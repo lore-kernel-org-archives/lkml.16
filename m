@@ -1,118 +1,135 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA3523C8D5;
-	Thu, 12 Jun 2025 10:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3035E231A32;
+	Thu, 12 Jun 2025 10:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724939; cv=none; b=GcXHvL6Pal9Z2qCaAUrlZZwY3nXFo0yPKyf9Hnyz8VI46ynkKHINShrBaTAY6XMxG2aCNpfbk7NBUfnNiajV6QLaaR2IjWfqMWOeFa9Hy/EMdax3KRXygCfzhyfYm54q2dVsmrYsYr9IFc7bf0Qz/nfwR5Bhh1O01qbKaPpGuDQ=
+	t=1749724975; cv=none; b=ORux5l4R7F8MfySaatF6quPmPsPP2VXIKUjsjy+HkwqUaUyjExq35PLr8LRaAv2FuFnPBcj4Kvuk2bzFrg3BwPtT2DqOT4mrpq5MdTMFrA9aPfinqP1PI4Oh1sGgwqEpRdR5yB6L21Qk/VlxbsuKArHaR2+lHf/BDxCQk5jnaRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724939; c=relaxed/simple;
-	bh=oFVhBP/YL0n9/tCf5ttdVuifzE71UiLOJVEiL84VSXw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b3kS1nrrj2zz58MfT/QHmgbgfp1QwiuBLdHtm97JgsHLr19oV08bzW+g+0thEGkXETC4+qlcAR5uNAttK6GW0r02DQI8wFHDeaYQCs1YNnUfc0+KjGpYibcJPjh99ryrQWwNtfnU7cVGsZmR/Ys+ZBVnGDHa6ue/x1CZLKLLQUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OnYAvcr5; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749724975; c=relaxed/simple;
+	bh=lRvJOiOoQxNwg1/S0z3v+01XL+nggaA0QMHlFm6CCss=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=i1ahfGlUUYxDszhpj/O3mB0AkjaJPdU6HUg0dVEHsU5JphR133Iv0fX/CekQ5xd3UPO8DMvoaek1Ek/3IpoeR0nMMWmEZcqldMHw27tnFJaZMnL4PbyXSbF+4XiCacPv2oa8Y6xbhkFtD4r3DK05u7GNEt3LPxw0zAjFA952JVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=njXntUFo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnYAvcr5"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23649faf69fso7538135ad.0;
-        Thu, 12 Jun 2025 03:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749724936; x=1750329736; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GybQZWZoCD/mNp4Fv4oNQX2ZSbaSeKZ922lZ4/MEtpA=;
-        b=OnYAvcr5Xf5dXA3uUW0Vg9SVoa9cVGBZPQstWPBGyyF5863OlXakqSOrcFDQ3Dt+Sl
-         Atb7thj2KgHpg3TApuJ4A0U2RZuchIp06tgrd97ztMIZfm62/qRV+9zDA873Ua/7GGtX
-         LcZ8wm8+I84qH2fHHFUPT88BwFDgte31+4JO+a33iWOTjv6Eirsa+KCeYx9O7P5gxtkJ
-         57gE8DmD+hAXqhFr1OfLwPzRZYzvcVDAt4p5svwvOSyTkvMZv1D61eqM01jjRKGsYw6i
-         zcyZ3vTjZjY8ugNTe9+Jc7lxlPi7wzScJKMtfv2Gi3BbDtDbVh2DncWoj5XGPVwMv3MR
-         XQXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749724936; x=1750329736;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GybQZWZoCD/mNp4Fv4oNQX2ZSbaSeKZ922lZ4/MEtpA=;
-        b=WCAj8PcoMEGicr7UuxCx+4CyPGy34IkdFLBHnqYOo2jkeft+5eR3Su/ktnPJEtRAiD
-         n4etWJ9ORiZM1Z7KpMWSsupjALkcziRwbJwKG5yv4KLseUSlwY/2g4mgw+gqrdtBOJAW
-         7AiiFARIv+i5T928CvKORPpvSRq1LqJ4hWnbHvRT9JN1NsJXiUQ2OzqRkItOcY7qIzMf
-         UZQ7lpMFRAAfDmL0LjbFNl+N7/zyu39/TcDA7bzAU9u1nvd99eFzSryXoBTwN965Vz10
-         gEdYsCgNurj94za3MW81sBsJ6xFRp47pI/t7niSpKwiejQ2A2FdnVjExaEV9lAvI5qkj
-         A+jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUShPqibipuIZ+tnnhevPS2Tyu/7Yx5iOi81pyVdcCOavB8w2UGiMxwb9X24mRTEBjXANO1GqNyoI841Ok=@vger.kernel.org, AJvYcCWjkI3ef0EK3CZ6uSEB2sDipQm+GhK3RpV4n2jm3Leva6U1QOkPzACMR9+0RBC9X1wOrG5XbtRQ6Xk=@vger.kernel.org, AJvYcCXXy/3YlOkstsaf8HkitB0XDf0oPqm12ivaPuldBU/BZafH2FIRoo5xVeBmXpkpGwvhS+vCyHrWNVLLNT7Jtrc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBrdq9C3cFCJu+QHylxwLsNITI1SlPSj0oI5mVfoewJvXxLe22
-	5RGUz/5J2kQhpzacuptrNtW5jTx2qwoYXOqqtnqpx2Nu8j3mR5YVusbc
-X-Gm-Gg: ASbGncu1efhdmNVZGb6vs99WoBPoIxrBE4chmqsSXdFa95zQW0Ik03j6D2M+w4NLsuv
-	vrhmZJQVJ/oygyz/ZzoqACrD1P7sza1kF5D6VR1U3PQimmbUE/8h8zl597JwAvFywhxEHGUDnVD
-	5WxsQ97knbDa78yDixQyQ59J+1DoFayL6eglb7XuVKeWjQ5aQMHjOfzNQWC56wVGU3hYnZertoy
-	/q1SRCfdieVnDlpQ/rxqvcgvXb5hxrU12T4TsI0z+5UoIEGmtUKdV14lYP8cPkzmzE/vg74O4xR
-	vSIAQ1/Y/z7VZwuzkhf+/uzMaz+vNoVC2Z4Nqacsy4v7VBcmNzEM9IkBK/iIXB2c
-X-Google-Smtp-Source: AGHT+IH8ZWbq3NcYdfeleEGz9gzoJI5uvC922HCmGxSqEdvple5ZXtJJUZjzVkBZ/Vxr7g8UM1sPMA==
-X-Received: by 2002:a17:903:1a0d:b0:22d:b243:2fee with SMTP id d9443c01a7336-2364d6603b7mr33758835ad.13.1749724936128;
-        Thu, 12 Jun 2025 03:42:16 -0700 (PDT)
-Received: from pop-os.. ([2401:4900:1c96:fdb4:2bbd:5e55:1c88:31fe])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e6d9bf4sm10781665ad.104.2025.06.12.03.42.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 03:42:15 -0700 (PDT)
-From: Abhinav Ananthu <abhinav.ogl@gmail.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-pm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abhinav Ananthu <abhinav.ogl@gmail.com>
-Subject: [PATCH v2] rust : Update the bios_limit_callback to use the C FFI types #1170
-Date: Thu, 12 Jun 2025 16:11:28 +0530
-Message-Id: <20250612104127.10299-1-abhinav.ogl@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="njXntUFo"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C8L6qM011530;
+	Thu, 12 Jun 2025 10:42:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	h4034OsWfnzqWI7rpRXbrvhnUsIe7YHju91pqkD8gVk=; b=njXntUFoQo1PyQt4
+	lD4i/pyOMkJ9KrmGQozlUQvyMIz5CDJUbAyJQz3mUnB8g/eOOVyAOi6U0jJxmN59
+	JjZKdfm1cx3zb3Jq2kGqPw+vJRZFZaR7OSOus6wuuuiq6tOm3K4Mtek/UeOv1wVS
+	XaUoTp4b3MkkK77UfYPsXS9eY6DYp81+3hMZFyKlDNK4KKl2Gq4dgaJGNJejlbv/
+	FhUB1H0re1Iwkn1rDsNLtk7u4it1SBzLlEBeyScr6JcN6bySpExwFWg8cGYmXXw5
+	daljSgENRyJikx98eID/uiBfb3ekFFfpz3RqGaPvpK/nEmSjA9Ey0cbAsaKabNVN
+	zpuGkw==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ekpyvnn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 10:42:50 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55CAgobO001890
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 10:42:50 GMT
+Received: from [10.218.12.164] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 12 Jun
+ 2025 03:42:45 -0700
+Message-ID: <85594b9d-b4fe-4cfd-ae3a-07901b9e27df@quicinc.com>
+Date: Thu, 12 Jun 2025 16:12:28 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: qcs615: Enable TSENS support for
+ QCS615 SoC
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: <amitk@kernel.org>, <daniel.lezcano@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <quic_manafm@quicinc.com>
+References: <cover.1744955863.git.gkohli@qti.qualcomm.com>
+ <1758b5c2d839d40a9cb1dd17c734f36c279ac81c.1744955863.git.gkohli@qti.qualcomm.com>
+ <74b017c2-7144-4446-969c-8502fb2cb74b@oss.qualcomm.com>
+ <x2avlatyjo7sgcjubefexsfk6gerdbhx5dcug2kszk2hukcusm@srs5dwuc2m22>
+ <4a8df547-e625-4dbf-9c6e-44a3f793e602@oss.qualcomm.com>
+Content-Language: en-US
+From: Gaurav Kohli <quic_gkohli@quicinc.com>
+In-Reply-To: <4a8df547-e625-4dbf-9c6e-44a3f793e602@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=JcO8rVKV c=1 sm=1 tr=0 ts=684aaf2a cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=07oZwJDR7OJQ1aN1LC4A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA4MSBTYWx0ZWRfX7pwmCrcYR40U
+ fdQq8X1+w0C1dsCnR462/nZ/W9XQEOL9Th790pgqvRbJD58W3PbrBL5fOMF0YcjH0bmdjB93uzU
+ HyerLjhMPyoNpMHuHCDdR2+MCUHdLl57d+N5XwKQ/ufWDGpGMAM6UkcuSbW6evjUsAHixvsvV7W
+ bZzice92BBf3bS+eN9PzpJKaZgSPNbsO1oOASwoe6BR6FgVmtk8BRg5cLB5rDNmfpozrWosTykK
+ bf6nAc6RUKvu0o1CDAaop+27zOijwzeyE2+V3TgDTa+06aTuXLqorw407zxGkMnSyLIVhqImNT6
+ DS7jBvp/Fz5P955kIoY0rt0f/7Ywu9VXJeYeYy4m9xbtvKUhb1PsuPn09S7KdGwf11yGo5ArkyI
+ kpDGrjeXudsA8wQjzOQ2KhE2/gdCQeFc6Le2nAfxDCddylXyOvSs7fcygdBidAD2se01z/j9
+X-Proofpoint-GUID: DWzGg613QCuoJZ3IrlGm5yhEOASbYPOa
+X-Proofpoint-ORIG-GUID: DWzGg613QCuoJZ3IrlGm5yhEOASbYPOa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=661 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506120081
 
-Update the `bios_limit_callback` function to use `c_int` and `c_uint` types,
-which match the C ABI for the corresponding callback function. These types are
-imported from the prelude.
 
-This change ensures the Rust function signature exactly matches its expected
-C counterpart, avoiding potential issues with type mismatches in the FFI
-boundary.
 
-Reported-by: Miguel Ojeda <ojeda@kernel.org>
-Closes: https://lore.kernel.org/rust-for-linux/CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com/.
-Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
----
-
- rust/kernel/cpufreq.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-index b0a9c6182aec..e97607ed86c2 100644
---- a/rust/kernel/cpufreq.rs
-+++ b/rust/kernel/cpufreq.rs
-@@ -1277,7 +1277,7 @@ extern "C" fn update_limits_callback(ptr: *mut bindings::cpufreq_policy) {
-     /// Driver's `bios_limit` callback.
-     ///
-     /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_int {
-+    extern "C" fn bios_limit_callback(cpu: c_int, limit: *mut c_uint) -> c_int {
-         from_result(|| {
-             let mut policy = PolicyCpu::from_cpu(cpu as u32)?;
- 
--- 
-2.34.1
+On 6/11/2025 8:17 PM, Konrad Dybcio wrote:
+> On 6/11/25 4:19 PM, Dmitry Baryshkov wrote:
+>> On Wed, Jun 11, 2025 at 04:08:57PM +0200, Konrad Dybcio wrote:
+>>> On 6/11/25 8:37 AM, Gaurav Kohli wrote:
+>>>> Add TSENS and thermal devicetree node for QCS615 SoC.
+>>>>
+>>>> Signed-off-by: Gaurav Kohli <quic_gkohli@quicinc.com>
+>>>> ---
+>>>
+>>> [...]
+>>>
+>>>> +	thermal-zones {
+>>>> +		aoss-thermal {
+>>>> +			thermal-sensors = <&tsens0 0>;
+>>>> +
+>>>> +			trips {
+>>>> +				trip-point0 {
+>>>> +					temperature = <110000>;
+>>>> +					hysteresis = <5000>;
+>>>> +					type = "passive";
+>>>
+>>> All of the passive trip points you added that aren't bound to any
+>>> cooling devices should be critical instead (otherwise they're not
+>>> doing anything)
+>>>
+>>> otherwise, looks good
+>>
+thanks for the review & comment, let me send 3rd patch with critical for 
+all trips.
+>> Don't we need cooling-maps for CPU thermal zones?
+> 
+> no, we have lmh
+> 
+> Konrad
 
