@@ -1,82 +1,133 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD132BDC20
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD3E299A82;
+	Thu, 12 Jun 2025 16:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744739; cv=none; b=ok3DnkbFcjd6k5RnoVzjF7CopiXbbwXp4CzZ5VHuiAq/5xlq2PkU7RLElauvR/gsRTb3lSQtlU/EhW0/Wsee7g350H42o9zVAAWZq8gc5osFk6s2M9oqGDRqrjDYd4K5JdZPLcnPb/ordw6bljm/Szvnz64dLETYEhZ61Yk9Rik=
+	t=1749744786; cv=none; b=Slzm3cvswmQTUhG2mRs868laL8v8enBEGkunhYDo+tJL1KeWbTORgGi4KS44IVRA1GmjC3cnJC8YSCubyXrlp3LyOR9DBdYjRIcSY9oCyol4+r48jAlV10NFLu8CnTrHxsfiecY5rmESyFuJLFY4EV3W7EBpuNLdoTe54Bppe1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744739; c=relaxed/simple;
-	bh=lxgoEntNjVchjtLgiHQvoENTwEKia/YtQ5rdh5fn2qk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vAMCXEH6Z8Vuzt0RRzRjobIUJYpiEE4LffIAEX3852+Gmv5KedjURMj3KNdPV6+NEEx9CY5uVK4TkEUybySYMq51GMlo3EH96s+5WHpCWQWiXeSO895MHP9RW558V7IctdXrApABTyL5pfNejEcQhwALRvf655s1ofFXzNjKgXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mv39LFn8; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749744786; c=relaxed/simple;
+	bh=zAVkyIooyMat1eNJwc2FV9L0fbEJZLL7QPWVbExBqdQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ufT3jeZqm/Cet3hIEWe2D3kwKL2ZUMTsnUbyvFtj8mlRQwKuN/1naYUwEsBQdmMd0v2ziMX1T2wTj+0uRJQ7yeFJgCPLiXsUpwJGQzPTq9HGz4x2snaD3dv4xXA5i9OCFjM7fJFjBEOv6AymZnsltfsQ9YDJMHhqXNt2WCw4+DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dPq9n5FS; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mv39LFn8"
-Message-ID: <755cf90e-acf5-46d1-9ac4-2ea06c93e873@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749744734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wf6edq/KAq3HGPYGLrCGiQwCp9O3FQOz/ZxfLHqxjnQ=;
-	b=Mv39LFn8I5zouEC0f5T5xA7Xv20Js1UKmX9aq967+MLRIlPdA0S9b4I6NAKjg4UhnCp1Aq
-	9bjf3Ohzf2I6+9qkAmCcwwuAyj7Wlg8zTKUzI3WYwgKOg19uS2u9+WI25/4r3VQwyBp336
-	L82OKqGzbTX+EFofYeDNXIjZEm+r4KE=
-Date: Thu, 12 Jun 2025 09:12:09 -0700
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dPq9n5FS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=7r
+	ztfc6dZ+PrkFfJa9/o6oD1yqpDmBSs0eJuIxIy4h4=; b=dPq9n5FSzlngOtGcPJ
+	zIsC2FrZzSRhp05F2FiO5sOc03biHtqOkujDa61eWjdwVW6FLa7ZueuE6FRv+aJL
+	UCPHeauLIPw+rqzC21XayVFKwJWwbL1aWmkv+lZtwcrhgA/rq5C55sqG3Uuy2mGi
+	Qx55kVS3xkVB2VhyDYW22DnTE=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD3J19t_EpodUoJHw--.37531S2;
+	Fri, 13 Jun 2025 00:12:30 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	mani@kernel.org
+Cc: robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH] PCI: dwc: Simplify boolean condition returns in debugfs
+Date: Fri, 13 Jun 2025 00:12:26 +0800
+Message-Id: <20250612161226.950937-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [GIT PULL] ARC updates for 6.16
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Vineet Gupta <vgupta@kernel.org>
-Cc: arcml <linux-snps-arc@lists.infradead.org>,
- lkml <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
- Yu-Chun Lin <eleanor15x@gmail.com>, Thomas Huth <thuth@redhat.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-References: <4cb508de-3af3-4796-ac74-2c082a578588@kernel.org>
- <CAHk-=wgda=j0VNdx1gTos_4DL986Z2cKotgpVsn36T-JmNshXg@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vineet Gupta <vineet.gupta@linux.dev>
-Content-Language: en-US
-In-Reply-To: <CAHk-=wgda=j0VNdx1gTos_4DL986Z2cKotgpVsn36T-JmNshXg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:_____wD3J19t_EpodUoJHw--.37531S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WFy5Ar48Cr48Kr47AF45Awb_yoW8Kr45p3
+	y8ZFWFyFs0ya45ZFs3A3WfZF1Skr93AF1DJasxta4xu3W2gFsrWr1DA34a934ftrWUWr17
+	Ka1xAFWxAr1ayFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEl1vDUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQxdqo2hK9tiWLAABsq
 
+Replace redundant ternary conditional expressions with direct boolean
+returns in PTM visibility functions. Specifically change this pattern:
 
+    return (condition) ? true : false;
 
-On 6/12/25 08:26, Linus Torvalds wrote:
-> On Wed, 11 Jun 2025 at 20:29, Vineet Gupta <vgupta@kernel.org> wrote:
->>   git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc.git/ tags/arc-6.16-rc1
-> So this is signed and I pulled, but your key has expired. And I don't
-> find a new key on kernel.org or the normal keyservers.
->
-> Please don't put expiration dates on your keys and then not refresh
-> them. Or tell me where to find updated key/.
+to the simpler:
 
-Sorry about this and thx for pulling anyways.
+    return condition;
 
-Back when ii had happened I did extend the date on the key and AFAIKR did
---send-keys to pgp.mit.edu
-I've redone this and today also sent it over for inclusion into kernel.org pgp repo.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ .../pci/controller/dwc/pcie-designware-debugfs.c   | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-pub   rsa4096 2013-02-16 [SC] [expires: 2029-12-08]
-      397A6E0AE47A85E76B74B08969D7F1DDE28AC25E
-uid           [ unknown] Vineet Gupta (kernel) <vgupta@kernel.org>
-uid           [ unknown] Vineet Gupta (linux) <vineet.gupta@linux.dev>
-uid           [ unknown] Vineet Gupta (personal) <vineetg76@gmail.com>
-uid           [ unknown] Vineet Gupta (alias) <vgupta@synopsys.com>
-uid           [ unknown] Vineet Gupta (official) <vineet.gupta1@synopsys.com>
-uid           [ unknown] [jpeg image of size 24452]
+diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+index c67601096c48..6f438a36f840 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
++++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+@@ -814,14 +814,14 @@ static bool dw_pcie_ptm_context_update_visible(void *drvdata)
+ {
+ 	struct dw_pcie *pci = drvdata;
+ 
+-	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
++	return pci->mode == DW_PCIE_EP_TYPE;
+ }
+ 
+ static bool dw_pcie_ptm_context_valid_visible(void *drvdata)
+ {
+ 	struct dw_pcie *pci = drvdata;
+ 
+-	return (pci->mode == DW_PCIE_RC_TYPE) ? true : false;
++	return pci->mode == DW_PCIE_RC_TYPE;
+ }
+ 
+ static bool dw_pcie_ptm_local_clock_visible(void *drvdata)
+@@ -834,35 +834,35 @@ static bool dw_pcie_ptm_master_clock_visible(void *drvdata)
+ {
+ 	struct dw_pcie *pci = drvdata;
+ 
+-	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
++	return pci->mode == DW_PCIE_EP_TYPE;
+ }
+ 
+ static bool dw_pcie_ptm_t1_visible(void *drvdata)
+ {
+ 	struct dw_pcie *pci = drvdata;
+ 
+-	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
++	return pci->mode == DW_PCIE_EP_TYPE;
+ }
+ 
+ static bool dw_pcie_ptm_t2_visible(void *drvdata)
+ {
+ 	struct dw_pcie *pci = drvdata;
+ 
+-	return (pci->mode == DW_PCIE_RC_TYPE) ? true : false;
++	return pci->mode == DW_PCIE_RC_TYPE;
+ }
+ 
+ static bool dw_pcie_ptm_t3_visible(void *drvdata)
+ {
+ 	struct dw_pcie *pci = drvdata;
+ 
+-	return (pci->mode == DW_PCIE_RC_TYPE) ? true : false;
++	return pci->mode == DW_PCIE_RC_TYPE;
+ }
+ 
+ static bool dw_pcie_ptm_t4_visible(void *drvdata)
+ {
+ 	struct dw_pcie *pci = drvdata;
+ 
+-	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
++	return pci->mode == DW_PCIE_EP_TYPE;
+ }
+ 
+ const struct pcie_ptm_ops dw_pcie_ptm_ops = {
 
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.25.1
 
-Thx,
--Vineet
