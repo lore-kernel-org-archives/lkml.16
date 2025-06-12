@@ -1,155 +1,116 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97335221543;
-	Thu, 12 Jun 2025 07:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306091F3D56;
+	Thu, 12 Jun 2025 07:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714595; cv=none; b=qEpvWtGXwQUt/Ks7G5fshkLAGiYpDnRO64Vv1CkZ/F3OEcEc2rW5w4zbjnH0yAxpShIlE9S9iGMxxgJbYS4f+CWyk5NKStE6OHaQp52ajdRu/SdpmyLFn+QE0nXs1CYtdE3VyUWWWUIElD3c+FcrndzZ6eHGUI0i9XNBGghc+a0=
+	t=1749714692; cv=none; b=sr0lTMSJ4hm3CabDooft+k7lkddiApvXsdA23T5rWWCwdR6UVrFsKM9TSQ3tptF7HyN08wzwICWD+gegtZS+37WfZVV5ymvVpxo/alBr88tooGHnX2cWgyF2z8MQKPkm6O/DmsOlupdAQBQY0Yi5lfhMMjFxyYE/Ucxk+EhAuA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714595; c=relaxed/simple;
-	bh=z1txkkcsPtDNvxgOoTa1iBz32cpkiJc/UP2ZbJMccPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NqVBkTOvsfnl1NfGM9WDo/5oH7St7xiIjFJoG5cIyo1VtssTx2HjZPM7l7Ixoa4FEz7h7EKCC9ZNshHbLpEXTFooat8tYICsm83FOhE1PyJk6c052urJynQ+Mh8LqAy1rqOowZUwxA7K1KlPXsUV7W+bXlTaSINALQxuTBrs4NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Pso88brr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749714692; c=relaxed/simple;
+	bh=V0+ki51DVrkVbXtl6/gYN/Gkb9exxrbXA3cRDGVVahQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=r77u1iTtFLilndgapVCZyh20+2Uv58nzvyGT9C998/nzF/lpezSsMDS7si7zmCMNOxnHLkspU7Q02MQ4LkjKs+sdaL6AsdtGhnfS7to2KGWVsfQxlAV417ZPt1GgnhPlxzpXMaKf01u4L/nFXVE+M716lqa11LxgPs02Hmh6/iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L65AzWga; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Pso88brr"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BKDHox027198;
-	Thu, 12 Jun 2025 07:49:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	i0DFzH1CWJKbI7tcV1MijTTXBL6R9YvoBS65P0+WZO8=; b=Pso88brrYyw2FNtV
-	+ucKM07hOsc5icp2wd2fHqYlNFulE/2zzQRn87/wGo/p+apvBd0e/h18HdZXkXtr
-	t3EoiwvPM3B6ZHf8KXT0dvjGfMO3cIqBywSITTa8hecZp7e4iGhDc2HPO2G+xclj
-	elLjTqS88bVPenpj6cbbLm4c2FnJOV67wWMlmU3xjmr0NvCvQ5ngEt9McSxvemW9
-	b5fiQwskJmqigT5lGi+QCuP1gxwhkKsYIhP9BbwI5oPn2cvnpl5wB75yaKnyRt/D
-	3hwn319qx7VTe6d2Z9TU9D1qS/2DgEUnx1OSOqDOsVI+8vTuASsOVFA+BW9YJ0+e
-	cLFLmA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccvfk96-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 07:49:48 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55C7nlSp030521
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 07:49:47 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 12 Jun
- 2025 00:49:46 -0700
-Message-ID: <ce3c0e51-4df0-4164-adcd-e98f2edee454@quicinc.com>
-Date: Thu, 12 Jun 2025 15:49:43 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L65AzWga"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-311d27eb8bdso539150a91.0;
+        Thu, 12 Jun 2025 00:51:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749714690; x=1750319490; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=swocyyVkC1m0yK3KFc05VY0vapacmuONNBylQbQbwQM=;
+        b=L65AzWgabpjTV+100djmIvN13tgB5pugl6qzet2H+/bk1W9ZppXXD6LOhRdh7zI8KF
+         ULDrEkzEModcLODstZJ2aGlHVXSciqgANeogj+ltRiVed0c/WInU1FBCG1Bx6yitFupm
+         HnBZAy5N6YyCkTR65BZERZQZq6ZyiPEaGGFZLoPntGlT/f6Zy0Mg06chN4gmk2qzo86k
+         zOtYh/WVUSYoJNFTtEZxE2EVSKxs2JxWsTfVj9ot3zQak0yZOUkAU9dLvVNYvYk+vzf9
+         cMsf4XtOn6h+B9VxB1llE8EPihrTUGP40aFGXB52XXGo+i61E9YJ2AEhnTCZwZleyl2Y
+         HE2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749714690; x=1750319490;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=swocyyVkC1m0yK3KFc05VY0vapacmuONNBylQbQbwQM=;
+        b=WCd3kEC93RhaXiRhviMcZ0dFR2VOeT5+7cb3uB4y1eo9nvWySkaWf5oNQGavhbStpL
+         tOV7BCwvCDHgnE45Gz5DWoglJzeSAKyeT3sD+PwWZFeTbsBcOVqp6Xbz93ZP6NKXbaSB
+         a9M7zd0CCd5MGmrmX2uDuFI8fnyPA5BPhOXPclivluqwIIVUZOEesos7Ncl+vyeB1GRc
+         ciy5wDIwwDNMScJYnKFv3+3Wq7W38CDK4pmj1sdkqzqbFRnvaeGnETSwNULva14e897E
+         0U3w5aPK92n1gtCT3VOLquoS63BQDbNn7X1rPeDDsVjeRNzfTpGf0XcepEDz3P7bwj6y
+         /DFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEkAq348D9UzD9tE8Jy1TbXlDl/XLVzthTvWTi9vE8L3bA0kqe4oqb2dBXA3dcyjyMF7giBdRELdXwt4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvx4TUYBrXBPGzabeRu9XOjGXSTKiL0rP9VZkzani7GxDvK6Nw
+	cok1L5T0AfjWbNw5Ybzpat/ZjVBUYYu6Vtl2TQ0uIJg33kigbWW9N9zZTu227MB4/F0=
+X-Gm-Gg: ASbGncvNjC+0Z74VfvXBgac77GomCcvkPkqRla8Pt8+CCqhTSu31NCCXpYAwJMBl/o3
+	jhcdQ4W7ot6TrSDDMfU1SYuK1QMHzBIDFgAt6jYfBhSDkubIfWm7dfEhHkHqfqr67yU+fXK2zHI
+	z/d5fyzflAbrH1IrIYHLabtGILFXPY9BxwYxuLe87EBaRkEUTFS6p7C1tfHs+/ZlrQC9V3P6N43
+	ENzZ3L0jcreC/fOTMlEemtEgR1nTOcuQE/W28UpmI5U06trxD8PcbFgQ2riuCST3x9sHe0S1ejQ
+	q8oJzT6dgG3e8/jYqsIXfhEK1MPy1cfE+/KWc553h92ubit7JaZZUxI8BbcDOtZEeEzHQdwLwHV
+	i4k1gcxO3h1leZZy+ITWpmBY=
+X-Google-Smtp-Source: AGHT+IGjalZHIM8I5uIyPD4PFNJrTr3b+7NZ2QJSRfZ+xrOON4O5ngplWUEXGHHBCAbhjmak68v2CA==
+X-Received: by 2002:a17:90b:4986:b0:312:e618:bd53 with SMTP id 98e67ed59e1d1-313af1e44a0mr7908723a91.26.1749714690389;
+        Thu, 12 Jun 2025 00:51:30 -0700 (PDT)
+Received: from ankitchauhan-Legion-5-15ITH6.. ([2405:201:4042:d128:1895:113a:65dd:3ae0])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-313c1c4e3b9sm915761a91.29.2025.06.12.00.51.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 00:51:30 -0700 (PDT)
+From: Ankit Chauhan <ankitchauhan2065@gmail.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	joel@jms.id.au,
+	andrew@codeconstruct.com.au
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Ankit Chauhan <ankitchauhan2065@gmail.com>
+Subject: [PATCH v2] ARM: dts: aspeed: lanyang: Fix 'lable' typo in LED nodes
+Date: Thu, 12 Jun 2025 13:20:57 +0530
+Message-Id: <20250612075057.80433-1-ankitchauhan2065@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2] wifi: ath11k: mark reset srng lists as uninitialized
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-CC: Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250529035708.3136232-1-senozhatsky@chromium.org>
- <5857380e-ced9-4118-b9a0-ce926b25c11c@quicinc.com>
- <rxaibpgtf37w3th5lnt3w574w443yononqjoglyfktlcxe26qg@jpmtkckrotzp>
- <2f77045c-6763-4fc4-bf09-50fd9b76a394@quicinc.com>
- <xr3n5pbohquhaloonctfqvpb2r3eu6fi5jly7ms4pgcotqmqzh@msrgbaawafsj>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <xr3n5pbohquhaloonctfqvpb2r3eu6fi5jly7ms4pgcotqmqzh@msrgbaawafsj>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: rgMrJ6vwbmgimnlQHWAS1h2kisqDrQLV
-X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=684a869c cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=Er88retq1L1mZmvwAMoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: rgMrJ6vwbmgimnlQHWAS1h2kisqDrQLV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA1OSBTYWx0ZWRfX200IIP6yTpiY
- 4zIQ2hlrU4hRWaVDH8vJszYngNzsqdRAgY8aAqg69jWgop+6ojIdmpMxY887oxcUi2GZ5SXLZet
- zZNlBypaQetD82zjX1R3EoOkzNAf1f/Cp3E8alHXe+Q+/5Fn9PQNIoseHMskUzzNWnRBBf7aQ2v
- MdEUhlYIOqc9Xk6mwVOXKY31PpQ+6iUzli/GqlNWGxS8FyP3l27ejZISDF2XINPa4/ilcSd0f0n
- /W2jT+oS4kD1ugTFYU1V+v+/6KnfJxEITK6qmn9G5oUQWU0ogJgboZaxfyHXRYW1rrE341uMUJV
- EJK7+FCo+WaYSHXfmECfEeBNP2dDx4t8qKHV0jN8jwv4FWnmNLtp6NMdn9l46IEf9nd1bmP+e1U
- fPP9iq2uS+6zjP2nWXnFqwFvM2GeR18ZNLAaelk27eAedA7shXYR6mycczraxCsOJl+J8fsq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
- malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506120059
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Fix an obvious spelling error in the DTS file for the Lanyang BMC
+("lable" → "label"). This was reported by bugzilla a few years ago
+but never got fixed.
 
+Reported-by: Jens Schleusener <Jens.Schleusener@fossies.org>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=205891
+Signed-off-by: Ankit Chauhan <ankitchauhan2065@gmail.com>
+---
+V1 -> V2: Changed the subject prefix and addressed review comments from Andrew Jeffery
+ arch/arm/boot/dts/aspeed/aspeed-bmc-opp-lanyang.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 6/12/2025 3:02 PM, Sergey Senozhatsky wrote:
-> On (25/06/12 13:47), Baochen Qiang wrote:
->>> [..]
->>>>> diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
->>>>> index 8cb1505a5a0c..cab11a35f911 100644
->>>>> --- a/drivers/net/wireless/ath/ath11k/hal.c
->>>>> +++ b/drivers/net/wireless/ath/ath11k/hal.c
->>>>> @@ -1346,6 +1346,10 @@ EXPORT_SYMBOL(ath11k_hal_srng_init);
->>>>>  void ath11k_hal_srng_deinit(struct ath11k_base *ab)
->>>>>  {
->>>>>  	struct ath11k_hal *hal = &ab->hal;
->>>>> +	int i;
->>>>> +
->>>>> +	for (i = 0; i < HAL_SRNG_RING_ID_MAX; i++)
->>>>> +		ab->hal.srng_list[i].initialized = 0;
->>>>
->>>> With this flag reset, srng stats would not be dumped in ath11k_hal_dump_srng_stats().
->>>
->>> I think un-initialized lists should not be dumped.
->>>
->>> ath11k_hal_srng_deinit() releases wrp.vaddr and rdp.vaddr, which are
->>> accessed, as far as I understand it, in ath11k_hal_dump_srng_stats()
->>> as *srng->u.src_ring.tp_addr and *srng->u.dst_ring.hp_addr, presumably,
->>> causing things like:
->>
->> But ath11k_hal_dump_srng_stats() is called before ath11k_hal_srng_deinit(), right?
->>
->> The sequence is ath11k_hal_dump_srng_stats() is called in reset process, then restart_work
->> is queued and in ath11k_core_restart() we call ath11k_core_reconfigure_on_crash(), there
->> ath11k_hal_srng_deinit() is called, right?
-> 
-> My understanding is that the driver first fails to reconfigure
-> 
-> <4>[163874.555825] ath11k_pci 0000:01:00.0: already resetting count 2
-> <4>[163884.606490] ath11k_pci 0000:01:00.0: failed to wait wlan mode request (mode 4): -110
-> <4>[163884.606508] ath11k_pci 0000:01:00.0: qmi failed to send wlan mode off: -110
-> <3>[163884.606550] ath11k_pci 0000:01:00.0: failed to reconfigure driver on crash recovery
-> 
-> so ath11k_core_reconfigure_on_crash() calls ath11k_hal_srng_deinit(),
-> which destroys the srng lists, but leaves the stale initialized flag.
-> So next time ath11k_hal_dump_srng_stats() is called everything looks ok,
-> but in fact everything is not quite ok.
-
-OK, we have a second crash while the first crash is still in recovering. And guess the
-first recovery fails such that srng is not reinitialized. Then after a
-wait-for-first-recovery time out, the second recovery starts, this results in
-ath11k_hal_dump_srng_stats() getting called and hence the kernel crash.
-
-Could you please share complete verbose kernel log? you may enable it with
-
-	modprobe ath11k debug_mask=0xffffffff
-	modprobe ath11k_pci
-
-> 
-> Regardless of that, I do think that resetting the initialized flag
-> when srng list is de-initialized/destroyed is the right thing to do.
-
-Yeah, correct.
-
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-opp-lanyang.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-opp-lanyang.dts
+index 370738572a55..8b9d382241ff 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-opp-lanyang.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-opp-lanyang.dts
+@@ -52,12 +52,12 @@ hdd_fault {
+ 			gpios = <&gpio ASPEED_GPIO(B, 3) GPIO_ACTIVE_HIGH>;
+ 		};
+ 		bmc_err {
+-			lable = "BMC_fault";
++			label = "BMC_fault";
+ 			gpios = <&gpio ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+ 		sys_err {
+-			lable = "Sys_fault";
++			label = "Sys_fault";
+ 			gpios = <&gpio ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
+ 		};
+ 	};
+-- 
+2.34.1
 
