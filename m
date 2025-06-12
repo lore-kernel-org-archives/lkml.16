@@ -1,181 +1,135 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7B021ABC1;
-	Thu, 12 Jun 2025 23:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AA01B0F19;
+	Thu, 12 Jun 2025 23:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749772194; cv=none; b=t60DMqzRSflXTIBy3zWvyv3FLvc4CG/yNn8a11BOQRhpCyNcJj1vLxbXFFx743biMC2xM1OHxh1zr8mkwBc/A1caXtBi0jtE/TE/3Q+HMbpkEkPVJXhXKfklIvfmE6/cql3TsZaljv3Tm+h7djqaIVB10slf7hB3CPmp2B1Mm+M=
+	t=1749772610; cv=none; b=Srfet6okB3FRmFX7jwXuQyzFvDoUXTO9/T0//OBlHWVvlPecyMvpF4TCqGTE442cxQ5Dglia1cch64emFMFNOYmLMIIKC+/DoUikqQPVnkBrFdiTJeAiThmI9FkoHq28Lvd5/bBs1T/r4ynZb6LPp5NGpZA6rlqXllIagWtyEQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749772194; c=relaxed/simple;
-	bh=IGlM1aMwuWlN4KUgs+V/8/qfzdLCjm0iM5gKzBkBrKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qKvCzplF4dVTWqiXrLwL9Dtd6Jj4fj35ZaKbyN+Th7S/v+NfGXZyUYhBAyE4rrbnWDkWAD7ggIjg9XdG1ikKhWJHjMjw56LA9ZISBk7sytNmps0O26VBMzGmnehAan+2y6A4iILKacPxNGe5tJcgwKbMNxHIqUvcz3RpTG3tnCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P7BEwALT; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1749772610; c=relaxed/simple;
+	bh=XpXzmFLbZEL2tGyKDgGWORGNARTe6Z7i23Dzsc/2GdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JY9PoR98n2hSXmp8lAp32wppMXXmSApyqbbIJ0Qu5a+T5AiT8VqYv6CsawC6Gyt3+6enZJl6lqJ14zNsEuQLy+CbKAl8w/pQjADQwTX7t0dTTZEJAdsC99VY4maHlsW40/p7C6TDoDOf2Z9DXmSpBsY+03W7nwY2/XkyXRNbqjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B3c7QWtS; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7BEwALT"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74264d1832eso1725115b3a.0;
-        Thu, 12 Jun 2025 16:49:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3c7QWtS"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so947816f8f.1;
+        Thu, 12 Jun 2025 16:56:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749772192; x=1750376992; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749772607; x=1750377407; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yydAhh80AdKqo80zFIdgFeGLonAt34YNlvMq6VZBR8s=;
-        b=P7BEwALThu81hyLunqQniObUZopgz57oIcU2z6AKhx6W75jNDDfh6GClAelHLuNpcm
-         F1PwXEMg0GXb2TADm2lRdsZmDnbdIRvwz6INwOSJPfTaZyHfxSXIjO1ws8633LjOt3rk
-         UCNaQ7+NawdvXzELzXmHfew7KZV0tGKtuezGRXbAPUIOK2Eybk2WMPCFkb4zUE8kY7lA
-         5Zh5sw7sSZAlF7EULQbhcdvera/faDlBMZ4qpGRuRnR+URSsv3YY1WrVA4e1mz/6GT2y
-         MRewrPCLAZhITWRvf7m7TcsiepZjY0FwlL19XCqgUKQqK9PAo9pIFABSFJvxNx08lL76
-         NJig==
+        bh=XpXzmFLbZEL2tGyKDgGWORGNARTe6Z7i23Dzsc/2GdE=;
+        b=B3c7QWtSxbidwfS8QuoJ87DkEWiv6acN+VvtSSVZaaXWKXMGzltVhCg5Sa4wLlck4k
+         7JTKhMzJozyzfFT24E0oLYNnOEyjSO4suaXMKGF7kWiaPKkaw9bH+812S8d5Yp0PaTSP
+         96CvXFpl5OSqkulZ4/iqpJLIV41Uz7bysNl2BFMTLTwab9rgbCZ5OYETkoZX/0Ai/ngF
+         JftcUrK2moxjDl0jEzyIRHTHEl5/KkLGbgmWy5SwQPj8fWQ/DD1Y17eLtR7djPgI2mQX
+         ALzAkm8EPWswpQ1TDGN6GFmLdjijE5G6idBLr322jB9Grso3qmrxuvkmobtwYV0qNcR0
+         uKZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749772192; x=1750376992;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749772607; x=1750377407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yydAhh80AdKqo80zFIdgFeGLonAt34YNlvMq6VZBR8s=;
-        b=fmz3TK5r0cejUEQBjw1lcNk1BAr3KJQUKCkWFLZkGto3IahEiBFrn0MPi6UMC2PBh1
-         yVktu7fn9XSufLbQ/yZD+by2yelskm3GuYcM9Rao0hNRYIE26sUJSk1hK/muwum2ktsL
-         YXdOGgQr69ds9FteT82RF1KtUNvLXu9kJmDMbujxnzas3oC58P5dtx+GpaAevDxUi7hD
-         sgOkVTUuMXMAGe24A41y+IF7AOa4GhHLP2k7blIH+gPtiW5lcEqqllnLdFkp+/wPmGLX
-         agJGzBvZhwp8sus0+JIsCCeGAXkQ0VOzWBOmtS+b9i34deQ9UCpHcZ6Wfxizrkgja3hU
-         gqJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUN4fq60KxHeo6eOQkQuNvcYtmqQJ7Co4jZ4P0+RWp8/gYzw7agkFuZvHTuPkcNwl8p5FQLQ5MV1T16XhA=@vger.kernel.org, AJvYcCV50Tb15M8gycUmpF3LtSiNXEP7b79MspcyueCT6uix8uKFYJ7NKktYmLBMK07XmdAFi2NGOBzb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7O75ch9yDryffnZE7aS1LGsqhtBkdXY6EgfJ59kMcgSyU2WIn
-	uxuDI6+2FXFIMPlX6X3UXoPDDDaeCiemJrOayLm3hgD3++kAdwcg0FE=
-X-Gm-Gg: ASbGncsveJGYYcijY3ztBAqQTMar3QhOsNjzfdivQOHwT6kfn91bRv6iPk9A4GJxfqx
-	5jgXJlb2q43XYvR/HGllmeoDQ0CQMH8r1Q1dSYwb2MlcweEY7xStEGKwYPcvS0EZvagx6+jcxYP
-	sYkZur5FMPlTL9MCNcWqoWVxvP5RqWjnpmYl9dz1ol7eOcPmuuaOhV99U4l4ZZgkqwJxNrsj4N3
-	iXbz22jn+fG01Jzu2ddlBecpapp9tXiLfGX4m6bbKxJb6y/wDcc3LXEMgiEGyaaKJYcmyxtLrNn
-	apSTTTe1RqB6zhZFE1cD7xoYp+lPUcJ8hjNuvGs=
-X-Google-Smtp-Source: AGHT+IEK19ZXZEaZ/4s2jK4Oc4ZfOvTW+ytKr0OgAwkaJT19D7NqpmAu5KFzRe9eVhOZEcj2PugcAg==
-X-Received: by 2002:a05:6a00:a86:b0:73f:f816:dd78 with SMTP id d2e1a72fcca58-7488f79d15dmr1253898b3a.15.1749772192135;
-        Thu, 12 Jun 2025 16:49:52 -0700 (PDT)
-Received: from fedora.. ([2601:647:6700:3390::c8d1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b2e30sm325453b3a.128.2025.06.12.16.49.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 16:49:51 -0700 (PDT)
-From: Kuniyuki Iwashima <kuni1840@gmail.com>
-To: syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com
-Cc: 3chas3@gmail.com,
-	linux-atm-general@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	kuniyu@google.com
-Subject: Re: [syzbot] [atm?] KMSAN: uninit-value in atmtcp_c_send
-Date: Thu, 12 Jun 2025 16:49:36 -0700
-Message-ID: <20250612234950.40595-1-kuni1840@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <684b65a6.050a0220.be214.0295.GAE@google.com>
-References: <684b65a6.050a0220.be214.0295.GAE@google.com>
+        bh=XpXzmFLbZEL2tGyKDgGWORGNARTe6Z7i23Dzsc/2GdE=;
+        b=GExZ5zE7SBVcNOoTvzj5bNXX4jUCpXLgMDw4ppe39NINlzKK+svpjvH8s7SpkHXDMh
+         HqgVueWlzHxorEPe0TK6WNGLoJExckyeaUwcGeLqQwZTd333kioXZlnegxgdHzVZ88lv
+         PiX7RxfxRYuiwk6T6wQF5uqe/5SoFnVIkV24A/bzAJ7wUNi46vAR30TxWwBXfq9zbUtC
+         2uR/AzFBByGtgmnh61RMulIxl1IPpR5yn0se96wcIYMc4+CT/A7lY0CbOLtNCddC9ha9
+         H2zRnH5ElADaXnxix4V7g23UZWtwadgyFhMTEbXpuIFJs3RfXoe14v6UQQ7Wk0C+HtwM
+         6HFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVd0YJSe2ZGgKglSBoNq9Qm8abyiGhR6fdTUU94i1RBBVPYGQujhbO3DlO3b+V9YctGpohJ4yARf/4ONSUB@vger.kernel.org, AJvYcCWfmy2erZ+jkml4yjPaTs/zRuwdl41A7mMAjJ/7zmQgOUPAWsZQODMQQj2XsjMHum1DyD8=@vger.kernel.org, AJvYcCXIIER0aUtaB3RpxVuATyD5Ybzi42eLVCxBb7Od+W06GeYdFonqoRqky2b9h3J6Kx/TmniibJrbIbqoafm4ECGXOZSp@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVkl4cY7nWcI/o7w+3VF8dcClFz3ZVt23eGE5OnHW9X7Mh6wu3
+	ANJW4zMT7Vh2Q1fAI3/2gAgr9vksQ0Row/zBE5mM9hxPs68Z3xV8BQ8a9O5/pJhAxxc6MK7U+JK
+	i0IT9Yu89Zazhvv2BbxRAgrdPPqYnOVM=
+X-Gm-Gg: ASbGncvWR/p8xH8JjU04o+xqkJb/iRF0VYt2B/+YFd9VbNTf+KyFeRpeman3aJECFoP
+	gTtmYKNXKr7FlR+Futl39iSRnZBh4RwX6xZlSONDcSX98QQsjYnx5zCB+k4dfXGFdaVvndtki2n
+	s1bXRZlckyTYNvDS3lRLYsEWlHYEejvV4CgAx6PR6tu1Z559Ox5lmvaka8wRcj97QeezFHpzxio
+	buYOTCdkI0=
+X-Google-Smtp-Source: AGHT+IHeRAAifYf+ljSgH6/oKOJK6Y/hkLqmasJbneu7HU1u9BPrDR5QXhcT6XKGgiDZMLD93vIESy1R4qAwez7ZvGQ=
+X-Received: by 2002:a05:6000:1889:b0:3a4:ea1f:3534 with SMTP id
+ ffacd0b85a97d-3a5686e4504mr811554f8f.5.1749772607087; Thu, 12 Jun 2025
+ 16:56:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250611154859.259682-1-chen.dylane@linux.dev>
+ <CAEf4Bzbn=RVhMOR7RapYwi+s8gbVS=1msOuZ7MhPvgz8zHiE9w@mail.gmail.com>
+ <CAADnVQJ8cVi4KyJqWgEfyWYs+zSYQ73PevrNszPkisrdPSjYMg@mail.gmail.com> <CAEf4BzayBd9e5c9fiEPgDKPoRm-E4uB_u__xKcRpXDz18kNnkA@mail.gmail.com>
+In-Reply-To: <CAEf4BzayBd9e5c9fiEPgDKPoRm-E4uB_u__xKcRpXDz18kNnkA@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 12 Jun 2025 16:56:36 -0700
+X-Gm-Features: AX0GCFvzDp5b7L5pNMYWkvU4e4tmq2DN8N5PdOM6XoTqTHMKEVfcYvUDafKwKfg
+Message-ID: <CAADnVQKw2u9y-Cf+8idB0bZ0v-p6BtuyRV=JpmN4to3_1Z6GEA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: clear user buf when bpf_d_path failed
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Tao Chen <chen.dylane@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: syzbot <syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com>
-Date: Thu, 12 Jun 2025 16:41:26 -0700
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    2c4a1f3fe03e Merge tag 'bpf-fixes' of git://git.kernel.org..
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1787d9d4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=42d51b7b9f9e61d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=1d3c235276f62963e93a
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1195ed70580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16187682580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/1313b3ad2bf4/disk-2c4a1f3f.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/15f719cfdf88/vmlinux-2c4a1f3f.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/e7f531b0bef6/bzImage-2c4a1f3f.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com
-> 
-> =====================================================
-> BUG: KMSAN: uninit-value in atmtcp_c_send+0x255/0xed0 drivers/atm/atmtcp.c:294
->  atmtcp_c_send+0x255/0xed0 drivers/atm/atmtcp.c:294
->  vcc_sendmsg+0xd7c/0xff0 net/atm/common.c:644
->  sock_sendmsg_nosec net/socket.c:712 [inline]
->  __sock_sendmsg+0x330/0x3d0 net/socket.c:727
->  ____sys_sendmsg+0x7e0/0xd80 net/socket.c:2566
->  ___sys_sendmsg+0x271/0x3b0 net/socket.c:2620
->  __sys_sendmsg net/socket.c:2652 [inline]
->  __do_sys_sendmsg net/socket.c:2657 [inline]
->  __se_sys_sendmsg net/socket.c:2655 [inline]
->  __x64_sys_sendmsg+0x211/0x3e0 net/socket.c:2655
->  x64_sys_call+0x32fb/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:47
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Uninit was created at:
->  slab_post_alloc_hook mm/slub.c:4154 [inline]
->  slab_alloc_node mm/slub.c:4197 [inline]
->  kmem_cache_alloc_node_noprof+0x818/0xf00 mm/slub.c:4249
->  kmalloc_reserve+0x13c/0x4b0 net/core/skbuff.c:579
->  __alloc_skb+0x347/0x7d0 net/core/skbuff.c:670
->  alloc_skb include/linux/skbuff.h:1336 [inline]
->  vcc_sendmsg+0xb40/0xff0 net/atm/common.c:628
->  sock_sendmsg_nosec net/socket.c:712 [inline]
->  __sock_sendmsg+0x330/0x3d0 net/socket.c:727
->  ____sys_sendmsg+0x7e0/0xd80 net/socket.c:2566
->  ___sys_sendmsg+0x271/0x3b0 net/socket.c:2620
->  __sys_sendmsg net/socket.c:2652 [inline]
->  __do_sys_sendmsg net/socket.c:2657 [inline]
->  __se_sys_sendmsg net/socket.c:2655 [inline]
->  __x64_sys_sendmsg+0x211/0x3e0 net/socket.c:2655
->  x64_sys_call+0x32fb/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:47
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> CPU: 1 UID: 0 PID: 5798 Comm: syz-executor192 Not tainted 6.16.0-rc1-syzkaller-00010-g2c4a1f3fe03e #0 PREEMPT(undef) 
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-> =====================================================
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+On Thu, Jun 12, 2025 at 4:27=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Thu, Jun 12, 2025 at 2:40=E2=80=AFPM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Thu, Jun 12, 2025 at 2:29=E2=80=AFPM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Wed, Jun 11, 2025 at 8:49=E2=80=AFAM Tao Chen <chen.dylane@linux.d=
+ev> wrote:
+> > > >
+> > > > The bpf_d_path() function may fail. If it does,
+> > > > clear the user buf, like bpf_probe_read etc.
+> > > >
+> > >
+> > > But that doesn't mean we *have to* do memset(0) for bpf_d_path(),
+> > > though. Especially given that path buffer can be pretty large (4KB).
+> > >
+> > > Is there an issue you are trying to address with this, or is it more
+> > > of a consistency clean up? Note, that more or less recently we made
+> > > this zero filling behavior an option with an extra flag
+> > > (BPF_F_PAD_ZEROS) for newer APIs. And if anything, bpf_d_path() is
+> > > more akin to variable-sized string probing APIs rather than
+> > > fixed-sized bpf_probe_read* family.
+> >
+> > All old helpers had this BPF_F_PAD_ZEROS behavior
+> > (or rather should have had).
+> > So it makes sense to zero in this helper too for consistency.
+> > I don't share performance concerns. This is an error path.
+>
+> It's just a bizarre behavior as it stands right now.
+>
+> On error, you'll have a zeroed out buffer, OK, good so far.
+>
+> On success, though, you'll have a buffer where first N bytes are
+> filled out with good path information, but then the last sizeof(buf) -
+> N bytes would be, effectively, garbage.
+>
+> All in all, you can't use that buffer as a key for hashmap looking
+> (because of leftover non-zeroed bytes at the end), yet on error we
+> still zero out bytes for no apparently useful reason.
+>
+> And then for the bpf_path_d_path(). What do we do about that one? It
+> doesn't have zeroing out either in the error path, nor in the success
+> path. So just more inconsistency all around.
 
-#syz test
+Consistency with bpf_path_d_path() kfunc is indeed missing.
 
-diff --git a/drivers/atm/atmtcp.c b/drivers/atm/atmtcp.c
-index d4aa0f353b6c..c74dec9a2759 100644
---- a/drivers/atm/atmtcp.c
-+++ b/drivers/atm/atmtcp.c
-@@ -288,7 +288,11 @@ static int atmtcp_c_send(struct atm_vcc *vcc,struct sk_buff *skb)
- 	struct sk_buff *new_skb;
- 	int result = 0;
- 
--	if (!skb->len) return 0;
-+	if (!skb->len)
-+		return 0;
-+	if (skb->len < sizeof(atmtcp_hdr))
-+		return -EINVAL;
-+
- 	dev = vcc->dev_data;
- 	hdr = (struct atmtcp_hdr *) skb->data;
- 	if (hdr->length == ATMTCP_HDR_MAGIC) {
+Ok, since you insist, dropped this patch, and force pushed.
