@@ -1,47 +1,46 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C4922333D
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519A72F4337;
+	Thu, 12 Jun 2025 16:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749745209; cv=none; b=llqSMbWNFxgOfzWZNaGCrZCawWgtzgTitSHHZdGPLcmHHEskiQD8fBwX35r6F6LNJPtMZvPzbatpQn20snPpYa9NGr8rc6UU24UjAxC1ethWVAdKL3AdCJkxezy4feQFsuthmJna7gasUvhbJspc6mjEMGdqmeXKxBFX8Z85ezw=
+	t=1749745218; cv=none; b=gYXj1zE3D+zxvFajwxrQELih6eIjakZIkJga35TP1AlrpPtQmPTx/z/zEQh9zL+GA3gLA28hFk+XZ1bXPcqk8+AqbC8NxSkNH4GICZnysMJw+pI7byiylqI4UrImf3Y4rnejIJ8ZoTnRvOWwrIF6eQMfm357Ka2SFGeKYgqgWs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749745209; c=relaxed/simple;
-	bh=+tvZzd0kkE2nYV+4N1Ormbpy8ugVT1tsiBVKBZVlzrE=;
+	s=arc-20240116; t=1749745218; c=relaxed/simple;
+	bh=Exbz9bEFkUebfba+VJlIAq8RWt6MqPSbghPlez9tlrk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t0bBVuZkPJ7Megb5JwfI2Izy15eQXPoCH+8FI1vgp6abzrI6OMR6NRl4BqPSJ82UxaKml88h5k2NS4aCwiOaCaZ1/OMMHxRhTKr0sU9c5EEiWylFzBo0zZ4HqhhHx+qGN6GZcV2m57AiJGIjWj12WrVKpb8Wql6DSHDDa/UAV2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59683153B;
-	Thu, 12 Jun 2025 09:19:46 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E6193F673;
-	Thu, 12 Jun 2025 09:20:04 -0700 (PDT)
-Date: Thu, 12 Jun 2025 17:19:55 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: "Chatre, Reinette" <reinette.chatre@intel.com>,
-	Fenghua Yu <fenghuay@nvidia.com>,
-	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	"Keshavamurthy, Anil S" <anil.s.keshavamurthy@intel.com>,
-	"Chen, Yu C" <yu.c.chen@intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH v5 14/29] x86,fs/resctrl: Support binary fixed point
- event counters
-Message-ID: <aEr2OJspONWeWo34@e133380.arm.com>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <20250521225049.132551-15-tony.luck@intel.com>
- <f368c506-c479-4e8b-a5c6-b9bc5bcd5674@intel.com>
- <aEMWhMbLpImmMBrL@agluck-desk3>
- <7d4c739b-3fe2-43e2-9771-6137f15b42f1@intel.com>
- <aEhMWBemtev/f3yf@e133380.arm.com>
- <SJ1PR11MB60833DCE7DF82E40BFB80FA5FC6AA@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JYW1xA2nCvawqWmcVz5WLA1H5XCqd8cyzYrAa1tYL5UKwokHmKqs2EG0uyCQqBlcTQi+oa/Bs7FsioSomJQCm+/PsVbivFNl6tD82Eagaf8uwS8fKzCpkC31ztgA96cwOxKGo/jpWQGnSrpA/dg8GShn9ZogU/ac9P0aDlJjJRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tHkLtVUU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tHkLtVUU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1098C4CEEE;
+	Thu, 12 Jun 2025 16:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749745215;
+	bh=Exbz9bEFkUebfba+VJlIAq8RWt6MqPSbghPlez9tlrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tHkLtVUUXDvGPsKDVj59OX6bUq18Jv8y7VFQ03dNLTxRQBIKPamF485hsi9kbCKHT
+	 +wdJsbLDw7RhcH845So/upy4bnCpUIkBEiZOVUpS0lT25pZmqhULv29W9XFWYBiAnx
+	 M9T4DG36Mo0BnceqDwNP9Nox3ekWo4sQHUbT1i+H6uQTh4vZvSyLcE6chmpDENi474
+	 PoHsGf9R6rccME0lQ7nZG7TDgcacT89+M8OoDYoh0KO1SDTED6/izxE/bixrdBi2G/
+	 GiQ/I2482ByHNdRdMHURwJxAKorFfx/h7kN2QUyBi+fZFlAe495Ry8QsB0k3hLcclW
+	 /PVafb4VbpWyw==
+Date: Thu, 12 Jun 2025 18:20:10 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] rust: revocable: support fallible PinInit types
+Message-ID: <aEr-OnKiL5MKzur2@cassiopeiae>
+References: <20250612145145.12143-1-dakr@kernel.org>
+ <20250612145145.12143-2-dakr@kernel.org>
+ <DAKO8MMSCUE4.1WVR6SBADGP8W@kernel.org>
+ <aEr5FNDaueo5SG5R@cassiopeiae>
+ <DAKOUVS4YP4L.3I6FD9JKN02EU@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,84 +49,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB60833DCE7DF82E40BFB80FA5FC6AA@SJ1PR11MB6083.namprd11.prod.outlook.com>
+In-Reply-To: <DAKOUVS4YP4L.3I6FD9JKN02EU@kernel.org>
 
-Hi,
-
-On Tue, Jun 10, 2025 at 03:54:35PM +0000, Luck, Tony wrote:
-> > Trying to circumvent this...
+On Thu, Jun 12, 2025 at 06:17:40PM +0200, Benno Lossin wrote:
+> On Thu Jun 12, 2025 at 5:58 PM CEST, Danilo Krummrich wrote:
+> > On Thu, Jun 12, 2025 at 05:48:36PM +0200, Benno Lossin wrote:
+> >> On Thu Jun 12, 2025 at 4:51 PM CEST, Danilo Krummrich wrote:
+> >> > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+> >> > index fa1fd70efa27..41b8fe374af6 100644
+> >> > --- a/rust/kernel/revocable.rs
+> >> > +++ b/rust/kernel/revocable.rs
+> >> > @@ -82,8 +82,11 @@ unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
+> >> >  
+> >> >  impl<T> Revocable<T> {
+> >> >      /// Creates a new revocable instance of the given data.
+> >> > -    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
+> >> > -        pin_init!(Self {
+> >> > +    pub fn new<E>(data: impl PinInit<T, E>) -> impl PinInit<Self, Error>
+> >> > +    where
+> >> > +        Error: From<E>,
+> >> 
+> >> I don't think we need this bound as you don't use it in the function
+> >> body.
 > >
-> > Why do these conversions need to be done in the kernel at all?
+> > I think it's needed by try_pin_init!() below, no?
 > >
-> > Can't we just tell userspace the scaling factor and expose the
-> > parameter as an integer?
+> > Without it I get the compilation error in [1].
 > >
-> > In your example, this above value would be exposed as
-> >
-> >       0b110_0000_0000_0000_0000 / 0b100_0000_0000_0000_0000
-> >
-> > (=    0x60000 / 0x40000)
-> >
-> > This has the advantage that the data exchanged with userspace is exact,
-> > (so far as the hardware permits, anyway) and there is no unnecessary
-> > cost or complexity in the kernel.
-> >
-> > Since userspace is probably some kind of scripting language, it can do
-> > scaling conversions and pretty-print tables more straightforwardly
-> > than the kernel can -- if it wants to.  But it can also work in the
-> > native representation with no introduction of rounding errors, and do
-> > conversions only when necessary rather than every time a value crosses
-> > the user/kernel boundary...
+> >> > +    {
+> >> > +        try_pin_init!(Self {
+> >> >              is_available: AtomicBool::new(true),
+> >> >              data <- Opaque::pin_init(data),
+> >> >          })
 > 
-> It seems user hostile to print 8974832975 with some info file to explain that
-> the scaling factor is 262144. While it may be common to read using some
-> special tool, it make life harder for casual scripts.
+> Does it work with this?
 > 
-> Printing that value as 34236.270809 makes it simple for all tools.
+>     try_pin_init!(Self {
+>         is_available: AtomicBool::new(true),
+>         data <- Opaque::pin_init(data),
+>     }? E)
 
-The divisor is going to be a power of two or a power of ten in
-practice, and I think most technical users are fairly used to looking
-at values scaled by those -- so I'm not convinced that this is quite as
-bad as you suggest.
-
-The choice of unit in the interface is still arbitrary, and the kernel
-is already inconsistent with itself in this area, so I think userspace
-is often going to have to do some scaling conversions anyway.
-
-resctrl is not (necessarily) a user interface, but I agree that it is
-no bad thing for make the output eyeball-friendly, so long is the cost
-of doing so is reasonable.
-
-(Plenty of virtual "text" files exported by the kernel are extremely
-cryptic and user-hostile, though.)
-
-> The rounding error from the kernel is insignificant ("true" value is
-> 34236.270809173583984375 ... so the error is around five parts
-> per trillion).
-> 
-> Things are worse sampling the Joule values once per-second to convert
-> to Watts. But even there the rounding errors from a 1-Watt workload
-> are tiny. Worst case you see 0.999999 followed by 2.000001 one second
-> later and report as 1.000002 Watts instead of 1.0
-> 
-> The error bars on the values computed by hardware are enormously
-> larger than this. Further compounded by the telemetry update rate
-> of 2 millliseconds. Errors from uncertainty in when the value was
-> captured are also orders of magnitude higher than kernel rounding
-> errors.
-> 
-> -Tony
-
-If we can make the intermediate interface error-free by construction
-and without making life especially hard for anyone, then that means we
-can bolt whatever on at each end without having to even think about the
-effect on accuracy.
-
-I agree though that the inaccuracies introduced by the interface will
-be very marginal, and likely swamped by hardware limitations and timing
-skid.
-
-Either way, it's not my call...
-
-Cheers
----Dave
+Yes, it does -- thanks!
