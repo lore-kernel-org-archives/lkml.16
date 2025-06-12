@@ -1,60 +1,63 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E2718EFD1
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A109B1A0BC9
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749702018; cv=none; b=oyiX3fbBex5amZbopG4hFst2C9d/m1jdHLC68k9B2QfpidwcXe0dOUwxlidysG7ztvPPf0tPRnEG76BtAprrKtSsQCg2NiEgv3q9bQHYf1dSklIv5dvBpyWfxCHztxdQMChsy2SLKJZvU4fdAGgkML+X0Q5rWNje6PoohygQKww=
+	t=1749702046; cv=none; b=rLIixZPws7GwwOTKmrroZcZGxANeEhXUJ+5IlNsX4tFzXPja0XJJCaDYEP722VONJws4m+sCSKmsacUEta3xro7yDDh8W6/rUd9eTR5Tj+vwbdLTQxsvFL/IorV3Di8kkyLhPe3SGfGKAnQull0jUxcS91y2I8i+ljPq7WVPjwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749702018; c=relaxed/simple;
-	bh=YtVuhdDFhkiyy6k3UXFHjI9pLcHTjEXoJ3m9S8DtA1M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DSsibz7cAiktG6cOTOutzHQrmvtsHvodKSFaAn8Z1Mbz0pZEdvhx6cft0aY2R10YAvPtwL7zgfWLQFLuS7fvbZ21g5dwm9O7gubUVgU20+8I2PuIxQJK9P41Jr2GFW4svtR6QNePie1BkhA5WOC8hwCDFEIVGI4PoT0jMGZyNP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/TgHzQx; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1749702046; c=relaxed/simple;
+	bh=2GkpFMkXFfl3T18Cz96lOl8ixQGqT3V/0aUv6tknrZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D87pqkfOrxiGLc+qhyuF5/kQ1d+ok3NPbnuLmmy7vI6++HMxGOLzr48tavo3tuQwbwD839ig5TdPCkz3Np3ZYZ5HweRHQ0JWb93oFCWI+ToBPvZ8OT+kWmEHHbgTrxiO6eHmYKF2AF9Jz7WYe/M4Ohci7J/fZnUQD/s5y/XvDDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDCGjLza; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/TgHzQx"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso439716b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:20:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDCGjLza"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747fc7506d4so567162b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749702016; x=1750306816; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/oJA+/pMM+r8skY0Sy7euJgpsfBpkoRiiJD5vVTuvXw=;
-        b=Y/TgHzQxzRL/PeemST02nHpioGTFE3MYFGOv+KYcux0RA41zCUU8W3ex38fdlK/j7k
-         ajlmVJE9IxYBG1PDP5imxQRIm1lFEV0TsURpLTXlWqqyPAQPhvquF8qQ+DCATTrem3P5
-         QL5vZtGZKifjRUzbYyZVh0YBoyd9+UE7CPQKCmvCkBQQnJ7R9sTWUpWmtP28eTqeEeZP
-         pyBlmMDovuBKsH8C7rmdSwOU8w3MVV6P8qbcYg9pA2RsNs+/MzVf68inI+8sAcrlG8jb
-         luCG25+2mYpejdAlBVxXrEkAv0fNMJMbeUJcgw7shqxyMFna6EcgdWXb/esWI9RQnPkJ
-         +2TQ==
+        d=gmail.com; s=20230601; t=1749702044; x=1750306844; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=78vj2uCodgRO2NQvf2s188xHcuRs6eU7DQ0fjLo6Ke0=;
+        b=gDCGjLzaNuKFxAR4PSVGFbWP7GYT1ukOKnc10mINRxBJ7EOxvy160vz8Uheec+pDWV
+         Lw66Vp2U5oA7uEWJpCl3NqQbrCBctGBSFSNLG6ih+TfuyprrSNo5F26dUqHd/h44DxeR
+         i4HOVnbFo57eXsJnO13VyHcZOW8NbNvbahFKXoZtFYWfY6J0vrpB4a1PqMo1P2+bNY9D
+         4jiewNWPEJb5mJDts8q/Q2DUQboqv2s9UKBFso6i7IuI/BaKINCpoerilJdEP1+vbue5
+         QoOIEghZammJcs/e7dojJUgVs77owdhGu6T2WXVIIdx/U17BIW/sZaRwqxLZwlDAmIoo
+         7d3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749702016; x=1750306816;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/oJA+/pMM+r8skY0Sy7euJgpsfBpkoRiiJD5vVTuvXw=;
-        b=B9hcYkz7ajX9eRGfUSqv/zhDG8C/07aeVJpWfHJlN17jWZp8+ToAzyL1YnCwkiR/6p
-         rgaFHFayS2eV3QTmI4G07UqaGGlzcL+xFJsyNNAnNOTUqMCfOFFVMmxE/qWpIAXt9yvW
-         05mGY5gJQcaAL8DxT1BRXDfJFdSU+2MfJXla/b6RxsQN18yHh2gqjoueJ2nBkr1gfwxc
-         u+qqU1RGM+3yl9QpbTIHyHd/b1X6NOf5nHrb2pTgwGEJ+vWz5GX9D//tzGpUIwVZUfIz
-         RNjmvBeJYRq7Z7s/rfvhZIGt6QsBMst+UE943R371jI2/SiRNQ550tCF90sWX85rVzm9
-         OB5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUcOo2YSmpjVMGTn+PRIW1NyiHG/M46UFB4iWRK0Wi4glCjixhhqcVJ93GdBO+kz2HobzzaWeJLE9Q9UIE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6b9KjY0IISYslcA9pQsWIGWtHeUG/dU4CWy4I+669SOQhiCHV
-	ZmxO+uBn4E5ZRN0irvoC+4YYeJFmNUty75PdYSnWc1NiltyrP8LfeZJy
-X-Gm-Gg: ASbGncsh87v2PLrdxOeJkSSuLUS0eC87Se1LltOXZvrt01j0GhpsJ9m+WsQPrK/ajRy
-	Kud5+Hu1cZZEzw5NCfAnvgfYU4z8q+xBESG2dJDDxg2GhU3BEKoe1YXJDCLISLDrDSgZAaLWSiQ
-	HvSQ/NaQw/OWUuMZkdzPvGoO4bGZU9gJjVbQryKFF8awMKFY71k+J/K4/GOXHTfqO6lA6BhcP3I
-	fNm7gLBVpGhQRNhtoAXUkiVgaxRyeSwBqJCU8EX1FNkE47ozadby2O/MCDj8tf76NfdDSIg7ft5
-	CpBjnzmXBxqMZ7AsI1P5V1HQXkSf64IZKkhd7lDJHYbnEShSAg6Ak4ovZ19eu5F5N/QU1Eg=
-X-Google-Smtp-Source: AGHT+IFrICv0uvFeYxF7lQUwfHCC+ZGTWZMSQZaRDgvQ3927CItSQCP0Tr/vRnYsUL5hGN1oQ6kUcQ==
-X-Received: by 2002:a05:6a00:4504:b0:746:2c7f:b271 with SMTP id d2e1a72fcca58-7486cb63ecamr7783273b3a.9.1749702015627;
-        Wed, 11 Jun 2025 21:20:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749702044; x=1750306844;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=78vj2uCodgRO2NQvf2s188xHcuRs6eU7DQ0fjLo6Ke0=;
+        b=HlsXX3JrhzmC81STsk9olGBR4D08ZrMvPB0SpPCBqEE61nk/vm5ZScX9+2V/2U7x8P
+         UQC4sJd4Hsi65uhBrQ5NHcCvgtU8LthaEfT5yuSCs9FSeIqlb+nvrlsTBUoHxytzxojJ
+         PwJC2NSbW0aOK3F98+s2XmoVBeWwWOgYnFBveLE3OhyanCWO3qJ4xNKdJrqUiCbHO0mW
+         C39VaXhwptjMprgTysSlkkRr6yLcug5vZedLM1E0WpKhK+or+tMVlMzZKypMFarNPEdI
+         qmgNhlSitNryNIZXvHDmpqVT/qho6NX0ucIZp2KxfNseq5O4kw4aFidFbTeJ/GOHA5+y
+         RFJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgyM/+JTWrYOWTs2/c1RoHaUqxvvwtn8+k3150Pz3F1LSYPPxsLuZmUgBfWZZPmNOOuy96uleQ0O0KB2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5X4pDmQQlj/XwUdEHGjVmuVcEmmoosFeFkiMqjucbje14JEUS
+	GAflo8MH1gF9xP4J1VbA/ZOy7zyne5MHJbSq/qSL46GehAlOTEey4y7K
+X-Gm-Gg: ASbGnctFcm+gE12yisGjv5pbP7Qka/gsNToNGaqEBNIHqapI+xpwFNgI6PMwyzNRUOK
+	H0m8BW5jce65orych19aIzd6yiPYm/pLZgkkxA8yI6uNxcxsvRPnjMGwpiQof2GbF6UZCqTjeKy
+	M+eN0pD5IX5JZi6CpANikJ423FxbXZv7jtqBpTzzPmsFay4c8KRwIa1iwFvhD9zx68OF4OQqQ1Y
+	5BeMa+ht8kf4+OeRAUiOa3Z7uPb0xbQfBx7rx0aD5X3AL47PNAhzu1yP8lSsB88b9qE0XBJ+WGF
+	zl8bC1LLqQ7x4CvP01uBTMf5qaF31VJj85nmrUK1Q0LdC4gunmbp/5dB3xxnaKLZiy0q7aToQ9D
+	y0T/tgw==
+X-Google-Smtp-Source: AGHT+IG5Sz2jXAvQt6nprHOBhcaEtyzrN5CivB9HVh3hGjjLbu6U4jLkt7oMIqQ0iexJTMUHil/HLQ==
+X-Received: by 2002:a05:6a00:2d86:b0:732:2923:b70f with SMTP id d2e1a72fcca58-7487e246061mr2110278b3a.11.1749702043843;
+        Wed, 11 Jun 2025 21:20:43 -0700 (PDT)
 Received: from EBJ9932692.tcent.cn ([103.88.46.15])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748809d2b79sm439361b3a.92.2025.06.11.21.20.09
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748809d2b79sm439361b3a.92.2025.06.11.21.20.37
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 11 Jun 2025 21:20:15 -0700 (PDT)
+        Wed, 11 Jun 2025 21:20:43 -0700 (PDT)
 From: Lance Yang <ioworker0@gmail.com>
 X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
 To: akpm@linux-foundation.org
@@ -74,11 +77,14 @@ Cc: zi.li@linux.dev,
 	rostedt@goodmis.org,
 	senozhatsky@chromium.org,
 	tfiga@chromium.org,
-	will@kernel.org
-Subject: [PATCH RFC 0/3] extend hung task blocker tracking to rwsems
-Date: Thu, 12 Jun 2025 12:19:23 +0800
-Message-ID: <20250612042005.99602-1-lance.yang@linux.dev>
+	will@kernel.org,
+	Lance Yang <lance.yang@linux.dev>
+Subject: [PATCH RFC 1/3] locking/rwsem: make owner helpers globally available
+Date: Thu, 12 Jun 2025 12:19:24 +0800
+Message-ID: <20250612042005.99602-2-lance.yang@linux.dev>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250612042005.99602-1-lance.yang@linux.dev>
+References: <20250612042005.99602-1-lance.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,100 +93,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+From: Lance Yang <lance.yang@linux.dev>
 
-Inspired by mutex blocker tracking[1], and having already extended it to
-semaphores, let's now add support for reader-writer semaphores (rwsems).
+In preparation for extending blocker tracking to support rwsems, make the
+rwsem_owner() and is_rwsem_reader_owned() helpers globally available for
+determining if the blocker is a writer or one of the readers.
 
-The approach is simple: when a task enters TASK_UNINTERRUPTIBLE while
-waiting for an rwsem, we just call hung_task_set_blocker(). The hung task
-detector can then query the rwsem's owner to identify the lock holder.
+Signed-off-by: Lance Yang <lance.yang@linux.dev>
+---
+ include/linux/rwsem.h  | 12 ++++++++++++
+ kernel/locking/rwsem.c |  8 +++++---
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
-Tracking works reliably for writers, as there can only be a single writer
-holding the lock, and its task struct is stored in the owner field.
-
-The main challenge lies with readers. The owner field points to only one
-of many concurrent readers, so we might lose track of the blocker if that
-specific reader unlocks, even while others remain. This is not a
-significant issue, however. In practice, long-lasting lock contention is
-almost always caused by a writer. Therefore, reliably tracking the writer
-is the primary goal of this patch series ;)
-
-With this change, the hung task detector can now show blocker task's info
-like below:
-
-[Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 blocked for more than 122 seconds.
-[Thu Jun 12 11:01:33 2025]       Tainted: G S         O        6.16.0-rc1 #1
-[Thu Jun 12 11:01:33 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[Thu Jun 12 11:01:33 2025] task:rw_sem_thread2  state:D stack:0     pid:36526 tgid:36526 ppid:2      task_flags:0x208040 flags:0x00004000
-[Thu Jun 12 11:01:33 2025] Call Trace:
-[Thu Jun 12 11:01:33 2025]  <TASK>
-[Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
-[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? _raw_spin_lock_irq+0x8a/0xe0
-[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
-[Thu Jun 12 11:01:33 2025]  schedule_preempt_disabled+0x15/0x30
-[Thu Jun 12 11:01:33 2025]  rwsem_down_write_slowpath+0x447/0x1090
-[Thu Jun 12 11:01:33 2025]  ? __pfx_rwsem_down_write_slowpath+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx___might_resched+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx_thread2_func+0x10/0x10 [rw_sem_test_2]
-[Thu Jun 12 11:01:33 2025]  down_write+0x125/0x140
-[Thu Jun 12 11:01:33 2025]  ? __pfx_down_write+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? msleep+0x91/0xf0
-[Thu Jun 12 11:01:33 2025]  ? __raw_spin_lock_irqsave+0x8c/0xf0
-[Thu Jun 12 11:01:33 2025]  thread2_func+0x37/0x70 [rw_sem_test_2]
-[Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
-[Thu Jun 12 11:01:33 2025]  </TASK>
-[Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 <writer> blocked on an rw-semaphore likely owned by task rw_sem_thread1:36525 <writer>
-[Thu Jun 12 11:01:33 2025] task:rw_sem_thread1  state:S stack:0     pid:36525 tgid:36525 ppid:2      task_flags:0x208040 flags:0x00004000
-[Thu Jun 12 11:01:33 2025] Call Trace:
-[Thu Jun 12 11:01:33 2025]  <TASK>
-[Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
-[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __mod_timer+0x304/0xa80
-[Thu Jun 12 11:01:33 2025]  ? irq_work_queue+0x6a/0xa0
-[Thu Jun 12 11:01:33 2025]  ? __pfx_vprintk_emit+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
-[Thu Jun 12 11:01:33 2025]  schedule_timeout+0xfb/0x230
-[Thu Jun 12 11:01:33 2025]  ? __pfx_schedule_timeout+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx_process_timeout+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? down_write+0xc4/0x140
-[Thu Jun 12 11:01:33 2025]  msleep_interruptible+0xbe/0x150
-[Thu Jun 12 11:01:33 2025]  ? __pfx_thread1_func+0x10/0x10 [rw_sem_test_2]
-[Thu Jun 12 11:01:33 2025]  thread1_func+0x37/0x60 [rw_sem_test_2]
-[Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
-[Thu Jun 12 11:01:33 2025]  </TASK>
-
-[1] https://lore.kernel.org/all/174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com/
-
-Thanks,
-Lance
-
-Lance Yang (3):
-  locking/rwsem: make owner helpers globally available
-  locking/rwsem: clear reader-owner on unlock to reduce false positives
-  hung_task: extend hung task blocker tracking to rwsems
-
- include/linux/hung_task.h | 18 +++++++++---------
- include/linux/rwsem.h     | 12 ++++++++++++
- kernel/hung_task.c        | 29 +++++++++++++++++++++++++----
- kernel/locking/rwsem.c    | 31 +++++++++++++++++++++++--------
- 4 files changed, 69 insertions(+), 21 deletions(-)
-
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index c8b543d428b0..544853bed5b9 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -132,6 +132,18 @@ static inline int rwsem_is_contended(struct rw_semaphore *sem)
+ 	return !list_empty(&sem->wait_list);
+ }
+ 
++#if defined(CONFIG_DEBUG_RWSEMS) || defined(CONFIG_DETECT_HUNG_TASK_BLOCKER)
++/*
++ * Return just the real task structure pointer of the owner
++ */
++extern struct task_struct *rwsem_owner(struct rw_semaphore *sem);
++
++/*
++ * Return true if the rwsem is owned by a reader.
++ */
++extern bool is_rwsem_reader_owned(struct rw_semaphore *sem);
++#endif
++
+ #else /* !CONFIG_PREEMPT_RT */
+ 
+ #include <linux/rwbase_rt.h>
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 2ddb827e3bea..6cb29442d4fc 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -181,11 +181,11 @@ static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
+ 	__rwsem_set_reader_owned(sem, current);
+ }
+ 
+-#ifdef CONFIG_DEBUG_RWSEMS
++#if defined(CONFIG_DEBUG_RWSEMS) || defined(CONFIG_DETECT_HUNG_TASK_BLOCKER)
+ /*
+  * Return just the real task structure pointer of the owner
+  */
+-static inline struct task_struct *rwsem_owner(struct rw_semaphore *sem)
++struct task_struct *rwsem_owner(struct rw_semaphore *sem)
+ {
+ 	return (struct task_struct *)
+ 		(atomic_long_read(&sem->owner) & ~RWSEM_OWNER_FLAGS_MASK);
+@@ -194,7 +194,7 @@ static inline struct task_struct *rwsem_owner(struct rw_semaphore *sem)
+ /*
+  * Return true if the rwsem is owned by a reader.
+  */
+-static inline bool is_rwsem_reader_owned(struct rw_semaphore *sem)
++bool is_rwsem_reader_owned(struct rw_semaphore *sem)
+ {
+ 	/*
+ 	 * Check the count to see if it is write-locked.
+@@ -205,7 +205,9 @@ static inline bool is_rwsem_reader_owned(struct rw_semaphore *sem)
+ 		return false;
+ 	return rwsem_test_oflags(sem, RWSEM_READER_OWNED);
+ }
++#endif
+ 
++#ifdef CONFIG_DEBUG_RWSEMS
+ /*
+  * With CONFIG_DEBUG_RWSEMS configured, it will make sure that if there
+  * is a task pointer in owner of a reader-owned rwsem, it will be the
 -- 
 2.49.0
 
