@@ -1,87 +1,62 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D302C3774
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 18:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C9D29B200;
+	Thu, 12 Jun 2025 18:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749751373; cv=none; b=KHpIzvvf7wwWeLQzwmq7QiF1MVcn+3vPDjsBH79+SZWWEHryXwHf2vlldfH0dWI4yvjLhDaYnyIwlkR6m2EX8hsqzV/xO43rYSncrAZfj4luRFCQN3nhlc9GeMhqsY6JOn1jCtyLbDN0YhL5Wx9W2NcSCxIUAPZb464B5pgZr28=
+	t=1749751491; cv=none; b=FvuXqssZY1obFs1OTPOVNdLVuP+bUdp9lgLiaByHrxTpDZAjGyvxXc8zoYhKPzBdJNnHOXXmt/eNhk5mrrmkIsCX29ZfJJYOiqGc3Ee1Z6QSNePlKIzmUbYe7ii1oJP/u+0pPKm+9UxKIHRku2/hXfiJluu6kzHoJXCDouJxBUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749751373; c=relaxed/simple;
-	bh=7xWw5aJLm8rN49o70JV7Et+XL03bPweLX55FIjhoBWI=;
+	s=arc-20240116; t=1749751491; c=relaxed/simple;
+	bh=w4nmA+td2ExYiaBNDnEm+Ltur33N4rnCwWlrsEz9qx4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGy9sb56PhR95d2aXuykqYfKlKJvtvxTeJc/kWK8EiD0Xx+rNdZXuF1/zxKk4Lmw9qKp1Z8A0YdoNWsm3s4EujVHEoyD0rAEfiuHWZ9kxLBLVgCYKZ2uglvYsuWW6rVqMk786kU6jz1yRpGHycvgSv/KUPajmNQfKhHZ97BVfNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=SHQUsczu; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SHQUsczu"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6facba680a1so15235106d6.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1749751371; x=1750356171; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GDDRWPX1lH08t+vNjXng50l3/jIs9pZf702xFyzNrfY=;
-        b=SHQUsczuWm3agl6woZtp5CzhI7/hEvYO/lqDw70+mtT+2jgiku0xpGdC2XGyFTdiNY
-         h4m/rihWjDzqeFqTygtJsjrTbLIgVc2oWUdkcrr7ixISuPE6IWe7rynrg+xfzMo18k/A
-         c4vIlJLWRVpVTtyJ5TpLHCoh1ETzUp7EW+n/8K3wcszxUQJ6KNlse89xi/AFh0tXl7G2
-         lR6fuSupVMvMvwpHei0L6VE7O3Fm17HcKOWOAuCOii4/lzYuX4UmS/+/zNzQDqtowlbY
-         CUPbEigeyT+6uW+JOJd9PB2F7dNmvze8S5qlSbaplW8dAJQ+PNarM3DTxXeo7gkd9tW7
-         s3cA==
+	 Content-Type:Content-Disposition:In-Reply-To; b=UsYZSkaqKOhx0Q48Hb76KE70b+VBUBF13zoOuZEpu37UGuTocjRfd50TRclLlx0nA4gUZcaW6O/By1aGU1nODGQZ1WZ2c4JFeeiEJLZsZofaVsPWk6yRitsedsuc72Dt9GKHDsE7iU9wGlsRN9vDz6Fl2Yn1jfj22WghS1jE1TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so2238425a12.2;
+        Thu, 12 Jun 2025 11:04:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749751371; x=1750356171;
+        d=1e100.net; s=20230601; t=1749751488; x=1750356288;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GDDRWPX1lH08t+vNjXng50l3/jIs9pZf702xFyzNrfY=;
-        b=pQROpGLq/amZsN3QbUN1EzMdgFRDJFXCDU6Q7D8ldpiR7N+5X77UxRZ3GWUWRTl6Zf
-         EdUIW1OzG6QbyRqg8eJDRepThPIgZhiagqry2WX+5wMlo10OnVrHaOnWEbY57IL8/oFo
-         UZYoYsZVoTiKBbdB29/lrEDFJAXFGH2TE6tVUisu2rQpHLEEdhYCDxP9vFf9iFd5u+6R
-         3XMc+KrEP9ILA99VkClt4BIFTwrEXALw1zioYOZraH4mdXVFXVjHQVuzlsTHeHNW0efF
-         M1IOE+y3AtIaiPMh+K1hnO1SAZamZcUxaBcUOBZjC8LLvunFROnyfkaeQc9WuxEDx4oO
-         8psA==
-X-Gm-Message-State: AOJu0YxFVZq5J7piIUrZQH4rQnjKhGnhP/AG5YCnRB4yMT/Jg8Fj0sZ/
-	aesmQeujFl2oairDXJ20D+cayuoPg8ylUzGE8ds1n+iEqHn4TmtAhNKUoJ7yhJ1pCxc=
-X-Gm-Gg: ASbGnctpguJqDv1oTcrX4AeqmYKEL8lDVgdJG95dH7X5Jb7bDwm7e3pwgxbmC05bB0g
-	QwrZkKF90DGB/+Tzq8K+DwX3Kj7ihF/Ow8TuDN3hhHGCFTFM1JeevO5f0HPRXC35dSgRR3ToHuZ
-	ujzYHkNlNHhUfA/V/OTI6YzeWGpweAi0NJlh3PamdCXtqa0QzTTyX77q3e1l44sXzif4sm8FF4Q
-	dz0+I3cNdUd+D8S5rEV9zfPbs/lXtQhAR04l8AIzdNHWBAWcUaTk4OghrGV0zkxT3MKzDjjyCxm
-	b+h8pXgl7PZazlUxXgXRSpZQu0ORXmPb2VRd6WUXZ1cpdcWdbgpH5E6uBtUbqeDi64K664f9Dbd
-	JFHNtWYdQqZ82/RLjbOEOi4P6JLoca4KYuF0bcg==
-X-Google-Smtp-Source: AGHT+IErLirqZ/IjWI/XgEsozLii1/UP6Pds6ZK0pCCFWbV1P+4pjEqskuPc1d9m/qNp3cmq3DvELw==
-X-Received: by 2002:a05:6214:e86:b0:6fa:d95d:d0b1 with SMTP id 6a1803df08f44-6fb3d2b2155mr7744516d6.24.1749751371067;
-        Thu, 12 Jun 2025 11:02:51 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c8ee5fsm12595756d6.122.2025.06.12.11.02.50
+        bh=CNunZIgYlwEtLu9L7BQi2+QkqU/Yq8JzmhNXkx9O8/Y=;
+        b=Dw6lt2jnxHGjEUlG7fOi7W651HIGWtjT/X6sCAmSvrRqjNXhySc5shRTSSgqDQXNE7
+         +mSBf1vxzSo7pDkIeQzPJ9TYlsh268/nj/sWuqxyVDp9SMVbHptSZtIEfuvyHzkkFU2j
+         sjKAq+I2/kiYGojPJ6VJYTDicz0j0d/0Yrq09OWJF2qdLWe/vBSsjkNbdrSHf9x/hSIM
+         ZkL9xgMiTaDdicDEjEy+pA7xedD1x1JazfgflgfHvMl3PewdWRag4NCyJWgp5bx/oEgG
+         qVWGGEhfdTjgChYye8ZQFTSfFDcHu+RxNsLJBNfd4FKyiX0JwZ2QN+KfIBa7KfO4l0xb
+         vi4w==
+X-Forwarded-Encrypted: i=1; AJvYcCW4GKd1fHjglgBvo6FfvPB7tsGhJAlYMdL46EqgEz0TxSH0TqgY2Q369qUG5nlXuez2fFxvnYrB@vger.kernel.org, AJvYcCWNaE4dDe7yZ18maCLJK91LxbEwDLYLsYK23kMZrQYCCxR28jTArFtU/1h57AG+wtVbbhfgS7tauw3extA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwskjXqO+/ou/Wwz1a3BmuVc1sSivpJiwXlfuSTEusN3+OLyl2I
+	a7I0Lzm7wNtSP4GvJqh1kQiTO3gMCWxn7H5Ok4e33VW6UwspaTn+8gqL
+X-Gm-Gg: ASbGncvOsnvybrcHhpKN0iYjDgLfO6Jytwy6aHJEWvCY+9EQ8SyvaZfLfIRh7Yyrd82
+	nc96uvoi4MSVxHN1m31iZXHzlnGiFK9hSpiEmR+/D9Ulhw+M5Nr6zmdzUpW8JDQMtycdi41WTU/
+	pJgSjuvw9XjVQlEAQ7ZNHiaqW7of9kJv5qUCTW32FCPQ8g/pUW1tpoKZgSTS+LbT1SlluRliDq5
+	STRjvyRnUBUJqn09yd5IKnMVHChxJuxGLuuluohr+EssgA+cYp5zvJ1lA36mOU9yvWqAXvPeXA8
+	Rz0j+HSE+cFXS4fuWXf4dPKLe9k+lke514NNDG0Db+1rZmnW2A==
+X-Google-Smtp-Source: AGHT+IGc8l4XV7XaWNdsUBfEtSOZFeyD8ieAOH2P/GzmS2eLYMPjEoV7DIpAN6MPaRb5Fn6AFKwxmA==
+X-Received: by 2002:a17:907:6d1c:b0:ad8:8621:924f with SMTP id a640c23a62f3a-adec5d6b20dmr20554366b.56.1749751488133;
+        Thu, 12 Jun 2025 11:04:48 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adeadf3bb7asm171135166b.172.2025.06.12.11.04.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 11:02:50 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uPmGI-00000004kgd-0Li5;
-	Thu, 12 Jun 2025 15:02:50 -0300
-Date: Thu, 12 Jun 2025 15:02:50 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v2 3/3] mm/huge_memory: don't mark refcounted folios
- special in vmf_insert_folio_pud()
-Message-ID: <20250612180250.GC1130869@ziepe.ca>
-References: <20250611120654.545963-1-david@redhat.com>
- <20250611120654.545963-4-david@redhat.com>
+        Thu, 12 Jun 2025 11:04:47 -0700 (PDT)
+Date: Thu, 12 Jun 2025 11:04:45 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Joe Damato <joe@dama.to>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH net-next 2/2] netdevsim: collect statistics at RX side
+Message-ID: <aEsWvciIxKqlD2W8@gmail.com>
+References: <20250611-netdevsim_stat-v1-0-c11b657d96bf@debian.org>
+ <20250611-netdevsim_stat-v1-2-c11b657d96bf@debian.org>
+ <aErjcH3NPbdP7Usx@MacBook-Air.local>
+ <20250612074503.1f80b816@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,34 +65,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611120654.545963-4-david@redhat.com>
+In-Reply-To: <20250612074503.1f80b816@kernel.org>
 
-On Wed, Jun 11, 2025 at 02:06:54PM +0200, David Hildenbrand wrote:
-> Marking PUDs that map a "normal" refcounted folios as special is
-> against our rules documented for vm_normal_page().
+On Thu, Jun 12, 2025 at 07:45:03AM -0700, Jakub Kicinski wrote:
+> On Thu, 12 Jun 2025 17:25:52 +0300 Joe Damato wrote:
+> > It "feels" like other drivers would be bumping RX stats in their NAPI poll
+> > function (which is nsim_poll, the naming of the functions is a bit confusing
+> > here), so it seems like netdevsim maybe should too?
 > 
-> Fortunately, there are not that many pud_special() check that can be
-> mislead and are right now rather harmless: e.g., none so far
-> bases decisions whether to grab a folio reference on that decision.
-> 
-> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
-> implications as it seems.
-> 
-> Getting this right will get more important as we introduce
-> folio_normal_page_pud() and start using it in more place where we
-> currently special-case based on other VMA flags.
-> 
-> Fix it just like we fixed vmf_insert_folio_pmd().
-> 
-> Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
-> 
-> Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  include/linux/mm.h | 19 ++++++++++++++++-
->  mm/huge_memory.c   | 51 +++++++++++++++++++++++++---------------------
->  2 files changed, 46 insertions(+), 24 deletions(-)
+> Good point, and then we should probably add the queue length to
+> rx_dropped in nsim_queue_free() before we call purge?
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Thanks Joe and Jakub, and after a review, I agree it might be a better
+approach. I will update this patch with this new approach
+and send a v2 tomorrow.
 
-Jason
+Thanks for the review,
+--breno
