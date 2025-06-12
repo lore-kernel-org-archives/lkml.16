@@ -1,102 +1,131 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4384E1E491B;
-	Thu, 12 Jun 2025 08:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2657F17A2E6
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749715254; cv=none; b=TNJ/SKSE2neThbIuHM8/EWnlTAM6xIfHJmC3rN7A+Ttye47r3nHKbGSsQNkAMsbyTra/XG50iNWoF7Uai3/SFRpgzTl0LZZ+5cI4wRQMzFhQwKo8evca3rf5WNAwMNVyyZnRH7vNeCss65k70yVtDD0clGKoplIaLeJ8ZPj/iGE=
+	t=1749715283; cv=none; b=Ai93PhOvBrdYwr4aMPHo2/pp9olOE1oS8dZbAEdBLZAS7zAP4ISofTEMYWmoHhZKeMTtm8mCUmwsD0KC7IMig0K9ga7ldxzQ0mOkVT/UkjY4qoFY54GeosZX5P+9CKQQmUReg+lcqgoUENx3g28N0gF0Ur2ojhUL2ehzgFpyImU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749715254; c=relaxed/simple;
-	bh=desxjdnqsSZXQRH99BwWawmL+/3SeH9taYKGxgTXdFE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TJVAND1TTEBZ8Q7kDLuggw9W7xAd6il0RbzzvomZxhiBiNRoH3jiOA9e2xYbAZJBc7Hi7gx/P+cPXeJo64f6XE3w3b7zfxmb536SZ5iYVJk1nPkIegtjfyojnNjJqrXsvwYpE4Javjbxd+Iz4XLTIc2ZUdkVFvQgb0HwebR1sF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qmNRT0yX; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749715283; c=relaxed/simple;
+	bh=6Ose6+B71k7iqCx66aWRA/Yp59uxaaNK8czjGm/rHnA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wu4r60FK2tD4QKVvnkAB5u7R2cavQgwFoB8tWqwe346pCX6vjt55cevs0mSMHM7bkvDooLe92hEzvaGOU3GdeNyrd46tTjpIUcpheztil730cxhSnYYO2UsIqgDVeOrLcv6AqtSs+cl1GXtSkhX+Wq3sqPJpNjfKdowSfuza7HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=GQo5MWqz; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qmNRT0yX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749715250;
-	bh=desxjdnqsSZXQRH99BwWawmL+/3SeH9taYKGxgTXdFE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qmNRT0yXgFMIOo2OXuX4dN0Xhn+L4mdLweHj8p2xfiU3NR50YBxwqg87Mk/EtY2hs
-	 eL3QIDgaNeeySk5NtKAheI9W/vIpf4giP+cdDsIVjptdoV0d7oc2CyIWg4WZnkYFho
-	 M2pAlqWzK9y30IS8x70G7zBKWZ5ez0UndXUDhxD8/HMhB++zGuchJqTcnE57VuF37i
-	 qbdkS4Vzv55INGyjGpgRJhUC5WEKHz8r/icyvyjzVzWHbI75zdQcfNHUAJhoVVJeDa
-	 0CJhl4SkJVAyA8S3SxQgTKvu8NFsWDVigfgXLR/IDRU2RU5l8coAQFg9TcnXyD9PQl
-	 xqpV2r1gDYH/w==
-Received: from [192.168.1.90] (unknown [212.93.144.165])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id BBEAA17E1560;
-	Thu, 12 Jun 2025 10:00:49 +0200 (CEST)
-Message-ID: <6adf1ea5-53c3-47eb-ba4d-6c7e58dd05dd@collabora.com>
-Date: Thu, 12 Jun 2025 11:00:38 +0300
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="GQo5MWqz"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad883afdf0cso139930966b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749715279; x=1750320079; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7oxSJUEVlshkD0aDlvVP1clOg+BglaIQc1uVhMM16LQ=;
+        b=GQo5MWqzxoHmUY+Wxdcrm12k6RVY/knEiiTfXF6dA7Z2Co7zIiXNrYhDmtL2PfUFyk
+         a4GtSfnlmjgXILddyORwYA/g2GHl1DTk5VawRJMhTYsAxBPNbu0McPaFR5JydPsfHbF5
+         oLZH4JBElI3aBMYUiKjBS+cDijnxr+vRdu36tEGcSkNZChXIs6IGaAY1EFdCCE/pvf4a
+         7kJCeD5bQT4vGYhIOODbh3aIxIfUMMsgtUCU6QSOox7dtx9Kx+6rVCbOujjIuVLO1sPk
+         1rweDZ5Q/F7VEuYPaavvIPH5IfQfEAIsnHMoijxWBbYi+ImCrZf0sHocBiQyT/VVJeuj
+         9l3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749715279; x=1750320079;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7oxSJUEVlshkD0aDlvVP1clOg+BglaIQc1uVhMM16LQ=;
+        b=hSVZyHI+XAz7xT8mbU7iLQo8Mu0i0rpr1RVB/H7wGBvPAz0zYM2/ikPUkdQpprVgey
+         E9Wh4ifURMeet9kUPk6767IbvqQFCCUzgcxP4dBNaezkO6sjWNUBndQbiJtDNoG/+tR8
+         3CFkR8pItHorXoLqtCIRx2uncifXbo3rUJDMyW2ExnbqrFu495MS1ifIYhAbocCBYRpD
+         0G4oeBReD7tyueon/zd+ruYrXqwFZxmg+skmZVD7Xqz6axDMFK8uBsRx5FWYCARjzxGT
+         alrHLK4JP9vJzg+xP3+LXJqy00+/5fXW817QHaxRwYClbwyRR+UKNQUwHRLb2an3ZX1h
+         b1hA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCxDEoSI+Wo790SciawLn2OVANN8gy7hAu42PkZXlQPyqGTsN4ASwU3TUV3HcGuWRGBCD9tq5V6iI+lQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj3xu2PZcb2mFfJMwDmPOBgROx3terPlzgDw7LSboiYW0SUUe0
+	Vu2Arjo7rrMf9LHI/nE8ncyYR1duQ0iTRG3n9QspPsjJHQ4fM5wC0sh5RwBlwawI/9IUb5pEwcq
+	9g24Qmp4Gu/vXS83k10gUGDHphUsna1cafZvL2f7G0Q==
+X-Gm-Gg: ASbGncuXmeQIm+mlgJSbtyZzyW6OACs0KTMh05+g3VP+7zV1fV/TpYgTmDnnGNiR6fs
+	Zv8Pyv/BWk/D/IQQ1mR3fYmaGggzTu1ebdaZB3ayKVJZywO6Ec7nHRo4mR9VOhdVZd1mS3IYfJR
+	4PpGU0CKC7ksm4u0bI/XDl0/q+NzxUozfob5Jo1rXC0lKz
+X-Google-Smtp-Source: AGHT+IHDczhcOV54f0XomIKx+8AvFzloZqJPe+NAcKM5RDeAoHNu5Itf848xFcRsOPgv8woiTaDbH1WF8g3ZBcPtFeQ=
+X-Received: by 2002:a17:907:d03:b0:ade:3bec:ea29 with SMTP id
+ a640c23a62f3a-adea2ec74a3mr265693466b.25.1749715278188; Thu, 12 Jun 2025
+ 01:01:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/11] HID: playstation: Add support for audio jack
- handling on DualSense
-To: Roderick Colenbrander <thunderbird2k@gmail.com>
-Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>,
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- Henrik Rydberg <rydberg@bitmath.org>, kernel@collabora.com,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
- <CAEc3jaCoVgP=0v73ZTeAhd0wb2LpGqguEedY6haNLi_HNA_Mng@mail.gmail.com>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <CAEc3jaCoVgP=0v73ZTeAhd0wb2LpGqguEedY6haNLi_HNA_Mng@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250611125723.181711-1-guodong@riscstar.com> <20250611125723.181711-7-guodong@riscstar.com>
+ <20250611135757-GYC125008@gentoo> <CAH1PCMbt3wLbeomQ+kgR6yZZ18TZ=_LF-kCcnLqad55FSHBhDA@mail.gmail.com>
+ <20250611150227-GYA127466@gentoo>
+In-Reply-To: <20250611150227-GYA127466@gentoo>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Thu, 12 Jun 2025 16:00:57 +0800
+X-Gm-Features: AX0GCFtVVlHqZ-iio4sy0I0p_9gClOFpDAZk_842S7V7_Hx6vWxgyXXCaFMBON4
+Message-ID: <CAH1PCMbNEMvpU=eNvrHj3pcLEMn=ObCOZZHVM4tjZbL9-BiraQ@mail.gmail.com>
+Subject: Re: [PATCH 6/8] riscv: dts: spacemit: Enable PDMA0 controller on
+ Banana Pi F3
+To: Yixun Lan <dlan@gentoo.org>
+Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, 
+	emil.renner.berthing@canonical.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	joel@jms.id.au, duje.mihanovic@skole.hr, elder@riscstar.com, 
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Roderick,
+On Wed, Jun 11, 2025 at 11:02=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
+>
+> Hi Guodong,
+>
+> On 22:32 Wed 11 Jun     , Guodong Xu wrote:
+> > On Wed, Jun 11, 2025 at 9:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wro=
+te:
+> > >
+> > > Hi Guodong,
+> > >
+> > > On 20:57 Wed 11 Jun     , Guodong Xu wrote:
+> > > > Enable the Peripheral DMA controller (PDMA0) on the SpacemiT K1-bas=
+ed
+> > > > Banana Pi F3 board by setting its status to "okay". This board-spec=
+ific
+> > > > configuration activates the PDMA controller defined in the SoC's ba=
+se
+> > > > device tree.
+> > > >
+> > >   Although this series is actively developed under Bananapi-f3 board
+> > > but it should work fine with jupiter board, so I'd suggest to enable
+> > > it too, thanks
+> > >
+> >
+> > I'd be glad to include the Jupiter board as well. Since I don't have Ju=
+piter
+> > hardware for testing, could someone with access verify it works before =
+I
+> > add it to the series?
+> >
+> Do you have any suggestion how to test? like if any test cases there?
+>
 
-On 6/10/25 7:01 AM, Roderick Colenbrander wrote:
-> Hi Cristian,
-> 
-> Thanks for sharing your patches around audio. I need to have a closer
-> look at some of those and how the console also behaves (we try to keep
-> things in-sync'ish when possible). I need to double check the
-> datasheets as well.
+I am using the dmatest (CONFIG_DMATEST) for memory-to-memory
+and using spi3 to test device-to-memory / memory-to-device.
 
-No worries, take your time!
+> I would assume it work fine on jupiter since it's a SoC level feature?
+> instead of board specific..
+>
 
-> The series does contain some other patches around style and stuff.
-> Some of them for me are entering that slippery slope of what to
-> change. There are some different styles in use around the kernel (e.g.
-> uint32_t etcetera is fine). But then if you use super strict mode on
-> checkpatch half the kernel almost needs to be touched. I'm a bit
-> skeptical on those kind of patches.
+Yeah, that's a SoC level device. I would say a boot test and some
+basic mem-to-mem test should be enough.
 
-While I can understand that some of these patches might be perceived as
-unnecessary noise, I still think the sooner we do this type of cleanup,
-the better.  And the rationale is that we should aim for consistency, at
-least for the actively maintained code.  This should also encourage any
-new contributor who might touch the code to comply with the recommended
-style and/or best practices, instead of potentially falling into the
-trap of taking as reference some obsolete or non-conformant constructs,
-which would only bring additional mess.
+-Guodong
 
-As a matter of fact, I initially planned to just focus on fixing up the
-patches introduced as part of this series, in order to make checkpatch
-happy.  While doing it, I quickly realized some additional
-inconsistencies, hence I extended a bit the scope of the cleanup.  That
-highlighted even more issues and after a few iterations I eventually
-ended up fixing them all.
-
-I'm aware that some of these checkpatch reports could be silenced by
-operating in non-strict mode, by I don't really like the idea.  The
-reason is that some (or most?!) maintainers prefer or even demand using
-the strict mode, hence it's hard or impossible to always have then right
-switch set, particularly when touching multiple subsystems.
-
-Thanks,
-Cristian
+> --
+> Yixun Lan (dlan)
