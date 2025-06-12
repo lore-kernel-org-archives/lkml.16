@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2FF1F16B;
-	Thu, 12 Jun 2025 14:24:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC69230277;
+	Thu, 12 Jun 2025 14:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738264; cv=none; b=l8vTfBTF2z0ZqsLG3IkYMB6LkGIeWhNAXNJJ9Py0JxVNA2Q9cl82qkr6Xa0lNVJDEo7JxaxzJB6EBN4yTocXMquTD37uGXXZ/hA5Uq5B0VwHwmVCN968+xFtEwc4hVEp6HSD6FNpgt8XW/bigO1bzfhL1YB9PgMwcbDea50wiek=
+	t=1749738286; cv=none; b=ehkfyDCRx7sqg/OMxyVK4yTpZWgUOhRWKhxiptf2U0OqFmMedYge+r9kvpPtc4dZTT8Ux6fPQoB5uQkChLSQh950cByo3n881AmBWYKPVSlzXmeoDoKl/jp3vCCP1shP8gPGv+K7Wzh6qigA1MVRBeGmp/0tXkPfxlV5PwNDkkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749738264; c=relaxed/simple;
-	bh=nEsTlMah9gnHESH6LtPtgD7WWncfqtpDL9THG9p2xXQ=;
+	s=arc-20240116; t=1749738286; c=relaxed/simple;
+	bh=UB9pPWSFelC2u7NTQ7zW5F438SFKXFk/yswKxPVbq8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VcKAQjCgXEd62rLdP6kUohkaNe9SvJUGy7T6QsLNPOm6s6BEuFRAXZMLzUiFlG8hasx1gwqIVfXyJQQnnzIsEBXQBlEK+vWtHZvT6i5pt9RcFUOeqc7Vly7aduTGwKySnjFINrUskq1n0lUVQKGqLIXQFiOswOl5hDKtZ+qixx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sO6sgXw3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZwT8gQSHsX2IAJ2qsNgjULx3qXUaZhLfLTgZpO14JtUQpOzfsu4vb3CALEz5f4uEdZ9oddco4YAtq9Wd1dC4eizDDUaD5Kx4qconrlQIo6UsJlBBZqowqULTKHey261WkUuKvo1cqvhdk6t39492havEAbQcfSEI5NLRAnN31Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ir4g4Omd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sO6sgXw3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84867C4CEEA;
-	Thu, 12 Jun 2025 14:24:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ir4g4Omd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0C4EC4CEEA;
+	Thu, 12 Jun 2025 14:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749738264;
-	bh=nEsTlMah9gnHESH6LtPtgD7WWncfqtpDL9THG9p2xXQ=;
+	s=k20201202; t=1749738286;
+	bh=UB9pPWSFelC2u7NTQ7zW5F438SFKXFk/yswKxPVbq8M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sO6sgXw3fo/7aQQ2yyZVu1pNbu3CzmCpSKk4o9R9YUwGlzNMt4Grgr4pBj2bzwe0Z
-	 M/ZOpNw7C3yDcTW2qvXHaQtCTHQTQ7gam9dEsRITXK1LS1p9P/sCd5UQCC3QE35r5h
-	 QGLhf/GOcCZ6jYBaWz1xi2bVoR+53sSXD9YFP5jJ5h+yDHZMXML3kscumnXQ48aRyt
-	 8N3bXnDzvV8VkMDMCDHdMZoOugHZDhNfRzKE6A3qsKKQ4gluICBFoLgYdskdZ4+5yZ
-	 X43al6UXGDdNn++SvXQALgpqhykVaYeyAm5+qy45TV+76zszH9QnR2ADUvpy9xstd4
-	 uI+FcJ1FtXWeQ==
-Date: Thu, 12 Jun 2025 16:24:16 +0200
+	b=Ir4g4OmdgZV29NnH05kdyoPyE5SQnR4sD6yVdz+YaWOeDgV5x5qXZ7iLriutwPYCw
+	 enkCPPQiXcWYEOUqVU0Mr7vRq78BLacpp0aTY0uF4fnWjWObFP4jp9Zq8f7b62iFWb
+	 ViAL3JscUTolhEyCMQydtMEcNV1nfEE2ZqjHZMQabtOFEt12tuk5U2yqW6CbOV8F1k
+	 JKmGKlPt+6S1NChEg9n3MmmsrUUzqNckBkHroFxymVR9BrBzCGlWnR+O6Y6eRk798T
+	 bZCTX8Z2QOAXYinZnA2j0DlhuMGYaav6cQmMo88W+S+ZKz/CMVtRs5s8ciPG48wWn6
+	 mMmNZcz7hye5Q==
+Date: Thu, 12 Jun 2025 16:24:38 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
  <corbet@lwn.net>
@@ -52,6 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250612142438.MED5SEN3C-3RDQI5I1ELC-u8QJEjH8W4vUQRBdyK1tI@z>
 
 Em Thu, 12 Jun 2025 15:41:29 +0200
 Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
@@ -90,7 +91,6 @@ warnings after make cleandocs:
 	Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`tc<../../networking/netlink_spec/tc>`
 	Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
 	Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
-	Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
 
 Because they refer to the temp .rst source files generated inside
 the source directory by the yaml conversion script.
