@@ -1,137 +1,130 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871C92F4321;
-	Thu, 12 Jun 2025 11:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8482F4311
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749728465; cv=none; b=A+7jqZ+rT225wJBEi8CBmfn5JtlFjvPe1ihtyAocccHreIit8FHXy/czCvr0FxwpP3iIoGE8zoNgRt04EWecJMWVhGhwv/dqUs6nTe8/pQ6wkxsPEGeUfbE9lh/NCXcBgjfL7EDXYIUS2T0AepPJIU+uHTl3T5ltEQ6l/Cyxfv0=
+	t=1749728522; cv=none; b=RW5URQ3SiGjwR911zM83VNC/FHMvjUqKT7/qcWg2G6TzFu5x5RgOKm4E/MAJTz8hlfe0NMwae0RjJ9xBZs+32/dcvSkAXFqnrDIzdHogmSZDc1XdzJNYceRauvKpV/X4DwFJOV5pijSh+J9kEJr3TXvCrFRYtKX7rb8zWcXivVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749728465; c=relaxed/simple;
-	bh=Q4XoUFpQv2swVxPe++qvUoEtbFikUDsX9fGBpjA8psk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WRvwgR60nikkMw2y0KAI8suy0Ze/foMX5vY1aQIr0RXrf7PUa25pHTaFT72O5FhOhuwF8rmPamw9SrpgWUTZITu6YvNarphz0JIut0rY8wVocjL9hf0Vx8QR3yC+6rsz56QkVf+qJV1Bas2WaMOGsdsYrbNU104a5s1TV7rXvu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rOtMhvcH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749728522; c=relaxed/simple;
+	bh=JO2jjm9qYOdw2JshMb5OsK/0Q8ZwDMtKa89tdDngYdM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ju565ysoLoiOiV5GNjXe+VEozkddhpdMFHQobiwuaYJvcrLYszprooctmHKvBaFS1qeLJq2QRk5NN0Je859sgnWbuY5/bToaYvEMREu46fajRPwLU1shDxVZRQKZFroSr/8cvLKuAO5TBGKUOdpCtM0Aj3LTZ/7LS70jpwvZ2D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JHSBmUJR; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rOtMhvcH"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C2rOhi027347;
-	Thu, 12 Jun 2025 11:40:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=bcV/754bBlWaL9ToRIvwhPmH1WFMs7
-	Bzy0vJwrIycHk=; b=rOtMhvcHE7en9IRnDh/uhZUJ7rDCWIz1t32sMgGTNLww3t
-	JxY/Eeht+WACtq3xVsOw1kfX4fo960j/ahFPr9qTXsbNLiqoBl0vo4qdl7H9qsOZ
-	cYpVWHoTBFcnCJuqsDcxlr7W37L0DSGWqHbVtDLOZikq3l0pBIJ1WL4+MvFaWf02
-	m3ICXB9JlvE4w2gS2bleaGSpLqHWe9qcncFx1Hd1d65xtls3SeFxfdSQZ1jnqEsE
-	9ii1mhxPJupuBoQubt2A+s8+tbnHdIsegXsMc9yPiH/ZfhqEsQtvDNTa8Pb15P8z
-	n/Fug71It+cSe9LcsRcsbTdjHJHIZgDtL7tFcTvw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474dv7taqq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 11:40:56 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55CAKDTq021895;
-	Thu, 12 Jun 2025 11:40:55 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750504msp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 11:40:55 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55CBepeP59441530
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Jun 2025 11:40:51 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B98A920040;
-	Thu, 12 Jun 2025 11:40:51 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6FDAE2004B;
-	Thu, 12 Jun 2025 11:40:51 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 12 Jun 2025 11:40:51 +0000 (GMT)
-Date: Thu, 12 Jun 2025 13:40:50 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Harald Freudenberger <freude@linux.ibm.com>,
-        Holger Dengler <dengler@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] s390/pkey: prevent overflow in size calculation for
- memdup_user()
-Message-ID: <aEq8wrEmJVItMiZQ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250611192011.206057-1-pchelkin@ispras.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JHSBmUJR"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-311d27eb8bdso659057a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:42:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749728520; x=1750333320; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OQiLIawa1V32qoLRiAiNhsJ7EGIPTtQuUgMBaxbGSIw=;
+        b=JHSBmUJR0+k/HmI2OvFbJYYjsR809vHN66Xce/YQ//folTPgOm+1hm9SJl19TyWGwa
+         yJXcKnAA+ZV9sp+rPFBTUNOM2/GnrQYijux90sNb0N6EcTpKyAvrKCJ+FL6w2+O/dnDI
+         1MuIAUA5UnsAo74kh+q4FiEn4G31DPIfSbjkbXHxxEIAO0PKRsOewPzwGG7pAqckv3H2
+         kvgNcuRNNIoXQWeBxSGajouOJ7BP90QIObl7AWMLX8mRlOXVhsk8ZDkGs1NJnew1rVvN
+         F2Fs7KKUXNBDFp4TckfVeVVdGC1H6hhh2AfsvV3My5toIxWz8gZ6Z+2LetkCPQpYScwa
+         2o5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749728520; x=1750333320;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OQiLIawa1V32qoLRiAiNhsJ7EGIPTtQuUgMBaxbGSIw=;
+        b=fokdrJelKFCbzhtneK3qr3FWHrbjIemsQy8if70cQEJuhUNVTdyxKe+7dfMV+kcXCW
+         lY5CQoPE57cnxau8LK+7gU2w0XBpcR0Ss+jQ+IzUhCx+I2SlmY0bhdzji5lmECJYTWuC
+         PTQxsL14DsKX9YVo61tLEWHNl9Lg59K+OK9KV4z+L9uWusDxrWlEkBN9TO3dDWLY5EtA
+         8jZv63wLUhppodPUCRdo1P3/ieG0vZgbcoF7qip9zEhUwz55FFRcoy4K4AiEOZxGIGWX
+         S0xHSURocL36QxBrxGvbkbldSeWBXI3HQ2Yh5ZIASMZsbaHHHdg4NVd/ll7bYF3PgPuY
+         Bsmw==
+X-Gm-Message-State: AOJu0Yz66AwUXz4lf5pdBOBOSO+XJrFQw/TjejBa8fKUC9MKUJQz1pH5
+	7qdO/2hh9P4DWNeRq8vmD/PY7Uj7wj/4EpbORo6jOApA8VyEDJr5k424pN9LgzBrZMOHBesRX0o
+	LPfehtZFA2kQF0LKrz/YyQxjpgiUP41Q=
+X-Gm-Gg: ASbGncvKEAnf78hBlkvaxsN+AGGpr5NCDMWIQ0QttOby5atd8oLeBN3QI+zccv7Yl5C
+	SUUMJJuoFmxGfl9r7A9T5QaQfWp7/qsyx611sK+9w1fefhXCJkUPifgvslnORG3JIRBjGqKN9VI
+	tBmFrrSKkS6gd3dHnoPjHuzKzoi6Fq9w9eYeh5nUnBDcZc
+X-Google-Smtp-Source: AGHT+IHdBp+IoDkdTG/nt1rk4Di2kL71Qu1GGMsx1QgagC6jyO2vbN+W5WFbJ4cCZphomlDigaNYwUwOe2MJywkSIv0=
+X-Received: by 2002:a17:90b:2809:b0:312:39c1:c9cf with SMTP id
+ 98e67ed59e1d1-313af0f80d9mr10946079a91.7.1749728519703; Thu, 12 Jun 2025
+ 04:41:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611192011.206057-1-pchelkin@ispras.ru>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: YzfeidtxsQ4a7GyVfVSZDf4kay8v1FrQ
-X-Proofpoint-GUID: YzfeidtxsQ4a7GyVfVSZDf4kay8v1FrQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA4NiBTYWx0ZWRfXykqO6HJL6g0W 8yPNuUf3Hhbjqd2KkVXvn9IaKwRVZr7tZu66Enk8RYY7U0c066pgvds99QOqmJ1OjytbFVjk3ZF CkNMm5ZNv0TsWgd0poQ8nDXP3+dQy5ZDCuhnqUai0L7bzlCLFkYdBfJJPJ4nAby3HNH2jDdY9N8
- PKD4t7X7jPLgm4hj8UfjMjuvAh+Evw/cFV0GzMFeyGBGIne+w/QCEWtO9s84YCmJO8x0JAt8J6I j67AX4eyjI7k4d3A2ow4BvEejwTvf6lOA43gk+DXI5KBehZXuy4SS+Gn+2l95YFcBpB0b3RskJO 09QcUmuR9p622H5zX+PQ6wsUbuNSAr9FCEQwdYiTJV55UraPhp4LM26lMJdJ3lFmXiZP5EtFfc1
- UbKNm6oydGFn3I8CSz1bQsoPRkiFkhzGEcthSSeOcREVzDkotwuKbOPEff/KlSh7mqemm9hJ
-X-Authority-Analysis: v=2.4 cv=CfMI5Krl c=1 sm=1 tr=0 ts=684abcc9 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=HH5vDtPzAAAA:8 a=VwQbUJbxAAAA:8 a=xjQjg--fAAAA:8 a=wqd0SS-B0bwRHdejR9QA:9
- a=CjuIK1q_8ugA:10 a=QM_-zKB-Ew0MsOlNKMB5:22 a=L4vkcYpMSA5nFlNZ2tk3:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- phishscore=0 priorityscore=1501 clxscore=1011 impostorscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=638 adultscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506120086
+References: <20250527093530.958801-1-gye976@gmail.com> <87tt4mok84.ffs@tglx>
+In-Reply-To: <87tt4mok84.ffs@tglx>
+From: Gyeyoung Baek <gye976@gmail.com>
+Date: Thu, 12 Jun 2025 20:41:48 +0900
+X-Gm-Features: AX0GCFvpBlEiPiLB19NLIdP6bP__Ri2c8-rBfsAsOUluqZaBHoFJXhvLtEXeaOs
+Message-ID: <CAKbEznsu=2O4b-3rHGVtqg=+s28Np2=cL+q8w6TbrkO6RPCVVg@mail.gmail.com>
+Subject: Re: [PATCH] irq: Fix uninitialized pointers
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 10:20:10PM +0300, Fedor Pchelkin wrote:
-> Number of apqn target list entries contained in 'nr_apqns' variable is
-> determined by userspace via an ioctl call so the result of the product in
-> calculation of size passed to memdup_user() may overflow.
-> 
-> In this case the actual size of the allocated area and the value
-> describing it won't be in sync leading to various types of unpredictable
-> behaviour later.
-> 
-> Use a proper memdup_array_user() helper which returns an error if an
-> overflow is detected. Note that it is different from when nr_apqns is
-> initially zero - that case is considered valid and should be handled in
-> subsequent pkey_handler implementations.
-> 
-> Found by Linux Verification Center (linuxtesting.org).
-> 
-> Fixes: f2bbc96e7cfa ("s390/pkey: add CCA AES cipher key support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> ---
-> 
-> v2: use memdup_array_user() helper (Heiko Carstens)
-> 
->  drivers/s390/crypto/pkey_api.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-> index cef60770f68b..b3fcdcae379e 100644
-> --- a/drivers/s390/crypto/pkey_api.c
-> +++ b/drivers/s390/crypto/pkey_api.c
-> @@ -86,7 +86,7 @@ static void *_copy_apqns_from_user(void __user *uapqns, size_t nr_apqns)
->  	if (!uapqns || nr_apqns == 0)
->  		return NULL;
->  
-> -	return memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn));
-> +	return memdup_array_user(uapqns, nr_apqns, sizeof(struct pkey_apqn));
->  }
->  
->  static int pkey_ioctl_genseck(struct pkey_genseck __user *ugs)
+Hi Thomas, thanks for your review.
 
-Applied, thanks!
+On Wed, Jun 11, 2025 at 3:39=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Tue, May 27 2025 at 18:35, Gyeyoung Baek wrote:
+>
+> The subject line prefix is wrong. See
+>
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-=
+subject
+
+Thank you for providing the guideline, I see now how to.
+
+> > Fix uninitialized `ops` member's pointers to avoid kernel Oops in
+>
+> You cannot fix an uninitialized pointer. You only can initialize it
+> properly.
+
+Yes, I will update the subject to 'Initialize properly' in v2.
+
+---
+
+> Also please describe how this ends up with an oops in
+> irq_sim_request_resources(). The point is that any dereference of an
+> uninitialized pointer is resulting in a problem and it does not matter
+> where.
+
+Yes, It looks good to just remove irq_sim_request_resources() from the
+commit message.
+
+> Dereferencing an uninitialized pointer can cause an Ooops or worse it
+> can call into some random code when the uninitialized memory contained a
+> valid pointer, which is way harder to debug than a plain crash.
+
+Yes, then I will remove irq_sim_request_resources() from the commit message=
+,
+and explain it consistently with the subject.
+
+---
+
+> > -     if (ops)
+> > +     if (ops) {
+> >               memcpy(&work_ctx->ops, ops, sizeof(*ops));
+> > +     } else {
+> > +             work_ctx->ops.irq_sim_irq_released =3D NULL;
+> > +             work_ctx->ops.irq_sim_irq_requested =3D NULL;
+> > +     }
+>
+> The obvious fix is way more simple. Just allocate work_ctx with
+> kzalloc() instead of kmalloc(), no?
+
+Yes, that's a much simpler and cleaner fix.
+then I will send a v2 patch according to your reviews, Thank you.
+
+--
+Best Regards,
+Gyeyoung
