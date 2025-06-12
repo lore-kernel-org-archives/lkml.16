@@ -1,15 +1,16 @@
 Received: from glittertind.blackshift.org (glittertind.blackshift.org [116.203.23.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623571F16B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4602229B18
 	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.23.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738315; cv=none; b=BTLyUaLjLWql/GQfh8uvRBoPXj20vYWZS6OLONzp+eVbWq0Un2j92jx89QlowfXPewAW0g/NftOw3IyyFnbqVwAoWGcAUyiNShBn2S4eH7/cVy8R4649cMCwgaEn0lZlpJL0ELxoGQnHdyEQpbDJCBsb8EgIEkknZ8qvczc0txk=
+	t=1749738315; cv=none; b=nIMXPey9hb6H0cS6tm2wKEL70nXJ7f2vPSTV9YhQcyP9Rh+t4xVM+o2t+A6bSgv0GCrRuESoTF9h590islCs/Vx8De9dg6QfnfPyKfa9ZHgpjtqe30z5wZu8MQmhhYTwYq1GjEB9qzItUu1UIaEuH2te1qNOxWsfFucC6vTc/r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749738315; c=relaxed/simple;
-	bh=cU0YxEDE2UjP6n/4f3vNPORMNpitnn9kuSiOsDU/GHY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y7fauw9ThiL3CIQlWpCoBvUczKVA4lhmuCJwGSGYvO4zw/M8MHxGH8UlzF++WE4UjiUxrFMgtskeCqnzqqwvd5LRkAVyBS3l0iP896v/8DjbSXYngRc5tf67Y3DLdMax45CWuwJSIHOMgLfzjMqztVmwuMRc4sp6DfpPRrRvi/g=
+	bh=fM3DJ0fKp+s7JwVePf1s77eQbBcgW9+yZWYcLMCuBf4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PL0p2pQ2sVjk/ZmHPDkp3BDz0y7rzxfUuJL81PmomDePNGhBXHprx0e8E8OAfifP8vNGvIWiPxvI4WLignw3q76T29ARcBPOgS3LhfrkCYaxsWtKwJwxZUz+D8hu7bRQZ1taiD8nLgStwcgGbJ5JubvBcZnAa+wJQA+IlUlBTQY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=none smtp.mailfrom=hardanger.blackshift.org; arc=none smtp.client-ip=116.203.23.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hardanger.blackshift.org
@@ -18,25 +19,23 @@ Received: from bjornoya.blackshift.org (unknown [IPv6:2003:e3:7f3d:bb00:e75c:512
 	 key-exchange X25519 server-signature ECDSA (secp384r1)
 	 client-signature RSA-PSS (4096 bits))
 	(Client CN "bjornoya.blackshift.org", Issuer "R10" (verified OK))
-	by glittertind.blackshift.org (Postfix) with ESMTPS id AABF666BB98
+	by glittertind.blackshift.org (Postfix) with ESMTPS id D61D566BB9B
 	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:16:21 +0000 (UTC)
 Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id 7A44F426466
+	by bjornoya.blackshift.org (Postfix) with SMTP id 98DE9426469
 	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:16:21 +0000 (UTC)
 Received: from hardanger.blackshift.org (unknown [172.20.34.65])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id D98AA42641D;
+	by bjornoya.blackshift.org (Postfix) with ESMTPS id EB8AE42641E;
 	Thu, 12 Jun 2025 14:16:17 +0000 (UTC)
 Received: from hardanger.blackshift.org (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 055e1c19;
+	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 8943e361;
 	Thu, 12 Jun 2025 14:16:16 +0000 (UTC)
 From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH net-next v2 00/10] net: fec: cleanups, update quirk, update
- IRQ naming
-Date: Thu, 12 Jun 2025 16:15:53 +0200
-Message-Id: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
+Date: Thu, 12 Jun 2025 16:15:54 +0200
+Subject: [PATCH net-next v2 01/10] net: fec: fix typos found by codespell
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,11 +44,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABnhSmgC/1WNQQ6CMBBFr0Jm7Zi2tgiuvIdhAe0ATcxA2kIwh
- Ltb2bl8efnv7xApeIrwKHYItProJ86gLgXYseWB0LvMoITSolYGe7Jo39TyMke0dWeM1p2tjIY
- 8mQP1fjtzL2BKyLQlaLIZfUxT+Jw/qzz9LymFLP+Tq0SBju7VrXPSUNk+Z+JhSWFiv10dQXMcx
- xfnBamrtwAAAA==
-X-Change-ID: 20240925-fec-cleanups-c9b5544bc854
+Message-Id: <20250612-fec-cleanups-v2-1-ae7c36df185e@pengutronix.de>
+References: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
+In-Reply-To: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
 To: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
  Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
@@ -59,66 +56,92 @@ Cc: imx@lists.linux.dev, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, kernel@pengutronix.de, 
  Marc Kleine-Budde <mkl@pengutronix.de>, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.15-dev-6f78e
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2076; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=cU0YxEDE2UjP6n/4f3vNPORMNpitnn9kuSiOsDU/GHY=;
- b=owEBbQGS/pANAwAKAQx0Zd/5kJGcAcsmYgBoSuEbClArwX+nTRoEhDnrwcdDMtqdx3HQNnFzt
- SkZ3vNrzyGJATMEAAEKAB0WIQSf+wzYr2eoX/wVbPMMdGXf+ZCRnAUCaErhGwAKCRAMdGXf+ZCR
- nLCoB/4pDPVR0Pde2JRt6ZBeDv4IAOBgoCmF67KSKDbUhFNXSkfmsoG3Vuu+oM1XEMNI/lHRzSJ
- qud67Uhl3tB4zFKBUzy0wyotA3p68oxoGMnuZxF5CtUanm+I9IKB0UgQJ/gC+GQFv18bFJN3NXb
- Qcu4cZhJhm/WnBWWA56asy2YUlZs1e+iWLvpz6+JnW0fZXZob/ipezoIXnPELz7UMkl22dZ8SOr
- J9iqVWH7Frjs8ghxAVOWRXP+G3Dv6hDP3d8r1H5uzW5fP9y0rJJa0Fo2QL0qzQxLo3/iRoxCIog
- 5tPMojNoTgCqnF53Abhdaq+JdEEOBhuj3oqlnesUf5uXzFXC
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3701; i=mkl@pengutronix.de;
+ h=from:subject:message-id; bh=fM3DJ0fKp+s7JwVePf1s77eQbBcgW9+yZWYcLMCuBf4=;
+ b=kA0DAAoBDHRl3/mQkZwByyZiAGhK4R6gqFFCBHaQvogqFti7YA5JQXQfKIZcAtO9hIekE3OuC
+ IkBMwQAAQoAHRYhBJ/7DNivZ6hf/BVs8wx0Zd/5kJGcBQJoSuEeAAoJEAx0Zd/5kJGcDYIIAJAU
+ k3788reIO3/4DKGBNdI+KFFLuE1qVm4nWKMUqJwCpPNO9kTRaiVxNALjxiDYJOygv+sGJgMXX//
+ hNhUAXkCEQ2YmXrw5FARiWbJJV4zOtwj0UYBe5QIJ76mkz2JEDiT8ad3tbHrQxvjeK4eZkRFBk8
+ BCu50JOJsKRkx99cqfAF8o5hHScJdR/muYvLNzHLHym4STWIGtt02aJTbGmj9qfEjEZTYBjLHe8
+ k3pwD3CWHtbyA0UG+fwMu4rrTy631QWjCMVrqQ86lSgGERF76XO/opjN5CUwQ3cZmyfJ3llEq8y
+ eEMRncEJwp8AzoGQ7nSsBbE03zaxvOw3EJ4c5dA=
 X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
  fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
 
-This series first cleans up the fec driver a bit (typos, obsolete
-comments, add missing header files, rename struct, replace magic
-number by defines).
+codespell has found some typos in the comments, fix them.
 
-The next 2 patches update the order of IRQs in the driver and gives
-them names that reflect their function.
-
-The last 5 patches clean up the fec_enet_rx_queue() function,
-including VLAN handling.
-
+Reviewed-by: Wei Fang <wei.fang@nxp.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 ---
-Changes in v2:
-- removed patches 7, 8 for now
-- rebased to recent net-next/main:
-  dropped patch 6
-- 2, 3: wrap patch description at 75 chars:
-  (thanks Frank Li)
-- 4, 5, 6, 7, 9: updated wording of patch description
-  (thanks Frank Li)
-- 10: move VLAN_header into the if statement (thanks Wei Fang)
-- 10: mark several variables const
-- collected Wei Fang's and Frank Li's Reviewed-by
-- Link to v1: https://patch.msgid.link/20241016-fec-cleanups-v1-0-de783bd15e6a@pengutronix.de
+ drivers/net/ethernet/freescale/fec.h     | 8 ++++----
+ drivers/net/ethernet/freescale/fec_ptp.c | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
----
-Marc Kleine-Budde (10):
-      net: fec: fix typos found by codespell
-      net: fec: struct fec_enet_private: remove obsolete comment
-      net: fec: add missing header files
-      net: fec: rename struct fec_devinfo fec_imx6x_info -> fec_imx6sx_info
-      net: fec: fec_restart(): introduce a define for FEC_ECR_SPEED
-      net: fec: fec_enet_rx_queue(): use same signature as fec_enet_tx_queue()
-      net: fec: fec_enet_rx_queue(): replace manual VLAN header calculation with skb_vlan_eth_hdr()
-      net: fec: fec_enet_rx_queue(): reduce scope of data
-      net: fec: fec_enet_rx_queue(): move_call to _vlan_hwaccel_put_tag()
-      net: fec: fec_enet_rx_queue(): factor out VLAN handling into separate function fec_enet_rx_vlan()
+diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
+index c81f2ea588f2..3cce9bba5dee 100644
+--- a/drivers/net/ethernet/freescale/fec.h
++++ b/drivers/net/ethernet/freescale/fec.h
+@@ -115,7 +115,7 @@
+ #define IEEE_T_MCOL		0x254 /* Frames tx'd with multiple collision */
+ #define IEEE_T_DEF		0x258 /* Frames tx'd after deferral delay */
+ #define IEEE_T_LCOL		0x25c /* Frames tx'd with late collision */
+-#define IEEE_T_EXCOL		0x260 /* Frames tx'd with excesv collisions */
++#define IEEE_T_EXCOL		0x260 /* Frames tx'd with excessive collisions */
+ #define IEEE_T_MACERR		0x264 /* Frames tx'd with TX FIFO underrun */
+ #define IEEE_T_CSERR		0x268 /* Frames tx'd with carrier sense err */
+ #define IEEE_T_SQE		0x26c /* Frames tx'd with SQE err */
+@@ -342,7 +342,7 @@ struct bufdesc_ex {
+ #define FEC_TX_BD_FTYPE(X)	(((X) & 0xf) << 20)
+ 
+ /* The number of Tx and Rx buffers.  These are allocated from the page
+- * pool.  The code may assume these are power of two, so it it best
++ * pool.  The code may assume these are power of two, so it is best
+  * to keep them that size.
+  * We don't need to allocate pages for the transmitter.  We just use
+  * the skbuffer directly.
+@@ -460,7 +460,7 @@ struct bufdesc_ex {
+ #define FEC_QUIRK_SINGLE_MDIO		(1 << 11)
+ /* Controller supports RACC register */
+ #define FEC_QUIRK_HAS_RACC		(1 << 12)
+-/* Controller supports interrupt coalesc */
++/* Controller supports interrupt coalesce */
+ #define FEC_QUIRK_HAS_COALESCE		(1 << 13)
+ /* Interrupt doesn't wake CPU from deep idle */
+ #define FEC_QUIRK_ERR006687		(1 << 14)
+@@ -495,7 +495,7 @@ struct bufdesc_ex {
+  */
+ #define FEC_QUIRK_HAS_EEE		(1 << 20)
+ 
+-/* i.MX8QM ENET IP version add new feture to generate delayed TXC/RXC
++/* i.MX8QM ENET IP version add new feature to generate delayed TXC/RXC
+  * as an alternative option to make sure it works well with various PHYs.
+  * For the implementation of delayed clock, ENET takes synchronized 250MHz
+  * clocks to generate 2ns delay.
+diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
+index 876d90832596..3aacd64c9e73 100644
+--- a/drivers/net/ethernet/freescale/fec_ptp.c
++++ b/drivers/net/ethernet/freescale/fec_ptp.c
+@@ -117,7 +117,7 @@ static u64 fec_ptp_read(const struct cyclecounter *cc)
+  * @fep: the fec_enet_private structure handle
+  * @enable: enable the channel pps output
+  *
+- * This function enble the PPS ouput on the timer channel.
++ * This function enable the PPS output on the timer channel.
+  */
+ static int fec_ptp_enable_pps(struct fec_enet_private *fep, uint enable)
+ {
+@@ -172,7 +172,7 @@ static int fec_ptp_enable_pps(struct fec_enet_private *fep, uint enable)
+ 		 * very close to the second point, which means NSEC_PER_SEC
+ 		 * - ts.tv_nsec is close to be zero(For example 20ns); Since the timer
+ 		 * is still running when we calculate the first compare event, it is
+-		 * possible that the remaining nanoseonds run out before the compare
++		 * possible that the remaining nanoseconds run out before the compare
+ 		 * counter is calculated and written into TCCR register. To avoid
+ 		 * this possibility, we will set the compare event to be the next
+ 		 * of next second. The current setting is 31-bit timer and wrap
 
- drivers/net/ethernet/freescale/fec.h      | 11 +++---
- drivers/net/ethernet/freescale/fec_main.c | 56 +++++++++++++++----------------
- drivers/net/ethernet/freescale/fec_ptp.c  |  4 +--
- 3 files changed, 35 insertions(+), 36 deletions(-)
----
-base-commit: 5d6d67c4cb10a4b4d3ae35758d5eeed6239afdc8
-change-id: 20240925-fec-cleanups-c9b5544bc854
-
-Best regards,
 -- 
-Marc Kleine-Budde <mkl@pengutronix.de>
+2.47.2
 
 
