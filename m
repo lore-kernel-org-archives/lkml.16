@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC1C1C32FF;
-	Thu, 12 Jun 2025 04:00:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355561DF75D;
+	Thu, 12 Jun 2025 04:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749700855; cv=none; b=CzG1HuH7zQPdqJFm7DUfCcucUKPfCAeJyoqkwWYkyHcIs2JZzXMk374oWj0htjKOIeiXT0pOc1lNeWa3afcosbGHGFabejfv3OASgbKGWi2Vy1oUwBIpxJb+hJV22csqNjxVIxpo4XKnPiQ+L0h/s3FKc4YN44TnmW2yqkrGbto=
+	t=1749700856; cv=none; b=CLj9o4JpfgsDUtcq13DqeAQnrk+jvnaHY3nXUB/yrMQXcihA1OUCKIo2J788Z/wF0eiyrYf5R1uL0d9uoUsjqo7F3qwBqINadtEzzlQkDiEvxhSd6IoKRG/iHj1G7ff2lcd24BWeEv/vmVawTrm4hzcfydfNL3kv2OLFc8X/J/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749700855; c=relaxed/simple;
-	bh=RNOBAoQ4FlcbcHzSQexrGIpqp38M7Y0na4e0BuXj+JM=;
+	s=arc-20240116; t=1749700856; c=relaxed/simple;
+	bh=g1i3IadCjMyVHlW8wXsPLLdfwkk3+gIYb7B9MPiXNL0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qpltrrPTBX4/JVqwDN6b+qh3nPcp6QrwcbkXNeQgDbFSUKqIvTl4Ob23hj7ZBUsqTAl20ZW2Cawa6AtMuTHYVJ8unG/RUE1w6vR4YPG6U/OjZamrzfNYDqp10QeF5nijRQflWeAlfXG26NTX/jlD5XdJkVnsbARybrTXUUW9dEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcqCyHAq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ExzXNvAasvBcjLS+gfuXXqRvk8SI24Cg9DN+chBNJEBFt3rABzKqDWMRE09PyDoKHH4uQEnZbaNcZyycrJ0W/8d68p64Mr1Gn7EZhboZ4qj3SbxDN72XK6TijgR1RYUyaT9gRJWxbt9pv+yNV2Zhg4fQAWzaQ1mjnETujknzeNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfaeqdvi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcqCyHAq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D45C4CEEA;
-	Thu, 12 Jun 2025 04:00:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfaeqdvi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EAD7C4CEF0;
+	Thu, 12 Jun 2025 04:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749700854;
-	bh=RNOBAoQ4FlcbcHzSQexrGIpqp38M7Y0na4e0BuXj+JM=;
+	s=k20201202; t=1749700855;
+	bh=g1i3IadCjMyVHlW8wXsPLLdfwkk3+gIYb7B9MPiXNL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bcqCyHAqCEeSXpfh9vxS0s0cbuiJMAzHt90Udk+csPYBm7HlJIhsE46fUXeTUgRQi
-	 I0+FO7rZCu4g4b6WjXlblFOcDIxdxIiCvEtQeeSxVzu7F9jO1KKQRX0t2/msu4gHMh
-	 heMwwrzsgEyqLQBc2DrpUUcxA8DXCdGZr3uy5bF4o8Q/SW3YLcItvJKaibOaMs7oXR
-	 7THcfMK2hq8+spwOvm1m++f+Tte7uO6IbgIxntrPwkOFULgavoktqlCy5bhvO/3xYU
-	 aQHsF/TugdzzxEdQx1lPljmOKrBMJ7IIHj2YiQzZnVcQbVSrFPTqIBNfmtxJmpxjl1
-	 2K1OI1JA3FuEg==
+	b=hfaeqdvisgrmZZXyU+/nf3Yr967oJOkD5ZaaDRPpwXQp8jdZlZPI5AHKM44Du36e/
+	 lCuL8gLchDcWraaMTgey5RUxOZUdcBhup310NkLC3Lg1yFaFabuFXfDQYJEjg7hlY+
+	 HQeabAJsl17X1bvOiMKHY+kmUk33qpBJmaNKod8zUHdTofUqqFNdZnHdCOLc7TO08e
+	 EEK33bFGwGl+LXPF8ng+xDHladbkVNwteeQ0NBUU1ZaFD0UrSPve2tyaWHq3zLxlOw
+	 0E9zWg4ZWEDS8l5o9SGrKgcHmUnbBryF/Kslp23bmE38kok6CD4sCttB8V/3wJt8/P
+	 vC3zkO4J9WkEQ==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Christian Marangi <ansuelsmth@gmail.com>
-Cc: stable@vger.kernel.org
-Subject: Re: [PATCH] clk: qcom: gcc-ipq8074: fix broken freq table for nss_port6_tx_clk_src
-Date: Wed, 11 Jun 2025 23:00:33 -0500
-Message-ID: <174970084199.547582.1426735315594799373.b4-ty@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] arm64: dts: qcom: x1e80100-hp-x14: add usb-1-ss1-sbu-mux
+Date: Wed, 11 Jun 2025 23:00:35 -0500
+Message-ID: <174970084203.547582.156329907994435318.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250522202600.4028-1-ansuelsmth@gmail.com>
-References: <20250522202600.4028-1-ansuelsmth@gmail.com>
+In-Reply-To: <20250610-hp-x14-v3-0-35d5b50efae0@oldschoolsolutions.biz>
+References: <20250610-hp-x14-v3-0-35d5b50efae0@oldschoolsolutions.biz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,21 +51,25 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Thu, 22 May 2025 22:25:55 +0200, Christian Marangi wrote:
-> With the conversion done by commit e88f03230dc0 ("clk: qcom: gcc-ipq8074:
-> rework nss_port5/6 clock to multiple conf") a Copy-Paste error was made
-> for the nss_port6_tx_clk_src frequency table.
+On Tue, 10 Jun 2025 19:25:38 +0200, Jens Glathe wrote:
+> The usb_1_1 port doesn't have the PS8830 repeater, but apparently some
+> MUX for DP altmode control. After a suggestion from sgerhold on
+> '#aarch64-laptops' I added gpio-sbu-mux nodes from the x1e80100-QCP
+> tree, and this appears to work well. It is still guesswork, but
+> working guesswork.
 > 
-> This was caused by the wrong setting of the parent in
-> ftbl_nss_port6_tx_clk_src that was wrongly set to P_UNIPHY1_RX instead
-> of P_UNIPHY2_TX.
+> Added and rewired for usb_1_1
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] clk: qcom: gcc-ipq8074: fix broken freq table for nss_port6_tx_clk_src
-      commit: 077ec7bcec9a8987d2a133afb7e13011878c7576
+[1/3] arm64: dts: qcom: x1e80100-hp-x14: add usb-1-ss1-sbu-mux
+      commit: b9137c58c737c928d71c3dd2bb3abc47abdd05b6
+[2/3] arm64: dts: qcom: x1e80100-hp-x14: remove unused i2c buses
+      commit: 8766cead89ff362fa19fa5fd93f6752bdf68c2c4
+[3/3] arm64: dts: qcom: x1e80100-hp-x14: amend order of nodes
+      commit: 0bc88e66b3a1e9086f786f1033a03867777a1104
 
 Best regards,
 -- 
