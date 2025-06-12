@@ -1,130 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC82C2F433B;
-	Thu, 12 Jun 2025 15:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2F0298CC7;
+	Thu, 12 Jun 2025 15:33:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742367; cv=none; b=QChiNQ2rnCAhHXREwm2l9FdqaLHNwI+dQjQuVBnqjYoEaLlozJwJMGOPwmxF7dyod+nHauHOLO37B8Pm1DdgWNo4aJKJ2Cdhjsn47fwn+l2n31fQBNH1KSz/ac4ea+N/dyDPceFZWkBUK11noEULAjaUhBx320+X2TOPeAtc/GM=
+	t=1749742391; cv=none; b=QZb6+wDTXTnlNidwAKDCtQPB9jo8WkSbE97rJsqZBGckD8frwWGf2Gm7n+glCji5A9DQTwJgcE4+gsHRnThdd/IKN+akqrUPyMxyEuN74NW56HvJRS9Vn1p1zvp/rwRuzMSwcnftSgglfcdTaHffbuUId67ZdXlibwLF+icPI6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742367; c=relaxed/simple;
-	bh=ph6Qm/Zu8qima9WKxdl5cyVv5qHWsu81Bj3LUOBhyKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sWNK0nb7m9CENp/EYQG8cbo7pt6DQrewSMGCyXZkMsyXA7NI8dP9dD3cSAd26DXDpocq3XJd5orCGHuvz/OboJsZerHHooc4bixCrwyaRlfnMHeNs4CkCtrlhBi3RoYRaa/1nCMURgoZB0r8QDnM+I0ozTrNEzGG/Y2AIFB9qrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z76ZSExR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749742391; c=relaxed/simple;
+	bh=G5zzOUC3sJWmNEzmJf+R0AbhG6YXRm+OEvsMcVDdwEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sr9+TEBKGhZ68YbG25R8BxcqtmrUVLct/Ib+qG/EfLQMgD5XyKIa2fUH7DDpH1ahU4rU7ZEBBVCQfW6HKXe0AqGZlIkfMAKHixAgctaRFWCBD/oTHaBtFaV2N7PN5+u2B8OZ1W0t0Hx6/hDuOk8PT6gFrtDuMb+mmIbVaC+vcRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgmPRL1a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z76ZSExR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A08E2C4CEEA;
-	Thu, 12 Jun 2025 15:32:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgmPRL1a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BD55C4CEEA;
+	Thu, 12 Jun 2025 15:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749742367;
-	bh=ph6Qm/Zu8qima9WKxdl5cyVv5qHWsu81Bj3LUOBhyKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z76ZSExR2NJPvxfNLitwVNJ5/gkyfINE0FpXuI7C7oGqvl8Zn1ZyMS/9uVC2IpR3X
-	 09bfN1i2mar7nJEWgySKEKpoTa/nTnNwSkqxfk70ftJo5X8GIHAU5VswfQVQIOz1+l
-	 8NtZ2bjR6isp5W7bsPpmVofipF2S4kMB/mgB8W814UthCVjfFGusQE032+AC6ap4QG
-	 vk0U/oSHFQMh+cJlifm4SNJAn4BclvKe0pCgcPapGFPk5ATt3WZTA20wZD+p+FM6v0
-	 gwalPJTCRN8jwH0Ji6T1iAlMgO/zBMWQ4cL7Azo29AIBQHj2KqHbKJbi1Zm4psxM9k
-	 mTPuIUKuwqlog==
-Date: Thu, 12 Jun 2025 16:32:42 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: display: panel: document Synaptics TDDI
- panel driver
-Message-ID: <20250612-agency-mothball-3830177fd43b@spud>
-References: <20250612-panel-synaptics-tddi-v1-0-dfb8a425f76c@disroot.org>
- <20250612-panel-synaptics-tddi-v1-1-dfb8a425f76c@disroot.org>
+	s=k20201202; t=1749742391;
+	bh=G5zzOUC3sJWmNEzmJf+R0AbhG6YXRm+OEvsMcVDdwEA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fgmPRL1aZRnyCUkbREqrMNF6B3UZ1LJhoB01DRegITWBseKlTLmc3kvza3cXFRX1u
+	 cVU6AEyzUDss62q6KEaSNR6BabqvSk7mWCqX55O5RDFrmjCtZ7U14Ymkff6kfmDh2b
+	 8BfgpGHkSVwUyOhLiVRanQWUGJC3eGIgHpwyV97BzPk5qgy15/zB+9NaBaP9Lp+/im
+	 nS6hX1nBaq4YaqBSyhRoFbbe5/0ghpShFfmy6SP5BeYRrR8WnGzgx9y7JB/FzO2wl0
+	 VNXbqDOmsVfAzYnY22Y58DCeoRNcleMrgkDqYpTTo2T2DV3Hj06O4GyxpdkPLKYmfi
+	 6wdpwvH6/LsOg==
+Date: Thu, 12 Jun 2025 08:33:09 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>, Jian
+ Shen <shenjian15@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Nathan
+ Chancellor <nathan@kernel.org>, Nick Desaulniers
+ <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, Justin
+ Stitt <justinstitt@google.com>, Hao Lan <lanhao@huawei.com>, Guangwei Zhang
+ <zhangwangwei6@huawei.com>, Netdev <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>
+Subject: Re: [PATCH] hns3: work around stack size warning
+Message-ID: <20250612083309.7402a42e@kernel.org>
+In-Reply-To: <34d9d8f7-384e-4447-90e2-7c6694ecbb05@huawei.com>
+References: <20250610092113.2639248-1-arnd@kernel.org>
+	<41f14b66-f301-45cb-bdfd-0192afe588ec@huawei.com>
+	<a029763b-6a5c-48ed-b135-daf1d359ac24@app.fastmail.com>
+	<34d9d8f7-384e-4447-90e2-7c6694ecbb05@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="VDw7BB0FAKwf3bbg"
-Content-Disposition: inline
-In-Reply-To: <20250612-panel-synaptics-tddi-v1-1-dfb8a425f76c@disroot.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu, 12 Jun 2025 21:09:40 +0800 Jijie Shao wrote:
+> seq_file is good. But the change is quite big.
+> I need to discuss it internally, and it may not be completed so quickly.
+> I will also need consider the maintainer's suggestion.
 
---VDw7BB0FAKwf3bbg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 12, 2025 at 08:09:40PM +0530, Kaustabh Chakraborty wrote:
-> Document the driver for Synaptics TDDI (Touch/Display Integration) panels.
-> Along with the MIPI-DSI panel, these devices also have an in-built LED
-> backlight device and a touchscreen, all packed together in a single chip.
-> Also, add compatibles for supported panels - TD4101 and TD4300.
->=20
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  .../bindings/display/panel/synaptics,tddi.yaml     | 92 ++++++++++++++++=
-++++++
->  1 file changed, 92 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/synaptics,td=
-di.yaml b/Documentation/devicetree/bindings/display/panel/synaptics,tddi.ya=
-ml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..3aae1358a1d764361c072d3b5=
-4f74cdf634f7fa8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/synaptics,tddi.yaml
-
-File called synaptics,tddi
-
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/samsung,tddi.yaml#
-
-id of samsung,tddi
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synaptics TDDI Display Panel Controller
-> +
-> +maintainers:
-> +  - Kaustabh Chakraborty <kauschluss@disroot.org>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - syna,td4101-panel
-> +      - syna,td4300-panel
-
-compatibles are syna,td####-panel
-
-These should be consistent and tooling should have complained about the
-mismatch between id and filename at the least.
-
-
---VDw7BB0FAKwf3bbg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaErzGgAKCRB4tDGHoIJi
-0h3oAP9CB4FuHC6Rw0Tmtlumy5MJLtCuVVJfVPJHDzHi2EHfSwEAj7OX7AU+mI7c
-+Vxcu5Bly5SfP5x+z5e0plVKW4Jh6Qk=
-=2rxw
------END PGP SIGNATURE-----
-
---VDw7BB0FAKwf3bbg--
+Please work on the seq_file conversion, given that the merge window
+just closed you have around 6 weeks to get it done, so hopefully plenty
+of time.
