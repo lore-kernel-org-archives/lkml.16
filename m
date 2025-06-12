@@ -1,162 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BB1236A9F;
-	Thu, 12 Jun 2025 10:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2D5223339
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725256; cv=none; b=Liz1L8eavsVmsxgwcTk17b6NCsv+KWMdnE2SVbhQj2mLBN5PEzokpOncSV351a9qMEW3822nIVgJC2jLUBOylWD6++CV+CkhjmD+aGjJo35LvBxqs2+RTtt1a1ILdNZ5eQ6ULhk/cOz3H+Qj0OBZFyVEmqH5bnj6i7Z4IfIwvd4=
+	t=1749725304; cv=none; b=R27pa3CPPbdaAotD7h06tzqZIFY2jNn5Cj/nn1IsdORaNsQmJygbzZZEOJ8EKOknCFSWLoANWAVwGOsepYf/Dkkt2rsY7/WiOjfU75RGhAJwm9pOp4pwgsx35xLbn+dYl9qe2j2VJzoWgwKPgcixXOpZVzGv9umK3Q0wkKK7ucs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725256; c=relaxed/simple;
-	bh=cA/9g4df0rnYMna80cfWKquJ3DSe/MAYAo6HdSAPeK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JcW+ILCnJ6BIL88UgH57hgFwN8pxpqVTOSKYI1Y85stRX+yru3HGZc+zKjw9LA43mMViLunskDULOkElBK0WnjaYM+dcP6pXTXE6MT4AksAD7SZjiaGyA3XUkDCv6dHg+iJt/ftoTXui/SaUZUoK5/rDycY8XZG/2Kv1FpKa4kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UarOyjjv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749725304; c=relaxed/simple;
+	bh=HNDqJvbrM3YoJTFiv4uqxRukmDC/kioQTcqiuAA2cac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E++7//TjKGmdoHkKnCclSpd9S47Th6ps5RIJnJVWzGf5K7gGnBgSMIRwiZu8YiTFEpHLKCPl27OpNICxIhzKDAp8DWwhEirOi5FodmmGBSlza8DLW3ZB3aiHw0lHvK7WJZabFcIjAy9rpg9gYKf0DUMszTAOVJP/+7dKCseNHb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VKGzRxSh; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UarOyjjv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0F74C4CEEA;
-	Thu, 12 Jun 2025 10:47:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749725256;
-	bh=cA/9g4df0rnYMna80cfWKquJ3DSe/MAYAo6HdSAPeK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UarOyjjvTQMBXR7aL+237IUKvnrSP6hZJed599hmZGjYhxOM68vUSjwXtfVYCkOgd
-	 X/MGyBXxv5Asva4SlWXZEm8WzxFkpTYwdtG+pe5tNAL7Y114w+0b8blObd+TzHnhe1
-	 R5kirTOySydU6E4q8eMH+lqwQKkShSH/vi+VfAMkbAWvR3mGbLSTXZIE6vzlQGKm/n
-	 K2fqwP+9vFTjGxFitOWVRIspX4HlyDryVwxgsulSM4PvCZuo7Ia2fbD5dwtrAaPcIE
-	 ctWku4I/Fs+imivXwpjkAx4LPOjr3O08hdnYZeg0bQXe9O+/goLC/oFP7VCC4MFo7c
-	 h090qHFXDjdeQ==
-Date: Thu, 12 Jun 2025 12:47:29 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
-Message-ID: <aEqwQYJdbVSNA7mr@pollux>
-References: <20250603205416.49281-1-dakr@kernel.org>
- <20250603205416.49281-2-dakr@kernel.org>
- <DAKE8OYKXUWH.1NRVGV5IKW7I9@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VKGzRxSh"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a54700a463so486515f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749725301; x=1750330101; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O9eVd27nL1eqHZbw4F9ds6pBpZa05pK5xdu04RGTqP0=;
+        b=VKGzRxSh71/QF8p8wnUQ7PEGwC0EUpZkw7hv4LYxPDa7j4XDSOth5nk828JYDek1HH
+         gyVQZfml7PkpMgWORHIN6L5J4O0dbGuWYWf3SdM6mHoN69ENGQC3uHa1nBqkq0siUJi3
+         5Hs6IsYvlv41WztZIOdtoOof0W+m9AvXIw20bVXixzeqjj04ZJIbyem3HTHuXpFUoJnh
+         kocp75cCpvXWbWxRNgYl83NQdPsX8kN1A8iBNUh6QUK+C0M4Q+1QUx+csaDXMRxRAGKl
+         RdBq+F4t5VAEuNsA2bNtnC3/F5zoQpcYX/F46KVzSg2QMSF0mA59uuKAnBlfYLBe2uMc
+         tbUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749725301; x=1750330101;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O9eVd27nL1eqHZbw4F9ds6pBpZa05pK5xdu04RGTqP0=;
+        b=FcBlBibvuGtLhPDaKdcx6J+YkpJsZyzdigGdL6ZoWeqJgdSYEZgul58j+c3tyomW8S
+         jyRRyPn1dnJU+GerGSWtkM573aliSsziDmIvyTYjXc1NrNQSOa4vzrPQnp+PYJPs4ysU
+         hHShi9+GKVt9SBq5N199u6qbvj8/97VKEY8PwSxhd4Nb2jiwiKkSgd9ZZCT9KWHYZxZ+
+         MGmPRMcco58T3fwNcL/E6byQ4mZZBjFxaRSR6hhNpsnDTzi7QBYYpaBewFhmPNw4tk/p
+         zTpodRfQwB3Qf9Kd3ukNrrjidDoP8Rajv2qNycXb0AohIaC5AynW/d+Mx/NjQg9Fc47z
+         7/iw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmWmaX5t9HdC8nOMSZhGRRHbUUqGDeeknaFKjvfzZcAP1a+he67dADeMAmFExPRmMRzWLAdaftFR0xnPo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGl2z+1YQ87KCI6bFmJyR18o2yUIdQSUY2GHRyNT6KXT1CTV/C
+	psp130HJGSiuVbwoMq20k+dkZFXuX3GSAEcoCCyrFrrvi9Oe6r7vt+HxYZyLk0mz/F0=
+X-Gm-Gg: ASbGncuMibqtL+q0emK6H9fCkBeMIw3w5gGBnI+sGDWwvErNEk8LyItyQw8VUfItGA2
+	uLz6AvdAg/+BqoaSgZUNFF82VCcX2HXXHr2RfpjnfkZj6Z+HensLipBLNj7hss43GSdh4ZmJxcm
+	xYmQ36bGcwdXyo+uUwGyTOzFFAGAo9MUM4MvoWoJKM+dlqCAXGVN/1uRJo01PZ9JFl+V5UyVH2W
+	Puan9JulWWseQlSnsZ9Nvc5qQXCdD6t+z9tfKBj+w8U81QhtsYnKVxwIx6WW49zrNckYPoH0KCP
+	x7gTa9FPOeoCaozpRMuCeouis1wcWJRuw2IM8ygHSRW06Hc5HZX/TzPKf+PsIiLzJrRsBvxHNHo
+	jXmXs
+X-Google-Smtp-Source: AGHT+IEaAyozngycLd0mG65hkJuHuQ/++UMGDBEwmcvUNmlN9HEgHszswErmF9JjhOS7OFHmrHQ5zA==
+X-Received: by 2002:a05:6000:3107:b0:3a4:ed9a:7016 with SMTP id ffacd0b85a97d-3a560827df3mr1956811f8f.26.1749725300756;
+        Thu, 12 Jun 2025 03:48:20 -0700 (PDT)
+Received: from [10.0.1.22] (109-81-1-248.rct.o2.cz. [109.81.1.248])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561976a20sm1655934f8f.19.2025.06.12.03.48.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 03:48:20 -0700 (PDT)
+Message-ID: <c7dbb33d-98b6-45da-be77-e86b9e6787ee@suse.com>
+Date: Thu, 12 Jun 2025 12:48:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAKE8OYKXUWH.1NRVGV5IKW7I9@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] module: Fix memory deallocation on error path in
+ move_module()
+To: Daniel Gomez <da.gomez@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250607161823.409691-1-petr.pavlu@suse.com>
+ <20250607161823.409691-2-petr.pavlu@suse.com>
+ <ae967353-71fa-4438-a84b-8f7e2815f485@kernel.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <ae967353-71fa-4438-a84b-8f7e2815f485@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 09:58:30AM +0200, Benno Lossin wrote:
-> On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
-> > +/// # Examples
-> > +///
-> > +/// ```
-> > +/// use kernel::sync::{Arc, Completion};
-> > +/// use kernel::workqueue::{self, impl_has_work, new_work, Work, WorkItem};
-> > +///
-> > +/// #[pin_data]
-> > +/// struct MyTask {
-> > +///     #[pin]
-> > +///     work: Work<MyTask>,
+On 6/10/25 8:51 PM, Daniel Gomez wrote:
+> On 07/06/2025 18.16, Petr Pavlu wrote:
+>> The function move_module() uses the variable t to track how many memory
+>> types it has allocated and consequently how many should be freed if an
+>> error occurs.
+>>
+>> The variable is initially set to 0 and is updated when a call to
+>> module_memory_alloc() fails. However, move_module() can fail for other
+>> reasons as well, in which case t remains set to 0 and no memory is freed.
 > 
-> Can we maybe add a dummy value like `Mutex<i32>` here that the task
-> changes, so we can print the value of it below (after waiting for the
-> task)?
+> Do you have a way to reproduce the leak?
 
-Sure, but I don't think it improves the example a lot. It adds more code that
-may be more distracting than helpful.
+I was only able to test it by directly inserting errors in
+move_module().
 
-> > +///     #[pin]
-> > +///     done: Completion,
-> > +/// }
-> > +///
-> > +/// impl_has_work! {
-> > +///     impl HasWork<Self> for MyTask { self.work }
-> > +/// }
-> > +///
-> > +/// impl MyTask {
-> > +///     fn new() -> Result<Arc<Self>> {
-> > +///         let this = Arc::pin_init(pin_init!(MyTask {
-> > +///             work <- new_work!("MyTask::work"),
-> > +///             done <- Completion::new(),
-> > +///         }), GFP_KERNEL)?;
-> > +///
-> > +///         let _ = workqueue::system().enqueue(this.clone());
-> > +///
-> > +///         Ok(this)
-> > +///     }
-> > +///
-> > +///     fn wait_for_completion(&self) {
-> > +///         self.done.wait_for_completion();
-> > +///
-> > +///         pr_info!("Completion: task complete\n");
-> > +///     }
-> > +/// }
-> > +///
-> > +/// impl WorkItem for MyTask {
-> > +///     type Pointer = Arc<MyTask>;
-> > +///
-> > +///     fn run(this: Arc<MyTask>) {
-> > +///         // process this task
-> > +///         this.done.complete_all();
-> > +///     }
-> > +/// }
-> > +///
-> > +/// let task = MyTask::new()?;
-> > +/// task.wait_for_completion();
-> > +/// # Ok::<(), Error>(())
-> > +/// ```
-> > +#[pin_data]
-> > +pub struct Completion {
-> > +    #[pin]
-> > +    inner: Opaque<bindings::completion>,
-> > +}
-> > +
-> > +impl Completion {
-> > +    /// Create an initializer for a new [`Completion`].
-> > +    pub fn new() -> impl PinInit<Self> {
-> > +        pin_init!(Self {
-> > +            inner <- Opaque::ffi_init(|slot: *mut bindings::completion| {
-> > +                // SAFETY: `slot` is a valid pointer to an uninitialized `struct completion`.
-> > +                unsafe { bindings::init_completion(slot) };
-> > +            }),
-> > +        })
-> > +    }
-> > +
-> > +    fn as_raw(&self) -> *mut bindings::completion {
-> > +        self.inner.get()
-> > +    }
-> > +
-> > +    /// Signal all tasks waiting on this completion.
-> > +    ///
-> > +    /// This method wakes up all tasks waiting on this completion; after this operation the
-> > +    /// completion is permanently done.
-> > +    pub fn complete_all(&self) {
-> > +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct completion`.
-> > +        unsafe { bindings::complete_all(self.as_raw()) };
-> > +    }
-> > +
-> > +    /// Wait for completion of a task.
-> > +    ///
-> > +    /// This method waits for the completion of a task; it is not interruptible and there is no
 > 
-> I personally would write:
+>>
+>> Fix the problem by setting t to MOD_MEM_NUM_TYPES after all memory types
+>> have been allocated. Additionally, make the deallocation loop more robust
+>> by not relying on the mod_mem_type_t enum having a signed integer as its
+>> underlying type.
+>>
+>> Fixes: c7ee8aebf6c0 ("module: add stop-grap sanity check on module memcpy()")
+>> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+>> ---
+>>  kernel/module/main.c | 7 ++++---
+>>  1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/kernel/module/main.c b/kernel/module/main.c
+>> index 08b59c37735e..322b38c0a782 100644
+>> --- a/kernel/module/main.c
+>> +++ b/kernel/module/main.c
+>> @@ -2614,7 +2614,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+>>  static int move_module(struct module *mod, struct load_info *info)
+>>  {
+>>  	int i;
+>> -	enum mod_mem_type t = 0;
+>> +	enum mod_mem_type t;
+>>  	int ret = -ENOMEM;
+>>  	bool codetag_section_found = false;
+>>  
+>> @@ -2630,6 +2630,7 @@ static int move_module(struct module *mod, struct load_info *info)
+>>  			goto out_err;
+>>  		}
+>>  	}
+>> +	t = MOD_MEM_NUM_TYPES;
 > 
-> s/waits for/blocks on/
+> Why forcing to this? I think we want to loop from the last type found, in case
+> move_module() fails after this point. Here's my suggestion:
 > 
-> But if `wait` is the more common kernel term then let's go with your
-> version instead.
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index ada44860a868..c66881d2fb62 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -2697,7 +2697,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+>  static int move_module(struct module *mod, struct load_info *info)
+>  {
+>         int i;
+> -       enum mod_mem_type t;
+> +       enum mod_mem_type t = MOD_TEXT;
+>         int ret;
+>         bool codetag_section_found = false;
+> 
+> @@ -2708,12 +2708,10 @@ static int move_module(struct module *mod, struct load_info *info)
+>                 }
+> 
+>                 ret = module_memory_alloc(mod, type);
+> -               if (ret) {
+> -                       t = type;
+> +               t = type;
+> +               if (ret)
+>                         goto out_err;
+> -               }
+>         }
+> -       t = MOD_MEM_NUM_TYPES;
+> 
+>         /* Transfer each section which specifies SHF_ALLOC */
+>         pr_debug("Final section addresses for %s:\n", mod->name)
 
-I don't think either is more common in general, but the C code and the existing
-documentation all use "wait for".
+This seems to be off by one. For instance, if the loop reaches the last
+valid type in mod_mem_type, MOD_INIT_RODATA, and successfully allocates
+its memory, the variable t gets set to MOD_INIT_RODATA. Subsequently, if
+an error occurs later in move_module() and control is transferred to
+out_err, the deallocation starts from t-1, and therefore MOD_INIT_RODATA
+doesn't get freed.
+
+If we want to always start from the last type found, the code would need
+to be:
+
+		[...]
+		ret = module_memory_alloc(mod, type);
+		if (ret)
+			goto out_err;
+		t = type + 1;
+	}
+
+I can adjust it in this way if it is preferred.
+
+-- 
+Thanks,
+Petr
