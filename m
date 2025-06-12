@@ -1,141 +1,226 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388ED1E51EB
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953331E51EB;
+	Thu, 12 Jun 2025 07:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714343; cv=none; b=WuXneHE+X5dNIfLo3tKMTQ6rZG2DrfENEI8QfNKy9c++w3fnjkgMvD36BVJGGXNnC8bhLPOlpZSbBewoLnd9vIEa1yU2duoQwQdUrlkR8sf5+pbq3IJL2l7LmzJABDAGF3mtL9Ol4yrvzMFHl9QECZJ/dsESsLH4FhAEkIf2QFE=
+	t=1749714366; cv=none; b=AIryoSz4pb67116eB5VuT0GH/tUP+DGL94rrX2TO9flFdyn/QCW8v3lOMwlYXK2eydL9NcC9jyY63C213JDoTbAnqVugdGSUaWa/UGVQ7ANhVvC0JoRQYKIR2Eq0fexZyOpVOX33M8jKmexz3B7CKN2km9r/KyI4IZsqU/gbmpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714343; c=relaxed/simple;
-	bh=IPP4978znnBT+7XdoT2b281Vaw9mm1eJSch43ipMupU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SJq6oOtJdcMVutnqqEfHg6HpqusGp2+GdgJUdU16hLg7XdT9uTdRpoFQ3ZGx/6VnTqThf83zHwHdLe439Yj5Oe61PMwCwa8/2RBSMNk2tICm+p9/cG1ZarEr5iMxEbVgi/TJia+Le4aSd34ovoHCemqhmogwYqMs47Pl9MoQcW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkcNQ84c; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1749714366; c=relaxed/simple;
+	bh=JxoHN1cqD3EU3/Ag5kU+xS0bmPg6uR+cY4LyyXCx0j4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DeZmJDKFR043DsuAD+no7yuymG8uI2O+772OETa76SMLyr0U4MZU464oap8tj1kqOL65yDK2bR0Xl/Wkpx6Tle8EP2hVfeSZ5Lugh6vj3aiz8z/qBmlogTDchl5zGpUmMpASZ37QD37TzIFcg5Yo5EqbGyZRUL60/RiJOyyNZ5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFJnqxPe; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkcNQ84c"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235ae05d224so15837755ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:45:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFJnqxPe"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3138b2f0249so601095a91.2;
+        Thu, 12 Jun 2025 00:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749714341; x=1750319141; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=x/r4HaILg277b3MgONbz0YWOe53JlF7XtF3YrZR19cU=;
-        b=GkcNQ84cpt/gxvQ7yl/MToYw0Ik6GQTBjuXHt9vB6vy1eVzc0SDWtSOy0x6kv0g+xS
-         eDJ2ncMg/6KfAjWwW07VLkn8VGI6A71ZcbX+VOFry/hd8/uZDHBm6xr/iAsg5As83OE2
-         Zfss4u2clvLRo/f/4DMMehD9FjcCe0PbiUg2I0R5e7Gmnw/Cxg+Md0LYIqVxpxcyG7Bn
-         BY1fFr8jgx3clqYGOx7m05uZ3jH2s3gbNtAyQZWoXJ0+aSvG2Uca9WxgYaCd7sQJtejC
-         bJb8nm7m5FcKCG/uwlMTOiHpaJDLhFK4OnZ37ini7YnggqdEL2ecy0qmLxdsS8M734Eh
-         usTA==
+        d=gmail.com; s=20230601; t=1749714364; x=1750319164; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XR1hLLgZbNoPUjH3b40Hb0TtWaE1qxdt20ZVSEhp23g=;
+        b=CFJnqxPehGRITbTBIhdNp/4/S8nySKtiO2IYy7FtJPS6BmvOE6N1QEuGlWOKGuNsF5
+         L9a/p6z8X27RxTW9G69lFQlSfDKKsHHhaoMm9aU3l7u9F5LKjMpGsQrQtD8ZeiiU4bPo
+         xq7kBajGT/Nh0EwtExhVdZzHFOWDOcXNBDzxrMslKiGvLYSxG82lEZeS/+jhzRa/2RaQ
+         kR1Yxz/fUhlw15ofv6JGu1PTPOvyEQ9357Tg85IXxQavoi2Sw/JS9KlmXwwCUYJiSRcu
+         S/U/oHDjmGNFoqcixTUfJ3vwPCKNQM1UVd3qtMA859e5ixlWK8MRr4uL2OHsYDuqb44U
+         LhGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714341; x=1750319141;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1749714364; x=1750319164;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x/r4HaILg277b3MgONbz0YWOe53JlF7XtF3YrZR19cU=;
-        b=AF4i4dnjVnLj/Ec7Qd2ZIqOX8i7X3cFYEjtgQTi1NWosVH0nwZI+Q4cXAA/lv9cmyO
-         Dcx9cd+C/0Aq2EQObbYK/YGgatVrjxWm2sOJiMp80FxaIPEI7aeOjjJVdW2fwVrhNFoW
-         ao7BNVIAFsa72WjCv5iD9SgkQo+bNIAkADrbjxU8ywFXo8xaXiyQfT/2vRyupRpKmq0B
-         MX9XGVz76IDNtuo5CG6THF1v45eEto79suheW/GZmrZiahGFgoMzJWrKmTFr8yM9vCeK
-         kCDS4Ch1TyKpOvxHLHnZacV7ODEXwwKfMbJsWLj9ZLKKnToeKlSEgwIz+ZC21k4bW2IG
-         WeBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFN994a1E00sAVJ6RzMWtQEdTyi4V1xuzKnFbIbJoDXyKaOWzDSmuvx+VVligQUj9ij5s/t89J3jM3kPo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp/4Q3q8SV7/irH3eC8MtbW9iWpM/5FrTX6dQAAWOTp6ckxy8J
-	smN1ibSuLZpLW/looVlWZCK9yLA5+EZr5OlQ6v9LQ9gBbQOpTc1vT21kUvQkZc06
-X-Gm-Gg: ASbGncvkaaZ8m9A9nyWeCbkHg6z7PW9ewy0UFdUdCIzxd8ZjRy3W7x+CZQQUJTKWH7x
-	WTEtiK7xZk1TBbQLdtEDK7G5Aop2fudQqE+RHeTor/vgJyiVmJRZ4mrO0OoNNS4gXd/DLd9q03U
-	12FnOjI9HRo4uYsUE6jyUZPq1+su0qW4jVNvOVOh3ZD3FNSZdR/OZgk655OzlIdfHY8KkzaYY7A
-	Ep44uBvXuGJlBtHvo8SHDKXwqDZJDXEws6Uxr7SA0nrwPQcsJOK+TvjyvuPenxwdUJwvE30LLBN
-	QMQwfxzf66qDR87fERg98avkiOc6dQC3TKxCYyYffwtv0sb8lcoMKWMlvLUwyduuJMPvVzETPtT
-	+9g==
-X-Google-Smtp-Source: AGHT+IEkos/uNROJz/Zz+MX/GOvxBe9ubiY46UzkUMeDb5+z/xXrsj6/fN5COhHTycOGbND/qHF87A==
-X-Received: by 2002:a17:903:3204:b0:235:efbb:9537 with SMTP id d9443c01a7336-2364cd01898mr36636945ad.3.1749714341403;
-        Thu, 12 Jun 2025 00:45:41 -0700 (PDT)
-Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:2c7d:4ae3:493:2da6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e7031efsm7687285ad.188.2025.06.12.00.45.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 00:45:40 -0700 (PDT)
-Date: Thu, 12 Jun 2025 15:45:36 +0800
-From: I Hsin Cheng <richard120310@gmail.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: John Stultz <jstultz@google.com>, tglx@linutronix.de, sboyd@kernel.org,
-	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] clocksource: Utilize cpumask_next_wrap() to shrink code
- size
-Message-ID: <aEqFoNGGu3eOKBEL@vaxr-BM6660-BM6360>
-References: <20250611104506.2270561-1-richard120310@gmail.com>
- <CANDhNCoJ_MmpEfyuL+JWav+NUfQDH3dm196JSE-Mv3QrPUzi3g@mail.gmail.com>
- <aEnTSuVy2Aq8jRk8@yury>
+        bh=XR1hLLgZbNoPUjH3b40Hb0TtWaE1qxdt20ZVSEhp23g=;
+        b=H7sEJqBm1m4eHnc6SupIilOGsCs4Ir58dq+LAWrLAEkzREF6m7Z1hPfWJELrtP73Up
+         5kJnzV+RCYygwvh8cQMR3SGIRJEk8aHSmYJk+fIstumwpRk4gKPjwjv1hVvQM/u7JgG5
+         JfzRVqJllJWcsnEJp6RGXsQ/BFacusikq0TJl+Ix0s6NiK4ddZ1x8et0UEH9AlgXZ7/8
+         qsgSt0Lad+c/imRaP4pHaSq6XNm4Vz78jVxONhHLzjsjPRiD745vtmcvf9QL27sAfBpo
+         309JjE8+hVjO8WRioFroduACGFdK5x2vJpEQBN98K98j5N2dDwxMRnnHXij5kp2Z+p1P
+         I54Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUJGKCMU+/cREhHfkLmQGjt4nWzfqdrnCzcz/w4JjHEH+FK7Kfp1SblGmvdoK65vXjqIkzTOpqGn3iJZxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJeqFmf0rUBZlAqFsdwrUJJJ4SdhmywgAEf9NMbsoExuB1BsEg
+	hWNvKO+c5Bmn/xRqI8WyoCqbCvbb876fIRGm8JPM3m8B8xe6cUD3tXgklsrXsf7Poer/+Q==
+X-Gm-Gg: ASbGncumeO4bwJua1cMcy7ArAk9ERU7ZLATwqkP1kTNLFJHelgsdVA3dkJEMzihu8MP
+	0Mbcs5ACbUkCGiDOunuGEgwtUZ3Tvfc2vJTufKIHhdmXkEGmVsl/I+XZM6U8/hhONr+OLPEdqgi
+	Tpt6RXII/etteTpQmShyrMkoivJeViC9aVykGi6MElsKb15dW6h5LCovtQifXZDW5ddDLeaebbn
+	RAPDP6OEV4lPFqBiiKu6YY85nQWFPeNlxb2Rzhs1sgKVHYJjVCXo8CZWxlfQI3jxBB6y91R7Quz
+	RMuIe0soIlm60moHWJkH5DnIGTfoxpLBGIXKA1i96ApZ
+X-Google-Smtp-Source: AGHT+IHaSXvB+nJVixBEGqiAmwKGpfI2Ua+//G15eQv/+dSv+zqKo94/Kc4E4dyEks+jdJQJJBS+Vw==
+X-Received: by 2002:a17:90b:5826:b0:313:bdbf:36c0 with SMTP id 98e67ed59e1d1-313bdbf3715mr5785959a91.0.1749714363831;
+        Thu, 12 Jun 2025 00:46:03 -0700 (PDT)
+Received: from [127.0.0.1] ([2403:2c80:6::3058])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e7194e0sm7703545ad.222.2025.06.12.00.46.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 00:46:03 -0700 (PDT)
+Message-ID: <06935480-a959-4e3f-8e41-286d7f54754a@gmail.com>
+Date: Thu, 12 Jun 2025 15:45:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] md/raid1: Fix stack memory use after return in
+ raid1_reshape
+To: Yu Kuai <yukuai1@huaweicloud.com>, Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250611090203.271488-1-wangjinchao600@gmail.com>
+ <5143c5c3-3a77-919f-0d38-8adb0e8923e9@huaweicloud.com>
+Content-Language: en-US
+From: Wang Jinchao <wangjinchao600@gmail.com>
+In-Reply-To: <5143c5c3-3a77-919f-0d38-8adb0e8923e9@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEnTSuVy2Aq8jRk8@yury>
 
-On Wed, Jun 11, 2025 at 03:04:42PM -0400, Yury Norov wrote:
-> On Wed, Jun 11, 2025 at 11:35:13AM -0700, John Stultz wrote:
-> > On Wed, Jun 11, 2025 at 3:45 AM I Hsin Cheng <richard120310@gmail.com> wrote:
-> > >
-> > > Simplify the procedure of CPU random selection under
-> > > "clocksource_verify_choose_cpus()" with "cpumask_next_wrap()". The
-> > > logic is still the same but with this change it can shrink the code size
-> > > by 18 bytes and increase readability.
-> > >
-> > > $ ./scripts/bloat-o-meter vmlinux_old vmlinux_new
-> > > add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-18 (-18)
-> > > Function                                     old     new   delta
-> > > clocksource_verify_percpu                   1064    1046     -18
-> > >
-> > > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> > > ---
-> > >  kernel/time/clocksource.c | 4 +---
-> > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > >
-> > > diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-> > > index bb48498ebb5a..ab580873408b 100644
-> > > --- a/kernel/time/clocksource.c
-> > > +++ b/kernel/time/clocksource.c
-> > > @@ -343,9 +343,7 @@ static void clocksource_verify_choose_cpus(void)
-> > >          */
-> > >         for (i = 1; i < n; i++) {
-> > >                 cpu = get_random_u32_below(nr_cpu_ids);
-> > > -               cpu = cpumask_next(cpu - 1, cpu_online_mask);
-> > > -               if (cpu >= nr_cpu_ids)
-> > > -                       cpu = cpumask_first(cpu_online_mask);
-> > > +               cpu = cpumask_next_wrap(cpu - 1, cpu_online_mask);
-> > >                 if (!WARN_ON_ONCE(cpu >= nr_cpu_ids))
-> > >                         cpumask_set_cpu(cpu, &cpus_chosen);
-> > >         }
-> > 
-> > I think Yury submitted the same change here recently:
-> >   https://lore.kernel.org/lkml/20250607141106.563924-3-yury.norov@gmail.com/
-> > 
-> > Though, I think he has another iteration needed as Thomas had feedback
-> > on the subject line.
-> > 
-> > The bloat-o-meter data is a nice inclusion here!
-> > 
-> > Yury: Would you be open to adapting I Hsin Cheng's commit message into
-> > yours and adding them as co-author via the Co-developed-by: tag?
-> > (Assuming I Hsin Cheng agrees - See
-> > Documentation/process/submitting-patches.rst for how to do this
-> > properly).
+在 2025/6/12 15:31, Yu Kuai 写道:
+> Hi,
 > 
-> Yeah, bloat-o-meter report is good enough to add co-developed-by tag.
-> I Hsin, do you agree?
+> 在 2025/06/11 16:55, Wang Jinchao 写道:
+>> In the raid1_reshape function, newpool is
+>> allocated on the stack and assigned to conf->r1bio_pool.
+>> This results in conf->r1bio_pool.wait.head pointing
+>> to a stack address.
+>> Accessing this address later can lead to a kernel panic.
+>>
+>> Example access path:
+>>
+>> raid1_reshape()
+>> {
+>>     // newpool is on the stack
+>>     mempool_t newpool, oldpool;
+>>     // initialize newpool.wait.head to stack address
+>>     mempool_init(&newpool, ...);
+>>     conf->r1bio_pool = newpool;
+>> }
+>>
+>> raid1_read_request() or raid1_write_request()
+>> {
+>>     alloc_r1bio()
+>>     {
+>>         mempool_alloc()
+>>         {
+>>             // if pool->alloc fails
+>>             remove_element()
+>>             {
+>>                 --pool->curr_nr;
+>>             }
+>>         }
+>>     }
+>> }
+>>
+>> mempool_free()
+>> {
+>>     if (pool->curr_nr < pool->min_nr) {
+>>         // pool->wait.head is a stack address
+>>         // wake_up() will try to access this invalid address
+>>         // which leads to a kernel panic
+>>         return;
+>>         wake_up(&pool->wait);
+>>     }
+>> }
+>>
+>> Fix:
+>> The solution is to avoid using a stack-based newpool.
+>> Instead, directly initialize conf->r1bio_pool.
+>>
+>> Signed-off-by: Wang Jinchao <wangjinchao600@gmail.com>
+>> ---
+>> v1 -> v2:
+>> - change subject
+>> - use mempool_init(&conf->r1bio_pool) instead of reinitializing the 
+>> list on stack
+>> ---
+>>   drivers/md/raid1.c | 34 +++++++++++++++++++---------------
+>>   1 file changed, 19 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+>> index 19c5a0ce5a40..f2436262092a 100644
+>> --- a/drivers/md/raid1.c
+>> +++ b/drivers/md/raid1.c
+>> @@ -3366,7 +3366,7 @@ static int raid1_reshape(struct mddev *mddev)
+>>        * At the same time, we "pack" the devices so that all the missing
+>>        * devices have the higher raid_disk numbers.
+>>        */
+>> -    mempool_t newpool, oldpool;
+>> +    mempool_t oldpool;
+>>       struct pool_info *newpoolinfo;
+>>       struct raid1_info *newmirrors;
+>>       struct r1conf *conf = mddev->private;
+>> @@ -3375,9 +3375,6 @@ static int raid1_reshape(struct mddev *mddev)
+>>       int d, d2;
+>>       int ret;
+>> -    memset(&newpool, 0, sizeof(newpool));
+>> -    memset(&oldpool, 0, sizeof(oldpool));
+>> -
+>>       /* Cannot change chunk_size, layout, or level */
+>>       if (mddev->chunk_sectors != mddev->new_chunk_sectors ||
+>>           mddev->layout != mddev->new_layout ||
+>> @@ -3408,26 +3405,33 @@ static int raid1_reshape(struct mddev *mddev)
+>>       newpoolinfo->mddev = mddev;
+>>       newpoolinfo->raid_disks = raid_disks * 2;
+>> -    ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
+>> -               rbio_pool_free, newpoolinfo);
+>> -    if (ret) {
+>> -        kfree(newpoolinfo);
+>> -        return ret;
+>> -    }
+>>       newmirrors = kzalloc(array3_size(sizeof(struct raid1_info),
+>> -                     raid_disks, 2),
+>> -                 GFP_KERNEL);
+>> +    raid_disks, 2),
+>> +    GFP_KERNEL);
+>>       if (!newmirrors) {
+>>           kfree(newpoolinfo);
+>> -        mempool_exit(&newpool);
+>>           return -ENOMEM;
+>>       }
+>> +    /* stop everything before switching the pool */
+>>       freeze_array(conf, 0);
+>> -    /* ok, everything is stopped */
+>> +    /* backup old pool in case restore is needed */
+>>       oldpool = conf->r1bio_pool;
+>> -    conf->r1bio_pool = newpool;
+>> +
+>> +    ret = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, 
+>> r1bio_pool_alloc,
+>> +               rbio_pool_free, newpoolinfo);
+>> +    if (ret) {
+>> +        kfree(newpoolinfo);
+>> +        kfree(newmirrors);
+>> +        mempool_exit(&conf->r1bio_pool);
+>> +        /* restore the old pool */
+>> +        conf->r1bio_pool = oldpool;
+>> +        unfreeze_array(conf);
+>> +        pr_err("md/raid1:%s: cannot allocate r1bio_pool for reshape\n",
+>> +            mdname(mddev));
+>> +        return ret;
+>> +    }
+>>       for (d = d2 = 0; d < conf->raid_disks; d++) {
+>>           struct md_rdev *rdev = conf->mirrors[d].rdev;
+>>
+> 
+> Any specific reason not to use mempool_resize() and krealloc() here?
+> In the case if new raid_disks is greater than the old one.
+The element size is different between the old pool and the new pool.
+mempool_resize only resizes the pool size (i.e., the number of elements 
+in pool->elements), but does not handle changes in element size, which 
+occurs in raid1_reshape.
 
-Sure thing, so do I need to apply the tag myself or we'll follow Yury's
-patch work?
+Another reason may be to avoid modifying the old pool directly — in case 
+initializing the new pool fails, the old one remains usable.
 
-Best regards,
-I Hsin Cheng
+If we modify the old pool directly and the operation fails, not only 
+will the reshaped RAID be unusable, but the original RAID may also be 
+corrupted.
+> 
+> Thanks,
+> Kuai
+> 
 
