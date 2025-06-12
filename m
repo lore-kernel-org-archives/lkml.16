@@ -1,137 +1,270 @@
-Received: from kurisu.lahfa.xyz (kurisu.lahfa.xyz [163.172.69.160])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBB5537F8;
-	Thu, 12 Jun 2025 22:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.69.160
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB452D0292
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749767509; cv=none; b=aTBcH+boqbNNFOEGDCvu02HNtlOsc/A9uDYJKe6iYEVed1gXP6icic5OSZHfFDu02BN/MtLxC/FC5jA25hxuusvxHIxgy+Hjga61hFakTyO87Y0RFI1rcFQQwXg5zQAnmlm8wDE4yr6NEh0cLpkfA+bgMdcRNMCqQ+MMG4bDI7Y=
+	t=1749767568; cv=none; b=C5Htbv0I0R3XdN9NsBudDLG9b5sgzvQN+JdQt9a+WH3ZEKfGL+vtpvxW9F9W8nFt6nyAVceNgrNHnZB/wE/FJBYedPf525lRmj9c1kXwP8fvjv4Cawk1iyK8qvNQ4ThpVvuUfMY2UDFNThdQm2knq0J8p9CNG+w1cPzvZKQKX0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749767509; c=relaxed/simple;
-	bh=cH2TJaPhP16q+O7GZ4mzgek1QfkFEQdXgNxSfT/q03M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UrSSVhaBsIqm9Dlwfbk3D3ktir4lI/98bCcMQkHgeQMKLsvc+ZtkEDQMmZtaP6IX+Lkm609MoR8p3+QJ/b58zlBHMv0fJxX3RPZkFtsWUhIMuDnP2le0QlmbmOo1clNrtadMrhblmuafJBhJIvjIsrIt3eEilGFM6+1tQvgJQEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lahfa.xyz; spf=pass smtp.mailfrom=lahfa.xyz; dkim=pass (1024-bit key) header.d=lahfa.xyz header.i=@lahfa.xyz header.b=hyWwVe6y; arc=none smtp.client-ip=163.172.69.160
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lahfa.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lahfa.xyz
+	s=arc-20240116; t=1749767568; c=relaxed/simple;
+	bh=ctdtthRBf734RF+bRXRAg1huSW90W+IfRetliFxoKTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mJ+tcY/NHMa4/PBLaht4h4jIeLNUHVHm8NSzF1zhgya0PJYBHQv2Ct1EtWY9RrpbA/gXuAXzdZSlv5jfyzgTRe5v7SCc/pTx11iEVOfJp6R6GRxi1dHi3pQ5JiLuU5qLyjFZD4L017IDC7r1a11tLUlkTjBE/fsqvG5J2BrVEf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MykXgfUT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lahfa.xyz header.i=@lahfa.xyz header.b="hyWwVe6y"
-Date: Fri, 13 Jun 2025 00:24:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lahfa.xyz; s=kurisu;
-	t=1749767060;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MykXgfUT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749767565;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k5CSy6NPtlYW+SywnOyyYPKFA5kG/64nLhhD3+nTO/Q=;
-	b=hyWwVe6yQIc8ayyl5ZJszKksBtIr6039zYA9qoofbPidbru0i7jkgdhUcBiXBa0zQluBhK
-	guYuK5Mf9JXhJv1BL+10mTDU9Br0lttTKel/wunz+eBzSCA6r6mc2D0kXGOitNPpEEQF8k
-	tlOqIr++/TR3ACEaM8sZCrDbn7OJ/v4=
-From: Ryan Lahfa <ryan@lahfa.xyz>
-To: Antony Antony <antony.antony@secunet.com>
-Cc: David Howells <dhowells@redhat.com>, 
-	Antony Antony <antony@phenome.org>, Christian Brauner <brauner@kernel.org>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Sedat Dilek <sedat.dilek@gmail.com>, Maximilian Bosch <maximilian@mbosch.me>, 
-	regressions@lists.linux.dev, v9fs@lists.linux.dev, netfs@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
-Message-ID: <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
-References: <ZxFQw4OI9rrc7UYc@Antony2201.local>
- <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
- <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
- <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
- <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
- <3327438.1729678025@warthog.procyon.org.uk>
- <ZxlQv5OXjJUbkLah@moon.secunet.de>
+	bh=6EkmZKkEbCw6g+yAHEMJk9YyAvmLNqFOuK+gidHgpWQ=;
+	b=MykXgfUTn4JY3cAh2nZsWtsFjXLMmE4N31ezaUtUxpFObMg5c/T6ROkPbDoEXD0RxlnbMM
+	4hq2Jsx0JQ+r6j88HhmNXMV2KJ16ac5Ty72EtjRZvYw49lbqsE0HJ3HZq4bq1JEHPyAYFl
+	f3DRWsXiLPP+7pfAVll+j5viZT0yFcU=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-633-YXqpRqviNjm4SJJUcacWsg-1; Thu, 12 Jun 2025 18:32:44 -0400
+X-MC-Unique: YXqpRqviNjm4SJJUcacWsg-1
+X-Mimecast-MFC-AGG-ID: YXqpRqviNjm4SJJUcacWsg_1749767563
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86cfa0cb1eeso13116539f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:32:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749767563; x=1750372363;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6EkmZKkEbCw6g+yAHEMJk9YyAvmLNqFOuK+gidHgpWQ=;
+        b=fSb0YrKinDybZNPQBOYfCXOviY2y/7GdVrOsnIKPYcqK3iS6xR6B84cf1ZAbyy9GNZ
+         GVpBRnPwv4md28CbmXrglv1kpLLS8iEBincjXcZztNI5EIlnuffGuBH5Xw8lMUbeUebX
+         f6F3itbN6sPT/NBdSTlxcSN2hRKhD1zZHJqkiThtAHM+Yu016m9DaEOQ5LGJRuftHn2x
+         alOw1xs2AFN36yyB4uCB6ZL2JWeb5GiDXRLxhwYNCaKAe6yEXbl6+ke/nyDt+2BU0tKw
+         Dq5s2XSW7VvqUOJr1Br1LKMk+fYLvF6PtDDMly26683I3dLyg40GkfEGvl9SLsh/ZUUD
+         gahw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+0AXFZre67dkbhGaJT981ogeNMc+EcsUcAu61bjssPI9DPc+xFtbZ0aVO7PDuXrfepmuw8SPg+k434do=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI+nuBq8PJATqdnpYD+xbkJsenJfyucAi1EB7KOk6RrJ0ZYYW5
+	+Ad/NBvn/SDBBRAUkDl3NYlYxuKByxk0GBojx8jEee0IYruBJokqzU1eLqFEF/cOtF05fRf3Uwh
+	FO/q0tchaTU45Hf6B9EyXdh3qg5QBusiict8PA/o6xuulYw2PxeUrO/1YyAf29PI0/w==
+X-Gm-Gg: ASbGnctWDzWS0xBMshLmxt7S3TXnYEYj/p40VaKRIM1wPPr8xgN0BUjs60iTEQ5xjEo
+	whrXmhrL3QTZ+HwTXoI1MIFGXVn8AUdZqrPQnYmdnhHhPVV2q9kpGz6641oi3he7ncubZucKIY4
+	mHG1JyB0PVgaC9RDOo6xTrovv7h8Z2hIFQvkAuhEYd3J4FAnrW+o9E8aeHtsFjToeaWIdyeEB8i
+	IVAR2EAqDsaOByKYe/4Kgf52kYxW58Mfs98q9MpuqatpdPXaLeRGGUHa2pdSEeiqeNNKA3kn3nn
+	Q6Om4MToNkcrFxAu4Bk5DvlgEw==
+X-Received: by 2002:a05:6e02:1c23:b0:3dd:990b:83e3 with SMTP id e9e14a558f8ab-3de00a146a1mr2862875ab.0.1749767563160;
+        Thu, 12 Jun 2025 15:32:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECFjWxtIl10OpsNKUPkSqSRGbG0DNH2aN/PiID4uxi4rhkt+zNmPyfwseizCMRqeeZbRBHWg==
+X-Received: by 2002:a05:6e02:1c23:b0:3dd:990b:83e3 with SMTP id e9e14a558f8ab-3de00a146a1mr2862815ab.0.1749767562754;
+        Thu, 12 Jun 2025 15:32:42 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de019d11e8sm130095ab.30.2025.06.12.15.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 15:32:41 -0700 (PDT)
+Date: Thu, 12 Jun 2025 16:32:39 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: lizhe.67@bytedance.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Xu
+ <peterx@redhat.com>, David Hildenbrand <david@redhat.com>
+Subject: Re: [RFC v2] vfio/type1: optimize vfio_unpin_pages_remote() for
+ large folio
+Message-ID: <20250612163239.5e45afc6.alex.williamson@redhat.com>
+In-Reply-To: <20250610045753.6405-1-lizhe.67@bytedance.com>
+References: <20250610045753.6405-1-lizhe.67@bytedance.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZxlQv5OXjJUbkLah@moon.secunet.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi everyone,
+[Cc+ David, Peter]
 
-Le Wed, Oct 23, 2024 at 09:38:39PM +0200, Antony Antony a écrit :
-> On Wed, Oct 23, 2024 at 11:07:05 +0100, David Howells wrote:
-> > Hi Antony,
-> > 
-> > I think the attached should fix it properly rather than working around it as
-> > the previous patch did.  If you could give it a whirl?
+On Tue, 10 Jun 2025 12:57:53 +0800
+lizhe.67@bytedance.com wrote:
+
+> From: Li Zhe <lizhe.67@bytedance.com>
 > 
-> Yes this also fix the crash.
+> This patch is based on patch 'vfio/type1: optimize vfio_pin_pages_remote()
+> for large folios'[1].
 > 
-> Tested-by: Antony Antony <antony.antony@secunet.com>
+> When vfio_unpin_pages_remote() is called with a range of addresses that
+> includes large folios, the function currently performs individual
+> put_pfn() operations for each page. This can lead to significant
+> performance overheads, especially when dealing with large ranges of pages.
+> 
+> This patch optimize this process by batching the put_pfn() operations.
+> 
+> The performance test results, based on v6.15, for completing the 16G VFIO
+> IOMMU DMA unmapping, obtained through unit test[2] with slight
+> modifications[3], are as follows.
+> 
+> Base(v6.15):
+> ./vfio-pci-mem-dma-map 0000:03:00.0 16
+> ------- AVERAGE (MADV_HUGEPAGE) --------
+> VFIO MAP DMA in 0.048 s (331.3 GB/s)
+> VFIO UNMAP DMA in 0.138 s (116.1 GB/s)
+> ------- AVERAGE (MAP_POPULATE) --------
+> VFIO MAP DMA in 0.281 s (57.0 GB/s)
+> VFIO UNMAP DMA in 0.313 s (51.1 GB/s)
+> ------- AVERAGE (HUGETLBFS) --------
+> VFIO MAP DMA in 0.053 s (301.2 GB/s)
+> VFIO UNMAP DMA in 0.139 s (115.2 GB/s)
+> 
+> Map[1] + This patches:
+> ------- AVERAGE (MADV_HUGEPAGE) --------
+> VFIO MAP DMA in 0.028 s (578.4 GB/s)
+> VFIO UNMAP DMA in 0.049 s (324.8 GB/s)
+> ------- AVERAGE (MAP_POPULATE) --------
+> VFIO MAP DMA in 0.293 s (54.6 GB/s)
+> VFIO UNMAP DMA in 0.308 s (51.9 GB/s)
+> ------- AVERAGE (HUGETLBFS) --------
+> VFIO MAP DMA in 0.032 s (494.5 GB/s)
+> VFIO UNMAP DMA in 0.050 s (322.8 GB/s)
+> 
+> For large folio, we achieve an approximate 64% performance improvement
+> in the VFIO UNMAP DMA item. For small folios, the performance test
+> results appear to show no significant changes.
+> 
+> [1]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
+> [2]: https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
+> [3]: https://lore.kernel.org/all/20250610031013.98556-1-lizhe.67@bytedance.com/
+> 
+> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> ---
+> Changelogs:
+> 
+> v1->v2:
+> - Refactor the implementation of the optimized code
+> 
+> v1 patch: https://lore.kernel.org/all/20250605124923.21896-1-lizhe.67@bytedance.com/
+> 
+>  drivers/vfio/vfio_iommu_type1.c | 53 +++++++++++++++++++++++++--------
+>  1 file changed, 41 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 28ee4b8d39ae..2f6c0074d7b3 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -469,17 +469,28 @@ static bool is_invalid_reserved_pfn(unsigned long pfn)
+>  	return true;
+>  }
+>  
+> -static int put_pfn(unsigned long pfn, int prot)
+> +static inline void _put_pfns(struct page *page, int npages, int prot)
+>  {
+> -	if (!is_invalid_reserved_pfn(pfn)) {
+> -		struct page *page = pfn_to_page(pfn);
+> +	unpin_user_page_range_dirty_lock(page, npages, prot & IOMMU_WRITE);
+> +}
+>  
+> -		unpin_user_pages_dirty_lock(&page, 1, prot & IOMMU_WRITE);
+> -		return 1;
+> +/*
+> + * The caller must ensure that these npages PFNs belong to the same folio.
+> + */
+> +static inline int put_pfns(unsigned long pfn, int npages, int prot)
+> +{
+> +	if (!is_invalid_reserved_pfn(pfn)) {
+> +		_put_pfns(pfn_to_page(pfn), npages, prot);
+> +		return npages;
+>  	}
+>  	return 0;
+>  }
+>  
+> +static inline int put_pfn(unsigned long pfn, int prot)
+> +{
+> +	return put_pfns(pfn, 1, prot);
+> +}
+> +
+>  #define VFIO_BATCH_MAX_CAPACITY (PAGE_SIZE / sizeof(struct page *))
+>  
+>  static void __vfio_batch_init(struct vfio_batch *batch, bool single)
+> @@ -805,15 +816,33 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
+>  				    unsigned long pfn, unsigned long npage,
+>  				    bool do_accounting)
+>  {
+> -	long unlocked = 0, locked = 0;
+> -	long i;
+> +	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
+>  
+> -	for (i = 0; i < npage; i++, iova += PAGE_SIZE) {
+> -		if (put_pfn(pfn++, dma->prot)) {
+> -			unlocked++;
+> -			if (vfio_find_vpfn(dma, iova))
+> -				locked++;
+> +	while (npage) {
+> +		struct folio *folio;
+> +		struct page *page;
+> +		long step = 1;
+> +
+> +		if (is_invalid_reserved_pfn(pfn))
+> +			goto next;
+> +
+> +		page = pfn_to_page(pfn);
+> +		folio = page_folio(page);
+> +
+> +		if (!folio_test_large(folio)) {
+> +			_put_pfns(page, 1, dma->prot);
+> +		} else {
+> +			step = min_t(long, npage,
+> +				folio_nr_pages(folio) -
+> +				folio_page_idx(folio, page));
+> +			_put_pfns(page, step, dma->prot);
+>  		}
+> +
+> +		unlocked += step;
+> +next:
 
-I cannot confirm this fixes the crash for me. My reproducer is slightly
-more complicated than Max's original one, albeit, still on NixOS and
-probably uses 9p more intensively than the automated NixOS testings
-workload.
+Usage of @step is inconsistent, goto isn't really necessary either, how
+about:
 
-Here is how to reproduce it:
+	while (npage) {
+		unsigned long step = 1;
 
-$ git clone https://gerrit.lix.systems/lix
-$ cd lix
-$ git fetch https://gerrit.lix.systems/lix refs/changes/29/3329/8 && git checkout FETCH_HEAD
-$ nix-build -A hydraJobs.tests.local-releng
+		if (!is_invalid_reserved_pfn(pfn)) {
+			struct page *page = pfn_to_page(pfn);
+			struct folio *folio = page_folio(page);
+			long nr_pages = folio_nr_pages(folio);
 
-I suspect the reason for why Antony considers the crash to be fixed is
-that the workload used to test it requires a significant amount of
-chance and retries to trigger the bug.
+			if (nr_pages > 1)
+				step = min_t(long, npage,
+					nr_pages -
+					folio_page_idx(folio, page));
 
-On my end, you can see our CI showing the symptoms:
-https://buildkite.com/organizations/lix-project/pipelines/lix/builds/2357/jobs/019761e7-784e-4790-8c1b-f609270d9d19/log.
+			_put_pfns(page, step, dma->prot);
+			unlocked += step;
+		}
 
-We retried probably hundreds of times and saw different corruption
-patterns, Python getting confused, ld.so getting confused, systemd
-sometimes too. Python had a much higher chance of crashing in many of
-our tests. We reproduced it over aarch64-linux (Ampere Altra Q80-30) but
-also Intel and AMD CPUs (~5 different systems).
+> +		pfn += step;
+> +		iova += PAGE_SIZE * step;
+> +		npage -= step;
+>  	}
+>  
+>  	if (do_accounting)
 
-As soon as we reverted to Linux 6.6 series, the bug went away.
+AIUI, the idea is that we know we have npage contiguous pfns and we
+currently test invalid/reserved, call pfn_to_page(), call
+unpin_user_pages_dirty_lock(), and test vpfn for each individually.
 
-We bisected but we started to have weirder problems, this is because we
-encountered the original regression mentioned in October 2024 and for a
-certain range of commits, we were unable to bisect anything further.
+This instead wants to batch the vpfn accounted pfns using the range
+helper added for the mapping patch, infer that continuous pfns have the
+same invalid/reserved state, the pages are sequential, and that we can
+use the end of the folio to mark any inflections in those assumptions
+otherwise.  Do I have that correct?
 
-So I switched my bisection strategy to understand when the bug was
-fixed, this lead me on the commit
-e65a0dc1cabe71b91ef5603e5814359451b74ca7 which is the proper fix
-mentioned here and on this discussion.
+I think this could be split into two patches, one simply batching the
+vpfn accounting and the next introducing the folio dependency.  The
+contributions of each to the overall performance improvement would be
+interesting.
 
-Reverting this on the top of 6.12 cause indeed a massive amount of
-traces, see this gist [1] for examples.
+I'll Cc some mm folks to see if they can punch holes in it.  Thanks,
 
-Applying the "workaround patch" aka "[PATCH] 9p: Don't revert the I/O
-iterator after reading" after reverting e65a0dc1cabe makes the problem
-go away after 5 tries (5 tries were sufficient to trigger with the
-proper fix).
+Alex
 
-If this can be helpful, the nature of the test above is to copy a
-significant amount of assets to an S3 implementation (Garage) running
-inside of the VM. Many of these assets comes from the Nix store which
-sits over 9p.
-
-Anyhow, I see three patterns:
-
-- Kernel panic when starting the /init, this is the crash Max reported
-  back in October 2024 and the one we started to encounter while
-  bisecting this problem in the range between v6.11 and v6.12.
-- systemd crashing very quickly, 
-  this is what we see when reverting e65a0dc1cabe71b91ef5603e5814359451b74ca7
-  on the top of v6.12 *OR* when we are around v6.12rc5.
-- what the CI above shows which are userspace programs crashing after
-  some serious I/O exercising has been done, which happens on the top of
-  v6.12, v6.14, v6.15 (incl. stable kernels).
-
-If you need me to test things, please let me know.
-
-[1]: https://gist.dgnum.eu/raito/3d1fa61ebaf642218342ffe644fb6efd
--- 
-Ryan Lahfa
