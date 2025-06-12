@@ -1,114 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580CC2D3232;
-	Thu, 12 Jun 2025 18:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754693; cv=none; b=AA4wEWMHWqvUHuDSoJZqBlZmS/bjXUPbi4VtFDsl4Za7M24OCKLBozcpxqUw9D+mTjVFeCq3E6f3XtIg3AXqkCuJpz0QaY9xj9RolNGyQgc1hB1q0VudB+SvpT5RB+x76JWsqiODyGpte+HwwluV1djwbg2fXBZ83MLkgzg0CNQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754693; c=relaxed/simple;
-	bh=zaz/qKtnA1eAwQLge9799svVuaz0bK6tpHPHFb9I4nM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O/LXU7PQ+5KhQfzIxPS1+lGnTbS/aeohLDpYXp6MdIvKXvJN8U8ESF2alWa52yqg/0o9qoVnTrgkZ5x30yL5qHiMABUE6R6d7NjxvnT4FcVL0jdfo0m7h5Q+Flc+Ik/zcgpkb5NAo1annXNcWuVZCRW1r6NEsLn3jL1DAFtW/lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CEg1rSys; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2321F2D6629;
+	Thu, 12 Jun 2025 18:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749754698; cv=pass; b=FvkGCfc86CI+quMQHYtBezTedocdP0adNlr39Cxd9UZWJN472DP2jcwTcKxjqnsrdr+kxwwg0ZVYfkGPD8U7N/PghIOWPyI3h/8CTGUTTFP+Odw/ohOcJwrZlhw7E3ZDxjy3gx+IHHTWmP2B8+/gJvyp5lXXtrCoZGJPEXSYun8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749754698; c=relaxed/simple;
+	bh=oZ43J9vdeTFKLjmcPo+eLytEk+JVxZZ7XSoA67LPgEA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=twpFRIA5atPlIEYrWJp23ImYIj+Kt3VJvAroq3fNihai9O+BlP2ZJ43yAzj3JvKyTNV0Mu3wngHX/jAxk3my/3kUn7t5RndbD+IACmyiPx8DgK3/r3VZiHySWVdjYQUHmEeg05mbiDP8u9x928IffMEilzuT+0a8WK4xgyc7cjw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=MKyukhD9; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CEg1rSys"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749754691; x=1781290691;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=zaz/qKtnA1eAwQLge9799svVuaz0bK6tpHPHFb9I4nM=;
-  b=CEg1rSys/Y2NLC4wWixgGwXmLlSPQWQhLb7m094voWW5DimLs1UjmQic
-   XACSHgiYE1D+OsEqq9fBKm6Sx9iVbuzS+/2D99zrcFl4zhHlrGc1TJ6Cr
-   S1Ybh+SWqfeyLtu5gpCASIuqecEtyg9e1X7QElulhJlt1omm4io8cbKDt
-   EdiDS0drTUj6PVTfWIxbih1+NL0Bmao56oaVZjnFHHaO3DwbjqAFTjVpt
-   wJF7KObc6rz2bm3gM8ve6oWgoQrF6l4wItGSBPW6WWeDBLXO7QF0Azdvj
-   mWTzxOMzmaVUArNzR7s5A/twIkbyjsHZGPeR7FQKimQg+HD6FTiAJe2cd
-   Q==;
-X-CSE-ConnectionGUID: HW4d9bCOTKSQF9iiyuHR4Q==
-X-CSE-MsgGUID: wo45PT2mQKOpJu4BfxfbiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55627070"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="55627070"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 11:58:11 -0700
-X-CSE-ConnectionGUID: lqZL7g11Tj2E3L7ZXAXFgg==
-X-CSE-MsgGUID: yTjIVX5zS5G2SFZ75CZymQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="152766963"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 11:58:08 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uPn7l-000000061eI-2CMG;
-	Thu, 12 Jun 2025 21:58:05 +0300
-Date: Thu, 12 Jun 2025 21:58:05 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] iio: amplifiers: ada4250: move offset_uv in struct
-Message-ID: <aEsjPffnVdhMXXFK@smile.fi.intel.com>
-References: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-0-bf85ddea79f2@baylibre.com>
- <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-4-bf85ddea79f2@baylibre.com>
- <aErQVKul7Gnxvu3F@smile.fi.intel.com>
- <275cf035-f0ca-4aa6-a41f-b0c21d7c9374@baylibre.com>
- <CAHp75VeewKdOQk9qoO-2Ann90hwAGE0goOtiOG9BRjJ4cn6h=g@mail.gmail.com>
- <846f5979-778a-41f0-b5d2-52d639607315@baylibre.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="MKyukhD9"
+ARC-Seal: i=1; a=rsa-sha256; t=1749754637; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cQ/34ghqKuGjcrWPS7b1Wq9MVwd24fiYy33dfNtZnwjp0TIlEGsMMZkTkkw84nbbhyDSgqmMOg6aYVQUnswX2KLbY0zwxv0fjczYXuNmDI9AjiDoJ53+BOvo0HtFYsCaa1N4+iXE/Gt8d2kk9TDm8pR2k9zH/lnXEDwCkrRV/oc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749754637; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=9FbAT/kFTYAJV4B26t5chvy2NGDoQ0MYqsffVQGJEKY=; 
+	b=XyyXjlQtxQmWzzagFz4yGtANAwqMiepjym1NS8jMP7V5pzr6sadWHFUOWHGQQA1lmJOUo+2QVCccrPjUdAHykFtt2qVQfI5NJMoC0aurpHLczUmmCxA+FIBFmqkGSy+zMtgNP71TMcvQCucOhyMW1/vo/Z+nd2aexOPze1q130I=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754637;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=9FbAT/kFTYAJV4B26t5chvy2NGDoQ0MYqsffVQGJEKY=;
+	b=MKyukhD9mQguSmr/ZgdeSbDoZqzeO5gjhx6xYALY/foknYyAnNv2HJdJdbqSA2Gk
+	dxkFofcpizGOU+UgoFrzslUvu4X+WEoVS+h5BQsh12DO2+BCeOD6RwVJoRJvirAWqIk
+	4vQvnFeC037T1+7jdCaeWd4mGVHpghNxJIBdYm7U=
+Received: by mx.zohomail.com with SMTPS id 1749754636246148.0365477005737;
+	Thu, 12 Jun 2025 11:57:16 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Thu, 12 Jun 2025 20:56:06 +0200
+Subject: [PATCH 04/20] media: synopsys: hdmirx: replace macros with
+ bitfield variants
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <846f5979-778a-41f0-b5d2-52d639607315@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-byeword-update-v1-4-f4afb8f6313f@collabora.com>
+References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+To: Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Shreeya Patel <shreeya.patel@collabora.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Shawn Lin <shawn.lin@rock-chips.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+ MyungJoo Ham <myungjoo.ham@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Thu, Jun 12, 2025 at 01:45:16PM -0500, David Lechner wrote:
-> On 6/12/25 1:34 PM, Andy Shevchenko wrote:
-> > On Thu, Jun 12, 2025 at 6:31 PM David Lechner <dlechner@baylibre.com> wrote:
-> >> On 6/12/25 8:04 AM, Andy Shevchenko wrote:
-> >>> On Wed, Jun 11, 2025 at 04:33:04PM -0500, David Lechner wrote:
-> >>>> Move offset_uv in struct ada4250_state. This keeps things logically
-> >>>> grouped and reduces holes in the struct.
-> >>>
-> >>> Can the (smallest part of) the diff for `pahole` runs be added here?
-> >>
-> >> Well, I didn't use pahole. I could just tell by looking at it. There
-> >> was int followed by two u8 followed by int, so we know there was a 2
-> >> byte hole before the last int.
-> > 
-> > Yes, but since we have a tool for such cases, why not use it?
-> 
-> In cases like this, I don't think the we are getting much value
-> from it compared to the amount of time it would take me to do it.
+The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
+drivers that use constant masks.
 
-It helps reviewers to see the difference without checking themselves.
-Also, it's not a waste of 15 minutes (that's my experience with pahole
-when I started it first time), it's an investment to the future similar
-changes by you or others. Believe me, as a reviewer you will find this tool
-very helpful.
+Replace the UPDATE macro with bitfield.h's FIELD_PREP, to give us
+additional error checking.
 
-So, please try it once and then you will know how to do that again much
-quicker.
+Also, replace the HIWORD_UPDATE macro at the same time with bitfield.h's
+new HWORD_UPDATE macro, which also gives us additional error checking.
+
+The UPDATE/HIWORD_UPDATE macros are left as wrappers around the
+bitfield.h macros, in order to not rock the boat too much, and keep the
+changes easy to review.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+ drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
+index 220ab99ca61152b36b0a08b398ddefdb985709a5..cd5250e282a5c9de9a75ea73f26496ed53766dff 100644
+--- a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
++++ b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
+@@ -8,10 +8,11 @@
+ #ifndef DW_HDMIRX_H
+ #define DW_HDMIRX_H
+ 
++#include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ 
+-#define UPDATE(x, h, l)		(((x) << (l)) & GENMASK((h), (l)))
+-#define HIWORD_UPDATE(v, h, l)	(((v) << (l)) | (GENMASK((h), (l)) << 16))
++#define UPDATE(x, h, l)		(FIELD_PREP(GENMASK((h), (l)), (x)))
++#define HIWORD_UPDATE(v, h, l)	(HWORD_UPDATE(GENMASK((h), (l)), (v)))
+ 
+ /* SYS_GRF */
+ #define SYS_GRF_SOC_CON1			0x0304
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
