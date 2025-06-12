@@ -1,119 +1,90 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E4D289804;
-	Thu, 12 Jun 2025 15:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A3E27511A;
+	Thu, 12 Jun 2025 15:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740993; cv=none; b=KtJWZE0nOTHCWI3DcvFWsYZUuvYmuMPxjqIkY9vUr/J8c+VORWXuMwf3Wc7IbtFLcycet7rDMW2Um7/BQHhXDK1AmPedNdb64EWPJXQC6lwMYLspdkftxyDdCY6YXHMPR/m1EA0qPonQmjdm5ofJbQkapZ9ympVdeAvAOmyKxgY=
+	t=1749741003; cv=none; b=KxjBof4xEkDuLZRh7TPl8hVuW1rhIJujBBhAhbDBF0ILFWNTps6SHVl5Ap0cCS6yVtInO25vwcPOhNcGHVRB8uSY7tQaryJCaxSBymRmC0h4pi/PLOz2Ltam0exk0ip0wIcsJ0Q6COkORMT4FHAP+CFcuBU4lMM2eKrPSXzIsNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740993; c=relaxed/simple;
-	bh=MoojmeoRF4o0D1mo63kTveZ/tYQdb3lhmx3lmiIHecU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UV/VrktrukkJZ2pLRK3XaCtuOfz5t2HrGMV3RrfGTsEzJ75ADsqyKV4CCouGBxzMJhP+iEkoriQOYcMR5mGAokqNa60ATqIwD5Y39qSmTjjKRjgpFuQdytp1hn7AO/bw+0yMzlaSu1UG7jMcrECbqa8SWn/fa8wPFUIBCb1S5v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LZIhZgzh; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749741003; c=relaxed/simple;
+	bh=dSXo45mIJJx9bDeTqNn31sUJ/q0OnjYwLXEix43Xrw0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jcTd9rZ7YGucSbORzdahNljm6SEvTu4B75VdVhRh3e1Vt2CI7u+9LMjIJPbrt9yZPPY5Sidf8MYSEQvBtntB+xaiGijuSAV6KBWJhlqmoSE/GfnkxjYWyabQe2U23roxs6ymlWTs70BAq8FwMhOHhRMd55pyKXf/FXzGZIw1WkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=glwmPQ2C; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZIhZgzh"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3137c2021a0so947385a91.3;
-        Thu, 12 Jun 2025 08:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749740991; x=1750345791; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yUuhnoKELMuM+rze0VXW6hHnp/ZBtRvDccMUHcPOHQ4=;
-        b=LZIhZgzh/DEpFo7bVDu2+l0VypWAG4jN96YS/UrwocmhZ22j/mBqqIIXC4KI2YADfS
-         hc4NrkiLWd875LYYF/PdCaQwtnOAEUtal+lpSyBcTj/zSubqfxGqJFiLKmim6uIvXvmg
-         tq0ofCJGAGsRvOwQRqxB2JPiqiaWE7lNU8TtY4ZQpnXF2ndE8Bl7SkxdhN/xagikF1NX
-         IvCgQ+jo/D8ddA1pOxNbAdrmvTC3XGC3VguzcxpuC4nRbPVzFKGg/B3TDq0g5fddoO+O
-         DlEnBvK+diCCj0CS8YNEc490g6Uf2t/iDwlszyVeu4KH+MqP1S/hzYJIT1UsV/ZQ4Rfl
-         i/UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749740991; x=1750345791;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yUuhnoKELMuM+rze0VXW6hHnp/ZBtRvDccMUHcPOHQ4=;
-        b=Iht3JXc0XE9rl/B9WaZYOw9z8k5EGj83Rx23pm9fOZKhSGSw1LXs/DEdEd1nG/lVU9
-         ZADuHnPzi9EAUqc83ceVlf1vPIetvI6lneSQ4MlfcPVxw3WpGIQPH61y2mdTKlLaz5p9
-         KH2vZQp1P8gkAmOilusZO5bz97Xj1B6LAyKnMcTIG/QmX+IxaJp0DUetZtt8Eg2a2G/2
-         LQFq53po9Pf0ISOkH1ic8lP7uKtLbug6k7ooukxbJjNVqmirMBkhMLfP1H/5QQk6TESX
-         lJPGwIrSeb6B8u0QmsExJrsmSwd9O4vHuNtJlwdzmIEiWJrRwszAcigESPUar0/Ycj0R
-         +PCA==
-X-Forwarded-Encrypted: i=1; AJvYcCV90Yc2lIvs8we13XxOUG8gwWtjAzh9cKlRQ6ImYs0mfGz55yhqOXxaeJ4sgxxM8f2XcSUZtJo9Bgb+dQs=@vger.kernel.org, AJvYcCX5XcqsN3vzXb+ysT7uGv9FJRoH1b7Fylic7DyKnrxs1SXgp6koin7hqRnCRtp6qYmyxLG5stsKa8UuNxSeAg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSnZmBbxbH3kHRB1CW9vYtee2vvHGqjCmd3co4phr9VjTl+9yI
-	h2UwR2dboijOLiK8UbT5L6ZY+JTwFpw/o0v8Ctu047L9YaDk4KbPYoQi9oCLMRJZevM+GZ0iNbt
-	aT9K38qawKD6EaMsLNqpRxq5+P6hMIqY=
-X-Gm-Gg: ASbGncuOga+rr70BVFAKISMfcY1mAr50DrevIDxdwsPdj8yY3vzvRnUdUKNKy+AXn8s
-	5i76SucNq10V+ChyKm5qf562/ludQno+XkZ/XGZ1+uLpJuy//Wuu++GItvmwORo7qKg5CLrQwBy
-	LTaE4uoLbKj/ju1GZuRHJMn8SUgna/thdV3YHmHSwBYgY=
-X-Google-Smtp-Source: AGHT+IGpCu/ny+HlAgnFhT+7qJZLmizvXxbjXDA0wRsEoawbaUXHksVEjxlmPIQOaKo8SUI2IttvsJ2Jab7iAef/vpw=
-X-Received: by 2002:a17:90b:4d07:b0:311:c970:c9bc with SMTP id
- 98e67ed59e1d1-313af21d9bfmr11247530a91.30.1749740990703; Thu, 12 Jun 2025
- 08:09:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="glwmPQ2C"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 7075025C7B;
+	Thu, 12 Jun 2025 17:10:00 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id guWSlxOGple0; Thu, 12 Jun 2025 17:09:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1749740999; bh=dSXo45mIJJx9bDeTqNn31sUJ/q0OnjYwLXEix43Xrw0=;
+	h=From:Subject:Date:To:Cc;
+	b=glwmPQ2CSMUg8fREOyygECG6WwXxlVb+wX16fBWBwWSdhrZZs3DDXfSGRf1pL2KUv
+	 XBiaj0mtIneJeaSpdZBwbrM27QMAN5ZPKHsV6E94LVOqygMVnlh5SbVyRkjXFLO4Kh
+	 ytQFo315OmRo8ozmC6/lB7Q0RrpIFYHfa2se+eG2hA5HyScrGNlNJvvSRDeIFcvn1W
+	 SRIFgp8gVdxMjO6SzYVMTTg/2XS95cuhMeOTEwdKhMQAsVdFC7vCD4C9jI6ilIy39i
+	 WktJloerb2WhF6VsYwM/vsSLNVk712C2IvKdBN+1o4EAHlSK2VtT7yr+3wYeDgOHXZ
+	 H+wnu1ViQdNqg==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH 0/2] Support for Exynos7870's MIPI PHY blocks
+Date: Thu, 12 Jun 2025 20:39:28 +0530
+Message-Id: <20250612-exynos7870-mipi-phy-v1-0-3fff0b62d9d3@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6828591c.a00a0220.398d88.0248.GAE@google.com> <tencent_AB76B566A43C5B37A4961637CC4ABC745909@qq.com>
-In-Reply-To: <tencent_AB76B566A43C5B37A4961637CC4ABC745909@qq.com>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Thu, 12 Jun 2025 11:09:39 -0400
-X-Gm-Features: AX0GCFsH-yo5JUhyWyBqrHBwq4KIAN-CHYAesU4gaI6S4jpDyCqdWzVGFPlCL_I
-Message-ID: <CAEjxPJ40rFsoXNYpMhZSNCuRrnWXP3GUavA3=1q7DkhcPLZ-+w@mail.gmail.com>
-Subject: Re: [PATCH] fs/xattr: reset err to 0 after get security.* xattrs
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com, amir73il@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKjtSmgC/x3MTQqAIBBA4avErBswy4yuEi36GWsWmSiEIt09a
+ fkt3ssQyDMFGKsMnh4OfNuCpq5gOxd7EPJeDFJIJZRskWKyd9CDFnixY3Rnwk41ZtDK9OsioZT
+ Ok+H4X6f5fT+Xq/nrZQAAAA==
+X-Change-ID: 20250523-exynos7870-mipi-phy-451f875f6ba2
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749740994; l=845;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=dSXo45mIJJx9bDeTqNn31sUJ/q0OnjYwLXEix43Xrw0=;
+ b=8D4uqf1bHJF54i/+4jjJQo9pGHE9cAYBK0Au1T4+ogxwrDYvP9PPCEjq13Ru+GQKkhUc+0qcS
+ IlkF/AAqxdhCI54z50n1Z7RsvpIJIcihHrGP2kSNOtGQtBp+xNwGE3C
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On Thu, Jun 12, 2025 at 11:01=E2=80=AFAM Edward Adam Davis <eadavis@qq.com>=
- wrote:
->
-> After successfully getting "security.SMACK64", err is not reset to 0, whi=
-ch
-> causes simple_xattr_list() to return 17, which is much smaller than the
-> actual buffer size..
->
-> After updating err to remaining_size, reset err to 0 to avoid returning a=
-n
-> inappropriate buffer size.
->
-> Fixes: 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always include=
- security.* xattrs")
-> Reported-by: syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=3D4125590f2a9f5b3cdf43
-> Tested-by: syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+This patch series adds support for Exynos7870's MIPI DSIM (for display)
+and CSIS (for camera) PHY blocks. It contains a single DSIM and three
+CSIS PHYs.
 
-Already fixed on vfs/vfs.fixes, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=3Dvfs=
-.fixes&id=3D800d0b9b6a8b1b354637b4194cc167ad1ce2bdd3
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Kaustabh Chakraborty (2):
+      dt-bindings: phy: samsung,mipi-video-phy: document exynos7870 MIPI phy
+      phy: exynos-mipi-video: introduce support for exynos7870
 
-> ---
->  fs/xattr.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/fs/xattr.c b/fs/xattr.c
-> index 8ec5b0204bfd..600ae97969cf 100644
-> --- a/fs/xattr.c
-> +++ b/fs/xattr.c
-> @@ -1479,6 +1479,7 @@ ssize_t simple_xattr_list(struct inode *inode, stru=
-ct simple_xattrs *xattrs,
->                 buffer +=3D err;
->         }
->         remaining_size -=3D err;
-> +       err =3D 0;
->
->         read_lock(&xattrs->lock);
->         for (rbp =3D rb_first(&xattrs->rb_root); rbp; rbp =3D rb_next(rbp=
-)) {
-> --
-> 2.43.0
->
+ .../bindings/phy/samsung,mipi-video-phy.yaml       | 29 ++++++++++--
+ drivers/phy/samsung/phy-exynos-mipi-video.c        | 52 ++++++++++++++++++++++
+ include/linux/soc/samsung/exynos-regs-pmu.h        |  5 +++
+ 3 files changed, 82 insertions(+), 4 deletions(-)
+---
+base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
+change-id: 20250523-exynos7870-mipi-phy-451f875f6ba2
+
+Best regards,
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
+
