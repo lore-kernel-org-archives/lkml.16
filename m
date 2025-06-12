@@ -1,72 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD321C7013
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B1C1F12F6
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749713680; cv=none; b=ASU4/SWh+Jp5xpQw+LpuyyEA/YF9HXTRWnJHPm0ScuIA4tH121i+rI1FI76v93WuqRfHJILjLgxVEsY0BtoURs4XxLN2ysFGbLlFiWgZADQyMm4MhyJe9zEZ8OgwVIYRMUUGCe1yxXUF0KnggMortxvFwC+JsVpbns5hq9IcHGI=
+	t=1749713711; cv=none; b=Jsos6dHsrHPm/2nvBr8B8/dw9ExXCku+FwBHGXw/EzFmlmpIhZ/15qKSZxVlIa5fqNv/H9tT8y4Ytnlhy2q+R66v7EWWl8ncABD7aomWzl2hREah+JaGT+DpQGgPAftaM6rN6zEkAJIPB8lM9YGgX827I3XOhN2T0DiYtxAvFV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749713680; c=relaxed/simple;
-	bh=O7pyEM0izVRPCeXuDgYSq4asRxZjMzOuStrUn64cft4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ubJdsPIdiT3OqkJC6GZPllMZxbJ/kz3Hdas1Z8jz6w+DXj8+pynYPbIHVlWfOXpAp2M6/N34zLxoIBqb1DCjHWWSx/8oxE+S3LvDYh1LW5sfKsAgbdgIoD+ORtnqgBZpfQNIrHT3R/P+tHfX5h3EqEEasFoA9UYMvBVOZS8QPwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lf+iEm7f; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749713711; c=relaxed/simple;
+	bh=FXZ9bhH+BLLLl4nJRU+nUNnCam5qUFLuJJuygGh/Na0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ORV7/n/W0LXor4MdheY9pyg0ixJBp1lqnncrK+63LpX+5Mw5sygHsieXOxad79GRVODi8U3AeiGVOKDX3Ev0hHn4T/9yCK1G31LQdMBESxdz/TMp3n44ZkXLACg3RTlx3ON5KhTjHDRTaNGDe+XF0Smzm1jw/eGxPVNYRzX8EFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YtJi7zzt; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lf+iEm7f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749713677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=p3JenDZmdffOaVYnSVPt/myIgL1tW+jk0aEnlDMO+rw=;
-	b=Lf+iEm7ftLqiYUEkG4T+fyxn8q6tIi1xHoN6Ewqz43+jXo7Y+tJrDA1n/ArUyDkMqvxwDN
-	DiYW9i92t+3PSsDX8Pi1VvBxaMJyiO92iXwXinI1OnjnNZsLe7liEpp/spzAn7TlYpzvPU
-	9ZPjG8DOlJQEIHqvq0fiNQ0THl4KKR4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-482-59C8LgfkNriDkB8-pQ_33w-1; Thu, 12 Jun 2025 03:34:36 -0400
-X-MC-Unique: 59C8LgfkNriDkB8-pQ_33w-1
-X-Mimecast-MFC-AGG-ID: 59C8LgfkNriDkB8-pQ_33w_1749713675
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451d5600a54so4373475e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:34:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749713675; x=1750318475;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=p3JenDZmdffOaVYnSVPt/myIgL1tW+jk0aEnlDMO+rw=;
-        b=Xs/SP9kn54NnXJWBaqIOgmDVA2dR9OccVi1CWfzAUiVTBZK0yfI+xtjq/s+vHkGVPF
-         kZvFO14gpcPM+X1+SPGIkrW+4vIm+dJ48Y7YTC2sER0O9nJzG9pGooE+6+78i+0MXybg
-         0Nz2MblVKTZEMAXM84jdjlcDx+qwuanjtLq7JJUy+91N1Hi6yXNV24FDthv134TCSC8H
-         m2IDJoIV3AlUxZRRCuPfRqMjjIuIqUZN+vSLcxgVSOYQqLs+nd1wpntG607CplUvH6MA
-         UIku/BMvr7rhuZ4T9MvL5vzV0+iojtdqhTKt/yS9zPgOdprFLlVPUUFVJxw9DwBXGAnt
-         f2WA==
-X-Gm-Message-State: AOJu0YwYIoDwaS0vai4YEcLz7w1jaPL+cKFSvNfmCBs7ZeD2KwWHXQFM
-	PksY9Ry1Wg8QS8n51RN15VYhXL1dmVpN/d4hdwHsMmcMhQ7RoizQg3i2ieWlvliCLx+zVoTKdgY
-	TQPo3XG43n9AkIWBba+P2u+7vR1IQVXedEwhRNoTPyoO2uyOB5Kt3hXkPIm3EfvWOeg==
-X-Gm-Gg: ASbGncvy3IYzLJ51U3/6KfuA9Ici3YuzUswazEjA6M7kfu2QFWrqLRhS5dZ19tULTD+
-	O3zi+eLWlqMFh+A6+284tNdgOsYHO6X+vzo5MsYnNYCFP0TXYpGeMMql7s2JN/7bLGzx/G4G59l
-	tJs2B4xsfqVJglJsSv4Y21gZjV9y9S7cOYfiBAD7ou8LXiN89RA63PC9jlhOB4Dky59+pPBg7Nf
-	jQ9goGl+YEnCMhwYC9oVp+4Ys0ZAXuJKYkndhzR7o0RaRFFVwteJZdJJ53PhxdEAWBSW7da1xHD
-	FA7NjL4CWBzSl3dJOaM7X1hp9Ut5HlonQS8GGQ8YhhcJ02aamMJgLxJ3lwfBC7inYUATFP1eSwU
-	w04mU09eg4aUrifMVGdqG4SDl8JmqgUB3FGBBo136PtA/09+I4A==
-X-Received: by 2002:a05:600c:314b:b0:442:e9eb:cba2 with SMTP id 5b1f17b1804b1-453247d6b1dmr66212195e9.0.1749713674666;
-        Thu, 12 Jun 2025 00:34:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEpm8FZysBhfK5FdgNbKwxCA9LHHmCOsPng7ME2OaJNGz/MWqAuec3iQWqzq++f2gekcuzJ2Q==
-X-Received: by 2002:a05:600c:314b:b0:442:e9eb:cba2 with SMTP id 5b1f17b1804b1-453247d6b1dmr66211895e9.0.1749713674264;
-        Thu, 12 Jun 2025 00:34:34 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2384cesm11371905e9.16.2025.06.12.00.34.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 00:34:33 -0700 (PDT)
-Message-ID: <a4566c51-7a4e-4371-9922-b819cf2b11dc@redhat.com>
-Date: Thu, 12 Jun 2025 09:34:31 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YtJi7zzt"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C7YotS2803952;
+	Thu, 12 Jun 2025 02:34:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749713690;
+	bh=y+SxmXMBIixJUqhr8/6PjgF8JavGa38wPXzRB7ZzE+4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=YtJi7zztG8qGrLoiEpIHXrR7NNwIW74ihmj+1Ln0ANs3v0Ctz7EyOwlio7GUUXLLg
+	 us6sf76kipjOu7Xwg5+EQ652EJv/G/xFfsrQrHTwSTqcDQLoEVG/JGG2fnsfjHAmv+
+	 /PNcNqJme7i3Fo/tsGCtX/7Wd2+gKxQqFtH0h0/g=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C7YnZv2392385
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 12 Jun 2025 02:34:49 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 12
+ Jun 2025 02:34:49 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
+ Jun 2025 02:34:49 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 12 Jun 2025 02:34:49 -0500
+Received: from [172.24.227.14] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.14])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C7YibL1802508;
+	Thu, 12 Jun 2025 02:34:45 -0500
+Message-ID: <affbef6e-f253-4dbb-bf64-3cc7d244acbb@ti.com>
+Date: Thu, 12 Jun 2025 13:04:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,132 +54,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] mm/huge_memory: vmf_insert_folio_*() and
- vmf_insert_pfn_pud() fixes
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
- Oscar Salvador <osalvador@suse.de>
-References: <20250611120654.545963-1-david@redhat.com>
- <20250611160804.89bc8b8cb570101e51b522e4@linux-foundation.org>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: fix REFCLK setting
+To: Michael Walle <mwalle@kernel.org>, Doug Anderson <dianders@chromium.org>
+CC: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250528132148.1087890-1-mwalle@kernel.org>
+ <CAD=FV=WfV1Kr5hFSqf=t0OS3qFSGfQ3_+LQ-57nMKHXRSYvZ-w@mail.gmail.com>
+ <9272e36e-e764-4007-9d9e-8e09b9c08d34@ti.com>
+ <c0027ff0e63bcc0fd21aab37af991baf@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250611160804.89bc8b8cb570101e51b522e4@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <c0027ff0e63bcc0fd21aab37af991baf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 12.06.25 01:08, Andrew Morton wrote:
-> On Wed, 11 Jun 2025 14:06:51 +0200 David Hildenbrand <david@redhat.com> wrote:
+Hello Michael,
+
+On 10/06/25 12:45, Michael Walle wrote:
+> Hi Jayesh,
 > 
->> While working on improving vm_normal_page() and friends, I stumbled
->> over this issues: refcounted "normal" pages must not be marked
->> using pmd_special() / pud_special().
+>>>> +       /*
+>>>> +        * After EN is deasserted and an external clock is detected, 
+>>>> the bridge
+>>>> +        * will sample GPIO3:1 to determine its frequency. The 
+>>>> driver will
+>>>> +        * overwrite this setting. But this is racy. Thus we have to 
+>>>> wait a
+>>>> +        * couple of us. According to the datasheet the GPIO lines 
+>>>> has to be
+>>>> +        * stable at least 5 us (td5) but it seems that is not 
+>>>> enough and the
+>>>> +        * refclk frequency value is lost/overwritten by the bridge 
+>>>> itself.
+>>>> +        * Waiting for 20us seems to work.
+>>>> +        */
+>>>> +       usleep_range(20, 30);
+>>>
+>>> It might be worth pointing at _where_ the driver overwrites this
+>>> setting, or maybe at least pointing to something that makes it easy to
+>>> find which exact bits you're talking about.
 > 
-> Why is this?
-
-The two patches for that refer to the rules documented for 
-vm_normal_page(), how it could mislead pmd_special()/pud_special() 
-users, and how the harm so far is fortunately still limited.
-
-It's all about how we identify refcounted folios vs. pfn mappings / 
-decide what's normal and what's special.
-
+> Yeah, Jayesh just pointed that out below. I'll add add it to the comment.
 > 
+>>> This looks reasonable to me, though.
 >>
->> ...
->>
->> I spent too much time trying to get the ndctl tests mentioned by Dan
->> running (.config tweaks, memmap= setup, ... ), without getting them to
->> pass even without these patches. Some SKIP, some FAIL, some sometimes
->> suddenly SKIP on first invocation, ... instructions unclear or the tests
->> are shaky. This is how far I got:
+>> I think we are talking about SN_DPPLL_SRC_REG[3:1] bits?
 > 
-> I won't include this in the [0/N] - it doesn't seem helpful for future
-> readers of the patchset.
+> Yes.
+> 
+>> What exact mismatch are you observing in register value?
+> 
+> The one set by the chip itself vs the one from the driver, see below.
+> 
+>> I am assuming that you have a clock at REFCLK pin. For that:
+> 
+> Yes, I'm using an external clock.
+> 
+>> If refclk is described in devicetree node, then I see that
+>> the driver modifies it in every resume call based solely on the
+>> clock value in dts.
+> 
+> Exactly. But that is racy with what the chip itself is doing. I.e.
+> if you don't have that usleep() above, the chip will win the race
+> and the refclk frequency setting will be set according to the
+> external GPIOs (which is poorly described in the datasheet, btw),
+> regardless what the linux driver is setting (because that I2C write
+> happens too early).
 
-Yes, trim it down to "ran ndctl tests, tests are shaky and ahrd to run, 
-but the results indicate that the relevant stuff seems to keep working".
+I am a little confused here.
+Won't it be opposite?
+If we have this delay here, GPIO will stabilize and set the register
+accordingly?
 
-... combined with the Tested-by by Dan.
+In the driver, I came across the case when we do not have refclk.
+(My platform does have a refclk, I am just removing the property from
+the dts node to check the affect of GPIO[3:1] in question because clock
+is not a required property for the bridge as per the bindings)
+
+In the ti_sn65dsi86_probe(), before we read SN_DEVICE_ID_REGS,
+when we go to resume(), we do not do enable_comms() that calls
+ti_sn_bridge_set_refclk_freq() to set SN_DPPLL_SRC_REG.
+I see that register read for SN_DEVICE_ID_REGS fails in that case.
+
+Adding this delay fixes that issue. This made me think that we need
+the delay for GPIO to stabilize and set the refclk.
+
+Is my understanding incorrect?
+
+I am totally on board with your change especially after observing the
+above but is my understanding incorrect somewhere?
+
+Warm Regards,
+Jayesh
 
 > 
-> I'll give the patchset a run in mm-new, but it feels like some more
-> baking is needed?
-
-Fortunately Dan and Alistair managed to get the tests run properly. So I 
-don't have to waste another valuable 4 hours of my life on testing some 
-simple fixes that only stand in between me and doing the actual work in 
-that area I want to get done.
-
+>> If refclk is not described in dts, then this register is modified by the
+>> driver only when pre_enable() calls enable_comms(). Here also, the
+>> value depends on crtc_mode and the refclk_rate often would not be equal
+>> to the values in "ti_sn_bridge_dsiclk_lut" (supported frequencies), and
+>> you would fallback to "001" register value.
 > 
-> The [1/N] has cc:stable but there's nothing in there to explain this
-> decision.  How does the issues affect userspace?
-
-My reasoning was: Getting cachemodes in page table entries wrong sounds 
-... bad? At least to me :)
-
-PAT code is confusing (when/how we could we actually mess up the 
-cachemode?), so it's hard to decide when this actually hits, and what 
-the exact results in which scenario would be. I tried to find out, but 
-cannot spend another hour digging through that horrible code.
-
-So if someone has a problem with "stable" here, we can drop it. But the 
-fix is simple.
-
--- 
-Cheers,
-
-David / dhildenb
-
+>> Rest of time, I guess it depends on reading the status from GPIO and
+>> changing the register.
+> 
+> Not "rest of the time", the reading of the strapping option from the
+> GPIO always happens if an external refclk is detected. It's part of
+> the chip after all. It will just sometimes be overwritten by the
+> linux driver.
+> 
+>> Is the latter one your usecase?
+> 
+> My use case is that the GPIO setting is wrong on my board (it's really
+> non-existent) and I'm relying on the linux driver to set the correct
+> frequency.
+> 
+> HTH,
+> -michael
