@@ -1,259 +1,209 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5542E29DB97;
-	Thu, 12 Jun 2025 17:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9D929DB97;
+	Thu, 12 Jun 2025 17:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749750928; cv=none; b=Bygin/VCZPI5mseJoaz3UND/n/laSSaKpMoWR693bp4jhGOu6MAojQrC74FTLYdgxDkyH4L9TBMvkE7gC12K1DKKgxasU6Q6KluyDHSxKJ/lxaMEjYdYOu1zUrAzwZvbfyZUqk/z/MW0uUBdAkMdjH5N/zT1fePFFezaRJqFcXk=
+	t=1749750965; cv=none; b=hYrAShvIWB2XRl/U+zKiOdX5VZcTueKon7uJj6wr99QzHjXRxAIdfLAca6/UHVFZJST3JMaQq/dOsR2F+7Aua7O377odcG2eKgKKq5eGrT6wdwooB5Gp6gRMpfO+NferUetveNJeaIWeEzAXzU4hk4xfSdvKt5uCTobOzvLq8VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749750928; c=relaxed/simple;
-	bh=U14epDudFR2T/XBBsRZuwpcksaEexz7yCA93a0AxNLc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HU+o+NO3yaQOFgGvzJyKAYKduk8P0si7HIhU6lqgobBy0rWqhghsRTS7uHDusEu+W8bXr9bJT1SpnZ5Tohr4DpZd8qAicBoYX5x9fcM0t3Ek/K/atZQ0PbaUFUmFipJHuAnCJDnvBa78reTv0czKlVwFza+E5RKrKPQT4s3kiQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=RpQH8GAS; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1749750965; c=relaxed/simple;
+	bh=7NbD5EzbriPvyz1s1i70hQjMMOxbxKhc7LyGfM9t5Vg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Df09p68tbIJGPn2l3luQkjsQB1vvA9LqiOpFTwxsHVRF7dcWzyHHlpZYZ1U9b9Bpyv3+SofBKHA+g5JoaS6KZ63A/cCfrd5P7m2HnbCcN+CZDj+xeSaYN5LUXAKNjFcvru7+Ks4jfUpv7e0+Nq7DLzdbHnTIRCnAZXOAzx9tRXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=P8MOdCSu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SflIqit1; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="RpQH8GAS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1749750918; x=1750355718; i=spasswolf@web.de;
-	bh=iSk6/OoQ6wLcS1kYB8t5xUlwZCaMp8afhUK7G888awM=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=RpQH8GASgLMweyn8b8seICdK8ZR2zvM6vuCXDIqa1IKW5Xir9loe7jUAaCL0mmsv
-	 7DGixNodpJsmcdjMcfyyWAaCaNAW7Z/Aw/rz7s42nXIBKUD7b731rHsF786N0LI4w
-	 v95NHt2/v4Upb1O8sr+5G3MwHzHlHgU4EfGfvBVgri8Lc/QUl5D+Nmrb6nbJrd3PS
-	 gLlzdBOqezPxsa92n8h76IUguCbTV9G42uCi9gMPKQdOnWUmJyWAuEt4eQ8qI96Ul
-	 M5NEvC91FUN5MhQ6iaTAPJdQZsn28kv54tGHM588BB8KgyycEwr5nj0STfrr+rN12
-	 LAW6cRrPl4ufmHMKRw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
- (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 1M6pYS-1uSVyN2pp8-00FAVO; Thu, 12 Jun 2025 19:55:17 +0200
-From: Bert Karwatzki <spasswolf@web.de>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	linux-kernel@vger.kernel.org,
-	linux-next@vger.kernel.org,
-	Waiman Long <longman@redhat.com>,
-	Kees Cook <kees@kernel.org>
-Subject: register_syctl_init error in linux-next-20250612
-Date: Thu, 12 Jun 2025 19:55:13 +0200
-Message-ID: <20250612175515.3251-1-spasswolf@web.de>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="P8MOdCSu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SflIqit1"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id E4F721140271;
+	Thu, 12 Jun 2025 13:56:00 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 13:56:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749750960;
+	 x=1749837360; bh=X3PFZfCUQBros9qPu/MsUt6kHpLBNUqRMh5dm9jEwls=; b=
+	P8MOdCSuHwbMJgixB48KjbVFAS+s8PDDh9IOcIlJO3T1aESi6U8JIRz6R3PaG4qZ
+	ZjYUoMogHTAfLAu9BwjPEdVmUkGdtFtyTEx5AwzZgPZ5A7xGuR57kF4p8+zNdj4D
+	S7HnhBSrpNj+98B7I6pBc3pba9+08hqI6tL6OCSi8B7sezP9tQ13plCvBFYRQNmt
+	9ZY4G5aHUpBvOIhR8bBazcdK/SrRt8zaxtLTv3EREnZSj/F2e2SsFRM4wsjHTWGv
+	/Xm8MCp0MqNbSCBWTT7CAoNOLLT0W+7W1EQbLH0LTIbKZ5vDQm5Tainvmk6b4W17
+	9Twjd+MfMzogLYucJIBTDg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749750960; x=
+	1749837360; bh=X3PFZfCUQBros9qPu/MsUt6kHpLBNUqRMh5dm9jEwls=; b=S
+	flIqit1jgtdN9jNL5V9azAyOQv0hLnAOT+UvhFzAZyji1jY1ZbRvBCUguk5eUHop
+	XXRdVLktD7Ma/7jqvXZ+3/aIofcFj7swqt/RKG7jVZwD4ug02iwGYXUnK+8lJaNR
+	b7ePgoXjFnKOjDO1rSU19AeNUAl64rcLNj7GYqgQT7sZVvLEHbPfRsVw74ne+/oK
+	nlUoCfTABoTQ5+n8d6tabiLHDpRIE3S3YKLU0lGtMfBtnCi00sBt5A3sj3ROshN/
+	svkg1Z6pBuXSWSA9l447yB2wHNy7ZjDrpqv767eBspOOJuD2UH4KXAE+3e6m7PdG
+	aUPdkfIIJWBYZshuH0EXQ==
+X-ME-Sender: <xms:sBRLaL9KyTgPbQW55YDOp4fDhsB9dl1K73d720IfaJMoCUB4EMkMdA>
+    <xme:sBRLaHuJ5tgPdaTTbAamGdfh_O81nSNMS4I0x0AbYkulzA-FSLXh-h1bpYsJFutSm
+    M5KxT74Ziw4Ubh4iwg>
+X-ME-Received: <xmr:sBRLaJBjcdhrhy5pe19p_7fBTCi7Tg-T7zyJ8htRCf7zJJWAeVmd9yXzL9alQCNo9YieAj3J1M6CWRQgKUMb82BeZCoAXZOI0g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheejvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
+    guvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepveet
+    gedtvddvhfdtkeeghfeffeehteehkeekgeefjeduieduueelgedtheekkeetnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhs
+    ohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtghpthhtohepkedpmh
+    houggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgrtghophhordhmohhnughisehiuggv
+    rghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghhrg
+    hrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhgrtghophhordhm
+    ohhnughiodhrvghnvghsrghssehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtth
+    hopehmtghhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkihgvrhgrnhdr
+    sghinhhghhgrmhdorhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtg
+    hpthhtoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhg
+X-ME-Proxy: <xmx:sBRLaHcwXvWGhYMfbEbd9g-_HfFOIDjyTWPUlpdJtBXGcdiXac8eCQ>
+    <xmx:sBRLaANRnTRYtJftVMEvA0cZM2TfTZH3QyM_0Bywh_Zkb3CXpM3UHg>
+    <xmx:sBRLaJnMboe4Hr2wVI14q02Xpf41-L34LYNhcNkswJpXg6xbHEuzoA>
+    <xmx:sBRLaKskqPMX4LKLnm3NXQ8MKwVMyArZOCJC5rb3mmMTjcq2JMTthg>
+    <xmx:sBRLaKAhMYPOBUgpq7jU2J_Kaitf2TieF1xhDxnG7bAxlP8Mo-iz_F2e>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Jun 2025 13:55:59 -0400 (EDT)
+Date: Thu, 12 Jun 2025 19:55:57 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] media: vsp1: Reset FCP for VSPX
+Message-ID: <20250612175557.GJ330732@ragnatech.se>
+References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
+ <20250609-vspx-reset-v1-3-9f17277ff1e2@ideasonboard.com>
+ <20250611233611.GR24465@pendragon.ideasonboard.com>
+ <6orphbs6syqu6oruppyln4kkepj42c775cs4nj4oygu4xitpx6@tlvab6mntrrx>
+ <20250612101215.GE25137@pendragon.ideasonboard.com>
+ <rkihvnry5yybz7bjcbanth4yq7svywicmbhksz4ity6buw52ff@tmxefdhvpgaf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bLy5k+D/8avNeAwN3RnZG8nBNOul+2jBGHhjG1BoT1Xu+db9623
- luN18MXhKtof4WJNgbf6K1YlzlgBUKUKD/MCqhMUN9ZoD7ngumVp372fMakII+YyhCQjP7d
- U+a63RZQ4Zm/LZ/i804HFUWZOfRab2eS5UUmiJ3EOAkoPmZLhieY+QIBSBh0Mw7kPzH3QC1
- 5dd1U9dT4vqjsdWlRhD1Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:gU+LjsyFAr4=;C5h7OHfKOyrBGpDM+qRAxgpoLC0
- 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
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <rkihvnry5yybz7bjcbanth4yq7svywicmbhksz4ity6buw52ff@tmxefdhvpgaf>
 
-When starting evolution (gnome email client) on my debian sid with
-linux-next-20250612 I get the following error message on the terminal
-emulator (the Gtk messages also occur  when):
+On 2025-06-12 12:20:13 +0200, Jacopo Mondi wrote:
+> Hi Laurent
+> 
+> On Thu, Jun 12, 2025 at 01:12:15PM +0300, Laurent Pinchart wrote:
+> > On Thu, Jun 12, 2025 at 11:48:49AM +0200, Jacopo Mondi wrote:
+> > > On Thu, Jun 12, 2025 at 02:36:11AM +0300, Laurent Pinchart wrote:
+> > > > On Mon, Jun 09, 2025 at 09:01:44PM +0200, Jacopo Mondi wrote:
+> > > > > According section "62.3.7.1 "Operation Control Setting
+> > > >
+> > > > "According to"
+> > > >
+> > > > > IP set VSPX+FCPVX" of the R-Car Gen4 Hardware Manual, FCPX has to
+> > > > > be reset when stopping the image processing.
+> > > >
+> > > > That's only when stopping "image process of VSPX+FCPVX immediately".
+> > > > Note the "immediately", which involves resetting the VSP too. The code
+> > > > below waits for the pipeline to stop at the end of the frame. Resetting
+> > > > the FCP doesn't seem to be required in that case.
+> > >
+> > > True, we certainly don't
+> > >
+> > > 2. Set value 1 to VSPX register VI6_SRESET.SRST0. VSPX will invoke
+> > >    termination process immediately.
+> > >
+> > > but rather wait for the last frame to complete before stopping the
+> > > pipeline.
+> > >
+> > > Do you think this patch should be dropped ?
+> >
+> > I would say so, I don't think there's a need to reset the FCP when
+> > waiting for the pipeline to stop normally. Or have you noticed issues
+> > that this patch would solve ?
+> >
+> 
+> Not really, this comes straight from the upporting of the FCPD reset.
+> 
+> We've been running with an older of this patch that wasn't actually
+> resetting the FCP and we got no issues. At the same time Niklas has
+> confirmed running with this version that actually resets the FCP
+> doesn't introduce regressions.
 
-Gtk-Message: 13:34:49.069: Failed to load module "colorreload-gtk-module"
-Gtk-Message: 13:34:49.070: Failed to load module "window-decorations-gtk-m=
-odule"
-Gtk-Message: 13:34:51.012: Failed to load module "colorreload-gtk-module"
-Gtk-Message: 13:34:51.013: Failed to load module "window-decorations-gtk-m=
-odule"
-bwrap: Can't read /proc/sys/kernel/overflowuid: No such file or directory
+I'm not up to snuff on the diff between the two sets. But from our 
+discussion on IRC today I dropped all 3 patches from my testing branch 
+and that broke my stress tests (after a few runs). I will keep these 
+three patches in my ISP branch for now.
 
-** (org.gnome.Evolution:3327): ERROR **: 13:34:51.245: Failed to fully lau=
-nch dbus-proxy: Der Kindprozess wurde mit Status 1 beendet
-Trace/Breakpoint ausgel=C3=B6st
+Just to be clear the stress tests where fine with the old version too, 
+only dropping all 3 reset patches had an negative effect.
 
-and the following message in dmesg:
+> 
+> I'm fine dropping this patch indeed
+> 
+> > > > > Softawre reset the FCPX after the vsp1 pipe has stopped.
+> > > >
+> > > > s/Softawre/Software/
+> > > >
+> > > > > Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+> > > > > ---
+> > > > >  drivers/media/platform/renesas/vsp1/vsp1_pipe.c | 7 +++++--
+> > > > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
+> > > > > index a6e5e10f3ef275c1b081c3d957e6cf356332afce..c6f2417aabc479384012ab8ab99556029ede1f44 100644
+> > > > > --- a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
+> > > > > +++ b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
+> > > > > @@ -499,6 +499,7 @@ bool vsp1_pipeline_stopped(struct vsp1_pipeline *pipe)
+> > > > >  int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
+> > > > >  {
+> > > > >  	struct vsp1_device *vsp1 = pipe->output->entity.vsp1;
+> > > > > +	u32 version = vsp1->version & VI6_IP_VERSION_MODEL_MASK;
+> > > > >  	struct vsp1_entity *entity;
+> > > > >  	unsigned long flags;
+> > > > >  	int ret;
+> > > > > @@ -515,8 +516,7 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
+> > > > >  			spin_unlock_irqrestore(&pipe->irqlock, flags);
+> > > > >  		}
+> > > > >
+> > > > > -		if ((vsp1->version & VI6_IP_VERSION_MODEL_MASK) ==
+> > > > > -		    VI6_IP_VERSION_MODEL_VSPD_GEN3)
+> > > > > +		if (version == VI6_IP_VERSION_MODEL_VSPD_GEN3)
+> > > > >  			ret |= rcar_fcp_soft_reset(vsp1->fcp);
+> > > > >
+> > > > >  	} else {
+> > > > > @@ -529,6 +529,9 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
+> > > > >  		ret = wait_event_timeout(pipe->wq, vsp1_pipeline_stopped(pipe),
+> > > > >  					 msecs_to_jiffies(500));
+> > > > >  		ret = ret == 0 ? -ETIMEDOUT : 0;
+> > > > > +
+> > > > > +		if (version == VI6_IP_VERSION_MODEL_VSPX_GEN4)
+> > > > > +			ret |= rcar_fcp_soft_reset(vsp1->fcp);
+> > > > >  	}
+> > > > >
+> > > > >  	list_for_each_entry(entity, &pipe->entities, list_pipe) {
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
 
-[  305.600587] [      T3327] traps: evolution[3327] trap int3 ip:7f64442d3=
-ab7 sp:7ffc9f4e94d0 error:0 in libglib-2.0.so.0.8400.2[66ab7,7f644428c000+=
-a1000]
-
-I bisected this to commit cf47285025e6 ("locking/rtmutex: Move max_lock_de=
-pth
-into rtmutex.c"). The absence of /proc/sys/kernel/overflow{uid,gid} seems =
-to be the related
-to the start failure, in affected kernel version the files are absent whil=
-e they're present
-when evolution starts normally.
-
-Also when booting next-20250612 I get this error message regarding max_loc=
-k_depth and
-rtmutex_sysctl_table:
-
-[    0.234399] [         T1] sysctl duplicate entry: /kernel/max_lock_dept=
-h
-[    0.234402] [         T1] failed when register_sysctl_sz rtmutex_sysctl=
-_table to kernel
-[    0.234405] [         T1] sysctl duplicate entry: /kernel/max_lock_dept=
-h
-[    0.234407] [         T1] failed when register_sysctl_sz rtmutex_sysctl=
-_table to kernel
-
-Reverting commit cf47285025e6 in next-20250612 fixes the both the "sysctl =
-duplicate
-entry" issue and the missing overflow{gid,uid} files and evolution starts =
-normally again.
-
-As there were conflicts when reverting, here the revert patch for next-202=
-50612
-to illustrate conflict resolution:
-
-diff --git a/include/linux/rtmutex.h b/include/linux/rtmutex.h
-index dc9a51cda97c..7d049883a08a 100644
-=2D-- a/include/linux/rtmutex.h
-+++ b/include/linux/rtmutex.h
-@@ -18,6 +18,8 @@
- #include <linux/rbtree_types.h>
- #include <linux/spinlock_types_raw.h>
-=20
-+extern int max_lock_depth; /* for sysctl */
-+
- struct rt_mutex_base {
- 	raw_spinlock_t		wait_lock;
- 	struct rb_root_cached   waiters;
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 705a0e0fd72a..c80902eacd79 100644
-=2D-- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -29,29 +29,6 @@
- #include "rtmutex_common.h"
- #include "lock_events.h"
-=20
--/*
-- * Max number of times we'll walk the boosting chain:
-- */
--static int max_lock_depth =3D 1024;
--
--static const struct ctl_table rtmutex_sysctl_table[] =3D {
--	{
--		.procname	=3D "max_lock_depth",
--		.data		=3D &max_lock_depth,
--		.maxlen		=3D sizeof(int),
--		.mode		=3D 0644,
--		.proc_handler	=3D proc_dointvec,
--	},
--};
--
--static int __init init_rtmutex_sysctl(void)
--{
--	register_sysctl_init("kernel", rtmutex_sysctl_table);
--	return 0;
--}
--
--subsys_initcall(init_rtmutex_sysctl);
--
- #ifndef WW_RT
- # define build_ww_mutex()	(false)
- # define ww_container_of(rtm)	NULL
-diff --git a/kernel/locking/rtmutex_api.c b/kernel/locking/rtmutex_api.c
-index 9e00ea0e5cfa..2d933528a0fa 100644
-=2D-- a/kernel/locking/rtmutex_api.c
-+++ b/kernel/locking/rtmutex_api.c
-@@ -8,6 +8,11 @@
- #define RT_MUTEX_BUILD_MUTEX
- #include "rtmutex.c"
-=20
-+/*
-+ * Max number of times we'll walk the boosting chain:
-+ */
-+int max_lock_depth =3D 1024;
-+
- /*
-  * Debug aware fast / slowpath lock,trylock,unlock
-  *
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 0716c7df7243..82af6e6f5dbb 100644
-=2D-- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -23,6 +23,14 @@
- #include <linux/uaccess.h>
- #include <asm/processor.h>
-=20
-+#ifdef CONFIG_X86
-+#include <asm/nmi.h>
-+#include <asm/io.h>
-+#endif
-+#ifdef CONFIG_RT_MUTEXES
-+#include <linux/rtmutex.h>
-+#endif
-+
- /* shared constants to be used in various sysctls */
- const int sysctl_vals[] =3D { 0, 1, 2, 3, 4, 100, 200, 1000, 3000, INT_MA=
-X, 65535, -1 };
- EXPORT_SYMBOL(sysctl_vals);
-@@ -1525,6 +1533,15 @@ static const struct ctl_table kern_table[] =3D {
- 		.proc_handler	=3D proc_dointvec,
- 	},
- #endif
-+#ifdef CONFIG_RT_MUTEXES
-+	{
-+		.procname	=3D "max_lock_depth",
-+		.data		=3D &max_lock_depth,
-+		.maxlen		=3D sizeof(int),
-+		.mode		=3D 0644,
-+		.proc_handler	=3D proc_dointvec,
-+	},
-+#endif
- };
-=20
- int __init sysctl_init_bases(void)
-
-
-Bert Karwatzki
+-- 
+Kind Regards,
+Niklas Söderlund
