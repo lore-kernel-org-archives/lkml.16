@@ -1,89 +1,164 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D657C2BF3F9;
-	Thu, 12 Jun 2025 15:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81BF2C327A;
+	Thu, 12 Jun 2025 15:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742331; cv=none; b=otj8bUlStZ5tCYBup/eF4Jxlh5hGtgf3OGOH5pOXq3SqRJu8FuXqYtXw/FHOXHI33vfvBzzLKJwKJM/sFqCGTZZ1CNEaPAzAHADbFs2wDjOrEBQIncQUPVZBHcFKtLf/zGJDIL7jAiqJ/omjw3ywdJNbya1QU2EYW3nGPKpGLbw=
+	t=1749742340; cv=none; b=UHeW6Y/nP6Cc6odVdIJPJc8bispbhAydbYF53vDUM2Eljn36+QBTsPFk4hX4C79uesQ1IR03jBn3v/5fGmP8jzum2MN2DDnrgTXsw7PzATTTf3DYkN/BY2bmk2MssJTl7D8j2S1VDrq64bf2Chl643zbpZUYsHmxf3csAK8uHaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742331; c=relaxed/simple;
-	bh=5PV+jOeEc6M5rMfrO2WVc1PW2rGtHnpqpCCs2fKhF4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fa9Hqm+L5M7X+ygGg3m0/hTiDb4ixvpX3RS8IpAyRDDbibwnAbM02uCMJAb/dCj55EAgpP0kXZ7qNGJfsLuWZwS6/arpUXQyrML+XKeZjF/AHFEVxZ4Mnh4Kr+HOrNYkn3TFyF3UwjWU3iP7IDA815HwT5P06qD+Rtxe3WsUvDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=B2qosYu+; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B2qosYu+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=STSk0/Pp53STkxsJ2uC08Ifb3MPW7vNpEjKmTxWJIX8=; b=B2qosYu+6KqYewsmy/RV+3y2TH
-	ZOd7C053W7apTgLKzCe3JOoKjw01irsa6bti8pJNU3c1NlVJWSEfH8X+wgAomC3AUrq8TuBZA8WFU
-	CY8E7Z38v8FNwpKjj8eLvCarMWGmQqUCMQ5BM/TUip1zoPnfvI9fNY/V4ULTbJ+lS5LM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uPju6-00FYla-CO; Thu, 12 Jun 2025 17:31:46 +0200
-Date: Thu, 12 Jun 2025 17:31:46 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yajun Deng <yajun.deng@linux.dev>
-Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND net-next v2] net: phy: Add c45_phy_ids sysfs
- directory entry
-Message-ID: <737294c1-258f-4780-80f8-e7a72e887f8b@lunn.ch>
-References: <20250612143532.4689-1-yajun.deng@linux.dev>
+	s=arc-20240116; t=1749742340; c=relaxed/simple;
+	bh=DOUOGbeZ0qQ4DsAqlWdYIHJzRPjWZMq7jRdHVK2GQQo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cFFfWJC6xRxin5GpjeAiAyiB+odpk19vXbDBs3V/S3ya1VOmQtJ7pdlDqLpt0qRzuxQX3rzVh6xsLJio7DfYNffdsC7l9ExPxcAQOPq5xngqEx0fA7x3PrvK2iufT4YhSRYwepklg/Usw3EaDRBNuMdlS22Jr2pEcL031mqSrGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13E69153B;
+	Thu, 12 Jun 2025 08:31:57 -0700 (PDT)
+Received: from [10.1.37.36] (e122027.cambridge.arm.com [10.1.37.36])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8784E3F66E;
+	Thu, 12 Jun 2025 08:32:14 -0700 (PDT)
+Message-ID: <8817e2bf-2283-4536-8a5f-9c32173b3a61@arm.com>
+Date: Thu, 12 Jun 2025 16:32:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612143532.4689-1-yajun.deng@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 41/43] KVM: arm64: Expose support for private memory
+To: Joey Gouly <joey.gouly@arm.com>
+Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+ Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>, Emi Kisanuki <fj0570is@fujitsu.com>
+References: <20250611104844.245235-1-steven.price@arm.com>
+ <20250611104844.245235-42-steven.price@arm.com>
+ <20250612151427.GA1913753@e124191.cambridge.arm.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250612151427.GA1913753@e124191.cambridge.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> +#define MMD_INDICES \
-> +	_(1) _(2) _(3) _(4) _(5) _(6) _(7) _(8) \
-> +	_(9) _(10) _(11) _(12) _(13) _(14) _(15) _(16) \
-> +	_(17) _(18) _(19) _(20) _(21) _(22) _(23) _(24) \
-> +	_(25) _(26) _(27) _(28) _(29) _(30) _(31)
+On 12/06/2025 16:14, Joey Gouly wrote:
+> Hi Steven,
+> 
+> On Wed, Jun 11, 2025 at 11:48:38AM +0100, Steven Price wrote:
+>> Select KVM_GENERIC_PRIVATE_MEM and provide the necessary support
+>> functions.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> Reviewed-by: Gavin Shan <gshan@redhat.com>
+>> ---
+>> Changes since v2:
+>>  * Switch kvm_arch_has_private_mem() to a macro to avoid overhead of a
+>>    function call.
+>>  * Guard definitions of kvm_arch_{pre,post}_set_memory_attributes() with
+>>    #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES.
+>>  * Early out in kvm_arch_post_set_memory_attributes() if the WARN_ON
+>>    should trigger.
+>> ---
+>>  arch/arm64/include/asm/kvm_host.h |  6 ++++++
+>>  arch/arm64/kvm/Kconfig            |  1 +
+>>  arch/arm64/kvm/mmu.c              | 24 ++++++++++++++++++++++++
+>>  3 files changed, 31 insertions(+)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index a1857802db64..9903b0e8ef3f 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -1514,6 +1514,12 @@ struct kvm *kvm_arch_alloc_vm(void);
+>>  
+>>  #define vcpu_is_protected(vcpu)		kvm_vm_is_protected((vcpu)->kvm)
+>>  
+>> +#ifdef CONFIG_KVM_PRIVATE_MEM
+>> +#define kvm_arch_has_private_mem(kvm) ((kvm)->arch.is_realm)
+>> +#else
+>> +#define kvm_arch_has_private_mem(kvm) false
+>> +#endif
+> 
+> I don't understand the ifdef here (or below). In the Kconfig you 'select
+> KVM_GENERIC_PRIVATE_MEM', so it will always be on/defined? Unless I'm
+> misunderstanding something.
 
-Is 0 not valid?
+I have to admit this is somewhat cargo-culted from x86. And I think they
+have more build configurations which don't include KVM_GENERIC_PRIVATE_MEM.
 
-> +#define MMD_DEVICE_ID_ATTR(n) \
-> +static ssize_t mmd##n##_device_id_show(struct device *dev, \
-> +				struct device_attribute *attr, char *buf) \
-> +{ \
-> +	struct phy_device *phydev = to_phy_device(dev); \
-> +	return sysfs_emit(buf, "0x%.8lx\n", \
-> +			 (unsigned long)phydev->c45_ids.device_ids[n]); \
-> +} \
-> +static DEVICE_ATTR_RO(mmd##n##_device_id)
+It is possible to build without KVM_GENERIC_PRIVATE_MEM (by disabling
+CONFIG_KVM). But that's probably not very interesting here - the
+definition shouldn't actually matter in that case.
 
-This macro magic i can follow, you see this quite a bit in the kernel.
+So I think you're right - there's no need for the #ifdeffery here.
 
-> +
-> +#define _(x) MMD_DEVICE_ID_ATTR(x);
-> +MMD_INDICES
-> +#undef _
-> +
-> +static struct attribute *phy_mmd_attrs[] = {
-> +	#define _(x) &dev_attr_mmd##x##_device_id.attr,
-> +	MMD_INDICES
-> +	#undef _
-> +	NULL
-> +};
+Thanks,
+Steve
 
-If i squint at this enough, i can work it out, but generally a much
-more readable KISS approach is taken, of just invoking a macro 32
-times. See mdio_bus.c as an example.
+>> +
+>>  int kvm_arm_vcpu_finalize(struct kvm_vcpu *vcpu, int feature);
+>>  bool kvm_arm_vcpu_is_finalized(struct kvm_vcpu *vcpu);
+>>  
+>> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+>> index 713248f240e0..3a04b040869d 100644
+>> --- a/arch/arm64/kvm/Kconfig
+>> +++ b/arch/arm64/kvm/Kconfig
+>> @@ -37,6 +37,7 @@ menuconfig KVM
+>>  	select HAVE_KVM_VCPU_RUN_PID_CHANGE
+>>  	select SCHED_INFO
+>>  	select GUEST_PERF_EVENTS if PERF_EVENTS
+>> +	select KVM_GENERIC_PRIVATE_MEM
+>>  	help
+>>  	  Support hosting virtualized guest machines.
+>>  
+>> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+>> index 580ed362833c..c866891fd8f9 100644
+>> --- a/arch/arm64/kvm/mmu.c
+>> +++ b/arch/arm64/kvm/mmu.c
+>> @@ -2384,6 +2384,30 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+>>  	return ret;
+>>  }
+>>  
+>> +#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+>> +bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+>> +					struct kvm_gfn_range *range)
+>> +{
+>> +	WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm));
+>> +	return false;
+>> +}
+>> +
+>> +bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+>> +					 struct kvm_gfn_range *range)
+>> +{
+>> +	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
+>> +		return false;
+>> +
+>> +	if (range->arg.attributes & KVM_MEMORY_ATTRIBUTE_PRIVATE)
+>> +		range->attr_filter = KVM_FILTER_SHARED;
+>> +	else
+>> +		range->attr_filter = KVM_FILTER_PRIVATE;
+>> +	kvm_unmap_gfn_range(kvm, range);
+>> +
+>> +	return false;
+>> +}
+>> +#endif
+>> +
+>>  void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *slot)
+>>  {
+>>  }
+>> -- 
+>> 2.43.0
+>>
+> 
+> Thanks,
+> Joey
 
-    Andrew
-
----
-pw-bot: cr
