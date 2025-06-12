@@ -1,130 +1,208 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9F721B8F8
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D98622172E
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716063; cv=none; b=ZUiHhB+G0T/5KsWdVx/9Hz898CoYugWqm1pPS6vtNWURbEmSpmYmJNBPjXU+D48Rxh1O7h0hSxdasRelpFT/iOgHWGpFYFs9eMJiiSD0LW6/BIhmnjXvzJxI2+d17Oa/arvj8moFta9ld0A/GhkA38CEhZRFBnXx7PTERcrYygk=
+	t=1749716064; cv=none; b=d4JQ95XrFJhM2d1JfbYbZV2Jk9aYMUWZ7J4Dmeu5cO7hnsBxLp26Z07j5eZhl17s4F307ENciVO2mxfTDiNCRYpmwq/CQbhW5bI0V3vBBfvWq7BoUtB+W+98VAc3qDgG0zlWndx9ZbkxxD+Sb2F+tkyJ+3pXOrswqhaxwyZcF20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716063; c=relaxed/simple;
-	bh=t6OQBoKn4ugcADw2zlqfCSNZogwvqWRRtXHkaQJmL8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=FsDkgnZARxBEcPDRkmkZeq9R3bbeOpHrUOC5PhPhl6k5ykg1Uehea4VyfFH5WjceDqyYALj1F1S4sQoR3dKatLIE/7Wb0d8jApidK12veo5LjGf5wO2bcPEmHHAkSAHqPdRHDv+wPk1/WO/oKVNcoCsXgY2PWvMd8BsbyyW7KpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=IS4jiy/q; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749716064; c=relaxed/simple;
+	bh=ZyUHJK8E9KfN3/ahCH3y7p+3sEISjtxi7gtR12w3ZUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kfX853Q9D6eUWFVUx56fnfYtwYMw8MGoFHpjlWKs3pZQhgYBLgKWRFjCy0q9YdMblpY5NUUSpvV/NGq5KiG+jTrqg+cZZHGY4jayC2rHn76sVrKX9fX8wsco24YtTKMaRjgVxCCszuutBZAPdcNcu0jUXl7lJuyo85qRqa0Xdqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S2Q9Yr0F; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IS4jiy/q"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250612081416euoutp02209749aaae82344e9a0f2a1ac0139660~IPXuL35ka1188911889euoutp02N
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:14:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250612081416euoutp02209749aaae82344e9a0f2a1ac0139660~IPXuL35ka1188911889euoutp02N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749716056;
-	bh=/VOe1tEPEUiWf+yiC0MtudUMPxShLqsFiTfwLc2Ert0=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=IS4jiy/qFsRCS3Gg9TZjyHnrCsU66P75Itwnb4oQ494v95PikpmcOTXnh/3YRDwCM
-	 OXCBoeCvNH+FEbvDAWbQSbFq1PJ1PE/9cOww+3FgZocmukDVpD7OQCJkCltMsabXXt
-	 TiHRv0LjcuyEr0jTLVE5OzEhqptX3yoqfhjGaQMo=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250612081415eucas1p229fc20aa3f3252e93349c606f4a8dbd2~IPXtmCWFa0599605996eucas1p2p;
-	Thu, 12 Jun 2025 08:14:15 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250612081414eusmtip158dc80f809c9f48925cc69e56d3e5521~IPXsaMu1q2395823958eusmtip1O;
-	Thu, 12 Jun 2025 08:14:14 +0000 (GMT)
-Message-ID: <d1523586-82ca-4863-964f-331718bb1f0e@samsung.com>
-Date: Thu, 12 Jun 2025 10:14:13 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S2Q9Yr0F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749716061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7zgUFcNjP45KVFN7fvEt+xKxva7ecAlvU3lfLilVE+Q=;
+	b=S2Q9Yr0FRYSHS5PfXQU7KTi+PWagO7/eIMm+xno5pIqpTRDkCAIgZKH4g+tEGhET8k2TCM
+	kuNV32M/zo0K3V8TZRKKmQzLUCv7Ld+fa8AE2cMCFVMxhN4ja3YNKcGxLwSCYz7uX+uX6v
+	FvNm5f2K0zF79NpRXX04U6/OVgnoni8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-oGwUxBqzO1WP2BV5Aq_ggg-1; Thu,
+ 12 Jun 2025 04:14:15 -0400
+X-MC-Unique: oGwUxBqzO1WP2BV5Aq_ggg-1
+X-Mimecast-MFC-AGG-ID: oGwUxBqzO1WP2BV5Aq_ggg_1749716053
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 80DCD1800296;
+	Thu, 12 Jun 2025 08:14:13 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.45.225.28])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CEA26195609D;
+	Thu, 12 Jun 2025 08:14:07 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH v9 1/9] drm/i915/fbdev: Add intel_fbdev_get_map()
+Date: Thu, 12 Jun 2025 10:00:58 +0200
+Message-ID: <20250612081344.225200-2-jfalempe@redhat.com>
+In-Reply-To: <20250612081344.225200-1-jfalempe@redhat.com>
+References: <20250612081344.225200-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] pwm: Add Rust driver for T-HEAD TH1520 SoC
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini
-	<drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob
-	Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
-	Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, Michael
-	Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <jbm3qvowi5vskhnjyqlp3xek36gzzqjt35m66eayxi6lmi525t@iefevopxjl53>
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250612081415eucas1p229fc20aa3f3252e93349c606f4a8dbd2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d
-X-EPHeader: CA
-X-CMS-RootMailID: 20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d
-References: <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
-	<CGME20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d@eucas1p1.samsung.com>
-	<20250610-rust-next-pwm-working-fan-for-sending-v2-2-753e2955f110@samsung.com>
-	<jbm3qvowi5vskhnjyqlp3xek36gzzqjt35m66eayxi6lmi525t@iefevopxjl53>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
+The vaddr of the fbdev framebuffer is private to the struct
+intel_fbdev, so this function is needed to access it for drm_panic.
+Also the struct i915_vma is different between i915 and xe, so it
+requires a few functions to access fbdev->vma->iomap.
 
+Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+---
 
-On 6/11/25 08:58, Uwe Kleine-König wrote:
-> Hello,
-> 
-> Huh, if you do the newstyle stuff, .get_state() is wrong. It's either
-> .round_waveform_tohw() + .round_waveform_fromhw() + .read_waveform() +
-> .write_waveform() or .apply() + .get_state(), but don't mix these.
+v2:
+ * Add intel_fb_get_vaddr() and i915_vma_get_iomap() to build with Xe driver.
+ 
+v4:
+ * rename to get_map(), and return the struct iosys_map mapping.
+ * implement the Xe variant.
 
-In the process of implementing the full "newstyle" waveform API as you
-suggested, I discovered a hardware limitation. After writing new values
-to the period and duty cycle registers, reading them back does not
-return the programmed values, which makes it impossible to reliably
-report the current hardware state.
+ drivers/gpu/drm/i915/display/intel_fb_pin.c | 5 +++++
+ drivers/gpu/drm/i915/display/intel_fb_pin.h | 2 ++
+ drivers/gpu/drm/i915/display/intel_fbdev.c  | 5 +++++
+ drivers/gpu/drm/i915/display/intel_fbdev.h  | 6 +++++-
+ drivers/gpu/drm/i915/i915_vma.h             | 5 +++++
+ drivers/gpu/drm/xe/display/xe_fb_pin.c      | 5 +++++
+ 6 files changed, 27 insertions(+), 1 deletion(-)
 
-This appears to be a known quirk of the hardware, as the reference C
-driver from T-HEAD [1] also omits the .get_state callback, likely for
-the same reason.
-
-Given this, would it be acceptable to provide a write-only driver? My
-proposed solution would be to omit the .read_waveform() and
-.round_waveform_fromhw() implementations from my PwmOps trait. This
-would mean the driver can correctly set the PWM state, but attempting to
-read it back via sysfs would fail (e.g., with -EOPNOTSUPP), reflecting
-the hardware's capability.
-
-Does this sound like a reasonable approach to you?
-
-[1] - https://github.com/revyos/thead-kernel/blob/lpi4a/drivers/pwm/pwm-light.c
-
-> 
->> +        let data: &Self = chip.drvdata().ok_or(EINVAL)?;
->> +        let hwpwm = pwm.hwpwm();
->> +        let iomem_guard = data.iomem.access(parent_dev)?;
->> +        let iomap = iomem_guard.deref();
->> +        let ctrl = iomap.read32(th1520_pwm_ctrl(hwpwm));
->> +        let period_cycles = iomap.read32(th1520_pwm_per(hwpwm));
->> +        let duty_cycles = iomap.read32(th1520_pwm_fp(hwpwm));
->> +
->> +        state.set_enabled(duty_cycles != 0);
->> +
->> +        let rate_hz = data.clk.rate().as_hz();
->> +        let period_ns = (period_cycles as u64)
->> +            .mul_div(time::NSEC_PER_SEC as u64, rate_hz as u64)
->> +            .unwrap_or(0);
-
-> Best regards
-> Uwe
-
-Best regards,
+diff --git a/drivers/gpu/drm/i915/display/intel_fb_pin.c b/drivers/gpu/drm/i915/display/intel_fb_pin.c
+index 98a61a7b0b93..b792e9b062d8 100644
+--- a/drivers/gpu/drm/i915/display/intel_fb_pin.c
++++ b/drivers/gpu/drm/i915/display/intel_fb_pin.c
+@@ -334,3 +334,8 @@ void intel_plane_unpin_fb(struct intel_plane_state *old_plane_state)
+ 			intel_dpt_unpin_from_ggtt(fb->dpt_vm);
+ 	}
+ }
++
++void intel_fb_get_map(struct i915_vma *vma, struct iosys_map *map)
++{
++	iosys_map_set_vaddr_iomem(map, i915_vma_get_iomap(vma));
++}
+diff --git a/drivers/gpu/drm/i915/display/intel_fb_pin.h b/drivers/gpu/drm/i915/display/intel_fb_pin.h
+index 01770dbba2e0..81ab79da1af7 100644
+--- a/drivers/gpu/drm/i915/display/intel_fb_pin.h
++++ b/drivers/gpu/drm/i915/display/intel_fb_pin.h
+@@ -12,6 +12,7 @@ struct drm_framebuffer;
+ struct i915_vma;
+ struct intel_plane_state;
+ struct i915_gtt_view;
++struct iosys_map;
+ 
+ struct i915_vma *
+ intel_fb_pin_to_ggtt(const struct drm_framebuffer *fb,
+@@ -27,5 +28,6 @@ void intel_fb_unpin_vma(struct i915_vma *vma, unsigned long flags);
+ int intel_plane_pin_fb(struct intel_plane_state *new_plane_state,
+ 		       const struct intel_plane_state *old_plane_state);
+ void intel_plane_unpin_fb(struct intel_plane_state *old_plane_state);
++void intel_fb_get_map(struct i915_vma *vma, struct iosys_map *map);
+ 
+ #endif
+diff --git a/drivers/gpu/drm/i915/display/intel_fbdev.c b/drivers/gpu/drm/i915/display/intel_fbdev.c
+index 2dc4029d71ed..7c4709d58aa3 100644
+--- a/drivers/gpu/drm/i915/display/intel_fbdev.c
++++ b/drivers/gpu/drm/i915/display/intel_fbdev.c
+@@ -512,3 +512,8 @@ struct i915_vma *intel_fbdev_vma_pointer(struct intel_fbdev *fbdev)
+ {
+ 	return fbdev ? fbdev->vma : NULL;
+ }
++
++void intel_fbdev_get_map(struct intel_fbdev *fbdev, struct iosys_map *map)
++{
++	intel_fb_get_map(fbdev->vma, map);
++}
+diff --git a/drivers/gpu/drm/i915/display/intel_fbdev.h b/drivers/gpu/drm/i915/display/intel_fbdev.h
+index a15e3e222a0c..150cc5f45bb3 100644
+--- a/drivers/gpu/drm/i915/display/intel_fbdev.h
++++ b/drivers/gpu/drm/i915/display/intel_fbdev.h
+@@ -13,6 +13,7 @@ struct drm_fb_helper_surface_size;
+ struct intel_display;
+ struct intel_fbdev;
+ struct intel_framebuffer;
++struct iosys_map;
+ 
+ #ifdef CONFIG_DRM_FBDEV_EMULATION
+ int intel_fbdev_driver_fbdev_probe(struct drm_fb_helper *helper,
+@@ -22,7 +23,7 @@ int intel_fbdev_driver_fbdev_probe(struct drm_fb_helper *helper,
+ void intel_fbdev_setup(struct intel_display *display);
+ struct intel_framebuffer *intel_fbdev_framebuffer(struct intel_fbdev *fbdev);
+ struct i915_vma *intel_fbdev_vma_pointer(struct intel_fbdev *fbdev);
+-
++void intel_fbdev_get_map(struct intel_fbdev *fbdev, struct iosys_map *map);
+ #else
+ #define INTEL_FBDEV_DRIVER_OPS \
+ 	.fbdev_probe = NULL
+@@ -39,6 +40,9 @@ static inline struct i915_vma *intel_fbdev_vma_pointer(struct intel_fbdev *fbdev
+ 	return NULL;
+ }
+ 
++static inline void intel_fbdev_get_map(struct intel_fbdev *fbdev, struct iosys_map *map)
++{
++}
+ #endif
+ 
+ #endif /* __INTEL_FBDEV_H__ */
+diff --git a/drivers/gpu/drm/i915/i915_vma.h b/drivers/gpu/drm/i915/i915_vma.h
+index 6a6be8048aa8..4ae610927fa7 100644
+--- a/drivers/gpu/drm/i915/i915_vma.h
++++ b/drivers/gpu/drm/i915/i915_vma.h
+@@ -353,6 +353,11 @@ static inline bool i915_node_color_differs(const struct drm_mm_node *node,
+ 	return drm_mm_node_allocated(node) && node->color != color;
+ }
+ 
++static inline void __iomem *i915_vma_get_iomap(struct i915_vma *vma)
++{
++	return READ_ONCE(vma->iomap);
++}
++
+ /**
+  * i915_vma_pin_iomap - calls ioremap_wc to map the GGTT VMA via the aperture
+  * @vma: VMA to iomap
+diff --git a/drivers/gpu/drm/xe/display/xe_fb_pin.c b/drivers/gpu/drm/xe/display/xe_fb_pin.c
+index 461ecdfdb742..ac9a5ba363b2 100644
+--- a/drivers/gpu/drm/xe/display/xe_fb_pin.c
++++ b/drivers/gpu/drm/xe/display/xe_fb_pin.c
+@@ -465,3 +465,8 @@ u64 intel_dpt_offset(struct i915_vma *dpt_vma)
+ {
+ 	return 0;
+ }
++
++void intel_fb_get_map(struct i915_vma *vma, struct iosys_map *map)
++{
++	*map = vma->bo->vmap;
++}
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+2.49.0
+
