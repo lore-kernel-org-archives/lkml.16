@@ -1,93 +1,190 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09A119007D
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4794123D280;
+	Thu, 12 Jun 2025 13:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749733941; cv=none; b=njYFRj2MaE8W3etfdzMm4SFMgvU1PfARoMeqqS6KHub9l9K7FQyYlA1xLJ6eIapIQA2J1Q6OgXNCuitKnWeENGJ2mx212UJn+6+8QTmBcMniT5NCEeIt+AIXYIL3pvYXTBkpe3D5ROdyTk6NVeHC4zI8kh2xxjaPo69HfxncAew=
+	t=1749733970; cv=none; b=UXIDQILFYyxtawqSa0HJBul5qoEYORxRlK5c/+mhdQBtEo7vG0164GAjD3XRng4g/g+6fBTxmzI0Bg9H+jVELd1kNTX9UU52VSNGeqwwOnZRZUI5IqMO0++m+ZrCncR5iA1DkXDGUpTwIi3VAB64wcYsB1ye/1FDzZnfbrjL8CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749733941; c=relaxed/simple;
-	bh=fwK4Jz6/rNR1kYgfA3kD7NYVQkNvkfNxHWEgIYg3Vis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qvYDqHW1xNfQMBGRH+O/bh9Z4XFQxu+vA/0DudzdrJzFtYCU/JzERB1rNv444prfMEJWfxo0zx52vNT1Fq2PSvrMBEjyx2+8XjRLqcGPLeRa5IfR/4IhRtU8xiEwyA1iXAfRAZSBlpYd+HRBlEH7dnYgEps/9r88LejThHlwKjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0C319431EB;
-	Thu, 12 Jun 2025 13:12:09 +0000 (UTC)
-Message-ID: <221b0b7c-1879-4944-b9c4-cfb9fad9ae91@ghiti.fr>
-Date: Thu, 12 Jun 2025 15:12:09 +0200
+	s=arc-20240116; t=1749733970; c=relaxed/simple;
+	bh=7UPdY64JJ72+l5O3IsGp4X0va/EyqoWVab2O6wj1VUs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Caa6w4WCXow7jcXEIcFpSAzcLvUmIo9a1AFLclsnVBLg7TzpURzHVUl+ucarF7J0dVHtUux5NE6pZzz5MOIMpFILgiWCmaMbT73ETj5Aay7vkyeAPDZ76WK/zGxAvZvHoUQx5UD7YL/tf2x/iCk9rYaMt+OwY4DkHM+Lzotr1to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdRPwH/O; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdRPwH/O"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32ade3723adso9948661fa.0;
+        Thu, 12 Jun 2025 06:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749733966; x=1750338766; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lVnHHKEy1VyvVoQknUk2ch5LzvEGfZ30fQTnWrhXBr4=;
+        b=NdRPwH/OtDMt7luJiLanTXh/ZtyEnjD89TMaTsKgYq5X4zCMgGL1EvVyUCrk+aY3HM
+         KKw8MkntmjTD//21SSEI+HoX/z15RfjuImxs737xe+ss/hGyci1erj5xIsg5cBVyhikD
+         bigYrYCi+3tIy6gtpYmneH31n8d5zq2GBxs+sn90O5X3dSQMPEl7LzwJCLC1y3ouTcHw
+         d5glsYixPgkP5Gr4789OgAY8LiGOCK8FpC1ZN6C3ZSixV8phMWGSlDFedJQJ3HSrHCKR
+         n0aTH9icTU9aWEY/O/Qnrc6Z0al/ZT4V1O9I8e9mUTaXPnkHcJ7qokcP1jLPZDIwhoBA
+         un6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749733966; x=1750338766;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lVnHHKEy1VyvVoQknUk2ch5LzvEGfZ30fQTnWrhXBr4=;
+        b=JHAYeSVhT/Ftg+5rewKWXoQIbBEi2XqbthKmhUnbT2hIiL4MbiFEwUIS60BY2qqZNj
+         xdORke9F2RBE4KwdbjlNqV3BLlxjvXHPvH2XDAkt2uWqWFzMRhgLVmoUNCZz5uJ5b0bD
+         1bNaWS5PI+NA42f5WHyUiGxOi77Vf/Jfxf4CSjZnPgUZhOxfBRhBeTkpddjai5ffsQXG
+         kj/VXUekkRlJmLvJQfG/LV1jGOqAWcb3U8YB983BmpEb4xwgeEFaBCAwPIJPZoo9hjVB
+         06oxFvaI2BmwSU8dCJ9T1U0tz7voxB3sdDvp6NJH/m+uaAI/ZBwzg5ueAVE/KFt4ep9L
+         u67A==
+X-Forwarded-Encrypted: i=1; AJvYcCX/1moh6PFmw+pEPGeO9E+YXwBf/t41jyMg/6dDoCIsIyIqcQ4jpQ0nULrn4mCINrDiF9vRI1OdbFfTh13K@vger.kernel.org, AJvYcCXGYCHQMti9D2zN3b5cKtXE0IBHzzsoGVKYrajdcOxLvdyCotxTKbyFYoSO3FvMoOAv51ttn7AvbZRF9QE//ug=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5j5N5MGQlp+WUs8ptYzKw4o7OAffyQBWSEjKT782Gnfuf5MAV
+	rwrbiF137YLLIMLrOFCNTouzuwtOJ5g7YqbUS9Go6zZpYLsx33fSZnraPb9ILF4rCqiXAHjCzd+
+	JNHNC8HQe2i0E0giVk8HLTfmJqUmA5Zc=
+X-Gm-Gg: ASbGncvAi3YyzqqOMWoDzdKIPpmfuI1By6qwF3XawjuMiiCox/Q7/JHGAa8HPoliAQ0
+	pDPPsaU/wSJQdztWOik1AHHF7vkssTsXHIazlVo8lo/ZHxXqdX2Jz6ByPxET5NmWP/djbPa72ex
+	69lDAiZKwEP+jywkB1SMnyo8tRwBXs+3/bmNXd/VHqLuD/9FB/h6bX
+X-Google-Smtp-Source: AGHT+IEH0CkXP4YrxtGc8WhKCJlTw/IBE6kuWlSDpVjQh43CjGs0xlQ7U17g3NKFfkHTcM8zVIQ3QV+CEytevymHcLM=
+X-Received: by 2002:a2e:be03:0:b0:32b:3879:ce7f with SMTP id
+ 38308e7fff4ca-32b3879f2fbmr6342511fa.0.1749733965944; Thu, 12 Jun 2025
+ 06:12:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: defconfig: run savedefconfig to reorder it
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Conor Dooley <conor@kernel.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Guodong Xu <guodong@riscstar.com>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- spacemit@lists.linux.dev
-References: <20250611-01-riscv-defconfig-v1-1-b48fc3517498@gentoo.org>
- <92faa45d-0f3a-4bb6-afae-180c2b28fb65@ghiti.fr>
- <20250612093227-GYA130879@gentoo>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250612093227-GYA130879@gentoo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheduiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdfhleefjeegheevgeeljeellefgvefhkeeiffekueejteefvdevhfelvdeggeeinecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemfhduvggsmehfugelrgemrgguudgumeeifhehsgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemfhduvggsmehfugelrgemrgguudgumeeifhehsgdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemfhduvggsmehfugelrgemrgguudgumeeifhehsggnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepledprhgtphhtthhopegulhgrnhesghgvnhhtohhordhorhhgpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepp
- hgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehguhhoughonhhgsehrihhstghsthgrrhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+References: <4e1578fb-c81d-fe9c-1aa1-26b6016866eb@salutedevices.com>
+In-Reply-To: <4e1578fb-c81d-fe9c-1aa1-26b6016866eb@salutedevices.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Thu, 12 Jun 2025 09:12:33 -0400
+X-Gm-Features: AX0GCFtoF8kmEfxIWY2iK9V3IKYBfPHHYIWyXIo9X4fM-6SffgStTpz0HPSfNJ8
+Message-ID: <CABBYNZJPuZKifTNe5DMEaro6-4j+_7ExvKU5C6JgRZEwcbZBDw@mail.gmail.com>
+Subject: Re: [PATCH v1] Bluetooth: hci_sync: fix double free in 'hci_discovery_filter_clear()'
+To: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, oxffffaa@gmail.com, kernel@salutedevices.com, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/12/25 11:32, Yixun Lan wrote:
-> Hi Alexandre,
+Hi Arseniy,
+
+On Wed, Jun 11, 2025 at 12:31=E2=80=AFPM Arseniy Krasnov
+<avkrasnov@salutedevices.com> wrote:
 >
-> On 10:37 Thu 12 Jun     , Alexandre Ghiti wrote:
->> Hi Yixun,
->>
->> On 6/11/25 16:56, Yixun Lan wrote:
->>> Changes to defconfig should be always updated via 'make
->>> savedefconfig', run this command to make it aligned again.
->>>
->>> This will ease the effort of reviewing changes of defconfig
->>> in the future.
->>>
->>> Signed-off-by: Yixun Lan <dlan@gentoo.org>
->>> ---
->>> Update PDMA config bring in unnecessary changes[1], let's fix
->>> it by run savedefconfig first.
->>
->> It would be easier if this patch was part of the PDMA series since the
->> last patch will depend on it: @Guodong can you integrate this patch to
->> your next revision of your patchset?
->>
-> I'd rather make this patch independent, as nothing strongly ralated with PDMA,
-> and it probably would take several rounds for PDMA patch to be settled down..
+> Function 'hci_discovery_filter_clear()' frees 'uuids' array and then
+> sets it to NULL. There is a tiny chance of the following race:
 >
-> Besides, there is no problem for PDMA patch to depend on this patch if
-> needed (easy to use b4 to handle this..)
+> 'hci_cmd_sync_work()'
 >
-> The idea here is to get this patch merged as early as possible, as it's
-> quite straightforward, and other people may have similar problem instead
-> of PDMA here
-
-
-Ok makes sense, so let's Guodong deal with that then.
-
-Thanks,
-
-Alex
-
-
+>  'update_passive_scan_sync()'
 >
->> Thanks,
->>
->> Alex
->>
+>    'hci_update_passive_scan_sync()'
+>
+>      'hci_discovery_filter_clear()'
+>        kfree(uuids);
+>
+>        <-------------------------preempted-------------------------------=
+->
+>                                            'start_service_discovery()'
+>
+>                                              'hci_discovery_filter_clear(=
+)'
+>                                                kfree(uuids); // DOUBLE FR=
+EE
+>
+>        <-------------------------preempted-------------------------------=
+->
+>
+>       uuids =3D NULL;
+>
+> To fix it let's add locking around call  'hci_update_passive_scan_sync()'=
+ in
+> 'update_passive_scan_sync()'. Otherwise the following backtrace fires:
+>
+> [ ] ------------[ cut here ]------------
+> [ ] kernel BUG at mm/slub.c:547!
+> [ ] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+> [ ] CPU: 3 UID: 0 PID: 246 Comm: bluetoothd Tainted: G O 6.12.19-sdkernel=
+ #1
+> [ ] Tainted: [O]=3DOOT_MODULE
+> [ ] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+> [ ] pc : __slab_free+0xf8/0x348
+> [ ] lr : __slab_free+0x48/0x348
+> ...
+> [ ] Call trace:
+> [ ]  __slab_free+0xf8/0x348
+> [ ]  kfree+0x164/0x27c
+> [ ]  start_service_discovery+0x1d0/0x2c0
+> [ ]  hci_sock_sendmsg+0x518/0x924
+> [ ]  __sock_sendmsg+0x54/0x60
+> [ ]  sock_write_iter+0x98/0xf8
+> [ ]  do_iter_readv_writev+0xe4/0x1c8
+> [ ]  vfs_writev+0x128/0x2b0
+> [ ]  do_writev+0xfc/0x118
+> [ ]  __arm64_sys_writev+0x20/0x2c
+> [ ]  invoke_syscall+0x68/0xf0
+> [ ]  el0_svc_common.constprop.0+0x40/0xe0
+> [ ]  do_el0_svc+0x1c/0x28
+> [ ]  el0_svc+0x30/0xd0
+> [ ]  el0t_64_sync_handler+0x100/0x12c
+> [ ]  el0t_64_sync+0x194/0x198
+> [ ] Code: 8b0002e6 eb17031f 54fffbe1 d503201f (d4210000)
+> [ ] ---[ end trace 0000000000000000 ]---
+>
+> Cc: stable@vger.kernel.org
+> Fixes: ad383c2c65a5 ("Bluetooth: hci_sync: Enable advertising when LL pri=
+vacy is enabled")
+> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> ---
+>  net/bluetooth/hci_sync.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+> index e56b1cbedab90..61a9922eb820d 100644
+> --- a/net/bluetooth/hci_sync.c
+> +++ b/net/bluetooth/hci_sync.c
+> @@ -3167,7 +3167,15 @@ int hci_update_scan(struct hci_dev *hdev)
+>
+>  static int update_passive_scan_sync(struct hci_dev *hdev, void *data)
+>  {
+> -       return hci_update_passive_scan_sync(hdev);
+> +       int ret;
+> +
+> +       hci_dev_lock(hdev);
+> +
+> +       ret =3D hci_update_passive_scan_sync(hdev);
+> +
+> +       hci_dev_unlock(hdev);
+> +
+> +       return ret;
+
+This deadlocks since it is a callback on hci_cmd_sync_work which shall
+never use hci_dev_lock while waiting for events processed by
+hci_event_packet which will attempt to do:
+
+    hci_dev_lock(hdev);
+    kfree_skb(hdev->recv_event);
+    hdev->recv_event =3D skb_clone(skb, GFP_KERNEL);
+    hci_dev_unlock(hdev);
+
+This is why there are no test results because all tests seem to be failing =
+now:
+
+https://github.com/BluezTestBot/bluetooth-next/pull/2884
+
+>  }
+>
+>  int hci_update_passive_scan(struct hci_dev *hdev)
+> --
+> 2.30.1
+>
+
+
+--=20
+Luiz Augusto von Dentz
