@@ -1,188 +1,83 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DA71DF965;
-	Thu, 12 Jun 2025 23:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866BB235070
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771863; cv=none; b=NZMGMiiQWIxSfX7kPG5afoTm+WeD+kSpc/WiEw7rQ3cZ3y9OoBU4wUXlJUAKSBCpoGxp3Bl2GVBSC0mRePySs0/Zwj1v9X00mjbq5Gn2WKbEXE7LfgoXNcsSFXBgzi/SVxqzZstbqb+fiJmmzG3zo9oMqNmyE7IwjdlTvd9N6vk=
+	t=1749772056; cv=none; b=nsGjX90jy6HMHb4W31FVpfVRXxzPUtwNbNq6ug37Yu7dnSOMwd3M2JlrhKdef4zOi8MhrlvWuAFVouuJTXVUwo/vlKk0hkOkkpmiAb0BC8GOWtBptzTgmKP8DDdv7E/OBiwa50sg4aF7Fs0iIxBHX3jWRV6c47ifsAC/yz1Zh+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771863; c=relaxed/simple;
-	bh=5JzILznrMxvVRQxf8Hqsu5zni/A7Rt4O3iDHv8KHbJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=soWe6IKRkAVIuRaQfqio/pv1UxvEUK5VMPpbLYjcMbrcsJMdYL8gRgngKRePSHJQOMDbZxuZSpUlnugR2EZz1Oky2yG48vwVro8Xp6updhj3rP+mfrIQ9xNx1SglNQDEMh6+qeL4dByALB3CxfkHYmtTOuR1ODvsz3QZc0e7h3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Rh4BNFVB; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749772056; c=relaxed/simple;
+	bh=YUChF49bAYlJOpP0WqVyLSRATHcO/9CPEgcMbqtKARw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Rttmljw0QupyN+i97cdlurymQeM34C2bUJjDSiv6kSfpBUa3AgZVeOxpXK1OD3tgDqLKkdQ9ZPr+CpZre3M1cLtLpPluMg6ARLRNaPgP1S4SkrtJaF9jCjSxaqp5lSWFB0jI6I19ArMtUxCxILN55MfGHXrfT3hKsNVnv/1bwmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XR4I488A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Rh4BNFVB"
-Message-ID: <dbe26b36-a10c-4afb-88ad-a6f7f9bff440@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749771854;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8t46q3qqq58O3Iozg3ZVMZkLga+rVEXppYIQU8pZTR0=;
-	b=Rh4BNFVBqPKyzkGEg0VtlBVcGVma+gqZgIWAUmqAsAdlmzUPABYeGR+rU4K4DFugaPTDCH
-	DTvJ0F/BqKuCcM4tgryjopxwu4S87qgFaOcDxAPnhq/TXQ/UAx21rrv7j0uKhy9+F+HcWa
-	havTzu7j2MGZIk2vEYr+o91l1q0qADY=
-Date: Thu, 12 Jun 2025 19:44:09 -0400
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XR4I488A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D951C4CEEA;
+	Thu, 12 Jun 2025 23:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749772056;
+	bh=YUChF49bAYlJOpP0WqVyLSRATHcO/9CPEgcMbqtKARw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XR4I488AZIuD5wUchz+ZxH9y0yZjE8wvKVuscwaBAauVpw9jrrXNa73Dyj71GKWvV
+	 r9ouV0lLueOOIN9f4uYhzrbLLIwkhRBFWpUPSFE0vP2uldYj4e0JWrbEr7HPOoVW2C
+	 4n9FTeAs6nvAA0MghkEuEce3eKDI/r1nKw6kYmxs=
+Date: Thu, 12 Jun 2025 16:47:35 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jiri Bohac <jbohac@suse.cz>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young
+ <dyoung@redhat.com>, kexec@lists.infradead.org, Philipp Rudo
+ <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>, Pingfan Liu
+ <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+ linux-kernel@vger.kernel.org, David Hildenbrand <dhildenb@redhat.com>,
+ Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v5 4/5] kdump: wait for DMA to finish when using CMA
+Message-Id: <20250612164735.76a1ea9a156cd254331ffdc4@linux-foundation.org>
+In-Reply-To: <aEqpgDIBndZ5LXSo@dwarf.suse.cz>
+References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
+	<aEqpgDIBndZ5LXSo@dwarf.suse.cz>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/7] dt-bindings: spi: zynqmp-qspi: Split the bus
-To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>,
- Michal Simek <michal.simek@amd.com>, linux-spi@vger.kernel.org
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
- linux-arm-kernel@lists.infradead.org,
- Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
- linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- devicetree@vger.kernel.org,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>
-References: <20250116232118.2694169-1-sean.anderson@linux.dev>
- <20250116232118.2694169-2-sean.anderson@linux.dev>
- <9f40295b-484a-48e8-b053-ff8550e589d7@baylibre.com>
- <46a7eba6-a705-4543-b967-e83ccc89e7d4@linux.dev>
- <6afc379a-2f9f-4462-ae30-ef6945a83236@baylibre.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <6afc379a-2f9f-4462-ae30-ef6945a83236@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-Hi David,
+On Thu, 12 Jun 2025 12:18:40 +0200 Jiri Bohac <jbohac@suse.cz> wrote:
 
-I am (finally!) getting around to doing v2 of this series, and I ran
-into a small problem with your proposed solution.
+> When re-using the CMA area for kdump there is a risk of pending DMA
+> into pinned user pages in the CMA area.
+> 
+> Pages residing in CMA areas can usually not get long-term pinned and
+> are instead migrated away from the CMA area, so long-term pinning is
+> typically not a concern. (BUGs in the kernel might still lead to
+> long-term pinning of such pages if everything goes wrong.)
+> 
+> Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
+> be the source or destination of a pending DMA transfer.
+> 
+> Although there is no clear specification how long a page may be pinned
+> without FOLL_LONGTERM, pinning without the flag shows an intent of the
+> caller to only use the memory for short-lived DMA transfers, not a transfer
+> initiated by a device asynchronously at a random time in the future.
+> 
+> Add a delay of CMA_DMA_TIMEOUT_SEC seconds before starting the kdump
+> kernel, giving such short-lived DMA transfers time to finish before
+> the CMA memory is re-used by the kdump kernel.
+> 
+> Set CMA_DMA_TIMEOUT_SEC to 10 seconds - chosen arbitrarily as both
+> a huge margin for a DMA transfer, yet not increasing the kdump time
+> too significantly.
 
-On 1/23/25 16:59, David Lechner wrote:
-> ---
-> From: David Lechner <dlechner@baylibre.com>
-> Date: Thu, 23 Jan 2025 15:35:19 -0600
-> Subject: [PATCH 2/2] spi: add support for multi-bus controllers
-> 
-> Add support for SPI controllers with multiple physical SPI buses.
-> 
-> This is common in the type of controller that can be used with parallel
-> flash memories, but can be used for general purpose SPI as well.
-> 
-> To indicate support, a controller just needs to set ctlr->num_buses to
-> something greater than 1. Peripherals indicate which bus they are
-> connected to via device tree (ACPI support can be added if needed).
-> 
-> In the future, this can be extended to support peripherals that also
-> have multiple SPI buses to use those buses at the same time by adding
-> a similar bus flags field to struct spi_transfer.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  drivers/spi/spi.c       | 26 +++++++++++++++++++++++++-
->  include/linux/spi/spi.h | 13 +++++++++++++
->  2 files changed, 38 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 10c365e9100a..f7722e5e906d 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -2364,7 +2364,7 @@ static void of_spi_parse_dt_cs_delay(struct device_node *nc,
->  static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
->  			   struct device_node *nc)
->  {
-> -	u32 value, cs[SPI_CS_CNT_MAX];
-> +	u32 value, buses[8], cs[SPI_CS_CNT_MAX];
->  	int rc, idx;
->  
->  	/* Mode (clock phase/polarity/etc.) */
-> @@ -2379,6 +2379,29 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
->  	if (of_property_read_bool(nc, "spi-cs-high"))
->  		spi->mode |= SPI_CS_HIGH;
->  
-> +	rc = of_property_read_variable_u32_array(nc, "spi-buses", buses, 1,
-> +						 ARRAY_SIZE(buses));
-> +	if (rc < 0 && rc != -EINVAL) {
-> +		dev_err(&ctlr->dev, "%pOF has invalid 'spi-buses' property (%d)\n",
-> +			nc, rc);
-> +		return rc;
-> +	}
-> +
-> +	if (rc == -EINVAL) {
-> +		/* Default when property is omitted. */
-> +		spi->buses = BIT(0);
+Oh.  10s sounds a lot.  How long does this process typically take?
 
-For backwards compatibility, the default bus for CS 1 on gqspi must be 1
-and not 0. Ideally there would be some hook for the master to fix things
-up when the slaves are probed, but that doesn't seem to exist. I was
-thinking about doing this with OF changesets. Do you have any better
-ideas?
+It's sad to add a 10s delay for something which some systems will never
+do.  I wonder if there's some simple hack we can add.  Like having a
+global flag which gets set the first time someone pins a CMA page for
+DMA and, if that flag is later found to be unset, skip the delay?  Or
+something else along these lines?
 
---Sean
-
-> +	} else {
-> +		for (idx = 0; idx < rc; idx++) {
-> +			if (buses[idx] >= ctlr->num_buses) {
-> +				dev_err(&ctlr->dev,
-> +					"%pOF has out of range 'spi-buses' property (%d)\n",
-> +					nc, buses[idx]);
-> +				return -EINVAL;
-> +			}
-> +			spi->buses |= BIT(buses[idx]);
-> +		}
-> +	}
-> +
->  	/* Device DUAL/QUAD mode */
->  	if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
->  		switch (value) {
-> @@ -3072,6 +3095,7 @@ struct spi_controller *__spi_alloc_controller(struct device *dev,
->  	mutex_init(&ctlr->add_lock);
->  	ctlr->bus_num = -1;
->  	ctlr->num_chipselect = 1;
-> +	ctlr->num_buses = 1;
->  	ctlr->slave = slave;
->  	if (IS_ENABLED(CONFIG_SPI_SLAVE) && slave)
->  		ctlr->dev.class = &spi_slave_class;
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 4c087009cf97..bc45d70e8c45 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -187,6 +187,11 @@ struct spi_device {
->  	struct device		dev;
->  	struct spi_controller	*controller;
->  	u32			max_speed_hz;
-> +	/*
-> +	 * Bit flags indicating which buses this device is connected to. Only
-> +	 * applicable to multi-bus controllers.
-> +	 */
-> +	u8 			buses;
->  	u8			chip_select[SPI_CS_CNT_MAX];
->  	u8			bits_per_word;
->  	bool			rt;
-> @@ -570,6 +575,14 @@ struct spi_controller {
->  	 */
->  	u16			num_chipselect;
->  
-> +	/*
-> +	 * Some specialized SPI controllers can have more than one physical
-> +	 * bus interface per controller. This specifies the number of buses
-> +	 * in that case. Other controllers do not need to set this (defaults
-> +	 * to 1).
-> +	 */
-> +	u16			num_buses;
-> +
->  	/* Some SPI controllers pose alignment requirements on DMAable
->  	 * buffers; let protocol drivers know about these requirements.
->  	 */
-> -- 
-> 2.43.0
-> 
-> 
-> 
