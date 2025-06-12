@@ -1,131 +1,155 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2657F17A2E6
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2401920F069;
+	Thu, 12 Jun 2025 08:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749715283; cv=none; b=Ai93PhOvBrdYwr4aMPHo2/pp9olOE1oS8dZbAEdBLZAS7zAP4ISofTEMYWmoHhZKeMTtm8mCUmwsD0KC7IMig0K9ga7ldxzQ0mOkVT/UkjY4qoFY54GeosZX5P+9CKQQmUReg+lcqgoUENx3g28N0gF0Ur2ojhUL2ehzgFpyImU=
+	t=1749715285; cv=none; b=WMNCF6xA1qq/LtIFwLiKPn4oouUnmDbOtx5/kpjqZ7p2OSieDwsjdgc9T8Nf+hHt0cRdqWcxF+ERg2xAj6qsi9d0/LW/HVO/ddYhy7+D7CqL/njvZtugAtTqBVO1olcYi88ddl1BIaOtVcdhAh29CEZb9KgWF4yZxrFtgxe7mq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749715283; c=relaxed/simple;
-	bh=6Ose6+B71k7iqCx66aWRA/Yp59uxaaNK8czjGm/rHnA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wu4r60FK2tD4QKVvnkAB5u7R2cavQgwFoB8tWqwe346pCX6vjt55cevs0mSMHM7bkvDooLe92hEzvaGOU3GdeNyrd46tTjpIUcpheztil730cxhSnYYO2UsIqgDVeOrLcv6AqtSs+cl1GXtSkhX+Wq3sqPJpNjfKdowSfuza7HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=GQo5MWqz; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1749715285; c=relaxed/simple;
+	bh=m2zs+8VpRJtc+aR6SbZTkUZULAfTzFK7CScj34oxfVE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=HxU7Z+pkZONC6t+Y+dy2oIljdi4SPPXYGl47dc67g9jSbwlbDSYAY8y9lYQPwrDwHV5es5mrTzjhkwhTI4CH7S6pfj7BgdBVnS+qfn/opE1ghp34zHI59je92xCmtqadGFDaVxv3jzjss3NBcdem39dmCM7EEnnB+vap5fhIAGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Djdn65SD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q1Hun9oF; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="GQo5MWqz"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad883afdf0cso139930966b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749715279; x=1750320079; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7oxSJUEVlshkD0aDlvVP1clOg+BglaIQc1uVhMM16LQ=;
-        b=GQo5MWqzxoHmUY+Wxdcrm12k6RVY/knEiiTfXF6dA7Z2Co7zIiXNrYhDmtL2PfUFyk
-         a4GtSfnlmjgXILddyORwYA/g2GHl1DTk5VawRJMhTYsAxBPNbu0McPaFR5JydPsfHbF5
-         oLZH4JBElI3aBMYUiKjBS+cDijnxr+vRdu36tEGcSkNZChXIs6IGaAY1EFdCCE/pvf4a
-         7kJCeD5bQT4vGYhIOODbh3aIxIfUMMsgtUCU6QSOox7dtx9Kx+6rVCbOujjIuVLO1sPk
-         1rweDZ5Q/F7VEuYPaavvIPH5IfQfEAIsnHMoijxWBbYi+ImCrZf0sHocBiQyT/VVJeuj
-         9l3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749715279; x=1750320079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7oxSJUEVlshkD0aDlvVP1clOg+BglaIQc1uVhMM16LQ=;
-        b=hSVZyHI+XAz7xT8mbU7iLQo8Mu0i0rpr1RVB/H7wGBvPAz0zYM2/ikPUkdQpprVgey
-         E9Wh4ifURMeet9kUPk6767IbvqQFCCUzgcxP4dBNaezkO6sjWNUBndQbiJtDNoG/+tR8
-         3CFkR8pItHorXoLqtCIRx2uncifXbo3rUJDMyW2ExnbqrFu495MS1ifIYhAbocCBYRpD
-         0G4oeBReD7tyueon/zd+ruYrXqwFZxmg+skmZVD7Xqz6axDMFK8uBsRx5FWYCARjzxGT
-         alrHLK4JP9vJzg+xP3+LXJqy00+/5fXW817QHaxRwYClbwyRR+UKNQUwHRLb2an3ZX1h
-         b1hA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCxDEoSI+Wo790SciawLn2OVANN8gy7hAu42PkZXlQPyqGTsN4ASwU3TUV3HcGuWRGBCD9tq5V6iI+lQM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj3xu2PZcb2mFfJMwDmPOBgROx3terPlzgDw7LSboiYW0SUUe0
-	Vu2Arjo7rrMf9LHI/nE8ncyYR1duQ0iTRG3n9QspPsjJHQ4fM5wC0sh5RwBlwawI/9IUb5pEwcq
-	9g24Qmp4Gu/vXS83k10gUGDHphUsna1cafZvL2f7G0Q==
-X-Gm-Gg: ASbGncuXmeQIm+mlgJSbtyZzyW6OACs0KTMh05+g3VP+7zV1fV/TpYgTmDnnGNiR6fs
-	Zv8Pyv/BWk/D/IQQ1mR3fYmaGggzTu1ebdaZB3ayKVJZywO6Ec7nHRo4mR9VOhdVZd1mS3IYfJR
-	4PpGU0CKC7ksm4u0bI/XDl0/q+NzxUozfob5Jo1rXC0lKz
-X-Google-Smtp-Source: AGHT+IHDczhcOV54f0XomIKx+8AvFzloZqJPe+NAcKM5RDeAoHNu5Itf848xFcRsOPgv8woiTaDbH1WF8g3ZBcPtFeQ=
-X-Received: by 2002:a17:907:d03:b0:ade:3bec:ea29 with SMTP id
- a640c23a62f3a-adea2ec74a3mr265693466b.25.1749715278188; Thu, 12 Jun 2025
- 01:01:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Djdn65SD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q1Hun9oF"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E2DC911401DC;
+	Thu, 12 Jun 2025 04:01:21 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 04:01:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749715281;
+	 x=1749801681; bh=ESXbHeJFagXQn1CJAp2zXfESHZ5BTFgFyg2i6iJTqKY=; b=
+	Djdn65SDtIlM/HGxUXWA4JU/IBnKZKcpgxCoTJfE6OKBEcC/IctIF/W0MFCe9G2l
+	8TOIaHxzFiddQA32Q1UMmccrF1bhYgd1Big/emUnHWzQd5z9NPcdel4cfIbodiZ/
+	E489BJK0VmL1FiHg9AKMYXKtSxXzaza0iNPbS6mRSgHHwPXwqj+nN3d88/ShvBl6
+	Umzx5ZcZv7eSS+QVynNxhFzitXlC+PlCqQvdnG71ssxgOln8CD9NpY4TfpzlpkpA
+	hNMW9GG+kif+ThMzMq+cVtooc3w1+8x6Nws45+L5gOUSwBHB+4tvqMlCobKGT/eA
+	mGVRiAPKy2VRenL3rOgHZQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749715281; x=
+	1749801681; bh=ESXbHeJFagXQn1CJAp2zXfESHZ5BTFgFyg2i6iJTqKY=; b=Q
+	1Hun9oF/DwhBK8vo6mO3j5lQ1qT1G+QGPE5s23kLkDPW5fclhpox2bt4PkRl5Mij
+	hrFsotl3nCxWANsF8tlFF3bYA2I39LoD80Ux6RLkOeO9ruWLuIgUbJyEqbsjKtbT
+	CAeAdvmalAWLWOqSKZbu02O98m1mNYw4yachgdCs4M32Pz3rCet1oXOXUoZrsu+9
+	RSDNdaPmSny44x3TjwcE05F5EC/0TJ94a93JPWPvsqm1RLQ82FUbqhYNzMQ6u4UD
+	jNxvwhjdIlckCy5iCUAsz7+fxho/hOsBr2WDSjlkUF9dbDz+qjW+cb8FX5vtH/a0
+	xLgAy28jO8LDBEmz+y37A==
+X-ME-Sender: <xms:UYlKaEjLfviqKKR4d3KgfhQErMHW_tIsvJ_tGYO5cQwzuwdB7IyXLw>
+    <xme:UYlKaNBZ9dbNtqp7OZhgCIvjQn2pQn6O-SsmIfN6NA6Apr8onfr-zmN7r8WY1vEy5
+    FqQcux8XLUCsdECFN8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddugeehfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
+    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeh
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggr
+    thhiohhnrdhorhhgpdhrtghpthhtohephhgtrgeslhhinhhugidrihgsmhdrtghomhdprh
+    gtphhtthhopehlihhnuhigqdhksghuihhlugesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:UYlKaMF1SBiKQcf9DMKPWwawPbd4wPAUybvkuxRiBZr_jkifx-y-XA>
+    <xmx:UYlKaFT1dKGkTp8qcj3PdHS2Na0Cg5QDrLPws6pe4GQ3bnEsFfDSBA>
+    <xmx:UYlKaByx6RB9tjJ5nLqo9YHNUy3J9A-EFXq7EyrL9ArYHgY8bI69ng>
+    <xmx:UYlKaD4tVjeXCPmm8M9GGeQrC-GgOmSqYWTUi-eufeuKFq2uUfA8Bw>
+    <xmx:UYlKaCrVdbYyeJd28tAqFoK72V3iqSer_DTZiUk60LYiwDdG4on562_A>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8A636700063; Thu, 12 Jun 2025 04:01:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611125723.181711-1-guodong@riscstar.com> <20250611125723.181711-7-guodong@riscstar.com>
- <20250611135757-GYC125008@gentoo> <CAH1PCMbt3wLbeomQ+kgR6yZZ18TZ=_LF-kCcnLqad55FSHBhDA@mail.gmail.com>
- <20250611150227-GYA127466@gentoo>
-In-Reply-To: <20250611150227-GYA127466@gentoo>
-From: Guodong Xu <guodong@riscstar.com>
-Date: Thu, 12 Jun 2025 16:00:57 +0800
-X-Gm-Features: AX0GCFtVVlHqZ-iio4sy0I0p_9gClOFpDAZk_842S7V7_Hx6vWxgyXXCaFMBON4
-Message-ID: <CAH1PCMbNEMvpU=eNvrHj3pcLEMn=ObCOZZHVM4tjZbL9-BiraQ@mail.gmail.com>
-Subject: Re: [PATCH 6/8] riscv: dts: spacemit: Enable PDMA0 controller on
- Banana Pi F3
-To: Yixun Lan <dlan@gentoo.org>
-Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, 
-	emil.renner.berthing@canonical.com, inochiama@gmail.com, 
-	geert+renesas@glider.be, tglx@linutronix.de, hal.feng@starfivetech.com, 
-	joel@jms.id.au, duje.mihanovic@skole.hr, elder@riscstar.com, 
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: T11a455a1e4054318
+Date: Thu, 12 Jun 2025 10:01:00 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Masahiro Yamada" <masahiroy@kernel.org>
+Cc: "Heiko Carstens" <hca@linux.ibm.com>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+ "Linux Kbuild mailing list" <linux-kbuild@vger.kernel.org>
+Message-Id: <38a08452-4db2-43e0-afdc-b7d696da5454@app.fastmail.com>
+In-Reply-To: 
+ <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
+References: 
+ <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
+ <20250611075533.8102A57-hca@linux.ibm.com>
+ <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
+ <8992766a-cc96-40bb-b8c2-60931ad0f065@app.fastmail.com>
+ <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 11:02=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
+On Thu, Jun 12, 2025, at 03:42, Masahiro Yamada wrote:
+> On Wed, Jun 11, 2025 at 11:24=E2=80=AFPM Arnd Bergmann <arnd@arndb.de>=
+ wrote:
+>> On Wed, Jun 11, 2025, at 15:32, Masahiro Yamada wrote:
+>> > On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.i=
+bm.com> wrote:
+>> I think this makes sense in general, but the output here is
+>> excessive if it leads to users no longer wanting to enable W=3D1.
+>>
+>> There are other warnings that I think should be enabled at the
+>> W=3D1 level (e.g. -Wformat-security) and eventually by default,
+>> but that are still too noisy at that level.
+>>
+>> My own cutoff would be at a few hundred warnings in allmodconfig
+>> builds if there is an effort to reduce it further, but it seems
+>> that this one is still at a few thousand, which does not seem ok.
 >
-> Hi Guodong,
+> Then, what to do?  Downgrade to W=3D2?
 >
-> On 22:32 Wed 11 Jun     , Guodong Xu wrote:
-> > On Wed, Jun 11, 2025 at 9:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wro=
-te:
-> > >
-> > > Hi Guodong,
-> > >
-> > > On 20:57 Wed 11 Jun     , Guodong Xu wrote:
-> > > > Enable the Peripheral DMA controller (PDMA0) on the SpacemiT K1-bas=
-ed
-> > > > Banana Pi F3 board by setting its status to "okay". This board-spec=
-ific
-> > > > configuration activates the PDMA controller defined in the SoC's ba=
-se
-> > > > device tree.
-> > > >
-> > >   Although this series is actively developed under Bananapi-f3 board
-> > > but it should work fine with jupiter board, so I'd suggest to enable
-> > > it too, thanks
-> > >
-> >
-> > I'd be glad to include the Jupiter board as well. Since I don't have Ju=
-piter
-> > hardware for testing, could someone with access verify it works before =
-I
-> > add it to the series?
-> >
-> Do you have any suggestion how to test? like if any test cases there?
->
+> I think nobody cares about W=3D2 builds,
 
-I am using the dmatest (CONFIG_DMATEST) for memory-to-memory
-and using spi3 to test device-to-memory / memory-to-device.
+I think the first step would be mass-cleanup patches to get
+the initial numbers down. A lot of this can be scripted.
 
-> I would assume it work fine on jupiter since it's a SoC level feature?
-> instead of board specific..
->
+> and the problem of all C files including <linux/export.h>
+> would remain forever.
 
-Yeah, that's a SoC level device. I would say a boot test and some
-basic mem-to-mem test should be enough.
+I'm missing a bit of background here, and I don't see this
+explained in the 5b20755b7780 ("init: move THIS_MODULE
+from <linux/export.h> to <linux/init.h>") changelog text
+either
 
--Guodong
+What is the purpose of cleaning the linux/export.h inclusions,
+and what makes this one more important than others?
+I obviously understand that indirect header inclusions are
+a giant mess and that any such cleanup helps, but linux/export.h
+seems particularly small compared to many others. It was
+originally introduced so a lot of files would no longer have
+to pull in linux/module.h if they only care about using
+EXPORT_SYMBOL() and THIS_MODULE, so linux/module.h could
+eventually become private to kernel/module/*.c.
 
-> --
-> Yixun Lan (dlan)
+Is this something you are trying to continue, or are you
+doing something else here?
+
+FWIW, I compared the preprocessed sizes of linux/export.h
+(~2000) and linux/module.h (~120,000), and it seems that almost
+none of those are needed by most of the files including
+linux/module.h. The one part that is commonly required is
+MODULE_{INFO,AUTHOR,LICENSE,DESCRIPTION}, so maybe there would
+be a chance to clean this up at the same time if you are
+planning some large-scale reshuffling of #include statements
+around export.h.
+
+     Arnd
