@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B5015278E;
-	Thu, 12 Jun 2025 14:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E07267F78
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740294; cv=none; b=rCJfvHUrCQ9wFZzc1eGgJ2mbnu9hSAoaTYb8Pw6GBaBBWMoP3fhTOIYd61mrmNKzlr6FIaacuq0OXLmkQYJcqMWY5Po6QOgfrCIGe2bhQdokXSDvUBpKVsu/33jGGvCWHCefdzZ3olSfDwYIz81wrcaOGR+fWxb/h/FSDeNRdPU=
+	t=1749740334; cv=none; b=fTn+UVyIaIjthZeocBDkGQbCf+A446y7+F81BeC+/7Bk+n5aPfkxhqGEJQ0krpV6xlqm+CbCkZFibu4WaN2md75wOtDEGqKfHY/WEekUDeTA+y0YgyUc2sqduZgQqFlIg5V2+nGISaZ6Hre5RUsbUtiu7IiUx6Y6lRv7F7zkWTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740294; c=relaxed/simple;
-	bh=MEQ00cN8fGMKpGx5TTT2lBG5uw4fLGW1FJZZt7d8B0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kaiX3QaVumLmmOglpx3WyHjErhbxpPv1cD9djLrG/p47nKEmdomWhPv90FoURwdl0gFWAZavevOFqL8kIHp/pJJ+UtyV38M/edXleJBoqXtj8mSsJL0CpR+W23c36Onkmww8czXRjZ3mpbydydWK6QkdPl+5RLyjEvp3xUFC1is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyhEhweN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749740334; c=relaxed/simple;
+	bh=LMZP3Iit/zo/pN1qqkBLVVhcxAYQH/mYPWspVWFPNvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oo73Mb3Al8Y38YhExfxZbhYY3OhsrD/QbyQnh4Igr/GeRZab8Ma93Bkbz88NigRiA7+yVMp4ls0OhwSW0SLj+VZFvqy8FcnXNGTLE/LjrY8shwCRwH/CgEcQqzQsZsO+Vwpu5jnDSWyb0J06JO3qocHclM+qP13TG0gCbIuvC+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+a9WpEd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyhEhweN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5474DC4CEEA;
-	Thu, 12 Jun 2025 14:58:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+a9WpEd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2ACBC4CEEA;
+	Thu, 12 Jun 2025 14:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749740293;
-	bh=MEQ00cN8fGMKpGx5TTT2lBG5uw4fLGW1FJZZt7d8B0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tyhEhweNRZcVd2K4arWld8S0SFJue+WF4/91t2dHUDMg0/cbg2Tvu9EtE4Iu1hzNb
-	 7jOB/+bthFWk32dO1y/vdiyWb8jsdhiDa0Ex9SMs3hpmjcn2jk/9OllCxRuXZnHdXF
-	 yxkaJpCWCTh8DQVAXTlnr5El/O0Xg5/pCNbCUm4GJTIwvrL9kp8Ya9Ov0hfJgsUvOy
-	 LL1bg3cEte3Pq/tJ4GVaS4w7m31nGTN+aldUzZcbCJR0xesh8gmDJIdIwGNA1BSAIL
-	 7l6J7d3JBj9VD7KEZqtj6M6C4gp60RJhapMQrsgcUrHG0oTYOtdm90twWZX3SKWjG3
-	 s2TGt9tLDstZw==
-Date: Thu, 12 Jun 2025 15:58:08 +0100
-From: Will Deacon <will@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: Re: [PATCH] arm64/ptdump: Ensure memory hotplug is prevented during
- ptdump_check_wx()
-Message-ID: <20250612145808.GA12912@willie-the-truck>
-References: <20250609041214.285664-1-anshuman.khandual@arm.com>
+	s=k20201202; t=1749740334;
+	bh=LMZP3Iit/zo/pN1qqkBLVVhcxAYQH/mYPWspVWFPNvY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=c+a9WpEdbRr0g1a4FBFoLtsmK3mSOqCYLNnCqrCLqLQdGlOyUHHHocSSZmWK4gxoH
+	 u+dgVq3sym19SZVpV6YtAQiRArAaFbLOzyAburzP5KTICGXzSfjAL4FLlJYh6JoP5/
+	 mRobzdJ5P+ImGv4T6m7ETJgNL7JsevwkT9b9NF1lrUTojSrS4oQdZmM0nZR9scdfQz
+	 SVS4xucHpWGBsH0hR7K3H1FyIGsjgZGWNYOHO6jXY1BWgU0u8ZnqwsgJkH6J/NVX/0
+	 tfu6pC2THdyGnHEFy3+Dywfgz5aJq0G1ZFDu/CQ4//3pgoykKfWjSI+HccAnWc6CQ9
+	 zwSyfxAEfF7OQ==
+Date: Thu, 12 Jun 2025 11:58:51 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Breno Leitao <leitao@debian.org>, Ian Rogers <irogers@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 1/1 fyi] perf beauty: Update copy of linux/socket.h with the
+ kernel sources
+Message-ID: <aErrK24XLUILFH_P@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,28 +46,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250609041214.285664-1-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jun 09, 2025 at 05:12:14AM +0100, Anshuman Khandual wrote:
-> The arm64 page table dump code can race with concurrent modification of the
-> kernel page tables. When a leaf entries are modified concurrently, the dump
-> code may log stale or inconsistent information for a VA range, but this is
-> otherwise not harmful.
-> 
-> When intermediate levels of table are freed, the dump code will continue to
-> use memory which has been freed and potentially reallocated for another
-> purpose. In such cases, the dump code may dereference bogus addresses,
-> leading to a number of potential problems.
-> 
-> This problem was fixed for ptdump_show() earlier via commit 'bf2b59f60ee1
-> ("arm64/mm: Hold memory hotplug lock while walking for kernel page table
-> dump")' but a same was missed for ptdump_check_wx() which faced the race
-> condition as well. Let's just take the memory hotplug lock while executing
-> ptdump_check_wx().
+tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-How do other architectures (e.g. x86) handle this? I don't see any usage
-of {get,put}_online_mems() over there. Should this be moved into the core
-code?
+Full explanation:
 
-Will
+There used to be no copies, with tools/ code using kernel headers
+directly. From time to time tools/perf/ broke due to legitimate kernel
+hacking. At some point Linus complained about such direct usage. Then we
+adopted the current model.
+
+See further details at:
+
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
+
+To pick the changes in:
+
+  b1e904999542ad67 ("net: pass const to msg_data_left()")
+
+That don't result in any changes in the tables generated from that
+header.
+
+This silences this perf build warning:
+
+  Warning: Kernel ABI header differences:
+    diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/socket.h
+
+Please see tools/include/uapi/README for details.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Breno Leitao <leitao@debian.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/trace/beauty/include/linux/socket.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
+index c3322eb3d6865d5e..3b262487ec06032b 100644
+--- a/tools/perf/trace/beauty/include/linux/socket.h
++++ b/tools/perf/trace/beauty/include/linux/socket.h
+@@ -168,7 +168,7 @@ static inline struct cmsghdr * cmsg_nxthdr (struct msghdr *__msg, struct cmsghdr
+ 	return __cmsg_nxthdr(__msg->msg_control, __msg->msg_controllen, __cmsg);
+ }
+ 
+-static inline size_t msg_data_left(struct msghdr *msg)
++static inline size_t msg_data_left(const struct msghdr *msg)
+ {
+ 	return iov_iter_count(&msg->msg_iter);
+ }
+-- 
+2.49.0
+
