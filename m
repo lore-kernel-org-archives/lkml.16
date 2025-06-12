@@ -1,70 +1,94 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F241CDA3F;
-	Thu, 12 Jun 2025 09:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17DE223DCC
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749719267; cv=none; b=K2CV36aQ/dc3CWGPWBMmhT/z8Ab7uaK6T8gIR+Ua/x4rCqVVhWRcbd006ciOfeNFlJefH9qx7V5zQ9FVhUhyXpwIHCyi+m/E+yPHj808uMkr8jSnsYqCJM3n0KKhXK8yz2as48l0T1BF4uinHhCXDVhuPf6fE1qBvDbmWeELDS8=
+	t=1749719310; cv=none; b=NqSWylBDxDCXx6cG9zh+wnZ8hlpbqmE7qNOF6U+tOUwi0Rh67lNO9Z5fapYWlGZ3W6qOUru/xTRBpXF8YcpSnk6EdEHg1vqxYHL9NPisRKexCJIx+ReOyr5J4JcaISb60ANTcKaCbUE3C1OKUwWEkb8Plbka8YhzD1R00+KbIjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749719267; c=relaxed/simple;
-	bh=nPaGWMZ4NG9UTsgXyf6E4c3wv/YhKDdZPZghgszys+k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iRSUf0sEPYWenIkYiv/QI9e+/EajmqdDw5GtLSkCPRtb7q/NwYsYsUi3qnaNdYIgka0jGq138XOeDBs3kG0ihNKngrO7gOIoWYTmN2F9QCFfIqztwpLBxhiJB3QoP2VRYlaQ+hfRLJEwX4MLkld5fWTUDsiSSMkWDYB3TcKJJpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kVbGupnt; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749719310; c=relaxed/simple;
+	bh=6KfPFbuiFd+XjZqq79kzPL/jMNedVQKHcM7hei2cEc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mcnrUzIcoCwzMdw6uZuwFYQzIThw8nPx63hjZ20y8fiFN+S+wnnZaLFQPWqj25EoFTKMcUPpu5Pzlf2bUPwIkiHuLl8dIivW0FpTDGSYIN40l8GGOI9UXh57hgNCsjQzx/lK3/kGeyq/iXFjdHCz2bwvNPbFOQ044KYqRL3VLyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=np334vZ9; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVbGupnt"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4530e6f4db4so205065e9.2;
-        Thu, 12 Jun 2025 02:07:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="np334vZ9"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so1293777a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 02:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749719263; x=1750324063; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1749719307; x=1750324107; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rBWkeK6hGx5OvRMWT1USZjz50+Of77xDqL2XQmoejP8=;
-        b=kVbGupnt6UEYFqwZUuhNICMrztf8n0YE8PGJM9Mb2WGzCRcxqjhdkEJ5GpoJkCjJ1i
-         V31esfRuCRWYVR5IZDzwLvPwnHbJBMtojhq1cyvIt+W2feEYo9IQkGcbUJi7Oq6BnyXa
-         tZvr/HEefh/dAV+MROsqAwiWtAnkwhBnnQMGpmMuVcOEP9m42W2/hGbWI/8u5bj6Ydkw
-         U15/pRRv4kxB5j3G4pfU190ATgvoFxaFJkNL4kmkMCxSoMijG9PgMarkY3QE70VSq/oJ
-         xsuqySaB1NDEJw9HnMf/AQi0jgHlKfJG/fsN/301N9XMNXsBXuGPv/pfqeTyDKjW2SC9
-         usMw==
+        bh=8NxJW8a0rDs+8sBFsEtXBrcHDs56LoiAx3JrdQr1I1I=;
+        b=np334vZ9EYomQ0DdSxEWpJVSRMJZuzrOxkt/rj4NG+m58e7y98O3eFb3SM90givXFj
+         WDgCCFf7QFrsKoxx5fQT+4xo0pwkSOCHVwTmPS4/MOidzUibabKfY+CIxPFHJmh6beb6
+         p602mu1TWqwO1A1HpFffioI3VmcIeO34zv+rQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749719263; x=1750324063;
+        d=1e100.net; s=20230601; t=1749719307; x=1750324107;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rBWkeK6hGx5OvRMWT1USZjz50+Of77xDqL2XQmoejP8=;
-        b=h63R6EUydz97lJuBYtkoGOyQLWuSb3I5ehhUGGUms5aoWsRn3R8DDRz4f6B/MUCSi1
-         yX+FFhPtD8b/Tdoy6qsdB+cDLxcW1FnS+ABDKFVZNhTehNeKTPjCvXoCFgeVWacpiDry
-         jPweSF+z4puDJxM/W5NwgTjCG6OMcGvimfx40q2NP4UYr6ZgXAeoGGzSU8Sn0j5bHZKl
-         G9FNAKOapXc4GlIoevlMExANRpRDg0qsRL2wgQVGQKGQeY8OkQ7gjjB0unboBZxudmzp
-         osmwiCiAp48wcHS4+VltDCGt+lRLm6FONeDxUpUU8VXlLUoxmRB3VVmjSl2ZkXAp86G5
-         ebaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVC5BD5gKLqUGq/7MgQqg75eLqH7oIx9P+QUOlUeAtwPuqERmlBFrN3s9UQnxyEESOgXANBdOf7ZpRuPt4=@vger.kernel.org, AJvYcCVuQsmKZZTkzCvnNqc7rAc5G6CTGxnrjyl3qPbWubr55mqI93Ag3ZlquZoeu/4u9GQJkFftkASSZ8+N+UHI1gY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ/knC3scRBlgoW2cZJaRWNjrpU2OKq1Ktgi4s5Mk3eo3zpC8O
-	Op4hi7u2ORdTwroPsiSQroRkZzC0Ofx9Yz3BWXNJuCkP/6A52exjgIjl
-X-Gm-Gg: ASbGncsMr2xTKecIzoqJt4BfENYVmgw0xo3fjgjW1TT1TcJtAKLgHT1O/RGaYTA8YSg
-	CQOBcoF45bgt/bRapWEDa0hmjumEFQ8MHxqEBNLtPQVeWNCkJjP7IetFGnY4bfkkTzVpPdsKnYZ
-	GN4R9Sj9toXDTXQz1sLKAh5+agtirT0jkYkAVjyyBu99g+NEVvTqx3bHTJvHVyFgqqS4XoSyXHi
-	qIU+BShLTD13AwsImIA7dOebqrNxrLR4gCpoPrHKQrVQHjni3bu19QxTzywPInxwlVJHEuzpP2Z
-	5XRUSXm8RO6BeCuZgzEDlGn/NGuoK3AEJfZaAxYxrHWUs0v2025pS9BNVdflvlCvkRk9yptATTs
-	DZyeNMM8jjC3J0H8=
-X-Google-Smtp-Source: AGHT+IGHbfxT2141g/HEDN48PqEbgPnWCfTrql/YAEm6ytjb6sLkgf9FfpPfKwqSms0MnVYa/zy/Dg==
-X-Received: by 2002:a05:600c:4e0d:b0:439:9fde:da76 with SMTP id 5b1f17b1804b1-453253b0905mr21982685e9.0.1749719262297;
-        Thu, 12 Jun 2025 02:07:42 -0700 (PDT)
-Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:b893:ade0:c175:b695])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532e2522b1sm13756895e9.25.2025.06.12.02.07.41
+        bh=8NxJW8a0rDs+8sBFsEtXBrcHDs56LoiAx3JrdQr1I1I=;
+        b=WpUak7NsE8bznxnrqcv0Yknx0XjqUw39wxPbuPoo/gXkIM8aDoMPiFpMsrht1hH/Km
+         zJ8fF5hdebKg+gpdddmYIP4fex1j/2YfqvcUvjQXJ1nNWy5bB4r/ytIgdp01q/sD+yd5
+         CeLO/JwH8aVULt4JUq0ZK5jCqz8ArfbcbRxOZAMZ8hhA1LP7ssH5aO33AKLiYSUoPn8B
+         L/XaXWoHH823B8M7qq2GOul9q5W6T7W9gVtA0hdDzmnPOq2OL1NZ2aw9eHQcNMSdeYVl
+         gsYI6NTDATNQ/walVnWH08S8It0gB1mDHI4f/5VOBDdA4DeMzXNiyrjVsIzBqZ2MD8HG
+         bIPw==
+X-Gm-Message-State: AOJu0YzJt9sWHeDVrI/qaHzJIq2Qauoy2JxToVqFGCJC3RAKJHiHzTnP
+	p52j9KVF+PiDVRYiY7M2sSMtjQBWmrk4UeIrIZ296gTjh7FjuiqlUPZd4JFvKVlPA2fVWjETshR
+	I07vD
+X-Gm-Gg: ASbGncvGfv6bYQZKvyRAoOqKyuzQMqWmEPI3oAyWnH1GqVAgebAeuDt7/GazVGHC2Yn
+	ppFUf77QHxl9QzKqO/lL2u5YfmT3FhRS6JASPcbec2jlsvbzCzbJEoraHUOJhq+rA43IyexPsS/
+	Uyc9/pGJC01/iyC4GRhFMuZr3mEs9zInEfBcfJpdDQ82ElZXS8rj9eUlM9bkcMgKurprJlHPlNR
+	D+Sqcl8AXctWvk0zslZJibSB2SOnTnF6KbqSU0rVTeif2sbM5Fa7Dc/Bn3QaKYAx/5PjsQFkTmF
+	6Wc/yA5n8SQWj8dPuFGNKHJpFfZkYyfs2x7rOIHg6Br4yz83hv3NZ8K+xg7mfcP3/2SA0iuddPH
+	MDiXlktSNpUZaPP/Q6d0pCiR6wrjLqCa0tfFw
+X-Google-Smtp-Source: AGHT+IHXDyupYzZCXJi0eiJsh48G5Ym1bzk1PJGvBlaIo3IRc/SJXPwW1VjHYYpk3eeIYvpgukMg0A==
+X-Received: by 2002:a17:907:c807:b0:ad5:e18:2141 with SMTP id a640c23a62f3a-adea273e373mr294920066b.53.1749719306831;
+        Thu, 12 Jun 2025 02:08:26 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.. ([2.196.42.38])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adead4cf274sm99933366b.31.2025.06.12.02.08.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 02:07:41 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drive/realtek/rtlwifi: fix possible memory leak
-Date: Thu, 12 Jun 2025 11:07:19 +0200
-Message-ID: <20250612090724.17777-1-fourier.thomas@gmail.com>
+        Thu, 12 Jun 2025 02:08:26 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-amarula@amarulasolutions.com,
+	Matteo Lisi <matteo.lisi@engicam.com>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Fabio Estevam <festevam@denx.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Marek Vasut <marex@denx.de>,
+	Markus Niebel <Markus.Niebel@tq-group.com>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Primoz Fiser <primoz.fiser@norik.com>,
+	Rob Herring <robh@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 00/10] Support Engicam MicroGEA boards
+Date: Thu, 12 Jun 2025 11:07:45 +0200
+Message-ID: <20250612090823.2519183-1-dario.binacchi@amarulasolutions.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -74,31 +98,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When `dma_mapping_error()` is true, if a new `skb` has been allocated,
-then it must be de-allocated.
+The series adds support for Engicam MicroGEA boards:
 
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/net/wireless/realtek/rtlwifi/pci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+- BMM
+- RMM
+- GTW
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
-index 898f597f70a9..f754f1c3f783 100644
---- a/drivers/net/wireless/realtek/rtlwifi/pci.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
-@@ -572,8 +572,11 @@ static int _rtl_pci_init_one_rxdesc(struct ieee80211_hw *hw,
- 		dma_map_single(&rtlpci->pdev->dev, skb_tail_pointer(skb),
- 			       rtlpci->rxbuffersize, DMA_FROM_DEVICE);
- 	bufferaddress = *((dma_addr_t *)skb->cb);
--	if (dma_mapping_error(&rtlpci->pdev->dev, bufferaddress))
-+	if (dma_mapping_error(&rtlpci->pdev->dev, bufferaddress)) {
-+		if (!new_skb)
-+			kfree_skb(skb)
- 		return 0;
-+	}
- 	rtlpci->rx_ring[rxring_idx].rx_buf[desc_idx] = skb;
- 	if (rtlpriv->use_new_trx_flow) {
- 		/* skb->cb may be 64 bit address */
+based on MicroGEA-MX6UL SoM.
+
+Changes in v4:
+- Fix commit title. It was referring to a wrong configuration
+
+Changes in v3:
+- Drop an extra blank line from the iomuxc node.
+- Rename sgtl5000 node to audio-codec.
+- Move the reg property of the audio-codec node right
+  after the compatible property.
+- Drop an extra blank line from iomuxc and iomuxc_snvs nodes.
+- Rename sgtl5000 node to audio-codec.
+- Move the reg property of the audio-codec node right
+  after the compatible property.
+- Drop an extra blank line from iomuxc and iomuxc_snvs nodes.
+- Drop an extra blank line from the iomuxc node.
+
+Changes in v2:
+- Change local-mac-address to 00 00 00 00 00 00. The actual value will
+  be set by the bootloader. The previous one was assigned to Freescale
+  Semiconductor.
+- Move iomuxc and iomuxc_snvs nodes to the end of the DTS file.
+- Move iomuxc and iomuxc_snvs nodes to the end of the DTS file.
+- Drop an extra blank line
+- Move iomuxc and iomuxc_snvs nodes to the end of the DTS file.
+
+Dario Binacchi (10):
+  dt-bindings: arm: fsl: support Engicam MicroGEA BMM board
+  ARM: dts: imx6ul: support Engicam MicroGEA-MX6UL SoM
+  ARM: dts: imx6ul: support Engicam MicroGEA BMM board
+  ARM: imx_v6_v7_defconfig: cleanup with savedefconfig
+  ARM: imx_v6_v7_defconfig: select CONFIG_INPUT_PWM_BEEPER
+  dt-bindings: arm: fsl: support Engicam MicroGEA RMM board
+  ARM: dts: imx6ul: support Engicam MicroGEA RMM board
+  dt-bindings: arm: fsl: support Engicam MicroGEA GTW board
+  ARM: dts: imx6ul: support Engicam MicroGEA GTW board
+  ARM: imx_v6_v7_defconfig: select CONFIG_USB_HSIC_USB3503
+
+ .../devicetree/bindings/arm/fsl.yaml          |   9 +
+ arch/arm/boot/dts/nxp/imx/Makefile            |   3 +
+ .../nxp/imx/imx6ull-engicam-microgea-bmm.dts  | 303 +++++++++++++++
+ .../nxp/imx/imx6ull-engicam-microgea-gtw.dts  | 162 ++++++++
+ .../nxp/imx/imx6ull-engicam-microgea-rmm.dts  | 360 ++++++++++++++++++
+ .../dts/nxp/imx/imx6ull-engicam-microgea.dtsi |  95 +++++
+ arch/arm/configs/imx_v6_v7_defconfig          |  27 +-
+ 7 files changed, 938 insertions(+), 21 deletions(-)
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-bmm.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-gtw.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-rmm.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea.dtsi
+
 -- 
 2.43.0
 
+base-commit: 2c4a1f3fe03edab80db66688360685031802160a
+branch: imx6ull-engicam-microgea
