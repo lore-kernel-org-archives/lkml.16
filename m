@@ -1,260 +1,286 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B70A2C325B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 18:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749752646; cv=fail; b=IIT7Xx7nPg37QCBmo7B6nQd6PM/oEqW0dlIsQJEMx8kEMcZqTQNmrn6zflhB440Jb77fLdrFoPYOSak2ss+eAZeSsQYzjVMMbW1WI+aJFyNWJf7ZJPN7L2/TEhEZXf1eHpTIpPgSNgfaI2yKOwOjvZTgWQKJn4NoRlXjfsXIVq8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749752646; c=relaxed/simple;
-	bh=sIDLYISTeVS5qEcEuZUSJRuAEjoTqVJRl/oUXFgJVXk=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JtrYQSfJuuWABq+MO6EZuu+2YxPlDVRMCN7W+aq+2PvhCpyYV1ho1NrPIjStfpsTiKp9ir960UcVt8QZc7K3UQpKt3U+9XU1eLgR8aQ9wWJBjjfNnniiqncxXMa3lqMK0OEO4qi5ZUzanR4Y2ESSrKVn7q1BgOyboCOJPsuZ/XY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=chS7GDZZ; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105EA26D4E2
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 18:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749752699; cv=none; b=FPB3SgiQXdLqShak0YTTEUpJmQDEfS5cj8jzo64933EFmM4puVzqsvznDsvdD+gMW2W05vg3IRkJcANmxtM4+++9OMDroRJmTZDenHbqmBpIMLfWV8EqZfGohuZERNL7B0/rIoks3EO73+a6EGylkFbstQvmhhuKENqDXct0I1w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749752699; c=relaxed/simple;
+	bh=2g4ZUh0m8n+XE5MFF8/Z1k/RSajqqAgdSLQhiFY2/uY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T9o/P+9QT+HOUyBz4re8xSBFXwXfxZFcFRKEaK4zYC9xVOugPYQF6qNOaChLK7NP5tKQaxyJ1OHvZZv2mWjvX+KtdO8dUnUX9hR/goeIc2g8xpq7FHDEflxtSgvCOSvWS293Nlrt2UTMrC0tNoJ9vQ4pE27FNmvQu+1iZ13DaUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RxRQluD9; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="chS7GDZZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749752645; x=1781288645;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=sIDLYISTeVS5qEcEuZUSJRuAEjoTqVJRl/oUXFgJVXk=;
-  b=chS7GDZZXX3cnF8JKz90PUcci2Bz6wgt1bVfS0ZihYaG8ojzXRQX0Oif
-   vERfahH2R+6D88ehW4sgzkJFtb4G+Me+s4WM+AOQ2ZMEN6x3wrN07kmZ4
-   N0cqqXsszrlPPWh5M8Nyfp1lYC1n2W1V9w3wT6TL1scrBSb6GBuRJ9zyh
-   3a3FXHj0xtwA9WE7YCxZceHXy4M7ekWmD5e0zXASTBwT8O+QLlYAHu2R8
-   zEg2BSt4U14HzU0XLwv3hlhw+U4+3esZjkVnE2NLC6NZq1WiZEuecQYZX
-   Q9uPtVz2GXn10fVuLfpq9FgwAE45B19opBBETYKi/u2ACUFfYkRub5KS8
-   w==;
-X-CSE-ConnectionGUID: hJoC4x+tRAycbzWG5kEG1g==
-X-CSE-MsgGUID: JXkDhTbAQVSgYmpaTObffQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69389625"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="69389625"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 11:24:04 -0700
-X-CSE-ConnectionGUID: gLiN2RkBREmvVbNtlyPClA==
-X-CSE-MsgGUID: 0mzlZjfuS0CHHNoaO7ezwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="178568546"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 11:24:03 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 12 Jun 2025 11:24:02 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 12 Jun 2025 11:24:02 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (40.107.101.65)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 12 Jun 2025 11:24:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vkdz4pW/SDk5NqaOBBUqNF/5ufbGVnDn6TxLf1hFVmoOzJGstJGO93EdIZLrqmhJz2+HeqRFvX1riDl3fzlAIhyE/5YQi8JdB8yFAoOUNozHe+dZKy4nvjVLVmvyuqpiH0KclTZfyLZaojpwsbMuqeSuyRk2hd3rcvl+XWbZ6QKdi245HQp7nHbV+SJNdEKCYEsSP/NhV06Dk52AzFsEYbYWG7ZhFPVVN22eMGaGDK8aFYR42ou4rs77CgAn9YXY3ev6Te6MhOzTDU/zSMxUiDZ2Ha416jQM6PA+cul8pO5eZGVbW+ipgLdKOQRCV10zTRFHA/3bjWcc4cjcIp/tlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xVfs/NpYmNJ24TJ9s90yB+GnJBRqqjx5EFNifbOJ2ro=;
- b=S6DXFgnle7FR293binlzHWeRdjyACmg5hBMgSkiE26ORq4bsheV5xM1zn9DOBudvXn9aWZUHc1+b6lzQCGSCMSWy60XE5dOaMpeEtUkZAdTmS/vf1fDmOQCp/eoFRcHtA9mk+VdKQ0+BfdHpIaxyRqylOCNmC7uGvljjRgKXJAMdN8unoGXVWSPmcWrPoo8QIbzWKmNfNBKJUQwleX+BP17kjz/ZKHWRRC3Usuo2PgjxbNbJEq/XtpgGlOU7LaIbKNNkI+ToLzI6ZRPwnEB6XTd1jNRM5AAKCpvmKRWxD/+bn+Ft61qOQRfAQ6QQJARIP5+XhiVTm4enlDG5BSnxOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by SN7PR11MB8068.namprd11.prod.outlook.com (2603:10b6:806:2e9::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Thu, 12 Jun
- 2025 18:23:46 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8792.034; Thu, 12 Jun 2025
- 18:23:46 +0000
-Message-ID: <fea254dd-c622-4868-b9ec-3a902c5d7fa6@intel.com>
-Date: Thu, 12 Jun 2025 11:23:44 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] x86/resctrl: Optimize code in rdt_get_tree()
-To: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: James Morse <james.morse@arm.com>, Yury Norov <yury.norov@gmail.com>,
-	"Dave Martin" <dave.martin@arm.com>, <fenghuay@nvidia.com>,
-	<peternewman@google.com>, Babu Moger <Babu.Moger@amd.com>, Borislav Petkov
-	<bp@alien8.de>, <shameerali.kolothum.thodi@huawei.com>,
-	<bobo.shaobowang@huawei.com>, D Scott Phillips OS
-	<scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>, Koba Ko
-	<kobak@nvidia.com>, Shanker Donthineni <sdonthineni@nvidia.com>, Xin Hao
-	<xhao@linux.alibaba.com>, <baolin.wang@linux.alibaba.com>,
-	<lcherian@marvell.com>, <amitsinght@marvell.com>, Ingo Molnar
-	<mingo@redhat.com>, David Hildenbrand <david@redhat.com>, H Peter Anvin
-	<hpa@zytor.com>, Rex Nie <rex.nie@jaguarmicro.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, <dfustini@baylibre.com>, Thomas Gleixner
-	<tglx@linutronix.de>
-References: <20250611021547.2766889-1-tan.shaopeng@jp.fujitsu.com>
- <20250611021547.2766889-3-tan.shaopeng@jp.fujitsu.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <20250611021547.2766889-3-tan.shaopeng@jp.fujitsu.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0190.namprd05.prod.outlook.com
- (2603:10b6:a03:330::15) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RxRQluD9"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72ecb4d9a10so1224134a34.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749752695; x=1750357495; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qKJxATL4YMBdzvbHBBRpBVXUJ21PkK+U4mKtrypsKtE=;
+        b=RxRQluD9StVTwLWa9VVVLfYLdnKqgjib5+DJfkidm9G79FFq/Ggb3i3bx4BULPOSPW
+         vv82waank9kJETsyuLz4BtvBKm6Ewyiu3ZTWa7afVz7yOu/vIUurhFAgO4PEMj0nAo8N
+         oK8ZmWTEdpnQiaOrc/94YzFvTlUuIt1ZQZfHHcaT9k9o6FgJcNXdIQXlmbmkef0dvLeA
+         gg3sT7F/JZqKOIjlJTwd9vH8sZegiraOZg/TnHrK5ep6n4pcZXen5MZEgr8Khpoxr533
+         GD0nt54BtRZZtnfrQrSF66TIFqzzVKtcUvdaVZqcEGbpOdIF23X0JS6b7339ZRQ9an+4
+         QrmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749752695; x=1750357495;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qKJxATL4YMBdzvbHBBRpBVXUJ21PkK+U4mKtrypsKtE=;
+        b=dpfEPSys1e4a6K0ImU7bHQtlDCKMKHkXsIE0Mk4kvw3OJoCkL+3GXAio3Ykdjjgje+
+         n6Hj11KILhk6SJ3Lwqv3JqLd7SdvbAKqDoWDbCsxUPo2Slh/3TFf/hJj8ydfeDtLZ7nd
+         hsqmtyiEVRnkRDw1P90fVd/CJeKA7ibdNBRc1wC83MlPfrf5qM1BsRw/JtkhW322JuOY
+         /vu+20+SDyHudEn9scOYUTiQFy7+NGbFRP0lJLAbMFUOuUMhzxw6plcOnty5CNTCImmy
+         1HKrzI7ZyqPidaITVkbWR/0C0zQxWEFpJCLa5cwll058bZJNMB/rat5XatMdI3rbzPX0
+         3reA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfMiPD0Q8OI0WVvaAOq4x5N4hjv88fbBrIdkeAVyfuo9XzCEeCu8lhDCEkZraMrRul8p/hKR2/bmkPJNc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBZ4dOPSPxNdYDJROvCBb+s8D2v0JQlTTyOEPxkGb/ujMCJ5xk
+	0YXavCR4ffo3HJxErFiDGs7skGcVL3Ob9/aJl5p2SWUsJPLzsNIdSY9asGsVFF09AIc=
+X-Gm-Gg: ASbGncvRYjCZghDvzgxUnKYVgupPOH34HyzEq4HHHS+cDajgAwJ0WJbDhcL6joulzvB
+	vEogEXipvjh8mtaahO7HcUyx2/b1AJqRVgIHXCgFFo0rf5HrHjcYQcQDUqzwrU7QSA9Umrg81Cr
+	nEu1hOGRgjcgcXM55ijbMNjpeZBhCjPHIpRQDURjWKQfvnX4K9hXXixPuX9ooVOt1whBlSsxjYw
+	LeP9KZSTecMFrC16zYcj1x56vGT1uRk92lXCVBCUV0CCg3dJ4uiddR0wduEJVpeg681qBfAY3VQ
+	IliDHTWbkYB768wY7e/P78WCv5YH8YNOgmQtdKdfYE6dMaGqmgZDTUQZdZe8XCB0RPomyO498ZD
+	Ocb5oLHhx52rDW/ZQjGRDjnCmr5bprt7sEWsf
+X-Google-Smtp-Source: AGHT+IH7y7N6FQcEXxSZUYMysodZdP2stIOOmnVe6cAAnMyqXG2QO8LT8kHIyP9bDYnz+FMD07lITg==
+X-Received: by 2002:a9d:5c82:0:b0:72b:a465:d93c with SMTP id 46e09a7af769-73a05df0556mr4537432a34.20.1749752694930;
+        Thu, 12 Jun 2025 11:24:54 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:f808:847:b3ae:ff1a? ([2600:8803:e7e4:1d00:f808:847:b3ae:ff1a])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a16d43fb3sm355311a34.61.2025.06.12.11.24.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 11:24:54 -0700 (PDT)
+Message-ID: <6bd4a0f2-90a9-4e99-8cd6-9fefd04f2323@baylibre.com>
+Date: Thu, 12 Jun 2025 13:24:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SN7PR11MB8068:EE_
-X-MS-Office365-Filtering-Correlation-Id: 723ab1ee-307f-4290-e685-08dda9de454b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?WDlpRnhqa3pKRGU0UUVNQ2IyS2RETHN3ck1FVE9LNVZkVkswUDlQMzBaZ3Zz?=
- =?utf-8?B?bFNhL1ZyQmdFMFBHTHF4UVdQOXlkcFBFZVdWQVBCUGdLSVduaWtFZDNZdWVH?=
- =?utf-8?B?RGpZUjFaeVBPU2RJNXhuNitJc2QzRUFlbFJwdDRXajlqV05xTDk2T0ZwVkww?=
- =?utf-8?B?RU9GUWxPazFFY1NjS3M4YWhPSnlsaFkyaUZGQlFsc1lSdENSbnlWLzMyVFov?=
- =?utf-8?B?Y2VIRFJmbjd4NE9OamZRZ1VJU0dvVGZJU01QYXpKS0hEVTJmeFhoc3MyeG5T?=
- =?utf-8?B?NzdPVnNuK3VXVEx4eFFVZHpVZm8yV1JUVHF6eWhTSGpJTTNDMy8yYk5aVFJl?=
- =?utf-8?B?bDRSWXUxMGU3V3JiSGhyWW9aYkp1OWlPcVV1N1ZnS1BaaHNGeG5pZlB0VUFY?=
- =?utf-8?B?S0N4V09kalVZTUVlNFc4VkVsR1dBVEVPSzJlUXRlTkpvbWI4dUpBYmYraURQ?=
- =?utf-8?B?dUxoMmkwSnpnYWRYcEhMUFBoNGJqdHYxaHRxWlRBNlZrVk1NZzJ2NTVFMmht?=
- =?utf-8?B?V3lSMkx3cEl1dEswY1JJMk5ib3hiYXZqK0RaTkJKNlJISFZhL2dUMm9Kc3M5?=
- =?utf-8?B?WGJMOUZPSWZ5aHRPZWJYbjBhMTFybVdGOGdGWWF0ZUhaUSthZnVJY2NmVDZ1?=
- =?utf-8?B?RzNYdGh4MDd2WXQ5QUtaN0labGJPamhNaTQ5ZWQyd2JoSkgrSmo4K2grYndh?=
- =?utf-8?B?R01wd3JNVW1GQk9IeEJXY3lUVndCSjlpb212N0l3TkFibFlHRk9hSWlwU2U0?=
- =?utf-8?B?d0t2VlI4aHdlUmtwQ01vZ2Uza0VkbldiRlk0UDRiME96NG0rRkVTMmVpRHNP?=
- =?utf-8?B?TCsvS3ZBQWluOTJybmRuc2dRYkViVFQ1VG9HOFpYL2ZoRDNtZElPcGVzSTc4?=
- =?utf-8?B?SFNjenpEMzF5azQvT1JCVmFnb0xIblJvaG1xbVBQY01ibnZhY0lodTZSVlJ6?=
- =?utf-8?B?NCt1OWt2NzhOVVVkQXgvS0NwcTl3Rnk5aVN2UlE5c29oc0NDWVV1NktzV0gx?=
- =?utf-8?B?Y0QxaUFuSHkyK2tDLzY2WWtld1JRekNVTk12L2RzY0NFYUlsOGZuME1YNVNh?=
- =?utf-8?B?R2xZVWZhcVlaelBSM09Ba2lFS21kb2x1TytLMVZtY2RKMHdFdlV3TW1VUEVz?=
- =?utf-8?B?Y3lFNHNPNVRVdzZMQkdzRmNrbERFTHlwSDdVS21YU3J0YklOMFdzZTcvbWZF?=
- =?utf-8?B?MXp6NlRoUkIvNG1SQkJ3T0lvdWdZd0h4a01hUFQzNlorb2EzaGdDaEVzRlZ2?=
- =?utf-8?B?SVJSY3p1Y1JrOWpXL2VDK3BnWS9GdXVVMU9JUXZ6WkRLbnhJZ204WlhyUi9G?=
- =?utf-8?B?MnlMclRBZUIyemFvK01KUnJIVXIzd3dESjJNb0psWUpBQnhjY0xjK2szVzdR?=
- =?utf-8?B?OVZITzJ1STQrakY5bXZLT0xMN3dTTHJNdFdKL29wZ3R2S3RPZEhvLzMwRnNE?=
- =?utf-8?B?S1QvZ2s1RzJ4MXk1bU1GK0lDUENDY2FqcW5NWHlkWDRheDVqWTVSMWRmNk85?=
- =?utf-8?B?YS95L3VFdnNEUE15UnNxTVlVT2FJZ0lCR0djT3dHSEtHY2xLWXFFT1FySnVo?=
- =?utf-8?B?WEFwTGFNc0w4blNDUTdVK28zLzdyKzFXeWYvVm45MDZ5bXVZV05OVmFzckpz?=
- =?utf-8?B?cE9XK01EMXhqcEIxK3pQUi9NdVN5YmhIOVJ2UzkxeGEwdVJlRnE5RnQxbFBx?=
- =?utf-8?B?TWZTa1lZSkNOVTRaUmRadUNTVjlZTFRuWkplTEh6RDJQTURvU2VVblRSK2c2?=
- =?utf-8?B?MXFobnJFa0xtTWZFUytUZnM1NGliWTVXdXAxVzNmaitvckkrQ0w4MXVDZ0Fy?=
- =?utf-8?B?V0pIVi9nM09UZVFOTjRFWkpsOTRPQUFGS1RJSTVmYXdiSWExanZpaWhQT1V0?=
- =?utf-8?B?SFJZS3BmQW1XV3hqb2F1RTJialFMbnZmNVlOclJzMWZzZXNWZEZQSVBFcUdq?=
- =?utf-8?Q?FGUCWbsNuLg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dTNuMFU3eGE1eDNVeEVXUXJIaDB1TFViTUp4bFhyUGs2SThzd2JWTUpqWm14?=
- =?utf-8?B?VmJ0NHJFSkVrNWJSb2pNdDB6VXJaak9UaFhwbUFYeWk5dzJ2ZkoyNWM1NW9a?=
- =?utf-8?B?dUROcU1FYWhXMG9vZjFLSVg1TVlvZysrRGpCRitiRUwvKzFrSEI2VmN0VzZZ?=
- =?utf-8?B?dFJqV0E5UUhSdlFKazRISllYcXBBZXN5M3hCaUVvbm9mMDZrcjFaL3d0Nmda?=
- =?utf-8?B?Ujd6Q2NFT0V3aW5qR1FXd2Y5eGduN3ByaEVqT0JvRjdJMnFGVVQ5VGoyU1Ft?=
- =?utf-8?B?M2Y0cXM2QlViNHp5bHJzWUlWamRTN09hYkJ2ekluMWVJNjE0bk5wTUdGSUxt?=
- =?utf-8?B?VEcwNXV2eXNIWjBJeExjeW56bmN0RG8wbzBxSnNTeEZENUJacENrd1JFek5V?=
- =?utf-8?B?SEo5ZC83UFNKb0ZVK3prYVFhY3NSZ0E3RWx4Zi9hd0dqQlpyN3N3REM0WG9H?=
- =?utf-8?B?ZVRQZytrc1VYR2phcTkrNENaZUVlNHM2WWhZa0xJYVA3WkxOOWd2dyt3bUFV?=
- =?utf-8?B?dmt4elQ4bm1GYW1Gbm5yTHYzeGYzcloyclhKV2F3RUN4WWJrMXpjN21qZzVE?=
- =?utf-8?B?SlJiblVlL2tLS0ZhVmJKYllpaG9taWFoSlZoV2FTUnRSUWRKZW8zaVhVT2g3?=
- =?utf-8?B?V1hIemRIZmdoNUU0QTI0OGdPcWc0aHVVcllNSWpySzdnSlBENWlBeTFXY1Jt?=
- =?utf-8?B?eWw1RGM1QnhNMUltVEhrQ3pUV2cvbUJTc0l0NFFaaXdxL09JQTZyT3dzQzl3?=
- =?utf-8?B?MU4rTzBJU3lobWJaSWJXaVRlRHYvd3ltc2RKL0RZazhmV1BoSGRtM21HM0x6?=
- =?utf-8?B?SlVwaGZ6L0tzNlRMdW9CVzVqOTFob0NxNWVQbnQ5cEYyZ2ZrSmxYQTRNZXRo?=
- =?utf-8?B?VHdBbEs1S2JxOXN0a1BmYUtGVkhHQnVmVG82NE1qUVJkbzY2Q0FoUjRJMzRK?=
- =?utf-8?B?TWxVTDNscDg3S3hJVnZSUEZPZlpYZ29CZ0FWUUZTOHhCSDduMTdzOWp2OHIx?=
- =?utf-8?B?MHJRNXdhRmZyRVU0SnFxSGU2a3VhV0VTTHBEeU1qR29hd2hYUzAzNW53ai81?=
- =?utf-8?B?bnBISzNsZ3QwOUlHaFlyWlZOcXRxUVdFTTdpenlidnpCNmhOVHpjaDE4K0Rp?=
- =?utf-8?B?VURPbjFnbUN5T1RkVm8vanFnQUtZa1k5a3p5N0l6Y3F3UHpxMVRZUVBIbUJu?=
- =?utf-8?B?aTJhY2s3dERBNHdNUG5mVXo1U3o3eTZDMUVjUDNTNWdBbEs3aURzR1B1M0g2?=
- =?utf-8?B?YVppRkFTTnlGMEx0clJmTTkrVlFKYmlxMk5NV2dnNitRdWxVSWxEbkhlcEx1?=
- =?utf-8?B?cDNlVXl4cDR4UkwvZzIwK1FGN2wzWktuY1lqb2crSitCeEgreklFcVpqREVx?=
- =?utf-8?B?d3NkNUdSVVRiTTFudHB2TFd3UVpwdWU5eTdidzZSb0U3U3dDeXdjMlQ1Wjd5?=
- =?utf-8?B?Yk14d055SjUxL2lQUTJRU2lPM0dYaEJXYThEWFlycnIvN3gxOXh1aVRGbWhB?=
- =?utf-8?B?QnNlcHVpQzRRd3Z0bFpJRlRtVWF6WmZiTGNZa3E4aDV5UUNncWhLQTJuRUt5?=
- =?utf-8?B?UVJPRldrVzJLOThQamNDbzVVODBYYXF6a0N1R2FRckhTZzViQmYyK1NSWGI5?=
- =?utf-8?B?UEgrVjB1cGhJV3pqci8zZ1pKTzdVSUZHNHRZaCtpOVZtc2phak5hZ0VtRG1n?=
- =?utf-8?B?enArQlVUWWRhNURwYk53bVhHTENCRDlMTHp5NktrUUtCaFVXZHRtK2p0ZG9I?=
- =?utf-8?B?bEhMVVBGR0dkQmluMWplTmUyeHE4Tjg3cHJkcFB6V1IyN1JadktSTGt6WWJu?=
- =?utf-8?B?RFU1SWNZR2FrM2ZHZG5BTWN1R2RoQmlVWjB0Ri9FMXhHSDg5aXBoSTdmQms1?=
- =?utf-8?B?ZkY5cGh2dlJWZTNZWW1oL1hJY0VsVUV6UTBUVWZYVmJGVUJaVkVpRDQzMCtD?=
- =?utf-8?B?b0k5VWxFSEVqOW4raEtLU2xXUExVUW10TFFUZXBVWk1zakJCRmZuUXZUVFFr?=
- =?utf-8?B?blc0RHJrcWd4cjFVSkUwN3BWdDIrZkRmNzRsYlRWVU9mZHRMODdUMGV2aVZX?=
- =?utf-8?B?NFFZczRpeXg3UWg2UGl3eGxiL2VMZkJqc01WZWlSUGFYdFJXY3hldk92Q2sx?=
- =?utf-8?B?dW5LUkJNM2czME1LRkN5QW5YUHhDVjFlYUJ6K2hVSXRQMVlRWXFveVB4dmpz?=
- =?utf-8?B?dnc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 723ab1ee-307f-4290-e685-08dda9de454b
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 18:23:46.8173
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FWXs8SQenT7Zlz3Vqw7WfG0ETVoD3XMHO/7CQ3dKOv3VDwTJm9I23BUYsPNPANF9cvQ3I6nCvyLqCGKC13yX2YCzaiSlKNOh3fqzu3L64KM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8068
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] iio: chemical: Add driver for Sharp GP2Y1010AU0F
+To: surajsonawane0215@gmail.com, Jonathan Cameron <jic23@kernel.org>
+Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250612100758.13241-1-surajsonawane0215@gmail.com>
+ <20250612100758.13241-4-surajsonawane0215@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250612100758.13241-4-surajsonawane0215@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Shaopeng,
-
-On 6/10/25 7:15 PM, Shaopeng Tan wrote:
-> Inconsistent context format. Optimize it,
-
-What does "Inconsistent context format" mean?
-
-> not only save a line and also make it easier to understand.
-
-The changelog needs to follow rules found in "Changelog"
-section of Documentation/process/maintainer-tip.rst.
-
-Here is an example:
-	schemata_list_destroy() has to be called if
-	schemata_list_create() fails.
-
-	rdt_get_tree() calls schemata_list_destroy() in two different
-	ways: directly if schemata_list_create() itself fails and on
-	the exit path via the out_schemata_free goto label.                                           
-                                                                                
-	Remove schemata_list_destroy() call on schemata_list_create()
-	failure. Use existing out_schemata_free goto label instead.
-
+On 6/12/25 5:07 AM, surajsonawane0215@gmail.com wrote:
+> From: Suraj Sonawane <surajsonawane0215@gmail.com>
 > 
-> Signed-off-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+> Implement support for the Sharp GP2Y1010AU0F optical dust sensor which
+> measures particulate matter concentration using infrared scattering.
+> The sensor requires precise 320μs LED pulses with ADC sampling at 280μs
+> after LED activation (as specified in datasheet section 6-1).
+> 
+> The driver provides:
+> - Raw density readings via IIO_DENSITY channel type
+> - Hardware-agnostic operation via GPIO and IIO ADC interfaces
+> - Power management through regulator framework
+> - Device Tree binding support
+> 
+> Datasheet: https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
+> 
+> Signed-off-by: Suraj Sonawane <surajsonawane0215@gmail.com>
 > ---
->  fs/resctrl/rdtgroup.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-> index 1beb124e25f6..8bf87211eadb 100644
-> --- a/fs/resctrl/rdtgroup.c
-> +++ b/fs/resctrl/rdtgroup.c
-> @@ -2608,10 +2608,8 @@ static int rdt_get_tree(struct fs_context *fc)
->  		goto out_root;
+
+...
+
+> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+> index b22afa1f6..35c126836 100644
+> --- a/drivers/iio/chemical/Kconfig
+> +++ b/drivers/iio/chemical/Kconfig
+> @@ -129,6 +129,16 @@ config PMS7003
 >  
->  	ret = schemata_list_create();
-> -	if (ret) {
-> -		schemata_list_destroy();
-> -		goto out_ctx;
-> -	}
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called pms7003.
+> +
+> +config GP2Y1010AU0F
+> +	tristate "Sharp GP2Y1010AU0F optical dust sensor"
+> +	depends on IIO
+> +	help
+> +	  Say Y here to build support for Sharp GP2Y1010AU0F optical dust sensor
+> +	  that measures particulate matter concentration in air.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called gp2y1010au0f.
+
+The object file name is just gp2y1010.
+
+>  
+>  config SCD30_CORE
+>  	tristate "SCD30 carbon dioxide sensor driver"
+> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+> index 2287a00a6..f1d932ab0 100644
+> --- a/drivers/iio/chemical/Makefile
+> +++ b/drivers/iio/chemical/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_CCS811)		+= ccs811.o
+>  obj-$(CONFIG_ENS160) += ens160_core.o
+>  obj-$(CONFIG_ENS160_I2C) += ens160_i2c.o
+>  obj-$(CONFIG_ENS160_SPI) += ens160_spi.o
+> +obj-$(CONFIG_GP2Y1010AU0F) += gp2y1010.o
+>  obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
+>  obj-$(CONFIG_MHZ19B) += mhz19b.o
+>  obj-$(CONFIG_PMS7003) += pms7003.o
+> diff --git a/drivers/iio/chemical/gp2y1010.c b/drivers/iio/chemical/gp2y1010.c
+> new file mode 100644
+> index 000000000..3a8657035
+> --- /dev/null
+> +++ b/drivers/iio/chemical/gp2y1010.c
+> @@ -0,0 +1,126 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Suraj Sonawane <surajsonawane0215@gmail.com>
+> + * Sharp GP2Y1010AU0F Dust Sensor Driver
+> + * Datasheet: https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/iio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +/* Timings based on GP2Y1010AU0F datasheet Section 6-1 */
+> +#define GP2Y1010_LED_PULSE_US     320  /* Total LED ON time (0.32 ms) */
+> +#define GP2Y1010_SAMPLE_DELAY_US  280  /* ADC sampling after LED ON (0.28 ms) */
+
+If we aren't using the values from the devicetree for this
+I would leave those out of the devicetree bindings until we
+are really sure we need them.
+
+> +
+> +struct gp2y1010_data {
+> +	struct gpio_desc *led_gpio;
+> +	struct iio_channel *adc_chan;
+> +	int v_clean;  /* Calibration: voltage in clean air (mV) */
+> +};
+> +
+> +static int gp2y1010_read_raw(struct iio_dev *indio_dev,
+> +							 struct iio_chan_spec const *chan,
+> +							 int *val, int *val2, long mask)
+> +{
+> +	struct gp2y1010_data *data = iio_priv(indio_dev);
+> +	int ret, voltage_mv;
+> +
+> +	if (mask != IIO_CHAN_INFO_RAW)
+> +		return -EINVAL;
+> +
+> +	gpiod_set_value(data->led_gpio, 1);
+> +	udelay(GP2Y1010_SAMPLE_DELAY_US);
+> +
+> +	ret = iio_read_channel_processed(data->adc_chan, &voltage_mv);
+
+As I mentioned in the reply to the devicetree bindings. I have some
+doubts that we could get accurate enough timing to have the ADC read
+exactly at the peak output +/-20 microseconds in Linux like this.
+
+Are you using an oscilloscope to verify that the timing is correct?
+
+> +
+> +	/* Wait remaining time to complete 320 µs total LED pulse width */
+> +	udelay(GP2Y1010_LED_PULSE_US - GP2Y1010_SAMPLE_DELAY_US);
+> +	gpiod_set_value(data->led_gpio, 0);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = voltage_mv;
+
+Since we can't read a raw value directly from the sensor,
+might as well convert this to the processes value. This
+would also allow to handle the non-linear parts at the
+extremes of the graph shown in the datasheet.
+
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static const struct iio_info gp2y1010_info = {
+> +	.read_raw = gp2y1010_read_raw,
+> +};
+> +
+> +static const struct iio_chan_spec gp2y1010_channels[] = {
+> +	{
+> +		.type = IIO_DENSITY,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +	},
+> +};
+
+There is only one channel, so we don't need an array.
+
+> +
+> +static int gp2y1010_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct gp2y1010_data *data;
+> +	enum iio_chan_type ch_type;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	data = iio_priv(indio_dev);
+> +	data->v_clean = 900;
+
+This isn't used anywhere.
+
+> +
+> +	data->led_gpio = devm_gpiod_get(dev, "led", GPIOD_OUT_LOW);
+> +	if (IS_ERR(data->led_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(data->led_gpio), "Failed to get LED GPIO\n");
+> +
+> +	ret = devm_regulator_get_enable(dev, "vdd");
 > +	if (ret)
-> +		goto out_schemata_free;
->  
->  	ret = closid_init();
->  	if (ret)
+> +		return ret;
+> +	udelay(100);
 
-Please address the issue of now unused "out_ctx" label reported
-in [1]. Looks good to me otherwise.
+Datasheet says this delay is "less than 1 sec". So this seems rather short.
 
-Thank you for the cleanup.
+> +
+> +	data->adc_chan = devm_iio_channel_get(dev, "dust");
+> +	if (IS_ERR(data->adc_chan))
+> +		return dev_err_probe(dev, PTR_ERR(data->adc_chan), "Failed to get ADC channel\n");
+> +
+> +	ret = iio_get_channel_type(data->adc_chan, &ch_type);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ch_type != IIO_DENSITY)
+> +		return dev_err_probe(dev, -EINVAL, "ADC channel is not density type\n");
 
-Reinette
+This check looks wrong. Aren't we expecting a voltage channel?
 
-[1] https://lore.kernel.org/lkml/202506120440.lz9OAoXE-lkp@intel.com/
+> +
+> +	indio_dev->name = dev_name(dev);
+> +	indio_dev->info = &gp2y1010_info;
+> +	indio_dev->channels = gp2y1010_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(gp2y1010_channels);
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
 
