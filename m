@@ -1,102 +1,127 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566431F583D;
-	Thu, 12 Jun 2025 09:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2062422A804;
+	Thu, 12 Jun 2025 09:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749721015; cv=none; b=DHUS0CkNkaM4fyTvvhQY3cBqgX2fjK4R1WnSOE+Z/mmFyN9ioIhWmxZeAIYehyz7SUBpNSnVDk5j6v6IkxN+99vIBbtEL5WDNt7PcqNamnwoujagIDxItxICh4xP4K8Lp1QaOMY4s+dKQIuNdyl5kYOeOE1hja4+P2dXCkUD/Qc=
+	t=1749721041; cv=none; b=IiWP0IqqMP/Mbl1iNI7yq7u0S9RzIz+E+PMimYbpBw+xfqEOmKz7vkO0qW/E4mHaJYP1CrBl3sUUOzMGzKca5JDEqWWKHxw92H/ogaz4+J5b95MLENftoAVP8VNNZ1+t+ZvEUh25t0tr5xwFCxwDY1T044K2AnRC6aplMu1Vzzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749721015; c=relaxed/simple;
-	bh=zzNM1NRpWtTljNxxKqwlEBrzD8clwdhi+hEHCOXqPPY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nYU0O1YPDB/P55q74Ujrjmln6knOOs3QRLHZpIe0G5L8lqm1qEIWFQRWnKQ/dFkzvyYmBSrW1KFjtzODJ7LuRODi+Rsv/UR0D5+0LppowFjA78y0dVc5Jeef3N2aHK7hTt0uIKxDNADUmfj/WsykDUkFTNnOuU6KQiPh5J8A0f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1749721041; c=relaxed/simple;
+	bh=VKQMD6iP+0w1E2dffmvUxlnEMT19ZCyMucFZHtYeZnY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y43or5WG0TjALxiHbU4TctPzNgiapulXNK5y5XVDQ1DZkOQfqKj3puWZtJg4lQ7XYmEKB6+NNaVWxxENHkVGifvFEkZu3CIvF+c6LjnMtAp6ZV2LrwJUuTB3qLFYXi2Rxom97Jn7uSsrSF7rvLkRTJ8U1z9koCFhD7fmymFjNnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NN+tkTww; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-527a2b89a11so287989e0c.2;
-        Thu, 12 Jun 2025 02:36:54 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NN+tkTww"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5534edc6493so809210e87.1;
+        Thu, 12 Jun 2025 02:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749721037; x=1750325837; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Xk308O1KlvA6k3uBQDw8z50KFvPVgd1NjWS8ld81/fk=;
+        b=NN+tkTwwmEKFmbe8JXpuOrcKtmTgld6iZkQsUYxHtKhmyiYaSAjZItgDaQoHss7W87
+         U9IhX1DWYesSPc7FS1OzJSXxfoAVG+3f6FVqg0CJpbELMWgoYHEPOoohkY+mRRBsAXs6
+         lzLCQcLgImvbqiobT9adUZ+pSsyY/HouNAy4io3hWc805Ivoqy0SDxq+YdaKMhAPR09M
+         HL1njIjBhUO2eYYWT7V/KerdcR4RDyoDAs2vLqn7xYHfMvt13OOFQAO4b3g0EuJHiN41
+         3rnQpbjptIruHt0yRmEU+Bn+e8JZWrdi9SFmX/EXPlur2ppJXTYVUP06R6eQhffWxhLR
+         3hfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749721012; x=1750325812;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MlKXKGVlwoBPp0PAkcRb9oaTjUaq4FXxnfqiTqHWy3A=;
-        b=UBWbS9UadkQzq4enQ+bLMqY4YFV8sDHfL9h1RhaV8FKvhtencOOmJPvnYfzkep6gzJ
-         VvYwFoDhpcVeCtTWdvR8/Tp1hhuTkhxHUTolSVdi+RHEt8B/ioieQpJCM3kpbm7qWfCK
-         7U4IgCX3KomIbLJHbLByM0J+UfXAkPeyWax3GW8ZKRmmrcdwnxo53UOxjH88v0+/INq7
-         Y9lL0MU+IDwpxjYOXAHLvhzEZw1/7i1bfrRcjs/w+81UDhBihN4QBwpE6/SW6P3ShloA
-         V96bK1XbD/R22ggUfHOnQtI/Wr1PhuTrjfEIt8FnEWSEyDI65czmrCEa54lUCjsgXXBu
-         MA+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUPJXOcj1uUthccqZ6jEmM9KycXUjDPlTT9v40QJtFhksifp6CcqoHYVSzJnhdLU9ITAW1t+jwGzecMGYb9Nc59rME=@vger.kernel.org, AJvYcCVzJ1eNer9GNGdXApse5hpGDSDEjW9usZJTQndlirJ14xNlbkYu+w4W0POoT63vnxG5Zzsyl8ga25By+qo=@vger.kernel.org, AJvYcCWLBV+aKTm3HvAGNbhl9K+RR9hlDEeSBxm0rKeDw7Y7WPD7GvYtolewSL3pDSVsaZS1wwJmwIU0B+2RplM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywnd8rXug/jDUqOsdAhdMHjNMNHGhU+3FeQIhfaaqoum0RDwGXC
-	dz4ccuyNHbK/Cx1pT1dLu/glUcWdQzXLHSaSHP9ar4FntYU06pnVVx8Ly5D9P66P
-X-Gm-Gg: ASbGnct0TAbqhZRCsjydpCJ2Q6MbCJdJ4v2Ldh8/t6cpfyHuP+3N40Vg6QMZ7h6+7zw
-	tD64uD+HdcRoaF1g+dVcpx9T1TBHIn2oWGL5nBIprMeQFKCfAPU8hDB5b6ISxtQEy5mBGHdwe7F
-	YrgGU5XDFVicLCcH01qACnG2OmFqOhFs9lYPgg5iZX778PcPu8SMpdoWH4JRcxuBTsxhstOVOPl
-	/BFoX1wRERzn7nlH6dYErmsOeQaglm658D8RbtOdZLQiXLmv0xDDG1POh4LUbnv0oDKSYC85cta
-	QFGRKXwRrQosJShFOeEHK/ssRgweNeaPte6dHN2dXqLhZsEJikJIWaIoRBMJdcVd712n1IJmKve
-	cw4+ulHf7uWMXvi21vUC5q7/E
-X-Google-Smtp-Source: AGHT+IE7G3+nzLIpxcptvLHLTiA+tKRj0R3+LBkMd4mPtM4xHC0/iJ0GLeVpBwedX8XExy8z2nX96A==
-X-Received: by 2002:a05:6122:1d9f:b0:531:2afc:461c with SMTP id 71dfb90a1353d-5312afc4de3mr4328581e0c.7.1749721011791;
-        Thu, 12 Jun 2025 02:36:51 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5312f670ae2sm226427e0c.38.2025.06.12.02.36.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 02:36:51 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4c9cea30173so177554137.3;
-        Thu, 12 Jun 2025 02:36:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUR6OoZXJKTGqjpsKEnJ7HRdvJGKBNWCyJu8CvAz6Ea53Dp5WLteQ2PhqMfgUJ6ajIBZQrzMIcGzI9r/mw=@vger.kernel.org, AJvYcCXtB2uGn4VIGkQJgn5cQFoS2VZCJrwSD/Gvm2owo1hpb50E3nRfak1hH4rjVaouvKcKpoRLDZ/JB4x1a+yorzdccgo=@vger.kernel.org, AJvYcCXxDaixyf+2H1HRXCwZ/1XvENovbubVnEVMgKf4mRKSRjHtofhid4mniFqDeJndoSBm9fJ6Id8BcbVmxmQ=@vger.kernel.org
-X-Received: by 2002:a05:6102:4b8b:b0:4e4:5ed0:19bb with SMTP id
- ada2fe7eead31-4e7bafda80fmr6504211137.22.1749721011180; Thu, 12 Jun 2025
- 02:36:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749721037; x=1750325837;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xk308O1KlvA6k3uBQDw8z50KFvPVgd1NjWS8ld81/fk=;
+        b=hdmGOL2GnyYihzjl0C6iR5NRECRUiGdqQle7Q6w12/ypQ/AkSiKq7LcB85VXKGeHJI
+         SjM7AAVHS015HFs+1IyYG0Uxcxk41yASJ+3g35dmAp9naU0spy2lKLSi8bUjn3fIzQoI
+         oEiebNZzCaZ44tt2vS5ajdOmluFW9JFsIADE4skVLrpAqaxBfKbDF//1YplBwU05bPD0
+         1sJXOkQIsVQyDLshXRLt5xfFGj7pfddXhy6xoB0i7uCMK+n1dMUqYbA5gqh4kuya40ri
+         zFeetfauCNthUjddSjxfsh9DaLpCufw91AE+AjrK6HhMj/gUBsoLXyzSodpjHjy6gv+d
+         8kZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKKyiBSfi/yqKQ1S0AJV3Te4vA6Fg9tjR+lqdcZFSrXNJeCCNH9JrfIM5A76B7NPLOSqIsK4/3c+vDx35E@vger.kernel.org, AJvYcCUaZbdhWl27u7crGDBnso2w1VBmxqoqJeocg4NW2nNom/qqfmO96S1qp94j3HkGfoJjf6Pe@vger.kernel.org, AJvYcCWuKDBbDpsT3dU4A5IayCEo5AGxqV2oT27M4xwF/SDGqbssZZtSdzZ9smdxKiERhrIF6Zq30gfW9NjibhsUSQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLXon9iK+HW8y6h+n0VJxYAlskWaXCqA+V0yJyy0UmrK5/YW0Q
+	Z9SV5o94tOnBOtY4zO5JjABTDudsKlOkbU5HSYSSvHBNiEKXzu8mkVP0
+X-Gm-Gg: ASbGncuebTkJZSLHxLumEs/jmdd/rWOFgXiZ7v8VV15iOrlkMPRchQUQSRqRixyBvfl
+	pN85G5eYhwpzpIyGiJqGQdUxzvaorhZwUL8EjxsSNkjAfBSHl0Q9tRV441QUtdDfurn3flcqKzV
+	0N+K8bmmRc5fkiGkXD8f0zb/v4+Eul4t/P9Qeap+lORNPH865r6xSfMNDN32g+NZ4Hklxpn4IG9
+	TSpJMqupXaa/+HmfA3U1RVGU6hLGcFQjtz3dpLO+XDqKQo2PhZGO48y0plNtuPrUh/xFJqVz0hS
+	FcgF6wcyCF7u7zexC5lgDWvCaSIA/gJscw7evmn6zGpeOunRnIfFNIZRS6Lj2mUCmqiPqkLWcTP
+	WSqKzdrk1ylA=
+X-Google-Smtp-Source: AGHT+IEj5f77EREUpZ5E8w/EotPyfdIbWYVJo/+X7KstcTDOFCPPy6sZX4ZtpEWDZ+ZUxCfqDqiafA==
+X-Received: by 2002:a05:6512:3985:b0:553:5d00:be86 with SMTP id 2adb3069b0e04-553a55f7c07mr835838e87.41.1749721036987;
+        Thu, 12 Jun 2025 02:37:16 -0700 (PDT)
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1ab650sm52500e87.91.2025.06.12.02.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 02:37:16 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 12 Jun 2025 11:37:13 +0200
+To: Aleksandr Nogikh <nogikh@google.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>,
+	akpm@linux-foundation.org, josh@joshtriplett.org,
+	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	paulmck@kernel.org, rcu@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com, urezki@gmail.com
+Subject: Re: [syzbot] [bcachefs?] [rcu?] BUG: unable to handle kernel NULL
+ pointer dereference in rcu_core (3)
+Message-ID: <aEqfySUeBHDbQ-96@pc636>
+References: <aEnVuzK7VhGSizWj@pc636>
+ <6849df90.a70a0220.cc01e.058d.GAE@google.com>
+ <aEnuAp5w6QSoSu_M@tardis.local>
+ <CANp29Y4d3de3cc9weuqHCw2sDMdtArOFz5B=783KZ4419Ux=Ag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
- <20250609-vspx-reset-v1-2-9f17277ff1e2@ideasonboard.com> <20250611232956.GQ24465@pendragon.ideasonboard.com>
-In-Reply-To: <20250611232956.GQ24465@pendragon.ideasonboard.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Jun 2025 11:36:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWm2KCea7yJc5O3M13XemzTYwB9+2zxGrwD0O7UVA+vRg@mail.gmail.com>
-X-Gm-Features: AX0GCFuSWiY9GrYiJHYatrVtXsEGNwmZ1WJ7mSFq_nJisU5eexe41JDPFmO9OmE
-Message-ID: <CAMuHMdWm2KCea7yJc5O3M13XemzTYwB9+2zxGrwD0O7UVA+vRg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] media: vsp1: Reset FCP for VSPD
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
-	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, 
-	LUU HOAI <hoai.luu.ub@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANp29Y4d3de3cc9weuqHCw2sDMdtArOFz5B=783KZ4419Ux=Ag@mail.gmail.com>
 
-On Thu, 12 Jun 2025 at 09:19, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Mon, Jun 09, 2025 at 09:01:43PM +0200, Jacopo Mondi wrote:
-> > From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+On Thu, Jun 12, 2025 at 09:42:32AM +0200, Aleksandr Nogikh wrote:
+> On Wed, Jun 11, 2025 at 10:58 PM Boqun Feng <boqun.feng@gmail.com> wrote:
 > >
-> > According to H/W manual v1.00, VSPD must be excecuted
-> > FCP_RST.SOFTRST after VI6_SRESET.SRST. So this patch adds it.
-> > VSPDL is not applicable.
->
-> According to the R-Car Gen3 H/W manual v1.00, the FCP must be reset
-> after resetting the VSPD, except for the VSPDL. Do so.
+> > On Wed, Jun 11, 2025 at 12:57:04PM -0700, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> > >
+> > > Reported-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
+> > > Tested-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
+> > >
+> > > Tested on:
+> > >
+> > > commit:         488ef356 KEYS: Invert FINAL_PUT bit
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=129a660c580000
+> >
+> > Is there a way to see the whole console output? If Ulad's patch fixes
+> > the exact issue, we should be able to see a WARN_ON_ONCE() triggered.
+> 
+> If WARN_ON_ONCE() were triggered, the associated kernel panic output
+> would have been at the end of this log.
+> 
+> >
+> > Regards,
+> > Boqun
+> >
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=713d218acd33d94
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
+> 
+> FWIW the last time the bug was observed on syzbot was 100 days ago, so
+> it has likely been fixed since then or has become much harder to
+> reproduce.
+> 
+That is even worse, if it is last for 100 days already.
 
-And s/Reset FCP for VSPD/Reset FCP after VSPD/g in the one-line
-summary.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Uladzislau Rezki
