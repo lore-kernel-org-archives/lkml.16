@@ -1,178 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611C029B217
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6BC29C33E
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742698; cv=none; b=n5SibxUTUlShMOpJQUXq2fpZtUbKa5aFLKHy39W4d0tlEVAdhcUt2DjkM8Ih4dLOKw9IzkkOMaghsHcAO8gTcscivxnTQfTVScW1uM6ZvlYx3JZXLKTNvPEix0V9j00uZLQjX2hHumHSRg8IFOl0lK5VY0D/pqFTR7+wEOI4SbA=
+	t=1749742755; cv=none; b=K+cqPZaLF/3HNnQU7jmOo/CkszQYStk7RBSCR5Wtt8kv75Z6OY7nrghc8iokYQx/oGvz2A31/2S5p4NebUg9FqMSihZRmKU+5gB0/tLvjTC1CHIbX3URfsEafHVcOw7CRtt2QNEBx+IEavA7jgOElf0977p+2hxNWSV8QQdyPuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742698; c=relaxed/simple;
-	bh=V/KXZQvn72uFeeoa6IasivvIy46FqL7ppaS0T08g54c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dyzsfMtjLEKhZwfBAbBVqxgprFuQ5F6wlqydFCTeVntGCPYcNbGtyC0tSZNBE5SDdlLLPKm6ZrVJNgngLAKQ2YPy9JsxU/PbqRkP8oPxUbA5KcpOGzTZE2bJF+xtX85XkgDFQ4ZTrZ5hAGhDt+dvSpHG6RJfJw2RdHTm4JB8xzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2ghaKKj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749742755; c=relaxed/simple;
+	bh=bh6e3aZhERXOjQ6Gx4/GsntMfPc/vEUDeUlfzxV4/OU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VvV4qxbhfKh+7qtEjWDreCtB4Rin3nlmX0yQx40D4wl3sna/iqV/WLLoi5PZyac5/jNqyaMcbsurAXfZR86HNfc48pa+ycpdjEFhMn5kOLl+K8XpqHrEGrv1a8jv8bPk2B2vLZBo4AUjtT3KQ8trs1tkby3C/v0YnGT7M8/H4Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=icgN1GsS; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2ghaKKj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44410C4CEEA;
-	Thu, 12 Jun 2025 15:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749742695;
-	bh=V/KXZQvn72uFeeoa6IasivvIy46FqL7ppaS0T08g54c=;
-	h=Date:From:To:Cc:Subject:From;
-	b=X2ghaKKj01Gfj9wpIdjCTx1VOwqY496Z8LXOLfhYePS0U/TjoNI7bgorHZsbJd8ie
-	 KTB7xlQy17Oj9kMSsiE31eXef3Zi2aFZBEt7JsRDE0l2giKdRuLv8MFDt/8GgkS7cV
-	 d8/rDJwLFAEfcQ31+HxlgPvsLKWPUFdxPggzwlsdilGNRgsb676IWWISAOPssoMs4P
-	 M09bbgs2AA8isgCmeZ4+kZRQMUDvaNPkAlbt9MFmv/DnEime4Yt4Cdnzdfy2OmRaXa
-	 0GKwr4cJeoWnr8x/RfEY59SmY0W7jTjwDgj672Xvl4+q+Q+CrwcQFAkRvXAbIeWiO+
-	 vxPnU7a5Lebag==
-Date: Thu, 12 Jun 2025 12:38:12 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH 1/1 fyi] tools headers: Synchronize linux/bits.h with the
- kernel sources
-Message-ID: <aEr0ZJ60EbshEy6p@x1>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="icgN1GsS"
+Message-ID: <b7137a4a-cb87-4aa5-958f-a83d3239e967@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749742740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mx5FBx1fw+pZ6pjrn+Y9O7dYZ++IH+lPj2ErOykVNzA=;
+	b=icgN1GsSf4dXa2aarzDwWLo3Iju3i34wDoXZoI3hiV79iRnI6s4EulvHLkro7SyECmvQ5b
+	1LjfW+VJ6oyFp1e/LYzdQV1XsAuXoDs/RkibJylnYHAndNQJaLHFycVSGp5yNd87wm/fsN
+	PWE3e17NjdvWnJNa1YgTcb8Zzgi+DfI=
+Date: Thu, 12 Jun 2025 11:38:56 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Subject: Re: [net-next PATCH v6 03/10] net: pcs: Add subsystem
+To: Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Daniel Golle <daniel@makrotopia.org>, Simon Horman <horms@kernel.org>,
+ Christian Marangi <ansuelsmth@gmail.com>, Lei Wei <quic_leiwei@quicinc.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+References: <20250610233134.3588011-1-sean.anderson@linux.dev>
+ <20250610233134.3588011-4-sean.anderson@linux.dev>
+ <f5b16bd6-01b6-45c0-9668-41ccf90445a3@infradead.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <f5b16bd6-01b6-45c0-9668-41ccf90445a3@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+On 6/10/25 20:24, Randy Dunlap wrote:
+> Hi,
+> 
+> 
+>> diff --git a/Documentation/networking/pcs.rst b/Documentation/networking/pcs.rst
+>> new file mode 100644
+>> index 000000000000..4b41ba884160
+>> --- /dev/null
+>> +++ b/Documentation/networking/pcs.rst
+>> @@ -0,0 +1,102 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +=============
+>> +PCS Subsystem
+>> +=============
+>> +
+>> +The PCS (Physical Coding Sublayer) subsystem handles the registration and lookup
+>> +of PCS devices. These devices contain the upper sublayers of the Ethernet
+>> +physical layer, generally handling framing, scrambling, and encoding tasks. PCS
+>> +devices may also include PMA (Physical Medium Attachment) components. PCS
+>> +devices transfer data between the Link-layer MAC device, and the rest of the
+>> +physical layer, typically via a serdes. The output of the serdes may be
+>> +connected more-or-less directly to the medium when using fiber-optic or
+>> +backplane connections (1000BASE-SX, 1000BASE-KX, etc). It may also communicate
+>> +with a separate PHY (such as over SGMII) which handles the connection to the
+>> +medium (such as 1000BASE-T).
+>> +
+>> +Looking up PCS Devices
+>> +----------------------
+>> +
+>> +There are generally two ways to look up a PCS device. If the PCS device is
+>> +internal to a larger device (such as a MAC or switch), and it does not share an
+>> +implementation with an existing PCS, then it does not need to be registered with
+>> +the PCS subsystem. Instead, you can populate a :c:type:`phylink_pcs`
+>> +in your probe function. Otherwise, you must look up the PCS.
+>> +
+>> +If your device has a :c:type:`fwnode_handle`, you can add a PCS using the
+>> +``pcs-handle`` property::
+>> +
+>> +    ethernet-controller {
+>> +        // ...
+>> +        pcs-handle = <&pcs>;
+>> +        pcs-handle-names = "internal";
+>> +    };
+>> +
+>> +Then, during your probe function, you can get the PCS using :c:func:`pcs_get`::
+> 
+> It's preferable to use                               PCS using pcs_get()::
+> instead of the :c:func: notation to make the .rst file more human-readable.
+> They produce the same generated output.
 
-Full explanation:
+If you find this syntax useful, then you should update
+Documentation/doc-guide/{kernel-doc,sphinx}.rst. I did not use it
+because it I did not know about it because it is not documented.
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
-
-See further details at:
-
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
-
-To pick up the changes in this cset:
-
-  5b572e8a9f3dcd6e ("bits: introduce fixed-type BIT_U*()")
-  19408200c094858d ("bits: introduce fixed-type GENMASK_U*()")
-  31299a5e02112411 ("bits: add comments and newlines to #if, #else and #endif directives")
-
-This addresses these perf build warnings:
-
-  Warning: Kernel ABI header differences:
-    diff -u tools/include/linux/bits.h include/linux/bits.h
-
-Please see tools/include/uapi/README for further details.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Yury Norov <yury.norov@gmail.com>
-Link: https://lore.kernel.org/r/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/linux/bits.h | 57 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 2 deletions(-)
-
-diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
-index 14fd0ca9a6cd1733..7ad0562191153471 100644
---- a/tools/include/linux/bits.h
-+++ b/tools/include/linux/bits.h
-@@ -12,6 +12,7 @@
- #define BIT_ULL_MASK(nr)	(ULL(1) << ((nr) % BITS_PER_LONG_LONG))
- #define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
- #define BITS_PER_BYTE		8
-+#define BITS_PER_TYPE(type)	(sizeof(type) * BITS_PER_BYTE)
- 
- /*
-  * Create a contiguous bitmask starting at bit position @l and ending at
-@@ -19,16 +20,68 @@
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
- #if !defined(__ASSEMBLY__)
-+
-+/*
-+ * Missing asm support
-+ *
-+ * GENMASK_U*() and BIT_U*() depend on BITS_PER_TYPE() which relies on sizeof(),
-+ * something not available in asm. Nevertheless, fixed width integers is a C
-+ * concept. Assembly code can rely on the long and long long versions instead.
-+ */
-+
- #include <linux/build_bug.h>
- #include <linux/compiler.h>
-+#include <linux/overflow.h>
-+
- #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
--#else
-+
-+/*
-+ * Generate a mask for the specified type @t. Additional checks are made to
-+ * guarantee the value returned fits in that type, relying on
-+ * -Wshift-count-overflow compiler check to detect incompatible arguments.
-+ * For example, all these create build errors or warnings:
-+ *
-+ * - GENMASK(15, 20): wrong argument order
-+ * - GENMASK(72, 15): doesn't fit unsigned long
-+ * - GENMASK_U32(33, 15): doesn't fit in a u32
-+ */
-+#define GENMASK_TYPE(t, h, l)					\
-+	((t)(GENMASK_INPUT_CHECK(h, l) +			\
-+	     (type_max(t) << (l) &				\
-+	      type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-+
-+#define GENMASK_U8(h, l)	GENMASK_TYPE(u8, h, l)
-+#define GENMASK_U16(h, l)	GENMASK_TYPE(u16, h, l)
-+#define GENMASK_U32(h, l)	GENMASK_TYPE(u32, h, l)
-+#define GENMASK_U64(h, l)	GENMASK_TYPE(u64, h, l)
-+
-+/*
-+ * Fixed-type variants of BIT(), with additional checks like GENMASK_TYPE(). The
-+ * following examples generate compiler warnings due to -Wshift-count-overflow:
-+ *
-+ * - BIT_U8(8)
-+ * - BIT_U32(-1)
-+ * - BIT_U32(40)
-+ */
-+#define BIT_INPUT_CHECK(type, nr) \
-+	BUILD_BUG_ON_ZERO(const_true((nr) >= BITS_PER_TYPE(type)))
-+
-+#define BIT_TYPE(type, nr) ((type)(BIT_INPUT_CHECK(type, nr) + BIT_ULL(nr)))
-+
-+#define BIT_U8(nr)	BIT_TYPE(u8, nr)
-+#define BIT_U16(nr)	BIT_TYPE(u16, nr)
-+#define BIT_U32(nr)	BIT_TYPE(u32, nr)
-+#define BIT_U64(nr)	BIT_TYPE(u64, nr)
-+
-+#else /* defined(__ASSEMBLY__) */
-+
- /*
-  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-  * disable the input check if that is the case.
-  */
- #define GENMASK_INPUT_CHECK(h, l) 0
--#endif
-+
-+#endif /* !defined(__ASSEMBLY__) */
- 
- #define GENMASK(h, l) \
- 	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
--- 
-2.49.0
-
+--Sean
