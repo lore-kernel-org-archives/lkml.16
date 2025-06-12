@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD892F4321;
-	Thu, 12 Jun 2025 04:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC1C1C32FF;
+	Thu, 12 Jun 2025 04:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749700855; cv=none; b=FecjSR8lQOBWamtMSOal9RFrnm4QTTKddT8wSP3XzJUM4raVF3U7842rrclYIE0Vv5iFvKYwpL9Q7TTGp2hB4A6t7IwvDZ4/W8iU/dFp2eN0P1XnRfonikY+snbj1totH/kCnoelVAjq5rys9Q8YhHfsiei5F48kvuCGCe4/SiM=
+	t=1749700855; cv=none; b=CzG1HuH7zQPdqJFm7DUfCcucUKPfCAeJyoqkwWYkyHcIs2JZzXMk374oWj0htjKOIeiXT0pOc1lNeWa3afcosbGHGFabejfv3OASgbKGWi2Vy1oUwBIpxJb+hJV22csqNjxVIxpo4XKnPiQ+L0h/s3FKc4YN44TnmW2yqkrGbto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749700855; c=relaxed/simple;
-	bh=mz2ucRVIwB/L/SqWdSybuRAOphTiphXBWZwiEvEMGII=;
+	bh=RNOBAoQ4FlcbcHzSQexrGIpqp38M7Y0na4e0BuXj+JM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CI5x0iaCQ8ehZgsApLgiw8VLOE0YsHVu5NxAaU0saeKr5ZULJc+OuXljXhRpchqB+7fWNXL5e62h4mVtQqUa9jG1UAZ82uFbW98IrjIgnNEOcnMTcxNcZR7u9d8ZF//qVo/N8DHhOLL5m4xzL5pnhrjpjYP2wuOjqfD+E6NFIFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvx+gSGj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qpltrrPTBX4/JVqwDN6b+qh3nPcp6QrwcbkXNeQgDbFSUKqIvTl4Ob23hj7ZBUsqTAl20ZW2Cawa6AtMuTHYVJ8unG/RUE1w6vR4YPG6U/OjZamrzfNYDqp10QeF5nijRQflWeAlfXG26NTX/jlD5XdJkVnsbARybrTXUUW9dEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcqCyHAq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvx+gSGj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C361C4CEEB;
-	Thu, 12 Jun 2025 04:00:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcqCyHAq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D45C4CEEA;
+	Thu, 12 Jun 2025 04:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749700854;
-	bh=mz2ucRVIwB/L/SqWdSybuRAOphTiphXBWZwiEvEMGII=;
+	bh=RNOBAoQ4FlcbcHzSQexrGIpqp38M7Y0na4e0BuXj+JM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kvx+gSGjRIoWdvm8i5SbrmJAGs8P+t1fqoq5G6z952YQahbrdaUCKD4XCaFk3qQEL
-	 mzMMrXgvUimUpcKl6cmkVvZu8w+6NiRGVWjJ/qky8z+DqLC0KWZUum+PFPF+3sAuJ0
-	 xPr7ZstiL+rW8iOADVH/2JqQ6cXB1cxTwoUnPPbLidKTL8IEDsUYWQPxFrGbU4OJPQ
-	 oZXr+bh26djhv8ZX/JlGoXWL1exM+GRboaeFYoaBs2l01Bc0hWd9AEdK693jg8V3bL
-	 Dp3Dbjx4wcuhdRboFOBQoZM6sbYplbFAFxPfdAatfxNrbJ9T3U4YdTd2/9KGFjSZIO
-	 MFPj8OLy1ltTw==
+	b=bcqCyHAqCEeSXpfh9vxS0s0cbuiJMAzHt90Udk+csPYBm7HlJIhsE46fUXeTUgRQi
+	 I0+FO7rZCu4g4b6WjXlblFOcDIxdxIiCvEtQeeSxVzu7F9jO1KKQRX0t2/msu4gHMh
+	 heMwwrzsgEyqLQBc2DrpUUcxA8DXCdGZr3uy5bF4o8Q/SW3YLcItvJKaibOaMs7oXR
+	 7THcfMK2hq8+spwOvm1m++f+Tte7uO6IbgIxntrPwkOFULgavoktqlCy5bhvO/3xYU
+	 aQHsF/TugdzzxEdQx1lPljmOKrBMJ7IIHj2YiQzZnVcQbVSrFPTqIBNfmtxJmpxjl1
+	 2K1OI1JA3FuEg==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm CPUCP mailbox driver
-Date: Wed, 11 Jun 2025 23:00:34 -0500
-Message-ID: <174970084177.547582.1881380220654294150.b4-ty@kernel.org>
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Christian Marangi <ansuelsmth@gmail.com>
+Cc: stable@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: gcc-ipq8074: fix broken freq table for nss_port6_tx_clk_src
+Date: Wed, 11 Jun 2025 23:00:33 -0500
+Message-ID: <174970084199.547582.1426735315594799373.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250605-enable-cpucp-v1-1-111ecef7e4c9@oss.qualcomm.com>
-References: <20250605-enable-cpucp-v1-1-111ecef7e4c9@oss.qualcomm.com>
+In-Reply-To: <20250522202600.4028-1-ansuelsmth@gmail.com>
+References: <20250522202600.4028-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,16 +50,21 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Thu, 05 Jun 2025 19:06:06 -0500, Bjorn Andersson wrote:
-> The Qualcomm CPUCP mailbox driver needs to be enabled for CPU frequency
-> scaling to work on the X Elite platform, so enable this driver.
+On Thu, 22 May 2025 22:25:55 +0200, Christian Marangi wrote:
+> With the conversion done by commit e88f03230dc0 ("clk: qcom: gcc-ipq8074:
+> rework nss_port5/6 clock to multiple conf") a Copy-Paste error was made
+> for the nss_port6_tx_clk_src frequency table.
 > 
+> This was caused by the wrong setting of the parent in
+> ftbl_nss_port6_tx_clk_src that was wrongly set to P_UNIPHY1_RX instead
+> of P_UNIPHY2_TX.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] arm64: defconfig: Enable Qualcomm CPUCP mailbox driver
-      commit: 3871b51a684275e3a47fbebf93c0a0e7a05d7f9f
+[1/1] clk: qcom: gcc-ipq8074: fix broken freq table for nss_port6_tx_clk_src
+      commit: 077ec7bcec9a8987d2a133afb7e13011878c7576
 
 Best regards,
 -- 
