@@ -1,136 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B8D2BF3DF;
-	Thu, 12 Jun 2025 15:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE382BF3DF;
+	Thu, 12 Jun 2025 15:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749741801; cv=none; b=ubFsq8l3K9/SEBP/fqQvoC0QsSeKuX/nrLrT8XPTrNrxvfS0yJdt7XiwN6lMxMbKFICh9S17nx0przsl+U3wl8emRfCT7cGqmaYJBVJOIEQAXl+0nl4jqCDRBsf5yJePDPZdMidUT4wVhP+OsYgBkKV3nco5A4Zkex2VJvdhc2g=
+	t=1749741843; cv=none; b=hp3beWmtYx7PyowoywzIMizYHtYNi9ptEF57w7uRCnu3SwN2uzc1NsNSWJrz6ltOIClB2FgqvASo2wdw7h/CTx1euG+CLmBgS5vp+jtcyv+ICevG9bPam0Xelz7f1HIA8BjqFuM0LEUNsZcRf5RYezVcAJ09T++32nSvFRb8hOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749741801; c=relaxed/simple;
-	bh=7+POKnao7dJbjl1goCWSf3SOuai5TxMCVJI0eCvMhl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pNkO2JWjTzeqHm438qpva+KTCIUGy1joYCwlHdBWwYQXKIKxhGru2FUdgaC9J9jmTJ1J5m/+Eb9oaLMjw7rb8KunAoQzG9JiVUztZA4Wjn1mrwtyOdQH/5pKjFr/DCfwHLyJjwunRdFBkE/KoNYrjmFerj5JpAtgn9HFm6FaqhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBK70+8m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749741843; c=relaxed/simple;
+	bh=e2L+AV00TtnXw1GDXliijhYZY+VMGmWnxJeetHc99Lw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=b9qdb1qrOssI45sDrwDy7xQEIsIMKei6So8LaiyZBGbRRMCjAp5bVbujvweAg0KQKdQrkjmPFPc81Ch++EJfs+h0P92syPSQKOxe39tJFNvmSYA+38Pb7A0LmFN0WmebF/yzvnAkO6UXsiu4V6pNKNOThSLrI+Bxe2UwhHdUyzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=JoPZTG1K; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBK70+8m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7476AC4CEEA;
-	Thu, 12 Jun 2025 15:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749741801;
-	bh=7+POKnao7dJbjl1goCWSf3SOuai5TxMCVJI0eCvMhl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XBK70+8mAD6hUz34u1ynNTORuPkMNSYLirTEViOINENBZ5407zYk4HLRqeP17W/9B
-	 r2T/RngfGRyjBXFassi3AwAo//t5JSlaSdlpTbSuktY5YqTigeFGAe14UPRecFFGrZ
-	 h4ANsE8KM7zyJ+MYcjcoFhRZh1spF96TQOIJ6ll/bwZ63quYEUyuRF3RQZ0aFaWp5z
-	 B7wzht3/RTptjwaOhYWbWSbdiH1a41WZVhZ3YqtuyUzJgiZa6Xf8DoATPYsjAnkWyw
-	 GbRMD5Y3RQ3ktzKKHY9r4VFDpYLxoWpTAVt4wQDa4FF7eEXPjkrKK3xkJNquJNO65f
-	 rwCl5GmA+SldA==
-Date: Thu, 12 Jun 2025 16:23:13 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
-	linux@roeck-us.net, jdelvare@suse.com,
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org, netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
-	Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20250612152313.GP381401@google.com>
-References: <20250604041418.1188792-1-tmyu0@nuvoton.com>
- <20250604041418.1188792-2-tmyu0@nuvoton.com>
- <20250612140041.GF381401@google.com>
- <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="JoPZTG1K"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id D0EDA25C00;
+	Thu, 12 Jun 2025 17:24:00 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id rzejOIWm-WrY; Thu, 12 Jun 2025 17:23:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1749741839; bh=e2L+AV00TtnXw1GDXliijhYZY+VMGmWnxJeetHc99Lw=;
+	h=From:Subject:Date:To:Cc;
+	b=JoPZTG1K6VC45U7XtfBY06ap5s93Rik5lgGujH2W+JLf3pxrnEtJV/eH/p1ys7uG/
+	 VyX6XBI4ef8t6H7fKaKACPhJpSXegVdZhYvqq+Rj1c1025y4n7efdT+oOpJjvgllun
+	 uVyl3u911sKoWhpI7iRr8ShukuAUXK7BsU8jpZEqSY/2Z128kV4+REgD/9fpL4Ainw
+	 WeicsoCcSLJ7MlTC3lIjhmBzHJklyBO9j70uPL8W0fso5rxLJPwv+dl/xkln3rot8c
+	 ULI2Y5Hc/O1lPIl+MXuvPrvkDH0Rw+/AMGAJkEJaaIIlRuESLAiubQG2gCLPtn/1Dw
+	 jNMGBjgTqUXlQ==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH 0/5] Support for Exynos7870's display stack (DECON,
+ MIPIPHY, DSIM, etc.)
+Date: Thu, 12 Jun 2025 20:53:36 +0530
+Message-Id: <20250612-exynos7870-drm-dts-v1-0-88c0779af6cb@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPjwSmgC/x3MTQ5AMBBA4avIrE1SFSmuIhb9GcxCSUeEiLtrL
+ L/Few8IJSaBvngg0cnCW8yoygL8YuNMyCEbtNKNanSNdN1xE9MahSGtGA7B1nhvnakrZzvI4Z5
+ o4uufDuP7fl9vAzZkAAAA
+X-Change-ID: 20250523-exynos7870-drm-dts-87ccab731ba9
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749741830; l=2522;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=e2L+AV00TtnXw1GDXliijhYZY+VMGmWnxJeetHc99Lw=;
+ b=IvYVO6KFyABl3lbASbgkJhmTWfjQJX6zHF9WbeGzXKnrcA7VcRJxNE9s4peKlOdsfTDZmTNUH
+ c36YxJ2VAD9Dnup2Mr4nBiKF+6E+kPQClh8o/Z42pDKgHfSiBS9zGVd
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On Thu, 12 Jun 2025, Ming Yu wrote:
+Exynos7870 has a IP subsystem in its architecture dedicated to display
+management. Notably, this block includes the Display Enhancement
+Controller (DECON), and the DSI Master (DSIM).
 
-> Dear Lee,
-> 
-> Thank you for reviewing,
-> 
-> Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
-> >
-> ...
-> > > +static const struct mfd_cell nct6694_devs[] = {
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
-> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
-> > > +
-> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
-> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
-> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
-> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
-> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
-> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
-> >
-> > Why have we gone back to this silly numbering scheme?
-> >
-> > What happened to using IDA in the child driver?
-> >
-> 
-> In a previous version, I tried to maintain a static IDA in each
-> sub-driver. However, I didn’t consider the case where multiple NCT6694
-> devices are bound to the same driver — in that case, the IDs are not
-> fixed and become unusable for my purpose.
+The following series and its sub-series implement all components for a
+functioning display pipeline. All vital information which helped shaping
+up the patches have been retrieved from Exynos7870 vendor kernel sources
+as provided by Samsung.
 
-Not sure I understand.
+Testing has been done on all three devices available upstream, i.e.
+Samsung Galaxy J7 Prime (samsung-on7xelte), Samsung Galaxy A2 Core
+(samsung-a2corelte), and Samsung Galaxy J6 (samsung-j6lte). Regrettably,
+I've only been able to test the functionality on video mode, as none of
+the devices have panels working in command mode.
 
-> I’ve since realized that using pdev->id avoids the need for cell->id,
-> so I reverted to the earlier approach.
-> 
-> That said, do you think it would be a better solution to manage all
-> the IDAs centrally within the driver? For example:
-> in nct6694.c
-> struct nct6694 {
->     struct device *dev;
-> 
->     struct ida gpio_ida;
->     struct ida i2c_ida;
->     struct ida can_ida;
->     struct ida wdt_ida;
-> };
-> 
-> static int nct6694_probe(struct platform_device *pdev)
-> {
->     ida_init(&nct6694->gpio_ida);
->     ...
-> }
-> 
-> in gpio-nct6694.c
-> static int nct6694_gpio_probe(struct platform_device *pdev)
-> {
->     id = ida_alloc(&nct6694->gpio_ida, GFP_KERNEL);
-> }
+This series implements changes in the SoC subsystem, which includes
+devicetree additions. It depends on all sub-series listed below:
+(Legend: [R]eviewed, [A]ccepted)
 
-No that would be way worse.
+exynosdrm-decon            - https://lore.kernel.org/r/20250612-exynosdrm-decon-v2-0-d6c1d21c8057@disroot.org
+exynos7870-mipi-phy        - https://lore.kernel.org/r/20250612-exynos7870-mipi-phy-v1-0-3fff0b62d9d3@disroot.org
+exynos7870-dsim            - https://lore.kernel.org/r/20250612-exynos7870-dsim-v1-0-1a330bca89df@disroot.org
+panel-samsung-s6e8aa5x01   - https://lore.kernel.org/r/20250612-panel-synaptics-tddi-v1-0-dfb8a425f76c@disroot.org
+panel-synaptics-tddi       - https://lore.kernel.org/r/20250612-panel-samsung-s6e8aa5x01-v1-0-06dcba071ea6@disroot.org
 
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Kaustabh Chakraborty (5):
+      dt-bindings: samsung: exynos-sysreg: add exynos7870 sysregs
+      arch: arm64: dts: exynos7870: add DSI support
+      arch: arm64: dts: exynos7870-on7xelte: enable display panel support
+      arch: arm64: dts: exynos7870-a2corelte: enable display panel support
+      arch: arm64: dts: exynos7870-j6lte: enable display panel support
+
+ .../soc/samsung/samsung,exynos-sysreg.yaml         |  6 ++
+ .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts | 41 ++++++++++
+ arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    | 38 +++++++++
+ arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts | 40 +++++++++
+ arch/arm64/boot/dts/exynos/exynos7870.dtsi         | 94 ++++++++++++++++++++++
+ 5 files changed, 219 insertions(+)
+---
+base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
+change-id: 20250523-exynos7870-drm-dts-87ccab731ba9
+
+Best regards,
 -- 
-Lee Jones [李琼斯]
+Kaustabh Chakraborty <kauschluss@disroot.org>
+
