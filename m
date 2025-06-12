@@ -1,136 +1,94 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCEF38B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A616538B
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749705395; cv=none; b=O4r16vsmfhM1fnezF4nqU+zYLNna7uzBt+Svy45nvvEv3UGjsbrx5UiXkyD/Sjw7SvIA+5vmzfopdSzfcwOMQk6BFohd1dAoi0/lPAP2KX/q+6e4gvdmqLpNMc6+r81qeH/68hVWF8sPSyK4O5j9TCAfqWwwur7cTLD9vnZd91g=
+	t=1749705470; cv=none; b=fDT+rlbYaC0VE8MZ9OxI3KZ6o92IRWzUBNPvVzcZkDdBq2RK5YYthUKzjgJK8Nekw8n757mjfPGA17adgrEstdJryhFI0YtOUU2GGnUQ3JRqywLUzZ+ArdmUvq/VUNIlb9o2XxsMvhIrqH0esUo4L1eSz1jAqWlj4qL4DLM0pzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749705395; c=relaxed/simple;
-	bh=GYwJDBqm5ype1Fn87+cuFdQQ7WJUMfaovIJl6GLLetg=;
+	s=arc-20240116; t=1749705470; c=relaxed/simple;
+	bh=2SCdJ/+4doAXDA1dugfcerrihJYg32knCvs3SFTaAHM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gKzFASI068mjw8pEvxkWautuIthCkLPJTZGF+/XFjHDFixuOoxwUHRvh4H7NVbbANsBReCDp+eqk44ByzhMn+hoy+2BHi0iayW4HlD8xtjY/rNx+R/+U/7pA4C75J1wJ829cCrpMqEXxGxAxgDYyRoUMx7Q51B3CHMoyCJo1bw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sDHB2qpn; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=lTlO07wFJcLgb3ztSCjFGxAzINaYXJsjvixe8WGuOhRJJ7dqyjSLPrjt7lFZwqMt35J+WAy5bLpIC7HCpGmDzMo41FnBAik/VyOOrlTE/Lz6L7Eyj//wEOD60oIjlr011Zm46u2evChLVY3i1CUOcPaqVyD/sFNdYh8fm/vc6aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l2+xx4lR; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sDHB2qpn"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235e389599fso125335ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:16:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l2+xx4lR"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2357c61cda7so63625ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:17:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749705393; x=1750310193; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749705468; x=1750310268; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p6diRbRZRukPlWo9M8OnwMyyu0ZftkgUDqdamePSBwg=;
-        b=sDHB2qpnwXvcOKxsQtQo/Q4WJS5QK/HrPfBdYCgUz3W9Eb04KykuWqhl8HcDa/Ui90
-         axXTHe8gHVxfSpsaif29YE6UFLQLgPSZjo3pZQsiipao9Hc+MgySlvYCGRbA6n/daot1
-         0i2dHxn3azMLq5dqxMEHnTkWa5nErRAYU/4E7rbAZTXIDpbg9B5mQP/f8LoP3rrU2Pzu
-         5WPIERiQUhvpR7KlmSo08l3oU+d+H0MhdgcFmy2J5JzkIi8SjDUWmh/hu0QTjgEJsdzm
-         HIjOux2C1tnk7asVgoLvImgThko8L5Kqu5XFZFK5F8iV0LBxsCpIEOw2i+MrMYp2UKrh
-         0CqA==
+        bh=2SCdJ/+4doAXDA1dugfcerrihJYg32knCvs3SFTaAHM=;
+        b=l2+xx4lRk9VZdvj+XODaAdpfsmHoNTAQiuoBm+Vxve0ddmNB/2OTz8EJY4erV7FZGD
+         6mhjNLpen8OIBrqasVtsOlcrBEVLpT/ZpMhjKJEZrINkvYjiRjvEKFcceRepBXWmUNEB
+         kdpnArPcasSr1FwZG+zzD0Dp2hhxE3yzF9Gi4V1dRR9PwBuJRORakl5YBRPHWhPtz5bU
+         /XBjGUoIuS+UdyiPkqG+8JolPkK8FQjKplfO1MMVLnJfJx7TtW9yTnBkt9bmFDlaXY/4
+         szjqy6+2cZjkGPZ2rMDDgNYm4GVhYXJXKPpnIbPREaHqUiOgxlTy3OOjkd7NxYx9a5Z7
+         o8Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749705393; x=1750310193;
+        d=1e100.net; s=20230601; t=1749705468; x=1750310268;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=p6diRbRZRukPlWo9M8OnwMyyu0ZftkgUDqdamePSBwg=;
-        b=IPy+TfkaUUxxTKrVCxuxU8KvkRT0/mkO/nCUVij+AuNJ4MU8YXEs9S2ohZtonVqdpm
-         GITqZRvc3oNpGvsZoeJtkjT+CLPUrKzHL6XsJcyl5tledapLYKEdetX2sPAGflfrRlRR
-         VkDrvoEUTWBvJIncIqWLjeJbqbh1qyhaKrKbBIrl58OYv/o6jBHJeQUaTcBo3oBFhbCb
-         ioMSsZ0sQLqUqC9E9nGfzPQWKg+FF+uPkQpi90uM2c4oOEAnJeyZ2byYf/VZbXoWs/0e
-         hz/TwQu8rgyhBy0fiDq1iagbVR+4YET/6pu/vQ9t4BfIhhZEWQrLqrcG8x57A+9T+3ud
-         07yg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9DLoKi86eGRaPuKsJeenNVocYkglyC9eHBo697kWXwDSnOAsCumOniwETKiS7NWMdse55ejOVlDiUZhk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDXlVxhgSMx0cJlozYqSFCjc93WSGlybsJXHQWIkkzJm4XvNTP
-	P38vJBrEe2KEJZdlKfYnOkmoSHayjLcKEKDOu5oqq3Zx60otDTz96jQG9tu70yJVZAg/n0lXSiE
-	iu+w2WtE/sFHZ9sYAi89UnnFFIUIwSAEvybxD5NE6
-X-Gm-Gg: ASbGnculTgaKyGxsKdX8R9XgTMu2AWrdywUHbJoo9aFnt8nBDcJXr0by15KEyVsoHh8
-	Eht0/akRlMWoWp91lcMHfO6Ney0Zt9yT8mEzPbmjKQ0rQ6gONUakikIOM3l/HTYSTKgGp6wljje
-	xkojIewDFcNrN1uAbX9GTZvc6DYCtx34k+g57X3RbUnnEu
-X-Google-Smtp-Source: AGHT+IFsS2B5lC69yG+ZIzDjoB42cEDFFoUNubkkslLP3SlQB8j7he9Gt0R5igTKHstKDOVSt4yEWMRv9eqcqO1H2bY=
-X-Received: by 2002:a17:902:d4cf:b0:235:e1e4:efc4 with SMTP id
- d9443c01a7336-2364dc69fc5mr1822195ad.14.1749705392972; Wed, 11 Jun 2025
- 22:16:32 -0700 (PDT)
+        bh=2SCdJ/+4doAXDA1dugfcerrihJYg32knCvs3SFTaAHM=;
+        b=H8L6MYtVO8+hwz0CkIPTYi1kzcVuZWhtiIHcx9Z9l168EdKT7JJvY1UNN8D/Kwpwny
+         0lshjPtRmbIomYAFdWrvtlcxlQ+PuxkHf1v9RRyVGdhqM5y/NeV6Y3RiUQtqsgQ9jBI1
+         yzJ8uY4oTazzXOOzYix+THB3yI8T9aVtejCl42LFrIQrAU1DSHJG0hmrVwZuWrr69sEE
+         dEAEdsA9bZQs2K56uS+CniRYyOYIu3lJH0U8JlujnfolUcpVjgTaEQXOSl7cg62VIxEF
+         gQmcI8R7pz/S4sNo0uePPFMQw12yK/TJaR/ccVlBCSWo8Hl58NOiR3z3atQ1qC+SfiE9
+         NABQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAoLu10ZVk8rsqaNKXzy09Eo/6nxpYS1N+nMvN5n23M/ybz0Zf/sdpSzSGEIyaf57ounHmkYwknpIOMPs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH/mgD+nPb7fcAVjcwqhLsEExz9elbT7Ew77nfc2DbIRC0D4vV
+	bmEK2wm8rb0oFaY3jERXfpgZMdzz3h/vJXTRF4bhWtEmxwLY49jF4dQGbIHnGqQOf0/t9lGIt7B
+	SA9voJJfOLi/K8qAnKQjAiuaSx4s3Y14pvBzSOD/g
+X-Gm-Gg: ASbGnctxu7t6mEn0bJeOnihxdN+MifGdU3XA/71UXSnlCWDJ8sEsQ4mM/dH+V17HGxj
+	zjWR/+07FfUhOCD69wdXpL7lGK0uTufhyPcgmPuy9Irj/f2sOofSQWcP1JbBoJ1sHyrX2BJTy13
+	kRcUL14BvJsnT5CPpelNF2QQEK1x5zSvkk9MqGGFTeqqS+
+X-Google-Smtp-Source: AGHT+IGYP9KzkXjDzsA4+41CLW5Waykb3HixIBnHVes8taLU5EpIH0GQEyzbO+4zVc94uZKbBXgXshRqTVavOIadoX8=
+X-Received: by 2002:a17:902:d2c6:b0:231:d0ef:e8fb with SMTP id
+ d9443c01a7336-2364dc4e3b8mr1774665ad.10.1749705467691; Wed, 11 Jun 2025
+ 22:17:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610150950.1094376-1-mbloch@nvidia.com> <20250610150950.1094376-9-mbloch@nvidia.com>
-In-Reply-To: <20250610150950.1094376-9-mbloch@nvidia.com>
+References: <20250610150950.1094376-1-mbloch@nvidia.com> <20250610150950.1094376-12-mbloch@nvidia.com>
+In-Reply-To: <20250610150950.1094376-12-mbloch@nvidia.com>
 From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 11 Jun 2025 22:16:18 -0700
-X-Gm-Features: AX0GCFtSea24S64oBWfvhRVn2iiOFXlEz1l-q8Ml6dx4ayAJvrSCDhs5kdtjaHM
-Message-ID: <CAHS8izOEn+C5QexSPZT3_ekUr2zR1dm9R6OsoGBPaqg5MFvBRQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 08/11] net/mlx5e: Add support for UNREADABLE
- netmem page pools
+Date: Wed, 11 Jun 2025 22:17:34 -0700
+X-Gm-Features: AX0GCFsQbpdJnxhJgwGMagCQgzHoP4omoeUSZWQdZ5DAkp2-7EHR6n8NXEpEZgY
+Message-ID: <CAHS8izMOcAYzcseZqud5xj_3ibaWKBUqEARgJd65S0_Wqs6haw@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 11/11] net/mlx5e: Add TX support for netmems
 To: Mark Bloch <mbloch@nvidia.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
 	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
 	Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com, gal@nvidia.com, 
 	leonro@nvidia.com, tariqt@nvidia.com, Leon Romanovsky <leon@kernel.org>, 
 	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dragos Tatulea <dtatulea@nvidia.com>, 
-	Cosmin Ratiu <cratiu@nvidia.com>
+	linux-kernel@vger.kernel.org, Dragos Tatulea <dtatulea@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 8:20=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
+On Tue, Jun 10, 2025 at 8:21=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
 e:
 >
-> From: Saeed Mahameed <saeedm@nvidia.com>
+> From: Dragos Tatulea <dtatulea@nvidia.com>
 >
-> On netdev_rx_queue_restart, a special type of page pool maybe expected.
+> Declare netmem TX support in netdev.
 >
-> In this patch declare support for UNREADABLE netmem iov pages in the
-> pool params only when header data split shampo RQ mode is enabled, also
-> set the queue index in the page pool params struct.
+> As required, use the netmem aware dma unmapping APIs
+> for unmapping netmems in tx completion path.
 >
-> Shampo mode requirement: Without header split rx needs to peek at the dat=
-a,
-> we can't do UNREADABLE_NETMEM.
->
-> The patch also enables the use of a separate page pool for headers when
-> a memory provider is installed for the queue, otherwise the same common
-> page pool continues to be used.
->
-> Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
-> Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 > Signed-off-by: Mark Bloch <mbloch@nvidia.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/=
-net/ethernet/mellanox/mlx5/core/en_main.c
-> index 5e649705e35f..a51e204bd364 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -749,7 +749,9 @@ static void mlx5e_rq_shampo_hd_info_free(struct mlx5e=
-_rq *rq)
->
->  static bool mlx5_rq_needs_separate_hd_pool(struct mlx5e_rq *rq)
->  {
-> -       return false;
-> +       struct netdev_rx_queue *rxq =3D __netif_get_rx_queue(rq->netdev, =
-rq->ix);
-> +
-> +       return !!rxq->mp_params.mp_ops;
-
-This is kinda assuming that all future memory providers will return
-unreadable memory, which is not a restriction I have in mind... in
-theory there is nothing wrong with memory providers that feed readable
-pages. Technically the right thing to do here is to define a new
-helper page_pool_is_readable() and have the mp report to the pp if
-it's all readable or not.
-
-But all this sounds like a huge hassle for an unnecessary amount of
-future proofing, so I guess this is fine.
 
 Reviewed-by: Mina Almasry <almasrymina@google.com>
 
