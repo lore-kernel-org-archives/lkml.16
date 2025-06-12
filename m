@@ -1,55 +1,55 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4602D8789
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 19:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594062D5417
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 19:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749757794; cv=none; b=dPQUbUdkZFJaIdlO1KEVycZd2st8agJnElpYG3T9hldvdPwj+/FVEo6uXPP5MLHcDtI4e2ATd205ZTatFQc5YWG2NlXe8c5LUAmJ8hFE78LqYvY0TesPQf+EC8oI4+yZXJr0sQI33IboGD5FKTC7CNU/qNQusfNBu4vIFe9goB4=
+	t=1749757794; cv=none; b=naX34YGp+zLaCYRS9RUzOb2IR2DYCTwxxv3Jt0GulfpSRTh5tDNpdIlRobv7kOICtRTY5OWC223gSg1TtsXBP3FwOVRJA60kDp4AMoUH0yKX9xixqDc1nCjXDtksfqmAwTa4JNFjgn8Lhw9Gf/6Os+Z6OfuGo9TQB1E5VOrCHWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749757794; c=relaxed/simple;
-	bh=zMY1NElYNZzt1bGCpQPOES94FzbCwXlf9lyBYpGO4Zs=;
+	bh=Zpl+gL2iTdwOtoVI5LL2teb9gquZyRVctFv0bvAwr08=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dph+dltAvt21pGVFb//w9to7HKdLIktuIkzG+KXSXjg7AgL0O+APYUa5yS4OH3SiK3mNJDWC8iVecx8oowHTsKhVNnkP0Q6A+JUmZ1msjLL1hWEFMDRqM1g7shWhtz+SCxN0Zcf+L1dzA+Zq8umP8xMBDEzaAZEQK74vRYKdrr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pf/YFNdf; arc=none smtp.client-ip=209.85.160.73
+	 To:Cc:Content-Type; b=D4P5JMdEFzfWcYtfSXyVB4r0Bg2po0HMGCuwuj9WpDzuc4ZDE0fZBB72RrcCfLUggyDAIRzHC2wb+grtQgSgjGRI311nfuiN8QAzcIMe7CChMJEEnPKh0nzidHCtInRPf+SiAzEO11bI15ZzxAsU7RZd5MbW2kd/GqLbDfU2bms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mzv98nda; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pf/YFNdf"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e922a13d49so1066259fac.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:49:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mzv98nda"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2362e130be8so11813505ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:49:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749757791; x=1750362591; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749757789; x=1750362589; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tnqUhIyewIO5q6Zf7WHC0dqAJTno3LzWwwCSTFeopTU=;
-        b=pf/YFNdf2TFfW8W83c3aYcwSTXRNJDv3IiR1eZN/O2v4IhP+nduHsTIIyYMUuRTEBQ
-         0IHtnZIGAAKux6EsiAibo7Cx7EYjgY2hW19ApTWr9sn1hmhtenpfCoWbT+rXVAsheCU7
-         7GfvmlwA/SfzF5b51VFFHPn1E33Cq+K6UQSS6ucoIwhqhuz5VL76DQCRyVg6/WwZYT8Q
-         dX3fYRTqPHiLyGcqugEZmhsexeL6pDyeWaliA/BnGop2PbFqgA26kFnVWOi54n/YRWDt
-         8BzJe4GVKAyx5wHSnsLuCM/VoxDOfageIEzL1R8Zg4lyIxsitBO9cUUbTYxbPZIDVnsb
-         XtOA==
+        bh=CMS8RaOBfbTI0bE4f4YZc13pYHrZ07AfQzpRmzcnsGg=;
+        b=Mzv98nda/DQZhtE2tTTwiRWOoxE/JMPye1u/9w2xVMerL3k7U31gRQ7WPI5jN62jSm
+         WH5gkM3l9lVy1B+8vCeGDnYxGs41CIaq4n6FmSewfnbkgyhnBvmcqIJ1F+v8CWltRWUL
+         sKYSaA2ftdTdEXtjrrEOrGuR8ZvhbR6vK3ujhGy6zzb0lipZgxyk+uLDRorDDhRaDRm1
+         l4YJLR/Dnur4SxWXAMkGeQH9aoKznojoPerzRoZokORTkp7X/fMJWrF49F6ZNfb1JrzO
+         Il+41Gx394+mIq2Qs9PbnK/4fz7TDpLfprA4FiH7ADLXa9eShHXrzYmUWN9uF9B/0VGe
+         +CbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749757791; x=1750362591;
+        d=1e100.net; s=20230601; t=1749757789; x=1750362589;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tnqUhIyewIO5q6Zf7WHC0dqAJTno3LzWwwCSTFeopTU=;
-        b=kr4/o9aRqPpJuYCZE04Z9LoFI6dEMJF5GdQBprLn4+AifMYzCdX/Iv9HT7HaEevuVh
-         X6ohB0XrEME1Wq382rtUVcKinAsyQKwIR8OMrsy0wE8nWlipDKG9eXgvTHEUPJshPufj
-         /HkFDGgUNcAksLnSHT85cO8L+oDzQZowtl5yo1fCMV3FPUt0jJI+vx2Jz5w/kJBvNafk
-         mK9T7DiYCP4p5oTnrnWMTSjPZC5Mcjj5Ma6QY05YdfKLsoK7D4sfGI9lChqMVbYWCoGJ
-         QGJKtydskrnFOwZN9TuMNtebPDX+3zBIzTQsk4PoQ1usw6qrxMCCCML/HFuX/pJsWoKT
-         2GXw==
-X-Forwarded-Encrypted: i=1; AJvYcCViWKxjJ/Y5m/Qtmocsi6XkSezieoXcT6aTBg3gDAqwpTZlS0CoQN1r6eXQD0ymgchScCPziUooBijOaik=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq0ycDdxdJ91DQya9gOSAQaqXGhkuKlrPBZOnTFYuwE6Vuw3qb
-	KESqadu+9Yiof7o5+Ra6pgXQ2b+DAAysbrBreiQ+KlRx04xqDau7rpQz4KxcxEhTg6zmS54qkB7
-	jV3UdycCZ8y2hPWJcoT9irw==
-X-Google-Smtp-Source: AGHT+IFNTXR/9UID8W6zRYCP3OwhC3x1U++y9rRlwJYFwQhSIGl+YEKkxpm2xUoLbRLXAHqqMRE3zncdhPzwhCzN
-X-Received: from oabqw11.prod.google.com ([2002:a05:6870:6f0b:b0:2d9:841d:6155])
+        bh=CMS8RaOBfbTI0bE4f4YZc13pYHrZ07AfQzpRmzcnsGg=;
+        b=syJgBJAqZ3DLq7QpIBNcTNzJDzjFBPf1Wcn7S24veHijTI4B3HHGqisDY/qvoQZJqe
+         xNjKaRMT0hJgKHRdtFtTekWhgSMEV7hBRsl+HwYIkeicvgb02edRtblHcB/r2+8OHEKl
+         Z3kvuTGbqBm/ujeKB6wcMGkXxasteyJF6bV04BU6foaRUnLIg49DUKbLBi8eFwjE3I51
+         Dl3+M4FPG4v5ow1Yf2axF62VGoaEsxL36g2vrgxGyfpfXnoPJz8q0uW3GpcoMnqLnVad
+         FmT4t1y5kMeuEb5L0KyyGlvTVVHRodjqnAQAJb7hYY/A91Ajk6wlTWThsj5/xf1MgiIQ
+         nKZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjRbKK+qcQw2FZ4TuwShYtctixyokepapTflgIWegzOIAl7X/uWdN0wo0jEJ2+wI7cDM4MMiCVNIipUtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1VYBRuXUMSgwXoUMKaxLAqGQso2ahwARfsioCO6015q+ddRmZ
+	ctrNg89F6Tp9z1mKsXrFzWxxB27r5JhvoKYfMFCEKgH3GibxKSDBuz/mWdItPJfdZ3lCzeXhTyg
+	ruZfKFzw8kZpgQtMKrvSxGA==
+X-Google-Smtp-Source: AGHT+IGijBJNdMzlmqcrnuW61J+eMb7bY/1t6JzudPAqfBJ4Jq8Dm1Qx+hCW1yYkPQ17bT9aX+jWCEUm1c6CuFer
+X-Received: from plbmm15.prod.google.com ([2002:a17:903:a0f:b0:234:9673:1d13])
  (user=blakejones job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6871:4002:b0:2b8:e4b9:47a3 with SMTP id 586e51a60fabf-2ead509b590mr228640fac.22.1749757791440;
- Thu, 12 Jun 2025 12:49:51 -0700 (PDT)
-Date: Thu, 12 Jun 2025 12:49:39 -0700
+ 2002:a17:902:f689:b0:235:ea0d:ae21 with SMTP id d9443c01a7336-2365dc09ad7mr4825965ad.35.1749757789645;
+ Thu, 12 Jun 2025 12:49:49 -0700 (PDT)
+Date: Thu, 12 Jun 2025 12:49:38 -0700
 In-Reply-To: <20250612194939.162730-1-blakejones@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250612194939.162730-1-blakejones@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250612194939.162730-6-blakejones@google.com>
-Subject: [PATCH v4 5/5] perf: add test for PERF_RECORD_BPF_METADATA collection
+Message-ID: <20250612194939.162730-5-blakejones@google.com>
+Subject: [PATCH v4 4/5] perf: display the new PERF_RECORD_BPF_METADATA event
 From: Blake Jones <blakejones@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
@@ -81,142 +81,251 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Blake Jones <blakejones@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This is an end-to-end test for the PERF_RECORD_BPF_METADATA support.
-It adds a new "bpf_metadata_perf_version" variable to perf's BPF programs,
-so that when they are loaded, there will be at least one BPF program with
-some metadata to parse. The test invokes "perf record" in a way that loads
-one of those BPF programs, and then sifts through the output to find its
-BPF metadata.
+Here's some example "perf script -D" output for the new event type. The
+": unhandled!" message is from tool.c, analogous to other behavior there.
+I've elided some rows with all NUL characters for brevity, and I wrapped
+one of the >75-column lines to fit in the commit guidelines.
+
+0x50fc8@perf.data [0x260]: event: 84
+.
+. ... raw event: size 608 bytes
+.  0000:  54 00 00 00 00 00 60 02 62 70 66 5f 70 72 6f 67  T.....`.bpf_prog
+.  0010:  5f 31 65 30 61 32 65 33 36 36 65 35 36 66 31 61  _1e0a2e366e56f1a
+.  0020:  32 5f 70 65 72 66 5f 73 61 6d 70 6c 65 5f 66 69  2_perf_sample_fi
+.  0030:  6c 74 65 72 00 00 00 00 00 00 00 00 00 00 00 00  lter............
+.  0040:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[...]
+.  0110:  74 65 73 74 5f 76 61 6c 75 65 00 00 00 00 00 00  test_value......
+.  0120:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[...]
+.  0150:  34 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00  42..............
+.  0160:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[...]
+
+0 0x50fc8 [0x260]: PERF_RECORD_BPF_METADATA \
+      prog bpf_prog_1e0a2e366e56f1a2_perf_sample_filter
+  entry 0:           test_value = 42
+: unhandled!
 
 Signed-off-by: Blake Jones <blakejones@google.com>
 ---
- tools/perf/Makefile.perf                    |  3 +-
- tools/perf/tests/shell/test_bpf_metadata.sh | 76 +++++++++++++++++++++
- tools/perf/util/bpf_skel/perf_version.h     | 17 +++++
- 3 files changed, 95 insertions(+), 1 deletion(-)
- create mode 100755 tools/perf/tests/shell/test_bpf_metadata.sh
- create mode 100644 tools/perf/util/bpf_skel/perf_version.h
+ tools/perf/builtin-inject.c |  1 +
+ tools/perf/builtin-script.c | 15 +++++++++++++--
+ tools/perf/util/event.c     | 21 +++++++++++++++++++++
+ tools/perf/util/event.h     |  1 +
+ tools/perf/util/session.c   |  4 ++++
+ tools/perf/util/tool.c      | 14 ++++++++++++++
+ tools/perf/util/tool.h      |  3 ++-
+ 7 files changed, 56 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d4c7031b01a7..4f292edeca5a 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1250,8 +1250,9 @@ else
- 	$(Q)cp "$(VMLINUX_H)" $@
- endif
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 11e49cafa3af..b15eac0716f7 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -2530,6 +2530,7 @@ int cmd_inject(int argc, const char **argv)
+ 	inject.tool.finished_init	= perf_event__repipe_op2_synth;
+ 	inject.tool.compressed		= perf_event__repipe_op4_synth;
+ 	inject.tool.auxtrace		= perf_event__repipe_auxtrace;
++	inject.tool.bpf_metadata	= perf_event__repipe_op2_synth;
+ 	inject.tool.dont_split_sample_group = true;
+ 	inject.session = __perf_session__new(&data, &inject.tool,
+ 					     /*trace_event_repipe=*/inject.output.is_pipe);
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 6c3bf74dd78c..4001e621b6cb 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -38,6 +38,7 @@
+ #include "print_insn.h"
+ #include "archinsn.h"
+ #include <linux/bitmap.h>
++#include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/stringify.h>
+ #include <linux/time64.h>
+@@ -50,6 +51,7 @@
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <signal.h>
++#include <stdio.h>
+ #include <sys/param.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -2755,6 +2757,14 @@ process_bpf_events(const struct perf_tool *tool __maybe_unused,
+ 			   sample->tid);
+ }
  
--$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h | $(SKEL_TMP_OUT)
-+$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(OUTPUT)PERF-VERSION-FILE util/bpf_skel/perf_version.h $(LIBBPF) $(SKEL_OUT)/vmlinux.h | $(SKEL_TMP_OUT)
- 	$(QUIET_CLANG)$(CLANG) -g -O2 --target=bpf $(CLANG_OPTIONS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
-+	  -include $(OUTPUT)PERF-VERSION-FILE -include util/bpf_skel/perf_version.h \
- 	  -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
++static int
++process_bpf_metadata_event(struct perf_session *session __maybe_unused,
++			   union perf_event *event)
++{
++	perf_event__fprintf(event, NULL, stdout);
++	return 0;
++}
++
+ static int process_text_poke_events(const struct perf_tool *tool,
+ 				    union perf_event *event,
+ 				    struct perf_sample *sample,
+@@ -2877,8 +2887,9 @@ static int __cmd_script(struct perf_script *script)
+ 		script->tool.finished_round = process_finished_round_event;
+ 	}
+ 	if (script->show_bpf_events) {
+-		script->tool.ksymbol = process_bpf_events;
+-		script->tool.bpf     = process_bpf_events;
++		script->tool.ksymbol	  = process_bpf_events;
++		script->tool.bpf	  = process_bpf_events;
++		script->tool.bpf_metadata = process_bpf_metadata_event;
+ 	}
+ 	if (script->show_text_poke_events) {
+ 		script->tool.ksymbol   = process_bpf_events;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 7544a3104e21..14b0d3689137 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -1,9 +1,12 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <inttypes.h>
++#include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <perf/cpumap.h>
++#include <perf/event.h>
++#include <stdio.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+@@ -78,6 +81,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_COMPRESSED]		= "COMPRESSED",
+ 	[PERF_RECORD_FINISHED_INIT]		= "FINISHED_INIT",
+ 	[PERF_RECORD_COMPRESSED2]		= "COMPRESSED2",
++	[PERF_RECORD_BPF_METADATA]		= "BPF_METADATA",
+ };
  
- $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o | $(BPFTOOL)
-diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tests/shell/test_bpf_metadata.sh
-new file mode 100755
-index 000000000000..11df592fb661
---- /dev/null
-+++ b/tools/perf/tests/shell/test_bpf_metadata.sh
-@@ -0,0 +1,76 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# BPF metadata collection test.
+ const char *perf_event__name(unsigned int id)
+@@ -505,6 +509,20 @@ size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp)
+ 		       event->bpf.type, event->bpf.flags, event->bpf.id);
+ }
+ 
++size_t perf_event__fprintf_bpf_metadata(union perf_event *event, FILE *fp)
++{
++	struct perf_record_bpf_metadata *metadata = &event->bpf_metadata;
++	size_t ret;
 +
-+set -e
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+cleanup() {
-+	rm -f "${perfdata}"
-+	rm -f "${perfdata}".old
-+	trap - EXIT TERM INT
++	ret = fprintf(fp, " prog %s\n", metadata->prog_name);
++	for (__u32 i = 0; i < metadata->nr_entries; i++) {
++		ret += fprintf(fp, "  entry %d: %20s = %s\n", i,
++			       metadata->entries[i].key,
++			       metadata->entries[i].value);
++	}
++	return ret;
 +}
 +
-+trap_cleanup() {
-+	cleanup
-+	exit 1
+ static int text_poke_printer(enum binary_printer_ops op, unsigned int val,
+ 			     void *extra, FILE *fp)
+ {
+@@ -602,6 +620,9 @@ size_t perf_event__fprintf(union perf_event *event, struct machine *machine, FIL
+ 	case PERF_RECORD_AUX_OUTPUT_HW_ID:
+ 		ret += perf_event__fprintf_aux_output_hw_id(event, fp);
+ 		break;
++	case PERF_RECORD_BPF_METADATA:
++		ret += perf_event__fprintf_bpf_metadata(event, fp);
++		break;
+ 	default:
+ 		ret += fprintf(fp, "\n");
+ 	}
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 664bf39567ce..67ad4a2014bc 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -370,6 +370,7 @@ size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp);
++size_t perf_event__fprintf_bpf_metadata(union perf_event *event, FILE *fp);
+ size_t perf_event__fprintf_text_poke(union perf_event *event, struct machine *machine,FILE *fp);
+ size_t perf_event__fprintf(union perf_event *event, struct machine *machine, FILE *fp);
+ 
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index a320672c264e..38075059086c 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -12,6 +12,7 @@
+ #include <sys/types.h>
+ #include <sys/mman.h>
+ #include <perf/cpumap.h>
++#include <perf/event.h>
+ 
+ #include "map_symbol.h"
+ #include "branch.h"
+@@ -1491,6 +1492,9 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 	case PERF_RECORD_FINISHED_INIT:
+ 		err = tool->finished_init(session, event);
+ 		break;
++	case PERF_RECORD_BPF_METADATA:
++		err = tool->bpf_metadata(session, event);
++		break;
+ 	default:
+ 		err = -EINVAL;
+ 		break;
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+index 37bd8ac63b01..204ec03071bc 100644
+--- a/tools/perf/util/tool.c
++++ b/tools/perf/util/tool.c
+@@ -1,12 +1,15 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "data.h"
+ #include "debug.h"
++#include "event.h"
+ #include "header.h"
+ #include "session.h"
+ #include "stat.h"
+ #include "tool.h"
+ #include "tsc.h"
++#include <linux/compiler.h>
+ #include <sys/mman.h>
++#include <stddef.h>
+ #include <unistd.h>
+ 
+ #ifdef HAVE_ZSTD_SUPPORT
+@@ -237,6 +240,16 @@ static int perf_session__process_compressed_event_stub(struct perf_session *sess
+ 	return 0;
+ }
+ 
++static int perf_event__process_bpf_metadata_stub(struct perf_session *perf_session __maybe_unused,
++						 union perf_event *event)
++{
++	if (dump_trace)
++		perf_event__fprintf_bpf_metadata(event, stdout);
++
++	dump_printf(": unhandled!\n");
++	return 0;
 +}
-+trap trap_cleanup EXIT TERM INT
 +
-+test_bpf_metadata() {
-+	echo "Checking BPF metadata collection"
-+
-+	if ! perf check -q feature libbpf-strings ; then
-+		echo "Basic BPF metadata test [skipping - not supported]"
-+		err=0
-+		return
-+	fi
-+
-+	# This is a basic invocation of perf record
-+	# that invokes the perf_sample_filter BPF program.
-+	if ! perf record -e task-clock --filter 'ip > 0' \
-+			 -o "${perfdata}" sleep 1 2> /dev/null
-+	then
-+		echo "Basic BPF metadata test [Failed record]"
-+		err=1
-+		return
-+	fi
-+
-+	# The BPF programs that ship with "perf" all have the following
-+	# variable defined at compile time:
-+	#
-+	#   const char bpf_metadata_perf_version[] SEC(".rodata") = <...>;
-+	#
-+	# This invocation looks for a PERF_RECORD_BPF_METADATA event,
-+	# and checks that its content contains the string given by
-+	# "perf version".
-+	VERS=$(perf version | awk '{print $NF}')
-+	if ! perf script --show-bpf-events -i "${perfdata}" | awk '
-+		/PERF_RECORD_BPF_METADATA.*perf_sample_filter/ {
-+			header = 1;
-+		}
-+		/^ *entry/ {
-+			if (header) { header = 0; entry = 1; }
-+		}
-+		$0 !~ /^ *entry/ {
-+			entry = 0;
-+		}
-+		/perf_version/ {
-+			if (entry) print $NF;
-+		}
-+	' | egrep "$VERS" > /dev/null
-+	then
-+		echo "Basic BPF metadata test [Failed invalid output]"
-+		err=1
-+		return
-+	fi
-+	echo "Basic BPF metadata test [Success]"
-+}
-+
-+test_bpf_metadata
-+
-+cleanup
-+exit $err
-diff --git a/tools/perf/util/bpf_skel/perf_version.h b/tools/perf/util/bpf_skel/perf_version.h
-new file mode 100644
-index 000000000000..1ed5b2e59bf5
---- /dev/null
-+++ b/tools/perf/util/bpf_skel/perf_version.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+
-+#ifndef __PERF_VERSION_H__
-+#define __PERF_VERSION_H__
-+
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+
-+/*
-+ * This is used by tests/shell/record_bpf_metadata.sh
-+ * to verify that BPF metadata generation works.
-+ *
-+ * PERF_VERSION is defined by a build rule at compile time.
-+ */
-+const char bpf_metadata_perf_version[] SEC(".rodata") = PERF_VERSION;
-+
-+#endif /* __PERF_VERSION_H__ */
+ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
+ {
+ 	tool->ordered_events = ordered_events;
+@@ -293,6 +306,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
+ 	tool->compressed = perf_session__process_compressed_event_stub;
+ #endif
+ 	tool->finished_init = process_event_op2_stub;
++	tool->bpf_metadata = perf_event__process_bpf_metadata_stub;
+ }
+ 
+ bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index db1c7642b0d1..18b76ff0f26a 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -77,7 +77,8 @@ struct perf_tool {
+ 			stat,
+ 			stat_round,
+ 			feature,
+-			finished_init;
++			finished_init,
++			bpf_metadata;
+ 	event_op4	compressed;
+ 	event_op3	auxtrace;
+ 	bool		ordered_events;
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
