@@ -1,118 +1,142 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E66A22173D;
-	Thu, 12 Jun 2025 12:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749730432; cv=pass; b=Rd2fIAk05JAkSjP0pqHEk6nH0uUzuE6ecpfju5UDEvTjC5paFmvajDr68Lk/ibFt/X8tuXqrGEeFBTu9R1JjGvES5gI1Nr/ZLK6lPq0h8sAPSK9iPWclIE4g7qQ1zXm3zTFfFJ6sq3jWiNiHAvg0Jl9kWjCZjM5fRSxh7NvmrJw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749730432; c=relaxed/simple;
-	bh=3+9AwwnLhWYVtqxFc3MJrxrd1rEgNw2S8GK3LM7JSMs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rpSXfXXjOQqmaJ4ALhYTi0QlDE3IdZB+0M3EzszGND5umm9vTU9S9TQX6cyylCiYZ/D2SrytF7C7OfH6Jp7o8ovJSMo/FT0LXoPaRyLaSHe9Jr0O+9Xa5+wS9RnAGbWwt7dE0+67iKd9twf7Cd9UCzY8az2masQ2w3itRADWFAg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=d+RkCAVL; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF53422173D
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749730443; cv=none; b=Dl1A5TquR29L/Uz37DxhtKOwDVYyRibmanivWIqHDmt7j5a3lFB7fMJP2pkl1Ou2V7ox7w8QXMIAKM1zcTB7uEsbFHOM/K80RBuRBGSHAb+xZqT3XmxDKKqydV0pSCODPNhGuG678Hll54BhtJqqqCsNajaxi3aYmw0EW5nS4A0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749730443; c=relaxed/simple;
+	bh=EH0s1Pm3IFLOMzDcQLbRoq5Njn1Q4NNObx8IgbEOXA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JxHwYg0b2ZztnBLMOzxyD230u8Hf68zUJ5ClH/ovJDtzOpYv/ZW4dqi7UAJrpuciQmvS9cDV3WAylRhU5+C5ZLOhyoCtO8TdBWAcFHRjAyU3GyMD4R1zpMYx2Qw0DKBwQZ6Ej2xdxoz2X1VxvmUshwx9YSZdsLzQR1FJzB6gSHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GblwlS/J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e2PTDUO1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=su6Ru5rB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9qaCMp9g; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="d+RkCAVL"
-ARC-Seal: i=1; a=rsa-sha256; t=1749730388; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=JmJQM+jRvKt3sfgWkyOX4HaeWFVmPbVAO8KKw41WsufLNG+hkfi3klar7FzBKqa0rb+LNIFbWFaE/9rwZE+W7v1Grghsny1FiPBo8dhL0YYtuBgOKYn7PojELsZdUPV8SeUsJhRonIaMm6EpPFZjyhQI9cEn3U0UtqxZhgtXQTA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749730388; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=xHyHeKSFmeGChzEgnyhjfuWXXlgy/EN/udP8iYeBM9Y=; 
-	b=Ib9ekT7AwMRUYhGvgD9uKKP6GelvUKk6hJUYqrrJ6CRYajukgppFIPL0voa2jIlyrM90yRs02e71g334VJGyTiT4sOp+9d15BoOjXB4WPx6gOIKEO9sIp8l/KeAt2GUT/6cyZP0MsYHZ28SMss613cMocZObIwa/2LKTP+cGTrc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749730388;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=xHyHeKSFmeGChzEgnyhjfuWXXlgy/EN/udP8iYeBM9Y=;
-	b=d+RkCAVL7ZCghwxV5Eux+3bXYGhO6sl4hXL7ifOJnCTCeQn2zHcqD5oCqiGsg2z4
-	wY20o06EDmfS5LlTr/thtEU5z02fLNUC06JV0yXduO/kai1CtJB7ziqGHNeofc9ov2u
-	xQGtnTc+H1+LtJ9QDY6+Br9AGt45A8vIQDGO5a8A=
-Received: by mx.zohomail.com with SMTPS id 1749730386061466.0088473265579;
-	Thu, 12 Jun 2025 05:13:06 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Sandy Huang <hjc@rock-chips.com>,
- Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
- Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-rockchip@lists.infradead.org
-Cc: kernel@collabora.com, Andy Yan <andyshrk@163.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Subject: Re: [PATCH 0/3] arm64: dts: rockchip: Fix HDMI output on RK3576
-Date: Thu, 12 Jun 2025 14:13:00 +0200
-Message-ID: <3011644.e9J7NaK4W3@workhorse>
-In-Reply-To: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
-References: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GblwlS/J";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e2PTDUO1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="su6Ru5rB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9qaCMp9g"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0F7652193C;
+	Thu, 12 Jun 2025 12:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749730440; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=igqigvRNjdpiGj091yZDoYG9R3yOYk9WpBChKBlsbF4=;
+	b=GblwlS/J79a405opJXvwzo1rzQH+49MkVzSn7sFw9crJm8cETsZPAZZvwrwh3M+AT2UiFW
+	QKIk6lYRU5T4eJXFk10TkoZVigBlSBBOAWQksCxM56gEVHqYXjlPwQ3X55HB+7UYylteNf
+	7bUz0vx7eOjy9BWKLuucb+hRJLJiXo8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749730440;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=igqigvRNjdpiGj091yZDoYG9R3yOYk9WpBChKBlsbF4=;
+	b=e2PTDUO1PCpz1eIiyr4KInG7UPyNX/hhW2d926JAC1Cp0HyFVHB2nlYQijy8KIQSwYJRZq
+	xp3UMyqp0s8uJ5BA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749730439; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=igqigvRNjdpiGj091yZDoYG9R3yOYk9WpBChKBlsbF4=;
+	b=su6Ru5rBuVDe8e8USTus+8/FW0C3mwhw5wEjer9AqQ4YSkApysFX4FdRFN6vscjkfsfvNt
+	OcZGajUA6VSiNmchDgVavZPL3oyRbhb1fjIcISddpPKuog0KnoeIrEa/LPMF1LXqHWSwV+
+	ksadfgrD5pODxr2LaBD+gGnUIFj/AvU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749730439;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=igqigvRNjdpiGj091yZDoYG9R3yOYk9WpBChKBlsbF4=;
+	b=9qaCMp9g+13w4iccW4v1/P5hNJwYu/0yptYO6cNDHn3ohR2QQKY+1+BQP91HE5qElozVpl
+	7/J7+jF3q5OYslCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B32F9132D8;
+	Thu, 12 Jun 2025 12:13:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nJOpKIXESmhTcgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 12 Jun 2025 12:13:57 +0000
+Date: Thu, 12 Jun 2025 13:13:52 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com, ryan.roberts@arm.com, 
+	mingo@kernel.org, libang.li@antgroup.com, maobibo@loongson.cn, 
+	zhengqi.arch@bytedance.com, baohua@kernel.org, anshuman.khandual@arm.com, 
+	willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com, 
+	baolin.wang@linux.alibaba.com, ziy@nvidia.com, hughd@google.com
+Subject: Re: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
+Message-ID: <jnv4n23bydfkn6kz4cpgtkrryfme2zjybp2frc2v734gnn32zj@3oboohu3bqiy>
+References: <20250610035043.75448-1-dev.jain@arm.com>
+ <20250610035043.75448-3-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610035043.75448-3-dev.jain@arm.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,oracle.com,suse.cz,google.com,kvack.org,vger.kernel.org,redhat.com,arm.com,kernel.org,antgroup.com,loongson.cn,bytedance.com,infradead.org,gmail.com,os.amperecomputing.com,linux.alibaba.com,nvidia.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Wednesday, 11 June 2025 23:47:46 Central European Summer Time Cristian Ciocaltea wrote:
-> Since commit c871a311edf0 ("phy: rockchip: samsung-hdptx: Setup TMDS
-> char rate via phy_configure_opts_hdmi"), the workaround of passing the
-> PHY rate from DW HDMI QP bridge driver via phy_set_bus_width() became
-> partially broken, unless the rate adjustment is done as with RK3588,
-> i.e. by CCF from VOP2.
+On Tue, Jun 10, 2025 at 09:20:43AM +0530, Dev Jain wrote:
+> Use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
+> are painted with the contig bit, then ptep_get() will iterate through all 16
+> entries to collect a/d bits. Hence this optimization will result in a 16x
+> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
+> will eventually call contpte_try_unfold() on every contig block, thus
+> flushing the TLB for the complete large folio range. Instead, use
+> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
+> do them on the starting and ending contig block.
 > 
-> Attempting to fix this up at PHY level would not only introduce
-> additional hacks, but it would also fail to adequately resolve the
-> display issues that are a consequence of the system CRU limitations.
+> For split folios, there will be no pte batching; nr_ptes will be 1. For
+> pagetable splitting, the ptes will still point to the same large folio;
+> for arm64, this results in the optimization described above, and for other
+> arches (including the general case), a minor improvement is expected due to
+> a reduction in the number of function calls.
 > 
-> Therefore, let's proceed with the solution already implemented for
-> RK3588, that is to make use of the HDMI PHY PLL as a more accurate DCLK
-> source in VOP2.
-> 
-> It's worth noting a follow-up patch is going to drop the hack from the
-> bridge driver altogether, while switching to HDMI PHY configuration API
-> for setting up the TMDS character rate.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> ---
-> Cristian Ciocaltea (3):
->       dt-bindings: display: vop2: Add optional PLL clock property for rk3576
->       arm64: dts: rockchip: Enable HDMI PHY clk provider on rk3576
->       arm64: dts: rockchip: Add HDMI PHY PLL clock source to VOP2 on rk3576
-> 
->  .../bindings/display/rockchip/rockchip-vop2.yaml   | 56 +++++++++++++++++-----
->  arch/arm64/boot/dts/rockchip/rk3576.dtsi           |  7 ++-
->  2 files changed, 49 insertions(+), 14 deletions(-)
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250611-rk3576-hdmitx-fix-e030fbdb0d17
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
 
-For the whole series:
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-
-This fixes HDMI output for 4K resolutions on my RK3576 ArmSoM Sige5.
-The DTB checks and bindings checks pass as well.
-
-Kind regards,
-Nicolas Frattaroli
-
-
+-- 
+Pedro
