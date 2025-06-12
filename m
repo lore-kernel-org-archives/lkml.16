@@ -1,283 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA5624678F;
-	Thu, 12 Jun 2025 13:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5DD232395
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735720; cv=none; b=ISewZUYEvjsaNQLHw8kUYNxeB73Erl9kQE+Vfe26g5uU2vu/3FfNiDDMZfxcffZVOlr7tyjalt1zTOYduDbXceeEuRtDJnlVXxZozUU0jA29TMBPVLHmNOopvIPsSDaqOhGctaCJ+5+/XeBGMAXpboPX1yQrKuyyyK8byhpYGso=
+	t=1749735783; cv=none; b=JB/27lspT3HicPQhSTWfYQOeIPckGEjEuYeO05+5/unsI+t05EUYX0cmPw3b337vkeFQS/FydeqL3DytHKcVB3UBNO8Q1gBdObwUJ1JsTs2RLCW9MlTBfpyYuW842kf6ZlyODWkfMfuzGsZQjKGhGWQBJ7bg/k0vsIEU7gUqdw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735720; c=relaxed/simple;
-	bh=1Zk5g4c16Y0HV+ODTr1tmXBR2FFrktQueKOUyeJhRoE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Bi4E2YydGLrcIDa6WicVCDbZ9MF5gX1+QoXqNP4pHK5fH31RqeR33qNqLJCG4OpxK1owyN6dA0mJVWsfdCiJFu0DoMhE6jYbwQ82GKQQkz6zqLJHBToJxmIX00pAnSez9o723MxDLRjzkHXvphS1AhlgQwrfsZ0/cZIPOKHPsjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkQNwO45; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749735783; c=relaxed/simple;
+	bh=HRpqT7CJV7R2st3zI4o7FNVJez0Nudlxgr5nBNYBoBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TdVQohUsrSmZ5auaS73WBG/PczX3442nLUGdflbs9gWBmF9Yl1743qBVK/NXK8Aac71LTWJJn42b5e4sJRuA/Y34xR1Oy8ybzAhIng65AgSX4Gnk7c775swFonL4HpWrccJI2pOxyhNIvb6/gJ/l7k4sHJKvfm89mneca5pljno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=JCJMTve4; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkQNwO45"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78DF5C4CEEA;
-	Thu, 12 Jun 2025 13:41:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749735720;
-	bh=1Zk5g4c16Y0HV+ODTr1tmXBR2FFrktQueKOUyeJhRoE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=AkQNwO45AjGclUDSyhcIjBeG0N+juuS207LArNb59QRcFmmgYp1Mf8uSYvlJlow/0
-	 Q0lHeB5wVMdYliuNKAAp3lCN0fNC/klogrbwXYb2YuQhRNU41g97KdIDlGGwyrrWQH
-	 Ltsq2gu/1h1qyGnyQidznRAe/AxBftV6UCEYxtR+GOauKExtLcE2vGcDHCmnPtHGlk
-	 uttn4QlPg8gChCLHkIi/bL0jt0Zrl6T2tx0SEwiP1EHvPKJvR2kvV+D0ACMfZRoKQ2
-	 WEddRxM3+3DuEmrVmdxdWz4efQnb0qoGrtEQ837H3fM9LYZ7x0xAjwZeIDXg+ezStN
-	 DBWUpFRS02IBQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Thu, 12 Jun 2025 15:40:02 +0200
-Subject: [PATCH v13 1/6] rust: str: add radix prefixed integer parsing
- functions
+	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="JCJMTve4"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a54700a46eso850011f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1749735780; x=1750340580; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RevJ/gQJI0kAeinOh0Aa3oPwiioNpsblb8GshgA5Dxc=;
+        b=JCJMTve4YZC6+meQzgDEurJ9Htnxxx3huFAicKrwiR6GuL5oC18mLYu+DNhtk8hNmT
+         JyWqlY/iQvJ9v0b6RZnevkOw9iRYn+IAwzKX2xX7TF7YfGYzbD9u8pf80Al77ZyL+etu
+         xiCyPU+C1u2qOmUXZc6FMXSJmWut+/jmjeyNExYFm54e0jGHOH8VDF9eHuEQV6uyR6jq
+         ZGX5JFEj9ZcuE+uAoh4OUicSqwsVzdKaYGFw70VKFphfbu+H7uSrufLSWTQvWryzkdQs
+         HeI2+/I0lJ222k+ACTIWvIvga7dCC+hK/wihIOT3r3bu+glW1OVWdxTTdLgDgAaXZsyc
+         /zRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749735780; x=1750340580;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RevJ/gQJI0kAeinOh0Aa3oPwiioNpsblb8GshgA5Dxc=;
+        b=D6pF+b386YBVRvKIhlDuidpUUHDH4/aQaaFN1pml04Hv/thrrexF3LyCtAVb3x8Gvp
+         quGObxvCQXCfHrgFvxGKKZ6ACwJtQLQED3dSO6kyXn3KHlbp6hwINfHK7kOWpzRVxflR
+         WuUUe8cgzzKUm7PgxIYlSU6+i/XLETJRKn+yIe88fptumqMvfk+jrjqJdyYIqhyTMn3D
+         IMHx/MGrsBwn+v4zmj8TL+wjocVAVOioETdyBAir0jZSEUS5E0LimeDfuwlYSazMI0pL
+         SKRIEW6fHxBmvL+1g3muiyvT6w3l56+c8RGdQbZTIy0P9OS5N7Nn4NEQ5IQlkWMjQZ7v
+         CveQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUu7cyW67Mwwbu6d4bxAU8ZmkQkciLbqoJYpPKZoMuUZUEDB2NuhiJFU3MKSPTr9Kui70ZQU/2taVbfxcc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7+TCA2zYvau9aI+jMW5iV+wrXCUVdgVdwtWCDcLHR3omFLYMP
+	4rZNGQfr/dVjzvvW1KAXUKKbkGUkjJXrsVM9zOtbgIUfpb0BsGvXOyjjZc/723+u2ek=
+X-Gm-Gg: ASbGncsQc+xy3v5l9Ii6KTSY7ITxK5r1AzaO+9YD/lFUvp4OXD1MgCwTrMXif6Oc+3v
+	iUUcJ2YLb3/VqFFFaGKHtLa6RqWbpfPrns+TobspiivpvQYxeLfuYSWQT3Lr6pM4X1y0EWYK/HE
+	QlxPRaQtzscRjAwbxbZqpu4NZBtJxKOaX2p9EPJ0zCYd6jSBqK4LR8laIhBjKLKL7SegjTID+u9
+	AOiEDdB5MBJVMEsBbHISw2A5c86A80h/pY5LseecFJtR7s6GtdZqZLtrSugpNInKDnUXr143mO3
+	EE8oOj1GfC1opMxdr7LKNmjv0FveZ6tUD+misAKALJqBJA43EQqn54y97cnqur5UjjmEBJtBezG
+	l1g==
+X-Google-Smtp-Source: AGHT+IEuZZtThnI3hRXhwGPGYckc2m1iLnp3XfZhUwE/EycL2TcAHPJ73SFA2Bwg27KVkfdd3IkJrA==
+X-Received: by 2002:a05:6000:4305:b0:3a5:1266:3e96 with SMTP id ffacd0b85a97d-3a558695737mr6259408f8f.15.1749735779860;
+        Thu, 12 Jun 2025 06:42:59 -0700 (PDT)
+Received: from MacBook-Air.local ([5.100.243.24])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a56199a02csm2063211f8f.34.2025.06.12.06.42.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 06:42:59 -0700 (PDT)
+Date: Thu, 12 Jun 2025 16:42:56 +0300
+From: Joe Damato <joe@dama.to>
+To: Shannon Nelson <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, brett.creeley@amd.com
+Subject: Re: [PATCH net-next 2/3] ionic: clean dbpage in de-init
+Message-ID: <aErZYDQsHPbvfpqZ@MacBook-Air.local>
+Mail-Followup-To: Joe Damato <joe@dama.to>,
+	Shannon Nelson <shannon.nelson@amd.com>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, brett.creeley@amd.com
+References: <20250609214644.64851-1-shannon.nelson@amd.com>
+ <20250609214644.64851-3-shannon.nelson@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-module-params-v3-v13-1-bc219cd1a3f8@kernel.org>
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
-In-Reply-To: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
- Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
- Benno Lossin <lossin@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Trevor Gross <tmgross@umich.edu>, 
- Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
- Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- linux-modules@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7428; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=1Zk5g4c16Y0HV+ODTr1tmXBR2FFrktQueKOUyeJhRoE=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoSti2h5MQjr8bdVGbxH+6TaWLZpN63COs78haP
- paQ8whrZ/yJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaErYtgAKCRDhuBo+eShj
- dwWFEACxCR5MqlEOysO50ToQYRiW/Fn4Zzh2S3FkmxKp7/dxGJ8/rNB9LLtsYJH32DzIQQpGl+v
- GG3ZzD6dnPQfZ1MefbBrxZYuFUqN+SN5qKXPK5kpg9c1APfIJAJ+wc/lGXh5YMYwtQ/L8TSR8/h
- Hv7gqbKd2RHGuJNQ36uHGm8cUB1hkWFWjPoJOqX0Qfls50Xvt0yhYLf8tdc7enEmzO83W6YI2YD
- FEypOh7/jNi3QMZQEYrjgZSheeOyDHKwcFMrV/usjVBJPQRVCndfjhINknMnDZqanWTrTgZVe3D
- lHENkgB023+CkR44R7P1yxHULZurGO2jfL8oHKQxEBVj64xbcbIXiUVDApI28R29/UQtltAOADQ
- jWT38noiM6TQjf5gfXkE+wg8MjCUhAiLQTWWNUwuNvdBd5OMDSQSA/JNgLIME14cX5MwH+yaAMv
- fjr0Va1Bn/6jCIP9Ih8Zs22LtLXam5GEM0RoLIA7mT2RoVEnshyrZg+K5Y2ESd6ugmlUPVGU1SF
- jz+MedZfAozt/WZaWu6Zv2M0eCcVUnAPEyGfSpIw3/52ebWDm7SbjHpM5h38de2COZUZzn6mIZ2
- ou6SUGL+8RVB8pnmYztX8EZWrXdh94g25BOOXEXL3TWp914Ii9N7gWnSRcT0NQ8U7qzQqY6STqf
- 3/Z+4888pNa2G4g==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609214644.64851-3-shannon.nelson@amd.com>
 
-Add the trait `ParseInt` for parsing string representations of integers
-where the string representations are optionally prefixed by a radix
-specifier. Implement the trait for the primitive integer types.
+On Mon, Jun 09, 2025 at 02:46:43PM -0700, Shannon Nelson wrote:
+> Since the kern_dbpage gets set up in ionic_lif_init() and that
+> function's error path will clean it if needed, the kern_dbpage
+> on teardown should be cleaned in ionic_lif_deinit(), not in
+> ionic_lif_free().  As it is currently we get a double call
+> to iounmap() on kern_dbpage if the PCI ionic fails setting up
+> the lif.  One example of this is when firmware isn't responding
+> to AdminQ requests and ionic's first AdminQ call fails to
+> setup the NotifyQ.
+> 
+> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
+> ---
+>  drivers/net/ethernet/pensando/ionic/ionic_lif.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> index 7707a9e53c43..48cb5d30b5f6 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> @@ -3526,10 +3526,6 @@ void ionic_lif_free(struct ionic_lif *lif)
+>  	lif->info = NULL;
+>  	lif->info_pa = 0;
+>  
+> -	/* unmap doorbell page */
+> -	ionic_bus_unmap_dbpage(lif->ionic, lif->kern_dbpage);
+> -	lif->kern_dbpage = NULL;
+> -
+>  	mutex_destroy(&lif->config_lock);
+>  	mutex_destroy(&lif->queue_lock);
+>  
+> @@ -3555,6 +3551,9 @@ void ionic_lif_deinit(struct ionic_lif *lif)
+>  	ionic_lif_qcq_deinit(lif, lif->notifyqcq);
+>  	ionic_lif_qcq_deinit(lif, lif->adminqcq);
+>  
+> +	ionic_bus_unmap_dbpage(lif->ionic, lif->kern_dbpage);
+> +	lif->kern_dbpage = NULL;
+> +
 
-Tested-by: Daniel Gomez <da.gomez@samsung.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/kernel/str.rs           |   2 +
- rust/kernel/str/parse_int.rs | 171 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 173 insertions(+)
+Seems fine to me; my only minor nit that you can probably ignore is that the
+code to unmap the page and set kern_dbpage to NULL is repeated, as you
+mentioned, in ionic_lif_init's error path. Not sure if it's worth adding a
+wrapper to avoid the repetition.
 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index a927db8e079c..2b6c8b4a0ae4 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -8,6 +8,8 @@
- 
- use crate::prelude::*;
- 
-+pub mod parse_int;
-+
- /// Byte string without UTF-8 validity guarantee.
- #[repr(transparent)]
- pub struct BStr([u8]);
-diff --git a/rust/kernel/str/parse_int.rs b/rust/kernel/str/parse_int.rs
-new file mode 100644
-index 000000000000..0754490aec4b
---- /dev/null
-+++ b/rust/kernel/str/parse_int.rs
-@@ -0,0 +1,171 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Integer parsing functions.
-+//!
-+//! Integer parsing functions for parsing signed and unsigned integers
-+//! potentially prefixed with `0x`, `0o`, or `0b`.
-+
-+use crate::prelude::*;
-+use crate::str::BStr;
-+use core::ops::Deref;
-+
-+// Make `FromStrRadix` a public type with a private name. This seals
-+// `ParseInt`, that is, prevents downstream users from implementing the
-+// trait.
-+mod private {
-+    use crate::str::BStr;
-+
-+    /// Trait that allows parsing a [`&BStr`] to an integer with a radix.
-+    ///
-+    /// # Safety
-+    ///
-+    /// The member functions of this trait must be implemented according to
-+    /// their documentation.
-+    ///
-+    /// [`&BStr`]: kernel::str::BStr
-+    // This is required because the `from_str_radix` function on the primitive
-+    // integer types is not part of any trait.
-+    pub unsafe trait FromStrRadix: Sized {
-+        /// The minimum value this integer type can assume.
-+        const MIN: Self;
-+
-+        /// Parse `src` to [`Self`] using radix `radix`.
-+        fn from_str_radix(src: &BStr, radix: u32) -> Result<Self, crate::error::Error>;
-+
-+        /// Return the absolute value of [`Self::MIN`].
-+        fn abs_min() -> u64;
-+
-+        /// Perform bitwise 2's complement on `self`.
-+        ///
-+        /// Note: This function does not make sense for unsigned integers.
-+        fn complement(self) -> Self;
-+    }
-+}
-+
-+/// Extract the radix from an integer literal optionally prefixed with
-+/// one of `0x`, `0X`, `0o`, `0O`, `0b`, `0B`, `0`.
-+fn strip_radix(src: &BStr) -> (u32, &BStr) {
-+    match src.deref() {
-+        [b'0', b'x' | b'X', rest @ ..] => (16, rest.as_ref()),
-+        [b'0', b'o' | b'O', rest @ ..] => (8, rest.as_ref()),
-+        [b'0', b'b' | b'B', rest @ ..] => (2, rest.as_ref()),
-+        // NOTE: We are including the leading zero to be able to parse
-+        // literal `0` here. If we removed it as a radix prefix, we would
-+        // not be able to parse `0`.
-+        [b'0', ..] => (8, src),
-+        _ => (10, src),
-+    }
-+}
-+
-+/// Trait for parsing string representations of integers.
-+///
-+/// Strings beginning with `0x`, `0o`, or `0b` are parsed as hex, octal, or
-+/// binary respectively. Strings beginning with `0` otherwise are parsed as
-+/// octal. Anything else is parsed as decimal. A leading `+` or `-` is also
-+/// permitted. Any string parsed by [`kstrtol()`] or [`kstrtoul()`] will be
-+/// successfully parsed.
-+///
-+/// [`kstrtol()`]: https://docs.kernel.org/core-api/kernel-api.html#c.kstrtol
-+/// [`kstrtoul()`]: https://docs.kernel.org/core-api/kernel-api.html#c.kstrtoul
-+///
-+/// # Examples
-+///
-+/// ```
-+/// # use kernel::str::parse_int::ParseInt;
-+/// # use kernel::b_str;
-+///
-+/// assert_eq!(Ok(0u8), u8::from_str(b_str!("0")));
-+///
-+/// assert_eq!(Ok(0xa2u8), u8::from_str(b_str!("0xa2")));
-+/// assert_eq!(Ok(-0xa2i32), i32::from_str(b_str!("-0xa2")));
-+///
-+/// assert_eq!(Ok(-0o57i8), i8::from_str(b_str!("-0o57")));
-+/// assert_eq!(Ok(0o57i8), i8::from_str(b_str!("057")));
-+///
-+/// assert_eq!(Ok(0b1001i16), i16::from_str(b_str!("0b1001")));
-+/// assert_eq!(Ok(-0b1001i16), i16::from_str(b_str!("-0b1001")));
-+///
-+/// assert_eq!(Ok(127i8), i8::from_str(b_str!("127")));
-+/// assert!(i8::from_str(b_str!("128")).is_err());
-+/// assert_eq!(Ok(-128i8), i8::from_str(b_str!("-128")));
-+/// assert!(i8::from_str(b_str!("-129")).is_err());
-+/// assert_eq!(Ok(255u8), u8::from_str(b_str!("255")));
-+/// assert!(u8::from_str(b_str!("256")).is_err());
-+/// ```
-+pub trait ParseInt: private::FromStrRadix + TryFrom<u64> {
-+    /// Parse a string according to the description in [`Self`].
-+    fn from_str(src: &BStr) -> Result<Self> {
-+        match src.deref() {
-+            [b'-', rest @ ..] => {
-+                let (radix, digits) = strip_radix(rest.as_ref());
-+                // 2's complement values range from -2^(b-1) to 2^(b-1)-1.
-+                // So if we want to parse negative numbers as positive and
-+                // later multiply by -1, we have to parse into a larger
-+                // integer. We choose `u64` as sufficiently large.
-+                //
-+                // NOTE: 128 bit integers are not available on all
-+                // platforms, hence the choice of 64 bits.
-+                let val =
-+                    u64::from_str_radix(core::str::from_utf8(digits).map_err(|_| EINVAL)?, radix)
-+                        .map_err(|_| EINVAL)?;
-+
-+                if val > Self::abs_min() {
-+                    return Err(EINVAL);
-+                }
-+
-+                if val == Self::abs_min() {
-+                    return Ok(Self::MIN);
-+                }
-+
-+                // SAFETY: We checked that `val` will fit in `Self` above.
-+                let val: Self = unsafe { val.try_into().unwrap_unchecked() };
-+
-+                Ok(val.complement())
-+            }
-+            _ => {
-+                let (radix, digits) = strip_radix(src);
-+                Self::from_str_radix(digits, radix).map_err(|_| EINVAL)
-+            }
-+        }
-+    }
-+}
-+
-+macro_rules! impl_parse_int {
-+    ($ty:ty) => {
-+        // SAFETY: We implement the trait according to the documentation.
-+        unsafe impl private::FromStrRadix for $ty {
-+            const MIN: Self = <$ty>::MIN;
-+
-+            fn from_str_radix(src: &BStr, radix: u32) -> Result<Self, crate::error::Error> {
-+                <$ty>::from_str_radix(core::str::from_utf8(src).map_err(|_| EINVAL)?, radix)
-+                    .map_err(|_| EINVAL)
-+            }
-+
-+            fn abs_min() -> u64 {
-+                #[allow(unused_comparisons)]
-+                if Self::MIN < 0 {
-+                    1u64 << (Self::BITS - 1)
-+                } else {
-+                    0
-+                }
-+            }
-+
-+            fn complement(self) -> Self {
-+                (!self).wrapping_add((1 as $ty))
-+            }
-+        }
-+
-+        impl ParseInt for $ty {}
-+    };
-+}
-+
-+impl_parse_int!(i8);
-+impl_parse_int!(u8);
-+impl_parse_int!(i16);
-+impl_parse_int!(u16);
-+impl_parse_int!(i32);
-+impl_parse_int!(u32);
-+impl_parse_int!(i64);
-+impl_parse_int!(u64);
-+impl_parse_int!(isize);
-+impl_parse_int!(usize);
+In either case:
 
--- 
-2.47.2
-
-
+Reviewed-by: Joe Damato <joe@dama.to>
