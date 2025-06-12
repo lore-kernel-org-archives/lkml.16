@@ -1,86 +1,91 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F192045948;
-	Thu, 12 Jun 2025 19:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F8929898B;
+	Thu, 12 Jun 2025 19:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749755344; cv=none; b=uMz6cx3ybdpmCxRhcbeupojjjPqh2GnBNhiQTbg5FSxg2da/C/cDBcoGWnbfsn9SNzvj3bZZtbXe8oE6qFGs9fniqhv7n3MJ/bLtLccOONoA2wPeiEe2kNHYLvG9rTG+qBnwpTG+EaHBZseOA8XyxfpWx0ayg/AdLkWqCDLSESI=
+	t=1749755422; cv=none; b=OkRe7CWvlTnHhIV6o6yFLrElAjj1x6HeLE7RRGj9st27jTp8UujfAD+GZEYmNlRPw2pQc02qsZyuIrH8kv0LHIIWvNV1wh/APjQt18epCU8JYZXjyXcApVqr4dbRBqFUZFvsMS4CPTR6CsxhlVe/YyViDKs4q6xKfQYs9nnw44o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749755344; c=relaxed/simple;
-	bh=iC0yP7AhS8twBlgK7SnCgKyhjgUwHbU1BlzBDNwWN0w=;
+	s=arc-20240116; t=1749755422; c=relaxed/simple;
+	bh=BQ0TV5Stz/vWyyu62ZhSbJbmlu58TvJYqNpEEOYBVC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X7r7AbN4YjRilSOuV3d/QlG1kd2S/NZCNipwmbpUG9msw/I0tOa2G+UAcG7bFAr+Yn6IhYUAriHaifaCvCKXYzc+TXxsDhxVFG8EGFKKoQ2/xAFFInwB/2Eq6p6GAGSp0T+vzCQOXF38LiYk9+R/YgGpbIFdaazRUp4QTFxvkJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=2DdGMCY/; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=e90xr5c+oLFWYE99NwvIP3ohDbuG29+KN4rVNb29U5msZTnlg83ow2E8+n7pxxEWAcPD3MbACxHx43zD7D6TA9igbw63eIxVT04W+D13+X2una8wVC7Ru4bDAcNHc6wIuBp+Cs0Jr8fSmfG02rJkbQ7dRX25g4S/pcpOW1frKWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GkZqj9zZ; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2DdGMCY/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=U0UHRZVFR/9o1BtZeDpkFOYGrW0/3kxtp0aIw6uYvBY=; b=2DdGMCY/Cmy+VC5+/1czoZCXwX
-	OlxZReGzj+bxOuaZXkgBDZrb3ccbqYemF5q+lgf/TFl+gC5MGNjNPxSKZWBSsh1u6tXQFprca/pM2
-	qq32uiR7T4l57K4w7SEePztfoxdtwPDhIAasxSLOe0zhxNJHyCzvSg9HCEmjYin5vlIE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uPnHg-00FaEs-Pw; Thu, 12 Jun 2025 21:08:20 +0200
-Date: Thu, 12 Jun 2025 21:08:20 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaehoon Chung <jh80.chung@samsung.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GkZqj9zZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749755422; x=1781291422;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BQ0TV5Stz/vWyyu62ZhSbJbmlu58TvJYqNpEEOYBVC0=;
+  b=GkZqj9zZAh6+L9J73XsL+f0yQ35oiUsyVJz4Sx+w62ysjQ8JyaCoJ1mV
+   ETts5XFckit8gA1w5G0bsoyEY2p6uB3G6LiqUOmQwuMOllbYR4m8dwXqr
+   KClqbKO/FuU5hLG7Q6TCXcMQ612q+p/PBJ5KHeM4qhMiOgFWb7xejuvsJ
+   AnWosiPvaq2YYUsx15liZEWOgj/H6m7WGNbbnlR55tt9u4qo6WA/6ot1g
+   G/axo7vVzhQ0LWFFupKzZEIN+oXGAvPM0wnQO8+t74P7r5oYeIMyioBSM
+   WbtWgpy5SrDPfHvzUdgDdr1S2XR7VuyvxbQ9U2D3mxFeg4Ah2JSlMo+aV
+   g==;
+X-CSE-ConnectionGUID: GFSTUfQdQBOH8IzSqSP2AA==
+X-CSE-MsgGUID: LNJq3U4kRu6TIEeQd3hu9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="52093210"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="52093210"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 12:10:21 -0700
+X-CSE-ConnectionGUID: e9iD3O3SS36bVUZFVNkguw==
+X-CSE-MsgGUID: lSBa5jyTT9mJ70WAU7t4XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="184852801"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 12:10:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uPnJQ-000000061me-0q0g;
+	Thu, 12 Jun 2025 22:10:08 +0300
+Date: Thu, 12 Jun 2025 22:10:07 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	David Lechner <dlechner@baylibre.com>,
+	linux-rockchip@lists.infradead.org,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Heiko Stuebner <heiko@sntech.de>,
-	Shreeya Patel <shreeya.patel@collabora.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sandy Huang <hjc@rock-chips.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Qin Jian <qinjian@cqplus1.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, kernel@collabora.com,
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+	Francesco Dolcini <francesco@dolcini.it>,
+	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>,
+	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
+	kernel@pengutronix.de, Oleksij Rempel <o.rempel@pengutronix.de>,
+	Roan van Dijk <roan@protonic.nl>,
+	Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+	Jacopo Mondi <jacopo@jmondi.org>,
+	Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+	Mudit Sharma <muditsharma.info@gmail.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	=?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+	Andreas Klinger <ak@it-klinger.de>,
+	Petre Rodan <petre.rodan@subdimension.ro>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org,
-	linux-sound@vger.kernel.org, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH 15/20] net: stmmac: dwmac-rk: switch to HWORD_UPDATE macro
-Message-ID: <5947475f-ef38-44cb-857e-0c7378023ccd@lunn.ch>
-References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
- <20250612-byeword-update-v1-15-f4afb8f6313f@collabora.com>
+	linux-mediatek@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 00/28] iio: zero init stack with { } instead of memset()
+Message-ID: <aEsmDyc44P8amm5p@smile.fi.intel.com>
+References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
+ <aEqbQPvz0FsLXt0Z@duo.ucw.cz>
+ <2243943.irdbgypaU6@workhorse>
+ <aEsiTy++yKGe1p9W@duo.ucw.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,29 +94,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612-byeword-update-v1-15-f4afb8f6313f@collabora.com>
+In-Reply-To: <aEsiTy++yKGe1p9W@duo.ucw.cz>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Jun 12, 2025 at 08:56:17PM +0200, Nicolas Frattaroli wrote:
-> The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-> drivers that use constant masks.
+On Thu, Jun 12, 2025 at 08:54:07PM +0200, Pavel Machek wrote:
+> > On Thursday, 12 June 2025 11:17:52 Central European Summer Time Pavel Machek wrote:
+> > > 
+> > > > Jonathan mentioned recently that he would like to get away from using
+> > > > memset() to zero-initialize stack memory in the IIO subsystem. And we
+> > > > have it on good authority that initializing a struct or array with = { }
+> > > > is the preferred way to do this in the kernel [1]. So here is a series
+> > > > to take care of that.
+> > > 
+> > > 1) Is it worth the churn?
+> > > 
+> > > 2) Will this fail to initialize padding with some obscure compiler?
+> > 
+> > as of right now, the only two C compilers that are supported are
+> > GCC >= 8.1, and Clang >= 13.0.1. If anyone even manages to get the
+> > kernel
 > 
-> Like many other Rockchip drivers, dwmac-rk has its own HIWORD_UPDATE
-> macro. Its semantics allow us to redefine it as a wrapper to the shared
-> bitfield.h HWORD_UPDATE macros though.
+> Well... I'm pretty sure parts of this would make it into -stable as a
+> dependency, or because AUTOSEL decides it is a bugfix. So..
 > 
-> Replace the implementation of this driver's very own HIWORD_UPDATE macro
-> with an instance of HWORD_UPDATE from bitfield.h. This keeps the diff
-> easily reviewable, while giving us more compile-time error checking.
-> 
-> The related GRF_BIT macro is left alone for now; any attempt to rework
-> the code to not use its own solution here would likely end up harder to
-> review and less pretty for the time being.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> GNU C                  4.9              gcc --version
+> Clang/LLVM (optional)  10.0.1           clang --version
 
-Please split this out into a patch for net-next. Also, Russell King
-has just posted a number of patches for this driver, so you will
-probably want to wait for them to be merged, so you post something
-which will merged without any fuzz.
+Even though, what the kernel versions are you referring to? I am sure there
+plenty of cases with {} there.
 
-	Andrew
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
