@@ -1,182 +1,154 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C68B2D6626;
-	Thu, 12 Jun 2025 20:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7AF2D541E
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758710; cv=none; b=BCEqVfkcKhcYbd5fUuSN2XmfzME2zVMVV3mNpU62427nu8sPnco0Qj/morh5NdQYX5bpdzmNqs9miR03WdSkyHPsVNbRrBjheBbJJV6B6JtLGjR94gU+9uLlvwdz3pLiozWEYgHLIZJ9TtLnQQAFJH+zEX29hCaq2iiWtOwYeOs=
+	t=1749758758; cv=none; b=ktGQSrzFQStuUcq+hb8IrTI4F7yYFUE0eIjvCJEsMEz1E1H0tYLr/eFKf1qtWpqeQ9YdZycfAn6+JEvFyfiI2W3DR8iuKBOOYdOUcsAm61JBugtJOi1yZ0cXseZkxYyAVfxC50Xvrb8dY9Hfox7AwtvpBHH6N0cUsuM4qywo+NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758710; c=relaxed/simple;
-	bh=fD/NnX816hgjKube9yvfb+JWWN6f4VcImV0sIZEIMeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=klM4lao1jd3yKpPuYKq7qQIfV6E3nCuj+HvZuc/5ZU9qTOH/pfp25OPNSjjV5gNxhN3OfKIpuJP5zPgWvTUThukAnfm1smd1S8e2XKZx3N0Jc02KvSAnVskjx3CLaLdYKl/FqmRPi86/hCZJzm4m+LVBBb3oyN0EF++GP+0Sk1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0d9AOEA; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749758758; c=relaxed/simple;
+	bh=Re2CW7co8R/M5Q8rcFGXf3tlF1UXLdad4cNsqa8bUlE=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=Yauv+BrFYGkBXE89iwDyEeaG0w4ukI8kRy2qBhCjCOUAjhsyL89qcf6wKGn+B+MJysP8c6CgtTSkfvGYZ8QhmAYEiTAzZnYpUaVYEY00LBgA52eklILryaYIgkijzAMUbP2wkwuvdw5prnFSVbFTlf1hX0SRFCZZrdIKPZoqEhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=SuEck5h2; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0d9AOEA"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d38b84984dso210859685a.0;
-        Thu, 12 Jun 2025 13:05:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="SuEck5h2"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7486ca9d396so1072210b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749758708; x=1750363508; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/v8Wi9pmLbzK2fVR/8wTPHTfFlRGupAggALw4VZWcDE=;
-        b=G0d9AOEAACmauQ22y8hkW79aTKoUuThVoKelZUVjnDs7zu+yYfMpouqd1kOGjpav+p
-         hRc1er93aBk6gYJuMcLg1lBFMIq7rkWhvT8+Uycglntwhjo81oTPh8jQYWgp5oO37GBt
-         usDIDtwxRwji1Gzo/3r0AbSIb1sxjGcGGA72T6tHXIEzh3vh/DC71D6qzf+/BHeVaFeT
-         Dlac8Lu7q4InsFtj6O3X9tV8ltZgq11QR3NsFfPqNY6WAHtUTBZSS1WwRgn34zUqwTw/
-         A/BQwBmf4h8R5NQPI9bQUf+MUksGj760RYTJkHOTkDKipO3ojxqjqkeBsJbjfLuSxCeK
-         tTbw==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749758756; x=1750363556; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=af51BBEYY6aGbebFxLHnn8CgVDycQQJsTeT80Jnf6RE=;
+        b=SuEck5h23rl7A5mmW4xg7DLt2XBObgIo3T382/kq7tOIlySjncTfm8aFMBmKDM4plj
+         O5988OetrYvtpdzphTccnjwX727gzen3anbo64aq1r9rwH9dXW5lp2U3qErGYtgsA2FR
+         fJnuilMynnhg3ctpKYGVWrhWSgI5BDZOjpPQQF4OzDUNvSchDUWRAf1dAsuet2OTu2A0
+         ZT3jdEbvOYzguvlnG+2O0XfnvjfdKMDPxRr28SAzMw+tAHf6SEAVBv6HMDL3t/V5Dyij
+         01EHMRJPoN8vIcnGQHavsw5uAxG0fdUKYV5YE0jvTuqGeIBqdg+/RATirgUonqK3ojn4
+         K0Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749758708; x=1750363508;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/v8Wi9pmLbzK2fVR/8wTPHTfFlRGupAggALw4VZWcDE=;
-        b=K9ARBx7gocsj0/UhcGWJt/bE7GyrDYwbHPpYCC1PuCPNJbZ63Vf6+EAe0bjHwH0xwN
-         g15Ekzw+Q99ZDF4KqKJw/0Oo0mBheXG1ltExkd/wBRt5uuw3FTvecrSIZccpRWoi1jEx
-         2DIegh0+pCRea7tE/azfDYj1GMYHgGslMk+dFOqttSGyVJP49Cq91gllX3ZfCzZef4cl
-         DhhlvXhgR3ZerJLmbvLB9yO+pxmMh9LsRhQmR+yDen5c6iEp/e3spKX3EwCfMwBL0wzO
-         XMPgloJNj4+8oeOyoZMRHHxddxIE1mu2tRfoklP5lJ9wCsts0YzXDYj1wp+xBWRw9mDn
-         7jXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUmjxAuAZV2OGfM0ylujzF7LSreWcIYisux/Vk7LIuwC+25Mv/3QtGUyBPEIbjRxzo9U2RfvJdI5K9pqVfLjQ=@vger.kernel.org, AJvYcCXW669PTUFj+joLUQo91sy2Ej1k+Wiep0ZVlRGjIQYlpo40yPz9qjJdsVlu5BK1T9N9myBnKOi5ZYGFfPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVFjoc1qDigbq6cdNneGbHzsy7Qs5dprRzuMyU0qOxL2eEz2yw
-	D1+G43o/n7Q2bBZY2o1s8eJiyGJA2QCmNHG1hJXvoatmgfAE8Rln2xWd
-X-Gm-Gg: ASbGncvD3cuNpd3rlMZgpUNaIUxyg5e5/t3Jsil/8bsN014OHVzeYMih7ZIT2BqyQT5
-	YZuZLI3u4FKKnFZ7Rg6mIF5Hekj69bD4Qh70TxjKGBDq3H4xCOnZsPCK41SVebXR5hphcT5I6Ol
-	EUoHHCH752t+vUxjtgNXnZosGj8E/lC/FfsWmz6oVQMYf6zIhGmPMpRc7mY6X0Qw9afqdz09VCf
-	Gm4tGiSfEz9HzFBD0ANrmN4xA1jxgsC6Mjziao6z6hmzU/EjGJWJaYn2fEzqujShYLvEWJFBTiH
-	3zRluGUoehYu0aFRACrnQJT4DY0aEfZkkUBX2bCJ8e4hm2V2NjwpKIpiO76S9truwN9un2taFlq
-	H6AqCbT6mUk32LcaivnPOpQDT4mdB+Mo+8/FB7J/rc4Ksb1Dwx2Tg
-X-Google-Smtp-Source: AGHT+IGPvbhYn1lrn4qrmeoqzJFjK9J0A7QGgbiWc7FHysFCIXuha98d9b++ZX/ELwLmeM9pGf4jzg==
-X-Received: by 2002:a05:620a:28c5:b0:7cc:fddb:74d9 with SMTP id af79cd13be357-7d3bc3aa135mr102342385a.22.1749758707841;
-        Thu, 12 Jun 2025 13:05:07 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8e014dcsm78864185a.34.2025.06.12.13.05.06
+        d=1e100.net; s=20230601; t=1749758756; x=1750363556;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=af51BBEYY6aGbebFxLHnn8CgVDycQQJsTeT80Jnf6RE=;
+        b=cCzBhNFB+e2C0LfScZwm6KF3oIs5rUnBr/u1H2jK7PkKqKosrUJj0L6prB6p64ft6g
+         Gk7voEUyWRm6w3Dg+rNFRMomBxGH4Gu7bxoAxnxfZ2AzLdedLeJ/qH+ITknnmx2y/q3p
+         Ttdia8yd38Nkg8dxEkJBZX8MUjbbgxtDZpQuvGkZf5kMZqdIbPteoZllEDCgcjpUy9T8
+         NYZ4FE77ZcA5rkTocEVmxgRab85VurEzwMVCq8bihadXG9jD8paKIp30ipCDXXRIZGpD
+         RJ/Yopwp99/FGkhAYbal8LQgxsyMzpsKWu7lVHMpZ110PFlfgj/xaKcHqguPWUVvEtes
+         OBLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMGbuaP/QvbfWUT2sG2WkUsvz5upSmoQehOZaLziAFbeIoPTdzedMOYmIPcmNEIJCSDh9Ez/HxyBilz+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJpZpSGc40TqShN+Df4meisXQdR/6KHKO23X6ezO9zvITkpQZ7
+	wdeh7W4HMZ/5yc531K0HdTVEMdLTkX1HCRjV0djhgqG8EIw428cohghKkNIUQ6kzpO8=
+X-Gm-Gg: ASbGnct8aciiPi++8p6dDAUQeU3cZznBpLChBCnvCVuv1UlD6rokL+60k1+GylQE0A2
+	u3eu3m+ucmQR3sesDgxn8wNyHPqAL/m5RmaNRw2lIha85bJKEQcQzlH4Y9ST/qyKcZgWsYjHerK
+	SWTF7tx2iuqJLEeDSlj2/HgQT9dwkTn2fOhTyqZ1ss2ubrdzyy3061yM6JuKCxmszR4KjXuWg63
+	ECl7Zd266Av/GsV+3BGf7NLXSFBcUFC+WgAy4c4336vi5/t7H4QGrbI5dQG9T/kRh+g1xwUF2aO
+	Ek2b5G3Tb7fGa2ICJFN2ATJXIGMzay5G7Qpw8j8RFu4I1EniOrJx+Y+z1/nGYS3vaj9WE7Q=
+X-Google-Smtp-Source: AGHT+IH2RoHWF8PmxJBIXY2wg5rdTqPBQh+vVExjeVE43egm/MogvtvtIhJaxeSLVjk+Z689LqbYIQ==
+X-Received: by 2002:a05:6300:8a05:b0:21f:5adb:52c4 with SMTP id adf61e73a8af0-21fad02d0c2mr253713637.30.1749758755672;
+        Thu, 12 Jun 2025 13:05:55 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:500::7:116a])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-748900063f6sm140856b3a.64.2025.06.12.13.05.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 13:05:07 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A02B01200069;
-	Thu, 12 Jun 2025 16:05:06 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Thu, 12 Jun 2025 16:05:06 -0400
-X-ME-Sender: <xms:8jJLaDKg1c-9WrSx28hWxxjLGRPk-oC9LXUQXrH7iYPsPfmRxfKG6g>
-    <xme:8jJLaHI98L03KajeyCOFSEhjpbfFLEDSLmvOCQZ0RfDaBO4JoiHAt_1ovxTbHdkCD
-    8foDAuobfUGm_rjtQ>
-X-ME-Received: <xmr:8jJLaLvt9i59zBXEyTt_YbiW5XQE0leVQffWjB_jhVQ7AWkwHLZNU40kESA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheelkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
-    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
-    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
-    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedvhedpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhhuhgssggrrhgusehnvhhiughirgdrtg
-    homhdprhgtphhtthhopegrtghouhhrsghothesnhhvihguihgrrdgtohhmpdhrtghpthht
-    ohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnh
-    horhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgv
-    thdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprh
-    gtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    rghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhrohhssh
-    esuhhmihgthhdrvgguuh
-X-ME-Proxy: <xmx:8jJLaMamAHDz7-udyNIXaRAnQ5xED8QoPEp7Vi9OM1U-oarB-YAKnQ>
-    <xmx:8jJLaKaq6PRdbPepVJaW_bsaSLlxn2oAo5ggiqXbd9brNEG7wnkirA>
-    <xmx:8jJLaABpUBZ_vC7o5pmrsbmXztk0Mv4neO5_MKsYE9cNAfEfp-lrzw>
-    <xmx:8jJLaIZGMP1bP5oyTJkZ5v-KBjTvfqzJBLQlOLYji6S0FsvmZRB56g>
-    <xmx:8jJLaOo3I22I0K7cjp0hS0Av5MFGXjhucJXIc_y_asDa0_aC3TqKWFek>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Jun 2025 16:05:06 -0400 (EDT)
-Date: Thu, 12 Jun 2025 13:05:05 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Benno Lossin <lossin@kernel.org>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v5 04/23] rust: add new `num` module with `PowerOfTwo`
- type
-Message-ID: <aEsy8XDy6JW8zb6v@tardis.local>
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
- <aErtL6yxLu3Azbsm@tardis.local>
- <f8d9af76-fc1d-4f7a-8dfb-a0606e44c56b@nvidia.com>
+        Thu, 12 Jun 2025 13:05:55 -0700 (PDT)
+Date: Thu, 12 Jun 2025 13:05:55 -0700 (PDT)
+X-Google-Original-Date: Thu, 12 Jun 2025 13:05:52 PDT (-0700)
+Subject:     Re: [PATCH v3 3/3] vdso: Reject absolute relocations during build
+In-Reply-To: <7ddda233-99f7-468b-842d-8469f0a86e77@ghiti.fr>
+CC: thomas.weissschuh@linutronix.de, Paul Walmsley <paul.walmsley@sifive.com>,
+  aou@eecs.berkeley.edu, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com,
+  justinstitt@google.com, luto@kernel.org, tglx@linutronix.de, vincenzo.frascino@arm.com,
+  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Message-ID: <mhng-4BA05CCD-6D5A-4067-B88A-DEBD4FCDED77@palmerdabbelt-mac>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8d9af76-fc1d-4f7a-8dfb-a0606e44c56b@nvidia.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 12, 2025 at 01:00:12PM -0700, John Hubbard wrote:
-> On 6/12/25 8:07 AM, Boqun Feng wrote:
-> > On Thu, Jun 12, 2025 at 11:01:32PM +0900, Alexandre Courbot wrote:
-> ...
-> >> +                #[inline(always)]
-> >> +                pub const fn align_down(self, value: $t) -> $t {
-> > 
-> > I'm late to party, but could we instead implement:
-> > 
-> >     pub const fn round_down<i32>(value: i32, shift: i32) -> i32 {
-> >         value & !((1 << shift) - 1)
-> >     }
-> > 
-> >     pub const fn round_up<i32>(value: i32, shift: i32) -> i32 {
-> >         let mask = (1 << shift) - 1;
-> >         value.wrapping_add(mask) & !mask
-> >     }
-> 
-> Just a naming concern here.
-> 
-> The function name, and the "shift" argument is extremely odd there.
-> And that's because it is re-inventing the concept of align_down()
-> and align_up(), but with a misleading name and a hard to understand
-> "shift" argument.
-> 
-> If you are "rounding" to a power of two, that's normally called
-> alignment, at least in kernel code. And if you are rounding to the
-> nearest...integer, for example, that's rounding.
-> 
-> But "rounding" with a "shift" argument? That's a little too 
-> creative! :) 
-> 
+On Thu, 12 Jun 2025 01:31:20 PDT (-0700), Alexandre Ghiti wrote:
+> Hi Thomas,
+>
+> On 6/11/25 11:22, Thomas Weißschuh wrote:
+>> All vDSO code needs to be completely position independent.
+>> Symbol references are marked as hidden so the compiler emits
+>> PC-relative relocations. However there are cases where the compiler may
+>> still emit absolute relocations, as they are valid in regular PIC DSO code.
+>> These would be resolved by the linker and will break at runtime.
+>> This has been observed on arm64 under some circumstances, see
+>> commit 0c314cda9325 ("arm64: vdso: Work around invalid absolute relocations from GCC")
+>>
+>> Introduce a build-time check for absolute relocations.
+>> The check is done on the object files as the relocations will not exist
+>> anymore in the final DSO. As there is no extension point for the
+>> compilation of each object file, perform the validation in vdso_check.
+>>
+>> Debug information can contain legal absolute relocations and readelf can
+>> not print relocations from the .text section only. Make use of the fact
+>> that all global vDSO symbols follow the naming pattern "vdso_u_".
+>>
+>> Link: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
+>> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120002
+>> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+>> ---
+>>   lib/vdso/Makefile.include | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
+>> index cedbf15f80874d4bb27c097244bc5b11272f261c..04257d0f28c0ed324e31adbb68497181085752f8 100644
+>> --- a/lib/vdso/Makefile.include
+>> +++ b/lib/vdso/Makefile.include
+>> @@ -12,7 +12,13 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrand
+>>   #
+>>   # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
+>>   # dynamic relocations, ignore R_*_NONE.
+>> +#
+>> +# Also validate that no absolute relocations against global symbols are present
+>> +# in the object files.
+>>   quiet_cmd_vdso_check = VDSOCHK $@
+>>         cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
+>>   		       then (echo >&2 "$@: dynamic relocations are not supported"; \
+>> +			     rm -f $@; /bin/false); fi && \
+>> +		       if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q " R_\w*_ABS.*vdso_u_"; \
+>
+>
+> This only works for arm64 relocations right? I can't find any *ABS*
+> relocations in riscv elf abi
+> (https://github.com/riscv-non-isa/riscv-elf-psabi-doc/releases/tag/v1.0).
 
-Oh, sorry, I should have mentioned where I got these names, see
-round_up() and round_down() in include/linux/math.h. But no objection to
-find a better name for "shift".
+That's because the psABI people do not believe in absolute symbols.  
+They exist in the actual toolchains, though, as they are part of the 
+generic ELF ABI.  In theory they'd work fine in the VDSO as long as 
+we're using absolute addressing instructions for them, which is 
+possible to do (and I think should happen for some global symbols).
 
-Regards,
-Boqun
+That said, it doesn't really seem worth the effort to get the checking 
+more fine-grained here.  I don't see any reason we'd need an absolute 
+symbol in the VDSO, so unil someone has one we might as well just forbid 
+them entirely.
 
-> > 
-> > ? It's much harder to pass an invalid alignment with this.
-> 
-> Hopefully we can address argument validation without blowing up
-> the usual naming conventions.
-> 
-> 
-> thanks,
-> -- 
-> John Hubbard
-> 
+Some old toolchains had an absolute "__gloabl_pointer$" floating around 
+some of the CRT files, so we might trip over bugs here.  I think we're 
+safe as those shouldn't show up in the VDSO, but not 100% sure.  
+Probably best to get this on next to bake for a bit, just to make sure 
+we're not trippig anyone up.
+
+> Thanks,
+>
+> Alex
+>
+>
+>> +		       then (echo >&2 "$@: absolute relocations are not supported"; \
+>>   			     rm -f $@; /bin/false); fi
+>>
