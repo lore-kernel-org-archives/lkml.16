@@ -1,133 +1,91 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364F7153598;
-	Thu, 12 Jun 2025 06:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879EC153598
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749708606; cv=none; b=I586AfYb3rdSzNH5E3yxhlSNuv50BIaCLIZ+V6O9DdtriqMzWcn8TgYinPk2Of66+tTDaLXYBJnM7CE67wI3IGtxk7mpUkugeeE1So1U6JDGJAlbJm9NLQV9ejod+tN2+bPjkobMLhQ6pIEI1/DSXQptkkOMBYPWkAy0mri8DFE=
+	t=1749708642; cv=none; b=uRnP+ELCSrHk2Xj+a6JA4vxPPw64YFt+cppKsLRsrxW80iL47uPDKyIOqjoC5LludSVrNY+K1pmdvcuOIhTtmceaapowbh63GOkqhyXNVFMt8OVmOsWM4FMBcWq7TEsAEnYCgAWjZdYymFlY+JT9o/8rxDwLDYl7sQ+pKD6+PLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749708606; c=relaxed/simple;
-	bh=i8PWqD4P60CAuVZ7Gnxu56jRgxjKhfnbhFQBOFOxYPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TRaOQJou+DsaGMgE27k4FPuuvmrXkOs9ucv9X3ssac+KtOjkWuUEix0bOj/EabKjWsQKlu0h369LbxLysl6U4i0ZpubpyYKGPDmIv8iokbVdLX/zYjkA/1zE1/fkfDLDLNoCc0jsWT512ljveG1NBVUTx6yf9lx9a3RD5KIFxhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GS550hFw; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749708642; c=relaxed/simple;
+	bh=A4zc0EMiZ0JUl6RqVV9OyKZA1/ZylTuCgKp6RDdhuI4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fWdORIQpFgnFZW8uUvGylKCh3bjQdtlvTfuyieNHJPauEyHOMcfCYOdnxWeZpTty7PRR7seUlkSjzk41U+HGMmmJN1WKb1/tDGTuZUMRj1dt9GqPNY7k/Xths+Mf/yi1xUc6O68LB3wcqPhLz3PzA2RAQ10SsfgdT8/jn3Qdx7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=QYxji6OC; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GS550hFw"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C3C24250;
-	Thu, 12 Jun 2025 08:09:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749708590;
-	bh=i8PWqD4P60CAuVZ7Gnxu56jRgxjKhfnbhFQBOFOxYPw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GS550hFw+nJb/FK5Nx2uzBtRkHj00NFY09rVTblYEDtONh65dodWEsjEWfQc2fCt6
-	 m353b0o/OgbkJGVPAhAZz8kboB11gVYvUDzCn1m2H952qcLmviH7yeT9EYLqPuflWk
-	 gix4oZKAiG40KM4yp3ssHV/m5O7V4uV6zvGDGDdE=
-Message-ID: <4a682199-1da1-404b-addf-f0afa65d4c08@ideasonboard.com>
-Date: Thu, 12 Jun 2025 09:09:54 +0300
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="QYxji6OC"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d20451c016so32946785a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1749708639; x=1750313439; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=O0GS3Xn45yxp2jYxNXPognaFy6v44TiCH4udWlQ/Naw=;
+        b=QYxji6OC7Ts5695m72aclbyPKpX52oS88+a2m4q0ycO4sAD5iULi/7ysEvXl7QAuuu
+         YnaiHbM8z+42oVrvK5R1g4E8ZmSZeFBuTAZi1oDo00q8Sw48jiXdYmgNNI+9Q98aXvkE
+         UODBjDBdrBxvC25L2X8Y5x0OmU62OCbfvTyOc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749708639; x=1750313439;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O0GS3Xn45yxp2jYxNXPognaFy6v44TiCH4udWlQ/Naw=;
+        b=vTvZ1h74K1UlLNsVpmdPxY1qz6qgmIRU6mO2CO3+9xtbceJZLmo8iaynetaYyXrCho
+         jCM6tdMPC1kvNNW+pcZ6EFXGh3yo/0eN0lyP/aA15Aw6KusogZL7BHFQ0NpHjAxqAM6/
+         bhgiWLK+IJmDgwn7w5fGd/Z6WKgKX/jna13pnyuxK3YmUDXl7jHpifELRDZqlhoyg7Id
+         wHrQTXR6hWR+rs7tzyEpEZWaPR7gmxxe/wvCX1EFCAZH1NSKcGb2SsiVA0OqOPbA8tQo
+         FeS+p1UfVzhh4tMIdzfhY9dStNjRvXnXoByiT2VEuvFdeCsLo+KFinjQaCC7y8JxYqjs
+         QkAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVeJpXA5srx68u1MkfivKam/b4jR2tZwHI5s1WoOpm/oo+/Ri8c9L2szLb3HG7tUJdE5EaUxEmuqUltEbM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWr5ekeSut5+rbqCBxoS7x6XIldNbHiYc3RNYXua0I55AXHEhX
+	NNToMYO1K2MdsmqfNkOOLBmBxfHsBAPa7OzCt/2YHp3KyVgomRLXV9b9tjOFzwSGkqBu+6Ulu0j
+	2wfGo7gGPSHGOr1kr555nU0mZP6n2KtigwZIVF+q2LQ==
+X-Gm-Gg: ASbGncsn3dn8VeMBTqjwA16qjdBjzl6wFUfw2hwKU9o1tQnv4eAZLXThG3Dj+6MgRv6
+	Y9TuzIXptHvTf27F+FYkLDy9D7Vb9zjHBdBGndchou6xLcM/Q5QHlEIT/749LE/sW5MAh34uy9M
+	omh2Wo6pL+zHlmFsdKgWSXedQGOhwH9qEWs6qQ1H0RyK2F
+X-Google-Smtp-Source: AGHT+IG8mJ6hovLPfrGSPVZZU8LTl3WPeV6J9EcHeo13rKs+RbYAbWrMSqN0W1KPVIpUi8ZQ5vNJpJ1Y0zewWcBaRQU=
+X-Received: by 2002:a05:620a:27cf:b0:7d0:984a:d1b4 with SMTP id
+ af79cd13be357-7d3b35ddb5cmr233276985a.17.1749708639529; Wed, 11 Jun 2025
+ 23:10:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/21] pmdomain: Add generic ->sync_state() support to
- genpd
-To: Ulf Hansson <ulf.hansson@linaro.org>,
- Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
- linux-pm@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Michael Grzeschik <m.grzeschik@pengutronix.de>,
- Bjorn Andersson <andersson@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
- Peng Fan <peng.fan@oss.nxp.com>, Johan Hovold <johan@kernel.org>,
- Maulik Shah <maulik.shah@oss.qualcomm.com>,
- Michal Simek <michal.simek@amd.com>, Konrad Dybcio <konradybcio@kernel.org>,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250523134025.75130-1-ulf.hansson@linaro.org>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
- wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
- Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
- eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
- LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
- G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
- DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
- 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
- rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
- Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
- aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
- ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
- PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
- VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
- 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
- uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
- R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
- sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
- Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
- PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
- dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
- qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
- hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
- DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
- KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
- 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
- xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
- UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
- /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
- 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
- 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
- mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
- 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
- suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
- xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
- m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
- CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
- CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
- 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
- ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
- yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
- 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
-In-Reply-To: <20250523134025.75130-1-ulf.hansson@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250611225848.1374929-1-neil@brown.name> <20250611225848.1374929-2-neil@brown.name>
+ <20250611233842.GB1647736@ZenIV>
+In-Reply-To: <20250611233842.GB1647736@ZenIV>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Thu, 12 Jun 2025 08:10:27 +0200
+X-Gm-Features: AX0GCFtntii07X6oZYW-zPG_4E3lufAYRQgLIdh6AS0l6bl-_PMPPzxmVgXFsfY
+Message-ID: <CAJfpeguiOZJ4dZU-mc0V8bwvWoJ-Q0JubYvYPpmr-f8uguF2LQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] VFS: change old_dir and new_dir in struct renamedata
+ to dentrys
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Joel Granados <joel.granados@kernel.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Steve French <smfrench@gmail.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, netfs@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 12 Jun 2025 at 01:38, Al Viro <viro@zeniv.linux.org.uk> wrote:
 
-On 23/05/2025 16:39, Ulf Hansson wrote:
-> Changes in v2:
-> 	- Well, quite a lot as I discovered various problems when doing
-> 	additional testing of corner-case. I suggest re-review from scratch,
-> 	even if I decided to keep some reviewed-by tags.
-> 	- Added patches to allow some drivers that needs to align or opt-out
-> 	from the new common behaviour in genpd.
-> 
-> If a PM domain (genpd) is powered-on during boot, there is probably a good
-> reason for it. Therefore it's known to be a bad idea to allow such genpd to be
-> powered-off before all of its consumer devices have been probed. This series
-> intends to fix this problem.
-> 
-> We have been discussing these issues at LKML and at various Linux-conferences
-> in the past. I have therefore tried to include the people I can recall being
-> involved, but I may have forgotten some (my apologies), feel free to loop them
-> in.
-> 
-> I have tested this with QEMU with a bunch of local test-drivers and DT nodes.
-> Let me know if you want me to share this code too.
-> 
-> Please help review and test!
-> Finally, a big thanks to Saravana for all the support!
+> Umm...  No objections, as long as overlayfs part is correct; it seems
+> to be, but I hadn't checked every chunk there...
 
-For TI AM62A and Xilinx ZynqMP ZCU106:
+Overlayfs parts looks okay too.
 
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+A followup would be nice (e.g. make ovl_cleanup() take a dentry for
+the directory as well, etc) so that there's no need to have local
+variables for both the inode and dentry of the directory.
 
- Tomi
-
+Thanks,
+Miklos
