@@ -1,130 +1,86 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393292288F9;
-	Thu, 12 Jun 2025 23:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799E0238C21;
+	Thu, 12 Jun 2025 23:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771015; cv=none; b=MClsyzYcdOJ5Rb5LIv+dLWu0AnvTm/BxRWSqMwFpxSZHYJ4kLhvgmArIqJ4aBMsYQXO8nPMp5l9XSThIhMgKP0smM8Ls348P1Lxx50MQR6n2y6h2Fjz6Pkja2d6sWdEXneKLQsz/psNLNEX62ZmlmbFGferk+CPCR44cZy8H8aA=
+	t=1749771071; cv=none; b=TwpqjoMRMu7TL0x21LbucIM3mod6pAZdJcWTWZrqq+Mvl2nScgBRTgpj69bPBMbcSutvoophzmpl/VMYzHx8WZK/u1h9VFR7f1LLHmqodOdklPoj0xAEZoqZQiMXFBjUeV4F4Wnmh++Relqfr5kzIkANAYaTxoBXbrbwEHD7Dq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771015; c=relaxed/simple;
-	bh=QBSJJLbkVh/sfY6gCTyV9ImrIqi97ccBxBNjq9Z/JDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tMFomHGs8zC3cplDGFlWZuD6x5Q8jITLINjAl+Tjvqk7L1HIvpJ48WEMu0+qNXFJ6lV9Bc/CpArThfQ6ocoy1zaKl2uMOpz4k0qAbNambRYsBcCVVnWTfI4ioJBhrb+PbhUdN/x8XdKceFY8CEeo/GU6mLx8xhmXVVuKwKsLOlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lkx+8+w6; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749771071; c=relaxed/simple;
+	bh=mU5DXDEL7JdhVFDjam/sn9jho5YjD+GUxxITlSy3FG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vApnmkp+HehpZNVMwXzyJFyS2xOQckQozbJ4Pvs7gon9fBydX8y1AlW+FILGBZiaUbc4vAYVpzyAhRoMFYySkI2tmpdRgy9camWll1biwkB3uoGM1xFlbGV6w7W1nFaWRFQeKlY11f7Xh9o5KmHQ2t91Thk04p8xMyC1unhOlcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7suuKZ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lkx+8+w6"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22c33677183so13794025ad.2;
-        Thu, 12 Jun 2025 16:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749771013; x=1750375813; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QBSJJLbkVh/sfY6gCTyV9ImrIqi97ccBxBNjq9Z/JDc=;
-        b=Lkx+8+w6rWIS0E+JX59ENY5rLUAdGex0kL0o1mCSxcyms7BmnBi+QNAEnFfsluea1M
-         q+I/MUeQhm4vsRPM7g5jfBu82eFM+yc6TXH7RPF5NH3kXaAO03cy6F2uo2AIWfeaE16g
-         shCSvGAyhvMoyH4deJ+yRUTn5hxYiJs5BkqggGnl+0RH084gbtTPOKbrJF48CXflUfbu
-         TgoVPXd9WqvEhpO/qHBbgtG5nY1iGadNZOPKOy/DySkWOrTsU2gJHziJIn8B2QkIhwfI
-         kJEDGPaT5lhTfmsyWLiSHNgtjtO/CZwKH2xWzEhl3uO5e0PPNnNIBvNDUUu9TkiWTN/S
-         eJBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749771013; x=1750375813;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QBSJJLbkVh/sfY6gCTyV9ImrIqi97ccBxBNjq9Z/JDc=;
-        b=kbieJyX4wdA8wLhm8zRAENc5WfT6yeO4rgmcCKdL+xeFLTzGbisMrYxS6kwSn9lozT
-         wPNYrH/82lwrGIqIJLcduaiC0vrS6hoPvzoEOoI75pjpF/R8Qz+6QBFIiHA0j29TpGT4
-         EEk6eoDOtqWj2xqxb73q416S/7okwqpIoeIk/blyg9mIXbVqUTikl8XdWrF7ueGN6/aS
-         aHhm7Yx2jZ2cTjz8tJZ5iDPfY7axKBSQuUuAS9/85jU6RYWtBaH+y597WCbEXe2Q57eR
-         SiGTkq8L3Ggi0h+5cl08Y+QZ0x6gCMrpUvo5kxBjgnGn3h2tHm5TvnaxQgq05ousAm3i
-         XwnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlECxz5WNPWy4Nj4HXRcvNV3XhYKuaB32kd5dtvtN1ZrYvztNF3MGw8L29bEd4Izg2V3McqiS5e4pRi3OrY/xzYvXm@vger.kernel.org, AJvYcCUxoeZ3uHPqmqyg6fy/bxIu4r9Il7Suf9WCA4uibHoh3kuOvtJUoCzpkgOOxd1lxU8iJa8=@vger.kernel.org, AJvYcCXGtiqMWrnUYV72P7cvy5svnm9G4s54IqW5IMkJOTFfhJMtJ/HHZ+xOyGLtzpiQGiQ2UtF0nf1Ztm39NkzX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHRDeeUywZC/MzoEt53FCGGn1BEaxaZizvNTNOZlhTBG2Exxxl
-	yKQxu8C5SI/AxftK9bwo/bw338al7Ua6Sn9TFgO0YLCJzSLLyRNqjA5/56V+r1tzYjN6Dee9Cgo
-	TWoPWpm5RgV8TPdLnJXGYqWtPTEowlkQ=
-X-Gm-Gg: ASbGncv7ACjYo3i1Qvp55G2qjzTohUglVe8avOpZUMwHMI6hn388YEvuogn6ipGrlfs
-	h59tvG6OvsfGMwvMwbConMZigOfx0Aw5QUWbksl5F7ZmMeLe2xI1Fz3LLAhNM17LvcEV5Kt1wRw
-	VJP34melZP+uXavFVakuSngK2pCI6ng7kjSlN0nIqDeYY9NBxjuZBM4phg9uk=
-X-Google-Smtp-Source: AGHT+IEYqGdJqUNKIdRsB/HowX/im2B1kRSmkiEERPQ8iHBOmhhPb1gDj9rbaiZ0boo+XCSoL/M95mhC7FQ31TcKubA=
-X-Received: by 2002:a17:902:d584:b0:235:129e:f640 with SMTP id
- d9443c01a7336-2365dc0a93fmr11974605ad.38.1749771013448; Thu, 12 Jun 2025
- 16:30:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7suuKZ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6457AC4CEEA;
+	Thu, 12 Jun 2025 23:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749771071;
+	bh=mU5DXDEL7JdhVFDjam/sn9jho5YjD+GUxxITlSy3FG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k7suuKZ9oZ5wCRHKONiv/gjZWvLGLxXukuKiFHv7R7DLPnkqRYVvWGxb9ksbbFNqn
+	 G4wYv7Up3oZfznl7bPdrICrVqFnaNtCZJdfXqq82EJ7Xpspmebu9HCWz45x3LFE9EP
+	 m/TKI5rwD8kjjGo818AtqjppZVgjuFgwe5WNQ0R/ckqTey7vXNK2yeny+Vue5T/1fW
+	 E1YGHUnRh7Tx0xLdj64XwO4gQudneBlaFb37sloeDzpUenNHG1JD1xXKz7HofQr2zE
+	 yPej+CdDKR/993BBR00Q3eWzbmSz3gvnSIPUCpfjiaL91o1SBHsWmKZIfXT9iReIbS
+	 tEoUcXhV/ihWw==
+Date: Fri, 13 Jun 2025 01:31:04 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v8 0/9] More Rust bindings for device property reads
+Message-ID: <aEtjONTgqDikCoB6@cassiopeiae>
+References: <20250611102908.212514-1-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611005421.144238328@goodmis.org> <CAEf4BzZ9-wScwgYAc5ubEttZyZYUfkuAhr3dYiaqoVYu=yWKog@mail.gmail.com>
- <ldnmzsofhpy7rxk7rslgs5mevep7s22ltaqd7pxuoshs67flvm@cakolwpjdkwm>
-In-Reply-To: <ldnmzsofhpy7rxk7rslgs5mevep7s22ltaqd7pxuoshs67flvm@cakolwpjdkwm>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 12 Jun 2025 16:30:00 -0700
-X-Gm-Features: AX0GCFsletYbAxfzTbaieGo9hqnFkli_Ooy53vK0_Wf5ogiiXP7rsCTVyenKqIs
-Message-ID: <CAEf4BzY4JtvZa=ubyiO8AKGcKpOjk_YX2yHqW5JzaBLjM5gjDw@mail.gmail.com>
-Subject: Re: [PATCH v10 00/14] unwind_user: x86: Deferred unwinding infrastructure
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
-	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
-	Jens Remus <jremus@linux.ibm.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611102908.212514-1-remo@buenzli.dev>
 
-On Thu, Jun 12, 2025 at 3:02=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Thu, Jun 12, 2025 at 02:44:18PM -0700, Andrii Nakryiko wrote:
-> > On Tue, Jun 10, 2025 at 6:03=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
-.org> wrote:
-> > >
-> > >
-> > > Hi Peter and Ingo,
-> > >
-> > > This is the first patch series of a set that will make it possible to=
- be able
-> > > to use SFrames[1] in the Linux kernel. A quick recap of the motivatio=
-n for
-> > > doing this.
-> > >
-> > > Currently the only way to get a user space stack trace from a stack
-> > > walk (and not just copying large amount of user stack into the kernel
-> > > ring buffer) is to use frame pointers. This has a few issues. The big=
-gest
-> > > one is that compiling frame pointers into every application and libra=
-ry
-> > > has been shown to cause performance overhead.
-> > >
-> > > Another issue is that the format of the frames may not always be cons=
-istent
-> > > between different compilers and some architectures (s390) has no defi=
-ned
-> > > format to do a reliable stack walk. The only way to perform user spac=
-e
-> > > profiling on these architectures is to copy the user stack into the k=
-ernel
-> > > buffer.
-> > >
-> > > SFrames is now supported in gcc binutils and soon will also be suppor=
-ted
-> > > by LLVM. SFrames acts more like ORC, and lives in the ELF executable
-> >
-> > Is there any upstream PR or discussion for SFrames support in LLVM to
-> > keep track of?
->
-> https://github.com/llvm/llvm-project/issues/64449
+On Wed, Jun 11, 2025 at 12:28:59PM +0200, Remo Senekowitsch wrote:
+> Remo Senekowitsch (9):
+>   rust: device: Create FwNode abstraction for accessing device
+>     properties
+>   rust: device: Enable accessing the FwNode of a Device
+>   rust: device: Move property_present() to FwNode
+>   rust: device: Enable printing fwnode name and path
+>   rust: device: Introduce PropertyGuard
+>   rust: device: Implement accessors for firmware properties
+>   samples: rust: platform: Add property read examples
 
-Great, thank you!
+Applied to driver-core-testing, thanks!
 
->
-> --
-> Josh
+Once the patches passed 0-day testing they will be merged into driver-core-next.
+
+>   rust: device: Add child accessor and iterator
+>   rust: device: Add property_get_reference_args
+
+I did drop those two patches for now, because:
+
+  (1) They're basically dead code.
+
+  (2) It seems that FwNode::property_get_reference_args() leaks a struct
+      fwnode_handle reference. property_get_reference_args() explicitly says
+      that the caller is responsible "for calling fwnode_handle_put() on the
+      returned @args->fwnode pointer", which doesn't seem to happen.
+
+Can you please fix the leak and resend those two patches with an additional one
+that adds a sample usage of the introduced methods to the platform sample
+driver?
