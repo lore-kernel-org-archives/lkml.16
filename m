@@ -1,102 +1,146 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6925B2D8773;
-	Thu, 12 Jun 2025 20:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C35170A26
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749760628; cv=none; b=BIeleUsEaAeyPoC1vDnFOFqSOc5HcWjdHjeB0t/ircDGM68FpW2jDwPXHI+W8NPWJD7muldwNLOojLRG2r1Ub29CAtJXM1QibAKlO0tiqkCp6n1AH65iPFPqPv7A0Hq3SwmZx/lTZkVc6dcFfzbxA6XawlPrnrHU29bVLHQw2jA=
+	t=1749760673; cv=none; b=K2G7ujY5EHvcjzEuYeTaef41ZzlE8RTXv1ZhnR7hhJ/eiEsJvY+4LgZoBorQ+axZshS/YDyzJJdp4L3V7ZvlDGBYtkHqup6/BL8j87Umv2vQ6HNs1asKJ0zEN+wAdciKtEUN4msIIV1YaV5FO5shQTkTFAfAv9i79iMsBinoln0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749760628; c=relaxed/simple;
-	bh=9bR2YbjDcKulL5hNBeUJr73babSsUOTOMmhT4wUFqnY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JSlbG5l/xpouAIPRlee4lstuHG39DirTs343CmFEuozJMFWxh2xOvWn5izai1RFV25SvSrfWKaBVSXF4oN2TrixGThVdwnpENnS9GKaeoo1CVK8zZr7dUtZjdoZA4V89aX0v/rT3ibNXPo0OS28QVFrKAlNkhY8JPWr0rJfx7gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=R4LaJXdj; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1749760673; c=relaxed/simple;
+	bh=xSZdo/Zzd05ugnakn4C7C0dQqii/sRlp+AQ6zI0Eg90=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=okupuJkII191cfWHKieiDYfnboI0AHsV8Qzo0TxcGlvgXHpvkJs4Qk5nvSBWvepHHNvnjyH9ejjGu/EO4a8ZhGkQKvuf7jOp7aXt5euVAqMazN8VrDTuu3oXlrqnD1PjCjL1I2yxnHR+Iq6gQaWlHH0a0aVoigBuJhACiolYSeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Pf03wBG/; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="R4LaJXdj"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bJDpk5BGyz9t5Y;
-	Thu, 12 Jun 2025 22:37:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1749760622;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7Smza2Jc4Jwl4Da5lRMks2Zjvr0wRUWchDcyc8CJiMs=;
-	b=R4LaJXdjSwMzUkY7g817Vq/lRyAaIBH3jcKGIh7tWnoqeown1ttyXDuiZ3nabREK7v9XHw
-	ycPTaxOzRz1qNET38XoBmQrfxk3NzK9NAxaTGLMHjSWjAwvtd7MxSvkbxp1VIOaaMP5DZE
-	Byzvv5fxey/X9IFFTI5HPyGIgiMDIAcg6pfLG52GYWH8NVHJ5bthwJwL9aYMSMQlR/J3IP
-	E30fKoibQSosM97GRjxFsckpEWYAEezBI+osesLhmBdWKdFPoTEVgIg2F2N5eic3cFBHCK
-	4U7HoT/g5YhSxT117sCaYTkH6p15140lyOmGr94ba7fhb+algNv2I1TZ7ZZVfQ==
-Date: Thu, 12 Jun 2025 22:36:48 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Pankaj Raghav <p.raghav@samsung.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, willy@infradead.org, x86@kernel.org, linux-block@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
-	gost.dev@samsung.com, hch@lst.de
-Subject: Re: [PATCH 0/5] add STATIC_PMD_ZERO_PAGE config option
-Message-ID: <nsquvkkywghoeloxexlgqman2ks7s6o6isxzvkehaipayaxnth@6er73cdqopmo>
-References: <20250612105100.59144-1-p.raghav@samsung.com>
- <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Pf03wBG/"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso1758684b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1749760670; x=1750365470; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=7HWklvJfKy7JIO8DgRBbmTBlL/1LchC6bmvGtj26N2M=;
+        b=Pf03wBG/7mkWmktQbbFEDFEOp/p1KHdsqJNXzZ2sKVdznjU8lI83Krd1G53rs6QPjR
+         axz8A19z6kM6ljOEO03w0BVtwElFZXMI1MUZvOtC9ETPvfNru5V2lJGV1k8Sa5K6NofO
+         Y4aFDXSUjXJosbheuha7CDR6tVciqs743BXkE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749760670; x=1750365470;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7HWklvJfKy7JIO8DgRBbmTBlL/1LchC6bmvGtj26N2M=;
+        b=WerAF8hkfSQ+tybA17jmgChIWi1LTarWWfMOHUuKSdbJOHz2TQswBr8xY+goTSlztB
+         KN9pWuLcMFQlkJzK5bShmi8T0re3EaAVEE5YlAk248YAslb5CnANxsbIS8xHjLCaexLM
+         FdhNrG+MAA64fvIelmXzxW2tn/XY8n/2UGWdaSf4cSlqwEahrNOdLpr4IgmqcXokRGzK
+         wRWHH0fQDj3+K6G9Wy9XnayzG4b2jwuX44D4iuXgnYPoxgQUeHiAVBr7KXT2s1uUKchS
+         rUAuiIvG41r4a29p0BbnXyAv7HpMMLmj3/2WSh5YXBFmhsPlqnMSKxXqjyBRiUWpct3J
+         whdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1rEV77JZrBnww+74IbQ+3ZOLt2iWqstlFhFq64dVp+y10Vd228wH5mrZP/B2cHgBYyIzHxhVkJHMmVt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIXLqvqny7zNNZhFtoqjWlHS8qveqopeCnPhFQkeDP3HSi/ON7
+	Ynl3Z1FOhIzTyXf0zdj/70TOdGT0zHoVKhWqNZfMLUBUOFhFaTyuu0pfANazVXBQJw==
+X-Gm-Gg: ASbGncsPKc7DXyfuD/fa0tIifKtm5E4ruvV+DxVQiivpUb7TfT6rDlrD68olXRHcFRR
+	j6yGLEOwNXqQUCIF0Ifpz/atypCAXlDGBgWzMGUsZ4wVrHiDIqH1uk7qs/lLejRA4OlUy02sj/0
+	KtUCOmJYNlFyKrpwz70xJnuJdZarcFy3EUNswz7UlfjL4nP5M99gbzJY3vKTqghtdP8+T1CdU/M
+	1ot8XfGTAJgPLdSDcEHFyLxwdJC9G9K6L0p1OzR4+tujMU4/IZ1d4XTUfkf2KOU4CzVWSQH7Fgn
+	JAbE4f19JpoAVD6Q1J437SMQ5PWWihy45CruFGfnAkMq5ScoWfJTiyHDdLV0CkdznIRt0MPRMDm
+	e1mVXVKols01ikjUP7D1moNTYXQ==
+X-Google-Smtp-Source: AGHT+IEVcVYG19AKfNaCIbnScw72eqDzUbGwGRCRwGuLcyoKLwoOFWNS0WrxzkDzZbCoZAXbB3hpwQ==
+X-Received: by 2002:a05:6a00:2307:b0:742:a91d:b2f5 with SMTP id d2e1a72fcca58-7488f6facebmr786242b3a.13.1749760669874;
+        Thu, 12 Jun 2025 13:37:49 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d252esm154388b3a.163.2025.06.12.13.37.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 13:37:49 -0700 (PDT)
+Message-ID: <0d957a78-0eb4-4474-a251-50994e1a88cb@broadcom.com>
+Date: Thu, 12 Jun 2025 13:37:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
-X-Rspamd-Queue-Id: 4bJDpk5BGyz9t5Y
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] PCI: brcmstb: Enable Broadcom Cable Modem SoCs
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250609221710.10315-1-james.quinlan@broadcom.com>
+ <20250609221710.10315-4-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250609221710.10315-4-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 06:50:07AM -0700, Dave Hansen wrote:
-> On 6/12/25 03:50, Pankaj Raghav wrote:
-> > But to use huge_zero_folio, we need to pass a mm struct and the
-> > put_folio needs to be called in the destructor. This makes sense for
-> > systems that have memory constraints but for bigger servers, it does not
-> > matter if the PMD size is reasonable (like in x86).
+On 6/9/25 15:17, Jim Quinlan wrote:
+> Broadcom's Cable Modem (CM) group also uses this PCIe driver
+> as it shares the PCIe HW core with the STB group.
 > 
-> So, what's the problem with calling a destructor?
+> Make the modifications to enable the CM SoCs.
 > 
-> In your last patch, surely bio_add_folio() can put the page/folio when
-> it's done. Is the real problem that you don't want to call zero page
-> specific code at bio teardown?
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
 
-Yeah, it feels like a lot of code on the caller just to use a zero page.
-It would be nice just to have a call similar to ZERO_PAGE() in these
-subsystems where we can have guarantee of getting huge zero page.
+[snip]
 
-Apart from that, these are the following problems if we use
-mm_get_huge_zero_folio() at the moment:
+> @@ -1354,7 +1417,10 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+>   
+>   	brcm_config_clkreq(pcie);
+>   
+> -	if (pcie->ssc) {
+> +	if (IS_CM_SOC(pcie->cfg->soc_base)) {
+> +		/* This driver does configure SSC for CM chips */
 
-- We might end up allocating 512MB PMD on ARM systems with 64k base page
-  size, which is undesirable. With the patch series posted, we will only
-  enable the static huge page for sane architectures and page sizes.
+Nit: does not configure SSC for CM chips. With that fixed:
 
-- In the current implementation we always call mm_put_huge_zero_folio()
-  in __mmput()[1]. I am not sure if model will work for all subsystems. For
-  example bio completions can be async, i.e, we might need a reference
-  to the zero page even if the process is no longer alive.
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-I will try to include these motivations in the cover letter next time.
-
-Thanks
-
-[1] 6fcb52a56ff6 ("thp: reduce usage of huge zero page's atomic counter")
-
---
-Pankaj
+-- 
+Florian
