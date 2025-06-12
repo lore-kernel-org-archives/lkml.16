@@ -1,104 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B044522B8D9;
-	Thu, 12 Jun 2025 10:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8BA1F1319
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749722670; cv=none; b=czms159KoTqa6Hl6sI+RKvwduQqGtlJtkRf+XRMRfQYWThh+HplWIz0ZBxgVNxxOa/EuFIHvo5O8rxCto2wigZne6/d82z24MIsubCV+/X+GLZFp87zic0JJ21Zhp8KPiebNBwjN7+8EzL+/sPhI1GV3zfnG4c8XtYatmgvrWP4=
+	t=1749722683; cv=none; b=oKX4DR0gdKRVtgWNTtOoyd0FrbdeOcQDTH0Vyt3CH6iLBXdASveLNO/TwQbL2bm/4cxK9g6DyoSsc1xZd4pBy0WAjkm+80mYXx1FN9dkA3RGEta069Ed22K9ZgH1W5nuREwWTXHXbK+sUPed8tkyysVsv0a7KXkOuA4IUxuowOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749722670; c=relaxed/simple;
-	bh=QBAYqX6Pw2ZwWYI5EF1qzqiJNs8mwdk6y1BAmfqBmNA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SIbGXB+Qzg40UwM4In7BQ5rkTg3x1/k+uWBmkChHdgTCGBH1IxCi+UclOvzHOa4gaeGT1ASamP84SVmbTRMx8GmQ5Y6Ad5jIpXgQbqcWH7am4sUMfuYZVKBpfwn+um8kpHMjzSI8P94cRlGEZdMb/rtanqwq/sYKJAaAnJ6dskI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TCyr094p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749722683; c=relaxed/simple;
+	bh=Y7fBJE3mF0MaeREF0IrNL8R2g2r8lHgzWIaluxm87VE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nshSDDbv3P4aMGfwXWzKb2FSNm8AKo70bklGHm1E7JTSs+3IxwcZiC2ZvsZDyAKR22B3Uwh6FxB+WlvoVtR0vchN7LfzYVMREf7uIAnzd5sI0ljsSdTDdFewr5V1KtsHnhAl5XWTRbGVTpWngUiTprfuurP5KGugjJcRAg/eA78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BoxAwgD2; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TCyr094p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25725C4CEEA;
-	Thu, 12 Jun 2025 10:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749722670;
-	bh=QBAYqX6Pw2ZwWYI5EF1qzqiJNs8mwdk6y1BAmfqBmNA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=TCyr094pT/fl8yodSHT9QsFROyFgU9HVL3utpppBPSxMI5g74JEt1arMXIaf+jVAh
-	 m2LIatmmGDMmMRU/iBE0xfGN1UCpDp/y2+ZCGjD3HqnBMbrjYiEneFpIEVHID6Rs4T
-	 j5JxIjbuB3kXuul6l3kzvhpxMzuFd+d2TsjO2aoe1LZOPLIOzRmU430wnYU2YzgfWh
-	 ef3mLfI8w4XlY2EJZ3lAzwIa0shACe1KnkILyim9tR2A9N1fgQoia8XRDWJXWdS/ET
-	 6a+O0mfFpjGezRNn56LVVck8d2mnGhnbg3Q8FkcG43uLHJ9Dg9HDGgyc4q9UUnVIXz
-	 DsV0Gv1U3/mKw==
-Message-ID: <3bf97628-fb30-4298-bfd4-1ec819a43340@kernel.org>
-Date: Thu, 12 Jun 2025 12:04:27 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BoxAwgD2"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55CA4NFf2882638;
+	Thu, 12 Jun 2025 05:04:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749722663;
+	bh=M0kvq/12rDbuJoW2tEUY3xZ2q0mV8QHq6VdoGLJBCVM=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=BoxAwgD2buHHc5xQReJkJk/XWxKlkhor4zR5KLFTmrpzvrwJ0RSC0RknNnYtdQy9s
+	 VK584tKRpAyyAZo8czRUE19ivyZVGcX+bgWCKGZyFPH6cSseR/o3dBDFUrPSJ3dHuk
+	 SGZhe2ni5JBz61w74do3uGu1TNiLfPoJUCGxHn3I=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55CA4N3m2496745
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 12 Jun 2025 05:04:23 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
+ Jun 2025 05:04:22 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 12 Jun 2025 05:04:22 -0500
+Received: from localhost (dhcp-172-24-227-169.dhcp.ti.com [172.24.227.169])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55CA4LvJ1998196;
+	Thu, 12 Jun 2025 05:04:21 -0500
+Date: Thu, 12 Jun 2025 15:34:20 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Enric Balletbo i Serra <eballetb@redhat.com>
+CC: Roger Quadros <rogerq@kernel.org>,
+        Siddharth Vadapalli
+	<s-vadapalli@ti.com>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <sjakhade@cadence.com>,
+        <thomas.richard@bootlin.com>, <christophe.jaillet@wanadoo.fr>,
+        <u.kleine-koenig@baylibre.com>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH v3 1/2] phy: cadence-torrent: Add PCIe multilink
+ configuration for 100 MHz refclk
+Message-ID: <6b747de0-9d10-43e9-a2b1-23a129301538@ti.com>
+References: <20250109121614.754466-1-s-vadapalli@ti.com>
+ <20250109121614.754466-2-s-vadapalli@ti.com>
+ <fccedc26-0bb9-4078-8a94-4199f6b383c1@kernel.org>
+ <CALE0LRsdsTU-NLN4fgh2c8qnS-pPP1BDJvjnvsSOnud8amk3=A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 23/33] serial: 8250: extract serial8250_set_efr()
-From: Jiri Slaby <jirislaby@kernel.org>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-serial <linux-serial@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250611100319.186924-1-jirislaby@kernel.org>
- <20250611100319.186924-24-jirislaby@kernel.org>
- <2b9d3171-6a71-ad9e-8a73-f07487f0ad6b@linux.intel.com>
- <451ac044-6e91-4895-a5b3-cb30396436e5@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
- rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
- rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
- i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
- wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
- ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
- cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
- 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
- w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
- YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABzSFKaXJpIFNsYWJ5
- IDxqaXJpc2xhYnlAa2VybmVsLm9yZz7CwXcEEwEIACEFAlW3RUwCGwMFCwkIBwIGFQgJCgsC
- BBYCAwECHgECF4AACgkQvSWxBAa0cEnVTg//TQpdIAr8Tn0VAeUjdVIH9XCFw+cPSU+zMSCH
- eCZoA/N6gitEcnvHoFVVM7b3hK2HgoFUNbmYC0RdcSc80pOF5gCnACSP9XWHGWzeKCARRcQR
- 4s5YD8I4VV5hqXcKo2DFAtIOVbHDW+0okOzcecdasCakUTr7s2fXz97uuoc2gIBB7bmHUGAH
- XQXHvdnCLjDjR+eJN+zrtbqZKYSfj89s/ZHn5Slug6w8qOPT1sVNGG+eWPlc5s7XYhT9z66E
- l5C0rG35JE4PhC+tl7BaE5IwjJlBMHf/cMJxNHAYoQ1hWQCKOfMDQ6bsEr++kGUCbHkrEFwD
- UVA72iLnnnlZCMevwE4hc0zVhseWhPc/KMYObU1sDGqaCesRLkE3tiE7X2cikmj/qH0CoMWe
- gjnwnQ2qVJcaPSzJ4QITvchEQ+tbuVAyvn9H+9MkdT7b7b2OaqYsUP8rn/2k1Td5zknUz7iF
- oJ0Z9wPTl6tDfF8phaMIPISYrhceVOIoL+rWfaikhBulZTIT5ihieY9nQOw6vhOfWkYvv0Dl
- o4GRnb2ybPQpfEs7WtetOsUgiUbfljTgILFw3CsPW8JESOGQc0Pv8ieznIighqPPFz9g+zSu
- Ss/rpcsqag5n9rQp/H3WW5zKUpeYcKGaPDp/vSUovMcjp8USIhzBBrmI7UWAtuedG9prjqfO
- wU0ETpLnhgEQAM+cDWLL+Wvc9cLhA2OXZ/gMmu7NbYKjfth1UyOuBd5emIO+d4RfFM02XFTI
- t4MxwhAryhsKQQcA4iQNldkbyeviYrPKWjLTjRXT5cD2lpWzr+Jx7mX7InV5JOz1Qq+P+nJW
- YIBjUKhI03ux89p58CYil24Zpyn2F5cX7U+inY8lJIBwLPBnc9Z0An/DVnUOD+0wIcYVnZAK
- DiIXODkGqTg3fhZwbbi+KAhtHPFM2fGw2VTUf62IHzV+eBSnamzPOBc1XsJYKRo3FHNeLuS8
- f4wUe7bWb9O66PPFK/RkeqNX6akkFBf9VfrZ1rTEKAyJ2uqf1EI1olYnENk4+00IBa+BavGQ
- 8UW9dGW3nbPrfuOV5UUvbnsSQwj67pSdrBQqilr5N/5H9z7VCDQ0dhuJNtvDSlTf2iUFBqgk
- 3smln31PUYiVPrMP0V4ja0i9qtO/TB01rTfTyXTRtqz53qO5dGsYiliJO5aUmh8swVpotgK4
- /57h3zGsaXO9PGgnnAdqeKVITaFTLY1ISg+Ptb4KoliiOjrBMmQUSJVtkUXMrCMCeuPDGHo7
- 39Xc75lcHlGuM3yEB//htKjyprbLeLf1y4xPyTeeF5zg/0ztRZNKZicgEmxyUNBHHnBKHQxz
- 1j+mzH0HjZZtXjGu2KLJ18G07q0fpz2ZPk2D53Ww39VNI/J9ABEBAAHCwV8EGAECAAkFAk6S
- 54YCGwwACgkQvSWxBAa0cEk3tRAAgO+DFpbyIa4RlnfpcW17AfnpZi9VR5+zr496n2jH/1ld
- wRO/S+QNSA8qdABqMb9WI4BNaoANgcg0AS429Mq0taaWKkAjkkGAT7mD1Q5PiLr06Y/+Kzdr
- 90eUVneqM2TUQQbK+Kh7JwmGVrRGNqQrDk+gRNvKnGwFNeTkTKtJ0P8jYd7P1gZb9Fwj9YLx
- jhn/sVIhNmEBLBoI7PL+9fbILqJPHgAwW35rpnq4f/EYTykbk1sa13Tav6btJ+4QOgbcezWI
- wZ5w/JVfEJW9JXp3BFAVzRQ5nVrrLDAJZ8Y5ioWcm99JtSIIxXxt9FJaGc1Bgsi5K/+dyTKL
- wLMJgiBzbVx8G+fCJJ9YtlNOPWhbKPlrQ8+AY52Aagi9WNhe6XfJdh5g6ptiOILm330mkR4g
- W6nEgZVyIyTq3ekOuruftWL99qpP5zi+eNrMmLRQx9iecDNgFr342R9bTDlb1TLuRb+/tJ98
- f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
- DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
- S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
-In-Reply-To: <451ac044-6e91-4895-a5b3-cb30396436e5@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALE0LRsdsTU-NLN4fgh2c8qnS-pPP1BDJvjnvsSOnud8amk3=A@mail.gmail.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 12. 06. 25, 12:01, Jiri Slaby wrote:
-> The question is whether we need the code or we can drop it 8-).
+On Thu, Jun 12, 2025 at 10:48:20AM +0200, Enric Balletbo i Serra wrote:
 
-As it is now, we could drop UPF_EXAR_EFR altogether, right?
+Hello Enric,
 
--- 
-js
-suse labs
+> Hi all,
+> 
+> On Thu, Jan 9, 2025 at 5:35 PM Roger Quadros <rogerq@kernel.org> wrote:
+> >
+> >
+> >
+> > On 09/01/2025 14:16, Siddharth Vadapalli wrote:
+> > > From: Swapnil Jakhade <sjakhade@cadence.com>
+> > >
+> > > Add register sequences to support PCIe multilink configuration for 100MHz
+> > > reference clock. Maximum two PCIe links are supported.
+> > >
+> > > Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> >
+> > Reviewed-by: Roger Quadros <rogerq@kernel.org>
+> >
+> 
+> These patches seem good and have been reviewed but look stalled here.
+> There is any chance to rebase it on top of the mainline?
 
+The patches apply cleanly on the latest linux-next tagged next-20250612.
+
+Regards,
+Siddharth.
