@@ -1,95 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8238524A047;
-	Thu, 12 Jun 2025 13:41:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E561429405;
+	Thu, 12 Jun 2025 13:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735701; cv=none; b=m5DTDbgknn+CRKBkhK/8Ta7H05dpV4ko8CrSlJIlsK3vgNfTWHTbXnSshYwuSo9gz0TVXAe9zXcPlIwV3oZuw74cy8y7mmFfVlCRYisMzsch/GwS7wEoqlE87Az8/g7yqewY0tn2c+dRXs2Z0gisRck90RhtP6ArEQoikoks1gc=
+	t=1749735704; cv=none; b=jvk1GBWWlaS6D3cZuWC3NsWQ8ZLPolOns2Jy4FOHHGImIeVNgXUCgT9UalbrcG8wAKek/DDkjdaX649h0yS2gIifPzvZTc1xwL7CeIqgWSWiAwS0nBPYY0BnPnUp8R0wFyEvIsTT3di4SNOCWmgkSQ76Atqz3ZUqKXeqfKiBAC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735701; c=relaxed/simple;
-	bh=LQToylDvoxpMEuXz7DwhxX+xauKJJgbGi0v6srPoxD4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gvHBjIDZ9MMku2ofRj+nqmRgEaJTNl6S2U/v8FAXdB+nifQp/1WYi5ywmnbm++0mjii6wIKCDspGXqHF9UE9UrTbWrYtN87+WnPM21/Ix2wrgjeJYdYxm1E3SiJm1xtjkG9a92PPJ3Daa7Ko/eUZ/VtxMnFeH6Lf1Bp61fFypSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQvuw9H0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749735704; c=relaxed/simple;
+	bh=PtuTc4hQCwkPkaeEcx5FuCImo6u7nfEiFFeDuVcRi+8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=scS38d9ACMRZD5/NQ1JJmStVPd4sm8Kt54oLAkinRX3Fiu+MIkq15f0F38BsZSCOadIreYCGT79GuRlVEiq6CjU5GOtV2AX014Lr2A9m6vfV4/4gJ595WXx1CBQdwO8Gl/P9kafLIX3kWCDbg/Tu0h383X7gLoLQRg7cHrKRZ6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zve+8Us0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQvuw9H0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7EAC4CEEA;
-	Thu, 12 Jun 2025 13:41:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zve+8Us0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD919C4CEF3;
+	Thu, 12 Jun 2025 13:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749735701;
-	bh=LQToylDvoxpMEuXz7DwhxX+xauKJJgbGi0v6srPoxD4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dQvuw9H0vzsylslwFUYwVC1oZcMDYgIa1ZdJynn5hUsmj8pf7lHI2SZhecOaK8dCz
-	 MgkWZYfbniqSj3KJhn4YfAXyOpmgJnB0aYFtTNmFGsNMKzaPCjK+iUorJ7DiHcdM95
-	 LLCnZPxRZvooLPh69Fe6/63eCJoYOP7GSQWG7f3UvpJrx79TRkESplfkgcmvQpWNLs
-	 vsXomq88k8zPEJxTD02OOVlJxNGNgNI3CD2LcNWoWCSpLp/p8HBuzldePWS/0oPJYM
-	 xOxfQmvTSqVFTfc9zTMqIyR8wMlmctsiPvpB0Ij063LtzGdOQsctd8yyopQDJLMgXQ
-	 kuJE+ciVdVmZQ==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uPiBX-000000053px-0HmP;
-	Thu, 12 Jun 2025 15:41:39 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Akira Yokosawa <akiyks@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Ignacio Encinas Rubio <ignacio@iencinas.com>,
-	Marco Elver <elver@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jan Stancek <jstancek@redhat.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Ruben Wauters <rubenru09@aol.com>,
-	joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev,
-	lkmm@lists.linux.dev,
-	netdev@vger.kernel.org,
-	peterz@infradead.org,
-	stern@rowland.harvard.edu,
-	Breno Leitao <leitao@debian.org>,
-	Jakub Kicinski <mchehab+huawei@kernel.org>,
-	Simon Horman <mchehab+huawei@kernel.org>
-Subject: [PATCH v2 0/2] Some extra patches for netlink doc generation
-Date: Thu, 12 Jun 2025 15:41:29 +0200
-Message-ID: <cover.1749735022.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1749735703;
+	bh=PtuTc4hQCwkPkaeEcx5FuCImo6u7nfEiFFeDuVcRi+8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Zve+8Us0w5wjasu/XWomWd5hMM8F6wniPNtUHEY44FW0R+Y3sQrnFv625tpuFP41+
+	 txzXWxSKvH5MV2P+7ZcCrZr8ex2+I2QEvzcNcSaERgNUNr6+8AbRIUu9G3ey4RnbLg
+	 1kWUZM3GgTKHCg9AwhLMEpq8U0dHrIekbnr5dKLzCu48fXl/8iFLLSj5xOH2axaufb
+	 i4jG1lnWrxab0PgafLygvevOmtv6cCwPVpgQy94lZ4iggQP8KTlGmL7d1CBwnNqAqW
+	 ftbpYZqM49g0a8KAJOFsaaOf0KEteuzhNTePhDLzqUECmusLEM+5MDtB9nbpvlaqm1
+	 iO5u+QlhvW9Mw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Thu, 12 Jun 2025 15:40:07 +0200
+Subject: [PATCH v13 6/6] modules: add rust modules files to MAINTAINERS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-module-params-v3-v13-6-bc219cd1a3f8@kernel.org>
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+In-Reply-To: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+ Benno Lossin <lossin@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Trevor Gross <tmgross@umich.edu>, 
+ Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+ Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+ Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ linux-modules@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=808; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=PtuTc4hQCwkPkaeEcx5FuCImo6u7nfEiFFeDuVcRi+8=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoSti7f7BsTFkFbFOskmVS4/+QcJ4aUaQYBbQjc
+ u8+JpR5o2mJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaErYuwAKCRDhuBo+eShj
+ d2pNEACnbI0d469VxHqJtVI1ZNarSPJeilQVW6J6dQh5JvBNAIkcUK5AZEBQsV/OGQG9suT42g7
+ +Q5LB5BgS8yKbKE2eDWN+zzdqyGzsno/unTxk+KOPXyw3wsnhv9N7WYIL0z0bRYsni2gyWem+1C
+ 2NiVyuU50OBTR/930EnWbhdU6aVJjJSfDT3/RAFWeJXU46RZnB8w+z7fAFyDVI7YfhWxbk/FfyF
+ mydPez6cGLpS8G9VBJVfyx+XvLsCXzELL49z+pNOj46Ah80QTzBbA13CmRYgQOCmi1hDTO3n2W+
+ lNg4nYZB40m/nqXI2cGpw+F3ECX38Y3z31NPlW8wvoXbafwSGxK2AF3VeeClEVD6f5u7BFZgjM9
+ T9dvRlj/gymgVtlNYUHI3+bQ6a8xDprgsrJQweiZxlhfukuOV1/oOT2AuYivIar2TMaRwcfml2N
+ V6paR5z9uuI8KU4vF6o1S9K6eal5FfPTloW/pskhaU6h92QFKHohse/H4LMDKWuemYw0qiF2stP
+ vOftpBfMsQwTUolE1kaftrVY0cV72g/7hiGI0V/rbgw7p4SRQB16j2TPEko8WMLwgt9ukl+srfO
+ deEtA9WYjFHYGRk+uPwTjKAMeghe7e+EI4wEOdBzEPGAya0g0czzJDRBnZT4en/YCd3qLDm1Spm
+ cNZlXPvQdrnhYdQ==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-This patch series comes after:
-	https://lore.kernel.org/linux-doc/cover.1749723671.git.mchehab+huawei@kernel.org/T/#t	
-The first patch is meant to speedup glob time by not adding all yaml to the parser.
+The module subsystem people agreed to maintain rust support for modules
+[1]. Thus, add entries for relevant files to modules entry in MAINTAINERS.
 
-The second one adjusts the location of netlink/specs/index.rst.
+Link: https://lore.kernel.org/all/0d9e596a-5316-4e00-862b-fd77552ae4b5@suse.com/ [1]
 
-With that, on my AMD Ryzen 9 7900 machine, the time to do a full build after a
-cleanup is:
+Acked-by: Daniel Gomez <da.gomez@samsung.com>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-real    7m29,196s
-user    14m21,893s
-sys     2m28,510s
-
-Mauro Carvalho Chehab (2):
-  docs: conf.py: add include_pattern to speedup
-  docs: uapi: netlink: update netlink specs link
-
- Documentation/conf.py                         | 7 +++++--
- Documentation/userspace-api/netlink/index.rst | 2 +-
- Documentation/userspace-api/netlink/specs.rst | 2 +-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a92290fffa16..e3f43583c9c6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16794,6 +16794,8 @@ F:	include/linux/module*.h
+ F:	kernel/module/
+ F:	lib/test_kmod.c
+ F:	lib/tests/module/
++F:	rust/kernel/module_param.rs
++F:	rust/macros/module.rs
+ F:	scripts/module*
+ F:	tools/testing/selftests/kmod/
+ F:	tools/testing/selftests/module/
 
 -- 
-2.49.0
+2.47.2
 
 
