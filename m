@@ -1,87 +1,146 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BAA1DE4EC;
-	Thu, 12 Jun 2025 18:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAA81DE4EC;
+	Thu, 12 Jun 2025 18:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749751255; cv=none; b=ea2XmogbRg15HIog0o3xw2k2+k9X2Dj33CmLtuyoJlCobRnajxhN1atiPk2xaf8KQlp6QrZ0IZrtEbMpZkzgqxSx6SRjDGBsRHJJeimFbWVjDqkDlI2DrjCFXogqSBgxHx+L6JgkOnPxlyfjKwEVohgosY0rq6tryM/E3Bq/8HY=
+	t=1749751344; cv=none; b=TILMjCq4w0P4phX5zzpONPR5JBasIlsnKBRVJ+6tGnsQKrh2875S62CvZ2TYAuAA0wcK1kBwR/ou3BaSH1UVsIoqMq9Cpe8lyr8YJLHuu4wsTuJnO1uzylZ3wdS2CkazVClVaeHnDJdUfOJNDREGvLHLddp/Y+m01gwK6IQvAvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749751255; c=relaxed/simple;
-	bh=XZ67z4AvZTTlJfXqDGeb2LDeAoDVG3sdPTCXuPVaTTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SrsLnPm0geJooR5WqI3v+aZ8Mm8GR+I/YTeZSBbuzEim+kFuAN2KD9cAeLXJacxamkKcTMRqSLWB8zn8B/xYKiNlr7YqS/rVdonJiaq6b6SgFzhoIeAJ3somvNeBn86Y6M9spOtIVxgnnyUb1wPV2X5pOciyYk6VoLXHdYSXMAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 1FD681A1DBF;
-	Thu, 12 Jun 2025 18:00:30 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 45DD919;
-	Thu, 12 Jun 2025 18:00:28 +0000 (UTC)
-Date: Thu, 12 Jun 2025 14:00:27 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Carlos Maiolino <cem@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-xfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] xfs: actually use the xfs_growfs_check_rtgeom
- tracepoint
-Message-ID: <20250612140027.6655d6ed@batman.local.home>
-In-Reply-To: <20250612175111.GP6156@frogsfrogsfrogs>
-References: <20250612175111.GP6156@frogsfrogsfrogs>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749751344; c=relaxed/simple;
+	bh=MGNrLspyBuVpm/4SZnjMSy7+VeVU4JeBXhsZCCkfqAM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n403zhN+PHIcAQPE8yfxsxITRfzp6yS+U3IBTOIvJX205banAeI/q62pZKaPB1drURAyQ156BVcB8lCYbSov9hJOWbKM+Qlslp+IGC4teQ38gPU3l9gjXz6EZztcgUxLlZtlRRsQkmOuGARJytbtA3W0DHmiaRiQzPMGjRqVxjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=VoLgJNLO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QkyK7T6d; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="VoLgJNLO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QkyK7T6d"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id CD85B11401DF;
+	Thu, 12 Jun 2025 14:02:21 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Thu, 12 Jun 2025 14:02:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1749751341; x=1749837741; bh=Zz
+	F9BcLlRSYQfOzzleyPakkKKInfN0nDB3cc4YLylRs=; b=VoLgJNLO8b9BmhqKGB
+	lRJ5lEacg0SsQnRLzM6dIXRhZQ62nX5woUYtmAoHeWia8i8ALc4Q9gjPatNwKrzI
+	V004/kXQ1nKaJiGRBtNePOOYmczwmxogD2D0vGZyMG4CexTzMHDpgiIAoQICwudx
+	XOes+h3vZvsUXHAgcwwJ8ezFnK4HCScYGyUDpI+q85dvNYVrdBx64liG75UcDzjC
+	oA0awdMUX5+y587FLQ4PZM7ZoEMdYnanwo69q5nTc/FfRLL6n1gOV7CqE/wHD7Gc
+	w6+Pl3rcB72JZ+23k5PG/YUq3cq6HVRxGM+Vj5f6931Xq0jM56RF88o9omswG1lk
+	nkdQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1749751341; x=1749837741; bh=ZzF9BcLlRSYQfOzzleyPakkKKInf
+	N0nDB3cc4YLylRs=; b=QkyK7T6d8CJmCl2K/WLi9mQ9npT6R4vSzam92yRP0ilf
+	W/rQaQDIlSWw9K1loHGhw0qpzvQBDB9+Ic7i71DqoK9PFI1EWElC1cT2XZrTgs2c
+	QVmdMtg9aL4P0uVYnZk+/cg8eFfIQko+jRQZjSCx2kH8riY/oNuvA30Ompf5351h
+	NF67m/TzWDAcA2NlHwrk779mT1tDWDgBDKptUQ0U9eR3X/J8xWCqh3CStReFC+O8
+	iqFzCMnjI5T+zlfn7gyDkODvUp4ZZFDdijw8P1REvrNiKLTzJk/j3+90gyGd3/rC
+	pXq376zOQcThne2EgB62+3YZfecSuQprY6yVzvWp8Q==
+X-ME-Sender: <xms:LRZLaF_s08jROAw4VDSS6iZnmMpTqCtGwBfV59yiTX1VKnDssKLP-Q>
+    <xme:LRZLaJsaI3pbxfsXCJTsBZVLl0Ktd0wTxdCfHOX4I0qqZ5vJFR4QOCJDGcHP717uS
+    sF0LJhDtc7o8cx33iY>
+X-ME-Received: <xmr:LRZLaDDuHXOIt8fOIH8-4DYSRYBVc9_lSWoVSBO8gONi5z_KZk8TDb2kP8lH1nRWy5ixePgIe-ObwXNp-glMSE5x>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheejfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffogggtgfesthekredtredtjeen
+    ucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsohguvg
+    hrlhhunhguodhrvghnvghsrghssehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgrthht
+    vghrnhepheduleetteekgffffedufeeuvdejiedvkefhveeifeegffehledtvdevhfefte
+    egnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhi
+    khhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtghpth
+    htohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgthhgvhhgrsgeskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvg
+    hrrdgsvgdprhgtphhtthhopehsrghkrghrihdrrghilhhusheslhhinhhugidrihhnthgv
+    lhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgvnhgvshgrsh
+    esihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhgruhhrvghnthdrphhi
+    nhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlihhnuh
+    igqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
+    gidqrhgvnhgvshgrshdqshhotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvg
+    gthhdrshgv
+X-ME-Proxy: <xmx:LRZLaJf24GBTWIr_8RXhIR_1bMtzGyAbzPu4IKIvQoLxrFRS1ULJjA>
+    <xmx:LRZLaKNszN5oFEAvUGFYnil0BxA9V7g3tDM2GuMvJnNqzneFkT5InA>
+    <xmx:LRZLaLlPz4ei4Oisp92jVv8BOvjRNNm64YMRU8F4ms9-9WOX90RSSw>
+    <xmx:LRZLaEu5DnSlimx2Rl-ZfuapZOUhHoLH4IyM_yyUbIU3WG1u0H49dQ>
+    <xmx:LRZLaPmuu9OYCMby7xwAq141uAqyAItp5jsp8c8hBwel25zUgO6f_TFv>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Jun 2025 14:02:20 -0400 (EDT)
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-media@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH v4 0/4] media: rcar-csi2: Add D-PHY support for V4H
+Date: Thu, 12 Jun 2025 19:59:00 +0200
+Message-ID: <20250612175904.1126717-1-niklas.soderlund+renesas@ragnatech.se>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 45DD919
-X-Stat-Signature: xg3u6bd3s1ucrari1wbneao8ww6d3jwa
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+VqFJ+19J63HXVgTJeciwPHq0DiHeAbk8=
-X-HE-Tag: 1749751228-2520
-X-HE-Meta: U2FsdGVkX19UW+4qC9Jss3E9WLJBwDY8btlovxTkB40PpK4TMVtqxWJMJDLO8XIfkzs/uaYivh0H9G9uUYqscz7GdCIjKaLIXpJjOht/+Cmpu92c2haJRlx5583BaThCNV/ucHoDOeOSv38d9fkw6baMmIRxw5g0RtzMJ7RXrQfikOWCr0zU8snHxeHPqO9LyydVCkoNct71DkH/akZW2LGxHQCz3iGTFK9xE3yfHPJeHha/ux6Rnc3bMpg1bR/WxDRx9BcqYZD5VGftzQjkqJOAXQO8AB8bRtCknN9dr2q/3yl9PoLJlI/mzObVk4EuF5q+DPIk69v5ISU1Y3dOqbQpmFogHwOXo0IbhPafQj3wkquCk37qhFvQs7pJPv6YxjCW2nfb2MiMs710dgWMZQ==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Jun 2025 10:51:12 -0700
-"Darrick J. Wong" <djwong@kernel.org> wrote:
+Hello,
 
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> We created a new tracepoint but forgot to put it in.  Fix that.
-> 
-> Cc: rostedt@goodmis.org
-> Cc: <stable@vger.kernel.org> # v6.14
-> Fixes: 59a57acbce282d ("xfs: check that the rtrmapbt maxlevels doesn't increase when growing fs")
+This series adds support for CSI-2 D-PHY reception on R-Car Gen4 V4H
+devices. Previously only C-PHY reception was supported due lack of
+documentation and no hardware to test D-PHY on.
 
-May want to also add:
+Later revisions of the datasheet (Rev.1.21) describes the start-up
+procedure in some detail, and we now have hardware to test on! The
+documentation however only sparsely documents the registers involved and
+instead mostly document magic values and an order to write them to
+register offsets without much documentation.
 
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Closes: https://lore.kernel.org/all/20250612131021.114e6ec8@batman.local.home/
+This series tries to in the extend possible to at least used named
+register and use formulas and lookup tables to make some sens of the
+magic values. Still most of them comes of a table of magic values in the
+datasheet.
 
-Thanks,
+Patch 1/4 clears up a unfortunate mix of the name mbps (mega bits per
+second) used in the D-PHY context and msps (mega symbols per second)
+used in the C-PHY context.
 
--- Steve
+Patch 2/4 and 3/4 prepares for adding D-PHY support by cleaning up
+register names and an updated common startup procedure for V4H which
+have been revised in later versions of the datasheet since the initial
+C-PHY V4H support was added.
 
-> Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
-> ---
->  fs/xfs/xfs_rtalloc.c |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-> index 6484c596eceaf2..736eb0924573d3 100644
-> --- a/fs/xfs/xfs_rtalloc.c
-> +++ b/fs/xfs/xfs_rtalloc.c
-> @@ -1259,6 +1259,8 @@ xfs_growfs_check_rtgeom(
->  
->  	kfree(nmp);
->  
-> +	trace_xfs_growfs_check_rtgeom(mp, min_logfsbs);
-> +
->  	if (min_logfsbs > mp->m_sb.sb_logblocks)
->  		return -EINVAL;
->  
+Finally patch 4/4 adds D-PHY support.
+
+The work is tested at many different link speed and number of lanes. In 
+2-lane mode using an IMX219 and in 4-lane mode using IMX462 sensors.
+
+See individual patches for change log.
+
+Niklas Söderlund (4):
+  media: rcar-csi2: Clarify usage of mbps and msps
+  media: rcar-csi2: Rework macros to access AFE lanes
+  media: rcar-csi2: Update start procedure for V4H
+  media: rcar-csi2: Add D-PHY support for V4H
+
+ drivers/media/platform/renesas/rcar-csi2.c | 332 ++++++++++++++++++---
+ 1 file changed, 287 insertions(+), 45 deletions(-)
+
+-- 
+2.49.0
 
