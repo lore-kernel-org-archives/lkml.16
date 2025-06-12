@@ -1,164 +1,109 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5081E18D;
-	Thu, 12 Jun 2025 03:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD88B18D;
+	Thu, 12 Jun 2025 03:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749698054; cv=none; b=F4kpoKsEWsrPFVZ3KWdikDHuT9C1axn2x0GxVgJcNIoLfSJ6JwnfMg2bQU4geAOUQJxnc9/V5vP52pwC1exXP9EFQDohkh1Tvnfi5qwce/pIlWAgny1MuKcahPhQ6cJ3T8hKcflI/mGFDOsQ+TN3AVO1D0CaVjFKyVJSTm+6yic=
+	t=1749698097; cv=none; b=HArm7wU5vXK3soFN046Qi8f56+Qi/i5+k9v1bDVCvuCAa4y7sfrUHmstsbASnb8eOyFZ+jxVLYMpc7UzS8YSdF5onEyKpVG+mayFaN2OZXi2nwLnkt8KeO6szy5nHP+nDFcVil2f4CDqjIdg1Qzflrlr/UHXCpWjKD6klkw4+0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749698054; c=relaxed/simple;
-	bh=tF98iIuxDOq4aFCTGkMt7XE4xgsy5S6eAFSZibVgTk4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nleLjdbvuhGf27CP912uL8JO9sDBw+g8ujIC3I10PmneQRtDemC44VhCqHqX29aflVCLCmGpwjzyQGgzzItvoMen1V4kYJT6hThO0nRR1+aE/gZPjNt9tNuwUqu3NAAGU9aAD4MAHRQZE92XKJElNqNKE82GqWxKLVGJOZVNL40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=ekU8C/ws; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1749698097; c=relaxed/simple;
+	bh=7jJhAfebdEIfSg5lLa5dJj+zy2cgJc0CzRnWHGsNRdM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=G5tfBYC0ViWgtRQrDP3hFpMSkgW6HYBG+HeoU7mxr06x0uo+a6hS/LslkbPDlXrfarwgBB6XXBLkRLjx0yh4GmisPc7hx46LbtHe0tmTWro8MEbH42z3ScN+xu2f1KdniN5tJgPiXECjVeg4trSJflWMQKBHapWeTkKKVYeRi4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OwNMvS60; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="ekU8C/ws"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55C3DXvzC1825952, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1749698013; bh=ILkh8wYA5EhlBYGr8kJIxUe2DIRkeTB38TC7zInjTJE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=ekU8C/wsb2pGdiZyTjL6638gyXFQJeVj7I5lVx7T5UEWegwavo3jK+lls1CmupRIo
-	 zAoGaCFYEafJFjbpLZwghUGoJdt4PTOuRJ/TPW2xUP1DdV0xAB5HzusLlR6ooAz2gE
-	 Oh8X3Cfx4QtZUjsZ94kgREDndnSTQU1mSPPJT4236SQhJg7nYpCU8meW1OO4QTzfRL
-	 ZuYKg1XtSB02GSJux9OHzdBsaZ7JR1CqynqtNmb+YdNIxFRPY92HYm450AzP0m+BR3
-	 VLySGTpgNVEVasZbd5rXh8BF3tFcih8fAlRGXdtiV140YfEYTddYwxvfkp0vuN1ZQS
-	 F25/JAkfmak+w==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55C3DXvzC1825952
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Jun 2025 11:13:33 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 12 Jun 2025 11:13:33 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 12 Jun 2025 11:13:32 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Thu, 12 Jun 2025 11:13:32 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Joe Damato <joe@dama.to>
-CC: "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "horms@kernel.org" <horms@kernel.org>,
-        "jdamato@fastly.com" <jdamato@fastly.com>,
-        Ping-Ke Shih <pkshih@realtek.com>, Larry Chiu <larry.chiu@realtek.com>
-Subject: RE: [PATCH net-next 1/2] rtase: Link IRQs to NAPI instances
-Thread-Topic: [PATCH net-next 1/2] rtase: Link IRQs to NAPI instances
-Thread-Index: AQHb2fM5jESWV4w0S0S8H02icTqIGrP9dfaAgAFlkYA=
-Date: Thu, 12 Jun 2025 03:13:32 +0000
-Message-ID: <72547c5443424151860d808616fdcc23@realtek.com>
-References: <20250610103334.10446-1-justinlai0215@realtek.com>
- <20250610103334.10446-2-justinlai0215@realtek.com>
- <aEmJ-b8ogdb3U5M4@MacBook-Air.local>
-In-Reply-To: <aEmJ-b8ogdb3U5M4@MacBook-Air.local>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwNMvS60"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-74849e33349so517115b3a.3;
+        Wed, 11 Jun 2025 20:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749698095; x=1750302895; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VcfvNlt00FTPnlyELPoRt9S7HG9qLcQIDOCI0yY1ETI=;
+        b=OwNMvS60un+NWkXu5j2HkJ6ABmuIIw1Acl/+0aeA0+EWNym2UFGB/x3ZVrKyNgRtb9
+         iCOl2mgI+hp7TYg/HRL0pGLwt1dWBaYFvI/RPlhUDOWmGe1QtU6O3adrSbHJACnvqvRq
+         tiatJxItlogBWgNe9l3gibQfuoWcDVFUnXjn9mm3RHLxtQdbOIM1n7TbZ1fgoD5RFQ5o
+         U8FosN7KF4iKXPm2vMCGF9obbpNhmjb4LQV9i3LwmX1Naj1IKqK9rnoG9v6hIrBPAwhz
+         V8ge0JXkWNCnyCyC/TvTuBrlhY/eJ5zs1fixmJV6RJBya7D3MtETkOi56XoLkwc5uwdU
+         rI9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749698095; x=1750302895;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VcfvNlt00FTPnlyELPoRt9S7HG9qLcQIDOCI0yY1ETI=;
+        b=ipelcwcd2V+cND88JUho3+8Anb+wGCacDEyVm+M62hHaxZZ/NSYUbA4VoE4N3aTT8R
+         b6UmKh4rA7GkmSYPbTBQO4cGeX93rqEDX9P7Ie2dwfZ2QaU5NkbBXlp1/E94VZ8i+dAY
+         9CNcNP6p/LCzQ+n6QbNNR49cUzQIZ5PtvlXDPAyhF6Bg7E/vu0BE8zIDagiBKEE7gedN
+         ny0B1fGNuMNQW5hhj3od2N9cEEeJ2FVDADzWFb1d7qFxeZU8kcWzFatc8m8JK0ehFwjb
+         3I3UB8su5zynP35K3OCfOEF5KBZk8+Kl3Qo5oXXHdSpo4nNwKIm6BN73+HxDjOmSVbzU
+         bFSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7oyuNvBgYvIww89MPb9plEkkixcpT7OTdmJicZm5DaoP4BG5Wpmm0TXa0aKqCb4PnwtqI8yfb+s5H5+g6@vger.kernel.org, AJvYcCVu8j8pynmgTE3HspVJQWZMiKYlF5M4Zd3DvrMaWS4ihZmZleHxDMRYxt7k6SDHTIBP6bd8T8RkZ9x7ag==@vger.kernel.org, AJvYcCXA2NreDOnGtF0KVeL5G5NaKE36cdb302b5P3rC6/z3209yVPG5CGWMLdQm+wKc58ytoHqQ1uPFEos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNPz8fRpanE85KTD5Fo12VarxMbCoScu3osZ/vsXy2b/FYVfWR
+	ytHYclWRcZ70zBGw7/8cTiP1d91d4w0SjkagnXNgAmAhP6Vo5OenQORH
+X-Gm-Gg: ASbGncvhKKxJFXQVGcjKfdp7dDLgilvCXUYHUcraEeoCJPcJKtpxXdsxI5am5Ap2m7X
+	uqEJc6O2Wswglt587ikoAqqdYLi2T0TOXbVYV2FS7ORTLVtLz0FoT3QgdaxargSoui29cw5YKOT
+	2HQZl60+g28CXZSfbcAHLq+TO6MHN5Rj7gq/ULZQGX2g9dkJwBR+w2qdFgpI4Rrn6J1R79v5tVW
+	sroQERmAbSOsJBMGVm2eLE6DJZXgC2zJdg2eYrJ9lInc7hYDsyrHcnL+nbSAUBw7Hsdf1tgSabD
+	B8wLG+7rPvbiLNGHahyZG4xjcouE4sYQ8Sl1cfQGJ3zi8zCg0+qKBgK81U/PEUUNZB0VQ3wT9xZ
+	QaCv/
+X-Google-Smtp-Source: AGHT+IE89JQcQCFvk3h02GmjoF0xUyL9MLke8YxZb75TKbqJ9AyQHn/6KwKLAgtRBahWWUJo0vLigw==
+X-Received: by 2002:a05:6a20:12c6:b0:1f5:889c:3cbd with SMTP id adf61e73a8af0-21f867441e9mr9009270637.35.1749698094760;
+        Wed, 11 Jun 2025 20:14:54 -0700 (PDT)
+Received: from [192.168.0.150] ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74880896268sm350183b3a.44.2025.06.11.20.14.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 20:14:54 -0700 (PDT)
+Message-ID: <8b354dec-021b-4083-a59d-d77b48e3e616@gmail.com>
+Date: Thu, 12 Jun 2025 10:14:50 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: ext4: atomic_writes: Remove
+ cross-reference labels
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Documentation <linux-doc@vger.kernel.org>,
+ Linux ext4 <linux-ext4@vger.kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+ Andreas Dilger <adilger.kernel@dilger.ca>,
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+References: <20250610091200.54075-2-bagasdotme@gmail.com>
+ <20250611164800.GC6134@frogsfrogsfrogs> <87ikl21a5u.fsf@trenco.lwn.net>
+ <aEoaJEhw5qHkd2_w@archie.me> <20250612010942.GJ6179@frogsfrogsfrogs>
+ <aEpAD2jcemzvoJlQ@archie.me>
+Content-Language: en-US
+In-Reply-To: <aEpAD2jcemzvoJlQ@archie.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> On Tue, Jun 10, 2025 at 06:33:33PM +0800, Justin Lai wrote:
-> > Link IRQs to NAPI instances with netif_napi_set_irq. This information
-> > can be queried with the netdev-genl API.
-> >
-> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> > ---
-> >  .../net/ethernet/realtek/rtase/rtase_main.c   | 20 +++++++++++++------
-> >  1 file changed, 14 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > index 4d37217e9a14..a88af868da8c 100644
-> > --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > @@ -1871,6 +1871,18 @@ static void rtase_init_netdev_ops(struct
-> net_device *dev)
-> >       dev->ethtool_ops =3D &rtase_ethtool_ops;  }
-> >
-> > +static void rtase_init_napi(struct rtase_private *tp) {
-> > +     u16 i;
-> > +
-> > +     for (i =3D 0; i < tp->int_nums; i++) {
-> > +             netif_napi_add(tp->dev, &tp->int_vector[i].napi,
-> > +                            tp->int_vector[i].poll);
->=20
-> Maybe netif_napi_add_config can be used either in this patch or in an add=
-ed
-> 3rd patch to this series to support persitent NAPI config?
->=20
-> Otherwise:
->=20
-> Reviewed-by: Joe Damato <joe@dama.to>
+On 6/12/25 09:48, Bagas Sanjaya wrote:
+> On Wed, Jun 11, 2025 at 06:09:42PM -0700, Darrick J. Wong wrote:
+>> On Thu, Jun 12, 2025 at 07:07:00AM +0700, Bagas Sanjaya wrote:
+>>> On Wed, Jun 11, 2025 at 11:05:17AM -0600, Jonathan Corbet wrote:
+>>>> Sphinx wants to snarf up every .rst file it sees, regardless of whether
+>>>> it is explicitly made part of the document tree.  So it will pick up
+>>>> atomic_writes.rst separately from the include.
+>>
+>> Does that mean that overview.rst doesn't need to include the other files
+>> at all?
+> 
+> I think overview.rst can be turned into toctree index.
+> 
 
-Hi Joe,
+Or maybe slurp all included .rst's.
 
-Thank you for your suggestion. I will make the change in this patch in v2.
+Thanks.
 
-Thanks,
-Justin
->=20
-> > +             netif_napi_set_irq(&tp->int_vector[i].napi,
-> > +                                tp->int_vector[i].irq);
-> > +     }
-> > +}
-> > +
-> >  static void rtase_reset_interrupt(struct pci_dev *pdev,
-> >                                 const struct rtase_private *tp)
-> { @@
-> > -1956,9 +1968,6 @@ static void rtase_init_int_vector(struct rtase_priva=
-te
-> *tp)
-> >       memset(tp->int_vector[0].name, 0x0,
-> sizeof(tp->int_vector[0].name));
-> >       INIT_LIST_HEAD(&tp->int_vector[0].ring_list);
-> >
-> > -     netif_napi_add(tp->dev, &tp->int_vector[0].napi,
-> > -                    tp->int_vector[0].poll);
-> > -
-> >       /* interrupt vector 1 ~ 3 */
-> >       for (i =3D 1; i < tp->int_nums; i++) {
-> >               tp->int_vector[i].tp =3D tp; @@ -1972,9 +1981,6 @@ static
-> > void rtase_init_int_vector(struct rtase_private *tp)
-> >               memset(tp->int_vector[i].name, 0x0,
-> >                      sizeof(tp->int_vector[0].name));
-> >               INIT_LIST_HEAD(&tp->int_vector[i].ring_list);
-> > -
-> > -             netif_napi_add(tp->dev, &tp->int_vector[i].napi,
-> > -                            tp->int_vector[i].poll);
-> >       }
-> >  }
-> >
-> > @@ -2206,6 +2212,8 @@ static int rtase_init_one(struct pci_dev *pdev,
-> >               goto err_out_del_napi;
-> >       }
-> >
-> > +     rtase_init_napi(tp);
-> > +
-> >       rtase_init_netdev_ops(dev);
-> >
-> >       dev->pcpu_stat_type =3D NETDEV_PCPU_STAT_TSTATS;
-> > --
-> > 2.34.1
-> >
-> >
+
+-- 
+An old man doll... just what I always wanted! - Clara
