@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A12233D9E
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C492309B2
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:42:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724936; cv=none; b=uZNReSNXaxHwKrQPqTlqzyJRcY+k/gGWStdU/S2mzX6ujDcnS3gF4gzShLldqrYRWRXpjbg2q1Wk8aX3n8oSA+htBc79JqofcXdp5KpE4m1nq5WNpdeuPRwL2dgex2Uj67mxKNjfAfd8KtizSqHyyqbnkAAf57E8S3RGMyQlRsQ=
+	t=1749724935; cv=none; b=TKx4KYpTWw6euf8vI0/Emq84KTnw3s/CODcWW9K0stbxNgBhNj0A/hWM/v3um9vW4YxW5w44TPEkdae9Dpwb/bPr+w3oG13FBl1cVrDQyT2TSi2HU6Qno+WJuEMivqq6Q9FCEKmKEPiT98II7cmgLxJ1PTez6u2IzBWrF18adII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724936; c=relaxed/simple;
-	bh=qakqnYbp0Vf8pUMDYk4oYr8IE4ZL3eLBv+g1sFJb9YA=;
+	s=arc-20240116; t=1749724935; c=relaxed/simple;
+	bh=dccEvE8z4YXo6tWQOzZnVtCqb27+4nTiKtzvpzK8h3o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=akUmDYVVIuSGmGV7gFkixHT062RDTOVoWA0x28+MW8UV28sNLfRidSA0aENe72ybFakKb57Erm5JxtiMTb6SpKxfbGNCwwkLRwm0p324JrTiBNlE55uajxSLxL/Z2ftLexXwyZa38Wn7BO/DTUEEKpyDTZVez2v/aUAbM7xYzBY=
+	 MIME-Version; b=jZMIA6Ssbiqf7BMYhATc+L1YpkCZnWEzIiYtkZSKDZpHV6ZpXsIoeD34+6J2Bs1EC00g98iQZnQ8ztaMVej7BNltt8a010fU9IPT2dihgs2chAhfh0p6ceoL4sW4v7Al7vG1lLqRZVcXo9OgSG8VEJ2b1xP4NAYPgh27/A3TWwo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uPfNg-00069I-GW; Thu, 12 Jun 2025 12:42:00 +0200
+	id 1uPfNg-00069H-GV; Thu, 12 Jun 2025 12:42:00 +0200
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uPfNf-0036k1-0U;
+	id 1uPfNf-0036k0-0S;
 	Thu, 12 Jun 2025 12:41:59 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uPfNf-009UTw-0H;
+	id 1uPfNf-009UTm-0E;
 	Thu, 12 Jun 2025 12:41:59 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Andrew Lunn <andrew@lunn.ch>,
@@ -42,9 +42,9 @@ Cc: David Jander <david@protonic.nl>,
 	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH net-next v2 2/3] net: phy: dp83tg720: remove redundant 600ms post-reset delay
-Date: Thu, 12 Jun 2025 12:41:56 +0200
-Message-Id: <20250612104157.2262058-3-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v2 1/3] net: phy: dp83tg720: implement soft reset with asymmetric delay
+Date: Thu, 12 Jun 2025 12:41:55 +0200
+Message-Id: <20250612104157.2262058-2-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250612104157.2262058-1-o.rempel@pengutronix.de>
 References: <20250612104157.2262058-1-o.rempel@pengutronix.de>
@@ -62,12 +62,15 @@ X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 From: David Jander <david@protonic.nl>
 
-Now that dp83tg720_soft_reset() introduces role-specific delays to avoid
-reset synchronization deadlocks, the fixed 600ms post-reset delay in
-dp83tg720_read_status() is no longer needed.
+Add a .soft_reset callback for the DP83TG720 PHY that issues a hardware
+reset followed by an asymmetric post-reset delay. The delay differs
+based on the PHY's master/slave role to avoid synchronized reset
+deadlocks, which are known to occur when both link partners use
+identical reset intervals.
 
-The new logic provides both the required MDC timing and link stabilization,
-making the old empirical delay redundant and unnecessarily long.
+The delay includes:
+- a fixed 1ms wait to satisfy MDC access timing per datasheet, and
+- an empirically chosen extra delay (97ms for master, 149ms for slave).
 
 Co-developed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 Signed-off-by: David Jander <david@protonic.nl>
@@ -75,36 +78,141 @@ Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
 changes v2:
 - move by Sob to the end of commit message
+- add documentation references to the comment
 ---
- drivers/net/phy/dp83tg720.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/net/phy/dp83tg720.c | 81 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 71 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/net/phy/dp83tg720.c b/drivers/net/phy/dp83tg720.c
-index a53ea6d6130b..92597d12ecb9 100644
+index 7e76323409c4..a53ea6d6130b 100644
 --- a/drivers/net/phy/dp83tg720.c
 +++ b/drivers/net/phy/dp83tg720.c
-@@ -450,21 +450,11 @@ static int dp83tg720_read_status(struct phy_device *phydev)
- 		/* According to the "DP83TC81x, DP83TG72x Software
- 		 * Implementation Guide", the PHY needs to be reset after a
- 		 * link loss or if no link is created after at least 100ms.
--		 *
--		 * Currently we are polling with the PHY_STATE_TIME (1000ms)
--		 * interval, which is still enough for not automotive use cases.
- 		 */
- 		ret = phy_init_hw(phydev);
- 		if (ret)
- 			return ret;
+@@ -12,6 +12,48 @@
  
--		/* Sleep 600ms for PHY stabilization post-reset.
--		 * Empirically chosen value (not documented).
--		 * Helps reduce reset bounces with link partners having similar
--		 * issues.
--		 */
--		msleep(600);
+ #include "open_alliance_helpers.h"
+ 
++/*
++ * DP83TG720 PHY Limitations and Workarounds
++ *
++ * The DP83TG720 1000BASE-T1 PHY has several limitations that require
++ * software-side mitigations. These workarounds are implemented throughout
++ * this driver. This section documents the known issues and their corresponding
++ * mitigation strategies.
++ *
++ * 1. Unreliable Link Detection and Synchronized Reset Deadlock
++ * ------------------------------------------------------------
++ * After a link loss or during link establishment, the DP83TG720 PHY may fail
++ * to detect or report link status correctly. As of June 2025, no public
++ * errata sheet for the DP83TG720 PHY documents this behavior.
++ * The "DP83TC81x, DP83TG72x Software Implementation Guide" application note
++ * (SNLA404, available at https://www.ti.com/lit/an/snla404/snla404.pdf)
++ * recommends performing a soft restart if polling for a link fails to establish
++ * a connection after 100ms. This procedure is adopted as the workaround for the
++ * observed link detection issue.
++ *
++ * However, in point-to-point setups where both link partners use the same
++ * driver (e.g. Linux on both sides), a synchronized reset pattern may emerge.
++ * This leads to a deadlock, where both PHYs reset at the same time and
++ * continuously miss each other during auto-negotiation.
++ *
++ * To address this, the reset procedure includes two components:
++ *
++ * - A **fixed minimum delay of 1ms** after a hardware reset. The datasheet
++ *   "DP83TG720S-Q1 1000BASE-T1 Automotive Ethernet PHY with SGMII and RGMII"
++ *   specifies this as the "Post reset stabilization-time prior to MDC preamble
++ *   for register access" (T6.2), ensuring the PHY is ready for MDIO
++ *   operations.
++ *
++ * - An **additional asymmetric delay**, empirically chosen based on
++ *   master/slave role. This reduces the risk of synchronized resets on both
++ *   link partners. Values are selected to avoid periodic overlap and ensure
++ *   the link is re-established within a few cycles.
++ *
++ * The functions that implement this logic are:
++ * - dp83tg720_soft_reset()
++ * - dp83tg720_get_next_update_time()
++ */
++
+ /*
+  * DP83TG720S_POLL_ACTIVE_LINK - Polling interval in milliseconds when the link
+  *				 is active.
+@@ -19,6 +61,10 @@
+  *				 the link is down.
+  * DP83TG720S_POLL_NO_LINK_MAX - Maximum polling interval in milliseconds when
+  *				 the link is down.
++ * DP83TG720S_RESET_DELAY_MS_MASTER - Delay after a reset before attempting
++ *				 to establish a link again for master phy.
++ * DP83TG720S_RESET_DELAY_MS_SLAVE  - Delay after a reset before attempting
++ *				 to establish a link again for slave phy.
+  *
+  * These values are not documented or officially recommended by the vendor but
+  * were determined through empirical testing. They achieve a good balance in
+@@ -28,6 +74,8 @@
+ #define DP83TG720S_POLL_ACTIVE_LINK		1000
+ #define DP83TG720S_POLL_NO_LINK_MIN		100
+ #define DP83TG720S_POLL_NO_LINK_MAX		1000
++#define DP83TG720S_RESET_DELAY_MS_MASTER	97
++#define DP83TG720S_RESET_DELAY_MS_SLAVE		149
+ 
+ #define DP83TG720S_PHY_ID			0x2000a284
+ 
+@@ -201,6 +249,26 @@ static int dp83tg720_update_stats(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static int dp83tg720_soft_reset(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = phy_write(phydev, DP83TG720S_PHY_RESET, DP83TG720S_HW_RESET);
++	if (ret)
++		return ret;
++
++	/* Include mandatory MDC-access delay (1ms) + extra asymmetric delay to
++	 * avoid synchronized reset deadlock. See section 1 in the top-of-file
++	 * comment block.
++	 */
++	if (phydev->master_slave_state == MASTER_SLAVE_STATE_SLAVE)
++		msleep(DP83TG720S_RESET_DELAY_MS_SLAVE);
++	else
++		msleep(DP83TG720S_RESET_DELAY_MS_MASTER);
++
++	return ret;
++}
++
+ static void dp83tg720_get_link_stats(struct phy_device *phydev,
+ 				     struct ethtool_link_ext_stats *link_stats)
+ {
+@@ -477,19 +545,11 @@ static int dp83tg720_config_init(struct phy_device *phydev)
+ {
+ 	int ret;
+ 
+-	/* Software Restart is not enough to recover from a link failure.
+-	 * Using Hardware Reset instead.
+-	 */
+-	ret = phy_write(phydev, DP83TG720S_PHY_RESET, DP83TG720S_HW_RESET);
++	/* Reset the PHY to recover from a link failure */
++	ret = dp83tg720_soft_reset(phydev);
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Wait until MDC can be used again.
+-	 * The wait value of one 1ms is documented in "DP83TG720S-Q1 1000BASE-T1
+-	 * Automotive Ethernet PHY with SGMII and RGMII" datasheet.
+-	 */
+-	usleep_range(1000, 2000);
 -
- 		/* After HW reset we need to restore master/slave configuration.
- 		 * genphy_c45_pma_baset1_read_master_slave() call will be done
- 		 * by the dp83tg720_config_aneg() function.
+ 	if (phy_interface_is_rgmii(phydev)) {
+ 		ret = dp83tg720_config_rgmii_delay(phydev);
+ 		if (ret)
+@@ -582,6 +642,7 @@ static struct phy_driver dp83tg720_driver[] = {
+ 
+ 	.flags          = PHY_POLL_CABLE_TEST,
+ 	.probe		= dp83tg720_probe,
++	.soft_reset	= dp83tg720_soft_reset,
+ 	.config_aneg	= dp83tg720_config_aneg,
+ 	.read_status	= dp83tg720_read_status,
+ 	.get_features	= genphy_c45_pma_read_ext_abilities,
 -- 
 2.39.5
 
