@@ -1,193 +1,314 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA61522F;
-	Thu, 12 Jun 2025 08:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749718244; cv=fail; b=j4jdonAn1/HnS0VGEfCryZBF0MhV+2BrtNWY0PGGqThWM0tbUIdm4WsFHbJyR2HWIWIdqvlTIqPwvPx2NFagtYGCZK/4DhMuMVxApj6SVLFpEFPtKDpMzhtoyO1HlyqVZyInUywWXdWdkLpnMw2456DVWJPidCpy9zOg/7Av/v0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749718244; c=relaxed/simple;
-	bh=TRXcrKGib/1ggSnXpozeeqzIZsx2TaicwldzxFJfjZY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=t5T0DtZFMKjog/r+wFy3F07xWSwExjxXEKwY+QaljIUWm7QDjG/eQ4EbCr5qJfCWI+irU9EfMck35+eXsbID3C2R4+Q7OHzG24hHye1QuMT+hyMpxS8JNzZ+Vf/IvYTvcHRzPPbmpyKENv5FC2diUO1okfEBoqYoYSx6DNW2i4s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VjughloI; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A58522F
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749718285; cv=none; b=E3LvZTC9ne6rgggeD7vlQozNDlKBnvfg0ODDB5RV8yZ81BKzsm/IfTo3e/+ZyMSJHHWhUwgsgbvoX8tDIpldPLlCVVaCwHhZK6qbIy5PpKjYl+mN8EK1QvnYh6IH6aNYDTqaVkyEm3yadROuxSh8K07sFmQaH2QrIUqd5J8Cofw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749718285; c=relaxed/simple;
+	bh=mwbCOGoMOW0c5JCYm1Q5ST7r/VVjMKXg8iz79RHmZa0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZRl7g5GG5jrSEs6IP8AXqvdPR8P7hWeMBi738SxwBns/i9so2TdoYZmksbj1HDehM+kcS0AR2Gmw1YVFWrIFp2YDgO9PJZiKktCnOyzTL/9H1y4IqLVE93YsQutBgpYbEUGsz+kj3t9XG5rRFmRoc7Oxafya96zOy8eb5cwOfRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ANVq0kTw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VjughloI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749718243; x=1781254243;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=TRXcrKGib/1ggSnXpozeeqzIZsx2TaicwldzxFJfjZY=;
-  b=VjughloIg8vvqFjl8Y3JzMUwhKCs5NNi+JjXKXlKiW5zizPOW+GR3q1+
-   TxRET4kBOPAbAGLsNM3jqiRv5u7ehYvhoTxR1JG+Rdu1O55OY+wE4Bdue
-   mM1nYcLPJsTUDZxeqTKa0poxzT5XNVPaHC53c3B4JClKuOsb72kVe6q6v
-   A2PUa8EaZJJud2shZ/yceQyMOYWgFzGn+mvR8ZjJ4zy1BXHqM5NDePqug
-   S+jRSsu1pjmBo0SYs3DH6oIgq/t5Gwxt23sndd8HzxH2XFuYvXk0qhAE7
-   29zWFRa8tPh+JBpEu3fOOA0zmNu7NQXx/P75FdJrNiy7HWI8IvoHIue7W
-   A==;
-X-CSE-ConnectionGUID: UCzbFg7VRuacsOUnvVlwkQ==
-X-CSE-MsgGUID: vfAgHH/mQVOpatLsXQTYNA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="50995385"
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="50995385"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 01:50:41 -0700
-X-CSE-ConnectionGUID: k/7iOw8HS8evKWshTCY1fg==
-X-CSE-MsgGUID: dSgeJn9hQ1Wr3CxZfgTnqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="148006093"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 01:50:42 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 12 Jun 2025 01:50:41 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 12 Jun 2025 01:50:41 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.80)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 12 Jun 2025 01:50:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VLd7Wcsmg9Ej1/IuLa+CK5oUsn5oWYFo8ArQJJko7tjYLehjVf+7JNS98Svvs34PJombd8mCzxVKiKG79JnMeIsaVOxv76PM28L8se1AiBxNuOx0Vm4gp6kUS1/u0f1m32Yf7REwgOOdvnx//U10dB5WF98UCBuy3BJKVY4dea5gtkpsiMhYyxem0C5ultqh1sxUU8JZY1iq7SBvFt2n2ZDqv75C4v48F64u3uOpZl3pbLwI8KMIkqlYmKpwZt60pu3X1LcLV8ZukP4J1fwjOFHdtk/H429LtmPkbK7qmWFJYHfR9vddcPZWubo1UQ97qW7AmLXaczDQ+7hIzITnig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8b+4Z8ybpWm3RWVQpnfmlVXbQqBifLb4Pk8dsQ+8ikk=;
- b=Q7EAMBdV7X6ORiyXgjsqDOunhwPxir1wWr0aGM8YzVIsmKupGZmy4+Zc7UO7kr1zzI0sCLhACST1sao2IRGQD9gdCnoTUsPjU70MkhZcwC2iJ2zzf82FgRC8brlev8MU/lItfXoMEk9CX878rCXQ+NHfriYK0a2+WY282BHLW726hvH65b+Sx+0qq4I2Gr5KWptYNaPHbQ2lUSFNqSiwMyiL8v32JJPGwluTJRsbRuXAkyQd7I0u4D/FC7wTMBfFBbeI31WfFcCSsTQ3cuA284r4bqEWU7xroXAuCkI05UDUklj7+kB/4RQC7WmRZ673mYLtOoZqFw82fNqhFJ6V7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6366.namprd11.prod.outlook.com (2603:10b6:930:3a::8)
- by SA2PR11MB4954.namprd11.prod.outlook.com (2603:10b6:806:11b::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 12 Jun
- 2025 08:50:33 +0000
-Received: from CY5PR11MB6366.namprd11.prod.outlook.com
- ([fe80::6826:6928:9e6:d778]) by CY5PR11MB6366.namprd11.prod.outlook.com
- ([fe80::6826:6928:9e6:d778%3]) with mapi id 15.20.8835.019; Thu, 12 Jun 2025
- 08:50:33 +0000
-Date: Thu, 12 Jun 2025 09:50:26 +0100
-From: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-To: Eric Biggers <ebiggers@kernel.org>
-CC: Simon Richter <Simon.Richter@hogyros.de>, <linux-fscrypt@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mtd@lists.infradead.org>, <linux-ext4@vger.kernel.org>,
-	<linux-f2fs-devel@lists.sourceforge.net>, <ceph-devel@vger.kernel.org>
-Subject: Re: [PATCH] fscrypt: don't use hardware offload Crypto API drivers
-Message-ID: <aEqU0iU1tBrLEYUq@gcabiddu-mobl.ger.corp.intel.com>
-References: <20250611205859.80819-1-ebiggers@kernel.org>
- <7f63be76-289b-4a99-b802-afd72e0512b8@hogyros.de>
- <20250612005914.GA546455@google.com>
- <20250612062521.GA1838@sol>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250612062521.GA1838@sol>
-Organization: Intel Research and Development Ireland Ltd - Co. Reg. #308263 -
- Collinstown Industrial Park, Leixlip, County Kildare - Ireland
-X-ClientProxiedBy: DU6P191CA0060.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:10:53e::10) To CY5PR11MB6366.namprd11.prod.outlook.com
- (2603:10b6:930:3a::8)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ANVq0kTw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749718282;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Pv/0K55P/9M5ozPIv7hpLb7AI6NzEJqs/WOSxFVf7Yk=;
+	b=ANVq0kTwP/E3NEjcMVdSZDMMUi2Gs3tMkRvA2nDJ7ygSh/TKfThvNGOkWdZa/USK0g7MPb
+	ViNIsrcnnbyX5azUAo2BWR+sYWgw1/UV2c9kxvkDTcwj6dmj+Fy2hLO75Ym79OuCpBCnzz
+	7ceasZJVx4hAab2kc6I2raNmByPHvDQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-352-bs-OyU8IM6-0gr4VyFjjIg-1; Thu, 12 Jun 2025 04:51:21 -0400
+X-MC-Unique: bs-OyU8IM6-0gr4VyFjjIg-1
+X-Mimecast-MFC-AGG-ID: bs-OyU8IM6-0gr4VyFjjIg_1749718280
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f55ea44dso327730f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:51:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749718280; x=1750323080;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Pv/0K55P/9M5ozPIv7hpLb7AI6NzEJqs/WOSxFVf7Yk=;
+        b=sOWxsnYvCq33G5+hV/km6/7CAVx07FWh5EgCPA9RessktVDn1tUVnVmTmxFBotw6kh
+         sSL9PlPaYHgH7ddo7nXJEmJigqP/a5AmPtCrdkMVUqQW1Orn5JCyLb2fWsAQS3qkLcdK
+         35qQ3vJi2QBy6rG+QuqvgU4UPGHIh3PKdw9dH5EUKhnnmmf1PugTXh5Vu4TPjOd8A3B/
+         1Yber/BjNxwNyZeS8Tvp72YLtVCZcRCNMwPH2Vuq6x2RGhHTkinwvOVRjlpG+3Xv0RlT
+         nQsr3e6jGod41hb6/Z9TzDBWknEAY0QbQRZk+ZL65bbVXzoDg63Mf8emeUZFmRRA8YgA
+         eetA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1i+SzwnCTCkXHPIUDFT25KKcoApbxegcNmwYo6PuLc3G44B3c4i4uHsFM8gHtvVDnwO+5cHmx0YQMNPU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxaNiz14lJbVw3dI0/VB3EmWn1Sjk7znLblN9hjoTLDjOz4Bcg
+	uvA6sqUkiqicqR5OIHPVDQYEU23NWuzl6+EIrH8hhTH9MupBV5dIIil0Wk4unhEYTYZZCZYAIkC
+	LTJKgQ5cNzOer9BEeMMeHF/3tpOrFeNmCrpyAwWQZ94uORcM9PRSXGqpnEDZNhvmzAw==
+X-Gm-Gg: ASbGncv5XLaUvIYFcvDkLnzVB5WXTLyStmkpidbpAnE8rlwgytjCplebH2XZLRl3ATb
+	2C7StXtTkx2A7WvelOQXa/iMqQrrSnPvfjGcNsuedrP/8OX2c1wTOIjvPj6xv+8UAIX8LXGhE4U
+	3WeyjL9qOJbSbjPSBwnEt699fwAxvLrHdP4fZp9EjGpFzRTuavYZtcDEkZz29Y0aMmq/jppENEj
+	fBtlnybmfSa+1+t60TF25uA5WIWxxB4IOEjta57eRlfknPB9bndXs+IoiBY1peH4bOl6/c+DtlW
+	Q14C/ynRouwYxdpZ6F6U9VUYgmuxBBDOeWjjaklSLqBTNGcvyS9RL2VUeMDDyQ39kO50tIqQ2i/
+	cHbJatJZGtVApHtZeP3lq/+zSCfN7jAuTRHOZ99oKZWuAhXTr0A==
+X-Received: by 2002:a5d:584f:0:b0:3a4:fefb:c8d3 with SMTP id ffacd0b85a97d-3a5613749e0mr1487969f8f.40.1749718279712;
+        Thu, 12 Jun 2025 01:51:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGR97nD4A7G13VvrYWhbBiFquVyXYFNAgzoGY2i1WaeJKeOxM+l3+KiJDeEPR+DPQoF3+BIBg==
+X-Received: by 2002:a5d:584f:0:b0:3a4:fefb:c8d3 with SMTP id ffacd0b85a97d-3a5613749e0mr1487945f8f.40.1749718279257;
+        Thu, 12 Jun 2025 01:51:19 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561a3cd3esm1333342f8f.63.2025.06.12.01.51.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 01:51:18 -0700 (PDT)
+Message-ID: <953596b2-8749-493d-97eb-a5d8995d9ef8@redhat.com>
+Date: Thu, 12 Jun 2025 10:51:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6366:EE_|SA2PR11MB4954:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0148b7a-7e54-45bc-5f74-08dda98e3165
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?qq/FCe19+EHD0QUI8mIYtMZw7JsJuVG3BhxiXkoHhfo7tYGiGYGP4Slof38q?=
- =?us-ascii?Q?ZcZZELm/03uxQjMGrreWYvDbNOcvMAK1UAkLxcv91WoFJsLmjQO7j9MgCAU/?=
- =?us-ascii?Q?1t9U+G0cX5FMI03FwDou8NKJq4/nvgMx9jSzONJXLBE3fMicc/mKQeIjnenF?=
- =?us-ascii?Q?FCh75Rlj1relZIeAUUem/OPetBqJ0VGf+521QXJIZercjXy0ERXwzzoGrx1z?=
- =?us-ascii?Q?k1tQRnBYWUCiPxp98EtcMwgwrM6qyhohOKuOxvlWMujrygx6z5NrF/RRsGT0?=
- =?us-ascii?Q?qLc0XesUaDz5R4WatLRuFwh0R+35NfvG6foSEsX2L/mFcsxvJXZ3l9VqorOM?=
- =?us-ascii?Q?3nXaMG9A+6Q0+3LSszXNuYeOFupwN0yQacOFCFz31pAyAefF4bz2C1oYeRzM?=
- =?us-ascii?Q?eWIb8HTFfaoyFIS+o0HGDXXDcEfvcoxaIGWXH+w4FUAoFCxLYLN475N73eTZ?=
- =?us-ascii?Q?7eE1D7ZQ49tqRV85+wMfrAz/WsNSg2ZXzTM+GuX9ilQdJrbUlwS13GVmmMiP?=
- =?us-ascii?Q?AvwYt1Q3hA4VMW0j/cNqjejirEqWBBKY2UAa4A8Gz3lFZbcA0EuHItUSGN5e?=
- =?us-ascii?Q?uPcvf8wmQOBsLkC1lpboSIEXIjc4JL3uwnpdpivKNRC4+7+Iq65WX6wW5Wev?=
- =?us-ascii?Q?mcfSQLUMTrbSHLo1O45OcNGb5CaIM8d8RPPkd3xpVzk/HsUape4vZCIB4RUV?=
- =?us-ascii?Q?c5siF1jGBwQuUrbr9/iPo3hMTvE5orWQKqTQjoonBB3bsS1U6ZY/PajWS+XQ?=
- =?us-ascii?Q?ZhTJcB+XAA9XPLXV0ILT/uA/bebP1wrX9j5W7VyoXNCSaiWaJg9/sWGu85K5?=
- =?us-ascii?Q?1GNkqdnSVZIXNKc0Q0skLgnh7i3lYY1iGkaVyGLqW6NhGRjO5YfNl9yDe9Yy?=
- =?us-ascii?Q?O5iRmcrYqmRdHHaeGedvYK3UgIc1TK6QIulspONWlvgGbzq6yNt6s19oQ7rF?=
- =?us-ascii?Q?AAU7uc3ZfTcU/F9aIc5Su7Q6scRTBTu9G4XMW+3ny5eGud5UuZ24bDQ4GJFx?=
- =?us-ascii?Q?uJsGZx7cdD+R27jR67J/CulAIiMU53w1kskRmcGe5VDCjvNF4cBaBlHESyC3?=
- =?us-ascii?Q?5NZMmA0UOzs8SV5iW5DElz0oUwGxydIjNbtvb4UepFUicp82gcZ40BlWBQ+p?=
- =?us-ascii?Q?7eBPEk5ORdu87TvM4pZ+ectR3PYNUzIlAGQA5017MsqMCJdMN2S4ThoiFPRG?=
- =?us-ascii?Q?Gm3gIKXi7ONTwdNJ3xgFnTAEYjQ4hyw20JpBViQoUrVJiXD6HWpm0/QkYCku?=
- =?us-ascii?Q?IdVAkL7WjY4wpsdQM63l45MAIVZIyMo9Q96+km2xe6auxFZCEqhe+UYHWPvD?=
- =?us-ascii?Q?UwvoqjBMZuU20SDSAVEaUq0y98q+3JvwAdRQQPIfiwRZP+VYbYygDkdtQLA5?=
- =?us-ascii?Q?JoHMjH74r5ZJXhPaQC1hze7DSSuh?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6366.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eTyBu/Lsc/Bms2Qgl2LPjPboywMBuAa7CoPQ1hQE7mAKIto644IyWQcfC2fg?=
- =?us-ascii?Q?RF1RFltSLqv8UfmBK29LvG3SO2FraJXLUErPABAy4UlANYXTw0wzuXygm0Cz?=
- =?us-ascii?Q?h4sW3c+3Vaz0f98EI5CWDYvXu8bHqg7wck+4LUIR4dC/YKhHfZpkzeuKa962?=
- =?us-ascii?Q?K3J1+6+4U67VyZguwDe/aZgzhYUNuMPnCmpxIqny21bhIB8Ln8aP4lttkoa4?=
- =?us-ascii?Q?nYasTQRBJ+AGFXCrVOlEsdHHBHdED2qvCPQBalQ2FpBqQjSwQs5O3sjOboQb?=
- =?us-ascii?Q?0l48XFKzXk6o9ALSQg9TbcPHzwkk807fQ+Fy3EWLlXDeKuY92ujBGLtYU1Jf?=
- =?us-ascii?Q?Iv6SnOJ19LtpyfZnx/QeCF9cOTp57ZzE5hUbPWGUuzh1iSi5j+AkU1bj515m?=
- =?us-ascii?Q?2z9RRr75cXaFbpA1XzQuEXRzZwlhZHfnvIDYVYpK5bXyfjHKIlDatzGkL3mP?=
- =?us-ascii?Q?vSnQHXRzc3kNcem+Xbm47xV28CaoZk87ldOF1ivBh9MpAs0vPw1FLG8iZXaY?=
- =?us-ascii?Q?ULEwCeJitYfu468HBLMaBUxUEHP7LzUcuFdzYcOIXGpm1Foyr/qx85QlAQLW?=
- =?us-ascii?Q?7Hza3KWLFvS7n+INNySyVWF26Oi2a3YjHHnJiT41m1YFPcVsl80tVlXozN4K?=
- =?us-ascii?Q?WEuH46akynHQEIJWQBs32J49OnTjNqOz0NbYcByi0JAibJn+duByyyTBsR4P?=
- =?us-ascii?Q?8Ie0G/Um9/+kwc087sUgdFPzn/h/sdxNPTl1nL7YUWxmPHjo+HxB7Ex0I78f?=
- =?us-ascii?Q?zN7FamB450it4YKWSQN7C44v/UPw2R3kr1FwtoFDGRSFY8h8V1x3KRgUp70G?=
- =?us-ascii?Q?W48omm8pts8x756EvJG3+k5BqI2vc7xlAlNqU6sB/2eU+nWOsjyPsYbBiN+d?=
- =?us-ascii?Q?HtgWjLmaQBm2waVOsbn+Ph0D1j2UfUGiIXpVXufi1hHtMi4tXZ0YTJVzrOOa?=
- =?us-ascii?Q?QflgI1xTitR53ImL+QIo/mUza58ltMJ9lXEMD4Onw2/kNN6JInDcd3DqqlIH?=
- =?us-ascii?Q?i8XLwDBtEaCq+VqVZfCP7bsnaf1hYYJYQJtrThWJn6d728SR1ldwyGHIsMhp?=
- =?us-ascii?Q?hn+qiE44zwkwnDjaAVK0KBS4csYA0zbS8VwiKv29l0iVuk6ToRJbARhhYHlB?=
- =?us-ascii?Q?5911S7AvMApH9wFZXXTa25QMo8J8ZhONk9Dz1fTOmlIj2jKHrsubb2oJqyjK?=
- =?us-ascii?Q?gSHoYHgGWyvdKIRlyQQsGuNXP1DyVNjF/rKSr6Y7a714B11DVH4Xwi9ozEY/?=
- =?us-ascii?Q?a7XxF4Stsu9kUH/x+nswnAcpv5ig/4gJgHx4eBgGvf6Lb1FgI8uyflNRJtnm?=
- =?us-ascii?Q?g9HeKtpXnC1MhjEEl0K8Kl0hrJpVgG7HGOG06Stg5pjMbJCv6+OJp/l36mMJ?=
- =?us-ascii?Q?d/yFVhTkP47VlcRfOwEdoerf0pr6e93hik38uXny7t3671ee1nEPflYlIggS?=
- =?us-ascii?Q?7hUkju9Eg9du6yCxkcQslKqVhTk3Y4mDRBKInH1OAh8WYuTILTIpByhy4TZp?=
- =?us-ascii?Q?xtJF91fPezUo9mQ7r+C9/UVxGs4y/gEQVXKrKKfqpfqSGQSQ5ERKmzUjLq7G?=
- =?us-ascii?Q?XZBZ9vW2wxLKsLykpbEBzeHWh1LQLopU4HBoDM+rF8pNYaKGr6SaXFz5O7YF?=
- =?us-ascii?Q?gA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0148b7a-7e54-45bc-5f74-08dda98e3165
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6366.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 08:50:33.6806
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sMtla1o3UIsK6vCoyR7fnqlkTCTGQQcg70IbTIB5192/k5ZBZ3ro/eGURT8kgwqqwwnLr+NUq2emWHQ+OOfrr5uoPT8wCbjuND8LLXbJ1xo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4954
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] mm: huge_memory: disallow hugepages if the
+ system-wide THP sysfs settings are disabled
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1749109709.git.baolin.wang@linux.alibaba.com>
+ <8eefb0809c598fadaa4a022634fba5689a4f3257.1749109709.git.baolin.wang@linux.alibaba.com>
+ <1ec368c4-c4d8-41ea-b8a3-7d1fdb3ec358@redhat.com>
+ <2ff65f37-efa9-4e96-9cdf-534d63ff154e@linux.alibaba.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <2ff65f37-efa9-4e96-9cdf-534d63ff154e@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 11:25:21PM -0700, Eric Biggers wrote:
+On 12.06.25 09:51, Baolin Wang wrote:
+> 
+> 
+> On 2025/6/11 20:34, David Hildenbrand wrote:
+>> On 05.06.25 10:00, Baolin Wang wrote:
+>>> The MADV_COLLAPSE will ignore the system-wide Anon THP sysfs settings,
+>>> which
+>>> means that even though we have disabled the Anon THP configuration,
+>>> MADV_COLLAPSE
+>>> will still attempt to collapse into a Anon THP. This violates the rule
+>>> we have
+>>> agreed upon: never means never.
+>>>
+>>> Another rule for madvise, referring to David's suggestion: “allowing
+>>> for collapsing
+>>> in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
+>>>
+>>> To address this issue, should check whether the Anon THP configuration
+>>> is disabled
+>>> in thp_vma_allowable_orders(), even when the TVA_ENFORCE_SYSFS flag is
+>>> set.
+>>>
+>>> In summary, the current strategy is:
+>>>
+>>> 1. If always & orders == 0, and madvise & orders == 0, and
+>>> hugepage_global_enabled() == false
+>>> (global THP settings are not enabled), it means mTHP of that orders
+>>> are prohibited
+>>> from being used, then madvise_collapse() is forbidden for that orders.
+>>>
+>>> 2. If always & orders == 0, and madvise & orders == 0, and
+>>> hugepage_global_enabled() == true
+>>> (global THP settings are enabled), and inherit & orders == 0, it means
+>>> mTHP of that
+>>> orders are still prohibited from being used, thus madvise_collapse()
+>>> is not allowed
+>>> for that orders.
+>>>
+>>> Reviewed-by: Zi Yan <ziy@nvidia.com>
+>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>> ---
+>>>    include/linux/huge_mm.h | 23 +++++++++++++++++++----
+>>>    1 file changed, 19 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>> index 2f190c90192d..199ddc9f04a1 100644
+>>> --- a/include/linux/huge_mm.h
+>>> +++ b/include/linux/huge_mm.h
+>>> @@ -287,20 +287,35 @@ unsigned long thp_vma_allowable_orders(struct
+>>> vm_area_struct *vma,
+>>>                           unsigned long orders)
+>>>    {
+>>>        /* Optimization to check if required orders are enabled early. */
+>>> -    if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
+>>> -        unsigned long mask = READ_ONCE(huge_anon_orders_always);
+>>> +    if (vma_is_anonymous(vma)) {
+>>> +        unsigned long always = READ_ONCE(huge_anon_orders_always);
+>>> +        unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
+>>> +        unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);
+>>> +        unsigned long mask = always | madvise;
+>>> +
+>>> +        /*
+>>> +         * If the system-wide THP/mTHP sysfs settings are disabled,
+>>> +         * then we should never allow hugepages.
+>>   > +         */> +        if (!(mask & orders) &&
+>> !(hugepage_global_enabled() && (inherit & orders)))
+>>> +            return 0;
+>>
+>> I'm still trying to digest that. Isn't there a way for us to work with
+>> the orders,
+>> essentially masking off all orders that are forbidden globally. Similar
+>> to below, if !orders, then return 0?
+>> /* Orders disabled directly. */
+>> orders &= ~TODO;
+>> /* Orders disabled by inheriting from the global toggle. */
+>> if (!hugepage_global_enabled())
+>>       orders &= ~READ_ONCE(huge_anon_orders_inherit);
+>>
+>> TODO is probably a -1ULL and then clearing always/madvise/inherit. Could
+>> add a simple helper for that
+>>
+>> huge_anon_orders_never
+> 
+> I followed Lorenzo's suggestion to simplify the logic. Does that look
+> more readable?
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 2f190c90192d..3087ac7631e0 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -265,6 +265,43 @@ unsigned long __thp_vma_allowable_orders(struct
+> vm_area_struct *vma,
+>                                            unsigned long tva_flags,
+>                                            unsigned long orders);
+> 
+> +/* Strictly mask requested anonymous orders according to sysfs settings. */
+> +static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
+> +                               unsigned long tva_flags, unsigned long
+> orders)
+> +{
+> +       unsigned long always = READ_ONCE(huge_anon_orders_always);
+> +       unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
+> +       unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);
+> +       bool inherit_enabled = hugepage_global_enabled();
+> +       bool has_madvise =  vm_flags & VM_HUGEPAGE;
+> +       unsigned long mask = always | madvise;
+> +
+> +       mask = always | madvise;
+> +       if (inherit_enabled)
+> +               mask |= inherit;
+> +
+> +       /* All set to/inherit NEVER - never means never globally, abort. */
+> +       if (!(mask & orders))
+> +               return 0;
+
+Still confusing. I am not sure if we would properly catch when someone 
+specifies e.g., 2M and 1M, while we only have 2M disabled.
+
+
+I would rewrite the function to only ever substract from "orders".
 
 ...
 
-> FWIW, here's what happens if you try to use the Intel QAT driver with dm-crypt:
-> https://lore.kernel.org/r/CACsaVZ+mt3CfdXV0_yJh7d50tRcGcRZ12j3n6-hoX2cz3+njsg@mail.gmail.com/
+/* Disallow orders that are set to NEVER directly ... */
+order &= (always | madvise | inherit);
 
-/s/happens/happened/
+/* ... or through inheritance. */
+if (inherit_enabled)
+	orders &= ~inherit;
 
-... and it got fixed
-https://lore.kernel.org/all/20220506082327.21605-1-giovanni.cabiddu@intel.com/
+/*
+  * Otherwise, we only enforce sysfs settings if asked. In addition,
+  * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
+  * is not set, we don't bother checking whether the VMA has VM_HUGEPAGE
+  * set.
+  */
+if (!orders || !(tva_flags & TVA_ENFORCE_SYSFS))
+	return orders;
 
-Regards,
+> +
+> +       /*
+> +        * Otherwise, we only enforce sysfs settings if asked. In addition,
+> +        * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
+> +        * is not set, we don't bother checking whether the VMA has
+> VM_HUGEPAGE
+> +        * set.
+> +        */
+> +       if (!(tva_flags & TVA_ENFORCE_SYSFS))
+> +               return orders;
+> +
+> +       mask = always;
+> +       if (has_madvise)
+> +               mask |= madvise;
+> +       if (hugepage_global_always() || (has_madvise && inherit_enabled))
+> +               mask |= inherit;
+
+Similarly, this can maybe become (not 100% sure if I got it right, the 
+condition above is confusing)
+
+if (!has_madvise) {
+	/*
+	 * Without VM_HUGEPAGE, only allow orders that are set to
+	 * ALWAYS directly ...
+	  */
+	order &= (always | inherit);
+	/* ... or through inheritance. */
+	if (!hugepage_global_always())
+		orders &= ~inherit;
+}
 
 -- 
-Giovanni
+Cheers,
+
+David / dhildenb
+
