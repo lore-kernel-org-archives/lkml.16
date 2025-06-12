@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519A72F4337;
-	Thu, 12 Jun 2025 16:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC621E5B68
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749745218; cv=none; b=gYXj1zE3D+zxvFajwxrQELih6eIjakZIkJga35TP1AlrpPtQmPTx/z/zEQh9zL+GA3gLA28hFk+XZ1bXPcqk8+AqbC8NxSkNH4GICZnysMJw+pI7byiylqI4UrImf3Y4rnejIJ8ZoTnRvOWwrIF6eQMfm357Ka2SFGeKYgqgWs4=
+	t=1749745233; cv=none; b=PNDAmf13HOpUU96xIrItV4P6AGMTEJaG+H/kthqUIfp1dTrSySiPS3VxXilxdU+EHoiyLPexJZZ6yGhw8VgILKQlBE4qU4L5D91ng8reLZE8k2B4IVEpLu8YuB1a9oj56BYwWd2HroHcJ69Q982HGLC/FuM1yw9G9w2Sl5FicjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749745218; c=relaxed/simple;
-	bh=Exbz9bEFkUebfba+VJlIAq8RWt6MqPSbghPlez9tlrk=;
+	s=arc-20240116; t=1749745233; c=relaxed/simple;
+	bh=X+UdTHXDFMte+vwvhwJwB2Z7tZ1dV9rcTCoM9SVT0hs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYW1xA2nCvawqWmcVz5WLA1H5XCqd8cyzYrAa1tYL5UKwokHmKqs2EG0uyCQqBlcTQi+oa/Bs7FsioSomJQCm+/PsVbivFNl6tD82Eagaf8uwS8fKzCpkC31ztgA96cwOxKGo/jpWQGnSrpA/dg8GShn9ZogU/ac9P0aDlJjJRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tHkLtVUU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EHd4g1zBsmNCiWBG1rGQb6SKJZ34EVdQXUSz0ukw3iRH+3VXab3llZG4ukyAEBwwWJV7hbamfyummYvNjWK3LjH9yatyxXPvrIEf0MOg+PK4o46UIQc3kdUIsBpRXDDsnMuz+qqbVqkykVlmO6j+Jsw3/GOdSo7K/2/1uMAyh2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPyJ2dWs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tHkLtVUU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1098C4CEEE;
-	Thu, 12 Jun 2025 16:20:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPyJ2dWs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B66C4CEEE;
+	Thu, 12 Jun 2025 16:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749745215;
-	bh=Exbz9bEFkUebfba+VJlIAq8RWt6MqPSbghPlez9tlrk=;
+	s=k20201202; t=1749745233;
+	bh=X+UdTHXDFMte+vwvhwJwB2Z7tZ1dV9rcTCoM9SVT0hs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tHkLtVUUXDvGPsKDVj59OX6bUq18Jv8y7VFQ03dNLTxRQBIKPamF485hsi9kbCKHT
-	 +wdJsbLDw7RhcH845So/upy4bnCpUIkBEiZOVUpS0lT25pZmqhULv29W9XFWYBiAnx
-	 M9T4DG36Mo0BnceqDwNP9Nox3ekWo4sQHUbT1i+H6uQTh4vZvSyLcE6chmpDENi474
-	 PoHsGf9R6rccME0lQ7nZG7TDgcacT89+M8OoDYoh0KO1SDTED6/izxE/bixrdBi2G/
-	 GiQ/I2482ByHNdRdMHURwJxAKorFfx/h7kN2QUyBi+fZFlAe495Ry8QsB0k3hLcclW
-	 /PVafb4VbpWyw==
-Date: Thu, 12 Jun 2025 18:20:10 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] rust: revocable: support fallible PinInit types
-Message-ID: <aEr-OnKiL5MKzur2@cassiopeiae>
-References: <20250612145145.12143-1-dakr@kernel.org>
- <20250612145145.12143-2-dakr@kernel.org>
- <DAKO8MMSCUE4.1WVR6SBADGP8W@kernel.org>
- <aEr5FNDaueo5SG5R@cassiopeiae>
- <DAKOUVS4YP4L.3I6FD9JKN02EU@kernel.org>
+	b=RPyJ2dWsJbyzqBHD0PMyl8dK0RPs99sGSg01vkmm8hOgV86bNu+pxGug0oIm/y81b
+	 jOGoS8UxKiTofeJqilG6Z7djN3h1/Ly3QvOEBlE7VbcP30TF31xEakvNu3FlvgKhlk
+	 hHcOIs0/WnVPw+shOtZsK23BdENywcy3flnjnJ67xsr/eKIGYZ53F2Gm7lwV0bXzIe
+	 NXPaT6szRw06eFc982fGx7qpmGYpicxKDbE+CSQo7a21SXHThms78ptWkh2iit4Wgf
+	 NfXudkexdO2dQtpCvDDuW41+cG9sIrY6UAuzq3vkOD+NndlGjT2hNwRvHScZm/k13l
+	 00aPjaTYzYQtw==
+Date: Thu, 12 Jun 2025 17:20:28 +0100
+From: Will Deacon <will@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/gcs: Don't call gcs_free() during flush_gcs()
+Message-ID: <20250612162027.GA13202@willie-the-truck>
+References: <20250611-arm64-gcs-flush-thread-v1-1-cc26feeddabd@kernel.org>
+ <aEm-F04k0sC1tOCp@arm.com>
+ <4b354842-2108-4904-9294-fb9b00978986@sirena.org.uk>
+ <aErokN0vKT3urlmA@arm.com>
+ <93a0f043-d5f6-432f-ac37-266dd5bbe899@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,44 +46,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DAKOUVS4YP4L.3I6FD9JKN02EU@kernel.org>
+In-Reply-To: <93a0f043-d5f6-432f-ac37-266dd5bbe899@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, Jun 12, 2025 at 06:17:40PM +0200, Benno Lossin wrote:
-> On Thu Jun 12, 2025 at 5:58 PM CEST, Danilo Krummrich wrote:
-> > On Thu, Jun 12, 2025 at 05:48:36PM +0200, Benno Lossin wrote:
-> >> On Thu Jun 12, 2025 at 4:51 PM CEST, Danilo Krummrich wrote:
-> >> > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-> >> > index fa1fd70efa27..41b8fe374af6 100644
-> >> > --- a/rust/kernel/revocable.rs
-> >> > +++ b/rust/kernel/revocable.rs
-> >> > @@ -82,8 +82,11 @@ unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
-> >> >  
-> >> >  impl<T> Revocable<T> {
-> >> >      /// Creates a new revocable instance of the given data.
-> >> > -    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
-> >> > -        pin_init!(Self {
-> >> > +    pub fn new<E>(data: impl PinInit<T, E>) -> impl PinInit<Self, Error>
-> >> > +    where
-> >> > +        Error: From<E>,
-> >> 
-> >> I don't think we need this bound as you don't use it in the function
-> >> body.
-> >
-> > I think it's needed by try_pin_init!() below, no?
-> >
-> > Without it I get the compilation error in [1].
-> >
-> >> > +    {
-> >> > +        try_pin_init!(Self {
-> >> >              is_available: AtomicBool::new(true),
-> >> >              data <- Opaque::pin_init(data),
-> >> >          })
+On Thu, Jun 12, 2025 at 03:51:19PM +0100, Mark Brown wrote:
+> On Thu, Jun 12, 2025 at 03:47:44PM +0100, Catalin Marinas wrote:
+> > On Thu, Jun 12, 2025 at 12:40:42PM +0100, Mark Brown wrote:
+> > > On Wed, Jun 11, 2025 at 06:34:15PM +0100, Catalin Marinas wrote:
 > 
-> Does it work with this?
+> > > > Another caller of gcs_free() is deactivate_mm(). It's not clear to me
+> > > > when we need to free the shadow stack on this path. On the exit_mm()
+> > > > path for example we have mmput() -> exit_mmap() that takes care of
+> > > > unmapping everything. Similarly on the exec_mmap() path.
 > 
->     try_pin_init!(Self {
->         is_available: AtomicBool::new(true),
->         data <- Opaque::pin_init(data),
->     }? E)
+> > > We need that one to clean up the GCS for threads that had it allocated
+> > > for compatibility, you can see the leak that results without it easily
+> > > with the glibc testsuite (or anything else that does threads, the glibc
+> > > tests just spot it).  Most of the checking for arch_release_task_struct()
+> > > is verifying that deactivate_mm() is guaranteed to be called eveywhere
+> > > it's relevant, I need to page that back in.
+> 
+> > Makes sense. I think we should only keep gcs_free() in one place,
+> > ideally deactivate_mm() as that's more related to mm rather than the
+> > task_struct.
+> 
+> Yes, me too - I just need to double check.
 
-Yes, it does -- thanks!
+Having looking a little at the code, I think that
+arch_release_task_struct() might be better than deactivate_mm(). The
+latter takes an 'mm' parameter which we ignore but I think happens to
+be 'current->mm'and so things work. Given that, and that we don't do any
+GCS management on the activate_mm() path, freeing the GCS in the
+task-centric functions makes more sense to me.
+
+Will
