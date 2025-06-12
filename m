@@ -1,225 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE43D23026B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CA12F430B;
+	Thu, 12 Jun 2025 12:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749729578; cv=none; b=QFXcg8ktR4GgrcoK20PTuaOEHGgINm4E2Ba8efUugrhQSnHf9BsMPsM/dth0KkQBbFMWJrfP7IyJb5X2tdkjYW+/4IRz4KsPZV4Lwh6TTPXvLmXoV3MhGMNoyuNTTKFVJT0WZ4e+unIJ06Ww7BNZCDeQLzOaSaM36Cv7b3WTh1g=
+	t=1749729781; cv=none; b=IC79KAvZyGQ0SAa8VIOpq+5mFZMgy848AjZrWHwrmp3g522obzzItIQkJoEcpR5KYothjYsRkSvMdlY1TCA6t/KgjqAKTEb/P+QkkIxiKDFsiorsS7CFdKkHbtrxGXaGhbeEbm7CF1rRN26qrQR70RUDCcbCbS3rUmmQi03nwmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749729578; c=relaxed/simple;
-	bh=FKOlBvAwUREHDR/8KhJup1MEyA23nPKaBwO+OQk6+/g=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=R/9V/l7CLahW/aEGV3A0/zkz8r3D2H2jrbrCd9yPSq5KEg/urryDV49CcoiuRXSwq/lwsfIlZnsN7BROJ91qfVvhpDCt2BohRe0ShZEyJb9jxVlhjbk+UYub6di9AyPx5qzYdjv4NxNSns4nl9HHjrPjlCCq2IulFhhOmO657x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIbqRhcg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749729781; c=relaxed/simple;
+	bh=9TF4TS7HJTGPNOkFIxQGNmmFmjlfd1e/5O/TAB6Zj10=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VpVG+MZtZjn579ai1wOHdreJNvaTYlAH1dRBSOordtg6QUhFhi2MTdIakr6aknRfnaWjITr1Shrn3oa6vruY6AnAi1rAd7XW3XfWHm0EnTPZ7I1AHTbPdGG2uVTWevuo52lZR9Ym0cTI6DLujFEYhAZ0tWM68yq0Hv4nwNYOXrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=hq88WZBS; arc=none smtp.client-ip=217.72.192.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIbqRhcg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1180BC4CEEA;
-	Thu, 12 Jun 2025 11:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749729575;
-	bh=FKOlBvAwUREHDR/8KhJup1MEyA23nPKaBwO+OQk6+/g=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=YIbqRhcguOtZ9iqaHcXctAB+Yw/FCOtuCHuyQ/UR3abQ2D6R/qZzsknTmUQEWTZwZ
-	 uYre7eOHfOETOND0mHkFnxP6f3T2piJQwsCSt7+Szd/pgrwakjz3pU5fOCxzWMUo8z
-	 HfCzq0TCH5Gk/qloZskgXgTGTLcd9rp39SqKZdenywHE5NWpfeD3zOVPblOPB7h1Kb
-	 5SOk0wLhao7W0TjclAs5iot5ZAHNogMHhzRWjKtfdZO7XBJOooblS66RyAfn/zdfZt
-	 idynOzAHyQX+wFqI1lCb113SZMkkEnPXx9esSJ47Hdp9L/yUCte8kIBN4SMGSs3GTT
-	 oRUMhbObQtZ/Q==
-Content-Type: multipart/signed;
- boundary=8857958cc2b3b1e14f9588e336e03fd15d02f1cc0813e76c9a0ecfbe0aa8;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Thu, 12 Jun 2025 13:59:31 +0200
-Message-Id: <DAKJD89W5O3D.1WXVSY2RLLEFZ@kernel.org>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: fix REFCLK setting
-Cc: "Andrzej Hajda" <andrzej.hajda@intel.com>, "Neil Armstrong"
- <neil.armstrong@linaro.org>, "Robert Foss" <rfoss@kernel.org>, "Laurent
- Pinchart" <Laurent.pinchart@ideasonboard.com>, "Jonas Karlman"
- <jonas@kwiboo.se>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
- Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Jayesh Choudhary" <j-choudhary@ti.com>, "Doug Anderson"
- <dianders@chromium.org>
-X-Mailer: aerc 0.16.0
-References: <20250528132148.1087890-1-mwalle@kernel.org>
- <CAD=FV=WfV1Kr5hFSqf=t0OS3qFSGfQ3_+LQ-57nMKHXRSYvZ-w@mail.gmail.com>
- <9272e36e-e764-4007-9d9e-8e09b9c08d34@ti.com>
- <c0027ff0e63bcc0fd21aab37af991baf@kernel.org>
- <affbef6e-f253-4dbb-bf64-3cc7d244acbb@ti.com>
-In-Reply-To: <affbef6e-f253-4dbb-bf64-3cc7d244acbb@ti.com>
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="hq88WZBS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1749729771; x=1750334571;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=9TF4TS7HJTGPNOkFIxQGNmmFmjlfd1e/5O/TAB6Zj10=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=hq88WZBS/UZk1CLqJ5Y4whdiepavhaheE0DTj4N4enSKSJdgOwD+GJYaadckRVAg
+	 tH7sdODyk/6WnQDGA4UQiRPA5SKO8Af1vUDluLzz6r9SB5aETlnfVYDtlTy7Qp7wA
+	 UfT050iwsWJQuo+DwgtWo5awDbUTcfyFjoL2JS7m49bcrbzMPzgrY9MRNPWO/SY0D
+	 0iiDSI7upSlLysms9LbaWXg4P7LXeJb284oldpPzGIUb53F/Cm9vE1wf4RVJHBh0V
+	 ZsJOGf5zSuo0r3KjnWwr2UNTfvI8aeMS684Pxd137VnC4yMI+DEII0DzZ2rDYk3dF
+	 PwHJ1i/8xmlqoszmgw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.192] ([91.64.235.193]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MY6TD-1uKSMI1X8H-00LaH9; Thu, 12 Jun 2025 14:02:51 +0200
+Message-ID: <0e6fd97d-9a56-426b-8b98-dc8aa50d02d2@oldschoolsolutions.biz>
+Date: Thu, 12 Jun 2025 14:02:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
---8857958cc2b3b1e14f9588e336e03fd15d02f1cc0813e76c9a0ecfbe0aa8
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] Support for Adreno X1-45 GPU
+To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+ Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-pm@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+X-Provags-ID: V03:K1:PA710ORLSCeaHxN8hFzgvAQEIwCwCDgAqOPxruFizn/AlMGjSUW
+ 85uyv+NKj8CJmTO0sQnvMTIrZKQ6go/mQ+6xlAatX56T7sbfoY9mrlGxuK9GqULgAmnaFnI
+ SRZ9HjMKSXySd+iYIlVnC8F/m6mNicG0sb5pyedZWjPtYWzcuTS7566I4WNuxQLOEyqK+x9
+ Bh/Uz2SCZsJOfkrhXHa1g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:L1EqaybFqPc=;SH5yWekgKGHaAg1DHQsy+EzoiJq
+ Fl33glttMNku1XZ3PTQbtb1rmTcDXbw/vl6qSCG/34IBmm/DS8vKdIccBDVBP8bvI/DqmMJez
+ 6byvoL6GFFNM1CzDtjKWZABX9NJ4LnQbkIpGuj1Y/Z6MN9X3klsIW2zF8chmAuuQdzLNN0pqA
+ PoqPsBYemVKVNhE3XnbyZCuHtha/Q0gfKOyhl5icS1r70P47mUuNWR4cfk9LEjrRm//zd/8cY
+ WzQ5F792ABH62d95D1KWBO8AjRUshhpAHKvH4ThW7NJ60XhXuPnqMZeyRmeOusx+NBn2FpgxF
+ J0yLdMiIMLTAk41h1Dlhg7zy4o6gjT9jsegg9l9k5X9Bi0hTsjtQiRJFTnY6Id4dmxT5GlMEq
+ RenJBljZbzGPcA/rFtr0cukkKmtA8osWr+fsey1+lXU8LCSXGwi+dATMTpW7JnR0ingmsdM+Z
+ YKUjVso7pM+kd4zpmNR2Q3JPozM3VMR0ZDH+t/STUVNeiFgCDYUaPmHczxPJTpBRdpBKLehhR
+ SOySjY8o/cs8vTG0PQnUjCgO6NdHRt81X0Vq9/2gcoRAxjBfhQuV0cHJ+Kx0fTpsY8ubz1ul/
+ myEmfKl1BwJ0nnK636uqKlkh2pVOgN6i3lZv2UbRmtjtIAJ6IMiXQ969R+AGuuyIQ8UxH6sxt
+ FZigztwQCqqYwZGlABZzY7ZGb8sXiHw+CRSHq7Tf2ddwl8rz4H+ALxOBNFuYtWo6Q30NT0RTs
+ gfW8TXxhGDGay92JfTOmmaePFtXJXKmhHUytOWrvwfmJoA5/qvqFXkwfm9hsZCAyLMW6Rr5Nv
+ Dup8v0DVyMrM9CjYr4zCsEarLgGkTGOAF2BPED53kmP5iQBCPKoYLz72NlKRgyNfdUyWDNy2K
+ dTtdW7K8AYxt4ZhH6eSVWHQsBd5pfUy/svx8mJJtnNhTKhNsJLu2+Wfr+PASg7eIRHHtH6T/I
+ b5Qsn35pG1HRk11oxA8Rzvhwb4SgPmuJN4SRzV1JNj6roLIRwB55utfAiGpMdIZRTHr0aMd2q
+ tzMaB2gTpJt/8iT3lypRZuSrQPxIe7Bl/tGWiqwNJiwZ+IvsYb3DhRyx1PyWON/xc8OdnGgcj
+ K/9WeZoUvksWB2cXT2ppehye2Ng5A+QwmgTeKoHp4meAOiNN7ZSSndmchBFGVrYA503WOpm0f
+ LDurQ1mJ9EQVTQJOMtYM9kqpDTt0rhwRxzYGgkkOygitExSsr6C1TVGcAf3Vesk4tG+6Ctkvw
+ PPtbXm1kMH5pmSk86Ek+TqY9T93192Ci7WQ5rE/vF4qmA3DhitQJDGZn+Hyxtx4b4Qn0+aOUx
+ 4vBkLmiZxmrdt2llTj0c44+bd707cNzq/WJQNEfhJ5RhEeHG0fNTFv9106zHmCODAl2l44zqX
+ v/xI4aoMh/F4Yb/2uTgcBijj7AMpCZ+9s8g7pkk0Dn81sYe3pNcjsb+Ix/t+fed23Qp+bv82f
+ KOWpJFA==
 
-Hi Jayesh,
+On 6/11/25 13:15, Akhil P Oommen wrote:
 
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * After EN is deasserted=
- and an external clock is detected,=20
-> >>>> the bridge
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * will sample GPIO3:1 to=
- determine its frequency. The=20
-> >>>> driver will
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * overwrite this setting=
-. But this is racy. Thus we have to=20
-> >>>> wait a
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * couple of us. Accordin=
-g to the datasheet the GPIO lines=20
-> >>>> has to be
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * stable at least 5 us (=
-td5) but it seems that is not=20
-> >>>> enough and the
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * refclk frequency value=
- is lost/overwritten by the bridge=20
-> >>>> itself.
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Waiting for 20us seems=
- to work.
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 usleep_range(20, 30);
-> >>>
-> >>> It might be worth pointing at _where_ the driver overwrites this
-> >>> setting, or maybe at least pointing to something that makes it easy t=
-o
-> >>> find which exact bits you're talking about.
-> >=20
-> > Yeah, Jayesh just pointed that out below. I'll add add it to the commen=
-t.
-> >=20
-> >>> This looks reasonable to me, though.
-> >>
-> >> I think we are talking about SN_DPPLL_SRC_REG[3:1] bits?
-> >=20
-> > Yes.
-> >=20
-> >> What exact mismatch are you observing in register value?
-> >=20
-> > The one set by the chip itself vs the one from the driver, see below.
-> >=20
-> >> I am assuming that you have a clock at REFCLK pin. For that:
-> >=20
-> > Yes, I'm using an external clock.
-> >=20
-> >> If refclk is described in devicetree node, then I see that
-> >> the driver modifies it in every resume call based solely on the
-> >> clock value in dts.
-> >=20
-> > Exactly. But that is racy with what the chip itself is doing. I.e.
-> > if you don't have that usleep() above, the chip will win the race
-> > and the refclk frequency setting will be set according to the
-> > external GPIOs (which is poorly described in the datasheet, btw),
-> > regardless what the linux driver is setting (because that I2C write
-> > happens too early).
+> Add support for X1-45 GPU found in X1P41200 chipset (8 cpu core
+> version). X1-45 is a smaller version of X1-85 with lower core count and
+> smaller memories. From UMD perspective, this is similar to "FD735"
+> present in Mesa.
 >
-> I am a little confused here.
-> Won't it be opposite?
-> If we have this delay here, GPIO will stabilize and set the register
-> accordingly?
+Hi Akhil,
 
-What do you mean by GPIO? Maybe we are talking about the very same
-thing. From my understanding there are two "parties" involved here:
+when loading the driver (still without firmware files) I'm getting a=20
+speedbin warning:
 
-(1) the linux driver
-(2) the bridge IC that comes out of reset when EN is asserted
+[=C2=A0=C2=A0=C2=A0 3.318341] adreno 3d00000.gpu: [drm:a6xx_gpu_init [msm]=
+] *ERROR*=20
+missing support for speed-bin: 233. Some OPPs may not be supported by=20
+hardware
 
-And both are trying to write to the same setting.
+I've seen that there is a table for speed bins, this one is not there.=20
+Tested on a Lenovo ThinkBook 16 G7 QOY.
 
-From what I understand, is that (2) is running some kind of state
-machine or even firmware that will figure out if there is a refclk
-present. If so it will sample the GPIOs and set the refclk frequency
-setting accordingly. This happens autonomously after EN is asserted.
+with best regards
 
-Now there is also (1) which will assert the EN signal and shortly
-after trying to write the refclk frequency setting.
+Jens
 
-With this patch we will delay the register write from (1) to a point
-after (2) updated its refclk setting. Thus (1) will win.
-
-> In the driver, I came across the case when we do not have refclk.
-> (My platform does have a refclk, I am just removing the property from
-> the dts node to check the affect of GPIO[3:1] in question because clock
-> is not a required property for the bridge as per the bindings)
-
-I'd expect that in this case the refclk is set according to the GPIO
-strapping. Correct?
-
-> In the ti_sn65dsi86_probe(), before we read SN_DEVICE_ID_REGS,
-> when we go to resume(), we do not do enable_comms() that calls
-> ti_sn_bridge_set_refclk_freq() to set SN_DPPLL_SRC_REG.
-> I see that register read for SN_DEVICE_ID_REGS fails in that case.
-
-Does it work with the property still in the device tree? I might try
-that on my board later.
-
-> Adding this delay fixes that issue. This made me think that we need
-> the delay for GPIO to stabilize and set the refclk.
->
-> Is my understanding incorrect?
-
-Unfortunately, the datasheet is really sparse on details here, but
-maybe the bridge needs some time after EN is assert to respond on
-the I2C bus in general. I'm basing my guesswork on the td5 timing
-with the vague description "GPIO[3:1] stable after EN assertion". I
-assume that somewhere during that time the chip will sample the
-GPIOs and do something with that setting (presumable setting its
-internal refclk frequency setting). FWIW there is also a td4
-("GPIO[3:1] stable before EN assertion"). Both td4 and td5, makes
-me believe that this is not some setting which is sampled (and hold)
-at reset, otherwise td5 wouldn't make much sense.
-
-> I am totally on board with your change especially after observing the
-> above but is my understanding incorrect somewhere?
->
-> Warm Regards,
-> Jayesh
->
-> >=20
-> >> If refclk is not described in dts, then this register is modified by t=
-he
-> >> driver only when pre_enable() calls enable_comms(). Here also, the
-> >> value depends on crtc_mode and the refclk_rate often would not be equa=
-l
-> >> to the values in "ti_sn_bridge_dsiclk_lut" (supported frequencies), an=
-d
-> >> you would fallback to "001" register value.
-> >=20
-> >> Rest of time, I guess it depends on reading the status from GPIO and
-> >> changing the register.
-> >=20
-> > Not "rest of the time", the reading of the strapping option from the
-> > GPIO always happens if an external refclk is detected. It's part of
-> > the chip after all. It will just sometimes be overwritten by the
-> > linux driver.
-> >=20
-> >> Is the latter one your usecase?
-> >=20
-> > My use case is that the GPIO setting is wrong on my board (it's really
-> > non-existent) and I'm relying on the linux driver to set the correct
-> > frequency.
-> >=20
-> > HTH,
-> > -michael
-
-
---8857958cc2b3b1e14f9588e336e03fd15d02f1cc0813e76c9a0ecfbe0aa8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaErBIxIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/it1wF/eikbWKB9PK6T8iVBtE7h6BTi0wl8nMri
-Z8hsMY+70ZYucENExgnqak+aWH33RCAFAX9WF+8buyy+I7L6xPtnNxLyD8A3COwt
-uMflT8Slu+lnp4nqBAzTE4uIdI9AWfIhcyQ=
-=1Y6Q
------END PGP SIGNATURE-----
-
---8857958cc2b3b1e14f9588e336e03fd15d02f1cc0813e76c9a0ecfbe0aa8--
