@@ -1,126 +1,120 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB45526D4C9;
-	Thu, 12 Jun 2025 15:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D53275114
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740728; cv=none; b=B1d1jcXXLNlSs5wTxA5e9W0n9aawnZ2XpyvYhXdwTHt2jDAZrGLDT79Grktm11bbeM7tc+p/hWKKva92opEClbGkrVUIs6h7AAo1VJjRbJsECQhwCqErVuSRd26jEdnS39icZTCSdEmopV+oaGFMHtw7Ikpe59t403YgTizp1gs=
+	t=1749740835; cv=none; b=PEjc1KEp25PzJIuRIWJ00Pwoafb70uxBYXGs9MUlzumVI1Iu5LQXBZb+jwyinyIuVVcgzZYrlpOIYFyZIBMVJjUmdBCiVZSKz4V7kmaNWuAcI/Q4T08s74ymGZUOMe3JFK1PobA5fq5srOzLdI8+O9o37LVNIbBxQ2+puEwArUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740728; c=relaxed/simple;
-	bh=FrUyFoeakZ/6ELmKkHRpIQLhoYY54oaCXbP4semewDk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=lOL+VTMQOFrjHt43JTNmuI41/ppszWTSj/YHubQnwbb10XWCVbYcm+E4KcUFqttL2bPgtf2akZFHxMZz+4/F48jboi+5poybcMZeDgS/ZMmeQum3dXQEd3Y0OrnBTRWdvb+f9EBeXLerm90udO2m6ON9wkVKTPed06gIpfZkL9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Jm5Tqtx+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JVD8+Avq; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1749740835; c=relaxed/simple;
+	bh=A8ID2siI1cROgork7uvnNzSAYJ0WqXVEfFZMFQB9lI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VyZY3w2m9eiFwqVEVwbYydwqqZdvpncFh/EnNYK0GKwHH9/L0UQUSWH9B+9AUymgKlMWgYhOeH4AeITsG8nt3L5Hv19/9KgbDGIlYqJ8Tb5PWIL5c+GYJX5ih+Xcl321OH0QpDPXgeFrLhKMosseX3uJS3RwwleVH7i4OIUqPb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CV3tDyBn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Jm5Tqtx+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JVD8+Avq"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id D44AA13805C6;
-	Thu, 12 Jun 2025 11:05:23 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 11:05:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749740723;
-	 x=1749827123; bh=F2brnDyX2RdfWZaowl+U6ywciKsVMQieC6WvQHg1iV8=; b=
-	Jm5Tqtx+yk1k2lGRaFOeo2qQR4+VMyseQTEKG42iSTo9P6jMwKWKxgQ9Iwqk6iI8
-	lf4fGeCpzFFE+CgHlMxYSKP7zDq3J0XJU5nE3OnUbiUXlQNC9rb8DH2Oy3ZX5JcR
-	0NFR3yQVoi9d+qzJyiSgmqMxE8EJp5E1Rb2JejI7NSlWJ4Jrn18wiLF8okqYWsVa
-	RXMQrTG2ZS9n4vnc/LqLV5cp1n4H6Yyg4GQZ7HWrboQo3Vrsf94Q3IiSeDn1oFRQ
-	7yMjlxnr4iej+yMzGhOfwJY5T2QdSwL0ut1df66NsRC11gxZnzSi/3r+F7qa02ZJ
-	aRP74315z5Sz3fwtha7yUg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749740723; x=
-	1749827123; bh=F2brnDyX2RdfWZaowl+U6ywciKsVMQieC6WvQHg1iV8=; b=J
-	VD8+AvqEq1VJvmoypW5EPfC3mFllRnFuJEfEg4zHvXlMukjVmaSZhryCTQbm3eaA
-	0Fh1XLNxOMOhIWizIcdPuTeoA4MktyLzHHdnlhpx3ostDMYmEocxybbp9dHl6qfN
-	DA0/06CZPn/GDkq6ZDNm0U4RxAnktIvU2GA9jXGAvfT8GzpW+w68gNtkQdz6D/Cd
-	KjI8ayYWSu9P+dHHezgD47utUXkDoEQQrAtvDw9xBzSJduPsz/6ppYVwz3VnrqC9
-	Cl2OoM/RSaslVa2HtpTZWoTlB/h1sFP9WkMSvOGdqjF3R0ehRw+l6iKc5c9xpvLb
-	UKcROEiF0juumr9gIrtug==
-X-ME-Sender: <xms:s-xKaH34P9m8uz7hV427SUVGaDNUksqr_CYe9SDRYAHlDcO9vnyodQ>
-    <xme:s-xKaGE3r7qLnHcKobFcB0f3aQZuhWhKHKLHHKEqFwDl28BUN8EpOcenxen5G2urQ
-    0Dm-xaUlEnI6fWY89Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheefkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeel
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjsehjrghnnhgruhdrnhgvthdprh
-    gtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhvvghnsehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiihihsiihtohhfrdhkohiilhhofihskh
-    hisehlihhnrghrohdrohhrghdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieek
-    khdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtsh
-    drihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegrshgrhhhisehlihhsthhsrdhl
-    ihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgrmhhsuhhnghdqshhotges
-    vhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:s-xKaH4SKAslg6GaVk3KwslqGGvlTgs9tgucsMNFsvLValYWOnOmlQ>
-    <xmx:s-xKaM1_uFV8rVSaGmZtdIio6EoSJJr8B3qXjtCAu64uAPCFj3L6TA>
-    <xmx:s-xKaKFcoBVn_K_jB5B61X_GRyU0rPYMVnwc0v4jMwnMUleLRlCsBQ>
-    <xmx:s-xKaN-y0st34moHmInI4RYu2-ubKc-ELP3A2tpmXDnj7iR1jrQnkA>
-    <xmx:s-xKaF9tXKePnpmYLrwW5E9xrOPmpcVk5d3Z3GQFRQ9tqykg9UqvMB_n>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 186A0700065; Thu, 12 Jun 2025 11:05:23 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CV3tDyBn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06539C4CEEA;
+	Thu, 12 Jun 2025 15:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749740833;
+	bh=A8ID2siI1cROgork7uvnNzSAYJ0WqXVEfFZMFQB9lI0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=CV3tDyBn2fCnXExgzOB/bF7XCfWN3NGGLRm+xrXQ0FfzxWRig+/IzeEWJeD51fJdx
+	 8ALedBkGy9XCJkASKxQWoaQ3wnb4uaKr1/TTPxnZOpcA9HsEFSOjN5nVDKjKwigXwS
+	 DPCA/Vw7iNqP+6LWAJlJkJiTW2OjF5OydKFD7zhn01FD0vQapq8JLmKp/lHUsOmrJR
+	 cjKTjILRcPskLV/EWvUkHP18BV6R9zXOOuz+KbFMRY20e3EsAqoaIN4C6foP4truzK
+	 et3GzRo6Q2BAiatdNwp2UWIvmvmNM/lukw21ZB6pjSgbdzF/yYbX94vZ1S9AlLAni+
+	 QQMEIXEzgIk+A==
+Date: Thu, 12 Jun 2025 12:07:10 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Rob Clark <robin.clark@oss.qualcomm.com>
+Subject: [PATCH 1/1 fyi] tools headers UAPI: Sync the drm/drm.h with the
+ kernel sources
+Message-ID: <aErtHs3T2hdPjjHx@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T0983471eb64d6916
-Date: Thu, 12 Jun 2025 17:05:02 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "Sven Peter" <sven@kernel.org>, "Janne Grunau" <j@jannau.net>,
- asahi@lists.linux.dev, linux-samsung-soc@vger.kernel.org
-Message-Id: <b8783289-6670-4254-9049-786ae7cdd6a1@app.fastmail.com>
-In-Reply-To: <20250612134421.95782-3-krzysztof.kozlowski@linaro.org>
-References: <20250612134421.95782-3-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 1/2] arm64: defconfig: Switch SOUND to module
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 12, 2025, at 15:44, Krzysztof Kozlowski wrote:
-> Sound drivers are not essential to boot boards or mount rootfs,
-> therefore in effort to reduce the size of kernel image (and boot images)
-> switch the ASoC drivers to modules to decrease the size:
->
->   vmlinux: 152864 kB -> 154528 kB
->   Image: 39391 kB -> 39067 kB
->
-> No difference in resulting include/generated/autoconf.h, except making
-> modules: SND_SOC_SAMSUNG, SND_SOC_SDCA_OPTIONAL, SND_SOC_APPLE_MCA,
-> SND_TIMER, SND_COMPRESS_OFFLOAD, SND_PCM, SND_SOC_SOF_OF and
-> SND_DMAENGINE_PCM.
->
-> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
-> ---
->
-> If patches are fine, I will take them via Samsung SoC.
+tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-Nice find!
+Full explanation:
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+There used to be no copies, with tools/ code using kernel headers
+directly. From time to time tools/perf/ broke due to legitimate kernel
+hacking. At some point Linus complained about such direct usage. Then we
+adopted the current model.
 
-There are some nasty interactions between DRM drivers calling
-into sound drivers for HDMI audio, but I checked that this is fine
-here because of CONFIG_DRM=m.
+See further details at:
+
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
+
+Picking the changes from:
+
+  c2d3a730069545f2 ("drm/syncobj: Extend EXPORT_SYNC_FILE for timeline syncobjs")
+
+Silencing these perf build warnings:
+
+  Warning: Kernel ABI header differences:
+    diff -u tools/include/uapi/drm/drm.h include/uapi/drm/drm.h
+
+No changes in tooling as these are just C comment documentation changes:
+
+  $ tools/perf/trace/beauty/drm_ioctl.sh > before
+  $ cp include/uapi/drm/drm.h tools/include/uapi/drm/drm.h
+  $ tools/perf/trace/beauty/drm_ioctl.sh > after
+  $ diff -u before after
+  $
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>
+Link: https://lore.kernel.org/r/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/include/uapi/drm/drm.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
+index 7fba37b94401a6d5..e63a71d3c607a673 100644
+--- a/tools/include/uapi/drm/drm.h
++++ b/tools/include/uapi/drm/drm.h
+@@ -905,13 +905,17 @@ struct drm_syncobj_destroy {
+ };
+ 
+ #define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE (1 << 0)
++#define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE         (1 << 1)
+ #define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE (1 << 0)
++#define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE         (1 << 1)
+ struct drm_syncobj_handle {
+ 	__u32 handle;
+ 	__u32 flags;
+ 
+ 	__s32 fd;
+ 	__u32 pad;
++
++	__u64 point;
+ };
+ 
+ struct drm_syncobj_transfer {
+-- 
+2.49.0
+
