@@ -1,155 +1,186 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6355DEACE
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E2718EFD1
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749701727; cv=none; b=qy2G1StGY/O8M2Wbh4Y/3Ev8uGXS7eFjpGkJVQBTQ1lCglOxjH4052hLk7/gWeJJNZUN5D6x8m1eocRJi8cP+JSzQ41crGtdBKop9jn6/fDTOmT1A16SJOj82FfmWJbHWHMlLeq5vloqGb8ivPOcApDeglHaaXw4ojSJOvf5UXs=
+	t=1749702018; cv=none; b=oyiX3fbBex5amZbopG4hFst2C9d/m1jdHLC68k9B2QfpidwcXe0dOUwxlidysG7ztvPPf0tPRnEG76BtAprrKtSsQCg2NiEgv3q9bQHYf1dSklIv5dvBpyWfxCHztxdQMChsy2SLKJZvU4fdAGgkML+X0Q5rWNje6PoohygQKww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749701727; c=relaxed/simple;
-	bh=lpAkSVoyxNACPdIdnN1idWGDw6nN8KK/jKqoSvbsz2E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YDQzQ8men34LXby4gTThoEmLXQLi0N3BBuQW2MYrHS9PUD2ZAB3T4OYeUMVsLky1VFb15GvQGnVh30tAQcF3O3sIsc8cwe6PBgUqNE1TIsTyT22I1Vqm8oI1z+TH6Jz86AmPpsYTdOrf9YGZl+5fvGvspL7jFA+DeHmnh3P9yYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SBitBQ2u; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749702018; c=relaxed/simple;
+	bh=YtVuhdDFhkiyy6k3UXFHjI9pLcHTjEXoJ3m9S8DtA1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DSsibz7cAiktG6cOTOutzHQrmvtsHvodKSFaAn8Z1Mbz0pZEdvhx6cft0aY2R10YAvPtwL7zgfWLQFLuS7fvbZ21g5dwm9O7gubUVgU20+8I2PuIxQJK9P41Jr2GFW4svtR6QNePie1BkhA5WOC8hwCDFEIVGI4PoT0jMGZyNP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/TgHzQx; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SBitBQ2u"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BIiMD1026034
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:15:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UlDizTZaRy01LwN7t9CKJYpTQ9cFtd+2yQ9Q6Pk8ShY=; b=SBitBQ2uHh39FlYM
-	D2J+br9uu2y7Ug87feAwrBlT1iYzqGzHcZjelg2+MYjw/1/g24fL1hyg8j+sgXIr
-	88/uoIwUGLJfliokH9+zFb7Wl11Csn0e88ZijBf5DCZ0jE5j8njJYsAqUjl394Gp
-	ioGsyutX5i3hbV51T1Ijiml3ac4go66wenGTTKKcWCAYM36TW02t4+yDbbVYjEow
-	FiykS0bWXUwSpjXipiNlOP8yXgavz8qjtgTQ8xupzwNwBrurYE+eGgm/wK4qwtJx
-	Gbs4pyUqH+u0ozvUrkbhU6PqqRUr035opLmi9wuOZswi2LZpiJO/7TC9IyM5tJFp
-	zOjtHw==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2ya0c6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:15:24 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-234906c5e29so6486665ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:15:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/TgHzQx"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso439716b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749702016; x=1750306816; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/oJA+/pMM+r8skY0Sy7euJgpsfBpkoRiiJD5vVTuvXw=;
+        b=Y/TgHzQxzRL/PeemST02nHpioGTFE3MYFGOv+KYcux0RA41zCUU8W3ex38fdlK/j7k
+         ajlmVJE9IxYBG1PDP5imxQRIm1lFEV0TsURpLTXlWqqyPAQPhvquF8qQ+DCATTrem3P5
+         QL5vZtGZKifjRUzbYyZVh0YBoyd9+UE7CPQKCmvCkBQQnJ7R9sTWUpWmtP28eTqeEeZP
+         pyBlmMDovuBKsH8C7rmdSwOU8w3MVV6P8qbcYg9pA2RsNs+/MzVf68inI+8sAcrlG8jb
+         luCG25+2mYpejdAlBVxXrEkAv0fNMJMbeUJcgw7shqxyMFna6EcgdWXb/esWI9RQnPkJ
+         +2TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749701723; x=1750306523;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UlDizTZaRy01LwN7t9CKJYpTQ9cFtd+2yQ9Q6Pk8ShY=;
-        b=i56NR8XYo18bK3Up7ZQYKHWDhicwVi3xOkpRxvnjz0oQioZl6IzG/gYNeIiaDZtvnN
-         B14VywE3hays0Ydk/Jl/3rZPVRgDcqFye097UVSyGjF0zN3C+3xiNGSJ/Viro/jmEpoW
-         es/xwhXugEfnI/XIeT2ZfMobk0MfoVLV2+R/IiwCD0xIFEEJ0jJN/Pz9e+eGzhDowbBV
-         9nlkYXhHbshKuLfumxz8RsV2J2i7y006rJdtkllLfIqETMfKau/u1qoWNZRfewS9D5zu
-         FGQW7E0akkMziPaCAB/ux+PZOnBsWiNf6hxS7srwNfjCUEyBjMS2VdWHHSSU9RLYGjt+
-         vmFA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1av18zKFqWUj1gQmKeh/D1+YRiODTAer7GoitjjO7mzUbBagDPcEMpislt5SF1ht9KZSL8bASJZk15LU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtesDWCKoAhmx98IDTx86nKXrRwR8wn40dEJMMtVP1lE+ARadr
-	vBQA9tMmEliOIfs5upT6uZBW+6GL9OS394isqK70kUiJnB5Dw4twH58i0pbmO4ebvUzdLKCDGE6
-	zSfzb7LG1RvcZZMMVD4FY7Cxm0uEMCKVFEyerPRFh2WjXeJ6Ka46Kqkx41LFAmSiNpW4=
-X-Gm-Gg: ASbGncsTqn/4hWHMkW78wceoVbTQIn0xQTw9v+dFsfBwyoAKpNc4k3bxhU9L2Bbw9lb
-	YVRXZCWYx9FJbMMKhC1IZieol//qzflZ9KjtTP8bDc/HLmKh3OEzYo5hsDDAOH36OA4LoWQ68SF
-	+iW+4L0Fc/n5jU914FpZSm+DK4YbovHOKA/OKm0ENhbRR9rj1Op6RVbKwDxfY6zQAGv8yswucYl
-	XOzfxKySZn2HEjhlAyh9Q497RcO5hzhS0Ux6N0uZIOW9M90W7t527vs0Wtd3LIeC/pPkYwPJQ1C
-	ZIaalV1fkSBdnf+lH/5MrSX6FKXAdtEBy4UbgKc2lhT0DRz/JCGCHkJnaAW3q5U=
-X-Received: by 2002:a17:903:1b6c:b0:234:ed31:fca7 with SMTP id d9443c01a7336-2364ca8b2cfmr34435425ad.48.1749701723490;
-        Wed, 11 Jun 2025 21:15:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGjkJSZxC/UbgF2f0dDkWH1U92D9XxBYEir3BqtZ8ceLq2lAdw/5hGuqWNSleFNh7omefhGvw==
-X-Received: by 2002:a17:903:1b6c:b0:234:ed31:fca7 with SMTP id d9443c01a7336-2364ca8b2cfmr34435135ad.48.1749701723040;
-        Wed, 11 Jun 2025 21:15:23 -0700 (PDT)
-Received: from [10.151.37.217] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e732edcsm3945095ad.244.2025.06.11.21.15.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 21:15:22 -0700 (PDT)
-Message-ID: <ab70258d-5854-4529-8524-d4b0a1eed77b@oss.qualcomm.com>
-Date: Thu, 12 Jun 2025 09:45:19 +0530
+        d=1e100.net; s=20230601; t=1749702016; x=1750306816;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/oJA+/pMM+r8skY0Sy7euJgpsfBpkoRiiJD5vVTuvXw=;
+        b=B9hcYkz7ajX9eRGfUSqv/zhDG8C/07aeVJpWfHJlN17jWZp8+ToAzyL1YnCwkiR/6p
+         rgaFHFayS2eV3QTmI4G07UqaGGlzcL+xFJsyNNAnNOTUqMCfOFFVMmxE/qWpIAXt9yvW
+         05mGY5gJQcaAL8DxT1BRXDfJFdSU+2MfJXla/b6RxsQN18yHh2gqjoueJ2nBkr1gfwxc
+         u+qqU1RGM+3yl9QpbTIHyHd/b1X6NOf5nHrb2pTgwGEJ+vWz5GX9D//tzGpUIwVZUfIz
+         RNjmvBeJYRq7Z7s/rfvhZIGt6QsBMst+UE943R371jI2/SiRNQ550tCF90sWX85rVzm9
+         OB5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUcOo2YSmpjVMGTn+PRIW1NyiHG/M46UFB4iWRK0Wi4glCjixhhqcVJ93GdBO+kz2HobzzaWeJLE9Q9UIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6b9KjY0IISYslcA9pQsWIGWtHeUG/dU4CWy4I+669SOQhiCHV
+	ZmxO+uBn4E5ZRN0irvoC+4YYeJFmNUty75PdYSnWc1NiltyrP8LfeZJy
+X-Gm-Gg: ASbGncsh87v2PLrdxOeJkSSuLUS0eC87Se1LltOXZvrt01j0GhpsJ9m+WsQPrK/ajRy
+	Kud5+Hu1cZZEzw5NCfAnvgfYU4z8q+xBESG2dJDDxg2GhU3BEKoe1YXJDCLISLDrDSgZAaLWSiQ
+	HvSQ/NaQw/OWUuMZkdzPvGoO4bGZU9gJjVbQryKFF8awMKFY71k+J/K4/GOXHTfqO6lA6BhcP3I
+	fNm7gLBVpGhQRNhtoAXUkiVgaxRyeSwBqJCU8EX1FNkE47ozadby2O/MCDj8tf76NfdDSIg7ft5
+	CpBjnzmXBxqMZ7AsI1P5V1HQXkSf64IZKkhd7lDJHYbnEShSAg6Ak4ovZ19eu5F5N/QU1Eg=
+X-Google-Smtp-Source: AGHT+IFrICv0uvFeYxF7lQUwfHCC+ZGTWZMSQZaRDgvQ3927CItSQCP0Tr/vRnYsUL5hGN1oQ6kUcQ==
+X-Received: by 2002:a05:6a00:4504:b0:746:2c7f:b271 with SMTP id d2e1a72fcca58-7486cb63ecamr7783273b3a.9.1749702015627;
+        Wed, 11 Jun 2025 21:20:15 -0700 (PDT)
+Received: from EBJ9932692.tcent.cn ([103.88.46.15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748809d2b79sm439361b3a.92.2025.06.11.21.20.09
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 11 Jun 2025 21:20:15 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: akpm@linux-foundation.org
+Cc: zi.li@linux.dev,
+	anna.schumaker@oracle.com,
+	boqun.feng@gmail.com,
+	joel.granados@kernel.org,
+	jstultz@google.com,
+	kent.overstreet@linux.dev,
+	leonylgao@tencent.com,
+	linux-kernel@vger.kernel.org,
+	longman@redhat.com,
+	mhiramat@kernel.org,
+	mingo@redhat.com,
+	mingzhe.yang@ly.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	senozhatsky@chromium.org,
+	tfiga@chromium.org,
+	will@kernel.org
+Subject: [PATCH RFC 0/3] extend hung task blocker tracking to rwsems
+Date: Thu, 12 Jun 2025 12:19:23 +0800
+Message-ID: <20250612042005.99602-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: qcom: socinfo: Add support to retrieve TME build
- details
-Content-Language: en-US
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250519-tme-crm-version-v1-1-a6dceadc10aa@oss.qualcomm.com>
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <20250519-tme-crm-version-v1-1-a6dceadc10aa@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDAzMCBTYWx0ZWRfX2pxCQaM8ESI1
- fcMK6uGAQt6Hq36kv3s3nf2A15YUoRQ6ZaBoyJb5rPIneEOlyRn2XZxaL7xVG5c9DDgC6JkYYXm
- ClRntCsgVY3vxpKjmjZOz72FgwjnZ8gJ1evusa82cZtHy1bvSMoYpgxjbDHs1KL1fEPgyKamwh2
- NeCzF/8ZO/oiCAsF03g+vbMvg7OEw/Ne67mGk9lScWWMBEgcaY3LzwvD6mE/ZUea+Okt/3IPUb5
- lVwm8p3wo5JjVEY9ITXisr3CvxyJn+tHKQB5uIR+TG2yEXTekuDcr/MmX76oDcH3/JYtbezOcVZ
- 9hcVV8+8PxwQt/0O6AewcmlYApGkDlKXZ1BDP9OT0asHyMTDgrbe6MgfztDWYSNm+bwgVTB6p/8
- AU99/EopAB/uY/jULhAOemhLSo8vLRQNHD7IAecM2IPT0oc2Q0/WYxoWCBoPx3RsVDMDubQn
-X-Proofpoint-GUID: oqbgL5fQ_Aqvdnkh4YaSE8AZ5NNVGKuH
-X-Proofpoint-ORIG-GUID: oqbgL5fQ_Aqvdnkh4YaSE8AZ5NNVGKuH
-X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=684a545c cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=3TG353hyPe5QJAdDZr8A:9
- a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_02,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506120030
+Content-Transfer-Encoding: 8bit
 
+Hi all,
 
-On 5/19/2025 7:14 PM, Kathiravan Thirumoorthy wrote:
-> Add support to retrieve Trust Management Engine (TME) image details
-> from SMEM, which is present in the IPQ5424 SoC.
->
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> ---
-> Note: On IPQ SoCs, the Trust Management Engine is referred to as TME-L
-> (Lite). Other SoCs from different business units may use variants like
-> TME-M. For consistency, the image name is retained as "TME".
-> ---
->   drivers/soc/qcom/socinfo.c | 2 ++
->   1 file changed, 2 insertions(+)
+Inspired by mutex blocker tracking[1], and having already extended it to
+semaphores, let's now add support for reader-writer semaphores (rwsems).
 
+The approach is simple: when a task enters TASK_UNINTERRUPTIBLE while
+waiting for an rwsem, we just call hung_task_set_blocker(). The hung task
+detector can then query the rwsem's owner to identify the lock holder.
 
-Bjorn, can this be picked up for v6.17?
+Tracking works reliably for writers, as there can only be a single writer
+holding the lock, and its task struct is stored in the owner field.
 
+The main challenge lies with readers. The owner field points to only one
+of many concurrent readers, so we might lose track of the blocker if that
+specific reader unlocks, even while others remain. This is not a
+significant issue, however. In practice, long-lasting lock contention is
+almost always caused by a writer. Therefore, reliably tracking the writer
+is the primary goal of this patch series ;)
 
->
-> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-> index 8c4147737c35e3878db2def47f34c03ffc1fea52..391380820f082d8daa5c764d5f3c44e6240e18a2 100644
-> --- a/drivers/soc/qcom/socinfo.c
-> +++ b/drivers/soc/qcom/socinfo.c
-> @@ -48,6 +48,7 @@
->   #define SMEM_IMAGE_TABLE_CDSP1_INDEX    19
->   #define SMEM_IMAGE_TABLE_GPDSP_INDEX    20
->   #define SMEM_IMAGE_TABLE_GPDSP1_INDEX   21
-> +#define SMEM_IMAGE_TABLE_TME_INDEX	28
->   #define SMEM_IMAGE_VERSION_TABLE       469
->   
->   /*
-> @@ -67,6 +68,7 @@ static const char *const socinfo_image_names[] = {
->   	[SMEM_IMAGE_TABLE_CDSP1_INDEX] = "cdsp1",
->   	[SMEM_IMAGE_TABLE_GPDSP_INDEX] = "gpdsp",
->   	[SMEM_IMAGE_TABLE_GPDSP1_INDEX] = "gpdsp1",
-> +	[SMEM_IMAGE_TABLE_TME_INDEX] = "tme",
->   };
->   
->   static const char *const pmic_models[] = {
->
-> ---
-> base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
-> change-id: 20250519-tme-crm-version-a1c7aa3ce820
->
-> Best regards,
+With this change, the hung task detector can now show blocker task's info
+like below:
+
+[Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 blocked for more than 122 seconds.
+[Thu Jun 12 11:01:33 2025]       Tainted: G S         O        6.16.0-rc1 #1
+[Thu Jun 12 11:01:33 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[Thu Jun 12 11:01:33 2025] task:rw_sem_thread2  state:D stack:0     pid:36526 tgid:36526 ppid:2      task_flags:0x208040 flags:0x00004000
+[Thu Jun 12 11:01:33 2025] Call Trace:
+[Thu Jun 12 11:01:33 2025]  <TASK>
+[Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
+[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? _raw_spin_lock_irq+0x8a/0xe0
+[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
+[Thu Jun 12 11:01:33 2025]  schedule_preempt_disabled+0x15/0x30
+[Thu Jun 12 11:01:33 2025]  rwsem_down_write_slowpath+0x447/0x1090
+[Thu Jun 12 11:01:33 2025]  ? __pfx_rwsem_down_write_slowpath+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx___might_resched+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx_thread2_func+0x10/0x10 [rw_sem_test_2]
+[Thu Jun 12 11:01:33 2025]  down_write+0x125/0x140
+[Thu Jun 12 11:01:33 2025]  ? __pfx_down_write+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? msleep+0x91/0xf0
+[Thu Jun 12 11:01:33 2025]  ? __raw_spin_lock_irqsave+0x8c/0xf0
+[Thu Jun 12 11:01:33 2025]  thread2_func+0x37/0x70 [rw_sem_test_2]
+[Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
+[Thu Jun 12 11:01:33 2025]  </TASK>
+[Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 <writer> blocked on an rw-semaphore likely owned by task rw_sem_thread1:36525 <writer>
+[Thu Jun 12 11:01:33 2025] task:rw_sem_thread1  state:S stack:0     pid:36525 tgid:36525 ppid:2      task_flags:0x208040 flags:0x00004000
+[Thu Jun 12 11:01:33 2025] Call Trace:
+[Thu Jun 12 11:01:33 2025]  <TASK>
+[Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
+[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __mod_timer+0x304/0xa80
+[Thu Jun 12 11:01:33 2025]  ? irq_work_queue+0x6a/0xa0
+[Thu Jun 12 11:01:33 2025]  ? __pfx_vprintk_emit+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
+[Thu Jun 12 11:01:33 2025]  schedule_timeout+0xfb/0x230
+[Thu Jun 12 11:01:33 2025]  ? __pfx_schedule_timeout+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx_process_timeout+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? down_write+0xc4/0x140
+[Thu Jun 12 11:01:33 2025]  msleep_interruptible+0xbe/0x150
+[Thu Jun 12 11:01:33 2025]  ? __pfx_thread1_func+0x10/0x10 [rw_sem_test_2]
+[Thu Jun 12 11:01:33 2025]  thread1_func+0x37/0x60 [rw_sem_test_2]
+[Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
+[Thu Jun 12 11:01:33 2025]  </TASK>
+
+[1] https://lore.kernel.org/all/174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com/
+
+Thanks,
+Lance
+
+Lance Yang (3):
+  locking/rwsem: make owner helpers globally available
+  locking/rwsem: clear reader-owner on unlock to reduce false positives
+  hung_task: extend hung task blocker tracking to rwsems
+
+ include/linux/hung_task.h | 18 +++++++++---------
+ include/linux/rwsem.h     | 12 ++++++++++++
+ kernel/hung_task.c        | 29 +++++++++++++++++++++++++----
+ kernel/locking/rwsem.c    | 31 +++++++++++++++++++++++--------
+ 4 files changed, 69 insertions(+), 21 deletions(-)
+
+-- 
+2.49.0
+
