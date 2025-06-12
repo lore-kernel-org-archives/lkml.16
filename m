@@ -1,100 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F95230D1E;
-	Thu, 12 Jun 2025 22:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76949537F8
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749767650; cv=none; b=aBaNIaEbbbBKJrsNRfDliSqhHOR8kRj/Mw3rdnGEDUHAz5TgR7FdKJRak5Oj8sZhGywW6TROIdj1YhjZ84HFh3umgoEWiAO2l5zznCkH4vAMVoPyyD3MA5a7e52DqG6BtYXJLowz88oJ68FXrTbN5G9UkWAfJVXu4afRphm9XXA=
+	t=1749767708; cv=none; b=lajUqTqepXLp4lFAivI/QWSUC2lRUwOk/i01YG5nueXxysGI/gWlXmih3hOxWbk+2TmMo1uP5xaipZ0mtxEClV0lskBzxWuh9P6FCWCfiE/aG5IZaoYB1s/cvVgbaE9TjttDtIXf205RIYM8x3GnEwnx8tl+9cC29XB1jUCAkRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749767650; c=relaxed/simple;
-	bh=NKWTLr65Hcmg0MMBeQ2Z/lSxWCh4uYG9hCxq/seIme8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E3KKZk+TC4tp9l/9ZjGl2enSNqlhD0/dt0J/OKbpZtBQLpoxTd2qjgjRgSfxRIhL/G4vz5ga5zNrmvC8ROYeSrBdsnGCKH+lGDLA7wbRq0Ib9gqSrQYD1nUFftW7apmFIzVsDUp9S5WbzseDX7H6v0dirsh5IAzc4A0RIqLGBP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=chZHuC9c; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749767708; c=relaxed/simple;
+	bh=QA2tFYqN2RlJKEYGmIpVctDIKIpy36En/K5HHqEQ9c4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nPeS4FomZNqots1gq6gTBCOeHnRob3q0Wc9hvQrOJl4DgSnZDqe50qy1WC9YQWuyBBSeO0wHlL5XeAlFuMTSw91UTyYyA2kpF7hXIuJCAve0SPDLR4hkOdZ2zh6Un6uFpt3MgzrV2zLNAhFOlTYcahUDiNhyXbVuzi4rDRpmBpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x6sSDVgx; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="chZHuC9c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749767648; x=1781303648;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NKWTLr65Hcmg0MMBeQ2Z/lSxWCh4uYG9hCxq/seIme8=;
-  b=chZHuC9ci33WHPbsRz8MFaf0u51tfoerzpMLyTBaHTIgm4PcXCoRetm3
-   NWZfGK/pmT4Ga1XhRxmKJhx6w17mfkOm4NNS5tMN9DhL92BDTIb+heS10
-   UupcTgYRYUgdzYGdMszYhxsaO8/VMFKmZg7j3QA/imhLVT4MydtPt5gUj
-   SYyZngNIw2Lmn9/dJtm0eeBHK+20jlcBmzDfl+W0rvs1ZkJeze7Hoe7p/
-   OaSx2MFdg+8YjgnG53riF4Ucm9SLUkAS71hd6fW3q794z5ydJIBUVtxSA
-   xuImIrKm2JNZQrEtJOlfHvo6wjaDNVAkzWwaB9Gfv888ANgXENdgVXTNA
-   w==;
-X-CSE-ConnectionGUID: kvidIT0vQoeCDsmC+f8eVQ==
-X-CSE-MsgGUID: CilzCWI1SauycZt7+LLmQQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55771878"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="55771878"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 15:34:08 -0700
-X-CSE-ConnectionGUID: IgjqehKISRuLCpQGukBFWw==
-X-CSE-MsgGUID: /5HrnusNQSmAq6DS1AB4Iw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="184892812"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 12 Jun 2025 15:34:06 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPqUl-000C0I-30;
-	Thu, 12 Jun 2025 22:34:03 +0000
-Date: Fri, 13 Jun 2025 06:33:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ming Wang <wangming01@loongson.cn>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
-	lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
-Subject: Re: [PATCH] rtc: efi: Defer driver initialization to prioritize more
- capable RTCs
-Message-ID: <202506130610.5rhXSP5U-lkp@intel.com>
-References: <20250611062025.3243732-1-wangming01@loongson.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x6sSDVgx"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5533303070cso1338292e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749767704; x=1750372504; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QA2tFYqN2RlJKEYGmIpVctDIKIpy36En/K5HHqEQ9c4=;
+        b=x6sSDVgxEKu9+/jNIUGNkkSa6u5Fw/fmnn58DJpu60m1P9yGIwciRzBLqitV9j/asV
+         Nlkvv8fIsEQNlCLCSixipf3M08vVJPkHqzFtsKo4k8SaJuXaNkCeRQttZnrr9SJH3lCH
+         okEPAQRrzgEFYQQcE6QWf9bPKQMTRMVRnjKBE1kDF+0P18ZC9vtiNjUsPiUSU/41nKaU
+         gHfNepT4/cvse7RtkqaLgxUPF8MuuptH/aGMr+VXKT++wP8FAnAszteBiw+0c+QMokLz
+         m7uU0yNDgP8o8Wb2VSp34QQGIyV7BC3x07hd9+ZZOtEQHy5IrSVSJXlsls7qPd6milKR
+         tR4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749767704; x=1750372504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QA2tFYqN2RlJKEYGmIpVctDIKIpy36En/K5HHqEQ9c4=;
+        b=XeAJ22Ycz3WhUzfM0ZP5HenL+LwvJQcxm4UFa98eXXIQNOM1KJk2vngAHW/YF7tOF9
+         I0t7PYyTcYio/YCl1BM9RnDEUcWIczq/2MAujMbmCCiLqLRHOcVFtCgMNsDn4/kUrkQ3
+         lc3yj7CgCHXA2X+lNt9IZIdZlWMBFoqNbbB/1G4COAU/abw09Q6bl3rB1HiX/wF38STA
+         nzazFmp+FmYO1f34FslXTkHXKWZpipWhHHfeTdgqpr4VVmrQuMU2VHNOAuSgcF7dV1h9
+         cyE7mfDgCJxoss72Gaq6IRtTOPuRo13NMAoneAYQyif5G98QV7+O7o7QCWrXhI6dzV3x
+         b3jA==
+X-Gm-Message-State: AOJu0Yw4CnrEe1C50sSYZZ928vwM+RNtYl26nlhNb0z0AXHsTSpWwIu7
+	7nah2ivt/P/o5pqHdgZCFBGrynnAKc9VsrTYnEdvHhwX5Xpbv/dZ8VZbSW6KOsir/v1mLFFqUBq
+	GTGb4LB05ZGiMe5aSgLWIzvAXGOsk8gkmiU8wquE=
+X-Gm-Gg: ASbGncuTxhdrWZ5uZ8zDwVmbQGtCNFKWoJJYYObRyFZ2jhSgmPIptv8FZJmI8PVwLdf
+	CvJgZHtInPPU70Ncgdu9BCm0pToGbe9tOzT/6vCPlMD9xS7IY2sDMFUjdaQqUL4j94HEfvber5c
+	Rp330MkyXZUGT7/dpypLzc+Zr61mFmqwAuaJqWyOM2WscKeoCUiXne7YskFmpZTvp2IvIWMYAx
+X-Google-Smtp-Source: AGHT+IFDTJC/Vdt2wLIjM69G0c0CvJ2GlOg6VdkTRaJzAf9o9CG2KNlttV9DkWauNgtO6mb1ZL3ESwCTBOwtfSJnIJ4=
+X-Received: by 2002:a05:6512:b1f:b0:553:a30b:ee04 with SMTP id
+ 2adb3069b0e04-553af907766mr218487e87.14.1749767704397; Thu, 12 Jun 2025
+ 15:35:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611062025.3243732-1-wangming01@loongson.cn>
+References: <20250519082042.742926976@linutronix.de> <20250519083025.652611452@linutronix.de>
+In-Reply-To: <20250519083025.652611452@linutronix.de>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 12 Jun 2025 15:34:52 -0700
+X-Gm-Features: AX0GCFu6c6tQwPqQEiNiejJsors8-caVPvvKXKm_2z8brWLY2l8YznTJmGjnNoM
+Message-ID: <CANDhNCqWeX2TX4Yne-g55Rpat4xj1QHo5xvuTMt_7R3B78kvFA@mail.gmail.com>
+Subject: Re: [patch V2 01/26] timekeeping: Remove hardcoded access to tk_core
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ming,
+On Mon, May 19, 2025 at 1:33=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> This was overlooked in the initial conversion. Use the provided pointer t=
+o
+> access the shadow timekeeper.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on abelloni/rtc-next]
-[also build test WARNING on linus/master v6.16-rc1 next-20250612]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ming-Wang/rtc-efi-Defer-driver-initialization-to-prioritize-more-capable-RTCs/20250611-142308
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
-patch link:    https://lore.kernel.org/r/20250611062025.3243732-1-wangming01%40loongson.cn
-patch subject: [PATCH] rtc: efi: Defer driver initialization to prioritize more capable RTCs
-config: arm-multi_v7_defconfig (https://download.01.org/0day-ci/archive/20250613/202506130610.5rhXSP5U-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506130610.5rhXSP5U-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506130610.5rhXSP5U-lkp@intel.com/
-
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
->> WARNING: modpost: drivers/rtc/rtc-efi: section mismatch in reference: efi_rtc_driver+0x0 (section: .data) -> efi_rtc_probe (section: .init.text)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Acked-by: John Stultz <jstultz@google.com>
