@@ -1,91 +1,94 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0B826D4E9;
-	Thu, 12 Jun 2025 14:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79591273D7F;
+	Thu, 12 Jun 2025 14:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739979; cv=none; b=GswK+kNvp8NQPIu5S2ylv4v+ZUwedTA/R+2dmQBhPAml55JUfLCOyYJPg6dNVdTKdjcQ8kUhkzoV6oH7dtSU1h31mLBTvfd84kaBUL4Nb57GD0i10U9MRNI5+4iDBBC+etAdnF0MrBqT/gsyBtRw99kFoEuKxAKtd+sHjWlVSpg=
+	t=1749739985; cv=none; b=gx/B0aFCOu7Tuo443NVGwHPqiQNMgianovme/0kXUVo5wbDZwRNx3m6zv6XJab8g/RQwH+c9PrF6Loy1uqSug5eIGBDIzJdSJ3Q8SDmq2c5p7Mw4mrxLTj28tbEyQhV6sr3pOhTpgm7vWLpyXWjP2PZt4PMtcY23gopOV9d8k7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739979; c=relaxed/simple;
-	bh=BHs6em2IdPZtT/B9EW91eqWvHJ+mI9zvLDnVDmv0ZJw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EabX5GuPKgC0ckDOPwKWwk6G6AIHZ3O8nDEY2myZlRtN2rFzGqE/hq/9vlfelyGa+i3TT3UlCDYOIMmZ9Y9liBJKtMq8HrTbf1N0iVV/AMuQ5gMcyTE/b4OEI3/rYfhAV01c0wRIfkQhQ2lbhFc9pV22aIzM06DUy38SOJ8T+YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=YzEhAtWk; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="YzEhAtWk"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id ADADC26064;
-	Thu, 12 Jun 2025 16:52:56 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 3zxYttUun_bL; Thu, 12 Jun 2025 16:52:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749739975; bh=BHs6em2IdPZtT/B9EW91eqWvHJ+mI9zvLDnVDmv0ZJw=;
-	h=From:Subject:Date:To:Cc;
-	b=YzEhAtWkELydVwtHUsUb6GmGaBzJ/4su5F9KfmHtUcTnk25hy2gUDKuH2Ob9+p6Ij
-	 bF5PtPfyiul5lBYRKZSWkxqTXPuY+Ftvrk39XXoip4q4BMCMDnuP9uayqj1+5DBX7u
-	 QiZG8M3r5DCvzKzljNTc5un/ofA2qEgGD78SIabV4s7RrKZTBt4/aAiE8Z6t7aZQrs
-	 GF+AQBKLq82Xr1xxxorWTum6yAkMdz+Qtc052t++B14KVUJIgzKWpSojAVql1ObEO+
-	 h1dkxPF4Wm6C+zlHHdVl3/ffKnkBrgZnYucst26bX81s9nVZnKRbThRRn2ubscOq67
-	 8XAf+CSjbtZCA==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Subject: [PATCH 0/2] Add driver for Samsung S6E8AA5X01 panel controller
-Date: Thu, 12 Jun 2025 20:22:40 +0530
-Message-Id: <20250612-panel-samsung-s6e8aa5x01-v1-0-06dcba071ea6@disroot.org>
+	s=arc-20240116; t=1749739985; c=relaxed/simple;
+	bh=iPaMVCvtVq/bIrjuta3WZIZB6tCzbML6yKhL4yeq8kU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=gvXoaG330HfKXmMvIs9fjAcfiIQF0ubTS84CfPlpv7r3k7JuVwPOyWndYvcfyOU3j2zw1kataAgSdduhc3uB5crXyUKh8J8293kID7BFRu4+fV3cxyfAD1i8pCh6wBhqWzqHZA07U3Y5x02UBkC1y92DoQNP+KqmS+AbIka44Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id B80275FBDE;
+	Thu, 12 Jun 2025 14:52:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id D68DE20028;
+	Thu, 12 Jun 2025 14:52:32 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uPjJg-00000001lQ5-2NL5;
+	Thu, 12 Jun 2025 10:54:08 -0400
+Message-ID: <20250612145408.415483176@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 12 Jun 2025 10:53:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4/4] PM: tracing: Hide power_domain_target event under ARCH_OMAP2PLUS
+References: <20250612145310.563358597@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALnpSmgC/x3MQQqDMBBG4avIrDsQo5HWqxQXg/7qgI2SQRHEu
- ze4/BbvXWRICqO2uCjhUNM1ZpSvgvpZ4gTWIZu888EFX/EmEQub/GyPE1uDt0g4XckQX38ayIh
- BKOdbwqjns/529/0HhI38EWoAAAA=
-X-Change-ID: 20250523-panel-samsung-s6e8aa5x01-ea2496eafeda
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749739970; l=962;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=BHs6em2IdPZtT/B9EW91eqWvHJ+mI9zvLDnVDmv0ZJw=;
- b=FMYOVwgZYbs2u1TNKThh2/6iwy2E5OIkUYogzpc7A37V2edkpE/09hxm2GWU3bVUR6c5n+m5W
- m7z00i7fzYOCo54SdBL/JG1rNYOnP0y+0UqhLPhOj0go3uQQDxpOeRR
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Content-Type: text/plain; charset=UTF-8
+X-Rspamd-Queue-Id: D68DE20028
+X-Stat-Signature: d779s6b79wo56idmtjbw44h7e3pmcfdt
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+p9qLGefh3sHaR9HeWxLmuONQDxFeJOGA=
+X-HE-Tag: 1749739952-78830
+X-HE-Meta: U2FsdGVkX1+oktxM9QHJotdDuSoK5vAHsGppqxtCgNWEj1VK1VKxq7/y9psVHR+Bs2ogve3wyTswzYhgNOyT0RsushAuh86z1DNqREAWXAVYDIw2j/ZsYhMZLTVYjQ8tO3lOFw5W+hCQAnkWijSF0faDxdMJ9DJ6sGb8RQKmoR3SZNxnb7lAeFHLvABmw29eyA7HWOe3keGbV3AcW1SXcIb1HyTjyHcZ7NsmXrf4Kc7rI+8WmBBmycoB36t9bq5+LBgoUG3rcDrkB7/7MIJ6wtJaGJ+4hMxsfRR+6L3upigYysuBZt6mHOQGwhCgC8DnLSqMPjWh1mkigyDN9bMbVxUntrVmbY2x2r+jJZ9u3EJbauVyndWCWlvOSERxtbTuWU7ND/LoCS+VoL3L5cnl4w==
 
-This patch series introduces a driver for Samsung S6E8AA5X01, which is
-an AMOLED MIPI DSI panel controller. This panel is found in several
-(mostly Samsung) phones, in at least two different sizes - 720x1280 and
-720x1480.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+The power_domain_target event event is only called when CONFIG_OMAP2PLUS
+is defined. As each event can take up to 5K regardless if they are used or
+not, it's best not to define them when they are not used. Add #ifdef
+around these events when they are not used.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Kaustabh Chakraborty (2):
-      dt-bindings: display: panel: document Samsung S6E8AA5X01 panel driver
-      drm: panel: add support for Samsung S6E8AA5X01 panel controller
+ include/trace/events/power.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
- .../bindings/display/panel/samsung,s6e8aa5x01.yaml |  80 ++
- drivers/gpu/drm/panel/Kconfig                      |  11 +
- drivers/gpu/drm/panel/Makefile                     |   1 +
- drivers/gpu/drm/panel/panel-samsung-s6e8aa5x01.c   | 922 +++++++++++++++++++++
- 4 files changed, 1014 insertions(+)
----
-base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
-change-id: 20250523-panel-samsung-s6e8aa5x01-ea2496eafeda
-
-Best regards,
+diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+index 5b1df5e1e092..82904291c2b8 100644
+--- a/include/trace/events/power.h
++++ b/include/trace/events/power.h
+@@ -319,6 +319,7 @@ DEFINE_EVENT(wakeup_source, wakeup_source_deactivate,
+ 	TP_ARGS(name, state)
+ );
+ 
++#ifdef CONFIG_ARCH_OMAP2PLUS
+ /*
+  * The power domain events are used for power domains transitions
+  */
+@@ -350,6 +351,7 @@ DEFINE_EVENT(power_domain, power_domain_target,
+ 
+ 	TP_ARGS(name, state, cpu_id)
+ );
++#endif
+ 
+ /*
+  * CPU latency QoS events used for global CPU latency QoS list updates
 -- 
-Kaustabh Chakraborty <kauschluss@disroot.org>
+2.47.2
+
 
