@@ -1,106 +1,138 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84CD2036EC
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0FB24678F;
+	Thu, 12 Jun 2025 20:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749759775; cv=none; b=n7QH4a9FmGCA2lg6kSXuE2vU3JRRIAHWFhHcAPpYXsUtc2iA5GOSTagvvVRxPTJEFVNHbUcOLH+HmjZiqljfL6BS9yYlVCIXBvWJf8n7l/1pt8KbZ2xftvu+IMHu8w6yWIPOrr/PhuA32bRRK83sPmwIW0J3Cxsof2DuVvfCWD4=
+	t=1749759933; cv=none; b=r5qp7FhljbNfvHTIvGT6Wrjl6K+iF0qq/XRZh+MH+WzCqKgZbqV45qKna744oLkL1MLKRREVUxmLPQIs3mxyan1Dv3l+fUed8N3oaTiCzL8hO5w3rrHq4coyqZIrQDwN6wzZ2raa+iRB6A6LgaQJRAhbh+9YEVVzy90xCXMR8QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749759775; c=relaxed/simple;
-	bh=k+8qcqat19/l68bSpa8MpZylm2SaxNPNAiemLPlp424=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z7QKYedYbtGbzSdgVHSoqFL2lgJYUGli5+VuwNXu5Yu1TKCsfuFVSzRPUWWEcuMoucLNHof8eUCLBhyyyucweSQxPtI/ZOFQmhcd94nlRyW/nleSTdAzc7ZTcPof+FJyB5GtdWrFeZ+CV2jKo3UNmmpaiR8Vk3zYLzC2948rOJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=oETaLA86; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
+	s=arc-20240116; t=1749759933; c=relaxed/simple;
+	bh=l//TA/wIxUleMp15iIiBD/Mnz0+P2PcGzVXJQCu7cgo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tECiUEqPzkUnMCcD4+8kV0LmVd9B7/+KAjO7xiZBDVqcAsRdw2wEjeOsORwOwD0lb2fZllhlfnKlTSypYkATU0cjrlcwCqimnIQCnNYyDKYR7YaOixbtDur292UYElWxMKF5rrFA/LP6w2opCrFlX47UZT6bLA8CcgGijj06das=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=JtxOZU0B; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="oETaLA86"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a54700a46eso1185964f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:22:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1749759772; x=1750364572; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hlTcxbxt8X33Mas2XcA4ZwTuUsj8P5XCjQiAPUa/TdY=;
-        b=oETaLA86YBtbSXxqW61JdxQyu9WHbqTArGNERt8WffopwxFakQO2j1YzMtCxYk7FN2
-         LF90K9wPrVx3T3V/BqBvmEcgp21dF/TjrpQoIOd34UfL/pAbZS1lj1KdZ4XJopMI6+E+
-         ex6xjYL1US2C9tYAinBo/Y9iiht8Y6axmCDGsRKtKiDWJRsegOxb3xYkPbs45OqCE+o1
-         g5Y828qX4sWt//GBAL2CcB9GbTL+rfecCfGMZLS44srgXUUwwd8aAG7MCuhpNkbYRWj5
-         bfDoSzVoGZ822/AyaFEkQjcEjAeEOWAdL2rjYUyvYZa2pHyjzPp/yFp0lIxBdxnS1YXn
-         eMVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749759772; x=1750364572;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlTcxbxt8X33Mas2XcA4ZwTuUsj8P5XCjQiAPUa/TdY=;
-        b=XHdsQWTQh0FtPpMGZ3PG8g6SkBzpPswQHaynqLAMUsj5ClSl9ZPKuPRofgO/6BK4Z0
-         XpOhI864kDZmab1bEmhzZItebuJaWD28w3lqdRTSvhwsi9XM1V4MT9PsAqB/Bk3bdMyw
-         J/IH/h8Lj/D1wYtCQPHahq6G44AjSmMwYW0QNiS/qS4nvLvzADMOWVu/lS7jRA7C3SaX
-         JspXlCLenLfAlXNUbmgXt1MxAAI1+zBVlHZRQQAEggIGY9Ne21yGRWqmYNHhq2NhmvVB
-         HwF2Cdik6HEyZZwuC8+zMUqofqJbaKtK1YkKR41h2auXQVboPjLUmPgeQ/dSydwUWWnp
-         1EZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7MEEW4cZb9yv2Seup+Z0LwDSlHY54oun9s2p/dOoqLf067EpiL0CoEPn8oZnj4ynx3YYxpQO+7cExv4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqFpR0RiQweEBsDD6P6aZi1uz8Df+CFonnb+ctu4hvlOZx/EP4
-	/KZBRvZi/kdCtvUDBy1HiQR5JEyAplLEh8f8hd9KPfbdRlMHSxhLJyt+gqrYvLyYK28=
-X-Gm-Gg: ASbGncv3zMRNXjzWWHsP4IcD0BaC0S8IWIuh0mz6VuZEKI6avfFT0Q4pVr7ccEUnboT
-	RJKHzdQsP2CmtwKFzxglSsyi3vuehJIztvGmwY6Cpagy3Ak1KVABgw4k89xbDTGS4PaRIOEegKS
-	KQVlGUM9eOom2s3Z7iqTpI9tWaVx5lehLvjFKB01fhalzuJmog12qfDq7vkUold7Dl+0aqV6E5t
-	rKEijHYTaeEda8ghY4XqbHRMCbuZJVzbd8r7Q0FKKovgtr4ix+Wv32qoWcv7bq4WeHxx6A6J14i
-	jwoMEIN9SxANMGt4ndgk9hdr7tSaxbF1+E58Jv0RYfYdeYsL5c8fQwIx0qyHkqzgpG8=
-X-Google-Smtp-Source: AGHT+IF+gq1H20mJU4eexJoIkhCAQCtqebZZXUexoV64aJkjI/XmvNM4sYHXfE4os5j9Dm6p65O13A==
-X-Received: by 2002:a05:6000:2507:b0:3a5:39bb:3d61 with SMTP id ffacd0b85a97d-3a5686f44b7mr504689f8f.27.1749759771298;
-        Thu, 12 Jun 2025 13:22:51 -0700 (PDT)
-Received: from MacBook-Air.local ([5.100.243.24])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a612d8sm307284f8f.24.2025.06.12.13.22.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 13:22:50 -0700 (PDT)
-Date: Thu, 12 Jun 2025 23:22:47 +0300
-From: Joe Damato <joe@dama.to>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: netdev@vger.kernel.org, Justin Chen <justin.chen@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:BROADCOM ASP 2.0 ETHERNET DRIVER" <bcm-kernel-feedback-list@broadcom.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 1/2] net: bcmasp: Utilize
- napi_complete_done() return value
-Message-ID: <aEs3F49J-WMQbary@MacBook-Air.local>
-Mail-Followup-To: Joe Damato <joe@dama.to>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	netdev@vger.kernel.org, Justin Chen <justin.chen@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:BROADCOM ASP 2.0 ETHERNET DRIVER" <bcm-kernel-feedback-list@broadcom.com>,
-	open list <linux-kernel@vger.kernel.org>
-References: <20250611212730.252342-1-florian.fainelli@broadcom.com>
- <20250611212730.252342-2-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="JtxOZU0B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1749759910; x=1750364710; i=markus.elfring@web.de;
+	bh=l//TA/wIxUleMp15iIiBD/Mnz0+P2PcGzVXJQCu7cgo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=JtxOZU0Bb0KCjL9undv45j90FKoU0oXbT5ZXeDKxESLRRyeH27izkwlNfCqD/xB1
+	 eupaVVNcSWV/pQ5BhiRZHjMWjCixqahN1FpSa7sIWJVYdr8G52EoSJWxsZ0mooDr9
+	 lpGPPzZDW4LhS8yYosXle0boqUmhmoZ8PmflJebw70C/P0VomAnJT16DrUIbnuvMj
+	 G49qSrG0iDoIxjo50WIbu+EX2ynnadglzcglZnAqpSrx2ZqnT11na3mp5MxPrSDrr
+	 2jt7p3m7HwjbOw8lbp4pTKyUz8uEwFwZKuqcGGvHQRTHB3TxKaf1sL34EmOamX5RR
+	 8ZOVnylZ05HUdBQA+w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.213]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MK574-1u6dTM0xYc-00YXDn; Thu, 12
+ Jun 2025 22:25:10 +0200
+Message-ID: <a0f391bd-4bea-41c9-8c4c-cc1237261e0c@web.de>
+Date: Thu, 12 Jun 2025 22:25:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611212730.252342-2-florian.fainelli@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3] drm/amd/display: Fix exception handling in
+ dm_validate_stream_and_context()
+To: Melissa Wen <mwen@igalia.com>, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+Cc: Alex Deucher <alexander.deucher@amd.com>, Alex Hung <alex.hung@amd.com>,
+ Aurabindo Pillai <aurabindo.pillai@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
+ Dominik Kaszewski <dominik.kaszewski@amd.com>,
+ Fangzhi Zuo <Jerry.Zuo@amd.com>, Harry Wentland <harry.wentland@amd.com>,
+ Leo Li <sunpeng.li@amd.com>, Mario Limonciello <mario.limonciello@amd.com>,
+ Roman Li <roman.li@amd.com>, Simona Vetter <simona@ffwll.ch>,
+ Tom Chung <chiahsuan.chung@amd.com>, Wayne Lin <Wayne.Lin@amd.com>,
+ LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ lkp@intel.com, oe-kbuild-all@lists.linux.dev, llvm@lists.linux.dev,
+ cocci@inria.fr
+References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
+ <e6656c83-ee7a-a253-2028-109138779c94@web.de>
+ <ea0ff67b-3665-db82-9792-67a633ba07f5@web.de>
+ <32674bac-92c2-8fc7-0977-6d2d81b3257f@amd.com>
+ <da489521-7786-4716-8fb8-d79b3c08d93c@web.de>
+ <8684e2ba-b644-44c8-adf7-9f1423a1251d@web.de>
+ <5ebybqjohsoz7qhsenufkpkkw52w6tgikkbrzpegwotmefhnpn@m2cnzvsfai7v>
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <5ebybqjohsoz7qhsenufkpkkw52w6tgikkbrzpegwotmefhnpn@m2cnzvsfai7v>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CwmAqMJtLC/WOX/lrln3aBeTTfzPJqj7veTvO0d7RPoT+Y3/0x2
+ AUU2rmDO2pYs/7lyefDrbNyuFHKGmp7+SKOtv9CFLhYt8x5gCete32jmT96nsZqLwM9BCAM
+ JoihQ6ARUa6+c1VrSTcPQNxBSw3tiwIhWuMvjzIJk8oXZLyWr6ahx/ai4C4md4+8I8EVlKw
+ sBja6Xq/hztnkH89OaHjw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ktVqxSortBc=;8nMd/P9Mkb4oM6NrEJRSTJVAxNq
+ 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
+ 1j8v78ikg+0Dj83zdoN+HSdtzmCmn4nvu+NpSA==
 
-On Wed, Jun 11, 2025 at 02:27:29PM -0700, Florian Fainelli wrote:
-> Make use of the return value from napi_complete_done(). This allows
-> users to use the gro_flush_timeout and napi_defer_hard_irqs sysfs
-> attributes for configuring software interrupt coalescing.
-> 
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> Reviewed-by: Justin Chen <justin.chen@broadcom.com>
-> ---
->  drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202506100312.Ms4XgAzW-lkp=
+@intel.com/
+>=20
+> As the patch wasn't merged yet, don't add these two kernel-bot-related l=
+ines.
 
-Reviewed-by: Joe Damato <joe@dama.to>
+Can such information eventually be omitted also by a final committer (main=
+tainer)?
+
+Regards,
+Markus
