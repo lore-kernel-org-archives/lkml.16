@@ -1,64 +1,129 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63F91F0E39;
-	Thu, 12 Jun 2025 06:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB6114A8B
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749709884; cv=none; b=FeRWMokbhBexgJurWW00aH9iVKzRMvBxJWFIWCHjDOGOD5txB/DUtkyd0WUDvAbAg1JaBBv/gytmPAwXfkVYLj5QvqrmQMzxZQh2Tm1mbobOQvfTKedsgnoSYQXhmJingCsSqT3MFFvkT114XwbmW8fmuNQ84PDsLf1k20Kmkkw=
+	t=1749710029; cv=none; b=Rgv8zUsywcgkYwxGqKhHyffE+q5Uk1Ivmu/glXXTGb0QS9Xa2adT8AogJS+TWxvGuTwdGSczi6EQIZR8exulVYfq9i2zlVmaFKlOHqtlqiq0YzJrM5eP2KYrrMX0a3jg0jZhX+u7i23fHQjsnXTYD8dS37NLvF+U0AoVjceqjWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749709884; c=relaxed/simple;
-	bh=hwEQMmj5NpD7TYTUrpSQl8P8YX/4owSuhsy987Ydyf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T9Ny167rBOskNp52MRtaodGyWKZZOAmpjmy2kVUihujcVjmFxwHElbQJfV3yBV2C6/O6SqKHy94e/KEhgRbrBle3MCprtliOvZNqXoWB1K5YC/x3e9Rdzrzpcyp/Yw2UqqZgrkSLbJNzoVN8C+o1mc+4HsqO4iSAWjl82ylKzOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Oqo9AlTX; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1749710029; c=relaxed/simple;
+	bh=efaVr7x4DyfPYiYGhfU7gIrNkZWvEaUcvLN7XhkIyA4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qba/Bf5WJtlA1VejZEAYzKPUJS0wtxcuM3CRY0BG9evRkCw3p/QgYjXalplFgEwiIC7RwV8tkD9/To5V1FBSvR78B4fygqXacRqfhO51skTz9qJPaSrKNuKcbBaeXAw7zuNmL96O+vuGEIvveiY+UeaI6gGTVmUR2PnAe34XttU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkQX2ljS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oqo9AlTX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/LIT+PyE2jX0PpxZeFpDNynbM6tFJlZCwyr6C5tUQIc=; b=Oqo9AlTXShU0/3RSbMuyuzzPD7
-	KJwmmT3Tvzw6DIHfQGPs3jw08HtW8+682FZon6Tk8DZ+q1nIMRUUC9k/VApO7Jy/jqu+zDTGhLDAP
-	nb4sRP+AOzPh9nxiBgQdlGnvzQZuaFQSqCL0wX/f/8JmhyRh+jtDETmfm74u0E0Zcv6lOGEvu3Xak
-	WytEOEbWKfHN3Zpm84cz3UD60ENFXYJtB7QzCT9bIB6SRdM6cfrXde+KafFei1vJCaq5OWwPaiFmr
-	WcGi4aLPRTqttb5VsJq3/xr1UuOkjxy26MA8Yi1igTyCcs5Kk+EGyP1T2gPlCEq28fbLycjUkeu4c
-	61zJN8vA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPbT5-0000000CK0N-2Anj;
-	Thu, 12 Jun 2025 06:31:19 +0000
-Date: Wed, 11 Jun 2025 23:31:19 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Graham Whyte <grwhyte@linux.microsoft.com>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, linux-pci@vger.kernel.org,
-	shyamsaini@linux.microsoft.com, code@tyhicks.com, Okaya@kernel.org,
-	bhelgaas@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
-Message-ID: <aEp0N2RNh1szW1Xy@infradead.org>
-References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
- <aEj3kAy5bOXPA_1O@infradead.org>
- <aEku4RTXT-uitUSi@ryzen>
- <1ccbaac5-7866-42f6-b324-cb9e851579e6@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkQX2ljS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE244C4CEEA;
+	Thu, 12 Jun 2025 06:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749710028;
+	bh=efaVr7x4DyfPYiYGhfU7gIrNkZWvEaUcvLN7XhkIyA4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IkQX2ljSLK7qpNmxvKCm2f3cCS4vshkU+IKzyIJAxjA5bZgIlZssxZR43mje9/kKX
+	 cy1KCc3w5JiMRgWDJ/BLC+l6dC8eHsHwjslwXLr75+W0u5sRcp/LNp/w7awEFcy2U+
+	 PfAeLQ2GgZOlFulpuBJqfHrZr0y7926RhJ21BqoETwJpaVKFI5JdKvF5qljSHl90t0
+	 wlDSxcLsAOyRmMWNquJ8Gk94VzD7pCyTZbJk75nSrrUj9dE05IG+/DbdSfKIBk3lT9
+	 MUrGCi2rjOXNCVidMHEodkkM4RiufSFT8IVOG58fTduTTZYD4X1PEEBRGYGDtTrn7S
+	 pLhYwY+h9qDDw==
+Received: from 91-161-240-24.subs.proxad.net ([91.161.240.24] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uPbVS-0068PW-Bv;
+	Thu, 12 Jun 2025 07:33:46 +0100
+Date: Thu, 12 Jun 2025 07:33:46 +0100
+Message-ID: <87ikl1foz9.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	oliver.upton@linux.dev,
+	ardb@kernel.org,
+	frederic@kernel.org,
+	james.morse@arm.com,
+	joey.gouly@arm.com,
+	scott@os.amperecomputing.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] arm64/Kconfig: add LSUI Kconfig
+In-Reply-To: <aEnC6img102ZygDy@e129823.arm.com>
+References: <20250611104916.10636-1-yeoreum.yun@arm.com>
+	<20250611104916.10636-3-yeoreum.yun@arm.com>
+	<86zfeecnog.wl-maz@kernel.org>
+	<aEnC6img102ZygDy@e129823.arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ccbaac5-7866-42f6-b324-cb9e851579e6@linux.microsoft.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 91.161.240.24
+X-SA-Exim-Rcpt-To: yeoreum.yun@arm.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, oliver.upton@linux.dev, ardb@kernel.org, frederic@kernel.org, james.morse@arm.com, joey.gouly@arm.com, scott@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Jun 11, 2025 at 01:08:21PM -0700, Graham Whyte wrote:
-> We can ask our HW engineers to implement function readiness but we need
-> to be able to support exiting products, hence why posting it as a quirk.
+On Wed, 11 Jun 2025 18:54:50 +0100,
+Yeoreum Yun <yeoreum.yun@arm.com> wrote:
+> 
+> Hi Marc,
+> 
+> > On Wed, 11 Jun 2025 11:49:12 +0100,
+> > Yeoreum Yun <yeoreum.yun@arm.com> wrote:
+> > >
+> > > Since Armv9.6, FEAT_LSUI supplies the load/store instructions for
+> > > previleged level to access to access user memory without clearing
+> > > PSTATE.PAN bit.
+> > > It's enough to add CONFIG_AS_HAS_LSUI only because the code for LUSI uses
+> > > indiviual `.arch_extension` entries.
+> > >
+> > > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> > > ---
+> > >  arch/arm64/Kconfig | 8 +++++++-
+> > >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > > index 55fc331af337..20f360eef2ac 100644
+> > > --- a/arch/arm64/Kconfig
+> > > +++ b/arch/arm64/Kconfig
+> > > @@ -2237,6 +2237,13 @@ config ARM64_GCS
+> > >
+> > >  endmenu # "v9.4 architectural features"
+> > >
+> > > +menu "v9.6 architectural features"
+> > > +
+> > > +config AS_HAS_LSUI
+> > > +	def_bool $(as-instr,.arch_extension lsui)
+> > > +
+> > > +endmenu # "v9.6 architectural features"
+> > > +
+> > >  config ARM64_SVE
+> > >  	bool "ARM Scalable Vector Extension support"
+> > >  	default y
+> > > @@ -2498,4 +2505,3 @@ endmenu # "CPU Power Management"
+> > >  source "drivers/acpi/Kconfig"
+> > >
+> > >  source "arch/arm64/kvm/Kconfig"
+> > > -
+> >
+> > Can you please document what toolchain versions have support for this?
+> >
+> > Thanks,
+> 
+> Okay. But here with comment or Is any other suggested place for
+> this?
 
-Your report sounds like it works perfectly fine, it's just that you
-want to reduce the delay.  For that you'll need to stick to the standard
-methods instead of adding quirks, which are for buggy hardware that does
-not otherwise work.
+The help section in the Kconfig option you are introducing would be a
+good start.
 
+Thanks,
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
