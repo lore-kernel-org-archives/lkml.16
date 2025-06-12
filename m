@@ -1,79 +1,58 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A0C2BE7D7;
-	Thu, 12 Jun 2025 20:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE7F2BE7D7;
+	Thu, 12 Jun 2025 20:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749761406; cv=none; b=Ru265sYj+FDtbuvUdgphED2+quZSBx7Qz9EF82AiDFNQrjc/3YMkRgbtJtNjeNquEbnIRzYE9MvDO+r3VrNB+NvuroLqP64IN3AafUj5+GO5S490hnVXb+0lD8NE4vhjhbZ0h+IQKOshDBPOP2FUdSpgqNCrBVjepp5u5WAGWGM=
+	t=1749761681; cv=none; b=eo2VR3UYY7fWZmBReEzIbWrDIdm7WG1IGFIQv64vJIL+OtYQzsTs9mbRLBM8S4v5/Kftsi4g6sRnFr2B4Yp8KX7DKBjmbAqcRzku8qSRzVc8lxa8B/FGWA2q8JVwkktZskBGMOxsyoxRB0QF6LWJte0EQ1RXYpdfyB30G6Jgou8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749761406; c=relaxed/simple;
-	bh=iUgHLNAadS4y5q+Zna7GF0wPrd3qbJ+v+rYYs0/My4I=;
+	s=arc-20240116; t=1749761681; c=relaxed/simple;
+	bh=6P5cbaAl8rTt1XMIQMPvx6uTYWL/JwGk967YHx7eCtE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q5TWZrfL5tokn+CdYSz8gNoSqZXNyGtLePjcEZ4adKf/soXKTnnP7YQ62OITZyoEdvfSaT1mKPT2h3EKNgp4FCviSt8rm5WCNvTcNBd4hNjVieCNAD0W10rOOMiE5b6ebKwHZePLyeCYjquvnEtbKlGM0fzpueYr0zT6WWUig9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LR3oItHw; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vs/CBqJ1v03I2VNSiz6JbCPZzhy7y5EYzmxuuBIinJW7tWLgraWXL7DgWJ9YeZ2P1Fne0IiBoi5lMuiDrrwWxtR1f1Qx+6jSa8wtdVA2JOS/H2xBhCdGDy+HcFhjDwDGDn/Z3PfrNFxQwjnKBq01sFgg7ZjJz8wXnwXuDh09aJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=iZwhEzvY; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LR3oItHw"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-235f9e87f78so15497055ad.2;
-        Thu, 12 Jun 2025 13:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749761404; x=1750366204; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2UoLqPJz+BVnnu2pZ/H+yolFKvZxInzCZIkRhDZ6aJs=;
-        b=LR3oItHwN/CGDBI/D+97fr9yZROQNVwfIiHc93y7/RJqgP081mKyamCcN17hh/HX7E
-         vJo9qGRSbPT2FJy28Z56p78oB7VMDFBnP00gLIJ5LTTEJw0fKou10WnBARQqGv9XUwVf
-         qOX9onhl9URJJQan0JN1AEMr4kTf0IpfhkaFUKcLzSz7/8sRAl6JFspYzmoNkmHVmxUG
-         ZXnbpyA0NsBRIzBWVWQymmWO60rG84nHG/Hh6xZagSP7v9Ig9mAoKfijGMtGe5Qf4uap
-         eyrtguL05fcunrZkubj6QYibwTtzl0S7F8jYFsH9W2ADdN7SPAAWMif3DHlvqQWAgOPC
-         wx0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749761404; x=1750366204;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2UoLqPJz+BVnnu2pZ/H+yolFKvZxInzCZIkRhDZ6aJs=;
-        b=AhERSSj5PTKiHnqYIaUmoM8FhFTZUeUIIwz20iaYY1dw4UvJFKm5Hv/0iLDzq2km6H
-         vx7cEVL/2FmlnTeqnTyPjaTYGcQveiBegMwNvA0BS7EcqmJeG9MKWv0RpKHzZkVfe/go
-         pjTu4gW+TyIXTlhXUyLNKESzmrv/x1LnQEPxM2Od2cvRvL4fUJiwy/EW+LnsTgesxaL+
-         l6+vWbnRfxIyWBg+plTwSGO90YWGkjlfarvPBL4xlqtB9ABF6ewTaYd6GkNo0PeTdgkS
-         s02LURHkolGWWZh9uBTov/uh+WkVfXodk76A3dd9aEkOhDtIByANX7nC9DOE0eJ//Bx+
-         DzVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdYHBY89iz5pmpsWTZwoDhYXgwY/xIGFvLfGnpVBLNAHKUxCzoVq7k0jNgxk4fMddUdin4PIYJkdk9@vger.kernel.org, AJvYcCWN4gqY2OI3rMCzyC+nk2ySlC4YfjDZIbKVPsdiUH1+7zeqD8+t5olAP2720KNcIs1i8elt12UqMn2mdrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7vD8S+N+gKOqEOcQpEHu6lxaw36kdcMJo4lyGFHCACseqtbTZ
-	0ajl7JGaaKdiqwmqoXOHcPKnVF74aeW1y9KOh8qre4MV0WX7X2ghK6B+FAKyPNRL
-X-Gm-Gg: ASbGncvBM+JGLl1eWyH1Ja3hPDESbwaOPskuMXpdRm75Yda0djPmLGlMU5lqN784fNp
-	AGJ4yzuVShBukcmHqfr9v+K34ohX+/yJI2S8aDMVbpLITNoNGVUstbp2FPCdOnXwPYX77rJ7lTl
-	1Rbdzd5JJ35YvMRr2STUgVyeTa9xgNmts+k1r835fbdDkNlpZJXWWG+AN/xNoa/8YQg88Eqafex
-	ZFv891hK+MR01k+Vfyyb1YIlWplI+kOiWc+ALA3RJtylNfR6aBGWX7QU+6uGWEqfCD4c2oPWiOo
-	2ysujzVXqWYPkzyzwYOVhaJb6pvZo2d5Vo5wkCgJlF8RK6f9LA==
-X-Google-Smtp-Source: AGHT+IG+khSNpIZ1lLheFLw/LHPdBlZ34dCXBeuy237kfv8em5EfwIdvXLjGbIw5JRwoxwzkTzKMoQ==
-X-Received: by 2002:a17:903:41cf:b0:234:9092:9dda with SMTP id d9443c01a7336-2365da07967mr7032275ad.24.1749761403815;
-        Thu, 12 Jun 2025 13:50:03 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:725c::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88bfe4sm1670705ad.18.2025.06.12.13.49.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 13:50:03 -0700 (PDT)
-Date: Thu, 12 Jun 2025 17:49:57 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/4] PCI: pcie-rockchip: add Link Control and
- Status Register 2
-Message-ID: <aEs9daeceXkePg7y@geday>
-References: <28ae3286f3217881ae6ea3aecad47ae4567d6ec7.1749588810.git.geraldogabriel@gmail.com>
- <20250611194259.GA825364@bhelgaas>
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="iZwhEzvY"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bJFBz4y5Jz9t7n;
+	Thu, 12 Jun 2025 22:54:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1749761675;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jMqfz5QP21cfg2NCOI8fXNl9RMD8SNqZRc2zFgJBMAw=;
+	b=iZwhEzvYWF83q7vfuMaVVdkC7ni+BF6LjRTCNacgi7U44mGZxBYd2q/TXF7Ca3rRKYdItU
+	NUgz7qHGRZMfSmTVAKhe3TxmO+Qk05M9l9tGcoW/2QwmlBvVxX64taW30RoE/wW+D11NOM
+	djFNftsO30QF7YJfCkQ/GplV4f4hky6I9UiUH2Z+x1YSc8njtD4/CYqoiGHiakIvAc+dsK
+	wAo6UxQlsBF1xc8KbSmLDnd8QliEucrqrX5UyPsP1s0nN/eW/4vkykI9RDo334phcgRNbq
+	rTXu+RytbxrtPM8jeGB1yOpaJV3cAC0V4C6sFCmQXSnH4w3d8viTGkZ+Mr0R+g==
+Date: Thu, 12 Jun 2025 22:54:28 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Pankaj Raghav <p.raghav@samsung.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, willy@infradead.org, x86@kernel.org, linux-block@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
+	gost.dev@samsung.com, hch@lst.de
+Subject: Re: [PATCH 4/5] mm: add mm_get_static_huge_zero_folio() routine
+Message-ID: <cglmujb275faqkpqmb75mz4tt5dtruvhntpe5t4qyzjr363qyr@vluzyx4hukap>
+References: <20250612105100.59144-1-p.raghav@samsung.com>
+ <20250612105100.59144-5-p.raghav@samsung.com>
+ <e3075e27-93d2-4a11-a174-f05a7497870e@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,27 +61,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611194259.GA825364@bhelgaas>
+In-Reply-To: <e3075e27-93d2-4a11-a174-f05a7497870e@intel.com>
 
-On Wed, Jun 11, 2025 at 02:42:59PM -0500, Bjorn Helgaas wrote:
-> I would do a pure conversion patch of the existing #defines.  Then I
-> suspect you wouldn't need a patch to add the Link 2 registers at all
-> because you could just use the #defines from pci_regs.h.
+On Thu, Jun 12, 2025 at 07:09:34AM -0700, Dave Hansen wrote:
+> On 6/12/25 03:50, Pankaj Raghav wrote:
+> > +/*
+> > + * mm_get_static_huge_zero_folio - Get a PMD sized zero folio
+> 
+> Isn't that a rather inaccurate function name and comment?
+I agree. I also felt it was not a good name for the function.
 
-Hi Bjorn,
+> 
+> The third line of the function literally returns a non-PMD-sized zero folio.
+> 
+> > + * This function will return a PMD sized zero folio if CONFIG_STATIC_PMD_ZERO_PAGE
+> > + * is enabled. Otherwise, a ZERO_PAGE folio is returned.
+> > + *
+> > + * Deduce the size of the folio with folio_size instead of assuming the
+> > + * folio size.
+> > + */
+> > +static inline struct folio *mm_get_static_huge_zero_folio(void)
+> > +{
+> > +	if(IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
+> > +		return READ_ONCE(huge_zero_folio);
+> > +	return page_folio(ZERO_PAGE(0));
+> > +}
+> 
+> This doesn't tell us very much about when I should use:
+> 
+> 	mm_get_static_huge_zero_folio()
+> vs.
+> 	mm_get_huge_zero_folio(mm)
+> vs.
+> 	page_folio(ZERO_PAGE(0))
+> 
+> What's with the "mm_" in the name? Usually "mm" means "mm_struct" not
+> Memory Management. It's really weird to prefix something that doesn't
+> take an "mm_struct" with "mm_"
 
-I've hit roadblock, maybe you can help?
+Got it. Actually, I was not aware of this one.
 
-PCIE_RC_CONFIG_DCR_CSPL_LIMIT is defined as 0xff...
+> 
+> Isn't the "get_" also a bad idea since mm_get_huge_zero_folio() does its
+> own refcounting but this interface does not?
+> 
 
-I'd like to kill that define too, since it will be
-orphaned.
+Agree.
 
-But hardcoding 0xff seems like illegible solution.
+> Shouldn't this be something more along the lines of:
+> 
+> /*
+>  * pick_zero_folio() - Pick and return the largest available zero folio
+>  *
+>  * mm_get_huge_zero_folio() is preferred over this function. It is more
+>  * flexible and can provide a larger zero page under wider
+>  * circumstances.
+>  *
+>  * Only use this when there is no mm available.
+>  *
+>  * ... then other comments
+>  */
+> static inline struct folio *pick_zero_folio(void)
+> {
+> 	if (IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
+> 		return READ_ONCE(huge_zero_folio);
+> 	return page_folio(ZERO_PAGE(0));
+> }
+> 
+> Or, maybe even name it _just_: zero_folio()
 
-Perhaps there is another standard define that
-maps to 0xff that I can use? Anyone comes
-to your mind?
+I think zero_folio() sounds like a good and straightforward name. In
+most cases it will return a ZERO_PAGE() folio. If
+CONFIG_STATIC_PMD_ZERO_PAGE is enabled, then we return a PMD page.
 
-Thanks!
-Geraldo Nascimento
+Thanks for all your comments Dave.
+
+--
+Pankaj
