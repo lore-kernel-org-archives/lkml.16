@@ -1,102 +1,184 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FA52D8DB9
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 19:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754863; cv=none; b=g4fwyUGHm6tSUGCiGypdfbLcXj3NyNaZpXlmnugfMiX0z8WzLVcIkfsHk6PGbdNPdxI3mUk3l40NUhSEU2nF9GhwLgAPL+rSG2aOTxVJWNScVJeUe/37VijZieqIpIfjScF7eZmLWC89100K9w7eQ7r3NXp2OQ7kubDYnYmOHPM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DFA2D8DB1;
+	Thu, 12 Jun 2025 19:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749754863; cv=pass; b=NSy5U3D35hOLtD8eaRKYSMjVuzD7ky675zVyJ2ZytY3LLvhRW+2c6nJpv3HYjYqB4S4pKY0bbT3eVQ/znblpJS8vIRAl/chWbttgNNS0Szs9DFqVq4XWfc7MKiQBGjn6f4vwfGT239aIvtacpRwvwuwzWyITDaJn2vBiJqodWQk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749754863; c=relaxed/simple;
-	bh=ZwlMsaTHjZOtEXv/YqtnnEPbYBwwh6k+wD4c3F2kUr0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GZQFT0auXo0Awx8mK2T2fJasJiOZS5TI0hMaDi75uZNZvHMYGUlnwrIn5151WEkC3FbZu+hhLrnfZFFs+IuI/fQUz9LbCiTvcolskYsfWXglVgr8WB51Zmg1Rp9vpHzI/ysQx/+jQdFV9LKNJnrLwmgYteIW3pec9Kx3OwcJEqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A4L79eJ5; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=ZiqhO4+U4IAlUrJkVpt4wtbxqeTqqtyT7pvofjdMk5k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PsL3u8ZCdFoG3OudX3UHAfGH+MSfWg2j2/ES0ycavHuH/xInpfQCWTWJCtWcsF18ACUeUL8pdGGgeSzGyY3z7XV8ZsBqn+mLMCZyummfSa2eHj3i5z2ZuqKseTmDyHZBka7uBqfEqu9sblpfDj22hUfxQb9+O1lSiRY6Mj/OTNc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=F11eH/x3; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A4L79eJ5"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235e389599fso40365ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749754860; x=1750359660; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZwlMsaTHjZOtEXv/YqtnnEPbYBwwh6k+wD4c3F2kUr0=;
-        b=A4L79eJ54S8X/R6hdBRCGJERy7H+zrEjPyMVVBDEq73jX4tDGzH3TXGyFFeViSYU5x
-         IGzAXqwuH26ZZPVqh2BTD5c3EpOFjYyeo1I9HO28R5rcfjJlc2TAXXEdCVOvI8HMDWfp
-         M7wJn59bo/R0KEjXzu89S81WRPMoZVOOhkc21AJp4jsxBc+Z1Ovope1S+Euh07I4obrz
-         XE0AA8khB6StZ406/4PRkf1tmhWHpT5xPcwwyRiaVgrHj8YsHyvkoiansK9tWjlLAHxI
-         FYIg/BMQu0jDDqJ66Tbft8Y7n2iHJ/TnY54dW18edX+W/DKljg8uhbbwI+IRKCUqSyD8
-         Ja2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749754860; x=1750359660;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZwlMsaTHjZOtEXv/YqtnnEPbYBwwh6k+wD4c3F2kUr0=;
-        b=G040Fri07UWfLIS6jpnguV1WQq3o9obx0jKuIujm3nFemt5Y+DF5A3Yy2O+8GgLaQt
-         0nv8tJqZpyzEbMtcHP29cNoc+rQP/9Q+kRTzd0mjer6JzkUIiLk8Wy8cI/4J5ReggQ1O
-         7RxDfivz+Kjoteh5juj+jjyzc+4mvSIWsCsm98QD16A2YsMRGkI3XCrx47swWIhjsXgj
-         8SSyUhtmcz4ILF3/zmk4aUTYZvjZCrbtSbaVuhe4yqScBMCx24bLD5t2uxoQc9h05mec
-         SB71IWIYm9ApEMuE2VlQgBjzUfS363v/gxnNw+3hpe0fzYnlecqODk5cRDvDDzf3/F+I
-         WxqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWMyJ61T4C9drZOJILIxlcg4CKpbCQj4QHbc3wgYTCW5pCayAlkhci859v12xH/kzuqhcOf6Vw2M5tiGu8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfrASuCTjDD37H0DvMTsVR5nTzB0D4y6UjEwYP1S+LRtNG/9y6
-	cpAfQWgXILDxt6CrQWJLf7D4a//LN74aMd2s4LX2nM3KYPZ2WSAnoEXHORlo+mvpZ9kPT63W4l/
-	MOYG77v4AW/TzGYXQPCCp0SxId9SRK+QYm5HNQLfOix85aDF1F6RCV3QA
-X-Gm-Gg: ASbGncsGL7MgeZPQwxt3U7DTse4j4wN1yfT1KB86/wEFGOkHcC+m8BBpHS4FEMmqO+V
-	bDYNCO1KBblf0RovLcU3ijWUT0Vyey7qX+/OcehW0tvmrc4zP/p9OqfvAByJ8ZUMuzdD5pn6Zgj
-	P8LIbumpxCbO7URNzyymn3WrT7sQlOAug4EI5GpaKfAh3QqioXdXZDxxwY4ND4RTeXPeab88fcw
-	w==
-X-Google-Smtp-Source: AGHT+IF+DrhTdw1EVP33Lsxs8pEmeKyxPiFeWCjxcFQq5i+dtpZuy+WTSh+WvsQ3zeAWf1tAffKMVahMPLgaOisNCFA=
-X-Received: by 2002:a17:902:d54a:b0:235:e1d6:5339 with SMTP id
- d9443c01a7336-2365e950001mr97625ad.26.1749754859927; Thu, 12 Jun 2025
- 12:00:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="F11eH/x3"
+ARC-Seal: i=1; a=rsa-sha256; t=1749754796; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=dTQnEmD0F0ReSNos4ZwrJOs7FeJ9pcyllrVcC0kco2tiW2TVyMiA44lg6w6L9/AlLw5Bf4h7yK9likBTYMcyFTzxMswsK7xOcQ5JSQsiPK+oyQRXYnrboLhP1rwueN1JbKaMDiSS+s40mMJdNh15QmofmqOfcqQ9Vfdzav4+rdI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749754796; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=VUi0L3qjgWIOtB9w1pZ+kGtU0drLgK6HcZu/fP6Tah0=; 
+	b=ep8qaAuelesv3XuZzrKpmyUYcpOmLfE3pHeavz6/RFv7EgQNCjDfNmlqLGebdmXVhVEHcjrWVX+5eJrKtsoGIjX7ksPGDquAPu0mGsg3WjsBr495vS39hdByBDBhs4pLloE7wVvI0Bp2rSZnkJI/jenwa+FJL1TTSJZwqWWveYw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754796;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=VUi0L3qjgWIOtB9w1pZ+kGtU0drLgK6HcZu/fP6Tah0=;
+	b=F11eH/x3HJtCZ/OvInut5/ooBULXRQwj7+EpNuT3721rEzUO1JWybfyd9eSZQslI
+	+alckYmIdMl9qp5RGPPO5WK+EwwYo94+91nisnQS4ee2LlY1WpaxB5+XWIPBSuTzUSp
+	Jep8LC7G64oqfdS0QdZXslThEvzYkVut5Cizld48=
+Received: by mx.zohomail.com with SMTPS id 1749754794152192.26527667378116;
+	Thu, 12 Jun 2025 11:59:54 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Thu, 12 Jun 2025 20:56:18 +0200
+Subject: [PATCH 16/20] PCI: rockchip: switch to HWORD_UPDATE* macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612154648.1161201-1-mbloch@nvidia.com> <20250612154648.1161201-4-mbloch@nvidia.com>
-In-Reply-To: <20250612154648.1161201-4-mbloch@nvidia.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 12 Jun 2025 12:00:45 -0700
-X-Gm-Features: AX0GCFs8bIh3dxPetT87B5xeJSISXmwVqrXxvRLSdCTJ2AOZNbM701RU8f8TtdA
-Message-ID: <CAHS8izNe_g9o92C0RbOe6vtbSfBMbJJJc4K1HubpozN4xwrcuA@mail.gmail.com>
-Subject: Re: [PATCH net-next v5 03/12] page_pool: Add page_pool_dev_alloc_netmems
- helper
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>, saeedm@nvidia.com, 
-	gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com, 
-	Leon Romanovsky <leon@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Richard Cochran <richardcochran@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Dragos Tatulea <dtatulea@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-byeword-update-v1-16-f4afb8f6313f@collabora.com>
+References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+To: Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Shreeya Patel <shreeya.patel@collabora.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Shawn Lin <shawn.lin@rock-chips.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+ MyungJoo Ham <myungjoo.ham@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Thu, Jun 12, 2025 at 8:52=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
-e:
->
-> From: Dragos Tatulea <dtatulea@nvidia.com>
->
-> This is the netmem counterpart of page_pool_dev_alloc_pages() which
-> uses the default GFP flags for RX.
->
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
+drivers that use constant masks.
 
-Thank you!
+The Rockchip PCI driver, like many other Rockchip drivers, has its very
+own definition of HIWORD_UPDATE.
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
+Remove it, and replace its usage with either HWORD_UPDATE, or two new
+header local macros for setting/clearing a bit with the high mask, which
+use HWORD_UPDATE_CONST internally. In the process, ENCODE_LANES needed
+to be adjusted, as HWORD_UPDATE* shifts the value for us.
 
---=20
-Thanks,
-Mina
+That this is equivalent was verified by first making all HWORD_UPDATE
+instances HWORD_UPDATE_CONST, then doing a static_assert() comparing it
+to the old macro (and for those with parameters, static_asserting for
+the full range of possible values with the old encode macro).
+
+What we get out of this is compile time error checking to make sure the
+value actually fits in the mask, and that the mask fits in the register,
+and also generally less icky code that writes shifted values when it
+actually just meant to set and clear a handful of bits.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+ drivers/pci/controller/pcie-rockchip.h | 35 +++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 5864a20323f21a004bfee4ac6d3a1328c4ab4d8a..5f2e45f062d94cd75983f7ad0c5b708e5b4cfb6f 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -11,6 +11,7 @@
+ #ifndef _PCIE_ROCKCHIP_H
+ #define _PCIE_ROCKCHIP_H
+ 
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/kernel.h>
+ #include <linux/pci.h>
+@@ -21,10 +22,10 @@
+  * The upper 16 bits of PCIE_CLIENT_CONFIG are a write mask for the lower 16
+  * bits.  This allows atomic updates of the register without locking.
+  */
+-#define HIWORD_UPDATE(mask, val)	(((mask) << 16) | (val))
+-#define HIWORD_UPDATE_BIT(val)		HIWORD_UPDATE(val, val)
++#define HWORD_SET_BIT(val)		(HWORD_UPDATE_CONST((val), 1))
++#define HWORD_CLR_BIT(val)		(HWORD_UPDATE_CONST((val), 0))
+ 
+-#define ENCODE_LANES(x)			((((x) >> 1) & 3) << 4)
++#define ENCODE_LANES(x)			((((x) >> 1) & 3))
+ #define MAX_LANE_NUM			4
+ #define MAX_REGION_LIMIT		32
+ #define MIN_EP_APERTURE			28
+@@ -32,21 +33,21 @@
+ 
+ #define PCIE_CLIENT_BASE		0x0
+ #define PCIE_CLIENT_CONFIG		(PCIE_CLIENT_BASE + 0x00)
+-#define   PCIE_CLIENT_CONF_ENABLE	  HIWORD_UPDATE_BIT(0x0001)
+-#define   PCIE_CLIENT_CONF_DISABLE       HIWORD_UPDATE(0x0001, 0)
+-#define   PCIE_CLIENT_LINK_TRAIN_ENABLE	  HIWORD_UPDATE_BIT(0x0002)
+-#define   PCIE_CLIENT_LINK_TRAIN_DISABLE  HIWORD_UPDATE(0x0002, 0)
+-#define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
+-#define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+-#define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
+-#define   PCIE_CLIENT_MODE_EP            HIWORD_UPDATE(0x0040, 0)
+-#define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
+-#define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
++#define   PCIE_CLIENT_CONF_ENABLE		HWORD_SET_BIT(0x0001)
++#define   PCIE_CLIENT_CONF_DISABLE		HWORD_CLR_BIT(0x0001)
++#define   PCIE_CLIENT_LINK_TRAIN_ENABLE		HWORD_SET_BIT(0x0002)
++#define   PCIE_CLIENT_LINK_TRAIN_DISABLE	HWORD_CLR_BIT(0x0002)
++#define   PCIE_CLIENT_ARI_ENABLE		HWORD_SET_BIT(0x0008)
++#define   PCIE_CLIENT_CONF_LANE_NUM(x)		HWORD_UPDATE(0x0030, ENCODE_LANES(x))
++#define   PCIE_CLIENT_MODE_RC			HWORD_SET_BIT(0x0040)
++#define   PCIE_CLIENT_MODE_EP			HWORD_CLR_BIT(0x0040)
++#define   PCIE_CLIENT_GEN_SEL_1			HWORD_CLR_BIT(0x0080)
++#define   PCIE_CLIENT_GEN_SEL_2			HWORD_SET_BIT(0x0080)
+ #define PCIE_CLIENT_LEGACY_INT_CTRL	(PCIE_CLIENT_BASE + 0x0c)
+-#define   PCIE_CLIENT_INT_IN_ASSERT		HIWORD_UPDATE_BIT(0x0002)
+-#define   PCIE_CLIENT_INT_IN_DEASSERT		HIWORD_UPDATE(0x0002, 0)
+-#define   PCIE_CLIENT_INT_PEND_ST_PEND		HIWORD_UPDATE_BIT(0x0001)
+-#define   PCIE_CLIENT_INT_PEND_ST_NORMAL	HIWORD_UPDATE(0x0001, 0)
++#define   PCIE_CLIENT_INT_IN_ASSERT		HWORD_SET_BIT(0x0002)
++#define   PCIE_CLIENT_INT_IN_DEASSERT		HWORD_CLR_BIT(0x0002)
++#define   PCIE_CLIENT_INT_PEND_ST_PEND		HWORD_SET_BIT(0x0001)
++#define   PCIE_CLIENT_INT_PEND_ST_NORMAL	HWORD_CLR_BIT(0x0001)
+ #define PCIE_CLIENT_SIDE_BAND_STATUS	(PCIE_CLIENT_BASE + 0x20)
+ #define   PCIE_CLIENT_PHY_ST			BIT(12)
+ #define PCIE_CLIENT_DEBUG_OUT_0		(PCIE_CLIENT_BASE + 0x3c)
+
+-- 
+2.49.0
+
