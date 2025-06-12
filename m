@@ -1,149 +1,76 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0F415624B;
-	Thu, 12 Jun 2025 13:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518661BC2A;
+	Thu, 12 Jun 2025 13:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735494; cv=none; b=gbMsuDgGtY6CysxolW18586INq/AH+5kQ9Mn7Jom5DwcB2ZtmKcQaWBRlAMPnLMpBuuOR4wv2h9RXj8e0JIjsc/8WYW8P6bxvxh7m23OahZfhsNwBnp9orWg8sac7SFLRUzVPrXCxn7rQzJboHa+3TrBOpNpaJiuuP+m8/ibRz8=
+	t=1749735599; cv=none; b=frrv6bmwPSgqPbOwuJEoGJroBByJvUXryJCml+B+6lZHTJgndzEKesluLfOF88uhNXoV5XqgRaJncUrJlGDdyMQRz8tokBKUIJxNoVOIxkmRZfK5q4M1K9FQ9YxYDLJCDSjJE5hJovHGTQp6Rcm3iqsdIL1b3/yIWMoOMmRe1p4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735494; c=relaxed/simple;
-	bh=szU490pY/xtwR8j/yoCyjtlrIVxHF7cdPSe2QLHVMf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DUWjQCwqVOJB6oWm9CnMk8UpPIU0mM27pYfr10N+sFzpZEhiJSNBEYhOGFjF6uyAznGsNaq7GJUzZXn0f8xiNzU/lYDIkMt5yqtVH9KgqGezsglk7o1bhfpHZLzMHfHTdwepdMrPG3G1A/oyguDu9qT9146rWpgA34fNDm11a38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 6120E5B400;
-	Thu, 12 Jun 2025 13:38:04 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 9E84A17;
-	Thu, 12 Jun 2025 13:38:02 +0000 (UTC)
-Date: Thu, 12 Jun 2025 09:38:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Valentin Schneider
- <vschneid@redhat.com>
-Subject: [PATCH] tracing/ipi: Hide ARM specific IPI trace events from other
- architectures
-Message-ID: <20250612093802.77cdcc9c@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749735599; c=relaxed/simple;
+	bh=PO6VS+Ipf/QNoHDKTP4/NOCSKfLw8CarcdYSUJogoYg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=hU9foso79W61vplqacjnkTuZZ0oeasxwFF7JeUATIUw17VIk2V2fuZkHdLhyqapklvQ64MSKn6WkXHTVWU2hFSY3gAaIYJPp/yv1Twi2qvVHB2NY4GlngZHG22/ZSIh+jiAwhjpE//HMu1puLUo19bICdKmRfiloZ0CTs4835wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cQx5mUj9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQx5mUj9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B23C4CEEA;
+	Thu, 12 Jun 2025 13:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749735598;
+	bh=PO6VS+Ipf/QNoHDKTP4/NOCSKfLw8CarcdYSUJogoYg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=cQx5mUj9Q3oOsrcAblXewv+xLgn3PT5liMvAeKokpGN5WtW7EAicWI20EqUcQ7KaU
+	 dTsldtN8eZq3MNu2Z4S0I/3c7a/p6XsOohwxsTYKgfXrifVKRdgvXqT65wVYyj+Ofw
+	 07I16RZEzm7daYSKl+7UOSIgyr+STOKu88sTrkiJVK2cOv9MukD6esvbR7qNTZdeRj
+	 q4ODrzueEADIYs+NVpDXtn8BJ/F1QZAkg6SetSL8moodrwU8BDJ5p+X7jNqKAa329U
+	 42G+45g7cfYgnDKLZ/rTa9GLRuA3YX3GYSl7N9oDhmSYe9P3tIgtZYu1IMnvdeLjpt
+	 IJVIgoGcS0Zrw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE6039EFFCF;
+	Thu, 12 Jun 2025 13:40:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 9E84A17
-X-Stat-Signature: of9cdjmkm34d8mn47z5ss4s5f1kzzb3s
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18lwVEvWrQ8W0t+uSfL2Sw31sYeE07hWtU=
-X-HE-Tag: 1749735482-515476
-X-HE-Meta: U2FsdGVkX19RG2c28YS+jzUwsVxPN6BgeLy+uYYqrKJoCA8x2JMOxdz+yLPs6JOYVFsvo2WDoqefcjXvLPJLQr+hRDQT/414xh20Qb3K/kJb3YG+uavlhZD0braKYV289hiR4UbM14bPtouqkQdlwf5Jr0rE0UzCeWSoJMMGdQ+0XKO5kJ9sEvqWV+tTYwKJhvuz8mKJhlDncHRMG7y26U13rlilD/nop9NTEo+ClNb5SUOY5PSmNCmlr+1cnOBDoNYpeIaV50pACSKzq87z7pD//TF/37kU956X9NggJCL8piYM7ziXet6smsU5Q+4IUEuF/SxizyHm+KlZlTdXPYSQ1TPoSUWI2JUIeK4STP3JuyUd4Lnuidj04YzdRP1M
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] Bluetooth: btusb: Add a new VID/PID 2c7c/7009 for MT7925
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <174973562875.4138205.13746264820757572587.git-patchwork-notify@kernel.org>
+Date: Thu, 12 Jun 2025 13:40:28 +0000
+References: <20250606-btusb-mt7925-add-v1-1-9b64bfa86ea4@hexchain.org>
+In-Reply-To: <20250606-btusb-mt7925-add-v1-1-9b64bfa86ea4@hexchain.org>
+To: Haochen Tong <i@hexchain.org>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hello:
 
-The IPI trace events ipi_raise, ipi_handler, ipi_entry and ipi_exit are
-only used by the arm and arm64 architectures. As each trace event can take
-up to 5K in size, regardless if they are used or not, add #ifdef around
-these events so that they are only defined for arm and they do not waste
-memory in other architectures.
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Note, I'll be adding code soon that will make unused events cause a warning.
+On Fri, 06 Jun 2025 23:33:03 +0800 you wrote:
+> From: Haochen Tong <i@hexchain.org>
+> 
+> Adds a new entry with VID 2c7c and PID 7009 for MediaTek MT7925
+> Bluetooth chip.
+> 
+> The device information from /sys/kernel/debug/usb/devices is provided
+> below.
+> 
+> [...]
 
- include/trace/events/ipi.h | 58 ++++++++++++++++++++------------------
- 1 file changed, 30 insertions(+), 28 deletions(-)
+Here is the summary with links:
+  - Bluetooth: btusb: Add a new VID/PID 2c7c/7009 for MT7925
+    https://git.kernel.org/bluetooth/bluetooth-next/c/892768493447
 
-diff --git a/include/trace/events/ipi.h b/include/trace/events/ipi.h
-index 3de9bfc982ce..e5c7998f636c 100644
---- a/include/trace/events/ipi.h
-+++ b/include/trace/events/ipi.h
-@@ -7,34 +7,6 @@
- 
- #include <linux/tracepoint.h>
- 
--/**
-- * ipi_raise - called when a smp cross call is made
-- *
-- * @mask: mask of recipient CPUs for the IPI
-- * @reason: string identifying the IPI purpose
-- *
-- * It is necessary for @reason to be a static string declared with
-- * __tracepoint_string.
-- */
--TRACE_EVENT(ipi_raise,
--
--	TP_PROTO(const struct cpumask *mask, const char *reason),
--
--	TP_ARGS(mask, reason),
--
--	TP_STRUCT__entry(
--		__bitmask(target_cpus, nr_cpumask_bits)
--		__field(const char *, reason)
--	),
--
--	TP_fast_assign(
--		__assign_bitmask(target_cpus, cpumask_bits(mask), nr_cpumask_bits);
--		__entry->reason = reason;
--	),
--
--	TP_printk("target_mask=%s (%s)", __get_bitmask(target_cpus), __entry->reason)
--);
--
- TRACE_EVENT(ipi_send_cpu,
- 
- 	TP_PROTO(const unsigned int cpu, unsigned long callsite, void *callback),
-@@ -79,6 +51,35 @@ TRACE_EVENT(ipi_send_cpumask,
- 		  __get_cpumask(cpumask), __entry->callsite, __entry->callback)
- );
- 
-+#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
-+/**
-+ * ipi_raise - called when a smp cross call is made
-+ *
-+ * @mask: mask of recipient CPUs for the IPI
-+ * @reason: string identifying the IPI purpose
-+ *
-+ * It is necessary for @reason to be a static string declared with
-+ * __tracepoint_string.
-+ */
-+TRACE_EVENT(ipi_raise,
-+
-+	TP_PROTO(const struct cpumask *mask, const char *reason),
-+
-+	TP_ARGS(mask, reason),
-+
-+	TP_STRUCT__entry(
-+		__bitmask(target_cpus, nr_cpumask_bits)
-+		__field(const char *, reason)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_bitmask(target_cpus, cpumask_bits(mask), nr_cpumask_bits);
-+		__entry->reason = reason;
-+	),
-+
-+	TP_printk("target_mask=%s (%s)", __get_bitmask(target_cpus), __entry->reason)
-+);
-+
- DECLARE_EVENT_CLASS(ipi_handler,
- 
- 	TP_PROTO(const char *reason),
-@@ -127,6 +128,7 @@ DEFINE_EVENT(ipi_handler, ipi_exit,
- 
- 	TP_ARGS(reason)
- );
-+#endif /* defined(CONFIG_ARM) || defined(CONFIG_ARM64) */
- 
- #endif /* _TRACE_IPI_H */
- 
+You are awesome, thank you!
 -- 
-2.47.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
