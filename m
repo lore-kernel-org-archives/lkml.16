@@ -1,108 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E67F3596B;
-	Thu, 12 Jun 2025 14:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05302F4317
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749737498; cv=none; b=Nf1LRrjLxrxiILjKxPiRt7PkUxyRMVfiwZmYCSou3n7RfH0bSQ925I3DIoM9rw74gEKKhRlDYK1xHtMS/5QluD+bQGCMBhbmOwvwhb8NVRsR/Z57LiqoWqA2DfjBhMTMl0hmnHGUDEumlsnb8kuB8QfLJDmjJQUMn20sfmq5MOo=
+	t=1749737576; cv=none; b=i6shXdepk8H2drzMW1vf/TFZF6qcyiwtS+Ol3F44dNAc//w5qeTawIS83KSioe101vxvbs3WJe/i3y3Hpcrhw+ronZZVjZ+Bk+kACO6rcs1q+UqrIuvSvJByFegsg0v/orhnqtHB+nos3VCpGWi7o8Dg+ShZVYvXHp99L+NgeQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749737498; c=relaxed/simple;
-	bh=eVcT22CR6MUvmIdjYr3MtOpYN2U0aHt7Hy7WNsb7NkM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RVAj/7WpB8sQnelRsleZW9Rw65M49T+Ui7o4oRYWCoxu+ZiGKERyUN3hUzUH8QM3xwHIQAJqPTOa//yRcM/e8zqmphLTNiGAH0qAD6xSTTCGlwk2We9s6dQi+AL7SBWlmS+s+6c3DAfdlcobJq+GHpsaqbjn9jfmT2KOw0U1wsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rF1dgaeH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749737576; c=relaxed/simple;
+	bh=LZbMld6BzHGILlIgf66HaC3NP9UK6TgOAVrYfhtRoh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lrc7ItGDD/wcO/le6Bn7PU7Plw9Mw6OQCaF1phmKHbTMb80LcK79vMrIBy6w1ISP3cZVTJpGZ5F0BUCCC5QJPxS7lENLqorlRa4yBzElPF/zOT31QZet3ufUexRPqxCGDMarSNpDa7mOnkHOLDRc7Kob7lmvGhM1MxvnVwUXZWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=r08Pb8at; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rF1dgaeH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C053DC4CEEA;
-	Thu, 12 Jun 2025 14:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749737496;
-	bh=eVcT22CR6MUvmIdjYr3MtOpYN2U0aHt7Hy7WNsb7NkM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rF1dgaeHPS7gQ0UjeHj1ioH3nZys3BESMWp2LfjYJNHYhw5M9lc1TIihF5xWfoxXK
-	 5iCWIOSnDgcG+jFBZDdO0ywovQxdgyD7ph3XLqnazH6rknAxTxP8K/DoxpW0iUCIW8
-	 HYWkSEUH5+jJM8bJ8ntZOqzFEJUiYia5B5ISrRg7X09jz4efh2nPXP3mUQuJ7Tuw25
-	 WxRLc7225gaD7Ey274985yUp5TX2VKwcrrwlvvZQotqll2x9vGDLT+6Oo4iRlq90q1
-	 1aCGQKjoVi17yK7bFTJAnCP4/sHsroEyROlll7hzgeZrF7mcpnI+EhpKvTSxERiPrg
-	 oA60e9XLjelIA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uPieU-006GX7-24;
-	Thu, 12 Jun 2025 15:11:34 +0100
-Date: Thu, 12 Jun 2025 15:11:33 +0100
-Message-ID: <86sek5cane.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	"Nicolas\
- Palix" <nicolas.palix@imag.fr>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton
-	<oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	<linux-kernel@vger.kernel.org>,
-	<cocci@inria.fr>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>,
-	<andrew@lunn.ch>,
-	<quic_kkumarcs@quicinc.com>,
-	<quic_linchen@quicinc.com>,
-	<quic_leiwei@quicinc.com>,
-	<quic_suruchia@quicinc.com>,
-	<quic_pavir@quicinc.com>
-Subject: Re: [PATCH v4 0/5] Add FIELD_MODIFY() helper
-In-Reply-To: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
-References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="r08Pb8at"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so1456744f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1749737572; x=1750342372; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5+m7vYBsU85tLjESg73MFdmLBCg20+wdtbP1Z8Mu9gw=;
+        b=r08Pb8at6TMubRhspo20s87DkBBMJqfSpJQ7KF8oaYst2wmc//XZzWWbc+cq9AUPC1
+         7XczUL9FMl+XytepYgwSJWBlZ6Kxzmsf+gYLXldQJX54BmULpuzTcdXBlgoH0JXwpKzy
+         MXtPYg+x1aG2l+G6wkQpvboIMRK+pvP5prusYp+XiLhEsVKeljFIgnTUdlB2E+pzwAh7
+         WnMl8VGtJP31K518n6Pxo2DxVxZPFvGZHFeD2JHY+3sU9ptVNDxDOF+5+Gg1vO+3Ei3A
+         uWrWuthUdOEqAvKx8iEciBbaCfxN2H/YNlZ2pR21csKDxJTgwXMGHkvs1NdIzrMwUddk
+         Z9eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749737572; x=1750342372;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5+m7vYBsU85tLjESg73MFdmLBCg20+wdtbP1Z8Mu9gw=;
+        b=YVURZWZBdrVqWeokyuTj7IbW1uKz+5hL+gL4dEk3+g7YJBBhDpYraVCwhloMn5WZ7e
+         Nr5EM7q4PphTIeq0sWFexNSNLC++mpQ2GKrHqF3wl2/9DX6JQbc0t8DgUehSYbI8Bqah
+         VrNHcnW8XrjUPOEU3FDjzrk67mgn/roAkACHpWfVnKmqpp0xquuqJWWuEIAdfQ6RJtlN
+         9MhFsRtcM0meknOhfK7rqhilh3WgHsHCOlLJ8U12G+BXIB22scSXaggOdcbdL6EIo89O
+         gtLgRdVdrebx99o66iOLXGsDouqKF3foX8Fjuo3HhCD5Eocv1cI5zCsxkCviuHUiO2gq
+         wRdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYVl56l9j9a97suKy6wOAbcx+pQnCgAzEgR/msDLWajl+Ga6Umggzvaq+4NSnC7JoDgQtRrnW3YuTLW+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy57ojPdhrARchM2dmDU0tXPWEfTXODfMnaqXRRmcRDgSRi0Phh
+	Kl+DMc6HyCA1ROrYJ6A8Hjaj/rN8+kIEfhT4Ie3Z+hDoMf++p0o+nShR6X4c0tUi+0g=
+X-Gm-Gg: ASbGncv64jtfw8XDdbwu/Okoev27d0qAKx/ATBr+zk1SKBvbG8yc4GRuUegIkkEGE99
+	QgcLZEPG+U8BtLI49bEJeSwE03YQLFAhKvwT+MJzhOHIU4gPNcZgVFJ1PHf1dx9UjdgHRsMm9+Q
+	waDZtk2oDe+tR//9lInLLdNNDfuWDG6smiWoNKWcuRzHujM2IqcD7y8tXS9vh5C4bmytO7CAo5j
+	IZGyoxOwvmqOWIu9Rwhobi3YxdSAXt3v/TMV9ZXeVsLh5TuEn9zP/p6zy05JSPxEzKujPCqZtaV
+	WB1nkUeEM55/HjZmM5xMoPNs3W4EqEBXjIKxJuJQao1lsm8P2LD32GumLm+SXgFei5A=
+X-Google-Smtp-Source: AGHT+IE6AmCf5V9oHfWOt9dYuSHqj1qzlXCkWSsFnnG7NUfV5Z5SKBuMKwud/rOH6HANsQ0sthmKhw==
+X-Received: by 2002:a05:6000:178d:b0:3a4:da0e:517a with SMTP id ffacd0b85a97d-3a5608135aemr3279107f8f.23.1749737571906;
+        Thu, 12 Jun 2025 07:12:51 -0700 (PDT)
+Received: from MacBook-Air.local ([5.100.243.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2446b0sm21538585e9.21.2025.06.12.07.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 07:12:51 -0700 (PDT)
+Date: Thu, 12 Jun 2025 17:12:48 +0300
+From: Joe Damato <joe@dama.to>
+To: Breno Leitao <leitao@debian.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH net-next 1/2] netdevsim: migrate to dstats stats
+ collection
+Message-ID: <aErgYLGwLjoHxCLv@MacBook-Air.local>
+Mail-Followup-To: Joe Damato <joe@dama.to>,
+	Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+References: <20250611-netdevsim_stat-v1-0-c11b657d96bf@debian.org>
+ <20250611-netdevsim_stat-v1-1-c11b657d96bf@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: quic_luoj@quicinc.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, Julia.Lawall@inria.fr, nicolas.palix@imag.fr, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, cocci@inria.fr, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com, quic_leiwei@quicinc.com, quic_suruchia@quicinc.com, quic_pavir@quicinc.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-netdevsim_stat-v1-1-c11b657d96bf@debian.org>
 
-On Thu, 12 Jun 2025 14:46:07 +0100,
-Luo Jie <quic_luoj@quicinc.com> wrote:
+On Wed, Jun 11, 2025 at 08:06:19AM -0700, Breno Leitao wrote:
+> Replace custom statistics tracking with the kernel's dstats infrastructure
+> to simplify code and improve consistency with other network drivers.
 > 
-> Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
-> macros. It is functionally similar as xxx_replace_bits(), but adds
-> the compile time checking to catch incorrect parameter type errors.
+> This change:
+> - Sets dev->pcpu_stat_type = NETDEV_PCPU_STAT_DSTATS for automatic
+>   automatic allocation and deallocation.
+
+Ignorable minor nits: "automatic" repeated twice in the list item above and the
+other items in the list below do not end with periods.
+
+> - Removes manual stats fields and their update
+> - Replaces custom nsim_get_stats64() with dev_get_stats()
+> - Uses dev_dstats_tx_add() and dev_dstats_tx_dropped() helpers
+> - Eliminates the need for manual synchronization primitives
 > 
-> This series also converts the four instances of opencoded FIELD_MODIFY()
-> that are found in the core kernel files, to instead use the new
-> FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
-> the script field_modify.cocci.
+> The dstats framework provides the same functionality with less code.
 > 
-> The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
-> 
-> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  drivers/net/netdevsim/netdev.c    | 33 ++++++---------------------------
+>  drivers/net/netdevsim/netdevsim.h |  5 -----
+>  2 files changed, 6 insertions(+), 32 deletions(-)
 
-I already indicated that the *pre-existing* set of helpers are enough
-for what we want to do, that we *already* use them for KVM/arm64, and
-that I didn't need nor want two ways to do the same thing in the same
-code base.
 
-My opinion hasn't changed on that front, and I don't see a point in
-these patches.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Reviewed-by: Joe Damato <joe@dama.to>
