@@ -1,105 +1,84 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10A223C50F;
-	Thu, 12 Jun 2025 11:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92CB205AA3;
+	Thu, 12 Jun 2025 11:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749727258; cv=none; b=Z7xZoI2xYVuaBD090gV8KG6rtO4c7eSvIOUrNKRnFFLjVx069TSOLnJ6SCRoWBh4AsOfiy46KfUNoS2IugRPEYCu96f5QhyXBCkTGAny5k71G8minB9Z7AzdkNakSEAsGz/rn4oFDKqhMkembNDnhouAnL4qTlNEje7QjDN86P8=
+	t=1749727315; cv=none; b=GD/wu5aMMfnTQplAuizq36rAz4btasNQou5jfIMZuDJedmabl/LxlaiWC/lHTzSb2nt7XPqK7xECi9Ld1jFYXXCL6en09SpspBDQkGwDlEmZJ9JW6cVjf2HA3IrdomRWLwOtaknjocctWFw/jerFUiYvejPpf0AuVLS1cFcGWTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749727258; c=relaxed/simple;
-	bh=h6YOaSQV04KhF5kytS5KZKyKtH/gn74YtvcnSW9T1LE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GM/QpzjrqiVSx1TFxc8FDfRevTLxE2WOql1NgjQZhpW8Of/EMRmCVTNZpYq1tK+P46xKkfMVNQ+IIyroyd2NeWLTLRdWNg15moZ3ntPZZnwShvQvuMrDT89oiFamOe8AoLmjKEqU40QVUZEIxvgiEt1uEwrkKtM1VfWLNb3H2jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bJ0Sw65TCzYQvR7;
-	Thu, 12 Jun 2025 19:20:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id CB8261A0F13;
-	Thu, 12 Jun 2025 19:20:47 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgB3218NuEpot0onPQ--.37716S3;
-	Thu, 12 Jun 2025 19:20:47 +0800 (CST)
-Message-ID: <41c21e20-5439-4157-ad73-6f133df42d28@huaweicloud.com>
-Date: Thu, 12 Jun 2025 19:20:45 +0800
+	s=arc-20240116; t=1749727315; c=relaxed/simple;
+	bh=kTC8uxKsbrWlLLBTcToPBHyavEBjAw+eccYqlwX55zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GjmKYxJY59TjRle4IOHRd6ZBlVJbhzcEgD8NzZF0qIZVLfNAWztNDjnsXqtPd9JUM6eeS2QNBUxgBHKZ5hi4qCdlfhW8PXEZS87R7xNSufXwIoDVMKZxJ8uN/VZrWBT0MW60zDwXCKuk10vEdS0/eOixgjSJ/i00oA7noXkjy+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y7mFikYx; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y7mFikYx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749727314; x=1781263314;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kTC8uxKsbrWlLLBTcToPBHyavEBjAw+eccYqlwX55zg=;
+  b=Y7mFikYxdM2S1chsnzZOOBvLz0slNwXuATVtSeHkwqEY4rAK671uwNtN
+   fGQY/JyjMgHKbYi8SEJJAkj1x9U6ZCYAZV1+uDtB1rDXk9loy/2wtkE4V
+   bJ/hjpF9EkbrAHPZbo9Y793DQ0HLohh5LKiOFDXqnQWAt2arkph5aR9i/
+   XAJOACri9Fa7rY0lve73xkI8FnsN3xF6tTdEQ6LYn5ecDWx08dJjnuOMH
+   xfPXIKu0yFwDTptmuncT7F9VuuhoPuURN96n6UWxgcLAHyPIT9q+15kxy
+   KWZeoMLXSxeA9MKNj1dogfX3OATgfZ5XSkpsliu0bttNiOIChI/LOPz99
+   w==;
+X-CSE-ConnectionGUID: 7QDp+TCIQt69PCGZ+JWQ9w==
+X-CSE-MsgGUID: ndJlTq1zSQKy4nGUERQT1w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51772510"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="51772510"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 04:21:53 -0700
+X-CSE-ConnectionGUID: yjU+GwBtSeiWKbbg4H/Wdw==
+X-CSE-MsgGUID: XRvoAchPSPKNFrd3CIVNGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="147337288"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 04:21:50 -0700
+Date: Thu, 12 Jun 2025 13:21:02 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
+	shenjian15@huawei.com, wangpeiyang1@huawei.com,
+	liuyonglong@huawei.com, chenhao418@huawei.com,
+	jonathan.cameron@huawei.com, shameerali.kolothum.thodi@huawei.com,
+	salil.mehta@huawei.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 3/8] net: hns3: add the hns3_get_ops() helper
+Message-ID: <aEq4Hvg4aaxnn7m0@mev-dev.igk.intel.com>
+References: <20250612021317.1487943-1-shaojijie@huawei.com>
+ <20250612021317.1487943-4-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/10] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to
- queue limits features
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
- chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, brauner@kernel.org,
- martin.petersen@oracle.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
- <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
- <20250611060900.GA4613@lst.de>
- <343f7f06-9bf6-442f-8e77-0a774203ec3f@huaweicloud.com>
- <20250612044744.GA12828@lst.de>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250612044744.GA12828@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgB3218NuEpot0onPQ--.37716S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruF1UZFyxCrWxtF1DCr45Jrb_yoWkAwc_ur
-	s5JwsrZw1kJryxt34ftrs8Grsxuwsru3yxKw1xWr1rK3s8JF4xA3ykuwnFvw15tFsIgry2
-	9ry0qF4SkFW2gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIa
-	0PDUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612021317.1487943-4-shaojijie@huawei.com>
 
-On 2025/6/12 12:47, Christoph Hellwig wrote:
-> On Wed, Jun 11, 2025 at 03:31:21PM +0800, Zhang Yi wrote:
->>>> +/* supports unmap write zeroes command */
->>>> +#define BLK_FEAT_WRITE_ZEROES_UNMAP	((__force blk_features_t)(1u << 17))
->>>
->>>
->>> Should this be exposed through sysfs as a read-only value?
->>
->> Uh, are you suggesting adding another sysfs interface to expose
->> this feature?
+On Thu, Jun 12, 2025 at 10:13:12AM +0800, Jijie Shao wrote:
+> This patch introduces a hns3_get_ops() helper to reduce the unnecessary
+> middle layer conversion. Apply it to the whole HNS3 driver.
+> The former discusstion can be checked from the link.
 > 
-> That was the idea.  Or do we have another way to report this capability?
-> 
+> Link: https://patchwork.kernel.org/project/netdevbpf/patch/20230310081404.947-1-lanhao@huawei.com/
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 
-Exposing this feature looks useful, but I think adding a new interface
-might be somewhat redundant, and it's also difficult to name the new
-interface. What about extend this interface to include 3 types? When
-read, it exposes the following:
+Like with previous patch, not introducing, but using. Still the linked
+discussion is about sth else. If you can, please rephrase commit message
+to reflect what it is really doing.
 
- - none     : the device doesn't support BLK_FEAT_WRITE_ZEROES_UNMAP.
- - enabled  : the device supports BLK_FEAT_WRITE_ZEROES_UNMAP, but the
-              BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED is not set.
- - disabled : the device supports BLK_FEAT_WRITE_ZEROES_UNMAP, and the
-              BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED is set.
+Thanks
 
-Users can write '0' and '1' to disable and enable this operation if it
-is not 'none', thoughts?
-
-Best regards,
-Yi.
-
+[...]
