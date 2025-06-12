@@ -1,123 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BF4238C09;
-	Thu, 12 Jun 2025 11:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A723236A9F;
+	Thu, 12 Jun 2025 11:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726746; cv=none; b=ptaRijWE82GW3R0donyTYHzpv0clpbyN5KejegQ/0/B4TGwXCzwQHls1cG7jpKPIErogo8Komyehye2E+0wKaQ87QtgkgvPLDxQiJCn9x9sr6e9vQ58z5nT5T1MXrRcG6yc6LO8348eC78uPq8LdESZy/2wT0/unC2o589EUqxE=
+	t=1749726857; cv=none; b=SmNsL4T+niSscPkY5c2fhnnqnY0ra7d8pmYcb5ARyfBM04IZvBuSVmteb9juKmJou+Yv2UzXBAvnN+APrcsV8FzmfMuGwmfwFEtBrg48SPHMFE2yom76NiDBlbd5IzVsmTiHnoxMJYHcWzOHEIWmQjKkAvtFJsYCp1kREfJtvu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726746; c=relaxed/simple;
-	bh=maYvKYeEHIz96Kc4cKa/zbCx3Wu7VTI5c9HNXVJ1yus=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BHjYh076fPrvq0oBdboalCDY+yf/yvbgKMduRdnc5v5UnKaejzglaF0TM4vrjIkkuKqIDl3GBCDSGMhb0YebutUjEIVUlAjRvt7jRuUBN+CN3DaFUA2FImQFvBB9FCjAE8vz6rU4RtnjECwX9r0ptIF5XXCUMyGMEMMiFUSU08E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sfl/OKEK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749726857; c=relaxed/simple;
+	bh=/Yo6O8SI0+IWA2XkJwjWpPVbipozk8mlgRIa5ULwmeI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c46ltpr1+pCH7mJvsBaw0mXFWvoyTBrFOmOCk7r0lsATEfsR05wbw8JDRVCCGu6v0iWPZgFYhYog/BKJw4ogClQnmfM/J6VPfiL0HgSF5y+2agcWqIMCpRKCyfFtuRLwddGhy5h9tj6hffkz/wms3ayzSBgNHmteJQSMWHImVF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=RfD52Ozb; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sfl/OKEK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA8AEC4CEEA;
-	Thu, 12 Jun 2025 11:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749726745;
-	bh=maYvKYeEHIz96Kc4cKa/zbCx3Wu7VTI5c9HNXVJ1yus=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=sfl/OKEKZKQ7xeIUy1EWZkcw7wbPbkLMWlw15Q5Hkb1bFZZqCbvSD3+UgxfFUNO1D
-	 OpQLdaP6DL5VpMiTi96yVsEP4OPjKihhAjmq1qkERV7CCrhRqtMlSJq++mQAOB1M5T
-	 AMMpymbXosrh0+6wwpscA2RDH3j/SQbhYUOfd0RAqgyKhHJlxcpRxy77ZaT2kwC+Jc
-	 6tO6802VpCOfnNZs7RPw7qzV7MaSaLkXjrw1d71TPpZTGvtHSqXFUv7qTloIQxQYBp
-	 lbOwdTEucnSV6g1xuxDoOBwzML/HA4rs0e9UljmeQ/3pzBcOka6a2qqDExSzY0H+gN
-	 az3iVb+P49z0Q==
-Message-ID: <94d9a2ac-e4cb-4126-b4a5-7f634606d787@kernel.org>
-Date: Thu, 12 Jun 2025 13:12:20 +0200
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="RfD52Ozb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1749726856; x=1781262856;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/Yo6O8SI0+IWA2XkJwjWpPVbipozk8mlgRIa5ULwmeI=;
+  b=RfD52Ozbn9/VtvClwGW8qiUJbMSPx/qiUZzWoKGsggw85khpnAsstdou
+   S1F3jbAFP2LnH62f5os/AZzaTQJydPzcKl8FHr35bsuQMWd3QEl+jiSjX
+   X0QtwX/UXdWrxbVj30h7NYXy79xKCC7K+kiSAekSKWbcInJ94qHmBRUxa
+   M3hS0ef8nirFYhx42zYFrn0eyF7itM4Y1lEkwIeHIup1/JTvj+jRIaRj1
+   cY16GlNX9SxHyc/phtMOr9BE6tug1gx1yja6T3h2Fb7EEDUsCq0I/6tQu
+   iDFZWtzkNjaiiepXiZJHrmNnI4fcA0tKbuvyfyoT/xuPLqZDtgXftTE2Y
+   A==;
+X-CSE-ConnectionGUID: XKX4+bGSRJuOKv/zrTvxRw==
+X-CSE-MsgGUID: K4YPm728TP2LJl8QyeZUiA==
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="43292364"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Jun 2025 04:14:13 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 12 Jun 2025 04:14:06 -0700
+Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Thu, 12 Jun 2025 04:14:05 -0700
+From: Conor Dooley <conor.dooley@microchip.com>
+To: <linux-i2c@vger.kernel.org>
+CC: Conor Dooley <conor.dooley@microchip.com>, Daire McNamara
+	<daire.mcnamara@microchip.com>, Andi Shyti <andi.shyti@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [RESEND PATCH v1] i2c: microchip-core: re-fix fake detections w/ i2cdetect
+Date: Thu, 12 Jun 2025 12:12:49 +0100
+Message-ID: <20250612-jaybird-arrange-53b6200548e9@wendy>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: qcom: sm8550: Add support for camss
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Wenmeng Liu <quic_wenmliu@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, todor.too@gmail.com, rfoss@kernel.org,
- bryan.odonoghue@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- Depeng Shao <quic_depengs@quicinc.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-References: <20250612-sm8550-camss-v2-1-ed370124075e@quicinc.com>
- <a86a0d45-8da1-475f-aeb8-37faa58b9849@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <a86a0d45-8da1-475f-aeb8-37faa58b9849@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1850; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=/Yo6O8SI0+IWA2XkJwjWpPVbipozk8mlgRIa5ULwmeI=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBle24xjb0jsq/crelFha76gy1ro4FSxPRcXX7+cwH5w0qn7 vy/yd5SyMIhxMMiKKbIk3u5rkVr/x2WHc89bmDmsTCBDGLg4BWAiinMZGb4e+pOt9Ull3YFLm286J6 m3fdY+O9sicwnH0rf5KWty2moY/vCblPxvaWrXW8GjOH3JnM2iErN7p+401crMOOLx5u3Nbk4A
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 12/06/2025 13:11, Krzysztof Kozlowski wrote:
-> On 12/06/2025 10:01, Wenmeng Liu wrote:
->> Add support for the camera subsystem on the SM8550 Qualcomm SoC. This
->> includes bringing up the CSIPHY, CSID, VFE/RDI interfaces.
->>
->> SM8550 provides
->> - 3 x VFE, 3 RDI per VFE
->> - 2 x VFE Lite, 4 RDI per VFE
->> - 3 x CSID
->> - 2 x CSID Lite
->> - 8 x CSI PHY
->>
->> Co-developed-by: Depeng Shao <quic_depengs@quicinc.com>
->> Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
->> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
->> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> 
-> 
-> Where did this happen? Please point specific email.
+Introducing support for smbus re-broke i2cdetect, causing it to detect
+devices at every i2c address, just as it did prior to being fixed in
+commit 49e1f0fd0d4cb ("i2c: microchip-core: fix "ghost" detections").
+This was caused by an oversight, where the new smbus code failed to
+check the return value of mchp_corei2c_xfer(). Check it, and propagate
+any errors.
 
-OK, I found, never mind.
-Best regards,
-Krzysztof
+Fixes: d6ceb40538263 ("i2c: microchip-corei2c: add smbus support")
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+
+Resending cos I think it attempted a send using my korg address on a
+network where that is not possible.
+
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: Andi Shyti <andi.shyti@kernel.org>
+CC: linux-i2c@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+---
+ drivers/i2c/busses/i2c-microchip-corei2c.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-microchip-corei2c.c b/drivers/i2c/busses/i2c-microchip-corei2c.c
+index 492bf4c34722c..a4611381c4f0b 100644
+--- a/drivers/i2c/busses/i2c-microchip-corei2c.c
++++ b/drivers/i2c/busses/i2c-microchip-corei2c.c
+@@ -435,6 +435,7 @@ static int mchp_corei2c_smbus_xfer(struct i2c_adapter *adap, u16 addr, unsigned
+ 	u8 tx_buf[I2C_SMBUS_BLOCK_MAX + 2];
+ 	u8 rx_buf[I2C_SMBUS_BLOCK_MAX + 1];
+ 	int num_msgs = 1;
++	int ret;
+ 
+ 	msgs[CORE_I2C_SMBUS_MSG_WR].addr = addr;
+ 	msgs[CORE_I2C_SMBUS_MSG_WR].flags = 0;
+@@ -505,7 +506,10 @@ static int mchp_corei2c_smbus_xfer(struct i2c_adapter *adap, u16 addr, unsigned
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	mchp_corei2c_xfer(&idev->adapter, msgs, num_msgs);
++	ret = mchp_corei2c_xfer(&idev->adapter, msgs, num_msgs);
++	if (ret)
++		return ret;
++
+ 	if (read_write == I2C_SMBUS_WRITE || size <= I2C_SMBUS_BYTE_DATA)
+ 		return 0;
+ 
+-- 
+2.49.0
+
