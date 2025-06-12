@@ -1,121 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BC4220F2A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F82A2AEED;
+	Thu, 12 Jun 2025 13:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736539; cv=none; b=fl+bGl346jT8GhuAUxjoorRSUU6UJsgRdGMAJ8/cWdE89n4V2Foe60fSD4Z/Q6EDrxSW/55Algf2kBrn6Q7p1AVVfq3u4a7L/j55ZNwqvxvdsQZBabbAzABREmsTZOXL6uMy9RS1azYF/ApZgf8x+Q2dl8Lz23h4kU4tcaB/TZA=
+	t=1749736551; cv=none; b=OziNnSi27cAiS1s08EgdgWak+qspwCDiCxPHyz7RfkjQyVOvaPC7IHCb5rhZ8XADMNJLFsPE2C9rLQsP1bRfOEbpOMG058d8XRZjy1/rQuPiuFHcZQIbOY9fJOMqGtRYWEYCKU6n5lHTCuqJYoEX3vG8uCKTjc6MPA+dQ558IQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736539; c=relaxed/simple;
-	bh=VWDpjyEwYWKBY0W4CnF9s+kB7l3/hqfNXUApEh884yE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=O5eIqqBjSjVhoeg6AtK6K4RxUqqts+jKxXTjVbwv+QWPatYLJdZmjTmivQAN3LYnYHJfaxgBMCgFuA/I+zwhfxTKs9m2CV6bI5iEFaqI5cGSz7mqlh2WJsdGQHEYpz5dZhpRiCElQOxg39wkbgEwtQA7kuwu11CAZnQvB3ZyjQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6P1k5gD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749736551; c=relaxed/simple;
+	bh=E0Nxbb8Zhk8mfwiipHLBBckrZjv1zJdhcMMkqy7tMgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r9GhRb3MFF3WUCOizMwD5CYBGJ7425S1oD24P/KMbr+bCzwN1amoEhCmQ2NgJCRnAWFAC2zmDP6g7Xaz5OGSxqO5Svh4oALPvZ4N5B1CjAzZ8vUHY9uuEuEzAKTy2HN84oZHn9T/GUVOXAcerSSiPwdF3DiQ5OqsN9GLBBEzrdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kPOC7IHB; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6P1k5gD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79090C4CEEA;
-	Thu, 12 Jun 2025 13:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749736537;
-	bh=VWDpjyEwYWKBY0W4CnF9s+kB7l3/hqfNXUApEh884yE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=A6P1k5gD6OGmRjrQMNiRt5KqNiE/VyrZ2vZjkkVb5b+8G02lVxkojsjmCIq0Pqtq+
-	 7B+sZxal3GRiVEQzMFe1iq4fg/bzRMrA9uD4Dqxl2ewik03Ucyo+DsyNt8emvLYXvf
-	 ACNHH6NxhwDqvdoNJ8c8aBDkHTOsz4htzBPCjWLRAoLzohqD/8BoZ6Qx1HgelRD+LJ
-	 SqT7JsB0lnbSb38lD25OgVOvNncFlN6KdbjXZtNhM/oPO0obs6Qj/Tw1/7T4+8kj09
-	 los18PjhCiEJ7QB53DlFZhD8WNinXvcsov7qqQJPM/wK5d2XqrNY6ROsOaQfBECy6U
-	 OTZMJ8zm+OT5A==
-Date: Thu, 12 Jun 2025 10:55:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Isaku Yamahata <isaku.yamahata@intel.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 1/1 fyi] tools headers UAPI: Sync KVM's vmx.h header with the
- kernel sources
-Message-ID: <aErcVn_4plQyODR1@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPOC7IHB"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ade5b8aab41so215911466b.0;
+        Thu, 12 Jun 2025 06:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749736548; x=1750341348; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xikeG81Glqm5M9v3u+UCgVKmnmOs9BH7r2u0CB2OILg=;
+        b=kPOC7IHB7oaMcgBNiRPMVraJYWrDhrfoCH2nmJxQzMbOXLVsFH95ru6BuLDPXU5/TP
+         XGyu35QBNLfQRRqcvLxc2Hfa+a4pqrJl0JMKKGI/F3cpJOI0A7DxHvriOVupVPMs+rAk
+         xqP9CGCVEj7h4Wd6Pv6T2truLEv6TBLUob1jQL0EDLk8FAzP4u61yccZB99xBNRznMS2
+         xdvYjRzg+OEsXyNHnFf3JDV97CRGmyziNLOyTcV104TTWBOtVNhyPc8dtyoCXi/tjv9G
+         fQyDl6dK+iux8UEhhBPi+fLkvwqgIoqp+bEsFns5wpThlPx9x+7F5u6ZIVSOPoFjnM/V
+         rP4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749736548; x=1750341348;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xikeG81Glqm5M9v3u+UCgVKmnmOs9BH7r2u0CB2OILg=;
+        b=JpZ0GozvaazjBibXzxVT8mVpVpD6p6qqtMqDe4XRWHKg4ZmWghcvaeVImOF/w+zsU+
+         p0o30TDmrNwG61sHjnR4AYvTQOctyuBzZrgJzw4rL6cKpgCUrLXBEav2H4stgIXUOHeS
+         /k1hQ7dtlH6gQI458CTu8F4fjkI26RvQ5HqxzAhoPOIIib3WSjq5JjhB5UKInrL7T5gb
+         Xrzf/VCtKfP5nULIlC18zfRaEm7jNF+sPSaLHz0obMeTNKF+wwxijOF3Esn1LUa0Lf8A
+         BguMbES6JNv0R1mpAnbF4nu6Ed3dPwEW+AiyLs61/6ZlOE7k3PzANg9u3pIxA5InGIIC
+         IEpw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPxL3IloC0+xx7F6HU+65gaNwhrqiIX5nqeEIsqT508bqOJAaAeJojnsLmt6uPvJbszlpWMTRspEw2SBXJ@vger.kernel.org, AJvYcCXf5oWSMN5xhN1/RrRRvxI1evy1TJkk7ee3vMz2pZ2PQNRlZWEpg6TFfPzPwU3f7Dl0L6k0rdiI+J+4oNye@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx8o2e1aPQ8ykSclda1Zrp7ZfcsO8JS8LojyCzdXO0p0xb8o2T
+	FHT3epRL1CKizu12j3euSQxmeXPrNj2qfX2W73D1kFgnqCDMsdxO+J7M
+X-Gm-Gg: ASbGncuPGSmVX/igEw/isXiky7r3FNbqkFHRZJei2FJg0Hj9pQla1gtH7SLyU6q2jfH
+	sMhoFUMFUpmHGrdgnp+JHgQxpgb5j3VaS3sKVQuayeezGPxw+BNEVQIHVW8w20QWGw4u9Uf/LwE
+	I4axKqkJQjReHXJ8Nnr2l87vHKIXDxy9ssNYZjwGHOEQN5rYAeUlhrUkayc8eTYPepNnQkvLN0a
+	2Wd76E4QmvARVVNo2l1X1zUIsAuYldQNpJtB53GBqVlkU2Zs8cvMYQ6qpkkxatUQrIiJ20/bPB1
+	Tf8oCgoPMw/sqG+6cA+RnuX262klhW6T+MXnit0xIQius4UWiSaLIAGYeOZkhWCY/K5CwsFJ2cU
+	rxA==
+X-Google-Smtp-Source: AGHT+IEt/gyCua3q4hkdwtZlk5m5IJpx57fEfd6rwWGyPrfaAiZW+b8ZSeyx9l/e9qKVOFzE3helXQ==
+X-Received: by 2002:a17:907:7248:b0:ade:348f:88df with SMTP id a640c23a62f3a-adea92790f3mr328097866b.4.1749736547320;
+        Thu, 12 Jun 2025 06:55:47 -0700 (PDT)
+Received: from f (cst-prg-93-231.cust.vodafone.cz. [46.135.93.231])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adeadb8c3f8sm136320766b.129.2025.06.12.06.55.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 06:55:46 -0700 (PDT)
+Date: Thu, 12 Jun 2025 15:55:40 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Luis Henriques <luis@igalia.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-dev@igalia.com
+Subject: Re: [PATCH] fs: drop assert in file_seek_cur_needs_f_lock
+Message-ID: <ybfhcrgmiwlsa4elkag6fuibfnniep76n43xzopxpe645vy4zr@fth26jirachp>
+References: <87tt4u4p4h.fsf@igalia.com>
+ <20250612094101.6003-1-luis@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20250612094101.6003-1-luis@igalia.com>
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+On Thu, Jun 12, 2025 at 10:41:01AM +0100, Luis Henriques wrote:
+> The assert in function file_seek_cur_needs_f_lock() can be triggered very
+> easily because, as Jan Kara suggested, the file reference may get
+> incremented after checking it with fdget_pos().
+> 
+> Fixes: da06e3c51794 ("fs: don't needlessly acquire f_lock")
+> Signed-off-by: Luis Henriques <luis@igalia.com>
+> ---
+> Hi Christian,
+> 
+> It wasn't clear whether you'd be queueing this fix yourself.  Since I don't
+> see it on vfs.git, I decided to explicitly send the patch so that it doesn't
+> slip through the cracks.
+> 
+> Cheers,
+> -- 
+> Luis
+> 
+>  fs/file.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/fs/file.c b/fs/file.c
+> index 3a3146664cf3..075f07bdc977 100644
+> --- a/fs/file.c
+> +++ b/fs/file.c
+> @@ -1198,8 +1198,6 @@ bool file_seek_cur_needs_f_lock(struct file *file)
+>  	if (!(file->f_mode & FMODE_ATOMIC_POS) && !file->f_op->iterate_shared)
+>  		return false;
+>  
+> -	VFS_WARN_ON_ONCE((file_count(file) > 1) &&
+> -			 !mutex_is_locked(&file->f_pos_lock));
+>  	return true;
+>  }
+>  
 
-Full explanation:
+There this justifies the change.
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
+fdget_pos() can only legally skip locking if it determines to be in
+position where nobody else can operate on the same file obj, meaning
+file_count(file) == 1 and it can't go up. Otherwise the lock is taken.
 
-See further details at:
+Or to put it differently, fdget_pos() NOT taking the lock and new refs
+showing up later is a bug.
 
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
+I don't believe anything of the sort is happening here.
 
-To pick the changes in:
+Instead, overlayfs is playing games and *NOT* going through fdget_pos():
 
-  6c441e4d6e729616 ("KVM: TDX: Handle EXIT_REASON_OTHER_SMI")
-  c42856af8f70d983 ("KVM: TDX: Add a place holder for handler of TDX hypercalls (TDG.VP.VMCALL)")
+	ovl_inode_lock(inode);
+        realfile = ovl_real_file(file);
+	[..]
+        ret = vfs_llseek(realfile, offset, whence);
 
-That makes 'perf kvm-stat' aware of this new TDCALL exit reason, thus
-addressing the following perf build warning:
+Given the custom inode locking around the call, it may be any other
+locking is unnecessary and the code happens to be correct despite the
+splat.
 
-  Warning: Kernel ABI header differences:
-    diff -u tools/arch/x86/include/uapi/asm/vmx.h arch/x86/include/uapi/asm/vmx.h
+I think the safest way out with some future-proofing is to in fact *add*
+the locking in ovl_llseek() to shut up the assert -- personally I find
+it uneasy there is some underlying file obj flying around.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Link: https://lore.kernel.org/r/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/arch/x86/include/uapi/asm/vmx.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/arch/x86/include/uapi/asm/vmx.h b/tools/arch/x86/include/uapi/asm/vmx.h
-index a5faf6d88f1bf614..f0f4a4cf84a7244e 100644
---- a/tools/arch/x86/include/uapi/asm/vmx.h
-+++ b/tools/arch/x86/include/uapi/asm/vmx.h
-@@ -34,6 +34,7 @@
- #define EXIT_REASON_TRIPLE_FAULT        2
- #define EXIT_REASON_INIT_SIGNAL			3
- #define EXIT_REASON_SIPI_SIGNAL         4
-+#define EXIT_REASON_OTHER_SMI           6
- 
- #define EXIT_REASON_INTERRUPT_WINDOW    7
- #define EXIT_REASON_NMI_WINDOW          8
-@@ -92,6 +93,7 @@
- #define EXIT_REASON_TPAUSE              68
- #define EXIT_REASON_BUS_LOCK            74
- #define EXIT_REASON_NOTIFY              75
-+#define EXIT_REASON_TDCALL              77
- 
- #define VMX_EXIT_REASONS \
- 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
-@@ -155,7 +157,8 @@
- 	{ EXIT_REASON_UMWAIT,                "UMWAIT" }, \
- 	{ EXIT_REASON_TPAUSE,                "TPAUSE" }, \
- 	{ EXIT_REASON_BUS_LOCK,              "BUS_LOCK" }, \
--	{ EXIT_REASON_NOTIFY,                "NOTIFY" }
-+	{ EXIT_REASON_NOTIFY,                "NOTIFY" }, \
-+	{ EXIT_REASON_TDCALL,                "TDCALL" }
- 
- #define VMX_EXIT_REASON_FLAGS \
- 	{ VMX_EXIT_REASONS_FAILED_VMENTRY,	"FAILED_VMENTRY" }
--- 
-2.49.0
-
+Even if ultimately the assert has to go, the proposed commit message
+does not justify it.
