@@ -1,177 +1,78 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C2C298CB5;
-	Thu, 12 Jun 2025 15:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D471629A9E1
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749741543; cv=none; b=CdcMrVGkRCEDU6Sl0gQYMbEEU1N/QpMZysbGXJkTX255Xxw0hhx/Yu58wFlSBpNlsQTF+gQcZVS3AvYAgo0iRzIMKAm0H/pNXf+YAy0zKtMrTbe3EeF6D0hxHbboqEcki1DLEzFRLYc6uWiKnYozRJyfTdaTRlgN5kE5qzDmiNs=
+	t=1749741544; cv=none; b=GM5SAeqIPYEvdbn71wYbhYYTSXSUO5dhTlkHXl7AcCRm/owXrwZGW/0iZpt7VWu9nyacBUs5+mY1KkUnA/4t0Ux3MJsYFsixF9ejwDI/Uxf8HAqCBW1Au0jl8pwlR9LNq67Lkn6LIjeVnOX6mkbjWje8+Tcn9ejH4ab8ZSnd8Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749741543; c=relaxed/simple;
-	bh=UXKoXs5q4LIaUmOilU4paxb7oql8YI65SX6preoNwg4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nwlbYHy7niNySpyA1QRfd3l2o7lhqhtrK6k/KD40PqWVy0HwhtgdXJwFuptLdi2SNkO9A0NYqM38SnKxjAOd/8XIdfPfAVBVIzlPBHdimZht1wSO7P6Ddf0R3s1+S8ffJ3pi46wZ0WquYp/f7Y8sgjisRVwUvLMbnrGadZqAjtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=aNkS0ZO3; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1749741544; c=relaxed/simple;
+	bh=ph4NrsjjtamLfSRGSV8IrWFOeVnkUjNMXGKpS7G1gOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GJimNtIEORAyQiPcccSQZMmW4jlwfKUyD3zYvC27njmnJJ3eJTOSSyb/uDB2vlvlCld5l+6edgk7kKkYT/nJZhSVivG1rwEpEHOZ3jYrgW8/U1/LgIctQafl7t5AYc8DAMsdD30Gtngt0Z6qtsE/9hLvunakK3aPbZ3RD9hhImY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxnDutY6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="aNkS0ZO3"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id D0C5C25C7E;
-	Thu, 12 Jun 2025 17:18:59 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id ZGuRfnsPHQ0L; Thu, 12 Jun 2025 17:18:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749741538; bh=UXKoXs5q4LIaUmOilU4paxb7oql8YI65SX6preoNwg4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=aNkS0ZO3ifYcpmDNJcPBSawttNvT2Di6sKFeJTGr9a94zpLp7xaelbDhubUkAuZhd
-	 UFp8W2Yzbhek458Co+CVNAzvYMTiyvIjQOzX23llLMxa1qeQYRq1MxcnvVLscXhyEj
-	 rId72V8jDP9UkAfKePS/Wr85/NsUHwxP63dSppQQNnQmgtajVAB5YyBg6pDIVsgLZ2
-	 J1z8nz1troHTITUcTRwkuX+zRgpiK7aGiJyksNaexQWpYBlyKsbW5IVHBzZnfyx8oT
-	 l0CKzImnBDmCtwO6PyVXHTQ4fSxyYLWmScZ56/Isly6Pz1NErqkFmJEqvGJQam2oxX
-	 CX2tUR01iKFAQ==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Thu, 12 Jun 2025 20:48:07 +0530
-Subject: [PATCH 03/12] drm/bridge: samsung-dsim: add flag to control header
- FIFO wait
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxnDutY6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E28CFC4CEEA;
+	Thu, 12 Jun 2025 15:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749741544;
+	bh=ph4NrsjjtamLfSRGSV8IrWFOeVnkUjNMXGKpS7G1gOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KxnDutY6UJEe6l2TzebzS3WVZS27DCvR2GXMecLqwD6dU1rOKbP6mMgNjjTFDEQ8r
+	 mietXp/OMOfHCfBPBIDifj860usNRyGuFVBXTXYg0NWuEcEQ4GKNKfKZS/iAVLutrL
+	 ENCgfSxNVkJyhwkitubz6H9t//6MbpbXfZkz34NvZlr4FcJIH0YPHihmt6D0XL0Rb3
+	 nWDdL5JO3AlpOMVa15tcXaAKEJG3YWYnE3fUqqhPHR+d9759WY4X3RMy6IbAvTItzu
+	 Dk/1VGJP79u6HvSRfd3hpUbYBE5sR+Y4CnS8mkitcdMYNEQZJGzTm+YYp4DqXAr/0m
+	 +mqRWtxhFhypQ==
+Date: Thu, 12 Jun 2025 16:18:59 +0100
+From: Will Deacon <will@kernel.org>
+To: Dylan Hatch <dylanbhatch@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Song Liu <song@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Toshiyuki Sato <fj6611ie@aa.jp.fujitsu.com>
+Subject: Re: [PATCH v7] arm64/module: Use text-poke API for late relocations.
+Message-ID: <20250612151859.GD12912@willie-the-truck>
+References: <20250603223417.3700218-1-dylanbhatch@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-exynos7870-dsim-v1-3-1a330bca89df@disroot.org>
-References: <20250612-exynos7870-dsim-v1-0-1a330bca89df@disroot.org>
-In-Reply-To: <20250612-exynos7870-dsim-v1-0-1a330bca89df@disroot.org>
-To: Inki Dae <inki.dae@samsung.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, 
- Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749741499; l=3612;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=UXKoXs5q4LIaUmOilU4paxb7oql8YI65SX6preoNwg4=;
- b=G4w05gL6UJNA/3qkDrUQv2AYVQjzl3xP30/qaUrO7TKpMwcDrakJUH/z0IwTVnNuT1k6CbGmU
- VF6GS0eaAVRD6OVeNWlduTslwGKgKJTPTj0Ezp0bWN6YgBfFzCKlVJg
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603223417.3700218-1-dylanbhatch@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Exynos7870's DSIM device doesn't require waiting for the header FIFO
-during a MIPI DSI transfer. Add a flag in the driver data in order to
-control said behavior.
+On Tue, Jun 03, 2025 at 10:34:17PM +0000, Dylan Hatch wrote:
+> To enable late module patching, livepatch modules need to be able to
+> apply some of their relocations well after being loaded. In this
+> scenario however, the livepatch module text and data is already RX-only,
+> so special treatment is needed to make the late relocations possible. To
+> do this, use the text-poking API for these late relocations.
+> 
+> This patch is partially based off commit 88fc078a7a8f6 ("x86/module: Use
+> text_poke() for late relocations").
+> 
+> Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
+> Acked-by: Song Liu <song@kernel.org>
+> ---
+>  arch/arm64/kernel/module.c | 101 +++++++++++++++++++++----------------
+>  1 file changed, 57 insertions(+), 44 deletions(-)
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- drivers/gpu/drm/bridge/samsung-dsim.c | 15 ++++++++++++---
- include/drm/bridge/samsung-dsim.h     |  1 +
- 2 files changed, 13 insertions(+), 3 deletions(-)
+Thanks for sticking with this, Dylan:
 
-diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
-index e7287c289e0f8d01e295407578817801bad9d8c8..356c949aaa030a2ecc39beb43ae8608c1e6af828 100644
---- a/drivers/gpu/drm/bridge/samsung-dsim.c
-+++ b/drivers/gpu/drm/bridge/samsung-dsim.c
-@@ -416,6 +416,7 @@ static const struct samsung_dsim_driver_data exynos3_dsi_driver_data = {
- 	.has_clklane_stop = 1,
- 	.num_clks = 2,
- 	.max_freq = 1000,
-+	.wait_for_hdr_fifo = 1,
- 	.wait_for_reset = 1,
- 	.num_bits_resol = 11,
- 	.pll_p_offset = 13,
-@@ -435,6 +436,7 @@ static const struct samsung_dsim_driver_data exynos4_dsi_driver_data = {
- 	.has_clklane_stop = 1,
- 	.num_clks = 2,
- 	.max_freq = 1000,
-+	.wait_for_hdr_fifo = 1,
- 	.wait_for_reset = 1,
- 	.num_bits_resol = 11,
- 	.pll_p_offset = 13,
-@@ -452,6 +454,7 @@ static const struct samsung_dsim_driver_data exynos5_dsi_driver_data = {
- 	.plltmr_reg = 0x58,
- 	.num_clks = 2,
- 	.max_freq = 1000,
-+	.wait_for_hdr_fifo = 1,
- 	.wait_for_reset = 1,
- 	.num_bits_resol = 11,
- 	.pll_p_offset = 13,
-@@ -469,6 +472,7 @@ static const struct samsung_dsim_driver_data exynos5433_dsi_driver_data = {
- 	.has_clklane_stop = 1,
- 	.num_clks = 5,
- 	.max_freq = 1500,
-+	.wait_for_hdr_fifo = 1,
- 	.wait_for_reset = 0,
- 	.num_bits_resol = 12,
- 	.pll_p_offset = 13,
-@@ -486,6 +490,7 @@ static const struct samsung_dsim_driver_data exynos5422_dsi_driver_data = {
- 	.has_clklane_stop = 1,
- 	.num_clks = 2,
- 	.max_freq = 1500,
-+	.wait_for_hdr_fifo = 1,
- 	.wait_for_reset = 1,
- 	.num_bits_resol = 12,
- 	.pll_p_offset = 13,
-@@ -503,6 +508,7 @@ static const struct samsung_dsim_driver_data imx8mm_dsi_driver_data = {
- 	.has_clklane_stop = 1,
- 	.num_clks = 2,
- 	.max_freq = 2100,
-+	.wait_for_hdr_fifo = 1,
- 	.wait_for_reset = 0,
- 	.num_bits_resol = 12,
- 	/*
-@@ -1109,6 +1115,7 @@ static void samsung_dsim_send_to_fifo(struct samsung_dsim *dsi,
- {
- 	struct device *dev = dsi->dev;
- 	struct mipi_dsi_packet *pkt = &xfer->packet;
-+	const struct samsung_dsim_driver_data *driver_data = dsi->driver_data;
- 	const u8 *payload = pkt->payload + xfer->tx_done;
- 	u16 length = pkt->payload_length - xfer->tx_done;
- 	bool first = !xfer->tx_done;
-@@ -1149,9 +1156,11 @@ static void samsung_dsim_send_to_fifo(struct samsung_dsim *dsi,
- 		return;
- 
- 	reg = get_unaligned_le32(pkt->header);
--	if (samsung_dsim_wait_for_hdr_fifo(dsi)) {
--		dev_err(dev, "waiting for header FIFO timed out\n");
--		return;
-+	if (driver_data->wait_for_hdr_fifo) {
-+		if (samsung_dsim_wait_for_hdr_fifo(dsi)) {
-+			dev_err(dev, "waiting for header FIFO timed out\n");
-+			return;
-+		}
- 	}
- 
- 	if (NEQV(xfer->flags & MIPI_DSI_MSG_USE_LPM,
-diff --git a/include/drm/bridge/samsung-dsim.h b/include/drm/bridge/samsung-dsim.h
-index a50e4f521b9d9561f6a3b9fe3e174c0e140849a2..3641c57557f42fd90cd2e8c0282f69dbe36ba2de 100644
---- a/include/drm/bridge/samsung-dsim.h
-+++ b/include/drm/bridge/samsung-dsim.h
-@@ -60,6 +60,7 @@ struct samsung_dsim_driver_data {
- 	unsigned int num_clks;
- 	unsigned int min_freq;
- 	unsigned int max_freq;
-+	unsigned int wait_for_hdr_fifo;
- 	unsigned int wait_for_reset;
- 	unsigned int num_bits_resol;
- 	unsigned int pll_p_offset;
+Acked-by: Will Deacon <will@kernel.org>
 
--- 
-2.49.0
+Catalin, I assume you'll pick this up for 6.17.
 
+Cheers,
+
+Will
