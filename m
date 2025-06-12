@@ -1,80 +1,79 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4BC1514E4;
-	Thu, 12 Jun 2025 14:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD7C149C4D
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736880; cv=none; b=JPNMhsRmpYd9q9BW8V97ub58le1XTPV1Ub9lupd1AHLTKTxX9zoymSD+zdDuFfvHVUzbgLyS9ncqBrz8qF1wV8P2GT07jEtQ5wMJFaUT8kleF0jX+150UWvY2Y2B7xz94/YwiCfyYw9oRCLt+kMPb/i7/xC/2pZTW5XkcQIyNSU=
+	t=1749736908; cv=none; b=bKasnPdy66JEFiOW32ay8hg3qkmdqI1r13ojhPFdNvJ9X/dn7mtKRjOXVay8J1aowjwC4/4MVR9Vc2F/rl6lqPsEOh7HIbZ9jkUNZ1QBZugSNgRjIORpTdmUtZod/B+nBEINeFKuPU40ziTmWYadSH+o0Wur20FaX80jMDe1Bd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736880; c=relaxed/simple;
-	bh=YPxMTxw3oYrovaTdA0xeKAG6x+IDWmVWaIS2Zqn0zaQ=;
+	s=arc-20240116; t=1749736908; c=relaxed/simple;
+	bh=ZZ43kS8ldodA8ytEGpODD/ELIeuFK1PLrhz2Ds+7Vv0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cx9LJkWM+UVT61CyIMy3SYz5nDTv64S8jZS5EBQKuDjdWrlmoQz1TD789xFb9aYbtJGs5Oaedj7pl2o3R0Pq7Iwqonw+uhghX/C+2YOj54ks/WcUzwUxr7Alm9fVUJnTO3qMg9PHt45J6cOwnEzvVnoR1qTLAr+dROl/fkV7BS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTS+CL3G; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NEHJ6cpQ95i8i9jWNQfC/Oo7doUkndvCuBuAG+PytUsUigJttDwgPY/J+/tb/vCWknKLrjC+/ofT4ZN7MIt/LAD3x8SZk/DZCECDBq6yNg8K4gDnuV1+XXqzQiwvcO141f+O1ua0V5Kjw2//P/QAlIe1K+9GdS3L6C1RgeU+XO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=G1MOtfez; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTS+CL3G"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-235f9ea8d08so10241075ad.1;
-        Thu, 12 Jun 2025 07:01:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="G1MOtfez"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so5629075e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:01:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749736878; x=1750341678; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WrUaDDGPJzFKUiQFGAoTVMOx8+jgdrUvU/jOz6JWMNw=;
-        b=UTS+CL3Gjh838bYLJBzKh2eeK/oG0HizVwk/p8sl8Xj8Om1xYTb5tAS5BDCHHc/I4j
-         fq/zUMGvOOGtBnJImBw+l60aqJTU0ydmxOY2xXip7N685CBdw3LWOTor0Nuybi3uaJNV
-         wqtrXNMdbjNpimT3syBfML+uFwT1TAypwB9hS7T1Mo2m4Z9va6XEakrtum6cCIf43RNv
-         9iWte9czJvvijbWnuQiyumZV9ETVWTg/WvHj/0fCuc0+53419GjMlltJJRtkMpBTyaM3
-         OjRrDoJNmVg3MgmA/yvuAmaE5CByotXHhY7ZFJyPT/v0bQ2OHqANcRG29lTGTzHvDVc7
-         SJYA==
+        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1749736903; x=1750341703; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qcnu5fvN7W4+2bj6XO77hAeu2WjhdtIOX66M3CMmvLU=;
+        b=G1MOtfezASpfIf0qX8HQJCQ6GQ++sMFBGcJgtT6OflK7xN5KWPGfjIju3JGZkHbIgl
+         wX6yAC21ZwNbx+x5poBr7636Ewmca1fVlBOl5dC9UPGafqDFPvT7U7myLrL01Bzdlc2k
+         r5QGXmbaSdSDWqABUid8M3dP2n43MGpMBlg5CkNJJD3fbqzs/jCF8A4gOespsWUzbmTZ
+         KTbBgK4RrAIG0jYptiNmw1M/YQCxn94Ncuu5qEegxDrfxttJ1jaeP6cJYS8n6ig7ROOU
+         i04QJanD1EBFdD/Idh72GArj3I5IaXmHdjnhFbQWg/dbrVK416d2tlG1/LhkJC9E2cPN
+         AKgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749736878; x=1750341678;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WrUaDDGPJzFKUiQFGAoTVMOx8+jgdrUvU/jOz6JWMNw=;
-        b=CPFG6qyDZZBGwSO96tgyXHVRZIY79vXVMOaYY6pMJgmbzAjFm8v4DFY5QymTkPfK56
-         +sw2TC9RrzuwoTq1dRY7uUJPOuOiCd58nLhu+45TNuYu/Zv+c5oXPFbDz3iFC1zPLsKW
-         QzHyjW7vKX4MB4fIJdaK4kAT2v6wnWurdgTmH2Abk96odrmqOYQ4K4SIisLOOBbyaeql
-         QQ7mGY5tUV1up5VwvHa7k6Hn3M+8Z8ihTHqq+mUa/zk0BCqLNgq459XGVlj3Uek/veUW
-         nMtoZGvIlIk3YyRi1a6E9ZxP6/Gpm6/CpA1RiYQIwl2IG79BULBaoyZtVMgKybqdPEcr
-         ZxnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjZ2AifQbPnpI026JI1EINjKXBSLMWzH4XoK7P87qL4cMnIEUGLklmK6P1/1zTSxMgo+oxOByLu6TZ@vger.kernel.org, AJvYcCUpmz/M8J/A6xTTMIr59rmtdOxzm++3ZHuZL2x5PlAyQqjSn/3Slbn5IRN94n985wIA69A1UiSoSJAwnQ==@vger.kernel.org, AJvYcCVGJcYa+RqR8XlLbsciFb3kL1Evj6c6/GsqGJLtRPWxzIR6bju8PqTgZH18VRmA4xH6XKEiGGvPZKwHBxXc@vger.kernel.org, AJvYcCW+6Cjdsp8I94WzlMZQzAvwWt8DNg1GLzVtfKib7xKEqOuY6cU27BLqSdV3bURxmpkCbXaQW2QnvBzk@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUMtDMRjHTqsVepc6KsR5bnDiVZgNYBJbYjozlUyQOI7v5Bw4R
-	cJ7cbd/vT3OxbLAVyK/ltDmdRj1s+w0bBh2emPWvJOA+o8ybygtZTeeG
-X-Gm-Gg: ASbGncuavj2E90z1j9L4f/6rLtkghpyH2UCTN3EtSMThFHE4wmgVQiDEijgC5ibrtOl
-	t9KqA3XrnXc6TNSQ7bXWe1QPgyHMvNLTM97DIVp/12NboXFLKsh5lahTGfmeE4c4A5NVNyH+Gcn
-	Q6YJT327578ovzpAPndWHo3SCHGNAyDXl2wo6zdU1ley9HHfKzPRWlezk3mtcD7EPU6SA7A6WMy
-	PmcfQR0f2kSnmd5YeN7KfhT9bMNBXUBNQo8kF8prj7TdGiDxz/MI9d810Zs+GzF7Sd6M5+LC2q6
-	hwJUDAcqOjv58uTC20qH2d2V/FtQqiw1J+O4b9ITGOlX/nY94EP2fBGkxLMYxEptX3eU/RGIHt2
-	CgdpuwA==
-X-Google-Smtp-Source: AGHT+IG8MPbeD44xaQLw4mhm0dmlhPEtylSTie6+7pb/0KZ3veLVzkzsT+ldEJIwVLhZFtndrz6dYQ==
-X-Received: by 2002:a17:902:e74e:b0:234:8ec1:4af6 with SMTP id d9443c01a7336-23641b3291amr103085065ad.45.1749736877677;
-        Thu, 12 Jun 2025 07:01:17 -0700 (PDT)
-Received: from localhost ([2804:30c:4000:5900:b4c4:6073:1a92:4077])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2364e6d9c65sm14079355ad.111.2025.06.12.07.01.16
+        d=1e100.net; s=20230601; t=1749736903; x=1750341703;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qcnu5fvN7W4+2bj6XO77hAeu2WjhdtIOX66M3CMmvLU=;
+        b=aDddbRa/ExrN+A3dUh3RNqV7fdRiVDsCNkj1qSn+H/HW5mDQELl0f7Zsqlg/6XedH/
+         82dOWbN6ZHULkNv08tMLcWP0PBDgtUR6PdUiOhsbm4PJtDTwqvtHz9t4/PqbOuLhmsWK
+         pyxGVgM590nq3ek0iESPRksGaFIYypGiKCQvKTSdwLpjudz9Gb6MTF+9z2LiXiCnrt21
+         63ypE8CSywFjMCa3mKhA1lWziQPay5c60d2Ae9ETdmUZbPyCgR4AmSFXE5HkdgDT24b6
+         0rbaYtsBhH/F8bbJ+RdiQ52fOxQg2zLT8y6UJjRMthEBzp3wuEYd0HGk2n2N4q7+oUrG
+         UjNg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+CWKLzJkzpsXXzmhfmt68sn/jQXgLNZKpltPnnQ8i/AOnw9Ud9ZF+LwTOPdJzANVL5vTJSxSt/vAxF4k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRuEfpHBspBy1abbY4rguCQUMLNAbRLWMnF+nBFflQIzTGRLyM
+	MsRU5wCVB1xEz8pWC2RoEZVEMhIUDpIPc+BpY2rjKqN4qL9F9YljIQRRG2dwzvSST4TlQ7dIHlI
+	NXdC16OY=
+X-Gm-Gg: ASbGnctwSCyCw1+qTpeo4dw1iVAXLCXA6Zbk5zCkrBQ+qoRhRc1o4Lxo/9j/qJ1z+Sc
+	JVuMNuV19bONClIVMR5AVKmyDhF3DJpM08LygRY9GDWFM5Jr7yUt5B2AAV9Ooi6Q3ZCzcfKPA9t
+	rkxg6mD+P9m4HwFoK4jDTUEyzh99qVtW7zLE3mgUr1XbHGr/qlqf0c429VrsXox0HXYLmEF0y11
+	RujtfkNDuz+uKz2SeNHahG5aKLFrSicsfow+L5PCjXTy8V2Whs7mJ79EMxQGglDoX93qJQn0u0V
+	wIGG1rMtpMUf8xHL9SHBtvsAc3xI+1ccpwhGU5LqTKfY0gOUROCTetiscXRh2E57sH7FHlQX9uI
+	WDQ==
+X-Google-Smtp-Source: AGHT+IF9vG727gdXjZJJB2mJs18JTWpDw9L1lyEsGwm5J9cJLF4nYoR1uT6I1BXoR1zcBSJ/THuMnA==
+X-Received: by 2002:a05:600c:5809:b0:453:9b3:5b58 with SMTP id 5b1f17b1804b1-4532c2a48cbmr22424125e9.4.1749736902805;
+        Thu, 12 Jun 2025 07:01:42 -0700 (PDT)
+Received: from MacBook-Air.local ([5.100.243.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25f207sm21571515e9.35.2025.06.12.07.01.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 07:01:16 -0700 (PDT)
-Date: Thu, 12 Jun 2025 11:03:01 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <aEreFQUZXsdsgBSm@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1749582679.git.marcelo.schmitt@analog.com>
- <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
- <aEifWXPV1nsIyWbT@smile.fi.intel.com>
- <aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
- <aErMgh6AKVStF4rQ@smile.fi.intel.com>
+        Thu, 12 Jun 2025 07:01:42 -0700 (PDT)
+Date: Thu, 12 Jun 2025 17:01:39 +0300
+From: Joe Damato <joe@dama.to>
+To: Shannon Nelson <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, brett.creeley@amd.com
+Subject: Re: [PATCH net-next 3/3] ionic: cancel delayed work earlier in remove
+Message-ID: <aErdwwvIHq8L7WBM@MacBook-Air.local>
+Mail-Followup-To: Joe Damato <joe@dama.to>,
+	Shannon Nelson <shannon.nelson@amd.com>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, brett.creeley@amd.com
+References: <20250609214644.64851-1-shannon.nelson@amd.com>
+ <20250609214644.64851-4-shannon.nelson@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,53 +82,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aErMgh6AKVStF4rQ@smile.fi.intel.com>
+In-Reply-To: <20250609214644.64851-4-shannon.nelson@amd.com>
 
-On 06/12, Andy Shevchenko wrote:
-> On Wed, Jun 11, 2025 at 06:04:49PM -0300, Marcelo Schmitt wrote:
-> > On 06/11, Andy Shevchenko wrote:
-> > > On Tue, Jun 10, 2025 at 05:31:25PM -0300, Marcelo Schmitt wrote:
+On Mon, Jun 09, 2025 at 02:46:44PM -0700, Shannon Nelson wrote:
+> Cancel any entries on the delayed work queue before starting
+> to tear down the lif to be sure there is no race with any
+> other events.
 > 
-> ...
+> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
+> ---
+>  drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> > > > +	return spi_write(st->spi, st->tx_buf, size + 2);
-> > > 
-> > > ... + sizeof(reg) ?
-> > 
-> > The size of the specific ADC register is stored in the size variable.
-> > The result of sizeof(reg) can be different on different machines and will
-> > probably not be equal to the size of the register in the ADC chip.
-> 
-> Hmm... But shouldn't we have a variable type that respects the sizeof() of the
-> register in HW to keep it there? 2 is magic.
-> 
-I'll add a define for that constant.
-For clarification, there is a 2 byte instruction phase during which the driver
-sends the R/W flag and register address. After that, it sends the data to be
-written to the register. There are 1 byte, 2 byte, and 3 byte long registers.
-So, the total transfer length is 2 + reg size.
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c b/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
+> index 4c377bdc62c8..136bfa3516d0 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
+> @@ -409,6 +409,7 @@ static void ionic_remove(struct pci_dev *pdev)
+>  	timer_shutdown_sync(&ionic->watchdog_timer);
+>  
+>  	if (ionic->lif) {
+> +		cancel_work_sync(&ionic->lif->deferred.work);
+>  		/* prevent adminq cmds if already known as down */
+>  		if (test_and_clear_bit(IONIC_LIF_F_FW_RESET, ionic->lif->state))
+>  			set_bit(IONIC_LIF_F_FW_STOPPING, ionic->lif->state);
 
-...
-> 
-> > > > +	/* Assume AVSS at GND (0V) if not provided */
-> > > > +	st->vrefs_uv[AD4170_AVSS_SUP] = ret == -ENODEV ? 0 : -ret;
-> > > 
-> > > -ret ?!?!
-> > 
-> > That's because AVSS is never above system ground level (i.e. AVSS is either GND
-> > or a negative voltage). But we currently don't have support for reading negative
-> > voltages with the regulator framework. So, the current AD4170 support reads
-> > a positive value from the regulator, then inverts signal to make it negative :)
-> 
-> This needs a good comment and ideally a TODO item in the regulator framework.
-> (It might be easy to implement by adding a flag without changing the type of
->  the field, if it's unsigned.)
+Wanted to note that it seems this could be called twice in this path?
 
-I'll add a TODO mark and expand the comment in the driver.
-Not sure about sending a patch only adding a TODO to the regulator framework.
-Aren't developers expected to propose things?
-I'm anticipating 'talk is cheap, show me the code' coming.
+Once above and then a second time in ionic_lif_deinit, although
+ionic_lif_deinit seems to be called from other paths (like fw down?), so
+that's probably OK.
 
-
-Thanks,
-Marcelo
+Reviewed-by: Joe Damato <joe@dama.to>
