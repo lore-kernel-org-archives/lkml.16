@@ -1,263 +1,187 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2066.outbound.protection.outlook.com [40.107.92.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BB92D1F72;
-	Thu, 12 Jun 2025 19:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94B72C325B;
+	Thu, 12 Jun 2025 19:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754908; cv=pass; b=icCYHYsLZjRC4LJhLZWwkGXCkpg3V3Q4xozutkRg2/lIj/6PDP1u9HZk+TiPknTgDlbrGFEoKS2UCLAdv5WWYPpjbuWvXZeICBwZAYSzDmQISIKCTbT6ELcoSmjhYbZn2TyNXBna9w9E7crMZIXP3mFoKdYc+bHNFj4N6ogIAUI=
+	t=1749755024; cv=fail; b=HaVmW541DFajGBtR+IshSnZW22C3O977eN0p7tyXGhBMukDpDHQQ9o/HCoYg4x0XYebY0FkmhbVJ7H0iv7yhFWc/LN4QNZB9BjJjNDl/fVT+ZrLI0GATYNFQ9J03HV6AiGcVIWXMewt7X3933ERJO7PjKy3hqyRd1uOLoqXuUO4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754908; c=relaxed/simple;
-	bh=mZD77SZcH1gDijOn4xxFCpLnXQKxP72IzxOzF3zD1wo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IXeZTR46m8hecB5oc1nZH0Nlfx1B2wxWDt+Np74GbAdOc9PglSTaSSPv/4FaNYTD8UMbTz2RQpl2eG1IaqQkzKRfhwYWiBjYo1UFOm3iaKGm+a0cGiWXc72i19GOkn8cd5/iTs+CKD/i1W/x+M3QcwO5vn4ljBXWPDV4Znptovw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=CIy7jthP; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749755024; c=relaxed/simple;
+	bh=9y7LBmjuLN5oAqOEc/5bgtT/IegfHIbLNX0hLCx0mxs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AZS5Q73vhPcg3F3zdISIPHcuEnp3Ni9QJ40LvZUYCpdiJ/+398lkaT3nE3F5ClWqgIpVOfH91YF8WlVV94N0Hx8cxkEcUVb7rK+wII5oAwsYLYxCqSLZsM9xkv6VMpvFVHRwCSHi2a31CXrjIV+1EYqB/NKiBmeKENWSkMsKYkQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EXvLchgI; arc=fail smtp.client-ip=40.107.92.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="CIy7jthP"
-ARC-Seal: i=1; a=rsa-sha256; t=1749754847; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=U1rUZbpAXUp7ntMrJjmQxF4hNpsjurE8G9vz0ufQ5/NDfrmWFlR7OBMSXjgVqeYOYnpV90kF7aQVyHtqlyZKQikJaPfmYoz2l0VrUeshaV/o9IrM0MErUWp7mXL4Ah9v93mZx176tRj/VvZUZUWGTUgVG2R5v1l4IGN/VP+igJQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749754847; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=hOlEtywVoaa9GYHyWTuEQ+Doi2prp9NQsnYCAZDXUrY=; 
-	b=PLN+3wAR17snXoAKJ7sDFCkMSRdH4ud+br+G2w5rOoLh9SFk8Erg2mrrLjXpHJkav3z+y+68g0yYfe/OoZVU7QTCfuQeOxlmHcSb3Nx+PmN4cqJbzw9lIfZLVOefhtqfYJBTaXfAkqNXSAgFDXnMP3K384zU2s6rWl7N5DN3zoA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754847;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=hOlEtywVoaa9GYHyWTuEQ+Doi2prp9NQsnYCAZDXUrY=;
-	b=CIy7jthP0vmYmRBLGe3ArudzrJYd57ADhv2sXVxobeAF3HjHq+BVAfNW3YDlLxzH
-	NRfoC35x8e9/TT/8bnO0pp96cuHlFEzgLzeoE+OAf2fqxqA+nCGwybx6Gg4xSvOANiD
-	mEb/rqHQsJW6lwwJXB8KXabrA82pmDgAwoyVLU0s=
-Received: by mx.zohomail.com with SMTPS id 174975484621575.10184870586033;
-	Thu, 12 Jun 2025 12:00:46 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 12 Jun 2025 20:56:22 +0200
-Subject: [PATCH 20/20] phy: rockchip-pcie: switch to HWORD_UPDATE macro
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EXvLchgI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=O8j/LdfpKOG0cBnLMcNGhHetbaz4awRvAnhk8GduymKpX5H5Szh5dFsnJmRRsH80MOg34rLo7QDoJTzqYjkoZN/B59/ab/rt1AoCa6ZPReeuZo3AqCGNLOgMyFFHta28beuPj/i7HXG55tjCXLy6SAKHnnQ4wLGBBHeqccm4c5FVKcnfMyJM5V3TErwisCSEEyrqAthw3J9sexYMgO0igAjXvi7+xAvQ2N6qukNtzz051Yq82XEB+1YGXG9WSyXdHFJAKDxsVIRfx6fw2hf+DyxZH4JWf1F24PIqpdnA0k30UaVIODSio8Psb8BQWfOAmvLn+iTKnLrPsyF+R0BPnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6ZPdlS1rQ0VvIRt+i4YQIF0sgZYmqbfMuuc+llMdQaE=;
+ b=NmKwSRquWSGaVUgiBEp79bdI+j14FoNWuvjptk9H65+dI8lizlr0TxfJ8cgFhgMeLRjvIUfppQqD/qbKj4ZnUMGgSFIB2z0jeDALBsdOT7BMQyjsmoqj5K/5wJw10Xq1nqsQCl91jMx2ia6gOC9+CCMRlc/cZEMNx1fSUK1rIMgzFfcFO9NRFmtaJ2S6JoPGesMD22WKPhCH4miB5Aqi6bMa4h152i1l2ag41WIQGN3Ut2rjEyHeItl064CoTIPRa8ugTrQynSsHNE0g1Zj1DG3deNphmnqD2PSCEYqsXPPZsMqgIfalGf3BfBpjQlLH3Zifpv/Oum92iQXC0HRZIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=linutronix.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6ZPdlS1rQ0VvIRt+i4YQIF0sgZYmqbfMuuc+llMdQaE=;
+ b=EXvLchgI64H324uZftH0CUXDENAKgsQKBFw9uy607wNYebYkntjE7ARq91+Wt+JqRQQG/QlYk6ji88hdIdtqna48C4sbTLA02V/t7qPCUoZFlAtlqfsMiOv2o1Qh/XlJY5RlqT8gd7soa/G2qP8rYCuiz+h/dORk0RqtJ00tsjaXSGUFqKLV80B9jKQdU14OPbx01gNaIjQrogHFsqEzTM5hFjfuLKC4JMET7qpxjUDoaAL6QMSwgEQp+woznmpgudiPOodkZyZtUNDF/IxCKxx2wFMavDVVSwiMWwx/XLkrmGWaDBDApqzdGNDYiZfEqpbERi3B9kMnGEcOnA4y1A==
+Received: from BN0PR02CA0015.namprd02.prod.outlook.com (2603:10b6:408:e4::20)
+ by CY8PR12MB7513.namprd12.prod.outlook.com (2603:10b6:930:91::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.40; Thu, 12 Jun
+ 2025 19:03:39 +0000
+Received: from BL6PEPF0001AB75.namprd02.prod.outlook.com
+ (2603:10b6:408:e4:cafe::12) by BN0PR02CA0015.outlook.office365.com
+ (2603:10b6:408:e4::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.17 via Frontend Transport; Thu,
+ 12 Jun 2025 19:03:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL6PEPF0001AB75.mail.protection.outlook.com (10.167.242.168) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Thu, 12 Jun 2025 19:03:39 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 12 Jun
+ 2025 12:03:20 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 12 Jun
+ 2025 12:03:20 -0700
+Received: from nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 12 Jun 2025 12:03:17 -0700
+Date: Thu, 12 Jun 2025 12:03:14 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, "Willy
+ Tarreau" <w@1wt.eu>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
+	<linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Andy Lutomirski
+	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown
+	<broonie@kernel.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
+ into test metadata
+Message-ID: <aEskchlFcNL3T6sO@nvidia.com>
+References: <20250611235117.GR543171@nvidia.com>
+ <aEp6tGUEFCQz1prh@nvidia.com>
+ <20250612135802.GU543171@nvidia.com>
+ <20250612162151-1fc97a6c-a1c9-4656-997e-fd02f5f9418b@linutronix.de>
+ <20250612145801.GV543171@nvidia.com>
+ <20250612171437-450fb7d6-c73a-47e3-9e1c-5c009cba7fe1@linutronix.de>
+ <20250612154242.GW543171@nvidia.com>
+ <aEsUGP8xPTDjG0ob@nvidia.com>
+ <aEsiJFku+wR9KxE8@nvidia.com>
+ <20250612185613.GX543171@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-byeword-update-v1-20-f4afb8f6313f@collabora.com>
-References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
-In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
-To: Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shreeya Patel <shreeya.patel@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
- MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
- linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250612185613.GX543171@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB75:EE_|CY8PR12MB7513:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55034f0c-3173-4384-8b1d-08dda9e3d76b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ERcuyYppuELCD3x5oiWrn1NeHO1U6F+J0KWUDdlLuPHuOgT3hSvSaqiYjv7V?=
+ =?us-ascii?Q?HO7kGceMTMCbXZjWPUG04tnV28QbVqpGCKo/cxX0D7bJQ65EJRyErxvBfKGa?=
+ =?us-ascii?Q?6QDyrfMjnF2xWVoZChRpNpyevq6WUNW42WjAZH/t9xsmDrQs6CLKitH5qqpi?=
+ =?us-ascii?Q?rfiapQkYt+j/S+GS3SclxjwBfHcxjdvIuwGbHA47ZbIZYfEWfpXiNJoa8eT2?=
+ =?us-ascii?Q?nJUisI4UoJM+u7iKC/7CfTdWNjPndIU1r5lIBct9kjV7JsQA6LI+NHqS+8YL?=
+ =?us-ascii?Q?Xc3mXzyMYKOSrGXcFtqEx5cpANDh0XX43ZJZ+0ydh7HqbjcaF2y3/9SQE8u0?=
+ =?us-ascii?Q?MQdYKORGAkeHaFs4jqai7I0Ag7zXtiLYtQiMhK176XILhe7cc66eABj7Z8A1?=
+ =?us-ascii?Q?hRn3RMp1P2mTDuWbpHyXjSdkbEl/0IVHYB/VNdeQctXGDxLZlSU6gWdC0dh5?=
+ =?us-ascii?Q?JVL7hbZ1vSY/QG2R1Kx4feEFHULm4ZmHtJG1zEvLHtzOQC75cABOEDHWq6TN?=
+ =?us-ascii?Q?2vOw46X9xLIKNu41FIVS4L9p525hp6TOykdnd5vGaaL0oUjbUDSsBxeq5gPe?=
+ =?us-ascii?Q?gmcrsLoO1jf5zPJkWST0EE80cf3co2lF4+llLqoAn8NPz2XN7p4i+LEQeITh?=
+ =?us-ascii?Q?KR9kLUlfOffdNdjvImhVXJX0UT0QnEENB9bSn1Mow+w5nUb1DLf4nrAcFgwL?=
+ =?us-ascii?Q?vC/bT0upFYlLMYodbFOS4fa/qJsdoui1dx6cu3pWT7CO6iQsUDSxN3BbSw1h?=
+ =?us-ascii?Q?7qFxIfeEwPNV7jZDY2Pm6n3XsCNPGOEkTzEXxhVDeG0rAy5SdJp3qC/OxsZf?=
+ =?us-ascii?Q?tmgPMslDFfxWpHTV3hxCrOyCbuYgxyaRBFEJmacNMnRodNuq+4auC+grEfWu?=
+ =?us-ascii?Q?thUGaIn4mNKD5HZtzi1oIudD1tGyI0+tdSePjpwu1R4FKBmeezq/GNpxUqn2?=
+ =?us-ascii?Q?+GPu7sA4vsJLtUhZuBCpnjqhDkyI8GeQe7j6dt5DPc75sWdMJrcU3jkGvKZq?=
+ =?us-ascii?Q?C8IwgY0mi1TU3U3qfpjF/91PkcDkKmL+vCSeFtWcQiyWAcnSF9eUCNj5YHwY?=
+ =?us-ascii?Q?mat2K9BUYsvwPmA2WC9gNZBl69tpvK5iwpHPIuNajG70e/9gX6JSqwxj+iaY?=
+ =?us-ascii?Q?yVZ+y18h+2sKtQNUkbS35uOOaAoegO3cdMqYugjUXuvfXWdDp+7XBMSP2hWw?=
+ =?us-ascii?Q?D3OIewM8e8c2IEZ3vnpysySzn/gpxUqV/lRi96112Ci0oeIEhPxnl0++z84l?=
+ =?us-ascii?Q?1j3yZYZPekKqgbP/mSj9U1EtZU9jct/3WDnbJeX/RCRlhYWrX6ya9AketAnY?=
+ =?us-ascii?Q?U+4Co4jnItt6oLaR2ehBIGfHWBsls/QgWuof/nJkjfZYAUZCdp9Ly4r/veqM?=
+ =?us-ascii?Q?1dSBgkQCKPZuBaVYN2UFavHJjlLBc8c13erSEJHPlNFIDxxfNP15wa3UZdwF?=
+ =?us-ascii?Q?xOykxNgH+ythO2JaimUuECBnPgOxxmsFTBrWRxCw1vfd26BQMdWCop8iSTs6?=
+ =?us-ascii?Q?XyioI0GG80zv0Sr2W1n/5AncH3X4jTSBfKjT?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 19:03:39.1230
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55034f0c-3173-4384-8b1d-08dda9e3d76b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB75.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7513
 
-The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-drivers that use constant masks.
+On Thu, Jun 12, 2025 at 03:56:13PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jun 12, 2025 at 11:53:24AM -0700, Nicolin Chen wrote:
+> > @@ -2022,7 +2023,19 @@ FIXTURE_SETUP(iommufd_dirty_tracking)
+> >         self->fd = open("/dev/iommu", O_RDWR);
+> >         ASSERT_NE(-1, self->fd);
+> > 
+> > -       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
+> > +       if (variant->hugepages) {
+> > +               /*
+> > +                * Allocation must be aligned to the HUGEPAGE_SIZE, because the
+> > +                * following mmap() will automatically align the length to be a
+> > +                * multiple of the underlying huge page size. Failing to do the
+> > +                * same at this allocation will result in a memory overwrite by
+> > +                * the mmap().
+> > +                */
+> > +               size = __ALIGN_KERNEL(variant->buffer_size, HUGEPAGE_SIZE);
+> > +       } else {
+> > +               size = variant->buffer_size;
+> > +       }
+> > +       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, size);
+> >         if (rc || !self->buffer) {
+> >                 SKIP(return, "Skipping buffer_size=%lu due to errno=%d",
+> >                            variant->buffer_size, rc);
+> > 
+> > It can just upsize the allocation, i.e. the test case will only
+> > use the first 64M or 128MB out of the reserved 512MB huge page.
+> 
+> The MAP_HUGETLBFS is required that is the whole point of what it is
+> doing..
 
-The Rockchip PCIe PHY driver, used on the RK3399, has its own definition
-of HIWORD_UPDATE.
+I am not quite following this.. MAP_HUGETLB will be still set.
 
-Remove it, and replace instances of it with bitfield.h's HWORD_UPDATE.
-To achieve this, some mask defines are reshuffled, as HWORD_UPDATE uses
-the mask as both the mask of bits to write and to derive the shift
-amount from in order to shift the value.
+And the underlying selftest case is using:
+	MOCK_HUGE_PAGE_SIZE = 512 * MOCK_IO_PAGE_SIZE
 
-In order to ensure that the mask is always a constant, the inst->index
-shift is performed after the HWORD_UPDATE, as this is a runtime value.
+Does it matter if the underlying allocation has an overshot?
 
-From this, we gain compile-time error checking, and in my humble opinion
-nicer code, as well as a single definition of this macro across the
-entire codebase to aid in code comprehension.
-
-Tested on a RK3399 ROCKPro64, where PCIe still works as expected when
-accessing an NVMe drive.
-
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- drivers/phy/rockchip/phy-rockchip-pcie.c | 72 ++++++++++----------------------
- 1 file changed, 21 insertions(+), 51 deletions(-)
-
-diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index bd44af36c67a5a504801275c1b0384d373fe7ec7..7c486ecb96ffe1589fa077d7d2b079e02f4f6769 100644
---- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-+++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -6,6 +6,7 @@
-  * Copyright (C) 2016 ROCKCHIP, Inc.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/io.h>
-@@ -18,23 +19,14 @@
- #include <linux/regmap.h>
- #include <linux/reset.h>
- 
--/*
-- * The higher 16-bit of this register is used for write protection
-- * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-- */
--#define HIWORD_UPDATE(val, mask, shift) \
--		((val) << (shift) | (mask) << ((shift) + 16))
- 
- #define PHY_MAX_LANE_NUM      4
--#define PHY_CFG_DATA_SHIFT    7
--#define PHY_CFG_ADDR_SHIFT    1
--#define PHY_CFG_DATA_MASK     0xf
--#define PHY_CFG_ADDR_MASK     0x3f
--#define PHY_CFG_RD_MASK       0x3ff
-+#define PHY_CFG_DATA_MASK     GENMASK(10, 7)
-+#define PHY_CFG_ADDR_MASK     GENMASK(6, 1)
-+#define PHY_CFG_RD_MASK       GENMASK(9, 0)
- #define PHY_CFG_WR_ENABLE     1
- #define PHY_CFG_WR_DISABLE    1
--#define PHY_CFG_WR_SHIFT      0
--#define PHY_CFG_WR_MASK       1
-+#define PHY_CFG_WR_MASK       BIT(0)
- #define PHY_CFG_PLL_LOCK      0x10
- #define PHY_CFG_CLK_TEST      0x10
- #define PHY_CFG_CLK_SCC       0x12
-@@ -49,11 +41,7 @@
- #define PHY_LANE_RX_DET_SHIFT 11
- #define PHY_LANE_RX_DET_TH    0x1
- #define PHY_LANE_IDLE_OFF     0x1
--#define PHY_LANE_IDLE_MASK    0x1
--#define PHY_LANE_IDLE_A_SHIFT 3
--#define PHY_LANE_IDLE_B_SHIFT 4
--#define PHY_LANE_IDLE_C_SHIFT 5
--#define PHY_LANE_IDLE_D_SHIFT 6
-+#define PHY_LANE_IDLE_MASK    BIT(3)
- 
- struct rockchip_pcie_data {
- 	unsigned int pcie_conf;
-@@ -100,22 +88,14 @@ static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
- 			      u32 addr, u32 data)
- {
- 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
--		     HIWORD_UPDATE(data,
--				   PHY_CFG_DATA_MASK,
--				   PHY_CFG_DATA_SHIFT) |
--		     HIWORD_UPDATE(addr,
--				   PHY_CFG_ADDR_MASK,
--				   PHY_CFG_ADDR_SHIFT));
-+		     HWORD_UPDATE(PHY_CFG_DATA_MASK, data) |
-+		     HWORD_UPDATE(PHY_CFG_ADDR_MASK, addr));
- 	udelay(1);
- 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
--		     HIWORD_UPDATE(PHY_CFG_WR_ENABLE,
--				   PHY_CFG_WR_MASK,
--				   PHY_CFG_WR_SHIFT));
-+		     HWORD_UPDATE(PHY_CFG_WR_MASK, PHY_CFG_WR_ENABLE));
- 	udelay(1);
- 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
--		     HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
--				   PHY_CFG_WR_MASK,
--				   PHY_CFG_WR_SHIFT));
-+		     HWORD_UPDATE(PHY_CFG_WR_MASK, PHY_CFG_WR_DISABLE));
- }
- 
- static int rockchip_pcie_phy_power_off(struct phy *phy)
-@@ -126,11 +106,9 @@ static int rockchip_pcie_phy_power_off(struct phy *phy)
- 
- 	guard(mutex)(&rk_phy->pcie_mutex);
- 
--	regmap_write(rk_phy->reg_base,
--		     rk_phy->phy_data->pcie_laneoff,
--		     HIWORD_UPDATE(PHY_LANE_IDLE_OFF,
--				   PHY_LANE_IDLE_MASK,
--				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_laneoff,
-+		     HWORD_UPDATE(PHY_LANE_IDLE_MASK,
-+				  PHY_LANE_IDLE_OFF) << inst->index);
- 
- 	if (--rk_phy->pwr_cnt) {
- 		return 0;
-@@ -140,11 +118,9 @@ static int rockchip_pcie_phy_power_off(struct phy *phy)
- 	if (err) {
- 		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
- 		rk_phy->pwr_cnt++;
--		regmap_write(rk_phy->reg_base,
--			     rk_phy->phy_data->pcie_laneoff,
--			     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
--					   PHY_LANE_IDLE_MASK,
--					   PHY_LANE_IDLE_A_SHIFT + inst->index));
-+		regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_laneoff,
-+			     HWORD_UPDATE(PHY_LANE_IDLE_MASK,
-+					  !PHY_LANE_IDLE_OFF) << inst->index);
- 		return err;
- 	}
- 
-@@ -172,15 +148,11 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
- 	}
- 
- 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
--		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
--				   PHY_CFG_ADDR_MASK,
--				   PHY_CFG_ADDR_SHIFT));
-+		     HWORD_UPDATE(PHY_CFG_ADDR_MASK, PHY_CFG_PLL_LOCK));
- 
--	regmap_write(rk_phy->reg_base,
--		     rk_phy->phy_data->pcie_laneoff,
--		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
--				   PHY_LANE_IDLE_MASK,
--				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_laneoff,
-+		     HWORD_UPDATE(PHY_LANE_IDLE_MASK,
-+				  !PHY_LANE_IDLE_OFF) << inst->index);
- 
- 	/*
- 	 * No documented timeout value for phy operation below,
-@@ -211,9 +183,7 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
- 	}
- 
- 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
--		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
--				   PHY_CFG_ADDR_MASK,
--				   PHY_CFG_ADDR_SHIFT));
-+		     HWORD_UPDATE(PHY_CFG_ADDR_MASK, PHY_CFG_PLL_LOCK));
- 
- 	err = regmap_read_poll_timeout(rk_phy->reg_base,
- 				       rk_phy->phy_data->pcie_status,
-
--- 
-2.49.0
-
+Thanks
+Nicolin
