@@ -1,80 +1,112 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CA3248888;
-	Thu, 12 Jun 2025 14:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD51B248867
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739285; cv=none; b=lMmWGjXqY7srxbN+VEYgE0E8hGxz9jRztJ8m6D+rhXG9HD0uoa9D3B6WJ9rYifV0vocUc8nsmuIup5W7Yd+2X5uWapEwv3qg296MjJsLpx7vHj4SE4EQWw0/tzCIKVS8QSPjT3nVBnBLXml/6z4x93CKRmzDKZTygrNiwTQtcLI=
+	t=1749739355; cv=none; b=APme95KrBgRsGyrnskkZpel9QWkgm2SRei4TNPWIXY1ON4SkTG64F0RuZrOsZnbNl5LxBj0PoMnDNUWyz3TE2cqAb/VuZAwVoqtZruSZaLXwgtY/bev3dc3wmGBmIHUQrSnGPUKtAMk6rkrIQuJrE+eA2QFmwsnA10mSQ8y5MqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739285; c=relaxed/simple;
-	bh=LFbsH10WLiGBngvFPh44/deNfnqtaymDaLb4kT/e05U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=krdIU2bVQ+Uu7hG94w4zJKdrao37djGpRiCMLe+dMx1K8cW+V1gb4Vfgm0EJ81HC7jXDfOQyygm+ZmSs6vvIo4ZDlnBqcnxzPuaPxGCSiC8U4Ge/XCap4vGEwyxR/X1tQshAoGMUwudsVrhOmtdLVQNEknGpseNp7FQflQjU4fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id CEB5D1A1783;
-	Thu, 12 Jun 2025 14:41:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 74D8122;
-	Thu, 12 Jun 2025 14:41:17 +0000 (UTC)
-Date: Thu, 12 Jun 2025 10:41:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, David Hildenbrand <david@redhat.com>,
- Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] mm, x86/mm: Move creating the tlb_flush event back to
- x86 code
-Message-ID: <20250612104115.039a3817@batman.local.home>
-In-Reply-To: <2aec964c-ed7d-4e37-9649-cc0d20469142@intel.com>
-References: <20250612100313.3b9a8b80@batman.local.home>
-	<2aec964c-ed7d-4e37-9649-cc0d20469142@intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749739355; c=relaxed/simple;
+	bh=DyUPyYKSPutkrhnWKupXTc7jwGYipmVB2DqQ9I24XrI=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=kkmHW2r6L5ZSn7Ax3wANfkqacfE0Xhu2+7NWimXxNvIEE37OwBwaqAaR+5zlMPfaR0pxkKyT5OcFfHgpjfmBtb1banFZUkqkuY5cL6ACX+UzSTqdnzAUe9kebMSzYEa7NfUITrheGoropjTfOx3qIoYxlI4j+4HPK1OzntGUBqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=NI8f1bka; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="NI8f1bka"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1749739346; bh=NToeTN6IU0WmTBBtUA+yvRVHRrqzzw7NRPGo0vASSpY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=NI8f1bkaAj520LZJ2iKFwTwi1b0GeL/GeF7qMjRTHjOJjJoUfItFJ3iPvwHoDiivl
+	 m2eKlvguJOtZwt25X3mNFsqMx3fUgk9YFoiMijqYPODdRoMdTY2uG3Cngbn1SGLdRP
+	 2nbV4N6HLPvTnpo25JFygAMIGORl6sA4nyNhlvXQ=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 7452329B; Thu, 12 Jun 2025 22:29:05 +0800
+X-QQ-mid: xmsmtpt1749738545t1wilvvox
+Message-ID: <tencent_AF9E831B6F4B5F1B1A251EBA5ABBBA33E808@qq.com>
+X-QQ-XMAILINFO: MmuCfgcSBfHxgqwkTzhmftflY5Sc2yUe5WbRIbDxg6FZ+OtSbwCrmhEUkDzoQB
+	 t3Licjb9XzdpB+IDqxpSKrFbB6tdVZxckuVbxsNc/2UOEXtcy286TZkF3VQgXXcq+DeeHDqlom5s
+	 KH0GknF9IBOrV1sZ45PTA6pwidVolCim9xI0rdKTzgN7F0GwjelPU+Gs7qeNhX9iioiRn/98D1Sb
+	 7u1tNJ/vBF5syR8PypnyVIUAhQ7Gmmm6SJBpLH0wVSfL54RBpw1q8kbe8rUIyck0te5oFpC4mk1j
+	 9si8z5IFb6RinFuxTb5nzGFRSfMbj/6mKdk/XZy0jh42cG1hvgM6bSi0ADXeDzGHbHPmVrHcJMsg
+	 RL4vZ10kQJrGRprrpp02u2lgu8ISzqSQAbW8eifDDPHDuk5Mg2chSWgSJQ671+c/0JQ19GMGGKzW
+	 R3S5XWHPLumKe18lRccj6FIbrxmDKoiFBHAubQ3PFpoNZzPKR5jl2Mh35iPPaV6ukWC/s+RNNNnf
+	 fJamFPjWgMFj74DlkrYOGBIBA+qrfMGWPNd0Dz91EEUrg3bYQUDEqWABmMnRuyWS1VwaQag4Z0TQ
+	 mDpqsS2vXpL4NclN16H6gxsf7ZW/ZsceKoGXmtUdwcd32nW95o7QBGHx7W2zJpjcH60PNjCifjZE
+	 ZzaLIe5Utw71aBn0Kh5G27zlrgFqcl9Mb/WqEjiHo3dJebRER0N69oHfc8Z6O4Nl2KcQBsbjT78w
+	 9fZyd1gn8fWhfl3R7C9GZ5Dp6K76ngakVu2HnhyFR33WLw9OEFR9q+7RUWBW6eIHTtFaKQb7ZfU7
+	 RvxdGFPLgc2FJPd9YCQ5dQaj6xEAIQ0GxdBsQO2zdrZw+30w3PcI+0fJ3SHPY+ikJAXXeN3vXB27
+	 yYqIoaUZz3clka0H6Q7c9ykuSZWU2KEA0WGKOM3OHwvru3Hq5tfvnnGEBx24zseojTVEyrNa7qEd
+	 Bzt4VFeV0pIN+s/YNV2eTWoiux+tIIFEDWA72HvOgFa/ysgR1Kpyk+lbj+0j/EVGoKDGV31YT36F
+	 WbzhcRcg==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [overlayfs?] WARNING in ovl_listxattr
+Date: Thu, 12 Jun 2025 22:29:05 +0800
+X-OQ-MSGID: <20250612142905.2754914-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <6828591c.a00a0220.398d88.0248.GAE@google.com>
+References: <6828591c.a00a0220.398d88.0248.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 74D8122
-X-Stat-Signature: 14hjkb4s3yoff3wm6gf659x3bwz7783f
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX196er8TgFlcvZzFV7v1dZa9COTqpYsEhew=
-X-HE-Tag: 1749739277-873154
-X-HE-Meta: U2FsdGVkX18wyPL2yuue7VL02ph12FgTwvegfaD4iTi35/VWqfSPLmLSGyNWfO2TO40aBJ4fT8UNWbBF5M5sSxew+Vv9NO8j4KZIoq0bByed8Fk7orVUocN2xfl2i3omDu2fDOwQB954fenIF65SwV5zmPVfre53F+YzfzeYzN4G1ZvNGWEQQtrhDf1uV4cvgNLOUMr5HnOVfzKGHoN2ym+0r53vP2dKCr4I/dCkFtOIg/MlaXGtA2QpYO1iHgF76TZ87v9qt4jfNvVTNtVf/5t7meV7cTL+1mcBe1Q/6rEdETi1BTP1ShfcYZx0yZ3SkCWuLWB+HAuxyv5Aml3PCLJZOgNZ0YYJ
+Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Jun 2025 07:06:47 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
+#syz test
 
-> On 6/12/25 07:03, Steven Rostedt wrote:
-> > Remove the events/tlb.h from mm/rmap.c and add the define
-> > CREATE_TRACE_POINTS back in the x86 code.
-> > 
-> > Fixes: 4cc79b3303f22 ("mm/migration: add trace events for base page and HugeTLB migrations")  
-> 
-> Is this a big enough problem that it deserves a cc:stable@?
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 8ec5b0204bfd..3751c9306274 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -491,6 +491,7 @@ vfs_listxattr(struct dentry *dentry, char *list, size_t size)
+ 
+ 	if (inode->i_op->listxattr) {
+ 		error = inode->i_op->listxattr(dentry, list, size);
++		printk("buf: %s, size: %lu, res: %ld, sb: %s, %s\n", list, size, error, inode->i_sb->s_type->name, __func__);
+ 	} else {
+ 		error = security_inode_listsecurity(inode, list, size);
+ 		if (size && error > size)
+@@ -1466,12 +1467,14 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
+ 	int err = 0;
+ 
+ 	err = posix_acl_listxattr(inode, &buffer, &remaining_size);
++	printk("inode: %p, buf: %s, size: %lu, res: %d, remaining_size: %ld, %s\n", inode, buffer, size, err, remaining_size, __func__);
+ 	if (err)
+-		return err;
++		goto out;
+ 
+ 	err = security_inode_listsecurity(inode, buffer, remaining_size);
++	printk("2inode: %p, buf: %s, size: %lu, res: %d, remaining_size: %ld, %s\n", inode, buffer, size, err, remaining_size, __func__);
+ 	if (err < 0)
+-		return err;
++		goto out;
+ 
+ 	if (buffer) {
+ 		if (remaining_size < err)
+@@ -1479,6 +1482,7 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
+ 		buffer += err;
+ 	}
+ 	remaining_size -= err;
++	err = 0;
+ 
+ 	read_lock(&xattrs->lock);
+ 	for (rbp = rb_first(&xattrs->rb_root); rbp; rbp = rb_next(rbp)) {
+@@ -1498,6 +1502,8 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
+ 	}
+ 	read_unlock(&xattrs->lock);
+ 
++	printk("3inode: %p, buf: %s, size: %lu, res: %d, remaining_size: %ld, %s\n", inode, buffer, size, err, remaining_size, __func__);
++out:
+ 	return err ? err : size - remaining_size;
+ }
+ 
 
-That's questionable. Without this patch, some memory is simply wasted.
-So it matters how much you care about wasted memory? On memory tight
-systems it may make a difference. But it's just one trace event, which
-would free up around 5K of memory.
-
-I put in the fixes tag here because it was an obvious mistake that the
-header file wasn't removed from rmap.c when the call to the tracepoint
-was. Hmm, I think I put in the wrong fixes tag. I should probably be
-the other commit:
-
-Fixes: e73ad5ff2f76 ("mm, x86/mm: Make the batched unmap TLB flush API more generic")
-
--- Steve
