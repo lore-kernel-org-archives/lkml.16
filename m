@@ -1,195 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0890618DB2A;
-	Thu, 12 Jun 2025 08:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309811DF270
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716014; cv=none; b=u/GJbui3PDBvl8T0M8d3D7Aunk4evCgCXDyWjffZFQ6dDcv2PA2+g2npY3FrybJCgzmkMIrls8AngT8ANk6/+Vbc4vfh+03UNSowCNyaqQvpAN/MV7Asefbdp1JjiUcUgXCOBvqffrf0zIfSfrbLyXJvBR/JwtmjPhCpFtBCiAM=
+	t=1749716061; cv=none; b=YlkJlokNTpKtB0W1aykLhX00rELUCtz39Vc0SCkGEu++dnCmkWcW+5XwgOrtvHtRx+uYs5X5bSHowT4qmg/wtoYa7d+twGnDwZt29HVHun9Mwfp8GizRgtUF4PTNm/b8SMreYq7YHoexdhSI2gu19RlwaWpGkyptKUhmtb1VfUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716014; c=relaxed/simple;
-	bh=nDMS9g+Bk/QeVRgWt7heX7r7uo+JtLzV4PyG8up0zxk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=Q+/A1DO94yYaAU8ZyVTgLGhlOfDCPoe5M8u1I7LRGIYAT7C8J1SCWmHlwFv9NREoD4jkah/LVGNOButV+3hcq1DfHHf65BfXgbexrJIRUl4rQiVmhujoHpOJGgNR9e+UwIk6kylJyJ3fbHF5FmeOBC0KfFbqsrseGjb/zOXCjfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOBfFPAk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749716061; c=relaxed/simple;
+	bh=Tsrs9NSASMWB7MB9hg+v4rruls+qG2gBrZvgzpeVemU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CluF/U1u7BJUo7Edg5CxYU+o/X1frcDqAZlfP0oQD00bJIy1PmLLv7sxYF6qbMJw+sEGvri/o21Mpkuc5f9ZyYoSnaiGwcJP17F6cIuRU6OTxMSgNTswUy2UIXf1dNe2oufND+xTqFH+v16koGF6GsnHFxzP4zCnj8N6EJ5rcN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dY02PbgA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOBfFPAk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D74B1C4CEF0;
-	Thu, 12 Jun 2025 08:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749716013;
-	bh=nDMS9g+Bk/QeVRgWt7heX7r7uo+JtLzV4PyG8up0zxk=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=UOBfFPAkqn0/5Qa8ozLrbc6kw5oNKd9Ls0uO1HhhhBOMhj2zxZTuuVJjIQqX94DBx
-	 +KgVinLXMZvTf0PLPZaXlLuH5nyLfMFuwoClSslkNl7UxSljNMpjdjlw6UEevXj72Y
-	 n9hkmKOExgvActWN43YnGocNlRH1Gzip2fBravrXYHid1jKtYEaxCzndzkQWqxskda
-	 WUwDSGGY1wsmyOaBFiMwDUZXnlHrbdE1iS+YWdKNPKbL6kEJchz5Gz6SEfsWACpUFO
-	 tmRWELy6CPa3kjRBDZGNuH2y8YQEHAwoUUXQ1qdCxjjy4aOU+Ne9jeDlol+t8X7/qn
-	 mDWnnSYD2Cikg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dY02PbgA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749716055;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kefk+0N0LQM5ub7YS4EGq9meLfOXnPVkh2ZvsWPlkfE=;
+	b=dY02PbgAQjzbWVLBrjjpbYSr34QpFvUvzJLSHfHJQ3BybQNpUt/SQpENXLuUldLL2ICUqz
+	2efD4+pl9EkBV7iyIDyhjja4ktJsslmRvMYPyt4I795pUhSIgJG2YQ768nyNbGginPZeJj
+	+BzsguUWyqTcIDU3uFzSqRRzee1H6S0=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-252-OkC26ATwNmKPaZKZas3vWA-1; Thu,
+ 12 Jun 2025 04:14:10 -0400
+X-MC-Unique: OkC26ATwNmKPaZKZas3vWA-1
+X-Mimecast-MFC-AGG-ID: OkC26ATwNmKPaZKZas3vWA_1749716048
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E45D195608D;
+	Thu, 12 Jun 2025 08:14:07 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.45.225.28])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A619319560A3;
+	Thu, 12 Jun 2025 08:14:01 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH v9 0/9] drm/i915: Add drm_panic support
+Date: Thu, 12 Jun 2025 10:00:57 +0200
+Message-ID: <20250612081344.225200-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 10:13:29 +0200
-Message-Id: <DAKEK5YPNCAU.3LQGI98GGG4KF@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] rust: devres: fix race in Devres::drop()
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250603205416.49281-1-dakr@kernel.org>
- <20250603205416.49281-4-dakr@kernel.org>
-In-Reply-To: <20250603205416.49281-4-dakr@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
-> In Devres::drop() we first remove the devres action and then drop the
-> wrapped device resource.
->
-> The design goal is to give the owner of a Devres object control over when
-> the device resource is dropped, but limit the overall scope to the
-> corresponding device being bound to a driver.
->
-> However, there's a race that was introduced with commit 8ff656643d30
-> ("rust: devres: remove action in `Devres::drop`"), but also has been
-> (partially) present from the initial version on.
->
-> In Devres::drop(), the devres action is removed successfully and
-> subsequently the destructor of the wrapped device resource runs.
-> However, there is no guarantee that the destructor of the wrapped device
-> resource completes before the driver core is done unbinding the
-> corresponding device.
->
-> If in Devres::drop(), the devres action can't be removed, it means that
-> the devres callback has been executed already, or is still running
-> concurrently. In case of the latter, either Devres::drop() wins revoking
-> the Revocable or the devres callback wins revoking the Revocable. If
-> Devres::drop() wins, we (again) have no guarantee that the destructor of
-> the wrapped device resource completes before the driver core is done
-> unbinding the corresponding device.
+This adds drm_panic support for i915 and xe driver.
 
-I don't understand the exact sequence of events here. Here is what I got
-from your explanation:
+I've tested it on the 4 intel laptops I have at my disposal.
+ * Haswell with 128MB of eDRAM.
+ * Comet Lake  i7-10850H
+ * Raptor Lake i7-1370P (with DPT, and Y-tiling).
+ * Lunar Lake Ultra 5 228V (with DPT, and 4-tiling, and using the Xe driver.
 
-* the driver created a `Devres<T>` associated to their device.
-* their physical device gets disconnected and thus the driver core
-  starts unbinding the device.
-* simultaneously, the driver drops the `Devres<T>` (eg because the
-  driver initiated the physical removal)
-* now `devres_callback` is being called from both `Devres::Drop` (which
-  calls `Devres::remove_action`) and from the driver core.
-* they both call `inner.data.revoke()`, but only one wins, in our
-  example `Devres::drop`.
-* but now the driver core has finished running `devres_callback` and
-  finalizes unbinding the device, even though the `Devres` still exists
-  though is almost done being dropped.
+I tested panic in both fbdev console and gnome desktop.
+I think it won't work yet on discrete GPU, but that can be added later.
 
-I don't see a race here. Also the `dev: ARef<Device>` should keep the
-device alive until the `Devres` is dropped, no?
+Best regards,
 
-> Depending on the specific device resource, this can potentially lead to
-> user-after-free bugs.
->
-> In order to fix this, implement the following logic.
->
-> In the devres callback, we're always good when we get to revoke the
-> device resource ourselves, i.e. Revocable::revoke() returns true.
->
-> If Revocable::revoke() returns false, it means that Devres::drop(),
-> concurrently, already drops the device resource and we have to wait for
-> Devres::drop() to signal that it finished dropping the device resource.
->
-> Note that if we hit the case where we need to wait for the completion of
-> Devres::drop() in the devres callback, it means that we're actually
-> racing with a concurrent Devres::drop() call, which already started
-> revoking the device resource for us. This is rather unlikely and means
-> that the concurrent Devres::drop() already started doing our work and we
-> just need to wait for it to complete it for us. Hence, there should not
-> be any additional overhead from that.
->
-> (Actually, for now it's even better if Devres::drop() does the work for
-> us, since it can bypass the synchronize_rcu() call implied by
-> Revocable::revoke(), but this goes away anyways once I get to implement
-> the split devres callback approach, which allows us to first flip the
-> atomics of all registered Devres objects of a certain device, execute a
-> single synchronize_rcu() and then drop all revocable objects.)
->
-> In Devres::drop() we try to revoke the device resource. If that is *not*
-> successful, it means that the devres callback already did and we're good.
->
-> Otherwise, we try to remove the devres action, which, if successful,
-> means that we're good, since the device resource has just been revoked
-> by us *before* we removed the devres action successfully.
->
-> If the devres action could not be removed, it means that the devres
-> callback must be running concurrently, hence we signal that the device
-> resource has been revoked by us, using the completion.
->
-> This makes it safe to drop a Devres object from any task and at any point
-> of time, which is one of the design goals.
->
-> Fixes: 8ff656643d30 ("rust: devres: remove action in `Devres::drop`") [1]
-> Reported-by: Alice Ryhl <aliceryhl@google.com>
-> Closes: https://lore.kernel.org/lkml/aD64YNuqbPPZHAa5@google.com/
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/devres.rs | 33 ++++++++++++++++++++++++++-------
->  1 file changed, 26 insertions(+), 7 deletions(-)
+v2:
+ * Add the proper abstractions to build also for Xe.
+ * Fix dim checkpatch issues.
 
-> @@ -161,7 +166,12 @@ fn remove_action(this: &Arc<Self>) {
->          //         `DevresInner::new`.
->          let inner =3D unsafe { Arc::from_raw(ptr) };
-> =20
-> -        inner.data.revoke();
-> +        if !inner.data.revoke() {
-> +            // If `revoke()` returns false, it means that `Devres::drop`=
- already started revoking
-> +            // `inner.data` for us. Hence we have to wait until `Devres:=
-:drop()` signals that it
-> +            // completed revoking `inner.data`.
-> +            inner.revoke.wait_for_completion();
-> +        }
->      }
->  }
-> =20
-> @@ -232,6 +242,15 @@ fn deref(&self) -> &Self::Target {
-> =20
->  impl<T> Drop for Devres<T> {
->      fn drop(&mut self) {
-> -        DevresInner::remove_action(&self.0);
-> +        // SAFETY: When `drop` runs, it is guaranteed that nobody is acc=
-essing the revocable data
-> +        // anymore, hence it is safe not to wait for the grace period to=
- finish.
-> +        if unsafe { self.revoke_nosync() } {
-> +            // We revoked `self.0.data` before the devres action did, he=
-nce try to remove it.
-> +            if !DevresInner::remove_action(&self.0) {
+v3:
+ * Add support for Y-tiled framebuffer when DPT is enabled.
 
-Shouldn't this not be inverted? (ie 's/!//')
+v4:
+ * Add support for Xe driver, which shares most of the code.
+ * Add support for 4-tiled framebuffer found in newest GPU.
 
-Otherwise this will return `true`, get negated and we don't run the code
-below and the `inner.data.revoke()` in `devres_callback` will return
-`false` which will get negated and thus it will never return.
+v5:
+ * Rebase on top of git@gitlab.freedesktop.org:drm/i915/kernel.git drm-intel-next
+ * Use struct intel_display instead of drm_i915_private.
+ * Use iosys_map for intel_bo_panic_map().
 
----
-Cheers,
-Benno
+v6:
+ * Rebase on top of git@gitlab.freedesktop.org:drm/i915/kernel.git drm-intel-next
+ * Use struct intel_display instead of drm_i915_private for intel_atomic_plane.c
 
-> +                // We could not remove the devres action, which means th=
-at it now runs concurrently,
-> +                // hence signal that `self.0.data` has been revoked succ=
-essfully.
-> +                self.0.revoke.complete_all();
-> +            }
-> +        }
->      }
->  }
+v7:
+ * Fix mismatch {} in intel_panic_flush() (Jani Nikula)
+ * Return int for i915_gem_object_panic_map() (Ville Syrjälä)
+ * Reword commit message about alignment/size when disabling tiling (Ville Syrjälä)
+
+v8:
+ * Use kmap_try_from_panic() instead of vmap, to access the framebuffer.
+ * Add ttm_bo_kmap_try_from_panic() for the xe driver, that uses ttm.
+ * Replace intel_bo_panic_map() with a setup() and finish() function,
+   to allow mapping only one page of teh framebuffer at a time.
+ * Configure psr to send the full framebuffer update.
+
+v9:
+ * Fix comment in ttm_bo_kmap_try_from_panic(), this can *only* be called
+   from the panic handler (Christian König)
+ * Fix missing kfree() for i915_panic_pages in i915_gem_object_panic_finish()
+   Also change i915_panic_pages allocation to kmalloc, as kvmalloc is not
+   safe to call from the panic handler.
+ * Fix dim checkpatch warnings.
+
+Jocelyn Falempe (9):
+  drm/i915/fbdev: Add intel_fbdev_get_map()
+  drm/i915/display/i9xx: Add a disable_tiling() for i9xx planes
+  drm/i915/display: Add a disable_tiling() for skl planes
+  drm/ttm: Add ttm_bo_kmap_try_from_panic()
+  drm/i915: Add intel_bo_panic_setup and intel_bo_panic_finish
+  drm/i915/display: Add drm_panic support
+  drm/i915/display: Add drm_panic support for Y-tiling with DPT
+  drm/i915/display: Add drm_panic support for 4-tiling with DPT
+  drm/i915/psr: Add intel_psr2_panic_force_full_update
+
+ drivers/gpu/drm/i915/display/i9xx_plane.c     |  23 +++
+ .../gpu/drm/i915/display/intel_atomic_plane.c | 169 +++++++++++++++++-
+ drivers/gpu/drm/i915/display/intel_bo.c       |  12 ++
+ drivers/gpu/drm/i915/display/intel_bo.h       |   4 +
+ .../drm/i915/display/intel_display_types.h    |   2 +
+ drivers/gpu/drm/i915/display/intel_fb_pin.c   |   5 +
+ drivers/gpu/drm/i915/display/intel_fb_pin.h   |   2 +
+ drivers/gpu/drm/i915/display/intel_fbdev.c    |   5 +
+ drivers/gpu/drm/i915/display/intel_fbdev.h    |   6 +-
+ drivers/gpu/drm/i915/display/intel_psr.c      |  20 +++
+ drivers/gpu/drm/i915/display/intel_psr.h      |   2 +
+ .../drm/i915/display/skl_universal_plane.c    |  27 +++
+ drivers/gpu/drm/i915/gem/i915_gem_object.h    |   5 +
+ drivers/gpu/drm/i915/gem/i915_gem_pages.c     | 112 ++++++++++++
+ drivers/gpu/drm/i915/i915_vma.h               |   5 +
+ drivers/gpu/drm/ttm/ttm_bo_util.c             |  27 +++
+ drivers/gpu/drm/xe/display/intel_bo.c         |  62 +++++++
+ drivers/gpu/drm/xe/display/xe_fb_pin.c        |   5 +
+ include/drm/ttm/ttm_bo.h                      |   1 +
+ 19 files changed, 492 insertions(+), 2 deletions(-)
+
+
+base-commit: 7247efca0dcbc8ac6147db9200ed1549c0662465
+-- 
+2.49.0
 
