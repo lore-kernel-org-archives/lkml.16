@@ -1,148 +1,188 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8527A17A2EA
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F6A234971;
+	Thu, 12 Jun 2025 11:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726331; cv=none; b=H6REXKla/QRGfTbo9gE5+Ke+NxfFZ8CPJH9DvnodY/EBD0Zd/8JEWaoHqase5z6CRUe9tI0Oz7foYdk4v+/mMTtFAfMdGlVYjIdfu72V5Ts3CaF023YPK7hapHF+jaXHsT7+6PC9Xrx/1hqS+sj4P25Ti7ZCZn6VXg5n7FxLyhY=
+	t=1749726343; cv=none; b=ELiBgyTCT7bgNHpI01z7nILYPPKc/YKVeMLsXbj9c222DqLzvaUsukKJvrK5VlEGwpuBfuYIj9CF/u6MB08jjDJSvg8Sq2xu4iCdM610oqo3o8V+u2NJg1MI3rFSvZRupgV26teE8ApJaH4wuS5OCV5fVoyDmN0f4yGbdScFI7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726331; c=relaxed/simple;
-	bh=VmVdPGLJWVp1Q+RRMP+IPcIfqsGTNRzvggSjlNeCNHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oEy5lTaI1uTwcem3QD30Y+7K3KWL+wV4Ug5m0PT+mszV6xQDzK91huAjkBxrw8mG1Vq0kcBNo7Sz+NXu9uJc31hVGheKLGIezTOtwSI5wazPxkSILRoqbeQGi1Q4ajLH+YPvhWq+XaNfQNWIyW79rdLLAHSLEfH51TQGiW9pi7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xGBsA9Ty; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749726343; c=relaxed/simple;
+	bh=nLSFvNhhkH/i0AW4xZZyeVQQGE39E68tSVlCKIweu8U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qecp6fc5ByBtxrjn44cgLbaxqJj9dK2td29uwJYb8QxJMBys4JsNVc/md1AxIQ7hAi4yPMzrbSZv4jLKtgW20wi9qIflLb3POXlDinLbtu9l5sdP3WMVcsTHfpUMs/o4Dj/n9omeE9+UiH6nLS0w5r0D4e7Im/WzrDWSUxCrOXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDdWQQHx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGBsA9Ty"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a528243636so519777f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:05:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749726328; x=1750331128; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N7u4uVBYqmPw4TM6JxOSbDHprNtjOfckENCh20/XDzs=;
-        b=xGBsA9Tyj0keivIGMnDoulHYNW/90tQGyMWZJbhJGjdvp5ZCOv+crARY9AlNH0JD8y
-         SdGKrCc8tPzUVeH7U7OldWGwZboemPeHxeCRZePaPWnIUa7tDLCdRfts2QU6Tnm07VyM
-         A+csCl78a8rNK5UajcVjEvolV4hpaTNk5DuEoNwD0f/USS1a7SR2gylj2PFuws0Fx7Rd
-         ox3cmUOCbGmS6d4sS/hykjgK7vBQeKzKAZs5xCibzFvk9+WW9JMgq9u0+yHOsPoNnDDk
-         pS0wYqpYy/q/zbTqV0aUPyTtqdaBVyustyeZk1V6o2MUtPWG/nT6gjojXpeFj8g1kxET
-         +MSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749726328; x=1750331128;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N7u4uVBYqmPw4TM6JxOSbDHprNtjOfckENCh20/XDzs=;
-        b=AamYaCzB5V6Qe1niRFG3VmwR7qYGu3CyO13ZDEj08DTgkEREYA959tCDiKu8ME5ZNb
-         TTZ0RhzqN9QyOia0w3P1P8bLWlhDTK/znXwYAo7Ye1GHP3bNF8nAQYVFgJ6OtTbqmzAz
-         QDsUrWT/nB/rBlU2YFehFlkOlax5ubDv2dAO/0lPwEgGuftuljv0/8O06RVhPD+AfzEX
-         RLwnKb0ke7wT+j7+GZQr96slVAorJJVb802tQXHcwRbicsUSAyegqow4OSKANbUUvuh/
-         6rN6kBtZaUsy8ZkVap0gOVldU5r4yZl30tnQ0v1OAKPEowd6OKd1ViG2GrFlqGImZVPx
-         ZNwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfiFQ4yn5G1SLkKgloormTWv+ja3xcec13wHVUxPy78Er2TP5I8y9oQ8P9DvEI+afqLYF5umkRk+V5mVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw96OdOVu9pr3drV1hXyQF3e56J8DOWCs/emNTuoCVGRFzFeLaK
-	fSh906bNEe7RHNXBxx3wyX7uMMUgJOh9JBmMpkHmc3qptkOR8/1GU/B76DUKjjj4lmc=
-X-Gm-Gg: ASbGnctrTMnYKRzVCSQ2cZE085WIk7Z8tvykDaWli0cVoZtk/AVYEFPUz9/0rJmQFyy
-	PmQgJ700hPFIrWauHVA81UHsrhAwtFAPZSmm+c5pyssF2cZ/J7CwNMt6ECGKU4w7VtAUjxCjSrM
-	XBfOUST8/yt662N1O7nreQYqppjyaDhtoMvp0aQFtPf7QPtr7aHQy6ZzgY2w93KIkqiYAqcg9YT
-	IEsJvtnkqkxL53evelnzCi2wBLvEuG1lfiKiq2xyvFNd4+zsnHwofWr0S3FWwuuzjOBUTYLuni9
-	bZAA5Gp0Jn5MYJ1FfYdFoO3b55465xVatHy4kGTE2LA4+ncpv+153ndhx07kahnOQ3E=
-X-Google-Smtp-Source: AGHT+IGqh+W+S3heXakioz/3q0T976hhBdPRspmk0RARxwVhScFCvhjgC58QG45FOLgAchX8ykqp6A==
-X-Received: by 2002:a05:6000:4284:b0:3a5:2fe2:c9e1 with SMTP id ffacd0b85a97d-3a56075a5b0mr2326130f8f.30.1749726327860;
-        Thu, 12 Jun 2025 04:05:27 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5619767b3sm1719322f8f.13.2025.06.12.04.05.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 04:05:27 -0700 (PDT)
-Message-ID: <c65c752a-5b60-4f30-8d51-9a903ddd55a6@linaro.org>
-Date: Thu, 12 Jun 2025 12:05:26 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDdWQQHx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84DCAC4CEEA;
+	Thu, 12 Jun 2025 11:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749726342;
+	bh=nLSFvNhhkH/i0AW4xZZyeVQQGE39E68tSVlCKIweu8U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=qDdWQQHxflEwGgvLGrA7yFYTJaUyXMY2fWh33EJgxUQf54sqNCRzWvq76JLo+wqKI
+	 wi3//16+vXlwMPBe+pMBxdCoW1pvfstM/90sFC6bYA4GKXJ/DLO/RZxmYHp9Lno0w+
+	 2R937/rFXe/6yomj5pTMk1Gf1JtK2KJ4KfIspUApGy4+FMb0U0+QsZ1bRhrt14Bc3h
+	 fBgKSF5Qnm0sXp8MqYuolV1Z1evNWPWq5k7aTJd+f3igWa3/8h9n/DO2UJvUXfWCap
+	 d/WkhRasnbpjeKRrIuV4W1x2gm694q5S79rMhRutgVESoT516W6GsN0lhDFbFaINY/
+	 uS4LAnQAnBqOA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
+ <nathan@kernel.org>,  "Luis Chamberlain" <mcgrof@kernel.org>,  "Danilo
+ Krummrich" <dakr@kernel.org>,  "Nicolas Schier"
+ <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,  "Adam
+ Bratschi-Kaye" <ark.email@gmail.com>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-kbuild@vger.kernel.org>,  "Petr
+ Pavlu" <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
+  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
+ <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,  "Fiona
+ Behrens" <me@kloenk.dev>,  "Daniel Almeida"
+ <daniel.almeida@collabora.com>,  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v12 2/3] rust: add parameter support to the `module!` macro
+In-Reply-To: <DAKE43J2GFVF.18KWPFWPZKDM@kernel.org> (Benno Lossin's message of
+	"Thu, 12 Jun 2025 09:52:30 +0200")
+References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
+	<20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org>
+	<D9PW1NI2S6FV.8LA53J87VCML@kernel.org> <87plfazi13.fsf@kernel.org>
+	<V29kiTfRcPU-AK3Dk6vAhU4ERR2auWVQO6PRp1TJrOmq3AgagkEMmShjxYAQSx9IkfVtHEVwhYM93UQQhiElJA==@protonmail.internalid>
+	<DAKE43J2GFVF.18KWPFWPZKDM@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Thu, 12 Jun 2025 13:05:31 +0200
+Message-ID: <87ikl1xls4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] spi: spi-fsl-dspi: Use non-coherent memory for DMA
-To: Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
- Frank Li <Frank.li@nxp.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
- <20250609-james-nxp-spi-dma-v1-2-2b831e714be2@linaro.org>
- <aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
- <de7142ac-f1a3-412f-9f00-502222b20165@app.fastmail.com>
- <aEhVsrEk0qv+38r3@lizhi-Precision-Tower-5810>
- <20250611090107.t35zatn47vetnvse@skbuf>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250611090107.t35zatn47vetnvse@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+"Benno Lossin" <lossin@kernel.org> writes:
+
+> On Wed Jun 11, 2025 at 12:31 PM CEST, Andreas Hindborg wrote:
+>> "Benno Lossin" <lossin@kernel.org> writes:
+>>> On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
+>>>> diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
+>>>> index a3ee27e29a6f..16d300ad3d3b 100644
+>>>> --- a/rust/macros/helpers.rs
+>>>> +++ b/rust/macros/helpers.rs
+>>>> @@ -10,6 +10,17 @@ pub(crate) fn try_ident(it: &mut token_stream::Into=
+Iter) -> Option<String> {
+>>>>      }
+>>>>  }
+>>>>
+>>>> +pub(crate) fn try_sign(it: &mut token_stream::IntoIter) -> Option<cha=
+r> {
+>>>> +    let peek =3D it.clone().next();
+>>>> +    match peek {
+>>>> +        Some(TokenTree::Punct(punct)) if punct.as_char() =3D=3D '-' =
+=3D> {
+>>>
+>>> Should we also allow a leading `+`?
+>>
+>> I would argue no, because rust literals cannot start with `+`.
+>
+> Makes sense.
+>
+>>>> +            let _ =3D it.next();
+>>>> +            Some(punct.as_char())
+>>>> +        }
+>>>> +        _ =3D> None,
+>>>> +    }
+>>>> +}
+>>>> +
+>>>>  pub(crate) fn try_literal(it: &mut token_stream::IntoIter) -> Option<=
+String> {
+>>>>      if let Some(TokenTree::Literal(literal)) =3D it.next() {
+>>>>          Some(literal.to_string())
+>>>> @@ -86,3 +97,17 @@ pub(crate) fn function_name(input: TokenStream) -> =
+Option<Ident> {
+>>>>      }
+>>>>      None
+>>>>  }
+>>>> +
+>>>> +/// Parse a token stream of the form `expected_name: "value",` and re=
+turn the
+>>>> +/// string in the position of "value".
+>>>> +///
+>>>> +/// # Panics
+>>>> +///
+>>>> +/// - On parse error.
+>>>> +pub(crate) fn expect_string_field(it: &mut token_stream::IntoIter, ex=
+pected_name: &str) -> String {
+>>>> +    assert_eq!(expect_ident(it), expected_name);
+>>>> +    assert_eq!(expect_punct(it), ':');
+>>>> +    let string =3D expect_string(it);
+>>>> +    assert_eq!(expect_punct(it), ',');
+>>>
+>>> This won't allow omitting the trailing comma.
+>>
+>> This is in line with the rest of the module macro.
+>
+> Then we should change that:
+>
+>     https://github.com/Rust-for-Linux/linux/issues/1172
+>
+>>>> +    string
+>>>> +}
+>>>
+>>> [...]
+>>>
+>>>> @@ -186,33 +336,35 @@ pub(crate) fn module(ts: TokenStream) -> TokenSt=
+ream {
+>>>>      let info =3D ModuleInfo::parse(&mut it);
+>>>>
+>>>>      let mut modinfo =3D ModInfoBuilder::new(info.name.as_ref());
+>>>> -    if let Some(author) =3D info.author {
+>>>> -        modinfo.emit("author", &author);
+>>>> +    if let Some(author) =3D &info.author {
+>>>> +        modinfo.emit("author", author);
+>>>>      }
+>>>> -    if let Some(authors) =3D info.authors {
+>>>> +    if let Some(authors) =3D &info.authors {
+>>>>          for author in authors {
+>>>> -            modinfo.emit("author", &author);
+>>>> +            modinfo.emit("author", author);
+>>>>          }
+>>>>      }
+>>>> -    if let Some(description) =3D info.description {
+>>>> -        modinfo.emit("description", &description);
+>>>> +    if let Some(description) =3D &info.description {
+>>>> +        modinfo.emit("description", description);
+>>>>      }
+>>>>      modinfo.emit("license", &info.license);
+>>>> -    if let Some(aliases) =3D info.alias {
+>>>> +    if let Some(aliases) =3D &info.alias {
+>>>>          for alias in aliases {
+>>>> -            modinfo.emit("alias", &alias);
+>>>> +            modinfo.emit("alias", alias);
+>>>>          }
+>>>>      }
+>>>> -    if let Some(firmware) =3D info.firmware {
+>>>> +    if let Some(firmware) =3D &info.firmware {
+>>>>          for fw in firmware {
+>>>> -            modinfo.emit("firmware", &fw);
+>>>> +            modinfo.emit("firmware", fw);
+>>>
+>>> I don't like that you have to change all of these.
+>>
+>> Why not? If I was to write this code in the first place, I would have
+>> used a reference rather than pass by value.
+>
+> That's fine, but do it in a separate commit then.
+
+OK, I can do that =F0=9F=91=8D
 
 
+Best regards,
+Andreas Hindborg
 
-On 11/06/2025 10:01 am, Vladimir Oltean wrote:
-> On Tue, Jun 10, 2025 at 11:56:34AM -0400, Frank Li wrote:
->> Can you add performance beneafit information after use non-coherent memory
->> in commit message to let reviewer easily know your intention.
-> 
-> To expand on that, you can post the output of something like this
-> (before and after):
-> $ spidev_test --device /dev/spidev1.0 --bpw 8 --size 256 --cpha --iter 10000000 --speed 10000000
-> where /dev/spidev1.0 is an unconnected chip select with a dummy entry in
-> the device tree.
 
-Coherent (before):
-
-rate: tx 385.8kbps, rx 385.8kbps
-rate: tx 1215.7kbps, rx 1215.7kbps
-rate: tx 1845.2kbps, rx 1845.2kbps
-rate: tx 1844.0kbps, rx 1844.0kbps
-rate: tx 1846.1kbps, rx 1846.1kbps
-rate: tx 1844.8kbps, rx 1844.8kbps
-rate: tx 1844.4kbps, rx 1844.4kbps
-rate: tx 1846.9kbps, rx 1846.9kbps
-rate: tx 1846.5kbps, rx 1846.5kbps
-rate: tx 1843.2kbps, rx 1843.2kbps
-rate: tx 1844.8kbps, rx 1844.8kbps
-rate: tx 1845.2kbps, rx 1845.2kbps
-rate: tx 1846.5kbps, rx 1846.5kbps
-
-Non-coherent (after):
-
-rate: tx 314.6kbps, rx 314.6kbps
-rate: tx 748.3kbps, rx 748.3kbps
-rate: tx 1845.2kbps, rx 1845.2kbps
-rate: tx 1849.3kbps, rx 1849.3kbps
-rate: tx 1846.1kbps, rx 1846.1kbps
-rate: tx 1847.3kbps, rx 1847.3kbps
-rate: tx 1845.7kbps, rx 1845.7kbps
-rate: tx 1846.5kbps, rx 1846.5kbps
-rate: tx 1844.4kbps, rx 1844.4kbps
-rate: tx 1847.3kbps, rx 1847.3kbps
-rate: tx 1847.3kbps, rx 1847.3kbps
-rate: tx 1845.7kbps, rx 1845.7kbps
-rate: tx 1846.5kbps, rx 1846.5kbps
-
-Ignoring anything less than 1800 as starting up, coherent has an average 
-of 1845.2kbps and non-coherent 1846.5kbps. Not sure if that's just noise 
-or an actual effect.
-
-With stress running in the background the difference in average over 17 
-runs is slightly more significant:
-
-   stress -m 8 --vm-stride 1 --vm-bytes 64MB
-
-Coherent: 2105.5kbps
-Non-coherent: 2125.6kbps
-
-There's not much variance in the runs either, they're pretty much always 
-2105 and 2125 +-1 so I don't think this result is noise.
-
-(No idea why it goes faster when it's under load, but I hope that can be 
-ignored for this test)
 
