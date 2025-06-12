@@ -1,401 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4370221FDD;
-	Thu, 12 Jun 2025 08:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD490EC2
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749717122; cv=none; b=W7geyEqJ88riRuztqqmYuEZjFEdlvaQpgXNcnAiC2KXQ/2JaM58+hb0JKIN4uJjonZbqPvhCwk3LmxnPFvpXX0m/uEul4Yg6oeG0tdLF3HYUBV7daadW/3gT/Zweacco+9oaSPu+YwbWZ9W+a1kBUndBSgpZDVqjmgZb9qnyVrc=
+	t=1749717274; cv=none; b=kT5JsnMIWHJRtPM96HfYva/4t4F8QrKexrNFY/U66/5SJgYlPW4M5JRihR5wIecKDscnAAnHjzO6OHfWwQ78Su/M4+CvTLul5D+dpJ2+xUYqlzxu2Jy+lmyYsC0BEkoxED+L16rEgyY2E0qJfUHSOjPjLtDTwFJKlmtEzC5qaPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749717122; c=relaxed/simple;
-	bh=ioxNr8DNBEiHDDJ/28rb91WVRuA0d698WZH8DdW09iM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Oa314KgI8UYIlbHV+64WHuWmNYqHZ8pVWuw3tfD/nhwlW+Fax4ITp/w6Gd3VqZhS3ZZEkVndrFVCfT3mYzqAZRNrMCoSChRXfVWKLEc3noZ3b1uE1gos1nwtGWLe3tZaCz1zBl7nlcY+nB9mZhopplvTZ2o03Kxd9KlINhRyszw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMaKDOlJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749717274; c=relaxed/simple;
+	bh=KmseBCGkBltkQJB+bXiWrUlTYOiIhBbRpBapI2IUh0c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=igqWKDSq2TXfBSMukuiuNZQ3UZKFEUQJgdFS31b+zQ8wPAapqBrPoyCeWqx1///FoIVJsB99e/VzoDZ0NBRElQF1bI2Nx9JV/sf3Na0axdM64aSxbrVdYvl/KEwNcJxOUa9JWxReE7NjM9EFyQjtIIS8nl5tCH8Fr26YEuUC0Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YmThgej+; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMaKDOlJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C1BCC4CEF0;
-	Thu, 12 Jun 2025 08:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749717122;
-	bh=ioxNr8DNBEiHDDJ/28rb91WVRuA0d698WZH8DdW09iM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FMaKDOlJub/zVk4vHO2I0RYHSrD5xyplgu38Lag4uEkM7XVy+TSJAoGiHACqMjnid
-	 kCBql43oBYLUPCVVDICPA3k2hlsBTc5eMACF/QFVuBo+twBmUNZ89YYXn0c1xc+So6
-	 /aULZseBDKBZO3xLhyhx2XVNVWPnbuOHLfP2kiQ/Hk51VbeQ4veFV15m1t8KMbEFzE
-	 9HY6yP/Qt957S/oAEUTE4d61osrfAGM28MaQSO8VLOs6NGLEGlTgJwnqwPrn5ONqUR
-	 IdqC4Chv3tS6fpdTRBSl7gzdsc7vw6XvR4DL4gpWuOoGtiH6q/kBV+3B6s4ZUd8ugH
-	 /v80PU/mnu0bQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Tyler Hicks <code@tyhicks.com>,
-	linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Subject: [RFC PATCH 1/1] nvdimm: allow exposing RAM carveouts as NVDIMM DIMM devices
-Date: Thu, 12 Jun 2025 11:31:53 +0300
-Message-ID: <20250612083153.48624-2-rppt@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250612083153.48624-1-rppt@kernel.org>
-References: <20250612083153.48624-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YmThgej+"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad8a8da2376so116296166b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:34:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749717271; x=1750322071; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=R7g8CYkJXGi+LouyxL2Tn5ZZ861hnviLISrxqX1kUus=;
+        b=YmThgej+evWuaKj9jRAJaB/6T/nZicY1AvMwtE03QVTf+d05a4KlKLbepIyZlmcHyu
+         pRBYbHfQY+jPxJMoznnfBG+0Ad1BuuNWAGJAgQLjf7ua8Poiw18HojHKtjBDcOKkhCk2
+         3yY26Ourd6RZnnWJrC8lmSC8y99LKQdur8sj9ofx6YX+ioGmfjw7DB5rjW3fnPNiCeOt
+         eDPrCtwTKkHx26omZwe2hirdMENj1uuetR1V90tcid1F8dotqOiKuiiobB+q3BO/wmZ4
+         RCjXlGPSFTlntvlH9nXuZ6aRwpgA11z5wbdKDGwGi/jxPDtpHd2ZNAIuXukKml6R3qg8
+         n1BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749717271; x=1750322071;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R7g8CYkJXGi+LouyxL2Tn5ZZ861hnviLISrxqX1kUus=;
+        b=L5rxUj0hzbwyTFA7CwD2DfNyh3ALTHamKSVPATuyz63yOn8bVLJMlNP3cHd6qFcfRZ
+         eVjTsjB6MqgDQPhnfytKHVytxqLKNwMHIG9Ei+arCeUObI3eS/y+NYPccGgW71wv3g4G
+         l1u7A5BZ6BBxcx7S2EdXydGFbJp88vcd9CbnR3n5mloyoMKdb61+So2NpsE/u4o5opnT
+         kWU+H+/XkU/jHNSQnez19RCbqCTPzfsnLeo2+hxUvswycVMh+0nfoFaOoH3zsollstx/
+         m04EwsYUrPc9PKwvPdk6v/vNGlqfxQRSyp/U2s5YnaxCvpvNcX+6MDLAd/KNSyn1L7B9
+         2oPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWugUO1DK7Cm0z3WqBfKjFObsO3dz2Rj3Dbvnfz6N2mWEmewBPk98ulKBTamrxAZN4pE/lhNcbRvGPD8iQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq7chk0Yw4WfU1Qs67dMWBlezFT/5bLDBJ9G9qQoQxN4/czbKR
+	biaheuvOQu6t6iMbbqEjqG10WuLHRNuDaa6gET2nGYYv3vJFAbQ2TDJVbTkdSg6VX70qF6SvaP8
+	qWFX3zZctfhIeZ2UwoPTgSxxwfbA1thZ+wADQWmbvLw==
+X-Gm-Gg: ASbGnctvRbsT7H2aNMqgL8Bqljjc0dkR/vP9D5utIj/gJHB7GhnQv7+TQlzOLQwrbUk
+	a0Kh4jcPXMGI1El2m9qQM0YjgwqigopXBWxDxssC11KjxOdwJ0AeJmvEWuLUu3lMRw/rGkZLXtR
+	4bCv2Q8+FGO2xMfLbxArwj/bPyISSEN64A2kk25EkdCg==
+X-Google-Smtp-Source: AGHT+IFVugGpngvrzd5noKecu2O4BZGb+svn8vwAenX7BptOiMp6XK92yeX+JaMUqYjvqa9ZA798w5EpZZYsteYSr4c=
+X-Received: by 2002:a17:907:25cb:b0:ade:3b84:8ef6 with SMTP id
+ a640c23a62f3a-adea92898f9mr197761666b.23.1749717271081; Thu, 12 Jun 2025
+ 01:34:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250512172321.3004779-1-neelx@suse.com> <20250606172811.GY4037@twin.jikos.cz>
+In-Reply-To: <20250606172811.GY4037@twin.jikos.cz>
+From: Daniel Vacek <neelx@suse.com>
+Date: Thu, 12 Jun 2025 10:34:20 +0200
+X-Gm-Features: AX0GCFs0W2NEeBrD98LqU3d1NgoxS3gwTh7DNtFowD5ncNr0sDzIgrfzpQTGXbc
+Message-ID: <CAPjX3FdP0k8YRR7vA+g_deUqEt=1wnRZXV-9gaTHwur43HVJ6w@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: index buffer_tree using node size
+To: dsterba@suse.cz
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Fri, 6 Jun 2025 at 19:28, David Sterba <dsterba@suse.cz> wrote:
+>
+> On Mon, May 12, 2025 at 07:23:20PM +0200, Daniel Vacek wrote:
+> > So far we are deriving the buffer tree index using the sector size. But each
+> > extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
+> >
+> > For example the typical and quite common configuration uses sector size of 4KiB
+> > and node size of 16KiB. In this case it means the buffer tree is using up to
+> > the maximum of 25% of it's slots. Or in other words at least 75% of the tree
+> > slots are wasted as never used.
+> >
+> > We can score significant memory savings on the required tree nodes by indexing
+> > the tree using the node size instead. As a result far less slots are wasted
+> > and the tree can now use up to all 100% of it's slots this way.
+> >
+> > Signed-off-by: Daniel Vacek <neelx@suse.com>
+>
+> This is a useful improvement, so we should continue and merge it. The
+> performance improvements should be done so we get some idea. Runtime and
+> slab savings.
 
-There are use cases, for example virtual machine hosts, that create
-"persistent" memory regions using memmap= option on x86 or dummy
-pmem-region device tree nodes on DT based systems.
+Performance-wise this fix is not that significant. With my testing I
+did not notice any changes in runtime performance.
+Slab usage is _relatively_ significant though - about 2/3 of the btrfs
+radix_tree_node objects are saved. Though in _absolute_ numbers
+system-wide it's still within the level of noise. Without this fix
+btrfs uses a bit over 1% of the radix_tree_node slab cache while with
+the fix it falls below half a percent from what I was able to pull
+from the memory.
 
-Both these options are inflexible because they create static regions and
-the layout of the "persistent" memory cannot be adjusted without reboot.
+> One coding comment, please rename node_bits to nodesize_bits so it's
+> consistent with sectorsize and sectorsize_bits.
 
-Add a ramdax driver that allows creation of DIMM devices on top of
-E820_TYPE_PRAM regions and devicetree pmem-region nodes.
+Right.
 
-The DIMMs support label space management on the "device" and provide a
-flexible way to access RAM using fsdax and devdax.
+> >  fs/btrfs/disk-io.c   |  1 +
+> >  fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
+> >  fs/btrfs/fs.h        |  3 ++-
+> >  3 files changed, 18 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+> > index 5bcf11246ba66..dcea5b0a2db50 100644
+> > --- a/fs/btrfs/extent_io.c
+> > +++ b/fs/btrfs/extent_io.c
+> > @@ -4294,9 +4294,9 @@ static int try_release_subpage_extent_buffer(struct folio *folio)
+> >  {
+> >       struct btrfs_fs_info *fs_info = folio_to_fs_info(folio);
+> >       struct extent_buffer *eb;
+> > -     unsigned long start = folio_pos(folio) >> fs_info->sectorsize_bits;
+> > +     unsigned long start = folio_pos(folio) >> fs_info->node_bits;
+> >       unsigned long index = start;
+> > -     unsigned long end = index + (PAGE_SIZE >> fs_info->sectorsize_bits) - 1;
+> > +     unsigned long end = index + (PAGE_SIZE >> fs_info->node_bits) - 1;
+>
+> This looks a bit suspicious, page size is 4k node size can be 4k .. 64k.
+> It's in subpage code so sector < page, the shift it's always >= 0. Node
+> can be larger so the shift result would be 0 but as a result of 4k
+> shifted by "16k".
 
-Signed-off-by: Mike Rapoport (Mircosoft) <rppt@kernel.org>
----
- drivers/nvdimm/Kconfig  |  15 +++
- drivers/nvdimm/Makefile |   1 +
- drivers/nvdimm/ramdax.c | 279 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 295 insertions(+)
- create mode 100644 drivers/nvdimm/ramdax.c
+This comes from commit 19d7f65f032f ("btrfs: convert the buffer_radix
+to an xarray").
+You can still have 64 KiB page with 16 KiB node size. So this still
+looks sound to me.
 
-diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-index fde3e17c836c..7aae74a29f10 100644
---- a/drivers/nvdimm/Kconfig
-+++ b/drivers/nvdimm/Kconfig
-@@ -97,6 +97,21 @@ config OF_PMEM
- 
- 	  Select Y if unsure.
- 
-+config RAMDAX
-+	tristate "Support persistent memory interfaces on RAM carveouts"
-+	depends on OF || (X86 && X86_PMEM_LEGACY=n)
-+	select X86_PMEM_LEGACY_DEVICE
-+	default LIBNVDIMM
-+	help
-+	  Allows creation of DAX devices on RAM carveouts.
-+
-+	  Memory ranges that are manually specified by the
-+	  'memmap=nn[KMG]!ss[KMG]' kernel command line or defined by dummy
-+	  pmem-region device tree nodes would be managed by this driver as DIMM
-+	  devices with support for dynamic layout of namespaces.
-+
-+	  Select N if unsure.
-+
- config NVDIMM_KEYS
- 	def_bool y
- 	depends on ENCRYPTED_KEYS
-diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
-index ba0296dca9db..8c268814936c 100644
---- a/drivers/nvdimm/Makefile
-+++ b/drivers/nvdimm/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_ND_BTT) += nd_btt.o
- obj-$(CONFIG_X86_PMEM_LEGACY) += nd_e820.o
- obj-$(CONFIG_OF_PMEM) += of_pmem.o
- obj-$(CONFIG_VIRTIO_PMEM) += virtio_pmem.o nd_virtio.o
-+obj-$(CONFIG_RAMDAX) += ramdax.o
- 
- nd_pmem-y := pmem.o
- 
-diff --git a/drivers/nvdimm/ramdax.c b/drivers/nvdimm/ramdax.c
-new file mode 100644
-index 000000000000..67b0a240c0ae
---- /dev/null
-+++ b/drivers/nvdimm/ramdax.c
-@@ -0,0 +1,279 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2015, Mike Rapoport, Microsoft
-+ *
-+ * Based on e820 pmem driver:
-+ * Copyright (c) 2015, Christoph Hellwig.
-+ * Copyright (c) 2015, Intel Corporation.
-+ */
-+#include <linux/platform_device.h>
-+#include <linux/memory_hotplug.h>
-+#include <linux/libnvdimm.h>
-+#include <linux/module.h>
-+#include <linux/numa.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+
-+#include <uapi/linux/ndctl.h>
-+
-+#define LABEL_AREA_SIZE	SZ_128K
-+
-+struct ramdax_dimm {
-+	struct nvdimm *nvdimm;
-+	void *label_area;
-+};
-+
-+static void ramdax_remove(struct platform_device *pdev)
-+{
-+	struct nvdimm_bus *nvdimm_bus = platform_get_drvdata(pdev);
-+
-+	/* FIXME: cleanup dimm and region devices */
-+
-+	nvdimm_bus_unregister(nvdimm_bus);
-+}
-+
-+static int ramdax_register_region(struct resource *res,
-+				    struct nvdimm *nvdimm,
-+				    struct nvdimm_bus *nvdimm_bus)
-+{
-+	struct nd_mapping_desc mapping;
-+	struct nd_region_desc ndr_desc;
-+	struct nd_interleave_set *nd_set;
-+	int nid = phys_to_target_node(res->start);
-+
-+	nd_set = kzalloc(sizeof(*nd_set), GFP_KERNEL);
-+	if (!nd_set)
-+		return -ENOMEM;
-+
-+	nd_set->cookie1 = get_random_u64();
-+	nd_set->cookie2 = nd_set->cookie1;
-+
-+	memset(&mapping, 0, sizeof(mapping));
-+	mapping.nvdimm = nvdimm;
-+	mapping.start = 0;
-+	mapping.size = resource_size(res) - LABEL_AREA_SIZE;
-+
-+	memset(&ndr_desc, 0, sizeof(ndr_desc));
-+	ndr_desc.res = res;
-+	ndr_desc.numa_node = numa_map_to_online_node(nid);
-+	ndr_desc.target_node = nid;
-+	ndr_desc.num_mappings = 1;
-+	ndr_desc.mapping = &mapping;
-+	ndr_desc.nd_set = nd_set;
-+
-+	if (!nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc))
-+		goto err_free_nd_set;
-+
-+	return 0;
-+
-+err_free_nd_set:
-+	kfree(nd_set);
-+	return -ENXIO;
-+}
-+
-+static int ramdax_register_dimm(struct resource *res, void *data)
-+{
-+	resource_size_t start = res->start;
-+	resource_size_t size = resource_size(res);
-+	unsigned long flags = 0, cmd_mask = 0;
-+	struct nvdimm_bus *nvdimm_bus = data;
-+	struct ramdax_dimm *dimm;
-+	int err;
-+
-+	dimm = kzalloc(sizeof(*dimm), GFP_KERNEL);
-+	if (!dimm)
-+		return -ENOMEM;
-+
-+	dimm->label_area = memremap(start + size - LABEL_AREA_SIZE,
-+				    LABEL_AREA_SIZE, MEMREMAP_WB);
-+	if (!dimm->label_area)
-+		goto err_free_dimm;
-+
-+	set_bit(NDD_LABELING, &flags);
-+	set_bit(NDD_REGISTER_SYNC, &flags);
-+	set_bit(ND_CMD_GET_CONFIG_SIZE, &cmd_mask);
-+	set_bit(ND_CMD_GET_CONFIG_DATA, &cmd_mask);
-+	set_bit(ND_CMD_SET_CONFIG_DATA, &cmd_mask);
-+	dimm->nvdimm = nvdimm_create(nvdimm_bus, dimm,
-+				     /* dimm_attribute_groups */ NULL,
-+				     flags, cmd_mask, 0, NULL);
-+	if (!dimm->nvdimm) {
-+		err = -ENOMEM;
-+		goto err_unmap_label;
-+	}
-+
-+	err = ramdax_register_region(res, dimm->nvdimm, nvdimm_bus);
-+	if (err)
-+		goto err_remove_nvdimm;
-+
-+	return 0;
-+
-+err_remove_nvdimm:
-+	nvdimm_delete(dimm->nvdimm);
-+err_unmap_label:
-+	memunmap(dimm->label_area);
-+err_free_dimm:
-+	kfree(dimm);
-+	return err;
-+}
-+
-+static int ramdax_get_config_size(struct nvdimm *nvdimm, int buf_len,
-+				    struct nd_cmd_get_config_size *cmd)
-+{
-+	if (sizeof(*cmd) > buf_len)
-+		return -EINVAL;
-+
-+	*cmd = (struct nd_cmd_get_config_size){
-+		.status = 0,
-+		.config_size = LABEL_AREA_SIZE,
-+		.max_xfer = 8,
-+	};
-+
-+	return 0;
-+}
-+
-+static int ramdax_get_config_data(struct nvdimm *nvdimm, int buf_len,
-+				    struct nd_cmd_get_config_data_hdr *cmd)
-+{
-+	struct ramdax_dimm *dimm = nvdimm_provider_data(nvdimm);
-+
-+	if (sizeof(*cmd) > buf_len)
-+		return -EINVAL;
-+	if (struct_size(cmd, out_buf, cmd->in_length) > buf_len)
-+		return -EINVAL;
-+	if (cmd->in_offset + cmd->in_length > LABEL_AREA_SIZE)
-+		return -EINVAL;
-+
-+	memcpy(cmd->out_buf, dimm->label_area + cmd->in_offset, buf_len);
-+
-+	return 0;
-+}
-+
-+static int ramdax_set_config_data(struct nvdimm *nvdimm, int buf_len,
-+				    struct nd_cmd_set_config_hdr *cmd)
-+{
-+	struct ramdax_dimm *dimm = nvdimm_provider_data(nvdimm);
-+
-+	if (sizeof(*cmd) > buf_len)
-+		return -EINVAL;
-+	if (struct_size(cmd, in_buf, cmd->in_length) > buf_len)
-+		return -EINVAL;
-+	if (cmd->in_offset + cmd->in_length > LABEL_AREA_SIZE)
-+		return -EINVAL;
-+
-+	memcpy(dimm->label_area + cmd->in_offset, cmd->in_buf, buf_len);
-+
-+	return 0;
-+}
-+
-+static int ramdax_nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd,
-+			       void *buf, unsigned int buf_len)
-+{
-+	unsigned long cmd_mask = nvdimm_cmd_mask(nvdimm);
-+
-+	if (!test_bit(cmd, &cmd_mask))
-+		return -ENOTTY;
-+
-+	switch (cmd) {
-+	case ND_CMD_GET_CONFIG_SIZE:
-+		return ramdax_get_config_size(nvdimm, buf_len, buf);
-+	case ND_CMD_GET_CONFIG_DATA:
-+		return ramdax_get_config_data(nvdimm, buf_len, buf);
-+	case ND_CMD_SET_CONFIG_DATA:
-+		return ramdax_set_config_data(nvdimm, buf_len, buf);
-+	default:
-+		return -ENOTTY;
-+	}
-+}
-+
-+static int ramdax_ctl(struct nvdimm_bus_descriptor *nd_desc,
-+			 struct nvdimm *nvdimm, unsigned int cmd, void *buf,
-+			 unsigned int buf_len, int *cmd_rc)
-+{
-+	/*
-+	 * No firmware response to translate, let the transport error
-+	 * code take precedence.
-+	 */
-+	*cmd_rc = 0;
-+
-+	if (!nvdimm)
-+		return -ENOTTY;
-+	return ramdax_nvdimm_ctl(nvdimm, cmd, buf, buf_len);
-+}
-+
-+static int ramdax_probe_of(struct platform_device *pdev,
-+			     struct nvdimm_bus *bus, struct device_node *np)
-+{
-+	int err;
-+
-+	for (int i = 0; i < pdev->num_resources; i++) {
-+		err = ramdax_register_dimm(&pdev->resource[i], bus);
-+		if (err)
-+			goto err_unregister;
-+	}
-+
-+	return 0;
-+
-+err_unregister:
-+	/*
-+	 * FIXME: should we unregister the dimms that were registered
-+	 * successfully
-+	 */
-+	return err;
-+}
-+
-+static int ramdax_probe(struct platform_device *pdev)
-+{
-+	static struct nvdimm_bus_descriptor nd_desc;
-+	struct device *dev = &pdev->dev;
-+	struct nvdimm_bus *nvdimm_bus;
-+	struct device_node *np;
-+	int rc = -ENXIO;
-+
-+	nd_desc.provider_name = "ramdax";
-+	nd_desc.module = THIS_MODULE;
-+	nd_desc.ndctl = ramdax_ctl;
-+	nvdimm_bus = nvdimm_bus_register(dev, &nd_desc);
-+	if (!nvdimm_bus)
-+		goto err;
-+
-+	np = dev_of_node(&pdev->dev);
-+	if (np)
-+		rc = ramdax_probe_of(pdev, nvdimm_bus, np);
-+	else
-+		rc = walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY_LEGACY,
-+					 IORESOURCE_MEM, 0, -1, nvdimm_bus,
-+					 ramdax_register_dimm);
-+	if (rc)
-+		goto err;
-+
-+	platform_set_drvdata(pdev, nvdimm_bus);
-+
-+	return 0;
-+err:
-+	nvdimm_bus_unregister(nvdimm_bus);
-+	return rc;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id ramdax_of_matches[] = {
-+	{ .compatible = "pmem-region", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, ramdax_of_matches);
-+#endif
-+
-+static struct platform_driver ramdax_driver = {
-+	.probe = ramdax_probe,
-+	.remove = ramdax_remove,
-+	.driver = {
-+		.name = "e820_pmem",
-+		.of_match_table = of_match_ptr(ramdax_of_matches),
-+	},
-+};
-+
-+module_platform_driver(ramdax_driver);
-+
-+MODULE_DESCRIPTION("NVDIMM support for e820 type-12 memory and OF pmem-region");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Microsoft Corporation");
--- 
-2.47.2
+> >       int ret;
+> >
+> >       xa_lock_irq(&fs_info->buffer_tree);
+> > diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
+> > index cf805b4032af3..8c9113304fabe 100644
+> > --- a/fs/btrfs/fs.h
+> > +++ b/fs/btrfs/fs.h
+> > @@ -778,8 +778,9 @@ struct btrfs_fs_info {
+> >
+> >       struct btrfs_delayed_root *delayed_root;
+> >
+> > -     /* Entries are eb->start / sectorsize */
+> > +     /* Entries are eb->start >> node_bits */
+> >       struct xarray buffer_tree;
+> > +     int node_bits;
+>
+> u32 and pleas move it to nodesize.
 
+Sure.
