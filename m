@@ -1,270 +1,103 @@
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010005.outbound.protection.outlook.com [52.101.229.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F00013D539;
-	Thu, 12 Jun 2025 18:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.5
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749753972; cv=fail; b=LJ+ym779QlG40PcAIzWpzUXgw63STNMVEGA2trCL1RC+UhFwe2NrU6lCz4jRC5Snd5+KjqDm2Q19gxq/r+lu8Apff982Ns6PHPOQ0XbNNXHq5QOMTsqBPxTzCVzjiym7NnD00YT/bN95fsvEE1HAXpJeKkBGdKqP4bscIlnFv6I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749753972; c=relaxed/simple;
-	bh=cQ4/CFZZQVuZ1aX9BTBVYFFYmodDK3lXkOEfBVtxqDA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rAozVqAMeLq1WBnuDRpG5+avOwzY0Mt1vnBkcdH5hl4h7I3UWiAjrI3Ifr80V5hkxZm5xmLJWQS80AcGjoxSVwTHlSyzSariPxw0hV4gsxld4qrSXqTQFi3naDUYhsbiPbs9xLUJh6Ba9c8jdz+2Y5Gc86K/azkuVZZLhUtBwmE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=CcoPp2e+; arc=fail smtp.client-ip=52.101.229.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A9713D539;
+	Thu, 12 Jun 2025 18:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749754021; cv=none; b=NlFWtEBDsPKNVlr/t5N8PHNhcFrWXQNp4A0dy/EzwDIllodns/ofcvxoRWZdOABwGyY2DMOEdOOGfrWPPpPmkXBFAfh6Y5cMFpA+GegczrGIFiKCPmmc0io29bT7PC8ERkhAmK5A+WPNmpODfHxHMKojA0wPj8IFrOvkySfAYGY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749754021; c=relaxed/simple;
+	bh=rae+Xy+GVeClcCuswO7WbVtIsL71ZmU4FtcEUBegmnw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JrOLie8W7A/P4toljWIbIMYpinyAPdpYs2TiHSo1k7Z0FtOg+YWtVsXlCzk01L+ah4Sy5oBdVtsRoQ9GUeLRuIGjVVprsUCPcqT5E4MJpmgxPoeuUJt2lr6zB7ukStZ/DJnmwpMrzfYXu4b654V4fVVltobY+1J8WB78tVFMDhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjiiOam3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="CcoPp2e+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xvE3Nn3ZXEMgjG8FbVZXAH4xW+QObo3rZJrEslIl54maPjan/pfLlHObNAqIzGJ05W5zDPevZ5IYqBpTp5n4PTt7jj+ExB8EN/iSZuA1EO1XiTpclVtbEXtsxYt2L+xAwvmxSoaZYEd7ZmQuk9JvuWI1SbymOZYW/5vN/nekFtWEg+6FAAnFO8LhFD3nYVfipk9k32ie1jGw4745LZ6Vi8lHx4x9K86jxwyvbVAwPtWKwUOY4LGDLlJZTYzyz/ZZbxmVKFkCdEwXEXGlOZW6UuOSXwZOkO0ToK5E5/BV5otckKoRfV1WRc9xu92IbRQ/lbkGPQ4CoWgg15BAkQNygQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4iG1Ur8aUNdurEfk8KHXS9ES11l5BPvKWs1c/plCaoQ=;
- b=dIsCVipEkTQW2YptoG0nOda0k/nWm5poYDlZsaGo/G2I95glIn4s6fduxT0Cq7YMvAYHnIx1gHOO68F1ag9vsx+yVJ1obFAAi0rM7i3ysw6N8js2h3Afjzj0fhf8uclRr0LcAFff3EjCMidtIIPvwOtXIJ/Yr0lEOx/aeqRsLwV1sEbCfyr6bmA67Ftz62nplkjRaD35JkWCIS084vgKZhOnafBhFrZfripYulewU5AQL2munz8kA7CBkZjICJRCaeFccXrQcAuJXf+cwk/7fyI5CjXVbm7vBlVtEFCOxUo+TfjLvDgZJfc/in1Jf0yS1qpbtOP2JELLQB3YfU+T/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4iG1Ur8aUNdurEfk8KHXS9ES11l5BPvKWs1c/plCaoQ=;
- b=CcoPp2e+nk71m6YahAlnxC2C13WrcQlKcalOASPhLLA7dYp/S5bvDMEVt1m3HuRzIN/pAOTI+5KuQcJ1dG8mmVk6zRqnJGqYIm1gYPhllapytPOApk43PJzoL8atWCYwcgF4JH7EciT6qaYhIOXeezKAYpZPdQYAd2rTuLb6D4k=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by OSCPR01MB13443.jpnprd01.prod.outlook.com (2603:1096:604:331::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Thu, 12 Jun
- 2025 18:46:03 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.8835.023; Thu, 12 Jun 2025
- 18:45:56 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>, Laurent Pinchart
-	<laurent.pinchart+renesas@ideasonboard.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
-	<magnus.damm@gmail.com>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>
-CC: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabrizio
- Castro <fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v7 0/9] drm: renesas: rz-du: mipi_dsi: Prepare driver to
- support RZ/V2H(P) SoC
-Thread-Topic: [PATCH v7 0/9] drm: renesas: rz-du: mipi_dsi: Prepare driver to
- support RZ/V2H(P) SoC
-Thread-Index: AQHb2ZHKfJ0kCzT1QEqvZdyBd28TS7P/4RPg
-Date: Thu, 12 Jun 2025 18:45:56 +0000
-Message-ID:
- <TY3PR01MB1134613C19F77704DBE20C15C8674A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20250609225630.502888-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250609225630.502888-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OSCPR01MB13443:EE_
-x-ms-office365-filtering-correlation-id: 381c066e-d3b0-4362-bc5c-08dda9e15dff
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?wgpQJwKsp9LIazJJ0GkYWwIJBxQI0bypJ2rjcLcvfnv85EFK+KVhYx/aFRuj?=
- =?us-ascii?Q?87NgEtIXgwgh0gGE7CIF5TnhbE2c8L23uJVjQTQCN05wHKPHLM22uSBNPrk9?=
- =?us-ascii?Q?QbUS+l80ewSzecn6f+U78CPsm4d55RGZDlFj1Tox2bgdzgoMQNEHXF+TP2W9?=
- =?us-ascii?Q?kJd6geK/GtX98K8poVjxO7cdPPRavtenLcqYsn2kc692SrNTGAZBKqIaz6fQ?=
- =?us-ascii?Q?O081pS55KVkuPulg3UhtUOI4H3Md2dvj4y8378cifWZm9WGRpJfBTD7Qur3F?=
- =?us-ascii?Q?GAnyVNHOzUnEtL167FQd+WK8YorsG6Lev9jOMXPzBE6/zPDwjXBvUmPxold1?=
- =?us-ascii?Q?P6TsRyDHW+nKQxYbXwIZjjdt/GQZPlmR2L6gT+TvHbX1PoRpFlUcVFXcPaVv?=
- =?us-ascii?Q?Cs5m5Gp/Axl4YvZt/dc+uur6BfsiMF/6ErFCVMDazixuNrdhw0/Ld+5nMlL5?=
- =?us-ascii?Q?XXud6O8nwC54IqxjerjbcZAnMJ2grT9OeEr3hiMXlhp+ffkCeGr+/IEIHXVZ?=
- =?us-ascii?Q?jeRGVRAZ5cvl1CAi1Jr60I+Y5bpku7E2VGpfTo9ZRCOYJ/S49EjVnuKVdhHZ?=
- =?us-ascii?Q?E/RRy04gXi6mxaIloIcvHsuVCZBmBbBmT83t1/NXUTGWv06DvYZy1veuiOVD?=
- =?us-ascii?Q?N9CZ7T900lYNkhzf529Bb+mwlKfDrsfUo1bxqOWLuIAD4N+xrBoRqGtLaNTU?=
- =?us-ascii?Q?WDko5FHQ/cXBQ69pFTVQcba7rkWyFDCsqCkHuLDbckxh6gihiJoEsk1W+vIq?=
- =?us-ascii?Q?uZWpbwVgG0vE6Y1tMmnWTTpVHvynefKs9pTtB4d6Y5w8VbbkFqJxMVdRyarx?=
- =?us-ascii?Q?6ooO71Ifps4pjux1wMvQjPEMqR/+TmerhZoCMpOQdFWnHFy/5IcDh4AtuZdM?=
- =?us-ascii?Q?68/QclAuaLcfWVdrdoBKVr9YDHeYRGRbb8MNo8wd4zc1oKu03CxVzJa0CDNf?=
- =?us-ascii?Q?eyMzyiP0NRHoQ6U7z30cUGQzNwbAgibyuZnetlHfEtwov2EnrEP6RgxgXN28?=
- =?us-ascii?Q?JQLdOZTOqLXSFYNr0vij+Vm34HRcNWVuBfHzotiffUpuE980dbqaib1wtn4e?=
- =?us-ascii?Q?aBaw5jcNA2jSo9gFkMjOpaPudQ97UyVNvHszqZGXWh+UxEbDPON43uAxCSMb?=
- =?us-ascii?Q?zU54cNJVRMeMnGzVix31b0OUJH/Z4f6H0ieZtAbJlAmgL8vIKpviPFrzkCnG?=
- =?us-ascii?Q?KvIUC2dbfcTOufBrZM5CDKO6kPoOf3gsxHGpzSpw+FtkKNp+NCrKTpbsE27p?=
- =?us-ascii?Q?zmaBtRo7es6Ft6/L5OZcrZ83hKiN5RUjmVomFMVUvL4q3Uuvq035SxYPRf85?=
- =?us-ascii?Q?RjMkvr2q3RMuaP40kYRw92bb922aedo5Ck/j99MK1apX9IGGPdciwrvgvvpH?=
- =?us-ascii?Q?QcPxNZdURRO7KW43HBrp7nUGlhAwWBEEgZrIjanskN+kEZWu7Z2BKro6arKM?=
- =?us-ascii?Q?vhn067z0gnqQu0MyNI5fLywyOCu16Q+cUn4BlRbxn7DbRQuQG4iZjHCPRNcT?=
- =?us-ascii?Q?XYAPVYYe56fD2Ls=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?nLkOnA+wsZGLi8pBu7Q6bGNOkPhhXbSnm8D7S1M1H4ZGTK6JE9HaiA9afatC?=
- =?us-ascii?Q?MkBRmGQr58zK/nq83PKgXl5/nsWVuWsv2hmKKTg1oGSVxbCR2uHpoudio/kQ?=
- =?us-ascii?Q?X+80GqyrT1aRFbahjnUAc5ppPKsPZqEYYigNw5cTsjGdxa+uhOTQTDRyQdq6?=
- =?us-ascii?Q?bZ8vQPgxG8GymwNQ4QFk9xSejmAlgOe9/tKNuGnNM3ZKBDifcwGITrfKgUq5?=
- =?us-ascii?Q?ZicT1c8z6YBj4ew0HJlvU9uMQ6gJa8Poj+VLNfDNyDpUpcUdyPdMYI//5kib?=
- =?us-ascii?Q?t846B8PnXKJM+dpz3rhGgCQCRPkN7UUJt+ZjO6LswlaAULzazcV5FiVr3D0y?=
- =?us-ascii?Q?2JwSOG8PCQX8dVDebT9iV3QGmbRHYnYlU9AjlJF8evEBLRCEeFd8p8guPNLZ?=
- =?us-ascii?Q?PSBpOfvDAWYsMiZmqCE+Gs+XniI8rxI/jvZHwx3xUN28CusVMcfOQ18WDBIi?=
- =?us-ascii?Q?88pDAITQ6QjbHd8kY64ol9Pgsn5Q4YZg2NUBdr4upSHel8U4XrLcvAyalSPD?=
- =?us-ascii?Q?2RWZwKTZvTiq9GUjIxuMLXRE2FZ5+x4kBRIHhpkGJVPm87bQ8cH3ZL7NV4Aa?=
- =?us-ascii?Q?OYmOB7aJ0BGbZjUgEAIcN3B5rQTBuF0bJQElj1RqxcCLw57VNWBHHxbKurn1?=
- =?us-ascii?Q?5AkvHJz/FTu9rUTHsEoIKXjwrQxrU59KC+Yh4dAWPogeHlmFNKuPBCNh7ymi?=
- =?us-ascii?Q?x5AgG5zU1sD2DhDLKCf82N/wOkp063pvPa8+erjPeEOudmSgwqj9lUDPebWp?=
- =?us-ascii?Q?vfisl2t7nQG2JP5L8tgqGimEQ7vUa6XgSheN6K6DA3JhDkqZDFe5fH30CZOx?=
- =?us-ascii?Q?0xHYSynwR04W+zPbkfyB4HPT7DwdHBaaUh614c4UzgyJyD5UJRkXGIUL5ap8?=
- =?us-ascii?Q?fsjabopVyvOMdwagEpwkzMJGliCm5vV1vbNC9PdTdf8CbwpYzxpt6eljJxrR?=
- =?us-ascii?Q?IsoKFG3ZCzu2kuoZYXNpqN8p8MSFQW6wI6Z5U5kk3qze08KfKoG0WcxDb+Pu?=
- =?us-ascii?Q?AdPgWxsYwhtqP5W6tFBQhCXIKz8k9EAzaGioL363Bup/ESB4Wct/W9r1TNbx?=
- =?us-ascii?Q?S4ZzZBFUn5ukfVvYzYfQ9viQcFZDegGC/OkB+8BGki4b4QZux56VRf/8VWLh?=
- =?us-ascii?Q?wODLhF3O6WNJcYxbZoFAX+F970IVFY+K82WLj7tDBxV+eEAQgkD/J9B2uIIl?=
- =?us-ascii?Q?SnjnMZ9pbnfVh3lQq4x3PORmZmUrd0Q+aNnWiIn7SPjYuwpdujdOgDiUIw7j?=
- =?us-ascii?Q?lNGZ/e70VQBqRW24RyEbP2fhiPkxds2+64yEL4SpG/iJ8XnpAy5zBwsqgkW3?=
- =?us-ascii?Q?xkQ0qQwjA0x6lX3Fd1K/yQoKwaK49j98EiaekeZXHUkYyZc7ztqY86O/bUWF?=
- =?us-ascii?Q?bB9FfJa2aStYIDnB4gpUFPapMxKi0KIB/wmN1xhdlZnn7QDFa/mArCRAXPo6?=
- =?us-ascii?Q?wEAhWFyTCGwlF9eKxvDMvQJhO4f/TR8/kH8Kjy6JTg4iQhMPBdpkQOVVRNJE?=
- =?us-ascii?Q?xXAmD8K8s3iI4IoQ/5iD8/cPgVbJIeYnUFbPyCHTS/2BHW+NR3Vh5R3wsDzh?=
- =?us-ascii?Q?J3Kh/jSu0E5G50OX4yt5ovqo4TV9BJrM+jpP14JGJpS/BFuHIJlNyaQFPJH/?=
- =?us-ascii?Q?xw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjiiOam3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 037DAC4CEF1;
+	Thu, 12 Jun 2025 18:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749754021;
+	bh=rae+Xy+GVeClcCuswO7WbVtIsL71ZmU4FtcEUBegmnw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OjiiOam3P0ES7NiE+EZJjuXt7LqkCLNruQnPCNpX06jpVlpRfuT+ibrxnDfCr0Qgc
+	 aVmenVGPayEVh2vBYKeO9OxkFdANxN+sF9dpZl1f50vhu/3TPnrU6fxMxryjugHJ0F
+	 OKC1MjSo8BZ23PZF3xzP0Pw8eXOEpdfMIwAETx+6iXATUZ93/ovbHZklNkYigseKK1
+	 JRcZtE7lzdX62ZT87N0AZ+XGacFN00z4cIWuGiWW2U8AK/gPVPESeseWd5DA9iYXhT
+	 6WAamqnLjbDyz5qKvoz8e790Q2osebh0BfhNUmWJDrQD/hrQJK+PMqsG/tGOBfkszj
+	 Rjk7GyUDVfOlA==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6065251725bso871119eaf.1;
+        Thu, 12 Jun 2025 11:47:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW1rHUBy2kx3KRoTGpddzPz9vqOvfzo9fqma0Dy5HIZttUG/Gv5k2u+6UmF3uDDutOvhPp1sjwKGw==@vger.kernel.org, AJvYcCW5JliNhPEphbk4qbS3oLyS/PPN+mgniZbpA0rIvZKbikGRfSqxnRXqXOEJOe/MXbxYJ4oMmB094zIIHWylep3up4C/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3RQllC2Qm/q7CRxpFFUr73tr2qJWC6gkW/5FOVkdJqtp76mtm
+	SOI2xKwz7TGVS7sU5GrTHOvZ4RDhvlDdYZ+UbR83QyzUV0mLIa1MAlAk7ni8ifMsnLR8e7gqCTa
+	556zKbwyesbYOrwzPWSnQPXlBcS3lQxc=
+X-Google-Smtp-Source: AGHT+IGVBH3lWI6ocKqXpduli60MAl5yPrTXUSBJUCNvpZ8YMVLXnRTpp4jSJe5p38bu5Vi5w5+ShdNClwr7F6Qn4V8=
+X-Received: by 2002:a05:6820:1a09:b0:60f:3be9:187a with SMTP id
+ 006d021491bc7-61107aa1b27mr172114eaf.8.1749754020209; Thu, 12 Jun 2025
+ 11:47:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 381c066e-d3b0-4362-bc5c-08dda9e15dff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2025 18:45:56.5825
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cyXONNBg8dlsvVmMs4iNmK+r0AvLe2vevlQIF/gsIf1qNWbfQion3xVV0103DlMrLRNozT2HSRHKBvHmKW5IPki/xBU33h4TJmRRUadFFJo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB13443
+References: <20250612145310.563358597@goodmis.org>
+In-Reply-To: <20250612145310.563358597@goodmis.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 12 Jun 2025 20:46:48 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iTrDBV7wG0gzpg3hzjBFWUdohquyVGta93uOhyoWpiLw@mail.gmail.com>
+X-Gm-Features: AX0GCFtmIZhBJxZjxq0ItKlhq1D_VGfvqSHyPe_kp82oXVvS-MbMbDdYCDMbVmA
+Message-ID: <CAJZ5v0iTrDBV7wG0gzpg3hzjBFWUdohquyVGta93uOhyoWpiLw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] PM: tracing: Don't compile in unused trace events
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jun 12, 2025 at 4:52=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+>
+> I have code that makes unsued events trigger a warning. I'm currently cle=
+aning
+> up the kernel to remove the majority of events that are defined but not u=
+sed.
+> When an event is defined, it can take up to 5K of text and meta data per
+> event. An event should not be created if it is not being used.
+>
+> The powernv_throttle event is only used by the powernv code so I moved it=
+ to
+> its own header file and it gets created when the powernv code is compiled=
+ in.
+>
+> For the other power events, I just added #ifdef around them with the conf=
+igs
+> that enable them.
+>
+> Steven Rostedt (4):
+>       PM: cpufreq: powernv/tracing: Move powernv_throttle trace event
+>       PM: tracing: Hide psci_domain_idle events under ARM_PSCI_CPUIDLE
+>       PM: tracing: Hide device_pm_callback events under PM_SLEEP
+>       PM: tracing: Hide power_domain_target event under ARCH_OMAP2PLUS
+>
+> ----
+>  drivers/cpufreq/Makefile          |  1 +
+>  drivers/cpufreq/powernv-cpufreq.c |  4 +++-
+>  drivers/cpufreq/powernv-trace.h   | 44 +++++++++++++++++++++++++++++++++=
+++++++
+>  include/trace/events/power.h      | 28 ++++++-------------------
+>  kernel/trace/power-traces.c       |  1 -
+>  5 files changed, 54 insertions(+), 24 deletions(-)
+>  create mode 100644 drivers/cpufreq/powernv-trace.h
 
+For the series:
 
-> -----Original Message-----
-> From: Prabhakar <prabhakar.csengg@gmail.com>
-> Sent: 09 June 2025 23:56
-> Subject: [PATCH v7 0/9] drm: renesas: rz-du: mipi_dsi: Prepare driver to =
-support RZ/V2H(P) SoC
->=20
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> Hi All,
->=20
-> This patch series prepares the MIPI DSI driver to support the Renesas
-> RZ/V2H(P) SoC. These patches were originally part of series [0], but I ha=
-ve split them into two parts
-> to make them easier to review and merge.
->=20
-> v6->v7:
-> - Rebased the changes on drm-misc/next
-> - Dropped DU patches as they are already applied
-> - Fixed revie comments from Laurent
-> - Dropped patch 12/12 from v6 "drm: renesas: rz-du: mipi_dsi: Add
->   support for LPCLK clock handling" as suggested by Laurent
->=20
-> v5->v6:
-> - Added reviewed tag from Biju and Laurent
-> - Updated commit messages
-> - Dropped parentheses around the calculation
-> - Added min_dclk above max_dclk in rzg2l_mipi_dsi_hw_info
-> - Renamed dphy_late_init to dphy_startup_late_init
->=20
-> v4->v5:
-> - Split up the series
-> - Added Reviewed-by tag from Biju
-> - Dropped feature flags for reset and LPCLK
-> - Patch 07/12 is new.
->=20
-> v3->v4:
-> - Corrected parameter name in rzv2h_dsi_get_pll_parameters_values()
->   description freq_millihz
-> - Used MILLI instead of KILO
-> - Made use of mul_u32_u32() for multiplication
-> - In rzv2h_dphy_find_ulpsexit() made the array static const.
->=20
-> v2->v3:
-> - Update the commit message for patch 1/15 to clarify the purpose
->   of `renesas-rzv2h-dsi.h` header
-> - Used mul_u32_u32() in rzv2h_cpg_plldsi_div_determine_rate()
-> - Replaced *_mhz to *_millihz for clarity
-> - Updated u64->u32 for fvco limits
-> - Initialized the members in declaration order for
->   RZV2H_CPG_PLL_DSI_LIMITS() macro
-> - Used clk_div_mask() in rzv2h_cpg_plldsi_div_recalc_rate()
-> - Replaced `unsigned long long` with u64
-> - Dropped rzv2h_cpg_plldsi_clk_recalc_rate() and reused
->   rzv2h_cpg_pll_clk_recalc_rate() instead
-> - In rzv2h_cpg_plldsi_div_set_rate() followed the same style
->   of RMW-operation as done in the other functions
-> - Renamed rzv2h_cpg_plldsi_set_rate() to rzv2h_cpg_pll_set_rate()
-> - Dropped rzv2h_cpg_plldsi_clk_register() and reused
->   rzv2h_cpg_pll_clk_register() instead
-> - Added a guard in renesas-rzv2h-dsi.h header
-> - Reverted CSDIV0_DIVCTL2() to use DDIV_PACK()
-> - Renamed plleth_lpclk_div4 -> cdiv4_plleth_lpclk
-> - Renamed plleth_lpclk -> plleth_lpclk_gear
-> - Collected reviewed tag from Krzysztof for patch 3/15
-> - Dropped !dsi->info check in rzg2l_mipi_dsi_probe() as it
->   is not needed.
-> - Simplified V2H DSI timings array to save space
-> - Switched to use fsleep() instead of udelay()
->=20
-> v1->v2:
-> - Rebased the changes on top of v6.15-rc1
-> - Kept the sort order for schema validation
-> - Added  `port@1: false` for RZ/V2H(P) SoC
-> - Added enum for RZ/V2H as suggested by Krzysztof as the list
->   will grow in the future (while adding RZ/G3E SoC).
-> - Added Reviewed-by tag from Biju and Krzysztof.
-> - Replaced individual flags as reset flag
-> - Dropped unused macros
-> - Added missing LPCLK flag to rzvv2h info
-> - Dropped FCP and VSP documentation patch and sent them separately
->=20
-> Cheers,
-> Prabhakar
->=20
-> Lad Prabhakar (9):
->   drm: renesas: rz-du: mipi_dsi: Add min check for VCLK range
->   drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ calculation
->   drm: renesas: rz-du: mipi_dsi: Use VCLK for HSFREQ calculation
->   drm: renesas: rz-du: mipi_dsi: Add OF data support
->   drm: renesas: rz-du: mipi_dsi: Make "rst" reset control optional for
->     RZ/V2H(P)
->   drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY frequency
->     calculations
->   drm: renesas: rz-du: mipi_dsi: Add feature flag for 16BPP support
->   drm: renesas: rz-du: mipi_dsi: Add dphy_late_init() callback for
->     RZ/V2H(P)
->   drm: renesas: rz-du: mipi_dsi: Add function pointers for configuring
->     VCLK and mode validation
->=20
->  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 151 +++++++++++++-----
->  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |   2 -
->  2 files changed, 114 insertions(+), 39 deletions(-)
->=20
-> --
-> 2.49.0
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-Applied to drm-misc-next
-
-Thanks,
-Biju
-
+Thanks!
