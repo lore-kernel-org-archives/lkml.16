@@ -1,509 +1,287 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EF01AC891;
-	Thu, 12 Jun 2025 06:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553951F0E2D
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749709759; cv=none; b=SoKykTjWPTBtxaVrdF6vNVOnyOrb4XI4oskZ3kPAS4EPAeUTR5IneEZcT3d/SULilSR55m+7NiOaUQ1dg8lzVYonOyEuzRwWLVlMPAYU7dfniD9zur2dQ3zq24Zeo50Oe8aFsg5zbtnVT/v4g5ayVDMEqCUO4/FfVm7Bh0cqwq4=
+	t=1749709881; cv=none; b=sTOgm9dQaGQENPF1wbQou5Y/ech8AJbuH4kNMeWPgDs8ncknWLZoQHNynZCzzcUrU/5OKG1X2D+sgCsfZXmpDlUGRFDLB9rAkGJwvxy384Rdm5XT01T9WLhiL/k9bfn+cTg7dea+VhoYeT7AokeKR9oFEYfdpIfohlNJNmMHnQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749709759; c=relaxed/simple;
-	bh=q+ooHgsMsxlWywNzAHkgEDbnTeufzdrYa5toXP1T9mw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WKApkWDkGxyKHsIUskEZQ3UrgKIFIzGRISwH5P7cuzzuLVZDM72CcZoCU7l6e6TjZb72MBEdHTuIXbYkBCEJb/RqH4Bi3bLUMwxmjNrZzwJDP/7WdQvWH0l3CT+FodA9EoBLKPXyfl9gZMuiYv/6Yy7KU0jN+yKgz/BPZ9MuGgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m2zYh1xN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MbGyspmo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749709881; c=relaxed/simple;
+	bh=uVP9puXoIew/Ys15nmcdCzBtIRCr9QIJfdWgIpcR6wI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C7+jUNSq5s2gt26dFwo2NyBeTG7dx9/CpULY0D5hwTC2xpfHJzOaWr/4T7c+RwBoBgqnOfIavhYSrA4WB2PWKfLCA2CJNCOHaXJJxl2I0lx8GZPyLe7k8Gg+UVsDSrum07vKpDWp6pfpJA1T4FGJ3yKHfSpqD68tWg+0tnxACNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PPWCls6E; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m2zYh1xN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MbGyspmo"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749709755;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PPWCls6E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749709878;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/gwFuPowb6u+x2IVr4GkR/YZTTKIETm7xejWZr1/1hQ=;
-	b=m2zYh1xNxTZZwrK4OVcTXPdFRDlMzV0YO3MxziqXW1CiANmhK9vc85ZvNBySyJsSeYgyjs
-	y/QBC/hBLI/Y50ZdgS6W/c9S+KCg77KJOhNZTBTLP0RwcvhPqwNyv1xR0Gjh7n3x/ixFzh
-	qkd8NKBAjbSOFwfl43THlBS5Q0EeDMSDnJr6nNBiBwQ1y/QbVzGEo5rwqpR9jBYjtJkwo5
-	3Dc0Kvzx4HUIr58DAGRPyrD9l+os/F82UvB70XpSsVHvhX4RQvf5n2ybcW3bL2uYiBKMfk
-	VFnF0lO6hTmusonjRHPqe0ZxQNEek+oycMsdCgcN1mxP7/3SOjzCNuMOQrWotQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749709755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/gwFuPowb6u+x2IVr4GkR/YZTTKIETm7xejWZr1/1hQ=;
-	b=MbGyspmos2sNkNBg9fDhrdUFyFSN8LK2BN088a/b71cyfSoWcjyGYmCBiawgNR/cLMBV5G
-	emnhoHzE49IK+nCg==
-Date: Thu, 12 Jun 2025 08:29:07 +0200
-Subject: [PATCH v3] printk: ringbuffer: Add KUnit test
+	 in-reply-to:in-reply-to:references:references;
+	bh=u3UuqHSkhoCWjsmKvKZgvB4q0ePA6YJ5VWAJGZfkLJg=;
+	b=PPWCls6EuOVxzAFB+j1IZ0fPpQBEWlxXEAsN28azayMSpndqgg0AA5KX/XTH7fAPUJ6klc
+	aNeDOp6+TCThUlSQlv6fEmVCd6P4FREx1g1VZi2cREvPid0KLWTjoT9zhlzw2BMkGUtqHl
+	Gz+Mnb23TPTTuG/W+gW/qIxOoISEhh8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-lrylldFFMD6Ed-d0yrcXNQ-1; Thu, 12 Jun 2025 02:31:16 -0400
+X-MC-Unique: lrylldFFMD6Ed-d0yrcXNQ-1
+X-Mimecast-MFC-AGG-ID: lrylldFFMD6Ed-d0yrcXNQ_1749709875
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d50eacafso2968005e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:31:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749709875; x=1750314675;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u3UuqHSkhoCWjsmKvKZgvB4q0ePA6YJ5VWAJGZfkLJg=;
+        b=unU1RZQMLWGpXaAsg4QgB/uf6wIFHtEUR5CXGiZ0YsbpYznBzH8704wnDUdnuikKFH
+         oCuE6Vvkm2xg/Kb6yk+4KEmR8JsUz3xqEr0w1XgjBz7+Jab95raP2FjOpjb3eCsMIa8R
+         eH73O8was+hBalHX4Hy770U3pHIFG/SQcOcd4SxKKfGboUjmk5kflRbW+us6GX+/whv9
+         KMicaCHmO/GTM7Y8QjQ745ZK1Pd378GEPDCzaBjHjwPsOU+P2oRmPfpy9uUDhZlqsMQg
+         j3cl8/plQDGk26MRaUXNcs48eBxADZD4/PQS6lFmlQClSsjGdxIvDi3k1Gk2S/S65JaV
+         lvDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDNQol25+FJB/nGtWvaHs9NQ1bh3ANXE2qKEb0n/B0hUZlWVh6zALAVtXMXA+YXi0yq88vHyD2vXGKK8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwSDF81TagI1FohGonzceOBPCeMYYCnKgIPliAkK9cWezpU56Z
+	pAhDsGzmWRZ+oNJ65iAVFqeOAq18PFZKrKvS0B0RngPYKjt1gokHbmyH/Gdvr+bhCp8u5k920wR
+	PfUfl6FCmMXBC+DrCK+FsahMSZ9L3wX4nTixG8aeVRWXSXug/YAgHWMdHYO3SuglWjA==
+X-Gm-Gg: ASbGncvyp/jZz5AQ3B8UzXATmX+6TLs+8NGNxrnA5PbLm6fHEfs7xysft+mtdxJ0ReH
+	xy8Asb7tkCCy85pCPO1Jwv3CIrRIRRKajM1+UB3i5d5VCmi6URAYhl/cH7sJUGjajFF3TP2PFUL
+	5ODzr2uYBBRHn6uFR+5iFq23/gYDqRFcTkX7LvqXA/nnK68Mf/dWrDXjo7oC1h2tqpg81mWJ9xy
+	YqwaHul/jbn498ZeTlqU4MqfAFeuDQajNY2Co8mAbJHNTgzUKQAB5Wc2OEiAovgimVQXUhGzOEA
+	/aNJKNtdc93nOziY
+X-Received: by 2002:a05:600c:4f06:b0:453:608:a18b with SMTP id 5b1f17b1804b1-4532b28d858mr24218465e9.9.1749709875305;
+        Wed, 11 Jun 2025 23:31:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG42kNG+HqM89NPvBcNZFAzJ3Vn7GxaF9vIvrfn2F0Rh/ycFiYHni3pyzMMLUuiDLbmUb5Kuw==
+X-Received: by 2002:a05:600c:4f06:b0:453:608:a18b with SMTP id 5b1f17b1804b1-4532b28d858mr24218175e9.9.1749709874848;
+        Wed, 11 Jun 2025 23:31:14 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e24155bsm10020445e9.17.2025.06.11.23.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 23:31:14 -0700 (PDT)
+Date: Thu, 12 Jun 2025 02:31:12 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Cindy Lu <lulu@redhat.com>
+Cc: jasowang@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v11 3/3] vhost: Add configuration controls for vhost
+ worker's mode
+Message-ID: <20250612022053-mutt-send-email-mst@kernel.org>
+References: <20250609073430.442159-1-lulu@redhat.com>
+ <20250609073430.442159-4-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250612-printk-ringbuffer-test-v3-1-550c088ee368@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIALJzSmgC/33OwWrDMAwG4FcJPtdDsq0k3WnvMXawHbk1G0mx3
- dBS8u51ukspyy6CX6BP/01kTpGzeG9uIvEcc5zGGvSuEf5oxwPLONQsFCiDgChPKY7lW9Z5cOc
- QOMnCuchgutB3vrV970Q9PiUO8fKAP79qPsZcpnR9/Jlx3a4kgUHaImeUKDu25DunLYP++Inju
- aRpjJe3gcXKzuqJUnqTUpVqFbo9+MF68i/UrvklCNp/CSSlAKjds8O/2pjnNv0mZSpliME6D0E
- TvVLLstwBv6PX7pkBAAA=
-X-Change-ID: 20241011-printk-ringbuffer-test-f47f87c6a88b
-To: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
- John Ogness <john.ogness@linutronix.de>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: John Ogness <jogness@linutronix.de>, David Gow <davidgow@google.com>, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749709754; l=14587;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=q+ooHgsMsxlWywNzAHkgEDbnTeufzdrYa5toXP1T9mw=;
- b=oQ1Zj+FuNq48sXvAgFf0v77Qfu78+ieO7Zu+7jjfnCSoOUu6yPtRSV5n9lK0AHoEkuU3evPhK
- HXyPsoYaF9YCSyLIc0r5v1Bygc7YI2EtKZud/W6fS3MWrq/BXpLhAwv
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609073430.442159-4-lulu@redhat.com>
 
-The KUnit test validates the correct operation of the ringbuffer.
-A separate dedicated ringbuffer is used so that the global printk
-ringbuffer is not touched.
+On Mon, Jun 09, 2025 at 03:33:09PM +0800, Cindy Lu wrote:
+> This patch introduces functionality to control the vhost worker mode:
+> 
+> - Add two new IOCTLs:
+>   * VHOST_SET_FORK_FROM_OWNER: Allows userspace to select between
+>     task mode (fork_owner=1) and kthread mode (fork_owner=0)
+>   * VHOST_GET_FORK_FROM_OWNER: Retrieves the current thread mode
+>     setting
+> 
+> - Expose module parameter 'fork_from_owner_default' to allow system
+>   administrators to configure the default mode for vhost workers
+> 
+> - Add KConfig option CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL to
+>   control the availability of these IOCTLs and parameter, allowing
+>   distributions to disable them if not needed
+> 
+> - The VHOST_NEW_WORKER functionality requires fork_owner to be set
+>   to true, with validation added to ensure proper configuration
+> 
+> Signed-off-by: Cindy Lu <lulu@redhat.com>
 
-Co-developed-by: John Ogness <john.ogness@linutronix.de>
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
-Changes in v3:
-- Rebase onto v6.16-rc1
-- Fix build for PRINTK_RINGBUFFER_KUNIT_TEST=m
-- Add comment about reinitialization
-- Avoid strnlen() in prbtest_check_data() to
-  - Avoid out-of-bound reads with CONFIG_FORTIFY_SOURCE
-  - Work correctly with so many CPUs that "text_id" will be '\0'
-- Link to v2: https://lore.kernel.org/r/20250506-printk-ringbuffer-test-v2-1-152200569eb1@linutronix.de
 
-Changes in v2:
-- Adapt to new MODULE_IMPORT_NS() syntax
-- Handle platforms without u64 division
-- Allocate resources through kunit wrappers
-- Drop setup thread
-- Allow multiple executions
-- Make naming more consistent
-- Use get_random_u32_below()
-- Allow !CONFIG_SMP
-- Follow KUNIT kconfig naming scheme
-- Fix limited string formatting in prbtest_fail_record()
-- Fix MODULE_DESCRIPTION
-- Use get_random_u32_inclusive()
-- Drop timing measurements, preemption and lost tracking
-- Use plain jiffies variable
-- Print warning if only one CPU is present
-- Style cleanup
-- Fix formatting of bad message payload
-- Link to v1: https://lore.kernel.org/r/20250415-printk-ringbuffer-test-v1-1-7ea5c7b3ae03@linutronix.de
----
- init/Kconfig                                 |  12 ++
- kernel/printk/.kunitconfig                   |   3 +
- kernel/printk/Makefile                       |   2 +
- kernel/printk/printk_ringbuffer.c            |   5 +
- kernel/printk/printk_ringbuffer_kunit_test.c | 295 +++++++++++++++++++++++++++
- 5 files changed, 317 insertions(+)
+getting there. yet something to improve.
 
-diff --git a/init/Kconfig b/init/Kconfig
-index af4c2f0854554bbcdf193852cf5c1d2c2accc64f..73e64172b564e6db3efe2a18c5f52d620c62bf44 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1667,6 +1667,18 @@ config PRINTK
- 	  very difficult to diagnose system problems, saying N here is
- 	  strongly discouraged.
- 
-+config PRINTK_RINGBUFFER_KUNIT_TEST
-+	tristate "KUnit Test for the printk ringbuffer" if !KUNIT_ALL_TESTS
-+	depends on PRINTK && KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the printk ringbuffer KUnit test suite.
-+
-+	  For more information on KUnit and unit tests in general, please refer
-+	  to the KUnit documentation.
-+
-+	  If unsure, say N.
-+
- config BUG
- 	bool "BUG() support" if EXPERT
- 	default y
-diff --git a/kernel/printk/.kunitconfig b/kernel/printk/.kunitconfig
-new file mode 100644
-index 0000000000000000000000000000000000000000..f31458fd1a92fe24a61f6a6ebd1078b7ea2cd137
---- /dev/null
-+++ b/kernel/printk/.kunitconfig
-@@ -0,0 +1,3 @@
-+CONFIG_KUNIT=y
-+CONFIG_PRINTK=y
-+CONFIG_PRINTK_RINGBUFFER_KUNIT_TEST=y
-diff --git a/kernel/printk/Makefile b/kernel/printk/Makefile
-index 39a2b61c7232e7b65d64eafd3ceadcf72cd32760..f8004ac3983da27a6218705fc5273bf3bf572045 100644
---- a/kernel/printk/Makefile
-+++ b/kernel/printk/Makefile
-@@ -7,3 +7,5 @@ obj-$(CONFIG_PRINTK_INDEX)	+= index.o
- obj-$(CONFIG_PRINTK)                 += printk_support.o
- printk_support-y	             := printk_ringbuffer.o
- printk_support-$(CONFIG_SYSCTL)	     += sysctl.o
-+
-+obj-$(CONFIG_PRINTK_RINGBUFFER_KUNIT_TEST) += printk_ringbuffer_kunit_test.o
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index d9fb053cff67dbdb8741ee3cac60f51ab986e499..bc811de18316bb8bcb59b96a272addd3c0d46e40 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <kunit/visibility.h>
- #include <linux/kernel.h>
- #include <linux/irqflags.h>
- #include <linux/string.h>
-@@ -1685,6 +1686,7 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
- 	memset(r, 0, sizeof(*r));
- 	return false;
- }
-+EXPORT_SYMBOL_IF_KUNIT(prb_reserve);
- 
- /* Commit the data (possibly finalizing it) and restore interrupts. */
- static void _prb_commit(struct prb_reserved_entry *e, unsigned long state_val)
-@@ -1759,6 +1761,7 @@ void prb_commit(struct prb_reserved_entry *e)
- 	if (head_id != e->id)
- 		desc_make_final(e->rb, e->id);
- }
-+EXPORT_SYMBOL_IF_KUNIT(prb_commit);
- 
- /**
-  * prb_final_commit() - Commit and finalize (previously reserved) data to
-@@ -2184,6 +2187,7 @@ bool prb_read_valid(struct printk_ringbuffer *rb, u64 seq,
- {
- 	return _prb_read_valid(rb, &seq, r, NULL);
- }
-+EXPORT_SYMBOL_IF_KUNIT(prb_read_valid);
- 
- /**
-  * prb_read_valid_info() - Non-blocking read of meta data for a requested
-@@ -2333,6 +2337,7 @@ void prb_init(struct printk_ringbuffer *rb,
- 	infos[0].seq = -(u64)_DESCS_COUNT(descbits);
- 	infos[_DESCS_COUNT(descbits) - 1].seq = 0;
- }
-+EXPORT_SYMBOL_IF_KUNIT(prb_init);
- 
- /**
-  * prb_record_text_space() - Query the full actual used ringbuffer space for
-diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..4081ae051d8e63fe195095118f2e8370ddd0737e
---- /dev/null
-+++ b/kernel/printk/printk_ringbuffer_kunit_test.c
-@@ -0,0 +1,295 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/cpuhplock.h>
-+#include <linux/cpumask.h>
-+#include <linux/init.h>
-+#include <linux/kthread.h>
-+#include <linux/module.h>
-+#include <linux/moduleparam.h>
-+#include <linux/random.h>
-+#include <linux/slab.h>
-+#include <linux/timer.h>
-+#include <linux/wait.h>
-+
-+#include <kunit/resource.h>
-+#include <kunit/test.h>
-+
-+#include "printk_ringbuffer.h"
-+
-+/*
-+ * This KUnit tests the data integrity of the lockless printk_ringbuffer.
-+ * From multiple CPUs it writes messages of varying length and content while
-+ * a reader validates the correctness of the messages.
-+ *
-+ * IMPORTANT: The more CPUs you can use for this KUnit, the better!
-+ *
-+ * The test works by starting "num_online_cpus() - 1" writer threads, each
-+ * pinned to their own CPU. Each writer thread loops, writing data of varying
-+ * length into a printk_ringbuffer as fast as possible. The data content is
-+ * an embedded data struct followed by string content repeating the byte:
-+ *
-+ *      'A' + CPUID
-+ *
-+ * The reader is running on the remaining online CPU, or if there is only one
-+ * CPU on the same as the writer.
-+ * It ensures that the embedded struct content is consistent with the string
-+ * and that the string * is terminated and is composed of the same repeating
-+ * byte as its first byte.
-+ *
-+ * Because the threads are running in such tight loops, they will call
-+ * cond_resched() from time to time so the system stays functional.
-+ *
-+ * If the reader encounters an error, the test is aborted and some
-+ * information about the error is reported.
-+ * The runtime of the test can be configured with the runtime_ms module parameter.
-+ *
-+ * Note that the test is performed on a separate printk_ringbuffer instance
-+ * and not the instance used by printk().
-+ */
-+
-+static unsigned long runtime_ms = 10 * MSEC_PER_SEC;
-+module_param(runtime_ms, ulong, 0400);
-+
-+/* test data structure */
-+struct prbtest_rbdata {
-+	unsigned int len;
-+	char text[] __counted_by(len);
-+};
-+
-+#define MAX_RBDATA_TEXT_SIZE 0x7f
-+/* +1 for terminator. */
-+#define MAX_PRB_RECORD_SIZE (sizeof(struct prbtest_rbdata) + MAX_RBDATA_TEXT_SIZE + 1)
-+
-+struct prbtest_data {
-+	struct kunit *test;
-+	struct printk_ringbuffer *ringbuffer;
-+	/* used by writers to signal reader of new records */
-+	wait_queue_head_t new_record_wait;
-+};
-+
-+struct prbtest_thread_data {
-+	unsigned long num;
-+	struct prbtest_data *test_data;
-+};
-+
-+static void prbtest_fail_record(struct kunit *test, const struct prbtest_rbdata *dat, u64 seq)
-+{
-+	KUNIT_FAIL(test, "BAD RECORD: seq=%llu len=%u text=%.*s\n",
-+		   seq, dat->len,
-+		   dat->len <= MAX_RBDATA_TEXT_SIZE ? dat->len : -1,
-+		   dat->len <= MAX_RBDATA_TEXT_SIZE ? dat->text : "<invalid>");
-+}
-+
-+static bool prbtest_check_data(const struct prbtest_rbdata *dat)
-+{
-+	unsigned int len;
-+
-+	/* Sane length? */
-+	if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
-+		return false;
-+
-+	if (dat->text[dat->len] != '\0')
-+		return false;
-+
-+	/* String repeats with the same character? */
-+	len = dat->len;
-+	while (len--) {
-+		if (dat->text[len] != dat->text[0])
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+static int prbtest_writer(void *data)
-+{
-+	struct prbtest_thread_data *tr = data;
-+	char text_id = 'A' + tr->num;
-+	struct prb_reserved_entry e;
-+	struct prbtest_rbdata *dat;
-+	u32 record_size, text_size;
-+	unsigned long count = 0;
-+	struct printk_record r;
-+
-+	kunit_info(tr->test_data->test, "start thread %03lu (writer)\n", tr->num);
-+
-+	for (;;) {
-+		/* ensure at least 1 character */
-+		text_size = get_random_u32_inclusive(1, MAX_RBDATA_TEXT_SIZE);
-+		/* +1 for terminator. */
-+		record_size = sizeof(struct prbtest_rbdata) + text_size + 1;
-+		WARN_ON_ONCE(record_size > MAX_PRB_RECORD_SIZE);
-+
-+		/* specify the text sizes for reservation */
-+		prb_rec_init_wr(&r, record_size);
-+
-+		if (prb_reserve(&e, tr->test_data->ringbuffer, &r)) {
-+			r.info->text_len = record_size;
-+
-+			dat = (struct prbtest_rbdata *)r.text_buf;
-+			dat->len = text_size;
-+			memset(dat->text, text_id, text_size);
-+			dat->text[text_size] = 0;
-+
-+			prb_commit(&e);
-+
-+			wake_up_interruptible(&tr->test_data->new_record_wait);
-+		}
-+
-+		if ((count++ & 0x3fff) == 0)
-+			cond_resched();
-+
-+		if (kthread_should_stop())
-+			break;
-+	}
-+
-+	kunit_info(tr->test_data->test, "end thread %03lu: wrote=%lu\n", tr->num, count);
-+
-+	return 0;
-+}
-+
-+struct prbtest_wakeup_timer {
-+	struct timer_list timer;
-+	struct task_struct *task;
-+};
-+
-+static void prbtest_wakeup_callback(struct timer_list *timer)
-+{
-+	struct prbtest_wakeup_timer *wakeup = timer_container_of(wakeup, timer, timer);
-+
-+	set_tsk_thread_flag(wakeup->task, TIF_NOTIFY_SIGNAL);
-+	wake_up_process(wakeup->task);
-+}
-+
-+static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_ms)
-+{
-+	struct prbtest_wakeup_timer wakeup;
-+	char text_buf[MAX_PRB_RECORD_SIZE];
-+	unsigned long count = 0;
-+	struct printk_info info;
-+	struct printk_record r;
-+	u64 seq = 0;
-+
-+	wakeup.task = current;
-+	timer_setup_on_stack(&wakeup.timer, prbtest_wakeup_callback, 0);
-+	mod_timer(&wakeup.timer, jiffies + msecs_to_jiffies(timeout_ms));
-+
-+	prb_rec_init_rd(&r, &info, text_buf, sizeof(text_buf));
-+
-+	kunit_info(test_data->test, "start reader\n");
-+
-+	while (!wait_event_interruptible(test_data->new_record_wait,
-+					 prb_read_valid(test_data->ringbuffer, seq, &r))) {
-+		/* check/track the sequence */
-+		if (info.seq < seq)
-+			KUNIT_FAIL(test_data->test, "BAD SEQ READ: request=%llu read=%llu\n",
-+				   seq, info.seq);
-+
-+		if (!prbtest_check_data((struct prbtest_rbdata *)r.text_buf))
-+			prbtest_fail_record(test_data->test,
-+					    (struct prbtest_rbdata *)r.text_buf, info.seq);
-+
-+		if ((count++ & 0x3fff) == 0)
-+			cond_resched();
-+
-+		seq = info.seq + 1;
-+	}
-+
-+	timer_delete_sync(&wakeup.timer);
-+	timer_destroy_on_stack(&wakeup.timer);
-+
-+	kunit_info(test_data->test, "end reader: read=%lu seq=%llu\n", count, info.seq);
-+
-+	return 0;
-+}
-+
-+KUNIT_DEFINE_ACTION_WRAPPER(prbtest_kthread_cleanup, kthread_stop, struct task_struct *);
-+
-+static void prbtest_add_kthread_cleanup(struct kunit *test, struct task_struct *kthread)
-+{
-+	int err;
-+
-+	err = kunit_add_action_or_reset(test, prbtest_kthread_cleanup, kthread);
-+	KUNIT_ASSERT_EQ(test, err, 0);
-+}
-+
-+static inline void prbtest_prb_reinit(struct printk_ringbuffer *rb)
-+{
-+	prb_init(rb, rb->text_data_ring.data, rb->text_data_ring.size_bits, rb->desc_ring.descs,
-+		 rb->desc_ring.count_bits, rb->desc_ring.infos);
-+}
-+
-+static void test_readerwriter(struct kunit *test)
-+{
-+	/* Equivalent to CONFIG_LOG_BUF_SHIFT=13 */
-+	DEFINE_PRINTKRB(test_rb, 8, 5);
-+
-+	struct prbtest_thread_data *thread_data;
-+	struct prbtest_data *test_data;
-+	struct task_struct *thread;
-+	cpumask_t test_cpus;
-+	int cpu, reader_cpu;
-+
-+	cpus_read_lock();
-+	/*
-+	 * Failure of KUNIT_ASSERT() kills the current task
-+	 * so it can not be called while the CPU hotplug lock is held.
-+	 * Instead use a snapshot of the online CPUs.
-+	 * If they change during test execution it is unfortunate but not a grave error.
-+	 */
-+	cpumask_copy(&test_cpus, cpu_online_mask);
-+	cpus_read_unlock();
-+
-+	/* One CPU is for the reader, all others are writers */
-+	reader_cpu = cpumask_first(&test_cpus);
-+	if (cpumask_weight(&test_cpus) == 1)
-+		kunit_warn(test, "more than one CPU is recommended");
-+	else
-+		cpumask_clear_cpu(reader_cpu, &test_cpus);
-+
-+	/* KUnit test can get restarted more times. */
-+	prbtest_prb_reinit(&test_rb);
-+
-+	test_data = kunit_kmalloc(test, sizeof(*test_data), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, test_data);
-+	test_data->test = test;
-+	test_data->ringbuffer = &test_rb;
-+	init_waitqueue_head(&test_data->new_record_wait);
-+
-+	kunit_info(test, "running for %lu ms\n", runtime_ms);
-+
-+	for_each_cpu(cpu, &test_cpus) {
-+		thread_data = kunit_kmalloc(test, sizeof(*thread_data), GFP_KERNEL);
-+		KUNIT_ASSERT_NOT_NULL(test, thread_data);
-+		thread_data->test_data = test_data;
-+		thread_data->num = cpu;
-+
-+		thread = kthread_run_on_cpu(prbtest_writer, thread_data, cpu,
-+					    "prbtest writer %u");
-+		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, thread);
-+		prbtest_add_kthread_cleanup(test, thread);
-+	}
-+
-+	kunit_info(test, "starting test\n");
-+
-+	set_cpus_allowed_ptr(current, cpumask_of(reader_cpu));
-+	prbtest_reader(test_data, runtime_ms);
-+
-+	kunit_info(test, "completed test\n");
-+}
-+
-+static struct kunit_case prb_test_cases[] = {
-+	KUNIT_CASE_SLOW(test_readerwriter),
-+	{}
-+};
-+
-+static struct kunit_suite prb_test_suite = {
-+	.name       = "printk-ringbuffer",
-+	.test_cases = prb_test_cases,
-+};
-+kunit_test_suite(prb_test_suite);
-+
-+MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
-+MODULE_AUTHOR("John Ogness <john.ogness@linutronix.de>");
-+MODULE_DESCRIPTION("printk_ringbuffer KUnit test");
-+MODULE_LICENSE("GPL");
+> ---
+>  drivers/vhost/Kconfig      | 17 +++++++++++++++
+>  drivers/vhost/vhost.c      | 44 ++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vhost.h | 25 ++++++++++++++++++++++
+>  3 files changed, 86 insertions(+)
+> 
+> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+> index 020d4fbb947c..49e1d9dc92b7 100644
+> --- a/drivers/vhost/Kconfig
+> +++ b/drivers/vhost/Kconfig
+> @@ -96,3 +96,20 @@ config VHOST_CROSS_ENDIAN_LEGACY
+>  	  If unsure, say "N".
+>  
+>  endif
+> +
+> +config CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
+> +	bool "Enable CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL"
+> +	default n
+> +	help
+> +	  This option enables two IOCTLs: VHOST_SET_FORK_FROM_OWNER and
+> +	  VHOST_GET_FORK_FROM_OWNER. These allow userspace applications
+> +	  to modify the vhost worker mode for vhost devices.
+> +
+> +	  Also expose module parameter 'fork_from_owner_default' to allow users
+> +	  to configure the default mode for vhost workers.
+> +
+> +	  By default, `CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL` is set to `n`,
+> +	  which disables the IOCTLs and parameter.
+> +	  When enabled (y), users can change the worker thread mode as needed.
+> +
+> +	  If unsure, say "N".
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 37d3ed8be822..903d9c3f6784 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -43,6 +43,11 @@ module_param(max_iotlb_entries, int, 0444);
+>  MODULE_PARM_DESC(max_iotlb_entries,
+>  	"Maximum number of iotlb entries. (default: 2048)");
+>  static bool fork_from_owner_default = true;
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20241011-printk-ringbuffer-test-f47f87c6a88b
+Add empty lines around ifdef to make it clear what code do they
+delimit.
 
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
+> +#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
+> +module_param(fork_from_owner_default, bool, 0444);
+> +MODULE_PARM_DESC(fork_from_owner_default,
+> +		 "Set task mode as the default(default: Y)");
+> +#endif
+>  
+>  enum {
+>  	VHOST_MEMORY_F_LOG = 0x1,
+> @@ -1019,6 +1024,13 @@ long vhost_worker_ioctl(struct vhost_dev *dev, unsigned int ioctl,
+>  	switch (ioctl) {
+>  	/* dev worker ioctls */
+>  	case VHOST_NEW_WORKER:
+> +		/*
+> +		 * vhost_tasks will account for worker threads under the parent's
+> +		 * NPROC value but kthreads do not. To avoid userspace overflowing
+> +		 * the system with worker threads fork_owner must be true.
+> +		 */
+> +		if (!dev->fork_owner)
+> +			return -EFAULT;
+
+An empty line here would make the code clearer.
+
+>  		ret = vhost_new_worker(dev, &state);
+>  		if (!ret && copy_to_user(argp, &state, sizeof(state)))
+>  			ret = -EFAULT;
+> @@ -1136,6 +1148,7 @@ void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *umem)
+>  
+>  	vhost_dev_cleanup(dev);
+>  
+> +	dev->fork_owner = fork_from_owner_default;
+>  	dev->umem = umem;
+>  	/* We don't need VQ locks below since vhost_dev_cleanup makes sure
+>  	 * VQs aren't running.
+> @@ -2289,6 +2302,37 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
+>  		goto done;
+>  	}
+>  
+> +#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
+> +	u8 fork_owner;
+
+Do not declare variables in the middle of a scope please.
+This one is not needed in this scope, so just move it down
+to within if (yes you will repeat the declaration twice then).
+
+
+
+> +
+> +	if (ioctl == VHOST_SET_FORK_FROM_OWNER) {
+> +		/*fork_owner can only be modified before owner is set*/
+
+bad comment style.
+
+> +		if (vhost_dev_has_owner(d)) {
+> +			r = -EBUSY;
+> +			goto done;
+> +		}
+> +		if (copy_from_user(&fork_owner, argp, sizeof(u8))) {
+
+get_user is a better fit for this. In particular, typesafe.
+
+
+> +			r = -EFAULT;
+> +			goto done;
+> +		}
+> +		if (fork_owner > 1) {
+
+so 0 and 1 are the only legal values?
+maybe add an enum or defines in the header then.
+
+
+> +			r = -EINVAL;
+> +			goto done;
+> +		}
+> +		d->fork_owner = (bool)fork_owner;
+
+		!!fork_owner is shorter and idiomatic.
+
+> +		r = 0;
+> +		goto done;
+> +	}
+> +	if (ioctl == VHOST_GET_FORK_FROM_OWNER) {
+> +		fork_owner = d->fork_owner;
+> +		if (copy_to_user(argp, &fork_owner, sizeof(u8))) {
+
+put_user
+
+> +			r = -EFAULT;
+> +			goto done;
+> +		}
+> +		r = 0;
+> +		goto done;
+> +	}
+> +#endif
+>  	/* You must be the owner to do anything else */
+>  	r = vhost_dev_check_owner(d);
+>  	if (r)
+> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
+> index d4b3e2ae1314..e51d6a347607 100644
+> --- a/include/uapi/linux/vhost.h
+> +++ b/include/uapi/linux/vhost.h
+> @@ -235,4 +235,29 @@
+>   */
+>  #define VHOST_VDPA_GET_VRING_SIZE	_IOWR(VHOST_VIRTIO, 0x82,	\
+>  					      struct vhost_vring_state)
+> +
+> +/**
+> + * VHOST_SET_FORK_FROM_OWNER - Set the fork_owner flag for the vhost device,
+> + * This ioctl must called before VHOST_SET_OWNER.
+> + * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=y
+> + *
+> + * @param fork_owner: An 8-bit value that determines the vhost thread mode
+> + *
+> + * When fork_owner is set to 1(default value):
+> + *   - Vhost will create vhost worker as tasks forked from the owner,
+> + *     inheriting all of the owner's attributes.
+> + *
+> + * When fork_owner is set to 0:
+> + *   - Vhost will create vhost workers as kernel threads.
+> + */
+> +#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
+> +
+> +/**
+> + * VHOST_GET_FORK_OWNER - Get the current fork_owner flag for the vhost device.
+> + * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=y
+> + *
+> + * @return: An 8-bit value indicating the current thread mode.
+> + */
+> +#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x84, __u8)
+> +
+>  #endif
+> -- 
+> 2.45.0
 
