@@ -1,113 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D85246797;
-	Thu, 12 Jun 2025 10:53:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC28238C09;
+	Thu, 12 Jun 2025 10:54:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725632; cv=none; b=KHKGze7DiAhdXUPhmVAGY5DtQNxSfI1HPkwqxzQERhrXC9WcNikZ/X5l2CAxtikKOED1awx3az1RO4AUD5xaAC01rQaX3S/N3FNUZo06INT6zSP3VucBUmVNLRTn2p9yQa7ZdrKToC+789YoDYLqUlmFnQokJZlQYAJgaChBr3A=
+	t=1749725679; cv=none; b=MYEM3AYWbKRQGOdjvOZQyLxnHzvYn7CSWwL1XwEsDzumW9ScePl97yudC1ERCsR8o+DY8Ka7P64HsNSzKxxNOD6xa9p0vO/UYnAGidXqmfwIhPxOqgaRKD5rK9H5N8nPt7Q8NoGjVTUmeS3tR1gBuAje4c5mevYFC03toPzwGAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725632; c=relaxed/simple;
-	bh=kLBLY/1VoxwlHEXQXPLtXWDGykTKRQSRy0gRlSA3/44=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=OAkJvlSHnf0fi234uj4aEprEMci0UFegKq5vLzqtRINrcrY11hsRyrybwmSVBAT0MAWTn1TpFYJ5kOd2I867+1SFq6/9zIHIyBuUDmPJDpQu8ftRtHeNrkeJb9aS9Mvb8tyPvprbCd46zwiZyWh206CifhCObxA2y+mLONqIdFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pPLGB5DC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749725679; c=relaxed/simple;
+	bh=Svf2SlshRf4K2I3bpqEV/6RweQo/oo8/RGNKpTG7qDs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bc9BEEL9VtCw8mxmeXyByYr9LXFyu+6BiFHa/uCJFpN79e/po5yVByOfMCR3c1cv1UK40EFyU6s6TRqjL/IHZBWiFWQccVAoDkC0yYq1oEm3VO88bqW61bzkzLRVQrRNm8KsgVYYIMKnHOoAxz/LBGoYJbcGI7aKJDuhIBla+SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wl7wNucj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pPLGB5DC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 789ECC4CEEA;
-	Thu, 12 Jun 2025 10:53:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wl7wNucj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBADCC4CEEA;
+	Thu, 12 Jun 2025 10:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749725632;
-	bh=kLBLY/1VoxwlHEXQXPLtXWDGykTKRQSRy0gRlSA3/44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pPLGB5DCggP6sVYRduvA5cFsFJ8EyHL7r38ZXnGPQQCnfYo2Ybo5BsSUhUjMVYmw/
-	 oUrqbv8lrTTXHVgjmkTMGmzDduNQdBJIPLuYMHBFuP6XuNRM9BrJLFKol8MQQKzRnp
-	 NR2m1dcjzO3cfp4AWt2c2RlSQp2EmP56FaLGm7ekYc4BxsK6CVfXcWT7ehOkOoQyP7
-	 AecsNaazSRvv0S0NjQAxQyQ3Jd00eLlzc+pIC6p17WbjDfokG0B+voHEQx1TMhvbR/
-	 1StxwJ4Kfni0KyhDjIZ3QeKdmIVCgBn9Vn4ZRnUj3bT6Wh6Z9kC/+usDJnIOO59udD
-	 I/y7cUpPqmRrg==
+	s=k20201202; t=1749725677;
+	bh=Svf2SlshRf4K2I3bpqEV/6RweQo/oo8/RGNKpTG7qDs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Wl7wNucjTNCstmT8lp0PPGX2AAqsrSfFv41JrNffe3eBnZlkiDeRDpgKVI5QWRn1f
+	 4LvzOizaTV6LTjwMAahzYTkouypLbCtX6MLiD7iWkEcFLbA5GgL0584ayTrOwyJy6q
+	 GZ0xDOOQvhagfMadU4IYifKGs8zn3dPIPt8DF1KHuXLEae/LN+WkKdo6gqQMgRRlAm
+	 0f40dVGAP/11T/OPQxjpMxL4/bnqJaNlUSnxCSLfCzpVK4/67JqW4Qhg3BxNGkU7kS
+	 UbFl4M6f2XJNpOAydXw/LO3zQXI6Bfab6qpFBLT14W+LFIOz/aoKNyZcRNHjTfqYdW
+	 erTQ3cyOhT+Tg==
+Message-ID: <6e97aa79-6d6f-497f-96d2-7568d6516682@kernel.org>
+Date: Thu, 12 Jun 2025 12:54:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 12:53:45 +0200
-Message-Id: <DAKHYVHNSO30.3SICBU2MAW9UL@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <chrisi.schrefl@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Ingo Molnar" <mingo@redhat.com>, "Peter
- Zijlstra" <peterz@infradead.org>, "Juri Lelli" <juri.lelli@redhat.com>,
- "Vincent Guittot" <vincent.guittot@linaro.org>, "Dietmar Eggemann"
- <dietmar.eggemann@arm.com>, "Steven Rostedt" <rostedt@goodmis.org>, "Ben
- Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>, "Valentin
- Schneider" <vschneid@redhat.com>
-Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
-X-Mailer: aerc 0.20.1
-References: <20250603205416.49281-1-dakr@kernel.org>
- <20250603205416.49281-2-dakr@kernel.org>
- <DAKEM192U5RZ.3D00TOR520LRY@kernel.org> <aEqtexr4WwfU7rIP@pollux>
-In-Reply-To: <aEqtexr4WwfU7rIP@pollux>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 18/20] gpu: nova-core: add types for patching firmware
+ binaries
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+ Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
+ Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-18-05dfd4f39479@nvidia.com>
+ <aEAf3GUUz5oxnuk9@cassiopeiae> <DAKDETL7I95F.31L41GTLYNBWO@nvidia.com>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <DAKDETL7I95F.31L41GTLYNBWO@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu Jun 12, 2025 at 12:35 PM CEST, Danilo Krummrich wrote:
-> On Thu, Jun 12, 2025 at 10:15:55AM +0200, Benno Lossin wrote:
->> On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
->> > +    /// Signal all tasks waiting on this completion.
->> > +    ///
->> > +    /// This method wakes up all tasks waiting on this completion; af=
-ter this operation the
->> > +    /// completion is permanently done.
->> > +    pub fn complete_all(&self) {
->> > +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct co=
-mpletion`.
->> > +        unsafe { bindings::complete_all(self.as_raw()) };
->> > +    }
->> > +
->> > +    /// Wait for completion of a task.
->> > +    ///
->> > +    /// This method waits for the completion of a task; it is not int=
-erruptible and there is no
->> > +    /// timeout.
->>=20
->> Another thing that we should document is weather this function returns
->> immediately when `complete_all` was already called in the past.
->
-> The details are all documented in [1], which is also linked in the module
-> documentation of this file.
->
-> [1] https://docs.kernel.org/scheduler/completion.html
+On 6/12/25 9:19 AM, Alexandre Courbot wrote:
+> On Wed Jun 4, 2025 at 7:28 PM JST, Danilo Krummrich wrote:
+>> If we can't patch them when the object is created, i.e. in
+>> FirmwareDmaObject::new(), I think we should take self by value in
+>> FirmwareDmaObject::patch_signature() and return a SignedFirmwareDmaObject (which
+>> can just be a transparent wrapper) instead in order to let the type system prove
+>> that we did not forget to call patch_signature().
+> 
+> This one is a bit tricky. Signature patching is actually optional,
+> depending on whether there are signatures present at all (it might not
+> be the case on development setups). So involving the type system here
+> would require storing the result in an enum, and then match that enum
+> later in order to do the same thing in both cases - load the binary
+> as-is.
+> 
+> So I guess I would rather leave this one as it currently is, unless
+> there is a better way I haven't thought about?
 
-I dislike that we don't have the docs right there on the function.
-Following that link, there is also a lot of other stuff there that don't
-apply to Rust (eg initializing completions, and the
-wait_for_completion*() variants).
-
-After a bit of reading, I found the part that I was looking for (by
-searching for `complete_all`...):
-
-    A thread that wants to signal that the conditions for continuation have
-    been achieved calls `complete()` to signal exactly one of the waiters
-    that it can continue:
-   =20
-    ```c
-    void complete(struct completion *done)
-    ```
-   =20
-    ... or calls `complete_all()` to signal all current and future waiters:
-   =20
-    ```c
-    void complete_all(struct completion *done)
-    ```
-
-Let's just put this information on the `complete_all` function.
-
----
-Cheers,
-Benno
+In the end the idea is to ensure that we can't forget to call patch_signature(), 
+so even if it's optional we could do what I mentioned above, just that 
+patch_signature() might be a noop?
