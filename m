@@ -1,202 +1,163 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E855299A8C;
-	Thu, 12 Jun 2025 16:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DD62F4317;
+	Thu, 12 Jun 2025 16:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744389; cv=none; b=FdWP5/sAnYmF3XkRm2zf3svCflRK2x3orPmK1FT4Q1wMqj4J2+bGoGPHxoq9YBAMa4GK6hUEbl9/gHPKg8KZ83A8QpdyN6z8Vk6QUu6w3Murfcx/Kfc5mhE5mpQh2g3XGU6dwBxdHKJ/HdpCS4ToAQs81yqJGF7qXfiOX6i2JVI=
+	t=1749744462; cv=none; b=jRlo1Oj3aRMOApcFGzpuxv00s47H029jm9XIIJabHFfWuuINsKFON6+J902Z4ob0oAsNJTfmWvcYTznP0J+MZ+Nn9Hj3LriQzkIAfpV4Ndvpf5BZr7cRk+5feuOBP+pV9F0M6VaNwGmpwkqgNzPt4MjZMJ0eSwWt2HtXkEhNYpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744389; c=relaxed/simple;
-	bh=VIUv2Ui3nYFGZ2cBKzI5nTq2hiA+kq32TImfGH+4rXk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QWWIUIt9fyylJ2iqEJk1NvGJZRldYbB/19CZ6qDyeWgcrIfeIIsl0fomE6CMopO+ujABfWeUpTrDR/TI6BDqfHx+YSVvt1EF3uslYkcZXwjKO/L68TjYm2ePW3EA2Evx/9GoPmuKCnBj1B5GDBWDlTSU58HtVAM4KW4eUYMU8VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ6jQ4d5cz6H76Z;
-	Fri, 13 Jun 2025 00:02:02 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 97121140136;
-	Fri, 13 Jun 2025 00:06:24 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Jun
- 2025 18:06:23 +0200
-Date: Thu, 12 Jun 2025 17:06:22 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <PradeepVineshReddy.Kodamati@amd.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <bp@alien8.de>,
-	<ming.li@zohomail.com>, <shiju.jose@huawei.com>, <dan.carpenter@linaro.org>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <kobayashi.da-06@fujitsu.com>,
-	<yanfei.xu@intel.com>, <rrichter@amd.com>, <peterz@infradead.org>,
-	<colyli@suse.de>, <uaisheng.ye@intel.com>,
-	<fabio.m.de.francesco@linux.intel.com>, <ilpo.jarvinen@linux.intel.com>,
-	<yazen.ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v9 05/16] CXL/PCI: Introduce CXL uncorrectable protocol
- error recovery
-Message-ID: <20250612170622.000071df@huawei.com>
-In-Reply-To: <20250603172239.159260-6-terry.bowman@amd.com>
-References: <20250603172239.159260-1-terry.bowman@amd.com>
-	<20250603172239.159260-6-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1749744462; c=relaxed/simple;
+	bh=U2fEccG9fwLvIRudQJWjcfVnqPecNc7cIYAnmbd9khA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NmzaQMhVc1HIQlsRQ2zg9IndE4zpG6XHGlTrwFx/NzqMp9Sb/+OjSuiTuGtB/ZzjYyry0LuxtbzXNgzzEAJauD70CsQ7eAR2wzpk/PkJrNGcowuu9ZmYfZgQMZWmHDsS2gjZxBL9gXsOnvHTBSByVqSEg5CtB3Tle6yJoKsT/x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEh3gMA+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEh3gMA+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC20C4CEEA;
+	Thu, 12 Jun 2025 16:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749744462;
+	bh=U2fEccG9fwLvIRudQJWjcfVnqPecNc7cIYAnmbd9khA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mEh3gMA+uqltfgyJQaJ90yWpKwGTygJsPr0O9fMOzml4JNjs87T06CgqshJcmeK2a
+	 cR4rjIe2FUgOnMr7zcc4JULd1LTSgJdCmkTLzK0X8MhEy54PZZcTcO/W77Snrv9TAF
+	 9jjbS3IrliMLjb1gBPawNk57SFosgtvTcfV/pUX81mHnson4FtH3k/D3anOyqOQTdI
+	 tPOt1qpl894jqeGcBNZWQzyR0Zf/3LOnh26KTMCIGHm1+ymHK31BrfWy97HNfprnb1
+	 PvYzNT8C0/5IDjb8GOKphXcGP+c4OHWz65CuE33bnZpsPCqmXSH6JZX0H2PEqk92Pk
+	 NT4uu25RTCEwg==
+Date: Thu, 12 Jun 2025 17:07:37 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: phy: Add Sophgo CV1800 USB phy
+Message-ID: <20250612-siesta-verbalize-6a7768ebc648@spud>
+References: <20250611081804.1196397-1-inochiama@gmail.com>
+ <20250611081804.1196397-2-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TJu6QFbeFePgDQPv"
+Content-Disposition: inline
+In-Reply-To: <20250611081804.1196397-2-inochiama@gmail.com>
 
-On Tue, 3 Jun 2025 12:22:28 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
 
-> Create cxl_do_recovery() to provide uncorrectable protocol error (UCE)
-> handling. Follow similar design as found in PCIe error driver,
-> pcie_do_recovery(). One difference is cxl_do_recovery() will treat all UCEs
-> as fatal with a kernel panic. This is to prevent corruption on CXL memory.
-> 
-> Copy the PCI error driver's merge_result() and rename as cxl_merge_result().
-> Introduce PCI_ERS_RESULT_PANIC and add support in the cxl_merge_result()
-> routine.
+--TJu6QFbeFePgDQPv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Do we need a separate version?  PCI won't ever set PCI_ERS_RESULT_PANIC
-so new != PCI_ERS_RESULT_PANIC and the first condition would only do
-something on CXL.
+On Wed, Jun 11, 2025 at 04:18:02PM +0800, Inochi Amaoto wrote:
+> The USB phy of Sophgo CV18XX series SoC needs to sense a pin called
+> "VBUS_DET" to get the right operation mode. If this pin is not
+> connected, it only supports setting the mode manually.
+>=20
+> Add USB phy bindings for Sophgo CV18XX/SG200X series SoC.
+>=20
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
 
-> 
-> Copy pci_walk_bridge() to cxl_walk_bridge(). Make a change to walk the
-> first device in all cases.
-> 
-> Copy the PCI error driver's report_error_detected() to cxl_report_error_detected().
-> Note, only CXL Endpoints are currently supported. Add locking for PCI
-> device as done in PCI's report_error_detected(). Add reference counting for
-> the CXL device responsible for cleanup of the CXL RAS. This is necessary
-> to prevent the RAS registers from disappearing before logging is completed.
-> 
-> Call panic() to halt the system in the case of uncorrectable errors (UCE)
-> in cxl_do_recovery(). Export pci_aer_clear_fatal_status() for CXL to use
-> if a UCE is not found. In this case the AER status must be cleared and
-> uses pci_aer_clear_fatal_status().
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+I'm having a bit of trouble finding the v3 etc, could you provide a
+link?
+I think what is here is sane, but I want to make sure that review
+comments on previous versions have been addressed. "dfn:" searches for
+both driver and binding filenames turned up nothing.
+
 > ---
->  drivers/cxl/core/ras.c | 79 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h    |  3 ++
->  2 files changed, 82 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 9ed5c682e128..715f7221ea3a 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -110,8 +110,87 @@ static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
->  
->  #ifdef CONFIG_PCIEAER_CXL
->  
-> +static pci_ers_result_t cxl_merge_result(enum pci_ers_result orig,
-> +					 enum pci_ers_result new)
-> +{
-> +	if (new == PCI_ERS_RESULT_PANIC)
-> +		return PCI_ERS_RESULT_PANIC;
+>  .../bindings/phy/sophgo,cv1800b-usb2-phy.yaml | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/sophgo,cv1800b-=
+usb2-phy.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/sophgo,cv1800b-usb2-ph=
+y.yaml b/Documentation/devicetree/bindings/phy/sophgo,cv1800b-usb2-phy.yaml
+> new file mode 100644
+> index 000000000000..2ff8f85d0282
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/sophgo,cv1800b-usb2-phy.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/sophgo,cv1800b-usb2-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
-> +		return PCI_ERS_RESULT_NO_AER_DRIVER;
+> +title: Sophgo CV18XX/SG200X USB 2.0 PHY
 > +
-> +	if (new == PCI_ERS_RESULT_NONE)
-> +		return orig;
+> +maintainers:
+> +  - Inochi Amaoto <inochiama@gmail.com>
 > +
-> +	switch (orig) {
-> +	case PCI_ERS_RESULT_CAN_RECOVER:
-> +	case PCI_ERS_RESULT_RECOVERED:
-> +		orig = new;
-> +		break;
-> +	case PCI_ERS_RESULT_DISCONNECT:
-> +		if (new == PCI_ERS_RESULT_NEED_RESET)
-> +			orig = PCI_ERS_RESULT_NEED_RESET;
-> +		break;
-> +	default:
-> +		break;
-> +	}
+> +properties:
+> +  compatible:
+> +    const: sophgo,cv1800b-usb2-phy
 > +
-> +	return orig;
-> +}
+> +  reg:
+> +    maxItems: 1
 > +
-> +static int cxl_report_error_detected(struct pci_dev *pdev, void *data)
-> +{
-> +	pci_ers_result_t vote, *result = data;
-> +	struct cxl_dev_state *cxlds;
+> +  "#phy-cells":
+> +    const: 0
 > +
-> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
-> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END))
-> +		return 0;
+> +  clocks:
+> +    items:
+> +      - description: PHY app clock
+> +      - description: PHY stb clock
+> +      - description: PHY lpm clock
 > +
-> +	cxlds = pci_get_drvdata(pdev);
-> +	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+> +  clock-names:
+> +    items:
+> +      - const: app
+> +      - const: stb
+> +      - const: lpm
 > +
-> +	device_lock(&pdev->dev);
-> +	vote = cxl_error_detected(pdev, pci_channel_io_frozen);
-> +	*result = cxl_merge_result(*result, vote);
-> +	device_unlock(&pdev->dev);
+> +  resets:
+> +    maxItems: 1
 > +
-> +	return 0;
-> +}
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - clocks
+> +  - clock-names
 > +
-> +static void cxl_walk_bridge(struct pci_dev *bridge,
-> +			    int (*cb)(struct pci_dev *, void *),
-> +			    void *userdata)
-> +{
-> +	if (cb(bridge, userdata))
-> +		return;
+> +additionalProperties: false
 > +
-> +	if (bridge->subordinate)
-> +		pci_walk_bus(bridge->subordinate, cb, userdata);
-> +}
-> +
->  static void cxl_do_recovery(struct pci_dev *pdev)
->  {
-> +	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
-> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> +
-> +	cxl_walk_bridge(pdev, cxl_report_error_detected, &status);
-> +	if (status == PCI_ERS_RESULT_PANIC)
-> +		panic("CXL cachemem error.");
-> +
-> +	/*
-> +	 * If we have native control of AER, clear error status in the device
-> +	 * that detected the error.  If the platform retained control of AER,
-> +	 * it is responsible for clearing this status.  In that case, the
-> +	 * signaling device may not even be visible to the OS.
-> +	 */
-> +	if (host->native_aer) {
-> +		pcie_clear_device_status(pdev);
-> +		pci_aer_clear_nonfatal_status(pdev);
-> +		pci_aer_clear_fatal_status(pdev);
-> +	}
-> +
-> +	pci_info(pdev, "CXL uncorrectable error.\n");
->  }
->  
->  static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd53715d53f3..b0e7545162de 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -870,6 +870,9 @@ enum pci_ers_result {
->  
->  	/* No AER capabilities registered for the driver */
->  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
-> +
-> +	/* System is unstable, panic  */
-> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
->  };
->  
->  /* PCI bus error event callbacks */
+> +examples:
+> +  - |
+> +    phy@48 {
+> +      compatible =3D "sophgo,cv1800b-usb2-phy";
+> +      reg =3D <0x48 0x4>;
+> +      #phy-cells =3D <0>;
+> +      clocks =3D <&clk 93>, <&clk 94>, <&clk 95>;
+> +      clock-names =3D "app", "stb", "lpm";
+> +      resets =3D <&rst 58>;
+> +    };
+> --=20
+> 2.49.0
+>=20
 
+--TJu6QFbeFePgDQPv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEr7SQAKCRB4tDGHoIJi
+0pktAP9VMMOkhXJg21RuCXXueBhHqnv5XmapThudPFOJGbmUdAEAvW5JBZ8R4b+W
+fK8JZ5b3IEgK+NyZ4wGFRnCQlzB1Pg0=
+=wnik
+-----END PGP SIGNATURE-----
+
+--TJu6QFbeFePgDQPv--
