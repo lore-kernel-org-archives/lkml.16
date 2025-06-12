@@ -1,297 +1,232 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A541E5B68;
-	Thu, 12 Jun 2025 16:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749745823; cv=none; b=a7fSz2vXBuHnc49ODaUqgvfDYHAPARKQWsxDSWRAFKvFgH6+iMNdqUGvEjzsSTfLarrpBm1hvLzxlTYO/MseyIBefGC4sC0id3w/HOSFFPOTIY1S9H3AAJC6NWmNqDi3uU2tlqCaijGiW3F+I9DfePWdnXShkYs0xBqCMYpNGUg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749745823; c=relaxed/simple;
-	bh=AjJaai9iEL5xRpPzz41oHvg6cnXsWNmzbO7rx581ebc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XaKXVbgXCMQX7bA/GU9OXRHx0xJirQGcbx4jpPTJMdG/0Xnf0nFeDqpOSUBdKIhZvNXfeKcGgSxmazrx701W9+rQNhMqnWzwEeTGQNNV6ErPjH4arIDRUN7qiKG36HPdQjiHX3febh7ah5EiuictXpgr3Yj9FY8bYqCQ7tRu7Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jN1XPQ9s; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B72123AE96;
+	Thu, 12 Jun 2025 16:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749745841; cv=fail; b=NuCq6a2dypl5biUGbbrm4lU+YK+CwdRO+mnt8puzroI6V07kcerAHe4x5VqxC4b/NofqN+RciHXhutAjaLKSX5LzEj+ZuTjbziTmDE9z7homwlbY9C5LhAZ9G49ENZYs/NwzlyMssbOwMfxOuY5qmCGx4m26vIMdOXAYPDlstp0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749745841; c=relaxed/simple;
+	bh=u9Ox6Qly02CfhikjMI3ccthuJ8bsuVqFERfYy1z6rrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kUvF08HJ+5QIDHQgda26p4lY+x0kxDohd8bVeTInyr2bzPENfs8HOjVVPAHxyx/Rzerz7DWlGKH/vj6gYft5lJsSHOZqlNOGUckZZj1MO2zCx8i8UXxNDQrRVkQyZl7g8SiGvNS2CFGhICRNqrogErMwPEhv2xbNoRUFNXcoM6E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Udfmpf5A; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=vS/wRY2W; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jN1XPQ9s"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4eed70f24so92341f8f.0;
-        Thu, 12 Jun 2025 09:30:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Udfmpf5A";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="vS/wRY2W"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CEtej9024725;
+	Thu, 12 Jun 2025 16:30:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=u9Ox6Qly02CfhikjMI
+	3ccthuJ8bsuVqFERfYy1z6rrw=; b=Udfmpf5ANcOxotRCYEnuMFGMJIrbZm6pJT
+	flPpV56pNYTG3R/auA3/1rHIz69CSqzS6uTuWlkGc7bXsmrDz3NR905bJsBCE1Ev
+	Tr/nb01PCdL9hiRe0eVzFP8NZf5dlOaw//nSQC7zYzqHLXLvFoSAsAL3+KL69PAn
+	HzkoLvvO9fiboJm1clFOa50PtCjZnHDAHwBqDMds77xYiLm8OaO73n+F2tNqAUHL
+	UmvycqsGMACfZPGo3yTIrU8Ie1FyVR5D97gxZNFo4DgJ0l/yCidSdU2wXnG9C2pj
+	gtzPoSivixPphhIsOMnRAlzBg0WgKyighqGBgg+OGa7PJ4LKKWiQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474bufa1na-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Jun 2025 16:30:16 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55CFt3jv016717;
+	Thu, 12 Jun 2025 16:30:16 GMT
+Received: from bn8pr05cu002.outbound.protection.outlook.com (mail-eastus2azon11011001.outbound.protection.outlook.com [52.101.57.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 474bvbtyf7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Jun 2025 16:30:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NxOkZdr/iPg3cUquV58HiOAA6BreCqf5qsL29o3uHzvASHozCmgHG13MBquRzoXliCysc6qWSiSJeHAV6WYOPNxpJp8hT+um6+tuLiklFP2/QXkkL4Fe0+eMBXUMB5lgBvecsEppVT3cG/4PMfdCNcNDL4AkTE/rBlldLeknQ+1kKOOxvHAEkvICtp6DKXB5f/pnfnYJFj6lScNtueWGSqY7tRibbleaCFh4vknlJb0h2HAefT/5carlxlxY73fp7efUt6u4kyqhgaKgGjoxFZMgGh2xu2dK8vS/3ZvayIqxqTj/da4n7j3iE7XmtdaYaHhp8ZkhXqGAs1oGeK9psQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u9Ox6Qly02CfhikjMI3ccthuJ8bsuVqFERfYy1z6rrw=;
+ b=iNmcGYjy+yKYx00wlp1JAkq/H7ekP/9Rec/4ix1Zb63dMSFzZEeA+gchkB5DDn4Fdm+DZxC0Mt5aXLY1fdxy657Wz27+vSDwKbYS2pOnP84bMWJ5+9kkFKvis6PK3eJl8H28yvx/pYkerX7TqdRUmdxIpHE60gjUXoOK12/UEMvI5lXn7f12SP7CHx6V9xxzlYNMn4FImjFumTIfMPD7UMKO9UapqNiwsjSs4Hh9nsXTi2+GSzj3JvWpEROUlyzQ0e8XT4wUWJekbj42kHeY9NoCmzP0gC96kj38tKYTr0SeToT7mKnClATFwkvVvvdSXiT8T1uVTrOHiUzpsZupZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749745820; x=1750350620; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3o0VnVi1dbV9tBOqGAJzI9G91QEofUUU96Z5/r8Hs4o=;
-        b=jN1XPQ9sv0cHs7rndSG+Yw5FAqtDez4VYZ5kLskd3aWwkQzEX3s5mWhrv77xR2DJ5v
-         2Ec+j15noJ5FHmVfsxift/xBlvorZiWRZIRIAZlfxT1Qqxy5amb8klTgh8VXopfChUk5
-         2Hro95IP9QOJkPsPoiO0vLa8iRd5AU7fHZclhSA78g8qaBSC5BxJ4vFVYCmyorngTMcH
-         6pUzxXaEbBl0Spse7bpwkfho6ZvPp+9MqsDdxd0Lv+lcnXwdYXn1g4/MHS8tMNa8BFnk
-         cZtw2cIAt7k70ze/xNOL2/cVyrZXaMtsZBrCh+djgemGvCvNvb5ZjjgWrKfUdiOlFYG+
-         6Q3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749745820; x=1750350620;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3o0VnVi1dbV9tBOqGAJzI9G91QEofUUU96Z5/r8Hs4o=;
-        b=R4Efk5B0GEqYpcxGJuyy8uDTmRpWRdIz1OBnkCPyBDuaFmpEYxtANA0VYc9o8/QKWZ
-         wYWiDyORO+fD0GA63jmKoBqJ5SIxMKnq82FghvvwKINNsZpitWFGx/lKrUF0NNQTbILB
-         2k+wGhtMvMz6O+BetQxmdE+o92D8AvruKFDnPrXKhFucT7qPq84sbLoQ/WWbdBsicYuC
-         mrF6TbEY9Q0atUosQnqzMxjQDd0GfVAEI1Pyeyk5aRx1Xp93nPiwhskpCUj9kPjKddjz
-         Y8TftIzXOjLUixLXxpiI+dA9r6u1AkCf7AcnnfmwqbbfAaJUVcUHbA7VcGaaMTBy0DHU
-         ufjw==
-X-Forwarded-Encrypted: i=1; AJvYcCV28D2taijgkZIizpFBC9DECFcYUVw4QSlCRqKqz+UeA6NWyBBdWaTxNoc47qST4ut//bMsw+Fsq3I/3SSl@vger.kernel.org, AJvYcCWpcwF9ggdTZEuOsGOKKbYidKTQRs28u9hrJ6HGsb2G+NuRhq9gdw4qcldwno8RKQ3oQaDrxa1Tdg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ3ASB5x7sRx7+tFog8SzZoMz97ncnArUMQucJpMcu1ijQ4Yah
-	YGReZLCIM43p4SbauQ8CPv+pXDSispWzH4KCKud2kXNTvf4ftqdv/dF+
-X-Gm-Gg: ASbGncsNwiA4c1C23phodNlsBTSopWWmcgXjs/v3Epw0/hNVwAT6BiLUeUKHoaVBoIG
-	NA2utGEk6slHQGxB7NT6UZNDdol9W0GQyIQRfwH7YJGg7SqZM+KL/BSry5Fnp5QHLJzr3yWNk2r
-	fiaWzLmzrtYl9e316FyRJQtQTNbNXxWehNEoR7xUnZ5y6NtRA0BhnSVaviKcmIx4O3lSu55EvDm
-	zUydR50NmPCdyzDkpMk6C0JX/BQh7UNbmZi1Ad9Ng91utXREs7+O9BkVM+WXoXYrmMdEg7skdlF
-	UEOWJSJA3jO3pVKoI4bRxhs2vY2X5L9hZ+DwRnjCWQMvz7J9ShJtPu4wK+emiNeWBU7w93l94rA
-	+phxV13b70bfh74/n8iMfDQ==
-X-Google-Smtp-Source: AGHT+IGVDuSGJuohJRZKq1esAq8HonbJ3Cbg6ELoq/f8wyb1XeKFRdINfRLFCE32CSQ89UNHD0Og/A==
-X-Received: by 2002:a05:6000:2908:b0:3a5:3369:391c with SMTP id ffacd0b85a97d-3a5586b9c38mr2550921f8f.1.1749745819863;
-        Thu, 12 Jun 2025 09:30:19 -0700 (PDT)
-Received: from localhost.localdomain ([102.40.66.223])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e24b0c8sm24872135e9.24.2025.06.12.09.30.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 09:30:19 -0700 (PDT)
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	corbet@lwn.net
-Cc: netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.com,
-	linux-kernel-mentees@lists.linux.dev,
-	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Subject: [PATCH 2/2] docs: net: clarify sysctl value constraints
-Date: Thu, 12 Jun 2025 19:29:54 +0300
-Message-Id: <20250612162954.55843-3-abdelrahmanfekry375@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250612162954.55843-1-abdelrahmanfekry375@gmail.com>
-References: <20250612162954.55843-1-abdelrahmanfekry375@gmail.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u9Ox6Qly02CfhikjMI3ccthuJ8bsuVqFERfYy1z6rrw=;
+ b=vS/wRY2WdELOe1dPurWfqehKzPepEJor6x5ezIbEBnCYYZ8PPADBljN4tMm4CxyEXfefWfxH8hq5LzleKQkPVA0Uuure7q/strczAMh3FzbPpCh+mmCyVpPFrE+FqKO/lKN/RSWfTHrYXj8Roe3QqmQhEBHN4mboE6ir/RzNRVk=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by IA1PR10MB7167.namprd10.prod.outlook.com (2603:10b6:208:3f1::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.26; Thu, 12 Jun
+ 2025 16:30:13 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8813.024; Thu, 12 Jun 2025
+ 16:30:13 +0000
+Date: Thu, 12 Jun 2025 17:30:11 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+        linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Alistair Popple <apopple@nvidia.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v2 0/3] mm/huge_memory: vmf_insert_folio_*() and
+ vmf_insert_pfn_pud() fixes
+Message-ID: <948cf313-adb2-408e-a5c2-8ebc1d47cfe5@lucifer.local>
+References: <20250611120654.545963-1-david@redhat.com>
+ <6ae86037-69bc-4329-9a0f-4ecc815f645d@lucifer.local>
+ <0340de74-1cc8-4760-9741-2d9c96bcfd17@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0340de74-1cc8-4760-9741-2d9c96bcfd17@redhat.com>
+X-ClientProxiedBy: LO2P265CA0023.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:62::35) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA1PR10MB7167:EE_
+X-MS-Office365-Filtering-Correlation-Id: f2611298-67de-4574-8082-08dda9ce6864
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vKBJq9aYsGkXe6N5VtcWurfThUzMG0k3oWH5cwPdBWCaF7Kf0P1qZDNzaYH7?=
+ =?us-ascii?Q?kt8oS8DGIPg3WPN7zGHzSTqGsQuEM6Czy08SnuwPpl6TZR6rdQwOc5ZOrnxW?=
+ =?us-ascii?Q?Vy1/F7Jdcu6fL5kqecwOh0pIeuM3BZ5mXU/no1f5r3okGlo49YqREHJxXV1W?=
+ =?us-ascii?Q?yC2hx+oXwAOnuBfnSM3HLIYX2SZiaWjfU+3xVUqkZ+jEs+m848uMZfZNUt5v?=
+ =?us-ascii?Q?0v/bvMuzLvhV9BH0xe9ZugISFPSaA881JHHvCQzGmmpV+7rHiYlLDFO8Guw5?=
+ =?us-ascii?Q?DZA2+gYUSLqQhjJazajykuk84d6mpHxQELMXbAv8y9gBxT1yHyLEmK8Uj8Rc?=
+ =?us-ascii?Q?hpBTR4qoOsF6wsovjNbQsQKdXz9CPbznmcFyazsRHhDEiTkwJOxb3jApTLQs?=
+ =?us-ascii?Q?JOC2fBrSeOvqIRgtu4/jEyqyqfhhLPjq82kCbUdYDDXkl0GVJ7BHPqebbTvv?=
+ =?us-ascii?Q?nQPD1AxvtUddpasmZXhLL+h3z5281J4Ds3pGfzVUhjqtytIveiIXlNLcDjxZ?=
+ =?us-ascii?Q?IUBzt3CyuMoO23kPRkrtnzqIINKuI6y/N53fpp9nbf4CEEvNrPU4GGsEavES?=
+ =?us-ascii?Q?CRiGYmfItyhUUoU4F4U0U/aUDeAIx06gwQiwEAJVn+AFIIrQ0+NLaXb9SWOh?=
+ =?us-ascii?Q?dmDEWSqu4zdAmo+OyVW4YAMjbgFPp9TUV9DQjV4jzCa8cT6rQil/Eb07mEPX?=
+ =?us-ascii?Q?xa/o9IFDoWYSus6//JIji7jCWb/Uci5tm3bK3MZqdjjOqaA/wvFZIM23ilrG?=
+ =?us-ascii?Q?7Zh924fwE8gAwZi81ALlEBOCxko2bTmGzb5sjpreWyenbazI6ZNvKj8Dr53X?=
+ =?us-ascii?Q?Jw3llNuwKqc3KCNAP6oQnbBOuiGP5NlHYv9A2z4vmMX8mDGZyqSfZDUTWutI?=
+ =?us-ascii?Q?7I1gOPl2ecBJzpcLDzgMUviYX4MXxeZM50PXPLb45b5JBuR2AihFSZzdKfwe?=
+ =?us-ascii?Q?WVdohkm5Ha0zsS6LhYMiSe0WoahjqgOx1qHrNthJmNy4mSOH5KtdaSWMA7Mo?=
+ =?us-ascii?Q?j4/GCOs4qDZYQk+X9whBG1mM1xdDNI6i/pN2tcmZW2AtJ6Dm/SdCV+6EB0+4?=
+ =?us-ascii?Q?mMNOTQZGuXLpLmBtVTmp5JUADZLY5mxr8UrnfHgquUBdo6WZk85sipArPUTk?=
+ =?us-ascii?Q?vvfxaNE/Iwnvin6ZldTbjKlnmbtGIms5wJcSguV1MrzeizF8vt2Z3YEFJpSe?=
+ =?us-ascii?Q?PR6x/uIfmPZPiAkLROJA+AxmL9w4F7RIU7NGL6UeXiGxBuEoQf3/WiwzIj14?=
+ =?us-ascii?Q?8YhJpUmPTttTvLCdoKYdfaleec2syDnbIEAenN8fz7kxuVygTjTn5ALjoixH?=
+ =?us-ascii?Q?FxfDsfWJYM39XETW7UrHw2eyl0YveGife22jl4pQromhfg+aKhh1nTQyq4iM?=
+ =?us-ascii?Q?0RZopwJAGbKofRIQk5tXvfglY1zuV/yapkAYeYg8EzH+SZeT/Rs860n0twhX?=
+ =?us-ascii?Q?WOwZjPwZ4gI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8iEeuENGpGoUG8RiAoTnlnyDVHcI1F+73la1Ia1i6yEtNNzYsbXsatGCsVr1?=
+ =?us-ascii?Q?juT3GlQjNV1az7QbrjQPQ6UE2ZzrJuM5llXVVJmXGjeGMMVDflyCgky3eYuH?=
+ =?us-ascii?Q?b+3kYD0m1jB9gavtmc5fS+Jlf+QrNYLZM8Wc8Pd3pq2U4oOFRRHSrIfi5WeH?=
+ =?us-ascii?Q?nlMRxB511iEA0HxXH5IyfXAOwXBesKaEpQzOLxitZhd5AzYYzmyuNp7A7SLO?=
+ =?us-ascii?Q?Lm3Ef89wJRSs+BvpWpbadSqqL45AfdZsfkndvnt79Y3eNyhxrj1A2QI+d7Qr?=
+ =?us-ascii?Q?VKWX8rcGDWmBHjBjz2dQeBgKASrePEnlfGNXvS94jocMOfy9e2vyyscRkXBO?=
+ =?us-ascii?Q?vz7WfgqdJkxl7MhQjBTXB2cr7d9zOeyTM1lD1/Qub7NmxTwR64M6ZXLweUDf?=
+ =?us-ascii?Q?gerBVtn/TPhQ5winTW3nZ0r+qnL1dyimVYQgXyCwMiM2l92tNPqN8vLg6rKR?=
+ =?us-ascii?Q?nQKqN7Ymbxvbfi+NYtdbDjfWNz1q8sSATgkdtTzs/GfVB/cFjsuHtH0psNFY?=
+ =?us-ascii?Q?rwZ3DJkf4MGl1aNY+oGdTmj/s2qaU3zsYsijs7bMLpZz1oHxHiE+hHd3Ljo1?=
+ =?us-ascii?Q?iMaDhDkC4nc403WFyHwUfhI7qAJUH4xG6VNKYkyqjygMta54biT3IZBpUjWq?=
+ =?us-ascii?Q?fzrLqF2I8IVZ5M7e9jQN96CbdMCCldha0HpkX9xem/rweE6FzXrvnVgvwAeW?=
+ =?us-ascii?Q?oBGhaZ0K6IBtqMRhpAB0yTK81yz+j6z2QmwrR2gs7u8Wh8GSPN53naT3Bf97?=
+ =?us-ascii?Q?MREP7TEH6HKenulTJfjVLqfjlDTzftNcgi0Obk1NK8ZOqd3mOScMfBB1xzKK?=
+ =?us-ascii?Q?GBiqCm78sR5qVsiPKDRntVBn6Vx4pn6/GZkr9YHp7XKYkHZmkMNz7+REAkPV?=
+ =?us-ascii?Q?JrakhCQekWERLEnkcbhH5yEGNz57tidJgVZf2sgMQAWQVKQI6Rvvb1zH3V1+?=
+ =?us-ascii?Q?je7jo7qAzsphCQtUaKEwY/g4Gy9l3YLyjzc9vefqEicFqmhWp3VTKEQeRVjJ?=
+ =?us-ascii?Q?WwBmP6WaLV1RfyouG9HNODOcgfOvcQRqKrtldTpKzFAhqeoC8QN3wMcqXh+1?=
+ =?us-ascii?Q?bBGoJJHRb2Opc+fnfq/++k+QbiV38G2f+7hkUT2mC4/VEXX10DG6OG9/J3IS?=
+ =?us-ascii?Q?aV0okSV3sLC/QlR1Bs6muy+8ekfNbvru9Cjz82Ib16l8J7BuIUCFmsLFAWAd?=
+ =?us-ascii?Q?GDwrzOwFmexFH+rRRCzsVr7tg10lLN59NsCwNLI4C8/dJQ6Rh4dngKTYUCnQ?=
+ =?us-ascii?Q?i5ooVN84qEjzD72PeUYhGgM/1qcwIo6lmsZvqAyXD3G9fvdCJzGpFv1zWJSH?=
+ =?us-ascii?Q?rZnNsoN9RBmYS6C00MVu5IAzWzgfXEUcyjEoBqjhlnSeoMcWq6ofbQMDFm9H?=
+ =?us-ascii?Q?/k2H16MyD8r2jsoPfXS1LzPW5W/E+kIOydRMTkYaE29dq4VU+ps2DNcrbW2f?=
+ =?us-ascii?Q?p8i/xK4R/1ihFApP1ZSSa7w/O9nZ8eW/L/k99xkw3xbfSaxPo7ia31Ce6eBn?=
+ =?us-ascii?Q?cQxcHvBVlDpP0YmJetmpxoBySyBVP/PdNAvWCk3J8AXdxTAt9+VXDDfRfOMM?=
+ =?us-ascii?Q?y20CBtztercs3jBWNRyvsxK/QUd89+WXDgeTvwiy3WnA1O5khf0NgVi1P3aE?=
+ =?us-ascii?Q?7w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	34ixyUw6Ggjb+76jcdx2+w8YUehW3vPXu07VLZpcm7Cmwb0nHvm7uOS+wsl0H0TMbhvpK6i+WH8mnmqjIhECl7fsto+jnR17SW4J9DowW2dihGtG7LBW0vJNJrgJxZtrLbFISDs1inI5bqvvIKMdzGDZ3J3A2BADoNA7t7umveWrSdrM4K9JM2d7lVT0yeScEw5StHhDF0AIv2vKctVMgkPzFyturi/MBAkE4yWyveAqvOXyE8bOC3zWx6d/kvPgeWh9asaRsQnr0cr6ZZjMPQ/Mc61Lj6yGLjFrROFSw//J8LTYzKh75cnn8bq90qT9UzynmDR8nOrxG5txaL+M54e6/wNJgDF5zRaUHfq5ki0SwbPxFLcqOwNzSGeNyYs10v+4tiFr495Dj1H9fG0Wz9Rrf5hrC8+vT4an75Cgft7XvdfB59653WGnp/QugYXhc54s0e33hMNvxacTG4jAlpU34qDNjCFsH49/rbaR5rwY6TDS6ee5pBObRM9KzMf+dKeATveMSuKYHp3kGESa6BC3dN8YxoSntsNUXVrr6eGQlS1q5UQf5NFPHJGxwOoP2206LvvXL/7cch0z5PRnQpRj+caPnBMjgZ+dhhRLeB8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2611298-67de-4574-8082-08dda9ce6864
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 16:30:13.7378
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bPAq6ecZS0ifYTz8RJnjAey5LhJ/jvYVVnf/nmqpklyKqKpbfUNY+d9EOiM3YjgD7XWQAwma2atvgWEi+66lV3K1DW5esg80G2pvTzdSqx8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7167
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_09,2025-06-12_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506120126
+X-Authority-Analysis: v=2.4 cv=RZGQC0tv c=1 sm=1 tr=0 ts=684b0098 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=zeWl8pnoE9DlUiHRzXQA:9 a=NqO74GWdXPXpGKcKHaDJD/ajO6k=:19 a=CjuIK1q_8ugA:10 cc=ntf awl=host:14714
+X-Proofpoint-GUID: NfphO41zr5T49trYxHWqbWZ76uS9T6DM
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEyNiBTYWx0ZWRfX+cC+zG92ws7W gl2Sa/zp1UxOQwnser6NqShnMng8LGn/oNxdfinLngDTnbpmtCx0Kzo3YzqqWPzrCM6DbMMw9SL l/6BkCNx95xoDSiopNq5vbeH5F+FpbE25kZcwwOmrK9VBKXZkfrmCPqA6TbDbaWR4Uudufu6tHa
+ Hr2xkm2o5WJPogIqT9ZZ57+8vK8Ir+uJdS3+vMoUyWGBICuqqtCVaF0FMby/FREc8Ha0e6Bh7Vq SVzfGtenE3dUcyUp0a4BtyVoSN/eTKxmQcClYgMHuBKiNaiO7s3cAX0vSt6ykPkQ9JOXnF8y6UZ O4KclMBX5Ez7bKuKKlkKb455YyTEHaPvFgaXYRfyPJniQZPSCfKn8DReNffSZOJdN3bSW7smDI0
+ ddmZRu3N3kn/gxgWT35MDtXP9wX1euucYW9fyLwT1JN4IsZaOvQMvC8RCVwmWzgAv1PJexZi
+X-Proofpoint-ORIG-GUID: NfphO41zr5T49trYxHWqbWZ76uS9T6DM
 
-So, i also noticed that some of the parameters represented
-as boolean have no value constrain checks and accept integer
-values due to u8 implementation, so i wrote a note for every
-boolean parameter that have no constrain checks in code. and
-fixed a typo in fmwark instead of fwmark.
+On Thu, Jun 12, 2025 at 06:22:32PM +0200, David Hildenbrand wrote:
+> On 12.06.25 18:19, Lorenzo Stoakes wrote:
+> > FWIW I did a basic build/mm self tests run locally and all looking good!
+>
+> Thanks! I have another series based on this series coming up ... but
+> struggling to get !CONFIG_ARCH_HAS_PTE_SPECIAL tested "easily" :)
 
-Added notes for 19 confirmed parameters,
-Verified by code inspection and runtime testing.
+Hm which arches don't set it?
 
-Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
----
- Documentation/networking/ip-sysctl.rst | 50 +++++++++++++++++++++++---
- 1 file changed, 45 insertions(+), 5 deletions(-)
+Filtering through:
 
-diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
-index f7ff8c53f412..99e786915204 100644
---- a/Documentation/networking/ip-sysctl.rst
-+++ b/Documentation/networking/ip-sysctl.rst
-@@ -68,6 +68,8 @@ ip_forward_use_pmtu - BOOLEAN
- 
- 	- 0 - disabled
- 	- 1 - enabled
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- fwmark_reflect - BOOLEAN
- 	Controls the fwmark of kernel-generated IPv4 reply packets that are not
-@@ -89,6 +91,8 @@ fib_multipath_use_neigh - BOOLEAN
- 
- 	- 0 - disabled
- 	- 1 - enabled
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- fib_multipath_hash_policy - INTEGER
- 	Controls which hash policy to use for multipath routes. Only valid
-@@ -489,6 +493,8 @@ tcp_fwmark_accept - BOOLEAN
- 	unaffected.
- 
- 	Default: 0
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- tcp_invalid_ratelimit - INTEGER
- 	Limit the maximal rate for sending duplicate acknowledgments
-@@ -603,6 +609,8 @@ tcp_moderate_rcvbuf - BOOLEAN
- 	automatically size the buffer (no greater than tcp_rmem[2]) to
- 	match the size required by the path for full throughput.  Enabled by
- 	default.
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- tcp_mtu_probing - INTEGER
- 	Controls TCP Packetization-Layer Path MTU Discovery.  Takes three
-@@ -636,6 +644,8 @@ tcp_no_ssthresh_metrics_save - BOOLEAN
- 	Controls whether TCP saves ssthresh metrics in the route cache.
- 
- 	Default is 1, which disables ssthresh metrics.
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- tcp_orphan_retries - INTEGER
- 	This value influences the timeout of a locally closed TCP connection,
-@@ -703,7 +713,9 @@ tcp_retries1 - INTEGER
- 
- 	RFC 1122 recommends at least 3 retransmissions, which is the
- 	default.
--
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- tcp_retries2 - INTEGER
- 	This value influences the timeout of an alive TCP connection,
- 	when RTO retransmissions remain unacknowledged.
-@@ -751,6 +763,8 @@ tcp_sack - BOOLEAN
- 	Enable select acknowledgments (SACKS).
- 	
- 	Default: 1 (enabled)
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- tcp_comp_sack_delay_ns - LONG INTEGER
- 	TCP tries to reduce number of SACK sent, using a timer
-@@ -787,6 +801,8 @@ tcp_slow_start_after_idle - BOOLEAN
- 	be timed out after an idle period.
- 
- 	Default: 1
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- tcp_stdurg - BOOLEAN
- 	Use the Host requirements interpretation of the TCP urgent pointer field.
-@@ -794,6 +810,8 @@ tcp_stdurg - BOOLEAN
- 	Linux might not communicate correctly with them.
- 
- 	Default: 0 (disabled)
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- tcp_synack_retries - INTEGER
- 	Number of times SYNACKs for a passive TCP connection attempt will
-@@ -1034,6 +1052,8 @@ tcp_window_scaling - BOOLEAN
- 	- 1 - Enabled.
- 	
- 	Default: 1 (enabled)
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- tcp_shrink_window - BOOLEAN
- 	This changes how the TCP receive window is calculated.
-@@ -1049,6 +1069,8 @@ tcp_shrink_window - BOOLEAN
- 			scaling factor is also in effect.
- 
- 	Default: 0
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
- 
- tcp_wmem - vector of 3 INTEGERs: min, default, max
- 	min: Amount of memory reserved for send buffers for TCP sockets.
-@@ -1104,7 +1126,9 @@ tcp_thin_linear_timeouts - BOOLEAN
- 	Documentation/networking/tcp-thin.rst
- 
- 	Default: 0
--
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- tcp_limit_output_bytes - INTEGER
- 	Controls TCP Small Queue limit per tcp socket.
- 	TCP bulk sender tends to increase packets in flight until it
-@@ -1367,6 +1391,9 @@ cipso_rbm_optfmt - BOOLEAN
- 	categories in order to make the packet data 32-bit aligned.
- 
- 	Default: 0
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- 
- cipso_rbm_strictvalid - BOOLEAN
- 	If set, do a very strict check of the CIPSO option when
-@@ -1377,6 +1404,9 @@ cipso_rbm_strictvalid - BOOLEAN
- 	with other implementations that require strict checking.
- 
- 	Default: 0
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- 
- IP Variables
- ============
-@@ -1437,6 +1467,9 @@ ip_nonlocal_bind - BOOLEAN
- 	which can be quite useful - but may break some applications.
- 
- 	Default: 0
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- 
- ip_autobind_reuse - BOOLEAN
- 	By default, bind() does not select the ports automatically even if
-@@ -1447,6 +1480,8 @@ ip_autobind_reuse - BOOLEAN
- 	option should only be set by experts.
- 	Default: 0
- 
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- ip_dynaddr - INTEGER
- 	If set non-zero, enables support for dynamic addresses.
- 	If set to a non-zero value larger than 1, a kernel log
-@@ -1476,13 +1511,16 @@ tcp_early_demux - BOOLEAN
- 	Enable early demux for established TCP sockets.
- 
- 	Default: 1
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- 
- udp_early_demux - BOOLEAN
- 	Enable early demux for connected UDP sockets. Disable this if
- 	your system could experience more unconnected load.
- 
- 	Default: 1
--
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- icmp_echo_ignore_all - BOOLEAN
- 	If set non-zero, then the kernel will ignore all ICMP ECHO
- 	requests sent to it.
-@@ -1815,7 +1853,7 @@ src_valid_mark - BOOLEAN
- 	  lookup.  This permits rp_filter to function when the fwmark is
- 	  used for routing traffic in both directions.
- 
--	This setting also affects the utilization of fmwark when
-+	This setting also affects the utilization of fwmark when
- 	performing source address selection for ICMP replies, or
- 	determining addresses stored for the IPOPT_TS_TSANDADDR and
- 	IPOPT_RR IP options.
-@@ -2324,7 +2362,9 @@ fwmark_reflect - BOOLEAN
- 	fwmark of the packet they are replying to.
- 
- 	Default: 0
--
-+
-+	note: Accepts integer values (0-255) but only 0/1 have defined behaviour.
-+
- ``conf/interface/*``:
- 	Change special settings per interface.
- 
--- 
-2.25.1
+arm - If !ARM_LPAE
+csky
+hexagon
+m68k
+microblaze
+mips - If 32-bit or !CPU_HAS_RIXI
+nios2
+openrisc
+um
+xtensa
 
+So the usual suspects of museum pieces and museum pieces on life-support for
+some reason but also... usermode linux?
+
+Might that be the easiest to play with?
+
+I got this list from a basic grep for 'select ARCH_HAS_PTE_SPECIAL' so I'm not
+sure if um imports some other arch's kconfig or there is some other way to set
+it but probably this criteria is accurate...
+
+IMO: criteria for arch removal (or in case of um - adjustment :) - 32-bit
+(kernel), !ARCH_HAS_PTE_SPECIAL, nommu
+
+Of course, pipe dreams...
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
