@@ -1,215 +1,158 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2083.outbound.protection.outlook.com [40.107.220.83])
+Received: from mail.kapsi.fi (mail-auth.kapsi.fi [91.232.154.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB60433AD;
-	Thu, 12 Jun 2025 01:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749693392; cv=fail; b=uDiyHF5GOBVm+/raUAUltO2syfAWR2tWYSHSkya5bDu+pPu/6Awqh61hTDlyksLNLHrDGwqAOHJxKLqs+B7vQCvUAW/Tx/Fkko0hRM/0IlnXp1VfFqBwF9WQk/7IL771w72zY1I3Oxpg70LflSop8gfP/K4mElRQJQwD/H45qZ4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749693392; c=relaxed/simple;
-	bh=DYq6Qe4Kt2HnaxJJAiS/KpJouDvKZGm6mBdxougyaME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=jXxPAx46bQMRFs/LiDB7ZA7Ril6Qav6kYUMonDVIm8iByEegmhRUJZMzwZCFnHK5OiSMsAaTCW8UagDT6RlaziBLIGoh+0JrlKOSTAwhDL7hvhGXkHIR4g6IYLPWzCL6XNqc2obZ2C219w9329BgHlBt9/FQORTPEuC6DdmQFQ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=r+fBJ4HG; arc=fail smtp.client-ip=40.107.220.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5051B770FE;
+	Thu, 12 Jun 2025 01:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.232.154.24
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749693473; cv=none; b=WLa6UPdcpVBmQ8GgAY4xNk3Ei18WWDum3HcFRcDV7yQdWoQ+iXkyb641fOnmDaWws2kHSHlnzchcMR6akYgXKHlFMTE5M40fZhbT9Exorta5SC9M6Z54LWbfYJ8/IOr5Bztdss97Bq7t/GXCdpscFSbNdCVGdvCfPw+ItziaoYQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749693473; c=relaxed/simple;
+	bh=A9TkELkIlKIZrcNNPESM/UHkept+MT+PNaOa2I+ZqYU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mgug0BlQHG2vDOvWMk5YLGnM5xKjtT4fiEM0JwOtBFN/pjnmmfkpDkaaGJcWyeZjobtEXqkWDbChKKFRcmxDFVWd19uA6PH2iUZ+jg8Ca8Kg1Slsyu/x5OfbahMxK3oVRhOvVz3bFR9OnnCTHTkvYuQ2/zcqvTJrLtf7uLkfaP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kapsi.fi; spf=pass smtp.mailfrom=kapsi.fi; dkim=pass (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b=I3aYeJZa; arc=none smtp.client-ip=91.232.154.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kapsi.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kapsi.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="r+fBJ4HG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uLOQzGvuykKVsdxmss3KNHCFMqFzjeGIWABlpRr2Ek/daOn/LtLEb11IN3vddNLNzEufRr0UUTHdtG7dMiAmT7WfRq0+kHXCL7y/7bICx4uGbKoC+ebE5iTxJwR6jfyQDBfF9K2d9GbOktjuzP8cdizx899Aae0mN7izFFPg1A8WRJcAgv9wwJ4tMKMFheeMYaAezLFqTsCe6a3DFUC+kUU6qW3cjg9KsYH0kF4YW5QpzSIvsY0rCbA1Go5AHRb/jq19x0uQURlJLxYbmtmMg4IG2CD5UI6Vofu5KFZEh6h25NvJ/x0mR1FRx4yXkEtD26GaAYMfJWwED78RL0tD4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f7VIgni/GEtOLbD9+JfTOJnktEwrhPDUk+z16ZpZXA4=;
- b=iIRCPrtKOOd9KPeJxPTyccyFbKc0xiakMHKjnJX5byKN8vCM0+2U2WHy0k+qfnX9JOpxw4o26n8RgMsSoTkb6VvcijSrzCASsJiLlgWjgAcovJ0xkSZvl0lCRtjMHYwHtvvVA+6J9+k6FCeRxGnAdNGZhlNe2sf2bHT7/p/v/neTYlBWZNg95GMSZ/3100Il0mzwA5Vck4EKD3JjTtDMzYCvRa4CfFcS+CtuZ58iuwZi5ydBt+ZPYYRUOqkyPjQ+DPY2t77lSlOaIOc9XKfvgsToaObFwroePngsFxPtTkoAfFtPqHgKSW8dyOuSM1hjhuWC045UEeJiLBMfseWVzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f7VIgni/GEtOLbD9+JfTOJnktEwrhPDUk+z16ZpZXA4=;
- b=r+fBJ4HGyAAddoHq4dUtl6wXFYcUiJwFQLGYbkyAEpFFZUPl839HM1qZEUuyaUIxBxFTlTS3KpM3syUEU/w45dRI76sMCxoepomssz2olMwxxucG1PL+3BMvWLlPhiucI5N7Z5bOSbgUNpisTdWeGHtye8hHBS220hVC8+sNaPcutqkATk4DjRbk+0BgdtejYhwnZynF6XqKWKelr2T+RNOBqXJguIKXaNL74XV1118H7EOdir37Hr1HntlQXkb2/sFSRW+IbcPi+UIUzHJGtYHjLx6kIPZkK718YSwOW3XwOHLkyDWRKc6jHk080hpNrUXQAxaEGCf1ybd3g3mapA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7728.namprd12.prod.outlook.com (2603:10b6:8:13a::10)
- by BL4PR12MB9723.namprd12.prod.outlook.com (2603:10b6:208:4ed::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Thu, 12 Jun
- 2025 01:56:28 +0000
-Received: from DS0PR12MB7728.namprd12.prod.outlook.com
- ([fe80::f790:9057:1f2:6e67]) by DS0PR12MB7728.namprd12.prod.outlook.com
- ([fe80::f790:9057:1f2:6e67%5]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
- 01:56:27 +0000
-Date: Thu, 12 Jun 2025 11:56:22 +1000
-From: Alistair Popple <apopple@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Oscar Salvador <osalvador@suse.de>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mm/huge_memory: don't ignore queried cachemode in
- vmf_insert_pfn_pud()
-Message-ID: <dvstixx4pey6euns6xttep5bbc4jhz6smtgheijviwkbawnqbm@tqhbg4hzeiog>
-References: <20250611120654.545963-1-david@redhat.com>
- <20250611120654.545963-2-david@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611120654.545963-2-david@redhat.com>
-X-ClientProxiedBy: SY6PR01CA0076.ausprd01.prod.outlook.com
- (2603:10c6:10:110::9) To DS0PR12MB7728.namprd12.prod.outlook.com
- (2603:10b6:8:13a::10)
+	dkim=pass (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="I3aYeJZa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+	s=20161220; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=My7ku61t0R/YRh9ePPMG3Cu/uUDaAwNFOLS11kIAzO8=; b=I3aYeJZa2lk55Pl6fTG+8F/o4w
+	ZcPCbMt7wb6UunSsp0/KS+Esydn0Hy2OmdTwZVIQos5OGtqLa4uutdi2A+eV1+0jFGwaSD+A/ABBP
+	yn6vH0UiUOwwu7MKejqcEa99scRqe/INEt3AfNkpV0d3F7pntla3AESfGF8nm2siLVEK8dyrZlLOz
+	h6goBYqPXg9AJMQYrx9cgrT65Megs03wDemCGJ/jeKC74iNrWjSY8cgcno0HXOqULibwbY3A+N+f1
+	RzG+eN3+9H6Ro00j6ndzcpCR6DYiaoEINqb+iR29j0C0WTpA4qs1kCWg4AQBe1LK3y4YwQWUYpWFj
+	h1/+Fhew==;
+Received: from [2404:7a80:b960:1a00:5eaa:b33c:a197:a90f]
+	by mail.kapsi.fi with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <cyndis@kapsi.fi>)
+	id 1uPXBH-000k9l-2B;
+	Thu, 12 Jun 2025 04:56:39 +0300
+Message-ID: <3293ae49-90c6-454c-b2f4-98ea84302c11@kapsi.fi>
+Date: Thu, 12 Jun 2025 10:55:20 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7728:EE_|BL4PR12MB9723:EE_
-X-MS-Office365-Filtering-Correlation-Id: 57163f23-b0ab-42e7-cb97-08dda95457c0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kiICP6XMlJ86n5AJZNmgW6m0K7J1H/XjXlh+M3TxfGdO7JeSlGMOqBWzHr8t?=
- =?us-ascii?Q?ptFjyATNXQjmfyIGg2a03pPz9CwFhfpW8HZsT03ACXIKb1Jc1DAAk/ENGCbz?=
- =?us-ascii?Q?LLuSRWVgyvAPmEZ+ty0PRp9MgWbyZ+k5MESwAGSzYciARfceIgr0JuMNzO4u?=
- =?us-ascii?Q?MCKgGp7MeUk5NaDupLFunyqHZTN7YeIYn/nIW+z2kmKO54Dx6XA64fTkJL77?=
- =?us-ascii?Q?4AcZvbcivH1CsSR7vsOMh6KJPojSjNJtjkf4LcgQo3OBE9PAqQ+tqRg6vbdX?=
- =?us-ascii?Q?Sf6v2alO3uLpmkgGxADegIcKPNnb43x9oomMUlJhuVIWFvdIdkuProZh5wt5?=
- =?us-ascii?Q?OpUMdrzzLbKDoHEpfPyoFtuYKs0X+kwqxMAnCD0J4sIniklv/FkT+nFnn5wX?=
- =?us-ascii?Q?/IsHc4fM9CVlu/5zJN3yCL1ej0NBRT0JkQzoSj/2s4Xg0maczLF9kmSY62N3?=
- =?us-ascii?Q?RQUUT/4xcR/tysk2uhjCdjmOZWDmXb4/pIXNVUWbnoVWI2T8goBkA/8QYD77?=
- =?us-ascii?Q?qeJLCpvH8bHTNwtSKKB1MsFqZNPmOoJvBfGb6qrVsPV0lQ+BDEerosgD4KjA?=
- =?us-ascii?Q?5xZ77idQCtzldm+HF6mZHPuQDfMw11hGeqc+LoFW98tIfANa+sAcKb46poJb?=
- =?us-ascii?Q?6ybj0/bS9PbpTyHxGGTkZUB9TDMTzsjwnlu2V5dOqrxP7XpKiNxyEKlMS8kh?=
- =?us-ascii?Q?VZtL1JaOZ0v10dKt/vb3z/4m2vehxPO2qghZjXVvBGCaplwfSjneqrO+1jes?=
- =?us-ascii?Q?rDL8FUBVVKs/Fd3uQ1YB21elshgi9Ejn5PLo18+62SQXS0I1XtQghvbjXB2s?=
- =?us-ascii?Q?oqUwAPBjNpvD+wFVpSBMZUbC9kf1+8Q4u6pU+T675hDyaV0v5pxHnqOfALBb?=
- =?us-ascii?Q?y42q6bL7cQpPP6PDZI2y2yEszrNXzp/ayY5giRc9SLCbhGxjzJV7gU0oZRUC?=
- =?us-ascii?Q?fyerwqh5x4zydoKEGvDiK2AycVVNMjbjCh5JQvERjMmRoz8G7wkhzSAgus7h?=
- =?us-ascii?Q?G4HFhb4y9dWp/BHW6vIDzWygKBtEUyMgA0MWaNrpHCIbHAH/oVhZLlnwW4rn?=
- =?us-ascii?Q?fA87BpGK3ys8DiuuiTkEsAaIWJt8aEJICddDehZCgO+TLGc7sbAh4OmGbugU?=
- =?us-ascii?Q?BkSdjnts+njeATS0Q/068aYFBPkm/yXSf9RjzHYkXcHsL9VawBJVIl2PQq6w?=
- =?us-ascii?Q?+kac6GUb5Ii1FNjnRl6BF+QKh5gH+tsOOMytV9ijTz2Q1B82PTFl/tDgibDE?=
- =?us-ascii?Q?LDcAymSzx0Nz8uxD7zppUrmXHxXLdYn7jPDNvfj/RtdiNnrYLe/daFRQQaCY?=
- =?us-ascii?Q?tP53YD6dOr/ad7UdcKxSTO+hQ6SBwzCxgKYzlTdj3ShZ7CKIzxi9t9c9rQ11?=
- =?us-ascii?Q?txrC6a0mp/WG3hhftsDsnmt+hmrUhDosDsRXf9aShXzGSFGMDg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7728.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?g8EqKwqPUbJ5Xb7mAoAKFfA/fc+mHUmKjhe8MXaAP0B4Sw8xLZjzabAG9c1U?=
- =?us-ascii?Q?Zr06yyqAuwEciBhpTEM4s7jjJIlgb9YvzXUQTtJAKmiCstm74+lQvxzvdgQc?=
- =?us-ascii?Q?Alky327I1ug7Ek9EK4s4i94fg23e1ySO0gqiEB1MAMDGFKdY23p5iK6eGMSb?=
- =?us-ascii?Q?4ADqPD9KkGTcrQsWlnBgnryLp15jp+hXWS3B4Kx0ZGYgntQdGnYUFocO4RpG?=
- =?us-ascii?Q?4zmCRAGkDwBvHYH8eXA9P2u7lcX2qyvLg2IsWk1FYu0cYHL8ET0wdmPU6KV8?=
- =?us-ascii?Q?2Ah8lC/d2K+8R4R+QrJnK3VwKwWcqOAgo8kJd3FjPSPTIOABasutlhkideTy?=
- =?us-ascii?Q?w8OsqqQn/Jj8MMCNvZgHP/ptUXiDG+AcRJ1HK02bkQjq9K2R/ccb0ELWo/Oi?=
- =?us-ascii?Q?Rt+qfi7U44NnLLT4NClGR/Lh1LVeYdO7u02GtgqHqxk62L2guR8nOw57eclT?=
- =?us-ascii?Q?HvegI8AJtNJG+zEdAAXxpkByZdvhopsU5BpGX5APSMicUqFvpPFJTgOdSKp5?=
- =?us-ascii?Q?TI00d2FElCmATC5IUanYgkbM5tVCuusJlVvr/61oDnDxDBJglPPYcePyw+0s?=
- =?us-ascii?Q?KFroDE2xngHIyIg/osOTGMwuZjkdLRhuOSvUmen/Qy2OrWBiDk7hGExLnEdt?=
- =?us-ascii?Q?/S6DKi4Y3kpx8bPOnALv7UC1JHe9TXnVLobb4hoAExyjotl4+8377i9MsWvX?=
- =?us-ascii?Q?aNwwf09V/NejlKbLFMEqClL78WY6magNxo7yx63E15RaULGqu/G0qyNx7YXa?=
- =?us-ascii?Q?/qTxuVKc/ocZEV5usA3TZOv2lqh+Zi/LHMgEQR+fQFlAxM/D/ZyAXF3aBEtz?=
- =?us-ascii?Q?cDv2xm1a2zJlJ5Q6nIr3+siK+MnlCdvuAFAd/IuiD+Q+zraenQOBR5QGgPi6?=
- =?us-ascii?Q?td9rrImFCkAJ+bHVT/bqFO2FCcKmBIJWQUBwLArydq+THf5VAU3EBMtGTfUz?=
- =?us-ascii?Q?EbuRFA+AIW1AqQ7BxoTRSu8f6ytqHYkqhfst9rbru11aNJHDLH30hUQ5qra/?=
- =?us-ascii?Q?CLqcTzRuJY+l6N4QalzNq9MtW6iY81jrtl//1U5Izyi84osD44Qg1bKSDYd3?=
- =?us-ascii?Q?+/88Nv2gwgG9TeGyxKAMasPPXBvLnFAoI9YuTzAZ351qxHGtmwyCfY1/mRfu?=
- =?us-ascii?Q?mlnvtAYEHMkV6O6hBgJFp8X0wIqM8aIM1oDCZ+7DxW2kwTuXuZQ7kKaqZ4VL?=
- =?us-ascii?Q?p5aCICy0vs7gd198CqXIUPR3ZqTlmBBEnLO53nv6wNYYrlbgGzV3nF7vxucp?=
- =?us-ascii?Q?afklgDTLsq6pancE66FvIt+u20wS79XLnLwKv/XidYTvIvbkyTAa8fAcn1li?=
- =?us-ascii?Q?qlCQ5sy6dRB7bzRASIg8TNDEx2DSQiofMV3JdBMA85y4DELxXnlCFYXlUZ7K?=
- =?us-ascii?Q?Nb5lsdvUeuwxYstKEFExUDctuRaJFh3sexp+gkpDmR5Zjvn6mpxoU+mi7FUD?=
- =?us-ascii?Q?o1SeyuLrv2em/ZLh7lxNMe/KRae+DJp2h206UXWbswJ3LVaXzBblrPHLQwaj?=
- =?us-ascii?Q?d97KZGJkPwsf2YWVQrje13z8SrRJtfTZ0zIS5dBcR/Q4jjDAka1NDwSvvWxX?=
- =?us-ascii?Q?KTBy990oG3HOTe9KfYo3bjVH04tEMnAdewGSFNeP?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57163f23-b0ab-42e7-cb97-08dda95457c0
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7728.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 01:56:27.6587
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GoDC9zUNlaWgOxc7t7FoR3wA8vrDSu+lRFiTYuN6vSBGhrX0h6jruFczQLdYn0215jXmze3celFm/6OmXzyvGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9723
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
+To: Thierry Reding <thierry.reding@gmail.com>,
+ Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Cc: Mikko Perttunen <mperttunen@nvidia.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
+ <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
+ <621a9459-f2dd-4b19-a083-0e62f1a42f50@kapsi.fi>
+ <96b721cd-7223-4b28-a3fd-a4d92c9d5142@tecnico.ulisboa.pt>
+ <4cibh66elviiatataa45lsfcyeovkqyxe4fjvfh7uqddhsbe6z@svt2dgeafrdh>
+Content-Language: en-US
+From: Mikko Perttunen <cyndis@kapsi.fi>
+In-Reply-To: <4cibh66elviiatataa45lsfcyeovkqyxe4fjvfh7uqddhsbe6z@svt2dgeafrdh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2404:7a80:b960:1a00:5eaa:b33c:a197:a90f
+X-SA-Exim-Mail-From: cyndis@kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 
-On Wed, Jun 11, 2025 at 02:06:52PM +0200, David Hildenbrand wrote:
-> We setup the cache mode but ... don't forward the updated pgprot to
-> insert_pfn_pud().
+On 6/12/25 12:06 AM, Thierry Reding wrote:
+> On Wed, Jun 11, 2025 at 01:05:40PM +0100, Diogo Ivo wrote:
+>>
+>>
+>> On 6/10/25 10:52 AM, Mikko Perttunen wrote:
+>>> On 6/10/25 6:05 PM, Thierry Reding wrote:
+>>>> On Fri, Jun 06, 2025 at 11:45:33AM +0100, Diogo Ivo wrote:
+>>>>> Hello,
+>>>>>
+>>>>> This series adds support for the NVJPG hardware accelerator found in the
+>>>>> Tegra210 SoC.
+>>>>>
+>>>>> The kernel driver is essentially a copy of the NVDEC driver as both
+>>>>> engines are Falcon-based.
+>>>>>
+>>>>> For the userspace part I have written a Mesa Gallium backend [1] that,
+>>>>> while still very much experimental, works in decoding images
+>>>>> with VA- API.
+>>>>>
+>>>>> I have been using ffmpeg to call VA-API with the following command:
+>>>>>
+>>>>> ffmpeg -v verbose -hwaccel vaapi -hwaccel_device
+>>>>> /dev/dri/renderD129 -i <input.jpg> -pix_fmt bgra -f fbdev
+>>>>> /dev/fb0
+>>>>>
+>>>>> which decodes <input.jpg> and shows the result in the framebuffer.
+>>>>>
+>>>>> The firmware for the engine can be obtained from a Linux for Tegra
+>>>>> distribution.
+>>>>
+>>>> By the way, have you tried running this on anything newer than Tegra210?
+>>>> Given your progress on this, we can probably start thinking about
+>>>> submitting the binaries to linux-firmware.
+>>>
+>>> FWIW, the impression I have is that NVJPG is basically unchanged all the
+>>> way to Tegra234. So if we add stream ID support and the firmwares, it'll
+>>> probably just work. Tegra234 has the quirk that it has two instances of
+>>> NVJPG -- these have to be distinguished by their different class IDs.
+>>> But we should go ahead with the T210 support first.
+>>
+>> I have a question here, what exactly are the stream IDs? While working
+>> on the driver this came up and I didn't manage to figure it out.
 > 
-> Only a problem on x86-64 PAT when mapping PFNs using PUDs that
-> require a special cachemode.
+> Stream IDs are a way to identify memory transactions as belonging to a
+> certain device. This comes into play when working with the IOMMU (which
+> is a Tegra SMMU on Tegra210 and earlier, and an ARM SMMU on Tegra) and
+> is used to isolate DMA capable devices. Basically for every stream ID
+> you get a separate I/O address space. NVJPG will have its own address
+> space, and so will VIC. Each device can only access whatever has been
+> mapped to it's I/O address space. That means NVJPG can't interfere with
+> VIC and vice-versa. And neither can any of these engines read from or
+> write to random system memory if badly programmed.
 > 
-> Fix it by using the proper pgprot where the cachemode was setup.
+> For Tegra SMMU there's no such thing as programmable stream IDs, so the
+> stream ID is fixed for the given device.
 > 
-> Identified by code inspection.
-> 
-> Fixes: 7b806d229ef1 ("mm: remove vmf_insert_pfn_xxx_prot() for huge page-table entries")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/huge_memory.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index d3e66136e41a3..49b98082c5401 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1516,10 +1516,9 @@ static pud_t maybe_pud_mkwrite(pud_t pud, struct vm_area_struct *vma)
->  }
->  
->  static void insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
-> -		pud_t *pud, pfn_t pfn, bool write)
-> +		pud_t *pud, pfn_t pfn, pgprot_t prot, bool write)
->  {
->  	struct mm_struct *mm = vma->vm_mm;
-> -	pgprot_t prot = vma->vm_page_prot;
->  	pud_t entry;
->  
->  	if (!pud_none(*pud)) {
-> @@ -1581,7 +1580,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
->  	pfnmap_setup_cachemode_pfn(pfn_t_to_pfn(pfn), &pgprot);
->  
->  	ptl = pud_lock(vma->vm_mm, vmf->pud);
-> -	insert_pfn_pud(vma, addr, vmf->pud, pfn, write);
-> +	insert_pfn_pud(vma, addr, vmf->pud, pfn, pgprot, write);
->  	spin_unlock(ptl);
->  
->  	return VM_FAULT_NOPAGE;
-> @@ -1625,7 +1624,7 @@ vm_fault_t vmf_insert_folio_pud(struct vm_fault *vmf, struct folio *folio,
->  		add_mm_counter(mm, mm_counter_file(folio), HPAGE_PUD_NR);
->  	}
->  	insert_pfn_pud(vma, addr, vmf->pud, pfn_to_pfn_t(folio_pfn(folio)),
-> -		write);
-> +		       vma->vm_page_prot, write);
+> On newer chips (Tegra186 and later, or maybe it wasn't until Tegra194),
 
-Actually It's not immediately obvious to me why we don't call track_pfn_insert()
-and forward the pgprot here as well. Prior to me adding vmf_insert_folio_pud()
-device DAX would call vmf_insert_pfn_pud(), and the intent at least seems to
-have been to change pgprot for that (and we did for the PTE/PMD versions).
+Tegra186 and newer -- all chips with the ARM SMMU. To add a little bit, 
+each engine can address two stream IDs, one for firmware and one for 
+data. All user specified buffers are mapped into the data IOMMU domain, 
+and these are switched between jobs / applications.
 
-However now that the ZONE_DEVICE folios are refcounted normally I switched
-device dax to using vmf_insert_folio_*() which never changes pgprot based on x86
-PAT. So I think we probably need to either add that to vmf_insert_folio_*() or
-a new variant or make it the responsibility of callers to figure out the correct
-pgprot.
+As an aside, currently each engine has its own firmware stream ID, but 
+that's a bit wasteful, since the kernel allocates a separate IOMMU 
+domain for each. The firmwares are all read-only so they could be in a 
+shared one. We've had to consolidate these on some platforms that ran 
+out of IOMMU domains otherwise. Not really a concern with upstream 
+platforms, though.
 
->  	spin_unlock(ptl);
->  
->  	return VM_FAULT_NOPAGE;
-> -- 
-> 2.49.0
+> certain IP blocks have special registers that can be used to override
+> the stream ID. There's also a way to set the stream ID via command
+> streams, which means that you can have different I/O address spaces (I
+> think we call them memory context) per engine, which means that you can
+> isolate different processes using the same engine from each other.
 > 
+> Again, for Tegra210 that's nothing we need to worry about. For newer
+> chips it's probably just a matter of adding .get_streamid_offset() and
+> .can_use_memory_ctx() implementations.
+
+Also need to program the THI_STREAMID / TRANSCFG registers during boot.
+
+Cheers,
+Mikko
+
+> 
+> Thierry
+
