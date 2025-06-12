@@ -1,172 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BC023C8B3;
-	Thu, 12 Jun 2025 13:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE4123BD1F
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749733638; cv=none; b=T7CXagy7WivBCL3gMFOdTM0jw15LSLtM4hPVcixzbnJWYv4beczTp1Slodwj2hUQu9Ad1GqXFwoCMyYkqmOoPdNFBEsU+/gCF185eE5Ho6jhu1kKdcsV0q5PxGSo1zZUmR0qKoU5zsqB/FUMsqbqnnc3mqv2433Ueamrn6KI4MM=
+	t=1749733655; cv=none; b=REoaMIsEBoMTcVXiyBdHG5Xr39oVYKmV7ORUysHTQxtk2rmDC3w+SioEdPgRqjlnY2aqK+SO2Wdoe2rmFtFF5Tq2gkiR++XupGftWWt+y93EuCXLUzmUrvdgv9BEYIMiOp9Txvj2yZ3wtXhqePU/XADUULx3ttnULo3GqVxdFkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749733638; c=relaxed/simple;
-	bh=Ht8NIHUWY05/PIbqs7EIkuaSxSpm2Y4FLH6CxtL40+Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=nH950Gkca6yBmIRrq24JouGW2S5bneW8gLRI+/6tXUnawZkKFFRuBcL6/JhdQte4m1IgRTyhgMOrRA4qdHqhvjcfxzilauFLp9OvEsf2r9LiK5vxNqui0R4Zcqg8Q3Q9fgadvrCqJPYtj0jh00rd+03MMc4AuA98ctOzx/jeuMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbiWPpPh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749733655; c=relaxed/simple;
+	bh=z6N1TMabJk8XUstMPq0jYPGGMmny/6BK+fsPOJYZ5CY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dUNXQi+O6Y+nnPjee8TgMDgDpnmP4VzTvtsVbjib8Z7O6tQzbIZzmFbba//DS904q3FqmaZDAKBcFTXj017fANdz1hjab4Sp7eHdjmu5zN801SVblde5r0A9G71cm5NAAwKw+lckE6R+7fW5FRcmC66WPHenECGGxIjcFGkmcBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G0auFR2q; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbiWPpPh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54DAFC4CEEA;
-	Thu, 12 Jun 2025 13:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749733636;
-	bh=Ht8NIHUWY05/PIbqs7EIkuaSxSpm2Y4FLH6CxtL40+Y=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=JbiWPpPhStkDwlqbOklhYu2YmA0zyhr2SqnwXLxe89Hy6xQEuIfQL0HAS2ngoppBG
-	 Nr4WPRWSLFGIa5nGaOF2pGFBcD8DfFCC38H5T1NHZo08kFBW8hwweVs03ohEWu+CgC
-	 6UihtVOSJThDHwRLJOR1nGPoIMcMc7Pik1S5qnxApr+Q8Pt9ZD//sEw2FUg9LtTSOb
-	 Qif61o8YPGl/fe0r5AckR5bb78HgfmJgspIvEd/oKtH50E6DuGl0rf2ndg16eFrzsF
-	 r0h8pHa3EyauXfBTA3fduJMp+KLuXKXSmdms8F4U+PDaXDihlhqi1O/On99k2qo1m/
-	 wNDDBGIcQMZ3g==
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G0auFR2q"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-55342f0a688so69042e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:07:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749733651; x=1750338451; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kCVYnr2NHXP6YD4R7dCQrJMSmoXGQWCXxHYKeLMW5Bc=;
+        b=G0auFR2qLEXdjYxnS9WX54xv/bOdEO9CGe//ke8upTBnp4RpuguQr8m6NPWQXoY+Q8
+         vqu6GT3JvXbtSAU/QoBsQo4EGHkHrenpvfUmMW6gHpUFXzSIRTY3xn9Ba34acA7KNv3J
+         QMVBdFYHmzsfElzbxkclTK1HvR9f33kVa0eIGMpQhVYHYvrXyvBK7ti5nCWrMiHkqb8+
+         8Rh2epcQoRa6/4SJhU8mgVRqJSSv9KqOAyK3upf4EMkrNVyN8mn5hdz/uFwSr3gf6Jd9
+         d4iivEP0oCf6x2goGDlVB4PaA12TGR5/uVecESSjouS0UUp2ksSwvQGBhZzct2btTn35
+         Tiiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749733651; x=1750338451;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kCVYnr2NHXP6YD4R7dCQrJMSmoXGQWCXxHYKeLMW5Bc=;
+        b=BCv2eYLNHwJQz7Fq5euoT1yyLbYsO8dpJ3VSFbre+CbzOIBQVEH4plS8cBnktcj6+Y
+         r/c8v3sa+8khux55xy9Ck4uhFaJSaj9OWE3TXRkiSK2xWomCjNMqLiO2CeQKTOtSacTr
+         UNgqzDzYzJxWrx0U6hSSYS9Q5jnLM5sNiHmB4TTqji31nE+lEMD7k4t1ZkR2T+DLbnh8
+         bMmtHCdXiRM+iiN5xjn2Gy9YrgisQyFxqPapI/hkskD2u+uYJAflTU9CcUt2cWKCbyhX
+         vzk+LFBgcIsTyk2tyfLozovacPkF6yLS1ovA9SVAJtePVVPGnMnxq8GWbT6zESISSQOO
+         VZgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUATdfsaGiDQmqVboTI0BNuSSUGQsT94V9vxUVOkVvX1hC8bzaQpii58obbe5A53dMQgQS8z+qYNeaMfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl03diRktsnYMB2zpAptN+Fr0PPXba4qrqY0czLTvdO+cFLzay
+	qYEpfwaRrys4DjezjaWqOXAnMo3m1eSibctij3WtcRlQ6u3Ja9h+mlJxbdyrrbfHxp4=
+X-Gm-Gg: ASbGncsClBdIuSTNsmg6ucLPvUNE0wWuVIanR+z58KKULewgKMvANxcF5iod8cdGDQy
+	yTdrrIic4MoCy8hHo/GgmwYqYKkRa3IGGxaXP0zzot/6OFfSS5MXtlAevFcQheO6nfMeoAJclpv
+	IB1ErAzSkEd/oDH61sfvRupMfw9E0304NNlhBKl63CQMnQ2LWajdiMfTUZgHbrvMIecxtb3QfD3
+	WMIEZ76r1aNQeg69gk7rY3K1nn423FFAwK/qzV1BxduwCjRCSQsw4oZX0bbJKfT3MaF7Ct9mDe0
+	W6A8DYLQkDFfHxT+4moIXG4GsC1m6kUXQ937vxlc5f4nWDc+Dtn74hqyN0BqGM0mzIkVvD2Y7gQ
+	oP0skPUaFAelr6tVUBJKefg==
+X-Google-Smtp-Source: AGHT+IG99wDY0vjvv6M/1KtXYegvp4C3S75fNTyHcxKq9q0WZeCKaCu52C6L42UnkRUNGviHQyf8og==
+X-Received: by 2002:a05:6512:e93:b0:553:a889:9f0e with SMTP id 2adb3069b0e04-553a889a14dmr244104e87.15.1749733651043;
+        Thu, 12 Jun 2025 06:07:31 -0700 (PDT)
+Received: from localhost (c-85-229-7-191.bbcust.telenor.se. [85.229.7.191])
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-553ac13f0besm110490e87.84.2025.06.12.06.07.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 06:07:30 -0700 (PDT)
+From: Anders Roxell <anders.roxell@linaro.org>
+To: miriam.rachel.korenblit@intel.com
+Cc: dan.carpenter@linaro.org,
+	arnd@arndb.de,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: [PATCH] wifi: iwlwifi: pcie: ensure RX_QUEUE_CB_SIZE fits bitfield for gcc-8|9
+Date: Thu, 12 Jun 2025 15:07:19 +0200
+Message-ID: <20250612130719.3878754-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 15:07:11 +0200
-Message-Id: <DAKKT1ML27VO.35Q9I6SQHTYTX@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] rust: devres: fix race in Devres::drop()
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>
-X-Mailer: aerc 0.20.1
-References: <20250612121817.1621-1-dakr@kernel.org>
- <20250612121817.1621-4-dakr@kernel.org>
-In-Reply-To: <20250612121817.1621-4-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu Jun 12, 2025 at 2:17 PM CEST, Danilo Krummrich wrote:
-> In Devres::drop() we first remove the devres action and then drop the
-> wrapped device resource.
->
-> The design goal is to give the owner of a Devres object control over when
-> the device resource is dropped, but limit the overall scope to the
-> corresponding device being bound to a driver.
->
-> However, there's a race that was introduced with commit 8ff656643d30
-> ("rust: devres: remove action in `Devres::drop`"), but also has been
-> (partially) present from the initial version on.
->
-> In Devres::drop(), the devres action is removed successfully and
-> subsequently the destructor of the wrapped device resource runs.
-> However, there is no guarantee that the destructor of the wrapped device
-> resource completes before the driver core is done unbinding the
-> corresponding device.
->
-> If in Devres::drop(), the devres action can't be removed, it means that
-> the devres callback has been executed already, or is still running
-> concurrently. In case of the latter, either Devres::drop() wins revoking
-> the Revocable or the devres callback wins revoking the Revocable. If
-> Devres::drop() wins, we (again) have no guarantee that the destructor of
-> the wrapped device resource completes before the driver core is done
-> unbinding the corresponding device.
->
-> CPU0					CPU1
-> ------------------------------------------------------------------------
-> Devres::drop() {			Devres::devres_callback() {
->    self.data.revoke() {			   this.data.revoke() {
->       is_available.swap() =3D=3D true
-> 					      is_available.swap =3D=3D false
-> 					   }
-> 					}
->
-> 					// [...]
-> 					// device fully unbound
->       drop_in_place() {
->          // release device resource
->       }
->    }
-> }
+GCC-8 and GCC-9 emits a hard error when the value passed to
+`u32_encode_bits()`. These versions somehow think that
+RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) is an out of bounds
+constant.  Open code this calculation using FIELD_PREP() to avoid this
+compile error.
 
-I forgot to mention: you used tabs, which breaks when tabstop is not set
-to 8 (such as in my editor. This is how it looks for me ):
+error: call to '__field_overflow' declared with attribute error: value
+doesn't fit into mask
 
-    -----------------------------------------------------------------------=
--
-    Devres::drop() {      Devres::devres_callback() {
-       self.data.revoke() {         this.data.revoke() {
-          is_available.swap() =3D=3D true
-                    is_available.swap =3D=3D false
-                 }
-              }
-  =20
-              // [...]
-              // device fully unbound
-          drop_in_place() {
-             // release device resource
-          }
-       }
-    }
-
-I personally would have used spaces for this, but it looks fine in my
-gitlog, so feel free to keep it this way.
-
-> Depending on the specific device resource, this can potentially lead to
-> user-after-free bugs.
->
-> In order to fix this, implement the following logic.
->
-> In the devres callback, we're always good when we get to revoke the
-> device resource ourselves, i.e. Revocable::revoke() returns true.
->
-> If Revocable::revoke() returns false, it means that Devres::drop(),
-> concurrently, already drops the device resource and we have to wait for
-> Devres::drop() to signal that it finished dropping the device resource.
->
-> Note that if we hit the case where we need to wait for the completion of
-> Devres::drop() in the devres callback, it means that we're actually
-> racing with a concurrent Devres::drop() call, which already started
-> revoking the device resource for us. This is rather unlikely and means
-> that the concurrent Devres::drop() already started doing our work and we
-> just need to wait for it to complete it for us. Hence, there should not
-> be any additional overhead from that.
->
-> (Actually, for now it's even better if Devres::drop() does the work for
-> us, since it can bypass the synchronize_rcu() call implied by
-> Revocable::revoke(), but this goes away anyways once I get to implement
-> the split devres callback approach, which allows us to first flip the
-> atomics of all registered Devres objects of a certain device, execute a
-> single synchronize_rcu() and then drop all revocable objects.)
->
-> In Devres::drop() we try to revoke the device resource. If that is *not*
-> successful, it means that the devres callback already did and we're good.
->
-> Otherwise, we try to remove the devres action, which, if successful,
-> means that we're good, since the device resource has just been revoked
-> by us *before* we removed the devres action successfully.
->
-> If the devres action could not be removed, it means that the devres
-> callback must be running concurrently, hence we signal that the device
-> resource has been revoked by us, using the completion.
->
-> This makes it safe to drop a Devres object from any task and at any point
-> of time, which is one of the design goals.
->
-> Fixes: 76c01ded724b ("rust: add devres abstraction")
-> Reported-by: Alice Ryhl <aliceryhl@google.com>
-> Closes: https://lore.kernel.org/lkml/aD64YNuqbPPZHAa5@google.com/
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-
-Reviewed-by: Benno Lossin <lossin@kernel.org>
-
+Fixes: b8eee90f0ba5 ("wifi: iwlwifi: cfg: unify num_rbds config")
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Closes: https://lore.kernel.org/all/CA+G9fYssasMnOE36xLH5m7ky4fKxbzN7kX5mEE7icnuu+0hGuQ@mail.gmail.com/
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
-Cheers,
-Benno
+ drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> ---
->  rust/kernel/devres.rs | 33 ++++++++++++++++++++++++++-------
->  1 file changed, 26 insertions(+), 7 deletions(-)
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
+index cb36baac14da..1854d071aff2 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c
+@@ -204,9 +204,10 @@ int iwl_pcie_ctxt_info_init(struct iwl_trans *trans,
+ 
+ 	WARN_ON(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) > 12);
+ 	control_flags = IWL_CTXT_INFO_TFD_FORMAT_LONG;
+-	control_flags |=
+-		u32_encode_bits(RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)),
+-				IWL_CTXT_INFO_RB_CB_SIZE);
++	/* This should just be u32_encode_bits() but gcc-8 and gcc-9 fail to build */
++	control_flags |= FIELD_PREP(IWL_CTXT_INFO_RB_CB_SIZE,
++		RX_QUEUE_CB_SIZE(iwl_trans_get_num_rbds(trans)) &
++		FIELD_MAX(IWL_CTXT_INFO_RB_CB_SIZE));
+ 	control_flags |= u32_encode_bits(rb_size, IWL_CTXT_INFO_RB_SIZE);
+ 	ctxt_info->control.control_flags = cpu_to_le32(control_flags);
+ 
+-- 
+2.47.2
+
