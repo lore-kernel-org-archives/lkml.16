@@ -1,94 +1,138 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110001DFE20;
-	Thu, 12 Jun 2025 06:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E841E2858
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749708852; cv=none; b=MdXL9Gc6/YLnhmFetp+pCbUKJX6N2oTPVVQWw8iTymXZ+THxHC6yickSbs7r5TLOzqXIKJFk4pa8D+UnXfs+dfj7JPNWgkQkWdl/RpI090wOZfXndQNg+dhVU0xlaKRNCf2pEoN/Qnm4K9muat/uEVHdL8gBUsd5iSe0Jp4JN4I=
+	t=1749708988; cv=none; b=lLJjLo9/jpXgYy4jnurKDDj0EoRSH8P+1i2hpAYI/RJyNwxq+LyCfzlYp7GxkF2MOqkQvEEXnGvw0MDn5/GV78GsE6vArVQ01iULWakYDjygk9Rt7K9GJP5ddw3VIs7kJbncUcsWwdCGFsjcTFKH9ZcLE5UIFRjrPwcrNdf4w50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749708852; c=relaxed/simple;
-	bh=N1ALVDfrYGPmjOFwwjT7K4Q9Dit3eb5jqKkO8HFS3ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TrMJq9fL5WMimGxqGh//7obyC3HdPCbg1Z8f/qkcsM41lMWH+4U2uPZOl9wcbTFa55e5kvUZqCC+pjBD80M+Grzfh+IGu97ks2dsEDbzLAYNHE20Ct6wLW1ptCbpyXl6YvxqICP0lQI+dVU4hZG856csyNx6nnJB2E8lUg7HYxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dkNQZqnb; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749708988; c=relaxed/simple;
+	bh=kmYwNOfZYNiauWbtvqa6oli6QU+Z8hXUpPbkLQJ/9v4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CqKY3noIYYQokn5BvSujr+4qqXi5mtrIfYyNYHZ2801f6I4WxYaNc/E5A0MhRRQwNoCbLSlR7wngRg1jtdPRRFnFZZaKK3qCjQRtBqzbYCpmP5Dvisto5yvR7jnMhB2lkUU9vg3LU5xKvE9dfLL7jJ4X0KcgKc8TbfmuJVPqEgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=TqpJ+qCH; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dkNQZqnb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749708848;
-	bh=N1ALVDfrYGPmjOFwwjT7K4Q9Dit3eb5jqKkO8HFS3ho=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dkNQZqnbA0YtXKgvELtqrku34gkNoRLMpuyGMJRiyfRmCw9FAK3CQFbIMPnQFdRbq
-	 H+ayX4EsvP4Wl/0VEwVWrcX4d11lm7n0GGB8ghIlfvvihLIvNtWsykzloDglB7Yzh9
-	 ghOqCt1OrBpTvFwiHXP/faya+GBTwlmexOTXsgTTXc+U40zDeLVms50YRGj3Q+QWqe
-	 lmaXpnXZWgoCLuz2uJv80wJMkluBnSabc19H2jMo5CgvoZa3RVV6qdly84uMNiwb9h
-	 6FIOlQN3sLnadhBeoLq/VQZTkEnrZwz/vnjBsGT4g5Pxn+Bpu2rWC6LShd4n1h8do+
-	 nNti/nXyNiUWQ==
-Received: from [192.168.1.90] (unknown [212.93.144.165])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A696817E0FDB;
-	Thu, 12 Jun 2025 08:14:07 +0200 (CEST)
-Message-ID: <25839448-6307-479d-a6f2-8c3ae03bbfaf@collabora.com>
-Date: Thu, 12 Jun 2025 09:13:59 +0300
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="TqpJ+qCH"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so6149015e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1749708985; x=1750313785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ScgjUpaPfHbqDIMCPtaXg6Ano9ZrKG6mzFmgIhysYwY=;
+        b=TqpJ+qCHviRY/tAqZshG/4rp+CJpoRGKhsj3BRsqsVg9lrTcxCBybe6kLmwoVTaNef
+         tQ1fNhrl6Jeda6epcjOn4O9bFlQAJZ/f/TNak1QJ7la4ibpiKoUDmCYhbnwXyi2M/8Um
+         n5ZazGKmE/7kfZ2EsYOFX+dUQcZAmStc1NPG4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749708985; x=1750313785;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ScgjUpaPfHbqDIMCPtaXg6Ano9ZrKG6mzFmgIhysYwY=;
+        b=GNkcwgKTKMwBfo00FGKIfLhaxi6oVo6vwIZLaJHCoxjc9SKDHEZqQ5ZElGJGn0+2qY
+         UUweqwV6lbsnHWjdVQIPFa5y8fLJPgYC/ScaCeDLf5mg2lnZ0MwWsSURzn6dSiyAGpPV
+         q+WWhjU3+nXt5XgyK1tC4fPiuetQP5TRmMvrDCcSmvNmHxXf4FvUb7Q2TcMK0WUG1orW
+         jdgEATA6vPHVvxYVTGUU1I/0ScPisxrQEbCiX9oEA2Vcy34/z3ODnaQ/sNW53JAXOFXb
+         IdqOhw5y/Dsy5ozR1GQddooFAQrqP6HjXBiG1gMWMv2rwVLnyUx2A4frVF/8yPEidS1N
+         0xnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiCBu61rvn9oJqIhSBYV3n8h8deM4FJRBuMQy90qJpTPolIfG1KKUAvc61NZ/68IdpeHoCguWPkAGBH0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxejfiYtpU/tmSuaeFb6QSvpvDAcAlhCD2R7fMKxQQjg5OOh7SN
+	nipJE31jY44xesu3nbzsh2ZSGTC/VDYkTJQJcdqQNeWTSUfv01ag7i8sh91C480R6HbNepPBiR4
+	AEuu60zg=
+X-Gm-Gg: ASbGnctxs95lKaAXUdKqP6d9sBtHXNYvbO8mCr8ii9hcglSBCdVi3eJQK5ybEyFlnio
+	FB1ZpgI+LuVdv7K4o9Cc7b6nizI9aoUdq8pzcQVML+qSsg5aaIr4FBdncG2rhK9APer7HaKxJZN
+	SMK0pL9qVGcMNevzH3EWAxqqYFhq88cXAj9as9GSID2r1t6XxOTb9mizWKpSgs47n9au6oCqiQJ
+	XnZSwNl8ltw/56D8104m/pLMifLj3xJA6vOCjpBDoKVTG6nojJmpRvR868eRSyFWFLiza01AlZ2
+	HrEo4kXjPbQkvUdXMgQqJiFRAv0jF0iGKTVzYXnIGe1djoTuYDLSiUdbcWkiU5/0faLhaUt0jiG
+	X9mZM9TxhLbFgwg==
+X-Google-Smtp-Source: AGHT+IGm81iQMqozoNbGvUNa7Ii3Oga/QDuCjWZCS5lp+cWSAZ4nkHJS8aNtWeIEjp0Xmo8H09kLdA==
+X-Received: by 2002:a05:600c:37c5:b0:442:faa3:fadb with SMTP id 5b1f17b1804b1-4532d2bd72dmr12505585e9.2.1749708985332;
+        Wed, 11 Jun 2025 23:16:25 -0700 (PDT)
+Received: from localhost.localdomain ([2001:b07:6467:4426:b34c:fa23:a49e:c18c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4531fe840a3sm53716255e9.0.2025.06.11.23.16.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 23:16:24 -0700 (PDT)
+From: Michael Trimarchi <michael@amarulasolutions.com>
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-amarula@amarulasolutions.com,
+	Michael Trimarchi <michael@amarulasolutions.com>,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org
+Subject: [RFC PATCH] wifi: ath11k: Prevent sending WMI commands to firmware during firmware crash
+Date: Thu, 12 Jun 2025 08:16:15 +0200
+Message-ID: <20250612061619.22094-1-michael@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ALSA: usb-audio: Convert comma to semicolon
-To: Chen Ni <nichen@iscas.ac.cn>, perex@perex.cz, tiwai@suse.com,
- franta-linux@frantovo.cz, lina+kernel@asahilina.net, livvy@base.nu,
- sstistrup@gmail.com, s@srd.tw
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250612060228.1518028-1-nichen@iscas.ac.cn>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20250612060228.1518028-1-nichen@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/12/25 9:02 AM, Chen Ni wrote:
-> Replace comma between expressions with semicolons.
-> 
-> Using a ',' in place of a ';' can have unintended side effects.
-> Although that is not the case here, it is seems best to use ';'
-> unless ',' is intended.
-> 
-> Found by inspection.
-> No functional change intended.
-> Compile tested only.
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> ---
->  sound/usb/mixer_quirks.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
-> index 0769ecd91144..a0ffe8b559dc 100644
-> --- a/sound/usb/mixer_quirks.c
-> +++ b/sound/usb/mixer_quirks.c
-> @@ -762,9 +762,9 @@ static int snd_dualsense_jack_create(struct usb_mixer_interface *mixer,
->  
->  	mei->ih.event = snd_dualsense_ih_event;
->  	mei->ih.match = snd_dualsense_ih_match;
-> -	mei->ih.connect = snd_dualsense_ih_connect,
-> -	mei->ih.disconnect = snd_dualsense_ih_disconnect,
-> -	mei->ih.start = snd_dualsense_ih_start,
-> +	mei->ih.connect = snd_dualsense_ih_connect;
-> +	mei->ih.disconnect = snd_dualsense_ih_disconnect;
-> +	mei->ih.start = snd_dualsense_ih_start;
->  	mei->ih.name = name;
->  	mei->ih.id_table = mei->id_table;
+Set the ATH11K_FLAG_CRASH_FLUSH and ATH11K_FLAG_RECOVERY flags when the
+host driver receives the firmware crash notification from MHI. This
+prevents sending WMI commands to the firmware during recovery.
+We want to prevent the laptop from freezing or becoming extremely slow when
+its firmware repeatedly crashes while attempting to connect to a known Wi-Fi
+network. This often happens with routers that intermittently fail to reconnect
+until the access point is reset. While this solution doesn't fix the underlying
+router issue, it would allow the laptop to select a different Wi-Fi network and
+significant performance degradation during the recovery process.
 
+[75795.712161] ath11k_pci 0000:02:00.0: firmware crashed: MHI_CB_EE_RDDM
+[75797.738073] ath11k_pci 0000:02:00.0: wmi command 262145 timeout
+[75797.738090] ath11k_pci 0000:02:00.0: Failed to send WMI_PDEV_OBSS_PD_SPATIAL_REUSE_CMDID
+[75797.738101] ath11k_pci 0000:02:00.0: failed to set vdev 0 OBSS PD parameters: -11
+[75800.746321] ath11k_pci 0000:02:00.0: wmi command 20488 timeout
+[75800.746344] ath11k_pci 0000:02:00.0: failed to send WMI_VDEV_SET_PARAM_CMDID
+[75800.746358] ath11k_pci 0000:02:00.0: failed to set vdev 0 dtim policy: -11
+[75803.754345] ath11k_pci 0000:02:00.0: wmi command 237571 timeout
+[75803.754360] ath11k_pci 0000:02:00.0: failed to send WMI_11D_SCAN_STOP_CMDID: -11
+[75803.754371] ath11k_pci 0000:02:00.0: failed to stopt 11d scan vdev 0 ret: -11
+[75806.762259] ath11k_pci 0000:02:00.0: wmi command 28684 timeout
+[75806.762281] ath11k_pci 0000:02:00.0: Failed to send WMI_BSS_COLOR_CHANGE_ENABLE_CMDID
+[75806.762294] ath11k_pci 0000:02:00.0: failed to enable bss color change on vdev 0: -11
+[75809.770916] ath11k_pci 0000:02:00.0: wmi command 172035 timeout
+[75809.770930] ath11k_pci 0000:02:00.0: Failed to send WMI_OBSS_COLOR_COLLISION_DET_CONFIG_CMDID
+[75809.770938] ath11k_pci 0000:02:00.0: failed to set bss color collision on vdev 0: -11
+[75809.770966] wlp2s0: associated
+[75809.771051] wlp2s0: deauthenticating from a0:95:7f:45:e8:47 by local choice (Reason: 3=DEAUTH_LEAVING)
+[75809.782908] ieee80211 phy0: Hardware restart was requested
+[75809.782932] ath11k_pci 0000:02:00.0: failed to lookup peer a0:95:7f:45:e8:47 on vdev 0
+[75812.842136] ath11k_pci 0000:02:00.0: wmi command 20488 timeout
+[75812.842153] ath11k_pci 0000:02:00.0: failed to send WMI_VDEV_SET_PARAM_CMDID
+[75812.842164] ath11k_pci 0000:02:00.0: Failed to set CTS prot for VDEV: 0
+[75815.850227] ath11k_pci 0000:02:00.0: wmi command 20488 timeout
 
-Thanks for catching this!
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
 
-Reviewed-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+---
 
+ drivers/net/wireless/ath/ath11k/mhi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
+index acd76e9392d31..af7ff4fc794de 100644
+--- a/drivers/net/wireless/ath/ath11k/mhi.c
++++ b/drivers/net/wireless/ath/ath11k/mhi.c
+@@ -286,8 +286,11 @@ static void ath11k_mhi_op_status_cb(struct mhi_controller *mhi_cntrl,
+ 			break;
+ 		}
+ 
+-		if (!(test_bit(ATH11K_FLAG_UNREGISTERING, &ab->dev_flags)))
++		if (!(test_bit(ATH11K_FLAG_UNREGISTERING, &ab->dev_flags))) {
++			set_bit(ATH11K_FLAG_CRASH_FLUSH, &ab->dev_flags);
++			set_bit(ATH11K_FLAG_RECOVERY, &ab->dev_flags);
+ 			queue_work(ab->workqueue_aux, &ab->reset_work);
++		}
+ 
+ 		break;
+ 	default:
+-- 
+2.43.0
+
+base-commit: 0f70f5b08a47a3bc1a252e5f451a137cde7c98ce
