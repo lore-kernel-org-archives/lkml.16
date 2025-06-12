@@ -1,148 +1,99 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3962823E331
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F75220F2A;
+	Thu, 12 Jun 2025 13:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736323; cv=none; b=ZQesh1Tlakh4MMDIJ4tYxCG5ZpyKDAl5HdEiLePS0tS290t5N1WV0Yx9G3JSxi6CQl9Sb1THtImz9JKjH04jfUpcarAG+5C6ryEwoOzU3V0CYO0mgwq1Bd8vxTRaEWUQtuyLYHzc2URbQsJooGeLu+aP5+iBhTb9RV4CEYJOLKU=
+	t=1749736370; cv=none; b=Y5HV5P8GTDMcbK7fZIqNM20WIIGuppeTEliSJPTy/ezwZHwuurzeteq2ht/ZuUX0Qt5YP66Vp7WjKcRsuLpr0iTbSSBJva8jRZluGfU5omiKGvLl5Y/iPkWDxchW6P4eqs4WJsX6LeI+eiMjGPmTxiyNsWkpsK/SJ0WIkqQumM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736323; c=relaxed/simple;
-	bh=iUjNUxN1xIpBV8h+1ymERj2J0ETvO565u+bdg94CNuw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=UIe2Xo/0+qvbdSsK/bm2zLYBMurQJP3ZhIXB/JPMu2JPGBafLy2aKKLe2dzFZcpvI+n9jc3YL7mHAA+T/1Tk5GTIONl106AF5Wy+MV/CJn+N17uCjHaZ7M7E0i/9Yq7qZv+GgIkxMToyJafXJ8HXax/seElP3q4MdpCH1jTVmz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NY7Ih6hX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749736370; c=relaxed/simple;
+	bh=S5qtNAXCpRXuIJHkgSFJUeAvSjADu2RXd2r/n4jbK0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ptcX9+kYx69FS/3ehRUjtVgWIG9Yi2tWU5j5FhGi4t0k/Wi12ERzITCxOBpUoCxyglXlUiTj3FU4oJ6E8s7nlxdzh6M9xxRjefm0ThiWKR8FBRwWyDltB5HiylL8tOJhKM64eBZAfAwujs3HO6Paz5W0+z4+cec0WlHIwQ+Nm7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZ576ryH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NY7Ih6hX"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C7p1oH029232;
-	Thu, 12 Jun 2025 13:46:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tmk++c2mkcJELsKXVxVYZLuqg2o3nAxMrCB7YLxsRv4=; b=NY7Ih6hXYb4q4aUl
-	T7DCkzP1NaC6tHihZKVsvVoj2zj18kcTjB+R8ARPs3c88rF6R2seGrubyAvwHXIG
-	pZ/bftZtSSnKBk4srW3OEkuudg3gI5kNvkKWxn8r34izLD4VyyYJzQET/q162iAL
-	vxQ3rokzKNYNRu6BpQx6d/P2OWskB/7XfnnnFPiGRErCCqy9vK5UboLp4GT2XCwz
-	8g84HA+9fHR9L+35BLs1YF43WtO9b3OyYgrmdhrJTwgb1IAFd2IU8+4nkYAD1nhE
-	gjmKBANWC0RQxDI6ROEscwOyMev7f5ecCLDzP9FxNrxPgdcRlBB+gnmzAJ4OYZiB
-	0RprXg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dn6gq2y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 13:46:36 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55CDkaoC007559
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 13:46:36 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 12 Jun 2025 06:46:31 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-Date: Thu, 12 Jun 2025 21:46:11 +0800
-Subject: [PATCH v4 4/5] arm64: kvm: Convert the opencoded field modify
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZ576ryH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514C4C4CEEA;
+	Thu, 12 Jun 2025 13:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749736370;
+	bh=S5qtNAXCpRXuIJHkgSFJUeAvSjADu2RXd2r/n4jbK0I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CZ576ryHXNGQ547s7LE6F+wUGVxvdrMiZ+qHyaJ5axp6VaK15awFGbW2LqrDI/jAT
+	 X1vw2xIOYKUjulm/YmyAu8KXissvgc+PVhXyAj3BzG4dFEJJ5XR3WUCmy2w/tCRroI
+	 tdHf5EsEn+taetHjsil3ReDw0BnpcHeRkoDH7UkyOfMZA7cOyuGAMdFQd6hdbsP8RZ
+	 72MBluGC8Bn81kXlrd76pAKDUjLUNm03uJw+5nmaEbeT1jZiZS+UAWYrPOPEEeJJFQ
+	 514ZX20538PFJheI2vRNTbvsXjj1BnSm8OQT+7i/i58bT6gAMd8SSdLuhxzZx0AY/u
+	 IGm64rtC/Cofg==
+Date: Thu, 12 Jun 2025 14:52:45 +0100
+From: Lee Jones <lee@kernel.org>
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Steffen Trumtrar <kernel@pengutronix.de>,
+	Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] leds: lp5860: save count of multi_leds
+Message-ID: <20250612135245.GE381401@google.com>
+References: <20250514-v6-14-topic-ti-lp5860-v2-0-72ecc8fa4ad7@pengutronix.de>
+ <20250514-v6-14-topic-ti-lp5860-v2-3-72ecc8fa4ad7@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250612-field_modify-v4-4-ae4f74da45a6@quicinc.com>
-References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
-In-Reply-To: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
-To: Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        "Nicolas
- Palix" <nicolas.palix@imag.fr>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton
-	<oliver.upton@linux.dev>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <cocci@inria.fr>,
-        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-        <andrew@lunn.ch>, <quic_kkumarcs@quicinc.com>,
-        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
-        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>,
-        Luo Jie <quic_luoj@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749735973; l=1164;
- i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=iUjNUxN1xIpBV8h+1ymERj2J0ETvO565u+bdg94CNuw=;
- b=Rl/McSDJhXaLrhpJ0frxvIhIfvp4v21iFTJNHsQn3oCpHpvZ7M8UNZbO5IH81vMeAfKUvO89l
- gY9neAwYxBmBqcFuZzRyP/hcmI7vRbga2VnXux64d/LdbO8KZ2cnmIi
-X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
- pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEwNiBTYWx0ZWRfXz+dJ0Eg/kmV6
- IkjDE3jTwrQvyd5ADMggW5TOhrbScj2wcenOOXIP4M9vQEjgp30TJCO+o0rhASugfHVPkHRgDOq
- IdPPg6KrFbiBVtbWAY1K77H4iWe59CPkYuB+P8m84X6VxfbWibrDMVDwcy4Jv6LYeCGO4sbVXIp
- /jNz1YCWsa+wTvscwVHoT15Z0L7TCc+8SgTcXmzkGCQ3Au/8PJinX+Bs+XakkfssEbSINBYBL6Q
- 4tazH1o4O4WU561Dh4tAZJP6xMiMK0RFMuFueAQxDl3agaRgMTfOf57SgONWQzRtBEi5BoN4H0f
- lxyZdtJ1hE0hmbE9b+03W3SKMnnzbJS8x1PJgv3fn1IMvQBviSjGV2IHvQbueV8v7TrS7bzbqPW
- p3n2ERo0pfJo2oIU+dTN0qJOWSGEfvNQl+KWZj1C1NKuUTtDNlBsmEJhGjz9pZIb0+DbrRRg
-X-Proofpoint-GUID: 9eXI8tMV2ghSaD5ylQpNtXpLf2lL_h-b
-X-Authority-Analysis: v=2.4 cv=FaQ3xI+6 c=1 sm=1 tr=0 ts=684ada3c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=YgwN3AOMAAAA:8
- a=COk6AnOGAAAA:8 a=8vQftXNygbJtpsvDVS4A:9 a=QEXdDO2ut3YA:10
- a=ztR1XV6QG-NWxUt1dNgd:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 9eXI8tMV2ghSaD5ylQpNtXpLf2lL_h-b
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_09,2025-06-12_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
- mlxlogscore=754 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506120106
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250514-v6-14-topic-ti-lp5860-v2-3-72ecc8fa4ad7@pengutronix.de>
 
-Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-- reg &= ~MASK;
-- reg |= FIELD_PREP(MASK, val);
-The semantic patch that makes this change is available
-in scripts/coccinelle/misc/field_modify.cocci.
+On Wed, 14 May 2025, Steffen Trumtrar wrote:
 
-More information about semantic patching is available at
-http://coccinelle.lip6.fr/
+> Save the count of multi_leds child nodes for later use.
+> As the leds are added to a flex array, the size needs to be saved at
+> runtime.
 
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
- arch/arm64/kvm/vgic/vgic-mmio-v3.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Size of the LEDs?  Length in millimeters?
 
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-index ae4c0593d114..946db5b3500f 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-@@ -123,10 +123,8 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
- 			val &= ~GICD_CTLR_nASSGIreq;
- 
- 		/* Dist stays enabled? nASSGIreq is RO */
--		if (was_enabled && dist->enabled) {
--			val &= ~GICD_CTLR_nASSGIreq;
--			val |= FIELD_PREP(GICD_CTLR_nASSGIreq, is_hwsgi);
--		}
-+		if (was_enabled && dist->enabled)
-+			FIELD_MODIFY(GICD_CTLR_nASSGIreq, &val, is_hwsgi);
- 
- 		/* Switching HW SGIs? */
- 		dist->nassgireq = val & GICD_CTLR_nASSGIreq;
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> ---
+>  drivers/leds/leds-lp5860-spi.c | 2 ++
+>  drivers/leds/leds-lp5860.h     | 1 +
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/leds/leds-lp5860-spi.c b/drivers/leds/leds-lp5860-spi.c
+> index 751cc4184037c3c0e14d3493d0a43f0885786523..eee41ee8a8c226db6a68413998642624fabffe7c 100644
+> --- a/drivers/leds/leds-lp5860-spi.c
+> +++ b/drivers/leds/leds-lp5860-spi.c
+> @@ -50,6 +50,8 @@ static int lp5860_probe(struct spi_device *spi)
+>  	if (!lp5860)
+>  		return -ENOMEM;
+>  
+> +	lp5860->leds_size = multi_leds;
+> +
+>  	spi_set_drvdata(spi, lp5860);
+>  
+>  	spi->mode = SPI_MODE_0;
+> diff --git a/drivers/leds/leds-lp5860.h b/drivers/leds/leds-lp5860.h
+> index b4255fb48372814c7fda86ada96f504c2036f534..3b8342a832bc75afdf2318fd4ee1ee9ce105cbe3 100644
+> --- a/drivers/leds/leds-lp5860.h
+> +++ b/drivers/leds/leds-lp5860.h
+> @@ -305,6 +305,7 @@ struct lp5860_led {
+>  struct lp5860 {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+> +	unsigned int leds_size;
+>  
+>  	DECLARE_FLEX_ARRAY(struct lp5860_led, leds);
+>  };
+> 
+> -- 
+> 2.47.1
+> 
+> 
 
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
