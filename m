@@ -1,84 +1,156 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292BE244677;
-	Thu, 12 Jun 2025 13:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F94623D2AE;
+	Thu, 12 Jun 2025 13:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736721; cv=none; b=OZMWpU5fhR0w2vaCe6aAOwdqO8WOHH6A/SVKts7vlDxj/IlTIbMaPWWPUc4VzZprY/8SEQB0kRcqB8sI05BfZOTai9Ax1z2H/pOIp4zli3/6lDvJxJCgQUNbj+ckC6wsvKJjalr8pqkPLpc850E2pLqKCpX2XvNb+fr2s3HcehA=
+	t=1749736770; cv=none; b=ffxB4sdGwglEmJI9B1XiP8vPcm/R4LWI6Eo9n4ljdWvXMPYqcnGluucOFaATw49Z3+d70LVlvg6E/TdfHLJKJKsxhfvL2DPz6ubBRYO/8gIa6zc5jJUiynN0IjSLUTSsFc72CqLZMslQCkhpG4iETENLjlABUbPKvy1yI96QccY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736721; c=relaxed/simple;
-	bh=5fG+ma7be2HXjLZY8eb1IqmlxKPaqchKCh/xX1V/3tc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MqiS91tHQWFYANLkyENnHw51ZEafTpAYcFqjPqpONSQDgivbgKS/aEMYskCdM9bbgYrTMb9w23w6IX1DhJt3gv7QPCUr0v4zN26te+esAiBYedf1urr+cPI+JHm4fvForGABjpbvab/NQWk78SNM6FYjaLHFMFkHt8MIumw81aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 2F5CE161545;
-	Thu, 12 Jun 2025 13:58:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 556FB80013;
-	Thu, 12 Jun 2025 13:58:29 +0000 (UTC)
-Date: Thu, 12 Jun 2025 09:58:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] alarmtimer: Hide alarmtimer_suspend event when RTC_CLASS is
- not configured
-Message-ID: <20250612095828.6d75dfa3@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749736770; c=relaxed/simple;
+	bh=0fruNrL61s70gsmhqJiV7bdE97vxE3uBVBn3wzWCIEk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HXdv7530t23ii22VABX1YniU893jVKZKCRjt0cmi7eZt4aXO0QRAMOLGazzP+BtzbFH+tHJixm+l7+b4XHi2OvBVLVzDm+cc/GqbdoabczV0Yc6mv1uPb3RhXfgT4eqCvJYQlv1JQUtjPm4+xMDDRaBmL+loQbXMs4n1+oepL/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCDACP7V; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCDACP7V"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so1766723a12.2;
+        Thu, 12 Jun 2025 06:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749736767; x=1750341567; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=axy0rlQIMI9WMYF0qCH4ZRxaAh4fle4NuWe/olzB1AY=;
+        b=mCDACP7VYvEbo4sM+Xs653oASS/z5cy9LTyskx075mH1TdSHapdTIMedq7vob/D/iC
+         uTRU2Iejw3yjt1MCi2rXNQGiV4gXrA8x7y2qwRNJxxnvrsqwL2O85FO7OFMa0g9N+aQL
+         +MGQwRYX57e3/u2nwIIwbpbYL+hCvjlQlG5IomconqBYzJuohD04rpaM4r19GdQ0LarK
+         y1mtm7kXFKUiC/hjoSKSf1UDWmcH/6UJ9kAloUFtaZ7NcOosrLU7e5UMWuNlKpqgNRD0
+         FLsbZFFrtWODopgO6DoySsS470IJQ14OahpR7yffo212Rk7ZFDGjFwu9DA8MFbUZdwKj
+         1Wjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749736767; x=1750341567;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=axy0rlQIMI9WMYF0qCH4ZRxaAh4fle4NuWe/olzB1AY=;
+        b=xTuRT2Ue4rdjLrDtQkNw5vGmnehpuFJ4B0cKx6K4voupl11Zf+kb1t9Eq8ytBnTf1h
+         R0sDjJNdj9Ks1BxigHMrN9eGxf7Wi7mO0vmFjJSgTLGjUG0XYpzPnedqgR1Iy6vJRxOP
+         N4IVose+8AXNNjj3sg80ii0Pq2WaSne2QRsBNiG5q6INPm1J/SY8SHJuARyemewGbL+x
+         6EwK4yPm/rUR4yYDa3inkCLDLQEo3zgPgEXVhofvIQq7jL/DvTZ9Drv7TKNmKv6JczCa
+         SnooCxW05Dd7Hoin2FlyDpqfQeAGrW5FJQwW0sMYYzg1wrf7ieyEPveWKEtas8OxYcut
+         x7YA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUPP7IITJNMfktNtpqyBzsjIObDc4/D0OkyjFeWquwzv0NjIgk15NKABa23efooueYQiZ3ezoJNUtvj5F+@vger.kernel.org, AJvYcCWmoMgsGemilP2h24jEJQxHqjQbJ63H6RsqERVL9+RzwPTaY6XF+V8Tb3lPvLfXUbpWMX2+A3sY9Sm4cRVA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdPyQ7BYaeDJe/5NPKDzMIWSSq9haJ/dsMUsC0OB5kk6E19K9o
+	of+Ou7tj4NK6qbNpNDa+LY/Gm+9e5kR4843qdT8b8QdO4G8rmgLdJFjKhs6aakg615J/GlXAqOQ
+	7Hhr4BanOdVYyYI8yQegCtECTYVscSMY=
+X-Gm-Gg: ASbGncvqWETol0LywT2pAyMUjH1mOREvi1YetI2lQWpSI3ciAbsDYljLVE6/srdXN3r
+	3KohTPaH4G3G7Ey9xgxXCYCGTqWuhmhoTSJ7uX4iZDaazmyGrYvn1v6ODPAMrlgTYnwAshHnVv7
+	J2uxzvcn+aPq0jo68HKvivfKPEdX1rJ9LMpb0gTm5ik80=
+X-Google-Smtp-Source: AGHT+IHCp92945l3Lbtgjt/svwIozABtOwPn4OQRdnVjt/ol944mXSPlcGwdCBTCbWlG9Pwl0bclDvHWAS/3qCMb/j4=
+X-Received: by 2002:a17:906:4fca:b0:adb:e08:5e87 with SMTP id
+ a640c23a62f3a-adea25df16emr412104266b.19.1749736766532; Thu, 12 Jun 2025
+ 06:59:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 556FB80013
-X-Stat-Signature: rzt6kqk8ua561tgw3cbq78kzrcybddjk
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18vTyB+un0k1UFtVDec50hBidb6Mf66z3k=
-X-HE-Tag: 1749736709-495039
-X-HE-Meta: U2FsdGVkX19IPBBr4fOfFrdKCfTM4a/mK0amP6fvrFRKcEu5wAOkqxt0EK+DfBOCMGOTf2HMVHpXyPeoZhzox9wHHqVatbDgDFW7Z/fXwfykuJsOzaedor0V4YdGrvZ7/JEpHoRxcEwoHGPzTUzik6I5vSyedFBS8AY2e9uu9X5oS9pd0QGY/zqazdLzIWi32ukVti3kKDio4B1+BbEcVBgvCgZQcB91r4nX8FGsnptAY9q+/J5axGDBFFPFiQRUjA+9Vut94HsHRFV20ieLwnuW+NYpvP/JtwRkI5dj0OQmct17Wmgp4SI6fDfeCVyFIZXldlq2hUVEh0fA61R4H4PWK4iDNjKPOq4fWNUnt8CQmqmy6ftUrvhshw0U41tt
+References: <87tt4u4p4h.fsf@igalia.com> <20250612094101.6003-1-luis@igalia.com>
+ <ybfhcrgmiwlsa4elkag6fuibfnniep76n43xzopxpe645vy4zr@fth26jirachp>
+In-Reply-To: <ybfhcrgmiwlsa4elkag6fuibfnniep76n43xzopxpe645vy4zr@fth26jirachp>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 12 Jun 2025 15:59:14 +0200
+X-Gm-Features: AX0GCFuVyzyb2mmghgZNaZwSNzJ0qgm89k7sk9w6b-c01nLChtinaI9yTu6OiLw
+Message-ID: <CAGudoHG7jcSWkLYf0P6W6zYnK4XAY-xb30Vu5-qFVtX9atUWYQ@mail.gmail.com>
+Subject: Re: [PATCH] fs: drop assert in file_seek_cur_needs_f_lock
+To: Luis Henriques <luis@igalia.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-dev@igalia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Jun 12, 2025 at 3:55=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
+rote:
+>
+> On Thu, Jun 12, 2025 at 10:41:01AM +0100, Luis Henriques wrote:
+> > The assert in function file_seek_cur_needs_f_lock() can be triggered ve=
+ry
+> > easily because, as Jan Kara suggested, the file reference may get
+> > incremented after checking it with fdget_pos().
+> >
+> > Fixes: da06e3c51794 ("fs: don't needlessly acquire f_lock")
+> > Signed-off-by: Luis Henriques <luis@igalia.com>
+> > ---
+> > Hi Christian,
+> >
+> > It wasn't clear whether you'd be queueing this fix yourself.  Since I d=
+on't
+> > see it on vfs.git, I decided to explicitly send the patch so that it do=
+esn't
+> > slip through the cracks.
+> >
+> > Cheers,
+> > --
+> > Luis
+> >
+> >  fs/file.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> >
+> > diff --git a/fs/file.c b/fs/file.c
+> > index 3a3146664cf3..075f07bdc977 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -1198,8 +1198,6 @@ bool file_seek_cur_needs_f_lock(struct file *file=
+)
+> >       if (!(file->f_mode & FMODE_ATOMIC_POS) && !file->f_op->iterate_sh=
+ared)
+> >               return false;
+> >
+> > -     VFS_WARN_ON_ONCE((file_count(file) > 1) &&
+> > -                      !mutex_is_locked(&file->f_pos_lock));
+> >       return true;
+> >  }
+> >
+>
+> There this justifies the change.
+>
 
-The trace event alarmtimer_suspend is only called when RTC_CLASS is not
-defined. As every event created can create up to 5K of text and meta data
-regardless if it is called or not it should not be created and waste
-memory. Hide the event when CONFIG_RTC_CLASS is not defined.
+Huh. scratch this sentence. I stand by the rest. :)
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Note, I will be adding code soon that will make unused events cause a warning.
+> fdget_pos() can only legally skip locking if it determines to be in
+> position where nobody else can operate on the same file obj, meaning
+> file_count(file) =3D=3D 1 and it can't go up. Otherwise the lock is taken=
+.
+>
+> Or to put it differently, fdget_pos() NOT taking the lock and new refs
+> showing up later is a bug.
+>
+> I don't believe anything of the sort is happening here.
+>
+> Instead, overlayfs is playing games and *NOT* going through fdget_pos():
+>
+>         ovl_inode_lock(inode);
+>         realfile =3D ovl_real_file(file);
+>         [..]
+>         ret =3D vfs_llseek(realfile, offset, whence);
+>
+> Given the custom inode locking around the call, it may be any other
+> locking is unnecessary and the code happens to be correct despite the
+> splat.
+>
+> I think the safest way out with some future-proofing is to in fact *add*
+> the locking in ovl_llseek() to shut up the assert -- personally I find
+> it uneasy there is some underlying file obj flying around.
+>
+> Even if ultimately the assert has to go, the proposed commit message
+> does not justify it.
 
- include/trace/events/alarmtimer.h | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/include/trace/events/alarmtimer.h b/include/trace/events/alarmtimer.h
-index 13483c7ca70b..8e9c76a7f21b 100644
---- a/include/trace/events/alarmtimer.h
-+++ b/include/trace/events/alarmtimer.h
-@@ -20,6 +20,7 @@ TRACE_DEFINE_ENUM(ALARM_BOOTTIME_FREEZER);
- 	{ 1 << ALARM_REALTIME_FREEZER, "REALTIME Freezer" },	\
- 	{ 1 << ALARM_BOOTTIME_FREEZER, "BOOTTIME Freezer" })
- 
-+#ifdef CONFIG_RTC_CLASS
- TRACE_EVENT(alarmtimer_suspend,
- 
- 	TP_PROTO(ktime_t expires, int flag),
-@@ -41,6 +42,7 @@ TRACE_EVENT(alarmtimer_suspend,
- 		  __entry->expires
- 	)
- );
-+#endif /* CONFIG_RTC_CLASS */
- 
- DECLARE_EVENT_CLASS(alarm_class,
- 
--- 
-2.47.2
 
+--=20
+Mateusz Guzik <mjguzik gmail.com>
