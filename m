@@ -1,87 +1,89 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3316A10957;
-	Thu, 12 Jun 2025 03:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07F810957
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749698810; cv=none; b=qk4fzX7VqSrUrDR0Jlr9h3uWV5fBHL1UrLvN6tPifDjcxWIYCVWBf3qdLtjzubvesgKSMAymFNxQ+/mpKZ+ri2b3B0OZ3DLiK/3Q6IwV13d+bkxTneB+HaYHJz6a4I4gjOw1rPPItw6LQLpWZ6ps32FgNYD5ao/RS0kfDOlvz24=
+	t=1749698875; cv=none; b=laI0xF1IKCrJ8JbHaMRbMqrU7Md47JVJimRZ5aOXyn1sTbXm1BRo+p+74iJ8u2PN/itNmKoIiB9XDgFVJzAXdki0Mokx3BV/zDNNI43Xk8j2xIQsEBA0AJBCGTcwWgf7P9/g5qV5GwSNzxc5R8RZCTU2ODzOQQrk672M258EoII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749698810; c=relaxed/simple;
-	bh=fMSjX1XneikPjeYMLuohvrYv1PB55ij71zTFtcYndz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TnfKZi3iynMjJBepxipEsx4i2jd/gTAak5r5syknEoz4Kr1QGJIfRbNUwl5S4ANxqxFRk2r01n752rDb+dg5YMj0ShQieoorWCkvXVN43m1qvingN2QIWuCXxwP/wz/sgtAb/ydrrRKfCw3r5C6GdWS6eWitYgHzBDDsS6bRspU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZVMGi3f1; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZVMGi3f1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1749698801;
-	bh=pvm9Ym0WC6I6HYqTJLkuD9MN4dqMu1pJN8zQYxlhxfY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZVMGi3f19E29S9UkDCpq+aNJmInzjQeVNVSB6+J6qusGN+OG49M763mwPKN/5h80v
-	 Vb8Ya5wPcaKBS0koZ+6YTrQMdyOSpbFQttJuAQ0JEZiNjKF6kn4tyb10KXxXQyPFIt
-	 dan3ABUJBstXbTPj5k3yCYveDeYHrgkh9egGOSJtlD9P5wmAzV4fWu5nCCaflNRZLB
-	 S/j8Y4hW0j7V+iSMkuBWhc2w+ako5GJ0Tg1//kaTBxJdJQrES5WUFdBtr+IKQNSLyk
-	 qPcLN1ef76wazOTFrMtaWJp1AVhmgC/wWJxteFcnkZ5ExcjAkOAlW4iJskntXQRjDm
-	 tgARjpQziz1Ag==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bHnxr6d1Zz4wb0;
-	Thu, 12 Jun 2025 13:26:40 +1000 (AEST)
-Date: Thu, 12 Jun 2025 13:26:38 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Ming Lei <ming.lei@redhat.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the block tree
-Message-ID: <20250612132638.193de386@canb.auug.org.au>
+	s=arc-20240116; t=1749698875; c=relaxed/simple;
+	bh=pyP3LKjBqTJk80HIkrc7Hx5rUDUcxph2kmtJfcFzh5U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fedQ46mHoXkRsfMxLu27TdBXj5QmpvYq40nR1ePw8g9qXEqqkI/NcQ810sFHpy4eAZOOha+PCUOIaOaThw+8G3QABSUWmV3bHWGl3HW/rwKcpomRUTWIH+/gJJSMK1KFCxZNCrr/xqZXJJxr6GI8lhNfUybKMf9oqoSPYC6BHtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w013.hihonor.com (unknown [10.68.26.19])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bHnwp3n60zYlZl1;
+	Thu, 12 Jun 2025 11:25:46 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w013.hihonor.com
+ (10.68.26.19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 12 Jun
+ 2025 11:27:45 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 12 Jun
+ 2025 11:27:45 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <bo.wu@vivo.com>, <linux-f2fs-devel@lists.sourceforge.net>,
+	<linux-kernel@vger.kernel.org>, wangzijie <wangzijie1@honor.com>
+Subject: [f2fs-dev] [PATCH] f2fs: continue to allocate pinned section when gc happens EAGAIN
+Date: Thu, 12 Jun 2025 11:27:42 +0800
+Message-ID: <20250612032742.1734852-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/v+PwzsKkNWXLMa5eE9UzOH3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: w001.hihonor.com (10.68.25.235) To a011.hihonor.com
+ (10.68.31.243)
 
---Sig_/v+PwzsKkNWXLMa5eE9UzOH3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Wu Bo once mentioned a fallocate fail scenario in this link[1].
+After commit 3fdd89b452c2("f2fs: prevent writing without fallocate()
+for pinned files"), we cannot directly generate 4K size file and
+pin it, but we can still generate non-segment aligned pinned file:
 
-Hi all,
+touch test_file
+./f2fs_io pinfile set test_file
+./f2fs_io fallocate 0 0 8192 test_file
+truncate -s 4096 test_file
 
-After merging the block tree, today's linux-next build (htmldocs)
-produced this warning:
+By doing this, pin+fallocate failure(gc happens EAGAIN but f2fs shows
+enough spare space) may occurs.
 
-Documentation/block/ublk.rst:414: ERROR: Unexpected indentation. [docutils]
+From message in commit 2e42b7f817ac("f2fs: stop allocating pinned sections
+if EAGAIN happens"), gc EAGAIN doesn't guarantee a free section, so we stop
+allocating. But after commit 48ea8b200414 ("f2fs: fix to avoid panic once 
+fallocation fails for pinfile"), we have a way to avoid panic caused by
+concurrent pinfile allocation run out of free section, so I think that we 
+can continue to allocate pinned section when gc happens EAGAIN. Even if we
+don't have free section, f2fs_allocate_pinning_section() can fail with ENOSPC.
 
-Introduced by commit
+[1] https://lore.kernel.org/linux-f2fs-devel/20231030094024.263707-1-bo.wu@vivo.com/t/#u
 
-  ff20c516485e ("ublk: document auto buffer registration(UBLK_F_AUTO_BUF_RE=
-G)")
+Signed-off-by: wangzijie <wangzijie1@honor.com>
+---
+ fs/f2fs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 6bd3de64f..05c80d2b5 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1859,7 +1859,7 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+ 			f2fs_down_write(&sbi->gc_lock);
+ 			stat_inc_gc_call_count(sbi, FOREGROUND);
+ 			err = f2fs_gc(sbi, &gc_control);
+-			if (err && err != -ENODATA) {
++			if (err && err != -ENODATA && err != -EAGAIN) {
+ 				f2fs_up_write(&sbi->pin_sem);
+ 				goto out_err;
+ 			}
+-- 
+2.25.1
 
---Sig_/v+PwzsKkNWXLMa5eE9UzOH3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhKSO4ACgkQAVBC80lX
-0Gwtawf+I9DCdPfuQaou1Z7CSgXKwO9gG16PetdWs+YVM/aL1iWzzximELR9fUyg
-F4hCdJKGteAmqEwIcbL2LED/CPedHwNyym5Prtc+JzzaAU5lf9YcdnnfTFAhBAbw
-ZaExTn46+TE0t3VmoW0CqkDoXX6K3vslarj8hf/t37m7q8skUzjyUobpUmbKoMm9
-f1/3HI1jTmOzv2cd4csEIwD+s21RLus9WPxVBdku3LhtGgYWfr6O/x2ki/QCbvfV
-9FLU5ihVkcjPh9x7mhUovHMIOzK3qkvK7qI1cwy1V0g8X2Ow42zAQFAqBSiv30DU
-QqmjQYAqrAplDqbyC1Wkpnc3SZZa9w==
-=ysv2
------END PGP SIGNATURE-----
-
---Sig_/v+PwzsKkNWXLMa5eE9UzOH3--
