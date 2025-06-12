@@ -1,171 +1,99 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003602356CF
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24944222574;
+	Thu, 12 Jun 2025 12:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749733028; cv=none; b=Msuxl+Av4X+dQV/sAh4uKpn4uyyJAgE7W22p9aKVL2dgEb6nGpdsNc+4UMTGeEzuNPh+cFzDWQuZZQ71OI5P/s2NMZeGsHp6ojhfyqXCTKVynb5oVENkdNCuZxIYFT0DmwYVVTgEuEl12DEZ84Mv4tEmjGyd/lonhqB/R1jJKnA=
+	t=1749733133; cv=none; b=pDh2o4J106XMEoGlNNFhCYUUohzIXB7PyBR8FlEpg/ev1OC4dAXMk54Tr4lMo/nJNRnhrqcOvFRpn4NcIHd+e8Quqr4u10euouTcfdiimoQDcpPNo/AYqVnXZlDUo/CqgdpIdt1oHtXyio08y7iIFmv8bXJeqp3agJm6pyEAhmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749733028; c=relaxed/simple;
-	bh=8JxZvtllvWjakpqaItxlNl6mV192kL0bUL2elT1gdg8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tq8ANQ4s5eo+LKMQ4SIheEkrVlEt4XzIAs9ho5Jv4vS180q2QZd+qxChmG34vsjueXU3bLDSszpRwFDOuOZGY0OyJtlRxbYL7CY1InLBW0zWfpovvJUDoL0EHkGAM/Erakkp/iBwLXAE+epqS47UYtOf8U+51M0aUYIoyVzMN0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1uPhUK-0000zC-FR; Thu, 12 Jun 2025 14:57:00 +0200
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1uPhUJ-0037ot-38;
-	Thu, 12 Jun 2025 14:56:59 +0200
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1uPhUJ-009XzG-2p;
-	Thu, 12 Jun 2025 14:56:59 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Thu, 12 Jun 2025 14:56:57 +0200
-Subject: [PATCH v3] clk: scmi: Handle case where child clocks are
- initialized before their parents
+	s=arc-20240116; t=1749733133; c=relaxed/simple;
+	bh=tvOzRak3NxCCxuZb5njChHp5ISdPJBKppqhdKhqj1VU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aAa/0KkyuyOlOaV2BcLk4FYTo4FaefPJaYHOd9RQlJtJRMvu1LTmy5nxjv2mdd1Ik8A0nz7nDDZb8aANN06WcU1zXBdUDimexl8maS9/ut/J9tTA+KqCs51KNpW7jLdJEZTQUl8NZahlkodogSgRjskp1yS/oMdB4ygnD2JMIbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExZ4gQZY; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExZ4gQZY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749733132; x=1781269132;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=tvOzRak3NxCCxuZb5njChHp5ISdPJBKppqhdKhqj1VU=;
+  b=ExZ4gQZY8P4ML6oyhN/qBnY+6iY0pzNlH7fJNz+EkMCvpRx8c5A/vMaz
+   YWYiTNy3iZzx94eaVSCriMgqJ2hXZyUpelYGXhttQjWPwk3Qr7B7OMJsj
+   UMwrQuOTuBhQCmI1E3TijFEx75xSw+NzZEAEFF5XKrQHPC2rdaCMolAsv
+   gtbQsM2D0z23z8KPLKg+7j6nybG2T4iNDsuHDahMdK1tMv6SyjE4Wj0zS
+   TBRKZX0OifofqZDHpDenVadfMTlbgj68Qc8K0S+kzG7YpBO4bPgXDyxR5
+   lvE9xLvBNxAdI0huPHGZN3gvOotCO7elTA0SMuNWPJjN2x802w6mCV/bg
+   Q==;
+X-CSE-ConnectionGUID: yO2kZRx+Q9i56P9TPa8ppw==
+X-CSE-MsgGUID: +DhAPsT0QNGRY6EofgOlVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="39520803"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="39520803"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:58:51 -0700
+X-CSE-ConnectionGUID: 7OK3mPA2Qp+MTbkNTSUUfg==
+X-CSE-MsgGUID: tChaeAagQs+87ZSieaSjHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="148065020"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:58:48 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uPhW1-00000005xEZ-1QiU;
+	Thu, 12 Jun 2025 15:58:45 +0300
+Date: Thu, 12 Jun 2025 15:58:45 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: surajsonawane0215@gmail.com
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] iio: Add IIO_DENSITY channel type
+Message-ID: <aErPBUnBWsCewA1i@smile.fi.intel.com>
+References: <20250612100758.13241-1-surajsonawane0215@gmail.com>
+ <20250612100758.13241-2-surajsonawane0215@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-clk-scmi-children-parent-fix-v3-1-7de52a27593d@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIAJjOSmgC/43NsQ6CMBDG8VcxnT3THtCAk+9hHAoccBELabHBE
- N7dwmTioMsl/2/43SI8OSYvzodFOArsebAxkuNBVJ2xLQHXsQVKzKSWKVT9HXz1YKg67mtHFkY
- T7wQNz5BmJi8UlnlppIjE6CjOO3+9xe7YT4N77d+C2tY/4aBAQUkodZGlda71ZSTbPic3WJ5PN
- YlND/ghKvwhYhQVZiVqkyjVfIvrur4BQ4iYJx8BAAA=
-X-Change-ID: 20250604-clk-scmi-children-parent-fix-45a8912b8ba0
-To: Sudeep Holla <sudeep.holla@arm.com>, 
- Cristian Marussi <cristian.marussi@arm.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>
-Cc: arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sascha Hauer <s.hauer@pengutronix.de>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749733019; l=3681;
- i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=8JxZvtllvWjakpqaItxlNl6mV192kL0bUL2elT1gdg8=;
- b=xqjx5SXlcU2Ed4jQFMiktyqTi6Z0JkHykWrzmP0gJEUGdicSyjHF16tl+zPPtt3VLDIjVxUUV
- yB47GgqkLEKD70pqW0GzduIb2sbwnpcP1EpkCsZGkmiHxoRzNiS6FW5
-X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
- pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250612100758.13241-2-surajsonawane0215@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The SCMI clock driver currently assumes that parent clocks are always
-initialized before their children. However, this assumption can fail if
-a child clock is encountered before its parent during probe.
+On Thu, Jun 12, 2025 at 03:37:44PM +0530, surajsonawane0215@gmail.com wrote:
+> From: Suraj Sonawane <surajsonawane0215@gmail.com>
+> 
+> Add IIO_DENSITY channel type for particulate matter sensors,
+> with base units of grams per cubic meter (g/m³). This is needed
+> for optical dust sensors like the Sharp GP2Y1010AU0F that measure
+> airborne particle concentration rather than raw voltage.
 
-This leads to an issue during initialization of the parent_data array:
+...
 
-    sclk->parent_data[i].hw = hws[sclk->info->parents[i]];
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_density_raw
+> +KernelVersion:	6.15
 
-If the parent clock's hardware structure has not been initialized yet,
-this assignment results in invalid data.
+If it was missed in the past, add Fixes tag, otherwise this boat already
+sailed, the v6.17 is the nearest one.
 
-To resolve this, allocate all struct scmi_clk instances as a contiguous
-array at the beginning of the probe and populate the hws[] array
-upfront. This ensures that any parent referenced later is already
-initialized, regardless of the order in which clocks are processed.
+> +Contact:	linux-iio@vger.kernel.org
 
-Note that we can no longer free individual scmi_clk instances if
-scmi_clk_ops_init() fails which shouldn't be a problem if the SCMI
-platform has proper per-agent clock discovery.
-
-Fixes: 65a8a3dd3b95f ("clk: scmi: Add support for clock {set,get}_parent")
-Reviewed-by: peng.fan@nxp.com
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
-Changes in v3:
-- Reword commit message
-- Add Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-- Link to v2: https://lore.kernel.org/r/20250612-clk-scmi-children-parent-fix-v2-1-125b26a311f6@pengutronix.de
-
-Changes in v2:
-- Collect reviewed-by from Cristian Marussi and Peng Fan
-- Do not use a local variable that is only used once (Christian)
-- Link to v1: https://lore.kernel.org/r/20250604-clk-scmi-children-parent-fix-v1-1-be206954d866@pengutronix.de
----
- drivers/clk/clk-scmi.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
-index 15510c2ff21c0335f5cb30677343bd4ef59c0738..1b1561c84127b9e41bfb6096ceb3626f32c4fee0 100644
---- a/drivers/clk/clk-scmi.c
-+++ b/drivers/clk/clk-scmi.c
-@@ -404,6 +404,7 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
- 	const struct scmi_handle *handle = sdev->handle;
- 	struct scmi_protocol_handle *ph;
- 	const struct clk_ops *scmi_clk_ops_db[SCMI_MAX_CLK_OPS] = {};
-+	struct scmi_clk *sclks;
- 
- 	if (!handle)
- 		return -ENODEV;
-@@ -430,18 +431,21 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
- 	transport_is_atomic = handle->is_transport_atomic(handle,
- 							  &atomic_threshold_us);
- 
-+	sclks = devm_kcalloc(dev, count, sizeof(*sclks), GFP_KERNEL);
-+	if (!sclks)
-+		return -ENOMEM;
-+
-+	for (idx = 0; idx < count; idx++)
-+		hws[idx] = &sclks[idx].hw;
-+
- 	for (idx = 0; idx < count; idx++) {
--		struct scmi_clk *sclk;
-+		struct scmi_clk *sclk = &sclks[idx];
- 		const struct clk_ops *scmi_ops;
- 
--		sclk = devm_kzalloc(dev, sizeof(*sclk), GFP_KERNEL);
--		if (!sclk)
--			return -ENOMEM;
--
- 		sclk->info = scmi_proto_clk_ops->info_get(ph, idx);
- 		if (!sclk->info) {
- 			dev_dbg(dev, "invalid clock info for idx %d\n", idx);
--			devm_kfree(dev, sclk);
-+			hws[idx] = NULL;
- 			continue;
- 		}
- 
-@@ -479,13 +483,11 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
- 		if (err) {
- 			dev_err(dev, "failed to register clock %d\n", idx);
- 			devm_kfree(dev, sclk->parent_data);
--			devm_kfree(dev, sclk);
- 			hws[idx] = NULL;
- 		} else {
- 			dev_dbg(dev, "Registered clock:%s%s\n",
- 				sclk->info->name,
- 				scmi_ops->enable ? " (atomic ops)" : "");
--			hws[idx] = &sclk->hw;
- 		}
- 	}
- 
-
----
-base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
-change-id: 20250604-clk-scmi-children-parent-fix-45a8912b8ba0
-
-Best regards,
 -- 
-Sascha Hauer <s.hauer@pengutronix.de>
+With Best Regards,
+Andy Shevchenko
+
 
