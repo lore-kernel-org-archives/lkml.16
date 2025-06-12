@@ -1,53 +1,81 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87631F92E
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA3523C8D5;
+	Thu, 12 Jun 2025 10:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724936; cv=none; b=Y1gJL8OsiponrtCbf8nzKS4/JIQEHpthh83uEY8SWQL4vevemWlF7lUmZtkLHmJDGqzDrh1GPFX42KywEW7CANoohltrhK5sliX7ZaSmHqyJejycoACtXPnV8VRDjr7N6hXEUFJO73/wBSzI3pSY3BkgTiOzM91NiH2KWhULt1E=
+	t=1749724939; cv=none; b=GcXHvL6Pal9Z2qCaAUrlZZwY3nXFo0yPKyf9Hnyz8VI46ynkKHINShrBaTAY6XMxG2aCNpfbk7NBUfnNiajV6QLaaR2IjWfqMWOeFa9Hy/EMdax3KRXygCfzhyfYm54q2dVsmrYsYr9IFc7bf0Qz/nfwR5Bhh1O01qbKaPpGuDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724936; c=relaxed/simple;
-	bh=ouu2cHZCiDwpO+QTY/I1XSm6jEuv/+YIdngIZFjwsBk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UuyU5vKqyD1ze2ITq0UEg3L7UIsDb51T38tX5xdu77HYanXT9fvIWitebGUN4vTgopo7ScbnWNzjHjeDtP+BZJZFuVZvG9JXyVMHQ6FTcI704+dQzOpmev1aD6roSp0p85fhoJOpgiL64QjyZTm8g8NCbi9DkZGTiuTSzgVh9yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uPfNg-00069J-GV; Thu, 12 Jun 2025 12:42:00 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uPfNf-0036k2-0Z;
-	Thu, 12 Jun 2025 12:41:59 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uPfNf-009UU6-0L;
-	Thu, 12 Jun 2025 12:41:59 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: David Jander <david@protonic.nl>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
+	s=arc-20240116; t=1749724939; c=relaxed/simple;
+	bh=oFVhBP/YL0n9/tCf5ttdVuifzE71UiLOJVEiL84VSXw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b3kS1nrrj2zz58MfT/QHmgbgfp1QwiuBLdHtm97JgsHLr19oV08bzW+g+0thEGkXETC4+qlcAR5uNAttK6GW0r02DQI8wFHDeaYQCs1YNnUfc0+KjGpYibcJPjh99ryrQWwNtfnU7cVGsZmR/Ys+ZBVnGDHa6ue/x1CZLKLLQUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OnYAvcr5; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnYAvcr5"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23649faf69fso7538135ad.0;
+        Thu, 12 Jun 2025 03:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749724936; x=1750329736; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GybQZWZoCD/mNp4Fv4oNQX2ZSbaSeKZ922lZ4/MEtpA=;
+        b=OnYAvcr5Xf5dXA3uUW0Vg9SVoa9cVGBZPQstWPBGyyF5863OlXakqSOrcFDQ3Dt+Sl
+         Atb7thj2KgHpg3TApuJ4A0U2RZuchIp06tgrd97ztMIZfm62/qRV+9zDA873Ua/7GGtX
+         LcZ8wm8+I84qH2fHHFUPT88BwFDgte31+4JO+a33iWOTjv6Eirsa+KCeYx9O7P5gxtkJ
+         57gE8DmD+hAXqhFr1OfLwPzRZYzvcVDAt4p5svwvOSyTkvMZv1D61eqM01jjRKGsYw6i
+         zcyZ3vTjZjY8ugNTe9+Jc7lxlPi7wzScJKMtfv2Gi3BbDtDbVh2DncWoj5XGPVwMv3MR
+         XQXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749724936; x=1750329736;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GybQZWZoCD/mNp4Fv4oNQX2ZSbaSeKZ922lZ4/MEtpA=;
+        b=WCAj8PcoMEGicr7UuxCx+4CyPGy34IkdFLBHnqYOo2jkeft+5eR3Su/ktnPJEtRAiD
+         n4etWJ9ORiZM1Z7KpMWSsupjALkcziRwbJwKG5yv4KLseUSlwY/2g4mgw+gqrdtBOJAW
+         7AiiFARIv+i5T928CvKORPpvSRq1LqJ4hWnbHvRT9JN1NsJXiUQ2OzqRkItOcY7qIzMf
+         UZQ7lpMFRAAfDmL0LjbFNl+N7/zyu39/TcDA7bzAU9u1nvd99eFzSryXoBTwN965Vz10
+         gEdYsCgNurj94za3MW81sBsJ6xFRp47pI/t7niSpKwiejQ2A2FdnVjExaEV9lAvI5qkj
+         A+jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUShPqibipuIZ+tnnhevPS2Tyu/7Yx5iOi81pyVdcCOavB8w2UGiMxwb9X24mRTEBjXANO1GqNyoI841Ok=@vger.kernel.org, AJvYcCWjkI3ef0EK3CZ6uSEB2sDipQm+GhK3RpV4n2jm3Leva6U1QOkPzACMR9+0RBC9X1wOrG5XbtRQ6Xk=@vger.kernel.org, AJvYcCXXy/3YlOkstsaf8HkitB0XDf0oPqm12ivaPuldBU/BZafH2FIRoo5xVeBmXpkpGwvhS+vCyHrWNVLLNT7Jtrc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBrdq9C3cFCJu+QHylxwLsNITI1SlPSj0oI5mVfoewJvXxLe22
+	5RGUz/5J2kQhpzacuptrNtW5jTx2qwoYXOqqtnqpx2Nu8j3mR5YVusbc
+X-Gm-Gg: ASbGncu1efhdmNVZGb6vs99WoBPoIxrBE4chmqsSXdFa95zQW0Ik03j6D2M+w4NLsuv
+	vrhmZJQVJ/oygyz/ZzoqACrD1P7sza1kF5D6VR1U3PQimmbUE/8h8zl597JwAvFywhxEHGUDnVD
+	5WxsQ97knbDa78yDixQyQ59J+1DoFayL6eglb7XuVKeWjQ5aQMHjOfzNQWC56wVGU3hYnZertoy
+	/q1SRCfdieVnDlpQ/rxqvcgvXb5hxrU12T4TsI0z+5UoIEGmtUKdV14lYP8cPkzmzE/vg74O4xR
+	vSIAQ1/Y/z7VZwuzkhf+/uzMaz+vNoVC2Z4Nqacsy4v7VBcmNzEM9IkBK/iIXB2c
+X-Google-Smtp-Source: AGHT+IH8ZWbq3NcYdfeleEGz9gzoJI5uvC922HCmGxSqEdvple5ZXtJJUZjzVkBZ/Vxr7g8UM1sPMA==
+X-Received: by 2002:a17:903:1a0d:b0:22d:b243:2fee with SMTP id d9443c01a7336-2364d6603b7mr33758835ad.13.1749724936128;
+        Thu, 12 Jun 2025 03:42:16 -0700 (PDT)
+Received: from pop-os.. ([2401:4900:1c96:fdb4:2bbd:5e55:1c88:31fe])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e6d9bf4sm10781665ad.104.2025.06.12.03.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 03:42:15 -0700 (PDT)
+From: Abhinav Ananthu <abhinav.ogl@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	linux-pm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next v2 3/3] net: phy: dp83tg720: switch to adaptive polling and remove random delays
-Date: Thu, 12 Jun 2025 12:41:57 +0200
-Message-Id: <20250612104157.2262058-4-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250612104157.2262058-1-o.rempel@pengutronix.de>
-References: <20250612104157.2262058-1-o.rempel@pengutronix.de>
+	Abhinav Ananthu <abhinav.ogl@gmail.com>
+Subject: [PATCH v2] rust : Update the bios_limit_callback to use the C FFI types #1170
+Date: Thu, 12 Jun 2025 16:11:28 +0530
+Message-Id: <20250612104127.10299-1-abhinav.ogl@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,184 +83,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: David Jander <david@protonic.nl>
+Update the `bios_limit_callback` function to use `c_int` and `c_uint` types,
+which match the C ABI for the corresponding callback function. These types are
+imported from the prelude.
 
-Now that the PHY reset logic includes a role-specific asymmetric delay
-to avoid synchronized reset deadlocks, the previously used randomized
-polling intervals are no longer necessary.
+This change ensures the Rust function signature exactly matches its expected
+C counterpart, avoiding potential issues with type mismatches in the FFI
+boundary.
 
-This patch removes the get_random_u32_below()-based logic and introduces
-an adaptive polling strategy:
-- Fast polling for a short time after link-down
-- Slow polling if the link remains down
-- Slower polling when the link is up
-
-This balances CPU usage and responsiveness while avoiding reset
-collisions. Additionally, the driver still relies on polling for
-all link state changes, as interrupt support is not implemented,
-and link-up events are not reliably signaled by the PHY.
-
-The polling parameters are now documented in the updated top-of-file
-comment.
-
-Co-developed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: David Jander <david@protonic.nl>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reported-by: Miguel Ojeda <ojeda@kernel.org>
+Closes: https://lore.kernel.org/rust-for-linux/CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com/.
+Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
 ---
-changes v2:
-- move by Sob to the end of commit message
----
- drivers/net/phy/dp83tg720.c | 94 ++++++++++++++++++++++---------------
- 1 file changed, 55 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/net/phy/dp83tg720.c b/drivers/net/phy/dp83tg720.c
-index 92597d12ecb9..391c1d868808 100644
---- a/drivers/net/phy/dp83tg720.c
-+++ b/drivers/net/phy/dp83tg720.c
-@@ -52,15 +52,37 @@
-  * The functions that implement this logic are:
-  * - dp83tg720_soft_reset()
-  * - dp83tg720_get_next_update_time()
-+ *
-+ * 2. Polling-Based Link Detection and IRQ Support
-+ * -----------------------------------------------
-+ * Due to the PHY-specific limitation described in section 1, link-up events
-+ * cannot be reliably detected via interrupts on the DP83TG720. Therefore,
-+ * polling is required to detect transitions from link-down to link-up.
-+ *
-+ * While link-down events *can* be detected via IRQs on this PHY, this driver
-+ * currently does **not** implement interrupt support. As a result, all link
-+ * state changes must be detected using polling.
-+ *
-+ * Polling behavior:
-+ * - When the link is up: slow polling (e.g. 1s).
-+ * - When the link just went down: fast polling for a short time.
-+ * - When the link stays down: fallback to slow polling.
-+ *
-+ * This design balances responsiveness and CPU usage. It sacrifices fast link-up
-+ * times in cases where the link is expected to remain down for extended periods,
-+ * assuming that such systems do not require immediate reactivity.
-  */
+ rust/kernel/cpufreq.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index b0a9c6182aec..e97607ed86c2 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -1277,7 +1277,7 @@ extern "C" fn update_limits_callback(ptr: *mut bindings::cpufreq_policy) {
+     /// Driver's `bios_limit` callback.
+     ///
+     /// SAFETY: Called from C. Inputs must be valid pointers.
+-    extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_int {
++    extern "C" fn bios_limit_callback(cpu: c_int, limit: *mut c_uint) -> c_int {
+         from_result(|| {
+             let mut policy = PolicyCpu::from_cpu(cpu as u32)?;
  
- /*
-  * DP83TG720S_POLL_ACTIVE_LINK - Polling interval in milliseconds when the link
-  *				 is active.
-- * DP83TG720S_POLL_NO_LINK_MIN - Minimum polling interval in milliseconds when
-- *				 the link is down.
-- * DP83TG720S_POLL_NO_LINK_MAX - Maximum polling interval in milliseconds when
-- *				 the link is down.
-+ * DP83TG720S_POLL_NO_LINK     - Polling interval in milliseconds when the
-+ *				 link is down.
-+ * DP83TG720S_FAST_POLL_DURATION_MS - Timeout in milliseconds for no-link
-+ *				 polling after which polling interval is
-+ *				 increased.
-+ * DP83TG720S_POLL_SLOW	       - Slow polling interval when there is no
-+ *				 link for a prolongued period.
-  * DP83TG720S_RESET_DELAY_MS_MASTER - Delay after a reset before attempting
-  *				 to establish a link again for master phy.
-  * DP83TG720S_RESET_DELAY_MS_SLAVE  - Delay after a reset before attempting
-@@ -71,9 +93,10 @@
-  * minimizing the number of reset retries while ensuring reliable link recovery
-  * within a reasonable timeframe.
-  */
--#define DP83TG720S_POLL_ACTIVE_LINK		1000
--#define DP83TG720S_POLL_NO_LINK_MIN		100
--#define DP83TG720S_POLL_NO_LINK_MAX		1000
-+#define DP83TG720S_POLL_ACTIVE_LINK		421
-+#define DP83TG720S_POLL_NO_LINK			149
-+#define DP83TG720S_FAST_POLL_DURATION_MS	6000
-+#define DP83TG720S_POLL_SLOW			1117
- #define DP83TG720S_RESET_DELAY_MS_MASTER	97
- #define DP83TG720S_RESET_DELAY_MS_SLAVE		149
- 
-@@ -172,6 +195,7 @@ struct dp83tg720_stats {
- 
- struct dp83tg720_priv {
- 	struct dp83tg720_stats stats;
-+	unsigned long last_link_down_jiffies;
- };
- 
- /**
-@@ -575,50 +599,42 @@ static int dp83tg720_probe(struct phy_device *phydev)
- }
- 
- /**
-- * dp83tg720_get_next_update_time - Determine the next update time for PHY
-- *                                  state
-+ * dp83tg720_get_next_update_time - Return next polling interval for PHY state
-  * @phydev: Pointer to the phy_device structure
-  *
-- * This function addresses a limitation of the DP83TG720 PHY, which cannot
-- * reliably detect or report a stable link state. To recover from such
-- * scenarios, the PHY must be periodically reset when the link is down. However,
-- * if the link partner also runs Linux with the same driver, synchronized reset
-- * intervals can lead to a deadlock where the link never establishes due to
-- * simultaneous resets on both sides.
-- *
-- * To avoid this, the function implements randomized polling intervals when the
-- * link is down. It ensures that reset intervals are desynchronized by
-- * introducing a random delay between a configured minimum and maximum range.
-- * When the link is up, a fixed polling interval is used to minimize overhead.
-- *
-- * This mechanism guarantees that the link will reestablish within 10 seconds
-- * in the worst-case scenario.
-+ * Implements adaptive polling interval logic depending on link state and
-+ * downtime duration. See the "2. Polling-Based Link Detection and IRQ Support"
-+ * section at the top of this file for details.
-  *
-- * Return: Time (in jiffies) until the next update event for the PHY state
-- * machine.
-+ * Return: Time (in jiffies) until the next poll
-  */
- static unsigned int dp83tg720_get_next_update_time(struct phy_device *phydev)
- {
-+	struct dp83tg720_priv *priv = phydev->priv;
- 	unsigned int next_time_jiffies;
- 
- 	if (phydev->link) {
--		/* When the link is up, use a fixed 1000ms interval
--		 * (in jiffies)
--		 */
-+		priv->last_link_down_jiffies = 0;
-+
-+		/* When the link is up, use a slower interval (in jiffies) */
- 		next_time_jiffies =
- 			msecs_to_jiffies(DP83TG720S_POLL_ACTIVE_LINK);
- 	} else {
--		unsigned int min_jiffies, max_jiffies, rand_jiffies;
--
--		/* When the link is down, randomize interval between min/max
--		 * (in jiffies)
--		 */
--		min_jiffies = msecs_to_jiffies(DP83TG720S_POLL_NO_LINK_MIN);
--		max_jiffies = msecs_to_jiffies(DP83TG720S_POLL_NO_LINK_MAX);
--
--		rand_jiffies = min_jiffies +
--			get_random_u32_below(max_jiffies - min_jiffies + 1);
--		next_time_jiffies = rand_jiffies;
-+		unsigned long now = jiffies;
-+
-+		if (!priv->last_link_down_jiffies)
-+			priv->last_link_down_jiffies = now;
-+
-+		if (time_before(now, priv->last_link_down_jiffies +
-+			  msecs_to_jiffies(DP83TG720S_FAST_POLL_DURATION_MS))) {
-+			/* Link recently went down: fast polling */
-+			next_time_jiffies =
-+				msecs_to_jiffies(DP83TG720S_POLL_NO_LINK);
-+		} else {
-+			/* Link has been down for a while: slow polling */
-+			next_time_jiffies =
-+				msecs_to_jiffies(DP83TG720S_POLL_SLOW);
-+		}
- 	}
- 
- 	/* Ensure the polling time is at least one jiffy */
 -- 
-2.39.5
+2.34.1
 
