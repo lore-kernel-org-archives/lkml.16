@@ -1,155 +1,163 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2401920F069;
-	Thu, 12 Jun 2025 08:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6FBBA34;
+	Thu, 12 Jun 2025 08:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749715285; cv=none; b=WMNCF6xA1qq/LtIFwLiKPn4oouUnmDbOtx5/kpjqZ7p2OSieDwsjdgc9T8Nf+hHt0cRdqWcxF+ERg2xAj6qsi9d0/LW/HVO/ddYhy7+D7CqL/njvZtugAtTqBVO1olcYi88ddl1BIaOtVcdhAh29CEZb9KgWF4yZxrFtgxe7mq8=
+	t=1749715327; cv=none; b=nosr9yHkjWJyL/FUV7vWpFZh947P06OnYuVB9rihwDqdZtIcFCjHpjOSwlvk/qJ74i52FMnvk6PT8t9xoF6GbYrqsmI3l6QiDlfJKSQUN6QGJmJeG/GN/6W46XFK3W3MjxkRbuMA0TT0QbAuoWhsoxC1JkrQ72ilLoVHq0qkV88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749715285; c=relaxed/simple;
-	bh=m2zs+8VpRJtc+aR6SbZTkUZULAfTzFK7CScj34oxfVE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=HxU7Z+pkZONC6t+Y+dy2oIljdi4SPPXYGl47dc67g9jSbwlbDSYAY8y9lYQPwrDwHV5es5mrTzjhkwhTI4CH7S6pfj7BgdBVnS+qfn/opE1ghp34zHI59je92xCmtqadGFDaVxv3jzjss3NBcdem39dmCM7EEnnB+vap5fhIAGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Djdn65SD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q1Hun9oF; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1749715327; c=relaxed/simple;
+	bh=7HgOqxchUCK4vKsy/UlLh+aYLzop6aXcxPO+nk0jUzU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BSEldVm5ar7BHddVJSfDl27oTWfSh8u6PobrhBZBmK4Sv69G+zA2EeY3CnqcLIGVKDmlddQkIWLgYetkqDm49k+1VdLHxFtqEV9kTh+RhVkJA7velEnZzAMICmyqDCZtK0vvCUn9H+q8yK2Mp/TfdCACspyoY+NhXRuQS/lhANw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OjmAtI2k; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Djdn65SD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q1Hun9oF"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id E2DC911401DC;
-	Thu, 12 Jun 2025 04:01:21 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 04:01:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749715281;
-	 x=1749801681; bh=ESXbHeJFagXQn1CJAp2zXfESHZ5BTFgFyg2i6iJTqKY=; b=
-	Djdn65SDtIlM/HGxUXWA4JU/IBnKZKcpgxCoTJfE6OKBEcC/IctIF/W0MFCe9G2l
-	8TOIaHxzFiddQA32Q1UMmccrF1bhYgd1Big/emUnHWzQd5z9NPcdel4cfIbodiZ/
-	E489BJK0VmL1FiHg9AKMYXKtSxXzaza0iNPbS6mRSgHHwPXwqj+nN3d88/ShvBl6
-	Umzx5ZcZv7eSS+QVynNxhFzitXlC+PlCqQvdnG71ssxgOln8CD9NpY4TfpzlpkpA
-	hNMW9GG+kif+ThMzMq+cVtooc3w1+8x6Nws45+L5gOUSwBHB+4tvqMlCobKGT/eA
-	mGVRiAPKy2VRenL3rOgHZQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749715281; x=
-	1749801681; bh=ESXbHeJFagXQn1CJAp2zXfESHZ5BTFgFyg2i6iJTqKY=; b=Q
-	1Hun9oF/DwhBK8vo6mO3j5lQ1qT1G+QGPE5s23kLkDPW5fclhpox2bt4PkRl5Mij
-	hrFsotl3nCxWANsF8tlFF3bYA2I39LoD80Ux6RLkOeO9ruWLuIgUbJyEqbsjKtbT
-	CAeAdvmalAWLWOqSKZbu02O98m1mNYw4yachgdCs4M32Pz3rCet1oXOXUoZrsu+9
-	RSDNdaPmSny44x3TjwcE05F5EC/0TJ94a93JPWPvsqm1RLQ82FUbqhYNzMQ6u4UD
-	jNxvwhjdIlckCy5iCUAsz7+fxho/hOsBr2WDSjlkUF9dbDz+qjW+cb8FX5vtH/a0
-	xLgAy28jO8LDBEmz+y37A==
-X-ME-Sender: <xms:UYlKaEjLfviqKKR4d3KgfhQErMHW_tIsvJ_tGYO5cQwzuwdB7IyXLw>
-    <xme:UYlKaNBZ9dbNtqp7OZhgCIvjQn2pQn6O-SsmIfN6NA6Apr8onfr-zmN7r8WY1vEy5
-    FqQcux8XLUCsdECFN8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddugeehfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
-    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeh
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggr
-    thhiohhnrdhorhhgpdhrtghpthhtohephhgtrgeslhhinhhugidrihgsmhdrtghomhdprh
-    gtphhtthhopehlihhnuhigqdhksghuihhlugesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:UYlKaMF1SBiKQcf9DMKPWwawPbd4wPAUybvkuxRiBZr_jkifx-y-XA>
-    <xmx:UYlKaFT1dKGkTp8qcj3PdHS2Na0Cg5QDrLPws6pe4GQ3bnEsFfDSBA>
-    <xmx:UYlKaByx6RB9tjJ5nLqo9YHNUy3J9A-EFXq7EyrL9ArYHgY8bI69ng>
-    <xmx:UYlKaD4tVjeXCPmm8M9GGeQrC-GgOmSqYWTUi-eufeuKFq2uUfA8Bw>
-    <xmx:UYlKaCrVdbYyeJd28tAqFoK72V3iqSer_DTZiUk60LYiwDdG4on562_A>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8A636700063; Thu, 12 Jun 2025 04:01:21 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OjmAtI2k"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C7lGAr027235;
+	Thu, 12 Jun 2025 08:01:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	oaomhS8dMfrepLdECiBKjEBqxHnNVF77uNFcGepwSTk=; b=OjmAtI2kg69l6oBp
+	3F+aK87BasOzZV7pvTbNzU39NSpu0Go3Qz7sz3UNnCxHl413tBKyCt0qEYDAcIRi
+	gPAtwBFI167IrJmJBfVwM4vDJrNqGr9CzaP+c1/FuHqFHuaIzj++yMnFwFHswZyX
+	Th3cJ8HFkoXE2Sz6NMJWp548CVyn1OH02U7lTiKzbq6JAx5KViha8Ciiws2vfKn3
+	dfQJBH70WtUq6NsDFQh/l0z7QBeiKl5O2C2RQBa4jt57gEIi/Os3XZtnKvgiyCHz
+	IkXZJVR7+F1YtoKW6ZdQuJgzth994Dh8iYOtLETIGY/0iFZVjMMyQKF7tJGoJmPM
+	SD6cGA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476jrheprd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 08:01:55 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55C81sC6020488
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 08:01:54 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 12 Jun
+ 2025 01:01:52 -0700
+Message-ID: <d02bca79-66f1-48b0-8c3b-aeaaa17135a9@quicinc.com>
+Date: Thu, 12 Jun 2025 16:01:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T11a455a1e4054318
-Date: Thu, 12 Jun 2025 10:01:00 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Masahiro Yamada" <masahiroy@kernel.org>
-Cc: "Heiko Carstens" <hca@linux.ibm.com>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- "Linux Kbuild mailing list" <linux-kbuild@vger.kernel.org>
-Message-Id: <38a08452-4db2-43e0-afdc-b7d696da5454@app.fastmail.com>
-In-Reply-To: 
- <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
-References: 
- <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
- <20250611075533.8102A57-hca@linux.ibm.com>
- <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
- <8992766a-cc96-40bb-b8c2-60931ad0f065@app.fastmail.com>
- <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
-Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2] wifi: ath11k: mark reset srng lists as uninitialized
+To: Sergey Senozhatsky <senozhatsky@chromium.org>, <akpm@linux-foundation.org>
+CC: Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20250529035708.3136232-1-senozhatsky@chromium.org>
+ <5857380e-ced9-4118-b9a0-ce926b25c11c@quicinc.com>
+ <rxaibpgtf37w3th5lnt3w574w443yononqjoglyfktlcxe26qg@jpmtkckrotzp>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <rxaibpgtf37w3th5lnt3w574w443yononqjoglyfktlcxe26qg@jpmtkckrotzp>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EovSrTcA c=1 sm=1 tr=0 ts=684a8973 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=gw6Avj90hZdGHWO8bBkA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: SurSnutfkbfhL8eagUqC8sWXXVKQyfUH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA2MSBTYWx0ZWRfXyGVF4C944/yV
+ CWktncgLfW/3bkZlpSr2rXRBA6go89MAZu0sDepB9EQV0y2Ocx7cyYA5hPfT8qJHjUL2hm7gNG9
+ NiwL15W6Ytw+Z1g+8qfpSW+eiCDFYy65RnLUdAXpN47F/4vVsfS2nhBPLpGHWSMtscZ0fOsBaWm
+ badj40hNHNAmA5I1tbXWyEi03JjV/r1LcG8RHxW8372g9BmpMpN1JJhLpWrsOIRZjodKzAa+127
+ fPdJCVvmQM18ARc3vHuniCthB94e9KAF7JYF+HrQrEOq30CuU3tIqhujY1wfm+mxZxe7xhhW++y
+ bt0nGmynG+8sY4qol8MT/ideq5O3G/dn98JWo8Ki/N6mS4aRRg0883ZqajTAabM+cc/mlhyt0m7
+ XP79fyYmBQkXLjx3KMrdkMsHR67pVoAyRKoHwnSs0BQ0+NHuy7t+3ngsIgn1rO+qWEONQKXh
+X-Proofpoint-GUID: SurSnutfkbfhL8eagUqC8sWXXVKQyfUH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
+ mlxscore=0 clxscore=1011 malwarescore=0 adultscore=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506120061
 
-On Thu, Jun 12, 2025, at 03:42, Masahiro Yamada wrote:
-> On Wed, Jun 11, 2025 at 11:24=E2=80=AFPM Arnd Bergmann <arnd@arndb.de>=
- wrote:
->> On Wed, Jun 11, 2025, at 15:32, Masahiro Yamada wrote:
->> > On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.i=
-bm.com> wrote:
->> I think this makes sense in general, but the output here is
->> excessive if it leads to users no longer wanting to enable W=3D1.
+[+ kernel mm list]
+
+On 6/12/2025 1:04 PM, Sergey Senozhatsky wrote:
+> On (25/06/12 11:30), Baochen Qiang wrote:
+>> On 5/29/2025 11:56 AM, Sergey Senozhatsky wrote:
+>>> ath11k_hal_srng_deinit() frees rdp and wrp which are used
+>>> by srng lists.  Mark srng lists as not-initialized.  This
+>>> makes sense, for instance, when device fails to resume
+>>> and the driver calls ath11k_hal_srng_deinit() from
+>>> ath11k_core_reconfigure_on_crash().
 >>
->> There are other warnings that I think should be enabled at the
->> W=3D1 level (e.g. -Wformat-security) and eventually by default,
->> but that are still too noisy at that level.
+>> Did you see any issue without your change?
+> 
+> We do see some issues, yes, on LTS kernels.
+> 
+> [..]
+>>> diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
+>>> index 8cb1505a5a0c..cab11a35f911 100644
+>>> --- a/drivers/net/wireless/ath/ath11k/hal.c
+>>> +++ b/drivers/net/wireless/ath/ath11k/hal.c
+>>> @@ -1346,6 +1346,10 @@ EXPORT_SYMBOL(ath11k_hal_srng_init);
+>>>  void ath11k_hal_srng_deinit(struct ath11k_base *ab)
+>>>  {
+>>>  	struct ath11k_hal *hal = &ab->hal;
+>>> +	int i;
+>>> +
+>>> +	for (i = 0; i < HAL_SRNG_RING_ID_MAX; i++)
+>>> +		ab->hal.srng_list[i].initialized = 0;
 >>
->> My own cutoff would be at a few hundred warnings in allmodconfig
->> builds if there is an effort to reduce it further, but it seems
->> that this one is still at a few thousand, which does not seem ok.
->
-> Then, what to do?  Downgrade to W=3D2?
->
-> I think nobody cares about W=3D2 builds,
+>> With this flag reset, srng stats would not be dumped in ath11k_hal_dump_srng_stats().
+> 
+> I think un-initialized lists should not be dumped.
+> 
+> ath11k_hal_srng_deinit() releases wrp.vaddr and rdp.vaddr, which are
+> accessed, as far as I understand it, in ath11k_hal_dump_srng_stats()
+> as *srng->u.src_ring.tp_addr and *srng->u.dst_ring.hp_addr, presumably,
+> causing things like:
+> 
+> <1>[173154.396775] BUG: unable to handle page fault for address: ffffb4e4c046f010
+> <1>[173154.396778] #PF: supervisor read access in kernel mode
+> <1>[173154.396781] #PF: error_code(0x0000) - not-present page
 
-I think the first step would be mass-cleanup patches to get
-the initial numbers down. A lot of this can be scripted.
+I am confused here: if the root cause is driver trying to read a freed memory, it should
+not result in a PF issue. Because even if freed, the page is there and still mapped in
+kernel page table.
 
-> and the problem of all C files including <linux/export.h>
-> would remain forever.
+Andrew, any insights?
 
-I'm missing a bit of background here, and I don't see this
-explained in the 5b20755b7780 ("init: move THIS_MODULE
-from <linux/export.h> to <linux/init.h>") changelog text
-either
+> <4>[173154.396824] RIP: 0010:ath11k_hal_dump_srng_stats+0x2b4/0x3b0 [ath11k]
+> <4>[173154.396839] Code: 88 c0 44 89 f2 89 c1 e8 3a 14 06 00 41 be e8 25 00 00 eb 6e 42 0f b6 84 33 78 ff ff ff 89 45 d0 46 8b 7c 33 d8 4a 8b 44 33 e0 <44> 8b 20 46 8b 6c 33 e8 42 8b 04 33 48 89 45 c8 48 8b 3d 45 a3 a0
+> <4>[173154.396842] RSP: 0018:ffffb4e4dceefc50 EFLAGS: 00010246
+> <4>[173154.396846] RAX: ffffb4e4c046f010 RBX: ffff90d1c3040000 RCX: a0009634a5d28c00
+> <4>[173154.396849] RDX: ffffffffb0279d80 RSI: ffffffffb0279d80 RDI: ffff90d2e5d17488
+> <4>[173154.396851] RBP: ffffb4e4dceefc90 R08: ffffffffb0249d80 R09: 0000000000003b82
+> <4>[173154.396854] R10: 0000000000000004 R11: 00000000ffffffea R12: ffff90d1c3041c90
+> <4>[173154.396856] R13: ffff90d1c3040000 R14: 0000000000002828 R15: 0000000000000000
+> <4>[173154.396859] FS: 0000000000000000(0000) GS:ffff90d2e5d00000(0000) knlGS:0000000000000000
+> <4>[173154.396862] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> <4>[173154.396865] CR2: ffffb4e4c046f010 CR3: 000000005ca24000 CR4: 0000000000750ee0
+> <4>[173154.396868] PKRU: 55555554
+> <4>[173154.396870] Call Trace:
+> <4>[173154.396874] <TASK>
+> <4>[173154.396883] ? __die_body+0xae/0xb0
+> <4>[173154.396890] ? page_fault_oops+0x381/0x3e0
+> <4>[173154.396896] ? exc_page_fault+0x69/0xa0
+> <4>[173154.396901] ? asm_exc_page_fault+0x22/0x30
+> <4>[173154.396908] ? ath11k_hal_dump_srng_stats+0x2b4/0x3b0 [ath11k (HASH:3de7 4)]
+> <4>[173154.396923] ath11k_qmi_driver_event_work+0xbd/0x1050 [ath11k (HASH:3de7 4)]
+> <4>[173154.396942] worker_thread+0x390/0x960
+> <4>[173154.396949] kthread+0x149/0x170
 
-What is the purpose of cleaning the linux/export.h inclusions,
-and what makes this one more important than others?
-I obviously understand that indirect header inclusions are
-a giant mess and that any such cleanup helps, but linux/export.h
-seems particularly small compared to many others. It was
-originally introduced so a lot of files would no longer have
-to pull in linux/module.h if they only care about using
-EXPORT_SYMBOL() and THIS_MODULE, so linux/module.h could
-eventually become private to kernel/module/*.c.
-
-Is this something you are trying to continue, or are you
-doing something else here?
-
-FWIW, I compared the preprocessed sizes of linux/export.h
-(~2000) and linux/module.h (~120,000), and it seems that almost
-none of those are needed by most of the files including
-linux/module.h. The one part that is commonly required is
-MODULE_{INFO,AUTHOR,LICENSE,DESCRIPTION}, so maybe there would
-be a chance to clean this up at the same time if you are
-planning some large-scale reshuffling of #include statements
-around export.h.
-
-     Arnd
