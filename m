@@ -1,57 +1,44 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22661298CD2;
-	Thu, 12 Jun 2025 15:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED20F299A94
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742607; cv=none; b=rumciY7DCPIX0dahXfuoPtvKYMGfogb7XSh8TRYI3rBo1rwchZGyhwtmfTPVQOxWzGMIFxg2r/BelYiRCfDsfcdZsUCU2vqYLwO4CLDTLQX0gBPfxfxcYqAatUvwMNSCT5mJHkYQKh8lJfZfevpWoJ+ysJSvt+LeXZDieWE2dYQ=
+	t=1749742642; cv=none; b=BuqujzaCvLenJkZR5BXc8YOnnbQsKiqlpjl1b+gKvMyQll48uFHhlgRErL4qU/LA3b4MV4GOgdxhjg5hOmfac3w8Moc9FQ+zlIsHev6MywCxd6qHNAwnnv6ChFTnN6S8MKyhdcxSewhhK+HuDGInGG+eXjiVhMS0+yAnCzZxBm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742607; c=relaxed/simple;
-	bh=YkGQb8u2LFs6Ny5AZDZ8dQLB2Mj5Hwh5mCAoXi9JxhY=;
+	s=arc-20240116; t=1749742642; c=relaxed/simple;
+	bh=40oOS0EzOygRw6Ct8YfCoYPEwtrQozMXnQmoWeB0P9Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SWsmdJEJDWJB9sT2RHhue+xtyo5IfsChUcKb8jystETJ3Pn5vzMeUtcLchenVD1Iw1o2TIg/qMR5Ijirc19fNOJxw8dU3pqVQzSwp/eqSEEw3XNHenYDvJtaqVHG9y+gLI4owvaYv2OEyqbY8/eIc9QvIxhnieNxWbi540fldxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=yt01YW6k; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=MOpUJWObOnNLjUsZxAMU1XjnzQlRGrje+bqAq3D8KULB0X+q4+CU9kL3RHt2jawzV8CINYRn9+FHltd4j47vlatYP2ZEvHA1tfz/sBZ0CmRihdg559OCnvP8EYJeN0HuHJyz6jFaphytjmCe1F6txnzSBhBfBv0v7ELkJq9wbng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CCV7CGw7; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yt01YW6k"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=QrJhlPmIGFpkmPRtfeqRYsI2Ia1MBPkjaqSOSbGZiSs=; b=yt01YW6k4t6UAt7H4xX6DshAhI
-	i0quv3ifop6RM7RcEvjAwOADbe58RlzVgrd6fn8Sv3QwWQO+qf3bAdvAVrA1vgvJDqbaDo+n7zzlj
-	4X13J99n1oGhBOwg9McPGr3hByePOxmfvQpMmNNSHgyB7xzX8WyS0yxdev82S46khAn4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uPjyn-00FYqi-JH; Thu, 12 Jun 2025 17:36:37 +0200
-Date: Thu, 12 Jun 2025 17:36:37 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v5 3/5] net: phy: qcom: at803x: Add Qualcomm
- IPQ5018 Internal PHY support
-Message-ID: <096eacfe-ff24-4ed8-b223-04a6fe590496@lunn.ch>
-References: <20250612-ipq5018-ge-phy-v5-0-b5baf36705b0@outlook.com>
- <DS7PR19MB88833EF18DC634F4D7F037439D74A@DS7PR19MB8883.namprd19.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CCV7CGw7"
+Date: Thu, 12 Jun 2025 11:37:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749742637;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7CU/iQsk5gpUai/YAmYmMwFfofj02R/7lL+2KrmQX8Y=;
+	b=CCV7CGw79cuNiwv6htG/7Spz678SlAhpsv+4m607dtbbh7HzBUbTyoaLpPNBrrenxvyGBw
+	2Xx6YMoa8NPHFAv2hHjvq4c03koTlaIaNgNxrBg7ROLm64jQHArzc/G+2gAiko4tFEWxtQ
+	AeUSnHssZ/WYL8RNIUVwvdEx7XtX8c0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: David Wang <00107082@163.com>
+Cc: cachen@purestorage.com, akpm@linux-foundation.org, cl@gentwo.org, 
+	corbet@lwn.net, dennis@kernel.org, hannes@cmpxchg.org, harry.yoo@oracle.com, 
+	jackmanb@google.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, mhocko@suse.com, rientjes@google.com, roman.gushchin@linux.dev, 
+	surenb@google.com, tj@kernel.org, vbabka@suse.cz, yzhong@purestorage.com, 
+	ziy@nvidia.com
+Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
+Message-ID: <ub5knll6sof6sbl4elcrdpmf7ptyds6xfusio672fgyt6sxeja@3awoyjpq7xev>
+References: <20250610233053.973796-1-cachen@purestorage.com>
+ <20250612053605.5911-1-00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,22 +47,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DS7PR19MB88833EF18DC634F4D7F037439D74A@DS7PR19MB8883.namprd19.prod.outlook.com>
+In-Reply-To: <20250612053605.5911-1-00107082@163.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jun 12, 2025 at 05:11:07PM +0400, George Moussalem wrote:
-> The IPQ5018 SoC contains a single internal Gigabit Ethernet PHY which
-> provides an MDI interface directly to an RJ45 connector or an external
-> switch over a PHY to PHY link.
+On Thu, Jun 12, 2025 at 01:36:05PM +0800, David Wang wrote:
+> Hi, 
 > 
-> The PHY supports 10BASE-T/100BASE-TX/1000BASE-T link modes in SGMII
-> interface mode, CDT, auto-negotiation and 802.3az EEE.
+> On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
+> > Add support for tracking per-NUMA node statistics in /proc/allocinfo.
+> > Previously, each alloc_tag had a single set of counters (bytes and
+> > calls), aggregated across all CPUs. With this change, each CPU can
+> > maintain separate counters for each NUMA node, allowing finer-grained
+> > memory allocation profiling.
+> > 
+> > This feature is controlled by the new
+> > CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
+> > 
+> > * When enabled (=y), the output includes per-node statistics following
+> >   the total bytes/calls:
+> > 
+> > <size> <calls> <tag info>
+> > ...
+> > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> >         nid0     94912        2966
+> >         nid1     220544       6892
+> > 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> >         nid0     4224         33
+> >         nid1     3456         27
+> > 
+> > * When disabled (=n), the output remains unchanged:
+> > <size> <calls> <tag info>
+> > ...
+> > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> > 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> > 
+> > To minimize memory overhead, per-NUMA stats counters are dynamically
+> > allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
+> > increased to ensure sufficient space for in-kernel alloc_tag counters.
+> > 
+> > For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
+> > allocate counters. These allocations are excluded from the profiling
+> > statistics themselves.
 > 
-> Let's add support for this PHY in the at803x driver as it falls within
-> the Qualcomm Atheros OUI.
-> 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> Considering NUMA balance, I have two questions:
+> 1. Do we need the granularity of calling sites?
+> We need that granularity to identify a possible memory leak, or somewhere
+> we can optimize its memory usage.
+> But for NUMA unbalance, the calling site would mostly be *innocent*, the
+> clue normally lies in the cpu making memory allocation, memory interface, etc...
+> The point is, when NUMA unbalance happened, can it be fixed by adjusting the calling sites?
+> Isn't <cpu, memory interface/slab name, numa id> enough to be used as key for numa
+> stats analysis?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+kmalloc_node().
 
-    Andrew
+Per callsite is the right granularity.
 
+But AFAIK correlating profiling information with the allocation is still
+an entirely manual process, so that's the part I'm interested in right
+now.
+
+Under the hood memory allocation profiling gives you the ability to map
+any specific allocation to the line of code that owns it - that is, map
+kernel virtual address to codetag.
+
+But I don't know if perf collects _data_ addresses on cache misses. Does
+anyone?
