@@ -1,41 +1,65 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CC72063D2
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F8629B78B
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749759337; cv=none; b=CKiA4100Scq5yLAZhytHCBLd1+o9rmNVsm4CpdpUOYPCPgi+WWDCohp8BKHK7g8YNsb7La7rz4uivNgEj5QVCAuevWhs9DxYwu85eYjmmOCo+VV0r/koEUAq75PJ0k56u8U461zSxli2BXjIfvTW1b/uQzc6cDJKqWZaH2t/Uis=
+	t=1749759644; cv=none; b=sXElFBxVQ1gefNJ742MvF8kpb/GeEgDs3dOY1XyfmmwGSC+DfZGIwLYH/PE3eWzlBB2hh3yRbz++mT8/iNFnf0KJjgaqllsEvQF95Ka0ORm5hbQDN/BJhEIKuKZOJidx2IOuvrAwRc//A0IgQUqRYjUHRYtq4VcIUNVgh03rOJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749759337; c=relaxed/simple;
-	bh=6qiWD4JXlRTSkr0OCRaCLJF5LrOxAnEBQoG5YvQMX2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=f9eoTNc09iJHCf9T71BLVlfjEiQA4/LkJYovgxtbP0mSM4BOZHH3ollITtitUVMDKRgOcg0vaDHvzfzqeygfldCrFZXaHFtRE8nn5YtXJD/2F+uSp9B87cofSJmrMASNgxvK3V4TLKvQKrYCy0EdVitEkV4oUQXiO8+AAw433Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=O/61qFsW; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1749759644; c=relaxed/simple;
+	bh=6Q/PGBvknyPShMaTySM+cqmOkNrRnIyJJHTUlyaDcRg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fjNiG5ZdKISK0Sf/rLtnVhXdbYNvX2tkYet+IgPyzQoFxCqUekHXVmxvUNvPgH/FH/I1GHfcUSyHmxEMxgDcZt7Ck/t/BJ62yE1B1s1YT9Nox2rpCqdOZr9wb9SoYxzO011Xb9VAf3c7+fCbhVV5YhqFi8pwEInFsgKVpRc+BeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tm8bH2fA; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="O/61qFsW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1749759321; x=1750364121; i=markus.elfring@web.de;
-	bh=6qiWD4JXlRTSkr0OCRaCLJF5LrOxAnEBQoG5YvQMX2A=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:Cc:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=O/61qFsWC+jsy2q8T+nUj4Cth0ry95AIGHDhC2oaqerD3418OvlNptTBmW85AMoC
-	 mnyO8xQh2OpmWDbicbE8bQQk8B3iYE6BJaiIwTArq0wxp1czYYIDHAxB+DFHp/yml
-	 DFfoZfRFkuzKLGe6ltaIAukKIWIbBhjY9bX1D/FiQUeF0huZuJpFqzdlCNB/6PGF9
-	 N81vNLLSvlfCKOOj85gJgHbkySGlgZxTMj8jkipr1bDP0yeMduLpmgpts2W/5PyOo
-	 QbKRuimmOM+k8m9J5oR1G4GLsHH/jTBJj2cdu/dJr0dJpLkrrOyoQymTpdxK5HwTK
-	 myNP377FjEkEG4k3sw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.213]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N0qqv-1umon62TMT-011GGb; Thu, 12
- Jun 2025 22:15:21 +0200
-Message-ID: <3537a4ce-b5e8-44d5-a884-70a81562068d@web.de>
-Date: Thu, 12 Jun 2025 22:15:10 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tm8bH2fA"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72c3b863b8eso999023a34.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749759641; x=1750364441; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LnqQFNNg7S/LY+02Og7P0coplg2HCqvVrychShtmb0Y=;
+        b=tm8bH2fAiv5IUInWReklncngSn1Jtoe0JCWTc00pJMs5xwwkSYX9PKVj+XJt51LOyl
+         Al51SfNuaOJTrqkCoUJBDRt/6+X449+aRIxNyxOg72EAvu5LfnTwxLuXN3fvs+K/TtLf
+         6H+Gok/BevwEBq2bdB1UD5MdXKk9u+Sop/4Y9p1GvPdPQJXyyNo45xYB0UxgExaZHN2L
+         JB5qfh5DFb6Y8I/DNYl85HY1DGCd5NuC0zzaoAXLB7B1/Z/RzhGJ5l/B9Yw18wtbulhy
+         WmzJzRO6Ro8V/gyvmL00UwITZBUQUZqyxsptVsx7FId5Hf99khtNJY7qq5U4lSvhQsTe
+         m6qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749759641; x=1750364441;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LnqQFNNg7S/LY+02Og7P0coplg2HCqvVrychShtmb0Y=;
+        b=FlH6QK5f5Ba31b0tuSLDkN6+rAQEHoHJPmsTz5pZj9poUIyaGxbYv311DHobmiY4LI
+         9zRUrrcywNmeuYVT9btn4ZT7YMyLXAbsOd/v4agFNiDU1uO4iY4tSGeirq0H7tVesgJG
+         8yxpY5B5F8+p5LwLcLNRgGclxKga7f4HH3hR5HvmHHocPliITZIX7ZSX3NpWhCQvoFvr
+         Bec2Kfv4/bB5gGADMjr4TdqCm0FAT+orpesREiLMTDM8JOMAusZx/5uBgVzmWuOslueh
+         K7Mk4MPIyU5bs92HbmpJG2r9SsyaUvS9zL+515PMw+uS2QAOhJoK/NhHfeMggvJNlxER
+         zYTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkcs/TpvKQZiCy98E2ZbzD0kdMwNR2PmBuJjZ38jZ7Mn6bHsWV99bzFJt0+qdyVHaG6RcvUPYXf+bEjjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlA/eWTBgXTgxFatvl9Kuu4qhA5T3t+4kQ00GBHxvYBDeMLXGP
+	SSwWBX7WMRW5eAQ1x4SCU24RKkOa6iyMBxGVFICgIlZJ0QpQHuGoPSYu/upqgP+RRak=
+X-Gm-Gg: ASbGncshgghrft98q6VPxHwIkHbx3A069jF1S96JSpVK6aUUrjLHqCQBp8fWT7PtnDb
+	N9Wu66ugTW4H5IOGFpwpVvYpCSwwGvoSk1PODobjoTGYt1kjEMQ0sGMb5FiPLQCxzgKFUP4RQJT
+	CWhfHA3aBBoiaR2FguHJYzKcvJRHzF92sLgAsqXb+nQYiVG1XYeN9bEZgmyZb0sYuMOGdTGhGlD
+	812G197mAfU7I22d+qu0PA3xwafL6or+z0FS7czax155DWEvhcg/CD7Zbfi1XRXDIu+vOwsoFJi
+	w89mklZRvp4YuCvKKr2tAVQ6QGrRcHdgInJuhTN5wCLAfrG41MSeSwCY8sW5o1hIsgyEZxt+pUs
+	fWNJubxkmNaD6I2Wlkbhu6QHCdafc82AY5CSb
+X-Google-Smtp-Source: AGHT+IGvy63gbdgYzhxx915nytzJrnbOCs/GabFdn8/B1Ozt4U4/eT429+1bpQ6NvozpwiaByThNIA==
+X-Received: by 2002:a05:6830:8009:b0:72a:47ec:12c6 with SMTP id 46e09a7af769-73a2708d702mr121676a34.2.1749759641342;
+        Thu, 12 Jun 2025 13:20:41 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:f808:847:b3ae:ff1a? ([2600:8803:e7e4:1d00:f808:847:b3ae:ff1a])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a16a57ec5sm392377a34.18.2025.06.12.13.20.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 13:20:40 -0700 (PDT)
+Message-ID: <5130be5d-b769-41aa-af2f-b1e16a91e569@baylibre.com>
+Date: Thu, 12 Jun 2025 15:20:40 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,98 +67,318 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [cocci] [PATCH v4 2/5] arm64: tlb: Convert the opencoded field
- modify
-To: Luo Jie <quic_luoj@quicinc.com>, cocci@inria.fr
-References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
- <20250612-field_modify-v4-2-ae4f74da45a6@quicinc.com>
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- Andrew Lunn <andrew@lunn.ch>, Catalin Marinas <catalin.marinas@arm.com>,
- Joey Gouly <joey.gouly@arm.com>, Julia Lawall <Julia.Lawall@inria.fr>,
- "Kiran Kumar C.S.K" <quic_kkumarcs@quicinc.com>,
- Lei Wei <quic_leiwei@quicinc.com>, Marc Zyngier <maz@kernel.org>,
- Nicolas Palix <nicolas.palix@imag.fr>, Oliver Upton
- <oliver.upton@linux.dev>, Pavithra R <quic_pavir@quicinc.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Suruchi Agarwal <quic_suruchia@quicinc.com>,
- Suzuki Poulose <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>,
- Yury Norov <yury.norov@gmail.com>, Zenghui Yu <yuzenghui@huawei.com>,
- quic_linchen@quicinc.com
-In-Reply-To: <20250612-field_modify-v4-2-ae4f74da45a6@quicinc.com>
+Subject: Re: [PATCH v3 2/8] dt-bindings: iio: adc: Add adi,ad4052
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+ Jorge Marques <jorge.marques@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+ <20250610-iio-driver-ad4052-v3-2-cf1e44c516d4@analog.com>
+ <20250611181818.14d147c7@jic23-huawei>
+ <xqkr3rq6ikuiz5wcbxmto4gp7wnccmmogklf2ux2edauotufim@pcuhddxdzjxi>
+ <ef0d4038-b665-4ef0-9e7b-7ad2ce154c50@baylibre.com>
+ <zd4fvyjbfurgsp3rpslo2ubpxzxn7bh5b2vh5j4j7outxdrcd7@firxlr6bfkic>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <zd4fvyjbfurgsp3rpslo2ubpxzxn7bh5b2vh5j4j7outxdrcd7@firxlr6bfkic>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:pA7EGEjfJnflF4TE9tOyoGXxUB/CzNseX2uUxJifNOawy2xR3sw
- EpfU8UgiCF7Gkwcx+fgXhi8wIvPzl+Z1knLjb45m3UDFMU8K/nfuWw9NUvJ3Evp0bONcLYm
- 6pRgCRt5Hwqlt+w524mTGSeQuG0RXzixxhhasYuD7PsfvRW2QzHuFbVbd1wisbV7nM8DrjW
- /Kdo1s6l3WTQSOLXK/9Mg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:W0k8pYu0TLU=;0N+yz1Jd+j/p7C7cl3SIf5Tx+gs
- 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
- THSY34RPGLT/+AIU
 
-I see further refinement possibilities for such a change description.
+On 6/12/25 2:42 PM, Jorge Marques wrote:
+> Hi David,
+> 
+> thank you for chiming in
+> 
+> On Thu, Jun 12, 2025 at 10:03:37AM -0500, David Lechner wrote:
+>> On 6/12/25 5:11 AM, Jorge Marques wrote:
+>>> On Wed, Jun 11, 2025 at 06:18:18PM +0100, Jonathan Cameron wrote:
+>>>> On Tue, 10 Jun 2025 09:34:35 +0200
+>>>> Jorge Marques <jorge.marques@analog.com> wrote:
+>>>>
+>>
+>> ...
+>>
+>>>>> +  trigger-sources:
+>>>>> +    minItems: 1
+>>>>> +    maxItems: 2
+>>>>> +    description:
+>>>>> +      Describes the output pin and event associated.
+>>
+>> trigger-sources would be an input pin connected to an external trigger.
+>> For example, the CNV pin could be connected to a trigger-source
+>> provider to trigger a conversion. But there aren't any other digital
+>> inputs, so I don't know what the 2nd source would be here.
+>>
+>> As an example, see [1]. We could potentially use the same gpio
+>> trigger-source for the conversion pin here. There is already
+>> a similar binding for pwm triggers, so we could drop the separate
+>> pwms binding as well an just have a single trigger-sources
+>> property for the CNV pin that works for both gpio and pwm.
+>>
+>> [1]: https://lore.kernel.org/linux-iio/cover.1749569957.git.Jonathan.Santos@analog.com/
+>>
+> 
+> Quick summary to familiarize myself with this part and driver.
+> 
+> On ad7768-1:
+> ad7768-1.SYNC_OUT is a digital output, ad7768-1.SYNC_IN input, and
+> ad7768-1.GPIO3 (START) configured as input. ad7768-1.GPIO[0..3] are
+> configurable GPIO, GPIO3 as START, or in PIN control mode, the input
+> GPIO[3:0] sets the power mode and modulator freq (MODEx).
+> 
+> On that thread:
+> https://lore.kernel.org/linux-iio/8abca580f43cb31d7088d07a7414b5f7efe91ead.1749569957.git.Jonathan.Santos@analog.com/
+> exposes GPIO[0..3] through gpio_chip if gpio-controller in dt.
+> 
+> https://lore.kernel.org/linux-iio/713fd786010c75858700efaec8bb285274e7057e.1749569957.git.Jonathan.Santos@analog.com/
+> trigger-sources-cells: the cell define the type of signal but *not* its
+> origin, because {DRDY, SYNC_OUT, GPIO3(START)} are dedicated pins, *so
+> there is no need to do so*.
+> 
+>>>>> +
+>>>>> +  "#trigger-source-cells":
+>>>>> +    const: 2
+>>>>> +    description: |
+>>>>> +      Output pins used as trigger source.
+>>>>> +
+>>>>> +      Cell 0 defines the event:
+>>>>> +      * 0 = Data ready
+>>>>> +      * 1 = Min threshold
+>>>>> +      * 2 = Max threshold
+>>>>> +      * 3 = Either threshold
+>>>>> +      * 4 = CHOP control
+>>>>> +      * 5 = Device enable
+>>>>> +      * 6 = Device ready (only GP1)
+>>>>
+>>>> Hmm. I'm a bit dubious on why 'what the offload trigger is'
+>>>> is a DT thing?  Is that because the IP needs to comprehend
+>>>> this?  I guess only data ready is actually supported in
+>>>> practice? 
+>>>
+>>> A trigger can be connected to trigger something other than a spi
+>>> offload, it is in the DT because it describes how the device is
+>>> connected. When using spi offload, the trigger-source at the spi handle
+>>> describes which gpio and event is routed to the offload trigger input.
+>>> At the ADC node, trigger-source-cells describe the source gpio and event
+>>> for the device driver.
+>>>
+>>> In practice, in this series, one gpio is Data ready, triggering offload
+>>> when buffer enabled, and raw reads, when disabled. And the other is
+>>> Either threshold, propagated as an IIO event. Fancy logic can be added
+>>> to the driver in future patches to allow other combinations.
+>>>
+>>> It is also worth to mention that the trigger-source is duplicated for
+>>> each node that uses it, as seen in the second dts example:
+>>>
+>>>    &adc AD4052_TRIGGER_EVENT_DATA_READY AD4052_TRIGGER_PIN_GP1
+>>>
+>>> Is repeated on both adc and spi node.
+>>
+>> That sounds wrong. This would only make sense if an output of the
+>> ADC was wired back to itself. 
+>>
+> 
+> The issue is the lack of way of describing to the driver the function of
+> each gpio, when configurable. Perhaps it is better to use
+> trigger-source-cells to only describe the topology at that node
+> receiving the trigger, e.g.
+> 
+>   trigger-sources = <&adc AD4052_TRIGGER_PIN_GP0>;
+> 
+> Below I continue the discussion.
+>>>
+>>> One last thing, on the driver, for v3, I should handle -ENOENT:
+>>>
+>>>   ret = of_parse_phandle_with_args(np, "trigger-sources",
+>>>   				   "#trigger-source-cells", i,
+>>>   				   &trigger_sources);
+>>>   if (ret)
+>>>   	return ret == -ENOENT ? 0 : ret;
+>>>
+>>> To assert only when present, since the nodes are not required.
+>>> Or, in the driver,
+>>> require AD4052_TRIGGER_PIN_GP0 if irq_get_byname finds gp0, and
+>>> require AD4052_TRIGGER_PIN_GP1 if irq_get_byname finds gp1?
+>>> (I would go with the first option).
+>>>>
+>>
+>> ,,,
+>>
+>>>>> +examples:
+>>>>> +  - |
+>>>>> +    #include <dt-bindings/gpio/gpio.h>
+>>>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>>>>> +    #include <dt-bindings/iio/adc/adi,ad4052.h>
+>>>>> +
+>>>>> +    spi {
+>>>>> +        #address-cells = <1>;
+>>>>> +        #size-cells = <0>;
+>>>>> +
+>>>>> +        adc@0 {
+>>>>> +            compatible = "adi,ad4052";
+>>>>> +            reg = <0>;
+>>>>> +            vdd-supply = <&vdd>;
+>>>>> +            vio-supply = <&vio>;
+>>>>> +            ref-supply = <&ref>;
+>>>>> +            spi-max-frequency = <83333333>;
+>>>>> +
+>>>>> +            #trigger-source-cells = <2>;
+>>>>> +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
+>>>>> +                                    AD4052_TRIGGER_PIN_GP0
+>>>>> +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
+>>>>> +                                    AD4052_TRIGGER_PIN_GP1>;
+>>
+>> This doesn't make sense for the reason given above. These outputs
+>> aren't wired back to inputs on the ADC. They are wired to interrupts
+>> on the MCU, which is already described below.
+>>
+> Below.
+>>>>> +            interrupt-parent = <&gpio>;
+>>>>> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+>>>>> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+>>>>> +            interrupt-names = "gp0", "gp1";
+>>>>> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+>>>>> +        };
+>>>>> +    };
+>>>>> +  - |
+>>>>> +    #include <dt-bindings/gpio/gpio.h>
+>>>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>>>>> +    #include <dt-bindings/iio/adc/adi,ad4052.h>
+>>>>> +
+>>>>> +    rx_dma {
+>>>>> +            #dma-cells = <1>;
+>>>>> +    };
+>>>>> +
+>>>>> +    spi {
+>>>>> +        #address-cells = <1>;
+>>>>> +        #size-cells = <0>;
+>>>>> +
+>>>>> +        dmas = <&rx_dma 0>;
+>>>>> +        dma-names = "offload0-rx";
+>>
+>> The dmas aren't related to the ADC, so can be left out of the example.
+>>
+> Ack.
+>>>>> +        trigger-sources = <&adc AD4052_TRIGGER_EVENT_DATA_READY
+>>>>> +                                AD4052_TRIGGER_PIN_GP1>;
+>>>>> +
+>>>>> +        adc@0 {
+>>>>> +            compatible = "adi,ad4052";
+>>>>> +            reg = <0>;
+>>>>> +            vdd-supply = <&vdd>;
+>>>>> +            vio-supply = <&vio>;
+>>>>> +            spi-max-frequency = <83333333>;
+>>>>> +            pwms = <&adc_trigger 0 10000 0>;
+>>>>> +
+>>>>> +            #trigger-source-cells = <2>;
+>>>>> +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
+>>>>> +                                    AD4052_TRIGGER_PIN_GP0
+>>>>> +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
+>>>>> +                                    AD4052_TRIGGER_PIN_GP1>;
+>>
+>> Same as above - the GP pins aren't wired back to the ADC itself.
+>>
+>>>>> +            interrupt-parent = <&gpio>;
+>>>>> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+>>>>> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+>>>>> +            interrupt-names = "gp0", "gp1";
+>>>>> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+>>>>> +        };
+>>>>> +    };
+> 
+> Considering the discussion above. As is, in this series GP0 is event
+> Either threshold and GP1 Data ready. A future series would aim to make
+> it truly configurable.
+> 
+> For this series then, do we then drop the second cell of trigger cell
+> and do not provide a way of describing the function of each gpio? e.g.
+
+The bindings can't be changed later, so no, don't drop the 2nd cell
+if we are going to add it back later.
+
+But considering Jonathan's feedback, I am now questioning if we need
+the 2nd cell at all. The way trigger-source consumers work currently
+is that they request a trigger of a certain generic type, like "data
+ready". So this information could be used to determine what function
+needs to be assigned to the pin without having to define that in the
+devicetree.
+
+> 
+>   - |
+>     #include <dt-bindings/gpio/gpio.h>
+>     #include <dt-bindings/interrupt-controller/irq.h>
+>     #include <dt-bindings/iio/adc/adi,ad4052.h>
+>   
+>     rx_dma {
+>             #dma-cells = <1>;
+>     };
+>   
+>     spi {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>   
+>         trigger-sources = <&adc AD4052_TRIGGER_PIN_GP0>;
+>   
+>         adc@0 {
+>             compatible = "adi,ad4052";
+>             reg = <0>;
+>             vdd-supply = <&vdd>;
+>             vio-supply = <&vio>;
+>             spi-max-frequency = <83333333>;
+>             pwms = <&adc_trigger 0 10000 0>;
+>   
+>             // --- Other thought ------
+>             //adi,gpio-role = <AD4052_TRIGGER_EVENT_EITHER_THRESH
+>             //                 AD4052_TRIGGER_EVENT_DATA_READY>;
+>             // ------------------------
+>             interrupt-parent =  <&gpio>;
+>             interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+>                          <0 1 IRQ_TYPE_EDGE_FALLING>;
+>             interrupt-names = "gp0", "gp1";
+>             cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+>         };
+>     };
+> 
+> Other thought is to add an "adi,gpio-role" property to define gpio
+> function (as commented in the example above, matched with index of
+> interrupts-names). If no interrupt-name.gp0 but trigger-source.GP0,
+> assume role Data ready (no irq for raw read, only buffer offload).
+> 
+> What is your opinion on this?
 
 
-> Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-> - reg &= ~MASK;
-> - reg |= FIELD_PREP(MASK, val);
+Usually, we just have the devicetree describe how things are wired up.
+Then the driver looks at how things are wired up and decides how to
+best make use of the available resources. I.e. in the driver add some
+variables in the driver state struct that keeps track of the function
+assigned to each GP pin and use that to make decisions.
 
-* How do you think about to omit leading minus characters?
+In the driver, we would want to make sure to handle triggers first
+since those are less flexible (so set up SPI offload first). This
+would cause one of the GP pins to be assigned to the /RDY function.
+It doesn't matter which one.
 
-* Subsequent blank line?
+Then later, parse the interrupts property. If we see that one of
+the GP pins is already assigned to /RDY, then we know we have to
+use that pin for the /RDY interrupt as well. If both pins are still
+available, then an arbitrary one can be assigned for /RDY.
 
+Then if there is still an unused GP pin left that is actually
+wired up to an interrupt, that can be used for the events interrupt.
 
-> More information about semantic patching is available at
-> http://coccinelle.lip6.fr/
+Or we could even consider to have everything on one pin since the
+/RDY signal would never be needed at the same time as events as long
+as the events are only ever used in monitor mode.
 
-I suggest to omit this information here (and in similar patches).
-
-Regards,
-Markus
+If we find that there is some case though where the driver really
+can't figure out what to do with the available information, then
+we could probably justify adding a property like you suggested.
+It seems like we could possibly do without it at this point though.
