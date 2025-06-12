@@ -1,531 +1,194 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound-ip191b.ess.barracuda.com (outbound-ip191b.ess.barracuda.com [209.222.82.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172251A304A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749728554; cv=none; b=STORpg1wlytQFkbKOnxHxJr1rNy3GCTGvkKQl/J1nXqYxPFpBD5J5wspP/whAeb0gptf9PY0EHJSZHmm+BgPXA16T/ePb5oFRBYmqfm+dUvzgfWtdvx/JPaFfUmPrUWm3DWD95XtrV7KiuVQVLd4Qdr1Se6ymKhxN5pvzJEWDO8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749728554; c=relaxed/simple;
-	bh=uyh332o1pAPuEY2uH91QWERhySxOdcUopuo5d5VLyZY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LTsPmUa8DlzhTh7WdVI5KipX/JcLVepg1nudvPLEkTD5xuzhDr6rcNndZH6sz5GJoPOvxwJzKGA+9V1EEhTweMzCSJKM0bibHnG2nLsCsqICG9Xo2LNgZPMEfIeeO5AlFpOxe578e9myXJo8PeRMwRb6Um++z3VyiJJu1e84Bvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z70n7kUo; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A702F432C
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=209.222.82.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749728617; cv=fail; b=s0bd7Eb1s4q2aPd/KaIc+yONwcfH6pb3lkt3ve55qI8+CCFnMVRbyhsOE+jaDmD0UZaGp85CeYSDeHjoN2gn9vNen1hDOcJn0SMq+S2n/94KyKalVEZ5ESRoa5TzfqnhwP0fPhzW3MPV7ztTkUWKSdLOj19Nr85FLImpbX+dFMA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749728617; c=relaxed/simple;
+	bh=9aNLnZMptO7pOWsU+38gtnQUClwHDElX8Vi+JOVocCQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=i/d+zoros3ChGfT4nw/184RaXRIQo1QlhVZPNcPDF7W3rFTo/iNyURfivXDkMCMl/zIugEPjXNG49tSnQasE1pvKQsMJ4gE2zC98h/beotc4RuaJeikcz5fU8+WItMum4HVRPDdmzQGgLhNCKjiC9LUCP4h/E/wiiAl0urvfzEc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ddn.com; spf=pass smtp.mailfrom=ddn.com; dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b=DNsxDZQc; arc=fail smtp.client-ip=209.222.82.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ddn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ddn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z70n7kUo"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-607bc9bbb8aso1003942a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:42:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749728550; x=1750333350; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ny50wxbGCl9/p7vQHYlJ5hEC+vKtyReCBNsYASuV5I=;
-        b=Z70n7kUom+T3xZMABB0IOL4BsbJofhTvbEgalQ2Rcjcdpj2u5SVRbSd4jsUj3nYDrN
-         Aw/qOWBsVZQgpRaVvKIHGZwM+2RMJo8Cv2p/2zuPq36ekZlvKh6gLPTtN9XXLRmZ9dke
-         ljDgChOCbJtEStUq6NPE0Beq1kg5ZZGBXTB7AG+0XVP+k6Q+9kDevYTeM2Boic9mkLlL
-         g3IrDmbBAVlxLd4VkdgWHJxUABKLmaJvC/eZHxd7ZP4pcN12rloGoH9mJSDUxThTBMgd
-         57K3lgIocP5WKqIS4+RZie97dfYAssShLFWLQfbZK5T1uNlzSAXp7vMo3Rzjj/478TBT
-         OKqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749728550; x=1750333350;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ny50wxbGCl9/p7vQHYlJ5hEC+vKtyReCBNsYASuV5I=;
-        b=JhAs1hW01ArxooyrMYHwfRVb4STB7kpJY5IO4gM7cHg8R4h7W171XcxV/hKjpxSGdy
-         3IlARfn4sFBAdT+iolg1Hb4DyTFi8xxBB/MFltvVN+9SpVrWC2E3ruEZQF+WpO5IrMUA
-         0l65DDg5G23dzLjrFM3m4Wc6d6IgSKOkW5R1nQS8kqgOoF/EvhAIUbvu2yrYRN7ErKJD
-         MhEtEVPvnFDXZSpZpZ7KiNQ7RESSe0P5yaMrsgFPFEOXmQYQ7cGzLwgnWODi2R6J5mvw
-         UYH5nCygFXVGY68ZK/LQcrutUKPtBoVySxotTmvJ7eHAG3i5F9e5mChjysp9f2XviWHm
-         TNAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXCacEzWvVr0z67fppyCMYHQktVLG0NliicLiT2TE1ZES9h3jLSCkxsyH2UJ49lXyvg7hZ1y0B65G+AS2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaY94w52J4NIF7lV97vOSwmwrTT6yLs/uGezM1GtWmH+jUsaEY
-	uxa0GyLU0JkfPhsgn7IuVeR4eQdA1sVmOPByHCRp9RRBtpH4H3ZgJkUobJHhdSH+dfdlP5OyOGM
-	jR/N30aG0euCSi+VfuFGy/g==
-X-Google-Smtp-Source: AGHT+IHDD1UnNT+nvBQNPFZnom0wa4E2j3MQhNuNSWlQgOSnWJg+n1r0cAtiW4veuvHINkkCDUQd+Ll58aoDNRGI
-X-Received: from edvw21.prod.google.com ([2002:a05:6402:1295:b0:608:558a:1de1])
- (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:13c9:b0:602:201:b46e with SMTP id 4fb4d7f45d1cf-60846baa5fcmr5909183a12.31.1749728550520;
- Thu, 12 Jun 2025 04:42:30 -0700 (PDT)
-Date: Thu, 12 Jun 2025 13:42:10 +0200
-In-Reply-To: <20250612114210.2786075-1-mclapinski@google.com>
+	dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b="DNsxDZQc"
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2125.outbound.protection.outlook.com [40.107.94.125]) by mx-outbound43-165.us-east-2c.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Thu, 12 Jun 2025 11:43:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CZ6fFrnHVvp5n7QfGaL1Nn3TgBK1Eaopuu2hPya3ZHerJuM9MluwpUlwpI75HETkaRjUkKOfHeSVwLvFlmm5ygNSS/NspNne6GXaOW30anh9nWCtVDhmD0QPh7swl2Z3l6PlvDpYdxmwiOANhUWOD3YFzlhlSTJxn1RHmZ7oXz+mdCY788OAGe9Vw3QHqzrbGbb/4Rd0YewBNQ1t/2NuztXJBJZUDAsfgHO7XJORGmRIZN0A9JEQZ2p7fZqfEBxn79hhFPV5Tatxe34lIDLplU2StBcRAUfLm/q90bJqCUT2dKZR1ms/SH/npy+GtdvcxU973apcpIfZAYV25ZYRPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iXDJAE0GxIsvXhayphMRUIoOUwXI1S3oKnteslKoa6Y=;
+ b=yv/KZeoWxvekjV/YN2Uy4lKrkj92xpl3yAHPeOiQap+sx5AFh2L7WgH1Sg+sZaKsUzPl2XEE3R67Z2iD7x/FDsSJggV03V0jYfTxunXObJXOYybAQrSTGuXfp9+3n1gMNb0Ls1P3G90aSH2DF0Y1OMRyJKlTKKFG4Jdm/itmv+3ARTtz8im0rbzVA4IlYd+WLe05o/jvnI4sCAVjN5iQKwwHGT8t397GBwN/npEkplxt1EX1PDN7ROKXbBLSmslLR7EsSwwJXcJnE+iag9KoBjlXmOtAXqTO9j1qCYE4awVmONZyL3wrfaqvQ6tA1Z4kUKzjzODgcgZIj6eby7KEmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ddn.com; dmarc=pass action=none header.from=ddn.com; dkim=pass
+ header.d=ddn.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ddn.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iXDJAE0GxIsvXhayphMRUIoOUwXI1S3oKnteslKoa6Y=;
+ b=DNsxDZQcEh7iY4mdsz7zkKs127lfg1nvXcqEKHLZog9ZxmOdI6UVSAwquxSQqBTIMLG9kdzXR0JAqkdR9ts1U7F4EVHFqn8Zr6+MRUeqKAJcZ4ZIhMR5qhEaj9bHbuEnfPmprlOEW/twk7Je0794JAL+IWQmDTOBEUGj8NWK03I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=ddn.com;
+Received: from CH2PR19MB3864.namprd19.prod.outlook.com (2603:10b6:610:93::21)
+ by PH7PR19MB6532.namprd19.prod.outlook.com (2603:10b6:510:1f4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.22; Thu, 12 Jun
+ 2025 09:09:43 +0000
+Received: from CH2PR19MB3864.namprd19.prod.outlook.com
+ ([fe80::abe1:8b29:6aaa:8f03]) by CH2PR19MB3864.namprd19.prod.outlook.com
+ ([fe80::abe1:8b29:6aaa:8f03%5]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
+ 09:09:42 +0000
+Message-ID: <d50c69ff-c0dd-4429-b75f-98cda2339540@ddn.com>
+Date: Thu, 12 Jun 2025 11:09:37 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: fuse: Consolidate FUSE docs into its own
+ subdirectory
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Documentation <linux-doc@vger.kernel.org>,
+ Linux Filesystems Development <linux-fsdevel@vger.kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi <miklos@szeredi.hu>,
+ Luis Henriques <luis@igalia.com>, Amir Goldstein <amir73il@gmail.com>,
+ Chen Linxuan <chenlinxuan@uniontech.com>,
+ Christian Brauner <brauner@kernel.org>, "Darrick J. Wong"
+ <djwong@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+ Jan Kara <jack@suse.cz>, James Morse <james.morse@arm.com>
+References: <20250612032239.17561-1-bagasdotme@gmail.com>
+From: Bernd Schubert <bschubert@ddn.com>
+Content-Language: en-US, de-DE, fr
+In-Reply-To: <20250612032239.17561-1-bagasdotme@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PR3P191CA0041.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:102:55::16) To MN2PR19MB3872.namprd19.prod.outlook.com
+ (2603:10b6:208:1e8::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250612114210.2786075-1-mclapinski@google.com>
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250612114210.2786075-3-mclapinski@google.com>
-Subject: [PATCH v3 2/2] libnvdimm: add nd_e820.pmem automatic devdax conversion
-From: Michal Clapinski <mclapinski@google.com>
-To: Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, nvdimm@lists.linux.dev
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Thomas Huth <thuth@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	"Borislav Petkov (AMD)" <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Michal Clapinski <mclapinski@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR19MB3864:EE_|PH7PR19MB6532:EE_
+X-MS-Office365-Filtering-Correlation-Id: ea1b95fe-2de1-4670-d8e2-08dda990ddcb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|10070799003|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?K1dOUGMrWU55RktXSFM5Z0F4UkZTbGxxMWhCWnZ4c2paZm01RE1LQXUvTm9a?=
+ =?utf-8?B?b1ZOTUJpYStDQi9sTkZnSHB1ckIwc0ltd0ZNSjFhSlBNSmtkT2pFb3BqOEVB?=
+ =?utf-8?B?ZWpSVUNJOHJvMS9jTHd3ZTdwT2dBUHJZa0JSam1PckMwL3dKVU5QZW1rdWg5?=
+ =?utf-8?B?dm51ZVNYbmFLWWdYc05ZVkJldUFuNVd6eTZZaHo0aXB5b2ZKTnd1WXFjMzU2?=
+ =?utf-8?B?T3NnRFcyV2lYdmZXM1VWR0cyNjFQa2Vuenk1R2Iva3dUVWtrSk5NSUVrbnc3?=
+ =?utf-8?B?anV4aGl0cDl2c3hYa3QrZ2swZStMSDVoSDAxNEx2S1J5MS9YMlNLRHFsOWhJ?=
+ =?utf-8?B?YTI5RG9EcTRDMU5oR2NCb2FNMEQvaTFXYmtOSEJOSkJsaGtOaFVTMndzNzVW?=
+ =?utf-8?B?emtiYmVBK2VueFN0NTVhUUVSaU5ZWG9KQk1iVmtNQ2ZUS3Z3WmdqWTBFZnFx?=
+ =?utf-8?B?Y3JzUC8zSE53N2ZsK05lNXQvZ1V5YTFxM1dNSTV1bHBmRENQSXhJZ2o3REhO?=
+ =?utf-8?B?VzlCZmdMcUNRRjE0RlNOTnBKeVdZUjE3ckxRTnV0bDhuUlNWTnZxZW9RN2JW?=
+ =?utf-8?B?WCtwV2wzT0VwZ1BTa2xyd1NEVXlNWXlUOVNjcDlLVW95WEJEZHdlMVdlVXlq?=
+ =?utf-8?B?YWxtWFJrYkU4MUhKR1NEUm9EMURRMHVTRk82eDRueHRUaVIvM2RjTVVpSDB2?=
+ =?utf-8?B?eWtXSjl6OWgrYk9OUVU5YituSVhGNUdPcktnVElxd0p6R25HQ3UxTytVb2oz?=
+ =?utf-8?B?SEdpbE13U3FLV3VDL2VHVmQ4V1JvVE9nN2VPZm4wQmhpbllwSFY5dzlKc1BT?=
+ =?utf-8?B?MldJVmUzSEE0V2tsdExOd3dOOEV4VDlLWWJScmxoRmc1MXBRYXdyZld3Y2xP?=
+ =?utf-8?B?RXVLc1NQZ0huQ1VqWEN6dzg5amFnRkJkbTFTWXB2SVNIek4yV1F2ck5Tb3ha?=
+ =?utf-8?B?UVh2Unk3NGlLdEtJV2ZPVUs0Ym10b2ZHalg3REtoNUhyS2tqVlFBeC9tY1pz?=
+ =?utf-8?B?dGwxazVYalhCVXRvQTVOSFh0bG1KS2lFamZJZlRmMmVCdElJVHgzUVZPNnZC?=
+ =?utf-8?B?VlBTY0h0SnpmSUIxVlZSQlY2M1RVNVVSQ2ZjL0thS3lkZ0ZwZStOVjFWbmpZ?=
+ =?utf-8?B?eTA2NzY2c3FXa2hQYkFyVXQ3K3E0VVcvWlkrMXBhTEJ5Qlo4WlNjOCtrMm5q?=
+ =?utf-8?B?SllYVlp6RVd1eEJkSEt0UXJ6b0tMUzEvQzJhdmJGdnlzM2NWVDlWTk56SnlN?=
+ =?utf-8?B?Mlh1UDk5WVUvS2lZQ1J5dGsrYnRYbktiWmJwVmdJL3pUbnhFZHhIVnREbGgw?=
+ =?utf-8?B?QzRSL2pPSVRhNlJsWUFRWE9QMFpVbWpsMmRGSG5yWW1xVW9FYyszVjdocUNQ?=
+ =?utf-8?B?SDhYL0hIcEFnbGZMR3U2RW55ZHRXaDJQdHlFVW0reXg4YzZSOWhoQmc3U3Zh?=
+ =?utf-8?B?ZzV4Lzlmd1RNM1hyRytMK1RsTUlRcE1NVDNneHR0SE1OSmxGYXlzRG43NnhC?=
+ =?utf-8?B?VXIxZ05HdkRnd0ExNE9LdTdXbXAvNmxVcXhqRmloak9IMUhGdUdNN1JTN0pK?=
+ =?utf-8?B?UTQ0REhHc0xiYXJqMTlSTXpOVlNaMEhzeC9zNGZxWmxBRzJHL1ZXbGloM0pF?=
+ =?utf-8?B?OHdPcmFONm1jRlBYTWl5TS9XUng5STJVK2ZTWkpJOXh6bHc2cXExM0VZMUFB?=
+ =?utf-8?B?WXNLVVFxYU95OGVhOUltK2taSUJwK3VmL1FwOWhNK2hQNlU3L0lJNWxnclJt?=
+ =?utf-8?B?bzVjaExYUVhUNVFlT3gxUkd1Z21URFVWSmNOSk9LYmJQdEZGYkdrdjY5RGFW?=
+ =?utf-8?B?MlBoeldhSllWeVM4TVY4dUVYbytidGxxZHl4SUYyWngrcHVmZXFCclpNdklP?=
+ =?utf-8?B?djl6cW5xSWpDaXd4VCtRVlVGUytOQkJXSi9CVlF4VTBSK1E9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR19MB3864.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(10070799003)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NFlLc2R2YnBtRkNpS0QzZzlURURyTldwTnFlRmRoYmo5Nm95SGg0SUNPV1hB?=
+ =?utf-8?B?L3JVcE0xNmxYaXdSL0ZXUmtCalNJMlVlOXp1T3ZlNkJTNGZWKy9raGhIbk91?=
+ =?utf-8?B?MVg2aG5YdEF6b210VkcwTVlqR1A4VDBVVCtFS3hOM3c1RTMwYzFWR1E2NVFR?=
+ =?utf-8?B?WFkrRGFsNTRVRGtLaDFHcmxLelAxano4SDZWSEZUZEpLRngzWWwvek8rMFJt?=
+ =?utf-8?B?eW4zK1NyT3NSd1BGR0x5M1RsSHU2djMyYnVsbmZJTFhuNjFvWWRkUkdnWlo1?=
+ =?utf-8?B?ZldBVFkwTFBONlgrcGhtMVRNVSsxcUhLN1R6NGFpbS9XSzJIZUZhK3Nzd1pE?=
+ =?utf-8?B?OVF6UnltUUNyTWNpN0xpRmlqSlRTSTlsRjNVbnRCR1hmV3VySlpWemlYRVNW?=
+ =?utf-8?B?TmkzU2RHbWNFWXNRNW5Yc3pQUDFKL2hGakVDdXRWNVdJUTR2QkY2cjVjbk03?=
+ =?utf-8?B?S1NoSHVFR21LZGhrVmV3Q1k3NS83WWdXWi93aXBoNTBHVFJxSXVNT1NpMTlu?=
+ =?utf-8?B?Mk5iaGlaa3NsaUZ2VEdWQ2NCSVk2ZXJ1MFZQUnhwOVJQb1l3WmJHOXg4Vzk3?=
+ =?utf-8?B?SkdOOU1NTVgxZ0JyNjJ6dTlXMjdpdkx6NHh3clVaNjhvRGRFTXBGbzlvQWlq?=
+ =?utf-8?B?VXFuMzVwWWM1T3h0WnlrTW1kWHloSHdyRUEraGswT3Q5dXdXNW9ORzh0RVJm?=
+ =?utf-8?B?THkzS3Y3WkhZZGZjdFNrRXlMQjR1WEF5Y3k4eldoSloyZFRLMElnMFFKeEQ1?=
+ =?utf-8?B?UVJVcUVMS0xQMUxVeE42L0lFSHRsY3luUkdMSGVlSjlENk5zMU5uUUp4V1pV?=
+ =?utf-8?B?aVNwdHRwdU5CUnhjRjNSWWVxYVUrdFZJVlh6QXVBd2E4QzZ1QkU3Y3VpSGV1?=
+ =?utf-8?B?c0RjdjhmSjB4ZTE2TmZqMk0xRElRZ0ptcmgvUmxqWEl1S203QzZzbTBKcUdk?=
+ =?utf-8?B?VmhTU2pNdzNzaE42MWlPSmpOWGJoSGxoZGdMUjRib2FlN0FEbTRMMnBpdWZC?=
+ =?utf-8?B?QXVLdUlMYm40K3JGT2F0SzJNWTFBNVVpc25MWWJCS0h0N2VneENzeTNadWlB?=
+ =?utf-8?B?QmtYaStpeG9zbkxjTW5mRzc3bkRLdUJWbWpaeUpYZW1qL3p5VjNSU2Z1UlE4?=
+ =?utf-8?B?dDRHbm82VWVsenlUY1paeXhPYTYwamNyZm8wVC8yWkNza3BuYzlDWGtOdVEw?=
+ =?utf-8?B?THd4MlJaRVhHT0QxaUQzWlhLa01rQ0owUitpSUhMUEU5cnRML2Q3MzhKVXA5?=
+ =?utf-8?B?dTk4SXBRNXRMNmI1QlNEWTlXTU5ZZnlKQThxR2c3VExIQ3Q5WklBYUpnQ3hu?=
+ =?utf-8?B?cmhUNkFSQkRKVGU3YnFkc3JIWUNybWFEeXR4RGxmUlR3UnB6cWY0NFIzVVZw?=
+ =?utf-8?B?QTlDSXBrc2IxZG5VKzQvQ01VZEpGK1RIdDdPZjB0L2p4azNKVEg1VVhqMm1T?=
+ =?utf-8?B?eC9pU01HSWJ6MHQycnlRZnFoK0tJMXJ0VmxvV0ovTldqU01lSDI5Zld1YTE3?=
+ =?utf-8?B?am1Fc0daaGkyNjlVS3d2TjRRTms2M0xXZHBUMkkwSUk0ZmZPalhmQ2t3VEVQ?=
+ =?utf-8?B?OTNXY1czcnl0MHNYMURRanREa3E5ajEyN3l1VW1wN3hrbkNWdHFkWkV1aXpZ?=
+ =?utf-8?B?U3NsNGlmZW1RMGFEdG9aOFZaRUgwVURWSFBhaHA4SnI4eDd5VDdVNTVYY1Fw?=
+ =?utf-8?B?NzhSMlJVbmFneXJZNGpSR3ZjVTdQOWY0SjVISjNUQ3k2NmpNL3ZVV0FTM05L?=
+ =?utf-8?B?cjJITDdQSUxpV21XR0pGaFFrRVVFc05lRlBOTWxwbTIzWFR4UG9XNVNJZEVx?=
+ =?utf-8?B?K1FIZEkrLzE5SXdzcWppSFZPNWdOYWtVd0Nram9xRDg4R0ZuT05DaDZ2azdz?=
+ =?utf-8?B?N2xGUUJodUdxakVsYU8vdTYyK0RyVnNGd0VUQm1TYUFqQzY4bk4yNmxjVGNq?=
+ =?utf-8?B?cEJsa2xYeFVzcEh1RUpUbG50NjM3cXdEM0xVSmhXSWhma1JpUWg0NDRZbGdL?=
+ =?utf-8?B?QkVXOHdSV0NrU2VWZW50ZUx0WUlpMXdXWXdFcDlHeUsyNVZyWWlVdWtFRE8z?=
+ =?utf-8?B?ZzUyUUZTbDJvKzFjR0NyTC92c2h3eUx1YXN2U04wUlhUUWtIREE3eExQNlEv?=
+ =?utf-8?B?WXZwRWhmQTFwK2JCdnpHVmJvOUpmcG5keXFpOU1DQ0FJbTBXbHM3aVI3YndR?=
+ =?utf-8?Q?QfMvgBD5VH32u1dCUSFE2+xRwQEHeAeJkNWkqi4sTMlv?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	OPsZPdWHdCnE3kpKVekBbwx26gpwbqletlS+ehuKP+JjUICxZOjh7NMSdjOZoWlYBGacjqxr7v4War+T8tpcRxUIvIGWNN3YheR1XhDNiuKjjg7vjKogDF4sLRgrB5TJc+04qOVvRsbzzvD/T+H55C8T7Ok1umckiStgEWZ2eL5G+/jNW6ZjDM2cwvyH01/9CZtgwYedbnFGuuwRm2RBwWadFJdZxQF/sP/gTvXL6/XBB95TB4BWwUr4jvQAKYGsxk+dt7QYNvVJEm2EFGdF6XGuHAZz4iODxUj6hgRBREqsg4m+WbuluDsdnMxrhpdi7PEtlTXUqnb1Ha+GOcCabQz+gA9OEpychJ2hb4+WhGPemw6XHjC4cm+AnQXnokTeslvvdE0JmEOdfhy0vIb9cE60RD7qaqeVWZJQI7dS9itDkJqNYzc5K6defin2qyCbOw0M0YjbgbdGRBHQXdtdi4qdTdcZjefktNZGs8zjk8HNnpkeyhffAuI46IdoWwVFQ/a2vAtTBPaWe25a6ulmPFnPnru8TbglxxwO4M4rJY/yLQr3mQPTjLYD2BVoDB4E7e0TBzSQRoPQt+FZWfHGshdf7Z5rkOjV7B9nPnZSCGIOjdX4EMcdXqkj5wP+minZ109AOUIEMIgXWnAIOk3i5A==
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea1b95fe-2de1-4670-d8e2-08dda990ddcb
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR19MB3872.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 09:09:42.6583
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 753b6e26-6fd3-43e6-8248-3f1735d59bb4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7zYJIEWHdsoTxZyTkB9WkrC4bXdSWv9LtXCNm1WkpJsY3nNjMoW3piCt+o5b20aycpF8U18fHMqgnQWc6TwvCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR19MB6532
+X-OriginatorOrg: ddn.com
+X-BESS-ID: 1749728611-111173-7575-2136-1
+X-BESS-VER: 2019.1_20250611.1405
+X-BESS-Apparent-Source-IP: 40.107.94.125
+X-BESS-Parts: H4sIAAAAAAACA4uuVkqtKFGyUioBkjpK+cVKViYGBkBGBlAszcDIMinVyCw1Od
+	HSOMXQICUNyDcwNk5OSTK2SLVIVaqNBQDoyKMUQAAAAA==
+X-BESS-Outbound-Spam-Score: 0.01
+X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.265280 [from 
+	cloudscan12-92.us-east-2a.ess.aws.cudaops.com]
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------
+	0.01 BSF_SC7_SA959_1        META: Custom Rule BSF_SC7_SA959_1 
+	0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
+X-BESS-Outbound-Spam-Status: SCORE=0.01 using account:ESS124931 scores of KILL_LEVEL=7.0 tests=BSF_SC7_SA959_1, BSF_BESS_OUTBOUND
+X-BESS-BRTS-Status:1
 
-Those devices will not have metadata blocks. The whole device will be
-accessible by the user.
 
-Changes include:
-1. Modified the nd_e820.pmem argument to include mode and align params.
-   They are saved in the nd_region_desc struct.
-2. When mode=devdax, invoke a new function nd_pfn_set_dax_defaults
-   instead of nd_pfn_validate. nd_pfn_validate validates the dax
-   signature and initializes data structes with the data from the
-   info-block. nd_pfn_set_dax_defaults just initializes the data
-   structures with some defaults and the alignment if provided in the
-   pmem arg. If the alignment is not provided, the maximum possible
-   alignment is applied.
-3. Extracted some checks to a new function nd_pfn_checks.
-4. Skipped requesting metadata area for our default dax devices.
 
-Signed-off-by: Michal Clapinski <mclapinski@google.com>
----
- .../admin-guide/kernel-parameters.txt         |   5 +-
- drivers/dax/pmem.c                            |   2 +-
- drivers/nvdimm/dax_devs.c                     |   5 +-
- drivers/nvdimm/e820.c                         |  62 ++++++-
- drivers/nvdimm/nd.h                           |   6 +
- drivers/nvdimm/pfn_devs.c                     | 158 +++++++++++++-----
- include/linux/libnvdimm.h                     |   3 +
- 7 files changed, 189 insertions(+), 52 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 63af03eb850e..bd2d1f3fb7d8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3849,13 +3849,16 @@
- 
- 	n2=		[NET] SDL Inc. RISCom/N2 synchronous serial card
- 
--	nd_e820.pmem=ss[KMG],nn[KMG]
-+	nd_e820.pmem=ss[KMG],nn[KMG][,mode=fsdax/devdax,align=aa[KMG]]
- 			Divide one e820 entry specified by memmap=x!ss
- 			(that is starting at ss) into pmem devices of size nn.
- 			There can be only one pmem parameter per one e820
- 			entry. The size of the e820 entry has to be divisible
- 			by the device size.
- 
-+			Named parameters are optional. Currently align affects
-+			only the devdax alignment.
-+
- 	netdev=		[NET] Network devices parameters
- 			Format: <irq>,<io>,<mem_start>,<mem_end>,<name>
- 			Note that mem_start is often overloaded to mean
-diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
-index c8ebf4e281f2..2af9d51e73c0 100644
---- a/drivers/dax/pmem.c
-+++ b/drivers/dax/pmem.c
-@@ -39,7 +39,7 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
- 	pfn_sb = nd_pfn->pfn_sb;
- 	offset = le64_to_cpu(pfn_sb->dataoff);
- 	nsio = to_nd_namespace_io(&ndns->dev);
--	if (!devm_request_mem_region(dev, nsio->res.start, offset,
-+	if (offset && !devm_request_mem_region(dev, nsio->res.start, offset,
- 				dev_name(&ndns->dev))) {
- 		dev_warn(dev, "could not reserve metadata\n");
- 		return ERR_PTR(-EBUSY);
-diff --git a/drivers/nvdimm/dax_devs.c b/drivers/nvdimm/dax_devs.c
-index 37b743acbb7b..52480c396bb2 100644
---- a/drivers/nvdimm/dax_devs.c
-+++ b/drivers/nvdimm/dax_devs.c
-@@ -113,7 +113,10 @@ int nd_dax_probe(struct device *dev, struct nd_namespace_common *ndns)
- 	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn = &nd_dax->nd_pfn;
- 	nd_pfn->pfn_sb = pfn_sb;
--	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
-+	if (test_bit(ND_REGION_DEVDAX, &nd_region->flags))
-+		rc = nd_pfn_set_dax_defaults(nd_pfn);
-+	else
-+		rc = nd_pfn_validate(nd_pfn, DAX_SIG);
- 	dev_dbg(dev, "dax: %s\n", rc == 0 ? dev_name(dax_dev) : "<none>");
- 	if (rc < 0) {
- 		nd_detach_ndns(dax_dev, &nd_pfn->ndns);
-diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-index 0cd2d739af70..4dd4ebcc3180 100644
---- a/drivers/nvdimm/e820.c
-+++ b/drivers/nvdimm/e820.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/numa.h>
- #include <linux/moduleparam.h>
-+#include <linux/parser.h>
- #include <linux/string.h>
- #include <linux/xarray.h>
- 
-@@ -49,8 +50,51 @@ module_param_cb(pmem, &pmem_param_ops, NULL, 0);
- 
- struct pmem_entry {
- 	unsigned long region_size;
-+	bool treat_as_devdax;
-+	unsigned long align;
- };
- 
-+static int parse_one_optional_pmem_param(struct pmem_entry *entry, char *p)
-+{
-+	int token;
-+	char *parse_end;
-+	substring_t args[MAX_OPT_ARGS];
-+
-+	enum {
-+		OPT_MODE_DEVDAX,
-+		OPT_MODE_FSDAX,
-+		OPT_ALIGN,
-+		OPT_ERR,
-+	};
-+
-+	static const match_table_t tokens = {
-+		{OPT_MODE_DEVDAX, "mode=devdax"},
-+		{OPT_MODE_FSDAX, "mode=fsdax"},
-+		{OPT_ALIGN, "align=%s"},
-+		{OPT_ERR, NULL}
-+	};
-+
-+	token = match_token(p, tokens, args);
-+	switch (token) {
-+	case OPT_MODE_DEVDAX:
-+		entry->treat_as_devdax = true;
-+		break;
-+	case OPT_MODE_FSDAX:
-+		break;
-+	case OPT_ALIGN:
-+		entry->align = memparse(args[0].from, &parse_end);
-+		if (parse_end == args[0].from || parse_end != args[0].to) {
-+			pr_err("Can't parse pmem align: %s\n", args[0].from);
-+			return -EINVAL;
-+		}
-+		break;
-+	default:
-+		pr_warn("Unexpected parameter: %s\n", p);
-+	}
-+
-+	return 0;
-+}
-+
- static int parse_one_pmem_arg(struct xarray *xarray, char *whole_arg)
- {
- 	int rc = -EINVAL;
-@@ -85,8 +129,11 @@ static int parse_one_pmem_arg(struct xarray *xarray, char *whole_arg)
- 		goto err;
- 	}
- 
--	while ((p = strsep(&char_iter, ",")) != NULL)
--		pr_warn("Unexpected parameter: %s\n", p);
-+	while ((p = strsep(&char_iter, ",")) != NULL) {
-+		rc = parse_one_optional_pmem_param(entry, p);
-+		if (rc)
-+			goto err;
-+	}
- 
- 	rc = xa_err(xa_store(xarray, start, entry, GFP_KERNEL));
- 	if (rc)
-@@ -107,7 +154,8 @@ static void e820_pmem_remove(struct platform_device *pdev)
- 	nvdimm_bus_unregister(nvdimm_bus);
- }
- 
--static int register_one_pmem(struct resource *res, struct nvdimm_bus *nvdimm_bus)
-+static int register_one_pmem(struct resource *res, struct nvdimm_bus *nvdimm_bus,
-+			     struct pmem_entry *entry)
- {
- 	struct nd_region_desc ndr_desc;
- 	int nid = phys_to_target_node(res->start);
-@@ -117,6 +165,10 @@ static int register_one_pmem(struct resource *res, struct nvdimm_bus *nvdimm_bus
- 	ndr_desc.numa_node = numa_map_to_online_node(nid);
- 	ndr_desc.target_node = nid;
- 	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-+	if (entry && entry->treat_as_devdax) {
-+		set_bit(ND_REGION_DEVDAX, &ndr_desc.flags);
-+		ndr_desc.provider_data = (void *)entry->align;
-+	}
- 	if (!nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc))
- 		return -ENXIO;
- 	return 0;
-@@ -138,7 +190,7 @@ static int e820_handle_one_entry(struct resource *res, void *data)
- 	entry = xa_load(walk_data->pmem_xarray, res->start);
- 
- 	if (!entry)
--		return register_one_pmem(res, walk_data->nvdimm_bus);
-+		return register_one_pmem(res, walk_data->nvdimm_bus, NULL);
- 
- 	if (entry_size % entry->region_size != 0) {
- 		pr_err("Entry size %lu is not divisible by region size %lu\n",
-@@ -149,7 +201,7 @@ static int e820_handle_one_entry(struct resource *res, void *data)
- 	res_local.start = res->start;
- 	res_local.end = res->start + entry->region_size - 1;
- 	while (res_local.end <= res->end) {
--		rc = register_one_pmem(&res_local, walk_data->nvdimm_bus);
-+		rc = register_one_pmem(&res_local, walk_data->nvdimm_bus, entry);
- 		if (rc)
- 			return rc;
- 
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index 5ca06e9a2d29..d53393d9e027 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -571,6 +571,7 @@ struct device *nd_pfn_create(struct nd_region *nd_region);
- struct device *nd_pfn_devinit(struct nd_pfn *nd_pfn,
- 		struct nd_namespace_common *ndns);
- int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig);
-+int nd_pfn_set_dax_defaults(struct nd_pfn *nd_pfn);
- extern const struct attribute_group *nd_pfn_attribute_groups[];
- #else
- static inline int nd_pfn_probe(struct device *dev,
-@@ -593,6 +594,11 @@ static inline int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
- {
- 	return -ENODEV;
- }
-+
-+static inline int nd_pfn_set_dax_defaults(struct nd_pfn *nd_pfn)
-+{
-+	return -ENODEV;
-+}
- #endif
- 
- struct nd_dax *to_nd_dax(struct device *dev);
-diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-index cfdfe0eaa512..4fea24df6e56 100644
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -438,6 +438,76 @@ static bool nd_supported_alignment(unsigned long align)
- 	return false;
- }
- 
-+static unsigned long nd_best_supported_alignment(unsigned long start,
-+						 unsigned long end)
-+{
-+	int i;
-+	unsigned long ret = 0, supported[MAX_NVDIMM_ALIGN] = { [0] = 0, };
-+
-+	nd_pfn_supported_alignments(supported);
-+	for (i = 0; supported[i]; i++)
-+		if (IS_ALIGNED(start, supported[i]) &&
-+		    IS_ALIGNED(end + 1, supported[i]))
-+			ret = supported[i];
-+		else
-+			break;
-+
-+	return ret;
-+}
-+
-+static int nd_pfn_checks(struct nd_pfn *nd_pfn, u64 offset,
-+			 unsigned long start_pad, unsigned long end_trunc)
-+{
-+	/*
-+	 * These warnings are verbose because they can only trigger in
-+	 * the case where the physical address alignment of the
-+	 * namespace has changed since the pfn superblock was
-+	 * established.
-+	 */
-+	struct nd_namespace_common *ndns = nd_pfn->ndns;
-+	struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
-+	struct resource *res = &nsio->res;
-+	resource_size_t res_size = resource_size(res);
-+	unsigned long align = nd_pfn->align;
-+
-+	if (align > nvdimm_namespace_capacity(ndns)) {
-+		dev_err(&nd_pfn->dev, "alignment: %lx exceeds capacity %llx\n",
-+			align, nvdimm_namespace_capacity(ndns));
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (offset >= res_size) {
-+		dev_err(&nd_pfn->dev, "pfn array size exceeds capacity of %s\n",
-+			dev_name(&ndns->dev));
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if ((align && !IS_ALIGNED(res->start + offset + start_pad, align)) ||
-+	    !IS_ALIGNED(offset, PAGE_SIZE)) {
-+		dev_err(&nd_pfn->dev,
-+			"bad offset: %#llx dax disabled align: %#lx\n",
-+			offset, align);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (!IS_ALIGNED(res->start + start_pad, memremap_compat_align())) {
-+		dev_err(&nd_pfn->dev, "resource start misaligned\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (!IS_ALIGNED(res->end + 1 - end_trunc, memremap_compat_align())) {
-+		dev_err(&nd_pfn->dev, "resource end misaligned\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (offset >= (res_size - start_pad - end_trunc)) {
-+		dev_err(&nd_pfn->dev, "bad offset with small namespace\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * nd_pfn_validate - read and validate info-block
-  * @nd_pfn: fsdax namespace runtime state / properties
-@@ -450,10 +520,7 @@ static bool nd_supported_alignment(unsigned long align)
- int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
- {
- 	u64 checksum, offset;
--	struct resource *res;
- 	enum nd_pfn_mode mode;
--	resource_size_t res_size;
--	struct nd_namespace_io *nsio;
- 	unsigned long align, start_pad, end_trunc;
- 	struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
- 	struct nd_namespace_common *ndns = nd_pfn->ndns;
-@@ -572,52 +639,53 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
- 		}
- 	}
- 
--	if (align > nvdimm_namespace_capacity(ndns)) {
--		dev_err(&nd_pfn->dev, "alignment: %lx exceeds capacity %llx\n",
--				align, nvdimm_namespace_capacity(ndns));
--		return -EOPNOTSUPP;
--	}
-+	return nd_pfn_checks(nd_pfn, offset, start_pad, end_trunc);
-+}
-+EXPORT_SYMBOL(nd_pfn_validate);
- 
--	/*
--	 * These warnings are verbose because they can only trigger in
--	 * the case where the physical address alignment of the
--	 * namespace has changed since the pfn superblock was
--	 * established.
--	 */
--	nsio = to_nd_namespace_io(&ndns->dev);
--	res = &nsio->res;
--	res_size = resource_size(res);
--	if (offset >= res_size) {
--		dev_err(&nd_pfn->dev, "pfn array size exceeds capacity of %s\n",
--				dev_name(&ndns->dev));
--		return -EOPNOTSUPP;
--	}
-+int nd_pfn_set_dax_defaults(struct nd_pfn *nd_pfn)
-+{
-+	struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
-+	struct nd_namespace_common *ndns = nd_pfn->ndns;
-+	struct nd_region *nd_region = to_nd_region(nd_pfn->dev.parent);
-+	struct nd_namespace_io *nsio;
-+	struct resource *res;
-+	unsigned long align;
- 
--	if ((align && !IS_ALIGNED(res->start + offset + start_pad, align))
--			|| !IS_ALIGNED(offset, PAGE_SIZE)) {
--		dev_err(&nd_pfn->dev,
--				"bad offset: %#llx dax disabled align: %#lx\n",
--				offset, align);
--		return -EOPNOTSUPP;
--	}
-+	if (!pfn_sb || !ndns)
-+		return -ENODEV;
- 
--	if (!IS_ALIGNED(res->start + start_pad, memremap_compat_align())) {
--		dev_err(&nd_pfn->dev, "resource start misaligned\n");
--		return -EOPNOTSUPP;
--	}
-+	if (!is_memory(nd_pfn->dev.parent))
-+		return -ENODEV;
- 
--	if (!IS_ALIGNED(res->end + 1 - end_trunc, memremap_compat_align())) {
--		dev_err(&nd_pfn->dev, "resource end misaligned\n");
--		return -EOPNOTSUPP;
-+	if (nd_region->provider_data) {
-+		align = (unsigned long)nd_region->provider_data;
-+	} else {
-+		nsio = to_nd_namespace_io(&ndns->dev);
-+		res = &nsio->res;
-+		align = nd_best_supported_alignment(res->start, res->end);
-+		if (!align) {
-+			dev_err(&nd_pfn->dev, "init failed, resource misaligned\n");
-+			return -EOPNOTSUPP;
-+		}
- 	}
- 
--	if (offset >= (res_size - start_pad - end_trunc)) {
--		dev_err(&nd_pfn->dev, "bad offset with small namespace\n");
--		return -EOPNOTSUPP;
-+	memset(pfn_sb, 0, sizeof(*pfn_sb));
-+
-+	if (!nd_pfn->uuid) {
-+		nd_pfn->uuid = kmemdup(pfn_sb->uuid, 16, GFP_KERNEL);
-+		if (!nd_pfn->uuid)
-+			return -ENOMEM;
-+		nd_pfn->align = align;
-+		nd_pfn->mode = PFN_MODE_RAM;
- 	}
--	return 0;
-+
-+	pfn_sb->align = cpu_to_le64(nd_pfn->align);
-+	pfn_sb->mode = cpu_to_le32(nd_pfn->mode);
-+
-+	return nd_pfn_checks(nd_pfn, 0, 0, 0);
- }
--EXPORT_SYMBOL(nd_pfn_validate);
-+EXPORT_SYMBOL(nd_pfn_set_dax_defaults);
- 
- int nd_pfn_probe(struct device *dev, struct nd_namespace_common *ndns)
- {
-@@ -704,7 +772,7 @@ static int __nvdimm_setup_pfn(struct nd_pfn *nd_pfn, struct dev_pagemap *pgmap)
- 	};
- 	pgmap->nr_range = 1;
- 	if (nd_pfn->mode == PFN_MODE_RAM) {
--		if (offset < reserve)
-+		if (offset && offset < reserve)
- 			return -EINVAL;
- 		nd_pfn->npfns = le64_to_cpu(pfn_sb->npfns);
- 	} else if (nd_pfn->mode == PFN_MODE_PMEM) {
-@@ -729,7 +797,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 	struct nd_namespace_common *ndns = nd_pfn->ndns;
- 	struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
- 	resource_size_t start, size;
--	struct nd_region *nd_region;
-+	struct nd_region *nd_region = to_nd_region(nd_pfn->dev.parent);
- 	unsigned long npfns, align;
- 	u32 end_trunc;
- 	struct nd_pfn_sb *pfn_sb;
-@@ -748,6 +816,9 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 	else
- 		sig = PFN_SIG;
- 
-+	if (test_bit(ND_REGION_DEVDAX, &nd_region->flags))
-+		return nd_pfn_set_dax_defaults(nd_pfn);
-+
- 	rc = nd_pfn_validate(nd_pfn, sig);
- 	if (rc == 0)
- 		return nd_pfn_clear_memmap_errors(nd_pfn);
-@@ -757,7 +828,6 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 	/* no info block, do init */;
- 	memset(pfn_sb, 0, sizeof(*pfn_sb));
- 
--	nd_region = to_nd_region(nd_pfn->dev.parent);
- 	if (nd_region->ro) {
- 		dev_info(&nd_pfn->dev,
- 				"%s is read-only, unable to init metadata\n",
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index e772aae71843..a07f3f81975c 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -70,6 +70,9 @@ enum {
- 	/* Region was created by CXL subsystem */
- 	ND_REGION_CXL = 4,
- 
-+	/* Region is supposed to be treated as devdax */
-+	ND_REGION_DEVDAX = 5,
-+
- 	/* mark newly adjusted resources as requiring a label update */
- 	DPA_RESOURCE_ADJUSTED = 1 << 0,
- };
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
-
+On 6/12/25 05:22, Bagas Sanjaya wrote:
+> [You don't often get email from bagasdotme@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> All four FUSE docs are currently in upper-level
+> Documentation/filesystems/ directory, but these are distinct as a group
+> of its own. Move them into Documentation/filesystems/fuse/ subdirectory.
+Good idea, thank you!
