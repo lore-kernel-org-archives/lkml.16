@@ -1,611 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D322D8777
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883332D8782;
+	Thu, 12 Jun 2025 20:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758583; cv=none; b=M56qLmuP6F1BTNy0mrEBNTxMMLdEt9elXIzZiU4TwJXQlhgMcENbJdaO1tSpWMBEGm5h9twZoZR0wiZpOXX9hkW5cqJvNjamxn94YC9gTsWfdA5fApqLZiyqeFxDPvEsy3J3ENp6jAVYa1cX/0DLdZO9aEd4CeADkB/o8JCe1VM=
+	t=1749758593; cv=none; b=nDVtLWEFdDuU/sZKm+1lfNNfLa9p0z/bKIyVtmGHPMeC2rB1Qp0ZeNKVfWIGz5JKm5k+AtPJXXTT5Cq82SeqZ2l9P8dguDxSAFHc10o+KLOzC8EZJtGpewJ6j5VdzyOyi6MnTjOk5kIMVFYw3Mk3Hmv6VoPmZ9meBz0Ailm8+Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758583; c=relaxed/simple;
-	bh=LMXyri+YKuStVyc5fg/UiyFaVTBrDpKRI7Mucqlx13g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ycp1sQv6LCPIIWx+AVncDwMJxA07bFBY9ikiyYrP+TA7I2HDC1TfQjXtpQrL/v2K+B2J8/qkf+Vz0Wz6udbBq/PZV3RuvAxYVt7QfACvF5VCxugFD8RFhBtIFVLsn9OFQWrdpGZ0tCyz7Megnio+egDkDSFnIxaf4eR2Xg15AWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U25PwsPQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749758593; c=relaxed/simple;
+	bh=WIciPhkuwpytb96ZPY3/taNGW/mxm70/ocDf/etRYAY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aMQpT1etPb7CKquTVfCLlpJqZXfOiqb1BtZ0Ti6NP/5gT0M7nqsK1iOVUDOZArJT9T+IjT3OdxwnTyfNmv0ihfNWMmEEmKe26IeohQJ+W3dwZwrfzPZ7wxZ1w/7E8GVTSz2FTDah9RlpqgoSZOn6ERcv8yasZx1f4x1tYdGVAXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1u9ex91; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U25PwsPQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749758579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/s5o2N/AERYY3tiFEGTQAHE2rHnvYPfPJoTOkCe0zPE=;
-	b=U25PwsPQ6e7Pc/IQIb/5LVkubF9l36bMcMeDJqMfKjKFi0d6/5ekjcd4q4JsokB9uzIH45
-	XZaeKtyS4pXaCdai9oK3VILxbQxJvLaTowHRghvufKPuhgNaUmC5edLzFqWXdhOGhOwNdh
-	QzcYB3Xo3Q96u9ClDwm5BJXCV+kaixM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-67-k5z473WoOh-mTyx9X9qhig-1; Thu,
- 12 Jun 2025 16:02:56 -0400
-X-MC-Unique: k5z473WoOh-mTyx9X9qhig-1
-X-Mimecast-MFC-AGG-ID: k5z473WoOh-mTyx9X9qhig_1749758573
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 450EF19560BD;
-	Thu, 12 Jun 2025 20:02:53 +0000 (UTC)
-Received: from p16v.redhat.com (unknown [10.45.224.169])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DAC7A18003FC;
-	Thu, 12 Jun 2025 20:02:46 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Michal Schmidt <mschmidt@redhat.com>,
-	Petr Oros <poros@redhat.com>
-Subject: [PATCH net-next v9 08/14] dpll: zl3073x: Read DPLL types and pin properties from system firmware
-Date: Thu, 12 Jun 2025 22:01:39 +0200
-Message-ID: <20250612200145.774195-9-ivecera@redhat.com>
-In-Reply-To: <20250612200145.774195-1-ivecera@redhat.com>
-References: <20250612200145.774195-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1u9ex91"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a5901854e3so1979181cf.3;
+        Thu, 12 Jun 2025 13:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749758590; x=1750363390; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xc6N+dUinlHw4NHSG2eKigRbuom9TvjgvsTWo0kWaOk=;
+        b=R1u9ex913dDCt8MWvYVKqiLpUwHZlK1jNHSAA47qkTW1knj8vgkNS0ZXL3TN6eXepw
+         JbpttQqV998JFsxk0yHZUr8pIccZFX+E9wjPXoKEX5JeeXtEzIi0bNFX3YNJlAdegPFp
+         NSlLwtxvdEUW9Tentuu9zVrN4+rzc5ReZmGFP1S7xEXv0QtzGMTlLwkeMwRTwGw0/wD0
+         /4c5ICwK+kNptOasVJMwwyYHRcuUFODs9iaKcD71DyCTSxd77i05uDQDzR5yUMS8prT8
+         28U5dSy6K1OR1sGtOjt8xXvsPi0BtyspJO/ufyaWyZfHACtWDM9RzTOaXSi4eHFFvTgU
+         XPOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749758590; x=1750363390;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xc6N+dUinlHw4NHSG2eKigRbuom9TvjgvsTWo0kWaOk=;
+        b=mgWn1EOEFwtAN1N9YvsbCHlekBWl3nIPHezZHt/d77AwdYu4zaJq66mg4jLmXnGIbB
+         mymlStHgWbj4yykpu0F6NQFRgvG5Slq9b2hZnSeXIF+nWUy373IXSLe3Ztzh8Blhn3JK
+         XZUTZTqhO0ojoKR8d1ePiS1M0nfjz7C+HqmOAfNV/Il5LdQfXxG1ShevMWo6QHLnMmkp
+         1bI94UKzbyhLMujIgQTtWx9GHTceH5qcYgygBSKN5ovXHUbwlM8CtlHGeITsVNFc/HGY
+         OldbOYMnIKml457tzzcwrxe/lw7zXJeuQqMiUqJ1AY7N/7A/b2uwQyPWrxv7S8DE5uzJ
+         NaAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3YbDF0bSb2wwyAqNNiHYJbnGXf6D8zMPKeBfBTom3oeuNeVm9MPr8UhArRWE+JP1Chg6UtRHsBak9Ll/D@vger.kernel.org, AJvYcCVmFfinmb5Q6wUs1r2Urg+Wnp3gdgjGUn+EOmNuC5zHcdoXbuvMawIXbURxBAbnn/qgKPV2l22bXEU=@vger.kernel.org, AJvYcCXob5MS8c0l04a5WtoYA4RMlPAfM4oXqU4Wu3B7sm608me24OBXBX87ydypoy7L0bzTaHUsAE+qDpoTdZAmKz2R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg1iGSrNFEQQL8nN6wj8Ptl8UJf3XTiu1lPDLEeY1wz4l+lFhH
+	v7zddYoPYlbqEq6IBK126nj9v4OxvZ9IDRYddnIDHABlq04qop5kT7bZp1c3cZ9D
+X-Gm-Gg: ASbGncsQraKRwvkEcDaCTMIvbb/3eQZtC6jk5fmN/ylXokmPuSRyAT77XsKbB761Oue
+	HAAsOSZvG0ypKbfa5n/sRkBcz540a1JDcMpf7SclufQqLwA+NmsVxxFgBEaNXG4B4sR1jkDFeRi
+	HbbHvrCWhVRx0KJmNIiM8tkHrqBqqcGUDH2Wy/1el6/auMVNy1JtznlmviHhV3uRRtodERPYFMK
+	c4JTPDzrHUX8Yy3a22BtU6vOPeLMlkmqOJP1Mn5VbcTjMcQr55cky3L8yakk9yyoyF5C0YrMkXG
+	ZkJa7KWgalgEh+ilEI7zANOMNyco8f7ef5tHTLp9LYEYcrU8PbkieTw=
+X-Google-Smtp-Source: AGHT+IGh8hGn1isSQPrREYZv+mteO2JTk2LNLUhOGmq4qos4Tno+tEnXNR6Sbv760f4p4rKcB7Av/w==
+X-Received: by 2002:a05:6214:1cc6:b0:6e8:f645:2639 with SMTP id 6a1803df08f44-6fb3e5ba9famr1175366d6.5.1749758590209;
+        Thu, 12 Jun 2025 13:03:10 -0700 (PDT)
+Received: from localhost ([2a03:2880:20ff:9::])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c31688sm13592516d6.80.2025.06.12.13.03.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 13:03:09 -0700 (PDT)
+From: Gustavo Luiz Duarte <gustavold@gmail.com>
+Subject: [PATCH net-next v2 0/5] netconsole: Add support for msgid in
+ sysdata
+Date: Thu, 12 Jun 2025 13:02:13 -0700
+Message-Id: <20250612-netconsole-msgid-v2-0-d4c1abc84bac@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEUyS2gC/2WNwQqDMBBEf0X23JSsrVZ76n8UDzGuumASSUQs4
+ r93scceh5n3ZodEkSnBM9sh0sqJg5eQXzKwo/EDKe4kQ67zQpe6Vp4WG3wKEymXBu5UW99s2Vd
+ U21KDYHOknrdT+QZZC7Et0EgzclpC/JxfK579T4v4r11RaYWP6m4K7KlFeg3O8HS1wUFzHMcXH
+ bMMbLoAAAA=
+To: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Gustavo Luiz Duarte <gustavold@gmail.com>
+X-Mailer: b4 0.13.0
 
-Add support for reading of DPLL types and optional pin properties from
-the system firmware (DT, ACPI...).
+This patch series introduces a new feature to netconsole which allows
+appending a message ID to the userdata dictionary.
 
-The DPLL types are stored in property 'dpll-types' as string array and
-possible values 'pps' and 'eec' are mapped to DPLL enums DPLL_TYPE_PPS
-and DPLL_TYPE_EEC.
+If the msgid feature is enabled, the message ID is built from a per-target 32
+bit counter that is incremented and appended to every message sent to the target.
 
-The pin properties are stored under 'input-pins' and 'output-pins'
-sub-nodes and the following ones are supported:
+Example::
+  echo 1 > "/sys/kernel/config/netconsole/cmdline0/userdata/msgid_enabled"
+  echo "This is message #1" > /dev/kmsg
+  echo "This is message #2" > /dev/kmsg
+  13,434,54928466,-;This is message #1
+   msgid=1
+  13,435,54934019,-;This is message #2
+   msgid=2
 
-* reg
-    integer that specifies pin index
-* label
-    string that is used by driver as board label
-* connection-type
-    string that indicates pin connection type
-* supported-frequencies-hz
-    array of u64 values what frequencies are supported / allowed for
-    given pin with respect to hardware wiring
+This feature can be used by the target to detect if messages were dropped or
+reordered before reaching the target. This allows system administrators to
+assess the reliability of their netconsole pipeline and detect loss of messages
+due to network contention or temporary unavailability.
 
-Do not blindly trust system firmware and filter out frequencies that
-cannot be configured/represented in device (input frequencies have to
-be factorized by one of the base frequencies and output frequencies have
-to divide configured synthesizer frequency).
+Suggested-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
 
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
- drivers/dpll/zl3073x/Makefile |   2 +-
- drivers/dpll/zl3073x/core.c   |  41 ++++
- drivers/dpll/zl3073x/core.h   |   7 +
- drivers/dpll/zl3073x/prop.c   | 354 ++++++++++++++++++++++++++++++++++
- drivers/dpll/zl3073x/prop.h   |  34 ++++
- 5 files changed, 437 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dpll/zl3073x/prop.c
- create mode 100644 drivers/dpll/zl3073x/prop.h
+Changes in v2:
+- Use wrapping_assign_add() to avoid warnings in UBSAN and friends.
+- Improve documentation to clarify wrapping and distinguish msgid from sequnum.
+- Rebase and fix conflict in prepare_extradata().
+- Link to v1: https://lore.kernel.org/r/20250611-netconsole-msgid-v1-0-1784a51feb1e@gmail.com
 
-diff --git a/drivers/dpll/zl3073x/Makefile b/drivers/dpll/zl3073x/Makefile
-index 8760f358f5447..56d7d9feeaf0d 100644
---- a/drivers/dpll/zl3073x/Makefile
-+++ b/drivers/dpll/zl3073x/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- obj-$(CONFIG_ZL3073X)		+= zl3073x.o
--zl3073x-objs			:= core.o
-+zl3073x-objs			:= core.o prop.o
- 
- obj-$(CONFIG_ZL3073X_I2C)	+= zl3073x_i2c.o
- zl3073x_i2c-objs		:= i2c.o
-diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
-index b9809d21d2e52..f2520c48fcf51 100644
---- a/drivers/dpll/zl3073x/core.c
-+++ b/drivers/dpll/zl3073x/core.c
-@@ -120,6 +120,47 @@ const struct regmap_config zl3073x_regmap_config = {
- };
- EXPORT_SYMBOL_NS_GPL(zl3073x_regmap_config, "ZL3073X");
- 
-+/**
-+ * zl3073x_ref_freq_factorize - factorize given frequency
-+ * @freq: input frequency
-+ * @base: base frequency
-+ * @mult: multiplier
-+ *
-+ * Checks if the given frequency can be factorized using one of the
-+ * supported base frequencies. If so the base frequency and multiplier
-+ * are stored into appropriate parameters if they are not NULL.
-+ *
-+ * Return: 0 on success, -EINVAL if the frequency cannot be factorized
-+ */
-+int
-+zl3073x_ref_freq_factorize(u32 freq, u16 *base, u16 *mult)
-+{
-+	static const u16 base_freqs[] = {
-+		1, 2, 4, 5, 8, 10, 16, 20, 25, 32, 40, 50, 64, 80, 100, 125,
-+		128, 160, 200, 250, 256, 320, 400, 500, 625, 640, 800, 1000,
-+		1250, 1280, 1600, 2000, 2500, 3125, 3200, 4000, 5000, 6250,
-+		6400, 8000, 10000, 12500, 15625, 16000, 20000, 25000, 31250,
-+		32000, 40000, 50000, 62500,
-+	};
-+	u32 div;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(base_freqs); i++) {
-+		div = freq / base_freqs[i];
-+
-+		if (div <= U16_MAX && (freq % base_freqs[i]) == 0) {
-+			if (base)
-+				*base = base_freqs[i];
-+			if (mult)
-+				*mult = div;
-+
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static bool
- zl3073x_check_reg(struct zl3073x_dev *zldev, unsigned int reg, size_t size)
- {
-diff --git a/drivers/dpll/zl3073x/core.h b/drivers/dpll/zl3073x/core.h
-index fcf142f3f8cb6..4fcce761fc5f2 100644
---- a/drivers/dpll/zl3073x/core.h
-+++ b/drivers/dpll/zl3073x/core.h
-@@ -14,6 +14,7 @@ struct regmap;
- /*
-  * Hardware limits for ZL3073x chip family
-  */
-+#define ZL3073X_MAX_CHANNELS	5
- #define ZL3073X_NUM_REFS	10
- #define ZL3073X_NUM_OUTS	10
- #define ZL3073X_NUM_SYNTHS	5
-@@ -111,6 +112,12 @@ int zl3073x_write_u16(struct zl3073x_dev *zldev, unsigned int reg, u16 val);
- int zl3073x_write_u32(struct zl3073x_dev *zldev, unsigned int reg, u32 val);
- int zl3073x_write_u48(struct zl3073x_dev *zldev, unsigned int reg, u64 val);
- 
-+/*****************
-+ * Misc operations
-+ *****************/
-+
-+int zl3073x_ref_freq_factorize(u32 freq, u16 *base, u16 *mult);
-+
- static inline bool
- zl3073x_is_n_pin(u8 id)
- {
-diff --git a/drivers/dpll/zl3073x/prop.c b/drivers/dpll/zl3073x/prop.c
-new file mode 100644
-index 0000000000000..bc8b78cfb5ae0
---- /dev/null
-+++ b/drivers/dpll/zl3073x/prop.c
-@@ -0,0 +1,354 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/array_size.h>
-+#include <linux/dev_printk.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/fwnode.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+
-+#include "core.h"
-+#include "prop.h"
-+
-+/**
-+ * zl3073x_pin_check_freq - verify frequency for given pin
-+ * @zldev: pointer to zl3073x device
-+ * @dir: pin direction
-+ * @id: pin index
-+ * @freq: frequency to check
-+ *
-+ * The function checks the given frequency is valid for the device. For input
-+ * pins it checks that the frequency can be factorized using supported base
-+ * frequencies. For output pins it checks that the frequency divides connected
-+ * synth frequency without remainder.
-+ *
-+ * Return: true if the frequency is valid, false if not.
-+ */
-+static bool
-+zl3073x_pin_check_freq(struct zl3073x_dev *zldev, enum dpll_pin_direction dir,
-+		       u8 id, u64 freq)
-+{
-+	if (freq > U32_MAX)
-+		goto err_inv_freq;
-+
-+	if (dir == DPLL_PIN_DIRECTION_INPUT) {
-+		int rc;
-+
-+		/* Check if the frequency can be factorized */
-+		rc = zl3073x_ref_freq_factorize(freq, NULL, NULL);
-+		if (rc)
-+			goto err_inv_freq;
-+	} else {
-+		u32 synth_freq;
-+		u8 out, synth;
-+
-+		/* Get output pin synthesizer */
-+		out = zl3073x_output_pin_out_get(id);
-+		synth = zl3073x_out_synth_get(zldev, out);
-+
-+		/* Get synth frequency */
-+		synth_freq = zl3073x_synth_freq_get(zldev, synth);
-+
-+		/* Check the frequency divides synth frequency */
-+		if (synth_freq % (u32)freq)
-+			goto err_inv_freq;
-+	}
-+
-+	return true;
-+
-+err_inv_freq:
-+	dev_warn(zldev->dev,
-+		 "Unsupported frequency %llu Hz in firmware node\n", freq);
-+
-+	return false;
-+}
-+
-+/**
-+ * zl3073x_prop_pin_package_label_set - get package label for the pin
-+ * @zldev: pointer to zl3073x device
-+ * @props: pointer to pin properties
-+ * @dir: pin direction
-+ * @id: pin index
-+ *
-+ * Generates package label string and stores it into pin properties structure.
-+ *
-+ * Possible formats:
-+ * REF<n> - differential input reference
-+ * REF<n>P & REF<n>N - single-ended input reference (P or N pin)
-+ * OUT<n> - differential output
-+ * OUT<n>P & OUT<n>N - single-ended output (P or N pin)
-+ */
-+static void
-+zl3073x_prop_pin_package_label_set(struct zl3073x_dev *zldev,
-+				   struct zl3073x_pin_props *props,
-+				   enum dpll_pin_direction dir, u8 id)
-+{
-+	const char *prefix, *suffix;
-+	bool is_diff;
-+
-+	if (dir == DPLL_PIN_DIRECTION_INPUT) {
-+		u8 ref;
-+
-+		prefix = "REF";
-+		ref = zl3073x_input_pin_ref_get(id);
-+		is_diff = zl3073x_ref_is_diff(zldev, ref);
-+	} else {
-+		u8 out;
-+
-+		prefix = "OUT";
-+		out = zl3073x_output_pin_out_get(id);
-+		is_diff = zl3073x_out_is_diff(zldev, out);
-+	}
-+
-+	if (!is_diff)
-+		suffix = zl3073x_is_p_pin(id) ? "P" : "N";
-+	else
-+		suffix = ""; /* No suffix for differential one */
-+
-+	snprintf(props->package_label, sizeof(props->package_label), "%s%u%s",
-+		 prefix, id / 2, suffix);
-+
-+	/* Set package_label pointer in DPLL core properties to generated
-+	 * string.
-+	 */
-+	props->dpll_props.package_label = props->package_label;
-+}
-+
-+/**
-+ * zl3073x_prop_pin_fwnode_get - get fwnode for given pin
-+ * @zldev: pointer to zl3073x device
-+ * @props: pointer to pin properties
-+ * @dir: pin direction
-+ * @id: pin index
-+ *
-+ * Return: 0 on success, -ENOENT if the firmware node does not exist
-+ */
-+static int
-+zl3073x_prop_pin_fwnode_get(struct zl3073x_dev *zldev,
-+			    struct zl3073x_pin_props *props,
-+			    enum dpll_pin_direction dir, u8 id)
-+{
-+	struct fwnode_handle *pins_node, *pin_node;
-+	const char *node_name;
-+
-+	if (dir == DPLL_PIN_DIRECTION_INPUT)
-+		node_name = "input-pins";
-+	else
-+		node_name = "output-pins";
-+
-+	/* Get node containing input or output pins */
-+	pins_node = device_get_named_child_node(zldev->dev, node_name);
-+	if (!pins_node) {
-+		dev_dbg(zldev->dev, "'%s' sub-node is missing\n", node_name);
-+		return -ENOENT;
-+	}
-+
-+	/* Enumerate child pin nodes and find the requested one */
-+	fwnode_for_each_child_node(pins_node, pin_node) {
-+		u32 reg;
-+
-+		if (fwnode_property_read_u32(pin_node, "reg", &reg))
-+			continue;
-+
-+		if (id == reg)
-+			break;
-+	}
-+
-+	/* Release pin parent node */
-+	fwnode_handle_put(pins_node);
-+
-+	/* Save found node */
-+	props->fwnode = pin_node;
-+
-+	dev_dbg(zldev->dev, "Firmware node for %s %sfound\n",
-+		props->package_label, pin_node ? "" : "NOT ");
-+
-+	return pin_node ? 0 : -ENOENT;
-+}
-+
-+/**
-+ * zl3073x_pin_props_get - get pin properties
-+ * @zldev: pointer to zl3073x device
-+ * @dir: pin direction
-+ * @index: pin index
-+ *
-+ * The function looks for firmware node for the given pin if it is provided
-+ * by the system firmware (DT or ACPI), allocates pin properties structure,
-+ * generates package label string according pin type and optionally fetches
-+ * board label, connection type, supported frequencies and esync capability
-+ * from the firmware node if it does exist.
-+ *
-+ * Pointer that is returned by this function should be freed using
-+ * @zl3073x_pin_props_put().
-+ *
-+ * Return:
-+ * * pointer to allocated pin properties structure on success
-+ * * error pointer in case of error
-+ */
-+struct zl3073x_pin_props *zl3073x_pin_props_get(struct zl3073x_dev *zldev,
-+						enum dpll_pin_direction dir,
-+						u8 index)
-+{
-+	struct dpll_pin_frequency *ranges;
-+	struct zl3073x_pin_props *props;
-+	int i, j, num_freqs, rc;
-+	const char *type;
-+	u64 *freqs;
-+
-+	props = kzalloc(sizeof(*props), GFP_KERNEL);
-+	if (!props)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/* Set default pin type */
-+	if (dir == DPLL_PIN_DIRECTION_INPUT)
-+		props->dpll_props.type = DPLL_PIN_TYPE_EXT;
-+	else
-+		props->dpll_props.type = DPLL_PIN_TYPE_GNSS;
-+
-+	props->dpll_props.phase_range.min = S32_MIN;
-+	props->dpll_props.phase_range.max = S32_MAX;
-+
-+	zl3073x_prop_pin_package_label_set(zldev, props, dir, index);
-+
-+	/* Get firmware node for the given pin */
-+	rc = zl3073x_prop_pin_fwnode_get(zldev, props, dir, index);
-+	if (rc)
-+		return props; /* Return if it does not exist */
-+
-+	/* Look for label property and store the value as board label */
-+	fwnode_property_read_string(props->fwnode, "label",
-+				    &props->dpll_props.board_label);
-+
-+	/* Look for pin type property and translate its value to DPLL
-+	 * pin type enum if it is present.
-+	 */
-+	if (!fwnode_property_read_string(props->fwnode, "connection-type",
-+					 &type)) {
-+		if (!strcmp(type, "ext"))
-+			props->dpll_props.type = DPLL_PIN_TYPE_EXT;
-+		else if (!strcmp(type, "gnss"))
-+			props->dpll_props.type = DPLL_PIN_TYPE_GNSS;
-+		else if (!strcmp(type, "int"))
-+			props->dpll_props.type = DPLL_PIN_TYPE_INT_OSCILLATOR;
-+		else if (!strcmp(type, "synce"))
-+			props->dpll_props.type = DPLL_PIN_TYPE_SYNCE_ETH_PORT;
-+		else
-+			dev_warn(zldev->dev,
-+				 "Unknown or unsupported pin type '%s'\n",
-+				 type);
-+	}
-+
-+	/* Check if the pin supports embedded sync control */
-+	props->esync_control = fwnode_property_read_bool(props->fwnode,
-+							 "esync-control");
-+
-+	/* Read supported frequencies property if it is specified */
-+	num_freqs = fwnode_property_count_u64(props->fwnode,
-+					      "supported-frequencies-hz");
-+	if (num_freqs <= 0)
-+		/* Return if the property does not exist or number is 0 */
-+		return props;
-+
-+	/* The firmware node specifies list of supported frequencies while
-+	 * DPLL core pin properties requires list of frequency ranges.
-+	 * So read the frequency list into temporary array.
-+	 */
-+	freqs = kcalloc(num_freqs, sizeof(*freqs), GFP_KERNEL);
-+	if (!freqs) {
-+		rc = -ENOMEM;
-+		goto err_alloc_freqs;
-+	}
-+
-+	/* Read frequencies list from firmware node */
-+	fwnode_property_read_u64_array(props->fwnode,
-+				       "supported-frequencies-hz", freqs,
-+				       num_freqs);
-+
-+	/* Allocate frequency ranges list and fill it */
-+	ranges = kcalloc(num_freqs, sizeof(*ranges), GFP_KERNEL);
-+	if (!ranges) {
-+		rc = -ENOMEM;
-+		goto err_alloc_ranges;
-+	}
-+
-+	/* Convert list of frequencies to list of frequency ranges but
-+	 * filter-out frequencies that are not representable by device
-+	 */
-+	for (i = 0, j = 0; i < num_freqs; i++) {
-+		struct dpll_pin_frequency freq = DPLL_PIN_FREQUENCY(freqs[i]);
-+
-+		if (zl3073x_pin_check_freq(zldev, dir, index, freqs[i])) {
-+			ranges[j] = freq;
-+			j++;
-+		}
-+	}
-+
-+	/* Save number of freq ranges and pointer to them into pin properties */
-+	props->dpll_props.freq_supported = ranges;
-+	props->dpll_props.freq_supported_num = j;
-+
-+	/* Free temporary array */
-+	kfree(freqs);
-+
-+	return props;
-+
-+err_alloc_ranges:
-+	kfree(freqs);
-+err_alloc_freqs:
-+	fwnode_handle_put(props->fwnode);
-+	kfree(props);
-+
-+	return ERR_PTR(rc);
-+}
-+
-+/**
-+ * zl3073x_pin_props_put - release pin properties
-+ * @props: pin properties to free
-+ *
-+ * The function deallocates given pin properties structure.
-+ */
-+void zl3073x_pin_props_put(struct zl3073x_pin_props *props)
-+{
-+	/* Free supported frequency ranges list if it is present */
-+	kfree(props->dpll_props.freq_supported);
-+
-+	/* Put firmware handle if it is present */
-+	if (props->fwnode)
-+		fwnode_handle_put(props->fwnode);
-+
-+	kfree(props);
-+}
-+
-+/**
-+ * zl3073x_prop_dpll_type_get - get DPLL channel type
-+ * @zldev: pointer to zl3073x device
-+ * @index: DPLL channel index
-+ *
-+ * Return: DPLL type for given DPLL channel
-+ */
-+enum dpll_type
-+zl3073x_prop_dpll_type_get(struct zl3073x_dev *zldev, u8 index)
-+{
-+	const char *types[ZL3073X_MAX_CHANNELS];
-+	int count;
-+
-+	/* Read dpll types property from firmware */
-+	count = device_property_read_string_array(zldev->dev, "dpll-types",
-+						  types, ARRAY_SIZE(types));
-+
-+	/* Return default if property or entry for given channel is missing */
-+	if (index >= count)
-+		return DPLL_TYPE_PPS;
-+
-+	if (!strcmp(types[index], "pps"))
-+		return DPLL_TYPE_PPS;
-+	else if (!strcmp(types[index], "eec"))
-+		return DPLL_TYPE_EEC;
-+
-+	dev_info(zldev->dev, "Unknown DPLL type '%s', using default\n",
-+		 types[index]);
-+
-+	return DPLL_TYPE_PPS; /* Default */
-+}
-diff --git a/drivers/dpll/zl3073x/prop.h b/drivers/dpll/zl3073x/prop.h
-new file mode 100644
-index 0000000000000..721a18f05938b
---- /dev/null
-+++ b/drivers/dpll/zl3073x/prop.h
-@@ -0,0 +1,34 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef _ZL3073X_PROP_H
-+#define _ZL3073X_PROP_H
-+
-+#include <linux/dpll.h>
-+
-+#include "core.h"
-+
-+struct fwnode_handle;
-+
-+/**
-+ * struct zl3073x_pin_props - pin properties
-+ * @fwnode: pin firmware node
-+ * @dpll_props: DPLL core pin properties
-+ * @package_label: pin package label
-+ * @esync_control: embedded sync support
-+ */
-+struct zl3073x_pin_props {
-+	struct fwnode_handle		*fwnode;
-+	struct dpll_pin_properties	dpll_props;
-+	char				package_label[8];
-+	bool				esync_control;
-+};
-+
-+enum dpll_type zl3073x_prop_dpll_type_get(struct zl3073x_dev *zldev, u8 index);
-+
-+struct zl3073x_pin_props *zl3073x_pin_props_get(struct zl3073x_dev *zldev,
-+						enum dpll_pin_direction dir,
-+						u8 index);
-+
-+void zl3073x_pin_props_put(struct zl3073x_pin_props *props);
-+
-+#endif /* _ZL3073X_PROP_H */
+---
+Gustavo Luiz Duarte (5):
+      netconsole: introduce 'msgid' as a new sysdata field
+      netconsole: implement configfs for msgid_enabled
+      netconsole: append msgid to sysdata
+      selftests: netconsole: Add tests for 'msgid' feature in sysdata
+      docs: netconsole: document msgid feature
+
+ Documentation/networking/netconsole.rst            | 32 +++++++++++
+ drivers/net/netconsole.c                           | 65 ++++++++++++++++++++++
+ .../selftests/drivers/net/netcons_sysdata.sh       | 30 ++++++++++
+ 3 files changed, 127 insertions(+)
+---
+base-commit: 535de528015b56e34a40a8e1eb1629fadf809a84
+change-id: 20250609-netconsole-msgid-b93c6f8e9c60
+
+Best regards,
 -- 
-2.49.0
+Gustavo Luiz Duarte <gustavold@gmail.com>
 
