@@ -1,121 +1,144 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE6E195808
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E57195808;
+	Thu, 12 Jun 2025 07:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749711757; cv=none; b=jcdiiIBPBSpPipUiGmLo5zh/NIp24wv0KEiwtuWsrjv8vsNyiBZXh0igkdTxlajxglW/Qk229hwPLYpqtio3sEzMKFiclWVRAvH1TW80MvW5DXrN2litK75EnOpt+jmKF3LsPVxLZ2LqPrTbNHpkB+gfyHYwRN2ui8sCFQATs9U=
+	t=1749711821; cv=none; b=ikgt1RxSckFYevUCmY+CQ/HmpyODgQT0BwSMeOBjKyRD50+S4eXoS+lF4FTR/hz+yanSBj/G2e/veBWKkZYk9cwIBViC+A08aICQfGZ3pLeyhWGjsdMUqEevUn1Wjhb69q3SoI+qBnKP1jRs/khOPBiZY/LO5zEc6tlHR7prA6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749711757; c=relaxed/simple;
-	bh=yUbefScyV6fywDXKmFEH+kZ81+XHm2FI0cg9MiAUBlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CSCeSPoeqnZE3qbfnHK3iwGiSHQSo/8YDnWoioCa5d6SnlolLWnTUa3P3aqhMpik/DMNFq5gYCrgsBNx/f9jzNPZZ+0Kcs8UbDrFKPCQ3Z3b9ysxhv5RreNs0P3AvoUHSWt3Uue/Ei8OB4jzCxHFrIzJmUBU2iDMdCAjZqnJPGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=k8gAj6f0; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749711821; c=relaxed/simple;
+	bh=jcZDLKqbqjAfKbQedgUODPcuNZG2Ql2waANaGALBD0U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rC1dEudVR1WfzuF+LWFpn0jdKIBSmMOUOeexbJQos3yXewzw2IWGKEJT4/K+l23fqQYxiKQjO2zsmjTFNkZpxPja3+9N+nirAy7pLBB3P6MZpnNqoXSeMjzucCh8J1O3+KoxozBCPoMIgAHCy4+TfSWGJIJ4X7yrVWfqfZHCKy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8EnxJfY; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k8gAj6f0"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c46611b6so818165b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:02:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8EnxJfY"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso932865a91.3;
+        Thu, 12 Jun 2025 00:03:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749711754; x=1750316554; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qr8kVjHr7X/135AkQtdC+yfxTrVr7FzRufaMrCUufQI=;
-        b=k8gAj6f0uwIN7Frdx8PhMbnnAo7rk8FvcBducP9wjzlbXc5kQG4/atD//UzivPdQku
-         pDi7GzXJ8gNwz9gVs5hC4nLsHrR7oFi+KbTd2Q6crBfvY4dXgIJ3dk9V5KvAVaDztABr
-         U/ix4NEe8In9NcLt9dHgobMdOQrptBTvmE+EI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749711754; x=1750316554;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749711819; x=1750316619; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Qr8kVjHr7X/135AkQtdC+yfxTrVr7FzRufaMrCUufQI=;
-        b=aL+SN1rqLY+zdMRKQ1CDD9Wt7/MtLA2JbgjPZC/COjCrPMSFqv8wVT2mbRQI2z/7bX
-         J+laJPRimnpFnKwAQ5ZWqP/NI9yUdX1aDca28Mbh+w8ziHvsR1jZzsWK/C6H2V1AZNhq
-         SbQKod0JhEU/pOTTC/+GEPMhAx3/TAlWqnzxlpTCYuNxrtTD3UcmprZqazOcf3fg8T9G
-         zG0j7aQ0iTe57o5iCwe45V14FPyD3XPeg29HKH55D0htHml7mS1Qpidw3MESj/9TbjW3
-         ejN8p55UqoNeFGBA9ARvHJb5iVpe+wCpttsVNwiWPxHk4oasLZ1iTfOYMBYhJ4G41nE/
-         Geeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbOJ8TiDxF3vWmPpUGtMXv3no8Zv9eOJPtoFtLvvXvahYK5z0vvedNRBT65wA9W1JH3yzhRHEVYCoAuSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGR8rOs94tqr1MezeKBU28jn4Uv4T+zpsTs7GymK78b5ZmjjP2
-	0YvghZ3VW3SI2pf74C4koPEu5GVR/yCypFFQLHJBiSp6GxQD1KOiG5YnFDELhLneKw==
-X-Gm-Gg: ASbGnctVLSZG8mSGBDILcnj6PmZKkXts9GU7Tx14WAHPTTxTKSsK0MGxjrYO0WW8jIL
-	Xnw5Y1jM9jwJAWh1JCMLWdOBnZ8t+96ZFKQ9qB1Oo7dhgaicLDYq7n9MXOwK/S1JgBkm/ZqdlHi
-	sbKTkQe4Q1YyOZxIZcjJCfcpB0RSdyBmUl3OKYaufP8WgNIqVqQ9/lrFyFl1hFtXPbfDXumzyyh
-	jT2EC+NNIkn6yWV8c8IJBjWKUEEkN/cmmod86PltvAVctybWz3C1Yq0PSrvdY9KIuF9AjUCkm4Z
-	caTZrTxWqzbYL9bUPn2AqmCfLougjYgEzus2jTTPyw5A6z3Ax1cmIXS8sr/o7ebC
-X-Google-Smtp-Source: AGHT+IHval7kzOTw8xt75tWclw0C5/vtH8Ex8hhouxzzQKZOiM32UWpl93/0+/Xgn6u1sHUzijj+fQ==
-X-Received: by 2002:a05:6a00:8cb:b0:736:5664:53f3 with SMTP id d2e1a72fcca58-7487c31bda1mr2941155b3a.15.1749711753751;
-        Thu, 12 Jun 2025 00:02:33 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:fcb5:79e0:99d6:8d5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488087e769sm755732b3a.11.2025.06.12.00.02.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 00:02:33 -0700 (PDT)
-Date: Thu, 12 Jun 2025 16:02:28 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2] wifi: ath11k: mark reset srng lists as uninitialized
-Message-ID: <xr3n5pbohquhaloonctfqvpb2r3eu6fi5jly7ms4pgcotqmqzh@msrgbaawafsj>
-References: <20250529035708.3136232-1-senozhatsky@chromium.org>
- <5857380e-ced9-4118-b9a0-ce926b25c11c@quicinc.com>
- <rxaibpgtf37w3th5lnt3w574w443yononqjoglyfktlcxe26qg@jpmtkckrotzp>
- <2f77045c-6763-4fc4-bf09-50fd9b76a394@quicinc.com>
+        bh=a2viZ0fvQanFU5qt8YT35F/R2lomO19AjWDbbjNosEQ=;
+        b=f8EnxJfY9fJ8FBdBej1HnTpTYTzTkJFST6Yfelveguu2KMguJpYBt6dWONPx44hDBk
+         kUoQIueLISJv+VEMj6vtCr0VmRdDSwjRqu6WQS8N6OCPzWqr2eq1oGydCF0vb1PNh2tl
+         YbhijoKeG0PdIm72Ghw7nY15cuVrKLg08zKDK4+rSknNFBhLS7Rtx7l1wp52CSb5YbVA
+         IQmVvyaJ3hT0NDzilPSCiebuDPZL7Urzf7UYDp0XBnNRxEHJC3raxWfSAdKNQs95kBYs
+         1Q1GzaphpXPgrJ1a9Wv/O7phet5QaRb6p39N8q+cBYat2e2vO/IBg/BhldssNOFj9iZN
+         s7IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749711819; x=1750316619;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a2viZ0fvQanFU5qt8YT35F/R2lomO19AjWDbbjNosEQ=;
+        b=GPv/99SzzqirDz/HDbsbDHU5SQWuvJ6zt9u63jHmK4Ti+mhnl3ZhUchBmARDV4JpAo
+         YWD1fMUazE6cjgqcXzwroL9I2QR05zC1aDBmQTt/H34nhuoqAv7RLRyavZknN98xL2TU
+         26h9e2a4LFKUm9VyFy30JLNlj24QdmkXHOdkcRod5DE4xol0OSjDyKOJG8qlCe4JQRRy
+         1cuuErhrfcyOGN0nh71JksL/EXXDOAIVZjAPI7pj6WZZScjp+9rDr3OY2ZLld/7d89ZJ
+         38p5XfAW4L+Ll6yc7SLiaPLTSFB1n5Tp+eQ5YfgB5UmXb0EuiOtZl6HwI+xTbz6RClgl
+         N1iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCjB+BLCEOpnR4yhDYdF3LhB629MiqQqztEADll8uu0fvW0F5iu9xSrKwF0LJnwpwcvyb9RLqD@vger.kernel.org, AJvYcCV5G/60ORlejLam7cciyO9qiWW9lggIR2E4zPUA7nZsUycRl0M3h3kCLuJQlqiO+UkRTi8MxfAwWjUkvGiQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLlLYPppswl6weeDSjtVoH2OSH/u+wZkgYyfaylrCzKENNR7eD
+	dWlu8mhLW0jpKZRuUEbWJhw1TR8s6SA0fOJBJ2vF25DMAxRkDmSS8esCAU89JL+7wXcUxM9Pjti
+	bxCppVCrVEVNTsq0IkmTDK0pGD/7kWXc=
+X-Gm-Gg: ASbGncuYeQXShSYmAjUtadcjhsxo4ofS35MGN7D5PsUkmRlA8lI2zAZ/OwSBb2k7Dlk
+	sOyGcKHHPifAuhQqUpDs7xI4cps8fTyHRPZxE0hm+0L66HXRwrbeffop1bbIrVIbGel6BNHuZbS
+	LpmCOveLhzy+eAhdSwq8lINgNk2j89nRHMe0FJXp32cAFfkaYsP1N7h6o=
+X-Google-Smtp-Source: AGHT+IENKZbG1UVgSxMkbsR683h8ZS+NANUj8qRCEWN4KJPO/n5K8VlClSz08iFrHEgPCWpYK+IcgPjCIyzqEMtreeY=
+X-Received: by 2002:a17:90a:d60c:b0:313:279d:665c with SMTP id
+ 98e67ed59e1d1-313af0fd099mr9895979a91.7.1749711819053; Thu, 12 Jun 2025
+ 00:03:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f77045c-6763-4fc4-bf09-50fd9b76a394@quicinc.com>
+References: <CAFGhKbwVyxCwYSNrPaQ-GkuP008+uvDg-wNA5syWLLzODCfpcA@mail.gmail.com>
+ <68c0649d-d9b3-44f4-9a92-7f72c51a5013@suse.cz> <CAADnVQK+wjvxmBM7WJOGNK=AqeJ7UHBO4tUZR3Gjc4kfgux1sw@mail.gmail.com>
+In-Reply-To: <CAADnVQK+wjvxmBM7WJOGNK=AqeJ7UHBO4tUZR3Gjc4kfgux1sw@mail.gmail.com>
+From: Charlemagne Lasse <charlemagnelasse@gmail.com>
+Date: Thu, 12 Jun 2025 09:03:27 +0200
+X-Gm-Features: AX0GCFvBcJwp9XkOkM0Sw3LXe5H0SSamdpy1Wp3lz3PcgPgcT0LbkH9Bh5kjWlk
+Message-ID: <CAFGhKbwP9e6yWM615FGuq0=eX-57E-f813MMdXZ98D4_+0TveQ@mail.gmail.com>
+Subject: Re: locking/local_lock, mm: sparse warnings about shadowed variable
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Jakub Kicinski <kuba@kernel.org>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	linux-rt-devel@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On (25/06/12 13:47), Baochen Qiang wrote:
-> > [..]
-> >>> diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
-> >>> index 8cb1505a5a0c..cab11a35f911 100644
-> >>> --- a/drivers/net/wireless/ath/ath11k/hal.c
-> >>> +++ b/drivers/net/wireless/ath/ath11k/hal.c
-> >>> @@ -1346,6 +1346,10 @@ EXPORT_SYMBOL(ath11k_hal_srng_init);
-> >>>  void ath11k_hal_srng_deinit(struct ath11k_base *ab)
-> >>>  {
-> >>>  	struct ath11k_hal *hal = &ab->hal;
-> >>> +	int i;
-> >>> +
-> >>> +	for (i = 0; i < HAL_SRNG_RING_ID_MAX; i++)
-> >>> +		ab->hal.srng_list[i].initialized = 0;
-> >>
-> >> With this flag reset, srng stats would not be dumped in ath11k_hal_dump_srng_stats().
-> > 
-> > I think un-initialized lists should not be dumped.
-> > 
-> > ath11k_hal_srng_deinit() releases wrp.vaddr and rdp.vaddr, which are
-> > accessed, as far as I understand it, in ath11k_hal_dump_srng_stats()
-> > as *srng->u.src_ring.tp_addr and *srng->u.dst_ring.hp_addr, presumably,
-> > causing things like:
-> 
-> But ath11k_hal_dump_srng_stats() is called before ath11k_hal_srng_deinit(), right?
-> 
-> The sequence is ath11k_hal_dump_srng_stats() is called in reset process, then restart_work
-> is queued and in ath11k_core_restart() we call ath11k_core_reconfigure_on_crash(), there
-> ath11k_hal_srng_deinit() is called, right?
+Am Mi., 11. Juni 2025 um 20:20 Uhr schrieb Alexei Starovoitov
+<alexei.starovoitov@gmail.com>:
+> I wouldn't bother messing with the code because of sparse.
+> Compilers don't warn here.
 
-My understanding is that the driver first fails to reconfigure
+Actually, they do:
 
-<4>[163874.555825] ath11k_pci 0000:01:00.0: already resetting count 2
-<4>[163884.606490] ath11k_pci 0000:01:00.0: failed to wait wlan mode request (mode 4): -110
-<4>[163884.606508] ath11k_pci 0000:01:00.0: qmi failed to send wlan mode off: -110
-<3>[163884.606550] ath11k_pci 0000:01:00.0: failed to reconfigure driver on crash recovery
+$ make W=3D2 mm/mlock.o
+[...]
+In file included from ./include/linux/preempt.h:11,
+                from ./include/linux/spinlock.h:56,
+                from ./include/linux/wait.h:9,
+                from ./include/linux/wait_bit.h:8,
+                from ./include/linux/fs.h:7,
+                from ./include/linux/mman.h:5,
+                from mm/mlock.c:10:
+./include/linux/local_lock.h: In function
+=E2=80=98class_local_lock_irqsave_constructor=E2=80=99:
+./include/linux/local_lock_internal.h:100:31: warning: declaration of
+=E2=80=98l=E2=80=99 shadows a parameter [-Wshadow]
+ 100 |                 local_lock_t *l;                                    =
+    \
+     |                               ^
+./include/linux/cleanup.h:394:9: note: in definition of macro
+=E2=80=98__DEFINE_LOCK_GUARD_1=E2=80=99
+ 394 |         _lock;                                                      =
+    \
+     |         ^~~~~
+./include/linux/local_lock.h:88:1: note: in expansion of macro
+=E2=80=98DEFINE_LOCK_GUARD_1=E2=80=99
+  88 | DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __percpu,
+     | ^~~~~~~~~~~~~~~~~~~
+./include/linux/local_lock_internal.h:128:17: note: in expansion of
+macro =E2=80=98__local_lock_acquire=E2=80=99
+ 128 |                 __local_lock_acquire(lock);                     \
+     |                 ^~~~~~~~~~~~~~~~~~~~
+./include/linux/local_lock.h:31:9: note: in expansion of macro
+=E2=80=98__local_lock_irqsave=E2=80=99
+  31 |         __local_lock_irqsave(lock, flags)
+     |         ^~~~~~~~~~~~~~~~~~~~
+./include/linux/local_lock.h:89:21: note: in expansion of macro
+=E2=80=98local_lock_irqsave=E2=80=99
+  89 |                     local_lock_irqsave(_T->lock, _T->flags),
+     |                     ^~~~~~~~~~~~~~~~~~
+./include/linux/cleanup.h:391:68: note: shadowed declaration is here
+ 391 | static inline class_##_name##_t class_##_name##_constructor(_type *l=
+)   \
+./include/linux/cleanup.h:410:1: note: in expansion of macro
+=E2=80=98__DEFINE_LOCK_GUARD_1=E2=80=99
+ 410 | __DEFINE_LOCK_GUARD_1(_name, _type, _lock)
+     | ^~~~~~~~~~~~~~~~~~~~~
+./include/linux/local_lock.h:88:1: note: in expansion of macro
+=E2=80=98DEFINE_LOCK_GUARD_1=E2=80=99
+  88 | DEFINE_LOCK_GUARD_1
 
-so ath11k_core_reconfigure_on_crash() calls ath11k_hal_srng_deinit(),
-which destroys the srng lists, but leaves the stale initialized flag.
-So next time ath11k_hal_dump_srng_stats() is called everything looks ok,
-but in fact everything is not quite ok.
 
-Regardless of that, I do think that resetting the initialized flag
-when srng list is de-initialized/destroyed is the right thing to do.
+$ gcc --version
+gcc (Debian 14.2.0-19) 14.2.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
