@@ -1,132 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D9017A2EA;
-	Thu, 12 Jun 2025 11:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E7017A2EA
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726070; cv=none; b=YQ0StWzuSmLKwavNKrjs/84OvOGPfqVBtqCSdQXJPgGT9G9JDx7E0o7hoClishjoTwBGSiOell4jjFOFcFVYnwvvTquzHEuzW6p3nBpx+7f4eSwFhJfjzrv8UktfC+eX5C1p3gFwBFCeswYZBCoRArjGltTJFyuOWOtJOrBhASU=
+	t=1749726177; cv=none; b=arxsvS0CxWXmQcUeQBCsbaErQ9KXolcM0zheGVFxX/orHZ0hfNeJWUubno7fBPBV0WvNZ3y9B55eOBZYnag1YcXUX90PQHo1h+OM36I4klfUFZY1D8YdyTy51G5WN4t2a/JEa7IwX8d9Fo4RlAeZyLsd8d8xIIOSb7Vg+iyPwpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726070; c=relaxed/simple;
-	bh=q+XQyDezCQkDlRP4sWbeQSN9mB+s4/CJAn9VL/4nIOE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BgoiH2++IxmuS4EDn171jsOzjIC9EMERIwqnT+eMBlWMxAV+jM3auuBmlSiaxb1vPh7wq92Fp3zrehufcVTWD25KUSDDEE0HFz5iZU8DpeZkRtgFbUcw7f1C1iEyEVs8Ma2TbjfudLD63HM3zqPZoAwmpMhCnRXb+nbTpoCXBoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Id4uAOxC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Id4uAOxC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 562D9C4CEEA;
-	Thu, 12 Jun 2025 11:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749726070;
-	bh=q+XQyDezCQkDlRP4sWbeQSN9mB+s4/CJAn9VL/4nIOE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Id4uAOxCUT+TsLKlFyVzGwLD/JUBKwUj6ACt+He1C31y6kbG7XQL4m4LWcrUVBHvJ
-	 BQZXUyOQm9VQM+JZfTEVl2iIEvkQ+lGZp+P3xpAIZvRWKZKI7EkTLt4f0z2JCudRCP
-	 bgjRo3XNsLdB9I/DwJNiLl5PdJ7P0D5OJQDPQPuvI8pmuFCpD0mfNVq1JVzc4zEKx3
-	 WH4pavhZX077ONchooutsWPT7Jp5mhww2k4GrcPEZ8hW35MU5trXoNFlT/3Ta21pGc
-	 wdjIh2bJN7AsFCuPvO9QZ9FDsKKv+Y1k0C6813SjTo2RvhU6Y9aaQKLC+u7xgeTpy8
-	 QwfG7nl6/DD4A==
-Message-ID: <578ea477-c68c-4427-8013-550bf4f9c05b@kernel.org>
-Date: Thu, 12 Jun 2025 13:01:06 +0200
+	s=arc-20240116; t=1749726177; c=relaxed/simple;
+	bh=SsrMCwrPKcWpRPYLXveM/2pcgW5S6XJtyd0QAhzsR4A=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CLPWawUMlQzT2WAJ/Rim+3eyeAH2SVzv4AmfadoalxU8ActeHm2w3wx+ygmGqNCNAyOUDLqii60R0/0fY7twhnRQ9xicECu69tIC6HhyHAlBdW03Bw00hDYHiLvAUBZ/7Z6Qi5lFyKUM936uoI5Cp5EMs8X+3zGlMtfdR/k46B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 32E8E1F78E;
+	Thu, 12 Jun 2025 11:02:53 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB75A139E2;
+	Thu, 12 Jun 2025 11:02:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jQJAONyzSmi4XAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 12 Jun 2025 11:02:52 +0000
+Date: Thu, 12 Jun 2025 13:02:52 +0200
+Message-ID: <87wm9hte77.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	Herve Codina <herve.codina@bootlin.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ALSA: pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to user_access_begin/user_access_end()
+In-Reply-To: <8df11af98033e4cb4d9b0f16d6e9d5b69110b036.1749724057.git.christophe.leroy@csgroup.eu>
+References: <8df11af98033e4cb4d9b0f16d6e9d5b69110b036.1749724057.git.christophe.leroy@csgroup.eu>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: arm: imx8mp: Add Ultratronik
- Ultra-MACH SBC
-To: Goran Radenovic <goran.radni@gmail.com>
-Cc: boerge.struempfel@gmail.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250611113039.304742-1-goran.radni@gmail.com>
- <20250611113039.304742-3-goran.radni@gmail.com>
- <20250612-snobbish-outrageous-nyala-dca804@kuoka>
- <26194c8d-c16f-4293-8c0f-5c674e09a1ba@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <26194c8d-c16f-4293-8c0f-5c674e09a1ba@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 32E8E1F78E
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Spam-Score: -4.00
 
-On 12/06/2025 12:09, Goran Radenovic wrote:
-> Hi Krzysztof,
+On Thu, 12 Jun 2025 12:39:39 +0200,
+Christophe Leroy wrote:
 > 
-> Thanks for the feedback, and you're absolutely right — I made a mistake 
-> here.
+> With user access protection (Called SMAP on x86 or KUAP on powerpc)
+> each and every call to get_user() or put_user() performs heavy
+> operations to unlock and lock kernel access to userspace.
 > 
-> That said, I’m still a bit confused by your earlier comment:
+> SNDRV_PCM_IOCTL_SYNC_PTR ioctl is a hot path that needs to be
+> optimised. To do that, perform user accesses by blocks using
+> user_access_begin/user_access_end() and unsafe_get_user()/
+> unsafe_put_user() and alike.
 > 
->      "That's just part of the standard/first enum."
+> Before the patch the 9 calls to put_user() at the
+> end of snd_pcm_ioctl_sync_ptr_compat() imply the following set of
+> instructions about 9 times (access_ok - enable user - write - disable
+> user):
+>     0.00 :   c057f858:       3d 20 7f ff     lis     r9,32767
+>     0.29 :   c057f85c:       39 5e 00 14     addi    r10,r30,20
+>     0.77 :   c057f860:       61 29 ff fc     ori     r9,r9,65532
+>     0.32 :   c057f864:       7c 0a 48 40     cmplw   r10,r9
+>     0.36 :   c057f868:       41 a1 fb 58     bgt     c057f3c0 <snd_pcm_ioctl+0xbb0>
+>     0.30 :   c057f86c:       3d 20 dc 00     lis     r9,-9216
+>     1.95 :   c057f870:       7d 3a c3 a6     mtspr   794,r9
+>     0.33 :   c057f874:       92 8a 00 00     stw     r20,0(r10)
+>     0.27 :   c057f878:       3d 20 de 00     lis     r9,-8704
+>     0.28 :   c057f87c:       7d 3a c3 a6     mtspr   794,r9
+> ...
 > 
-> I’m introducing a new board from a new manufacturer, so I expected to 
-> add a new enum block — similar to how it's done for other vendor entries 
-
-No, you are expected to add to existing enum.
-
-> in the same file. I ran dt_binding_check, and it passed without errors 
-> for this structure.
-
-Not possible. The syntax is clearly wrong, so there is no way it passed
-any tests. And Rob's report is a proof of that.
-
+> A perf profile shows that in total the 9 put_user() represent 36% of
+> the time spent in snd_pcm_ioctl() and about 80 instructions.
 > 
-> Could you clarify which “standard/first enum” you were referring to? 
-> Should all i.MX8MP-based boards share a single enum block, regardless of 
-> vendor?
-
-Don't they? Look around in this file.
-
+> With this patch everything is done in 13 instructions and represent
+> only 15% of the time spent in snd_pcm_ioctl():
 > 
-> Thanks again for your guidance.
+>     0.57 :   c057f5dc:       3d 20 dc 00     lis     r9,-9216
+>     0.98 :   c057f5e0:       7d 3a c3 a6     mtspr   794,r9
+>     0.16 :   c057f5e4:       92 7f 00 04     stw     r19,4(r31)
+>     0.63 :   c057f5e8:       93 df 00 0c     stw     r30,12(r31)
+>     0.16 :   c057f5ec:       93 9f 00 10     stw     r28,16(r31)
+>     4.95 :   c057f5f0:       92 9f 00 14     stw     r20,20(r31)
+>     0.19 :   c057f5f4:       92 5f 00 18     stw     r18,24(r31)
+>     0.49 :   c057f5f8:       92 bf 00 1c     stw     r21,28(r31)
+>     0.27 :   c057f5fc:       93 7f 00 20     stw     r27,32(r31)
+>     5.88 :   c057f600:       93 36 00 00     stw     r25,0(r22)
+>     0.11 :   c057f604:       93 17 00 00     stw     r24,0(r23)
+>     0.00 :   c057f608:       3d 20 de 00     lis     r9,-8704
+>     0.79 :   c057f60c:       7d 3a c3 a6     mtspr   794,r9
+> 
+> Note that here the access_ok() in user_write_access_begin() is skipped
+> because the exact same verification has already been performed at the
+> beginning of the fonction with the call to user_read_access_begin().
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+> This is a lighter version of previous patch "[PATCH v2] ALSA: pcm: Convert multiple {get/put}_user to user_access_begin/user_access_end()" focussing on identified hot path.
+> Moved and nested the failure labels closer in order to increase readability
 
-Don't top post but reply inline.
+Thanks for the revised patch!
 
-Best regards,
-Krzysztof
+Although it's now much lighter, I still believe that we can reduce
+get_user() / put_user() calls significantly by adjusting the struct
+usage.
+
+Could you check whether the patch below can improve?
+(Zero-ing of sstatus can be an overhead here, but there are some
+holes, and these need to be initialized before copying back...)
+
+
+Takashi
+
+--- a/sound/core/pcm_compat.c
++++ b/sound/core/pcm_compat.c
+@@ -410,8 +410,8 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
+ 	volatile struct snd_pcm_mmap_status *status;
+ 	volatile struct snd_pcm_mmap_control *control;
+ 	u32 sflags;
+-	struct snd_pcm_mmap_control scontrol;
+-	struct snd_pcm_mmap_status sstatus;
++	struct snd_pcm_mmap_control_x32 scontrol;
++	struct snd_pcm_mmap_status_x32 sstatus = {};
+ 	snd_pcm_uframes_t boundary;
+ 	int err;
+ 
+@@ -419,8 +419,7 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 
+ 	if (get_user(sflags, &src->flags) ||
+-	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+-	    get_user(scontrol.avail_min, &src->c.control.avail_min))
++	    copy_from_user(&scontrol, &src->c.control))
+ 		return -EFAULT;
+ 	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
+ 		err = snd_pcm_hwsync(substream);
+@@ -444,21 +443,16 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
+ 			scontrol.avail_min = control->avail_min;
+ 		sstatus.state = status->state;
+ 		sstatus.hw_ptr = status->hw_ptr % boundary;
+-		sstatus.tstamp = status->tstamp;
++		sstatus.tstamp_sec = status->tstamp.tv_sec;
++		sstatus.tstamp_nsec = status->tstamp.tv_nsec;
+ 		sstatus.suspended_state = status->suspended_state;
+-		sstatus.audio_tstamp = status->audio_tstamp;
++		sstatus.audio_tstamp_sec = status->audio_tstamp.tv_sec;
++		sstatus.audio_tstamp_nsec = status->audio_tstamp.tv_nsec;
+ 	}
+ 	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
+ 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
+-	if (put_user(sstatus.state, &src->s.status.state) ||
+-	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
+-	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
+-	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
+-	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
+-	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
+-	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
+-	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+-	    put_user(scontrol.avail_min, &src->c.control.avail_min))
++	if (copy_to_user(&src->s.status, &sstatus, sizeof(sstatus)) ||
++	    copy_to_user(&src->c.control, &scontrol, sizeof(scontrol)))
+ 		return -EFAULT;
+ 
+ 	return 0;
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -3157,8 +3157,8 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
+ 	volatile struct snd_pcm_mmap_status *status;
+ 	volatile struct snd_pcm_mmap_control *control;
+ 	u32 sflags;
+-	struct snd_pcm_mmap_control scontrol;
+-	struct snd_pcm_mmap_status sstatus;
++	struct snd_pcm_mmap_control32 scontrol;
++	struct snd_pcm_mmap_status32 sstatus = {};
+ 	snd_pcm_uframes_t boundary;
+ 	int err;
+ 
+@@ -3166,8 +3166,7 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 
+ 	if (get_user(sflags, &src->flags) ||
+-	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+-	    get_user(scontrol.avail_min, &src->c.control.avail_min))
++	    copy_from_user(&scontrol, &src->c.control, sizeof(scontrol)))
+ 		return -EFAULT;
+ 	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
+ 		err = snd_pcm_hwsync(substream);
+@@ -3194,21 +3193,16 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
+ 			scontrol.avail_min = control->avail_min;
+ 		sstatus.state = status->state;
+ 		sstatus.hw_ptr = status->hw_ptr % boundary;
+-		sstatus.tstamp = status->tstamp;
++		sstatus.tstamp_sec = status->tstamp.tv_sec;
++		sstatus.tstamp_nsec = status->tstamp.tv_nsec;
+ 		sstatus.suspended_state = status->suspended_state;
+-		sstatus.audio_tstamp = status->audio_tstamp;
++		sstatus.audio_tstamp_sec = status->audio_tstamp.tv_sec;
++		sstatus.audio_tstamp_nsec = status->audio_tstamp.tv_nsec;
+ 	}
+ 	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
+ 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
+-	if (put_user(sstatus.state, &src->s.status.state) ||
+-	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
+-	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
+-	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
+-	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
+-	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
+-	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
+-	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+-	    put_user(scontrol.avail_min, &src->c.control.avail_min))
++	if (copy_to_user(&src->s.status, &sstatus, sizeof(sstatus)) ||
++	    copy_to_user(&src->c.control, &scontrol, sizeof(scontrol)))
+ 		return -EFAULT;
+ 
+ 	return 0;
+
