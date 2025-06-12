@@ -1,226 +1,830 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2088.outbound.protection.outlook.com [40.107.92.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8E2522F;
-	Thu, 12 Jun 2025 08:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749718015; cv=fail; b=o/lKu+S1X2kjoMRWEu/ydRUcboPXMtpWRc3kloJLQ0I6K9pYT5n4iYw/VrgvglNunNx+1RnAC599NkY5vbxzASRiG5Svxx70Cq8/ivpQAHqf1IFNfJ1kXQXN3aoXKbViLPXRXCBjIn5+q+jmBNxSmLJZhsNkUEjL5wunx8zzGAI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749718015; c=relaxed/simple;
-	bh=CbETtX8epUcUjJLNJjHzAbTTzZ8iLzi4yl/6iLh+QHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZSKScovHwrKz1jJEzP96nEh7EofQo0/6YR38OJrN1da7JEGUWqRdGVnL1+Qg/eNUpw/hTwfBPwkuzZ3B8xi0Co547yP9imoVN5y8CMbfIcGxJIuVO5MfZYSiZH+qCnjyO89EZZsWyzhaQPU0fHec9tKfphoMlxZksYRwNsGDy7U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gzCsso4v; arc=fail smtp.client-ip=40.107.92.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADA11E9B19
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749718023; cv=none; b=RJkK6PU5QkCs+QBP7M3GVjovL7mqfvB57crFBrWo3VN4Kd8vamuxFM5nQ+L94RDJSc2lFYjlrX7MfndTGmNLOoHs1HSCnNsc9C0gkYT7RntP+ePBR8Y0dIjkMCgZHVtjteg5kRj6FhEdXxCZYs9bFme72c1IID9xgjQPqGqTLCQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749718023; c=relaxed/simple;
+	bh=IZhPENFSDhVY3cFOYkdh0rxvEIOeL3rV798hNc6/OYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m1VZh6rMbkE+p7OnB2EYIxPths6G4lm01McKRangzSfkq7doOhzfAzEj6ZwpZASAWPuuvI45caBQ9SMo3BYNcLGQI/fUCPgmatr08GBL7SV7dlaHBkFxRonWQyZCQkzFXMy1Q0/aN1ZBHN2HYULbnAG3SWqcJVxYr0SrPujd5+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hsaetEYT; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gzCsso4v"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vC9f5+ehMM0sF8XoNrP/6D/5gyfKi1Q5SffPcSihW6prrcPDYWfwsGCmHoS5boVkiRYTTQd4EAiev7gx6E2bccqyUvF4t1Lqdk0il7o/n7ff4Q/2SlQXE9kg3jWkdEaeSAijnbfnnKVhV/2Wavl0+/7IHUBeOHhp+XPuDQbOASc1WGMZNZ86dBiBqswVDnpB0KRITrBDGdRQGidMukKW/w4A/MUKV5Hb6tFmXaRRQBuIge9PtN+Oa6c+ouT1nRg/3meE7rp90HCOqH8tKBHTQFSRlhC66QKPJ7jkdyqHHoKcHM2KGXl7YXcs+4TKM5ABqo4b1rFZQsWdU2PYrfgCkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b79nIiR3wgbW5B8iGbzR8S2bEAmXFwsGW1ukOLH5RM8=;
- b=E+5ClBXPoA4CV80UTSBQbWz0+MyGA/wQgvBkgkkrT8zqXg5R203A7DKdODK3LP5ARlIhzZ7Q4MkX2SjOkpDG42FCVEnBmoVikHwCiJKKJc7N/KoG1H0yauymtGFKU6cC9mhiXlF0LKg2Oe01oXls76QeI8DIoEmu/xXAIAAtf69icQVwO6VE0A8bESbDqxevseeI+uhxa+HRCtRxdTzK1lBn2kLsoT7z7DKPjfh1bPAMiYtFmhVnbB5e/pq9KZc7oINSgFqfONr+WVsfCRSlnc5ZNcnEx0vn+fgneC4SzFtxW3onQlWxIXr1HIO4Ukp/m7G7stXfivsHBI36aKVERw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b79nIiR3wgbW5B8iGbzR8S2bEAmXFwsGW1ukOLH5RM8=;
- b=gzCsso4v2iiehxeLct+3VyeCff4ptopjy5fMKpl59jq7T5fxHpJsW4Vv5QnwYHlRixgX6BcAuMO1pHgMs47hAhCVatjV0h9wwNg6Kh+fvF1eqEiZdeEBNPyPjdF2rKfVjCrk6p0k/UVkOzU7AeZIB8aOmIb7TMPyOGmxR95IfAEjFAa4ibyKlvehw4SS5521oAbRN1sY2/eWrByohr3zzndFiwe38bxlSLsVplk7lWtJzBeCo28VKTdekd8jwbSRDEX+VNY2JNnojMCH353QMZkTiL5dzYJTwOe3fG5UIe6YEySfVu1Wax3anfFrvLaGxDOMjBFtZEQka26pLWquGw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA1PR12MB9031.namprd12.prod.outlook.com (2603:10b6:208:3f9::19)
- by DM6PR12MB4434.namprd12.prod.outlook.com (2603:10b6:5:2ad::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.41; Thu, 12 Jun
- 2025 08:46:49 +0000
-Received: from IA1PR12MB9031.namprd12.prod.outlook.com
- ([fe80::1fb7:5076:77b5:559c]) by IA1PR12MB9031.namprd12.prod.outlook.com
- ([fe80::1fb7:5076:77b5:559c%4]) with mapi id 15.20.8835.023; Thu, 12 Jun 2025
- 08:46:49 +0000
-Date: Thu, 12 Jun 2025 08:46:44 +0000
-From: Dragos Tatulea <dtatulea@nvidia.com>
-To: Mina Almasry <almasrymina@google.com>, Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com, 
-	gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com, 
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Cosmin Ratiu <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next v4 08/11] net/mlx5e: Add support for UNREADABLE
- netmem page pools
-Message-ID: <6nd3d7z5dmpzpegbwfkhszmtjqmsb4af5ts36mpv5m6jfavo23@lwijppu24jjf>
-References: <20250610150950.1094376-1-mbloch@nvidia.com>
- <20250610150950.1094376-9-mbloch@nvidia.com>
- <CAHS8izOEn+C5QexSPZT3_ekUr2zR1dm9R6OsoGBPaqg5MFvBRQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izOEn+C5QexSPZT3_ekUr2zR1dm9R6OsoGBPaqg5MFvBRQ@mail.gmail.com>
-X-ClientProxiedBy: TL2P290CA0001.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:2::19) To IA1PR12MB9031.namprd12.prod.outlook.com
- (2603:10b6:208:3f9::19)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hsaetEYT"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-60ef850d590so212574eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749718020; x=1750322820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=URYsLG12m2hS1TJ45P5eOvVU8bDPgK05H43IYOFYz08=;
+        b=hsaetEYTvH9i6/mtPl1daOoGZSygiQyOW9cW1QePEY/ripVn6rqC8M5FrBpVCRElbe
+         XUbMOtkIxigd03B5sz+NNxDqf6G+teaAkjCtjyd2irQE+Yrb6or5rsjXrL22s13AVnZx
+         hxUK1/JhsQdt9uJKfu7uQeT/y+Vg4DIhEy24BI4cwG6XxdXF1CNGBaCHg/R6Nt7r7Cb0
+         MpiVYX2s8D4DTUsbYXNQuJM4Junwqws1Zw0rzfRNDMOcJvpyXut7waDlk5olIPIkK1dc
+         LB2afmEMXs8GErPy39YgOh+q7hwpXoNJZMLTH1UWGhYNeSVxXEp8J+9r6h3VcuIPUptO
+         o0tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749718020; x=1750322820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=URYsLG12m2hS1TJ45P5eOvVU8bDPgK05H43IYOFYz08=;
+        b=Ux3Xr36u9EtLDcOr1a4OCLIXb7027nBK+s9M2eIFvUrgJeBi4AqUMlTixkilYtpSYK
+         /w05XY+i0N8AzZ5zr/oqxFHUjoIB8hfLCVlqtnxeYQqKOe+8xy6pYT4dl9tvATjvuUvY
+         5r0Wrc9bOldn3iafXmfjemAbDeQw51JkJGERPXsRNLx8TX80K33mxWaWr0k8UIc3tvsN
+         C+ObfMpYEDjZ61+3KQYLV5EQ+YHVspNyE59l0tHIHkJtqU0DdbVyYAMsXu/eiIArK4Z9
+         vKMocNBp5F9Q+B4bnNLuqM7oNfl6J3ySSLw/MVyoBZ4CYDia64F/NWw+ktt7i1mLHyvo
+         Ptfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXo3ly8qewyLzEmFDYHjd2vtAwGEhbnd8wB0764M17yeMaZAqLBHwf5G18eaSDjdeGUxBVJYlWwa1Ev+hU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0t3GFZLwh83gXNvJIFxygJtzMZFk2GFU9TmFUJlL3pfk3dMmj
+	xu11v0BrLVxfSu9GlDLhRA27cgVEG5/y9LN2aH9TcgkRePVVfF1mMmice8YfPybaCN0uaJvW/CE
+	votwUvPpvKd35PpfHF6oD++s2ChyJW/2c+5qWwrAi8y0rkey01pg5hIUnp+4=
+X-Gm-Gg: ASbGncs6DTZH9QcMODLeaqyGPPu+VQvKbc79hgVkfFngxYSN7EhGxynaWT8Q7gkTdTD
+	t3M2+kQ6Kd4tiFHWn6qZoc5eOXcY1wvV7PCUjZxVg8QcbcRRRIVN0pKHR3zdPkUby09Pu3srp4X
+	owXNWOikhsX4vmqEXKgEwVzh3HL1yScNcZ3HleiBuFcfmANVk3m5hRr+/pjgCRXm0pckr/18i7O
+	Q==
+X-Google-Smtp-Source: AGHT+IHP7Vwp5nPC0xulZAJ7iBG5jk1eBk24nSpz4+bxxhppzuJtI7hJ6ehF36r2w5Rpwp+7BL5FnaTf3TfVWQi2Gpg=
+X-Received: by 2002:a05:6808:3a09:b0:403:3973:23c4 with SMTP id
+ 5614622812f47-40a65fcb9a1mr1865067b6e.9.1749718019461; Thu, 12 Jun 2025
+ 01:46:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB9031:EE_|DM6PR12MB4434:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf58c311-1919-4ed8-93c4-08dda98dabcf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bHdTQmh3NEJkMzdPY05YeERvZWpyUXNOVGRaOHJaaGJJcGFwVEhSUUJKZ09M?=
- =?utf-8?B?eklDcGEzQTZFd0dSMmIwQ21Zd1V0RlVEQ1hab0o1N2xMaVI4UlR4TFdLMWNs?=
- =?utf-8?B?UzljQWRSdTRLSmU3cVNhOCtSNXdOcEVWQW41cEprWU56ZS96MHBOeFlxUG5U?=
- =?utf-8?B?MkQ0UUpORmVWL3BTbk1KV0EwL2hXcEUvSWpSckkzSEcyMUlQN3VWcGJ4NEwr?=
- =?utf-8?B?K21oUUY1Zjh6NC9DNlFKRzlEN0VQMElYTWNObVRDZkZPV3dHZ21XaUprZzF2?=
- =?utf-8?B?RVhiVXdiWE5aWkFBREhWZXhsQUJYZ3c2ODUxQnZBMjJwbmlNUVFmbTJkRUNF?=
- =?utf-8?B?VW90SFIwVHYyV3QxZnpoYVVBYndjU3ZSN1VTR1laNzhiSEY4QXFiSGw3VVVT?=
- =?utf-8?B?SkgrQVZGRzZFclY5a1laN1RGOVA1V0UxWGtrVG1PMEgzL010U1g2MlVWUzE1?=
- =?utf-8?B?Rm53KzJLbEhkKzVRZ2JxOHdBOVlyaU4zMENnZmNKNlVveWZWSmdUV08wSDM0?=
- =?utf-8?B?Z21qZjRhTmVwbXhPSW9KQnQxdmdMR3I0SGlBMUZFcEtZSXNmTlM3SDlNY09B?=
- =?utf-8?B?THF3Zm83cHM3eXBzanZUVWJJNHRqSnFLbkVmUXQyMzZxc1FoNzU3aUhZWnVX?=
- =?utf-8?B?NFhNeWpVdy9SbnNkUGR5NU9iMnc4dEgxaHpacjhNdEQ4WmFNZ3B4cHJIcm9k?=
- =?utf-8?B?eUxCaXM2akNDNUUwMkNoVmVZNU4zMC9PeGVSM3pURU1VUXU5Ym85RW1QYmlU?=
- =?utf-8?B?VjI5UlhMNzFIcEdGU2wxUkd1NnlUOHRhTWpONWp3NnRmU1ZuK1NsM0gvNk9n?=
- =?utf-8?B?c0xkcExNNzBlYzZNcVhxVFhZWEhBNGVRaW5qaHdmb3RJT2V2SjZsUnlYMjFM?=
- =?utf-8?B?QnIrUHdIbzZnVlAvWnAwVjZNS0hxNFlSbFhpSWhBMllQTEE2ZS9Ieis4Q1dQ?=
- =?utf-8?B?MjJtajRqZUFEeHFMK2t3bnp1Zkd1ZzlROGtYd3FheDRrVW1BSlVPSXErYmM1?=
- =?utf-8?B?UkNDYVlZMmsyUUFCRVUwWmgxd3B5cW9OYzdMTTdaSDVGdXEwb2VydHpPczRm?=
- =?utf-8?B?dnQrc0NhbG5RelRrWGpIQmNFRlFYeU1VaE8ycEQ3S1BlMktXanptekQ5Vy8z?=
- =?utf-8?B?RmZkclVBTnYrRWxoa1hjTytyUFhlc1FvczVDdjVVSC82ZDdicDduWW1waDZ3?=
- =?utf-8?B?MVl3aXUrVXpwUXhnMk9Xem9MNmVXVHB6UnZOSUUzV2dIcTRqLzJJTDJ0bTZq?=
- =?utf-8?B?TnVjNDM4RlY2VDU5eHI1OGViRGw5QksvamQzUUY4Wno3MTZoNFpNVEpqU1Fk?=
- =?utf-8?B?OGpSdEdIQXdTWXlvVFAxdDFEdE1zQ0pzYmlxZTA4aU9FVk01VmNGZlJQaDRI?=
- =?utf-8?B?WXVUaUEzMktnR1R2emFXMDd5OVovTWllRGdxalpSWXdDL0tyZW1acWNOaDdU?=
- =?utf-8?B?Vkg1ekwwdWdjM0VpMUxqUFpWblpweENBSk1mT2x1MzdZdTBseUhzZkNxWlRF?=
- =?utf-8?B?S2t3OE5UM1FNQTk5RXJOdUFGMUZmRzJGRTBEeXRsZWhxU042RjNPci8wNmgz?=
- =?utf-8?B?WmEvbktxN1RVNWJFSUlnVW9telNlV1Y3YUxJUytKOC9kMDNMRXVseENnQWJM?=
- =?utf-8?B?cWdMZ0tXWWxBYnNrSGMzMGlJZ1pxM3paZG5Ea2pBT0p0WUJjVXJUc2hVRmRK?=
- =?utf-8?B?RGJobTN0czJqRFVpY2UxN3NWRXg5Y0dUSFNYNEM3QnpLMlBoR0oyaldMTk9R?=
- =?utf-8?B?d0lvN05RSTZ5QTFVM2kzMForOW04L1cwZnJqRVUrajBUbmtLUlpmUGVxT0lO?=
- =?utf-8?B?djhSVTFBWXBjZWZtSFBtanVsZFIvcWJ6TVFScWhmcW1mTW80cHVJbDhGRDdI?=
- =?utf-8?B?YjBubHBCaE1vSHRHSXIvK2NzU3AxWk5PZktabUFUdnM2Q0lJb0xPYVlRUllZ?=
- =?utf-8?Q?4HzuBgJLOmQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9031.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VGxISmtIRGhuNGtsNmVPY3JKZE1xUDNuNW5ndkpEaHhTWGVkSGZvREpWbGY2?=
- =?utf-8?B?Qkw4OVVseGx1WGszSGdNblJjTHg0N2cyM012SGhHTWE1Q1BJZTVqRXVWWnVK?=
- =?utf-8?B?MU5OakxMZStaUFNGbjVheVJyRlNvYmMvU0QrQ0RtZ0FSTDQ1N3IxT01CaXdC?=
- =?utf-8?B?eTVvV25tQ0liY0VleW9VcFVmeE5JVWg0dm1VWFFyRUxUejVvUjdPNkkzL1ZK?=
- =?utf-8?B?Wk5TeTdyVXBoeVlDQUxDK0ZYRGYyZGo4Uyt4a0l1aTJxTEtkWndmTkptYVBp?=
- =?utf-8?B?ZzE3djB6M1FyMzJFMThNM0FPQ0cvc0c5SXlZVkExcVlwZ00weWoxUmtCMGlh?=
- =?utf-8?B?THREZmFUSVJrZ0RzVDR1akplV2hUcDBiZ2cweDA3MEFmVUNMR2l2eG16b09T?=
- =?utf-8?B?anZKdWVzUElVcUVtZmY3NFFIQXBmZUpHa1dMV0o2cGFwbnY2NUx4bTA5VVMy?=
- =?utf-8?B?Y3dmYUYzZHZjWVJwMVZ2T21zYWgxZWlKeDdsQXJzd0ZyMExpVzMyMWR5TzRU?=
- =?utf-8?B?MVZUcStmM20zUmlLOGpYSmdrYWFoa0tpVldMZVRHNUxCOHA2RkZhM3VDRWVt?=
- =?utf-8?B?UE1DMGRacW5KRS9xTHJ3VGVTVzNsSDlrSlcxYzhyeHFMVEw5SFFETUIxNjF0?=
- =?utf-8?B?ckMvMGVLa29DT0t2WlhZSUlCTmkwdWE1ZDZEYXBVTGo0Q05CdC96U0xuTUlC?=
- =?utf-8?B?VC9TSjdCaiszUEQzREVrbmdrL3c4RWE1RE00czR6ZDk5WU54Q1BoWUV0aDlk?=
- =?utf-8?B?bSs0S0hDRXJCaGpaMVFHZDczWmFKOWpQb2Z5S2ZkVnc4M1ZTY1BGbExkNGhN?=
- =?utf-8?B?alJVVS91WXduTnY2SktacEoyU1JpMWZKS3ZKQ0F3akVQVE54RUlLQ0cybW43?=
- =?utf-8?B?dGQxOFZQMmlGUFlEYkhQdGJyTTdFSUdyWVJrZTV5Y1JoRFFRZUgxaWtIdUQw?=
- =?utf-8?B?b0ZPYzZGbWc3dlpuRU9HM1ZtSlhIMUdKbGRmRllRL2pEZThtYVJ0cjJ6d2tz?=
- =?utf-8?B?NWlsVzFGNGl2dnNwZ1gyRERYQmd0WWVReEhyUDl6a1BwQkdYNzVaVXpwcDcr?=
- =?utf-8?B?QTVsdUN4eXJDY1FVbGIyMFF5cjVuTHcrcXo3a2g3RnVLeFhJeWdjakVrdFhw?=
- =?utf-8?B?QkhGNStOTnY5bEVQY2ZkTVZTNDYxNHhZdGQ1WHM1Q2lTQWhOOEpFTTY4Z3RD?=
- =?utf-8?B?MmI4azNyTFFZbGF4RkpSVWxRa0hrNDl4Y0Z3UW5GZWR4dFlNRjhUMUZmdFBa?=
- =?utf-8?B?WlFoamNQNWhWblo4YnNDRk56NDA3dXNEaktmZFN4L1dRN2x3RXJQcGdZelF6?=
- =?utf-8?B?M0Z5cFVvYXlNR1JjS0gyQ1VHQXJkRlh5K3hXUGh3M2k1TGhXYXdNa2xZZEM5?=
- =?utf-8?B?dzFxYVRENGIyaFFqMjJIdTVJKzNqbVJzdGdUUTk4MkpXejBLTWUwZWNxSE5E?=
- =?utf-8?B?eCs5US9YUFQ5Um5wdjNCK3lMNnB6Z1Y5RElVSXFITmtySmljS2lvNE9rQUJH?=
- =?utf-8?B?WVNlSzk1NlRWNVlGQUxueTFCb1BsczFuSGc2eHFjQnlwL2dCM3ZWeHRBdVcy?=
- =?utf-8?B?MzNvdVBOa2xrWGFVamgvcVhtajhsRlNibHp6dk9LdWc1MEtyVHNiRnFjVkNn?=
- =?utf-8?B?RTdPWldGK3grSElaRE40WStyRFRlSy9nbXRhV0JmbkxsRkQzVW1HSlQ4SmZI?=
- =?utf-8?B?TTg2TEdDRzZCZEZaVjN3L0pMMTF5VktSUitjOW9hYndVMUNCU29HSTk1Rmdx?=
- =?utf-8?B?NGs5UlU1TGkvU3RSWlowUDFtdnZnRSt1QkJienorUEszYUVXb091NjFmRVNo?=
- =?utf-8?B?OVpudlY5L1lGbURObzhTZ0dNcCs2alpYVWt2WEUrWitYODArc1JxZWxmdXFw?=
- =?utf-8?B?eEVQcDROaThFSVh2cFhCTGtDQkZNOFE5SDhvSmFHelRUbXRCbTNtWEkyU1Nv?=
- =?utf-8?B?QlRtWmlqV2JwNUY5dS9Eejk4N042K3pKNmhrM2o5SEZicW1zUXdJazIzSDE0?=
- =?utf-8?B?dWMyTTNTTDExVW5vZFRaQWo2aDZ6NnJUL25WSTNubEs0akdnWUFIa1R3N0tJ?=
- =?utf-8?B?Mk9ZVHdWMmNqcjBZVWl2KzcxREpud05jOThvNGhNQjZvMzl1TkM2akNaZVZH?=
- =?utf-8?Q?D7sMAfNrNQvjWYukUboxpeb7G?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf58c311-1919-4ed8-93c4-08dda98dabcf
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9031.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 08:46:49.5804
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GUFpCM7phR4IlyFARTRqbtwvxpHJnDwIikMvMFfngW//vzZAoQeGwNGXetsRq3ndVoRcwAbL2KjITkeF1hg0cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4434
+References: <20250611194840.877308-1-bqe@google.com> <20250611194840.877308-4-bqe@google.com>
+ <CAH5fLgi1GBqDHvMh30fbxVUjnTETLXthpK6eGLJA0Vh_TZRnsQ@mail.gmail.com>
+In-Reply-To: <CAH5fLgi1GBqDHvMh30fbxVUjnTETLXthpK6eGLJA0Vh_TZRnsQ@mail.gmail.com>
+From: Burak Emir <bqe@google.com>
+Date: Thu, 12 Jun 2025 10:46:46 +0200
+X-Gm-Features: AX0GCFv98Pn9kYvvN90Gvw4jWYhAPagNO5ddvga328nLw_8rnEVeAtEUhREmC0Q
+Message-ID: <CACQBu=W4PziG3Fsnzqu_wu-vgBThktD7FcEJ-vOhOMhNDz8h3g@mail.gmail.com>
+Subject: Re: [PATCH v12 3/5] rust: add bitmap API.
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	Carlos LLama <cmllamas@google.com>, Pekka Ristola <pekkarr@protonmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 10:16:18PM -0700, Mina Almasry wrote:
-> On Tue, Jun 10, 2025 at 8:20 AM Mark Bloch <mbloch@nvidia.com> wrote:
-> >
-> > From: Saeed Mahameed <saeedm@nvidia.com>
-> >
-> > On netdev_rx_queue_restart, a special type of page pool maybe expected.
-> >
-> > In this patch declare support for UNREADABLE netmem iov pages in the
-> > pool params only when header data split shampo RQ mode is enabled, also
-> > set the queue index in the page pool params struct.
-> >
-> > Shampo mode requirement: Without header split rx needs to peek at the data,
-> > we can't do UNREADABLE_NETMEM.
-> >
-> > The patch also enables the use of a separate page pool for headers when
-> > a memory provider is installed for the queue, otherwise the same common
-> > page pool continues to be used.
-> >
-> > Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
-> > Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
-> > Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
-> > Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> > Signed-off-by: Mark Bloch <mbloch@nvidia.com>
-> > ---
-> >  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > index 5e649705e35f..a51e204bd364 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > @@ -749,7 +749,9 @@ static void mlx5e_rq_shampo_hd_info_free(struct mlx5e_rq *rq)
-> >
-> >  static bool mlx5_rq_needs_separate_hd_pool(struct mlx5e_rq *rq)
-> >  {
-> > -       return false;
-> > +       struct netdev_rx_queue *rxq = __netif_get_rx_queue(rq->netdev, rq->ix);
-> > +
-> > +       return !!rxq->mp_params.mp_ops;
-> 
-> This is kinda assuming that all future memory providers will return
-> unreadable memory, which is not a restriction I have in mind... in
-> theory there is nothing wrong with memory providers that feed readable
-> pages. Technically the right thing to do here is to define a new
-> helper page_pool_is_readable() and have the mp report to the pp if
-> it's all readable or not.
+On Wed, Jun 11, 2025 at 11:58=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> =
+wrote:
 >
-The API is already there: page_pool_is_unreadable(). But it uses the
-same logic...
+> On Wed, Jun 11, 2025 at 9:48=E2=80=AFPM Burak Emir <bqe@google.com> wrote=
+:
+[...]
+> > diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
+> > new file mode 100644
+> > index 000000000000..1fe72ca980ac
+> > --- /dev/null
+> > +++ b/rust/kernel/bitmap.rs
+> > @@ -0,0 +1,582 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +// Copyright (C) 2025 Google LLC.
+> > +
+> > +//! Rust API for bitmap.
+> > +//!
+> > +//! C headers: [`include/linux/bitmap.h`](srctree/include/linux/bitmap=
+.h).
+> > +
+> > +use crate::alloc::{AllocError, Flags};
+> > +use crate::bindings;
+> > +#[cfg(not(CONFIG_RUST_BITMAP_HARDENED))]
+> > +use crate::pr_err;
+> > +use core::ptr::NonNull;
+> > +
+> > +/// Represents a C bitmap. Wraps underlying C bitmap API.
+> > +///
+> > +/// # Invariants
+> > +///
+> > +/// Must reference a `[c_ulong]` long enough to fit `data.len()` bits.
+> > +#[cfg_attr(CONFIG_64BIT, repr(align(8)))]
+> > +#[cfg_attr(not(CONFIG_64BIT), repr(align(4)))]
+> > +pub struct CBitmap {
+> > +    data: [()],
+> > +}
+>
+> I wonder if we should just call this type Bitmap?
+>
 
-However, having a pp level API is a bit limiting: as Cosmin pointed out,
-mlx5 can't use it because it needs to know in advance if this page_pool
-is for unreadable memory to correctly size the data page_pool (with or
-without headers).
+OK. I am renaming the other type to OwnedBitmap then.
 
-> But all this sounds like a huge hassle for an unnecessary amount of
-> future proofing, so I guess this is fine.
-> 
-> Reviewed-by: Mina Almasry <almasrymina@google.com>
-> 
-Thanks!
-Dragos
+> > +
+> > +/// SAFETY: All methods that take immutable references are either atom=
+ic or read-only.
+> > +unsafe impl Sync for CBitmap {}
+>
+> You don't have any fields wrapping C types anymore, so this has no effect=
+.
+
+Removing.
+
+> > +
+> > +impl CBitmap {
+> > +    /// Borrows a C bitmap.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// * `ptr` holds a non-null address of an initialized array of `u=
+nsigned long`
+> > +    ///   that is large enough to hold `nbits` bits.
+> > +    /// * the array must not be freed for the lifetime of this [`CBitm=
+ap`]
+> > +    /// * concurrent access only happens through atomic operations
+> > +    pub unsafe fn from_raw<'a>(ptr: *const usize, nbits: usize) -> &'a=
+ CBitmap {
+> > +        let data: *const [()] =3D core::ptr::slice_from_raw_parts(ptr.=
+cast(), nbits);
+> > +        // INVARIANT: `data` references an initialized array that can =
+hold `nbits` bits.
+> > +        // SAFETY:
+> > +        // The caller guarantees that `data` (derived from `ptr` and `=
+nbits`)
+> > +        // points to a valid, initialized, and appropriately sized mem=
+ory region
+> > +        // that will not be freed for the lifetime 'a.
+> > +        // We are casting `*const [()]` to `*const CBitmap`. The `CBit=
+map`
+> > +        // struct is a ZST with a `data: [()]` field. This means its l=
+ayout
+> > +        // is compatible with a slice of `()`, and effectively it's a =
+"thin pointer"
+> > +        // (its size is 0 and alignment is 1). The `slice_from_raw_par=
+ts`
+> > +        // function correctly encodes the length (number of bits, not =
+elements)
+> > +        // into the metadata of the fat pointer. Therefore, dereferenc=
+ing this
+> > +        // pointer as `&CBitmap` is safe given the caller's guarantees=
+.
+> > +        unsafe { &*(data as *const CBitmap) }
+> > +    }
+> > +
+> > +    /// Borrows a C bitmap exclusively.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// * `ptr` holds a non-null address of an initialized array of `u=
+nsigned long`
+> > +    ///   that is large enough to hold `nbits` bits.
+> > +    /// * the array must not be freed for the lifetime of this [`CBitm=
+ap`]
+> > +    /// * no concurrent access may happen.
+> > +    pub unsafe fn from_raw_mut<'a>(ptr: *mut usize, nbits: usize) -> &=
+'a mut CBitmap {
+> > +        let data: *mut [()] =3D core::ptr::slice_from_raw_parts_mut(pt=
+r.cast(), nbits);
+> > +        // INVARIANT: `data` references an initialized array that can =
+hold `nbits` bits.
+> > +        // SAFETY:
+> > +        // The caller guarantees that `data` (derived from `ptr` and `=
+nbits`)
+> > +        // points to a valid, initialized, and appropriately sized mem=
+ory region
+> > +        // that will not be freed for the lifetime 'a.
+> > +        // Furthermore, the caller guarantees no concurrent access wil=
+l happen,
+> > +        // which upholds the exclusivity requirement for a mutable ref=
+erence.
+> > +        // Similar to `from_raw`, casting `*mut [()]` to `*mut CBitmap=
+` is
+> > +        // safe because `CBitmap` is a ZST with a `data: [()]` field,
+> > +        // making its layout compatible with a slice of `()`.
+> > +        unsafe { &mut *(data as *mut CBitmap) }
+> > +    }
+> > +
+> > +    /// Returns a raw pointer to the backing [`Bitmap`].
+> > +    pub fn as_ptr(&self) -> *const usize {
+> > +        self as *const CBitmap as *const usize
+> > +    }
+> > +
+> > +    /// Returns a mutable raw pointer to the backing [`Bitmap`].
+> > +    pub fn as_mut_ptr(&mut self) -> *mut usize {
+> > +        self as *mut CBitmap as *mut usize
+> > +    }
+> > +
+> > +    /// Returns length of this [`CBitmap`].
+> > +    #[expect(clippy::len_without_is_empty)]
+> > +    pub fn len(&self) -> usize {
+> > +        self.data.len()
+> > +    }
+> > +}
+> > +
+> > +/// Holds either a pointer to array of `unsigned long` or a small bitm=
+ap.
+> > +#[repr(C)]
+> > +union BitmapRepr {
+> > +    bitmap: usize,
+> > +    ptr: NonNull<usize>,
+> > +}
+> > +
+> > +macro_rules! bitmap_assert {
+> > +    ($cond:expr, $($arg:tt)+) =3D> {
+> > +        #[cfg(CONFIG_RUST_BITMAP_HARDENED)]
+> > +        assert!($cond, $($arg)*);
+> > +    }
+> > +}
+> > +
+> > +macro_rules! bitmap_assert_return {
+> > +    ($cond:expr, $($arg:tt)+) =3D> {
+> > +        #[cfg(CONFIG_RUST_BITMAP_HARDENED)]
+> > +        assert!($cond, $($arg)*);
+> > +
+> > +        #[cfg(not(CONFIG_RUST_BITMAP_HARDENED))]
+> > +        if !($cond) {
+> > +            pr_err!($($arg)*);
+> > +            return
+> > +        }
+> > +    }
+> > +}
+> > +
+> > +/// Represents an owned bitmap.
+> > +///
+> > +/// Wraps underlying C bitmap API. See [`CBitmap`] for available
+> > +/// methods.
+> > +///
+> > +/// # Examples
+> > +///
+> > +/// Basic usage
+> > +///
+> > +/// ```
+> > +/// use kernel::alloc::flags::GFP_KERNEL;
+> > +/// use kernel::bitmap::Bitmap;
+> > +///
+> > +/// let mut b =3D Bitmap::new(16, GFP_KERNEL)?;
+> > +///
+> > +/// assert_eq!(16, b.len());
+> > +/// for i in 0..16 {
+> > +///     if i % 4 =3D=3D 0 {
+> > +///       b.set_bit(i);
+> > +///     }
+> > +/// }
+> > +/// assert_eq!(Some(0), b.next_bit(0));
+> > +/// assert_eq!(Some(1), b.next_zero_bit(0));
+> > +/// assert_eq!(Some(4), b.next_bit(1));
+> > +/// assert_eq!(Some(5), b.next_zero_bit(4));
+> > +/// assert_eq!(Some(12), b.last_bit());
+> > +/// # Ok::<(), Error>(())
+> > +/// ```
+> > +///
+> > +/// # Invariants
+> > +///
+> > +/// * `nbits` is `<=3D i32::MAX` and never changes.
+> > +/// * if `nbits <=3D bindings::BITS_PER_LONG`, then `repr` is a `usize=
+`.
+> > +/// * otherwise, `repr` holds a non-null pointer to an initialized
+> > +///   array of `unsigned long` that is large enough to hold `nbits` bi=
+ts.
+> > +pub struct Bitmap {
+> > +    /// Representation of bitmap.
+> > +    repr: BitmapRepr,
+> > +    /// Length of this bitmap. Must be `<=3D i32::MAX`.
+> > +    nbits: usize,
+> > +}
+> > +
+> > +impl core::ops::Deref for Bitmap {
+> > +    type Target =3D CBitmap;
+> > +
+> > +    fn deref(&self) -> &CBitmap {
+> > +        let ptr =3D if self.nbits <=3D bindings::BITS_PER_LONG as _ {
+>
+> You can define a local constant with the right size to avoid these casts:
+> const BITS_PER_LONG: usize =3D bindings::BITS_PER_LONG as usize;
+
+Done.
+
+
+> > +            // SAFETY: Bitmap is represented inline.
+> > +            unsafe { core::ptr::addr_of!(self.repr.bitmap) }
+> > +        } else {
+> > +            // SAFETY: Bitmap is represented as array of `unsigned lon=
+g`.
+> > +            unsafe { self.repr.ptr.as_ptr() }
+> > +        };
+> > +
+> > +        // SAFETY: We got the right pointer and invariants of [`Bitmap=
+`] hold.
+> > +        // An inline bitmap is treated like an array with single eleme=
+nt.
+> > +        unsafe { CBitmap::from_raw(ptr, self.nbits) }
+> > +    }
+> > +}
+> > +
+> > +impl core::ops::DerefMut for Bitmap {
+> > +    fn deref_mut(&mut self) -> &mut CBitmap {
+> > +        let ptr =3D if self.nbits <=3D bindings::BITS_PER_LONG as _ {
+> > +            // SAFETY: Bitmap is represented inline.
+> > +            unsafe { core::ptr::addr_of_mut!(self.repr.bitmap) }
+> > +        } else {
+> > +            // SAFETY: Bitmap is represented as array of `unsigned lon=
+g`.
+> > +            unsafe { self.repr.ptr.as_mut() }
+> > +        };
+> > +
+> > +        // SAFETY: We got the right pointer and invariants of [`Bitmap=
+`] hold.
+> > +        // An inline bitmap is treated like an array with single eleme=
+nt.
+> > +        unsafe { CBitmap::from_raw_mut(ptr, self.nbits) }
+> > +    }
+> > +}
+> > +
+> > +/// Enable ownership transfer to other threads.
+> > +///
+> > +/// SAFETY: We own the underlying bitmap representation.
+> > +unsafe impl Send for Bitmap {}
+> > +
+> > +/// Enable unsynchronized concurrent access to [`Bitmap`] through shar=
+ed references.
+> > +///
+> > +/// SAFETY: `deref()` will return a reference to a [`CBitmap`] which i=
+s Sync. Its methods
+> > +/// that take immutable references are either atomic or read-only.
+> > +unsafe impl Sync for Bitmap {}
+> > +
+> > +impl Drop for Bitmap {
+> > +    fn drop(&mut self) {
+> > +        if self.nbits <=3D bindings::BITS_PER_LONG as _ {
+> > +            return;
+> > +        }
+> > +        // SAFETY: `self.ptr` was returned by the C `bitmap_zalloc`.
+> > +        //
+> > +        // INVARIANT: there is no other use of the `self.ptr` after th=
+is
+> > +        // call and the value is being dropped so the broken invariant=
+ is
+> > +        // not observable on function exit.
+> > +        unsafe { bindings::bitmap_free(self.repr.ptr.as_ptr()) };
+> > +    }
+> > +}
+> > +
+> > +impl Bitmap {
+> > +    /// Constructs a new [`Bitmap`].
+> > +    ///
+> > +    /// Fails with [`AllocError`] when the [`Bitmap`] could not be all=
+ocated. This
+> > +    /// includes the case when `nbits` is greater than `i32::MAX`.
+> > +    #[inline]
+> > +    pub fn new(nbits: usize, flags: Flags) -> Result<Self, AllocError>=
+ {
+> > +        if nbits <=3D bindings::BITS_PER_LONG as _ {
+> > +            return Ok(Bitmap {
+> > +                repr: BitmapRepr { bitmap: 0 },
+> > +                nbits,
+> > +            });
+> > +        }
+> > +        if nbits > i32::MAX.try_into().unwrap() {
+> > +            return Err(AllocError);
+> > +        }
+> > +        let nbits_u32 =3D u32::try_from(nbits).unwrap();
+> > +        // SAFETY: `bindings::BITS_PER_LONG < nbits` and `nbits <=3D i=
+32::MAX`.
+> > +        let ptr =3D unsafe { bindings::bitmap_zalloc(nbits_u32, flags.=
+as_raw()) };
+> > +        let ptr =3D NonNull::new(ptr).ok_or(AllocError)?;
+> > +        // INVARIANT: `ptr` returned by C `bitmap_zalloc` and `nbits` =
+checked.
+> > +        Ok(Bitmap {
+> > +            repr: BitmapRepr { ptr },
+> > +            nbits,
+> > +        })
+> > +    }
+> > +
+> > +    /// Returns length of this [`Bitmap`].
+> > +    #[allow(clippy::len_without_is_empty)]
+> > +    #[inline]
+> > +    pub fn len(&self) -> usize {
+> > +        self.nbits
+> > +    }
+> > +}
+> > +
+> > +impl CBitmap {
+> > +    /// Set bit with index `index`.
+> > +    ///
+> > +    /// ATTENTION: `set_bit` is non-atomic, which differs from the nam=
+ing
+> > +    /// convention in C code. The corresponding C function is `__set_b=
+it`.
+> > +    ///
+> > +    /// If CONFIG_RUST_BITMAP_HARDENED is not enabled and `index` is g=
+reater than
+> > +    /// or equal to `self.nbits`, does nothing.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if CONFIG_RUST_BITMAP_HARDENED is enabled and `index` i=
+s greater than
+> > +    /// or equal to `self.nbits`.
+> > +    #[inline]
+> > +    pub fn set_bit(&mut self, index: usize) {
+> > +        bitmap_assert_return!(
+> > +            index < self.len(),
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.len(),
+> > +            index
+> > +        );
+> > +        // SAFETY: Bit `index` is within bounds.
+> > +        unsafe { bindings::__set_bit(index, self.as_mut_ptr()) };
+> > +    }
+> > +
+> > +    /// Set bit with index `index`, atomically.
+> > +    ///
+> > +    /// This is a relaxed atomic operation (no implied memory barriers=
+).
+> > +    ///
+> > +    /// ATTENTION: The naming convention differs from C, where the cor=
+responding
+> > +    /// function is called `set_bit`.
+> > +    ///
+> > +    /// If CONFIG_RUST_BITMAP_HARDENED is not enabled and `index` is g=
+reater than
+> > +    /// or equal to `self.len()`, does nothing.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if CONFIG_RUST_BITMAP_HARDENED is enabled and `index` i=
+s greater than
+> > +    /// or equal to `self.len()`.
+> > +    #[inline]
+> > +    pub fn set_bit_atomic(&self, index: usize) {
+> > +        bitmap_assert_return!(
+> > +            index < self.len(),
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.len(),
+> > +            index
+> > +        );
+> > +        // SAFETY: `index` is within bounds and the caller has ensured=
+ that
+> > +        // there is no mix of non-atomic and atomic operations.
+> > +        unsafe { bindings::set_bit(index, self.as_ptr() as *mut usize)=
+ };
+> > +    }
+> > +
+> > +    /// Clear `index` bit.
+> > +    ///
+> > +    /// ATTENTION: `clear_bit` is non-atomic, which differs from the n=
+aming
+> > +    /// convention in C code. The corresponding C function is `__clear=
+_bit`.
+> > +    ///
+> > +    /// If CONFIG_RUST_BITMAP_HARDENED is not enabled and `index` is g=
+reater than
+> > +    /// or equal to `self.len()`, does nothing.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if CONFIG_RUST_BITMAP_HARDENED is enabled and `index` i=
+s greater than
+> > +    /// or equal to `self.len()`.
+> > +    #[inline]
+> > +    pub fn clear_bit(&mut self, index: usize) {
+> > +        bitmap_assert_return!(
+> > +            index < self.len(),
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.len(),
+> > +            index
+> > +        );
+> > +        // SAFETY: `index` is within bounds.
+> > +        unsafe { bindings::__clear_bit(index, self.as_mut_ptr()) };
+> > +    }
+> > +
+> > +    /// Clear `index` bit, atomically.
+> > +    ///
+> > +    /// This is a relaxed atomic operation (no implied memory barriers=
+).
+> > +    ///
+> > +    /// ATTENTION: The naming convention differs from C, where the cor=
+responding
+> > +    /// function is called `clear_bit`.
+> > +    ///
+> > +    /// If CONFIG_RUST_BITMAP_HARDENED is not enabled and `index` is g=
+reater than
+> > +    /// or equal to `self.len()`, does nothing.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if CONFIG_RUST_BITMAP_HARDENED is enabled and `index` i=
+s greater than
+> > +    /// or equal to `self.len()`.
+> > +    #[inline]
+> > +    pub fn clear_bit_atomic(&self, index: usize) {
+> > +        bitmap_assert_return!(
+> > +            index < self.len(),
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.len(),
+> > +            index
+> > +        );
+> > +        // SAFETY: `index` is within bounds and the caller has ensured=
+ that
+> > +        // there is no mix of non-atomic and atomic operations.
+> > +        unsafe { bindings::clear_bit(index, self.as_ptr() as *mut usiz=
+e) };
+> > +    }
+> > +
+> > +    /// Copy `src` into this [`Bitmap`] and set any remaining bits to =
+zero.
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
+> > +    /// use kernel::bitmap::Bitmap;
+> > +    ///
+> > +    /// let mut long_bitmap =3D Bitmap::new(256, GFP_KERNEL)?;
+> > +    //
+> > +    /// assert_eq!(None, long_bitmap.last_bit());
+> > +    //
+> > +    /// let mut short_bitmap =3D Bitmap::new(16, GFP_KERNEL)?;
+> > +    //
+> > +    /// short_bitmap.set_bit(7);
+> > +    /// long_bitmap.copy_and_extend(&short_bitmap);
+> > +    /// assert_eq!(Some(7), long_bitmap.last_bit());
+> > +    ///
+> > +    /// # Ok::<(), AllocError>(())
+> > +    /// ```
+> > +    #[inline]
+> > +    pub fn copy_and_extend(&mut self, src: &Bitmap) {
+> > +        let len =3D core::cmp::min(src.nbits, self.len());
+> > +        // SAFETY: access to `self` and `src` is within bounds.
+> > +        unsafe {
+> > +            bindings::bitmap_copy_and_extend(
+> > +                self.as_mut_ptr(),
+> > +                src.as_ptr(),
+> > +                len as u32,
+> > +                self.len() as u32,
+> > +            )
+> > +        };
+> > +    }
+> > +
+> > +    /// Finds last set bit.
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
+> > +    /// use kernel::bitmap::Bitmap;
+> > +    ///
+> > +    /// let bitmap =3D Bitmap::new(64, GFP_KERNEL)?;
+> > +    ///
+> > +    /// match bitmap.last_bit() {
+> > +    ///     Some(idx) =3D> {
+> > +    ///         pr_info!("The last bit has index {idx}.\n");
+> > +    ///     }
+> > +    ///     None =3D> {
+> > +    ///         pr_info!("All bits in this bitmap are 0.\n");
+> > +    ///     }
+> > +    /// }
+> > +    /// # Ok::<(), AllocError>(())
+> > +    /// ```
+> > +    #[inline]
+> > +    pub fn last_bit(&self) -> Option<usize> {
+> > +        // SAFETY: `_find_next_bit` access is within bounds due to inv=
+ariant.
+> > +        let index =3D unsafe { bindings::_find_last_bit(self.as_ptr(),=
+ self.len()) };
+> > +        if index >=3D self.len() {
+> > +            None
+> > +        } else {
+> > +            Some(index)
+> > +        }
+> > +    }
+> > +
+> > +    /// Finds next set bit, starting from `start`.
+> > +    /// Returns `None` if `start` is greater of equal than `self.nbits=
+`.
+> > +    #[inline]
+>
+> The html docs look better if you include a newline:
+>
+
+> /// Finds next set bit, starting from `start`.
+> ///
+> /// Returns `None` if `start` is greater of equal than `self.nbits`.
+
+Done
+
+> > +    pub fn next_bit(&self, start: usize) -> Option<usize> {
+> > +        bitmap_assert!(
+> > +            start < self.len(),
+> > +            "`start` must be < {} was {}",
+> > +            self.len(),
+> > +            start
+> > +        );
+> > +        // SAFETY: `_find_next_bit` tolerates out-of-bounds arguments =
+and returns a
+> > +        // value larger than or equal to `self.len()` in that case.
+> > +        let index =3D unsafe { bindings::_find_next_bit(self.as_ptr(),=
+ self.len(), start) };
+> > +        if index >=3D self.len() {
+> > +            None
+> > +        } else {
+> > +            Some(index)
+> > +        }
+> > +    }
+> > +
+> > +    /// Finds next zero bit, starting from `start`.
+> > +    /// Returns `None` if `start` is greater than or equal to `self.le=
+n()`.
+> > +    #[inline]
+> > +    pub fn next_zero_bit(&self, start: usize) -> Option<usize> {
+> > +        bitmap_assert!(
+> > +            start < self.len(),
+> > +            "`start` must be < {} was {}",
+> > +            self.len(),
+> > +            start
+> > +        );
+> > +        // SAFETY: `_find_next_zero_bit` tolerates out-of-bounds argum=
+ents and returns a
+> > +        // value larger than or equal to `self.len()` in that case.
+> > +        let index =3D unsafe { bindings::_find_next_zero_bit(self.as_p=
+tr(), self.len(), start) };
+> > +        if index >=3D self.len() {
+> > +            None
+> > +        } else {
+> > +            Some(index)
+> > +        }
+> > +    }
+> > +}
+> > +
+> > +use macros::kunit_tests;
+> > +
+> > +#[kunit_tests(rust_kernel_bitmap)]
+> > +mod tests {
+> > +    use super::*;
+> > +    use kernel::alloc::flags::GFP_KERNEL;
+> > +
+> > +    #[test]
+> > +    fn cbitmap_borrow() {
+> > +        let fake_c_bitmap: [usize; 2] =3D [0, 0];
+> > +        // SAFETY: `fake_c_bitmap` is an array of expected length.
+> > +        let b =3D unsafe {
+> > +            CBitmap::from_raw(
+> > +                core::ptr::addr_of!(fake_c_bitmap) as *const usize,
+>
+> You can just do fake_c_bitmap.as_ptr()
+>
+
+> > +                2 * bindings::BITS_PER_LONG as usize,
+> > +            )
+> > +        };
+> > +        assert_eq!(2 * bindings::BITS_PER_LONG as usize, b.len());
+> > +        assert_eq!(None, b.next_bit(0));
+> > +    }
+> > +
+> > +    #[test]
+> > +    fn cbitmap_copy() {
+> > +        let fake_c_bitmap: usize =3D 0xFF;
+> > +        // SAFETY: `fake_c_bitmap` can be used as one-element array of=
+ expected length.
+> > +        let b =3D unsafe { CBitmap::from_raw(core::ptr::addr_of!(fake_=
+c_bitmap), 8) };
+> > +        assert_eq!(8, b.len());
+> > +        assert_eq!(None, b.next_zero_bit(0));
+> > +    }
+> > +
+> > +    #[test]
+> > +    fn bitmap_new() {
+> > +        let b =3D Bitmap::new(0, GFP_KERNEL).unwrap();
+> > +        assert_eq!(0, b.len());
+> > +
+> > +        let b =3D Bitmap::new(3, GFP_KERNEL).unwrap();
+> > +        assert_eq!(3, b.len());
+> > +
+> > +        let b =3D Bitmap::new(1024, GFP_KERNEL).unwrap();
+> > +        assert_eq!(1024, b.len());
+> > +
+> > +        // Requesting too large values results in [`AllocError`].
+> > +        let b =3D Bitmap::new(1 << 31, GFP_KERNEL);
+> > +        assert!(b.is_err());
+> > +    }
+> > +
+> > +    #[test]
+> > +    fn bitmap_set_clear_find() {
+> > +        let mut b =3D Bitmap::new(128, GFP_KERNEL).unwrap();
+> > +
+> > +        // Zero-initialized
+> > +        assert_eq!(None, b.next_bit(0));
+> > +        assert_eq!(Some(0), b.next_zero_bit(0));
+> > +        assert_eq!(None, b.last_bit());
+> > +
+> > +        b.set_bit(17);
+> > +
+> > +        assert_eq!(Some(17), b.next_bit(0));
+> > +        assert_eq!(Some(17), b.next_bit(17));
+> > +        assert_eq!(None, b.next_bit(18));
+> > +        assert_eq!(Some(17), b.last_bit());
+> > +
+> > +        b.set_bit(107);
+> > +
+> > +        assert_eq!(Some(17), b.next_bit(0));
+> > +        assert_eq!(Some(17), b.next_bit(17));
+> > +        assert_eq!(Some(107), b.next_bit(18));
+> > +        assert_eq!(Some(107), b.last_bit());
+> > +
+> > +        b.clear_bit(17);
+> > +
+> > +        assert_eq!(Some(107), b.next_bit(0));
+> > +        assert_eq!(Some(107), b.last_bit());
+> > +    }
+> > +
+> > +    #[cfg(not(CONFIG_RUST_BITMAP_HARDENED))]
+> > +    #[test]
+> > +    fn bitmap_out_of_bounds() {
+> > +        let mut b =3D Bitmap::new(128, GFP_KERNEL).unwrap();
+> > +
+> > +        b.set_bit(2048);
+> > +        b.set_bit_atomic(2048);
+> > +        b.clear_bit(2048);
+> > +        b.clear_bit_atomic(2048);
+> > +        assert_eq!(None, b.next_bit(2048));
+> > +        assert_eq!(None, b.next_zero_bit(2048));
+> > +        assert_eq!(None, b.last_bit());
+> > +    }
+> > +
+> > +    #[cfg(CONFIG_RUST_BITMAP_HARDENED)]
+> > +    #[test]
+> > +    #[should_panic]
+> > +    fn bitmap_out_of_bounds() {
+>
+> I don't think we have #[should_panic] support in Rust KUnit yet.
+>
+True, I observed the panic but the test is erroneously marked as failing.
+I have commented it out and added TODO to enable it once
+[should_panic] is supported.
+
+> > +        let mut b =3D Bitmap::new(128, GFP_KERNEL).unwrap();
+> > +
+> > +        b.set_bit(2048);
+> > +    }
+> > +
+> > +    #[test]
+> > +    fn bitmap_copy_and_extend() {
+> > +        let mut long_bitmap =3D Bitmap::new(256, GFP_KERNEL).unwrap();
+> > +
+> > +        long_bitmap.set_bit(3);
+> > +        long_bitmap.set_bit(200);
+> > +
+> > +        let mut short_bitmap =3D Bitmap::new(32, GFP_KERNEL).unwrap();
+> > +
+> > +        short_bitmap.set_bit(17);
+> > +
+> > +        long_bitmap.copy_and_extend(&short_bitmap);
+> > +
+> > +        // Previous bits have been cleared.
+> > +        assert_eq!(Some(17), long_bitmap.next_bit(0));
+> > +        assert_eq!(Some(17), long_bitmap.last_bit());
+> > +    }
+> > +}
+> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > index de07aadd1ff5..8c4161cd82ac 100644
+> > --- a/rust/kernel/lib.rs
+> > +++ b/rust/kernel/lib.rs
+> > @@ -38,6 +38,7 @@
+> >  pub use ffi;
+> >
+> >  pub mod alloc;
+> > +pub mod bitmap;
+> >  #[cfg(CONFIG_BLOCK)]
+> >  pub mod block;
+> >  #[doc(hidden)]
+> > diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> > index 3fe9d7b945c4..d77a39aef554 100644
+> > --- a/security/Kconfig.hardening
+> > +++ b/security/Kconfig.hardening
+> > @@ -324,6 +324,16 @@ config LIST_HARDENED
+> >
+> >           If unsure, say N.
+> >
+> > +config RUST_BITMAP_HARDENED
+> > +       bool "Check integrity of bitmap Rust API"
+> > +       depends on RUST
+> > +       help
+> > +         Enables additional assertions in the Rust Bitmap API to catch
+> > +         arguments that are not guaranteed to result in an immediate a=
+ccess
+> > +         fault.
+> > +
+> > +         If unsure, say N.
+> > +
+> >  config BUG_ON_DATA_CORRUPTION
+> >         bool "Trigger a BUG when data corruption is detected"
+> >         select LIST_HARDENED
+> > --
+> > 2.50.0.rc1.591.g9c95f17f64-goog
+> >
