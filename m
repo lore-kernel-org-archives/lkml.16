@@ -1,133 +1,260 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7147926C39C
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166C926E142;
+	Thu, 12 Jun 2025 14:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740351; cv=none; b=WM5jK//1NeBuOa/6C/d5Q5YqgYX+Pnup9Bf5L0jlvptwLvs5wTzbb9Qe21TF66F93IxojvVtzr7FJ7r1A65wtLNQ4STr34e5Ih/LuLa43g3NfCWDXKPkW/+QPSdg/bhpvdj5OA2dOM/GLqJKlehI1TXMU2YJJRBaws1v/wH9m8I=
+	t=1749740361; cv=none; b=ksOAhJnQL1H54MQzMOdl9jQKeKEmCtOMJX90qkPRD7MBsOEGUuO4YqYJKnDW7rcullMlI5wVr9Q/QnWwclIuiYBqyYb59G2BTTnT6N6PY1wTf1CysY02lFf8ILkmum3MXndUAbd6pwjMANczgU5nlqKvW+E9f8A/gQNv/voXits=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740351; c=relaxed/simple;
-	bh=ojBGHXn1vUpJycK6ORdZXXJtOHf8zF7gSm+mZb22HOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RNU2LycxUaCChNO2+CAvynddw53lIOkBSueKiYm4QhUUka6FOZhbpDu05SDLWDQ2KvyML2dBHdHt1JDFOT9ZnXbyO2s/Ub/wpzxAAOSNLppwe8oQxlhfzSJQ4psapI76aTtCHl6y9mE8EKipi7RMTBQbx0xipixg+LnHBSPNGW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILHIinid; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749740361; c=relaxed/simple;
+	bh=4WhOw5Pc8bV38NNBKDq+M7SXVLk0DorgEecTG6vPvq8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HxMIlT5RVkbaGi0IYHADOjJvtfpkv3mKe/S/6eATZ98CmLlyTh4hwNlKw0T311+bltpACpQLcWrON0XfhBYIaECCgN5h//GqmdOL2XENhq3Phn7Atb+0P97ShQxadu7GOBeMZBaEq/6aUHu1IHwWyGSps/TVo0hoSGacKmaw+E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbjhbZ+G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILHIinid"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE08C4CEEA;
-	Thu, 12 Jun 2025 14:59:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbjhbZ+G"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A8A2EC4CEEE;
+	Thu, 12 Jun 2025 14:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749740350;
-	bh=ojBGHXn1vUpJycK6ORdZXXJtOHf8zF7gSm+mZb22HOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ILHIinidwPTFzHnyloqn7k3FKs4AAV6Pd9HoxU5EmEQxYWmeiffMvgFuYpYPe07o2
-	 L5EbA02mRawCu3O2f0IVBasaV2TzKq2Yq4Lby50b2M0a/2ai8i4dj8S3excj4cNPIe
-	 C2sL+fdCG2Zca5gw476eA2UOK7eF02v1f/WbY7nnhQhubS955sPnjGnJE8UVtalPJw
-	 LMYZXGrMDaDPNigF7Mz6ax3tUVHAcKD7IlcKn0ltKRCY2+0oipeRWolygoY1YQaahk
-	 hyF9Z6Cx0/r4Ld/PPRwFIULRWUz/dgX7O8w4PurKxTnIDlXqC90YWxN+OyYbBZrn+F
-	 7KuWwr+CenVIw==
-Date: Thu, 12 Jun 2025 15:59:06 +0100
-From: Will Deacon <will@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] arm64/mm: Ensure lazy_mmu_mode never nests
-Message-ID: <20250612145906.GB12912@willie-the-truck>
-References: <20250606135654.178300-1-ryan.roberts@arm.com>
- <aEgeQCCzRt-B8_nW@arm.com>
- <3cad01ea-b704-4156-807e-7a83643917a8@arm.com>
- <aEhKSq0zVaUJkomX@arm.com>
- <b567a16a-8d80-4aab-84c2-21cbc6a6a35d@arm.com>
+	s=k20201202; t=1749740360;
+	bh=4WhOw5Pc8bV38NNBKDq+M7SXVLk0DorgEecTG6vPvq8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=kbjhbZ+G7Qk9tPQNf/BAYyIP993CXLqvB+HcfboSuGreSTSQeCkLFqgN7i9Osk8Ou
+	 wk3ZFxe6/l6qRQQfXvAbr57SQBmhZPowHoEtrevheuTFcEbSpUX/awMiN6lFrupjex
+	 WXIW86nOl5i3bsaOOBsag4seeAmjyZfrSu8hCP1+eQVYpLqUk1Kg4E6dDqQmqnPE62
+	 QdqmFGLhux9nv0Un1EoG5WWu/XlHz2qTdwBMuPNM04Tci2DYZTOj6oLcymy/gtW2t4
+	 y2vVGYpiCBxQ+AZ94dRVRzQ+IpoouA6UAUo946vkoFHiBAEVYcHiVMaQp7S5eRf+nW
+	 WLkSUSsWo8f7Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B13C71136;
+	Thu, 12 Jun 2025 14:59:20 +0000 (UTC)
+From: Samuel Kayode via B4 Relay <devnull+samuel.kayode.savoirfairelinux.com@kernel.org>
+Date: Thu, 12 Jun 2025 10:55:43 -0400
+Subject: [PATCH v7 1/6] dt-bindings: mfd: add pf1550
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b567a16a-8d80-4aab-84c2-21cbc6a6a35d@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-pf1550-v7-1-0e393b0f45d7@savoirfairelinux.com>
+References: <20250612-pf1550-v7-0-0e393b0f45d7@savoirfairelinux.com>
+In-Reply-To: <20250612-pf1550-v7-0-0e393b0f45d7@savoirfairelinux.com>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Sebastian Reichel <sre@kernel.org>, Frank Li <Frank.li@nxp.com>
+Cc: imx@lists.linux.dev, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>, 
+ Abel Vesa <abelvesa@linux.com>, Robin Gong <b38343@freescale.com>, 
+ Robin Gong <yibin.gong@nxp.com>, 
+ Enric Balletbo i Serra <eballetbo@gmail.com>, 
+ Samuel Kayode <samuel.kayode@savoirfairelinux.com>, 
+ Abel Vesa <abelvesa@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749740359; l=5930;
+ i=samuel.kayode@savoirfairelinux.com; s=20250527;
+ h=from:subject:message-id;
+ bh=r8SVeBRmGib5X/fCH5StS6pFWPmPVyMn+NWDHww3thQ=;
+ b=BxAqpfO7hNoBRyX3oiHAa2ms9lHpa4SxEE7EkS3VLnlF3dwN8EdZxFkV05jYliWhhRa8vWbe2
+ 60NSHCEBJPTC2Ge3w7jKDxtOPQDlYYK9idlJimNY25oAOkPR3tyIOcX
+X-Developer-Key: i=samuel.kayode@savoirfairelinux.com; a=ed25519;
+ pk=TPSQGQ5kywnnPyGs0EQqLajLFbdDu17ahXz8/gxMfio=
+X-Endpoint-Received: by B4 Relay for
+ samuel.kayode@savoirfairelinux.com/20250527 with auth_id=412
+X-Original-From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+Reply-To: samuel.kayode@savoirfairelinux.com
 
-On Tue, Jun 10, 2025 at 05:37:20PM +0100, Ryan Roberts wrote:
-> On 10/06/2025 16:07, Catalin Marinas wrote:
-> > On Tue, Jun 10, 2025 at 02:41:01PM +0100, Ryan Roberts wrote:
-> >> On 10/06/2025 13:00, Catalin Marinas wrote:
-> >>> On Fri, Jun 06, 2025 at 02:56:52PM +0100, Ryan Roberts wrote:
-> >>>> Commit 1ef3095b1405 ("arm64/mm: Permit lazy_mmu_mode to be nested")
-> >>>> provided a quick fix to ensure that lazy_mmu_mode continues to work when
-> >>>> CONFIG_DEBUG_PAGEALLOC is enabled, which can cause lazy_mmu_mode to
-> >>>> nest.
-> >>>>
-> >>>> The solution in that patch is the make the implementation tolerant to
-> >>>
-> >>> s/is the make/is to make/
-> >>>
-> >>>> nesting; when the inner nest exits lazy_mmu_mode, we exit then the outer
-> >>>> exit becomes a nop. But this sacrifices the optimization opportunity for
-> >>>> the remainder of the outer user.
-> >>> [...]
-> >>>> I wonder if you might be willing to take this for v6.16? I think its a neater
-> >>>> solution then my first attempt - Commit 1ef3095b1405 ("arm64/mm: Permit
-> >>>> lazy_mmu_mode to be nested") - which is already in Linus's master.
-> >>>>
-> >>>> To be clear, the current solution is safe, I just think this is much neater.
-> >>>
-> >>> Maybe better, though I wouldn't say much neater. One concern I have is
-> >>> about whether we'll get other such nesting in the future and we need to
-> >>> fix them in generic code. Here we control __kernel_map_pages() but we
-> >>> may not for other cases.
-> >>>
-> >>> Is it the fault of the arch code that uses apply_to_page_range() via
-> >>> __kernel_map_pages()? It feels like it shouldn't care about the lazy
-> >>> mode as that's some detail of the apply_to_page_range() implementation.
-> >>> Maybe this API should just allow nesting.
-> >>
-> >> I don't think it is possible to properly support nesting:
-> >>
-> >> enter_lazy_mmu
-> >>     for_each_pte {
-> >>         read/modify-write pte
-> >>
-> >>         alloc_page
-> >>             enter_lazy_mmu
-> >>                 make page valid
-> >>             exit_lazy_mmu
-> >>
-> >>         write_to_page
-> >>     }
-> >> exit_lazy_mmu
-> >>
-> >> This example only works because lazy_mmu doesn't support nesting. The "make page
-> >> valid" operation is completed by the time of the inner exit_lazy_mmu so that the
-> >> page can be accessed in write_to_page. If nesting was supported, the inner
-> >> exit_lazy_mmu would become a nop and write_to_page would explode.
-> > 
-> > What I meant is for enter/exit_lazy_mmu to handle a kind of de-nesting
-> > themselves: enter_lazy_mmu would emit the barriers if already in lazy
-> > mode, clear pending (well, it doesn't need to do this but it may be
-> > easier to reason about in terms of flattening). exit_lazy_mmu also needs
-> > to emit the barriers but leave the lazy mode on if already on when last
-> > entered. This does need some API modifications to return the old mode on
-> > enter and get an argument for exit. But the correctness wouldn't be
-> > affected since exit_lazy_mmu still emits the barriers irrespective of
-> > the nesting level.
-> 
-> Ahh I see what you mean now; exit always emits barriers but only the last exit
-> clears TIF_LAZY_MMU.
-> 
-> I think that's much cleaner, but we are changing the API which needs changes to
-> all the arches and my attempt at [1] didn't really gain much enthusiasm.
+From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
 
-To be honest, I don't think the proposal in this series is really
-improving what we have. Either we support nested lazy mode or we don't;
-having __kernel_map_pages() mess around with the lazy mmu state because
-it somehow knows that set_memory_valid() is going to use it is fragile
-and ugly.
+Add a DT binding document for pf1550 PMIC. This describes the core mfd
+device along with its children: regulators, charger and onkey.
 
-So I'm incined to leave the current code as-is, unless we can remove it
-in favour of teaching the core code how to handle it instead.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+---
+v5:
+ - Address Krzystof's feedback:
+   - Drop monitored battery ref already included in power supply schema
+   - Move `additionalProperties` close to `type` for regulator
+   - Drop unneccessary |
+   - Change `additionalProperties` to `unevaluatedProperties` for the
+     PMIC
+v4:
+ - Address Krzystof's feedback:
+   - Filename changed to nxp,pf1550.yaml
+   - Replace Freescale with NXP
+   - Define include before battery-cell
+   - Drop operating-range-celsius in example since
+     nxp,thermal-regulation-celsisus already exists
+ - Not sure if there is similar binding to thermal-regulation...
+   for regulating temperature on thermal-zones? @Sebastian and @Krzysztof
+v3:
+ - Address Krzysztof's feedback:
+   - Fold charger and onkey objects
+   - Drop compatible for sub-devices: onkey, charger and regulator.
+   - Drop constant voltage property already included in
+     monitored-battery
+   - Fix whitespace warnings
+   - Fix license
+v2:
+ - Add yamls for the PMIC and the sub-devices
+---
+ .../devicetree/bindings/mfd/nxp,pf1550.yaml        | 137 +++++++++++++++++++++
+ 1 file changed, 137 insertions(+)
 
-Cheers,
+diff --git a/Documentation/devicetree/bindings/mfd/nxp,pf1550.yaml b/Documentation/devicetree/bindings/mfd/nxp,pf1550.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..a0b412c3468a3d8972e5c129387c5417933c78e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/nxp,pf1550.yaml
+@@ -0,0 +1,137 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/nxp,pf1550.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP PF1550 Power Management IC
++
++maintainers:
++  - Samuel Kayode <samuel.kayode@savoirfairelinux.com>
++
++description:
++  PF1550 PMIC provides battery charging and power supply for low power IoT and
++  wearable applications. This device consists of an i2c controlled MFD that
++  includes regulators, battery charging and an onkey/power button.
++
++$ref: /schemas/power/supply/power-supply.yaml
++
++properties:
++  compatible:
++    const: nxp,pf1550
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  wakeup-source: true
++
++  regulators:
++    type: object
++    additionalProperties: false
++
++    patternProperties:
++      "^(ldo[1-3]|sw[1-3]|vrefddr)$":
++        type: object
++        $ref: /schemas/regulator/regulator.yaml
++        description:
++          regulator configuration for ldo1-3, buck converters(sw1-3)
++          and DDR termination reference voltage (vrefddr)
++        unevaluatedProperties: false
++
++  monitored-battery:
++    description: |
++      A phandle to a monitored battery node that contains a valid value
++      for:
++      constant-charge-voltage-max-microvolt.
++
++  nxp,thermal-regulation-celsius:
++    description:
++      Temperature threshold for thermal regulation of charger in celsius.
++    enum: [ 60, 75, 90, 105 ]
++
++  nxp,min-system-microvolt:
++    description:
++      System specific lower limit voltage.
++    enum: [ 3500000, 3700000, 4300000 ]
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/input/linux-event-codes.h>
++
++    battery: battery-cell {
++        compatible = "simple-battery";
++        constant-charge-voltage-max-microvolt = <4400000>;
++    };
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pmic@8 {
++            compatible = "nxp,pf1550";
++            reg = <0x8>;
++
++            interrupt-parent = <&gpio1>;
++            interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++            wakeup-source;
++            monitored-battery = <&battery>;
++            nxp,min-system-microvolt = <4300000>;
++            nxp,thermal-regulation-celsius = <75>;
++
++            regulators {
++                sw1_reg: sw1 {
++                    regulator-name = "sw1";
++                    regulator-min-microvolt = <600000>;
++                    regulator-max-microvolt = <1387500>;
++                    regulator-always-on;
++                    regulator-ramp-delay = <6250>;
++                };
++
++                sw2_reg: sw2 {
++                    regulator-name = "sw2";
++                    regulator-min-microvolt = <600000>;
++                    regulator-max-microvolt = <1387500>;
++                    regulator-always-on;
++                };
++
++                sw3_reg: sw3 {
++                    regulator-name = "sw3";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++
++                vldo1_reg: ldo1 {
++                    regulator-name = "ldo1";
++                    regulator-min-microvolt = <750000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++
++                vldo2_reg: ldo2 {
++                    regulator-name = "ldo2";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++
++                vldo3_reg: ldo3 {
++                    regulator-name = "ldo3";
++                    regulator-min-microvolt = <750000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++            };
++        };
++    };
 
-Will
+-- 
+2.49.0
+
+
