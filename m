@@ -1,78 +1,57 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADB4223DD1;
-	Thu, 12 Jun 2025 17:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD035299A83;
+	Thu, 12 Jun 2025 17:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749748229; cv=none; b=FHkEnuza4o5wrRhWPa45O/JTYWnbUjNUknpmC3bdThk2XXsJeSc0h1CitoqaRwU2SAtX/HsImxyFK38p0tlQ3HUxg7JlpEHbl3cHAO2wDG7UX494Xs1Lfc8te/nl6IPABFDgqVNYA9D6xhOWpvReJDGzlJGLHD6vm5yDiJI3Uoc=
+	t=1749748256; cv=none; b=ExpOP21HiMJlVjw5oAWGVDCtq9KNco9/fcd1gNKIiUnpRN0GHpLdEpH+2HqWICKzM1IIYCC89RzR+jehQcSjk8DhIL+Z2TwS4HLdJWGVRw6vLmoo67uktvpUFOpRk6GdNJ+WCGGiyCWMgoNODXMOzdlU19xsladQBjRJKJPCgPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749748229; c=relaxed/simple;
-	bh=kI3pWz5ciJdR+6gfjQTJB664EWheKt9HhsUyJ6DP3ow=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=fjuzLvUm3Ow+zTgARDLMD3EsTez1IuhVz28GmwQ4cQ3UnSzwYiMIpaj3PGMm2NINSsLYFAAL6lJxtLA2pEO5w8zwITnSDDlb7AXBKvJnidkRer7NqyylOruOdDqnDeNHFbQi8zz3nUNn2HhPDjI1y5WTLL0mW2y70J9xwQ4FtvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=OrZFR7dw; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="OrZFR7dw"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id ABC9025DC0;
-	Thu, 12 Jun 2025 19:10:24 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id bwC3n6P74jcH; Thu, 12 Jun 2025 19:10:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749748223; bh=kI3pWz5ciJdR+6gfjQTJB664EWheKt9HhsUyJ6DP3ow=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=OrZFR7dwVxAcDcZIqnMV/6mj/709JInMhWhb2oSHlEapC3pHFqOeWT5YX74iT4KuJ
-	 K1pz8E7/PfeZWUWz2CUf/nvNY9CNL9q5LfBbIjfhUjgWCJDkJDFzdG4+GMwLuvb8Ff
-	 sEMcoxgEgVG3m9QrSICzzdIXFJRELHQsHHNHJvlbTpwa73+1mfrDuayaBg5+zV24ZN
-	 KKfny0drPz/wxxukSi7XGEMnCPVbpxfwIfB6LNS++k1aj7DY1EBHXPd37stab5SOwt
-	 8E75+AnXz4pTkm4xynpgyfqVaw4wGVteum/3zACucOWL5d3BGc1h7Zm2C2Am/qmDUr
-	 qifDz3wFPuSJA==
+	s=arc-20240116; t=1749748256; c=relaxed/simple;
+	bh=QmUgJY91IsgedZOIxe947RbcBLJnjsxKwg/n+broCvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=XHgtJaCIUCYpasF2T8vc1iwwMexurfxorvhmcPEoBBa3dpIxvW92o4CIfDKxhH23u7bpD+nye67FZKWfQNQkcihj9nFMUpbOM/2cUhi76c0ZLJNOUVl8+4tCZHPsgo8r5taRjvNe8bP/Ha4zQEaGaFjbAkCvTPpnj2JYZQe4On8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 499C0121B49;
+	Thu, 12 Jun 2025 17:10:24 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id A130D2002D;
+	Thu, 12 Jun 2025 17:10:22 +0000 (UTC)
+Date: Thu, 12 Jun 2025 13:10:21 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org
+Cc: Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+ Christoph Hellwig <hch@lst.de>
+Subject: Unused event xfs_growfs_check_rtgeom
+Message-ID: <20250612131021.114e6ec8@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 12 Jun 2025 17:10:23 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jessica Zhang
- <jessica.zhang@oss.qualcomm.com>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: display: panel: document Samsung
- S6E8AA5X01 panel driver
-In-Reply-To: <20250612-lively-duplex-ff45181ffd5a@spud>
-References: <20250612-panel-samsung-s6e8aa5x01-v1-0-06dcba071ea6@disroot.org>
- <20250612-panel-samsung-s6e8aa5x01-v1-1-06dcba071ea6@disroot.org>
- <20250612-lively-duplex-ff45181ffd5a@spud>
-Message-ID: <0a89c2b2edee38fc910d2ec88760f2e5@disroot.org>
-X-Sender: kauschluss@disroot.org
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: A130D2002D
+X-Stat-Signature: urdo41qkgkibkgfqmtzin6a3n6niceb4
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX199sc+tXBmqI8BO6c6k37AAlisKGGKWNvY=
+X-HE-Tag: 1749748222-455376
+X-HE-Meta: U2FsdGVkX1/BilQKQ8cDjxBpENW65zCgbHuc4+c3modMdomoYuptpUrVUrU694vrTvYQ3vpFNoKfclnzjpG65k8RmOvjcAqbM8DtyKSvxFnX9zijLAv+8naBujxSJlAdqso7PdNONgCshKOej9z8KEQkbGgReZce09DAu4rYTSFMV6xto0SzubXasssKBXvr1fADkscuqmzNSUYzGV0R+5HesR8QyfCT+b42m85VzLX6nR5sYcixJLMN4lYnQLHH4jVqlAkuMHLu1X6M5t8FCBvAuLk2PQnSrAd5aIdBtmRWqXsBMQagCEA6+dAaf3Ya
 
-On 2025-06-12 15:30, Conor Dooley wrote:
-> On Thu, Jun 12, 2025 at 08:22:41PM +0530, Kaustabh Chakraborty wrote:
->> Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Document the
->> compatible and devicetree properties of this panel driver. Timings are
->> provided through the devicetree node as panels are available in
->> different sizes.
->> 
->> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+I have code that will cause a warning if a trace event or tracepoint is
+created but not used. Trace events can take up to 5K of memory in text
+and meta data per event. There's a lot of events in the XFS file system
+that are not used, but one in particular was added by commit
+59a57acbce282 ("xfs: check that the rtrmapbt maxlevels doesn't increase
+when growing fs"). That event is xfs_growfs_check_rtgeom, but it was
+never called.
 
-Okay no, even this one has the ID wrong, ugh :(
+It looks like it was just an oversight. I'm holding off from deleting
+it as it may still be valid but just never been added. It was added
+relatively recently.
 
->> +$id: http://devicetree.org/schemas/display/panel/samsung,s6e8aa0.yaml#
-
-Will apply tag after fixing it.
+-- Steve
