@@ -1,87 +1,125 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE33B298994
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA0F1A265E;
+	Thu, 12 Jun 2025 15:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742859; cv=none; b=q78tXnGL1WdW4r+9CyK/aDYicF/VQs/7XOdMnvribWqVMXX68fLv5WAJFYbOvdXkLaXV/XTO5KoXyTWf520tLLUn5yZoJVk/GfXE7PF/bSFeUN4Y8VBDnbBwfkyG15FZX4C6FyLJoz9x6uAHxbAdOrDfNesm+wVwELzvzxl69yE=
+	t=1749742856; cv=none; b=QjmhkHH9WNX2vRq+a3reoC8ixJrem2LCKBY121vE+WTWrFCFy4shFh4h3ACxZk7kR0RbWRVNrvVT4cT4BP5i5Pm5oRRhoTDuOuYcWYO83tV6glB5bqDSUTAA7Wd9aYvaSAecVTZSYMvMU+GyeYTjHp/ZtTac+9Ke0kNce8IysJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742859; c=relaxed/simple;
-	bh=TWQGumuO93u36q2VkFAd+HA92aZbD8DvDjoKEJO3NtY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QLFH9baBHj9fkUvvcKtfXd7pImyxU1zxJCD4JgwGoplWsVbHnEeQhqf0rhqSfTDhic5+MSXfHslWi7GeswK/pIQhFeoB6ImUFv0qX8W1uQ/qAiWKoB5+8DXu2P+jNbjD4/GC2ucLhDppWym7xZYoWKEvLApSfUNeBKfOvJwx5O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E02E7153B;
-	Thu, 12 Jun 2025 08:40:35 -0700 (PDT)
-Received: from [10.1.37.36] (e122027.cambridge.arm.com [10.1.37.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4ACB3F66E;
-	Thu, 12 Jun 2025 08:40:54 -0700 (PDT)
-Message-ID: <b59c9bf1-352a-43db-af05-7b4d4ac526b0@arm.com>
-Date: Thu, 12 Jun 2025 16:40:53 +0100
+	s=arc-20240116; t=1749742856; c=relaxed/simple;
+	bh=id4ih60TuebeVY8xdlobeadCEqP8YfcnizOYCiHa1u0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=CDSxBuPMpnkTawTCeMsYaCix6Cx6dSpN9vd49cga0peZVDfbvs7M75gUw00c0UviIZCogwG7eOC+oPf2opI9KP6IjKPS61+gjZsBqrrOqZNyLVgVsRU51Z6sMhIRoAYhYCS5H6CiI36TW73d+8tEIi5S8Dic5npWpzLOr6WCPjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=4QeuTfF5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qvu9P7xE; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="4QeuTfF5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qvu9P7xE"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8384F1140250;
+	Thu, 12 Jun 2025 11:40:54 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 11:40:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749742854;
+	 x=1749829254; bh=sWelLnp2+cYiV77S4Yvo1Q6mYaqOKiPfdOyUWSK8nrk=; b=
+	4QeuTfF5PcInrQBsM34KSDk2CeLuGSu2AIA5rYUy+wrTcXmhhvKu5ctBRJ6PJV6k
+	J/a0ymN6VytkungiF+5mwf6I97I8LVCXYQ1fYHIcLOksONNi+dSj19yBUZ+KEzmN
+	dZHD1YUcO0kGi/Sxi449AOVJk+r5lbHUYsvFYviyJHE26ZzGbB7LLACLiUK+CLlQ
+	eyHREgOoBHWhJ+ZOstwsP2aoZ8RfqOyKG7B7vYpX6RqvILpluJ4DsBNDeAvZeEj4
+	wix3WLwt6L0HOq8ntu/7p4vNP0m4opTocN+laKqpuG34D+pHo2FvyCUM74BUSw8R
+	9NPh59rl/hn3cGn9JtlpUA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749742854; x=
+	1749829254; bh=sWelLnp2+cYiV77S4Yvo1Q6mYaqOKiPfdOyUWSK8nrk=; b=Q
+	vu9P7xE0es4tN65mYdM2nVsmcOOXCKQ+rX4bT02kV1HFMLYfb4pNKvQkoD02qlVp
+	El9ihjx46fB/X/MEQmDVrQUkqqG9+AwjkcbZOBfFrC+GGTtzfvNi+LYeMlO0scyp
+	XAstAhZ0x3FRzCo6VuzxStn0dt+QAsLCYfSaolfyg1LZTZQAr2d6rP9q0XhIUUAu
+	CDCEYZJM8InFaqGrtzQynWkNPrthDAeZXEXI396GBXOWRC3rciG5q7Rj1PGr/7Sn
+	zorydElm7bbd+RhqyRv6CkaaisCLWeLEONOlS2MK0cFAelR5d4TzHocB8E0aYhZC
+	5SdXpbQaY9P+SJGIP1Ujg==
+X-ME-Sender: <xms:BvVKaO4sczhyK7B8_T1rKSioG-PMJreKeelislgf2dbmvEWfze2I-w>
+    <xme:BvVKaH4RxposRIUuwLQg7RMjyb3SfICpCr4AjnPMHX2QAwkAuHONW8PcSPAoefUsC
+    -OlKpAazzWMqlBSk7I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheeghecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeek
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeholhhtvggrnhhvsehgmhgrihhlrd
+    gtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepjhgrmhgvshdrtghlrghrkheslhhinhgrrhhordhorhhgpdhrtghpthhtohepihhmgi
+    eslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehfrhgrnhhkrdhlihesnhig
+    phdrtghomhdprhgtphhtthhopehvlhgrughimhhirhdrohhlthgvrghnsehngihprdgtoh
+    hmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:BvVKaNf-lDV226O4SxCItt11pByKUOXkXVxwpMakcaqssbnnX9DV6g>
+    <xmx:BvVKaLIXfVITFPBjbJ4aDbf5jti0-uDXCt1asfxJ06HYMd0SuSqJvg>
+    <xmx:BvVKaCLH6PJ0SSkRDpV6BfUUGguMkrNHBMVd4Ywr0yK40EJOoMskKg>
+    <xmx:BvVKaMzxQyBts5JxAz1C9MIDV6_bVLXqDTPtsWAf0-39s-3lsubdhA>
+    <xmx:BvVKaNyeL7nRYyg0pQ0kawOd1LbaMh6GRmW7-lG890m_c_NGdIvjjKaB>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3D9A8700062; Thu, 12 Jun 2025 11:40:54 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] drm/panthor: Reset queue slots if termination
- fails
-To: Ashley Smith <ashley.smith@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: kernel@collabora.com,
- "open list:ARM MALI PANTHOR DRM DRIVER" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250603094952.4188093-1-ashley.smith@collabora.com>
- <20250603094952.4188093-2-ashley.smith@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250603094952.4188093-2-ashley.smith@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+X-ThreadId: T7ec8a5524929d219
+Date: Thu, 12 Jun 2025 17:40:33 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "James Clark" <james.clark@linaro.org>,
+ "Vladimir Oltean" <vladimir.oltean@nxp.com>
+Cc: "Frank Li" <Frank.li@nxp.com>, "Vladimir Oltean" <olteanv@gmail.com>,
+ "Mark Brown" <broonie@kernel.org>, linux-spi@vger.kernel.org,
+ imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Message-Id: <b9ae3ee9-1296-4a0d-b6e2-97aaf551482c@app.fastmail.com>
+In-Reply-To: <ad7e9aa7-74a3-449d-8ed9-cb270fd5c718@linaro.org>
+References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
+ <20250609-james-nxp-spi-dma-v1-2-2b831e714be2@linaro.org>
+ <aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
+ <de7142ac-f1a3-412f-9f00-502222b20165@app.fastmail.com>
+ <aEhVsrEk0qv+38r3@lizhi-Precision-Tower-5810>
+ <20250611090107.t35zatn47vetnvse@skbuf>
+ <c65c752a-5b60-4f30-8d51-9a903ddd55a6@linaro.org>
+ <20250612111514.rfb3gpmlilznrfxs@skbuf>
+ <ad7e9aa7-74a3-449d-8ed9-cb270fd5c718@linaro.org>
+Subject: Re: [PATCH 2/4] spi: spi-fsl-dspi: Use non-coherent memory for DMA
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 03/06/2025 10:49, Ashley Smith wrote:
-> This fixes a bug where if we timeout after a suspend and the termination
-> fails, due to waiting on a fence that will never be signalled for
-> example, we do not resume the group correctly. The fix forces a reset
-> for groups that are not terminated correctly.
-> 
-> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
-> Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")
+On Thu, Jun 12, 2025, at 16:14, James Clark wrote:
+> On 12/06/2025 12:15 pm, Vladimir Oltean wrote:
+> This leads me to realise a mistake in my original figures. My head was 
+> stuck in target mode where we use DMA so I forgot to force DMA in host 
+> mode to run the performance tests. The previous figures were all XSPI 
+> mode and the small difference in performance could have been just down 
+> to the layout of the code changing?
+>
+> Changing it to DMA mode gives figures that make much more sense:
+>
+> Coherent (4096 byte transfers): 6534 kbps
+> Non-coherent:                   7347 kbps
+>
+> Coherent (16 byte transfers):    447 kbps
+> Non-coherent:                    448 kbps
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+Ok, good. The improvement from the patch is less than I had hoped
+for, but it does sound like at least it doesn't get worse for
+small transfers.
 
-> ---
->  drivers/gpu/drm/panthor/panthor_sched.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-> index 43ee57728de5..65d8ae3dcac1 100644
-> --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> @@ -2727,8 +2727,17 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
->  			 * automatically terminate all active groups, so let's
->  			 * force the state to halted here.
->  			 */
-> -			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
-> +			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
->  				csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
-> +
-> +				/* Reset the queue slots manually if the termination
-> +				 * request failed.
-> +				 */
-> +				for (i = 0; i < group->queue_count; i++) {
-> +					if (group->queues[i])
-> +						cs_slot_reset_locked(ptdev, csg_id, i);
-> +				}
-> +			}
->  			slot_mask &= ~BIT(csg_id);
->  		}
->  	}
-
+     Arnd
