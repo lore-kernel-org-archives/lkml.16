@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08212ECE9C
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5D2ECE9D
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:42:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771759; cv=none; b=pMLBGkaNoaB1RUrITpE2pZ50oLNz2pQ/jab35b/31jeOHNw2CqocpT4D78AXb7V74J4emId8e4iXWisOK6GtLAlLvQoxtBYRe4pmToezYPEyLyepJ+HoPcgVogcd1woVVAupjZ738W18lGhoFMEnch1fZ8B2ZJ5FoheMmddUhP8=
+	t=1749771762; cv=none; b=PapgZKJgPtg7QMMPYeiCbBllEgc3CoyL+E8j/YZzR8oJhp37AQUzLrOnTGLk9qhQmQu3NLChnziSbkIRSCoMo2125H3AeAj11We8mlkm8vWApxCJeOMYrCbGUqwxEsoVd3XELyruVf47v9rAe5hv0Ykl94J9QBzardR+q82NxOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771759; c=relaxed/simple;
-	bh=FTESbv55VSuQPuAp2vy1/V9XHlZBZKHsuwSmEztqyPo=;
+	s=arc-20240116; t=1749771762; c=relaxed/simple;
+	bh=o6Bbz5lQ615J4ru0a/N+eq20jvp8zjlPf71idMnzQY4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jwh1Z/Oa7/vdMUe6oU+y1sGTkSOvEceNJEDwEUwVzSA/qaGp1nALnQEQnDKwpp7y9IiZK8LN53gEyONu5S8C+nI27FIi7jSXKjd7GDYc8hYDC8g/UGx/6tS07zwLrBlXxJC67dNvUlBEP1WJIQXj7plxHLB/Oqr7nY+S7gqMaks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E4HADOp7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+OBFs0tk; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=aLTBosFISv6SjGxnbC033uMEidlZZgIDSRCcZ6eIPv8pxzlUzzYonvim2/XWeVsRZvbiu2XjenzvelQvmBZl04o6o7gx2sGQUJWL+vKtHlfnei4IZsjfCjE7mtSNXoPod0G0VE4WsHcA/BAR8JULmdv7qt5bxKUjAjKPeLrspLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T13hYi1c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N12RORi/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E4HADOp7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+OBFs0tk"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T13hYi1c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N12RORi/"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749771756;
+	s=2020; t=1749771759;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fFZQmugutsviUyhvi1xQJowcmdC20YjG3suPpqwyY4s=;
-	b=E4HADOp7Bw+WDYz5MuYnIl4E4uUNIl4dTAeA14AZ4Auoq3I3Aw3oSwJvkB30v9N2CYsnfm
-	jB6SeE51Pj2qiExuve5GIfF/thvlFlvcwSowg7NpocbM1mPILQx4u6omsvZ2rCb3haYgR8
-	fcfakJNnPaVVAdlNVy5CybT8VDqsuOiZcLYWD9Qtx4poDKSx1fdA8s+TjX5jn6ff7du5IH
-	xIVSnWmZ4T6HjbjqgbiuiLByr/auUe8/5rYLJ16NqrqVapwpHf/Wv5SdilG3MXZxHS6Z83
-	wMvzcVlFRNo1A/RLG4PWvv4lQ7BV3sPmxsTXUDpe060BanJiWj5F1Cp3CY5p4A==
+	bh=nsczU9Cnv76lV78TZ5tdmxGG7/e4mNUxWgTJZQGdiA0=;
+	b=T13hYi1cp2uDHJxyuL2G14Y4iZXeOtv8NtQrldkj48L4ZOZj8OfqCNm39W7eFiyTc7ejmx
+	pvzr9nA9oiWyYPuDJxh1Q+SLzAVIkaQ/vDO9SkMmayqhZveUhsLxJiImDA+hmeFdOv+InA
+	5zOioQ60fDJZpMafpkX+eg8HHw+eaQCXytnxJcSaJEUnD+WPpbtF/npPcuB3w47z7MqS0J
+	aSYNpAD1gTyVQ+2ace0L7zpG7wSFiwEDNqO3mA2snRHCaybrxd9JIxbdtgNCf1Ud0cj2CZ
+	pcDqWxEIDRT40+fVCilVoH7F82EGtbRtMBhKNaXi+9UBvbES+4x7hT+AItmwcA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749771756;
+	s=2020e; t=1749771759;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fFZQmugutsviUyhvi1xQJowcmdC20YjG3suPpqwyY4s=;
-	b=+OBFs0tkHRkO2grtUs0lm8+N1KzGdboqBtC+JmE2p2nny3jk+cpbeKSvEKT+H0FkMJcvgy
-	pJIUR/QWOGFPoFAA==
+	bh=nsczU9Cnv76lV78TZ5tdmxGG7/e4mNUxWgTJZQGdiA0=;
+	b=N12RORi/jE/zf6Tt1F9psWgvk5BXj1JaxEkysgWhYsKWYaa3oYN0levdRFSvMWlkAN3BFk
+	03DYMfN2bYMvMpBw==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -54,9 +54,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 41/44] x86/cpu: <asm/processor.h>: Do not include CPUID API header
-Date: Fri, 13 Jun 2025 01:40:07 +0200
-Message-ID: <20250612234010.572636-42-darwi@linutronix.de>
+Subject: [PATCH v3 42/44] x86/cpuid: Use parsed CPUID(0x80000006)
+Date: Fri, 13 Jun 2025 01:40:08 +0200
+Message-ID: <20250612234010.572636-43-darwi@linutronix.de>
 In-Reply-To: <20250612234010.572636-1-darwi@linutronix.de>
 References: <20250612234010.572636-1-darwi@linutronix.de>
 Precedence: bulk
@@ -67,39 +67,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-<asm/processor.h> includes the CPUID API header <asm/cpuid/api.h>, but
-all what it actually needs are data types from <asm/cpuid/types.h>.
+For cpuid_amd_hygon_has_l3_cache(), use parsed CPUID access instead of a
+direct CPUID query.  The new API offers centralization benefits and
+avoids bit fiddling at call sites.
 
-Modify the header to include <asm/cpuid/types.h> instead.
+For testing L3 cache availability, just check if the EDX.l3_assoc output
+is not zero.  Per AMD manuals, an L3 associativity of zero implies the
+absence of an L3 cache on the CPU.
 
-Note, this allows the CPUID API header to include <asm/processor.h> next,
-without inducing a circular dependency.  This will be needed by the
-upcoming centralized CPUID model APIs.
-
-Note, a large number of call sites were already using the CPUID APIs
-without including <asm/cpuid/api.h>.  They directly or indirectly
-included <asm/processor.h>, which included the CPUID API header.  Such
-call sites have been modified, by parent commits, to explicitly include
-the CPUID API header instead.
+Note, since this function is now using parsed CPUID API, move it under
+the <cpuid/api.h> section: 'Convenience leaf-specific functions (using
+parsed CPUID data)'
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/include/asm/processor.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/cpuid/api.h | 18 +++++++++---------
+ arch/x86/kernel/amd_nb.c         |  2 +-
+ arch/x86/kernel/cpu/cacheinfo.c  |  6 +++---
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index b5d90b60191b..88f8ee33bfca 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -16,7 +16,7 @@ struct vm86;
- #include <uapi/asm/sigcontext.h>
- #include <asm/current.h>
- #include <asm/cpufeatures.h>
--#include <asm/cpuid/api.h>
-+#include <asm/cpuid/types.h>
- #include <asm/page.h>
- #include <asm/pgtable_types.h>
- #include <asm/percpu.h>
+diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/api.h
+index 9f9c035a9e73..92366de5e490 100644
+--- a/arch/x86/include/asm/cpuid/api.h
++++ b/arch/x86/include/asm/cpuid/api.h
+@@ -212,15 +212,6 @@ static inline u32 cpuid_base_hypervisor(const char *sig, u32 leaves)
+ 	return 0;
+ }
+ 
+-/*
+- * CPUID(0x80000006) parsing:
+- */
+-
+-static inline bool cpuid_amd_hygon_has_l3_cache(void)
+-{
+-	return cpuid_edx(0x80000006);
+-}
+-
+ /*
+  * 'struct cpuid_leaves' accessors:
+  *
+@@ -518,6 +509,15 @@ static inline bool cpuid_amd_hygon_has_l3_cache(void)
+ 	     _ptr < &((union leaf_0x2_regs *)(_regs))->desc[16] && (_desc = &cpuid_0x2_table[*_ptr]);\
+ 	     _ptr++)
+ 
++/*
++ * CPUID(0x80000006)
++ */
++
++static inline bool cpuid_amd_hygon_has_l3_cache(struct cpuinfo_x86 *c)
++{
++	return cpuid_leaf(c, 0x80000006)->l3_assoc;
++}
++
+ /*
+  * CPUID parser exported APIs:
+  */
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index a8809778b208..a5d022e15a6b 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -94,7 +94,7 @@ static int amd_cache_northbridges(struct cpuinfo_x86 *c)
+ 	if (amd_gart_present())
+ 		amd_northbridges.flags |= AMD_NB_GART;
+ 
+-	if (!cpuid_amd_hygon_has_l3_cache())
++	if (!cpuid_amd_hygon_has_l3_cache(c))
+ 		return 0;
+ 
+ 	/*
+diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
+index de8e7125eedd..dc28ffdbdc7f 100644
+--- a/arch/x86/kernel/cpu/cacheinfo.c
++++ b/arch/x86/kernel/cpu/cacheinfo.c
+@@ -210,7 +210,7 @@ static int fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4_inf
+ 
+ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, u16 die_id)
+ {
+-	if (!cpuid_amd_hygon_has_l3_cache())
++	if (!cpuid_amd_hygon_has_l3_cache(c))
+ 		return;
+ 
+ 	if (c->x86 < 0x17) {
+@@ -241,7 +241,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, u16 die_id)
+ 
+ void cacheinfo_hygon_init_llc_id(struct cpuinfo_x86 *c)
+ {
+-	if (!cpuid_amd_hygon_has_l3_cache())
++	if (!cpuid_amd_hygon_has_l3_cache(c))
+ 		return;
+ 
+ 	/*
+@@ -257,7 +257,7 @@ void init_amd_cacheinfo(struct cpuinfo_x86 *c)
+ 
+ 	ci->num_leaves = boot_cpu_has(X86_FEATURE_TOPOEXT) ?
+ 		cpuid_subleaf_count(c, 0x8000001d) :
+-		cpuid_leaf(c, 0x80000006)->l3_assoc ? 4 : 3;
++		cpuid_amd_hygon_has_l3_cache(c) ? 4 : 3;
+ }
+ 
+ void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
 -- 
 2.49.0
 
