@@ -1,208 +1,234 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CEA1A7AF7
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749731826; cv=none; b=XHZWs/V8cVhvDoPTai8G2eJnDW4PP60P56wc3fKgD69uyqKGjjQOgsLGKX8zwRBxVWHaMsXHRn0703UIdkmQUvUw3yFECTjAp0EHv7hIND2btft2ruNe7miQRgugUF8bVsQCbvhb838UpR3timhVV8VvTSo4O0a4nRQJF7fBaCM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749731826; c=relaxed/simple;
-	bh=8AFhk+xM+ccWdq6s7fDK5DBd/Hbfx8V0/cEk4s6If3s=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=MRceUBqa7L+UcjPJp+7+6YvdJ9EuYKWJu1vWICAgJPDubdWOYAk2dy7bY2RvPOtrrTGY2MTFSYRqfNcqGoBPqFraNO+4gmjKbBOpJoHpwdI7YuJibgyi2VIvo5v0ZvFW/BsoRFbcIyNv593sCMNPp6Ms+JkOEBg78QgzV4Ht/pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gzCUMyXF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0702BD04
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749731870; cv=fail; b=LyL16HIrbqrxmaqd0SNrZ3AtMLLeHAeg5eh6J8u+yoTj3MsHCY7tyzUpmU8M8jMdzmKdp4Px0nDMiQbhggjQb3RtsWn8KiKBIZM66Oqrc6RYPxkzp+n13rVdkpFMuMbanOQnn630sqqGt95bJuEcA9T/EZY+KtxRRuvW7ZCRUAI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749731870; c=relaxed/simple;
+	bh=eht4rkVD4p9w5PPFZv3RKSdoIC0y1K96EOqoH8ClKes=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=t8hn+QUWl+wSDoahs76TkWHonFdBTlvF3b5FSQKOiztJtDR90fTGTXzJzujx3BEg7zPD+V390mPS2WWbl4zr8xkt15Yp6FXTVpr3X9P/ZMVDSndxjbGjkHmK8J9TAepqNjdLwqyVtFYpQOHFtM6svyJb+lHXqPesqs6Y4fUTUss=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ezqJ1rwa; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gzCUMyXF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749731823;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=Yn83hBseogD5ikMpjR5nAA28nJER1I8C3igW2mcZWe8=;
-	b=gzCUMyXFOE5/cf1ss+76W3Ug5+/lctwskBjJBXFT7TvAwoJL9Z5259Ug4+NawdyeSrM7z7
-	qzJQi5VKV/WIUjrRujrDLPeKJw4HfVNfLbbmEYWyOhRWFRlx9ag/xu7i7vfbHAkn8FS5Zi
-	ct0tCwYgSlKUxFygMIsCqmDT2c3DKMg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-671-iUrsCtDSOweJCslnb-BYaQ-1; Thu,
- 12 Jun 2025 08:36:59 -0400
-X-MC-Unique: iUrsCtDSOweJCslnb-BYaQ-1
-X-Mimecast-MFC-AGG-ID: iUrsCtDSOweJCslnb-BYaQ_1749731816
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 320BD18011CD;
-	Thu, 12 Jun 2025 12:36:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.18])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4236E195609D;
-	Thu, 12 Jun 2025 12:36:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>,
-    Steve French <sfrench@samba.org>,
-    Chuck Lever <chuck.lever@oracle.com>,
-    Mimi Zohar <zohar@linux.ibm.com>
-cc: dhowells@redhat.com, Paulo Alcantara <pc@manguebit.org>,
-    Herbert Xu <herbert@gondor.apana.org.au>,
-    Jeffrey Altman <jaltman@auristor.com>, hch@infradead.org,
-    linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-    linux-cifs@vger.kernel.org, linux-security-module@vger.kernel.org,
-    linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC] Keyrings: How to make them more useful
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ezqJ1rwa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749731869; x=1781267869;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=eht4rkVD4p9w5PPFZv3RKSdoIC0y1K96EOqoH8ClKes=;
+  b=ezqJ1rwaFrQbE45p4Sx8PF/xoIMWQbftkYmNr6lEvYpRkn0OjcmmpqPn
+   uurDdDTUMF7hJldzm1jYx/vqs+F3qSNt4uVp2Vn3KulVl1Tfx4DY+KdQA
+   uP/0YRdP1VLpqBvXjKOfDSr3V6AEV78JC8w7pkkihs7GaTzzcXSmJGS2u
+   8WNKYAqW5Q+hXHJ0JHrZzIrXAsiRX4wKGltKoFkCP1ZZYnomPNldxKom+
+   m/asin2oB4C9GWu80T0D3Csaw07TbEwBKCHgOCirVJ2Fj4BJzAWgNizA1
+   cA5u/s0eWafGFUN9y+gOcb6OmCEkZksnUK5oumB1zvAu1Jy5ABJZmfKav
+   Q==;
+X-CSE-ConnectionGUID: GZZKxuY8TOmNTQMFIFHWvw==
+X-CSE-MsgGUID: wf7TclU5S/Cq9RBLWyWKPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51782645"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="51782645"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:37:48 -0700
+X-CSE-ConnectionGUID: e2h5NrU0SXWRfiyPUS/bcA==
+X-CSE-MsgGUID: kOydk+UjQbK/s6XS0vE+QQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="151329163"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:37:46 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 12 Jun 2025 05:37:45 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 12 Jun 2025 05:37:45 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.47) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 12 Jun 2025 05:37:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gjLtsn04ttMWM6SFbOdXZRKTob+pqh7Yv/5r7K/K4Qq9CaiZWsU6mW+9Go1bl9TxUY3IU5p50uK5voA8PkpVt0QBUfYNt6qIAFlow1kd7VaHAsKUPlIWmPTE7YYpQUumF5qcVPfIQjfxPlWTF40ChbDmT3HPunB9KnxikilyWzrZSW7Scti4eCS3VKP1EK8TwpOrCPe9z2rFj+2FOAAt37hD3LcfIx7snfxuDZ+RXQPjXGFTxJeLUcvdDpzxKuo6Xzdmp6ECA/g7IqaCJ8efi2uU/mdMRrx1snKT++u73AE2gtXKOn6EP9Z1QmSSciQPTyTkDhTTkrJcX87JN0awSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eht4rkVD4p9w5PPFZv3RKSdoIC0y1K96EOqoH8ClKes=;
+ b=yB3p/FFyaPg0QxeELoN9jyKgvsZOj++1+ekcjUiAwuCC0o7bJWpCEllvLwd+buvpMip/TA4rkeseKqovnd9wTkbSmjJRZnBEDgFNhsGiveRW+OjNVE9oLLF1/zMX1DfiuwPGMqebdV8ECFUygyKBytur8XG8wrC/QB18eNWu2FfDmEW2ESFNPuFedaIQYodzPdW0pRsdENVV+b+tT+CrdKMfV87r2Y0vRPoDKHTRWjj/BEB+qsnnqNFTnY7zSXhYuwU0OT0CxCNmB5Q2kFdHMyJ/NjL+8WJYrmNSpz+4R8mDDUI6Wn/eqD0i1q3jNz6m7QEvfOUqKQcVOwBjoCPU9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY5PR11MB6366.namprd11.prod.outlook.com (2603:10b6:930:3a::8)
+ by IA1PR11MB6323.namprd11.prod.outlook.com (2603:10b6:208:389::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
+ 2025 12:37:36 +0000
+Received: from CY5PR11MB6366.namprd11.prod.outlook.com
+ ([fe80::6826:6928:9e6:d778]) by CY5PR11MB6366.namprd11.prod.outlook.com
+ ([fe80::6826:6928:9e6:d778%3]) with mapi id 15.20.8835.019; Thu, 12 Jun 2025
+ 12:37:36 +0000
+From: "Usyskin, Alexander" <alexander.usyskin@intel.com>
+To: Richard Weinberger <richard@nod.at>
+CC: Miquel Raynal <miquel.raynal@bootlin.com>, Guenter Roeck
+	<linux@roeck-us.net>, Vignesh Raghavendra <vigneshr@ti.com>, "De Marchi,
+ Lucas" <lucas.demarchi@intel.com>, =?utf-8?B?VGhvbWFzIEhlbGxzdHLDtm0=?=
+	<thomas.hellstrom@linux.intel.com>, "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Jani Nikula
+	<jani.nikula@linux.intel.com>, Joonas Lahtinen
+	<joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
+	"Poosa, Karthik" <karthik.poosa@intel.com>, "Abliyev, Reuven"
+	<reuven.abliyev@intel.com>, "Weil, Oren jer" <oren.jer.weil@intel.com>,
+	linux-mtd <linux-mtd@lists.infradead.org>, DRI mailing list
+	<dri-devel@lists.freedesktop.org>, intel-gfx
+	<intel-gfx@lists.freedesktop.org>, linux-kernel
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v6 01/11] mtd: core: always create master device
+Thread-Topic: [PATCH v6 01/11] mtd: core: always create master device
+Thread-Index: AQHbi35N9ptLZMK+/0+KHmcJoUKk0bP5FNKAgABXSdCAANahSoAAWdKAgACSaAOAACUigIAAFAQAgAAhxhCAAAxMAIAAXViAgADet1B87pkdB/wY57yAgAEiYbGAAA56AIAABaLggABFNgOAATvKgCORNoJK/uOiyTA=
+Date: Thu, 12 Jun 2025 12:37:36 +0000
+Message-ID: <CY5PR11MB6366A8123B5FDA2BA2A2849EED74A@CY5PR11MB6366.namprd11.prod.outlook.com>
+References: <20250302140921.504304-1-alexander.usyskin@intel.com>
+ <130790886.134361099.1749560056731.JavaMail.zimbra@nod.at>
+ <c90c8bad-9c7a-4bf7-8282-ebefebba90a3@roeck-us.net>
+ <877c1ivcym.fsf@bootlin.com>
+ <1612313571.134371311.1749637592940.JavaMail.zimbra@nod.at>
+ <CY5PR11MB636692EFD9BB99B6F2D959BFED75A@CY5PR11MB6366.namprd11.prod.outlook.com>
+ <87y0tytjmj.fsf@bootlin.com>
+ <CY5PR11MB6366DA38B20B29C1662BDC76ED74A@CY5PR11MB6366.namprd11.prod.outlook.com>
+ <1466250376.134375386.1749723930972.JavaMail.zimbra@nod.at>
+In-Reply-To: <1466250376.134375386.1749723930972.JavaMail.zimbra@nod.at>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY5PR11MB6366:EE_|IA1PR11MB6323:EE_
+x-ms-office365-filtering-correlation-id: cb44b5d7-cd82-4bf2-641b-08dda9ade97f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|10070799003|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?TlNrcUlYUnVsM01XeVkvV210OXFEQTBkRkZ2VEhZUFRBeG03T0tDRy9rRjN4?=
+ =?utf-8?B?ZjM4Z0RYUGNxUzFZZlBQUEg1TGFOcENBT3pFd1BsTENRRmMwRC8xYjR4UFNm?=
+ =?utf-8?B?cysyKzFBUTcrUzVaSkNKYW5WRFNjSUVVNEpLTkpYRE9FeGVVWjdLOFM4LzlF?=
+ =?utf-8?B?cG56TWNBb0lwRE1tYklIU245V2VlOFVQYXVRRTFvN1V3by93ZnlQRUVHQnM5?=
+ =?utf-8?B?WFBQZjhBZ3ZNK291am9NWWEzUFAzeHpYTTdWMlN6VjRwUTAwQTEzZmJlMTNI?=
+ =?utf-8?B?TEdNNzllcUd2VzdvRXpWc0pEUW55OXlncUg5MXJDWnJwaWw0TmlmSDFrdGdn?=
+ =?utf-8?B?WXJqUVdNenFuWlFxekNoQ0gwb3NQQ3VOci9XaVVjTHJneDFSdmtQcWd6Wi93?=
+ =?utf-8?B?c1M2RnR5SFJVY1RmcnFObXN6akpSc1RyWXNzMm9ldW5jTk9uVWVjdStoQ01D?=
+ =?utf-8?B?M2NKQ3gvaXNkQVhLY20zMEFLUTMrdFFKUEVoTUJ4eHR2dDM1eDhhVUhGbzJB?=
+ =?utf-8?B?dHhRK3FkM0VxeGFuNS9KcWFYdVE4S1pQZDFFQXNBeXhFR1pzeGErWk9iVlFJ?=
+ =?utf-8?B?TEhNdE94Y0ZJTkdDNUZ6cFFzNGNJS0lpVUF2Y3R0VWJEZUhnZEJTZ29MWnQ2?=
+ =?utf-8?B?NzQ3UXpKRUkvQmYvdzZSeVNJdUJnczFGM2NGTzR3Wkk5TEdGTUx2VzZ5M2dS?=
+ =?utf-8?B?MjB2VnRiZGJDSGVzOWhuWlQzUDdocHEwWFNuSjZHRUtocWo3dytSeG9xVGNV?=
+ =?utf-8?B?ZDkzb2c1Njl1U0lJc2ZQNXVWZnVjMHpCcVFsVXRMRTc3QU5kekNQUzI4RC8r?=
+ =?utf-8?B?Y2hKVFJ5akVickVCQjhyOVA1bUxraCtTVjl5MXo4Y1p6bW0yelYyZzlkUTZz?=
+ =?utf-8?B?Z09aU0sxa21pVTZQTUlLTEFXUHNoNFkrSDM4S0lJTWxwNmRWTWc2WVEzdXpI?=
+ =?utf-8?B?WXJ5NzF0dWlZTkNmeUNBV09iUmN4RzZHblNnQmhKVDdlVkpHWml1UjdYS1hR?=
+ =?utf-8?B?eVF4VHdKZUdqZGI2eS93QVE3UDR6cXRkMzRkNnVsMFQ4cis1NXBSaFVDRjB5?=
+ =?utf-8?B?c3VyaElUelRMdHlOS3d5WXR2dkFaQ0RNWjJvc0xhd0xmbWRmUWxPNWlLcnlu?=
+ =?utf-8?B?RnB4V01Ea3pYc2p6d2w2Y1B0MUhSSU15VlJuNUQ2eUhlZDhnMk5YS3lXNlBO?=
+ =?utf-8?B?M3h4alJ4SnE4THE1WFBlK3l6cVlQa2JVTUU2UUNVUG1aVFk4QlVUaGIvZ0dW?=
+ =?utf-8?B?WkJoWDhqd0VQc0hGSVpyYkpSMG9xVmJsVlpVWEV1VDMzamoyL3dPK2E2Vjlq?=
+ =?utf-8?B?aEFLNW1iWlB2eFYwbGhPc1E3S3UwSEM5Rnp3N0QxZjZIYWJUaWUraVJvVmR1?=
+ =?utf-8?B?WEk0LzJJTHpzSDAzVk1FL3ZJWUM5aTl5UHFMQVQ4eE1vWDY2eVVwVXE3aFha?=
+ =?utf-8?B?S3h0bHFJZXBVeEFLNHdIUVZ4MW9LSnB0eHJCMUZaVEhYSmFsbzJIaFVTMVE4?=
+ =?utf-8?B?SHV1ZTRHbDROckxYMjlKbUJoanpuS2pTdEhKSkdwY25RQklld0RUK25OKzRa?=
+ =?utf-8?B?dEhiK0dDYkZxRncwU0tERlNQMFREWjdzb1BsVk1pQ3NmcDlCVUZkVXZNd2pH?=
+ =?utf-8?B?QnJXRHI2VmlvTmxxRm5XQllGSmtFLzRKT2lKQmtvbnlQb2F4djFISzdLZEpr?=
+ =?utf-8?B?eHpSNmRRTWtWdmxoQmdVeEhJL1RVMGJaczNpWkZDbStNSWlCTjI5MDBZNWQ0?=
+ =?utf-8?B?R0V5aTB2a0tGRU1KU1hQUkdSL2lDd0dvVVZXRDczZWRLZXBrNS9ISVQxVUVr?=
+ =?utf-8?B?ZE50MGRORGVPT3c2R1RRNHNNQXR0dWN3anFMS2VPb1p4ZzdGdmtkVlFaMUxD?=
+ =?utf-8?B?bFFsd1AvNzNVak95cjFJQnRyTk1JV0lRb2M3N1JVSzI1REZycno3MS9HYWJK?=
+ =?utf-8?B?aGplcUtueTNrUW8vakEvcE16WHl3dkNlZ3NIeU02MGJnME5SQzRRenh2S3lu?=
+ =?utf-8?Q?v+aCu0eqazpCXMlWjGfC8sjVcmmtlY=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6366.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cHNPOG1GejMrNHdjUnMvUDVxejVaQzg2RFJjVVJNbnBsdTh0ZlU2ZXAyaUZM?=
+ =?utf-8?B?a05kWEVlLzJvU09sSytndFNhdmFaMUFVOElxUDVVaTkrQnpSMEVlT3l0aU92?=
+ =?utf-8?B?RW01M2FrbHlnTUR2VVRCRDI3Y3Zua2JlZDJ3ZU5oeUJKSEVYdnU5YWtlZm9J?=
+ =?utf-8?B?TzlCcmxVSXZCVnJHNUVUb2pBejg5ekEwNUN3STFxSE1xUjVuWW9vQlpJbGUy?=
+ =?utf-8?B?U1RtblQ2a0NKcGZTUE5mSk42QmQxVlpLb1dyb20vWHkwc3lmSHlZd0cyOEpo?=
+ =?utf-8?B?MkRnK25kbXRFc0p1SHNvcTBWYi93azliUTlWVXlBZXhnK0tLb0dVeTVnUTJU?=
+ =?utf-8?B?Ui9RUEZJTy9ocFRUNlpmek5MaDVoNGFXUU12RXJCMlR4YVBNaG5iang1RktR?=
+ =?utf-8?B?dS9la3pnUFkyV09iRVgwUDdRdWNTbmc0KzIweWU4TW03WFRtS0QwK092cXND?=
+ =?utf-8?B?RHNEc280eWtadVp5TWRWajBDeFEyUWNJK0pNNytLNEs0ekpSV3ZROHZuTk1t?=
+ =?utf-8?B?VjFQTnpyakhBNlhKK3VsQ3o2K1pYNm1WYUpRMEZMYU0xdzJldm54ZCt4TkJn?=
+ =?utf-8?B?bG1GZ2Fmbm9qQmFGcjdxTE1ZTnBPNnB2MjNTMXIrWWdZUzNYRUYybWVxdThP?=
+ =?utf-8?B?dG00eWNrSFFnamREdkUwT05tVUlFNlFydWVzTmZ3dEN6eVRyNnNzM2ZSeit6?=
+ =?utf-8?B?aThaRlhPMGh4Q2owQnV4Y0p4S1lXcGVrQnRoZ2EzZXlDajNnNU9qWktRQ0hS?=
+ =?utf-8?B?MkFyMUhIUVV3cWEzdk05b2VGZTNIV0tXelhOaUJ5TXRjZzB3THZ0V2s1SEVv?=
+ =?utf-8?B?dE9jSHpJTXJsdkJGQ2NpWVc2V3cvV1VIMjlNM0VEeFNIWE13VWhwUDU4QUpy?=
+ =?utf-8?B?eHk2Y2FGYlRmT0syQVJvWmNRV2JoQ0FXWXJQTnl5OHlsMy8rWExMamQzYVpy?=
+ =?utf-8?B?bzZFSU1xZHpCR3JQQUEvMXlJL09XUHpITmVYTkh3Yjd3V3FYcGdtS3pjR0Q1?=
+ =?utf-8?B?Q1pkc2FuVkF5TmRGMVkzOUthMmZjV1M5OG0ybkVyQk95dWx2L0Jpa3ZmOHFI?=
+ =?utf-8?B?TVpQSWtrUThvM3VQYTN1azhTZXRHcnVHMWxXbmVhOXp3QkRjczAzaXJBWnlR?=
+ =?utf-8?B?VmU4ZXRVUVJsVXZqSXJ2bzNSNExlQWtlbSsyY2RFUHY3SEFrdW5iaDFCcGQz?=
+ =?utf-8?B?SGthUERWMWJCR0ZqZmx2L21mYmdmenBRTUQyaU44d2lXQzJIRDRpUG9aclVu?=
+ =?utf-8?B?NmFtSkNUYkkrSkZJUG5ucU1TMXh0VlYzMzV4aDFBVWNDbE1hWE5POTlDYlBp?=
+ =?utf-8?B?VC8xNnhjRkJpUUFIbzdodkdRT3N6cXlySEV4eGo4SXg0UmFIalVPaXZYTmxN?=
+ =?utf-8?B?ZDFiNitDMW1mUGozMVFyNnk3cTg0LzJoQ1FkNitBUmU3MVY3RlNKb2ZpeFFx?=
+ =?utf-8?B?QkU1NUlGZURXb1Q2WGZ2eFh4ZVlPcFlHTlJzdUF4c2FNb0R4WllLeGFmaDJB?=
+ =?utf-8?B?TG9ycWN2N1pqeW8vSHpMbGhsSDZiWnVGRitsMGxrenh6U2NNZkNOcURMaUVR?=
+ =?utf-8?B?eDdoUVQwRmttMkhBbGovT0RHekUxVkkyazZOS3Y5SGJkc2U5Tm1SN0R6QUx4?=
+ =?utf-8?B?Um9tdVF3ZlNKdVcwWUtlcHRSTEw1L2tMV3VBbXRsaDlqcEpzMVBrcks3dWNV?=
+ =?utf-8?B?cittcFM5RDNHUFJ5V2RXUzJsb2JvMEhkYWp5TnZnRWY5Tmw4Yk1uNUlJQjlK?=
+ =?utf-8?B?NkFOZE1UeGtyVlVpSzNnWlpXY1pMTkptcmJkSU0vR1VPSXc3ajQrYVM2SHdl?=
+ =?utf-8?B?ZnBSSUJsYlFTdGNDQlQ3ZzdlVllNQnY4bXdSalZsdjJRUlN1WjJubVl3aU9r?=
+ =?utf-8?B?VVFMWnE1R3ZDanhxMXVDMVpDNEpDTUowV2NrREtIclFubWZtcXYyOGloanBs?=
+ =?utf-8?B?eTdzV2F2dmNtNEt3OU9pZHJnTWJweUF3ZktoMkprVHZJU1kvVXMyb08zNlVh?=
+ =?utf-8?B?ckxqQUZIYm42cS92MFVxVlMwT1VQdWZQOXovNzJsOEo3RFV3SDk1WTl1aSsz?=
+ =?utf-8?B?M0hUNmdiNHdHRGdjQ0dxK0Y0VUhVeVh5VTZ2cmtLL2xzcEI5SmlsZGdsWldv?=
+ =?utf-8?B?aHVXOFpkQ0dLZXhrejhNNE8xZjJPRWNUb2NlTE9Ndm1mSS9Rb3ZNNmpWd3hr?=
+ =?utf-8?B?VG9qUDJ6UDI5NFloL3g0YjVPNmRYZHVDQy9GaHVDSVhXN2tQYkJRNzEwbGdU?=
+ =?utf-8?B?MmM4MUxtQ1ZlblVkZDdjTkZ6WmNBPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <462885.1749731810.1@warthog.procyon.org.uk>
-Date: Thu, 12 Jun 2025 13:36:50 +0100
-Message-ID: <462886.1749731810@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6366.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb44b5d7-cd82-4bf2-641b-08dda9ade97f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2025 12:37:36.7912
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0euRYzB1cwyPGkx74SVsfW8HDwWS0Zfd0w8PnzsBRT++T0XVJv9O7RTR+TJRz5eP4ECGIwA1NRBT9sbUcmLVzyDi8g5IVdoGPtB/yaBxEgM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6323
+X-OriginatorOrg: intel.com
 
-Hi Jarkko, Steve, Chuck, Mimi, et al.,
-
-I think work needs to be done on the keyrings subsystem to make them more
-useful for network filesystems and other kernel services such as TLS and
-crypto.
-
-There are a number of issues that I think need addressing:
-
- (1) One of the flaws in the initial design is that whilst keys have a type
-     (which is necessary), this has to be specified as part of the lookup or
-     the search, which is overly restrictive.
-
-     It probably would have been better to search by description alone and
-     then, if a key is found, have any type of key with that description
-     returned and let the app/service investigate the key to find the type.
-
-     Now, this is still possible to implement on top of the existing API: just
-     allow a NULL type to be passed in - but we might need some way to
-     enumerate all the keys with that description, but of different types.
-     Possibly, the search function should return all the matching keys.
-
-     Possibly, within the kernel, for each keyring, all the keys of the same
-     description can be stored within a group structure, and the search
-     returns the group.  This could also have the added benefit of maybe
-     making it easier to handle updates.
-
- (2) For certain applications, keys need versioning - and we need to be able
-     to get access to older versions (at least to some extent) of the keys.
-     An example of this is cifs where (if I understand it correctly) the key
-     version gets cranked, but not all servers may have caught up yet, so we
-     need to be able to try the keys in descending order of version.
-
-     This could also work within the group idea mentioned above.
-
- (3) For certain applications, such as AFS and AF_RXRPC, we may need to be
-     able to keep a number of keys around that have the same description
-     (e.g. cell name) and basic type (e.g. rxrpc) and version, but that have
-     different crypto types (e.g. Rx security classes and Kerberos types, such
-     as RxGK+aes256-cts-hmac-sha1-96, RxGK+aes128-cts-hmac-sha256-128 or
-     RxKAD) as different servers in the same cell might not support all or we
-     might be implementing a server that is offering multiple crypto types.
-
-     So we might need a "subtype" as well as a version.
-
- (4) I think the keyring ACLs idea need to be revived.  We have a whole bunch
-     of different keyrings, each with a specific 'domain' of usage for the
-     keys contained therein for checking signatures on things.  Can we reduce
-     this to one keyring and use ACLs to declare the specific purposes for
-     which a key may be used or the specific tasks that may use it?  Use
-     special subject IDs (ie. not simply UIDs/GIDs) to mark this.
-
- (5) Replace the upcall mechanism with a listenable service channel, so that a
-     userspace service (possibly part of systemd or driven from systemd) can
-     listen on it and perform key creation/maintenance services.
-
-     From previous discussions with the systemd maintainer, it would be a lot
-     easier for them to manage if the key is attached to a file descriptor -
-     at least for the duration of the maintenance operation.
-
-     Further, this needs to be containerised in some way so that requests from
-     different containers can be handled separately - and can be
-     distinguished.
-
- (6) Move away from keeping DNS records in a keyring, but rather keep them in
-     some sort of shrinkable list.  They could still be looked up over a
-     secure channel.
-
-To aid with at least (1), (2) and (3) and possibly (4), I think it might be
-worth adding an extended add_key() system call that takes an additional
-parameter string:
-
-	key_serial_t add_key2(const char *type,
-			      const char *description,
-			      const char *parameters,
-			      const void payload, size_t plen,
-			      key_serial_t keyring);
-
-The parameters would get passed to the key type driver for it to extract
-things like version number and subtype from without the need to try and fold
-it into the payload (which may, for example, be a binary ticket obtained from
-kerberos).  Though possibly that is a bad example as the kerberos ticket may
-contain multiple keys.
-
-Also, maybe add a multi-key adding syscall for when the payload may contain
-multiple keys, each to be added separately:
-
-	int add_keys(const char *type,
-		     const char *description,
-		     const char *parameters,
-		     const void payload, size_t plen,
-		     key_serial_t keyring);
-
-When it comes to keyrings, I'm thinking that the keyring needs to change such
-that the index holds CoW groups of keys of the same description, but of
-different type, version and subtype, e.g.:
-
-	struct key_group {
-		struct rcu_head		rcu;
-		struct key_group	*replacement;
-		char			*description;
-		unsigned int		seq;
-		refcount_t		ref;
-		int			nr_keys;
-		struct {
-			unsigned long	version;
-			struct key __rcu *key;
-		} key_list[];
-	};
-
-and that these groups should be made available to kernel services upon
-searching.  I'm tempted to put the version as part of the group as a whole,
-making it easier to ditch a set of the same version, but that could make RCU
-CoW-ness tricky.
-
-I could then add two new keyctls, one to unlink all the keys in a keyring that
-match description and, optionally, type and parameters (e.g. of a particular
-version):
-
-	int keyctl_scrub(const char *type, /* can be NULL */
-			 const char *description,
-			 const char *parameters, /* can be NULL */
-			 key_serial_t keyring);
-
-and one to list all the keys matching a description and, optionally, type and
-parameters:
-
-	int list_keys(const char *type, /* can be NULL */
-		      const char *description,
-		      const char *parameters, /* can be NULL */
-		      key_serial_t keyring,
-		      key_serial_t *list,
-		      size_t list_size);
-
-Thoughts?
-
-Thanks,
-David
-
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDAxLzExXSBtdGQ6IGNvcmU6IGFsd2F5cyBjcmVhdGUg
+bWFzdGVyIGRldmljZQ0KPiANCj4gLS0tLS0gVXJzcHLDvG5nbGljaGUgTWFpbCAtLS0tLQ0KPiA+
+IFZvbjogIkFsZXhhbmRlciBVc3lza2luIiA8YWxleGFuZGVyLnVzeXNraW5AaW50ZWwuY29tPg0K
+PiA+IEluIGdlbmVyYWwsIGl0IGlzIGZpbmUgZm9yIG1lIC0gd2UgaGF2ZSBwYXJlbnQgbXRkIGlu
+aXRpYWxpemVkIGFuZCBwYXJ0aWNpcGF0aW5nDQo+ID4gaW4gcG93ZXIgbWFuYWdlbWVudC4NCj4g
+Pg0KPiA+IEkgY2FuJ3Qgc2VlIGhvdyB0byBiZW5kIGlkcl9hbGxvYyB0byBhbGxvY2F0ZSBmcm9t
+IHRoZSBlbmQgYW5kIGNvcm5lciBjYXNlDQo+ID4gb2YgZnVsbCBpZHIgcmFuZ2UgaXMgYWxzbyB3
+aWxsIGJlIHByb2JsZW1hdGljLg0KPiANCj4gSSBleHBlY3RlZCBpdCB0byB3b3JrIGJlY2F1c2Ug
+d2UgY2FuIHRyYWNrIHRoZSBoaWdoZXN0IG10ZCBJRCBhbmQgcGFzcyBsaW1pdHMNCj4gdG8gaWRy
+X2FsbG9jKCksIG5vPw0KPiANCj4gVGhhbmtzLA0KPiAvL3JpY2hhcmQNCg0KVGhpcyB3aWxsIHBy
+b2R1Y2UgZGlmZmVyZW50IGlkcyBpZiB0aGVyZSBhcmUgdHdvIG10ZCBjaGlwcy4NCkUuZy46DQpC
+ZWZvcmUgcGF0Y2hlczoNCjAgLSBmaXJzdCBjaGlwIHBhcnRpdGlvbiAxIC0gc2Vjb25kIGNoaXAg
+cGFydGl0aW9uDQpBZnRlciBwYXRjaGVzOg0KMCAtIGZpcnN0IGNoaXAgcGFydGl0aW9uIDEgLSBm
+aXJzdCBjaGlwIG1hc3Rlcg0KMiAtIHNlY29uZCBjaGlwIHBhcnRpdGlvbiAzIC0gc2Vjb25kIGNo
+aXAgbWFzdGVyDQoNCk9yIHdlIHNob3VsZCBtYW51YWxseSBnaXZlIHJlZ2lvbiBmb3IgbWFzdGVy
+J3MgaWRzIGF0IHRoZSBlbmQNCm9mIGlkciByYW5nZSBuZWFyIFVJTlRfTUFYLg0KQW5kIHRoYXQg
+cmVxdWlyZXMgY2FyZWZ1bCBtYW51YWwgaGFuZGxpbmcgb2Ygb3ZlcmZsb3dzLg0KDQpQZXJzb25h
+bGx5LCBJIHRoaW5rIGl0IGlzIGJhZCBpZGVhIHRvIHJlbHkgb24gcGFydGl0aW9uIG51bWJlciwN
+CmJ1dCBpdCBpcyB0aGUgc3RhdHVzLXF1byBub3cuDQoNCi0gLSANClRoYW5rcywNClNhc2hhDQoN
+Cg0K
