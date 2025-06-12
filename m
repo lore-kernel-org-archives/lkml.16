@@ -1,189 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B8923C4E1;
-	Thu, 12 Jun 2025 11:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7D1239E92;
+	Thu, 12 Jun 2025 11:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726355; cv=none; b=r0l8sLStE2BLys29Qgj/9I7n1XOsTxiPJDW6Z1G8vbebkoNy/B6Mo1jjGVb52ZmzMxz+ijzX0Fim9/TklXKNZEbPxFoLUmtT3SbWq9fnVmwZJu7nTyBq7B5rZ6B1Xuupcq/ehX/Br5kkOhKURYq/PMo/kgisLZL423mwFMu7NZ4=
+	t=1749726396; cv=none; b=f3NWvI4BFtGGIGv96ZAXQIMppB+FuPV88b3KGSWUbjnijxH88fySGYU01en+KWZN+heOKf05vNTSP8XaqnbLKECd8qWKowaaAsNhvh3Tgi9rraGUOBaHx4piWlLM+MWJlJTGvU0DEI9xk+TeYDKmE3bz/u1rqpHbdJ4L+OrR7rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726355; c=relaxed/simple;
-	bh=J7zUfhMpAdwFfUP75/R8HkzXHrkbFmTeVwn8MXHX3wo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rt9r0YEEaCtllte0kd4Rt0aYY5By8lQ1TguGvIeVfBqy/CJ0Qo8jy1lN2argjzYsQSeVIJS7HHJr9MEHbUAWGwyGwK9TPsXha470o6MpE1v6/GHYJrk4fosduCsoHVk+tlVALq1HJYHmki3XEby6d7AnItXHz7u/UztVHOEjUgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5BJuoTc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749726396; c=relaxed/simple;
+	bh=CX/SJ6p2PC4ePksVeP0bGJ7+lohsdUHkw9p8R2H3Ufs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HBKViFZgQcpCqTz9YkRVL0pwmCf+B5hQOGnG0o2RJjB9+nZrBR6h9gWVxBmS6Hwnh6JMw477IU86cG5o0hPgaCfl2A9IskfwYUSe8akKjs2Nu/7r3hYL7y2+Hhc71tT6lXmGPZ9hVBTg2nOaRHcXDdDhZzAL+kRc5A8tJYcg28c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8w5btC+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5BJuoTc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA18C4CEEA;
-	Thu, 12 Jun 2025 11:05:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8w5btC+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840AAC4CEEA;
+	Thu, 12 Jun 2025 11:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749726354;
-	bh=J7zUfhMpAdwFfUP75/R8HkzXHrkbFmTeVwn8MXHX3wo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G5BJuoTc4SmTGNDTEXaxziELQuqow+YWxAYIBa3/bnaqCE15yWEFuB+v/S7567Gvd
-	 Es6LynGXcv5ll4OSjE7b0sk6pKbD4tcjBDTPMKy0m+gf8kBWR/FTNVY1UHRPM65bMt
-	 jmsBOplO9IAkKCWw3IIYTrg4EE1SZmPw3kvARLswbhZI1wwPsC9ByxfBscYrTvsDWY
-	 U20HQ4loBBP+hlcE3HQ17MbfgXB1G31CJveorWHgY5FV/+di1E7DxmFv8XsgB3/LVG
-	 caqfdKlvLBNYjRznPW9euvbbKUwZGxA0FIKed+mVcfm8SsxeNO4kCXn4mR5S9rOwYL
-	 xCMaGxB/I1bNA==
-Message-ID: <4f31f016-d250-41ea-b613-b074b8ea00d1@kernel.org>
-Date: Thu, 12 Jun 2025 13:05:49 +0200
+	s=k20201202; t=1749726396;
+	bh=CX/SJ6p2PC4ePksVeP0bGJ7+lohsdUHkw9p8R2H3Ufs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a8w5btC+atZJrFVZ2nyZfr4+HxCVdpaQ4Cg98xepzMKVDR4E/sGpyF/nUCZMfjfva
+	 j3Re4i6p/Cpf/rJxDMIK/Z8rQIGwHGH6wHVSscq1J4Mq/5Dcsli4ltdcGk7jt+UfX9
+	 fWgO7jzM5e/arjAW3OGpdOljFmN/kQ6ttdYxgq2NNB412PKTyvaInrUxMsQi/XeZ2C
+	 lBIPhh/TgknjyhpC5SOJVPWBwK1bDcJaSL1Xw0gR2YZLptw6FLgxYlZ3WA8rD2xu4G
+	 s9Ck+UYEEPAMxpi+LXit2IlkuinaqctK6qUK+gBseyxaNHOyLDkLDyohU8cNisIFbX
+	 h/a+wtCkLYBUQ==
+Date: Thu, 12 Jun 2025 13:06:28 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
+Message-ID: <aEq0tA7yuBPxTSXq@pollux>
+References: <20250603205416.49281-1-dakr@kernel.org>
+ <20250603205416.49281-2-dakr@kernel.org>
+ <DAKEM192U5RZ.3D00TOR520LRY@kernel.org>
+ <aEqtexr4WwfU7rIP@pollux>
+ <DAKHYVHNSO30.3SICBU2MAW9UL@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp13
-To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
- <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
- <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
- <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
- <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
- <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
- <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
- <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
- <42a0b7ab-d85d-4d52-a263-4a4648c7ff05@kernel.org>
- <2865ab3a-1c20-4951-8132-4be98d73d70e@foss.st.com>
- <f1a63830-0533-4f1c-9116-32e8c1e61a8b@kernel.org>
- <26a4f12a-2295-402e-8e31-45733aa6582d@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <26a4f12a-2295-402e-8e31-45733aa6582d@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DAKHYVHNSO30.3SICBU2MAW9UL@kernel.org>
 
-On 12/06/2025 11:31, Clement LE GOFFIC wrote:
-> On 6/11/25 17:48, Krzysztof Kozlowski wrote:
->> On 11/06/2025 16:08, Clement LE GOFFIC wrote:
->>> On 6/11/25 08:35, Krzysztof Kozlowski wrote:
->>>> On 10/06/2025 15:33, Clement LE GOFFIC wrote:
->>>>> On 6/10/25 14:38, Krzysztof Kozlowski wrote:
->>>>>> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
->>>>>>> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
->>>>>>>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
->>>>>>>>>>
->>>>>>>>>>> +		};
->>>>>>>>>>> +
->>>>>>>>>>> +		hdp: pinctrl@5002a000 {
->>>>>>>>>>> +			compatible = "st,stm32mp131-hdp";
->>>>>>>>>>> +			reg = <0x5002a000 0x400>;
->>>>>>>>>>> +			clocks = <&rcc HDP>;
->>>>>>>>>>>       			status = "disabled";
->>>>>>>>>>
->>>>>>>>>> Why are you disabling it? What is missing?
->>>>>>>>>
->>>>>>>>> Nothing is missing just disabled by default.
->>>>>>>>> The node is then enabled when needed in board's dts file.
->>>>>>>> Nodes should not be disabled by default if they are complete. That's why
->>>>>>>> I asked what is missing. Drop.
->>>>>>>
->>>>>>> Hi Krzysztof, OK I better understand now.
->>>>>>> So yes the 'pinctrl-*' properties which are board dependent are lacking.
->>>>>>
->>>>>> These are not properties of this node.
->>>>>
->>>>> Does this mean I should add 'pinctrl-*' properties in bindings yaml file ?
->>>>> I don't get it..
->>>>
->>>> These properties have no meaning here, so the hardware description is
->>>> complete. You claim that you miss them thus device is incomplete is just
->>>> not correct: these properties do not belong here! They belong to the
->>>> board but even there they are totally optional. Why would they be a
->>>> required resource?
->>>>
->>>> To remind: we talk here ONLY about required resources.
->>>
->>> Yes, 'pinctrl-*' properties belongs to the board and are not required.
->>> So nothing is missing.
->>>
->>> This hdp node in the SoC dtsi file can be enabled by default.
->>> But the hdp driver will probe and do nothing because without the
->>> 'pinctrl-*' properties from the board files it would not be able to
->>> access to any pin.
->>
->>
->> Pinctrl has other features in general, including interfaces to userspace
->> (as pretty often combined with gpio, although not sure if relevant here).
+On Thu, Jun 12, 2025 at 12:53:45PM +0200, Benno Lossin wrote:
+> On Thu Jun 12, 2025 at 12:35 PM CEST, Danilo Krummrich wrote:
+> > On Thu, Jun 12, 2025 at 10:15:55AM +0200, Benno Lossin wrote:
+> >> On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
+> >> > +    /// Signal all tasks waiting on this completion.
+> >> > +    ///
+> >> > +    /// This method wakes up all tasks waiting on this completion; after this operation the
+> >> > +    /// completion is permanently done.
+> >> > +    pub fn complete_all(&self) {
+> >> > +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct completion`.
+> >> > +        unsafe { bindings::complete_all(self.as_raw()) };
+> >> > +    }
+> >> > +
+> >> > +    /// Wait for completion of a task.
+> >> > +    ///
+> >> > +    /// This method waits for the completion of a task; it is not interruptible and there is no
+> >> > +    /// timeout.
+> >> 
+> >> Another thing that we should document is weather this function returns
+> >> immediately when `complete_all` was already called in the past.
+> >
+> > The details are all documented in [1], which is also linked in the module
+> > documentation of this file.
+> >
+> > [1] https://docs.kernel.org/scheduler/completion.html
 > 
-> You're right. Also HDP pinctrl has a GPO feature accessible from userspace.
-> But by default the HDP is not connected to any pad; it needs the board 
-
-OK, then that was the answer to my first question - what is missing.
-However aren't these pads connected internally also to other parts of
-the SoC (like in most other vendors)?
-
-> 'pinctrl-*' properties to configure the SoC pinctrl and expose HDP on 
-> the SoC pads.
+> I dislike that we don't have the docs right there on the function.
+> Following that link, there is also a lot of other stuff there that don't
+> apply to Rust (eg initializing completions, and the
+> wait_for_completion*() variants).
 > 
-> That's why for me the enabling of the driver should be in the board file 
-> together with the SoC pinctrl configuration.
-
-And what are the default pad settings configured by HPD driver in
-bootloader (and by bootloader I mean one of few bootloaders this is
-going to be used on like U-Boot)
-
+> After a bit of reading, I found the part that I was looking for (by
+> searching for `complete_all`...):
 > 
-> The userland cannot change the pinctrl alternate function mux, this is 
-> statically defined by the devicetree.
+>     A thread that wants to signal that the conditions for continuation have
+>     been achieved calls `complete()` to signal exactly one of the waiters
+>     that it can continue:
+>     
+>     ```c
+>     void complete(struct completion *done)
+>     ```
+>     
+>     ... or calls `complete_all()` to signal all current and future waiters:
+>     
+>     ```c
+>     void complete_all(struct completion *done)
+>     ```
+> 
+> Let's just put this information on the `complete_all` function.
 
-If you expose GPIO then userland needs this regardless of alternate mux.
-IOW, board level could not configure mux because it should be always
-configured to safe GPIO input.
+It's already there, no?
 
-Best regards,
-Krzysztof
+"after this operation the completion is permanently done"
