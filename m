@@ -1,113 +1,132 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5687B46B8;
-	Thu, 12 Jun 2025 12:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27AA2F4322;
+	Thu, 12 Jun 2025 12:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749731441; cv=none; b=SpsbHFIUyaU/x6nNCJXUPI6EOC1NzNZRgEevN4UmmoBTqD062cVsdnfoEcsD0qag1EGwVMdnoYAvm52+2uuaLXJIfnhTDJkAYdxoYIaSfk60AOeEqvF6LENVuTGQ7K+jSi/3wNYzg74nCEyxKZoVdOfxSuEbe0YAIBQ3Ubomr00=
+	t=1749731494; cv=none; b=DrgnrRqCxMmptPvEPEG/fWf8Kifhx3CoRAAKWn1GoWPNoPy9gfnr+r/R5eX/jNnoePtVbbTZv6egDwZR08ePr4/jkdchb3JbPpaKCQr8xX7A3fyraQFcDG3meLPXIEddJm6Pjk2uFAjhd7RI5IBAMF+SGSL1lMxJ0yhSgQf9404=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749731441; c=relaxed/simple;
-	bh=xMj0PeXUpejsICB72qzZq/FU9wUca+EJE4sWUqWhTeA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y7VMaqWD4eU68EnxbP99yz5RrT+JDjUYMq4rZaWMCH4L73bwsuaP1Z+4SCovQ5+dyF91JBvRLPPRz7QV6mE6EmgrLPPYg6ZufvUDLwgiV/DyLrTSe5QlC1iRE7KA2HLrt+AAr/nYZGY1JYvnHOsC4NL/WN+zA+/Krrz5qV1fL4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Pdr3jsG8; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749731494; c=relaxed/simple;
+	bh=plOimjf1Hornox4olvLgJ3RBchkKjUgxZh9h3lWIBkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lnc+jN3cvdtWk3NLebcc/ZpaiOIEByggQW9B+4OqaUxp7CnmoKGekP7yTwxw18DvttnYnlq0RgM5kSY6OdUTA0bp4yBaSDeofO4svuTP3jRWJMyvfPlN3lH80lcnWVDU340YRvYLMUyBN8zjLzh8JmIEomJTz4qowllAYgZ42ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7wHX6gx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Pdr3jsG8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749731436;
-	bh=xMj0PeXUpejsICB72qzZq/FU9wUca+EJE4sWUqWhTeA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Pdr3jsG8LEBbrTq48ZzhTF8vjLwU0K+gNO+X2iv7Gdtf7LmKBdaFEIz5QMWdeccwD
-	 GLCxrTWkvx74UkGx64K3aPq/B4r5m2wWanFUdRsvxE/zkUcEWjvmC0tdmaSl7DthRD
-	 5BeuUwEdjAOZP363EEtatAdEPq2wvbL19UMWfJpDqLJEWqCebJY82sVUPdY5Cah+Bp
-	 d6wLrrwIXhisc4G9pCT8qm9/8yoDg9PO+QNBA6isGJKMkProKjiDrtP+vHW8of9oIv
-	 T0bBlbb2VBZy8YlsWjQe1n9JNo/CshEopiXzxi9osJgM+NETN7+2eF9RvK13lDKGw6
-	 5cndkuogjgGWQ==
-Received: from [192.168.1.90] (unknown [212.93.144.165])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 48C9D17E06BF;
-	Thu, 12 Jun 2025 14:30:35 +0200 (CEST)
-Message-ID: <85cb44fd-f597-443e-81b4-e259513aec9f@collabora.com>
-Date: Thu, 12 Jun 2025 15:30:23 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7wHX6gx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79AF6C4CEEA;
+	Thu, 12 Jun 2025 12:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749731493;
+	bh=plOimjf1Hornox4olvLgJ3RBchkKjUgxZh9h3lWIBkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W7wHX6gxBmrU2wVsFjdyFIS3aQp5X1snRh9Mmvs9UQs24DxYXjh4+w2zD0C+IzxV6
+	 KDHsCn1xEmU9LVqAjZDT/06LgNn9uS6XHzyO8O+VWC1movfClioKVy2A4q9zqkuR3A
+	 IZeWpvA8+FjveKr+MsPa+LNnCzolLDhJVT46+v8Am+FUohlXKgIbbMuGVw0NY3qEzF
+	 b5ppPTucCtnsjdYAyKcZISOXRUlVPIGm6GDtu3K9+r9GTCaKcdVThiDqroxFnHsQHF
+	 4jPcXwQdvVZCQbdY9X0Gw5U34gin+DUTkDAFkBU9HHL1XJsGW2n5eyT4iB+HyK8xS+
+	 qCtpkkiKZpD2w==
+Date: Thu, 12 Jun 2025 14:31:25 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Song Liu <song@kernel.org>, Tingmao Wang <m@maowtm.org>, 
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, NeilBrown <neil@brown.name>, bpf@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
+	viro@zeniv.linux.org.uk, kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, 
+	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com
+Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
+ path_walk_parent()
+Message-ID: <20250612-erraten-bepacken-42675dfcfa82@brauner>
+References: <20250606213015.255134-1-song@kernel.org>
+ <20250606213015.255134-2-song@kernel.org>
+ <174959847640.608730.1496017556661353963@noble.neil.brown.name>
+ <CAPhsuW6oet8_LbL+6mVi7Lc4U_8i7O-PN5F1zOm5esV52sBu0A@mail.gmail.com>
+ <20250611.Bee1Iohoh4We@digikod.net>
+ <CAPhsuW6jZxRBEgz00KV4SasiMhBGyMHoP5dMktoyCOeMbJwmgg@mail.gmail.com>
+ <e7115b18-84fc-4e8f-afdb-0d3d3e574497@maowtm.org>
+ <CAPhsuW4LfhtVCe8Kym4qM6s-7n5rRMY-bBkhwoWU7SPGQdk=bw@mail.gmail.com>
+ <csh2jbt5gythdlqps7b4jgizfeww6siuu7de5ftr6ygpnta6bd@umja7wbmnw7j>
+ <zlpjk36aplguzvc2feyu4j5levmbxlzwvrn3bo5jpsc5vjztm2@io27pkd44pow>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] arm64: dts: rockchip: Fix HDMI output on RK3576
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-rockchip@lists.infradead.org
-Cc: kernel@collabora.com, Andy Yan <andyshrk@163.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
- <3011644.e9J7NaK4W3@workhorse>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <3011644.e9J7NaK4W3@workhorse>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <zlpjk36aplguzvc2feyu4j5levmbxlzwvrn3bo5jpsc5vjztm2@io27pkd44pow>
 
-Hi Nicolas,
+On Thu, Jun 12, 2025 at 11:49:08AM +0200, Jan Kara wrote:
+> On Thu 12-06-25 11:01:16, Jan Kara wrote:
+> > On Wed 11-06-25 11:08:30, Song Liu wrote:
+> > > On Wed, Jun 11, 2025 at 10:50 AM Tingmao Wang <m@maowtm.org> wrote:
+> > > [...]
+> > > > > I think we will need some callback mechanism for this. Something like:
+> > > > >
+> > > > > for_each_parents(starting_path, root, callback_fn, cb_data, bool try_rcu) {
+> > > > >    if (!try_rcu)
+> > > > >       goto ref_walk;
+> > > > >
+> > > > >    __read_seqcount_begin();
+> > > > >     /* rcu walk parents, from starting_path until root */
+> > > > >    walk_rcu(starting_path, root, path) {
+> > > > >     callback_fn(path, cb_data);
+> > > > >   }
+> > > > >   if (!read_seqcount_retry())
+> > > > >     return xxx;  /* successful rcu walk */
+> > > > >
+> > > > > ref_walk:
+> > > > >   /* ref walk parents, from starting_path until root */
+> > > > >    walk(starting_path, root, path) {
+> > > > >     callback_fn(path, cb_data);
+> > > > >   }
+> > > > >   return xxx;
+> > > > > }
+> > > > >
+> > > > > Personally, I don't like this version very much, because the callback
+> > > > > mechanism is not very flexible, and it is tricky to use it in BPF LSM.
+> > > >
+> > > > Aside from the "exposing mount seqcounts" problem, what do you think about
+> > > > the parent_iterator approach I suggested earlier?  I feel that it is
+> > > > better than such a callback - more flexible, and also fits in right with
+> > > > the BPF API you already designed (i.e. with a callback you might then have
+> > > > to allow BPF to pass a callback?).  There are some specifics that I can
+> > > > improve - Mickaël suggested some in our discussion:
+> > > >
+> > > > - Letting the caller take rcu_read_lock outside rather than doing it in
+> > > > path_walk_parent_start
+> > > >
+> > > > - Instead of always requiring a struct parent_iterator, allow passing in
+> > > > NULL for the iterator to path_walk_parent to do a reference walk without
+> > > > needing to call path_walk_parent_start - this way might be simpler and
+> > > > path_walk_parent_start/end can just be for rcu case.
+> > > >
+> > > > but what do you think about the overall shape of it?
+> > > 
+> > > Personally, I don't have strong objections to this design. But VFS
+> > > folks may have other concerns with it.
+> > 
+> > From what I've read above I'm not sure about details of the proposal but I
+> > don't think mixing of RCU & non-RCU walk in a single function / iterator is
+> > a good idea. IMHO the code would be quite messy. After all we have
+> > follow_dotdot_rcu() and follow_dotdot() as separate functions for a reason.
+> > Also given this series went through several iterations and we don't yet
+> > have an acceptable / correct solution suggests getting even the standard
+> > walk correct is hard enough. RCU walk is going to be only worse. So I'd
+> > suggest to get the standard walk finished and agreed on first and
+> > investigate feasibility of RCU variant later.
+> 
+> OK, I've now read some of Tingmaon's and Christian's replies which I've
+> missed previously so I guess I now better understand why you complicate
+> things with RCU walking but still I'm of the opinion that we should start
+> with getting the standard walk working. IMHO pulling in RCU walk into the
+> iterator will bring it to a completely new complexity level...
 
-On 6/12/25 3:13 PM, Nicolas Frattaroli wrote:
-> On Wednesday, 11 June 2025 23:47:46 Central European Summer Time Cristian Ciocaltea wrote:
->> Since commit c871a311edf0 ("phy: rockchip: samsung-hdptx: Setup TMDS
->> char rate via phy_configure_opts_hdmi"), the workaround of passing the
->> PHY rate from DW HDMI QP bridge driver via phy_set_bus_width() became
->> partially broken, unless the rate adjustment is done as with RK3588,
->> i.e. by CCF from VOP2.
->>
->> Attempting to fix this up at PHY level would not only introduce
->> additional hacks, but it would also fail to adequately resolve the
->> display issues that are a consequence of the system CRU limitations.
->>
->> Therefore, let's proceed with the solution already implemented for
->> RK3588, that is to make use of the HDMI PHY PLL as a more accurate DCLK
->> source in VOP2.
->>
->> It's worth noting a follow-up patch is going to drop the hack from the
->> bridge driver altogether, while switching to HDMI PHY configuration API
->> for setting up the TMDS character rate.
->>
->> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->> ---
->> Cristian Ciocaltea (3):
->>       dt-bindings: display: vop2: Add optional PLL clock property for rk3576
->>       arm64: dts: rockchip: Enable HDMI PHY clk provider on rk3576
->>       arm64: dts: rockchip: Add HDMI PHY PLL clock source to VOP2 on rk3576
->>
->>  .../bindings/display/rockchip/rockchip-vop2.yaml   | 56 +++++++++++++++++-----
->>  arch/arm64/boot/dts/rockchip/rk3576.dtsi           |  7 ++-
->>  2 files changed, 49 insertions(+), 14 deletions(-)
->> ---
->> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
->> change-id: 20250611-rk3576-hdmitx-fix-e030fbdb0d17
->>
-> 
-> For the whole series:
-> 
-> Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> 
-> This fixes HDMI output for 4K resolutions on my RK3576 ArmSoM Sige5.
-> The DTB checks and bindings checks pass as well.
-Many thanks for the additional testing!
-
-Regards,
-Cristian
+I would not want it in the first place. But I have a deep seated
+aversion to exposing two different variants. Especially if the second
+variant wants or needs access to internal details such as mount or
+dentry sequence counts. I'm not at all in favor of that.
