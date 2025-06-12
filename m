@@ -1,111 +1,205 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B69E2D6636
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B072D6616;
+	Thu, 12 Jun 2025 20:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749760603; cv=none; b=Qt1hOxQWxJyBNUjNJB1zi9Rpbvu78WHJxH6qHFG96Z5a2GsHlAuQe2+X5aebPd2sOj8yyoi2tVl9IWuXwjfIk3rtMPSYruLQPp300gCkKzbpcLp28d1/vYBnzJtOvDc+j2SQYFp6ah02FdTsoDqSr9cPInriuej1rQuOtG9cgOo=
+	t=1749760620; cv=none; b=iSd5LgHkRzkC1lJ2LhK/bLkhNTJtZoAPG2aIdviPBxpeHAc/6M4VUWG2Ir9geCZUfM0EQmhI1RSWZqmtg3OPOoUlReHK+d+v8yQeuglCK6zaj5mpCeEjcDnwZi3YTkCoGl+PcnCK67H+t4PRoHhVge4E96yYPgl4pXfx/Nhm+CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749760603; c=relaxed/simple;
-	bh=SAU5o2DQ0CfgLin1S8tnE5huEGqu4f6AQhBXhQIQYLU=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=tyRlL0sDPwUIZkLtUWpxn5DiNK2s3ZQ/ncsWZG7pGN4+7AhAu1cJINKsvT00AbAq+CM80d0JbmuyRTTRim86aZyGwHKMiptpUCdIzR6ctYXI6XTswzxJ+wMB/GTgsuDFqsB8Zzu3a0u8sLDNGtKf4GzR02k32mcvjxGFMQQ475g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jT8b4bai; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749760620; c=relaxed/simple;
+	bh=H8u1w/YwStaUJxudyE2L3/g/KCe1Lq6vTTC/Fx7X2wI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Srqx2mipeCBcHhKlKNlnTMlu1dRY/uqfz2rcqGyjRr5uV5cyS+rG1EiQy1tCEFr1IXMBsWM3iv87XuYLuTWE0kKoSP1tis6PDkGsQFNSsGrN8j0xvcKbasLR5TsB50dx4RPSzRnhbQ7yVTCVffcw41UJOzZPbSAzspzX5k1/M0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LxkrIfVV; arc=none smtp.client-ip=80.12.242.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jT8b4bai"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749760600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gj8SQGLLh0rljui6jnNkQMA92RjfoZpiblWpalJC6vA=;
-	b=jT8b4baiUZ2r4ib2mm7mh5UzfMe0XOYMY76yAVQePMj7SSfu2ELllHyvTL4tQDgdz3pIdD
-	epdwn4A3t0QiOJpiWxFZT+IdAtQgkC7vKPwl/VDR+hqcTwnRd974mawKnqDBskYFpdi9Gj
-	m1WVW4a7ShMfPb52UA2nEAHi6j60Cb4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-yC1TTY1fOoaf_k-updd0AA-1; Thu,
- 12 Jun 2025 16:36:35 -0400
-X-MC-Unique: yC1TTY1fOoaf_k-updd0AA-1
-X-Mimecast-MFC-AGG-ID: yC1TTY1fOoaf_k-updd0AA_1749760593
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E95CE180AB15;
-	Thu, 12 Jun 2025 20:36:29 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.18])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 84881195E340;
-	Thu, 12 Jun 2025 20:36:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <2dc7318d6c74b27a49b4c64b513f3da13d980473.camel@HansenPartnership.com>
-References: <2dc7318d6c74b27a49b4c64b513f3da13d980473.camel@HansenPartnership.com> <462886.1749731810@warthog.procyon.org.uk>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: dhowells@redhat.com, keyrings@vger.kernel.org,
-    Jarkko Sakkinen <jarkko@kernel.org>,
-    Steve French <sfrench@samba.org>,
-    Chuck Lever <chuck.lever@oracle.com>,
-    Mimi Zohar <zohar@linux.ibm.com>, Paulo Alcantara <pc@manguebit.org>,
-    Herbert Xu <herbert@gondor.apana.org.au>,
-    Jeffrey Altman <jaltman@auristor.com>, hch@infradead.org,
-    linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-    linux-cifs@vger.kernel.org, linux-security-module@vger.kernel.org,
-    linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Keyrings: How to make them more useful
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LxkrIfVV"
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id PoWIuYWF3h2MlPoWJutI1a; Thu, 12 Jun 2025 22:27:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1749760052;
+	bh=30F9MeODJaJtiCyPTKPIaDBgYSsnYVpZ0EqQQiVnKc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=LxkrIfVVst3GNiCIT4KgzwDqBS7GHuyxt1F86CTNcjmtrqWPq33ea8kN0AFZ79R1J
+	 OrSf46HuFOMk24s6lePYsB7lz+Nd2k8lLOHWUj/tG/uBUBjQX9P8r9FPX268lSo+VH
+	 NeNSbLfs4Hk+UYZn9E0s3zR/R98L2WllTR2hieQPjAJ+nyKdk/CmL6oKx/60MtMg7m
+	 sna5jFMu7AO5g/194HqUqmj8Tx16xrjoFZmcQR0dogrwNzQ5UPt6zKArBLmeUeq4cc
+	 0NLouo5u4hMqCHaXj8/6nnCLcrq86m+ZsQv/Kj7yubTx7rQRQsUYRsUpaDSd6+8Dtm
+	 xM5bAJeS6ZrIQ==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Thu, 12 Jun 2025 22:27:32 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <5e131f07-9753-4d2f-a043-35751c278a63@wanadoo.fr>
+Date: Thu, 12 Jun 2025 22:27:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <473710.1749760578.1@warthog.procyon.org.uk>
-Date: Thu, 12 Jun 2025 21:36:18 +0100
-Message-ID: <473711.1749760578@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/2] leds: as3668: Driver for the ams Osram 4-channel
+ i2c LED driver
+To: Lukas Timmermann <linux@timmermann.space>, lee@kernel.org,
+ pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250611083151.22150-1-linux@timmermann.space>
+ <20250611083151.22150-3-linux@timmermann.space>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250611083151.22150-3-linux@timmermann.space>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
-
-> One of the problems I keep tripping over is different special casing
-> for user keyrings (which are real struct key structures) and system
-> keyrings which are special values of the pointer in struct key *.
-
-It's meant to be like that.  The trusted system keyrings are static within
-system_keyring.c and not so easily accessible by kernel modules for
-direct modification, bypassing the security checks.
-
-Obviously this is merely a bit of obscurity and enforcement isn't possible
-against kernel code that is determined to modify those keyrings or otherwise
-interfere in the verification process.
-
-> For examples of what this special handling does, just look at things
-> like bpf_trace.c:bpf_lookup_{user|system}_key
+Le 11/06/2025 à 10:31, Lukas Timmermann a écrit :
+> Since there were no existing drivers for the AS3668 or related devices,
+> a new driver was introduced in a separate file. Similar devices were
+> reviewed, but none shared enough characteristics to justify code reuse.
+> As a result, this driver is written specifically for the AS3668.
 > 
-> Since the serial allocation code has a hard coded not less than 3
-> (which looks for all the world like it was designed to mean the two
-> system keyring id's were never used as user serial numbers)
+> Signed-off-by: Lukas Timmermann <linux@timmermann.space>
 
-That's just a coincidence.  The <3 thing predates the advent of those system
-keyring magic pointers.
+Hi,
 
-> I think we could simply allow the two system keyring ids to be passed into
-> lookup_user_key() (which now might be a bit misnamed) and special case not
-> freeing it in put_key().
+first, I should that you should wait longer before sending each new 
+version, so that you can collect more feedback.
 
-If you want to make lookup_user_key() provide access to specific keyrings like
-this, just use the next negative numbers - it's not like we're likely to run
-out soon.
+> ---
+>   MAINTAINERS                |   1 +
+>   drivers/leds/Kconfig       |  13 +++
+>   drivers/leds/Makefile      |   1 +
+>   drivers/leds/leds-as3668.c | 204 +++++++++++++++++++++++++++++++++++++
+>   4 files changed, 219 insertions(+)
+>   create mode 100644 drivers/leds/leds-as3668.c
 
-But I'd rather not let lookup_user_key() return pointers to these keyrings...
+...
 
-David
+> +static int as3668_dt_init(struct as3668 *as3668)
+> +{
+> +	struct device *dev = &as3668->client->dev;
+> +	struct as3668_led *led;
+> +	struct led_init_data init_data = {};
+> +	int err;
+> +	u32 reg;
+> +
+> +	for_each_available_child_of_node_scoped(dev_of_node(dev), child) {
+> +		err = of_property_read_u32(child, "reg", &reg);
+> +		if (err) {
+> +			dev_err(dev, "unable to read device tree led reg, err %d\n", err);
 
+as3668_dt_init() is only called from the probe. Sometimes maintainers 
+prefer using "return dev_err_probe()" in such a case, to have less 
+verbose code.
+(I don't know if it is the case for the leds subsystem)
+
+> +			return err;
+> +		}
+> +
+> +		if (reg < 0 || reg > AS3668_MAX_LEDS) {
+> +			dev_err(dev, "unsupported led reg %d\n", reg);
+> +			return -EOPNOTSUPP;
+
+Same.
+
+> +		}
+> +
+> +		led = &as3668->leds[reg];
+> +		led->fwnode = of_fwnode_handle(child);
+> +
+> +		led->num = reg;
+> +		led->chip = as3668;
+> +
+> +		led->cdev.max_brightness = U8_MAX;
+> +		led->cdev.brightness_get = as3668_brightness_get;
+> +		led->cdev.brightness_set = as3668_brightness_set;
+> +
+> +		init_data.fwnode = led->fwnode;
+> +		init_data.default_label = ":";
+> +
+> +		err = devm_led_classdev_register_ext(dev, &led->cdev, &init_data);
+> +		if (err) {
+> +			dev_err(dev, "failed to register %d LED\n", reg);
+> +			return err;
+
+Same.
+
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int as3668_probe(struct i2c_client *client)
+> +{
+> +	u8 chip_id1, chip_id2, chip_serial, chip_rev;
+> +	struct as3668 *as3668;
+> +
+> +	/* Check for sensible i2c address */
+> +	if (client->addr != 0x42)
+> +		return dev_err_probe(&client->dev, -EFAULT,
+> +				     "unexpected address for as3668 device\n");
+> +
+> +	/* Read identifier from chip */
+> +	chip_id1 = as3668_read_value(client, AS3668_CHIP_ID1);
+> +
+> +	if (chip_id1 != AS3668_CHIP_IDENT)
+> +		return dev_err_probe(&client->dev, -ENODEV,
+> +				"chip reported wrong id: 0x%02x\n", chip_id1);
+> +
+> +	/* Check the revision */
+> +	chip_id2 = as3668_read_value(client, AS3668_CHIP_ID2);
+> +	chip_serial = FIELD_GET(AS3668_CHIP_ID2_SERIAL_MASK, chip_id2);
+> +	chip_rev = FIELD_GET(AS3668_CHIP_ID2_REV_MASK, chip_id2);
+> +
+> +	if (chip_rev != AS3668_CHIP_REV1)
+> +		dev_warn(&client->dev, "unexpected chip revision\n");
+> +
+> +	/* Print out information about the chip */
+> +	dev_dbg(&client->dev,
+> +		"chip_id: 0x%02x | chip_id2: 0x%02x | chip_serial: 0x%02x | chip_rev: 0x%02x\n",
+> +		chip_id1, chip_id2, chip_serial, chip_rev);
+> +
+> +	as3668 = devm_kzalloc(&client->dev, sizeof(*as3668), GFP_KERNEL);
+> +
+
+Unneeded new line.
+
+> +	if (!as3668)
+> +		return -ENOMEM;
+> +
+> +	as3668->client = client;
+> +	int err = as3668_dt_init(as3668);
+
+Would be better, IMHO, if err was declared at the top of the function.
+
+> +
+
+Unneeded new line.
+
+> +	if (err) {
+> +		dev_err(&client->dev, "failed to initialize device, err %d\n", err);
+
+return dev_err_probe() to be consistent with the code above.
+
+> +		return err;
+> +	}
+> +
+> +	/* Initialize the chip */
+> +	as3668_write_value(client, AS3668_CURRX_CONTROL, 0x55);
+> +	as3668_write_value(client, AS3668_CURR1, 0x00);
+> +	as3668_write_value(client, AS3668_CURR2, 0x00);
+> +	as3668_write_value(client, AS3668_CURR3, 0x00);
+> +	as3668_write_value(client, AS3668_CURR4, 0x00);
+> +
+> +	return 0;
+> +}
+
+...
+
+CJ
