@@ -1,273 +1,126 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EFF2BD001;
-	Thu, 12 Jun 2025 17:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B827429C339;
+	Thu, 12 Jun 2025 17:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749749280; cv=none; b=sq+MFdj/UrwAgnzS6A7Ve9ocNPCLseRedBMcdW7XO+vgHbYvfhYXOs0f0D+R0NvGQpTOjZyQaDMZpp+jVbHyKUHjtBWBjCU1xT5ILiw67KC3m0opjvuPE2JqDlvaujEGHNemAOX0aq+whD7I5kf6I9GFDYinL/vEi05AxzUKd5o=
+	t=1749749315; cv=none; b=NWj6aB3WUQS4pHQhuada4ZgqhFrwmchtl9wddKE5fdtIAUWySJw/kRu4E54LfkpmXJiBUsndfp7sQruTnz+rblpmc9irb2+knVQkDsO6vEWPg/k4teyLMo9medzxq+8sarHMxXCQz/3qfr8S3pdvXrTY2kFVdXE/8RQ5NNn1Kg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749749280; c=relaxed/simple;
-	bh=rQzMv7zMW+V8xJgEwDRoJJEYf7Gnl8DxCH5zWo5O9oc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IifWEaUeJg0aze4pDAcsFbGklZY8ujdv5rhS8LX6OGlRqJPJ04iHfuRhgWrmtoRNFWW69LLk4bXlGi63Yivwj+RiX9OwojOJaZDfTzfUvCkcNhlBHW1id6J3sCDG91G/ghgfOZd7a/8V0DoR3mfXd0H/5Nj8fEuUBlknj1q+1VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cuQYKpHB; arc=none smtp.client-ip=209.85.167.50
+	s=arc-20240116; t=1749749315; c=relaxed/simple;
+	bh=PH8QKM2zIfjbs2XiWW6oY3idX+GiqDPjFhwl34h04vU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=juyhDxrr9qs3DYlwp5YXl4r0QYDF5ESbSgnnMyXWS429bqgSChrkAxDRaljQflNjtH0Qs6UgOnGv1Jr51KoJjPPLJdmdS6ZpGF2nc/8sYip9MPLOU+M/qBPP6j7nkFeAv5Zuo5O0+r/bNi/zjOhaILDpySCtV4rd0veoAPHFaEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGhmqAoz; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cuQYKpHB"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55351af2fc6so1345327e87.0;
-        Thu, 12 Jun 2025 10:27:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGhmqAoz"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2349f096605so16311285ad.3;
+        Thu, 12 Jun 2025 10:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749749276; x=1750354076; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XNWv1Vkdp6Tz4ugdH9sHsD45TiS1risRm/SEcmxn+Qw=;
-        b=cuQYKpHB5httxDjBwgGpqu9M9x96dvpowk6hms78CZdNZMb8FAk49pLUlOi6dsnLrX
-         r8ZtgCcaPmKie0XjKU0D3yPfeRdQYp0fwqYynUv6FmA0KWdXGq3tEOv6lKla8lqC9+6G
-         IkcgXDOXY6xdN6yhB03qJX8cd5a5XrY8Kz/8UTgUJycW+6KYgiorFQvlFJ0P5XkvtISb
-         ZDYNo4VOfe7mTaqk+uX4MFPzbs5URtVxiReh99R/UNAchjB2IaRWHGmvm2jkJXK2PvOU
-         /WZsoxk9ZPZC7fOI3P1mxIOUh2uOnkVyqLn+Ym7SBBQ0pdkjpMeY5F0/l28pFQyvH6cX
-         jFyw==
+        d=gmail.com; s=20230601; t=1749749313; x=1750354113; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Z1CAnDtsn56h094ipnFC5TjpsgKkprOu65PkgheDX4=;
+        b=RGhmqAozMiW1opD0dGXVtV4JWy6r0KxsewBFkiiWNWeNTUOgqgYazOoOCGi7JtFEgK
+         uULTg3NnfDBLn2+x1lPTpbjgiLFybH/gZL4pgd6BMim56FDn5kCHpbZslXaOgclSbRRR
+         +czxw0Cwun+K7UZygmydUqQ9PbGnN2qHjjmpQxStkRLt4+OA9SBYJ1BP4L/w3e9oJupG
+         PZvnA8PI/yJGfjy/ai0vyiz9nKwRqaNXUDIe37LPDJDYVAm0lMnXQa4FeXJt1GxVMYjY
+         82hDTRZkB3kwE6TXn9rTakZEnJUrUIFMfcWvtB6ReFnTOiSwAHfY2V/W2k+KZGiRVUtc
+         owAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749749276; x=1750354076;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XNWv1Vkdp6Tz4ugdH9sHsD45TiS1risRm/SEcmxn+Qw=;
-        b=U7Tqe7FYF/MBELDRYjNzg8b4m8Swf8LsDpARf4dwATsGMrRFPYysoPoUIdq7A2FPgv
-         GMAluqhtpXrAIFtNZMGvbyPwP28lWWIk/fO/OlzHN5s23C28azP5n+X1mVPEOwE6AMIG
-         ZRw5ocbOBgsD3KhHqlApYAVErMvDOoMbbU4KBBRGNj0fatZiLUzf8vyfy5ocx+sUIhRn
-         c+YtcUq6dhVQwJoTV1REqXp8bhzWi9kvsoTpxi7sRbu/eaS8kUYualxSQNlqh/LOwvEt
-         +GwTBrzndZSGV9Ry7QJeakuWPKV53yf7dE17Ih3GhkjwWCOUc2ROE1y+OEXYtG6DjdVC
-         DnKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBFWq9H4jnM65GkggKxNFdD+5Ph53qe67AcvnFgIByfnmf4ZVLWr6S4NiycXG9VGMER7PsLWlPt0YMUxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz898jfZYXpWq2QzmVEfvbjn4op0YcnOcoR6Qmt9LTNWSWp5dP2
-	fAgJDb2aoqZ0iPowEsNHodlPWOUzjSsMjccS9o8noC1KBVZ+s3tqXxrn
-X-Gm-Gg: ASbGncvBE5KEE/QiylQxJqnbPTP0NuwERCQ7zupJFb3Ox3Bnuni7xbO7ywqY1QfdfS3
-	sy0jnTUOF16i9FZSXPVP4QHe4TM9weX50V0vOd6+p6lFoazsmxlIz/S1UJGglS39YgiOhweY2tv
-	T/gvmDQ7I8KNaDnCs8Sw3695ExreGpNf68rsSic2lgyXrICBo/8Xz8H9sPCf+nm+sOP6BE625Ig
-	FSeYFMbCAiAuRM6XkedNFhIqhnpZy7C4OI5vovEbMaTVDlV+FIEFKGZRop/iHLKAQOxigVxLXD1
-	lbd+1H2QhaF/i/YSFmQ1iGEhso/P+BDQ1WfRZK53RyvxhWROphmUkZFMVRgsAGWvcusHid823ls
-	7nPT/cBgv6IgkRJl9ER7CjRg2BUumlMBj8frp2IPNnh6SvKGvxpM98t5STA==
-X-Google-Smtp-Source: AGHT+IHQDLn3RPUl3OK0txE6hw/CRkdzygyWof51VXKj3tR67bEBhRnJ1A1cgWFxPHAjPiJ66jaa4w==
-X-Received: by 2002:a05:6512:b1d:b0:553:3073:c38b with SMTP id 2adb3069b0e04-553af932938mr381e87.1.1749749275765;
-        Thu, 12 Jun 2025 10:27:55 -0700 (PDT)
-Received: from uuba.fritz.box (2001-14ba-6e-3100-4ba3-46aa-7f0f-54f.rev.dnainternet.fi. [2001:14ba:6e:3100:4ba3:46aa:7f0f:54f])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1c24fbsm170358e87.164.2025.06.12.10.27.54
+        d=1e100.net; s=20230601; t=1749749313; x=1750354113;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Z1CAnDtsn56h094ipnFC5TjpsgKkprOu65PkgheDX4=;
+        b=JD11mBrQwpc4GKSQf0od/qdUFDxHCyFZr/MiTF2rQZFLcOaV5PFZ+Rht+h4TEDfxNL
+         jq3ftcAN+rzUhosuvL9a/Ym54uBD7bAHjQQpDcNhFCj1DevVe6FGO6S7kkYs68F9kUEK
+         2mr9GuGRq/xeZhmynqSOHJLqDPHDvq6Kz7zkuJS0qQtyZCO97KAujWMV3LYbhHWOMS+g
+         K/ybh6ocaj3WXS/BtbOkQQIaFvVXnKsMpRWCf0kL3RyX+mtHqDRK76WEQ4rbIba7zDAu
+         TEvskNEtFfR9tDWnxJH2vgDqfVGEleHWKH/FjuJ1y1taOt1ZpP2u8X+OxfRAHRQtktZV
+         gWGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQZFbpIumPAk+QqGjdBuJ4OupQGmHVFq6e5cRw4nO05tRytzmWq8cq3jdTcdQRBt5F3Rgs+hKn37K5Rkad@vger.kernel.org, AJvYcCXye6UtevbqAnRAi3TK7CDoeWh2kHDO+BpW21YB7NIuv+YO5Tti+VONaZwkfv5BAG/aX6BtOhIdb8yJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyujPraqScwX5v4bFH3nj8CE6hJ7hbY0pGk950gJwdBHSAPAMiy
+	MVNhRX6LLRbf0olLSOF7ngzf4me2AQ6zqKSVB9dMXnm1k72600VG/Hdv
+X-Gm-Gg: ASbGncvDclw0k3KxpDpeIfhcmnd13vQ11wc6Evq8BScPXJi9NCMwE2V5+V1fb2hd1ik
+	8r5h+PR0ghsUL54yZvQDyDyMWi4nOlR2SSZGrAiVmuTL9BFmh0m3YS/UbnXBlgjUFcrrnO2HS2j
+	sU0Nl90ReHyMvYJv/5eQNfjOT8p+yYchCbFV7QidJjrdxdnRln1gw/chIbWXaJE+efRvDhDWLST
+	bMt5FljBQoXSPKVvEDsgWGm1jQfrdlO/VezGj8Ac6ugGp6MhlLKjtcBZfWtIYAF43m4FoZglNmf
+	7ZFgKKe2iiryWyKI46pAxsN2gv+y9bln+lYbjMBhrxLtKVM+Hcf7M6fJL/zUqZwRZc3ciQb1uFg
+	LZQ+SU6lQ13EpNJKpGJQO
+X-Google-Smtp-Source: AGHT+IFIVXOyOM5DFIT9gmbEUNOHuQMUX2pMymqDTVsNqy3aJEAFqXUop0eA4qDVx2/oR9mypI1WqA==
+X-Received: by 2002:a17:902:d485:b0:234:e655:a632 with SMTP id d9443c01a7336-2365c576d27mr4057365ad.51.1749749313056;
+        Thu, 12 Jun 2025 10:28:33 -0700 (PDT)
+Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd6362e28sm1665891a12.66.2025.06.12.10.28.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 10:27:55 -0700 (PDT)
-From: =?UTF-8?q?Hanne-Lotta=20M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>
-To: mchehab@kernel.org,
-	hljunggr@cisco.com,
-	ribalda@chromium.org,
-	hverkuil@xs4all.nl,
-	skhan@linuxfoundation.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	=?UTF-8?q?Hanne-Lotta=20M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>
-Subject: [PATCH v3 2/2] docs: Improve grammar, formatting in Video4Linux
-Date: Thu, 12 Jun 2025 20:27:03 +0300
-Message-Id: <20250612172703.32293-2-hannelotta@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250612172703.32293-1-hannelotta@gmail.com>
-References: <20250612172703.32293-1-hannelotta@gmail.com>
+        Thu, 12 Jun 2025 10:28:32 -0700 (PDT)
+From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
+Subject: [PATCH v3 0/3] hwmon: (amc6821) Add cooling device support
+Date: Thu, 12 Jun 2025 14:28:07 -0300
+Message-Id: <20250612-b4-amc6821-cooling-device-support-v3-0-360681a7652c@toradex.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIACgOS2gC/42Nyw6CMBBFf4V07Zja8mhd+R+GRZlWmERo0yLBE
+ P7dSuLe5bnJPWdjyUVyiV2LjUW3UCI/ZZCnguFgpt4B2cxMcFHxmgvoSjAj1kpcAL1/0tSDzT9
+ 0kF4h+DgDctlxo7SWVcOyJ0T3oPVo3NvMA6XZx/eRXMR3/dnlH/ZFAIem1KVEpbQR9pZlxrr1j
+ H5k7b7vH2wpd3nUAAAA
+X-Change-ID: 20250602-b4-amc6821-cooling-device-support-c03b0a899357
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Farouk Bouabid <farouk.bouabid@cherry.de>, 
+ Quentin Schulz <quentin.schulz@cherry.de>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
+X-Mailer: b4 0.14.2
 
-Fix typos, punctuation and improve grammar and formatting
-in documentation for Video4Linux (V4L).
+Add support for using the AMC6821 as a cooling device. The AMC6821
+registers with the thermal framework only if the `cooling-levels`
+property is present in the fan device tree child node. If this property
+is present, the driver assumes the fan will operate in open-loop, and
+the kernel will control it directly. In this case, the driver will
+change the AMC6821 mode to manual (software DCY) and set the initial PWM
+duty cycle to the maximum fan cooling state level as defined in the DT.
+It is worth mentioning that the cooling device is registered on the
+child fan node, not on the fan controller node. Existing behavior is
+unchanged, so the AMC6821 can still be used without the thermal
+framework (hwmon only).
 
-Signed-off-by: Hanne-Lotta Mäenpää <hannelotta@gmail.com>
+Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
 ---
+v3:
+- Fix using fan node after of_node_put() with scope based free
+- Add setting the pwm duty cycle to max fan cooling state level on
+  initialization
+v2: https://lore.kernel.org/lkml/20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com/
+- Remove devm_action on release and call of_node_put() manually
+- Change of_pwm_polarity to store resulting pwm polarity on driver
+  private data
+v1: https://lore.kernel.org/lkml/20250530-b4-v1-amc6821-cooling-device-support-b4-v1-0-7bb98496c969@toradex.com/
 
-Notes:
-    v1 -> v2:
-    
-    Left out changes based on feedback from Jonathan Corbet
-    <corbet@lwn.net> and Bagas Sanjaya <bagasdotme@gmail.com>.
-    
-    v2 -> v3:
-    
-    Shortened the patch series to two patches, as parts
-    3/4 and 4/4 have been applied.
-    
-    No changes in content.
+---
+João Paulo Gonçalves (3):
+      dt-bindings: hwmon: amc6821: Add cooling levels
+      hwmon: (amc6821) Move reading fan data from OF to a function
+      hwmon: (amc6821) Add cooling device support
 
- .../userspace-api/media/v4l/biblio.rst        |  2 +-
- .../media/v4l/dev-sliced-vbi.rst              |  4 ++--
- .../media/v4l/ext-ctrls-fm-rx.rst             | 11 +++-------
- .../media/v4l/ext-ctrls-fm-tx.rst             | 21 +++++++------------
- .../media/v4l/pixfmt-srggb12p.rst             |  4 ++--
- .../media/v4l/pixfmt-srggb14p.rst             |  2 +-
- 6 files changed, 16 insertions(+), 28 deletions(-)
+ .../devicetree/bindings/hwmon/ti,amc6821.yaml      |   6 +
+ drivers/hwmon/amc6821.c                            | 130 +++++++++++++++++++--
+ 2 files changed, 127 insertions(+), 9 deletions(-)
+---
+base-commit: b43674a549ed17319cb08ede9e0909ff6198ea70
+change-id: 20250602-b4-amc6821-cooling-device-support-c03b0a899357
 
-diff --git a/Documentation/userspace-api/media/v4l/biblio.rst b/Documentation/userspace-api/media/v4l/biblio.rst
-index 35674eeae20d..856acf6a890c 100644
---- a/Documentation/userspace-api/media/v4l/biblio.rst
-+++ b/Documentation/userspace-api/media/v4l/biblio.rst
-@@ -150,7 +150,7 @@ ITU-T.81
- ========
- 
- 
--:title:     ITU-T Recommendation T.81 "Information Technology --- Digital Compression and Coding of Continous-Tone Still Images --- Requirements and Guidelines"
-+:title:     ITU-T Recommendation T.81 "Information Technology --- Digital Compression and Coding of Continuous-Tone Still Images --- Requirements and Guidelines"
- 
- :author:    International Telecommunication Union (http://www.itu.int)
- 
-diff --git a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-index 42cdb0a9f786..96e0e85a822c 100644
---- a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-+++ b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
-@@ -48,7 +48,7 @@ capabilities, and they may support :ref:`control` ioctls.
- The :ref:`video standard <standard>` ioctls provide information vital
- to program a sliced VBI device, therefore must be supported.
- 
--.. _sliced-vbi-format-negotitation:
-+.. _sliced-vbi-format-negotiation:
- 
- Sliced VBI Format Negotiation
- =============================
-@@ -377,7 +377,7 @@ Sliced VBI Data in MPEG Streams
- 
- If a device can produce an MPEG output stream, it may be capable of
- providing
--:ref:`negotiated sliced VBI services <sliced-vbi-format-negotitation>`
-+:ref:`negotiated sliced VBI services <sliced-vbi-format-negotiation>`
- as data embedded in the MPEG stream. Users or applications control this
- sliced VBI data insertion with the
- :ref:`V4L2_CID_MPEG_STREAM_VBI_FMT <v4l2-mpeg-stream-vbi-fmt>`
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-index b6cfc0e823d2..ccd439e9e0e3 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-rx.rst
-@@ -64,17 +64,12 @@ FM_RX Control IDs
-     broadcasts speech. If the transmitter doesn't make this distinction,
-     then it will be set.
- 
--``V4L2_CID_TUNE_DEEMPHASIS``
--    (enum)
--
--enum v4l2_deemphasis -
-+``V4L2_CID_TUNE_DEEMPHASIS (enum)``
-     Configures the de-emphasis value for reception. A de-emphasis filter
-     is applied to the broadcast to accentuate the high audio
-     frequencies. Depending on the region, a time constant of either 50
--    or 75 useconds is used. The enum v4l2_deemphasis defines possible
--    values for de-emphasis. Here they are:
--
--
-+    or 75 microseconds is used. The enum v4l2_deemphasis defines possible
-+    values for de-emphasis. They are:
- 
- .. flat-table::
-     :header-rows:  0
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-index 04c997c9a4c3..cb40cf4cc3ec 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-fm-tx.rst
-@@ -104,7 +104,7 @@ FM_TX Control IDs
- 
- ``V4L2_CID_AUDIO_LIMITER_RELEASE_TIME (integer)``
-     Sets the audio deviation limiter feature release time. Unit is in
--    useconds. Step and range are driver-specific.
-+    microseconds. Step and range are driver-specific.
- 
- ``V4L2_CID_AUDIO_LIMITER_DEVIATION (integer)``
-     Configures audio frequency deviation level in Hz. The range and step
-@@ -121,16 +121,16 @@ FM_TX Control IDs
-     range and step are driver-specific.
- 
- ``V4L2_CID_AUDIO_COMPRESSION_THRESHOLD (integer)``
--    Sets the threshold level for audio compression freature. It is a dB
-+    Sets the threshold level for audio compression feature. It is a dB
-     value. The range and step are driver-specific.
- 
- ``V4L2_CID_AUDIO_COMPRESSION_ATTACK_TIME (integer)``
--    Sets the attack time for audio compression feature. It is a useconds
-+    Sets the attack time for audio compression feature. It is a microseconds
-     value. The range and step are driver-specific.
- 
- ``V4L2_CID_AUDIO_COMPRESSION_RELEASE_TIME (integer)``
-     Sets the release time for audio compression feature. It is a
--    useconds value. The range and step are driver-specific.
-+    microseconds value. The range and step are driver-specific.
- 
- ``V4L2_CID_PILOT_TONE_ENABLED (boolean)``
-     Enables or disables the pilot tone generation feature.
-@@ -143,17 +143,12 @@ FM_TX Control IDs
-     Configures pilot tone frequency value. Unit is in Hz. The range and
-     step are driver-specific.
- 
--``V4L2_CID_TUNE_PREEMPHASIS``
--    (enum)
--
--enum v4l2_preemphasis -
-+``V4L2_CID_TUNE_PREEMPHASIS (enum)``
-     Configures the pre-emphasis value for broadcasting. A pre-emphasis
-     filter is applied to the broadcast to accentuate the high audio
-     frequencies. Depending on the region, a time constant of either 50
--    or 75 useconds is used. The enum v4l2_preemphasis defines possible
--    values for pre-emphasis. Here they are:
--
--
-+    or 75 microseconds is used. The enum v4l2_preemphasis defines possible
-+    values for pre-emphasis. They are:
- 
- .. flat-table::
-     :header-rows:  0
-@@ -166,8 +161,6 @@ enum v4l2_preemphasis -
-     * - ``V4L2_PREEMPHASIS_75_uS``
-       - A pre-emphasis of 75 uS is used.
- 
--
--
- ``V4L2_CID_TUNE_POWER_LEVEL (integer)``
-     Sets the output power level for signal transmission. Unit is in
-     dBuV. Range and step are driver-specific.
-diff --git a/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst b/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
-index 7c3810ff783c..8c03aedcc00e 100644
---- a/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
-+++ b/Documentation/userspace-api/media/v4l/pixfmt-srggb12p.rst
-@@ -6,7 +6,7 @@
- .. _v4l2-pix-fmt-sgrbg12p:
- 
- *******************************************************************************************************************************
--V4L2_PIX_FMT_SRGGB12P ('pRCC'), V4L2_PIX_FMT_SGRBG12P ('pgCC'), V4L2_PIX_FMT_SGBRG12P ('pGCC'), V4L2_PIX_FMT_SBGGR12P ('pBCC'),
-+V4L2_PIX_FMT_SRGGB12P ('pRCC'), V4L2_PIX_FMT_SGRBG12P ('pgCC'), V4L2_PIX_FMT_SGBRG12P ('pGCC'), V4L2_PIX_FMT_SBGGR12P ('pBCC')
- *******************************************************************************************************************************
- 
- 
-@@ -20,7 +20,7 @@ Description
- These four pixel formats are packed raw sRGB / Bayer formats with 12
- bits per colour. Every two consecutive samples are packed into three
- bytes. Each of the first two bytes contain the 8 high order bits of
--the pixels, and the third byte contains the four least significants
-+the pixels, and the third byte contains the four least significant
- bits of each pixel, in the same order.
- 
- Each n-pixel row contains n/2 green samples and n/2 blue or red
-diff --git a/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst b/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
-index 3572e42adb22..f4f53d7dbdeb 100644
---- a/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
-+++ b/Documentation/userspace-api/media/v4l/pixfmt-srggb14p.rst
-@@ -24,7 +24,7 @@ These four pixel formats are packed raw sRGB / Bayer formats with 14
- bits per colour. Every four consecutive samples are packed into seven
- bytes. Each of the first four bytes contain the eight high order bits
- of the pixels, and the three following bytes contains the six least
--significants bits of each pixel, in the same order.
-+significant bits of each pixel, in the same order.
- 
- Each n-pixel row contains n/2 green samples and n/2 blue or red samples,
- with alternating green-red and green-blue rows. They are conventionally
+Best regards,
 -- 
-2.39.5
+João Paulo Gonçalves <joao.goncalves@toradex.com>
 
