@@ -1,58 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8239E23D284
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58B92744D;
+	Thu, 12 Jun 2025 13:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734578; cv=none; b=MVpho+W7mSHh32CYfTfwStmLmQjLd8SqN5RFpJBx3dr2rc0ZupvhDXz971joCweWUugUEwTWEjEktGROu4CuGVk1n6rnuws39Oo3ceFojqojd+T7jEHYZsTuK2o/3wWXtDAMXNUV6D9c/LFoI/YKZc1A71Zquwx2LscXuIhOrys=
+	t=1749734579; cv=none; b=sTvLgO4iF6Zu3nwIgEr4Hl3cni55BP3ASmElapOZb8oFwSetCnSf6m7Y61vFhsMpTXv6XO+4/JZXS6KD4+282mGZdggeF75uExaomgcTYgvz8u4TrEFgbCAwo1TAq1lJwj4qyxasJMDoE+H2xaUyafCNSOb1rDSryHI+UZs4SGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734578; c=relaxed/simple;
-	bh=DX6UEMb+iyNSYkkAU+xtYVYYiAZRgNNPDyijXIvfsL4=;
+	s=arc-20240116; t=1749734579; c=relaxed/simple;
+	bh=z31TFJJA6H9aGmzIDY67vP6/BIVJXmTiHnogd+G0yC4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AukkfX1ITHG9OHF0zTlkKssNAQh+C69nWOS2b+UgAq8r4sJuU24M2g8L5V55mUawc5Rt/RgoDsrH8mP4B/yF/m37g/ufzQo2syZNKgVIMeORdEnBJH2Xu6gTFHNXsffaQpmf6B4XAD8nGyrxW4kv37eLRmn/DfjsGqPVw0vZN2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LZjslZB6; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WadQuHd6ANYcr5HfnM9+iof8TCboJ28dVuwwnQi9T3DKmshP9t8d27IfOW/BK7W9RF7+f8RnXotcwlgEyioW2x8+IhiHpkfqwrhHYiTgx743Nui9+rGCBKxG4+NxqpRnjyZoTmLOhxAhzYynGCZzVugwc3PKPvGv9gfUmeBbYso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P4v/MX/S; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LZjslZB6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P4v/MX/S"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749734576; x=1781270576;
+  t=1749734578; x=1781270578;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=DX6UEMb+iyNSYkkAU+xtYVYYiAZRgNNPDyijXIvfsL4=;
-  b=LZjslZB6aaSK3wiMJ3lmxsxiQIW/GtQ4LDSKSsY9L4FTeasHoknIjewP
-   4HKS2m3t2C36y1kvOqmCfAscBAFTyzh8G/I5WapH3UMe7U3nQJnEvg0Wg
-   bVDf7aj+GhUXt4EwVV/BV8kw4XzFeWeCPpn8AKsesMV3MGW2SgjhStRAS
-   +2kMYvh0VaT0e/8p6Joe0EI/DSiL1Lb+cQQrTe4YFC+ZpjHldp8I+MzJT
-   xxr1W3sya1vEegvcgpqqCaAOB4c7cJHIOxgiGs2gPbYgFmG/FqdY5tJjQ
-   aAe6vT/9J3ncAZQH+v8SKQ2UGhd5P5sZANs0XR3CsMuNtSQRCu5RfmXer
-   Q==;
-X-CSE-ConnectionGUID: 2EZWuATRQwWtyrbRK3R6jw==
-X-CSE-MsgGUID: gHqhjKg0QJ2zJSkF4cl7RA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="63321666"
+  bh=z31TFJJA6H9aGmzIDY67vP6/BIVJXmTiHnogd+G0yC4=;
+  b=P4v/MX/SE/mapbjkQ5Q8nzXqBOOfHElgxk0cfkUWVZebfgNBFdAuV40V
+   FY48Y4CIOtvwgVbDE6lSSeadaIMQcXRa98kot9xZNdrsvnB4/3vmoM9Sz
+   sZ0T6KaWup/Wm7nDbXhJ0AYYCnj1nGEcNfXhl5mc+RGKQRiwtKgT2zHuw
+   qVymgNphM+/0+XS7ybbq7ylezKTqpLfnxTSl/Sp4JZ3UZy4am+YLNAp7A
+   DuQHXFnp5k5gCdmjGrooLVGSc0jTvhSFDZ0RzD3NNSdMTjZMNjDS3mOfr
+   N0lNqzbkJ5pz+aA4rztp/X/busMuNxOKrZkUcdBvJhHhiSEPK7v7PGdB9
+   g==;
+X-CSE-ConnectionGUID: 0rGfpxluSEiBOuNOFT/9rQ==
+X-CSE-MsgGUID: g+WKv91WT3+8k1KWP1IlsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51999197"
 X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="63321666"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:22:56 -0700
-X-CSE-ConnectionGUID: 552AbT7GQG2qjsELcjgc1Q==
-X-CSE-MsgGUID: A9DAT8ypQxmkOkCFQjLO7g==
+   d="scan'208";a="51999197"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:22:58 -0700
+X-CSE-ConnectionGUID: e2UBrUH8QLGUjuuspRu4wQ==
+X-CSE-MsgGUID: +EQhxeZQRW2qwWDBtGKd9Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="178425128"
-Received: from dholevas-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.47])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:22:56 -0700
-Date: Thu, 12 Jun 2025 06:22:50 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: Re: [PATCH] x86/its: Warn when microcode is old
-Message-ID: <20250612132250.k2loomkqhkfvksvk@desk>
-References: <20250611-its-warn-v1-1-02eb9a75ce9c@linux.intel.com>
- <f9e2dcaa-6eff-4eda-8c7c-0d19c2d11e73@suse.com>
+   d="scan'208";a="148409670"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:22:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uPhtM-00000005xWB-0lGu;
+	Thu, 12 Jun 2025 16:22:52 +0300
+Date: Thu, 12 Jun 2025 16:22:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Andrew Ijano <andrew.ijano@gmail.com>
+Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	jstephan@baylibre.com, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] iio: accel: sca3000: replace usages of internal
+ read data helpers by spi helpers
+Message-ID: <aErUqzdFL9nG6Bxc@smile.fi.intel.com>
+References: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
+ <20250611194648.18133-3-andrew.lopes@alumni.usp.br>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,42 +67,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f9e2dcaa-6eff-4eda-8c7c-0d19c2d11e73@suse.com>
+In-Reply-To: <20250611194648.18133-3-andrew.lopes@alumni.usp.br>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Jun 12, 2025 at 09:58:35AM +0300, Nikolay Borisov wrote:
+On Wed, Jun 11, 2025 at 04:39:20PM -0300, Andrew Ijano wrote:
+> Remove usages of sca3000_read_data() and sca3000_read_data_short()
+> functions, replacing it by spi_w8r8() and spi_w8r16be() helpers. Just
+> one case that reads large buffers is left using an internal helper.
 > 
-> 
-> On 6/12/25 03:08, Pawan Gupta wrote:
-> > A microcode update is required for IBPB to be effective against ITS. On
-> > Intel, X86_BUG_OLD_MICROCODE is set already when old microcode is detected.
-> > In such a case system is tainted and a warning is issued.
-> > 
-> > Also warn that userspace could be vulnerable to ITS.
-> > 
-> > Suggested-by: Borislav Petkov <bp@alien8.de>
-> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > ---
-> >   arch/x86/kernel/cpu/bugs.c | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> > index 7f94e6a5497d9a2d312a76095e48d6b364565777..7aa3ae00e6b4daa5e42217b66c50cd46d6bcc115 100644
-> > --- a/arch/x86/kernel/cpu/bugs.c
-> > +++ b/arch/x86/kernel/cpu/bugs.c
-> > @@ -1427,6 +1427,10 @@ static void __init its_select_mitigation(void)
-> >   		return;
-> >   	}
-> > +	/* For IBPB to be effective against ITS */
-> > +	if (boot_cpu_has_bug(X86_BUG_OLD_MICROCODE))
-> > +		pr_warn("Old microcode, userspace may be vulnerable to ITS\n");
-> > +
-> 
-> That check is too coarse and probably has a high chance of false positive,
-> i.e
-> 
-> Latest firmware for your CPU is version Z as defined in intel-ucode-defs.h,
-> current running version is X which is older than Z , but it already contains
-> IBPB fixups for ITS. Then it will trigger a false positive.
+> This is an old driver that was not making full use of the newer
+> infrastructure.
 
-Agree, as I mentioned in the other email, I am okay dropping this patch.
-This creates more confusion than it helps.
+...
+
+> +	ret |= (mode & SCA3000_REG_MODE_MODE_MASK);
+
+Unneeded parentheses.
+
+...
+
+> +			ret = spi_w8r16be(st->us,
+> +						SCA3000_READ_REG(SCA3000_REG_TEMP_MSB_ADDR));
+
+Make it simply one line. The above formatting is ugly.
+
+...
+
+>  	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+>  	struct sca3000_state *st = iio_priv(indio_dev);
+> -	int len = 0, ret, val;
+> +	int len = 0, ret;
+
+Ideally it's better to split them and len should never be signed.
+Moreover, the function  should be switched to sysfs_emit_at() if this is part
+of ABI.
+
+>  	mutex_lock(&st->lock);
+> -	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
+> -	val = st->rx[0];
+> +	ret = spi_w8r8(st->us, SCA3000_READ_REG(SCA3000_REG_MODE_ADDR));
+>  	mutex_unlock(&st->lock);
+>  	if (ret)
+>  		return ret;
+
+...
+
+>  		}, {
+>  			.len = len,
+> -			.rx_buf = rx,
+> +			.rx_buf = st->rx,
+>  		}
+>  	};
+
+> -
+
+Stray change. Doesn't checkpatch complain on this?
+
+> -			(st->rx[0] | SCA3000_REG_MODE_RING_BUF_ENABLE));
+> +			(ret | SCA3000_REG_MODE_RING_BUF_ENABLE));
+
+> -			(st->rx[0] & ~SCA3000_REG_MODE_RING_BUF_ENABLE));
+> +			(ret & ~SCA3000_REG_MODE_RING_BUF_ENABLE));
+
+In the original code and still now too many parentheses.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
