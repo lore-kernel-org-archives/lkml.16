@@ -1,132 +1,168 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052B019C560
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744055; cv=none; b=hpR2K8DNLCDcfoiv/Kc/jCZT+7bCejxOZp/H2MJmafb/lFZvgg9LU3YhengMzq6jpbhUyEbxyWdMOPAMn29mjuy9RdThdbDDVEHsFZUXxQACgNWa7+6EqwstFUiF4lui8v/HMaPJepIPfur66SuILWvTxjXA3qaI3ggLbJz2e18=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744055; c=relaxed/simple;
-	bh=+lhjIRljPNF+vDzpCER5jBDQNCl4vIVi4E8v0yNukeE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R2H1HhBm6mC7xgXUeUXQpY76bGucAUUhDTDL1tEGscQDXIgndd2OkpcCL+SZru8w0vcCKXA2EVuUYCXmWmzh7nnXqNc4BmnQG44Vf6z+MKR3Gji+RN0kC2ho9hyAK2hxnEsUesxpKThORbyROUj4KHk1FEbKDSCx1sj7NUVHMXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D8F9153B;
-	Thu, 12 Jun 2025 09:00:33 -0700 (PDT)
-Received: from [10.57.84.35] (unknown [10.57.84.35])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96C423F66E;
-	Thu, 12 Jun 2025 09:00:52 -0700 (PDT)
-Message-ID: <066fa735-98ad-45f4-9316-b983d2e5a3d3@arm.com>
-Date: Thu, 12 Jun 2025 17:00:51 +0100
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD8C28B7FC;
+	Thu, 12 Jun 2025 16:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749744056; cv=fail; b=XAokhDnVxZoalCxh66J4z/Dk9B62FSPZIJtF6dpXIT/QeGUSbe7D4Bh/tKsO9flN+1XuGJ6y1cV82mTaNCy3U8X4eXxMX3Vc0Hlcv54aaOHkt8rUC1rNmA6qOP9ErsEdfau2lBKc4aXi0JMQ0u9Wx3U8XJbyhZyKOadHYCAT23Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749744056; c=relaxed/simple;
+	bh=5oejMhCeqzdOLYNVsEZEBWcgRPaDcARFT5E2XaBeGRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qcUCX61lzILg0FnDY55e3fysxc7ZC7cotw47bn6Dr26euKBGn5NSM0DrvxxMadLYj0mZRBcR2jjQlBLdP2QnVnBEsZSB14Jly9YrEpUq7KQOnJoi8WBZrnwROaOdWumB9EYRyPNI2IlIg05bldvzuYBHCrQboC1Zrd8N3bQScaY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=UcAH9PAd; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=e6P/m22P; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UcAH9PAd";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="e6P/m22P"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C4KWDA023474;
+	Thu, 12 Jun 2025 11:00:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=/U/tC/qSkpY4JI9L
+	EADbEP+/z0TUvNfQwbMfPwlrdzM=; b=UcAH9PAdcPGkP6aYacYUYXv5HfhaqbFM
+	4egVjJmVa2MfOA99deSl3Ky9AYzlnGHzG//3dW/Qz/Ey2MhA6xqrIpySDtVXhuql
+	502l7J/3iIUsQ9g6ZqL4rUDAhh+1no5RaCx5jNbNIfJOfnojgbx3xsLESm0DunC1
+	G43GNVp4OM+sBFrLbIX0Klz9pdFX0JNXTHVxUmMzFWhIRrae4rDsK8NEtMn3AVc5
+	4S4w9rbJmFhyle+DGXBYpPt5TIJck6IQvqwPvb9i1qE1MOUArZnZxXTn4bU2RQEQ
+	zeAeJ8wla5/GiDrAFX75zAW/a7vR39ma8sGCj/uog6xeXNlJ3NVgLw==
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11on2115.outbound.protection.outlook.com [40.107.223.115])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 476ksdc4tp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 11:00:47 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fTdjayonILFtUgSwioswKWUNICSbCGvdMfgd6QSkGuuUw/ryyndxDewwL5tz4ySsDVcPP9z4UbgBWPRbq7BXv8KzWohUtf59HaEbuANjf4LnxtJzCkrNd6H40H9OBoBejtmGkelCqgPffTDfiwB0NaY9gP5Y86+5lMydfeMzMcVuqmtnYq4ekMUvMdo5Q9p3oc0aSChV8vqvgcM+sFrk0RnbE7lRngwvT4bG33ue/SLiknbmTUqgtek3EZhPL2pWFP2v0nGYBcydYQfdYSrKpfCRfE/Z3mzcAcwQPPIxpwcmEbcevfXmrL98ne4BnzeZtyIHYruyydJOGsmf1ltkLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/U/tC/qSkpY4JI9LEADbEP+/z0TUvNfQwbMfPwlrdzM=;
+ b=vLP54vlstTrFIAntiZeyzL5/I2ArLU5KOCiQKfs6eIVCL3orC2XcgQANrflYWTn3kKoXcZu3/uipuOXoMOKqLpefq25PwRwU7Q/FADdMnycZM6m3kxT1kETQw2r40B9sogEWKO9MieGMyND8x5FM41ymyI6yHRouz46JUnJlVWMk/msmLFJZfwDy1KPaRH0l5nXRbh2/gpBuZGdYnaKy0HEKAcUklZc3Uh+fzqUcPWYg7DTj93CFjPrDbVcJky4kMk+fTJs7QfMexo8WMbuF+jH2IzfGTnyZzxNrhohM32/7i1hEqUHaHQUXGKzPsGSXWG4pMDTztP9ryZlv4e0gjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=cirrus.com
+ smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=opensource.cirrus.com; dkim=none (message not
+ signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/U/tC/qSkpY4JI9LEADbEP+/z0TUvNfQwbMfPwlrdzM=;
+ b=e6P/m22P4/0KFqD/jzKWq28kx4/sPRi2fcGqduZb9sWCo0YRlLME6Le3mv3/tvWwyBKxFmOeFaLcqg5EpNarzeE77YNyf3ssKpTpPucR2uVQ9l6xH3VLaGng+YIwBSbr4ijAoDA5cMBV+hCT5crcEUfPyOSvg8AYwR7hqEC3Cv4=
+Received: from SN6PR05CA0030.namprd05.prod.outlook.com (2603:10b6:805:de::43)
+ by PH0PR19MB5049.namprd19.prod.outlook.com (2603:10b6:510:79::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.22; Thu, 12 Jun
+ 2025 16:00:43 +0000
+Received: from SA2PEPF00003F66.namprd04.prod.outlook.com
+ (2603:10b6:805:de:cafe::f4) by SN6PR05CA0030.outlook.office365.com
+ (2603:10b6:805:de::43) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18 via Frontend Transport; Thu,
+ 12 Jun 2025 16:00:43 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ SA2PEPF00003F66.mail.protection.outlook.com (10.167.248.41) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
+ via Frontend Transport; Thu, 12 Jun 2025 16:00:42 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 18016406545;
+	Thu, 12 Jun 2025 16:00:41 +0000 (UTC)
+Received: from lonswws02.ad.cirrus.com (lonswws02.ad.cirrus.com [198.90.188.42])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id CC7C382024A;
+	Thu, 12 Jun 2025 16:00:40 +0000 (UTC)
+From: Stefan Binding <sbinding@opensource.cirrus.com>
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com,
+        Stefan Binding <sbinding@opensource.cirrus.com>
+Subject: [PATCH v1 0/2] Add Support for ASUS NUC using CS35L41
+Date: Thu, 12 Jun 2025 17:00:21 +0100
+Message-ID: <20250612160029.848104-1-sbinding@opensource.cirrus.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] arm64/mm: Ensure lazy_mmu_mode never nests
-Content-Language: en-GB
-To: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250606135654.178300-1-ryan.roberts@arm.com>
- <aEgeQCCzRt-B8_nW@arm.com> <3cad01ea-b704-4156-807e-7a83643917a8@arm.com>
- <aEhKSq0zVaUJkomX@arm.com> <b567a16a-8d80-4aab-84c2-21cbc6a6a35d@arm.com>
- <20250612145906.GB12912@willie-the-truck>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250612145906.GB12912@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F66:EE_|PH0PR19MB5049:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: dfb27a4a-3d80-4885-8925-08dda9ca48eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|61400799027|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rrnBqkq9m7hSh9WUK8mqvOfz9plXw8I/tBHrb2+UeG4Ih02HnW5ljj9Kl+AU?=
+ =?us-ascii?Q?rh48CXS0oPZSkPV2KBN0ocCA+0wsIpkKfo6ZgcTaPLwkpMRzEy0eAvnEXn6p?=
+ =?us-ascii?Q?XJmoSes0xLlxfnB8Wq9+i46nP47CCPh7JLyOcK423vnxLxi4gWOOxuK5aZmq?=
+ =?us-ascii?Q?OIQY57hz6noYWhg2aqnBVN5e93JKbfIMdfsCvJjhfQFmpZQ4neo738Fbq4Yk?=
+ =?us-ascii?Q?iojTYj/FrNaGGBJ/TxHEPgjhTjnbVqawPCS+b5MPgDfsTnmk5kwCqb3MJyoB?=
+ =?us-ascii?Q?Oo3Qw1qnmhSQDytgpOpJnw+qlgX/Eydw26QD/QkhhbuMLsszysL3YJ1ODHqT?=
+ =?us-ascii?Q?G6TeuqrKqTiQlqr+j6KjADC9xvASEKQJfbtv1Js4dFttBPCwcj9jbhiNJfnQ?=
+ =?us-ascii?Q?tBuwdH350AMA+mUwV0OBS1Yg5yX5zagg7x5noJudL/oBHKGo27gowYT7RkWY?=
+ =?us-ascii?Q?4tFf8HO0RcemqRZsvY6HwLWLXASGLQvTt2yZKe8O/ZrzxYZ3MQWi2NQxRdGb?=
+ =?us-ascii?Q?wvI1Gi+KuCLbuXt4iulicrcXW/SSkZePyMCyWOnX5GQ3AsjJ2mgGsSLkca32?=
+ =?us-ascii?Q?MZkaSN85c8i9MjbvSBLlGlcbm4XPCUPMoQb5kwi3VlrmsOy7T/0xPhrYD7RV?=
+ =?us-ascii?Q?rBg1oDihGLF7j61IL/CN9CJ3tzRgxBNPFC7dhh/OUzq7NwXqif68ebg1b8XX?=
+ =?us-ascii?Q?VR0wkU/CN+QCC0w7edwzh/K2ED7aPRvzTCK4/tEsXRtQCTyLoYmOXfQz7y71?=
+ =?us-ascii?Q?X/sIpOzgZ+JWx6MkevFT5XNHUnrmbCal1//jUCF6FN4TFKVJt1JZK1gNexnP?=
+ =?us-ascii?Q?ZnwWF1SL1EmxVqFTq3kG9fHFEVSqlbTUE65k7X68SnIPUF9NvCE1n/FRZfS9?=
+ =?us-ascii?Q?mY107Ka7uGYYIdiNhcZgTv5NZDhMWqtKv4r12is12jV37MokntyEvUiZUalS?=
+ =?us-ascii?Q?FYTKgymD6OrOewp+0rsTZslqwTXdBMxBezGtwSALcvAWLwZgnRmTp6D/BKjY?=
+ =?us-ascii?Q?RMsUjqjsWxhlrVhwL9bcoV6IxEWS0TA6MI0tiKfRpPlIYyQ//uCSAmdwIlJn?=
+ =?us-ascii?Q?Cv4ZmCZ5BAOr8WW1o0AJ0NaijOroP1oetlhNSKj63VMfdyKnqMQPQ6jwD0yq?=
+ =?us-ascii?Q?BPvg5WKuUrSGN/9iXXvwFiGbCBBouuwBytlPYL+abetB5HEGOYAUugZZp7wn?=
+ =?us-ascii?Q?QORgeZ/W2ZF3JHz9+fe85LD+7PGNqHV22VkKUM2tfDZTQPcLgP6WsBXru/Yp?=
+ =?us-ascii?Q?K8pNF22eRcXEEnwqdzsGw7co2fqmtqHkt04F2LtJnvbJvOUuB7rtM8yowAbn?=
+ =?us-ascii?Q?SxVwFrgRkzsDE2Sbu1Apm1mXQbDDdRfqZnO478dKtdchP80rHykkx+oTkYrK?=
+ =?us-ascii?Q?NR+vQauZGiT1a9q9OtAPccDiAha8IVInrbAYINN8DoW7WCnsEtKscab4eK9c?=
+ =?us-ascii?Q?RhjQB28PuN21bB/PcQmU6MxRFR/n5e5Q5krTQHezA05Wt5Sh4Ykl7QSJEUJ0?=
+ =?us-ascii?Q?NjsagHoPjJkvaRewiceIMLaj2bIs7mulfuji?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(61400799027)(82310400026)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 16:00:42.5533
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfb27a4a-3d80-4885-8925-08dda9ca48eb
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003F66.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR19MB5049
+X-Proofpoint-GUID: yyO0pYsoBDaGSWG1tnyeEyqqW_c2SpXO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEyMyBTYWx0ZWRfX926lfPFVEmLP HjPaWOg1Q1q9TWeWC0vsQuMdJJrpnsR34dJ6+2WaDN3rX1izhyQqk6As9YJWGvgxCuHrIqT7Ac9 IqgEsNwkuBTxkvIO8VHH0InZwMlCW19T0h1+2l4EV/RlgyGBNolt8+PKjgxmZb7A78TZqHXKJh8
+ FNdpeU7P3Qfga83kglZ7A/tt7fOEnj1Ta0yPj+c7c9otOsKLG9G1mn2JtfIEBShKzv4fDXHnstG kKhQdUlODx6VoxutdT/Dw7JkKNwye+sJmlFqLZmglhDo1WFaI4ytcJKj2JC3vyyWXVMPtYeJdcM jqScFLtQSASqkkkCmoarfpfkkFkATUULMA35uYrVrL971NS5KWeQi8GmUwlU+hOf2emdOokJuuZ
+ jBMQ09T5LZ9us+SqPOFUyH4Q44nqBUgeVADSfDsVkGaKKV2oC/Q2ZcT7Qf6VFpHcEckt/UT4
+X-Authority-Analysis: v=2.4 cv=c5OrQQ9l c=1 sm=1 tr=0 ts=684af9af cx=c_pps a=YbcMhz4I3gND9vdO9+Tgiw==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=6IFa9wvqVegA:10
+ a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=I-vAyZJnyVNIUjFTEmMA:9
+X-Proofpoint-ORIG-GUID: yyO0pYsoBDaGSWG1tnyeEyqqW_c2SpXO
+X-Proofpoint-Spam-Reason: safe
 
-On 12/06/2025 15:59, Will Deacon wrote:
-> On Tue, Jun 10, 2025 at 05:37:20PM +0100, Ryan Roberts wrote:
->> On 10/06/2025 16:07, Catalin Marinas wrote:
->>> On Tue, Jun 10, 2025 at 02:41:01PM +0100, Ryan Roberts wrote:
->>>> On 10/06/2025 13:00, Catalin Marinas wrote:
->>>>> On Fri, Jun 06, 2025 at 02:56:52PM +0100, Ryan Roberts wrote:
->>>>>> Commit 1ef3095b1405 ("arm64/mm: Permit lazy_mmu_mode to be nested")
->>>>>> provided a quick fix to ensure that lazy_mmu_mode continues to work when
->>>>>> CONFIG_DEBUG_PAGEALLOC is enabled, which can cause lazy_mmu_mode to
->>>>>> nest.
->>>>>>
->>>>>> The solution in that patch is the make the implementation tolerant to
->>>>>
->>>>> s/is the make/is to make/
->>>>>
->>>>>> nesting; when the inner nest exits lazy_mmu_mode, we exit then the outer
->>>>>> exit becomes a nop. But this sacrifices the optimization opportunity for
->>>>>> the remainder of the outer user.
->>>>> [...]
->>>>>> I wonder if you might be willing to take this for v6.16? I think its a neater
->>>>>> solution then my first attempt - Commit 1ef3095b1405 ("arm64/mm: Permit
->>>>>> lazy_mmu_mode to be nested") - which is already in Linus's master.
->>>>>>
->>>>>> To be clear, the current solution is safe, I just think this is much neater.
->>>>>
->>>>> Maybe better, though I wouldn't say much neater. One concern I have is
->>>>> about whether we'll get other such nesting in the future and we need to
->>>>> fix them in generic code. Here we control __kernel_map_pages() but we
->>>>> may not for other cases.
->>>>>
->>>>> Is it the fault of the arch code that uses apply_to_page_range() via
->>>>> __kernel_map_pages()? It feels like it shouldn't care about the lazy
->>>>> mode as that's some detail of the apply_to_page_range() implementation.
->>>>> Maybe this API should just allow nesting.
->>>>
->>>> I don't think it is possible to properly support nesting:
->>>>
->>>> enter_lazy_mmu
->>>>     for_each_pte {
->>>>         read/modify-write pte
->>>>
->>>>         alloc_page
->>>>             enter_lazy_mmu
->>>>                 make page valid
->>>>             exit_lazy_mmu
->>>>
->>>>         write_to_page
->>>>     }
->>>> exit_lazy_mmu
->>>>
->>>> This example only works because lazy_mmu doesn't support nesting. The "make page
->>>> valid" operation is completed by the time of the inner exit_lazy_mmu so that the
->>>> page can be accessed in write_to_page. If nesting was supported, the inner
->>>> exit_lazy_mmu would become a nop and write_to_page would explode.
->>>
->>> What I meant is for enter/exit_lazy_mmu to handle a kind of de-nesting
->>> themselves: enter_lazy_mmu would emit the barriers if already in lazy
->>> mode, clear pending (well, it doesn't need to do this but it may be
->>> easier to reason about in terms of flattening). exit_lazy_mmu also needs
->>> to emit the barriers but leave the lazy mode on if already on when last
->>> entered. This does need some API modifications to return the old mode on
->>> enter and get an argument for exit. But the correctness wouldn't be
->>> affected since exit_lazy_mmu still emits the barriers irrespective of
->>> the nesting level.
->>
->> Ahh I see what you mean now; exit always emits barriers but only the last exit
->> clears TIF_LAZY_MMU.
->>
->> I think that's much cleaner, but we are changing the API which needs changes to
->> all the arches and my attempt at [1] didn't really gain much enthusiasm.
-> 
-> To be honest, I don't think the proposal in this series is really
-> improving what we have. Either we support nested lazy mode or we don't;
-> having __kernel_map_pages() mess around with the lazy mmu state because
-> it somehow knows that set_memory_valid() is going to use it is fragile
-> and ugly.
-> 
-> So I'm incined to leave the current code as-is, unless we can remove it
-> in favour of teaching the core code how to handle it instead.
+Add support for 1 amp configuration for ASUS NUC using CS35L41.
+The NUC is using 1 CS35L41 amplifier using SPI with Internal Boost.
 
-Yeah fair enough. I'm not going to have time to do the proper nesting support
-thing. But I'll see if I can find someone internally that I might be able to
-convince. If not, we'll just leave as is.
+Stefan Binding (2):
+  ALSA: hda: cs35l41: Add support for center channel in CS35L41 HDA
+  ALSA: hda/realtek: Add support for ASUS NUC using CS35L41 HDA
 
-> 
-> Cheers,
-> 
-> Will
+ include/sound/cs35l41.h       |  12 ++++
+ sound/pci/hda/cs35l41_hda.c   | 103 +++++++++++++++++++++-------------
+ sound/pci/hda/cs35l41_hda.h   |   1 +
+ sound/pci/hda/patch_realtek.c |  11 ++++
+ 4 files changed, 89 insertions(+), 38 deletions(-)
+
+-- 
+2.43.0
 
