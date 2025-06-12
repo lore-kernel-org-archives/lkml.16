@@ -1,72 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BF825BF02;
-	Thu, 12 Jun 2025 14:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F83625B2F9;
+	Thu, 12 Jun 2025 14:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.90.104.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739171; cv=none; b=Pxepq7KvOdRS/5MVEI8+B07RbSCricvuuHbGfuog779wHZAwcOSI2Y5BWtSKWCcgtGoFim7XPs9NScBIC4wWnZ/8Kp2JmAHto6LxtVuQGxo4uOG8xe+F383GOhbNjIn7wqqsLH9/9nKsCVPL3ehXUOKeh+XphnMY7bnYiNtPX+s=
+	t=1749739172; cv=none; b=l4lIGq8BgKL7nP6fFImBKY+i8e7XiRV/E5jAv5tV1Wbp7b9eYhqjVa5WnPY5cTjYX239vytv3in3ElrXrWlP3BD9Xsuml8wJWU0GU3ehiqFYGi6W6fJzavKyzBEVn3o8X0XUNZiSxT/Ss9nmdWZ+YaoylzGFvXwe7gwKmSxn6V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739171; c=relaxed/simple;
-	bh=oocYYW9XhNGhlIxt3VxA0yDbX+cvu/AYrEHlCDzEaEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AwJi/vxYgZYtWZhR+vRFnsbxZJN8asC62tfZ5dJZgTbgj6A7btgjPC1owapw0pdCCM3ARfitKvoIMTXpJpdSN74J3cVBh9rk8hZ+q7gRaCe4qZKEJ7LwymL/2ujOgS4zY/EEB3s/pYzPf1gbWLORsLeA1x2Rj8epM7AD4L7fGAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HeWqqdY5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749739172; c=relaxed/simple;
+	bh=R0DjUyymyH51702nfIhvD4gSoTHc5AdW1g9ClY+/bUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eWj/93Hsca/bCeK45fDWBNgvDzpC+83oFD+5ZnwubzWNVLiHCjhdmMfsn5NKUBXw1vwhwLdypS3K8uxozKdTEgli+bBFsv9JmhzlDRSKR5aKxwmh0uDwV3caZgAvjdF24VztseRnGlCcym/zUALocuGn8TVdqep7/215iQvuCyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=bV8ZGutc reason="key not found in DNS"; arc=none smtp.client-ip=23.90.104.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HeWqqdY5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB59C4CEF7;
-	Thu, 12 Jun 2025 14:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749739171;
-	bh=oocYYW9XhNGhlIxt3VxA0yDbX+cvu/AYrEHlCDzEaEU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HeWqqdY5vrpn0k5DQvBel2CHEGRBgQDN15MknA6s3IDn1q15iZRQdO9brvYgOw177
-	 3MORk3AUrQAElWBebC92T8aK8le5Ne9IOPe3m79od2/iZRTLPjTEACw4dAxWAq0LIl
-	 Nbfc58jHNiOieAz6Fsf/6ttOegsKnaYKDds6AVzzqhEAAxCA8xy3ZnwYQYmZ3fnJP8
-	 UTaPQwt7hGzhEJQ2KwkG9QfN172sCiD0hPzFBU6c/j1GfBge/+x7BevqT+tFj45XL5
-	 AReWpz5axKrG5sfnaHIuUxRCkUiPptVnl1sbtl9Glk15VhXxSu10ho7aSlzNxaa66x
-	 3k3A5hLKio1LA==
-Date: Thu, 12 Jun 2025 07:39:29 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, skalluru@marvell.com, manishc@marvell.com,
- andrew+netdev@lunn.ch, michael.chan@broadcom.com,
- pavan.chebbi@broadcom.com, ajit.khaparde@broadcom.com,
- sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
- anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
- tariqt@nvidia.com, saeedm@nvidia.com, louis.peens@corigine.com,
- shshaikh@marvell.com, GR-Linux-NIC-Dev@marvell.com, ecree.xilinx@gmail.com,
- horms@kernel.org, dsahern@kernel.org, shuah@kernel.org,
- ruanjinjie@huawei.com, mheib@redhat.com, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
- oss-drivers@corigine.com, linux-net-drivers@amd.com,
- linux-kselftest@vger.kernel.org, leon@kernel.org, Cosmin Ratiu
- <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next v3 1/4] udp_tunnel: remove rtnl_lock dependency
-Message-ID: <20250612073929.151fe6bf@kernel.org>
-In-Reply-To: <aEo_2hOn5kh6kBpk@mini-arch>
-References: <20250610171522.2119030-1-stfomichev@gmail.com>
-	<20250610171522.2119030-2-stfomichev@gmail.com>
-	<20250611184345.3b403ad0@kernel.org>
-	<aEo_2hOn5kh6kBpk@mini-arch>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="bV8ZGutc"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
+  t=1749739169; x=1781275169;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=R0DjUyymyH51702nfIhvD4gSoTHc5AdW1g9ClY+/bUU=;
+  b=bV8ZGutcaeGnSKrV+zhuKyfgipO9QQVlwosntyCZMUWzfmFXjOngBe5z
+   5INRRgWVoy82bYHgD/l6tTCS48RAWLMgpyOf1OTgu3gO3CnNGMgDsfl3H
+   ByV0OBFIvA9yZQtOzQ9SKAtGBU9xxib31FGbjZw/Gs+kXkHCktc2tqamb
+   6JMIyR4KcqEB1NWMBlAU+8FG18jyxrj4gi/uM0/9rrm+BrXI9uQcF6a6j
+   BHTGnOXf5WSF+63ydLTZMLqdY+NN4rlOzHDgvLhY9g7pXcSXt+pfMOV1p
+   UkRWT/Rfe/mw1wQY+N8Ua2HS5QJdrOPZeKZSt5MhxjGQ7JXgvCJ81LLzD
+   A==;
+X-CSE-ConnectionGUID: un4Mo7nPRqidx0IW4sWGuw==
+X-CSE-MsgGUID: byih88LRQ6yq5E8J+vCgQg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from unknown (HELO ces04_data.me-crop.lan) ([146.255.191.134])
+  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 17:39:18 +0300
+X-CSE-ConnectionGUID: +8ZAKTERTIydl0ak4WMZ5w==
+X-CSE-MsgGUID: i1rORHJeROiet+NjGoACVw==
+Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.1])
+  by ces04_data.me-crop.lan with SMTP; 12 Jun 2025 17:39:16 +0300
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Jun 2025 17:39:17 +0300
+From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Anup Patel <anup@brainfault.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Ryo Takakura <takakura@valinux.co.jp>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	sophgo@lists.linux.dev,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Subject: [PATCH v3 3/7] dt-bindings: interrupt-controller: add MIPS P8700 aclint-sswi
+Date: Thu, 12 Jun 2025 17:39:07 +0300
+Message-ID: <20250612143911.3224046-4-vladimir.kondratiev@mobileye.com>
+In-Reply-To: <20250612143911.3224046-1-vladimir.kondratiev@mobileye.com>
+References: <20250609134749.1453835-1-vladimir.kondratiev@mobileye.com>
+ <20250612143911.3224046-1-vladimir.kondratiev@mobileye.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 11 Jun 2025 19:47:54 -0700 Stanislav Fomichev wrote:
-> > There are multiple entry points to this code, basically each member of
-> > struct udp_tunnel_nic_ops and the netdev notifiers. In this patch only
-> > reset and work are locked. I'm a bit confused as to what is the new
-> > lock protecting :S  
-> 
-> I though that most of the callers are from do_setlink and there we have
-> rtnl and we grab rtnl+lock during the sync. But that doesn't
-> address the suspend/resume vs do_setlink race, that's true :-(
+Add ACLINT-SSWI variant for the MIPS P8700. This CPU has
+SSWI device compliant with the RISC-V draft spec (see [1])
+CPU indexes on this platform are not contiguous, instead
+it uses bit-fields to encode hart,core,cluster numbers, thus
+property "riscv,hart-indexes" is mandatory
 
-It's the UDP tunnels that add and remove the ports usually.
+Link: https://github.com/riscvarchive/riscv-aclint [1]
+
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+---
+ .../thead,c900-aclint-sswi.yaml               | 64 ++++++++++++++++---
+ 1 file changed, 55 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/thead,c900-aclint-sswi.yaml b/Documentation/devicetree/bindings/interrupt-controller/thead,c900-aclint-sswi.yaml
+index 8d330906bbbd..c1ab865fcd64 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/thead,c900-aclint-sswi.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/thead,c900-aclint-sswi.yaml
+@@ -4,23 +4,32 @@
+ $id: http://devicetree.org/schemas/interrupt-controller/thead,c900-aclint-sswi.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: T-HEAD C900 ACLINT Supervisor-level Software Interrupt Device
++title: ACLINT Supervisor-level Software Interrupt Device
+ 
+ maintainers:
+   - Inochi Amaoto <inochiama@outlook.com>
+ 
+ description:
+-  The SSWI device is a part of the THEAD ACLINT device. It provides
+-  supervisor-level IPI functionality for a set of HARTs on a THEAD
+-  platform. It provides a register to set an IPI (SETSSIP) for each
+-  HART connected to the SSWI device.
++  The SSWI device is a part of the ACLINT device. It provides
++  supervisor-level IPI functionality for a set of HARTs on a supported
++  platforms. It provides a register to set an IPI (SETSSIP) for each
++  HART connected to the SSWI device. See draft specification
++  https://github.com/riscvarchive/riscv-aclint
++
++  Following variants of the SSWI ACLINT supported, using dedicated
++  compatible string
++  - THEAD C900
++  - MIPS P8700
+ 
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - sophgo,sg2044-aclint-sswi
+-      - const: thead,c900-aclint-sswi
++    oneOf:
++      - items:
++          - enum:
++              - sophgo,sg2044-aclint-sswi
++          - const: thead,c900-aclint-sswi
++      - items:
++          - const: mips,p8700-aclint-sswi
+ 
+   reg:
+     maxItems: 1
+@@ -34,6 +43,14 @@ properties:
+     minItems: 1
+     maxItems: 4095
+ 
++  riscv,hart-indexes:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 1
++    maxItems: 4095
++    description:
++      A list of hart indexes that APLIC should use to address each hart
++      that is mentioned in the "interrupts-extended"
++
+ additionalProperties: false
+ 
+ required:
+@@ -43,8 +60,22 @@ required:
+   - interrupt-controller
+   - interrupts-extended
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: mips,p8700-aclint-sswi
++    then:
++      required:
++        - riscv,hart-indexes
++    else:
++      properties:
++        riscv,hart-indexes: false
++
+ examples:
+   - |
++    //Example 1
+     interrupt-controller@94000000 {
+       compatible = "sophgo,sg2044-aclint-sswi", "thead,c900-aclint-sswi";
+       reg = <0x94000000 0x00004000>;
+@@ -55,4 +86,19 @@ examples:
+                             <&cpu3intc 1>,
+                             <&cpu4intc 1>;
+     };
++
++  - |
++    //Example 2
++    interrupt-controller@94000000 {
++      compatible = "mips,p8700-aclint-sswi";
++      reg = <0x94000000 0x00004000>;
++      #interrupt-cells = <0>;
++      interrupt-controller;
++      interrupts-extended = <&cpu1intc 1>,
++                            <&cpu2intc 1>,
++                            <&cpu3intc 1>,
++                            <&cpu4intc 1>;
++      riscv,hart-indexes = <0x0 0x1 0x10 0x11>;
++    };
++
+ ...
+-- 
+2.43.0
+
