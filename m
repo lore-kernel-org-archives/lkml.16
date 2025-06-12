@@ -1,347 +1,250 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-001d1705.pphosted.com (mx08-001d1705.pphosted.com [185.183.30.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6B51A3165
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749702060; cv=none; b=iWymRs/1dl/SoAe9BD9vg6FQNIxYj6pNmbeL/NG4iLvXJCtz2SLZXYBxtZ82QnRkU0FF84ftZHJJh+sHUjxfHKwoj7Olxv4BBBUwgOzmnyNfnpwYFzRvH/RR6JzvZbhKtIxDkLGkbWGIIepm+hh7XidQh/mEgsRsUg1E+mIW0AI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749702060; c=relaxed/simple;
-	bh=TsxN2z8IOm8/jwGSpBka8PYJRa2K7ScElWp5HNUlTS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=un0oKii4BECLznXfvVMhVVEpX5bnFg+IrisF2qTrPy6hYlUXyxCBz7JoRD/bmJimNYI/mjUHARDgiXOG83QQgAobE2zoyTq/RftIRzy9v5vi09GTJrIPVRCjZex0yLcGrpUOkBb0h7sC2LzkYeRYTgRQl7rzjHvzQwjXiG3zl7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KO0qY2Fu; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0841EF38E;
+	Thu, 12 Jun 2025 04:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.183.30.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749702068; cv=fail; b=q30NKBiTfb2TwKRHD8365bTbvukTPNXOj55Gaxmig5zzlFpAbzVujk7VHbBASxZJTN2GJ5xhHb7s0zf095aT7iXhiX02gldFO5y8rBYZZF8IZ0/4y2I/RyCXMAZGJmk21ElYhwm6gjVci742KspFqNN2jk8qZJUyXLauKvNekgU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749702068; c=relaxed/simple;
+	bh=99xV20JvaYluhIOUrWSoCRUSC/qJKpGeEGzSmeaslL4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=e8SbpHlffJYh505kBZgXoN3dVZP1nrB8DPCfY5dLHy2yLmgtt4k4CpjvcDMIHKG18SxdB2kws5ExfWJlDohk1iH/IiMIqkN/jFMbF1H9fcU8MCTRCeeLWp/323EorzLji6yiCOjz9oIRVvNvxUj/TJHwaL04XjuwfoTmCr9bBdg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=NnimW7P1; arc=fail smtp.client-ip=185.183.30.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KO0qY2Fu"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74877ac9d42so420803b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:20:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749702058; x=1750306858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ct43B9dpr2sXOkfVpusyhMVLq0HGGYTToPuza0NtbVc=;
-        b=KO0qY2FuaBUkjt3xzLTK7vTEky+kVlvU87M35wkVIU911ZgcjstwdUP697OFIzHoN9
-         g2VavI9QzYIKS2/hoaXxBoaZId9xetGHq0sdPGWF072dBDe6L9W71I1KJKiFgYY+YeVM
-         bIpQV75/wLkAvS3LogZqguY3I5TOMHVW+2bRdW3+J3zc7vc7bghGkfk7dNeEJmnrSTuL
-         gOEiisGU1+4hbDFEx3HYOx+Etd2fGofMN8i8+RTg3f3OnFUZXPzaS/3uTZumL+OYBmc6
-         krxcCnhXMbXjhgTKL7AsmQwBA3NDoN3DyaOS+cRQ1O4kavymF6Zbma4QNe9tZP428A1n
-         x5Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749702058; x=1750306858;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ct43B9dpr2sXOkfVpusyhMVLq0HGGYTToPuza0NtbVc=;
-        b=GnY0/5YHaiCOlXynIHbz98iewfQB9hhGU7786M7LFIkvW6ccBTnE3PE9xGitNeeEjt
-         NcOWKda+C/oNfcY4iWNCu5/fUAnSrd8Ff7tgVbDy87clE4aGduct9qw/We4Dk458D/E3
-         GP0XjslqtsrsgbhcK0h1Ei2wV2rpnUyCkhvEUy18R8oxABr5Jo9NlweN1DWTUiP13BiH
-         lQiXDW9CKUo3TVUemTecW+nwH7HUaZSjZLOCQjiAp69psTT19LxRK7K7WpaTLRzqQste
-         L7yMU9VNEmPRHZWlJlsYEwIAXLpzmm6t4IelYzAfOjoOjjUNb2nQH9l6CPO2ZaCuySyX
-         ZJyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWB6O7ZEQGR4L1afp0vgVUSYSBMSQoxXzzASQUgjnJrDGBlt7TR7dGo7qj+ILPTiL75qze2DsTRtM5Hd0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxghuMADMs7uZc/4GeTxmOVUyBGJbPHSaE9dnKOuqT+W/GT8E/4
-	Opk9hJoM70sSrnb05EKzNj9V57ttt7IOKf8NgQraLWNHQmh/yfg7b/IDtX+5fA==
-X-Gm-Gg: ASbGncvaSU+ZTKkZX+R6iVE4md8m1ZlSz4HbdKGa8kreve6DXneStPzPhUHmr15hB52
-	3WWJ9miYnvfS+3Sy6II8eefv3bCYoQiTPK2aNNj0LjdsCGxOq1pvvA6bPbGLK8HMqMapc8a6YsD
-	FVPZEHD2HRDmned4UJ70CvAn+TPSm+i+JdRXzewrn9/z5shNLmrxj5MUHhJOoJsTqikFtko6o1a
-	j4x2jgH+4qQt3v5MrpuhU+p4EgRyMzEMo5K0bgJtgzMVFblCtYO5KwclPqwgf6R5qyNVwyklxz9
-	I06l6rFQfUG3GO1VLF814IFFbXDeM+26VkRSoOhT2y/vXmZAlZj6Jkul/5nshVk+K70Hm6o=
-X-Google-Smtp-Source: AGHT+IHp+TrDpYOL2EW1gnU8IlHnV/0vXqH0dISgVaNDvudJhUGB/JfjkFfiHo15CgWdHT+oLPnivw==
-X-Received: by 2002:aa7:88c9:0:b0:748:3a1a:ba72 with SMTP id d2e1a72fcca58-7487e29c60amr2188551b3a.20.1749702057954;
-        Wed, 11 Jun 2025 21:20:57 -0700 (PDT)
-Received: from EBJ9932692.tcent.cn ([103.88.46.15])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748809d2b79sm439361b3a.92.2025.06.11.21.20.51
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 11 Jun 2025 21:20:57 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
-To: akpm@linux-foundation.org
-Cc: zi.li@linux.dev,
-	anna.schumaker@oracle.com,
-	boqun.feng@gmail.com,
-	joel.granados@kernel.org,
-	jstultz@google.com,
-	kent.overstreet@linux.dev,
-	leonylgao@tencent.com,
-	linux-kernel@vger.kernel.org,
-	longman@redhat.com,
-	mhiramat@kernel.org,
-	mingo@redhat.com,
-	mingzhe.yang@ly.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	senozhatsky@chromium.org,
-	tfiga@chromium.org,
-	will@kernel.org,
-	Lance Yang <lance.yang@linux.dev>
-Subject: [PATCH RFC 3/3] hung_task: extend hung task blocker tracking to rwsems
-Date: Thu, 12 Jun 2025 12:19:26 +0800
-Message-ID: <20250612042005.99602-4-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250612042005.99602-1-lance.yang@linux.dev>
-References: <20250612042005.99602-1-lance.yang@linux.dev>
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="NnimW7P1"
+Received: from pps.filterd (m0209319.ppops.net [127.0.0.1])
+	by mx08-001d1705.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BMUQdR016787;
+	Thu, 12 Jun 2025 04:20:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sony.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=S1; bh=wcZAdo7
+	8I9gx2Ns8AejpYydAkfBsjN7WXOU27hYek8Y=; b=NnimW7P14EOexe5gFBYi5Vf
+	TbGV9oA6inakBD9i6pprzsgM87Vrg35t6M+R+/i9xo/IY8zq68fr+YhaK7gXbYw2
+	+TlU7HK+CwtKeKo1jQZKiTckBekvEm4qCd2fWrpjwFaL8T7khhjCMQBME+HglsKV
+	DhgNhDzz0P/km0WUgbtgU+yMWf3/etrC8SIJ15aB7lVWoGzcEj1Sjw4+scjutCPs
+	kZ1zzRu9T7Zx4DLRUj5syrFOl29Z99lwq8FKKK1vDGpTIMM41Q70FsBdvHrJwTuC
+	jiT6jhRv3fYO7mVzQaPGDYzs+Y/9XBXSUrn1gcposQ3Ay0i34orc9TbKh6oOulg=
+	=
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
+	by mx08-001d1705.pphosted.com (PPS) with ESMTPS id 474dttux0h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Jun 2025 04:20:24 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Bv6evvjKmS7CXIfIzeciM5t9EnyD66iCgTTF8hhzuxJN9OhKHYIUOzYjwud34CbleHwaJQTpJc9CmKsq/Ir6gGoDsVLkzTo/QZekge8+fYxzW19lmxtNNt9QSVj+I75bbwp0GDy7NhvqRyMVdk5w8W6Gl4DQpXigplFkegq0lxOnP8yKI2p5S80p9Vr/CNHdgqz5nfn2AMoYppLjc3RNqvsAFtImFRh8NRe/QMFO1i7W03Q3zxXR7jpDKY9bzChHZGtldvcU8cfMGvY7ObcyE+l8N1HMo+OmqwKZ3hxHlHjYwDZO32r8Lwvqn81ifIhqLbHNzWOOZPAKCs4zVTR4FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q6SSkEBOSc8jWMjZaIKghwoAqgKBXltc8YFqWabx2j8=;
+ b=ErU6QVChgKuv+E4oqpj1zOXgmoRcWEhpRUms9RI7PctFBCLbdTvkDf1Rrrcwi7OKhYyT840e7w9ZvA0Klp1u2Ml1in+gG6qN3e8vsn4q3/h9KG3iNFH93Cup9S1dPd0mH3rYLcDgJlZeO0buw3lLYl8PwD2JDM67oCrvFBG1+cA5yHZMnbyBttr9OORhIgzwktEunOszH7gwAzisp9VeqsoeHe9CXYPYZOSgnPnEK6GoCpZ0b9eX346ubvJqASj+kbWcQADGx25XgI3L/QNx3o+ibpfo0EOgkHqseD/dEyprlaenOrhiqTEa3VVmLmYBxJfO9XPfXr2yJMSuGJ8aUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+Received: from MW5PR13MB5632.namprd13.prod.outlook.com (2603:10b6:303:197::16)
+ by IA2PR13MB6632.namprd13.prod.outlook.com (2603:10b6:208:4b9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.22; Thu, 12 Jun
+ 2025 04:20:19 +0000
+Received: from MW5PR13MB5632.namprd13.prod.outlook.com
+ ([fe80::df7c:a5b9:aa3e:9197]) by MW5PR13MB5632.namprd13.prod.outlook.com
+ ([fe80::df7c:a5b9:aa3e:9197%5]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
+ 04:20:19 +0000
+From: "Bird, Tim" <Tim.Bird@sony.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>,
+        "david@redhat.com" <david@redhat.com>
+CC: "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+        "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
+        "npache@redhat.com"
+	<npache@redhat.com>,
+        "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+        "dev.jain@arm.com" <dev.jain@arm.com>,
+        "baohua@kernel.org"
+	<baohua@kernel.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "ziy@nvidia.com"
+	<ziy@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] selftests: mm: add shmem collpase as a default test
+ item
+Thread-Topic: [PATCH 2/2] selftests: mm: add shmem collpase as a default test
+ item
+Thread-Index: AQHb203Ks5i0+nPBjESSBCrtye6MErP+67VQ
+Date: Thu, 12 Jun 2025 04:20:19 +0000
+Message-ID:
+ <MW5PR13MB563297B61566E15E59B02330FD74A@MW5PR13MB5632.namprd13.prod.outlook.com>
+References:
+ <c16d1d452aa876b449324d12df6465677158a711.1749697399.git.baolin.wang@linux.alibaba.com>
+ <1352b17c513364164f6231ac32283cbb7093b603.1749697399.git.baolin.wang@linux.alibaba.com>
+In-Reply-To:
+ <1352b17c513364164f6231ac32283cbb7093b603.1749697399.git.baolin.wang@linux.alibaba.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW5PR13MB5632:EE_|IA2PR13MB6632:EE_
+x-ms-office365-filtering-correlation-id: d9aeb909-690c-4b82-b35c-08dda96870fd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?c0RJbHVhTFlnUjB2WDJHTGR4UTd4MWNnaDdUWVJiVXBENnk5OTZEWFFmcTRh?=
+ =?utf-8?B?b3BJczlHVDR6RzhmZ0RwdFkvVTJGMjdXaDF3NU5jMnRJdDc1dnZSM2JYUHl1?=
+ =?utf-8?B?R0tKL1Z2aWRLOXNMR284VkUyMHpLUGdPYkZZenptVkVlaGVSVFZQSjRIRFRu?=
+ =?utf-8?B?VXVJU3UyTlVsOUZXdzlhVmNtYVJYbFhOVFFJYUF4TFJ5UDVxRUtzdkpwL3Vp?=
+ =?utf-8?B?NnRYYjkrVVRJSDlNayswZFhQaGoxTFJOeDd2QkIrdHNwd0lXTExtQW5EdGtt?=
+ =?utf-8?B?QmQ2UjZsMUtyWE5WVFJRVTZNU3VpS3ZPWEt5TVhwcXF0MWUvWFByejdtNUlz?=
+ =?utf-8?B?OVNHU3VJMTVZUzBBK3JBbUdsVFJyNHN5MlFBdnh3cW9SUFkyNnhBVUh5QTFO?=
+ =?utf-8?B?MFN1ajVyVzZ1WFd0Z1pKaEE1Q0w1RmpVU0lFTjIwSnA3WGR1NTlmYU15NUVG?=
+ =?utf-8?B?MkxrbW9sT1p0b08zZndLTi9qR0JtOUh2UklQOTNCS1RRMFZOSjJSME03T01U?=
+ =?utf-8?B?WlRXNTRLbkhEdlZqOUExL3RrNVF1VzBnS3ViRkxobnB5WlVQUm9qZU9xLzRS?=
+ =?utf-8?B?V3dzWTNsQWlBNURxaDQzZms0RWozQzV2a1k2eUZKSS9IR05sRjB3REUyVXp3?=
+ =?utf-8?B?aU4wbU5ubUN3V2VweWFMYnJTSDZyNjlQQTljTXpnUkIvQTE5ZmFldHhSVjRR?=
+ =?utf-8?B?cytLckw2eVJKU1pXMldFVlBwNDBWc0lxRTl2R09UYWFNemU1QXpBSzY4SGJw?=
+ =?utf-8?B?T0F2eGFQQ2NFQkJhamNSRFBEQzhmY1kwK2RCdDJlckpvbm9Ocmh0dElLendE?=
+ =?utf-8?B?R3pGam9YQklsRTAxT1JwTmZrQ0MwU1YrQWZTYi9qbzJHempaTWl4bmVqUUhi?=
+ =?utf-8?B?emVzVWdSUkRDSzBMd2dzWnhDb0RRdlpCRk85UVdiTHQyS0R3dGJHQjEwQUhP?=
+ =?utf-8?B?QUdVVDdBRUZKcUk3SUFzT0I1YVA5VldjdDZ1YTFhTlpvQktvdXdRZjJXcVR0?=
+ =?utf-8?B?b3ZMZkRDMWd4RzFYKy92YlRUQ3dBUE8xRkg3RWkvem95cS9jRjJIY3c0aXBh?=
+ =?utf-8?B?alFtM3FnL1kxeVZDSmo0NUpxRjloeGR0dVFZOFFyNGM3a0V5UnlsWll4NEYv?=
+ =?utf-8?B?QkJSU01oUXgyZnJxcDlqQjZRVFB1U0poUmpWaWJHcjIrdXVxYVRWdjlTNHFN?=
+ =?utf-8?B?eUl4TytjY25HT3FQT2plUDIrOUwrNmR2OWJyQmRuOHNkTTFnZHpYWXMzSkc2?=
+ =?utf-8?B?d01SazRFMTdtU1MzaVlkbzNFaERrSVFSZkpySzVqK0N6ZWh1NEt1aTQ1eFZL?=
+ =?utf-8?B?TFVnKzhMRWZCUTZpa0VKZ3k0STdrbVI5eDRQWmkvT0QxcTEwVlJWTS9RbVJP?=
+ =?utf-8?B?YkVCeXRqRm1ROC9BL2dXOWJUT1hxd2RGMFl1dmNrcjIveTBlbXdybk1JMkow?=
+ =?utf-8?B?aWlyYjBJTlhrNFhLRytmUXRUK2hMWlNyRktMRC9UWUxwWU1IaFlWYkJIT2F1?=
+ =?utf-8?B?QkszVW1iTHl5Qlc5ekNISEtldXFoM3V5SUZyN2ZFaEd4Y2FFazJ0dll1S2w4?=
+ =?utf-8?B?VHFIM0pVUFFQQ2Mzc3ppTG13K09WUGpSdUlwZ09WMEQ5eWRvUzJhWVpYc2tm?=
+ =?utf-8?B?QkJySzRybkdXNmxFOEZDZ3o3Z2NXN3hFZUFTK2hZckpXL2JkVFR1M3cyYURC?=
+ =?utf-8?B?SkQ2QVRNamxRYjFlajdsUzNTTnNoem51aFl1QTExQWtZRjlndGdqeFk2RXl4?=
+ =?utf-8?B?YWpRTlp5MHZ5cHYxL2xnQy9vbWM1T3JNNzA0cjY4NG04TEdHS0pyU0NLMWl4?=
+ =?utf-8?B?U3hId1dBTGpwTTBOV0c1enlKOW5wdHNhVjc4elE4ZVk0Qy9McTFmVENDS2dj?=
+ =?utf-8?B?WDErVkNSanhFeEZLZkxFeFlUbXZJVk5xSUtaMWlpMk9BSW5jdStwZVlWdmhK?=
+ =?utf-8?B?TjI4STd0RkNRVUFmNnM3TkxzUW13UExZelpseTNCQWhEU0YzQ3p1ODNOaTJk?=
+ =?utf-8?Q?5J4EvjgYg+W7qRc1A+NrQ2/CpTVkSk=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR13MB5632.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?U2RGdnNjWTNoYlowVDB2eHcxTDZLZStEQytYQmpXQVo3bDlOUVMzcm01Q3NF?=
+ =?utf-8?B?dDQ1MHZQVkdXOThBNDBEeXYxeTJjV2ZIUUFTNHo0bTRCZW5uazdiY3M4THNu?=
+ =?utf-8?B?VmNscWRvQXl4WlViUkhuOVBBVkQvVEdaeVV6eGxzSWY0T0NVeVFKdFhjWHYw?=
+ =?utf-8?B?Qk8zclJydDlRWG9wQmdNMlo5bWQ4WjNvNHU2cFk3YWo2ckRTdXNWU3lKQkor?=
+ =?utf-8?B?YldGSjVLVFhITnJ5ZTZEYjRlYnNtUjBvVjVBRkUrVFFLeFF3eWEraEJkQzBV?=
+ =?utf-8?B?dTFGTmlKWUpjRnlsVTY1VXE2Ung5SzZOUnNkOE1uNVliSXNNV21Jblc2cWl3?=
+ =?utf-8?B?aThQMERTZkpvK0VPK0F6bFVVS2lsSWI2UzNZcnVoL2ZBcUJRWEIzSnhjcXFF?=
+ =?utf-8?B?TGNZSHBFVDhzNGtpa2pnbU83MUFuYVN3YmhhL29Oa1FaY04yUm56TE93RlJI?=
+ =?utf-8?B?QnliNHB3RWgvaVFEbjJ0UWxKcjNVRktMWEZIOGoxd2tPMWlleU4zSHc2Y1Ux?=
+ =?utf-8?B?TzJDbE9IbksrbDlOL0pJK1BqTVkyMFBJMWRTSE16ajRFMWZxeHhUcHg0dS9N?=
+ =?utf-8?B?L3hFdFM2dTRlUWdXQ3BEY2V1MUpNQ0dTR3JYNWd2VStRTnpycnJQTEZ0dENJ?=
+ =?utf-8?B?YVlyUWREQTZDeVp5SHdMQkQrSDFDWXMxeGpsT2FkS0RqdU1lODlzdm8zVzdn?=
+ =?utf-8?B?dWc1NU0rdko1c3k0ZHpqM3Z0VXNwQ0RZcjZwUlN4OWpOVTFPbHNUT0FpY1VF?=
+ =?utf-8?B?T0o2c1VPMHd3dDlXc010ZnpDUnpMQjAraFJxa09IdysydDJvek1mS2krWEh0?=
+ =?utf-8?B?WUY4YktkSFJSUm9sZzVDTkVkMzZyRXE3MGgzclE2R2UwbTBFWVdBMlRGYTBx?=
+ =?utf-8?B?UkNIWTd0akdhams5ZDFpWkFQNk5LUC81a0RlYWN2Z3pRazhTVVcwR0wxcG82?=
+ =?utf-8?B?WjdSQ0FCNkp4cWNINEthUzJ1dEtOY3ZWdFQ1NDNISDRlMTk0ajRBZ3dhdUdR?=
+ =?utf-8?B?bTFld0xNVDBzV29tY1RzdGN2M2I2TVk0OHRuY2tGWVF1cU52ZWhjR0FvOTBW?=
+ =?utf-8?B?MWJSRy9kOU9hMlJrbXBLa2dNZHNFV01DR3gyYnZEdEtpZmE5eHIrTnVNU3Q0?=
+ =?utf-8?B?N2M2NnAzaFlVTk01TjV3YVp1VmU0T1VhZjRBcWlyQjI0a1hwRDZITzVsRGtj?=
+ =?utf-8?B?OVVkdm5KY1hiRDFIc2NBQkQrWklvV3FQSXBUQjR5cVJSYWFpWnFudjNlZGhX?=
+ =?utf-8?B?TmRuWlU1UTduY0VqUS9SVWozV1IzRU4ydW5ja2M1cTMvazV2NndveEM5TzQz?=
+ =?utf-8?B?d2FPOS9KZjJyQW5pTVdRbUl4aFp4SHoxU3B4TEZhU21pdy9DVE9oanFOdVZK?=
+ =?utf-8?B?WEdLbnZQS1FzVWw3RDIyeGV3T1Q4MGlUV2t1ZEFjOE16MWk3R0xxWklVZ3Ix?=
+ =?utf-8?B?ZTRmQjltblUxbzhIVm41c1JhQ0Y0MWZ5S0piZVZJbmRaQkx6bTVIZDVqbHBB?=
+ =?utf-8?B?REx0VEo2RWFENk5HbmUrUU10SVJjcEVXaExEN3Nwa3RZcWN2MlhTYUYzZ0ZT?=
+ =?utf-8?B?K2pVLzhhM25OVnByVGtkRVMwcnBrWW5rMEZUVG1FSnZyMXVWS0FxOE9hc3BC?=
+ =?utf-8?B?NFRqazZZUVRrZ3FxUWtUQU8zZHdHd09NYWxJNWM0dEJVdm1qMkx6b0Q3OGVu?=
+ =?utf-8?B?ZDUwbGJJWTJ3djIzSlNJaUs3azBJM0NDQUx4QlIrdWhtZ0FBK1dTcGdpeUJP?=
+ =?utf-8?B?SVE2RFJXRDRIQ05xMXpUR2x0N05EcGxjcXhjT2NhMGJrUEVLdS8rT3RwdHM4?=
+ =?utf-8?B?RFVlRDZscWVUeDBCMmVqNit3cy82aG5kQkVkdXBDZUxLQ3VwWlU0MG41VDkw?=
+ =?utf-8?B?UVUyVzBLUjdmaFhCME5sdnV6L1Z5WnVjN05qOGl1RjZBV3dEVlZoQnN0ZWYx?=
+ =?utf-8?B?TjJVWkZ2bWJ0Y2ZHZEpGRzlQVXRhZDRWVTM4MVFKNktJTS9PelRsSWV2VDdI?=
+ =?utf-8?B?bkFaQStMajJhQlpzWGc0d3pjbkVBSExrVW9JcXBXNmFHenF5cnJxRzZaL1Aw?=
+ =?utf-8?B?amdxZUZxTHd6RC9URFoxd0tESVZYaGNSTnk3dDZMcmxVUFo3Z2V2VEV2akZO?=
+ =?utf-8?Q?ic1M=3D?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	mLv99P9WSuSDFYzsUa9teVdk2bCGqHi5pk3plZNVy3n1PASTQ0a0ouKhLeLsi9CRjjmw9dId0t4OubaS4FmDkzLti3RoiIeeoUroVbBLIjJV8uFL6sa6EspK+1G28Lc4ahqkMIXvu00NAMvu09vqg0ORrpBmuyNwIN8QcIToNoX2hY/eEgw0+IQPIS40NR+wJ0Lr3XIs1qEtfFs9ArHkrDXAYlTIyc7D63bLU8/vNc3hFmQ6fOt2x9RfNqQG2h9F4EP8OiI51BrOoMYqQyWZpKtPf1WKG+tQKkPnWboEP7GGMrL3yGq3xJUnlYcJx+Ssz4l/Ryex8A6BkpU3AeT0izkOiyRL0J027ydrTLS0sKCW/wCqUIJ7CTr4UGcUdvQajB9dfixhp4M4X5MtFnXrrTNsJyuXfLuu3olCWKGcYt47qTmOE2Czp+/lk6hANtczBRCHiIN/3kck3VmQWXJBtNodMvCbHn6L8/EMt0k4p4c6P8i6F/nq7MNE3RCqT2199nHaVtAe9L6ssMADaV5GPcNtP28pgP7kM1x7sdqzcIWcTWUaJ52D40EZB5JubN+il8Coo9v9a+agfHnMFtkmrzwwFfq/tw+dudNj7vdM5YsCPmnuLdFRBP/GqNVuyPCB
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR13MB5632.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9aeb909-690c-4b82-b35c-08dda96870fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2025 04:20:19.3475
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uFhpGSfPJXttsrQt4avKUzaDxkjRqhluv9Qj7gmiXZu5RrQuKIx5gBm8Y40WcYqH3dc1lL6NHNsh8lgwW6w0vA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA2PR13MB6632
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-GUID: -y3Bb4DPPA15JiDHcBzDkfyX2Fmf2Zd2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDAzMSBTYWx0ZWRfX9+GRNNFdKs4c sSh0Y8TlX+PTboVxGDNzmE+IJvrLOdp+MGoQ6Pjx3u+CcT4lXm+NKvSriXU9WkfEYo8tNOtNewR vf07cMqGq29vyf3XLrZcPnif0rrADb9gUuoucJvAC+zv23GqngoO5W9LWxIatxj9H4X92oBJ8/p
+ cKNcc4EPh9jOqSHF+XuBB2fwLsd+4dkb6t/gz4lU9c5SRVj8jvy+li90OKc22v1FBjVC5xUDjHR QOvwX/rw2n9vW5p9a2Mv1YwXMYFSG/lzYbCUSKgBiz+s+jOeK5DBE5/uVSSTPpjdU4FpTEqju/8 eNuE/MeHXIIqp6mUadoNHBXxObUDqIYGECb6CHO5+XVMBjmM44pRm+qEuuVyU/Nt98OS8JqPEi3
+ I1Xn1YFbC3XWIIYox/lN45u9FJgvu3IozYaldtu8xNuJlsxQv2bZWxznZERotBJbJ4EBwgMH
+X-Authority-Analysis: v=2.4 cv=KaPSsRYD c=1 sm=1 tr=0 ts=684a5589 cx=c_pps a=kCcHEhArWiBOTpcczqSLvA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=xR56lInIT_wA:10 a=SRrdq9N9AAAA:8 a=Hiey9j-r7o24BsEoXjQA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: -y3Bb4DPPA15JiDHcBzDkfyX2Fmf2Zd2
+X-Sony-Outbound-GUID: -y3Bb4DPPA15JiDHcBzDkfyX2Fmf2Zd2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_02,2025-06-10_01,2025-03-28_01
 
-From: Lance Yang <lance.yang@linux.dev>
+collpase in the subject line should be collapse
+ -- Tim
 
-Inspired by mutex blocker tracking[1], and having already extended it to
-semaphores, let's now add support for reader-writer semaphores (rwsems).
-
-The approach is simple: when a task enters TASK_UNINTERRUPTIBLE while
-waiting for an rwsem, we just call hung_task_set_blocker(). The hung task
-detector can then query the rwsem's owner to identify the lock holder.
-
-Tracking works reliably for writers, as there can only be a single writer
-holding the lock, and its task struct is stored in the owner field.
-
-The main challenge lies with readers. The owner field points to only one
-of many concurrent readers, so we might lose track of the blocker if that
-specific reader unlocks, even while others remain. This is not a
-significant issue, however. In practice, long-lasting lock contention is
-almost always caused by a writer. Therefore, reliably tracking the writer
-is the primary goal of this patch series ;)
-
-With this change, the hung task detector can now show blocker task's info
-like below:
-
-[Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 blocked for more than 122 seconds.
-[Thu Jun 12 11:01:33 2025]       Tainted: G S         O        6.16.0-rc1 #1
-[Thu Jun 12 11:01:33 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[Thu Jun 12 11:01:33 2025] task:rw_sem_thread2  state:D stack:0     pid:36526 tgid:36526 ppid:2      task_flags:0x208040 flags:0x00004000
-[Thu Jun 12 11:01:33 2025] Call Trace:
-[Thu Jun 12 11:01:33 2025]  <TASK>
-[Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
-[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? _raw_spin_lock_irq+0x8a/0xe0
-[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
-[Thu Jun 12 11:01:33 2025]  schedule_preempt_disabled+0x15/0x30
-[Thu Jun 12 11:01:33 2025]  rwsem_down_write_slowpath+0x447/0x1090
-[Thu Jun 12 11:01:33 2025]  ? __pfx_rwsem_down_write_slowpath+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx___might_resched+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx_thread2_func+0x10/0x10 [rw_sem_test_2]
-[Thu Jun 12 11:01:33 2025]  down_write+0x125/0x140
-[Thu Jun 12 11:01:33 2025]  ? __pfx_down_write+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? msleep+0x91/0xf0
-[Thu Jun 12 11:01:33 2025]  ? __raw_spin_lock_irqsave+0x8c/0xf0
-[Thu Jun 12 11:01:33 2025]  thread2_func+0x37/0x70 [rw_sem_test_2]
-[Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
-[Thu Jun 12 11:01:33 2025]  </TASK>
-[Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 <writer> blocked on an rw-semaphore likely owned by task rw_sem_thread1:36525 <writer>
-[Thu Jun 12 11:01:33 2025] task:rw_sem_thread1  state:S stack:0     pid:36525 tgid:36525 ppid:2      task_flags:0x208040 flags:0x00004000
-[Thu Jun 12 11:01:33 2025] Call Trace:
-[Thu Jun 12 11:01:33 2025]  <TASK>
-[Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
-[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __mod_timer+0x304/0xa80
-[Thu Jun 12 11:01:33 2025]  ? irq_work_queue+0x6a/0xa0
-[Thu Jun 12 11:01:33 2025]  ? __pfx_vprintk_emit+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
-[Thu Jun 12 11:01:33 2025]  schedule_timeout+0xfb/0x230
-[Thu Jun 12 11:01:33 2025]  ? __pfx_schedule_timeout+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx_process_timeout+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? down_write+0xc4/0x140
-[Thu Jun 12 11:01:33 2025]  msleep_interruptible+0xbe/0x150
-[Thu Jun 12 11:01:33 2025]  ? __pfx_thread1_func+0x10/0x10 [rw_sem_test_2]
-[Thu Jun 12 11:01:33 2025]  thread1_func+0x37/0x60 [rw_sem_test_2]
-[Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
-[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
-[Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
-[Thu Jun 12 11:01:33 2025]  </TASK>
-
-[1] https://lore.kernel.org/all/174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com/
-
-Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Lance Yang <lance.yang@linux.dev>
----
- include/linux/hung_task.h | 18 +++++++++---------
- kernel/hung_task.c        | 29 +++++++++++++++++++++++++----
- kernel/locking/rwsem.c    | 17 ++++++++++++++++-
- 3 files changed, 50 insertions(+), 14 deletions(-)
-
-diff --git a/include/linux/hung_task.h b/include/linux/hung_task.h
-index 1bc2b3244613..34e615c76ca5 100644
---- a/include/linux/hung_task.h
-+++ b/include/linux/hung_task.h
-@@ -21,17 +21,17 @@
-  * type.
-  *
-  * Type encoding:
-- * 00 - Blocked on mutex        (BLOCKER_TYPE_MUTEX)
-- * 01 - Blocked on semaphore    (BLOCKER_TYPE_SEM)
-- * 10 - Blocked on rt-mutex     (BLOCKER_TYPE_RTMUTEX)
-- * 11 - Blocked on rw-semaphore (BLOCKER_TYPE_RWSEM)
-+ * 00 - Blocked on mutex			(BLOCKER_TYPE_MUTEX)
-+ * 01 - Blocked on semaphore			(BLOCKER_TYPE_SEM)
-+ * 10 - Blocked on rw-semaphore as READER	(BLOCKER_TYPE_RWSEM_READER)
-+ * 11 - Blocked on rw-semaphore as WRITER	(BLOCKER_TYPE_RWSEM_WRITER)
-  */
--#define BLOCKER_TYPE_MUTEX      0x00UL
--#define BLOCKER_TYPE_SEM        0x01UL
--#define BLOCKER_TYPE_RTMUTEX    0x02UL
--#define BLOCKER_TYPE_RWSEM      0x03UL
-+#define BLOCKER_TYPE_MUTEX		0x00UL
-+#define BLOCKER_TYPE_SEM		0x01UL
-+#define BLOCKER_TYPE_RWSEM_READER	0x02UL
-+#define BLOCKER_TYPE_RWSEM_WRITER	0x03UL
- 
--#define BLOCKER_TYPE_MASK       0x03UL
-+#define BLOCKER_TYPE_MASK		0x03UL
- 
- #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
- static inline void hung_task_set_blocker(void *lock, unsigned long type)
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index d2432df2b905..8708a1205f82 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -23,6 +23,7 @@
- #include <linux/sched/debug.h>
- #include <linux/sched/sysctl.h>
- #include <linux/hung_task.h>
-+#include <linux/rwsem.h>
- 
- #include <trace/events/sched.h>
- 
-@@ -100,6 +101,7 @@ static void debug_show_blocker(struct task_struct *task)
- {
- 	struct task_struct *g, *t;
- 	unsigned long owner, blocker, blocker_type;
-+	const char *rwsem_blocked_by, *rwsem_blocked_as;
- 
- 	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
- 
-@@ -111,12 +113,20 @@ static void debug_show_blocker(struct task_struct *task)
- 
- 	switch (blocker_type) {
- 	case BLOCKER_TYPE_MUTEX:
--		owner = mutex_get_owner(
--			(struct mutex *)hung_task_blocker_to_lock(blocker));
-+		owner = mutex_get_owner(hung_task_blocker_to_lock(blocker));
- 		break;
- 	case BLOCKER_TYPE_SEM:
--		owner = sem_last_holder(
--			(struct semaphore *)hung_task_blocker_to_lock(blocker));
-+		owner = sem_last_holder(hung_task_blocker_to_lock(blocker));
-+		break;
-+	case BLOCKER_TYPE_RWSEM_READER:
-+	case BLOCKER_TYPE_RWSEM_WRITER:
-+		owner = (unsigned long)rwsem_owner(
-+					hung_task_blocker_to_lock(blocker));
-+		rwsem_blocked_as = (blocker_type == BLOCKER_TYPE_RWSEM_READER) ?
-+					"reader" : "writer";
-+		rwsem_blocked_by = is_rwsem_reader_owned(
-+					hung_task_blocker_to_lock(blocker)) ?
-+					"reader" : "writer";
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
-@@ -134,6 +144,11 @@ static void debug_show_blocker(struct task_struct *task)
- 			pr_err("INFO: task %s:%d is blocked on a semaphore, but the last holder is not found.\n",
- 			       task->comm, task->pid);
- 			break;
-+		case BLOCKER_TYPE_RWSEM_READER:
-+		case BLOCKER_TYPE_RWSEM_WRITER:
-+			pr_err("INFO: task %s:%d is blocked on an rw-semaphore, but the owner is not found.\n",
-+			       task->comm, task->pid);
-+			break;
- 		}
- 		return;
- 	}
-@@ -152,6 +167,12 @@ static void debug_show_blocker(struct task_struct *task)
- 			pr_err("INFO: task %s:%d blocked on a semaphore likely last held by task %s:%d\n",
- 			       task->comm, task->pid, t->comm, t->pid);
- 			break;
-+		case BLOCKER_TYPE_RWSEM_READER:
-+		case BLOCKER_TYPE_RWSEM_WRITER:
-+			pr_err("INFO: task %s:%d <%s> blocked on an rw-semaphore likely owned by task %s:%d <%s>\n",
-+			       task->comm, task->pid, rwsem_blocked_as, t->comm,
-+			       t->pid, rwsem_blocked_by);
-+			break;
- 		}
- 		sched_show_task(t);
- 		return;
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index a310eb9896de..92c6332da401 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -27,6 +27,7 @@
- #include <linux/export.h>
- #include <linux/rwsem.h>
- #include <linux/atomic.h>
-+#include <linux/hung_task.h>
- #include <trace/events/lock.h>
- 
- #ifndef CONFIG_PREEMPT_RT
-@@ -1065,10 +1066,13 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, long count, unsigned int stat
- 		wake_up_q(&wake_q);
- 
- 	trace_contention_begin(sem, LCB_F_READ);
-+	set_current_state(state);
-+
-+	if (state == TASK_UNINTERRUPTIBLE)
-+		hung_task_set_blocker(sem, BLOCKER_TYPE_RWSEM_READER);
- 
- 	/* wait to be given the lock */
- 	for (;;) {
--		set_current_state(state);
- 		if (!smp_load_acquire(&waiter.task)) {
- 			/* Matches rwsem_mark_wake()'s smp_store_release(). */
- 			break;
-@@ -1083,8 +1087,12 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, long count, unsigned int stat
- 		}
- 		schedule_preempt_disabled();
- 		lockevent_inc(rwsem_sleep_reader);
-+		set_current_state(state);
- 	}
- 
-+	if (state == TASK_UNINTERRUPTIBLE)
-+		hung_task_clear_blocker();
-+
- 	__set_current_state(TASK_RUNNING);
- 	lockevent_inc(rwsem_rlock);
- 	trace_contention_end(sem, 0);
-@@ -1146,6 +1154,9 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
- 	set_current_state(state);
- 	trace_contention_begin(sem, LCB_F_WRITE);
- 
-+	if (state == TASK_UNINTERRUPTIBLE)
-+		hung_task_set_blocker(sem, BLOCKER_TYPE_RWSEM_WRITER);
-+
- 	for (;;) {
- 		if (rwsem_try_write_lock(sem, &waiter)) {
- 			/* rwsem_try_write_lock() implies ACQUIRE on success */
-@@ -1179,6 +1190,10 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
- trylock_again:
- 		raw_spin_lock_irq(&sem->wait_lock);
- 	}
-+
-+	if (state == TASK_UNINTERRUPTIBLE)
-+		hung_task_clear_blocker();
-+
- 	__set_current_state(TASK_RUNNING);
- 	raw_spin_unlock_irq(&sem->wait_lock);
- 	lockevent_inc(rwsem_wlock);
--- 
-2.49.0
+> -----Original Message-----
+> From: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Subject: [PATCH 2/2] selftests: mm: add shmem collpase as a default test =
+item
+>=20
+> Currently, we only test anonymous memory collapse by default. We should a=
+lso add shmem collapse as a default test item to catch issues that
+> could break the test cases. Signed-off-by: Baolin Wang <baolin.=E2=80=8Aw=
+ang@=E2=80=8Alinux.=E2=80=8Aalibaba.=E2=80=8Acom> --- tools/testing/selftes=
+ts/mm/run_vmtests.=E2=80=8Ash
+>=20
+> Currently, we only test anonymous memory collapse by default. We should a=
+lso
+> add shmem collapse as a default test item to catch issues that could break
+> the test cases.
+>=20
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>  tools/testing/selftests/mm/run_vmtests.sh | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/se=
+lftests/mm/run_vmtests.sh
+> index 33fc7fafa8f9..a38c984103ce 100755
+> --- a/tools/testing/selftests/mm/run_vmtests.sh
+> +++ b/tools/testing/selftests/mm/run_vmtests.sh
+> @@ -485,6 +485,10 @@ CATEGORY=3D"thp" run_test ./khugepaged
+>=20
+>  CATEGORY=3D"thp" run_test ./khugepaged -s 2
+>=20
+> +CATEGORY=3D"thp" run_test ./khugepaged all:shmem
+> +
+> +CATEGORY=3D"thp" run_test ./khugepaged -s 4 all:shmem
+> +
+>  CATEGORY=3D"thp" run_test ./transhuge-stress -d 20
+>=20
+>  # Try to create XFS if not provided
+> --
+> 2.43.5
+>=20
 
