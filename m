@@ -1,179 +1,98 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F46A72616;
-	Thu, 12 Jun 2025 14:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF5B19DF9A;
+	Thu, 12 Jun 2025 14:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739727; cv=none; b=k3YlEQk8zbbVXt3+3SRuSMz4Dw9z4+KqvY0291wzYrS013R6wrXTaIK2//sLaIZE9PVQm8hhtCxyKEsRBGTwKJmj3klQSwi8vUiI/ZydWtpKzcjn0guICz0Oyi9pfsc6V43RKkSs6Bs5SGtU0wD4GlXTfk2Dqa5rkfGKAMxYAbo=
+	t=1749739772; cv=none; b=TQ5o89py7xDM2rAUH4LpDGR3PCH3vHfvKWjar1fOUBHZSjtxHPSCylXuFeCxKeDcQ55azFblb8t/Jdd1jA2HGdTYB2wbsbmZG1Cca5s492+6WQOekCPADcWptpyXn1QfxCh5FckRNhdwipzVa7G29XXZbiVOyd3C+BnudMf+oeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739727; c=relaxed/simple;
-	bh=MNY5GrlKulcobjKhaz4Ugy35VrS+LfXdMTxhyeYCZ3U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jRUiuHmr3ygmPDU+Zta6IGX59QjVrBuVdnV+dcgZ6lgOTWL3xFqig5DZB0uvsPLu4tk+rHE0yEFYyRzD3msgRZf0he9ZdAgiz8CSws+/HbK4UTKeZJHzIEjBj8torSI9W/I+95dOnW43e1kgHU+3BAeVuuxi5+roxvRaL673N6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=bYS8wDMr; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="bYS8wDMr"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id C2F8825E38;
-	Thu, 12 Jun 2025 16:40:09 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id SR4gQnR6tiSp; Thu, 12 Jun 2025 16:40:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749739208; bh=MNY5GrlKulcobjKhaz4Ugy35VrS+LfXdMTxhyeYCZ3U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=bYS8wDMrUnyo4JzaHSlNlBuQJs2yRt7Q3r9qwIqoFOe1mzNq6pgINXshKC8h4AlHS
-	 Sf6eL7xdwdGfRCjkT7ojVU1sduxcNKNHQk/gQhD7ao0ZNyhpN2t231XXbc6kO+OSRW
-	 OQ1HAoOS1Hg+6VJnpr+BBvanuXg4eKgYbmXHNpBVGQSx/9I+Jck+EDvriZ9L3uC2nC
-	 baKxMlr+A1murkSHJ9wbhgxKIiF8nzcyXHpYtuc4aCFUpGQB9HtozuBRlVRjA7O/3P
-	 MlsSKOs/bKdGEvPKEIlYDjBJbmsr8as9zvtIzdVeqqKwtr65y/87oTPke25OWMq3qw
-	 eAM8cXbAcwpVg==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Thu, 12 Jun 2025 20:09:40 +0530
-Subject: [PATCH 1/2] dt-bindings: display: panel: document Synaptics TDDI
- panel driver
+	s=arc-20240116; t=1749739772; c=relaxed/simple;
+	bh=2ZertXQqA431pXbmfY4GDumWZtR6wULFf8L3AEAO8rM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QGROpGplzC5Bfb2EWIazmjqg0KY0wgbUP+BFzj9Sps5z9xNGowYtc4JdeOB9caqWzWyRxS7iRo44vzkO+06y5VgSXYN7EXhtcQ4pcTJSN+Lmaig9VFEWgCYYhJUO+rUT8m4m3KolX9+zsGUTTJcSOb4Q8mhZY3fnwMp+lmYFfpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-531341d339dso178748e0c.0;
+        Thu, 12 Jun 2025 07:49:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749739769; x=1750344569;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NBzo5c2eHQJ4UmDLe5XXuGLhcnXVF2196yaOopFMfv0=;
+        b=pqNOihS2Pqh/9TRoqV7QbUb+bRiUhtK4KdnHvS03U2t/C6nHnYwkCAYR3IAG8vMEmC
+         R8VM5hX6E8VD6W0b2wTjJyHv9OB98p4xTDZMvIZbDmPg/9DI8SdYmUkcNtpMbVVWyPVm
+         dfWPNPkYEhWuQagMAv2Lj0Y4V84Zo3mMvF8pbc+xNdynmjoXtv1bMV9cJERMteYO3C4O
+         vdGfTtHDAUD7qxeG2T6wUgdetIPvaBdbwmj9ni5goFJz+9j5Kgrw7sz8GVAGFnGb3PV3
+         q0ezjG3/MYCKGNhaRw2Mtg+SoFWD+9NwJ2fBLYm+aAGkkF1Rb91qBIlimdCGozimmATS
+         5Awg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMrZF2cgbbKgpvbamNhk47XeuHW7byFVPWk3ey0zSRRwQdOfa1NnjatSlEdBkQL5kpZ6z4dtdYVNfR@vger.kernel.org, AJvYcCUj2FDy9E7Z//XVgq8TH/6HU4neRyuFXPzZ6sVmaWWSDj7RqztpTjJUvoBIIQqCm8m+ItWtJanEl36NLJiCPxdOFw0=@vger.kernel.org, AJvYcCUlO+b6Qj+PPbAOWUxAxjlMXovuak4mWUgW9aP/N39nxCPUWIKWHk3X1WVeKkgGi/qjPZY/l4EtU4k5ESfE@vger.kernel.org, AJvYcCW7KnSFMKDrLg0kXjbnw9Iy9kiQzZ+QzOIC6McgrvUwa7qVqp3PJv7gFcrdeOPzAXarZeguwoUVjenR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3RnuNSkGNZCSoXQDD20sgon89hqI/kwgGiP3OoJpzK/bYtlhD
+	rVO/Aj8fdC0fJFiSnGLCLCbYEA9dgXgh/twxxMLc4ZcnW/r60Ko74ymrSTJtBM0Y
+X-Gm-Gg: ASbGncszOk226Xv5biiKojUQhqTOB8yzv4Gi5wqRHP8Bs4Y2Heb3JPpDDxz+0q8Zw60
+	q4f09mGqFNPmH1JtuGS9Y1LgaJBFfHwK3W+mwezdu7leLMnnL4LezpYiwCvdxvhLEp4d0aEZZvg
+	9jCZtJlxi0LnLB1C5FW+jpM11HuD+qJPLjUGhkwd9TIQ+heGTjcJXxLRsDlY4cuGzH9pvSCS2JR
+	5cbDBcv/8kej+4UgYcyixZm/xws7gByinQy6RLFlm4Egb/4rmoRcgk2ylL46tubx/MpcxadePZM
+	WJcBFx90CBn1s4tjHDUUzCDuhcg3SEPn9nb8AT3mvrLzviq6KiZD22aQSMCp6ZAGsw5zFjs1+GF
+	ztHIf2Ieksdiu9QX+MZ7IXr52HFbb
+X-Google-Smtp-Source: AGHT+IG6FCabMPqa5gDFT4SapTYACCrrvG2cjeoN5OVOFPidto9Q5HvhaGYw4d9+mfNfqUjy6UKbBw==
+X-Received: by 2002:a05:6122:da9:b0:531:2413:ce62 with SMTP id 71dfb90a1353d-5312cf19905mr4022816e0c.11.1749739769196;
+        Thu, 12 Jun 2025 07:49:29 -0700 (PDT)
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5312f651547sm312041e0c.22.2025.06.12.07.49.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 07:49:29 -0700 (PDT)
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-53125ca78b0so363782e0c.1;
+        Thu, 12 Jun 2025 07:49:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUpY8gNH0tvlUuGQiztU2Y6o840aHcf15/PXi+NuWppKlDz0YqxCeP/PQutbMwfaFme/vfwZp7vRXwXgolKA1IzrRw=@vger.kernel.org, AJvYcCWEafgFeMhYJJ2r2C0InAcHW7wQ8KQmENJUY0mtGkB2I3jj3i7qAwjRhXsymZglaVq5+75hv0kasQCG@vger.kernel.org, AJvYcCWbl6AOjqDjeK9fw9O29Ctspdfe6nFbgITapmrFWuXqH2KEdObdDX5HFeeR8knAoB8CHkOUIumX0y35@vger.kernel.org, AJvYcCXG/2U+1aE8JawFuQ8foGZEfoNRJk9+ttP35UgrmSeFK82lRGjrI+VXychRGNSMkhKjx5JLHIzI5iudJuId@vger.kernel.org
+X-Received: by 2002:a05:6122:3093:b0:531:236f:1295 with SMTP id
+ 71dfb90a1353d-5312cde4b2cmr4126676e0c.5.1749739768831; Thu, 12 Jun 2025
+ 07:49:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-panel-synaptics-tddi-v1-1-dfb8a425f76c@disroot.org>
-References: <20250612-panel-synaptics-tddi-v1-0-dfb8a425f76c@disroot.org>
-In-Reply-To: <20250612-panel-synaptics-tddi-v1-0-dfb8a425f76c@disroot.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749739197; l=2932;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=MNY5GrlKulcobjKhaz4Ugy35VrS+LfXdMTxhyeYCZ3U=;
- b=4j7u0ZeD2t4wgyl9xeAF3zzcvOQbOARt4jYlNXeqN1cKeberTGie2+iVPNKswaGLsKepy3Uii
- lqjhmVDlrsVAQgRdfuUxrzahqYv8KzzJ/vfCz7l+czOcN6gy3hmYGWx
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+References: <20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250609203656.333138-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250609203656.333138-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 16:49:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXJvYFrj9ZX4Q-EOAZXC+P=SmNMfMZM9tbebYeiZKQYGA@mail.gmail.com>
+X-Gm-Features: AX0GCFt9BGU4-f86W1haNgpSZABnoAaeDYNvqzPOREPZOvb_CkRm3reF840XDAE
+Message-ID: <CAMuHMdXJvYFrj9ZX4Q-EOAZXC+P=SmNMfMZM9tbebYeiZKQYGA@mail.gmail.com>
+Subject: Re: [PATCH 7/8] arm64: dts: renesas: Add DTSI for R9A09G087M44
+ variant of RZ/N2H SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Document the driver for Synaptics TDDI (Touch/Display Integration) panels.
-Along with the MIPI-DSI panel, these devices also have an in-built LED
-backlight device and a touchscreen, all packed together in a single chip.
-Also, add compatibles for supported panels - TD4101 and TD4300.
+On Mon, 9 Jun 2025 at 22:37, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Paul Barker <paul.barker.ct@bp.renesas.com>
+>
+> Add the device tree source include file for the R9A09G087M44 variant of the
+> Renesas RZ/N2H SoC, which features a 4-core configuration.
+>
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- .../bindings/display/panel/synaptics,tddi.yaml     | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/display/panel/synaptics,tddi.yaml b/Documentation/devicetree/bindings/display/panel/synaptics,tddi.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..3aae1358a1d764361c072d3b54f74cdf634f7fa8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/synaptics,tddi.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/samsung,tddi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synaptics TDDI Display Panel Controller
-+
-+maintainers:
-+  - Kaustabh Chakraborty <kauschluss@disroot.org>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - syna,td4101-panel
-+      - syna,td4300-panel
-+
-+  reg:
-+    maxItems: 1
-+
-+  vio-supply:
-+    maxItems: 1
-+    description: core I/O voltage supply
-+
-+  vsn-supply:
-+    maxItems: 1
-+    description: negative voltage supply for analog circuits
-+
-+  vsp-supply:
-+    maxItems: 1
-+    description: positive voltage supply for analog circuits
-+
-+  backlight-gpios:
-+    maxItems: 1
-+    description: backlight enable GPIO
-+
-+  reset-gpios: true
-+  width-mm: true
-+  height-mm: true
-+  panel-timing: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - width-mm
-+  - height-mm
-+  - panel-timing
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@0 {
-+            compatible = "synaptics,td4300-panel";
-+            reg = <0>;
-+
-+            vio-supply = <&panel_vio_reg>;
-+            vsn-supply = <&panel_vsn_reg>;
-+            vsp-supply = <&panel_vsp_reg>;
-+
-+            backlight-gpios = <&gpd3 5 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&gpd3 4 GPIO_ACTIVE_LOW>;
-+
-+            width-mm = <68>;
-+            height-mm = <121>;
-+
-+            panel-timing {
-+                clock-frequency = <144389520>;
-+
-+                hactive = <1080>;
-+                hsync-len = <4>;
-+                hfront-porch = <120>;
-+                hback-porch = <32>;
-+
-+                vactive = <1920>;
-+                vsync-len = <2>;
-+                vfront-porch = <21>;
-+                vback-porch = <4>;
-+            };
-+        };
-+    };
-+
-+...
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-2.49.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
