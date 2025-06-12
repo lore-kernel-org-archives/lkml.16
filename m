@@ -1,181 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16132F432C;
-	Thu, 12 Jun 2025 12:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8108223321
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749732492; cv=none; b=GSEUbLuRTUgM3zV3odB2ObSPDwXiOVDv+aM4Dm8sFyGS+IyTk1lY2wXBv0NFpxbPKGXT+R7AJgYFv77D5PptVmneVrlnLDdC2+p5qQp4rHHPbw7DONsT7qcDqdcHg4pGpG338jb6FD7Uthl967fURJegYb8JtStqlkVAYeQw3dQ=
+	t=1749732515; cv=none; b=KZkHZVaPyF//j5Jd9ai+o2QE5sI8mGGxPiir61KcSnPmYHrMxXFF9oVSG7LcC1iqWlkAhkmjDjuReH8tusZTXAKSXc+tdWcCPfvfW1L3S6qwr4jp2HRKppphIrzZOq6Ujmbden7RwvdqOp7PZBLkUcVjjpcCjunHRIkyzCwoRzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749732492; c=relaxed/simple;
-	bh=Fjp9hcmXAIrCkfYCQtqV83QQT9g0u4DPzSNaZbioKKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IqGtM9QxaefmLEnFXhZ822opaN2I5OF/7y3PFO3unZwgivOQHtCli/h/6SL0E5P4yRD1kWyjQDXHCz4A0tOzhW1TmvIKHyewHZiWLAuMGZlhtfsDibe+zioyksf5pQ05YUaw6hvwQOWysXvFuPK2He5KNCce0g6bo8DN16CtjIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g+CNHlCq; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749732515; c=relaxed/simple;
+	bh=uIpfV86I5hPV5TggbDl8CTaPWvS8Orv3jUk+S3wEWyg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qwFl7stT1jenJEThQ9yAmO7Gl/RgIbJVR+2Vccb9cG0BJvwzBipnNLV/59N4vOaiPKwhLHMFZQ8mrWe37kfADJzBBRtCnbwENgSXiBEw29JFFCp3A+/Nh/KtLyqxUiaVH3frA3lAF37v9wQbkBJGtTovTONqAxOGDNGfsHeaqeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mZaYPTpG; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g+CNHlCq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749732491; x=1781268491;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Fjp9hcmXAIrCkfYCQtqV83QQT9g0u4DPzSNaZbioKKM=;
-  b=g+CNHlCq0InXuXmU9CDXOTcmPMg0gXlRI27eFCwOY08aSf6ISFbTQhq6
-   RagmoBGcqK1ipgyFAL8rkB5nKV0yHNUpN64lrwz0qdMT1nIcXpc5G/fmS
-   3mw/o3WbulpKOsaa6CnyFIn87NiAuCalWfdP3u9gkppkfU5Z/hQTJKwT5
-   Ygu3YE27THdDWa6aEHePAmFeM+u9kaFsB/0Uea2EsupoqN4OLeokrJQT+
-   x/8b4WxWeAGqGOpNjcG2B55wKzALTljD0PV+L0Jk/P10h1UL9egx/3bvo
-   Fg2umBaRjklkb2TgYrXzYvQE1k1ahDAri6ViajAUeDx0MUaXLXOw3KkLL
-   w==;
-X-CSE-ConnectionGUID: eJlamKFvQlyD9WdNgHJ7WA==
-X-CSE-MsgGUID: 2/7kVuruTVuLt8uhzk3t1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55582807"
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="55582807"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:48:10 -0700
-X-CSE-ConnectionGUID: 6hrNdlaVQpmn9K1K+Vr+jA==
-X-CSE-MsgGUID: X9pY8ZHGQNiXuIxi6mZ8ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="178414898"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:48:06 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uPhLe-00000005x4y-2rhE;
-	Thu, 12 Jun 2025 15:48:02 +0300
-Date: Thu, 12 Jun 2025 15:48:02 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <aErMgh6AKVStF4rQ@smile.fi.intel.com>
-References: <cover.1749582679.git.marcelo.schmitt@analog.com>
- <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
- <aEifWXPV1nsIyWbT@smile.fi.intel.com>
- <aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZaYPTpG"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso648765a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:48:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749732513; x=1750337313; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Un8c4hSuq68zw8qRr2FQLigByWgPP3IS2ZayC2CfFEk=;
+        b=mZaYPTpG96J6e1RcNCyS7vupJyeXhs/JkNxgS1Z1b1YQIyfB0BBpSe5ylwjeEM8kLn
+         re81pCKJLxayTh8hOlQB6F8nzcWyiL0TWp8cEc6u4tgyCxMEpb36e70r0H87E+5GGUkl
+         OmnQYOytfMv/iwtyaSSsbXF1vcSVeChVEGBWssbhiFdklZ8aZTUJXfeMX5iPTyDBdHN3
+         bV7phVpqvVQPsyTkNDuja1UG03DXuMVAoBLsvETpkxxmALDUqU51gPx8eddVUmpq8gMA
+         fNbghgp89+uSsUB5lq1FJPtcNxfsCFBTMpd3PV0QY5aBaQ3CfpBEoL86JfjGQFLe0SJR
+         JZZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749732513; x=1750337313;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Un8c4hSuq68zw8qRr2FQLigByWgPP3IS2ZayC2CfFEk=;
+        b=YDHxMTXXvxtj2NrQkU8eKQh87p6dl0WOivncXbOYYywAuT9c21FOphjhZVCEw+Lbdk
+         4vqeWbd1AR9Kv7Aa714NhDiY408kaWo3CU04cpYwpEROfX+4ht9fplsNIHldLTfQFAwc
+         vLXDCebivCb8zS+2xzaHoiMXHmp7cU1DzIG0BiEBNDyr1HUVlvkSesWLtYITVkt+1Nql
+         IgSLuGOtXxt4ku4qUfvz3KgXp3ewGl58G5wnGQI0jXnBeq/9YVWO6yPNsrbgY0auzRYj
+         1CXJHFTOPRRgM9b5NPbJtneoVjxcS4UM9b1NrYDOZF+IQNmWnBtTOsfCh1z6USlQWXzD
+         2ZpA==
+X-Gm-Message-State: AOJu0Ywl35k6Zi9X2gKtuvYMeiws896Pon7FnDs1ZmCcN205hUvcEJ+K
+	B2j3l3STmfTfDFTUlwMvkRYufNtJFEVMxWfQ6Hr3IXZIQaAIiYZ6H/PP
+X-Gm-Gg: ASbGnctujpQieRJc1T46ZAIqLBPL6pqZ49wkOFdJYZWsS7p2zEHhN3k12CNmrhJJQAV
+	pSUmDImYFZdkyZ38qA//jsMuceVsNmoSvDr+LTj44OPqjd/15IdvlFTIG96y+1GSZl5MzuntGoY
+	axbjJQbxnmHdfIQGHHSm5wC7bF1LR/w3wF8Ku1g6k0+1Ac7B95apqt6mhMST5+Icf4Atbr/BuhK
+	NNkgRRRkAL7YoMVu95r4MFfK1O9EvOWXvcs/MWrlLoRvbJbB/ImFbQCplHZDBrqzcdA95seSnn4
+	MufcrGwskCN+4YDN2PQzEssDYH+UAsM5j2yPkWFVYKgmFq6gIDD4WUcL2geONatXjkzV
+X-Google-Smtp-Source: AGHT+IHPPN6kLSixGb/big4CyW5D5xRPw8joJqbkJBxJ8MQ1m7AocngH+i51AVcjWCqF1viIVH5JSg==
+X-Received: by 2002:a17:90b:2c90:b0:313:20d2:c99b with SMTP id 98e67ed59e1d1-313af11cb9bmr10910933a91.9.1749732513058;
+        Thu, 12 Jun 2025 05:48:33 -0700 (PDT)
+Received: from gye-ThinkPad-T590.. ([39.120.225.141])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5d80bsm1342010a91.35.2025.06.12.05.48.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 05:48:32 -0700 (PDT)
+From: Gyeyoung Baek <gye976@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	Gyeyoung Baek <gye976@gmail.com>
+Subject: [PATCH v2] genirq/irq_sim: Initialize pointers properly.
+Date: Thu, 12 Jun 2025 21:48:27 +0900
+Message-ID: <20250612124827.63259-1-gye976@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 06:04:49PM -0300, Marcelo Schmitt wrote:
-> On 06/11, Andy Shevchenko wrote:
-> > On Tue, Jun 10, 2025 at 05:31:25PM -0300, Marcelo Schmitt wrote:
+Initialize `ops` member's pointers properly.
 
-...
+Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
+---
+Changelog:
 
-> > > +	return spi_write(st->spi, st->tx_buf, size + 2);
-> > 
-> > ... + sizeof(reg) ?
-> 
-> The size of the specific ADC register is stored in the size variable.
-> The result of sizeof(reg) can be different on different machines and will
-> probably not be equal to the size of the register in the ADC chip.
+v2:
+ - Edit commit message and subject. 
+ - Use kzalloc() to initialize simply.
+---
+ kernel/irq/irq_sim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hmm... But shouldn't we have a variable type that respects the sizeof() of the
-register in HW to keep it there? 2 is magic.
-
-...
-
-> > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
-> > > +{
-> > > +	/*
-> > > +	 * The use of static_assert() here is to make sure that, if
-> > > +	 * struct ad4170_setup is ever changed (e.g. a field is added to the
-> > > +	 * struct's declaration), the comparison below is adapted to keep
-> > > +	 * comparing each of struct ad4170_setup fields.
-> > > +	 */
-> > 
-> > Okay. But this also will trigger the case when the field just changes the type.
-> > So, it also brings false positives. I really think this is wrong place to put
-> > static_assert(). To me it looks like a solving rare problem, if any.
-> 
-> I think it is unlikely that struct ad4170_setup declaration will ever change.
-> The fields match the registers that are associated with a channel setup and
-> the their types match the size of the respective registers. So, I do agree
-> that triggering this assert would be something rare.
-
-Yep, which thinks to me as an unneeded noise in the code, making it harder to
-read and maintain (in _this_ case).
-
-> > But I leave this to the IIO maintainers.
-> > 
-> > In my opinion static_assert() makes only sense when memcmp() is being used.
-> > Otherwise it has prons and cons.
-> 
-> I think the most relevant reason to have this static_assert would be to keep
-> some consistency with ad4130, ad7124, and ad7173, but no strong opinion about it.
-
-I would argue that those needs to be revisited for the same reasons as above.
-
-> Actually, I don't get why static_assert() would only matter if memcmp() was
-> being used. Would it be better to not bother if the fields change type?
-> 
-> Anyway, I'll go with whatever be IIO maintainer's preference.
-
-> > > +	static_assert(sizeof(*a) ==
-> > > +		      sizeof(struct {
-> > > +				     u16 misc;
-> > > +				     u16 afe;
-> > > +				     u16 filter;
-> > > +				     u16 filter_fs;
-> > > +				     u32 offset;
-> > > +				     u32 gain;
-> > > +			     }));
-> > > +
-> > > +	if (a->misc != b->misc ||
-> > > +	    a->afe != b->afe ||
-> > > +	    a->filter != b->filter ||
-> > > +	    a->filter_fs != b->filter_fs ||
-> > > +	    a->offset != b->offset ||
-> > > +	    a->gain != b->gain)
-> > > +		return false;
-> > > +
-> > > +	return true;
-> > > +}
-
-...
-
-> > > +	/* Assume AVSS at GND (0V) if not provided */
-> > > +	st->vrefs_uv[AD4170_AVSS_SUP] = ret == -ENODEV ? 0 : -ret;
-> > 
-> > -ret ?!?!
-> 
-> That's because AVSS is never above system ground level (i.e. AVSS is either GND
-> or a negative voltage). But we currently don't have support for reading negative
-> voltages with the regulator framework. So, the current AD4170 support reads
-> a positive value from the regulator, then inverts signal to make it negative :)
-
-This needs a good comment and ideally a TODO item in the regulator framework.
-(It might be easy to implement by adding a flag without changing the type of
- the field, if it's unsigned.)
-
-> > Even if you know that *now* it can't have any other error code, it's quite
-> > fragile.
-> 
-> Yeah, I guess ADCs that can take bipolar power supplies are not that common.
-> I couldn't think of any better way to have that, though.
-
+diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+index 1a3d483548e2..ae4c9cbd1b4b 100644
+--- a/kernel/irq/irq_sim.c
++++ b/kernel/irq/irq_sim.c
+@@ -202,7 +202,7 @@ struct irq_domain *irq_domain_create_sim_full(struct fwnode_handle *fwnode,
+ 					      void *data)
+ {
+ 	struct irq_sim_work_ctx *work_ctx __free(kfree) =
+-				kmalloc(sizeof(*work_ctx), GFP_KERNEL);
++				kzalloc(sizeof(*work_ctx), GFP_KERNEL);
+ 
+ 	if (!work_ctx)
+ 		return ERR_PTR(-ENOMEM);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
