@@ -1,115 +1,159 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6BC29C33E
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957DB1A265E;
+	Thu, 12 Jun 2025 15:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742755; cv=none; b=K+cqPZaLF/3HNnQU7jmOo/CkszQYStk7RBSCR5Wtt8kv75Z6OY7nrghc8iokYQx/oGvz2A31/2S5p4NebUg9FqMSihZRmKU+5gB0/tLvjTC1CHIbX3URfsEafHVcOw7CRtt2QNEBx+IEavA7jgOElf0977p+2hxNWSV8QQdyPuU=
+	t=1749742785; cv=none; b=PtfCBOKM/vsyq0AHQrIXrhpjVcgFDv28aLBLdT44itnWtLjYfj4FktM2vak4C2gdK3Aho/rgTsQU01O0+3/x7i8SwcaNTJo1BOanoZoAjScXfuXSKAc368ME1mQSw/xRQHgXnu+l8UhqK0FbIDjHWq9QYXVrMvzawPfjaKGKeUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742755; c=relaxed/simple;
-	bh=bh6e3aZhERXOjQ6Gx4/GsntMfPc/vEUDeUlfzxV4/OU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VvV4qxbhfKh+7qtEjWDreCtB4Rin3nlmX0yQx40D4wl3sna/iqV/WLLoi5PZyac5/jNqyaMcbsurAXfZR86HNfc48pa+ycpdjEFhMn5kOLl+K8XpqHrEGrv1a8jv8bPk2B2vLZBo4AUjtT3KQ8trs1tkby3C/v0YnGT7M8/H4Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=icgN1GsS; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749742785; c=relaxed/simple;
+	bh=kql/68pdZM78tfHESpUFtGAG253otQkry8EKhBsHpQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bFhESgFB0rrG4MPq/+ll5u+zMd5jQjwaCFFgofOlxwa4kXGKggK65//a+9YyxSE4dltIsFtN+KhfQuhkRnBMRXp6GpPJmV1/si2wkpwdF7Ppb6m4vYXqBxsLv2H/fBAm2D/Dg4Ufpc+faXQrUm2obrzG/h4V06JNl8nZIg7vNZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V10LlDub; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="icgN1GsS"
-Message-ID: <b7137a4a-cb87-4aa5-958f-a83d3239e967@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749742740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mx5FBx1fw+pZ6pjrn+Y9O7dYZ++IH+lPj2ErOykVNzA=;
-	b=icgN1GsSf4dXa2aarzDwWLo3Iju3i34wDoXZoI3hiV79iRnI6s4EulvHLkro7SyECmvQ5b
-	1LjfW+VJ6oyFp1e/LYzdQV1XsAuXoDs/RkibJylnYHAndNQJaLHFycVSGp5yNd87wm/fsN
-	PWE3e17NjdvWnJNa1YgTcb8Zzgi+DfI=
-Date: Thu, 12 Jun 2025 11:38:56 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V10LlDub"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183CAC4CEEA;
+	Thu, 12 Jun 2025 15:39:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749742785;
+	bh=kql/68pdZM78tfHESpUFtGAG253otQkry8EKhBsHpQ0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=V10LlDub+VHqlA5ixOqtYjEnEMX0oLZoITvIBMJKwrUTQBiOnGJJIkfHy9d7WXD+u
+	 57JrjqMBuhe6az73OLfIvzzWL04vXyC0vhxmcjri86AA+pBZdrct3yE9Sdv9doT4Ba
+	 stDpdJS1V8W9EKceuG4g8pPbSKFnScf8W0RZpqpKtBGXJ0oYRIs9mBh66vQaOkA5XT
+	 OzkBwU1yEhMfxdaPWGhiBI8cupBC79gQq6dKOHMJwPi3WzGD83Qz74V83r3WHSosmP
+	 87qeQbY/Cl987QkI8XzbFzjfUctOnQyPlbEGYHx8kCOVsYkItH3IYBDTCFuorLZRF6
+	 GDjf05tupfbxg==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so1059483e87.0;
+        Thu, 12 Jun 2025 08:39:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVTnRuGJlIwHt4SGr5zCYR1pQuuHkAKvPH7OL/zDCm2AgKDouG/7de96CVzvnGNAne8Q9qec99JXDBmTALp@vger.kernel.org, AJvYcCWT3G2k6m3+E50QKdy9uOpskvUbhWJ2f9R+MWUP0qZvPOkp+uvLPhF2f0QcQHv02Cx5K6YNyLnA1qG/kHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx69eDiHpjXJczvnOyOAhBBdHyhxRUY78guebg3JqYrpEvyVmDe
+	ENGfaCg4kghIHoJSbA1n5zLozcc+PJC30hoonvYOaOtd2IlFzvdY5SlgrPbgYUAqZv7EemnIlgX
+	EbqPoMXcWVJwE55bvmyJI7BX+pRe+U44=
+X-Google-Smtp-Source: AGHT+IFCn4cy8C3+uiWTpUl/bd4P8YsEsu+4izukKFuLL6PKg/Lb5ciTZY8OYnsP8L0vp4VZAkEInbX/v51sLL36k8M=
+X-Received: by 2002:a05:6512:4025:b0:553:2f50:5dff with SMTP id
+ 2adb3069b0e04-553a5599d7fmr1294722e87.17.1749742783743; Thu, 12 Jun 2025
+ 08:39:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next PATCH v6 03/10] net: pcs: Add subsystem
-To: Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Russell King <linux@armlinux.org.uk>
-Cc: Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
- Kory Maincent <kory.maincent@bootlin.com>,
- Daniel Golle <daniel@makrotopia.org>, Simon Horman <horms@kernel.org>,
- Christian Marangi <ansuelsmth@gmail.com>, Lei Wei <quic_leiwei@quicinc.com>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-References: <20250610233134.3588011-1-sean.anderson@linux.dev>
- <20250610233134.3588011-4-sean.anderson@linux.dev>
- <f5b16bd6-01b6-45c0-9668-41ccf90445a3@infradead.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <f5b16bd6-01b6-45c0-9668-41ccf90445a3@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
+ <20250611075533.8102A57-hca@linux.ibm.com> <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
+ <8992766a-cc96-40bb-b8c2-60931ad0f065@app.fastmail.com> <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
+ <38a08452-4db2-43e0-afdc-b7d696da5454@app.fastmail.com>
+In-Reply-To: <38a08452-4db2-43e0-afdc-b7d696da5454@app.fastmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 13 Jun 2025 00:39:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARzWWrQQb3C5hXQ91GED6-7A3eG8WzeFDvcqQeA15hZrA@mail.gmail.com>
+X-Gm-Features: AX0GCFuubVFMo5O9hAdzt9MUjZOnvHvlasTNzdZAHWJ9mz6H1COFBdQ9RnKyH9A
+Message-ID: <CAK7LNARzWWrQQb3C5hXQ91GED6-7A3eG8WzeFDvcqQeA15hZrA@mail.gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/10/25 20:24, Randy Dunlap wrote:
-> Hi,
-> 
-> 
->> diff --git a/Documentation/networking/pcs.rst b/Documentation/networking/pcs.rst
->> new file mode 100644
->> index 000000000000..4b41ba884160
->> --- /dev/null
->> +++ b/Documentation/networking/pcs.rst
->> @@ -0,0 +1,102 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +=============
->> +PCS Subsystem
->> +=============
->> +
->> +The PCS (Physical Coding Sublayer) subsystem handles the registration and lookup
->> +of PCS devices. These devices contain the upper sublayers of the Ethernet
->> +physical layer, generally handling framing, scrambling, and encoding tasks. PCS
->> +devices may also include PMA (Physical Medium Attachment) components. PCS
->> +devices transfer data between the Link-layer MAC device, and the rest of the
->> +physical layer, typically via a serdes. The output of the serdes may be
->> +connected more-or-less directly to the medium when using fiber-optic or
->> +backplane connections (1000BASE-SX, 1000BASE-KX, etc). It may also communicate
->> +with a separate PHY (such as over SGMII) which handles the connection to the
->> +medium (such as 1000BASE-T).
->> +
->> +Looking up PCS Devices
->> +----------------------
->> +
->> +There are generally two ways to look up a PCS device. If the PCS device is
->> +internal to a larger device (such as a MAC or switch), and it does not share an
->> +implementation with an existing PCS, then it does not need to be registered with
->> +the PCS subsystem. Instead, you can populate a :c:type:`phylink_pcs`
->> +in your probe function. Otherwise, you must look up the PCS.
->> +
->> +If your device has a :c:type:`fwnode_handle`, you can add a PCS using the
->> +``pcs-handle`` property::
->> +
->> +    ethernet-controller {
->> +        // ...
->> +        pcs-handle = <&pcs>;
->> +        pcs-handle-names = "internal";
->> +    };
->> +
->> +Then, during your probe function, you can get the PCS using :c:func:`pcs_get`::
-> 
-> It's preferable to use                               PCS using pcs_get()::
-> instead of the :c:func: notation to make the .rst file more human-readable.
-> They produce the same generated output.
+On Thu, Jun 12, 2025 at 5:01=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>
+> On Thu, Jun 12, 2025, at 03:42, Masahiro Yamada wrote:
+> > On Wed, Jun 11, 2025 at 11:24=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
+wrote:
+> >> On Wed, Jun 11, 2025, at 15:32, Masahiro Yamada wrote:
+> >> > On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.ib=
+m.com> wrote:
+> >> I think this makes sense in general, but the output here is
+> >> excessive if it leads to users no longer wanting to enable W=3D1.
+> >>
+> >> There are other warnings that I think should be enabled at the
+> >> W=3D1 level (e.g. -Wformat-security) and eventually by default,
+> >> but that are still too noisy at that level.
+> >>
+> >> My own cutoff would be at a few hundred warnings in allmodconfig
+> >> builds if there is an effort to reduce it further, but it seems
+> >> that this one is still at a few thousand, which does not seem ok.
+> >
+> > Then, what to do?  Downgrade to W=3D2?
+> >
+> > I think nobody cares about W=3D2 builds,
+>
+> I think the first step would be mass-cleanup patches to get
+> the initial numbers down. A lot of this can be scripted.
+>
+> > and the problem of all C files including <linux/export.h>
+> > would remain forever.
+>
+> I'm missing a bit of background here, and I don't see this
+> explained in the 5b20755b7780 ("init: move THIS_MODULE
+> from <linux/export.h> to <linux/init.h>") changelog text
+> either
 
-If you find this syntax useful, then you should update
-Documentation/doc-guide/{kernel-doc,sphinx}.rst. I did not use it
-because it I did not know about it because it is not documented.
+I explained in 5b20755b7780 and also in the comment lines
+in scripts/misc-check.
 
---Sean
+
+<linux/module.h> is included by modular (i.e. tristate) code,
+which is symbol _consumers_.
+
+<linux/export.h> is included by symbol _providers_.
+
+These are independent, or in other words, orthogonal.
+
+Therefore, there is no reason for <linux/module.h>
+to include <linux/export.h>.
+
+It is standard to split consumers and providers,
+since they are included by different files.
+See <linux/clk.h> vs <linux/clk-providers.h> as another example.
+
+
+
+
+
+> What is the purpose of cleaning the linux/export.h inclusions,
+> and what makes this one more important than others?
+> I obviously understand that indirect header inclusions are
+> a giant mess and that any such cleanup helps, but linux/export.h
+> seems particularly small compared to many others. It was
+> originally introduced so a lot of files would no longer have
+> to pull in linux/module.h if they only care about using
+> EXPORT_SYMBOL() and THIS_MODULE, so linux/module.h could
+> eventually become private to kernel/module/*.c.
+
+I believe <linux/module.h> will remain, as modules must
+define MODULE_LICENSE().
+
+
+> Is this something you are trying to continue, or are you
+> doing something else here?
+>
+> FWIW, I compared the preprocessed sizes of linux/export.h
+> (~2000) and linux/module.h (~120,000), and it seems that almost
+> none of those are needed by most of the files including
+> linux/module.h. The one part that is commonly required is
+> MODULE_{INFO,AUTHOR,LICENSE,DESCRIPTION}, so maybe there would
+> be a chance to clean this up at the same time if you are
+> planning some large-scale reshuffling of #include statements
+> around export.h.
+>
+>      Arnd
+
+Split <linux/module.h> into public and private is good,
+but it is beyond the scope of this work.
+
+Regardless of the file size, if a file does not need to
+include <linux/export.h>, the open syscall can be avoided.
+80 % of *.c files do not need to include it.
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
