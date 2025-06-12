@@ -1,78 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE0E2367BC;
-	Thu, 12 Jun 2025 10:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7850422DF95;
+	Thu, 12 Jun 2025 10:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724230; cv=none; b=h+0E7iHo3RBotLiIBIlGtnuf2SiZVHMyXlHzquRqYt1qUG4Sw9I32EgD7oFav0OxJyw1ftOndUlwJ7xgl8JFbXmGk2sUWrPmdZhvirkZd6JGaDx2B1EETjy5QAsSfCCpFEts6VcohcGA9YyWkfHLbTiPqUfRFo7NNj68pPg76PA=
+	t=1749724259; cv=none; b=DLEQMgi43CYvQkBi1aePje5pX+N8K7x2NJNc4gM58MkVt5mY2vb5piwLi2ebtq7l2TxAxhXkyIbUh9oocQN/7EtgZ4cMFf5h4Vnokw08Wyw8nR2vZhemTC5Ypwdqz2JiTO9Emymi/RoJmdjNA4/XiSWJke+me77lmspw5dCTHh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724230; c=relaxed/simple;
-	bh=3DEc4h66KpM39d9s61Ex2AB7LLJV25GL4TXRcKI5g9k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iZo12j7ux+Dv2OIVjGdiGF9VWDvjAJHhSuhg3F8Yhu3TYKMeg7fsa5LywFx8J+Al8MgF4jo6qnHSxWGe7KAz5Yl3OHsmjeVeoRRxqtdYadB3RjXSd04SrZKb74P4z/W4iSAZZKQqIbVVCHU0xRqKM7UYaDYp5fD3kWYekzW2bZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gu8Ia/uB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749724259; c=relaxed/simple;
+	bh=UptZCHL/SIqqhiJnZoOAivvnbhhBVRs8nh2meH1TAcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AFF/i4L+7W13AGFlZx8BJcqOX47cbzjt5jV8IITOgCSdyezUKcAloJtJtBqzI2FdWgdHUcT2ItETIoGMXV5Auwgqlk907Qnq8VBT3B3TdqmpS46dEjzpZ8I7kxnKYyq9MqFVUpEzNuNcvKnyxNzr0xVQqngqa44xWtc1kjH9UJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RoppQeLr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gu8Ia/uB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5BCC4CEEA;
-	Thu, 12 Jun 2025 10:30:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RoppQeLr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0929C4CEEA;
+	Thu, 12 Jun 2025 10:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749724230;
-	bh=3DEc4h66KpM39d9s61Ex2AB7LLJV25GL4TXRcKI5g9k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gu8Ia/uB/zXp9zILhzjNZwhHRUGppAZLKYL0Y9M36mf7Op4uV/G0ILdntfsh1FhQ6
-	 yqDj+1mCgeXlcDp8KT3el9cfRrjhWMHc0VRbjmbupczLOCDyoU466UAN+9ogDneodJ
-	 Vk6avv6cDdSUkkY74RIVntyr5y02OkqJ5sDsT7MeYgwFolE/U6ZEktL4pa9+1iRI/D
-	 wYyi3wqpN/NSRdUOg2tWigjHNmEZ9PD827+GIZOkK5kMftmlUA7u7MPuSjBDI5+aM6
-	 /EyqnF74hRUCjTnoH78r6Ko8gt0MgqviR6KjT0dVJSwxTWp9me2+t0AUuEuG5tX3w8
-	 FXRLp3RmoclEQ==
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id D0DAA1AF6CD7; Thu, 12 Jun 2025 12:30:06 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard
- Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
-Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
- xdp_redirect_map_err
-In-Reply-To: <20250611155615.0c2cf61c@batman.local.home>
-References: <20250611155615.0c2cf61c@batman.local.home>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Thu, 12 Jun 2025 12:30:06 +0200
-Message-ID: <87bjqtb6c1.fsf@toke.dk>
+	s=k20201202; t=1749724259;
+	bh=UptZCHL/SIqqhiJnZoOAivvnbhhBVRs8nh2meH1TAcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RoppQeLrgwYBS3NtzwQCtg9PLDtH/IW+ZdBAiOqEUnLKHV7xetiRSWhnJCL+5ufcr
+	 TLeO5n8ZYUTLCEvR/bpqNXAckoT3PD8OstCVmnSkcaacWAbQsqFbjhxXKXjml9hGx0
+	 g3gSZuma6ldoBoH5tCj1cqwYsBg2wt9X1kp5GrcAf4TiSTpkVKYjM+D3rKXThm2kxd
+	 prCk207kuuLlS4HyEGVy5tHgKTtw4uBDlBdiwDjwHvU1wLmKsvzQab0rtIAj96qAz3
+	 VHItFaOFe64btH1Wmli7MOVyhz4OR9jLZe/OH0J0Mk5NXu+XyRzR9n0F+9KokdT4vT
+	 Y798ZykDBKcQQ==
+Date: Thu, 12 Jun 2025 13:30:55 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: sudeep.holla@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+	stuart.yoder@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] fix failure of integration IMA with tpm_crb_ffa
+Message-ID: <aEqsX0hBKb7ZC1qZ@kernel.org>
+References: <20250610060334.2149041-1-yeoreum.yun@arm.com>
+ <aEgmhwu1RP27yBpw@kernel.org>
+ <aEgwpXXftXW6JNRy@e129823.arm.com>
+ <aEg6Bgh8TqzK5nSu@kernel.org>
+ <aEhDY4VlkIPYAjPE@e129823.arm.com>
+ <aEhIPC95FisptBO5@kernel.org>
+ <aEhNnAxlToRMteA2@e129823.arm.com>
+ <aEmxaJQNfYJwSCd0@kernel.org>
+ <aEm+gqyp0aa4ULYa@e129823.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEm+gqyp0aa4ULYa@e129823.arm.com>
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On Wed, Jun 11, 2025 at 06:36:02PM +0100, Yeoreum Yun wrote:
+> Hi Jarkko,
+> 
+> > On Tue, Jun 10, 2025 at 04:22:04PM +0100, Yeoreum Yun wrote:
+> > > > OK, if ffa_init() is leveled up in the initcall hierarchy, shouldn't
+> > > > that be enough as long as ko's can be found from initramfs?
+> > >
+> > > As you mentioned, this is handled in Patch #1.
+> > > However, although ffa_init() is called first,
+> > > unless tpm_crb_ffa_init() is also invoked,
+> > > crb_acpi_driver_init() will fail with -EPROBE_DEFER.
+> > >
+> > > Please note that IMA is always built-in and cannot be built as a module.
+> >
+> > Sure but if one needs IMA, then tpm_crb_ffa can be compiled as built-in
+> > with zero code changes.
+> 
+> All of my describtion based on all things are built as "built-in".
+> in case of ffa_init() changes the init level to root_initcall,
+> so, the ffa_device will be produced first before the trial of TPM probe.
+> 
+> Note that tpm_crb_ffa_init() which is the "ffa_driver" is called in
+> device_initcall level. I mean
+> 
+>     ffa_init() -> arm_ffa -> root_initcall
+>     tpm_crb_ffa_init() -> device_initcall
+>     crb_acpi_driver_init() -> device_initcall
+> 
+> therefore, "crb_acpi_driver_init()" can be call first before
+> tpm_crb_ffa_init() since they're deployed in device_initcall.
+> If this happen, "crb_acpi_driver_init()" failed with -EPROBE_DEFER.
+> 
+> That's why this patch is required to probe "tpm_crb_ffa" when
+> crb_acpi_driver_init() called to complete the TPM device probe before
+> IMA subsystem initailization.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> Each TRACE_EVENT() defined can take up around 5K of text and meta data
-> regardless if they are used or not. New code is being developed that will
-> warn when a tracepoint is defined but not used.
->
-> The trace events xdp_redirect_map and xdp_redirect_map_err are defined but
-> not used, but there's also a comment that states these are kept around for
-> backward compatibility. Which is interesting because since they are not
-> used, any old BPF program that expects them to exist will get incorrect
-> data (no data) when they use them. It's worse than not working, it's
-> silently failing.
->
-> Remove them as they will soon cause warnings, or if they really need to
-> stick around, then code needs to be added to use them.
->
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Yep, and you sort it out by not compiling it as a module.
 
-I guess that makes sense; I have no objections to getting rid of them.
++	ret = ffa_register(&tpm_crb_ffa_driver);
++	BUG_ON(!ret && !tpm_crb_ffa);
 
-Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@kernel.org>
+These lines struck me in your patch. The commit message has nothing
+about ffa_register().
+
+Also, please remove BUG_ON(). That said, I don't think 2/2 is needed.
+
+> 
+> Thanks.
+> 
+> --
+> Sincerely,
+> Yeoreum Yun
+
+
+BR, Jarkko
