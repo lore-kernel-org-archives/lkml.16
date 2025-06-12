@@ -1,162 +1,106 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C24EBE5E
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD2218DF89;
+	Thu, 12 Jun 2025 03:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749698332; cv=none; b=rIDtVpW2UyP06Ht59fo4B7Ixhy0+c4YY5JS6l6BowwhlEb6Y0tZlpqm47vEY24E2Kiq2g+sR+UtML79pV1o3vdp6Pdqgw52VbZHaPnD34Y4FSjGcXeLf6RFQLYsnkmy/wsyQkhkVukH3YOK8MC6j83+E1zMfIfqxovxwfXM0sJc=
+	t=1749698359; cv=none; b=eqd0De/jooNKh4Zv5K1pIPPNN5quUNce7/zoIrly1+QMFwCfBNmJb6bceJ7dBm3UZPoLB2rE56eZaI/M9csHS0nVuumoeB5toT+jWjY1mCaIyDcv24z8bkJFdaJ3nVyVQ2fffZEN7NulywKJmpWyz3CIovbhVHbLLoJMQOgHGgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749698332; c=relaxed/simple;
-	bh=oWbfHnwsDcvRiVIG47R2mARy4M+VrLkvjEzVd2T5AjU=;
+	s=arc-20240116; t=1749698359; c=relaxed/simple;
+	bh=LqT62hpEkjDkTSssN+QxjSix+Y5eCURTaiH374a2EcQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XDsT7WCj+LJbfl8X2weOv0I3K/1tr0L5B7mI5lxVYwGA4y/O1wV4xqmYWPfDahZb/RSVwx6tstqrgtAbExYlDB5EIam6YPOx2GmWklMnhHW+0Bbog80iC6jqbpGpQBiq3cipxYNDsaHXYOSclFlHNX/QGO4xmkJj+DrHGUnK35s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r9hxtVtG; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=R27S8zkKuK7AgzFnKzpnKe71zZP4uyvrMeVqbRN8cMRbuggI2wO7eBcdx1kEm2cuB5MlvYglJo1iKlEGmLO/erMlTdqWtknFWInel5gqYjZGiXOp1P+jRAkpcn3TxDuF69KNeYw6PzUqW6jfNHX2fscPVi8B4OL1JO6iOonHlKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCPljML8; arc=none smtp.client-ip=209.85.219.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r9hxtVtG"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-604f5691bceso1337953a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 20:18:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCPljML8"
+Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-e8175f45e18so325698276.0;
+        Wed, 11 Jun 2025 20:19:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749698329; x=1750303129; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749698357; x=1750303157; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=27e+okI1P/k74gjOKKGPL59BBptQM40JJvOeix/wj8E=;
-        b=r9hxtVtG8999Fr0ziEUBUq13yRNkxwaIBgByEva/3ws1cu//72Xc9aKwro9kdOvc7i
-         Pn3UBsu3W+cV4QXyftuSMDT2pNVbF+lbyzj7mVJZvSdoaLmYt0gLMi4hDugSxF28zsek
-         A6knt3CHwa7TL/Ob+79EMIZ2m0ltoFxYm/WNRe6+8XTdX6/tWDtuX66qSRBsZ1nqvFrT
-         IvfN8jaVWGl4GPsGfkGqLgYgAiCRYgSOYkEh6FuNExVqzbeoE6R3dor9tRUd/xo4Q04P
-         C2LQR3YOUJkqH/x4Ng2niKm7KB3zNStNt8pMPnpMHe2GilZnYT4Jo0Ta2dD78Pts7u7D
-         aSgA==
+        bh=LqT62hpEkjDkTSssN+QxjSix+Y5eCURTaiH374a2EcQ=;
+        b=TCPljML8oTSAZh2Swl2qF1tOMBm4QyATKalYT7OVyKrSTLvL45tJdJ4oPsjl87qp3a
+         agLTWDkpSVOVuWXy0+K2m7O2PETMfXp/y9duRoSjzgMNyR49XC4NCYH1VAvr/fUnqyIG
+         /EnaVUclBEroGOuCLMWwa2mg3Ye/FEqAZtgnMZDn1T1Qt/GV3SfYxMgm0BdYLKYYHt56
+         CuxGrkAZdH6ZnjMBmTc9iohTngq/xk+E4uzXpmZZcCagq9NyyeCtmwioDsOVU0mpd9lf
+         vTg+4ezE93CV1oiA8tKFRDVZD93IAcGWF+GaPXxQ+Z6Vh7Jm2o3F6GzNNojggbmUqSZE
+         oIgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749698329; x=1750303129;
+        d=1e100.net; s=20230601; t=1749698357; x=1750303157;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=27e+okI1P/k74gjOKKGPL59BBptQM40JJvOeix/wj8E=;
-        b=oflGNVaAYQ1ENgt1mv0c2SnS17LkA6T0z3R3S2YI9ppH+Ca0edqSD0wCRzU7jLrmw3
-         SB1jG9HR02McwtbBT1JYOuxUGVPCPs79wnPc4U5Sg84AXNNCPOSQVVsLaySvB85b1ILu
-         AF6MkJV7eUmlzv6SYq6NZf8BAUFsA2Gw5leWZ6K7SYjAZtVaNg9mO7FiiR7Blqr7Efkh
-         AWMdoJ80DrRUoLgwkzltBli6b8jFHZikhidekN83KWHJNDeBPOHF6xr+2FjVapsZFmEZ
-         NzAnC24kGu4ampBkUgOCK0AqatN8e4p7pymnl5UeZEnt1fZaTpeFk04MjSakosAarGlv
-         SVSQ==
-X-Gm-Message-State: AOJu0YxbxdSlowh+wOt0e/EtBY/l06jAWtpXIvkuh9ptWe16eFF+lu/P
-	oQm6L22iZeS6DGDU5eBonAx05yAHLJj8VlD3V2hSOS8Y76AsUKI7kowBRZ3a5fXXoOuKzmeDYUj
-	xbWDlh1aK3YMzbRERsheymcbcbxXytcQxAfGzU0Aq
-X-Gm-Gg: ASbGncs8+IuS1u4eChB6wyG54onzJyyfM71nrIUJBE2TnoLOjUsAwKKPWWNXkvxqgCS
-	Dx0VG1y8Fwj0Rjyo3HnpUoHIqFxh6YTMA2PJnQsfir/Vn5TQeSzk64RKmfczAsuAL1yElrS7V4m
-	jHseFHq9+b51uSeSA9AAEbtcXvoHtudzEwpk8Zw5ZC1A==
-X-Google-Smtp-Source: AGHT+IGT1nq+v77NrogwC2vPW2rtS/9YmduwTQIuRku0gKjRxiTwDFKSBdaGdBr+aOmizt1RnUe062KnCvjThW3LkfM=
-X-Received: by 2002:a17:906:7308:b0:ad5:59ef:7f56 with SMTP id
- a640c23a62f3a-ade8979c4b6mr652471566b.48.1749698329198; Wed, 11 Jun 2025
- 20:18:49 -0700 (PDT)
+        bh=LqT62hpEkjDkTSssN+QxjSix+Y5eCURTaiH374a2EcQ=;
+        b=vlDuHD+j3FCjclrJFyY4VAaU1X/ch0Ovzk/KmwWx0s+jdSMPybzp6AYZp/iKu1GQvA
+         aUOUNATGdAvCm3jyBxeHc7QUyCEvSwPNM9Rp2RfESqptlQpwhzgt1IGF9uXKffiW0kJa
+         2e9uM4esZdOC/Qx/guiMXxXrosAxgHxthSu3mD2wgdGfcdTnkN00Lvej5aXyQHStbqSD
+         5uUVm3Di3Qn6NyOjdLJ0gXrS7DnoZu/L3yZ6cdcRgPfw5EbBLpBbl1hruL2fPfBu/KAb
+         dxnZCMP+wo1U+0AoAVW4TVtQU4UU++Fel9JUY8gTeFYLYXukUs7OFNq4oBPrCQkHSgNp
+         QPVw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6/DT87UvOtYwSHtpUat/MO5wxrZUmP/z34ulOHZM8uMv1sxLwdErMey70dVmZQ3d2eoHd1DdF0XVPgt5V@vger.kernel.org, AJvYcCX1YGSLlELotuRuXFoKTliuyD4gcCkFG6ib2oZSqDwi5u8E2g8mNl+tgXVpY/Qg6L/FZpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHyuNmfNbVEpR+dMdJl7a0xaD/vubcpKEcpt7pPQK5SV7AfGr2
+	1nQcHoFFycQfLbbmnPEQfLurocPpMP6+GwmKHT+QPo5cBB8PkK21D8qaEf721l4y2o1PYtxj5Bk
+	29vQucrUaoQPAhcz3RKeG5j4RYuN9uV+tsh15n6nm97hk
+X-Gm-Gg: ASbGncsWjrte2Qs32ARBsX/Buivq9LhPCgX0Z//JpFv7KW/b9ddc/PRpfH6cjOB+XlL
+	A2v4xRUmoi4XLm0EUUdME+NOEjXEFQ/sgxj8GzkAaRTLCt25i9vJXxOzHKB8mSMFAQf8/8xYV6g
+	gWYngkPSemP/t8pO8JmaOf6SekUKd1lUULKOqxnXjtEagmhY35dZRd6g==
+X-Google-Smtp-Source: AGHT+IFBLWQTy/TlYwLcD3IvzbAC5ijPWMnSDeFRm3MqAqqAo+J2KAB9sKFe5H1Fg4bCcRnI/Q1Voq1aUoQKKgr09pY=
+X-Received: by 2002:a05:6902:1b8a:b0:e81:b2ba:cedf with SMTP id
+ 3f1490d57ef6-e81fda2c0c6mr8136869276.15.1749698356834; Wed, 11 Jun 2025
+ 20:19:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611233239.3098064-1-ctshao@google.com> <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
-In-Reply-To: <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Wed, 11 Jun 2025 20:18:36 -0700
-X-Gm-Features: AX0GCFtprLsA0M2y1ufqbSz5pPgmEtShGMa5HqQdjZurUUQoPCjBD3meKiFjhuM
-Message-ID: <CAJpZYjVxs3yAS1-Uj_aQjkHGo+hRkHnwCbWxNsS4pT50-rvRPg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
-To: Ian Rogers <irogers@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+References: <20250528034712.138701-1-dongml2@chinatelecom.cn>
+ <CAADnVQ+G+mQPJ+O1Oc9+UW=J17CGNC5B=usCmUDxBA-ze+gZGw@mail.gmail.com>
+ <CADxym3YhE23r0p31xLE=UHay7mm3DJ8+n6GcaP7Va8BaKCxRfA@mail.gmail.com>
+ <CAADnVQ+Qn5H7idVv-ae84NSMpPHKyKRYbrn30bVRoq=nnPq-pw@mail.gmail.com>
+ <CADxym3bK503vi+rGxHm5hj814b8aaxbQW17=vwLYszFncXMXhQ@mail.gmail.com> <CAADnVQL1KBYE3ev6b1gvve_miDhfxSV=6y5QYWEhG5ynPwti-g@mail.gmail.com>
+In-Reply-To: <CAADnVQL1KBYE3ev6b1gvve_miDhfxSV=6y5QYWEhG5ynPwti-g@mail.gmail.com>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Thu, 12 Jun 2025 11:18:43 +0800
+X-Gm-Features: AX0GCFt99ylZT6APqPx_bCBTu3wKkzZJ8kWsqX-cIZ-CxVswHWNHd2nXkRpXrkM
+Message-ID: <CADxym3bjJARRg3OQtd_e4R=UTAc+5UMyjAU8vT_frs67Em2-9A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 00/25] bpf: tracing multi-link support
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Menglong Dong <dongml2@chinatelecom.cn>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for your test, Ian!
+On Thu, Jun 12, 2025 at 8:58=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Wed, Jun 11, 2025 at 5:07=E2=80=AFPM Menglong Dong <menglong8.dong@gma=
+il.com> wrote:
+> >
+> > Hi Alexei, thank you for your explanation, and now I realize the
+> > problem is my hash table :/
+> >
+> > My hash table made reference to ftrace and fprobe, whose
+> > max budget length is 1024.
+> >
+> > It's interesting to make the hash table O(1) by using rhashtable
+> > or sizing up the budgets, as you said. I suspect we even don't
+> > need the function padding part if the hash table is random
+> > enough.
+>
+> I suggest starting with rhashtable. It's used in many
+> performance critical places, and when rhashtable_params are
+> constant the compiler optimizes everything nicely.
+> lookup is lockless and only needs RCU, so safe to use
+> from fentry_multi.
 
-I wonder if `nr_pmus` makes sense, since the column would be shared
-with multiple different pmus. WDYT?
+Thanks for the advice! rhashtable is a nice choice for fentry_multi.
+and I'll redesign the function metadata with it.
 
--CT
-
-On Wed, Jun 11, 2025 at 5:16=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, Jun 11, 2025 at 4:36=E2=80=AFPM Chun-Tse Shao <ctshao@google.com>=
- wrote:
-> >
-> > Follow up:
-> > lore.kernel.org/CAP-5=3DfVDF4-qYL1Lm7efgiHk7X=3D_nw_nEFMBZFMcsnOOJgX4Kg=
-@mail.gmail.com/
-> >
-> > The patch adds unit aggregation during evsel merge the aggregated uncor=
-e
-> > counters.
-> >
-> > Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> > cpumask=3D"0,120"
-> > Before:
-> >   perf stat -e clockticks -I 1000 --per-socket
-> >   #           time socket cpus             counts unit events
-> >        1.001085024 S0        1         9615386315      clockticks
-> >        1.001085024 S1        1         9614287448      clockticks
-> >   perf stat -e clockticks -I 1000 --per-node
-> >   #           time node   cpus             counts unit events
-> >        1.001029867 N0        1         3205726984      clockticks
-> >        1.001029867 N1        1         3205444421      clockticks
-> >        1.001029867 N2        1         3205234018      clockticks
-> >        1.001029867 N3        1         3205224660      clockticks
-> >        1.001029867 N4        1         3205207213      clockticks
-> >        1.001029867 N5        1         3205528246      clockticks
-> > After:
-> >   perf stat -e clockticks -I 1000 --per-socket
-> >   #           time socket cpus             counts unit events
->
-> I wonder if there is a better column heading than "cpus" given that
-> these are imc PMUs.
->
-> >        1.001022937 S0       12         9621463177      clockticks
-> >        1.001022937 S1       12         9619804949      clockticks
-> >   perf stat -e clockticks -I 1000 --per-node
-> >   #           time node   cpus             counts unit events
-> >        1.001029867 N0        4         3206782080      clockticks
-> >        1.001029867 N1        4         3207025354      clockticks
-> >        1.001029867 N2        4         3207067946      clockticks
-> >        1.001029867 N3        4         3206871733      clockticks
-> >        1.001029867 N4        4         3206199005      clockticks
-> >        1.001029867 N5        4         3205525058      clockticks
-> >
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-
-Added Namhyung's ack from the previous email.
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
->
-> Tested-by: Ian Rogers <irogers@google.com>
->
-> Thanks,
-> Ian
->
-> > ---
-> >  tools/perf/util/stat.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > index 355a7d5c8ab8..52266d773353 100644
-> > --- a/tools/perf/util/stat.c
-> > +++ b/tools/perf/util/stat.c
-> > @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct evsel =
-*evsel, struct evsel *alias)
-> >                 struct perf_counts_values *aggr_counts_b =3D &ps_b->agg=
-r[i].counts;
-> >
-> >                 /* NB: don't increase aggr.nr for aliases */
-> > +               ps_a->aggr[i].nr +=3D ps_b->aggr[i].nr;
-> >
-> >                 aggr_counts_a->val +=3D aggr_counts_b->val;
-> >                 aggr_counts_a->ena +=3D aggr_counts_b->ena;
-> > --
-> > 2.50.0.rc1.591.g9c95f17f64-goog
-> >
+Thanks!
+Menglong Dong
