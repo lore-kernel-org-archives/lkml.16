@@ -1,345 +1,407 @@
-Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B9C25B692;
-	Thu, 12 Jun 2025 14:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.90.104.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C381F248897;
+	Thu, 12 Jun 2025 14:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739173; cv=none; b=k/eVk7lT0f9N9Xg93fnEywRBb5+I3/jK36e+pYTS8zwZComrLxAKMfGci1fK6xgkNCJNxesx9jKm17UvuixqifiL+0f/gbPAhOBiaTpyqqdteKzXS/zkuhkIYQn9pQW1AkHvJOAxuP+zlWXta31JT7wFf9u5FkicylOT3jrhKWg=
+	t=1749739221; cv=none; b=sIEWapZW96MHY14ug8+ZPIYqhZUM3bsmr4eWicU3BxNS2uQt9TgfD2nzwZTxr17dHMkBUUcnPd+W2eSNmhweH/XsIpMMWXEv0pFCQRxHhX+mqAHP4CtWaRfOOIrI+gB6q5IuBzCtUxM3zxqnDC1pzIgPGG8j1tqgWc3/1niNF3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739173; c=relaxed/simple;
-	bh=IUsgoytCa960UqK9Tup9+lUYJiEi9bGrelfn5xp32LM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o4+xzL7QWFLtoTY9DyhETvDNn4ldLpij5KE1Vfx8JKn/v5iREd2VvcNG8WWAH7IIwJBFHR7pkCZ5csnyA+dsWMCwd0JZ+Qkh8oBit5ceNP3ZDmbMb8Z0b9aH5J92uZYfAY1audaHb6Bq5L/WErMeI4TDSFDkHYoTLQJxTVe717k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=XDpTFQMW reason="key not found in DNS"; arc=none smtp.client-ip=23.90.104.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+	s=arc-20240116; t=1749739221; c=relaxed/simple;
+	bh=MJ3uVb3an03MS7bw3AzCf6P2btLX3fhHO8bsNkjbdjk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WMUMst51Ptzk3qcTVOgK4ymXJIyXag2Rz/qnnEo329fQMezMP/rxBwqRrC3YghNsqQ9FXvq0j5WrTiZkzhGOvfNCOQq6z3BOccr5z5hZWGzT73THcAAQXEunPb4YaelzYQQJGWKGBoZ7LOAvMmZxkx0dX3p/sf+yLFD09xIDGFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=edkOeEzI; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="XDpTFQMW"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1749739170; x=1781275170;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IUsgoytCa960UqK9Tup9+lUYJiEi9bGrelfn5xp32LM=;
-  b=XDpTFQMWkz/thFgWFQoqQoyl1kcAbdJtTVDa9UUe0q7NLQLVh+CE3x2t
-   qojefw5EsxSh6WYcKy5JxOz1FVHipmGdZFiI/4YBDL3dKdShrtdZqWjmA
-   SJVVonpZRVdGp5bJNOF+xL2PdolAABCoQl9lQcPMZFsf0siMAA/yj2uWL
-   W4hkbW0ln5pTW1qTa4d8xN04R1QpgP01OcC+xHsOuJs5goil5vboasoWt
-   fHObrWix3cEiyqs3Up+6MWKNnVsOWVETG5w+Hn8x13TKV1/GvIN3Ci90v
-   1fkRXrw+fjPSzTqthR6C3KspWrG57MEhbRMv2jWKe+fbkAOuVLDJqkfa3
-   Q==;
-X-CSE-ConnectionGUID: ir1SvB+CSzy4Z5qjXS/M9A==
-X-CSE-MsgGUID: oxf5+owXRV2wYVvdlc5vpQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
-  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 17:39:19 +0300
-X-CSE-ConnectionGUID: x3X4diFySeybW0papmj+KA==
-X-CSE-MsgGUID: xFE6pKGLTw+8Dm3smtkXvg==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.6])
-  by ces01_data.me-corp.lan with SMTP; 12 Jun 2025 17:39:18 +0300
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Jun 2025 17:39:18 +0300
-From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Anup Patel <anup@brainfault.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Ryo Takakura <takakura@valinux.co.jp>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	sophgo@lists.linux.dev,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Subject: [PATCH v3 4/7] irqchip: MIPS P800 variant of aclint-sswi
-Date: Thu, 12 Jun 2025 17:39:08 +0300
-Message-ID: <20250612143911.3224046-5-vladimir.kondratiev@mobileye.com>
-In-Reply-To: <20250612143911.3224046-1-vladimir.kondratiev@mobileye.com>
-References: <20250609134749.1453835-1-vladimir.kondratiev@mobileye.com>
- <20250612143911.3224046-1-vladimir.kondratiev@mobileye.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="edkOeEzI"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id E817E25EE0;
+	Thu, 12 Jun 2025 16:40:16 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id ccIj6Uxqgg5e; Thu, 12 Jun 2025 16:40:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1749739214; bh=MJ3uVb3an03MS7bw3AzCf6P2btLX3fhHO8bsNkjbdjk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=edkOeEzIce2Y82nIAnkgTHVRdDt9FbwV1HE7Pxn8LNxJHPg0x6GyfHEAjuo973LTC
+	 42ffZwclkvsC5tWblS90cebqAqAFlP8WV9QPsIZJ1AVtXxO6h/m2NYnGnvdjev0WiA
+	 ZYqtrjAjjaJuqGejR4+z9MaaGjwvofHtAYqLLr70eVlSgwtjkumHormSEFzOEb0rS6
+	 QkIPOB/NmqBvtoc48psj/AUYaNdfAzTHicsrPA6QYLJepCbxH3ElyaLPMaHZF1H2oy
+	 oCD7RI3cfbTcnCQjmZnpoq+O2ZhIeB/C2H9rCXRkmfXAxghJVhFbyQyItGQGuAucrv
+	 A+67ronWpzYag==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Date: Thu, 12 Jun 2025 20:09:41 +0530
+Subject: [PATCH 2/2] drm: panel: add support for Synaptics TDDI series DSI
+ panels
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-panel-synaptics-tddi-v1-2-dfb8a425f76c@disroot.org>
+References: <20250612-panel-synaptics-tddi-v1-0-dfb8a425f76c@disroot.org>
+In-Reply-To: <20250612-panel-synaptics-tddi-v1-0-dfb8a425f76c@disroot.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749739197; l=10787;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=MJ3uVb3an03MS7bw3AzCf6P2btLX3fhHO8bsNkjbdjk=;
+ b=mn44vS3P+3Gi2fOGM2JqvjKoYxkvFjuWbrsu+Cnctf0018cWVBcv3u+5HYJ0bM4X7Tv0gQMJ4
+ ekasLtkY7uRBoGQNT1sZcBpWrP9+8m2WTAQqaPbV/oYz/NKtDgOn8GW
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-Refactor Thead specific implementation of the ACLINT-SSWI irqchip.
-Factor out generic code that serves both Thead and MIPS variants.
-This generic part is according to the RISC-V draft spec [1].
+Synaptics TDDI (Touch/Display Integration) panels utilize a single chip
+for display and touch controllers. Implement a simple device driver for
+such panels, along with its built-in LED backlight controller, and add
+support for TD4101 and TD4300 panels in the driver.
 
-Link: https://github.com/riscvarchive/riscv-aclint [1]
-
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
- drivers/irqchip/Kconfig                       | 15 ++-
- drivers/irqchip/Makefile                      |  2 +-
- ...d-c900-aclint-sswi.c => irq-aclint-sswi.c} | 91 +++++++++++++------
- include/linux/cpuhotplug.h                    |  2 +-
- 4 files changed, 75 insertions(+), 35 deletions(-)
- rename drivers/irqchip/{irq-thead-c900-aclint-sswi.c => irq-aclint-sswi.c} (68%)
+ drivers/gpu/drm/panel/Kconfig                |  11 ++
+ drivers/gpu/drm/panel/Makefile               |   1 +
+ drivers/gpu/drm/panel/panel-synaptics-tddi.c | 284 +++++++++++++++++++++++++++
+ 3 files changed, 296 insertions(+)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 0d196e447142..39f6f421fc75 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -634,18 +634,25 @@ config STARFIVE_JH8100_INTC
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index d5aa1c95c6a45b2fea9b1d7a9e8a39fe617b860c..ad906d96ac5cbbbd6846d6c6a9043033660daf54 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -1011,6 +1011,17 @@ config DRM_PANEL_SYNAPTICS_R63353
+ 	  Say Y if you want to enable support for panels based on the
+ 	  Synaptics R63353 controller.
  
- 	  If you don't know what to do here, say Y.
- 
--config THEAD_C900_ACLINT_SSWI
--	bool "THEAD C9XX ACLINT S-mode IPI Interrupt Controller"
-+config ACLINT_SSWI
-+	bool "RISC-V ACLINT S-mode IPI Interrupt Controller"
- 	depends on RISCV
- 	depends on SMP
- 	select IRQ_DOMAIN_HIERARCHY
- 	select GENERIC_IRQ_IPI_MUX
- 	help
--	  This enables support for T-HEAD specific ACLINT SSWI device
--	  support.
-+	  This enables support for variants of the RISC-V ACLINT-SSWI device.
-+	  Supported variants are:
-+	  - T-HEAD, with compatible "thead,c900-aclint-sswi"
-+	  - MIPS P8700, with compatible "mips,p8700-aclint-sswi"
- 
- 	  If you don't know what to do here, say Y.
- 
-+# Backwards compatibility so oldconfig does not drop it.
-+config THEAD_C900_ACLINT_SSWI
-+	bool
-+	select ACLINT_SSWI
++config DRM_PANEL_SYNAPTICS_TDDI
++	tristate "Synaptics TDDI display panels"
++	depends on OF
++	depends on DRM_MIPI_DSI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  Say Y if you want to enable support for the Synaptics TDDI display
++	  panels. There are multiple MIPI DSI panels manufactured under the TDDI
++	  namesake, with varying resolutions and data lanes. They also have a
++	  built-in LED backlight and a touch controller.
 +
- config EXYNOS_IRQ_COMBINER
- 	bool "Samsung Exynos IRQ combiner support" if COMPILE_TEST
- 	depends on (ARCH_EXYNOS && ARM) || COMPILE_TEST
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 23ca4959e6ce..0458d6c5d161 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -105,7 +105,7 @@ obj-$(CONFIG_RISCV_APLIC_MSI)		+= irq-riscv-aplic-msi.o
- obj-$(CONFIG_RISCV_IMSIC)		+= irq-riscv-imsic-state.o irq-riscv-imsic-early.o irq-riscv-imsic-platform.o
- obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
- obj-$(CONFIG_STARFIVE_JH8100_INTC)	+= irq-starfive-jh8100-intc.o
--obj-$(CONFIG_THEAD_C900_ACLINT_SSWI)	+= irq-thead-c900-aclint-sswi.o
-+obj-$(CONFIG_ACLINT_SSWI)		+= irq-aclint-sswi.o
- obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
- obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
- obj-$(CONFIG_IMX_MU_MSI)		+= irq-imx-mu-msi.o
-diff --git a/drivers/irqchip/irq-thead-c900-aclint-sswi.c b/drivers/irqchip/irq-aclint-sswi.c
-similarity index 68%
-rename from drivers/irqchip/irq-thead-c900-aclint-sswi.c
-rename to drivers/irqchip/irq-aclint-sswi.c
-index 8ff6e7a1363b..5e133cf29737 100644
---- a/drivers/irqchip/irq-thead-c900-aclint-sswi.c
-+++ b/drivers/irqchip/irq-aclint-sswi.c
-@@ -3,7 +3,8 @@
-  * Copyright (C) 2024 Inochi Amaoto <inochiama@gmail.com>
-  */
- 
--#define pr_fmt(fmt) "thead-c900-aclint-sswi: " fmt
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ config DRM_PANEL_TDO_TL070WSH30
+ 	tristate "TDO TL070WSH30 DSI panel"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+index 73a39bc726045f3ce52fdeef8c0ec762a4a378c7..3cde8f27e7e6c1d12b08fd2f9e6252dd121a6b38 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -97,6 +97,7 @@ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7703) += panel-sitronix-st7703.o
+ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
+ obj-$(CONFIG_DRM_PANEL_SUMMIT) += panel-summit.o
+ obj-$(CONFIG_DRM_PANEL_SYNAPTICS_R63353) += panel-synaptics-r63353.o
++obj-$(CONFIG_DRM_PANEL_SYNAPTICS_TDDI) += panel-synaptics-tddi.o
+ obj-$(CONFIG_DRM_PANEL_SONY_ACX565AKM) += panel-sony-acx565akm.o
+ obj-$(CONFIG_DRM_PANEL_SONY_TD4353_JDI) += panel-sony-td4353-jdi.o
+ obj-$(CONFIG_DRM_PANEL_SONY_TULIP_TRULY_NT35521) += panel-sony-tulip-truly-nt35521.o
+diff --git a/drivers/gpu/drm/panel/panel-synaptics-tddi.c b/drivers/gpu/drm/panel/panel-synaptics-tddi.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..c081380c087a927634d1452c151dfa350149add5
+--- /dev/null
++++ b/drivers/gpu/drm/panel/panel-synaptics-tddi.c
+@@ -0,0 +1,284 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Synaptics TDDI display panel driver.
++ *
++ * Copyright (C) 2025 Kaustabh Chakraborty <kauschluss@disroot.org>
++ */
 +
- #include <linux/cpu.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -21,56 +22,51 @@
- #include <asm/sbi.h>
- #include <asm/vendorid_list.h>
- 
--#define THEAD_ACLINT_xSWI_REGISTER_SIZE		4
--
--#define THEAD_C9XX_CSR_SXSTATUS			0x5c0
--#define THEAD_C9XX_SXSTATUS_CLINTEE		BIT(17)
--
- static int sswi_ipi_virq __ro_after_init;
- static DEFINE_PER_CPU(void __iomem *, sswi_cpu_regs);
- 
--static void thead_aclint_sswi_ipi_send(unsigned int cpu)
-+static void aclint_sswi_ipi_send(unsigned int cpu)
- {
- 	writel(0x1, per_cpu(sswi_cpu_regs, cpu));
- }
- 
--static void thead_aclint_sswi_ipi_clear(void)
-+static void aclint_sswi_ipi_clear(void)
- {
- 	writel_relaxed(0x0, this_cpu_read(sswi_cpu_regs));
- }
- 
--static void thead_aclint_sswi_ipi_handle(struct irq_desc *desc)
-+static void aclint_sswi_ipi_handle(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 
- 	chained_irq_enter(chip, desc);
- 
- 	csr_clear(CSR_IP, IE_SIE);
--	thead_aclint_sswi_ipi_clear();
-+	aclint_sswi_ipi_clear();
- 
- 	ipi_mux_process();
- 
- 	chained_irq_exit(chip, desc);
- }
- 
--static int thead_aclint_sswi_starting_cpu(unsigned int cpu)
-+static int aclint_sswi_starting_cpu(unsigned int cpu)
- {
- 	enable_percpu_irq(sswi_ipi_virq, irq_get_trigger_type(sswi_ipi_virq));
- 
- 	return 0;
- }
- 
--static int thead_aclint_sswi_dying_cpu(unsigned int cpu)
-+static int aclint_sswi_dying_cpu(unsigned int cpu)
- {
--	thead_aclint_sswi_ipi_clear();
-+	aclint_sswi_ipi_clear();
- 
- 	disable_percpu_irq(sswi_ipi_virq);
- 
- 	return 0;
- }
- 
--static int __init thead_aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
--					      void __iomem *reg)
-+static int __init aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
-+					void __iomem *reg)
- {
- 	struct of_phandle_args parent;
- 	unsigned long hartid;
-@@ -97,7 +93,7 @@ static int __init thead_aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
- 
- 		cpu = riscv_hartid_to_cpuid(hartid);
- 
--		per_cpu(sswi_cpu_regs, cpu) = reg + i * THEAD_ACLINT_xSWI_REGISTER_SIZE;
-+		per_cpu(sswi_cpu_regs, cpu) = reg + hart_index * 4;
- 	}
- 
- 	pr_info("%pfwP: register %u CPU%s\n", fwnode, contexts, str_plural(contexts));
-@@ -105,17 +101,12 @@ static int __init thead_aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
- 	return 0;
- }
- 
--static int __init thead_aclint_sswi_probe(struct fwnode_handle *fwnode)
-+static int __init aclint_sswi_probe(struct fwnode_handle *fwnode)
- {
- 	struct irq_domain *domain;
- 	void __iomem *reg;
- 	int virq, rc;
- 
--	/* If it is T-HEAD CPU, check whether SSWI is enabled */
--	if (riscv_cached_mvendorid(0) == THEAD_VENDOR_ID &&
--	    !(csr_read(THEAD_C9XX_CSR_SXSTATUS) & THEAD_C9XX_SXSTATUS_CLINTEE))
--		return -ENOTSUPP;
--
- 	if (!is_of_node(fwnode))
- 		return -EINVAL;
- 
-@@ -124,7 +115,7 @@ static int __init thead_aclint_sswi_probe(struct fwnode_handle *fwnode)
- 		return -ENOMEM;
- 
- 	/* Parse SSWI setting */
--	rc = thead_aclint_sswi_parse_irq(fwnode, reg);
-+	rc = aclint_sswi_parse_irq(fwnode, reg);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -146,22 +137,64 @@ static int __init thead_aclint_sswi_probe(struct fwnode_handle *fwnode)
- 	}
- 
- 	/* Register SSWI irq and handler */
--	virq = ipi_mux_create(BITS_PER_BYTE, thead_aclint_sswi_ipi_send);
-+	virq = ipi_mux_create(BITS_PER_BYTE, aclint_sswi_ipi_send);
- 	if (virq <= 0) {
- 		pr_err("unable to create muxed IPIs\n");
- 		irq_dispose_mapping(sswi_ipi_virq);
- 		return virq < 0 ? virq : -ENOMEM;
- 	}
- 
--	irq_set_chained_handler(sswi_ipi_virq, thead_aclint_sswi_ipi_handle);
-+	irq_set_chained_handler(sswi_ipi_virq, aclint_sswi_ipi_handle);
- 
--	cpuhp_setup_state(CPUHP_AP_IRQ_THEAD_ACLINT_SSWI_STARTING,
--			  "irqchip/thead-aclint-sswi:starting",
--			  thead_aclint_sswi_starting_cpu,
--			  thead_aclint_sswi_dying_cpu);
-+	cpuhp_setup_state(CPUHP_AP_IRQ_ACLINT_SSWI_STARTING,
-+			  "irqchip/aclint-sswi:starting",
-+			  aclint_sswi_starting_cpu,
-+			  aclint_sswi_dying_cpu);
- 
- 	riscv_ipi_set_virq_range(virq, BITS_PER_BYTE);
- 
-+	return 0;
++#include <linux/backlight.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++
++#include <video/mipi_display.h>
++
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_modes.h>
++#include <drm/drm_panel.h>
++
++struct tddi_panel_data {
++	u8 lanes;
++	/* wait timings for panel enable */
++	u8 delay_ms_sleep_exit;
++	u8 delay_ms_display_on;
++	/* wait timings for panel disable */
++	u8 delay_ms_display_off;
++	u8 delay_ms_sleep_enter;
++};
++
++struct tddi_ctx {
++	struct drm_panel panel;
++	struct mipi_dsi_device *dsi;
++	struct drm_display_mode mode;
++	struct backlight_device *backlight;
++	const struct tddi_panel_data *data;
++	struct regulator_bulk_data supplies[3];
++	struct gpio_desc *reset_gpio;
++	struct gpio_desc *backlight_gpio;
++	u32 bus_flags;
++	u32 width;
++	u32 height;
++};
++
++static inline struct tddi_ctx *to_tddi_ctx(struct drm_panel *panel)
++{
++	return container_of(panel, struct tddi_ctx, panel);
 +}
 +
-+/* generic/MIPS variant */
-+static int __init generic_aclint_sswi_probe(struct fwnode_handle *fwnode)
++static int tddi_update_brightness(struct backlight_device *backlight)
 +{
-+	int rc;
++	struct mipi_dsi_multi_context dsi = { .dsi = bl_get_data(backlight) };
++	u8 brightness = backlight->props.brightness;
 +
-+	rc = aclint_sswi_probe(fwnode);
-+	if (rc)
-+		return rc;
++	mipi_dsi_dcs_set_display_brightness_multi(&dsi, brightness);
 +
-+	/* Announce that SSWI is providing IPIs */
-+	pr_info("providing IPIs using ACLINT SSWI\n");
++	return dsi.accum_err;
++}
++
++static int tddi_prepare(struct drm_panel *panel)
++{
++	struct tddi_ctx *ctx = to_tddi_ctx(panel);
++	struct device *dev = &ctx->dsi->dev;
++	int ret;
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
++	if (ret < 0) {
++		dev_err(dev, "Failed to enable regulators: %d\n", ret);
++		return ret;
++	}
++
++	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
++	usleep_range(5000, 6000);
++	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
++	usleep_range(5000, 6000);
++	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
++	usleep_range(10000, 11000);
++
++	gpiod_set_value_cansleep(ctx->backlight_gpio, 0);
++	usleep_range(5000, 6000);
 +
 +	return 0;
 +}
 +
-+static int __init generic_aclint_sswi_early_probe(struct device_node *node,
-+						  struct device_node *parent)
++static int tddi_unprepare(struct drm_panel *panel)
 +{
-+	return generic_aclint_sswi_probe(&node->fwnode);
++	struct tddi_ctx *ctx = to_tddi_ctx(panel);
++
++	gpiod_set_value_cansleep(ctx->backlight_gpio, 1);
++	usleep_range(5000, 6000);
++
++	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
++	usleep_range(5000, 6000);
++
++	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
++
++	return 0;
 +}
-+IRQCHIP_DECLARE(generic_aclint_sswi, "mips,p8700-aclint-sswi", generic_aclint_sswi_early_probe);
 +
-+/* THEAD variant */
-+#define THEAD_C9XX_CSR_SXSTATUS			0x5c0
-+#define THEAD_C9XX_SXSTATUS_CLINTEE		BIT(17)
-+
-+static int __init thead_aclint_sswi_probe(struct fwnode_handle *fwnode)
++static int tddi_enable(struct drm_panel *panel)
 +{
-+	int rc;
++	struct tddi_ctx *ctx = to_tddi_ctx(panel);
++	struct mipi_dsi_multi_context dsi = { .dsi = ctx->dsi };
++	u8 brightness = ctx->backlight->props.brightness;
 +
-+	/* If it is T-HEAD CPU, check whether SSWI is enabled */
-+	if (riscv_cached_mvendorid(0) == THEAD_VENDOR_ID &&
-+	    !(csr_read(THEAD_C9XX_CSR_SXSTATUS) & THEAD_C9XX_SXSTATUS_CLINTEE))
-+		return -ENOTSUPP;
++	mipi_dsi_dcs_write_seq_multi(&dsi, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x0c);
 +
-+	rc = aclint_sswi_probe(fwnode);
-+	if (rc)
-+		return rc;
++	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi);
++	mipi_dsi_msleep(&dsi, ctx->data->delay_ms_sleep_exit);
 +
- 	/* Announce that SSWI is providing IPIs */
- 	pr_info("providing IPIs using THEAD ACLINT SSWI\n");
- 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index df366ee15456..d381420bbd5f 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -145,7 +145,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_EIOINTC_STARTING,
- 	CPUHP_AP_IRQ_AVECINTC_STARTING,
- 	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
--	CPUHP_AP_IRQ_THEAD_ACLINT_SSWI_STARTING,
-+	CPUHP_AP_IRQ_ACLINT_SSWI_STARTING,
- 	CPUHP_AP_IRQ_RISCV_IMSIC_STARTING,
- 	CPUHP_AP_IRQ_RISCV_SBI_IPI_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
++	/* sync the panel with the backlight's brightness level */
++	mipi_dsi_dcs_set_display_brightness_multi(&dsi, brightness);
++
++	mipi_dsi_dcs_set_display_on_multi(&dsi);
++	mipi_dsi_msleep(&dsi, ctx->data->delay_ms_display_on);
++
++	return dsi.accum_err;
++};
++
++static int tddi_disable(struct drm_panel *panel)
++{
++	struct tddi_ctx *ctx = to_tddi_ctx(panel);
++	struct mipi_dsi_multi_context dsi = { .dsi = ctx->dsi };
++
++	mipi_dsi_dcs_set_display_off_multi(&dsi);
++	mipi_dsi_msleep(&dsi, ctx->data->delay_ms_display_off);
++
++	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi);
++	mipi_dsi_msleep(&dsi, ctx->data->delay_ms_sleep_enter);
++
++	return dsi.accum_err;
++}
++
++static int tddi_get_modes(struct drm_panel *panel,
++			  struct drm_connector *connector)
++{
++	struct tddi_ctx *ctx = to_tddi_ctx(panel);
++	struct drm_display_mode *mode;
++
++	mode = drm_mode_duplicate(connector->dev, &ctx->mode);
++	if (!mode)
++		return -ENOMEM;
++
++	mode->type |= DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
++	drm_mode_probed_add(connector, mode);
++	drm_mode_set_name(mode);
++
++	connector->display_info.width_mm = mode->width_mm;
++	connector->display_info.height_mm = mode->height_mm;
++	connector->display_info.bus_flags = ctx->bus_flags;
++
++	return 1;
++}
++
++static const struct backlight_ops tddi_bl_ops = {
++	.update_status = tddi_update_brightness,
++};
++
++static const struct drm_panel_funcs tddi_drm_panel_funcs = {
++	.prepare = tddi_prepare,
++	.unprepare = tddi_unprepare,
++	.enable = tddi_enable,
++	.disable = tddi_disable,
++	.get_modes = tddi_get_modes,
++};
++
++static int tddi_probe(struct mipi_dsi_device *dsi)
++{
++	struct device *dev = &dsi->dev;
++	struct tddi_ctx *ctx;
++	int ret;
++
++	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->data = of_device_get_match_data(dev);
++
++	ctx->dsi = dsi;
++	mipi_dsi_set_drvdata(dsi, ctx);
++
++	ctx->supplies[0].supply = "vio";
++	ctx->supplies[1].supply = "vsn";
++	ctx->supplies[2].supply = "vsp";
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
++				      ctx->supplies);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to get regulators\n");
++
++	ctx->backlight_gpio = devm_gpiod_get_optional(dev, "backlight", GPIOD_ASIS);
++	if (IS_ERR(ctx->backlight_gpio))
++		return dev_err_probe(dev, PTR_ERR(ctx->backlight_gpio),
++				     "Failed to get backlight-gpios\n");
++
++	ctx->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
++	if (IS_ERR(ctx->reset_gpio))
++		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
++				     "Failed to get reset-gpios\n");
++
++	ret = of_get_drm_panel_display_mode(dev->of_node, &ctx->mode,
++					    &ctx->bus_flags);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to get panel timings\n");
++
++	ctx->backlight = devm_backlight_device_register(dev, dev_name(dev), dev,
++							dsi, &tddi_bl_ops, NULL);
++	if (IS_ERR(ctx->backlight))
++		return dev_err_probe(dev, PTR_ERR(ctx->backlight),
++				     "Failed to register backlight device");
++
++	ctx->backlight->props.type = BACKLIGHT_PLATFORM;
++	ctx->backlight->props.brightness = 255;
++	ctx->backlight->props.max_brightness = 255;
++
++	dsi->lanes = ctx->data->lanes;
++	dsi->format = MIPI_DSI_FMT_RGB888;
++	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
++			  MIPI_DSI_MODE_VIDEO_NO_HFP;
++
++	drm_panel_init(&ctx->panel, dev, &tddi_drm_panel_funcs,
++		       DRM_MODE_CONNECTOR_DSI);
++	ctx->panel.prepare_prev_first = true;
++
++	drm_panel_add(&ctx->panel);
++
++	ret = devm_mipi_dsi_attach(dev, dsi);
++	if (ret < 0) {
++		drm_panel_remove(&ctx->panel);
++		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
++	}
++
++	return 0;
++}
++
++static void tddi_remove(struct mipi_dsi_device *dsi)
++{
++	struct tddi_ctx *ctx = mipi_dsi_get_drvdata(dsi);
++
++	drm_panel_remove(&ctx->panel);
++}
++
++static const struct tddi_panel_data td4101_panel_data = {
++	.lanes = 2,
++	/* wait timings for panel enable */
++	.delay_ms_sleep_exit = 100,
++	.delay_ms_display_on = 0,
++	/* wait timings for panel disable */
++	.delay_ms_display_off = 20,
++	.delay_ms_sleep_enter = 90,
++};
++
++static const struct tddi_panel_data td4300_panel_data = {
++	.lanes = 4,
++	/* wait timings for panel enable */
++	.delay_ms_sleep_exit = 100,
++	.delay_ms_display_on = 0,
++	/* wait timings for panel disable */
++	.delay_ms_display_off = 0,
++	.delay_ms_sleep_enter = 0,
++};
++
++static const struct of_device_id tddi_of_device_id[] = {
++	{
++		.compatible = "syna,td4101-panel",
++		.data = &td4101_panel_data,
++	}, {
++		.compatible = "syna,td4300-panel",
++		.data = &td4300_panel_data,
++	}, { }
++};
++MODULE_DEVICE_TABLE(of, tddi_of_device_id);
++
++static struct mipi_dsi_driver tddi_dsi_driver = {
++	.probe = tddi_probe,
++	.remove = tddi_remove,
++	.driver = {
++		.name = "panel-synaptics-tddi",
++		.of_match_table = tddi_of_device_id,
++	},
++};
++module_mipi_dsi_driver(tddi_dsi_driver);
++
++MODULE_AUTHOR("Kaustabh Chakraborty <kauschluss@disroot.org>");
++MODULE_DESCRIPTION("Synaptics TDDI Display Panel Driver");
++MODULE_LICENSE("GPL");
+
 -- 
-2.43.0
+2.49.0
 
