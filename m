@@ -1,124 +1,117 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29B3D1798F;
-	Thu, 12 Jun 2025 05:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0482F1798F;
+	Thu, 12 Jun 2025 05:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749706776; cv=none; b=oDELRM4xqAdirHZvGnUSZ40fiPsHYmHaEs3m6kHU/bvyZ+dbn66VqkW50dT8oqr+eusZ4+nvXOjOsh3OxUAiwy8BdwihVlGk+kzipw0i8TRNr0hPlBR3McNWCgqFLufB0IPVx6aoYAtPmDoVSylBNF54dD4NctHYwwsvyMhsAKc=
+	t=1749706896; cv=none; b=KlWJkf0z5MGex4sF+Xhr9ILHiRlGGAqW/Guc5WdD466QE5VZqdZnBE+afEXR1uoc2DhvNJIRc1pT8qyDq2cJd3oVZ2OA+5b5imL03nbQJez1NqXCAooCZBd3PswZc3Rpg1F2R6+Io3bRLGSSZXhl2j5Z+UV5UGrCTrZkMAd4hfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749706776; c=relaxed/simple;
-	bh=D5zs25k5ilJdAfvmjAwbyIJsXuPFkV9J3ttBcMMcEyo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I4Q8iM/V955IPI5hR81/dYlBppSOzSc0XmuqQnDrAflpU5JWV9r/w989vs70refyZEO8bvBg0NLVso5vDjX7iXtd9/i9kElMwCipDLlKnLCrrmptHoERGqslO1omw3jiWxJVt0/FlxdJDPgsje/d8Zj4qFqf6wnfv0fFUvB7DGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aN8ZsyEl; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749706896; c=relaxed/simple;
+	bh=MVwiMWOB+RZa3CMd6OW3EQuZjFNX92K9tTPczDmVAYM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jyW3SOOr43CslKAY2vGbQAul2eFae5LEsQUh4Hrfq8HRrj64qEUg51Iii3wQ7409zqZBqjvaStXsdx8q+NKKgyOZzUInA8CIAdpuc883jexmi0vX6EM7m8Qs+Qz2KHBlud8X7wtYMdyW2eX58mH3OkM6lzfgTC4gbbDd1fK3a2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9CKBv36; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aN8ZsyEl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=8u
-	xIV25rvzc500OQYm7n7CRS3Jb65U/qpwbuXBGHpLw=; b=aN8ZsyElLBwfE4rdkV
-	oDYF7HowdLbtdoIRzS2zsKZHoDRaIveTc01SoZPzLiIEI1Y/eKIDG9lL4psJx5Hk
-	phhjiNe770/zQMOkMcQjWaecrW/Y0BDQOfiJuM2EFkGidOPFWF68C89FcuVpwy57
-	crAOEsgzxLWkiui9twZtZ4MRA=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgB3lmVFZ0poG_P_CA--.31050S4;
-	Thu, 12 Jun 2025 13:36:21 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: cachen@purestorage.com
-Cc: akpm@linux-foundation.org,
-	cl@gentwo.org,
-	corbet@lwn.net,
-	dennis@kernel.org,
-	hannes@cmpxchg.org,
-	harry.yoo@oracle.com,
-	jackmanb@google.com,
-	kent.overstreet@linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	mhocko@suse.com,
-	rientjes@google.com,
-	roman.gushchin@linux.dev,
-	surenb@google.com,
-	tj@kernel.org,
-	vbabka@suse.cz,
-	yzhong@purestorage.com,
-	ziy@nvidia.com
-Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
-Date: Thu, 12 Jun 2025 13:36:05 +0800
-Message-Id: <20250612053605.5911-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250610233053.973796-1-cachen@purestorage.com>
-References: <20250610233053.973796-1-cachen@purestorage.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9CKBv36"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749706895; x=1781242895;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MVwiMWOB+RZa3CMd6OW3EQuZjFNX92K9tTPczDmVAYM=;
+  b=l9CKBv36GlirXtVzy3++/HbCYLb014CQeE/enEmB73XYPQL7SBG48q+H
+   q0YMyq1ZR2/QTdL/9ur3dcdckQigDD9N74dyohnsrP1x0Q1toXDMz6sj4
+   +dXhJRFGXs0yqvSJY+tpKBMk7+YR+C6h7kQD9vneLBz9G5KWyjGMxby/o
+   UcGGBSvH6t6kixe4JRbvjB6pLJxTljyPMst56CozXQ0F1FlrIjEHq6xLW
+   tAvXOoS293tSOlOzXtmrNVVIiA/Cz14e2HI7/u2oJ8iPJZ4RG+uLDX/wB
+   3WUoVpDNJg1S8fwUPXpcGLoj1EsczABufNqT9q9/I6ziUoOLI5cF2P90P
+   g==;
+X-CSE-ConnectionGUID: 8TuH7jsER3KaVQITx/hS2Q==
+X-CSE-MsgGUID: eof6/NbzTfG5qFMPYV0ypw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55669806"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="55669806"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 22:41:34 -0700
+X-CSE-ConnectionGUID: YiPn0AsZS4GnJnRX2ah+cQ==
+X-CSE-MsgGUID: aGRd18cHTaqjiib4PQLfng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="178375661"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 22:41:32 -0700
+Message-ID: <d5f528c2-3518-4251-a50b-2d1f36c1662e@intel.com>
+Date: Thu, 12 Jun 2025 13:41:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: x86/mmu: Reject direct bits in gpa passed to
+ KVM_PRE_FAULT_MEMORY
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
+ yan.y.zhao@intel.com
+References: <20250612044943.151258-1-pbonzini@redhat.com>
+ <cfd99e56-551b-49c5-b486-05c9f6d8cf11@intel.com>
+ <CABgObfafukOFkeR09krA5GVb3itfpHNHjBM0aRZj5t4EKJv7Dw@mail.gmail.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <CABgObfafukOFkeR09krA5GVb3itfpHNHjBM0aRZj5t4EKJv7Dw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgB3lmVFZ0poG_P_CA--.31050S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw1UKrW8Gry3WFy8GFWfZrb_yoW8tF18pF
-	4UKw1rWF4qqr1xCrn7J3WIga4ft3Z8CFWUJ3yaq34SvF1akryfZrZrKw45uF47CF40yF1U
-	ZFWq9w17Z3W5ZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UxCzNUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAhqqmhKX67XLgAAsK
 
-Hi, 
-
-On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
-> Add support for tracking per-NUMA node statistics in /proc/allocinfo.
-> Previously, each alloc_tag had a single set of counters (bytes and
-> calls), aggregated across all CPUs. With this change, each CPU can
-> maintain separate counters for each NUMA node, allowing finer-grained
-> memory allocation profiling.
+On 6/12/2025 1:34 PM, Paolo Bonzini wrote:
+> On Thu, Jun 12, 2025 at 7:29 AM Xiaoyao Li <xiaoyao.li@intel.com> wrote:
+>>
+>> On 6/12/2025 12:49 PM, Paolo Bonzini wrote:
+>>> Only let userspace pass the same addresses that were used in KVM_SET_USER_MEMORY_REGION
+>>> (or KVM_SET_USER_MEMORY_REGION2); gpas in the the upper half of the address space
+>>> are an implementation detail of TDX and KVM.
+>>>
+>>> Extracted from a patch by Sean Christopherson <seanjc@google.com>.
+>>>
+>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> ---
+>>>    arch/x86/kvm/mmu/mmu.c | 3 +++
+>>>    1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+>>> index a4040578b537..4e06e2e89a8f 100644
+>>> --- a/arch/x86/kvm/mmu/mmu.c
+>>> +++ b/arch/x86/kvm/mmu/mmu.c
+>>> @@ -4903,6 +4903,9 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+>>>        if (!vcpu->kvm->arch.pre_fault_allowed)
+>>>                return -EOPNOTSUPP;
+>>>
+>>> +     if (kvm_is_gfn_alias(vcpu->kvm, gpa_to_gfn(range->gpa)))
+>>> +             return -EINVAL;
+>>
+>> Do we need to worry about the case (range->gpa + range->size) becomes alias?
 > 
-> This feature is controlled by the new
-> CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
+> No, because the function only processes a single page and everything
+> in the non-aliased part of the address space *can* be prefaulted.
 > 
-> * When enabled (=y), the output includes per-node statistics following
->   the total bytes/calls:
+> KVM's generic kvm_vcpu_pre_fault_memory() call will see the EINVAL on
+> a later invocation and will stop processing the part of the request
+> that is has the shared/direct bit set.
+
+reasonable..
+
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+
+> Paolo
 > 
-> <size> <calls> <tag info>
-> ...
-> 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
->         nid0     94912        2966
->         nid1     220544       6892
-> 7680         60       mm/dmapool.c:254 func:dma_pool_create
->         nid0     4224         33
->         nid1     3456         27
+>>
+>>>        /*
+>>>         * reload is efficient when called repeatedly, so we can do it on
+>>>         * every iteration.
+>>
 > 
-> * When disabled (=n), the output remains unchanged:
-> <size> <calls> <tag info>
-> ...
-> 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
-> 7680         60       mm/dmapool.c:254 func:dma_pool_create
 > 
-> To minimize memory overhead, per-NUMA stats counters are dynamically
-> allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
-> increased to ensure sufficient space for in-kernel alloc_tag counters.
-> 
-> For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
-> allocate counters. These allocations are excluded from the profiling
-> statistics themselves.
-
-Considering NUMA balance, I have two questions:
-1. Do we need the granularity of calling sites?
-We need that granularity to identify a possible memory leak, or somewhere
-we can optimize its memory usage.
-But for NUMA unbalance, the calling site would mostly be *innocent*, the
-clue normally lies in the cpu making memory allocation, memory interface, etc...
-The point is, when NUMA unbalance happened, can it be fixed by adjusting the calling sites?
-Isn't <cpu, memory interface/slab name, numa id> enough to be used as key for numa
-stats analysis?
-Any example explaining why you need the information of calling sites and how the
-information of calling site help?
-
-2. There are other factors affecting NUMA balance, cgroup usage, e.g...
-Could we collect those information at calling sites as well.
-
-
-
-Thanks
-David
 
