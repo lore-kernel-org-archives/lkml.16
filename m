@@ -1,136 +1,181 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CAE286A9;
-	Thu, 12 Jun 2025 12:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16132F432C;
+	Thu, 12 Jun 2025 12:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749732412; cv=none; b=aSjn9yrvuWSN0spWwECHG+BlacarKxyDlFL1Hvr/zmQl5XhHTfWmNb8Jb+FJIW5TOnkIGCoQykPTlcjU7icqO+UKwqrCCJ3C1w8iLLZtJvDteKoIEgjEFB1YwHNWdDLiVl9n3DIgAlp0e2mOb8hpXaTbtZU0DKysv7bcEPJwZPY=
+	t=1749732492; cv=none; b=GSEUbLuRTUgM3zV3odB2ObSPDwXiOVDv+aM4Dm8sFyGS+IyTk1lY2wXBv0NFpxbPKGXT+R7AJgYFv77D5PptVmneVrlnLDdC2+p5qQp4rHHPbw7DONsT7qcDqdcHg4pGpG338jb6FD7Uthl967fURJegYb8JtStqlkVAYeQw3dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749732412; c=relaxed/simple;
-	bh=2ZQbCbtmHM4QbReq9nM0qKRZOiMuSdWdfPDKCGox5cE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ao5jNj6ojDYm5pHHvXusqxy57Ocsr6jaqsg2i1JoxU1VHgTcO7RaIiiIW9Rx8Wo0pMerCYPE8EpMQeQBd3ov8Xi/9WZfgRK6eKDdvzXRy551eXpYupK2NtsoYPG6YQ4Ev66cryRrMvZZbuYeQd6IHaBMikvMVXXAkzyszPDY2vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 60581432A3;
-	Thu, 12 Jun 2025 12:46:39 +0000 (UTC)
-Message-ID: <df439eb4-4dbd-4f0f-bfd2-27c6b1534f39@ghiti.fr>
-Date: Thu, 12 Jun 2025 14:46:39 +0200
+	s=arc-20240116; t=1749732492; c=relaxed/simple;
+	bh=Fjp9hcmXAIrCkfYCQtqV83QQT9g0u4DPzSNaZbioKKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IqGtM9QxaefmLEnFXhZ822opaN2I5OF/7y3PFO3unZwgivOQHtCli/h/6SL0E5P4yRD1kWyjQDXHCz4A0tOzhW1TmvIKHyewHZiWLAuMGZlhtfsDibe+zioyksf5pQ05YUaw6hvwQOWysXvFuPK2He5KNCce0g6bo8DN16CtjIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g+CNHlCq; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g+CNHlCq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749732491; x=1781268491;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Fjp9hcmXAIrCkfYCQtqV83QQT9g0u4DPzSNaZbioKKM=;
+  b=g+CNHlCq0InXuXmU9CDXOTcmPMg0gXlRI27eFCwOY08aSf6ISFbTQhq6
+   RagmoBGcqK1ipgyFAL8rkB5nKV0yHNUpN64lrwz0qdMT1nIcXpc5G/fmS
+   3mw/o3WbulpKOsaa6CnyFIn87NiAuCalWfdP3u9gkppkfU5Z/hQTJKwT5
+   Ygu3YE27THdDWa6aEHePAmFeM+u9kaFsB/0Uea2EsupoqN4OLeokrJQT+
+   x/8b4WxWeAGqGOpNjcG2B55wKzALTljD0PV+L0Jk/P10h1UL9egx/3bvo
+   Fg2umBaRjklkb2TgYrXzYvQE1k1ahDAri6ViajAUeDx0MUaXLXOw3KkLL
+   w==;
+X-CSE-ConnectionGUID: eJlamKFvQlyD9WdNgHJ7WA==
+X-CSE-MsgGUID: 2/7kVuruTVuLt8uhzk3t1g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55582807"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="55582807"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:48:10 -0700
+X-CSE-ConnectionGUID: 6hrNdlaVQpmn9K1K+Vr+jA==
+X-CSE-MsgGUID: X9pY8ZHGQNiXuIxi6mZ8ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="178414898"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:48:06 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPhLe-00000005x4y-2rhE;
+	Thu, 12 Jun 2025 15:48:02 +0300
+Date: Thu, 12 Jun 2025 15:48:02 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aErMgh6AKVStF4rQ@smile.fi.intel.com>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+ <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
+ <aEifWXPV1nsIyWbT@smile.fi.intel.com>
+ <aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Broken 32-bit riscv debug build with ZSTD and FTRACE
-To: Marco Bonelli <marco@mebeim.net>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "terrelln@fb.com" <terrelln@fb.com>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "mhiramat@kernel.org" <mhiramat@kernel.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
- "palmer@dabbelt.com" <palmer@dabbelt.com>,
- "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-References: <960240908.630790.1748641210849@privateemail.com>
- <1552795452.650306.1748692371190@privateemail.com>
- <c239ee1b-f201-4e7b-80f8-03a7fb02b666@ghiti.fr>
- <1338988468.1011577.1749045125350@privateemail.com>
- <191074362.1248877.1749238947947@privateemail.com>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <191074362.1248877.1749238947947@privateemail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduhedutdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepjeeiuedujeeikeevuedtgeeuhfekudeludegveehffefjedugeegudffgfeluefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmehfudgvsgemfhgulegrmegrugduugemiehfhegsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmehfudgvsgemfhgulegrmegrugduugemiehfhegspdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmehfudgvsgemfhgulegrmegrugduugemiehfhegsngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehmrghrtghosehmvggsvghimhdrnhgvthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhop
- ehtvghrrhgvlhhlnhesfhgsrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtoheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhm
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Marco,
+On Wed, Jun 11, 2025 at 06:04:49PM -0300, Marcelo Schmitt wrote:
+> On 06/11, Andy Shevchenko wrote:
+> > On Tue, Jun 10, 2025 at 05:31:25PM -0300, Marcelo Schmitt wrote:
 
-On 6/6/25 21:42, Marco Bonelli wrote:
-> I was able to also reproduce without ZSTD (i.e. both ZSTD_COMPRESS=n
-> and ZSTD_DECOMPRESS=n) like this:
->
-> 	export ARCH=riscv CROSS_COMPILE=riscv32-linux-
-> 	make distclean
-> 	make defconfig
-> 	make 32-bit.config
-> 	./scripts/config \
-> 		-e FTRACE \
-> 		-e CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
-> 		-d RD_ZSTD \
-> 		-d SECURITY_APPARMOR_INTROSPECT_POLICY \
-> 		-d BTRFS_FS
-> 	make olddefconfig
-> 	make -j vmlinux
->
-> Did another bisect run between v6.14 and v6.15 with the above commands
-> in a bash script and got:
->
-> 	494e7fe591bf834d57c6607cdc26ab8873708aa7 Merge tag 'bpf_res_spin_lock' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next
->
-> This leaves me more puzzled than before honestly. Not sure whether it is
-> a real bug or a problem on my end at this point? The fact that I can repro
-> in a Docker makes me think of the former, but the fact that I was able to
-> bisect it down to two different commits depending on ZSTD vs no ZSTD is
-> weird.
->
-> Alex (or anyone else really): are you able to reproduce with my Dockerfile
-> or config I provided in my last mail by any chance?
+...
 
-I'm able to reproduce your issue with your Dockerfile and locally too 
-now using your last instructions, with the rv32 toolchain you provided 
-and my regular rv64 toolchain (13.1.0).
+> > > +	return spi_write(st->spi, st->tx_buf, size + 2);
+> > 
+> > ... + sizeof(reg) ?
+> 
+> The size of the specific ADC register is stored in the size variable.
+> The result of sizeof(reg) can be different on different machines and will
+> probably not be equal to the size of the register in the ADC chip.
 
-So, that's weird, let's take the following failure:
+Hmm... But shouldn't we have a variable type that respects the sizeof() of the
+register in HW to keep it there? 2 is magic.
 
-ERROR: modpost: vmlinux: local symbol 'riscv_cached_mvendorid' was exported
+...
 
-When attaching with gdb, I get this:
+> > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
+> > > +{
+> > > +	/*
+> > > +	 * The use of static_assert() here is to make sure that, if
+> > > +	 * struct ad4170_setup is ever changed (e.g. a field is added to the
+> > > +	 * struct's declaration), the comparison below is adapted to keep
+> > > +	 * comparing each of struct ad4170_setup fields.
+> > > +	 */
+> > 
+> > Okay. But this also will trigger the case when the field just changes the type.
+> > So, it also brings false positives. I really think this is wrong place to put
+> > static_assert(). To me it looks like a solving rare problem, if any.
+> 
+> I think it is unlikely that struct ad4170_setup declaration will ever change.
+> The fields match the registers that are associated with a channel setup and
+> the their types match the size of the respective registers. So, I do agree
+> that triggering this assert would be something rare.
 
-Breakpoint 2, check_export_symbol (sym=0x7fffcfc5aca8, 
-secname=0x7ffff7b7e3aa ".debug_str", faddr=72, elf=0x7fffffffdec0, 
-mod=0x55555556b2a0) at ../scripts/mod/modpost.c:1087
-1087            error("%s: local symbol '%s' was exported\n", mod->name,
-1: mod->name = 0x55555556b334 "vmlinux"
-2: label_name = 0x7fffdfcd965f "__export_symbol_riscv_cached_mvendorid"
-(gdb) p/x sym->st_info
-$1 = 0x0
-(gdb) p/x *sym
-$2 = {st_name = 0x321ded, st_value = 0x3d9111, st_size = 0x0, st_info = 
-0x0,
-   st_other = 0x0, st_shndx = 0xb6}
+Yep, which thinks to me as an unneeded noise in the code, making it harder to
+read and maintain (in _this_ case).
 
-where st_info == 0 == STB_LOCAL.
+> > But I leave this to the IIO maintainers.
+> > 
+> > In my opinion static_assert() makes only sense when memcmp() is being used.
+> > Otherwise it has prons and cons.
+> 
+> I think the most relevant reason to have this static_assert would be to keep
+> some consistency with ad4130, ad7124, and ad7173, but no strong opinion about it.
 
-On a working rv64 build with the same configs, I get:
+I would argue that those needs to be revisited for the same reasons as above.
 
-Breakpoint 1, check_export_symbol (sym=0x7fffc56d94a8, 
-secname=0x7ffff7ae9e54 ".text", faddr=120, elf=0x7fffffffded0, 
-mod=0x55555556b2a0) at ../scripts/mod/modpost.c:1085
-1085        if (ELF_ST_BIND(sym->st_info) != STB_GLOBAL &&
-(gdb) p/x *sym
-$1 = {st_name = 0xe6aa, st_info = 0x12, st_other = 0x0, st_shndx = 0x2,
-   st_value = 0x11ba, st_size = 0x2c}
+> Actually, I don't get why static_assert() would only matter if memcmp() was
+> being used. Would it be better to not bother if the fields change type?
+> 
+> Anyway, I'll go with whatever be IIO maintainer's preference.
 
-The difference is that the symbol is not in the same section.
+> > > +	static_assert(sizeof(*a) ==
+> > > +		      sizeof(struct {
+> > > +				     u16 misc;
+> > > +				     u16 afe;
+> > > +				     u16 filter;
+> > > +				     u16 filter_fs;
+> > > +				     u32 offset;
+> > > +				     u32 gain;
+> > > +			     }));
+> > > +
+> > > +	if (a->misc != b->misc ||
+> > > +	    a->afe != b->afe ||
+> > > +	    a->filter != b->filter ||
+> > > +	    a->filter_fs != b->filter_fs ||
+> > > +	    a->offset != b->offset ||
+> > > +	    a->gain != b->gain)
+> > > +		return false;
+> > > +
+> > > +	return true;
+> > > +}
 
-I'm still looking into it, just wanted to let you know that I can 
-reproduce and hoping someone who knows could jump in :)
+...
 
-Thanks,
+> > > +	/* Assume AVSS at GND (0V) if not provided */
+> > > +	st->vrefs_uv[AD4170_AVSS_SUP] = ret == -ENODEV ? 0 : -ret;
+> > 
+> > -ret ?!?!
+> 
+> That's because AVSS is never above system ground level (i.e. AVSS is either GND
+> or a negative voltage). But we currently don't have support for reading negative
+> voltages with the regulator framework. So, the current AD4170 support reads
+> a positive value from the regulator, then inverts signal to make it negative :)
 
-Alex
+This needs a good comment and ideally a TODO item in the regulator framework.
+(It might be easy to implement by adding a flag without changing the type of
+ the field, if it's unsigned.)
+
+> > Even if you know that *now* it can't have any other error code, it's quite
+> > fragile.
+> 
+> Yeah, I guess ADCs that can take bipolar power supplies are not that common.
+> I couldn't think of any better way to have that, though.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
->
-> --
-> Marco Bonelli
