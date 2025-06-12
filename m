@@ -1,147 +1,127 @@
-Received: from glittertind.blackshift.org (glittertind.blackshift.org [116.203.23.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4602229B18
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.23.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783BE42048
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738315; cv=none; b=nIMXPey9hb6H0cS6tm2wKEL70nXJ7f2vPSTV9YhQcyP9Rh+t4xVM+o2t+A6bSgv0GCrRuESoTF9h590islCs/Vx8De9dg6QfnfPyKfa9ZHgpjtqe30z5wZu8MQmhhYTwYq1GjEB9qzItUu1UIaEuH2te1qNOxWsfFucC6vTc/r8=
+	t=1749738359; cv=none; b=fG6bbocNBWyDyY3NldR9abZbIegdaqgdh0D2Y3trVZEJIvPCW2t7f5+awS4JUr+hCsXroFFkF64+gGOYJmoIjS92AOqOmDoXdu9CRk5jiC8N9KS5TOjYiBLmtdH6SAWjjh0gZnYPUTx1S5mFcg0DmMCbiH3tvCza2FT2W6QOn0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749738315; c=relaxed/simple;
-	bh=fM3DJ0fKp+s7JwVePf1s77eQbBcgW9+yZWYcLMCuBf4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PL0p2pQ2sVjk/ZmHPDkp3BDz0y7rzxfUuJL81PmomDePNGhBXHprx0e8E8OAfifP8vNGvIWiPxvI4WLignw3q76T29ARcBPOgS3LhfrkCYaxsWtKwJwxZUz+D8hu7bRQZ1taiD8nLgStwcgGbJ5JubvBcZnAa+wJQA+IlUlBTQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=none smtp.mailfrom=hardanger.blackshift.org; arc=none smtp.client-ip=116.203.23.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hardanger.blackshift.org
-Received: from bjornoya.blackshift.org (unknown [IPv6:2003:e3:7f3d:bb00:e75c:5124:23a3:4f62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1)
-	 client-signature RSA-PSS (4096 bits))
-	(Client CN "bjornoya.blackshift.org", Issuer "R10" (verified OK))
-	by glittertind.blackshift.org (Postfix) with ESMTPS id D61D566BB9B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:16:21 +0000 (UTC)
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id 98DE9426469
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:16:21 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id EB8AE42641E;
-	Thu, 12 Jun 2025 14:16:17 +0000 (UTC)
-Received: from hardanger.blackshift.org (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 8943e361;
-	Thu, 12 Jun 2025 14:16:16 +0000 (UTC)
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Date: Thu, 12 Jun 2025 16:15:54 +0200
-Subject: [PATCH net-next v2 01/10] net: fec: fix typos found by codespell
+	s=arc-20240116; t=1749738359; c=relaxed/simple;
+	bh=ApF8vBWEk/Mxf+COrA4pHzNgYDC969mE44V8IPsB400=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uR7nJOUdveyQKD6HoLRbzp5+/qBd11oFUBI0HO5uJbM4yhCo3TLLFnpPqm5TXnjF7q/0DABMFZ1+39xPspVHcBirYZVa9HddA0gGbHDS6MkXOVW0P75R57sRHt9SFnPIRYJYwrdTss9qWIToJWy0muiNau1GrXqpJqdCUw3zihM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=FQof/u5+; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="FQof/u5+"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-453066fad06so7981855e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1749738356; x=1750343156; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0dRuAS/zUdBPIbw/8bXhZ48yEMTP9V1WRvDJONrZWng=;
+        b=FQof/u5+XPWjd6NV2IFJb/4KDZU3/J7pgIEP2R1sm03mDbWsQ4WHEWrtxOQVcl4Ibv
+         rJnxh/tYt05LCn6V8Bm/IAag8/2NWnzyW1SlWlKnO75yTGINCuhKYdIQSD3Y/pngMnlq
+         tENBY5RAfxQxA0ZqJYMWat/DKSerPorUM5Dg0iHsDjt2+3gD29BAR/YzWDxbx1W3ivWs
+         OSUrDN540zZmnavTSsZKl8uBqycr4kinUPwXmBcMzMRYyqimR1C5pc2qBQrIDqofNwYT
+         KKnNLaV2ADfYozEk2iJmlVQXKfLffXPvz3w43joLsl84iurtthyLPnP2PigSqumFD3E0
+         aGug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749738356; x=1750343156;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0dRuAS/zUdBPIbw/8bXhZ48yEMTP9V1WRvDJONrZWng=;
+        b=mrBcXsy+vSl2qmAQZpYED9aqJYjGnHULiEEREmkWtNMYiqzqcap3XnOpsMSYPfud75
+         fVjzF9/leg6e9izRSh1ZBFgy8whNLuzjnxWpZSjvysPdkyDutywp+jxs7aWkZHvP5qYF
+         hNgfXvTtedtLzznUuVvEFOYNKfChfgUGTd6Pk5N6h9VcqrU6d2G4kxNFgkduMIa285z8
+         sJQcQMfi+WDUf0yVuYX57pzcMvflPZYoJp8MzBU5+YA3HDNS+xWpEGKe1QeJO6ranDGL
+         WNoaUMIwUqGGYVSPAZtKg90vMar93kTkdDElcdiI/9W2UFm0zeHjjaNlk1mM3ehmk0jF
+         JX6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUw2b5UPOpUacJ4j4qrFHD9/oENTJoYs+t8YU84JUxefW0vhPe/0HxGZejS0eA9kDw8JR1+pQAvMUvbSbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbCwXkXwF7pNM+gTeOiHuh6/M7QnlPKYAeSpjkzTGlv69yf8Y5
+	hZW1vPJFC4ZM1lumQ2mzxlqp59wXP+JRNZ5KaaWycRDmTXBIvUH5hUOV0VHu3dnqqvE=
+X-Gm-Gg: ASbGncuiWD9J5C2l9ORtqgkbQgNcnAUfBAjNOrW7qIhqxEWWRKkVTdmvQXagyqB+zlO
+	IqdtDJJZOs97lhbzzABOSRU7kXtznHmAsTSk4r8Ac9YL8LfGOeHh76bQB2GoPgs/OSPWBmA6d4H
+	G+DtsCQG/TM7N1b93MzIsN58fWwgYZv9F7LrWBH1M5K5kaVFxdracAQ97Tw8rHAAdUkyo9YiDTn
+	9iIYirATErM/MvaTNCbaTTW39WhztxYf+4GGL0rTH6xZ4iMvI7qfa767utMonxywIb2MaHEcjZL
+	pROvMCUr7PNaewg5u55LNLFHqp2/hJHPyNZpou1cXT5/cWJzMkSrD72bYdhK86An5YoupoJA
+X-Google-Smtp-Source: AGHT+IFvlefm01oYPM1h9ExnmLfkUHYFh6gyuhvhlTFDJV5yDSLIyUvQ0kWkWHYwVMpiGkMEole17Q==
+X-Received: by 2002:a05:6000:1887:b0:3a4:e672:deef with SMTP id ffacd0b85a97d-3a5586dc42dmr6618337f8f.36.1749738355672;
+        Thu, 12 Jun 2025 07:25:55 -0700 (PDT)
+Received: from MacBook-Air.local ([5.100.243.24])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a56199a930sm2174154f8f.35.2025.06.12.07.25.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 07:25:55 -0700 (PDT)
+Date: Thu, 12 Jun 2025 17:25:52 +0300
+From: Joe Damato <joe@dama.to>
+To: Breno Leitao <leitao@debian.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH net-next 2/2] netdevsim: collect statistics at RX side
+Message-ID: <aErjcH3NPbdP7Usx@MacBook-Air.local>
+Mail-Followup-To: Joe Damato <joe@dama.to>,
+	Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+References: <20250611-netdevsim_stat-v1-0-c11b657d96bf@debian.org>
+ <20250611-netdevsim_stat-v1-2-c11b657d96bf@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-fec-cleanups-v2-1-ae7c36df185e@pengutronix.de>
-References: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
-In-Reply-To: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
-To: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
- Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: imx@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel@pengutronix.de, 
- Marc Kleine-Budde <mkl@pengutronix.de>, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.15-dev-6f78e
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3701; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=fM3DJ0fKp+s7JwVePf1s77eQbBcgW9+yZWYcLMCuBf4=;
- b=kA0DAAoBDHRl3/mQkZwByyZiAGhK4R6gqFFCBHaQvogqFti7YA5JQXQfKIZcAtO9hIekE3OuC
- IkBMwQAAQoAHRYhBJ/7DNivZ6hf/BVs8wx0Zd/5kJGcBQJoSuEeAAoJEAx0Zd/5kJGcDYIIAJAU
- k3788reIO3/4DKGBNdI+KFFLuE1qVm4nWKMUqJwCpPNO9kTRaiVxNALjxiDYJOygv+sGJgMXX//
- hNhUAXkCEQ2YmXrw5FARiWbJJV4zOtwj0UYBe5QIJ76mkz2JEDiT8ad3tbHrQxvjeK4eZkRFBk8
- BCu50JOJsKRkx99cqfAF8o5hHScJdR/muYvLNzHLHym4STWIGtt02aJTbGmj9qfEjEZTYBjLHe8
- k3pwD3CWHtbyA0UG+fwMu4rrTy631QWjCMVrqQ86lSgGERF76XO/opjN5CUwQ3cZmyfJ3llEq8y
- eEMRncEJwp8AzoGQ7nSsBbE03zaxvOw3EJ4c5dA=
-X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
- fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-netdevsim_stat-v1-2-c11b657d96bf@debian.org>
 
-codespell has found some typos in the comments, fix them.
+On Wed, Jun 11, 2025 at 08:06:20AM -0700, Breno Leitao wrote:
+> When the RX side of netdevsim was added, the RX statistics were missing,
+> making the driver unusable for GenerateTraffic() test framework.
+> 
+> This patch adds proper statistics tracking on RX side, complementing the
+> TX path.
+> 
+> Signed-off-by: Breno Leitao <Leitao@debian.org>
+> ---
+>  drivers/net/netdevsim/netdev.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+> index 67871d31252fe..590cb5bb0d20b 100644
+> --- a/drivers/net/netdevsim/netdev.c
+> +++ b/drivers/net/netdevsim/netdev.c
+> @@ -39,12 +39,16 @@ MODULE_IMPORT_NS("NETDEV_INTERNAL");
+>  
+>  static int nsim_napi_rx(struct nsim_rq *rq, struct sk_buff *skb)
+>  {
+> +	struct net_device *dev = rq->napi.dev;
+> +
+>  	if (skb_queue_len(&rq->skb_queue) > NSIM_RING_SIZE) {
+>  		dev_kfree_skb_any(skb);
+> +		dev_dstats_rx_dropped(dev);
+>  		return NET_RX_DROP;
+>  	}
+>  
+>  	skb_queue_tail(&rq->skb_queue, skb);
+> +	dev_dstats_rx_add(dev, skb->len);
+>  	return NET_RX_SUCCESS;
+>  }
 
-Reviewed-by: Wei Fang <wei.fang@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
----
- drivers/net/ethernet/freescale/fec.h     | 8 ++++----
- drivers/net/ethernet/freescale/fec_ptp.c | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Hm, I was wondering: is it maybe better to add the stats code to nsim_poll or
+nsim_rcv instead?
 
-diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-index c81f2ea588f2..3cce9bba5dee 100644
---- a/drivers/net/ethernet/freescale/fec.h
-+++ b/drivers/net/ethernet/freescale/fec.h
-@@ -115,7 +115,7 @@
- #define IEEE_T_MCOL		0x254 /* Frames tx'd with multiple collision */
- #define IEEE_T_DEF		0x258 /* Frames tx'd after deferral delay */
- #define IEEE_T_LCOL		0x25c /* Frames tx'd with late collision */
--#define IEEE_T_EXCOL		0x260 /* Frames tx'd with excesv collisions */
-+#define IEEE_T_EXCOL		0x260 /* Frames tx'd with excessive collisions */
- #define IEEE_T_MACERR		0x264 /* Frames tx'd with TX FIFO underrun */
- #define IEEE_T_CSERR		0x268 /* Frames tx'd with carrier sense err */
- #define IEEE_T_SQE		0x26c /* Frames tx'd with SQE err */
-@@ -342,7 +342,7 @@ struct bufdesc_ex {
- #define FEC_TX_BD_FTYPE(X)	(((X) & 0xf) << 20)
- 
- /* The number of Tx and Rx buffers.  These are allocated from the page
-- * pool.  The code may assume these are power of two, so it it best
-+ * pool.  The code may assume these are power of two, so it is best
-  * to keep them that size.
-  * We don't need to allocate pages for the transmitter.  We just use
-  * the skbuffer directly.
-@@ -460,7 +460,7 @@ struct bufdesc_ex {
- #define FEC_QUIRK_SINGLE_MDIO		(1 << 11)
- /* Controller supports RACC register */
- #define FEC_QUIRK_HAS_RACC		(1 << 12)
--/* Controller supports interrupt coalesc */
-+/* Controller supports interrupt coalesce */
- #define FEC_QUIRK_HAS_COALESCE		(1 << 13)
- /* Interrupt doesn't wake CPU from deep idle */
- #define FEC_QUIRK_ERR006687		(1 << 14)
-@@ -495,7 +495,7 @@ struct bufdesc_ex {
-  */
- #define FEC_QUIRK_HAS_EEE		(1 << 20)
- 
--/* i.MX8QM ENET IP version add new feture to generate delayed TXC/RXC
-+/* i.MX8QM ENET IP version add new feature to generate delayed TXC/RXC
-  * as an alternative option to make sure it works well with various PHYs.
-  * For the implementation of delayed clock, ENET takes synchronized 250MHz
-  * clocks to generate 2ns delay.
-diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-index 876d90832596..3aacd64c9e73 100644
---- a/drivers/net/ethernet/freescale/fec_ptp.c
-+++ b/drivers/net/ethernet/freescale/fec_ptp.c
-@@ -117,7 +117,7 @@ static u64 fec_ptp_read(const struct cyclecounter *cc)
-  * @fep: the fec_enet_private structure handle
-  * @enable: enable the channel pps output
-  *
-- * This function enble the PPS ouput on the timer channel.
-+ * This function enable the PPS output on the timer channel.
-  */
- static int fec_ptp_enable_pps(struct fec_enet_private *fep, uint enable)
- {
-@@ -172,7 +172,7 @@ static int fec_ptp_enable_pps(struct fec_enet_private *fep, uint enable)
- 		 * very close to the second point, which means NSEC_PER_SEC
- 		 * - ts.tv_nsec is close to be zero(For example 20ns); Since the timer
- 		 * is still running when we calculate the first compare event, it is
--		 * possible that the remaining nanoseonds run out before the compare
-+		 * possible that the remaining nanoseconds run out before the compare
- 		 * counter is calculated and written into TCCR register. To avoid
- 		 * this possibility, we will set the compare event to be the next
- 		 * of next second. The current setting is 31-bit timer and wrap
-
--- 
-2.47.2
-
-
+It "feels" like other drivers would be bumping RX stats in their NAPI poll
+function (which is nsim_poll, the naming of the functions is a bit confusing
+here), so it seems like netdevsim maybe should too?
