@@ -1,108 +1,188 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2002E6D38
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DA71DF965;
+	Thu, 12 Jun 2025 23:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771769; cv=none; b=Oqyp3VwDzIOQRqOJtwSZcFiUICHrfUH+XZFvUIuiss1y3Vs+ZF7s82nRCM6cL9YwV6Zb90nBccMGYTI46NVZUsGk4CPwLTLvNrnnGj6YH6cE1xY47N0OEa3/X7kN3gcjLTyH8mFNi6AOqwF4igKtWN3hWSZ2D3BfFu2P7cQt4Bk=
+	t=1749771863; cv=none; b=NZMGMiiQWIxSfX7kPG5afoTm+WeD+kSpc/WiEw7rQ3cZ3y9OoBU4wUXlJUAKSBCpoGxp3Bl2GVBSC0mRePySs0/Zwj1v9X00mjbq5Gn2WKbEXE7LfgoXNcsSFXBgzi/SVxqzZstbqb+fiJmmzG3zo9oMqNmyE7IwjdlTvd9N6vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771769; c=relaxed/simple;
-	bh=99/rmdC76lXafxdI59q/csW0I07ujjJoHzTFBs1h2jw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aEVUYl6dcnpthvrs1Jtw6Xx7BtO67TpXl/9oXYS0LZ6yvGc1HLlbo/WVisAn7yuIFBsovaLImTL3aItC73UpNxpz0xM8ExZ/vDau/Qbf7qOcz7SZjmPFiKjwIb9nhKysKXaA2VIsKoBDryNPTkP8d+YPxaDCsQMgxmRfsfCc8Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HDb1LTTo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fJONCEj+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749771863; c=relaxed/simple;
+	bh=5JzILznrMxvVRQxf8Hqsu5zni/A7Rt4O3iDHv8KHbJk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=soWe6IKRkAVIuRaQfqio/pv1UxvEUK5VMPpbLYjcMbrcsJMdYL8gRgngKRePSHJQOMDbZxuZSpUlnugR2EZz1Oky2yG48vwVro8Xp6updhj3rP+mfrIQ9xNx1SglNQDEMh6+qeL4dByALB3CxfkHYmtTOuR1ODvsz3QZc0e7h3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Rh4BNFVB; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HDb1LTTo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fJONCEj+"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749771766;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Rh4BNFVB"
+Message-ID: <dbe26b36-a10c-4afb-88ad-a6f7f9bff440@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749771854;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3xM6jpBCj2QZBxsvLfh5xBbyT4OKBSIAuCLE2scKBOQ=;
-	b=HDb1LTToIapoL0ZHw/7LThym1XYWFC5Y9jnmB/b3iFElVQcCox5E/41OQsLz3hCXReE/JP
-	CVinsPOzUjEgROe5Fxrb7avvgzkJUDNhBlAdEU7hsmqhQ/ftVbvyB0i1VkK5cOITltcGTs
-	5eQUNoSMvV7H51++kXF0uC0rHRCyUYs2Y7PJ/O+Rf7ib2REM0KOZ916AzBXiPDZn8T42Lo
-	T4567W5oalPB88qe4ygNuHIYdnl5CALMIfupvnW5Slf5i+RA2gwmDn1yloEUbpYgEGXqzY
-	o27PfGHSMBbvua8J+QFBKLcd0FyPtPuwxbanp3Th5FDMkO6HpF3ZELxyN6v4ew==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749771766;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3xM6jpBCj2QZBxsvLfh5xBbyT4OKBSIAuCLE2scKBOQ=;
-	b=fJONCEj+g3/5PxMAOmQVCsTiC25VKf0r2DwfxLeYAQKa0XsV+DCp4tWg3S99TKKCIsxWwX
-	bWlWQ48cPlaX1bCA==
-To: Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 44/44] x86/cpu: Rescan CPUID table after unlocking full CPUID range
-Date: Fri, 13 Jun 2025 01:40:10 +0200
-Message-ID: <20250612234010.572636-45-darwi@linutronix.de>
-In-Reply-To: <20250612234010.572636-1-darwi@linutronix.de>
-References: <20250612234010.572636-1-darwi@linutronix.de>
+	bh=8t46q3qqq58O3Iozg3ZVMZkLga+rVEXppYIQU8pZTR0=;
+	b=Rh4BNFVBqPKyzkGEg0VtlBVcGVma+gqZgIWAUmqAsAdlmzUPABYeGR+rU4K4DFugaPTDCH
+	DTvJ0F/BqKuCcM4tgryjopxwu4S87qgFaOcDxAPnhq/TXQ/UAx21rrv7j0uKhy9+F+HcWa
+	havTzu7j2MGZIk2vEYr+o91l1q0qADY=
+Date: Thu, 12 Jun 2025 19:44:09 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 1/7] dt-bindings: spi: zynqmp-qspi: Split the bus
+To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, linux-spi@vger.kernel.org
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
+ linux-arm-kernel@lists.infradead.org,
+ Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+ linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>
+References: <20250116232118.2694169-1-sean.anderson@linux.dev>
+ <20250116232118.2694169-2-sean.anderson@linux.dev>
+ <9f40295b-484a-48e8-b053-ff8550e589d7@baylibre.com>
+ <46a7eba6-a705-4543-b967-e83ccc89e7d4@linux.dev>
+ <6afc379a-2f9f-4462-ae30-ef6945a83236@baylibre.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <6afc379a-2f9f-4462-ae30-ef6945a83236@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Intel CPUs have an MSR bit to limit CPUID enumeration to leaf two, which
-can be set by old BIOSen before booting Linux.
+Hi David,
 
-Rescan the CPUID table after unlocking the CPU's full CPUID range.  Use
-parsed CPUID(0x0) access, instead of a direct CPUID query, afterwards.
+I am (finally!) getting around to doing v2 of this series, and I ran
+into a small problem with your proposed solution.
 
-References: 066941bd4eeb ("x86: unmask CPUID levels on Intel CPUs")
-References: 0c2f6d04619e ("x86/topology/intel: Unlock CPUID before evaluating anything")
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
----
- arch/x86/kernel/cpu/intel.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+On 1/23/25 16:59, David Lechner wrote:
+> ---
+> From: David Lechner <dlechner@baylibre.com>
+> Date: Thu, 23 Jan 2025 15:35:19 -0600
+> Subject: [PATCH 2/2] spi: add support for multi-bus controllers
+> 
+> Add support for SPI controllers with multiple physical SPI buses.
+> 
+> This is common in the type of controller that can be used with parallel
+> flash memories, but can be used for general purpose SPI as well.
+> 
+> To indicate support, a controller just needs to set ctlr->num_buses to
+> something greater than 1. Peripherals indicate which bus they are
+> connected to via device tree (ACPI support can be added if needed).
+> 
+> In the future, this can be extended to support peripherals that also
+> have multiple SPI buses to use those buses at the same time by adding
+> a similar bus flags field to struct spi_transfer.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  drivers/spi/spi.c       | 26 +++++++++++++++++++++++++-
+>  include/linux/spi/spi.h | 13 +++++++++++++
+>  2 files changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 10c365e9100a..f7722e5e906d 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -2364,7 +2364,7 @@ static void of_spi_parse_dt_cs_delay(struct device_node *nc,
+>  static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+>  			   struct device_node *nc)
+>  {
+> -	u32 value, cs[SPI_CS_CNT_MAX];
+> +	u32 value, buses[8], cs[SPI_CS_CNT_MAX];
+>  	int rc, idx;
+>  
+>  	/* Mode (clock phase/polarity/etc.) */
+> @@ -2379,6 +2379,29 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+>  	if (of_property_read_bool(nc, "spi-cs-high"))
+>  		spi->mode |= SPI_CS_HIGH;
+>  
+> +	rc = of_property_read_variable_u32_array(nc, "spi-buses", buses, 1,
+> +						 ARRAY_SIZE(buses));
+> +	if (rc < 0 && rc != -EINVAL) {
+> +		dev_err(&ctlr->dev, "%pOF has invalid 'spi-buses' property (%d)\n",
+> +			nc, rc);
+> +		return rc;
+> +	}
+> +
+> +	if (rc == -EINVAL) {
+> +		/* Default when property is omitted. */
+> +		spi->buses = BIT(0);
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 06c249110c8b..fe4d1cf479c2 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -192,11 +192,14 @@ void intel_unlock_cpuid_leafs(struct cpuinfo_x86 *c)
- 		return;
- 
- 	/*
--	 * The BIOS can have limited CPUID to leaf 2, which breaks feature
--	 * enumeration. Unlock it and update the maximum leaf info.
-+	 * Intel CPUs have an MSR bit to limit CPUID enumeration to CPUID(0x2),
-+	 * which can be set by old BIOSes before booting Linux.  If enabled,
-+	 * unlock the CPU's full CPUID range and rescan its CPUID table.
- 	 */
--	if (msr_clear_bit(MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE_LIMIT_CPUID_BIT) > 0)
--		c->cpuid_level = cpuid_eax(0);
-+	if (msr_clear_bit(MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE_LIMIT_CPUID_BIT) > 0) {
-+		cpuid_parser_scan_cpu(c);
-+		c->cpuid_level = cpuid_leaf(c, 0x0)->max_std_leaf;
-+	}
- }
- 
- static void early_init_intel(struct cpuinfo_x86 *c)
--- 
-2.49.0
+For backwards compatibility, the default bus for CS 1 on gqspi must be 1
+and not 0. Ideally there would be some hook for the master to fix things
+up when the slaves are probed, but that doesn't seem to exist. I was
+thinking about doing this with OF changesets. Do you have any better
+ideas?
 
+--Sean
+
+> +	} else {
+> +		for (idx = 0; idx < rc; idx++) {
+> +			if (buses[idx] >= ctlr->num_buses) {
+> +				dev_err(&ctlr->dev,
+> +					"%pOF has out of range 'spi-buses' property (%d)\n",
+> +					nc, buses[idx]);
+> +				return -EINVAL;
+> +			}
+> +			spi->buses |= BIT(buses[idx]);
+> +		}
+> +	}
+> +
+>  	/* Device DUAL/QUAD mode */
+>  	if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
+>  		switch (value) {
+> @@ -3072,6 +3095,7 @@ struct spi_controller *__spi_alloc_controller(struct device *dev,
+>  	mutex_init(&ctlr->add_lock);
+>  	ctlr->bus_num = -1;
+>  	ctlr->num_chipselect = 1;
+> +	ctlr->num_buses = 1;
+>  	ctlr->slave = slave;
+>  	if (IS_ENABLED(CONFIG_SPI_SLAVE) && slave)
+>  		ctlr->dev.class = &spi_slave_class;
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 4c087009cf97..bc45d70e8c45 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -187,6 +187,11 @@ struct spi_device {
+>  	struct device		dev;
+>  	struct spi_controller	*controller;
+>  	u32			max_speed_hz;
+> +	/*
+> +	 * Bit flags indicating which buses this device is connected to. Only
+> +	 * applicable to multi-bus controllers.
+> +	 */
+> +	u8 			buses;
+>  	u8			chip_select[SPI_CS_CNT_MAX];
+>  	u8			bits_per_word;
+>  	bool			rt;
+> @@ -570,6 +575,14 @@ struct spi_controller {
+>  	 */
+>  	u16			num_chipselect;
+>  
+> +	/*
+> +	 * Some specialized SPI controllers can have more than one physical
+> +	 * bus interface per controller. This specifies the number of buses
+> +	 * in that case. Other controllers do not need to set this (defaults
+> +	 * to 1).
+> +	 */
+> +	u16			num_buses;
+> +
+>  	/* Some SPI controllers pose alignment requirements on DMAable
+>  	 * buffers; let protocol drivers know about these requirements.
+>  	 */
+> -- 
+> 2.43.0
+> 
+> 
+> 
