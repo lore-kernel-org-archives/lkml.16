@@ -1,223 +1,347 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2062.outbound.protection.outlook.com [40.107.220.62])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DDE2F4334
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749748722; cv=fail; b=aCSi0FX2YmsV0/fxy087PUoPHBhz4RIGwLtqyK6QsHT+2CEWUbnGiGR3GPsuVPViFnBAlYZ66oTG7Vjpv9SGK+pnJ0YmaLeqv87fmdHc5sEKDRd4jKAj79DPz9hqb1gOzvlPEk2CmmA5PcbqYy2jmI+wUyxytY+q5SgfDoY1KXE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749748722; c=relaxed/simple;
-	bh=DwG9cwzVS/GF+CpYTR1fuFgF+K949oAlcwc7sI8wsDs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oouI7a2HmtBUCLXT3iKowWnvjSLUmyILVH0RoR/Z/lJS3qys8JWFndM/qKipazzEXOET+EcVgMHhnEPiFWPTcYwL19QtYk9/mtf0yzdA/4QuTQXuIUUd/m3liTHe3iId8oZZkVbXhqQnche5eEzqG0GSUx5kO4vqKAce1am5Qmw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ri95mwKZ; arc=fail smtp.client-ip=40.107.220.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91F919A2A3
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749748731; cv=none; b=EOwRA21dS7KTmmfGv8J96VOsG3k7SGHdgBNlc/JsJKp96uD8ZCUefJhlGW7dZfiiAcV04fjgoIS9LNxfhQuq19+5NeKBjxmxNKc45hBDpqCezfdOTLdvHccxTJrMN5eBR7EWkZ5Kqi/pNud6ADDeva/QZq9ZNDG0jvJgzqEb4I4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749748731; c=relaxed/simple;
+	bh=cn88p5R3Fk3fbeYuWcR19hLDcM8Ds/dn8XfTcbw4Hfg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sM7kw+PHn6L5fuHjJbDHIx8kMMPM9zx7gl0hPdADyR2qKL/FGgEcfaph+O0pwMMxuM59ubIqDkHjtQKlcTrBi3+KXkj9jE8wwR11jmqI8ffqXLrr3lgaZU7coUVjYtmbp8RIMztwawm98BXazn85mmv6x3bvFA1OqhqMNxQD4xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nC62XfK9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ri95mwKZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kn1qIZii5FgrkvQjcXY3xsTsN5FelsO96fkEVGCKLcCkoiQ+K6TdRrvpID1VXT/p0zOXMy0V/F/KpIBKKQSMrMKUaE0crWR8OUaJI7UDKh9ReoTAhyRbO5dSPYMc2ObDYzP0IDqCkswIWUp66r80r5NtxOgK1fp/EkagZY0DR2nhnjl3o2A+nckUTrFED4SRB8zsNQ09TtgoM4vKjACw11qrSiimrzNboisEYb9aUJOcbTZgUSF+c60A/RK2VIXZGogF0O8VgHhQEPN/9WiOf7bQLZseoIr+Jd9WwKSWNiqVTSoGyb0G7bU9KfBfUfAEthDfOkvS2MezchOp3LoIjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/QHqWUBL9tixbYxZlMXAPDyRypAcJoqwUk88QBoGlY0=;
- b=CEeajWAXbh2qo1UHFKFt/ud7QcNq5eG6+4sEdQZ0cGM5uVJbKKJ19hvkRRVUl9WecH0itDQTPwXENxF7ZqvHvuuAjYNyhWhPQvVJdnoK2a1+tfxVzWcdTFoVuOuPHfcMTQVpib7OPJJy23PbhaKQsgyb44QWX0Ht68oJsBoNDvDGoGUzgH2Kd4I0saP8l1u+kDYw8Pz5bTPx3LxdBDgI91vlUWULVEInuriXJxJcuVWThP992PkU5OoEYa3cGHVX023K0yvSzhUKDOm46YsAspKplJ3gQngrJOxL//SpTs3TQpbQaxzX9nX6kBs7opdtR/ZKHqNZl+Z/+96RIJu/OA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/QHqWUBL9tixbYxZlMXAPDyRypAcJoqwUk88QBoGlY0=;
- b=ri95mwKZ646dsYSmreiXDgbXu/VAVdN0gDfVeHDkeNNx5pFAi/0JAfng/iUydCl/mkOKis57mo405qeVxvTcn3Lu/2SYAxEP9DmQH7qhmuB1kznjxSvYv9PWWfgpfhqK6i3gXsHavTCJe9dJMRiK1ZyIoibm2rQN2HfCYKzE0l/txUKCwyZmL2pK2TCUn7kBJQNGK99MpkqVNjiTe/GZNgE0x/7POKU/XAjlYVmk8/O/+F13KSka7x0gV4B2DkI7bEJ5fn3iJFVtnwa9gp0aTzkwMXpZmZA/kEgPah4kcSE9+VNaZtSX0qPKtDxWTHl3oiyf/lwdz0LyKj0jxGS1Qw==
-Received: from BLAPR03CA0138.namprd03.prod.outlook.com (2603:10b6:208:32e::23)
- by MN2PR12MB4373.namprd12.prod.outlook.com (2603:10b6:208:261::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
- 2025 17:18:37 +0000
-Received: from BN1PEPF00004680.namprd03.prod.outlook.com
- (2603:10b6:208:32e:cafe::f6) by BLAPR03CA0138.outlook.office365.com
- (2603:10b6:208:32e::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.22 via Frontend Transport; Thu,
- 12 Jun 2025 17:18:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN1PEPF00004680.mail.protection.outlook.com (10.167.243.85) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Thu, 12 Jun 2025 17:18:37 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 12 Jun
- 2025 10:18:23 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 12 Jun
- 2025 10:18:23 -0700
-Received: from nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Thu, 12 Jun 2025 10:18:20 -0700
-Date: Thu, 12 Jun 2025 10:18:18 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-CC: "jgg@nvidia.com" <jgg@nvidia.com>, "will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org"
-	<joro@8bytes.org>, "ddutile@redhat.com" <ddutile@redhat.com>, "Liu, Yi L"
-	<yi.l.liu@intel.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"jsnitsel@redhat.com" <jsnitsel@redhat.com>, "praan@google.com"
-	<praan@google.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "baolu.lu@linux.intel.com"
-	<baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v1 07/12] iommu/arm-smmu-v3: Implement
- arm_smmu_get_viommu_size and arm_vsmmu_init
-Message-ID: <aEsL2mxfO0x3isog@nvidia.com>
-References: <cover.1749488870.git.nicolinc@nvidia.com>
- <55b1d69b2cceb685d4eb728a7a53572a9147993a.1749488870.git.nicolinc@nvidia.com>
- <BN9PR11MB52764E40612C1293699E43F98C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nC62XfK9"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CHHfHj027161
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:18:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=FAfd/466aJtk26pdkcE23i
+	lUVjqGoKW+Tnh2zkx2NW4=; b=nC62XfK9UZzFHDI4g+xpU2QOqAXn6b+A7Prl/w
+	YXxKtazHEVz3vLsP4Xars2nfNDMAVmBlYl8mCfFr4WzH8vJ+n2Jo/QhK9ubT4cDy
+	CSsTOEjMXIn4d8npkbKCXxqxhzwomRigFgdKvCevJsmUOVaKrypvBmzSEjlvmvdd
+	W9Fi9OJe8MQEiP9baIGvJt5umZd3AztiO5NW6dMTpov1xTr8pDVxQ03pGdWKIG6A
+	0eDP7jYdfNzLpfGeB/aaoUuy1khB3PBoZFNzCoHiVe12C1sbRih/XdNbo/na6rtH
+	cvCe+iiDsV5XjtHZdgnALjA7//bwmj610dSumU89utDFw5dg==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccvh8qn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:18:48 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-23592f5fcb0so16683315ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:18:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749748727; x=1750353527;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FAfd/466aJtk26pdkcE23ilUVjqGoKW+Tnh2zkx2NW4=;
+        b=Elr6jkhk+tEUkCTYwW6hwuu4l1k0AF9LlHdkqRpLBp/xvu9P9+WnLl1v/zt25fDPX9
+         iRJzNXR3i/iIG5bO7POZVQLOATq0GMvG8I3iLpegxceG0qExn/LEgrzosg8UdOMI0zDY
+         QC/IgbeMgF8yTTSAmexZhr1MCFT4U58gjbX+8eAih5ZSLhUFobUjH5qBb9exPNfn4yMk
+         EqRTaSlXdb46CAEM30t6hxAFAO78+WAf0dvPuwY6bgiBk7wrrndQQoTzy9uhT/KkNcsl
+         xPDe/wnZH2g+hIyaGYQUGR871X2R6msgdS0ehijyQCmLXIgGZuq1b6qkalTUO5CPDdco
+         4U7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ+rNVwGXrODj5uiCCzJfObXe+3jLQxztZbubpvOtqV07P8eJqx8o/ctZ9VYel4Ldh0DO4c04g5wxdXa4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1h4hutpsEaCzAwgkv/3OfmYe0l0zMFHEXH46Ro+ompX0AWWGQ
+	TSr8XR0vL9DPzRbeSw2lp2OB1yCwcsF2ErBnl+6s3J2SZGkUDosyOlaHb/c0fyCVN9BBSXNCee3
+	7MTKgfoPcxyheZSU9rikyTdQ0Rzx9rrxzhew3QDhJnRG5vM7lqfI29x9LBZqaH2Vm7Zk=
+X-Gm-Gg: ASbGncuJiaNEC8V6s91PGcXQHAOgJGJ4FR9xCLT4Rkku2Q+KtlxM7P0CmvTpCtg3vAb
+	5H6iX0AFOUYk5AW8N08zOccmnTBTgqyvvf3o/YeHV5f9cpcop6PnJa97IU479Xl+FPVyguGuMOm
+	1mN5VwRHb4Z6sD488bJU/tXeLh98SRlzj9Bs8HPqmMovyytAG+ptYbpjsKDzHQm3J6PKUb0kctJ
+	GYz1rmwjCplQ43cgUp6nphqkCCaX+sgxplVDm/rAhOZbFRJimaOvZFlGCd3OEqd+hDiaj9rCZ2c
+	EnCurs18w2s2nYJaARX4n75Tu4kqZjB5y7PzhMBGGthzU3wn9tx2ikhz7V7Lf+2gPfeCoSkCPei
+	IkY9voQsnxT68zPbytcTM7MmLT7pNhTBEAGPEtWGtZqCtpdk=
+X-Received: by 2002:a17:902:d489:b0:234:a992:96d8 with SMTP id d9443c01a7336-23641abe52fmr121980145ad.19.1749748727203;
+        Thu, 12 Jun 2025 10:18:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEb3hmyzcuYh62ytDN+Gfk1knVYsAAA29UVORbZv5+sAlmWUmsH84jXYEFz2PZxZTBqay4zGA==
+X-Received: by 2002:a17:902:d489:b0:234:a992:96d8 with SMTP id d9443c01a7336-23641abe52fmr121979685ad.19.1749748726701;
+        Thu, 12 Jun 2025 10:18:46 -0700 (PDT)
+Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd629375fsm1411495a12.45.2025.06.12.10.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 10:18:46 -0700 (PDT)
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Date: Thu, 12 Jun 2025 22:48:20 +0530
+Subject: [PATCH ath-next] wifi: ath12k: handle regulatory hints during mac
+ registration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52764E40612C1293699E43F98C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004680:EE_|MN2PR12MB4373:EE_
-X-MS-Office365-Filtering-Correlation-Id: 951b2209-c55e-42c8-a63a-08dda9d52b56
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|7416014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KMapU/4r7Y3z39YpTL4RE3Ky8uhnfdLtdILEDMP+SHdV2kX+9xB4Asu57z9p?=
- =?us-ascii?Q?rhwhPFkRJ5Z20ASQ2LX+DDo2uVnZ4BFXr7us3OPIQm0QSYolthpqnqdcZSrL?=
- =?us-ascii?Q?uCvGpg7D1w74SBHs5XqvtwKM+JCW6T3sYGJQo737CA9cP/YQOqPACCl3iyYu?=
- =?us-ascii?Q?XEmzlmar+T2hm53d0e8wWjmHqjTYBNe0zSZ7I+u5UmqxQvqQFmK+C+o0dMpe?=
- =?us-ascii?Q?XHsAiAbzmpYc/2U9JxL2Qf2gFcUec9slyGYsjY8SBXSGMcKOvp0K+I780xgw?=
- =?us-ascii?Q?aAGUFSV2GuFVbU7QYJnA3d8HzgGrO8ZST/4U+H1ZZf7s+qfpmdjBBZfK4gwl?=
- =?us-ascii?Q?NOsuL+kSUP1T1xHJXmnYB4uco5Uw/MEgnY938Ted8/PW6x6RF+DI3grSsqYh?=
- =?us-ascii?Q?/7L51ecCvOOCeOM1r65bzSiUJvTgLK/teXPhVoX3Q/Q//UCge7EH718p5mUb?=
- =?us-ascii?Q?gUQFLKmGMR3JyIK9kTYP8T9cB/IMOWFNnG3wl3Hb5ByyCuIwdIDrZajQsZMs?=
- =?us-ascii?Q?M0r5KEqTS+HdSzzH43xrMg6tgLwT/+Ao3IOi2TXeYM8LUKpC/IdOultBo2bS?=
- =?us-ascii?Q?Hs94JSnSAAIpp8nWwyDaItokYfkkN0dYLW79BWxXabODkPk00asUJZbIWkeN?=
- =?us-ascii?Q?CDkgDj0XzT01QgQVOCV6DvtlqE9YptsFXVHqgq2gZ2xwe6AfMKEw/X1kohaw?=
- =?us-ascii?Q?eXrcA9uVXUGhPLg9yVr6Tv9nLU86jz/SWeGvaQ7GXRQjvMvDxb3xxER5CwoH?=
- =?us-ascii?Q?CWWZqRNsrGjkLRL+mweCUoKOhQym0j9EE8Gi5Z3SX5T4USPOGap0EYQbtT2n?=
- =?us-ascii?Q?w3BgtEnUacx5vOpDpxmtBDs9Om8mt4u/vXzi4Ro/iZNh3C4vYKBHnVDW7Qhg?=
- =?us-ascii?Q?KSvtmeDxAD/S2TwR6RmmAWnVBo7RTY80D+tQhx6sAsBFWsE3qEkeyk2oVnQ2?=
- =?us-ascii?Q?4dCUgEYhvvkQ2SV8PlbCetRLvb1h7JO0juCXzwzvWmzTlasfvglAcnvQ/HU/?=
- =?us-ascii?Q?E+buN9ZgDfxGVRKt53MzfXMpffI2oxJbhqCIubg1EEumqiMV+eMlR1r0H7Tk?=
- =?us-ascii?Q?PbknDoQPiM/qNov9In9p7uQIoCqul9fN1TTsTa/iXPWjhNm1UV18UcpW1b+Y?=
- =?us-ascii?Q?pwbNzc5ZY44wBf3KIdlkSBKIQl5+qrUQWP5exgPWSsZAVh2V+AKk5oT1Ivdl?=
- =?us-ascii?Q?llVNAgrVSoxh2OFpgZDf02PecT5PM+A5mXjKA/NNKoqpv94LlqhA/51/G81j?=
- =?us-ascii?Q?QAPWkhpkGF+qN7lSrdIv4QtCJsoVlgAIsevZw/kfTyrpwUZjb5GwQaX1vwg2?=
- =?us-ascii?Q?PiAeWxYcq8k4ukCk/5xkKSDca8lXIIKd8Hck8e7Tm2+F3erEiv7QqcCgcsqc?=
- =?us-ascii?Q?zGVLvBnUoHCwj9jFjcxocIddduv4Slb8sC8QOe/wcPjTpyXpshiqmVOkO/gP?=
- =?us-ascii?Q?qYlRq1XGUEpqV2fw7eOJcr7ocDghspcKnFFdg1xrHRvpNWCvh+7ApzqSboAE?=
- =?us-ascii?Q?CCcYI/BL2v40c4tMxZZFEGgseHx3ar5F7Iqe?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(7416014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 17:18:37.4600
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 951b2209-c55e-42c8-a63a-08dda9d52b56
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004680.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4373
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-handle_user_regd_update_hints_during_insmod-v1-1-576bd0f6dbe0@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIANsLS2gC/6XPwW7DIAwA0F+pOI8qkFBIT/uPqkIoNomlBjogU
+ acq/z6Wyy7bYdvFkm3Zz36yjIkws/PhyRKulCmGmoiXAxsmF0bkBDVnspGqUVLyWoQb2qXO2YQ
+ j2OUOrqCdKJRsYUkURkshzxF4JwctELVvzYnVjfeEnh67dmGuTDzgo7Br7UyUS0zv+xmr2Pt/E
+ lfBBTfOOwOq1aZ3rzHn49vibkOc52MNO7fKfxCyEh2YzjdeNdrrH4j2izgJ8Tui/fyi70HhgOB
+ 7/w2xbdsH8kOorb0BAAA=
+X-Change-ID: 20250522-handle_user_regd_update_hints_during_insmod-42c71ee7f386
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: CLGuVmWB1B56rllnDQ7TGG08ifG0_DA9
+X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=684b0bf8 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=cjyl3gcxlCMcS8tmzmQA:9
+ a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-GUID: CLGuVmWB1B56rllnDQ7TGG08ifG0_DA9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEzMyBTYWx0ZWRfX+0os2WEb8I9r
+ D/5bhynisdZ83dABlol0L7SLn5gG7jnwaOiVZdZTNNnUi7jad2pg77OSYKMSTmhisZoSVSlessp
+ kR9zrHjUyzSxoiwCzeVqGkmq7hMlLcHtf7QUxL0tYnOrKoT54MFF4OVHuDBZhwAjlQ7FUEVnXr7
+ eA8DbHb6gzY5pdmWdFMz1+gZZco4QBdjma+jFb579oTX85IfLE8nihQD8hr81ciUtjQZB28QuOA
+ j0qsL+D7gNc6MFWbz3AUPKHyL+RFeDc7ibV1qmLbnTS5AUknv2g2POkmobDiVBud551UIp+uN7G
+ LiX9jZ7cu0puhuXea4ZKMNoDJogmBVOfBfosfmNMBKFPbqVRnZOOKQYdutumEUOdqKs8CmBtC5k
+ 09+/meyCOMI5TZG4BFeNfGWKUdODIsZTkV52anOr9UE8pgKtr3CSSHQ2YzjJTAZ/jdjaY/yo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506120133
 
-On Thu, Jun 12, 2025 at 08:20:30AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Tuesday, June 10, 2025 1:14 AM
-> > 
-> > +int arm_smmu_get_viommu_size(enum iommu_viommu_type
-> > viommu_type,
-> > +			     struct device *dev, size_t *viommu_size)
-> > +{
-> > +	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
-> > +	struct arm_smmu_device *smmu = master->smmu;
-> > +
-> > +	if (!(smmu->features & ARM_SMMU_FEAT_NESTING))
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	/*
-> > +	 * FORCE_SYNC is not set with FEAT_NESTING. Some study of the
-> > exact HW
-> > +	 * defect is needed to determine if arm_vsmmu_cache_invalidate()
-> > needs
-> > +	 * any change to remove this.
-> > +	 */
-> > +	if (WARN_ON(smmu->options &
-> > ARM_SMMU_OPT_CMDQ_FORCE_SYNC))
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	/*
-> > +	 * Must support some way to prevent the VM from bypassing the
-> > cache
-> > +	 * because VFIO currently does not do any cache maintenance.
-> > canwbs
-> > +	 * indicates the device is fully coherent and no cache maintenance is
-> > +	 * ever required, even for PCI No-Snoop. S2FWB means the S1 can't
-> > make
-> > +	 * things non-coherent using the memattr, but No-Snoop behavior is
-> > not
-> > +	 * effected.
-> > +	 */
-> > +	if (!arm_smmu_master_canwbs(master) &&
-> > +	    !(smmu->features & ARM_SMMU_FEAT_S2FWB))
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
-> > +		return -EOPNOTSUPP;
-> 
-> it's more intuitive to check it first.
+If a regulatory notification is there in the system while the hardware is
+being registered, it attempts to set the new regulatory country. However,
+ath12k currently boots with a default country derived from the BDF. If this
+default country differs from the one provided in the notification, a race
+condition can occur while updating the regulatory information back to
+userspace. This potentially leads to driver having the incorrect regulatory
+applied.
 
-Agreed. But I kinda intentionally left it here. The SMMU driver
-will have something like an impl_op->get_viommu_size in the HW
-queue series. That can simply insert a piece:
-===============================================================
-@@ -415,6 +415,12 @@ int arm_smmu_get_viommu_size(enum iommu_viommu_type viommu_type,
-            !(smmu->features & ARM_SMMU_FEAT_S2FWB))
-                return -EOPNOTSUPP;
+For example, suppose the regulatory domain for France (FR) is already
+applied, and then the driver is loaded with a BDF that has the United
+States (US) country programmed. When the driver finishes loading, the
+regulatory domain shown in phyX still reflects the US regulatory settings.
+This is incorrect, as the driver had already received a notification for
+FR during hardware registration, but failed to process it properly due to
+the race condition.
 
-+       if (smmu->impl_ops && smmu->impl_ops->vsmmu_size &&
-+           viommu_type == smmu->impl_ops->vsmmu_type) {
-+               *viommu_size = smmu->impl_ops->vsmmu_size;
-+               return 0;
-+       }
+The race condition exists during driver initialization and hardware
+registration:
+- On driver load, the firmware sends BDF-based country regulatory rules,
+  which are stored in default_regd via ath12k_reg_handle_chan_list().
+
+- During hardware registration, a regulatory notification is triggered
+  through:
+    ath12k_mac_hw_register()
+      -> ieee80211_register_hw()
+        -> wiphy_register()
+          -> wiphy_regulatory_register()
+            -> reg_call_notifier()
+
+  This sends a country code to the firmware, which responds with updated
+  regulatory rules.
+
+- After registration, ath12k_mac_hw_register() calls ath12k_regd_update(),
+  which copies default_regd and passes it to the upper layers.
+
+The race occurs between the firmware's response and the execution of
+ath12k_regd_update(). If the firmware's new rules are processed before the
+update call, the correct values are used. Otherwise, outdated boot-time
+country settings are exposed to userspace.
+
+To resolve this issue, introduce a completion mechanism within the hardware
+group (ah). Trigger this completion whenever a regulatory change is
+requested from the firmware. Then, in ath12k_regd_update(), wait for the
+firmware to complete its regulatory processing before proceeding with the
+update.
+
+This ensures that during driver load, the default country is processed
+first. However, before ath12k_regd_update() is called, the new regulatory
+notification will have already been received by the driver. As a result, it
+will wait for the firmware's regulatory processing to complete, and only
+the final, correct regulatory domain will be updated to userspace.
+
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
+
+Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+---
+ drivers/net/wireless/ath/ath12k/core.c |  4 ++++
+ drivers/net/wireless/ath/ath12k/core.h |  1 +
+ drivers/net/wireless/ath/ath12k/mac.c  | 15 +++++++++++++++
+ drivers/net/wireless/ath/ath12k/reg.c  | 12 ++++++++++++
+ drivers/net/wireless/ath/ath12k/reg.h  |  2 ++
+ drivers/net/wireless/ath/ath12k/wmi.c  | 13 ++++++++++++-
+ 6 files changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
+index ebc0560d40e3419130e4caf01c9b91bd9affb3bd..9c18a706dc3ae3b8c5b95d8575e778c8a9c898ba 100644
+--- a/drivers/net/wireless/ath/ath12k/core.c
++++ b/drivers/net/wireless/ath/ath12k/core.c
+@@ -1470,6 +1470,7 @@ static void ath12k_core_pre_reconfigure_recovery(struct ath12k_base *ab)
+ 			complete(&ar->vdev_setup_done);
+ 			complete(&ar->vdev_delete_done);
+ 			complete(&ar->bss_survey_done);
++			complete(&ar->regd_update_completed);
+ 
+ 			wake_up(&ar->dp.tx_empty_waitq);
+ 			idr_for_each(&ar->txmgmt_idr,
+@@ -1509,6 +1510,9 @@ static void ath12k_update_11d(struct work_struct *work)
+ 		ar = pdev->ar;
+ 
+ 		memcpy(&ar->alpha2, &arg.alpha2, 2);
 +
-        if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
-                return -EOPNOTSUPP;
++		reinit_completion(&ar->regd_update_completed);
++
+ 		ret = ath12k_wmi_send_set_current_country_cmd(ar, &arg);
+ 		if (ret)
+ 			ath12k_warn(ar->ab,
+diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
+index 941db6e49d6eaeb03783f7714d433259d887820b..329f3e490a713b179413f73a4024448aedc363fd 100644
+--- a/drivers/net/wireless/ath/ath12k/core.h
++++ b/drivers/net/wireless/ath/ath12k/core.h
+@@ -804,6 +804,7 @@ struct ath12k {
+ 	enum ath12k_11d_state state_11d;
+ 	u8 alpha2[REG_ALPHA2_LEN];
+ 	bool regdom_set_by_user;
++	struct completion regd_update_completed;
+ 
+ 	struct completion fw_stats_complete;
+ 
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index 88b59f3ff87af8b48cb3fafcd364fd9ced4ff197..ef2e8398cbe8723c020aff03da5db7fa7fb2245e 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -10900,6 +10900,7 @@ ath12k_mac_op_reconfig_complete(struct ieee80211_hw *hw,
+ 			struct wmi_set_current_country_arg arg = {};
+ 
+ 			memcpy(&arg.alpha2, ar->alpha2, 2);
++			reinit_completion(&ar->regd_update_completed);
+ 			ath12k_wmi_send_set_current_country_cmd(ar, &arg);
+ 		}
+ 
+@@ -12116,6 +12117,16 @@ static int ath12k_mac_hw_register(struct ath12k_hw *ah)
+ 		goto err_cleanup_if_combs;
+ 	}
+ 
++	/* Boot-time regulatory updates have already been processed.
++	 * Mark them as complete now, because after registration,
++	 * cfg80211 will notify us again if there are any pending hints.
++	 * We need to wait for those hints to be processed, so it's
++	 * important to mark the boot-time updates as complete before
++	 * proceeding with registration.
++	 */
++	for_each_ar(ah, ar, i)
++		complete(&ar->regd_update_completed);
++
+ 	ret = ieee80211_register_hw(hw);
+ 	if (ret) {
+ 		ath12k_err(ab, "ieee80211 registration failed: %d\n", ret);
+@@ -12143,6 +12154,9 @@ static int ath12k_mac_hw_register(struct ath12k_hw *ah)
+ 
+ 			memcpy(&current_cc.alpha2, ab->new_alpha2, 2);
+ 			memcpy(&ar->alpha2, ab->new_alpha2, 2);
++
++			reinit_completion(&ar->regd_update_completed);
++
+ 			ret = ath12k_wmi_send_set_current_country_cmd(ar, &current_cc);
+ 			if (ret)
+ 				ath12k_warn(ar->ab,
+@@ -12215,6 +12229,7 @@ static void ath12k_mac_setup(struct ath12k *ar)
+ 	init_completion(&ar->scan.on_channel);
+ 	init_completion(&ar->mlo_setup_done);
+ 	init_completion(&ar->completed_11d_scan);
++	init_completion(&ar->regd_update_completed);
+ 
+ 	INIT_DELAYED_WORK(&ar->scan.timeout, ath12k_scan_timeout_work);
+ 	wiphy_work_init(&ar->scan.vdev_clean_wk, ath12k_scan_vdev_clean_work);
+diff --git a/drivers/net/wireless/ath/ath12k/reg.c b/drivers/net/wireless/ath/ath12k/reg.c
+index 2598b39d5d7ee9b24ad8ed5d6de1bc5bbc6554e0..079dcb6d83df4eb487fb0dbf4088fb8cacca8f6e 100644
+--- a/drivers/net/wireless/ath/ath12k/reg.c
++++ b/drivers/net/wireless/ath/ath12k/reg.c
+@@ -102,6 +102,8 @@ ath12k_reg_notifier(struct wiphy *wiphy, struct regulatory_request *request)
+ 
+ 	/* Send the reg change request to all the radios */
+ 	for_each_ar(ah, ar, i) {
++		reinit_completion(&ar->regd_update_completed);
++
+ 		if (ar->ab->hw_params->current_cc_support) {
+ 			memcpy(&current_arg.alpha2, request->alpha2, 2);
+ 			memcpy(&ar->alpha2, &current_arg.alpha2, 2);
+@@ -272,9 +274,19 @@ int ath12k_regd_update(struct ath12k *ar, bool init)
+ 	struct ieee80211_regdomain *regd, *regd_copy = NULL;
+ 	int ret, regd_len, pdev_id;
+ 	struct ath12k_base *ab;
++	long time_left;
+ 
+ 	ab = ar->ab;
+ 
++	time_left = wait_for_completion_timeout(&ar->regd_update_completed,
++						ATH12K_REG_UPDATE_TIMEOUT_HZ);
++	if (time_left == 0) {
++		ath12k_warn(ab, "Timeout while waiting for regulatory update");
++		/* Even though timeout has occurred, still continue since at least boot
++		 * time data would be there to process
++		 */
++	}
++
+ 	supported_bands = ar->pdev->cap.supported_bands;
+ 	reg_cap = &ab->hal_reg_cap[ar->pdev_idx];
+ 
+diff --git a/drivers/net/wireless/ath/ath12k/reg.h b/drivers/net/wireless/ath/ath12k/reg.h
+index 8af8e9ba462e90db3eb137885d0acd4b1cb2286e..fb508302c7f0f1fea2588ad4cf9d813da574d06b 100644
+--- a/drivers/net/wireless/ath/ath12k/reg.h
++++ b/drivers/net/wireless/ath/ath12k/reg.h
+@@ -13,6 +13,8 @@
+ struct ath12k_base;
+ struct ath12k;
+ 
++#define ATH12K_REG_UPDATE_TIMEOUT_HZ	(3 * HZ)
++
+ #define ATH12K_2GHZ_MAX_FREQUENCY	2495
+ #define ATH12K_5GHZ_MAX_FREQUENCY	5920
+ 
+diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
+index 60e2444fe08cefa39ae218d07eb9736d2a0c982b..047d7a0f0e7423759f7cf05dff4aafbd3b9697d7 100644
+--- a/drivers/net/wireless/ath/ath12k/wmi.c
++++ b/drivers/net/wireless/ath/ath12k/wmi.c
+@@ -6143,6 +6143,7 @@ static void ath12k_wmi_htc_tx_complete(struct ath12k_base *ab,
+ static int ath12k_reg_chan_list_event(struct ath12k_base *ab, struct sk_buff *skb)
+ {
+ 	struct ath12k_reg_info *reg_info;
++	struct ath12k *ar;
+ 	u8 pdev_idx;
+ 	int ret;
+ 
+@@ -6198,7 +6199,7 @@ static int ath12k_reg_chan_list_event(struct ath12k_base *ab, struct sk_buff *sk
+ 	kfree(reg_info);
+ 
+ 	if (ret == ATH12K_REG_STATUS_VALID)
+-		return ret;
++		goto out;
+ 
+ fallback:
+ 	/* Fallback to older reg (by sending previous country setting
+@@ -6212,6 +6213,16 @@ static int ath12k_reg_chan_list_event(struct ath12k_base *ab, struct sk_buff *sk
+ 	WARN_ON(1);
+ 
+ out:
++	ar = ab->pdevs[pdev_idx].ar;
++
++	/* During the boot-time update, 'ar' might not be allocated,
++	 * so the completion cannot be marked at that point.
++	 * This boot-time update is handled in ath12k_mac_hw_register()
++	 * before registering the hardware.
++	 */
++	if (ar)
++		complete(&ar->regd_update_completed);
++
+ 	return ret;
+ }
+ 
 
-===============================================================
+---
+base-commit: 8270f43193a0d097659eca55e701fd6818708945
+change-id: 20250522-handle_user_regd_update_hints_during_insmod-42c71ee7f386
 
-Otherwise, this following patch has to move the type check again.
-
-> btw does it make sense to also add below here?
-> 	if (s2_parent->smmu != master->smmu)
-> 		return ERR_PTR(-EINVAL);
-
-I can't find a legit reason to forward the s2_parent to run this
-sanity. "struct device *" is forwarded since the driver needs to
-know the smmu pointer: A for the compatibility checks; b for the
-smmu->impl_ops mentioned above.
-
-Thanks
-Nicolin
