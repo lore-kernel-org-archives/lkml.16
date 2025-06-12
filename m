@@ -1,59 +1,79 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4787DA47
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167E638B;
+	Thu, 12 Jun 2025 00:14:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749686921; cv=none; b=Bt3QBrOGbFcLWnyTLMyiFeB3ewj7rjl6n7vD9P4bqEXcg3RYUstHaDrN2GgU5U1jj+RiPDWgHTzQ0EKUXLTOk4cA1MX3/uj1HioJK/F49xJuc9VMpFSlOJV5RvQQq3+DWNU1loyjWB9sp1lBFMwXk5PIVD9TSqy5xJCVvlV9fuA=
+	t=1749687295; cv=none; b=P2AYvGmxDNhDvNgyrC6ooZOmU3vzrnmg8BA2yHx7o+m02ijTLo1tH+lcofBSRM6g//tFta3+wmMn+NAf7SgVyU5ymIicdNDs/3q0A0ksHnQqSoWFyw5lm1R4iWQ98Tbh0ercDqfO1w4zUo7naQg9tzJZKqYiaXLRD/Rya8PPemk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749686921; c=relaxed/simple;
-	bh=dO1aGfOK0X87wPcIYoNPCRhKa9bKA09E+iK5IxpsaZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=q6IvtaPcm9Tmpy8gIckGEOsc1FW/5YEt2fpvFu5idmyu9sviV4dn9XJE7HvEl8ARnQ6Z/r5EMEw6KGlYndSaIKHGsjHyUi0YXIyV/VX0hYaEYyAnkrxJ79FnABn9ePEV/6DhUViMtmFxLkthftx4qevCxDFEXl6aFjeQMwiMIAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dh1fpUM0; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749687295; c=relaxed/simple;
+	bh=3+i/qQYgvBYTLJ9rk46HeDginwQWUDS8zT4mmWEEUrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tsZnLWSNpCQcEcnUR0vj3YW/MfN8vpzA4MzWnjEk7yvZrK6HQDH+j9qyiyiGKV0lfA/+Egv0eftK/Zkg3YqhCkAOJo1OWhzktpLZJJXfVeSdmnUj5YTP99S3TpaZ6lZ88uOq2KEvX0PeHMuLR297q3lirxkgVkxT04K+66nrkFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XncBIGu1; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dh1fpUM0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XncBIGu1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749686919; x=1781222919;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dO1aGfOK0X87wPcIYoNPCRhKa9bKA09E+iK5IxpsaZo=;
-  b=dh1fpUM0I16qJRR7ZKfMFxmxvFcKVcXXoi5YjMo1nCqhJdKoad0kdskj
-   2b/cX15Ji1rgv3LeLY29L7kY7KUr8R98sFf/pUsMu80kvt6Kz5pLiyVAo
-   eGx1kEKDSB1wj6dfJvZ77dvhg3ak/4Xu+6D8kWcFPUV9XXrUqcTbgngSQ
-   AwiG7S2jYa0eU2NbxFRXVfF/rz0cZjvTm2QSlivUDtYli3FFDAtmZF04j
-   1PjfcZ5ux02/AuxDNj7pWT4fFYcJx336nTGe8VR7JOtZbxpr8P3+49O1i
-   RgYB5hJjGuXB3B6Lz6xS9XjDclr5wv/9RT3p3yZRjroP9Xq1umFIWVBjy
-   A==;
-X-CSE-ConnectionGUID: VQ4RtehsTJ2p3sSG0xkqJQ==
-X-CSE-MsgGUID: lBhYkuamQeOGkTDGDi+mUQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51726706"
+  t=1749687293; x=1781223293;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3+i/qQYgvBYTLJ9rk46HeDginwQWUDS8zT4mmWEEUrE=;
+  b=XncBIGu1SREir3faycrrnQsT4ZjGpxzPRFdmSwRKqFmPWKl9SOg6EGq2
+   zupDldq756YW5ol87VGNm2/fIn/dV1s8h63tNh2wNfPTDUK0sJhsub86O
+   f/qn5IET3c8+/CxxWc3AqJ9simrY+Tw4ISofZ+Fi0ZPnSSR3oZccgqVpG
+   7+BtpjBdtajkf32XZl3+4pI32oNhKsPNrlJH1z6FadI55UHuckoYeS6a8
+   7qCem+QPxgMq+qrtUBnUv1z+diYkScGMF3ncnCzkBn7tHU8WsKC4OxCVH
+   OQjEoeTum0OPWXJxZqGn1oKeIDCt8qd1sSKGiU/sjAhKTFwn25X5MKNwN
+   g==;
+X-CSE-ConnectionGUID: 4AIsD6q7TnWHZWg/j6D5DA==
+X-CSE-MsgGUID: Z4TUn9f5TVC4ktVZoNGnoA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51727344"
 X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="51726706"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 17:08:39 -0700
-X-CSE-ConnectionGUID: OBv3cnc6SK26yAhoDhwVvg==
-X-CSE-MsgGUID: EVotz/hPRwy3RjVTZL1gfw==
+   d="scan'208";a="51727344"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 17:14:52 -0700
+X-CSE-ConnectionGUID: 1f0u85CwQt2U7n5U0sxH2w==
+X-CSE-MsgGUID: +x7J175lRBSblLkppAz+cg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="147899068"
-Received: from chhatrar-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.46])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 17:08:39 -0700
-Date: Wed, 11 Jun 2025 17:08:27 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-	Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: [PATCH] x86/its: Warn when microcode is old
-Message-ID: <20250611-its-warn-v1-1-02eb9a75ce9c@linux.intel.com>
-X-B4-Tracking: v=1; b=H4sIAN8ZSmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0ND3cySYt3yxKI83SQjS6MkQwMLS7NUYyWg8oKi1LTMCrBR0bG1tQA
- hxjEhWgAAAA==
-X-Change-ID: 20250611-its-warn-b292b10896e3
-X-Mailer: b4 0.14.2
+   d="scan'208";a="147842871"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 11 Jun 2025 17:14:47 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uPVae-000Ax0-2r;
+	Thu, 12 Jun 2025 00:14:44 +0000
+Date: Thu, 12 Jun 2025 08:14:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev,
+	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Simon Horman <horms@kernel.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Lei Wei <quic_leiwei@quicinc.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Michal Simek <monstr@monstr.eu>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Robert Hancock <robert.hancock@calian.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [net-next PATCH v6 06/10] net: pcs: Add Xilinx PCS driver
+Message-ID: <202506120722.o7HB1e60-lkp@intel.com>
+References: <20250610233134.3588011-7-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,35 +82,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250610233134.3588011-7-sean.anderson@linux.dev>
 
-A microcode update is required for IBPB to be effective against ITS. On
-Intel, X86_BUG_OLD_MICROCODE is set already when old microcode is detected.
-In such a case system is tainted and a warning is issued.
+Hi Sean,
 
-Also warn that userspace could be vulnerable to ITS.
+kernel test robot noticed the following build warnings:
 
-Suggested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
----
- arch/x86/kernel/cpu/bugs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+[auto build test WARNING on net-next/main]
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 7f94e6a5497d9a2d312a76095e48d6b364565777..7aa3ae00e6b4daa5e42217b66c50cd46d6bcc115 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1427,6 +1427,10 @@ static void __init its_select_mitigation(void)
- 		return;
- 	}
- 
-+	/* For IBPB to be effective against ITS */
-+	if (boot_cpu_has_bug(X86_BUG_OLD_MICROCODE))
-+		pr_warn("Old microcode, userspace may be vulnerable to ITS\n");
-+
- 	if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
- 	    !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)) {
- 		pr_err("RSB stuff mitigation not supported, using default\n");
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-net-Add-Xilinx-PCS/20250611-143544
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250610233134.3588011-7-sean.anderson%40linux.dev
+patch subject: [net-next PATCH v6 06/10] net: pcs: Add Xilinx PCS driver
+config: sh-kismet-CONFIG_COMMON_CLK-CONFIG_PCS_XILINX-0-0 (https://download.01.org/0day-ci/archive/20250612/202506120722.o7HB1e60-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250612/202506120722.o7HB1e60-lkp@intel.com/reproduce)
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250611-its-warn-b292b10896e3
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506120722.o7HB1e60-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for COMMON_CLK when selected by PCS_XILINX
+   WARNING: unmet direct dependencies detected for COMMON_CLK
+     Depends on [n]: !HAVE_LEGACY_CLK [=y]
+     Selected by [y]:
+     - PCS_XILINX [=y] && NETDEVICES [=y]
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
