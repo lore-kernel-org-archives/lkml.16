@@ -1,57 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046471E5718;
-	Thu, 12 Jun 2025 04:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA42231A4D;
+	Thu, 12 Jun 2025 04:01:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749700872; cv=none; b=FMEsa8kW49d+pvhwOGk0q1b6sTclqno55Kbo4oWW+JbdkUxkVWEb0jLuvRxTynmB8WgkZsCM6VnNVuPlJJm7o89RQWrcVvUfyZz/tWrx6tTUDu9gsgmAZbGcYKYJaRNraJ0fPSLmFjYV1XqKGZPU1zRF3kDB5mR4IKkBU1y6U04=
+	t=1749700872; cv=none; b=JPaLhz4NzvLvwIEa9Y8b3YN5t1t5y8gnG2+6nOIlXp49K8niBK2cbPmgybd3gYtc1kATiKjiMMZn2B2Dz3OBMKM5Ikth2AafByIXMpCq/9yNQzCp1+f9bktNdNfLYjlxAdx5F4pT06CjgqYFpv2y9O2A5x5cnw/+RZ4xWzNVCPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749700872; c=relaxed/simple;
-	bh=oQ4osCgHbzemXS4dxxFdiShB4rZ0fXLkCLHJI3UQ/zY=;
+	bh=Ak9Cw+XEVeVNu/bPQVPZBiGN4T3ReR9/GVKensgGhbg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IkIHwtDq2Mux/jXK7Wb6DjHVqBCva7UvSLfvbhABay7WVhdorNU+u349HEC3FupAaGnlqvlWRcisXmz0AS43i1H8F32DRVYCsN/ZK9tDQQ7pYsPhAkaT6ze6b9rW5AoCmQybgqnZj8jcjVJXBTn3vaBre3dzGS0xzxI6rCUghac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtOzaxSQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Fi1w8FWHlLVC1mZGbrUKDMIg+aLQM9ZU7Y+Uzc2EGQNJjd6wYZvwBG9edHRXj9N0zhIKQepA9jm6puA4CRRy1e/DUKI0IiW0Dt9HSdjqZukbS9v+NFS4tc286vF7I+l0ue/mDA8CRW/owiOZeuXtu4o1DY8Z2DSoggTOk/nv6wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V32cHvn4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtOzaxSQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A03C4CEF0;
-	Thu, 12 Jun 2025 04:01:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V32cHvn4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E701FC4CEF2;
+	Thu, 12 Jun 2025 04:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749700870;
-	bh=oQ4osCgHbzemXS4dxxFdiShB4rZ0fXLkCLHJI3UQ/zY=;
+	s=k20201202; t=1749700872;
+	bh=Ak9Cw+XEVeVNu/bPQVPZBiGN4T3ReR9/GVKensgGhbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EtOzaxSQDyydkxX1KAIFi79hwUVZzSxAAXfSsnAjynZATN0HqUcr+YcrMVmVYd2sR
-	 zaJ1hHDgWxqJ1KQkTEyA3rVjc09k4zR/OoVHjP4K2+lUquhsaZm/+sJF0k8gOgXRnn
-	 RzXLhtJylaf7nYlk8mVcvk2l4QaeMXbHIXOCmrPM98cXMD5YjbkoP6aAbLFIPgXge2
-	 neLcBV2ZpU/djkGE1LJdU1z/seJCYYo9fcGJIPe9tAzt0c+53lG3SSY6OqGZYcYLJh
-	 PTZlNm/MUZ+kkMuxRxFiJ4vv7Cvlk9s56Sr3zNY2zf4D6APvSYbb6U1MjgmTsD3y+i
-	 5L4P8+GiC6akA==
+	b=V32cHvn4GzRNpVO+Gbssd2OW7qhN4AXNiVLhdWCBVMPf1n+k71DIbyJVwPQfO6SyC
+	 SlGRTqPc4fdVrDXn8jlp8sRYWj3qB2dH8daIsz1xoFGRPDyVIPY2Rg6xhNaUPTAEbV
+	 /vlNauytNmibyPPBC6XTc1g61dX1DlvWSi4BlyGy+R4pPM9l79qjmTC6aam/ix/xRX
+	 ZuLi246Hy0fHaacS2klp0fu5NZ1e8+bhF90wdgQgUvmp/trEi0brrmfJEqFUPX7Xs5
+	 NYm+6aH4CL6EWN0VREKTL3VzzJM8m2iQP+323pPBIw691K+KRquQIT6BLCGcpmtPoE
+	 CU0tlNghOl5cA==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
+To: Konrad Dybcio <konradybcio@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
-	Imran Shaik <quic_imrashai@quicinc.com>,
-	Taniya Das <quic_tdas@quicinc.com>,
-	Jagadeesh Kona <quic_jkona@quicinc.com>,
-	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
+	Max Shevchenko <wctrl@proton.me>
+Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v4 0/4] clk: qcom: Add camera clock controller support for sc8180x
-Date: Wed, 11 Jun 2025 23:00:49 -0500
-Message-ID: <174970084200.547582.10866755491364924120.b4-ty@kernel.org>
+	Rudraksha Gupta <guptarud@gmail.com>
+Subject: Re: [PATCH] ARM: dts: qcom: msm8960: use macros for interrupts
+Date: Wed, 11 Jun 2025 23:00:51 -0500
+Message-ID: <174970084201.547582.5153342376914964484.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512-sc8180x-camcc-support-v4-0-8fb1d3265f52@quicinc.com>
-References: <20250512-sc8180x-camcc-support-v4-0-8fb1d3265f52@quicinc.com>
+In-Reply-To: <20250606-msm8960-irq-macros-v1-1-03e573ba26d6@proton.me>
+References: <20250606-msm8960-irq-macros-v1-1-03e573ba26d6@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,16 +52,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Mon, 12 May 2025 10:34:35 +0530, Satya Priya Kakitapalli wrote:
-> This series adds support for camera clock controller base driver,
-> bindings and DT support on sc8180x platform.
+On Fri, 06 Jun 2025 14:03:51 +0300, Max Shevchenko wrote:
+> Replace the raw values with macros. No changes to the output
 > 
 > 
 
 Applied, thanks!
 
-[4/4] arm64: dts: qcom: Add camera clock controller for sc8180x
-      commit: 277d48b2ab1e1150993ccb233156d0916b0cebd3
+[1/1] ARM: dts: qcom: msm8960: use macros for interrupts
+      commit: da7811bb0edbea0208800cfa16516a47b8d45747
 
 Best regards,
 -- 
