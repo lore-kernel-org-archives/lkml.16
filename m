@@ -1,171 +1,125 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BD6247DEA
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29CB2417F0
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734808; cv=none; b=IyjcmzkQhl3PiR4gXB28m/zt5PuucJ/vA/KhcUSbR/k7uktIxjXV8UWH9FQj7wllbMYaYHhcs0j5+EzkagzAujAs5uQ8Ezf7K1Ecb2ZmWSeezQEeC5kjNn/OS8PjHrOFunqPC2x9Hlw4NXBn2uF5QTAjZH/KlRCfhP8cUYzizHw=
+	t=1749734835; cv=none; b=YKEsDA5+qlU4KNLRNv3/qWyakVvUkCyaDD+PTMTq/91PIbP6Wdnd6c1R4rcqDY6REJ+FjrnM2H407dslmkS4nxaeL0X6OQXhPuCB6e02z8buG+I+kjJQALXn6em0k1BbV/R+50X03V/p64NJdpXERZ21i6W6CAkfZ70YGxO7x+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734808; c=relaxed/simple;
-	bh=CVQ9VovITFp4al3duc780000P3ZE3EpGg5M4UugODQo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EtimHL/YxQS6+6Fv+ld5Hj8UrNwTVYOaXVu2DSdyrr+Xw40k/Mc4fkkCiOLeDr3GwTPqCOqZsmD1mS+7X8IYTx8TjOqIH0qyuFUl0WH67+OFqvAvTnooJpPX6/YNQ7sm4vr21OlPeIFVriZUA4/gLO9RlrSamiCnG8zdjblFI/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Uh9DXPNF; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1749734835; c=relaxed/simple;
+	bh=4LHEwxEc3hBPrlnpoz7wEtk78FB0iBFJ2kl/SiFP2GU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=jZyc1v3J4YOGoqrHRAApsLVrHbiHhDDLtC+A7HF0lD+du2FYOWGuumCzqkOUBeGzGWaZSWur3FgHsH1ccIJEXIa+dFhlGQFj+mnnkiRjkbIcW93K8U6slnSCvULACoqUxDLKy0u+5YggFPCj8REDgB0e3DvB9gTgMc0klMkIYLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=e+p98fe2; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Uh9DXPNF"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3ddd6f2d911so4042025ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:26:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1749734806; x=1750339606; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2eN3swV8AIIuWWlJ3gYBwChYsvkIrC7SYyJzazn/BSI=;
-        b=Uh9DXPNF0rmS4hO/A2moRXrF7EqWLUsG33MFYRgsajNC+EyEIi15DBT6cUAcUeDr/O
-         Y8tdbyH4SurOAhZ9aKgO1Sqb3u9Ex091HtfWSLd0mVvWqHAWSQWk3ggvl8CDiiIvXbVs
-         SRot/VnAGpn4VMGeJXmjeTZ0jVYuiHX2VPtNolzSRajwi6zsNeCAcVz6nzmySNonBL07
-         A8FkhwUzuLrbDmp4cDs1WiQOGYqjYwNyVuD4UvlSA7cXIX7boYEr0vYecdHeFuYe8TYD
-         j0vUmpCPgi7C4ypudoQ4bupP6YKcrU7elqQDGfzJ/8kXZcV/20+dP4sw/alXG/LfIZA7
-         DUPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749734806; x=1750339606;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2eN3swV8AIIuWWlJ3gYBwChYsvkIrC7SYyJzazn/BSI=;
-        b=p62DrmQrlnJ9zuJpNtC273dwvDDDzvOQyak270brf5SKQgxAxxeOR48/+UrZPExfkN
-         GLb8eBRj5G+oP9ApecEqcyoZ5BSSCmeEUaaSh9XTzXfW5d+wRSE+QGKB30mcmyQ3GVPS
-         VABRDT/rzAldzpEJmp9YaaFhcjTL6rd4jdVtzUhi0vW2ZZuK6TLKgBpWtQyXfWDP6QoU
-         mfqXamlBHVBYbzzsF5D9G1vPhbKJ3PZmGy/UqXsRHq4ptMJCPgYGBwcWa6ccgtvdhFyB
-         aUAD68x33SCMtgVGJA61f1MpfeLCy6QzP/VfUdFQoGAAn0zQsqOU10zqQ+jJu6OIg87a
-         fuDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvX0PIXn+9IbXjM2weyzEkDcSJixdxQwbVWU+JkKPoMiYiATBrLYLFvTduuC8SMCb5av56pSomG9C+Rz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQD+04GVM1dPaIiUHwaBtNI4tBCZSFwyZbQbfnbc4uVPZMMxvX
-	EiSePzyv+Qs3XloXHT91r+ipLr4Chv027KAnsWK8w2OkdJ8NzurmywTVSku/luW+QiSVDsnVI0V
-	GGuzbpiU0AqW7ozCJUc/HlOsIhT0qApFW/Ou5m/HLhw==
-X-Gm-Gg: ASbGncvdzcuI7IbOA0LxFSDn+HJj+b9f312v5WudXEn+90cdIutfhO/exDHc6cuTtwo
-	zoaWdch4DAJLiJXIJcEMPpRcU5r9kZWaLEGL2ArUbqn+3h9BY0SJLFkQTABrZP0YvOCV+SOfkEy
-	UkmLahBkxR8KIq3vG9fcRQJKtkoPoySdwE/U/iHcEYe0kz
-X-Google-Smtp-Source: AGHT+IG2iBZqXBZpblYqqV1CfizkbcXBVYuUqCYGloOAj0H2lvAJwOXwnS5XNnZkQ46BncD7OmhOhE+Hobvx1RtA1UQ=
-X-Received: by 2002:a05:6e02:1807:b0:3dd:8663:d182 with SMTP id
- e9e14a558f8ab-3ddf42c5b4dmr72461125ab.13.1749734805782; Thu, 12 Jun 2025
- 06:26:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e+p98fe2"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250612132711euoutp0277b4cc93e49bb483e62a22e1e966bc15~ITo8m6UXk1789617896euoutp02B
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:27:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250612132711euoutp0277b4cc93e49bb483e62a22e1e966bc15~ITo8m6UXk1789617896euoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749734832;
+	bh=PULRw5otkpn6GT9WVK7m+LoEccaSTbNn1hjyoEzOiIs=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=e+p98fe2EtXbMFxwWvQgJluh1QObjr8g6tF2nHs1kG+Hcjb3bO5O924WF1GVlTPyk
+	 YhWHkegBS5oA4jFG8qH0C5OBvo/7m/hgotMW9dT1Iay0p0xMz4OUgLKQmM2GGgWlW0
+	 s/gQAlg+rNLhrihoWDunNEKjcRep3lrnbq6wGfAg=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250612132711eucas1p1db84d1c02a89f07e7346dec9dc6c48e8~ITo75vBrM2197421974eucas1p1Q;
+	Thu, 12 Jun 2025 13:27:11 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250612132709eusmtip2f714daf4dd428c2679068f9872962dc7~ITo6trRkm1234712347eusmtip23;
+	Thu, 12 Jun 2025 13:27:09 +0000 (GMT)
+Message-ID: <b3252042-e7fd-4ac9-a4ad-0226d21fd477@samsung.com>
+Date: Thu, 12 Jun 2025 15:27:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523101932.1594077-1-cleger@rivosinc.com> <20250523101932.1594077-15-cleger@rivosinc.com>
-In-Reply-To: <20250523101932.1594077-15-cleger@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Thu, 12 Jun 2025 18:56:33 +0530
-X-Gm-Features: AX0GCFtHBaD1dkadFboJHCaCDko1UoltJB37LuW30sdZ0j57mmaziXXBSUbao7Y
-Message-ID: <CAAhSdy1qnRYOh0ka4PeJDf5ybviMrf+bpYaOOka3BXVmwAPSoQ@mail.gmail.com>
-Subject: Re: [PATCH v8 14/14] RISC-V: KVM: add support for SBI_FWFT_MISALIGNED_DELEG
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	Samuel Holland <samuel.holland@sifive.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Deepak Gupta <debug@rivosinc.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Atish Patra <atishp@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/7] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Drew Fustini
+	<drew@pdp7.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Guo Ren
+	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, Benno
+	Lossin <lossin@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <t26bhukukjzy7e4d2omtvjchxxzlnfyx54ku7xbytcnxkuk7xk@6tap2t3z2oaq>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250612132711eucas1p1db84d1c02a89f07e7346dec9dc6c48e8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9
+X-EPHeader: CA
+X-CMS-RootMailID: 20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9
+References: <CGME20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9@eucas1p2.samsung.com>
+	<20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
+	<aEifXZnLxKd2wa0w@x1> <6ca6016e-3b17-48a0-ad8d-bb05317aa100@samsung.com>
+	<aEoWtviFl0vYATXe@x1>
+	<t26bhukukjzy7e4d2omtvjchxxzlnfyx54ku7xbytcnxkuk7xk@6tap2t3z2oaq>
 
-On Fri, May 23, 2025 at 3:53=E2=80=AFPM Cl=C3=A9ment L=C3=A9ger <cleger@riv=
-osinc.com> wrote:
->
-> SBI_FWFT_MISALIGNED_DELEG needs hedeleg to be modified to delegate
-> misaligned load/store exceptions. Save and restore it during CPU
-> load/put.
->
-> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
-> Reviewed-by: Deepak Gupta <debug@rivosinc.com>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
-Queued this patch for Linux-6.17
 
-Thanks,
-Anup
+On 6/12/25 07:01, Uwe Kleine-König wrote:
+> Hello Drew,
+> 
+> On Wed, Jun 11, 2025 at 04:52:22PM -0700, Drew Fustini wrote:
+>> I also enabled the pwm fan driver. However, there is a probe failure:
+>>
+>> [    1.250921] pwm-fan pwm-fan: Failed to configure PWM: -524
+>> [    1.256546] pwm-fan pwm-fan: probe with driver pwm-fan failed with error -524
+> 
+> 524 = ENOTSUPP, so it seems the request had duty_offset > 0. Does your
+> fan use PWM_POLARITY_INVERTED? If so, try without that flag. If your fan
+> really needs an inverted PWM this of course makes fan control buggy.
+> With the next revision it should work fine (as a duty_offset > 0 should
+> get rounded down to 0).
 
-> ---
->  arch/riscv/kvm/vcpu_sbi_fwft.c | 41 ++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->
-> diff --git a/arch/riscv/kvm/vcpu_sbi_fwft.c b/arch/riscv/kvm/vcpu_sbi_fwf=
-t.c
-> index b0f66c7bf010..6770c043bbcb 100644
-> --- a/arch/riscv/kvm/vcpu_sbi_fwft.c
-> +++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
-> @@ -14,6 +14,8 @@
->  #include <asm/kvm_vcpu_sbi.h>
->  #include <asm/kvm_vcpu_sbi_fwft.h>
->
-> +#define MIS_DELEG (BIT_ULL(EXC_LOAD_MISALIGNED) | BIT_ULL(EXC_STORE_MISA=
-LIGNED))
-> +
->  struct kvm_sbi_fwft_feature {
->         /**
->          * @id: Feature ID
-> @@ -68,7 +70,46 @@ static bool kvm_fwft_is_defined_feature(enum sbi_fwft_=
-feature_t feature)
->         return false;
->  }
->
-> +static bool kvm_sbi_fwft_misaligned_delegation_supported(struct kvm_vcpu=
- *vcpu)
-> +{
-> +       return misaligned_traps_can_delegate();
-> +}
-> +
-> +static long kvm_sbi_fwft_set_misaligned_delegation(struct kvm_vcpu *vcpu=
-,
-> +                                       struct kvm_sbi_fwft_config *conf,
-> +                                       unsigned long value)
-> +{
-> +       struct kvm_vcpu_config *cfg =3D &vcpu->arch.cfg;
-> +
-> +       if (value =3D=3D 1) {
-> +               cfg->hedeleg |=3D MIS_DELEG;
-> +               csr_set(CSR_HEDELEG, MIS_DELEG);
-> +       } else if (value =3D=3D 0) {
-> +               cfg->hedeleg &=3D ~MIS_DELEG;
-> +               csr_clear(CSR_HEDELEG, MIS_DELEG);
-> +       } else {
-> +               return SBI_ERR_INVALID_PARAM;
-> +       }
-> +
-> +       return SBI_SUCCESS;
-> +}
-> +
-> +static long kvm_sbi_fwft_get_misaligned_delegation(struct kvm_vcpu *vcpu=
-,
-> +                                       struct kvm_sbi_fwft_config *conf,
-> +                                       unsigned long *value)
-> +{
-> +       *value =3D (csr_read(CSR_HEDELEG) & MIS_DELEG) =3D=3D MIS_DELEG;
-> +
-> +       return SBI_SUCCESS;
-> +}
-> +
->  static const struct kvm_sbi_fwft_feature features[] =3D {
-> +       {
-> +               .id =3D SBI_FWFT_MISALIGNED_EXC_DELEG,
-> +               .supported =3D kvm_sbi_fwft_misaligned_delegation_support=
-ed,
-> +               .set =3D kvm_sbi_fwft_set_misaligned_delegation,
-> +               .get =3D kvm_sbi_fwft_get_misaligned_delegation,
-> +       },
->  };
->
->  static struct kvm_sbi_fwft_config *
-> --
-> 2.49.0
->
+Since we're running the same DT, the polarity shouldn't be inverted. I
+see you have CONFIG_PWM_DEBUG=y enabled, which is most likely the reason
+the probe fails.
+
+With that option, the following check is performed in __pwm_apply:
+
+if (IS_ENABLED(CONFIG_PWM_DEBUG)) {
+	struct pwm_waveform wf_rounded;
+
+		err = __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf_rounded);
+		if (err)
+			return err;
+
+In this revision of the driver, I have not implemented the read-waveform
+callbacks, so the Rust PWM abstractions correctly return -ENOTSUPP.
+
+Uwe, this poses a problem, as reading from the duty and period registers
+on the TH1520 SoC's PWM controller appears to be broken.
+
+
+> 
+> Best regards
+> Uwe
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
