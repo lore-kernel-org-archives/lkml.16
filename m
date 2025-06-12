@@ -1,120 +1,107 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CAB8BE8;
-	Thu, 12 Jun 2025 00:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3555A26AD9;
+	Thu, 12 Jun 2025 00:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749689324; cv=none; b=fTcEXSSgA2jbVJaOR3+CNAtDHnyCTu/27XrKnHQqrH5/MPAmxIDr4LUtjlM1kgKeOFu8DtKEEzkR2z7CWyvG4wU4uay2ZjTwgTYc8ZJhCROvQ6fFSv1ljUMFp4CigQccb/PlBN+7Ylj7Hf01upEN4zCs15oAm/lbaLb2K0Xv4H0=
+	t=1749689341; cv=none; b=li7Bf19WlkLKqey3sN7hU1x9X79ONvI0YmbdCSzYWWQ+uYV9qNOC97AwiUwRUwFO2gvqw+Wo73+f5/52v+Zxcl3pZygT5zqs2eSyyB5bVmUDzCldUI0NmDjZEyyCdh+IupqUTn1YlQCbJ5wW7ZHKoKMGClXoNU2mOrZKvjEx9f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749689324; c=relaxed/simple;
-	bh=ht1gA/ZPteEMrTAwGuxbLshnWpppVntQPyraSN5yQj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WTOMxw9yuasYTN1GTtB9zmVg9C/3SS243Omq/jeVrbjl76RZ6GsTUSEUDCWvkqs8R/ytVoif4ap6ZuijYd8ZS/PvyQS1FCwLZtNIO0tprHS6MJueZrjRsTjmSETK9A8/pS9+DGfjwxXeUJ1SgD430bsiBZqbnkgHpcbhhuvCizs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pzr4UFaQ; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1749689341; c=relaxed/simple;
+	bh=/yHgCp2Nj87O1+hE+z6Wjjusqd4RBegdP1jqfyeqfZQ=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=f7Ajf8XQKXHo+LYowz8n6uH5HjuW7uI0Wg1mSu6xhry1W3AszhtH/hrrAODhTYJ4jDFlA3CRf2oeszkZmwuXdLm/QTykx2ftqbRSAqimvxcrRj15zenaEeP5bmbHUEKeeMACI4Cb7Y9B6R5mzoX20yXHGxv46mzR06aw67zyzlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvEqefY6; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pzr4UFaQ"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-74264d1832eso535610b3a.0;
-        Wed, 11 Jun 2025 17:48:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvEqefY6"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso597399b3a.2;
+        Wed, 11 Jun 2025 17:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749689322; x=1750294122; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hqINRbhBXUv8DDvAKfwGN3D5A5fdVAfIH4y8gA4/FgQ=;
-        b=Pzr4UFaQ0c1V5WpJDKxZFd2vMJJXhK1YF13MjlU876scY6FM3HpCDPp0Rjak8OEyq3
-         UGJJzD/xvCvDpneSYHLO5tSP05OQuW84phZ8IU5l+yTT/mOIeWjk6cU70sNV1iXwCRlt
-         x+G4XMqXyqaDPuUxR7fYGDlCz49PQzMJABBIZJ5F2JiXkVwRa/HAezjFSe2NrtV0jVuC
-         /mt8YJ3iDlh25VlazkMh9vWwZCsVq/l07UEuM4lrkTd11pCwPSqTzZ7JGMZuRVtwhGNB
-         DPdQdqUqSejH1LtO3HPPeeIzXBm9xugMl1h0fXdtbTVp6nVH/jhajRK1CMv2Ht2cL7P9
-         ynBA==
+        d=gmail.com; s=20230601; t=1749689339; x=1750294139; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BnVzuSAi+VGLwZqj+6jW2zhew4ye4rLcStPcRTu5cuk=;
+        b=AvEqefY6MTyPCo3kGuYo4Vk3HH30915VAkCroEvsJ5rG/gSzWdiLXjzXqJwNmWr/jY
+         Ir8T6hVkyoC46zx775XQxQu1Wu7uv6iEkhbrKC3lYs5HKC7BoqNeFEBsZ1zpukV4d3gY
+         CW3N8R92oOLDS4pFFP04BpdlIw0owQWBCeLinoojfEQBBsbQErRAlqKidJaeLxMvAslN
+         bVUIOpaUyAVSOCMh+LugAlbGPoqbAinPLWEiWm9W6e1saLtnxjQNqJv8EEQS0QI1DZvc
+         1gvOgfYS+5AiJRZcUBqd5RHhR3oXpd0O0XsQh0mmV3Yp2TELUh/dhHNJ+CyD5c6kyUeT
+         thTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749689322; x=1750294122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hqINRbhBXUv8DDvAKfwGN3D5A5fdVAfIH4y8gA4/FgQ=;
-        b=DBfL9W0KY+8NCYyw9O/1hdGlCYY9cunz/wYtFhzKbh5PKX8p1175znNqKDQUc2goeG
-         3eTBQi5SnqMR6jTW7hmHsvbuLkhXN2/BbLLHQsTW6kOy5CDCNoSl8H4lsLEeNY6ffdAc
-         +rmOvy26K6OBVZ8y6LOkIwj97IHegNVsEmwkJg4oocbdqxUYC0SvQoH//TqY2whhnYpS
-         +1Np5HVg0Oon6TYdCCTGwPen4b51y/RNziI81901/GjHUcq7aN2RvyuVDGtuLQ6IOQt1
-         I6EmyojX0hvpkFI+3o5m6pRCJcLzNkCj2UlDfiE4ydX5KfsoEwq6IO7+2ZTF2XorkEME
-         HiwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV74YxXFIN0iXZTkkVbUcKsTohGyCQk/nXvp9LoD1t6fERaMJnobir2ITW1wRMR3EKs4ryoUvwdeVLY@vger.kernel.org, AJvYcCVoR1PQpJt12phcap/7qApSU86nhkTr83hX4sCdK84JMCxyyWy63r/LzfGJgePSSzdb8AMNBsqdeGdk2rQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIibJ6laaD42TVmRMB6AI62VxV3uyBiB4CFk7QncksOdCe1W7U
-	ad6n3PY/zQA8/M+xnsloc8Bp10MIUNjeXwgHdGU76INYTFpW3ZAJ4fBJ
-X-Gm-Gg: ASbGnctVipjhIcv2bLwXruwA6Lw957DldTB65d/NIVW94wps9DZNplxZ3wFITkITS9X
-	StIkQlWN4j8Ccki6lcWTk+XCdNXKg7Vu26pqKg3mzm90bEUKMsrHSM9xrUi9XHesIXztQbi3mcW
-	8Xpfpd2YHsEUkuL0gzyshFpZVd8M96/2sHDZKve4u62Jf5E6Z95pc4mbkVxQA+luk0t+0pvo2di
-	CoiaqqR2VhKINoz5auXRY7UggVfIOplNlnQdyAXfQulRjnVkpFi3luWN63eZG15t7nzhUgsWC9u
-	eYtkz8MUXzhOaPtQp0Dor09bEKFy0Z++eh7bpkeLNt1RqtJLlg==
-X-Google-Smtp-Source: AGHT+IH/jwJJdwYkzPE0y591nja7/GMlqARzj1ko2DlwznP5A+rVIrdUR5MsMWEBoz/8q6p4qz3Sng==
-X-Received: by 2002:a05:6a21:6d88:b0:215:dee4:4808 with SMTP id adf61e73a8af0-21f9b720273mr1173711637.18.1749689321805;
-        Wed, 11 Jun 2025 17:48:41 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:5f6a::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd611e32dsm221034a12.9.2025.06.11.17.48.37
+        d=1e100.net; s=20230601; t=1749689339; x=1750294139;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BnVzuSAi+VGLwZqj+6jW2zhew4ye4rLcStPcRTu5cuk=;
+        b=dC0rYjzTjm2xc8WDUlZiXzHMc4ZJYD6H324xOYy1ndCJ2FmeL4f2ZJO/sGFJEXzFlX
+         6N6+ukl+ugmaAsYpuT18uYHWm7D62H4GCT6lDdwkWNj49MrfqX8y6TmTgggBHRBN8KiZ
+         5YzHSbsag2Ed/0S21DsqolLAISPxQJ9b/0tQVr3WggrJGlKC2qse4M94Fh8N0ysYBeNT
+         mf8L/Otp8L18Iae+INVeloQvnEyAq8jI0jeB9wMgjU8KNHIjCmr7y2vQck4eedMB+0bw
+         PL0xgmAV68FzLoxcntc0+FmrFfArwUZRE81wIwEaCkflJ4le+j+cd2Uqy47NP5R7k66N
+         eKpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvMZB94hx1NirGvCa/yzRZNe8gQYFw7a2lwMKDzC1OxHOOQHhsWT8/ovUKqwir3TE7+kta+pR3@vger.kernel.org, AJvYcCXWeq2PzHvqTsnl5gVZHRbpvCNLQjNfqw5WRFKw+S2DWh7rQ/ouBITNbkvYZS/oTV23nSmfmsZm5TFkOJg=@vger.kernel.org, AJvYcCXpK57Yknzna9a02iFlohd/CP7B5LYsF/2blwFW0N+zk0ON+3NW6jT1wRMGptNQjwflQTxKNfoyB/TBGK5Iug0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxioXv4f0VzU6RXMJM0fJDmXdhIxEy6IOhmBKfLqxgwVbgeo58L
+	WUXXDm29uhsOOQkQCmuKxXGRQgWFgfiKMFjRL9HKNH6xucgbvTRA+FyR
+X-Gm-Gg: ASbGncurzeyEN3B+pva9lPVH/ZjwmpuDj/KPg8+lTboqG2BFrXZR4uvZWHkch3vwYzJ
+	9+9s8h8+pp67Z39kgmtTwJ9gFM+1MwONFewxJ4KMg1IBDPZNKBRbXzsYm+wUsScr8lhFd+qn6yg
+	sZ16CUae0BPi/UfHA9qPcw3xtri3iMvpnGN2L4zgq/XNyUdVh8ud83kPEC0GlYZ2IQvSmPwSvVX
+	8d2GvEqZmJEMyXac7VyQY7x6FV05MzT2mNH4g0Ld1g/QP5dkboLmXfsqkum/ksBNE+OHIylnTsm
+	eFUF+jhjVgVmES+4JE9/QilUcuW9/jurWJwaiTcTJOvS7mzqFoneUK8IHgiCrKeaGoycHMzS0WX
+	NgcW71E1W+8D6wRatqGnx/9oSWI6XuiscX+VyPRwB
+X-Google-Smtp-Source: AGHT+IHkUbqDLQgmErzS/Fm0ohtqpYCXxdJOooNkrwjZOfmDhJCFlgfY+aV1we6nOyEVcpq2KHK6mw==
+X-Received: by 2002:a05:6a20:2587:b0:21f:53e4:1930 with SMTP id adf61e73a8af0-21f86725dfemr7996776637.22.1749689339308;
+        Wed, 11 Jun 2025 17:48:59 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748809ebb8bsm195364b3a.126.2025.06.11.17.48.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 17:48:41 -0700 (PDT)
-Date: Wed, 11 Jun 2025 21:48:31 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/4] PCI: pcie-rockchip: add Link Control and
- Status Register 2
-Message-ID: <aEoj385BMtLvNuKL@geday>
-References: <28ae3286f3217881ae6ea3aecad47ae4567d6ec7.1749588810.git.geraldogabriel@gmail.com>
- <20250611194259.GA825364@bhelgaas>
+        Wed, 11 Jun 2025 17:48:59 -0700 (PDT)
+Date: Thu, 12 Jun 2025 09:48:53 +0900 (JST)
+Message-Id: <20250612.094853.1245231705823615660.fujita.tomonori@gmail.com>
+To: tamird@gmail.com
+Cc: aliceryhl@google.com, fujita.tomonori@gmail.com, tmgross@umich.edu,
+ ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+ a.hindborg@kernel.org, dakr@kernel.org, davem@davemloft.net,
+ andrew@lunn.ch, netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: cast to the proper type
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <CAJ-ks9kZZEWXSHX95=QrNXaQvEc-T1cTPTaB3mCjT2coGzpwUg@mail.gmail.com>
+References: <CAH5fLghomO3znaj14ZSR9FeJSTAtJhLjR=fNdmSQ0MJdO+NfjQ@mail.gmail.com>
+	<CAJ-ks9m837aTYsS9Qd8bC0_abE_GT9TZUDZbbPnpyOtgrF9Ehw@mail.gmail.com>
+	<CAJ-ks9kZZEWXSHX95=QrNXaQvEc-T1cTPTaB3mCjT2coGzpwUg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611194259.GA825364@bhelgaas>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 02:42:59PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jun 10, 2025 at 06:19:49PM -0300, Geraldo Nascimento wrote:
-> > +#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP)
+On Wed, 11 Jun 2025 09:41:08 -0400
+Tamir Duberstein <tamird@gmail.com> wrote:
+
+>> > > +            DuplexMode::Full => bindings::DUPLEX_FULL,
+>> > > +            DuplexMode::Half => bindings::DUPLEX_HALF,
+>> > > +            DuplexMode::Unknown => bindings::DUPLEX_UNKNOWN,
+>> > > +        } as crate::ffi::c_int;
+>> >
+>> > This file imports the prelude, so this can just be c_int without the
+>> > crate::ffI:: path.
+>>
+>> This has come up a few times now; should we consider denying
+>> unused_qualifications?
+>>
+>> https://doc.rust-lang.org/stable/nightly-rustc/rustc_lint/builtin/static.UNUSED_QUALIFICATIONS.html
 > 
-> I would really like to see PCI_EXP_DEVCAP referenced in the source
-> where we currently use PCIE_RC_CONFIG_DCR.  That way, cscope/tags/grep
-> will find the actual uses of PCI_EXP_DEVCAP, not just this #define of
-> PCIE_RC_CONFIG_DCR.
-> 
-> Something like this:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-mvebu.c?id=v6.15#n265
->
+> I should point out also that every reference to crate::ffi::c_int in
+> this file is fully qualified, so I think this should be a separate
+> change.
 
-Hi Bjorn,
+I can take care of this file.
 
-Yes, thank you for the code snippet, it makes things more clear.
-
-> >  #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
-> >  #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
-> >  #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
-> 
-> Also use PCI_EXP_DEVCAP_PWR_VAL and PCI_EXP_DEVCAP_PWR_SCL here if
-> possible.  And FIELD_GET()/FIELD_PREP(), which avoid the need to
-> define _SHIFT values.
-> 
-> I would do a pure conversion patch of the existing #defines.  Then I
-> suspect you wouldn't need a patch to add the Link 2 registers at all
-> because you could just use the #defines from pci_regs.h.
->
-
-Got it!
-
-Thanks!
-Geraldo Nascimento
+Thanks,
