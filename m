@@ -1,123 +1,124 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264D221420F
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A982F213252;
+	Thu, 12 Jun 2025 07:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714157; cv=none; b=gv1gzOUv1LqwLoCKwXA4pdkLwFrFTk4bIOdyCMxbVCMfN7HgeXSZu5GoS1pzuDrRSaHBTIoWtf5NeI+Z4w8wbBJ+YJx3AHY8p6uwEnKVyTxPGywhczOv70LIa8DC7ELHkwZLJ1QphG24vy5o//UvdBIx7oVZlTQ2sAqEfQdqby8=
+	t=1749714158; cv=none; b=CQQ9zzEHPrH+XL+b1FjczL9tg8HPSBDniGFuD6ktuq0BJoYT+L8jm+m46/Ry2g8ro5xf48oPEw1dG03lwirwF98E81Ehoz4z3spWEZlNkpxwx+ft/FO5M++Fc+JbH7xKvj+7aB1pi9Hn22KkCqz95JJ7SioMpBboUhM0anXHr8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714157; c=relaxed/simple;
-	bh=liD84H33mldJ5FwcAo5b42k0QKzep4H4rmYW/0tE3Po=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ixM5j4fek/yWqHGTi/n3EZLMG2YH78Bs/SCE/Pzex37IaeWCAwVbwD2ICRt31hetOnl5bjVMRZAvoFE0ysOYWGaLkR6ouh4nPzebKfayZdHnbldy1D7mGpPTpl45yjuQeI/yLyTJs8I45tbsSQNIHU7N+pQoYU9DsFimsxQQlvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RB7mHz2P; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749714158; c=relaxed/simple;
+	bh=Ejd1F3oztgT7GGOChLr0+rZvQgex8/guYbVeNSvcKcw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Pub72PX+lPlQyVjcj0wHvmF2vYJz8iXgkElZRC3o47tIr71JNbQbPNCra7GqbMVmbp3fKyIdxXOP5blx/aRs/jXjJ9+w3RmmKoLZHncaiy/baoCL/fjfwv2Vp3mM+r4YRzQpSTuvxyH17PzIeuK9TGYxCJambYbBhi/kqz59usw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=F3mQFInM; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RB7mHz2P"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so579137f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:42:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749714154; x=1750318954; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pOjdW6tvwIHGvqgEBjcYXxpqXXP0mM93Bi1E5VHKi0I=;
-        b=RB7mHz2P2F0km9hNYYtu3w9W1j0fp/y1iV6+QIlaCDcvOSzig+rw9sfzzBLqoNB9My
-         FC0BFiaK7emHFD9TfA3KoCEgVCMmooWs5v8kXWeJxYp0GXatPBKkxRo96PLPF6be1G70
-         wLKRi4UcC1JJWBC9uNDWrtn9j2csf4afhir3kvjc+p4qP6Xck5DJsdbimN2+fS8KekDG
-         wMVUbeTYauqAoKxVs/4Ljj2jEwi44JjRtkG58FmM7ZcHmw+95RfQ+1ZkGYPgww5xTQUV
-         u7aKlNpEpnGPTunoHhOsXFFONPmfcpcL0onPOS4cxzaEC+EgcOJnsj8re5KGWIqnoJHj
-         M2hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714154; x=1750318954;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pOjdW6tvwIHGvqgEBjcYXxpqXXP0mM93Bi1E5VHKi0I=;
-        b=Cu8f+pnEgfEhwI0evKmeJs5NTojxpzLQsWxkvFpsTROY0FeXH9Cu47JC2iVL/Z2ecE
-         hfKN2ABSqziwLB4x74OjWVm6P/QpQNA5L65wwAZ/73rm3Yex9+uHZSCRuqUzNP1LPZJ/
-         Nnk2KSfUmjHcEj5gt/Sq5OiuxmOcz6oJdPVcgLAiw+ehD0J4wKebmci4oZABu39udBty
-         Dx5sRPhoMhmX9N/KmLeWG6nXQ/eNsFe9IrFZAb0ojpWyOGoUpKKILNSss7hTwiTYXdtt
-         TFhVALZSE+ziuvDZQDBkJvBdeiUpYZYHC2K73pbWvHMyEbFaEIIDZyk0pkHFMdWuvmfm
-         /Nyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvmlCP1UonQKisTh5PM8CRSlrZHRTb2xK/cujJU51W4/QAkoqEpD5qtmEMnzp7feF42wGH+kMh0HJw54Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1Or+UKfUygvFzbVMFxMjOqHrryu8Bvcl3jtcMp9U9W2bVM6u6
-	jTDYY8oBpcOeKkXhIqkcYpA8C2wKYmF4CFTReKG95jlfnsmukXqSRD8QZ16HJBanB+k=
-X-Gm-Gg: ASbGncugxNb/5KBP31dipBSX4AZLA2iFn/Kjnqy0XaO1Q+bbvfudprfblkTOgPbYXfQ
-	l0TgG/XbQNkvzDMA9OaG3HxaXAhQNYhRzY7wqkfkS0f0av8ShOOCOR9XUbNHFxES5ldumzcauGy
-	55/7bAj6ckmilP18GcMJR/wktF8NWaZrj0rWTLdD6E/xDYlMz6DPSsUpT+Ehmd7NMH8mDds35c5
-	P6ZmufsOGxIZ06WVYaScYWSulvaw4HQ/FbtLp0WVSwnGo4Z6FutJLbOGzupytqCSZ1iqX6Dc+pK
-	aA4xmI6WCiIfepJLLo3WCV95Rilw8R1UmYtJJvD8tJBWHve5QvEZmrp5VtU07fTB8H0=
-X-Google-Smtp-Source: AGHT+IHK4uQuCn2XQWMjU/bTqraytEDLe7/LB0UXdjlju8466jLpB8n5+oghPZtv4fc6nLejDkqEyw==
-X-Received: by 2002:a05:6000:2308:b0:3a4:e740:cd72 with SMTP id ffacd0b85a97d-3a56127883dmr1425617f8f.13.1749714154457;
-        Thu, 12 Jun 2025 00:42:34 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453305a0d9dsm3836115e9.21.2025.06.12.00.42.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 00:42:34 -0700 (PDT)
-Date: Thu, 12 Jun 2025 10:42:30 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Karan Tilak Kumar <kartilak@cisco.com>
-Cc: sebaddel@cisco.com, arulponn@cisco.com, djhawar@cisco.com,
-	gcboffa@cisco.com, mkai2@cisco.com, satishkh@cisco.com,
-	aeasi@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com, revers@redhat.com, stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler
- when FDMI times out
-Message-ID: <aEqE5okf2jfV9kwt@stanley.mountain>
-References: <20250612004426.4661-1-kartilak@cisco.com>
- <20250612004426.4661-2-kartilak@cisco.com>
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="F3mQFInM"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55C7g6v652108225, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1749714126; bh=tF8kdL/sLV4r3jnC1QAn5lYdwy8836T1xAuzL3QtTrE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=F3mQFInM32qRDJ2O1+CahVhBoRYTiAnZPqUadwinQWp+ZatrIb85CkuU9mIZddRAf
+	 Lu281peyb+iqR3JSGv50ANV/L1BXrZ0LYGIL0ZEwWvLeyUJxH66mdvwMbazXIpLWOp
+	 tbjZ6Fopfkq2epZLZoGhw6T5ULJGv5b/IoRLfuOiwFC8qoZuG94gDuhXHG7P+vlINc
+	 Qbm8h0CyYQMjJ63mQWduSA2BAUOT7e0H9Gpm/uDNn7xLXRapBkgyYSuyz0I8+hSaN/
+	 fS3Dz4Wt7F5rpii6/dMasToOZfGUcb+D+qdT5SNcqWHf+7jU0XvLszq5LIUplwfxY9
+	 8BDOwwPHhknQw==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55C7g6v652108225
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Jun 2025 15:42:06 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 12 Jun 2025 15:42:06 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 12 Jun 2025 15:42:05 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Thu, 12 Jun 2025 15:42:05 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com"
+	<edumazet@google.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "horms@kernel.org"
+	<horms@kernel.org>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Larry Chiu
+	<larry.chiu@realtek.com>
+Subject: RE: [PATCH net-next] rtase: Refine the flexibility of Rx queue allocation
+Thread-Topic: [PATCH net-next] rtase: Refine the flexibility of Rx queue
+ allocation
+Thread-Index: AQHb2e3LR3+Ghbehf0qGerDekzflKrP99LaAgAExx+A=
+Date: Thu, 12 Jun 2025 07:42:05 +0000
+Message-ID: <3553c84b61b24ebe99846136123062f5@realtek.com>
+References: <20250610095518.6585-1-justinlai0215@realtek.com>
+ <20250611142523.67e7d984@kernel.org>
+In-Reply-To: <20250611142523.67e7d984@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612004426.4661-2-kartilak@cisco.com>
 
-On Wed, Jun 11, 2025 at 05:44:23PM -0700, Karan Tilak Kumar wrote:
-> When both the RHBA and RPA FDMI requests time out, fnic reuses a frame
-> to send ABTS for each of them. On send completion, this causes an
-> attempt to free the same frame twice that leads to a crash.
-> 
-> Fix crash by allocating separate frames for RHBA and RPA,
-> and modify ABTS logic accordingly.
-> 
-> Tested by checking MDS for FDMI information.
-> Tested by using instrumented driver to:
-> Drop PLOGI response
-> Drop RHBA response
-> Drop RPA response
-> Drop RHBA and RPA response
-> Drop PLOGI response + ABTS response
-> Drop RHBA response + ABTS response
-> Drop RPA response + ABTS response
-> Drop RHBA and RPA response + ABTS response for both of them
-> 
-> Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
-> Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-> Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-> Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-> Tested-by: Arun Easi <aeasi@cisco.com>
-> Co-developed-by: Arun Easi <aeasi@cisco.com>
-> Signed-off-by: Arun Easi <aeasi@cisco.com>
-> Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
-> Cc: <stable@vger.kernel.org> # 6.14.x Please see patch description
+> On Tue, 10 Jun 2025 17:55:18 +0800 Justin Lai wrote:
+> > Refine the flexibility of Rx queue allocation by using alloc_etherdev_m=
+qs.
+> >
+> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+> > ---
+> >  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > index 4d37217e9a14..c22dd573418a 100644
+> > --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > @@ -2080,8 +2080,8 @@ static int rtase_init_board(struct pci_dev *pdev,
+> struct net_device **dev_out,
+> >       int ret =3D -ENOMEM;
+> >
+> >       /* dev zeroed in alloc_etherdev */
+> > -     dev =3D alloc_etherdev_mq(sizeof(struct rtase_private),
+> > -                             RTASE_FUNC_TXQ_NUM);
+> > +     dev =3D alloc_etherdev_mqs(sizeof(struct rtase_private),
+> > +                              RTASE_FUNC_TXQ_NUM,
+> RTASE_FUNC_RXQ_NUM);
+> >       if (!dev)
+> >               goto err_out;
+> >
+>=20
+> $ git grep RTASE_FUNC_.XQ_NUM
+> drivers/net/ethernet/realtek/rtase/rtase.h:#define RTASE_FUNC_TXQ_NUM
+> 1
+> drivers/net/ethernet/realtek/rtase/rtase.h:#define RTASE_FUNC_RXQ_NUM
+> 1
+>=20
+> This patch is a nop?
+> --
+> pw-bot: reject
 
-I'm a bit confused.  Why do we need to specify 6.14.x?  I would have
-assumed that the Fixes tag was enough information.  What are we supposed
-to see in the patch description?
+Hi Jakub,
 
-I suspect you're making this too complicated...  Just put
-Cc: <stable@vger.kernel.org> and a Fixes tag and let the scripts figure
-it out.  Or put in the commit description, "The Fixes tag points to
-an older kernel because XXX but really this should only be backported
-to 6.14.x because YYY."
-
-regards,
-dan carpenter
-
+Sorry about this, but this patch needs to be abandoned for now. It's
+currently non-functional, and we'll resubmit it in the future together
+with changes that support user-configurable queue numbers.
+=20
+Thanks,
+Justin
