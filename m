@@ -1,105 +1,205 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FDF19BBC
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F60B847B
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749692273; cv=none; b=rki0QAq3fzkCrYASvS/GVEl0KcBm4kzT95uQhekL/bUjrr8hPHAvihLby/bPh+3ymZG9S15NAuOBBKs0XexluvnzojHxEByAuj7lSaPz6ut1tyhiq8ZQ47GYCS/cZ822I0QKqwQuGIJpH5/mIOj5kdUH8gKE/54ALMU40xPjzZA=
+	t=1749692376; cv=none; b=DLyAXiweIi9Kbui6CdcD7aYrPy6/Zimw9pniPj5T6Me1dhl3kjEUdXMSf7WUKaxMm/ZPeik5SWyCr62AvldM90uv45l4UEm03r+58EvRClbwA5H+0unene+yMKKjgHg+yNXr13yT2GqGnD5ORIVa0BMckUnTSNBCdgAYgzSjO3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749692273; c=relaxed/simple;
-	bh=EmgxiCslSolMNCzBUoL4OQg87GsLep/G3Phn9Wkt9NY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SmAyJH5+Kkpx+ISqg4IIVph7FWN7q+Qn1BzTHSVFhIYh6j/aKsXmu9w0bTe8b8clp+/029JESfXvvUhuU781mU/jvmDSOmYQGmcCgmTY1kKRHChrgqjDt/5mV5qHQwyHe7rChK06kT4TAgaTU0K3Qg4bK+B2HcnRQcSOuR1jT18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oJAampAh; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749692376; c=relaxed/simple;
+	bh=12dIK4IDDxkHymWycq4Ktg9zaxgm1LEYEl5ko1Z6VGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KmFotcG4g8FFVP7ZZCBbR3h+WIG4wtwoUTvBXs4B9/yHEZ3inVtx/CToOImEPJl4Lamz0k8409m22Ij/0fRt2CSfXlg37eZgkBR060GUVfAiVF5FSO8bwW2Wh7HUxawFyH+PElceV6Cmniup0Hp+LBarmYQnWnKEl8tK7ai5uLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ljxM02K0; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJAampAh"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742caef5896so486040b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749692271; x=1750297071; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=acl3HM/gy65MT7QW59o4rGkPJzPE8ycfLTpRSNc4cWU=;
-        b=oJAampAhEhpA5cLdKflyLUxnNCqwBAg8wUsGafqBw8d+YGc1yhVYqM6FyrLl7bLTOJ
-         VyEQEtnZaDYwsuGtYqegu9ln278lZUhJqeTE+jNhjouFSKht7RcxtaTEZo3v084MtRi9
-         SNp/ujiepiAhJ1QFsCgtPUPJcSo+eZdKDDqp41b0UNkWAtB4Wt5zgVItMYWeSkbFlYH1
-         aovtexlvaeiMQ8sz3XZYMWcOZyTdwtz/rJovSBEYIX5W19VeOcZgd1Z1/6wC3WAi7ZMt
-         jDAaTRek7jOC+HVs84xyqHHHqdWFU01t9o8kIXvpMsqdrq2dHKlZm9sxtf9uxahvx5tn
-         kxag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749692271; x=1750297071;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=acl3HM/gy65MT7QW59o4rGkPJzPE8ycfLTpRSNc4cWU=;
-        b=TjaBqal2k/VUUnW9Qj1pMtHHT4ot8jVAPTXDdeQwbxlpeNKRnVZn0XQU9BVidwo7bb
-         O/8TFwvFlG4MH/o9GrLYgHGC+XKuev8k3IZHhEQ0Lv44vH1xrtlnCNjMmPIumku9RaLi
-         dlWfB4fWAqho5BDPBURXIfNAMMYiKQF1wRg6q7Qeihysop+QY+ojbS4cP7XPr5htjCj7
-         3ehfB6xUDwCvQLsCcDvUbJ1pfjbYywJdz+M/l3+SYCoXxlSApfqzgYlwszLYpdUT3Nwn
-         OgtkZNTADrOxaDEV3D3xsAgQAh9mqMdYFpCoKwyyM7iDVXETXldMnsVzDJi/+uSH6BhA
-         N7tw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKanLJDvu1ZPpMg1m9QmGfn1zB4g1v4fKoKxcdqQgtEk0Z/wav/4/lnXoI98i5tYyaT/ugW73BWmYdyCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPMu04ywZL24H9OUURKvLZQNijeZyScihEfOvH3QXJJsQ2I0t2
-	WnB8k6XXSDB4nxqhswSscI9Uev+L+H/UEWfiL3kYgOhTks6Miejt+zZhFMFt5E87Aek=
-X-Gm-Gg: ASbGnculajDLxsIdAvKWq+NHnz5TBav3x2ozkaI8//ONNH13JpTj+BlJ7VX9aKXP/FO
-	5icAdE52IYLXAi422i3VYo2cz+TcTlzA7FvQkJjuOZJA7PHF9GRR4qi1d5Qr0k/4EBjB6l5EeAn
-	TNTzECFIqCi9EgznWXegiCSptDghPHv2DvavST0Sp5eMDNzliO7QoP5CG09WVjF6kQ9I74Q116s
-	8gXqojEmaa7F2liOT0wP+rAwOPARdkAUAOOezPnIEhfsXlbbOxK7MdeFGIm2CC7E0BSdL1AO7dO
-	GW8OWVi8EzQlAPho6pGsnzKwXxmVxDU2VSIUerPgzL2X4ueOEbVQgZZUGJTiX9k=
-X-Google-Smtp-Source: AGHT+IGQb69oSvUbCWxUQ9pS4E1eHVQjsTTq/cBES45AIlrmrVW+OEfUjBX2qBwDqZa2fbH9zp5fXA==
-X-Received: by 2002:a05:6300:6b0d:b0:21f:97f3:d4c2 with SMTP id adf61e73a8af0-21f97f3d6f9mr1549747637.16.1749692271459;
-        Wed, 11 Jun 2025 18:37:51 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd611e4dbsm261228a12.12.2025.06.11.18.37.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 18:37:50 -0700 (PDT)
-Date: Thu, 12 Jun 2025 07:07:46 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-pm@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: Convert `/// SAFETY` lines to `# Safety`
- sections
-Message-ID: <20250612013746.psicbrobklub6xvy@vireshk-i7>
-References: <4823a58093c6dfa20df62b5c18da613621b9716e.1749554599.git.viresh.kumar@linaro.org>
- <CANiq72mP7tGzZM_f2gRSVcBw5a5Y7vMM3eOSvuAOK=yJeEmFBg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ljxM02K0"
+Message-ID: <b1508b89-69fe-4d92-9854-5787186de603@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749692368;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fDaLoebKXYq1dhWh0U4LSCfiXioc71GWbSJENfRMRds=;
+	b=ljxM02K01UuAJs38k0Uj76PvRaegxhg+IoFOPX7g5cdn2lv8wy7HbvFZNTYpQlHIbKTywn
+	TfibyxnagfDXkXUhocJ3w5iUj67ZpqapaQZY6XfVcs0tP8kofRXslDVVmqudq9/zHTJR1d
+	7uifdhIuKTKINZXxppt+VsC3TJrnBNQ=
+Date: Thu, 12 Jun 2025 09:38:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH] mm/alloc_tag: add the ARCH_NEEDS_WEAK_PER_CPU macro when
+ statically defining the percpu variable alloc_tag_counters.
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Hao Ge <gehao@kylinos.cn>
+References: <20250529073537.563107-1-hao.ge@linux.dev>
+ <177e1f6b-50f0-4c0a-bb0b-514283e009a2@linux.dev>
+ <CAJuCfpE9Y6iMt5sDd+NUuXAeqXiQXaYZOobGDvi7LYRqm=7-KA@mail.gmail.com>
+ <b132dd1f-984b-452e-b19b-18cdecb2842a@linux.dev>
+ <CAJuCfpGueFFKwyhG6Lz44dtJOZbicFoB5S=44GV_oyLUn8oQtA@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Hao Ge <hao.ge@linux.dev>
+In-Reply-To: <CAJuCfpGueFFKwyhG6Lz44dtJOZbicFoB5S=44GV_oyLUn8oQtA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72mP7tGzZM_f2gRSVcBw5a5Y7vMM3eOSvuAOK=yJeEmFBg@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 11-06-25, 13:46, Miguel Ojeda wrote:
-> On Tue, Jun 10, 2025 at 1:23 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > Replace `/// SAFETY` comments in doc comments with proper `# Safety`
-> > sections, as per rustdoc conventions.
-> >
-> > Also mark the C FFI callbacks as `unsafe` to correctly reflect their
-> > safety requirements.
-> 
-> +1 I guess the Clippy lint triggered when writing the section, right?
 
-Yes.
+On 2025/6/11 23:24, Suren Baghdasaryan wrote:
+> On Tue, Jun 10, 2025 at 10:27 PM Hao Ge <hao.ge@linux.dev> wrote:
+>>
+>> On 2025/6/10 00:39, Suren Baghdasaryan wrote:
+>>> On Sun, Jun 8, 2025 at 11:08 PM Hao Ge <hao.ge@linux.dev> wrote:
+>>>> On 2025/5/29 15:35, Hao Ge wrote:
+>>>>> From: Hao Ge <gehao@kylinos.cn>
+>>>>>
+>>>>> Recently discovered this entry while checking kallsyms on ARM64:
+>>>>> ffff800083e509c0 D _shared_alloc_tag
+>>>>>
+>>>>> If ARCH_NEEDS_WEAK_PER_CPU is not defined,there's no need to statically
+>>>>> define the percpu variable alloc_tag_counters.
+>>>>>
+>>>>> Therefore,add therelevant macro guards at the appropriate location.
+>>>>>
+>>>>> Fixes: 22d407b164ff ("lib: add allocation tagging support for memory allocation profiling")
+>>>>> Signed-off-by: Hao Ge <gehao@kylinos.cn>
+>>>>> ---
+>>>>>     lib/alloc_tag.c | 2 ++
+>>>>>     1 file changed, 2 insertions(+)
+>>>>>
+>>>>> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+>>>>> index c7f602fa7b23..d1dab80b70ad 100644
+>>>>> --- a/lib/alloc_tag.c
+>>>>> +++ b/lib/alloc_tag.c
+>>>>> @@ -24,8 +24,10 @@ static bool mem_profiling_support;
+>>>>>
+>>>>>     static struct codetag_type *alloc_tag_cttype;
+>>>>>
+>>>>> +#ifdef ARCH_NEEDS_WEAK_PER_CPU
+>>>>>     DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+>>>>>     EXPORT_SYMBOL(_shared_alloc_tag);
+>>>>> +#endif /* ARCH_NEEDS_WEAK_PER_CPU */
+>>>>>
+>>>>>     DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+>>>>>                         mem_alloc_profiling_key);
+>>>> Hi Suren
+>>>>
+>>>>
+>>>> I'm sorry to bother you. As mentioned in my commit message,
+>>>>
+>>>> in fact, on the ARM64 architecture, the _shared_alloc_tag percpu
+>>>> variable is not needed.
+>>>>
+>>>> In my understanding, it will create a copy for each CPU.
+>>>>
+>>>>     The alloc_tag_counters variable will occupy 16 bytes,
+>>>>
+>>>> and as the number of CPUs increases, more and more memory will be wasted
+>>>> in this segment.
+>>>>
+>>>> I realized that this modification was a mistake. It resulted in a build
+>>>> error, and the link is as follows:
+>>>>
+>>>> https://lore.kernel.org/all/202506080448.KWN8arrX-lkp@intel.com/
+>>>>
+>>>> After I studied the comments of DECLARE_PER_CPU_SECTION, I roughly
+>>>> understood why this is the case.
+>>>>
+>>>> But so far, I haven't come up with a good way to solve this problem. Do
+>>>> you have any suggestions?
+>>> Hi Hao,
+>>> The problem here is that ARCH_NEEDS_WEAK_PER_CPU is not a Kconfig
+>>> option, it gets defined only on 2 architectures and only when building
+>>> modules here https://elixir.bootlin.com/linux/v6.15.1/source/arch/alpha/include/asm/percpu.h#L14
+>>> and here https://elixir.bootlin.com/linux/v6.15.1/source/arch/s390/include/asm/percpu.h#L21.
+>>> A nicer way to deal with that is to make if a Kconfig option which is
+>>> enabled only for alpha and s390 and then do something like this:
+>>>
+>>>    #if defined(MODULE) && defined(ARCH_NEEDS_WEAK_PER_CPU)
+>>> #define MODULE_NEEDS_WEAK_PER_CPU
+>>> #endif
+>>>
+>>> and change all the usages of ARCH_NEEDS_WEAK_PER_CPU with
+>>> MODULE_NEEDS_WEAK_PER_CPU.
+>>> Did I explain the idea clearly?
+>>> Thanks,
+>>> Suren.
+>>>
+>> Hi Suren
+> Hi Hao,
+>
+>> Thanks for your guidance.
+>> I understand this train of thought.
+>>
+>> I've been thinking about a problem: I only added the
+>> ARCH_NEEDS_WEAK_PER_CPU
+>>
+>> macro to isolate the definition of _shared_alloc_tag.
+>>
+>> Since s390 defines this macro, why did this build error occur?
+Hi Suren
+> The problem is that ARCH_NEEDS_WEAK_PER_CPU is not a Kconfig option,
+> it's just a definition, for s390 it's here:
+> https://elixir.bootlin.com/linux/v6.15.1/source/arch/s390/include/asm/percpu.h#L21
+> So, even for s390 if you are building core kernel code (not a module),
+> ARCH_NEEDS_WEAK_PER_CPU will be undefined, however if you are building
+> a module on s390 then it is defined. So, your change effectively
+> results in _shared_alloc_tag being compiled out in the core kernel
+> while it's used when you build a module. Therefore during linking
+> modules can't link to that symbol in the core kernel. Hope this
+> explains the issue.
 
--- 
-viresh
+
+Thank you so, so, so much! I understand now, and thank you for such a 
+detailed explanation.
+
+
+> The way I would fix this is by making ARCH_NEEDS_WEAK_PER_CPU a
+> Kconfig option and enable it for s390 and alpha, would replace old
+> definitions from
+> https://elixir.bootlin.com/linux/v6.15.1/source/arch/s390/include/asm/percpu.h#L21
+> and https://elixir.bootlin.com/linux/v6.15.1/source/arch/alpha/include/asm/percpu.h#L14
+> with:
+>
+> #if defined(MODULE) && defined(ARCH_NEEDS_WEAK_PER_CPU)
+> #define MODULE_NEEDS_WEAK_PER_CPU
+> #endif
+>
+> Then use MODULE_NEEDS_WEAK_PER_CPU instead of ARCH_NEEDS_WEAK_PER_CPU
+> in all the current places in the kernel code. Lastly, to compile out
+> _shared_alloc_tag your current patch should work fine because on s390
+> and alpha ARCH_NEEDS_WEAK_PER_CPU will be defined after all these
+> changes.
+> Does that make sense?
+
+
+I quite agree with this approach.
+
+Thanks
+Best Regards
+Hao
+
+>> Could you please help explain it again?
+>>
+>> Thanks
+>> Best Regards
+>> Hao
+>>
+>>>> Thanks
+>>>>
+>>>> Best Regards
+>>>>
+>>>> Hao
+>>>>
+>>>>
+>>>>
+>>>>
