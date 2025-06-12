@@ -1,108 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E492F431E;
-	Thu, 12 Jun 2025 12:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166E92F431E;
+	Thu, 12 Jun 2025 12:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749730902; cv=none; b=tpYqieJMYuFNYir8kB8Ehj1SfznRjiaCX7AXQVVyis5OqVEtAmj2q2PGQNaYNg4ayECqlA0jlzFbkPwAhHx9Yf0VHlJxSdmjL2sYJyD0aYKmIAAHd3a2zAQPQoWnyb1VcJend9zsXb2OsveVYpgr/vnD63M707cHgrmiigSRhWE=
+	t=1749730910; cv=none; b=IrhAyz0MVbM4ZNLDH0g3n/g9oLwYDvj3Sf9Anr946vIYqIKtOiQYV2XWd38MvjHU0XkxSwYK0DvlCx/K90VeVPUS7QOWj9M79SF+cNn7REksqOXRjGNr6pkzRgKoiUjDXcvGfMX7Sdds0Rfspbp9nc1I+SqsXjEeGmKGpj4M3kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749730902; c=relaxed/simple;
-	bh=jMub8+Ya8ghmQ/qCgFJGnUqLLospMFuG9+31wf0sbCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SuICM4Ju+KJD1exFKruSpjvmA0toFERieB2/LRMR90QnIloN9iZ7+/cZ4XiHd54H8ELadQ5vlwvFHGtZo/9xGIQtTfI1gqgiG+Af6uLYeTRUO3vIQEzMFbfoaIJUyGDfByynZtwzpIF5hSCL3jDmMbrBypK0LTY39KvHg8rViyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSQ7XtNB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSQ7XtNB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C41DC4CEEA;
-	Thu, 12 Jun 2025 12:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749730901;
-	bh=jMub8+Ya8ghmQ/qCgFJGnUqLLospMFuG9+31wf0sbCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tSQ7XtNButpwRWlSCeexUlrkuwXlubRyrDfeMKJA9fBlTkM3Ad9Ccl005rArhX9D9
-	 fgCacDWxNDYKL9w3px2yevqe/EBIgtsSf9gUrP9pAk8qBgLnjr1Wr0p+eKzfWLzh+v
-	 40UiLmpPjUmlqahBbDqWZQ69CEMDkHwv70UFCsbUeUDdkWPToaByss2jKBlV/6CioN
-	 lGL8isf9TgsGlTJyy3FuyTns0I+YXTDpEaxbB8Vf2MfWuom0yfsBiIgX8lRyCVdK72
-	 MV5jlhNt0wK+NtmdZ7VijgK/saXEibw4HgWNl9D28v7kKXdV/XMy2IM/f+kC9QjE1x
-	 iyEnGsi+l9DfA==
-Date: Thu, 12 Jun 2025 14:21:36 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Paul Moore <paul@paul-moore.com>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Collin Funk <collin.funk1@gmail.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, linux-kernel@vger.kernel.org, selinux@vger.kernel.org, 
-	eggert@cs.ucla.edu, bug-gnulib@gnu.org
-Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list()
-Message-ID: <20250612-trabant-erbost-3c1983e42085@brauner>
-References: <20250605164852.2016-1-stephen.smalley.work@gmail.com>
- <CAHC9VhQ-f-n+0g29MpBB3_om-e=vDqSC3h+Vn_XzpK2zpqamdQ@mail.gmail.com>
- <CAHC9VhRUqpubkuFFVCfiMN4jDiEhXQvJ91vHjrM5d9e4bEopaw@mail.gmail.com>
- <87plfhsa2r.fsf@gmail.com>
- <CAHC9VhRSAaENMnEYXrPTY4Z4sPO_s4fSXF=rEUFuEEUg6Lz21Q@mail.gmail.com>
- <20250611-gepunktet-umkurven-5482b6f39958@brauner>
- <CAHC9VhQYi2k3eamrn+kPkooZQpQ4cdsjs=nvntRVbz4=wz1rzA@mail.gmail.com>
+	s=arc-20240116; t=1749730910; c=relaxed/simple;
+	bh=4Fo/1W1kabTZ2FkPuDY915cDbo8OaFCKSSYQl//Y98A=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CRLtVPJevcBRkowB0kEiShrTNS3poizVqJ2uPshc5gxW7N1Ghl/a1FNhO/8pV4y0XyI+RpY5JWZASYRrAzPP+1J022TvAByhATZZRYRSNehTgAFKlGFTaF81MET4vXt3i1gCWOEyNwdXDFtpoTb2krQ3UZ5ezPHZvD6yP0VoFMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bJ1kl5XMdz2Cf5J;
+	Thu, 12 Jun 2025 20:17:51 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 80C9A1A016C;
+	Thu, 12 Jun 2025 20:21:43 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 12 Jun 2025 20:21:42 +0800
+Message-ID: <70b3f869-26be-4364-9658-8bfe56d16594@huawei.com>
+Date: Thu, 12 Jun 2025 20:21:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhQYi2k3eamrn+kPkooZQpQ4cdsjs=nvntRVbz4=wz1rzA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
+	<horms@kernel.org>, <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
+	<liuyonglong@huawei.com>, <chenhao418@huawei.com>,
+	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/8] net: hns3: add the hns3_get_ae_dev() helper
+To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+References: <20250612021317.1487943-1-shaojijie@huawei.com>
+ <20250612021317.1487943-3-shaojijie@huawei.com>
+ <aEq3DgCDh98Deidl@mev-dev.igk.intel.com>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <aEq3DgCDh98Deidl@mev-dev.igk.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-On Wed, Jun 11, 2025 at 11:45:03AM -0400, Paul Moore wrote:
-> On Wed, Jun 11, 2025 at 6:05 AM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On Tue, Jun 10, 2025 at 07:50:10PM -0400, Paul Moore wrote:
-> > > On Fri, Jun 6, 2025 at 1:39 AM Collin Funk <collin.funk1@gmail.com> wrote:
-> > > > Paul Moore <paul@paul-moore.com> writes:
-> > > > >> <stephen.smalley.work@gmail.com> wrote:
-> > > > >> >
-> > > > >> > commit 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always
-> > > > >> > include security.* xattrs") failed to reset err after the call to
-> > > > >> > security_inode_listsecurity(), which returns the length of the
-> > > > >> > returned xattr name. This results in simple_xattr_list() incorrectly
-> > > > >> > returning this length even if a POSIX acl is also set on the inode.
-> > > > >> >
-> > > > >> > Reported-by: Collin Funk <collin.funk1@gmail.com>
-> > > > >> > Closes: https://lore.kernel.org/selinux/8734ceal7q.fsf@gmail.com/
-> > > > >> > Reported-by: Paul Eggert <eggert@cs.ucla.edu>
-> > > > >> > Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2369561
-> > > > >> > Fixes: 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always include security.* xattrs")
-> > > > >> >
-> > > > >> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> > > > >> > ---
-> > > > >> >  fs/xattr.c | 1 +
-> > > > >> >  1 file changed, 1 insertion(+)
-> > > > >>
-> > > > >> Reviewed-by: Paul Moore <paul@paul-moore.com>
-> > > > >
-> > > > > Resending this as it appears that Stephen's original posting had a
-> > > > > typo in the VFS mailing list.  The original post can be found in the
-> > > > > SELinux archives:
-> > > > >
-> > > > > https://lore.kernel.org/selinux/20250605164852.2016-1-stephen.smalley.work@gmail.com/
-> > > >
-> > > > Hi, responding to this message since it has the correct lists.
-> > > >
-> > > > I just booted into a kernel with this patch applied and confirm that it
-> > > > fixes the Gnulib tests that were failing.
-> > > >
-> > > > Reviewed-by: Collin Funk <collin.funk1@gmail.com>
-> > > > Tested-by: Collin Funk <collin.funk1@gmail.com>
-> > > >
-> > > > Thanks for the fix.
-> > >
-> > > Al, Christian, are either of you going to pick up this fix to send to
-> > > Linus?  If not, any objection if I send this up?
-> >
-> > It's been in vfs.fixes for some time already and it'll go out with the
-> > first round of post -rc1 fixes this week.
-> 
-> Great, thanks.  I didn't see any replies on-list indicating that the
-> patch had been picked up, so I just wanted to make sure someone was
 
-Hm, odd. I did send a b4 ty I'm pretty sure.
+on 2025/6/12 19:16, Michal Swiatkowski wrote:
+> On Thu, Jun 12, 2025 at 10:13:11AM +0800, Jijie Shao wrote:
+>> This patch introduces a hns3_get_ae_dev() helper to reduce the unnecessary
+>> middle layer conversion. Apply it to the whole HNS3 driver.
+>> The former discusstion can be checked from the link.
+> The definition already exist, so more like "use hns3_get_ae_dev()
+> wherever possible".
+>
+>> Link: https://patchwork.kernel.org/project/netdevbpf/patch/20230310081404.947-1-lanhao@huawei.com/
+> I think the comment is about going from netdev to your private
+> hnae3_ae_dev. You need hnae3_netdev_to_dev/pf/whatever().
+>
+> Using already defined helper is fine, just please change the commit
+> message/title.
+
+
+I will change this in v2.
+
+Thanks,
+Jijie SHao
+
+>
+>> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+> [...]
+>
