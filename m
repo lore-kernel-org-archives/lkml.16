@@ -1,102 +1,106 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D18EB23184A;
-	Thu, 12 Jun 2025 10:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D754231A32;
+	Thu, 12 Jun 2025 10:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725170; cv=none; b=qZdGWthThN5GsPRkv0xXhkMw69zsCwB+ld0DaH8udTbn80fnpAsDz3nCcSDt2536vf3HWvj1CBKoiVt3neB5GaMDs/mF7LltS7QQEYxmEZp9ttpRzBXZZwkzG0xfsxOnSzwAD0SJ11u4IjpJOIGfCpUsZvzRMGviUiT6KgYg4io=
+	t=1749725206; cv=none; b=hC05j2i33x1uMcJ0QjZi81Lxv/ufcSCDyCz9QkboqW3QzmvLKJDUB2CZh2H8jE2hNL3zHUedYEz0DGyZEO2oa/OGlpg8ChU40JutA9FsMJVJaVVs0PpdhWGm9QOfg1LRks3lFeyYWBVTuSajOTzugi3K4R2EgMfsTts8vuuRayQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725170; c=relaxed/simple;
-	bh=/1gcciYLf3mcr5dTWnS0/NNH5ggDzXWBaBIN89ySJHw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KpAfdjVeyVA9HxkTmcXzpgDAxTPGbDOJtaZ+gB3818iD3EyVth1FcdqY0CQxR22rM00VuQNPgWWQusKdpW0zjbQE3NaPp4FXzoXxLeDgTmLqOStHNmRtGUrVfiMwThvfSQEkVQLSPOLwUWtAEDKjXCJ1+WRLNZYKaX+DzShaQfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app1 (Coremail) with SMTP id TAJkCgDH6xHXr0popHueAA--.50747S2;
-	Thu, 12 Jun 2025 18:45:45 +0800 (CST)
-From: Yulin Lu <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	zhengyu@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	Yulin Lu <luyulin@eswincomputing.com>
-Subject: [PATCH v5 0/2] ESWIN EIC7700 pinctrl driver
-Date: Thu, 12 Jun 2025 18:45:39 +0800
-Message-Id: <20250612104539.2011-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
+	s=arc-20240116; t=1749725206; c=relaxed/simple;
+	bh=6rmmiSB1nU3IQ0qw0+ckwjysahJXSea7GRNyqVg84jY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bosuNaFonuA/yoa3JhG4y9ycAcXNZu+htItlMUPtDin5O5YzLbBuq/ZnRolOY+2CthTv/Pig3hHTIcKUjn9ohEFSyoPErmSvfFhBoFZKl05q3im8ZJUN831XIAiGOHGnzgjWKAMkceQvSjkVq8rmVznScgFbXTlRxiTD9/wFyms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sO7KR46D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sO7KR46D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CA91C4CEEA;
+	Thu, 12 Jun 2025 10:46:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749725206;
+	bh=6rmmiSB1nU3IQ0qw0+ckwjysahJXSea7GRNyqVg84jY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sO7KR46DWS7JVO+IVKFBlPk2axEZHUAA1mPsVrQhyIFlbSyq1ED1OzeAFJDimvO7G
+	 G6BEIjTcIlUT/cKH20t6h/YA/87MVWs7mlZvrZzXPVTtscM2rfVY8KWOjeKlFNJRXl
+	 DY/qc3yoiKfnWA3qiC8xH7zPh/3mNSCg/lZ+rFlQjJUFaeC0SYxHg8Ch0a2oZ/O3D8
+	 pG2+WUdm7yq4u5ebZBMNa8hdL0RT+w5rdds9xDa+jKESw2xx//Z515r+P/b51IwZw0
+	 r7X2GYvawtYlzqLha9iCrpyZ+8+cA3vWRmbuePGYiVMCW4UNtAFLg5E/bu1VvUdAY2
+	 jMVYXidYHyTEQ==
+Date: Thu, 12 Jun 2025 16:16:38 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org, mahesh@linux.ibm.com, 
+	oohall@gmail.com, Jonathan.Cameron@huawei.com, terry.bowman@amd.com, 
+	tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v4 3/3] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+Message-ID: <54nug57urubw5uhrwrdos3s3kta2r4qovzb6cf2mntc7kiora5@lg3p7vjmrvb3>
+References: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+ <20250217024218.1681-4-xueshuai@linux.alibaba.com>
+ <8a833aaf-53aa-4e56-a560-2b84a6e9c28c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgDH6xHXr0popHueAA--.50747S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cry7KF4fAFWUKFWkJFWkZwb_yoW8Gr13pF
-	43Grn5Jan8XF47ta4xJ3Wj9ry3Gan7Ar1a9a1Sg347XFs8Aw1UJFW5Kr15XFWDGr48Jr93
-	tF15Kryj9F1UArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
+In-Reply-To: <8a833aaf-53aa-4e56-a560-2b84a6e9c28c@linux.intel.com>
 
-  Implements support for the Eswin eic7700 SoC pinctrl controller.
-  Provides API to manage pinctrl for the eic7700 SoC.
-  Integration with the Linux pinctrl subsystem for consistency and
-  scalability.
+On Sun, Mar 02, 2025 at 07:43:41PM -0800, Sathyanarayanan Kuppuswamy wrote:
+> 
+> On 2/16/25 6:42 PM, Shuai Xue wrote:
+> > The AER driver has historically avoided reading the configuration space of
+> > an endpoint or RCiEP that reported a fatal error, considering the link to
+> > that device unreliable. Consequently, when a fatal error occurs, the AER
+> > and DPC drivers do not report specific error types, resulting in logs like:
+> > 
+> >    pcieport 0000:30:03.0: EDR: EDR event received
+> >    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+> >    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+> >    pcieport 0000:30:03.0: AER: broadcast error_detected message
+> >    nvme nvme0: frozen state error detected, reset controller
+> >    nvme 0000:34:00.0: ready 0ms after DPC
+> >    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+> > 
+> > AER status registers are sticky and Write-1-to-clear. If the link recovered
+> > after hot reset, we can still safely access AER status of the error device.
+> > In such case, report fatal errors which helps to figure out the error root
+> > case.
+> > 
+> > After this patch, the logs like:
+> > 
+> >    pcieport 0000:30:03.0: EDR: EDR event received
+> >    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+> >    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+> >    pcieport 0000:30:03.0: AER: broadcast error_detected message
+> >    nvme nvme0: frozen state error detected, reset controller
+> >    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+> >    nvme 0000:34:00.0: ready 0ms after DPC
+> >    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+> >    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+> >    nvme 0000:34:00.0:    [ 4] DLP                    (First)
+> >    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+> 
+> IMO, above info about device error details is more of a debug info. Since
+> the
+> main use of this info use to understand more details about the recovered
+> DPC error. So I think is better to print with debug tag. Lets see what
+> others
+> think.
+> 
 
-  Supported chips:
-    Eswin eic7700 SoC.
+My two cents: All AER logs are mostly error messages, so I don't see why this
+one should be a debug message. But having said that, this new error log may
+confuse users as if a new AER error is received post recovery. So adding
+something that specifies that this belong to the previous AER error would be
+good IMO.
 
-  Test:
-    Tested this patch on the Sifive HiFive Premier P550 (which uses
-    the EIC7700 SoC), including system boot, networking, EMMC, display,
-    and other peripherals. The drivers for these modules all use the
-    pinctrl module, so this verifies that this pinctrl driver
-    patch is working properly.
-
----
-Changes since V4:
-  pinctrl: eswin: Add EIC7700 pinctrl driver
-  - Added #ifdef CONFIG_OF to fix the kernel robot test compilation error.
-  - Removed "Reviewed-by" tag of "Krzysztof Kozlowski"
-  - Link: https://lore.kernel.org/all/20250515054524.390-1-luyulin@eswincomputing.com/
-
-Yulin Lu (2):
-  dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
-  pinctrl: eswin: Add EIC7700 pinctrl driver
-
- .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++
- drivers/pinctrl/Kconfig                       |  11 +
- drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/pinctrl-eic7700.c             | 704 ++++++++++++++++++
- 4 files changed, 872 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
- create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
+- Mani
 
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
