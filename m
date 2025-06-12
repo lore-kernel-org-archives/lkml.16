@@ -1,173 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E109B29ACF0;
-	Thu, 12 Jun 2025 15:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3161B3957;
+	Thu, 12 Jun 2025 15:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749743559; cv=none; b=NF4DH5lrjLxbNzAegfGklk2CvWxfZRuf80+uO37h1sXjLXEaK5F009o45R+Zz9gjtJsB/pKlfjzWyIMZWYWpYGgIdNVP38o96L15qdVFDyS6jFwaFMwTmbqSascuJwoH9YmC0qiaqmY+yMXwIqZV//cAkujtO3v2x8SF5bMGGc0=
+	t=1749743586; cv=none; b=VJU2TLy1liMJGViwxMHSq7NKVZ6f5FuEvbf6B36oEuyR2VHw/G53Pg4zKD1AQGr809pIKE1BtXzFE2mJZ16AB8FNlCY7hblHpnZ/xmvGeFYlOn0+Trn/ZBrRIEFZ3N7sgXoWcHpdFstF6Ulpj9T11ZN+o1zBqYZzkivBrD3geMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749743559; c=relaxed/simple;
-	bh=Updcin2t1tn+PnzGiadb1hLYzbZBbIAKi6D8Vusxwu0=;
+	s=arc-20240116; t=1749743586; c=relaxed/simple;
+	bh=G7ZMMQ9ADT/6wk/tz0a93t09tIL8YIFEwIYmqTwvN7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qwH5mcnAsf+jIxAH/pwNFjcD6t/ANdZH3Pe9k1ubp63XE+OpaCO/jFZI/0X9sX22PKt3YKMtecB2dJkBCxvA0Udn4q4gCVohCBS/egANsALcf/f3oSKV8pS32XQxml+ObWvGcEd9Bjt6ivxM6pL8U1TEwKtWHk8r+q3FnErAy/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GFQlllvz; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KG4RwmYSvYqKxFjMdpaGmpAGUQTcv6bZnxBnzSO0vjs3lwgRJcQ7PPimtRhwzP+nrDu0ERrgIwZezk/Xx4UTvmw/7pEj6Ww1Pi7S2zVsg+ZF+4nixxhBxgAB6Hc4KWvAqeC5SwqSwnpdQXlfL0pCORcInerisOULORRzcM6ml78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1FQieJT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GFQlllvz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749743558; x=1781279558;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Updcin2t1tn+PnzGiadb1hLYzbZBbIAKi6D8Vusxwu0=;
-  b=GFQlllvzLdpK8b3fLMXMR3cAuy6lwP4iJ7k/vIrMSm9HcFUQ8LsU05AU
-   Xo+siBf5DgChF0VL6Gq3rEAwiWpbgDtm6gKW86mtRVyxeKEueB+6Qgl3n
-   Rzo5ojqwiwpdW/Y5d2Y4/eI+n28Z6OeYNZVXD+MY5+9ymKWYfLp7rmcdQ
-   b+indV05MUxJLxQ5egGXrJpTNfOJsN5mKD8Ibjm1baw2Gzup1NL8n4Ewl
-   JtaqHv3HUIY3oKThgOAD1C5rm2WsTuWlPJKPOgFG/hdgFPkaI14sD0Xqr
-   lycH+m7TPRQjTdto2F+HQqYV6kJY1MvPkmbpdiRtoRHvoCcTR+vZRHqmI
-   g==;
-X-CSE-ConnectionGUID: 8c2oviC6RyOXZrw9y/59nA==
-X-CSE-MsgGUID: bTRjB4GHTU+0+39hkwj5fw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="63343372"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="63343372"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 08:52:33 -0700
-X-CSE-ConnectionGUID: cj9l53x1T66tXFPkscPkWQ==
-X-CSE-MsgGUID: U8RpNtwQTySlX56UOkdwOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="148465993"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 12 Jun 2025 08:52:30 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPkE7-000Bjq-1Y;
-	Thu, 12 Jun 2025 15:52:27 +0000
-Date: Thu, 12 Jun 2025 23:52:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Ijano <andrew.ijano@gmail.com>, jic23@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, andrew.lopes@alumni.usp.br,
-	gustavobastos@usp.br, dlechner@baylibre.com, nuno.sa@analog.com,
-	andy@kernel.org, jstephan@baylibre.com, linux-iio@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1FQieJT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11085C4CEEA;
+	Thu, 12 Jun 2025 15:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749743585;
+	bh=G7ZMMQ9ADT/6wk/tz0a93t09tIL8YIFEwIYmqTwvN7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n1FQieJTUyWtSztZ5N1cLG1nh921uBAqQ+2ezL6GVhhIqU36+GzOkXOAfAcBr2tuN
+	 sdhPunWhYbIEA8AnT0MSD9Qh9/YV2oK40K9Q3YP6V2GgFXTYTLoyWU3r2GWdC+3gQz
+	 QBX5jdPLoaWnAVQh4uhuy2Ps9RDVLuXLMqJmce5O4OHvAoyJ21fN/iRO8YZUjHjCj+
+	 xLiov+Z9Ojk+Hl8W2yTtAnD+c6HkVYmBv5kC940amaRZqRuB//3sSExHH62wntLix0
+	 oDaLt4wjz0ho74ZMWAWEnGLXzQDizYPkHKO8v3cOu5ojq6+9+dK5k69mRV24ZqmHIn
+	 INOTynZQxxIxQ==
+Date: Thu, 12 Jun 2025 16:53:00 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] iio: accel: sca3000: use guard(mutex)() for
- handling mutex lock
-Message-ID: <202506122309.FvJPaMhh-lkp@intel.com>
-References: <20250611194648.18133-4-andrew.lopes@alumni.usp.br>
+Subject: Re: [PATCH 1/2] dt-bindings: display: panel: document Synaptics TDDI
+ panel driver
+Message-ID: <20250612-patriarch-triage-8ceeebc6da4a@spud>
+References: <20250612-panel-synaptics-tddi-v1-0-dfb8a425f76c@disroot.org>
+ <20250612-panel-synaptics-tddi-v1-1-dfb8a425f76c@disroot.org>
+ <20250612-agency-mothball-3830177fd43b@spud>
+ <2d8714983c484fe34313efe1dbabf2bd@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="s5vmbRD8rosFxZgz"
+Content-Disposition: inline
+In-Reply-To: <2d8714983c484fe34313efe1dbabf2bd@disroot.org>
+
+
+--s5vmbRD8rosFxZgz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611194648.18133-4-andrew.lopes@alumni.usp.br>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+On Thu, Jun 12, 2025 at 03:47:55PM +0000, Kaustabh Chakraborty wrote:
+> On 2025-06-12 15:32, Conor Dooley wrote:
+> > On Thu, Jun 12, 2025 at 08:09:40PM +0530, Kaustabh Chakraborty wrote:
+> >> Document the driver for Synaptics TDDI (Touch/Display Integration) pan=
+els.
+> >> Along with the MIPI-DSI panel, these devices also have an in-built LED
+> >> backlight device and a touchscreen, all packed together in a single ch=
+ip.
+> >> Also, add compatibles for supported panels - TD4101 and TD4300.
+> >>=20
+> >> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> >> ---
+> >>  .../bindings/display/panel/synaptics,tddi.yaml     | 92 +++++++++++++=
++++++++++
+> >>  1 file changed, 92 insertions(+)
+> >>=20
+> >> diff --git a/Documentation/devicetree/bindings/display/panel/synaptics=
+,tddi.yaml b/Documentation/devicetree/bindings/display/panel/synaptics,tddi=
+=2Eyaml
+> >> new file mode 100644
+> >> index 0000000000000000000000000000000000000000..3aae1358a1d764361c072d=
+3b54f74cdf634f7fa8
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/display/panel/synaptics,tddi.y=
+aml
+> >=20
+> > File called synaptics,tddi
+> >=20
+> >> @@ -0,0 +1,92 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/display/panel/samsung,tddi.yaml#
+> >=20
+> > id of samsung,tddi
+> >=20
+> > [...]
+> >
+> >> +properties:
+> >> +  compatible:
+> >> +    enum:
+> >> +      - syna,td4101-panel
+> >> +      - syna,td4300-panel
+> >=20
+> > compatibles are syna,td####-panel
+> >=20
+> > These should be consistent and tooling should have complained about the
+> > mismatch between id and filename at the least.
+>=20
+> Hmm, I don't recall seeing any errors. Do I pick any one then? Or is there
+> any other generic way?
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on jic23-iio/togreg]
-[also build test ERROR on linus/master v6.16-rc1 next-20250612]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andrew-Ijano/iio-accel-sca3000-replace-error_ret-labels-by-simple-returns/20250612-034940
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20250611194648.18133-4-andrew.lopes%40alumni.usp.br
-patch subject: [PATCH v5 3/3] iio: accel: sca3000: use guard(mutex)() for handling mutex lock
-config: nios2-randconfig-002-20250612 (https://download.01.org/0day-ci/archive/20250612/202506122309.FvJPaMhh-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250612/202506122309.FvJPaMhh-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506122309.FvJPaMhh-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/irqflags.h:17,
-                    from include/asm-generic/bitops.h:14,
-                    from ./arch/nios2/include/generated/asm/bitops.h:1,
-                    from include/linux/bitops.h:68,
-                    from include/linux/kernel.h:23,
-                    from include/linux/interrupt.h:6,
-                    from drivers/iio/accel/sca3000.c:10:
-   drivers/iio/accel/sca3000.c: In function 'sca3000_read_raw':
->> include/linux/cleanup.h:258:2: error: a label can only be part of a statement and a declaration is not a statement
-     class_##_name##_t var __cleanup(class_##_name##_destructor) = \
-     ^~~~~~
-   include/linux/cleanup.h:319:2: note: in expansion of macro 'CLASS'
-     CLASS(_name, __UNIQUE_ID(guard))
-     ^~~~~
-   drivers/iio/accel/sca3000.c:699:3: note: in expansion of macro 'guard'
-      guard(mutex)(&st->lock);
-      ^~~~~
->> include/linux/cleanup.h:258:2: error: a label can only be part of a statement and a declaration is not a statement
-     class_##_name##_t var __cleanup(class_##_name##_destructor) = \
-     ^~~~~~
-   include/linux/cleanup.h:319:2: note: in expansion of macro 'CLASS'
-     CLASS(_name, __UNIQUE_ID(guard))
-     ^~~~~
-   drivers/iio/accel/sca3000.c:731:3: note: in expansion of macro 'guard'
-      guard(mutex)(&st->lock);
-      ^~~~~
->> include/linux/cleanup.h:258:2: error: a label can only be part of a statement and a declaration is not a statement
-     class_##_name##_t var __cleanup(class_##_name##_destructor) = \
-     ^~~~~~
-   include/linux/cleanup.h:319:2: note: in expansion of macro 'CLASS'
-     CLASS(_name, __UNIQUE_ID(guard))
-     ^~~~~
-   drivers/iio/accel/sca3000.c:735:3: note: in expansion of macro 'guard'
-      guard(mutex)(&st->lock);
-      ^~~~~
-   drivers/iio/accel/sca3000.c: In function 'sca3000_write_raw':
-   drivers/iio/accel/sca3000.c:748:6: warning: unused variable 'ret' [-Wunused-variable]
-     int ret;
-         ^~~
-   In file included from include/linux/irqflags.h:17,
-                    from include/asm-generic/bitops.h:14,
-                    from ./arch/nios2/include/generated/asm/bitops.h:1,
-                    from include/linux/bitops.h:68,
-                    from include/linux/kernel.h:23,
-                    from include/linux/interrupt.h:6,
-                    from drivers/iio/accel/sca3000.c:10:
-   drivers/iio/accel/sca3000.c: In function 'sca3000_read_event_value':
->> include/linux/cleanup.h:258:2: error: a label can only be part of a statement and a declaration is not a statement
-     class_##_name##_t var __cleanup(class_##_name##_destructor) = \
-     ^~~~~~
-   include/linux/cleanup.h:319:2: note: in expansion of macro 'CLASS'
-     CLASS(_name, __UNIQUE_ID(guard))
-     ^~~~~
-   drivers/iio/accel/sca3000.c:835:3: note: in expansion of macro 'guard'
-      guard(mutex)(&st->lock);
-      ^~~~~
-   drivers/iio/accel/sca3000.c: In function 'sca3000_write_event_value':
-   drivers/iio/accel/sca3000.c:881:6: warning: unused variable 'ret' [-Wunused-variable]
-     int ret;
-         ^~~
-   drivers/iio/accel/sca3000.c: In function 'sca3000_write_event_config':
-   drivers/iio/accel/sca3000.c:1188:6: warning: unused variable 'ret' [-Wunused-variable]
-     int ret;
-         ^~~
+The id must match the filename and the filename should match one of the
+compatibles.
 
 
-vim +258 include/linux/cleanup.h
+--s5vmbRD8rosFxZgz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-54da6a0924311c Peter Zijlstra 2023-05-26  256  
-54da6a0924311c Peter Zijlstra 2023-05-26  257  #define CLASS(_name, var)						\
-54da6a0924311c Peter Zijlstra 2023-05-26 @258  	class_##_name##_t var __cleanup(class_##_name##_destructor) =	\
-54da6a0924311c Peter Zijlstra 2023-05-26  259  		class_##_name##_constructor
-54da6a0924311c Peter Zijlstra 2023-05-26  260  
-54da6a0924311c Peter Zijlstra 2023-05-26  261  
+-----BEGIN PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEr33AAKCRB4tDGHoIJi
+0o+1AQDRaFLnl2hzqpE5LjBnhUp12VJATlA6CFsXD8YOLe6IkwEAiexCjLj6ONAF
+oQvB1eDC8gP6KWkgZrOYnQuvxANgKgQ=
+=wHWT
+-----END PGP SIGNATURE-----
+
+--s5vmbRD8rosFxZgz--
