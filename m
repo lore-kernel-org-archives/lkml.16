@@ -1,257 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294051D5CE5
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413D5142E73;
+	Thu, 12 Jun 2025 07:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749711972; cv=none; b=cJZVzGIxo7K+gLgPJ60KMuUTffMVFx4emB8584TUYkIeifn4Rj+m2GQBFdfTk2oHDlCToCjqGEbDiMwpVhyBLyJbQdPBMWXyF9dLwdfQsK5xkLlIX4zlTqFcQpl566kDe9YhNDvKo56nRd4ipCMiVNc2ahnKapAkwHmJtm1RpEQ=
+	t=1749712077; cv=none; b=N9rNBlIJiRHZk++skbApflIuwRrld0Pt8lEzFEwrwjeLQNxrtvojsMmEoQ6m68mv4RyFr1mjnsVgT5Ve5qreGlMKQgOoXByJwl3mXDqo7zJ2QAc78VHa6a5xljnHH/3OCOeiveXr4QEUdPW5eMoX47COJMQc9lc1zqXFEP9JF2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749711972; c=relaxed/simple;
-	bh=f8prUh6/atF+n9TdAF4v1+dLavgeVHSI2BDX3mFj3lc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kU+Gmiur14AZck1mFCaQlKPfj4J+QqwvZO+nr+LiWpH1NnKM0FxDPmV0oUqHkNlbOMEmfuOrn1/LicgtGnFv1LoqnBCNdLgRjA5pcL+ch79/pVAdH1nA9ehEpIbVX1kBxQmX2CayaSZinsKHimPF1bdcW1S1FinUhqailVG7btI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M4MODApM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749712077; c=relaxed/simple;
+	bh=fcbcUsdmGSWC6B+UaH4cDfyK1n0S4FLllNdjhTXZzr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vdx5c7+ttOOdE0ox88mpGglcHswhU7XpjICl07ZOryC9iLngkRWELi9+Fkq8btn1OdaarNuzSprnY6LVcJleJX06FC8e2/st2PPw/uCIzqJ6dFBDiIU5g1PmXp6tVYhS8LbI5JQn2OOW8c8BnlJxM4+TaXIzr1naSliLUG/Xj94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kow2OY1i; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M4MODApM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749711970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bgI7EwmjXl77aJdJaolj+NbSd9BnE0i2KDqrsSDfOf8=;
-	b=M4MODApMADTbtWqVE2IOdAHB67Xzrbc6xD0HUW8EAC6HTcx6x+iLzxCOneFmxj5SHg/WbP
-	ZlyaeFdgZJK6AW3drPiy1GFUl8dI17Pa79Dn5Di7S8IjoMKixIfjf5K79o/4UDPPOODJIY
-	09Mx5FYf82FVZiWCoqxAl58ieEawGDo=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-159-sZfcMWs7MFulSB1Ntxhy5Q-1; Thu, 12 Jun 2025 03:06:08 -0400
-X-MC-Unique: sZfcMWs7MFulSB1Ntxhy5Q-1
-X-Mimecast-MFC-AGG-ID: sZfcMWs7MFulSB1Ntxhy5Q_1749711967
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451d2037f1eso3153425e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:06:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kow2OY1i"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso935875a91.3;
+        Thu, 12 Jun 2025 00:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749712075; x=1750316875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dAOjJxhCfv8VWKL7BVvY9ZNzsKcaY5YiZqclR7H4/vs=;
+        b=Kow2OY1iF0KD34H77JO1Y/hgIV2UH6IA2mx8lcd5ccw+l+c5ABmaipVzaiklpSzLVe
+         6q93GMpBqrPTGUKAZ6rpNoVRQv1bV56rUC/2uei+oz2sER+trBH+6xuMhhGJWYhQEaE8
+         btR5cEU1EGkZhWXwrDL2E3p4XPTo7AJOqXZQibMzW8mnIi63LPjwaqBMscVvL0BEswr1
+         JBf2R4XFV9GNIY7piJ1Fwg2Y8tRyvg4QcSdpcRgC7EhloHOhadzKFv8uwC+A+x1diCgd
+         G7IF/pzkSG1iGT7xhfeJp+W1MkHGYaE4moAjQii06O8KUMPiLcXGQxHgGcrrbS8WM9nQ
+         PWvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749711967; x=1750316767;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bgI7EwmjXl77aJdJaolj+NbSd9BnE0i2KDqrsSDfOf8=;
-        b=SZfGJtitO19ahUjjXCjrjzNgEywAcmuiOpiGaMpMztqvatEtRqZp0pRYqZ1vmuAQwG
-         LRu+pfDF4oxRicLSLlcUF3wTQdVojuIAzwpk4j6WOWqsonN5R+3csg1vZc7yV/Ydzl3l
-         X+nvPf+5RHFvKTIzCxyhr0WswMi93C+WivmjZjYlsPG6pc8w7vgGLVl1lv+H+J4sr0EP
-         VEGT6RREocPVcSFmvWa/0L1LjqHihNN7EJ88yCDyeXUTPDD9FyzZQqwqasCeCT3yQt3u
-         Ter+W2Kg2gpLK4eYMQt/OfqnZFLMH4WL/fP88PPmWMXbVJmdYWXeLRttRVwnzkTNvrxO
-         4ekg==
-X-Gm-Message-State: AOJu0YzzIMo7p2TlJTSIRpBpKjUyQI4ga+pXlK6RNPw0Zmi6A8XIj6lu
-	JseewihcmLW569GVSigL36PIBY2kXX2rEq11osKaiv6jrGIzePL4gH+Nn+Yz7eu+stUtsX0+Cta
-	/A9DLvB9E7uA55Ob2xv7D3xONm3QSVVpBqlswVZqVyBPsV2zW2V3eN3J0Tsc+6GKgxg==
-X-Gm-Gg: ASbGncu4neXqEN/MzZ/oEAgqW2gA+xiGQBkRiXSPVpvlGifGbFH+IZsTVJs4lqLfWYo
-	76x1bYrIJdaKxaa2lS/uYQklLLRqr93ulqUP3Ja36TH1O0mZ8klsPDUPrSkZZhTRIQEfy66D0MH
-	BTuBZkUUhhhZqWEpXZrqotuVgwbN/F//CPp3Td/FfVJtQdkG5TVkLXFhMDEtZ0FwdC/f/CvEfS0
-	p9xJvAaZZqB3MgfrcU1wMdQ8SLjXoltBtadmsvPeskshhZiK3r/G0eQWdUGHL8Kj5A+Zk6L5gBV
-	lcAz6TgQK3JXSrABFiKjduAtzLI7w82aiG41FXibofuq9yrr5iwlG+FiqLeM5zb9F2hquRAZ7CW
-	M386iiAPB99OSzWEN9tyxcghDByNJJYAgX+3bu5U3TmgK5/x6tA==
-X-Received: by 2002:a05:600c:6092:b0:43e:afca:808f with SMTP id 5b1f17b1804b1-4532d328cd4mr17302015e9.31.1749711967395;
-        Thu, 12 Jun 2025 00:06:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH7ktzxGj9rxgF3e5K2QU/ZuZlrNO09W01BkOtOhNwjn+efDP3YWSRr1Sn0SDBCN08gcUuT0g==
-X-Received: by 2002:a05:600c:6092:b0:43e:afca:808f with SMTP id 5b1f17b1804b1-4532d328cd4mr17301565e9.31.1749711966971;
-        Thu, 12 Jun 2025 00:06:06 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e24420csm10772795e9.20.2025.06.12.00.06.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 00:06:05 -0700 (PDT)
-Message-ID: <0302ec30-856d-4e4b-be7b-1105966733e8@redhat.com>
-Date: Thu, 12 Jun 2025 09:06:04 +0200
+        d=1e100.net; s=20230601; t=1749712075; x=1750316875;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dAOjJxhCfv8VWKL7BVvY9ZNzsKcaY5YiZqclR7H4/vs=;
+        b=VtIAjFV2zXPPXok7tYq2u9yr4u6HeqhuNf6BquJjWDbnS/dTfY8P/3TBwi0jSxuAcB
+         OWu97rGgsAfs8cPuoCsIBgbepiBSmh0H94m0MGb7FX3gBrCHUDvZMtW5VFR0lNNAyYyB
+         yOFAJelprb2S2l1rNP3/AZrc9fu9GSTvp8O9NLvCI4p0kP4SwP/oSbWSdrWgMQwBIKez
+         hybLNSzfERpn0cGx70FKwbXO3aIjmI5lM8tt7DgMA0eyTepqr9l8JHhaFIGQLNKqH97E
+         gZLCYW6r+DFpyL8ktQ9Nwg2i3eHhYT2vp8sFUHRcmMfUz4XV7+7+ufil27S8mcMopn+B
+         M1JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnc0Dy8jKmC3rByxNhhGeDRUT7RV4aN1j0Y65102epnY7Y2R0WTCcynKZS3sUt3LLCFoHVqa1iUTWN@vger.kernel.org, AJvYcCWwn1BS+2PW2SMdZZybcrWQd+SLviq5VvWf9/LQIh0UxMM6+JuPltPBNoFBVlpC40W6dxyehawTdXMYp2US@vger.kernel.org
+X-Gm-Message-State: AOJu0YzazXTpkPhCe54Fc1TdLdAP5fYZLoPAGJn3SxBvLD7EMuHW3OWt
+	knwJxjWJhMVxhYYVJhd8ZjYLcwx+1a6E46t5iX/O+VwBLcdlCk0SJVUYqmNp+8tZGQA=
+X-Gm-Gg: ASbGncsHzNAFiTLJe44cgltdiTdmSWvcM20a/W7DUzpxB5FptaxcG1WkaCVm/+QvtNu
+	BjEsKrHwnXLVbAfwx4IpHSD9FS3vQFWrKI6p9vFxqLtnHRjMrqPhoKoobS1q0wvu5lYQ7Bt+DvI
+	Qj/fv0t45xhLNnb7vhbVc5FnkIEBZcoebAMeY2snO4s3Espf4uKzwlAEuZJXqbcgPuaVJ26cAtD
+	Rl8Jc/wZgTehthGis5olQks9JfrhszNLn3CCxiCMT3MC2CY46r7Np0hczRgzAgtbYz4bwnkQlwb
+	WOFi4rxBiZxwLU6qRi2zt31/hbLfwx8ilPT8vgZIm6bI4DwX/ytWM7HbZJ5RqKXDXYZqFvwP3NA
+	qIND8pLvePyRgHuJ1fqKInXQkZ48xQVs=
+X-Google-Smtp-Source: AGHT+IGfi33QMmP2NxREt3lPErfPBTHFxGftgC5xTDBsF/Wzhv8TdBvW48FWIe805inRamkcxDRnzw==
+X-Received: by 2002:a05:6a20:729c:b0:1ee:efa5:6573 with SMTP id adf61e73a8af0-21f86600846mr9497042637.8.1749712064431;
+        Thu, 12 Jun 2025 00:07:44 -0700 (PDT)
+Received: from ankitchauhan-Legion-5-15ITH6 ([2405:201:4042:d128:1895:113a:65dd:3ae0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74880a06b64sm738064b3a.143.2025.06.12.00.07.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 00:07:43 -0700 (PDT)
+Date: Thu, 12 Jun 2025 12:36:56 +0530
+From: Ankit Chauhan <ankitchauhan2065@gmail.com>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm: lanyang: fix lable->label typo for lanyang dts
+Message-ID: <20250612070656.bir2ywkwu27gxs7d@ankitchauhan-Legion-5-15ITH6>
+References: <20250529-lanyang-lable-fix-v1-1-8a2dcb48bda4@gmail.com>
+ <3fe9885cc54a328932915a63816ac1b7952689a2.camel@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] mm/huge_memory: don't mark refcounted folios
- special in vmf_insert_folio_pmd()
-To: Alistair Popple <apopple@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
- Oscar Salvador <osalvador@suse.de>
-References: <20250611120654.545963-1-david@redhat.com>
- <20250611120654.545963-3-david@redhat.com>
- <xdkrref3md2rfc3sou6lta2vcevz6e4ckjd6q67znpipkvxbmw@gftpxkrtlqnx>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <xdkrref3md2rfc3sou6lta2vcevz6e4ckjd6q67znpipkvxbmw@gftpxkrtlqnx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3fe9885cc54a328932915a63816ac1b7952689a2.camel@codeconstruct.com.au>
 
-On 12.06.25 04:17, Alistair Popple wrote:
-> On Wed, Jun 11, 2025 at 02:06:53PM +0200, David Hildenbrand wrote:
->> Marking PMDs that map a "normal" refcounted folios as special is
->> against our rules documented for vm_normal_page().
->>
->> Fortunately, there are not that many pmd_special() check that can be
->> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
->> would get this wrong right now are rather harmless: e.g., none so far
->> bases decisions whether to grab a folio reference on that decision.
->>
->> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
->> implications as it seems.
->>
->> Getting this right will get more important as we use
->> folio_normal_page_pmd() in more places.
->>
->> Fix it by teaching insert_pfn_pmd() to properly handle folios and
->> pfns -- moving refcount/mapcount/etc handling in there, renaming it to
->> insert_pmd(), and distinguishing between both cases using a new simple
->> "struct folio_or_pfn" structure.
->>
->> Use folio_mk_pmd() to create a pmd for a folio cleanly.
->>
->> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>   mm/huge_memory.c | 58 ++++++++++++++++++++++++++++++++----------------
->>   1 file changed, 39 insertions(+), 19 deletions(-)
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 49b98082c5401..7e3e9028873e5 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -1372,9 +1372,17 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
->>   	return __do_huge_pmd_anonymous_page(vmf);
->>   }
->>   
->> -static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
->> -		pmd_t *pmd, pfn_t pfn, pgprot_t prot, bool write,
->> -		pgtable_t pgtable)
->> +struct folio_or_pfn {
->> +	union {
->> +		struct folio *folio;
->> +		pfn_t pfn;
->> +	};
->> +	bool is_folio;
->> +};
+On Thu, Jun 12, 2025 at 03:01:58PM +0930, Andrew Jeffery wrote:
+> Hi Ankit, thanks for the fix.
 > 
-> I know it's simple, but I'm still not a fan particularly as these types of
-> patterns tend to proliferate once introduced. See below for a suggestion.
-
-It's much better than abusing pfn_t for folios -- and I don't 
-particularly see a problem with this pattern here as long as it stays in 
-this file.
-
+> Regarding the subject, can you please use the prefix 'ARM: dts:
+> aspeed:'? From there, I'd prefer something like:
 > 
->> +static int insert_pmd(struct vm_area_struct *vma, unsigned long addr,
->> +		pmd_t *pmd, struct folio_or_pfn fop, pgprot_t prot,
->> +		bool write, pgtable_t pgtable)
->>   {
->>   	struct mm_struct *mm = vma->vm_mm;
->>   	pmd_t entry;
->> @@ -1382,8 +1390,11 @@ static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
->>   	lockdep_assert_held(pmd_lockptr(mm, pmd));
->>   
->>   	if (!pmd_none(*pmd)) {
->> +		const unsigned long pfn = fop.is_folio ? folio_pfn(fop.folio) :
->> +					  pfn_t_to_pfn(fop.pfn);
->> +
->>   		if (write) {
->> -			if (pmd_pfn(*pmd) != pfn_t_to_pfn(pfn)) {
->> +			if (pmd_pfn(*pmd) != pfn) {
->>   				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
->>   				return -EEXIST;
->>   			}
->> @@ -1396,11 +1407,19 @@ static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
->>   		return -EEXIST;
->>   	}
->>   
->> -	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
->> -	if (pfn_t_devmap(pfn))
->> -		entry = pmd_mkdevmap(entry);
->> -	else
->> -		entry = pmd_mkspecial(entry);
->> +	if (fop.is_folio) {
->> +		entry = folio_mk_pmd(fop.folio, vma->vm_page_prot);
->> +
->> +		folio_get(fop.folio);
->> +		folio_add_file_rmap_pmd(fop.folio, &fop.folio->page, vma);
->> +		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PMD_NR);
->> +	} else {
->> +		entry = pmd_mkhuge(pfn_t_pmd(fop.pfn, prot));
->> +		if (pfn_t_devmap(fop.pfn))
->> +			entry = pmd_mkdevmap(entry);
->> +		else
->> +			entry = pmd_mkspecial(entry);
->> +	}
+>    ARM: dts: aspeed: lanyang: Fix 'lable' typo in LED nodes
 > 
-> Could we change insert_pfn_pmd() to insert_pmd_entry() and have callers call
-> something like pfn_to_pmd_entry() or folio_to_pmd_entry() to create the pmd_t
-> entry as appropriate, which is then passed to insert_pmd_entry() to do the bits
-> common to both?
+> On Thu, 2025-05-29 at 17:09 +0530, Ankit Chauhan wrote:
+> > Fix an obvious spelling error in the dts file for Lanyang BMC.
+> > This was reported by bugzilla a few years ago but never got fixed.
+> > 
+> > Reported by: Jens Schleusener <Jens.Schleusener@fossies.org>
+> 
+> Please make sure these tags reflect convention:
+> 
+> https://docs.kernel.org/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
+> 
+> Rather than spaces, they use `-` to separate words, so:
+> 
+> Reported-by: ...
+> 
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=205891
+> > 
+> > Signed-off-by: Ankit Chauhan <ankitchauhan2065@gmail.com>
+> 
+> Finally, all the tags should go together in the 'trailer' (final
+> paragraph). There should not be an empty line between the `Closes:` tag
+> and your `Signed-off-by:` tag above.
+>
 
-Yeah, I had that idea as well but discarded it, because the 
-refcounting+mapcounting handling is better placed where we are actually 
-inserting the pmd (not possibly only upgrading permissions of an 
-existing mapping). Avoid 4-line comments as the one we are removing in 
-patch #3 ...
+Hi Andrew,
 
--- 
-Cheers,
+Thanks for the feedback. I will make all the necessary changes and send
+a v2 PATCH.
 
-David / dhildenb
-
+Kind regards,
+Ankit Chauhan
