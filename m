@@ -1,175 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869432D661B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064F710957;
+	Thu, 12 Jun 2025 20:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758835; cv=none; b=OIrnvvuSjNZbdjre5p7apH2LzVIBmi473g3h2SScL5p0hoaFc97HWHta+noH3R0oyDvuu1Y+2WA+MYZAfXYNvuI3rFU7ttjLXO7oozsai39tbj8bPIvrh9rtis2KgObXoZvu/eyGAoMVYNllltctiI48BVF1B3sGf+lq58v55zU=
+	t=1749758902; cv=none; b=gRL5u3vw1aBYLwdUwLP6sTQ9XzGenM1sD/m/ThI1VqXJlCS0c4x6qEq/dk/UnDQjITquuC5OAiCqw6eA1v4OJ3jRwwNAOS+VULLBRWHKltVTFXmbLGi/Mz3sySqDKGkpidjfx/WVykasNIn1tjWWK3oHdAlSq3Kh7Rm88oD6pz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758835; c=relaxed/simple;
-	bh=MlVnwk4GrJf7DJ+teSMM4MYhbPN4wLp/AfPIQRVr6pI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JLsJIefxx1xN+xCPDPVtX6z5PqSKtXbMXQXVIxQWVrSk3RBflgn29ITPhaLD2YYyhRGukivU5tKysNhRFYIw34dGoTC1jzcTf5COaj8YYU5qEwI72OuIif/ZIu7yrW2xgcycX1AfXPGq1VqqeJ17m5PqKMCepVR+bO0A44cMK7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBqyeckS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749758902; c=relaxed/simple;
+	bh=DiHz98Mxk+xvT9nSZ/1QhqW5iHTXOqSdDvRykpRGgyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dJ/v1YK5P77iYcyXNXOH3NUhdnTqnw2wJZN24XM7ht/fyMdMk4huY+2XR5CbXbhDxP5v4RZXneyA5ft+2p9nQEaNteeIbJO8UrNTMMsH68zcj2H67fvK7eGHYj+GAtMOCVHgSwnJv6vYPbJO1dI0AisPVrFegRQCtsq4S0K1KKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MiHqwQkY; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBqyeckS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C73C4CEEA;
-	Thu, 12 Jun 2025 20:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749758835;
-	bh=MlVnwk4GrJf7DJ+teSMM4MYhbPN4wLp/AfPIQRVr6pI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jBqyeckSlaS0YRvpGwT2pQE0Jc3N7nApDTYYxRNy/YULjhXr7ZhOfnx8fa0Fi0Vy7
-	 Ev9NNzlf2i6s8j5J4prkwowmFRmMhX49Rd48pZTiguY/bFW443QpSdgyvtaNq8Ni33
-	 sjoR55MpVDao3tWeZih6nU3RcV4zQuUd9SuuGbJ2x4RLY9YlWb+nWZYQwX2g0j8B/j
-	 BDSir/QJ3v3BVOAE8fcWfdhAkGUvCdP1/zcwX+LOuxtNKmcP10YBaSzDQyaLhjGQ75
-	 hc1nmyajx+3xKtZbC6UBiQBc6wkIQMg5YVSWRTFj2GB1zwbEnC94XLrMoO0I8oGWXH
-	 tabwK5zWGb9qw==
-Date: Thu, 12 Jun 2025 17:07:11 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH 1/1 fyi] tools headers: Syncronize linux/build_bug.h with the
- kernel sources
-Message-ID: <aEszb7SSIJB6Lp6f@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiHqwQkY"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fadd3ad18eso14413326d6.2;
+        Thu, 12 Jun 2025 13:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749758900; x=1750363700; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DiHz98Mxk+xvT9nSZ/1QhqW5iHTXOqSdDvRykpRGgyc=;
+        b=MiHqwQkYTJzFsuTWyTAg7L/2HwUqx+RyLY1TLuUrEp8RueJO7VF+E6b+sjF4slnDie
+         +qbOCy1TfqNJCcIspGbBz2yopEmyJW7CDMtDAqZMTTBbf26aUfafaxJrt9cHdCgg5wcm
+         dloj/CO7fVz/9ot6jIyZckx7Be3mmGMOgk+iYuvrgMvoaIOchYdXA4CrNAzik7hsFgKA
+         tnvIR0IS1gVKNB9nZeUrl/p2vjUyHMikloUtdLjAYvAFOShBXHSTpHcQgF+T9SygvIq9
+         lXkZKGg/cJahaxKoOWwNrEcIFWyw9UDa/Srpb4Ty7N7l7yLZa1OKFx2D7kwWKXWA/y3z
+         uYTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749758900; x=1750363700;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DiHz98Mxk+xvT9nSZ/1QhqW5iHTXOqSdDvRykpRGgyc=;
+        b=RHHIlnGvjMwHs9aosz7HxzwvsEeiSfKMpPIirKzA73wKXab+mHx4SqIpAV/js7mHC9
+         U8CJIsm9+zMNtJ+wV3OGC6ED1dFyKaa0Ft2zdJJA0iL2R3UkAB96DLWd1/zKPF9Ncz0I
+         8jxhwFQpX/i2r+NzSYFarcbBxxS2kR6oQI86MA1q7imuYvZrHeoTwxF09di2WY5iFXq4
+         y7+Ot7jlFivLhR4TGHqHbWnDcEl+BdSIhX/tWXFcwylDy/Lln0Q648V0m9Bkt+dlEN9O
+         xsbgueBqHz23DRfRONorjeg37RekxWiGmFwyBIM9vrKGch+x4Hy1aNSMqixBQ/cUATkk
+         3gNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGj1IRqIZJZAimuvSKgjCHKpHq4ZU9LHjkbLFbupqMFdA3e8QumPI17KzSN9Nhhygtgfm08a4u@vger.kernel.org, AJvYcCV9PonrnMaSIPCHhNAW+g7EU7bQ+p5ymHARwMHG472thtyXf2kqsaEgcF73xJchH5+8NVzUn8oZbFGCSuAs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4QZ9Oixnh5qdo/4WW3Y/aezDVTd+JRSpDMH0ItaiDcyTUtrPx
+	WOHtcggYdB7lAFzDXxI7mNMFo0DEKjbDttg74kEHyRh7fIfOkQrBFIGcDF99DPGxN/nRBz9m+jZ
+	DK7t91Gg4/fXalDgll5OrtKbOCaDGJpU=
+X-Gm-Gg: ASbGncs4trC1J/beToe2tWgk+RfoqfMUbc+dGPa57yvQaGQ39cFmWCnk/kkMSPIrO5C
+	aVkxH3LlXan4lPHu/bg0c4WiHlxkY97NyoeIdhNHadte75DmeH7ciO+0sNxorsVESGkIp3YPdFO
+	yax7/EcY24DiwaNe1BfzbTWwmH9QrchSLgjBcCBsCGmwsIalAckoTvh+Ai9gk=
+X-Google-Smtp-Source: AGHT+IEgTPBLzBNJnVH9ZaUwKb5JS2x+1tjyT6kY3nP+PXMGesmHoi/z8hyu7vCxT4zfKCaPEPsY83F+n+zgiAUDO1I=
+X-Received: by 2002:a05:6214:19e5:b0:6f8:d223:3c32 with SMTP id
+ 6a1803df08f44-6fb3e59bddemr3411996d6.10.1749758899634; Thu, 12 Jun 2025
+ 13:08:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250612103743.3385842-1-youngjun.park@lge.com>
+ <20250612103743.3385842-3-youngjun.park@lge.com> <CAMgjq7BJE9ALFG4N8wb-hdkC+b-8d1+ckXL9D6pbbfgiXfuzPA@mail.gmail.com>
+ <CAKEwX=PsGKS5JHqQ-G29Fg8xLssPhM+E-4wV_QakhqrDOsV36g@mail.gmail.com> <CAMgjq7Aq1LW9wFgyQ4oCS5Su23X62S+5ZW_d5OydJj-pp2n21Q@mail.gmail.com>
+In-Reply-To: <CAMgjq7Aq1LW9wFgyQ4oCS5Su23X62S+5ZW_d5OydJj-pp2n21Q@mail.gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Thu, 12 Jun 2025 13:08:08 -0700
+X-Gm-Features: AX0GCFstYwQPkydoxcIP3F_wXZqsbH2ZywGwO5bQiBiteJh5tFlf_0yxP0yKGKw
+Message-ID: <CAKEwX=PD+P_wugkAJ83ti6YRo4-6QNM7HDFs+KDURVwx2JrnZg@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] mm: swap: apply per cgroup swap priority
+ mechansim on swap layer
+To: Kairui Song <ryncsn@gmail.com>
+Cc: youngjun.park@lge.com, linux-mm@kvack.org, akpm@linux-foundation.org, 
+	hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	shikemeng@huaweicloud.com, bhe@redhat.com, baohua@kernel.org, 
+	chrisl@kernel.org, muchun.song@linux.dev, iamjoonsoo.kim@lge.com, 
+	taejoon.song@lge.com, gunho.lee@lge.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+On Thu, Jun 12, 2025 at 11:20=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wro=
+te:
+>
+> On Fri, Jun 13, 2025 at 1:28=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wro=
+te:
+> >
+> > On Thu, Jun 12, 2025 at 4:14=E2=80=AFAM Kairui Song <ryncsn@gmail.com> =
+wrote:
+> > >
+> > > On Thu, Jun 12, 2025 at 6:43=E2=80=AFPM <youngjun.park@lge.com> wrote=
+:
+> > > >
+> > > > From: "youngjun.park" <youngjun.park@lge.com>
+> > > >
+> > >
+> > > Hi, Youngjun,
+> > >
+> > > Thanks for sharing this series.
+> > >
+> > > > This patch implements swap device selection and swap on/off propaga=
+tion
+> > > > when a cgroup-specific swap priority is set.
+> > > >
+> > > > There is one workaround to this implementation as follows.
+> > > > Current per-cpu swap cluster enforces swap device selection based s=
+olely
+> > > > on CPU locality, overriding the swap cgroup's configured priorities=
+.
+> > >
+> > > I've been thinking about this, we can switch to a per-cgroup-per-cpu
+> > > next cluster selector, the problem with current code is that swap
+> >
+> > What about per-cpu-per-order-per-swap-device :-? Number of swap
+> > devices is gonna be smaller than number of cgroups, right?
+>
+> Hi Nhat,
+>
+> The problem is per cgroup makes more sense (I was suggested to use
+> cgroup level locality at the very beginning of the implementation of
+> the allocator in the mail list, but it was hard to do so at that
+> time), for container environments, a cgroup is a container that runs
+> one type of workload, so it has its own locality. Things like systemd
+> also organize different desktop workloads into cgroups. The whole
+> point is about cgroup.
 
-Full explanation:
+Yeah I know what cgroup represents. Which is why I mentioned in the
+next paragraph that are still making decisions based per-cgroup - we
+just organize the per-cpu cache based on swap devices. This way, two
+cgroups with similar/same priority list can share the clusters, for
+each swapfile, in each CPU. There will be a lot less duplication and
+overhead. And two cgroups with different priority lists won't
+interfere with each other, since they'll target different swapfiles.
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
+Unless we want to nudge the swapfiles/clusters to be self-partitioned
+among the cgroups? :) IOW, each cluster contains pages mostly from a
+single cgroup (with some stranglers mixed in). I suppose that will be
+very useful for swap on rotational drives where read contiguity is
+imperative, but not sure about other backends :-?
 
-See further details at:
-
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
-
-To pick up the changes in:
-
-  243c90e917f5cfc9 ("build_bug.h: more user friendly error messages in BUILD_BUG_ON_ZERO()")
-
-This also needed to pick the __BUILD_BUG_ON_ZERO_MSG() in
-linux/compiler.h, that needed to be polished to avoid hitting old clang
-problems with _Static_assert on arrays of structs:
-
-  Debian clang version 11.0.1-2~deb10u1
-
-  Debian clang version 11.0.1-2~deb10u1
-  $ make NO_LIBTRACEEVENT=1 ARCH= CROSS_COMPILE= EXTRA_CFLAGS= -C tools/perf O=/tmp/build/perf CC=clang
-  <SNIP>
-  btf_dump.c:895:18: error: type name does not allow storage class to be specified
-          for (i = 0; i < ARRAY_SIZE(pads); i++) {
-                          ^
-  /git/perf-6.16.0-rc1/tools/include/linux/kernel.h:91:59: note: expanded from macro 'ARRAY_SIZE'
-  #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
-                                                            ^
-  /git/perf-6.16.0-rc1/tools/include/linux/compiler-gcc.h:26:28: note: expanded from macro '__must_be_array'
-  #define __must_be_array(a)      BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
-                                  ^
-  /git/perf-6.16.0-rc1/tools/include/linux/build_bug.h:17:2: note: expanded from macro 'BUILD_BUG_ON_ZERO'
-          __BUILD_BUG_ON_ZERO_MSG(e, ##__VA_ARGS__, #e " is true")
-          ^
-  /git/perf-6.16.0-rc1/tools/include/linux/compiler.h:248:67: note: expanded from macro '__BUILD_BUG_ON_ZERO_MSG'
-  #define __BUILD_BUG_ON_ZERO_MSG(e, msg, ...) ((int)sizeof(struct {_Static_assert(!(e), msg);}))
-                                                                    ^
-  /usr/include/x86_64-linux-gnu/sys/cdefs.h:438:5: note: expanded from macro '_Static_assert'
-      extern int (*__Static_assert_function (void)) \
-      ^
-
-These also failed:
-
-toolsbuilder@five:~$ grep FAIL dm.log/summary | grep clang
-   1    72.87 almalinux:8    : FAIL clang version 19.1.7 ( 19.1.7-2.module_el8.10.0+3990+33d0d926)
-  15    73.39 centos:stream  : FAIL clang version 17.0.6 (Red Hat 17.0.6-1.module_el8+767+9fa966b8)
-  36    87.14 opensuse:15.4  : FAIL clang version 15.0.7
-  37    80.08 opensuse:15.5  : FAIL clang version 15.0.7
-  40    72.12 oraclelinux:8  : FAIL clang version 16.0.6 (Red Hat 16.0.6-2.0.1.module+el8.9.0+90129+d3ee8717)
-  42    74.12 rockylinux:8   : FAIL clang version 16.0.6 (Red Hat 16.0.6-2.module+el8.9.0+1651+e10a8f6d)
-toolsbuilder@five:~$
-
-This addresses this perf build warning:
-
-  Warning: Kernel ABI header differences:
-    diff -u tools/include/linux/build_bug.h include/linux/build_bug.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Yury Norov <yury.norov@gmail.com>
-Link: https://lore.kernel.org/r/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/linux/build_bug.h | 10 +++++-----
- tools/include/linux/compiler.h  |  8 ++++++++
- 2 files changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/tools/include/linux/build_bug.h b/tools/include/linux/build_bug.h
-index b4898ff085ded5a9..ab2aa97bd8ce441d 100644
---- a/tools/include/linux/build_bug.h
-+++ b/tools/include/linux/build_bug.h
-@@ -4,17 +4,17 @@
- 
- #include <linux/compiler.h>
- 
--#ifdef __CHECKER__
--#define BUILD_BUG_ON_ZERO(e) (0)
--#else /* __CHECKER__ */
- /*
-  * Force a compilation error if condition is true, but also produce a
-  * result (of value 0 and type int), so the expression can be used
-  * e.g. in a structure initializer (or where-ever else comma expressions
-  * aren't permitted).
-+ *
-+ * Take an error message as an optional second argument. If omitted,
-+ * default to the stringification of the tested expression.
-  */
--#define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
--#endif /* __CHECKER__ */
-+#define BUILD_BUG_ON_ZERO(e, ...) \
-+	__BUILD_BUG_ON_ZERO_MSG(e, ##__VA_ARGS__, #e " is true")
- 
- /* Force a compilation error if a constant expression is not a power of 2 */
- #define __BUILD_BUG_ON_NOT_POWER_OF_2(n)	\
-diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
-index d627e66a04a6192e..33411ca0cc90f02b 100644
---- a/tools/include/linux/compiler.h
-+++ b/tools/include/linux/compiler.h
-@@ -244,6 +244,14 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
- 	__asm__ ("" : "=r" (var) : "0" (var))
- #endif
- 
-+#ifndef __BUILD_BUG_ON_ZERO_MSG
-+#if defined(__clang__)
-+#define __BUILD_BUG_ON_ZERO_MSG(e, msg, ...) ((int)(sizeof(struct { int:(-!!(e)); })))
-+#else
-+#define __BUILD_BUG_ON_ZERO_MSG(e, msg, ...) ((int)sizeof(struct {_Static_assert(!(e), msg);}))
-+#endif
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _TOOLS_LINUX_COMPILER_H */
--- 
-2.49.0
-
+Anyway, no strong opinions to be completely honest :) Was just
+throwing out some ideas. Per-cgroup-per-cpu-per-order sounds good to
+me too, if it's easy to do.
