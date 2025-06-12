@@ -1,120 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049C41DDC1B;
-	Thu, 12 Jun 2025 09:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809142248A4;
+	Thu, 12 Jun 2025 09:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749719546; cv=none; b=MbV2Wau/N+m90dX8sqm5dcGMjMqgSUhKSmB+QDvTKNUCeizNhvoO/RN3ckZHoT8v6DImQz8C+B9rrKpYJr87m7iVQD4OBPYPqcpPbTPV5/0MYshD7sB7hqOohgrLEDnXkKWq32aa9mLcYsHEhICvBZgNWEjvRqa160sjefKlcy0=
+	t=1749719571; cv=none; b=b9Jp3JDOm68z282PbUMPRMU/Gcaqx4YAi2F4ye3MQ2+aGVa1J7WRIxIdklU+l26JbAz90NSysMiE5pazZeGxa5TwMZG8q9uvyGatryx6bgLwI/cStlh9Tbp2z1H/tQ2zkT8/qLuXUd96QUGXgqxiTGh1+5jbFozetZyLspfKPgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749719546; c=relaxed/simple;
-	bh=zJQ79n0+FenXg8CW9hXrEPBZ2mMHVHaVY55v6bEoH3c=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=UO6DLSYZEyJZgs9oQngoiTsDK97+dk7YRZqsiCrPmyrc7RktifkEg8lvKbC2y3t5uWMBtvInnqTvxal3XrqgQO24Re69E0Zd3CzU+sEUm/laExl5BQw34D47Gjp7eIuRE0L5UGBPHXycbusSjxAt7v9IhGvo3i9OiIVz41lyr4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vNmY3HVZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749719571; c=relaxed/simple;
+	bh=42E6E2A4Ymy9vC+ni9OnFExuqN/KM0INPI6sbvhyP/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hR6BOSsfV6+FzscjSmrklw67jel6x8k4DprWW8xp3YvuHct1coRQ4nqkgnY2LwGmw4aTT99BZnGqKnTg/riGYHaEHC3d2raaX1Mm6zJxL13utMNq+ScABfdHeuk1AAEmu+jYMVILqBmPVbPIwQxH4yTkLNn3kgV4NDHunL1Y8qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ovwOcZGv; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vNmY3HVZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 333E9C4CEEA;
-	Thu, 12 Jun 2025 09:12:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749719545;
-	bh=zJQ79n0+FenXg8CW9hXrEPBZ2mMHVHaVY55v6bEoH3c=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=vNmY3HVZoPLE2n2l1u5VMrnXXjfglJfJQkQW/kG9MSzoncNmdaVGVF/Zw0VdhSd+2
-	 3+zr6nieafadxOb84+tYiZSE33Iz+U0ONwWQLxb5+sDYXYrzn9EF4QTGZlREZVq/zq
-	 Y4Gg/fT7BII/gpL1zRNomeJYsQqlCwd5uZC14eZjOx//CxZ3nRpEtdZrFCkYF4gsTZ
-	 tphePEpk50umpQ61omEd+GsAQtVOFyun0lIgSpexo5QiBohESdem3p1NFx9DZucQZk
-	 MEsSLIQKk31UVAkkrQ8bIv0OypuJ0QRzSRHZoZhseI3nEmGq9m9auyauKk0xWUhlAC
-	 FAAKddH+Qwn/Q==
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ovwOcZGv"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C93cWv004497;
+	Thu, 12 Jun 2025 11:12:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	k4gTnAusbtfL5G0grnWGEElF552MerFrkX+8ouuadF0=; b=ovwOcZGvVZO+1lK8
+	pwGai2+7sgumZ9z7lixxIQdKouskKxZyNisYGGKx2ibHkV7KU+T2BW5ewjpdZ4PG
+	g92OxE9AH0lbYtHM4Di29+naHxN0/2LQuJzzItlndQCP4P6R1jnqjBUHg8j9rnSI
+	E8aUzlcKiyAeyEXg0pXGC8Gdav+n93DLCf9u9zcp/GWScF94I60S4wJjbSc/deuZ
+	5A8zGO6f4kn14VLnpel7Mwu9Kkp5zI3UJNgH6yUwcU6g5w21zWJ4Tn+JRyQbQ8O1
+	iaUc/K6zYN4xgRUCnghOdKXp+Irc6WizD32L7lR+YF+RE2x11hnDqvYyjzj70xvv
+	QC9IgA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474ajaegp1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 11:12:27 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 51E7840044;
+	Thu, 12 Jun 2025 11:11:22 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B23985C820E;
+	Thu, 12 Jun 2025 11:10:44 +0200 (CEST)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Jun
+ 2025 11:10:44 +0200
+Message-ID: <11dcec73-8e29-4139-bddf-4b63de3f9aed@foss.st.com>
+Date: Thu, 12 Jun 2025 11:10:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 11:12:18 +0200
-Message-Id: <DAKFT7C8IRC4.2ID8TJIKN4Z5R@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v2 1/7] rust: Add basic PWM abstractions
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Michal Wilczynski" <m.wilczynski@samsung.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "Drew Fustini" <drew@pdp7.com>, "Guo Ren" <guoren@kernel.org>, "Fu Wei"
- <wefu@redhat.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>, "Marek
- Szyprowski" <m.szyprowski@samsung.com>, "Michael Turquette"
- <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com> <CGME20250610125332eucas1p2da441aa44760236527afc82495af95d1@eucas1p2.samsung.com> <20250610-rust-next-pwm-working-fan-for-sending-v2-1-753e2955f110@samsung.com>
-In-Reply-To: <20250610-rust-next-pwm-working-fan-for-sending-v2-1-753e2955f110@samsung.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] spi: stm32-ospi: clean up on error in probe()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <aEmAGTUzzKZlLe3K@stanley.mountain>
+Content-Language: en-US
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <aEmAGTUzzKZlLe3K@stanley.mountain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_06,2025-06-10_01,2025-03-28_01
 
-On Tue Jun 10, 2025 at 2:52 PM CEST, Michal Wilczynski wrote:
-> Introduce safe Rust abstractions for the Linux PWM subsystem. These
-> abstractions provide ergonomic, lifetime managed wrappers around the
-> core C data structures and functions, enabling the development of PWM
-> chip drivers in safe Rust.
->
-> This initial version provides the core building blocks for writing a PWM
-> chip provider driver, with a focus on safety, resource management, and
-> idiomatic Rust patterns.
->
-> The main components are:
->
-> Ownership and Lifetime Management:
->  - The pwm::Chip type, an ARef managed wrapper for struct pwm_chip,
->    correctly handles the object's lifetime by using the embedded struct
->    device's reference counter.
->  - A pwm::Registration RAII guard ensures that a call to register a
->    chip (pwmchip_add) is always paired with a call to unregister it
->    (pwmchip_remove), preventing resource leaks.
->
-> Safe Type Wrappers:
->  - Safe, idiomatic Rust types (Polarity, Waveform, State, Args,
->    Device) are provided to abstract away the raw C structs and enums.
->    The State wrapper holds its data by value, avoiding unnecessary
->    heap allocations.
->
-> Driver Operations (PwmOps):
->  - A generic PwmOps trait allows drivers to implement the standard
->    PWM operations. It uses an associated type (WfHw) for the driver's
->    hardware specific waveform data, moving unsafe serialization logic int=
-o
->    the abstraction layer.
->    The trait exposes the modern waveform API (round_waveform_tohw,
->    write_waveform, etc.) as well as the other standard kernel callbacks
->    (get_state, request, apply).
->  - A create_pwm_ops function generates a C-compatible vtable from a
->    PwmOps implementor.
->
-> This foundational layer is designed to be used by subsequent patches to
-> implement specific PWM chip drivers in Rust.
->
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+
+
+On 6/11/25 15:09, Dan Carpenter wrote:
+> If reset_control_acquire() fails, then we can't return directly.
+> We need to do a little clean up first.
+> 
+> Fixes: cf2c3eceb757 ("spi: stm32-ospi: Make usage of reset_control_acquire/release() API")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  MAINTAINERS                     |   6 +
->  drivers/pwm/Kconfig             |  13 +
->  rust/bindings/bindings_helper.h |   1 +
->  rust/helpers/helpers.c          |   1 +
->  rust/helpers/pwm.c              |  20 +
->  rust/kernel/lib.rs              |   2 +
->  rust/kernel/pwm.rs              | 864 ++++++++++++++++++++++++++++++++++=
-++++++
->  7 files changed, 907 insertions(+)
+>  drivers/spi/spi-stm32-ospi.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+> index db6b1cfc970f..4ab7e86f4bd5 100644
+> --- a/drivers/spi/spi-stm32-ospi.c
+> +++ b/drivers/spi/spi-stm32-ospi.c
+> @@ -937,8 +937,10 @@ static int stm32_ospi_probe(struct platform_device *pdev)
+>  		goto err_pm_enable;
+>  
+>  	ret = reset_control_acquire(ospi->rstc);
+> -	if (ret)
+> -		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
+> +	if (ret) {
+> +		dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
+> +		goto err_pm_resume;
+> +	}
+>  
+>  	reset_control_assert(ospi->rstc);
+>  	udelay(2);
 
-Do you mind splitting this into smaller commits to make review easier?
 
----
-Cheers,
-Benno
+Hi Dan
 
+Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
+
+Thanks
+Patrice
