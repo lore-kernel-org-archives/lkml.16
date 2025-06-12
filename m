@@ -1,33 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA413C1F;
-	Thu, 12 Jun 2025 10:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8731A9B32;
+	Thu, 12 Jun 2025 10:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723363; cv=none; b=hkS5oaHcqd7FrC5bb/pGHbDwTMHWAZ0YkqM63J6WW88N/v9HRiD1nx8F1SPC+gehs2r517j1Q7MVg0grWklpEnhUn1VVnOY2xzKviaBzbmpblxUfIeB0SAnymlJgzRI4GBYoqhnPNlOiQo46PLEomyxe+Brx3yOiPyYGNtKfThY=
+	t=1749723374; cv=none; b=jjRB1g15dgzMtyi0MDtn2256yfYlUUrc64Ub3oqqFIem1YBC0QQ4O0ARDSiDyejgN8cCOfetcIYuD1lsLJRcqm4UE5dibsJGkWB2OvGAWzp9Q8zcgMGs+1hhnbRQ6wTWxgnm9CBrEplGD0TFjqAJtUP2cE7Y/f7564XLUO567nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723363; c=relaxed/simple;
-	bh=7FGoClZ0ml34gXc4dFPqG8zZERR14btnitxt2Mt6UNs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=U6MvKa2Jopq5guVdZjSq/MyyfdJZWTRTPaolijJ7RvEViaG8H3K9inyQ4LugJf2v/R51H8Aqo7HLjBg6VODJdElPaRDL2TmgHMbhl33NY+ybW8v71OzXPCtRjj1QnaEAfGjzkBr6JMNHw9NJY9VjB1mhud4ekqJ4N6S9rmwQtoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfakI3ex; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749723374; c=relaxed/simple;
+	bh=U8Ib+vhgknJZUGujsTIacxWsiwarvISy9tV/JoJj3mE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=In2mZ4Oy0db9/gKLpVZqHlMGPaumCHAyVA/DsHEcaabbPBX5YxNH/eg3Knnm8H8Ro8PtXK9U64od2nRuOZxcICFeYUSFSrMz+g5MlV3HW3NgFg9jWBht0EelHQQMgqxwGrZSIqQBRF44Uuy3tLTQxaGGV5rMuziE01Vxrku/knI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vlgNQb4s; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfakI3ex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B768EC4CEEA;
-	Thu, 12 Jun 2025 10:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749723362;
-	bh=7FGoClZ0ml34gXc4dFPqG8zZERR14btnitxt2Mt6UNs=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=LfakI3expq8CouXdOICpLytc1xOKKFqPeAcib0tnQ4dxZ588j99YPtCQU9Nv6XYG3
-	 AfkbW8PJrf3dCXCh6DksHTAwRb/r3jnKGFTvRLicPKl4hw1lZKuCwZ16WPsA6nbr6Y
-	 Ydb6lH7vKUnJuHWCDKhypq3Qme8UPbHK7ob3+luuhBpR2nZuLN7Z0AVhqeEdwftOIj
-	 kqj+rXEXWcbjaFx8NCVwH82WaNGs8eb/0xxvHPKqq5/PxPHThId4LW5BI/K0COoD/z
-	 /o2em6nIJCHD0c9nfTuySDNMDOxEURanK96KYz54R0Yj44eOE8gUeZGWCA1QmftrYf
-	 Ifu6KJAGoIqnA==
-Message-ID: <278193c2-7061-4cd3-88e3-402ac85eddf7@kernel.org>
-Date: Thu, 12 Jun 2025 12:15:55 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vlgNQb4s"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55CAFxWp2886298;
+	Thu, 12 Jun 2025 05:15:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749723359;
+	bh=w1BvpyF39z5hMo5/VBX/0oCDLHJPdp2C+Dbe2C2TKsM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=vlgNQb4seNrwaouEv9+opWOU/k/iDzdQY6kL8THh/EMZ6I61r9DMp4NfWInqBpHFq
+	 Dfzbx2R4JFIEIpktNhmtGodgG4x3x7ipw9MEAGtiXlaDx/ImOhNrsmhcG85R8eFx0N
+	 0qTNfc8AqFb1qzhocK6DRFVnnFdCrpOMuPkPynkA=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55CAFxsK3562020
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 12 Jun 2025 05:15:59 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
+ Jun 2025 05:15:58 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 12 Jun 2025 05:15:58 -0500
+Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55CAFtXR1834025;
+	Thu, 12 Jun 2025 05:15:55 -0500
+Message-ID: <b27eab62-cfe0-4dfc-8429-ea464eef9e6f@ti.com>
+Date: Thu, 12 Jun 2025 15:45:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,89 +50,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v0 1/5] dt-bindings: arm: aspeed: Add AST2700 board
- compatible
-To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Nishanth Menon <nm@ti.com>,
- nfraprado@collabora.com, Taniya Das <quic_tdas@quicinc.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Eric Biggers <ebiggers@google.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, soc@lists.linux.dev,
- Mo Elbadry <elbadrym@google.com>, Rom Lemarchand <romlem@google.com>,
- William Kennington <wak@google.com>, Yuxiao Zhang <yuxiaozhang@google.com>,
- wthai@nvidia.com, leohu@nvidia.com, dkodihalli@nvidia.com,
- spuranik@nvidia.com
-References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
- <20250612100933.3007673-2-ryan_chen@aspeedtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 2/2] crypto: ti: Add driver for DTHE V2 AES Engine
+ (ECB, CBC)
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "David S. Miller" <davem@davemloft.net>,
+        Kamlesh Gurudasani
+	<kamlesh@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri
+	<praneeth@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, Vinod Koul
+	<vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>
+References: <20250603124217.957116-1-t-pratham@ti.com>
+ <20250603124217.957116-3-t-pratham@ti.com>
+ <aElSKF88vBsIOJMV@gondor.apana.org.au>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250612100933.3007673-2-ryan_chen@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8
+From: T Pratham <t-pratham@ti.com>
+In-Reply-To: <aElSKF88vBsIOJMV@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 12/06/2025 12:09, Ryan Chen wrote:
-> Add device tree compatible string for AST2700 based boards
-> ("aspeed,ast2700-evb" and "aspeed,ast2700") to the Aspeed SoC
-> board bindings. This allows proper schema validation and
-> enables support for AST2700 platforms.
+On 11/06/25 15:23, Herbert Xu wrote:
+> On Tue, Jun 03, 2025 at 06:07:29PM +0530, T Pratham wrote:
+>>
+>> +	// Need to do a timeout to ensure finalise gets called if DMA callback fails for any reason
+>> +	ret = wait_for_completion_timeout(&rctx->aes_compl, msecs_to_jiffies(DTHE_DMA_TIMEOUT_MS));
 > 
-> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
-> ---
-Align with your colleagues. This is not v0, but vX+1. And X was already
-3 since you sent it!
+> This doesn't look safe.  What if the callback is invoked after a
+> timeout? That would be a UAF.
+> 
+> Does the DMA engine provide any timeout mechanism? If not, then
+> you could do it with a delayed work struct.  Just make sure that
+> you cancel the work struct in the normal path callback.  Vice versa
+> you need to terminate the DMA job in the timeout work struct.
+> 
+> Cheers,
 
-https://lore.kernel.org/all/20241212155237.848336-4-kevin_chen@aspeedtech.com/
+Calling dma_terminate_sync() here should suffice I presume? I'll update the code accordingly.
 
-Best regards,
-Krzysztof
+Regards
+T Pratham <t-pratham@ti.com>
