@@ -1,90 +1,71 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2051.outbound.protection.outlook.com [40.107.94.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922591B0F0A;
-	Thu, 12 Jun 2025 08:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716487; cv=none; b=TDYdCWl9xBwb2UAV/FjkWqiU57LCko3hjYVAm5EtpK3C8O3vMTeh0tOWZwFqMejAPTFjw+9ykN+M739jFoLPyA0i2vemKIc4Z+tFRnMxk7iDaiYSEVJLmQOX+mb2KTwuuRvn1Fp+WKLZsHdCDkBcgCLpxIWnUMBcRnqoqcOMOqs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716487; c=relaxed/simple;
-	bh=cA1qk3yB6bh3HRDOAFOZEbWTkiE34cfwmnNRWGtfb2E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O8agmeS7n6QuvduhTugMHhoiqtrCxXWLtl0giLTselNIbSqU8P4JfvMgXx0S1u7Koj83xw4Bo8BJm3onQ5SBM/4Unf1aSEqUdsJrkk986sShvl/Z6tffp1Fk0BIRvdJEKmaf/TMccKYoHkk0u96Iqb6i/gDm6R5vtomDkWRse+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NE5UStuq; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABF28F5C;
+	Thu, 12 Jun 2025 08:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749716578; cv=fail; b=JMM/hwX2llLsEJgoiDv6G4jywUb5qTBTPauDYFqg2BAs0KqlSMuwIsk4YOW+icDC+uUyRdbfREoP42lnJO7atJxHhWsYdZnfbxRsbM2y6HQa9axRJrGLmvmOpq5V5Ec42T73E8hY9Gl26up79S2pZmbVHisRgdiq3r9AOR90mDI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749716578; c=relaxed/simple;
+	bh=mwzxsH79ou2B//FdnNEYdvfHCqv6o37j8joDgxYONAI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U9Km63yrErW23e3Kk+6e4oQlZrClmQiP2IRWvdSYY0joJX6UgatlaE4hbNrtKbH98WbycgJuiv6S+tS8iE9/ktipbSqfjGQvQADg6zpexb5Jy5wLPHL7EhWcwSZodNb96ApSKiM8De0A/JgFE28025bAbNDxMI4aCXuCnmKfr1U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jiWXWLOi; arc=fail smtp.client-ip=40.107.94.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NE5UStuq"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-747fba9f962so601955b3a.0;
-        Thu, 12 Jun 2025 01:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749716485; x=1750321285; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AGY5/ZppoucW3cdRAPG2Yq6T7pXeZ7SlaGjUvy+OgTk=;
-        b=NE5UStuqMQFzN4O1JR2+Lh/1vWkuDiFNCPmY1UudhEpx7ElDGCCxNOiEiVM7srEH5h
-         of9W8bckPd6ruNZlBMbIAx5EahRUwuDVYTFte0fyOKvV6II1qbeTjjNWZ3S8nzV8YO5o
-         P9rigoNx5uWG+DZLesnN5RUE6GN4gXtdDqY5vQxyHiAKQ3G/Z7G0na1VnPHNXA3TEVKx
-         zjazkfU9/NUaE1x7hG2fJyztk+ZCpq7MvxRKdjlmED32pCZ0Lc2C5N716y1ZSo1X0L3e
-         2EVNDZW/r+z8rutRk/oYsGK9UCM9mP+FEdbppa9zKEZeTU9cxpXigO3u7Rbs0GUQ3/RR
-         HzJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749716485; x=1750321285;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AGY5/ZppoucW3cdRAPG2Yq6T7pXeZ7SlaGjUvy+OgTk=;
-        b=IPR2WJ9h4TBSsIn5/QgmeqORZBoygc0ReN8jcV2aoz2jbjWmH4hhObdQHXoRnCvNi0
-         ngUGAvhnNRosrj3iSBDValWneeXCrDsmUrjO26YwmbxLqAri3CKeNcPtWd+NVTEGOWi3
-         oeLRG4BeP3PXyf74UcrAiYRRbEsNGNj9WC6ANcSo6z0SSTMWw/b7jXwRSPWwZUH5ljtf
-         HKF/mtmgigR9Jdnicwf0trc6HClVY+qIMYpEzZ/rm0QAK1TN7O0/V7Fy/lYu8ISTA+Vs
-         2jAmLiQ3EB76R5vKUDpd1LRPQjnUKMB+p3KHe2MLuOdi1wSB92Q/hzXlV6ibQo+qYVqH
-         bW3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUEeOu0t6MYjEHmOiEwMqLcTHwEe/FKG22PBPosD9R5lwKtWWu7FkrNHazviaQBtTYTv3o=@vger.kernel.org, AJvYcCXWLPWnZUry82M8HltcnZMuVaQVqC1S6c9XYuL3NuZ6HCwZcFShTlYlEMlSu/IpFIn5sduaesQFarNhkObj@vger.kernel.org, AJvYcCXWWANMZrMPfNm4k5z5XN2oTz3ysNcQhKf+2XbU9DYCW7HKAOIdzc/qZRlk7cMR1PTJu7SmRArW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMf8MtyHaRAGxKC6h1HmOym0o6A71+5Abfmgz/GV17sG2zXTCm
-	LXMS50opsZEQrrGNvFq1ARrmqEjZmmyEdbxWeC14RM6Kjv6OcnLtaTLm
-X-Gm-Gg: ASbGncvSIEVMaiCcxcM97NfkiBfSWO4vOnAc9nywRD5RTLZITxZCWbVAjWk5G4LYCtq
-	jr4TKza3ArPpfzZEQvbbfCYBG734gblupl0BlYchHApXSiVLczaESC4dRHSkcb4R5K86wPVCUhx
-	LXgOFFx7vNin6c1BHA6vDV5vXiYy/E+2vpQoRmUtaZIZBSP03SuaiL7gnhJ+n4vzSgjNJlWWnKu
-	HjuJ6+yZfoRinB3sST8pQYALOyT3+54nxlKH7niwH0+SENToG9oV/t5URejv+6fPpmuxitOw88H
-	5io9oU2vaaywYT4rhJE2Uz3VABkmhybIfupqPsCc0soGf1kqljVY6xQ0eycobXoP2l7f/BPM918
-	LOLqP1MtdvqEk8jBy30Y=
-X-Google-Smtp-Source: AGHT+IE+LDi/Ab84IBFtCqrYc1tpyvpJ4aUiVqEazD1/iV2mWYI0UZMCjrUiYLHgOoy0bCfPKn/26A==
-X-Received: by 2002:a05:6a00:6086:b0:746:2217:5863 with SMTP id d2e1a72fcca58-7487ce58871mr2355872b3a.6.1749716484623;
-        Thu, 12 Jun 2025 01:21:24 -0700 (PDT)
-Received: from devant.antgroup-inc.local ([47.89.83.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748808962d5sm885967b3a.54.2025.06.12.01.21.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 01:21:24 -0700 (PDT)
-From: Xuewei Niu <niuxuewei97@gmail.com>
-X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-To: sgarzare@redhat.com
-Cc: Oxffffaa@gmail.com,
-	avkrasnov@salutedevices.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	eperezma@redhat.com,
-	horms@kernel.org,
-	jasowang@redhat.com,
-	kuba@kernel.org,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mst@redhat.com,
-	netdev@vger.kernel.org,
-	niuxuewei.nxw@antgroup.com,
-	niuxuewei97@gmail.com,
-	pabeni@redhat.com,
-	stefanha@redhat.com,
-	virtualization@lists.linux.dev,
-	xuanzhuo@linux.alibaba.com
-Subject: Re: [PATCH net] vsock/virtio: fix `rx_bytes` accounting for stream sockets
-Date: Thu, 12 Jun 2025 16:21:02 +0800
-Message-Id: <20250612082102.995225-1-niuxuewei.nxw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CAGxU2F6c7=M-jbBRXkU-iUfzNbUYAr9QApDvRVOAU6Q0zDsFGQ@mail.gmail.com>
-References: <CAGxU2F6c7=M-jbBRXkU-iUfzNbUYAr9QApDvRVOAU6Q0zDsFGQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jiWXWLOi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YNq8Vw6s2frfCDLOf9bA+PzxA15k4FSY20UUfrP/p4oquVH4dUqny+3zIWy0hTSplg+nodxhTxbUSJjyZewQLRZDgrUc/BGuHVjJmfzqUyX7JkbhJvaYnX/TLnUA/pJERM7HB/Sr/Q+AoPZSANCY+laisD9UPZNz9UTqRwcVv6mlLWDbhqrx83lvyK/K9D6SCkzc++Q29se1Q4e1sG9w0pQCQ3Xxs03tgraKEb4YeXC93hE1d2cfPRl7h4b2GGX0zs/7JSfVXaNa4R8lB8CmjKj6plPFeAvX3LzPebs0BrtlYfSr7sn8rIqs+yj6QNdNHEr3WWMxS0a2Sg4vSJ9NRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w3Lf9dUvT3SRab7KtcmXVPB7MhfKO9fY1L2iTVGIs6Y=;
+ b=nPkPyhQdlsFZfKcA6/zDiKxTVx7UKCSFMvqQQxWXdGWz2gI3ppTvnRfJYX98T0iiX5i+ZlnvKFZeL//1Bf3raIIbWCdwe05HhuobsGq1iuAgPRl+UC8PsfxtW/FbOdy2D563+b61gpLP2JPWHpChRTIzZ7BwwyE2qw93Meq/85vyhE+RVgZxL2egb2HLvpS91Lxfjuvu9tv5uhsE7Ifs/tCVv0I2AeCgkTvXWtWlCU5v5j7b3qdvY5MQSDuvsTb4i89wTGfbdEga5ptX23SxuGJuOurmYl+7fiAatoeSU4WUEedsHgjv24HuVJr8k5pEMs5ZVS2B3ZpoflhIiwmt7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w3Lf9dUvT3SRab7KtcmXVPB7MhfKO9fY1L2iTVGIs6Y=;
+ b=jiWXWLOihtU7SCpFopOrJQG5H1YSsl4qSwXPcKfBtdskbxovc6nX8QJ+anzSiufCbmVhj4xWrWXr+2xoc5JfX/zhIEXQMPPnnkQ+c4zyv20JEsQC2L2uxL01oAWUqqvfjMRr4KtegS2JK94DYgJZhhuZL4eNP8KqaCdO6eL2UMs=
+Received: from MW4PR04CA0090.namprd04.prod.outlook.com (2603:10b6:303:6b::35)
+ by CY8PR12MB7586.namprd12.prod.outlook.com (2603:10b6:930:99::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
+ 2025 08:22:53 +0000
+Received: from SJ1PEPF00001CDF.namprd05.prod.outlook.com
+ (2603:10b6:303:6b:cafe::ce) by MW4PR04CA0090.outlook.office365.com
+ (2603:10b6:303:6b::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.33 via Frontend Transport; Thu,
+ 12 Jun 2025 08:22:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CDF.mail.protection.outlook.com (10.167.242.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Thu, 12 Jun 2025 08:22:52 +0000
+Received: from aiemdee.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Jun
+ 2025 03:22:49 -0500
+From: Alexey Kardashevskiy <aik@amd.com>
+To: <linux-pci@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"David Woodhouse" <dwmw@amazon.co.uk>, Kai-Heng Feng
+	<kai.heng.feng@canonical.com>, Paolo Bonzini <pbonzini@redhat.com>, Sean
+ Christopherson <seanjc@google.com>, Nikunj A Dadhania
+	<nikunj@linux.vnet.ibm.com>, Santosh Shukla <santosh.shukla@amd.com>, Alexey
+ Kardashevskiy <aik@amd.com>
+Subject: [RFC PATCH] PCI: Add quirk to always map ivshmem as write-back
+Date: Thu, 12 Jun 2025 18:22:33 +1000
+Message-ID: <20250612082233.3008318-1-aik@amd.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,39 +73,140 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDF:EE_|CY8PR12MB7586:EE_
+X-MS-Office365-Filtering-Correlation-Id: d0672236-b439-4197-cd84-08dda98a536e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PFhSPeyByGLjfHJsmnB3/me+Hm5Y+gm3w2FEB32aYh4QqPqWpLF4kMUhlW0Z?=
+ =?us-ascii?Q?zXpbREOJzJ6r5ZZGuq31RcE0jLR/GlLoZhUOty4J2kL2KY0SuXJUJkvzrWa6?=
+ =?us-ascii?Q?ZkCSEdXs1dkW/5QapEKEuifZpGW/ttR5h8cByuUSLzEghc7OcgQYtxdu5JpH?=
+ =?us-ascii?Q?fGUPdTZB4asw3ZdjOy90ztXMpLSwDJVMoQVQCKMosXSzBbfsu2A37ApNK5cR?=
+ =?us-ascii?Q?LIKCcDqd1OQEpzK6ERslVTMo2juBkrEoYeowJhT++mkuQfgKTdJbmBVq3857?=
+ =?us-ascii?Q?OqAgeQ5/n3xGUAPtUibhNt+Om4BmI+cdTiJ5fynz6B7qWegt2sfJaqUEmxME?=
+ =?us-ascii?Q?9h3ZbwWJVN+7hQz31Xb/y1jhjjJ51DEjKobmiiarhnTBresE93jH4SAkpMss?=
+ =?us-ascii?Q?mt8lA5PjtSxcDcWfVeyzs4R36nFQcdb1t7tOl7SpgWZFkt6JMYmdik9PMGnv?=
+ =?us-ascii?Q?eHtwaLj066id2053f7ba8uIjh2+tEbshuV98eo+hiW2vJscW+4xlT9t0MkIH?=
+ =?us-ascii?Q?e/Higaj9ZeeOivEFLPVLlNWZFuezM1KkLAooOZADiKxXZjmLDOrqIK7Kq9Tp?=
+ =?us-ascii?Q?j6E5XSpPHlafgdPKbUx6Q+Sy9FbM0QcfdMWjfGn3lvVA4obajjqQyAEscyMG?=
+ =?us-ascii?Q?mslVPJFlAzsdekBWhlUmFLchJSdNnKBeQCGkW5csYZ1Kk4q5oO3DUO1rlPkY?=
+ =?us-ascii?Q?nzETsnoRWSekIoUvoYTHOnR2X9lnoSJ7DJRUcz/Lk97UgqzcFfyzN4Mkh+su?=
+ =?us-ascii?Q?Z6FbbHg1K5s1XgHE3doEJv9H4FW4pVY0w7bMg3EuAzGjIaFUPhCpI+XwBn+N?=
+ =?us-ascii?Q?yy3WXD4UGE3aH0+ySkfwjTHTUstkBj1eGmFm99slumK1p4mFcitEV1Vd8+yl?=
+ =?us-ascii?Q?dNnAdof8zKudV12npdz+ZbGObL4qpbCoz0WvEFxrwZTI4P++eHkzIgr+AUZx?=
+ =?us-ascii?Q?2WA8UQnQsnBKQePU/eGoyRawwcy0mh6d1czOFrX+tIArWQ6Yko/N0cIr3Swn?=
+ =?us-ascii?Q?xvRDX86JDCAUBSJYzgElotNj2lQzuufd2Iq7/rNFmgRM7+lyW+hZCtJUyTu7?=
+ =?us-ascii?Q?qE4Wh6P6cM40RKzDIagkkyUhpPfASUgn4PQwruMMBuVQ7Wsb4pBHdVJMrWu8?=
+ =?us-ascii?Q?eVU9tapckZw69Vyl1IFlLkih+mRRXFMIU209PC3h/gaj8miRyE6JNpLtdtM5?=
+ =?us-ascii?Q?+SvrGTm/8SJi3k+Yd0uyDlGg7x7doVar97Sk5ivjKg2HXLADdQ6EivgJoOnq?=
+ =?us-ascii?Q?3pHAOXA9dJslbXtJEYAGGckYvtm/rpKN8e8N19Usn/47BtoMjcyOaqJkbyHY?=
+ =?us-ascii?Q?f+PlidHBKzGOQNLvDbH9pSIEuoRFLsbpza4zKT6mritCMVGzlkP767PuDwAi?=
+ =?us-ascii?Q?pVekv6msG9GtCN79Rhl3rDW2Zed/aljebx2vF7KiUMAyYbmyMcJzI6ihz+UN?=
+ =?us-ascii?Q?fuQGL0EYx5DOhCDh8usTQUDAsBIMK4nJ6dujEFQddgi9kmlzqtXfiRl8J80y?=
+ =?us-ascii?Q?WTwcFY+tdZh1aNqiCzjADIzcSAmaE3MbcPd/?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 08:22:52.5557
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0672236-b439-4197-cd84-08dda98a536e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CDF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7586
 
-> On Thu, 12 Jun 2025 at 08:50, Xuewei Niu <niuxuewei97@gmail.com> wrote:
-> >
-> > > On Thu, Jun 12, 2025 at 01:32:01PM +0800, Xuewei Niu wrote:
-> > > > No comments since last month.
-> > > >
-> > > > The patch [1], which adds SIOCINQ ioctl support for vsock, depends on this
-> > > > patch. Could I get more eyes on this one?
-> > > >
-> > > > [1]: https://lore.kernel.org/lkml/bbn4lvdwh42m2zvi3rdyws66y5ulew32rchtz3kxirqlllkr63@7toa4tcepax3/#t
-> > > >
-> > > > Thanks,
-> > > > Xuewei
-> > >
-> > > it's been in net for two weeks now, no?
-> >
-> > Umm sorry, I didn't check the date carefully, because there are several
-> > ongoing patches. Next time I'll check it carefully. Sorry again.
-> >
-> > It looks like no one is paying attention to this patch. I am requesting
-> > someone interested in vsock to review this. I'd appreciate that!
-> 
-> Which patch do you mean?
-> 
-> Thanks,
-> Stefano
+QEMU Inter-VM Shared Memory (ivshmem) is designed to share a memory
+region between guest and host. The host creates a file, passes it to QEMU
+which it presents to the guest via PCI BAR#2. The guest userspace
+can map /sys/bus/pci/devices/0000:01:02.3/resource2(_wc) to use the region
+without having the guest driver for the device at all.
 
-I am saying your patch, "vsock/virtio: fix `rx_bytes` accounting for stream
-sockets".
+The problem with this, since it is a PCI resource, the PCI sysfs
+reasonably enforces:
+- no caching when mapped via "resourceN" (PTE::PCD on x86) or
+- write-through when mapped via "resourceN_wc" (PTE::PWT on x86).
 
-Once this gets merged, I will send a new version of my patch to support
-SIOCINQ ioctl. Thus, I can reuse `rx_bytes` to count unread bytes, as we
-discussed.
+As the result, the host writes are seen by the guest immediately
+(as the region is just a mapped file) but it takes quite some time for
+the host to see non-cached guest writes.
 
-Thanks,
-Xuewei
+Add a quirk to always map ivshmem's BAR2 as cacheable (==write-back) as
+ivshmem is backed by RAM anyway.
+(Re)use already defined but not used IORESOURCE_CACHEABLE flag.
+
+This does not affect other ways of mapping a PCI BAR, a driver can use
+memremap() for this functionality.
+
+Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+---
+
+What is this IORESOURCE_CACHEABLE for actually?
+
+Anyway, the alternatives are:
+
+1. add a new node in sysfs - "resourceN_wb" - for mapping as writeback
+but this requires changing existing (and likely old) userspace tools;
+
+2. fix the kernel to strictly follow /proc/mtrr (now it is rather
+a recommendation) but Documentation/arch/x86/mtrr.rst says it is replaced
+with PAT which does not seem to allow overriding caching for specific
+devices (==MMIO ranges).
+
+---
+ drivers/pci/mmap.c   | 6 ++++++
+ drivers/pci/quirks.c | 8 ++++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/drivers/pci/mmap.c b/drivers/pci/mmap.c
+index 8da3347a95c4..8495bee08fae 100644
+--- a/drivers/pci/mmap.c
++++ b/drivers/pci/mmap.c
+@@ -35,6 +35,7 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
+ 	if (write_combine)
+ 		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+ 	else
++	else if (!(pci_resource_flags(pdev, bar) & IORESOURCE_CACHEABLE))
+ 		vma->vm_page_prot = pgprot_device(vma->vm_page_prot);
+ 
+ 	if (mmap_state == pci_mmap_io) {
+@@ -46,6 +47,11 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
+ 
+ 	vma->vm_ops = &pci_phys_vm_ops;
+ 
++	if (pci_resource_flags(pdev, bar) & IORESOURCE_CACHEABLE)
++		return remap_pfn_range_notrack(vma, vma->vm_start, vma->vm_pgoff,
++					       vma->vm_end - vma->vm_start,
++					       vma->vm_page_prot);
++
+ 	return io_remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+ 				  vma->vm_end - vma->vm_start,
+ 				  vma->vm_page_prot);
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d7f4ee634263..858869ec6612 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6335,3 +6335,11 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
+ #endif
++
++static void pci_ivshmem_writeback(struct pci_dev *dev)
++{
++	struct resource *r = &dev->resource[2];
++
++	r->flags |= IORESOURCE_CACHEABLE;
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT_QUMRANET, 0x1110, pci_ivshmem_writeback);
+-- 
+2.49.0
+
