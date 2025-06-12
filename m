@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57782F432A;
-	Thu, 12 Jun 2025 12:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3300E26ADD;
+	Thu, 12 Jun 2025 12:33:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749731610; cv=none; b=GItq5DDxRlsJEG3esghpltlH4jXEhg5ql9hod273tDGdnMfPBZqhimkNiivppDgaEeBzL7OiPdwWkBQazwUrgVJrBBYZG7toCijakxgzO7W6hpjFp0R4GfX2+OmisI+lIpLIZJAjON5NhKUYSWKJrtaVYMwJciqfwarJbUcnXdE=
+	t=1749731617; cv=none; b=Lz13SIbDVju0sRWhmg3Mx6eHNE1CrCSCY+62TRZRTBMMz0bVWC38SuAXVhydtaJy7o7BIhVScu3GJxn0XTKhh6ZXHrQCxPWz0WbMF+XXvbIl3MM1Mgi4mjxYVfd+QqB4nvUXvaqeIctKAXMJzqnidwSpkFEXj+VYdHiDtFzHcAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749731610; c=relaxed/simple;
-	bh=XHmQstvfanfzC7FHLXlVhn+/xiU+w0Rr72xmTwR0M/0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=WttVojjXsAtD+0P0+XfiYWC72WyeJ6fQC3mGIU7HWf3o5TuQqIzS54avCoOoVVKSRW3H3F9J0KlYha3+G8mjoqq9CDCat8e2AzPQySSFht2mGIEObY4+DPEGAYYv9cqmKnDygh9S+eIIBK51gWDukOzTUiTfpRpQG1fXLKlwxwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzy2FMc7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749731617; c=relaxed/simple;
+	bh=JGn1f3INBhXvJVWCD4krHYMnfnWE70gK4tzg9KrrWrQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tYtJcoOuri7VGxWJI4qMSCxQFSW/+/FnQP91U92KPhgHkgj9oTsHZq5TFUDlZTDzex954Z9ApD0D8heLuJKKubCnVIjTo7WM0tZcoLhgXK05kaY8nwFkAXwJhbOSFVe2hpKoObtDlEOkSRNViC9fTih1R1RYXZ6f+8OIRJs6ysQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=muoewxoJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzy2FMc7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC6BC4CEEA;
-	Thu, 12 Jun 2025 12:33:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="muoewxoJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325DCC4CEED;
+	Thu, 12 Jun 2025 12:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749731610;
-	bh=XHmQstvfanfzC7FHLXlVhn+/xiU+w0Rr72xmTwR0M/0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=uzy2FMc79vbPGrR43FVIRsW3RKK2BWPs5tvdvyhHo3bDQ9dYV1OHot8dEKGiUkv5i
-	 Vqd0z7T4DoLAo0ylOfrW6XYtXff+4qksm5pM3IlbUma2a4N6zgutsOVo0gcn4BxX4P
-	 wZhj86qHv1QQJaiAPvNRQxw9YGjrzkiRp0jyXX1mjZ38k0/buFdv72Gj3J6YtwdeYW
-	 076BPvDjjiFIua3RTBbG+piMmTiimVwTcf26gBMTxO/YIobw71ZckdQmWjWvoaAHwy
-	 XXN4WEJU6aRr80V42EPitKowp3AuPZPS9nFYBQtBNu3i9hI2yu3LUOOxDxvwvzracR
-	 dDU2DcbQC2NXw==
-From: Mark Brown <broonie@kernel.org>
-To: Patrice Chotard <patrice.chotard@foss.st.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, linux-spi@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- kernel-janitors@vger.kernel.org
-In-Reply-To: <aEmAGTUzzKZlLe3K@stanley.mountain>
-References: <aEmAGTUzzKZlLe3K@stanley.mountain>
-Subject: Re: [PATCH next] spi: stm32-ospi: clean up on error in probe()
-Message-Id: <174973160798.39704.11177150841033836429.b4-ty@kernel.org>
-Date: Thu, 12 Jun 2025 13:33:27 +0100
+	s=k20201202; t=1749731615;
+	bh=JGn1f3INBhXvJVWCD4krHYMnfnWE70gK4tzg9KrrWrQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=muoewxoJqLW27Eaf12Vt4fcbP3MdN9kNANIwCDfUAcswz/Cz/ze78R4YkbDKHgxB8
+	 7c2/9mn1D9Yw5nmnka+FncRcKr8uAlW5RadhvvO7msB8AwjdnVsUnFAkfns6+sHAXS
+	 x6iTxPRFCvg9porI+CHUxiZD4awF4+cW6mos1w2kMbHgU9fCmlJ6r/n0cuVWJsv0Ww
+	 kg13XBziNJHg8mIxD/EDZY6ygdWgKsFAUnLR14gI7MSEl+edX5D/6URTwUz4qVhppn
+	 3QXuaFmBgbD3H7OjgvCK0UUuD25v6AGU5BnMbO0eJyQIci2VPvDx14wh8b8W0PS48P
+	 uyIdfHTmlmI/w==
+From: Christian Brauner <brauner@kernel.org>
+To: Luis Henriques <luis@igalia.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] fs: drop assert in file_seek_cur_needs_f_lock
+Date: Thu, 12 Jun 2025 14:33:14 +0200
+Message-ID: <20250612-dickdarm-wachsen-bd0814d01811@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250612094101.6003-1-luis@igalia.com>
+References: <87tt4u4p4h.fsf@igalia.com> <20250612094101.6003-1-luis@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,40 +47,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1024; i=brauner@kernel.org; h=from:subject:message-id; bh=JGn1f3INBhXvJVWCD4krHYMnfnWE70gK4tzg9KrrWrQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWR4nRR3/1jTn/f205GgozL6G7a+Mfl2vV+nOmjp3VUHm 9uddO9xd5SwMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEykfCPDb9bu0yv9S7iqmvfc t1+cl7+vQpTtVLRx/J8Hl7fsmS0p95fhR38+a6ZwiYpfWqt0ywvlyb4S6qtinsxQzXhsXHHtMyM PAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Wed, 11 Jun 2025 16:09:45 +0300, Dan Carpenter wrote:
-> If reset_control_acquire() fails, then we can't return directly.
-> We need to do a little clean up first.
+On Thu, 12 Jun 2025 10:41:01 +0100, Luis Henriques wrote:
+> The assert in function file_seek_cur_needs_f_lock() can be triggered very
+> easily because, as Jan Kara suggested, the file reference may get
+> incremented after checking it with fdget_pos().
 > 
 > 
 
-Applied to
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Thanks!
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-[1/1] spi: stm32-ospi: clean up on error in probe()
-      commit: 83f066fac3c231e58e9adf3b307e96fee172dfb3
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+[1/1] fs: drop assert in file_seek_cur_needs_f_lock
+      https://git.kernel.org/vfs/vfs/c/ec86bba684b1
