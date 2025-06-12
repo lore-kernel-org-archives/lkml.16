@@ -1,167 +1,131 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54783182D0;
-	Thu, 12 Jun 2025 00:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667DE182D0
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749688466; cv=none; b=uXayRTo0pVwl2KY2r1kCzXcba00D1Ricokv91SACg2PnzHGXyH0NmGcII3LGL50VtXq4OgC2nwE4PfzVMRXWE2BQNqYX7tMUGVaZgYfwyJLYnBgx6PklH+/HxDBou+P5wFcrV6G+kaWNFnHZDdiAMKiioEA7vSLU8Y1SDbLbeFI=
+	t=1749688763; cv=none; b=WroC0yyXKAhz5AJRYWwU1u1QaQmgkXRQuQ94HEDPuhrcl0FVKsWKW7Z8JnWndAW/Op0iFLLm5wZzohBsVP7yRZudwSYLEacyUD4L8yq7kzU4t1hSx742hFK2tchTEY2ZLZnrgum49qs1rr6kbORGhoar/dU6Y4S7oDbb2VnSNds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749688466; c=relaxed/simple;
-	bh=fyg0oH5gh4es/IuhtNEOsuu0+l7oIjlulkU49FIeU38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DAxalJja3zqTVYc8ivpF2e+bkubmAGR45EXmrBypy9QrW3XdNceWFMJVxQwGiSqzHXF+vNLd6Ou1yvp6AJiOpFpvJRC5Ii3ot6DeDysBerfRiMcyap8qj4yA6Wu7PvkRH25eh+IvOZ/0zM8MiQQNSAqjS4mlfiUxuBn51Jf7XQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ud/NnQNy; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749688763; c=relaxed/simple;
+	bh=1/YtnVp2w5cLp0fXiP/AkynA4GjML3bPzu3yfR14Y34=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d8auiEHtwx0R3fN24F0kuy15Rp4uwLtSoYCmpW4FvvnBsDvAx7KaQbtMlWU4xauw5tlSvDmGgrp5flIKCIXAitXUln2l2VAx8+Iu7Ny3nQfb77RYBx2lblZp2GyE5kSwOA8JodMZTxlApFckBa5JSDahtSJFD2C6Dn+hmRE1wFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AnG9Eito; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ud/NnQNy"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d38d1eae03so36057785a.2;
-        Wed, 11 Jun 2025 17:34:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AnG9Eito"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87ed55a3c30so53780241.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:39:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749688464; x=1750293264; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N4cnX0EhvoTvV363ROgxXVvXp5RchZqTY+BHR1peIlQ=;
-        b=Ud/NnQNyF1I5G3qec7VXzvqHp/o1RuBYYwT9Rwocnwhg/wUiR5i4k7SQbvovn+96bn
-         5IkQ/WiVX1yxJ3Q7J+tuYYQ4Qf/QIQSFqqv72BNBHDB46kssC7YBRtf3racQ63Ang6tH
-         bKO+Oq25UHcz/gNXbsh9/ghDxA/Io23m8xPn6HLngjrcpnrXjqyMX8RIqbgXyvo8PAg5
-         Czk9/YuOInk6ISaxUVORymQOUmRq7tfGuPgU3LyHoGEGKXKkjcYkMrtMFTgW8FL5tBpI
-         5KZp4DNsierkMmPW+NrzFaa1RB8AygQacX834z6yR2PSngP2e4Rd9t7qh9FMzsNCURhf
-         wEPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749688464; x=1750293264;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1749688760; x=1750293560; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N4cnX0EhvoTvV363ROgxXVvXp5RchZqTY+BHR1peIlQ=;
-        b=eQx8o65x/ElK/K0s5g0AJuLFTR574EaRyaTyTThInyt+alZs/eLC5G04PritPO+kE7
-         SCnrGocoI/yRvCIAnEWoO8VX6/WWqooCSuwPfivyjpBODhKD8DwITH3cjdxCT6wl/Jag
-         gmaoX9ko4izFT4trXGrUGkY3gWZEE0nGkYZNQDo17vaLkxOJSj8B9uM5VkUxjyvG5YJS
-         OOHe/RBUa7qqLNPZP9Px2fpaEqgZY7dYi7WBVhqzFN4Xb16xubPxyGUVQe2jrseiPhOX
-         LZJZNRm3RhabhxfpeftlAhfMALwF6JLOXE+SXF6B6hj3t44RC3wX5UuI6ffPg+fy6v/J
-         AchA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtDT4A+bC4eb4v0ZKg0xALVmlfqrUG0Lhp4rg92gmqA/XV4/Mw3t5Fv4vUmhmbn0hE3lRO/H6gyzSt@vger.kernel.org, AJvYcCX4SqlfmF79imYBNGgxAvaYFdlqPA+JvsGjHM6anBi6L/+uykq5IwnfCM8vtphz3cnN/orKu+cf@vger.kernel.org, AJvYcCXRSRt1oF7uqClm3EhRvVMlvqbN4Iv/G11Qdx+0I4ADyZJc+2jtaLA5wpyJaMb3pn92NHbf5XedGNxKzD24@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFjL1jq+V1GljqU2fUE5or5XAMil0iXQMCe6YW8O0CVOMecbbz
-	v3rK8HsN392UbQRIqVUIuoxKmRIbXu2vyLE6D67OkxwJulfxg/vxOIZX
-X-Gm-Gg: ASbGncs89cnEBCGIHCKdJ5bUoDDZ5+ExBmxL+Y/TIKyRFkopqtep4ursL/0t5kCd9jj
-	SjFKT3aXDXJvnBpF6iDwojNME/jFaQGEH51SlLYYpB2yRljuB/zzD1AbjVsrOCJ9UCqTSAeGmup
-	poJr2wxEgzhTmgmscweZSbqlNKJPOMYxVUZbjXehzbpD5S56FXc1DICkXVV5aQIJepsZdpSZlaG
-	fFVaMj6LpiDYnSE8xMlf/3KedVQdIafCTC6OPZaJ3KEkdtHkOSgXHt3+9Wvx1PMG9vdblxozZM0
-	gszh3OZPIzGUmg3nfOKv1kKgSaiCJ2h9hgnBHQ==
-X-Google-Smtp-Source: AGHT+IGS6qXzX1rhsw1lo3B14jV1zL+YdAy/l3s2f7PapW2jiFo2sgI8OTVrHVYxwYZAApjNnHhfeg==
-X-Received: by 2002:a05:620a:24cd:b0:7d3:96ba:78d9 with SMTP id af79cd13be357-7d3b2a6bfb4mr231743485a.29.1749688464229;
-        Wed, 11 Jun 2025 17:34:24 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d3b5282c06sm35379685a.95.2025.06.11.17.34.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 17:34:23 -0700 (PDT)
-Date: Thu, 12 Jun 2025 08:33:15 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>, Inochi Amaoto <inochiama@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH net-next 2/2] net: mdio-mux: Add MDIO mux driver for
- Sophgo CV1800 SoCs
-Message-ID: <m3rqdpoztgbdocm2yx5ajcnfk7p7b2sifp6fibj3htsmw53mbl@icnaj6xndnjf>
-References: <20250611080228.1166090-1-inochiama@gmail.com>
- <20250611080228.1166090-3-inochiama@gmail.com>
- <eb419ffa-055f-48db-8c6a-60bf240fbb9d@lunn.ch>
+        bh=MijS6fKI8avgozeUh7V7g+wjXCdFSSFspwam+Jh7L04=;
+        b=AnG9EitoIjCACvlxjPoy7H/3x22cSvo+/Tu4hMhTJCOPYGAhirEnle10JkT/BHEXJc
+         9ZL4vufBbE4zVP5ThJIyg8pjEbVa9roiLzwael+phWD3wMQIgctGYLnUX04kdwxZB6rh
+         8KtpXjqtN/hw1YSaz0tVIZh5EzGAuRd59bBTw8HGsRUxwNcqLEygtA076T988oiUfMvj
+         8JI6U15UazpbG9/kjDpIQbf8zdh56Zo4i9i0XbWZOpU/rF5ZFyPPyAjOYai6Wgi09U/H
+         rG8w7ejZ24qM+pi3gw8OmYttKZiM+DUpNfJyWdw/lfKA9wW0gyAttKPqi91bEZY1lfO4
+         WQ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749688760; x=1750293560;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MijS6fKI8avgozeUh7V7g+wjXCdFSSFspwam+Jh7L04=;
+        b=V/pcDjcZc3AjnaAzgAfbvflkw7Lh6tAe3Pa8DP/KpgiadF3ioVZ0uV01I6ROXPqUTR
+         6VQsB+MeE2UaRvlY3AGagX5LqAVDLmUceLaGncHkKVBTukKGObyI+3u/raWuCs2RZBJn
+         NyJHCiQkJW4fklLY9wg+ZOr8szQp8LO5eo+A2os/DMdZKWeNGWpod7KC5HwoyBJAxbf2
+         NnxJ9qZMf16CLLFTc/mMi4tiVAoizFabdgAs2/I/LrqpIgnq23iXLJcIDrz8v3XcfuB5
+         9MJWOekz+OBGd+76fkwMl6SW+AGIdnr4Ix97TmJNHzV+70Z42PgT43NwDoZ2AoO5zlMf
+         2egQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVe9piWePeVG+544UVsVXEs8UdQ+4HhrVuq03ONqniuL+M5vIb2KykquVh/xWbCztJbebLL3FkoxbHK/UM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR10tHVXLAN/kkQ9vEWNKn1tB53lWEQr6jSwofdv+WkDWDKCGy
+	Zdatl4USPA5g9P48cFszFFwnbtxvc3k2cFSTwv9FUT2tXdsK0KXzVQiaA4Q+VxaHqpjWTYUNa1w
+	76vOMb0/IHMNzQgP1JxkJ4k26Bso0EEwnOfts7Is/
+X-Gm-Gg: ASbGncv9Sxdc+VsLDSkp0STdX5QdwftxGsQnBRvg14bmPQgiBXGsLtvsY5pT/fZ79RX
+	DcwDDRb9YDbPoy1ToV4fPDum017jZKl3S4BAl8Z9SV6AJvtqdHGEQ2cQcTIetVvMqZjWj5yhwad
+	HMx5eW6z6AItZRMQ9VIsMZYoho3SBv/xYkxa0MpRcPafQ=
+X-Google-Smtp-Source: AGHT+IGJyR0TkHrxu2ca510smf27CLRnlR33XS+KipMFozqKN/NJ2jtkGZyOWX8gVxAfHrBxFp4dlDR5VA1QBQu8htA=
+X-Received: by 2002:a05:6102:510e:b0:4e5:acea:2dec with SMTP id
+ ada2fe7eead31-4e7ccb90176mr2182302137.7.1749688760064; Wed, 11 Jun 2025
+ 17:39:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb419ffa-055f-48db-8c6a-60bf240fbb9d@lunn.ch>
+References: <20250606215246.2419387-1-blakejones@google.com> <aEnLBgCTuuZjeakP@google.com>
+In-Reply-To: <aEnLBgCTuuZjeakP@google.com>
+From: Blake Jones <blakejones@google.com>
+Date: Wed, 11 Jun 2025 17:39:09 -0700
+X-Gm-Features: AX0GCFtvh8DDYNH81d0g8swylgEtR-w4SutaqGqiWCk_py3r2whgK08XDdIBGYk
+Message-ID: <CAP_z_Ci2HtnSX8h51Lg=XcW_-5OryGb3PAH7MJjWg60Bjpdpng@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] perf: generate events for BPF metadata
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	Graham Woodward <graham.woodward@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 06:13:00PM +0200, Andrew Lunn wrote:
-> On Wed, Jun 11, 2025 at 04:02:00PM +0800, Inochi Amaoto wrote:
-> > Add device driver for the mux driver for Sophgo CV18XX/SG200X
-> > series SoCs.
-> > 
-> > @@ -0,0 +1,119 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Sophgo CV1800 MDIO multiplexer driver
-> > + *
-> > + * Copyright (C) 2025 Inochi Amaoto <inochiama@gmail.com>
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/bits.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/io.h>
-> > +#include <linux/mdio-mux.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define EPHY_PAGE_SELECT		0x07c
-> > +#define EPHY_CTRL			0x800
-> > +#define EPHY_REG_SELECT			0x804
-> > +
-> > +#define EPHY_PAGE_SELECT_SRC		GENMASK(12, 8)
-> > +
-> > +#define EPHY_CTRL_ANALOG_SHUTDOWN	BIT(0)
-> > +#define EPHY_CTRL_USE_EXTPHY		BIT(7)
-> > +#define EPHY_CTRL_PHYMODE		BIT(8)
-> > +#define EPHY_CTRL_PHYMODE_SMI_RMII	1
-> > +#define EPHY_CTRL_EXTPHY_ID		GENMASK(15, 11)
-> 
-> There are a lot of defines here which are not used, but as far as i
-> see, there is one 8bit register, where bit 7 controls the mux.
-> 
+Hi Namhyung,
 
-You are true. Only bit 7 control the mux.
+On Wed, Jun 11, 2025 at 11:29=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> I tried to process your patches but it failed to build like below:
+> [...]
+> Please run 'make build-test' and send v4.
 
-> It looks like you can throw this driver away and just use
-> mdio-mux-mmioreg.c. This is from the binding documentation with a few
-> tweaks:
-> 
->    mdio-mux@3009000 {
->         compatible = "mdio-mux-mmioreg", "mdio-mux";
->         mdio-parent-bus = <&xmdio0>;
->         #address-cells = <1>;
->         #size-cells = <0>;
->         reg = <0x3009000 1>;
->         mux-mask = <128>;
-> 
->         mdio@0 {
->             reg = <0>;
->             #address-cells = <1>;
->             #size-cells = <0>;
-> 
->             phy_xgmii_slot1: ethernet-phy@4 {
->                 compatible = "ethernet-phy-ieee802.3-c45";
->                 reg = <4>;
->             };
->         };
-> 
->         mdio@128 {
->             reg = <128>;
->             #address-cells = <1>;
->             #size-cells = <0>;
-> 
->             ethernet-phy@4 {
->                 compatible = "ethernet-phy-ieee802.3-c45";
->                 reg = <4>;
->             };
->         };
->     };
-> 
+Very sorry about that. I've fixed the two issues you noticed, as well as
+one additional one where I was using the wrong include path to check for
+the presence of the libbpf-strings feature.
 
-It is good for me to use this. I will have a try. Thanks.
+I'm trying to test my fixes using "make build-test", but it's proving a bit
+of a challenge. I installed libgtk-4-dev, binutils-dev, and libopencsd-dev
+to fix build problems as they came up; I also installed libtraceevent-dev,
+but somehow it still wasn't detected by the build process and so I had to
+use NO_LIBTRACEEVENT=3D1.
 
-Regards,
-Inochi
+Even after installing these libraries, I'm still hitting errors when doing
+"make build-test" on a copy of the perf source *without* my changes:
+
+    In file included from util/disasm_bpf.c:18:
+    .../tools/include/tools/dis-asm-compat.h:10:6:
+        error: redeclaration of 'enum disassembler_style'
+       10 | enum disassembler_style {DISASSEMBLER_STYLE_NOT_EMPTY};
+          |      ^~~~~~~~~~~~~~~~~~
+    In file included from util/disasm_bpf.c:15:
+    /usr/include/dis-asm.h:53:6: note: originally defined here
+       53 | enum disassembler_style
+          |      ^~~~~~~~~~~~~~~~~~
+
+I noticed that tools/perf/BUILD_TEST_FEATURE_DUMP has
+"feature-disassembler-four-args=3D0" and "feature-disassembler-init-styled=
+=3D0"
+as of when this failed, which seems to be upstream of the observed failure
+(the version of binutils-dev that I installed seems to have newer-style
+versions of these interfaces).
+
+Is there anything written up about how to set up a machine so that
+"make build-test" works reliably?
+
+Thanks.
+
+Blake
