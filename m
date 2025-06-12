@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5D2ECE9D
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF842ECEB6
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:42:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771762; cv=none; b=PapgZKJgPtg7QMMPYeiCbBllEgc3CoyL+E8j/YZzR8oJhp37AQUzLrOnTGLk9qhQmQu3NLChnziSbkIRSCoMo2125H3AeAj11We8mlkm8vWApxCJeOMYrCbGUqwxEsoVd3XELyruVf47v9rAe5hv0Ykl94J9QBzardR+q82NxOc=
+	t=1749771765; cv=none; b=qZboH/GOzLLTTKB4IGmkd75ZHUeDpO2l5sCaqQR9eWfr3YMNpKXstI9OOEMxeSOJPGvVuXNyTeH8dHsYTju7JRV68lOCCawL8A5zeyuX7RrxQvYPdU04xzIm+y5IQjkz0AW5WSYOevz2sMMq01z8oInxkTRb+W8Gq6MqMwV5ZE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771762; c=relaxed/simple;
-	bh=o6Bbz5lQ615J4ru0a/N+eq20jvp8zjlPf71idMnzQY4=;
+	s=arc-20240116; t=1749771765; c=relaxed/simple;
+	bh=8Z8DzIpBi/ZkYTVyIpXYybxgXpT2m2QXqkLWK+een1E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aLTBosFISv6SjGxnbC033uMEidlZZgIDSRCcZ6eIPv8pxzlUzzYonvim2/XWeVsRZvbiu2XjenzvelQvmBZl04o6o7gx2sGQUJWL+vKtHlfnei4IZsjfCjE7mtSNXoPod0G0VE4WsHcA/BAR8JULmdv7qt5bxKUjAjKPeLrspLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T13hYi1c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N12RORi/; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=U8zoPUmyKPZ/tYXD183+JSn+vRLixWVX7vPVY8xE9QBQFJyfdwkEUSbpPIgJ+lCrekYqZAadSeGL0iGMpkBHnLPLnvWyHEv7MHlyq1J/mqVfCr4IeHz+zrH78gFpVGcY0hSntqlPnX0dJJtEpkZPVzZNL60/Z/YzT1dcBL/nn1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=koyNiSky; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qecpKycV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T13hYi1c";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N12RORi/"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="koyNiSky";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qecpKycV"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749771759;
+	s=2020; t=1749771763;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nsczU9Cnv76lV78TZ5tdmxGG7/e4mNUxWgTJZQGdiA0=;
-	b=T13hYi1cp2uDHJxyuL2G14Y4iZXeOtv8NtQrldkj48L4ZOZj8OfqCNm39W7eFiyTc7ejmx
-	pvzr9nA9oiWyYPuDJxh1Q+SLzAVIkaQ/vDO9SkMmayqhZveUhsLxJiImDA+hmeFdOv+InA
-	5zOioQ60fDJZpMafpkX+eg8HHw+eaQCXytnxJcSaJEUnD+WPpbtF/npPcuB3w47z7MqS0J
-	aSYNpAD1gTyVQ+2ace0L7zpG7wSFiwEDNqO3mA2snRHCaybrxd9JIxbdtgNCf1Ud0cj2CZ
-	pcDqWxEIDRT40+fVCilVoH7F82EGtbRtMBhKNaXi+9UBvbES+4x7hT+AItmwcA==
+	bh=83xWVTLv2SQJxvrNZ04ptTVzV4QN6q1DpfqyN70JUP4=;
+	b=koyNiSkyItfgN21wZ52plZgloDg04BdN0czDB0LUZmopP9mO3REPme+HhW8UuIrCJtiaId
+	rU4YXwLUf/kN180QD6Oc0gbzpL7CdtICpeMw8Evpx+8m1dujolFoLdTi4P8JSWnVl4dEDy
+	CaTaVvDCSVeW77oe4PyuGmcOoglbBrHMO9hN5+ZSHskE8xamksipb1XmhH4D87vqlwGC0O
+	kQ2lkiFtRxN/Vm1tgte8tzGsi49hufqs6tr59Z327pwQngeSDFHCCVYJa5yyeIk23yxfzg
+	6GWr0L45YkrXRmev7GxleH1f94jpfRDJ5y9uZl+z50WCPcazclOct3gFDV4zAw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749771759;
+	s=2020e; t=1749771763;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nsczU9Cnv76lV78TZ5tdmxGG7/e4mNUxWgTJZQGdiA0=;
-	b=N12RORi/jE/zf6Tt1F9psWgvk5BXj1JaxEkysgWhYsKWYaa3oYN0levdRFSvMWlkAN3BFk
-	03DYMfN2bYMvMpBw==
+	bh=83xWVTLv2SQJxvrNZ04ptTVzV4QN6q1DpfqyN70JUP4=;
+	b=qecpKycVIH5xSb8z8RyimQ2uHF/ERCLrjrLSMygVVcMU6++hjCpkJ3NpwywYzZchhtkYnW
+	7DuD9PvKQWNFmHBw==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -54,9 +54,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 42/44] x86/cpuid: Use parsed CPUID(0x80000006)
-Date: Fri, 13 Jun 2025 01:40:08 +0200
-Message-ID: <20250612234010.572636-43-darwi@linutronix.de>
+Subject: [PATCH v3 43/44] x86/cpu: Rescan CPUID table after PSN disable
+Date: Fri, 13 Jun 2025 01:40:09 +0200
+Message-ID: <20250612234010.572636-44-darwi@linutronix.de>
 In-Reply-To: <20250612234010.572636-1-darwi@linutronix.de>
 References: <20250612234010.572636-1-darwi@linutronix.de>
 Precedence: bulk
@@ -67,105 +67,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For cpuid_amd_hygon_has_l3_cache(), use parsed CPUID access instead of a
-direct CPUID query.  The new API offers centralization benefits and
-avoids bit fiddling at call sites.
+On Pentium-III and Transmeta CPUs, disabling the CPUID(0x3) Processor
+Serial Number (PSN) can affect the maximum valid CPUID standard leaf.
 
-For testing L3 cache availability, just check if the EDX.l3_assoc output
-is not zero.  Per AMD manuals, an L3 associativity of zero implies the
-absence of an L3 cache on the CPU.
+Rescan the CPU's CPUID table in that case, not to have stale cached data.
+Use parsed CPUID(0x0) access, instead of direct CPUID query, afterwards.
 
-Note, since this function is now using parsed CPUID API, move it under
-the <cpuid/api.h> section: 'Convenience leaf-specific functions (using
-parsed CPUID data)'
+Rename squash_the_stupid_serial_number() to disable_cpu_serial_number()
+and explain the rational for disabling the CPU's PSN.
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/include/asm/cpuid/api.h | 18 +++++++++---------
- arch/x86/kernel/amd_nb.c         |  2 +-
- arch/x86/kernel/cpu/cacheinfo.c  |  6 +++---
- 3 files changed, 13 insertions(+), 13 deletions(-)
+ arch/x86/kernel/cpu/common.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/api.h
-index 9f9c035a9e73..92366de5e490 100644
---- a/arch/x86/include/asm/cpuid/api.h
-+++ b/arch/x86/include/asm/cpuid/api.h
-@@ -212,15 +212,6 @@ static inline u32 cpuid_base_hypervisor(const char *sig, u32 leaves)
- 	return 0;
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 023613698b15..81fe33976ceb 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -327,15 +327,17 @@ bool cpuid_feature(void)
+ 	return flag_is_changeable_p(X86_EFLAGS_ID);
  }
  
--/*
-- * CPUID(0x80000006) parsing:
-- */
--
--static inline bool cpuid_amd_hygon_has_l3_cache(void)
--{
--	return cpuid_edx(0x80000006);
--}
--
- /*
-  * 'struct cpuid_leaves' accessors:
-  *
-@@ -518,6 +509,15 @@ static inline bool cpuid_amd_hygon_has_l3_cache(void)
- 	     _ptr < &((union leaf_0x2_regs *)(_regs))->desc[16] && (_desc = &cpuid_0x2_table[*_ptr]);\
- 	     _ptr++)
- 
+-static void squash_the_stupid_serial_number(struct cpuinfo_x86 *c)
 +/*
-+ * CPUID(0x80000006)
++ * For privacy concerns, disable legacy Intel and Transmeta CPUID(0x3)
++ * feature, Processor Serial Number, by default.
 + */
-+
-+static inline bool cpuid_amd_hygon_has_l3_cache(struct cpuinfo_x86 *c)
-+{
-+	return cpuid_leaf(c, 0x80000006)->l3_assoc;
-+}
-+
- /*
-  * CPUID parser exported APIs:
-  */
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index a8809778b208..a5d022e15a6b 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -94,7 +94,7 @@ static int amd_cache_northbridges(struct cpuinfo_x86 *c)
- 	if (amd_gart_present())
- 		amd_northbridges.flags |= AMD_NB_GART;
- 
--	if (!cpuid_amd_hygon_has_l3_cache())
-+	if (!cpuid_amd_hygon_has_l3_cache(c))
- 		return 0;
- 
- 	/*
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index de8e7125eedd..dc28ffdbdc7f 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -210,7 +210,7 @@ static int fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4_inf
- 
- void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, u16 die_id)
++static void disable_cpu_serial_number(struct cpuinfo_x86 *c)
  {
--	if (!cpuid_amd_hygon_has_l3_cache())
-+	if (!cpuid_amd_hygon_has_l3_cache(c))
+ 	unsigned long lo, hi;
+ 
+ 	if (!cpu_has(c, X86_FEATURE_PN) || !disable_x86_serial_nr)
  		return;
  
- 	if (c->x86 < 0x17) {
-@@ -241,7 +241,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, u16 die_id)
+-	/* Disable processor serial number: */
+-
+ 	rdmsr(MSR_IA32_BBL_CR_CTL, lo, hi);
+ 	lo |= 0x200000;
+ 	wrmsr(MSR_IA32_BBL_CR_CTL, lo, hi);
+@@ -343,8 +345,12 @@ static void squash_the_stupid_serial_number(struct cpuinfo_x86 *c)
+ 	pr_notice("CPU serial number disabled.\n");
+ 	clear_cpu_cap(c, X86_FEATURE_PN);
  
- void cacheinfo_hygon_init_llc_id(struct cpuinfo_x86 *c)
- {
--	if (!cpuid_amd_hygon_has_l3_cache())
-+	if (!cpuid_amd_hygon_has_l3_cache(c))
- 		return;
- 
- 	/*
-@@ -257,7 +257,7 @@ void init_amd_cacheinfo(struct cpuinfo_x86 *c)
- 
- 	ci->num_leaves = boot_cpu_has(X86_FEATURE_TOPOEXT) ?
- 		cpuid_subleaf_count(c, 0x8000001d) :
--		cpuid_leaf(c, 0x80000006)->l3_assoc ? 4 : 3;
-+		cpuid_amd_hygon_has_l3_cache(c) ? 4 : 3;
+-	/* Disabling the serial number may affect the cpuid level */
+-	c->cpuid_level = cpuid_eax(0);
++	/*
++	 * Disabling CPUID(0x3) might have affected the maximum standard
++	 * CPUID level.  Rescan the CPU's CPUID table afterwards.
++	 */
++	cpuid_parser_scan_cpu(c);
++	c->cpuid_level = cpuid_leaf(c, 0x0)->max_std_leaf;
  }
  
- void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
+ static int __init x86_serial_nr_setup(char *s)
+@@ -354,7 +360,7 @@ static int __init x86_serial_nr_setup(char *s)
+ }
+ __setup("serialnumber", x86_serial_nr_setup);
+ #else
+-static inline void squash_the_stupid_serial_number(struct cpuinfo_x86 *c)
++static inline void disable_cpu_serial_number(struct cpuinfo_x86 *c)
+ {
+ }
+ #endif
+@@ -1968,7 +1974,7 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 	bus_lock_init();
+ 
+ 	/* Disable the PN if appropriate */
+-	squash_the_stupid_serial_number(c);
++	disable_cpu_serial_number(c);
+ 
+ 	/* Set up SMEP/SMAP/UMIP */
+ 	setup_smep(c);
 -- 
 2.49.0
 
