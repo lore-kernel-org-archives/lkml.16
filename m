@@ -1,208 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6BB1F92E;
-	Thu, 12 Jun 2025 10:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6712E2356CB
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724859; cv=none; b=u/k+YhYb4cOuDGuYDQ0PBMrMEfnlirEE012yzG1wS6TYXLtbraj4rgssOzsQJGb9JphV/jHigHb3tzvWSZIWll5xpw5OEQs4uyvRGIut2iUz/fJiVRvy1M6JKuCokbSCRGce4/bk+S0U5eIPepI2299dDJm+UdxGtxQFpmI1rkA=
+	t=1749724931; cv=none; b=pYhVh2PYLQdZtSRL7pA5sns767IXw5VjakyI6qOtpI798KCKD7zNpawljQXkCG3Ey69ZbDnCs05ch77ZyYa313gifdpxcPZcbWQZGa8bckqZQC4oP16skVZgJ/zQvp0tuYGSTAjEpLjxPM/HnHT6E5MmwBGjm6yhTg/fnqOM7nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724859; c=relaxed/simple;
-	bh=IGseCNuZuDaz/lm8jRoy5U/gC1+Grl0hSR0NO4hnO+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X3U32MuoxZn3Alx6jCmtD15v9EnwoEk0DjCIIdYNPBhtYS1GUYQPFKyDVfPPqiFlujXMCbysJO9k8/y3n+iCjASeoxtpbGlkeHUOGEVVfHeF+6my+BGMNHQcybYrgHr4YTD6xvnW3mEJbPW/VvHzo8VFWLy5+v+yV69lorCstI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOdWp8b2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOdWp8b2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B8E4C4CEEA;
-	Thu, 12 Jun 2025 10:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749724858;
-	bh=IGseCNuZuDaz/lm8jRoy5U/gC1+Grl0hSR0NO4hnO+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WOdWp8b2U+M5RbBcY3ywIRDDW/JsQXJluubRcvguCDgshaBzfJIz6/unl5tzio3Mv
-	 9w9NzmQTU2sslCY1SLRIPVuD64Qry3+/BkmQgq6XzAMUKDDV83R5pqQmUBOHc4aEAL
-	 oeHok690Ge4pb1rslSQ+vDy1mvRSnboU7a1w/JX0BtTxIMdnVCLZQe4J1QfLlqBcuP
-	 Uaqjt5ntBISmdVZl8lYi5afoMjKoFQkO3ESzKtmAW3yTFK3cbdS1DHMJFbw7b7cGse
-	 YfO+ZG0Nw1HpzP+bsPdJpaRN/ql+GgcesjM6s8pO7Bj/XpCgnMoy+QsO4hSSbcVCZ/
-	 iKPJL1dM7M4qw==
-Date: Thu, 12 Jun 2025 13:40:55 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Prachotan Bathi <prachotan.bathi@arm.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Stuart Yoder <stuart.yoder@arm.com>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] tpm_crb_ffa: handle tpm busy return code
-Message-ID: <aEqut7qHnugl_vN_@kernel.org>
-References: <20250611193009.3941971-1-prachotan.bathi@arm.com>
- <20250611193009.3941971-2-prachotan.bathi@arm.com>
+	s=arc-20240116; t=1749724931; c=relaxed/simple;
+	bh=l+7byAOhjEfIbWiHLGK0INSJHIkZOFhsYV7OcbQjDaM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=RJLflyYt9X68EMyiuQ2jnA/ZZH1PBluXEsGo8C/uijCCNk9yxZpfDfGqVlUYfF48XKCPWo1I7/icN/h1DSFq0zgTXfVrw0CXjZtyun5gYw4jCb44rBNok7IWqW4xvvEIuWPmTdYdR7mwfr8g5gy5gTTjvI6rgLHWAIyOZqt+NrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uPfNg-00069G-CQ; Thu, 12 Jun 2025 12:42:00 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uPfNf-0036jz-0Q;
+	Thu, 12 Jun 2025 12:41:59 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uPfNf-009UTd-0A;
+	Thu, 12 Jun 2025 12:41:59 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v2 0/3] dp83tg720: Reduce link recovery
+Date: Thu, 12 Jun 2025 12:41:54 +0200
+Message-Id: <20250612104157.2262058-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611193009.3941971-2-prachotan.bathi@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, Jun 11, 2025 at 02:30:09PM -0500, Prachotan Bathi wrote:
-> Platforms supporting direct message request v2 can
-> support SPs that support multiple services.
-> If the TPM service is sharing the SP with another service,
+This patch series improves the link recovery behavior of the TI
+DP83TG720 PHY driver.
 
-What is "TPM service" and "SP"?
+Previously, we introduced randomized reset delay logic to avoid reset
+collisions in multi-PHY setups. While this approach was functional, it
+had notable drawbacks: unpredictable behavior, longer and more variable
+link recovery times, and overall higher complexity in link handling.
 
-> it could get an error code of BUSY if the other service is
-> in process.
-> This adds a parameterized variable (default 2000ms)
+With this new approach, we replace the randomized delay with
+deterministic, role-specific delays in the PHY reset logic. This enables
+us to:
+- Remove the redundant empirical 600 ms delay in read_status()
+- Drop the random polling interval logic
+- Introduce a clean, adaptive polling strategy with consistent
+behavior and improved responsiveness
 
-What is "this"?
+As a result, the PHY is now able to recover link reliably in under
+1000 ms
 
-"Add a ..."
+David Jander (3):
+  net: phy: dp83tg720: implement soft reset with asymmetric delay
+  net: phy: dp83tg720: remove redundant 600ms post-reset delay
+  net: phy: dp83tg720: switch to adaptive polling and remove random
+    delays
 
->  that indicates the maximum time to keep retrying for.
-> When the TPM service returns a BUSY error code, we sleep
+ drivers/net/phy/dp83tg720.c | 185 ++++++++++++++++++++++++------------
+ 1 file changed, 126 insertions(+), 59 deletions(-)
 
-s/we sleep/sleep/
+--
+2.39.5
 
-
->  50-100us before retrying again, until we are over the
-> busy timeout.
-> 
-> Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
-
-I'd consider rewriting the commit message as it lacks any explanation
-of the code change. You replace condition statement with a loop. Start
-with that.
-
-I'd strip some of the comments too i.e, those that state the obvious.
-
-> ---
->  drivers/char/tpm/tpm_crb_ffa.c | 78 +++++++++++++++++++++++-----------
->  1 file changed, 54 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-> index 4ead61f01299..5f0a30a20b57 100644
-> --- a/drivers/char/tpm/tpm_crb_ffa.c
-> +++ b/drivers/char/tpm/tpm_crb_ffa.c
-> @@ -10,6 +10,8 @@
->  #define pr_fmt(fmt) "CRB_FFA: " fmt
->  
->  #include <linux/arm_ffa.h>
-> +#include <linux/delay.h>
-> +#include <linux/moduleparam.h>
->  #include "tpm_crb_ffa.h"
->  
->  /* TPM service function status codes */
-> @@ -178,6 +180,17 @@ int tpm_crb_ffa_init(void)
->  }
->  EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
->  
-> +static unsigned int busy_timeout = 2000;
-> +/**
-> + * busy_timeout - Maximum time to retry before giving up on busy
-> + *
-> + * This parameter defines the maximum time in milliseconds to retry
-> + * sending a message to the TPM service before giving up.
-> + */
-> +module_param(busy_timeout, uint, 0644);
-> +MODULE_PARM_DESC(busy_timeout,
-> +		 "Maximum time to retry before giving up on busy");
-> +
->  static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
->  				      unsigned long a0,
->  				      unsigned long a1,
-> @@ -191,34 +204,51 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
->  
->  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
->  
-> -	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-> -		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
-> -		       sizeof(struct ffa_send_direct_data2));
-> +	ktime_t start;
-> +	ktime_t stop;
-> +
-> +	start = ktime_get();
-> +	stop = ktime_add(start, ms_to_ktime(busy_timeout));
-> +
-> +	do {
-> +		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-> +			memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
-> +			       sizeof(struct ffa_send_direct_data2));
->  
-> -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-> -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-> -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-> -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
-> +			tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-> +			tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-> +			tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-> +			tpm_crb_ffa->direct_msg_data2.data[3] = a2;
->  
-> -		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
-> +			ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
->  				&tpm_crb_ffa->direct_msg_data2);
-> -		if (!ret)
-> -			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
-> -	} else {
-> -		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-> -		       sizeof(struct ffa_send_direct_data));
-> -
-> -		tpm_crb_ffa->direct_msg_data.data1 = func_id;
-> -		tpm_crb_ffa->direct_msg_data.data2 = a0;
-> -		tpm_crb_ffa->direct_msg_data.data3 = a1;
-> -		tpm_crb_ffa->direct_msg_data.data4 = a2;
-> -
-> -		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-> -				&tpm_crb_ffa->direct_msg_data);
-> -		if (!ret)
-> -			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-> -	}
-> +			if (!ret)
-> +				ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
-> +		} else {
-> +			memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-> +			       sizeof(struct ffa_send_direct_data));
->  
-> +			tpm_crb_ffa->direct_msg_data.data1 = func_id;
-> +			tpm_crb_ffa->direct_msg_data.data2 = a0;
-> +			tpm_crb_ffa->direct_msg_data.data3 = a1;
-> +			tpm_crb_ffa->direct_msg_data.data4 = a2;
-> +
-> +			ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-> +				&tpm_crb_ffa->direct_msg_data);
-> +			if (!ret)
-> +				ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-> +		}
-> +		/* Check if the TPM service returned busy */
-
-Strip.
-
-> +		if (ret == -EBUSY)
-> +			pr_err("TPM says busy, trying again, value, ret: %d\n",
-> +			       ret);
-> +		else
-> +			/* If TPM did not return busy, we are done, exit the loop */
-
-Ditto.
-
-> +			break;
-> +		/* Sleep for a short time before retrying to avoid busy looping */
-
-Ditto.
-
-> +		usleep_range(50, 100);
-> +	} while (ktime_before(ktime_get(), stop));
-> +	/* If we are here, we either got a valid response or over the busy timeout */
-
-Ditto.
-
->  
->  	return ret;
->  }
-> -- 
-> 2.43.0
-> 
-
-BR, Jarkko
