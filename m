@@ -1,112 +1,156 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B23E2036EC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F6B1C7013
 	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749713826; cv=none; b=GX0DJNusG/1dpvdRYr4C8cMJBX6t5vfpvFgtXeEocZ3oMFmo3t/+0xMvFVaYERqsOgR+xvQzd+5PsRBk91OqCY4+EwsIizeZyIb1pXoWvCmlCeo0CQGSnUma1dZSpNx2nG4k2Ranvz6jHe3oePXnCfxP7J9+NO3d8u+syPuqqSs=
+	t=1749713826; cv=none; b=VxK7m+E2eVUiR9MDLH/P6I7HWIjkKnFRSQApEoroBP6aIuHKAqaljNQAvKgSEOVJWKSZwcLI430uElTcAJeAlUQk+D1gF39NGqHFCbRIf+hecCEQH8zXQKWHqlYKtiDkq2trNs0nOBV5XVEAMopAle695cMgBqgXHJCUI2w/9kA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749713826; c=relaxed/simple;
-	bh=KBn+MeQXFoE2AML8UxtcE3n9z866MyK7/9UveNtFzm4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=JVC2vV+CQOuSPIEpPgmVfJJlkWbP87aFREl2SJhnVLyb1zYrTCESJKltQsGJI7ieHvoUIfkhJmwCBjNKK+F/AB3hO4EdGjQZdQK+3zj8VT6E27Y8wZT/caGJgI1MwlWtV0gYtjrxEZFsMgxDzdofD6msupHG6EExV/gp0RxWSs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddcc7e8266so17623685ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:37:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749713823; x=1750318623;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aatQYN0QixykDIqcNbepmcOIFrIXybGJrPQWZA4St8M=;
-        b=q/UbMNdSmyhdGed57Y8XThG+KWlGztZpfqwr22021ExazBwskDKZylNiGsy90H0ld5
-         bukJKlYE/yimx83g1IdtPgjPeFwS46nannN4Pp4rw5ORHJvHzNJ8dVs4p85kVKZH5uLq
-         uYgMJMjXjfhrzay/BfphqTJi8nQyGVSxZ2jOs/XxjOGT32H+io/k9jCNcUsvGP6CfIma
-         I5LgXfp872ZgvBR0SNVjEw9laHUfrheBz9yJ8Mi7C8hHTbmai+iUXE2dxDbX1PNq2lwR
-         26R8eIsIzBvRlf51yh0ZRGxVbAtnJpU/tzvSr4r4Wjn5SE9Ft/XdEthewTANWvWldV+0
-         StZA==
-X-Gm-Message-State: AOJu0Ywpt71rCkQ3djjQ1mR7CXKyTlBOLRKZAXmkiLGLFEDpnanBYJfL
-	zChEKX5jGqIawxa44QuL+j8Tppy33BaK620IgtIopTWzIU+i+3xuBMEHlXsGES4YIMUpd08Yx7a
-	XGD47ODMfaul18hEzfmI4iRGgLT1Zda5EK8UUDKWNkOsTkipH4z60pJ6wjVQ=
-X-Google-Smtp-Source: AGHT+IEgnThMoLQG6Te+tUzIECh3rC+RueX1hXJY1GQBMiKGAIN7ciwE75vC2T+BlddSEbFGt2xMZd0MGNkc0kpMrL6YR8lcRopK
+	bh=1yD285e4f/0qm5mzi45IH4TOYoV/J2DAnenMER1YRKs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tl2fxNM5osSl1C2P1flwuClwd0y9K8mxTCA4iB9984UiqjNW4HskoFmF6l5YLkQWAmjDDXeiKpo5AM9OJkNv6gMvXrlxHEeXYNu0zj2YfWQOVaea9bpx1EKozdMFFF0AFAHiDNseNsQDzwi610F18dfF9bRQezkNHDcTGIUA9AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1uPcUe-0003tr-3k; Thu, 12 Jun 2025 09:37:00 +0200
+Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1uPcUd-0035Gr-2K;
+	Thu, 12 Jun 2025 09:36:59 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1uPcUd-0004zL-21;
+	Thu, 12 Jun 2025 09:36:59 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Thu, 12 Jun 2025 09:36:58 +0200
+Subject: [PATCH v2] clk: scmi: Fix children encountered before parents case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1687:b0:3d4:2ea4:6b87 with SMTP id
- e9e14a558f8ab-3ddfadf0f80mr25935485ab.11.1749713823504; Thu, 12 Jun 2025
- 00:37:03 -0700 (PDT)
-Date: Thu, 12 Jun 2025 00:37:03 -0700
-In-Reply-To: <20250612071417.2222649-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684a839f.050a0220.be214.028c.GAE@google.com>
-Subject: Re: [syzbot] [overlayfs?] WARNING in ovl_listxattr
-From: syzbot <syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-clk-scmi-children-parent-fix-v2-1-125b26a311f6@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAJmDSmgC/42NQQ6CMBBFr0Jm7Zi2gQZceQ/CorQjTMTStEgwh
+ LtbOYGbn7y3eH+HRJEpwa3YIdLKiWefQV0KsKPxAyG7zKCEqoQWJdrpicm+GO3Ik4vkMZi8Cz5
+ 4w7IydSNVX/dGQE6ESFmf+bbLPHJa5vg531b5s3+GV4kSe1JCN1Xpaq3vgfzwXuLsebs6gu44j
+ i+c2xZEzQAAAA==
+X-Change-ID: 20250604-clk-scmi-children-parent-fix-45a8912b8ba0
+To: Sudeep Holla <sudeep.holla@arm.com>, 
+ Cristian Marussi <cristian.marussi@arm.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>
+Cc: arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749713819; l=3000;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=1yD285e4f/0qm5mzi45IH4TOYoV/J2DAnenMER1YRKs=;
+ b=XNTPkQxA3Prq1iZoWgkw+UcaeEVdXtG1ggKYfSmh4iFLCzEmUtqC7HjsEgzqHCxEFdMxj5E8y
+ Sk5dQeGLNEAAwjF2e9uauKN7WjC5RmebKWhpT6DJatu9i/vifAgE08g
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello,
+When it comes to clocks with parents the SCMI clk driver assumes that
+parents are always initialized before their children which might not
+always be the case.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in ovl_listxattr
+During initialization of the parent_data array we have:
 
-WARNING: The mand mount option has been deprecated and
-         and is ignored by this kernel. Remove the mand
-         option from the mount to silence this warning.
-=======================================================
-buf: system.posix_acl_access, size: 182, res: 17, ovl_listxattr
-s: system.posix_acl_access, len: 17, slen: 18, ovl_listxattr
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 6633 at fs/overlayfs/xattrs.c:138 ovl_listxattr+0x3db/0x430 fs/overlayfs/xattrs.c:138
-Modules linked in:
-CPU: 1 UID: 0 PID: 6633 Comm: syz.0.16 Not tainted 6.16.0-rc1-syzkaller-g2c4a1f3fe03e-dirty #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:ovl_listxattr+0x3db/0x430 fs/overlayfs/xattrs.c:138
-Code: 05 f2 fe e9 47 ff ff ff e8 02 b9 90 fe 4c 89 f8 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 e6 b8 90 fe 90 <0f> 0b 90 49 c7 c7 fb ff ff ff eb d7 e8 d4 b8 90 fe 90 0f 0b 90 e9
-RSP: 0018:ffffc900033a7d98 EFLAGS: 00010293
-RAX: ffffffff832f950a RBX: ffff888077ba4200 RCX: ffff88802d620000
-RDX: 0000000000000000 RSI: 0000000000000011 RDI: 0000000000000012
-RBP: ffff88802a27de01 R08: ffffc900033a7ac7 R09: 1ffff92000674f58
-R10: dffffc0000000000 R11: fffff52000674f59 R12: ffffffffffffffff
-R13: 0000000000000012 R14: ffff8880787a3c88 R15: 0000000000000011
-FS:  00007f48fba146c0(0000) GS:ffff888125d86000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000001000 CR3: 000000007c3f0000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- vfs_listxattr fs/xattr.c:493 [inline]
- listxattr+0x10a/0x2a0 fs/xattr.c:924
- filename_listxattr fs/xattr.c:958 [inline]
- path_listxattrat+0x179/0x3a0 fs/xattr.c:988
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f48fab8e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f48fba14038 EFLAGS: 00000246 ORIG_RAX: 00000000000000c3
-RAX: ffffffffffffffda RBX: 00007f48fadb5fa0 RCX: 00007f48fab8e969
-RDX: 00000000000000b6 RSI: 0000200000000200 RDI: 00002000000001c0
-RBP: 00007f48fac10ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f48fadb5fa0 R15: 00007ffea266aa98
- </TASK>
+	sclk->parent_data[i].hw = hws[sclk->info->parents[i]];
 
+hws[sclk->info->parents[i]] will not yet be initialized when children
+are encountered before their possible parents. Solve this by allocating
+all struct scmi_clk as an array first and populating all hws[] upfront.
 
-Tested on:
+Fixes: 65a8a3dd3b95f ("clk: scmi: Add support for clock {set,get}_parent")
+Reviewed-by: peng.fan@nxp.com
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+Changes in v2:
+- Collect reviewed-by from Cristian Marussi and Peng Fan
+- Do not use a local variable that is only used once (Christian)
+- Link to v1: https://lore.kernel.org/r/20250604-clk-scmi-children-parent-fix-v1-1-be206954d866@pengutronix.de
+---
+ drivers/clk/clk-scmi.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-commit:         2c4a1f3f Merge tag 'bpf-fixes' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15676e0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
-dashboard link: https://syzkaller.appspot.com/bug?extid=4125590f2a9f5b3cdf43
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=117b6e0c580000
+diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+index 15510c2ff21c0335f5cb30677343bd4ef59c0738..1b1561c84127b9e41bfb6096ceb3626f32c4fee0 100644
+--- a/drivers/clk/clk-scmi.c
++++ b/drivers/clk/clk-scmi.c
+@@ -404,6 +404,7 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
+ 	const struct scmi_handle *handle = sdev->handle;
+ 	struct scmi_protocol_handle *ph;
+ 	const struct clk_ops *scmi_clk_ops_db[SCMI_MAX_CLK_OPS] = {};
++	struct scmi_clk *sclks;
+ 
+ 	if (!handle)
+ 		return -ENODEV;
+@@ -430,18 +431,21 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
+ 	transport_is_atomic = handle->is_transport_atomic(handle,
+ 							  &atomic_threshold_us);
+ 
++	sclks = devm_kcalloc(dev, count, sizeof(*sclks), GFP_KERNEL);
++	if (!sclks)
++		return -ENOMEM;
++
++	for (idx = 0; idx < count; idx++)
++		hws[idx] = &sclks[idx].hw;
++
+ 	for (idx = 0; idx < count; idx++) {
+-		struct scmi_clk *sclk;
++		struct scmi_clk *sclk = &sclks[idx];
+ 		const struct clk_ops *scmi_ops;
+ 
+-		sclk = devm_kzalloc(dev, sizeof(*sclk), GFP_KERNEL);
+-		if (!sclk)
+-			return -ENOMEM;
+-
+ 		sclk->info = scmi_proto_clk_ops->info_get(ph, idx);
+ 		if (!sclk->info) {
+ 			dev_dbg(dev, "invalid clock info for idx %d\n", idx);
+-			devm_kfree(dev, sclk);
++			hws[idx] = NULL;
+ 			continue;
+ 		}
+ 
+@@ -479,13 +483,11 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
+ 		if (err) {
+ 			dev_err(dev, "failed to register clock %d\n", idx);
+ 			devm_kfree(dev, sclk->parent_data);
+-			devm_kfree(dev, sclk);
+ 			hws[idx] = NULL;
+ 		} else {
+ 			dev_dbg(dev, "Registered clock:%s%s\n",
+ 				sclk->info->name,
+ 				scmi_ops->enable ? " (atomic ops)" : "");
+-			hws[idx] = &sclk->hw;
+ 		}
+ 	}
+ 
+
+---
+base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
+change-id: 20250604-clk-scmi-children-parent-fix-45a8912b8ba0
+
+Best regards,
+-- 
+Sascha Hauer <s.hauer@pengutronix.de>
 
