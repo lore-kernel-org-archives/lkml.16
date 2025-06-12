@@ -1,159 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957DB1A265E;
-	Thu, 12 Jun 2025 15:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE33B298994
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742785; cv=none; b=PtfCBOKM/vsyq0AHQrIXrhpjVcgFDv28aLBLdT44itnWtLjYfj4FktM2vak4C2gdK3Aho/rgTsQU01O0+3/x7i8SwcaNTJo1BOanoZoAjScXfuXSKAc368ME1mQSw/xRQHgXnu+l8UhqK0FbIDjHWq9QYXVrMvzawPfjaKGKeUY=
+	t=1749742859; cv=none; b=q78tXnGL1WdW4r+9CyK/aDYicF/VQs/7XOdMnvribWqVMXX68fLv5WAJFYbOvdXkLaXV/XTO5KoXyTWf520tLLUn5yZoJVk/GfXE7PF/bSFeUN4Y8VBDnbBwfkyG15FZX4C6FyLJoz9x6uAHxbAdOrDfNesm+wVwELzvzxl69yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742785; c=relaxed/simple;
-	bh=kql/68pdZM78tfHESpUFtGAG253otQkry8EKhBsHpQ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bFhESgFB0rrG4MPq/+ll5u+zMd5jQjwaCFFgofOlxwa4kXGKggK65//a+9YyxSE4dltIsFtN+KhfQuhkRnBMRXp6GpPJmV1/si2wkpwdF7Ppb6m4vYXqBxsLv2H/fBAm2D/Dg4Ufpc+faXQrUm2obrzG/h4V06JNl8nZIg7vNZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V10LlDub; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V10LlDub"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183CAC4CEEA;
-	Thu, 12 Jun 2025 15:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749742785;
-	bh=kql/68pdZM78tfHESpUFtGAG253otQkry8EKhBsHpQ0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=V10LlDub+VHqlA5ixOqtYjEnEMX0oLZoITvIBMJKwrUTQBiOnGJJIkfHy9d7WXD+u
-	 57JrjqMBuhe6az73OLfIvzzWL04vXyC0vhxmcjri86AA+pBZdrct3yE9Sdv9doT4Ba
-	 stDpdJS1V8W9EKceuG4g8pPbSKFnScf8W0RZpqpKtBGXJ0oYRIs9mBh66vQaOkA5XT
-	 OzkBwU1yEhMfxdaPWGhiBI8cupBC79gQq6dKOHMJwPi3WzGD83Qz74V83r3WHSosmP
-	 87qeQbY/Cl987QkI8XzbFzjfUctOnQyPlbEGYHx8kCOVsYkItH3IYBDTCFuorLZRF6
-	 GDjf05tupfbxg==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so1059483e87.0;
-        Thu, 12 Jun 2025 08:39:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVTnRuGJlIwHt4SGr5zCYR1pQuuHkAKvPH7OL/zDCm2AgKDouG/7de96CVzvnGNAne8Q9qec99JXDBmTALp@vger.kernel.org, AJvYcCWT3G2k6m3+E50QKdy9uOpskvUbhWJ2f9R+MWUP0qZvPOkp+uvLPhF2f0QcQHv02Cx5K6YNyLnA1qG/kHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx69eDiHpjXJczvnOyOAhBBdHyhxRUY78guebg3JqYrpEvyVmDe
-	ENGfaCg4kghIHoJSbA1n5zLozcc+PJC30hoonvYOaOtd2IlFzvdY5SlgrPbgYUAqZv7EemnIlgX
-	EbqPoMXcWVJwE55bvmyJI7BX+pRe+U44=
-X-Google-Smtp-Source: AGHT+IFCn4cy8C3+uiWTpUl/bd4P8YsEsu+4izukKFuLL6PKg/Lb5ciTZY8OYnsP8L0vp4VZAkEInbX/v51sLL36k8M=
-X-Received: by 2002:a05:6512:4025:b0:553:2f50:5dff with SMTP id
- 2adb3069b0e04-553a5599d7fmr1294722e87.17.1749742783743; Thu, 12 Jun 2025
- 08:39:43 -0700 (PDT)
+	s=arc-20240116; t=1749742859; c=relaxed/simple;
+	bh=TWQGumuO93u36q2VkFAd+HA92aZbD8DvDjoKEJO3NtY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QLFH9baBHj9fkUvvcKtfXd7pImyxU1zxJCD4JgwGoplWsVbHnEeQhqf0rhqSfTDhic5+MSXfHslWi7GeswK/pIQhFeoB6ImUFv0qX8W1uQ/qAiWKoB5+8DXu2P+jNbjD4/GC2ucLhDppWym7xZYoWKEvLApSfUNeBKfOvJwx5O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E02E7153B;
+	Thu, 12 Jun 2025 08:40:35 -0700 (PDT)
+Received: from [10.1.37.36] (e122027.cambridge.arm.com [10.1.37.36])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4ACB3F66E;
+	Thu, 12 Jun 2025 08:40:54 -0700 (PDT)
+Message-ID: <b59c9bf1-352a-43db-af05-7b4d4ac526b0@arm.com>
+Date: Thu, 12 Jun 2025 16:40:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
- <20250611075533.8102A57-hca@linux.ibm.com> <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
- <8992766a-cc96-40bb-b8c2-60931ad0f065@app.fastmail.com> <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
- <38a08452-4db2-43e0-afdc-b7d696da5454@app.fastmail.com>
-In-Reply-To: <38a08452-4db2-43e0-afdc-b7d696da5454@app.fastmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 13 Jun 2025 00:39:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARzWWrQQb3C5hXQ91GED6-7A3eG8WzeFDvcqQeA15hZrA@mail.gmail.com>
-X-Gm-Features: AX0GCFuubVFMo5O9hAdzt9MUjZOnvHvlasTNzdZAHWJ9mz6H1COFBdQ9RnKyH9A
-Message-ID: <CAK7LNARzWWrQQb3C5hXQ91GED6-7A3eG8WzeFDvcqQeA15hZrA@mail.gmail.com>
-Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] drm/panthor: Reset queue slots if termination
+ fails
+To: Ashley Smith <ashley.smith@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com,
+ "open list:ARM MALI PANTHOR DRM DRIVER" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250603094952.4188093-1-ashley.smith@collabora.com>
+ <20250603094952.4188093-2-ashley.smith@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250603094952.4188093-2-ashley.smith@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 5:01=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
->
-> On Thu, Jun 12, 2025, at 03:42, Masahiro Yamada wrote:
-> > On Wed, Jun 11, 2025 at 11:24=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
-wrote:
-> >> On Wed, Jun 11, 2025, at 15:32, Masahiro Yamada wrote:
-> >> > On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.ib=
-m.com> wrote:
-> >> I think this makes sense in general, but the output here is
-> >> excessive if it leads to users no longer wanting to enable W=3D1.
-> >>
-> >> There are other warnings that I think should be enabled at the
-> >> W=3D1 level (e.g. -Wformat-security) and eventually by default,
-> >> but that are still too noisy at that level.
-> >>
-> >> My own cutoff would be at a few hundred warnings in allmodconfig
-> >> builds if there is an effort to reduce it further, but it seems
-> >> that this one is still at a few thousand, which does not seem ok.
-> >
-> > Then, what to do?  Downgrade to W=3D2?
-> >
-> > I think nobody cares about W=3D2 builds,
->
-> I think the first step would be mass-cleanup patches to get
-> the initial numbers down. A lot of this can be scripted.
->
-> > and the problem of all C files including <linux/export.h>
-> > would remain forever.
->
-> I'm missing a bit of background here, and I don't see this
-> explained in the 5b20755b7780 ("init: move THIS_MODULE
-> from <linux/export.h> to <linux/init.h>") changelog text
-> either
+On 03/06/2025 10:49, Ashley Smith wrote:
+> This fixes a bug where if we timeout after a suspend and the termination
+> fails, due to waiting on a fence that will never be signalled for
+> example, we do not resume the group correctly. The fix forces a reset
+> for groups that are not terminated correctly.
+> 
+> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
+> Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")
 
-I explained in 5b20755b7780 and also in the comment lines
-in scripts/misc-check.
+Reviewed-by: Steven Price <steven.price@arm.com>
 
+> ---
+>  drivers/gpu/drm/panthor/panthor_sched.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+> index 43ee57728de5..65d8ae3dcac1 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -2727,8 +2727,17 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
+>  			 * automatically terminate all active groups, so let's
+>  			 * force the state to halted here.
+>  			 */
+> -			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
+> +			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
+>  				csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
+> +
+> +				/* Reset the queue slots manually if the termination
+> +				 * request failed.
+> +				 */
+> +				for (i = 0; i < group->queue_count; i++) {
+> +					if (group->queues[i])
+> +						cs_slot_reset_locked(ptdev, csg_id, i);
+> +				}
+> +			}
+>  			slot_mask &= ~BIT(csg_id);
+>  		}
+>  	}
 
-<linux/module.h> is included by modular (i.e. tristate) code,
-which is symbol _consumers_.
-
-<linux/export.h> is included by symbol _providers_.
-
-These are independent, or in other words, orthogonal.
-
-Therefore, there is no reason for <linux/module.h>
-to include <linux/export.h>.
-
-It is standard to split consumers and providers,
-since they are included by different files.
-See <linux/clk.h> vs <linux/clk-providers.h> as another example.
-
-
-
-
-
-> What is the purpose of cleaning the linux/export.h inclusions,
-> and what makes this one more important than others?
-> I obviously understand that indirect header inclusions are
-> a giant mess and that any such cleanup helps, but linux/export.h
-> seems particularly small compared to many others. It was
-> originally introduced so a lot of files would no longer have
-> to pull in linux/module.h if they only care about using
-> EXPORT_SYMBOL() and THIS_MODULE, so linux/module.h could
-> eventually become private to kernel/module/*.c.
-
-I believe <linux/module.h> will remain, as modules must
-define MODULE_LICENSE().
-
-
-> Is this something you are trying to continue, or are you
-> doing something else here?
->
-> FWIW, I compared the preprocessed sizes of linux/export.h
-> (~2000) and linux/module.h (~120,000), and it seems that almost
-> none of those are needed by most of the files including
-> linux/module.h. The one part that is commonly required is
-> MODULE_{INFO,AUTHOR,LICENSE,DESCRIPTION}, so maybe there would
-> be a chance to clean this up at the same time if you are
-> planning some large-scale reshuffling of #include statements
-> around export.h.
->
->      Arnd
-
-Split <linux/module.h> into public and private is good,
-but it is beyond the scope of this work.
-
-Regardless of the file size, if a file does not need to
-include <linux/export.h>, the open syscall can be avoided.
-80 % of *.c files do not need to include it.
-
-
-
---=20
-Best Regards
-Masahiro Yamada
