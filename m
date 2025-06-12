@@ -1,113 +1,98 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAB71E51EB
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C4921FF2B;
+	Thu, 12 Jun 2025 07:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714525; cv=none; b=f7xvJHlLhrk/f6qjMstL0/2mWpMPWT/ZoRycYYXyc4KAVUkaVhER9Fdu5ZMAeI3vUdva9QUi91KqjMIIgK0ay/gqh+swFTupk0Htuk3fQVBstuCeem1jyQaA54WW2yHe3Phl0fzC/8M0iCsJQ+qLUd+LGk/Xkifa8AxoVoZ6qrg=
+	t=1749714530; cv=none; b=esFhdazeoa0EzK+RDx83ueookVTRcaU5nTf/um6QWMPMjeW74PJmW4c8Pp+7OuUN523cnPttJ16YGOS9k84tDUwQc3XpjqFTWYblY7+pWMR1rgsDBzo9V2eZEhfGMo1JjNsOepP/Gsn62JmWumPj1Cu5AawHljlhGOllPwflslI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714525; c=relaxed/simple;
-	bh=WkPpAAZN6wiya3x1lfspsnoQ69Jw3+KU8DkWcXoaPlQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hw98o115h783xdxyaGql5nIR2gPyDZ2R2I4hgKDkS6xqCH/APQ5tmwGBEK6Vg4mTBuKhbg02kvRgMBUNPurTHilfnNYRcIldfpNU+NymyrIStWVNcCvQtpl04cZkUj+T0SskS7EcataGen1JHrmEfYopxzrE5Qv7U4zEWdi9UtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SBXydNzh; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1749714530; c=relaxed/simple;
+	bh=pGrWzWrpTEMKsYBNAeH/vQhaAU86ivNDkNoEIlv2dK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e6Nwaf5FufHEV7EcwLGIJ0/aDYOsCgOUD8jKshtFJeb1viqlVC+9oV+N98i/FsMYVF+bz+705DgBqF5f+wij9DgewGsUlA23brKlfvIWa04j6lUXr6gfH+vVKd8iaEmTISBZVIlb9kxIRK0sGymiJF/pvmgsQABrUSH4B8j9e3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JGnb1JkT; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SBXydNzh"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4531e146a24so3716345e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:48:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749714522; x=1750319322; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M6kbazs5dYqqqHnTBGLekJlCVKFOup+/Gt2I17JMQJg=;
-        b=SBXydNzhC5rByHXbAmTjGEC5yQTWwG73guwr7CDgfwJinOEfHKc/Byj4ahndCwvnD7
-         trRvZa9kXh6o0TV9ICEmq6ZRQ6Ilf9bbt0abnz4ZGf/mbr4EtJbsOa8HtGrtFx5kAVEO
-         mRq+zJGBiec6yqlgubRB7pB65f8GbIfQ86byO8HwhCKLllZnqw5Jrjjcm3ZmSwXZ4hVF
-         NmCDJ4x5Kkx2zYuC4s76xC156I4vEuIXjszDtSpqZjgpEYfsxwc/FHAKaGPEH85xRRDM
-         tFLSLe6gH5nfJ6Ml9lnpmkUiSHT8g/O/C6gEvV8/fFRIVYyGjJBNT18oMWwY2nIy8jUz
-         pmFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714522; x=1750319322;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M6kbazs5dYqqqHnTBGLekJlCVKFOup+/Gt2I17JMQJg=;
-        b=c9DNqD9D/0LP7mSxGm2ieiq4XgwdLnxVd/wKgX5yLN51UxFcfGqX6op7HnY0eoXU9A
-         9+Bn84tWfrtqZO/S1jIRqVZijDMOU6bnP/zp5WZ1yDs8/SDKUb+DZpE1CG7qAC86hofa
-         qbIKnwOrOO4NNhy7S0jJyH8JTAu7E55sYTGA9f1uLX6+WCL0Sn6htPKQzEsZtldIbgjE
-         +aEV/xDMJnzxltbM5chpeKtSYjEQqLhip/TGgt3GqvUNpH5q2SZUVtYIzBXfZiFayCLN
-         AvKMdmd7LaRJBh8Aj8B3NLYJUek9dQ+EpC2zPYNP7WLaJwyl2m+XPXgtJbe0ScmylDk6
-         3b1g==
-X-Forwarded-Encrypted: i=1; AJvYcCX6ha9DNALyb0eEvqKp/0yC9joCB+fQKXGhr4pNcbux/hQLwMYr7OpswqFVdQ6pk6QOqiGMcIMHvF57/wc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6v7of1A3tSOBR08rzFG3w2gXRYU1ytPw75mEbda7nvDX3BxeL
-	SWKkhT+xn28sHdPWmN+HtBQdWsCSe3sX7qRheUuGHnkUahmUmymAL+9/phS0CkHx30k=
-X-Gm-Gg: ASbGncvzpAGNDtKJdqCBYsD5sXK7YqnSpD5Ey2LLpn/fYLxeIjDb3rX9iSPwPg4HC35
-	+3dXxNcwIfcyB1hchyDZoFkzxDz42y4nn98tjGe9+EXUR+qRvOU/FH6dUCfTT7e48E5DgBjPq0n
-	SdQ9thg27w/bAJZ9UWiTTC0vA0S0npElTmQuz9NaprlIxb64QPeGZR2IoDuEkbcxdEzWLWoAoWQ
-	Kgo705Sy6Wy6F/AR4U2yiPoX2Sb75pvio/5HADnkxrxypolIIVF+GmoIKK3D2D1GdsjjPP02qvn
-	8xFcL0y4LAx/ctYxx7mjlMcz4CBjvu3EjifwFq99BSpQPzUmsGxIejYBnyOCUZA7iumI0f/gxw=
-	=
-X-Google-Smtp-Source: AGHT+IGfspKVbS1RMGhdM0mqEwwSe16gt1zmT0hxrDLfPBZvEF5ETRkitqYhctrTwYTM+zUgT5aL1g==
-X-Received: by 2002:a05:600c:8587:b0:450:cabd:160 with SMTP id 5b1f17b1804b1-453249d2072mr43594245e9.3.1749714521536;
-        Thu, 12 Jun 2025 00:48:41 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8b99:9926:3892:5310])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e268de2sm11983455e9.40.2025.06.12.00.48.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 00:48:41 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2] platform/x86: silicom: remove unnecessary GPIO line direction check
-Date: Thu, 12 Jun 2025 09:48:35 +0200
-Message-ID: <20250612074835.13800-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JGnb1JkT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749714526;
+	bh=pGrWzWrpTEMKsYBNAeH/vQhaAU86ivNDkNoEIlv2dK4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JGnb1JkTrhRE4lAyZDaBEsGAHx1F+prufkguqK3N+O+KmjNLCUIcOxcm2sqdVN+vv
+	 sjf3f17/UWcHfYmIxdJuZov1N3BG8LETCrvroKO83MclK4x6l70sw+cq1xJKrgQBsm
+	 tFg0pzly3ttHGPO66I2nSu8qIBSlZBK1sKNLj1f1bSUhZEV85GTj9zwUz+hIHELVyi
+	 8ARQo7lJWX3kmOLWc1pphgaZyv5tPF2TFqQPoWf6gQ2befgHBX4nObvKg2nfmzlEFs
+	 9SuinJxCcoIZxYTu7wRa6AaF1retQk+UEhGwhCBQaRkPH8cl0cyAOYxqy5X7FmRVwy
+	 2dmnTodz3GglQ==
+Received: from [192.168.1.90] (unknown [212.93.144.165])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id ADEB017E00A3;
+	Thu, 12 Jun 2025 09:48:45 +0200 (CEST)
+Message-ID: <644a7d9d-c2b4-412f-ab6c-860f5fae3676@collabora.com>
+Date: Thu, 12 Jun 2025 10:48:26 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ALSA: usb-audio: Convert comma to semicolon
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Chen Ni <nichen@iscas.ac.cn>, perex@perex.cz, tiwai@suse.com,
+ franta-linux@frantovo.cz, lina+kernel@asahilina.net, livvy@base.nu,
+ sstistrup@gmail.com, s@srd.tw, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250612060228.1518028-1-nichen@iscas.ac.cn>
+ <87ikl1v4cj.wl-tiwai@suse.de>
+ <b8f6fb15-cc77-41c5-b362-70cfd6be6f37@collabora.com>
+ <87ecvpv2mf.wl-tiwai@suse.de>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <87ecvpv2mf.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 6/12/25 10:30 AM, Takashi Iwai wrote:
+> On Thu, 12 Jun 2025 09:22:36 +0200,
+> Cristian Ciocaltea wrote:
+>>
+>> On 6/12/25 9:52 AM, Takashi Iwai wrote:
+>>> On Thu, 12 Jun 2025 08:02:28 +0200,
+>>> Chen Ni wrote:
+>>>>
+>>>> Replace comma between expressions with semicolons.
+>>>>
+>>>> Using a ',' in place of a ';' can have unintended side effects.
+>>>> Although that is not the case here, it is seems best to use ';'
+>>>> unless ',' is intended.
+>>>>
+>>>> Found by inspection.
+>>>> No functional change intended.
+>>>> Compile tested only.
+>>>>
+>>>> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+>>>
+>>> Thanks, applied now.
+>>>
+>>> At the next time, though, it'd be appreciated if you can put the
+>>> proper Fixes tag.
+>>
+>> Considering this is not really a functional change, I think a 
+>> Fixes tag would trigger an unnecessary backport, wouldn't it?
+> 
+> If it were in the old released kernels, I wouldn't be bothered,
+> either.  But this is still in staging for the next, and having Fixes
+> tag will help to track if someone tries to backport patches.
+> Otherwise the code differs and may give conflicts in further
+> backports.
 
-As of commit 92ac7de3175e3 ("gpiolib: don't allow setting values on input
-lines"), the GPIO core makes sure values cannot be set on input lines.
-Remove the unnecessary check.
+Oh, indeed, thanks for pointing this out!
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Changes in v2:
-- remove the now unused variable
-
- drivers/platform/x86/silicom-platform.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/platform/x86/silicom-platform.c b/drivers/platform/x86/silicom-platform.c
-index 021f3fed197a6..63b5da410ed57 100644
---- a/drivers/platform/x86/silicom-platform.c
-+++ b/drivers/platform/x86/silicom-platform.c
-@@ -248,13 +248,9 @@ static int silicom_gpio_direction_input(struct gpio_chip *gc,
- static int silicom_gpio_set(struct gpio_chip *gc, unsigned int offset,
- 			    int value)
- {
--	int direction = silicom_gpio_get_direction(gc, offset);
- 	u8 *channels = gpiochip_get_data(gc);
- 	int channel = channels[offset];
- 
--	if (direction == GPIO_LINE_DIRECTION_IN)
--		return -EPERM;
--
- 	silicom_mec_port_set(channel, !value);
- 
- 	return 0;
--- 
-2.48.1
-
+Regards,
+Cristian
