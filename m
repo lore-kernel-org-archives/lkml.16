@@ -1,322 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D3A1F92E;
-	Thu, 12 Jun 2025 10:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0621FBCB0
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723486; cv=none; b=ZXDRr0pAGSQLQY7lX8xe7ybQxl5IBJjucpICYIbszZ7nIu0xXUTdH7lneY/gEcjrnLUDRcmT5lYgNjxmIvXoP4XifdgzT3QONqEk7LRf5DFlMwBgy5nf9rh1jJxFuYwlZHSFl/3ZO3Ksk7BpUxVFUPsUHDHxpq1HeTWnOus7O8A=
+	t=1749723511; cv=none; b=itBCdK+ENdMFSOZH/9LLKIPfhmDcM/mcxSASGs6mYJvcbWa7FvtGSsw2FFZIo5wHfxf+02Z/PjxX5JNOZvlLRhn04p9NTYYxCDsBGjXT+2/nn8fMjoJDV2tmK7Ix9CpVTWc057NHPCJ1Qyq88e3CO1xZkz1gPWXNC/W7XAErcH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723486; c=relaxed/simple;
-	bh=haHjCLuyFcjjryC0APdEnmv4gb5nv2DCaiXwfEunHJM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cIS0KC7YG8pbpO7Z/pK5Km2HXKo4kjuSOqZAYhIx4Rz5nszt1/1GrmtWGtbyHgfqs3lqPd5yiQTSdcsqGnn+2TFSfqULgZAy1oXRhaCm/awWwHOWn/qxDefbbJ3B2DEns4dVhnZuaiKdOOBYD8q3r2+ZLeAtrIuexcClvnz8zx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQYFqmGY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749723511; c=relaxed/simple;
+	bh=sd0poDvnGY6HHEWeCGXSXd5sL+dUXrSF/1Dfjnl0Qi0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eTRmm2v5ACOdg8r7aUdzA1nLhgOTpv/C+rnJuwBwF/PtdefwtMY6aFRXvx7arzYWgA5DYzQlfrcoCeKwCoIHyqzeYn0O1pGWwChi4D7sMzrGMiFEt0grp8ffnzRiEnBqS6Yq1v28KKm21GhC/gu+pRuIPrgqmDI4ZZB6GLNXee4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ishitatsuyuki.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pC6APzYg; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ishitatsuyuki.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQYFqmGY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B242C4CEED;
-	Thu, 12 Jun 2025 10:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749723485;
-	bh=haHjCLuyFcjjryC0APdEnmv4gb5nv2DCaiXwfEunHJM=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=dQYFqmGYD9dnEMLAaX7tWl8uJkb68MH4h4zEji8ux2NVi9l54qh4m/jwWVlvrh42N
-	 Z0hrv/Pjkmc462Dn8jaSdyvjs0ya6fhOO2DIgU7kc15G7zvA5lNzEwP9tdnlKhDEx7
-	 gy8fnMRvJOnWAHqgvOe6/9tImJ/TrlyT9Jw8Gsesp3YRyic7RCyqfFys4N5WxHtZdE
-	 E/QwbElGUCd9Z3ff4kvXszezEmgX2tn52SPjBhHiPRq7sCEbsn/xEjTWFvpFli4K3j
-	 hAuTNHUltzD9fd8DM5VAhmx9UJSs88tSp0nyKCB40cpP+Jy/1DzXFm5RvNFezFingB
-	 XmOTOgl8MHq9A==
-Message-ID: <485749d4-b3c4-4965-9714-ad534d37e8c9@kernel.org>
-Date: Thu, 12 Jun 2025 12:17:57 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pC6APzYg"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310e7c24158so852178a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749723509; x=1750328309; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=20a6VXdSyZR3J7DOvNrBbIXfn2ygPO/nSrCWCnB/1y0=;
+        b=pC6APzYgWgX88kdWKRG7RLcOEBhdOWz3dPdidMOo6YDYBBJpWhjL/e97Sc3JcGO05G
+         8dzcStFymVw9GLCibprapHEpMgP3i2MNeSCf43ogxhXNTM6QJfsb1Rxkm4fIvF01GVPR
+         m2iDjfrFQBJmAqJCNsLHJn2tnMtvxtbg9ZcAnjScMUUK6K7J+QIcm10QTTDu5u8AfxRe
+         Uqfn5EPI5pkVGdvp78cm65o05vZ5mCgeTTWHJwGs4KUQcxsZY7EqSVPiISQGZhZ79Nze
+         CP8ZyPjaLRUM65AmIXGXC/UuMdwutFUtvJBlp97C5tpF/6TZG2n2+aUbj82sH76vnJgt
+         GBjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749723509; x=1750328309;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=20a6VXdSyZR3J7DOvNrBbIXfn2ygPO/nSrCWCnB/1y0=;
+        b=nmt7nVj1nKUiAWu07RVN/+FNdLVg820mnmwQnngnWxtKXMQYjnB67AiHDhqxb6odTC
+         vlQ43PXy13DSlP8ZEitqj2LautpeT2j0dOUnIxSpGdIWh5k34zS+XKzl+F8jobSv4trA
+         4sGOredwVh1WY70bZdXPE34yJuIoKrLzXuQxcx6Cp28Oct3idXTiENgLIiYgc+cF/3t7
+         zmXgF8mPFK1WImkmg6C9J+8/YPARKazuwQZTRqp+JUDFcLiSBxRs+UtViQgoW8y2+gYY
+         h10n4utmdWvpJuabDUtWWf9yYl+9Q23emfFluSTnYfc26s2UcuYkzfy22zQmOC09wc7A
+         dlug==
+X-Forwarded-Encrypted: i=1; AJvYcCWygO8ilw+IUWF5G7xU+EPGTnsIrC2Zgut7WU4FofxWxei8l7t/P+hdZpFFKlmRIr+q4Vp2uuojnZoXXkE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVD+arc0u5/Nz3IQY9XmUDxY00qFiYL08Rvh2af3ZCUj8guR5I
+	kx4niwzuFm/pMf3d8soK8gKUg7OOLTrb59wh9bnLslQT3m/QSHq/qYXi12JjOy7/4w6lidlhaoz
+	gyE05lSedReA5XeZVJcMYpRQFNTU4VfYSUw==
+X-Google-Smtp-Source: AGHT+IG9MR2SuFSzKZgWA0YQQQQgsFeVnjAS9ApDfDEl5sU6JXYo/aqTjv0GcbwrVoAVUpr1Cw8h6otWmq1nzp26ZPVf
+X-Received: from pjbst13.prod.google.com ([2002:a17:90b:1fcd:b0:312:1c59:43a6])
+ (user=ishitatsuyuki job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:1c09:b0:312:e8ed:758 with SMTP id 98e67ed59e1d1-313bfb677c7mr4388239a91.13.1749723509379;
+ Thu, 12 Jun 2025 03:18:29 -0700 (PDT)
+Date: Thu, 12 Jun 2025 19:18:25 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v0 3/5] arm64: dts: aspeed: Add initial AST2700 SoC device
- tree
-To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Nishanth Menon <nm@ti.com>,
- nfraprado@collabora.com, Taniya Das <quic_tdas@quicinc.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Eric Biggers <ebiggers@google.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, soc@lists.linux.dev,
- Mo Elbadry <elbadrym@google.com>, Rom Lemarchand <romlem@google.com>,
- William Kennington <wak@google.com>, Yuxiao Zhang <yuxiaozhang@google.com>,
- wthai@nvidia.com, leohu@nvidia.com, dkodihalli@nvidia.com,
- spuranik@nvidia.com
-References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
- <20250612100933.3007673-4-ryan_chen@aspeedtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250612100933.3007673-4-ryan_chen@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAHCpSmgC/x3MMQqAMAxA0atIZgMatKBXEYdao2awlUREEO9uc
+ XzD/w8Yq7BBXzygfIlJihl1WUDYfFwZZc4GqqitXE04NciaFkPZD1ZL0Z+MswvUkQutCx5yeig vcv/bYXzfD5Bjg8tmAAAA
+X-Change-Id: 20250612-b4-erofs-impersonate-d6c2926c56ca
+X-Mailer: b4 0.14.2
+Message-ID: <20250612-b4-erofs-impersonate-v1-1-8ea7d6f65171@google.com>
+Subject: [PATCH] erofs: impersonate the opener's credentials when accessing
+ backing file
+From: Tatsuyuki Ishi <ishitatsuyuki@google.com>
+To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
+	Hongbo Li <lihongbo22@huawei.com>
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	shengyong1@xiaomi.com, wangshuai12@xiaomi.com, 
+	Tatsuyuki Ishi <ishitatsuyuki@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On 12/06/2025 12:09, Ryan Chen wrote:
-> This add the initial device tree support for the ASPEED AST2700 SoC.
-> 
-> - Add top-level compatible string "aspeed,ast2700" and set up
-> address-cells/size-cells for 64-bit address space.
-> - Describe a quad-core ARM Cortex-A35 CPU cluster with L2 cache,
-> including cache properties and PSCI enable-method.
-> - Add PMU and ARMv8 timer nodes with correct PPI interrupt wiring.
-> - Model the dual-SoC architecture with two simple-bus nodes:
-> soc0 (@0x10000000) and soc1 (@0x14000000).
-> - Add syscon nodes for both SoCs (syscon0, syscon1) with clock/reset
-> cell definitions and address mapping.
-> - Add GICv3 interrupt controller node under soc0, with full register
-> mapping and interrupt properties.
-> - Hierarchical interrupt controller structure:
->   - intc0 under soc0, with child intc0_11 node.
->   - intc1 under soc1, with child intc1_0~intc1_5 nodes.
-> - Add serial4 node under soc0, others serial node under soc1.
-> 
-> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
-> ---
->  arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi | 380 ++++++++++++++++++++++
->  1 file changed, 380 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi b/arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi
-> new file mode 100644
-> index 000000000000..d197187bcf9f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi
-> @@ -0,0 +1,380 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +#include <dt-bindings/clock/aspeed,ast2700-scu.h>
-> +#include <dt-bindings/reset/aspeed,ast2700-scu.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	interrupt-parent = <&gic>;
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			enable-method = "psci";
-> +			reg = <0x0 0x1>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu2: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			enable-method = "psci";
-> +			reg = <0x0 0x2>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			enable-method = "psci";
-> +			reg = <0x0 0x3>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		l2: l2-cache0 {
-> +			compatible = "cache";
-> +			cache-level = <2>;
-> +			cache-unified;
-> +			cache-size = <0x80000>;
-> +			cache-line-size = <64>;
-> +			cache-sets = <1024>;
-> +		};
-> +	};
-> +
-> +	arm-pmu {
-> +		compatible = "arm,cortex-a35-pmu";
-> +		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +		arm,cpu-registers-not-fw-configured;
-> +		always-on;
-> +	};
-> +
-> +	soc0: soc@10000000 {
-> +		compatible = "simple-bus";
-> +		reg = <0x0 0x10000000 0x10000000>;
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		syscon0: syscon@12c02000 {
-> +			compatible = "aspeed,ast2700-scu0", "syscon", "simple-mfd";
-> +			reg = <0x0 0x12c02000 0x1000>;
-> +			ranges = <0x0 0x0 0 0x12c02000 0x1000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		gic: interrupt-controller@12200000 {
-> +			compatible = "arm,gic-v3";
-> +			reg = <0 0x12200000 0x10000>, /* GICD */
-> +			      <0 0x12280000 0x80000>, /* GICR */
-> +			      <0 0x40440000 0x1000>;  /* GICC */
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +			interrupt-parent = <&gic>;
-> +		};
-> +
-> +		serial4: serial@12c1a000 {
-> +			compatible = "ns16550a";
-> +			reg = <0x0 0x12c1a000 0x1000>;
-> +			clocks = <&syscon0 SCU0_CLK_GATE_UART4CLK>;
-> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg-shift = <2>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +
-> +	soc1: soc@14000000 {
-> +		compatible = "simple-bus";
-> +		reg = <0x0 0x14000000 0x10000000>;
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		syscon1: syscon@14c02000 {
-> +			compatible = "aspeed,ast2700-scu1", "syscon", "simple-mfd";
-> +			reg = <0x0 0x14c02000 0x1000>;
-> +			ranges = <0x0 0x0 0x0 0x14c02000 0x1000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		serial12: serial@14c33b00 {
-> +			compatible = "ns16550a";
-> +			reg = <0x0 0x14c33b00 0x100>;
-> +			clocks = <&syscon1 SCU1_CLK_GATE_UART12CLK>;
-> +			interrupts-extended =
-> +				<&intc1_4 18 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +			reg-shift = <2>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> +
-> +&soc0 {
+Previously, file operations on a file-backed mount used the current
+process' credentials to access the backing FD. Attempting to do so on
+Android lead to SELinux denials, as ACL rules on the backing file (e.g.
+/system/apex/foo.apex) is restricted to a small set of process.
+Arguably, this error is redundant and leaking implementation details, as
+access to files on a mount is already ACL'ed by path.
 
-This is the base DTSI, there is no existing node to override. Just
-define complete SoC node in one place like every other vendor.
+Instead, override to use the opener's cred when accessing the backing
+file. This makes the behavior similar to a loop-backed mount, which
+uses kworker cred when accessing the backing file and does not cause
+SELinux denials.
 
+Signed-off-by: Tatsuyuki Ishi <ishitatsuyuki@google.com>
+---
+ fs/erofs/fileio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> +	intc0: interrupt-controller@12100000 {
-> +		compatible = "simple-mfd";
+diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+index 7d81f504bff08f3d5c5d44d131460df5c3e7847d..df5cc63f2c01eb5e7ec4afab9e054ea12cea7175 100644
+--- a/fs/erofs/fileio.c
++++ b/fs/erofs/fileio.c
+@@ -47,6 +47,7 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
+ 
+ static void erofs_fileio_rq_submit(struct erofs_fileio_rq *rq)
+ {
++	const struct cred *old_cred;
+ 	struct iov_iter iter;
+ 	int ret;
+ 
+@@ -60,7 +61,9 @@ static void erofs_fileio_rq_submit(struct erofs_fileio_rq *rq)
+ 		rq->iocb.ki_flags = IOCB_DIRECT;
+ 	iov_iter_bvec(&iter, ITER_DEST, rq->bvecs, rq->bio.bi_vcnt,
+ 		      rq->bio.bi_iter.bi_size);
++	old_cred = override_creds(rq->iocb.ki_filp->f_cred);
+ 	ret = vfs_iocb_iter_read(rq->iocb.ki_filp, &rq->iocb, &iter);
++	revert_creds(old_cred);
+ 	if (ret != -EIOCBQUEUED)
+ 		erofs_fileio_ki_complete(&rq->iocb, ret);
+ }
 
-NAK, never tested.
-
-Not allowed, see bindings. And test it next time.
-
+---
+base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
+change-id: 20250612-b4-erofs-impersonate-d6c2926c56ca
 
 Best regards,
-Krzysztof
+-- 
+Tatsuyuki Ishi <ishitatsuyuki@google.com>
+
