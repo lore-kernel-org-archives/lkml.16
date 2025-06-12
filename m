@@ -1,210 +1,830 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D743A23CF12
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 375FA23643F;
+	Thu, 12 Jun 2025 10:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725538; cv=none; b=CPnTnL3D25aNSj7oeGFdR/jUzyVt25AMs7/6zr0XgVyyq4CsaKOpfAFrE8sqMneJv2o+VamVvAB15zD1BfgpQ27kvD0Bj76umLkwQWP1BD+ld1A/sCSfPiWlZwYtp5laB+1Fowo6Vfr+ej4E627wlU28Wy9KsQCS0T2JCI3WGFw=
+	t=1749725536; cv=none; b=Az1wO8XDvUZrqV87Of/KKxZyGqhKXeNtr16qubOzSNS+PldX5xlfHdS24DXKDDYIwWq5JpnpKMHWjxjJ+jLH/54oFraUCJrm4oWgYV7jp46vvbJhlH5hSFoGPdONv/oQLOnLMH0G/K3GacKrfxI4INgbzemUhTyJWzFibA+IvcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725538; c=relaxed/simple;
-	bh=3q7KrM2yr9Qp5xOzjAGUah6k2lgFj7Ti8ba/dxXSz1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kzIcNpmprKwJ8gtJVKovdHyQbuljSi6B4SpFgH0mxyOX6WadIl7fV9ocUWKNGdPPPbS0tmwmRrGOtedWQJyPKKBX2twSz0p1vXLYac2mX1gb3aQfEJ/ktpouebguGDS2tXt4EPzMnP3d30+pPGGUnR+DrTE2XxOdorKI0WVdGe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oSQqV7gI; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oSQqV7gI"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a524caf77eso116113f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749725535; x=1750330335; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=8o+4gAdaAZ3mryG31eBLn6EnhTDheXuGJ4iT2AxzWmI=;
-        b=oSQqV7gIWZ02TdJOR82IlaCjwMklahhYQlhX4QVNa8x9kFqAV/2L7bxfDQqdY0JH45
-         /tdyIx6Nqie/RWxumctgz/GqImtRTV9LUSxxq8bC0akIx0TrfzW4DuwiPfL95n4i69Lf
-         yZhVbI4qHnxcKPPXaWiccNGnBbOC/2ujGKeqjlZ5jYFD9IMpHCcISAuqXR0vyxA/nBiZ
-         BzSYVhEf6JPP60dcf1qfkwbz/Tp3G8hLspxBTIzXA+o7whZTan0Ca4cfmnOkSdgNaId0
-         p7b4jpCGuC9yMx0Tkp6zlwMiaJyP/qq/R7ra9+EVKDyDSZLL68VBRgmaUzuwTlTDR++U
-         RvBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749725535; x=1750330335;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8o+4gAdaAZ3mryG31eBLn6EnhTDheXuGJ4iT2AxzWmI=;
-        b=XySZt4k1frXggiEogfR+koIrq+ds+TUG6Yl0yOn69DwVxe7uZWv3fbeklf/QrwM1iW
-         TLAQIkig1wMc/d5XG/GFM/x26GZ6kzxqzBspW3MwJcFBYC+n0VPUjjeJLywllPKH23VK
-         Mbd9FlU4QJWOyrKGwbzqNAwapV7CS0Oe/6Vwpy8CN7uzcqXg770HZpRP/RGTFxuKBxUs
-         uI3fKE0EBlYEZzapkV5w64Ymb0VxZWnhxxTjxpdcPPbcfyLCEJ18X7r/bPcSdnKT8i+5
-         oXt6TwFWa2VyWgwcXOM2h1mGM+kyLJNpXEaFv791Rrhq4O0bLvVC0Ho95GgkmkCwnOqY
-         zQNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOaIf6jn4vC+3xahaYlc0saen3PJtGAFT1EuezqzIkScSgaRzHYLdihBlY9Wo6o7G/Jv1wAu+LvGVMHx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9i+xh7wcl4FFoUX/ELlDfaRsT4BnIBMiuCr55ODg0XHhCYRhl
-	0HctFI2872L2/M0aGI922YaeUESoAHIOWLisoOXfJcJISuPzSwImUa8aUb3wTZ9LFaI=
-X-Gm-Gg: ASbGncv/Soe9KnmFAUuXHns/Q7nq28tRZAKa25c91B4XYlm1fi40k40f7PlbTM7G/18
-	HUuQQDlIwVXcJg/sdY+srf8VDlB7E5M8lAFNn19l+6tU0O8vMechTU/YYtdc59orwl8fUyuXK2L
-	rw/2xYVSXa1mUxMqzYfqFLjFVXHW32dcZsGu+cPzDuwn9eH7xq+JMFc/FFTKHXuP69kw7iVaTAJ
-	384lpcE2NB2glCQzaP112tL56wEvBgXxW47N5zFmJDcnFJsCCE4ljvlm3c+giH3T1Eiiw++jLUi
-	ESxu6teNC+o128FGjm8AH6dec2CqkGk8HSEBTnRTncYKFYYRX8GZE+aNKjlEeoMAym8yE1zTuOR
-	/5uh+QfE=
-X-Google-Smtp-Source: AGHT+IGa1ALw/a8BRBzg2LWcl5urXQ/xKDMV4zRDfhmzQSWXFyWDavOAUlvOxtW5OpAy1V96OWFxWQ==
-X-Received: by 2002:a05:6000:430a:b0:3a4:eed9:753a with SMTP id ffacd0b85a97d-3a558823cd8mr2189896f8f.13.1749725535080;
-        Thu, 12 Jun 2025 03:52:15 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e16e550sm16778845e9.35.2025.06.12.03.52.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 03:52:13 -0700 (PDT)
-Message-ID: <91c11e62-b0d4-40e9-91a1-20da9973e415@linaro.org>
-Date: Thu, 12 Jun 2025 12:52:10 +0200
+	s=arc-20240116; t=1749725536; c=relaxed/simple;
+	bh=KRrdLkCs66UnNfMEZSWwB0iCEywwnyrK+Vc46gHPNe0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LCzAI18Rx06JYCdhA1QpY0ITvactp9UxP380N7Hj6k6XCoEp/lTrn0lSEUGd5LA94Bp7KGwY7mPTNul9EimcRzjpeSWDfScrdunAdcaFlf3ycvUxJUo5poUyu/los792M3QMwjGgjczNhq28JLnxNpaXs+9Yy5PedoDcxblZPa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app1 (Coremail) with SMTP id TAJkCgAXLxBRsUpoLHyeAA--.26054S2;
+	Thu, 12 Jun 2025 18:52:03 +0800 (CST)
+From: Yulin Lu <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	zhengyu@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	Yulin Lu <luyulin@eswincomputing.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v5 2/2] pinctrl: eswin: Add EIC7700 pinctrl driver
+Date: Thu, 12 Jun 2025 18:51:59 +0800
+Message-Id: <20250612105159.1241-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250612104539.2011-1-luyulin@eswincomputing.com>
+References: <20250612104539.2011-1-luyulin@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v5 00/18] clk: qcom: Add support to attach
- multiple power domains in cc probe
-To: Jagadeesh Kona <quic_jkona@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
- Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com>
- <174970084192.547582.612305407582982706.b4-ty@kernel.org>
- <65828662-5352-449b-a892-7c09d488a1f4@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <65828662-5352-449b-a892-7c09d488a1f4@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgAXLxBRsUpoLHyeAA--.26054S2
+X-Coremail-Antispam: 1UD129KBjvAXoWfXrWfJF47uryxurWUJF1DJrb_yoW5Wr4xKo
+	WfCw47Xr15Kr48ZrW3CFZ5K3Z5XrnakF1Yvw15Ar13AF1Iyr1IgrZYgr4qg343Jryjyry8
+	ur1DWry3A395Xa43n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUYl7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20EY4v20xva
+	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
+	x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
+	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrw
+	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+	14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTR_OzsDUUUU
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-On 12/06/2025 12:03, Jagadeesh Kona wrote:
-> 
-> 
-> On 6/12/2025 9:30 AM, Bjorn Andersson wrote:
->>
->> On Fri, 30 May 2025 18:50:45 +0530, Jagadeesh Kona wrote:
->>> In recent QCOM chipsets, PLLs require more than one power domain to be
->>> kept ON to configure the PLL. But the current code doesn't enable all
->>> the required power domains while configuring the PLLs, this leads to
->>> functional issues due to suboptimal settings of PLLs.
->>>
->>> To address this, add support for handling runtime power management,
->>> configuring plls and enabling critical clocks from qcom_cc_really_probe.
->>> The clock controller can specify PLLs, critical clocks, and runtime PM
->>> requirements using the descriptor data. The code in qcom_cc_really_probe()
->>> ensures all necessary power domains are enabled before configuring PLLs
->>> or critical clocks.
->>>
->>> [...]
->>
->> Applied, thanks!
->>
->> [01/18] dt-bindings: clock: qcom,sm8450-videocc: Add MXC power domain
->>         commit: 1a42f4d4bb92ea961c58599bac837fb8b377a296
->> [02/18] dt-bindings: clock: qcom,sm8450-camcc: Allow to specify two power domains
->>         commit: a02a8f8cb7f6f54b077a6f9eb74ccd840b472416
->> [03/18] dt-bindings: clock: qcom,sm8450-camcc: Move sc8280xp camcc to sa8775p camcc
->>         commit: 842fa748291553d2f56410034991d0eb36b70900
->> [04/18] clk: qcom: clk-alpha-pll: Add support for common PLL configuration function
->>         commit: 0f698c16358ef300ed28a608368b89a4f6a8623a
->> [05/18] clk: qcom: common: Handle runtime power management in qcom_cc_really_probe
->>         commit: c0b6627369bcfec151ccbd091f9ff1cadb1d40c1
->> [06/18] clk: qcom: common: Add support to configure clk regs in qcom_cc_really_probe
->>         commit: 452ae64997dd1db1fe9bec2e7bd65b33338e7a6b
->> [07/18] clk: qcom: videocc-sm8450: Move PLL & clk configuration to really probe
->>         commit: 512af5bf312efe09698de0870e99c0cec4d13e21
->> [08/18] clk: qcom: videocc-sm8550: Move PLL & clk configuration to really probe
->>         commit: a9dc2cc7279a1967f37192a2f954e7111bfa61b7
->> [09/18] clk: qcom: camcc-sm8450: Move PLL & clk configuration to really probe
->>         commit: eb65d754eb5eaeab7db87ce7e64dab27b7d156d8
->> [10/18] clk: qcom: camcc-sm8550: Move PLL & clk configuration to really probe
->>         commit: adb50c762f3a513a363d91722dbd8d1b4afc5f10
->> [11/18] clk: qcom: camcc-sm8650: Move PLL & clk configuration to really probe
->>         commit: 3f8dd231e60b706fc9395edbf0186b7a0756f45d
->> [12/18] clk: qcom: camcc-x1e80100: Move PLL & clk configuration to really probe
->>         commit: d7eddaf0ed07e79ffdfd20acb2f6f2ca53e7851b
->>
->> Best regards,
-> 
-> 
-> Hi Bjorn,
-> 
-> Thanks for picking these patches. However, the dt-bindings patches are closely linked with
-> the DT patches in this series and needs to be picked together. The dt-bindings changes adds
+Add support for the pin controller in ESWIN's EIC7700 SoC,
+which supports pin multiplexing, pin configuration,
+and rgmii voltage control.
 
-DT bindings are the DT patches. What do you mean by DT? DTS? If so, then
-you introduce regressions without explaining this at all in cover letter
-or patches.
+Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
+---
+ drivers/pinctrl/Kconfig           |  11 +
+ drivers/pinctrl/Makefile          |   1 +
+ drivers/pinctrl/pinctrl-eic7700.c | 704 ++++++++++++++++++++++++++++++
+ 3 files changed, 716 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
 
-> multiple power domains support for clock controllers, and without the corresponding DT
-> patches, dtbs_check will give warnings.
-> 
-> Can you please help to pick DT patches as well?
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 33db9104df17..e3e0cac002d2 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -206,6 +206,17 @@ config PINCTRL_DIGICOLOR
+ 	select PINMUX
+ 	select GENERIC_PINCONF
+ 
++config PINCTRL_EIC7700
++	tristate "EIC7700 PINCTRL driver"
++	depends on ARCH_ESWIN || COMPILE_TEST
++	select PINMUX
++	select GENERIC_PINCONF
++	help
++	  This driver support for the pin controller in ESWIN's EIC7700 SoC,
++	  which supports pin multiplexing, pin configuration,and rgmii voltage
++	  control.
++	  Say Y here to enable the eic7700 pinctrl driver
++
+ config PINCTRL_EP93XX
+ 	bool
+ 	depends on ARCH_EP93XX || COMPILE_TEST
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index ac27e88677d1..82e0d4cf5045 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL_CY8C95X0)	+= pinctrl-cy8c95x0.o
+ obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
+ obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
+ obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
++obj-$(CONFIG_PINCTRL_EIC7700)	+= pinctrl-eic7700.o
+ obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
+ obj-$(CONFIG_PINCTRL_EP93XX)	+= pinctrl-ep93xx.o
+ obj-$(CONFIG_PINCTRL_EYEQ5)	+= pinctrl-eyeq5.o
+diff --git a/drivers/pinctrl/pinctrl-eic7700.c b/drivers/pinctrl/pinctrl-eic7700.c
+new file mode 100644
+index 000000000000..719cd11e276a
+--- /dev/null
++++ b/drivers/pinctrl/pinctrl-eic7700.c
+@@ -0,0 +1,704 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ESWIN Pinctrl Controller Platform Device Driver
++ *
++ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
++ *
++ * Authors: Samuel Holland <samuel.holland@sifive.com>
++ *          Yulin Lu <luyulin@eswincomputing.com>
++ */
++
++#include <linux/bitfield.h>
++#include <linux/device.h>
++#include <linux/io.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/seq_file.h>
++#include <linux/regulator/consumer.h>
++
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++
++#include "core.h"
++#include "pinmux.h"
++#include "pinconf.h"
++
++#define EIC7700_PIN_REG(i)		(4 * (i))
++#define EIC7700_IE			BIT(0)
++#define EIC7700_PU			BIT(1)
++#define EIC7700_PD			BIT(2)
++#define EIC7700_DS			GENMASK(6, 3)
++#define EIC7700_ST			BIT(7)
++#define EIC7700_FUNC_SEL		GENMASK(18, 16)
++
++#define EIC7700_BIAS			(EIC7700_PD | EIC7700_PU)
++#define EIC7700_PINCONF			GENMASK(7, 0)
++
++#define EIC7700_RGMII0_SEL_MODE		(0x310 - 0x80)
++#define EIC7700_RGMII1_SEL_MODE		(0x314 - 0x80)
++#define EIC7700_MS			GENMASK(1, 0)
++#define EIC7700_MS_3V3			0x0
++#define EIC7700_MS_1V8			0x3
++
++#define EIC7700_FUNCTIONS_PER_PIN	8
++
++struct eic7700_pin {
++	u8 functions[EIC7700_FUNCTIONS_PER_PIN];
++};
++
++struct eic7700_pinctrl {
++	void __iomem *base;
++	struct pinctrl_desc desc;
++	unsigned int functions_count;
++	struct pinfunction functions[] __counted_by(functions_count);
++};
++
++enum {
++	F_DISABLED,
++	F_BOOT_SEL,
++	F_CHIP_MODE,
++	F_EMMC,
++	F_FAN_TACH,
++	F_GPIO,
++	F_HDMI,
++	F_I2C,
++	F_I2S,
++	F_JTAG,
++	F_DDR_REF_CLK_SEL,
++	F_LPDDR_REF_CLK,
++	F_MIPI_CSI,
++	F_OSC,
++	F_PCIE,
++	F_PWM,
++	F_RGMII,
++	F_RESET,
++	F_SATA,
++	F_SDIO,
++	F_SPI,
++	F_S_MODE,
++	F_UART,
++	F_USB,
++	EIC7700_FUNCTIONS_COUNT
++};
++
++static const char *const eic7700_functions[EIC7700_FUNCTIONS_COUNT] = {
++	[F_DISABLED]		= "disabled",
++	[F_BOOT_SEL]		= "boot_sel",
++	[F_CHIP_MODE]		= "chip_mode",
++	[F_EMMC]		= "emmc",
++	[F_FAN_TACH]		= "fan_tach",
++	[F_GPIO]		= "gpio",
++	[F_HDMI]		= "hdmi",
++	[F_I2C]			= "i2c",
++	[F_I2S]			= "i2s",
++	[F_JTAG]		= "jtag",
++	[F_DDR_REF_CLK_SEL]	= "ddr_ref_clk_sel",
++	[F_LPDDR_REF_CLK]	= "lpddr_ref_clk",
++	[F_MIPI_CSI]		= "mipi_csi",
++	[F_OSC]			= "osc",
++	[F_PCIE]		= "pcie",
++	[F_PWM]			= "pwm",
++	[F_RGMII]		= "rgmii",
++	[F_RESET]		= "reset",
++	[F_SATA]		= "sata",
++	[F_SDIO]		= "sdio",
++	[F_SPI]			= "spi",
++	[F_S_MODE]		= "s_mode",
++	[F_UART]		= "uart",
++	[F_USB]			= "usb",
++};
++
++#define EIC7700_PIN(_number, _name, ...) \
++	{ \
++		.number	= _number, \
++		.name = _name, \
++		.drv_data = (void *)&(struct eic7700_pin) { { __VA_ARGS__ } } \
++	}
++
++static const struct pinctrl_pin_desc eic7700_pins[] = {
++	EIC7700_PIN(0,   "chip_mode",		[0] = F_CHIP_MODE),
++	EIC7700_PIN(1,   "mode_set0",		[0] = F_SDIO, [2] = F_GPIO),
++	EIC7700_PIN(2,   "mode_set1",		[0] = F_SDIO, [2] = F_GPIO),
++	EIC7700_PIN(3,   "mode_set2",		[0] = F_SDIO, [2] = F_GPIO),
++	EIC7700_PIN(4,   "mode_set3",		[0] = F_SDIO, [2] = F_GPIO),
++	EIC7700_PIN(5,   "xin",			[0] = F_OSC),
++	EIC7700_PIN(6,   "rtc_xin",		[0] = F_DISABLED),
++	EIC7700_PIN(7,   "rst_out_n",		[0] = F_RESET),
++	EIC7700_PIN(8,   "key_reset_n",		[0] = F_RESET),
++	EIC7700_PIN(9,   "rst_in_n",		[0] = F_DISABLED),
++	EIC7700_PIN(10,  "por_in_n",		[0] = F_DISABLED),
++	EIC7700_PIN(11,  "por_out_n",		[0] = F_DISABLED),
++	EIC7700_PIN(12,  "gpio0",		[0] = F_GPIO),
++	EIC7700_PIN(13,  "por_sel",		[0] = F_RESET),
++	EIC7700_PIN(14,  "jtag0_tck",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(15,  "jtag0_tms",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(16,  "jtag0_tdi",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(17,  "jtag0_tdo",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(18,  "gpio5",		[0] = F_GPIO, [1] = F_SPI),
++	EIC7700_PIN(19,  "spi2_cs0_n",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(20,  "jtag1_tck",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(21,  "jtag1_tms",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(22,  "jtag1_tdi",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(23,  "jtag1_tdo",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(24,  "gpio11",		[0] = F_GPIO),
++	EIC7700_PIN(25,  "spi2_cs1_n",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(26,  "pcie_clkreq_n",	[0] = F_PCIE),
++	EIC7700_PIN(27,  "pcie_wake_n",		[0] = F_PCIE),
++	EIC7700_PIN(28,  "pcie_perst_n",	[0] = F_PCIE),
++	EIC7700_PIN(29,  "hdmi_scl",		[0] = F_HDMI),
++	EIC7700_PIN(30,  "hdmi_sda",		[0] = F_HDMI),
++	EIC7700_PIN(31,  "hdmi_cec",		[0] = F_HDMI),
++	EIC7700_PIN(32,  "jtag2_trst",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(33,  "rgmii0_clk_125",	[0] = F_RGMII),
++	EIC7700_PIN(34,  "rgmii0_txen",		[0] = F_RGMII),
++	EIC7700_PIN(35,  "rgmii0_txclk",	[0] = F_RGMII),
++	EIC7700_PIN(36,  "rgmii0_txd0",		[0] = F_RGMII),
++	EIC7700_PIN(37,  "rgmii0_txd1",		[0] = F_RGMII),
++	EIC7700_PIN(38,  "rgmii0_txd2",		[0] = F_RGMII),
++	EIC7700_PIN(39,  "rgmii0_txd3",		[0] = F_RGMII),
++	EIC7700_PIN(40,  "i2s0_bclk",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(41,  "i2s0_wclk",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(42,  "i2s0_sdi",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(43,  "i2s0_sdo",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(44,  "i2s_mclk",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(45,  "rgmii0_rxclk",	[0] = F_RGMII),
++	EIC7700_PIN(46,  "rgmii0_rxdv",		[0] = F_RGMII),
++	EIC7700_PIN(47,  "rgmii0_rxd0",		[0] = F_RGMII),
++	EIC7700_PIN(48,  "rgmii0_rxd1",		[0] = F_RGMII),
++	EIC7700_PIN(49,  "rgmii0_rxd2",		[0] = F_RGMII),
++	EIC7700_PIN(50,  "rgmii0_rxd3",		[0] = F_RGMII),
++	EIC7700_PIN(51,  "i2s2_bclk",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(52,  "i2s2_wclk",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(53,  "i2s2_sdi",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(54,  "i2s2_sdo",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(55,  "gpio27",		[0] = F_GPIO, [1] = F_SATA),
++	EIC7700_PIN(56,  "gpio28",		[0] = F_GPIO),
++	EIC7700_PIN(57,  "gpio29",		[0] = F_RESET, [1] = F_EMMC, [2] = F_GPIO),
++	EIC7700_PIN(58,  "rgmii0_mdc",		[0] = F_RGMII),
++	EIC7700_PIN(59,  "rgmii0_mdio",		[0] = F_RGMII),
++	EIC7700_PIN(60,  "rgmii0_intb",		[0] = F_RGMII),
++	EIC7700_PIN(61,  "rgmii1_clk_125",	[0] = F_RGMII),
++	EIC7700_PIN(62,  "rgmii1_txen",		[0] = F_RGMII),
++	EIC7700_PIN(63,  "rgmii1_txclk",	[0] = F_RGMII),
++	EIC7700_PIN(64,  "rgmii1_txd0",		[0] = F_RGMII),
++	EIC7700_PIN(65,  "rgmii1_txd1",		[0] = F_RGMII),
++	EIC7700_PIN(66,  "rgmii1_txd2",		[0] = F_RGMII),
++	EIC7700_PIN(67,  "rgmii1_txd3",		[0] = F_RGMII),
++	EIC7700_PIN(68,  "i2s1_bclk",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(69,  "i2s1_wclk",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(70,  "i2s1_sdi",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(71,  "i2s1_sdo",		[0] = F_I2S, [2] = F_GPIO),
++	EIC7700_PIN(72,  "gpio34",		[0] = F_RESET, [1] = F_SDIO, [2] = F_GPIO),
++	EIC7700_PIN(73,  "rgmii1_rxclk",	[0] = F_RGMII),
++	EIC7700_PIN(74,  "rgmii1_rxdv",		[0] = F_RGMII),
++	EIC7700_PIN(75,  "rgmii1_rxd0",		[0] = F_RGMII),
++	EIC7700_PIN(76,  "rgmii1_rxd1",		[0] = F_RGMII),
++	EIC7700_PIN(77,  "rgmii1_rxd2",		[0] = F_RGMII),
++	EIC7700_PIN(78,  "rgmii1_rxd3",		[0] = F_RGMII),
++	EIC7700_PIN(79,  "spi1_cs0_n",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(80,  "spi1_clk",        [0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(81,  "spi1_d0", [0] = F_SPI, [1] = F_I2C, [2] = F_GPIO, [3] = F_UART),
++	EIC7700_PIN(82,  "spi1_d1", [0] = F_SPI, [1] = F_I2C, [2] = F_GPIO, [3] = F_UART),
++	EIC7700_PIN(83,  "spi1_d2",		[0] = F_SPI, [1] = F_SDIO, [2] = F_GPIO),
++	EIC7700_PIN(84,  "spi1_d3",		[0] = F_SPI, [1] = F_PWM, [2] = F_GPIO),
++	EIC7700_PIN(85,  "spi1_cs1_n",		[0] = F_SPI, [1] = F_PWM, [2] = F_GPIO),
++	EIC7700_PIN(86,  "rgmii1_mdc",		[0] = F_RGMII),
++	EIC7700_PIN(87,  "rgmii1_mdio",		[0] = F_RGMII),
++	EIC7700_PIN(88,  "rgmii1_intb",		[0] = F_RGMII),
++	EIC7700_PIN(89,  "usb0_pwren",		[0] = F_USB, [2] = F_GPIO),
++	EIC7700_PIN(90,  "usb1_pwren",		[0] = F_USB, [2] = F_GPIO),
++	EIC7700_PIN(91,  "i2c0_scl",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(92,  "i2c0_sda",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(93,  "i2c1_scl",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(94,  "i2c1_sda",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(95,  "i2c2_scl",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(96,  "i2c2_sda",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(97,  "i2c3_scl",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(98,  "i2c3_sda",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(99,  "i2c4_scl",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(100, "i2c4_sda",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(101, "i2c5_scl",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(102, "i2c5_sda",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(103, "uart0_tx",		[0] = F_UART, [2] = F_GPIO),
++	EIC7700_PIN(104, "uart0_rx",		[0] = F_UART, [2] = F_GPIO),
++	EIC7700_PIN(105, "uart1_tx",		[0] = F_UART, [2] = F_GPIO),
++	EIC7700_PIN(106, "uart1_rx",		[0] = F_UART, [2] = F_GPIO),
++	EIC7700_PIN(107, "uart1_cts",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(108, "uart1_rts",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(109, "uart2_tx",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(110, "uart2_rx",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(111, "jtag2_tck",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(112, "jtag2_tms",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(113, "jtag2_tdi",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(114, "jtag2_tdo",		[0] = F_JTAG, [2] = F_GPIO),
++	EIC7700_PIN(115, "fan_pwm",		[0] = F_PWM, [2] = F_GPIO),
++	EIC7700_PIN(116, "fan_tach",		[0] = F_FAN_TACH, [2] = F_GPIO),
++	EIC7700_PIN(117, "mipi_csi0_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(118, "mipi_csi0_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(119, "mipi_csi0_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(120, "mipi_csi1_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(121, "mipi_csi1_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(122, "mipi_csi1_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(123, "mipi_csi2_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(124, "mipi_csi2_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(125, "mipi_csi2_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(126, "mipi_csi3_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(127, "mipi_csi3_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(128, "mipi_csi3_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(129, "mipi_csi4_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(130, "mipi_csi4_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(131, "mipi_csi4_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(132, "mipi_csi5_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(133, "mipi_csi5_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(134, "mipi_csi5_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
++	EIC7700_PIN(135, "spi3_cs_n",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(136, "spi3_clk",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(137, "spi3_di",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(138, "spi3_do",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(139, "gpio92",	[0] = F_I2C, [1] = F_MIPI_CSI, [2] = F_GPIO, [3] = F_UART),
++	EIC7700_PIN(140, "gpio93",	[0] = F_I2C, [1] = F_MIPI_CSI, [2] = F_GPIO, [3] = F_UART),
++	EIC7700_PIN(141, "s_mode",		[0] = F_S_MODE, [2] = F_GPIO),
++	EIC7700_PIN(142, "gpio95",		[0] = F_DDR_REF_CLK_SEL, [2] = F_GPIO),
++	EIC7700_PIN(143, "spi0_cs_n",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(144, "spi0_clk",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(145, "spi0_d0",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(146, "spi0_d1",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(147, "spi0_d2",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(148, "spi0_d3",		[0] = F_SPI, [2] = F_GPIO),
++	EIC7700_PIN(149, "i2c10_scl",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(150, "i2c10_sda",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(151, "i2c11_scl",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(152, "i2c11_sda",		[0] = F_I2C, [2] = F_GPIO),
++	EIC7700_PIN(153, "gpio106",		[0] = F_GPIO),
++	EIC7700_PIN(154, "boot_sel0",		[0] = F_BOOT_SEL, [2] = F_GPIO),
++	EIC7700_PIN(155, "boot_sel1",		[0] = F_BOOT_SEL, [2] = F_GPIO),
++	EIC7700_PIN(156, "boot_sel2",		[0] = F_BOOT_SEL, [2] = F_GPIO),
++	EIC7700_PIN(157, "boot_sel3",		[0] = F_BOOT_SEL, [2] = F_GPIO),
++	EIC7700_PIN(158, "gpio111",		[0] = F_GPIO),
++	EIC7700_PIN(159, "reserved0",		[0] = F_DISABLED),
++	EIC7700_PIN(160, "reserved1",		[0] = F_DISABLED),
++	EIC7700_PIN(161, "reserved2",		[0] = F_DISABLED),
++	EIC7700_PIN(162, "reserved3",		[0] = F_DISABLED),
++	EIC7700_PIN(163, "lpddr_ref_clk",		[0] = F_LPDDR_REF_CLK),
++};
++
++static int eic7700_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	return pc->desc.npins;
++}
++
++static const char *eic7700_get_group_name(struct pinctrl_dev *pctldev, unsigned int selector)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	return pc->desc.pins[selector].name;
++}
++
++static int eic7700_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selector,
++				  const unsigned int **pins, unsigned int *npins)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	*pins = &pc->desc.pins[selector].number;
++	*npins = 1;
++
++	return 0;
++}
++
++static const struct pinctrl_ops eic7700_pinctrl_ops = {
++	.get_groups_count	= eic7700_get_groups_count,
++	.get_group_name		= eic7700_get_group_name,
++	.get_group_pins		= eic7700_get_group_pins,
++#ifdef CONFIG_OF
++	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
++	.dt_free_map		= pinconf_generic_dt_free_map,
++#endif
++};
++
++static int eic7700_pin_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
++				  unsigned long *config)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
++	u32 arg, value;
++	int param;
++
++	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
++		return -EOPNOTSUPP;
++
++	value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin));
++
++	param = pinconf_to_config_param(*config);
++	switch (param) {
++	case PIN_CONFIG_BIAS_DISABLE:
++		arg = (value & EIC7700_BIAS) == 0;
++		break;
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		arg = (value & EIC7700_BIAS) == EIC7700_PD;
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		arg = (value & EIC7700_BIAS) == EIC7700_PU;
++		break;
++	case PIN_CONFIG_DRIVE_STRENGTH_UA:
++		if (pin_data->functions[0] == F_RGMII ||
++			pin_data->functions[0] == F_LPDDR_REF_CLK)
++			arg = FIELD_GET(EIC7700_DS, value) * 3000 + 3000;
++		else
++			arg = FIELD_GET(EIC7700_DS, value) * 3000 + 6000;
++		break;
++	case PIN_CONFIG_INPUT_ENABLE:
++		arg = value & EIC7700_IE;
++		break;
++	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
++		arg = value & EIC7700_ST;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	*config = pinconf_to_config_packed(param, arg);
++	return arg ? 0 : -EINVAL;
++}
++
++static int eic7700_pin_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
++				  unsigned long *configs, unsigned int num_configs)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
++	u32 value;
++
++	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
++		return -EOPNOTSUPP;
++
++	value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin));
++
++	for (unsigned int i = 0; i < num_configs; i++) {
++		int param = pinconf_to_config_param(configs[i]);
++		u32 arg = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_DISABLE:
++			value &= ~EIC7700_BIAS;
++			break;
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			if (arg == 0)
++				return -EOPNOTSUPP;
++			value &= ~EIC7700_BIAS;
++			value |= EIC7700_PD;
++			break;
++		case PIN_CONFIG_BIAS_PULL_UP:
++			if (arg == 0)
++				return -EOPNOTSUPP;
++			value &= ~EIC7700_BIAS;
++			value |= EIC7700_PU;
++			break;
++		case PIN_CONFIG_DRIVE_STRENGTH_UA:
++			value &= ~EIC7700_DS;
++			if (pin_data->functions[0] == F_RGMII ||
++				pin_data->functions[0] == F_LPDDR_REF_CLK) {
++				if (arg < 3000 || arg > 24000)
++					return -EOPNOTSUPP;
++				value |= FIELD_PREP(EIC7700_DS, (arg - 3000) / 3000);
++			} else {
++				if (arg < 6000 || arg > 27000)
++					return -EOPNOTSUPP;
++				value |= FIELD_PREP(EIC7700_DS, (arg - 6000) / 3000);
++			}
++			break;
++		case PIN_CONFIG_INPUT_ENABLE:
++			if (arg)
++				value |= EIC7700_IE;
++			else
++				value &= ~EIC7700_IE;
++			break;
++		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
++			if (arg)
++				value |= EIC7700_ST;
++			else
++				value &= ~EIC7700_ST;
++			break;
++		default:
++			return -EOPNOTSUPP;
++		}
++	}
++
++	writel_relaxed(value, pc->base + EIC7700_PIN_REG(pin));
++
++	return 0;
++}
++
++#ifdef CONFIG_DEBUG_FS
++static void eic7700_pin_config_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
++					unsigned int pin)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	u32 value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin)) & EIC7700_PINCONF;
++
++	seq_printf(s, " [0x%02x]", value);
++}
++#else
++#define eic7700_pin_config_dbg_show NULL
++#endif
++
++static const struct pinconf_ops eic7700_pinconf_ops = {
++	.is_generic			= true,
++	.pin_config_get			= eic7700_pin_config_get,
++	.pin_config_set			= eic7700_pin_config_set,
++	.pin_config_group_get		= eic7700_pin_config_get,
++	.pin_config_group_set		= eic7700_pin_config_set,
++	.pin_config_dbg_show		= eic7700_pin_config_dbg_show,
++	.pin_config_group_dbg_show	= eic7700_pin_config_dbg_show,
++};
++
++static int eic7700_get_functions_count(struct pinctrl_dev *pctldev)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	return pc->functions_count;
++}
++
++static const char *eic7700_get_function_name(struct pinctrl_dev *pctldev, unsigned int selector)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	return pc->functions[selector].name;
++}
++
++static int eic7700_get_function_groups(struct pinctrl_dev *pctldev, unsigned int selector,
++				       const char *const **groups, unsigned int *num_groups)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	*groups = pc->functions[selector].groups;
++	*num_groups = pc->functions[selector].ngroups;
++
++	return 0;
++}
++
++static int eic7700_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
++			   unsigned int group_selector)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	const struct eic7700_pin *pin_data = pc->desc.pins[group_selector].drv_data;
++	u32 fs, value;
++
++	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
++		return -EOPNOTSUPP;
++
++	for (fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++)
++		if (pin_data->functions[fs] == func_selector)
++			break;
++
++	if (fs == EIC7700_FUNCTIONS_PER_PIN) {
++		dev_err(pctldev->dev, "invalid mux %s for pin %s\n",
++			pc->functions[func_selector].name,
++			pc->desc.pins[group_selector].name);
++		return -EINVAL;
++	}
++
++	value = readl_relaxed(pc->base + EIC7700_PIN_REG(group_selector));
++	value &= ~EIC7700_FUNC_SEL;
++	value |= FIELD_PREP(EIC7700_FUNC_SEL, fs);
++	writel_relaxed(value, pc->base + EIC7700_PIN_REG(group_selector));
++
++	return 0;
++}
++
++static int eic7700_gpio_request_enable(struct pinctrl_dev *pctldev,
++				       struct pinctrl_gpio_range *range, unsigned int offset)
++{
++	return eic7700_set_mux(pctldev, F_GPIO, offset);
++}
++
++static void eic7700_gpio_disable_free(struct pinctrl_dev *pctldev,
++				      struct pinctrl_gpio_range *range, unsigned int offset)
++{
++	eic7700_set_mux(pctldev, F_DISABLED, offset);
++}
++
++static int eic7700_gpio_set_direction(struct pinctrl_dev *pctldev,
++				      struct pinctrl_gpio_range *range, unsigned int offset,
++				      bool input)
++{
++	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	u32 value;
++
++	value = readl_relaxed(pc->base + EIC7700_PIN_REG(offset));
++	if (input)
++		value |= EIC7700_IE;
++	else
++		value &= ~EIC7700_IE;
++	writel_relaxed(value, pc->base + EIC7700_PIN_REG(offset));
++
++	return 0;
++}
++
++static const struct pinmux_ops eic7700_pinmux_ops = {
++	.get_functions_count	= eic7700_get_functions_count,
++	.get_function_name	= eic7700_get_function_name,
++	.get_function_groups	= eic7700_get_function_groups,
++	.set_mux		= eic7700_set_mux,
++	.gpio_request_enable	= eic7700_gpio_request_enable,
++	.gpio_disable_free	= eic7700_gpio_disable_free,
++	.gpio_set_direction	= eic7700_gpio_set_direction,
++	.strict			= true,
++};
++
++static int eic7700_pinctrl_init_function_groups(struct device *dev, struct eic7700_pinctrl *pc,
++						const char *const *function_names)
++{
++	unsigned int ngroups = 0;
++	const char **groups;
++
++	/* Count the number of groups for each function */
++	for (unsigned int pin = 0; pin < pc->desc.npins; pin++) {
++		const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
++		bool found_disabled = false;
++
++		for (unsigned int fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++) {
++			unsigned int selector = pin_data->functions[fs];
++			struct pinfunction *function = &pc->functions[selector];
++
++			/* Only count F_DISABLED once per pin */
++			if (selector == F_DISABLED) {
++				if (found_disabled)
++					continue;
++				found_disabled = true;
++			}
++
++			function->ngroups++;
++			ngroups++;
++		}
++	}
++
++	groups = devm_kcalloc(dev, ngroups, sizeof(*groups), GFP_KERNEL);
++	if (!groups)
++		return -ENOMEM;
++
++	for (unsigned int selector = 0; selector < pc->functions_count; selector++) {
++		struct pinfunction *function = &pc->functions[selector];
++
++		function->name = function_names[selector];
++		function->groups = groups;
++		groups += function->ngroups;
++
++		/* Reset per-function ngroups for use as iterator below */
++		function->ngroups = 0;
++	}
++
++	/* Fill in the group pointers for each function */
++	for (unsigned int pin = 0; pin < pc->desc.npins; pin++) {
++		const struct pinctrl_pin_desc *desc = &pc->desc.pins[pin];
++		const struct eic7700_pin *pin_data = desc->drv_data;
++		bool found_disabled = false;
++
++		for (unsigned int fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++) {
++			unsigned int selector = pin_data->functions[fs];
++			struct pinfunction *function = &pc->functions[selector];
++
++			/* Only count F_DISABLED once per pin */
++			if (selector == F_DISABLED) {
++				if (found_disabled)
++					continue;
++				found_disabled = true;
++			}
++
++			((const char **)function->groups)[function->ngroups++] = desc->name;
++		}
++	}
++
++	return 0;
++}
++
++static int eic7700_pinctrl_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct pinctrl_dev *pctldev;
++	struct eic7700_pinctrl *pc;
++	struct regulator *regulator;
++	u32 voltage, rgmii0_mode, rgmii1_mode;
++	int ret;
++
++	pc = devm_kzalloc(dev, struct_size(pc, functions, EIC7700_FUNCTIONS_COUNT), GFP_KERNEL);
++	if (!pc)
++		return -ENOMEM;
++
++	pc->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(pc->base))
++		return PTR_ERR(pc->base);
++
++	regulator = devm_regulator_get(dev, "vrgmii");
++	if (IS_ERR_OR_NULL(regulator)) {
++		return dev_err_probe(dev, PTR_ERR(regulator),
++					 "failed to get vrgmii regulator\n");
++	}
++
++	voltage = regulator_get_voltage(regulator);
++	if (voltage < 0) {
++		return dev_err_probe(&pdev->dev, voltage,
++			 "Failed to get voltage from regulator\n");
++	}
++
++	rgmii0_mode = readl_relaxed(pc->base + EIC7700_RGMII0_SEL_MODE);
++	rgmii1_mode = readl_relaxed(pc->base + EIC7700_RGMII1_SEL_MODE);
++	rgmii0_mode &= ~EIC7700_MS;
++	rgmii1_mode &= ~EIC7700_MS;
++	if (voltage == 1800000) {
++		rgmii0_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_1V8);
++		rgmii1_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_1V8);
++	} else if (voltage == 3300000) {
++		rgmii0_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_3V3);
++		rgmii1_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_3V3);
++	} else {
++		return dev_err_probe(&pdev->dev, -EINVAL,
++			 "Invalid voltage configuration, should be either 1.8V or 3.3V\n");
++	}
++
++	writel_relaxed(rgmii0_mode, pc->base + EIC7700_RGMII0_SEL_MODE);
++	writel_relaxed(rgmii1_mode, pc->base + EIC7700_RGMII1_SEL_MODE);
++
++	pc->desc.name = dev_name(dev);
++	pc->desc.pins = eic7700_pins;
++	pc->desc.npins = ARRAY_SIZE(eic7700_pins);
++	pc->desc.pctlops = &eic7700_pinctrl_ops;
++	pc->desc.pmxops = &eic7700_pinmux_ops;
++	pc->desc.confops = &eic7700_pinconf_ops;
++	pc->desc.owner = THIS_MODULE;
++
++	pc->functions_count = EIC7700_FUNCTIONS_COUNT;
++	ret = eic7700_pinctrl_init_function_groups(dev, pc, eic7700_functions);
++	if (ret)
++		return ret;
++
++	ret = devm_pinctrl_register_and_init(dev, &pc->desc, pc, &pctldev);
++	if (ret)
++		return dev_err_probe(dev, ret, "could not register pinctrl driver\n");
++
++	return pinctrl_enable(pctldev);
++}
++
++static const struct of_device_id eic7700_pinctrl_of_match[] = {
++	{ .compatible = "eswin,eic7700-pinctrl" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, eic7700_pinctrl_of_match);
++
++static struct platform_driver eic7700_pinctrl_driver = {
++	.probe	= eic7700_pinctrl_probe,
++	.driver	= {
++		.name		= "pinctrl-eic7700",
++		.of_match_table	= eic7700_pinctrl_of_match,
++	},
++};
++module_platform_driver(eic7700_pinctrl_driver);
++
++MODULE_DESCRIPTION("Pinctrl driver for the ESWIN EIC7700 SoC");
++MODULE_AUTHOR("Samuel Holland <samuel.holland@sifive.com>");
++MODULE_AUTHOR("Yulin Lu <luyulin@eswincomputing.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
-Please read soc maintainer profile explaining how DTS is being organized.
-
-
-Best regards,
-Krzysztof
