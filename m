@@ -1,90 +1,101 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05B3299A83
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FFD299A9C;
+	Thu, 12 Jun 2025 16:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744516; cv=none; b=HFmWNSSWTOqgQLiDkdHIguG4jrL4BZi1dSuzZ4KqygDGG3V/cbHp8F1PAmzKWDCi4rIEaOAAF7dKwtoC1ZrYTPKpeaGMkwvJnxtw9K4f9vY2inRcSNoa6PxO8cpE+5k5nGzyIGQzTiogfVRVXvFX6oAitfBfo5Ps+jKGr/aZdxw=
+	t=1749744523; cv=none; b=DJ6lr3xxZeFMfrELEjtETS7Uedw73Af6GPQF1huEpBwZnoTkCEl2vF7u8EpppSW35PxYTjp88DBjDlwpiUUw2fmdBb+n4aW/ww+lrrvzqPpoSexGTXLDPCLlwnYFlw1up9K2PutMDMKZ2vqti1gLe4CwsszihzJu+Qnggm2iVo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744516; c=relaxed/simple;
-	bh=3YHe0k+PHvEsag+VHa9+YZ2Q28Kjv6z7VRpUu0X/shE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Jngp7LsmE9z548ot4SfDGssOvdERaZ8aUAz/2xSg+TqDjnFwYwyVPVeShF2SSuhrir8DfbjUGkU4FarHOla4Jz465qSiUk9kXh9c6oVCu3ZrrgXy5kMlL5br861zzlBGJVpXdZAKAmNd6kkgShy1+zw6CBHXKZECeAuvYgeVYVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=M4bFyDfH; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1749744523; c=relaxed/simple;
+	bh=7+b3JmMUKKzZHXO8vtquG03ptonMmn+AG6H+hfCo32c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f5xFf9FUnxZXfQcm5M/EIq6WId+1i0d6Jz8k/Fzf05MxbIA/m2anwVsURt7vF4LExxXxzNwcH30vv1pQfhDRsdUQUsHH0mzWAB8ihKgfhPZMyEG5S9p7kt+R7YNr8mj0zmr/DWLpZoYH9LIl+xTwgr67xzx1t9P9V45WrWzzFf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yu1eX2+y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="M4bFyDfH"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7d0a47f6692so117801285a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:08:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1749744513; x=1750349313; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dx0ZwLJ3SW0Kae1Wt1XXglLI6wwCOsqp87Ybf6szzLc=;
-        b=M4bFyDfHOqJwPpeqpWCF/I0k4egrkQcdtKlGytp19E+D7SO3nvnrOzBtVtj9L4dJw+
-         Flr0melE01T0xju2qND+PWyiMSRBmC2pvInu/HvdBwX9yzzHt1ngavdQV/EC0p1PvNFm
-         /5UH5Ri79WDQg1IM+TftiGuHJQx/5oYwZ+aG4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749744513; x=1750349313;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dx0ZwLJ3SW0Kae1Wt1XXglLI6wwCOsqp87Ybf6szzLc=;
-        b=R6+BT2LCr3qSbFOWPHQdv91Qp2nYzrhP2uhRfDELiw+bcEQT7Yd1FwejZ0p+oNbI11
-         87GYh1xqhLNJAjv2qW+da3mvukVup5H7Bm8bvS1b5IW5qQdUpjsaWNRyVoRy6jx4mQtC
-         8H0MjovWAVsjWAdpb8t6n7y9pdAmRU5PK3X9Fh4q5na+bPKTKgcmdM0jpZ2VJc+1ZqTf
-         FkRF5s9CsZ/lQxyfvrAjvMaTRPR9mmC0UApJ9NvX7mnXJfklbbxKg0c+S5OUndAPZ5PV
-         ssRbDwlEdEXYeL+Rl1+CmnXXAxRbKDjZCY80K0VTY6QGhR7cR5Ao0fM8PZlrOQ32LVIs
-         M6fA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSOiLlnU85ayEXqznvBaC+58GV/DXuRCqKJweGD1ZuJdnqvpfgGh+/s3A2yocD7TOrnbfXr3dY5hyOcTw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW0RmwGqA9PPjVl7E0iZsCWhe2YGkRSfgPQs4C0VzQXrLANy6r
-	jecfssZLLD7WXMGGCOlLCmKToL0aZ58vtKti2fqlGDMS+fEZGgEiaTzpSO01nXXMfg==
-X-Gm-Gg: ASbGncvgbQ8J3+STAAKZUCDFF1Sxg2EdzaVnRmaJH0PVp6JdHzvJynugvHgyEcg/18x
-	HvccRyUq7hZoLJVHpBjNgwUBpBTktultCQurnj1eQdGMzlXbFySFr8Y6QoP2dAy09UldLKua+KW
-	NyOmZT2ggDqYjFZdJ0HqtGjn8bh70WwyDL1ERa9tWsyN2tip7BEKNPWyUbQm5AunnX75ePEhwkW
-	Nj662DSLvl6lfm56mAMIj9hs0Xx98nJPjnGwCJr+8H/n3sbLX0tqK1dVtlw48Zl/2lnshDspwhL
-	zlcavGXpnPcHtDDEJzswuG/Is9O8bxcbPXn6o4qQ2suXfGXk7UPWDejG/39y90jEaQ7FgDswPsf
-	Wgpd9Cw==
-X-Google-Smtp-Source: AGHT+IEHqON53lM97qPneT55hkPQsjRWeaUbxv+fl45+n0nHgfZowZNRP5w89fJGFEh4vv6YXv/+Vw==
-X-Received: by 2002:a05:620a:c50:b0:7ce:e010:88bb with SMTP id af79cd13be357-7d3a883450amr1156220985a.22.1749744512722;
-        Thu, 12 Jun 2025 09:08:32 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eacbc7sm55688585a.62.2025.06.12.09.08.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 09:08:32 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Thu, 12 Jun 2025 12:08:30 -0400 (EDT)
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [perf] crashing bug in icl_update_topdown_event
-In-Reply-To: <36b65ee5-4bce-4b15-91bc-52604bc8a046@linux.intel.com>
-Message-ID: <da4d8a9a-66a4-32b4-0283-ef4687357349@maine.edu>
-References: <352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu> <080706b6-ed21-540d-dfae-ae27d130d796@maine.edu> <d8c64a21-ed4e-4d37-8d4b-9d3a9857b7fd@linux.intel.com> <704f6604-547b-f7ca-ad45-2afd2dd70456@maine.edu>
- <36b65ee5-4bce-4b15-91bc-52604bc8a046@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yu1eX2+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62BAC4CEEB;
+	Thu, 12 Jun 2025 16:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749744523;
+	bh=7+b3JmMUKKzZHXO8vtquG03ptonMmn+AG6H+hfCo32c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yu1eX2+yaTkbsl/d4yM4lfN2qNWWfjohdrJaOUTEURh2W67frVLVNJ9rRCgFxQrZf
+	 ndFlg8mMHcvOcqS4PhqSjZpEbYibip25n9/WMXx9yOX9Qth3pi9r1Ayvek6EEAdSHv
+	 dpNwxRCRDKpCbTYgUBrbAGwJ94lvMUwnRRjqgU+jxCip+i+JE/KLG2QPyM/zn8B4rJ
+	 Q8E6oTzwL6dbMpRzg3e6H8iuHtrL7hK+9Sl08Ggg407bIOdcfokMKeKs+14qTtTgx8
+	 HyWxtWvtY4MFq9igWIknEFRf4dzrpbgGHF6GMIobafqVsAe1ZXwkLzRnaepfDdulDX
+	 7aP4hDoAddGvQ==
+Date: Thu, 12 Jun 2025 21:38:32 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
+	Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v11 10/11] PCI: dwc: Print warning message when
+ cpu_addr_fixup() exists
+Message-ID: <az74rxjpfahjwmz7fg5agn47org7arpblariuauujhovkaieha@d6r2yp23vqan>
+References: <20250313-pci_fixup_addr-v11-0-01d2313502ab@nxp.com>
+ <20250313-pci_fixup_addr-v11-10-01d2313502ab@nxp.com>
+ <v77jy5tldwuasjzqirlwx45zigt6bpnaiz67e4w7r2lxqrdsek@5qzzobothf5r>
+ <aEr3nGCqRuyIwA37@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aEr3nGCqRuyIwA37@lizhi-Precision-Tower-5810>
 
-On Thu, 12 Jun 2025, Liang, Kan wrote:
-
-> Thanks for the test. I've posted a fix to LKML.
-> https://lore.kernel.org/linux-perf-users/20250612143818.2889040-1-kan.liang@linux.intel.com/
+On Thu, Jun 12, 2025 at 11:51:56AM -0400, Frank Li wrote:
+> On Thu, Jun 12, 2025 at 08:16:03PM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Mar 13, 2025 at 11:38:46AM -0400, Frank Li wrote:
+> > > If the parent 'ranges' property in DT correctly describes the address
+> > > translation, the cpu_addr_fixup() callback is not needed. Print a warning
+> > > message to inform users to correct their DTB files and prepare to remove
+> > > cpu_addr_fixup().
+> > >
+> >
+> > This patch seem to have dropped, but I do see a value in printing the warning to
+> > encourage developers/users to fix the DTB in some way. Since we fixed the driver
+> > to parse the DT 'ranges' properly, the presence of cpu_addr_fixup() callback
+> > indicates that the translation is not properly described in DT. So DT has to be
+> > fixed.
 > 
-> It's a little bit different from the one tested. Please check and
-> provide a 'tested-by' on the new patch if it works.Thanks,Kan
+> This patch already in mainline with Bjorn's fine tuned at when merge.
+> 
+> 	fixup = pci->ops ? pci->ops->cpu_addr_fixup : NULL;
+>         if (fixup) {
+>                 fixup_addr = fixup(pci, cpu_phys_addr);
+>                 if (reg_addr == fixup_addr) {
+>                         dev_info(dev, "%s reg[%d] %#010llx == %#010llx == fixup(cpu %#010llx); %ps is redundant with this devicetree\n",
+>                                  reg_name, index, reg_addr, fixup_addr,
+>                                  (unsigned long long) cpu_phys_addr, fixup);
+>                 } else {
+>                         dev_warn(dev, "%s reg[%d] %#010llx != %#010llx == fixup(cpu %#010llx); devicetree is broken\n",
+>                                  reg_name, index, reg_addr, fixup_addr,
+>                                  (unsigned long long) cpu_phys_addr);
+>                         reg_addr = fixup_addr;
+>                 }
+> 
+>                 return cpu_phys_addr - reg_addr;
+>         }
+> 
+> I have not seen this "dev_warn(pci->dev, "cpu_addr_fixup() usage detected. Please fix your DTB!\n");"
+> 
 
-I've tested the new patch and it also runs my testcase without crashing.
+This patch is supposed to add this warning and nothing else.
 
-Tested-by: Vince Weaver <vincent.weaver@maine.edu>
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
