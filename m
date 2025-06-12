@@ -1,159 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A48192584;
-	Thu, 12 Jun 2025 22:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC721F1319
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749768372; cv=none; b=UBsKAIidbtpev69iG2oKXD+o4feJdNJRnFZ9LV7dDnlXxPxnnz8eND7okJg2IS5vsEUT0hzfW24QRU7hhjiRiNBKXRQ4bl5HldeoMVQP0lR+D+6ArgiuRsPl6wU2sekND746+oe5j1uqmhjXFPASh354a+KLvPHc2LG66kfc0kY=
+	t=1749768544; cv=none; b=fX53AC3sqLs8EMCjABacJWS7b9SdsjxYOqYbWQKCy1ojepaxfBiYSNXilTaR5oIuVgzYaj6utyrgvbGvu/bCo4IL4H4xmo/XnIbP/iY+ZiKymZnajK69SS8HiyB00CvtRZNdg6SXLY3usBZDsrdIAbKfuDOEJ6kkAsc1Yysw7xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749768372; c=relaxed/simple;
-	bh=yBlwGGACujWXuF8os5bqI58U8p7ivNnrZt8Z2R+3XKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GV7mFlEc6n8VmklWqZLARbmfWC5FV9BGTz5XCRaAiyWX1WqmYk+aNHYD9aSrYuKCYy3WVtAZDh4IlSe/r0Hcvw2wjdniHaoFg/+xzItgOulKIXE/WL22MEAYJM0MRL5uy8EH+B/52NXs3CtMXgvJqpAjcxl0/zmCvthcac0f+xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cua6nK7E; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749768544; c=relaxed/simple;
+	bh=5G84Kw37xAPwjiCHjfVwKmHFyKI1o3SclDHCNHMKFyw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ar1sAmZP5d/rHJujHrQXxgVin+IU926aZ0AKUXi1EVV9wFReH4hLDmVpPVwAMc2kLYv/1LqbiY0mbcVH7uoHugYte/50yQW1UHiEr8GH168O0/S4r67rot5wFZmjPZ8d6LC0SmlpT7QBIta3DfKiOHZNp1eA3CdBk7RIMdA14r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=RJa+IhXH; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cua6nK7E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749768371; x=1781304371;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yBlwGGACujWXuF8os5bqI58U8p7ivNnrZt8Z2R+3XKI=;
-  b=Cua6nK7Ed/9xhlmG+w1Hk92PS5WtY8gjCRZFBWt2Ved8PelqbfXGH4dI
-   T2B35fwMYgdXIshKsXuskOglAUh7sr1rh3ZOH+guYT7a7GBmom2o1GKmU
-   krrZjCQbq9ybLi8dUfLYxf+P/z7iVAlDEh+xbjeA/nlcmOr35jF4XntBP
-   vzM7PjD5SsoQ2icKDcac3+tbyUGyxhjWLc+I7CTo5EjsKNh6M6b2bPD9t
-   el7zFjUCMmaznQw0U3kfD/vJuudHZIAnHBD0ndxQN4oJgBIRjpKDDmSZ7
-   lX2ymiHkMXEuFeDNaX44Ufmsi30D47p17nFlkh7jPKI4RgyqexgXUBjRW
-   Q==;
-X-CSE-ConnectionGUID: COh5U1QaS+O10PhczDKFtA==
-X-CSE-MsgGUID: p+Le8OLfSdW59ZlBVA1XGg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="52061786"
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="52061786"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 15:46:10 -0700
-X-CSE-ConnectionGUID: kBeLs/2qQe+tSrlVSyu85A==
-X-CSE-MsgGUID: NvEOFHdbSOSIifL/wP0uLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="148544889"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 12 Jun 2025 15:46:07 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPqgO-000C0U-2Z;
-	Thu, 12 Jun 2025 22:46:04 +0000
-Date: Fri, 13 Jun 2025 06:45:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Thomas Fourier <fourier.thomas@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>, linux-wireless@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="RJa+IhXH"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-8733548c627so49594339f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749768540; x=1750373340; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yEGtecxN4SBo9EmL2yEIxP+cEfCEUHwfF20h5d02P8o=;
+        b=RJa+IhXHIGBdpvuWmC8JCGva7OP9z1lxiQbo3aRBEgBwFoY9GIMNphYMhGMCh9+a+t
+         /xH78CQ7h2TJ8P/m04kSkJNrIGck2ryXOvwJju3QPLiKDrmi0195wB39E6GZwx51oxB2
+         xUY0Lc1B9spYNqQmuJI8hRrpl1iHq42pGX+nLmcWA2ZMTtwjtLXlrlOs6U5VKoKYm3jb
+         v2GWHgkOFE19JUN7jsaErV3XpFlzwMRMo9LCxB6G7Zwkzo2wBaA0P3vZcc7TiD/sdfRI
+         GO7KpvSEuKCSP8uwEYoBOanJiDuKRwPXEtjKjT6jehuzI9ozOmuBJOK95uVI9+GgBu33
+         24CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749768540; x=1750373340;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yEGtecxN4SBo9EmL2yEIxP+cEfCEUHwfF20h5d02P8o=;
+        b=luHO8Hzgv0kF4vroMWjtPDiSKh0Da9VAQaocBW38lKDNRchErvYl2S9riVr6S0TumD
+         8NvxAkAr61p9EX7lsH+JrdDwbPbUbWuIYy7xNypsO9HIgki2STQvzDxtwKis/w1aBZ40
+         S9y8mWE9OvEFTdESd0FC+qOsbf/N8P1SLf2n+wjQZbG/2HNOlXTL6tYPKDqU+ehas2C7
+         if/K7l1i3TDGvUWZ8o6BtbuvgWDHlyuRX4zXi6TP/q2eWaeV8WmD1VY4BJttseQ8chwD
+         JlgiYD7/kIzbLLLDXKIkDuIANQVpazmZDcMh7yFfdNNpZ3V6K088YwSYU7qlbP7/092D
+         fUsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUitWY2P6bFEwHRIIHviRMGYEj1Qdz0lCK6UBLVZIm0A6+k+6KKLmSj8/UDIY3/toIfjNiyV1jkLoYz2ow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQbNL+5RjRRQbd6GLVG7iGojjtaYbrHMXfC06/7lQhnksVgBxw
+	fo7XaY+cB4VHUdUMMw9lgrB2ZyrfUe9sa3Ns1ZQ6xv9RRvLjWSscQGHOroq8lcpfai4=
+X-Gm-Gg: ASbGncuudOLXUTghJmVawHoDU0BSAVHWusoDL2HDyXxJk+WcYHqFs7qp+HJNedUpcbk
+	mkKWgBVdLGdOPPxKPaV52Uw54/RPiyTD2kPQVLldRQOZENQzX3dkzowhUq25xXb/6WJXK5wLha1
+	kt58HZZRwW7WV05iv2eUNGSm1FYx6R5YTDSC+AOdp2b8SrPZQHg0ytm3Lb8WFqMWwn7yyuUWzxX
+	cXcW0f2EEq+/IodHeJY1WrPXHDm6kMP2K3Ighdz31gRQza+2a+Gu57kK4fdNH56mnKAbn2DL4tp
+	5rw2KW1WyihMsvrMdii9gprAOvFuT8RZhKLh5JVdqmcWrj4YWP+ucBQ7PuyRTGsmdiIdRwF3/5O
+	ZbwKdKaceTbk3EBUmr27vLOTNPQepIn4=
+X-Google-Smtp-Source: AGHT+IGicmZ0hXFTaHsWzHl5I27R7PwyfJk0YzLn3/RqKtqq+OswBbWo+sqwPlM8mPpDuZ0Zd2I9sA==
+X-Received: by 2002:a05:6602:3887:b0:86c:fa3a:fe97 with SMTP id ca18e2360f4ac-875d3cf8a7bmr38126239f.10.1749768539925;
+        Thu, 12 Jun 2025 15:48:59 -0700 (PDT)
+Received: from presto.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149c68bfcsm27925173.66.2025.06.12.15.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 15:48:59 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: mturquette@baylibre.com,
+	sboyd@kernel.org
+Cc: dlan@gentoo.org,
+	heylenay@4d2.org,
+	inochiama@outlook.com,
+	elder@riscstar.com,
+	guodong@riscstar.com,
+	linux-clk@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drive/realtek/rtlwifi: fix possible memory leak
-Message-ID: <202506130644.NKPuRVsI-lkp@intel.com>
-References: <20250612090724.17777-1-fourier.thomas@gmail.com>
+Subject: [PATCH v3] clk: spacemit: mark K1 pll1_d8 as critical
+Date: Thu, 12 Jun 2025 17:48:55 -0500
+Message-ID: <20250612224856.1105924-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612090724.17777-1-fourier.thomas@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
+The pll1_d8 clock is enabled by the boot loader, and is ultimately a
+parent for numerous clocks, including those used by APB and AXI buses.
+Guodong Xu discovered that this clock got disabled while responding to
+getting -EPROBE_DEFER when requesting a reset controller.
 
-kernel test robot noticed the following build errors:
+The needed clock (CLK_DMA, along with its parents) had already been
+enabled.  To respond to the probe deferral return, the CLK_DMA clock
+was disabled, and this led to parent clocks also reducing their enable
+count.  When the enable count for pll1_d8 was decremented it became 0,
+which caused it to be disabled.  This led to a system hang.
 
-[auto build test ERROR on wireless-next/main]
-[also build test ERROR on wireless/main linus/master v6.16-rc1 next-20250612]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Marking that clock critical resolves this by preventing it from being
+disabled.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Fourier/drive-realtek-rtlwifi-fix-possible-memory-leak/20250612-171134
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git main
-patch link:    https://lore.kernel.org/r/20250612090724.17777-1-fourier.thomas%40gmail.com
-patch subject: [PATCH] drive/realtek/rtlwifi: fix possible memory leak
-config: i386-randconfig-006-20250613 (https://download.01.org/0day-ci/archive/20250613/202506130644.NKPuRVsI-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506130644.NKPuRVsI-lkp@intel.com/reproduce)
+Define a new macro CCU_FACTOR_GATE_DEFINE() to allow clock flags to
+be supplied for a CCU_FACTOR_GATE clock.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506130644.NKPuRVsI-lkp@intel.com/
+Fixes: 1b72c59db0add ("clk: spacemit: Add clock support for SpacemiT K1 SoC")
+Signed-off-by: Alex Elder <elder@riscstar.com>
+Tested-by: Guodong Xu <guodong@riscstar.com>
+Reviewed-by: Haylen Chu <heylenay@4d2.org>
+---
+v3: Define struct with static scope; added Haylen's Reviewed-by
+v2: Reworded the description to provide better detail
 
-All errors (new ones prefixed by >>):
+ drivers/clk/spacemit/ccu-k1.c  |  3 ++-
+ drivers/clk/spacemit/ccu_mix.h | 21 +++++++++++++--------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
 
-   drivers/net/wireless/realtek/rtlwifi/pci.c: In function '_rtl_pci_init_one_rxdesc':
->> drivers/net/wireless/realtek/rtlwifi/pci.c:577:39: error: expected ';' before 'return'
-     577 |                         kfree_skb(skb)
-         |                                       ^
-         |                                       ;
-     578 |                 return 0;
-         |                 ~~~~~~                 
+diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
+index cdde37a052353..df65009a07bb1 100644
+--- a/drivers/clk/spacemit/ccu-k1.c
++++ b/drivers/clk/spacemit/ccu-k1.c
+@@ -170,7 +170,8 @@ CCU_FACTOR_GATE_DEFINE(pll1_d4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(3), 4,
+ CCU_FACTOR_GATE_DEFINE(pll1_d5, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(4), 5, 1);
+ CCU_FACTOR_GATE_DEFINE(pll1_d6, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(5), 6, 1);
+ CCU_FACTOR_GATE_DEFINE(pll1_d7, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(6), 7, 1);
+-CCU_FACTOR_GATE_DEFINE(pll1_d8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(7), 8, 1);
++CCU_FACTOR_GATE_FLAGS_DEFINE(pll1_d8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(7), 8, 1,
++		CLK_IS_CRITICAL);
+ CCU_FACTOR_GATE_DEFINE(pll1_d11_223p4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(15), 11, 1);
+ CCU_FACTOR_GATE_DEFINE(pll1_d13_189, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(16), 13, 1);
+ CCU_FACTOR_GATE_DEFINE(pll1_d23_106p8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(20), 23, 1);
+diff --git a/drivers/clk/spacemit/ccu_mix.h b/drivers/clk/spacemit/ccu_mix.h
+index 51d19f5d6aacb..54d40cd39b275 100644
+--- a/drivers/clk/spacemit/ccu_mix.h
++++ b/drivers/clk/spacemit/ccu_mix.h
+@@ -101,16 +101,21 @@ static struct ccu_mix _name = {							\
+ 	}									\
+ }
+ 
++#define CCU_FACTOR_GATE_FLAGS_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
++			       _mul, _flags)					\
++static struct ccu_mix _name = {							\
++	.gate	= CCU_GATE_INIT(_mask_gate),					\
++	.factor	= CCU_FACTOR_INIT(_div, _mul),					\
++	.common = {								\
++		.reg_ctrl	= _reg_ctrl,					\
++		CCU_MIX_INITHW(_name, _parent, spacemit_ccu_factor_gate_ops, _flags)	\
++	}									\
++}
++
+ #define CCU_FACTOR_GATE_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
+ 			       _mul)						\
+-static struct ccu_mix _name = {							\
+-	.gate	= CCU_GATE_INIT(_mask_gate),					\
+-	.factor	= CCU_FACTOR_INIT(_div, _mul),					\
+-	.common = {								\
+-		.reg_ctrl	= _reg_ctrl,					\
+-		CCU_MIX_INITHW(_name, _parent, spacemit_ccu_factor_gate_ops, 0)	\
+-	}									\
+-}
++	CCU_FACTOR_GATE_FLAGS_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
++			       _mul, 0)
+ 
+ #define CCU_MUX_GATE_DEFINE(_name, _parents, _reg_ctrl, _shift, _width,		\
+ 			    _mask_gate, _flags)					\
 
-
-vim +577 drivers/net/wireless/realtek/rtlwifi/pci.c
-
-   550	
-   551	static int _rtl_pci_init_one_rxdesc(struct ieee80211_hw *hw,
-   552					    struct sk_buff *new_skb, u8 *entry,
-   553					    int rxring_idx, int desc_idx)
-   554	{
-   555		struct rtl_priv *rtlpriv = rtl_priv(hw);
-   556		struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
-   557		u32 bufferaddress;
-   558		u8 tmp_one = 1;
-   559		struct sk_buff *skb;
-   560	
-   561		if (likely(new_skb)) {
-   562			skb = new_skb;
-   563			goto remap;
-   564		}
-   565		skb = dev_alloc_skb(rtlpci->rxbuffersize);
-   566		if (!skb)
-   567			return 0;
-   568	
-   569	remap:
-   570		/* just set skb->cb to mapping addr for pci_unmap_single use */
-   571		*((dma_addr_t *)skb->cb) =
-   572			dma_map_single(&rtlpci->pdev->dev, skb_tail_pointer(skb),
-   573				       rtlpci->rxbuffersize, DMA_FROM_DEVICE);
-   574		bufferaddress = *((dma_addr_t *)skb->cb);
-   575		if (dma_mapping_error(&rtlpci->pdev->dev, bufferaddress)) {
-   576			if (!new_skb)
- > 577				kfree_skb(skb)
-   578			return 0;
-   579		}
-   580		rtlpci->rx_ring[rxring_idx].rx_buf[desc_idx] = skb;
-   581		if (rtlpriv->use_new_trx_flow) {
-   582			/* skb->cb may be 64 bit address */
-   583			rtlpriv->cfg->ops->set_desc(hw, (u8 *)entry, false,
-   584						    HW_DESC_RX_PREPARE,
-   585						    (u8 *)(dma_addr_t *)skb->cb);
-   586		} else {
-   587			rtlpriv->cfg->ops->set_desc(hw, (u8 *)entry, false,
-   588						    HW_DESC_RXBUFF_ADDR,
-   589						    (u8 *)&bufferaddress);
-   590			rtlpriv->cfg->ops->set_desc(hw, (u8 *)entry, false,
-   591						    HW_DESC_RXPKT_LEN,
-   592						    (u8 *)&rtlpci->rxbuffersize);
-   593			rtlpriv->cfg->ops->set_desc(hw, (u8 *)entry, false,
-   594						    HW_DESC_RXOWN,
-   595						    (u8 *)&tmp_one);
-   596		}
-   597		return 1;
-   598	}
-   599	
-
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.2
+
