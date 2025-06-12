@@ -1,231 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02BF25A62D;
-	Thu, 12 Jun 2025 13:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD76524502E
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734145; cv=none; b=Usx987s1O2CfkG79RMOuEUloBvKAjZaDNvb7dQrfECt36eslligNnwNaivFJVKNGua2hgc9VjtfBHtdYWUGepW7VpyNPaOXns6PD6uQzAVk17KNY3k0YPVJV4JLJi2XT6Fs+3YyC7IX0ygF3QZLQmWLatLgklGowlP53X2I6fxc=
+	t=1749734145; cv=none; b=YlQ5GKv7h5Xhucpe2ezr00Izemux1D/5sj10VV1pOXOzvdvTlE4J1Hx8mdQuwDtDozV4v5u4bLV/stC+YWTJBx1wnhO3GXuPlvOtaPCLIh3rQplEph/iAEEJjcMOKxf67RLADAZjII1HUVHPVcWDYYa27+XbsNi9FhDKHBMOSbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749734145; c=relaxed/simple;
-	bh=LMUOc2RdYNDJK4nYvLILKjg7NqLsPsWS+vgJ82GlO9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RMmM753mVP7fAK/0Wn9cwZhRvaY40BMlfTNDU3mrffRzERRGp0T4ePSpq3gJZtKaSSIir8OWk0Tt0zWTxjytTSqVfXtuj3xyXyR4n0g6Q++NB9N9sX3wnJRno7OLgFEyUj/iCl4Zzdzt8seLLIHmMTxX1wWyEV6ptBk4uJIEdKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aegjPuSn; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=85haVVGK9Bcs+IGMqbyClCBY80jPljKCDJVYKsTGn2c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Gcosaum5Yy6IxNe5227N8PKzi3hS1+DNJ8uQ9+POc97wx75DKkeIPhYqmK4dj1H1901zlnhkejt4/IYuUsi4sNDdpNgqpw7nm1KeIdegM+Y93tVQ8EI38Z7OjZNS7qzrNWWAlJMuhtcdHVbU2A/KC65GfLoFFuYbePnnzeDv8NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MRoO7XI+; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aegjPuSn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749734142; x=1781270142;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=LMUOc2RdYNDJK4nYvLILKjg7NqLsPsWS+vgJ82GlO9c=;
-  b=aegjPuSngi5VStxqLTGKAlufNAmKJsBjf+6embY06L1KtEnHPuhATwz8
-   uiAG0GPmHrKWuDlORQsz6LPpdV9uFR4AGiKiB7I5WDSkm0wYVt+mDVZS5
-   w9MsUQpn+5tZl2o/Dk4BivWNk4E1mW+NCuSN+8hQ0dNmLz0lF7GboziJc
-   aHd3Zcn33NzRaDwh+BfV9CbdqGblC0VN9yu8PvMfjFDx9VH3SzkkFGIhQ
-   9WsFHbQClyUwBMWhKVC61x/KnqPehbLHpFDze0ZEVsGEKVhbymvTxtawU
-   KJJlWbnd9aOeJZZQR4xiFSLwwmZcJZWRGcC2/Jcd5pdqxi83USADWHFWk
-   Q==;
-X-CSE-ConnectionGUID: JfP3WiV7Rn2v0IM4uBxyIg==
-X-CSE-MsgGUID: G7+f7ZQDQuSwd9SoN4qwVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51138991"
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="51138991"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:15:41 -0700
-X-CSE-ConnectionGUID: YcM4vTLgSe+aq1A9LpR7Ug==
-X-CSE-MsgGUID: 3Xl/sVAJSbytpyaFde8TCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="152663513"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:15:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uPhmK-00000005xQy-1COj;
-	Thu, 12 Jun 2025 16:15:36 +0300
-Date: Thu, 12 Jun 2025 16:15:36 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: surajsonawane0215@gmail.com
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] iio: chemical: Add driver for Sharp GP2Y1010AU0F
-Message-ID: <aErS-HQkO5pMw3ph@smile.fi.intel.com>
-References: <20250612100758.13241-1-surajsonawane0215@gmail.com>
- <20250612100758.13241-4-surajsonawane0215@gmail.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MRoO7XI+"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cfb79177so5343865e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:15:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749734142; x=1750338942; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SYW0+B04sInxcyPw7RL4odLCTvi8nL12cX8+rIobfUQ=;
+        b=MRoO7XI+jh91AHkx/TICYRdn7kp+jtwHjcM/Rbsrgt77VOu007rWWcDFw9q/3Ybr6R
+         ItURHVZGOwzxEc8fjICWudMIYjBqSOe5ZnTArJVQ4OJS7Pb4lFv2NvboPje5nv33O4oq
+         //2z2If1hOwR95Lj1TnEjN0eBcpzP0D6tEBAdEBQBVu1s3pwbxtDlQjZwYZ5OWIaqkeO
+         s1o/5mJ+esXaOS6T8J6gIV8lSJ+mp7xTGhzp1OofX8l6rOzOafwimz3k9QSRRdT8zCsv
+         du5CW52dfFRiyS7Mi5xOHxjN9ye8GK4cI20XmxtYdTJXV9iISlN5Gqy76ONgt0wV1V/A
+         NBSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749734142; x=1750338942;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SYW0+B04sInxcyPw7RL4odLCTvi8nL12cX8+rIobfUQ=;
+        b=jnBWPKelkcAgqleQprQklovBpOjjtAm8vy+fUJlJbE5eDs5R3K+1GAaQmHVR/+VZdU
+         LQ4gbC8lhRN+O6bRTZP05OXw3e+jA7NqXwaC1WyZKQaQxNSEEG0Cee/Ed5b06bffKwPl
+         ofM8AkOUeeYknQwlDxj+z8iv7oQjTt9Pte+frmbE6N3JK6CK1t0/mErSDOCarWvcCyxt
+         ZAyB8HQJGR2GHQW4f4IvMpC3yjCfGgeZ2K5fFjonZcT56sw0NU4h8r/XrQKLp+cDOOSm
+         +EF/QWa6ig4NW8iQBaeQesrCF/5LdR/xkeKyWV3cybkTxVG02ByRtbEyj3Ev9iPGfFnm
+         GVhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVVbvEBc+N/QHpd2gM9ArhqeAG2E8XvoHQI95ZqxtGzQ7sO6g3FPjUYyzjdIhMcnQd0Karo6Wjbns004c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzkUSQuCnozwDQCoYYPNnIUl/xc7E7XgfYG0tezyXr433tlFQV
+	ptlEH4ehAsRLGTFhQeUooQmFyYxIFcwoxk3Emvyuwh1T+BlW8V0reSY7hWa3coKrNAI=
+X-Gm-Gg: ASbGncv3EjxsPWhQ0VMPPn/vcJ8tqJW+nCaCSvO/KUO2wZJtiATMLKFDf6zkSXVsHlx
+	IBFCTBRMx2FJRQeoxyRnMd/hJDjOEHOL7bLFNJ09OLyaOg70SM3AActe8R5UByjLWoYdbAUah23
+	ZMAMwhq+l1jLoG7qbql69+lqQCa/WoEOqmW+rZtcjL8BHMjUYVu8RQhFAC/u1rkvGNB+D/u/qQf
+	Zcujxx2yrk1mrHeGIwPuP/4RLo7MA6oB88Pv21eMMP4xFv3JnUDA3eMDoElRqiPmqZ0ev4LmPaw
+	j0cHK44mJx3lZwRapU4PnVM0LOudJLK5mc2dBbDVnWrYErbPK2/u0jc=
+X-Google-Smtp-Source: AGHT+IFpZ9SXfAbcx9UYgsykf4kQVZZ7hDQIXoDecEBolRJ+pnmV+MNhvJktOJmHqFQTsif+GRyCYg==
+X-Received: by 2002:a05:600c:3586:b0:43d:ea:51d2 with SMTP id 5b1f17b1804b1-4532b8c2f2bmr38451605e9.14.1749734141385;
+        Thu, 12 Jun 2025 06:15:41 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8b99:9926:3892:5310])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea17d7sm20619795e9.10.2025.06.12.06.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 06:15:40 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 12 Jun 2025 15:15:23 +0200
+Subject: [PATCH 14/16] pinctrl: sunxi: use new GPIO line value setter
+ callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250612100758.13241-4-surajsonawane0215@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-14-556b0a530cd4@linaro.org>
+References: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
+In-Reply-To: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
+To: Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Support Opensource <support.opensource@diasemi.com>, 
+ Baruch Siach <baruch@tkos.co.il>, Sven Peter <sven@kernel.org>, 
+ Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Neal Gompa <neal@gompa.dev>, Viresh Kumar <vireshk@kernel.org>, 
+ Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, asahi@lists.linux.dev, soc@lists.linux.dev, 
+ linux-sunxi@lists.linux.dev, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1804;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=nIb1ERVNbKJsSviHJxgUP0dw0VlXNMpXQSUn3radzBU=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoStLnDirgrB5LayZ6bmpzTb9vnrrWDTKxpwuY6
+ 6GuRs6+7+OJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaErS5wAKCRARpy6gFHHX
+ cjGPD/wNvb4j//YoAIysQkS1R/JAVIQzuJnhYsUG1hvGNE0K/Tj2zywZqHvUHGhwy0MMfY4/IPv
+ ipPG/UE5TMpaAfnUreWMO+6gxvRyBKLPdnaXZFXBx84htL1YUquIbzHMfT+cuIwtCnRANTxi9So
+ I+0/W4Ejq/+fTnRec5gzwllQdA+qwsjIuNLHh2hmROmHFzBhnrngKJdRyiYjB4n08hMg33DyloF
+ R+WMLG5USaOhzS/cXh74PjDCSNab71daGuxVVLjx6sNQm+imFmYb4aAZaHP34eGfUMMInd9XzFM
+ SSClmvWkl4TCO/CRIH9s2dok8DZbUhgNwR2461FteN5+z4/wJh7owtQ3RtsRJeriFnI6cdJNxiH
+ O/cD4XHBvqloqHTCEeD0KHICq0c4Ka6xKLZZaxo1/eJAtBPvQDdS6VXDNjKjxr4hpedktowfEPL
+ 8dzAoSnwDri+1MvHu82L2GIfD+vUzkRxP8AhYFQlINlgKg+FSNbV8utKdF7Dp/RvA0AyTR5AygF
+ CpNuMQSY+P7pgwk41Y9dwdiFlxRy30of81JlYjV6kdmBpB17p+eWnhfObkprJ5ndF6wY7DM75ri
+ VViJexUTAn0tAMuSEcLxSC3FqL/JUCBI8vRA1fvCu2BIbzgjhzOLrsorSrBLj10sqL1w8ZimBia
+ 8eHbwXrot5DU3sQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Thu, Jun 12, 2025 at 03:37:46PM +0530, surajsonawane0215@gmail.com wrote:
-> 
-> Implement support for the Sharp GP2Y1010AU0F optical dust sensor which
-> measures particulate matter concentration using infrared scattering.
-> The sensor requires precise 320μs LED pulses with ADC sampling at 280μs
-> after LED activation (as specified in datasheet section 6-1).
-> 
-> The driver provides:
-> - Raw density readings via IIO_DENSITY channel type
-> - Hardware-agnostic operation via GPIO and IIO ADC interfaces
-> - Power management through regulator framework
-> - Device Tree binding support
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Datasheet: https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
-> 
-> Signed-off-by: Suraj Sonawane <surajsonawane0215@gmail.com>
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-No blank line(s) in the tag block.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-> ---
-
-...
-
-> config PMS7003
-
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called pms7003.
-> +
-> +config GP2Y1010AU0F
-
-Shouldn't this be alphabetically ordered?
-
-> +	tristate "Sharp GP2Y1010AU0F optical dust sensor"
-> +	depends on IIO
-
-Is it needed? Nothing is missed?
-
-...
-
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/iio/consumer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-
-No of.h in a new code, please. Also follow IWYU principle, there are missed inclusionfs.
-
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-
-...
-
-> +struct gp2y1010_data {
-> +	struct gpio_desc *led_gpio;
-> +	struct iio_channel *adc_chan;
-> +	int v_clean;  /* Calibration: voltage in clean air (mV) */
-
-clean_air_uV is much better naming, most of the comment won't be needed with it.
-
-> +};
-
-...
-
-> +static int gp2y1010_read_raw(struct iio_dev *indio_dev,
-> +							 struct iio_chan_spec const *chan,
-> +							 int *val, int *val2, long mask)
-> +{
-> +	struct gp2y1010_data *data = iio_priv(indio_dev);
-> +	int ret, voltage_mv;
-
-_mV
-
-Also I recommend to split them as they are not semantically the same.
-
-> +
-> +	if (mask != IIO_CHAN_INFO_RAW)
-> +		return -EINVAL;
-> +
-> +	gpiod_set_value(data->led_gpio, 1);
-> +	udelay(GP2Y1010_SAMPLE_DELAY_US);
-
-flseep() and explain the need of it.
-
-> +
-> +	ret = iio_read_channel_processed(data->adc_chan, &voltage_mv);
-> +
-> +	/* Wait remaining time to complete 320 µs total LED pulse width */
-> +	udelay(GP2Y1010_LED_PULSE_US - GP2Y1010_SAMPLE_DELAY_US);
-
-fsleep()
-
-> +	gpiod_set_value(data->led_gpio, 0);
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = voltage_mv;
-> +	return IIO_VAL_INT;
-> +}
-
-...
-
-> +static int gp2y1010_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct gp2y1010_data *data;
-> +	enum iio_chan_type ch_type;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(indio_dev);
-> +	data->v_clean = 900;
-
-The default must be defined with a comment as constant.
-
-> +	data->led_gpio = devm_gpiod_get(dev, "led", GPIOD_OUT_LOW);
-> +	if (IS_ERR(data->led_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(data->led_gpio), "Failed to get LED GPIO\n");
-> +
-> +	ret = devm_regulator_get_enable(dev, "vdd");
-> +	if (ret)
-> +		return ret;
-> +	udelay(100);
-> +
-> +	data->adc_chan = devm_iio_channel_get(dev, "dust");
-> +	if (IS_ERR(data->adc_chan))
-> +		return dev_err_probe(dev, PTR_ERR(data->adc_chan), "Failed to get ADC channel\n");
-> +
-> +	ret = iio_get_channel_type(data->adc_chan, &ch_type);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ch_type != IIO_DENSITY)
-> +		return dev_err_probe(dev, -EINVAL, "ADC channel is not density type\n");
-> +
-> +	indio_dev->name = dev_name(dev);
-> +	indio_dev->info = &gp2y1010_info;
-> +	indio_dev->channels = gp2y1010_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(gp2y1010_channels);
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index bf8612d72daacdde6209b0b5c84e010ef3b846c9..9a94c5276828aca51212f536400897e447c62ecd 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -955,8 +955,8 @@ static int sunxi_pinctrl_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	return val;
+ }
+ 
+-static void sunxi_pinctrl_gpio_set(struct gpio_chip *chip,
+-				unsigned offset, int value)
++static int sunxi_pinctrl_gpio_set(struct gpio_chip *chip, unsigned int offset,
++				  int value)
+ {
+ 	struct sunxi_pinctrl *pctl = gpiochip_get_data(chip);
+ 	u32 reg, shift, mask, val;
+@@ -976,6 +976,8 @@ static void sunxi_pinctrl_gpio_set(struct gpio_chip *chip,
+ 	writel(val, pctl->membase + reg);
+ 
+ 	raw_spin_unlock_irqrestore(&pctl->lock, flags);
++
++	return 0;
+ }
+ 
+ static int sunxi_pinctrl_gpio_direction_output(struct gpio_chip *chip,
+@@ -1597,7 +1599,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
+ 	pctl->chip->direction_input = sunxi_pinctrl_gpio_direction_input;
+ 	pctl->chip->direction_output = sunxi_pinctrl_gpio_direction_output;
+ 	pctl->chip->get = sunxi_pinctrl_gpio_get;
+-	pctl->chip->set = sunxi_pinctrl_gpio_set;
++	pctl->chip->set_rv = sunxi_pinctrl_gpio_set;
+ 	pctl->chip->of_xlate = sunxi_pinctrl_gpio_of_xlate;
+ 	pctl->chip->to_irq = sunxi_pinctrl_gpio_to_irq;
+ 	pctl->chip->of_gpio_n_cells = 3;
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.48.1
 
