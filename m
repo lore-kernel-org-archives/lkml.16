@@ -1,192 +1,100 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC062F4315;
-	Thu, 12 Jun 2025 12:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E71C2F4329;
+	Thu, 12 Jun 2025 12:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749730647; cv=none; b=qbyvFOwRv24nEfEyM2Eqazky05f2vVhRF1Up59PNWck+cHidzwOjT6zHHTrwwOX8fPHETLpFHw6MDLLlV7gHvBhrA5GpS2MUzMiguNPDssJOLLFu4voFe2tapUrLFF8La4KxoNLe8eMGTee4Y2x+H/nq0XCkOeorNdszzTdnqlA=
+	t=1749730703; cv=none; b=g1ELxlHKe8B7RC27VH74xIZoutXtkejEMZdaa6UttM6AwNkJ9bopKpEQDWo4bWvBYxqaQE7dy4XzWI/H0dKt8ieE8298uANOxHfyrGicaebEO3XgHEz4OtH87ikDmEwF463999EG4lsCAKj3yfFBnXpo4i757m1MeI0N86qmzF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749730647; c=relaxed/simple;
-	bh=BAJPS5CTIsKgTtnWWCS8RNglnAj/Nh9iWChoip6rm+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dXfBmn+UUMqj8UKo0vZN7DreF6/GVpXR2UD82VOVujBDaus0ntqFBhFrwicKxdQJijOjSvdHyWi09EtoYKu0kbzt23x9OwPybO0laZ4ZNuH9bBUMqKIpcE88yT1EcJS1ZoVR/Ybe9SVqG4SqsTjHnPj8Vj7r044YMzX0+EzBJxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23508d30142so11005825ad.0;
-        Thu, 12 Jun 2025 05:17:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749730645; x=1750335445;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DoJJcCh5MIZf7vzkudV0p31BxyvL75PyGTQMdM/s56k=;
-        b=foOWqDza142eflaLjrts0s1LMUTaonOED3q6utgj+umm7zz/t6fDuUU4M54bHhhHfc
-         t+MQOchNuxCuqtGrAE/kYUhweVZ8dlbSneban3EqKjukSixrURgxMavWqkKaIAoGWsBu
-         Nuz0qhpPRdfHIvD/ULeVsmPIePvgB4ZlETTepidi5eZg8ACFoux3jRtj7Fuf73ZYaazT
-         QwQhb+0huTUy0wBF2pNL7qnMk4YaZIgTsphDqY6w7YXxGCmq0c3HgkpHLt4/3Qf6+VSa
-         kJgKFvYSDBUu+gLApW4jWyE6i5ovxwGFDgW3dnu+wxMcwHnHitrslPg7heMajyRaMq3t
-         Elaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDNE1kmUuiuuqxXWvZpIh3lpKWuaqBh9G8iPcXnG5n7q7pZo1NQYwUGj64ZgjqPdMtFixoGQXlWR1zEaIff2oTMyQ=@vger.kernel.org, AJvYcCUV26RfxlA1Xvl9eRHAWBwblt18fnbmcbasrGX4Nl0FMBJ1QYkbuUP74HfoklioS28K48tDk41Ay55M@vger.kernel.org, AJvYcCV+vVFytB3p6PRTmApRex8onfDN378GktRY2+925E6ELZgDcY+80mazq0wNDCG2VspHWM2OHyflVs4D@vger.kernel.org, AJvYcCWOvgy6sj+F0M4tGelTp+mWiSfiJqhYFILg1VbRHfPEsKkv6HV7HNJ6MPib9dzp6zAN8/edjpA02bk+n3FZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbTzElj2ilka6ZqjSJjRZfI9Iu5t9OnjZHVvGV4NmdVJvgsMpT
-	nVMVukGNKxdOop3Y2RTHKr7oQfzsC56Z22qT664CeMaxaCmMggw3Idt2ZLdbV04x
-X-Gm-Gg: ASbGncsddPF3jcVYiNVAuDa3Ryvd9RRynhuPFUE74+wWxw2oDxuzyUkn0pRYz+0GVp0
-	lo2lA5Ru1zRbG27X36kcTc3Un3unpT41Trh4h0klwf81GhfhBziISbEIgxUXEnjJlAOBccZ6wm8
-	Jam17mYODw4JVqMy+jfu9WHHJYBOF9jxKzEPS5F+qfBE7fvj9MP9DRpWhsl054bCIoV92gQemcl
-	HWN1uS2SiDlLXLHBXwOxQzv0nAjtsYNwj6GmAbcyJQNU7OVk5B1tupVwB4TZQ9HTAROQpch5f2I
-	Cv/5a3QPINf3VvvYZbQXXOeGegZ7OQxFpbSAUHfK02AJtXpcGbUwXqwY8nFXw+SyBOdXNN1OhOg
-	1cEmLaOHmGlNkDVoJs+VCoWz6CTJ4
-X-Google-Smtp-Source: AGHT+IEgFvXq46wHwmacDtJ1o7cDFPAhk1arkDEirrosX113yDofcaYTqcsmzJSga23+U/z6EBclRw==
-X-Received: by 2002:a05:6214:2242:b0:6fa:c617:23f0 with SMTP id 6a1803df08f44-6fb3464b734mr60985826d6.27.1749730633452;
-        Thu, 12 Jun 2025 05:17:13 -0700 (PDT)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com. [209.85.160.179])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c87430sm9297716d6.117.2025.06.12.05.17.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 05:17:13 -0700 (PDT)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a58ba6c945so17473001cf.2;
-        Thu, 12 Jun 2025 05:17:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX2IA5UD/7N1ZCuJn4LOV89By69nPvhV3aXfXJ6LG5UZvolTlCorhJIebdYdAjKWfIKmDMPVLtefe0r3K3w@vger.kernel.org, AJvYcCX2Rk441ZA9skIyLF3ElRSqi8mNCAwFK4S2sYr6aeJZ23O6G5nmOHyMqZNIK8OXZe9gZIoulkkXzxX+@vger.kernel.org, AJvYcCXTod7Luv3fHYUyh5+6sHDzsmfHU3hOewMb3a/AOcwf1xvYQYAqNN8dNPKHO9XT/rnFx58BpnwJ0lqEzxobv1Kb8V4=@vger.kernel.org, AJvYcCXm4H3WSGHe4btzk6lnwufatp8Erj8YqsmxQsB+IgkLX0E2Sbr+6UFDyadMeZSqTGaVvImQxE5F9Qa0@vger.kernel.org
-X-Received: by 2002:a05:622a:248b:b0:476:b7cf:4d42 with SMTP id
- d75a77b69052e-4a72298b45amr56780671cf.27.1749730621392; Thu, 12 Jun 2025
- 05:17:01 -0700 (PDT)
+	s=arc-20240116; t=1749730703; c=relaxed/simple;
+	bh=llD4QOF6mQTpUIHo493Pr5lhuGY7G7Ebp6CluFEqjLc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iWxRYPYE52VtHTQDEvaWivEVtJ/C3NbUlqZtccSyjrESYu4AXuPqWAak8pN9u5Ahje1Wx8FjhnD4jYSu4i9nyuyb9UjPFcmamhGyPbgt1FDNjZohqu5sxkBL2jb/PrYgkQqtUMwMKFeEpdSw6x9ojuv1mJfw/iqZUUFusqyCNbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXxRooZ7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXxRooZ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DF18C4CEEA;
+	Thu, 12 Jun 2025 12:18:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749730703;
+	bh=llD4QOF6mQTpUIHo493Pr5lhuGY7G7Ebp6CluFEqjLc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aXxRooZ7YLJmkYh4xkLXIIqTlfASRxSp16X1qrFaVmQUVdtiJ2/MN/W2RqoFIkPMc
+	 cBSxqZU84f5/QxAHSZBeft5Ph8hhEKH+PoyWT1sF7gF+vDb9Ls1byDGaz2sLiOOe0l
+	 v7vLj9XTn6+xOxia9w9SFYomSRSSmoMZwam9d5YqEQKTOou9iiowxPKcMpbnOYAmN7
+	 uYF26LPNZPsRWwGRfe9e9kTZ7UZTT0ERP3xi+8D8ZFDz1imkGKbGfUNEWLWssFxGxN
+	 iRhJsPdnYrjw690jNpuWd/o2/aQ3txONIzGNj8WL1Nr0E8IhP7yWB9WHgaqxjaLPH8
+	 CMECnydYbtC1Q==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v2 0/3] Fix race condition in Devres
+Date: Thu, 12 Jun 2025 14:17:12 +0200
+Message-ID: <20250612121817.1621-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609184114.282732-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250609184114.282732-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250609184114.282732-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Jun 2025 14:16:49 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUCYjPP326g9MsnH8p6gM-vy33L4OsFFMGzsZbLbucTUA@mail.gmail.com>
-X-Gm-Features: AX0GCFutJDPpULdILFjEorVuhRUPwxUBTaslsCHyRwchuwR_DqFdheZmmW6F7w0
-Message-ID: <CAMuHMdUCYjPP326g9MsnH8p6gM-vy33L4OsFFMGzsZbLbucTUA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] dt-bindings: i2c: renesas,riic: Document RZ/T2H support
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Conor Dooley <conor.dooley@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+This patch series fixes a race condition in Devres.
 
-On Mon, 9 Jun 2025 at 20:41, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Document support for the I2C Bus Interface (RIIC) found on the Renesas
-> RZ/T2H (R9A09G077) SoC. The RIIC IP on this SoC is similar to that on
-> the RZ/V2H(P) SoC but supports fewer interrupts, lacks FM+ support and
-> does not require resets. Due to these differences, add a new compatible
-> string `renesas,riic-r9a09g077` for the RZ/T2H SoC.
->
-> Unlike earlier SoCs that use eight distinct interrupts, the RZ/T2H uses
-> only four, including a combined error/event interrupt. Update the binding
-> schema to reflect this interrupt layout and skip the `resets` property
-> check, as it is not required on these SoCs.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
-> v1-> v2:
-> - Listed the interrupts in the order as mentioned in the
->   HW manual.
-> - Renamed the interrupt names to match the HW manual.
-> - Added Acked-by and Reviewed-by tags.
+Please see patch 3 "rust: devres: fix race in Devres::drop()" for a detailed
+description of the race and how it is fixed.
 
-Thanks for the update!
+None of the upstream users of Devres is prone to this race, hence we do not
+necessarily have to backport this -- yet, it must be fixed.
 
-> --- a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
-> @@ -29,32 +29,46 @@ properties:
->                - renesas,riic-r9a09g056   # RZ/V2N
->            - const: renesas,riic-r9a09g057   # RZ/V2H(P)
->
-> -      - const: renesas,riic-r9a09g057   # RZ/V2H(P)
-> +      - enum:
-> +          - renesas,riic-r9a09g057   # RZ/V2H(P)
-> +          - renesas,riic-r9a09g077   # RZ/T2H
->
->    reg:
->      maxItems: 1
->
->    interrupts:
-> -    items:
-> -      - description: Transmit End Interrupt
-> -      - description: Receive Data Full Interrupt
-> -      - description: Transmit Data Empty Interrupt
-> -      - description: Stop Condition Detection Interrupt
-> -      - description: Start Condition Detection Interrupt
-> -      - description: NACK Reception Interrupt
-> -      - description: Arbitration-Lost Interrupt
-> -      - description: Timeout Interrupt
-> +    oneOf:
-> +      - items:
-> +          - description: Transmit End Interrupt
-> +          - description: Receive Data Full Interrupt
-> +          - description: Transmit Data Empty Interrupt
-> +          - description: Stop Condition Detection Interrupt
-> +          - description: Start Condition Detection Interrupt
-> +          - description: NACK Reception Interrupt
-> +          - description: Arbitration-Lost Interrupt
-> +          - description: Timeout Interrupt
-> +      - items:
-> +          - description: Transmit Error Or Event Generation
+Thanks to Alice for catching and reporting this!
 
-s/Transmit/Transfer/
+A branch containing those patches can be found in [1].
 
-> +          - description: Receive Data Full Interrupt
-> +          - description: Transmit End Interrupt
-> +          - description: Transmit Data Empty Interrupt
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/devres-race
 
-The last two don't match the order in the documentation, and the
-order in interrupt-names below.
+Changes in v2:
+  - Completion
+    - s/can queue themselves up/have been queued up/
+    - move up Send / Sync impl
+    - refer to complete_all() from wait_for_completion()
+    - clarify "permanentely done" with "i.e. signals all current and future
+      waiters"
+  - Devres
+    - pick more appropriate 'Fixes' tag
+    - extend commit message with an illustration of the race
 
->
->    interrupt-names:
-> -    items:
-> -      - const: tei
-> -      - const: ri
-> -      - const: ti
-> -      - const: spi
-> -      - const: sti
-> -      - const: naki
-> -      - const: ali
-> -      - const: tmoi
-> +    oneOf:
-> +      - items:
-> +          - const: tei
-> +          - const: ri
-> +          - const: ti
-> +          - const: spi
-> +          - const: sti
-> +          - const: naki
-> +          - const: ali
-> +          - const: tmoi
-> +      - items:
-> +          - const: eei
-> +          - const: rxi
-> +          - const: txi
-> +          - const: tei
->
->    clock-frequency:
->      description:
+Danilo Krummrich (3):
+  rust: completion: implement initial abstraction
+  rust: revocable: indicate whether `data` has been revoked already
+  rust: devres: fix race in Devres::drop()
 
-Gr{oetje,eeting}s,
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/completion.c       |   8 +++
+ rust/helpers/helpers.c          |   1 +
+ rust/kernel/devres.rs           |  33 ++++++++--
+ rust/kernel/revocable.rs        |  18 +++--
+ rust/kernel/sync.rs             |   2 +
+ rust/kernel/sync/completion.rs  | 112 ++++++++++++++++++++++++++++++++
+ 7 files changed, 164 insertions(+), 11 deletions(-)
+ create mode 100644 rust/helpers/completion.c
+ create mode 100644 rust/kernel/sync/completion.rs
 
-                        Geert
 
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.49.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
