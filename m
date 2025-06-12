@@ -1,98 +1,120 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35EA8BE8;
-	Thu, 12 Jun 2025 00:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CAB8BE8;
+	Thu, 12 Jun 2025 00:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749689300; cv=none; b=pC5a0mlBie33GeWbIf3lUctklDFJp2e5W/t1nAUdCkaoWbz97GkEQ2UIVCNeM3z5tQcv41BfcEM5V2EVZy4xJgyqPw7XLf8fWbZlf8zwHFQakGGw2p4EFcNiXYH3114DnUINQ0ATkQ4T0fhoHmmBXVLOTe9js+ZkZYZztoQAr1A=
+	t=1749689324; cv=none; b=fTcEXSSgA2jbVJaOR3+CNAtDHnyCTu/27XrKnHQqrH5/MPAmxIDr4LUtjlM1kgKeOFu8DtKEEzkR2z7CWyvG4wU4uay2ZjTwgTYc8ZJhCROvQ6fFSv1ljUMFp4CigQccb/PlBN+7Ylj7Hf01upEN4zCs15oAm/lbaLb2K0Xv4H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749689300; c=relaxed/simple;
-	bh=3d2nv4mQzWVieMmhZJFf9T1T8JQ4ZqqR9dLmZQor5y0=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RC+X3HtzJN8WiKc5dPVWkJ0FPSuwUW3jYUoQdAJ8rNKYKfNJU4RRWaCyDeSsnj1OIkmXQAK5j+5vyTQVIxI9w7s/gGjwZmjtjedY6UI818o7Yj6N/gxdKHrsg2U9nZRm+OY9JphEQLqeSgngnhCTQKNg0LhyXs1M2KxyKR8knpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NpQiVKQD; arc=none smtp.client-ip=209.85.215.169
+	s=arc-20240116; t=1749689324; c=relaxed/simple;
+	bh=ht1gA/ZPteEMrTAwGuxbLshnWpppVntQPyraSN5yQj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WTOMxw9yuasYTN1GTtB9zmVg9C/3SS243Omq/jeVrbjl76RZ6GsTUSEUDCWvkqs8R/ytVoif4ap6ZuijYd8ZS/PvyQS1FCwLZtNIO0tprHS6MJueZrjRsTjmSETK9A8/pS9+DGfjwxXeUJ1SgD430bsiBZqbnkgHpcbhhuvCizs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pzr4UFaQ; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpQiVKQD"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso361747a12.2;
-        Wed, 11 Jun 2025 17:48:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pzr4UFaQ"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-74264d1832eso535610b3a.0;
+        Wed, 11 Jun 2025 17:48:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749689298; x=1750294098; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3d2nv4mQzWVieMmhZJFf9T1T8JQ4ZqqR9dLmZQor5y0=;
-        b=NpQiVKQDyfy/PLdFrLtHe5NAn8PTX/AuOT8bF+v7SgPeDJv5KudlkXvKAiobQXa2sx
-         jX41zYmce+v6/ZL8U1Oi9Gurozv+muxiseZdXgBNELAJ3+ILmGo3mpJ5AfCfgmvZLf6S
-         k2mBc6Ae9Mzk6huho+eAZKy+P3B/hNzYgG+IKhHfy+W5r5WFXhGMNL+GRD5tO4WNMiMZ
-         slpWR8/LMCe2WFo4W30CMaqoud7/OYeWCEpVw1t13+xw7NO3Sl7MrqjHXTe6Eme7dEt2
-         orFCGcPpzLjwXIgofH4Wl017mm4+6esBWShnYiDxwZlSoIzbzz/udZxjclEVXJ1wi96U
-         C7Lw==
+        d=gmail.com; s=20230601; t=1749689322; x=1750294122; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hqINRbhBXUv8DDvAKfwGN3D5A5fdVAfIH4y8gA4/FgQ=;
+        b=Pzr4UFaQ0c1V5WpJDKxZFd2vMJJXhK1YF13MjlU876scY6FM3HpCDPp0Rjak8OEyq3
+         UGJJzD/xvCvDpneSYHLO5tSP05OQuW84phZ8IU5l+yTT/mOIeWjk6cU70sNV1iXwCRlt
+         x+G4XMqXyqaDPuUxR7fYGDlCz49PQzMJABBIZJ5F2JiXkVwRa/HAezjFSe2NrtV0jVuC
+         /mt8YJ3iDlh25VlazkMh9vWwZCsVq/l07UEuM4lrkTd11pCwPSqTzZ7JGMZuRVtwhGNB
+         DPdQdqUqSejH1LtO3HPPeeIzXBm9xugMl1h0fXdtbTVp6nVH/jhajRK1CMv2Ht2cL7P9
+         ynBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749689298; x=1750294098;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3d2nv4mQzWVieMmhZJFf9T1T8JQ4ZqqR9dLmZQor5y0=;
-        b=OIBYK+eXGS+RKwDXbhqcS7kK5aLypNlv0dPXqHfwzg/0PNnf6FlgkKRpxnhdGsdpme
-         4T9EaW/VCFmmhi8TDoEUA7+O6xS//fTx045ILPTFVie9LZngxP7imQdRR8julglwoqP+
-         v5rkesCSgQoEH/2I+/lseEj/8M3JcU2YVftQsUAyAU6h9/VxYkmZZSQwzsqvQTAJBxI/
-         vfOoJFYGF92uqKMQ/LbPbP8x6CecZ1irnzJeomkxhuciLGbJ0awQvPdWPUn4qbf5DK6S
-         vjqnjYw6/u611UOHJjqySrLOCqgKgjFTAmXUdiRdf5fzvwsXM2ewzuiFKtfahSGKS8Lr
-         IK9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUarx6cp+fSk4d0nOG8xKklxWWgcQ8/5yAsYfpds4Zc/upVjVoSAeFLlR8U2T1Taga3zieAMNVe@vger.kernel.org, AJvYcCUmRvp4zKTlRP/mJ3wnGjqLGpnkTm9U2nf2J+0gF5MYrZ7LSUOGS9AgofJn/St9+a1S4/pqDJmzcwhBd+4gjYU=@vger.kernel.org, AJvYcCVhB5KQ2ojX4f6vKt8PMx23Nk5Q68CCnqEc8LACcZwdOGIU5ybkiOxpR+6/TiB2OpG4NxlLRg88pSwm9X0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4xZ1e3gPWaPlEKhbJvpth3fWW7ECIKEKStfFsQGd5RA4ix7gW
-	WTRkkmfkWjUf+f6FaFWRzVd/1RS0q1J1xny7C2Db8yV8dU1tCOkM+fIyHo/bKgnD
-X-Gm-Gg: ASbGncvZei7MEAAbFq/9Ddb4pQQ61E2I2gXKDYZp/x5UcOatqALAnC0iPQTIqmHEf41
-	7k/Ul+DrtJuiWn/OxpxmYGMwRV/eduMJc3gKHEvOyCbIl1PM9PBxVwPKY9QUxhoqviFQZbXu6hx
-	1VPizAk90QWjVP9kGqfF9UZgjecXKxMg53QvGer2g9X3S0Tq8JZoW8ojR3TZnucQTOQm2xw6xRt
-	TZdMuOYSbWL1oBin9jLFmXHpwX5dSvnOjgIDR4G4wW+5xeYQDtfO823eOlcG6L0TdNE0WWUIKCP
-	ERhCTL2c7oOygekldGoXhhaqcKv9WWnIfv5qdD245Oi74TaZLrg3movp50Z1WXCN9pFRHWCFRqF
-	WlK2XIJOMX08Lq9bSHTgXSMaNwqBePa21L7zJeSI4
-X-Google-Smtp-Source: AGHT+IG48Dss+KMa32YKb1Yc3+atTL+EItxUQqwsQHXnKCXv/vuFdpbPbpSc9wX8C8WDQ4IsuVkX2w==
-X-Received: by 2002:a17:902:d488:b0:234:d778:13fa with SMTP id d9443c01a7336-2364ca46910mr20702875ad.26.1749689297911;
-        Wed, 11 Jun 2025 17:48:17 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e6f9878sm1911455ad.151.2025.06.11.17.48.14
+        d=1e100.net; s=20230601; t=1749689322; x=1750294122;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hqINRbhBXUv8DDvAKfwGN3D5A5fdVAfIH4y8gA4/FgQ=;
+        b=DBfL9W0KY+8NCYyw9O/1hdGlCYY9cunz/wYtFhzKbh5PKX8p1175znNqKDQUc2goeG
+         3eTBQi5SnqMR6jTW7hmHsvbuLkhXN2/BbLLHQsTW6kOy5CDCNoSl8H4lsLEeNY6ffdAc
+         +rmOvy26K6OBVZ8y6LOkIwj97IHegNVsEmwkJg4oocbdqxUYC0SvQoH//TqY2whhnYpS
+         +1Np5HVg0Oon6TYdCCTGwPen4b51y/RNziI81901/GjHUcq7aN2RvyuVDGtuLQ6IOQt1
+         I6EmyojX0hvpkFI+3o5m6pRCJcLzNkCj2UlDfiE4ydX5KfsoEwq6IO7+2ZTF2XorkEME
+         HiwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV74YxXFIN0iXZTkkVbUcKsTohGyCQk/nXvp9LoD1t6fERaMJnobir2ITW1wRMR3EKs4ryoUvwdeVLY@vger.kernel.org, AJvYcCVoR1PQpJt12phcap/7qApSU86nhkTr83hX4sCdK84JMCxyyWy63r/LzfGJgePSSzdb8AMNBsqdeGdk2rQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIibJ6laaD42TVmRMB6AI62VxV3uyBiB4CFk7QncksOdCe1W7U
+	ad6n3PY/zQA8/M+xnsloc8Bp10MIUNjeXwgHdGU76INYTFpW3ZAJ4fBJ
+X-Gm-Gg: ASbGnctVipjhIcv2bLwXruwA6Lw957DldTB65d/NIVW94wps9DZNplxZ3wFITkITS9X
+	StIkQlWN4j8Ccki6lcWTk+XCdNXKg7Vu26pqKg3mzm90bEUKMsrHSM9xrUi9XHesIXztQbi3mcW
+	8Xpfpd2YHsEUkuL0gzyshFpZVd8M96/2sHDZKve4u62Jf5E6Z95pc4mbkVxQA+luk0t+0pvo2di
+	CoiaqqR2VhKINoz5auXRY7UggVfIOplNlnQdyAXfQulRjnVkpFi3luWN63eZG15t7nzhUgsWC9u
+	eYtkz8MUXzhOaPtQp0Dor09bEKFy0Z++eh7bpkeLNt1RqtJLlg==
+X-Google-Smtp-Source: AGHT+IH/jwJJdwYkzPE0y591nja7/GMlqARzj1ko2DlwznP5A+rVIrdUR5MsMWEBoz/8q6p4qz3Sng==
+X-Received: by 2002:a05:6a21:6d88:b0:215:dee4:4808 with SMTP id adf61e73a8af0-21f9b720273mr1173711637.18.1749689321805;
+        Wed, 11 Jun 2025 17:48:41 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:5f6a::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd611e32dsm221034a12.9.2025.06.11.17.48.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 17:48:17 -0700 (PDT)
-Date: Thu, 12 Jun 2025 09:48:05 +0900 (JST)
-Message-Id: <20250612.094805.256395171864740471.fujita.tomonori@gmail.com>
-To: tamird@gmail.com
-Cc: aliceryhl@google.com, fujita.tomonori@gmail.com, tmgross@umich.edu,
- ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
- a.hindborg@kernel.org, dakr@kernel.org, davem@davemloft.net,
- andrew@lunn.ch, netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: cast to the proper type
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CAJ-ks9m837aTYsS9Qd8bC0_abE_GT9TZUDZbbPnpyOtgrF9Ehw@mail.gmail.com>
-References: <20250611-correct-type-cast-v1-1-06c1cf970727@gmail.com>
-	<CAH5fLghomO3znaj14ZSR9FeJSTAtJhLjR=fNdmSQ0MJdO+NfjQ@mail.gmail.com>
-	<CAJ-ks9m837aTYsS9Qd8bC0_abE_GT9TZUDZbbPnpyOtgrF9Ehw@mail.gmail.com>
+        Wed, 11 Jun 2025 17:48:41 -0700 (PDT)
+Date: Wed, 11 Jun 2025 21:48:31 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/4] PCI: pcie-rockchip: add Link Control and
+ Status Register 2
+Message-ID: <aEoj385BMtLvNuKL@geday>
+References: <28ae3286f3217881ae6ea3aecad47ae4567d6ec7.1749588810.git.geraldogabriel@gmail.com>
+ <20250611194259.GA825364@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611194259.GA825364@bhelgaas>
 
-T24gV2VkLCAxMSBKdW4gMjAyNSAwOTozMDo0NiAtMDQwMA0KVGFtaXIgRHViZXJzdGVpbiA8dGFt
-aXJkQGdtYWlsLmNvbT4gd3JvdGU6DQoNCj4gT24gV2VkLCBKdW4gMTEsIDIwMjUgYXQgNzo0MuKA
-r0FNIEFsaWNlIFJ5aGwgPGFsaWNlcnlobEBnb29nbGUuY29tPiB3cm90ZToNCj4+DQo+PiBPbiBX
-ZWQsIEp1biAxMSwgMjAyNSBhdCAxMjoyOOKAr1BNIFRhbWlyIER1YmVyc3RlaW4gPHRhbWlyZEBn
-bWFpbC5jb20+IHdyb3RlOg0KPj4gPg0KPj4gPiBVc2UgdGhlIGZmaSB0eXBlIHJhdGhlciB0aGFu
-IHRoZSByZXNvbHZlZCB1bmRlcmx5aW5nIHR5cGUuDQo+PiA+DQo+PiA+IEZpeGVzOiBmMjBmZDU0
-NDlhZGEgKCJydXN0OiBjb3JlIGFic3RyYWN0aW9ucyBmb3IgbmV0d29yayBQSFkgZHJpdmVycyIp
-DQo+Pg0KPj4gRG9lcyB0aGlzIG5lZWQgdG8gYmUgYmFja3BvcnRlZD8gSWYgbm90LCBJIHdvdWxk
-bid0IGluY2x1ZGUgYSBGaXhlcyB0YWcuDQo+IA0KPiBJJ20gZmluZSB3aXRoIG9taXR0aW5nIGl0
-LiBJIHdhbnRlZCB0byBsZWF2ZSBhIGJyZWFkY3J1bWIgdG8gdGhlDQo+IGNvbW1pdCB0aGF0IGlu
-dHJvZHVjZWQgdGhlIGN1cnJlbnQgY29kZS4NCg0KSSBhbHNvIGRvbid0IHRoaW5rIHRoaXMgdGFn
-IGlzIG5lY2Vzc2FyeSBiZWNhdXNlIHRoaXMgaXMgbm90IGEgYnVnDQpmaXguIEFuZCBzaW5jZSB0
-aGlzIHRhZyBwb2ludHMgdG8gdGhlIGZpbGUncyBpbml0aWFsIGNvbW1pdCwgSSBkb24ndA0KdGhp
-bmsgaXQncyBwYXJ0aWN1bGFybHkgdXNlZnVsLg0K
+On Wed, Jun 11, 2025 at 02:42:59PM -0500, Bjorn Helgaas wrote:
+> On Tue, Jun 10, 2025 at 06:19:49PM -0300, Geraldo Nascimento wrote:
+> > +#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP)
+> 
+> I would really like to see PCI_EXP_DEVCAP referenced in the source
+> where we currently use PCIE_RC_CONFIG_DCR.  That way, cscope/tags/grep
+> will find the actual uses of PCI_EXP_DEVCAP, not just this #define of
+> PCIE_RC_CONFIG_DCR.
+> 
+> Something like this:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-mvebu.c?id=v6.15#n265
+>
+
+Hi Bjorn,
+
+Yes, thank you for the code snippet, it makes things more clear.
+
+> >  #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+> >  #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+> >  #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+> 
+> Also use PCI_EXP_DEVCAP_PWR_VAL and PCI_EXP_DEVCAP_PWR_SCL here if
+> possible.  And FIELD_GET()/FIELD_PREP(), which avoid the need to
+> define _SHIFT values.
+> 
+> I would do a pure conversion patch of the existing #defines.  Then I
+> suspect you wouldn't need a patch to add the Link 2 registers at all
+> because you could just use the #defines from pci_regs.h.
+>
+
+Got it!
+
+Thanks!
+Geraldo Nascimento
