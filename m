@@ -1,58 +1,60 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C8F21765E
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00974220F50
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714557; cv=none; b=S37Kp9EsN+zToVYO6XArYkELDV/dNI5MtHax9bYjvspmdtJCFZTdXmNTnZYUjrlgJpWua9sC6YK9sbE+QvMIj7Fiw4/GOvBL7JWtpaLV++Gmwz/JA7hL1mI2PqMZikEYcIbPW2pwDRbF3Cqg0XEOGwD1fe0+xssTQXQsdrKp3Vw=
+	t=1749714562; cv=none; b=HbER1Ae83TDp2SvRB6GX1ie3eI3OwOHFPoR2cZgbvmSpYknSnz70zbsHn698zPNDJSE9x7XIyktNg1oKnoW40wCFBdUytDUNNekLae3JGA3yl1iZ16cwLiYWf996/xdqebqBcGF25MJduAZJGjWe4sShDDFBpUFTk1sH4IWDgmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714557; c=relaxed/simple;
-	bh=Ffdfr1sEODkXZPRydcXgdeSHlcRT1dYDjdYvx7GZvao=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i0hrBxhlyZvoP8I5YVqTQ3YuVu2QGqFpKCHfFQz7enq1g65sdSlc3scAKjJoVqlpuB4tTJAfVTUhVsIqF4IgMU5P+UPgcCwV6Hqpu8J65EwaUa3PUNa+yScA2akDVpXCLboxV5AC3Swu353usxsG0i53ak2gt3Q7TezEBHeeo8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NFDpA2JO; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1749714562; c=relaxed/simple;
+	bh=M6CossAzrTItIWAzn1A9+kxxQ8xCK/jJ8XqU64/5Zf8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rCFrL+HZrlgdORo1G98khmQXIDJXWyPRobhjFBHfezDxuvQPSCaUk+wed0qRRx6Re2jAjU6S5crR5E0Szz3xSf7GMA27tCakc2I5Av2TABQXxJcGgo4kfxyTY2qWmFBGjfZkcdHeAQa0UeQjP7HQ4Nkds4MP2RsQn/3arv/LA4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QpMq05/2; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NFDpA2JO"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235d6de331fso7696535ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:49:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QpMq05/2"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23602481460so6727475ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749714554; x=1750319354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SPFuYxHVFr0kVDYRfxXF8FfjITbYZAv5cDjlCNLKod8=;
-        b=NFDpA2JO8PIP5SmVdoy76mqnrIt4Oq81UpJeJJSq7nqaIfw0IWcT41ahDFrE4mMO5S
-         n6V0i0bccqqEket+xrgOAbL3CB4KFIfMA88ti/dWqoi0NUFuvNB2KzgDIxwe5R+vur2n
-         KVKMSI2MOykzDPJhMICsGs4BsKUs0NhgnZV4c=
+        d=chromium.org; s=google; t=1749714560; x=1750319360; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hYQyoxfiAVqopjQvGW02GMsvVlG13E9Tz7Vl2Ymi3WE=;
+        b=QpMq05/2z0Omoetd1k2lkYpR5mgNnSVKYnFD96tlVCx3UOsgllXd/gTeyw2iLXoGsg
+         PQfj4eTdL0UiPNTFYIkujWcpQUV1SfJ9EdRsdSk9bKe9QeX8xqR0YTzTUJCiDiZ7mHqJ
+         xUn9fp6+ytjSwG44KQ0/ve6hmOhsBzJw8UsoY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714554; x=1750319354;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SPFuYxHVFr0kVDYRfxXF8FfjITbYZAv5cDjlCNLKod8=;
-        b=fwyhRvr3i1HJYNpXob0qlrIq5YycxoWwQchIWtX7eDEtzUVUo+wIoyQ+aga0+1zPWK
-         VmK3CzcUpTV3hg0SyDRCI1Qpv2lUUM3wu0ZHSyEx2MtsyYO5SziOOudTNbyReXYLaZ5r
-         YQFXO4dzoxWb9dLXvK4dYSl+b33gpHHyYsVm9dTqpzs5+FPXUnA2CuXJ9KDhstytRWHe
-         AIF2S2hLQ4uhhINS/vW6tDvxnUm1eVM1mcx4oCLz/Y1QZUfhGhDb/D8dal7Q0cMj6wTX
-         eysy84mtZRMynHEgBRmgW3Hk0FgDqOT1KVSfwjTXlwIy89C2ZiKCbGRqmMw7aoMhFdA+
-         Fkww==
-X-Forwarded-Encrypted: i=1; AJvYcCVyfUEOoorPuf7tJ1wWzSmQVk5AN0fSgAb5O8VmOZKg+VfDJQHdKnbK4uh2xAEmT4QbGO7zBZPh+DI5U7A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzdd/DutVz5SHeiw42qEGLg3eLvMAPNAeYsHHWBnv6f9EfRwi5C
-	TMgmtjTS3kbynttN7qR+FumjR1yE2S88zKV8bXfoyxNauWJbgPNc4YaHKqERy7p7bQ==
-X-Gm-Gg: ASbGncsQgnakmScZh1mrlWIW+hAB5WFCIi8iUIno1FVhPTpJIamAdlQCUuvB9/7akWW
-	ekMfvw3kxJaSKL1iHvYa+ODP4ko7rr1KO3i+EWyozZ+BzkWNz5i0cVRtECcb6CdymVP0RFk8/gP
-	CogDGbSbBGN1eKmM2OEY8kE5E3/WxO6GoOH+IuZwgMPBvb5PnvMipkqB8sURedrHrBDjeeHUOGi
-	a4r2LTmfLRkJVre0kp17ggYOuun637G4EU8SnwAUh2bDPY2rz1TgNOOizWkJR3cumAk7P/nuXNM
-	9+2x+PPWQz9vGuZol2O8DR6Q6nIxJcCm5tqxhA/A8bUmXdlxip8hG9sv1BKxcIyoiWnTszhMQyo
-	w19g=
-X-Google-Smtp-Source: AGHT+IEL+zvm6Pa+DO1Fnyj+R5YFcjNFtCXH/bW/rjNfe9qMH6I9WeUJgnkT/5fLkDBtWeqN43Q0Rg==
-X-Received: by 2002:a17:903:1b4d:b0:234:8eeb:d809 with SMTP id d9443c01a7336-2364ca62bc0mr42902035ad.43.1749714553790;
-        Thu, 12 Jun 2025 00:49:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749714560; x=1750319360;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hYQyoxfiAVqopjQvGW02GMsvVlG13E9Tz7Vl2Ymi3WE=;
+        b=w8ntWw+Gf6fSfrTXwlM1xB7I5b+4+clOW0RnGGrfAqhTWV+q8SXBNnBYac9nBQUCN3
+         ncx+fNyzlpH/u1CRRznPdfgdvTZq44cjE13hZJGBtPKqgUAv5cK3ubvb2eeixzxng3/m
+         dSv4RBeNc/rRGxg94UGqC+npmOUOswrCPgQFQRkOscDVs5Bsy48Mwc6t0vA+xydVuAeN
+         oBjEwz/80R2x/QotCtAhDqWlsrH7NVco8TSKKzZEVmynvUZQ9LZlbmnNi+eepl4J+onD
+         6xqgGZvaSJ7zJsRvtblEs3c9J73ENx73Rfg79Xtgo9Vn/GYnSRi7k9DXTe1YX9zi7V5T
+         r8Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUcC2szhxK3UDrX9zObWll9FbYMZcKGGNnnoOfaCo8vhWvH9rJ0aAmJ2PnUIcIXWTwKLq126xgJRfyDTI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxvaw+RmoxTvTjdk0ifpa2i2082r9bZiOmX/ZRD+HA2Br3unGAp
+	XPI1uNfG5HBg7bGNPqgFpJVwqEClHb2Gz0CUA7x/nn6xg/pPgYGQPlNMi4NUUwF3xg==
+X-Gm-Gg: ASbGncu/ZjVOVV1Z3Ftn+0UivumTvJUTH1v0rzQGIyXUhE2qYYMFodG81OT6SSzoFC7
+	ghyiELi7ytIvT7NE67dWa8X0nl6GwaILhS3n+FhOZ+JohOYK4aR9g+spiT7g0Gygd46/yFLD3eZ
+	fC9ICblXoy2HtgGiqaaduIfKxRsnD4YkODaCcx/+GYdMphAChurkEWsszlRFxCHaj1seaTo4QJ+
+	36H/gMSD1OFwerIxymbKOZ6ScRPr0fqhiTIZBoorIafpdYP2ZOgNX8GQEsTY9Zl9Rk8O1U8pVl0
+	D7BV0qAeQ2D0KrPawfZnfH2Brotb0dSGASCiQu+fnbDd8WigDMBRrWcJEGAu/ucOIV1eMBKnl0M
+	xLwg=
+X-Google-Smtp-Source: AGHT+IFaK/aSeTPU1FVSUiJwy75RRBlflMYnV4oLKYPHyMqt0+SId2lcqzKkgBqwPYhNLtKoxyy+Ag==
+X-Received: by 2002:a17:902:d60d:b0:223:4537:65b1 with SMTP id d9443c01a7336-23641b28de4mr102187465ad.36.1749714560273;
+        Thu, 12 Jun 2025 00:49:20 -0700 (PDT)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:5b9:e73a:2e58:5a47])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e63d42esm7893295ad.74.2025.06.12.00.49.10
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e63d42esm7893295ad.74.2025.06.12.00.49.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 00:49:13 -0700 (PDT)
+        Thu, 12 Jun 2025 00:49:19 -0700 (PDT)
 From: Chen-Yu Tsai <wenst@chromium.org>
 To: Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>
@@ -70,10 +72,12 @@ Cc: Chen-Yu Tsai <wenst@chromium.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/9] ASoC: mediatek: use reserved memory or enable buffer pre-allocation
-Date: Thu, 12 Jun 2025 15:48:51 +0800
-Message-ID: <20250612074901.4023253-1-wenst@chromium.org>
+Subject: [PATCH v3 2/9] ASoC: dt-bindings: mt8173-afe-pcm: Add power domain
+Date: Thu, 12 Jun 2025 15:48:53 +0800
+Message-ID: <20250612074901.4023253-3-wenst@chromium.org>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+In-Reply-To: <20250612074901.4023253-1-wenst@chromium.org>
+References: <20250612074901.4023253-1-wenst@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,104 +86,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi everyone,
+The audio subsystem sits under a controllable power domain.
 
-This is v3 of what was just a single patch "ASoC: mediatek: re-enable
-buffer pre-allocation on some platforms". Links to previous versions:
+Add it to the binding.
 
-  - v2: https://lore.kernel.org/all/20250424102509.1083185-1-wenst@chromium.org/
-  - v1: https://lore.kernel.org/all/20250401085659.1222008-1-wenst@chromium.org/
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+ .../devicetree/bindings/sound/mediatek,mt8173-afe-pcm.yaml  | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-v3 is simply a rebase onto next-20250612 to resolve conflicts against
-Mark's tree. I believe the main conflict is from my other series
-"mt8183-afe-pcm: Shorten source code" that Mark had merged earlier.
-Also, Angelo picked up the DT changes, so they are no longer included.
-
-
-Original cover letter:
-
-Angelo requested that these platforms use reserved memory regions if
-possible, and fall back to pre-allocated buffers only if that fails,
-to align with other MediaTek SoCs / platforms that already use reserved
-memory. The series covers MediaTek's MT8173, MT8183, MT8186, and MT8192
-SoCs.
-
-There are three parts to the series:
-
-- Part one (patches 1 through 5) update the DT bindings to allow having
-  a memory region. The text binding for the MT8173 was converted to YAML
-  and also aligned with current usage by addition of a power domain.
-
-  Note that the MT8183 text binding was _not_ converted. It is
-  drastically different from what was landed in the device trees. Some
-  time is needed to work out the differences. I might try to recombine
-  the audio clocks (which are actually part of the same hardware block)
-  as well.
-
-- Part two (patches 6 through 9) update the audio frontend drivers for
-  the various platforms covered in this series.
-
-  - Patch 6 is the evolution of version 1, now defaulting to reserved
-    memory if possible.
-
-  - Patch 7 adds support for >32 bit DMA addresses to the MT8183 driver.
-    This was missing, and prevents the memory regions, which are
-    allocated from the top end of main memory by default, from working.
-
-  - Patch 8 and 9 are just some minor cleanups to reduce the number of
-    "&pdev->dev" style dereferences. They are placed after the other
-    changes to make it easier for the fixes to be backported.
-
-- Part three (patches 10 through 13) add a reserved memory region for
-  the audio frontend on the various platforms. (This part is queued up
-  and therefore not included in v3.)
-
-  For the MT8173, the change covers the whole platform. In practice
-  there are only ChromeOS devices.
-
-  For the other platforms, only the ChromeOS devices are covered. These
-  are what I have available for testing.
-
-
-Please have a look. I assume the DT binding and driver changes will go
-through the ASoC tree, while the device tree changes will go through the
-MediaTek tree.
-
-
-Thanks
-ChenYu
-
-
-Chen-Yu Tsai (9):
-  ASoC: dt-bindings: Convert MT8173 AFE binding to dt-schema
-  ASoC: dt-bindings: mt8173-afe-pcm: Add power domain
-  ASoC: dt-bindings: mt8173-afe-pcm: Allow specifying reserved memory
-    region
-  ASoC: dt-bindings: mt8186-afe-pcm: Allow specifying reserved memory
-    region
-  ASoC: dt-bindings: mt8192-afe-pcm: Allow specifying reserved memory
-    region
-  ASoC: mediatek: use reserved memory or enable buffer pre-allocation
-  ASoC: mediatek: mt8183-afe-pcm: Support >32 bit DMA addresses
-  ASoC: mediatek: mt8173-afe-pcm: use local `dev` pointer in driver
-    callbacks
-  ASoC: mediatek: mt8183-afe-pcm: use local `dev` pointer in driver
-    callbacks
-
- .../sound/mediatek,mt8173-afe-pcm.yaml        | 98 +++++++++++++++++++
- .../bindings/sound/mt8186-afe-pcm.yaml        |  5 +
- .../bindings/sound/mt8192-afe-pcm.yaml        |  5 +
- .../devicetree/bindings/sound/mtk-afe-pcm.txt | 45 ---------
- .../mediatek/common/mtk-afe-platform-driver.c |  4 +-
- sound/soc/mediatek/common/mtk-base-afe.h      |  1 +
- sound/soc/mediatek/mt8173/mt8173-afe-pcm.c    | 66 +++++++------
- sound/soc/mediatek/mt8183/mt8183-afe-pcm.c    | 56 +++++++----
- sound/soc/mediatek/mt8186/mt8186-afe-pcm.c    |  7 ++
- sound/soc/mediatek/mt8192/mt8192-afe-pcm.c    |  7 ++
- 10 files changed, 200 insertions(+), 94 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8173-afe-pcm.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/mtk-afe-pcm.txt
-
+diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8173-afe-pcm.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8173-afe-pcm.yaml
+index a95215ba6361..666408d32f5c 100644
+--- a/Documentation/devicetree/bindings/sound/mediatek,mt8173-afe-pcm.yaml
++++ b/Documentation/devicetree/bindings/sound/mediatek,mt8173-afe-pcm.yaml
+@@ -45,12 +45,16 @@ properties:
+       - const: i2s3_m
+       - const: i2s3_b
+ 
++  power-domains:
++    maxItems: 1
++
+ required:
+   - compatible
+   - reg
+   - interrupts
+   - clocks
+   - clock-names
++  - power-domains
+ 
+ additionalProperties: false
+ 
+@@ -59,11 +63,13 @@ examples:
+     #include <dt-bindings/clock/mt8173-clk.h>
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/power/mt8173-power.h>
+ 
+     mt8173-afe-pcm@11220000 {
+         compatible = "mediatek,mt8173-afe-pcm";
+         reg = <0x11220000 0x1000>;
+         interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_FALLING>;
++        power-domains = <&spm MT8173_POWER_DOMAIN_AUDIO>;
+         clocks = <&infracfg CLK_INFRA_AUDIO>,
+                  <&topckgen CLK_TOP_AUDIO_SEL>,
+                  <&topckgen CLK_TOP_AUD_INTBUS_SEL>,
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
