@@ -1,128 +1,153 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA31C242D63;
-	Thu, 12 Jun 2025 13:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4C2245023;
+	Thu, 12 Jun 2025 13:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734707; cv=none; b=jJpnLuseY3YSi7e1X0VjCgk680Udt5nAODZthsp5LYgDD3D5gRbSNilcmoPpfuo0K55K+NdWY5Ew6++CBYDwMxuQnBIIkyzUCN+vy3jCQ7R5B0WUPoLwqjOac6EblNdHWJZ0KmZVe2oRrOi+s3xtUCiKYJEZROByUKz68ZwjCZc=
+	t=1749734720; cv=none; b=L7X2MEVJLTnJ1H2UWGhlvR4XB69YZu7bbZ89gztA1hx+BsXwSg7c/FYKAJxaSMsMELXjdyKj0nj0DSM6KXCHcPtJ3+pruuktJQ9W4389L9vesI6QmOLLNiba7pGDr2Gbn0RiGADPfpU+h3N4/EfzbsPNTf745Dk/35Ov1MLuvUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734707; c=relaxed/simple;
-	bh=IqqMPWUk2v+uBcqO5EM/Ty1qGKfeCbv7fRGmGpsEBz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bdkG1RN6I1G1DfAkIj/jG0FnKZoob1GY88Cp+D1GA17p6faMz5aroEzByfVSbjGFUYoLlbp9lAtHrC9tUJWusGS8HpW1r21v6jM+AlFf0qhBS2RfQdl7oMfRshD4Trd8GK26+A6L8AqLe7IioIVju5FRnlN+JYqsQZkFu8tXwNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MYnMjsV0; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749734720; c=relaxed/simple;
+	bh=UYi8yaa4IpCW+5RfkUS3FLlv0ptEwqridhTpzFcNsSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IAifvedn8zzd4uczLoXqyMxtYGmaesJM/4Zlp39dIi+eILFZ2KKAtywcEjh3/GoNu3sIW3ABppuHUfbzdmXy9/vTAYSaSObUjhcRQTesUYdDvcmtKzQUk4lEgzBF0uwClMzB6bbzYGpI7DupfgE+MSUpHWn4adsCs2AIlrrklUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZlIqWZ4D; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYnMjsV0"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45310223677so7979515e9.0;
-        Thu, 12 Jun 2025 06:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749734704; x=1750339504; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BZMLBIoT9gJSSjfo3bjWT2EO/rqNo4VRFJWQeolqXMA=;
-        b=MYnMjsV0qKnRjk9/VCnD8eDK0E/q2b0JSo46N1zOBLELR1dt0fzgULEv+H8w6D1ZSl
-         fq4+IeofIasVEXLdXSsrSja3PCwes8qN/Qt7PSpp8OFS14lvVF8yifQ0pl5NFCa9Ld8g
-         HBFXkQBsdppT5NKgvr/hZnjKLl5voIBMH6wCSbz0cpKoFAl8ZTnJ5LbGDu/1XILaDQJD
-         fBnaSrTiGWVFDdC3ICcwem3D/LhS4NLDq7CbX1KCMvr5C51xp/bPx4QEQ5lJXNeR/SdP
-         n3y+LsD9uXLHvrOb2bgKi5SZSyWJOb6sNCf7bKIr6v2KSS5X6j2pKGvtl+/6FGOKHvy5
-         Et/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749734704; x=1750339504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BZMLBIoT9gJSSjfo3bjWT2EO/rqNo4VRFJWQeolqXMA=;
-        b=VYN4nvCREMKY2TKtwdVdvbLQBYFu4voWy0O1bLBHc3VCKdhYtttlUW+OFGkDPU2/77
-         FOaYV5U7A41jNBAPjuGh0vpitkyQgDgBIp3CBEceVWXHxJep+o8bUjeh4SLsd/6uQn2v
-         n9r+QprQEIc6MvlOMPHRZBouWT19MAn92fL+blA2vpGJGwCuqba4X6uzbwiwvtGdyT4e
-         lwd9DbAMY+M9qq7q6XJ4hXY/ogpsDsoO2fmsOjZvIOFrJ8LyCVcHJ7i8X/iPbDSHBwoe
-         Az8/qnQNaW6cxVTbmwmKVRXIqdE1KYeG17DC3of/Md2WkvWYCKDDA3tsNutcpXnTx2pW
-         CLZw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/Tz9y3nFdVsR+OUnCvelTbpFYnqY4sonADRR5KhrMrNuLh7mQlc0ng3PvJuzmTfhoi86qenMpB0JVbuQf@vger.kernel.org, AJvYcCX4g/JeEgpVtNetxA0YqaKOlHF5Tju81VjvFwF7zVmVaWU/MCK4Z2XMX+/eItB6bG5c3TG1nnCu80wd@vger.kernel.org, AJvYcCXMHjzFT3kDBT23W+dM5MDXvX0GH8DsTfqkfsy+2AyF5uPwydEyOB1hLw0OQv1igqQ60zNpeM850kkVDzmcwtLFJw0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMSdHsWwhfNDgMiKKWAJ1xzBV4LwP4Gu8hLA13230lVHEGxlJ/
-	Gy5ESpKc3kSUitqDqIQw+mfW5QlALPyhznM2VV05I8/YLtkPzer7mrMNxPt9gqlL/dL+vtxMtZy
-	gTDCS5pVNhbbS6TVQJTbqLtpKk4TALF8=
-X-Gm-Gg: ASbGncsd/S/thsrtoiPfTJIqawvz5DZbp94ZloFhBghcf3XKVd0uQ34hb4WuUu1veWX
-	A1h2Hge2c8d5Kv+Mc3YHORiUTPnDpz4Z7BrwjlT9p7QjDqrE5EVA9hVBB3KWnbXTY+gDDcgP0zq
-	0r0BBfJ34xBjwLS6EDwfD4wmwc603jlwNwLpJN10/7m3iqYw==
-X-Google-Smtp-Source: AGHT+IGojv7wi+EXgUrJ1iAcaQXcq2yh/a6c2FWgiCP1FdZTWn9scfT0ormpQqL7u63zFto7esDU9JQ3yZ95W1IoapU=
-X-Received: by 2002:a05:6000:420e:b0:3a4:fcc3:4a14 with SMTP id
- ffacd0b85a97d-3a5612dc4edmr2358774f8f.34.1749734703859; Thu, 12 Jun 2025
- 06:25:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZlIqWZ4D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749734719; x=1781270719;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=UYi8yaa4IpCW+5RfkUS3FLlv0ptEwqridhTpzFcNsSI=;
+  b=ZlIqWZ4D9P6prEVmuPcuo8mpVkdawxUSZtDs2TqVlflMNVOtlk74E0lk
+   /YL7FcAJQLQrT38XycfuF8G0oiupdmzHw/eyET+e7QNWKSu9uI4tGevK8
+   xWZRRYvihISvb0YEAvLrNWKcyiozj+gDA5BMdJ7a79jHTQM3Oqywgtgf+
+   nkDCuWjqt61cti15izyfGaa1X8Tl6YI0csJue3IMBchu9txqMvlStdXGx
+   RMcqir4vn+CZTfq0U0zn7qMKCxQUVYXZc+EkM89Go5gqMpr4IOaDu/6Yg
+   J7aicyS7K0w+qd1GEwZNTkb95eBU1WIesQd4UPGxzn6GOGDDu+fuhNqX6
+   g==;
+X-CSE-ConnectionGUID: z6RJD09wRXKDnfvKahSLXg==
+X-CSE-MsgGUID: qdL1JyHURqGmo2H8o17Dzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55588367"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="55588367"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:25:01 -0700
+X-CSE-ConnectionGUID: zRqJAooVTe+FH9SoJH/aWg==
+X-CSE-MsgGUID: 1vMdLySZTHWhYthCeGvHQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="152509112"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP; 12 Jun 2025 06:24:56 -0700
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/4] i2c: designware: Add quirk for Intel Xe
+Date: Thu, 12 Jun 2025 16:24:47 +0300
+Message-ID: <20250612132450.3293248-2-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250612132450.3293248-1-heikki.krogerus@linux.intel.com>
+References: <20250612132450.3293248-1-heikki.krogerus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528140453.181851-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250528140453.181851-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVa4axB+aKhH18KxK4DVafeix6wn407PEhMxV_6xfpraA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVa4axB+aKhH18KxK4DVafeix6wn407PEhMxV_6xfpraA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 12 Jun 2025 14:24:37 +0100
-X-Gm-Features: AX0GCFtWM9emtIyXyU7iiWJWdsMZ7qy_zlJ1u6yeICmsB6pfXTrDdlaHSfP6HUA
-Message-ID: <CA+V-a8stpis6RuFZ8X+g=nnQhQQNJN8X8kpma6kf2Hmi+3hf4w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable
- USB2.0 support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Geert,
+The regmap is coming from the parent also in case of Xe
+GPUs. Reusing the Wangxun quirk for that.
 
-Thank you for the review.
+Originally-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+---
+ drivers/i2c/busses/i2c-designware-platdrv.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-On Thu, Jun 12, 2025 at 1:49=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, 28 May 2025 at 16:05, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Enable USB2.0 support on the RZ/V2N EVK board, CN2 connector on the EVK
-> > supports host/function operation.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-> > +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-> > @@ -302,6 +317,16 @@ sd1-dat-cmd {
-> >                         slew-rate =3D <0>;
-> >                 };
-> >         };
-> > +
-> > +       usb20_pins: usb20 {
-> > +               ovc {
-> > +                       pinmux =3D  <RZV2N_PORT_PINMUX(9, 6, 14)>; /* O=
-VC */
->
-> Any specific reason why OVC needs "bias-pull-up" on RZ/V2H EVK, but
-> not on RZ/V2N EVK?
->
-On the RZ/V2N EVK for the USB20_OVRCUR pin we have R13110K0603 pullup
-resistor, this was missing on the earlier version of the RZ/V2H EVK
-due to which we saw false OC condition (as seen below). Said that the
-actual EVKs for RZ/V2H for which support is being added do have this
-pullup resistor. After testing I will post a patch to drop the
-`bias-pull-up` property from the RZ/V2H DTS (thanks for reminding me
-:-)).
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 879719e91df2..a35e4c64a1d4 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -101,7 +101,7 @@ static int bt1_i2c_request_regs(struct dw_i2c_dev *dev)
+ }
+ #endif
+ 
+-static int txgbe_i2c_request_regs(struct dw_i2c_dev *dev)
++static int dw_i2c_get_parent_regmap(struct dw_i2c_dev *dev)
+ {
+ 	dev->map = dev_get_regmap(dev->dev->parent, NULL);
+ 	if (!dev->map)
+@@ -123,12 +123,15 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
+ 	struct platform_device *pdev = to_platform_device(dev->dev);
+ 	int ret;
+ 
++	if (device_is_compatible(dev->dev, "intel,xe-i2c"))
++		return dw_i2c_get_parent_regmap(dev);
++
+ 	switch (dev->flags & MODEL_MASK) {
+ 	case MODEL_BAIKAL_BT1:
+ 		ret = bt1_i2c_request_regs(dev);
+ 		break;
+ 	case MODEL_WANGXUN_SP:
+-		ret = txgbe_i2c_request_regs(dev);
++		ret = dw_i2c_get_parent_regmap(dev);
+ 		break;
+ 	default:
+ 		dev->base = devm_platform_ioremap_resource(pdev, 0);
+@@ -205,25 +208,28 @@ static void i2c_dw_remove_lock_support(struct dw_i2c_dev *dev)
+ 
+ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ {
++	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
+ 	struct device *device = &pdev->dev;
+ 	struct i2c_adapter *adap;
+ 	struct dw_i2c_dev *dev;
+ 	int irq, ret;
+ 
+-	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0)
++	irq = platform_get_irq_optional(pdev, 0);
++	if (irq == -ENXIO)
++		flags |= ACCESS_POLLING;
++	else if (irq < 0)
+ 		return irq;
+ 
+ 	dev = devm_kzalloc(device, sizeof(*dev), GFP_KERNEL);
+ 	if (!dev)
+ 		return -ENOMEM;
+ 
+-	dev->flags = (uintptr_t)device_get_match_data(device);
+ 	if (device_property_present(device, "wx,i2c-snps-model"))
+-		dev->flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
++		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
+ 
+ 	dev->dev = device;
+ 	dev->irq = irq;
++	dev->flags = flags;
+ 	platform_set_drvdata(pdev, dev);
+ 
+ 	ret = dw_i2c_plat_request_regs(dev);
+-- 
+2.47.2
 
-[    2.672424] usb usb3-port1: over-current condition
-[    2.792424] usb usb4-port1: over-current condition
-
-Cheers,
-Prabhakar
