@@ -1,143 +1,87 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDCC1F92E;
-	Thu, 12 Jun 2025 09:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B59F1F92E;
+	Thu, 12 Jun 2025 09:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749721573; cv=none; b=qtVsP2w2h/ZdvcORkWO9WTUcYIoQUSUUaoyMAj83KwP3CyvWZF2fPp37Xh11iQ0hDGK6wWXp/rosB3TSYzVpBQUBpUwu6gIGiThBYQHU/qm9tCb1EW42PE0kRkI5FdUydbkf+VO6ITi/V4yZFZcSZSpsHAtmnNDryc03PJw5e6Q=
+	t=1749721619; cv=none; b=qKaALhyxqLhpbLWpX63FeXOJ/ZVYedpFEj+Y+5nWDyT80iQaq7T6VlUV0U/lnQR3e5Oj7iD3v8C0VWsYCz9a7qg/+MDrWuELz1tuCb+oaWSz4bBZ+mBs0+1oPMogT2u58bPO/FOeEAl2wBJUhby7MduvAsFV3GlPnFuxj1fv/hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749721573; c=relaxed/simple;
-	bh=Dh0E6ChvgZtODSm2CyrhYN1/rcw1qbw6D7lUcqZQoPI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B9Ueg86MPA9q2FzX5t47mmYMDu8/Ln7aNYXnWy9qXqZRVljltXecJVGNUX8gJiaC0lNYNAhDxC6Eqd47bdqhIQd6ov8o+n9HqPNvlfFGsi384A1oFdaplb3OVwfzLHp/leLYYmrjHiT1qo1yWQ7IjJJwll14rqsixMp+nIgxarg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SBKpd59Z; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749721619; c=relaxed/simple;
+	bh=R+bE56ypbZBkGlHIlv3Cr3WEiW5cqDAMlUzTaz9EWiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3+FvLZGQOuopgC4NOe+MV8rvdwePSo4lwlbJmSy4yhl9fh9tLXOPa2OGYM8UBZVZL1unWPCInpN72QevGMdoik195SdWHmNh8LFRr0nNooQ4hIInSnfuBIr7lTXlVNGEOOPFaiVNOjPZvNvIltlg3Ym/b6uZ69oVVvIyYeip80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XXuVRmap; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SBKpd59Z"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C9jRZX1635161;
-	Thu, 12 Jun 2025 04:45:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749721527;
-	bh=1wGCQc0mcjPV9WgUkNTeUr3SyYHwhLuPypKWT3sxnDM=;
-	h=From:To:CC:Subject:Date;
-	b=SBKpd59ZfkK9r8jsdEr/Qis3VM6MSHyCwkYAyVVxxkHKaiYT263Q39aEo0HB8jbxL
-	 Xyp4KaI/iG+HKlysjnGrKMt0Znr+MLgkMUrJGVSe7CPLnGnD6Yo6OK+svo8aTbvtz8
-	 diFfqWDvjpAdBk1zeHlxnzBedKBTMiNlD56ACPrQ=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C9jRrE1841138
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 12 Jun 2025 04:45:27 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
- Jun 2025 04:45:27 -0500
-Received: from fllvem-mr07.itg.ti.com (10.64.41.89) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 12 Jun 2025 04:45:27 -0500
-Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
-	by fllvem-mr07.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C9jRVC490857;
-	Thu, 12 Jun 2025 04:45:27 -0500
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 55C9jP8J021791;
-	Thu, 12 Jun 2025 04:45:26 -0500
-From: Meghana Malladi <m-malladi@ti.com>
-To: <namcao@linutronix.de>, <m-malladi@ti.com>, <john.fastabend@gmail.com>,
-        <hawk@kernel.org>, <daniel@iogearbox.net>, <ast@kernel.org>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
-        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, <danishanwar@ti.com>
-Subject: [PATCH net] net: ti: icssg-prueth: Fix packet handling for XDP_TX
-Date: Thu, 12 Jun 2025 15:15:23 +0530
-Message-ID: <20250612094523.1615719-1-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XXuVRmap"
+Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 41C42B5;
+	Thu, 12 Jun 2025 11:46:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749721605;
+	bh=R+bE56ypbZBkGlHIlv3Cr3WEiW5cqDAMlUzTaz9EWiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XXuVRmapqT6rFu40ersf+ioMHVvW0neoj2B7NpA5dCSMpojWoK+uAm+t6CUeNSKo3
+	 xDYCX65+/4YjwRs9GwmopkEDuJM70qhbsPpcoe8RhGFtXFkSQ+S6gvSA8CD1NMXIiL
+	 EUekjF5daoJb+9gEIEacJRwyuxlv0+NAVATCXO+s=
+Date: Thu, 12 Jun 2025 11:46:50 +0200
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, 
+	LUU HOAI <hoai.luu.ub@renesas.com>
+Subject: Re: [PATCH 2/3] media: vsp1: Reset FCP for VSPD
+Message-ID: <4ieuh56kqcx47mqcp3m3gwusazyklsm73cftkb5cxry5en2gh2@rrsjmkd5qwcz>
+References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
+ <20250609-vspx-reset-v1-2-9f17277ff1e2@ideasonboard.com>
+ <20250611232956.GQ24465@pendragon.ideasonboard.com>
+ <CAMuHMdVU0JJDff539YBMhM8xNQVf5Ufiw1D9TXitzsGWXPBMAg@mail.gmail.com>
+ <20250612093757.GA4533@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250612093757.GA4533@pendragon.ideasonboard.com>
 
-While transmitting XDP frames for XDP_TX, page_pool is
-used to get the DMA buffers (already mapped to the pages)
-and need to be freed/reycled once the transmission is complete.
-This need not be explicitly done by the driver as this is handled
-more gracefully by the xdp driver while returning the xdp frame.
-__xdp_return() frees the XDP memory based on its memory type,
-under which page_pool memory is also handled. This change fixes
-the transmit queue timeout while running XDP_TX.
+Hi
 
-logs:
-[  309.069682] icssg-prueth icssg1-eth eth2: NETDEV WATCHDOG: CPU: 0: transmit queue 0 timed out 45860 ms
-[  313.933780] icssg-prueth icssg1-eth eth2: NETDEV WATCHDOG: CPU: 0: transmit queue 0 timed out 50724 ms
-[  319.053656] icssg-prueth icssg1-eth eth2: NETDEV WATCHDOG: CPU: 0: transmit queue 0 timed out 55844 ms
-...
+On Thu, Jun 12, 2025 at 12:37:57PM +0300, Laurent Pinchart wrote:
+> On Thu, Jun 12, 2025 at 11:33:39AM +0200, Geert Uytterhoeven wrote:
+> > On Thu, 12 Jun 2025 at 09:19, Laurent Pinchart wrote:
+> > > On Mon, Jun 09, 2025 at 09:01:43PM +0200, Jacopo Mondi wrote:
+> > > > From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+> > > >
+> > > > According to H/W manual v1.00, VSPD must be excecuted
+> > > > FCP_RST.SOFTRST after VI6_SRESET.SRST. So this patch adds it.
+> > > > VSPDL is not applicable.
+> > >
+> > > According to the R-Car Gen3 H/W manual v1.00, the FCP must be reset
+> > > after resetting the VSPD, except for the VSPDL. Do so.
+> >
+> > "Rev.1.00"
+> >
+> > Stil, that is a very old version. "Rev.2.40" is 6 years younger...
+>
+> The good thing is that both document the reset procedure the same way
+> :-)
 
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
----
- drivers/net/ethernet/ti/icssg/icssg_common.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+I didn't want to modify Matsuoka-san original commit message, but if
+it's appropriate to do so I will
 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index 5b8fdb882172..12f25cec6255 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -98,20 +98,11 @@ void prueth_xmit_free(struct prueth_tx_chn *tx_chn,
- {
- 	struct cppi5_host_desc_t *first_desc, *next_desc;
- 	dma_addr_t buf_dma, next_desc_dma;
--	struct prueth_swdata *swdata;
--	struct page *page;
- 	u32 buf_dma_len;
- 
- 	first_desc = desc;
- 	next_desc = first_desc;
- 
--	swdata = cppi5_hdesc_get_swdata(desc);
--	if (swdata->type == PRUETH_SWDATA_PAGE) {
--		page = swdata->data.page;
--		page_pool_recycle_direct(page->pp, swdata->data.page);
--		goto free_desc;
--	}
--
- 	cppi5_hdesc_get_obuf(first_desc, &buf_dma, &buf_dma_len);
- 	k3_udma_glue_tx_cppi5_to_dma_addr(tx_chn->tx_chn, &buf_dma);
- 
-@@ -135,7 +126,6 @@ void prueth_xmit_free(struct prueth_tx_chn *tx_chn,
- 		k3_cppi_desc_pool_free(tx_chn->desc_pool, next_desc);
- 	}
- 
--free_desc:
- 	k3_cppi_desc_pool_free(tx_chn->desc_pool, first_desc);
- }
- EXPORT_SYMBOL_GPL(prueth_xmit_free);
-@@ -612,13 +602,8 @@ u32 emac_xmit_xdp_frame(struct prueth_emac *emac,
- 	k3_udma_glue_tx_dma_to_cppi5_addr(tx_chn->tx_chn, &buf_dma);
- 	cppi5_hdesc_attach_buf(first_desc, buf_dma, xdpf->len, buf_dma, xdpf->len);
- 	swdata = cppi5_hdesc_get_swdata(first_desc);
--	if (page) {
--		swdata->type = PRUETH_SWDATA_PAGE;
--		swdata->data.page = page;
--	} else {
--		swdata->type = PRUETH_SWDATA_XDPF;
--		swdata->data.xdpf = xdpf;
--	}
-+	swdata->type = PRUETH_SWDATA_XDPF;
-+	swdata->data.xdpf = xdpf;
- 
- 	/* Report BQL before sending the packet */
- 	netif_txq = netdev_get_tx_queue(ndev, tx_chn->id);
+Thanks
+  j
 
-base-commit: 5d6d67c4cb10a4b4d3ae35758d5eeed6239afdc8
--- 
-2.43.0
-
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
