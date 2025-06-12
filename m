@@ -1,138 +1,172 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650641F03EF;
-	Thu, 12 Jun 2025 18:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50C91F03EF;
+	Thu, 12 Jun 2025 18:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749751971; cv=none; b=Au7FxnU6iIMKSkPoAyaQM6aNC2+ZK+JzCc2rdqFPcs8Ihn/WjEja4UuqkcYvI1L60+Wmn1vsTgDBSoYF3AY7ftCiQcgkAxkc8pHVCZhXPKkHM1kZmoT6eck4BNHuDeJC16bsOmbk2kMQDWUNCaWh5CcJ9ftUc+/RxpKFxlW7bcY=
+	t=1749752100; cv=none; b=XyEiI53ztLWkslVKj+bL6P8faQIlyqBjr8HK3zZ3HIERsE9DScyNNyv8CpL/bdIchAsH7Y2f6bBMJ9B5OPU+odf+CK0E/YGoNht4qOY+GdHVFdLxSJWH5LMp1tvWl3e35zA6iix0egTG3Mu/2wXiywiHHWBLOD70sN1VcSiNodk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749751971; c=relaxed/simple;
-	bh=W6hcqUdXy8CqRMhltXJvswv0y/Bk2o7f+pYcaBXuBZg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pcK4TqLpKdjQSFgHe9QEN0qBK2MFnK2yDeyoMZhWxm3+Wm6u0A+QtsyGrvQRdS/3F4onC+W4StA3cdHfOvXgSNqPgo0CD/Jyp9PU967qU/OG3rMUY64m0lCEkjPSNQU3E9c6OqMS0AaMI5ofhyECVix43vJf05C4/fa3BVtTCXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=MtqaZQgw; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1749752100; c=relaxed/simple;
+	bh=hHNRTNeRRwURj4qUEFDg68faIMn6MbkoXsjohNC0DzE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NxUEY64YLTVajEzVmSSITx4O5alQABuqEMWwS7F2MKSX0BmJ43/bn5XY8gM8jmpQunYcPZWy+z40HL5B/Q2QbHcvAjDDhW3DEiknoFjgC7gGl5lOHlXaNJBqWQjJEJ0aWxwvIVV6tXvK4QuntWsJj2kSl5CionVbuumYzGyn2g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJ21sGii; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MtqaZQgw"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55CICBwY3491064
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 12 Jun 2025 11:12:13 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55CICBwY3491064
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749751936;
-	bh=CYYqu6bI47VUkF0jgCUXpW0R05kZziYss1zdb1XWJdg=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=MtqaZQgwwSTYESgLIeefZRce7wvVmLCvsZx6xbjkmOE3wz7AGuz5J9f4YVsqXI2IK
-	 lA9jOB5aLDfpg3ZbOtI5VR9sB92FfKAEXzM7o3qGwnKpGoIv68DqP27tryPqE5x/3X
-	 xhC0BoI0jQIBBvd226m5UNdOb3fa+snGh2OOzPXoYHbLI7tvHCC0RulAebwSiWZuiM
-	 vuv6YMiAsderQ4zJoOiW1HXdC9UgKH5chFYCt+LIX6tpsJWMhqH2xLT1rdNUQqFT6Z
-	 NKFj2brOg6vphGmawPgV5oOs4GT9wc4p55MyNudNEfn997Vthx6mWXnHERZ4sn1ScP
-	 dWBbSxMaxQ9kA==
-Message-ID: <b65054ae-9bd8-4a7a-9554-a85eb4f445fc@zytor.com>
-Date: Thu, 12 Jun 2025 11:12:11 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJ21sGii"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e731a56e111so1222836276.1;
+        Thu, 12 Jun 2025 11:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749752097; x=1750356897; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7dGCBQnCx0nj6LJC8ipSZAzvXRddXH3Z76gYMfvl3qo=;
+        b=GJ21sGiiEI8CCLGV/1bzPt1ea24g2QpzmYzXuliIFKrPTakA+qJcRxpNN74RWgFAyz
+         G5mD/ubw0aIO1mFUdIVv6AnK2NBhL9+Zf2JcXAk1W0O0BK86BKkwI7zOzIogo1gPaeKz
+         FTvYd9ITd0m/HIwlxNrViA0XQpsK5rzDp/NZCRKcn/FwYpqnUMLD9wyR6sB8/bJlwH9Y
+         tn+9BQvEaBgHLEhT5D0c8844ap9Amo9Lyq/XarWlMa56VlQRk6Fi2d+aqyqYwCgj7EwP
+         dFkO38xRBN54QNc2AIwKU3GQSLMpI0df1kAzxxlk1YGenazjc16aC2QoQxOT92rtyKPn
+         Xo7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749752097; x=1750356897;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7dGCBQnCx0nj6LJC8ipSZAzvXRddXH3Z76gYMfvl3qo=;
+        b=l7wz6ETuTJLIGyWWRHPnI/SaD+jS/bWyPWq86FHqGIq4DE4lPUF4JHeN4UkwN50JC6
+         raCI1CO0Z11EHE2QuSN0crpu8w6mPOJZpd4fWsZjJf6rlbP4CzrVSz8CvfVyJQN0OAMr
+         crpozOWYn/z9B55b+sr0UKYrqgpxXGrxrNztN7oX9mZcGZtNFyuSZgkNLGGwmu+7FdCj
+         1qlMUw369vxq63QKfSDyGGCaR+qk5KGZVIwDmBQpoxZbGy/5jGNlxBrRo/I7FMpfQIl8
+         UMD5MEyM4CyRI/BoiAU0WWknTAt/ctfHNCub+lfnoPdeMFbmUNws/FeW6G/Snw3lYeUf
+         ovDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQo5xPAAvrYUGoRgwWl/qvSP1HZ+8pKZO6aRPEpH7hPTivMzC9SfbG1XGhTXbSHoKj4Kk6RvFCOJNk6OlP@vger.kernel.org, AJvYcCVSPIrkAOvbbqwTCGHGp5Uub6fmR5AZi6/MDoz7AQ360hbaxqID+Jhy/IdvRoJZX1VsZ/Tu1LuWK5g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAOXwfzBNhLl++y31X0I+AcmOn68BmuxyxFQqJnrk0QEy5V+VY
+	Ql4iOntx7PyCTvFK9+rYiDMhGQSH9jo/8OAwBhkIwPzfjZV9X0kyOXaY
+X-Gm-Gg: ASbGncvzDjbjBdgnibxsp22cKHzsu5BneX3Lu13KKprkIqE7kt7QAr9auyHNEdl0bKa
+	5fLc0Bj2RanlrkMlEc77gTbb0XrdG594/RxTd5Im89u8va08NMxivKTRxC3UqLLF9y294Gm4wPF
+	wrwVDn8sxwC1FaF5N444FsvWJ4mwC+vZaELLzBz4zpD4p+eBVA9KOm2is1EbBzyyIFuWtaW6eja
+	suYIsLPi/wrvCZol/PXd5rCgX3P0/mPD6cUL/16dspUfJ23Wi/vHGeLnZAEWy0kCQgaOmkt/HEY
+	vixopUrND8ixUKRG06XvUXA9PqbRmcX3BlOUDjkqCnRxGsc3qRCm4dbf6CTAP6p+HFl9M6bV9ZS
+	2ZDC1SXaejmJJ734reQ==
+X-Google-Smtp-Source: AGHT+IHuilM8OKD/FKaBak0BosxjVKmpehSXwuiIqtTuQ6Jsg2kCbvgxdn/IU8iSp6RJyUJ/a8SdjA==
+X-Received: by 2002:a05:6902:15c1:b0:e82:61:6536 with SMTP id 3f1490d57ef6-e821a74a74bmr951361276.7.1749752097431;
+        Thu, 12 Jun 2025 11:14:57 -0700 (PDT)
+Received: from bijan-laptop.attlocal.net ([2600:1700:680e:c000:dd1b:d4ae:15de:11db])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e820e312452sm592480276.40.2025.06.12.11.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 11:14:57 -0700 (PDT)
+From: Bijan Tabatabai <bijan311@gmail.com>
+To: damon@lists.linux.com,
+	linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: sj@kernel.org,
+	akpm@linux-foundation.org,
+	corbet@lwn.net,
+	david@redhat.com,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	bijantabatab@micron.com,
+	venkataravis@micron.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	vtavarespetr@micron.com
+Subject: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data across nodes
+Date: Thu, 12 Jun 2025 13:13:26 -0500
+Message-ID: <20250612181330.31236-1-bijan311@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Xin Li <xin@zytor.com>
-Subject: Re: [PATCH v4 0/2] x86/fred: Prevent single-step upon ERETU
- completion
-To: Sohil Mehta <sohil.mehta@intel.com>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        shuah@kernel.org, andrew.cooper3@citrix.com
-References: <20250605181020.590459-1-xin@zytor.com>
- <8264e653-6570-4c2a-a9a7-c4104da26f76@intel.com>
- <06e68373-a92b-472e-8fd9-ba548119770c@intel.com>
-Content-Language: en-US
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <06e68373-a92b-472e-8fd9-ba548119770c@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/5/2025 2:51 PM, Sohil Mehta wrote:
->>> Xin Li (Intel) (2):
->>>    x86/fred/signal: Prevent single-step upon ERETU completion
->>>    selftests/x86: Add a test to detect infinite sigtrap handler loop
->>>
->> I tested the patches on a machine that supports FRED. The results are as
->> expected:
->>
-> Seeing a split lock warning when running the test:
-> x86/split lock detection: #DB: sigtrap_loop_64/4614 took a bus_lock trap
-> at address: 0x4011ae
-> 
-> Wanted to get this out sooner for awareness. Will figure out more
-> details and send out an update.
+From: Bijan Tabatabai <bijantabatab@micron.com>
 
-We investigated this issue, and figured out the reason why we see a
-split lock warning when running the test:
+A recent patch set automatically set the interleave weight for each node
+according to the node's maximum bandwidth [1]. In another thread, the patch
+set's author, Joshua Hahn, wondered if/how these weights should be changed
+if the bandwidth utilization of the system changes [2].
 
-1) The warning is not caused by the test.
-2) It's a false warning.
-3) It happens even when bus lock detection (BLD) is not enabled.
-4) It happens only on the first #DB on a CPU.
+This patch set adds the mechanism for dynamically changing how application
+data is interleaved across nodes while leaving the policy of what the
+interleave weights should be to userspace. It does this by adding a new
+DAMOS action: DAMOS_INTERLEAVE. We implement DAMOS_INTERLEAVE with both
+paddr and vaddr operations sets. Using the paddr version is useful for
+managing page placement globally. Using the vaddr version limits tracking
+to one process per kdamond instance, but the va based tracking better
+captures spacial locality.
 
-The root cause is that Linux writes 0 to DR6 at boot time, which results
-in different values in DR6 depending on whether they support BLD or not.
+DAMOS_INTERLEAVE interleaves pages within a region across nodes using the
+interleave weights at /sys/kernel/mm/mempolicy/weighted_interleave/node<N>
+and the page placement algorithm in weighted_interleave_nid via
+policy_nodemask. We chose to reuse the mempolicy weighted interleave
+infrastructure to avoid reimplementing code. However, this has the awkward
+side effect that only pages that are mapped to processes using
+MPOL_WEIGHTED_INTERLEAVE will be migrated according to new interleave
+weights. This might be fine because workloads that want their data to be
+dynamically interleaved will want their newly allocated data to be
+interleaved at the same ratio.
 
-On CPUs that support BLD, writing 0 to DR6 sets DR6 to 0xFFFF07F0, i.e.,
-bit 11 of DR6, its BLD flag, is cleared.  Otherwise 0xFFFF0FF0.
+If exposing policy_nodemask is undesirable, we have two alternative methods
+for having DAMON access the interleave weights it should use. We would
+appreciate feedback on which method is preferred.
+1. Use mpol_misplaced instead
+  pros: mpol_misplaced is already exposed publically
+  cons: Would require refactoring mpol_misplaced to take a struct vm_area
+  instead of a struct vm_fault, and require refactoring mpol_misplaced and
+  get_vma_policy to take in a struct task_struct rather than just using
+  current. Also requires processes to use MPOL_WEIGHTED_INTERLEAVE.
+2. Add a new field to struct damos, similar to target_nid for the
+MIGRATE_HOT/COLD schemes.
+  pros: Keeps changes contained inside DAMON. Would not require processes
+  to use MPOL_WEIGHTED_INTERLEAVE.
+  cons: Duplicates page placement code. Requires discussion on the sysfs
+  interface to use for users to pass in the interleave weights.
 
-But Intel SDM says, other than BLD induced #DB, DR6.BLD is not modified.
-To avoid confusion in identifying debug exceptions, software debug-
-exception handlers should set bit 11 to 1 before returning.  DR6.BLD
-is always 1 if the processor does not support OS bus-lock detection.
+This patchset was tested on an AMD machine with a NUMA node with CPUs
+attached to DDR memory and a cpu-less NUMA node attached to CXL memory.
+However, this patch set should generalize to other architectures and number
+of NUMA nodes.
 
-Because Linux clears DR6.BLD on CPUs that support BLD at boot time, the
-first #DB will be INCORRECTLY interpreted as a BLD #DB, thus the
-warning, no matter whether BLD is enabled or not.
+Patches Sequence
+________________
+The first patch exposes policy_nodemask() in include/linux/mempolicy.h to
+let DAMON determine where a page should be placed for interleaving.
+The second patch implements DAMOS_INTERLEAVE as a paddr action.
+The third patch moves the DAMON page migration code to ops-common, allowing
+vaddr actions to use it.
+Finally, the fourth patch implements a vaddr version of DAMOS_INTERLEAVE.
 
-We will be working on a fix to initialize DR6 and DR7 with their
-architectural reset values instead of 0s.
+[1] https://lore.kernel.org/linux-mm/20250520141236.2987309-1-joshua.hahnjy@gmail.com/
+[2] https://lore.kernel.org/linux-mm/20250313155705.1943522-1-joshua.hahnjy@gmail.com/
 
-Thanks!
-     Xin
+Bijan Tabatabai (4):
+  mm/mempolicy: Expose policy_nodemask() in include/linux/mempolicy.h
+  mm/damon/paddr: Add DAMOS_INTERLEAVE action
+  mm/damon: Move damon_pa_migrate_pages to ops-common
+  mm/damon/vaddr: Add vaddr version of DAMOS_INTERLEAVE
 
+ Documentation/mm/damon/design.rst |   2 +
+ include/linux/damon.h             |   2 +
+ include/linux/mempolicy.h         |   2 +
+ mm/damon/ops-common.c             | 136 ++++++++++++++++++++
+ mm/damon/ops-common.h             |   4 +
+ mm/damon/paddr.c                  | 198 +++++++++++++-----------------
+ mm/damon/sysfs-schemes.c          |   1 +
+ mm/damon/vaddr.c                  | 124 +++++++++++++++++++
+ mm/mempolicy.c                    |   4 +-
+ 9 files changed, 360 insertions(+), 113 deletions(-)
+
+-- 
+2.43.5
 
