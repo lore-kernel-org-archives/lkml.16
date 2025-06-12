@@ -1,145 +1,298 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2074.outbound.protection.outlook.com [40.107.244.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB0824A066;
-	Thu, 12 Jun 2025 13:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734865; cv=none; b=jYVbTRHknZIP9+02bvxxvW/DGRlORPSwSImnZy/pt+tsWGjVm7f+qz2Heybk0nVSc5aNZtLATBrhf5crn64Z9ANQb1zUDk5Jke3Uvpt6GJfTfpF+G9zZhoyFIBdqTFekXlnSZ42yVjZHNntP/TUzfDzUUhSkBhSlgnPjs4vpilg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734865; c=relaxed/simple;
-	bh=2axOLzUf30BQP5kOoNmargzDJdFzgivypedmX5gDPFM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PsaS7r1Ybv9Zo/o/zO2zAZXxWCeDq01eXnCC/UDDsLA893sxSg6r/ey5KwaPP0CYqeitD2hmBwWDO2CP3C4dgxKaTBCNI1WOlMkPgz2g38NRTlFSJeDkB5DpeB2XZijXg5oW7svpXQ8NXPNrRLFgrN8ldZ3EBs1p7apPVqFmJn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bJ3HH5VrlzYQv41;
-	Thu, 12 Jun 2025 21:27:39 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BC6C81A0D9E;
-	Thu, 12 Jun 2025 21:27:38 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgB321_J1Upo_mswPQ--.39170S4;
-	Thu, 12 Jun 2025 21:27:38 +0800 (CST)
-From: Zheng Qixing <zhengqixing@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	zhengqixing@huawei.com
-Subject: [PATCH] md/raid1,raid10: fix IO handle for REQ_NOWAIT
-Date: Thu, 12 Jun 2025 21:21:41 +0800
-Message-Id: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12EC248F7E;
+	Thu, 12 Jun 2025 13:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749734864; cv=fail; b=NML7WDA9VyucUf8TzbEiY2WobYvjG3cukYyYhGst42FrH7TYshOBGBo0im2Z1B74InpnhumWxcj3yNYO8wm8ZMQZVahPj3G2ZZnHlGGOCB3zMA/Zkr+xNZl/2OiVgCtbj8bgX1md0MwBsJ23+9WpJrc9wjeudyjvTrKaG1z4KSk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749734864; c=relaxed/simple;
+	bh=wNx+2gzx6v0Vp6QPj3WufQUQqC2bkzq7x21Kqy5v6C0=;
+	h=Content-Type:Date:Message-Id:To:Cc:Subject:From:References:
+	 In-Reply-To:MIME-Version; b=hHuehsGZCbD9ripUI+MfyvH1mIJh7gTRk9+2YmBgRIRLro3NbOSt3rT9qM3pRKcKlFCacmVbsXvo/PAo1x8PvZJv1Sbeoe4HMoo84FeXG2/PHVH7k21XPbsNHHMcDyxBhrA61/mlBVf+zxUFkukO4VKGPI0eXpRei0HGWJ0jr+k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EFYEw8Mi; arc=fail smtp.client-ip=40.107.244.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EFYEw8Mi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cv3dthQn4HI4EHS05XIFnxXyA3makI5pA0IY6GqznR5Iwuln8fuwbwC2cbldXS01l2j/OCYA0sXOW21UdOPHmpxbm2yzHqLXIUsdvDuZ/z0xHpjtDZJ6bnqA2dbo6YvEfJcIXq9tBosSF5W7QogidIV/eGvypnPX7zWR/adfRNeHm9HnMYhf5IDmcUKIGrdtiqPFzfwUS4cUMQLlXVc5TToMLt8CzLBDfLJrc43sMZcb3Caj+29fGvrMDQFsHW/ZOjKiwelfx6wbyR84/GSvjSpXMY2JQte00oySeNev7bYOs5RcS87+yVg+t+hoiPTWKC1gnizWSiLxyaa3a+NvPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5VPAvhiIkV0jkG6liVl8GmsavWeXYFmVGvwWUA+Gx9Q=;
+ b=dfkyw5RIRASQQgjNSAvKxndQsEnwiEBst8EjkJ3RxyX6BEVSQQ2z6C67V3roYL1gVHCsjY6zj9t6DtSIxeWI+j9PCdfR6jB43z5xbAKWJ9FRURrqaN0armPF4u/W9i3t5kzRbiICqECT/G/QcjR6MOp75p6UDxv9oU0zdOCy/8dKVUbREOQEw08F7hyb+ZIk0wtFCBLX9y4xxQ0zMGye6rxOiluce1h5Ae3/IqaHQNkw1pIOPnsqryb3BOIieb7bzM5S/7KMV3UePNU9JejUulmoiKSiJZCRt23WL3V/1jG5HVdQU+wqK0Pj6N2G+qy4W4yPBGlEFB1ywNUv7IwcVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5VPAvhiIkV0jkG6liVl8GmsavWeXYFmVGvwWUA+Gx9Q=;
+ b=EFYEw8MiYqMI0lWHkDLJkf4DEVZIkxcJ5vqoqLhccanwdsZ32bsrJvTwL8NsSj5+C3y0EKnil5mRVscehSxypAOQtPXpXivz0d6QiXLU6cuDggtZkYfhXOJK7hANIIMIXDnXf2YzI/Q3cF19426DqzHpNtPBSpU+lpWJ7/cY8sLAaZKOk1Y/+n6s+WfQNS65UkgJTDgu6Gi51MkzR9tCtiaibSoEysHaYQm+tCS+9Zuhr8UQyeSLOUzfgl+DNV43Fh6ATZhJc3BGdncJrvhdbxZJqxWeJArXbNGB/wI4BNr6AsjuUNaJOXkJQVqzV4f/l9SYKjCI9WQvgYe05tcBGQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SA1PR12MB7101.namprd12.prod.outlook.com (2603:10b6:806:29d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Thu, 12 Jun
+ 2025 13:27:39 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
+ 13:27:39 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Jun 2025 22:27:35 +0900
+Message-Id: <DAKL8NQBUGH5.Y8YJIAYDWL3F@nvidia.com>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
+ operations
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
+ <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
+ <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
+ <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org>
+ <DAC2L6ZKR6U2.WOMERUJIOENK@nvidia.com>
+ <DAD9TNUBUGPN.1ED519FYR29U4@kernel.org>
+ <DADB6892Z31G.12LB1BVSGTEAQ@nvidia.com>
+ <DADKDQ1KGJJP.3T20P9V1D2PO1@kernel.org>
+ <DAKL0KOWUB1G.1DSJPRWFYC43O@nvidia.com>
+In-Reply-To: <DAKL0KOWUB1G.1DSJPRWFYC43O@nvidia.com>
+X-ClientProxiedBy: TYAPR01CA0011.jpnprd01.prod.outlook.com (2603:1096:404::23)
+ To CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB321_J1Upo_mswPQ--.39170S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFW8ZF17XFWUtFyUur1xXwb_yoW5Cw18p3
-	47Ga9av39rGFWUZ3WDtFWUXa4Fka1Fgay7C3yUJ34xXas09FZ8Aa1DJ34Ygrs8XFWrur12
-	q3WrWw4UCFWayFUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8imRUUUUUU==
-X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SA1PR12MB7101:EE_
+X-MS-Office365-Filtering-Correlation-Id: fee79c6f-c705-4710-2126-08dda9b4e6bf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|366016|7416014|376014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RHJwOWp4S0RtYUx5elpqYlZ4YWhRQ1lFKzlZSUlKYSt5NHJJTFlmWjJLM0ti?=
+ =?utf-8?B?RnV2THJ5RGFQYkdBSjJGc1NyTWFrb3ZOZzJYT1NOOUtmTmxsclFzV0krekgw?=
+ =?utf-8?B?bzkxRFpxTkxJMFdlSk00VDJYeWIzMnF2eWlpbGJ1ZE1wOTd0OTFmWGMxdHQy?=
+ =?utf-8?B?emR6WHdzaVZZVVhzRDVzdmlYWE94aW16cEVWYkNDVHg1anRJcWRpc1BiS0hH?=
+ =?utf-8?B?S0t3V3RySnJ4Wmc2S3FkTzJDNzhWanl5S21WenFlclBBRUNNVUN2bktBRWli?=
+ =?utf-8?B?Mng1T1EvL0ZNVjRJdWsrS0N2Tks2U2xHOEJyNjA1Y2VlQy9RcDF4azRVMVJN?=
+ =?utf-8?B?YndTd2U2d0tPb0JCbDg5blovYXZONk5uTzZBWWk2eFJYZTFvUlhnWG5Qc2pi?=
+ =?utf-8?B?K1NOVWdkc2dmbHkvT3lkRGdmYzZmZVJHMDFtQXRJTFZSekhUTnQvN0dmaVJo?=
+ =?utf-8?B?eldvNjAwTitUcmtrTitqKzM1Z1NleFRjMnpPR29Bb1p4M3d2S1FjcGtpbHFk?=
+ =?utf-8?B?MkoyWWp5MUVUK1ZqN3NQOXhpZytGMTc4L1RIaW9XRndXQjFDUjRqS0ZXWTdu?=
+ =?utf-8?B?NVRsNlVaS0ZCVHNjaGdENVpEVUVYcWxoZHRxN0dmaFFZdUQ3Ym5xV0I3Q2Rk?=
+ =?utf-8?B?OWJCd2NOcWYreVVOblp6ME5ZZDg2cnEwOFV1aFhJWXZHbklwNEs3R016b1B6?=
+ =?utf-8?B?L2Vub0FOS0RiR0dieFVxV0VFcGRVR2YvaGM5TjZRcVVnNXJ1Ni9rdVFWMDE5?=
+ =?utf-8?B?WXJ5MmRhSHpxRktTUXJmTzlRVTkrdnpSUzVjVGlaeHQycEw1b1Q4L0xxZWt1?=
+ =?utf-8?B?T0xMNHJjQ1hLbTVTMURaMXFBdEFmYnRVWVBsS3ZBanJTWVVnNEphRzZxNVVV?=
+ =?utf-8?B?VnBiTmJvQjdkN1R5S0xoeTFhbk1lUXlWWG9SU2ZCcGxuQWhlZlh4SDdQTG9G?=
+ =?utf-8?B?aFVIQitPclpVWTYwRUgvWFpib3pSUXY0Qm0zZjRkS2N2Zi9qYURseTh2aEhY?=
+ =?utf-8?B?Q1E4Ym1SODZVOTVqVjBZaHpPQXNCRDVUQ2VCcExZdXQ3ZFVBZDlRTTh1ZEx1?=
+ =?utf-8?B?T1NjSmkveWg2MnhMMkZFMnFpZ3lSTFBZNHg0US9xV0JPbkxycHhRWlZsY1JZ?=
+ =?utf-8?B?SmxENnN0d2xoa2pqbjg5Y2FaQW5QZC9USG9BZDg2NmFlQTllNTRYN2NkcFl4?=
+ =?utf-8?B?a2ZVUFdvUWduR2JtMGxpdi96bWdpVmIycVhzekJsWXRqWGtlcWs4c3RPYjNt?=
+ =?utf-8?B?WDVUT0NjSCtRSVh2V2RSd0tMTDIzMUNOand4NENXTGhDeURnajduTi83N2Va?=
+ =?utf-8?B?VlFEenlaamlPNldTTXdValFIWHd0aTdOVjJDYVMrcFlPSE9VWGI2RzNMRkZY?=
+ =?utf-8?B?aVR0WjNJMVBVTVdNRmJoRW1IVS9aUUlqTE1nSmM4bXJzeFdSRHRYV2hGWXRt?=
+ =?utf-8?B?Qkk1amNIS1d1OHM3ZDc2MGZYSWZmeDVSNGY3ME1IK1BIbDJkV0s2TEp6d2N2?=
+ =?utf-8?B?M2NOdWRMWFNhcW5ZcUtCQk5kcVg1ekFTUzRKQ0NGM3c1ZE9VcGwvczByQjdL?=
+ =?utf-8?B?a1VTakp3SGlLa0NkYzNOWlN2N2FXTHR1WmxkMk9lZUpRTUdSWU5kWXloVytH?=
+ =?utf-8?B?YlNMaDF2eGtaenNldSt0bUt4Yit2VlRBWEFpaUMzdm9zTXZCdDY3QldLYUxD?=
+ =?utf-8?B?TlB3ZW40VFZ2M3VZeHNtclB6NkNweW9FTmV1dWFzS1ZEUUpUNVFvYys5RURH?=
+ =?utf-8?B?RXZEZGFPZytqYkZ4Ulh2K1VPbEFpeWZ0SzhwYmJ0WEl0cDc3MjFiQ2hqZFVw?=
+ =?utf-8?B?aHVXOXhQK2VGOXE4ZUdNRWM1WTR5U0pTb2g2d3MrSy83YkVmNzU5dHNmTmcx?=
+ =?utf-8?B?c1YwMG4ydDlYZllxSkZzSkRXRWI3ZTBLYWswS2hnZURGWUlFN1pnWjE3N1hi?=
+ =?utf-8?B?bDBwZEw0N2dCa2h1SU04QmU5MG1JSzJWNFJGTFNCYU9mVzAxMzNibExvOXRm?=
+ =?utf-8?B?aGJGK2cwYldBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?M2RnamJSRUlyVllBZjArcWxyQlROYlRUYm15azBFaGpIWkhWUjZpb21PSDZY?=
+ =?utf-8?B?RnVaNmNTdXpUWjZuYnJJU3luSEZ4MVZNeHN6UlB3UUVEOENSV3lXM2hrdGd3?=
+ =?utf-8?B?VERGNDZ6UnhxU0NJbGdubWtpbjFDWVkxNmJYZXQyVlI2QW5JSi9IV1JmL1I5?=
+ =?utf-8?B?Mm90c0tRQmtkTWpNYVprUm9Ua2R4dVEzbGNJL3RmbkFBR2w1OWFIbGY3c3BC?=
+ =?utf-8?B?K3FxNlk4RmEzSmpPNTJDYVhaRWNBVHlFNWx5eGw2NS9ZbWh6aUdjY0c2TnJD?=
+ =?utf-8?B?Rk5Bd3RwT3hpUnNmY0hHWk81cTQxczE1SmRaWC9Gdmc2Wm0vWGlORVFGT0xt?=
+ =?utf-8?B?WVdtTlU2T0dlLzZwMHk1a3VOeFNLR2RXMWdUQ0dyTE1naitZY3JCREQyOFJR?=
+ =?utf-8?B?dHJ4Vk9ROEI3UWl1ZitDZERHK1RNNlQxa2VNTlN6UFgvQ3hyTlk5aHNXaVZp?=
+ =?utf-8?B?dFhPcXU5TXZKa3dZd084d3Q0NFVTaW00dDh2VXdxZFkrUjFIbUs2Ym8xZmRJ?=
+ =?utf-8?B?ZUlBUlpxdVhabDJLbDhoYk91S3EzM0ZvNEFkOU82THRWR28wdmk3cDhtZm51?=
+ =?utf-8?B?VWY5K0Z5QTgzRFlBRUdzZnhnR3FPMnRiUk12UTFwS3ZzNGNHL0hudFlLVmVo?=
+ =?utf-8?B?UjB2QUMveGxIb3FFL3pJZjZ3R3Q1WFdocVZ4dmR0QmRib0lGS1dwRW90dlJP?=
+ =?utf-8?B?bEhDVkVSYW9zazVrYVVWZHg0cHI0c0pobHFRZmhmcC9hYUVjYVRxNm9GcTVM?=
+ =?utf-8?B?cmFoNnZ0WXgvbVo4OThyMzlqYVNoUGhmd0VnQW4vSi9IaGJUUEhINklKaXY5?=
+ =?utf-8?B?Uk43V0JlN0EzTDd1eEdwMWlLSEZ6bWFGL2U1bmVzTFhtV2trNzczSmY0M29P?=
+ =?utf-8?B?c01pa0F0NzVOUEZPWkI3YThuV3BiTkw4YXVaSGJ0VE80ZVhqSS9TU0ZWdTNH?=
+ =?utf-8?B?QzNXcTRGNWhrOEJYU3hDVllpS09oSC9pY1ZMemg4ZWpSdFZ0a1EyYUIzVmg4?=
+ =?utf-8?B?akJXVnpGK2d5SDYyNUtyNlhwZkZrRENUYTlJWHBWbGFRSWdsWHJuQnJoVXNo?=
+ =?utf-8?B?ZHpyZ01SSkRXczBsdHd0V3Z3SDVGL0lvdUlRRm44N09uczZxSjFwWmVZMGJS?=
+ =?utf-8?B?Z01GR2lBR2ZUdlRhZEhyb1EvVTFsWko3SmYvanpSdTlRUi9zUlQ4Y1pOckNW?=
+ =?utf-8?B?YzFkZTJYMUQ2eTdLRnRxdnNDeGxvNDNGdmc4VjNPM1l2UXhzRXd0UER6TzlL?=
+ =?utf-8?B?alBrcnlBdHZRZU1wa1JDQlk1MUNNRlJCcUJ1ZUxoaElQK0Y4L1pCQWQ3MnRE?=
+ =?utf-8?B?eXJCZW9ySkxTVVpFajZMcmJQZ0lReWtKTkVoQ1dCaW9IMUI4VjgxUnY0aVFh?=
+ =?utf-8?B?Q3NkeTFrVlJ5bWIycTZDSzIyNi92aGVIeTVtOVkzZTZaT3FxenZ3ZkVuUGJa?=
+ =?utf-8?B?Zy8weWltTHBGT3MrTUUrb2owWEdwdFJ5c2xpajhWdVovV2YvbHc5cStGekFh?=
+ =?utf-8?B?M0w5K0JLZ1RmWjViOUIrL1psVGczeXJ1aDAzREkxMEJHOVVQU3AxaFZtZm9k?=
+ =?utf-8?B?N3VXTGhaclRhWEQvcjBleE9LcVF2K3k3ZlpDY2Zka29RTEFIMWtML1ROSzR4?=
+ =?utf-8?B?cVZXVVNNSGdtSjRqRU1FdnVvTEo0RnZpY0xheVZZZHVqMVlJaUhVRzVEd1pD?=
+ =?utf-8?B?ZklOK0lYeWoraVBWd2lPVkgxc3dGT1oveFoyczlvRDRXZGs1bkhtdjhoNUVa?=
+ =?utf-8?B?UVA2MTlUKzB6c3RmTktGZndjazVPZElFOTh3T1ByVmtHZXM1QkVPNXJaak1U?=
+ =?utf-8?B?eDJpU0tTd1M3TnlGLzQ5WnVEY3oxRmtwSnU2UEV2ZGpBTFpDYzFURHVWWTF0?=
+ =?utf-8?B?R2cvNXdjVlQ0S3ZjSDhEN0U3MTZqOFhieEVrU2RxbjRrL20veHRiOVlDWjNM?=
+ =?utf-8?B?VEh6c1ZrZm9zRm9GRTFzeXJ1ZE9OcjV5cnpvOXIxNmkzMmFDaXJIbk1JVWtq?=
+ =?utf-8?B?dnI0WHIzMmNrdEh1SW8vWW1yUHJHQ2FxVVVpNzlLbVhBVDdvL0JhTHNDclhB?=
+ =?utf-8?B?WnpLR043Vll5dTV6U3pKYzVybGtkUGVjVGROWEFNOEFOL3JWcjd2alNNSWdv?=
+ =?utf-8?B?R2o1cVVGM3FBZHVxU3BTRy9LUHBweTEwMlY3TjE3Y1J6elVRcWRZZnNPeWxV?=
+ =?utf-8?Q?wvqz0U40yk47/67SPzF5sAbC1PMPFHXz+qFdUis0+ovn?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fee79c6f-c705-4710-2126-08dda9b4e6bf
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 13:27:39.1833
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 14DK0mrDDPTWzIfrEQgpjUJ3fXMJzMPhl9qp0ILYy1HTYfc1Tz1ZJ/lYWjjjOyy7dlbIXGaE+aEi3NueGDDclw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7101
 
-From: Zheng Qixing <zhengqixing@huawei.com>
+On Thu Jun 12, 2025 at 10:17 PM JST, Alexandre Courbot wrote:
+> On Wed Jun 4, 2025 at 4:18 PM JST, Benno Lossin wrote:
+>> On Wed Jun 4, 2025 at 2:05 AM CEST, Alexandre Courbot wrote:
+>>> On Wed Jun 4, 2025 at 8:02 AM JST, Benno Lossin wrote:
+>>>> On Mon Jun 2, 2025 at 3:09 PM CEST, Alexandre Courbot wrote:
+>>>>> On Thu May 29, 2025 at 4:27 PM JST, Benno Lossin wrote:
+>>>>>> On Thu May 29, 2025 at 3:18 AM CEST, Alexandre Courbot wrote:
+>>>>>>> On Thu May 29, 2025 at 5:17 AM JST, Benno Lossin wrote:
+>>>>>>>> On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
+>>>>>>>>> +    /// Align `self` up to `alignment`.
+>>>>>>>>> +    ///
+>>>>>>>>> +    /// `alignment` must be a power of 2 for accurate results.
+>>>>>>>>> +    ///
+>>>>>>>>> +    /// Wraps around to `0` if the requested alignment pushes th=
+e result above the type's limits.
+>>>>>>>>> +    ///
+>>>>>>>>> +    /// # Examples
+>>>>>>>>> +    ///
+>>>>>>>>> +    /// ```
+>>>>>>>>> +    /// use kernel::num::NumExt;
+>>>>>>>>> +    ///
+>>>>>>>>> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
+>>>>>>>>> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
+>>>>>>>>> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
+>>>>>>>>> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
+>>>>>>>>> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
+>>>>>>>>> +    /// ```
+>>>>>>>>> +    fn align_up(self, alignment: Self) -> Self;
+>>>>>>>>
+>>>>>>>> Isn't this `next_multiple_of` [1] (it also allows non power of 2
+>>>>>>>> inputs).
+>>>>>>>>
+>>>>>>>> [1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next_=
+multiple_of
+>>>>>>>
+>>>>>>> It is, however the fact that `next_multiple_of` works with non powe=
+rs of
+>>>>>>> two also means it needs to perform a modulo operation. That operati=
+on
+>>>>>>> might well be optimized away by the compiler, but ACAICT we have no=
+ way
+>>>>>>> of proving it will always be the case, hence the always-optimal
+>>>>>>> implementation here.
+>>>>>>
+>>>>>> When you use a power of 2 constant, then I'm very sure that it will =
+get
+>>>>>> optimized [1]. Even with non-powers of 2, you don't get a division [=
+2].
+>>>>>> If you find some code that is not optimized, then sure add a custom
+>>>>>> function.
+>>>>>>
+>>>>>> [1]: https://godbolt.org/z/57M9e36T3
+>>>>>> [2]: https://godbolt.org/z/9P4P8zExh
+>>>>>
+>>>>> That's impressive and would definitely work well with a constant. But
+>>>>> when the value is not known at compile-time, the division does occur
+>>>>> unfortunately: https://godbolt.org/z/WK1bPMeEx
+>>>>>
+>>>>> So I think we will still need a kernel-optimized version of these
+>>>>> alignment functions.
+>>>>
+>>>> Hmm what exactly is the use-case for a variable align amount? Could yo=
+u
+>>>> store it in const generics?
+>>>
+>>> Say you have an IOMMU with support for different pages sizes, the size
+>>> of a particular page can be decided at runtime.
+>>>
+>>>>
+>>>> If not, there are also these two variants that are more efficient:
+>>>>
+>>>> * option: https://godbolt.org/z/ecnb19zaM
+>>>> * unsafe: https://godbolt.org/z/EqTaGov71
+>>>>
+>>>> So if the compiler can infer it from context it still optimizes it :)
+>>>
+>>> I think the `Option` (and subsequent `unwrap`) is something we want to
+>>> avoid on such a common operation.
+>>
+>> Makes sense.
+>>
+>>>> But yeah to be extra sure, you need your version. By the way, what
+>>>> happens if `align` is not a power of 2 in your version?
+>>>
+>>> It will just return `(self + (self - 1)) & (alignment - 1)`, which will
+>>> likely be a value you don't want.
+>>
+>> So wouldn't it be better to make users validate that they gave a
+>> power-of-2 alignment?
+>>
+>>> So yes, for this particular operation we would prefer to only use power=
+s
+>>> of 2 as inputs - if we can ensure that then it solves most of our
+>>> problems (can use `next_multiple_of`, no `Option`, etc).
+>>>
+>>> Maybe we can introduce a new integer type that, similarly to `NonZero`,
+>>> guarantees that the value it stores is a power of 2? Users with const
+>>> values (90+% of uses) won't see any difference, and if working with a
+>>> runtime-generated value we will want to validate it anyway...
+>>
+>> I like this idea. But it will mean that we have to have a custom
+>> function that is either standalone and const or in an extension trait :(
+>> But for this one we can use the name `align_up` :)
+>>
+>> Here is a cool idea for the implementation: https://godbolt.org/z/x6navM=
+5WK
+>
+> Yeah that's close to what I had in mind.
 
-IO with REQ_NOWAIT should not set R1BIO_Uptodate when it fails,
-and bad blocks should also be cleared when REQ_NOWAIT IO succeeds.
-
-Fixes: 9f346f7d4ea7 ("md/raid1,raid10: don't handle IO error for REQ_RAHEAD and REQ_NOWAIT")
-Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
----
- drivers/md/raid1.c  | 11 ++++++-----
- drivers/md/raid10.c |  9 +++++----
- 2 files changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 19c5a0ce5a40..a1cddd24b178 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -455,13 +455,13 @@ static void raid1_end_write_request(struct bio *bio)
- 	struct md_rdev *rdev = conf->mirrors[mirror].rdev;
- 	sector_t lo = r1_bio->sector;
- 	sector_t hi = r1_bio->sector + r1_bio->sectors;
--	bool ignore_error = !raid1_should_handle_error(bio) ||
--		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
-+	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
- 
- 	/*
- 	 * 'one mirror IO has finished' event handler:
- 	 */
--	if (bio->bi_status && !ignore_error) {
-+	if (bio->bi_status && !discard_error &&
-+	    raid1_should_handle_error(bio)) {
- 		set_bit(WriteErrorSeen,	&rdev->flags);
- 		if (!test_and_set_bit(WantReplacement, &rdev->flags))
- 			set_bit(MD_RECOVERY_NEEDED, &
-@@ -507,12 +507,13 @@ static void raid1_end_write_request(struct bio *bio)
- 		 * check this here.
- 		 */
- 		if (test_bit(In_sync, &rdev->flags) &&
--		    !test_bit(Faulty, &rdev->flags))
-+		    !test_bit(Faulty, &rdev->flags) &&
-+		    (!bio->bi_status || discard_error))
- 			set_bit(R1BIO_Uptodate, &r1_bio->state);
- 
- 		/* Maybe we can clear some bad blocks. */
- 		if (rdev_has_badblock(rdev, r1_bio->sector, r1_bio->sectors) &&
--		    !ignore_error) {
-+		    !bio->bi_status) {
- 			r1_bio->bios[mirror] = IO_MADE_GOOD;
- 			set_bit(R1BIO_MadeGood, &r1_bio->state);
- 		}
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index b74780af4c22..1848947b0a6d 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -458,8 +458,8 @@ static void raid10_end_write_request(struct bio *bio)
- 	int slot, repl;
- 	struct md_rdev *rdev = NULL;
- 	struct bio *to_put = NULL;
--	bool ignore_error = !raid1_should_handle_error(bio) ||
--		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
-+	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
-+	bool ignore_error = !raid1_should_handle_error(bio) || discard_error;
- 
- 	dev = find_bio_disk(conf, r10_bio, bio, &slot, &repl);
- 
-@@ -522,13 +522,14 @@ static void raid10_end_write_request(struct bio *bio)
- 		 * check this here.
- 		 */
- 		if (test_bit(In_sync, &rdev->flags) &&
--		    !test_bit(Faulty, &rdev->flags))
-+		    !test_bit(Faulty, &rdev->flags) &&
-+		    (!bio->bi_status || discard_error))
- 			set_bit(R10BIO_Uptodate, &r10_bio->state);
- 
- 		/* Maybe we can clear some bad blocks. */
- 		if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
- 				      r10_bio->sectors) &&
--		    !ignore_error) {
-+		    !bio->bi_status) {
- 			bio_put(bio);
- 			if (repl)
- 				r10_bio->devs[slot].repl_bio = IO_MADE_GOOD;
--- 
-2.39.2
-
+... with one difference though: I would like to avoid the use of
+`unsafe` for something so basic, so the implementation is close to the C
+one (using masks and logical operations). I think it's a great
+demonstration of the compiler's abilities that we can generate an
+always-optimized version of `next_multiple_of`, but for our use-case it
+feels like jumping through hoops just to show that we can jump through
+these hoops. I'll reconsider if there is pushback on v5 though. :)
