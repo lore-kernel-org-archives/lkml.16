@@ -1,94 +1,119 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C0B79D2;
-	Thu, 12 Jun 2025 00:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED36E79D2;
+	Thu, 12 Jun 2025 00:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749686641; cv=none; b=kgD2ALpjtKBT7gXZ09e3iEaPqGR4gJzdxbhrm1K7BOeVieRV9/dTGmkXvRoPOxm03kxFnmGuTP224bOLPU8Kfxr6lFVthePIEeC+XyH3zQpPTKOhpNpCxaVG3pjfiJpFHJNZVkpmcddAhGiZmLQyMt0+WZoxN0AGAQI4NKIkf4w=
+	t=1749686656; cv=none; b=p+6n5RuChP/WoTt+bDiVoVkgBndlI1c7ri4goZ1HD/2tbV5EEqhFVzh6JW/xiXxuXsVD62WEha8/jeuDYeAl5a4uOqe/CTuHXAMG/s1MAkhs6i9Jz5ksJOOxhXu+dj38YUpt0Kl18dS9sVtmt06tpqs8CLe6mHDkbpAKiDkOAQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749686641; c=relaxed/simple;
-	bh=h7yWjbfCQMl8h9k980xlB+2nvO4sI+S7hDa8rNNI6+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eOeM8+roDl/iqeD9pgjFmooDIv6Ftswp/Did/EjV9TujJXr/ATwv3DAN/N/melEqFkioYvygVDs8So0BsP1ZaraQ3HZyuDCvwB+6b0LqcVB/mER++8epIP/Kn5hbdXCtWaYl+JKVbbPV8uXxtd7xCqT3I54Rx0ea3harSvhsQkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.147.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 09DF7340B10;
-	Thu, 12 Jun 2025 00:03:58 +0000 (UTC)
-Date: Thu, 12 Jun 2025 00:03:54 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Guodong Xu <guodong@riscstar.com>, vkoul@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	p.zabel@pengutronix.de, drew@pdp7.com,
-	emil.renner.berthing@canonical.com, inochiama@gmail.com,
-	geert+renesas@glider.be, tglx@linutronix.de,
-	hal.feng@starfivetech.com, joel@jms.id.au, duje.mihanovic@skole.hr,
-	elder@riscstar.com, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH 1/8] dt-bindings: dma: marvell,mmp-dma: Add SpacemiT PDMA
- compatibility
-Message-ID: <20250612000354-GYA127864@gentoo>
-References: <20250611125723.181711-1-guodong@riscstar.com>
- <20250611125723.181711-2-guodong@riscstar.com>
- <20250611-kabob-unmindful-3b1e9728e77d@spud>
+	s=arc-20240116; t=1749686656; c=relaxed/simple;
+	bh=bNiddbebwxgrO+T2YxvgJlpp7XYCaOnNp2ptHJCxou8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ZKZecASLvCeAvpIVDgqRv9JWDfy/xf2G32R34yZoUFMhT90fkMpbNrIDBPe9qZYMnFpp3UzW1bitYso80JvFQ4RwXDq58L+cG4j/HMhHXk6SrNtvDHkdfG+79Ivu9m7HGO2TJ+DZcwB0id2ibnIFyz2mB+OncGe7I13kGjttM2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeWBbH4N; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeWBbH4N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AD72C4CEE3;
+	Thu, 12 Jun 2025 00:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749686655;
+	bh=bNiddbebwxgrO+T2YxvgJlpp7XYCaOnNp2ptHJCxou8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JeWBbH4NIbAluoyWqsLBvZcssk1mVO4c9x2vHAvkGTYjC11VLW4n68jQReiDS1TXo
+	 aTGWcYJq13beLyiTK6sSL+MkspAbu7av9QNHFRv5rHDFgOlXXfAPF0/HI7i1TEfVoK
+	 pD1S7881KP5PIAEcfpvB+hZWG8xH7X/+jO/rVehOFqF0gJVcm9R5gLRFSi7uJelx+b
+	 Z5lyx9F1VcnGe4G5gpSjrc3h/XVIPERnVinRGF1HVkvkHsm3BGBh8qXcPvGqzh4839
+	 ZfdYFY1i6pZieUhJdN8wvZ3/Dm8DnkO+wPOPsHFnPHhJhBcDU7BxvzwqVaFi2NILRI
+	 YUJyRgPjUOCzg==
+Date: Thu, 12 Jun 2025 09:04:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>
+Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
+ updated instructions
+Message-Id: <20250612090411.fe1cf10c61be1db40920dac8@kernel.org>
+In-Reply-To: <20250611114243.43a9e3e2@batman.local.home>
+References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
+	<20250610115030.0d60da65@gandalf.local.home>
+	<20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
+	<20250611102010.1bf7c264@batman.local.home>
+	<20250611114243.43a9e3e2@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611-kabob-unmindful-3b1e9728e77d@spud>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 17:27 Wed 11 Jun     , Conor Dooley wrote:
-> On Wed, Jun 11, 2025 at 08:57:16PM +0800, Guodong Xu wrote:
-> > Add "spacemit,pdma-1.0" compatible string to support SpacemiT PDMA
-> > controller in the Marvell MMP DMA device tree bindings. This enables:
-> > 
-> > - Support for SpacemiT PDMA controller configuration
-> > - New optional properties for platform-specific integration:
-> >   * clocks: Clock controller for the DMA
-> >   * resets: Reset controller for the DMA
-> > 
-> > Also, add explicit #dma-cells property definition to avoid
-> > "make dtbs_check W=3" warnings about unevaluated properties.
-> > 
-> > The #dma-cells property is defined as 2 cells to maintain compatibility
-> > with existing ARM device trees. The first cell specifies the DMA request
-> > line number, while the second cell is currently unused by the driver but
-> > required for backward compatibility with PXA device tree files.
-> > 
-> > Signed-off-by: Guodong Xu <guodong@riscstar.com>
-> > ---
-> >  .../bindings/dma/marvell,mmp-dma.yaml           | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
-> > index d447d5207be0..e117a81414bd 100644
-> > --- a/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
-> > +++ b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
-> > @@ -18,6 +18,7 @@ properties:
-> >        - marvell,pdma-1.0
-> >        - marvell,adma-1.0
-> >        - marvell,pxa910-squ
-> > +      - spacemit,pdma-1.0
-> 
-> You need a soc-specific compatible here.
-> 
-is the version number (1.0 here) actually documented anywhere?
+On Wed, 11 Jun 2025 11:42:43 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-otherwise I'd suggest using "spacemit,k1-pdma" which follow the convention
-which already done for spacemit in other components..
+> On Wed, 11 Jun 2025 10:20:10 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > If interrupts are enabled when the break point hits and just enters the
+> > int3 handler, does that also mean it can schedule?
+> 
+> I added this:
+> 
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index c5c897a86418..0f3153322ad2 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -854,6 +854,8 @@ static bool do_int3(struct pt_regs *regs)
+>  {
+>  	int res;
+>  
+> +	if (!irqs_disabled())
+> +		printk("IRQS NOT DISABLED\n");
+>  #ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
+>  	if (kgdb_ll_trap(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
+>  			 SIGTRAP) == NOTIFY_STOP)
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index ecfe7b497cad..2856805d9ed1 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -2728,6 +2728,12 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+>  	int ret = 0;
+>  	void *ip;
+>  
+> +	if (!irqs_disabled()) {
+> +		instrumentation_begin();
+> +		printk("IRQS NOT DISABLED\n");
+> +		instrumentation_end();
+> +	}
+> +
+>  	if (user_mode(regs))
+>  		return 0;
+>  
+> 
+> 
+> And it didn't trigger when enabling function tracing. Are you sure
+> interrupts are enabled here?
+
+Oops, I saw Xen's code. I confirmed that the asm_exc_int3 is
+registered as GATE_INTERRUPT. Hmm. Thus this might be a qemu
+bug as Peter said, because there is no chance to interrupt
+the IPI after hitting #BP.
+
+Thank you,
+
+> 
+> -- Steve
+> 
+
 
 -- 
-Yixun Lan (dlan)
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
