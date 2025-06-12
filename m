@@ -1,127 +1,234 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783BE42048
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611D02F24;
+	Thu, 12 Jun 2025 14:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738359; cv=none; b=fG6bbocNBWyDyY3NldR9abZbIegdaqgdh0D2Y3trVZEJIvPCW2t7f5+awS4JUr+hCsXroFFkF64+gGOYJmoIjS92AOqOmDoXdu9CRk5jiC8N9KS5TOjYiBLmtdH6SAWjjh0gZnYPUTx1S5mFcg0DmMCbiH3tvCza2FT2W6QOn0E=
+	t=1749738461; cv=none; b=JL8OxZKea/I4lflhc6j3Pkk9tOCpvYxX18s1TRTIj+xCHsDlDR2Dd+1cCXJ7OhE+tk8RiWl6keQgiz6xgugHBSWaSA9PwBtDRazscfJ2DgpTEIIK2O68o6+TEpc8F0Pl4RvNVxH1XFhaeNM3J9JKr5QduC8qKjt8OGh2E43Dzcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749738359; c=relaxed/simple;
-	bh=ApF8vBWEk/Mxf+COrA4pHzNgYDC969mE44V8IPsB400=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uR7nJOUdveyQKD6HoLRbzp5+/qBd11oFUBI0HO5uJbM4yhCo3TLLFnpPqm5TXnjF7q/0DABMFZ1+39xPspVHcBirYZVa9HddA0gGbHDS6MkXOVW0P75R57sRHt9SFnPIRYJYwrdTss9qWIToJWy0muiNau1GrXqpJqdCUw3zihM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=FQof/u5+; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
+	s=arc-20240116; t=1749738461; c=relaxed/simple;
+	bh=mZtjFVpDF4zOYDZZGfMJaIYLzQRJ1cUipqthavlmgVg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D+U0irz+fNiK8hEX1tTHk6+D9WLBpMeT7VNyubCpnjC3z4jaKnPWT2LYpdJWkzWvkeUuXEE/cpa/JvXLCN63/IvKR9/GmNiX8EUaJWYH2RxYn7QuGDThbj413YLtgmdtNQgTl7H7UFCOsIJ5Hbuoyy2KmMHuIcTtiutY79YIus8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=xD9XA+tF; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="FQof/u5+"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-453066fad06so7981855e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1749738356; x=1750343156; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0dRuAS/zUdBPIbw/8bXhZ48yEMTP9V1WRvDJONrZWng=;
-        b=FQof/u5+XPWjd6NV2IFJb/4KDZU3/J7pgIEP2R1sm03mDbWsQ4WHEWrtxOQVcl4Ibv
-         rJnxh/tYt05LCn6V8Bm/IAag8/2NWnzyW1SlWlKnO75yTGINCuhKYdIQSD3Y/pngMnlq
-         tENBY5RAfxQxA0ZqJYMWat/DKSerPorUM5Dg0iHsDjt2+3gD29BAR/YzWDxbx1W3ivWs
-         OSUrDN540zZmnavTSsZKl8uBqycr4kinUPwXmBcMzMRYyqimR1C5pc2qBQrIDqofNwYT
-         KKnNLaV2ADfYozEk2iJmlVQXKfLffXPvz3w43joLsl84iurtthyLPnP2PigSqumFD3E0
-         aGug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749738356; x=1750343156;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0dRuAS/zUdBPIbw/8bXhZ48yEMTP9V1WRvDJONrZWng=;
-        b=mrBcXsy+vSl2qmAQZpYED9aqJYjGnHULiEEREmkWtNMYiqzqcap3XnOpsMSYPfud75
-         fVjzF9/leg6e9izRSh1ZBFgy8whNLuzjnxWpZSjvysPdkyDutywp+jxs7aWkZHvP5qYF
-         hNgfXvTtedtLzznUuVvEFOYNKfChfgUGTd6Pk5N6h9VcqrU6d2G4kxNFgkduMIa285z8
-         sJQcQMfi+WDUf0yVuYX57pzcMvflPZYoJp8MzBU5+YA3HDNS+xWpEGKe1QeJO6ranDGL
-         WNoaUMIwUqGGYVSPAZtKg90vMar93kTkdDElcdiI/9W2UFm0zeHjjaNlk1mM3ehmk0jF
-         JX6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUw2b5UPOpUacJ4j4qrFHD9/oENTJoYs+t8YU84JUxefW0vhPe/0HxGZejS0eA9kDw8JR1+pQAvMUvbSbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbCwXkXwF7pNM+gTeOiHuh6/M7QnlPKYAeSpjkzTGlv69yf8Y5
-	hZW1vPJFC4ZM1lumQ2mzxlqp59wXP+JRNZ5KaaWycRDmTXBIvUH5hUOV0VHu3dnqqvE=
-X-Gm-Gg: ASbGncuiWD9J5C2l9ORtqgkbQgNcnAUfBAjNOrW7qIhqxEWWRKkVTdmvQXagyqB+zlO
-	IqdtDJJZOs97lhbzzABOSRU7kXtznHmAsTSk4r8Ac9YL8LfGOeHh76bQB2GoPgs/OSPWBmA6d4H
-	G+DtsCQG/TM7N1b93MzIsN58fWwgYZv9F7LrWBH1M5K5kaVFxdracAQ97Tw8rHAAdUkyo9YiDTn
-	9iIYirATErM/MvaTNCbaTTW39WhztxYf+4GGL0rTH6xZ4iMvI7qfa767utMonxywIb2MaHEcjZL
-	pROvMCUr7PNaewg5u55LNLFHqp2/hJHPyNZpou1cXT5/cWJzMkSrD72bYdhK86An5YoupoJA
-X-Google-Smtp-Source: AGHT+IFvlefm01oYPM1h9ExnmLfkUHYFh6gyuhvhlTFDJV5yDSLIyUvQ0kWkWHYwVMpiGkMEole17Q==
-X-Received: by 2002:a05:6000:1887:b0:3a4:e672:deef with SMTP id ffacd0b85a97d-3a5586dc42dmr6618337f8f.36.1749738355672;
-        Thu, 12 Jun 2025 07:25:55 -0700 (PDT)
-Received: from MacBook-Air.local ([5.100.243.24])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a56199a930sm2174154f8f.35.2025.06.12.07.25.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 07:25:55 -0700 (PDT)
-Date: Thu, 12 Jun 2025 17:25:52 +0300
-From: Joe Damato <joe@dama.to>
-To: Breno Leitao <leitao@debian.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH net-next 2/2] netdevsim: collect statistics at RX side
-Message-ID: <aErjcH3NPbdP7Usx@MacBook-Air.local>
-Mail-Followup-To: Joe Damato <joe@dama.to>,
-	Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-References: <20250611-netdevsim_stat-v1-0-c11b657d96bf@debian.org>
- <20250611-netdevsim_stat-v1-2-c11b657d96bf@debian.org>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="xD9XA+tF"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bJ4Sw0z4Dz9sp3;
+	Thu, 12 Jun 2025 16:21:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749738064; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LUPnbMKZsQR2YGEzcKKfW5NC/LS9WZVDDt3t+hU+WYU=;
+	b=xD9XA+tF3DtsgZ/TvoLRbK1Aczn2kB03rAMmVtJak3LqwegXNUc9uE/X+ueAQE2lsb3m4z
+	nMS/GAVVbawehSW3oHS+UrMDPUfosntFCueeJu0jdBg7agC7b/icGX2oLwDaaDbb/D3uJL
+	e0PHOod+Rz4m5QK3iAme7eCMyiPKbR5hv1VO4K8fvv7B7PtHCpIMMecJx5sREk1CryUckd
+	v62q0rHqELw4BRYHCKbhp13fonFZXPKIGO8HYmj7yJardsvD2c96JZp/YCYBLIPBPM8h8y
+	a26R8D10Vu/FuGEcVYJVpeR3fZsngtoc6ndZnptXNyVwj5KyXuDzGjrPViZ2IA==
+Message-ID: <f4f326a0ecb98a9996919c3f827b3247b8207feb.camel@mailbox.org>
+Subject: Re: [RFC PATCH 1/6] drm/sched: Avoid memory leaks with cancel_job()
+ callback
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, Philipp Stanner
+ <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>, Danilo Krummrich
+ <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Pierre-Eric Pelloux-Prayer
+ <pierre-eric.pelloux-prayer@amd.com>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Date: Thu, 12 Jun 2025 16:20:58 +0200
+In-Reply-To: <62ff8ddb-b2f1-4e52-a026-290561ab5337@igalia.com>
+References: <20250603093130.100159-2-phasta@kernel.org>
+	 <20250603093130.100159-3-phasta@kernel.org>
+	 <62ff8ddb-b2f1-4e52-a026-290561ab5337@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611-netdevsim_stat-v1-2-c11b657d96bf@debian.org>
+X-MBO-RS-META: oodnuo5gzpywi6c6hikd3z6f1sf1sei5
+X-MBO-RS-ID: 8a4021f237a81cd6bf4
 
-On Wed, Jun 11, 2025 at 08:06:20AM -0700, Breno Leitao wrote:
-> When the RX side of netdevsim was added, the RX statistics were missing,
-> making the driver unusable for GenerateTraffic() test framework.
-> 
-> This patch adds proper statistics tracking on RX side, complementing the
-> TX path.
-> 
-> Signed-off-by: Breno Leitao <Leitao@debian.org>
-> ---
->  drivers/net/netdevsim/netdev.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-> index 67871d31252fe..590cb5bb0d20b 100644
-> --- a/drivers/net/netdevsim/netdev.c
-> +++ b/drivers/net/netdevsim/netdev.c
-> @@ -39,12 +39,16 @@ MODULE_IMPORT_NS("NETDEV_INTERNAL");
->  
->  static int nsim_napi_rx(struct nsim_rq *rq, struct sk_buff *skb)
->  {
-> +	struct net_device *dev = rq->napi.dev;
-> +
->  	if (skb_queue_len(&rq->skb_queue) > NSIM_RING_SIZE) {
->  		dev_kfree_skb_any(skb);
-> +		dev_dstats_rx_dropped(dev);
->  		return NET_RX_DROP;
->  	}
->  
->  	skb_queue_tail(&rq->skb_queue, skb);
-> +	dev_dstats_rx_add(dev, skb->len);
->  	return NET_RX_SUCCESS;
->  }
+On Thu, 2025-06-12 at 15:17 +0100, Tvrtko Ursulin wrote:
+>=20
+> On 03/06/2025 10:31, Philipp Stanner wrote:
+> > Since its inception, the GPU scheduler can leak memory if the
+> > driver
+> > calls drm_sched_fini() while there are still jobs in flight.
+> >=20
+> > The simplest way to solve this in a backwards compatible manner is
+> > by
+> > adding a new callback, drm_sched_backend_ops.cancel_job(), which
+> > instructs the driver to signal the hardware fence associated with
+> > the
+> > job. Afterwards, the scheduler can savely use the established
+> > free_job()
+> > callback for freeing the job.
+> >=20
+> > Implement the new backend_ops callback cancel_job().
+> >=20
+> > Suggested-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+>=20
+> Please just add the link to the patch here (it is only in the cover
+> letter):
+>=20
+> Link:=20
+> https://lore.kernel.org/dri-devel/20250418113211.69956-1-tvrtko.ursulin@i=
+galia.com/
 
-Hm, I was wondering: is it maybe better to add the stats code to nsim_poll or
-nsim_rcv instead?
+That I can do, sure
 
-It "feels" like other drivers would be bumping RX stats in their NAPI poll
-function (which is nsim_poll, the naming of the functions is a bit confusing
-here), so it seems like netdevsim maybe should too?
+>=20
+> And you probably want to take the unit test modifications from the
+> same=20
+> patch too. You could put them in the same patch or separate.
+
+Necessary adjustments for the unit tests are already implemented and
+are waiting for review separately, since this can be done independently
+from this entire series:
+
+https://lore.kernel.org/dri-devel/20250605134154.191764-2-phasta@kernel.org=
+/
+
+
+Thx
+P.
+
+>=20
+> Regards,
+>=20
+> Tvrtko
+>=20
+> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> > ---
+> > =C2=A0 drivers/gpu/drm/scheduler/sched_main.c | 34 ++++++++++++++++----=
+-
+> > -----
+> > =C2=A0 include/drm/gpu_scheduler.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 +++++++
+> > =C2=A0 2 files changed, 30 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+> > b/drivers/gpu/drm/scheduler/sched_main.c
+> > index d20726d7adf0..3f14f1e151fa 100644
+> > --- a/drivers/gpu/drm/scheduler/sched_main.c
+> > +++ b/drivers/gpu/drm/scheduler/sched_main.c
+> > @@ -1352,6 +1352,18 @@ int drm_sched_init(struct drm_gpu_scheduler
+> > *sched, const struct drm_sched_init_
+> > =C2=A0 }
+> > =C2=A0 EXPORT_SYMBOL(drm_sched_init);
+> > =C2=A0=20
+> > +static void drm_sched_kill_remaining_jobs(struct drm_gpu_scheduler
+> > *sched)
+> > +{
+> > +	struct drm_sched_job *job, *tmp;
+> > +
+> > +	/* All other accessors are stopped. No locking necessary.
+> > */
+> > +	list_for_each_entry_safe_reverse(job, tmp, &sched-
+> > >pending_list, list) {
+> > +		sched->ops->cancel_job(job);
+> > +		list_del(&job->list);
+> > +		sched->ops->free_job(job);
+> > +	}
+> > +}
+> > +
+> > =C2=A0 /**
+> > =C2=A0=C2=A0 * drm_sched_fini - Destroy a gpu scheduler
+> > =C2=A0=C2=A0 *
+> > @@ -1359,19 +1371,11 @@ EXPORT_SYMBOL(drm_sched_init);
+> > =C2=A0=C2=A0 *
+> > =C2=A0=C2=A0 * Tears down and cleans up the scheduler.
+> > =C2=A0=C2=A0 *
+> > - * This stops submission of new jobs to the hardware through
+> > - * drm_sched_backend_ops.run_job(). Consequently,
+> > drm_sched_backend_ops.free_job()
+> > - * will not be called for all jobs still in
+> > drm_gpu_scheduler.pending_list.
+> > - * There is no solution for this currently. Thus, it is up to the
+> > driver to make
+> > - * sure that:
+> > - *
+> > - *=C2=A0 a) drm_sched_fini() is only called after for all submitted
+> > jobs
+> > - *=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_backend_ops.free_job() has been c=
+alled or that
+> > - *=C2=A0 b) the jobs for which drm_sched_backend_ops.free_job() has no=
+t
+> > been called
+> > - *=C2=A0=C2=A0=C2=A0=C2=A0 after drm_sched_fini() ran are freed manual=
+ly.
+> > - *
+> > - * FIXME: Take care of the above problem and prevent this function
+> > from leaking
+> > - * the jobs in drm_gpu_scheduler.pending_list under any
+> > circumstances.
+> > + * This stops submission of new jobs to the hardware through
+> > &struct
+> > + * drm_sched_backend_ops.run_job. If &struct
+> > drm_sched_backend_ops.cancel_job
+> > + * is implemented, all jobs will be canceled through it and
+> > afterwards cleaned
+> > + * up through &struct drm_sched_backend_ops.free_job. If
+> > cancel_job is not
+> > + * implemented, memory could leak.
+> > =C2=A0=C2=A0 */
+> > =C2=A0 void drm_sched_fini(struct drm_gpu_scheduler *sched)
+> > =C2=A0 {
+> > @@ -1401,6 +1405,10 @@ void drm_sched_fini(struct drm_gpu_scheduler
+> > *sched)
+> > =C2=A0=C2=A0	/* Confirm no work left behind accessing device structures
+> > */
+> > =C2=A0=C2=A0	cancel_delayed_work_sync(&sched->work_tdr);
+> > =C2=A0=20
+> > +	/* Avoid memory leaks if supported by the driver. */
+> > +	if (sched->ops->cancel_job)
+> > +		drm_sched_kill_remaining_jobs(sched);
+> > +
+> > =C2=A0=C2=A0	if (sched->own_submit_wq)
+> > =C2=A0=C2=A0		destroy_workqueue(sched->submit_wq);
+> > =C2=A0=C2=A0	sched->ready =3D false;
+> > diff --git a/include/drm/gpu_scheduler.h
+> > b/include/drm/gpu_scheduler.h
+> > index e62a7214e052..81dcbfc8c223 100644
+> > --- a/include/drm/gpu_scheduler.h
+> > +++ b/include/drm/gpu_scheduler.h
+> > @@ -512,6 +512,15 @@ struct drm_sched_backend_ops {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * and it's=
+ time to clean it up.
+> > =C2=A0=C2=A0	 */
+> > =C2=A0=C2=A0	void (*free_job)(struct drm_sched_job *sched_job);
+> > +
+> > +	/**
+> > +	 * @cancel_job: Used by the scheduler to guarantee
+> > remaining jobs' fences
+> > +	 * get signaled in drm_sched_fini().
+> > +	 *
+> > +	 * Drivers need to signal the passed job's hardware fence
+> > with
+> > +	 * -ECANCELED in this callback. They must not free the
+> > job.
+> > +	 */
+> > +	void (*cancel_job)(struct drm_sched_job *sched_job);
+> > =C2=A0 };
+> > =C2=A0=20
+> > =C2=A0 /**
+>=20
+
