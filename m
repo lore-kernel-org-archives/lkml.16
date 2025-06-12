@@ -1,144 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F612E62AE
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7B92E6D0D;
+	Thu, 12 Jun 2025 20:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758610; cv=none; b=oiZSiZ2waVanJYuAMCoYzZV01J+J3eotDGA75UTEFyewEXeAVvdrBSNu9CBEsCOq62OEpIOI0bKlRGAL+cjbxzJ5JZU5NMFsg3Xh044mPw0YvH7CXfKuIZGPN0sH8o23zMDbJfVaYDG9BhQww2c+fJdDrzFsDtlvCBHPRZH7pYU=
+	t=1749758612; cv=none; b=oykDLHeFqGybBA7eosJ06LVHYtp0L98BVxAp6ehVyUyWLkePCKLa1JhbnPt7N5sWgMe8IjyS36mmGqw8b9cu8e0agy4szLegwMJAo3l8EdFynHoedKfD2SvF3C58I8PlzCVrkV2xBi8uJKZAXhkAS9K1pUG89RDkdJg0+pJU2K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758610; c=relaxed/simple;
-	bh=cuMx/DF85Bb+I9H2yyQxON+JwPq0JyH02ly4MFSCS5U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ryXhFLC9fSd186VpfDpY5RE/ZBLM/DoDP43gBmIQPmku+1KomVMQ3+fWuvDmUHfdhzm+spzdvxzQXm1ayQQEiGB3ocWZ8PXR+zyFmxIICluw6mSevOSVqGWXs9wgct/zjiECjxWIgWi0Nj5gPTfbFhLNvTOcHkrhL9twZbuQFSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=biosMTja; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749758612; c=relaxed/simple;
+	bh=1fykyusYVro73+SkCEdouTI5VeesZrBsX99TGTggxRY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GAAyAvv9lIXR3cz9HD2ThZaq1wzxKon+gChUVXXxi1VS9gRNQTL5qia+sq33ISLlSHYpXpzqsL5ysojx4mu5xqIY/L6wkigRRZz6sLFSeySMdcZGyZJ+Sikqb7I3P7YpG/PICLspat9ZGSThXfsH6IMbWm/xtRdHwgRXi0HSLzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W4sHbK8R; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="biosMTja"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749758607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6wjTCorTURANLUWK2Ee4slBE9h5sdN9cJoapu/KqJjo=;
-	b=biosMTjaXkni9AgMr8d3bfDA2WDIPOgzPeycboeno9UMKzZyxSscUBl+Ii4lkmMi6wrYhR
-	4Qu9aYZIYZhHcEpjGSDGzzp7qsuVhcufwIFuMkWTRoiV5f72iRY9Ou2FhK9DUv/L+lKqdH
-	SNcfuSaWkEFFhaRd5e7fcui+l2ga4Z0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-IagqBWZTN32S_8K87Gr_gg-1; Thu,
- 12 Jun 2025 16:03:24 -0400
-X-MC-Unique: IagqBWZTN32S_8K87Gr_gg-1
-X-Mimecast-MFC-AGG-ID: IagqBWZTN32S_8K87Gr_gg_1749758601
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A534D19560B1;
-	Thu, 12 Jun 2025 20:03:21 +0000 (UTC)
-Received: from p16v.redhat.com (unknown [10.45.224.169])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 499FB18003FC;
-	Thu, 12 Jun 2025 20:03:15 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Michal Schmidt <mschmidt@redhat.com>,
-	Petr Oros <poros@redhat.com>
-Subject: [PATCH net-next v9 12/14] dpll: zl3073x: Implement input pin state setting in automatic mode
-Date: Thu, 12 Jun 2025 22:01:43 +0200
-Message-ID: <20250612200145.774195-13-ivecera@redhat.com>
-In-Reply-To: <20250612200145.774195-1-ivecera@redhat.com>
-References: <20250612200145.774195-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4sHbK8R"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d393a42698so13740885a.2;
+        Thu, 12 Jun 2025 13:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749758610; x=1750363410; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZnKjnGPQVsYruwW26IKQXjP4KtQDe+H/2EepWEDvdH4=;
+        b=W4sHbK8Rs5KCcGme9De5sqRir3UOA9vOZUcGmoOpf2cdZ8eVtjOlxadBwoa6UdY4qA
+         vhv59KXx9PALywRfJr53obg2XymxjiHUWtZtVr5731rN5HyxE2R1NpUM85oNbzaafcrN
+         VrvTpUCkIrV7HSSsCtVA8D2pyJ/IMq5Gwn6Cd1Rtex/VX4UtFGsn0WQdwxybAF5AesVk
+         LT7hYM/v4q+OwU1ZZqFzpQbQs7Z6cvfqwmfpanM950fUjwV3G69dlKjS+VUFniiIuAnj
+         cNFRaZasw117y0uEdrX59SoR6U3rvV92aAMU7lxT/gLn2YABxYYdzqpu/62udPRs10PC
+         sL2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749758610; x=1750363410;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZnKjnGPQVsYruwW26IKQXjP4KtQDe+H/2EepWEDvdH4=;
+        b=FYSb8ZBs+T1hBE7+4cYhBLcBcbUsfBomS5S2hjArW3N8znEvxz2bYAgCrW6iV6cfgg
+         NNZJCP+1wYUnCsuvxuLDQ2kdL4AbWfPrekuhFenU8xGk8R82rh4cPA8jV9qk7gpsDn7s
+         uaywj8UzIhW6/Q9xg0s4tqsa5fp0hffB9fTdf+TwfH35F58BtgwArrHFMxky1YZffq5M
+         WYJC20eWBLQW/CsGtCtVBh1dE0vszMTY8FtcXzcvMX9xoL16PPT+6gjTkvv0KPwpaXop
+         Dqt9aDaCYwZQJ0ggzrcZuYR3RfUJAI+Y+zgi8MM5bFcOHl4E8pIDfgWoRb9yy/kc8vmy
+         i9kA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzCku/qJEjoT4lmmSJWlLQMDfvzF1PDby7z6diCIzUGlMT28rEjGicpfzSbLCTYSCEHxsFrhoAnVw=@vger.kernel.org, AJvYcCXl1hzb/7TtZYcgq1mRBp2EBAVnlSixPgi9lWp8MBDNQgigANkhltwwRwPdypncKccWOM55JgnLBxC7tbgB5yH1@vger.kernel.org, AJvYcCXpsFENXwt6XDuMBp8YzIRglxg0uGbDIZCrnOc9LSgbmYoA8xLExibsrgmpq3mJkUbF45KAZRpX02YRfoe7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzemp48UW2eRTE77l+NhFmWCXbXdMkhb5b+0I6XRfqrHonCSFLK
+	h4VT5dRChQmGcbAOIhgXCj997Wl2MisvoE7U8Dnx1Zop4kL9/HWuOI1D/kEyEkYECYI=
+X-Gm-Gg: ASbGncv7uSNB/GwdM4f+K0mFi4sLBJxoYHT6kaFLmDKmp93cQlzBQpOmwizBJa23yGD
+	4X0HQj/NyvhAUMs7WLGZssRZmEdodbtGzznbH8nQvBo3TEZUMnJ6dulO29U+zxzjxL1/DJsCfEe
+	lQwDpoDLnZfiyuBOl2xZYPaSzoAbTWET4A/B7Ot7lnZHosb1AU3GD3hlexvJQ9yyqQUqS3GboCO
+	6auBKHxFiiI9dD05tHpxoQHdkH9cztNgsosV+fUp64L+c4fWaVlVe8T4dMrA5zx8eVp8yC0POju
+	1fPKlWizcCqmKwJgpvbD9Etez1QpWPaRN7DB69i/9zhhV3QvV94L1/U=
+X-Google-Smtp-Source: AGHT+IEYJNouzQaBO57RIFJdSjytY+rAwJnE1qi8JXnfhXTA6dO5SUQ1nlRCfzkPu1uKMj9aLcCzVw==
+X-Received: by 2002:a05:620a:bc3:b0:7c5:79e8:412a with SMTP id af79cd13be357-7d3bc37d979mr35927485a.2.1749758609646;
+        Thu, 12 Jun 2025 13:03:29 -0700 (PDT)
+Received: from localhost ([2a03:2880:20ff:1::])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ed35b1sm77151285a.88.2025.06.12.13.03.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 13:03:29 -0700 (PDT)
+From: Gustavo Luiz Duarte <gustavold@gmail.com>
+Date: Thu, 12 Jun 2025 13:02:18 -0700
+Subject: [PATCH net-next v2 5/5] docs: netconsole: document msgid feature
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-netconsole-msgid-v2-5-d4c1abc84bac@gmail.com>
+References: <20250612-netconsole-msgid-v2-0-d4c1abc84bac@gmail.com>
+In-Reply-To: <20250612-netconsole-msgid-v2-0-d4c1abc84bac@gmail.com>
+To: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Gustavo Luiz Duarte <gustavold@gmail.com>
+X-Mailer: b4 0.13.0
 
-Implement input pin state setting when the DPLL is running in automatic
-mode. Unlike manual mode, the DPLL mode switching is not used here and
-the implementation uses special priority value (15) to make the given
-pin non-selectable.
+Add documentation explaining the msgid feature in netconsole.
 
-When the user sets state of the pin as disconnected the driver
-internally sets its priority in HW to 15 that prevents the DPLL to
-choose this input pin. Conversely, if the pin status is set to
-selectable, the driver sets the pin priority in HW to the original saved
-value.
+This feature appends unique id to the userdata dictionary. The message
+ID is populated from a per-target 32 bit counter which is incremented
+for each message sent to the target. This allows a target to detect if
+messages are dropped before reaching the target.
 
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
 ---
- drivers/dpll/zl3073x/dpll.c | 32 ++++++++++++++++++++++++++++++++
+ Documentation/networking/netconsole.rst | 32 ++++++++++++++++++++++++++++++++
  1 file changed, 32 insertions(+)
 
-diff --git a/drivers/dpll/zl3073x/dpll.c b/drivers/dpll/zl3073x/dpll.c
-index e731b17c69394..1f44910958781 100644
---- a/drivers/dpll/zl3073x/dpll.c
-+++ b/drivers/dpll/zl3073x/dpll.c
-@@ -439,6 +439,38 @@ zl3073x_dpll_input_pin_state_on_dpll_set(const struct dpll_pin *dpll_pin,
+diff --git a/Documentation/networking/netconsole.rst b/Documentation/networking/netconsole.rst
+index a0076b542e9c..59cb9982afe6 100644
+--- a/Documentation/networking/netconsole.rst
++++ b/Documentation/networking/netconsole.rst
+@@ -340,6 +340,38 @@ In this example, the message was sent by CPU 42.
+       cpu=42    # kernel-populated value
  
- 		rc = zl3073x_dpll_selected_ref_set(zldpll, new_ref);
- 		break;
+ 
++Message ID auto population in userdata
++--------------------------------------
 +
-+	case ZL_DPLL_MODE_REFSEL_MODE_AUTO:
-+		if (state == DPLL_PIN_STATE_SELECTABLE) {
-+			if (pin->selectable)
-+				return 0; /* Pin is already selectable */
++Within the netconsole configfs hierarchy, there is a file named `msgid_enabled`
++located in the `userdata` directory. This file controls the message ID
++auto-population feature, which assigns a numeric id to each message sent to a
++given target and appends the ID to userdata dictionary in every message sent.
 +
-+			/* Restore pin priority in HW */
-+			rc = zl3073x_dpll_ref_prio_set(pin, pin->prio);
-+			if (rc)
-+				return rc;
++The message ID is generated using a per-target 32 bit counter that is
++incremented for every message sent to the target. Note that this counter will
++eventually wrap around after reaching uint32_t max value, so the message ID is
++not globally unique over time. However, it can still be used by the target to
++detect if messages were dropped before reaching the target by identifying gaps
++in the sequence of IDs.
 +
-+			/* Mark pin as selectable */
-+			pin->selectable = true;
-+		} else if (state == DPLL_PIN_STATE_DISCONNECTED) {
-+			if (!pin->selectable)
-+				return 0; /* Pin is already disconnected */
++It is important to distinguish message IDs from the message <sequnum> field.
++Some kernel messages may never reach netconsole (for example, due to printk
++rate limiting). Thus, a gap in <sequnum> cannot be solely relied upon to
++indicate that a message was dropped during transmission, as it may never have
++been sent via netconsole. The message ID, on the other hand, is only assigned
++to messages that are actually transmitted via netconsole.
 +
-+			/* Set pin priority to none in HW */
-+			rc = zl3073x_dpll_ref_prio_set(pin,
-+						       ZL_DPLL_REF_PRIO_NONE);
-+			if (rc)
-+				return rc;
++Example::
 +
-+			/* Mark pin as non-selectable */
-+			pin->selectable = false;
-+		} else {
-+			NL_SET_ERR_MSG(extack,
-+				       "Invalid pin state for automatic mode");
-+			return -EINVAL;
-+		}
-+		break;
++  echo "This is message #1" > /dev/kmsg
++  echo "This is message #2" > /dev/kmsg
++  13,434,54928466,-;This is message #1
++   msgid=1
++  13,435,54934019,-;This is message #2
++   msgid=2
 +
- 	default:
- 		/* In other modes we cannot change input reference */
- 		NL_SET_ERR_MSG(extack,
++
+ Extended console:
+ =================
+ 
+
 -- 
-2.49.0
+2.47.1
 
