@@ -1,104 +1,75 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF3F1DF75A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A321DF75A;
+	Thu, 12 Jun 2025 08:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749718319; cv=none; b=ppg/wZtFZ3i6bzsQJEnnAFqL0/OiSaQuHXib1AkZqMvGBM/cFfRX0jGuRdG8084Wko1lC+L1zXYPFiX1x2P2KbHMKRmtbro0tgd0+At24YAvk4b6jAjOC4jOZEw5a5udHjkHnIFHCA7rrJCR7AYjdv9Pm+IOYE+hjLejuBtd4WA=
+	t=1749718355; cv=none; b=n3zDLUJdst2UGwrVJGBAnbVpsHb8eBFmzhpgbyos4ygQMviArGE6n4SFQkFwt8qIpRp9Hv7Z89vreQdsRMwdeCCEAxKVU2sIuJERSoWMI6VRgeN2oBBBRPpqyENpdcJ7/h6fClW0uDK20hTGnrNeqdYnlQI2miiUjewt7BdmvwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749718319; c=relaxed/simple;
-	bh=H0VCAnV+60G/axqZge8syCzBtfm8tXNe14T0UBegxF8=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=TyjeNv7EP9tQFitfIkBTzdqFZjKKboTMQF8JaPFtvUehNdEw1FsVEJ6znEtUaeRhZJUSqzPrdc+CT+1UsW6r/nG6fDXVNcL8w+oacabOt5aw6SuxxE0OjyeQYRHiCsvkc60wHJT184wzlxiakn2wkfo7090rkG7AFc8m9eBFWQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c6+a28KT; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749718355; c=relaxed/simple;
+	bh=4TBRPcDqLnwDSufC92i8YQc4oolIMbkdMHlqPtpmTiE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pDnIR88FK3cZedEKITB7V+sN0lqB+uLoKgYp6BTTBWhV9kfH7A7j3GHu+Ok9OaNFynTLNvF37JBsxTeGp+GtgPGaeMGhz51GhIk82W0SLxPY6/Q3R1+byp35YxBiT3i/uQeqB9oHShiwPof2ORPC7EA8vnQHFWabM1dVVsVvSiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=DtPe8Y1i; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c6+a28KT"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="DtPe8Y1i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749718351;
+	bh=4TBRPcDqLnwDSufC92i8YQc4oolIMbkdMHlqPtpmTiE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DtPe8Y1ig+hYb3V3F5DSyrI3US7N7m59zAQ6I8iIYOXmAndIInxGDPBCtSLrhmsul
+	 7OWRwKBOep6Oo3stI8g9d7ASkqCxlukz6cBDOVNCVnE7B9XBpuk4uhHeRnehWmh7og
+	 sOqxIGNGO+6WLknAAHN67fEyeLjknErZiq9EDbpRs5HTmFT2Kn1BYMFMP0myJnBjJg
+	 r6r86fpPoav49iEylRyS/VlJY1nr5EQVjxPwrXFcVd2r/XY/TaBEGctaVQF/esgYYg
+	 f0kkcvWaB4cUnjqSaEk0O4RLtGUCjjvrWF0J6Kl3c3iFncRbhQTScggVMeRqrPuBdz
+	 O6myVGhGzkl5A==
+Received: from [192.168.1.90] (unknown [212.93.144.165])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3548A17E0FDB;
+	Thu, 12 Jun 2025 10:52:31 +0200 (CEST)
+Message-ID: <9cc6e90e-5bf1-474b-a326-532c3cb46ead@collabora.com>
+Date: Thu, 12 Jun 2025 11:52:19 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749718314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1fNjU9Jt2dl9a4ozW6RxgvUD+U87qbNB3Y48ndzwkqw=;
-	b=c6+a28KTWcxU/nQnzd1YNpZV62zUXn3MurB9aDU9I9dTDixL12OoyBdQNZuQ6v/nDhAyFf
-	XmWjDbK00zwdPaJQXNEV3Rznmk4RH9dE76l0gII6HetSWTr8F0SdMmW/6QowSHr1oMmedu
-	HV5hnmXCdaPhUZy+91ALLVuLzvVLFqE=
-Date: Thu, 12 Jun 2025 08:51:52 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yajun Deng" <yajun.deng@linux.dev>
-Message-ID: <be52bdf3f1f4786f73b618369f63ce035ce8b955@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net-next v2] net: sysfs: Implement is_visible for
- phys_(port_id, port_name, switch_id)
-To: "Paolo Abeni" <pabeni@redhat.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- horms@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <10a15ca4-ff93-4e62-9953-cbd3ba2c3f53@redhat.com>
-References: <20250521140824.3523-1-yajun.deng@linux.dev>
- <10a15ca4-ff93-4e62-9953-cbd3ba2c3f53@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/11] HID: playstation: Replace uint{32,16,8}_t with
+ u{32,16,8}
+To: Roderick Colenbrander <thunderbird2k@gmail.com>
+Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ Henrik Rydberg <rydberg@bitmath.org>, kernel@collabora.com,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
+ <20250526-dualsense-hid-jack-v1-4-a65fee4a60cc@collabora.com>
+ <CAEc3jaCX3MV7jTdmw3duS20UAMd0uZ0Ly5jzs3Hofa6SK3T3KQ@mail.gmail.com>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <CAEc3jaCX3MV7jTdmw3duS20UAMd0uZ0Ly5jzs3Hofa6SK3T3KQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-May 27, 2025 at 2:08 PM, "Paolo Abeni" <pabeni@redhat.com> wrote:
+Hi Roderick,
 
+On 6/10/25 7:30 AM, Roderick Colenbrander wrote:
+> Hi Christian,
+> 
+> I would rather skip this one. The use of uint32_t and family is fine
+> and many drivers do the same thing.
 
+That's again about ensuring consistency - even if it's not something
+imposed by the maintainer(s), I'd very much prefer to submit patches
+which comply with the recommended coding style and, consequently, 
+do not generate any checkpatch complaints.
 
->=20
->=20On 5/21/25 4:08 PM, Yajun Deng wrote:
->=20
->=20>=20
->=20> phys_port_id_show, phys_port_name_show and phys_switch_id_show woul=
-d
-> >=20
->=20>  return -EOPNOTSUPP if the netdev didn't implement the correspondin=
-g
-> >=20
->=20>  method.
-> >=20
->=20>=20=20
->=20>=20
->=20>  There is no point in creating these files if they are unsupported.
-> >=20
->=20>=20=20
->=20>=20
->=20>  Put these attributes in netdev_phys_group and implement the is_vis=
-ible
-> >=20
->=20>  method. make phys_(port_id, port_name, switch_id) invisible if the=
- netdev
-> >=20
->=20>  dosen't implement the corresponding method.
-> >=20
->=20>=20=20
->=20>=20
->=20>  Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
-> >=20
->=20
-> I fear that some orchestration infra depends on the files existence -
->=20
->=20i.e. scripts don't tolerate the files absence, deal only with I/O err=
-ors
->=20
->=20after open.
->=20
->=20It feel a bit too dangerous to merge a change that could break
->=20
-> user-space this late. Let's defer it to the beginning of the next cycle=
-.
->=20
-
-Ping.
-
->=20Paolo
->
+Thanks,
+Cristian
