@@ -1,302 +1,166 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43614299A82
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AC02D8764
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749761257; cv=none; b=fnN4S9ZBMWMcPexMVyhlmpcHVxc7onZmKbwyVjsHzCISZp1LRSIPglEijqoQ7femI84NhBAHhAtRX/3ZBJpmTUpNYzvzEzYgyqytb3GT7HLfsNPEDIaIgLiUUKkXuZqXjfgkqTAkgwRweS0xpunpaGsSWBvue89LadZsZfM0sdc=
+	t=1749761259; cv=none; b=Jgeqmb8EJzUuVBtHW4oDlQ9bdg/L71whk3HLjnvA2G10YTIIzqvfrkGiHbAQAE+IeJ625JVvFK5+xmK9wHHZPCxWC7DAR4+pqkdYYdw0XzfZ7PZri0V9xleS3Br+02NMp/i5+CGanm68yFOCKJqq8uu6alztOvHUWXzIiaHpGG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749761257; c=relaxed/simple;
-	bh=3Psga/p5lz/YOSfalIj0yEB2dAXEZdgpkSDHeU2x6GQ=;
+	s=arc-20240116; t=1749761259; c=relaxed/simple;
+	bh=AS3GrOSonbp9zk0Fa7DpmuxsDZ28EABxhA5RZzrO9pE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fGBd42XsQ4rsKyxICaHtRb+VvQ/oQPLbWjnKAqfLRFNUC0DR9IMefftHq3VSExhtDc/iRoEOH+BlpCDWD7aAnFenL+xtXqdh9KY72qr69fkXOzm51ieH0zqwcdTbp51G1b89bxrTGOQkDADEAgnuSJW7p/PuQ6MrpBBbhueM4w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G6LzZjZ/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 To:Cc:Content-Type; b=XwQBqz+eg8frWBsJRPpTE65Bmjc8lLYxSsJW7RRmnWmCJ1VqQbjvIHjeOgdqV+U7RDFm1FPgwp24iJVWFUh1kjzgdJLO5WkfpTY06Zc+dpslyZiylFD8c1LXscabGMuQaXt8FMuvM42AMUnInj2Hbn8jay8kprSgRA1inoXYIVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MEiW5nBN; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G6LzZjZ/"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CI72SR027902
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:47:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=
-	qcppdkim1; bh=OUQqiN0h+KOF+AItufskcppy5j1/Jr2ZlesKUzp3WRQ=; b=G6
-	LzZjZ/n6W6y8ayTp8bsV5O9LWgFCZ5fmjMwfBUAJjzr1eB8/WGsC/oWETj4bZS0f
-	Ty53xsV6hIn4hBQAMT61HUVQPRQyd0TBLOkW/bd5Qrwca4Jhw8Ps/Lh0nYBB7T8t
-	lRDXSX+cCPTVmEfJOPXI/DUt8KIz6a6Q83aeEgfRlIdbei9UmHGgJrTwPxblX36y
-	OzdjcW1Iba1iaWEjCYpNHPOUxU4VbFlSFBzEAQmaljR2F0U6LIu7LRfWaC1aXm6J
-	HCiqcIWiPZIVLntKb42/1mGL9Rki0HIb3Rwju/Vht8E18E/qZSVHvFed2fMuWEAO
-	BZWRxeDrJ3KvMZhAmILA==
-Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com [209.85.160.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476jrhgqvr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:47:33 +0000 (GMT)
-Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-2da80e525e3so1389933fac.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:47:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749761252; x=1750366052;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MEiW5nBN"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235e389599fso69605ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749761257; x=1750366057; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OUQqiN0h+KOF+AItufskcppy5j1/Jr2ZlesKUzp3WRQ=;
-        b=BI6OdPXK6S+2oQdGrWP1U0eL9OAbkWPIQU4VF7Ajh/TQA+iSPerDQXnNjZbFkuvczW
-         Sszx5iV9ePZlqv/zBPHCAX/ZCiT/GMaI+khPExEg9GDhYouE+3XTF/nyPDZH/fUKK8dT
-         bUaCHrHAOMYwDb9WC41pqkCUropuJcRplwz20X4WWxfhD9mlWD1k5pwdOgrVRzFMg6xS
-         89Bx4Dx2rsMNbThNKB1VrQQ9rPb4cowoGBNmUESd0XkExOHoF9PqtBraHqVIQsdPFAqb
-         pCYMQzQazfDstRkvbBrW02a2rAfeIgsBPuq3O6kTVpmRTtrZ184GVMvqjRK4yazdZEZa
-         Bv6w==
-X-Forwarded-Encrypted: i=1; AJvYcCU/sab2Q7CkQMQaeg17zSaKl9TXk9rQZa3o6unME6/6HHrJrgPvUupssT+X/LejM0NWYGPajc5Pg/1h3DY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUE/QJz3tPq/QRuAkfsMI68ApdMCDk5r6x0yyLquKCmiBj4e5t
-	84M9/lgprJABWK+sg1wl3GLoMqTnLua5seID4XppZzbpv/yRXVg4NbwiNxGqTRdJaEOymy+2v+/
-	lyypjXNlxL8giZ9G5yUr95X19fzPa/f8jvfXh4Umo4MrP9bdVh1VLjfXDUShe/jdl9lXKRuaa+I
-	zLZkUsogvvuJvuMz8kkQtKh5ErwKeAx25JluhKm0l/Sj9eFPgyQA==
-X-Gm-Gg: ASbGncvZ3T66cxoG4V9zlKbuYRbwcEl1Z2CKrvNzzJbLMw4yMxnt7yTT2UfJbd/O7bA
-	ohLMLTwOLtTblu5PkDk/8N48sz9UJ4lrHfi9tIUxU/PbIRzaxByMtL6s6ulKzl7ZCdOYtJwtO2m
-	6onRopv6gnX5+HjP6Iu6/k0tCnBB324DxfBBs=
-X-Received: by 2002:a05:6871:4002:b0:2ea:736c:2b08 with SMTP id 586e51a60fabf-2ead5178353mr351834fac.29.1749761251997;
-        Thu, 12 Jun 2025 13:47:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFo4t3zZYDyUT3FmlpIHipzv8NT4Dibo+WvhB3zcMygU2qylNFs4x1N+vPpadMlaGiNB2orLt5ziP1Mj7CpG3M=
-X-Received: by 2002:a05:6871:4002:b0:2ea:736c:2b08 with SMTP id
- 586e51a60fabf-2ead5178353mr351812fac.29.1749761251594; Thu, 12 Jun 2025
- 13:47:31 -0700 (PDT)
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nr6kooDbksDJJfxzyC1WbIX3H7ZZ58tLys9ggXzUeA4=;
+        b=MEiW5nBNJVmhSyrlp538SY8kqa/Sv93YQR9JC0ln68o2HTZ1UMiECmL+FU818Y53RX
+         jJhsgcCc14Hy1FOCuu21GOdPFa3iywZAFECERp4JJ4N04qj/dcFnSGwmMGw7IWsGV6LI
+         nTROSBQGtaA4l668fQaUOpiKo+Bvd0rCJYsAs9pjaiJIGzPdyXxmmciy8mMz/LiiSno9
+         6v2JIwZA8ctGzbkOPpwnK34CRF73KTYN5Fy/GhrKdsg18w81GynqSWlWWXcFrtkspRRm
+         rVrauDvYBeGoc7gBVL8N7AU4bYE7UaGv8pPHd+OKmSazCMVBN26a4fmTZm8l3HikmFWq
+         WS/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749761257; x=1750366057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nr6kooDbksDJJfxzyC1WbIX3H7ZZ58tLys9ggXzUeA4=;
+        b=U3VR/ghjUkr+0uBdVgdhATsHOrOlqapFS0QLTdhy++LHMTvVeyIJ490zqDwGRD6fc5
+         ifqgtkk16aYnrG1+UrNHivJWQh4mpSe0ysoPmhVAByGC1dKGAf93aFvXcVeRW28F0ykh
+         Iz2ULg4YuEYzzJewRIwIYB+9AiUe8YhaRoC3XL91ogT2259/0sBdrbY2RFBXIF+sqqzI
+         1qZCKe4FsBYFJexnFJyeMXmQrxB9UM8IZYKm4xZBFBHrPMGSOZbRLnHx2XHeRqiqsdmz
+         nVEfHUh/ZODy1pDlJhNe9ee9fT8pniYW9c9E+tm9OpDomVO6ja+iwfeN9AbVXqQnzDKV
+         Nyvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQaSpf75/atuIrW+ugfTXIi/m5QpJngKbtK1bE3ZTnvvPb3zwgxrdvFCl0O/mHV+rRaJ59vVYk/unBpY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzF0AsTZJrOXql5xIaIXULN1/AoURyXq8xByyp6eTjnH4zKXi54
+	wVrjCGnaK3vNv4ysvMqPoN4gDzV6QWYcK7ZwgnQIn4BcxYJWL/x3XvqYOndCC1dOO8i5oQSAmcC
+	r2Hlayf73qk701jPFlVCrR81m/D54pJ6smeQ1Z4ZL
+X-Gm-Gg: ASbGnctKTJWQX6QpYQp1hnhxRZYE6YIKgtwOpkQP9VVSBjwwJLeujE5egKWdKoDCKJU
+	FahAAj61PxUJzU5IIa2aHgrhFuvhc6piHTNglCLG3hhWFjWaBDjTiyYk2zNxs8gCkKgrQHY2uJ1
+	OuE4VdYTlsQJ56zmMsZVyvh6JC1x/bHf//5fXRDy1feXsvV0gbXh97XqPiX7JEClVNvosLTFHc0
+	Q==
+X-Google-Smtp-Source: AGHT+IEHoeUeqPp+cnSpet6RlgQGrs8OfW2u94ffFxvnZOLY+RPrDzdl21M2RwfhrxNi9bgdnG9KgQPYqe5L7gJzi1I=
+X-Received: by 2002:a17:903:185:b0:231:d0ef:e8ff with SMTP id
+ d9443c01a7336-2365e85307amr600125ad.8.1749761256479; Thu, 12 Jun 2025
+ 13:47:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609182439.28432-1-robin.clark@oss.qualcomm.com>
- <20250609182439.28432-4-robin.clark@oss.qualcomm.com> <DAKOKYU9O323.M7OSA1CFHQWX@linaro.org>
- <1bf920c8-245b-40c3-bce1-ec5194b30fd9@oss.qualcomm.com>
-In-Reply-To: <1bf920c8-245b-40c3-bce1-ec5194b30fd9@oss.qualcomm.com>
-Reply-To: rob.clark@oss.qualcomm.com
-From: Rob Clark <rob.clark@oss.qualcomm.com>
-Date: Thu, 12 Jun 2025 13:47:20 -0700
-X-Gm-Features: AX0GCFuxTx9pgxu_i4KrKSjSeKFBX6EzOI1MTSGy4XpCql4QPO4U0LlgB52T-48
-Message-ID: <CACSVV01ZsrLsLZstnwyH89-gM7KGd3dZYR_AieQYmXeqZPossw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] drm/msm/adreno: Check for recognized GPU before bind
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Alexey Klimov <alexey.klimov@linaro.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20250610150950.1094376-1-mbloch@nvidia.com> <20250610150950.1094376-9-mbloch@nvidia.com>
+ <CAHS8izOEn+C5QexSPZT3_ekUr2zR1dm9R6OsoGBPaqg5MFvBRQ@mail.gmail.com> <6nd3d7z5dmpzpegbwfkhszmtjqmsb4af5ts36mpv5m6jfavo23@lwijppu24jjf>
+In-Reply-To: <6nd3d7z5dmpzpegbwfkhszmtjqmsb4af5ts36mpv5m6jfavo23@lwijppu24jjf>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 12 Jun 2025 13:47:24 -0700
+X-Gm-Features: AX0GCFuekM7pseu4CUTgDEgxUud4AkQ-D4uoz7Py55DS2ZIX3Eg9EwW7G8lnVfc
+Message-ID: <CAHS8izNyFtcWd0wPGoCdZXtZkjqWk6VgLAyk4anfCQjGP2uk-w@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 08/11] net/mlx5e: Add support for UNREADABLE
+ netmem page pools
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: Mark Bloch <mbloch@nvidia.com>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com, gal@nvidia.com, 
+	leonro@nvidia.com, tariqt@nvidia.com, Leon Romanovsky <leon@kernel.org>, 
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Cosmin Ratiu <cratiu@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Authority-Analysis: v=2.4 cv=EovSrTcA c=1 sm=1 tr=0 ts=684b3ce5 cx=c_pps
- a=zPxD6eHSjdtQ/OcAcrOFGw==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=EUspDBNiAAAA:8 a=4MAclHcQAAAA:8 a=wlZFfpuQTLNucttZ8HoA:9 a=QEXdDO2ut3YA:10
- a=y8BKWJGFn5sdPF1Y92-H:22 a=6vtlOZhwcO7ZS_iRoh4Z:22
-X-Proofpoint-ORIG-GUID: VSh1oklG1h8mESMPpj5pjCzSIn7pb4xb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDE2MCBTYWx0ZWRfX2NarEQWTKFoh
- vIdYwu+vLfPeokBGShVUKjTrRN4TBcL9fE6torVUEIamkMaFFvFkPDafIod4AxD0q87T82NpLyi
- Kkf8njwJ+QRRr9e+kaYc73070bd92aREgG32DcCwq5Az0cCR4LywL2v6nsVCwfssmMXhywfpz4O
- S9ImXVof7H/vSlO8mOLLTIem+FFBxlhrolo2Ia/vboAGiYkiyKiZMLMdv9GPxLmDY3kZWONzX0X
- LbjA0bLXvFCqn8jzDCeq9VzMJv+WJhXnvAF2clC0o7QBnk9ZvHsVXE1OumpTfWmjPIYclz8dJy1
- DGSaTF/0DE7NkWg9KvOkQK2AkF1VV+TtLLf+AV0gXBv73z/L8CCgrWXqX7gH2U0znThWq18qjBK
- 2kSN9XYhX37g3FUy2UpqyGl1yCDFdUPCuQ9kR+gZNOFa81crjJ8RyUkjCWUx89P1p+4Ce3Nh
-X-Proofpoint-GUID: VSh1oklG1h8mESMPpj5pjCzSIn7pb4xb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
- mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506120160
 
-On Thu, Jun 12, 2025 at 9:08=E2=80=AFAM Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
+On Thu, Jun 12, 2025 at 1:46=E2=80=AFAM Dragos Tatulea <dtatulea@nvidia.com=
+> wrote:
 >
-> On 6/12/25 6:04 PM, Alexey Klimov wrote:
-> > On Mon Jun 9, 2025 at 7:24 PM BST, Rob Clark wrote:
-> >> If we have a newer dtb than kernel, we could end up in a situation whe=
-re
-> >> the GPU device is present in the dtb, but not in the drivers device
-> >> table.  We don't want this to prevent the display from probing.  So
-> >> check that we recognize the GPU before adding the GPU component.
-> >>
-> >> v2: use %pOF
-> >>
-> >> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
-> >> ---
-> >>  drivers/gpu/drm/msm/adreno/adreno_device.c | 29 ++++++++++++++++++---=
--
-> >>  drivers/gpu/drm/msm/msm_drv.c              |  2 +-
-> >>  drivers/gpu/drm/msm/msm_gpu.h              |  1 +
-> >>  3 files changed, 26 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/=
-drm/msm/adreno/adreno_device.c
-> >> index 778e6ae7f137..0d12454b1f2e 100644
-> >> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> >> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> >> @@ -178,6 +178,26 @@ static int find_chipid(struct device_node *node, =
-uint32_t *chipid)
-> >>      return 0;
-> >>  }
-> >>
-> >> +bool adreno_has_gpu(struct device_node *node)
-> >> +{
-> >> +    const struct adreno_info *info;
-> >> +    uint32_t chip_id;
-> >> +    int ret;
-> >> +
-> >> +    ret =3D find_chipid(node, &chip_id);
-> >> +    if (ret)
-> >> +            return false;
-> >> +
-> >> +    info =3D adreno_info(chip_id);
-> >> +    if (!info) {
-> >> +            pr_warn("%pOF: Unknown GPU revision: %"ADRENO_CHIPID_FMT"=
-\n",
-> >> +                    node, ADRENO_CHIPID_ARGS(chip_id));
-> >> +            return false;
-> >> +    }
-> >> +
-> >> +    return true;
-> >> +}
-> >> +
-> >>  static int adreno_bind(struct device *dev, struct device *master, voi=
-d *data)
-> >>  {
-> >>      static struct adreno_platform_config config =3D {};
-> >> @@ -188,18 +208,17 @@ static int adreno_bind(struct device *dev, struc=
-t device *master, void *data)
-> >>      int ret;
-> >>
-> >>      ret =3D find_chipid(dev->of_node, &config.chip_id);
-> >> -    if (ret)
-> >> +    /* We shouldn't have gotten this far if we can't parse the chip_i=
-d */
-> >> +    if (WARN_ON(ret))
-> >>              return ret;
+> On Wed, Jun 11, 2025 at 10:16:18PM -0700, Mina Almasry wrote:
+> > On Tue, Jun 10, 2025 at 8:20=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> =
+wrote:
+> > >
+> > > From: Saeed Mahameed <saeedm@nvidia.com>
+> > >
+> > > On netdev_rx_queue_restart, a special type of page pool maybe expecte=
+d.
+> > >
+> > > In this patch declare support for UNREADABLE netmem iov pages in the
+> > > pool params only when header data split shampo RQ mode is enabled, al=
+so
+> > > set the queue index in the page pool params struct.
+> > >
+> > > Shampo mode requirement: Without header split rx needs to peek at the=
+ data,
+> > > we can't do UNREADABLE_NETMEM.
+> > >
+> > > The patch also enables the use of a separate page pool for headers wh=
+en
+> > > a memory provider is installed for the queue, otherwise the same comm=
+on
+> > > page pool continues to be used.
+> > >
+> > > Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+> > > Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+> > > Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
+> > > Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+> > > Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+> > > ---
+> > >  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/driv=
+ers/net/ethernet/mellanox/mlx5/core/en_main.c
+> > > index 5e649705e35f..a51e204bd364 100644
+> > > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> > > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> > > @@ -749,7 +749,9 @@ static void mlx5e_rq_shampo_hd_info_free(struct m=
+lx5e_rq *rq)
+> > >
+> > >  static bool mlx5_rq_needs_separate_hd_pool(struct mlx5e_rq *rq)
+> > >  {
+> > > -       return false;
+> > > +       struct netdev_rx_queue *rxq =3D __netif_get_rx_queue(rq->netd=
+ev, rq->ix);
+> > > +
+> > > +       return !!rxq->mp_params.mp_ops;
 > >
-> > I just hit this with linux-next on qrb2210 RB1 [1].
+> > This is kinda assuming that all future memory providers will return
+> > unreadable memory, which is not a restriction I have in mind... in
+> > theory there is nothing wrong with memory providers that feed readable
+> > pages. Technically the right thing to do here is to define a new
+> > helper page_pool_is_readable() and have the mp report to the pp if
+> > it's all readable or not.
 > >
-> > Is it expected an warning now or do we miss some device tree updates on
-> > linux-next for RB1?
-> >
-> > I don't recall seeing such warnings previously.
-> >
-> > Thanks,
-> > Alexey
-> >
-> > [1]:
-> >
-> >  msm_dpu 5e01000.display-controller: bound 5e94000.dsi (ops dsi_ops [ms=
-m])
-> >  ------------[ cut here ]------------
-> >  WARNING: CPU: 0 PID: 242 at drivers/gpu/drm/msm/adreno/adreno_device.c=
-:224 adreno_bind+0x90/0x120 [msm]
-> >  Modules linked in: q6asm_dai q6routing q6afe_dai q6adm q6asm q6afe_clo=
-cks snd_q6dsp_common q6afe q6core apr pdr_interface qrtr_smd qcom_pd_mapper=
- qcom_pdr_msg mcp251xfd ath10k_snoc snd_soc_wsa881x_i2c snd_soc_wsa881x_com=
-mon can_dev lontium_lt9611uxc(+) ath10k_core ath mac80211 hci_uart btqca bt=
-bcm libarc4 msm snd_soc_sm8250 qrtr bluetooth drm_exec snd_soc_qcom_sdw qco=
-m_q6v5_pas llcc_qcom snd_soc_qcom_common lmh qcom_wdt ocmem cfg80211 ecdh_g=
-eneric qcom_pil_info pinctrl_sm6115_lpass_lpi gpu_sched ecc drm_display_hel=
-per rfkill qcom_q6v5 pinctrl_lpass_lpi qcom_sysmon pwrseq_core lpasscc_sm61=
-15 dispcc_qcm2290 qcom_common snd_soc_lpass_va_macro cec snd_soc_lpass_rx_m=
-acro drm_dp_aux_bus snd_soc_lpass_tx_macro qcom_glink_smem gpucc_qcm2290 sn=
-d_soc_pm4125 mdt_loader snd_soc_lpass_macro_common qmi_helpers snd_soc_pm41=
-25_sdw soundwire_qcom regmap_sdw slimbus qcom_pmic_tcpm qcom_usb_vbus_regul=
-ator drm_client_lib tcpm rtc_pm8xxx snd_soc_wcd_mbhc aux_hpd_bridge qcom_po=
-n qcrypto soundwire_bus sha256 qcom_stats gpi
-> >   spi_geni_qcom i2c_qcom_geni rpmsg_ctrl libsha256_generic libsha256 rp=
-msg_char qcom_rng sha256_arm64 authenc icc_bwmon phy_qcom_qmp_usbc libdes t=
-ypec phy_qcom_qusb2 display_connector i2c_gpio rmtfs_mem drm_kms_helper soc=
-info fuse drm backlight dm_mod ip_tables x_tables ipv6
-> >  CPU: 0 UID: 0 PID: 242 Comm: (udev-worker) Not tainted 6.16.0-rc1-next=
--20250612-00025-g0ce0d3974333-dirty #2 PREEMPT
-> >  Hardware name: Qualcomm Technologies, Inc. Robotics RB1 (DT)
-> >  pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
-> >  pc : adreno_bind+0x90/0x120 [msm]
-> >  lr : adreno_bind+0x50/0x120 [msm]
-> >  sp : ffff8000813f3580
-> >  x29: ffff8000813f3580 x28: ffff000008ae8800 x27: ffff000007c63700
-> >  x26: ffffca4a2814b860 x25: ffff000008b26880 x24: ffffca4a24922000
-> >  x23: ffffca4a249229d8 x22: ffff000009838800 x21: ffff000008b26880
-> >  x20: ffff000002ce4410 x19: ffffca4a2495a710 x18: 0000000000000006
-> >  x17: 6f5f697364207370 x16: 6f28206973642e30 x15: 0720072007200720
-> >  x14: 0000000000000000 x13: 0000000000000000 x12: 0101010101010101
-> >  x11: 7f7f7f7f7f7f7f7f x10: ffffca4a2866e1b2 x9 : 0000000000000002
-> >  x8 : 0101010101010101 x7 : 7f7f7f7f7f7f7f7f x6 : fefefeff2f383131
-> >  x5 : ffff00007fc1b968 x4 : 0000000000000000 x3 : 000000000000001e
-> >  x2 : 0000000000000001 x1 : 0000000007000200 x0 : ffffca4a2495a710
-> >  Call trace:
-> >   adreno_bind+0x90/0x120 [msm] (P)
-> >   component_bind_all+0x100/0x23c
-> >   msm_drm_bind+0x148/0x3e0 [msm]
-> >   try_to_bring_up_aggregate_device+0x16c/0x1e0
-> >   __component_add+0xa4/0x174
-> >   component_add+0x14/0x20
-> >   dsi_dev_attach+0x20/0x34 [msm]
-> >   dsi_host_attach+0x58/0x98 [msm]
-> >   devm_mipi_dsi_attach+0x34/0x90
-> >   lt9611uxc_attach_dsi.isra.0+0x94/0x124 [lontium_lt9611uxc]
-> >   lt9611uxc_probe+0x568/0x604 [lontium_lt9611uxc]
-> >   i2c_device_probe+0x158/0x32c
-> >   really_probe+0xbc/0x2b4
-> >   __driver_probe_device+0x78/0x120
-> >   driver_probe_device+0x3c/0x154
-> >   __driver_attach+0x90/0x1a0
-> >   bus_for_each_dev+0x68/0xb8
-> >   driver_attach+0x24/0x30
-> >   bus_add_driver+0xe4/0x208
-> >   driver_register+0x68/0x124
-> >   i2c_register_driver+0x48/0xcc
-> >   lt9611uxc_driver_init+0x20/0x1000 [lontium_lt9611uxc]
-> >   do_one_initcall+0x60/0x1d4
-> >   do_init_module+0x54/0x23c
-> >   load_module+0x1730/0x1cc0
-> >   init_module_from_file+0x74/0xa0
-> >   __arm64_sys_finit_module+0x130/0x2f8
-> >   invoke_syscall+0x48/0x104
-> >   el0_svc_common.constprop.0+0xc0/0xe0
-> >   do_el0_svc+0x1c/0x28
-> >   el0_svc+0x2c/0x80
-> >   el0t_64_sync_handler+0x10c/0x138
-> >   el0t_64_sync+0x198/0x19c
-> >  ---[ end trace 0000000000000000 ]---
-> >  adreno 5900000.gpu: supply vdd not found, using dummy regulator
-> >  adreno 5900000.gpu: supply vddcx not found, using dummy regulator
-> >  msm_dpu 5e01000.display-controller: bound 5900000.gpu (ops a3xx_ops [m=
-sm])
-> >  [drm:dpu_kms_hw_init:1173] dpu hardware revision:0x60050000
-> >  dummy 1-0045: No cache used with register defaults set!
-> >  [drm] Initialized msm 1.12.0 for 5e01000.display-controller on minor 0
-> >  msm_dpu 5e01000.display-controller: [drm:adreno_request_fw [msm]] load=
-ed qcom/a702_sqe.fw from new location
+> The API is already there: page_pool_is_unreadable(). But it uses the
+> same logic...
 >
-> Looks like we should be doing this instead
->
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm=
-/msm/adreno/adreno_device.c
-> index 5e7307567239..16e7ac444efd 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> @@ -221,7 +221,7 @@ static int adreno_bind(struct device *dev, struct dev=
-ice *master, void *data)
->
->         info =3D adreno_info(config.chip_id);
->         /* We shouldn't have gotten this far if we don't recognize the GP=
-U: */
-> -       if (!WARN_ON(info))
-> +       if (WARN_ON(!info))
->                 return -ENXIO;
->
->         config.info =3D info;
 
-Oh, yes, indeed
+Ugh, I was evidently not paying attention when that was added. I guess
+everyone thinks memory provider =3D=3D unreadable memory. I think it's
+more a coincidence that the first 2 memory providers give unreadable
+memory. Whatever I guess; it's good enough for now :D
 
-BR,
--R
+> However, having a pp level API is a bit limiting: as Cosmin pointed out,
+> mlx5 can't use it because it needs to know in advance if this page_pool
+> is for unreadable memory to correctly size the data page_pool (with or
+> without headers).
+>
+
+Yeah, in that case mlx5 would do something like:
+
+return !rxq->mp_params.mp_ops->is_readable();
+
+If we decided that mp's could report if they're readable or not. For
+now I guess assuming all mps are unreadable is fine.
+
+
+--=20
+Thanks,
+Mina
