@@ -1,96 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0763C47B;
-	Thu, 12 Jun 2025 13:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E118C3C47B;
+	Thu, 12 Jun 2025 13:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749733402; cv=none; b=m2Myt23S/TFjTKJJlbYKiCjekqF3KoPyBYe/+isWAQ5UgZEbkJgVRD47uy083feZPFdDBPRn2QVsSIIKTxGPaKzIbdTuR1UIVPkRKsj4pjVoEZWP5YKIBc0iWmD5Cl3y6hEvFsnJPn2vy3CI/fmiCGHYijS4qx1tVlCnbhvyKeE=
+	t=1749733438; cv=none; b=irV/FSy+6WcJ7EgnCX8dpO9KGaVsX+2ZlPTPFxIFbi/e3cZxot5sQWd57jtVXT7yzLgXTUazoDdoQnFQjTaBArUMxMRvfZtExSsBNDk+lr1GYf+zyY0ptSSUu5MV0rE+Wd+fdsI0D2ofH86vgx7E/RcfCgYJUFIc8g+1l9TLyzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749733402; c=relaxed/simple;
-	bh=smFod4njUytLjEceTyaLsqM0FApkQys84GHLHROOmnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GjkmxlR1ShXcan2HzhJvQ7zxPxp9yPqx+imNeq+atL7CJJriw59r2IN4MYCx2foMvyFoCopk4vopR5umWpRXwWd8tsM+RzGJgiTbqq9cFlmF45TfCIOmmDZ41B8j4ysGijkj75LxTXhnOYcNQYO2P+Rn/01RQkeWmW9RiUI5duE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drZSHf3F; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749733438; c=relaxed/simple;
+	bh=Z0grezPSoGr5pXzkUAsQ8shemjlZEwpuaPFyJwa6sWE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lPBB3HbgmccX8KHhidmelngIyqhX7wiAbVClrB2Ke5TZF8MtBrV3K6IDipQAVqZqPwUgniH+Y3e1hxdnpQvB6R1MlGdNGUj5fKvSvV5MF+pTPl78kB3zGgFO5obymUzOCmKAH09ST6T6NUVgwxABrTD1ARWhHjbl1ZyZUYFdeQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HKzm1HBR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GlCjmsnp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drZSHf3F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749733401; x=1781269401;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=smFod4njUytLjEceTyaLsqM0FApkQys84GHLHROOmnU=;
-  b=drZSHf3FlumkCbb6glLa1P+eghFYqU0dYeNgR0VgwphCYhBuo9vy/Ofm
-   vxPriUqhlq7x7BHY1TGcLHEqWc77sdnrAxu+q7g00ZmnLSVPFRJdQQGgK
-   ix/WLfVI5bc+Rdfv3rL4+wyvibQv5+jO+E2sIRGRRtBZMWWrA07Pr1lYc
-   yArLUFm7rN9Nh+2uXAo+ZUxId7GgSehG87ukZtIs6DMWu5Gq7GypLAnV3
-   tGD4XFPaPXlwUNNK/Ri6BUECwDHQd8giFajgSgrGaS5UE2ha+rc4BRixV
-   pTJinnkSl5CoVYFs7uekuU84Bnua9RFsEzuDqjgIYIyH80j0Z5xLxbT7A
-   Q==;
-X-CSE-ConnectionGUID: CFr9smqsSs+ck/T2OrbbHQ==
-X-CSE-MsgGUID: 2E2CWMiHTiO6ujTDm8mlHQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="39521660"
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="39521660"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:03:20 -0700
-X-CSE-ConnectionGUID: o2H5FO0LQy2gl7sQKQtNMA==
-X-CSE-MsgGUID: EEn9lOyjQpiYIK1ODSG7Vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="148066333"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:03:17 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uPhaM-00000005xI7-1Fw2;
-	Thu, 12 Jun 2025 16:03:14 +0300
-Date: Thu, 12 Jun 2025 16:03:14 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] iio: amplifiers: ada4250: use
- devm_regulator_get_enable_read_voltage()
-Message-ID: <aErQEn5sdf25Vlvi@smile.fi.intel.com>
-References: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-0-bf85ddea79f2@baylibre.com>
- <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-3-bf85ddea79f2@baylibre.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HKzm1HBR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GlCjmsnp"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749733434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZNcAOEiL3XjwzVrB/UHurIxwW0UwH/mpeP/ua8JcaY=;
+	b=HKzm1HBRKnHelVN43bRcu96NW1WHIrHMsq5hv097N9N7jLbjaiJsGWojti9nurVuuBL4r0
+	PKwl74gj+VIH8KePn4AdEb7sddKufpCu+eIzuG1LPQPZG5P0ARKx7XltTvhMoSCxsPe3fU
+	Z27WWPqiRZBFfBCMhyXDrC0/qgWjy68oI1ixDs4Wn205lSKZU+pAEWQPjgDeb0/KjWtQl/
+	CQ8P9/X44uNsYJY1wPjrkYR0Eg4ZrnY20CAmi33MRlBH277vdBirDlI5tGGYRtMOZOmS/T
+	ezvYYf6pZR8oeiX5aKiAbCI+71TCZ/yc5lR/NBRt9XkTgJUfxGHXrjJ9MlQ5+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749733434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZNcAOEiL3XjwzVrB/UHurIxwW0UwH/mpeP/ua8JcaY=;
+	b=GlCjmsnpmUVkNWwToYaFt5t5n4hO8nGY3LbhYhRMlVodb9+ZoBG/85IAyOn+C1HOieKWFX
+	mUOQXYPfmZDmdEAg==
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Anup Patel <anup@brainfault.org>, Chen Wang
+ <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, Sunil V L
+ <sunilvl@ventanamicro.com>, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>, Ryo Takakura <takakura@valinux.co.jp>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, sophgo@lists.linux.dev, Vladimir
+ Kondratiev <vladimir.kondratiev@mobileye.com>
+Subject: Re: [PATCH v2 4/7] irqchip: MIPS P800 variant of aclint-sswi
+In-Reply-To: <20250610100540.2834044-5-vladimir.kondratiev@mobileye.com>
+References: <20250609134749.1453835-1-vladimir.kondratiev@mobileye.com>
+ <20250610100540.2834044-1-vladimir.kondratiev@mobileye.com>
+ <20250610100540.2834044-5-vladimir.kondratiev@mobileye.com>
+Date: Thu, 12 Jun 2025 15:03:54 +0200
+Message-ID: <87ecvpru11.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-3-bf85ddea79f2@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain
 
-On Wed, Jun 11, 2025 at 04:33:03PM -0500, David Lechner wrote:
-> Use devm_regulator_get_enable_read_voltage() to simplify the code.
-> 
-> Replace 1000000 with MICRO while we are touching this for better
-> readability.
+On Tue, Jun 10 2025 at 13:05, Vladimir Kondratiev wrote:
+> +config ACLINT_SSWI
+> +	bool
+> +
+> +config MIPS_P8700_ACLINT_SSWI
+> +	bool "MIPS P8700 ACLINT S-mode IPI Interrupt Controller"
+> +	depends on RISCV
+> +	depends on SMP
+> +	select IRQ_DOMAIN_HIERARCHY
+> +	select GENERIC_IRQ_IPI_MUX
+> +	select ACLINT_SSWI
+> +	help
+> +	  This enables support for MIPS P8700 specific ACLINT SSWI device
+> +
+> +	  If you don't know what to do here, say Y.
+> +
+>  config THEAD_C900_ACLINT_SSWI
+>  	bool "THEAD C9XX ACLINT S-mode IPI Interrupt Controller"
+>  	depends on RISCV
+>  	depends on SMP
+>  	select IRQ_DOMAIN_HIERARCHY
+>  	select GENERIC_IRQ_IPI_MUX
+> +	select ACLINT_SSWI
+>  	help
+>  	  This enables support for T-HEAD specific ACLINT SSWI device
+>  	  support.
 
-...
+That's just exactly the same thing twice for no value. Just rename it to
+ACLINT_SSWI and have a list of supported chips in the help text.
 
-> -	voltage_v = DIV_ROUND_CLOSEST(voltage_v, 1000000);
-> +	voltage_v = DIV_ROUND_CLOSEST(st->avdd_uv, MICRO);
+The only issue with the rename is, that oldconfig will drop the then
+non-existing THEAD_C900_ACLINT_SSWI entry in the previous config. That's
+not the end of the world and if really desired this can be solved by
+having:
 
-Side note. I'm always worry about CLOSEST choice when it's related to voltage
-or current. Imagine the table which gives you 5, 3.3, and 1.2. If it happens to
-be closest to higher value, it may damage HW forever.
+config ACLINT_SSWI
+	bool "RISCV ACLINT ...."
+	depends on RISCV
+	depends on SMP
+	select IRQ_DOMAIN_HIERARCHY
+	select GENERIC_IRQ_IPI_MUX
+	select ACLINT_SSWI
+	help
+	  This enables support for ACLINT SSWI device on THEAD C9XX and
+	  MIPS P8700 devices.
 
--- 
-With Best Regards,
-Andy Shevchenko
+# Backwards compatibility so oldconfig does not drop it.
+config THEAD_C900_ACLINT_SSWI
+	select ACLINT_SSWI
 
+Or something like that.
 
+Thanks,
+
+        tglx
