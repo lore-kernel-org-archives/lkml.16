@@ -1,142 +1,122 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F82A2AEED;
-	Thu, 12 Jun 2025 13:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE35F23C516
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736551; cv=none; b=OziNnSi27cAiS1s08EgdgWak+qspwCDiCxPHyz7RfkjQyVOvaPC7IHCb5rhZ8XADMNJLFsPE2C9rLQsP1bRfOEbpOMG058d8XRZjy1/rQuPiuFHcZQIbOY9fJOMqGtRYWEYCKU6n5lHTCuqJYoEX3vG8uCKTjc6MPA+dQ558IQc=
+	t=1749736594; cv=none; b=THM6fQYfANeY+3eVHxxYQye+oNt0HkyFDsW1JKXy2/RSFBHw8BGgV2eG384gWTinsHalNpXZeGO1s6TrHMfCzA5NTfaHfIT/kpRBN6oyqCDZLwNTDvqXeAwaODSDMqIpHJN5FPdi7xdp6NdRTkbsH9aSUrN4P0fV+lCOd1TUaGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736551; c=relaxed/simple;
-	bh=E0Nxbb8Zhk8mfwiipHLBBckrZjv1zJdhcMMkqy7tMgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r9GhRb3MFF3WUCOizMwD5CYBGJ7425S1oD24P/KMbr+bCzwN1amoEhCmQ2NgJCRnAWFAC2zmDP6g7Xaz5OGSxqO5Svh4oALPvZ4N5B1CjAzZ8vUHY9uuEuEzAKTy2HN84oZHn9T/GUVOXAcerSSiPwdF3DiQ5OqsN9GLBBEzrdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kPOC7IHB; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749736594; c=relaxed/simple;
+	bh=WxMzIaZy423sDZIpi9KE0Tvfc7JKlMGJWRWMOOxFmHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nkYo4fHkrcx1pOr8rDUcs4wJz92VPn0oqs38aXVFy8tdzdtc3YzDAnXJbrOmaIe8m4CqurdMHRcPlTlPmcPtcXZtqVt8QWoleAWbQ3RqyUADBy5wx0qvQ67Sba8G7bXK1RI9lpdPEVFhMlGT8TA4e/KAmKishWE2wXwYQqKacmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGPN1uFs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPOC7IHB"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ade5b8aab41so215911466b.0;
-        Thu, 12 Jun 2025 06:55:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749736548; x=1750341348; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xikeG81Glqm5M9v3u+UCgVKmnmOs9BH7r2u0CB2OILg=;
-        b=kPOC7IHB7oaMcgBNiRPMVraJYWrDhrfoCH2nmJxQzMbOXLVsFH95ru6BuLDPXU5/TP
-         XGyu35QBNLfQRRqcvLxc2Hfa+a4pqrJl0JMKKGI/F3cpJOI0A7DxHvriOVupVPMs+rAk
-         xqP9CGCVEj7h4Wd6Pv6T2truLEv6TBLUob1jQL0EDLk8FAzP4u61yccZB99xBNRznMS2
-         xdvYjRzg+OEsXyNHnFf3JDV97CRGmyziNLOyTcV104TTWBOtVNhyPc8dtyoCXi/tjv9G
-         fQyDl6dK+iux8UEhhBPi+fLkvwqgIoqp+bEsFns5wpThlPx9x+7F5u6ZIVSOPoFjnM/V
-         rP4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749736548; x=1750341348;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xikeG81Glqm5M9v3u+UCgVKmnmOs9BH7r2u0CB2OILg=;
-        b=JpZ0GozvaazjBibXzxVT8mVpVpD6p6qqtMqDe4XRWHKg4ZmWghcvaeVImOF/w+zsU+
-         p0o30TDmrNwG61sHjnR4AYvTQOctyuBzZrgJzw4rL6cKpgCUrLXBEav2H4stgIXUOHeS
-         /k1hQ7dtlH6gQI458CTu8F4fjkI26RvQ5HqxzAhoPOIIib3WSjq5JjhB5UKInrL7T5gb
-         Xrzf/VCtKfP5nULIlC18zfRaEm7jNF+sPSaLHz0obMeTNKF+wwxijOF3Esn1LUa0Lf8A
-         BguMbES6JNv0R1mpAnbF4nu6Ed3dPwEW+AiyLs61/6ZlOE7k3PzANg9u3pIxA5InGIIC
-         IEpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPxL3IloC0+xx7F6HU+65gaNwhrqiIX5nqeEIsqT508bqOJAaAeJojnsLmt6uPvJbszlpWMTRspEw2SBXJ@vger.kernel.org, AJvYcCXf5oWSMN5xhN1/RrRRvxI1evy1TJkk7ee3vMz2pZ2PQNRlZWEpg6TFfPzPwU3f7Dl0L6k0rdiI+J+4oNye@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx8o2e1aPQ8ykSclda1Zrp7ZfcsO8JS8LojyCzdXO0p0xb8o2T
-	FHT3epRL1CKizu12j3euSQxmeXPrNj2qfX2W73D1kFgnqCDMsdxO+J7M
-X-Gm-Gg: ASbGncuPGSmVX/igEw/isXiky7r3FNbqkFHRZJei2FJg0Hj9pQla1gtH7SLyU6q2jfH
-	sMhoFUMFUpmHGrdgnp+JHgQxpgb5j3VaS3sKVQuayeezGPxw+BNEVQIHVW8w20QWGw4u9Uf/LwE
-	I4axKqkJQjReHXJ8Nnr2l87vHKIXDxy9ssNYZjwGHOEQN5rYAeUlhrUkayc8eTYPepNnQkvLN0a
-	2Wd76E4QmvARVVNo2l1X1zUIsAuYldQNpJtB53GBqVlkU2Zs8cvMYQ6qpkkxatUQrIiJ20/bPB1
-	Tf8oCgoPMw/sqG+6cA+RnuX262klhW6T+MXnit0xIQius4UWiSaLIAGYeOZkhWCY/K5CwsFJ2cU
-	rxA==
-X-Google-Smtp-Source: AGHT+IEt/gyCua3q4hkdwtZlk5m5IJpx57fEfd6rwWGyPrfaAiZW+b8ZSeyx9l/e9qKVOFzE3helXQ==
-X-Received: by 2002:a17:907:7248:b0:ade:348f:88df with SMTP id a640c23a62f3a-adea92790f3mr328097866b.4.1749736547320;
-        Thu, 12 Jun 2025 06:55:47 -0700 (PDT)
-Received: from f (cst-prg-93-231.cust.vodafone.cz. [46.135.93.231])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adeadb8c3f8sm136320766b.129.2025.06.12.06.55.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 06:55:46 -0700 (PDT)
-Date: Thu, 12 Jun 2025 15:55:40 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Luis Henriques <luis@igalia.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-dev@igalia.com
-Subject: Re: [PATCH] fs: drop assert in file_seek_cur_needs_f_lock
-Message-ID: <ybfhcrgmiwlsa4elkag6fuibfnniep76n43xzopxpe645vy4zr@fth26jirachp>
-References: <87tt4u4p4h.fsf@igalia.com>
- <20250612094101.6003-1-luis@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGPN1uFs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36678C4CEEA;
+	Thu, 12 Jun 2025 13:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749736593;
+	bh=WxMzIaZy423sDZIpi9KE0Tvfc7JKlMGJWRWMOOxFmHw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=EGPN1uFsB7Gp8Gg3O8/87vCP0sU0gTcHSNGSEGA8FSPJ129gA456eN68+UtFJHfNT
+	 9J43jIC3Anbm0D6b7cnyxhIxt2raxubu+WMLL+MPH5U8QAhEjwE5dmgc/72Kh3MPPD
+	 MPetWzSlSjo53jhTRH2z7ARPEF5nduHLpuo4GAqt4gGi1j/jw01gIF8rUCtcsTG2Fi
+	 o+KUTFWZ8QBOSBTP+0GUnQNTXxhiclH5gwYkrK7VlzsquR4xSQL8kHzUWdmNHdpXp7
+	 G5OrW1YcMbLxHrM6GKwhXrZt/Oj29Jvz11u2JLS+QwUAuOYfX8n5GGS9m4ZfAFXOq/
+	 4Ze3wFmHFL8qQ==
+Date: Thu, 12 Jun 2025 10:56:30 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Sean Christopherson <seanjc@google.com>
+Subject: [PATCH 1/1 fyi] tools headers x86 svm: Sync svm headers with the
+ kernel sources
+Message-ID: <aErcjuTTCVEZ-8Nb@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612094101.6003-1-luis@igalia.com>
 
-On Thu, Jun 12, 2025 at 10:41:01AM +0100, Luis Henriques wrote:
-> The assert in function file_seek_cur_needs_f_lock() can be triggered very
-> easily because, as Jan Kara suggested, the file reference may get
-> incremented after checking it with fdget_pos().
-> 
-> Fixes: da06e3c51794 ("fs: don't needlessly acquire f_lock")
-> Signed-off-by: Luis Henriques <luis@igalia.com>
-> ---
-> Hi Christian,
-> 
-> It wasn't clear whether you'd be queueing this fix yourself.  Since I don't
-> see it on vfs.git, I decided to explicitly send the patch so that it doesn't
-> slip through the cracks.
-> 
-> Cheers,
-> -- 
-> Luis
-> 
->  fs/file.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/fs/file.c b/fs/file.c
-> index 3a3146664cf3..075f07bdc977 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -1198,8 +1198,6 @@ bool file_seek_cur_needs_f_lock(struct file *file)
->  	if (!(file->f_mode & FMODE_ATOMIC_POS) && !file->f_op->iterate_shared)
->  		return false;
->  
-> -	VFS_WARN_ON_ONCE((file_count(file) > 1) &&
-> -			 !mutex_is_locked(&file->f_pos_lock));
->  	return true;
->  }
->  
+tldr; Just FYI, I'm carrying this on the perf tools tree.
 
-There this justifies the change.
+Full explanation:
 
-fdget_pos() can only legally skip locking if it determines to be in
-position where nobody else can operate on the same file obj, meaning
-file_count(file) == 1 and it can't go up. Otherwise the lock is taken.
+There used to be no copies, with tools/ code using kernel headers
+directly. From time to time tools/perf/ broke due to legitimate kernel
+hacking. At some point Linus complained about such direct usage. Then we
+adopted the current model.
 
-Or to put it differently, fdget_pos() NOT taking the lock and new refs
-showing up later is a bug.
+See further details at:
 
-I don't believe anything of the sort is happening here.
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
 
-Instead, overlayfs is playing games and *NOT* going through fdget_pos():
+To pick the changes in:
 
-	ovl_inode_lock(inode);
-        realfile = ovl_real_file(file);
-	[..]
-        ret = vfs_llseek(realfile, offset, whence);
+  827547bc3a2a2af6 ("KVM: SVM: Add architectural definitions/assets for Bus Lock Threshold")
 
-Given the custom inode locking around the call, it may be any other
-locking is unnecessary and the code happens to be correct despite the
-splat.
+That triggers:
 
-I think the safest way out with some future-proofing is to in fact *add*
-the locking in ovl_llseek() to shut up the assert -- personally I find
-it uneasy there is some underlying file obj flying around.
+  CC      /tmp/build/perf-tools/arch/x86/util/kvm-stat.o
+  LD      /tmp/build/perf-tools/arch/x86/util/perf-util-in.o
+  LD      /tmp/build/perf-tools/arch/x86/perf-util-in.o
+  LD      /tmp/build/perf-tools/arch/perf-util-in.o
+  LD      /tmp/build/perf-tools/perf-util-in.o
+  AR      /tmp/build/perf-tools/libperf-util.a
+  LINK    /tmp/build/perf-tools/perf
 
-Even if ultimately the assert has to go, the proposed commit message
-does not justify it.
+The SVM_EXIT_BUS_LOCK exit reason was added to SVM_EXIT_REASONS, used in
+kvm-stat.c.
+
+This addresses this perf build warning:
+
+ Warning: Kernel ABI header differences:
+  diff -u tools/arch/x86/include/uapi/asm/svm.h arch/x86/include/uapi/asm/svm.h
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nikunj A Dadhania <nikunj@amd.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Link: https://lore.kernel.org/r/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/arch/x86/include/uapi/asm/svm.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/arch/x86/include/uapi/asm/svm.h b/tools/arch/x86/include/uapi/asm/svm.h
+index ec1321248dac2ab5..9c640a521a67006d 100644
+--- a/tools/arch/x86/include/uapi/asm/svm.h
++++ b/tools/arch/x86/include/uapi/asm/svm.h
+@@ -95,6 +95,7 @@
+ #define SVM_EXIT_CR14_WRITE_TRAP		0x09e
+ #define SVM_EXIT_CR15_WRITE_TRAP		0x09f
+ #define SVM_EXIT_INVPCID       0x0a2
++#define SVM_EXIT_BUS_LOCK			0x0a5
+ #define SVM_EXIT_IDLE_HLT      0x0a6
+ #define SVM_EXIT_NPF           0x400
+ #define SVM_EXIT_AVIC_INCOMPLETE_IPI		0x401
+@@ -225,6 +226,7 @@
+ 	{ SVM_EXIT_CR4_WRITE_TRAP,	"write_cr4_trap" }, \
+ 	{ SVM_EXIT_CR8_WRITE_TRAP,	"write_cr8_trap" }, \
+ 	{ SVM_EXIT_INVPCID,     "invpcid" }, \
++	{ SVM_EXIT_BUS_LOCK,     "buslock" }, \
+ 	{ SVM_EXIT_IDLE_HLT,     "idle-halt" }, \
+ 	{ SVM_EXIT_NPF,         "npf" }, \
+ 	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"avic_incomplete_ipi" }, \
+-- 
+2.49.0
+
