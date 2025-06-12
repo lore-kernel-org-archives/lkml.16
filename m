@@ -1,131 +1,94 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014902AE6D;
-	Thu, 12 Jun 2025 05:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC352AE6D;
+	Thu, 12 Jun 2025 05:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749707482; cv=none; b=M2du0HGwvX/r3e/9TOFtKmX1IvENfxuAc7Qb4scnmSVDkerxbekXAzrnAb/pBaaWerW+/CfqBd27142z9s+bjR80UwLc3uMOwTa6au6qoeAfrh6gCVZyzogL5rLkTU+6KPbueltbW8RKEtPhkfH4gSLTZ0BFvtxCFDOYMf+WOdI=
+	t=1749707729; cv=none; b=pkTmY55ZKDsday5xVfz/u/VOJRfHNmzceirNiSp3r1p6Bw9MEjS6tgjKfYhGUzdiDUw1DlFBMYSvJJTe9bBDUQU0/J/qhQym2WmnwwJxQWeuRyIm625FamMJYcmkL+6y6qEmw39nhAcm69E+Rin+SdK+NV2IjIJcOWZ+3taEhVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749707482; c=relaxed/simple;
-	bh=slvcAQUT+HFsllFYLGyw5Fofz5HxNlsL+2o5mQBM/0s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b/73GVBBkoTms+NRRMKWMludeYjJ8oHrR1jepgrNLf0q/EeVQaH6omQPxgho1evyMt4enKkrF4Vv3E+aSZH9pEIGucneBDhHEfi1t+dcCnNjdKjnenPt4PyjIwwIktUsYaNHimE3NDHq7t8i+PaHYuaX2ZunIvAWdfutJnTnXwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TJiONlJ9; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749707729; c=relaxed/simple;
+	bh=8+H/tr96YZjUd6UCg+BS6Q3khuu+sPU8yba5aX51SoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J8c5vRTZl1I2rGK/cTpN7SQ8viTZrpK9gFFAM4FwhS1k809Fwaa/YkK1guj+Xo7eyp+snrjdxgNlU10PYvjMLDrmiUwNjfV0eK6Z60vQKZ7xpsNkuDdveEMu4ZZkGN/mZyEkvyM/rf97S+aBR73onVP7mYgq3AjjaNI9k7ombjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=k0a4qQP3; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TJiONlJ9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749707477;
-	bh=slvcAQUT+HFsllFYLGyw5Fofz5HxNlsL+2o5mQBM/0s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TJiONlJ9E7Ze3sRhwKZBV9R9Z6MEzthUCgwvyz+PCAR+b70XacpHK1Ok/w3otAUFo
-	 xcTXGKlAwRPHZ1F6LQYAfijJx8cPS2ocEIIYr5CIe0ASepzhEjtn3vMGn46lxkk2eW
-	 8psRt03UkK1YeCc6FFFhyESjq4YJXMdOEo/0/I0ziEoIMbfNowwJy5KPqv/k5cZNgZ
-	 MxuwYQMKU4LDB3uCpiJrUHZmeU79iOy4kKyhervclnE+dBW10wK/xsvQM6s/UVMUUa
-	 UcN/1JEs4AAex34cYtPmWbGHMbMtJnA49vF7KX6dJwpN6QDEC+iw572cMrnmH9AY6/
-	 TKCFRDlv01aYQ==
-Received: from [192.168.1.90] (unknown [212.93.144.165])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 19B3E17E0863;
-	Thu, 12 Jun 2025 07:51:17 +0200 (CEST)
-Message-ID: <33376472-679b-406f-aadb-41dd540c47cf@collabora.com>
-Date: Thu, 12 Jun 2025 08:51:05 +0300
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="k0a4qQP3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=rc74KEKSZcVOTVA/X0fklZuVaLUXgUh7vebuiIcruL8=; b=k0a4qQP3qpSqZjk6gHZ8m/K26L
+	mtwxJx5P23LDqdPMEW3EbrHOevA/Kp5rCrHQsNnBxneuHKohHbbLj4CXiVX16q1gOQrT7RFdod62y
+	3tat1rIObAbIB1g4SzrdX5jjXbLRpO0CWIt/4OUfGuX0e3wmA5tkctk+WZH2lBFh1uIsnL8vb99HV
+	3ngHRw3otW1VooHIB0R/b7VL7k6bttiDxnI4XPauFqtz1rVhhc3r3so+sP1zHpozmz5ZO1hGV2ahp
+	ZUU2DLZvviZxP0nNK7w2SRhQvPcNQ1SmAw9KgjRKOWo018iY0bednf1QglSjVhHHirHftWHcoYxNc
+	t7o6LraQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uPauH-00CYGr-2Y;
+	Thu, 12 Jun 2025 13:55:22 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 12 Jun 2025 13:55:21 +0800
+Date: Thu, 12 Jun 2025 13:55:21 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Ingo Franzki <ifranzki@linux.ibm.com>
+Subject: Re: [PATCH] crypto: testmgr - reinstate kconfig support for fast
+ tests only
+Message-ID: <aEpryXbiFJ5mmsvj@gondor.apana.org.au>
+References: <20250611175525.42516-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: Add HDMI PHY PLL clock source
- to VOP2 on rk3576
-To: Detlev Casanova <detlev.casanova@collabora.com>,
- Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: kernel@collabora.com, Andy Yan <andyshrk@163.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
- <20250612-rk3576-hdmitx-fix-v1-3-4b11007d8675@collabora.com>
- <6011857.DvuYhMxLoT@trenzalore>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <6011857.DvuYhMxLoT@trenzalore>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611175525.42516-1-ebiggers@kernel.org>
 
-Hi Detlev,
+On Wed, Jun 11, 2025 at 10:55:25AM -0700, Eric Biggers wrote:
+>
+> diff --git a/crypto/Kconfig b/crypto/Kconfig
+> index e9fee7818e270..8612ebf655647 100644
+> --- a/crypto/Kconfig
+> +++ b/crypto/Kconfig
+> @@ -174,20 +174,30 @@ config CRYPTO_USER
+>  	  Userspace configuration for cryptographic instantiations such as
+>  	  cbc(aes).
+>  
+>  config CRYPTO_SELFTESTS
+>  	bool "Enable cryptographic self-tests"
+> -	depends on DEBUG_KERNEL
 
-On 6/12/25 3:00 AM, Detlev Casanova wrote:
-> Hi Cristian,
-> 
-> On Wednesday, 11 June 2025 17:47:49 EDT Cristian Ciocaltea wrote:
->> Since commit c871a311edf0 ("phy: rockchip: samsung-hdptx: Setup TMDS
->> char rate via phy_configure_opts_hdmi"), the workaround of passing the
->> rate from DW HDMI QP bridge driver via phy_set_bus_width() became
->> partially broken, as it cannot reliably handle mode switches anymore.
->>
->> Attempting to fix this up at PHY level would not only introduce
->> additional hacks, but it would also fail to adequately resolve the
->> display issues that are a consequence of the system CRU limitations.
->>
->> Instead, proceed with the solution already implemented for RK3588: make
->> use of the HDMI PHY PLL as a better suited DCLK source for VOP2. This
->> will not only address the aforementioned problem, but it should also
->> facilitate the proper operation of display modes up to 4K@60Hz.
->>
->> It's worth noting that anything above 4K@30Hz still requires high TMDS
->> clock ratio and scrambling support, which hasn't been mainlined yet.
->>
->> Fixes: d74b842cab08 ("arm64: dts: rockchip: Add vop for rk3576")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->> ---
->>  arch/arm64/boot/dts/rockchip/rk3576.dtsi | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3576.dtsi index
->> 6a13fe0c3513fb2ff7cd535aa70e3386c37696e4..b1ac23035dd789f0478bf10c78c74ef16
->> 7d94904 100644 --- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
->> @@ -1155,12 +1155,14 @@ vop: vop@27d00000 {
->>  				 <&cru HCLK_VOP>,
->>  				 <&cru DCLK_VP0>,
->>  				 <&cru DCLK_VP1>,
->> -				 <&cru DCLK_VP2>;
->> +				 <&cru DCLK_VP2>,
->> +				 <&hdptxphy>;
->>  			clock-names = "aclk",
->>  				      "hclk",
->>  				      "dclk_vp0",
->>  				      "dclk_vp1",
->> -				      "dclk_vp2";
->> +				      "dclk_vp2",
->> +				      "pll_hdmiphy0";
->>  			iommus = <&vop_mmu>;
->>  			power-domains = <&power RK3576_PD_VOP>;
->>  			rockchip,grf = <&sys_grf>;
-> 
-> I tested this on the ROCK 4D and can confirm that:
->  - New modes like 2K are now working
->  - Mode changes is now correctly supported
-> 
-> So,
-> Tested-By: Detlev Casanova <detlev.casanova@collabora.com>
+Please restore the dependency on EXPERT.  I do not want random
+users exposed to this toggle.
 
-Thanks for taking the time to perform all these tests!
+> +config CRYPTO_SELFTESTS_FULL
+> +	bool "Enable the full set of cryptographic self-tests"
+> +	depends on CRYPTO_SELFTESTS
+> +	default y
+> +	help
+> +	  Enable the full set of cryptographic self-tests for each algorithm.
+> +
+> +	  For development and pre-release testing, leave this as 'y'.
+> +
+> +	  If you're keeping the crypto self-tests enabled in a production
+> +	  kernel, you likely want to set this to 'n' to speed up the boot.  This
+> +	  will cause the "slow" tests to be skipped.  This may suffice for a
+> +	  quick sanity check of drivers and for FIPS 140-3 pre-operational self-
+> +	  testing, but some issues can be found only by the full set of tests.
 
-Cristian
+Please remove the "default y".
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
