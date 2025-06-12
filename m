@@ -1,97 +1,136 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A616538B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72A08F40;
+	Thu, 12 Jun 2025 05:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749705470; cv=none; b=fDT+rlbYaC0VE8MZ9OxI3KZ6o92IRWzUBNPvVzcZkDdBq2RK5YYthUKzjgJK8Nekw8n757mjfPGA17adgrEstdJryhFI0YtOUU2GGnUQ3JRqywLUzZ+ArdmUvq/VUNIlb9o2XxsMvhIrqH0esUo4L1eSz1jAqWlj4qL4DLM0pzk=
+	t=1749705526; cv=none; b=ApJe1ILgKxH+UMibFtAU0vfyXpJnMzivbt+jlAvFbkMawC121lXY86g3mjs1lwVUTpqDPC8zLKIexm7DzzG7Q7bVrgEx4/X4v3FWTsY0Klp8aviw0l93NV3s1QVf0m/Et4aJyb0n0MXq2xjZLG5ug6jji0rAatDYiTXM4MZVUJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749705470; c=relaxed/simple;
-	bh=2SCdJ/+4doAXDA1dugfcerrihJYg32knCvs3SFTaAHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lTlO07wFJcLgb3ztSCjFGxAzINaYXJsjvixe8WGuOhRJJ7dqyjSLPrjt7lFZwqMt35J+WAy5bLpIC7HCpGmDzMo41FnBAik/VyOOrlTE/Lz6L7Eyj//wEOD60oIjlr011Zm46u2evChLVY3i1CUOcPaqVyD/sFNdYh8fm/vc6aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l2+xx4lR; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749705526; c=relaxed/simple;
+	bh=E5YlB2u7S0ZqY9qOmnfCFjhkpjNfWKCju/M+dvlFXx8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XfmkyBi7WXGPkxK4IYualZ7oWFTAznYi3JbArOvrIZwdUgj0TWp2PZd1W+TYHKze8C8h5f0rBeyyr7fKCcL3yDzI+YIne1u9ON9O8fHAlKsYCnGwMB2XsbI0IAeNOCqCS1kKwNSDX/pkHG5K/bkFXyUzvIKn97aSEbu3W64hyys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=s8sUfbk6; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l2+xx4lR"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2357c61cda7so63625ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:17:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749705468; x=1750310268; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2SCdJ/+4doAXDA1dugfcerrihJYg32knCvs3SFTaAHM=;
-        b=l2+xx4lRk9VZdvj+XODaAdpfsmHoNTAQiuoBm+Vxve0ddmNB/2OTz8EJY4erV7FZGD
-         6mhjNLpen8OIBrqasVtsOlcrBEVLpT/ZpMhjKJEZrINkvYjiRjvEKFcceRepBXWmUNEB
-         kdpnArPcasSr1FwZG+zzD0Dp2hhxE3yzF9Gi4V1dRR9PwBuJRORakl5YBRPHWhPtz5bU
-         /XBjGUoIuS+UdyiPkqG+8JolPkK8FQjKplfO1MMVLnJfJx7TtW9yTnBkt9bmFDlaXY/4
-         szjqy6+2cZjkGPZ2rMDDgNYm4GVhYXJXKPpnIbPREaHqUiOgxlTy3OOjkd7NxYx9a5Z7
-         o8Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749705468; x=1750310268;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2SCdJ/+4doAXDA1dugfcerrihJYg32knCvs3SFTaAHM=;
-        b=H8L6MYtVO8+hwz0CkIPTYi1kzcVuZWhtiIHcx9Z9l168EdKT7JJvY1UNN8D/Kwpwny
-         0lshjPtRmbIomYAFdWrvtlcxlQ+PuxkHf1v9RRyVGdhqM5y/NeV6Y3RiUQtqsgQ9jBI1
-         yzJ8uY4oTazzXOOzYix+THB3yI8T9aVtejCl42LFrIQrAU1DSHJG0hmrVwZuWrr69sEE
-         dEAEdsA9bZQs2K56uS+CniRYyOYIu3lJH0U8JlujnfolUcpVjgTaEQXOSl7cg62VIxEF
-         gQmcI8R7pz/S4sNo0uePPFMQw12yK/TJaR/ccVlBCSWo8Hl58NOiR3z3atQ1qC+SfiE9
-         NABQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAoLu10ZVk8rsqaNKXzy09Eo/6nxpYS1N+nMvN5n23M/ybz0Zf/sdpSzSGEIyaf57ounHmkYwknpIOMPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH/mgD+nPb7fcAVjcwqhLsEExz9elbT7Ew77nfc2DbIRC0D4vV
-	bmEK2wm8rb0oFaY3jERXfpgZMdzz3h/vJXTRF4bhWtEmxwLY49jF4dQGbIHnGqQOf0/t9lGIt7B
-	SA9voJJfOLi/K8qAnKQjAiuaSx4s3Y14pvBzSOD/g
-X-Gm-Gg: ASbGnctxu7t6mEn0bJeOnihxdN+MifGdU3XA/71UXSnlCWDJ8sEsQ4mM/dH+V17HGxj
-	zjWR/+07FfUhOCD69wdXpL7lGK0uTufhyPcgmPuy9Irj/f2sOofSQWcP1JbBoJ1sHyrX2BJTy13
-	kRcUL14BvJsnT5CPpelNF2QQEK1x5zSvkk9MqGGFTeqqS+
-X-Google-Smtp-Source: AGHT+IGYP9KzkXjDzsA4+41CLW5Waykb3HixIBnHVes8taLU5EpIH0GQEyzbO+4zVc94uZKbBXgXshRqTVavOIadoX8=
-X-Received: by 2002:a17:902:d2c6:b0:231:d0ef:e8fb with SMTP id
- d9443c01a7336-2364dc4e3b8mr1774665ad.10.1749705467691; Wed, 11 Jun 2025
- 22:17:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="s8sUfbk6"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749705519; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=qsxOidY6ikXbFJ667HOPRMq7JTZQwc/Y4evKhZPM3uo=;
+	b=s8sUfbk6TJ3f729grIOhCt11cNwEDWMZFSkjK7vK4OI19KQOq881Px+jx0nE/oJ4nwmTrK1MG1qYERgjN3sw8ki7LT19ffIpZ4v0kc4fZVP5Sut1ieglntdzOyKRGRb3wvMqdBdYPw+4Lam6PfovtT/DTY5M914dBhpWq+0YsMI=
+Received: from 30.74.144.123(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wdfbpu1_1749705518 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 12 Jun 2025 13:18:38 +0800
+Message-ID: <f920fdfe-fa0f-446c-b1cd-08956ec161c3@linux.alibaba.com>
+Date: Thu, 12 Jun 2025 13:18:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610150950.1094376-1-mbloch@nvidia.com> <20250610150950.1094376-12-mbloch@nvidia.com>
-In-Reply-To: <20250610150950.1094376-12-mbloch@nvidia.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 11 Jun 2025 22:17:34 -0700
-X-Gm-Features: AX0GCFsQbpdJnxhJgwGMagCQgzHoP4omoeUSZWQdZ5DAkp2-7EHR6n8NXEpEZgY
-Message-ID: <CAHS8izMOcAYzcseZqud5xj_3ibaWKBUqEARgJd65S0_Wqs6haw@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 11/11] net/mlx5e: Add TX support for netmems
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com, gal@nvidia.com, 
-	leonro@nvidia.com, tariqt@nvidia.com, Leon Romanovsky <leon@kernel.org>, 
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dragos Tatulea <dtatulea@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] selftests: khugepaged: fix the shmem collapse failure
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, baohua@kernel.org, shuah@kernel.org, ziy@nvidia.com,
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <c16d1d452aa876b449324d12df6465677158a711.1749697399.git.baolin.wang@linux.alibaba.com>
+ <80218cc2-de6f-49dc-bdee-4b2560c619b5@arm.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <80218cc2-de6f-49dc-bdee-4b2560c619b5@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 8:21=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
-e:
->
-> From: Dragos Tatulea <dtatulea@nvidia.com>
->
-> Declare netmem TX support in netdev.
->
-> As required, use the netmem aware dma unmapping APIs
-> for unmapping netmems in tx completion path.
->
-> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
-> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
 
---=20
-Thanks,
-Mina
+On 2025/6/12 13:10, Dev Jain wrote:
+> 
+> On 12/06/25 9:24 am, Baolin Wang wrote:
+>> When running the khugepaged selftest for shmem (./khugepaged all:shmem),
+>> I encountered the following test failures:
+>> "
+>> Run test: collapse_full (khugepaged:shmem)
+>> Collapse multiple fully populated PTE table.... Fail
+>> ...
+>> Run test: collapse_single_pte_entry (khugepaged:shmem)
+>> Collapse PTE table with single PTE entry present.... Fail
+>> ...
+>> Run test: collapse_full_of_compound (khugepaged:shmem)
+>> Allocate huge page... OK
+>> Split huge page leaving single PTE page table full of compound 
+>> pages... OK
+>> Collapse PTE table full of compound pages.... Fail
+>> "
+>>
+>> The reason for the failure is that, it will set MADV_NOHUGEPAGE to 
+>> prevent
+>> khugepaged from continuing to scan shmem VMA after khugepaged finishes
+>> scanning in the wait_for_scan() function. Moreover, shmem requires a 
+>> refault
+>> to establish PMD mappings.
+>>
+>> However, after commit 2b0f922323cc, PMD mappings are prevented if the 
+>> VMA is
+>> set with MADV_NOHUGEPAGE flag, so shmem cannot establish PMD mappings 
+>> during
+>> refault.
+>>
+>> To fix this issue, we can set the MADV_NOHUGEPAGE flag after the shmem 
+>> refault.
+>> With this fix, the shmem test case passes.
+>>
+>> Fixes: 2b0f922323cc ("mm: don't install PMD mappings when THPs are 
+>> disabled by the hw/process/vma")
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> ---
+>>   tools/testing/selftests/mm/khugepaged.c | 3 +--
+>>   1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/mm/khugepaged.c 
+>> b/tools/testing/selftests/mm/khugepaged.c
+>> index 8a4d34cce36b..d462f62d8116 100644
+>> --- a/tools/testing/selftests/mm/khugepaged.c
+>> +++ b/tools/testing/selftests/mm/khugepaged.c
+>> @@ -561,8 +561,6 @@ static bool wait_for_scan(const char *msg, char 
+>> *p, int nr_hpages,
+>>           usleep(TICK);
+>>       }
+>> -    madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
+>> -
+>>       return timeout == -1;
+>>   }
+>> @@ -585,6 +583,7 @@ static void khugepaged_collapse(const char *msg, 
+>> char *p, int nr_hpages,
+>>       if (ops != &__anon_ops)
+>>           ops->fault(p, 0, nr_hpages * hpage_pmd_size);
+>> +    madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
+>>       if (ops->check_huge(p, expect ? nr_hpages : 0))
+>>           success("OK");
+>>       else
+> 
+> The idea looks sane to me, but do we need to add the madvise call to
+> madvise_retracted_page_tables() too, since that also calls wait_for_scan()?
+
+Yes, I also realized this after sending the patches:) Thanks.
+
+To keep the original logic:
+
+diff --git a/tools/testing/selftests/mm/khugepaged.c 
+b/tools/testing/selftests/mm/khugepaged.c
+index d462f62d8116..3452763e2fe3 100644
+--- a/tools/testing/selftests/mm/khugepaged.c
++++ b/tools/testing/selftests/mm/khugepaged.c
+@@ -1074,6 +1074,7 @@ static void madvise_retracted_page_tables(struct 
+collapse_context *c,
+                 return;
+         }
+         success("OK");
++       madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
+         c->collapse("Install huge PMD from page cache", p, nr_hpages, ops,
+                     true);
+         validate_memory(p, 0, size);
