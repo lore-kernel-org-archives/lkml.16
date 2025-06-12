@@ -1,187 +1,284 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0790E23A58B;
-	Thu, 12 Jun 2025 13:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9375E23AB86;
+	Thu, 12 Jun 2025 13:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749733484; cv=none; b=L3FgSVC66/hD158eihCxurO3Eolkmb4UgrHKCqjOT3BDLcZfxFK4k/oeAreKqFAUQMf1onbbMVvICQX1yx2KBIo4mGffNW/gHgqV88ofKMpFnc7X/YK6vFnbHNuVM3Guo+5Zq5hXrk68clasGvMrJEYOAujMoYFnSb2svl7vs8Y=
+	t=1749733528; cv=none; b=rrOAf2DnU0a/fKtjC81qEXyR8NwRWN4+g7IPNlnE3BNUtCPscEeAbAtCfgHMHNLL3N5w9U2if9xHwMLO11tHmAR5b5s0sKoUjl15Ma9WJ6kd82LuP321YiFvj6vIld0bgeaMDJiZHZ+PK/GTK9H0VhVqlVNT/ttOMhN/5Rl+ELw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749733484; c=relaxed/simple;
-	bh=4UFDFeoe7EB6tQy/EkC230pjAKgF8cr6eInUsXKP8T8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rdsLeXAZ528+Ubj3VKdAwVxbEHpWKXnCNK62A/zKzLAc7j/OO0xYVkLD6MZqnrqx356sep/2zkbQ1Ji21glphInO24N7FY++Xi2Sem4gu0xOa6Dr14pGPViHIo9cC0nB0/faX0DLjMHAZssnvm2syrWdFhs8JUbjI/nbjbuxEIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=dAr2YaZ1; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749733528; c=relaxed/simple;
+	bh=y8NLeed2Zpqmgrw7HwqwPGxaHBEVNUyCekU0isYI6sc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K7B0H1lOxHDhPHp6ZEwJWTn5e5BvByQ++s1O/4yeqXGbn95j920Xg+zGQhHzS+yefDSiYlXbKt9cgnIqT7m3fKhk/IJ3ItEGP29kYoJEHq/U+T2FSGksmR+KVYX22wc1EaZ3rt1tylH9b65pzw/1jaw0G0w+oCAQAl3eNx/+qpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JgdmrRwr; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="dAr2YaZ1"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CCNNFN024136;
-	Thu, 12 Jun 2025 15:04:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	xgUlRHqrOgjoIr0Ken2L714FlmdoDE0xA4Gj6ELLtuY=; b=dAr2YaZ1sX7fLlr4
-	qIJtWMwLwt0MLr5MHKrK4dGxNw2ETtYSi2iYYwSjgJZZoe7pu6Z+FpxLYIBC65q3
-	L1k3ToqJl2w+O1gIIrkuVi019NXuGoI9O3N4usFcC5H0VJ04v+YKi0Wt+KSLFvcE
-	CfY+NKdw6gDnJBQzWSJbgR/k9OXf8x8yDRURcNI3AjzX+IKF8+ckI186VtX0KcMf
-	PvdvxvbE3AMPswfPQnoAkr7+IEo2KufhY2qBSXbAcEloo32YVEjy1rkV91/uTPzZ
-	E26qrJcRhDoyF2IyPgTlg1+/WiPEo0e5aGdOhElP4bIZyobA+ELz89Y42Fm/Uumd
-	c2a2nA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cs30j8c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 15:04:27 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 903E240071;
-	Thu, 12 Jun 2025 15:03:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 80866AFB28F;
-	Thu, 12 Jun 2025 15:02:16 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Jun
- 2025 15:02:15 +0200
-Message-ID: <782763e2-99d6-4533-b0db-79b618577586@foss.st.com>
-Date: Thu, 12 Jun 2025 15:02:13 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JgdmrRwr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749733526; x=1781269526;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=y8NLeed2Zpqmgrw7HwqwPGxaHBEVNUyCekU0isYI6sc=;
+  b=JgdmrRwrxx4k7HiHqcJRRH+LWllC745MjnNG4sPpazjVvSEnyNZqNIQx
+   Dc4lzZj9ztjygzDqonWtOFK1fG3w9bR/cyNdvoBHQCq0b9rDkvD8EHC8Y
+   9QCLxCSYEqF5F3W/IFxu1kRBSRPyYM0/gYdiZYbGWMPyRxIFXPshg85gq
+   1pjU3FgI+hRfQdvO1MXELKohS76T9YcSlNKFGPy3Xb7YDKBbDPIBdByVF
+   MRfqZMbCaEQ46szqgsQH3UZeF+y3hr35Jcus/Efu68JNxuIW76AZhsB/+
+   g4Fok8yw2q8quzZ8C7+KyG7x/YDj+b66XK8QoIdKtipAgj4E1XusO5VPH
+   A==;
+X-CSE-ConnectionGUID: UkUt4FHSSjmhdy1j+4K1ug==
+X-CSE-MsgGUID: gPCe54sDRxKxj9F+EhkOzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51017680"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="51017680"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:05:26 -0700
+X-CSE-ConnectionGUID: YRi7Uk+ESkOTtO4HZdYkkw==
+X-CSE-MsgGUID: 4/6vREUtSlaI3YeLwVU/rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="178489788"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 12 Jun 2025 06:05:21 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 2259E1DF; Thu, 12 Jun 2025 16:05:21 +0300 (EEST)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: chao.gao@intel.com
+Cc: bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	isaku.yamahata@intel.com,
+	kai.huang@intel.com,
+	kirill.shutemov@linux.intel.com,
+	kvm@vger.kernel.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	mingo@redhat.com,
+	pbonzini@redhat.com,
+	rick.p.edgecombe@intel.com,
+	seanjc@google.com,
+	tglx@linutronix.de,
+	x86@kernel.org,
+	yan.y.zhao@intel.com
+Subject: [PATCHv2.1 08/12] KVM: TDX: Handle PAMT allocation in fault path
+Date: Thu, 12 Jun 2025 16:05:08 +0300
+Message-ID: <20250612130508.3213505-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <aErF7JXwjmsf5zYp@intel.com>
+References: <aErF7JXwjmsf5zYp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp13
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
- <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
- <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
- <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
- <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
- <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
- <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
- <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
- <42a0b7ab-d85d-4d52-a263-4a4648c7ff05@kernel.org>
- <2865ab3a-1c20-4951-8132-4be98d73d70e@foss.st.com>
- <f1a63830-0533-4f1c-9116-32e8c1e61a8b@kernel.org>
- <26a4f12a-2295-402e-8e31-45733aa6582d@foss.st.com>
- <4f31f016-d250-41ea-b613-b074b8ea00d1@kernel.org>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <4f31f016-d250-41ea-b613-b074b8ea00d1@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_08,2025-06-10_01,2025-03-28_01
 
-On 6/12/25 13:05, Krzysztof Kozlowski wrote:
-> On 12/06/2025 11:31, Clement LE GOFFIC wrote:
->> On 6/11/25 17:48, Krzysztof Kozlowski wrote:
->>> On 11/06/2025 16:08, Clement LE GOFFIC wrote:
->>>> On 6/11/25 08:35, Krzysztof Kozlowski wrote:
->>>>> On 10/06/2025 15:33, Clement LE GOFFIC wrote:
->>>>>> On 6/10/25 14:38, Krzysztof Kozlowski wrote:
->>>>>>> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
->>>>>>>> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
->>>>>>>>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
->>>>>>>>>>>
->>>>>>>>>>>> +		};
->>>>>>>>>>>> +
->>>>>>>>>>>> +		hdp: pinctrl@5002a000 {
->>>>>>>>>>>> +			compatible = "st,stm32mp131-hdp";
->>>>>>>>>>>> +			reg = <0x5002a000 0x400>;
->>>>>>>>>>>> +			clocks = <&rcc HDP>;
->>>>>>>>>>>>        			status = "disabled";
->>>>>>>>>>>
->>>>>>>>>>> Why are you disabling it? What is missing?
->>>>>>>>>>
->>>>>>>>>> Nothing is missing just disabled by default.
->>>>>>>>>> The node is then enabled when needed in board's dts file.
->>>>>>>>> Nodes should not be disabled by default if they are complete. That's why
->>>>>>>>> I asked what is missing. Drop.
->>>>>>>>
->>>>>>>> Hi Krzysztof, OK I better understand now.
->>>>>>>> So yes the 'pinctrl-*' properties which are board dependent are lacking.
->>>>>>>
->>>>>>> These are not properties of this node.
->>>>>>
->>>>>> Does this mean I should add 'pinctrl-*' properties in bindings yaml file ?
->>>>>> I don't get it..
->>>>>
->>>>> These properties have no meaning here, so the hardware description is
->>>>> complete. You claim that you miss them thus device is incomplete is just
->>>>> not correct: these properties do not belong here! They belong to the
->>>>> board but even there they are totally optional. Why would they be a
->>>>> required resource?
->>>>>
->>>>> To remind: we talk here ONLY about required resources.
->>>>
->>>> Yes, 'pinctrl-*' properties belongs to the board and are not required.
->>>> So nothing is missing.
->>>>
->>>> This hdp node in the SoC dtsi file can be enabled by default.
->>>> But the hdp driver will probe and do nothing because without the
->>>> 'pinctrl-*' properties from the board files it would not be able to
->>>> access to any pin.
->>>
->>>
->>> Pinctrl has other features in general, including interfaces to userspace
->>> (as pretty often combined with gpio, although not sure if relevant here).
->>
->> You're right. Also HDP pinctrl has a GPO feature accessible from userspace.
->> But by default the HDP is not connected to any pad; it needs the board
-> 
-> OK, then that was the answer to my first question - what is missing.
-> However aren't these pads connected internally also to other parts of
-> the SoC (like in most other vendors)?
+There are two distinct cases when the kernel needs to allocate PAMT
+memory in the fault path: for SEPT page tables in tdx_sept_link_private_spt()
+and for leaf pages in tdx_sept_set_private_spte().
 
-No, HDP "output pads" are only connected to SoC pinctrl to route outside 
-the internal SoC signals for debug purpose.
+These code paths run in atomic context. Use a pre-allocated per-VCPU
+pool for memory allocations.
 
->> 'pinctrl-*' properties to configure the SoC pinctrl and expose HDP on
->> the SoC pads.
->>
->> That's why for me the enabling of the driver should be in the board file
->> together with the SoC pinctrl configuration.
-> 
-> And what are the default pad settings configured by HPD driver in
-> bootloader (and by bootloader I mean one of few bootloaders this is
-> going to be used on like U-Boot)
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/include/asm/tdx.h  |  4 ++++
+ arch/x86/kvm/vmx/tdx.c      | 40 ++++++++++++++++++++++++++++++++-----
+ arch/x86/virt/vmx/tdx/tdx.c | 23 +++++++++++++++------
+ virt/kvm/kvm_main.c         |  1 +
+ 4 files changed, 57 insertions(+), 11 deletions(-)
 
-The default is to use the GPIO of the SoC pinctrl. The HDP is not routed 
-outside.
-  >>
->> The userland cannot change the pinctrl alternate function mux, this is
->> statically defined by the devicetree.
-> 
-> If you expose GPIO then userland needs this regardless of alternate mux.
-> IOW, board level could not configure mux because it should be always
-> configured to safe GPIO input.
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index 47092eb13eb3..39f8dd7e0f06 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -116,6 +116,10 @@ u32 tdx_get_nr_guest_keyids(void);
+ void tdx_guest_keyid_free(unsigned int keyid);
+ 
+ int tdx_nr_pamt_pages(void);
++int tdx_pamt_get(struct page *page, enum pg_level level,
++		 struct page *(alloc)(void *data), void *data);
++void tdx_pamt_put(struct page *page, enum pg_level level);
++
+ struct page *tdx_alloc_page(void);
+ void tdx_free_page(struct page *page);
+ 
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 36c3c9f8a62c..2f058e17fd73 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -1537,16 +1537,31 @@ static int tdx_mem_page_record_premap_cnt(struct kvm *kvm, gfn_t gfn,
+ 	return 0;
+ }
+ 
++static struct page *tdx_alloc_pamt_page_atomic(void *data)
++{
++	struct kvm_vcpu *vcpu = data;
++	void *p;
++
++	p = kvm_mmu_memory_cache_alloc(&vcpu->arch.pamt_page_cache);
++	return virt_to_page(p);
++}
++
+ int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
+ 			      enum pg_level level, kvm_pfn_t pfn)
+ {
++	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
+ 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+ 	struct page *page = pfn_to_page(pfn);
++	int ret;
+ 
+ 	/* TODO: handle large pages. */
+ 	if (KVM_BUG_ON(level != PG_LEVEL_4K, kvm))
+ 		return -EINVAL;
+ 
++	ret = tdx_pamt_get(page, level, tdx_alloc_pamt_page_atomic, vcpu);
++	if (ret)
++		return ret;
++
+ 	/*
+ 	 * Because guest_memfd doesn't support page migration with
+ 	 * a_ops->migrate_folio (yet), no callback is triggered for KVM on page
+@@ -1562,10 +1577,16 @@ int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
+ 	 * barrier in tdx_td_finalize().
+ 	 */
+ 	smp_rmb();
+-	if (likely(kvm_tdx->state == TD_STATE_RUNNABLE))
+-		return tdx_mem_page_aug(kvm, gfn, level, page);
+ 
+-	return tdx_mem_page_record_premap_cnt(kvm, gfn, level, pfn);
++	if (likely(kvm_tdx->state == TD_STATE_RUNNABLE))
++		ret = tdx_mem_page_aug(kvm, gfn, level, page);
++	else
++		ret = tdx_mem_page_record_premap_cnt(kvm, gfn, level, pfn);
++
++	if (ret)
++		tdx_pamt_put(page, level);
++
++	return ret;
+ }
+ 
+ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
+@@ -1622,17 +1643,26 @@ int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
+ 			      enum pg_level level, void *private_spt)
+ {
+ 	int tdx_level = pg_level_to_tdx_sept_level(level);
+-	gpa_t gpa = gfn_to_gpa(gfn);
++	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
+ 	struct page *page = virt_to_page(private_spt);
++	gpa_t gpa = gfn_to_gpa(gfn);
+ 	u64 err, entry, level_state;
++	int ret;
++
++	ret = tdx_pamt_get(page, PG_LEVEL_4K, tdx_alloc_pamt_page_atomic, vcpu);
++	if (ret)
++		return ret;
+ 
+ 	err = tdh_mem_sept_add(&to_kvm_tdx(kvm)->td, gpa, tdx_level, page, &entry,
+ 			       &level_state);
+-	if (unlikely(tdx_operand_busy(err)))
++	if (unlikely(tdx_operand_busy(err))) {
++		tdx_pamt_put(page, PG_LEVEL_4K);
+ 		return -EBUSY;
++	}
+ 
+ 	if (KVM_BUG_ON(err, kvm)) {
+ 		pr_tdx_error_2(TDH_MEM_SEPT_ADD, err, entry, level_state);
++		tdx_pamt_put(page, PG_LEVEL_4K);
+ 		return -EIO;
+ 	}
+ 
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index 0cbf052c64e9..4fc9f4ae8165 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -2067,14 +2067,22 @@ static void tdx_free_pamt_pages(struct list_head *pamt_pages)
+ 	}
+ }
+ 
+-static int tdx_alloc_pamt_pages(struct list_head *pamt_pages)
++static int tdx_alloc_pamt_pages(struct list_head *pamt_pages,
++				 struct page *(alloc)(void *data), void *data)
+ {
+ 	for (int i = 0; i < tdx_nr_pamt_pages(); i++) {
+-		struct page *page = alloc_page(GFP_KERNEL);
++		struct page *page;
++
++		if (alloc)
++			page = alloc(data);
++		else
++			page = alloc_page(GFP_KERNEL);
++
+ 		if (!page) {
+ 			tdx_free_pamt_pages(pamt_pages);
+ 			return -ENOMEM;
+ 		}
++
+ 		list_add(&page->lru, pamt_pages);
+ 	}
+ 	return 0;
+@@ -2130,7 +2138,8 @@ static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
+ 	return 0;
+ }
+ 
+-static int tdx_pamt_get(struct page *page, enum pg_level level)
++int tdx_pamt_get(struct page *page, enum pg_level level,
++		 struct page *(alloc)(void *data), void *data)
+ {
+ 	unsigned long hpa = page_to_phys(page);
+ 	atomic_t *pamt_refcount;
+@@ -2153,7 +2162,7 @@ static int tdx_pamt_get(struct page *page, enum pg_level level)
+ 	if (atomic_inc_not_zero(pamt_refcount))
+ 		return 0;
+ 
+-	if (tdx_alloc_pamt_pages(&pamt_pages))
++	if (tdx_alloc_pamt_pages(&pamt_pages, alloc, data))
+ 		return -ENOMEM;
+ 
+ 	ret = tdx_pamt_add(pamt_refcount, hpa, &pamt_pages);
+@@ -2162,8 +2171,9 @@ static int tdx_pamt_get(struct page *page, enum pg_level level)
+ 
+ 	return ret >= 0 ? 0 : ret;
+ }
++EXPORT_SYMBOL_GPL(tdx_pamt_get);
+ 
+-static void tdx_pamt_put(struct page *page, enum pg_level level)
++void tdx_pamt_put(struct page *page, enum pg_level level)
+ {
+ 	unsigned long hpa = page_to_phys(page);
+ 	atomic_t *pamt_refcount;
+@@ -2198,6 +2208,7 @@ static void tdx_pamt_put(struct page *page, enum pg_level level)
+ 
+ 	tdx_free_pamt_pages(&pamt_pages);
+ }
++EXPORT_SYMBOL_GPL(tdx_pamt_put);
+ 
+ struct page *tdx_alloc_page(void)
+ {
+@@ -2207,7 +2218,7 @@ struct page *tdx_alloc_page(void)
+ 	if (!page)
+ 		return NULL;
+ 
+-	if (tdx_pamt_get(page, PG_LEVEL_4K)) {
++	if (tdx_pamt_get(page, PG_LEVEL_4K, NULL, NULL)) {
+ 		__free_page(page);
+ 		return NULL;
+ 	}
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index eec82775c5bf..6add012532a0 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -436,6 +436,7 @@ void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
+ 	BUG_ON(!p);
+ 	return p;
+ }
++EXPORT_SYMBOL_GPL(kvm_mmu_memory_cache_alloc);
+ #endif
+ 
+ static void kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+-- 
+2.47.2
 
-For userland sight view, SoC GPIO are preferred instead of HDP.
-HDP is only GPO not GPIO. 'pinctrl-*' properties configure at the same 
-time the SoC pinctrl mux to HDP and the HDP pinctrl mux to one of the 
-HDP functions (e.g. GPO).
-
-Best regards,
-Clément
