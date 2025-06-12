@@ -1,116 +1,86 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05302F4317
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC75C22157F;
+	Thu, 12 Jun 2025 14:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749737576; cv=none; b=i6shXdepk8H2drzMW1vf/TFZF6qcyiwtS+Ol3F44dNAc//w5qeTawIS83KSioe101vxvbs3WJe/i3y3Hpcrhw+ronZZVjZ+Bk+kACO6rcs1q+UqrIuvSvJByFegsg0v/orhnqtHB+nos3VCpGWi7o8Dg+ShZVYvXHp99L+NgeQw=
+	t=1749737587; cv=none; b=GTYcc8cwC4+BOa6ug33Sx3E4mAPtSANAxS/QG8O6iJ9+xYQKM/Lsf+liHdk/52dSDmnL5vvcAL4YofXHtIsW0UWK3Km3GLQItCjoQU/WbgMExL7Bk8oDvUhjrWcYZEeBpVZmFySZI5dxcLfwMIVzDazjWSwTgfXmmeBlKLKJ6AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749737576; c=relaxed/simple;
-	bh=LZbMld6BzHGILlIgf66HaC3NP9UK6TgOAVrYfhtRoh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lrc7ItGDD/wcO/le6Bn7PU7Plw9Mw6OQCaF1phmKHbTMb80LcK79vMrIBy6w1ISP3cZVTJpGZ5F0BUCCC5QJPxS7lENLqorlRa4yBzElPF/zOT31QZet3ufUexRPqxCGDMarSNpDa7mOnkHOLDRc7Kob7lmvGhM1MxvnVwUXZWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=r08Pb8at; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="r08Pb8at"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so1456744f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1749737572; x=1750342372; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5+m7vYBsU85tLjESg73MFdmLBCg20+wdtbP1Z8Mu9gw=;
-        b=r08Pb8at6TMubRhspo20s87DkBBMJqfSpJQ7KF8oaYst2wmc//XZzWWbc+cq9AUPC1
-         7XczUL9FMl+XytepYgwSJWBlZ6Kxzmsf+gYLXldQJX54BmULpuzTcdXBlgoH0JXwpKzy
-         MXtPYg+x1aG2l+G6wkQpvboIMRK+pvP5prusYp+XiLhEsVKeljFIgnTUdlB2E+pzwAh7
-         WnMl8VGtJP31K518n6Pxo2DxVxZPFvGZHFeD2JHY+3sU9ptVNDxDOF+5+Gg1vO+3Ei3A
-         uWrWuthUdOEqAvKx8iEciBbaCfxN2H/YNlZ2pR21csKDxJTgwXMGHkvs1NdIzrMwUddk
-         Z9eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749737572; x=1750342372;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5+m7vYBsU85tLjESg73MFdmLBCg20+wdtbP1Z8Mu9gw=;
-        b=YVURZWZBdrVqWeokyuTj7IbW1uKz+5hL+gL4dEk3+g7YJBBhDpYraVCwhloMn5WZ7e
-         Nr5EM7q4PphTIeq0sWFexNSNLC++mpQ2GKrHqF3wl2/9DX6JQbc0t8DgUehSYbI8Bqah
-         VrNHcnW8XrjUPOEU3FDjzrk67mgn/roAkACHpWfVnKmqpp0xquuqJWWuEIAdfQ6RJtlN
-         9MhFsRtcM0meknOhfK7rqhilh3WgHsHCOlLJ8U12G+BXIB22scSXaggOdcbdL6EIo89O
-         gtLgRdVdrebx99o66iOLXGsDouqKF3foX8Fjuo3HhCD5Eocv1cI5zCsxkCviuHUiO2gq
-         wRdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYVl56l9j9a97suKy6wOAbcx+pQnCgAzEgR/msDLWajl+Ga6Umggzvaq+4NSnC7JoDgQtRrnW3YuTLW+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy57ojPdhrARchM2dmDU0tXPWEfTXODfMnaqXRRmcRDgSRi0Phh
-	Kl+DMc6HyCA1ROrYJ6A8Hjaj/rN8+kIEfhT4Ie3Z+hDoMf++p0o+nShR6X4c0tUi+0g=
-X-Gm-Gg: ASbGncv64jtfw8XDdbwu/Okoev27d0qAKx/ATBr+zk1SKBvbG8yc4GRuUegIkkEGE99
-	QgcLZEPG+U8BtLI49bEJeSwE03YQLFAhKvwT+MJzhOHIU4gPNcZgVFJ1PHf1dx9UjdgHRsMm9+Q
-	waDZtk2oDe+tR//9lInLLdNNDfuWDG6smiWoNKWcuRzHujM2IqcD7y8tXS9vh5C4bmytO7CAo5j
-	IZGyoxOwvmqOWIu9Rwhobi3YxdSAXt3v/TMV9ZXeVsLh5TuEn9zP/p6zy05JSPxEzKujPCqZtaV
-	WB1nkUeEM55/HjZmM5xMoPNs3W4EqEBXjIKxJuJQao1lsm8P2LD32GumLm+SXgFei5A=
-X-Google-Smtp-Source: AGHT+IE6AmCf5V9oHfWOt9dYuSHqj1qzlXCkWSsFnnG7NUfV5Z5SKBuMKwud/rOH6HANsQ0sthmKhw==
-X-Received: by 2002:a05:6000:178d:b0:3a4:da0e:517a with SMTP id ffacd0b85a97d-3a5608135aemr3279107f8f.23.1749737571906;
-        Thu, 12 Jun 2025 07:12:51 -0700 (PDT)
-Received: from MacBook-Air.local ([5.100.243.24])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2446b0sm21538585e9.21.2025.06.12.07.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 07:12:51 -0700 (PDT)
-Date: Thu, 12 Jun 2025 17:12:48 +0300
-From: Joe Damato <joe@dama.to>
-To: Breno Leitao <leitao@debian.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH net-next 1/2] netdevsim: migrate to dstats stats
- collection
-Message-ID: <aErgYLGwLjoHxCLv@MacBook-Air.local>
-Mail-Followup-To: Joe Damato <joe@dama.to>,
-	Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-References: <20250611-netdevsim_stat-v1-0-c11b657d96bf@debian.org>
- <20250611-netdevsim_stat-v1-1-c11b657d96bf@debian.org>
+	s=arc-20240116; t=1749737587; c=relaxed/simple;
+	bh=Rpnn5xMwFPnTBd6TTY6z/Yi1ye7/TyK0BtV8aMiEVRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hGPmk0CrOGoiTuP48bETyWwlBQ+pU7seUTGBHeZTGD0bj+OBqQTp1O4W/PmUakBRhtkz87HENgQR9nIk7UdOoZuBelBMt3LhGbp1s82GYoc+jmsCNbAI+RKUStjyisyFuqghMc9VioGyDQA7JeP+dxeBq1e9CEZn2yGZxbh5cDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id ED80F81105;
+	Thu, 12 Jun 2025 14:13:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id D4CE518;
+	Thu, 12 Jun 2025 14:13:00 +0000 (UTC)
+Date: Thu, 12 Jun 2025 10:12:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH] powerpc/thp: tracing: Hide hugepage events under
+ CONFIG_PPC_BOOK3S_64
+Message-ID: <20250612101259.0ad43e48@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611-netdevsim_stat-v1-1-c11b657d96bf@debian.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: bph8eeis91dcouz9rgjooibbaxyq1yrh
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: D4CE518
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/TNcbCQL4JSQd2WThmCKZIdmvrRbao+Pg=
+X-HE-Tag: 1749737580-822780
+X-HE-Meta: U2FsdGVkX1+l9YM5abWc5caLLQlplWKE+WQkJvUPSjXG5kG4eFjP+HIM2/a2LpO5jRBFVVvKGK5Dt5Wrtb1q64jWXnsO5l9ab27tqcNjb75RYUBiBD7M0J62l2cH7TSG1kd3z58eiTfTW928dek77QjPHuiNdToXVDAoqndf6gbqD7fnIGW4JNuoyF/QSdrr2EdufYw/lXM9pLVGN6c4/zHRRcKiCZMtjKzWOAY6gWZM/nwAXUlgMcmg52eaQKssksrYHBRiMZ0xLODygqNKD521zy3rOyE80bBFkeS/Ua8pqPK/TeYmNZPUg65ijCr1IvmqzAiwkGu5ieXeG2ACi6oQlnilmcjMK1E85Sxhg5WAVvGlfBetvlIvkffN5OhhLzFpYohGI5vNu6duHQCGRn53lTEF849O
 
-On Wed, Jun 11, 2025 at 08:06:19AM -0700, Breno Leitao wrote:
-> Replace custom statistics tracking with the kernel's dstats infrastructure
-> to simplify code and improve consistency with other network drivers.
-> 
-> This change:
-> - Sets dev->pcpu_stat_type = NETDEV_PCPU_STAT_DSTATS for automatic
->   automatic allocation and deallocation.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Ignorable minor nits: "automatic" repeated twice in the list item above and the
-other items in the list below do not end with periods.
+The events hugepage_set_pmd, hugepage_set_pud, hugepage_update_pmd and
+hugepage_update_pud are only called when CONFIG_PPC_BOOK3S_64 is defined.
+As each event can take up to 5K regardless if they are used or not, it's
+best not to define them when they are not used. Add #ifdef around these
+events when they are not used.
 
-> - Removes manual stats fields and their update
-> - Replaces custom nsim_get_stats64() with dev_get_stats()
-> - Uses dev_dstats_tx_add() and dev_dstats_tx_dropped() helpers
-> - Eliminates the need for manual synchronization primitives
-> 
-> The dstats framework provides the same functionality with less code.
-> 
-> Suggested-by: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  drivers/net/netdevsim/netdev.c    | 33 ++++++---------------------------
->  drivers/net/netdevsim/netdevsim.h |  5 -----
->  2 files changed, 6 insertions(+), 32 deletions(-)
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Note, I will be adding code soon that will make unused events cause a warning.
 
+ include/trace/events/thp.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Joe Damato <joe@dama.to>
+diff --git a/include/trace/events/thp.h b/include/trace/events/thp.h
+index f50048af5fcc..c8fe879d5828 100644
+--- a/include/trace/events/thp.h
++++ b/include/trace/events/thp.h
+@@ -8,6 +8,7 @@
+ #include <linux/types.h>
+ #include <linux/tracepoint.h>
+ 
++#ifdef CONFIG_PPC_BOOK3S_64
+ DECLARE_EVENT_CLASS(hugepage_set,
+ 
+ 	    TP_PROTO(unsigned long addr, unsigned long pte),
+@@ -66,6 +67,7 @@ DEFINE_EVENT(hugepage_update, hugepage_update_pud,
+ 	    TP_PROTO(unsigned long addr, unsigned long pud, unsigned long clr, unsigned long set),
+ 	    TP_ARGS(addr, pud, clr, set)
+ );
++#endif /* CONFIG_PPC_BOOK3S_64 */
+ 
+ DECLARE_EVENT_CLASS(migration_pmd,
+ 
+-- 
+2.47.2
+
