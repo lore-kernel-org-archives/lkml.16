@@ -1,31 +1,40 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8BF222571;
-	Thu, 12 Jun 2025 12:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5687B46B8;
+	Thu, 12 Jun 2025 12:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749731417; cv=none; b=mmDL58nqxfe6DRtWhlIS54NoEPd1/kl2yoWrDk4dFe0erspcDs09U3j9n5aeCC0J1OXtBag9e+6z9STajEL8MTFplhR0nToLBfKwPOmP9ZcyABsAiFDs9FohXaLOofUwxvVgTE3YwQOhJM4OVRC3zzqUkCQa9pFKdUwD7mT42lk=
+	t=1749731441; cv=none; b=SpsbHFIUyaU/x6nNCJXUPI6EOC1NzNZRgEevN4UmmoBTqD062cVsdnfoEcsD0qag1EGwVMdnoYAvm52+2uuaLXJIfnhTDJkAYdxoYIaSfk60AOeEqvF6LENVuTGQ7K+jSi/3wNYzg74nCEyxKZoVdOfxSuEbe0YAIBQ3Ubomr00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749731417; c=relaxed/simple;
-	bh=j69Dnf1y/6nSiAAiJLBB05fVyOzl17WJ50+9HmwlJbw=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=YJq7775wWxrzTM4y46H5lr4Ug2HXzyUlICVQNAtHnhB2AlDD3QwNNPmU8poGvKhy+fwa+YV+GiPknb+ENCJg/6H6tkE3R/pIGh3qcYl/XUKbA5ASKvNVtlQlRC9Ehy0THz0y1xNlCgY0yIUL61hsTep6KcCcA3+vugCAySjqEYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bJ1yc2HDMz1GDmy;
-	Thu, 12 Jun 2025 20:28:08 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1F12D14020C;
-	Thu, 12 Jun 2025 20:30:12 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 12 Jun 2025 20:30:11 +0800
-Message-ID: <19e6f273-7bf1-489b-b1e7-c80e85d80641@huawei.com>
-Date: Thu, 12 Jun 2025 20:30:10 +0800
+	s=arc-20240116; t=1749731441; c=relaxed/simple;
+	bh=xMj0PeXUpejsICB72qzZq/FU9wUca+EJE4sWUqWhTeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y7VMaqWD4eU68EnxbP99yz5RrT+JDjUYMq4rZaWMCH4L73bwsuaP1Z+4SCovQ5+dyF91JBvRLPPRz7QV6mE6EmgrLPPYg6ZufvUDLwgiV/DyLrTSe5QlC1iRE7KA2HLrt+AAr/nYZGY1JYvnHOsC4NL/WN+zA+/Krrz5qV1fL4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Pdr3jsG8; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Pdr3jsG8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749731436;
+	bh=xMj0PeXUpejsICB72qzZq/FU9wUca+EJE4sWUqWhTeA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Pdr3jsG8LEBbrTq48ZzhTF8vjLwU0K+gNO+X2iv7Gdtf7LmKBdaFEIz5QMWdeccwD
+	 GLCxrTWkvx74UkGx64K3aPq/B4r5m2wWanFUdRsvxE/zkUcEWjvmC0tdmaSl7DthRD
+	 5BeuUwEdjAOZP363EEtatAdEPq2wvbL19UMWfJpDqLJEWqCebJY82sVUPdY5Cah+Bp
+	 d6wLrrwIXhisc4G9pCT8qm9/8yoDg9PO+QNBA6isGJKMkProKjiDrtP+vHW8of9oIv
+	 T0bBlbb2VBZy8YlsWjQe1n9JNo/CshEopiXzxi9osJgM+NETN7+2eF9RvK13lDKGw6
+	 5cndkuogjgGWQ==
+Received: from [192.168.1.90] (unknown [212.93.144.165])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 48C9D17E06BF;
+	Thu, 12 Jun 2025 14:30:35 +0200 (CEST)
+Message-ID: <85cb44fd-f597-443e-81b4-e259513aec9f@collabora.com>
+Date: Thu, 12 Jun 2025 15:30:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,42 +42,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
-	<horms@kernel.org>, <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/8] net: hns3: add the hns3_get_ops() helper
-To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-References: <20250612021317.1487943-1-shaojijie@huawei.com>
- <20250612021317.1487943-4-shaojijie@huawei.com>
- <aEq4Hvg4aaxnn7m0@mev-dev.igk.intel.com>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <aEq4Hvg4aaxnn7m0@mev-dev.igk.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH 0/3] arm64: dts: rockchip: Fix HDMI output on RK3576
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-rockchip@lists.infradead.org
+Cc: kernel@collabora.com, Andy Yan <andyshrk@163.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
+ <3011644.e9J7NaK4W3@workhorse>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <3011644.e9J7NaK4W3@workhorse>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemk100013.china.huawei.com (7.202.194.61)
 
+Hi Nicolas,
 
-on 2025/6/12 19:21, Michal Swiatkowski wrote:
-> On Thu, Jun 12, 2025 at 10:13:12AM +0800, Jijie Shao wrote:
->> This patch introduces a hns3_get_ops() helper to reduce the unnecessary
->> middle layer conversion. Apply it to the whole HNS3 driver.
->> The former discusstion can be checked from the link.
+On 6/12/25 3:13 PM, Nicolas Frattaroli wrote:
+> On Wednesday, 11 June 2025 23:47:46 Central European Summer Time Cristian Ciocaltea wrote:
+>> Since commit c871a311edf0 ("phy: rockchip: samsung-hdptx: Setup TMDS
+>> char rate via phy_configure_opts_hdmi"), the workaround of passing the
+>> PHY rate from DW HDMI QP bridge driver via phy_set_bus_width() became
+>> partially broken, unless the rate adjustment is done as with RK3588,
+>> i.e. by CCF from VOP2.
 >>
->> Link: https://patchwork.kernel.org/project/netdevbpf/patch/20230310081404.947-1-lanhao@huawei.com/
->> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-> Like with previous patch, not introducing, but using. Still the linked
-> discussion is about sth else. If you can, please rephrase commit message
-> to reflect what it is really doing.
->
-> Thanks
->
-> [...]
+>> Attempting to fix this up at PHY level would not only introduce
+>> additional hacks, but it would also fail to adequately resolve the
+>> display issues that are a consequence of the system CRU limitations.
+>>
+>> Therefore, let's proceed with the solution already implemented for
+>> RK3588, that is to make use of the HDMI PHY PLL as a more accurate DCLK
+>> source in VOP2.
+>>
+>> It's worth noting a follow-up patch is going to drop the hack from the
+>> bridge driver altogether, while switching to HDMI PHY configuration API
+>> for setting up the TMDS character rate.
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>> Cristian Ciocaltea (3):
+>>       dt-bindings: display: vop2: Add optional PLL clock property for rk3576
+>>       arm64: dts: rockchip: Enable HDMI PHY clk provider on rk3576
+>>       arm64: dts: rockchip: Add HDMI PHY PLL clock source to VOP2 on rk3576
+>>
+>>  .../bindings/display/rockchip/rockchip-vop2.yaml   | 56 +++++++++++++++++-----
+>>  arch/arm64/boot/dts/rockchip/rk3576.dtsi           |  7 ++-
+>>  2 files changed, 49 insertions(+), 14 deletions(-)
+>> ---
+>> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+>> change-id: 20250611-rk3576-hdmitx-fix-e030fbdb0d17
+>>
+> 
+> For the whole series:
+> 
+> Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> 
+> This fixes HDMI output for 4K resolutions on my RK3576 ArmSoM Sige5.
+> The DTB checks and bindings checks pass as well.
+Many thanks for the additional testing!
 
-ok
-
->
+Regards,
+Cristian
