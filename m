@@ -1,165 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4565C2F430C
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749731795; cv=none; b=D9cTB0ho4GnHGFNy90ju89qsCaNa5RGliGIgrFn3Vu+R7J4dpC8ePtCuwgTdV1B1PIy70pU9rRhso9gXKVtugF2UD5bsFOPSb1HM0K6RwTJg6wOqmf5QLi34MoQ3PhfMEnARHaoLzu90XYjm2ZbSKO6M1uXjp6zzQZx2vgysoKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749731795; c=relaxed/simple;
-	bh=0HnP0FEpzj7V4q4R8wW8B6GxRGKwBvsj9FPXBxQnZFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iiwa4Md+E3hQFqVE8Er8gGRMlVTaKE/Ko/yiNlxQm3crJX94QOqA1aC9WYvgNsdvjkgP3X8Y2PfCuTQ2mgN9fp9v2xKmBIbQdTlfWFGBFNOpNRQROAmJglxAdVRRVJuoZHx3Y8Xyj2nBmFd1T7MFrz37SPZmRtRg147+XtuogYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ncecoy/x; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B372F432A;
+	Thu, 12 Jun 2025 12:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749731805; cv=fail; b=UXujrCeu+2t65eddUBQbgjbNfW9MOXi5Ib/MPHUESqbzLKy6wlNDuviZlCKocXMFXl6TYfTN7YRx0Qwk1juO2JnFOefUSaCswhl6Id9DOktz5f9EOzYz10hfRf5KrYxxgRE70E++DVBgFd4e41BO3vXzBMEpTiFVqnlfF1vlJcQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749731805; c=relaxed/simple;
+	bh=reujuBj5SMOqbpdGeClTXfv3hpyrMlX8AFZ6o72R5wE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cY9ZFdgOK2gWTefkiZR/E+TgMa4tI/oIzEMLk+sGNjUyrCFIHMvWYrVW26WVMWgraSHZ3j9lkn1v/FPs1pzvbH9YpZa5wXHHwhuykccsFyeKAXv0roecTS3wGZyJmJ9fZ4S92CmOgmLu5UyER+TrZU8MbK0z1L1jFG7mQKCbs4g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=qeOcnpaI; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=QU5JMSyq; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ncecoy/x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749731792;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4Bh4dX1JlKlhpTIcfeVbnBt6ZIPlXQjwiP+ROQ/J7Y8=;
-	b=Ncecoy/xWjibUna/AwcW19ZV48hUsoa10NNFe+ESTNoWQVQ3txDB1tUfR/CyWZI7EMxdkf
-	mNY//KUmQUhzTVoyGUUQ2UTyLW0OZjPNqE5GGuzaRYmGJJsKKfg4XB2tWFQLZqX1Bj6vCb
-	ptN4BceuyREJfPkY9XLgZrM8lm2jxTA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-127-gNZhPBBgNnuJc_KQbu_zrQ-1; Thu, 12 Jun 2025 08:36:30 -0400
-X-MC-Unique: gNZhPBBgNnuJc_KQbu_zrQ-1
-X-Mimecast-MFC-AGG-ID: gNZhPBBgNnuJc_KQbu_zrQ_1749731790
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f85f31d9so433173f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:36:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749731790; x=1750336590;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4Bh4dX1JlKlhpTIcfeVbnBt6ZIPlXQjwiP+ROQ/J7Y8=;
-        b=KBBMKto3DFjR/ZNjYPgAnPoq8HofL4gWJ7Vn3P0vCyr1T0a1cfYeINeo9oBi0ATZ2z
-         3Pv1/ljhhFtP3e5Lqr9EgpBYjEWJEQ8FXTg0c8Gu2r1u559p3/i/eAgLy1dDjVm9dkv6
-         tD5L6osCNfq2VQM6GXsyw5SRd9a6iQYZqpXyWRJxIcqHSx/TnwkOQm9R1AndKAXg2T/u
-         RMhDEJFGIvLIaP+sReiyUCmX+8ZFQgW3zciAIJlfVKsDaiWNh8JVBjjWVeCb8Pl/EllG
-         Pvf2IPvdJQjLOu+OYWIEDPE/JR+qvCbQerBhxnDBrPa2nu0F6wG+6SVm7KwCpqDomvC7
-         c3ZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNMajGpSipO6gFXq0dfQFGX4z+wmVqAs8tCX6Tl0bzK5Fi/H9CYrDPvSN8W3/Nf5YvK8PwfcSGCW//S5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOcJ7PsXIp8fMqP/vN/T6nQGHfeU/REkfdVV9pqsjvniPo05Xu
-	lch2a858BDRZbw8hGhvtckJRlrMzJL14ZxRu5D/H48Rw9hLLdImrYNKGgGMFVSre5yFfbPadauS
-	VqDcetwYWyeUcuJ+N0BKp+dzdbhlg1dCLyovstGbOAdugBTEP383phX6p6+AoXOL39Q==
-X-Gm-Gg: ASbGnctJ02HpRdVogRtuV0huCY80S70m28yKwa9JlKvJWgnEKEaWN5ILdpwx1CXCCdc
-	ViUmNQMVHs2rCy2FBG1/P4a2TMI0n4STBQ/e9v1zToj0NpklQje8GhaCTSHbQP01t7dM8ooTnOs
-	J5PfpDL03V2kshhE0ACGNl59nzRKwWG+0ULbiW0GeDkqATy6TnxeNq3LEsWYXbXOpdHVQr6F1Fp
-	ozredgyk+oT7iOhKii77CDJ6YKsHzPfco5eEdpO55/AE0pViPJZAof+GSkRHqGxcnoQ6KRLUdJF
-	2kVNuWMzAdC4sOstU6TrdG6CuJnFYrdvuF8ckl7gnekZD8sRtgDTb3nbWv4IyW8eUCNixyw7I7c
-	WJLNBDTYaltcxb1q9W3es40fEN67vI7En+OCCLkW0HNMccHOUrA==
-X-Received: by 2002:a5d:64c5:0:b0:3a4:d700:f773 with SMTP id ffacd0b85a97d-3a5606a2f5amr2645494f8f.11.1749731789700;
-        Thu, 12 Jun 2025 05:36:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHP7GX8mmfHyy1XVyDTzaFoVHDRBqUqGtA2T6X6nOqxDvXWDpKckqBp/AufLCjgyp/gY7i0aQ==
-X-Received: by 2002:a5d:64c5:0:b0:3a4:d700:f773 with SMTP id ffacd0b85a97d-3a5606a2f5amr2645470f8f.11.1749731789304;
-        Thu, 12 Jun 2025 05:36:29 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561b65b0dsm1909627f8f.95.2025.06.12.05.36.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 05:36:28 -0700 (PDT)
-Message-ID: <79b5314e-a8d6-401c-a3d5-242a5887f562@redhat.com>
-Date: Thu, 12 Jun 2025 14:36:27 +0200
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="qeOcnpaI";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="QU5JMSyq"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C4KW0o023474;
+	Thu, 12 Jun 2025 07:36:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=5uX8ZQQCrFCyngnxvk
+	vG7nzq/4H/36rEgPRdujBXbAk=; b=qeOcnpaI8ZdXdJ4aT6f5kYRnnvb02lJxEl
+	vQ7WK3BTTdv1p/3k2Z9SBJnVZBJBWS+XMyZPWr09iXNyuxCKzrreMR1hhUxCuFJa
+	1dnjjATcokNkFIhmNd0nQ1G9FkJZhBvaYPn8wCJTeAnYlvXpt2397t6Y3fUz7311
+	uPDfYub8Wl/sTv3KdatB1TVJRAD5Wk++ZxYA5bmiBmqLKsWsuWLXwc80C8m/7AXn
+	/qAOvzeoHpLnxCDlp3Mj/IJQQST4rIMC2Mz4FgGVDg494vQGkspXn0SxZT+MkiMM
+	tqkbgU5vVNXRx6b+VPwP7O6LodF0ojOk2wXrtwImlDzIp3/ivKkw==
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02on2111.outbound.protection.outlook.com [40.107.212.111])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 476ksdbtcs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 07:36:39 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dtCVYzJSBDBtpvE6cgduLrKyLg3RVfWAUfZueTNuHPRDvL2WqkCsco4nhcXiciUW0YGuHHWOP0wVF7F2G/qnsl9dGJo58BPf3CrCCj32rdGIu1HxvAJXjdz6nSUzFkdQ5rhLdkDclaUZtavYAGfhhXpixIwuvsNGeOaMPt8vf95azEb3wcw/1wsOg0c8xDVrLnntebwB3zmsl6MiGrCvNBW0mkCJyT5ausN/L3fjjH/Yly539K+ouuMIeVOJG87HT26/qpYLWb4o249hFCfHgGBpQOm63gsSHESh7v/LoQFK6YE5BGDSg6vC04ue0xmIqUpeYUnsn6tfccny8DtvrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5uX8ZQQCrFCyngnxvkvG7nzq/4H/36rEgPRdujBXbAk=;
+ b=yY+pie4XfWjI+KmphceiCgyhAAHXdD5gPfHm6tyDqq7a2lhoZiYhVbfbKemR234aybP4YYMm2baQDBZEs+ku9qusexIwcN7ue/fq/VX6okZ8IHj9iKuTB13/Y+86MOv10KND9bBOdPBezngbxrDpERN86+caKhKS5Kc5F3lXNFLvs4qmx0fNFx9ve3BoeDzTRIWRGVm9WVvW00WCf9VQ+9l/vr4aa79oaH9Yl096px9QLbsA3eCFH4NL9hs28/6JhgyUWqjjbJyYNv/AveFU4FoEiffBH3a2Lv/4Waw8NpYb4WCTdY4HHjXeXgeF6kKyzTjTEuN7sH09hjJApNmPhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=bgdev.pl smtp.mailfrom=opensource.cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5uX8ZQQCrFCyngnxvkvG7nzq/4H/36rEgPRdujBXbAk=;
+ b=QU5JMSyqjSZ05AboJy89n8L1PuvLYxPlnV29qiHcO2tPMxVwk0QAmS9Q3GAnKnIIKZakS7kHe4c4l8FWtH03knyDHdf1VKyx7v7T57BJCV31Tz3L1ECdnuuhhw4o3k8iVpdCsKs46kEMOoWJpSGeRTO6HV5+p538ezJeGDu4Azs=
+Received: from SJ0PR03CA0287.namprd03.prod.outlook.com (2603:10b6:a03:39e::22)
+ by DM4PR19MB6511.namprd19.prod.outlook.com (2603:10b6:8:8a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.16; Thu, 12 Jun
+ 2025 12:36:35 +0000
+Received: from SJ1PEPF000023D9.namprd21.prod.outlook.com
+ (2603:10b6:a03:39e:cafe::ca) by SJ0PR03CA0287.outlook.office365.com
+ (2603:10b6:a03:39e::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.22 via Frontend Transport; Thu,
+ 12 Jun 2025 12:36:35 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ SJ1PEPF000023D9.mail.protection.outlook.com (10.167.244.74) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.0
+ via Frontend Transport; Thu, 12 Jun 2025 12:36:34 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id ABC3F406541;
+	Thu, 12 Jun 2025 12:36:32 +0000 (UTC)
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 9379F82024A;
+	Thu, 12 Jun 2025 12:36:32 +0000 (UTC)
+Date: Thu, 12 Jun 2025 13:36:31 +0100
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Rhodes <david.rhodes@cirrus.com>, patches@opensource.cirrus.com,
+        linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/2] pinctrl: cirrus: cs42l43: use new GPIO line value
+ setter callbacks
+Message-ID: <aErJz7C7f1iC4Aqm@opensource.cirrus.com>
+References: <20250612-gpiochip-set-rv-pinctrl-cirrus-v1-0-2d45c1f92557@linaro.org>
+ <20250612-gpiochip-set-rv-pinctrl-cirrus-v1-2-2d45c1f92557@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/pagewalk: Clean up folio_walk_start() by removing
- expose_page
-To: peng li <peng8420.li@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250612120903.2678910-1-peng8420.li@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250612120903.2678910-1-peng8420.li@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612-gpiochip-set-rv-pinctrl-cirrus-v1-2-2d45c1f92557@linaro.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D9:EE_|DM4PR19MB6511:EE_
+X-MS-Office365-Filtering-Correlation-Id: d3de17d9-d86c-4e79-e2af-08dda9adc47c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|61400799027|34020700016|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?l5IoSBDBNVRf3TtZL56nupt53tT1sg+L1zwfpLlyrTY2baezBUuX++mFpice?=
+ =?us-ascii?Q?11F44bEEunz3Ym1n1B9exFdj39QoZmXXxW+PFTQN9jgkbM0uwhZdZYzx4apY?=
+ =?us-ascii?Q?vTEUyvMw1uKcRjG1Q0Emali61zKKi0PzthuTgZ+9aOcG5yw20gwRpXndnqkY?=
+ =?us-ascii?Q?8H+vxh3VTIJm9v3xBeOLRRlYKKvN16SBzHkr0I2iesqr8lqnhrcYP15FNdS+?=
+ =?us-ascii?Q?GDH69+vtq4Z8VuR/Ykatc6s6Ievm8x/tY4amGxyQLnL9f6miBs/RUlhBdyHV?=
+ =?us-ascii?Q?aDI4zXmWhoIEYcNZPTdwhe4IuCPVzXyJohu3JR2/AN31kPA/lssOrm4schrv?=
+ =?us-ascii?Q?Cus/r2LhCYujNVEf9JTCTFcKMDeWL+XumaNE1akVAm8am0W71jZ3vF9lJvLS?=
+ =?us-ascii?Q?Ypa6MacmZFZN7fQYDoKkrxs7W2AWMaiGv3l4Bxfu0XAkJJeAUPd880FE+s3R?=
+ =?us-ascii?Q?8jrfyoEEY6Ne2ktiDYKX7NlsudGlDl8ThuQkkHnJnIUlkf34zjZPLnIsLrtS?=
+ =?us-ascii?Q?JaxoO0jgvQy1gfSwIjeh6vs1HWWp/W7OFMRQ5/BS65qH2Duvd9bht8DbfpKQ?=
+ =?us-ascii?Q?kYmHCjN9vvplAGNgTaClbqJ4DeWo3To6XcAbaGo2KNjtBs/O65Fq8xq6Tkjg?=
+ =?us-ascii?Q?JLsZKRdSCpQGyQqXAUDrkp/zwzCDtgw1Vw8oQD6ytZ3Dk9eI15jnWGw6/mcp?=
+ =?us-ascii?Q?W9SorGTPfI44Z6QgE5YON8VMitxefiT+W9w5VZYIrjC8fd5miOcA0TfKKZUT?=
+ =?us-ascii?Q?te9LhAP34/ieIIuGMRZZlLPVc6PKQzdNWF7K9GGot0BLHeZrdD4osRTeKQAE?=
+ =?us-ascii?Q?lVUIGmBML19aUlLgtMWHXy4hBZ1jR31QIu2+DPkPkam4jDDfKVRXoGOhZHaJ?=
+ =?us-ascii?Q?FxWbYV724CNIVrK36Ou+cvOnvmE0GBDMtLlVIAv9RuMdWaAANq32BnKAK9Kd?=
+ =?us-ascii?Q?n8z4IgZCEqhktX+G16C23ALeKeobGTLoewrnIfrKsYhH1JSfcgyKxC93cEGz?=
+ =?us-ascii?Q?n/2UKM//WcqXORx++qtnGHPoi5kxB8s+iRc1cW9lcga3b3tHvaAdGNzmM9xb?=
+ =?us-ascii?Q?MVe+WRzYYGJfbqCBYBlPw4BSBdOzi/WWIw90IkOB5p7rjtzYQ9HpG9ut3hHj?=
+ =?us-ascii?Q?wYKWpYTM3+l+12AkBzzrEziYNo2ETw2DYHDQ4xVKAzRR/lSzBxgTUm2MO4aF?=
+ =?us-ascii?Q?XkSD/5ZcHHNPUgxwEl6ZNGyaUAkJen8ag0Yn5jZiVYy/ciUEgRdbTAzZgpXV?=
+ =?us-ascii?Q?H8RbW0ukpN1lYUQdYu8AI/dFgX03/b5lDRduuSEo3X07onKfKmoD8aNkSuY/?=
+ =?us-ascii?Q?KqRidV4TPG/jXOi35RqWV9QEVoZuZZMgrZSQODGV/rXAjrr7OPT9SL8e2940?=
+ =?us-ascii?Q?fhvliBp1IBsHdCwh+N3ULEUULB2t0opJ1/KjpmBNCwvj5vKqkC7oFgD2U1a3?=
+ =?us-ascii?Q?F2M8DdUXoKU3Gkaxm78LECya4qUruRXTDsWoQUlnZEOJ18OEDqwnZQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(61400799027)(34020700016)(82310400026)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 12:36:34.4111
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3de17d9-d86c-4e79-e2af-08dda9adc47c
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000023D9.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR19MB6511
+X-Proofpoint-GUID: AfXnyhrWuwys0kcOS2B2_N2q0L5vco3L
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA5NiBTYWx0ZWRfX822w/7cn+Zv2 QCi0Hq6unC6y2zRoxe3rjzhbEVS7vmVJSAYtzzS51/AzVoRCwUM0s0QCvqYvrANDX3dzHfzANHg F6EZCe7G78cxCCaE21rvBABmDQsUessOLBDOexYuls1P/tS0cLmkgBGpm+zY8zxZINS+YuL3AuY
+ lX4tpRRyWaaWLbqVnfnbwDpKn4F1w3VZCEv2JRQU0LYdCLkm1kuJKeWlqDFZ6DcfSh+kJPgEWVq A8m7H8Rxhr7pGziAKa6dh3ihkTh6iP+k4f0Gbx1cfYipcOMvPzTN8RQdokLNiWvMUaMHHWZ3Suv sc3/oY3JhPA0QnOEnLKcCzRD0IMnC1JJ/zCEdND/39kty/LrpXIsSui/iA40CCwFwuThWKY/iF6
+ QdbRq4RA+NpEHCt6X5T5zazoyIKbx599GCz2ZKULE4l+qAG+15GxgO5fQDm/5mRA5cWqJaBt
+X-Authority-Analysis: v=2.4 cv=c5OrQQ9l c=1 sm=1 tr=0 ts=684ac9d7 cx=c_pps a=DUefcnIPdq0KHlc9UOEoeA==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=KKAkSRfTAAAA:8 a=aChJ_wylqbG-PFo4NTEA:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: AfXnyhrWuwys0kcOS2B2_N2q0L5vco3L
+X-Proofpoint-Spam-Reason: safe
 
-On 12.06.25 14:09, peng li wrote:
-> The name expose_page is confusing to understand. From the code logic, it is
-> probably meant to express "belongs to the normal page and get offset from
-> the mapped page"?
-> Perhaps changing "expose_page" to "normal_mapped_page" can better express
-> its behavior? But perhaps its existence is meaningless, because fw->page
-> can be directly confirmed and obtained from the page type without the need
-> for a separate flag.
+On Thu, Jun 12, 2025 at 02:19:54PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Key changes:
-> 1. Remove expose_page and its conditional logic
-> 2. Always set fw->page when a valid page is found
-> 3. Add clarifying comments about offset calculation
-> 4. Initialize fw->page to NULL at PMD/PTE levels
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 > 
-> Signed-off-by: peng li <peng8420.li@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
+> +static int cs42l43_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> +			    int value)
+>  {
+>  	struct cs42l43_pin *priv = gpiochip_get_data(chip);
+>  	unsigned int shift = offset + CS42L43_GPIO1_LVL_SHIFT;
+> @@ -493,23 +494,27 @@ static void cs42l43_gpio_set(struct gpio_chip *chip, unsigned int offset, int va
+>  		offset + 1, str_high_low(value));
+>  
+>  	ret = pm_runtime_resume_and_get(priv->dev);
+> -	if (ret) {
+> -		dev_err(priv->dev, "Failed to resume for set: %d\n", ret);
+> -		return;
+> -	}
+> +	if (ret)
+> +		return ret;
 
+Is there a reason to lose the error message here? Always nice to
+know which of the two paths failed when things go bad.
 
-I don't see the cleanup here, really.
-
-
--- 
-Cheers,
-
-David / dhildenb
-
+Thanks,
+Charles
+>  
+>  	ret = regmap_update_bits(priv->regmap, CS42L43_GPIO_CTRL1,
+>  				 BIT(shift), value << shift);
+>  	if (ret)
+> -		dev_err(priv->dev, "Failed to set gpio%d: %d\n", offset + 1, ret);
+> +		return ret;
+>  
+>  	pm_runtime_put(priv->dev);
+> +
+> +	return 0;
+>  }
