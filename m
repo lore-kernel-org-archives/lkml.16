@@ -1,611 +1,141 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B222E7632
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B74B2E1737
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771680; cv=none; b=gHR49BZBVfjC86VjKN66QZ5KLRWQ3D+0P3ojoLO5c1D8XACmaxjzvIC45CkD5CJMqBrmuhmRty3TAituRpD9dDwOWXPZQU4VHZ+osrmKxhuXghMGUQWzl351tKj2F5x9jDTPr0850ac8s4/ut9vXL1zEiyK23D/BXHMiUdaKbn0=
+	t=1749771688; cv=none; b=B797qt/eMsys/DNwSDIeM/wQGiPKLsdOhC6AhEE+0t+/S3AySOKo9UTJir5y2QZajaUw5ZUL8rpAS6DG2f5fBocuPJC1DqyzYpXrJ0glQpvDBBV9VsXLtpM916h2m5wkV7N1md6Y2VVtru/7ltPXkdwKp3jgFhDYu//hD3i0Ay4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771680; c=relaxed/simple;
-	bh=0Y+YU2tG91aTV6rlj83yTw8wALOgBmQrp7y1v8/NaWc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AxZAHE5Lo94CpE5SeUe2Bq4+ujliI/S6sRYx6+dhSigSSYYVmkFJFNZ6hdGkRTImpyPkAe9llTmx/ICLjEU1ktMsamyBdglY82dqSnJyD4ddx2QS10GhAZqT8TAMdp2cc4POsJcfoc/MGQX4Di3ON0KMf4d09U42oSUvOj0fH9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SF66KC/J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pTzm+fnu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SF66KC/J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pTzm+fnu"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749771677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=40K9B0t26LX1DySV5VsJmoyEVEFLIho/CTmnJzaTfWM=;
-	b=SF66KC/J3vMyQ/0/y97n/EYvWWfTQy7KtHk7qLOYJYpVT6aZuhxVcIr6Ej7W0QvqojSpYk
-	Gg79uojb2FGx4Asf6psjybjbZFa9ijYG/BwXA4oYPGlj3uHBMSH8syyLVvsp0qDpteFmam
-	X718FEv4NBeF5nps84rB2ucXtDCGuq6WqN/bILEYGguW1w4+uA6HGyNcQYUIT2M0u5HMgo
-	4oIJyo6BVaZWTc3iJUZx++Yd8/icWb1w/wRPXIRbxWYQQTjQYAShJrSGqABhivrFfw9Zzd
-	z/1ybk4gbnGC5vwptzz9NcfmWbt7N1TxRBG21skB/AY6RKKJEySlrDII7vPzYw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749771677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=40K9B0t26LX1DySV5VsJmoyEVEFLIho/CTmnJzaTfWM=;
-	b=pTzm+fnucc5OUIrpcOVXdd0eGc26x8b7iRpW5u98lBSwCp4EMf0QJu7je2+aYh7sOdNVG7
-	JotHM3fBs4dOGcDg==
-To: Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 17/44] treewide: Explicitly include <asm/cpuid/api.h>
-Date: Fri, 13 Jun 2025 01:39:43 +0200
-Message-ID: <20250612234010.572636-18-darwi@linutronix.de>
-In-Reply-To: <20250612234010.572636-1-darwi@linutronix.de>
-References: <20250612234010.572636-1-darwi@linutronix.de>
+	s=arc-20240116; t=1749771688; c=relaxed/simple;
+	bh=uBY7xNQg+tNA03tvbkiMqws3tHpqhv0Lp7Ij1/nnI+M=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tEa4MKnVzgB+XJ2LzVi3fnnCRjCI8Z3dCAEm7v30F3SvCMs1Lg1I7qnxCMGw5WWtVg0ExcxlXXiwPMC1oWyGOf9W/hCK67hfD53U/KvwPRK+wNGAM01dMHHuGhYxpj2sDVcLWP0rSMHxMhjkb160aakXhk7MHU0kKrW+8oipxIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddb4a92e80so19494615ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:41:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749771686; x=1750376486;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/v3lXQnQAInhUGFEhB4ef/LPPi0XF9azlmNMfdlDeDc=;
+        b=Ch3xumAVCkSmzkybTOZmf0G2NjtEy5GOsQswUGE3oZhdPuUnzf2Eyk28kBZdElvSIk
+         nfs7GMn351rytbLLaS5tY/+tdHQ1FAHYpxJABpSFYDItkcD7VYQiO0/9qh6RaksVTrZJ
+         afhKOFaM0/fDR/y/RxpN/I5HrOG7CGpkFU8aFsYgC1XRFNAz3n9YS2qWuCVAV8Sm0C6T
+         ZUzmcy670sofTf4MMutfI2CH63fioHPSKIConMJanE3jDuXhQ4KGLmi1Z16G63SFlSYr
+         5TMaROWC+a12NPMvM4QYa/4zTcEcQJ48yl3zMoIS6c3BvCVryaoT8ZZkRAZqc+thvjN4
+         /cSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzDuDCG7Emup93uItcqab2vMROE8fUrK2xENDfnmgRiDnfKLP0zujt7alSK7JYRy5x8xskCJhjUwPt1S0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGb4ojz6xOHPDkzjEuuwsUA5dE31XPdJ73YcDCvA6S2lgDGgbX
+	9qvm12eZgoIctZueDtbMLJXfBPYazmgvEqYMjiPO0f8WTyEkRK5r0dQGVZozPAVbdo6tAFe29Da
+	HopsomytGPs8Y1l66XSPslM1YX5PpmkXsZo6WHfBUmiLeKKv175JqyB8DYEw=
+X-Google-Smtp-Source: AGHT+IHNW1jYIesUGOjqdbDQy35MMrSQ++myxvFepafLZ7BQnCBxgqG/kCFgc7gR9FKInPo6fjOE/kP3dpmUBb+Oo/BdaWuvO4Gv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:12ee:b0:3dc:8423:5440 with SMTP id
+ e9e14a558f8ab-3de00a151f1mr9928625ab.0.1749771686333; Thu, 12 Jun 2025
+ 16:41:26 -0700 (PDT)
+Date: Thu, 12 Jun 2025 16:41:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684b65a6.050a0220.be214.0295.GAE@google.com>
+Subject: [syzbot] [atm?] KMSAN: uninit-value in atmtcp_c_send
+From: syzbot <syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com>
+To: 3chas3@gmail.com, linux-atm-general@lists.sourceforge.net, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Let all CPUID call sites which include the main CPUID API header
-implicitly though <asm/processor.h> include it explicitly instead.
+Hello,
 
-This disentangles the CPUID API header <asm/cpuid/api.h> from
-<asm/processor.h>, thus avoiding a circular header dependency.
+syzbot found the following issue on:
 
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+HEAD commit:    2c4a1f3fe03e Merge tag 'bpf-fixes' of git://git.kernel.org..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1787d9d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=42d51b7b9f9e61d
+dashboard link: https://syzkaller.appspot.com/bug?extid=1d3c235276f62963e93a
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1195ed70580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16187682580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/1313b3ad2bf4/disk-2c4a1f3f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/15f719cfdf88/vmlinux-2c4a1f3f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e7f531b0bef6/bzImage-2c4a1f3f.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in atmtcp_c_send+0x255/0xed0 drivers/atm/atmtcp.c:294
+ atmtcp_c_send+0x255/0xed0 drivers/atm/atmtcp.c:294
+ vcc_sendmsg+0xd7c/0xff0 net/atm/common.c:644
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x330/0x3d0 net/socket.c:727
+ ____sys_sendmsg+0x7e0/0xd80 net/socket.c:2566
+ ___sys_sendmsg+0x271/0x3b0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x211/0x3e0 net/socket.c:2655
+ x64_sys_call+0x32fb/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:47
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4154 [inline]
+ slab_alloc_node mm/slub.c:4197 [inline]
+ kmem_cache_alloc_node_noprof+0x818/0xf00 mm/slub.c:4249
+ kmalloc_reserve+0x13c/0x4b0 net/core/skbuff.c:579
+ __alloc_skb+0x347/0x7d0 net/core/skbuff.c:670
+ alloc_skb include/linux/skbuff.h:1336 [inline]
+ vcc_sendmsg+0xb40/0xff0 net/atm/common.c:628
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x330/0x3d0 net/socket.c:727
+ ____sys_sendmsg+0x7e0/0xd80 net/socket.c:2566
+ ___sys_sendmsg+0x271/0x3b0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x211/0x3e0 net/socket.c:2655
+ x64_sys_call+0x32fb/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:47
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 UID: 0 PID: 5798 Comm: syz-executor192 Not tainted 6.16.0-rc1-syzkaller-00010-g2c4a1f3fe03e #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
+
+
 ---
- arch/x86/boot/compressed/pgtable_64.c        | 1 +
- arch/x86/boot/startup/sme.c                  | 1 +
- arch/x86/coco/tdx/tdx.c                      | 1 +
- arch/x86/events/amd/core.c                   | 2 ++
- arch/x86/events/amd/ibs.c                    | 1 +
- arch/x86/events/amd/lbr.c                    | 2 ++
- arch/x86/events/amd/power.c                  | 3 +++
- arch/x86/events/amd/uncore.c                 | 1 +
- arch/x86/events/intel/core.c                 | 1 +
- arch/x86/events/intel/lbr.c                  | 1 +
- arch/x86/events/zhaoxin/core.c               | 1 +
- arch/x86/include/asm/acrn.h                  | 2 ++
- arch/x86/include/asm/microcode.h             | 1 +
- arch/x86/include/asm/xen/hypervisor.h        | 1 +
- arch/x86/kernel/cpu/amd.c                    | 1 +
- arch/x86/kernel/cpu/centaur.c                | 1 +
- arch/x86/kernel/cpu/hygon.c                  | 1 +
- arch/x86/kernel/cpu/mce/core.c               | 1 +
- arch/x86/kernel/cpu/mce/inject.c             | 1 +
- arch/x86/kernel/cpu/resctrl/core.c           | 1 +
- arch/x86/kernel/cpu/resctrl/monitor.c        | 1 +
- arch/x86/kernel/cpu/scattered.c              | 1 +
- arch/x86/kernel/cpu/sgx/main.c               | 3 +++
- arch/x86/kernel/cpu/topology_amd.c           | 1 +
- arch/x86/kernel/cpu/topology_common.c        | 1 +
- arch/x86/kernel/cpu/topology_ext.c           | 1 +
- arch/x86/kernel/cpu/transmeta.c              | 3 +++
- arch/x86/kernel/cpu/zhaoxin.c                | 1 +
- arch/x86/kernel/cpuid.c                      | 1 +
- arch/x86/kernel/paravirt.c                   | 1 +
- arch/x86/kvm/cpuid.h                         | 3 +++
- arch/x86/kvm/mmu/spte.c                      | 1 +
- drivers/cpufreq/speedstep-lib.c              | 1 +
- drivers/firmware/efi/libstub/x86-5lvl.c      | 1 +
- drivers/hwmon/fam15h_power.c                 | 1 +
- drivers/hwmon/k10temp.c                      | 2 ++
- drivers/hwmon/k8temp.c                       | 1 +
- drivers/thermal/intel/intel_hfi.c            | 1 +
- drivers/thermal/intel/x86_pkg_temp_thermal.c | 1 +
- 39 files changed, 51 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index bdd26050dff7..d94d98595780 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -2,6 +2,7 @@
- #include "misc.h"
- #include <asm/bootparam.h>
- #include <asm/bootparam_utils.h>
-+#include <asm/cpuid/api.h>
- #include <asm/e820/types.h>
- #include <asm/processor.h>
- #include "../string.h"
-diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
-index 922b236be02f..6a58ab568390 100644
---- a/arch/x86/boot/startup/sme.c
-+++ b/arch/x86/boot/startup/sme.c
-@@ -40,6 +40,7 @@
- #include <linux/mm.h>
- 
- #include <asm/coco.h>
-+#include <asm/cpuid/api.h>
- #include <asm/init.h>
- #include <asm/sections.h>
- #include <asm/setup.h>
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 7bc11836c46a..4ed8ec642646 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -10,6 +10,7 @@
- #include <linux/kexec.h>
- 
- #include <asm/coco.h>
-+#include <asm/cpuid/api.h>
- #include <asm/ia32.h>
- #include <asm/insn.h>
- #include <asm/insn-eval.h>
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index b20661b8621d..d28d45ceb707 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -7,8 +7,10 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/jiffies.h>
-+
- #include <asm/apicdef.h>
- #include <asm/apic.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- #include <asm/nmi.h>
- 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 112f43b23ebf..0c7848e6149e 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -15,6 +15,7 @@
- #include <linux/sched/clock.h>
- 
- #include <asm/apic.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- 
- #include "../perf_event.h"
-diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-index d24da377df77..5b437dc8e4ce 100644
---- a/arch/x86/events/amd/lbr.c
-+++ b/arch/x86/events/amd/lbr.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/perf_event.h>
-+
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- #include <asm/perf_event.h>
- 
-diff --git a/arch/x86/events/amd/power.c b/arch/x86/events/amd/power.c
-index dad42790cf7d..744dffa42dee 100644
---- a/arch/x86/events/amd/power.c
-+++ b/arch/x86/events/amd/power.c
-@@ -10,8 +10,11 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/perf_event.h>
-+
- #include <asm/cpu_device_id.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
-+
- #include "../perf_event.h"
- 
- /* Event code: LSB 8 bits, passed in attr->config any other bit is reserved. */
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index c1483ef16c0b..5261f12007df 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -15,6 +15,7 @@
- #include <linux/smp.h>
- #include <linux/types.h>
- 
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- #include <asm/perf_event.h>
- 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 741b229f0718..a372f0e2867a 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -17,6 +17,7 @@
- #include <linux/kvm_host.h>
- 
- #include <asm/cpufeature.h>
-+#include <asm/cpuid/api.h>
- #include <asm/debugreg.h>
- #include <asm/hardirq.h>
- #include <asm/intel-family.h>
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 7aa59966e7c3..0d1ec3651735 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -3,6 +3,7 @@
- #include <linux/types.h>
- 
- #include <asm/cpu_device_id.h>
-+#include <asm/cpuid/api.h>
- #include <asm/perf_event.h>
- #include <asm/msr.h>
- 
-diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
-index d59992364880..15bb9c9c9358 100644
---- a/arch/x86/events/zhaoxin/core.c
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -14,6 +14,7 @@
- 
- #include <asm/apic.h>
- #include <asm/cpufeature.h>
-+#include <asm/cpuid/api.h>
- #include <asm/hardirq.h>
- #include <asm/msr.h>
- 
-diff --git a/arch/x86/include/asm/acrn.h b/arch/x86/include/asm/acrn.h
-index fab11192c60a..db42b477c41d 100644
---- a/arch/x86/include/asm/acrn.h
-+++ b/arch/x86/include/asm/acrn.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_X86_ACRN_H
- #define _ASM_X86_ACRN_H
- 
-+#include <asm/cpuid/api.h>
-+
- /*
-  * This CPUID returns feature bitmaps in EAX.
-  * Guest VM uses this to detect the appropriate feature bit.
-diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
-index 8b41f26f003b..645e65ac1586 100644
---- a/arch/x86/include/asm/microcode.h
-+++ b/arch/x86/include/asm/microcode.h
-@@ -3,6 +3,7 @@
- #define _ASM_X86_MICROCODE_H
- 
- #include <asm/msr.h>
-+#include <asm/cpuid/api.h>
- 
- struct cpu_signature {
- 	unsigned int sig;
-diff --git a/arch/x86/include/asm/xen/hypervisor.h b/arch/x86/include/asm/xen/hypervisor.h
-index c2fc7869b996..7c596cebfb78 100644
---- a/arch/x86/include/asm/xen/hypervisor.h
-+++ b/arch/x86/include/asm/xen/hypervisor.h
-@@ -37,6 +37,7 @@ extern struct shared_info *HYPERVISOR_shared_info;
- extern struct start_info *xen_start_info;
- 
- #include <asm/bug.h>
-+#include <asm/cpuid/api.h>
- #include <asm/processor.h>
- 
- #define XEN_SIGNATURE "XenVMMXenVMM"
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index c988d876b700..f982b3bb1c10 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -14,6 +14,7 @@
- #include <asm/cacheinfo.h>
- #include <asm/cpu.h>
- #include <asm/cpu_device_id.h>
-+#include <asm/cpuid/api.h>
- #include <asm/debugreg.h>
- #include <asm/delay.h>
- #include <asm/msr.h>
-diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
-index a3b55db35c96..cc5a390dcd07 100644
---- a/arch/x86/kernel/cpu/centaur.c
-+++ b/arch/x86/kernel/cpu/centaur.c
-@@ -5,6 +5,7 @@
- 
- #include <asm/cpu.h>
- #include <asm/cpufeature.h>
-+#include <asm/cpuid/api.h>
- #include <asm/e820/api.h>
- #include <asm/mtrr.h>
- #include <asm/msr.h>
-diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
-index 2154f12766fb..75ad7eb1301a 100644
---- a/arch/x86/kernel/cpu/hygon.c
-+++ b/arch/x86/kernel/cpu/hygon.c
-@@ -10,6 +10,7 @@
- 
- #include <asm/apic.h>
- #include <asm/cpu.h>
-+#include <asm/cpuid/api.h>
- #include <asm/smp.h>
- #include <asm/numa.h>
- #include <asm/cacheinfo.h>
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index fe9e65f314fb..9f7c39b4163f 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -47,6 +47,7 @@
- #include <linux/uaccess.h>
- 
- #include <asm/cpu_device_id.h>
-+#include <asm/cpuid/api.h>
- #include <asm/fred.h>
- #include <asm/mce.h>
- #include <asm/msr.h>
-diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
-index d02c4f556cd0..42c82c14c48a 100644
---- a/arch/x86/kernel/cpu/mce/inject.c
-+++ b/arch/x86/kernel/cpu/mce/inject.c
-@@ -26,6 +26,7 @@
- 
- #include <asm/amd/nb.h>
- #include <asm/apic.h>
-+#include <asm/cpuid/api.h>
- #include <asm/irq_vectors.h>
- #include <asm/mce.h>
- #include <asm/msr.h>
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 289e79154922..9498d55d51e6 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- 
- #include <asm/cpu_device_id.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- #include <asm/resctrl.h>
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index c261558276cd..5dffb9453d77 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -21,6 +21,7 @@
- #include <linux/resctrl.h>
- 
- #include <asm/cpu_device_id.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- 
- #include "internal.h"
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 3d23b943f596..15f8752d4132 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -5,6 +5,7 @@
- #include <linux/cpu.h>
- 
- #include <asm/apic.h>
-+#include <asm/cpuid/api.h>
- #include <asm/memtype.h>
- #include <asm/processor.h>
- 
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index 2de01b379aa3..00bf42f4c536 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -14,8 +14,11 @@
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/vmalloc.h>
-+
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- #include <asm/sgx.h>
-+
- #include "driver.h"
- #include "encl.h"
- #include "encls.h"
-diff --git a/arch/x86/kernel/cpu/topology_amd.c b/arch/x86/kernel/cpu/topology_amd.c
-index 843b1655ab45..abc6f5a7a486 100644
---- a/arch/x86/kernel/cpu/topology_amd.c
-+++ b/arch/x86/kernel/cpu/topology_amd.c
-@@ -2,6 +2,7 @@
- #include <linux/cpu.h>
- 
- #include <asm/apic.h>
-+#include <asm/cpuid/api.h>
- #include <asm/memtype.h>
- #include <asm/msr.h>
- #include <asm/processor.h>
-diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
-index 48c47d02d8a9..38189e4fea0e 100644
---- a/arch/x86/kernel/cpu/topology_common.c
-+++ b/arch/x86/kernel/cpu/topology_common.c
-@@ -4,6 +4,7 @@
- #include <xen/xen.h>
- 
- #include <asm/apic.h>
-+#include <asm/cpuid/api.h>
- #include <asm/intel-family.h>
- #include <asm/processor.h>
- #include <asm/smp.h>
-diff --git a/arch/x86/kernel/cpu/topology_ext.c b/arch/x86/kernel/cpu/topology_ext.c
-index 467b0326bf1a..eb915c73895f 100644
---- a/arch/x86/kernel/cpu/topology_ext.c
-+++ b/arch/x86/kernel/cpu/topology_ext.c
-@@ -2,6 +2,7 @@
- #include <linux/cpu.h>
- 
- #include <asm/apic.h>
-+#include <asm/cpuid/api.h>
- #include <asm/memtype.h>
- #include <asm/processor.h>
- 
-diff --git a/arch/x86/kernel/cpu/transmeta.c b/arch/x86/kernel/cpu/transmeta.c
-index 42c939827621..1fdcd69c625c 100644
---- a/arch/x86/kernel/cpu/transmeta.c
-+++ b/arch/x86/kernel/cpu/transmeta.c
-@@ -3,8 +3,11 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
- #include <linux/mm.h>
-+
- #include <asm/cpufeature.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
-+
- #include "cpu.h"
- 
- static void early_init_transmeta(struct cpuinfo_x86 *c)
-diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
-index 89b1c8a70fe8..cfcfb6221e3f 100644
---- a/arch/x86/kernel/cpu/zhaoxin.c
-+++ b/arch/x86/kernel/cpu/zhaoxin.c
-@@ -4,6 +4,7 @@
- 
- #include <asm/cpu.h>
- #include <asm/cpufeature.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- 
- #include "cpu.h"
-diff --git a/arch/x86/kernel/cpuid.c b/arch/x86/kernel/cpuid.c
-index dae436253de4..cbd04b677fd1 100644
---- a/arch/x86/kernel/cpuid.c
-+++ b/arch/x86/kernel/cpuid.c
-@@ -37,6 +37,7 @@
- #include <linux/gfp.h>
- #include <linux/completion.h>
- 
-+#include <asm/cpuid/api.h>
- #include <asm/processor.h>
- #include <asm/msr.h>
- 
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 3d745cd25a43..b7fc3b78086c 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -18,6 +18,7 @@
- 
- #include <asm/apic.h>
- #include <asm/bug.h>
-+#include <asm/cpuid/api.h>
- #include <asm/debugreg.h>
- #include <asm/delay.h>
- #include <asm/desc.h>
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index d3f5ae15a7ca..89f8ed3fb37a 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -3,8 +3,11 @@
- #define ARCH_X86_KVM_CPUID_H
- 
- #include "reverse_cpuid.h"
-+
- #include <asm/cpu.h>
-+#include <asm/cpuid/api.h>
- #include <asm/processor.h>
-+
- #include <uapi/asm/kvm_para.h>
- 
- extern u32 kvm_cpu_caps[NR_KVM_CPU_CAPS] __read_mostly;
-diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
-index cfce03d8f123..e7b69275ae50 100644
---- a/arch/x86/kvm/mmu/spte.c
-+++ b/arch/x86/kvm/mmu/spte.c
-@@ -15,6 +15,7 @@
- #include "x86.h"
- #include "spte.h"
- 
-+#include <asm/cpuid/api.h>
- #include <asm/e820/api.h>
- #include <asm/memtype.h>
- #include <asm/vmx.h>
-diff --git a/drivers/cpufreq/speedstep-lib.c b/drivers/cpufreq/speedstep-lib.c
-index f08817331aec..3c323cd8eede 100644
---- a/drivers/cpufreq/speedstep-lib.c
-+++ b/drivers/cpufreq/speedstep-lib.c
-@@ -15,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- 
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- #include <asm/tsc.h>
- 
-diff --git a/drivers/firmware/efi/libstub/x86-5lvl.c b/drivers/firmware/efi/libstub/x86-5lvl.c
-index f1c5fb45d5f7..029ad80cf0b4 100644
---- a/drivers/firmware/efi/libstub/x86-5lvl.c
-+++ b/drivers/firmware/efi/libstub/x86-5lvl.c
-@@ -2,6 +2,7 @@
- #include <linux/efi.h>
- 
- #include <asm/boot.h>
-+#include <asm/cpuid/api.h>
- #include <asm/desc.h>
- #include <asm/efi.h>
- 
-diff --git a/drivers/hwmon/fam15h_power.c b/drivers/hwmon/fam15h_power.c
-index 5a5674e85f63..1ecaef25f04e 100644
---- a/drivers/hwmon/fam15h_power.c
-+++ b/drivers/hwmon/fam15h_power.c
-@@ -19,6 +19,7 @@
- #include <linux/time.h>
- #include <linux/topology.h>
- 
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- #include <asm/processor.h>
- 
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index babf2413d666..12115654689a 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -20,7 +20,9 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/pci_ids.h>
-+
- #include <asm/amd/node.h>
-+#include <asm/cpuid/api.h>
- #include <asm/processor.h>
- 
- MODULE_DESCRIPTION("AMD Family 10h+ CPU core temperature monitor");
-diff --git a/drivers/hwmon/k8temp.c b/drivers/hwmon/k8temp.c
-index 8c1efce9a04b..eb167be245b9 100644
---- a/drivers/hwmon/k8temp.c
-+++ b/drivers/hwmon/k8temp.c
-@@ -15,6 +15,7 @@
- #include <linux/pci.h>
- #include <linux/slab.h>
- 
-+#include <asm/cpuid/api.h>
- #include <asm/processor.h>
- 
- #define TEMP_FROM_REG(val)	(((((val) >> 16) & 0xff) - 49) * 1000)
-diff --git a/drivers/thermal/intel/intel_hfi.c b/drivers/thermal/intel/intel_hfi.c
-index bd2fca7dc017..c910cc563d9d 100644
---- a/drivers/thermal/intel/intel_hfi.c
-+++ b/drivers/thermal/intel/intel_hfi.c
-@@ -41,6 +41,7 @@
- #include <linux/topology.h>
- #include <linux/workqueue.h>
- 
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- 
- #include "intel_hfi.h"
-diff --git a/drivers/thermal/intel/x86_pkg_temp_thermal.c b/drivers/thermal/intel/x86_pkg_temp_thermal.c
-index c843cb5fc5c3..1b9e0b49856c 100644
---- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
-+++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
-@@ -20,6 +20,7 @@
- #include <linux/thermal.h>
- 
- #include <asm/cpu_device_id.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- 
- #include "thermal_interrupt.h"
--- 
-2.49.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
