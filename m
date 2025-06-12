@@ -1,201 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE131D95B3;
-	Thu, 12 Jun 2025 20:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0727170A26;
+	Thu, 12 Jun 2025 20:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749760429; cv=none; b=KBBIkKINUyOkvwkjNxRdKxjy2tGMowvQkwTL1C7Pb+71AHxANBlHzXdEf0BLpkNNOKA+kL8485PELXONd7UviBi8uLnzNOLtZNC0Z4tTW0HsQqzyWrFsPj6I3cHXT4Lkul801HQJoqO1EIpBuhpnBHzG63HL1l7mQiBzzR6GPLQ=
+	t=1749760548; cv=none; b=EW3aqxkFgLiEaiweyuqAgFsOX1nR7T5xgkTlD5FsyB96PXyJMjxWSoUm1sQntGp/U7jiydYRDkwMmXUd0BDLcGpHs2SBFdPZ9BYAV4wB1C5jq8B+nstyKe/uDP6lvjRa8lxjog4V7TIezu78yL3NNzOkQ+oi3tgK5A1eYMDHImg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749760429; c=relaxed/simple;
-	bh=dMuKn6Rn360CgpuHNtCLvFamVrOZjcTNMmRJ123llfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=USrpwb7d4aAAOc6TGgobor+L4NmjmNylVVxH36NIIMqjCCItRb6wnYK82hDP62e8KmBZKpwb65YYACHw5YbKFBcUqkBgz5if+3RgBC3o9hlFsTDgMsEFeuXO7zoRkUDejPQZrJ3xGjoarSOtiY4FbqVvnlGYD+K2Bu9h9+AajIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h74ewMVu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749760548; c=relaxed/simple;
+	bh=VKOjouIkPbjnpquNldGEURnFbitxXv7Hj66iDotFJR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f9Rw2hL159mGlZrP91Mf7Z/DiUslwOcnWWczlBUjbD19iP8hw++kOWUn92uaRYjqIyZsSteO8trsHSs18FhkSktepxmpBQ9AGL1eyuzJq8zCuQ4r3jTZvFcUJZwnxEUNiGcM9qNWzLQO92YRlO7Q3FmvImE4ThprPkfsrxBksRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6kYlCh9; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h74ewMVu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF4E8C4CEEA;
-	Thu, 12 Jun 2025 20:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749760429;
-	bh=dMuKn6Rn360CgpuHNtCLvFamVrOZjcTNMmRJ123llfY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=h74ewMVuthSJK1rceReZR/j0/hAfGmtaq60OaOswKCDEZ0eVTNe4jZYJXBezkDbDy
-	 UQnrGDfmB78E8OEYqdFq+ZMfxjso1AfILFHyCFzm1wNxEHKRMa8ZmjMi7k2f+xWL37
-	 csmU+cqFNimFc/f/0fdjRkqhpwWbgO7PONs5qCRGL/gy8CUmszMKDtU1p8j/9ylyKc
-	 MkDUfWkvY551iGC/+I0SlN1OwbNraTFZz2GHd0zS9aKkbdmS8azCQ9SEWNOLFkX+Li
-	 qvNwghpxaphtSyUj5gR2UGc4I9aHkK1UhEkYDAzA6O7cl0Wvyf3yyuvAvNlWa9ov0K
-	 JlqWB0JYe0bGQ==
-Date: Thu, 12 Jun 2025 15:33:47 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michal.simek@amd.com,
-	bharat.kumar.gogada@amd.com, thippeswamy.havalige@amd.com
-Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
- PERST# signal
-Message-ID: <20250612203347.GA926120@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6kYlCh9"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2351227b098so12316755ad.2;
+        Thu, 12 Jun 2025 13:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749760546; x=1750365346; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4QWSoYdyhatNabwZvPhcwiKLVaajSTZN35CYhP3BmVc=;
+        b=b6kYlCh9kOijbqdENnbpDYmLn+Pn2IBLOyKa3RfiD0ybqqXcBEvIqnGixFH1dEKQ5i
+         7XdbTyz3w8iwdZDNSnGrAFL3St9Ve8Ku3lwH0FW6Eg8PX5QZ10HvmaEo0kXHuL08DO0+
+         b8HaxyuWw+lOQRgUcgzy3vlmj+ZUpG4IwuRIsoxMZuCly9mricCfi0XjBRv8F7UgPYNi
+         YKEiesCoLfECGne+4LE6cE+IX1MIinAQwAMY0wJeyExXNzzl1/A+z/JEr/Hr6+w2pH1T
+         jdtAZItonO3pSE6e37bO8bPi0KrwibKMm33U6EnPEZfTfZ/hQRRBVkkX41kqsaLDl3CM
+         bNDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749760546; x=1750365346;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4QWSoYdyhatNabwZvPhcwiKLVaajSTZN35CYhP3BmVc=;
+        b=wo1MhcqXd0VoT9k2c6UiZ7n3mEWzogl44l5Wv7JETC7vf/npGt3fOOSr2vwWmIAy+D
+         HsjhgMED/0TC3zeoo69+b57O5AOYPhzT5QSXChi43rFSib6kKxciaCAlV2ZUhJ5c0tj7
+         G0kABmXvqRv9Z4rims6JrsXrK9J7uSiZosgDPPArSl6mo0Ue4kh+cw9EtwkJ7Q52oPyg
+         ywu7/+szH50yKCrwmpMwMUew2YBj+r7MkFgFUz3fyiFAgeUv79w6ZMzGyf2nz0eZo9+T
+         uOCombzcD/xVPwHZxexmAtA+RwOJRyfwiQyl8bLbOtWxalx3NiMeKRtgsbXk/B9d1Gm0
+         2urQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbaKWVzvX/SuSi3poGvtFuXX1hdTTs8BT8DWQucFt1oDs26rGeqmitdEDUKDevlwIQhyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB8L9GB1q+4OXiQeFq95foESAmuSIGfXlVnkUxiFTv7RrXIRi+
+	HswzSMDYddZr3e44wm/GQX4umYklM3EJV0K+RQQUKhmXnHKdyYcXcmGx
+X-Gm-Gg: ASbGncvW4GfzHirTp8gocOBuwKaVIfJYRxZ/7dYAd9nlZhHLBwhKI9EOv6llo+FXXFP
+	Go9n88v2DzSIOhqXt+XVTudE1dIZHDPy2KtZfItQvfbcbr5gf9pxLzToPbgahf8+bH48KcZNbuj
+	ohsN2KW8p8BfMwVxiskRXFLNeYeD4x4Om3Q2s0GR3BDgTOzy32MUQR7O0n8ms2BM/45TDQIaNq9
+	vzYUyhM5v6KyIYsOMdkJHTo+0RzxgiFd49GHj3QdjqVIjyHkR94glZ6Jv8PVngU6gcYvjGRJi9l
+	rqF2VxCj6qlK5T3uWcRODB28H1+SQE6b9I3EXZxCVAET8eBCNDlDROjxvap0L+BQ1P6/3YRtcRf
+	d
+X-Google-Smtp-Source: AGHT+IH9btAUftjr4XnFGe6XjhQpAuBtvJF3bOSgSEruSMF5xgFR20FqFzrIqcz4tAx8eUoBIc5zsA==
+X-Received: by 2002:a17:903:234e:b0:235:eb8d:800b with SMTP id d9443c01a7336-2365da0858cmr6108555ad.26.1749760546142;
+        Thu, 12 Jun 2025 13:35:46 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365decb864sm1371725ad.213.2025.06.12.13.35.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 13:35:44 -0700 (PDT)
+Date: Thu, 12 Jun 2025 13:35:43 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: Alban Crequy <alban.crequy@gmail.com>
+Cc: linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Yucong Sun <fallentree@fb.com>, mauriciovasquezbernal@gmail.com,
+	albancrequy@microsoft.com
+Subject: Re: Loading custom BPF programs at early boot (initrd)
+Message-ID: <aEs6H4sVGY/YqcQl@pop-os.localdomain>
+References: <CAMXgnP4nfgJ+gEvXLummspjRegsZsQ=e5Q8GFAONb2yCxVZLnA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250414032304.862779-3-sai.krishna.musham@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMXgnP4nfgJ+gEvXLummspjRegsZsQ=e5Q8GFAONb2yCxVZLnA@mail.gmail.com>
 
-On Mon, Apr 14, 2025 at 08:53:04AM +0530, Sai Krishna Musham wrote:
-> Add support for handling the PCIe Root Port (RP) PERST# signal using
-> the GPIO framework, along with the PCIe IP reset. This reset is
-> managed by the driver and occurs after the Initial Power Up sequence
-> (PCIe CEM r6.0, 2.2.1) is handled in hardware before the driver's probe
-> function is called.
+Hi Alban,
 
-Please say something specific here about what this does.  I *think* it
-asserts both the PCIe IP reset (which I assume resets the host
-controller) and PERST# (which resets any devices connected to the Root
-Port), but only for devices that implement the CPM Clock and Reset
-Control Registers AND describe the address of those registers via
-DT "cpm_crx" AND describe a GPIO connected to PERST# via DT "reset".
-
-> This reset mechanism is particularly useful in warm reset scenarios,
-> where the power rails remain stable and only PERST# signal is toggled
-> through the driver. Applying both the PCIe IP reset and the PERST#
-> improves the reliability of the reset process by ensuring that both
-> the Root Port controller and the Endpoint are reset synchronously
-> and avoid lane errors.
+On Wed, Jun 04, 2025 at 04:50:15PM +0200, Alban Crequy wrote:
+> Hello,
 > 
-> Adapt the implementation to use the GPIO framework for reset signal
-> handling and make this reset handling optional, along with the
-> `cpm_crx` property, to maintain backward compatibility with existing
-> device tree binaries (DTBs).
+> I’m looking to load and attach a BPF program at early boot, that is
+> before the rootfs is mounted in read-write mode. This is for tracing
+> I/O operations on disk.
+> 
+> Without BPF, this can be done with a kernel module and then use Dracut
+> + dkms to update the initrd. But I am looking to avoid custom kernel
+> modules and I would like to have a solution with BPF working on most
+> Linux distros without too much maintenance work for each distro.
+> 
+> I’ve noticed the bpf_preload module, but from the discussion below, I
+> gather that it does not allow to load custom bpf modules:
+> https://github.com/torvalds/linux/tree/master/kernel/bpf/preload
+> https://lwn.net/Articles/889466/
+> 
+> Do you know of prior-art or recommendation how to do this correctly,
+> and hopefully without a custom kernel module?
 
-> Additionally, clear Firewall after the link reset for CPM5NC to allow
-> further PCIe transactions.
+I must miss something here... but dracut should allow to pack any binary
+(e.g. your own eBPF program) into initramfs and allow to customize your
+own init script too. With the eBPF binary and bpftool and/or other
+loading script packed into initramfs, you can get what you want without
+bothering a kernel module?
 
-> -static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
-> +static int xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
->  {
->  	const struct xilinx_cpm_variant *variant = port->variant;
-> +	struct device *dev = port->dev;
-> +	struct gpio_desc *reset_gpio;
-> +	bool do_reset = false;
-> +
-> +	if (port->crx_base && (variant->version < CPM5NC_HOST ||
-> +			       (variant->version == CPM5NC_HOST &&
-> +				port->cpm5nc_fw_base))) {
+Something like below?
 
-Would be nicer if you could simply test for the feature, not the
-specific variants, e.g.,
+install_items+="/path/to/your/ebpf_program"
+# pack bpftool if you need
+# pack libbpf if you need
+inst_hook pre-mount 50 "/path/to/your_loading_script"
 
-  if (port->crx_base && port->perst_gpio) {
-    writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
-    udelay(100);
-    writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
-    gpiod_set_value(port->perst_gpio, 0);
-    mdelay(PCIE_T_RRS_READY_MS);
-  }
-
-  if (port->firewall_base) {
-    /* Clear Firewall */
-  }
-
-If you need to check the variants vs "cpm_crx", I think that should go
-in xilinx_cpm_pcie_parse_dt().
-
-> +		/* Request the GPIO for PCIe reset signal and assert */
-> +		reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-> +		if (IS_ERR(reset_gpio))
-> +			return dev_err_probe(dev, PTR_ERR(reset_gpio),
-> +					     "Failed to request reset GPIO\n");
-> +		if (reset_gpio)
-> +			do_reset = true;
-> +	}
-
-Maybe the devm_gpiod_get_optional() could go in
-xilinx_cpm_pcie_parse_dt() along with other DT stuff, as is done in
-starfive_pcie_parse_dt()/starfive_pcie_host_init()?
-
-You'd have to save the port->reset_gpio pointer so we could use it
-here, but wouldn't have to return error from
-xilinx_cpm_pcie_init_port().
-
-> +
-> +	if (do_reset) {
-> +		/* Assert the PCIe IP reset */
-> +		writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
-> +
-> +		/*
-> +		 * "PERST# active time", as per Table 2-10: Power Sequencing
-> +		 * and Reset Signal Timings of the PCIe Electromechanical
-> +		 * Specification, Revision 6.0, symbol "T_PERST".
-> +		 */
-> +		udelay(100);
-
-Whatever we need here, this should be a #define from drivers/pci/pci.h
-instead of 100.
-
-> +
-> +		/* Deassert the PCIe IP reset */
-> +		writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
-> +
-> +		/* Deassert the reset signal */
-> +		gpiod_set_value(reset_gpio, 0);
-
-I think reset_gpio controls PERST#.  If so, it would be nice to have
-"perst" in the name to make it less ambiguous.
-
-> +		mdelay(PCIE_T_RRS_READY_MS);
-
-We only wait PCIE_T_RRS_READY_MS for certain variants and only when
-the optional "cpm_crx" and "reset" properties are present.
-
-What about the other cases?  Unless there's something that guarantees
-a delay after the link comes up before we call pci_host_probe(), that
-sounds like a bug in the existing driver.  If it is a bug, you should
-fix it in its own separate patch.
-
-> +		if (variant->version == CPM5NC_HOST &&
-> +		    port->cpm5nc_fw_base) {
-
-Unnecessary to test both variant->version and port->cpm5nc_fw_base
-here, since only CPM5NC_HOST sets cpm5nc_fw_base.
-
-The function of the "Firewall" should be explained in the commit log,
-and it seems like the sort of thing that's likely to appear in future
-variants, so "cpm5nc_" seems like it might be unnecessarily specific.
-Maybe consider naming these "firewall_base" and "firewall_reset" so
-the test and the writes wouldn't have to change for future variants.
-
-> +			/* Clear Firewall */
-> +			writel_relaxed(0x00, port->cpm5nc_fw_base +
-> +				       variant->cpm5nc_fw_rst);
-> +			writel_relaxed(0x01, port->cpm5nc_fw_base +
-> +				       variant->cpm5nc_fw_rst);
-> +			writel_relaxed(0x00, port->cpm5nc_fw_base +
-> +				       variant->cpm5nc_fw_rst);
-> +		}
-> +	}
->  
->  	if (variant->version == CPM5NC_HOST)
-
-You didn't change this test, but it would be better if you could test
-for a *feature* instead of a specific variant.  Then you can avoid
-changes when future chips have the same feature.
-
-> -		return;
-> +		return 0;
->  
->  	if (cpm_pcie_link_up(port))
->  		dev_info(port->dev, "PCIe Link is UP\n");
-> @@ -512,6 +574,8 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
->  	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
->  		   XILINX_CPM_PCIE_REG_RPSC_BEN,
->  		   XILINX_CPM_PCIE_REG_RPSC);
-> +
-> +	return 0;
->  }
+Regards,
+Cong
