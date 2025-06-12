@@ -1,205 +1,102 @@
-Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B072D6616;
-	Thu, 12 Jun 2025 20:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6925B2D8773;
+	Thu, 12 Jun 2025 20:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749760620; cv=none; b=iSd5LgHkRzkC1lJ2LhK/bLkhNTJtZoAPG2aIdviPBxpeHAc/6M4VUWG2Ir9geCZUfM0EQmhI1RSWZqmtg3OPOoUlReHK+d+v8yQeuglCK6zaj5mpCeEjcDnwZi3YTkCoGl+PcnCK67H+t4PRoHhVge4E96yYPgl4pXfx/Nhm+CQ=
+	t=1749760628; cv=none; b=BIeleUsEaAeyPoC1vDnFOFqSOc5HcWjdHjeB0t/ircDGM68FpW2jDwPXHI+W8NPWJD7muldwNLOojLRG2r1Ub29CAtJXM1QibAKlO0tiqkCp6n1AH65iPFPqPv7A0Hq3SwmZx/lTZkVc6dcFfzbxA6XawlPrnrHU29bVLHQw2jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749760620; c=relaxed/simple;
-	bh=H8u1w/YwStaUJxudyE2L3/g/KCe1Lq6vTTC/Fx7X2wI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Srqx2mipeCBcHhKlKNlnTMlu1dRY/uqfz2rcqGyjRr5uV5cyS+rG1EiQy1tCEFr1IXMBsWM3iv87XuYLuTWE0kKoSP1tis6PDkGsQFNSsGrN8j0xvcKbasLR5TsB50dx4RPSzRnhbQ7yVTCVffcw41UJOzZPbSAzspzX5k1/M0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LxkrIfVV; arc=none smtp.client-ip=80.12.242.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1749760628; c=relaxed/simple;
+	bh=9bR2YbjDcKulL5hNBeUJr73babSsUOTOMmhT4wUFqnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JSlbG5l/xpouAIPRlee4lstuHG39DirTs343CmFEuozJMFWxh2xOvWn5izai1RFV25SvSrfWKaBVSXF4oN2TrixGThVdwnpENnS9GKaeoo1CVK8zZr7dUtZjdoZA4V89aX0v/rT3ibNXPo0OS28QVFrKAlNkhY8JPWr0rJfx7gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=R4LaJXdj; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LxkrIfVV"
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id PoWIuYWF3h2MlPoWJutI1a; Thu, 12 Jun 2025 22:27:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1749760052;
-	bh=30F9MeODJaJtiCyPTKPIaDBgYSsnYVpZ0EqQQiVnKc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=LxkrIfVVst3GNiCIT4KgzwDqBS7GHuyxt1F86CTNcjmtrqWPq33ea8kN0AFZ79R1J
-	 OrSf46HuFOMk24s6lePYsB7lz+Nd2k8lLOHWUj/tG/uBUBjQX9P8r9FPX268lSo+VH
-	 NeNSbLfs4Hk+UYZn9E0s3zR/R98L2WllTR2hieQPjAJ+nyKdk/CmL6oKx/60MtMg7m
-	 sna5jFMu7AO5g/194HqUqmj8Tx16xrjoFZmcQR0dogrwNzQ5UPt6zKArBLmeUeq4cc
-	 0NLouo5u4hMqCHaXj8/6nnCLcrq86m+ZsQv/Kj7yubTx7rQRQsUYRsUpaDSd6+8Dtm
-	 xM5bAJeS6ZrIQ==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 12 Jun 2025 22:27:32 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <5e131f07-9753-4d2f-a043-35751c278a63@wanadoo.fr>
-Date: Thu, 12 Jun 2025 22:27:30 +0200
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="R4LaJXdj"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bJDpk5BGyz9t5Y;
+	Thu, 12 Jun 2025 22:37:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1749760622;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7Smza2Jc4Jwl4Da5lRMks2Zjvr0wRUWchDcyc8CJiMs=;
+	b=R4LaJXdjSwMzUkY7g817Vq/lRyAaIBH3jcKGIh7tWnoqeown1ttyXDuiZ3nabREK7v9XHw
+	ycPTaxOzRz1qNET38XoBmQrfxk3NzK9NAxaTGLMHjSWjAwvtd7MxSvkbxp1VIOaaMP5DZE
+	Byzvv5fxey/X9IFFTI5HPyGIgiMDIAcg6pfLG52GYWH8NVHJ5bthwJwL9aYMSMQlR/J3IP
+	E30fKoibQSosM97GRjxFsckpEWYAEezBI+osesLhmBdWKdFPoTEVgIg2F2N5eic3cFBHCK
+	4U7HoT/g5YhSxT117sCaYTkH6p15140lyOmGr94ba7fhb+algNv2I1TZ7ZZVfQ==
+Date: Thu, 12 Jun 2025 22:36:48 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Pankaj Raghav <p.raghav@samsung.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, willy@infradead.org, x86@kernel.org, linux-block@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
+	gost.dev@samsung.com, hch@lst.de
+Subject: Re: [PATCH 0/5] add STATIC_PMD_ZERO_PAGE config option
+Message-ID: <nsquvkkywghoeloxexlgqman2ks7s6o6isxzvkehaipayaxnth@6er73cdqopmo>
+References: <20250612105100.59144-1-p.raghav@samsung.com>
+ <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] leds: as3668: Driver for the ams Osram 4-channel
- i2c LED driver
-To: Lukas Timmermann <linux@timmermann.space>, lee@kernel.org,
- pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250611083151.22150-1-linux@timmermann.space>
- <20250611083151.22150-3-linux@timmermann.space>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250611083151.22150-3-linux@timmermann.space>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
+X-Rspamd-Queue-Id: 4bJDpk5BGyz9t5Y
 
-Le 11/06/2025 à 10:31, Lukas Timmermann a écrit :
-> Since there were no existing drivers for the AS3668 or related devices,
-> a new driver was introduced in a separate file. Similar devices were
-> reviewed, but none shared enough characteristics to justify code reuse.
-> As a result, this driver is written specifically for the AS3668.
+On Thu, Jun 12, 2025 at 06:50:07AM -0700, Dave Hansen wrote:
+> On 6/12/25 03:50, Pankaj Raghav wrote:
+> > But to use huge_zero_folio, we need to pass a mm struct and the
+> > put_folio needs to be called in the destructor. This makes sense for
+> > systems that have memory constraints but for bigger servers, it does not
+> > matter if the PMD size is reasonable (like in x86).
 > 
-> Signed-off-by: Lukas Timmermann <linux@timmermann.space>
+> So, what's the problem with calling a destructor?
+> 
+> In your last patch, surely bio_add_folio() can put the page/folio when
+> it's done. Is the real problem that you don't want to call zero page
+> specific code at bio teardown?
 
-Hi,
+Yeah, it feels like a lot of code on the caller just to use a zero page.
+It would be nice just to have a call similar to ZERO_PAGE() in these
+subsystems where we can have guarantee of getting huge zero page.
 
-first, I should that you should wait longer before sending each new 
-version, so that you can collect more feedback.
+Apart from that, these are the following problems if we use
+mm_get_huge_zero_folio() at the moment:
 
-> ---
->   MAINTAINERS                |   1 +
->   drivers/leds/Kconfig       |  13 +++
->   drivers/leds/Makefile      |   1 +
->   drivers/leds/leds-as3668.c | 204 +++++++++++++++++++++++++++++++++++++
->   4 files changed, 219 insertions(+)
->   create mode 100644 drivers/leds/leds-as3668.c
+- We might end up allocating 512MB PMD on ARM systems with 64k base page
+  size, which is undesirable. With the patch series posted, we will only
+  enable the static huge page for sane architectures and page sizes.
 
-...
+- In the current implementation we always call mm_put_huge_zero_folio()
+  in __mmput()[1]. I am not sure if model will work for all subsystems. For
+  example bio completions can be async, i.e, we might need a reference
+  to the zero page even if the process is no longer alive.
 
-> +static int as3668_dt_init(struct as3668 *as3668)
-> +{
-> +	struct device *dev = &as3668->client->dev;
-> +	struct as3668_led *led;
-> +	struct led_init_data init_data = {};
-> +	int err;
-> +	u32 reg;
-> +
-> +	for_each_available_child_of_node_scoped(dev_of_node(dev), child) {
-> +		err = of_property_read_u32(child, "reg", &reg);
-> +		if (err) {
-> +			dev_err(dev, "unable to read device tree led reg, err %d\n", err);
+I will try to include these motivations in the cover letter next time.
 
-as3668_dt_init() is only called from the probe. Sometimes maintainers 
-prefer using "return dev_err_probe()" in such a case, to have less 
-verbose code.
-(I don't know if it is the case for the leds subsystem)
+Thanks
 
-> +			return err;
-> +		}
-> +
-> +		if (reg < 0 || reg > AS3668_MAX_LEDS) {
-> +			dev_err(dev, "unsupported led reg %d\n", reg);
-> +			return -EOPNOTSUPP;
+[1] 6fcb52a56ff6 ("thp: reduce usage of huge zero page's atomic counter")
 
-Same.
-
-> +		}
-> +
-> +		led = &as3668->leds[reg];
-> +		led->fwnode = of_fwnode_handle(child);
-> +
-> +		led->num = reg;
-> +		led->chip = as3668;
-> +
-> +		led->cdev.max_brightness = U8_MAX;
-> +		led->cdev.brightness_get = as3668_brightness_get;
-> +		led->cdev.brightness_set = as3668_brightness_set;
-> +
-> +		init_data.fwnode = led->fwnode;
-> +		init_data.default_label = ":";
-> +
-> +		err = devm_led_classdev_register_ext(dev, &led->cdev, &init_data);
-> +		if (err) {
-> +			dev_err(dev, "failed to register %d LED\n", reg);
-> +			return err;
-
-Same.
-
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int as3668_probe(struct i2c_client *client)
-> +{
-> +	u8 chip_id1, chip_id2, chip_serial, chip_rev;
-> +	struct as3668 *as3668;
-> +
-> +	/* Check for sensible i2c address */
-> +	if (client->addr != 0x42)
-> +		return dev_err_probe(&client->dev, -EFAULT,
-> +				     "unexpected address for as3668 device\n");
-> +
-> +	/* Read identifier from chip */
-> +	chip_id1 = as3668_read_value(client, AS3668_CHIP_ID1);
-> +
-> +	if (chip_id1 != AS3668_CHIP_IDENT)
-> +		return dev_err_probe(&client->dev, -ENODEV,
-> +				"chip reported wrong id: 0x%02x\n", chip_id1);
-> +
-> +	/* Check the revision */
-> +	chip_id2 = as3668_read_value(client, AS3668_CHIP_ID2);
-> +	chip_serial = FIELD_GET(AS3668_CHIP_ID2_SERIAL_MASK, chip_id2);
-> +	chip_rev = FIELD_GET(AS3668_CHIP_ID2_REV_MASK, chip_id2);
-> +
-> +	if (chip_rev != AS3668_CHIP_REV1)
-> +		dev_warn(&client->dev, "unexpected chip revision\n");
-> +
-> +	/* Print out information about the chip */
-> +	dev_dbg(&client->dev,
-> +		"chip_id: 0x%02x | chip_id2: 0x%02x | chip_serial: 0x%02x | chip_rev: 0x%02x\n",
-> +		chip_id1, chip_id2, chip_serial, chip_rev);
-> +
-> +	as3668 = devm_kzalloc(&client->dev, sizeof(*as3668), GFP_KERNEL);
-> +
-
-Unneeded new line.
-
-> +	if (!as3668)
-> +		return -ENOMEM;
-> +
-> +	as3668->client = client;
-> +	int err = as3668_dt_init(as3668);
-
-Would be better, IMHO, if err was declared at the top of the function.
-
-> +
-
-Unneeded new line.
-
-> +	if (err) {
-> +		dev_err(&client->dev, "failed to initialize device, err %d\n", err);
-
-return dev_err_probe() to be consistent with the code above.
-
-> +		return err;
-> +	}
-> +
-> +	/* Initialize the chip */
-> +	as3668_write_value(client, AS3668_CURRX_CONTROL, 0x55);
-> +	as3668_write_value(client, AS3668_CURR1, 0x00);
-> +	as3668_write_value(client, AS3668_CURR2, 0x00);
-> +	as3668_write_value(client, AS3668_CURR3, 0x00);
-> +	as3668_write_value(client, AS3668_CURR4, 0x00);
-> +
-> +	return 0;
-> +}
-
-...
-
-CJ
+--
+Pankaj
