@@ -1,131 +1,186 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169A5234971
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DEE231853
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749727064; cv=none; b=SV9xHsutbFJraQ70K2E91RAaLyz8uvSw2vDQd8fPlWMV1vwyB8sk6IIiU5FLSikDq3GDt5bKsiAQkQgH/KuITPfS+6+MEEdut+RywaIb3BxAh8bQ6pHs5oCMJ6kr1UjayJq+QuBXKwJZM+JKbc3yf6M28OkrOvjhBd16t2ahw5I=
+	t=1749727133; cv=none; b=JyUVj9ZQIfm3N0OB1wFlnPanljktLfC1Npe9X7XHlF+R9nfspzxIDOxOwx7KfumgqqtdRxKAFpuIc6lI7/ctnLWNa8Uj6KjEUS7Ht/g1cQdl3hj5j2TMy8IrhcsP9Q/hSolSJAEJg5AEniqVs1tZv9xXDgurk19GpViJuu+eLT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749727064; c=relaxed/simple;
-	bh=YQXP9ZTmEnpO/V8Ax1Tfe6HMTJO7Usy68xzxP270YZY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Gl7F2cYx73fhpH5ziQqq/aM2S+q72Z/03kK/H/2kh3DnniQ3nFImofXXlFi/hmLxIizTDNjrj/F/sJwzq3EGCawMhfKeHVDCspkQprH1ePowxZTn48t0Pk6RbhOLwhNEDSgu2UNw/bLTfGpEEO7+pV2dhFz18lmSlSmf2C6Ivew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SUFO41ba; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1749727133; c=relaxed/simple;
+	bh=3JjbhQubAgFcC97e/UoQ9hKiqpfIzqZGcS7aEKOfAmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DRIPOItC89/kjJ+eupA96Q093pZJWjhFB8GHY0NEeql88Z2t5xw+dbQ91gaAA0tb8yYTRJhctZeCxjniEcnXANDx4tj9Q6OsnUmySzsW5/SA08fU+owMN3DrfikcaQLPqRE5qFO2lPyw1VLHrg7WZ0sNJ2C7UzHxJKyKN2HPuSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MEDJOBfZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SUFO41ba"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4fabcafecso496548f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:17:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749727061; x=1750331861; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WWCjrcd9+LCf2SHBy1SQcJnNDjHYTxYoSHc0kBSop/k=;
-        b=SUFO41baVi7JOWfeLBeP/KCCwHrxJG9XK186pRe8dVNnd6QpsoF3aXEf4qOTMQJjcM
-         aQ7AslpBdozATTVgKdOUtAPXDGUoxvAbY2u+JJcZ4TZioDj+0xr4+9/DcduR6sqweXBx
-         g8JeCKeftyx8x58CsZ2E1cydY94L2k77qa3Sif5hCo8L2CZr+t0mCuIxUtso/sP5rNMb
-         PQZjfRkbhE/mz8YVhKa9We+u208XJI9jWQwanfb3q8ORvBVuiTzY5Mz5rivAi2iSQPpL
-         PMKHxmtM+8Fl3OCu171mSDFuN4SDM5/OuN2b9rClEHbJCAE0TUMiuJBctT/K1JpdnMCP
-         B/yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749727061; x=1750331861;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WWCjrcd9+LCf2SHBy1SQcJnNDjHYTxYoSHc0kBSop/k=;
-        b=PVRaibdo1bh173RwoCi4NUt+TLE74XQJ/BpbRVE+kBibK6llwmAu0wBDU1gC0tL5Ua
-         aui6NMKy4wS9Fp1PaoCRcBNxrOTOdBT52HBY1NNOP4660DS370tHgSjL3uootGrl1wtl
-         7xzJfyCnhUxIoq4tTAh2Acl0FN42CsLbocB++QBtJiBnVCRPSbobkCRY0n3YEMuIMRuw
-         fVZAb05mzmI6tH/KLkWBMK1ZgyD8jDBQFTxr7CFxFYpIF4hRh4UdV8p83RP6fLbfeT58
-         jm3JK1ahfjaNPNFSZHGK7GyEy3LGy4lFdWZH5UaK/UWo+hju78C4wFT7VWmDbfTFCDyo
-         CAzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVjed7+SBOkJ9IP0MOEbWVBl6gzywvmEpQaQd4gyyxBML9VOXKBL3P6s6eexykcYRzaEYMAEvp4+MkWzWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBfXjUzy65IrfIjbBrhEwf2TlPlVTiOB2/fRV9Danf+FKKzPjn
-	xKH8nvLHK1MroTmL7QRn5Cnbfm1pZemMZAxFHzAYcgB4HwWjsOf/jcQAYWwoIjok6K5Dz7vauqz
-	09vFQwbqVh0u7HptHMQ==
-X-Google-Smtp-Source: AGHT+IEDxKboKPgtyGNZMmesEeLEHvcND2xWZoB+Q5kc7pMP20fHVmKJV/iw4WtUihxxHwIosyiKPPJWRPzAwOw=
-X-Received: from wmtf7.prod.google.com ([2002:a05:600c:8b47:b0:451:4d6b:5b7e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:248a:b0:3a5:2dae:9710 with SMTP id ffacd0b85a97d-3a5586b2143mr5503229f8f.25.1749727061402;
- Thu, 12 Jun 2025 04:17:41 -0700 (PDT)
-Date: Thu, 12 Jun 2025 11:17:33 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MEDJOBfZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749727129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7T84xXSWCXYbJ0BcRNBZS+rZcumc2YBPF5dRlJgvCIQ=;
+	b=MEDJOBfZyG25IE+p9qjIS59GgUzgByWRoPy1D1fgNpNO+cP59QYEtDZVechHJB5DQFMpM8
+	re8e7LLCz0IdrByETtoZ6SXPVrVPdtB4M1bGonoOpg1aW0VnibXHgLzJ/YvrNyHNkFdv7D
+	TYfoE5asgSGvnCzDQdtgli5Pe43m4Y8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-oLHAgfETPii7mcF4IS4JBw-1; Thu,
+ 12 Jun 2025 07:18:45 -0400
+X-MC-Unique: oLHAgfETPii7mcF4IS4JBw-1
+X-Mimecast-MFC-AGG-ID: oLHAgfETPii7mcF4IS4JBw_1749727124
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C725E1800292;
+	Thu, 12 Jun 2025 11:18:43 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.181])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 34D00180045C;
+	Thu, 12 Jun 2025 11:18:41 +0000 (UTC)
+Date: Thu, 12 Jun 2025 19:18:37 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	coxu@redhat.com, piliu@redhat.com, pmenzel@molgen.mpg.de,
+	chenste@linux.microsoft.com
+Subject: Re: [PATCH v2] ima: add a knob ima= to make IMA be able to be
+ disabled
+Message-ID: <aEq3jZp4Cbta8+Ms@MiWiFi-R3L-srv>
+References: <20250611082535.127759-1-bhe@redhat.com>
+ <c1ad06ef84170633bdcc7f49b06d646ddbbdc763.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAE23SmgC/x2MWwqAIBAArxL73YLZk64SfZittVAaKhGEd0/6H
- JiZFwJ5pgBj8YKnmwM7m6EqC9C7shshr5lBCtmKrpKYJafVchBe0aN250k2Yq8HuTS9akVtILe XJ8PP/53mlD7uPtR6ZwAAAA==
-X-Change-Id: 20250612-revocable-ptr-comment-7c82b47a503f
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1934; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=YQXP9ZTmEnpO/V8Ax1Tfe6HMTJO7Usy68xzxP270YZY=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoSrdO0RaLtCZ6zWObIkO4UIaAlB1wmNG5P/gT2
- B4wnHaKWmWJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaEq3TgAKCRAEWL7uWMY5
- RncHD/9/0qFx/KzjcDNBCLv8rjqQEl0/XqhhaxwRVUvuhD1zD5qC48QhQD6CDKR8LkeumIIOEql
- CauMZqKuZgxVGzEn2yfFvfU0s/Uj0TZMPnAKCsMSc9YRY25s61CyQUHLfSNhqL7rDs2J8FIOUlP
- JDefDSxQSf2Pr+Tf5sh+9txPzGsO+f9387g5E268Q1/+5/6afQitMXOzgim7YKrhgMnfxkD5lWV
- 1Qz4dITpWNrvlAYMEjbm1IQkGj6CRaB7rrWN8tErG+B/6R0TcL1/baOln739np13gJz8FVbHub8
- /zXN7Z0nyaQYfeKGgWcSw42JNLhq1bGXuyWkVUl8NCZZuL7SmKImGlmty6Pt3el5rr35ra2sdYq
- jT0uVeRI3UF5zYx38xdjWI2v+qX6DIhjQ96WQm4+qE8JIwd4Kc1E9ZWvaCUHN5Lbc/A5QAMyk57
- /asNVhJi1dMYG40rnwtvT9d1stT9oRovLHZbg+eSIwHCMpWksmO19LppNWjqcw7WWccWAnzLFNH
- tGu2Tqz9qrucPWcR4/joT/1TUQSgOQNo4V6JcOr/XoLqPIIqbvfu4mUJ4NUD0+owajXZUrqL1L7
- GRqEvnmC43gww2sK0dvg0xbF+rpFbeJ9wg0CfROQczG6zZoSvvkZajYpCHKndyc2Pvkzwl6oEeE oq5Nyq6cPbaVmzg==
-X-Mailer: b4 0.14.2
-Message-ID: <20250612-revocable-ptr-comment-v1-1-db36785877f6@google.com>
-Subject: [PATCH] revocable: rust: document why &T is not used in RevocableGuard
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Marcelo Moreira <marcelomoreira1905@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1ad06ef84170633bdcc7f49b06d646ddbbdc763.camel@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-When a reference appears in a function argument, the reference is
-assumed to be valid for the entire duration of that function call; this
-is called a stack protector [1]. Because of that, custom pointer types
-whose destructor may invalidate the pointee (i.e. they are more similar
-to Box<T> than &T) cannot internally use a reference, and must instead
-use a raw pointer.
+On 06/12/25 at 06:59am, Mimi Zohar wrote:
+> Hi Baoquan,
+> 
+> As discussed
+> https://lore.kernel.org/linux-integrity/aC6ezNcUZ%2FulKgpv@MiWiFi-R3L-srv/ the
+> Subject line should indicate disabling IMA is limited to kdump.
 
-This issue is something that is often missed during unsafe review. For
-examples, see [2] and [3]. To ensure that people don't try to simplify
-RevocableGuard by changing the raw pointer to a reference, add a comment
-to that effect.
+Oops, my bad, I forgot this one.
 
-Link: https://perso.crans.org/vanille/treebor/protectors.html [1]
-Link: https://users.rust-lang.org/t/unsafe-code-review-semi-owning-weak-rwlock-t-guard/95706 [2]
-Link: https://lore.kernel.org/all/aEqdur4JTFa1V20U@google.com/ [3]
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/revocable.rs | 4 ++++
- 1 file changed, 4 insertions(+)
+> 
+> On Wed, 2025-06-11 at 16:25 +0800, Baoquan He wrote:
+> > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
+> > extra memory. It would be very helpful to allow IMA to be disabled for
+> > kdump kernel.
+> > 
+> > Hence add a knob ima=on|off here to allow turning IMA off in kdump
+> > kernel if needed.
+> > 
+> > Note that this IMA disabling is only limited to kdump kernel, please don't
+> > abuse it in other kernel and thus serious consequences are caused.
+> 
+> Remove the word 'only', here, and in other places.
 
-diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-index db4aa46bb1216d18868dcbdcb0b7033a757306b1..5dd7c5a24809ac372cf600b1cf92c455901e42d6 100644
---- a/rust/kernel/revocable.rs
-+++ b/rust/kernel/revocable.rs
-@@ -221,6 +221,10 @@ fn drop(self: Pin<&mut Self>) {
- ///
- /// The RCU read-side lock is held while the guard is alive.
- pub struct RevocableGuard<'a, T> {
-+    // This can't use the `&'a T` type because references that appear in function arguments must
-+    // not become dangling during the execution of the function, which can happen if the
-+    // `RevocableGuard` is passed as a function argument and then dropped during execution of the
-+    // function.
-     data_ref: *const T,
-     _rcu_guard: rcu::Guard,
-     _p: PhantomData<&'a ()>,
+Sure, will udpate in all relevant places. Thanks.
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250612-revocable-ptr-comment-7c82b47a503f
-
-Best regards,
--- 
-Alice Ryhl <aliceryhl@google.com>
+> 
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> > v1->v2:
+> > - Improve patch log and doc description;
+> > - Make slight adjustment in code; 
+> > These are all made according to Mimi's great suggestions. 
+> > 
+> >  .../admin-guide/kernel-parameters.txt         |  5 ++++
+> >  security/integrity/ima/ima_main.c             | 26 +++++++++++++++++++
+> >  2 files changed, 31 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index b3d62f4c370a..1de67b9c20b4 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -2214,6 +2214,11 @@
+> >  			different crypto accelerators. This option can be used
+> >  			to achieve best performance for particular HW.
+> >  
+> > +	ima=		[IMA] Enable or disable IMA
+> > +			Format: { "off" | "on" }
+> > +			Default: "on"
+> > +			Note that this is only limited to kdump kernel.
+> 
+> Remove the word 'only' ->  Note that disabling IMA is limited to kdump kernel.
+> 
+> > +
+> >  	indirect_target_selection= [X86,Intel] Mitigation control for Indirect
+> >  			Target Selection(ITS) bug in Intel CPUs. Updated
+> >  			microcode is also required for a fix in IBPB.
+> > diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> > index f99ab1a3b0f0..c38f3881d72f 100644
+> > --- a/security/integrity/ima/ima_main.c
+> > +++ b/security/integrity/ima/ima_main.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/fs.h>
+> >  #include <linux/iversion.h>
+> >  #include <linux/evm.h>
+> > +#include <linux/crash_dump.h>
+> >  
+> >  #include "ima.h"
+> >  
+> > @@ -38,11 +39,30 @@ int ima_appraise;
+> >  
+> >  int __ro_after_init ima_hash_algo = HASH_ALGO_SHA1;
+> >  static int hash_setup_done;
+> > +static int ima_disabled __ro_after_init;
+> >  
+> >  static struct notifier_block ima_lsm_policy_notifier = {
+> >  	.notifier_call = ima_lsm_policy_change,
+> >  };
+> >  
+> > +static int __init ima_setup(char *str)
+> > +{
+> > +	if (!is_kdump_kernel()) {
+> > +		pr_info("Warning: ima setup option only permitted in kdump");
+> > +		return 1;
+> > +	}
+> > +
+> > +	if (strncmp(str, "off", 3) == 0)
+> > +		ima_disabled = 1;
+> > +	else if (strncmp(str, "on", 2) == 0)
+> > +		ima_disabled = 0;
+> > +	else
+> > +		pr_err("Invalid ima setup option: \"%s\" , please specify ima=on|off.", str);
+> > +
+> > +	return 1;
+> > +}
+> > +__setup("ima=", ima_setup);
+> > +
+> >  static int __init hash_setup(char *str)
+> >  {
+> >  	struct ima_template_desc *template_desc = ima_template_desc_current();
+> > @@ -1186,6 +1206,12 @@ static int __init init_ima(void)
+> >  {
+> >  	int error;
+> >  
+> > +	/*Note that turning IMA off is only limited to kdump kernel.*/
+> 
+> Remove the word "only"  -> Note that turning IMA off is intentionally limited to
+> kdump kernel."
+> 
+> > +	if (ima_disabled && is_kdump_kernel()) {
+> > +		pr_info("IMA functionality is disabled");
+> > +		return 0;
+> > +	}
+> > +
+> >  	ima_appraise_parse_cmdline();
+> >  	ima_init_template_list();
+> >  	hash_setup(CONFIG_IMA_DEFAULT_HASH);
+> 
+> Mimi
+> 
 
