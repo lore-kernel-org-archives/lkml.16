@@ -1,103 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3141E25F2;
-	Thu, 12 Jun 2025 06:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1726F211F;
+	Thu, 12 Jun 2025 06:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749709472; cv=none; b=pB+APXxYzlQGi/vBDGZQpbJZugw46a42y/PDUlaChiIZWq+ilCGc+Y/g0hvWK6U2OLnGURttyzFl3cVo1dw6v8mjaVWfoftDnPsuvrHhjWfJlkxZPipFaeNZ5utB/guLPIZ6cEtBowIrAa54UObUx2zAY+QYC02TdVT2NUtXm5c=
+	t=1749709519; cv=none; b=cgeXdnxuqP2KcIOdxgF3s502SlJh2iT/zdXF0WCz07qNoa8hgylWW9VTn9tk7ZmSriWfsek8dBu3f6aweAt+HjWI7BBTC+kb8TyPr9E4vh78tj1m8pEi7WWaufigxGKiXUcGo/s1HM7IntYYMuwUTVQNwVR8QNEYmGXWxsYHKOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749709472; c=relaxed/simple;
-	bh=OgD5PfJ7RkF4cltRjCNted+cVCACXZ3aGl6DSN+4esU=;
+	s=arc-20240116; t=1749709519; c=relaxed/simple;
+	bh=WbKlRgT6f7BkyMv2x9S6bRsCtZQ2+P+hdMNKp/TwS0E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UdwNQ9IM8tK0TJ7y56uMJRqdMnz23kU6IYQV4nhxrQ4H2+CPzY+u+wZeXdZ/WMSHYH1RO8OCe/hAYLYh7T6U/pVYVJXlTLV2pgcgTVIvwu6fD8fhm+OHmmnCtwv8/zePWw8kqQXMhafnk082qL+VYMtdWvM5ryNMlqgGXsov8wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NPpp/nZF; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=J97RJycPQQWFw+GT9sBRyhx1JGmYDLL/sMGh8NZExM1VNwWeudYtloHITyBhhL6W+r5DQvYOO49WTipDFjlVadKOAB47e5XXS4n28mx32otbXQfchc/8srgx/QZmzjQ6Ag7U+da3RaRIR7UWC5cLkPKk5K4QqiPIUQ3ATJosFN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KZ+J5YWL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4S1BLYr0; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NPpp/nZF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749709461; x=1781245461;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OgD5PfJ7RkF4cltRjCNted+cVCACXZ3aGl6DSN+4esU=;
-  b=NPpp/nZFQJXlp7ppGnGJyta5Bg7Oy0agWJJYbq2qMJRdpNronh+Tkzwz
-   Clph4M51AJoezEFNeWlyat1TZ0CLY2xxTYWnj6CLffDfHSNeCaorBs3kY
-   vfiUhJIzkprdmuu3TJb5cHm7KpLBbtbfW/Bds2mXlfidRwmFxU1qAVHHw
-   /4Gj4Iez4ETCV50i06jj5s9KxDoKZL6mKKufZdZejBy/mFl8IMTWnumwF
-   gmcWmNGjN9VRe4Kkr4n/vvUnBh415+Z4X3Z13NHHQJuHzvL3azd1N6Kmg
-   7yruNuJj6BE0oYHV8YAy+zbUnLS5hREaejM24EckV04jHlR6vqeh9/gfA
-   w==;
-X-CSE-ConnectionGUID: fRzzeF5GTKir5gXcZ7/NKA==
-X-CSE-MsgGUID: tufYOHFJQxW+ldlN+AqpCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="63282559"
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="63282559"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 23:24:20 -0700
-X-CSE-ConnectionGUID: 08ANS45JSiGmB5hVd8pfRA==
-X-CSE-MsgGUID: L0T30c5mR8+S1pxFhHA26w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="152190013"
-Received: from dprybysh-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.101])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 23:24:19 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 9628111FBC0;
-	Thu, 12 Jun 2025 09:24:16 +0300 (EEST)
-Date: Thu, 12 Jun 2025 06:24:16 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] media: i2c: vd55g1: Fix RATE macros not being
- expressed in bps
-Message-ID: <aEpykCRKpJ9pA9sN@kekkonen.localdomain>
-References: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
- <20250609-fix_vd55g1-v1-1-594f1134e3fb@foss.st.com>
- <aEf0gdJ0hA2dNQoH@kekkonen.localdomain>
- <e080a28c-9ec7-46bd-8bcd-49b48bd9ab94@foss.st.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KZ+J5YWL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4S1BLYr0"
+Date: Thu, 12 Jun 2025 08:25:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749709516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V4Ia2CoUtifdcfPDTm3n0fPYredAvQzKsRuLKfT/bPA=;
+	b=KZ+J5YWLgu5kKVteRk79rAVUYOXvqgSK7g6OSuiTul7gdxgMu3bMc7LuO1BXumBVsr1pC+
+	eG9FL8Z7pw3VqA+DHUXQMrdmQMNsqVwptCp+v+vHZVHFNx3CHBg6xAK2N4aRPCjgLBn6qQ
+	YwxuBgg/xZkh35cuYZ09+P4Gle9c2uTKVlrhloddEcwFBLgnCcaAz0JsUSZRpyj+ilxhTE
+	ExBRNe9BbaN6BIFsVmu524sNXLIneYEP6K9Nwt+bvhxotHSzyU8Ss/9pzfXf3/Wei5kTaS
+	r8QQ5CX/rAf6+nZ/Ffq9CnHx66CCN+pq3dvOygXitVVZdVb0tsfG9+5iKKn/mQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749709516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V4Ia2CoUtifdcfPDTm3n0fPYredAvQzKsRuLKfT/bPA=;
+	b=4S1BLYr0T06auupOZKo0dZLI/0PnJcP+JnH3IuBB2BOllyQ1pnA6AuyfpWjZ4eJmMii8uc
+	Zip7LyqZ4oPP7wDg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
+Message-ID: <20250612062514.EZS2cVlO@linutronix.de>
+References: <aEh6xO14wDSCFUDr@google.com>
+ <20250611092542.F4ooE2FL@linutronix.de>
+ <aEmBOO0bSJYSvX2i@x1>
+ <aEmY259Mx92D60KG@x1>
+ <20250611150615.FcVIIhgA@linutronix.de>
+ <aEnSbBaFYgd4Gr9u@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e080a28c-9ec7-46bd-8bcd-49b48bd9ab94@foss.st.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aEnSbBaFYgd4Gr9u@x1>
 
-On Tue, Jun 10, 2025 at 11:31:09AM +0200, Benjamin Mugnier wrote:
-> On 6/10/25 11:01, Sakari Ailus wrote:
-> > On Mon, Jun 09, 2025 at 03:46:21PM +0200, Benjamin Mugnier wrote:
-> >> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-> >> ---
-> >>  drivers/media/i2c/vd55g1.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
-> >> index 25e2fc88a0367bf6a28bb22d209323ace99299f2..78dd22d9cab03edf4ff3e5a301f8d045e930c997 100644
-> >> --- a/drivers/media/i2c/vd55g1.c
-> >> +++ b/drivers/media/i2c/vd55g1.c
-> >> @@ -129,8 +129,8 @@
-> >>  #define VD55G1_FWPATCH_REVISION_MINOR			9
-> >>  #define VD55G1_XCLK_FREQ_MIN				(6 * HZ_PER_MHZ)
-> >>  #define VD55G1_XCLK_FREQ_MAX				(27 * HZ_PER_MHZ)
-> >> -#define VD55G1_MIPI_RATE_MIN				(250 * HZ_PER_MHZ)
-> >> -#define VD55G1_MIPI_RATE_MAX				(1200 * HZ_PER_MHZ)
-> >> +#define VD55G1_MIPI_RATE_MIN				(250 * MEGA)
-> >> +#define VD55G1_MIPI_RATE_MAX				(1200 * MEGA)
-> > 
-> > As the meaning of Hz is just /s, I don't think the use of HZ_PER_MHZ was
-> > wrong in any way above.
-> > 
-> 
-> Should I just drop this patch then ?
+On 2025-06-11 16:01:00 [-0300], Arnaldo Carvalho de Melo wrote:
+> > Is this needed? Aren't these defines coming from that local copy?
+>=20
+> So, these are, as you say, in the copied linux/prctl.h, but in musl libc
+> we have:
+right, I briefly forgot about musl.
+All good.
+=E2=80=A6
+> I thought this would be something fixed in newer alpine versions, but
+> no:
+>=20
+> toolsbuilder@five:~$ grep FAIL dm.log.old/summary=20
+>    5    19.53 alpine:3.16                   : FAIL gcc version 11.2.1 202=
+20219 (Alpine 11.2.1_git20220219)=20
+>    6    20.83 alpine:3.17                   : FAIL gcc version 12.2.1 202=
+20924 (Alpine 12.2.1_git20220924-r4)=20
+>    7    13.94 alpine:3.18                   : FAIL gcc version 12.2.1 202=
+20924 (Alpine 12.2.1_git20220924-r10)=20
+>    8    16.60 alpine:3.19                   : FAIL gcc version 13.2.1 202=
+31014 (Alpine 13.2.1_git20231014)=20
+>    9    15.72 alpine:3.20                   : FAIL gcc version 13.2.1 202=
+40309 (Alpine 13.2.1_git20240309)=20
+>   10    16.38 alpine:3.22                   : FAIL gcc version 14.2.0 (Al=
+pine 14.2.0)=20
+>   11    15.09 alpine:edge                   : FAIL gcc version 14.2.0 (Al=
+pine 14.2.0)=20
+> toolsbuilder@five:~$
+>=20
+> So the easiest way out of this seems to be not to explicitely include
+> linux/prctl.h and define the new stuff conditionally, as I did, right?
 
-Up to you.
+Let me drop an email to alpine and check with them.
 
--- 
-Sakari Ailus
+> - Arnaldo
+
+Sebastian
