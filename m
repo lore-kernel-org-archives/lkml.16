@@ -1,168 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE90F239E97
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED20113C8E8;
+	Thu, 12 Jun 2025 10:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725053; cv=none; b=DKfwlB9k6FnaUsaXDSpdT9Fu4tdbU8ztgHaCAylfgohm92YjDy7sKU/ZSsRXvhANwoW0GEx1sWruONd8QK6QKktCeTdZquWtL0RxlHweBDHZsubWx00Kt0XKGHqLjoiQIJIhFzmzch7mQAZ6P+YxaZVcuu0chbrk/JxYe+SyabE=
+	t=1749725166; cv=none; b=o+GgXwDXDl52kZLhngsO7H3TA0XKUyvtjbQCyAQ6SQzY3/1CX12QsJhNZKCMNuoRwyXUe7BFgbqGalLjN2IxcW+6YaNKil4JxkRun39mAeausFwu3Y14tJcIuZ2BGIYTDSH0JuEXYC7f45rh84LnFuSvn6iK+ZEAXNHnz6EZMGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725053; c=relaxed/simple;
-	bh=2T7OvIvbXQpz1az1cTon17qTeu5hxE6aNMsf4Szhn7c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UPGStUaqNs09wnDSSrrAAyT3l6f5mMqHNKtD9bSs2+c8q6XdiEODEpG7ggdf0IrjcCQsE9qRlFHlM6by1RG9pFoLroYpz6JeHmqoh0eF0aHdrhg18Euuw82wpMdwoDJyRZkXumFKzPLXI+OpDu8nBXc9X2Jl1eWtcmUpLziFfXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GM/96B9O; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GM/96B9O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749725050;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mv1uqkDZHNNjQcmTQAzf5MMmJ3eI0GyQ5KwebHi6ukY=;
-	b=GM/96B9OjbHbCQxAMHGwGdm7//jcEB/YPGyacZjDfUHhQH3EUnam6uTJXv+DeDlr8FcIKt
-	kTUB3Rt9Gndo5/bwOfBBixCPG0w2yCpIzYe/tUPU02A7XNSqcPOX1JZp7QNgErMYujmYxD
-	f4tE188i/KdOGbfzGbMEDBnx6iJQVbQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-596-tKtALmS2PBKkTbNK5PcTxw-1; Thu,
- 12 Jun 2025 06:44:09 -0400
-X-MC-Unique: tKtALmS2PBKkTbNK5PcTxw-1
-X-Mimecast-MFC-AGG-ID: tKtALmS2PBKkTbNK5PcTxw_1749725048
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 455AF1800283;
-	Thu, 12 Jun 2025 10:44:08 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.242.17])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B58B19560B2;
-	Thu, 12 Jun 2025 10:44:04 +0000 (UTC)
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: acarmina@redhat.com,
-	chuck.wolber@boeing.com,
-	Gabriele Paoloni <gpaoloni@redhat.com>
-Subject: [RFC PATCH 2/2] tracing: add testable specifications for event_enable_write/read
-Date: Thu, 12 Jun 2025 12:43:49 +0200
-Message-ID: <20250612104349.5047-3-gpaoloni@redhat.com>
-In-Reply-To: <20250612104349.5047-1-gpaoloni@redhat.com>
-References: <20250612104349.5047-1-gpaoloni@redhat.com>
+	s=arc-20240116; t=1749725166; c=relaxed/simple;
+	bh=7yad1GSJQw9Bk8q5ZMOfeOFyJpDchWvUthVVR+3/Fjw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ok/0rcj1wrw6fZRsd9cST2HUh+cTBbOGDftt0SwRqUbQf0Ffo3HOOEHXhjnufGC5xegmbq78L9+8msMTkn908k9pQI7fNnDWE3o+OrDvaQd73aj4y5llhKOT37XNuHttcvxMcOZgqDsN9Vdq7/uRlaORUl4gFy2PwNKNvDMpJz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bHzbl64zPz6L54g;
+	Thu, 12 Jun 2025 18:41:39 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1B8241402A5;
+	Thu, 12 Jun 2025 18:46:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Jun
+ 2025 12:45:59 +0200
+Date: Thu, 12 Jun 2025 11:45:57 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Pavel Machek <pavel@ucw.cz>
+CC: David Lechner <dlechner@baylibre.com>, Michael Hennerich
+	<michael.hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>, Nuno =?UTF-8?Q?S=C3=A1?=
+	<nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Heiko Stuebner <heiko@sntech.de>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
+	<alexandre.torgue@foss.st.com>, Francesco Dolcini <francesco@dolcini.it>,
+	=?UTF-8?Q?Jo=C3=A3o?= Paulo =?UTF-8?Q?Gon=C3=A7al?= =?UTF-8?Q?ves?=
+	<jpaulo.silvagoncalves@gmail.com>, Leonard =?UTF-8?Q?G?=
+ =?UTF-8?Q?=C3=B6hrs?= <l.goehrs@pengutronix.de>, <kernel@pengutronix.de>,
+	Oleksij Rempel <o.rempel@pengutronix.de>, Roan van Dijk <roan@protonic.nl>,
+	Tomasz Duszynski <tomasz.duszynski@octakon.com>, Jacopo Mondi
+	<jacopo@jmondi.org>, Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+	Mudit Sharma <muditsharma.info@gmail.com>, Javier Carrasco
+	<javier.carrasco.cruz@gmail.com>, =?UTF-8?Q?Ond=C5=99ej?= Jirman
+	<megi@xff.cz>, Andreas Klinger <ak@it-klinger.de>, Petre Rodan
+	<petre.rodan@subdimension.ro>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
+	<linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH 00/28] iio: zero init stack with { } instead of memset()
+Message-ID: <20250612114557.00007628@huawei.com>
+In-Reply-To: <aEqbQPvz0FsLXt0Z@duo.ucw.cz>
+References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
+	<aEqbQPvz0FsLXt0Z@duo.ucw.cz>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-This patch implements the documentation of event_enable_write and
-event_enable_read in the form of testable function's expectations.
+On Thu, 12 Jun 2025 11:17:52 +0200
+Pavel Machek <pavel@ucw.cz> wrote:
 
-Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
----
- kernel/trace/trace_events.c | 72 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+> Hi!
+> 
+> > Jonathan mentioned recently that he would like to get away from using
+> > memset() to zero-initialize stack memory in the IIO subsystem. And we
+> > have it on good authority that initializing a struct or array with = { }
+> > is the preferred way to do this in the kernel [1]. So here is a series
+> > to take care of that.  
+> 
+> 1) Is it worth the churn?
+> 
+> 2) Will this fail to initialize padding with some obscure compiler?
+> 
+> 3) Why do you believe that {} is the preffered way? All we have is
+> Kees' email that explains that = {} maybe works in configs he tested.
+> 
+Pavel,
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 5e84ef01d0c8..eb3c5e6e557d 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1771,6 +1771,46 @@ static void p_stop(struct seq_file *m, void *p)
- 	mutex_unlock(&event_mutex);
- }
+I think main thing that matters in Kees email is there is a self test
+that should fire if a compiler ever does this wrong.
+
+Using this syntax is definitely not a 'kernel wide' preference yet
+but I do prefer to make some changes like this in IIO just because it
+reduces the amount of code that smells different when reviewing.
+Given how many drivers we now have, sadly people pick different ones
+to cut and paste from so we get a lot of new drivers that look like
+how we preferred to do things 10 years ago :(
+
+However it is a fair bit of churn. hmm.  Let's let this sit for
+a little while and see if other view points come in.
+
+Thanks 
+
+Jonathan
  
-+/**
-+ * event_enable_read - read from a trace event file to retrieve its status.
-+ * @filp: file pointer associated with the target trace event;
-+ * @ubuf: user space buffer where the event status is copied to;
-+ * @cnt: number of bytes to be copied to the user space buffer;
-+ * @ppos: the current position in the buffer.
-+ *
-+ * This is a way for user space executables to retrieve the status of a
-+ * specific event
-+ *
-+ * Function's expectations:
-+ * - This function shall lock the global event_mutex before performing any
-+ *   operation on the target event file and unlock it after all operations on
-+ *   the target event file have completed;
-+ * - This function shall retrieve the status flags from the file associated
-+ *   with the target event;
-+ * - This function shall format the string to report the event status to user
-+ *   space:
-+ *   - The first character of the string to be copied to user space shall be
-+ *     set to "1" if the enabled flag is set AND the soft_disabled flag is not
-+ *     set, else it shall be set to "0";
-+ *   - The second character of the string to be copied to user space shall be
-+ *     set to "*" if either the soft_disabled flag or the soft_mode flag is
-+ *     set, else it shall be set to "\n";
-+ *   - The third character of the string to be copied to user space shall b
-+ *     set to "\n" if either the soft_disabled flag or the soft_mode flag is
-+ *     set, else it shall be set to "0";
-+ *   - Any other character in the string to be copied to user space shall be
-+ *     set to "0";
-+ * - This function shall check if the requested cnt bytes are equal or greater
-+ *   than the length of the string to be copied to user space (else a
-+ *   corrupted event status could be reported);
-+ * - This function shall invoke simple_read_from_buffer() to perform the copy
-+ *   of the kernel space string to ubuf.
-+ *
-+ * Returns the number of copied bytes on success, -ENODEV if the event file
-+ * cannot be retrieved from the input filp, -EINVAL if cnt is less than the
-+ * length of the string to be copied to ubuf, any error returned by
-+ * simple_read_from_buffer
-+ */
- static ssize_t
- event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 		  loff_t *ppos)
-@@ -1808,6 +1848,38 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
- }
- 
-+/**
-+ * event_enable_write - write to a trace event file to enable/disable it.
-+ * @filp: file pointer associated with the target trace event;
-+ * @ubuf: user space buffer where the enable/disable value is copied from;
-+ * @cnt: number of bytes to be copied from the user space buffer;
-+ * @ppos: the current position in the buffer.
-+ *
-+ * This is a way for user space executables to enable or disable event
-+ * recording.
-+ *
-+ * Function's expectations:
-+ * - This function shall copy cnt bytes from the input ubuf buffer to a kernel
-+ *   space buffer (or the whole input ubuf if cnt is larger than ubuf size)
-+ *   and shall convert the string within the kernel space buffer into a decimal
-+ *   base format number;
-+ * - This function shall lock the global event_mutex before performing any
-+ *   operation on the target event file and unlock it after all operations on
-+ *   the target event file have completed;
-+ * - This function shall check the size of the per-cpu ring-buffers used for
-+ *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, expand
-+ *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
-+ *   TRACE_BUF_SIZE_DEFAULT are not allowed);
-+ * - This function shall invoke ftrace_event_enable_disable to enable or
-+ *   disable the target trace event according to the value read from user space
-+ *   (0 - disable, 1 - enable);
-+ *
-+ * Returns 0 on success, any error returned by kstrtoul_from_user, -ENODEV if
-+ * the event file cannot be retrieved from the input filp, any error returned by
-+ * tracing_update_buffers, any error returned by ftrace_event_enable_disable,
-+ * -EINVAL if the value copied from the user space ubuf is different from 0 or
-+ *  1.
-+ */
- static ssize_t
- event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 		   loff_t *ppos)
--- 
-2.48.1
+
+> BR,
+> 								Pavel
+> 
+> > [1]:
+> > https://lore.kernel.org/linux-iio/202505090942.48EBF01B@keescook/  
+> 
+> 
+> 
+> > ---
+> > David Lechner (28):
+> >       iio: accel: adxl372: use = { } instead of memset()
+> >       iio: accel: msa311: use = { } instead of memset()
+> >       iio: adc: dln2-adc: use = { } instead of memset()
+> >       iio: adc: mt6360-adc: use = { } instead of memset()
+> >       iio: adc: rockchip_saradc: use = { } instead of memset()
+> >       iio: adc: rtq6056: use = { } instead of memset()
+> >       iio: adc: stm32-adc: use = { } instead of memset()
+> >       iio: adc: ti-ads1015: use = { } instead of memset()
+> >       iio: adc: ti-ads1119: use = { } instead of memset()
+> >       iio: adc: ti-lmp92064: use = { } instead of memset()
+> >       iio: adc: ti-tsc2046: use = { } instead of memset()
+> >       iio: chemical: scd4x: use = { } instead of memset()
+> >       iio: chemical: scd30: use = { } instead of memset()
+> >       iio: chemical: sunrise_co2: use = { } instead of memset()
+> >       iio: dac: ad3552r: use = { } instead of memset()
+> >       iio: imu: inv_icm42600: use = { } instead of memset()
+> >       iio: imu: inv_mpu6050: use = { } instead of memset()
+> >       iio: light: bh1745: use = { } instead of memset()
+> >       iio: light: ltr501: use = { } instead of memset()
+> >       iio: light: opt4060: use = { } instead of memset()
+> >       iio: light: veml6030: use = { } instead of memset()
+> >       iio: magnetometer: af8133j: use = { } instead of memset()
+> >       iio: pressure: bmp280: use = { } instead of memset()
+> >       iio: pressure: mpl3115: use = { } instead of memset()
+> >       iio: pressure: mprls0025pa: use = { } instead of memset()
+> >       iio: pressure: zpa2326: use = { } instead of memset()
+> >       iio: proximity: irsd200: use = { } instead of memset()
+> >       iio: temperature: tmp006: use = { } instead of memset()
+> > 
+> >  drivers/iio/accel/adxl372.c                       | 3 +--
+> >  drivers/iio/accel/msa311.c                        | 4 +---
+> >  drivers/iio/adc/dln2-adc.c                        | 4 +---
+> >  drivers/iio/adc/mt6360-adc.c                      | 3 +--
+> >  drivers/iio/adc/rockchip_saradc.c                 | 4 +---
+> >  drivers/iio/adc/rtq6056.c                         | 4 +---
+> >  drivers/iio/adc/stm32-adc.c                       | 3 +--
+> >  drivers/iio/adc/ti-ads1015.c                      | 4 +---
+> >  drivers/iio/adc/ti-ads1119.c                      | 4 +---
+> >  drivers/iio/adc/ti-lmp92064.c                     | 4 +---
+> >  drivers/iio/adc/ti-tsc2046.c                      | 3 +--
+> >  drivers/iio/chemical/scd30_core.c                 | 3 +--
+> >  drivers/iio/chemical/scd4x.c                      | 3 +--
+> >  drivers/iio/chemical/sunrise_co2.c                | 6 ++----
+> >  drivers/iio/dac/ad3552r.c                         | 3 +--
+> >  drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c | 5 ++---
+> >  drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 5 ++---
+> >  drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c        | 4 +---
+> >  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c        | 6 ++----
+> >  drivers/iio/light/bh1745.c                        | 4 +---
+> >  drivers/iio/light/ltr501.c                        | 4 +---
+> >  drivers/iio/light/opt4060.c                       | 4 +---
+> >  drivers/iio/light/veml6030.c                      | 4 +---
+> >  drivers/iio/magnetometer/af8133j.c                | 4 +---
+> >  drivers/iio/pressure/bmp280-core.c                | 5 +----
+> >  drivers/iio/pressure/mpl3115.c                    | 3 +--
+> >  drivers/iio/pressure/mprls0025pa_i2c.c            | 5 +----
+> >  drivers/iio/pressure/zpa2326.c                    | 4 +---
+> >  drivers/iio/proximity/irsd200.c                   | 3 +--
+> >  drivers/iio/temperature/tmp006.c                  | 4 +---
+> >  30 files changed, 34 insertions(+), 85 deletions(-)
+> > ---
+> > base-commit: 4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6
+> > change-id: 20250611-iio-zero-init-stack-with-instead-of-memset-0d12d41a7ecb
+> > 
+> > Best regards,  
+> 
 
