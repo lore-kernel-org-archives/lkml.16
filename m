@@ -1,70 +1,71 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76949537F8
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541A1537F8
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749767708; cv=none; b=lajUqTqepXLp4lFAivI/QWSUC2lRUwOk/i01YG5nueXxysGI/gWlXmih3hOxWbk+2TmMo1uP5xaipZ0mtxEClV0lskBzxWuh9P6FCWCfiE/aG5IZaoYB1s/cvVgbaE9TjttDtIXf205RIYM8x3GnEwnx8tl+9cC29XB1jUCAkRc=
+	t=1749767798; cv=none; b=TQktUY+VqclGETytc/HIQBNHk4gA5GBwonw5P/4qPmQEMARu0UecQ9OHzAhkxS98/yGhNnOAetupZZWDPyYITJXdU9moWU5eYCNJELGS8nMq1rfyfyUdnAPUYr7FId3keJ/CoBll3eiPrhsuy8JmjuNVYypVHaAPOvnGe5a830M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749767708; c=relaxed/simple;
-	bh=QA2tFYqN2RlJKEYGmIpVctDIKIpy36En/K5HHqEQ9c4=;
+	s=arc-20240116; t=1749767798; c=relaxed/simple;
+	bh=7xulCPXVhScf77ocienXAQH0tyuuMW7mAWLEdefz5Mk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nPeS4FomZNqots1gq6gTBCOeHnRob3q0Wc9hvQrOJl4DgSnZDqe50qy1WC9YQWuyBBSeO0wHlL5XeAlFuMTSw91UTyYyA2kpF7hXIuJCAve0SPDLR4hkOdZ2zh6Un6uFpt3MgzrV2zLNAhFOlTYcahUDiNhyXbVuzi4rDRpmBpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x6sSDVgx; arc=none smtp.client-ip=209.85.167.49
+	 To:Cc:Content-Type; b=qV7wRzTb/EByoWqcb60RJjLR09hLGxbx+MAG89bJDyJE+GNDMUaIadhrrAGdTJQIPn/h/6xPzcAbTIpImRuoz7W9Cr+UUDZw/kvI9oi8LPxkkOACZvv8mexsCprPg4UK0fn0j5scxrXJwfBs8DFXjJZhpeBzOqRbcCng7ei094w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=loklCyLS; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x6sSDVgx"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5533303070cso1338292e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:35:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="loklCyLS"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54998f865b8so1363671e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:36:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749767704; x=1750372504; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749767795; x=1750372595; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QA2tFYqN2RlJKEYGmIpVctDIKIpy36En/K5HHqEQ9c4=;
-        b=x6sSDVgxEKu9+/jNIUGNkkSa6u5Fw/fmnn58DJpu60m1P9yGIwciRzBLqitV9j/asV
-         Nlkvv8fIsEQNlCLCSixipf3M08vVJPkHqzFtsKo4k8SaJuXaNkCeRQttZnrr9SJH3lCH
-         okEPAQRrzgEFYQQcE6QWf9bPKQMTRMVRnjKBE1kDF+0P18ZC9vtiNjUsPiUSU/41nKaU
-         gHfNepT4/cvse7RtkqaLgxUPF8MuuptH/aGMr+VXKT++wP8FAnAszteBiw+0c+QMokLz
-         m7uU0yNDgP8o8Wb2VSp34QQGIyV7BC3x07hd9+ZZOtEQHy5IrSVSJXlsls7qPd6milKR
-         tR4Q==
+        bh=7xulCPXVhScf77ocienXAQH0tyuuMW7mAWLEdefz5Mk=;
+        b=loklCyLSBIWbDepinaOQW9Tqjlck0/Dht4cF45rIZcYONmgL/0skJqHmzScuSid0kh
+         u96qZDqm8VnkJuSigvKltWVgW47Ka3tDeRukNF11doYmV8rps9WbFha7ELoKQ+4cB2qQ
+         BHUa9SSNPb7kbu2D7DxdrjAIccs7BeDKaweLcWf0Xcy9Qomz8maaPRCODFYoDzzn7ORb
+         DKuvyz4hvPhXXdT8T6cUXnMRHJvWW9Thkso1cwwW4O5CkJ+J1DRNeFR5eyC/5b6OD0AH
+         FipTkKq16fKwk5JcWs5QKu0jPBz8Tu263QUGUHRJfxqZB1XyCPWV15WtWdvSek//Os2G
+         0ztg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749767704; x=1750372504;
+        d=1e100.net; s=20230601; t=1749767795; x=1750372595;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QA2tFYqN2RlJKEYGmIpVctDIKIpy36En/K5HHqEQ9c4=;
-        b=XeAJ22Ycz3WhUzfM0ZP5HenL+LwvJQcxm4UFa98eXXIQNOM1KJk2vngAHW/YF7tOF9
-         I0t7PYyTcYio/YCl1BM9RnDEUcWIczq/2MAujMbmCCiLqLRHOcVFtCgMNsDn4/kUrkQ3
-         lc3yj7CgCHXA2X+lNt9IZIdZlWMBFoqNbbB/1G4COAU/abw09Q6bl3rB1HiX/wF38STA
-         nzazFmp+FmYO1f34FslXTkHXKWZpipWhHHfeTdgqpr4VVmrQuMU2VHNOAuSgcF7dV1h9
-         cyE7mfDgCJxoss72Gaq6IRtTOPuRo13NMAoneAYQyif5G98QV7+O7o7QCWrXhI6dzV3x
-         b3jA==
-X-Gm-Message-State: AOJu0Yw4CnrEe1C50sSYZZ928vwM+RNtYl26nlhNb0z0AXHsTSpWwIu7
-	7nah2ivt/P/o5pqHdgZCFBGrynnAKc9VsrTYnEdvHhwX5Xpbv/dZ8VZbSW6KOsir/v1mLFFqUBq
-	GTGb4LB05ZGiMe5aSgLWIzvAXGOsk8gkmiU8wquE=
-X-Gm-Gg: ASbGncuTxhdrWZ5uZ8zDwVmbQGtCNFKWoJJYYObRyFZ2jhSgmPIptv8FZJmI8PVwLdf
-	CvJgZHtInPPU70Ncgdu9BCm0pToGbe9tOzT/6vCPlMD9xS7IY2sDMFUjdaQqUL4j94HEfvber5c
-	Rp330MkyXZUGT7/dpypLzc+Zr61mFmqwAuaJqWyOM2WscKeoCUiXne7YskFmpZTvp2IvIWMYAx
-X-Google-Smtp-Source: AGHT+IFDTJC/Vdt2wLIjM69G0c0CvJ2GlOg6VdkTRaJzAf9o9CG2KNlttV9DkWauNgtO6mb1ZL3ESwCTBOwtfSJnIJ4=
-X-Received: by 2002:a05:6512:b1f:b0:553:a30b:ee04 with SMTP id
- 2adb3069b0e04-553af907766mr218487e87.14.1749767704397; Thu, 12 Jun 2025
- 15:35:04 -0700 (PDT)
+        bh=7xulCPXVhScf77ocienXAQH0tyuuMW7mAWLEdefz5Mk=;
+        b=OfE41FgaCaFvtTCW0tEk4MmC5ya3BS9aBzgtvzvuTVTZJLOKK/ZLKtbHk5k/aOID6h
+         Yz0Zqb/LOFxR+79m1YHcnRUwfXFW3cFjad91iIOZMk8ycxhRoK0imbD+0C5pxToL7GoC
+         oHRQOYRWi9EKc58QJeWyrz+sdF7oD6kiIMXXG+pdrIVUZRIaktfEd+hmWp5JUGhI96H4
+         wnq6F3yhCyU7T7w6SZdfpBgZ7/4mkWUpJi9tA60Mr0ulRICJ44jh+H3zwpgIawgFIlCG
+         AOZCoNaWdfCd9jU0JlNOk5Dtsk/Ljws5oegwyGrGCBlSOWKMXiswrK8f4tR0xcU+JOVN
+         57Wg==
+X-Gm-Message-State: AOJu0YwktcsAqQkTPOe/RYnklPga9Xqf9qdQYTbyOR6Xqybmo/JVDE2j
+	bv3kVnpMuziDmh0ql+V6fhIa3pQTziQmjizGL4RwNcsdsYOpQB/quuarXWXrX2Gh1c2o/DwOPo3
+	cjJuCNXhoKBN2KRLekYoAVxDEDyx8LntBT+gDGkY=
+X-Gm-Gg: ASbGncs6RqR7Cp4snTqSVPdq7ZdQDED4OzFwTXgN7GLtTa1gkcfdNXROilWtGyGZZTi
+	dZdDIc7AjIclN9QozZJIjhV8CSryvJWCU6154osCrAI1sCamygmg87zjI0el64h+J/R9JAr63y4
+	CFqDZV1of1783PX8TWMYIJLvVIMNYlhDxFMrE+zjeIQ3QRsPU35icqgheIGaZFJWf2YHxNdOKYk
+	C9ggcUB+nM=
+X-Google-Smtp-Source: AGHT+IGl0dDXnBGPIef0qxu8tOFUCVgIEThs+j6hmCCV4bdPc347k+COWCMfaNFMLwa+jweiXZQPJhzkBZTLk4DyTgw=
+X-Received: by 2002:a05:6512:398b:b0:553:2cc1:2bba with SMTP id
+ 2adb3069b0e04-553af95ee64mr210885e87.31.1749767795412; Thu, 12 Jun 2025
+ 15:36:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519082042.742926976@linutronix.de> <20250519083025.652611452@linutronix.de>
-In-Reply-To: <20250519083025.652611452@linutronix.de>
+References: <20250519082042.742926976@linutronix.de> <20250519083025.715836017@linutronix.de>
+In-Reply-To: <20250519083025.715836017@linutronix.de>
 From: John Stultz <jstultz@google.com>
-Date: Thu, 12 Jun 2025 15:34:52 -0700
-X-Gm-Features: AX0GCFu6c6tQwPqQEiNiejJsors8-caVPvvKXKm_2z8brWLY2l8YznTJmGjnNoM
-Message-ID: <CANDhNCqWeX2TX4Yne-g55Rpat4xj1QHo5xvuTMt_7R3B78kvFA@mail.gmail.com>
-Subject: Re: [patch V2 01/26] timekeeping: Remove hardcoded access to tk_core
+Date: Thu, 12 Jun 2025 15:36:24 -0700
+X-Gm-Features: AX0GCFsxJlt95H0gfp-Y9RiXb9uKGp4ez_vZO90EG9M7VXdjEprJQT7MyGstH_A
+Message-ID: <CANDhNComTYD4q-M5OjjYBjgDuLYBUKUZu41ghxQpAe7NPtT87A@mail.gmail.com>
+Subject: Re: [patch V2 02/26] timekeeping: Cleanup kernel doc of __ktime_get_real_seconds()
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
 	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
@@ -80,10 +81,7 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, May 19, 2025 at 1:33=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
 > wrote:
 >
-> This was overlooked in the initial conversion. Use the provided pointer t=
-o
-> access the shadow timekeeper.
->
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
+Not a fan of empty commit messages, but:
 Acked-by: John Stultz <jstultz@google.com>
