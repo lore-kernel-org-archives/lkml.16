@@ -1,147 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95556EC2;
-	Thu, 12 Jun 2025 11:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07C62F431D;
+	Thu, 12 Jun 2025 11:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749728079; cv=none; b=HTmhr/b3Jh/pNDXriGpoynAmKJTiQt9a9lU5Ns7XBzdptb8dJ0k7IsBESjYaJfcncx45Kji92FTFgldQJCRZRlh94Yw5COEnpmJltdJKo2WFlGZdSbWhWOsUgxdIxe/9aDw/DtdEF5TvpVQGjo7uKPXPJiTbkp3GtKZr9+xXSLs=
+	t=1749728218; cv=none; b=MaWV83JpyzVrmblg1l1qSyrfjSxtpCQt9N/0vFyahxxZfJpPqWPE6y6XmlyN3cq+RATYtObS85faDUbiS29yree069MhZcyB4RXATuRchCMCaaDSnKXaNI5yBrxOUFW/Va/oMAXk6j/TbhRrtvzLP/dOB4k1xUtS5GY0IXis/UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749728079; c=relaxed/simple;
-	bh=ko4mzublJtTdY4EpEM9EjKSBWpgXZ7qKq5Px9Dremvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZQ3qipd4iQZFgCmLnl55pkYj4xyZuZhvdKX71L4qKqnn0tUclYF8ux4iPY9YmCDU26SJ5AuJfg1/J+lPvQ1+1hTDFSr9R6FNI3OryvZruChZTevFiyxAHnXC7Hycg5dJQAYPFVsdegfaYwklV7SmNiQwpCWNmpuvxK7b1dMzk9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhqEmwGe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhqEmwGe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9647CC4CEEA;
-	Thu, 12 Jun 2025 11:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749728078;
-	bh=ko4mzublJtTdY4EpEM9EjKSBWpgXZ7qKq5Px9Dremvw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EhqEmwGe0O4o3LvIBM90L2FgyNeWgLHGs/ZjhvGkJjrp1F6995G5rxjk/Z+CxNIIw
-	 OHxBQNREf9HFm5Dywf93qFYuNiN8XB+HEnJaPAjsQuzjT6oiSqO36W7lwtr2/8xwf2
-	 EHJ7RmpMlsuo24oo84zXwwUdI3FIoq2Qb7uQ5vrjg+1EPVAzIWD7ICKnrbYHVhqRmX
-	 UMTn+dnrpgE/Xb4CpItVUCiY4P0Z1JK9fz1XLGN8zGtLp6LzXztIxT+3EHdSaVuP4f
-	 3Uky+WEsKWrjyUexjT94tmMeSXxN3+B07u/xiKOZu942X9zV+/uBzbGRGcfwWJxXfz
-	 lh+lSh6bn20OA==
-Message-ID: <bae87d5b-c1e6-431a-ac25-9b3d7a2a5696@kernel.org>
-Date: Thu, 12 Jun 2025 13:34:34 +0200
+	s=arc-20240116; t=1749728218; c=relaxed/simple;
+	bh=hxzDTyu/j+LB5NGXyqsobkBQ9+K2Svtz4qgXDwQnKJ4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QsA1tUxFpAkaSdYe0nLWsLF5hAvxAQ8pdIWAZlZm+CHMKa8Cfpx3DJTLlxGftTCGiknufUzuTayH0oEX/F2UwmpU4i3cvddIj6Z09xvQN1Tf330xAljPuGugzVL1NNP3nPD1c+C1krRChNLoS9wifRxDfMNZabjuSqfRT4h9p6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ0kR5HfQz6H6h6;
+	Thu, 12 Jun 2025 19:32:31 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1C34F1400DC;
+	Thu, 12 Jun 2025 19:36:53 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Jun
+ 2025 13:36:52 +0200
+Date: Thu, 12 Jun 2025 12:36:50 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <PradeepVineshReddy.Kodamati@amd.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <bp@alien8.de>,
+	<ming.li@zohomail.com>, <shiju.jose@huawei.com>, <dan.carpenter@linaro.org>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <kobayashi.da-06@fujitsu.com>,
+	<yanfei.xu@intel.com>, <rrichter@amd.com>, <peterz@infradead.org>,
+	<colyli@suse.de>, <uaisheng.ye@intel.com>,
+	<fabio.m.de.francesco@linux.intel.com>, <ilpo.jarvinen@linux.intel.com>,
+	<yazen.ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v9 04/16] PCI/AER: Dequeue forwarded CXL error
+Message-ID: <20250612123650.0000321b@huawei.com>
+In-Reply-To: <20250603172239.159260-5-terry.bowman@amd.com>
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+	<20250603172239.159260-5-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memory: Use dev_fwnode()
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, Roger Quadros <rogerq@kernel.org>,
- Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
-References: <20250611104348.192092-1-jirislaby@kernel.org>
- <20250611104348.192092-12-jirislaby@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250611104348.192092-12-jirislaby@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 11/06/2025 12:43, Jiri Slaby (SUSE) wrote:
-> irq_domain_create_simple() takes fwnode as the first argument. It can be
-> extracted from the struct device using dev_fwnode() helper instead of
-> using of_node with of_fwnode_handle().
+On Tue, 3 Jun 2025 12:22:27 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
+
+> The AER driver is now designed to forward CXL protocol errors to the CXL
+> driver. Update the CXL driver with functionality to dequeue the forwarded
+> CXL error from the kfifo. Also, update the CXL driver to begin the protocol
+> error handling processing using the work received from the FIFO.
 > 
-> So use the dev_fwnode() helper.
+> Introduce function cxl_prot_err_work_fn() to dequeue work forwarded by the
+> AER service driver. This will begin the CXL protocol error processing
+> with a call to cxl_handle_prot_error().
 > 
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Roger Quadros <rogerq@kernel.org>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: linux-omap@vger.kernel.org
-> ---
-Please send patches standard way, so without fake in-reply-to. b4 shazam
-on entire patchset (because this is not a continuation - see subject
-prefix) grabs entirely wrong patch:
+> Update cxl/core/ras.c by adding cxl_rch_handle_error_iter() that was
+> previously in the AER driver.
+> 
+> Introduce sbdf_to_pci() to take the SBDF values from 'struct cxl_prot_error_info'
+> and use in discovering the erring PCI device. Make scope based reference
+> increments/decrements for the discovered PCI device and the associated
+> CXL device.
+> 
+> Implement cxl_handle_prot_error() to differentiate between Restricted CXL
+> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors.
+> RCH errors will be processed with a call to walk the associated Root
+> Complex Event Collector's (RCEC) secondary bus looking for the Root Complex
+> Integrated Endpoint (RCiEP) to handle the RCH error. Export pcie_walk_rcec()
+> so the CXL driver can walk the RCEC's downstream bus, searching for
+> the RCiEP.
+> 
+> VH correctable error (CE) processing will call the CXL CE handler. VH
+> uncorrectable errors (UCE) will call cxl_do_recovery(), implemented as a
+> stub for now and to be updated in future patch. Export pci_aer_clean_fatal_status()
+> and pci_clean_device_status() used to clean up AER status after handling.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
------------------
-Grabbing thread from
-lore.kernel.org/all/20250611104348.192092-12-jirislaby@kernel.org/t.mbox.gz
-Breaking thread to remove parents of
-20250611104348.192092-12-jirislaby@kernel.org
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-  Added from v2: 1 patches
-Analyzing 10 messages in the thread
-Analyzing 19 code-review messages
-Will use the latest revision: v2
-You can pick other revisions using the -vN flag
-Checking attestation on all messages, may take a moment...
----
-  ✓ [PATCH v2] iio: adc: stm32-adc: Use dev_fwnode()
-    + Link:
-https://lore.kernel.org/r/20250612084627.217341-1-jirislaby@kernel.org
------------------
+Hopefully I haven't duplicated existing feedback. A few more minor things
+inline.
 
-Applying single patch also fails:
+> +
+> +static struct pci_dev *sbdf_to_pci(struct cxl_prot_error_info *err_info)
 
+That's an odd function name as the sbdf is buried.
+Unless it's going to get a lot of use, I'd just put the lookup
+inline and not have a 'hard to name' function.  With other suggested
+changes you only need (at where this is currently called)
+	struct pci_dev *pdev __free(pci_dev_put) =
+		pci_get_domain_bus_and_slot(err_info->segment, err_info->bus,
+					    err_info->devfn);
 
------------------
-Grabbing thread from
-lore.kernel.org/all/20250611104348.192092-12-jirislaby@kernel.org/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-  Added from v2: 1 patches
-Analyzing 10 messages in the thread
-Analyzing 19 code-review messages
-Will use the latest revision: v2
-You can pick other revisions using the -vN flag
-Specified msgid is not present in the series, cannot cherrypick
------------------
+> +{
+> +	unsigned int devfn = PCI_DEVFN(err_info->device,
+> +				       err_info->function);
 
+This makes me wonder if you should have just use devfn inside the err_info.
+Is there a good reason to split them up before storing them?
 
-Best regards,
-Krzysztof
+IIRC ARI makes a mess anyway of their meaning when separate.
+
+> +	struct pci_dev *pdev __free(pci_dev_put) =
+> +		pci_get_domain_bus_and_slot(err_info->segment,
+> +					    err_info->bus,
+> +					    devfn);
+> +	return pdev;
+> +}
+> +
+> +static void cxl_handle_prot_error(struct cxl_prot_error_info *err_info)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(sbdf_to_pci(err_info));
+> +
+> +	if (!pdev) {
+> +		pr_err("Failed to find the CXL device\n");
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Internal errors of an RCEC indicate an AER error in an
+> +	 * RCH's downstream port. Check and handle them in the CXL.mem
+> +	 * device driver.
+> +	 */
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_EC)
+> +		return pcie_walk_rcec(pdev, cxl_rch_handle_error_iter, err_info);
+> +
+> +	if (err_info->severity == AER_CORRECTABLE) {
+> +		int aer = pdev->aer_cap;
+> +		struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +		struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+> +
+> +		if (aer)
+> +			pci_clear_and_set_config_dword(pdev,
+> +						       aer + PCI_ERR_COR_STATUS,
+> +						       0, PCI_ERR_COR_INTERNAL);
+> +
+> +		cxl_cor_error_detected(pdev);
+> +
+> +		pcie_clear_device_status(pdev);
+> +	} else {
+> +		cxl_do_recovery(pdev);
+> +	}
+> +}
+> +
+>  static void cxl_prot_err_work_fn(struct work_struct *work)
+>  {
+> +	struct cxl_prot_err_work_data wd;
+> +
+> +	while (cxl_prot_err_kfifo_get(&wd)) {
+> +		struct cxl_prot_error_info *err_info = &wd.err_info;
+> +
+> +		cxl_handle_prot_error(err_info);
+
+I'm not seeing value in the local variable.
+Ignore if this code changes later and that makes more sense!
+
+> +	}
+>  }
+>  
+>  #else
+
