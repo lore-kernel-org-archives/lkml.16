@@ -1,84 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9963A1FBCB0;
-	Thu, 12 Jun 2025 22:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7052E153BD9;
+	Thu, 12 Jun 2025 22:52:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749768745; cv=none; b=L2yUVDVGzQ4Dy9I5gnkpx01DWgRhLFJOPs2NO1SfwxqNW+1ZaN1flaIaOkerMVk1LSmp3wSUcl5zIPtxjpuRpPnrCXi2dN7CNeI3JvkOdXL3/hItpQAFsb7eFhnW7b0+DE+irmwP2ZF6m69E8UQyuMfV5mbMZ90/dsf5nUvr0HA=
+	t=1749768748; cv=none; b=jVo2ocwLNbqlTp2SpCTxrHiFDfA1gwNGM18pjK2VYjmiRwsfvPdShjC29WGHy+8Qqan4KHNKsdL9b4g8eUgY6+b5o1qY8/TZ6FsD4DGgSktfsUDtdXaxRVCP8T5k6P/I457kaC7D9/Pgz2wy25tr5zeNEbvb+76Xzzwm0a898VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749768745; c=relaxed/simple;
-	bh=RLb43KAcC5RaodCRSfGcH1QteKxbGALd1H/ZIPYUHiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pVr1Am5v9oRQWHq0aXq0gifyWwcorpqm2Pbyeicpz+tTgHRjpOL0Sedy6ICZKVwbrPqdLfvbEYrgfObv3C/w8oqwiYFN4xQmZvkhVIG070zFWNSRsjX5E6CCGcmt2J7mODv6Q2NaxK2KQHAF24G8mENdlAN/al+PPfjbo31U3NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mB/ejbQ3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749768748; c=relaxed/simple;
+	bh=jMlxmZZTo6rTWsBUudaRKPlf+d5/G0AfKjYQwml7YHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BR9nx8qrCxiclZsv6oJChAHkO0QDwa6PFqbNoS12lbnu6Xap152DIQYrv2DHJ+a80i4rzMjTivl135OPT3buUysX3YYOOCsXNepo9g1sZKBNUk85IeoJ7MJH9+QZ+IBjXOxZDLG41RCutl/nqH5a6/e+hY1vx1QxGoCkf2/X63k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lD0A/v97; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mB/ejbQ3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2126AC4CEF4;
-	Thu, 12 Jun 2025 22:52:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lD0A/v97"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 014C8C4CEEA;
+	Thu, 12 Jun 2025 22:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749768745;
-	bh=RLb43KAcC5RaodCRSfGcH1QteKxbGALd1H/ZIPYUHiY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mB/ejbQ3dPbzPx0vJQLYivH9v5mnXEd/scA1AhvIR8M46JK8BrlQ3eRWqz2qTDSQD
-	 wK8ea7e5qdGGpWe07lybVtH9ygVLZ3/CnGesVXwcrTTYCKACviX62NCJChn1+5myGy
-	 Wcr3UVwyT7wPgTKTMLBYMLZ9c7fDPsyOWIXDVs6ORTIrPzN/eOT9zfySfdldX4pB3n
-	 d17SPBa6cTBPIRche12CjBCQL+o2lKS3zQ0uZb+fKv43czwAgyxIunpnMXlUdLOE70
-	 RX8owW2PuuMjJnUGTUqAdMllFkuUdytAUnghgulHtsGByB/Scyzu2/1Q4JI3RGdZx9
-	 MaYK5S8C2BVNw==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-607b59b447bso2664905a12.1;
-        Thu, 12 Jun 2025 15:52:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+kiF7xBbEabdDb39W3IgLstzxzJKjU2JKTvizdB4etBVWEk2zRiEXDSdhbeOxjWztNybVXevWFKJ9M+klzw==@vger.kernel.org, AJvYcCUOlnUhzLnDjXpH5C71yVL2WaTIXvwy3vFGHyQCKl10rMOYOrMrlzTok5PVuSvk1JnvEJxfv4G4xEOlDzSOhw==@vger.kernel.org, AJvYcCUbrDLbK9gAc8TiBcA0rLdyER1dtB44RmnVeratRn38lWt3uT4F9i8nkNwpnukiRW7Jf60JL6TEK2pLKQ==@vger.kernel.org, AJvYcCUfYT6LMenNG3WZEGgTfEAEtnfaG3El2wObnJpyBIj2rdH3G6GSaFCeZqylAe4O2GX2j4t1LZFdPaRI@vger.kernel.org, AJvYcCUpVCPXekb3IF8vKlkjzoZibV+9hoAoPtGtKoJa9fTqQfEMamhu5c10bRy6XJ0QxkEp6WYNQ9Z7Mw==@vger.kernel.org, AJvYcCXObn0swETn89JDE5DRtTbRINVDk1X3jDBBOILrR/WAxoiEyl4xVAcv+0rxsbqn392jBzxLS86Q/0d319qQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrl0zs+UOt+7cEFWCGPeG+BipVslWzwEfn5iSNk0Cu8J5ThWbr
-	/BTAudx/9Ee7123SBP7TIR0BV5GOHMUwE1VqelSzIVvFlDXm6d1PyzI7uUvPFWMc+rfXFtWzleY
-	x5jFDREqyvGCMHEaa95YGlsAA8LFzXxI=
-X-Google-Smtp-Source: AGHT+IFv9dGYrIOKeOZKaL0BR+0Fv0LEjei5oP/yryZdck4J+qKZtwawXs+osRG8Bg80wjBiojwFLAHZMDY7UpigbAg=
-X-Received: by 2002:a17:907:9447:b0:ad8:9d9b:40f9 with SMTP id
- a640c23a62f3a-adec5bcd371mr94803066b.43.1749768743615; Thu, 12 Jun 2025
- 15:52:23 -0700 (PDT)
+	s=k20201202; t=1749768748;
+	bh=jMlxmZZTo6rTWsBUudaRKPlf+d5/G0AfKjYQwml7YHc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lD0A/v97SwM7Ga6ASEYxETAyNTwLSdN9s3YarAstt4LKd3yaRfck6VrPAmTsB1fCJ
+	 7ngZQ/kF6eslIdK8f1HF4+o1Jofu7ii0hMbI17a3FGvvxqwgPIsgD4e+9jM6jsf7g3
+	 UceH90Za5OPGojj1WUxg+hALC5Np95bcXQ3NJ73PNS0n+lZHr2XDxHdpTOtEY+9u9u
+	 DHzzIyj0fXgkemhBSFp1HpglGlxbmHRAkpESftpqd4wMHfVqqY6phJRLPrDuuOmRNs
+	 ygTAkQkpCdhUirmI4qmoboVN2wPS4c7tJyOC3k2fdM5CM9a/LuYw06T6m+aPX+uMFs
+	 QDhbVW8dmozgg==
+Date: Thu, 12 Jun 2025 15:52:26 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Cosmin Ratiu <cratiu@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Dragos
+ Tatulea <dtatulea@nvidia.com>, "andrew+netdev@lunn.ch"
+ <andrew+netdev@lunn.ch>, "hawk@kernel.org" <hawk@kernel.org>,
+ "davem@davemloft.net" <davem@davemloft.net>, "john.fastabend@gmail.com"
+ <john.fastabend@gmail.com>, "leon@kernel.org" <leon@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "pabeni@redhat.com" <pabeni@redhat.com>, "ast@kernel.org" <ast@kernel.org>,
+ "richardcochran@gmail.com" <richardcochran@gmail.com>, Leon Romanovsky
+ <leonro@nvidia.com>, "linux-rdma@vger.kernel.org"
+ <linux-rdma@vger.kernel.org>, "edumazet@google.com" <edumazet@google.com>,
+ "horms@kernel.org" <horms@kernel.org>, "daniel@iogearbox.net"
+ <daniel@iogearbox.net>, Tariq Toukan <tariqt@nvidia.com>, Saeed Mahameed
+ <saeedm@nvidia.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Gal
+ Pressman <gal@nvidia.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 10/12] net/mlx5e: Implement queue mgmt ops
+ and single channel swap
+Message-ID: <20250612155226.770f0676@kernel.org>
+In-Reply-To: <CAHS8izOG+LoJ-GvyRu6zSVCUvoW4VzYX5CEdDhCdVLimOSP0KQ@mail.gmail.com>
+References: <20250609145833.990793-1-mbloch@nvidia.com>
+	<20250609145833.990793-11-mbloch@nvidia.com>
+	<CAHS8izOX8t-Xu+mseiRBvLDYmk6G+iH=tX6t4SWY2TKBau7r-Q@mail.gmail.com>
+	<9107e96e488a741c79e0f5de33dd73261056c033.camel@nvidia.com>
+	<CAHS8izOG+LoJ-GvyRu6zSVCUvoW4VzYX5CEdDhCdVLimOSP0KQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611225848.1374929-1-neil@brown.name> <20250611225848.1374929-2-neil@brown.name>
-In-Reply-To: <20250611225848.1374929-2-neil@brown.name>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Fri, 13 Jun 2025 07:52:12 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd_bTyobeFyX7DvGN4vrdCqEDt0V=8vt7PeRfppcVbYP-w@mail.gmail.com>
-X-Gm-Features: AX0GCFsA8OY4bdVAjhiy1QgEfYRhs_gA_2LVvvqRo48JXUIIKzV2VY1ry6xZNOk
-Message-ID: <CAKYAXd_bTyobeFyX7DvGN4vrdCqEDt0V=8vt7PeRfppcVbYP-w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] VFS: change old_dir and new_dir in struct renamedata
- to dentrys
-To: NeilBrown <neil@brown.name>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Joel Granados <joel.granados@kernel.org>, Steve French <smfrench@gmail.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, netfs@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 7:59=E2=80=AFAM NeilBrown <neil@brown.name> wrote:
->
-> all users of 'struct renamedata' have the dentry for the old and new
-> directories, and often have no use for the inode except to store it in
-> the renamedata.
->
-> This patch changes struct renamedata to hold the dentry, rather than
-> the inode, for the old and new directories, and changes callers to
-> match.
->
-> This results in the removal of several local variables and several
-> dereferences of ->d_inode at the cost of adding ->d_inode dereferences
-> to vfs_rename().
->
-> Signed-off-by: NeilBrown <neil@brown.name>
-For ksmbd part,
-Reviewed-by: Namjae Jeon <linkinjeon@kernel.org>
-Thanks!
+On Thu, 12 Jun 2025 13:44:44 -0700 Mina Almasry wrote:
+> > On Wed, 2025-06-11 at 22:33 -0700, Mina Almasry wrote:  
+> > > Is this really better than maintaining uniformity of behavior between
+> > > the drivers that support the queue mgmt api and just doing the
+> > > mlx5e_deactivate_priv_channels and mlx5e_close_channel in the stop
+> > > like core sorta expects?
+> > >
+> > > We currently use the ndos to restart a queue, but I'm imagining in
+> > > the
+> > > future we can expand it to create queues on behalf of the queues. The
+> > > stop queue API may be reused in other contexts, like maybe to kill a
+> > > dynamically created devmem queue or something, and this specific
+> > > driver may stop working because stop actually doesn't do anything?
+> > >  
+> >
+> > The .ndo_queue_stop operation doesn't make sense by itself for mlx5,
+> > because the current mlx5 architecture is to atomically swap in all of
+> > the channels.
+> > The scenario you are describing, with a hypothetical ndo_queue_stop for
+> > dynamically created devmem queues would leave all of the queues stopped
+> > and the old channel deallocated in the channel array. Worse problems
+> > would happen in that state than with today's approach, which leaves the
+> > driver in functional state.
+> >
+> > Perhaps Saeed can add more details to this?  
+> 
+> I see, so essentially mlx5 supports restarting a queue but not
+> necessarily stopping and starting a queue as separate actions?
+> 
+> If so, can maybe the comment on the function be reworded to more
+> strongly indicate that this is a limitation? Just asking because
+> future driver authors interested in implementing the queue API will
+> probably look at one of mlx5/gve/bnxt to see what an existing
+> implementation looks like, and I would rather them follow bnxt/gve
+> that is more in line with core's expectations if possible. But that's
+> a minor concern; I'm fine with this patch.
+> 
+> FWIW this may break in the future if core decides to add code that
+> actually uses the stop operation as a 'stop', not as a stepping stone
+> to 'restart', but I'm not sure we can do anything about that if it's a
+> driver limitation.
+
+Agreed, would be good to add a TODO and follow up on this.
+It will bite us sooner or later. I suppose state_lock may
+need to be dropped in favor of the netdev instance lock first?
+
+I'm disappointed that mlx5 once again disrupts all rings to restart 
+a single one. But all existing drivers seem to do this, so I guess
+it'd be unfair to push back based on just that :|
