@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B12268C66;
-	Thu, 12 Jun 2025 14:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B965126989D;
+	Thu, 12 Jun 2025 14:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739911; cv=none; b=gGxj1NYPL9idGtFwZJAbif7qJkU2uda4U+hAaxvXtYRonNy2rlcoKzv7m6zSf/iKSbrJgfm2+NfKKPpdB7O7s9p2q1urHYXFjKcfo5fX7nPXrJeLf8+eSFANln+UbxJIh6pmbqiH0gpGp4SA9B8dmC7kwUfLe4Mb67jkrCkAMKE=
+	t=1749739914; cv=none; b=s2Ad0OW1I7a/xMc9XjzS62OKKYpZppGkzo2WXuAPIuqntsbBjxNKTLPW8E7zFQqrEhZQs/JWBJJidPS26GXHkQFe0k93bTqWWJrzP8zlR5lxTThLa63imuwBsYYfxqhpEiStzKRuiwV6bLVBzHXUy4dkEzNNL7hOiqjingWEwt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739911; c=relaxed/simple;
-	bh=M+iZ92QvszXsMUKBpby7ZU3P13f31um/5NFkEJ3pVro=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i2eW2A8f1HRvPKn/dezvS7twtos39JKGCcr6FiFUhfl0DXn33kNOMkoLF3q+Zd6DhhRerANcCylXuvEFvw2pDvaORw04bOXHg/ObmSlW0qjg3YSLA0smT5Rn8cU10J1KbxkGLv6Kaf/cIKwRqjDiWb94enq/uYk0DFDy8GczjAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLSKS37A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749739914; c=relaxed/simple;
+	bh=TciDSg9bcuZTke1QmCC3h0bSb7BA7urmikCTCcO+ODA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bmy+8qygk6z7Wn5mQ8KWMiB4yPKr17KeUwqoX5vjOg5tnhSzmgtVNSfBqatJssJtrQzHH9pSZlrQaqCWdswlcY4X6CMvO7gN+xQPWK0/orXTl6LxmYsEUjaRQXe6nX0Ox3bXcp6cduOjJWhinSKCoMIEyohs5UUJ1/T2zdaS3DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npDvdYDp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLSKS37A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B290C4CEEA;
-	Thu, 12 Jun 2025 14:51:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npDvdYDp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A75CC4CEEB;
+	Thu, 12 Jun 2025 14:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749739911;
-	bh=M+iZ92QvszXsMUKBpby7ZU3P13f31um/5NFkEJ3pVro=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jLSKS37AbbtnWw2hQ2CL61IfUjBbsK1Lhrb6giNpJJd0MWICFb1yAjCH9h5Ris4Hh
-	 GoZ/3Z48rg4IYQn7JUGitVw5DF+ZN4yZdARh4acLRfq5BZyjmi1KcE3YE+Bf6pu0Bu
-	 ztv/jFeTHj+DBxSwIAVYbm1E7ES4AVUvNr6BHAgs1ijncu5ZT2qriNLTJr6FKSMzrg
-	 7zbX1/mqVUg0RLUc6BBH62hL5so2hKVSwDpc6RN+MxpqR7K6qXvtdUjMogd8b8Nxsb
-	 MWq+/23cgrV6DwrPZtJ3Q/KTSzeDKtdlgi5xLMrP65XRg/FWV7uxhCDh5uQk2iwxDD
-	 MuKu69kAa2kvQ==
+	s=k20201202; t=1749739914;
+	bh=TciDSg9bcuZTke1QmCC3h0bSb7BA7urmikCTCcO+ODA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=npDvdYDpZPF8qJItRNBDBsBt/8K/dj0ueU5u6GBWQ9px9kW52AY1RQ9cs/0TvhUf9
+	 AypKQTD06JJkB2lg0vl9DD/Q+nOR4CRnQvV7nIeg1APEaloYlq/jZSb13/hTxGUMbh
+	 ysDRJFxb8Xd0y3QKi8wC0Ttsu6GELZYoubSmHFibrWUsDPbEElbskjyGZO4PSxsic/
+	 +jqIk09HZALyhIZNBWO8abHXYHyVs75hH6pDOjFZd8kurG2wvZCeuoaPm+YTkEjPaU
+	 HYsCIrNtxfvToQLoB4yJkI6jE5XOmvcHdRx3eXjsLeh5QkzUHaeQurbbETQcKhxi8Y
+	 KaWZqiipAuSkA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -40,10 +41,12 @@ To: gregkh@linuxfoundation.org,
 Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 0/4] Improvements for Devres
-Date: Thu, 12 Jun 2025 16:51:37 +0200
-Message-ID: <20250612145145.12143-1-dakr@kernel.org>
+Subject: [PATCH 1/4] rust: revocable: support fallible PinInit types
+Date: Thu, 12 Jun 2025 16:51:38 +0200
+Message-ID: <20250612145145.12143-2-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250612145145.12143-1-dakr@kernel.org>
+References: <20250612145145.12143-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,51 +55,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series provides some optimizations for Devres:
+Currently, Revocable::new() only supports infallible PinInit
+implementations, i.e. impl PinInit<T, Infallible>.
 
-  1) Provide a more lightweight replacement for Devres::new_foreign_owned().
+This has been sufficient so far, since users such as Devres do not
+support fallibility.
 
-  2) Get rid of Devres' inner Arc and instead consume and provide an
-     impl PinInit instead.
+Since this is about to change, make Revocable::new() generic over the
+error type E.
 
-     Additionally, having the resulting explicit synchronization in
-     Devres::drop() prevents potential subtle undesired side effects of the
-     devres callback dropping the final Arc reference asynchronously within
-     the devres callback.
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ rust/kernel/devres.rs    | 2 +-
+ rust/kernel/revocable.rs | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-  3) An optimization for when we never need to access the resource or release
-     it manually.
-
-Thanks to Alice for some great offline discussions on this topic.
-
-This patch series depends on the devres fixes [1] the Opaque patch in [2] and
-the pin-init patch in [3], which Benno will provide a signed tag for. A branch
-containing the patches can be found in [4].
-
-[1] https://lore.kernel.org/lkml/20250612121817.1621-1-dakr@kernel.org/
-[2] https://lore.kernel.org/lkml/20250610-b4-rust_miscdevice_registrationdata-v6-1-b03f5dfce998@gmail.com/
-[3] https://lore.kernel.org/rust-for-linux/20250529081027.297648-2-lossin@kernel.org/
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/devres
-
-Danilo Krummrich (4):
-  rust: revocable: support fallible PinInit types
-  rust: devres: replace Devres::new_foreign_owned()
-  rust: devres: get rid of Devres' inner Arc
-  rust: devres: implement register_foreign_release()
-
- drivers/gpu/nova-core/driver.rs |   7 +-
- drivers/gpu/nova-core/gpu.rs    |   6 +-
- rust/helpers/device.c           |   7 +
- rust/kernel/cpufreq.rs          |   8 +-
- rust/kernel/devres.rs           | 338 ++++++++++++++++++++++----------
- rust/kernel/drm/driver.rs       |  11 +-
- rust/kernel/pci.rs              |  20 +-
- rust/kernel/revocable.rs        |   7 +-
- samples/rust/rust_driver_pci.rs |  19 +-
- 9 files changed, 280 insertions(+), 143 deletions(-)
-
-
-base-commit: e15a5b4301ec42990448b5b023e3439315b821ce
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index d8bdf2bdb879..a7df9fbd724f 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -98,7 +98,7 @@ struct DevresInner<T> {
+ impl<T> DevresInner<T> {
+     fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
+         let inner = Arc::pin_init(
+-            pin_init!( DevresInner {
++            try_pin_init!( DevresInner {
+                 dev: dev.into(),
+                 callback: Self::devres_callback,
+                 data <- Revocable::new(data),
+diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+index fa1fd70efa27..41b8fe374af6 100644
+--- a/rust/kernel/revocable.rs
++++ b/rust/kernel/revocable.rs
+@@ -82,8 +82,11 @@ unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
+ 
+ impl<T> Revocable<T> {
+     /// Creates a new revocable instance of the given data.
+-    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
+-        pin_init!(Self {
++    pub fn new<E>(data: impl PinInit<T, E>) -> impl PinInit<Self, Error>
++    where
++        Error: From<E>,
++    {
++        try_pin_init!(Self {
+             is_available: AtomicBool::new(true),
+             data <- Opaque::pin_init(data),
+         })
 -- 
 2.49.0
 
