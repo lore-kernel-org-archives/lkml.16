@@ -1,103 +1,133 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4D710E5
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D03D10E5;
+	Thu, 12 Jun 2025 16:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749747361; cv=none; b=ANO+0SyONzJZ7E10HgB+b0bihgLizeVQB0P/D/NIaAEk+jzXOx98KgLNIwZ0WLn7XxEpWRKRBroK0WE1OFQTg9h2/2XmdzNILO8fwAZB4Jgxm9yvsU43LF0K7i/k0FF+CG0g6vAZF2klO2pW0xryBJ3xgb9iC3aN7swyqLvwqwU=
+	t=1749747398; cv=none; b=XGKJOh7FF/gUwRR7A/c8ZT7jackrMjxUcZ17gH/EyOp9jNv67LHqOvsoup7ztlikTaqiX+dx9jnnOaLPvlZcO78lHzWvbA1t6jwfJmGCjpxshPbwpM13W6ftCaqW71clZIclQ4e6iH2d5m/YF99ZUa+gRSD+GEKUkxVfs4IXfvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749747361; c=relaxed/simple;
-	bh=L+nj7VSATDTtQ8qziHcnn2N7SXjAfvLfGVPJ4UEQAjs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C2pqifaUrnXcZncgvqUPCINbCIIjhf7cahcDhEQuqIgepiBFYLUprHf7TMXzh6R3kjBceyOW3FMPXMfRYMJk/8Twso6++PC32I5ZXAH89QhaoCDIdHkrNkBIHnSwhGUnr5t6l73qDlpyH8K/cMiF7U4O7dzeZWUHwzivucdyAsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=uVwahqQU; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1749747398; c=relaxed/simple;
+	bh=8Ye67YnjttyTwFTBHI+RLSlHPDRdNz234kvp3fp5Y9M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u10EE370Od5Q0ZYNDXetaI77CQGIphy6w/fEQMWhAexEsY101uEYZZmTx2NB281Qg5ule+W984z51p1WxEEQfqWQi6j+7AMAE7EuMPbBFCwm/PN2lcAr3nhQbwKIIDvCfuYy9cahelm8nJzV0okuhZNz7UQMLCzwDWkXKf1ylKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnUpXXZp; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="uVwahqQU"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uPlDS-00Dv6v-8N; Thu, 12 Jun 2025 18:55:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From;
-	bh=h78SstLB+SKD2vCmdildXITOov0xVYk3Rhb763rP10o=; b=uVwahqQUmSqPo2FdTJiu5DYZs7
-	iu5POcB7G6wc7xoOuJ1Czw0lzfgXFDL0d7AmfYHhyNNPxSUe7lmOUmIzjAaycbbe2SsGOwzF33Smp
-	B3d9X7So8ymtrgwZEIQJ1yRnHjOTQNsuuaQjRpq2xxaXhg0cUVJfRm/28D9dUIHcMMTdJdZpEdrBk
-	MKm3NrZXghh8ZoYQKG0kGMgpkuucWaqg1IWHY7y+SDjt2h005uITZRBO6fgYwo2Kp3MpTkd5biRyp
-	FrMGSCJTMQ9pbWtBgQPwXI43wGMFNEZu0UgxK0k5FRzORtCQf4d8Aum6EMeYb8CGC3JMf4EirdLTp
-	WyLvwE1w==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uPlDM-00010g-7U; Thu, 12 Jun 2025 18:55:44 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uPlDG-00Gn5Y-4O; Thu, 12 Jun 2025 18:55:38 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Thu, 12 Jun 2025 18:55:09 +0200
-Subject: [PATCH v2] scripts/sorttable: Handle mmap() failure gracefully
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnUpXXZp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749747397; x=1781283397;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8Ye67YnjttyTwFTBHI+RLSlHPDRdNz234kvp3fp5Y9M=;
+  b=TnUpXXZpdFiZZhF+4UXGq3hxk1eRm/34eTtKsyBc6oNm99yXQtFzaeUC
+   FrXfplTJgH70k0mRtRsB0U788kq87zmTU1+wlorUSv4lhSG2uDGq4nnLu
+   +p0kaJ+Tb3Xe0uxTcUxHDT6jFPcW6DHIlCBg8U+YCGRC3pho1eWiOicSk
+   GWseOsyM8B9IwUCehv2lw9Gj9Zj9+CxSMqDz64XvS0yz+KWrEhf5HPdKJ
+   LiQUxvG8BSdb5WmqluR1nHZ/dQUixuRlXBifzJnP+SC6vuzciZRt0HE21
+   342rbys55+VyM/7O7NuaXu1Vc95GbGF8uf26pJCH8QwQ48I2ZIN+Mlk6P
+   A==;
+X-CSE-ConnectionGUID: THhNqup4QlSCCRicfyZf3g==
+X-CSE-MsgGUID: 8D0RYl9QTfuMK/qA86vccQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="52039761"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="52039761"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 09:56:36 -0700
+X-CSE-ConnectionGUID: IEi61bqhR3G9Riiy6tUyzw==
+X-CSE-MsgGUID: 3V8D+rDbRz6duGbQpO2V6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="152483191"
+Received: from dannysua-mobl.amr.corp.intel.com (HELO [10.125.98.185]) ([10.125.98.185])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 09:56:35 -0700
+Message-ID: <22b3158d-565d-450b-809a-af302220bcf4@linux.intel.com>
+Date: Thu, 12 Jun 2025 09:56:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] mm/huge_memory: vmf_insert_folio_*() and
+ vmf_insert_pfn_pud() fixes
+To: David Hildenbrand <david@redhat.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple <apopple@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Oscar Salvador <osalvador@suse.de>
+References: <20250611120654.545963-1-david@redhat.com>
+ <lpfprux2x34qjgpuk6ufvuq4akzolt3gwn5t4hmfakxcqakgqy@ciiwnsoqsl6j>
+ <684a5594eb21d_2491100de@dwillia2-xfh.jf.intel.com.notmuch>
+ <990ce9cf-0e48-432c-a29f-0bd1704eede4@redhat.com>
+ <e11ba418-4184-4f4f-add5-18a5edaa0f34@redhat.com>
+Content-Language: en-GB
+From: Marc Herbert <marc.herbert@linux.intel.com>
+In-Reply-To: <e11ba418-4184-4f4f-add5-18a5edaa0f34@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-sorttable-fix-v2-1-9cbb747e6b6d@rbox.co>
-X-B4-Tracking: v=1; b=H4sIAG0GS2gC/13MQQrCMBCF4auUWTuSpNFWV95DukjSqR2QRpIQK
- iV3NxbcuPwfvG+DSIEpwrXZIFDmyH6poQ4NuNksD0Iea4MSSotOtRh9SMnYJ+HEK4reXhz1crS
- tgvp5Barz7t2H2jPH5MN757P8rj/p/CdliRJ7e7JGO607Od2C9evReRhKKR/Y1HFnqAAAAA==
-X-Change-ID: 20240723-sorttable-fix-08b9ce81db32
-To: Steven Rostedt <rostedt@goodmis.org>, 
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, 
- Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
 
-When mmap() fails, don't propagate MAP_FAILED as a return value. Caller
-expects NULL on error.
 
-Fixes: 3c47b787b651 ("scripts/sortextable: Rewrite error/success handling")
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
-...
-  LD      vmlinux
-  BTFIDS  vmlinux
-  NM      System.map
-  SORTTAB vmlinux
-Could not mmap file: vmlinux
-scripts/link-vmlinux.sh: line 200:  2688 Segmentation fault      (core dumped) ${objtree}/scripts/sorttable ${1}
-Failed to sort kernel tables
----
-Changes in v2:
-- Rebase, resend
-- Link to v1: https://lore.kernel.org/r/20240726-sorttable-fix-v1-1-8b5ba4c4471f@rbox.co
----
- scripts/sorttable.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index deed676bfe384deb0333b6dde78c60bc3c6622da..2fe0974b53719b5660e1053af438ad098cdcaf28 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -334,6 +334,7 @@ static void *mmap_file(char const *fname, size_t *size)
- 	addr = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
- 	if (addr == MAP_FAILED) {
- 		fprintf(stderr, "Could not mmap file: %s\n", fname);
-+		addr = NULL;
- 		goto out;
- 	}
- 
+>>>>> I spent too much time trying to get the ndctl tests mentioned by Dan
+>>>>> running (.config tweaks, memmap= setup, ... ), without getting them to
+>>>>> pass even without these patches. Some SKIP, some FAIL, some sometimes
+>>>>> suddenly SKIP on first invocation, ... instructions unclear or the tests
+>>>>> are shaky. This is how far I got:
+>>>>
+>>>> FWIW I had a similar experience, although I eventually got the FAIL cases below
+>>>> to pass. I forget exactly what I needed to tweak for that though :-/
+>>>
+>>> Add Marc who has been working to clean the documentation up to solve the
+>>> reproducibility problem with standing up new environments to run these
+>>> tests.
+>>
+>> I was about to send some doc improvements myself, but I didn't manage to
+>> get the tests running in the first place ... even after trying hard :)
+>>
 
----
-base-commit: 9cc7d5904bab74f54aad4948a04535c1f07c74d8
-change-id: 20240723-sorttable-fix-08b9ce81db32
 
-Best regards,
--- 
-Michal Luczaj <mhal@rbox.co>
+>>> http://lore.kernel.org/20250521002640.1700283-1-marc.herbert@linux.intel.com
+>>>
+>>
+>> I think I have CONFIG_XFS_FS=m (instead of y) and CONFIG_DAX=y (instead
+>> of =m), and CONFIG_NFIT_SECURITY_DEBUG not set (instead of =y).
+>>
+>> Let me try with these settings adjusted.
+> 
+> Yeah, no. Unfortunately doesn't make it work with my debug config. Maybe with the
+> defconfig as raised by Marc it would do ... maybe will try that later.
+
+After a lot of trial and error to get them right, these fragments have always
+worked for me:
+
+make defconfig ARCH=x86_64
+./scripts/kconfig/merge_config.sh .config ../run_qemu/.github/workflows/*.cfg
+
+Warning: there is a CONFIG_DRM=n in there to save a lot of compilation
+time.  Nothing against DRM specifically; it's just the best "value" for
+a single line change :-)
+
+
+The run_qemu/.github/workflows/*.cfg fragments are mostly duplicated
+from ndctl.git/README.md - but unlike the latter, they're
+machine-readable and testable. The CXL fragment is actually tested in 
+run_qemu's CI (CI = the only way not to bitrot).
+https://github.com/pmem/run_qemu/actions
+
+As I wrote in
+https://lore.kernel.org/linux-cxl/aed71134-1029-4b88-ab20-8dfa527a7438@linux.intel.com/
+these fragments should ideally live in ndctl.git/, not in run_qemu.git/
+(the latter could still add tweaks). Then ndctl.git/README.md could just
+refer to the testable fragments instead of inlining them. "Send patches"
+they say :-)
 
