@@ -1,60 +1,60 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793722248B5
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A3A22541B
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714578; cv=none; b=cBvojIvvn5Dx4xQltGoZOOMLlRvGChy9QQKuMbKUG+aG9rckxW+zQxp3a6g3Q+LBzTbMu0wklZIdVFVE2RkMCBns0bE/xHLrIsDxPi3gvaKdBUfOeU0Iuslp9hSRd/OhmlN88SKtOh1QMMvj8d5wCRNknVXadwoSmSKywArjXs8=
+	t=1749714581; cv=none; b=dScpEqPIRgP7QTUgNIljwIWomdWMR38MT4d5eCgyBEtxT+jlqtmkl1Fiy1+djWL3l34YO6AocjucWKSZ5G9W4KEhg8QRJOL7OXsXhtmx5GxIHTdO8wfcsQyj7FNofQEL/PTU6jIfJSfvFUuMp+xyJBEVOMDDmzt8rvFKD1es3IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714578; c=relaxed/simple;
-	bh=7lBuRSPEgmZ9a+/jESzGhJRmqNmmVg//QwiKc44LjWo=;
+	s=arc-20240116; t=1749714581; c=relaxed/simple;
+	bh=buSIZ3mUEgzHTw13z6E0J1/Ujd8OUrdascAOzkTqqhI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZTF1FD5ioA3ao2oNCCfxT4X1iKZ9wRHO040EjeQTnlH5L2h6Ner3OrRUO4RbTaXV76kY09UwoFXYL4sh8dZkGvQYdSW1DsJeCNDuQdioW9mBjgixxJspNumZbfqEtshq35mGzWBY/88b2hTJp/vMcuNKsh08ZXsj8rnanNcaUUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YplBsCRS; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=Rm/P1zGuKb93nNteglHStGiWI02qSEUKGFEsnDOUV8tSLjsMemMCLZzBLTQq0kY0BPplUjPOdmPA/6NI8U/RLanc9sWKqx9E7BR/82X99p3vPDU5meQS3Bojxxr2exeLAUXw2joJSggbME75qhZiOdCBo17P/EuNysMyCAt6io4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=i+vd/MFS; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YplBsCRS"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2363e973db1so14810265ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:49:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i+vd/MFS"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2350b1b9129so4873755ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749714576; x=1750319376; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1749714579; x=1750319379; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Kzq7pTlEyk3DwCXw2bvXC8EVAUqzh3hKoNDLtBSSl4A=;
-        b=YplBsCRSsrSQcYtlzVGkTI8xVSm9k97MBTbxpd33Uh09r2IGzZcEiuwjMWj5WnML5P
-         WsptQaVwVFgp/K/tK41NgIZrqp49XrsP+Z6SatnbU5fo63mE9ZkgjdY/5/Hm7z9sqGiA
-         u0z5QQS78a2nGr0NRRjQiNsgIn+ihhEzwVSXU=
+        bh=iMKg3AJWHj8JObjZ77FIwuRQDDLq0jFSD2L3C+IDYm4=;
+        b=i+vd/MFSZtba3F3E5NLPCBgK1kTXOAcpAlOo17hxTT2PGNnM/QjjVuPnl46Uwo4Qc5
+         gLqNVS1esdsUVJjIMIgx8S1N/OFeSb+tg/Jgd0iu9wDFTie3yuIBjfNFXp2Vc5O1+yIC
+         dk9Tj8xno2oWx5DhfHTmEpuspzxdE4DeqoH1E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714576; x=1750319376;
+        d=1e100.net; s=20230601; t=1749714579; x=1750319379;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Kzq7pTlEyk3DwCXw2bvXC8EVAUqzh3hKoNDLtBSSl4A=;
-        b=hOskLl4V7ZT8VA4mEbumbZsa2p1ilZBgKHZ2SAIWLk6lZEa+Zd2jUilASWTZ0j8Aqw
-         ZwX2wgJjxiMPF5BMX9Zx5HnIxGq3z24eWsXLa5YiTEkV/FaRAx28szo9vvd0cFSgiSuE
-         xIOo3SbNHGkoqObNvJvG1A3eh/9FKni7NAGV1DikwsguapbioAU8IZf6u5PwZmftLXn1
-         5KgyOFc+M4aczijn8kVzGOACrrThuDC9RV7/R4A2/6z44Gh4X1DsDqafsblrpXWFHGXV
-         QzZRHKGuuqjgpf3li1BsY0HH/ECs+O4r95oLsUwRaJ6FsDEMwwmMldaejkzqE0CkKH0Y
-         FQqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWobTN3rdjSSjolChPsxd+5MguC532QOL0xokj1hd3dMgWCjK8/4tCMU3Gp3na3VLdbIUtychT5kcdYUT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrVqAYBSwNEhLxsc33n1KpAM0NxsNzf1uH+AuECFdBfnica7L/
-	3+CXnDxrjHlS6eTI1/EOQIOC7r55ZjlFB2DlMUelmnuqnNscGG+h4/6l33W8ZgUFXw==
-X-Gm-Gg: ASbGnctdF6Fuk2lyimvKKjx6mBx3tFH/qar1C8X1ifXcymM93xs2sHYDYKA6ph5P+/A
-	zQeUqbvmF0RXXlAGCbWobAHGvvV3sg0SeT76Mw3JhBNIQF/M4jlcBe5NQnunoJEW95ae3uYAI22
-	aLVmIH5n5/KPx4LwwKWp6Pmujvoj0JwtTqIwF6x/ILNJz2cYZUNd3bbFh3JBIZ1q0DbqBLeTJPB
-	dyvyx/GFsOKCGLwWJYGwFIZH2+hBuMeQ+SxN4yffmAbSWfFby9SofpbDHhziK4BijLpBfFMK//H
-	mko8JIS8ERCWhTUouB3F/qdTGSxbbnNt1Ver4q8UBbfSvcQ2NlZg4ncHovB743b1H8kwOi2kqyE
-	+kWQ=
-X-Google-Smtp-Source: AGHT+IEN7g9Kd2emZe+eC0bnFztivo7RuDUPLjNRq7/X/nnou4s5GK5KxWmXAWf3A6OG+nnmmIHeYQ==
-X-Received: by 2002:a17:902:c941:b0:232:59b:5923 with SMTP id d9443c01a7336-2364cf36e59mr38491355ad.23.1749714575691;
-        Thu, 12 Jun 2025 00:49:35 -0700 (PDT)
+        bh=iMKg3AJWHj8JObjZ77FIwuRQDDLq0jFSD2L3C+IDYm4=;
+        b=sjZkqfJ3mZNOyG7pDaeBraUPJTCocMkqAUwJfm/7DnCAHmoK6/T4mP/EB00OyvnpWM
+         YgB7Bfz5ldghiNLQy9Y4XELrOT0h6pCgYOpIVriqUXH7vTtNKo7+sEEn1AY/supOM9ho
+         jlfZswCBSRFiwDY4AbYTfsLggAfoCdEIC2lFZvcFDmTDLLM2tCoGjgUSKBBSKWToCgH2
+         aN92P9UoiDB5bGJbH1EnntU5xU20/9fQjMHgelaFp7VWOxIB5dNAZtIY6sAhROO55cP5
+         HjVuPcF+E5TeUm8b6rmuBpXATfuNBciz8m8X8in/JEZ9biXs406/JAPP4sXQL40Xc8Iy
+         7ouQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJV5s6rQEW8HgusCec0Oxu4SVdqDUa+b357V/FCLZeI1/yLSYlQynKJoGthJCXYlzJWPBM+MAoyxIof4M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbnIjb7mepQkaljQDQM+qYwxliaVgzrfKnxjnkjiGUiDB0rawk
+	FMC3NJvgJBfE7ULCtBZttuhOFfAPwBCFDa61J7OM5FWo8E6McZBVNVAUkG/Zl2i5Wg==
+X-Gm-Gg: ASbGncvYx7as9Y7dKpA4AhQPVsuYQPQ17v4OjFi0FxnvwDAtMIb16F6I7Eg2Qp5wKzN
+	tugMOWAWL+3DzBBPsISYgYxyp+V6njyMuxfg9VdvhwdA+oqkNlQ+kLWLBbio7Kg4TWvJvC1+idJ
+	Mn5hALvMB5Jl1QPywUo41uNRg8hQI+iXUw+AbupeFKSyWKYwYWeM5Tb7+BJmUP2T0ssRoaatD+8
+	WhTmYpsNF4rpJUx8ijX9zpZypG4Ebn0lvevBhWsXmaARPLYStY2riziGlsGbmK48Khdt48JDztE
+	sb+ESr+NRt11Hw9EIkEOI6/Xtbuic42T0a+TcI80YeYjvI0SO+8p4fu93rtbGCRNPq92W8o3qsl
+	r9WU=
+X-Google-Smtp-Source: AGHT+IFFR598oT7VAz4Mzmjghx/G16LP2D1CuewctVbUf6JSejNRvGbYfC7QtwuZY6nk2c5HrvbdeA==
+X-Received: by 2002:a17:902:ced0:b0:234:c549:da0e with SMTP id d9443c01a7336-2364ca8e826mr35303785ad.47.1749714578786;
+        Thu, 12 Jun 2025 00:49:38 -0700 (PDT)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:5b9:e73a:2e58:5a47])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e63d42esm7893295ad.74.2025.06.12.00.49.32
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e63d42esm7893295ad.74.2025.06.12.00.49.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 00:49:35 -0700 (PDT)
+        Thu, 12 Jun 2025 00:49:38 -0700 (PDT)
 From: Chen-Yu Tsai <wenst@chromium.org>
 To: Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>
@@ -72,9 +72,9 @@ Cc: Chen-Yu Tsai <wenst@chromium.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 7/9] ASoC: mediatek: mt8183-afe-pcm: Support >32 bit DMA addresses
-Date: Thu, 12 Jun 2025 15:48:58 +0800
-Message-ID: <20250612074901.4023253-8-wenst@chromium.org>
+Subject: [PATCH v3 8/9] ASoC: mediatek: mt8173-afe-pcm: use local `dev` pointer in driver callbacks
+Date: Thu, 12 Jun 2025 15:48:59 +0800
+Message-ID: <20250612074901.4023253-9-wenst@chromium.org>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
 In-Reply-To: <20250612074901.4023253-1-wenst@chromium.org>
 References: <20250612074901.4023253-1-wenst@chromium.org>
@@ -86,74 +86,190 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The AFE DMA hardware supports up to 34 bits for DMA addresses. This is
-missing from the driver and prevents reserved memory regions from
-working properly when the allocated region is above the 4GB line.
+The probe and remove functions in the mt8183-afe-pcm driver repeatedly uses
+`&pdev->dev` for |struct device *|, but then assigns this value to
+`afe->dev` and uses that in other places in the same function.
 
-Fill in the related register offsets for each DAI, and also set the
-DMA mask. Also fill in the LSB end register offsets for completeness.
+Store `&pdev->dev` in a local pointer and use that exclusively to avoid
+the numerous dereferences and to make the code more consistent. Lines
+are reflowed where it makes sense.
 
-Fixes: a94aec035a12 ("ASoC: mediatek: mt8183: add platform driver")
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 ---
-Changes in v3:
-- Rebased on top of "mt8183-afe-pcm: Shorten source code"
----
- sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ sound/soc/mediatek/mt8173/mt8173-afe-pcm.c | 63 +++++++++++-----------
+ 1 file changed, 32 insertions(+), 31 deletions(-)
 
-diff --git a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-index 9b6b45c646e6..7383184097a4 100644
---- a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-@@ -6,6 +6,7 @@
- // Author: KaiChieh Chuang <kaichieh.chuang@mediatek.com>
+diff --git a/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c b/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
+index f93d6348fdf8..c0fa623e0b17 100644
+--- a/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
++++ b/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
+@@ -1054,26 +1054,26 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	struct mtk_base_afe *afe;
+ 	struct mt8173_afe_private *afe_priv;
+ 	struct snd_soc_component *comp_pcm, *comp_hdmi;
++	struct device *dev = &pdev->dev;
  
- #include <linux/delay.h>
-+#include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/mfd/syscon.h>
- #include <linux/of.h>
-@@ -432,6 +433,9 @@ static const struct snd_soc_component_driver mt8183_afe_pcm_dai_component = {
- 		.reg_ofs_base = AFE_##_id##_BASE,	\
- 		.reg_ofs_cur = AFE_##_id##_CUR,		\
- 		.reg_ofs_end = AFE_##_id##_END,		\
-+		.reg_ofs_base_msb = AFE_##_id##_BASE_MSB,	\
-+		.reg_ofs_cur_msb = AFE_##_id##_CUR_MSB,		\
-+		.reg_ofs_end_msb = AFE_##_id##_END_MSB,		\
- 		.fs_reg = (_fs_reg),			\
- 		.fs_shift = _id##_MODE_SFT,		\
- 		.fs_maskbit = _id##_MODE_MASK,		\
-@@ -463,11 +467,17 @@ static const struct snd_soc_component_driver mt8183_afe_pcm_dai_component = {
- #define AFE_VUL12_BASE		AFE_VUL_D2_BASE
- #define AFE_VUL12_CUR		AFE_VUL_D2_CUR
- #define AFE_VUL12_END		AFE_VUL_D2_END
-+#define AFE_VUL12_BASE_MSB	AFE_VUL_D2_BASE_MSB
-+#define AFE_VUL12_CUR_MSB	AFE_VUL_D2_CUR_MSB
-+#define AFE_VUL12_END_MSB	AFE_VUL_D2_END_MSB
- #define AWB2_HD_ALIGN_SFT	AWB2_ALIGN_SFT
- #define VUL12_DATA_SFT		VUL12_MONO_SFT
- #define AFE_HDMI_BASE		AFE_HDMI_OUT_BASE
- #define AFE_HDMI_CUR		AFE_HDMI_OUT_CUR
- #define AFE_HDMI_END		AFE_HDMI_OUT_END
-+#define AFE_HDMI_BASE_MSB	AFE_HDMI_OUT_BASE_MSB
-+#define AFE_HDMI_CUR_MSB	AFE_HDMI_OUT_CUR_MSB
-+#define AFE_HDMI_END_MSB	AFE_HDMI_OUT_END_MSB
+-	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(33));
++	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(33));
+ 	if (ret)
+ 		return ret;
  
- static const struct mtk_base_memif_data memif_data[MT8183_MEMIF_NUM] = {
- 	MT8183_MEMIF(DL1, AFE_DAC_CON1, AFE_DAC_CON1),
-@@ -764,6 +774,10 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- 	struct reset_control *rstc;
- 	int i, irq_id, ret;
- 
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(34));
-+	if (ret)
-+		return ret;
-+
- 	afe = devm_kzalloc(&pdev->dev, sizeof(*afe), GFP_KERNEL);
+-	afe = devm_kzalloc(&pdev->dev, sizeof(*afe), GFP_KERNEL);
++	afe = devm_kzalloc(dev, sizeof(*afe), GFP_KERNEL);
  	if (!afe)
  		return -ENOMEM;
+ 
+-	afe->platform_priv = devm_kzalloc(&pdev->dev, sizeof(*afe_priv),
+-					  GFP_KERNEL);
++	afe->platform_priv = devm_kzalloc(dev, sizeof(*afe_priv), GFP_KERNEL);
+ 	afe_priv = afe->platform_priv;
+ 	if (!afe_priv)
+ 		return -ENOMEM;
+ 
+-	afe->dev = &pdev->dev;
++	afe->dev = dev;
+ 
+-	ret = of_reserved_mem_device_init(&pdev->dev);
++	ret = of_reserved_mem_device_init(dev);
+ 	if (ret) {
+-		dev_info(&pdev->dev, "no reserved memory found, pre-allocating buffers instead\n");
++		dev_info(dev, "no reserved memory found, pre-allocating buffers instead\n");
+ 		afe->preallocate_buffers = true;
+ 	}
+ 
+@@ -1085,27 +1085,27 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	if (IS_ERR(afe->base_addr))
+ 		return PTR_ERR(afe->base_addr);
+ 
+-	afe->regmap = devm_regmap_init_mmio(&pdev->dev, afe->base_addr,
+-		&mt8173_afe_regmap_config);
++	afe->regmap = devm_regmap_init_mmio(dev, afe->base_addr,
++					    &mt8173_afe_regmap_config);
+ 	if (IS_ERR(afe->regmap))
+ 		return PTR_ERR(afe->regmap);
+ 
+ 	/* initial audio related clock */
+ 	ret = mt8173_afe_init_audio_clk(afe);
+ 	if (ret) {
+-		dev_err(afe->dev, "mt8173_afe_init_audio_clk fail\n");
++		dev_err(dev, "mt8173_afe_init_audio_clk fail\n");
+ 		return ret;
+ 	}
+ 
+ 	/* memif % irq initialize*/
+ 	afe->memif_size = MT8173_AFE_MEMIF_NUM;
+-	afe->memif = devm_kcalloc(afe->dev, afe->memif_size,
++	afe->memif = devm_kcalloc(dev, afe->memif_size,
+ 				  sizeof(*afe->memif), GFP_KERNEL);
+ 	if (!afe->memif)
+ 		return -ENOMEM;
+ 
+ 	afe->irqs_size = MT8173_AFE_IRQ_NUM;
+-	afe->irqs = devm_kcalloc(afe->dev, afe->irqs_size,
++	afe->irqs = devm_kcalloc(dev, afe->irqs_size,
+ 				 sizeof(*afe->irqs), GFP_KERNEL);
+ 	if (!afe->irqs)
+ 		return -ENOMEM;
+@@ -1124,9 +1124,9 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, afe);
+ 
+-	pm_runtime_enable(&pdev->dev);
+-	if (!pm_runtime_enabled(&pdev->dev)) {
+-		ret = mt8173_afe_runtime_resume(&pdev->dev);
++	pm_runtime_enable(dev);
++	if (!pm_runtime_enabled(dev)) {
++		ret = mt8173_afe_runtime_resume(dev);
+ 		if (ret)
+ 			goto err_pm_disable;
+ 	}
+@@ -1136,13 +1136,12 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	afe->runtime_resume = mt8173_afe_runtime_resume;
+ 	afe->runtime_suspend = mt8173_afe_runtime_suspend;
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					 &mtk_afe_pcm_platform,
+-					 NULL, 0);
++	ret = devm_snd_soc_register_component(dev, &mtk_afe_pcm_platform,
++					      NULL, 0);
+ 	if (ret)
+ 		goto err_pm_disable;
+ 
+-	comp_pcm = devm_kzalloc(&pdev->dev, sizeof(*comp_pcm), GFP_KERNEL);
++	comp_pcm = devm_kzalloc(dev, sizeof(*comp_pcm), GFP_KERNEL);
+ 	if (!comp_pcm) {
+ 		ret = -ENOMEM;
+ 		goto err_pm_disable;
+@@ -1150,7 +1149,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 
+ 	ret = snd_soc_component_initialize(comp_pcm,
+ 					   &mt8173_afe_pcm_dai_component,
+-					   &pdev->dev);
++					   dev);
+ 	if (ret)
+ 		goto err_pm_disable;
+ 
+@@ -1164,7 +1163,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_pm_disable;
+ 
+-	comp_hdmi = devm_kzalloc(&pdev->dev, sizeof(*comp_hdmi), GFP_KERNEL);
++	comp_hdmi = devm_kzalloc(dev, sizeof(*comp_hdmi), GFP_KERNEL);
+ 	if (!comp_hdmi) {
+ 		ret = -ENOMEM;
+ 		goto err_cleanup_components;
+@@ -1172,7 +1171,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 
+ 	ret = snd_soc_component_initialize(comp_hdmi,
+ 					   &mt8173_afe_hdmi_dai_component,
+-					   &pdev->dev);
++					   dev);
+ 	if (ret)
+ 		goto err_cleanup_components;
+ 
+@@ -1186,30 +1185,32 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_cleanup_components;
+ 
+-	ret = devm_request_irq(afe->dev, irq_id, mt8173_afe_irq_handler,
++	ret = devm_request_irq(dev, irq_id, mt8173_afe_irq_handler,
+ 			       0, "Afe_ISR_Handle", (void *)afe);
+ 	if (ret) {
+-		dev_err(afe->dev, "could not request_irq\n");
++		dev_err(dev, "could not request_irq\n");
+ 		goto err_cleanup_components;
+ 	}
+ 
+-	dev_info(&pdev->dev, "MT8173 AFE driver initialized.\n");
++	dev_info(dev, "MT8173 AFE driver initialized.\n");
+ 	return 0;
+ 
+ err_cleanup_components:
+-	snd_soc_unregister_component(&pdev->dev);
++	snd_soc_unregister_component(dev);
+ err_pm_disable:
+-	pm_runtime_disable(&pdev->dev);
++	pm_runtime_disable(dev);
+ 	return ret;
+ }
+ 
+ static void mt8173_afe_pcm_dev_remove(struct platform_device *pdev)
+ {
+-	snd_soc_unregister_component(&pdev->dev);
++	struct device *dev = &pdev->dev;
+ 
+-	pm_runtime_disable(&pdev->dev);
+-	if (!pm_runtime_status_suspended(&pdev->dev))
+-		mt8173_afe_runtime_suspend(&pdev->dev);
++	snd_soc_unregister_component(dev);
++
++	pm_runtime_disable(dev);
++	if (!pm_runtime_status_suspended(dev))
++		mt8173_afe_runtime_suspend(dev);
+ }
+ 
+ static const struct of_device_id mt8173_afe_pcm_dt_match[] = {
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
