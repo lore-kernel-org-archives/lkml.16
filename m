@@ -1,161 +1,105 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA3A17A318;
-	Thu, 12 Jun 2025 01:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FDF19BBC
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749691937; cv=none; b=oZ5O6R0DdPS09f0wpmc6xwsP7qDyZdqQ74fe2+NBUNjB2fEs6t64iRrxyQoZPr+xsWNP1FKlHTwNzai+poLOxzY74UOXDdnjzHBIdv+YaUTtdx/QUp7lQytm19A1LQah5kt+ovlSVEZVogpFTz3iMqYQ1PJJ1uXmnvs0pb0xVys=
+	t=1749692273; cv=none; b=rki0QAq3fzkCrYASvS/GVEl0KcBm4kzT95uQhekL/bUjrr8hPHAvihLby/bPh+3ymZG9S15NAuOBBKs0XexluvnzojHxEByAuj7lSaPz6ut1tyhiq8ZQ47GYCS/cZ822I0QKqwQuGIJpH5/mIOj5kdUH8gKE/54ALMU40xPjzZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749691937; c=relaxed/simple;
-	bh=cThSd7K6kDqnRvLv9v0D7k0r1SuhKfyhgqtlJhe8gH0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=WA9gY33kcu15Q3J4vOP8ey5FTtGGHyNyJCnRzOdSUDC/ctHKUwGkhvAQlY1Y4RPvWFk4sm+XqdfOdjjy1uHfR2/CMPKlcGsogOAO4s0OnlHc0aJppLBzVYWz7iLbgW5gYISVkb0+pNbUmRgfDtXNU61J3bx6bl00B7NGswOg7Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oqxfdpYR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749692273; c=relaxed/simple;
+	bh=EmgxiCslSolMNCzBUoL4OQg87GsLep/G3Phn9Wkt9NY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SmAyJH5+Kkpx+ISqg4IIVph7FWN7q+Qn1BzTHSVFhIYh6j/aKsXmu9w0bTe8b8clp+/029JESfXvvUhuU781mU/jvmDSOmYQGmcCgmTY1kKRHChrgqjDt/5mV5qHQwyHe7rChK06kT4TAgaTU0K3Qg4bK+B2HcnRQcSOuR1jT18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oJAampAh; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oqxfdpYR"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BK880f002374;
-	Thu, 12 Jun 2025 01:32:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	eiLd07SJCxjZopKuS4ArzooclGq9tE02D1+OJO7qByQ=; b=oqxfdpYR3R5DvdBs
-	dL7suAVTiDyUSpESYQvdH4UOe2CvIpfGeA12cbR5v0crR6wv9S+ew0L0f5Uq4yfV
-	+/vliMNyYc8gU2qfSUYw5r2fQWrfrW6YMvBGd8wFhxnZ7EuYumNGsBNUyWpYWl5q
-	dcXs8IshDOMKqeZ1ckqzyNNNiXu6tyZoAdUHLgH7uDJomtTfMwUTgkEqmPXQuSTZ
-	m+aNs5sYSzU6ow4oLuvek0M/niZaH2b7JSYteicAObF5pDdTYhHHu+zvCZkHpPYL
-	aw0WtxenpE6NgcATrm3aPD5GXVwUgtt2SVa67+NH2M6XzgdxvdgJPsPze/u2GrLx
-	GI8GYg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dgxy3cr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 01:32:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55C1WA77014395
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 01:32:10 GMT
-Received: from [127.0.1.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 11 Jun
- 2025 18:32:08 -0700
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-Date: Thu, 12 Jun 2025 09:31:52 +0800
-Subject: [PATCH ath-current 4/4] wifi: ath12k: don't wait when there is no
- vdev started
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJAampAh"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742caef5896so486040b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749692271; x=1750297071; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=acl3HM/gy65MT7QW59o4rGkPJzPE8ycfLTpRSNc4cWU=;
+        b=oJAampAhEhpA5cLdKflyLUxnNCqwBAg8wUsGafqBw8d+YGc1yhVYqM6FyrLl7bLTOJ
+         VyEQEtnZaDYwsuGtYqegu9ln278lZUhJqeTE+jNhjouFSKht7RcxtaTEZo3v084MtRi9
+         SNp/ujiepiAhJ1QFsCgtPUPJcSo+eZdKDDqp41b0UNkWAtB4Wt5zgVItMYWeSkbFlYH1
+         aovtexlvaeiMQ8sz3XZYMWcOZyTdwtz/rJovSBEYIX5W19VeOcZgd1Z1/6wC3WAi7ZMt
+         jDAaTRek7jOC+HVs84xyqHHHqdWFU01t9o8kIXvpMsqdrq2dHKlZm9sxtf9uxahvx5tn
+         kxag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749692271; x=1750297071;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=acl3HM/gy65MT7QW59o4rGkPJzPE8ycfLTpRSNc4cWU=;
+        b=TjaBqal2k/VUUnW9Qj1pMtHHT4ot8jVAPTXDdeQwbxlpeNKRnVZn0XQU9BVidwo7bb
+         O/8TFwvFlG4MH/o9GrLYgHGC+XKuev8k3IZHhEQ0Lv44vH1xrtlnCNjMmPIumku9RaLi
+         dlWfB4fWAqho5BDPBURXIfNAMMYiKQF1wRg6q7Qeihysop+QY+ojbS4cP7XPr5htjCj7
+         3ehfB6xUDwCvQLsCcDvUbJ1pfjbYywJdz+M/l3+SYCoXxlSApfqzgYlwszLYpdUT3Nwn
+         OgtkZNTADrOxaDEV3D3xsAgQAh9mqMdYFpCoKwyyM7iDVXETXldMnsVzDJi/+uSH6BhA
+         N7tw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKanLJDvu1ZPpMg1m9QmGfn1zB4g1v4fKoKxcdqQgtEk0Z/wav/4/lnXoI98i5tYyaT/ugW73BWmYdyCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPMu04ywZL24H9OUURKvLZQNijeZyScihEfOvH3QXJJsQ2I0t2
+	WnB8k6XXSDB4nxqhswSscI9Uev+L+H/UEWfiL3kYgOhTks6Miejt+zZhFMFt5E87Aek=
+X-Gm-Gg: ASbGnculajDLxsIdAvKWq+NHnz5TBav3x2ozkaI8//ONNH13JpTj+BlJ7VX9aKXP/FO
+	5icAdE52IYLXAi422i3VYo2cz+TcTlzA7FvQkJjuOZJA7PHF9GRR4qi1d5Qr0k/4EBjB6l5EeAn
+	TNTzECFIqCi9EgznWXegiCSptDghPHv2DvavST0Sp5eMDNzliO7QoP5CG09WVjF6kQ9I74Q116s
+	8gXqojEmaa7F2liOT0wP+rAwOPARdkAUAOOezPnIEhfsXlbbOxK7MdeFGIm2CC7E0BSdL1AO7dO
+	GW8OWVi8EzQlAPho6pGsnzKwXxmVxDU2VSIUerPgzL2X4ueOEbVQgZZUGJTiX9k=
+X-Google-Smtp-Source: AGHT+IGQb69oSvUbCWxUQ9pS4E1eHVQjsTTq/cBES45AIlrmrVW+OEfUjBX2qBwDqZa2fbH9zp5fXA==
+X-Received: by 2002:a05:6300:6b0d:b0:21f:97f3:d4c2 with SMTP id adf61e73a8af0-21f97f3d6f9mr1549747637.16.1749692271459;
+        Wed, 11 Jun 2025 18:37:51 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd611e4dbsm261228a12.12.2025.06.11.18.37.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 18:37:50 -0700 (PDT)
+Date: Thu, 12 Jun 2025 07:07:46 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-pm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: Convert `/// SAFETY` lines to `# Safety`
+ sections
+Message-ID: <20250612013746.psicbrobklub6xvy@vireshk-i7>
+References: <4823a58093c6dfa20df62b5c18da613621b9716e.1749554599.git.viresh.kumar@linaro.org>
+ <CANiq72mP7tGzZM_f2gRSVcBw5a5Y7vMM3eOSvuAOK=yJeEmFBg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250612-ath12k-fw-fixes-v1-4-12f594f3b857@quicinc.com>
-References: <20250612-ath12k-fw-fixes-v1-0-12f594f3b857@quicinc.com>
-In-Reply-To: <20250612-ath12k-fw-fixes-v1-0-12f594f3b857@quicinc.com>
-To: Jeff Johnson <jjohnson@kernel.org>,
-        Ramya Gnanasekar
-	<ramya.gnanasekar@oss.qualcomm.com>,
-        Aditya Kumar Singh
-	<aditya.kumar.singh@oss.qualcomm.com>
-CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Baochen Qiang <quic_bqiang@quicinc.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: G3xTwWwCMzPHJg20oIZc-V-RCnUtMHky
-X-Authority-Analysis: v=2.4 cv=HMbDFptv c=1 sm=1 tr=0 ts=684a2e1b cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=zPWCEbQWmxFCawYx:21 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=COk6AnOGAAAA:8 a=LKi86vrQLEXAMEGEImwA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: G3xTwWwCMzPHJg20oIZc-V-RCnUtMHky
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDAxMCBTYWx0ZWRfX2zCZL5Opj+Zg
- PSAimMoy6ITBV+BnO1IzcNo3KGgWzaPkk0mB7hob5ALdCUC/sRGypoRWFLeRvh6+3XKetXJRHdG
- 5MGiI5Mh5d2gf9tEf5Tv5GzFnhiQSoCrwEN4W3InItpZLBK6GAK7TRT6fN0/LEVnp2hB1szSgVJ
- cVOy/vWtG+A1nVRiVpmWqyr1ffrZ0P3nW+5662EpQKh8HTlt2LurOi1Am0VtD2PNNaENi1bpQCa
- TX/3eSps1ANsib0NGB1qRScmkDIVDHi3h3lkV3MgfUBqi24D4YRjpIYfdWK9MR55A8kscde+SNX
- uqElAGqMHr0QUD0TpfiC7ZxqPqbMcNvwe9MZKJHQ5bXvLOEaoVloX6uh7IW6tiC9WpDISiVO/Om
- B7zRs2uDholfwpFAqeXsNwLpN4ZnblsMzgfayyedj/VmGaL3PkBfITB4yHr276MmWtjUHbqi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_01,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxlogscore=999 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506120010
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72mP7tGzZM_f2gRSVcBw5a5Y7vMM3eOSvuAOK=yJeEmFBg@mail.gmail.com>
 
-For WMI_REQUEST_VDEV_STAT request, firmware might split response into
-multiple events dut to buffer limit, hence currently in
-ath12k_wmi_fw_stats_process() host waits until all events received. In
-case there is no vdev started, this results in that below condition
-would never get satisfied
+On 11-06-25, 13:46, Miguel Ojeda wrote:
+> On Tue, Jun 10, 2025 at 1:23 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > Replace `/// SAFETY` comments in doc comments with proper `# Safety`
+> > sections, as per rustdoc conventions.
+> >
+> > Also mark the C FFI callbacks as `unsafe` to correctly reflect their
+> > safety requirements.
+> 
+> +1 I guess the Clippy lint triggered when writing the section, right?
 
-	((++ar->fw_stats.num_vdev_recvd) == total_vdevs_started)
-
-consequently the requestor would be blocked until time out.
-
-The same applies to WMI_REQUEST_BCN_STAT request as well due to:
-
-	((++ar->fw_stats.num_bcn_recvd) == ar->num_started_vdevs)
-
-Change to check the number of started vdev first: if it is zero, finish
-directly; if not, follow the old way.
-
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.1.c5-00284.1-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-Tested-on: QCN9274 hw2.0 WLAN.WBE.1.5-01651-QCAHKSWPL_SILICONZ-1
-
-Fixes: e367c924768b ("wifi: ath12k: Request vdev stats from firmware")
-Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
----
- drivers/net/wireless/ath/ath12k/wmi.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
-index dc6a2ad63663d988e495b115a1fc24a6408df600..bd04dd98f5f47a4a7d773d3b707a7e53b8f9b29e 100644
---- a/drivers/net/wireless/ath/ath12k/wmi.c
-+++ b/drivers/net/wireless/ath/ath12k/wmi.c
-@@ -7631,7 +7631,7 @@ static void ath12k_wmi_fw_stats_process(struct ath12k *ar,
- {
- 	struct ath12k_base *ab = ar->ab;
- 	struct ath12k_pdev *pdev;
--	bool is_end;
-+	bool is_end = true;
- 	size_t total_vdevs_started = 0;
- 	int i;
- 
-@@ -7651,7 +7651,9 @@ static void ath12k_wmi_fw_stats_process(struct ath12k *ar,
- 		}
- 		rcu_read_unlock();
- 
--		is_end = ((++ar->fw_stats.num_vdev_recvd) == total_vdevs_started);
-+		if (total_vdevs_started)
-+			is_end = ((++ar->fw_stats.num_vdev_recvd) ==
-+				  total_vdevs_started);
- 
- 		list_splice_tail_init(&stats->vdevs,
- 				      &ar->fw_stats.vdevs);
-@@ -7670,7 +7672,9 @@ static void ath12k_wmi_fw_stats_process(struct ath12k *ar,
- 		/* Mark end until we reached the count of all started VDEVs
- 		 * within the PDEV
- 		 */
--		is_end = ((++ar->fw_stats.num_bcn_recvd) == ar->num_started_vdevs);
-+		if (ar->num_started_vdevs)
-+			is_end = ((++ar->fw_stats.num_bcn_recvd) ==
-+				  ar->num_started_vdevs);
- 
- 		list_splice_tail_init(&stats->bcn,
- 				      &ar->fw_stats.bcn);
+Yes.
 
 -- 
-2.34.1
-
+viresh
