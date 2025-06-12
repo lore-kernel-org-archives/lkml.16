@@ -1,106 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E07267F78
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B93433A8;
+	Thu, 12 Jun 2025 14:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740334; cv=none; b=fTn+UVyIaIjthZeocBDkGQbCf+A446y7+F81BeC+/7Bk+n5aPfkxhqGEJQ0krpV6xlqm+CbCkZFibu4WaN2md75wOtDEGqKfHY/WEekUDeTA+y0YgyUc2sqduZgQqFlIg5V2+nGISaZ6Hre5RUsbUtiu7IiUx6Y6lRv7F7zkWTk=
+	t=1749740342; cv=none; b=OKwFaIDjWeDF0OWz7Qp+PqnJuQknEp6lYfYqbQXbUQWnwzg2XeAf/BN5OmqwkHe+qhyhjlt5vOIS2H4BTTF7jNnM0G63w9B6gjUy4Zwuept3gpW9NgkverP411LoKcQPWocJG0hcQ97+CVut5gGMsPhMdi6G1m0AY0vLK+hT/fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740334; c=relaxed/simple;
-	bh=LMZP3Iit/zo/pN1qqkBLVVhcxAYQH/mYPWspVWFPNvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oo73Mb3Al8Y38YhExfxZbhYY3OhsrD/QbyQnh4Igr/GeRZab8Ma93Bkbz88NigRiA7+yVMp4ls0OhwSW0SLj+VZFvqy8FcnXNGTLE/LjrY8shwCRwH/CgEcQqzQsZsO+Vwpu5jnDSWyb0J06JO3qocHclM+qP13TG0gCbIuvC+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+a9WpEd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+a9WpEd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2ACBC4CEEA;
-	Thu, 12 Jun 2025 14:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749740334;
-	bh=LMZP3Iit/zo/pN1qqkBLVVhcxAYQH/mYPWspVWFPNvY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=c+a9WpEdbRr0g1a4FBFoLtsmK3mSOqCYLNnCqrCLqLQdGlOyUHHHocSSZmWK4gxoH
-	 u+dgVq3sym19SZVpV6YtAQiRArAaFbLOzyAburzP5KTICGXzSfjAL4FLlJYh6JoP5/
-	 mRobzdJ5P+ImGv4T6m7ETJgNL7JsevwkT9b9NF1lrUTojSrS4oQdZmM0nZR9scdfQz
-	 SVS4xucHpWGBsH0hR7K3H1FyIGsjgZGWNYOHO6jXY1BWgU0u8ZnqwsgJkH6J/NVX/0
-	 tfu6pC2THdyGnHEFy3+Dywfgz5aJq0G1ZFDu/CQ4//3pgoykKfWjSI+HccAnWc6CQ9
-	 zwSyfxAEfF7OQ==
-Date: Thu, 12 Jun 2025 11:58:51 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Breno Leitao <leitao@debian.org>, Ian Rogers <irogers@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 1/1 fyi] perf beauty: Update copy of linux/socket.h with the
- kernel sources
-Message-ID: <aErrK24XLUILFH_P@x1>
+	s=arc-20240116; t=1749740342; c=relaxed/simple;
+	bh=YFbcPaCUWz0JNm0nMAA5mwjarfFNlAjkrukhxmWA728=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R0QmA1xuTqp6tOgjqEturY/O0aSk9tNS+NSrKpdQrHvohISecLUWkFmcev+UmKqv/v4We8KunRlpjB/bxmD29LzGeSc1s97bRXek3ZSEDcDmqt5+KxzgUzFSd0NMpyK9Xk7IFAkV3QuL+gYvDH08rXcHj+3OiSqWv+PJIzHdzBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87ecc02528aso278221241.2;
+        Thu, 12 Jun 2025 07:59:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749740339; x=1750345139;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j7urv+43q9m5//eN/fBrHnA2GxbG1zcAPVe31MZBFY0=;
+        b=c6Ey3fC9hMKr3W11NPKrXWFGN4XX8YN6isVY0F92hSCVmrIXxXcY21MzbO8fVQP/z7
+         4JuUeQo7a5tOgirhMvvhroIF4w1wPv1BrbIhsSLDNR7iswNTT7BUq5A0ctdBUFWPEL8d
+         U04I3RzIFTo2XH4mDDTbxGYaKmbgPuSkqW7n7q6yEvLOS3xMYTdtRALJXICZZS4+44st
+         gQY/41V67dm6uXXJ1ZRh1zjU9MmrbKyOgOGurITEZLEE2wco5SX1U2yYxnjYmQuf/ohS
+         VmyZUBPmPLD2vAIUCDrZwXChvG7ETpQUvG1B1Ab7VNJQShNB+fFKXeutbcKEDhFDKLVm
+         NTog==
+X-Forwarded-Encrypted: i=1; AJvYcCVDpXy/hevvmJcsUMjbIGpJpUDKMbpr4q0ZLopDNj1Pr4gOGPnt5f239X2MOFtqxiDneG9XXak5y/ko48ErWGKCA5M=@vger.kernel.org, AJvYcCVtVxVl1tOakQ6p2vo+K3sZ+GOhj1T15yRpphta0YGQLu8kVze8lW4zLNHpBB1U4Ygfd1YUrPSwGNA4@vger.kernel.org, AJvYcCXRd4sQc+A6TDsPNSISSt9k6pqvrxnBOeg/7pfyf0MxQvAjsN8NStq+nTldThf8JbeF4OyIbFNPT5EpNl90@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNLX+eha3Irbr6X/Lw88ScUY9AaDZxUdB+J25+0CNQUnw6yPLn
+	Ts/Ue94/oRLLpMUAgaBKgT3S3sNyiAaHXYzbNQ/kKDNTfY3an+LJaD0x/EniPQT9
+X-Gm-Gg: ASbGncsJtNEE+teuZl1JCHy3Uzl1PbuirD03MgA40Pgi6NdfLYrXvbiESl4+CQHE7pg
+	X5VqPaCgrv4xJy7KcByRLINu+FJiwwDATOCNE/duuEn27zAqVTkBudSJocafGH1KrAaWXMxYlsJ
+	FUiWLgWpSKqdATpBDzfO/pLw9jSczSGZSE7SasCANSqP7F3p9tcDVViHHLiznqfnNwFPYxqIXxz
+	iEX9ubrS+BOpPugZql3Hx528i9gQQgIIAQe6P0DXb+6iY23RdUuEJamJhinsoVQgBF0crFJ4AoS
+	B9pj3hwxnuB2a5K3uyrKzTSLUAAGdMya0YbZEsBNaQ8JwhfKq4/4eN9/o0bWSIoD8DZTeqixkdt
+	fngwdB+dkjBckGjjpXJ5z8ISP
+X-Google-Smtp-Source: AGHT+IErGQ4S796F23yq83bC6pdXSd7l+w0+o7liA23ok20eocm3/qzhDW5BLU3W0WGTYqS7iG0RFA==
+X-Received: by 2002:a05:6122:2024:b0:530:5996:63a2 with SMTP id 71dfb90a1353d-5312ce5ba11mr4520968e0c.7.1749740338992;
+        Thu, 12 Jun 2025 07:58:58 -0700 (PDT)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5312f6513b0sm315024e0c.26.2025.06.12.07.58.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 07:58:58 -0700 (PDT)
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e7ade16082so285256137.1;
+        Thu, 12 Jun 2025 07:58:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUrGJAvCGRxUDWoUiT/d1qlvxkzRYwebZYjzma6t6BKENAGAdHwPv0zPCAp9w+bDy7VgEnN3QB96h5l@vger.kernel.org, AJvYcCWijaO/jlTLDGvPlSLpYvLHZu0F3TFQriaPeJr+KEDo/OsGMRiA4dLc47AJU7z7MpoMXYFaAOBIZISOK59WqdJgtdc=@vger.kernel.org, AJvYcCWqtH9WhQNEmVdXq+VDEnWzGP2PxKYF2PJQrQZjkY8LE1qt/awYJbkfjNXM3tCSleGGbCA9kDkh+8rrO+B/@vger.kernel.org
+X-Received: by 2002:a05:6102:3046:b0:4e6:a338:a41d with SMTP id
+ ada2fe7eead31-4e7ccb9decbmr4392145137.11.1749740338109; Thu, 12 Jun 2025
+ 07:58:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250610-gpiochip-set-rv-soc-v1-0-1a0c36c9deed@linaro.org> <20250610-gpiochip-set-rv-soc-v1-2-1a0c36c9deed@linaro.org>
+In-Reply-To: <20250610-gpiochip-set-rv-soc-v1-2-1a0c36c9deed@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 16:58:46 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXt7W+XLoeQWqjNR8dBS3oCwFKBydVZueqtYg2uka0WxQ@mail.gmail.com>
+X-Gm-Features: AX0GCFuo1dTCSfHZ3zIJsOn9_JIHrUSOYlkHewmTg8yRd6ll7bXt9Le_Qc4mtYM
+Message-ID: <CAMuHMdXt7W+XLoeQWqjNR8dBS3oCwFKBydVZueqtYg2uka0WxQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] soc: renesas: pwc-rzv2m: use new GPIO line value
+ setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Qiang Zhao <qiang.zhao@nxp.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+On Tue, 10 Jun 2025 at 14:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Full explanation:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17.
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
+Gr{oetje,eeting}s,
 
-See further details at:
+                        Geert
 
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
-
-To pick the changes in:
-
-  b1e904999542ad67 ("net: pass const to msg_data_left()")
-
-That don't result in any changes in the tables generated from that
-header.
-
-This silences this perf build warning:
-
-  Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/socket.h
-
-Please see tools/include/uapi/README for details.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/trace/beauty/include/linux/socket.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
-index c3322eb3d6865d5e..3b262487ec06032b 100644
---- a/tools/perf/trace/beauty/include/linux/socket.h
-+++ b/tools/perf/trace/beauty/include/linux/socket.h
-@@ -168,7 +168,7 @@ static inline struct cmsghdr * cmsg_nxthdr (struct msghdr *__msg, struct cmsghdr
- 	return __cmsg_nxthdr(__msg->msg_control, __msg->msg_controllen, __cmsg);
- }
- 
--static inline size_t msg_data_left(struct msghdr *msg)
-+static inline size_t msg_data_left(const struct msghdr *msg)
- {
- 	return iov_iter_count(&msg->msg_iter);
- }
 -- 
-2.49.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
