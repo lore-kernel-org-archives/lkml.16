@@ -1,130 +1,117 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676381DED42;
-	Thu, 12 Jun 2025 03:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B45910957
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749698932; cv=none; b=Ly2WlX6TIOSSkayOwyYx1MNgAsBB9Zw2BCN/6NlthHLqZoJy2W6D+oX3GhDH+ysISwIBNp2GV2poUQpBYmswB1apsgDwZSoZWbHPa77pVj1rvMB2KhfAybAOHkxW8TQRpQlwtznwJlwR41W0dVqCCjfZW2wa5y/a4Bb22aU1wb8=
+	t=1749698987; cv=none; b=d2IIkrOcgfYwQ9RjYaoC7S7u4FxbvN8HblBPz75ZYmV+hk+yR56bjPD1qFbhIgp5//6NeU8J87e8rdGZPMU9wPSyjJAr3i6jngDR4MSO/RLgJS1nwYNwrTjKZuho2Va1d3KVFqqpQBTTb+BKA90+FbJovngUtIfkymOvZXxLBOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749698932; c=relaxed/simple;
-	bh=HBghfBJYWUhZWbDde60jhzZBBosP3QHIXZ8TKLYqHpQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=u1pxfX6nF21orzA6cUkA6ztdsIjcebuIGLZNvSgyNamEOgX50OVgj8YfK3zxBVbbAW2/vsRQfZIEKXnPL7BxWcD0KgoJBdA0iaRVGbf3AgsGrsbYqTIwfjZ3wx5GolP7Xa6YYxrNymnCYHunFeekUjc9mPre24sR/idjLVVn3Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jnSEJMY+; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749698987; c=relaxed/simple;
+	bh=KQgaKueJ8SmL0GquEvj6xboQpRgNJFsrZHkCTWpTp9k=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=paa5EeV/hSyK26ccDNE01aCPMAZ3uqRJ7cv0craAGZX2iOK71NUR/rNxY745ncaJczM2RwFsrfBHOYo4qbZA7AYk3+zDPi74XD50e+msYbSkrNsvnJGBBud4BGAKxHJTEGH4kvS76ppxzRpwV39piEuUaaeFJz4JQI/Lh/RX/HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixxiEf70; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnSEJMY+"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553a4f3ae42so374786e87.3;
-        Wed, 11 Jun 2025 20:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749698928; x=1750303728; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=py2x/3nEfcl/m+IfkfLCFYgC9n67Yc5sv7N0ha3Enew=;
-        b=jnSEJMY+UYZIj2k5+VRdpuCy7IxcqUKFPxs4fmDYHNDXMFkcSBGHCmF291uUXW4dGm
-         f75kPOsJL7ys5g8QLDZh/CnU9y1Gah1mD1TwTJ4ocdxvkNoGi9/PL2y9CjvMRoAcHpp9
-         3Z6gDaeGQMlRwY6vCV0PAxvX45IMjUIa9jeB5lBFH+z6Kevvb/VA+2QvAr5SLWkBPHuP
-         2BrcW1e2NHYCaHSrrKUMnbNAIL98qx28m6yJg09meWTX1Blz0Bw2qbFnWBMNDe4RpjUS
-         1mIFki+UMxDC28CGxIZrWdr2q8m7KW8ZvRSpCvv9Ox517uLPhOSI0hR0B4EdiPZ+IgeZ
-         6/Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749698928; x=1750303728;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=py2x/3nEfcl/m+IfkfLCFYgC9n67Yc5sv7N0ha3Enew=;
-        b=ZHI25SlpzfTZm4811iGSzjO0+5WOvGHNnI4t+WQNDh3mV2DjNby108nNOkS8S1rZDD
-         gPiJRfyRYieo/ZcWFxsOVUhXibCo2GaZF6PbP2ukgQTkZIHvyRuy3QMlwrjiydskugk+
-         Zl2107351C0mKE3dCL1kBO3PvZFJbkbgt/C8IoUZMPGUwvKs6Mmt17+iafFCgieciapE
-         qMCrRKUhQxXLLBlDRbGZiMhZgzZ3F2CU0Og5Tn/+lPNVrs+eijTILExCdbyktc7zjtHg
-         3jhGfschj0hxGaPjT0bu2hyRn45Z4lrKa5Kx6B8lEnEtn6H5VLrqjRQT/grbxsbz/Iw8
-         3u/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUGRcPQhFDnUGM5+KMmiFDqNxgOC7SotxGQp4rA6ExyHQpYZvwAgdNqVse5nX4XKmCHYFXFmAHAYsneGfg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwumWVYVFRx4++0HGLc1PgClynn2ovlwsYpEeU5KqewmGQ/hlT
-	hIbFzxszQSQtn+wb/IA1SlfhjpA2Phyd0YL2Dpy1cGKJ1WYDiHbvXje+
-X-Gm-Gg: ASbGncu8M0EqQk/SYJ3LnklShwDk3k+mUzRZbAns3HAizBUaRikXHYA56WBshe5gOc3
-	83NOwhwZRhgn/N26ElPMC9EclOIEKWdWwEh6meD8scNfFQchHRQnlBCXjfHR6Fpe/OFbYekbGGj
-	EiFFGTU9iJjZfygBXDnvvMvRdsZl+9hHH1vSNj6DID3eS8e2HK2nbwFd6f61j4rqBoo8yJwoF0c
-	yB3Ri0bEtV7MnQ9GpdceN8Kda+IE+CINZYcY4PSDbJz1Z6X7s26tE2cs/TRM7c8adaRwfEZFqmq
-	6Hw2JV4AdE6GjgWMOE7D1+AG+QVPdyAtHdg+M6JNgU0u2UTZl1OWeCobjFUD2fCZ/BKOFUBC
-X-Google-Smtp-Source: AGHT+IFzDApZL1pHjb5MwmdwMyKHvI7xFwnWpTu5M5Pu8keW8CYw7rmotHQw4lDjGUz6wII2O1nwJA==
-X-Received: by 2002:a05:6512:1047:b0:553:25b2:357d with SMTP id 2adb3069b0e04-5539c269200mr1758603e87.52.1749698927857;
-        Wed, 11 Jun 2025 20:28:47 -0700 (PDT)
-Received: from localhost ([62.89.208.175])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553a7003ee4sm87044e87.123.2025.06.11.20.28.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 20:28:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixxiEf70"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 726B4C4CEEB;
+	Thu, 12 Jun 2025 03:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749698986;
+	bh=KQgaKueJ8SmL0GquEvj6xboQpRgNJFsrZHkCTWpTp9k=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ixxiEf70uRv01WItso+c7o/nLY9PQPuISDzE3o9AtzXysgAUOa99S4bzIDdMGLvx1
+	 l9M5apUZ0gKN3U7+wmMg1MTDemHHa9qOAUSaQdnJTzfXMOh7OwvusgGIJD4kjcaaYn
+	 Ck2hStZnba7MQ4f5EFUK22WVE45yYmmFDIL6Bf5aTWna5s3dPRj73o8vDYbfOfWXOV
+	 UshP9osJA/npc1jJGrSXN6dd4J1ytF2QKHINViI/DRM77elJlkSD3k1SfPmvsCUh1n
+	 t2yrota3Hio3BFL3bmotcxWnw48J/YtNdRaV+h801ZRxgOURdmjIE9ntCabtDIcjua
+	 oWAjg0fePTwVg==
+Message-ID: <4cb508de-3af3-4796-ac74-2c082a578588@kernel.org>
+Date: Wed, 11 Jun 2025 20:29:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Vineet Gupta <vgupta@kernel.org>
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: arcml <linux-snps-arc@lists.infradead.org>,
+ lkml <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+ Yu-Chun Lin <eleanor15x@gmail.com>, Thomas Huth <thuth@redhat.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Subject: [GIT PULL] ARC updates for 6.16
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 08:28:21 +0500
-Message-Id: <DAK8HUY0VT5Y.1YRMH2LOHDY8X@gmail.com>
-Subject: Re: [PATCH 21/28] iio: light: veml6030: use = { } instead of
- memset()
-Cc: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-mediatek@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
- <linux-stm32@st-md-mailman.stormreply.com>
-To: "David Lechner" <dlechner@baylibre.com>, "Michael Hennerich"
- <michael.hennerich@analog.com>, "Lars-Peter Clausen" <lars@metafoo.de>,
- "Jonathan Cameron" <jic23@kernel.org>, =?utf-8?q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, "Andy Shevchenko" <andy@kernel.org>, "Matthias
- Brugger" <matthias.bgg@gmail.com>, "AngeloGioacchino Del Regno"
- <angelogioacchino.delregno@collabora.com>, "Heiko Stuebner"
- <heiko@sntech.de>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Francesco Dolcini"
- <francesco@dolcini.it>, =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
- <jpaulo.silvagoncalves@gmail.com>, =?utf-8?q?Leonard_G=C3=B6hrs?=
- <l.goehrs@pengutronix.de>, <kernel@pengutronix.de>, "Oleksij Rempel"
- <o.rempel@pengutronix.de>, "Roan van Dijk" <roan@protonic.nl>, "Tomasz
- Duszynski" <tomasz.duszynski@octakon.com>, "Jacopo Mondi"
- <jacopo@jmondi.org>, "Jean-Baptiste Maneyrol"
- <jean-baptiste.maneyrol@tdk.com>, "Mudit Sharma"
- <muditsharma.info@gmail.com>, =?utf-8?q?Ond=C5=99ej_Jirman?= <megi@xff.cz>,
- "Andreas Klinger" <ak@it-klinger.de>, "Petre Rodan"
- <petre.rodan@subdimension.ro>
-From: "Javier Carrasco" <javier.carrasco.cruz@gmail.com>
-X-Mailer: aerc 0.20.1-4-g02324e9d9cab
-References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com> <20250611-iio-zero-init-stack-with-instead-of-memset-v1-21-ebb2d0a24302@baylibre.com>
-In-Reply-To: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-21-ebb2d0a24302@baylibre.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu Jun 12, 2025 at 3:39 AM +05, David Lechner wrote:
-> Use { } instead of memset() to zero-initialize stack memory to simplify
-> the code.
->
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  drivers/iio/light/veml6030.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/iio/light/veml6030.c b/drivers/iio/light/veml6030.c
-> index 473a9c3e32a3a53f373595a5113b47e795f5366c..0945f146bedbda79511e70415=
-8122acaac5e60c1 100644
-> --- a/drivers/iio/light/veml6030.c
-> +++ b/drivers/iio/light/veml6030.c
-> @@ -892,9 +892,7 @@ static irqreturn_t veml6030_trigger_handler(int irq, =
-void *p)
->  	struct {
->  		u16 chans[2];
->  		aligned_s64 timestamp;
-> -	} scan;
-> -
-> -	memset(&scan, 0, sizeof(scan));
-> +	} scan =3D { };
-> =20
->  	iio_for_each_active_channel(iio, ch) {
->  		ret =3D regmap_read(data->regmap, VEML6030_REG_DATA(ch),
+Hi Linus,
 
-Thank you for the patch, it looks cleaner and simpler :) I trust the
-sources you provided, but I tested it with real hardware just in case.
+Some fixes for ARC.
+Please Pull.
 
-Tested-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Reviewed-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Thx,
+-Vineet
+------------------>
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc.git/ tags/arc-6.16-rc1
+
+for you to fetch changes up to 179e949719fe81219a3e23f1e716ac2d02eea845:
+
+  ARC: Replace __ASSEMBLY__ with __ASSEMBLER__ in the non-uapi headers
+(2025-06-09 09:18:12 -0700)
+
+----------------------------------------------------------------
+ARC fixes for 6.16
+
+ - arch_atomic64_cmpxchg relaxed variant [Jason]
+
+ - use of inbuilt swap in stack unwinder  [Yu-Chun Lin]
+
+ - use of __ASSEMBLER__ in kernel headers [Thomas Huth]
+
+----------------------------------------------------------------
+Jason Gunthorpe (1):
+      ARC: atomics: Implement arch_atomic64_cmpxchg using _relaxed
+
+Thomas Huth (2):
+      ARC: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
+      ARC: Replace __ASSEMBLY__ with __ASSEMBLER__ in the non-uapi headers
+
+Yu-Chun Lin (1):
+      ARC: unwind: Use built-in sort swap to reduce code size and improve
+performance
+
+ arch/arc/include/asm/arcregs.h            |  2 +-
+ arch/arc/include/asm/atomic.h             |  4 ++--
+ arch/arc/include/asm/atomic64-arcv2.h     | 15 +++++----------
+ arch/arc/include/asm/bitops.h             |  4 ++--
+ arch/arc/include/asm/bug.h                |  4 ++--
+ arch/arc/include/asm/cache.h              |  4 ++--
+ arch/arc/include/asm/current.h            |  4 ++--
+ arch/arc/include/asm/dsp-impl.h           |  2 +-
+ arch/arc/include/asm/dsp.h                |  4 ++--
+ arch/arc/include/asm/dwarf.h              |  4 ++--
+ arch/arc/include/asm/entry.h              |  4 ++--
+ arch/arc/include/asm/irqflags-arcv2.h     |  4 ++--
+ arch/arc/include/asm/irqflags-compact.h   |  4 ++--
+ arch/arc/include/asm/jump_label.h         |  4 ++--
+ arch/arc/include/asm/linkage.h            |  6 +++---
+ arch/arc/include/asm/mmu-arcv2.h          |  4 ++--
+ arch/arc/include/asm/mmu.h                |  2 +-
+ arch/arc/include/asm/page.h               |  4 ++--
+ arch/arc/include/asm/pgtable-bits-arcv2.h |  4 ++--
+ arch/arc/include/asm/pgtable-levels.h     |  4 ++--
+ arch/arc/include/asm/pgtable.h            |  4 ++--
+ arch/arc/include/asm/processor.h          |  4 ++--
+ arch/arc/include/asm/ptrace.h             |  4 ++--
+ arch/arc/include/asm/switch_to.h          |  2 +-
+ arch/arc/include/asm/thread_info.h        |  4 ++--
+ arch/arc/include/uapi/asm/ptrace.h        |  4 ++--
+ arch/arc/kernel/unwind.c                  | 11 +----------
+ 27 files changed, 53 insertions(+), 67 deletions(-)
