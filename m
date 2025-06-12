@@ -1,99 +1,136 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29E6A55;
-	Thu, 12 Jun 2025 12:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CAE286A9;
+	Thu, 12 Jun 2025 12:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749732401; cv=none; b=IZSwGtDnd3KJsL3d2vXR+pNJx21+vX0EMOR4TPf5t2qb22eMaQ6ryY+bpDOuxSHqpHMnOXOty/QYQ1O69WHVQVOMv0xSYqrbb3X1g+RGpjXvZ9vU+M2A5XtLDCeMEHZAD9IYtdJ6YxgZGyNgjD7edct15Er0aexfGjrJSDJ4GeE=
+	t=1749732412; cv=none; b=aSjn9yrvuWSN0spWwECHG+BlacarKxyDlFL1Hvr/zmQl5XhHTfWmNb8Jb+FJIW5TOnkIGCoQykPTlcjU7icqO+UKwqrCCJ3C1w8iLLZtJvDteKoIEgjEFB1YwHNWdDLiVl9n3DIgAlp0e2mOb8hpXaTbtZU0DKysv7bcEPJwZPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749732401; c=relaxed/simple;
-	bh=UEHGNT8OkyV40JRRhSs1RS3iCq1KdL1KzjJCQb2gnEU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dmFfRguUgeHcNn5/Zs3KM7KaUZePXJlAcIRh81Z810uQhCzrd14kQa7SCUQ0TJ+jlum79Pw+r5h/aKFKfqOGlV8ZqJ+Ds56bDBW4OA+a4pJk2vK0YzbgAZJExNe+ruKOz9c9sN4yUaCaNkGpK+Vs9RNQW6WVfaaJ9IQr/l7UAVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e79dde8511so221495137.0;
-        Thu, 12 Jun 2025 05:46:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749732398; x=1750337198;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8vSAoUstgikUUqDKzXknlBDKU/sYkHZcvI32J0wZveY=;
-        b=uL9+BhKrb7Pjq1gwja1AP+Rkr/iE8ZmbrnZDnOO9srM3cGGgPaJliCw4L22Ddhq+4I
-         FDleCRVWoa8M2NJTktfPRGvKlO73Q50lz9Iwq/fv1qn5PYkrTkeLSnHEtwHb7lh8iuv/
-         PwFJahVCN6uFdVx2w8JT7xRfjh4vv+84A9lrAZfDEPNyJAnXaE/X5ZVe0TchnaWITl7E
-         FhGjmalyem8WYtezoPMlD0xRxf6fCjWmco7wl0BiQVkHrb/b4GBe2wUefdC5ioEtFMew
-         Eq/dz+u9GTs5MpBJ3yUh7uDrfeycadBTUutK3wrqkpHLFhBEhwNuTqsyOBn4NsID/KTF
-         oOZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUltaUdmULy3tE2rjDDSCHBPwFqngTqZhFw/KOjRnK1VsDbaATmCFnBJttEg7LLr3Wys5/6xvWmhLPodSy@vger.kernel.org, AJvYcCVxoUtd5WuS1PHLkbDGa/DR7VvVD65sC0cOODcCOs0knJ6EXp40i5oSuBZta9J9N1tUeAkNHp4lhSYo@vger.kernel.org, AJvYcCW7abg7JZeof7dRJEZXT4S0gU9LjKs6244WxRzHt6Hmukt0rPcbQYLQ1asVfRn+owGe6iipXSDvO4NDARoYmQUqBYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpT3plPgrCa3aqmKJKtPykMeJD2KWu3EjVOozTuPQ0SnCBO9Q1
-	AXRgz2oH3bit1NJ1sbWh2TxXg6RbuF3nrJce+WWrnm97X7EjU2ipTYxMDNjJyvMU
-X-Gm-Gg: ASbGnctSLV+OzQkvYyddkWacaM3R4rU1g70qefDQChvjtmVpfOxo3so68Jn+90m3p+W
-	P4jbGCk4iEVRsMooyst84y7DZXRwlf6mnqk8s+eIGotRJf8RLHo5ssCYPrXFUtzhIFv2GCdBEPF
-	eKu9QRQmwGRZkK+TgCIEcHzw6fPpIeZZb97tfXAP33jmCfcLqI5tBg8+h9ob4ukDNyugdsf2/m3
-	vKr+UXlF0wSx1H/ohucW2rGAQvecl/9GBVp09TUFnyl8byVYbP+iNxw5gZaqqjGVpgE7zUQu+tj
-	RkySjcE0bwuvirc5sQa6B84wQcwTzEJI7AsMBI4ZaZ1lOzbT957kuae5Wzat9yLqVOcPGUFqEGx
-	AwFgSHraxp8fvNB/TLUunChJZ
-X-Google-Smtp-Source: AGHT+IExtcISPJB/Z1NN8upup1Nmo+XdMxTbnI7RpcquENYOUiQ9fcXAXS5sB20FuvJTq+okYxfq7g==
-X-Received: by 2002:a05:6102:c52:b0:4e5:a83a:3cee with SMTP id ada2fe7eead31-4e7ce96d112mr1956877137.14.1749732397875;
-        Thu, 12 Jun 2025 05:46:37 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7d0907f4dsm221602137.14.2025.06.12.05.46.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 05:46:37 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so212969241.1;
-        Thu, 12 Jun 2025 05:46:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUONZRMuXsMqi3iiLnjeP7ZlByABW5Hde0f0wT1Ti28Yw1z6JNWbf0WIjOBD642pndjpmJ38eVvUNMeowUl@vger.kernel.org, AJvYcCWDEk3ckl+n+hkgNQmh/2uM481QyjXay5TsvKnkWrNRf13/E2tIeoUvRIRV+SEAKwSgaZ+A43guzrGNPVROiCLTZqo=@vger.kernel.org, AJvYcCWTZ6UScguQQjBux+9wo7wDVRurijx7Jp7e+pjN38HmqwNKNB/wscNc+ZzlUijT8LIUJqDxhPty+4iY@vger.kernel.org
-X-Received: by 2002:a05:6102:441e:b0:4da:fc9d:f00 with SMTP id
- ada2fe7eead31-4e7ce96d107mr2142848137.13.1749732397116; Thu, 12 Jun 2025
- 05:46:37 -0700 (PDT)
+	s=arc-20240116; t=1749732412; c=relaxed/simple;
+	bh=2ZQbCbtmHM4QbReq9nM0qKRZOiMuSdWdfPDKCGox5cE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ao5jNj6ojDYm5pHHvXusqxy57Ocsr6jaqsg2i1JoxU1VHgTcO7RaIiiIW9Rx8Wo0pMerCYPE8EpMQeQBd3ov8Xi/9WZfgRK6eKDdvzXRy551eXpYupK2NtsoYPG6YQ4Ev66cryRrMvZZbuYeQd6IHaBMikvMVXXAkzyszPDY2vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 60581432A3;
+	Thu, 12 Jun 2025 12:46:39 +0000 (UTC)
+Message-ID: <df439eb4-4dbd-4f0f-bfd2-27c6b1534f39@ghiti.fr>
+Date: Thu, 12 Jun 2025 14:46:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528140453.181851-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250528140453.181851-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250528140453.181851-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Jun 2025 14:46:25 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWeXc1zqOgwRPjJ8RLL_oVFUtEAz5Ka_XssBBatXtEtmw@mail.gmail.com>
-X-Gm-Features: AX0GCFs-ouPmndvanqwNIxMC9hDtu7_aRuCPeAypWbiKcZT-yN-JH5KflfL3yXM
-Message-ID: <CAMuHMdWeXc1zqOgwRPjJ8RLL_oVFUtEAz5Ka_XssBBatXtEtmw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r9a09g056: Add USB2.0 support
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Broken 32-bit riscv debug build with ZSTD and FTRACE
+To: Marco Bonelli <marco@mebeim.net>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "terrelln@fb.com" <terrelln@fb.com>,
+ "rostedt@goodmis.org" <rostedt@goodmis.org>,
+ "mhiramat@kernel.org" <mhiramat@kernel.org>,
+ "mark.rutland@arm.com" <mark.rutland@arm.com>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+ "palmer@dabbelt.com" <palmer@dabbelt.com>,
+ "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+References: <960240908.630790.1748641210849@privateemail.com>
+ <1552795452.650306.1748692371190@privateemail.com>
+ <c239ee1b-f201-4e7b-80f8-03a7fb02b666@ghiti.fr>
+ <1338988468.1011577.1749045125350@privateemail.com>
+ <191074362.1248877.1749238947947@privateemail.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <191074362.1248877.1749238947947@privateemail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduhedutdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepjeeiuedujeeikeevuedtgeeuhfekudeludegveehffefjedugeegudffgfeluefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmehfudgvsgemfhgulegrmegrugduugemiehfhegsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmehfudgvsgemfhgulegrmegrugduugemiehfhegspdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmehfudgvsgemfhgulegrmegrugduugemiehfhegsngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehmrghrtghosehmvggsvghimhdrnhgvthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhop
+ ehtvghrrhgvlhhlnhesfhgsrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtoheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhm
+X-GND-Sasl: alex@ghiti.fr
 
-On Wed, 28 May 2025 at 16:05, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi Marco,
+
+On 6/6/25 21:42, Marco Bonelli wrote:
+> I was able to also reproduce without ZSTD (i.e. both ZSTD_COMPRESS=n
+> and ZSTD_DECOMPRESS=n) like this:
 >
-> The Renesas RZ/V2N (R9A09G056) SoC features a single-channel USB2.0
-> interface with host and peripheral (function) support.
+> 	export ARCH=riscv CROSS_COMPILE=riscv32-linux-
+> 	make distclean
+> 	make defconfig
+> 	make 32-bit.config
+> 	./scripts/config \
+> 		-e FTRACE \
+> 		-e CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
+> 		-d RD_ZSTD \
+> 		-d SECURITY_APPARMOR_INTROSPECT_POLICY \
+> 		-d BTRFS_FS
+> 	make olddefconfig
+> 	make -j vmlinux
 >
-> Add the ECHI, OHCI, USB2.0 PHY and reset control nodes for USB2.0
-> channel in R9A09G056 SoC DTSI.
+> Did another bisect run between v6.14 and v6.15 with the above commands
+> in a bash script and got:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 	494e7fe591bf834d57c6607cdc26ab8873708aa7 Merge tag 'bpf_res_spin_lock' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next
+>
+> This leaves me more puzzled than before honestly. Not sure whether it is
+> a real bug or a problem on my end at this point? The fact that I can repro
+> in a Docker makes me think of the former, but the fact that I was able to
+> bisect it down to two different commits depending on ZSTD vs no ZSTD is
+> weird.
+>
+> Alex (or anyone else really): are you able to reproduce with my Dockerfile
+> or config I provided in my last mail by any chance?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.17.
+I'm able to reproduce your issue with your Dockerfile and locally too 
+now using your last instructions, with the rv32 toolchain you provided 
+and my regular rv64 toolchain (13.1.0).
 
-Gr{oetje,eeting}s,
+So, that's weird, let's take the following failure:
 
-                        Geert
+ERROR: modpost: vmlinux: local symbol 'riscv_cached_mvendorid' was exported
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+When attaching with gdb, I get this:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Breakpoint 2, check_export_symbol (sym=0x7fffcfc5aca8, 
+secname=0x7ffff7b7e3aa ".debug_str", faddr=72, elf=0x7fffffffdec0, 
+mod=0x55555556b2a0) at ../scripts/mod/modpost.c:1087
+1087            error("%s: local symbol '%s' was exported\n", mod->name,
+1: mod->name = 0x55555556b334 "vmlinux"
+2: label_name = 0x7fffdfcd965f "__export_symbol_riscv_cached_mvendorid"
+(gdb) p/x sym->st_info
+$1 = 0x0
+(gdb) p/x *sym
+$2 = {st_name = 0x321ded, st_value = 0x3d9111, st_size = 0x0, st_info = 
+0x0,
+   st_other = 0x0, st_shndx = 0xb6}
+
+where st_info == 0 == STB_LOCAL.
+
+On a working rv64 build with the same configs, I get:
+
+Breakpoint 1, check_export_symbol (sym=0x7fffc56d94a8, 
+secname=0x7ffff7ae9e54 ".text", faddr=120, elf=0x7fffffffded0, 
+mod=0x55555556b2a0) at ../scripts/mod/modpost.c:1085
+1085        if (ELF_ST_BIND(sym->st_info) != STB_GLOBAL &&
+(gdb) p/x *sym
+$1 = {st_name = 0xe6aa, st_info = 0x12, st_other = 0x0, st_shndx = 0x2,
+   st_value = 0x11ba, st_size = 0x2c}
+
+The difference is that the symbol is not in the same section.
+
+I'm still looking into it, just wanted to let you know that I can 
+reproduce and hoping someone who knows could jump in :)
+
+Thanks,
+
+Alex
+
+
+>
+> --
+> Marco Bonelli
