@@ -1,139 +1,152 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0B122B5B8
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE4723A99F;
+	Thu, 12 Jun 2025 11:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749727509; cv=none; b=ReSyyKQiX9+a8Rbl0nOhnHyQrxWcy9MwzCbUEHGkaX7fYArlCrHX9c5TrR+IsCarZHFH32bXB27so5PH8QaavWjs0Qa8GplcwHfuKfgNsCY4UPLLIsqjsJSp8XLLJRFtLilPjWc9DNyXWlTidvCkSVV6fXdCozEJqWSQjoEZckQ=
+	t=1749727522; cv=none; b=tRyiDzPXQ7ws8A74qsaoct1IGbGLJbUsivmyjKWLQSA0ixcLCPEXWjSPnojO1+kM1QJCUkqIAya8J472c6cMr3dCQ2nUfngZDoRSSZXRqHgid+eFryeOAh8sYuDom/JujMkwB1iJbuaTYpuw8LZqZRoAM3UU3RzQamzLJq+Dchs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749727509; c=relaxed/simple;
-	bh=RbS4ZKDnvE31XgDmp4nfObFBJ2jz3h0yh4h4K+Mw0kE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=afP+ufLRYzFOFUuV9lCUZknM2r6UYUa/q4r/p/MAcAI0Sr9SxUJ/E3wEykP0wr0dsQfTunrrSHiMreNeSfIaNtaN4CVU/6/6hY16wF4Hf3JuGmeQpEt+rbUcs6TpBEx0BV/kpHe/v4UCfX4GEp3ZIw5tyTbfR0yw+HeCjCwVj74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fBQDkjG9; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749727522; c=relaxed/simple;
+	bh=5VZRSU7JzGQqlG5ttPLxdMstrifHZf9JUKXSkh/CuJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cb7G4caIVMPM6/YPq2VTA73Jg0Kjp4zB7IpBJU9E0agBkoBR4WfMWjxNXIdqnfqz8JdbhoU3kW6Q/rc6h6mdPM6Mvcs8aSNTz+dfpXjFPg3DjBAMiR9ppYH54nFAgSt6oYIIo+aLbWwZNbNFf0zKCWgVNIJY4rUYaBvRRhb15+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ntI1wtiH; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fBQDkjG9"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-606b6dbe316so1772241a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:25:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749727505; x=1750332305; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=pIj8IHtKqXDoSV7RqqEU+hPFyfW0yTCMwK0/QeKPMsc=;
-        b=fBQDkjG9e+vG1QD2TehiZFaYs3gNXPfL/7qi46ZYvyfZNStsBdNyiPFb9n5kf+x8yG
-         h4nEyZULBwCALvFqikPXP+gYYb63uRg1iIb3h0pHI0O8CIDKDkJL8IKLG/CyGOCLrhgL
-         P2C/5t8214sgaMZXTfiHMMIguiFGDnzITnQLYOOLQ9tF8IBOR7sASSVzV/4MeZrhetlq
-         M9jYwJyG1Ej9a+ybutnOKGHYR0EkGUvZL1SoBmOKLJXvsLQdZEuIy7HI46AzWDzmZC1l
-         pz7+F8DRa970MLZn9l5H+QOFEwgnxYWABd9Q8zYvaQzRDSZ+zjxrv24a+mXn55hIfZUB
-         iRLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749727505; x=1750332305;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pIj8IHtKqXDoSV7RqqEU+hPFyfW0yTCMwK0/QeKPMsc=;
-        b=Yfy70gB49/dwQ8k1YbkAUlPD8/wJ7ge9fg5QKqkYimoY918gltJdIhbLK6hWJM686I
-         nmnYEildBgW5Ze+7uWHmufww84VOXlAhwg2A44cwTOsCjHqmeG+LCKR4UQyr0d+TBkkG
-         gWylR4LFHMdn8cXZzkVecrS1JyIv8d853C8OM4jx9Jq1lt+qKD2aq4g/M4nvmc4gAbRq
-         yRsw4hRrRsZG3KXDxpvCi28VmTCgqF8Fc4qMdhIZ2dgKPYRSWVR3xv3v2G82/VtSwBJY
-         HhcDSJIuBNTAp0TpAugFxIeEBjUx5FoGIBGgc7XOno44LMgXvfjOply64K0+YxKorRZ2
-         xrwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbL6agSd8wc5ldRnY7v85hTM3HkMycZQOBFJVVTT6uLMoU1/Cy4y/mJJg1WDJ1A1lZz5nx2XKEuE5LnHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziT+gOmlVxe+kxf+4YJCk7CMDD7WvBsqdZcg1qd9dmiLjhvv+f
-	/I8mi+1VH0qMX4NGraed6NdhjQvZ/dE0g6zGMwASnQAxtTyy9z/+MCY2mvifhGoA86U=
-X-Gm-Gg: ASbGnctiMwHtqBPX8H0vcx9mPT6BrDulfXM1s+SvV4WIGIChu6lw/IvhSQwagM38KvP
-	CEBx/ZNAIhrJapXlrIj/suy3gW9rQXSUDsW4AxS7njjMx/aV+byayoDUcbP4idq/ZasGzB1c0bq
-	dSQqyQV2W7T+T5fOyaw7gJrtvH30ELOr6PqsEINdYFfZ4H0bL+BAn3PlMmyuEmelvD8DdXBHQWG
-	cl7yztY36ihHf7eR5pLUJxAzzrSZyUZTJnMAwzmroqiipTRsKCrN+I0kGja6KoYKmtf6Tvi9zfs
-	u0GsLP3EaKjrTGhJC1jCgj4dlvavXRDJjJH4oJxoDOzlLIGP0srltJlI9mq7KyAt14WIz3W9TPX
-	RyKRumIPYP+Tf
-X-Google-Smtp-Source: AGHT+IF+vAVMBvtfci95n6Tv1oY41jgX0c/sjmQXnpnK+od2hyac12ir4pt5adwc3OXI4vX8N7E9Ig==
-X-Received: by 2002:a05:6402:2792:b0:607:20d0:4e99 with SMTP id 4fb4d7f45d1cf-60846b1fe4bmr5326317a12.21.1749727505368;
-        Thu, 12 Jun 2025 04:25:05 -0700 (PDT)
-Received: from [192.168.0.20] (nborisov.ddns.nbis.net. [109.121.142.22])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6086b22ab35sm1034244a12.60.2025.06.12.04.25.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 04:25:05 -0700 (PDT)
-Message-ID: <37aaaff2-2519-43b3-b388-eb0185e03c41@suse.com>
-Date: Thu, 12 Jun 2025 14:25:04 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ntI1wtiH"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CAA74e012275;
+	Thu, 12 Jun 2025 11:24:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=2AMC/bEjzv39eZGGnud64gi+zqY2Gy
+	6AQYpnVFQJ9NI=; b=ntI1wtiHn/hqxY+baL8YNU65U85XzX7YVO5tHLbxJGGqXh
+	2FK+Pmne7Iy+kz7fF6RIUTdTO40fJivDQkwesidYjpzrHNkuQu7TtZjtMSwnykAD
+	6tThwNvs735Yv2e+GHHZCX2fhqHddMGYRyOUdG0K7t5XFEoILBUafVp6K1BjsPWQ
+	b0lVDO3WhRp69dDsxbLkXfTnlwfzFLgPDLrcXdxeeQvlxGvgmYiEMtTnWks3Ih3y
+	kzCcOA5QrM2n48GsbCwCNnOjofjG6JDCgbPMmJmCAo/lGpGcmTfOxAtgJ1qEgNZj
+	klzn/ykODUW35LYBo6J1A7aD/NX/qauivvSvHSjA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474cxjjewp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 11:24:52 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55CBOpBR005609;
+	Thu, 12 Jun 2025 11:24:51 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474cxjjewn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 11:24:51 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55C9TMCs022352;
+	Thu, 12 Jun 2025 11:24:50 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750504k9w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 11:24:50 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55CBOkgj25494242
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Jun 2025 11:24:46 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D0E720040;
+	Thu, 12 Jun 2025 11:24:46 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 70FCF2004B;
+	Thu, 12 Jun 2025 11:24:45 +0000 (GMT)
+Received: from osiris (unknown [9.87.144.171])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 12 Jun 2025 11:24:45 +0000 (GMT)
+Date: Thu, 12 Jun 2025 13:24:44 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Hao Ge <hao.ge@linux.dev>, Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Matt Turner <mattst88@gmail.com>, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Kent Overstreet <kent.overstreet@linux.dev>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-s390@vger.kernel.org, Hao Ge <gehao@kylinos.cn>
+Subject: Re: [PATCH 5/5] mm/alloc_tag: add the CONFIG_ARCH_NEEDS_WEAK_PER_CPU
+ macro when statically defining the percpu variable _shared_alloc_tag
+Message-ID: <20250612112444.10868E66-hca@linux.ibm.com>
+References: <cover.1749715979.git.gehao@kylinos.cn>
+ <adcd63180c9492361d929019c60ffa942255988a.1749715979.git.gehao@kylinos.cn>
+ <aEqWjSSLB3TPt9CH@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] KVM: x86: Deduplicate MSR interception enabling and
- disabling
-To: Chao Gao <chao.gao@intel.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: seanjc@google.com, pbonzini@redhat.com, dapeng1.mi@linux.intel.com
-References: <20250612081947.94081-1-chao.gao@intel.com>
- <20250612081947.94081-2-chao.gao@intel.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- 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
-In-Reply-To: <20250612081947.94081-2-chao.gao@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEqWjSSLB3TPt9CH@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Sv26n7mf3EWJevs8xBu8ADqXhqE1AM8t
+X-Proofpoint-GUID: CogFJVGLtjbrl2bCisizEvHCcJ_c4YH5
+X-Authority-Analysis: v=2.4 cv=fZWty1QF c=1 sm=1 tr=0 ts=684ab904 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=1XWaLZrsAAAA:8 a=uybNw-qwnAclyCFN39wA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA4NiBTYWx0ZWRfXzbs0KW3AiFNP hCFHSWNqOurrf3COjJlIlankl5U4ZnRZHhog94FLrN37KGhTrq8EhfTAhJNXuw3JeBWQmA2Uxee bbvmRBnsQa4Rt0jIdYxDOQWED70MMnvDBaNmNE7vAKAhA4UOWFZYRF87Zab/IFDqGmQxsrZbZfK
+ hU354BsC3OcmSAxGpxBNjwGPS/O2isOcDIOT3fo/TVI5rqnFCEz/FSdJDPT3rQdSMzF48FiP2Oa ChUJDM8sLnH/cNbZKwSbddQre0obvu9do2nnfvjZvI/8rj77f3D1H1jIjx0iVgBOBobBOTtaEE/ JlD9q/FEG8mjmEMmGRwlG7+1dHQbwQULSDCuj3ypfA1NtVmztc4+44lpVH5kT96RV0i5DnJxed8
+ 4onDv6HrjNpMeBJt5SK2NtAN8ZQ72DDetR9Ol1oD052pZJBvA9JaumbZ+QbVRPx86gXc2x6Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 spamscore=0 bulkscore=0 phishscore=0 suspectscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506120086
 
-
-
-On 6/12/25 11:19, Chao Gao wrote:
-> Extract a common function from MSR interception disabling logic and create
-> disabling and enabling functions based on it. This removes most of the
-> duplicated code for MSR interception disabling/enabling.
+On Thu, Jun 12, 2025 at 11:57:49AM +0300, Mike Rapoport wrote:
+> On Thu, Jun 12, 2025 at 04:27:30PM +0800, Hao Ge wrote:
+> > From: Hao Ge <gehao@kylinos.cn>
+> > 
+> > Recently discovered this entry while checking kallsyms on ARM64:
+> > ffff800083e509c0 D _shared_alloc_tag
+> > 
+> > If CONFIG_ARCH_NEEDS_WEAK_PER_CPU is not defined(it is only defined for
+> > s390 and alpha architectures),there's no need to statically define
+> > the percpu variable _shared_alloc_tag. As the number of CPUs
+> > increases,the wasted memory will grow correspondingly.
+> > 
+> > Enclose the definition of _shared_alloc_tag within the
+> > CONFIG_ARCH_NEEDS_WEAK_PER_CPU condition.
+> > 
+> > Suggested-by: Suren Baghdasaryan <surenb@google.com>
+> > Signed-off-by: Hao Ge <gehao@kylinos.cn>
+> > ---
+> >  lib/alloc_tag.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+> > index c7f602fa7b23..14fd66f26e42 100644
+> > --- a/lib/alloc_tag.c
+> > +++ b/lib/alloc_tag.c
+> > @@ -24,8 +24,10 @@ static bool mem_profiling_support;
+> >  
+> >  static struct codetag_type *alloc_tag_cttype;
+> >  
+> > +#ifdef CONFIG_ARCH_NEEDS_WEAK_PER_CPU
 > 
-> No functional change intended.
-> 
-> Signed-off-by: Chao Gao <chao.gao@intel.com>
+> It should be enough to add #ifdef ARCH_NEEDS_WEAK_PER_CPU here instead of
+> all the churn.
 
-I believe similar change is already part of Sean's series on MSR 
-intercept overhaul.
+That won't work since ARCH_NEEDS_WEAK_PER_CPU is only defined if MODULE is
+also defined, which is not the case for core kernel code like lib/alloc_tag.c.
+
+As a side note: I'm wondering if s390 still needs ARCH_NEEDS_WEAK_PER_CPU due
+to all the compiler option changes we had recently. But that's a different
+story and independent of this series.
