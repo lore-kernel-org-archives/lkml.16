@@ -1,274 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D66742A82;
-	Thu, 12 Jun 2025 08:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A376B42A82
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716267; cv=none; b=MxqnFRG+o2J8OaMaLlz76KmYdMaL7UCWbLkta1AelV+55ZOQnG3ipBy61RNd3tli/L99K1jX5nA7HKFTs1Rv1QE2vcffr2mpe8B/ipzFc196Nnwnw9P9C+ygURnJciweeIS9x/OHuh1OMD2i9g5W8Mkh1ZivP/PMI0/Bwt/ksRA=
+	t=1749716322; cv=none; b=dyPxhbT3cRZ0LF34XgJKD4XVmO7Vnq2VzIH73xVS9mlNV7m0EF2BCSAQe/78vNfTKtEVl8W1e7TnRf67n84OWhe0O2GzpW3PE6RkL3ZaPCNU+Yz4LycQfQDif2m9AnjV5sWhRoQeJspGXlyxv96EDY6tpamY0ny6iVSOY++hSkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716267; c=relaxed/simple;
-	bh=6LPy8p3Y+iUc3nCkDhjgrYNBYaIU9bUllH3YQM3T+tQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q+jQYe8dvVBnbj19fe4lqngGb9tkVk/hfiJkDJmqnAOxud+fQJ/BC5ejFFSwGuNCK1LKlE/e8Wx30LlEwG92hTgCYHWX877YEHTmRggMYEsDrPgTaK2YQdA/Gnedply/yIDEkHOnKO/iuqa/IansQbdc6gaXaDJFY8N4hHttgaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkOTsJzf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749716322; c=relaxed/simple;
+	bh=0qdrwiAj6O2C5b2rv9VYI4/lQoSv/F9LRl/c7Zh0O1E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TF7kXE2zo/zSIyQRRTS7pjjXxr9Ryah3WnSaxJDW6qlzjiO1CxaxBbU76b1sTSv2fUxUjXUqY5Bt4TP1/jaMjtjKylKcbtyPqj3sHIjpBa7v5m/0SbXVi51oV9ib9dHx8t37uAE94J6QjPX7KQMwNqMFqRsrjLEUjfxw21Xk8MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=vnyP5Wl3; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkOTsJzf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E380AC4CEEA;
-	Thu, 12 Jun 2025 08:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749716266;
-	bh=6LPy8p3Y+iUc3nCkDhjgrYNBYaIU9bUllH3YQM3T+tQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lkOTsJzfXKFHp1ZUHQMlqTHjTYpYDytqifyK0eUCzag8Hmc95o6S89pxFNIIupYGq
-	 cuep+kRQ/PUphaNcNjVWdy0wNmY8olLrnTceb879AKgqjB+2nX+suKuzF2/T3TK0p0
-	 7+kYs2j8K24Jl5S9Mc1WPDG98oVGiliAKQOJGKeQg+y7I8XU9AkKDzQ3fABhni/e4/
-	 o5ktc8gGOdO17/hmiXZnSsFWAmiHLzAmjPqS5cJX5gU6zrc51DWhlGWWCdHHdubOVZ
-	 3tR4Rl0YmrO2m86hsQAPBZjCKYSmrlatMIpRojxSmpxiOcLCy5jUfinoZEB8Vn/2Ml
-	 +JX51oE/0Kl9w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uPd83-006A0a-HM;
-	Thu, 12 Jun 2025 09:17:43 +0100
-Date: Thu, 12 Jun 2025 09:17:43 +0100
-Message-ID: <86wm9hcr14.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH V4 1/2] arm64/debug: Drop redundant DBG_MDSCR_* macros
-In-Reply-To: <20250612033547.480952-2-anshuman.khandual@arm.com>
-References: <20250612033547.480952-1-anshuman.khandual@arm.com>
-	<20250612033547.480952-2-anshuman.khandual@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="vnyP5Wl3"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 8CE53229C9;
+	Thu, 12 Jun 2025 10:18:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1749716319;
+	bh=GmMT2Gx7ebGWyVDXriDd7aNz+qSSEpHApUznco75Q1M=; h=From:To:Subject;
+	b=vnyP5Wl3dDjRBzubS5Zzkxtrb9SVNQvIk7S/1QMcnRD9f1j07zyobYbQTloW08qET
+	 KboSSVos/hiJ7e4bhTvWVHqHTYk3gC/RFsMhoECWgDUhzhNRU3IS+L7evlyARzOCmz
+	 6A3baPzMmnh9BIxex0lVAveoOUliL3JKITL99aofs4e1A1jqUwH3YOZ4gOZjpkSjgH
+	 7Fh4V1ibYDvIZsvifjpXNsM5jYIExtJEiPaV8eQ0V0BUvEJonldUXPXRXGxZENYRHg
+	 BsKlAlcXGhM/KBak/IUi4UmZFMpe1U7mWuzPO9unYsi/uBHa5heewMTuSmSJMNqANR
+	 Wb3EYclgml3mw==
+Date: Thu, 12 Jun 2025 10:18:34 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Anusha Srivatsa <asrivats@redhat.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Maxime Ripard <mripard@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: drm/panel/panel-simple v6.16-rc1 WARNING regression
+Message-ID: <20250612081834.GA248237@francesco-nb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com, oliver.upton@linux.dev, joey.gouly@arm.com, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, 12 Jun 2025 04:35:46 +0100,
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->=20
-> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
-> used in all debug monitor related call paths. But using generated sysreg
-> definitions causes build warnings because there is a mismatch between mds=
-cr
-> variable (u32) and GENMASK() based masks (long unsigned int). Convert all
-> variables handling MDSCR_EL1 register as u64 which also reflects its true
-> width as well.
->=20
-> --------------------------------------------------------------------------
-> arch/arm64/kernel/debug-monitors.c: In function =E2=80=98disable_debug_mo=
-nitors=E2=80=99:
-> arch/arm64/kernel/debug-monitors.c:108:13: warning: conversion from =E2=
-=80=98long
-> unsigned int=E2=80=99 to =E2=80=98u32=E2=80=99 {aka =E2=80=98unsigned int=
-=E2=80=99} changes value from
-> =E2=80=9818446744073709518847=E2=80=99 to =E2=80=984294934527=E2=80=99 [-=
-Woverflow]
->   108 |   disable =3D ~MDSCR_EL1_MDE;
->       |             ^
-> --------------------------------------------------------------------------
->=20
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/arm64/include/asm/assembler.h      |  4 ++--
->  arch/arm64/include/asm/debug-monitors.h |  6 ------
->  arch/arm64/kernel/debug-monitors.c      | 22 +++++++++++-----------
->  arch/arm64/kernel/entry-common.c        |  4 ++--
->  4 files changed, 15 insertions(+), 21 deletions(-)
->=20
-> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/=
-assembler.h
-> index ad63457a05c5..f229d96616e5 100644
-> --- a/arch/arm64/include/asm/assembler.h
-> +++ b/arch/arm64/include/asm/assembler.h
-> @@ -53,7 +53,7 @@
->  	.macro	disable_step_tsk, flgs, tmp
->  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
->  	mrs	\tmp, mdscr_el1
-> -	bic	\tmp, \tmp, #DBG_MDSCR_SS
-> +	bic	\tmp, \tmp, #MDSCR_EL1_SS
->  	msr	mdscr_el1, \tmp
->  	isb	// Take effect before a subsequent clear of DAIF.D
->  9990:
-> @@ -63,7 +63,7 @@
->  	.macro	enable_step_tsk, flgs, tmp
->  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
->  	mrs	\tmp, mdscr_el1
-> -	orr	\tmp, \tmp, #DBG_MDSCR_SS
-> +	orr	\tmp, \tmp, #MDSCR_EL1_SS
->  	msr	mdscr_el1, \tmp
->  9990:
->  	.endm
-> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include=
-/asm/debug-monitors.h
-> index 8f6ba31b8658..1f37dd01482b 100644
-> --- a/arch/arm64/include/asm/debug-monitors.h
-> +++ b/arch/arm64/include/asm/debug-monitors.h
-> @@ -13,14 +13,8 @@
->  #include <asm/ptrace.h>
-> =20
->  /* Low-level stepping controls. */
-> -#define DBG_MDSCR_SS		(1 << 0)
->  #define DBG_SPSR_SS		(1 << 21)
-> =20
-> -/* MDSCR_EL1 enabling bits */
-> -#define DBG_MDSCR_KDE		(1 << 13)
-> -#define DBG_MDSCR_MDE		(1 << 15)
-> -#define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
-> -
->  #define	DBG_ESR_EVT(x)		(((x) >> 27) & 0x7)
-> =20
->  /* AArch64 */
-> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug=
--monitors.c
-> index 58f047de3e1c..08f1d02507cd 100644
-> --- a/arch/arm64/kernel/debug-monitors.c
-> +++ b/arch/arm64/kernel/debug-monitors.c
-> @@ -34,7 +34,7 @@ u8 debug_monitors_arch(void)
->  /*
->   * MDSCR access routines.
->   */
-> -static void mdscr_write(u32 mdscr)
-> +static void mdscr_write(u64 mdscr)
->  {
->  	unsigned long flags;
->  	flags =3D local_daif_save();
-> @@ -43,7 +43,7 @@ static void mdscr_write(u32 mdscr)
->  }
->  NOKPROBE_SYMBOL(mdscr_write);
-> =20
-> -static u32 mdscr_read(void)
-> +static u64 mdscr_read(void)
->  {
->  	return read_sysreg(mdscr_el1);
->  }
-> @@ -79,16 +79,16 @@ static DEFINE_PER_CPU(int, kde_ref_count);
-> =20
->  void enable_debug_monitors(enum dbg_active_el el)
->  {
-> -	u32 mdscr, enable =3D 0;
-> +	u64 mdscr, enable =3D 0;
-> =20
->  	WARN_ON(preemptible());
-> =20
->  	if (this_cpu_inc_return(mde_ref_count) =3D=3D 1)
-> -		enable =3D DBG_MDSCR_MDE;
-> +		enable =3D MDSCR_EL1_MDE;
-> =20
->  	if (el =3D=3D DBG_ACTIVE_EL1 &&
->  	    this_cpu_inc_return(kde_ref_count) =3D=3D 1)
-> -		enable |=3D DBG_MDSCR_KDE;
-> +		enable |=3D MDSCR_EL1_KDE;
-> =20
->  	if (enable && debug_enabled) {
->  		mdscr =3D mdscr_read();
-> @@ -100,16 +100,16 @@ NOKPROBE_SYMBOL(enable_debug_monitors);
-> =20
->  void disable_debug_monitors(enum dbg_active_el el)
->  {
-> -	u32 mdscr, disable =3D 0;
-> +	u64 mdscr, disable =3D 0;
-> =20
->  	WARN_ON(preemptible());
-> =20
->  	if (this_cpu_dec_return(mde_ref_count) =3D=3D 0)
-> -		disable =3D ~DBG_MDSCR_MDE;
-> +		disable =3D ~MDSCR_EL1_MDE;
-> =20
->  	if (el =3D=3D DBG_ACTIVE_EL1 &&
->  	    this_cpu_dec_return(kde_ref_count) =3D=3D 0)
-> -		disable &=3D ~DBG_MDSCR_KDE;
-> +		disable &=3D ~MDSCR_EL1_KDE;
-> =20
->  	if (disable) {
->  		mdscr =3D mdscr_read();
-> @@ -415,7 +415,7 @@ void kernel_enable_single_step(struct pt_regs *regs)
->  {
->  	WARN_ON(!irqs_disabled());
->  	set_regs_spsr_ss(regs);
-> -	mdscr_write(mdscr_read() | DBG_MDSCR_SS);
-> +	mdscr_write(mdscr_read() | MDSCR_EL1_SS);
->  	enable_debug_monitors(DBG_ACTIVE_EL1);
->  }
->  NOKPROBE_SYMBOL(kernel_enable_single_step);
-> @@ -423,7 +423,7 @@ NOKPROBE_SYMBOL(kernel_enable_single_step);
->  void kernel_disable_single_step(void)
->  {
->  	WARN_ON(!irqs_disabled());
-> -	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
-> +	mdscr_write(mdscr_read() & ~MDSCR_EL1_SS);
->  	disable_debug_monitors(DBG_ACTIVE_EL1);
->  }
->  NOKPROBE_SYMBOL(kernel_disable_single_step);
-> @@ -431,7 +431,7 @@ NOKPROBE_SYMBOL(kernel_disable_single_step);
->  int kernel_active_single_step(void)
->  {
->  	WARN_ON(!irqs_disabled());
-> -	return mdscr_read() & DBG_MDSCR_SS;
-> +	return mdscr_read() & MDSCR_EL1_SS;
->  }
->  NOKPROBE_SYMBOL(kernel_active_single_step);
-> =20
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-c=
-ommon.c
-> index 7c1970b341b8..171f93f2494b 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum_14=
-63225_wa);
-> =20
->  static void cortex_a76_erratum_1463225_svc_handler(void)
->  {
-> -	u32 reg, val;
-> +	u64 reg, val;
-> =20
->  	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
->  		return;
-> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(vo=
-id)
-> =20
->  	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
->  	reg =3D read_sysreg(mdscr_el1);
-> -	val =3D reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
-> +	val =3D reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
->  	write_sysreg(val, mdscr_el1);
->  	asm volatile("msr daifclr, #8");
->  	isb();
+Hello all,
 
-Whilst you're at it, please also change the open-coded constant in
-__cpu_setup to MDSCR_EL1_TDCC.
+Commit de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in place of devm_kzalloc()")
+from 6.16-rc1 introduced a regression with this warning during probe
+with panel dpi described in the DT.
 
-Thanks,
+A revert solves the issue.
 
-	M.
+The issue is that connector_type is set to DRM_MODE_CONNECTOR_DPI in
+panel_dpi_probe() that after that change is called after
+devm_drm_panel_alloc().
 
---=20
-Without deviation from the norm, progress is not possible.
+I am not sure if there are other implication for this change in the call
+ordering, apart the one that triggers this warning.
+
+
+[   12.089274] ------------[ cut here ]------------
+[   12.089303] WARNING: CPU: 0 PID: 96 at drivers/gpu/drm/bridge/panel.c:377 devm_drm_of_get_bridge+0xac/0xb8
+[   12.130808] Modules linked in: v4l2_jpeg pwm_imx27(+) imx_vdoa gpu_sched panel_simple imx6_media(C) imx_media_common
+(C) videobuf2_dma_contig pwm_bl gpio_keys v4l2_mem2mem fuse ipv6 autofs4
+[   12.147774] CPU: 0 UID: 0 PID: 96 Comm: kworker/u8:3 Tainted: G         C          6.16.0-rc1+ #1 PREEMPT
+[   12.157446] Tainted: [C]=CRAP
+[   12.160418] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[   12.166953] Workqueue: events_unbound deferred_probe_work_func
+[   12.172805] Call trace:
+[   12.172815]  unwind_backtrace from show_stack+0x10/0x14
+[   12.180598]  show_stack from dump_stack_lvl+0x68/0x74
+[   12.185674]  dump_stack_lvl from __warn+0x7c/0xe0
+[   12.190407]  __warn from warn_slowpath_fmt+0x1b8/0x1c0
+[   12.195567]  warn_slowpath_fmt from devm_drm_of_get_bridge+0xac/0xb8
+[   12.201949]  devm_drm_of_get_bridge from imx_pd_probe+0x58/0x164
+[   12.207976]  imx_pd_probe from platform_probe+0x5c/0xb0
+[   12.213220]  platform_probe from really_probe+0xd0/0x3a4
+[   12.218551]  really_probe from __driver_probe_device+0x8c/0x1d4
+[   12.224486]  __driver_probe_device from driver_probe_device+0x30/0xc0
+[   12.230942]  driver_probe_device from __device_attach_driver+0x98/0x10c
+[   12.237572]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
+[   12.243854]  bus_for_each_drv from __device_attach+0xa8/0x1c8
+[   12.249614]  __device_attach from bus_probe_device+0x88/0x8c
+[   12.255285]  bus_probe_device from deferred_probe_work_func+0x8c/0xcc
+[   12.261739]  deferred_probe_work_func from process_one_work+0x154/0x2dc
+[   12.268371]  process_one_work from worker_thread+0x250/0x3f0
+[   12.274043]  worker_thread from kthread+0x12c/0x24c
+[   12.278940]  kthread from ret_from_fork+0x14/0x28
+[   12.283660] Exception stack(0xd0be9fb0 to 0xd0be9ff8)
+[   12.288720] 9fa0:                                     00000000 00000000 00000000 00000000
+[   12.296906] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   12.305089] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   12.312050] ---[ end trace 0000000000000000 ]---
+
+#regzbot ^introduced: de04bb0089a96cc00d13b12cbf66a088befe3057
+
+Any advise?
+
+Francesco
+
