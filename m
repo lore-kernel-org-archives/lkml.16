@@ -1,125 +1,101 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FD623D284
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD29723C50F;
+	Thu, 12 Jun 2025 13:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735237; cv=none; b=t73NuUAU0hZB2jWRi1bO2U9SZk5N2lM7hvrceEFDFIqasosDRQTdvOv3IH4OpGl11VyWgw1oeYoGWqrVml6v5LhbN9VO3vhct/80MQYiM/RAbdXzyRtQ/phZcYSmoC91Y/rUeGYgpUwcCrAcuI978XU5jAP2u2siJyXoZWTE3/c=
+	t=1749735262; cv=none; b=YCgCCw3n2ZDQA1dJ05ctn5kW6guznSLbWbPflDFhoWQt8CTHS0MZ8pmpOxGk/+8s6ilRcL/k+tiHZioBza5PMmB7WOfGEBZre04t9AapJkmHSXmsrk55V64YuGUBRGK4CDVqUt3Dj+QurvTPZTljae6AJwuze12xB2qH/PeymMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735237; c=relaxed/simple;
-	bh=tLbPoPnRW0rdPQUBzg2TyznGxUv67v8X6d5+AGG7jj4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u8wBSjbUdo+RKnJeLMH/AX7f6mV7G+2kylyMwzxw85Q1UQhuMZ/yZK8p/I/UWapXBlnBgEwhL3EWTOksPy+tUTBmkaa4I2UdL3Tkc4YlFRit6p1m8FcCywo9ozd3+Gxf6SZkn83aTWIu9PuQ3hG2vOEuJn0cgClR9jep4aNjUR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TdvUCEwN; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TdvUCEwN"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so6219865e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749735234; x=1750340034; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lPUZPI4tBuk4J3QMbJJf2HlNXfqlGDxMUfNoYa/lU9E=;
-        b=TdvUCEwNsDfD3TdKqjBdovSYEPbSA6W5OhzWAaCCbAED+iGIwRU7JuzSZckRdSOeaO
-         YvgHgs/IkF5lOLeG0HJru5bbPQUxYAiwlSYUJWiuv4vrbTqHLWZSfy+Yvlm9k58skWuL
-         pi8TPb7ezFjQoqLbfYqj9VLOZbzif95DrvIrIwbrTtNtTCPt3KeQI9JIfTETkl1CFZ8i
-         n60Qvy+uL83sjsNj438i09I0wBbPO/jgzjBSGmR46AFu5iYM2w0AmwWc/KdKkAxHjDnB
-         B4+52pl5IRt/SIWhc7LogI0d0lSv8Nu0rkF7ayDZEuDVZGrH3FF16/ZBZ+NipwYDhnlO
-         pkuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749735234; x=1750340034;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lPUZPI4tBuk4J3QMbJJf2HlNXfqlGDxMUfNoYa/lU9E=;
-        b=elXFtDLV+819ibtlxWQIzjhmtKuw21/8qpnimoLZTk5ZHoSRBhEkBudY0nNCQcATrx
-         j6r/ghPNWJHGE8kX06uBrjMadfgnrNXxv1Oc/gKOoZxaWTgyWGGecOBXGyG5pg33DNmq
-         +hN0NO735GPEqa++B4zQy/Yh3dG8O4PJdEIJ2a3+/G4OBdr1kNoH3QOUb81dyhRyHrWQ
-         Ni4scdAuU/e+GKt8YHzB8TBU6B4v2XFSCMA+P7WGVmJdMj9h+I15nN0i7Nxm1St5eO1x
-         UfNZJs3JQcDIIf9TiQUaMJoywZSVn0eBj87H44T6YEpcNBMKJcrULjgCO6pUzzB/d9U/
-         S1AQ==
-X-Gm-Message-State: AOJu0YyZ6qEfNgrrJH9PGg54dZbDYuxQOuAtPgkybUd4tls30nyxF9vE
-	Ol4j0N8UxdgWSs1XbbnGiudu19Nm1WxN20OcDPY+Qmr2w2EDV4b7X779o6fr2EJPj0OCP9BjfWJ
-	C/jOjmyQ=
-X-Gm-Gg: ASbGnct0v1+6hDPOBeruVybtspSjft/BihYpYGak9YmOtcF96o8AhWxxZU5OQPQpE0n
-	5GYRjS1CgSauW3O/Des5XLj3W2xXbqkjeXSbO5Alqn+EGQb0FDLzUJbKLsiBjySBXDFbq3x0/dp
-	0OAlgrho6Ez33W5WTeM3x15d2Tg1IAnqYTvztoQaaUT4ZZEhrBtrdJRQg6RGlBCo4CFfdkpBY1c
-	fpczWc2s87j7DHISBjxy95RwFTZKaqJ0vitdHtIihXbhqjn98wlJD2iHVhCQUirNJbOrOhuK0KZ
-	BedvbhvXRPj/TXuVicpstiaYhyptIdCxGwBtYE51jCQNKKPgnoQ6z2IKrIYmc8uG7C+7CfeYR4Y
-	pF1U6TuNX
-X-Google-Smtp-Source: AGHT+IFep9JCYUbxVpiH9RuWO4OxYgUGckAndZmGihNIlnDposOd00Ys+i/hBLIJuF9SM7GWWtRuGg==
-X-Received: by 2002:a5d:64ed:0:b0:3a4:d0fe:42b2 with SMTP id ffacd0b85a97d-3a56130a211mr2245810f8f.19.1749735233575;
-        Thu, 12 Jun 2025 06:33:53 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c64esm21693285e9.7.2025.06.12.06.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 06:33:53 -0700 (PDT)
-From: Marco Crivellari <marco.crivellari@suse.com>
-To: linux-kernel@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v4 3/3] [Doc] Workqueue: add WQ_PERCPU
-Date: Thu, 12 Jun 2025 15:33:35 +0200
-Message-ID: <20250612133335.788593-4-marco.crivellari@suse.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250612133335.788593-1-marco.crivellari@suse.com>
-References: <20250612133335.788593-1-marco.crivellari@suse.com>
+	s=arc-20240116; t=1749735262; c=relaxed/simple;
+	bh=4nOwCOzoXhUV4HhV7lS40+s4CsIgC1yHr144wW5EtNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mELrkb/2Sn4nvUDijJb4FCr0R1g8CNPzo+a7J/um5v5WoDFDm9r2wnhGzlB6VIzR2UH0wao/oCm8YOtZQGnd5WoEb39RdRjbNzg2xnZPRPl17XCPX6PaTMVVGWXggoBR3Umd/IvckHphKaGA+65tdYxCnj+8X8+vQ9SHJgR5J+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id D3CD21D80A4;
+	Thu, 12 Jun 2025 13:34:11 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 5EA1A20024;
+	Thu, 12 Jun 2025 13:34:09 +0000 (UTC)
+Date: Thu, 12 Jun 2025 09:34:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Arve =?UTF-8?B?SGrDuG5uZXbDpWc=?="
+ <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen
+ <maco@android.com>, Joel Fernandes <joelagnelf@nvidia.com>, Christian
+ Brauner <brauner@kernel.org>, Carlos Llamas <cmllamas@google.com>, Suren
+ Baghdasaryan <surenb@google.com>
+Subject: [PATCH] binder: Remove unused binder lock events
+Message-ID: <20250612093408.3b7320fa@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ot9rj6czg8cze1crshkbh1qwzchi3dxw
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 5EA1A20024
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+MNXt9Axg3pIFCzE+kX+CehiHv8MZXeeY=
+X-HE-Tag: 1749735249-369024
+X-HE-Meta: U2FsdGVkX182ghxfYEu+xq8bdt4k9kvRIUjtUZhhIGS5hHr2ZSDSBhkRvW2pzKXgtTzkTRrSauJVb8PeZEFwaKMqFcu/njaj3idaP9x3zkryVavFRdDYzaAw6QS8Nto3Po2zA+0WxD5XDJ7jscxy5OERCXctQJAlMyqRSpW3lwtxmbKNOYGqxOfbcGCchKlGqAI8OXcqe26OevG5BGd4kHzoDmxyRUdZIkTAC1SRr3RVE8QrZU9hKQUfy68IuqHRoh7L/9dY4ZWAmV9XZjwaLisGh01uJ2OdGkWnsjvNo5nl1eV6s8imo/0FamDVZvexpBGe2RBghhAsus5MiOL/n98yNxTTsXk0o/LBB0LS7CRqS8n/NZpRqr3XNC+odY8g
 
-Workqueue documentation upgraded with the description
-of the new added flag, WQ_PERCPU.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Also the WQ_UNBOUND flag documentation has been integrated
+Trace events can take up to 5K each when they are defined, regardless if
+they are used or not. The binder lock events: binder_lock, binder_locked
+and binder_unlock are no longer used.
 
-Suggested-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+Remove them.
+
+Fixes: a60b890f607d ("binder: remove global binder lock")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- Documentation/core-api/workqueue.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Note, I will be adding code soon that will make unused events cause a warning.
 
-diff --git a/Documentation/core-api/workqueue.rst b/Documentation/core-api/workqueue.rst
-index e295835fc116..ae63a648a51b 100644
---- a/Documentation/core-api/workqueue.rst
-+++ b/Documentation/core-api/workqueue.rst
-@@ -183,6 +183,12 @@ resources, scheduled and executed.
-   BH work items cannot sleep. All other features such as delayed queueing,
-   flushing and canceling are supported.
+ drivers/android/binder_trace.h | 21 ---------------------
+ 1 file changed, 21 deletions(-)
+
+diff --git a/drivers/android/binder_trace.h b/drivers/android/binder_trace.h
+index 16de1b9e72f7..97a78e5623db 100644
+--- a/drivers/android/binder_trace.h
++++ b/drivers/android/binder_trace.h
+@@ -34,27 +34,6 @@ TRACE_EVENT(binder_ioctl,
+ 	TP_printk("cmd=0x%x arg=0x%lx", __entry->cmd, __entry->arg)
+ );
  
-+``WQ_PERCPU``
-+  Work items queued to a per-cpu wq are bound to that specific CPU.
-+  This flag it's the right choice when cpu locality is important.
-+
-+  This flag is the complement of ``WQ_UNBOUND``.
-+
- ``WQ_UNBOUND``
-   Work items queued to an unbound wq are served by the special
-   worker-pools which host workers which are not bound to any
-@@ -200,6 +206,10 @@ resources, scheduled and executed.
-   * Long running CPU intensive workloads which can be better
-     managed by the system scheduler.
- 
-+  **Note:** This flag will be removed in future and all the work
-+  items that dosen't need to be bound to a specific CPU, should not
-+  use this flags.
-+
- ``WQ_FREEZABLE``
-   A freezable wq participates in the freeze phase of the system
-   suspend operations.  Work items on the wq are drained and no
+-DECLARE_EVENT_CLASS(binder_lock_class,
+-	TP_PROTO(const char *tag),
+-	TP_ARGS(tag),
+-	TP_STRUCT__entry(
+-		__field(const char *, tag)
+-	),
+-	TP_fast_assign(
+-		__entry->tag = tag;
+-	),
+-	TP_printk("tag=%s", __entry->tag)
+-);
+-
+-#define DEFINE_BINDER_LOCK_EVENT(name)	\
+-DEFINE_EVENT(binder_lock_class, name,	\
+-	TP_PROTO(const char *func), \
+-	TP_ARGS(func))
+-
+-DEFINE_BINDER_LOCK_EVENT(binder_lock);
+-DEFINE_BINDER_LOCK_EVENT(binder_locked);
+-DEFINE_BINDER_LOCK_EVENT(binder_unlock);
+-
+ DECLARE_EVENT_CLASS(binder_function_return_class,
+ 	TP_PROTO(int ret),
+ 	TP_ARGS(ret),
 -- 
-2.49.0
+2.47.2
 
