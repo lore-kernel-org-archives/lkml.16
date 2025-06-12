@@ -1,190 +1,307 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4794123D280;
-	Thu, 12 Jun 2025 13:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C4823C8A1;
+	Thu, 12 Jun 2025 13:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749733970; cv=none; b=UXIDQILFYyxtawqSa0HJBul5qoEYORxRlK5c/+mhdQBtEo7vG0164GAjD3XRng4g/g+6fBTxmzI0Bg9H+jVELd1kNTX9UU52VSNGeqwwOnZRZUI5IqMO0++m+ZrCncR5iA1DkXDGUpTwIi3VAB64wcYsB1ye/1FDzZnfbrjL8CM=
+	t=1749734009; cv=none; b=n3D2b7l7gaE2/MgXujX6is4INRG9IYPabFkYhrdINZuiH7vU3llzIH1QLYWpBj7zYOEiYiO872qkyfFuBbOt+RWiW3YikKDZm1PZ0wYpAMG8ga0v4XSY9ERX1JbrMznA4pWhFMjoaI6FayaCOsnZ/7euSDfYPmMk8mKqNx93lwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749733970; c=relaxed/simple;
-	bh=7UPdY64JJ72+l5O3IsGp4X0va/EyqoWVab2O6wj1VUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Caa6w4WCXow7jcXEIcFpSAzcLvUmIo9a1AFLclsnVBLg7TzpURzHVUl+ucarF7J0dVHtUux5NE6pZzz5MOIMpFILgiWCmaMbT73ETj5Aay7vkyeAPDZ76WK/zGxAvZvHoUQx5UD7YL/tf2x/iCk9rYaMt+OwY4DkHM+Lzotr1to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdRPwH/O; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749734009; c=relaxed/simple;
+	bh=XafmKj4P+VcSpKv9cSterEeNyAZwTIOKbYV4Fj9ARfg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Qikv7JC2+TJcUEbSFXyT8aC06FNxDqSj71h/EiGrf72YydHTeZOd/m3Xy8GUfzA6GS5okmIjuoSp9V5C9v9vJAa8Or+450T7Zqqlbv/eaitAiq96R+gR4v8Vj9LORFSvQ52AirlVnPEwHPLVJmaltcXpn5uSwBd1s3ddzxPm3xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iFE+w3cY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0Zqmk/K4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdRPwH/O"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32ade3723adso9948661fa.0;
-        Thu, 12 Jun 2025 06:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749733966; x=1750338766; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lVnHHKEy1VyvVoQknUk2ch5LzvEGfZ30fQTnWrhXBr4=;
-        b=NdRPwH/OtDMt7luJiLanTXh/ZtyEnjD89TMaTsKgYq5X4zCMgGL1EvVyUCrk+aY3HM
-         KKw8MkntmjTD//21SSEI+HoX/z15RfjuImxs737xe+ss/hGyci1erj5xIsg5cBVyhikD
-         bigYrYCi+3tIy6gtpYmneH31n8d5zq2GBxs+sn90O5X3dSQMPEl7LzwJCLC1y3ouTcHw
-         d5glsYixPgkP5Gr4789OgAY8LiGOCK8FpC1ZN6C3ZSixV8phMWGSlDFedJQJ3HSrHCKR
-         n0aTH9icTU9aWEY/O/Qnrc6Z0al/ZT4V1O9I8e9mUTaXPnkHcJ7qokcP1jLPZDIwhoBA
-         un6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749733966; x=1750338766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lVnHHKEy1VyvVoQknUk2ch5LzvEGfZ30fQTnWrhXBr4=;
-        b=JHAYeSVhT/Ftg+5rewKWXoQIbBEi2XqbthKmhUnbT2hIiL4MbiFEwUIS60BY2qqZNj
-         xdORke9F2RBE4KwdbjlNqV3BLlxjvXHPvH2XDAkt2uWqWFzMRhgLVmoUNCZz5uJ5b0bD
-         1bNaWS5PI+NA42f5WHyUiGxOi77Vf/Jfxf4CSjZnPgUZhOxfBRhBeTkpddjai5ffsQXG
-         kj/VXUekkRlJmLvJQfG/LV1jGOqAWcb3U8YB983BmpEb4xwgeEFaBCAwPIJPZoo9hjVB
-         06oxFvaI2BmwSU8dCJ9T1U0tz7voxB3sdDvp6NJH/m+uaAI/ZBwzg5ueAVE/KFt4ep9L
-         u67A==
-X-Forwarded-Encrypted: i=1; AJvYcCX/1moh6PFmw+pEPGeO9E+YXwBf/t41jyMg/6dDoCIsIyIqcQ4jpQ0nULrn4mCINrDiF9vRI1OdbFfTh13K@vger.kernel.org, AJvYcCXGYCHQMti9D2zN3b5cKtXE0IBHzzsoGVKYrajdcOxLvdyCotxTKbyFYoSO3FvMoOAv51ttn7AvbZRF9QE//ug=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5j5N5MGQlp+WUs8ptYzKw4o7OAffyQBWSEjKT782Gnfuf5MAV
-	rwrbiF137YLLIMLrOFCNTouzuwtOJ5g7YqbUS9Go6zZpYLsx33fSZnraPb9ILF4rCqiXAHjCzd+
-	JNHNC8HQe2i0E0giVk8HLTfmJqUmA5Zc=
-X-Gm-Gg: ASbGncvAi3YyzqqOMWoDzdKIPpmfuI1By6qwF3XawjuMiiCox/Q7/JHGAa8HPoliAQ0
-	pDPPsaU/wSJQdztWOik1AHHF7vkssTsXHIazlVo8lo/ZHxXqdX2Jz6ByPxET5NmWP/djbPa72ex
-	69lDAiZKwEP+jywkB1SMnyo8tRwBXs+3/bmNXd/VHqLuD/9FB/h6bX
-X-Google-Smtp-Source: AGHT+IEH0CkXP4YrxtGc8WhKCJlTw/IBE6kuWlSDpVjQh43CjGs0xlQ7U17g3NKFfkHTcM8zVIQ3QV+CEytevymHcLM=
-X-Received: by 2002:a2e:be03:0:b0:32b:3879:ce7f with SMTP id
- 38308e7fff4ca-32b3879f2fbmr6342511fa.0.1749733965944; Thu, 12 Jun 2025
- 06:12:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iFE+w3cY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Zqmk/K4"
+Date: Thu, 12 Jun 2025 13:13:24 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749734005;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ti/p1hE4ZdfJfuF05vJr9LJk0sp0PsHRWOG/G/TObDk=;
+	b=iFE+w3cYk0oD9cgfgqaxL9Ncy316Gd3WmOlBrYTD6235cLrU29lCOLhx8xPqWBzyjdBjvw
+	An5JFJEKZ2QQBDGTYIZLuUPKHdjz/CgjHyIOebXl+Sj98R/sH7QteqAH3uwe6pJSjcotmz
+	rzkYaMQQWMdQutVF2gccyybzBepsPbh0IrVJXQMS0TIBW7el6Jv1F5JZRfFAhUacjhJPHb
+	ciJKw02ewX+ZrigCS0AgxyDzS1yEOcdr2QdS3/Y86N//avXG2YXPZ4Z8WliP00kb1pALhX
+	fh4+g31NZjP3lZXbJSKyPSL/UDiAWU9N6PRgPZum03u/fP2N66zXp1qeGaDiRw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749734005;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ti/p1hE4ZdfJfuF05vJr9LJk0sp0PsHRWOG/G/TObDk=;
+	b=0Zqmk/K4C+Cg04J+Cc0JiHTDAdvo1S3sdpflWSL+zvff9bxpShDsqGNNRxnn+TTVY304et
+	2zwNiEABzLNSaLBA==
+From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/drivers] irqchip: Use dev_fwnode()
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250611104348.192092-10-jirislaby@kernel.org>
+References: <20250611104348.192092-10-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4e1578fb-c81d-fe9c-1aa1-26b6016866eb@salutedevices.com>
-In-Reply-To: <4e1578fb-c81d-fe9c-1aa1-26b6016866eb@salutedevices.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 12 Jun 2025 09:12:33 -0400
-X-Gm-Features: AX0GCFtoF8kmEfxIWY2iK9V3IKYBfPHHYIWyXIo9X4fM-6SffgStTpz0HPSfNJ8
-Message-ID: <CABBYNZJPuZKifTNe5DMEaro6-4j+_7ExvKU5C6JgRZEwcbZBDw@mail.gmail.com>
-Subject: Re: [PATCH v1] Bluetooth: hci_sync: fix double free in 'hci_discovery_filter_clear()'
-To: Arseniy Krasnov <avkrasnov@salutedevices.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, oxffffaa@gmail.com, kernel@salutedevices.com, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174973400435.406.9598053691888029048.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Arseniy,
+The following commit has been merged into the irq/drivers branch of tip:
 
-On Wed, Jun 11, 2025 at 12:31=E2=80=AFPM Arseniy Krasnov
-<avkrasnov@salutedevices.com> wrote:
->
-> Function 'hci_discovery_filter_clear()' frees 'uuids' array and then
-> sets it to NULL. There is a tiny chance of the following race:
->
-> 'hci_cmd_sync_work()'
->
->  'update_passive_scan_sync()'
->
->    'hci_update_passive_scan_sync()'
->
->      'hci_discovery_filter_clear()'
->        kfree(uuids);
->
->        <-------------------------preempted-------------------------------=
-->
->                                            'start_service_discovery()'
->
->                                              'hci_discovery_filter_clear(=
-)'
->                                                kfree(uuids); // DOUBLE FR=
-EE
->
->        <-------------------------preempted-------------------------------=
-->
->
->       uuids =3D NULL;
->
-> To fix it let's add locking around call  'hci_update_passive_scan_sync()'=
- in
-> 'update_passive_scan_sync()'. Otherwise the following backtrace fires:
->
-> [ ] ------------[ cut here ]------------
-> [ ] kernel BUG at mm/slub.c:547!
-> [ ] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-> [ ] CPU: 3 UID: 0 PID: 246 Comm: bluetoothd Tainted: G O 6.12.19-sdkernel=
- #1
-> [ ] Tainted: [O]=3DOOT_MODULE
-> [ ] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
-> [ ] pc : __slab_free+0xf8/0x348
-> [ ] lr : __slab_free+0x48/0x348
-> ...
-> [ ] Call trace:
-> [ ]  __slab_free+0xf8/0x348
-> [ ]  kfree+0x164/0x27c
-> [ ]  start_service_discovery+0x1d0/0x2c0
-> [ ]  hci_sock_sendmsg+0x518/0x924
-> [ ]  __sock_sendmsg+0x54/0x60
-> [ ]  sock_write_iter+0x98/0xf8
-> [ ]  do_iter_readv_writev+0xe4/0x1c8
-> [ ]  vfs_writev+0x128/0x2b0
-> [ ]  do_writev+0xfc/0x118
-> [ ]  __arm64_sys_writev+0x20/0x2c
-> [ ]  invoke_syscall+0x68/0xf0
-> [ ]  el0_svc_common.constprop.0+0x40/0xe0
-> [ ]  do_el0_svc+0x1c/0x28
-> [ ]  el0_svc+0x30/0xd0
-> [ ]  el0t_64_sync_handler+0x100/0x12c
-> [ ]  el0t_64_sync+0x194/0x198
-> [ ] Code: 8b0002e6 eb17031f 54fffbe1 d503201f (d4210000)
-> [ ] ---[ end trace 0000000000000000 ]---
->
-> Cc: stable@vger.kernel.org
-> Fixes: ad383c2c65a5 ("Bluetooth: hci_sync: Enable advertising when LL pri=
-vacy is enabled")
-> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
-> ---
->  net/bluetooth/hci_sync.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-> index e56b1cbedab90..61a9922eb820d 100644
-> --- a/net/bluetooth/hci_sync.c
-> +++ b/net/bluetooth/hci_sync.c
-> @@ -3167,7 +3167,15 @@ int hci_update_scan(struct hci_dev *hdev)
->
->  static int update_passive_scan_sync(struct hci_dev *hdev, void *data)
->  {
-> -       return hci_update_passive_scan_sync(hdev);
-> +       int ret;
-> +
-> +       hci_dev_lock(hdev);
-> +
-> +       ret =3D hci_update_passive_scan_sync(hdev);
-> +
-> +       hci_dev_unlock(hdev);
-> +
-> +       return ret;
+Commit-ID:     93174c05dd2e9b02eb6b5c93dd9109087ae4ffcf
+Gitweb:        https://git.kernel.org/tip/93174c05dd2e9b02eb6b5c93dd9109087ae4ffcf
+Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
+AuthorDate:    Wed, 11 Jun 2025 12:43:38 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 12 Jun 2025 15:08:12 +02:00
 
-This deadlocks since it is a callback on hci_cmd_sync_work which shall
-never use hci_dev_lock while waiting for events processed by
-hci_event_packet which will attempt to do:
+irqchip: Use dev_fwnode()
 
-    hci_dev_lock(hdev);
-    kfree_skb(hdev->recv_event);
-    hdev->recv_event =3D skb_clone(skb, GFP_KERNEL);
-    hci_dev_unlock(hdev);
+irq_domain_create_simple() takes a fwnode as the first argument. It can be
+extracted from struct device using the dev_fwnode() helper instead of using
+of_node with of_fwnode_handle().
 
-This is why there are no test results because all tests seem to be failing =
-now:
+So use the dev_fwnode() helper.
 
-https://github.com/BluezTestBot/bluetooth-next/pull/2884
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250611104348.192092-10-jirislaby@kernel.org
 
->  }
->
->  int hci_update_passive_scan(struct hci_dev *hdev)
-> --
-> 2.30.1
->
+---
+ drivers/irqchip/irq-imgpdc.c              | 4 ++--
+ drivers/irqchip/irq-imx-irqsteer.c        | 4 ++--
+ drivers/irqchip/irq-keystone.c            | 4 ++--
+ drivers/irqchip/irq-mvebu-pic.c           | 2 +-
+ drivers/irqchip/irq-pruss-intc.c          | 2 +-
+ drivers/irqchip/irq-renesas-intc-irqpin.c | 6 ++----
+ drivers/irqchip/irq-renesas-irqc.c        | 2 +-
+ drivers/irqchip/irq-renesas-rza1.c        | 5 ++---
+ drivers/irqchip/irq-renesas-rzg2l.c       | 5 ++---
+ drivers/irqchip/irq-renesas-rzv2h.c       | 2 +-
+ drivers/irqchip/irq-stm32mp-exti.c        | 4 +---
+ drivers/irqchip/irq-ti-sci-inta.c         | 3 +--
+ drivers/irqchip/irq-ti-sci-intr.c         | 3 +--
+ drivers/irqchip/irq-ts4800.c              | 2 +-
+ 14 files changed, 20 insertions(+), 28 deletions(-)
 
-
---=20
-Luiz Augusto von Dentz
+diff --git a/drivers/irqchip/irq-imgpdc.c b/drivers/irqchip/irq-imgpdc.c
+index f0410d5..e9ef2f5 100644
+--- a/drivers/irqchip/irq-imgpdc.c
++++ b/drivers/irqchip/irq-imgpdc.c
+@@ -372,8 +372,8 @@ static int pdc_intc_probe(struct platform_device *pdev)
+ 	priv->syswake_irq = irq;
+ 
+ 	/* Set up an IRQ domain */
+-	priv->domain = irq_domain_create_linear(of_fwnode_handle(node), 16, &irq_generic_chip_ops,
+-					     priv);
++	priv->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev), 16, &irq_generic_chip_ops,
++						priv);
+ 	if (unlikely(!priv->domain)) {
+ 		dev_err(&pdev->dev, "cannot add IRQ domain\n");
+ 		return -ENOMEM;
+diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
+index 6dc9ac4..4682ce5 100644
+--- a/drivers/irqchip/irq-imx-irqsteer.c
++++ b/drivers/irqchip/irq-imx-irqsteer.c
+@@ -212,8 +212,8 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
+ 	/* steer all IRQs into configured channel */
+ 	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
+ 
+-	data->domain = irq_domain_create_linear(of_fwnode_handle(np), data->reg_num * 32,
+-					     &imx_irqsteer_domain_ops, data);
++	data->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev), data->reg_num * 32,
++						&imx_irqsteer_domain_ops, data);
+ 	if (!data->domain) {
+ 		dev_err(&pdev->dev, "failed to create IRQ domain\n");
+ 		ret = -ENOMEM;
+diff --git a/drivers/irqchip/irq-keystone.c b/drivers/irqchip/irq-keystone.c
+index c9e902b..922fff0 100644
+--- a/drivers/irqchip/irq-keystone.c
++++ b/drivers/irqchip/irq-keystone.c
+@@ -157,8 +157,8 @@ static int keystone_irq_probe(struct platform_device *pdev)
+ 	kirq->chip.irq_mask	= keystone_irq_setmask;
+ 	kirq->chip.irq_unmask	= keystone_irq_unmask;
+ 
+-	kirq->irqd = irq_domain_create_linear(of_fwnode_handle(np), KEYSTONE_N_IRQ,
+-					      &keystone_irq_ops, kirq);
++	kirq->irqd = irq_domain_create_linear(dev_fwnode(dev), KEYSTONE_N_IRQ, &keystone_irq_ops,
++					      kirq);
+ 	if (!kirq->irqd) {
+ 		dev_err(dev, "IRQ domain registration failed\n");
+ 		return -ENODEV;
+diff --git a/drivers/irqchip/irq-mvebu-pic.c b/drivers/irqchip/irq-mvebu-pic.c
+index 8db638a..cd8b734 100644
+--- a/drivers/irqchip/irq-mvebu-pic.c
++++ b/drivers/irqchip/irq-mvebu-pic.c
+@@ -150,7 +150,7 @@ static int mvebu_pic_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	pic->domain = irq_domain_create_linear(of_fwnode_handle(node), PIC_MAX_IRQS,
++	pic->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev), PIC_MAX_IRQS,
+ 					       &mvebu_pic_domain_ops, pic);
+ 	if (!pic->domain) {
+ 		dev_err(&pdev->dev, "Failed to allocate irq domain\n");
+diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
+index 87a5813..81078d5 100644
+--- a/drivers/irqchip/irq-pruss-intc.c
++++ b/drivers/irqchip/irq-pruss-intc.c
+@@ -555,7 +555,7 @@ static int pruss_intc_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&intc->lock);
+ 
+-	intc->domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node), max_system_events,
++	intc->domain = irq_domain_create_linear(dev_fwnode(dev), max_system_events,
+ 						&pruss_intc_irq_domain_ops, intc);
+ 	if (!intc->domain)
+ 		return -ENOMEM;
+diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
+index 0959ed4..117b74b 100644
+--- a/drivers/irqchip/irq-renesas-intc-irqpin.c
++++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+@@ -513,10 +513,8 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+ 	irq_chip->irq_set_wake = intc_irqpin_irq_set_wake;
+ 	irq_chip->flags	= IRQCHIP_MASK_ON_SUSPEND;
+ 
+-	p->irq_domain = irq_domain_create_simple(of_fwnode_handle(dev->of_node),
+-						 nirqs, 0,
+-						 &intc_irqpin_irq_domain_ops,
+-						 p);
++	p->irq_domain = irq_domain_create_simple(dev_fwnode(dev), nirqs, 0,
++						 &intc_irqpin_irq_domain_ops, p);
+ 	if (!p->irq_domain) {
+ 		ret = -ENXIO;
+ 		dev_err(dev, "cannot initialize irq domain\n");
+diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
+index 5c3196e..b46bbb6 100644
+--- a/drivers/irqchip/irq-renesas-irqc.c
++++ b/drivers/irqchip/irq-renesas-irqc.c
+@@ -168,7 +168,7 @@ static int irqc_probe(struct platform_device *pdev)
+ 
+ 	p->cpu_int_base = p->iomem + IRQC_INT_CPU_BASE(0); /* SYS-SPI */
+ 
+-	p->irq_domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node), p->number_of_irqs,
++	p->irq_domain = irq_domain_create_linear(dev_fwnode(dev), p->number_of_irqs,
+ 						 &irq_generic_chip_ops, p);
+ 	if (!p->irq_domain) {
+ 		ret = -ENXIO;
+diff --git a/drivers/irqchip/irq-renesas-rza1.c b/drivers/irqchip/irq-renesas-rza1.c
+index 0a9640b..a697eb5 100644
+--- a/drivers/irqchip/irq-renesas-rza1.c
++++ b/drivers/irqchip/irq-renesas-rza1.c
+@@ -231,9 +231,8 @@ static int rza1_irqc_probe(struct platform_device *pdev)
+ 	priv->chip.irq_set_type = rza1_irqc_set_type;
+ 	priv->chip.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE;
+ 
+-	priv->irq_domain = irq_domain_create_hierarchy(parent, 0, IRQC_NUM_IRQ,
+-						       of_fwnode_handle(np), &rza1_irqc_domain_ops,
+-						       priv);
++	priv->irq_domain = irq_domain_create_hierarchy(parent, 0, IRQC_NUM_IRQ, dev_fwnode(dev),
++						       &rza1_irqc_domain_ops, priv);
+ 	if (!priv->irq_domain) {
+ 		dev_err(dev, "cannot initialize irq domain\n");
+ 		ret = -ENOMEM;
+diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
+index 1e861bd..360d886 100644
+--- a/drivers/irqchip/irq-renesas-rzg2l.c
++++ b/drivers/irqchip/irq-renesas-rzg2l.c
+@@ -574,9 +574,8 @@ static int rzg2l_irqc_common_init(struct device_node *node, struct device_node *
+ 
+ 	raw_spin_lock_init(&rzg2l_irqc_data->lock);
+ 
+-	irq_domain = irq_domain_create_hierarchy(parent_domain, 0, IRQC_NUM_IRQ,
+-						 of_fwnode_handle(node), &rzg2l_irqc_domain_ops,
+-						 rzg2l_irqc_data);
++	irq_domain = irq_domain_create_hierarchy(parent_domain, 0, IRQC_NUM_IRQ, dev_fwnode(dev),
++						 &rzg2l_irqc_domain_ops, rzg2l_irqc_data);
+ 	if (!irq_domain) {
+ 		pm_runtime_put(dev);
+ 		return dev_err_probe(dev, -ENOMEM, "failed to add irq domain\n");
+diff --git a/drivers/irqchip/irq-renesas-rzv2h.c b/drivers/irqchip/irq-renesas-rzv2h.c
+index 69b32c1..57c5a3c 100644
+--- a/drivers/irqchip/irq-renesas-rzv2h.c
++++ b/drivers/irqchip/irq-renesas-rzv2h.c
+@@ -558,7 +558,7 @@ static int rzv2h_icu_init_common(struct device_node *node, struct device_node *p
+ 	raw_spin_lock_init(&rzv2h_icu_data->lock);
+ 
+ 	irq_domain = irq_domain_create_hierarchy(parent_domain, 0, ICU_NUM_IRQ,
+-						 of_fwnode_handle(node), &rzv2h_icu_domain_ops,
++						 dev_fwnode(&pdev->dev), &rzv2h_icu_domain_ops,
+ 						 rzv2h_icu_data);
+ 	if (!irq_domain) {
+ 		dev_err(&pdev->dev, "failed to add irq domain\n");
+diff --git a/drivers/irqchip/irq-stm32mp-exti.c b/drivers/irqchip/irq-stm32mp-exti.c
+index c6b4407..a24f4f1 100644
+--- a/drivers/irqchip/irq-stm32mp-exti.c
++++ b/drivers/irqchip/irq-stm32mp-exti.c
+@@ -683,9 +683,7 @@ static int stm32mp_exti_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	domain = irq_domain_create_hierarchy(parent_domain, 0, drv_data->bank_nr * IRQS_PER_BANK,
+-					     of_fwnode_handle(np), &stm32mp_exti_domain_ops,
+-					     host_data);
+-
++					     dev_fwnode(dev), &stm32mp_exti_domain_ops, host_data);
+ 	if (!domain) {
+ 		dev_err(dev, "Could not register exti domain\n");
+ 		return -ENOMEM;
+diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+index 7de5923..01963d3 100644
+--- a/drivers/irqchip/irq-ti-sci-inta.c
++++ b/drivers/irqchip/irq-ti-sci-inta.c
+@@ -701,8 +701,7 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	domain = irq_domain_create_linear(of_fwnode_handle(dev_of_node(dev)),
+-					  ti_sci_get_num_resources(inta->vint),
++	domain = irq_domain_create_linear(dev_fwnode(dev), ti_sci_get_num_resources(inta->vint),
+ 					  &ti_sci_inta_irq_domain_ops, inta);
+ 	if (!domain) {
+ 		dev_err(dev, "Failed to allocate IRQ domain\n");
+diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
+index 07fff5a..354613e 100644
+--- a/drivers/irqchip/irq-ti-sci-intr.c
++++ b/drivers/irqchip/irq-ti-sci-intr.c
+@@ -274,8 +274,7 @@ static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
+ 		return PTR_ERR(intr->out_irqs);
+ 	}
+ 
+-	domain = irq_domain_create_hierarchy(parent_domain, 0, 0,
+-					     of_fwnode_handle(dev_of_node(dev)),
++	domain = irq_domain_create_hierarchy(parent_domain, 0, 0, dev_fwnode(dev),
+ 					     &ti_sci_intr_irq_domain_ops, intr);
+ 	if (!domain) {
+ 		dev_err(dev, "Failed to allocate IRQ domain\n");
+diff --git a/drivers/irqchip/irq-ts4800.c b/drivers/irqchip/irq-ts4800.c
+index e625f4f..1e236d5 100644
+--- a/drivers/irqchip/irq-ts4800.c
++++ b/drivers/irqchip/irq-ts4800.c
+@@ -125,7 +125,7 @@ static int ts4800_ic_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	data->domain = irq_domain_create_linear(of_fwnode_handle(node), 8, &ts4800_ic_ops, data);
++	data->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev), 8, &ts4800_ic_ops, data);
+ 	if (!data->domain) {
+ 		dev_err(&pdev->dev, "cannot add IRQ domain\n");
+ 		return -ENOMEM;
