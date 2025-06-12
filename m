@@ -1,117 +1,199 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C39421FF5B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EA920C485
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749730115; cv=none; b=RO6wwoOyt70GQzqn6VKiMong5GpYZ2RkTnP6kDzCEDUEtAS1Zd11SEj42v8wwR5SOeWcvHxbIfeGDG58Z5lqXWriGSSLk+4QQKCIAkJX0qAv50uhAuD1oghnQnMtH9ljhbeG3y57Lcfcnl8nGdpahxi8uQYVQuk+XwKn5aPYeBI=
+	t=1749730171; cv=none; b=oLaPtCiSzj+vm50HwsaJfayXgKuDMBVB2jDb/8KYanWiRH/oV2E0aWYDe1Nwx/lrXAt6kawTMr5mPII/7zh32/orv2d1EuWyWqTpgfeqSF5VKKx4hQqOzc22iipmtuj5jlY6DOvEzwakuWGQqNtJ7WMlN6D0vtjfdvPwkx9tp6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749730115; c=relaxed/simple;
-	bh=/5hkVOPMuKNYyP5pXqAuGWYICPyX3micXgythDTEnfM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FlsYTrMlbs7cvw+Sbd0ylEmlSErFN3toAr3NQlYn+k8Wy3XpyWFRGqk3iEg24eWGAYaYuNOSNY4OgJ+V0DHrbRlcACn6fVKtqXP2X4MHit9IGBadkq21ZFdt/XZ3tAthpn1vTK4YjuMLIHThUzaSLZcwcVZaYapOIvo076x7D/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=b/+EWrU0; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	s=arc-20240116; t=1749730171; c=relaxed/simple;
+	bh=CQTMBqrwO1xjHlPpoOYlHzVJJtakGvEfnnp4M+O0iR0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MxeFTZ8BIEq4BnFduJT+bD65bnTAsFYUwEhukJlOUnK/VhOL5AbIZ825N5gclilgOT1NZQDhyudKVBu6tIU3He6pvh1JaQXHt4WEBnQ9yoLa5aQYFuNGRZvl1zmCnynMpi968Pe8Fx2CUBWxyWZSei4EDxEFqSWuDvEd9Q5xQUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MNEG8Gq8; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="b/+EWrU0"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-872886ed65aso82141839f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:08:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNEG8Gq8"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234f17910d8so8793375ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1749730111; x=1750334911; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oiQC+W0yjIGVwcsiN86fhi+gjf0lk8z+cPeuP0rwwk8=;
-        b=b/+EWrU00bjwqoqDBfgmYPWOhkSYPf9t6JvmX8kXLzj1ZrUUYHgzKK7TZc6ZTCIm+u
-         kPgS+I65OIuGFHJxyqvt7BuJ47EADr8r/3NM6rNo0FaA4y1G8LzTtpQ6EGxttSF5B24P
-         /hTX0C/8paMgK9MgwJ57jgm3Pm5KPjA0ypCzA=
+        d=gmail.com; s=20230601; t=1749730169; x=1750334969; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qc+fJ5kUSUbKMuOdmwlhqgXfGsc4A0Ke0MUmskDWchg=;
+        b=MNEG8Gq8uOZIE+OedMYVDGDTT+cgrIVG7DBuCeMIey8JcqFyv6vvnMyslgyAfTwInT
+         /r1wdnZS09xyz7faPwnu3WPhMQowPivumFmkr+NXUKZ+xE1LiQo4Yovi5SXI0ikhJOkq
+         nWBKxfw4Fp/SFTnp5vw6Rw5SampV0JZKh/0tvkkNkcy76rujrWG2dsysCIQOf4N4346M
+         JaCk3QulNlkZktDok76flJhlDiEvXJ+a1APwgwwF+tfHi4GyA2r3RtkzkxRieEwD4DWI
+         pmDCwhcWnuNMOwMqF5aCxessYGmnS4SqeyDLMrySgZnVmNdVxlbvIB3fuOxVbVJ7B6qR
+         +uVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749730111; x=1750334911;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oiQC+W0yjIGVwcsiN86fhi+gjf0lk8z+cPeuP0rwwk8=;
-        b=jvDmqPGGfkOjznIXUxmhezlZTVL9AN4noDk2BQfcVO68SM+uMdQe3PnqxBeOLaa1kW
-         AEHAVwmAeT7tDaMUxf/cmLoMB/HjjthFdAzUw3GLUCFH2yjSWeigOtmVK65EQ49wBi40
-         y+YpMUkW+pg3jSB7KlVl9Q8/b8mJ8c2q9rCba3KAZcpnbBwLcl93hvEuAb7aLvpinTHL
-         Ol4eymIu9FmyLricvvU5aPEg8wIR3nv97lD6aOljVSDgLl+0z8kpgmTzSfR4dqDw51Dz
-         P2JJUzv1tnscrFBpoKeyVZ8GdwYKg0wX46/SNpJ+D8BghclyGmygVFSj5rLVIfh38yQr
-         THcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzJNZZBp+dLNtl18+BUswHf60Tzas+HjAUU9s5pEgGVaS/zA2MCtnvcpvjxuJIzG1806Ja6ycCh4gfHmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb6F34QaaU1x/mqLexFAkzMdgVlq20Ou2GLy8j4sxo1Bq/OjKM
-	j56R5JqjSiEG/gvjyrKhbM5bQobe84K4KGRgPcCSTbN1bNa77hsNQcAtWHz1GgEYXdwp6CSrEIi
-	g/X8=
-X-Gm-Gg: ASbGncsAGDebDmKF9/DA5PRM8xlBj1eGBWz9PmwF9pMFq+nywU/VXc0Rpp090VPyG6A
-	ZNXOPsgPpX9v4jDsg5m427IN+i7wVrtLHQ0+P9LeBLjUmtYA1zudaHJrEAl07/ahyA1Ld4jdYca
-	3I1ZBgmyh4tO005dSPSIU5kS392fp899t14dIxtt4BGOX8iLdfilhFtg3eorSe6r4N/X6rIjt/S
-	qegNU4gAhtJoBuWM8CSMEVjyVxwk0Brm+uivXTVVJp+bGoaH+UPCcme9p4HNni866P5aiekcIIi
-	X97qk7pnRnGcGn/tgNBfVvhRvf/HdNEZiTWw/WjbLQJT+nONoNXOTQ/dNyDM7Kh/UM2Z4LiH3qf
-	JgoFc9XlKNM2uDAumJwfI
-X-Google-Smtp-Source: AGHT+IFE6LoaIDSTbR2+Z49WPjvrD6HagrivYIZlBUHlPLtFW8Kl3MBn0+M7fl7SQRHeC/DZIkrMcg==
-X-Received: by 2002:a05:6602:3719:b0:864:a3d0:ddef with SMTP id ca18e2360f4ac-875bc410f92mr880203339f.6.1749730111300;
-        Thu, 12 Jun 2025 05:08:31 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-5013b75604esm260578173.8.2025.06.12.05.08.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 05:08:30 -0700 (PDT)
-Message-ID: <28c3f551-c1a2-4bc0-a263-a27576335317@ieee.org>
-Date: Thu, 12 Jun 2025 07:08:28 -0500
+        d=1e100.net; s=20230601; t=1749730169; x=1750334969;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qc+fJ5kUSUbKMuOdmwlhqgXfGsc4A0Ke0MUmskDWchg=;
+        b=G60p9FyTcPfy8IV5hrXNcAYbSd0ZcBByDbSRFnLdymXm6nFtZpF4Qkvn/DmAf+qexe
+         Flcim0zmNBp7g0hkmjFybBBA6WmQPvIwiJihNv2gYx3pPEXchlsx4rjSVmSQhGenN6DX
+         s9y18uzSkZCJ+NrdvaMq+L3OGozYxuergI4MG0lI+FjKlRfA0RqlSQvTcCWRnYsBJOpC
+         C58N/SK+Dd9r7lv6OmXB8/8imf8PjTXr79ekiQkdq4YjnrLGr+o+Hq+pBKYux8X5tDfH
+         NpIKucudLouYG+13PAQ4fpkBko9ttn9YUrXjj41YPixu8ibIfS2m8oDfJXT9Dsr7odlN
+         qO6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVhPrijO3sJTUMG85Vhi/ftl3rhjY8/gUyCLC6Qk8FvCoRA+pkK4EFkm8EhmQmHUar9dMdHrz2OLD61QOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq6LUTRw1Mm9lAH05oaQrO9STklwucNFuBaiEKtSaqAZ4hJsUl
+	MmIAZC0SbtpAqoSUZ40Vtr6j6mFvbebE2wJa/4W2o4uJPf29LjqBHt39
+X-Gm-Gg: ASbGncs6igseOmw3VPQ0m/NRA907mwX+T6yN5RWJnV1FP75eFiIVZ4TwcPYHpVClQFi
+	OyKxKVqEuLtQ+ZEH6Ly+rHdmL8M/tDXE2mdtUTQxS70SnShpF4qOk7PJ8J05D2ejnVYuSvgwD3a
+	vtFzIjZnEwj2ubMkEro64AWnLe5LJW1QOo3vZ6yE1eQEIu40uVtUtVYgOOKu1qSYJItT1Nf9gGs
+	hQ+lNVYc5ktKS+ePj4SlyuBZLS0DAsc9kdICirTqi34E7zAvseEcLzAp+NpuPe2D2EQVRGyPnth
+	Dss/PIQzkexLlr/f3Yaa1Em3rptQQO18FtWRBf1Cfd1pSYQPEBFs+Wt+trPv4Elq3McMNEgCiVn
+	0
+X-Google-Smtp-Source: AGHT+IG8kP612PZkW6Rpi0Vr/xRiBqYfLilslNPiXK39tjv65V4A6ZdWSeLlYYC8zylzgPFdEa1c2Q==
+X-Received: by 2002:a17:902:d58f:b0:235:ef79:2997 with SMTP id d9443c01a7336-2364cabaa7fmr44325705ad.47.1749730168776;
+        Thu, 12 Jun 2025 05:09:28 -0700 (PDT)
+Received: from localhost.localdomain ([43.225.59.120])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e717293sm12166515ad.196.2025.06.12.05.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 05:09:28 -0700 (PDT)
+From: peng li <peng8420.li@gmail.com>
+To: david@redhat.com
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	peng li <peng8420.li@gmail.com>
+Subject: [PATCH] mm/pagewalk: Clean up folio_walk_start() by removing expose_page
+Date: Thu, 12 Jun 2025 20:09:03 +0800
+Message-Id: <20250612120903.2678910-1-peng8420.li@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] rbd: convert to use secs_to_jiffies
-To: Yuesong Li <liyuesong@vivo.com>, Ilya Dryomov <idryomov@gmail.com>,
- Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>,
- ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: opensource.kernel@vivo.com
-References: <20250612110705.91353-1-liyuesong@vivo.com>
-Content-Language: en-US
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <20250612110705.91353-1-liyuesong@vivo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/12/25 6:07 AM, Yuesong Li wrote:
-> Since secs_to_jiffies()(commit:b35108a51cf7) has been introduced, we can
-> use it to avoid scaling the time to msec.
-> 
-> Signed-off-by: Yuesong Li <liyuesong@vivo.com>
+The name expose_page is confusing to understand. From the code logic, it is
+probably meant to express "belongs to the normal page and get offset from
+the mapped page"?
+Perhaps changing "expose_page" to "normal_mapped_page" can better express
+its behavior? But perhaps its existence is meaningless, because fw->page
+can be directly confirmed and obtained from the page type without the need
+for a separate flag.
 
-Looks good.
+Key changes:
+1. Remove expose_page and its conditional logic
+2. Always set fw->page when a valid page is found
+3. Add clarifying comments about offset calculation
+4. Initialize fw->page to NULL at PMD/PTE levels
 
-Reviewed-by: Alex Elder <elder@riscstar.com>
+Signed-off-by: peng li <peng8420.li@gmail.com>
+---
+ mm/pagewalk.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-> ---
->   drivers/block/rbd.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index faafd7ff43d6..92d04a60718f 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -4162,7 +4162,7 @@ static void rbd_acquire_lock(struct work_struct *work)
->   		dout("%s rbd_dev %p requeuing lock_dwork\n", __func__,
->   		     rbd_dev);
->   		mod_delayed_work(rbd_dev->task_wq, &rbd_dev->lock_dwork,
-> -		    msecs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT * MSEC_PER_SEC));
-> +		    secs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT));
->   	}
->   }
->   
-> @@ -6285,7 +6285,7 @@ static int rbd_parse_param(struct fs_parameter *param,
->   		/* 0 is "wait forever" (i.e. infinite timeout) */
->   		if (result.uint_32 > INT_MAX / 1000)
->   			goto out_of_range;
-> -		opt->lock_timeout = msecs_to_jiffies(result.uint_32 * 1000);
-> +		opt->lock_timeout = secs_to_jiffies(result.uint_32);
->   		break;
->   	case Opt_pool_ns:
->   		kfree(pctx->spec->pool_ns);
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index e478777c86e1..15150c27b9cf 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -831,7 +831,6 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+ 		folio_walk_flags_t flags)
+ {
+ 	unsigned long entry_size;
+-	bool expose_page = true;
+ 	struct page *page;
+ 	pud_t *pudp, pud;
+ 	pmd_t *pmdp, pmd;
+@@ -884,6 +883,9 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+ 		 * support PUD mappings in VM_PFNMAP|VM_MIXEDMAP VMAs.
+ 		 */
+ 		page = pud_page(pud);
++
++		/* Note: Offset from the mapped page, not the folio start. */
++		fw->page = nth_page(page, (addr & (entry_size - 1)) >> PAGE_SHIFT);
+ 		goto found;
+ 	}
+ 
+@@ -902,6 +904,7 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+ 		fw->level = FW_LEVEL_PMD;
+ 		fw->pmdp = pmdp;
+ 		fw->pmd = pmd;
++		fw->page = NULL;
+ 
+ 		if (pmd_none(pmd)) {
+ 			spin_unlock(ptl);
+@@ -912,11 +915,12 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+ 		} else if (pmd_present(pmd)) {
+ 			page = vm_normal_page_pmd(vma, addr, pmd);
+ 			if (page) {
++				/* Note: Offset from the mapped page, not the folio start. */
++				fw->page = nth_page(page, (addr & (entry_size - 1)) >> PAGE_SHIFT);
+ 				goto found;
+ 			} else if ((flags & FW_ZEROPAGE) &&
+ 				    is_huge_zero_pmd(pmd)) {
+ 				page = pfn_to_page(pmd_pfn(pmd));
+-				expose_page = false;
+ 				goto found;
+ 			}
+ 		} else if ((flags & FW_MIGRATION) &&
+@@ -924,7 +928,6 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+ 			swp_entry_t entry = pmd_to_swp_entry(pmd);
+ 
+ 			page = pfn_swap_entry_to_page(entry);
+-			expose_page = false;
+ 			goto found;
+ 		}
+ 		spin_unlock(ptl);
+@@ -942,15 +945,18 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+ 	fw->level = FW_LEVEL_PTE;
+ 	fw->ptep = ptep;
+ 	fw->pte = pte;
++	fw->page = NULL;
+ 
+ 	if (pte_present(pte)) {
+ 		page = vm_normal_page(vma, addr, pte);
+-		if (page)
++		if (page) {
++			/* Note: Offset from the mapped page, not the folio start. */
++			fw->page = nth_page(page, (addr & (entry_size - 1)) >> PAGE_SHIFT);
+ 			goto found;
++		}
+ 		if ((flags & FW_ZEROPAGE) &&
+ 		    is_zero_pfn(pte_pfn(pte))) {
+ 			page = pfn_to_page(pte_pfn(pte));
+-			expose_page = false;
+ 			goto found;
+ 		}
+ 	} else if (!pte_none(pte)) {
+@@ -959,7 +965,6 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+ 		if ((flags & FW_MIGRATION) &&
+ 		    is_migration_entry(entry)) {
+ 			page = pfn_swap_entry_to_page(entry);
+-			expose_page = false;
+ 			goto found;
+ 		}
+ 	}
+@@ -968,11 +973,6 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+ 	vma_pgtable_walk_end(vma);
+ 	return NULL;
+ found:
+-	if (expose_page)
+-		/* Note: Offset from the mapped page, not the folio start. */
+-		fw->page = nth_page(page, (addr & (entry_size - 1)) >> PAGE_SHIFT);
+-	else
+-		fw->page = NULL;
+ 	fw->ptl = ptl;
+ 	return page_folio(page);
+ }
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.25.1
 
