@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E0E2D542D
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 19:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4602D8789
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 19:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749757790; cv=none; b=VoD9o+HZqudvu+VG672PyxbhOshZPG0mmphWc4zyL/eVAUCbVXCTvLUz2jBQ2GswIg4oq2wExMPAb5k9cwoN2IX8NR/2LRgUm7YuGV0w7ZLYayL1rJ3xHuUFE767uQYUJBhPWmbAeISjcxM1salzbvfdcSvfH8vqswXng8655Go=
+	t=1749757794; cv=none; b=dPQUbUdkZFJaIdlO1KEVycZd2st8agJnElpYG3T9hldvdPwj+/FVEo6uXPP5MLHcDtI4e2ATd205ZTatFQc5YWG2NlXe8c5LUAmJ8hFE78LqYvY0TesPQf+EC8oI4+yZXJr0sQI33IboGD5FKTC7CNU/qNQusfNBu4vIFe9goB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749757790; c=relaxed/simple;
-	bh=ia2kNtooLXZtddxtzmjyLOZyIOrYzFIrc2YWBoyTzE0=;
+	s=arc-20240116; t=1749757794; c=relaxed/simple;
+	bh=zMY1NElYNZzt1bGCpQPOES94FzbCwXlf9lyBYpGO4Zs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DxprOFFXMign6UXYJ0UPmGg4jxAKFYbq2Pz/8Q5SM4RW7g+aYNCevLzIBqaGbauTOB0CTYzeKhhbOjHltfSPktmlgreNVxl2Ex0x6rvTNC6HduhJglLy/yfGZNMbqJ03lNfmm0T7BvJ3VG/tj38nuZyeYm5e2nXGECmG2QOpsss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Ohk/U6M; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=dph+dltAvt21pGVFb//w9to7HKdLIktuIkzG+KXSXjg7AgL0O+APYUa5yS4OH3SiK3mNJDWC8iVecx8oowHTsKhVNnkP0Q6A+JUmZ1msjLL1hWEFMDRqM1g7shWhtz+SCxN0Zcf+L1dzA+Zq8umP8xMBDEzaAZEQK74vRYKdrr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pf/YFNdf; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Ohk/U6M"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7462aff55bfso1015547b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:49:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pf/YFNdf"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e922a13d49so1066259fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:49:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749757788; x=1750362588; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749757791; x=1750362591; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RwgwORwGUH9uFoqt6oU2k4z3IDDLnBCDkrf4pU2pZuE=;
-        b=1Ohk/U6M+HM73qFP/xGDW255KKxSiq2eW1YSJzUK8AmKuRlERHf6M8TS9O5o+ke91q
-         BN6Sg51MBNeKt3Xq+FhAZEb2WfQ2mZPyh7x9mYHJiBrBO329NiFlyStDyX5/THsLPg7G
-         RL/tv0VKpoYZ6nuP7t3kMrHllKgQ4E2WjWE9rBQnQRkkAGrBdW++xuGVtNCPFcq37ABd
-         Vr7byi/ULYmIWHrFFLBfsKWECy2qGFMXjRheh/EgYZ8SfeoDo5Ft1rvbV/1lpRPb57LG
-         bbMTH6WhEHvmz5FS1fg6JKFwOH/6m1ghDjfgQLqurGSC5vSKTt38DZRYiOPQn0GkbMiK
-         4ZYA==
+        bh=tnqUhIyewIO5q6Zf7WHC0dqAJTno3LzWwwCSTFeopTU=;
+        b=pf/YFNdf2TFfW8W83c3aYcwSTXRNJDv3IiR1eZN/O2v4IhP+nduHsTIIyYMUuRTEBQ
+         0IHtnZIGAAKux6EsiAibo7Cx7EYjgY2hW19ApTWr9sn1hmhtenpfCoWbT+rXVAsheCU7
+         7GfvmlwA/SfzF5b51VFFHPn1E33Cq+K6UQSS6ucoIwhqhuz5VL76DQCRyVg6/WwZYT8Q
+         dX3fYRTqPHiLyGcqugEZmhsexeL6pDyeWaliA/BnGop2PbFqgA26kFnVWOi54n/YRWDt
+         8BzJe4GVKAyx5wHSnsLuCM/VoxDOfageIEzL1R8Zg4lyIxsitBO9cUUbTYxbPZIDVnsb
+         XtOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749757788; x=1750362588;
+        d=1e100.net; s=20230601; t=1749757791; x=1750362591;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RwgwORwGUH9uFoqt6oU2k4z3IDDLnBCDkrf4pU2pZuE=;
-        b=WxrG/Kx3LokJPMXb9127Ds2C8LkiWLMSn3lEY7AFLeeedetZZOt2KMsgaR9DhqFVCt
-         ny1/yW8D+GpvSf51nuReZa3os7vEncIrJDnIjQeMKz93eUEu8P3NsKa3jxmHl5sQkEyT
-         3azAdXdpaSGC9nyIdNLaPyRZJFyKqo0z+A4Spwa3vJgCBukApMZhzkD+B7PqJb1XQNyD
-         SDWkHf8O2FvX9uvPI5gBUJM/aXqZqyLNmi9EMvk7eCXCSy9xdAdRuW2fMIjUML0qwOxk
-         opHB492DiRub/7bvCLkK6iL0sKGL5s9iP88pFEd1qKQR6tlPNeOAPm13T4FdtS4Nya5E
-         TLUw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFPwPRwVxLo6SS8orCBKId6wHedxLe+B/ME/JU+jV/diWszJrgXMoYGxuJQXC2yLFyXVSNFzn2ikTMhy0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx6ejGjl9oL/WvMLiRzKLEgSX/gymGAFi56cARAmn41TMN6/tt
-	/MNRh1GLWKgfo4v/mF2DH9u5Ma6JmexSQRABA9Q6yreNHVugYxXJOk7AdfFk5xA6k1xxuQ+esGW
-	1PmHbWQt4uFqcwkY5iMXGCA==
-X-Google-Smtp-Source: AGHT+IGNw4lkpwjaf4v6bXxIOzfZmFO85pS43p7oo8MRgEqWKeMneT7/6nkmbDJ+tkgVhVSPF+Jk1alL6QtQUiX0
-X-Received: from pfbkq16.prod.google.com ([2002:a05:6a00:4b10:b0:73c:29d8:b795])
+        bh=tnqUhIyewIO5q6Zf7WHC0dqAJTno3LzWwwCSTFeopTU=;
+        b=kr4/o9aRqPpJuYCZE04Z9LoFI6dEMJF5GdQBprLn4+AifMYzCdX/Iv9HT7HaEevuVh
+         X6ohB0XrEME1Wq382rtUVcKinAsyQKwIR8OMrsy0wE8nWlipDKG9eXgvTHEUPJshPufj
+         /HkFDGgUNcAksLnSHT85cO8L+oDzQZowtl5yo1fCMV3FPUt0jJI+vx2Jz5w/kJBvNafk
+         mK9T7DiYCP4p5oTnrnWMTSjPZC5Mcjj5Ma6QY05YdfKLsoK7D4sfGI9lChqMVbYWCoGJ
+         QGJKtydskrnFOwZN9TuMNtebPDX+3zBIzTQsk4PoQ1usw6qrxMCCCML/HFuX/pJsWoKT
+         2GXw==
+X-Forwarded-Encrypted: i=1; AJvYcCViWKxjJ/Y5m/Qtmocsi6XkSezieoXcT6aTBg3gDAqwpTZlS0CoQN1r6eXQD0ymgchScCPziUooBijOaik=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq0ycDdxdJ91DQya9gOSAQaqXGhkuKlrPBZOnTFYuwE6Vuw3qb
+	KESqadu+9Yiof7o5+Ra6pgXQ2b+DAAysbrBreiQ+KlRx04xqDau7rpQz4KxcxEhTg6zmS54qkB7
+	jV3UdycCZ8y2hPWJcoT9irw==
+X-Google-Smtp-Source: AGHT+IFNTXR/9UID8W6zRYCP3OwhC3x1U++y9rRlwJYFwQhSIGl+YEKkxpm2xUoLbRLXAHqqMRE3zncdhPzwhCzN
+X-Received: from oabqw11.prod.google.com ([2002:a05:6870:6f0b:b0:2d9:841d:6155])
  (user=blakejones job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:c89:b0:736:a540:c9ad with SMTP id d2e1a72fcca58-7488f71e782mr688264b3a.20.1749757787828;
- Thu, 12 Jun 2025 12:49:47 -0700 (PDT)
-Date: Thu, 12 Jun 2025 12:49:37 -0700
+ 2002:a05:6871:4002:b0:2b8:e4b9:47a3 with SMTP id 586e51a60fabf-2ead509b590mr228640fac.22.1749757791440;
+ Thu, 12 Jun 2025 12:49:51 -0700 (PDT)
+Date: Thu, 12 Jun 2025 12:49:39 -0700
 In-Reply-To: <20250612194939.162730-1-blakejones@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250612194939.162730-1-blakejones@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250612194939.162730-4-blakejones@google.com>
-Subject: [PATCH v4 3/5] perf: collect BPF metadata from new programs
+Message-ID: <20250612194939.162730-6-blakejones@google.com>
+Subject: [PATCH v4 5/5] perf: add test for PERF_RECORD_BPF_METADATA collection
 From: Blake Jones <blakejones@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
@@ -81,235 +81,142 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Blake Jones <blakejones@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This collects metadata for any BPF programs that were loaded during a
-"perf record" run, and emits it at the end of the run.
+This is an end-to-end test for the PERF_RECORD_BPF_METADATA support.
+It adds a new "bpf_metadata_perf_version" variable to perf's BPF programs,
+so that when they are loaded, there will be at least one BPF program with
+some metadata to parse. The test invokes "perf record" in a way that loads
+one of those BPF programs, and then sifts through the output to find its
+BPF metadata.
 
 Signed-off-by: Blake Jones <blakejones@google.com>
 ---
- tools/perf/builtin-record.c        | 10 +++++++
- tools/perf/util/bpf-event.c        | 46 ++++++++++++++++++++++++++++++
- tools/perf/util/bpf-event.h        |  1 +
- tools/perf/util/env.c              | 19 +++++++++++-
- tools/perf/util/env.h              |  6 ++++
- tools/perf/util/header.c           |  1 +
- tools/perf/util/synthetic-events.h |  2 ++
- 7 files changed, 84 insertions(+), 1 deletion(-)
+ tools/perf/Makefile.perf                    |  3 +-
+ tools/perf/tests/shell/test_bpf_metadata.sh | 76 +++++++++++++++++++++
+ tools/perf/util/bpf_skel/perf_version.h     | 17 +++++
+ 3 files changed, 95 insertions(+), 1 deletion(-)
+ create mode 100755 tools/perf/tests/shell/test_bpf_metadata.sh
+ create mode 100644 tools/perf/util/bpf_skel/perf_version.h
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 0b566f300569..53971b9de3ba 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2162,6 +2162,14 @@ static int record__synthesize(struct record *rec, bool tail)
- 	return err;
- }
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index d4c7031b01a7..4f292edeca5a 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1250,8 +1250,9 @@ else
+ 	$(Q)cp "$(VMLINUX_H)" $@
+ endif
  
-+static void record__synthesize_final_bpf_metadata(struct record *rec __maybe_unused)
-+{
-+#ifdef HAVE_LIBBPF_SUPPORT
-+	perf_event__synthesize_final_bpf_metadata(rec->session,
-+						  process_synthesized_event);
-+#endif
+-$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h | $(SKEL_TMP_OUT)
++$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(OUTPUT)PERF-VERSION-FILE util/bpf_skel/perf_version.h $(LIBBPF) $(SKEL_OUT)/vmlinux.h | $(SKEL_TMP_OUT)
+ 	$(QUIET_CLANG)$(CLANG) -g -O2 --target=bpf $(CLANG_OPTIONS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
++	  -include $(OUTPUT)PERF-VERSION-FILE -include util/bpf_skel/perf_version.h \
+ 	  -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
+ 
+ $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o | $(BPFTOOL)
+diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tests/shell/test_bpf_metadata.sh
+new file mode 100755
+index 000000000000..11df592fb661
+--- /dev/null
++++ b/tools/perf/tests/shell/test_bpf_metadata.sh
+@@ -0,0 +1,76 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# BPF metadata collection test.
++
++set -e
++
++err=0
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++
++cleanup() {
++	rm -f "${perfdata}"
++	rm -f "${perfdata}".old
++	trap - EXIT TERM INT
 +}
 +
- static int record__process_signal_event(union perf_event *event __maybe_unused, void *data)
- {
- 	struct record *rec = data;
-@@ -2807,6 +2815,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	trigger_off(&auxtrace_snapshot_trigger);
- 	trigger_off(&switch_output_trigger);
- 
-+	record__synthesize_final_bpf_metadata(rec);
++trap_cleanup() {
++	cleanup
++	exit 1
++}
++trap trap_cleanup EXIT TERM INT
 +
- 	if (opts->auxtrace_snapshot_on_exit)
- 		record__auxtrace_snapshot_exit(rec);
- 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index 1f6e76ee6024..dc09a4730c50 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -472,6 +472,49 @@ void bpf_metadata_free(struct bpf_metadata *metadata __maybe_unused)
- 
- #endif /* HAVE_LIBBPF_STRINGS_SUPPORT */
- 
-+struct bpf_metadata_final_ctx {
-+	const struct perf_tool *tool;
-+	perf_event__handler_t process;
-+	struct machine *machine;
-+};
++test_bpf_metadata() {
++	echo "Checking BPF metadata collection"
 +
-+static void synthesize_final_bpf_metadata_cb(struct bpf_prog_info_node *node,
-+					     void *data)
-+{
-+	struct bpf_metadata_final_ctx *ctx = (struct bpf_metadata_final_ctx *)data;
-+	struct bpf_metadata *metadata = node->metadata;
-+	int err;
++	if ! perf check -q feature libbpf-strings ; then
++		echo "Basic BPF metadata test [skipping - not supported]"
++		err=0
++		return
++	fi
 +
-+	if (metadata == NULL)
-+		return;
-+	err = synthesize_perf_record_bpf_metadata(metadata, ctx->tool,
-+						  ctx->process, ctx->machine);
-+	if (err != 0) {
-+		const char *prog_name = metadata->prog_names[0];
++	# This is a basic invocation of perf record
++	# that invokes the perf_sample_filter BPF program.
++	if ! perf record -e task-clock --filter 'ip > 0' \
++			 -o "${perfdata}" sleep 1 2> /dev/null
++	then
++		echo "Basic BPF metadata test [Failed record]"
++		err=1
++		return
++	fi
 +
-+		if (prog_name != NULL)
-+			pr_warning("Couldn't synthesize final BPF metadata for %s.\n", prog_name);
-+		else
-+			pr_warning("Couldn't synthesize final BPF metadata.\n");
-+	}
-+	bpf_metadata_free(metadata);
-+	node->metadata = NULL;
++	# The BPF programs that ship with "perf" all have the following
++	# variable defined at compile time:
++	#
++	#   const char bpf_metadata_perf_version[] SEC(".rodata") = <...>;
++	#
++	# This invocation looks for a PERF_RECORD_BPF_METADATA event,
++	# and checks that its content contains the string given by
++	# "perf version".
++	VERS=$(perf version | awk '{print $NF}')
++	if ! perf script --show-bpf-events -i "${perfdata}" | awk '
++		/PERF_RECORD_BPF_METADATA.*perf_sample_filter/ {
++			header = 1;
++		}
++		/^ *entry/ {
++			if (header) { header = 0; entry = 1; }
++		}
++		$0 !~ /^ *entry/ {
++			entry = 0;
++		}
++		/perf_version/ {
++			if (entry) print $NF;
++		}
++	' | egrep "$VERS" > /dev/null
++	then
++		echo "Basic BPF metadata test [Failed invalid output]"
++		err=1
++		return
++	fi
++	echo "Basic BPF metadata test [Success]"
 +}
 +
-+void perf_event__synthesize_final_bpf_metadata(struct perf_session *session,
-+					       perf_event__handler_t process)
-+{
-+	struct perf_env *env = &session->header.env;
-+	struct bpf_metadata_final_ctx ctx = {
-+		.tool = session->tool,
-+		.process = process,
-+		.machine = &session->machines.host,
-+	};
++test_bpf_metadata
 +
-+	perf_env__iterate_bpf_prog_info(env, synthesize_final_bpf_metadata_cb,
-+					&ctx);
-+}
++cleanup
++exit $err
+diff --git a/tools/perf/util/bpf_skel/perf_version.h b/tools/perf/util/bpf_skel/perf_version.h
+new file mode 100644
+index 000000000000..1ed5b2e59bf5
+--- /dev/null
++++ b/tools/perf/util/bpf_skel/perf_version.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
 +
- /*
-  * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
-  * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
-@@ -612,6 +655,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 		}
- 
- 		info_node->info_linear = info_linear;
-+		info_node->metadata = NULL;
- 		if (!perf_env__insert_bpf_prog_info(env, info_node)) {
- 			free(info_linear);
- 			free(info_node);
-@@ -803,6 +847,7 @@ static void perf_env__add_bpf_info(struct perf_env *env, u32 id)
- 	arrays |= 1UL << PERF_BPIL_JITED_INSNS;
- 	arrays |= 1UL << PERF_BPIL_LINE_INFO;
- 	arrays |= 1UL << PERF_BPIL_JITED_LINE_INFO;
-+	arrays |= 1UL << PERF_BPIL_MAP_IDS;
- 
- 	info_linear = get_bpf_prog_info_linear(fd, arrays);
- 	if (IS_ERR_OR_NULL(info_linear)) {
-@@ -815,6 +860,7 @@ static void perf_env__add_bpf_info(struct perf_env *env, u32 id)
- 	info_node = malloc(sizeof(struct bpf_prog_info_node));
- 	if (info_node) {
- 		info_node->info_linear = info_linear;
-+		info_node->metadata = bpf_metadata_create(&info_linear->info);
- 		if (!perf_env__insert_bpf_prog_info(env, info_node)) {
- 			free(info_linear);
- 			free(info_node);
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index ef2dd3f1619e..60d2c6637af5 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -25,6 +25,7 @@ struct bpf_metadata {
- 
- struct bpf_prog_info_node {
- 	struct perf_bpil		*info_linear;
-+	struct bpf_metadata		*metadata;
- 	struct rb_node			rb_node;
- };
- 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 36411749e007..05a4f2657d72 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -3,8 +3,10 @@
- #include "debug.h"
- #include "env.h"
- #include "util/header.h"
--#include "linux/compiler.h"
-+#include "util/rwsem.h"
-+#include <linux/compiler.h>
- #include <linux/ctype.h>
-+#include <linux/rbtree.h>
- #include <linux/string.h>
- #include <linux/zalloc.h>
- #include "cgroup.h"
-@@ -89,6 +91,20 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- 	return node;
- }
- 
-+void perf_env__iterate_bpf_prog_info(struct perf_env *env,
-+				     void (*cb)(struct bpf_prog_info_node *node,
-+						void *data),
-+				     void *data)
-+{
-+	struct rb_node *first;
++#ifndef __PERF_VERSION_H__
++#define __PERF_VERSION_H__
 +
-+	down_read(&env->bpf_progs.lock);
-+	first = rb_first(&env->bpf_progs.infos);
-+	for (struct rb_node *node = first; node != NULL; node = rb_next(node))
-+		(*cb)(rb_entry(node, struct bpf_prog_info_node, rb_node), data);
-+	up_read(&env->bpf_progs.lock);
-+}
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
 +
- bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
- {
- 	bool ret;
-@@ -174,6 +190,7 @@ static void perf_env__purge_bpf(struct perf_env *env)
- 		next = rb_next(&node->rb_node);
- 		rb_erase(&node->rb_node, root);
- 		zfree(&node->info_linear);
-+		bpf_metadata_free(node->metadata);
- 		free(node);
- 	}
- 
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index d90e343cf1fa..c90c1d717e73 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -174,16 +174,22 @@ const char *perf_env__raw_arch(struct perf_env *env);
- int perf_env__nr_cpus_avail(struct perf_env *env);
- 
- void perf_env__init(struct perf_env *env);
-+#ifdef HAVE_LIBBPF_SUPPORT
- bool __perf_env__insert_bpf_prog_info(struct perf_env *env,
- 				      struct bpf_prog_info_node *info_node);
- bool perf_env__insert_bpf_prog_info(struct perf_env *env,
- 				    struct bpf_prog_info_node *info_node);
- struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- 							__u32 prog_id);
-+void perf_env__iterate_bpf_prog_info(struct perf_env *env,
-+				     void (*cb)(struct bpf_prog_info_node *node,
-+						void *data),
-+				     void *data);
- bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
- bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
- struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
- struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id);
-+#endif // HAVE_LIBBPF_SUPPORT
- 
- int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
- char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e3cdc3b7b4ab..7c477e2a93b3 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3161,6 +3161,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
- 		/* after reading from file, translate offset to address */
- 		bpil_offs_to_addr(info_linear);
- 		info_node->info_linear = info_linear;
-+		info_node->metadata = NULL;
- 		if (!__perf_env__insert_bpf_prog_info(env, info_node)) {
- 			free(info_linear);
- 			free(info_node);
-diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-index b9c936b5cfeb..ee29615d68e5 100644
---- a/tools/perf/util/synthetic-events.h
-+++ b/tools/perf/util/synthetic-events.h
-@@ -92,6 +92,8 @@ int perf_event__synthesize_threads(const struct perf_tool *tool, perf_event__han
- int perf_event__synthesize_tracing_data(const struct perf_tool *tool, int fd, struct evlist *evlist, perf_event__handler_t process);
- int perf_event__synth_time_conv(const struct perf_event_mmap_page *pc, const struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
- pid_t perf_event__synthesize_comm(const struct perf_tool *tool, union perf_event *event, pid_t pid, perf_event__handler_t process, struct machine *machine);
-+void perf_event__synthesize_final_bpf_metadata(struct perf_session *session,
-+					       perf_event__handler_t process);
- 
- int perf_tool__process_synth_event(const struct perf_tool *tool, union perf_event *event, struct machine *machine, perf_event__handler_t process);
- 
++/*
++ * This is used by tests/shell/record_bpf_metadata.sh
++ * to verify that BPF metadata generation works.
++ *
++ * PERF_VERSION is defined by a build rule at compile time.
++ */
++const char bpf_metadata_perf_version[] SEC(".rodata") = PERF_VERSION;
++
++#endif /* __PERF_VERSION_H__ */
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
