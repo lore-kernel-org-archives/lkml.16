@@ -1,98 +1,59 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2ACC2472BD;
-	Thu, 12 Jun 2025 14:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E78248F6F;
+	Thu, 12 Jun 2025 14:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739464; cv=none; b=G3D26xLmeBeltCTtfX+Xfv2xcc5Ozv+/8CykpoYnOMU4mLooNZYEkOA8AAo5mhk0E0iXIo7KSEc0XNcZj7Ii/3wfCfTLJGirjNwcgo1YcVUDx+7PPmod7cJrlsmlO+138Ow5LrlTKm7pj3qbNXQs0vQUmGVmw8bG5j91Xa+hfzo=
+	t=1749739505; cv=none; b=AJM7arRuCYla5K0ttK/STZREKOd0g9saAF+CAPlpf66wMwqGf2gQQhVI5u1gVBMs2H1YsMUhihkul/ZznZgOty4thpLDON2/edTXqTdRzSAwSDzTbxEVyv6xAkds1iVNBtdFZ/b+yIffTqBtBeeTkhFc47EiQV6WoYsCQUGSZew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739464; c=relaxed/simple;
-	bh=vBpKTwkj0wDTNvR3afmUscgIIZ3ospP8o3/K+X0opW8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mVES7ccqvXL0lQqUTr4YyAL4vFs1lq1XO1nJOoQv9tumo1bmWV1zmMOEYXqdnI3rDbummngCNjftiD8yM4KBsfXIEQSe8Ych+uyNmwnjNcepTbFdqMz2jBCY0dc5GoVWaZSHs5d4Zpm3Zsk1/zcnjrR97hqcxKSM4hbSuKDCd6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=vkbeMiww; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749739505; c=relaxed/simple;
+	bh=rhW2uPY7C6h/BLG/laMfzjLwgKmKRwYa3f9EKStw7xQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ej7uoodgqhWYnKKmz1qsmPDZfsRrEEdWdEBsIy24+lQS+FOo16tehFlPZYHeTwgRRDVzvWlwBkUfCC0oNzEsF7msvHCWmFQ+zPMFz7YvxEAXevPnneUu+XRbP+BN6UiMG1AcsqkaG9EQrB8a/OU99z12JxbT0Uoqa/7RE7UlxFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWN28862; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="vkbeMiww"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CCQQIv001116;
-	Thu, 12 Jun 2025 16:44:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	QzQS4U29OThDBUOM/lDg6huUyLt6fWa3NdeaaWxqcGE=; b=vkbeMiwwEQeCUUzz
-	orKOuWpY0qSbXIIYQYIIe+oakO0i9d+4W5+f4oMkqH4PBuM0kx1Q7tVRhGyWNm5r
-	kILeSfiWH0zUVTSHhITKO7Q71UMZDP6sWD9VCNUrITvMz67USZoQe5gEjPR0dvDA
-	+uubLYwTSYeFV1mIaT9z7x8HUjmm81JPClY9M5sgYRtRJBE/f6viPP6TW+6jQfzE
-	xkh4nvtYVesj5vDUiIrCOQrZ/4i27f/cteqhlA8Tl3+isePx0IWL05Qz3+0Sofp6
-	HaPk7k1HYKqCcxY9Ga36NkADxrZKfNZ1AYdgZ2xRTZJLEnbo5Uzo5l/sLIHrAoRt
-	t+EzFA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y05ekt4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 16:44:08 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5E4C84004F;
-	Thu, 12 Jun 2025 16:43:29 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 07BD5A95C10;
-	Thu, 12 Jun 2025 16:43:12 +0200 (CEST)
-Received: from [10.252.9.207] (10.252.9.207) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Jun
- 2025 16:43:11 +0200
-Message-ID: <ca48c562-ad69-4766-b766-247a172296db@foss.st.com>
-Date: Thu, 12 Jun 2025 16:43:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWN28862"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4174EC4CEEA;
+	Thu, 12 Jun 2025 14:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749739504;
+	bh=rhW2uPY7C6h/BLG/laMfzjLwgKmKRwYa3f9EKStw7xQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YWN28862BHnhGYH2SwLF8nXQOPAWhB6kiidXReIXS9Uv5OTfa9tgiGl75gYni45mD
+	 WhUq5RfqPQM8TIdoQwMteBUb0ip5b367AzSEJrqdJF7EwSFoV5y4JS57D/zXfqL+aZ
+	 Iqmv+SRjQ3iPttjydeguMOO2wnzYWmqhSngUgXq7SVCsy37I8jI4zhnHq3uj+N1KOR
+	 1p8Y4YWbTD/ICVkGI+fCROQNCGk29SBAmdlt3gR+HoLfro253MrwqpMAjtG4FumiL2
+	 s7rEoNaTagV5Rwy1nPT3NTixgHYQQhX9baHhdDcsVWaVb5+YZB4ClipnwlFHuFFnmr
+	 fooRbFXOvIE+g==
+Date: Thu, 12 Jun 2025 07:45:03 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Joe Damato <joe@dama.to>
+Cc: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next 2/2] netdevsim: collect statistics at RX side
+Message-ID: <20250612074503.1f80b816@kernel.org>
+In-Reply-To: <aErjcH3NPbdP7Usx@MacBook-Air.local>
+References: <20250611-netdevsim_stat-v1-0-c11b657d96bf@debian.org>
+	<20250611-netdevsim_stat-v1-2-c11b657d96bf@debian.org>
+	<aErjcH3NPbdP7Usx@MacBook-Air.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] media: i2c: vd55g1: Fix return code in
- vd55g1_enable_streams error path
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250611-fix_vd55g1-v3-0-ef4ecf15ddbc@foss.st.com>
- <20250611-fix_vd55g1-v3-2-ef4ecf15ddbc@foss.st.com>
- <aEpygaTstAGV5EuE@kekkonen.localdomain>
-Content-Language: en-US
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <aEpygaTstAGV5EuE@kekkonen.localdomain>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_09,2025-06-12_02,2025-03-28_01
 
+On Thu, 12 Jun 2025 17:25:52 +0300 Joe Damato wrote:
+> It "feels" like other drivers would be bumping RX stats in their NAPI poll
+> function (which is nsim_poll, the naming of the functions is a bit confusing
+> here), so it seems like netdevsim maybe should too?
 
-On 6/12/25 08:24, Sakari Ailus wrote:
-> Hi Benjamin,
-> 
-> On Wed, Jun 11, 2025 at 10:48:31AM +0200, Benjamin Mugnier wrote:
->> Enable stream was returning success even if an error occurred, fix it by
->> modifying the err_rpm_put return value to -EINVAL.
->>
->> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-> 
-> This looks like something that should be backported btw. What's the Fixes:
-> header? I can add that while applying.
-> 
-
-You're correct, here it is :
-
-Fixes: e56616d7b23c ("media: i2c: Add driver for ST VD55G1 camera sensor")
-
-Thank you.
-
+Good point, and then we should probably add the queue length to
+rx_dropped in nsim_queue_free() before we call purge?
 -- 
-Regards,
-Benjamin
+pw-bot: cr
