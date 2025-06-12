@@ -1,133 +1,126 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D66018DB2A;
-	Thu, 12 Jun 2025 21:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E127FD;
+	Thu, 12 Jun 2025 21:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749763767; cv=none; b=lATfi39hhp+j0uGCz3TEBqPiiZwrQFQPvIKDtZLw5j7q1UaK63wpzduFLJnRbWSCb8V7dxCOqX+dp3PIioLjzZjdK4EikWVyTTqi1CbAP/2v4cU8IVTq796zmel7vqUQG+sjx5KDrf7pnPAumYMTtz6+w6/D7Iu8Qzl97JX7oMk=
+	t=1749763966; cv=none; b=k8UlgQXJHZ5zpVXpL+aBmlYvD+cBeXsreP4hzivxsUURAnyNQ/BgndiMT6uqeNxHMdDVRCpexlNahNgiYuF0kRceGdJ2wSwKZbJ3DImolwVt23VhyKyJaADO/+WUT3D1DaJypZ4/Qz0ow68rjI7qvY0z2d91bfnW2VnMSqExMc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749763767; c=relaxed/simple;
-	bh=5W/YqfShlCHUTyY/DIeDvpacRhlL+WLbiLqLA5CCOMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BBWvPwsuPk4f3MH7KfgA1qAHb9KIrWrFVkJKiccZV1NmvCWdKePsy+f1l19S4yyvxi1StIwB+qyv7IcapulMxfEhTTPeDcAdNnEs49zcu1Ack3ukj5me44M9zJbsBFMiztD+ccBjMrdrVAVxvP3WoBGgfbstAR1aUKMKL42FGIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+of4RXm; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+of4RXm"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-73972a54919so1416295b3a.3;
-        Thu, 12 Jun 2025 14:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749763765; x=1750368565; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QUOuGKmouWTCGC9WhLKzsnt3gDMUj6WGMFR+tJi5hws=;
-        b=R+of4RXmq4WJhfk47H9bCRffw/9REBzFGijQZ2E17JG2ahNkSwZpyMAKEZ6fE6oHOX
-         MAV8g7OnGDCIc02M1SESLfDPTVtmn9Cui64XUJ4mtn4J/FpcFApSBTh2FHD/ixip/uM9
-         AihVnHuSo8J6x6ZVTJiP2LoMsGnKU7HSXTzt4sHT7hf8sY4AjJZRnwaQmLUF2W2UVcNT
-         0IJ3rNbJH+rtdvrmSPPZQkJDHwirZ+MkhiHtPcAZDZ78fDXPA6653Yo/dFW3l5J9FZY1
-         HNqMp49KGfSFOLwhqAqIW6K5hG6uiFYkOkHoTs1kUKYGgzUD69p1FnDoNtbfze8Kgfw2
-         psaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749763765; x=1750368565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QUOuGKmouWTCGC9WhLKzsnt3gDMUj6WGMFR+tJi5hws=;
-        b=DXNz7ogxX9sjGpCsCR0M7M+cz/VIIOdlx/AVD3Vuhi5qvcaoYXUgll2OgccT4ec+ZL
-         GGaOAwLu4sqadj90IXrnA9hVt+Lw1rJSGzJ+Ob7yjkreLzLLV5ej2CgZnqzEVTIgZ1/6
-         tIgLBQFsnqnHiHf9N+ZZghB0BRg+GdqD4zX07ikDbppEmMKwHzBYtn5jwJec3apZs31i
-         ygzOyL0QloSWO1p5JSuivTEgUHGlb6OST8J7oiE/5ZbyYvuF/5qZ4j1X81hBmxr1Kn5L
-         +LpSL2JBj6HgdrVDcbMtHZ3eh6O1IKLcKPrySBYjORg4szbcZbCCYIjtQB6r51Eq9JHf
-         vrng==
-X-Forwarded-Encrypted: i=1; AJvYcCV+rIRtpISPmJOeMcvnl+NMrBdDDgoET4emNr/Wdp12ZA8WUgTE0aEKz4xdFlGEmuLpO3RWe14BV++Y24fW@vger.kernel.org, AJvYcCVXtb0X+Bz/lIYCtzu/OipNEXEO01pKkt/t9Xw4jxp027hN7alZ2bY+BhQ7v5sgt1cXVgg=@vger.kernel.org, AJvYcCX8+mV80yFxzZZTCYjtqfbCU6TLXXh2Qhmzeio2T2+suu2MCbISN7aVGfOCVYyV7tE6HbMtDkUdjq9c2mdHlx2KudqM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX8/L3zaDiQI7GigEsAIyXD5qqU385e8PhuPTt6cFo/0FWuJ1U
-	BR4xzoyACKeTUhCV3a6h0vNDIshykQ2vNdMN5vbzNOJaV8zVLTG21HDyU32LsFaRwoCESwMTZvo
-	mApfONpTGEEO9iHwUH5q/aXuNjYc24co=
-X-Gm-Gg: ASbGncu/ZcqILicYRFM49bHt5I0P06cW1BriqV+GH2207HVIOKUTY6eCRyVKXEpzJd/
-	7yCqyKP6QI4PFXOwU/s5YdHWDRwHFWK668keeSYKtltDPmsUZEVNDNno4GbEQ866Ukq2sOKA4vh
-	iY72gwlJhbur6ZCSCdAMaWOes1LyUNNvyaph50Rs7HcFvZpVz+DrArEDKDhtA=
-X-Google-Smtp-Source: AGHT+IGogl48W5RBmja4Gye95lYVyB0DCcNPxyl1oM0sjLSuMS+F8qW5ia7I3pwUYbU1rVX71Bar7YpLieQmF3fONXc=
-X-Received: by 2002:a05:6a21:6da1:b0:217:4f95:6a51 with SMTP id
- adf61e73a8af0-21facc878c1mr674145637.29.1749763764823; Thu, 12 Jun 2025
- 14:29:24 -0700 (PDT)
+	s=arc-20240116; t=1749763966; c=relaxed/simple;
+	bh=ON3tli/S6K3gaMncVtXAqZDYSF179jqt86fVFR3uljs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mSOfWKC6Q+0N6Lx65vrReYR7/v6518xcBlpDbyTYUMtyJtVdJrMkFhl52KgMxh8P4MwgaB7/fvrAKpZ2r25FIVPlndDaQP62+F4QaWgPU8X6iwxMYmPssbTGV5s6niLjf7Yu8oN0QMVcbAVgjWh3Ct+qipMMII+GB4rYTZnkpKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+	id 0BA6F6B4; Thu, 12 Jun 2025 16:26:26 -0500 (CDT)
+Date: Thu, 12 Jun 2025 16:26:26 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Jann Horn <jannh@google.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Richard Guy Briggs <rgb@redhat.com>,
+	"Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <kees@kernel.org>,
+	Max Kellermann <max.kellermann@ionos.com>, jmorris@namei.org,
+	Andy Lutomirski <luto@kernel.org>, morgan@kernel.org,
+	Christian Brauner <christian@brauner.io>,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] exec: Correct the permission check for unsafe exec
+Message-ID: <20250612212626.GA166079@mail.hallyn.com>
+References: <202505151451.638C22B@keescook>
+ <87ecwopofp.fsf@email.froward.int.ebiederm.org>
+ <CAG48ez1VpuTR9_cvLrJEMmjOxTCYpYFswXVPmN6fE3NcSmPPVA@mail.gmail.com>
+ <87wmagnnhq.fsf@email.froward.int.ebiederm.org>
+ <202505201319.D57FDCB2A@keescook>
+ <87frgznd74.fsf_-_@email.froward.int.ebiederm.org>
+ <CAG48ez0N_1CEKyMHdjnvwsxUkCenmzsLe7dkUL=a6OmU4tPa6Q@mail.gmail.com>
+ <87zff6gf17.fsf@email.froward.int.ebiederm.org>
+ <CAG48ez1z97sCsx53W0O_dCCJL6tnf2pWuv=qaeszcYBfz_01sA@mail.gmail.com>
+ <CAHC9VhRPUXwqLvo4rbxL0++5zqHXfD8_tr-sirTJXdF_Aba_UQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611154859.259682-1-chen.dylane@linux.dev>
-In-Reply-To: <20250611154859.259682-1-chen.dylane@linux.dev>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 12 Jun 2025 14:29:12 -0700
-X-Gm-Features: AX0GCFvJFhBgfXD5SqubEiQJZ0Dc6KFRm6d2kuM9JQhOBCsd9ou8DGkqwmhgrKs
-Message-ID: <CAEf4Bzbn=RVhMOR7RapYwi+s8gbVS=1msOuZ7MhPvgz8zHiE9w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: clear user buf when bpf_d_path failed
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: kpsingh@kernel.org, mattbobrowski@google.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, sdf@fomichev.me, haoluo@google.com, 
-	jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhRPUXwqLvo4rbxL0++5zqHXfD8_tr-sirTJXdF_Aba_UQ@mail.gmail.com>
 
-On Wed, Jun 11, 2025 at 8:49=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
-ote:
->
-> The bpf_d_path() function may fail. If it does,
-> clear the user buf, like bpf_probe_read etc.
->
+On Tue, Jun 10, 2025 at 08:18:56PM -0400, Paul Moore wrote:
+> On Wed, May 21, 2025 at 11:36 AM Jann Horn <jannh@google.com> wrote:
+> > On Wed, May 21, 2025 at 5:27 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > > Jann Horn <jannh@google.com> writes:
+> > >
+> > > > On Wed, May 21, 2025 at 12:13 AM Eric W. Biederman
+> > > > <ebiederm@xmission.com> wrote:
+> > >
+> > > > Looks good to me overall, thanks for figuring out the history of this
+> > > > not-particularly-easy-to-understand code and figuring out the right
+> > > > fix.
+> > > >
+> > > > Reviewed-by: Jann Horn <jannh@google.com>
+> > > >
+> > > >> @@ -917,7 +911,7 @@ int cap_bprm_creds_from_file(struct linux_binprm *bprm, const struct file *file)
+> > > >>         /* Process setpcap binaries and capabilities for uid 0 */
+> > > >>         const struct cred *old = current_cred();
+> > > >>         struct cred *new = bprm->cred;
+> > > >> -       bool effective = false, has_fcap = false, is_setid;
+> > > >> +       bool effective = false, has_fcap = false, id_changed;
+> > > >>         int ret;
+> > > >>         kuid_t root_uid;
+> > > >>
+> > > >> @@ -941,9 +935,9 @@ int cap_bprm_creds_from_file(struct linux_binprm *bprm, const struct file *file)
+> > > >>          *
+> > > >>          * In addition, if NO_NEW_PRIVS, then ensure we get no new privs.
+> > > >>          */
+> > > >> -       is_setid = __is_setuid(new, old) || __is_setgid(new, old);
+> > > >> +       id_changed = !uid_eq(new->euid, old->euid) || !in_group_p(new->egid);
+> > > >
+> > > > Hm, so when we change from one EGID to another EGID which was already
+> > > > in our groups list, we don't treat it as a privileged exec? Which is
+> > > > okay because, while an unprivileged user would not just be allowed to
+> > > > change their EGID to a GID from their groups list themselves through
+> > > > __sys_setregid(), they would be allowed to create a new setgid binary
+> > > > owned by a group from their groups list and then execute that?
+> > > >
+> > > > That's fine with me, though it seems a little weird to me. setgid exec
+> > > > is changing our creds and yet we're not treating it as a "real" setgid
+> > > > execution because the execution is only granting privileges that
+> > > > userspace could have gotten anyway.
+> > >
+> > > More than could have gotten.  From permission checking point of view
+> > > permission that the application already had.  In general group based
+> > > permission checks just check in_group_p, which looks at cred->fsgid and
+> > > the group.
+> > >
+> > > The logic is since the effective permissions of the running executable
+> > > have not changed, there is nothing to special case.
+> > >
+> > > Arguably a setgid exec can drop what was egid, and if people have
+> > > configured their permissions to deny people access based upon a group
+> > > they are in that could change the result of the permission checks.  If
+> > > changing egid winds up dropping a group from the list of the process's
+> > > groups, the process could also have dropped that group with setresgid.
+> > > So I don't think we need to be concerned about the combination of
+> > > dropping egid and brpm->unsafe.
+> > >
+> > > If anyone sees a hole in that logic I am happy to change the check
+> > > to !gid_eq(new->egid, old->egid), but I just can't see a way changing
+> > > egid/fsgid to a group the process already has is a problem.
+> >
+> > I'm fine with leaving your patch as-is.
+> 
+> Aside from a tested-by verification from Max, it looks like everyone
+> is satisfied with the v2 patch, yes?
+> 
+> Serge, I see you've reviewed this patch, can I assume that now you
+> have a capabilities tree up and running you'll take this patch?
 
-But that doesn't mean we *have to* do memset(0) for bpf_d_path(),
-though. Especially given that path buffer can be pretty large (4KB).
+I can take another look and consider taking it on Monday, but until
+then I'm effectively afk.
 
-Is there an issue you are trying to address with this, or is it more
-of a consistency clean up? Note, that more or less recently we made
-this zero filling behavior an option with an extra flag
-(BPF_F_PAD_ZEROS) for newer APIs. And if anything, bpf_d_path() is
-more akin to variable-sized string probing APIs rather than
-fixed-sized bpf_probe_read* family.
-
-In short, I feel like we should revert this and let users do
-zero-filling, if they really need to. bpf_probe_read_kernel(dst, sz,
-NULL) would do. But we should think about adding dynptr-based
-bpf_dynptr_memset() API for cases when the size is not known
-statically, IMO.
-
-
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->  kernel/trace/bpf_trace.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 0998cbbb963..bb1003cb271 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -916,11 +916,14 @@ BPF_CALL_3(bpf_d_path, struct path *, path, char *,=
- buf, u32, sz)
->          * potentially broken verifier.
->          */
->         len =3D copy_from_kernel_nofault(&copy, path, sizeof(*path));
-> -       if (len < 0)
-> +       if (len < 0) {
-> +               memset(buf, 0, sz);
->                 return len;
-> +       }
->
->         p =3D d_path(&copy, buf, sz);
->         if (IS_ERR(p)) {
-> +               memset(buf, 0, sz);
->                 len =3D PTR_ERR(p);
->         } else {
->                 len =3D buf + sz - p;
-> --
-> 2.48.1
->
->
+-serge
