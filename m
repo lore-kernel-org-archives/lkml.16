@@ -1,98 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807B9247DEA;
-	Thu, 12 Jun 2025 13:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E36245023
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736016; cv=none; b=aAxs6WMNBEe+aCKimsZaDB6iSE0GyWNp4rWadlxeagsn23LTDT3t5tmq4BoOHjVNhNn0s7HZxZl0Q4/8xmWQ+g8TauwnEjU8QjRpxdLc+XqIKpVuP7VsAarqy3SEJsmHAAkpdJZXOiJlp/IWKxp4wHW3OdV62aDROvn3GCELaEg=
+	t=1749736027; cv=none; b=NxWcKIOLnmqREZDd6+IPt0h9yRxTAU71zJCUNpgWOY2LO2UEwwHExs3WAsGbUoo9eB/IQC2Tn8MHyJ1KLpxN2A97dDt78qGFLwlOOPIhbZ0NfiPreh6HiZjnfwnOIA8u2+wZgq2eMAFLDC1UyKPYkh7S8iOIBRYOoRYWPNe2dA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736016; c=relaxed/simple;
-	bh=hT/bQ9IGewEqAteujdCHealqh+6L8uhjT0UGYnjnpBY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SHXHZ2zkx719KnThWnowoB2Zb2ufIrdqAAB7i2+2fX1XtK3NVSGJRPw8hr1t8nTAqDHR7TnToxFL1UB49ps5AW2IiosN0jCQrqv2Mtz2du7wTBq2gVSwDh2pWhh35LtpXwm4236tNdEhkfJRKDqSUX4HmXvryyVJdhF10mj+dHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehENRr+w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749736027; c=relaxed/simple;
+	bh=67KHPK0ryj5WYDYDXexeSpchGNbTFtE5nDzepjRpz2w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=LKOeJK/fTlLY3CCk69+TDjOp21sJxmkYbLdH56WCzc00FlIe3mvltyy8dK36UJ81W6dT/D9RUe8pf3XEpXB0Ir3lv/ktwvL0Cry+5AKMqQBOhKuM4FuO/f/3APOpNFQ4ua5ZluqfMntnrv2nZbpPQWBN9FMFS2Rfa4ZxczY6NBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RQ6PsOvP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehENRr+w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4734EC4CEEA;
-	Thu, 12 Jun 2025 13:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749736015;
-	bh=hT/bQ9IGewEqAteujdCHealqh+6L8uhjT0UGYnjnpBY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ehENRr+wQeUQfWI7DWJUxjpVMJSGdm78/rslgoMuGjahzxO08dL/2SRVwORVcTzDu
-	 TQm9g19u0Qy2lC2qePI0+bXQ2y02huJZMPEa8DB732LY1SuAL1Sh7mhLMQkE5QVAAT
-	 yRNh2YKvf7KJXWP7pGMEf4SJNpDfP48C74xHWQTq6W2bqJUtF2BU+CwsuvvZLbqunj
-	 5ODWsD8nzFYTnsiNS7parMKvZ9Crg9o/se/2ZmK5nQ86zDVKnbPzHCgdjMzlAitjO9
-	 EigKo/rtcXoscxAwOZ87I7irCJFLjXEAktDwJEUpgVI/Z+wN5hNCb8qekeIUFMiYtS
-	 qHkeok0xqyD2Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <alex.gaynor@gmail.com>,  <ojeda@kernel.org>,  <aliceryhl@google.com>,
-  <anna-maria@linutronix.de>,  <bjorn3_gh@protonmail.com>,
-  <boqun.feng@gmail.com>,  <dakr@kernel.org>,  <frederic@kernel.org>,
-  <gary@garyguo.net>,  <jstultz@google.com>,
-  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
-  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
-  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
-Subject: Re: [PATCH v3 4/5] rust: time: Make HasHrTimer generic over
- HrTimerMode
-In-Reply-To: <20250610132823.3457263-5-fujita.tomonori@gmail.com> (FUJITA
-	Tomonori's message of "Tue, 10 Jun 2025 22:28:22 +0900")
-References: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
-	<aLAKkgBtJFi7eoQFKUAK328qMA9leoq0zggUJFvmVLvPKMS2zd93GP46_ctT_OyR_KidYBqkaweZYPt1sQ4VEQ==@protonmail.internalid>
-	<20250610132823.3457263-5-fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Thu, 12 Jun 2025 15:45:43 +0200
-Message-ID: <87cyb9xed4.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RQ6PsOvP"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C7emFn026020;
+	Thu, 12 Jun 2025 13:46:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	x1aM1/RH/pAvF5wMxosW5xMQEnEHvU9V8b+/IGhMbko=; b=RQ6PsOvPbmUc2k63
+	MpaiDqoVd+/4Ms7pv7QZ9CEB+A2PSsbkfhBO0L8H5rhO3GOE+znwNsvfiyuZ3xbY
+	IiWpS/OR7M/tbz67azpmbIot2y7DTfOc5+yxcxpr0fVpFt0RoFin+NRcPHAzYq91
+	a4Qolrx1D4/zcqkndchg+oVoLLnDkSqdog7ri4WJlsRdj4BDjuzwysAYMsXr0owi
+	J/6dlv25/CbbDCqTmGz6GDCQrev8sE9OKxbCvT22Nt/1lX+I3N/knjgQxqrf0upw
+	JlTZvifj/xU73mlhmu1XsjZ8OQIrwpU1RGVm5796k6g4bmgNDEUzPGp9+cagrUJ0
+	bmstMA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2ybhe8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 13:46:23 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55CDkMTi030294
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 13:46:22 GMT
+Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 12 Jun 2025 06:46:18 -0700
+From: Luo Jie <quic_luoj@quicinc.com>
+Date: Thu, 12 Jun 2025 21:46:08 +0800
+Subject: [PATCH v4 1/5] coccinelle: misc: Add field_modify script
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250612-field_modify-v4-1-ae4f74da45a6@quicinc.com>
+References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
+In-Reply-To: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
+To: Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>,
+        Julia Lawall <Julia.Lawall@inria.fr>,
+        "Nicolas
+ Palix" <nicolas.palix@imag.fr>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Oliver Upton
+	<oliver.upton@linux.dev>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <cocci@inria.fr>,
+        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+        <andrew@lunn.ch>, <quic_kkumarcs@quicinc.com>,
+        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
+        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>,
+        Luo Jie <quic_luoj@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749735973; l=2080;
+ i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
+ bh=67KHPK0ryj5WYDYDXexeSpchGNbTFtE5nDzepjRpz2w=;
+ b=MynC0pYX9Gv44FXGa3PgGdulk7VDm8uFk33/XLd0kf5RVAs3oe7amKe2dYFqLnvfyUx8W/sO7
+ coZ/hJ2Y+6NDMnBRlz8KI5Rv00X/ldzEzE+OETZwsIwzNRQF3sppunv
+X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
+ pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEwNSBTYWx0ZWRfX9fjypbZRF9us
+ TSdivsvAB3bdNAS/dxa3k/4waJ8PLm46wEH5ll9rscH0cPBNAm0qpQaSyq9lgMCjbVPc50L0yan
+ 3H2TzimlAdE4ZR2p3bJuBlteOc55c+S79y0VpU4swAbb/On/+nzuZu8kpX5BV4wVskOWbM/m2Em
+ cEo2ztZ33frACuREuAeeIoO30RjEAY5G0odY+oHdvVq57zTo6vvY6w27GOeBTRZKMEivQDzD/vB
+ DlH3VNKvg6f/hHorTbQH7bWnEA80VCyDbqThyRRL/ISqU1OAckF5WDuYnIcdkT3zWAlRfRqsokY
+ H96EOxoC8aLjgCeao/C357UZGg6XExEp+SpWeEU9McpNIqg7SM1Mj9G0j0NjqJoUzF4huvJUiz9
+ T5lEUkC87MRY9PwQbks7ZYBhRPTcOZTfwX+46GTc+7SztAUVBJmPrsRNnZ3qfS5KXAc4RcFD
+X-Proofpoint-GUID: F-nCuB_1zsCz5ribdNyO6PeJKsI-5Y3m
+X-Proofpoint-ORIG-GUID: F-nCuB_1zsCz5ribdNyO6PeJKsI-5Y3m
+X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=684ada2f cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=05oQ047nAAAA:8 a=l05NuDNGqYqV5CF8ttEA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=vNAg3JWiabyzeNEprMgK:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_09,2025-06-12_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506120105
 
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+Find and suggest conversions of opencoded field modify patterns with
+the wrapper FIELD_MODIFY() API defined in include/linux/bitfield.h
+for catching the possible parameter type error in the compile time.
 
-> Add a `TimerMode` associated type to the `HasHrTimer` trait to
-> represent the operational mode of the timer, such as absolute or
-> relative expiration. This new type must implement the `HrTimerMode`
-> trait, which defines how expiration values are interpreted.
->
-> Update the `start()` method to accept an `expires` parameter of type
-> `<Self::TimerMode as HrTimerMode>::Expires` instead of the fixed `Ktime`.
-> This enables different timer modes to provide strongly typed expiration
-> values, such as `Instant<C>` or `Delta`.
->
-> The `impl_has_hr_timer` macro is also extended to allow specifying the
-> `HrTimerMode`. In the following example, it guarantees that the
-> `start()` method for `Foo` only accepts `Instant<Monotonic>`. Using a
-> `Delta` or an `Instant` with a different clock source will result in a
-> compile-time error:
->
-> struct Foo {
->     #[pin]
->     timer: HrTimer<Self>,
-> }
->
-> impl_has_hr_timer! {
->     impl HasHrTimer<Self> for Foo {
->         mode : AbsoluteMode<Monotonic>,
->         field : self.timer
->     }
-> }
->
-> This design eliminates runtime mismatches between expires types and
-> clock sources, and enables stronger type-level guarantees throughout
-> hrtimer.
->
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+---
+ scripts/coccinelle/misc/field_modify.cocci | 61 ++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+diff --git a/scripts/coccinelle/misc/field_modify.cocci b/scripts/coccinelle/misc/field_modify.cocci
+new file mode 100644
+index 000000000000..48b00194a265
+--- /dev/null
++++ b/scripts/coccinelle/misc/field_modify.cocci
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/// Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
++/// - reg &= ~MASK;
++/// - reg |= FIELD_PREP(MASK, val);
++//
++// Confidence: High
++// Author: Luo Jie <quic_luoj@quicinc.com>
++// Copyright: (C) 2025 Qualcomm Innovation Center, Inc.
++// Keywords: FIELD_PREP, FIELD_MODIFY
++// Options: --include-headers
++
++virtual context
++virtual patch
++virtual org
++virtual report
++
++@ depends on context && !patch && !org && !report@
++identifier reg, val;
++constant mask;
++symbol FIELD_PREP;
++@@
++
++* reg &= ~mask;
++* reg |= FIELD_PREP(mask, val);
++
++@ depends on !context && patch && !org && !report @
++identifier reg, val;
++constant mask;
++symbol FIELD_PREP, FIELD_MODIFY;
++@@
++
++-reg &= ~mask;
++-reg |= FIELD_PREP(mask, val);
+++FIELD_MODIFY(mask, &reg, val);
++
++@r depends on !context && !patch && (org || report)@
++identifier reg, val;
++constant mask;
++symbol FIELD_PREP;
++position p;
++@@
++
++ reg &= ~mask;
++ reg |= FIELD_PREP@p(mask, val);
++
++@script:python depends on report@
++p << r.p;
++x << r.reg;
++@@
++
++msg="WARNING: Consider using FIELD_MODIFY helper on %s" % (x)
++coccilib.report.print_report(p[0], msg)
++
++@script:python depends on org@
++p << r.p;
++x << r.reg;
++@@
++
++msg="WARNING: Consider using FIELD_MODIFY helper on %s" % (x)
++msg_safe=msg.replace("[","@(").replace("]",")")
++coccilib.org.print_todo(p[0], msg_safe)
 
-
-Best regards,
-Andreas Hindborg
-
+-- 
+2.34.1
 
