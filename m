@@ -1,214 +1,157 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50AE1442E8;
-	Thu, 12 Jun 2025 20:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758424; cv=fail; b=amfpjuPbY1BT6CjUyG1d8EmebPhpYU5xSxP12/wX8LDX6fsSp+PJhp4JLfRVIVdYGHsXhzvXZzuPKDscfxuWBUXAv4cTYuAj7x52v3RPKtp4VF0AyHidlLNGYAtxmZ+7PZYNToBJxioPn5vp27OL3MqmIW0g7YNgRgh0Q2S+Cb8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758424; c=relaxed/simple;
-	bh=39qn9y7ePAIcQ7+dazTP1p2OxABujGkyKOP/iKiBkqA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=He/vuCR0Uwmd7JxJY/+G8cg8puOANrN9eBPC8mpFJlUzsLmhca5/xJgG51w7OV9YvDMbCb2Hu/FfNJofvO43RpnTFFTEzqfO4B08JWBYRJYkzIoV8cGpUWT9Q5oiBQ7PTp16qOZjbcNoKLS/qhGwlfR4JPcZe6k/13klDLRmpcA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WvqxjchO; arc=fail smtp.client-ip=40.107.243.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1631442E8
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749758527; cv=none; b=kNo6UoAfck7dcURfrIxaOxntlLqDdTIw5+EXo9X6Js4QphV+2bqkNYt+YuZ8i7vG5MwqPvEJAZ3d4KDTcGEnxyKLktxtTZebFP4i6eGpJiENWXKlAZrNUBi/dcU9iCB+z7inRBzh++35Z/slcytsPUpatmIOgwFYDUTj+t5v5WE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749758527; c=relaxed/simple;
+	bh=1zQZwJvti3V5peI0NwKLIco5vf9r0SDnNyPGUQi6jsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PEUe4Uf5KqZvMHjJKmZcrdJauguOpN0u9SpROD3ei0SJed0sLLxsdNdId2VKfe7PjRVfbLGbBQJfFCjW5h+849ZRL2Ns01l8kS3mYPtJuWmjV7rMOvGPWQg6iyb6UBoH1/vToFp8GtsvJJz2Wc1Ul0SJ6LcpUyftpM82TvdZ/VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aNXoE0Yp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WvqxjchO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y2TJsAl6kIHDn9yFoNFsJtWHsnCkZlWij2L/JhbI9NP4w60GlHV2PTGm0usF8pCPxQNvp2oGYZafR5OBsZGJQYHPLDFjLQMBIRjPwt2Zmf7ao0XakcpmyNt9yRiv0MLNekuROgWMZi8l+AhR7oxcjGi4GJJmV5KEsfSwsSyJm1GWWXWLkNzumCwofi3Nory4D18ZS3146FMB6f1f/JFY7BKhIocO6c6TXAyOeroPuIidEubwEJtvjS5KwUx5766f9WonLzJRLQeuxvn9/SEM5/T+9j0LB9JAVYanV5RsICKjM09yaIdqkUiuksUPnJnv3JqnkQBCoydlmCz4D1nxjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YheRLQg20VPmXEKDd+fhP14H/yp8urqQolgJ0YXCfqA=;
- b=gdOWCerVASGVm3IYvqU5gIge4mydxzjWiFm14gflGekzZkMCgNsjDu7h3q3lOb5azXcw9qrUpn0w5cKrYCvqmCytsm/gsWo9KjJCeli4RA8v6fENw8KEC8H3zgAErd4hhQJXaBMYSjvCybMZPxNnfF2nj6Vn22vcvF0PJpo8uQPSppwi//1oFkFy8py/XMDZIg9sv9I6s+Yud1qokniQfnEE0eUUqC5jh5L3RsE9Rm8s1SZNyW5zFU/qkqpcS/Pz5sGqIq52PtyYSJNECu/6tOaAwL+DzKKHtCha2F9YkfcT5irwEHK86HPfSMZ+qCuI3kmCBufRteFNGUh4Y6ohmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YheRLQg20VPmXEKDd+fhP14H/yp8urqQolgJ0YXCfqA=;
- b=WvqxjchOG1HCta8F/rLJyGe0DhURbf6B1vjzQcNCPtBh0izFeqNDD983IBu7sRZrCdRs6jKnuNozLmswmMp4P3TWqdgtPShfvWHUiiX/IwZlKwjviujMvdn6COy1ZIutIqwsBzl5zivVjCHqUP/3FwfxDC167FowarymX94wftGvvGQFQi6wutukdvDIB8yIsLY8ZpEfii5g6ZPlA0A3s9qHcTnh25b1C4D2/+pYNLdhKytPYST6Xe3qBgTo4YmErYTrzkWP3Z2mUsLJTCoBRLJOjEUmDG1Kt0SzlIgs/ts4eo1enM/vuqAV0EvaEz9W9nHvf0E3KK+Hr9uU04OHrg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
- by PH7PR12MB5831.namprd12.prod.outlook.com (2603:10b6:510:1d6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
- 2025 20:00:16 +0000
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4%4]) with mapi id 15.20.8792.035; Thu, 12 Jun 2025
- 20:00:15 +0000
-Message-ID: <f8d9af76-fc1d-4f7a-8dfb-a0606e44c56b@nvidia.com>
-Date: Thu, 12 Jun 2025 13:00:12 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 04/23] rust: add new `num` module with `PowerOfTwo`
- type
-To: Boqun Feng <boqun.feng@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Benno Lossin <lossin@kernel.org>, Ben Skeggs <bskeggs@nvidia.com>,
- Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
- Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
- <aErtL6yxLu3Azbsm@tardis.local>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <aErtL6yxLu3Azbsm@tardis.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0220.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::15) To LV2PR12MB5968.namprd12.prod.outlook.com
- (2603:10b6:408:14f::7)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aNXoE0Yp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749758524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=C4px3QPbZ1SRsAzWHP3GIAiZmhSyKEE8qa7Iyubi/WY=;
+	b=aNXoE0YpfHet3uKR61ofIm/hV34NHj3zViE3HRjrdYx5MPDAVahm465oJMzQwrf1iheRTY
+	XvA9PK9BzOMJLX4zxdSV/qYPX8UQtQzQy3xRmEUSwdOT1c7k5cxeuX7gVWhEb8LVwzSB8N
+	PFPNma6qhRYXACwz9YJWz10U6KoUAWY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-639-a79Eg75qPruNzc5Sp5pqxw-1; Thu,
+ 12 Jun 2025 16:01:59 -0400
+X-MC-Unique: a79Eg75qPruNzc5Sp5pqxw-1
+X-Mimecast-MFC-AGG-ID: a79Eg75qPruNzc5Sp5pqxw_1749758516
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C22A11800294;
+	Thu, 12 Jun 2025 20:01:55 +0000 (UTC)
+Received: from p16v.redhat.com (unknown [10.45.224.169])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6AEDD180045B;
+	Thu, 12 Jun 2025 20:01:47 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: [PATCH net-next v9 00/14] Add Microchip ZL3073x support (part 1)
+Date: Thu, 12 Jun 2025 22:01:31 +0200
+Message-ID: <20250612200145.774195-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|PH7PR12MB5831:EE_
-X-MS-Office365-Filtering-Correlation-Id: a7efdc74-cf43-484b-e5fb-08dda9ebbfa9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RWdFS1g0TTkwUHlYbStONlhPYWpDNURRdzVXUitGb2VhOHVIL0VmZ3RzWHBK?=
- =?utf-8?B?SGFMTjhKRUVOYXVOTHRqZGVKTnEva2FFU3JuNDA0OTBjZmJNYS9jVTNFRnRF?=
- =?utf-8?B?eXRQSnNCd3FWZjduL2RuSzB4RlVuV3BuQkRZNy8vOVdTY2VGQUVjbUN5ZjEy?=
- =?utf-8?B?cXZzbkZsaUI2ZzNzalFOYW1yT2l2TTJOYTFycEpTS25qaHFrZTUrNFZ0TERz?=
- =?utf-8?B?RDNtK1B6L0F6M1Q3Ui94SitZNlg1emRmSER6RUExZ1Q1aDdoQnliWUhwSld5?=
- =?utf-8?B?YVBpZVJER0Voa3Y1NjVJMFpjUEhUMG55ZlM3a1dST1lUZ0NteGZkd2FJSlBs?=
- =?utf-8?B?MG1vV0dpQ2lCZVZMbWVRYUNGL2lwa055aXgzY2JzOGQ1eWRBUWhRQXdCVi90?=
- =?utf-8?B?b05lY2M1Tlo3V1VsOHl3MkZqZDB3OEtOc2t2MmxTZXVDRVFLaWVGOEVQMnRs?=
- =?utf-8?B?ck5ueUJiRFpSMnVleTMxYzhWdXNJMVVhWlJEbC80NHFORUpSYmZ3amdUcE1k?=
- =?utf-8?B?VHN3U1I2b3A0b0tNRE1HWkIzcDVlU1JxVTFIRi9lQlZobEdpcFRDMXlnNlNE?=
- =?utf-8?B?UU84dVBwc1FYYlVhQzlNU0JhYmJlNWpHT0N0OTU4WlIvOXA3eG9nV1hVVm5Y?=
- =?utf-8?B?NDhSNkpEZlI4OXgyTlUwTUNvS0h1VzBPclJWdFJwUUZaLzM0TXJXSXk5SjMx?=
- =?utf-8?B?emZlWWlIYTU2Qks4M0Rwb1VaTGtreDU2Znc1ZEN3YlFwU09vVCtDM1N5UFJT?=
- =?utf-8?B?VENib1BBeGRzM2sxbkQyVkw2bmZnTFpBT3hwYnkrd2ltVGxadTNRVENZem1a?=
- =?utf-8?B?M2M4V0FmQ3BvMUtkeDJpNjJoQXliejZITlIrek8vN25KdGRPQUFtRDZnYjRM?=
- =?utf-8?B?TEMrSVRPZUZZZkJDMTBVUWRRK2cvMW0wZlloQXhRSFRQdXI3SVlPNlpTMndz?=
- =?utf-8?B?WlpldlpJUFVZSm9WOXExekkycWNGOEJORHhuZW8rQ29zTG9Hc1BOd0pXcXpK?=
- =?utf-8?B?VzZhOHpLZndhdVZEdUpNNkhjZ0lhSVlmdWhvQ041ZkJqYUFDQ0ZnZGpsMjh1?=
- =?utf-8?B?bEV6d3pHKy9yakhoQ1dUVWxrUWFQb2YxOTVveCtJTTRxTzN1eEFSUzRjRkZB?=
- =?utf-8?B?RFRyU3V5bTJJOFVzaXRObS9NUUJiWTNEZHptcmR4dVhpL0RxMkVqMmh0NVFF?=
- =?utf-8?B?am85ZGpsYVdnaWhBV1VWUDQvM3BEK2U3UzBYMHZGRHJ3bitXQWhudXVHTzVW?=
- =?utf-8?B?aGd0TGRFNTVBN3NFdU55eWZTWkN5ditWbEpXYmlKMjMzL251UzU1R1d0dDds?=
- =?utf-8?B?SHJqMHZnT3lCd1N6bjBtaTJVeW1JNjdNRzQrblE3QzRDVkNWZE1ORE8rYTNE?=
- =?utf-8?B?ZUlTY2FkTkNUUGJtcGNEZVV2WE83cEV4Wks2WDgyQWFRSmRzazR5ZDFzR2lq?=
- =?utf-8?B?YVE4dHdwSlBrblpmR2RmSTRFNkMwWDdZKzFRYncwdGtLSzk3eW9KY1lGZWk2?=
- =?utf-8?B?dFFsK0hGU2o4dXpad0I3MGFlcnk0dXBnRnhValV4NUpSdnBYTnhWNXE3bEph?=
- =?utf-8?B?WVJSVE5lV3JBbFlCUkV3VnlNSitCOU03TFpHeDFTdnVZYTJ0RDJneTJoK0ZS?=
- =?utf-8?B?VUN6TG1oSTgzUmFBUE9UOWliYnE5cE9nMmk4MTJOK1N3RFd2Rm5yTGFmU1Fp?=
- =?utf-8?B?NGFhd3VyYjlhRzloQVVWU2x5aDg5UEw5eU53MUUyQm92dVZydlN0aU5Dekcx?=
- =?utf-8?B?TTVMaDZDSUxONTkxbDJWMkFKcHdLTVk1Vy94RC9zOXJFWm1seXhaUC9ZRU0y?=
- =?utf-8?B?YW1VQTcvbGNuM0dCZUw0Y2dXYUdrS1BiQ1pSNVBlVDltem1udG5SaGZhczdw?=
- =?utf-8?B?ZTBJcm1WcWJuU2FtSmt5ajVmV1g5cXZzQ3I4QjJlVTRxZlZGSDNWeEZoRDNK?=
- =?utf-8?Q?SmXx5rW3Zx8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q1FxYzVYYmlqVW5sclRBV2ZVUlNkM3hzMG1NTFlIQ2R6WDN1amlZR1J5TVpl?=
- =?utf-8?B?eGpqK2pYMVNqYXRsWmxKdlNBVjV5bXA3dk9NVURHSzFBZ1hxbEtPdlZUTDdx?=
- =?utf-8?B?TmErMkRobGE0S3c3K2VQMUJOQ2pPcWpoQU1ycm8vRkpWdDdEalY0VzNsZmg3?=
- =?utf-8?B?YjhJZk5odWxtMHY4NkNXMStUcTRtbmNMNXNoK2J6SHErUXZxRmNzN0U4Unkv?=
- =?utf-8?B?ZVpUeWd6TE9MTWVtV0JEOXNrdzZQcjdkcXpXbTBSVFd2QWlpQTVQQ3kwcmdr?=
- =?utf-8?B?VzFQRzZQR1I4c3Y4TmIyRnIvYURvTzlPMnNQNEd6N2QrY3Zub0ZraDdBNXVw?=
- =?utf-8?B?OU13ditybzdOUkhkNnFlN1BIUXorU3JYd2ZyUlIzNktwNjdWejZrYXBLZ2xa?=
- =?utf-8?B?VFMyT0R4RFZZQ2tvdlFMU2FaREhXbmFPczJBbmJJZTNPRmc3MC9zSnNIblVt?=
- =?utf-8?B?eDNQOVJKTEZDUGdjU2ZybmhLZkZVMUJ6b2puakVJUTIyOFdKa3RINlRSaTFu?=
- =?utf-8?B?T0E0YXV1N3QwbDFHZzZUUWNkRE45aVI1WmFjNElCeURYK1c5UHJMc0pOOFN4?=
- =?utf-8?B?dHIzWk8zVjNOQm5PS0VHalBocEZGcnZ0NjVPY0JISnNnSmZsYTBVWDV4cWtK?=
- =?utf-8?B?YlRIMFRVWCtRMldjZ2thSTV2cmRxMERpL1d4RXRiWDgzNDlIZzVQaTJ5TGhu?=
- =?utf-8?B?aWJRSm9WVkR3SzYxNjNlRlZsL1dBRkZhdmtFVUtOR3MxdkYyWXFBaFhWRDNC?=
- =?utf-8?B?dkxPbWNjMnc1YW1MNUU3NjlOWmpjSis4VlRva2phdWk5Nk9zTE1HQVlOUFY2?=
- =?utf-8?B?NmdTOWFwOVBqRGYyZ0t4aWhyN0d3YzNYOU5rVDBwWVNnakYwenBYY0VWSm9x?=
- =?utf-8?B?SkhBZlFSeWxDUWxsN3BUNStudEZ0YzJPTnFWWTYycTB4YnVQNXBEK3RwZXlX?=
- =?utf-8?B?RFhwUVRYSU9aWW0xeUg1aGNFUm1VQjB6WGQ4eGxrWi9IRENzYnBWekhHdFgx?=
- =?utf-8?B?SFNUZDFSVUJmZk1TWlRZcmpKbWV1ZUgzdU5hTElTcGoybnNWWU80cDNCcS85?=
- =?utf-8?B?Y3RtVm1zajRWTy92YTJLYjJyS2JSQnlDbWY3TUxqdC8xZGFmekhGb1ZPdGxi?=
- =?utf-8?B?OFBEaGEvUFN4Ry9JRlBjNHBPYmtiSlhseHE5dVVPdVplKzZqR29JREhZejRQ?=
- =?utf-8?B?MENQUk9hajF0V1RpOUlWSER1TFVrVE13a2htTUg4Z3hxQWdMdnptc24rUUNI?=
- =?utf-8?B?TC85WWw1bTdxdlVlVDVlZHoyOTRVK3JaQ2pqTUJ5OGRic0lKNVhaODFsYlNL?=
- =?utf-8?B?TnFuOXZtQzMzU1UyQ0owTTlvRjdlOEpiOFMwY0pMbG5JVnkrNm11WG1VL1dI?=
- =?utf-8?B?QzRVb0piNnB4ZCtYS0o1aGZMeHdLVWRhYUwxNDhUWHdnZ2dGL2EzNkE2QmxZ?=
- =?utf-8?B?ajcvVmMybExKSWZzaDJWNUczVS83SmFVWi9GYXRpeEU5elNNNHRrSFZuZXZu?=
- =?utf-8?B?WUhkM0p1bjd1RmdVekcxNXpiUGtOdFFsVkk2N25ySENGNVRsZjluOTVBLzhF?=
- =?utf-8?B?N0xCRDlGNm92V1I3WEhPL2ZtdWYwL1o5UFBxV3FnbnpFL2R4MVdaazJNTUZ4?=
- =?utf-8?B?MFZRTkdZNXpVUXZCUjlpdjZSc3pDTktYcFRWbENma2dzS3dVZlZ0WWhUVWVE?=
- =?utf-8?B?c0JGNXVYWGZYTFFyMngvMEdjazgxY1Z4Z1doVnhLeWVUMVBwS0Q0bHBQK3dN?=
- =?utf-8?B?c0w3WEFCbEF1SXM2aXN4bXFuVm51cGkrYnBFM3B1c1Z6a2tsa096emkrczZ1?=
- =?utf-8?B?YmxTQVVJbWhreFBNeEt0NnNKRHRxQUdGSFE2emZzZUdEUm1iN1ozUUdZdnU1?=
- =?utf-8?B?U1FrRUhXSEJGVzBJSnVaQTRtMnk5VUwrN3h0TjZZZ0NJNkRYb3d4NWwveHF6?=
- =?utf-8?B?cmZBaUlGTDJrbVpTVytJYlFwNW9FQ0FxVWpHL1gyYjFnVCtsYkFycG5TTGJ2?=
- =?utf-8?B?NEVCUWJYaFY0TVphazZhSVQ1ZzYzSDdjSXlxTHh6WVFpWndEc0ZFZWJUWXRa?=
- =?utf-8?B?Q1MwVnk0czhWNlVjR3NIWk8zUHBNaUxYdkF5VzB5cklmWjV0QTIwOXFxQzFt?=
- =?utf-8?Q?ui35t7aQa/YhTU3keb+B1AWz1?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7efdc74-cf43-484b-e5fb-08dda9ebbfa9
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 20:00:15.7508
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QVIfdjfw11QGpXberpYMy54uGbEbIoL5TKlIN78sie2ciPfJaC5SUz/JxRr3wCqe7bn4FMhJyR+qjW2wZo3M1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5831
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 6/12/25 8:07 AM, Boqun Feng wrote:
-> On Thu, Jun 12, 2025 at 11:01:32PM +0900, Alexandre Courbot wrote:
-...
->> +                #[inline(always)]
->> +                pub const fn align_down(self, value: $t) -> $t {
-> 
-> I'm late to party, but could we instead implement:
-> 
->     pub const fn round_down<i32>(value: i32, shift: i32) -> i32 {
->         value & !((1 << shift) - 1)
->     }
-> 
->     pub const fn round_up<i32>(value: i32, shift: i32) -> i32 {
->         let mask = (1 << shift) - 1;
->         value.wrapping_add(mask) & !mask
->     }
+Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+provides DPLL and PTP functionality. This series bring first part
+that adds the core functionality and basic DPLL support.
 
-Just a naming concern here.
+The next part of the series will bring additional DPLL functionality
+like eSync support, phase offset and frequency offset reporting and
+phase adjustments.
 
-The function name, and the "shift" argument is extremely odd there.
-And that's because it is re-inventing the concept of align_down()
-and align_up(), but with a misleading name and a hard to understand
-"shift" argument.
+Testing was done by myself and by Prathosh Satish on Microchip EDS2
+development board with ZL30732 DPLL chip connected over I2C bus.
 
-If you are "rounding" to a power of two, that's normally called
-alignment, at least in kernel code. And if you are rounding to the
-nearest...integer, for example, that's rounding.
+---
+Changelog:
+v9:
+After discussion with Jakub Kicinski we agreed that it would be better
+to implement whole functionality in a single driver without touching
+MFD sub-system. Besides touching multiple sub-systems by single device
+there are also some technical issues that are easier resolvable
+in a single driver. Additionally the firmware flashing functionality
+would bring more than 1000 lines of code with previous approach to
+the MFD driver - it is not something the MFD maintainers would like
+to see.
 
-But "rounding" with a "shift" argument? That's a little too 
-creative! :) 
+Ivan Vecera (14):
+  dt-bindings: dpll: Add DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  dpll: Add basic Microchip ZL3073x support
+  dpll: zl3073x: Add support for devlink device info
+  dpll: zl3073x: Protect operations requiring multiple register accesses
+  dpll: zl3073x: Fetch invariants during probe
+  dpll: zl3073x: Add clock_id field
+  dpll: zl3073x: Read DPLL types and pin properties from system firmware
+  dpll: zl3073x: Register DPLL devices and pins
+  dpll: zl3073x: Implement input pin selection in manual mode
+  dpll: zl3073x: Add support to get/set priority on input pins
+  dpll: zl3073x: Implement input pin state setting in automatic mode
+  dpll: zl3073x: Add support to get/set frequency on input pins
+  dpll: zl3073x: Add support to get/set frequency on output pins
 
-> 
-> ? It's much harder to pass an invalid alignment with this.
+ .../devicetree/bindings/dpll/dpll-device.yaml |   76 +
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |   45 +
+ .../bindings/dpll/microchip,zl30731.yaml      |  115 ++
+ Documentation/networking/devlink/index.rst    |    1 +
+ Documentation/networking/devlink/zl3073x.rst  |   37 +
+ MAINTAINERS                                   |   10 +
+ drivers/Kconfig                               |    4 +-
+ drivers/dpll/Kconfig                          |    6 +
+ drivers/dpll/Makefile                         |    2 +
+ drivers/dpll/zl3073x/Kconfig                  |   36 +
+ drivers/dpll/zl3073x/Makefile                 |   10 +
+ drivers/dpll/zl3073x/core.c                   |  966 +++++++++++
+ drivers/dpll/zl3073x/core.h                   |  371 ++++
+ drivers/dpll/zl3073x/dpll.c                   | 1496 +++++++++++++++++
+ drivers/dpll/zl3073x/dpll.h                   |   42 +
+ drivers/dpll/zl3073x/i2c.c                    |   95 ++
+ drivers/dpll/zl3073x/prop.c                   |  358 ++++
+ drivers/dpll/zl3073x/prop.h                   |   34 +
+ drivers/dpll/zl3073x/regs.h                   |  206 +++
+ drivers/dpll/zl3073x/spi.c                    |   95 ++
+ 20 files changed, 4003 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+ create mode 100644 Documentation/networking/devlink/zl3073x.rst
+ create mode 100644 drivers/dpll/zl3073x/Kconfig
+ create mode 100644 drivers/dpll/zl3073x/Makefile
+ create mode 100644 drivers/dpll/zl3073x/core.c
+ create mode 100644 drivers/dpll/zl3073x/core.h
+ create mode 100644 drivers/dpll/zl3073x/dpll.c
+ create mode 100644 drivers/dpll/zl3073x/dpll.h
+ create mode 100644 drivers/dpll/zl3073x/i2c.c
+ create mode 100644 drivers/dpll/zl3073x/prop.c
+ create mode 100644 drivers/dpll/zl3073x/prop.h
+ create mode 100644 drivers/dpll/zl3073x/regs.h
+ create mode 100644 drivers/dpll/zl3073x/spi.c
 
-Hopefully we can address argument validation without blowing up
-the usual naming conventions.
-
-
-thanks,
 -- 
-John Hubbard
+2.49.0
 
