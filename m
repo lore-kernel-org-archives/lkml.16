@@ -1,427 +1,123 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74282D29C3;
-	Thu, 12 Jun 2025 18:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D302C3774
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 18:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749751355; cv=none; b=Jh1p7ZUGT400Q0mQHgT18Wq5+Mc3i8wsWmkwFa8IZj888//b2pJyCO6htWpsCdp7SnFmuMMVg0ESF6CAPiH7nUnY/rUvsOGeq1T6ICCA3ThQZ90RHOwzKUhqjthV0oonB4hQl4k0lfqGpf1ghGJwaZuf30LfuM/KGB5KfL+IIfE=
+	t=1749751373; cv=none; b=KHpIzvvf7wwWeLQzwmq7QiF1MVcn+3vPDjsBH79+SZWWEHryXwHf2vlldfH0dWI4yvjLhDaYnyIwlkR6m2EX8hsqzV/xO43rYSncrAZfj4luRFCQN3nhlc9GeMhqsY6JOn1jCtyLbDN0YhL5Wx9W2NcSCxIUAPZb464B5pgZr28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749751355; c=relaxed/simple;
-	bh=hBZMftNY5f9tgrs0EL9IrsmIP161T8uV3Z/MygHdM1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I+o4JMJ5MNEvnyVgPdyTyDApl122diVt58/OpJtOmsfZ+WiJUnPWs/2BB8IFkUWcony0lx7JRVAQIVOjcqumyNGDvBHDtEiNwTSavEGwci9BarYNezITzp5G6JIsNyzs34Zbb3n93aF4MFpV7itro4bSm/rigtz+2vgwxvMhZcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=XTvQpusP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qbG7HTzB; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1749751373; c=relaxed/simple;
+	bh=7xWw5aJLm8rN49o70JV7Et+XL03bPweLX55FIjhoBWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGy9sb56PhR95d2aXuykqYfKlKJvtvxTeJc/kWK8EiD0Xx+rNdZXuF1/zxKk4Lmw9qKp1Z8A0YdoNWsm3s4EujVHEoyD0rAEfiuHWZ9kxLBLVgCYKZ2uglvYsuWW6rVqMk786kU6jz1yRpGHycvgSv/KUPajmNQfKhHZ97BVfNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=SHQUsczu; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="XTvQpusP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qbG7HTzB"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id E8F181380598;
-	Thu, 12 Jun 2025 14:02:31 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 12 Jun 2025 14:02:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749751351;
-	 x=1749837751; bh=y+PB6CxyjMTzkvqZKfxUbprbGo+RaNlTqGEsUjl5Ww0=; b=
-	XTvQpusPUUJT7KxMrhKomEEYdPhFeNj8N4DY1mwtppdV9sBTff2aLeOuyaHq0fWl
-	lZ7g3//R2gm1xIhGwWiUc2dn1UESkBahaWKOQjCYm45JIDqF5wrtDmF0esXz/z30
-	h8G3OS6yENQ01r+frxcNwEhT6cdswWGtDh94mM58f9bZ42x3bIXnvr6rB+n5n/Ud
-	nkdzzhfrBC9BTTV+pdlsLliFxiu2O4S5T9DwGax1r9CjqtsxDtVmg/Ak7Rt+ayOG
-	K8txmDLkYXtjROdYfn7jRaMIkeKiffLFojZ/yErF7Os2hYMj2sbrvN2+ywBZfoaM
-	UQ+wcIEcrH8EYL00FG3RsA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749751351; x=
-	1749837751; bh=y+PB6CxyjMTzkvqZKfxUbprbGo+RaNlTqGEsUjl5Ww0=; b=q
-	bG7HTzBfLO2b3eEbjDSAvrC/eq0O4zhvlVAHGiGonzJyiZDj/Z8Ttk3wNurkI9wK
-	ufhGmwxC5lDNZVGZnsMxFRuywiGpe5gXkwijJ+W+cqxS9AYSRSc/tsxDfL1j9+4J
-	dQG8658nBft9/phmz7nC6TPbkbEJVUl3lkSAIG0JNlZByBWOyyVreWa3cujdI1Nk
-	nj6UsJyhGDCoslgM3wxHUIdQ/NdHig33WEywZkB36WFQecAbE3TA1CB23eFnu/ee
-	nbafDKSAseglH2nfi/vKAezML+FxTf1UKHJj8LW9HlBa3Ixyxpf/GPsQQhB4CcGN
-	lRz5GJLPZ0Akft2LVGW7A==
-X-ME-Sender: <xms:NxZLaNQyqC-Obh43uKB258U0f8wwqKKq6OZl_LY1Kd56gTbG3uGIUw>
-    <xme:NxZLaGw4rmOJNevC79kgM6Ko83oNZaRtxcs9OsVSkM7l4cJ0NKftlBEsZys-N2PNT
-    -57meRtAvM12peAAjg>
-X-ME-Received: <xmr:NxZLaC1mz5qTMtFHzW03rz4QLeGikVg1gFgOzsA69gYbvg9cOh07Gd9xjXEor8FJ6Y8pIxD2PBUZuNqhy-pgTt0v>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheejfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredt
-    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
-    guvghrlhhunhguodhrvghnvghsrghssehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgr
-    thhtvghrnhepheeigfeuveeutdefhfehgeekvedtleeuueekveefudehhffhjeffgfegff
-    elfeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    nhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtg
-    hpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgthhgvhhgrsges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlih
-    guvghrrdgsvgdprhgtphhtthhopehsrghkrghrihdrrghilhhusheslhhinhhugidrihhn
-    thgvlhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgvnhgvsh
-    grshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhgruhhrvghnthdr
-    phhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlih
-    hnuhigqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhi
-    nhhugidqrhgvnhgvshgrshdqshhotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
-    htthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrg
-    htvggthhdrshgv
-X-ME-Proxy: <xmx:NxZLaFBberxlzK-R_rMoWFCnUHjT7EVdpPLOD_aasUGETvpFM3LhPw>
-    <xmx:NxZLaGiFJvi5Kge2SRUdmLFWaEEwmv5R6QdCpNqa1tROPj0UY65bXA>
-    <xmx:NxZLaJrZCPEZjOABUbvFkTNXVWP1e2pscbLXlDixraklzJWBT3HgLg>
-    <xmx:NxZLaBiU2iwRTUVZjjLwNfJcmUfw4NCjnJV8uO3YloX1HJmLt_0nLQ>
-    <xmx:NxZLaE9xJF2tsEcNruNQfvEBEYCso18vYQ4hB_F-I1v_0leF9LYFbpSc>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Jun 2025 14:02:31 -0400 (EDT)
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	linux-media@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v4 4/4] media: rcar-csi2: Add D-PHY support for V4H
-Date: Thu, 12 Jun 2025 19:59:04 +0200
-Message-ID: <20250612175904.1126717-5-niklas.soderlund+renesas@ragnatech.se>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250612175904.1126717-1-niklas.soderlund+renesas@ragnatech.se>
-References: <20250612175904.1126717-1-niklas.soderlund+renesas@ragnatech.se>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SHQUsczu"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6facba680a1so15235106d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1749751371; x=1750356171; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GDDRWPX1lH08t+vNjXng50l3/jIs9pZf702xFyzNrfY=;
+        b=SHQUsczuWm3agl6woZtp5CzhI7/hEvYO/lqDw70+mtT+2jgiku0xpGdC2XGyFTdiNY
+         h4m/rihWjDzqeFqTygtJsjrTbLIgVc2oWUdkcrr7ixISuPE6IWe7rynrg+xfzMo18k/A
+         c4vIlJLWRVpVTtyJ5TpLHCoh1ETzUp7EW+n/8K3wcszxUQJ6KNlse89xi/AFh0tXl7G2
+         lR6fuSupVMvMvwpHei0L6VE7O3Fm17HcKOWOAuCOii4/lzYuX4UmS/+/zNzQDqtowlbY
+         CUPbEigeyT+6uW+JOJd9PB2F7dNmvze8S5qlSbaplW8dAJQ+PNarM3DTxXeo7gkd9tW7
+         s3cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749751371; x=1750356171;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GDDRWPX1lH08t+vNjXng50l3/jIs9pZf702xFyzNrfY=;
+        b=pQROpGLq/amZsN3QbUN1EzMdgFRDJFXCDU6Q7D8ldpiR7N+5X77UxRZ3GWUWRTl6Zf
+         EdUIW1OzG6QbyRqg8eJDRepThPIgZhiagqry2WX+5wMlo10OnVrHaOnWEbY57IL8/oFo
+         UZYoYsZVoTiKBbdB29/lrEDFJAXFGH2TE6tVUisu2rQpHLEEdhYCDxP9vFf9iFd5u+6R
+         3XMc+KrEP9ILA99VkClt4BIFTwrEXALw1zioYOZraH4mdXVFXVjHQVuzlsTHeHNW0efF
+         M1IOE+y3AtIaiPMh+K1hnO1SAZamZcUxaBcUOBZjC8LLvunFROnyfkaeQc9WuxEDx4oO
+         8psA==
+X-Gm-Message-State: AOJu0YxFVZq5J7piIUrZQH4rQnjKhGnhP/AG5YCnRB4yMT/Jg8Fj0sZ/
+	aesmQeujFl2oairDXJ20D+cayuoPg8ylUzGE8ds1n+iEqHn4TmtAhNKUoJ7yhJ1pCxc=
+X-Gm-Gg: ASbGnctpguJqDv1oTcrX4AeqmYKEL8lDVgdJG95dH7X5Jb7bDwm7e3pwgxbmC05bB0g
+	QwrZkKF90DGB/+Tzq8K+DwX3Kj7ihF/Ow8TuDN3hhHGCFTFM1JeevO5f0HPRXC35dSgRR3ToHuZ
+	ujzYHkNlNHhUfA/V/OTI6YzeWGpweAi0NJlh3PamdCXtqa0QzTTyX77q3e1l44sXzif4sm8FF4Q
+	dz0+I3cNdUd+D8S5rEV9zfPbs/lXtQhAR04l8AIzdNHWBAWcUaTk4OghrGV0zkxT3MKzDjjyCxm
+	b+h8pXgl7PZazlUxXgXRSpZQu0ORXmPb2VRd6WUXZ1cpdcWdbgpH5E6uBtUbqeDi64K664f9Dbd
+	JFHNtWYdQqZ82/RLjbOEOi4P6JLoca4KYuF0bcg==
+X-Google-Smtp-Source: AGHT+IErLirqZ/IjWI/XgEsozLii1/UP6Pds6ZK0pCCFWbV1P+4pjEqskuPc1d9m/qNp3cmq3DvELw==
+X-Received: by 2002:a05:6214:e86:b0:6fa:d95d:d0b1 with SMTP id 6a1803df08f44-6fb3d2b2155mr7744516d6.24.1749751371067;
+        Thu, 12 Jun 2025 11:02:51 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c8ee5fsm12595756d6.122.2025.06.12.11.02.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 11:02:50 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uPmGI-00000004kgd-0Li5;
+	Thu, 12 Jun 2025 15:02:50 -0300
+Date: Thu, 12 Jun 2025 15:02:50 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v2 3/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pud()
+Message-ID: <20250612180250.GC1130869@ziepe.ca>
+References: <20250611120654.545963-1-david@redhat.com>
+ <20250611120654.545963-4-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611120654.545963-4-david@redhat.com>
 
-Add D-PHY support for V4H in addition to the already supported C-PHY.
-The common start-up procedure for C-PHY and D-PHY is shared, only PHY
-setup differ. Extend the V4H setup with D-PHY support as documented in
-the datasheet (Rev.1.21).
+On Wed, Jun 11, 2025 at 02:06:54PM +0200, David Hildenbrand wrote:
+> Marking PUDs that map a "normal" refcounted folios as special is
+> against our rules documented for vm_normal_page().
+> 
+> Fortunately, there are not that many pud_special() check that can be
+> mislead and are right now rather harmless: e.g., none so far
+> bases decisions whether to grab a folio reference on that decision.
+> 
+> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+> implications as it seems.
+> 
+> Getting this right will get more important as we introduce
+> folio_normal_page_pud() and start using it in more place where we
+> currently special-case based on other VMA flags.
+> 
+> Fix it just like we fixed vmf_insert_folio_pmd().
+> 
+> Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
+> 
+> Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  include/linux/mm.h | 19 ++++++++++++++++-
+>  mm/huge_memory.c   | 51 +++++++++++++++++++++++++---------------------
+>  2 files changed, 46 insertions(+), 24 deletions(-)
 
-Most of the start-up procedure is only documented as magic values in
-tables, there is little documentation to make the settings more clear.
-Wherever possible formulas or lookup tables are used as they are
-documented in the datasheet.
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Tested-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
----
-* Fixes since v3
-- Improve spelling in commit message and fix a comment style issue.
-- Use DIV_ROUND_UP() instead of roundup().
-- Correct bad mbps comparison in rcsi2_d_phy_setting_v4h_lut_lookup().
-- Use ilog2() instead of a stacked if .. else if .. else if .. else ..
-  construct.
-
-* Fixes since v2
-- Stire DESKEW settings in an array and loop over it instead of opene
-  coding it.
-
-* Fixes since v1
-- Init cphy  variables to not trigger false -Wmaybe-uninitialized
-  warning.
-- Adjust line lengths.
----
- drivers/media/platform/renesas/rcar-csi2.c | 230 ++++++++++++++++++++-
- 1 file changed, 220 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-index 7ba637d8683b..0350eb76df36 100644
---- a/drivers/media/platform/renesas/rcar-csi2.c
-+++ b/drivers/media/platform/renesas/rcar-csi2.c
-@@ -172,6 +172,7 @@ struct rcar_csi2;
- #define V4H_PPI_RW_LPDCOCAL_TWAIT_CONFIG_REG		0x21c0a
- #define V4H_PPI_RW_LPDCOCAL_VT_CONFIG_REG		0x21c0c
- #define V4H_PPI_RW_LPDCOCAL_COARSE_CFG_REG		0x21c10
-+#define V4H_PPI_RW_DDLCAL_CFG_n_REG(n)			(0x21c40 + ((n) * 2)) /* n = 0 - 7 */
- #define V4H_PPI_RW_COMMON_CFG_REG			0x21c6c
- #define V4H_PPI_RW_TERMCAL_CFG_0_REG			0x21c80
- #define V4H_PPI_RW_OFFSETCAL_CFG_0_REG			0x21ca0
-@@ -185,6 +186,13 @@ struct rcar_csi2;
- #define V4H_CORE_DIG_IOCTRL_RW_AFE_CB_CTRL_2_REG(n)	(0x23840 + ((n) * 2)) /* n = 0 - 11 */
- #define V4H_CORE_DIG_RW_COMMON_REG(n)			(0x23880 + ((n) * 2)) /* n = 0 - 15 */
- #define V4H_CORE_DIG_ANACTRL_RW_COMMON_ANACTRL_REG(n)	(0x239e0 + ((n) * 2)) /* n = 0 - 3 */
-+#define V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG	0x23fe0
-+
-+#define V4H_CORE_DIG_DLANE_l_RW_CFG_n_REG(l, n)		(0x26000 + ((l) * 0x400) + ((n) * 2))
-+#define V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, n)		(0x26080 + ((l) * 0x400) + ((n) * 2))
-+#define V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, n)	(0x26100 + ((l) * 0x400) + ((n) * 2))
-+#define V4H_CORE_DIG_DLANE_CLK_RW_LP_n_REG(n)		V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(4, (n))
-+#define V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(n)	V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(4, (n))
- 
- /* V4H C-PHY */
- #define V4H_CORE_DIG_RW_TRIO0_REG(n)			(0x22100 + ((n) * 2)) /* n = 0 - 3 */
-@@ -1282,11 +1290,193 @@ rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int mbps)
- 	return conf;
- }
- 
-+struct rcsi2_d_phy_setting_v4h_lut_value {
-+	unsigned int mbps;
-+	unsigned char cfg_1;
-+	unsigned char cfg_5_94;
-+	unsigned char cfg_5_30;
-+	unsigned char lane_ctrl_2_8;
-+	unsigned char rw_hs_rx_3_83;
-+	unsigned char rw_hs_rx_3_20;
-+	unsigned char rw_hs_rx_6;
-+	unsigned char rw_hs_rx_1;
-+};
-+
-+static const struct rcsi2_d_phy_setting_v4h_lut_value *
-+rcsi2_d_phy_setting_v4h_lut_lookup(int mbps)
-+{
-+	static const struct rcsi2_d_phy_setting_v4h_lut_value values[] = {
-+		{ 4500, 0x3f, 0x07, 0x00, 0x01, 0x02, 0x01, 0x0d, 0x10 },
-+		{ 4000, 0x47, 0x08, 0x01, 0x01, 0x05, 0x01, 0x0f, 0x0d },
-+		{ 3600, 0x4f, 0x09, 0x01, 0x01, 0x06, 0x01, 0x10, 0x0b },
-+		{ 3230, 0x57, 0x0a, 0x01, 0x01, 0x06, 0x01, 0x12, 0x09 },
-+		{ 3000, 0x47, 0x08, 0x00, 0x00, 0x03, 0x01, 0x0f, 0x0c },
-+		{ 2700, 0x4f, 0x09, 0x01, 0x00, 0x06, 0x01, 0x10, 0x0b },
-+		{ 2455, 0x57, 0x0a, 0x01, 0x00, 0x06, 0x01, 0x12, 0x09 },
-+		{ 2250, 0x5f, 0x0b, 0x01, 0x00, 0x08, 0x01, 0x13, 0x08 },
-+		{ 2077, 0x67, 0x0c, 0x01, 0x00, 0x06, 0x02, 0x15, 0x0d },
-+		{ 1929, 0x6f, 0x0d, 0x02, 0x00, 0x06, 0x02, 0x17, 0x0d },
-+		{ 1800, 0x77, 0x0e, 0x02, 0x00, 0x06, 0x02, 0x18, 0x0d },
-+		{ 1688, 0x7f, 0x0f, 0x02, 0x00, 0x08, 0x02, 0x1a, 0x0d },
-+		{ 1588, 0x87, 0x10, 0x02, 0x00, 0x08, 0x02, 0x1b, 0x0d },
-+		{ 1500, 0x8f, 0x11, 0x03, 0x00, 0x08, 0x02, 0x1d, 0x0c },
-+	};
-+
-+	for (unsigned int i = 0; i < ARRAY_SIZE(values); i++)
-+		if (mbps >= values[i].mbps)
-+			return &values[i];
-+
-+	return NULL;
-+}
-+
-+static int rcsi2_d_phy_setting_v4h(struct rcar_csi2 *priv, int mbps)
-+{
-+	const struct rcsi2_d_phy_setting_v4h_lut_value *lut =
-+		rcsi2_d_phy_setting_v4h_lut_lookup(mbps);
-+	u16 val;
-+
-+	rcsi2_write16(priv, V4H_CORE_DIG_RW_COMMON_REG(7), 0x0000);
-+	rcsi2_write16(priv, V4H_PPI_STARTUP_RW_COMMON_DPHY_REG(7), mbps > 1500 ? 0x0028 : 0x0068);
-+	rcsi2_write16(priv, V4H_PPI_STARTUP_RW_COMMON_DPHY_REG(8), 0x0050);
-+	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(0), 0x0063);
-+	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(7), 0x1132);
-+	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(1), 0x1340);
-+	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(2), 0x4b13);
-+	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(4), 0x000a);
-+	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(6), 0x800a);
-+	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(7), 0x1109);
-+
-+	if (mbps > 1500) {
-+		val = DIV_ROUND_UP(5 * mbps, 64);
-+		rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(3), val);
-+	}
-+
-+	if (lut) {
-+		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(1),
-+			       lut->cfg_1, 0x00ff);
-+		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(5),
-+			       lut->cfg_5_94 << 4, 0x03f0);
-+		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(5),
-+			       lut->cfg_5_30 << 0, 0x000f);
-+
-+		for (unsigned int l = 0; l < 5; l++)
-+			rcsi2_modify16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 8),
-+				       lut->lane_ctrl_2_8 << 12, 0x1000);
-+	}
-+
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, 0), 0x463c);
-+
-+	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(0, 2), 0x0000);
-+	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(1, 2), 0x0000);
-+	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(2, 2), 0x0001);
-+	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(3, 2), 0x0000);
-+	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(4, 2), 0x0000);
-+
-+	rcsi2_write16(priv, V4H_CORE_DIG_RW_COMMON_REG(6), 0x0009);
-+
-+	val = mbps > 1500 ? 0x0800 : 0x0802;
-+	for (unsigned int l = 0; l < 5; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 12), val);
-+
-+	val = mbps > 1500 ? 0x0000 : 0x0002;
-+	for (unsigned int l = 0; l < 5; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 13), val);
-+
-+	if (mbps >= 80) {
-+		/* 2560: 6, 1280: 5, 640: 4, 320: 3, 160: 2, 80: 1 */
-+		val = ilog2(mbps / 80) + 1;
-+		rcsi2_modify16(priv,
-+			       V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(2, 9),
-+			       val << 5, 0xe0);
-+	}
-+
-+	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(0), 0x091c);
-+	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(7), 0x3b06);
-+
-+	val = DIV_ROUND_UP(1200, mbps) + 12;
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 0), val << 8, 0xf0);
-+
-+	val = mbps > 1500 ? 0x0004 : 0x0008;
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_CFG_n_REG(l, 1), val);
-+
-+	val = mbps > 2500 ? 0x669a : mbps > 1500 ? 0xe69a : 0xe69b;
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 2), val);
-+
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, 0), 0x163c);
-+	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_LP_n_REG(0), 0x163c);
-+
-+	if (lut) {
-+		for (unsigned int l = 0; l < 4; l++)
-+			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 1),
-+				       lut->rw_hs_rx_1, 0xff);
-+	}
-+
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 3), 0x9209);
-+
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 4), 0x0096);
-+
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 5), 0x0100);
-+
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 6), 0x2d02);
-+
-+	for (unsigned int l = 0; l < 4; l++)
-+		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 7), 0x1b06);
-+
-+	if (lut) {
-+		/*
-+		 * Documentation LUT have two values but document writing both
-+		 * values in a single write.
-+		 */
-+		for (unsigned int l = 0; l < 4; l++)
-+			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 3),
-+				       lut->rw_hs_rx_3_83 << 3 | lut->rw_hs_rx_3_20, 0x1ff);
-+
-+		for (unsigned int l = 0; l < 4; l++)
-+			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 6),
-+				       lut->rw_hs_rx_6 << 8, 0xff00);
-+	}
-+
-+	static const u16 deskew_fine[] = {
-+		0x0404, 0x040c, 0x0414, 0x041c, 0x0423, 0x0429, 0x0430, 0x043a,
-+		0x0445, 0x044a, 0x0450, 0x045a, 0x0465, 0x0469, 0x0472, 0x047a,
-+		0x0485, 0x0489, 0x0490, 0x049a, 0x04a4, 0x04ac, 0x04b4, 0x04bc,
-+		0x04c4, 0x04cc, 0x04d4, 0x04dc, 0x04e4, 0x04ec, 0x04f4, 0x04fc,
-+		0x0504, 0x050c, 0x0514, 0x051c, 0x0523, 0x0529, 0x0530, 0x053a,
-+		0x0545, 0x054a, 0x0550, 0x055a, 0x0565, 0x0569, 0x0572, 0x057a,
-+		0x0585, 0x0589, 0x0590, 0x059a, 0x05a4, 0x05ac, 0x05b4, 0x05bc,
-+		0x05c4, 0x05cc, 0x05d4, 0x05dc, 0x05e4, 0x05ec, 0x05f4, 0x05fc,
-+		0x0604, 0x060c, 0x0614, 0x061c, 0x0623, 0x0629, 0x0632, 0x063a,
-+		0x0645, 0x064a, 0x0650, 0x065a, 0x0665, 0x0669, 0x0672, 0x067a,
-+		0x0685, 0x0689, 0x0690, 0x069a, 0x06a4, 0x06ac, 0x06b4, 0x06bc,
-+		0x06c4, 0x06cc, 0x06d4, 0x06dc, 0x06e4, 0x06ec, 0x06f4, 0x06fc,
-+		0x0704, 0x070c, 0x0714, 0x071c, 0x0723, 0x072a, 0x0730, 0x073a,
-+		0x0745, 0x074a, 0x0750, 0x075a, 0x0765, 0x0769, 0x0772, 0x077a,
-+		0x0785, 0x0789, 0x0790, 0x079a, 0x07a4, 0x07ac, 0x07b4, 0x07bc,
-+		0x07c4, 0x07cc, 0x07d4, 0x07dc, 0x07e4, 0x07ec, 0x07f4, 0x07fc,
-+	};
-+
-+	for (unsigned int i = 0; i < ARRAY_SIZE(deskew_fine); i++) {
-+		rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
-+			      deskew_fine[i]);
-+	}
-+
-+	return 0;
-+}
-+
- static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
- 				    struct v4l2_subdev_state *state)
- {
-+	const struct rcsi2_cphy_setting *cphy = NULL;
- 	const struct rcar_csi2_format *format;
--	const struct rcsi2_cphy_setting *cphy;
- 	const struct v4l2_mbus_framefmt *fmt;
- 	unsigned int lanes;
- 	int mbps;
-@@ -1318,7 +1508,8 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
- 	rcsi2_write(priv, V4H_FLDC_REG, 0);
- 	rcsi2_write(priv, V4H_FLDD_REG, 0);
- 	rcsi2_write(priv, V4H_IDIC_REG, 0);
--	rcsi2_write(priv, V4H_PHY_MODE_REG, V4H_PHY_MODE_CPHY);
-+	rcsi2_write(priv, V4H_PHY_MODE_REG,
-+		    priv->cphy ? V4H_PHY_MODE_CPHY : V4H_PHY_MODE_DPHY);
- 	rcsi2_write(priv, V4H_N_LANES_REG, lanes - 1);
- 
- 	rcsi2_write(priv, V4M_FRXM_REG,
-@@ -1361,9 +1552,15 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
- 	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_CB_CTRL_2_REG(5), 0x4000);
- 
- 	/* T3: PHY settings */
--	cphy = rcsi2_c_phy_setting_v4h(priv, mbps);
--	if (!cphy)
--		return -ERANGE;
-+	if (priv->cphy) {
-+		cphy = rcsi2_c_phy_setting_v4h(priv, mbps);
-+		if (!cphy)
-+			return -ERANGE;
-+	} else {
-+		ret = rcsi2_d_phy_setting_v4h(priv, mbps);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	/* T4: Leave Shutdown mode */
- 	rcsi2_write(priv, V4H_DPHY_RSTZ_REG, BIT(0));
-@@ -1376,11 +1573,23 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
- 	}
- 
- 	/* T6: Analog programming */
--	for (unsigned int l = 0; l < 3; l++) {
--		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
--			      cphy->lane29);
--		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 7),
--			      cphy->lane27);
-+	if (priv->cphy) {
-+		for (unsigned int l = 0; l < 3; l++) {
-+			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
-+				      cphy->lane29);
-+			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 7),
-+				      cphy->lane27);
-+		}
-+	} else {
-+		u16 val_2_9 = mbps > 2500 ? 0x14 : mbps > 1500 ? 0x04 : 0x00;
-+		u16 val_2_15 = mbps > 1500 ? 0x03 : 0x00;
-+
-+		for (unsigned int l = 0; l < 5; l++) {
-+			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
-+				      val_2_9);
-+			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 15),
-+				      val_2_15);
-+		}
- 	}
- 
- 	/* T7: Wait for stop state */
-@@ -2245,6 +2454,7 @@ static const struct rcar_csi2_info rcar_csi2_info_r8a779g0 = {
- 	.start_receiver = rcsi2_start_receiver_v4h,
- 	.use_isp = true,
- 	.support_cphy = true,
-+	.support_dphy = true,
- };
- 
- static const struct rcsi2_register_layout rcsi2_registers_v4m = {
--- 
-2.49.0
-
+Jason
