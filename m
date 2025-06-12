@@ -1,110 +1,94 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5191E22318;
-	Thu, 12 Jun 2025 14:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABD024DCF1
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739838; cv=none; b=Spc9iAmTZ2Nr+zShz23wK3lIX4/2fqOM5gl2ufZOQ5nHZAW68n0HjqZkUvVHCgwvcTixmnS0b+jhWm7XASIMFCPwpKfIh7ytA/pj8OVdd8vr9igtTseWVzZVDKPGY/T+uMTAtiOuxVCexYk9ryb7XbqGLYstXGE1DfLUIxjgXBU=
+	t=1749739884; cv=none; b=HaH116bxdGP7T4rEYyGI+z3Wf/Zq+j57+OBxZS68xL4MM5dTstMJdAsGzVHWLFlSGFDQrvpizGL+n44bXlTwjAVgRmI04KjyhQwxkGL3m8fja5MFaxjq8lRccc7M19rGuTpjxNPp/HPD7X5chzs3wkni6n4afwIWTCf0feB7v4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739838; c=relaxed/simple;
-	bh=D9C+xwp3mD/7d0f06D4jPqB+wkdk0j3g2h2HOi1HAbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y6q/H9m5zGPJDaY+CLdeWGctvMmNEd1ah/PjBy6ZQLJzTGVGAKWC7KqojMluENv+SFiUyUOaH96ozEf5NjQOiSrc3ybq0CSMnja+Kh48aw8M1PoBL54SkZIpOQtEFDnlV35Esuj7ed4OIHtX0NhYu08jwE80DYKqaYV4msNy6e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=clBW/dVK; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749739884; c=relaxed/simple;
+	bh=Xf7pA1iH8R0kEK1Bi68lYJUZWLTkVcu0i//GjSh5l3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYxp28J57qrfzgt4fWiUZYisKe4yXFmL2kqex/I3h2Rz7lMoNFZE59nNMpSE1gwxip5ChRziQPmNY4GnhrVoxKEXA9liU2kaDPsjLe9b8AOnTdyPXmLSgwT1Xr51lfJnx1o5YWGtqZFmU7aFlUhyGvouPCO9fQbcARv1pinLyxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5izHmlo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clBW/dVK"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6084dfb4cd5so3836510a12.0;
-        Thu, 12 Jun 2025 07:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749739834; x=1750344634; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bRXKs4VGDh5S2vPlr4/hDjovefGwIy/vQJKlAAiyucM=;
-        b=clBW/dVKQJzm1xG59YQZgwa/4ot7SsigqvW5nfim+ys+GcVsJ+AXNMsLIRlnYHDjrt
-         m7e89fGv4N+aEYiYAqndEdeekow59gTlPjkhDu7EPbLhLfAJHLjlENUwLvd8rxeJirEb
-         8hnSQRa0olzwWU2QJct4jWM5mBcb0aQze2YPFMusvjV3SxmBVDTamFdb3W34pZgWibjL
-         VhBA3iO212k2Srdv9ARvnaPJdEumWuBNG2vu6m50Ao31IWfwBt2qA9UttSjsxYRQf6AK
-         hPJKbjB1BcG57Yv9I7ONFXXy1LCPsLgw98xQOkL3dhy9I9nOi6R1uKzTm0TTsn+DYzd1
-         D74Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749739834; x=1750344634;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bRXKs4VGDh5S2vPlr4/hDjovefGwIy/vQJKlAAiyucM=;
-        b=Z9qkghbZ6gccb8/8SM+wuvouQA636ba4h26csto8VUjaiTy+i6KeAKrvFRZTibvSDD
-         Izc9eR/Q43NEyPoIXXdlDzukhBK0qWW2zIGlor5SIlN2MNmjRtszyKJYVi1QwQm97yaN
-         xdI7vxstww2s923v0JKdhD1b7tiRs+RdkKiey9xfKnzh7uxkbLvnNKxcayVBU1u3XE2q
-         oRF8G9xR0hxefuPpdL+UlIPREbfMeIHIE+3bQCCANdwnsiYjPJ13pz4CsTJWrVz9mXC+
-         2OUZrmIaWejKxoYvbAKX0cBYiF0vRH+01YjawaFPTfFcHeRgCrOF0OBwnsWYMNqx2An4
-         vH/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVuusFVH/ngH9nnUXV2Sl9ObvzhER2+NyO9yEg5gotX0OOsI4+zulpIR0mFuGOLNPmbsRicGG2qaaMLKAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz92iOYL3znNf7XkQROOm7P0mXrZ2U29g8ZxFrrTjMf2ebo+5nd
-	l92TfZPKoWqwJEZB5HKrzS9If3Z+L77uWQkC8J+RHO5QCLuQXK2Alw2z5uvEN/m/
-X-Gm-Gg: ASbGnctHPHCFnihP3j5+Rho0pnH6Ckuy7CbRyn718rxE43sPpf5twimAuV2+nBItDG/
-	X61zZbpo8d7PnZQ0dvdiUvQHWOPM8pHuZGzW1QyfpsHX49mEOcRxVuFeXWxESjF5ocbqOG5eGU+
-	cIXw+w7VvFJomYD+Mv6UGuUzY4xILFtMyQFH2PZgFFDQb8E9m2rHKFOeBsnX1W9eohAp58ClHs+
-	Sb/7TM8KdAUGNZZ6+wy8/PlpY7ZJSx21BI7d2shwZADj+91wYEb9F4p9fOmfE+gCTLj0cacEic1
-	Xrbz95xkOSdNGhDXMJ6ChFwl8nrhcTTJACYU+SUJHZwl3fG0+RP+DYDYQMhsZ8SN2v0IEk+4lMV
-	UYH2K0/Q=
-X-Google-Smtp-Source: AGHT+IE6yt33Qixhwf2CvlRwXrUM91B/lNFVnf2cPUVd6bgWUieYAI6gxD+gQmh8m7XSxgF9h3kmTg==
-X-Received: by 2002:a17:906:7307:b0:aca:d29e:53f1 with SMTP id a640c23a62f3a-adea56302bdmr374648966b.12.1749739833928;
-        Thu, 12 Jun 2025 07:50:33 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:3030:ae0:54e3:8eed:b526:85ff:7c72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adead4cfe60sm145009266b.23.2025.06.12.07.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 07:50:33 -0700 (PDT)
-From: RubenKelevra <rubenkelevra@gmail.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	kuba@kernel.org,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	linux-kernel@vger.kernel.org,
-	RubenKelevra <rubenkelevra@gmail.com>
-Subject: [PATCH net-next v2] net: pfcp: fix typo in message_priority field name
-Date: Thu, 12 Jun 2025 16:50:12 +0200
-Message-ID: <20250612145012.185321-1-rubenkelevra@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250610160612.268612-1-rubenkelevra@gmail.com>
-References: <20250610160612.268612-1-rubenkelevra@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5izHmlo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB208C4CEEB;
+	Thu, 12 Jun 2025 14:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749739884;
+	bh=Xf7pA1iH8R0kEK1Bi68lYJUZWLTkVcu0i//GjSh5l3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G5izHmloGxfvmAKtxCBCGoWnKOObEAsaaMsON8o2BrhMNIpeBRzNJEeGl0QzTFC8o
+	 gI6IqastNqKeSsjpXyrXuodJWf/N7uO1+qPu97R4doYc0SmtDbGTNr/1yq3eDMYaSp
+	 0GF5dPC/nShzhzTStxALDZtWfcbly6QUpqwy54DZTgKVHwFgAHFfjS3kPzl1FJZiyD
+	 MV5jAOGevgyzGynH/dH+sjyyd6L2Xn3OEnRKaMQCk0WPTN461x80nkraPr1OkL9lfA
+	 heZh4hysHTNyR+UYAws2Crt7UTvYSgtmiR9Q3xvzak001Z0F+1OTMvT/aD/x7LiPiP
+	 S8CuvVrWccX4A==
+Date: Thu, 12 Jun 2025 15:51:19 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/gcs: Don't call gcs_free() during flush_gcs()
+Message-ID: <93a0f043-d5f6-432f-ac37-266dd5bbe899@sirena.org.uk>
+References: <20250611-arm64-gcs-flush-thread-v1-1-cc26feeddabd@kernel.org>
+ <aEm-F04k0sC1tOCp@arm.com>
+ <4b354842-2108-4904-9294-fb9b00978986@sirena.org.uk>
+ <aErokN0vKT3urlmA@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Rl3Atc6kzOHHJTuB"
+Content-Disposition: inline
+In-Reply-To: <aErokN0vKT3urlmA@arm.com>
+X-Cookie: Biz is better.
 
-The field is spelled “message_priprity” in the big-endian bit-field
-definition.  Nothing in-tree currently references the member, so the
-typo does not break kernel builds, but it is clearly incorrect and
-confuses out-of-tree code.
 
-Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
----
- include/net/pfcp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--Rl3Atc6kzOHHJTuB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/include/net/pfcp.h b/include/net/pfcp.h
-index af14f970b80e1..639553797d3e4 100644
---- a/include/net/pfcp.h
-+++ b/include/net/pfcp.h
-@@ -45,7 +45,7 @@ struct pfcphdr_session {
- 		reserved:4;
- #elif defined(__BIG_ENDIAN_BITFIELD)
- 	u8	reserved:4,
--		message_priprity:4;
-+		message_priority:4;
- #else
- #error "Please fix <asm/byteorder>"
- #endif
--- 
-2.49.0
+On Thu, Jun 12, 2025 at 03:47:44PM +0100, Catalin Marinas wrote:
+> On Thu, Jun 12, 2025 at 12:40:42PM +0100, Mark Brown wrote:
+> > On Wed, Jun 11, 2025 at 06:34:15PM +0100, Catalin Marinas wrote:
 
+> > > Another caller of gcs_free() is deactivate_mm(). It's not clear to me
+> > > when we need to free the shadow stack on this path. On the exit_mm()
+> > > path for example we have mmput() -> exit_mmap() that takes care of
+> > > unmapping everything. Similarly on the exec_mmap() path.
+
+> > We need that one to clean up the GCS for threads that had it allocated
+> > for compatibility, you can see the leak that results without it easily
+> > with the glibc testsuite (or anything else that does threads, the glibc
+> > tests just spot it).  Most of the checking for arch_release_task_struct()
+> > is verifying that deactivate_mm() is guaranteed to be called eveywhere
+> > it's relevant, I need to page that back in.
+
+> Makes sense. I think we should only keep gcs_free() in one place,
+> ideally deactivate_mm() as that's more related to mm rather than the
+> task_struct.
+
+Yes, me too - I just need to double check.
+
+--Rl3Atc6kzOHHJTuB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhK6WYACgkQJNaLcl1U
+h9CXoQf9FPQfd8EjZCLMPaTNqdJWnK+Imm3M4iiBTWQPw5Cs4En1X3aPzX06av/d
+hRgfuipMS/WRm1uJFcj/yvkijXiSwywItHs6CbK2TU+cMrxSvWK8Ilk1gCg2n8Ac
+Kek5jAtdA5ROBw9UZGw5/4mw8utZOP2DlrXpImQtFEU9G7fxMup2ipqfAVcsIoHo
+LgE680V/Gg/ytylXWjP1aA8YpMPivqTUu+bMmPhGfblUzCTj7BYsrqB+9PUtt2ly
+3mDthSe6MCXKm3g01RP5ursX5bnui2kvTIgPoYINxwcEDLz/ELjVbSCUBB9yf/VL
+h4FnRm1zAapoQ/K+wV+s7uLYmO5InQ==
+=FkRy
+-----END PGP SIGNATURE-----
+
+--Rl3Atc6kzOHHJTuB--
