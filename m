@@ -1,48 +1,50 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99B91361;
-	Thu, 12 Jun 2025 05:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8AA1E25F2;
+	Thu, 12 Jun 2025 05:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749705665; cv=none; b=lIL8R0SIGNoLrqm5mJO0utPz/M6uzm1/l63wTfXYmNHn/sizcQrt3dvh0Q0kE+ZN+IWpW95Ffsr17BRQ3jVf1aWIlDyNl9xv8+W6kzSY+Ltj0XrdC1el4DbfOnVyeCr07UgXTiKUhTJbnMW/EAL50/q1IKuZQTIymefLB3/pq4g=
+	t=1749706188; cv=none; b=YAEwXswNDecVd21x2jtpQpUXHMrWRj9miyKoufEFDzzWbqURpKvgg1Kdb7NX2mbk6XjMHkoCJOya4GoNs4MufjafgpbuQfncwTvwnr4vqe3VFmvpdw0QDUl8dp6maSU2rVeSqFSYoD22Vzysdy5eWyhgNYjQi92wRIYGiVGYSeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749705665; c=relaxed/simple;
-	bh=9wQfzzj7t9uK2/u04vK/+hfHsgoZV4eWemmen29KTdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=t4nCIPzxVUoNLvOvDdyXcs1JJCzCuCrif01CeZXPSGWZr1Pou2mDvU73YPZTxo4SBxVr6ie+J0xAvHbfA+ubPsgc9OTCK7dvyUvwlMfjVZ+CSHkJKb9cTopZa7UM8HsVrZ3FKtXALaaO7vgDI5GfMA+QW5CFsS9MD5Se2VQHfiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ePPip87u; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749706188; c=relaxed/simple;
+	bh=AE3+Ai7lW9yV7Ac20q5WllK+ofoz5XA1y3tE02Fp5yI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gUb5UNkE1Ph8TlNOszSbWtJFXnfUzaDfaVscmYJa+JHovOVYVGkWRYojYypCbUG0u0Pu5etneXJ3Xkkk5v16KoOJkAdaTcS+kk8GNY/pxar2eE3CUwxejD+cnWx4c2CQUMtkWu/0/dgZhh73BADCPmhMFCAhb8TSVKpVmabIcIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TT07/vRz; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ePPip87u"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C5KqE32777873;
-	Thu, 12 Jun 2025 00:20:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749705652;
-	bh=f0hXMw8ptRoZo8p1kCUGMksKDyTuNXCp9RDEBkWxjOA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=ePPip87uWoVMAXtwg7UZuCmvzjYTFrqY4z0RyKdYQe047ftJS5HKh8iNxGQYadiBG
-	 GhLLq45++EdhLh1Rd9eTQSF6nB2lSj6n+J5Il4cmk6S7UrsCGB0Gd1GOWPJM0XMcNx
-	 dwqD3ruNjFI6L4b5YXEJ8Tbiuu3eXUKdQezzBbHg=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C5KpNN2306843
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 12 Jun 2025 00:20:51 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
- Jun 2025 00:20:51 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 12 Jun 2025 00:20:50 -0500
-Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C5KjFH1459677;
-	Thu, 12 Jun 2025 00:20:46 -0500
-Message-ID: <42ac0736-cb5a-4d99-a11c-6f861adbdb5f@ti.com>
-Date: Thu, 12 Jun 2025 10:50:45 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TT07/vRz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749706186; x=1781242186;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AE3+Ai7lW9yV7Ac20q5WllK+ofoz5XA1y3tE02Fp5yI=;
+  b=TT07/vRzIBOadGPAjadI8HiMoj5uZjdP+CyrmNO8f1QJKYOI+73Zr9zy
+   9RuJTGfq4VEi4Gt4SmT9aBjharHmop++VCp+CWgDeBKDl8eEXSItr9af9
+   H3kusK+h0qYiMqeh5LsF7TBmAGSpknOQufTJE6JauapbJpyQT9ee3q9ce
+   W4K8qzI+gMUmvQJaCWzG6w1apP83jZ82Z5jNgB/8LnfmwohuPYGOVg2dO
+   vLr8EXeH7pW178FHT0fjCIdO4xaywyiyCs6JO2xHN8qpa+TqNKm3RtNhI
+   IEyKDUXc0q6NB7YAlp6nASwGgpdRSai1sCgNS2HtOQiClWQa7BVCUrVlv
+   Q==;
+X-CSE-ConnectionGUID: eftHv64mS5mUqT+gXxZWxg==
+X-CSE-MsgGUID: bqpWRNqeSK+mavjAQx3T1A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="52012676"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="52012676"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 22:29:45 -0700
+X-CSE-ConnectionGUID: Iyt6SaMpTViTsFcwh9KemA==
+X-CSE-MsgGUID: Bs/kYdOYRVOHKLwURPii/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="184633000"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 22:29:43 -0700
+Message-ID: <cfd99e56-551b-49c5-b486-05c9f6d8cf11@intel.com>
+Date: Thu, 12 Jun 2025 13:29:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,68 +52,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: ti: icssg-prueth: Add prp offload support
- to ICSSG driver
-To: Jakub Kicinski <kuba@kernel.org>, Himanshu Mittal <h-mittal1@ti.com>
-CC: <pabeni@redhat.com>, <edumazet@google.com>, <davem@davemloft.net>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, <m-malladi@ti.com>,
-        <pratheesh@ti.com>, <prajith@ti.com>
-References: <20250610061638.62822-1-h-mittal1@ti.com>
- <20250611170424.08e47f1a@kernel.org>
+Subject: Re: [PATCH] KVM: x86/mmu: Reject direct bits in gpa passed to
+ KVM_PRE_FAULT_MEMORY
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: seanjc@google.com, yan.y.zhao@intel.com
+References: <20250612044943.151258-1-pbonzini@redhat.com>
 Content-Language: en-US
-From: MD Danish Anwar <danishanwar@ti.com>
-In-Reply-To: <20250611170424.08e47f1a@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250612044943.151258-1-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-
-On 12/06/25 5:34 am, Jakub Kicinski wrote:
-> On Tue, 10 Jun 2025 11:46:38 +0530 Himanshu Mittal wrote:
->> Add support for ICSSG PRP mode which supports offloading of:
->>  - Packet duplication and PRP trailer insertion
->>  - Packet duplicate discard and PRP trailer removal
->>
->> Signed-off-by: Himanshu Mittal <h-mittal1@ti.com>
->> ---
->>  drivers/net/ethernet/ti/icssg/icssg_prueth.c | 23 +++++++++++++++++++-
->>  drivers/net/ethernet/ti/icssg/icssg_prueth.h |  3 +++
->>  2 files changed, 25 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
->> index 86fc1278127c..65883c7851c5 100644
->> --- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
->> +++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
->> @@ -138,6 +138,19 @@ static struct icssg_firmwares icssg_hsr_firmwares[] = {
->>  	}
->>  };
->>  
->> +static struct icssg_firmwares icssg_prp_firmwares[] = {
->> +	{
->> +		.pru = "ti-pruss/am65x-sr2-pru0-pruprp-fw.elf",
->> +		.rtu = "ti-pruss/am65x-sr2-rtu0-pruprp-fw.elf",
->> +		.txpru = "ti-pruss/am65x-sr2-txpru0-pruprp-fw.elf",
->> +	},
->> +	{
->> +		.pru = "ti-pruss/am65x-sr2-pru1-pruprp-fw.elf",
->> +		.rtu = "ti-pruss/am65x-sr2-rtu1-pruprp-fw.elf",
->> +		.txpru = "ti-pruss/am65x-sr2-txpru1-pruprp-fw.elf",
->> +	}
->> +};
+On 6/12/2025 12:49 PM, Paolo Bonzini wrote:
+> Only let userspace pass the same addresses that were used in KVM_SET_USER_MEMORY_REGION
+> (or KVM_SET_USER_MEMORY_REGION2); gpas in the the upper half of the address space
+> are an implementation detail of TDX and KVM.
 > 
-> AFAIU your coworker is removing the static names, please wait until 
-> the dust is settled on that:
+> Extracted from a patch by Sean Christopherson <seanjc@google.com>.
 > 
-> https://lore.kernel.org/all/20250610052501.3444441-1-danishanwar@ti.com/
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/mmu/mmu.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index a4040578b537..4e06e2e89a8f 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4903,6 +4903,9 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+>   	if (!vcpu->kvm->arch.pre_fault_allowed)
+>   		return -EOPNOTSUPP;
+>   
+> +	if (kvm_is_gfn_alias(vcpu->kvm, gpa_to_gfn(range->gpa)))
+> +		return -EINVAL;
 
-Yes, it's better to wait for that patch to get merged before we add new
-firmware.
+Do we need to worry about the case (range->gpa + range->size) becomes alias?
 
--- 
-Thanks and Regards,
-Danish
+>   	/*
+>   	 * reload is efficient when called repeatedly, so we can do it on
+>   	 * every iteration.
+
