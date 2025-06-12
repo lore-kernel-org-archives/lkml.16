@@ -1,248 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F372F431F
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F631E1A16
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749728763; cv=none; b=hKW1KzwzyztIZfX/ZmAs6NS1dEiWPH1/tl3qYbwT0MTU3d70NIVJb+ICA4uX0U2o1hs2i1KB0BnYEZbK1zl3l/lFUztB8ThzXZlNgiayr1Qqj94qF8FBcu/duFAeOluZCFe6PV3/XI4L3x3kThyaz7aDe7eJtOCXGv61Su53xuE=
+	t=1749728788; cv=none; b=bYdWF8ub2fM/sgVAd6JzEPElgWdAR0I9WhIbPZJ9Yuxl30FC+yhloG+3T40ibGZ/MsAnCHqoFWCEfoLG/RVkuk0bkQQm5o3PxDs/Z9phEadxuxu+pKT9x3DPOsF2R+5nHcnUuZMCEcKCOS7p/UWuKbzznmZmlnvuN+YKQXQY3L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749728763; c=relaxed/simple;
-	bh=NxzUkoX4YGmqxvw5PZtT0t3w5UUtTn07IM8Xo5Tt8fg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=carctj75E0z/b3j8V+h/gTa7xwsy4wUSEqk/TL7mRqThPp6Xx475ZMJHvaFIL3ms+x/6O+jxbTfk/F9uepbna7MD6iuPRcHGYEPY4Dz8RegQEOnqnQA/RuPXquLw3P9AuOj+GUOOk1hHcaE84k2xURDLFgpZ8dg07JWIY8RPv8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SNAHWRfE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749728788; c=relaxed/simple;
+	bh=lLCZoZNMy3Q3zpv+mA+EoiOjvX3DENCn4LWJlLw9slI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YGq24Oe/H0cFmj2dPbjXKZfnUioDZrbQ98m0j5TGemXdy9EPfHGvAov7l1O911108dN20XJ2b8tnY4bBarOAUqA0LkiGKdEpBgd+j/9dDp9prrQGFQ2in4u07CHuL1AYRtwjLkWkK0LuoBzFPru8Xszy4xJpVD6nHkgkMcMDQAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=azkPblft; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SNAHWRfE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749728760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NUBrU3Jg/CUyUUQEu0p/rtlfQN+OSb9bogSo5pDhUjs=;
-	b=SNAHWRfEvhfoqP4ZtZabDXWQ1ysgwLBuCWqcd4TDKbKcbAd2w3+ncbTOtWCej5dNlmUSWq
-	pC+01A3208m8CxkfSinp8bdUCegfcnHiu2OpTxufPJ+3PWBvqBx7VocS10ZdcsAI18/Mfu
-	EuDXI4ltXUlP3qNcB3/Lz7pf+4fxCE0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-136-gsvNWuZFOEuFTNK6JupBkg-1; Thu, 12 Jun 2025 07:45:59 -0400
-X-MC-Unique: gsvNWuZFOEuFTNK6JupBkg-1
-X-Mimecast-MFC-AGG-ID: gsvNWuZFOEuFTNK6JupBkg_1749728758
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a52cb5684dso521551f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:45:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="azkPblft"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so550388f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749728785; x=1750333585; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VpdeBAczxDpMxHPi8ej3bXu0PaquJ+drDxjVDx3klZk=;
+        b=azkPblfthaMsAYiVC3TGIUkA7B+KCXYBneQcDIdKHw3r66IxHcQ2bZ0sqlvGY+OQFz
+         lnnOfB4N/lHO0GMa8hYSRfrTG4bst5icBtlCg4JWmEpaKU8arX2rc2LHhvCHg/Mg2KAa
+         /NGn0kEdwTZgfVm7BbkpYSrvJp292WHscB63qK186206wjWvJbKRhN86eedM+Da3pgkx
+         dW/bWHyzLTYfabAhpOeun5drulKTtPv2hi8vttJGXlIqbQgmEnSV/3CVuP55qNgfOqvO
+         xZL4am0vXPEy05KRCzdQahYJCIR7f+ZvxMEPtF1UJUUhWt4UMByZ9S54Zl186UKZXqL1
+         SisA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749728758; x=1750333558;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NUBrU3Jg/CUyUUQEu0p/rtlfQN+OSb9bogSo5pDhUjs=;
-        b=c4aIf6gxO41Rfw15IXrpqEK2zL7YHDNh6CRFGcDynLyFT6VdoFnpG8XwZWYBZpr/V/
-         ytlMgbdHR1+JzyjE+xccTxLx28E1WvK+N3FcoJO+oe1y3hf4nrH416XUnQ21eaxRvK4S
-         JpInx8HMf+ELg/yt8v9BJlgN3IKj34wy772hZw5wdPDaNhkzjsjfyDawyfL+yfrw9oAc
-         TElvxd46bxaPp53fry5yTqq2S1+ko5BQmJmy/8979r40ypXkVNYLTZOchuK346mAdU84
-         EY42hfe10jDiPJz2b89ziiWhhB9MwvirAqh4BAt+ALtCex/RfyriCCyn998LxzVa+Px3
-         GY5g==
-X-Forwarded-Encrypted: i=1; AJvYcCV5k7Fd1A/YiLimBsM9PjzGg0pY/tpPsAkY0jv9MX9/b7EHE/1RtDCmy6Gh32/euYqQvUTNTonDS0CMQfY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYBZ4CEawPQcHlu62GaAxgpjxO4K61iTe3RDugbYcLYL35/Som
-	6fJRDs88MN/WkaVVE56GrdVRkVNMhd81zIKX4r66FPtilTB3EFE5wEIUj2eoNrAphRiMLGOwkrV
-	t5qKIwoawnaChEqto7kS64sl6xHhiQBlAix1rT+NhAT6VzH6ay6XMX6/CLiC0VQWzPw==
-X-Gm-Gg: ASbGncs3mUPE9fjduYlvVxfjv7SCSQxzkfsTT7hXquSAGjksArFbcVK/57IQrY9Ne6M
-	0P58SMlBjb7mJ3Pu6FfMOjwwdN4hx1yXnZGZ739SgX8xeS/Bt4KjgbXnln3SxHFFGhWHlcKhX4v
-	WqIEp7zj3mXN3/+uffAa5WH1r5k6y5OAeBxgdYD/6KEXEpK6bv/YgVSXUzo0r78DIEI6UPSaFNb
-	8IEg1mk0NIw4VJOWNpGoAQVe2wRDIAfRv/Ng7z+dBrxeqkIJXtbhCuGqXVAL8HdKGYIl5AxnW0d
-	v/xxgBpzCgCZVoWLp68okstJH228vs6VMcw9wCsj7qTLig5pfDVxvQ==
-X-Received: by 2002:a05:6000:26c5:b0:3a4:d0fe:428a with SMTP id ffacd0b85a97d-3a558a27540mr6070610f8f.28.1749728758303;
-        Thu, 12 Jun 2025 04:45:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGqazLFzdFqusR3OLSoTLzy3FePbxbU+q7iXp0Vbp++hFW1qVgR9Y3DMj1guKzAU7taGVv88w==
-X-Received: by 2002:a05:6000:26c5:b0:3a4:d0fe:428a with SMTP id ffacd0b85a97d-3a558a27540mr6070581f8f.28.1749728757938;
-        Thu, 12 Jun 2025 04:45:57 -0700 (PDT)
-Received: from [192.168.3.141] (p4fe0f8a8.dip0.t-ipconnect.de. [79.224.248.168])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a56199aa52sm1772249f8f.36.2025.06.12.04.45.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 04:45:57 -0700 (PDT)
-Message-ID: <6ceb38ce-c16d-48f2-baca-fef79f8fc058@redhat.com>
-Date: Thu, 12 Jun 2025 13:45:56 +0200
+        d=1e100.net; s=20230601; t=1749728785; x=1750333585;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VpdeBAczxDpMxHPi8ej3bXu0PaquJ+drDxjVDx3klZk=;
+        b=Kl540bF7BLa17D60N1Ed+X049Zeg7ROxpyAbkNcqXn2hm05PBFDLYRcjuMe9nliwUM
+         Q/+iIhvYG5WLIiJ512ClQWL2/C8V2FWq9Kz3nfGw4ySXmkAkykdvDZvjeJ5EEn6jnXPF
+         Fn0AJjw1T+hipMcHYVWqXqu7TlydA5Li38hIllu5H9bNqH0GHCMH+YvhFECJWcyin0TF
+         nzMDQvwAXnSBeFIemO1TEcp2ynn9Nrw2w53/elm9ClQhvEw3H1KulBAxaJADknVfGBeU
+         HPFGRO1TO1l7qJF4u3g4ugYOx3ncYMAPEVyqPQSsGVcYo1Hyf9hTddHM/4XsEn4MXGiu
+         4F7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUkO/DP0aAuq2ZoFLEAfKMMWQ84njIUrxMGNJFPo23ue0wJk4YaGzZp3MFz5Gi+J6bM2UUcUWlg1+bFJ2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPXdTKjeD0kQQsJK3PD+t9FP9Ef8GsyqrL3P/PXUduyqI1iwNl
+	q2dIpxp8kFb+pTjzLpyVj4HvkJ+mLqNHVU259dKbYZQYjRZCjWao07Wf+9dV7E5AWMg=
+X-Gm-Gg: ASbGncuou3RoqECwNnnACHE4QhUprxKlfhxE4E/Qw+dUa3JytNtXfpn/4EJCF0mpFMq
+	zapcpV6xvqgcYtiI/aHmVXggqjHMQGWqpJctA60ARdroRB4B5ZnBhd7hpW7XICMMHxWSoIMM6dx
+	xLKMQ6NL6f7zUOmdjyUVYTmaxWzr7MNh15CksRElNks7V0ekrMmTtnG9Sx7GmXL89DWXJKN4BXB
+	zl5U++X+fqAaViqxPu6qyVvPXoCVD1sXn3dHzbuIPc7iUJJVEnEPPcObgofx9qmFBhVhiLBbT9I
+	QLGC9qpZXCF/U6uScVwNIDk6vswmHf9gOi7jpj9w+MK+dM1OkrpK7WABUDtZuPrw
+X-Google-Smtp-Source: AGHT+IF/248Rvx3CVC08UaAQ4P3dTeJa+QHLA+I/CORpcgGm1jvrTGpa+IJI7ILEeBXIza4gfGGQkg==
+X-Received: by 2002:a05:6000:288e:b0:3a5:271e:c684 with SMTP id ffacd0b85a97d-3a560814897mr2780693f8f.24.1749728784595;
+        Thu, 12 Jun 2025 04:46:24 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19dcd05sm1406413a91.14.2025.06.12.04.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 04:46:23 -0700 (PDT)
+Date: Thu, 12 Jun 2025 13:46:06 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
+Subject: Re: [PATCH 1/7] printk: Make console_{suspend,resume} handle
+ CON_SUSPENDED
+Message-ID: <aEq9_kOoLSQwuYBq@pathway.suse.cz>
+References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
+ <20250606-printk-cleanup-part2-v1-1-f427c743dda0@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] selftests: khugepaged: fix the shmem collapse failure
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, shuah@kernel.org,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <c16d1d452aa876b449324d12df6465677158a711.1749697399.git.baolin.wang@linux.alibaba.com>
- <e06530f6-5c2e-4b6f-b175-c7aaab79aa4e@redhat.com>
- <42b76dbc-d1a1-4d00-b139-c50e0abf8b0c@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <42b76dbc-d1a1-4d00-b139-c50e0abf8b0c@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606-printk-cleanup-part2-v1-1-f427c743dda0@suse.com>
 
-On 12.06.25 13:37, Baolin Wang wrote:
+On Fri 2025-06-06 23:53:43, Marcos Paulo de Souza wrote:
+> Since commit 9e70a5e109a4 ("printk: Add per-console suspended state") the
+> CON_SUSPENDED flag was introced, and this flag was being checked on
+> console_is_usable function, which returns false if the console is suspended.
 > 
-> 
-> On 2025/6/12 18:08, David Hildenbrand wrote:
->> On 12.06.25 05:54, Baolin Wang wrote:
->>> When running the khugepaged selftest for shmem (./khugepaged all:shmem),
->>
->> Hmm, this combination is not run automatically through run_tests.sh,
->> right? IIUC, it only runs "./khugepaged" which tests anon only ...
->>
->> Should we add it there? Then I would probably have noticed that myself
->> earlier :)
-> 
-> Yes, see patch 2.
+> No functional changes.
 
-Yes, was pleasantly surprised when I found that :)
+I double checked potential functional changes. In particular, I
+checked where the CON_ENABLED and CON_SUSPENDED flags were used.
 
-> 
->>> I encountered the following test failures:
->>> "
->>> Run test: collapse_full (khugepaged:shmem)
->>> Collapse multiple fully populated PTE table.... Fail
->>> ...
->>> Run test: collapse_single_pte_entry (khugepaged:shmem)
->>> Collapse PTE table with single PTE entry present.... Fail
->>> ...
->>> Run test: collapse_full_of_compound (khugepaged:shmem)
->>> Allocate huge page... OK
->>> Split huge page leaving single PTE page table full of compound
->>> pages... OK
->>> Collapse PTE table full of compound pages.... Fail
->>> "
->>>
->>> The reason for the failure is that, it will set MADV_NOHUGEPAGE to
->>> prevent
->>> khugepaged from continuing to scan shmem VMA after khugepaged finishes
->>> scanning in the wait_for_scan() function. Moreover, shmem requires a
->>> refault
->>> to establish PMD mappings.
->>>
->>> However, after commit 2b0f922323cc, PMD mappings are prevented if the
->>> VMA is
->>> set with MADV_NOHUGEPAGE flag, so shmem cannot establish PMD mappings
->>> during
->>> refault.
->>
->> Right. It's always problematic when we have some contradicting
->> information in the VMA vs. pagecache.
->>
->>>
->>> To fix this issue, we can set the MADV_NOHUGEPAGE flag after the shmem
->>> refault.
->>> With this fix, the shmem test case passes.
->>>
->>> Fixes: 2b0f922323cc ("mm: don't install PMD mappings when THPs are
->>> disabled by the hw/process/vma")
->>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>> ---
->>>    tools/testing/selftests/mm/khugepaged.c | 3 +--
->>>    1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/mm/khugepaged.c
->>> b/tools/testing/selftests/mm/khugepaged.c
->>> index 8a4d34cce36b..d462f62d8116 100644
->>> --- a/tools/testing/selftests/mm/khugepaged.c
->>> +++ b/tools/testing/selftests/mm/khugepaged.c
->>> @@ -561,8 +561,6 @@ static bool wait_for_scan(const char *msg, char
->>> *p, int nr_hpages,
->>>            usleep(TICK);
->>>        }
->>> -    madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
->>> -
->>>        return timeout == -1;
->>>    }
->>> @@ -585,6 +583,7 @@ static void khugepaged_collapse(const char *msg,
->>> char *p, int nr_hpages,
->>>        if (ops != &__anon_ops)
->>>            ops->fault(p, 0, nr_hpages * hpage_pmd_size);
->>> +    madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
->>>        if (ops->check_huge(p, expect ? nr_hpages : 0))
->>>            success("OK");
->>>        else
->>
->> It's a shame we have this weird interface: there is no way we can clear
->> VM_HUGEPAGE without setting VM_NOHUGEPAGE :(
-> 
-> Right.
-> 
->> But, do we even care about setting MADV_NOHUGEPAGE at all? IIUC, we'll
->> almost immediately later call cleanup_area() where we munmap(), right?
-> 
-> I tested removing the MADV_NOHUGEPAGE setting, and the khugepaged test
-> cases all passed.
-> 
-> However, a potential impact of removing MADV_NOHUGEPAGE is that,
-> khugepaged might report 'timeout', but check_huge() would still report
-> 'success' (assuming khugepaged tries to scan the VMA and successfully
-> collapses it after the timeout). Such test result could be confusing.
+Both flags seems to have the same effect in most situations,
+for example, in console_is_usable() or console_unblank().
 
-If we run into the timeout, we return "true" from wait_for_scan(), and 
-in khugepaged_collapse() returns immediately.
+But there seems to be two exceptions: kdb_msg_write() and
+show_cons_active(). These two functions check only
+the CON_ENABLED flag. And they think that the console is
+usable when the flag is set.
 
-So we wouldn't issue another check_huge() call in khugepaged_collapse().
+The change in this patch would change the behavior of the two
+functions during suspend. It is later fixed by the 3rd and 4th
+patch. But it might cause regressions during bisections.
 
-Did I miss something?
+It is probably not a big deal because the system is not much
+usable during the suspend anyway. But still, I would feel more
+comfortable if we prevented the "temporary" regression.
 
+I see two possibilities:
 
--- 
-Cheers,
+   1. Merge the 3rd and 4th patch into this one. It would change
+      the semantic in a single patch.
 
-David / dhildenb
+   2. First update kdb_msg_write() and show_cons_active()
+      to check both CON_ENABLE and CON_SUSPENDED flags.
 
+The 1st solution probably makes more sense because we are going
+to remove the CON_ENABLE flag in the end. And even the merged
+patch is small enough.
+
+Best Regards,
+Petr
