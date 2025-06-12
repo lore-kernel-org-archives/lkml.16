@@ -1,698 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2082.outbound.protection.outlook.com [40.107.212.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BCA29C339;
-	Thu, 12 Jun 2025 18:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754314; cv=none; b=F75/ubCs9twZWFxl/JJxOd6vWOCr7FxK+J+O4zaiBxfVYlDnjFSrwsr80MaipTGPZ+goPmWeM+ZUjfgxdH4J6O0rEYt1VvWWiMTbMQzfefxLNnpnCwdySDgaKPpPt8J/Hmi0N/RMygWyfU3j+phbe7u+kIVLmhMa9V2cJ57TQMg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754314; c=relaxed/simple;
-	bh=ZkGvEl+IdFIcC/SL1FWpdfjNft83b+XO9Ln+/V8agMs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kyx2qHbqTzL0r6NlHwKuH/ibEhY/AUNmgTZ4PxcEj/HMzaYqPqnXzjehMxMWIfCBg8qAIdwM+9AbAKx+erTyatAFwz7WsdSkg+zTxK/D7nDE47XZ/FJNuZjnhZ2z0DRwABPSF9RO9hbfQanau3K429CjnmL96ylees4jqDNWv8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=awTZrN7J; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEF6433A0;
+	Thu, 12 Jun 2025 18:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749754427; cv=fail; b=CCQfM7F5SdOCF94+1fWCp3UjGuW8RTbpgKqfL/c9Rv7570xdgW5F1XCDFglkLlAE3PNpb3+xtnacKjR3NFdbrc6M5ekZkFRPwxwvFNhQtTjVnQzy97LuUPPwaeNilZCP1z4+flSNNEd97hOACl+8cOiuREM4qahLfdZfJxk0gn0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749754427; c=relaxed/simple;
+	bh=8XyKSsDzcTjvO37QEMKnrbqKkhhOtyT2Q6DvDINjp+4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wmt8Ia19ZSouS1xPHpbTN1lp039zpnWU9i3kBvQRcgkGtSy4wwbRg5aRPRXfzVbRojT7/rjvqZXOry+/ud03WWlHBTGfn8KRsRaOJi+JDP9wxVtIkGbevCtfZgSyHqf74vrUiRLLq06cL/KEldTiekb3N0wdKusHC2r6R9ptJI4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZTZS3/qj reason="signature verification failed"; arc=fail smtp.client-ip=40.107.212.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="awTZrN7J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD5FFC4CEEE;
-	Thu, 12 Jun 2025 18:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749754313;
-	bh=ZkGvEl+IdFIcC/SL1FWpdfjNft83b+XO9Ln+/V8agMs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=awTZrN7JmtuNuAdpxJPaI4sRKWkSWMZuIvQQO5uCoYwWUd/5cCQN/wuuhcDFXE1ZH
-	 q79e5E7o3YEIt3blnQ8kzHH1xm6b8Er2fyKo9XbDTbPsKqBv6XR3PqvcsgiZGkiRNn
-	 jYRFf6pzwBkiSmSt/bKeqEhXVmIYERH/JwMuYIYYAkNYmYTIL966q6xYKOSbRnNKop
-	 96OddO/7DNDaSG462eSsW4e5EKzUE6Sh+nHs/bKvvIz0I0f0lrF4tsYrsxlWTWixlP
-	 tgsAI3K/jkPSDJ1NT2PeRx4sWYpcrkMo3Ae8VFDuFQ3LaMWtOVyLtgLsZvBnKNP01L
-	 ZiGC7cDUpAf5g==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>
-Subject: [PATCH] lib/crypto: explicitly include <linux/export.h>
-Date: Thu, 12 Jun 2025 11:51:26 -0700
-Message-ID: <20250612185126.159473-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZTZS3/qj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cx7S6XqY+PGM9atTIwL2ZQjLzcSUGhyt3Umj2qHFD91c8S00NaQyQ9TzGBVSbcvwfRGpGMqrIEzFu8uLfCrZbRPm1bQU58yRKBZbe6wLBgwwSs53xfbFhVmkw6AwjGXgPu5483JK/CGVjXeqvXUmjrG7PHhZ4QwMSBCjVvQJugT3RQhcwOoN24gd3x96KT0q4IsDZxEC64nNKFOi8J7PXLWR8xNUl9+3D3XddfHbJ32S3aEaqrgyqdGEAXZahPWuc3pJYrxiUZssreGU7e4uqOsc95Xq8HrwjRF6YaRzB8BeCa+E7UDtBq/q3PIeJFPNtYUSRHihzd5LsgGLx7o6Uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ly+Pf51NLs484Cb6/M7X1vFlYZdBCXkcK6d6ufzZtfo=;
+ b=B+Y9QRi+tvCpHtVghx9MFXGpf51JuYg8ZiFo1A1S6P1w/xwJnmFlMxBNU+ZRo5gUaOaVNYyE5QkWjU9uN1iZYA65yqiOfMOXa6aIjxBzUISCro8lky4S50AD8JrN7JFRzW9lo3Rgaco5o4hlMVhXmGVO7Oh8cp3Di3BUMmHy90J5J0vignffWjKKkoKwN/ZwHh2zZ/0AHKRlHiUamCDp+Pl6OpBLs/z/BVkHKRpMZ9Ri6yXh0Al72o983j6acS4Gl/qqD3MFGnHNBFgOBDydpNzV3iDbscZzwazOnoPnjAeS5Zr82eU92nl5qXC5vhTJ0p53JdPGaxE1fEEJGNqgsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=linutronix.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ly+Pf51NLs484Cb6/M7X1vFlYZdBCXkcK6d6ufzZtfo=;
+ b=ZTZS3/qj1y5Ic7vMeBJhKI0cR6XBmcnXdEkCNhUmTIWb+gHntTNG2z2REOpwON4+w+fM7xLKlftFnSq0MFzxVrnj8cH6dF5pmBpe6abak4osXLTPeAO2k2CjJPQPPTUxKFCmQ1Vg8p2DRYMYQL8Y7T1BtRZHhDS/XYlNF7wUOOtWHNiou+QkI9WHxHxiSw0eNSbTX4V/pqhi3pA0Ra364vPZ87H3KOTzBveIkUliTf3beqeGLv/RwxJXM6ME/i0R5Oc3lohUlqqsNt5gdeJqvA8Chv11aWoX1uZCeg82T+u+2Kd9A435NLwSn3YErsZqhJ3GE3X+ZBgB5iZVcW2gCw==
+Received: from SA1P222CA0043.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:2d0::17)
+ by SA1PR12MB7318.namprd12.prod.outlook.com (2603:10b6:806:2b3::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.38; Thu, 12 Jun
+ 2025 18:53:41 +0000
+Received: from SN1PEPF0002636B.namprd02.prod.outlook.com
+ (2603:10b6:806:2d0:cafe::3) by SA1P222CA0043.outlook.office365.com
+ (2603:10b6:806:2d0::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Thu,
+ 12 Jun 2025 18:53:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SN1PEPF0002636B.mail.protection.outlook.com (10.167.241.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Thu, 12 Jun 2025 18:53:41 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 12 Jun
+ 2025 11:53:29 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 12 Jun 2025 11:53:28 -0700
+Received: from nvidia.com (10.127.8.9) by mail.nvidia.com (10.126.190.182)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 12 Jun 2025 11:53:26 -0700
+Date: Thu, 12 Jun 2025 11:53:24 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, "Willy
+ Tarreau" <w@1wt.eu>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
+	<linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Andy Lutomirski
+	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown
+	<broonie@kernel.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
+ into test metadata
+Message-ID: <aEsiJFku+wR9KxE8@nvidia.com>
+References: <aEn5jmXZbC5hARGv@nvidia.com>
+ <aEoUhPYIAizTLADq@nvidia.com>
+ <20250611235117.GR543171@nvidia.com>
+ <aEp6tGUEFCQz1prh@nvidia.com>
+ <20250612135802.GU543171@nvidia.com>
+ <20250612162151-1fc97a6c-a1c9-4656-997e-fd02f5f9418b@linutronix.de>
+ <20250612145801.GV543171@nvidia.com>
+ <20250612171437-450fb7d6-c73a-47e3-9e1c-5c009cba7fe1@linutronix.de>
+ <20250612154242.GW543171@nvidia.com>
+ <aEsUGP8xPTDjG0ob@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aEsUGP8xPTDjG0ob@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636B:EE_|SA1PR12MB7318:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4219867c-b887-4bb0-6400-08dda9e272f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|7416014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?aunnaQODNKNODhjsvjtgPcUth06+djaWddDkhKTb38UBl9leScrFUAsG+Z?=
+ =?iso-8859-1?Q?1hM+vC7tNi4GCieGIlnFQpvn1JTkmcCXiEqMvbfjiVU5fnBr3tU90uD2hi?=
+ =?iso-8859-1?Q?YXAH8hxsbQaVzawTcxcUhGc/7bV2dGMMqooaJzkB8pXCpotUNF2EA8O28z?=
+ =?iso-8859-1?Q?Dc70++U5VI7iDSlvOETJpUu3o3CXB8PIIy0EDINs6VyeLbeCfPBjVcL3a8?=
+ =?iso-8859-1?Q?eStmydLPuexf34jCjXa1vN1SkX1qj6b1xjkIKAYs+iCWd9+CWknn1veI21?=
+ =?iso-8859-1?Q?6fl36odNIpHhCcEbhTMga+kKYhGZY8GleOQNCxcJd0NcEkcjLyGftzV8Vg?=
+ =?iso-8859-1?Q?RoRl7SVTk8Ivg6oI+0Yw3N50JmzNDfKes7weyTgGbJ7wtb6rwaTMVyrMXN?=
+ =?iso-8859-1?Q?73LeTE8oc1Div0+cId4wPBk2wl0JbME3UtdF8AD2WkWsXTRSWXYEHzsnC3?=
+ =?iso-8859-1?Q?QIlwbKPx0ztPflSJx0aLKfx/79/wcpcUSuJPViTGsmnUJbfcmsXMot5IqN?=
+ =?iso-8859-1?Q?jZsO4s+D7PsLjn521fxx7oVUh8US6gTlw4BjqNfGYrS31GONwUOzIihZmE?=
+ =?iso-8859-1?Q?r/GPd2uurGAU+4eHnqG0wQ7v+EWZLokjatWnW4gteAfuuGKfXbfeijyaZO?=
+ =?iso-8859-1?Q?00Z3Yy2H/oSe4rmTzF5FzIfwFCIp74JGh11RNpxXw+YDeQbJqPYA/cG/c6?=
+ =?iso-8859-1?Q?fprDVDMDAJL3oHb3fvf+u/dd0nn8ea9CytiKm00KO8dQxJYMGnMz6xM+7X?=
+ =?iso-8859-1?Q?lgj6OSCydgr783vydv+2b9FBGVhuHdELvReEWH2JA5S5OMw+Li8GMjbF0a?=
+ =?iso-8859-1?Q?rkXCKnfXMhU5+Z7Y5UHyd6DUyESSI+Tgn+Coo6deFjfoe1Z2hHHsvO1qzu?=
+ =?iso-8859-1?Q?2Leik55ISyk55d/Nh8HsBysNe1LzOlVb0UY+9FaqvGZ7D4/uNfa/1YK8Ax?=
+ =?iso-8859-1?Q?IVrUPIg5fDt+hULw5ynxU25fkyNsimn2e6X/Kwpdv4+yVjVN5+WWga8N9d?=
+ =?iso-8859-1?Q?13ACiKOtVszy0aorBOyFIm+nlWkeXDO9EX4dsQR/WRuIttEEz2DgFwmZ6t?=
+ =?iso-8859-1?Q?uIpcDLk0GfohDqYXgwRJLJgKfDt5xKuAx58H1aSAVMQGulLAiDabeWVX3f?=
+ =?iso-8859-1?Q?nMpsE9P5+5s7EuseN7bbYPM4eqxbNJuyBR8yCppZgpb4Fpk5ps8fPAgxR5?=
+ =?iso-8859-1?Q?eGKKHlrbxFp0JykS7Tltjd+ipsc4siwwsqf6cmgDaLqma7RB9e6fSnl1P6?=
+ =?iso-8859-1?Q?aEvNBOOYrq6Kv7PlpfDFNs2IMxLaYj+pTVRm8BEveuExs2wYOkzHoZ3hzH?=
+ =?iso-8859-1?Q?HgLF0ssxro03Etz2WcwB+9u6M6dc87nZnHHW+WD8RfnICLka3OSGd1m5tM?=
+ =?iso-8859-1?Q?h0vUlg05dt4C1FeR8Q6hdnAZsDVRj//6lydCXiLGIDxnryjrnZyyodJg/L?=
+ =?iso-8859-1?Q?5rLWK+BPWxiWw/LuRLuleeG3Rsx9s46cTWZLXcy1T0Z5ljQ7J34pUTjma8?=
+ =?iso-8859-1?Q?lcuuqHscYSeMPnxOURvbaSlyfQAV/VjmkVPvpE3vVulkVSCmF/SnYfdZAB?=
+ =?iso-8859-1?Q?8ktA4uunPNdoko42JLbkpVZUTwtj?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 18:53:41.1383
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4219867c-b887-4bb0-6400-08dda9e272f4
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002636B.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7318
 
-From: Eric Biggers <ebiggers@google.com>
+On Thu, Jun 12, 2025 at 10:53:34AM -0700, Nicolin Chen wrote:
+> On Thu, Jun 12, 2025 at 12:42:42PM -0300, Jason Gunthorpe wrote:
+> > On Thu, Jun 12, 2025 at 05:23:01PM +0200, Thomas Weißschuh wrote:
+> > > On Thu, Jun 12, 2025 at 11:58:01AM -0300, Jason Gunthorpe wrote:
+> > > > On Thu, Jun 12, 2025 at 04:27:41PM +0200, Thomas Weißschuh wrote:
+> > > > 
+> > > > > If the assumption is that this is most likely a kernel bug,
+> > > > > shouldn't it be fixed properly rather than worked around?
+> > > > > After all the job of a selftest is to detect bugs to be fixed.
+> > > > 
+> > > > I investigated the history for a bit and it seems likely we cannot
+> > > > change the kernel here. Call it an undocumented "feature".
+> > > 
+> > > I looked a bit and it seems to be mentioned in mmap(2):
+> > > 
+> > > 	For mmap(), offset must be a multiple of the underlying huge page size.
+> > > 	The system automatically aligns length to be a multiple of the underlying huge page size.
+> > 
+> > Oh there you go then :) Horrible design. No way for userspace to know
+> > what the rounded up length actually was and thus no way for
+> > userspace to unmap it.
+> 
+> OK. I think we would have to skip those cases then.
 
-Fix build warnings with W=1 that started appearing after
-commit a934a57a42f6 ("scripts/misc-check: check missing #include
-<linux/export.h> when W=1").  While at it, sort the include lists
-alphabetically.
+Or.. maybe we could just allocate a huge page:
 
-This handles all of lib/crypto/, but not arch/*/lib/crypto/.  The
-exports in arch/*/lib/crypto/ will go away when the code is properly
-integrated into lib/crypto/ as planned.
+@@ -2022,7 +2023,19 @@ FIXTURE_SETUP(iommufd_dirty_tracking)
+        self->fd = open("/dev/iommu", O_RDWR);
+        ASSERT_NE(-1, self->fd);
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
+-       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
++       if (variant->hugepages) {
++               /*
++                * Allocation must be aligned to the HUGEPAGE_SIZE, because the
++                * following mmap() will automatically align the length to be a
++                * multiple of the underlying huge page size. Failing to do the
++                * same at this allocation will result in a memory overwrite by
++                * the mmap().
++                */
++               size = __ALIGN_KERNEL(variant->buffer_size, HUGEPAGE_SIZE);
++       } else {
++               size = variant->buffer_size;
++       }
++       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, size);
+        if (rc || !self->buffer) {
+                SKIP(return, "Skipping buffer_size=%lu due to errno=%d",
+                           variant->buffer_size, rc);
 
-This patch is targeting libcrypto-next.
+It can just upsize the allocation, i.e. the test case will only
+use the first 64M or 128MB out of the reserved 512MB huge page.
 
- lib/crypto/aes.c                | 1 +
- lib/crypto/aescfb.c             | 9 ++++-----
- lib/crypto/aesgcm.c             | 7 +++----
- lib/crypto/arc4.c               | 1 +
- lib/crypto/blake2s-generic.c    | 9 +++++----
- lib/crypto/blake2s.c            | 9 +++++----
- lib/crypto/chacha.c             | 7 ++++---
- lib/crypto/chacha20poly1305.c   | 8 ++++----
- lib/crypto/curve25519-generic.c | 1 +
- lib/crypto/des.c                | 7 +++----
- lib/crypto/gf128mul.c           | 1 +
- lib/crypto/libchacha.c          | 7 +++----
- lib/crypto/memneq.c             | 3 ++-
- lib/crypto/mpi/mpi-add.c        | 2 ++
- lib/crypto/mpi/mpi-bit.c        | 2 ++
- lib/crypto/mpi/mpi-cmp.c        | 2 ++
- lib/crypto/mpi/mpi-mul.c        | 2 ++
- lib/crypto/mpi/mpi-pow.c        | 2 ++
- lib/crypto/mpi/mpi-sub-ui.c     | 2 ++
- lib/crypto/mpi/mpicoder.c       | 3 ++-
- lib/crypto/mpi/mpiutil.c        | 2 ++
- lib/crypto/poly1305-donna32.c   | 3 ++-
- lib/crypto/poly1305-donna64.c   | 3 ++-
- lib/crypto/poly1305-generic.c   | 1 +
- lib/crypto/poly1305.c           | 1 +
- lib/crypto/sha1.c               | 6 +++---
- lib/crypto/sha256-generic.c     | 1 +
- lib/crypto/sha256.c             | 1 +
- lib/crypto/sm3.c                | 1 +
- lib/crypto/utils.c              | 3 ++-
- 30 files changed, 67 insertions(+), 40 deletions(-)
-
-diff --git a/lib/crypto/aes.c b/lib/crypto/aes.c
-index eafe14d021f5a..b57fda3460f1b 100644
---- a/lib/crypto/aes.c
-+++ b/lib/crypto/aes.c
-@@ -3,10 +3,11 @@
-  * Copyright (C) 2017-2019 Linaro Ltd <ard.biesheuvel@linaro.org>
-  */
- 
- #include <crypto/aes.h>
- #include <linux/crypto.h>
-+#include <linux/export.h>
- #include <linux/module.h>
- #include <linux/unaligned.h>
- 
- /*
-  * Emit the sbox as volatile const to prevent the compiler from doing
-diff --git a/lib/crypto/aescfb.c b/lib/crypto/aescfb.c
-index 437613265e14f..5ed46745f55cc 100644
---- a/lib/crypto/aescfb.c
-+++ b/lib/crypto/aescfb.c
-@@ -3,16 +3,15 @@
-  * Minimal library implementation of AES in CFB mode
-  *
-  * Copyright 2023 Google LLC
-  */
- 
--#include <linux/module.h>
--
--#include <crypto/algapi.h>
--#include <crypto/aes.h>
--
- #include <asm/irqflags.h>
-+#include <crypto/aes.h>
-+#include <crypto/algapi.h>
-+#include <linux/export.h>
-+#include <linux/module.h>
- 
- static void aescfb_encrypt_block(const struct crypto_aes_ctx *ctx, void *dst,
- 				 const void *src)
- {
- 	unsigned long flags;
-diff --git a/lib/crypto/aesgcm.c b/lib/crypto/aesgcm.c
-index 277824d6b4af7..8ebbf4342f6de 100644
---- a/lib/crypto/aesgcm.c
-+++ b/lib/crypto/aesgcm.c
-@@ -3,17 +3,16 @@
-  * Minimal library implementation of GCM
-  *
-  * Copyright 2022 Google LLC
-  */
- 
--#include <linux/module.h>
--
-+#include <asm/irqflags.h>
- #include <crypto/algapi.h>
- #include <crypto/gcm.h>
- #include <crypto/ghash.h>
--
--#include <asm/irqflags.h>
-+#include <linux/export.h>
-+#include <linux/module.h>
- 
- static void aesgcm_encrypt_block(const struct crypto_aes_ctx *ctx, void *dst,
- 				 const void *src)
- {
- 	unsigned long flags;
-diff --git a/lib/crypto/arc4.c b/lib/crypto/arc4.c
-index 838812d182164..4e950e1e66d08 100644
---- a/lib/crypto/arc4.c
-+++ b/lib/crypto/arc4.c
-@@ -6,10 +6,11 @@
-  *
-  * Jon Oberheide <jon@oberheide.org>
-  */
- 
- #include <crypto/arc4.h>
-+#include <linux/export.h>
- #include <linux/module.h>
- 
- int arc4_setkey(struct arc4_ctx *ctx, const u8 *in_key, unsigned int key_len)
- {
- 	int i, j = 0, k = 0;
-diff --git a/lib/crypto/blake2s-generic.c b/lib/crypto/blake2s-generic.c
-index 09682136b57c6..9828176a2efec 100644
---- a/lib/crypto/blake2s-generic.c
-+++ b/lib/crypto/blake2s-generic.c
-@@ -7,15 +7,16 @@
-  * Information: https://blake2.net/
-  *
-  */
- 
- #include <crypto/internal/blake2s.h>
--#include <linux/types.h>
--#include <linux/string.h>
--#include <linux/kernel.h>
--#include <linux/init.h>
- #include <linux/bug.h>
-+#include <linux/export.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
- #include <linux/unaligned.h>
- 
- static const u8 blake2s_sigma[10][16] = {
- 	{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
- 	{ 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 },
-diff --git a/lib/crypto/blake2s.c b/lib/crypto/blake2s.c
-index b0f9a678300b3..f6ec68c3dcdae 100644
---- a/lib/crypto/blake2s.c
-+++ b/lib/crypto/blake2s.c
-@@ -7,16 +7,17 @@
-  * Information: https://blake2.net/
-  *
-  */
- 
- #include <crypto/internal/blake2s.h>
--#include <linux/types.h>
--#include <linux/string.h>
-+#include <linux/bug.h>
-+#include <linux/export.h>
-+#include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
--#include <linux/bug.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
- 
- static inline void blake2s_set_lastblock(struct blake2s_state *state)
- {
- 	state->f[0] = -1;
- }
-diff --git a/lib/crypto/chacha.c b/lib/crypto/chacha.c
-index ced87dd31a97f..5962e65c5a9fd 100644
---- a/lib/crypto/chacha.c
-+++ b/lib/crypto/chacha.c
-@@ -3,17 +3,18 @@
-  * The "hash function" used as the core of the ChaCha stream cipher (RFC7539)
-  *
-  * Copyright (C) 2015 Martin Willi
-  */
- 
-+#include <crypto/chacha.h>
-+#include <linux/bitops.h>
- #include <linux/bug.h>
--#include <linux/kernel.h>
- #include <linux/export.h>
--#include <linux/bitops.h>
-+#include <linux/export.h>
-+#include <linux/kernel.h>
- #include <linux/string.h>
- #include <linux/unaligned.h>
--#include <crypto/chacha.h>
- 
- static void chacha_permute(struct chacha_state *state, int nrounds)
- {
- 	u32 *x = state->x;
- 	int i;
-diff --git a/lib/crypto/chacha20poly1305.c b/lib/crypto/chacha20poly1305.c
-index e29eed49a5a14..0b49d6aedefdd 100644
---- a/lib/crypto/chacha20poly1305.c
-+++ b/lib/crypto/chacha20poly1305.c
-@@ -5,20 +5,20 @@
-  * This is an implementation of the ChaCha20Poly1305 AEAD construction.
-  *
-  * Information: https://tools.ietf.org/html/rfc8439
-  */
- 
--#include <crypto/chacha20poly1305.h>
- #include <crypto/chacha.h>
-+#include <crypto/chacha20poly1305.h>
- #include <crypto/poly1305.h>
- #include <crypto/utils.h>
--
--#include <linux/unaligned.h>
--#include <linux/kernel.h>
-+#include <linux/export.h>
- #include <linux/init.h>
-+#include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/module.h>
-+#include <linux/unaligned.h>
- 
- static void chacha_load_key(u32 *k, const u8 *in)
- {
- 	k[0] = get_unaligned_le32(in);
- 	k[1] = get_unaligned_le32(in + 4);
-diff --git a/lib/crypto/curve25519-generic.c b/lib/crypto/curve25519-generic.c
-index de7c99172fa25..f8aa70c9f5598 100644
---- a/lib/crypto/curve25519-generic.c
-+++ b/lib/crypto/curve25519-generic.c
-@@ -8,10 +8,11 @@
-  *
-  * Information: https://cr.yp.to/ecdh.html
-  */
- 
- #include <crypto/curve25519.h>
-+#include <linux/export.h>
- #include <linux/module.h>
- 
- const u8 curve25519_null_point[CURVE25519_KEY_SIZE] __aligned(32) = { 0 };
- const u8 curve25519_base_point[CURVE25519_KEY_SIZE] __aligned(32) = { 9 };
- 
-diff --git a/lib/crypto/des.c b/lib/crypto/des.c
-index d3423b34a8e9b..a906070136dc3 100644
---- a/lib/crypto/des.c
-+++ b/lib/crypto/des.c
-@@ -5,25 +5,24 @@
-  * DES & Triple DES EDE Cipher Algorithms.
-  *
-  * Copyright (c) 2005 Dag Arne Osvik <da@osvik.no>
-  */
- 
-+#include <crypto/des.h>
-+#include <crypto/internal/des.h>
- #include <linux/bitops.h>
- #include <linux/compiler.h>
- #include <linux/crypto.h>
- #include <linux/errno.h>
-+#include <linux/export.h>
- #include <linux/fips.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/string.h>
- #include <linux/types.h>
--
- #include <linux/unaligned.h>
- 
--#include <crypto/des.h>
--#include <crypto/internal/des.h>
--
- #define ROL(x, r) ((x) = rol32((x), (r)))
- #define ROR(x, r) ((x) = ror32((x), (r)))
- 
- /* Lookup tables for key expansion */
- 
-diff --git a/lib/crypto/gf128mul.c b/lib/crypto/gf128mul.c
-index fbe72cb3453a5..2a34590fe3f10 100644
---- a/lib/crypto/gf128mul.c
-+++ b/lib/crypto/gf128mul.c
-@@ -47,10 +47,11 @@
-  This file provides fast multiplication in GF(2^128) as required by several
-  cryptographic authentication modes
- */
- 
- #include <crypto/gf128mul.h>
-+#include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- 
- #define gf128mul_dat(q) { \
-diff --git a/lib/crypto/libchacha.c b/lib/crypto/libchacha.c
-index ebcca381e248a..26862ad90a964 100644
---- a/lib/crypto/libchacha.c
-+++ b/lib/crypto/libchacha.c
-@@ -3,16 +3,15 @@
-  * The ChaCha stream cipher (RFC7539)
-  *
-  * Copyright (C) 2015 Martin Willi
-  */
- 
--#include <linux/kernel.h>
--#include <linux/export.h>
--#include <linux/module.h>
--
- #include <crypto/algapi.h> // for crypto_xor_cpy
- #include <crypto/chacha.h>
-+#include <linux/export.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
- 
- void chacha_crypt_generic(struct chacha_state *state, u8 *dst, const u8 *src,
- 			  unsigned int bytes, int nrounds)
- {
- 	/* aligned to potentially speed up crypto_xor() */
-diff --git a/lib/crypto/memneq.c b/lib/crypto/memneq.c
-index a2afd10349c92..44daacb8cb513 100644
---- a/lib/crypto/memneq.c
-+++ b/lib/crypto/memneq.c
-@@ -57,13 +57,14 @@
-  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
--#include <linux/unaligned.h>
- #include <crypto/algapi.h>
-+#include <linux/export.h>
- #include <linux/module.h>
-+#include <linux/unaligned.h>
- 
- /* Generic path for arbitrary size */
- static inline unsigned long
- __crypto_memneq_generic(const void *a, const void *b, size_t size)
- {
-diff --git a/lib/crypto/mpi/mpi-add.c b/lib/crypto/mpi/mpi-add.c
-index 3015140d48602..c0375c1672fa3 100644
---- a/lib/crypto/mpi/mpi-add.c
-+++ b/lib/crypto/mpi/mpi-add.c
-@@ -9,10 +9,12 @@
-  *	 way the data is stored; this is to support the abstraction
-  *	 of an optional secure memory allocation which may be used
-  *	 to avoid revealing of sensitive data due to paging etc.
-  */
- 
-+#include <linux/export.h>
-+
- #include "mpi-internal.h"
- 
- int mpi_add(MPI w, MPI u, MPI v)
- {
- 	mpi_ptr_t wp, up, vp;
-diff --git a/lib/crypto/mpi/mpi-bit.c b/lib/crypto/mpi/mpi-bit.c
-index 934d813113606..b3d0e7ddbc03d 100644
---- a/lib/crypto/mpi/mpi-bit.c
-+++ b/lib/crypto/mpi/mpi-bit.c
-@@ -16,10 +16,12 @@
-  * You should have received a copy of the GNU General Public License
-  * along with this program; if not, write to the Free Software
-  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
-  */
- 
-+#include <linux/export.h>
-+
- #include "mpi-internal.h"
- #include "longlong.h"
- 
- #define A_LIMB_1 ((mpi_limb_t) 1)
- 
-diff --git a/lib/crypto/mpi/mpi-cmp.c b/lib/crypto/mpi/mpi-cmp.c
-index ceaebe181cd70..b42929296bcef 100644
---- a/lib/crypto/mpi/mpi-cmp.c
-+++ b/lib/crypto/mpi/mpi-cmp.c
-@@ -16,10 +16,12 @@
-  * You should have received a copy of the GNU General Public License
-  * along with this program; if not, write to the Free Software
-  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
-  */
- 
-+#include <linux/export.h>
-+
- #include "mpi-internal.h"
- 
- int mpi_cmp_ui(MPI u, unsigned long v)
- {
- 	mpi_limb_t limb = v;
-diff --git a/lib/crypto/mpi/mpi-mul.c b/lib/crypto/mpi/mpi-mul.c
-index 7e6ff1ce3e9b6..d79f186ad90bc 100644
---- a/lib/crypto/mpi/mpi-mul.c
-+++ b/lib/crypto/mpi/mpi-mul.c
-@@ -9,10 +9,12 @@
-  *	 way the data is stored; this is to support the abstraction
-  *	 of an optional secure memory allocation which may be used
-  *	 to avoid revealing of sensitive data due to paging etc.
-  */
- 
-+#include <linux/export.h>
-+
- #include "mpi-internal.h"
- 
- int mpi_mul(MPI w, MPI u, MPI v)
- {
- 	mpi_size_t usize, vsize, wsize;
-diff --git a/lib/crypto/mpi/mpi-pow.c b/lib/crypto/mpi/mpi-pow.c
-index 67fbd4c2503d0..9e695a3bda3a0 100644
---- a/lib/crypto/mpi/mpi-pow.c
-+++ b/lib/crypto/mpi/mpi-pow.c
-@@ -11,12 +11,14 @@
-  *	 to avoid revealing of sensitive data due to paging etc.
-  *	 The GNU MP Library itself is published under the LGPL;
-  *	 however I decided to publish this code under the plain GPL.
-  */
- 
-+#include <linux/export.h>
- #include <linux/sched.h>
- #include <linux/string.h>
-+
- #include "mpi-internal.h"
- #include "longlong.h"
- 
- /****************
-  * RES = BASE ^ EXP mod MOD
-diff --git a/lib/crypto/mpi/mpi-sub-ui.c b/lib/crypto/mpi/mpi-sub-ui.c
-index b41b082b5f3e3..0edcdbd24833a 100644
---- a/lib/crypto/mpi/mpi-sub-ui.c
-+++ b/lib/crypto/mpi/mpi-sub-ui.c
-@@ -30,10 +30,12 @@
-  * You should have received copies of the GNU General Public License and the
-  * GNU Lesser General Public License along with the GNU MP Library.  If not,
-  * see https://www.gnu.org/licenses/.
-  */
- 
-+#include <linux/export.h>
-+
- #include "mpi-internal.h"
- 
- int mpi_sub_ui(MPI w, MPI u, unsigned long vval)
- {
- 	if (u->nlimbs == 0) {
-diff --git a/lib/crypto/mpi/mpicoder.c b/lib/crypto/mpi/mpicoder.c
-index dde01030807de..47f6939599b33 100644
---- a/lib/crypto/mpi/mpicoder.c
-+++ b/lib/crypto/mpi/mpicoder.c
-@@ -17,12 +17,13 @@
-  * along with this program; if not, write to the Free Software
-  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
-  */
- 
- #include <linux/bitops.h>
--#include <linux/count_zeros.h>
- #include <linux/byteorder/generic.h>
-+#include <linux/count_zeros.h>
-+#include <linux/export.h>
- #include <linux/scatterlist.h>
- #include <linux/string.h>
- #include "mpi-internal.h"
- 
- #define MAX_EXTERN_MPI_BITS 16384
-diff --git a/lib/crypto/mpi/mpiutil.c b/lib/crypto/mpi/mpiutil.c
-index 979ece5a81d25..7f2db830f4043 100644
---- a/lib/crypto/mpi/mpiutil.c
-+++ b/lib/crypto/mpi/mpiutil.c
-@@ -16,10 +16,12 @@
-  * You should have received a copy of the GNU General Public License
-  * along with this program; if not, write to the Free Software
-  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
-  */
- 
-+#include <linux/export.h>
-+
- #include "mpi-internal.h"
- 
- /****************
-  * Note:  It was a bad idea to use the number of limbs to allocate
-  *	  because on a alpha the limbs are large but we normally need
-diff --git a/lib/crypto/poly1305-donna32.c b/lib/crypto/poly1305-donna32.c
-index 0a4a2d99e3654..b66131b3f6d4b 100644
---- a/lib/crypto/poly1305-donna32.c
-+++ b/lib/crypto/poly1305-donna32.c
-@@ -4,13 +4,14 @@
-  *
-  * This is based in part on Andrew Moon's poly1305-donna, which is in the
-  * public domain.
-  */
- 
-+#include <crypto/internal/poly1305.h>
-+#include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/unaligned.h>
--#include <crypto/internal/poly1305.h>
- 
- void poly1305_core_setkey(struct poly1305_core_key *key,
- 			  const u8 raw_key[POLY1305_BLOCK_SIZE])
- {
- 	/* r &= 0xffffffc0ffffffc0ffffffc0fffffff */
-diff --git a/lib/crypto/poly1305-donna64.c b/lib/crypto/poly1305-donna64.c
-index 530287531b2ee..8a72a5a849446 100644
---- a/lib/crypto/poly1305-donna64.c
-+++ b/lib/crypto/poly1305-donna64.c
-@@ -4,13 +4,14 @@
-  *
-  * This is based in part on Andrew Moon's poly1305-donna, which is in the
-  * public domain.
-  */
- 
-+#include <crypto/internal/poly1305.h>
-+#include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/unaligned.h>
--#include <crypto/internal/poly1305.h>
- 
- void poly1305_core_setkey(struct poly1305_core_key *key,
- 			  const u8 raw_key[POLY1305_BLOCK_SIZE])
- {
- 	u64 t0, t1;
-diff --git a/lib/crypto/poly1305-generic.c b/lib/crypto/poly1305-generic.c
-index a73f700fa1fb8..71a16c5c538b4 100644
---- a/lib/crypto/poly1305-generic.c
-+++ b/lib/crypto/poly1305-generic.c
-@@ -6,10 +6,11 @@
-  *
-  * Based on public domain code by Andrew Moon and Daniel J. Bernstein.
-  */
- 
- #include <crypto/internal/poly1305.h>
-+#include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- 
- void poly1305_block_init_generic(struct poly1305_block_state *desc,
- 				 const u8 raw_key[POLY1305_BLOCK_SIZE])
-diff --git a/lib/crypto/poly1305.c b/lib/crypto/poly1305.c
-index 5f2f2af3b59f8..a6dc182b6c22d 100644
---- a/lib/crypto/poly1305.c
-+++ b/lib/crypto/poly1305.c
-@@ -7,10 +7,11 @@
-  * Based on public domain code by Andrew Moon and Daniel J. Bernstein.
-  */
- 
- #include <crypto/internal/blockhash.h>
- #include <crypto/internal/poly1305.h>
-+#include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/string.h>
- #include <linux/unaligned.h>
- 
-diff --git a/lib/crypto/sha1.c b/lib/crypto/sha1.c
-index ebb60519ae939..6d809c3088be3 100644
---- a/lib/crypto/sha1.c
-+++ b/lib/crypto/sha1.c
-@@ -4,16 +4,16 @@
-  * and to avoid unnecessary copies into the context array.
-  *
-  * This was based on the git SHA1 implementation.
-  */
- 
--#include <linux/kernel.h>
-+#include <crypto/sha1.h>
-+#include <linux/bitops.h>
- #include <linux/export.h>
-+#include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/bitops.h>
- #include <linux/string.h>
--#include <crypto/sha1.h>
- #include <linux/unaligned.h>
- 
- /*
-  * If you have 32 registers or more, the compiler can (and should)
-  * try to change the array[] accesses into registers. However, on
-diff --git a/lib/crypto/sha256-generic.c b/lib/crypto/sha256-generic.c
-index a16ad4f25ebb7..2968d95d04038 100644
---- a/lib/crypto/sha256-generic.c
-+++ b/lib/crypto/sha256-generic.c
-@@ -10,10 +10,11 @@
-  * Copyright (c) 2002 James Morris <jmorris@intercode.com.au>
-  * Copyright (c) 2014 Red Hat Inc.
-  */
- 
- #include <crypto/internal/sha2.h>
-+#include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/string.h>
- #include <linux/unaligned.h>
- 
-diff --git a/lib/crypto/sha256.c b/lib/crypto/sha256.c
-index 107e5162507a7..6bfa4ae8dfb59 100644
---- a/lib/crypto/sha256.c
-+++ b/lib/crypto/sha256.c
-@@ -11,10 +11,11 @@
-  * Copyright (c) 2014 Red Hat Inc.
-  */
- 
- #include <crypto/internal/blockhash.h>
- #include <crypto/internal/sha2.h>
-+#include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/string.h>
- 
- /*
-diff --git a/lib/crypto/sm3.c b/lib/crypto/sm3.c
-index efff0e267d84d..c6b9ad8a3ac66 100644
---- a/lib/crypto/sm3.c
-+++ b/lib/crypto/sm3.c
-@@ -7,10 +7,11 @@
-  * Copyright (C) 2017 Gilad Ben-Yossef <gilad@benyossef.com>
-  * Copyright (C) 2021 Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-  */
- 
- #include <crypto/sm3.h>
-+#include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/string.h>
- #include <linux/unaligned.h>
- 
-diff --git a/lib/crypto/utils.c b/lib/crypto/utils.c
-index 87da2a6dd161e..dec381d5e9065 100644
---- a/lib/crypto/utils.c
-+++ b/lib/crypto/utils.c
-@@ -3,13 +3,14 @@
-  * Crypto library utility functions
-  *
-  * Copyright (c) 2006 Herbert Xu <herbert@gondor.apana.org.au>
-  */
- 
--#include <linux/unaligned.h>
- #include <crypto/utils.h>
-+#include <linux/export.h>
- #include <linux/module.h>
-+#include <linux/unaligned.h>
- 
- /*
-  * XOR @len bytes from @src1 and @src2 together, writing the result to @dst
-  * (which may alias one of the sources).  Don't call this directly; call
-  * crypto_xor() or crypto_xor_cpy() instead.
-
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.49.0
-
+Thanks
+Nicolin
