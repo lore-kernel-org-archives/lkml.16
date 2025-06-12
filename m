@@ -1,81 +1,112 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F0B1A5B92
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F8A2B2CF
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749700668; cv=none; b=AGTza0s8ssPpL5pt5NbWEirTH+zAIlyAYpX6kBY8ZeAToNwLCISA6a2b8UXiMeWeYJA0MFajqnJhxrTnnZ8hwC3HAS62vOxh9T6caRLdlxDrMaqGy789q9A36CAWb3xR+qGnU0loWIQAZ+tY2y10Ma474l/KXzEkQTRd5//2w08=
+	t=1749700827; cv=none; b=aeKNyVo29DxRJ5UaskU59UKuTPzedk2VM3EQuBLl/C8QQE1W9Qdw26G/yuA9IUiBQ4QhggxlwZpi9eCOW8aQFNB7KioTdNxmttNElOuRHtFuhRxnZ6Ur3Y8+TDU23nf8bfwbagSx7zCmcDgrMc5fCmrFlc/8E6ClNEA9OrtJL70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749700668; c=relaxed/simple;
-	bh=CQtQgmc2RdVb7mtqJkvmdmIoIsDlVyjrM3+6xXubAdw=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=ECHeQcc6eFitgW9f4n0G8bMKSuyfiK2EHxl7YbqPel0eZ0pPXVPS+b+VKBgBeC2+btvDyzMwRn0wWfWkKJK4Hzk7V08W4OHGmjTgyf4+XawjL4Qg/vgZLyWtQlHVpKMcFvImT2IJx11yVdYw1sTJSUgbjUON4KbVtoStAZ1lmhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bHpdf3zFlz5DN7D;
-	Thu, 12 Jun 2025 11:57:42 +0800 (CST)
-Received: from njb2app05.zte.com.cn ([10.55.22.121])
-	by mse-fl2.zte.com.cn with SMTP id 55C3vOHA074733;
-	Thu, 12 Jun 2025 11:57:25 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njb2app05[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Thu, 12 Jun 2025 11:57:26 +0800 (CST)
-Date: Thu, 12 Jun 2025 11:57:26 +0800 (CST)
-X-Zmail-TransId: 2afd684a502648f-2fdc0
-X-Mailer: Zmail v1.0
-Message-ID: <20250612115726263u9zKGGhkQXNFUB3OQZqCR@zte.com.cn>
+	s=arc-20240116; t=1749700827; c=relaxed/simple;
+	bh=LrZf9tw7ue1AjUWwaIRpX02bUAB62dzm3WhOTiLfKg8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DLD1tjEgg/9/mZYA2K30SbZVt3rWLOcS2cAY91Ys/riJSNnUZMKk2CC47Krqi1MllrCSbDuqnMF3NbaBqxk1CVqLzVsCSMTD0PofTbSYZLI0VMohev6CvqRp8jGRvZrqob8EWiG9o/pvP5CVFhO8THQ4t+HuTOmxFdj59a96gqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=l1JaIQQ4; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="l1JaIQQ4"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54e98f73850so454522e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1749700823; x=1750305623; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LrZf9tw7ue1AjUWwaIRpX02bUAB62dzm3WhOTiLfKg8=;
+        b=l1JaIQQ4IipbLDrlJAd5wq48I3EnHNxUCz/XyNSq1qRxudJf+ysLG8dWTJpDBGviGz
+         ZXkCIneRl2HInlh67JUlcp76zlqbfbhn331R8iSR+OuS/eETVR54WHHumWEkNePvDJkm
+         aC1xhJHja7o6opJkIZXxO7pKZiyscJuMTlscILmb9p03V9VJk2+4TrmYek29iDo9P5Iq
+         2geeaYqme1nWR17W1H6hUbE5kOE75oesphuVSO/oeo3ueoBAlzoZG3wrfbTt8Tc+e1iH
+         Ik6myCgWnhkriWMoXckun5kwCvvbywBDfcE8aCLHLo2P4J4TQhLxgl99ox37bJCt3rpi
+         5A4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749700823; x=1750305623;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LrZf9tw7ue1AjUWwaIRpX02bUAB62dzm3WhOTiLfKg8=;
+        b=YQSOtib83+DxLJtwp5Sb7Fg2+qDQzrzvMy/bA+pCQgf1D60AXzPQ5A1jHh2B8Ehs2W
+         zmI+MwmkFhWzUJp4ZGxm/6Hm8IFzuofw3Dcrk/llujKdrlC48w/0Tj+nu5NscLFhJD6U
+         KU6yGKEDgXroE8XZqbMs+jXC5vR5RriucPQb7JIH7Ii1DbZz0FZuxM1ms7/Vwk6cycEk
+         6dXXik4lL8ZtuQd2McFro0hhh/ZSWU7MTGvtYwgT03qe177fHhUd/blZxqcW6rB683/t
+         +4xE+CviHm/ZORUhTSPLQtEDrSmjBr9AcxbC25hkhvJGdWRQglQfYYbJIEQ6gdivnhvD
+         sWTA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/Q43aqtOLc4O0TRZmsD4gxgcumGVEx97ZKmBoqhb6KdVGnyngHNx1I5/FenP8KW6OJ3+E5RyUMFkztlU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXw7QnPpvdhESyMSbqnMTvRwh/BwtSjnEB7fkBKEm621KK9+K7
+	OBRJesiNBunpjTcY44A5lqWQO6PuUcLsOuZBDyeBNuq4d8Mo2WiKCFIHKME6iWW+cqB2tzJxSrv
+	58UCfYIwYLfcTlv6fHWQcDIyrElqdL82Y4MRR2qck1A==
+X-Gm-Gg: ASbGncu6IUiEegNRzssx0b8JsONTIvOmd/L0C8Rnma0dPwx82FTjvgpJ3nCXC9ySgcq
+	71MZT2EA5grJDRx0YMlwV6e/bZAG1V1XrZyY60jW+BQw8T3XXpmRj2v4q+Sr/eFXoMhT08CkNvy
+	Oxa7dHys2qO1u2BaDLpBV8SZHcsbJGMMoT5sQzLeok9LuU
+X-Google-Smtp-Source: AGHT+IHFiT/1CKTclaeo4nECAjAsNA6jBOPa/LZL3M+Ccdnks+IHwcRkfiDgkJcope9mTG1+XxA4A5iEPu8+KuKIZnw=
+X-Received: by 2002:a05:6512:3b0c:b0:553:2450:5895 with SMTP id
+ 2adb3069b0e04-553a6446c73mr435357e87.4.1749700823052; Wed, 11 Jun 2025
+ 21:00:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <oleg@redhat.com>, <tglx@linutronix.de>, <frederic@kernel.org>,
-        <peterz@infradead.org>, <brauner@kernel.org>,
-        <viro@zeniv.linux.org.uk>, <joel.granados@kernel.org>,
-        <lorenzo.stoakes@oracle.com>, <linux-kernel@vger.kernel.org>
-Cc: <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>, <fan.yu9@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIFJFU0VORCBsaW51eCBuZXh0XSBzaWduYWw6IFVwZGF0ZSB0aGUgY29tbWVudCBvbiBfX3NlbmRfc2lnbmFsX2xvY2tlZCgpIGluCiBkb19ub3RpZnlfcGFyZW50KCk=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 55C3vOHA074733
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 684A5036.001/4bHpdf3zFlz5DN7D
+MIME-Version: 1.0
+References: <20250611062238.636753-1-apatel@ventanamicro.com>
+ <20250611062238.636753-9-apatel@ventanamicro.com> <20250611-sprint-playable-07774a23f027@spud>
+In-Reply-To: <20250611-sprint-playable-07774a23f027@spud>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Thu, 12 Jun 2025 09:30:11 +0530
+X-Gm-Features: AX0GCFsKCy8m7CU7KuBd7obZnUUEUh3VEd4feuIdW-8ohTJTYbZ_MYkJD8lCino
+Message-ID: <CAK9=C2UwtBhefp_FxwTtDPRyXb2McVdypgh-A9PaQO9288uzMA@mail.gmail.com>
+Subject: Re: [PATCH v5 08/23] dt-bindings: clock: Add RPMI clock service
+ controller bindings
+To: Conor Dooley <conor@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Qiu Yutan <qiu.yutan@zte.com.cn>
+On Wed, Jun 11, 2025 at 9:47=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Wed, Jun 11, 2025 at 11:52:23AM +0530, Anup Patel wrote:
+> > Add device tree bindings for the RPMI clock service group based
+> > controller for the supervisor software.
+> >
+> > The RPMI clock service group is defined by the RISC-V platform
+> > management interface (RPMI) specification.
+> >
+> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>
+> On v4 I said the tag I provided was for all binding patches.
+> Is there a reason, other than using b4 to grab tags, or not noticing,
+> for why you only added it here?
 
-Update the comments for the call to __send_signal_locked()
-in do_notify_parent() based on community discussions.
+Yes, I use b4 to grab tags before addressing comments. I will
+manually add your Reviewed-by in all binding patches in the
+next revision.
 
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Qiu Yutan <qiu.yutan@zte.com.cn>
-Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
-Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
----
- kernel/signal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 148082db9a55..45dc60f8b833 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2252,8 +2252,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
- 			sig = 0;
- 	}
- 	/*
--	 * Send with __send_signal as si_pid and si_uid are in the
--	 * parent's namespaces.
-+	 * Use __send_signal_locked() instead of send_signal_locked()
-+	 * because the latter can wrongly change si_pid/si_uid
- 	 */
- 	if (valid_signal(sig) && sig)
- 		__send_signal_locked(sig, &info, tsk->parent, PIDTYPE_TGID, false);
--- 
-2.25.1
+Thanks,
+Anup
