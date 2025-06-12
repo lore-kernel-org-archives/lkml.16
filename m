@@ -1,211 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03672D8771;
-	Thu, 12 Jun 2025 16:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C5C2D8796;
+	Thu, 12 Jun 2025 16:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744649; cv=none; b=PjDwkVZ2hOe/kG4+OTDwMDqGOXcMXT/PAqwIQbcRU/AEhWI59yBQO8bKeT2k2fF+VPc0iDRhkWiW+K2ZnXPgSqKc0T/zXOKvVYn5gNQ5VzsTnhMSTbd3QW+QrZnVmvYGtY1xNbCYxb/M/1v5SSYq5y7vb9ckDVrI4cLCKVzsI3k=
+	t=1749744651; cv=none; b=sWegSOWI41NkUg0bTYY1htIl6XdWdO5ntGZd99oKploqUb2C67cOEDvREF0GU21gGe4yS3BHbVloZ1/km6RYP1PmCfmsy0I0QdSXSIGvr1PRdnjbwuGhlCZ6Rgh2ECx5L/t/DnkhdWARwgSOyDWcSqe8rkLwBO7YrghJB2Rhf3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744649; c=relaxed/simple;
-	bh=X29ySbF7NIGDlQVp1woOlVIfnUo3FpZJcl8ba1PlchM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RkoiqT9lMnt0oeiiRckGXvR/tJHbeWL3nBDp1AjJJhfECr8cnjTTKNGgMa+UDXFrylWuIdKp2CWLUllkpwzLAdmMzxLOZx5acPuKGJPXhwR0VmAteY6repzNW2DBX+Frw/M640LtufzihrI264uwBx2RQ7Gb9jU8HXlhJz3u6KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HCF+7YLO; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749744651; c=relaxed/simple;
+	bh=0tJPuLJzplHSLCKLl5IAR6N3cdTftKei25pDSJK8fbo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KAb5tD+uHNO0Tn4yWgezJfJrQ3JfliIibX7T9KwTYY5+Dj0s6x6hjq2LyIFKMMuG0vOvMDZEtxn0MJHmq10aHRMi2lTTy5dT22ithlND6/Os7tkfpKYY/WZ0NuO5jQgnXk0RoEI0iapLaUmDaB2GM3utuMRZ2HnX2UAg0uXCdFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArH5qg8/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HCF+7YLO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749744648; x=1781280648;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=X29ySbF7NIGDlQVp1woOlVIfnUo3FpZJcl8ba1PlchM=;
-  b=HCF+7YLO5YHN4Mt8/qS9QehXe1gCyUZlj77SyO+NF9Velst+o53JQEuP
-   g81BEN1PGQMXJd2r5gu62w1HUdIxEs33zPORwXSYVVrCgRbd+CMWnOHzS
-   KY4Gm9eWRBh90OhWlfTRShLsm/hK0v/38ShMF2n+zGepatZkcB3G5CeQJ
-   etUp95qsWaBfhb//j07Bg8dK5P/wad+WEO2uYr80jYEcR3AKmN98CI4Vo
-   J74J8ECS21n57i02RgjH5wANYmiwQJ3DjsJdV19kcaFPliy64wmB6/Vl6
-   I1jUXFD+YjzGM2U5IbdyMiijj3A8MzCZiG9GJlmd6VGOyZBhDJ4rFa+Xl
-   g==;
-X-CSE-ConnectionGUID: RGyQPX1uS76A+zJMUqLU+g==
-X-CSE-MsgGUID: t0t8SJ/+TDq8gSG7J7LAHA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55739197"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="55739197"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 09:10:48 -0700
-X-CSE-ConnectionGUID: 6p3/DrJsTg6ZPyqWIzD1aw==
-X-CSE-MsgGUID: Uk5iDxCfSqaD0NS/1emfpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="148468690"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by orviesa008.jf.intel.com with ESMTP; 12 Jun 2025 09:10:43 -0700
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: intel-wired-lan@lists.osuosl.org
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Michal Kubiak <michal.kubiak@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH iwl-next v2 17/17] libeth: xdp, xsk: access adjacent u32s as u64 where applicable
-Date: Thu, 12 Jun 2025 18:02:34 +0200
-Message-ID: <20250612160234.68682-18-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250612160234.68682-1-aleksander.lobakin@intel.com>
-References: <20250612160234.68682-1-aleksander.lobakin@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArH5qg8/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C71C4CEEE;
+	Thu, 12 Jun 2025 16:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749744651;
+	bh=0tJPuLJzplHSLCKLl5IAR6N3cdTftKei25pDSJK8fbo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ArH5qg8/16C/5akIeSXyQGLdDKvAH0Bm1rbEQUrFDsnm3jHqqI1Hr1Cpiv7oflgAm
+	 f6ymsD15nZuUSNOHX/FZyI89IG/5y0D4wreuWJvOLyVt8dCPtsfrnBgJdwRqdO6GuP
+	 cuNKgVWXOPO29B6ayQV8SeUv3MC8xdFFHoyQ9V3vEr2tQTNiduW9Azk3iUVSTwtz2N
+	 Ge4nThcYl6MOAp/6YzaFdBo7iMvyufiJY56skd0xDCi6vBFL4Sw2o1SETKDN2tDA7/
+	 CO7bcvYq2El6Ve6jH4RNQKhY8WyPMyPsgVcY+1t2jD0jsfgxiez9ZL0myIz/cBSw7E
+	 nWneiYPYmATKA==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55220699ba8so1221224e87.2;
+        Thu, 12 Jun 2025 09:10:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV/oDJfvFiWllWgn0et3cYdjxaFJbf9Zu7eVeCql8rtN192Mx03M7ONHWGf6Ouu9vOOOp0QFqdV/7SaVjs=@vger.kernel.org, AJvYcCWOtsHXYlDA13x7uYTt5fwnKqlsMsQ7PmsJs2+gKXJLXUz5azaXL+yNruwB6TcO9rE84RooUlW3PjpSSWqK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb7h8aZQd17gO1zuMrSuovfRfTEUne2dP2RSq8BslvAKSxqwqn
+	3RcuYjFKyHDhNi4A1umJDd2lelxmhweKEY7DyGGM9vM68eI7c+GswinIYdCS0WMbHEKE2Tk/BVY
+	iHatO/Itk3OD+evtisE1zTfwV9q1h3OA=
+X-Google-Smtp-Source: AGHT+IEvNqyvadnOAl3oSGrlzNWzeH1A+7dlL7umrjsFvmwBmevNAZfba9haWRf0TRi1yCGGHP2yID5znfiKcAMUelI=
+X-Received: by 2002:a05:6512:3e10:b0:553:3028:75ae with SMTP id
+ 2adb3069b0e04-553a55783fcmr1264206e87.46.1749744649873; Thu, 12 Jun 2025
+ 09:10:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
+ <20250611075533.8102A57-hca@linux.ibm.com> <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
+ <8992766a-cc96-40bb-b8c2-60931ad0f065@app.fastmail.com> <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
+ <38a08452-4db2-43e0-afdc-b7d696da5454@app.fastmail.com> <20250612142938.10868H90-hca@linux.ibm.com>
+In-Reply-To: <20250612142938.10868H90-hca@linux.ibm.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 13 Jun 2025 01:10:13 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ3_tBrjfsGyeeKow5VD8tmtumdkBKyxXv1Dai6dNSziA@mail.gmail.com>
+X-Gm-Features: AX0GCFsqQcXnvEYUvLuV7mECSnsQL9sAKTtVtL_PwWNJ3QHC-oEHdisvTlaZTVI
+Message-ID: <CAK7LNAQ3_tBrjfsGyeeKow5VD8tmtumdkBKyxXv1Dai6dNSziA@mail.gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 64-bit systems, writing/reading one u64 is faster than two u32s even
-when they're are adjacent in a struct. The compilers won't guarantee
-they will combine those; I observed both successful and unsuccessful
-attempts with both GCC and Clang, and it's not easy to say what it
-depends on.
-There's a few places in libeth_xdp winning up to several percent from
-combined access (both performance and object code size, especially
-when unrolling). Add __LIBETH_WORD_ACCESS and use it there on LE.
-Drivers are free to optimize HW-specific callbacks under the same
-definition.
+On Thu, Jun 12, 2025 at 11:29=E2=80=AFPM Heiko Carstens <hca@linux.ibm.com>=
+ wrote:
+>
+> On Thu, Jun 12, 2025 at 10:01:00AM +0200, Arnd Bergmann wrote:
+> > On Thu, Jun 12, 2025, at 03:42, Masahiro Yamada wrote:
+> > > On Wed, Jun 11, 2025 at 11:24=E2=80=AFPM Arnd Bergmann <arnd@arndb.de=
+> wrote:
+> > >> On Wed, Jun 11, 2025, at 15:32, Masahiro Yamada wrote:
+> > >> > On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.=
+ibm.com> wrote:
+> > >> I think this makes sense in general, but the output here is
+> > >> excessive if it leads to users no longer wanting to enable W=3D1.
+> > >>
+> > >> There are other warnings that I think should be enabled at the
+> > >> W=3D1 level (e.g. -Wformat-security) and eventually by default,
+> > >> but that are still too noisy at that level.
+> > >>
+> > >> My own cutoff would be at a few hundred warnings in allmodconfig
+> > >> builds if there is an effort to reduce it further, but it seems
+> > >> that this one is still at a few thousand, which does not seem ok.
+> > >
+> > > Then, what to do?  Downgrade to W=3D2?
+> > >
+> > > I think nobody cares about W=3D2 builds,
+> >
+> > I think the first step would be mass-cleanup patches to get
+> > the initial numbers down. A lot of this can be scripted.
+>
+> I'm not sure this should be separate patches which would then be sent for
+> review. This is way too much churn for something trivial like this. Only =
+very
+> few patches have been posted yet, and discussions started:
+>
+> https://lore.kernel.org/all/aEjwqtotEEH8QMHB@gondor.apana.org.au
+> https://lore.kernel.org/all/aEl9kO81-kp0hhw0@google.com
+> https://lore.kernel.org/all/CAHp75Vc7AO_sRgB1Nj6CevbseMFyv5ku8ZS3PwzAuAgy=
+sKVxNg@mail.gmail.com
+>
+> This looks like the start of an immense waste of developer time.
+>
+> Can't this be scripted and be addressed with a single commit shortly
+> after/before the next merge window closes?
 
-Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
----
- include/net/libeth/xdp.h | 29 ++++++++++++++++++++++++++---
- include/net/libeth/xsk.h | 10 +++++-----
- 2 files changed, 31 insertions(+), 8 deletions(-)
+https://lore.kernel.org/linux-kbuild/20250612160850.3007038-1-masahiroy@ker=
+nel.org/T/#u
 
-diff --git a/include/net/libeth/xdp.h b/include/net/libeth/xdp.h
-index dba09a9168f1..6ce6aec6884c 100644
---- a/include/net/libeth/xdp.h
-+++ b/include/net/libeth/xdp.h
-@@ -475,6 +475,21 @@ struct libeth_xdp_tx_desc {
- 	((const void *)(uintptr_t)(priv));				      \
- })
- 
-+/*
-+ * On 64-bit systems, assigning one u64 is faster than two u32s. When ::len
-+ * occupies lowest 32 bits (LE), whole ::opts can be assigned directly instead.
-+ */
-+#ifdef __LITTLE_ENDIAN
-+#define __LIBETH_WORD_ACCESS		1
-+#endif
-+#ifdef __LIBETH_WORD_ACCESS
-+#define __libeth_xdp_tx_len(flen, ...)					      \
-+	.opts = ((flen) | FIELD_PREP(GENMASK_ULL(63, 32), (__VA_ARGS__ + 0)))
-+#else
-+#define __libeth_xdp_tx_len(flen, ...)					      \
-+	.len = (flen), .flags = (__VA_ARGS__ + 0)
-+#endif
-+
- /**
-  * libeth_xdp_tx_xmit_bulk - main XDP Tx function
-  * @bulk: array of frames to send
-@@ -870,8 +885,7 @@ static inline u32 libeth_xdp_xmit_queue_head(struct libeth_xdp_tx_bulk *bq,
- 
- 	bq->bulk[bq->count++] = (typeof(*bq->bulk)){
- 		.xdpf	= xdpf,
--		.len	= xdpf->len,
--		.flags	= LIBETH_XDP_TX_FIRST,
-+		__libeth_xdp_tx_len(xdpf->len, LIBETH_XDP_TX_FIRST),
- 	};
- 
- 	if (!xdp_frame_has_frags(xdpf))
-@@ -902,7 +916,7 @@ static inline bool libeth_xdp_xmit_queue_frag(struct libeth_xdp_tx_bulk *bq,
- 
- 	bq->bulk[bq->count++] = (typeof(*bq->bulk)){
- 		.dma	= dma,
--		.len	= skb_frag_size(frag),
-+		__libeth_xdp_tx_len(skb_frag_size(frag)),
- 	};
- 
- 	return true;
-@@ -1260,6 +1274,7 @@ bool libeth_xdp_buff_add_frag(struct libeth_xdp_buff *xdp,
-  * Internal, use libeth_xdp_process_buff() instead. Initializes XDP buffer
-  * head with the Rx buffer data: data pointer, length, headroom, and
-  * truesize/tailroom. Zeroes the flags.
-+ * Uses faster single u64 write instead of per-field access.
-  */
- static inline void libeth_xdp_prepare_buff(struct libeth_xdp_buff *xdp,
- 					   const struct libeth_fqe *fqe,
-@@ -1267,7 +1282,15 @@ static inline void libeth_xdp_prepare_buff(struct libeth_xdp_buff *xdp,
- {
- 	const struct page *page = __netmem_to_page(fqe->netmem);
- 
-+#ifdef __LIBETH_WORD_ACCESS
-+	static_assert(offsetofend(typeof(xdp->base), flags) -
-+		      offsetof(typeof(xdp->base), frame_sz) ==
-+		      sizeof(u64));
-+
-+	*(u64 *)&xdp->base.frame_sz = fqe->truesize;
-+#else
- 	xdp_init_buff(&xdp->base, fqe->truesize, xdp->base.rxq);
-+#endif
- 	xdp_prepare_buff(&xdp->base, page_address(page) + fqe->offset,
- 			 page->pp->p.offset, len, true);
- }
-diff --git a/include/net/libeth/xsk.h b/include/net/libeth/xsk.h
-index 213778a68476..481a7b28e6f2 100644
---- a/include/net/libeth/xsk.h
-+++ b/include/net/libeth/xsk.h
-@@ -26,8 +26,8 @@ static inline bool libeth_xsk_tx_queue_head(struct libeth_xdp_tx_bulk *bq,
- {
- 	bq->bulk[bq->count++] = (typeof(*bq->bulk)){
- 		.xsk	= xdp,
--		.len	= xdp->base.data_end - xdp->data,
--		.flags	= LIBETH_XDP_TX_FIRST,
-+		__libeth_xdp_tx_len(xdp->base.data_end - xdp->data,
-+				    LIBETH_XDP_TX_FIRST),
- 	};
- 
- 	if (likely(!xdp_buff_has_frags(&xdp->base)))
-@@ -48,7 +48,7 @@ static inline void libeth_xsk_tx_queue_frag(struct libeth_xdp_tx_bulk *bq,
- {
- 	bq->bulk[bq->count++] = (typeof(*bq->bulk)){
- 		.xsk	= frag,
--		.len	= frag->base.data_end - frag->data,
-+		__libeth_xdp_tx_len(frag->base.data_end - frag->data),
- 	};
- }
- 
-@@ -199,7 +199,7 @@ __libeth_xsk_xmit_fill_buf_md(const struct xdp_desc *xdesc,
- 	ctx = xsk_buff_raw_get_ctx(sq->pool, xdesc->addr);
- 	desc = (typeof(desc)){
- 		.addr	= ctx.dma,
--		.len	= xdesc->len,
-+		__libeth_xdp_tx_len(xdesc->len),
- 	};
- 
- 	BUILD_BUG_ON(!__builtin_constant_p(tmo == libeth_xsktmo));
-@@ -226,7 +226,7 @@ __libeth_xsk_xmit_fill_buf(const struct xdp_desc *xdesc,
- {
- 	return (struct libeth_xdp_tx_desc){
- 		.addr	= xsk_buff_raw_get_dma(sq->pool, xdesc->addr),
--		.len	= xdesc->len,
-+		__libeth_xdp_tx_len(xdesc->len),
- 	};
- }
- 
--- 
-2.49.0
-
+--=20
+Best Regards
+Masahiro Yamada
