@@ -1,106 +1,206 @@
-Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD2218DF89;
-	Thu, 12 Jun 2025 03:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB07B19644B;
+	Thu, 12 Jun 2025 03:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749698359; cv=none; b=eqd0De/jooNKh4Zv5K1pIPPNN5quUNce7/zoIrly1+QMFwCfBNmJb6bceJ7dBm3UZPoLB2rE56eZaI/M9csHS0nVuumoeB5toT+jWjY1mCaIyDcv24z8bkJFdaJ3nVyVQ2fffZEN7NulywKJmpWyz3CIovbhVHbLLoJMQOgHGgE=
+	t=1749698568; cv=none; b=gLRMY2DrYHDzaR6BornZANcOakOVd7XeAD+iu44HEDUIXs5FDl3vMY/N8F+JybeoUvAc/BLkTndva4df1Vz3Rqol7S0yOX4LAmBUaf7hNmKhkPpxgkqjhLREDUaR08mse+RVCzE+SdYASKOqddVAfQlZFjgDTXsM/ua3Ug+h1LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749698359; c=relaxed/simple;
-	bh=LqT62hpEkjDkTSssN+QxjSix+Y5eCURTaiH374a2EcQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R27S8zkKuK7AgzFnKzpnKe71zZP4uyvrMeVqbRN8cMRbuggI2wO7eBcdx1kEm2cuB5MlvYglJo1iKlEGmLO/erMlTdqWtknFWInel5gqYjZGiXOp1P+jRAkpcn3TxDuF69KNeYw6PzUqW6jfNHX2fscPVi8B4OL1JO6iOonHlKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCPljML8; arc=none smtp.client-ip=209.85.219.196
+	s=arc-20240116; t=1749698568; c=relaxed/simple;
+	bh=BrSkfwr2fEUkp4ke6mpxarWl8wHtq54sqWB/PYbJtZw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H5cH4k6WX/+KqYPi2K2hAMhMcfqJRishcmhxsl7yYglGovwljTrF8v/uDPIQQaUTrRCLt2sVK6cvVI7x5lugvZjLtgoKRTpEpnXGjzM+hcs9ivb9mgGZGpM5FRBUfviroP0SU2wbKTxEJxjEiTN2IaBfvfEYng2BPyW3pQkn520=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZzuX1X/k; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCPljML8"
-Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-e8175f45e18so325698276.0;
-        Wed, 11 Jun 2025 20:19:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzuX1X/k"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747ef5996edso581840b3a.0;
+        Wed, 11 Jun 2025 20:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749698357; x=1750303157; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LqT62hpEkjDkTSssN+QxjSix+Y5eCURTaiH374a2EcQ=;
-        b=TCPljML8oTSAZh2Swl2qF1tOMBm4QyATKalYT7OVyKrSTLvL45tJdJ4oPsjl87qp3a
-         agLTWDkpSVOVuWXy0+K2m7O2PETMfXp/y9duRoSjzgMNyR49XC4NCYH1VAvr/fUnqyIG
-         /EnaVUclBEroGOuCLMWwa2mg3Ye/FEqAZtgnMZDn1T1Qt/GV3SfYxMgm0BdYLKYYHt56
-         CuxGrkAZdH6ZnjMBmTc9iohTngq/xk+E4uzXpmZZcCagq9NyyeCtmwioDsOVU0mpd9lf
-         vTg+4ezE93CV1oiA8tKFRDVZD93IAcGWF+GaPXxQ+Z6Vh7Jm2o3F6GzNNojggbmUqSZE
-         oIgQ==
+        d=gmail.com; s=20230601; t=1749698566; x=1750303366; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=o5BrchDvLAnoGuJ9lm9D6RimRbXBnEt7ZlMQvCcmHq4=;
+        b=ZzuX1X/kWB7QVZhrxFKDBx8KwlPifKJdpdPsXI87yjybMeA9tAKCz0zM8BJP/BQWyu
+         5uNya1TW6YylOjXdp+BIDOpAlW6aH0LEF0g0XeKpD4vFze3RHv20D9phqRixZ1VDGIGe
+         CyD0KEDurZtACwZfOkkpgV56+wKn+7FslWKphcgXSFPlwRMvNJ+oKMfyhC6jXOvSJJ0C
+         9vfz/ujX8tlXYg09fEMcM5VJNmj7ZJNZCjEsh8s9gZxY4fa5fQwN81kpVpPln0B/1eGX
+         dO7w8CXbYcFcQQ6kTUUQlvuF8Qt4L1vfYfMp7tdE5eN7A2GElXtUqrN040RfdKuIk7X6
+         I+CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749698357; x=1750303157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LqT62hpEkjDkTSssN+QxjSix+Y5eCURTaiH374a2EcQ=;
-        b=vlDuHD+j3FCjclrJFyY4VAaU1X/ch0Ovzk/KmwWx0s+jdSMPybzp6AYZp/iKu1GQvA
-         aUOUNATGdAvCm3jyBxeHc7QUyCEvSwPNM9Rp2RfESqptlQpwhzgt1IGF9uXKffiW0kJa
-         2e9uM4esZdOC/Qx/guiMXxXrosAxgHxthSu3mD2wgdGfcdTnkN00Lvej5aXyQHStbqSD
-         5uUVm3Di3Qn6NyOjdLJ0gXrS7DnoZu/L3yZ6cdcRgPfw5EbBLpBbl1hruL2fPfBu/KAb
-         dxnZCMP+wo1U+0AoAVW4TVtQU4UU++Fel9JUY8gTeFYLYXukUs7OFNq4oBPrCQkHSgNp
-         QPVw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6/DT87UvOtYwSHtpUat/MO5wxrZUmP/z34ulOHZM8uMv1sxLwdErMey70dVmZQ3d2eoHd1DdF0XVPgt5V@vger.kernel.org, AJvYcCX1YGSLlELotuRuXFoKTliuyD4gcCkFG6ib2oZSqDwi5u8E2g8mNl+tgXVpY/Qg6L/FZpk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHyuNmfNbVEpR+dMdJl7a0xaD/vubcpKEcpt7pPQK5SV7AfGr2
-	1nQcHoFFycQfLbbmnPEQfLurocPpMP6+GwmKHT+QPo5cBB8PkK21D8qaEf721l4y2o1PYtxj5Bk
-	29vQucrUaoQPAhcz3RKeG5j4RYuN9uV+tsh15n6nm97hk
-X-Gm-Gg: ASbGncsWjrte2Qs32ARBsX/Buivq9LhPCgX0Z//JpFv7KW/b9ddc/PRpfH6cjOB+XlL
-	A2v4xRUmoi4XLm0EUUdME+NOEjXEFQ/sgxj8GzkAaRTLCt25i9vJXxOzHKB8mSMFAQf8/8xYV6g
-	gWYngkPSemP/t8pO8JmaOf6SekUKd1lUULKOqxnXjtEagmhY35dZRd6g==
-X-Google-Smtp-Source: AGHT+IFBLWQTy/TlYwLcD3IvzbAC5ijPWMnSDeFRm3MqAqqAo+J2KAB9sKFe5H1Fg4bCcRnI/Q1Voq1aUoQKKgr09pY=
-X-Received: by 2002:a05:6902:1b8a:b0:e81:b2ba:cedf with SMTP id
- 3f1490d57ef6-e81fda2c0c6mr8136869276.15.1749698356834; Wed, 11 Jun 2025
- 20:19:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749698566; x=1750303366;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o5BrchDvLAnoGuJ9lm9D6RimRbXBnEt7ZlMQvCcmHq4=;
+        b=wLj0ej3IoGxKdcjmy5lB9PGnbYe+0y5nCCuzxmjr4Pm9s+uDAhisA9Br+vJnl6CI5l
+         nmfli2FZDuwKTphbCb2EyKKj/qukw/77bplTfIVYdm1VqB/hE22F/UrZ9phIeRLPmzii
+         vyYE1MCxiL4jxYHuKEmMtuK3oPuPvUKV+F4cwXre02XtkqrSDHbxVZNS97sxXNj5mp9f
+         4hXmr0+uIiw6KsCMjrJa1N87u+cLzpaejOJY3f+OtND6XoaG/taouMzyrnyqh/Ivtp7r
+         XdxG/OWoSMq3M/E9S60XUKD3Ett0aZeWrVZ8EpJoZ46Mm90sKTaKwn3ekLhM/uI/C0Ad
+         5vRg==
+X-Forwarded-Encrypted: i=1; AJvYcCV++pvThQcF9TKNkylXz0oUpQAe2BrS7PTkBUe2Bj9bpn/KK6fHkn5cIdF+0G3IrLGl7mLY9uYQ7B+cdfCLzA==@vger.kernel.org, AJvYcCWGeI1XAozjUIkoRqj0OqZf+9FCevXGnGKoX3CXq51R/5mp2Tvzn65aIPr07pIzLyjeqTFGUj6/XLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXwQAKDuJ2NJ7unCDFd/R7tckC7vYnoxr+z1A75wE4LuxFsaNU
+	Kqk5yEJ11ZmjtpnWJFstc4+XbHXz/yyDPaK5DHIqDKcYQmbCdqRoAxo/
+X-Gm-Gg: ASbGncuyNUJ7Ew6kOaPLF/oyrbSorD9Uq6xLUFSuN8iktuapoDPtD3vndBkKUF+LoKg
+	JO2eIT2KtYbvxh0LsYZAxaqkDtRleFMN6Pvx8lqg/rtwXNN6EV9R3vO9yXP3M7mh3AWcOGIoJfi
+	JBjVLVlx3bdA7IIAvcVTlTsHAzwyviPj58WjdSg7fTjAL3yw0uSJ07FWg5vMkJ6wT3j02k7Yeir
+	Q+94TsY4oNuTj/DKuApzHkzokhpHrtqtRTsEYrZ+pFNa2ak7CMkziyss/4Lrnr6qKRS3/txq7Xg
+	7DnsYFo2GAVYJEme7sqLltjEdnyNCgaygTrDt65WKkt/tv1FyDEOYwxILFgoug==
+X-Google-Smtp-Source: AGHT+IH20S/NhBMoKYIZBWMUE+n8bVvzIS8OCFFPusGhzVlpdxZ284oURaUPgBmg+Tuye6NAdfA06A==
+X-Received: by 2002:a05:6a20:7d86:b0:21f:568c:713a with SMTP id adf61e73a8af0-21f977e8f6fmr3123090637.17.1749698566083;
+        Wed, 11 Jun 2025 20:22:46 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd6295233sm348019a12.37.2025.06.11.20.22.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 20:22:45 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 9B72E424180B; Thu, 12 Jun 2025 10:22:42 +0700 (WIB)
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Luis Henriques <luis@igalia.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Bernd Schubert <bschubert@ddn.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Chen Linxuan <chenlinxuan@uniontech.com>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	James Morse <james.morse@arm.com>
+Subject: [PATCH] Documentation: fuse: Consolidate FUSE docs into its own subdirectory
+Date: Thu, 12 Jun 2025 10:22:39 +0700
+Message-ID: <20250612032239.17561-1-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528034712.138701-1-dongml2@chinatelecom.cn>
- <CAADnVQ+G+mQPJ+O1Oc9+UW=J17CGNC5B=usCmUDxBA-ze+gZGw@mail.gmail.com>
- <CADxym3YhE23r0p31xLE=UHay7mm3DJ8+n6GcaP7Va8BaKCxRfA@mail.gmail.com>
- <CAADnVQ+Qn5H7idVv-ae84NSMpPHKyKRYbrn30bVRoq=nnPq-pw@mail.gmail.com>
- <CADxym3bK503vi+rGxHm5hj814b8aaxbQW17=vwLYszFncXMXhQ@mail.gmail.com> <CAADnVQL1KBYE3ev6b1gvve_miDhfxSV=6y5QYWEhG5ynPwti-g@mail.gmail.com>
-In-Reply-To: <CAADnVQL1KBYE3ev6b1gvve_miDhfxSV=6y5QYWEhG5ynPwti-g@mail.gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Thu, 12 Jun 2025 11:18:43 +0800
-X-Gm-Features: AX0GCFt99ylZT6APqPx_bCBTu3wKkzZJ8kWsqX-cIZ-CxVswHWNHd2nXkRpXrkM
-Message-ID: <CADxym3bjJARRg3OQtd_e4R=UTAc+5UMyjAU8vT_frs67Em2-9A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 00/25] bpf: tracing multi-link support
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Menglong Dong <dongml2@chinatelecom.cn>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4174; i=bagasdotme@gmail.com; h=from:subject; bh=BrSkfwr2fEUkp4ke6mpxarWl8wHtq54sqWB/PYbJtZw=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBle7q4TP35qt069wq+S5O5/afr+O4u2ntb/nDeXZbafv ZV383rfjlIWBjEuBlkxRZZJiXxNp3cZiVxoX+sIM4eVCWQIAxenAExktxzD/+AFB1WkDmx4Lql/ InKXlS9PfnR3UFvFvCnRUzkZZt39uIuRobeVW/2oPqc/086/r/S0ruh99WDIsWgsetih0sDFa+r ABQA=
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 12, 2025 at 8:58=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Wed, Jun 11, 2025 at 5:07=E2=80=AFPM Menglong Dong <menglong8.dong@gma=
-il.com> wrote:
-> >
-> > Hi Alexei, thank you for your explanation, and now I realize the
-> > problem is my hash table :/
-> >
-> > My hash table made reference to ftrace and fprobe, whose
-> > max budget length is 1024.
-> >
-> > It's interesting to make the hash table O(1) by using rhashtable
-> > or sizing up the budgets, as you said. I suspect we even don't
-> > need the function padding part if the hash table is random
-> > enough.
->
-> I suggest starting with rhashtable. It's used in many
-> performance critical places, and when rhashtable_params are
-> constant the compiler optimizes everything nicely.
-> lookup is lockless and only needs RCU, so safe to use
-> from fentry_multi.
+All four FUSE docs are currently in upper-level
+Documentation/filesystems/ directory, but these are distinct as a group
+of its own. Move them into Documentation/filesystems/fuse/ subdirectory.
 
-Thanks for the advice! rhashtable is a nice choice for fentry_multi.
-and I'll redesign the function metadata with it.
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+---
+ .../filesystems/{ => fuse}/fuse-io-uring.rst       |  0
+ Documentation/filesystems/{ => fuse}/fuse-io.rst   |  2 +-
+ .../filesystems/{ => fuse}/fuse-passthrough.rst    |  0
+ Documentation/filesystems/{ => fuse}/fuse.rst      |  6 +++---
+ Documentation/filesystems/fuse/index.rst           | 14 ++++++++++++++
+ Documentation/filesystems/index.rst                |  5 +----
+ MAINTAINERS                                        |  2 +-
+ 7 files changed, 20 insertions(+), 9 deletions(-)
+ rename Documentation/filesystems/{ => fuse}/fuse-io-uring.rst (100%)
+ rename Documentation/filesystems/{ => fuse}/fuse-io.rst (99%)
+ rename Documentation/filesystems/{ => fuse}/fuse-passthrough.rst (100%)
+ rename Documentation/filesystems/{ => fuse}/fuse.rst (99%)
+ create mode 100644 Documentation/filesystems/fuse/index.rst
 
-Thanks!
-Menglong Dong
+diff --git a/Documentation/filesystems/fuse-io-uring.rst b/Documentation/filesystems/fuse/fuse-io-uring.rst
+similarity index 100%
+rename from Documentation/filesystems/fuse-io-uring.rst
+rename to Documentation/filesystems/fuse/fuse-io-uring.rst
+diff --git a/Documentation/filesystems/fuse-io.rst b/Documentation/filesystems/fuse/fuse-io.rst
+similarity index 99%
+rename from Documentation/filesystems/fuse-io.rst
+rename to Documentation/filesystems/fuse/fuse-io.rst
+index 6464de4266ad50..d736ac4cb48370 100644
+--- a/Documentation/filesystems/fuse-io.rst
++++ b/Documentation/filesystems/fuse/fuse-io.rst
+@@ -1,7 +1,7 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ 
+ ==============
+-Fuse I/O Modes
++FUSE I/O Modes
+ ==============
+ 
+ Fuse supports the following I/O modes:
+diff --git a/Documentation/filesystems/fuse-passthrough.rst b/Documentation/filesystems/fuse/fuse-passthrough.rst
+similarity index 100%
+rename from Documentation/filesystems/fuse-passthrough.rst
+rename to Documentation/filesystems/fuse/fuse-passthrough.rst
+diff --git a/Documentation/filesystems/fuse.rst b/Documentation/filesystems/fuse/fuse.rst
+similarity index 99%
+rename from Documentation/filesystems/fuse.rst
+rename to Documentation/filesystems/fuse/fuse.rst
+index 1e31e87aee68c5..5976828586f8df 100644
+--- a/Documentation/filesystems/fuse.rst
++++ b/Documentation/filesystems/fuse/fuse.rst
+@@ -1,8 +1,8 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ 
+-====
+-FUSE
+-====
++=============
++FUSE Overview
++=============
+ 
+ Definitions
+ ===========
+diff --git a/Documentation/filesystems/fuse/index.rst b/Documentation/filesystems/fuse/index.rst
+new file mode 100644
+index 00000000000000..393a845214da95
+--- /dev/null
++++ b/Documentation/filesystems/fuse/index.rst
+@@ -0,0 +1,14 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++======================================================
++FUSE (Filesystem in Userspace) Technical Documentation
++======================================================
++
++.. toctree::
++   :maxdepth: 2
++   :numbered:
++
++   fuse
++   fuse-io
++   fuse-io-uring
++   fuse-passthrough
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 11a599387266a4..84c5a0d11b6df7 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -96,10 +96,7 @@ Documentation for filesystem implementations.
+    hfs
+    hfsplus
+    hpfs
+-   fuse
+-   fuse-io
+-   fuse-io-uring
+-   fuse-passthrough
++   fuse/index
+    inotify
+    isofs
+    nilfs2
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a92290fffa163f..026afb50000346 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9898,7 +9898,7 @@ L:	linux-fsdevel@vger.kernel.org
+ S:	Maintained
+ W:	https://github.com/libfuse/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
+-F:	Documentation/filesystems/fuse*
++F:	Documentation/filesystems/fuse/*
+ F:	fs/fuse/
+ F:	include/uapi/linux/fuse.h
+ 
+
+base-commit: d3f825032091fc14c7d5e34bcd54317ae4246903
+-- 
+An old man doll... just what I always wanted! - Clara
+
