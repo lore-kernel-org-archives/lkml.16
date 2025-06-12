@@ -1,91 +1,87 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879EC153598
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14CE41DFE20;
+	Thu, 12 Jun 2025 06:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749708642; cv=none; b=uRnP+ELCSrHk2Xj+a6JA4vxPPw64YFt+cppKsLRsrxW80iL47uPDKyIOqjoC5LludSVrNY+K1pmdvcuOIhTtmceaapowbh63GOkqhyXNVFMt8OVmOsWM4FMBcWq7TEsAEnYCgAWjZdYymFlY+JT9o/8rxDwLDYl7sQ+pKD6+PLU=
+	t=1749708657; cv=none; b=eoItsJhRBHCUul7+lbyZdQ9z0fGDPDKodvZ9eLBo0n/01efb7C/8WgeDgTN1djbcLhxDula2/QNi2ybsx0FSNlhs8/Wg/ix0A7EE0e6YTbIHlm5Cu0tahw6zYDQl5w0KKCqtEIxVM/DYGUUNQoLMXhWEn9+Cz7trvbsnY1P13P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749708642; c=relaxed/simple;
-	bh=A4zc0EMiZ0JUl6RqVV9OyKZA1/ZylTuCgKp6RDdhuI4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fWdORIQpFgnFZW8uUvGylKCh3bjQdtlvTfuyieNHJPauEyHOMcfCYOdnxWeZpTty7PRR7seUlkSjzk41U+HGMmmJN1WKb1/tDGTuZUMRj1dt9GqPNY7k/Xths+Mf/yi1xUc6O68LB3wcqPhLz3PzA2RAQ10SsfgdT8/jn3Qdx7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=QYxji6OC; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1749708657; c=relaxed/simple;
+	bh=H9PA9PCo638QQZPWDPbj0Ba1bybAEdQxDFbiE72JlkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPssS/SxQpOP/YlsMQ1fm1H+55V7Sn2QfjATn78tY7ZQ67nhNu0hI8D1Zx4Ys+qAcXzLbzdR5Xk6MJXRoDqRNKdcG6QrQKoiw2QSy6zpIdh+Sr35fUZVgIXH1FhqITdcU5/P2YBVSIne8z2dew26ZoAfQ7vFaeOcsOPlru9NvVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Joy80Sg4; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="QYxji6OC"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d20451c016so32946785a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1749708639; x=1750313439; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O0GS3Xn45yxp2jYxNXPognaFy6v44TiCH4udWlQ/Naw=;
-        b=QYxji6OC7Ts5695m72aclbyPKpX52oS88+a2m4q0ycO4sAD5iULi/7ysEvXl7QAuuu
-         YnaiHbM8z+42oVrvK5R1g4E8ZmSZeFBuTAZi1oDo00q8Sw48jiXdYmgNNI+9Q98aXvkE
-         UODBjDBdrBxvC25L2X8Y5x0OmU62OCbfvTyOc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749708639; x=1750313439;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O0GS3Xn45yxp2jYxNXPognaFy6v44TiCH4udWlQ/Naw=;
-        b=vTvZ1h74K1UlLNsVpmdPxY1qz6qgmIRU6mO2CO3+9xtbceJZLmo8iaynetaYyXrCho
-         jCM6tdMPC1kvNNW+pcZ6EFXGh3yo/0eN0lyP/aA15Aw6KusogZL7BHFQ0NpHjAxqAM6/
-         bhgiWLK+IJmDgwn7w5fGd/Z6WKgKX/jna13pnyuxK3YmUDXl7jHpifELRDZqlhoyg7Id
-         wHrQTXR6hWR+rs7tzyEpEZWaPR7gmxxe/wvCX1EFCAZH1NSKcGb2SsiVA0OqOPbA8tQo
-         FeS+p1UfVzhh4tMIdzfhY9dStNjRvXnXoByiT2VEuvFdeCsLo+KFinjQaCC7y8JxYqjs
-         QkAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeJpXA5srx68u1MkfivKam/b4jR2tZwHI5s1WoOpm/oo+/Ri8c9L2szLb3HG7tUJdE5EaUxEmuqUltEbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWr5ekeSut5+rbqCBxoS7x6XIldNbHiYc3RNYXua0I55AXHEhX
-	NNToMYO1K2MdsmqfNkOOLBmBxfHsBAPa7OzCt/2YHp3KyVgomRLXV9b9tjOFzwSGkqBu+6Ulu0j
-	2wfGo7gGPSHGOr1kr555nU0mZP6n2KtigwZIVF+q2LQ==
-X-Gm-Gg: ASbGncsn3dn8VeMBTqjwA16qjdBjzl6wFUfw2hwKU9o1tQnv4eAZLXThG3Dj+6MgRv6
-	Y9TuzIXptHvTf27F+FYkLDy9D7Vb9zjHBdBGndchou6xLcM/Q5QHlEIT/749LE/sW5MAh34uy9M
-	omh2Wo6pL+zHlmFsdKgWSXedQGOhwH9qEWs6qQ1H0RyK2F
-X-Google-Smtp-Source: AGHT+IG8mJ6hovLPfrGSPVZZU8LTl3WPeV6J9EcHeo13rKs+RbYAbWrMSqN0W1KPVIpUi8ZQ5vNJpJ1Y0zewWcBaRQU=
-X-Received: by 2002:a05:620a:27cf:b0:7d0:984a:d1b4 with SMTP id
- af79cd13be357-7d3b35ddb5cmr233276985a.17.1749708639529; Wed, 11 Jun 2025
- 23:10:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Joy80Sg4"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 76086201C75A; Wed, 11 Jun 2025 23:10:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 76086201C75A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749708655;
+	bh=HN++Rtd2kvEZX5dTxYCxgeHtSgU5q6eX3FDdzeIu4N0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Joy80Sg4iBtXAMbefgcBZB2I+MjPH66brawgypplOEsp1AczKCZB8ggW7gQR+TJ8K
+	 aXx/jPCBna4WI8HhmRdmW7OAyRvVS/QMan46Eh0xvbsyLy9+0vHWyjkYR7xhoOtX0q
+	 B3fiNpxGp6smskSMSw+52pUtmsW2y6xzPFNHhRuk=
+Date: Wed, 11 Jun 2025 23:10:55 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v6 0/5] Allow dyn MSI-X vector allocation of MANA
+Message-ID: <20250612061055.GA20126@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20250611085416.2e09b8cd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611225848.1374929-1-neil@brown.name> <20250611225848.1374929-2-neil@brown.name>
- <20250611233842.GB1647736@ZenIV>
-In-Reply-To: <20250611233842.GB1647736@ZenIV>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Thu, 12 Jun 2025 08:10:27 +0200
-X-Gm-Features: AX0GCFtntii07X6oZYW-zPG_4E3lufAYRQgLIdh6AS0l6bl-_PMPPzxmVgXFsfY
-Message-ID: <CAJfpeguiOZJ4dZU-mc0V8bwvWoJ-Q0JubYvYPpmr-f8uguF2LQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] VFS: change old_dir and new_dir in struct renamedata
- to dentrys
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Joel Granados <joel.granados@kernel.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Steve French <smfrench@gmail.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, netfs@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611085416.2e09b8cd@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Thu, 12 Jun 2025 at 01:38, Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Wed, Jun 11, 2025 at 08:54:16AM -0700, Jakub Kicinski wrote:
+> On Wed, 11 Jun 2025 07:09:44 -0700 Shradha Gupta wrote:
+> > Changes in v6
+> >  * rebased to linux-next's v6.16-rc1 as per Jakub's suggestion
+> 
+> I meant a branch, basically apply the patches on the v6.16-rc1 tag
+> and push it out to GitHub, kernel.org or somewhere else public.
+> Then we can pull it in and maintain the stable commit IDs.
+> No need to repost the patches, FWIW, just share the branch here
+> once you pushed it out..
 
-> Umm...  No objections, as long as overlayfs part is correct; it seems
-> to be, but I hadn't checked every chunk there...
+Oh, understood. Thanks for the clarity. Here is a github repo branch
+with the changes on v6.16-rc1 tag
+https://github.com/shradhagupta6/linux/tree/shradha_v6.16-rc1
 
-Overlayfs parts looks okay too.
+Would this suffice?
 
-A followup would be nice (e.g. make ovl_cleanup() take a dentry for
-the directory as well, etc) so that there's no need to have local
-variables for both the inode and dentry of the directory.
-
-Thanks,
-Miklos
+regards,
+Shradha.
