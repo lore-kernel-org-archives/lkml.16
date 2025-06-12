@@ -1,106 +1,266 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2075.outbound.protection.outlook.com [40.107.100.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BEC22157F;
-	Thu, 12 Jun 2025 14:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749737006; cv=none; b=ZLYYmW4B2uG44LdJJ6ukA3V0tOd25YdVVVhrA7frWbQAdM8l5ylyRDm/yvpGXlqdZ8paUAtqbuJQ90Gvyn0H9oNtRtOf0G2snd0Nx7N895C1nR8nUCMhf8dHjP2CVkEg8WvM7dSsxT4lUK0OUK7xO580dUm6K/ZNHqe6UM+f2aM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749737006; c=relaxed/simple;
-	bh=4Z63mMzRXQGf11Y/TbOm11xYKVHZZ2q9evEA63ZcDYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Xo1RAP9rDJGa41x/1fHszXiM5eJ36e7rqx/o6Gl96TymfeU39W7qY25n8JV659i0RtLFtVrTTw7oo1LPZlhETOaEN4MBmpXHS7/ps65Jym7fave+0wB0fHNbKHQOZuWvPx7GEk5Hg4KfNM/wE9ReoquNENmsbGH5ue39c9IcqNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 181C3140C8F;
-	Thu, 12 Jun 2025 14:03:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 027DB17;
-	Thu, 12 Jun 2025 14:03:13 +0000 (UTC)
-Date: Thu, 12 Jun 2025 10:03:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org, x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, David Hildenbrand <david@redhat.com>,
- Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] mm, x86/mm: Move creating the tlb_flush event back to x86
- code
-Message-ID: <20250612100313.3b9a8b80@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BFB185E4A;
+	Thu, 12 Jun 2025 14:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749737004; cv=fail; b=FtrQF4MRun0IhLfkIozU3m7/fi16hHYUfok0U3YMpgu0ZVaR3R4jGgLD+217F6vPvlcn/dG3wR3Ko30My1nhX47kHkTqSa0vudXIJn/u+tbmATOomrjHSOsTWWbjTTxEJsTq6z63D5Nl88KjARJTGnJEdB9nZT/BEV3lLdLmi1k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749737004; c=relaxed/simple;
+	bh=vg/wU0d0PqkUSEK3yKyNHSGaX4+kVqS6HM6f9xh1MCM=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=i82v8L2Zqo9kbkGpqtJIPNkwy0KU1SFPs5hevaFZwW/UyRw0DRoYwX/BXdoOa0MoFAoGgoUjPhLdX3SeiclMC+SmwmXVlCFJmpFYk1lX8bgvIcMGMOA/+a/QgfaVNMEOJ6BUUxeLLV3NCfprPJL6BU7UuTG225a5z3iRkCAZKMs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CO/XGRPt; arc=fail smtp.client-ip=40.107.100.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CO/XGRPt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lAMPexs0V6Ey8u6pN/QG4YXC5N5YM5vEAL9I0toOg5Ykfs6D9Zp78tnsfog8oBaz6+rOWHE72PVsPeSWhCQSUS4u8Zb0cf8kbInloaZag29hJJFei0J2WB5VTO+NGtcm7vfmrs4Ckn6tPu1cN3jG9qqDdrxiLOgTGJ74Q+9AJAX76F+RrlLQ5X7NPvjDb8XEHw1NIhnMwI5kdA+MpxtG1naNvgJsmLCBbhUvU8+v1iBfDUA7ys0nSdpovDs+A/Nh9ZGOjNTIMBXdIkg0WWyZq6o91zbty52UfNVnUwyGfzN36gcMeBIVUhCL/bbIOoqSGahDFqbxcr5lui/LJiVEkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FfJbH/ZhGXwlZOxN0riKJtDHu6rs6f6W8vPOAcOauTY=;
+ b=CYb7WHp/sgrQQk634QZwiFKayh/pgcvdREBkOZA+oPjlm0m6jyZWbe2DW+05QZyN/FlVbj4lUdBXnPU3dSXhAA2aPXCSamhO4fZm8jFw3mSNNKK6RQnKsFjOhkNciXdH89knL0S8nY5HJkeAFHm9mZlLoNPl5lJ94RA8xcJbsdtOovpcpyx+61741RKN+nuln1Q51O71DfPB+tQnCDGNZ825koiYbJdqwIbJkG0m5xeeUAbDGX5Dw3Z8dUJAOjF1pAmXtukwJYFNop4vnZ6h0vpxI40UvTaYdzOdPkB1B5fOlYu+/c+KnZgoupBAEtx1dVyUmat6zv9HcZts7mo2Aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FfJbH/ZhGXwlZOxN0riKJtDHu6rs6f6W8vPOAcOauTY=;
+ b=CO/XGRPtTifRJ3Qr/Q/hsofj/5PtGRNWfoHOHCe38nrYbMqvS8q0U1Zi4G4YjiYh3jold+f8G1Sh9Isoi/XrNShbaxk+JTlsNfAJZOywNcD8beCMXDAH/C3ezzJ1RscX6S8nZMuwSq90lDHHJXqydN6p4P/+YEwn1T8qydz8/gidlYHTHLFl0bKunN2dNUKA8XOlgzX2JMV2JsLnLG4qO/28DFDXvM1tvru+xNL0IRHzaDx9wfVifFlqoAb5rH8CqTZYm7SvgpSHAXYGLWAAMPypLYFynbkVFUNoDHEQEQIIGEVwgvLiot2gEAglIqqe9uxanl3LTjALA99VQ7DP8A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SA1PR12MB8598.namprd12.prod.outlook.com (2603:10b6:806:253::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.40; Thu, 12 Jun
+ 2025 14:03:14 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
+ 14:03:14 +0000
+From: Alexandre Courbot <acourbot@nvidia.com>
+Date: Thu, 12 Jun 2025 23:01:41 +0900
+Subject: [PATCH v5 13/23] gpu: nova-core: add DMA object struct
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-nova-frts-v5-13-14ba7eaf166b@nvidia.com>
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+In-Reply-To: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Benno Lossin <lossin@kernel.org>
+Cc: John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
+ Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
+ Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, Alexandre Courbot <acourbot@nvidia.com>, 
+ Lyude Paul <lyude@redhat.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: TYCPR01CA0123.jpnprd01.prod.outlook.com
+ (2603:1096:400:26d::9) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 027DB17
-X-Stat-Signature: a633aexr8assinwfnh58a1t5wtz17x14
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18C+o9UXjVaYLfXVFToL0QGqnozJG/773c=
-X-HE-Tag: 1749736993-720449
-X-HE-Meta: U2FsdGVkX19nUL9F8mZWNw+0MQ2nz2VkNz1X5YCpiQuSBsq9uh+KUxoAKhB5MUcc5h6RjHD+G5h0yQy7k2Us0ulvQkv+rh3UAN7WnG8Lb2grJSArNfqFjyxllkbiyIPcwy6cyN+ddxtnBWE6ID6ipVqvayImDHh3c3jDvRHcQZWAf3Djybp3gf/aL56oh25yZ03EEORZ4uj2Zpj2qNPT+74t/pGv+TreaTKs7VW6qT0hiovVztZAwdAwLpOnXYdX6YrFD13kBMcDloNpG7ccwAJMXvMebpvRRvBukQWn2pe9sXYt1T7skK7Qg9IUEd9N+p8eaLkCvqYlBKzf89GQX509Y7VtxBUh7HORsK1uO7qyqI5yt+bTw/BbXPNuzDjObl59oP53N6z9WDhTXIbGCj+9JZDhO99L
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SA1PR12MB8598:EE_
+X-MS-Office365-Filtering-Correlation-Id: 030605f6-bcbd-47ca-1567-08dda9b9df73
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|10070799003|376014|7416014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dkhURmRtalVybXdDY05KVlA2MFZGUDBXblF0TDFyQm1xSU40SUN2Qms1MCtw?=
+ =?utf-8?B?Um5TMVJiVHN5b2lCaVU4cmQzTG1NdXVxbXVPaDdwdS93d2ljdGZwcVhQNTVt?=
+ =?utf-8?B?T0RlcWNvR2ZpM1R3SkxRSzF1eVJ0Zjh3cWNxY0JIbWg1U1lBVHA1WjhGclpl?=
+ =?utf-8?B?TzRLbG9EV1QrUXl2UXJiVUljem0rRmF4MmZPc3Z4d2hqUGNMTUU3cHdvejgx?=
+ =?utf-8?B?L3lRRTdIVjcyRVRlZkFoWUtaR3lVTXhZY01WVnJMRVdiMGtwMG5vc20xUTBQ?=
+ =?utf-8?B?Ti9aY3JUOElZVlNSUTYvOG94M3lsTzN4WUpMV1pHUi8wdXd2MW9wbm83RlNB?=
+ =?utf-8?B?VUV2RTFyVzhjVjJsRmxydEg0VTVsV3NLRjNtRXVQTkx6Z2h5bytzRkZwUkJQ?=
+ =?utf-8?B?eHhqalF4Qmg0a1QwSW9lWnM3WktJaThsR2ltTXYrbzNmSHBZTWZVdkZTZjhS?=
+ =?utf-8?B?YkpUQlZldzlFbmowelhkSEFhZllzYjRGTWRPcmhucGJwbGlNWU0yNmFyTk1j?=
+ =?utf-8?B?L0FsYkxCcG95ZDhhTU1FQWRnOVM2c1hzTHQ5UlJ3VG51YjNVcGZzcGpURHRs?=
+ =?utf-8?B?U25PUGQ5ZElvbTFMa0ZHL3h5VERKRnFEdEhjUko0RWRjRGI3ejgyTWlES05O?=
+ =?utf-8?B?WWtBTEpkTjJsaWx6OU9DU3dqQlJTZW92dklZbnBTMllsYUd4d1VNUndPVHVz?=
+ =?utf-8?B?L0RJVmpoREJ2enF1NVhrQXVpYUtCblFERnpGeDdQK3QxQUlKa2piMEVIOUs5?=
+ =?utf-8?B?NW84aVBpVzZNVjM1bWNrL3pJZFRGYmxiRlZRRFB6QVluWXBvbVY3ck5YVVp0?=
+ =?utf-8?B?RSszV0IydTJXeGZuSkt0b0lUQXlicUFZczFIMjlDalFoQVNwSWJkdnhjaUlB?=
+ =?utf-8?B?MGhsL1UzR0tMSUtYblBWNzJjdTNFUzkrWTE3YitsVFgvRmdaYm1KQnl4UzdH?=
+ =?utf-8?B?MEc3bE5ldGNpU1grSU9MZHdyOGxQNjU2b0VxOWVwTWhpQ3lHcG5Cc2c3cW5z?=
+ =?utf-8?B?eW9kTWZEYzRKSnNFMGtCY0lpbUlXQ3dzZXd0TlRlZ0xWZytrc0IvQml2ZDRv?=
+ =?utf-8?B?bkcwNWdvenIvUDE2aDc5UktVQzUzYUd4R2RVVG5DeG5tUVk3Rnd5M3RoeDVa?=
+ =?utf-8?B?c3pxa3RmRGVNS3Z5d3ZsSW96UklQcG5ucmorTTFXc1A1RjNESjAvWE5jV3Bn?=
+ =?utf-8?B?VDRzNTc1ejhwbjJTRXhSSU5iYVMzTEJrZUwwZ0lhTmJzWTJHSy9uRFRRaDJp?=
+ =?utf-8?B?cjVlQXkzakFxeDJWbkRVYmRkR1E1T0Q4WG50U0d1VndKWVllS3d6Rk8vMmZH?=
+ =?utf-8?B?VWFVZFF2N3RDSkt1cGk3SkhpY0ZqWlR4RGdBY3pKQlJid0pwbnVydEdoWUQ0?=
+ =?utf-8?B?TnY1L2Z3eDdNMDEwZXpKVXNFY01YSzVvWHZZUnpPMXJrY0R6bm1OWktBNmdq?=
+ =?utf-8?B?OTlDZW5wd3FJWnBaVHhraFhyM1Z5TlQxZzFETndGekZzSk5wNXZMNTNuVHk5?=
+ =?utf-8?B?S0c0c01yTnJzZWpVNWMvbGlZeGd4R3d1ZjBvRStWSTFJNDBFeDJweVBvbHE3?=
+ =?utf-8?B?VHdlYmRONFdHeEdRcTZpVWdsbjRId0h5VUFNR1J6L3RmcUFCMnBRdm41YXVQ?=
+ =?utf-8?B?MXhpSDFZVUxFdGJrYlJzNjlHUUZWU0MxUGY1RWluRWNaZEtIWTBFU1RpUTl4?=
+ =?utf-8?B?WkJhSlFGZnNCTjB1cEFaVldLSUFmNnRNcmc4aHJ1THdxWkNqZi9kUUNkRXd6?=
+ =?utf-8?B?bEd2aUZheFd6R1ZJRHhIYVhibG13aCtRNVJ5cGNmMVdlR1A1cXlqenVvOHNE?=
+ =?utf-8?B?bDVQYVI3T0EzQjlTMzRMZ3RuaHExVkJXZS94RzNIaHcxeXhZQnpZc001Mk1C?=
+ =?utf-8?B?LzZkcG4xVTdoelVyZDE3NGgyQXVQNlNvb1VSaTdvVzJ5cHFneFR0bnBZcU9H?=
+ =?utf-8?B?MENpZzQ2VFhpcGtyUXE3QXhYNFBjaGtKTERKNjZqMm95TEJPaHRGZ3I1eVoy?=
+ =?utf-8?B?aytzQ3gyOTNnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UUcwQzd2RG14UldUZ2lzTldGa2JiY1ovOUpEUThPWVN6VHlNS3FRWm1QTUlJ?=
+ =?utf-8?B?SndRMTFoNUU3eWNLT2NXc1hub2hRTU5ibVFPUHZ1Nml3TExaSUZTUEtaeHdv?=
+ =?utf-8?B?aXhleWZLMm5QQzhTN1Nod1BEb0xLZ0w1VSt1NFZiMzNPTVJ4NzU4WlZlSjNN?=
+ =?utf-8?B?Vm93TDVoNEN0eFNYS1h1dlRzVnlYamtxRWN1cnR4UG1uRnNOUUUvaTEyWnNq?=
+ =?utf-8?B?ZnEyYUQxR2E4UmZKU2c0LzVHOGtzSW9xdHpFbktpQXJvNkVJTGdycTBjc1BJ?=
+ =?utf-8?B?MkNJaFB1L2VNdWtPTWIvVC9ieVVpR1lsT3NiNUl4WjRWNDA2SmQ2VXNWL2ZK?=
+ =?utf-8?B?RmExK2JYVGtPNXJINFlaQkpSa2pQWGU0K1lETGJ6MmF1RlY4YkdrQnFWaXVK?=
+ =?utf-8?B?bkU0ZWh0YTZlSEZQL3U4aXNWRDYxajlxZWZtQkpmbDU2TTJKWW1GdU5NZVV4?=
+ =?utf-8?B?S3pnK0tRV1BwSlB4QlU2VThNUHl3Z3ozR0g1QWM1QVRBK3lQZHhlWE0rc002?=
+ =?utf-8?B?RWhFbXp6RnY1VldmQURVWGpYTmI1alBKWHIzUUZhbDhacDVzSE5OeE55R1ZB?=
+ =?utf-8?B?T1JINU1RTDRPNWRUZUs2NmtIenFhc2xYRGVtUFVRNjVzakx3a0E1RjRwa0lO?=
+ =?utf-8?B?cis0ZUZOODRLU2tYUUIwcW43VWwweCszUTh4MW5HSE0xVFcrN0htdkRMb2FS?=
+ =?utf-8?B?Y1hXYlhMNi9HdGJVMGJaWFdzODc0TS9YbzdKaGMzMFVBZG40UldDUHlLQzRl?=
+ =?utf-8?B?RXF0ODZtSkZjVFhQUk84QjJBOFRTTFYrVGlLcytkZm1XYUNPWHlnSHJtZDJk?=
+ =?utf-8?B?SUVvN3FEQ3dkeVFNNVNzWGRzVW83Q0t1aWlEbGd5U1g2MTZFa01ObzVETCt1?=
+ =?utf-8?B?YzVFajZuMTl6K0xaRTlPVlFIdUxrRGtzTFVIOXk1bTVmc3RtMjdSdSsvbVNo?=
+ =?utf-8?B?RE9CTGdxNm1HVkhGQzFBZWxETDZMM3VYQzBIcnhDelBpZ1gxdUUrSldPNlc3?=
+ =?utf-8?B?aGVLelhxU1hwQWxhQ2ZLcHpmS012M09hMitCN1RKRjBzd3hOMFlCYTUwRHRK?=
+ =?utf-8?B?M1VMNVBEYm5PdHRza0FMM3JQdkhMTFlmRUFTUWJWTmE2eFpLZ3NkNDFJU2xE?=
+ =?utf-8?B?WG5QQUpaOXBtNzNYeTlFY29tVktjbVVUdWNyVEIxdEUrQVMvcVVYd2gxOTdN?=
+ =?utf-8?B?bHE4bUtwRERjYi85ck5WNHhyT054OE1XK1B0TnlPQnRlUlFPbXJmVHgxTFVF?=
+ =?utf-8?B?NklTaXVQODdoWG9FeWFVMTA5ZGQvdXNJb1owTnpreFV3TlBxSFJmUnBpK253?=
+ =?utf-8?B?RlJDYlBhOUdoK3IyWDhRL20ydnllN1F5SjA2Y3ZxVE1rVXJuNWFMc3pTUDR3?=
+ =?utf-8?B?cUtOcHZRMzUxdUpsZGF1cEpOV3NIODhWWkRBWS9INE9zV21Ib1hWTHViN0RT?=
+ =?utf-8?B?emgvZ2VNOU00ckZaM3hrL0ozVW1FbUdGRm12dEN6OUVMdWNCRWdKb2NERHBG?=
+ =?utf-8?B?OStKOUJvMmMwSUZPMmY3eENXUjVBMGNyVkhCZGsvbkgzMnNMbUZkaEdyM2lm?=
+ =?utf-8?B?M0plYzZ2dXMxcUM5WGNoQ0pHdGVsNFdSVmdva0RxZ2duSnZpbkoyTW1paGFl?=
+ =?utf-8?B?MldqUUJ6SWpiYUhpY09xQWF2Rm16aEdvMlRGQjFxZmI3MWFqRkJBekNLenJ2?=
+ =?utf-8?B?VnBsZnFOaVVvWDlFblcybTNLVFBxYmZTTDkxOG9OeXY3MEpTME93MUlIRzhE?=
+ =?utf-8?B?cjhkdm9EQzNRa2ZSbW9sMXZlNWhENksycHA2TVNTVHBqRzA4T2QrZmNHdTky?=
+ =?utf-8?B?Z25NTnB2Q0lwNThob0s0eG15a04yK3dQT00yMmVuTHByUnlUM1BRSVJoa2wx?=
+ =?utf-8?B?MEhPVXErVStweGVMUmJ6V3dRSEx1aVF4NVBac0dpRmFzSSt1a2N3TXFmdk9I?=
+ =?utf-8?B?Y0Y4WndOTGxaL1k3Mm8rNHE2dHBybHMzL3FFdUtSaTF6KzY5eURWdS9odWhP?=
+ =?utf-8?B?VXpIVUQ0cWlTaktUTGJrUGdKRUxxYnNaNDlDMU92RXpYNXJiM1VZNVBIRWxH?=
+ =?utf-8?B?aW44bjZtUHNCRTl2SDgvb0VtYmliK05MSmhmVERXUE45dktuKzk0SmpsUGRn?=
+ =?utf-8?B?elRxczhXUWtOOXVhbjJxUWRWeklPQ0MzNTJXSWpqZW9YQmwvOFlocFg5c3ZX?=
+ =?utf-8?Q?7NDSK73nW9ZEVw96X+rnHbNmSOj3h8F+oR9AZCP6itL5?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 030605f6-bcbd-47ca-1567-08dda9b9df73
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 14:03:14.1383
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tinwnC2VX1ms4Kb+H5zi4h9W4MalbQMcqIjZWNAw5djtDzUDngj1K+6bkNjdGmdK0V6B5Uh4FVM/IBtpqwZpWg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8598
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Since we will need to allocate lots of distinct memory chunks to be
+shared between GPU and CPU, introduce a type dedicated to that. It is a
+light wrapper around CoherentAllocation.
 
-Commit e73ad5ff2f76 ("mm, x86/mm: Make the batched unmap TLB flush API
-more generic") moved the trace_tlb_flush out of mm/rmap.c and back into
-x86 specific architecture, but it kept the include to the events/tlb.h
-file, even though it didn't use that event.
-
-Then another commit came in and added more events to the mm/rmap.c file
-and moved the #define CREATE_TRACE_POINTS define from the x86 specific
-architecture to the generic mm/rmap.h file to create both the tlb_flush
-tracepoint and the new tracepoints.
-
-But since the tlb_flush tracepoint is only x86 specific, it now creates
-that tracepoint for all other architectures and this wastes approximately
-5K of text and meta data that will not be used.
-
-Remove the events/tlb.h from mm/rmap.c and add the define
-CREATE_TRACE_POINTS back in the x86 code.
-
-Fixes: 4cc79b3303f22 ("mm/migration: add trace events for base page and HugeTLB migrations")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
-Note, I will be adding code soon that will make unused events cause a warning.
+ drivers/gpu/nova-core/dma.rs       | 61 ++++++++++++++++++++++++++++++++++++++
+ drivers/gpu/nova-core/nova_core.rs |  1 +
+ 2 files changed, 62 insertions(+)
 
- arch/x86/mm/init.c | 1 +
- mm/rmap.c          | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+diff --git a/drivers/gpu/nova-core/dma.rs b/drivers/gpu/nova-core/dma.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..4b063aaef65ec4e2f476fc5ce9dc25341b6660ca
+--- /dev/null
++++ b/drivers/gpu/nova-core/dma.rs
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Simple DMA object wrapper.
++
++// To be removed when all code is used.
++#![expect(dead_code)]
++
++use core::ops::{Deref, DerefMut};
++
++use kernel::device;
++use kernel::dma::CoherentAllocation;
++use kernel::page::PAGE_SIZE;
++use kernel::prelude::*;
++
++pub(crate) struct DmaObject {
++    dma: CoherentAllocation<u8>,
++}
++
++impl DmaObject {
++    pub(crate) fn new(dev: &device::Device<device::Bound>, len: usize) -> Result<Self> {
++        let len = core::alloc::Layout::from_size_align(len, PAGE_SIZE)
++            .map_err(|_| EINVAL)?
++            .pad_to_align()
++            .size();
++        let dma = CoherentAllocation::alloc_coherent(dev, len, GFP_KERNEL | __GFP_ZERO)?;
++
++        Ok(Self { dma })
++    }
++
++    pub(crate) fn from_data(dev: &device::Device<device::Bound>, data: &[u8]) -> Result<Self> {
++        Self::new(dev, data.len()).map(|mut dma_obj| {
++            // TODO: replace with `CoherentAllocation::write()` once available.
++            // SAFETY:
++            // - `dma_obj`'s size is at least `data.len()`.
++            // - We have just created this object and there is no other user at this stage.
++            unsafe {
++                core::ptr::copy_nonoverlapping(
++                    data.as_ptr(),
++                    dma_obj.dma.start_ptr_mut(),
++                    data.len(),
++                );
++            }
++
++            dma_obj
++        })
++    }
++}
++
++impl Deref for DmaObject {
++    type Target = CoherentAllocation<u8>;
++
++    fn deref(&self) -> &Self::Target {
++        &self.dma
++    }
++}
++
++impl DerefMut for DmaObject {
++    fn deref_mut(&mut self) -> &mut Self::Target {
++        &mut self.dma
++    }
++}
+diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/nova_core.rs
+index c3fde3e132ea658888851137ab47fcb7b3637577..121fe5c11044a192212d0a64353b7acad58c796a 100644
+--- a/drivers/gpu/nova-core/nova_core.rs
++++ b/drivers/gpu/nova-core/nova_core.rs
+@@ -2,6 +2,7 @@
+ 
+ //! Nova Core GPU Driver
+ 
++mod dma;
+ mod driver;
+ mod firmware;
+ mod gfw;
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 7456df985d96..f85313a8b5a9 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -34,6 +34,7 @@
-  * We need to define the tracepoints somewhere, and tlb.c
-  * is only compiled when SMP=y.
-  */
-+#define CREATE_TRACE_POINTS
- #include <trace/events/tlb.h>
- 
- #include "mm_internal.h"
-diff --git a/mm/rmap.c b/mm/rmap.c
-index fb63d9256f09..0bc00668970f 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -79,7 +79,6 @@
- #include <asm/tlbflush.h>
- 
- #define CREATE_TRACE_POINTS
--#include <trace/events/tlb.h>
- #include <trace/events/migrate.h>
- 
- #include "internal.h"
 -- 
-2.47.2
+2.49.0
 
