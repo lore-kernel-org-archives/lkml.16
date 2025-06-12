@@ -1,229 +1,228 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F001B0F0A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749733798; cv=none; b=uruu498m5BCih6550WjhTVKufvJ2Kb5Rt4DqRzvHLeCacjCPaHeRAeqCWlEWPjNUGT6XvHdcQLYFV28iQEqEbRrwgnUcPV6+p+uro/CnfjJvrmW/lzP+AbUzlC5FZtJG4dDjzComU+8hOBBVLASUgiSiD2f6y8hr7U4pSJArOk0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749733798; c=relaxed/simple;
-	bh=ds14tut9ukNgFvAYWrJRogxZC9YwxLXyToDhwHfpcLM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G/L+NjA9wKYrcND2oLYRCef8W5M9ZKio00Qr2kanSsTbX5uKaKxDfTihIP8fvcm+VpgzeaRErwkAjCBwsHqejQo4x1/aJeKnzXve3Bfq/0tJUgFLv2IwRB27DO64Mh/VJwcimSwGAArvdHMoQm5vHrpcobBVdVy/gjA2Vl7iijY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XlfPBaoi; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B06D1B0F0A;
+	Thu, 12 Jun 2025 13:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749733831; cv=fail; b=IYDTtq3LFiFRPNIFx4iciltlX1UVT47iwJd6k4hflf03cZJ9icsiRsuHJIXk6sa4AKRoV1n1Bk17OtPtLP0NQbUNuk+uQ8Tw2gEMTGPa2UCcpdGVTJzQYKRLOIm9bu5HyfhGv8PbO4D+T38jofoSAcBfeabANTNKhb5Z0wK1+8g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749733831; c=relaxed/simple;
+	bh=d0rh5mWYwyQHzcCOFEvPjAAc0Z9wNoT60dJ8tusEZDY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HimQhWvzBFf3nYeOyQbPR8UYoNQ+bp3AUApBV6wYBcC0rSi9PuHh4FvHA0LOoplvngLTp0UoSmDzCuhgIeDzaphksLAkN6ZD8iHNXwq1hRRsuf9WoWMG3nxMWPQ2NNMguA7KHxuaJf/c6F2H5pH+XCiIV+6lWGP3l8qL0vbhEMk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AjQc6AMq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NNErOQ+v; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XlfPBaoi"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad89333d603so193611966b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:09:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AjQc6AMq";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NNErOQ+v"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C7fq2b032035;
+	Thu, 12 Jun 2025 13:10:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=RuU/ij31QMP9uWbZVN45jgrmZpRxAKvWEJxzHMd5lnQ=; b=
+	AjQc6AMqz+g/IAWYwtUIaC+2MieJzv+d4KPS3BsR6HUjc7d0IAiEnBk30soSFPsc
+	Mt5ZtcjK8qKTxGEwSDlNV68KJXBCLjhElIQfPvYrQAhFYO4OgKHGiXb9wAu37SaK
+	6NEv+a7pE8BHgE9d7j7itXMUHZeM7jlF4yG9i2BJvac30B2KV/1QccA3VSnNpnXd
+	Roj8NnJa206r0LrhJ9wRLG2I+UlVGHvwywEwxNA2FjAR4G51QSrHvDtEv6ts6Hdn
+	1/tUJH/1ShJ4MK4SBg55YKDngGfGO2EaHRO0/+kc9WV2Z7VPmTYSxKdz06UQ8ale
+	oGcemVuG3WgyJs9er3YuPg==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474cbehnps-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Jun 2025 13:10:17 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55CCR9vw013330;
+	Thu, 12 Jun 2025 13:10:17 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2067.outbound.protection.outlook.com [40.107.236.67])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 474bvbas1a-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Jun 2025 13:10:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CLD7K9lQ7IuS+5AtCnhzNwR8qu1VWdVTXczWZ2lzB7l/5/fs/FWehc/lKTUM4A8bxKlaHVbz/WS0082TJKUlfK+IFvbY+hb6Pjt5mHa0VKsbDbCvuwZ9OdkmUTeCQiVuvG2uKC13EoGPj0VMZR8bjd19hPtNXoWbUtA3SlYcibtr0+SOGWiEt6W1q4RzYkEv5g2hkUfxX02YKVJdqx5agEm6C/6ueHhPjFot2uxtNgobXo1uAqVpLz5UEpfdr9IIZTWhGbdtUqOYbLjhFNoIipVncKeknKXjHbUCWy1NZ5WH8cg/0O3WHyfvLupB19d8VBJfKqRbJC5e2FQjGNnIMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RuU/ij31QMP9uWbZVN45jgrmZpRxAKvWEJxzHMd5lnQ=;
+ b=cN+FXCKXi5iFU6Fvb+ggCfUJ9ZMzPW9Np/s21ngaola1lnlh0gGzfWINr2ig92P5hsqruGlUen5z9Qcz3QR6D2dGy9I8XU0TPkcmZ141Cz9kOy0vzv3DV1A+Nt1b4xXRCZsTx08cmLzMWIwKepqaqwHgdL99PsEKMRLMygL5VoKQ4LmrchBq8zx5cX17hDTHABsS592ufANN5d+kbegEawuVJAvP1oQztnv/Iiw+1chipv//7UmZFdYAXjIGFo9liMdACNwu/4EioNrrf9vw8+g5C6ayQsAaWYIWK31xBQvXf0q8gqu+wtq0Dc1SOoK1toTzlou4jNWTL95QJJWCjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749733794; x=1750338594; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=opG1J/uuXUhUkyywN9VdfAudOLd1wp6HGMdhIzhjVZI=;
-        b=XlfPBaoinCuvLLnPCPi/0ncqHoB/gLVMB/gUaQhSnKdRNvvAxL63OXS/wpzP4TzbO2
-         6OKXtIDxcQNLrwATAjMSzAzi7o0uHAqcXKMZJ6D3CIVBfvWyv7Bc2V910tcJH3mWInHJ
-         4WxRpMEzHOI7S0U22Pg7knLT/hsvdt1afPryeOo/k+vmnhKG36wSS1dreyzjk1iyo5K9
-         jXTSz+lt7raO++4Krg2AzAbytRcEJWZcltsj7EWZ4OK3AQoJy5ehJieevZiEFJ90wggJ
-         D9CiW12t/N/P9KrowVf2O4yRRDekRBOEBHKzrOATrk2KJZnySSWcE+8opCLGaUM9fMKe
-         2e5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749733794; x=1750338594;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=opG1J/uuXUhUkyywN9VdfAudOLd1wp6HGMdhIzhjVZI=;
-        b=kLOcoTxidIGdlCuQqSBxFRHzUcMQFJZkl43nJ6kYk99TSObmDk2F/GuvOZ2mDdI8mL
-         jzg/epFeSJB5yQ1F9fpWSuAz1HOPtyGYNlr0nQjgqjLvyOi3p2Dc8mcEm+JouRnDbX3u
-         Ph1wP0vM75n7LdVduDK9cuY+0pzUg4ygH496eeR34dbr9LfkCyPRZvLyieOWCMdM2gll
-         nHvOeIpbXPiXYldPrynCqsNGpx4lqH50iTtAErszdX+uHPf1i5F0FrB2UYgBiuPnzzRc
-         4Fho93fD0nINY53UDde2B1+1V9c9ACVN+FJK2RSWl0yQg4k8T2I01KNFkQSHJDoqwT89
-         CJJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyXbxhUPKD0HvWo7a0TglhApA9gTIITCYDr2ApTpcrc7FpQpBmhLQMgTA76fPSSMRb7KVuVbTHv9uwHnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4s96k0GOxF9QbEk7NFw9+nrVlgswAk10/80DxcfXg0n3BFdwI
-	Xrf4wd8DGYOzNUkw8LaWWNxwS2boUDKo3nHe2fgQ8snY27OAkTZgTo+sMHTv62lJ7k2Ro7+1FTC
-	Y6KxguPqRYAXzblSIxxOErk0zDFJCsnpKzBRXIzOaFg==
-X-Gm-Gg: ASbGncsATAMLYxzsBquJmr8Xzk8Qjaopij9OHrbwFfaPYOBj3OkqCf8DgR/TIjTyMSX
-	4DNdU2KTnV2nvvsZdfC0GwveuvKXW4pZRvW1ahaY3SAO7ef3nuV+WCyj/Uz033J5IH9iwxjDnu8
-	UWpdX5vcwsVbJNy+ZeKYmTsQXBuLcpmE3052Nk6kcN6v0JV/K0T2frTsV2EWeeNPrXIArNQK/iC
-	9oN
-X-Google-Smtp-Source: AGHT+IGNOnr/szm3yBR9cV0j2z15yO7hP3u/Ee6kZpjjOIimYf4i36geqFsIBGpUgm01Mc+b/WDWQjJgSq96/eYeptQ=
-X-Received: by 2002:a17:907:3f28:b0:ad5:b2aa:847c with SMTP id
- a640c23a62f3a-ade898378c1mr749998366b.54.1749733794178; Thu, 12 Jun 2025
- 06:09:54 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RuU/ij31QMP9uWbZVN45jgrmZpRxAKvWEJxzHMd5lnQ=;
+ b=NNErOQ+vVinRZsJiOhV2QgaXlx09vRvjqdp9fa9bJZBAfGJMNNheVySc8cJuwRIeu1b4bnS/YEkhMr5YNM7gDMTRnI3K/TYcKuEsZT1C7/b8qWme9wTPbQWb8vyfEQFIPVHo3SpvBUu5BGpYfyxIHotRtgHrkBkGkNbp0etgLos=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH7PR10MB7085.namprd10.prod.outlook.com (2603:10b6:510:279::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Thu, 12 Jun
+ 2025 13:10:14 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8813.024; Thu, 12 Jun 2025
+ 13:10:13 +0000
+Message-ID: <1951a618-a35d-4515-b4b7-131880a780c6@oracle.com>
+Date: Thu, 12 Jun 2025 09:10:11 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] nfsd: Use correct error code when decoding extents
+To: Christoph Hellwig <hch@infradead.org>,
+        Sergey Bashirov <sergeybashirov@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Konstantin Evtushenko <koevtushenko@yandex.com>
+References: <20250611205504.19276-1-sergeybashirov@gmail.com>
+ <aEp6-T8Oqe2dI7of@infradead.org>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <aEp6-T8Oqe2dI7of@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR03CA0089.namprd03.prod.outlook.com
+ (2603:10b6:610:cc::34) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
- <20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org> <CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
- <20250610105337.68df01f4@gandalf.local.home>
-In-Reply-To: <20250610105337.68df01f4@gandalf.local.home>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 12 Jun 2025 18:39:41 +0530
-X-Gm-Features: AX0GCFvxFmwRBu8DgJ-HzbsdJ44lY7mfNY9MHLImOKOp-WOIdRz2u56nFMPkKoc
-Message-ID: <CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH7PR10MB7085:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54ac85b3-f365-4b8e-68f7-08dda9b277da
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?WS9Nc1JibWswQnZHRzFmQjZIWjdoejVqeGxqTUFvbTFEVDZFSVdJR0pvU3RN?=
+ =?utf-8?B?cXg4VFJka1Fjclp4cVc3b09vYm44WWQwemxnVVhaaXdQNFZuMkdsWm1xYWU2?=
+ =?utf-8?B?TXpRRzcycDhYUFRNZkpibHNweFBiZ25JdWRoVEtUU0N0d2RHejdvb0xaQ0o2?=
+ =?utf-8?B?YlFNTzMxNVNCK1FXd3oyNG4rTk5PK0hHM0ZzbXd2RzVNdW5Oc1JIMFNITWFT?=
+ =?utf-8?B?dWhiOWlzOEpzcUYvL1pRSUZmamFDc2RuVUEwa2p4R1N2OFhwNFlMTFlqQzc3?=
+ =?utf-8?B?cnJLY3hKeEsvaXdFekRKSzhvamFLV3ZlYk81R0YzZ29heCt4NzNKaXY2Z25t?=
+ =?utf-8?B?bUE0TTJDemxjbWtxSlozN3ZyS1dZY2hTclNOVHJldWMwTTRJTDhTbHhEbUVm?=
+ =?utf-8?B?c3grVklBR2xSOGw2Y0NFSUxOelVIVDhpZm5Sd3IyckZ5QllYMlhMTUlGamYx?=
+ =?utf-8?B?Ui9IR1MwaytES3RjTUVmYm52WjYvd00vdnhvb0tuVG5xcXNnQVNPamdESldq?=
+ =?utf-8?B?WEQzUkF3dmV0c0lIMlJkb1c4cVdwVW9URG9FUFVOeVpvTlV4U015K0ZKSDJ5?=
+ =?utf-8?B?VUVlQ1g2UTlIcmtXZVh0Ym9PdzB0K1FuVHRsTUhyQjJLS1VMeXR4aklSUlZz?=
+ =?utf-8?B?Zk5mMTJxOWQzaUZ0MzArLzZOYkg3R2paV2NydTVSNi9WbmJWWTdMQXVFc1l2?=
+ =?utf-8?B?aFNONG51Ky9FL2NpYmhFVTlZQ0sxZjVNblpSVzFmWWdpVmxZYVcrMjVXYk9n?=
+ =?utf-8?B?a0hrekNRakxuYWFEQ1JTOWtjZ1FmamFPWXNwMG5VczlFU2VEVUR3dGZOTWhF?=
+ =?utf-8?B?VEpJcHdvQ2xPc1R4U1JyYm50dGwrcXIyaFpVb3RKUUJONTBacFlQVW15MU84?=
+ =?utf-8?B?dkZtUmdkM3FmcGJpazBNazdvNUl5Vk9tQnJUNStZcjZaeGVvUE5WU3dBWmlo?=
+ =?utf-8?B?eE9ZZE1LVW5QWjU1L0l0MHlJcFowRVhTY3E0Yno4Y2ZvUHY3VC9qRXY3b3dI?=
+ =?utf-8?B?eURsS0FlZFpaTXZOSWk2QWZ4N0R3UjFIM3V3eE9XcUQvU0Z3TjBuczRsVHlS?=
+ =?utf-8?B?TlhMcG9qaXp0eTU5WFZ1U1RtZktzYzU5eHFsaWsrSEdLMkJXZzk4eUNCNnNv?=
+ =?utf-8?B?VkRxVlc2ZFh5TkVocWFBbUxZZkhpWWF5UkFYVzd2M0tjS09oZmFWR3RjMk5p?=
+ =?utf-8?B?UmgycHpQdGdCczUzeDBIZUZwNmdXdHFSQUxyUVViZ3Rna1MyR1Q4UHhsNlQv?=
+ =?utf-8?B?dWdpYWZ0YnRBM0JsRzk1dDVQaXIrV1lwY1BTMmxiRFRzU3NVSXVwWHE1ODJm?=
+ =?utf-8?B?TVppSTJHRi9vWDhlNFM2SkNxVER2Q2JEd0wrTU9jeWM3QnY1bXZyeDV5TGo0?=
+ =?utf-8?B?ZHdZMDVuV25lajlPSklFTG45d0V0a210SW80TGpBd2Y4cXplN05TMVZQeEts?=
+ =?utf-8?B?UU9jcTlMNXFlNnYyMkFabWJNZGxKRXVud1RyOHhSaFYrZ2tET3VoZjZnS05T?=
+ =?utf-8?B?YlJkRnRQNHJNTDV4aERhV09uSWczMDdDNU9hZm5oUERBdVA4dHVjV1hza2py?=
+ =?utf-8?B?L3lnRlp1eG5OcXB4V0Y0WCtpem41V2R6dTNnOVNPVC81OUVUY09sR3JkMWF2?=
+ =?utf-8?B?L2p3Y2M1STBtWEtFOE4vVi85VHJjMHZ3NW9sR1d6SEZ1VCtwcmc3U3MrenA3?=
+ =?utf-8?B?TUlKMSs4SjBIUUxNWkFRTExIbjliZVYyT2U5MGh1eXdMZ05nNHdTVDRVYitR?=
+ =?utf-8?B?dnJnMlZqdDQ3SnVhdVRObS8wNXFVaWNYTmtxQWpBZTZlMGlZeE93NXNBTlVj?=
+ =?utf-8?B?dFdmdCt3d2JKQUc4L3dRMGFqLzJ4TDF4cGZzN2J6M2VNanBxd3NiZlRQZWdl?=
+ =?utf-8?B?eElZbXJCekcxY0pLeVVHTzhHM0N6dE9OOGtQdFJjNk1LZnpDc0FEUGNXdnA1?=
+ =?utf-8?Q?eIFe+O0j2JQ=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?azJOd3NPZFJYcFlHeWdFWmdKM1dlQjA4RVZ2b0taZkpmaTl4WlVGSE1rUXBH?=
+ =?utf-8?B?dGlZak5NRk9LUmdnUzFvUG1OZi9BSWZNYkE1eWFPMmxLZVFsd203OTZRajFN?=
+ =?utf-8?B?MW5raDc1MitDUThEWkxqcTFzVXlSWXBCbkhGRDdmanYvV1pPZnRIMzVEYyt1?=
+ =?utf-8?B?VDc1Y1Z0U0ZONGV2L0xWSExjZlBCYmNUaVdNaHdnYnRwUld0UFRLaXE3VW9B?=
+ =?utf-8?B?NFY3VWlFOW5wV2tPRWJlWVVJRThubjlYOWNQeHc1WFNjNkllWlUyYWlrdWlB?=
+ =?utf-8?B?R2QxUEdmSXdaOTlzaUVaWE1JaHhIOTgwQlY0WnJWME9BZVgvb3p6bWlQTFUx?=
+ =?utf-8?B?b0JlNFFKOEg5N1VkU3dJUWpzTmdiRCsraDNLaVdCanA5amhuM0NkcTdOVTRQ?=
+ =?utf-8?B?a0RRZjlxbnBoL2dES0I2YngvNUxWVlZIVFh6YndocG1pUkFxVnBNcU4zRmw2?=
+ =?utf-8?B?NHd6MUtqU3Q0ZFhVNHA5M3V1N2F5OUUxditzcXZCZ2hSUG1hWkxTZzljSklQ?=
+ =?utf-8?B?NHNUUEQ5RTV6b1g4akY0djhKWi9lbERVZmtmZzJLOEFEVWxhcVRpMi9uRjNF?=
+ =?utf-8?B?TjRQei9QV3dHMjlSZ05PUVBHbldxQWhtM2wxTGxaSFgyZUo1dFJESkpnU3JJ?=
+ =?utf-8?B?cXBHa1hhR0IzWWxkN1NKWGFtR21DRUlVU01Oei9SQ002OURRUnd1TjJBcVpu?=
+ =?utf-8?B?Q29yQ1MrU3V4cDRHSW5yZGJLblVLNTlFOTcyRzFYSE1Hck16Z3dFNFVYWFhh?=
+ =?utf-8?B?WXNsS3ovVVE3UEVqRkllb25xNXY3eEY0bUwrZ1hPVlZreVhCUVNGN1kwNXMz?=
+ =?utf-8?B?ZnM3N0Z1YzkrL29RV0pUWUsrZEVQbk1LQVpqb2RkRXpyMmxYNFFOeVljaElU?=
+ =?utf-8?B?YXdjL1IvVi9OSGR6Zzc0NVJMUlViVkpOL0RtY0UwLzk4azFNNEY3amd3eGl0?=
+ =?utf-8?B?KzdOTzRHbDRBTlE4Q1FBNk1EVng4TW1Ec25jdzNaa0RicWhKZkVzWXBRYW9Z?=
+ =?utf-8?B?OCtocVFrWFhzalFiN1lpM0JBTG52RTVLdmRkVVhhKzJ5dEtzejhDc0xJNitX?=
+ =?utf-8?B?UTgzUHlkMHArUjY0RHRGOGlMUzVHb01zSlkvdGFlRmlTWm9KV2Uxd29uQUZ5?=
+ =?utf-8?B?UTFKRkxtcXRwbFhpaGU3R3NtdlFETEVQSG12S3dmU2V6ejBUUjlDWi82Qzhp?=
+ =?utf-8?B?MHlIaE9WcEIxU3ZvVXBLMWIwNnhMY1lqR2dBUjRKeHJydWRtd0ZOV29CV3Qr?=
+ =?utf-8?B?UVR0T25oVUd3WUVTT2I3cFp3VDNjZFYraHpPZ2hGTlBHSDdUeGsycjg4a3pj?=
+ =?utf-8?B?QWlTV2NyZlJ6WTdxbG5iSVdBcDltYkw3Y1dpdTdxa1FjczZCcW9XSk9KdUtC?=
+ =?utf-8?B?UURWMUxKbGkrSnFleUNGa1dXNGtrbnpRTlJMak9IcmRPTTh6bSs4SnhUcWkw?=
+ =?utf-8?B?Z2hxYU1IQno5aWVHWDBKSnZ3YWZjTk9QbDBPWDNSVDJ5bHV1VW5WV2daMW9u?=
+ =?utf-8?B?T01VMmxOajRmNFZDMTBYSHlBRjlBcVRhWnA2elFnRVd0UnVtbEdCbDd2OE1Z?=
+ =?utf-8?B?anpsMmtkbjYxWFMyczlvOHU2bE1vUHlLd0Z5RXN3bStpK2F2QUpiZE5IcUdv?=
+ =?utf-8?B?OVBmSlpLUXJMRzZvMnlxZjZRdU5SRThpaVdncnVhUVJnUXJORTAzZmNBYmJh?=
+ =?utf-8?B?YXl1QWxwUTFOQXcvZ1dLb0h0Q1pqUUhxMDduWXhBcCtIZjJXOHJtOGI0aHJS?=
+ =?utf-8?B?R2pPc2M1N2pzOU5mOWxjRHJtK0duVllGVDBoUjB6RnFyTnIwTkgzcGt5cEJ5?=
+ =?utf-8?B?a2wvNFhwWFMwVnpwYzFYK21Hc2VUZHErR2JMUFQ5ejNiZnZTUTFNYVNhc1ZC?=
+ =?utf-8?B?Unczd1BScW8zdTg5NlIzckxIMlpNd29yVjlITENVRlZQWlVXZWt6VnA1RFcz?=
+ =?utf-8?B?TnZBK2ZMKzJDUGtkOUpIWm9TNVFVc2VMUktkVGUybEJJOGpzdkMrdG9UUXU1?=
+ =?utf-8?B?T29EajNxaU1GL0kwQ08rOVVVR29rZDF1U1QzYkFXUlFUUisvUTJiU1BsKy84?=
+ =?utf-8?B?dUF0R0N3aHNoRElVUlBGeWZmQzlnYmpYb1I3TGhVMEo3a1ZDMGU0d3NibkVL?=
+ =?utf-8?B?THdrUlE0dXdiZ1pTZWlXbmhGOFBLTUhSODRBMmh0SWxKMExwSVNBUlpkMW9W?=
+ =?utf-8?B?NkE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	jcNL1r6kQ3jUsH7tfEopZVBs7K4+6koZ+92E7VarrrD1q1vMV59CVpddstbvom74IUjWKXj/9ytwPSWkIWs4fHrQ9KjyWspgP24d0NvRJdCDSgMPPh6PF6gk2epKqzdxueoadiDDK2VI73iJUif1zeaRV2F2dFaKUoQpuQN1y1iDpdQ6/3U5a4qUEocXFgvQm0OSyB9Iz+aXJv6OINVrBVLW6AEUcfku8TcJBYVx+jQoOnKWzstl6APvO46XlqPjGmbn4sK+wQ1i7H/0M0Lz+2D80OaeRMPGxKOSNUpRvYLK7t1OLm3kpJHF82MVXz6YN3MmH87l8H3czdL8ElfcOi0VoYUYBNQoX4rESKcsNzAW6uUTFDgcjm8COiCj77Kn60ClfB+gTilsH/gnBqT3QfuYIeKdvkTjTB8Nn+S+pm7uVkrmCBwyAaq2m2EI87kh0p1A13OiFmfyaJLIrSq3denPB9iPnn9jexIRixOa04dhGHpBNJ2DMasX0bsXpgp062I+dOUIfAgoE1MpA66e/EHTVCNDvNQABzRpUZ8vfozJgjKmUhvr723bLMES6SBwkFcneYwnFbPJLM68H36sRPw79IVdk532YFD60nfaujc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54ac85b3-f365-4b8e-68f7-08dda9b277da
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 13:10:13.8894
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DTP3A74i7ilULbICA0NluUb9R5wKCYaKyPl6TW3hl/9hVprop+vrzfzs70XH8Ohg4w2CekRUNoW5oiAQcQEMtQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB7085
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_08,2025-06-12_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=825 phishscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506120101
+X-Proofpoint-GUID: x3R6sqUcarBRpwgR5qOFvuefs6erublf
+X-Authority-Analysis: v=2.4 cv=BffY0qt2 c=1 sm=1 tr=0 ts=684ad1b9 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VdELoU_khlXGC6I73L4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: x3R6sqUcarBRpwgR5qOFvuefs6erublf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEwMSBTYWx0ZWRfX/ms2FdjKTEIG a6/4Mu6HfhiN2wqlVCHK1GgYmcbqj5TIz0RvtjMNKgt9dPMOytjrIYfeSBX4Ysa0IfX8IYGJlnG d9s77RYNeIzIYLSw31jvmWiRuuj7qeEpGwu5/2QVWXGu0CD6FONKqJELIljlJQp9yX14xuZH8ts
+ Gzwq7tyvGLTEs5gXk/8klKj22awW0fNxUJP6YnlylYE7c5Vzs9QfowVkCjcBMYZj4G/b8hNJlr4 82NzSLgkWmUemyESMszSXo6yo4ivcmIoUWJOOBN9KZF8XY28mIy46IforVtZ2Ax1l7PuQrWuxi9 ir+/kQ3jmIun5jin8vb448VYqOtaL5X+tZOo91GgCNwcaEqwn6rii+naDxw9jzH6+gsk7R7ItNK
+ Y2jMkZpITSq9EFneMgZDJJPq3v8Cg8UFGYxzkZB/WwniLKe7eddBxsCgb+I5R5H9LQunyGNt
 
-On Tue, 10 Jun 2025 at 20:22, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Tue, 10 Jun 2025 18:50:05 +0530
-> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> > > Is this bug reproducible easier recently?
-> >
-> > Yes. It is easy to reproduce.
->
-> Can you test before and after this commit:
->
->   4334336e769b ("x86/alternatives: Improve code-patching scalability by
->   removing false sharing in poke_int3_handler()")
->
-> I think that may be the culprit.
->
-> Even if Masami's patches work, I want to know what exactly caused it.
+On 6/12/25 3:00 AM, Christoph Hellwig wrote:
+> On Wed, Jun 11, 2025 at 11:55:02PM +0300, Sergey Bashirov wrote:
+>>  	if (nr_iomaps < 0)
+>> -		return nfserrno(nr_iomaps);
+>> +		return cpu_to_be32(-nr_iomaps);
+> 
+> This still feels like an odd calling convention.  Maybe we should just
+> change the calling convention to return the __be32 encoded nfs errno
+> and have a separate output argument for the number of iomaps?
+> 
+> Chuck, any preference?
+> 
 
-Steven,
+I thought of using an output argument. This calling convention is not
+uncommon in NFS code, and I recall that Linus might prefer avoiding
+output arguments?
 
-Since the reported regressions are intermittent, It is not easy to bisect.
-However, The commit merged into Linux next-20250414 tag and then
-started noticing from next-20250415 onwards this regression on both
-x86_64 devices and qemu-x86_64 intermittently with and without
-compat mode.
+If I were writing fresh code, I think I would use an output argument
+instead of folding results of two different types into a function's
+return value.
 
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250606/testrun/28685600/suite/log-parser-test/test/oops-oops-int3-smp-pti/history/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250606/testrun/28685600/suite/log-parser-test/test/oops-oops-int3-smp-pti/history/?page=2
-
-And above commit landed into Linus master branch on 2025-05-13 and
-then started noticing this regression intermittently on x86 with and without
-compat mode.
-
-  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.16-rc1/testrun/28711641/suite/log-parser-test/test/oops-oops-oops-smp-pti/history/?page=1
-
-Masami San,
-
-case 1) compat mode x86_64 (64-bit kernel + 32-bit rootfs)
-I have tested your patch on top of linux next-20250606 tag and tested
-on real x86_64 (64-bit kernel + 32-bit rootfs) hardware for 7 test runs.
-
-ftrace_regression01 - pass
-ftrace_regression02 - pass
-ftrace-stress-test - pass
-dynamic_debug01 - Hangs (No crash log on serial console)
-
-Case 1.1)
-Above case noticed on qemu-x86_64 with compat mode ^ with
-12 test runs.
-
-- https://lkft.validation.linaro.org/scheduler/job/8312811#L1687
-
-case 2) x86_64 (64-bit kernel + 64-bit rootfs)
-I have tested your patch on top of linux next-20250606 tag and tested
-on real x86_64 (64-bit kernel + 64-bit rootfs) hardware for 4 runs and out of
-these 3 runs failed and found these kernel warnings, kernel BUG and
-invalid opcode while running LTP tracing test cases.
-
-Here I am sharing the crash log snippet and boot and test log links  and
-build link.
-
-Test logs:
-[  112.596591] Ring buffer clock went backwards: 113864910133 -> 112596588266
-[  115.829620] cat (5762) used greatest stack depth: 10936 bytes left
-[  120.922517] ------------[ cut here ]------------
-[  120.927198] WARNING: CPU: 2 PID: 6639 at
-kernel/trace/trace_functions_graph.c:985 print_graph_entry+0x579/0x590
-[  120.937364] Modules linked in: x86_pkg_temp_thermal
-[  120.942405] CPU: 2 UID: 0 PID: 6639 Comm: cat Tainted: G S
-        6.15.0-next-20250606 #1 PREEMPT(voluntary)
-[  120.953380] Tainted: [S]=CPU_OUT_OF_SPEC
-[  120.957477] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.7 12/07/2021
-[  120.965036] RIP: 0010:print_graph_entry+0x579/0x590
-
-Run 1:
-- https://lkft.validation.linaro.org/scheduler/job/8311136#L1700
-
-
-ftrace-stress-test: [   58.963898] /usr/local/bin/kirk[340]: starting
-test ftrace-stress-test (ftrace_stress_test.sh 90)
-[   60.316588] ------------[ cut here ]------------
-[   60.316588] ------------[ cut here ]------------
-[   60.316590] ------------[ cut here ]------------
-[   60.316593] ------------[ cut here ]------------
-[   60.316593] ------------[ cut here ]------------
-[   60.316594] ------------[ cut here ]------------
-[   60.316594] kernel BUG at kernel/entry/common.c:328!
-[   60.316594] kernel BUG at kernel/entry/common.c:328!
-[   60.316595] kernel BUG at kernel/entry/common.c:328!
-[   60.316600] Oops: invalid opcode: 0000 [#1] SMP PTI
-[   60.316604] CPU: 2 UID: 0 PID: 1556 Comm: sh Tainted: G S
-       6.15.0-next-20250606 #1 PREEMPT(voluntary)
-[   60.316608] Tainted: [S]=CPU_OUT_OF_SPEC
-[   60.316609] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.7 12/07/2021
-[   60.316614] ------------[ cut here ]------------
-[   60.316615] kernel BUG at kernel/entry/common.c:328!
-[   60.316617] Oops: invalid opcode: 0000 [#2] SMP PTI
-[   60.316620] CPU: 2 UID: 0 PID: 1556 Comm: sh Tainted: G S
-       6.15.0-next-20250606 #1 PREEMPT(voluntary)
-[   60.316622] Tainted: [S]=CPU_OUT_OF_SPEC
-[   60.316623] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.7 12/07/2021
-[   60.316625] RIP: 0010:irqentry_nmi_enter+0x6c/0x70
-
-Run 2:
-- https://lkft.validation.linaro.org/scheduler/job/8311138#L1703
-
-ftrace-stress-test: [   78.877495] /usr/local/bin/kirk[343]: starting
-test ftrace-stress-test (ftrace_stress_test.sh 90)
-[   78.977303] Scheduler tracepoints stat_sleep, stat_iowait,
-stat_blocked and stat_runtime require the kernel parameter
-schedstats=enable or kernel.sched_schedstats=1
-[   82.299799] cat (2322) used greatest stack depth: 11520 bytes left
-[   82.327708] cat (2327) used greatest stack depth: 11256 bytes left
-[   82.632183] cat (2375) used greatest stack depth: 10992 bytes left
-[  137.335901] ------------[ cut here ]------------
-[  137.335901] ------------[ cut here ]------------
-[  137.335902] ------------[ cut here ]------------
-[  137.335907] kernel BUG at kernel/entry/common.c:328!
-[  137.335908] ------------[ cut here ]------------
-[  137.335909] ------------[ cut here ]------------
-[  137.335912] kernel BUG at kernel/entry/common.c:328!
-[  137.335912] kernel BUG at kernel/entry/common.c:328!
-[  137.335915] Oops: invalid opcode: 0000 [#1] SMP PTI
-[  137.335921] CPU: 0 UID: 0 PID: 544 Comm: sh Tainted: G S
-      6.15.0-next-20250606 #1 PREEMPT(voluntary)
-[  137.335926] Tainted: [S]=CPU_OUT_OF_SPEC
-[  137.335929] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.7 12/07/2021
-[  137.335937] ------------[ cut here ]------------
-[  137.335939] kernel BUG at kernel/entry/common.c:328!
-[  137.335945] Oops: invalid opcode: 0000 [#2] SMP PTI
-[  137.335949] CPU: 0 UID: 0 PID: 544 Comm: sh Tainted: G S
-      6.15.0-next-20250606 #1 PREEMPT(voluntary)
-[  137.335953] Tainted: [S]=CPU_OUT_OF_SPEC
-[  137.335956] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.7 12/07/2021
-[  137.335959] RIP: 0010:irqentry_nmi_enter+0x6c/0x70
-
-Run 3:
-- https://lkft.validation.linaro.org/scheduler/job/8311139#L1703
-
-Build log:
- - https://storage.tuxsuite.com/public/linaro/naresh/builds/2yM9krm5KgE5a57QFvOqw9UrSgQ/
-
-- Naresh
-
->
-> -- Steve
+-- 
+Chuck Lever
