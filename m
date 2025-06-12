@@ -1,104 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8F71B808;
-	Thu, 12 Jun 2025 14:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E6B15278E;
+	Thu, 12 Jun 2025 14:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739578; cv=none; b=IT3US6dIYhYiWRyofrh8LJHIgrCL2QMaLfN//+QrQYmexAA+nHnhQ1aodsQCI0WDCfXzEpotnmyva1s2xTVR5Ebrc0MZwgWiujtccrGUjYE9wlqtGUO1X2livLyFNr0uDQGzCaB7IhoMuvkehPdhFqra+vg5XziZnRwtcUBh02Q=
+	t=1749739622; cv=none; b=I2IHj35xwNHgDIX5D0+tmrHU3DPj35JPEVIRDATKR3RZ5yD8bBoU/7hO3K2Z961tiph2FlY9poOjXhh5e71Y/JhwFJeHejGIf2c437QAYL4UX7LWx/XaPc08HjeJ5WhAynp9qeSnBtekSn5z613gQFWe2TjbEV5T27gZMg48MV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739578; c=relaxed/simple;
-	bh=ktOIi/BfUKsUMRQMoHe23J8/rEqdQAIOh2BtMJa3q38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OVF3MrnkjG3UB5aTYc048TREoE/Bqitc+BFe9r7dsdO2R9Xvf//5oRycnjYB/y0y9l1VI4sIvzxcMaSlcYUTCLZjKia38j0F3ATxKesWAHAIeS76RqJ4bbYnqSe014lZ3xl6OYdo14yYygjbrxVpNCuAeAb6bupTx+7k+LEmjwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUqjF7ON; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUqjF7ON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE90C4CEEA;
-	Thu, 12 Jun 2025 14:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749739574;
-	bh=ktOIi/BfUKsUMRQMoHe23J8/rEqdQAIOh2BtMJa3q38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FUqjF7ONFa/8MEpHuAC0lNeK4nPttPf0Hz1juF4yxJk6qw8h112kn2pLn1gxQU2GR
-	 xCfBIrIgpwpX6PMUvf1+rkx53ho53XJD7FhpIpSg6XY583benADFDIXPTpvBIeCOx/
-	 sMkLO/n4wtblZxvr0nsVsALTLT9VlmquhajDWK4k4cCeuh5oK7ZMeTxTEk/TQn2kGV
-	 3urV9802dpwb86AfhMelys5oT6bfUdNxba0TbtaJ//L1qsgnPseh7br0VCwoVkk6NU
-	 fI3ekhZupD9ExVKASnX2ixaxELjUVMbNqc5VPV1WfHXySfMmM735xE4LOD2duATKcy
-	 pQg6+NcnmoIbg==
-Date: Thu, 12 Jun 2025 20:16:03 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v11 10/11] PCI: dwc: Print warning message when
- cpu_addr_fixup() exists
-Message-ID: <v77jy5tldwuasjzqirlwx45zigt6bpnaiz67e4w7r2lxqrdsek@5qzzobothf5r>
-References: <20250313-pci_fixup_addr-v11-0-01d2313502ab@nxp.com>
- <20250313-pci_fixup_addr-v11-10-01d2313502ab@nxp.com>
+	s=arc-20240116; t=1749739622; c=relaxed/simple;
+	bh=xhXwFA7K7QsidFRQdSd5RJx+u46l2K56qIqvNBBPDcM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MLhaqm6YWn0oOhXr0A9fbyhAcy6zAI2tV3EywbNLPxbQo8zbrbxDT8MCk6npOqGUq3IhMfORXfMjVqDJFsx8/y7mSA5bmAhAef0a5YYqp8kgEapPqCgkbBuRHrKJ5oMZrTL97xDZd3JRBVgsPRCFGjLroMa841sMLfJG7CLTRwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6face367320so11386666d6.3;
+        Thu, 12 Jun 2025 07:47:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749739619; x=1750344419;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hPQnvstfYcB3i++rnfd+IeGow4JWie1AdJXj2QA9U+4=;
+        b=hSqUHOdmABEYJoI56th7rwl1g01CfPcA/OpIBJQBX+r/RZkU0RVU6VO6Jz0e3Ru+dV
+         7KNIj/BzADmWZoY9Pc8s0zKMDzG36DSVv+va7h91g5sib1NEeNm2fhc6D6mPwqWVhCXq
+         IUTK3H1zfJDhf7QV2qtPCmb+DQ9/1EOjC66vWi4ZsMpO9rQy+9bqrNn5eR7miq2hYRtT
+         +gGGUfmOKcGEem57ob2rhYko/f8av4NvyAudjRJyUK3Cl/HrA0X1IWOmoJMgbkeN8psH
+         5XZ1n9pMsIbQIJ6gi1zVhw4/VtwkaYAX/+QB1ZgUOy99kmKen6BuDRQaKC1wNPMnyWi6
+         yX0A==
+X-Forwarded-Encrypted: i=1; AJvYcCU6i+4FjNendq/wJm52iq3REIESNcYTY2mD12nJ2ibnosi7cf5x732+Zwwf7l6K1n4p5gi1wzV5Ai2D@vger.kernel.org, AJvYcCUChrzmslB1l+sWUmaRlAnt3j6COgJoJNgumbvkK1YRkxu9TD2khZchGiBXOOD+WZ3+Z0q9O3MZF8iRYdk4XJP8IKg=@vger.kernel.org, AJvYcCVURsytOFVoBuwX1e3pm69LwJu4pfEYrD2AMYAAyHfpJH/k8yjUGxor6xEggKDxf5Xs08haK0h22shV+mzh@vger.kernel.org, AJvYcCXRRvqDBnZqcvdr91ltCLu+5nCYcfouAh+jewRw2x4zci9iNgl477DjgDhiLy0pbLi5sdnaOHAtR7jX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq2+xJLQRyBT5XgdNk8jQMqWk5JM88yR3+dHkxFQjTAisA3SbP
+	1Mr0IKVQyE6r+AgYuE2bgQs1+ZIsr8WC0lrPODDXwDE1t7+vJTgEtWs6Ih6x7x2S
+X-Gm-Gg: ASbGnctuUyjShSnQVaBRS2uhJjbcRz1RUPPO604FU81fnTUoqPcdG5LlNLS2dzowl3p
+	6wkPyklswUHJmhlwEr11YPPKBySreeF4eZeehjdc70gf4DoUD/FIe6hNdY7HI/ACynCWirBO0b0
+	bEP7EC5rotcRfp8aTxzsDPLPcyah44xo+vfDBan4vV1g3BbW5aHWAb9K9fy2ClaNyraiwbRimct
+	Fbi7l+Ky2HBWrUEQAKlcLSNDTZBTsDyut2bfT0TqQ3t5x12HInWnX+88zOzklZZF8QEAyWq4B+c
+	iS7Nckgu/SuMh7BGM1L7CT0WfazoWLTupOrEAqicorAV+2OjV/Uzp9G4aLnu/iRZvAci85gVgsO
+	M8UPU9YQjLnrWzDuK8i1mZO2QHJIULuXQjss=
+X-Google-Smtp-Source: AGHT+IErRealAoCpHb/7jEpFhckJz2xIjcmQKnwfC1zBB+0M6IP6x4bif67eEIBDFLcdGAozbmQPhg==
+X-Received: by 2002:a05:6214:2024:b0:6fa:ba15:e8d with SMTP id 6a1803df08f44-6fb345635ebmr63130996d6.0.1749739618785;
+        Thu, 12 Jun 2025 07:46:58 -0700 (PDT)
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com. [209.85.219.49])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c92758sm10716286d6.125.2025.06.12.07.46.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 07:46:58 -0700 (PDT)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6fad4a1dc33so11022666d6.1;
+        Thu, 12 Jun 2025 07:46:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUgYaYy1Ce72/AVcxpMEKa9+gX1XfPyo6ta8maLWk9XpdkuyiDMZ7gkhI4z6TmuOtIaaJpXAk9pXDSu@vger.kernel.org, AJvYcCX7UM1l1jFeWR72PMhAeVDP0ak+MxthTmYXDXn8N4rail8uWolfG/hPtGHcSrTDyLvwIq2ErSzcVS8HqnJD@vger.kernel.org, AJvYcCX8JUxuxB60k8v0bCOU+oulY+snjt90W/PSV4OfWZPnXeig3dXpMwc4MKy/qddtRzitxIaKKs+sEzjIGtELRtuHVrY=@vger.kernel.org, AJvYcCXgMsKzB/mw2SmgWkDhe6n2uK9NclKkoOBSvjVvdPhth1dgKu0fp81XO8+diLkqOgXuXMYGtF12p/b0@vger.kernel.org
+X-Received: by 2002:a0c:e011:0:b0:6fa:d976:197e with SMTP id
+ 6a1803df08f44-6fb34658e3fmr47352656d6.33.1749739617825; Thu, 12 Jun 2025
+ 07:46:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313-pci_fixup_addr-v11-10-01d2313502ab@nxp.com>
+References: <20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250609203656.333138-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250609203656.333138-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 16:46:46 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWd3atW6H=ewNcHDOkC7aEzXGi1mU0YtiEiBPgB6uT3bw@mail.gmail.com>
+X-Gm-Features: AX0GCFtJ9Ws27KN77fsFTiSkeS0Q_R8dIDJua9nkeCHXUCdoAws2T0wHrEKm3js
+Message-ID: <CAMuHMdWd3atW6H=ewNcHDOkC7aEzXGi1mU0YtiEiBPgB6uT3bw@mail.gmail.com>
+Subject: Re: [PATCH 6/8] arm64: dts: renesas: Refactor RZ/T2H EVK device tree
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 13, 2025 at 11:38:46AM -0400, Frank Li wrote:
-> If the parent 'ranges' property in DT correctly describes the address
-> translation, the cpu_addr_fixup() callback is not needed. Print a warning
-> message to inform users to correct their DTB files and prepare to remove
-> cpu_addr_fixup().
-> 
+Hi Prabhakar,
 
-This patch seem to have dropped, but I do see a value in printing the warning to
-encourage developers/users to fix the DTB in some way. Since we fixed the driver
-to parse the DT 'ranges' properly, the presence of cpu_addr_fixup() callback
-indicates that the translation is not properly described in DT. So DT has to be
-fixed.
+On Mon, 9 Jun 2025 at 22:37, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Paul Barker <paul.barker.ct@bp.renesas.com>
+>
+> The RZ/T2H EVK and RZ/N2H EVK are very similar boards. As there is so
+> much overlap between these parts, common device tree entries are moved
+> to the new file rzt2h-evk-common.dtsi.
+>
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Bjorn, thoughts?
+Thanks for your patch!
 
-- Mani
+>  .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    | 17 +------------
 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change from v10 to v11
-> - change to dev_warn()
-> - Bjorn: this is opitional patches to encourage user fix their dtb file.
-> 
-> change from v9 to v10
-> - new patch
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 8b546131b97f6..d4dc8bf06d4c1 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -1125,6 +1125,8 @@ int dw_pcie_init_parent_bus_offset(struct dw_pcie *pci, const char *reg_name,
->  
->  	fixup = pci->ops->cpu_addr_fixup;
->  	if (fixup) {
-> +		dev_warn(pci->dev, "cpu_addr_fixup() usage detected. Please fix your DTB!\n");
-> +
->  		fixup_addr = fixup(pci, cpu_phy_addr);
->  		if (reg_addr == fixup_addr) {
->  			dev_warn(dev, "%#010llx %s reg[%d] == %#010llx; %ps is redundant\n",
-> 
-> -- 
-> 2.34.1
-> 
+Definitely a good idea! Note that r9a09g077m44-rzt2h-evk.dts does not
+exist yet in my tree...
+
+>  .../boot/dts/renesas/rzt2h-evk-common.dtsi    | 24 +++++++++++++++++++
+>  2 files changed, 25 insertions(+), 16 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/renesas/rzt2h-evk-common.dtsi
+
+Perhaps call it rzt2h-n2h-evk-common.dtsi, to match the filename
+of the documentation?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
