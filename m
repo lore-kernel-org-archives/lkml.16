@@ -1,190 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC89135A53;
-	Thu, 12 Jun 2025 12:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749729897; cv=fail; b=BJwvcN2ytn39fS8eG64mgLRYS6qcpCpq+NSVm1Zy4rWqtgM0Vu4ecVlLPOg/iSPPqyAr4vFo98LUH9df7+A2HmoGuI9uR4YId8ix4xpYhhuqxpPzirUYunNZQ8u4Oc1kSnfYEI8pkiZVh+rEtXSomiuyrjgTvpao4yqDmPdqn50=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749729897; c=relaxed/simple;
-	bh=hrNlxAFmsVOl6HiTNWKtZjZ2KNaiQrMDv+sXwHMfRBk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ssJyyRobMzypbEFD3FpLY8NyY3wWoJBtWAHBDRL6vTjEacqEoAPIze55axFA7UkXbYj+iGLgZFCxQ2KFOt16AY7YN5KVpX5k+r+AoNVBUghzm0CfV62gcUPPQqhiVF+GzNxeIdHS4IECp4HOMHuhglcILGOFY+8LSxm8fm/RZhI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LRG/GW+l; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC02C135A53
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749729945; cv=none; b=O4xRWw3+wBEhr+XYWmFFLl6w5GKlez752V/OwacRVDGiuE+kjIlzSlC8dB1XjnpWDqhQmUUneTGrfXzwHI5WHpd6u/L591Ho3ebZJCb6yDKwBh+atbY8VQM9hA5E1miC65PSbkelSUUjQGELleOiXW0MDdiOaS4OfD4sk/YBg+A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749729945; c=relaxed/simple;
+	bh=3XwIwpV6tYjmjrm0psqIHI0tLjehrZkVaZvTgTW8u1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=clljNi3uhKJUA8LOh1/cGcs/Vq5qj40TpMRayh/A3QepmXap9QcWrG1jzrDjP7gMZ4TokyQHHW0qUhDStqrF0PXaUpFXzClcso/rwdp6cyM7oB0E76vNxd8TjtStBSshsyE+DK2AbAIfqoc236wshZhSVOTGDkWKfYh0q/tKSw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Mjh5HWXs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H2GoFZjG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nUiV40WC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wXIKjIoo; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LRG/GW+l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749729895; x=1781265895;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=hrNlxAFmsVOl6HiTNWKtZjZ2KNaiQrMDv+sXwHMfRBk=;
-  b=LRG/GW+lnRx3LxbJGD+TdpRRnKnhabd+Zl1gf47XPVbodd1taznEDCCV
-   Ylp9uQ5PTnt+y8O+0w//WbLtM0KK2OgV90nqSS/lIDgRKlIZf9fSn3he5
-   e52Q3TtlKRGSjxeV4LtMfu8LCGGYxP3Y16cGthJuzHqRA/uq2qDfrVlFP
-   lPqct+IvQktSDnSmxPivOOVGwkUDiykh9jTN8WtSXYPEcMx5EixhHrcxT
-   mAasnXQPbl4vtp2ZDGjubGZIwoeT3F+Wn6vvUMZxe8FmItyF9vUg8umyC
-   s/2Sw3jLKXXGgLNGImgYXRyofBJc+o9EJ8TRKZsYjnRC9B5ZAcHGHotD0
-   A==;
-X-CSE-ConnectionGUID: g6bjmCigQwyW7H0fgp/3OA==
-X-CSE-MsgGUID: XpWK8LU6QCqi28FhHCEMQA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51822702"
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="51822702"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:04:52 -0700
-X-CSE-ConnectionGUID: osHUsb9WQGSZEebfUBrrIQ==
-X-CSE-MsgGUID: JBe7R2yCTQSvYxAfvuPDYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="147490509"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:04:52 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 12 Jun 2025 05:04:51 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 12 Jun 2025 05:04:51 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.78)
- by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 12 Jun 2025 05:04:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NL4dWamf1k4PydIYq3Pr1F8E3LZO8JxitnuV3WnsTNH+wK8eyglYbWekIYdfncGlkd+uzbgph3BRkAXdc6LmMCuoLvL7frzO8xVvPk6GN8d3s0w7XWaCEjsiT/fKkq4wCicJrbniq8fl7nL23fYEFrYg0y0qnWRr5BiuGJ9HDTmxuwpDAH22TtQtTTcg9HndtjXQc5mFuQ+gLsC/nBNYTEn2Pk8Nmr8XR8RrJ9SBGdowZozJVqS59Zgr+853eYIyiyxKh6dSDxpIHtk+p7gGJ3tqeZb1UZGGcNTpp8PkKuPtYWZkqK5DHUaGbMq8uKxv6k1LPCm4L5hsYHwbtQNtqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3GsEEEoLiZxo4f1rwesN4lHgxV5j5apGlH52BbrC6a8=;
- b=gD8EnFxpxRLjLdihq3ei104V7stPiV23PUK7/3tF+yzVGkLsu6yPh0j54txue1NoSixQ0Y9NaHw5Wod/pjPJwHCe/f3EG6mYcB7QkVQ/JZWCwGpxpEEH8xG6W5mmrkOjbE7SYXwl2h2cQrX+jhSQrxIWH/EON08qdVvjJGVPiQiy3DQdevieVj7z4EwNKroFjgJ5teDcBtZFmkO8QE2S3vvzeuUfCzaCqhcBR9r2Qo1C+B4342fla0rygjft2ZF2aLahEZSChF6oLjDRFNzS3S1+ozT+atOjbBUkI+lcLcD+3Pf1Wfgsxa52ovkWGCExjessgf9CqDv1ESx40eCBZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by DM4PR11MB8177.namprd11.prod.outlook.com (2603:10b6:8:17e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.31; Thu, 12 Jun
- 2025 12:04:49 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%5]) with mapi id 15.20.8813.024; Thu, 12 Jun 2025
- 12:04:49 +0000
-Date: Thu, 12 Jun 2025 20:04:40 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Nikolay Borisov <nik.borisov@suse.com>
-CC: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<seanjc@google.com>, <pbonzini@redhat.com>, <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH 1/2] KVM: x86: Deduplicate MSR interception enabling and
- disabling
-Message-ID: <aErCWBDT4jZQfNXK@intel.com>
-References: <20250612081947.94081-1-chao.gao@intel.com>
- <20250612081947.94081-2-chao.gao@intel.com>
- <37aaaff2-2519-43b3-b388-eb0185e03c41@suse.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <37aaaff2-2519-43b3-b388-eb0185e03c41@suse.com>
-X-ClientProxiedBy: SI2PR01CA0025.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::10) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mjh5HWXs";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H2GoFZjG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nUiV40WC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wXIKjIoo"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7ECFC1F78E;
+	Thu, 12 Jun 2025 12:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749729938; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kXfiFH3R42SMESoKM9W7CezKKHx0W9fw4fisaAIaSZg=;
+	b=Mjh5HWXsL75T6ao0zhTTRBAhURQxP15aholSim1eOdC+YyoMS4kbJzqvfVCioF4bY7e93W
+	6F/7gPaxo9MBV2SYTQVCUJbSepP/49hBD1+glJUrcH0m3viFYNFcFswPK01pTuTfsHPSYd
+	DrpThngTjRBXqfhcIJsqZ5vKObDiUFA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749729938;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kXfiFH3R42SMESoKM9W7CezKKHx0W9fw4fisaAIaSZg=;
+	b=H2GoFZjGEs0rKF38m+Qg5I1uJ2emyk39+xSAFXCFg0rsShdVgrpJbitv/qwxCE6d8jgWiC
+	sU/OpttOqTq1J4Dw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nUiV40WC;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=wXIKjIoo
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749729936; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kXfiFH3R42SMESoKM9W7CezKKHx0W9fw4fisaAIaSZg=;
+	b=nUiV40WCix7Jf4u4SJyWo9DvzR1LI56a3nnl48tCdCvGyZpOCWVfZ6LQQUbZFGj8zMYoy3
+	ApynaScFyrM/DOJxqxl/QddqKK2KvqPjG9LnYEy/A8MM/6KqmP8VMIj4BFNEORfW38BkrV
+	X2DCHpln2YHXoEJvc6BkbMIx6U0b9j0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749729936;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kXfiFH3R42SMESoKM9W7CezKKHx0W9fw4fisaAIaSZg=;
+	b=wXIKjIooyPWJRTe5Dcjf7Wf2RUo+f3ZEJi5p4AQm4YWhn3i4dvZnRvMDWNAFy9ceq9cEkG
+	YKTs8apy+vZar8AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2770D132D8;
+	Thu, 12 Jun 2025 12:05:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iusPBo/CSmgUcAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 12 Jun 2025 12:05:35 +0000
+Date: Thu, 12 Jun 2025 13:05:29 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com, ryan.roberts@arm.com, 
+	mingo@kernel.org, libang.li@antgroup.com, maobibo@loongson.cn, 
+	zhengqi.arch@bytedance.com, baohua@kernel.org, anshuman.khandual@arm.com, 
+	willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com, 
+	baolin.wang@linux.alibaba.com, ziy@nvidia.com, hughd@google.com
+Subject: Re: [PATCH v4 1/2] mm: Call pointers to ptes as ptep
+Message-ID: <axv4qv7uwk7zs4ojni4syhr2tlutzrdpqk77x64tydp3sxdpza@n7vwujimcro6>
+References: <20250610035043.75448-1-dev.jain@arm.com>
+ <20250610035043.75448-2-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|DM4PR11MB8177:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b5bc94d-e79e-40f8-4871-08dda9a954d9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?gQs4LxkbSkWAqtuOgRZVBfcilCnqUahJ6vH1QiRHCsWosGeukZlY2E0PGIzL?=
- =?us-ascii?Q?cAikeTCfymluppuFTbSPsZ7lOtwLArEIIQbB1y9MqMCIhfQSmZvRlki6MxUT?=
- =?us-ascii?Q?0kjKY9rcI+4euHw6MvQaUp7/N+l9+uDnTMyf3g3POLvI1CCYPgL4gB+UaL55?=
- =?us-ascii?Q?mIJi7c1qRNrN5xBENx+dc+rcQwvn4i8MBo/ywMuVmTBqsQmTXdeSxfWPFSnl?=
- =?us-ascii?Q?4D556JR2/Uh/uxzYOWYlh8Jk79lD4sVqhN+SU6PO7CS93/0/UWAJufCCjjzT?=
- =?us-ascii?Q?nEAPOyWXjNYkwKVwRoPgBBWxkCPWM1jZ6pgAkZhskOyF6W3hJeofL6bqPVPm?=
- =?us-ascii?Q?tIATD0raC05Mic0cndTtv21JErxIGq+I0zTc9gFuy2jlkRlKEBrq5BLrau4J?=
- =?us-ascii?Q?R4k5O+TUcCWPET/gfqjx79zjxmf1ymW+AGzC9M5J1kG5TxacB9H+2LHD7K5H?=
- =?us-ascii?Q?5Jjf03N7lQMzMlmRJHALN4kns0d3Q2nAZadC0kMAl0kPWuwo+LylOm+SCIhl?=
- =?us-ascii?Q?B2lrTSvBpNHGKHEb8pfeySZmgEmASMj6E2jwOw5xJOoF1BvdjZpsI5yMOvjv?=
- =?us-ascii?Q?sBCtTCXDbv6BRJNmBTWoZ/rZvHEC1PzPCNmK2RyNbOxfuizVWuSdNdWs5U0J?=
- =?us-ascii?Q?DRRfw5rVM2lRGgfM1zPsa8/uJdxjM8viXJp0id7AU+B+ULjyjucddUKkvjue?=
- =?us-ascii?Q?/ZzmlyuPP1T/Gy/yc1H/AFwOoyixuLURCvx2Ph70jZqTH3sexPjaNHqNsFbv?=
- =?us-ascii?Q?cmmDSA95JLz5o3pPgQgxlVbOSC4HwIgcZ8fkzJHylzgUf0/nEZlUp8j1W/ZI?=
- =?us-ascii?Q?BQpC19JSMg5+mER//hHPBylNlVvXxXcJv4vETPPhEFjGP0YYBqTXfe9glE3Q?=
- =?us-ascii?Q?Q4sFT+l4Ry9SPIVGGjjXVGBvXwezjRAVFibxYjop0qtsRw4dCiyAJzjxEfWY?=
- =?us-ascii?Q?Eir6EqW0V7XTnOCPMPO0X9KoomRmpAMM2aWFVN2V64m1/GWNsmG8a88N2A/1?=
- =?us-ascii?Q?8N5UGQf5mWadSZd2T9BIWd3Ypa0bQcZhShRBG1uj9S2vjBIwoiYWdDhrm/KU?=
- =?us-ascii?Q?y/gf15bHiLAdbd7sDkxyb6Gw7srvfPIKA11bKmq88GSkL0DF1d6RkSpX+4Z5?=
- =?us-ascii?Q?eruz0yLKsHV4EQ3yu4Il7bRXqptHLnhSyVy7N8MKvTBBrpE/2aEaxjRNTUbS?=
- =?us-ascii?Q?yC7F8IhNrdXxJLGCm0X+TLM7nh3WLrvHd5BXpn1jtill+w9CTU6pDfNSZ8uy?=
- =?us-ascii?Q?itOZV2+tUvKMk+AwuRpFvEIWQ0HBq5Elch4OxwTj4qKLZ6fVWR1+IF6Dq0gW?=
- =?us-ascii?Q?vAULmrsWLDZfmiYTHoSlFvfwNbpLUbOJtm6fXnIX4K7rXCLFidHD1BB7hFZC?=
- =?us-ascii?Q?Gpe5Eoi5wwpeN4qnoXNGzlAw9+RlpKi5UGQU8M3sNHtutDjefuZQUsMEXjTW?=
- =?us-ascii?Q?zJil+KFS5NE=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OpnBZpn8vgYL3l3KbILxdmwtGlKmUXRGd0XiipVCHgsYdbjj+0daZs3WoNwE?=
- =?us-ascii?Q?EO9SgN3XwnJp33O7LwCPBv/1HBizJ0tBtsUFjllQMC6FZ7UmaKwcN+h8AvhW?=
- =?us-ascii?Q?63nUd3+Fuswi89NpC7UYtWoZYcFQIrVMuZ/UEHEHX05eLzrhsbil2HWr1MZV?=
- =?us-ascii?Q?WzXoldlQvRFXffwxPMOnavtWrZZC2odJJNyYvCfb3TXj7jacMk6Y577TqVit?=
- =?us-ascii?Q?Ci8yw5vPm8+qCs7UcKppoA4FCd42EkYYWrXmWT5yjlD5v5ouOuHxQ6vP+W3k?=
- =?us-ascii?Q?7KxsgeREr48l3w6yoTD6EsPQtdOp5wjBA1G+mCdqGMNNJdC3i7j+Ar8NATWm?=
- =?us-ascii?Q?rTTe9jKmpi7GLKSkAVHEN2P2JP8hIQDkmFf+75u8JTzwkwCngK0AbA9cBJ7W?=
- =?us-ascii?Q?MhQJFTiP81eLfruJ7u/dYICcKfYEuPTZFEbvqIbIToaWMDDdLe7YFNyGfqkr?=
- =?us-ascii?Q?wZuiUdI4HyKhJ7ofceRFE3uPNugcqfWLvPa7vriJvTqx6vv22mbyaUEg8Ybu?=
- =?us-ascii?Q?ixUd5hOPdZLp2LIvPXi3HM1NTva0ImyIcghqT7db2RIyXVRfWybylbIPPUU2?=
- =?us-ascii?Q?Vt3E+myd5/4/KtETTQ50kKLLJoPxE7+EivAc2karppiRnzdFB8jihUF+Iq/q?=
- =?us-ascii?Q?bZNtwHuZCgk4qP7ls6hRIbHc6dBD0PyFnGhHEaZPBhCOuwFKB1u6dZl82OPa?=
- =?us-ascii?Q?CGBzq/nRdtErLVXDr2trfAlJ0WsDmc7Q1lZ2I48d+FvdL5NZLeeZpVdKgHI4?=
- =?us-ascii?Q?YY5+Y/obP7y8eaSXqwX3lIiVwa1nNxJgiBAyI6KNISjcU04+bR3TElmbszUu?=
- =?us-ascii?Q?g1U2xhczRtorjr3/LPeBqAg0w71rApWmTmHTzom75bjCsPYPLTMJL+BAagHY?=
- =?us-ascii?Q?A9DqK650HLMR/irf9dVU9YkiOscdB35xnfXPq3bNzhimiY4T1b95NhWIff4E?=
- =?us-ascii?Q?gB612nZxdMlU9SLZvcMlr97VQioCqL0U6bKCCctA9qg3roKKVptXaZtu+1f+?=
- =?us-ascii?Q?8A9+g5ruM2X6p/xarIXpZrMshxMZAR0LQHM78IxWwKk9SM1MwcBFLlyQYRtB?=
- =?us-ascii?Q?0hJK4QiiiH3kRqB89WV3vkWJ1kkEyMZOAxYwJ406LCImFi1RfJi+aS1o7LIG?=
- =?us-ascii?Q?qpPVLgMyhsijmi/pfqYqE1/HBVPgWLOgRXIAXqX0CmvwJG0sgfCs4kLVZSWn?=
- =?us-ascii?Q?aZ9snQ9xSDg0X4detg5H03h4Pj9++TEAmMC480lkT/RS+/BX+VSGRFhGJf09?=
- =?us-ascii?Q?asK2kqe/wMtE8IxrEvGJPsn9dOx5bxM3BKRQPL3ZbecDbzmIDgMbcGfXMFng?=
- =?us-ascii?Q?/GC/yWO8+T5IerI94YjAWAz5EzC4kHv3YCL5rDzUMpRirmwLG4etKYZ3s34X?=
- =?us-ascii?Q?8o1/LZGBdfKJOAOW0JFQmlnWxkJmkoq+aGskJZwNK8q8aFAiJsLDXqjUIQ4w?=
- =?us-ascii?Q?wo5GbpQZxcWYj0SKKX7DXfGblkh3x7nmaiE5e0JcRRNF7VSk3gfIR35NgRlH?=
- =?us-ascii?Q?gyjuzkLhGpm0NVnoOp3FkDLrigYqBE7sM5lKONJhkeieE9XHeFYheGXehwQj?=
- =?us-ascii?Q?sGq0SGaw+5wOm3NW+oX6JHc/EWycsCU2KYnl/EMM?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b5bc94d-e79e-40f8-4871-08dda9a954d9
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 12:04:49.6549
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g0sfGj0N2p+XB1Rre2QVucbcsXUIQ4o9sUmHFA4UXSnntlogTumpNYr9ePdYRbrZUCAZ7hLqWTQnt6RkFNgPhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8177
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610035043.75448-2-dev.jain@arm.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,oracle.com,suse.cz,google.com,kvack.org,vger.kernel.org,redhat.com,arm.com,kernel.org,antgroup.com,loongson.cn,bytedance.com,infradead.org,gmail.com,os.amperecomputing.com,linux.alibaba.com,nvidia.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,oracle.com:email];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 7ECFC1F78E
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
 
-On Thu, Jun 12, 2025 at 02:25:04PM +0300, Nikolay Borisov wrote:
->
->
->On 6/12/25 11:19, Chao Gao wrote:
->> Extract a common function from MSR interception disabling logic and create
->> disabling and enabling functions based on it. This removes most of the
->> duplicated code for MSR interception disabling/enabling.
->> 
->> No functional change intended.
->> 
->> Signed-off-by: Chao Gao <chao.gao@intel.com>
->
->I believe similar change is already part of Sean's series on MSR intercept
->overhaul.
+On Tue, Jun 10, 2025 at 09:20:42AM +0530, Dev Jain wrote:
+> Avoid confusion between pte_t* and pte_t data types by suffixing pointer
+> type variables with p. No functional change.
+> 
+> Reviewed-by: Barry Song <baohua@kernel.org>
+> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
 
-No, this series is based on Sean's work and can only be applied after applying
-his v2.
+Thanks, this is less confusing!
+
+Feel free to add:
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+
+-- 
+Pedro
