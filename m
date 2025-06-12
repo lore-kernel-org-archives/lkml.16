@@ -1,176 +1,107 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE885695;
-	Thu, 12 Jun 2025 14:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26E62F4322
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749737891; cv=none; b=j+SFMm6iblrnpVx08qyNhpn7YLpMEBA/mEzFXObBTisf4kq+uXb28aDm3YNb4Wl2fQ7fWhBocpDiQHQluj1tbxoPPVQmv/rAVwjJIp0DSJpY9Rq5eSaScg1fDJuDHBlUUc0hRB/Snzm73HAs/FlbRU2yPOoH1g7ZyYnZEmhkJhg=
+	t=1749737918; cv=none; b=O48iqA0WqwaJ6ROuv07MSVIV+L4ffVKHggKJZV37Kg2chw6DA92seszwE7jvZVKwVFn6bsp3IvRfnyh/g2os6eih57/AszeZYfMBpp8/qr4PVZhA24Pc+q7sq1q98g97ecnSaaRpMAGr/1F/e/zClpEUpSjIRGgL1+hiCvdUlGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749737891; c=relaxed/simple;
-	bh=cyF3nTSTNSg076kd5N+AAyZbxrZKBPjxVEfxedTQRkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XNnEZHNovvnUmKkk/mT2VKpkqekI8YI98KWbOLaqih7bbb/zbyXEjB2L3n5kCfS9/uUguCt7xrcW9PzcC1flIkL2sdAKYsmCbg5pGB1Aq5soHP8HbOf2pBgksy64SfGOqa/5W1oDVTbdkEu+ppn6mPAloV8M4lbsF5nCMeIDbVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=WiT3Orib; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="WiT3Orib"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2N+lCsQLw5Lje5VsOQ8ETgYUevmvpiEu9dHqkRktYfY=; b=WiT3OriboTe5j0MRQN9ewNPR5b
-	9TZVcKKfirxxNnNEXUhTNDOe7++d8nfpXdYmRURGZGKH2FxF+5matttLG1afHkA9YS56B8oLsxvS4
-	Pb0OjhyuDIhqxOe2L2HVtLytZpNG8Bq1Vx7M94Y/xl7gqyMCKcApWKixmAt9nT/h3Y99xO/QLcc24
-	lQUNPqWeMQM7lAjC54bGT+aObY+T1wsu98sJ1UpObHC9ppKT4TkLhe6TVVE8SBj7igniIXzSI0gzm
-	R+6Q1qHqEKUf7KOsgcH5SvDIueU9rCoyg6qoH/v2eZNvo0lDH5a4SEbhxz4nEs8TrqmrtOW3csdpA
-	Z10/cc+A==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uPikY-002fLM-ED; Thu, 12 Jun 2025 16:17:50 +0200
-Message-ID: <62ff8ddb-b2f1-4e52-a026-290561ab5337@igalia.com>
-Date: Thu, 12 Jun 2025 15:17:49 +0100
+	s=arc-20240116; t=1749737918; c=relaxed/simple;
+	bh=YCwaBT/KPxVMxYpvM60UEqcste5hrihsbKqBXMlAEAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubP/wrftJoua8Bx4TXZQWWr53RnPWDfbgfy8TKj0BOgzaD9zTgrFI64oF/03EAyZB4uDiI36CNkdRZz6SNQ1fyl1UjXaZrywoxnWEiBnvEhpWuH1+Hn5lti43PKBSw2pQv6/Gqf2IR+K8sIlyo6N6eIzsse1ExCVOucVw/s1Wd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uPil5-0002qa-Em; Thu, 12 Jun 2025 16:18:23 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uPil4-0038bV-0Y;
+	Thu, 12 Jun 2025 16:18:22 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id C0FD9426516;
+	Thu, 12 Jun 2025 14:18:21 +0000 (UTC)
+Date: Thu, 12 Jun 2025 16:18:21 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
+	Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: imx@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH net-next v2 00/10] net: fec: cleanups, update quirk,
+ update IRQ naming
+Message-ID: <20250612-nostalgic-elk-of-vigor-fc7df7-mkl@pengutronix.de>
+References: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/6] drm/sched: Avoid memory leaks with cancel_job()
- callback
-To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-References: <20250603093130.100159-2-phasta@kernel.org>
- <20250603093130.100159-3-phasta@kernel.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <20250603093130.100159-3-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dzhx7la3oo7i3jre"
+Content-Disposition: inline
+In-Reply-To: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 
-On 03/06/2025 10:31, Philipp Stanner wrote:
-> Since its inception, the GPU scheduler can leak memory if the driver
-> calls drm_sched_fini() while there are still jobs in flight.
-> 
-> The simplest way to solve this in a backwards compatible manner is by
-> adding a new callback, drm_sched_backend_ops.cancel_job(), which
-> instructs the driver to signal the hardware fence associated with the
-> job. Afterwards, the scheduler can savely use the established free_job()
-> callback for freeing the job.
-> 
-> Implement the new backend_ops callback cancel_job().
-> 
-> Suggested-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+--dzhx7la3oo7i3jre
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next v2 00/10] net: fec: cleanups, update quirk,
+ update IRQ naming
+MIME-Version: 1.0
 
-Please just add the link to the patch here (it is only in the cover letter):
+On 12.06.2025 16:15:53, Marc Kleine-Budde wrote:
+> This series first cleans up the fec driver a bit (typos, obsolete
+> comments, add missing header files, rename struct, replace magic
+> number by defines).
+>=20
+> The next 2 patches update the order of IRQs in the driver and gives
+> them names that reflect their function.
 
-Link: 
-https://lore.kernel.org/dri-devel/20250418113211.69956-1-tvrtko.ursulin@igalia.com/
+Doh! These 2 patches have been removed, I'll send an updated series
+tomorrow.
 
-And you probably want to take the unit test modifications from the same 
-patch too. You could put them in the same patch or separate.
+regards,
+Marc
 
-Regards,
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-Tvrtko
+--dzhx7la3oo7i3jre
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
->   drivers/gpu/drm/scheduler/sched_main.c | 34 ++++++++++++++++----------
->   include/drm/gpu_scheduler.h            |  9 +++++++
->   2 files changed, 30 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-> index d20726d7adf0..3f14f1e151fa 100644
-> --- a/drivers/gpu/drm/scheduler/sched_main.c
-> +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> @@ -1352,6 +1352,18 @@ int drm_sched_init(struct drm_gpu_scheduler *sched, const struct drm_sched_init_
->   }
->   EXPORT_SYMBOL(drm_sched_init);
->   
-> +static void drm_sched_kill_remaining_jobs(struct drm_gpu_scheduler *sched)
-> +{
-> +	struct drm_sched_job *job, *tmp;
-> +
-> +	/* All other accessors are stopped. No locking necessary. */
-> +	list_for_each_entry_safe_reverse(job, tmp, &sched->pending_list, list) {
-> +		sched->ops->cancel_job(job);
-> +		list_del(&job->list);
-> +		sched->ops->free_job(job);
-> +	}
-> +}
-> +
->   /**
->    * drm_sched_fini - Destroy a gpu scheduler
->    *
-> @@ -1359,19 +1371,11 @@ EXPORT_SYMBOL(drm_sched_init);
->    *
->    * Tears down and cleans up the scheduler.
->    *
-> - * This stops submission of new jobs to the hardware through
-> - * drm_sched_backend_ops.run_job(). Consequently, drm_sched_backend_ops.free_job()
-> - * will not be called for all jobs still in drm_gpu_scheduler.pending_list.
-> - * There is no solution for this currently. Thus, it is up to the driver to make
-> - * sure that:
-> - *
-> - *  a) drm_sched_fini() is only called after for all submitted jobs
-> - *     drm_sched_backend_ops.free_job() has been called or that
-> - *  b) the jobs for which drm_sched_backend_ops.free_job() has not been called
-> - *     after drm_sched_fini() ran are freed manually.
-> - *
-> - * FIXME: Take care of the above problem and prevent this function from leaking
-> - * the jobs in drm_gpu_scheduler.pending_list under any circumstances.
-> + * This stops submission of new jobs to the hardware through &struct
-> + * drm_sched_backend_ops.run_job. If &struct drm_sched_backend_ops.cancel_job
-> + * is implemented, all jobs will be canceled through it and afterwards cleaned
-> + * up through &struct drm_sched_backend_ops.free_job. If cancel_job is not
-> + * implemented, memory could leak.
->    */
->   void drm_sched_fini(struct drm_gpu_scheduler *sched)
->   {
-> @@ -1401,6 +1405,10 @@ void drm_sched_fini(struct drm_gpu_scheduler *sched)
->   	/* Confirm no work left behind accessing device structures */
->   	cancel_delayed_work_sync(&sched->work_tdr);
->   
-> +	/* Avoid memory leaks if supported by the driver. */
-> +	if (sched->ops->cancel_job)
-> +		drm_sched_kill_remaining_jobs(sched);
-> +
->   	if (sched->own_submit_wq)
->   		destroy_workqueue(sched->submit_wq);
->   	sched->ready = false;
-> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-> index e62a7214e052..81dcbfc8c223 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -512,6 +512,15 @@ struct drm_sched_backend_ops {
->            * and it's time to clean it up.
->   	 */
->   	void (*free_job)(struct drm_sched_job *sched_job);
-> +
-> +	/**
-> +	 * @cancel_job: Used by the scheduler to guarantee remaining jobs' fences
-> +	 * get signaled in drm_sched_fini().
-> +	 *
-> +	 * Drivers need to signal the passed job's hardware fence with
-> +	 * -ECANCELED in this callback. They must not free the job.
-> +	 */
-> +	void (*cancel_job)(struct drm_sched_job *sched_job);
->   };
->   
->   /**
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhK4aoACgkQDHRl3/mQ
+kZxd4Qf+NgQA3YDIotiqNaXKN7WPLp57fc+c89S7jwiViLkjXwqg66qwgsSPFvVE
+ZKEpzCzmPfvAAqdtSH6oloApRjsmd+V7D63jEQ0bVpxElp3ycEsLWfDhPqT2Jk+G
+FMzhTIrCrnfWi4nmUkUhU9zdHkrOgYR02Qsm8rcUavvlZjVgSV8/ClsBCka+yiFJ
+kxlnUGMHNuDwrhf0pWzXxLbgDCjEfc2FH62eiWxBB70V0yx3X7tfgV3WomIbdVvS
+7OtjJNO6RWhrIgvBMT/CzMRb0EhebpHW2dYVrxS8s3aeDH7CABZEGxQSxh0I4sSs
+eM0lDD/IZmdofJwKvVmNTTKKkAO//w==
+=XGqy
+-----END PGP SIGNATURE-----
+
+--dzhx7la3oo7i3jre--
