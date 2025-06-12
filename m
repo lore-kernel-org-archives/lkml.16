@@ -1,476 +1,155 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2139.outbound.protection.partner.outlook.cn [139.219.17.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BCE1EB3D;
-	Thu, 12 Jun 2025 01:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749691375; cv=none; b=fCFYxSN8Ja8PwR1dSlzONjWKoCRmE7wwX6PNgZ6t7ZfjmICxjxxL12BoSmRtkb4DAz2DCljjV6kdNbLGCcT1kwsnrCiGcZEjv0gYUbSMHAAJnhNQNkHgsPMLMkiNnEx1KsrE/vLls10FPlW/hfMCzJbkLqXtkm2wfRKkljcrha8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749691375; c=relaxed/simple;
-	bh=0oVl373wY21Xyj3OL1Cxn1wzA2vU1rJzvKxIilN4bFA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Spi/eC/QrxHCyAF2ct4BdinYOkM7eO8k+rpn+dcsnUlcVYALhV6AwJ5tDNqfx5NgjlfO4Yg90ohZXaWCu1lKOo0DFjJE0m24qRWnQJ+Cpw6AaJSiNHcyV6MSRzZgs2JxqDlQ1rpuoT/uwX6hYz9+IV68XkxRwflnPHCDMf1gj/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 1D645121825;
-	Thu, 12 Jun 2025 01:22:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 01FA21C;
-	Thu, 12 Jun 2025 01:22:39 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uPAPM-00000000wRM-1c6Y;
-	Tue, 10 Jun 2025 21:37:40 -0400
-Message-ID: <20250611013740.234640670@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 10 Jun 2025 21:34:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v9 11/11] perf: Support deferred user callchains for per CPU events
-References: <20250611013421.040264741@goodmis.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D5572613;
+	Thu, 12 Jun 2025 01:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.139
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749691636; cv=fail; b=EqRUkDfUR71eyd7WnO2EjVaRVmN7U76JYRI9LHDkJDLyMmLozlx3fioiliptRqVQMP1DAKRE0nBnWfCYlSQ92IaK/14p8jUDq/6QnPsJXHfkVDslJ5oYCTKxPS77URJAnGTRjtv261dSLYoiIXT7S1TsWxNa70+tnRUnOx1Ajvo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749691636; c=relaxed/simple;
+	bh=c8pvgE3v8aI/eCvcneiU/QzCzZ2LarIoE8YbhUHmUic=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qfIcK/gjRLUcQqe5CA7AwMJcm1zOOAIOZF2bG0taRRHutYXzpiKb2Zgh/Bq+yW3ChP+MlQ1mOF06171GkxnjeTSUDlgu0/QxEyaZNzB8FJ65Zex1vLyab2j89mnjoHCrMzQXuEqk+uy1Ya9xmAGbb+zCQETK3/gcaLzFfv0l5nk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nZ26Lg0kosfM4yEQc/FQOT8bXJeHKdxK8aXFnkn0rBlZl2yuet0VQPi/bnQC++pT1mpphVLMb1dlRydaxPNWcULeh3KO6C2BZfJmWLuv8or41Lm9YXvG8EnKmJ9F+CnAsjDkJJ61FzV3lyMk2VLMMDeaW3IRsTD3f08O7ev+O22cZgEXgdijd+Nxu9hkhcccsnpUEkQhT5+J+d+1R50tJWRz4k319nguSdZrkGQ5bPwKMgrumYXXRUOXHxCWVDqiNDjD0SwmI6xv+Xqoe6VBTdiBH0t4fbWdImQoBVAvDPhwvYIGzre4UxFzoPcJ+GZcLnfjkcgKcNLbqvg1sQxmjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=c8pvgE3v8aI/eCvcneiU/QzCzZ2LarIoE8YbhUHmUic=;
+ b=EeyYGtf0q3sdyJrGKIOUda58YvVR2i9D6spBa2Ee751EG0Fbw0e3Od7pCtmkGjtTRiCKZ118MpuFuf2ga6FQoB5tdlim/hvNpBk6unSs59s9hnZD+X9xUJVCFD3TDrMJSGGQXlDIxyfN8sIiuoZ7osBSYPMSmVx/bNHYpBQz1V1wXuS8yuKPmtEr/27oIAxii+Sk0jDxf850WeqyaLyPie30RSE0KNy5I5ZhzZ0EtBovvb+WcdqfL2d0h2FOGpTyIQWvQMDZuhX7Up/RJ0LOO9kYgV63FJVJM0agFpnSThWgKG0x2SOjVjdwzWTXtVDcge7aAycEBPlIDi3gHFR23w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9) by ZQ0PR01MB1303.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1c::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.42; Thu, 12 Jun
+ 2025 01:12:05 +0000
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ ([fe80::64c5:50d8:4f2c:59aa]) by
+ ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::64c5:50d8:4f2c:59aa%7])
+ with mapi id 15.20.8792.038; Thu, 12 Jun 2025 01:12:05 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: "shao.mingyin@zte.com.cn" <shao.mingyin@zte.com.cn>,
+	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>
+CC: "geert+renesas@glider.be" <geert+renesas@glider.be>,
+	"magnus.damm@gmail.com" <magnus.damm@gmail.com>, "heiko@sntech.de"
+	<heiko@sntech.de>, "krzk@kernel.org" <krzk@kernel.org>,
+	"alim.akhtar@samsung.com" <alim.akhtar@samsung.com>, Walker Chen
+	<walker.chen@starfivetech.com>, "sebastian.reichel@collabora.com"
+	<sebastian.reichel@collabora.com>, "detlev.casanova@collabora.com"
+	<detlev.casanova@collabora.com>, "finley.xiao@rock-chips.com"
+	<finley.xiao@rock-chips.com>, "shawn.lin@rock-chips.com"
+	<shawn.lin@rock-chips.com>, "pgwipeout@gmail.com" <pgwipeout@gmail.com>,
+	"qiu.yutan@zte.com.cn" <qiu.yutan@zte.com.cn>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org"
+	<linux-rockchip@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org"
+	<linux-samsung-soc@vger.kernel.org>, "yang.yang29@zte.com.cn"
+	<yang.yang29@zte.com.cn>, "xu.xin16@zte.com.cn" <xu.xin16@zte.com.cn>,
+	"yang.tao172@zte.com.cn" <yang.tao172@zte.com.cn>, "ye.xingchen@zte.com.cn"
+	<ye.xingchen@zte.com.cn>
+Subject:
+ =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjJdIHBtZG9tYWluOiBVc2Ugc3RyX2VuYWJsZV9k?=
+ =?utf-8?Q?isable-like_helpers?=
+Thread-Topic: [PATCH v2] pmdomain: Use str_enable_disable-like helpers
+Thread-Index: AQHb2fuaxaFW95Sx/USP9qxGCvTQ0LP+uXyA
+Date: Thu, 12 Jun 2025 01:12:05 +0000
+Message-ID:
+ <ZQ0PR01MB130266C8DC79B041567E2262F2742@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+References: <20250610193403161UQCV5cVGXCRVDheTb7jvi@zte.com.cn>
+In-Reply-To: <20250610193403161UQCV5cVGXCRVDheTb7jvi@zte.com.cn>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1303:EE_
+x-ms-office365-filtering-correlation-id: c245bb18-bb2f-4714-a066-08dda94e2573
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|1800799024|41320700013|38070700018;
+x-microsoft-antispam-message-info:
+ LM29ALdgyzJjhKL9iC5l3yRNObMy8isMzLF/5cnyMplXSrVBfYU1l2MItq7LQAhCoP5AcSlP0f+4U/21dEYx14hzeWiBsGLPH9S8OaBPzLkbJ/ty2FbGKGUDMu+EtkgO8wdtIxSb/TVezcbNaOdPHTb3zyZ5BSz19JFKLu8grY2Rm3QnEk4gwZ8wr9+ZVUlDVinR8njXomcIUgDCB4qlt+V71zjv01I+gLZMaAhgyEjAI0ByG/qrqEZTagGi3Ff3Alr5T1Wc4d/ZdQ1ByKcb4JgNTmvIfO1CTXdM4G7M8cSikuYc7UpSQCUZkLw9juTLlS8c/FuiNX4H9NbE8EgAsvpEbANNY20n+/v1PJrH+dmNup4ikVoEmBNacCngto91CPnTZJ8feQccndNWE8bV/pDA8C6I5Xfy7l3JdvXBUAWqFFsUO4OyaLIeY1J10EwsEJy1eaJbveT8eD0mMqtTlyqrj5yeYE8R+9xpdSIqin52ZCyPAv4eMNMtxJmz/UcH89Sm42F9klFNybuP4f+Axk1pO7OSlkbwEIjyHs829CtFVR2CMhCNws0mrM4i6qwuCc/8LfPBeNnX6DtkG7ddzmaTq5UtH3jtF7nGQ60jPYs=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(41320700013)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?NlIrNnAwbDBZdGIvOFFFdGxIQUt4VkhNVy9qN3V6bkFPYis2T3lUcnI0N01O?=
+ =?utf-8?B?cnJLWnZna1QxRmttV05xbGNNeUQ0SDdodXp0ZUsvbEpYR0ZVOWtjUmpEQ0Zw?=
+ =?utf-8?B?aDVuck1HS2ZPbUJrUllxMzFQMi9EOGRpZ0xiTmUwMmlIenk5VmdUYWpKekpj?=
+ =?utf-8?B?N01UOWVqM25LSForRmptZHZsQWVlWFVVOHZSdjhoVmtBVUFLcnZOQ1YrVlNk?=
+ =?utf-8?B?cU5qSmJHLzR0WFhVU3RBSEFCenNrcHdQNm82d0ZBUkluemp3NVlHZUJEMENa?=
+ =?utf-8?B?NnhJYjFab1dlbmdRNytZVW9TMXZJOHduTFBVbjZXQ0prdUM0TlQ3NUFtRndU?=
+ =?utf-8?B?L01CVWNXWjhIOGlLbDlWdG9SMFVBRnBRZUk2U0tyYm55ek1Nc2ZEc1RwSTNI?=
+ =?utf-8?B?angvZTRBUTBheXFyMFEyRTdLTkIxc0ZsYVpPbXV5R0FyTmVGbVVpdytlUFpo?=
+ =?utf-8?B?Y3RDU1NhMWlsYTd1bFBMazZuRmtTZ1JINUw5YmJrZ1Y4aDcyZjFjUW5OR0Vz?=
+ =?utf-8?B?Z2RyTXdzSU9Ca1JhRjBYb2ZqUmxKVXdqU3U4K0RJMmVIa0wyM3ZhSUpTRzdP?=
+ =?utf-8?B?ek5LZ1YxWTd0cEx5b2dBc0xueE9yWW1ZenpocG1UcmlCOVdUVk1vRnhQdkFC?=
+ =?utf-8?B?dll2MGdrWmxDbUttNHNGU0VNSVgySWJsMVMyMkZHZGNHVHJPdTQ1UmZFcTln?=
+ =?utf-8?B?dThoU05TYTRCaWhSL2J1UjJwNUUvYTMyOXNvUW8vREZCaVpCN2Y1cU5SSk1i?=
+ =?utf-8?B?N2x4akYrd29CbDFIOWMreFhVRHpubG5kNHZpV2tMMXVjTnd5Smx4QTZqc0N5?=
+ =?utf-8?B?M1NHaTdYRHpVUVQ0VE5KeC84dGZMZWZOanJJU2d0cVBOZ1Jpb2tGNVJpSlY3?=
+ =?utf-8?B?OGd1OHFVS04ySkg0T0RkUEpLY3JydkxzVEFKeHJNemgvR2FkZncxdDVsUUdi?=
+ =?utf-8?B?Tmx1VjlDOHJ5NGVZQ2duclRwckFERzhJQ2djWVpmV1FURXFRc2IyQys3R0I3?=
+ =?utf-8?B?cFg4SDZuUDBsdjJKTFRsN1l2YUVMMlJadm9QbzY2SXdCczhVWkdMalhzdTl3?=
+ =?utf-8?B?dEJZSEZxSlNNK3hxVTFQa1Z4MGtWM1Vic1p4Z3QxZEttUnJTVW9xeWtjOTU3?=
+ =?utf-8?B?cFNQb1c0QmJmaEFLL3A1N1lMeWRnNDVFS2VrTUxIS09WNHE1MXZvTEQ0NjM0?=
+ =?utf-8?B?cFp3QkFkM0dXWS9NbGkzM2ZwaHpLNmIwbDZ5RERSOERIY3lvN01Hdy9rbHlF?=
+ =?utf-8?B?cld3aWJvQjNDOW1Ka3Y2T3MrY1dLVE9aVlFEeExpdTV4TCtSMldYRUQwcXpG?=
+ =?utf-8?B?SVRVTHUyN3FRM05UcUdoeElxY21XOVRyVlJHZWczRkdpTENNZXJ6L3ppSGxR?=
+ =?utf-8?B?RjhDSVNRcFlNOCswVjZKTitvMDJyNzgyUFoxSGkwRXRzclYxQVdXenBJSExO?=
+ =?utf-8?B?SzVsY012TUdQZ0ZjTzNXTm5uV2VMWll5Tm9aMnJEREVudkZXQ3JuZDF1NGxy?=
+ =?utf-8?B?eXlYRFc5Z0VrVHpuc3VKMkgvNkp2aDhTNXU5WDNIaFRoN0FLV1d6UXhYeXk0?=
+ =?utf-8?B?RHl2VC9MTHRmejlicDJ0YVBJQUJiK09rSWRWY3lKampsNG5yb0o0QzBMdE1N?=
+ =?utf-8?B?QjhQR3FsUlZkTGxGS1ZHdE1RajdPZDBPSVA1bkc4UnBPcW43VDRaeStDTWFE?=
+ =?utf-8?B?ZFVnems0SUx0NmxoRHhMRHNSRTNxZjNpbjhVWG1MNEZVem5uWDJnVVc4aE9R?=
+ =?utf-8?B?dlBWbEQ1WG00V0NINjFwRmdCUDNDYlp3SzQwdm1SSmZCQkEwSXhDMjNGTWxD?=
+ =?utf-8?B?cnUra0xsbGRpN2VKcm5HVldxdkNCRi9oOERoRlVBY3BiZ2xVTDd6VUI5UzZ5?=
+ =?utf-8?B?eWdkdzF3Q1dRdGwzanR3S2QrRlRnK1BZcENnZ3lHRzlpRmZEd2JiRVFud2Jj?=
+ =?utf-8?B?MWhQK2VITk0wbVNwOGt1aitxVkpHZlRhaXJBb25pNFd2OGVITkE2d2pXN09x?=
+ =?utf-8?B?L0V3QmpsTFp0YkJMZ3JSa09meDlTR2l4Z1ZXR2pPdjdaVmlwNWUrT25veFVW?=
+ =?utf-8?B?eUtML3BRSjBnM0JTcU1IbVJvWmQvbkNVbENyRFJVTmp5cWxzRTFjV0owOFBl?=
+ =?utf-8?B?YW9XWThBQ21mUHNzbDFsN2pnMjQxdkdkbjYzUEx5anZWbS9HT05VMTZIKzFi?=
+ =?utf-8?Q?34X04WYoAgaLMf150t3rE6U=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Stat-Signature: 3ob3wz1ea1s3icbphmne47mn75jqac1k
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 01FA21C
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+NEE2+Rk1mkyIxDMKQzwj6ZDo8XXCMOcg=
-X-HE-Tag: 1749691359-673213
-X-HE-Meta: U2FsdGVkX19GRUEBLssl2TzSyf8E/HlqRc0SIMismRj1c3ZmTrNGnnQV5i0n8UtkRXkg8rMFx15HfH0GslHcfV+1WcwMTiWTP0cR2/S4pr4h8fLl1+kqQMhyB16Ob5VBRJPcc8y+BgxJaHngwTzuW6Wr4W2K5P1HcAopy/RBt7Ec08QR1TW7RuWF2Lsd3bZ8ehbN8vWRLRualIpGhQk6i5T52frTIktPTaPMJDRkN5AGucEHXz2QdMZS18556iWLJlfCZ5uh6d0W8B1CQDU30jqNMIV1wc+hXA4+LjMt92cO6C8a9uZZcv5K3sQ+x4l2uepGIglhM2IDSEApHhldVa+HtDcmc/e8UxemdBzUHficJiHShpZ85Em1Jj0LU3MwEYxfsdgv+vzupicxR15Mnw==
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: c245bb18-bb2f-4714-a066-08dda94e2573
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2025 01:12:05.7186
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EZ4kR6m5KO83RiV0FNcph/aV3JQxx05KjjyJaNIUIKDMJK8wp4pyQ2TRJvynmbgNu8/kI6Fko27ZuyDMMhV8EcLeX2DPAzFDNvQ0M8pGKtxqlna9S+607Clz7/dU/UT6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1303
 
-From: Steven Rostedt <rostedt@goodmis.org>
-
-The deferred unwinder works fine for task events (events that trace only a
-specific task), as it can use a task_work from an interrupt or NMI and
-when the task goes back to user space it will call the event's callback to
-do the deferred unwinding.
-
-But for per CPU events things are not so simple. When a per CPU event
-wants a deferred unwinding to occur, it can not simply use a task_work as
-there's a many to many relationship. If the task migrates and another task
-is scheduled in where the per CPU event wants a deferred unwinding to
-occur on that task as well, and the task that migrated to another CPU has
-that CPU's event want to unwind it too, each CPU may need unwinding from
-more than one task, and each task may has requests from many CPUs.
-
-To solve this, when a per CPU event is created that has defer_callchain
-attribute set, it will do a lookup from a global list
-(unwind_deferred_list), for a perf_unwind_deferred descriptor that has the
-id that matches the PID of the current task's group_leader.
-
-If it is not found, then it will create one and add it to the global list.
-This descriptor contains an array of all possible CPUs, where each element
-is a perf_unwind_cpu descriptor.
-
-The perf_unwind_cpu descriptor has a list of all the per CPU events that
-is tracing the matching CPU that corresponds to its index in the array,
-where the events belong to a task that has the same group_leader.
-It also has a processing bit and rcuwait to handle removal.
-
-For each occupied perf_unwind_cpu descriptor in the array, the
-perf_deferred_unwind descriptor increments its nr_cpu_events. When a
-perf_unwind_cpu descriptor is empty, the nr_cpu_events is decremented.
-This is used to know when to free the perf_deferred_unwind descriptor, as
-when it become empty, it is no longer referenced.
-
-Finally, the perf_deferred_unwind descriptor has an id that holds the PID
-of the group_leader for the tasks that the events were created by.
-
-When a second (or more) per CPU event is created where the
-perf_deferred_unwind descriptor is already created, it just adds itself to
-the perf_unwind_cpu array of that descriptor. Updating the necessary
-counter.
-
-Each of these perf_deferred_unwind descriptors have a unwind_work that
-registers with the deferred unwind infrastructure via
-unwind_deferred_init(), where it also registers a callback to
-perf_event_deferred_cpu().
-
-Now when a per CPU event requests a deferred unwinding, it calls
-unwind_deferred_request() with the associated perf_deferred_unwind
-descriptor. It is expected that the program that uses this has events on
-all CPUs, as the deferred trace may not be called on the CPU event that
-requested it. That is, the task may migrate and its user stack trace will
-be recorded on the CPU event of the CPU that it exits back to user space
-on.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/perf_event.h |   5 +
- kernel/events/core.c       | 229 +++++++++++++++++++++++++++++++++----
- 2 files changed, 209 insertions(+), 25 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 416d55d2e81b..2a45d445be93 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -695,6 +695,7 @@ struct swevent_hlist {
- struct bpf_prog;
- struct perf_cgroup;
- struct perf_buffer;
-+struct perf_unwind_deferred;
- 
- struct pmu_event_list {
- 	raw_spinlock_t			lock;
-@@ -847,6 +848,9 @@ struct perf_event {
- 	struct callback_head		pending_unwind_work;
- 	struct rcuwait			pending_unwind_wait;
- 
-+	struct perf_unwind_deferred	*unwind_deferred;
-+	struct list_head		unwind_list;
-+
- 	atomic_t			event_limit;
- 
- 	/* address range filters */
-@@ -887,6 +891,7 @@ struct perf_event {
- #ifdef CONFIG_SECURITY
- 	void *security;
- #endif
-+
- 	struct list_head		sb_list;
- 	struct list_head		pmu_list;
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5a31f5c30299..195bdc3f2a8f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5564,10 +5564,128 @@ static bool exclusive_event_installable(struct perf_event *event,
- 	return true;
- }
- 
-+/* Holds a list of per CPU events that registered for deferred unwinding */
-+struct perf_unwind_cpu {
-+	struct list_head	list;
-+	struct rcuwait		pending_unwind_wait;
-+	int			processing;
-+};
-+
-+struct perf_unwind_deferred {
-+	struct list_head	list;
-+	struct unwind_work	unwind_work;
-+	struct perf_unwind_cpu	*cpu_events;
-+	int			nr_cpu_events;
-+	int			id;
-+};
-+
-+static DEFINE_MUTEX(unwind_deferred_mutex);
-+static LIST_HEAD(unwind_deferred_list);
-+
-+static void perf_event_deferred_cpu(struct unwind_work *work,
-+				    struct unwind_stacktrace *trace, u64 timestamp);
-+
-+static int perf_add_unwind_deferred(struct perf_event *event)
-+{
-+	struct perf_unwind_deferred *defer;
-+	int id = current->group_leader->pid;
-+	bool found = false;
-+	int ret = 0;
-+
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
-+	guard(mutex)(&unwind_deferred_mutex);
-+
-+	list_for_each_entry(defer, &unwind_deferred_list, list) {
-+		if (defer->id == id) {
-+			found = true;
-+			break;
-+		}
-+	}
-+
-+	if (!found) {
-+		defer = kzalloc(sizeof(*defer), GFP_KERNEL);
-+		if (!defer)
-+			return -ENOMEM;
-+		list_add(&defer->list, &unwind_deferred_list);
-+		defer->id = id;
-+	}
-+
-+	if (!defer->nr_cpu_events) {
-+		defer->cpu_events = kcalloc(num_possible_cpus(),
-+					    sizeof(*defer->cpu_events),
-+					    GFP_KERNEL);
-+		if (!defer->cpu_events) {
-+			ret = -ENOMEM;
-+			goto free;
-+		}
-+		for (int cpu = 0; cpu < num_possible_cpus(); cpu++) {
-+			rcuwait_init(&defer->cpu_events[cpu].pending_unwind_wait);
-+			INIT_LIST_HEAD(&defer->cpu_events[cpu].list);
-+		}
-+
-+		ret = unwind_deferred_init(&defer->unwind_work,
-+					   perf_event_deferred_cpu);
-+		if (ret)
-+			goto free;
-+	}
-+
-+	if (list_empty(&defer->cpu_events[event->cpu].list))
-+		defer->nr_cpu_events++;
-+	list_add_tail_rcu(&event->unwind_list, &defer->cpu_events[event->cpu].list);
-+
-+	event->unwind_deferred = defer;
-+	return 0;
-+free:
-+	if (found)
-+		return ret;
-+
-+	list_del(&defer->list);
-+	kfree(defer->cpu_events);
-+	kfree(defer);
-+	return ret;
-+}
-+
-+static void perf_remove_unwind_deferred(struct perf_event *event)
-+{
-+	struct perf_unwind_deferred *defer = event->unwind_deferred;
-+	struct perf_unwind_cpu *cpu_unwind;
-+
-+	if (!defer)
-+		return;
-+
-+	guard(mutex)(&unwind_deferred_mutex);
-+	list_del_rcu(&event->unwind_list);
-+
-+	cpu_unwind = &defer->cpu_events[event->cpu];
-+
-+	if (list_empty(&cpu_unwind->list)) {
-+		defer->nr_cpu_events--;
-+		if (!defer->nr_cpu_events)
-+			unwind_deferred_cancel(&defer->unwind_work);
-+	}
-+	/* Make sure perf_event_deferred_cpu() is done with this event */
-+	rcuwait_wait_event(&cpu_unwind->pending_unwind_wait,
-+				   !cpu_unwind->processing, TASK_UNINTERRUPTIBLE);
-+
-+	event->unwind_deferred = NULL;
-+
-+	/* Is this still being used by other per CPU events? */
-+	if (defer->nr_cpu_events)
-+		return;
-+
-+	list_del(&defer->list);
-+	kfree(defer->cpu_events);
-+	kfree(defer);
-+}
-+
- static void perf_pending_unwind_sync(struct perf_event *event)
- {
- 	might_sleep();
- 
-+	perf_remove_unwind_deferred(event);
-+
- 	if (!event->pending_unwind_callback)
- 		return;
- 
-@@ -5591,62 +5709,104 @@ static void perf_pending_unwind_sync(struct perf_event *event)
- 
- struct perf_callchain_deferred_event {
- 	struct perf_event_header	header;
-+	u64				timestamp;
- 	u64				nr;
- 	u64				ips[];
- };
- 
--static void perf_event_callchain_deferred(struct callback_head *work)
-+static void perf_event_callchain_deferred(struct perf_event *event,
-+					  struct unwind_stacktrace *trace,
-+					  u64 timestamp)
- {
--	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
- 	struct perf_callchain_deferred_event deferred_event;
- 	u64 callchain_context = PERF_CONTEXT_USER;
--	struct unwind_stacktrace trace;
- 	struct perf_output_handle handle;
- 	struct perf_sample_data data;
- 	u64 nr;
- 
--	if (!event->pending_unwind_callback)
--		return;
--
--	if (unwind_deferred_trace(&trace) < 0)
--		goto out;
--
--	/*
--	 * All accesses to the event must belong to the same implicit RCU
--	 * read-side critical section as the ->pending_unwind_callback reset.
--	 * See comment in perf_pending_unwind_sync().
--	 */
--	guard(rcu)();
--
- 	if (current->flags & PF_KTHREAD)
--		goto out;
-+		return;
- 
--	nr = trace.nr + 1 ; /* '+1' == callchain_context */
-+	nr = trace->nr + 1 ; /* '+1' == callchain_context */
- 
- 	deferred_event.header.type = PERF_RECORD_CALLCHAIN_DEFERRED;
- 	deferred_event.header.misc = PERF_RECORD_MISC_USER;
- 	deferred_event.header.size = sizeof(deferred_event) + (nr * sizeof(u64));
- 
-+	deferred_event.timestamp = timestamp;
- 	deferred_event.nr = nr;
- 
- 	perf_event_header__init_id(&deferred_event.header, &data, event);
- 
- 	if (perf_output_begin(&handle, &data, event, deferred_event.header.size))
--		goto out;
-+		return;
- 
- 	perf_output_put(&handle, deferred_event);
- 	perf_output_put(&handle, callchain_context);
--	perf_output_copy(&handle, trace.entries, trace.nr * sizeof(u64));
-+	perf_output_copy(&handle, trace->entries, trace->nr * sizeof(u64));
- 	perf_event__output_id_sample(event, &handle, &data);
- 
- 	perf_output_end(&handle);
-+}
-+
-+/* Deferred unwinding callback for task specific events */
-+static void perf_event_deferred_task(struct callback_head *work)
-+{
-+	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
-+	struct unwind_stacktrace trace;
-+
-+	if (!event->pending_unwind_callback)
-+		return;
-+
-+	if (unwind_deferred_trace(&trace) >= 0) {
-+
-+		/*
-+		 * All accesses to the event must belong to the same implicit RCU
-+		 * read-side critical section as the ->pending_unwind_callback reset.
-+		 * See comment in perf_pending_unwind_sync().
-+		 */
-+		guard(rcu)();
-+		perf_event_callchain_deferred(event, &trace, 0);
-+	}
- 
--out:
- 	event->pending_unwind_callback = 0;
- 	local_dec(&event->ctx->nr_no_switch_fast);
- 	rcuwait_wake_up(&event->pending_unwind_wait);
- }
- 
-+/* Deferred unwinding callback for per CPU events */
-+static void perf_event_deferred_cpu(struct unwind_work *work,
-+				    struct unwind_stacktrace *trace, u64 timestamp)
-+{
-+	struct perf_unwind_deferred *defer =
-+		container_of(work, struct perf_unwind_deferred, unwind_work);
-+	struct perf_unwind_cpu *cpu_unwind;
-+	struct perf_event *event;
-+	int cpu;
-+
-+	guard(rcu)();
-+	guard(preempt)();
-+
-+	cpu = smp_processor_id();
-+	cpu_unwind = &defer->cpu_events[cpu];
-+
-+	WRITE_ONCE(cpu_unwind->processing, 1);
-+	/*
-+	 * Make sure the above is seen for the rcuwait in
-+	 * perf_remove_unwind_deferred() before iterating the loop.
-+	 */
-+	smp_mb();
-+
-+	list_for_each_entry_rcu(event, &cpu_unwind->list, unwind_list) {
-+		perf_event_callchain_deferred(event, trace, timestamp);
-+		/* Only the first CPU event gets the trace */
-+		break;
-+	}
-+
-+	WRITE_ONCE(cpu_unwind->processing, 0);
-+	rcuwait_wake_up(&cpu_unwind->pending_unwind_wait);
-+}
-+
- static void perf_free_addr_filters(struct perf_event *event);
- 
- /* vs perf_event_alloc() error */
-@@ -8241,6 +8401,15 @@ static int deferred_request_nmi(struct perf_event *event)
- 	return 0;
- }
- 
-+static int deferred_unwind_request(struct perf_unwind_deferred *defer)
-+{
-+	u64 timestamp;
-+	int ret;
-+
-+	ret = unwind_deferred_request(&defer->unwind_work, &timestamp);
-+	return ret < 0 ? ret : 0;
-+}
-+
- /*
-  * Returns:
- *     > 0 : if already queued.
-@@ -8253,11 +8422,14 @@ static int deferred_request(struct perf_event *event)
- 	int pending;
- 	int ret;
- 
--	/* Only defer for task events */
--	if (!event->ctx->task)
-+	if ((current->flags & PF_KTHREAD) || !user_mode(task_pt_regs(current)))
- 		return -EINVAL;
- 
--	if ((current->flags & PF_KTHREAD) || !user_mode(task_pt_regs(current)))
-+	if (event->unwind_deferred)
-+		return deferred_unwind_request(event->unwind_deferred);
-+
-+	/* Per CPU events should have had unwind_deferred set! */
-+	if (WARN_ON_ONCE(!event->ctx->task))
- 		return -EINVAL;
- 
- 	if (in_nmi())
-@@ -13142,13 +13314,20 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 		}
- 	}
- 
-+	/* Setup unwind deferring for per CPU events */
-+	if (event->attr.defer_callchain && !task) {
-+		err = perf_add_unwind_deferred(event);
-+		if (err)
-+			return ERR_PTR(err);
-+	}
-+
- 	err = security_perf_event_alloc(event);
- 	if (err)
- 		return ERR_PTR(err);
- 
- 	if (event->attr.defer_callchain)
- 		init_task_work(&event->pending_unwind_work,
--			       perf_event_callchain_deferred);
-+			       perf_event_deferred_task);
- 
- 	/* symmetric to unaccount_event() in _free_event() */
- 	account_event(event);
--- 
-2.47.2
-
-
+PiBGcm9tOiBTaGFvIE1pbmd5aW4gPHNoYW8ubWluZ3lpbkB6dGUuY29tLmNuPg0KPiANCj4gUmVw
+bGFjZSB0ZXJuYXJ5IChjb25kaXRpb24gPyAiZW5hYmxlIiA6ICJkaXNhYmxlIikgc3ludGF4IGFu
+ZCB0ZXJuYXJ5DQo+IChjb25kaXRpb24gPyAib24iIDogIm9mZiIpIHN5bnRheCB3aXRoIGhlbHBl
+cnMgZnJvbSBzdHJpbmdfY2hvaWNlcy5oIGJlY2F1c2U6DQo+IDEuIFNpbXBsZSBmdW5jdGlvbiBj
+YWxsIHdpdGggb25lIGFyZ3VtZW50IGlzIGVhc2llciB0byByZWFkLiAgVGVybmFyeQ0KPiAgICBv
+cGVyYXRvciBoYXMgdGhyZWUgYXJndW1lbnRzIGFuZCB3aXRoIHdyYXBwaW5nIG1pZ2h0IGxlYWQg
+dG8gcXVpdGUNCj4gICAgbG9uZyBjb2RlLg0KPiAyLiBJcyBzbGlnaHRseSBzaG9ydGVyIHRodXMg
+YWxzbyBlYXNpZXIgdG8gcmVhZC4NCj4gMy4gSXQgYnJpbmdzIHVuaWZvcm1pdHkgaW4gdGhlIHRl
+eHQgLSBzYW1lIHN0cmluZy4NCj4gNC4gQWxsb3dzIGRlZHVwaW5nIGJ5IHRoZSBsaW5rZXIsIHdo
+aWNoIHJlc3VsdHMgaW4gYSBzbWFsbGVyIGJpbmFyeQ0KPiAgICBmaWxlLg0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogU2hhbyBNaW5neWluIDxzaGFvLm1pbmd5aW5AenRlLmNvbS5jbj4NCg0KRm9yIHN0
+YXJmaXZlOg0KDQpSZXZpZXdlZC1ieTogQ2hhbmdodWFuZyBMaWFuZyA8Y2hhbmdodWFuZy5saWFu
+Z0BzdGFyZml2ZXRlY2guY29tPg0KDQo=
