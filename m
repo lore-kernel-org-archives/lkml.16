@@ -1,159 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2B818A6AD
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E67F3596B;
+	Thu, 12 Jun 2025 14:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749737451; cv=none; b=nxqF8VPrKmYuKYE0v6YQzSFR9JnePuaUj33bvD+VetXqMpV/2CDvawlI7MoD0zuwgX6DghAim16/gGprPdTgmkDkgch/kJi6UJOigIBnC+QqPpKv2LZkBN53DdYenl5rDp6ioi11X9AJvtlG5kFcn/rcMH6M2fh+hm4zYC3ldF0=
+	t=1749737498; cv=none; b=Nf1LRrjLxrxiILjKxPiRt7PkUxyRMVfiwZmYCSou3n7RfH0bSQ925I3DIoM9rw74gEKKhRlDYK1xHtMS/5QluD+bQGCMBhbmOwvwhb8NVRsR/Z57LiqoWqA2DfjBhMTMl0hmnHGUDEumlsnb8kuB8QfLJDmjJQUMn20sfmq5MOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749737451; c=relaxed/simple;
-	bh=rx2127rFnhUhdp1EywtDCGhrT9qHfuVS0rW2DH6MNzQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SV3/vQiioI+l5B595D/5oSUxkbSw9JKPzgzTrKuR8KBhL7RGZBdZ17xnDggxqoqLIBG6AC2cWF7bB8qMGJEgjHJbt2OXOrTedb4Q9z9nt4YvEfTyxRczE0dPsMVNwLdTy8O2ufgC6Sxmqu5q8D4YNVJeFxeEwerjjrHYuVNMC+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KhZEvBxW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749737498; c=relaxed/simple;
+	bh=eVcT22CR6MUvmIdjYr3MtOpYN2U0aHt7Hy7WNsb7NkM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RVAj/7WpB8sQnelRsleZW9Rw65M49T+Ui7o4oRYWCoxu+ZiGKERyUN3hUzUH8QM3xwHIQAJqPTOa//yRcM/e8zqmphLTNiGAH0qAD6xSTTCGlwk2We9s6dQi+AL7SBWlmS+s+6c3DAfdlcobJq+GHpsaqbjn9jfmT2KOw0U1wsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rF1dgaeH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KhZEvBxW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749737448;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P1JMQZmzbIb6utls8iGRZ0NkyFLiqg1p9Vq7xmlV1lU=;
-	b=KhZEvBxWVNJKYG60u9qEalVZwF456E7QldaommDqFNUl/RH+ooyJZk+OrM8mlofL5LlJi7
-	oxmXM4e9a10QxBzVHgp6/TEgH5ytjlM37u0McVZXgqkao2aPtdVIysbXZfIjXECQ9pP0Zs
-	RZgs/wV4d1DLhClHsUIyXxoR0RT2MPU=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-486-ubVQ-dTQNmGrfAFCq5kbsw-1; Thu,
- 12 Jun 2025 10:10:44 -0400
-X-MC-Unique: ubVQ-dTQNmGrfAFCq5kbsw-1
-X-Mimecast-MFC-AGG-ID: ubVQ-dTQNmGrfAFCq5kbsw_1749737441
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2F7DE1955F42;
-	Thu, 12 Jun 2025 14:10:41 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.58.9])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A98121956050;
-	Thu, 12 Jun 2025 14:10:36 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: David Howells <dhowells@redhat.com>
-Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>,
- Steve French <sfrench@samba.org>, Chuck Lever <chuck.lever@oracle.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Paulo Alcantara <pc@manguebit.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Jeffrey Altman <jaltman@auristor.com>, hch@infradead.org,
- linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Keyrings: How to make them more useful
-Date: Thu, 12 Jun 2025 10:10:34 -0400
-Message-ID: <D33BA76E-E2D3-42C8-A983-A733ECD71CCE@redhat.com>
-In-Reply-To: <462886.1749731810@warthog.procyon.org.uk>
-References: <462886.1749731810@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rF1dgaeH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C053DC4CEEA;
+	Thu, 12 Jun 2025 14:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749737496;
+	bh=eVcT22CR6MUvmIdjYr3MtOpYN2U0aHt7Hy7WNsb7NkM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rF1dgaeHPS7gQ0UjeHj1ioH3nZys3BESMWp2LfjYJNHYhw5M9lc1TIihF5xWfoxXK
+	 5iCWIOSnDgcG+jFBZDdO0ywovQxdgyD7ph3XLqnazH6rknAxTxP8K/DoxpW0iUCIW8
+	 HYWkSEUH5+jJM8bJ8ntZOqzFEJUiYia5B5ISrRg7X09jz4efh2nPXP3mUQuJ7Tuw25
+	 WxRLc7225gaD7Ey274985yUp5TX2VKwcrrwlvvZQotqll2x9vGDLT+6Oo4iRlq90q1
+	 1aCGQKjoVi17yK7bFTJAnCP4/sHsroEyROlll7hzgeZrF7mcpnI+EhpKvTSxERiPrg
+	 oA60e9XLjelIA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uPieU-006GX7-24;
+	Thu, 12 Jun 2025 15:11:34 +0100
+Date: Thu, 12 Jun 2025 15:11:33 +0100
+Message-ID: <86sek5cane.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Luo Jie <quic_luoj@quicinc.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	"Nicolas\
+ Palix" <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton
+	<oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	<linux-kernel@vger.kernel.org>,
+	<cocci@inria.fr>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>,
+	<andrew@lunn.ch>,
+	<quic_kkumarcs@quicinc.com>,
+	<quic_linchen@quicinc.com>,
+	<quic_leiwei@quicinc.com>,
+	<quic_suruchia@quicinc.com>,
+	<quic_pavir@quicinc.com>
+Subject: Re: [PATCH v4 0/5] Add FIELD_MODIFY() helper
+In-Reply-To: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
+References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: quic_luoj@quicinc.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, Julia.Lawall@inria.fr, nicolas.palix@imag.fr, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, cocci@inria.fr, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com, quic_leiwei@quicinc.com, quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 12 Jun 2025, at 8:36, David Howells wrote:
+On Thu, 12 Jun 2025 14:46:07 +0100,
+Luo Jie <quic_luoj@quicinc.com> wrote:
+> 
+> Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
+> macros. It is functionally similar as xxx_replace_bits(), but adds
+> the compile time checking to catch incorrect parameter type errors.
+> 
+> This series also converts the four instances of opencoded FIELD_MODIFY()
+> that are found in the core kernel files, to instead use the new
+> FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
+> the script field_modify.cocci.
+> 
+> The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
+> 
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 
-> Hi Jarkko, Steve, Chuck, Mimi, et al.,
->
-> I think work needs to be done on the keyrings subsystem to make them more
-> useful for network filesystems and other kernel services such as TLS and
-> crypto.
->
-> There are a number of issues that I think need addressing:
->
->  (1) One of the flaws in the initial design is that whilst keys have a type
->      (which is necessary), this has to be specified as part of the lookup or
->      the search, which is overly restrictive.
->
->      It probably would have been better to search by description alone and
->      then, if a key is found, have any type of key with that description
->      returned and let the app/service investigate the key to find the type.
->
->      Now, this is still possible to implement on top of the existing API: just
->      allow a NULL type to be passed in - but we might need some way to
->      enumerate all the keys with that description, but of different types.
->      Possibly, the search function should return all the matching keys.
->
->      Possibly, within the kernel, for each keyring, all the keys of the same
->      description can be stored within a group structure, and the search
->      returns the group.  This could also have the added benefit of maybe
->      making it easier to handle updates.
->
->  (2) For certain applications, keys need versioning - and we need to be able
->      to get access to older versions (at least to some extent) of the keys.
->      An example of this is cifs where (if I understand it correctly) the key
->      version gets cranked, but not all servers may have caught up yet, so we
->      need to be able to try the keys in descending order of version.
->
->      This could also work within the group idea mentioned above.
->
->  (3) For certain applications, such as AFS and AF_RXRPC, we may need to be
->      able to keep a number of keys around that have the same description
->      (e.g. cell name) and basic type (e.g. rxrpc) and version, but that have
->      different crypto types (e.g. Rx security classes and Kerberos types, such
->      as RxGK+aes256-cts-hmac-sha1-96, RxGK+aes128-cts-hmac-sha256-128 or
->      RxKAD) as different servers in the same cell might not support all or we
->      might be implementing a server that is offering multiple crypto types.
->
->      So we might need a "subtype" as well as a version.
->
->  (4) I think the keyring ACLs idea need to be revived.  We have a whole bunch
->      of different keyrings, each with a specific 'domain' of usage for the
->      keys contained therein for checking signatures on things.  Can we reduce
->      this to one keyring and use ACLs to declare the specific purposes for
->      which a key may be used or the specific tasks that may use it?  Use
->      special subject IDs (ie. not simply UIDs/GIDs) to mark this.
->
->  (5) Replace the upcall mechanism with a listenable service channel, so that a
->      userspace service (possibly part of systemd or driven from systemd) can
->      listen on it and perform key creation/maintenance services.
+I already indicated that the *pre-existing* set of helpers are enough
+for what we want to do, that we *already* use them for KVM/arm64, and
+that I didn't need nor want two ways to do the same thing in the same
+code base.
 
->      From previous discussions with the systemd maintainer, it would be a lot
->      easier for them to manage if the key is attached to a file descriptor -
->      at least for the duration of the maintenance operation.
->
->      Further, this needs to be containerised in some way so that requests from
->      different containers can be handled separately - and can be
->      distinguished.
+My opinion hasn't changed on that front, and I don't see a point in
+these patches.
 
-Indeed one challenge on this front is configuring how to stitch together the
-various callers and recievers especially when one wants an upcall from one
-set of namespaces to be serviced within another.
+	M.
 
-I had previously posted some work in this area that fleshes out the idea of
-a "key agent" which is a userspace process that can receive a notification
-to instantiate a key.  The nice part (IMO) of this idea is that the keyagent
-is represented by a key itself, so the channel is available to any process
-that has the keyagent key in their keyrings.
-
-This allows a system to have a single keyagent for all processes/namespaces
-for a particular key type, or to build a more granular configuration where
-agents are confined within the same (or different) namespaces as the calling
-process.
-
-I'd be happy to continue work on this front, since long-term it would allow
-us to convert various NFS upcall mechanisms such that NFS access within a
-container wouldn't require duplicated gssd/svcgssd/idmapper userspace
-processes in every container if all the system needed was to use a single
-global instance.  It would also allow the partitioning of secure
-cryptographic material (like keytabs and certificate secrets) from
-containers that might still want to use NFS, but not divulge those secrets
-to the processes in that container.
-
-Ben
-
+-- 
+Without deviation from the norm, progress is not possible.
