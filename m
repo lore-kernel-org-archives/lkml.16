@@ -1,104 +1,108 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47794229B36
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC36E223714;
+	Thu, 12 Jun 2025 11:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749729120; cv=none; b=VvXOVz9JbDbRdcRTPViwImTahWBoIusiV84L0CXxyGD2rFuF2OpMW7zqobu5WZbxNVICGAQf4XOttS+Q2xMMfy1kqqbU2MjZu5/4ELcAvQCJwJHjqruAy/9IqpncWelnEW95TPzbmcUU802GskOuXnL+fs4G20ShKVCgSrborho=
+	t=1749729190; cv=none; b=P3ce2zamQseWRCxHkKXZAFmdCterHSX4bPeQ1DAHpyZsXz10UVqGDfZv8cvJfwVHrQtL8IwGhcgehGrfqvSB3j8oUhWeFd2/zm2gYs6E5fxL4B7NUhcpORMgjW6MMf/yRh/4baV8jOBMHKiO51r1VhHjCLAil23o5yBelDa5r2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749729120; c=relaxed/simple;
-	bh=rpaoB6Kdgo30xP8EggVBx+Midw7SMjcJzLqwV3FyulY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JsG+3rMErT0IGydgzc9fpvDLL8iVRamauBGK9Cg9RkGwbDhCcwH0rLFPTdaBxb/nhioKz+TMkeBe7OT2NLVP1RIOJfG5Kj6oJqqXNv8KVcGfKKZlkrzESVtX9eguNtDlUxLT4Z0C5AXy0wJh3bJChrSIT7y1c+Qckc4iaGQ0HSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ojci9aEQ; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ojci9aEQ"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-450d9f96f61so5489085e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:51:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749729118; x=1750333918; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LAzmGILo7rrIxQG7aEQAZf7smERdqkspR5utlYUtpd8=;
-        b=Ojci9aEQrBh485tfzv7GvvIhoDv/t9jkNfNwJ+/O8qwZ2LMc9AsO5CRjTezdP5Oz2F
-         PF51PX+X9OcfVLAUkTInFwtES4lndDA0dv5B4zYjml0JaMhzHK0r5Zunp2NfBqkheyc7
-         g/cQxfsO/Zjo08dXZIqzKdmQlMgl8Eg7DQ9zgPQcqCfoOTd4NZDgjxdg4n2kSazJ3b09
-         xsN3+OCDhHcTX2o9QypyoldVZnAS9r+qAqehn+0r45I+uceJPC71OeVVsrWn7sUGaq3a
-         IeiHj1O13UwlHGNvFyNuLjMy0/fZ2fBeHS02XWIZNP6W/zbOW6oNvG8Vh9A/ySUkdsyq
-         KyWA==
+	s=arc-20240116; t=1749729190; c=relaxed/simple;
+	bh=0kfKlgvUsAZgSqo7xmBv1o0xetRmC38w/qWeXk5OQPw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jA0FMpywMNtwpT1MuDZkAZDkfwx29iJ6TxlMj7ojiuzVKtLCC29NHr400z9XkRxa7D906yJi1hjeKKdUboUp1Ld0qDPdv8U2gWRdEgsJKNeW1Xvz+xRW34tYMRGtq1WkJ3m1ymQm7R70alJdDTyPVc0S5inmErJMQzE8QIlIC34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-87ec9a4c86cso272767241.1;
+        Thu, 12 Jun 2025 04:53:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749729118; x=1750333918;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LAzmGILo7rrIxQG7aEQAZf7smERdqkspR5utlYUtpd8=;
-        b=W9/+oMgkvRYAhLA9lOf58S9NOmWlZYw8rs877XajmIJvzZiJUPaD2BQnj2FW82YJJu
-         SP2nyuy7g/m4LYz13oRKG0ZZTKMpAw7QrsPa54NaDoMWuPMwZjnfmSXKDG3Nyp5PFjxn
-         SlpEWcVSLVMqAVt2kx69bdV3//8x4ZJRbRYlWBpSQMxamtcdxx+fC26s0du60OQzcj2U
-         to6lO2c7QMyaXQ1QdCfyi6nbAHCw4zawA+ozuj73RxdROb3VsjzhrrSd45XF04hP8A09
-         4/pvzbnUoAhDTPC1UWuNZoITNBQbZ57DZuicBEqlaXZYBKGag4p8DQO0z0BcWy0uKpWI
-         U8GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWV+K2e3NOhYo/y16Eu4nKLNf6DxsY7SzHHyF3yhNHyLiJqQt+bd2bnph/CSMvv/P2zIXxDDeaeOGjXmkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0RcYOWHaugtq/CHZSy6dB8UOXYU3LhAXBtB7sHjOwTpiFR2Rs
-	sMKZQhoQAOZ6BgVDKNUTHm1Yl0oOw7tDRMSlw/rGfmFsAxzkFqUcovn3YbbK8aSCEB2D4lPJyGv
-	+0mS3lQ==
-X-Google-Smtp-Source: AGHT+IEsZKWdgHnANRx2ktnzmqvZGLXgx1+Ck47ZJza7y/Io0sU2Wnsif1R3hfmp7+yITN1T3BAdCVc/W1Q=
-X-Received: from wmbei22.prod.google.com ([2002:a05:600c:3f16:b0:453:99d:39ff])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:6304:b0:442:d9f2:c74e
- with SMTP id 5b1f17b1804b1-453248cadc7mr58292805e9.23.1749729117681; Thu, 12
- Jun 2025 04:51:57 -0700 (PDT)
-Date: Thu, 12 Jun 2025 13:51:55 +0200
-In-Reply-To: <20250602.ko3thoc7ooL4@digikod.net>
+        d=1e100.net; s=20230601; t=1749729187; x=1750333987;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M5+f4CN+jVU3txnndL4whXnDARaGczHhcy3QpZ8lwrA=;
+        b=eNC+rHSj+yJOau1Ovf3eWxxWeA3oJmTl6eoM0vNIcs0WXY8PQ9+hTauZcH92iIV52z
+         K5l7eJ21wYP0VaZ3kaOplZjsF69wO4XVy+DbySzPKbiaMmFkNJIsu6btxtDe//Vjogk3
+         O7lG5b041ZVB4RORezGwSXCHutK3GnyUl9J8Pvr/sfssR9jdoHbbmtUh34ZPBbNEJqj1
+         sMpg7IIoshEKO2OvaMccYhtYbYR0m8cw4ZU733nbhVEBTmBIGakHhHRewhRii2Qtajq+
+         BpSrs9q98nlbCK67XX6FTV3X3IVoH9pcEjIBqi+6ZDeVAkb0Ge0XXZrhBb+1zpOGUeEL
+         TGYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUi01t1UGhXHbXGrhGjngfuBRelCUwTaDG5qyBjtayGRI+7E3MbEM04LpoP5KAocOk1fk2RyDd+HW8u@vger.kernel.org, AJvYcCXKqLTh+8BvFBDjJkklMwNgFknHCSd2Ns+ziO2H7x+y/Rht6gfRyBbSiW6E27QpthaOVnD41/aw1UQIUrVc@vger.kernel.org, AJvYcCXa4fECxont+JLEmHtPK0i1CAt00eFXElXJiW0CD81dL34GVl8ttGOjcqYHO808qZj5FjzrLuOamF8ovrmYcjEsVwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxnbP6WBfcpsLV3JEz3PTC61pCKijmH1pqkpUg76w3OJwJ93nZ
+	PgPoaWyVTFH/U4mHUoNkq8wLOguTSLDkp+8/OJkCmvd+HVpQ2XH/yuNgybLcyImg
+X-Gm-Gg: ASbGnctA5fUj2MZ06sxMohrNGtqjuz+Wqqj0iKqe+nwcjM0z9Iuo5RJ/uVFT76eOraT
+	Dbkz7Kq3PUDUuypnrtRuKumYfYEDtqhXDMc9F5VaxyCkIRZUQFHKm9IBhuAIzUvJDJk9ArVfiyN
+	MSej3vpuk7df+wWGHTZn1DH0fz8ioh8wdZh1Dq6hCgniQ033wCT8sWUf0DdkraP3leI7Jcydrd5
+	mw8QE3B1PpIHqTXEPRahVbmnPeZ6LD2yD+RVOg0W+q0kQ+stfQr4lckaeq3t9/rn8fCXnvmQ28z
+	q3HlfrzMRTpskfT2zAIxxSGQ7HfC9zxIXb0EGbeaA0wAxqBViFthk3/xrn5kRScnh0odkUesnA4
+	am1xPSW3fjV+uW4YgjQyTD7yD
+X-Google-Smtp-Source: AGHT+IG+xO+Qsqi0oEowhGM8ywgOudIo1KC4cbkn0lyjp6j+CR98tc7oeOw6qm7QQiZnsOezAlJLnQ==
+X-Received: by 2002:a05:6102:b09:b0:4e6:f8b0:28da with SMTP id ada2fe7eead31-4e7baf1057amr6678639137.11.1749729186524;
+        Thu, 12 Jun 2025 04:53:06 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f01350348sm256879241.22.2025.06.12.04.53.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 04:53:06 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-87f0ac304f0so18342241.3;
+        Thu, 12 Jun 2025 04:53:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUatpkqM6IDKYdImtpuGEJiNkfDxVCDXiLO6MCHnOzJOWtGdvisLIh+bXBoNhAk+XUoGZSEeTBNczE6@vger.kernel.org, AJvYcCV24HpPX15DFyZyxExV24Yp1Y7r+A730OSRTMRf2KloNPDoqGT3cJc9T+Aa3KnKDVMrD2t85tmYXVj2OaCyzHIuPY4=@vger.kernel.org, AJvYcCW7VDa6SKzTD3QFfLs1/DUOB5YqnmqVAOZab8mUhNe0Jc6L2E/nOz/EOCaxhG37SoH5BBYqEKmtE/ZrBjd7@vger.kernel.org
+X-Received: by 2002:a05:6102:504f:b0:4e2:c6e4:ab1e with SMTP id
+ ada2fe7eead31-4e7baed2177mr6031205137.7.1749729185967; Thu, 12 Jun 2025
+ 04:53:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250228.b3794e33d5c0@gnoack.org> <20250304.aroh3Aifiiz9@digikod.net>
- <20250310.990b29c809af@gnoack.org> <20250311.aefai7vo6huW@digikod.net>
- <20250518.be040c48937c@gnoack.org> <20250518.xeevoom3kieY@digikod.net>
- <aDmvpOMlaAZOXrji@google.com> <20250530.ozeuZufee5yu@digikod.net>
- <aDncH8D9FoyAIsTv@google.com> <20250602.ko3thoc7ooL4@digikod.net>
-Message-ID: <aEq_IAsYm2wFjA0c@google.com>
-Subject: Re: [RFC 1/2] landlock: Multithreading support for landlock_restrict_self()
-From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
-To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
-Cc: Casey Schaufler <casey@schaufler-ca.com>, 
-	"=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack3000@gmail.com>, Paul Moore <paul@paul-moore.com>, sergeh@kernel.org, 
-	David Howells <dhowells@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	linux-security-module@vger.kernel.org, 
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Jann Horn <jannh@google.com>, 
-	linux-kernel@vger.kernel.org, Peter Newman <peternewman@google.com>, 
-	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
-	Jarkko Sakkinen <jarkko@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+References: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-0-ad169a794ef0@linaro.org>
+In-Reply-To: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-0-ad169a794ef0@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 13:52:53 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVgNKgybzACevUkfuapayFZzYv4RNsARQD-RpFESc2hKQ@mail.gmail.com>
+X-Gm-Features: AX0GCFv5JDfZdCfj7ZSL6wZHfiPE35IHlz9ZS_abguFuvQn86KnzHH_gp-Y062o
+Message-ID: <CAMuHMdVgNKgybzACevUkfuapayFZzYv4RNsARQD-RpFESc2hKQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] pinctrl: renesas: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 02, 2025 at 08:45:06AM +0200, Micka=C3=ABl Sala=C3=BCn wrote:
-> On Fri, May 30, 2025 at 06:26:07PM +0200, G=C3=BCnther Noack wrote:
-> >      As Jann pointed out in [1], the tasklist_lock and siglock are not =
-sleepable
-> >      and can't be used while waiting, which is why he proposed an appro=
-ach where
-> >      we retry in a loop until no new threads show up any more, while ge=
-tting the
-> >      existing threads stuck in the task_work as well (where they can't =
-spawn new
-> >      threads).
->=20
-> This looks good.  Too bad we need to block all threads.
+On Wed, 11 Jun 2025 at 10:44, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+> values") added new line setter callbacks to struct gpio_chip. They allow
+> to indicate failures to callers. We're in the process of converting all
+> GPIO controllers to using them before removing the old ones. This series
+> converts all GPIO chips in renesas pin control drivers.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> Bartosz Golaszewski (5):
+>       pinctrl: renesas: use new GPIO line value setter callbacks
+>       pinctrl: rzg2l: use new GPIO line value setter callbacks
+>       pinctrl: rza1: use new GPIO line value setter callbacks
+>       pinctrl: rzv2m: use new GPIO line value setter callbacks
+>       pinctrl: rza2: use new GPIO line value setter callbacks
+>
+>  drivers/pinctrl/renesas/gpio.c          | 6 ++++--
+>  drivers/pinctrl/renesas/pinctrl-rza1.c  | 8 +++++---
+>  drivers/pinctrl/renesas/pinctrl-rza2.c  | 8 +++++---
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 8 +++++---
+>  drivers/pinctrl/renesas/pinctrl-rzv2m.c | 8 +++++---
+>  5 files changed, 24 insertions(+), 14 deletions(-)
 
-OK, I'll take that route then.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.17.
 
-In my understanding, if we are already blocking all threads, we might as we=
-ll
-use prepare_creds() in these threads again. -- It does not cost us much mor=
-e to
-collect these potential errors now.  Does that sound reasonable?
+Gr{oetje,eeting}s,
 
-=E2=80=94G=C3=BCnther
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
