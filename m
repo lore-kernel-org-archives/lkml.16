@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2399D298CAE;
-	Thu, 12 Jun 2025 15:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC80298CD7;
+	Thu, 12 Jun 2025 15:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749741469; cv=none; b=A0DL6AA1lMMqbFV2uFviW+WowUwmsFkRSa0rRHXkw7cLDsjCszKlCe2eO35YmuErExamotOynDvC+sYtbQ6PtYKWesc84RPU0NIZ5za5IgFK04YIzUex8bsHV5aLQC39U3W5piwR5I9JqRtd8z4CBD4fKXtzYBU5j6TweILBcrQ=
+	t=1749741469; cv=none; b=XvJdAxfO91mAAT0x6MVZ7PV8/4repTb9SRw9k+HlHtHbgTUqsRSiGFVhP+9+xkvDzMmBtSr8dmfTAelMf3EtdCJzW/nXqvb1LUxVla/R0i0HxsoCXrgVYFDN5bLMYn5gfWWiZQ88ddh29ANR+vXX8KWDOJGvwMqtWCJ1gddnp7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749741469; c=relaxed/simple;
-	bh=qT0ATk/szMufp7pLg3EjSMU6UchGJC4t7yLc86gnlkI=;
+	bh=Ru70Z0gfk7r/ztNDvEUpiGKGD5w8V2rasl2zsjCvPA0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h3/oSXvL0s1KxcX+x5DitVdGoYDiY5kAe+iq6EQhgRHIEPyW6CH/t7B0X2F9/5ZOl9KxpspUHO0irYhUYfOHEEeN0xTMVd7v9qCSLANdxHZ0jrELJAkhXbYUW6RyurvByrn72kKrfBembDdDnZ+5MEUW9G3goK5n9dbE1ElZN8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMm5ZGn/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=B7ii/Q9p+qyQ7kLZqiuj7rAidSBdjvD86hl5kKNuI1JiDM4zTehmCE7GS9Pm0+dxALHIfljvmjRweJ4Guh5mSWR8MsbmLGqEU4WWt4VcFq6ThedB/UjYFYsjj8FdRZWSBECyOTTB/m4bs02duItdzvfpQMsjnKwio5KeQ/zzUT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnwk1gdh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMm5ZGn/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DB8C4AF0B;
-	Thu, 12 Jun 2025 15:17:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnwk1gdh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A065C4AF09;
+	Thu, 12 Jun 2025 15:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749741468;
-	bh=qT0ATk/szMufp7pLg3EjSMU6UchGJC4t7yLc86gnlkI=;
+	s=k20201202; t=1749741469;
+	bh=Ru70Z0gfk7r/ztNDvEUpiGKGD5w8V2rasl2zsjCvPA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BMm5ZGn/AmZQBiV1AtepxMTZ+psNJkv/PIYHRK2NhVn+nruCRVyJUkG4X1iTGUz6s
-	 ZVBCuaCY1NPB9kX/z98uWcBl/q2pEUEQRTizAlwMpKdFS+FFrpj9fjDRIKxJc2A3ZL
-	 6qQgGNd8dhbdMJuLbPmhjxMBeo7G+ws191ROkOUy25ZP3T1KmHU32dACYs10PLRv26
-	 e1GTzOQQBVnCx25rb6nW7yxKpkpF/la8mZAMA27G6j/gjR12qMs7FcSFfUDtdYCWhW
-	 +WmuYvzkPtcHb7MOWwBppA92i6DbyZcD4Nwp4YWz9/TfF+qkVwTMP8VT+UqnMWJfDM
-	 NpM7QPgavwzPA==
+	b=gnwk1gdhM/3kbf8HHrU5zzhlH6cnS2A81Xtk2CK4MJethML2GjTybiMCalB6rD6J1
+	 NNZulKG0y3Vc58Ul9XTmHOipZe6b9aw6+q1IHaQPWVgei06/q6JQuJWXlDIrS2xWel
+	 UDORctuaOCujSkInB0xcF56QjYvaLsG114CiNSW1/Lk0RtNnk+I7u61WD4Ke6uJd5Z
+	 a4POzcQTr28dT7PBgD++1WxFEg2O+mnns/9NzDYDo8ZBDADHT/whBDf93RUEb3wx0Y
+	 rWmCqjPyqY4a1lgf+LpTQl1dLyael+8vEWfniXfjpHJ8fSCVU+ZKjqupXayB5MXPt0
+	 XimEFSiXxnBrw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uPjgY-00000005EvO-3ZDo;
-	Thu, 12 Jun 2025 17:17:46 +0200
+	id 1uPjgZ-00000005Evq-17RR;
+	Thu, 12 Jun 2025 17:17:47 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
 	"Michael S . Tsirkin" <mst@redhat.com>
@@ -48,9 +48,9 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	"Zhao Liu" <zhao1.liu@intel.com>,
 	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v10 (RESEND) 04/20] Revert "hw/acpi/ghes: Make ghes_record_cper_errors() static"
-Date: Thu, 12 Jun 2025 17:17:28 +0200
-Message-ID: <e473bbd6ddf17e8b7d6868657a4c815af435bd25.1749741085.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v10 (RESEND) 11/20] acpi/generic_event_device: Update GHES migration to cover hest addr
+Date: Thu, 12 Jun 2025 17:17:35 +0200
+Message-ID: <8f07e0535b4b1d4ae11e643c1885b85f4bcdda6a.1749741085.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749741085.git.mchehab+huawei@kernel.org>
 References: <cover.1749741085.git.mchehab+huawei@kernel.org>
@@ -63,58 +63,62 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The ghes_record_cper_errors() function was introduced to be used
-by other types of errors, as part of the error injection
-patch series. That's why it is not static.
-
-Make it non-static again to allow its usage outside ghes.c
-
-This reverts commit 611f3bdb20f7828b0813aa90d47d1275ef18329b.
+The GHES migration logic should now support HEST table location too.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Igor Mammedov <imammedo@redhat.com>
 ---
- hw/acpi/ghes.c         | 6 ++++--
- include/hw/acpi/ghes.h | 2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ hw/acpi/generic_event_device.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
-index b85bb48195a0..b709c177cdea 100644
---- a/hw/acpi/ghes.c
-+++ b/hw/acpi/ghes.c
-@@ -390,8 +390,8 @@ static void get_hw_error_offsets(uint64_t ghes_addr,
-     *read_ack_register_addr = ghes_addr + sizeof(uint64_t);
- }
+diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
+index 7a62f8d5bca1..d292f61b4e41 100644
+--- a/hw/acpi/generic_event_device.c
++++ b/hw/acpi/generic_event_device.c
+@@ -386,6 +386,34 @@ static const VMStateDescription vmstate_ghes_state = {
+     }
+ };
  
--static void ghes_record_cper_errors(const void *cper, size_t len,
--                                    uint16_t source_id, Error **errp)
-+void ghes_record_cper_errors(const void *cper, size_t len,
-+                             uint16_t source_id, Error **errp)
- {
-     uint64_t cper_addr = 0, read_ack_register_addr = 0, read_ack_register;
-     AcpiGedState *acpi_ged_state;
-@@ -440,6 +440,8 @@ static void ghes_record_cper_errors(const void *cper, size_t len,
- 
-     /* Write the generic error data entry into guest memory */
-     cpu_physical_memory_write(cper_addr, cper, len);
++static const VMStateDescription vmstate_hest = {
++    .name = "acpi-hest",
++    .version_id = 1,
++    .minimum_version_id = 1,
++    .fields = (const VMStateField[]) {
++        VMSTATE_UINT64(hest_addr_le, AcpiGhesState),
++        VMSTATE_END_OF_LIST()
++    },
++};
 +
-+    return;
- }
- 
- int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
-diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
-index 578a582203ce..39619a2457cb 100644
---- a/include/hw/acpi/ghes.h
-+++ b/include/hw/acpi/ghes.h
-@@ -75,6 +75,8 @@ void acpi_build_hest(GArray *table_data, GArray *hardware_errors,
- void acpi_ghes_add_fw_cfg(AcpiGhesState *vms, FWCfgState *s,
-                           GArray *hardware_errors);
- int acpi_ghes_memory_errors(uint16_t source_id, uint64_t error_physical_addr);
-+void ghes_record_cper_errors(const void *cper, size_t len,
-+                             uint16_t source_id, Error **errp);
- 
- /**
-  * acpi_ghes_present: Report whether ACPI GHES table is present
++static bool hest_needed(void *opaque)
++{
++    AcpiGedState *s = opaque;
++    return s->ghes_state.hest_addr_le;
++}
++
++static const VMStateDescription vmstate_hest_state = {
++    .name = "acpi-ged/hest",
++    .version_id = 1,
++    .minimum_version_id = 1,
++    .needed = hest_needed,
++    .fields = (const VMStateField[]) {
++        VMSTATE_STRUCT(ghes_state, AcpiGedState, 1,
++                       vmstate_hest, AcpiGhesState),
++        VMSTATE_END_OF_LIST()
++    }
++};
++
+ static const VMStateDescription vmstate_acpi_ged = {
+     .name = "acpi-ged",
+     .version_id = 1,
+@@ -398,6 +426,7 @@ static const VMStateDescription vmstate_acpi_ged = {
+         &vmstate_memhp_state,
+         &vmstate_cpuhp_state,
+         &vmstate_ghes_state,
++        &vmstate_hest_state,
+         NULL
+     }
+ };
 -- 
 2.49.0
 
