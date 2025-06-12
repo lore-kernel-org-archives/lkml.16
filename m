@@ -1,114 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167E638B;
-	Thu, 12 Jun 2025 00:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83970A944
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749687295; cv=none; b=P2AYvGmxDNhDvNgyrC6ooZOmU3vzrnmg8BA2yHx7o+m02ijTLo1tH+lcofBSRM6g//tFta3+wmMn+NAf7SgVyU5ymIicdNDs/3q0A0ksHnQqSoWFyw5lm1R4iWQ98Tbh0ercDqfO1w4zUo7naQg9tzJZKqYiaXLRD/Rya8PPemk=
+	t=1749687406; cv=none; b=cbyhzbt7A4HRJJhZTlSiQ2urIdpNt8eVCCBeYkO72jzTSzZt0NRbTbI20wF1/NgAm+Kh1df2JJaKaOg3n69F3Om9mH6aO33doJwKcEbiEfNgUdg63DvfUVp6ryBGcqN44vSUeSs4E5W3CQLLeUMt4Iy83rHLf3id4JOCiVtXvZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749687295; c=relaxed/simple;
-	bh=3+i/qQYgvBYTLJ9rk46HeDginwQWUDS8zT4mmWEEUrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tsZnLWSNpCQcEcnUR0vj3YW/MfN8vpzA4MzWnjEk7yvZrK6HQDH+j9qyiyiGKV0lfA/+Egv0eftK/Zkg3YqhCkAOJo1OWhzktpLZJJXfVeSdmnUj5YTP99S3TpaZ6lZ88uOq2KEvX0PeHMuLR297q3lirxkgVkxT04K+66nrkFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XncBIGu1; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749687406; c=relaxed/simple;
+	bh=qj5QS2sbbirxTbrQqn6si2l3oHZHSHeaoydlOC8MmRg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JAK+FOye8nZ+4M/G1vIg5waE29L55++Nx0NdG2lKKvsM2Ttq/xiGs9iP0WwEDiTXIKRqc529ZGFquFTgs/N2Z/jJ2UojVi04XPBvt5HDHQo0egPhEdhjYQ58eV97OJLFuFd1uknxQpy0UKK2LXIZvBPjZrk3Md/dib09WXeKnUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xiZRkSpH; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XncBIGu1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749687293; x=1781223293;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3+i/qQYgvBYTLJ9rk46HeDginwQWUDS8zT4mmWEEUrE=;
-  b=XncBIGu1SREir3faycrrnQsT4ZjGpxzPRFdmSwRKqFmPWKl9SOg6EGq2
-   zupDldq756YW5ol87VGNm2/fIn/dV1s8h63tNh2wNfPTDUK0sJhsub86O
-   f/qn5IET3c8+/CxxWc3AqJ9simrY+Tw4ISofZ+Fi0ZPnSSR3oZccgqVpG
-   7+BtpjBdtajkf32XZl3+4pI32oNhKsPNrlJH1z6FadI55UHuckoYeS6a8
-   7qCem+QPxgMq+qrtUBnUv1z+diYkScGMF3ncnCzkBn7tHU8WsKC4OxCVH
-   OQjEoeTum0OPWXJxZqGn1oKeIDCt8qd1sSKGiU/sjAhKTFwn25X5MKNwN
-   g==;
-X-CSE-ConnectionGUID: 4AIsD6q7TnWHZWg/j6D5DA==
-X-CSE-MsgGUID: Z4TUn9f5TVC4ktVZoNGnoA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51727344"
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="51727344"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 17:14:52 -0700
-X-CSE-ConnectionGUID: 1f0u85CwQt2U7n5U0sxH2w==
-X-CSE-MsgGUID: +x7J175lRBSblLkppAz+cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="147842871"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 11 Jun 2025 17:14:47 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPVae-000Ax0-2r;
-	Thu, 12 Jun 2025 00:14:44 +0000
-Date: Thu, 12 Jun 2025 08:14:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev,
-	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Simon Horman <horms@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Lei Wei <quic_leiwei@quicinc.com>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Michal Simek <monstr@monstr.eu>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Robert Hancock <robert.hancock@calian.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [net-next PATCH v6 06/10] net: pcs: Add Xilinx PCS driver
-Message-ID: <202506120722.o7HB1e60-lkp@intel.com>
-References: <20250610233134.3588011-7-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xiZRkSpH"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so71675ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:16:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749687403; x=1750292203; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ylgnLawNJtAmWY8kEGaV0f6rcg3R6c6dxmduNdDWPkU=;
+        b=xiZRkSpHQgCR+sCWBnC600hQR8R3Dk4lDmWaaEbz0RaoSaDhYNuT2lTQFkxLg0lSp3
+         SbrlQ6FkkXC4uuwx4j2KSkbE6lCsRrbmrfZRPgvcjn56GYk/yXdiuZlVH+kpoW+Mw0Mm
+         PljmKmn2aMk6pEvbxGa8jpxMddCW1cy3HD2BXbgsPq6BcUe4skOOT/eUbRMjY6yRhb41
+         n18X6nTizv9AVITIiCCzdcw7M3SBGme/5mh3I7qKr2pdGSRaMEI6GTZ4/j7GmBWI5Jlw
+         kd6TCXp/qOZ0MdJqEFRDObX/nHCtlr0HeIW4055j1U0l6MFMlJCabapOkF5bDgsZPZRB
+         5qWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749687403; x=1750292203;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ylgnLawNJtAmWY8kEGaV0f6rcg3R6c6dxmduNdDWPkU=;
+        b=a1w+9XIRG+cBwvjL0WnW0wgx3jC37bR1QzlGeYa9zQAKrTQ/RVGcsoZtAEieQI139E
+         IZ7PR9cHx7o9KzXnQ+/Uv4xJMr9eO1D9wy0KbPbEliYIfnGHzs08IS7iCDythpf6Wzbj
+         G5mRKTx4W1n149vuV85zgcR7YKfSq21sWNQzKzPQLIRsMTrHzMTeWlb44bPr0wh4i7GB
+         KSYxgW10Wn7MF+UrMWalP1WPyuf4/JYiiQ42aj9K6IboWjqwOId5wtd4k8uJMlUQBGMJ
+         LNe6nzN1lg5xGKzqVQeptrnOp1RiZUzjphqGS89CpyTp2pM3qDvibfEBkwqcTuebxwaG
+         oUDw==
+X-Gm-Message-State: AOJu0Ywz+5mnds/IEEkuM9hN0n99xj7f8E+TZg1cKPSbf/Xd4QtRMBYh
+	gJ6suSu3xCBUF+LZLdjwVkenPUfSyslUj7YCe/QkT2irjH/bx2q5UQ1CD3d2RJXeGrJfPfnYqT1
+	LSdayeWVqa+wL9cMVps74d/+V+dUfvY2izaRUAn/K
+X-Gm-Gg: ASbGncvu173V94hgjSc2iUfjBymTZv9Q1LHPW4t0SaQAWGtY5LvN6dolmIjpeUm8w3S
+	ZPfIaYCtZQ9DQk7+fEdE+h7O8AlIqQ9TN/neQjocfJwWKRh1epnlpZDDQW0oG8eEKB952/LCQGo
+	8jIvgBqB1SVQxAeKYOYyyhCtbM8naXwzai/MZ4MpsE3apM9x8AZeeRa8MrzGOMRVo1JeevxDg4
+X-Google-Smtp-Source: AGHT+IFFcHIvBuqmgSE8wSBCUm8XGGpkfpTJdDVqXFDwoXNq/Q70MgEkXqSf4ahaHQUelFlcvAvQ6A0sy2wBSPYE17A=
+X-Received: by 2002:a05:6e02:2181:b0:3dd:f68c:87ac with SMTP id
+ e9e14a558f8ab-3ddfbefacf6mr458965ab.7.1749687403304; Wed, 11 Jun 2025
+ 17:16:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610233134.3588011-7-sean.anderson@linux.dev>
+References: <20250611233239.3098064-1-ctshao@google.com>
+In-Reply-To: <20250611233239.3098064-1-ctshao@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 11 Jun 2025 17:16:31 -0700
+X-Gm-Features: AX0GCFsp_xt0KJi2mHuIfKsQiSrIqRQayI46uKJ3vfOt5OcTrM91v8bQ6KI35rI
+Message-ID: <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
+Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sean,
+On Wed, Jun 11, 2025 at 4:36=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
+>
+> Follow up:
+> lore.kernel.org/CAP-5=3DfVDF4-qYL1Lm7efgiHk7X=3D_nw_nEFMBZFMcsnOOJgX4Kg@m=
+ail.gmail.com/
+>
+> The patch adds unit aggregation during evsel merge the aggregated uncore
+> counters.
+>
+> Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
+> cpumask=3D"0,120"
+> Before:
+>   perf stat -e clockticks -I 1000 --per-socket
+>   #           time socket cpus             counts unit events
+>        1.001085024 S0        1         9615386315      clockticks
+>        1.001085024 S1        1         9614287448      clockticks
+>   perf stat -e clockticks -I 1000 --per-node
+>   #           time node   cpus             counts unit events
+>        1.001029867 N0        1         3205726984      clockticks
+>        1.001029867 N1        1         3205444421      clockticks
+>        1.001029867 N2        1         3205234018      clockticks
+>        1.001029867 N3        1         3205224660      clockticks
+>        1.001029867 N4        1         3205207213      clockticks
+>        1.001029867 N5        1         3205528246      clockticks
+> After:
+>   perf stat -e clockticks -I 1000 --per-socket
+>   #           time socket cpus             counts unit events
 
-kernel test robot noticed the following build warnings:
+I wonder if there is a better column heading than "cpus" given that
+these are imc PMUs.
 
-[auto build test WARNING on net-next/main]
+>        1.001022937 S0       12         9621463177      clockticks
+>        1.001022937 S1       12         9619804949      clockticks
+>   perf stat -e clockticks -I 1000 --per-node
+>   #           time node   cpus             counts unit events
+>        1.001029867 N0        4         3206782080      clockticks
+>        1.001029867 N1        4         3207025354      clockticks
+>        1.001029867 N2        4         3207067946      clockticks
+>        1.001029867 N3        4         3206871733      clockticks
+>        1.001029867 N4        4         3206199005      clockticks
+>        1.001029867 N5        4         3205525058      clockticks
+>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-net-Add-Xilinx-PCS/20250611-143544
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250610233134.3588011-7-sean.anderson%40linux.dev
-patch subject: [net-next PATCH v6 06/10] net: pcs: Add Xilinx PCS driver
-config: sh-kismet-CONFIG_COMMON_CLK-CONFIG_PCS_XILINX-0-0 (https://download.01.org/0day-ci/archive/20250612/202506120722.o7HB1e60-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250612/202506120722.o7HB1e60-lkp@intel.com/reproduce)
+Tested-by: Ian Rogers <irogers@google.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506120722.o7HB1e60-lkp@intel.com/
+Thanks,
+Ian
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for COMMON_CLK when selected by PCS_XILINX
-   WARNING: unmet direct dependencies detected for COMMON_CLK
-     Depends on [n]: !HAVE_LEGACY_CLK [=y]
-     Selected by [y]:
-     - PCS_XILINX [=y] && NETDEVICES [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  tools/perf/util/stat.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 355a7d5c8ab8..52266d773353 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct evsel *e=
+vsel, struct evsel *alias)
+>                 struct perf_counts_values *aggr_counts_b =3D &ps_b->aggr[=
+i].counts;
+>
+>                 /* NB: don't increase aggr.nr for aliases */
+> +               ps_a->aggr[i].nr +=3D ps_b->aggr[i].nr;
+>
+>                 aggr_counts_a->val +=3D aggr_counts_b->val;
+>                 aggr_counts_a->ena +=3D aggr_counts_b->ena;
+> --
+> 2.50.0.rc1.591.g9c95f17f64-goog
+>
