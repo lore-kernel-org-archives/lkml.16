@@ -1,98 +1,213 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF5B19DF9A;
-	Thu, 12 Jun 2025 14:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235AC1C68A6;
+	Thu, 12 Jun 2025 14:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739772; cv=none; b=TQ5o89py7xDM2rAUH4LpDGR3PCH3vHfvKWjar1fOUBHZSjtxHPSCylXuFeCxKeDcQ55azFblb8t/Jdd1jA2HGdTYB2wbsbmZG1Cca5s492+6WQOekCPADcWptpyXn1QfxCh5FckRNhdwipzVa7G29XXZbiVOyd3C+BnudMf+oeU=
+	t=1749739794; cv=none; b=vCH80jUnNbF0Ewxfi1Hagoxcb94Iob8Og6l9d4DnARFcmdZuyXG+QOBvWu07dXOwk0a1FIe2kfp0ViLforbNI+84lK8mlRNZm1R11z60sns/K5Nb8q7/nZd1xdDAOHUeE+PaKXe2Gw5nerVO45Qmox47L552yCEl8mSwRjI3btE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739772; c=relaxed/simple;
-	bh=2ZertXQqA431pXbmfY4GDumWZtR6wULFf8L3AEAO8rM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QGROpGplzC5Bfb2EWIazmjqg0KY0wgbUP+BFzj9Sps5z9xNGowYtc4JdeOB9caqWzWyRxS7iRo44vzkO+06y5VgSXYN7EXhtcQ4pcTJSN+Lmaig9VFEWgCYYhJUO+rUT8m4m3KolX9+zsGUTTJcSOb4Q8mhZY3fnwMp+lmYFfpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-531341d339dso178748e0c.0;
-        Thu, 12 Jun 2025 07:49:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749739769; x=1750344569;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NBzo5c2eHQJ4UmDLe5XXuGLhcnXVF2196yaOopFMfv0=;
-        b=pqNOihS2Pqh/9TRoqV7QbUb+bRiUhtK4KdnHvS03U2t/C6nHnYwkCAYR3IAG8vMEmC
-         R8VM5hX6E8VD6W0b2wTjJyHv9OB98p4xTDZMvIZbDmPg/9DI8SdYmUkcNtpMbVVWyPVm
-         dfWPNPkYEhWuQagMAv2Lj0Y4V84Zo3mMvF8pbc+xNdynmjoXtv1bMV9cJERMteYO3C4O
-         vdGfTtHDAUD7qxeG2T6wUgdetIPvaBdbwmj9ni5goFJz+9j5Kgrw7sz8GVAGFnGb3PV3
-         q0ezjG3/MYCKGNhaRw2Mtg+SoFWD+9NwJ2fBLYm+aAGkkF1Rb91qBIlimdCGozimmATS
-         5Awg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMrZF2cgbbKgpvbamNhk47XeuHW7byFVPWk3ey0zSRRwQdOfa1NnjatSlEdBkQL5kpZ6z4dtdYVNfR@vger.kernel.org, AJvYcCUj2FDy9E7Z//XVgq8TH/6HU4neRyuFXPzZ6sVmaWWSDj7RqztpTjJUvoBIIQqCm8m+ItWtJanEl36NLJiCPxdOFw0=@vger.kernel.org, AJvYcCUlO+b6Qj+PPbAOWUxAxjlMXovuak4mWUgW9aP/N39nxCPUWIKWHk3X1WVeKkgGi/qjPZY/l4EtU4k5ESfE@vger.kernel.org, AJvYcCW7KnSFMKDrLg0kXjbnw9Iy9kiQzZ+QzOIC6McgrvUwa7qVqp3PJv7gFcrdeOPzAXarZeguwoUVjenR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3RnuNSkGNZCSoXQDD20sgon89hqI/kwgGiP3OoJpzK/bYtlhD
-	rVO/Aj8fdC0fJFiSnGLCLCbYEA9dgXgh/twxxMLc4ZcnW/r60Ko74ymrSTJtBM0Y
-X-Gm-Gg: ASbGncszOk226Xv5biiKojUQhqTOB8yzv4Gi5wqRHP8Bs4Y2Heb3JPpDDxz+0q8Zw60
-	q4f09mGqFNPmH1JtuGS9Y1LgaJBFfHwK3W+mwezdu7leLMnnL4LezpYiwCvdxvhLEp4d0aEZZvg
-	9jCZtJlxi0LnLB1C5FW+jpM11HuD+qJPLjUGhkwd9TIQ+heGTjcJXxLRsDlY4cuGzH9pvSCS2JR
-	5cbDBcv/8kej+4UgYcyixZm/xws7gByinQy6RLFlm4Egb/4rmoRcgk2ylL46tubx/MpcxadePZM
-	WJcBFx90CBn1s4tjHDUUzCDuhcg3SEPn9nb8AT3mvrLzviq6KiZD22aQSMCp6ZAGsw5zFjs1+GF
-	ztHIf2Ieksdiu9QX+MZ7IXr52HFbb
-X-Google-Smtp-Source: AGHT+IG6FCabMPqa5gDFT4SapTYACCrrvG2cjeoN5OVOFPidto9Q5HvhaGYw4d9+mfNfqUjy6UKbBw==
-X-Received: by 2002:a05:6122:da9:b0:531:2413:ce62 with SMTP id 71dfb90a1353d-5312cf19905mr4022816e0c.11.1749739769196;
-        Thu, 12 Jun 2025 07:49:29 -0700 (PDT)
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5312f651547sm312041e0c.22.2025.06.12.07.49.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 07:49:29 -0700 (PDT)
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-53125ca78b0so363782e0c.1;
-        Thu, 12 Jun 2025 07:49:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpY8gNH0tvlUuGQiztU2Y6o840aHcf15/PXi+NuWppKlDz0YqxCeP/PQutbMwfaFme/vfwZp7vRXwXgolKA1IzrRw=@vger.kernel.org, AJvYcCWEafgFeMhYJJ2r2C0InAcHW7wQ8KQmENJUY0mtGkB2I3jj3i7qAwjRhXsymZglaVq5+75hv0kasQCG@vger.kernel.org, AJvYcCWbl6AOjqDjeK9fw9O29Ctspdfe6nFbgITapmrFWuXqH2KEdObdDX5HFeeR8knAoB8CHkOUIumX0y35@vger.kernel.org, AJvYcCXG/2U+1aE8JawFuQ8foGZEfoNRJk9+ttP35UgrmSeFK82lRGjrI+VXychRGNSMkhKjx5JLHIzI5iudJuId@vger.kernel.org
-X-Received: by 2002:a05:6122:3093:b0:531:236f:1295 with SMTP id
- 71dfb90a1353d-5312cde4b2cmr4126676e0c.5.1749739768831; Thu, 12 Jun 2025
- 07:49:28 -0700 (PDT)
+	s=arc-20240116; t=1749739794; c=relaxed/simple;
+	bh=L/jFare2boLHM3Kq6L91Q4VeAxtvN/LGMzDtRx0819M=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ADwnIOCmovoHG6oEq+w6/C9C/njmyPdDcUQdOIJ3bUuAYzoZ/23aStVAyTcoJZa7Bek30G5tzGCnQS0EKVEoraZNLHVlZqi5YsY5ZPC3WMU4F8TU63Hes+lPuu5WaPbojy/iW3fYsX8295fyq6+fuJfLlkBjTMX81JRI/tzZ6T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/E2HA9s; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/E2HA9s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC4DC4CEEA;
+	Thu, 12 Jun 2025 14:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749739793;
+	bh=L/jFare2boLHM3Kq6L91Q4VeAxtvN/LGMzDtRx0819M=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=J/E2HA9s+Gv2XQt44E1rcH8TsrQ2039YhyGWKu4sI97tcsLJ5Xna7KWXQ8Z/c0YUJ
+	 xMmFvXktxdY/ialgAkjoNj3tv8c2qMeDxJ/FmAgKvbvEEISKvFBhTgX1Zsr185J+XV
+	 b3hNaY/pO/YSbYGCxqy/bBoeLFzXs+/KZxPUlBmJgngpqdUntJAjp8Dy+cY0yD8/Yz
+	 5gNmhVHJJz/4NqDy0YrtiIsYAV2wblXrPp+J5Ea0VTqaMpMnofBMxDiTbWBnoPidNK
+	 dZWsACxi2f+081VDZB+JPJLoSORN0qMr6ijHaACkuMUhp4gRgXZlY9ZUjjunNcN7jf
+	 rc7od4Q+pPR8g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250609203656.333138-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250609203656.333138-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Jun 2025 16:49:16 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXJvYFrj9ZX4Q-EOAZXC+P=SmNMfMZM9tbebYeiZKQYGA@mail.gmail.com>
-X-Gm-Features: AX0GCFt9BGU4-f86W1haNgpSZABnoAaeDYNvqzPOREPZOvb_CkRm3reF840XDAE
-Message-ID: <CAMuHMdXJvYFrj9ZX4Q-EOAZXC+P=SmNMfMZM9tbebYeiZKQYGA@mail.gmail.com>
-Subject: Re: [PATCH 7/8] arm64: dts: renesas: Add DTSI for R9A09G087M44
- variant of RZ/N2H SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Jun 2025 16:49:46 +0200
+Message-Id: <DAKMZL839IBG.1D43UR9NNWZSM@kernel.org>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
+ operations
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>
+X-Mailer: aerc 0.20.1
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
+ <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
+ <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
+ <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org>
+ <DAC2L6ZKR6U2.WOMERUJIOENK@nvidia.com>
+ <DAD9TNUBUGPN.1ED519FYR29U4@kernel.org>
+ <DADB6892Z31G.12LB1BVSGTEAQ@nvidia.com>
+ <DADKDQ1KGJJP.3T20P9V1D2PO1@kernel.org>
+ <DAKL0KOWUB1G.1DSJPRWFYC43O@nvidia.com>
+ <DAKL8NQBUGH5.Y8YJIAYDWL3F@nvidia.com>
+In-Reply-To: <DAKL8NQBUGH5.Y8YJIAYDWL3F@nvidia.com>
 
-On Mon, 9 Jun 2025 at 22:37, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Paul Barker <paul.barker.ct@bp.renesas.com>
->
-> Add the device tree source include file for the R9A09G087M44 variant of the
-> Renesas RZ/N2H SoC, which features a 4-core configuration.
->
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu Jun 12, 2025 at 3:27 PM CEST, Alexandre Courbot wrote:
+> On Thu Jun 12, 2025 at 10:17 PM JST, Alexandre Courbot wrote:
+>> On Wed Jun 4, 2025 at 4:18 PM JST, Benno Lossin wrote:
+>>> On Wed Jun 4, 2025 at 2:05 AM CEST, Alexandre Courbot wrote:
+>>>> On Wed Jun 4, 2025 at 8:02 AM JST, Benno Lossin wrote:
+>>>>> On Mon Jun 2, 2025 at 3:09 PM CEST, Alexandre Courbot wrote:
+>>>>>> On Thu May 29, 2025 at 4:27 PM JST, Benno Lossin wrote:
+>>>>>>> On Thu May 29, 2025 at 3:18 AM CEST, Alexandre Courbot wrote:
+>>>>>>>> On Thu May 29, 2025 at 5:17 AM JST, Benno Lossin wrote:
+>>>>>>>>> On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
+>>>>>>>>>> +    /// Align `self` up to `alignment`.
+>>>>>>>>>> +    ///
+>>>>>>>>>> +    /// `alignment` must be a power of 2 for accurate results.
+>>>>>>>>>> +    ///
+>>>>>>>>>> +    /// Wraps around to `0` if the requested alignment pushes t=
+he result above the type's limits.
+>>>>>>>>>> +    ///
+>>>>>>>>>> +    /// # Examples
+>>>>>>>>>> +    ///
+>>>>>>>>>> +    /// ```
+>>>>>>>>>> +    /// use kernel::num::NumExt;
+>>>>>>>>>> +    ///
+>>>>>>>>>> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
+>>>>>>>>>> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
+>>>>>>>>>> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
+>>>>>>>>>> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
+>>>>>>>>>> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
+>>>>>>>>>> +    /// ```
+>>>>>>>>>> +    fn align_up(self, alignment: Self) -> Self;
+>>>>>>>>>
+>>>>>>>>> Isn't this `next_multiple_of` [1] (it also allows non power of 2
+>>>>>>>>> inputs).
+>>>>>>>>>
+>>>>>>>>> [1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next=
+_multiple_of
+>>>>>>>>
+>>>>>>>> It is, however the fact that `next_multiple_of` works with non pow=
+ers of
+>>>>>>>> two also means it needs to perform a modulo operation. That operat=
+ion
+>>>>>>>> might well be optimized away by the compiler, but ACAICT we have n=
+o way
+>>>>>>>> of proving it will always be the case, hence the always-optimal
+>>>>>>>> implementation here.
+>>>>>>>
+>>>>>>> When you use a power of 2 constant, then I'm very sure that it will=
+ get
+>>>>>>> optimized [1]. Even with non-powers of 2, you don't get a division =
+[2].
+>>>>>>> If you find some code that is not optimized, then sure add a custom
+>>>>>>> function.
+>>>>>>>
+>>>>>>> [1]: https://godbolt.org/z/57M9e36T3
+>>>>>>> [2]: https://godbolt.org/z/9P4P8zExh
+>>>>>>
+>>>>>> That's impressive and would definitely work well with a constant. Bu=
+t
+>>>>>> when the value is not known at compile-time, the division does occur
+>>>>>> unfortunately: https://godbolt.org/z/WK1bPMeEx
+>>>>>>
+>>>>>> So I think we will still need a kernel-optimized version of these
+>>>>>> alignment functions.
+>>>>>
+>>>>> Hmm what exactly is the use-case for a variable align amount? Could y=
+ou
+>>>>> store it in const generics?
+>>>>
+>>>> Say you have an IOMMU with support for different pages sizes, the size
+>>>> of a particular page can be decided at runtime.
+>>>>
+>>>>>
+>>>>> If not, there are also these two variants that are more efficient:
+>>>>>
+>>>>> * option: https://godbolt.org/z/ecnb19zaM
+>>>>> * unsafe: https://godbolt.org/z/EqTaGov71
+>>>>>
+>>>>> So if the compiler can infer it from context it still optimizes it :)
+>>>>
+>>>> I think the `Option` (and subsequent `unwrap`) is something we want to
+>>>> avoid on such a common operation.
+>>>
+>>> Makes sense.
+>>>
+>>>>> But yeah to be extra sure, you need your version. By the way, what
+>>>>> happens if `align` is not a power of 2 in your version?
+>>>>
+>>>> It will just return `(self + (self - 1)) & (alignment - 1)`, which wil=
+l
+>>>> likely be a value you don't want.
+>>>
+>>> So wouldn't it be better to make users validate that they gave a
+>>> power-of-2 alignment?
+>>>
+>>>> So yes, for this particular operation we would prefer to only use powe=
+rs
+>>>> of 2 as inputs - if we can ensure that then it solves most of our
+>>>> problems (can use `next_multiple_of`, no `Option`, etc).
+>>>>
+>>>> Maybe we can introduce a new integer type that, similarly to `NonZero`=
+,
+>>>> guarantees that the value it stores is a power of 2? Users with const
+>>>> values (90+% of uses) won't see any difference, and if working with a
+>>>> runtime-generated value we will want to validate it anyway...
+>>>
+>>> I like this idea. But it will mean that we have to have a custom
+>>> function that is either standalone and const or in an extension trait :=
+(
+>>> But for this one we can use the name `align_up` :)
+>>>
+>>> Here is a cool idea for the implementation: https://godbolt.org/z/x6nav=
+M5WK
+>>
+>> Yeah that's close to what I had in mind. Actually, we can also define
+>> `align_up` and `align_down` within this new type, and these methods can
+>> now be const since they are not implemented via a trait!
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+That sounds like a good idea.
 
-Gr{oetje,eeting}s,
+> ... with one difference though: I would like to avoid the use of
+> `unsafe` for something so basic, so the implementation is close to the C
+> one (using masks and logical operations). I think it's a great
+> demonstration of the compiler's abilities that we can generate an
+> always-optimized version of `next_multiple_of`, but for our use-case it
+> feels like jumping through hoops just to show that we can jump through
+> these hoops. I'll reconsider if there is pushback on v5 though. :)
 
-                        Geert
+It's always a balance when to use `unsafe` vs when not to. For me using
+`hint::unreachable` & `next_multiple_of` is much easier to read than=20
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+    self.wrapping_add(alignment.wrapping_sub(1)).align_down(alignment)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+given that `align_down` is
+
+    self & !alignment.wrapping_sub(1)
+
+But that is totally due to my lack of experience with raw bit
+operations. I also looked at the resulting assembly again and it seems
+like (not an assembly expert at all :) your safe version produces better
+code: https://godbolt.org/z/qhMbG7Mqd
+
+---
+Cheers,
+Benno
