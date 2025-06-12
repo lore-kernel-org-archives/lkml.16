@@ -1,118 +1,88 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E669929405
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F9523C511;
+	Thu, 12 Jun 2025 13:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735235; cv=none; b=AEN2p3S4Xx7zUsUmfbXRykIWfbwD4ShHm5kTODbiav0Z1oSoBwT2WTAvI7HsKKRLERo/TrKhI08YT7hEBzO39pVPmgLGrSC+jV0zZ3qvUJgzjRP+V4TxlcmpVdQkGTX7LqPChCoWvF7o41bi6ZAZukVPVh3WbaGMJKod1RvoLP0=
+	t=1749735236; cv=none; b=dPveYG1I3Kser9GNlnpxifgKY2u1q6anumeB9AE91i9jV5esAdd8q1w7top/GFbeNwH/Ua6kJNC4FI92VdekqeTsxAALh+6T6ABGhXbrVWaXeBnKLGz9a23BdsjL7JXWqIlo1OprkQVBbfN2ERKbayH5CenxTNKld0g2uSGjo78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735235; c=relaxed/simple;
-	bh=NFkyZS5CDkUYFRNmWKp+duw0yU9eLbw+7XKBXjSs2WM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o1IOoBsGuYi/snZGxeXnx95pAch8G4+0Y7TMSYS+/5Rgdv5DQaTFrwfIidOFYFUmrnFPm0jqzrG/UdZMZBcQ9ZPWX4z6W9p687pcxabBKTSfM/TehTJuQPaY5hwjSO/uMwtdAOs8ArXq6D6fUHP4DINeadqKsNcSB1lhWocF4lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LOOpn0eo; arc=none smtp.client-ip=209.85.128.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749735236; c=relaxed/simple;
+	bh=bdb9LtT3INJ2a+afM77uCeHvvb4maVgfYaghkxMbZMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oFnrSpKzWPtrzsc9D9cLT0ZGBBYLw8pKJb82byDXQW3FRSObQ5+NtTMqav0F3R7cBx7DRyWQDg4wXGyqYUKf2VeZFfalujLJaKp+TWBFiFsPPv+4oEotPPRVTRUv/T8yD1n7BvLWDNVdWRYdxEWmQuZs55OVb55PD5yjCq000h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G5Cn19Rk; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LOOpn0eo"
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-450cfb79177so5499345e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749735232; x=1750340032; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sqo2hIUl7oATdskMR359oZ58Fv64g+0bL+bh+r9fe1I=;
-        b=LOOpn0eo7J90v51vho7KG0KIiryLDDdxcUjz2QZsznHxqWdCTiH/OsQOnZGsDPT9WM
-         2jwg1CNPKMlCBzfezmsBd4uRIkVgV+TqUGo2wPmBn4HSS9q6dCTblTzDx8nRvQoSRZgK
-         jAT2gVUGv/ASPps/ayMIGA++Gtu5Z8MgY4/+tZbNm5If0lRk0oxR4/TEdysr0vd2koFR
-         iFN5Xy8ZBgPOCWK1e+focNlUU9lO9ruES2Uh41u8NM4vLoowkJHInDfyBrewXpl6NUU7
-         nx2lFztmXJNzXy4rOyWblEXycpVJa28vmtRT2Cd9axAwmohseU0HZSIXjLv5YdH+e+Eh
-         9fUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749735232; x=1750340032;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sqo2hIUl7oATdskMR359oZ58Fv64g+0bL+bh+r9fe1I=;
-        b=cDmqdQZS9PbMZb1oM2Py6BFxXyMVFNgdpMN4I4Ql4eZaOcR8IVtkE/Ny+iN5aoV0Bo
-         P2R+/2adtpB6S7wcvRDY0yU3drtVAn/3QdqylGEdGzyBE4vDA7LYr9EAi5n9CX6FtKBk
-         ooHisJpUHNBjiPNP3AzS7UFIcp4nkavw4rnEDIwLsTm8OdO7SMikTbQY6T+45J8U5ka2
-         FJtqRcmZL5xeh65YOMS3R1Fvet76yVxo2DgaG3c+zzvsXjORSl/fBbAq069UeM7RsJ8c
-         xeVV5wzBHw3KCT9sw/d1S2pkolzK01LkyD9i+XQj1yduGNAnC1KgbWXklG8xaAp/xMRs
-         Xm9w==
-X-Gm-Message-State: AOJu0Yx3PRsZJu/RFq/J/Ce7urZpANzTEno8W0ySAHZ6P9DFbG8OvjkB
-	NK4qmvBC0a0LWWLaL5T/zxm8fakSlhTPOQqgdZlSQe+ci+uiT87PwzObCfycQhB7N/MQCK2Lo07
-	1KL0AznqIag==
-X-Gm-Gg: ASbGnctaytyrcB7fsG+DIsXaRh27+H7p/phexngiJJZDzfKifMBwA1Vx2/cL/gNHXAU
-	C03CtMEwAEei66FRTaV7RSeHORioWhw6hJq81f+vmpZZD+zIbygZ6I0ui5P2yFlhjfBr4LplAL3
-	hHMRCkWOkjC1LlJ6CcB3vUPyD0ambw44nZDTyQXlsNaJOfRIdoVzErMQQdchM1t+iWjVbqS0jVh
-	SoEcrouxmJnNCVPFjYUvOWroaFmRNZlbbwpvY0SYFvOrKQMmHEG40akyLGLqVVq9wKQdiMqOtS6
-	QjaRmrOWQZdr8u37PgDO0M9A4kYF7Oj7Hsl7V2N1eI3ahuxpU48zooq2D6waEFgltxij3HklkEX
-	5T/5lKYsF
-X-Google-Smtp-Source: AGHT+IFg7ZMlB4nZzf0x8C0zd3onSzTlXDLuRaQ6oYB+LYsKsP7mxo6Rf3Zv3/bycrBatvNmFJwoOQ==
-X-Received: by 2002:a05:600c:4689:b0:450:d4a6:799e with SMTP id 5b1f17b1804b1-4532e8dd446mr20466125e9.20.1749735232001;
-        Thu, 12 Jun 2025 06:33:52 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c64esm21693285e9.7.2025.06.12.06.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 06:33:51 -0700 (PDT)
-From: Marco Crivellari <marco.crivellari@suse.com>
-To: linux-kernel@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v4 2/3] Workqueue: add new WQ_PERCPU flag
-Date: Thu, 12 Jun 2025 15:33:34 +0200
-Message-ID: <20250612133335.788593-3-marco.crivellari@suse.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250612133335.788593-1-marco.crivellari@suse.com>
-References: <20250612133335.788593-1-marco.crivellari@suse.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G5Cn19Rk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749735236; x=1781271236;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bdb9LtT3INJ2a+afM77uCeHvvb4maVgfYaghkxMbZMw=;
+  b=G5Cn19RkFtLyPu3sMJyAq71qzSPMZJj5lqToPU8pxjAxrQEvjbBGMgXe
+   8uBPG9b1VcJJ70hJXL5k8/XwdCggE+hXRbnrRIQiGrDlT97fyuqoGNo7D
+   +/sa9kGLK7AZOSU1s7Xd/yyLA0atQApSDv4RvFJO01FqC/CjqDQkgw+65
+   wLBuo/cHLEMV6nN6Z/GZnD/Yvl60+yWQVhHOT1WybCdJ+FP43XyaptS5s
+   ezMjIui0GsKmfvF6G99EgWENv6KGOMRqClBhUxt5xFfPue7WJfTVUh1Ad
+   LmlH7WyMohOq5OYNXUVajOPXjvR0VbQrl/NK+vKYu1DithSE/LUOiDvzL
+   w==;
+X-CSE-ConnectionGUID: NScrW77QTsKy9WbPW7kDGQ==
+X-CSE-MsgGUID: XpOkeNRkRF+Etcg4cnLL5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="74448335"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="74448335"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:33:55 -0700
+X-CSE-ConnectionGUID: typpU7OkR8Wqck2yRVVc0Q==
+X-CSE-MsgGUID: a3rBX2C/QVeqsIl6KyuLkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="147406514"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:33:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPi3z-00000005xfe-0jFz;
+	Thu, 12 Jun 2025 16:33:51 +0300
+Date: Thu, 12 Jun 2025 16:33:50 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-serial <linux-serial@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 23/33] serial: 8250: extract serial8250_set_efr()
+Message-ID: <aErXPu2YTXxMcg4p@smile.fi.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org>
+ <20250611100319.186924-24-jirislaby@kernel.org>
+ <2b9d3171-6a71-ad9e-8a73-f07487f0ad6b@linux.intel.com>
+ <451ac044-6e91-4895-a5b3-cb30396436e5@kernel.org>
+ <3bf97628-fb30-4298-bfd4-1ec819a43340@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3bf97628-fb30-4298-bfd4-1ec819a43340@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Currently if a user enqueue a work item using schedule_delayed_work() the
-used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
-WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
-schedule_work() that is using system_wq and queue_work(), that makes use
-again of WORK_CPU_UNBOUND.
-This lack of consistentcy cannot be addressed without refactoring the API.
+On Thu, Jun 12, 2025 at 12:04:27PM +0200, Jiri Slaby wrote:
+> On 12. 06. 25, 12:01, Jiri Slaby wrote:
+> > The question is whether we need the code or we can drop it 8-).
+> 
+> As it is now, we could drop UPF_EXAR_EFR altogether, right?
 
-This patch adds a new WQ_PERCPU flag to explicitly request the use of
-the per-CPU behavior. Both flags coexist for one release cycle to allow
-callers to transition their calls.
+Let me check. It might be that there is a lurking regression nobody reported so far.
 
-Once migration is complete, WQ_UNBOUND can be removed and unbound will
-become the implicit default.
-
-Suggested-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
----
- include/linux/workqueue.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index 502ec4a5e32c..6347b9b3e472 100644
---- a/include/linux/workqueue.h
-+++ b/include/linux/workqueue.h
-@@ -401,6 +401,7 @@ enum wq_flags {
- 	 * http://thread.gmane.org/gmane.linux.kernel/1480396
- 	 */
- 	WQ_POWER_EFFICIENT	= 1 << 7,
-+	WQ_PERCPU		= 1 << 8, /* bound to a specific cpu */
- 
- 	__WQ_DESTROYING		= 1 << 15, /* internal: workqueue is destroying */
- 	__WQ_DRAINING		= 1 << 16, /* internal: workqueue is draining */
 -- 
-2.49.0
+With Best Regards,
+Andy Shevchenko
+
 
