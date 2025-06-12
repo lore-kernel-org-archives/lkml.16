@@ -1,73 +1,80 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E90C23D280
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F98324502D;
+	Thu, 12 Jun 2025 13:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734276; cv=none; b=US8vgLBomXJ0RzGpMoxrp1ifLWxDup3WPWTb4kVr0k5GS7y2Gfeo5gqrMwjnQvT6ZUg5CejMWDs+/4aqjXSk2nNwqd5f156uSo39nKcGLVOepudfoY0omiPaGQmASajjzbOG2ituBeJ2goffWiRCB8367BtYJ1LMcLxyabvShJ8=
+	t=1749734301; cv=none; b=aeCI0RRBTZM2Rdx8xQk4opC9zsZ72vi+b3MGAuMg8EOp3K4fgk6dB1qgHMQP0slsJoDaqauEvFVCs4qPgzq8BIdofZ3fzEsxL3cmhAMMGqw7fh5XILDz2eJhdG3tTeEhjFwN2bSFf3l5HM5e89QnCDpmkmv04Wb61JopKxiAVIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734276; c=relaxed/simple;
-	bh=VabmgeLdDt1I8mhmTB5n9mUn+CV3HPyXX8NyFbEoGN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BdvrtOysdoTwG8N6JcQVbm3Wq83NTyi/1x5Zt+cjQQsNKcrKoaeC+IGIOUqNDW8EdJXwPyKpm33/j5f8JJK6PtaZ+W5eSGP3VphNbViPjiku1loatXzym8Nkt9tQJRTT1zuuX4uZSd67Av842uQozFifJBVB+etUUm2LGRTnSLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uPhoJ-0003C8-Ji; Thu, 12 Jun 2025 15:17:39 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uPhoJ-00389N-0z;
-	Thu, 12 Jun 2025 15:17:39 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uPhoJ-008vXx-0a;
-	Thu, 12 Jun 2025 15:17:39 +0200
-Date: Thu, 12 Jun 2025 15:17:39 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Adam Ford <aford173@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>, Peng Fan <peng.fan@nxp.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 3/4] arm64: dts: imx8mp-nominal: Explicitly configure
- nominal VPU clocks
-Message-ID: <20250612131739.w2u3olqliiipxzl6@pengutronix.de>
-References: <20250612003924.178251-1-aford173@gmail.com>
- <20250612003924.178251-4-aford173@gmail.com>
+	s=arc-20240116; t=1749734301; c=relaxed/simple;
+	bh=6SZIFnmbLf8JV1vJNHSiq1P6ecTniyk9z2YoaDHDHKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u5jJCuHgbbr25MkmjDtcnIMpzYSHl2jiIppx2MoMbq/afndUx8GbBNzlTYQy9okNZwvcDXzYPMhwVZyn6zdl1N3XW4V+PdCtmiXVojRDggeNtJwCa29a43dOT9GhysT7d74SbBXyebvf7MzXWnHhreCo3CUldDMWAJ3+Sbw2lrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/9gzw+S; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/9gzw+S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64212C4CEEA;
+	Thu, 12 Jun 2025 13:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749734299;
+	bh=6SZIFnmbLf8JV1vJNHSiq1P6ecTniyk9z2YoaDHDHKU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=I/9gzw+Sj9bAnBOePZPc+6llemB2Ta47w3C5ZmsoFID2TgBIBwPUCtuC7idEfc3Hm
+	 cUqipnOxEDiiIWQngNoN8vo3u0n0OUGO9yA5xGq05aVqU66njci5WVvU8XTyFaHBbK
+	 Uw0EE1D+epC9vwieMVa+ezGM7ws02SrNieTt7eRfNStM2sB1tihQAyTjY5p2cDVTDc
+	 9rYGohNGO1LKDlrcDqvQZ4oN3PNoqfnCv1WIM9DlrvW/9lLsKWOOA8KMIXFlLxVIsS
+	 4AJF6sw8nfalyCk8nmYDE2O9AjtRaE0suu/cVTQjxXS/LIu2HgHsVYGRWorRcD/b/O
+	 cpcuuOBf8lGPA==
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: shawn.lin@rock-chips.com,
+	lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	heiko@sntech.de,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Hans Zhang <18255117159@163.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 0/3] Fix interrupt log message
+Date: Thu, 12 Jun 2025 18:48:09 +0530
+Message-ID: <174973424623.20170.44933782990222558.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250607160201.807043-1-18255117159@163.com>
+References: <20250607160201.807043-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612003924.178251-4-aford173@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 25-06-11, Adam Ford wrote:
-> In preparation for increasing the default VPU clocks to overdrive,
-> configure the nominal values first to avoid running the nominal
-> devices out of spec when imx8mp.dtsi is changed.
+
+On Sun, 08 Jun 2025 00:01:58 +0800, Hans Zhang wrote:
+> Detailed descriptions of interrupts can be seen from RK3399 TRM doc.
+> I found two errors and cleaned up the driver by the way.
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-> Reviewed-by: Peng Fan <peng.fan@nxp.com>
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> This patch series improves the logging accuracy and code cleanliness of
+> the Rockchip PCIe host controller driver:
+> 
+> Log Message Clarifications
+> 
+> [...]
 
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+Applied, thanks!
+
+[1/3] PCI: rockchip-host: Fix "Unexpected Completion" log message
+      commit: fcc5f586c4edbcc10de23fb9b8c0972a84e945cd
+[2/3] PCI: rockchip-host: Correct non-fatal error log message
+      commit: 917600e630218ce61aa0551079592cb541391668
+[3/3] PCI: rockchip-host: Remove unused header includes
+      commit: 1fdb13f92388dfc936624b0a0d6abae362b0ace3
+
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
