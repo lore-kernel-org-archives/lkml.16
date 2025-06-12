@@ -1,626 +1,218 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5E424468A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56524244696;
+	Thu, 12 Jun 2025 13:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735049; cv=none; b=EJduc3UIAGxgnGYU9XNlSmdNCmaA0QFpmD6aBTHeUIAfO/EHDUawuAs9W2TGfxHYbiVYm/wmG5aiOg5jp+067WsWy2W5PikO/NKstWhuOzZYuuHjIly+4BtMOXtCQUOERaBa3gSOkOGeQR7a1SPPYecDo4uqbjuWRm9exq6CRzs=
+	t=1749735068; cv=none; b=cMXNxBSMgVhjZsjGjDhr1PKXWDs9IABytpm1uwMFTU0wYJwJqXpxT4EdLGu6SMZItG75tlvX97OyAm3iSxj4UbcFgJ8Cl9+O17w7T6SDhSsbDL7ANxQ2x4oLHrbtC3mnrarJiAlDFhokxtHB0eKo79p9DEheenufxmDiyeuTipM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735049; c=relaxed/simple;
-	bh=wZeNBzHzdl2QUNJzlKCVLF1nsDqYRcUKokOaDwz4RnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r49XHBWx12aYbD64ZWnJQrvBxmx6Tcaof2RREgolqvRf6BHyWJBlGA2QiA+BEjMoNFy8qQyl5kqv9KZqRgHWgUavUraNaIKcjYMxy9ItXoMe1NIzYCOPODKfo0wDd3hUHf0X7lcLZ4owSQ8ancy7N6igIFHMc4huZEDIwq34PCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mtr@pengutronix.de>)
-	id 1uPi0m-0001yE-Rn; Thu, 12 Jun 2025 15:30:32 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mtr@pengutronix.de>)
-	id 1uPi0m-0038B5-1P;
-	Thu, 12 Jun 2025 15:30:32 +0200
-Received: from mtr by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mtr@pengutronix.de>)
-	id 1uPi0m-008vvr-0Z;
-	Thu, 12 Jun 2025 15:30:32 +0200
-Date: Thu, 12 Jun 2025 15:30:32 +0200
-From: Michael Tretter <m.tretter@pengutronix.de>
-To: yassine.ouaissa@allegrodvt.com
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Dufresne <nicolas@ndufresne.ca>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] media: allegro-dvt: Add Gen 3 IP stateful decoder
- driver
-Message-ID: <aErWeK9qQSrCcNnp@pengutronix.de>
-Mail-Followup-To: Michael Tretter <m.tretter@pengutronix.de>,
-	yassine.ouaissa@allegrodvt.com,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Dufresne <nicolas@ndufresne.ca>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-References: <20250605-allegro_dvt_al300_dec_driver-v2-0-1ef4839f5f06@allegrodvt.com>
- <20250605-allegro_dvt_al300_dec_driver-v2-4-1ef4839f5f06@allegrodvt.com>
+	s=arc-20240116; t=1749735068; c=relaxed/simple;
+	bh=aMvLh341gdssraEfSVOSiKlXkAERmSxfQgVgt1vSRMo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=u8VJp0xZk1fPukiZjjEpOjjQ5++WPyLbsymjYIVInz039J7H0zl6W8CQkz99N/gG6dYgFMgihx+g3UIh+VFYWO0ksLyjZKrmqRDa/v2DihTsw/0andRWaoWRL9wEpf7zrNOBRIiYNfHTMUz5Nk+ADQowiqsgKFABL+BTn6u+lNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CEkICjMo; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CEkICjMo"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CCgPWj025965;
+	Thu, 12 Jun 2025 15:30:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	ERviKJzJWlZq/zWcOwo++EjzTpgeVRiokZ0eXobkweM=; b=CEkICjMoTQD0BpEW
+	suZqI97L6bGTXYEmI0lLhmS2Ix8pEnmIJHj/w4j00yCvyX9kVbX2PNQv2Lmi3QFv
+	HDEskOLiZ8Py1q+A4WKKv9CMH7uTzGKdJIeu80R6cRHVMtTnVQIxzwgDPB7xnuRR
+	ijfoEtAvYSluQMpp1+1c2fnyWw3yTPp3qkti4j/vZQcMOvp7y0BN0ay9XHXS8ARo
+	q9LRzEgc8F3S2ZV+80Xd2hmJ7VEtFHixDtvZUlg8aguRUhAMuUQeLCASt6l3l7lK
+	Mf7xPzOdZCA+HPxzb4mh8aoz4cZGpEf67SDE5YKcLNl2vlNA0BeXuZPgTh9HddHa
+	7vdsrQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aums1xg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 15:30:51 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 53BB940046;
+	Thu, 12 Jun 2025 15:29:42 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8557AB9C2B7;
+	Thu, 12 Jun 2025 15:28:53 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Jun
+ 2025 15:28:52 +0200
+Message-ID: <341950d6-1a2c-4191-948a-6e572fa74cc0@foss.st.com>
+Date: Thu, 12 Jun 2025 15:28:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250605-allegro_dvt_al300_dec_driver-v2-4-1ef4839f5f06@allegrodvt.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mtr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Linux-stm32] [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug
+ port (HDP) on stm32mp13
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-gpio@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
+ <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+ <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
+ <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
+ <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
+ <42a0b7ab-d85d-4d52-a263-4a4648c7ff05@kernel.org>
+ <2865ab3a-1c20-4951-8132-4be98d73d70e@foss.st.com>
+ <f1a63830-0533-4f1c-9116-32e8c1e61a8b@kernel.org>
+ <26a4f12a-2295-402e-8e31-45733aa6582d@foss.st.com>
+ <4f31f016-d250-41ea-b613-b074b8ea00d1@kernel.org>
+ <782763e2-99d6-4533-b0db-79b618577586@foss.st.com>
+ <30f8e319-4103-44ba-8f98-c01e7b0ba76c@kernel.org>
+ <49e5b9ca-6860-4ebe-9856-ae550e1aff42@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <49e5b9ca-6860-4ebe-9856-ae550e1aff42@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_08,2025-06-12_02,2025-03-28_01
 
-Hi Yassine,
-
-Thanks for the patch.
-
-The overall architecture looks a lot like the video encoder for the
-ZynqMP, but with some significant differences in the details. I didn't
-manage to look more closely at the driver, yet, but I have a few high
-level questions.
-
-On Thu, 05 Jun 2025 12:26:59 +0000, Yassine Ouaissa via B4 Relay wrote:
-> From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+On 6/12/25 15:21, Clement LE GOFFIC wrote:
+> On 6/12/25 15:09, Krzysztof Kozlowski wrote:
+>> On 12/06/2025 15:02, Clement LE GOFFIC wrote:
+>>> On 6/12/25 13:05, Krzysztof Kozlowski wrote:
+>>>> On 12/06/2025 11:31, Clement LE GOFFIC wrote:
+>>>>> On 6/11/25 17:48, Krzysztof Kozlowski wrote:
+>>>>>> On 11/06/2025 16:08, Clement LE GOFFIC wrote:
+>>>>>>> On 6/11/25 08:35, Krzysztof Kozlowski wrote:
+>>>>>>>> On 10/06/2025 15:33, Clement LE GOFFIC wrote:
+>>>>>>>>> On 6/10/25 14:38, Krzysztof Kozlowski wrote:
+>>>>>>>>>> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
+>>>>>>>>>>> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
+>>>>>>>>>>>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> +        };
+>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>> +        hdp: pinctrl@5002a000 {
+>>>>>>>>>>>>>>> +            compatible = "st,stm32mp131-hdp";
+>>>>>>>>>>>>>>> +            reg = <0x5002a000 0x400>;
+>>>>>>>>>>>>>>> +            clocks = <&rcc HDP>;
+>>>>>>>>>>>>>>>                     status = "disabled";
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Why are you disabling it? What is missing?
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Nothing is missing just disabled by default.
+>>>>>>>>>>>>> The node is then enabled when needed in board's dts file.
+>>>>>>>>>>>> Nodes should not be disabled by default if they are 
+>>>>>>>>>>>> complete. That's why
+>>>>>>>>>>>> I asked what is missing. Drop.
+>>>>>>>>>>>
+>>>>>>>>>>> Hi Krzysztof, OK I better understand now.
+>>>>>>>>>>> So yes the 'pinctrl-*' properties which are board dependent 
+>>>>>>>>>>> are lacking.
+>>>>>>>>>>
+>>>>>>>>>> These are not properties of this node.
+>>>>>>>>>
+>>>>>>>>> Does this mean I should add 'pinctrl-*' properties in bindings 
+>>>>>>>>> yaml file ?
+>>>>>>>>> I don't get it..
+>>>>>>>>
+>>>>>>>> These properties have no meaning here, so the hardware 
+>>>>>>>> description is
+>>>>>>>> complete. You claim that you miss them thus device is incomplete 
+>>>>>>>> is just
+>>>>>>>> not correct: these properties do not belong here! They belong to 
+>>>>>>>> the
+>>>>>>>> board but even there they are totally optional. Why would they be a
+>>>>>>>> required resource?
+>>>>>>>>
+>>>>>>>> To remind: we talk here ONLY about required resources.
+>>>>>>>
+>>>>>>> Yes, 'pinctrl-*' properties belongs to the board and are not 
+>>>>>>> required.
+>>>>>>> So nothing is missing.
+>>>>>>>
+>>>>>>> This hdp node in the SoC dtsi file can be enabled by default.
+>>>>>>> But the hdp driver will probe and do nothing because without the
+>>>>>>> 'pinctrl-*' properties from the board files it would not be able to
+>>>>>>> access to any pin.
+>>>>>>
+>>>>>>
+>>>>>> Pinctrl has other features in general, including interfaces to 
+>>>>>> userspace
+>>>>>> (as pretty often combined with gpio, although not sure if relevant 
+>>>>>> here).
+>>>>>
+>>>>> You're right. Also HDP pinctrl has a GPO feature accessible from 
+>>>>> userspace.
+>>>>> But by default the HDP is not connected to any pad; it needs the board
+>>>>
+>>>> OK, then that was the answer to my first question - what is missing.
+>>>> However aren't these pads connected internally also to other parts of
+>>>> the SoC (like in most other vendors)?
+>>>
+>>> No, HDP "output pads" are only connected to SoC pinctrl to route outside
+>>> the internal SoC signals for debug purpose.
+>>>
+>>>>> 'pinctrl-*' properties to configure the SoC pinctrl and expose HDP on
+>>>>> the SoC pads.
+>>>>>
+>>>>> That's why for me the enabling of the driver should be in the board 
+>>>>> file
+>>>>> together with the SoC pinctrl configuration.
+>>>>
+>>>> And what are the default pad settings configured by HPD driver in
+>>>> bootloader (and by bootloader I mean one of few bootloaders this is
+>>>> going to be used on like U-Boot)
+>>>
+>>> The default is to use the GPIO of the SoC pinctrl. The HDP is not routed
+>>> outside.
+>>>    >>
+>>>>> The userland cannot change the pinctrl alternate function mux, this is
+>>>>> statically defined by the devicetree.
+>>>>
+>>>> If you expose GPIO then userland needs this regardless of alternate 
+>>>> mux.
+>>>> IOW, board level could not configure mux because it should be always
+>>>> configured to safe GPIO input.
+>>>
+>>> For userland sight view, SoC GPIO are preferred instead of HDP.
+>>> HDP is only GPO not GPIO. 'pinctrl-*' properties configure at the same
+>>> time the SoC pinctrl mux to HDP and the HDP pinctrl mux to one of the
+>>> HDP functions (e.g. GPO).
+>> Thanks, that's explains, fine to keep it disabled. Unless it is obvious
+>> for everyone, it would be nice to put it in commit msg.
 > 
-> This commit introduces a new allegro-dvt V4L2 stateful decoder driverfor
-> the Gen 3 IP with support for:
-> - AVC (H.264), HEVC (H.265), and JPEG decoding
-> - Output formats: NV12, NV16, I420, and P010 for capture
+> You're welcome, so I'll provide the V6 with more information in the
+> commit message of patch [5-7] among other needed fixes.
+
+V5*
+
+>>
+>> Best regards,
+>> Krzysztof
 > 
-> v2:
-> - Replace the mutex_(lock/unlock) with the guard(mutex), that manage
->   mutexes more efficiently.
-> - Set DMA_BIT_MASK to 39, and drop the paddr check when allocating
->   dma_memory.
-> - Use dma_coerce_mask_and_coherent to set the DMA_MASK.
-> - Use static initializer for some structs.
-> - use #ifdef instead of #if defined
-> - Optimize some function.
-> - Use the declaration in the loop.
-> - Use codec for al_codec_dev instead of dev, to not get confused with
->   the device struct.
-> - Remove the codec member of the al_codec_dev, use the fmt->pixelformat
->   when request creating decoder instance.
-> 
-> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
-> ---
->  drivers/media/platform/allegro-dvt/Kconfig         |    1 +
->  drivers/media/platform/allegro-dvt/Makefile        |    1 +
->  drivers/media/platform/allegro-dvt/al300/Kconfig   |   23 +
->  drivers/media/platform/allegro-dvt/al300/Makefile  |    6 +
->  .../platform/allegro-dvt/al300/al_codec_common.c   |  733 ++++++++++
->  .../platform/allegro-dvt/al300/al_codec_common.h   |  248 ++++
->  .../platform/allegro-dvt/al300/al_codec_util.c     |  174 +++
->  .../platform/allegro-dvt/al300/al_codec_util.h     |  186 +++
->  .../media/platform/allegro-dvt/al300/al_vdec_drv.c | 1518 ++++++++++++++++++++
->  .../media/platform/allegro-dvt/al300/al_vdec_drv.h |   93 ++
->  10 files changed, 2983 insertions(+)
-> 
-[...]
-> diff --git a/drivers/media/platform/allegro-dvt/al300/al_codec_common.c b/drivers/media/platform/allegro-dvt/al300/al_codec_common.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..716d0004482702537ea89ec4abecd6af26654b32
-> --- /dev/null
-> +++ b/drivers/media/platform/allegro-dvt/al300/al_codec_common.c
-[...]
-> +static void handle_alloc_memory_req(struct al_codec_dev *codec,
-> +				    struct msg_itf_header *hdr)
-> +{
-> +	struct device *dev = &codec->pdev->dev;
-> +	struct msg_itf_alloc_mem_req req;
-> +	struct msg_itf_alloc_mem_reply_full reply = {
-> +		.reply.phyAddr = 0,
-> +		.hdr.type = MSG_ITF_TYPE_ALLOC_MEM_REPLY,
-> +		.hdr.drv_ctx_hdl = hdr->drv_ctx_hdl,
-> +		.hdr.drv_cmd_hdl = hdr->drv_cmd_hdl,
-> +		.hdr.payload_len = sizeof(struct msg_itf_alloc_mem_reply),
-> +	};
-> +	struct codec_dma_buf *buf;
-> +	int ret;
-> +
-> +	ret = al_common_get_data(codec, (char *)&req, hdr->payload_len);
-> +	if (ret) {
-> +		al_codec_err(codec, "Unable to get cma req %d", ret);
-> +		return;
-> +	}
-> +
-> +	buf = kmalloc(sizeof(*buf), GFP_KERNEL);
-> +	if (!buf)
-> +		goto send_reply;
-> +
-> +	buf->size = req.uSize;
-> +	buf->vaddr =
-> +		dma_alloc_coherent(dev, buf->size, &buf->paddr, GFP_KERNEL);
-> +	if (!buf->vaddr) {
-> +		dev_warn(dev, "Failed to allocate DMA buffer\n");
-> +		goto send_reply;
-> +	}
-> +
-> +	reply.reply.phyAddr = (u64)buf->paddr;
-> +	al_common_dma_buf_insert(codec, buf);
+> _______________________________________________
+> Linux-stm32 mailing list
+> Linux-stm32@st-md-mailman.stormreply.com
+> https://st-md-mailman.stormreply.com/mailman/listinfo/linux-stm32
 
-The buffers allocated by the firmware are tracked by device. Thus, there
-is only one list for all buffers used by the firmware.
-
-I guess that the buffers are be allocated per context. If that's the
-case, maybe tracking them per context in the driver would be a better
-option.
-
-> +
-> +send_reply:
-> +	ret = al_common_send(codec, &reply.hdr);
-> +	if (ret) {
-> +		al_codec_err(codec, "Unable to reply to cma alloc");
-> +		al_common_dma_buf_remove(codec, buf);
-> +	}
-> +}
-> +
-> +static void handle_free_memory_req(struct al_codec_dev *codec,
-> +				   struct msg_itf_header *hdr)
-> +{
-> +	struct msg_itf_free_mem_req req;
-> +	struct msg_itf_free_mem_reply_full reply = {
-> +		.hdr.type = MSG_ITF_TYPE_FREE_MEM_REPLY,
-> +		.hdr.drv_ctx_hdl = hdr->drv_ctx_hdl,
-> +		.hdr.drv_cmd_hdl = hdr->drv_cmd_hdl,
-> +		.hdr.payload_len = sizeof(struct msg_itf_free_mem_reply),
-> +		.reply.ret = -1,
-> +	};
-> +	struct codec_dma_buf *buf;
-> +	int ret;
-> +
-> +	ret = al_common_get_data(codec, (char *)&req, hdr->payload_len);
-> +	if (ret) {
-> +		al_codec_err(codec, "Unable to put cma req");
-> +		return;
-> +	}
-> +
-> +	buf = al_common_dma_buf_lookup(codec, req.phyAddr);
-> +	if (!buf) {
-> +		al_codec_err(codec, "Unable to get dma handle for %p",
-> +			     (void *)(long)req.phyAddr);
-> +		reply.reply.ret = -EINVAL;
-> +		goto send_reply;
-> +	}
-> +
-> +	al_codec_dbg(codec, "Free memory %p, size %d",
-> +		     (void *)(long)req.phyAddr, buf->size);
-> +
-> +	al_common_dma_buf_remove(codec, buf);
-> +	reply.reply.ret = 0;
-> +
-> +send_reply:
-> +	ret = al_common_send(codec, &reply.hdr);
-> +	if (ret)
-> +		al_codec_err(codec, "Unable to reply to cma free");
-> +}
-> +
-> +static void handle_mcu_console_print(struct al_codec_dev *codec,
-> +				     struct msg_itf_header *hdr)
-> +{
-> +#ifdef DEBUG
-
-What's the reason for making this a compile time option? Maybe a
-module parameter to enable MCU logging at runtime would be more
-friendly for debugging.
-
-> +	struct msg_itf_write_req *req;
-> +	int ret;
-> +
-> +	/* one more byte to be sure to have a zero terminated string */
-> +	req = kzalloc(hdr->payload_len + 1, GFP_KERNEL);
-> +	if (!req) {
-> +		al_common_skip_data(codec, hdr->payload_len);
-> +		al_codec_err(codec, "Unable to alloc memory");
-> +		return;
-> +	}
-> +
-> +	ret = al_codec_msg_get_data(&codec->mb_m2h, (char *)req,
-> +				    hdr->payload_len);
-> +	if (ret) {
-> +		al_codec_err(codec, "Unable to get request");
-> +		kfree(req);
-> +		return;
-> +	}
-> +
-> +	/* Print the mcu logs */
-> +	dev_dbg(&codec->pdev->dev, "[ALG_MCU] %s(),%d: %s\n", __func__,
-> +		__LINE__, (char *)(req + 1));
-> +	kfree(req);
-> +#else
-> +	al_common_skip_data(codec, hdr->payload_len);
-> +#endif
-> +}
-> +
-[...]
-> +static int al_common_load_firmware_start(struct al_codec_dev *codec,
-> +					 const char *name)
-> +{
-> +	struct device *dev = &codec->pdev->dev;
-> +	dma_addr_t phys;
-> +	size_t size;
-> +	void *virt;
-> +	int err;
-> +
-> +	if (codec->firmware.virt)
-> +		return 0;
-> +
-> +	err = al_common_read_firmware(codec, name);
-> +	if (err)
-> +		return err;
-> +
-> +	size = codec->firmware.size;
-> +
-> +	virt = dma_alloc_coherent(dev, size, &phys, GFP_KERNEL);
-> +	err = dma_mapping_error(dev, phys);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	codec->firmware.virt = virt;
-> +	codec->firmware.phys = phys;
-> +
-> +	al_common_copy_firmware_image(codec);
-> +	err = al_common_parse_firmware_image(codec);
-> +	if (err) {
-> +		al_codec_err(codec, "failed to parse firmware image");
-> +		goto cleanup;
-> +	}
-> +
-> +	err = al_common_setup_hw_regs(codec);
-> +	if (err) {
-> +		al_codec_err(codec, "Unable to setup hw registers");
-> +		goto cleanup;
-> +	}
-> +
-> +	al_codec_mb_init(&codec->mb_h2m, virt + codec->firmware.mb_h2m.offset,
-> +			 codec->firmware.mb_h2m.size, MB_IFT_MAGIC_H2M);
-> +
-> +	al_codec_mb_init(&codec->mb_m2h, virt + codec->firmware.mb_m2h.offset,
-> +			 codec->firmware.mb_m2h.size, MB_IFT_MAGIC_M2H);
-> +
-> +	err = al_common_start_fw(codec);
-> +	if (err) {
-> +		al_codec_err(codec, "fw start has failed");
-> +		goto cleanup;
-> +	}
-
-If I understand correctly, the difference to the ZynqMP firmware is that
-the firmware can be configured for different addresses. Thus, the
-firmware and mailbox addresses on ZynqMP are determined by the bitstream
-synthesis, which this driver is free to allocate memory for the firmware
-and mailboxes wherever it wants. Correct?
-
-> +
-> +	al_codec_dbg(codec, "mcu has boot successfully !");
-> +	codec->fw_ready_cb(codec->cb_arg);
-> +
-> +	release_firmware(codec->firmware.firmware);
-> +	codec->firmware.firmware = NULL;
-> +
-> +	return 0;
-> +
-> +cleanup:
-> +	dma_free_coherent(dev, size, virt, phys);
-> +
-> +	return err;
-> +}
-> +
-> +static u64 al_common_get_periph_addr(struct al_codec_dev *codec)
-> +{
-> +	struct resource *res;
-> +
-> +	res = platform_get_resource_byname(codec->pdev, IORESOURCE_MEM, "apb");
-> +	if (!res) {
-> +		al_codec_err(codec, "Unable to find APB start address");
-> +		return 0;
-> +	}
-> +
-> +	if (res->start & AL_CODEC_APB_MASK) {
-> +		al_codec_err(codec, "APB start address is invalid");
-> +		return 0;
-> +	}
-> +
-> +	return res->start;
-> +}
-> +
-> +int al_common_probe(struct al_codec_dev *codec, const char *name)
-> +{
-> +	struct platform_device *pdev = codec->pdev;
-> +	int irq;
-> +	int ret;
-> +
-> +	mutex_init(&codec->buf_lock);
-> +	INIT_LIST_HEAD(&codec->alloc_buffers);
-> +	init_completion(&codec->completion);
-> +
-> +	/* setup dma memory */
-> +	ret = al_common_setup_dma(codec);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Hw registers */
-> +	codec->regs_info =
-> +		platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
-> +	if (!codec->regs_info) {
-> +		al_codec_err(codec, "regs resource missing from device tree");
-> +		return -EINVAL;
-> +	}
-> +
-> +	codec->regs = devm_ioremap_resource(&pdev->dev, codec->regs_info);
-> +	if (!codec->regs) {
-> +		al_codec_err(codec, "failed to map registers");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	codec->apb = al_common_get_periph_addr(codec);
-> +	if (!codec->apb)
-> +		return -EINVAL;
-> +
-> +	/* The MCU has already default clock value */
-> +	codec->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(codec->clk)) {
-> +		al_codec_err(codec, "failed to get MCU core clock");
-> +		return PTR_ERR(codec->clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(codec->clk);
-> +	if (ret) {
-> +		al_codec_err(codec, "Cannot enable MCU clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		al_codec_err(codec, "Failed to get IRQ");
-> +		ret = -EINVAL;
-> +		goto disable_clk;
-> +	}
-> +
-> +	ret = devm_request_threaded_irq(&pdev->dev, irq,
-> +					al_common_hardirq_handler,
-> +					al_common_irq_handler, IRQF_SHARED,
-> +					dev_name(&pdev->dev), codec);
-> +	if (ret) {
-> +		al_codec_err(codec, "Unable to register irq handler");
-> +		goto disable_clk;
-> +	}
-> +
-> +	/* ok so request the fw */
-> +	ret = al_common_load_firmware_start(codec, name);
-> +	if (ret) {
-> +		al_codec_err(codec, "failed to load firmware : %s", name);
-> +		goto disable_clk;
-> +	}
-> +
-> +	return 0;
-> +
-> +disable_clk:
-> +	clk_disable_unprepare(codec->clk);
-> +
-> +	return ret;
-> +}
-> +
-[...]
-> diff --git a/drivers/media/platform/allegro-dvt/al300/al_codec_util.h b/drivers/media/platform/allegro-dvt/al300/al_codec_util.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..5f893db4a1a3f2b9e6e9109b81a956bcaa71851c
-> --- /dev/null
-> +++ b/drivers/media/platform/allegro-dvt/al300/al_codec_util.h
-> @@ -0,0 +1,186 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (c) 2025 Allegro DVT.
-> + * Author: Yassine OUAISSA <yassine.ouaissa@allegrodvt.fr>
-> + */
-> +
-> +#ifndef __AL_CODEC_UTIL__
-> +#define __AL_CODEC_UTIL__
-> +
-> +#include <linux/mutex.h>
-> +#include <linux/types.h>
-> +#include <linux/v4l2-common.h>
-> +
-> +#include <media/v4l2-mem2mem.h>
-> +#include <media/videobuf2-v4l2.h>
-> +
-> +#define MB_IFT_MAGIC_H2M 0xabcd1230
-> +#define MB_IFT_MAGIC_M2H 0xabcd1231
-> +#define MB_IFT_VERSION 0x00010000
-> +
-> +#define MAJOR_SHIFT 20
-> +#define MAJOR_MASK 0xfff
-> +#define MINOR_SHIFT 8
-> +#define MINOR_MASK 0xfff
-> +#define PATCH_SHIFT 0
-> +#define PATCH_MASK 0xff
-> +
-> +/*
-> + * AL_BOOT_VERSION() - Version format 32-bit, 12 bits for the major,
-> + * the same for minor, 8bits for the patch
-> + */
-> +#define AL_BOOT_VERSION(major, minor, patch) \
-> +	((((major) & MAJOR_MASK) << MAJOR_SHIFT) | \
-> +	 (((minor) & MINOR_MASK) << MINOR_SHIFT) | \
-> +	 (((patch) & PATCH_MASK) << PATCH_SHIFT))
-> +
-> +#define al_phys_to_virt(x) ((void *)(uintptr_t)x)
-> +#define al_virt_to_phys(x) ((phys_addr_t)(uintptr_t)x)
-> +
-> +#define DECLARE_FULL_REQ(s)    \
-> +	struct s##_full {            \
-> +		struct msg_itf_header hdr; \
-> +		struct s req;              \
-> +	} __packed
-> +
-> +#define DECLARE_FULL_REPLY(s)  \
-> +	struct s##_full {            \
-> +		struct msg_itf_header hdr; \
-> +		struct s reply;            \
-> +	} __packed
-> +
-> +#define DECLARE_FULL_EVENT(s)  \
-> +	struct s##_full {            \
-> +		struct msg_itf_header hdr; \
-> +		struct s event;            \
-> +	} __packed
-> +
-> +struct al_mb_itf {
-> +	u32 magic;
-> +	u32 version;
-> +	u32 head;
-> +	u32 tail;
-> +} __packed;
-> +
-> +struct al_codec_mb {
-> +	struct al_mb_itf *hdr;
-> +	struct mutex lock;
-> +	char *data;
-> +	int size;
-> +};
-
-On a first glance, this looks a lot like the allegro_mbox in the ZynqMP
-encoder driver. Even though the message format is different, would it be
-possible to generalize the general mailbox handling and use it for both
-drivers?
-
-Michael
-
-> +
-> +struct al_codec_cmd {
-> +	struct kref refcount;
-> +	struct list_head list;
-> +	struct completion done;
-> +	int reply_size;
-> +	void *reply;
-> +};
-> +
-> +#define al_codec_err(codec, fmt, args...)                               \
-> +	dev_err(&(codec)->pdev->dev, "[ALG_CODEC][ERROR] %s():%d: " fmt "\n", \
-> +		__func__, __LINE__, ##args)
-> +
-> +#define al_v4l2_err(codec, fmt, args...)                               \
-> +	dev_err(&(codec)->pdev->dev, "[ALG_V4L2][ERROR] %s():%d: " fmt "\n", \
-> +		__func__, __LINE__, ##args)
-> +
-> +#if defined(DEBUG)
-> +
-> +extern int debug;
-> +
-> +/* V4L2 logs */
-> +#define al_v4l2_dbg(codec, level, fmt, args...)   \
-> +	do {                                            \
-> +		if (debug >= level)                           \
-> +			dev_dbg(&(codec)->pdev->dev,                \
-> +				"[ALG_V4L2] level=%d %s(),%d: " fmt "\n", \
-> +				level, __func__, __LINE__, ##args);       \
-> +	} while (0)
-> +
-> +/* Codec logs */
-> +#define al_codec_dbg(codec, fmt, args...)           \
-> +	do {                                              \
-> +		if (debug)                                      \
-> +			dev_dbg(&(codec)->pdev->dev,                  \
-> +				"[ALG_CODEC] %s(),%d: " fmt "\n", __func__, \
-> +				__LINE__, ##args);                          \
-> +	} while (0)
-> +
-> +#else
-> +
-> +#define al_v4l2_dbg(codec, level, fmt, args...)             \
-> +	do {                                                      \
-> +		(void)level;                                            \
-> +		dev_dbg(&(codec)->pdev->dev, "[ALG_V4L2]: " fmt "\n",   \
-> +			##args);                                              \
-> +	} while (0)
-> +
-> +#define al_codec_dbg(codec, fmt, args...)                         \
-> +	dev_dbg(&(codec)->pdev->dev, "[ALG_CODEC]: " fmt "\n", ##args)
-> +
-> +#endif
-> +
-> +#define MSG_ITF_TYPE_LIMIT BIT(10)
-> +
-> +/* Message types host <-> mcu */
-> +enum {
-> +	MSG_ITF_TYPE_MCU_ALIVE = 0,
-> +	MSG_ITF_TYPE_WRITE_REQ = 2,
-> +	MSG_ITF_TYPE_FIRST_REQ = 1024,
-> +	MSG_ITF_TYPE_NEXT_REQ,
-> +	MSG_ITF_TYPE_FIRST_REPLY = 2048,
-> +	MSG_ITF_TYPE_NEXT_REPLY,
-> +	MSG_ITF_TYPE_ALLOC_MEM_REQ = 3072,
-> +	MSG_ITF_TYPE_FREE_MEM_REQ,
-> +	MSG_ITF_TYPE_ALLOC_MEM_REPLY = 4096,
-> +	MSG_ITF_TYPE_FREE_MEM_REPLY,
-> +	MSG_ITF_TYPE_FIRST_EVT = 5120,
-> +	MSG_ITF_TYPE_NEXT_EVT = MSG_ITF_TYPE_FIRST_EVT
-> +};
-> +
-> +struct msg_itf_header {
-> +	u64 drv_ctx_hdl;
-> +	u64 drv_cmd_hdl;
-> +	u16 type;
-> +	u16 payload_len;
-> +	u16 padding[2];
-> +} __packed;
-> +
-> +void al_codec_mb_init(struct al_codec_mb *mb, char *addr, int size, u32 magic);
-> +int al_codec_msg_get_header(struct al_codec_mb *mb, struct msg_itf_header *hdr);
-> +int al_codec_msg_get_data(struct al_codec_mb *mb, char *data, int len);
-> +int al_codec_msg_send(struct al_codec_mb *mb, struct msg_itf_header *hdr,
-> +		      void (*trigger)(void *), void *trigger_arg);
-> +
-> +static inline bool is_type_reply(uint16_t type)
-> +{
-> +	return type >= MSG_ITF_TYPE_FIRST_REPLY &&
-> +	       type < MSG_ITF_TYPE_FIRST_REPLY + MSG_ITF_TYPE_LIMIT;
-> +}
-> +
-> +static inline bool is_type_event(uint16_t type)
-> +{
-> +	return type >= MSG_ITF_TYPE_FIRST_EVT &&
-> +	       type < MSG_ITF_TYPE_FIRST_EVT + MSG_ITF_TYPE_LIMIT;
-> +}
-> +
-> +void al_codec_cmd_put(struct al_codec_cmd *cmd);
-> +
-> +struct al_codec_cmd *al_codec_cmd_create(int reply_size);
-> +
-> +static inline struct al_codec_cmd *al_codec_cmd_get(struct list_head *cmd_list,
-> +						    uint64_t hdl)
-> +{
-> +	struct al_codec_cmd *cmd = NULL;
-> +
-> +	list_for_each_entry(cmd, cmd_list, list) {
-> +		if (likely(cmd == al_phys_to_virt(hdl))) {
-> +			kref_get(&cmd->refcount);
-> +			break;
-> +		}
-> +	}
-> +	return list_entry_is_head(cmd, cmd_list, list) ? NULL : cmd;
-> +}
-> +
-> +#endif /* __AL_CODEC_UTIL__ */
