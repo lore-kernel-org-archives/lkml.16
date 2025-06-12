@@ -1,105 +1,63 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4649C1B043E
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D473218593;
+	Thu, 12 Jun 2025 08:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716912; cv=none; b=A7p/JMUcsCMELCwrPmYy3XjS+/viYNOakWvE4x0GqW+K/1uEbw9pg0bJ8PQQzIvwkovKbuhFEUlRPANwN45JVYMkj5vXhMh6yvYyrm4EQc0RUSGgsgYQx/i86YNumei8GdFypRy+/vKGGVJN8IuDulLenJOy4fwgdJjH6audKJU=
+	t=1749716962; cv=none; b=tdjHs6rHfK7/qDfUO+reboNQ9VeY7GaaAJUW5QG2V4lXerG5D9rcccYdO5JB8CQbD6HpEEImU7GDvO8O70mM2dqJTK3wbvwqbmZyj3GK4tWyqLcYbnKHiYynJCvoRDIePLP0ESr7PfVdIF8pE6d43kW2Ji+/FrT1JGqFNhacTlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716912; c=relaxed/simple;
-	bh=w5lvnxdf7nXQzABIUueKfM2G7ZWWXlgNS18Oez8SQuk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k5bB5/9U4k2M06T2738/6Fo77lOPZHMXHTRD+0wFTQeQenzKFubmhbnwwxD3jPxdLoG48ElA8wRpWO4Rg502i3VgXCf17tZbC0ysaPwzSKYjinhXTVH0NLgdgU/z+SWjVyEwr3eTQZ1VtqMIi8bgrCZG5kas4uqiLt98T3rTkqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K/ia8tsa; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K/ia8tsa"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749716909;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FK5GViGeaS0eKXb1CGklOs8Lcazv9ig1sTbfs/WnUDs=;
-	b=K/ia8tsaN5YSVwzcZ7cSw6MtYYEdAZL9pCWwtEBdCG53ZTxJTtSEirziliq4lO65RcDcXH
-	cWaXE6uKdHS0P0oc/dpDtfPnvsIIDISGN9MtmFylu+E8VSo1FfDvr5PMJUe8vnBkAhTP9c
-	WNWZV4ihnhgxf5TOOu61Q2VzdSWRVoE=
-From: Hao Ge <hao.ge@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	Hao Ge <hao.ge@linux.dev>,
-	Hao Ge <gehao@kylinos.cn>
-Subject: [PATCH 5/5] mm/alloc_tag: add the CONFIG_ARCH_NEEDS_WEAK_PER_CPU macro when statically defining the percpu variable _shared_alloc_tag
-Date: Thu, 12 Jun 2025 16:27:30 +0800
-Message-Id: <adcd63180c9492361d929019c60ffa942255988a.1749715979.git.gehao@kylinos.cn>
-In-Reply-To: <cover.1749715979.git.gehao@kylinos.cn>
-References: <cover.1749715979.git.gehao@kylinos.cn>
+	s=arc-20240116; t=1749716962; c=relaxed/simple;
+	bh=JL2xUuHpTmeqNBrwBPMGm1FaCGQfT5g9XcmIUWRwsRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BYSQu1QGA1hCN+c04aOIYkBeI4rVq7e8GjU0mAV/NbbDkxYR2GvqYOfKXFAvXKQjuz74oF1wXjb8zK1JleS1L95XbJkgVJ7bmo0H4LWV2dRM8IauL6k9Wgnhhkm768TTP63ceUFfKlWl516Ef8W45hfVfIcjnz3ZOtfhjYMmmQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5782339;
+	Thu, 12 Jun 2025 01:29:00 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 104273F59E;
+	Thu, 12 Jun 2025 01:29:18 -0700 (PDT)
+Date: Thu, 12 Jun 2025 09:29:16 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	<arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] clk: scmi: Fix children encountered before parents
+ case
+Message-ID: <20250612-eccentric-fresh-bee-e52db4@sudeepholla>
+References: <20250612-clk-scmi-children-parent-fix-v2-1-125b26a311f6@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612-clk-scmi-children-parent-fix-v2-1-125b26a311f6@pengutronix.de>
 
-From: Hao Ge <gehao@kylinos.cn>
+On Thu, Jun 12, 2025 at 09:36:58AM +0200, Sascha Hauer wrote:
+> When it comes to clocks with parents the SCMI clk driver assumes that
+> parents are always initialized before their children which might not
+> always be the case.
+> 
+> During initialization of the parent_data array we have:
+> 
+> 	sclk->parent_data[i].hw = hws[sclk->info->parents[i]];
+> 
+> hws[sclk->info->parents[i]] will not yet be initialized when children
+> are encountered before their possible parents. Solve this by allocating
+> all struct scmi_clk as an array first and populating all hws[] upfront.
+> 
 
-Recently discovered this entry while checking kallsyms on ARM64:
-ffff800083e509c0 D _shared_alloc_tag
+LGTM. I would like to add a note that we don't free individual scmi_clk
+if for some reason it fails to setup. I can do that when I apply, just
+checking if anyone has any objections. Please shout out if you have.
 
-If CONFIG_ARCH_NEEDS_WEAK_PER_CPU is not defined(it is only defined for
-s390 and alpha architectures),there's no need to statically define
-the percpu variable _shared_alloc_tag. As the number of CPUs
-increases,the wasted memory will grow correspondingly.
-
-Enclose the definition of _shared_alloc_tag within the
-CONFIG_ARCH_NEEDS_WEAK_PER_CPU condition.
-
-Suggested-by: Suren Baghdasaryan <surenb@google.com>
-Signed-off-by: Hao Ge <gehao@kylinos.cn>
----
- lib/alloc_tag.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-index c7f602fa7b23..14fd66f26e42 100644
---- a/lib/alloc_tag.c
-+++ b/lib/alloc_tag.c
-@@ -24,8 +24,10 @@ static bool mem_profiling_support;
- 
- static struct codetag_type *alloc_tag_cttype;
- 
-+#ifdef CONFIG_ARCH_NEEDS_WEAK_PER_CPU
- DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
- EXPORT_SYMBOL(_shared_alloc_tag);
-+#endif
- 
- DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
- 			mem_alloc_profiling_key);
 -- 
-2.25.1
-
+Regards,
+Sudeep
