@@ -1,191 +1,85 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472C0211F
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C84B211F;
+	Thu, 12 Jun 2025 06:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749709441; cv=none; b=Fd23jAP7V2LwgDaX+2qfLIPEHk3+qm0M19WmjtqD62XvRvyXG7wy0ZuWwyZSB6JDX+cjmWSdYhp7uovmBa1KCl8IVpiWlslCQkCnEaAHW1cssIQ57Q8yzYVFXyZaLlPB5CW32qSEVlsvcTc4jiwVp308DCT3krMxFYK7PRg1Dy0=
+	t=1749709448; cv=none; b=lY8edwg5NnpUISsA9R+pAt3uFtgedpzZ1DuyOF9LdZ0Js1/JNiM49qI155XypNamXTAZOzU+hC47uK9GSy2+KfrvWW05vjczMN6NbJ+/qtzfIPrvH5ut7MV/RB49fdw2aqV1H4Nj8dlesJwhREcoUOFEXcThu1PdOz6QCttj1hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749709441; c=relaxed/simple;
-	bh=jljVNt6BPZD/UUQ9H+MR7vP5z5VUVx+PYWtSAHZEcXM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=YOBV05NheWNu0z95wfCNBtLZxcJXaS9akM2MxdyTlqxQEw6nGN61bmGdquUM+lne8ddz+547w3ALZYo7lhL1wHmoLHjojUTdjw9smkBp64PSn33Ff71u1BhxcaPRlRCB7icduvKSJptBjtU74kH89VQqgYQEQxr/RC6hZzY1h9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xCfHSAI0; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749709448; c=relaxed/simple;
+	bh=l4fALJRoTns2aEPUjjOn5HmuW8Ca1bpn5dd/esrfWyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ITBVz355wrKNvq36x24tIpJ/1oI8AeLPIj6aYMIyD3ksFEiCMNW+81gUuXKQhQlPYinrsRDqJFWbMzIKDHoKeXR15BIlO7k19cQF+IFY7qEKQ2SVfdHD2Ib/1c/Md6n2F61QXOrsNAEU8hHAFXN0BiQ2iDZGs3OPKaw+frUWdMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lP3bdkh9; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xCfHSAI0"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5534edc6493so616535e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:23:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749709437; x=1750314237; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FX+vwXZpIRgv9MzwOtx1+r1I221i/Q8CEVWsZrvD4vo=;
-        b=xCfHSAI0sVYIf8jqfH0STxCFGkhRgeoz76J7jalyLG4GHqQoMS1jTExgP01Wvn09zv
-         zShZ0WoXI3qZLDXuvARTEA5gHdGnKdk4hh8vjlsynI7QvboWJzBghBdg/3Skm7Yrj5pq
-         D2kezgxdoubkdrxZ59eP6OKCEw8eOrT2R4KTDowK2Lc0xANIryxjDDL82Amyoj/LiouC
-         GekBJaa9IW4/+nJlzxj2Pc4VuM1wM60ThnPgo3xn7ME4sRDAecTrdAg8OOjRvf/TJ+VL
-         dE/qK6wvAMq+YjN6SeR7Q9dgTMraAp4LWjJiULaLHGhN95djD47o2ESd/56PuSgihuoT
-         k6xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749709437; x=1750314237;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FX+vwXZpIRgv9MzwOtx1+r1I221i/Q8CEVWsZrvD4vo=;
-        b=Wuyuk0r4JHuiMb2yAIAVsWDI0nWGI9VczzQ3hzLQjIlA5VM+ofO5Qa451leKnmZyIA
-         thG8H3UtcLGblgijOl2a5g1fKkQcuYrG+U61BD3Gmi/NqlFDh8v/Jtg2U4ic8W8R5Urw
-         36tT0AX5B6QJ/qAYrrAdV1DoPuSRax7/q/UsXy9W3PfvJYLornkMIHym7C5D14TXA9v6
-         0NVzGzeu6zf/SSVgFAosKr+lLRvsKm1twhNeLWDqx+IaY5pMIRCgZIvoyXs3zWP/T4uV
-         iytl/YUmpa2c8pvqgw+Ai9NCmvs2tBh8RO+VXOCWf8ojITpucmqX3C0F73sIi7SgdYfj
-         qBEg==
-X-Gm-Message-State: AOJu0YxN0GXAix0JP/lCOFZ/iMJeiID/F8dcTQL0xp3uefNTewE7PoFw
-	aOd8A9F/WgMp03u50XsUatqkO4kCkyb95/0ky6lZNw2mro1lvH64hWpO3pe/ckStJ5s6naIJGrz
-	Wf1PHjIMo+w1yWU3ptcLv6zKFUFFhtal0aMc9FGIBTQ==
-X-Gm-Gg: ASbGncslyqQyKKjTUhL+GOoVV+1AJSszRNYYQZ349gJgkmU3V9BUDLFL/zsJ8PmnaJK
-	5gGnRvdNlk2FQFftrWTgHEne52qOfcPFPFHcmpR0MC9xsU/ST6pTdPmR703i76bfuEe8UDGstmz
-	N7MuM+lU0W16acjsaap6R27LsWkAG9PzDPEIk8tKfDmFY=
-X-Google-Smtp-Source: AGHT+IHiqtEaFEnU53BOIjWvNP/y8XLoZUmy6d6q8hVj7pnj1jo/Lb3aYWmh9pEA+2n/ULjXKv8QqT7kQYcfnPLgUx0=
-X-Received: by 2002:a05:6512:108c:b0:553:398f:7730 with SMTP id
- 2adb3069b0e04-553a53dc4afmr645333e87.0.1749709437205; Wed, 11 Jun 2025
- 23:23:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lP3bdkh9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749709446; x=1781245446;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l4fALJRoTns2aEPUjjOn5HmuW8Ca1bpn5dd/esrfWyU=;
+  b=lP3bdkh920Fgq5Pb4u1TSqyW6pRpp+9Vi6gyWJLquuHYKlG20P7i3YDA
+   8fF38xeT593KRmnyLVOSd2Hgb4NYGz5WMnrURK10mEbKpIT7gAiSzteS6
+   FHoPR12oGTTKkR4CgsIBNcz48Ea3yJzAqw818qRUFhIm53KJRyJ4F5vd1
+   HkJaNhvEtHb1cTRJw1ZCz/N6usZz9LY/higOrC4xTfb2Lfk4T49FMcDMI
+   w2r9GJnGkmDpx3Wd4sIITgdZGzeo1JKnHT4pNcjmm7BrKhwXR3oyjQ4GH
+   GPK/RmdvpiW1Gqx7UBfJ0nPS2lfvGKN38o8auKs+tWzsjlkqvGE5xkV7e
+   w==;
+X-CSE-ConnectionGUID: ILVmev/9QkWORV4z8oA35w==
+X-CSE-MsgGUID: fRT4tWdzReKjD//U2lig6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="63282518"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="63282518"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 23:24:06 -0700
+X-CSE-ConnectionGUID: e31vFwp7QWmDgDkYQ868JA==
+X-CSE-MsgGUID: cPErx8xeRkC8aqI4BN4Ntw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="152189969"
+Received: from dprybysh-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.101])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 23:24:05 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 7AE9611FBC0;
+	Thu, 12 Jun 2025 09:24:01 +0300 (EEST)
+Date: Thu, 12 Jun 2025 06:24:01 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] media: i2c: vd55g1: Fix return code in
+ vd55g1_enable_streams error path
+Message-ID: <aEpygaTstAGV5EuE@kekkonen.localdomain>
+References: <20250611-fix_vd55g1-v3-0-ef4ecf15ddbc@foss.st.com>
+ <20250611-fix_vd55g1-v3-2-ef4ecf15ddbc@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 12 Jun 2025 08:23:46 +0200
-X-Gm-Features: AX0GCFvnh3xByupXFFA9XIoamiMqBdjgp746Q9J1lzhrhz83kl42XAIxlwoR7Wk
-Message-ID: <CACRpkdYC5Ut3L9Og5-c=e1DmqzQD-6BSDS-cMyhcmQq2m+LsYQ@mail.gmail.com>
-Subject: Pin control fixes for v6.16
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-fix_vd55g1-v3-2-ef4ecf15ddbc@foss.st.com>
 
-Hi Linus,
+Hi Benjamin,
 
-here are some early fixes for v6.16, nothing special just some
-merge window noise in various drivers.
+On Wed, Jun 11, 2025 at 10:48:31AM +0200, Benjamin Mugnier wrote:
+> Enable stream was returning success even if an error occurred, fix it by
+> modifying the err_rpm_put return value to -EINVAL.
+> 
+> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
 
-Details in the signed tag. The first Qualcomm patch was something
-that was based on fixes submitted late for v6.15 so it wasn't in
-the v6.16-rc1 pull request as that was based on v6.15-rc1.
+This looks like something that should be backported btw. What's the Fixes:
+header? I can add that while applying.
 
-Please pull it in!
+-- 
+Regards,
 
-Yours,
-Linus Walleij
-
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
-
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.16-2
-
-for you to fetch changes up to 5558f27a58459a4038ebb23bcb5bd40c1e345c57:
-
-  pinctrl: sunxi: dt: Consider pin base when calculating bank number
-from pin (2025-06-10 14:35:40 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for v6.16:
-
-- Add some missing pins on the Qualcomm QCM2290, along with a
-  managed resources patch that make it clean and nice.
-
-- Drop an unused function in the ST Micro driver.
-
-- Drop bouncing MAINTAINER entry.
-
-- Drop of_match_ptr() macro to rid compile warnings in the TB10x
-  driver.
-
-- Fix up calculation of pin numbers from base in the Sunxi driver.
-
-----------------------------------------------------------------
-Chen-Yu Tsai (1):
-      pinctrl: sunxi: dt: Consider pin base when calculating bank
-number from pin
-
-Dmitry Baryshkov (1):
-      pinctrl: qcom: switch to devm_gpiochip_add_data()
-
-Krzysztof Kozlowski (3):
-      pinctrl: st: Drop unused st_gpio_bank() function
-      pinctrl: MAINTAINERS: Drop bouncing Jianlong Huang
-      pinctrl: tb10x: Drop of_match_ptr for ID table
-
-Wojciech Slenska (1):
-      pinctrl: qcom: pinctrl-qcm2290: Add missing pins
-
- .../bindings/pinctrl/starfive,jh7110-aon-pinctrl.yaml         |  2 +-
- .../bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml         |  2 +-
- MAINTAINERS                                                   |  1 -
- drivers/pinctrl/pinctrl-st.c                                  |  5 -----
- drivers/pinctrl/pinctrl-tb10x.c                               |  2 +-
- drivers/pinctrl/qcom/pinctrl-apq8064.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-apq8084.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq4019.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq5018.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq5332.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq5424.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq6018.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq8064.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq8074.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq9574.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-mdm9607.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-mdm9615.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm.c                            | 11 +----------
- drivers/pinctrl/qcom/pinctrl-msm.h                            |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8226.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8660.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8909.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8916.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8917.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8953.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8960.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8976.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8994.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8996.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8998.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8x74.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-qcm2290.c                        | 10 +++++++++-
- drivers/pinctrl/qcom/pinctrl-qcs404.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-qcs615.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-qcs8300.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-qdf2xxx.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-qdu1000.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-sa8775p.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-sar2130p.c                       |  1 -
- drivers/pinctrl/qcom/pinctrl-sc7180.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sc7280.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sc8180x.c                        |  1 -
- drivers/pinctrl/qcom/pinctrl-sc8280xp.c                       |  1 -
- drivers/pinctrl/qcom/pinctrl-sdm660.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sdm670.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sdm845.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sdx55.c                          |  1 -
- drivers/pinctrl/qcom/pinctrl-sdx65.c                          |  1 -
- drivers/pinctrl/qcom/pinctrl-sdx75.c                          |  1 -
- drivers/pinctrl/qcom/pinctrl-sm4450.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm6115.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm6125.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm6350.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm6375.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm7150.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8150.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8250.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8350.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8450.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8550.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8650.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8750.c                         |  1 -
- drivers/pinctrl/qcom/pinctrl-x1e80100.c                       |  1 -
- drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c                      |  8 ++++----
- 64 files changed, 17 insertions(+), 80 deletions(-)
+Sakari Ailus
