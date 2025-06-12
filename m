@@ -1,66 +1,66 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3185829C33C;
-	Thu, 12 Jun 2025 17:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAE42BCF7C;
+	Thu, 12 Jun 2025 17:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749749809; cv=none; b=klXPcfjT+SqgLAMVppFeoqFYZKFYtfrJdfaajZsUWn8+sR4S4EOD5v/jDOJC2s+fqlUKByEcT5T4AvSWuHBDTI3RQ114NTSjyBfF0mFT/SNCdgeftrOgpj74SSThkvpFvkuS+kp/lyOgq6/dVnA3A6aE6wauGifxxbsmqAdDDiw=
+	t=1749749811; cv=none; b=OTKS5LVBubP/l8fiWoN9NELS0ctjgfBJV06qcBplgMewddBgu7W9o5LZzODw3Iq3j20tvl9Xb9yY6v0kDHQReMVRNrH6PAq4aEvdEI0TxiKWFPsgMnPZjSb5H6aMHQdUc8NPPTtu0k/lrOJoyi8Y3Nw7WFMjl32mJ21CEMiiNwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749749809; c=relaxed/simple;
-	bh=6z+a18SZhXUWILsGzwnuNuKPZ0Ml207M/8YBA42sBhA=;
+	s=arc-20240116; t=1749749811; c=relaxed/simple;
+	bh=DJCgbz7P7ke/myhNlZxItSAxHUOmPn/o9dEQTyHF0Z4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tR5qYOQI9q4/OWGtmdOlQyMYlG9ZWizAdpDkkno+M4yJFwQ8H2a7JYGoj8P8V+tWt2FGwOu1N/EpvS7+vvTaPKjK/RmZsrscvzG9dnZceeHcoyMxUI3Wzw0WJjmL8sHvH0VE4RWTxfONnz81MnxyKKTYJFs4daSdXZhE0QLyg/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ESDJHNKE; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=XpWO8nDHxxhVu9V1k3zK5wHKttpgqQkqLk3rPkJUONd3hj16GTMd3NJWwtRzsIydLSgAEQGJJEFl1CPilV4Jvwal4NiauH53wVNYQfFp5VZN4KLRCUkY86iROgvaiTHDpnf8Qcq6HAG/4n8r7gS0RkRod6zYm7OT/nB4BXEWU+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qzApvk7S; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ESDJHNKE"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CDVPIr012486;
-	Thu, 12 Jun 2025 17:36:18 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qzApvk7S"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CBGWVP017713;
+	Thu, 12 Jun 2025 17:36:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Bzq6L693jOZBbQpnk
-	olPJGXvQrWYd1fA+nYNAUkTJK4=; b=ESDJHNKEE5xuMiyIFUW6rYf02Me5a5lyb
-	sWhbyWwUtgNFGu8PZLKdUv0/9qZAokrkZRb85d5PqBmzMqJaTlf6PYCK7ooXS42h
-	Sq9hPT9J3MS2Gveds7bG8V2afGAi1+Bp71tEdFw4AjRsQPRDr1Umq+yV+i/+HxRz
-	n29nAJUsXyZsJzo6atbehh0gZuHskVtQ+fWRjZb2/pbovS94Rs2p0L6Km7uhekrU
-	1t3NzEXRsgT+51JGwOIO1WeLGZ6quB0XBM0mrJpvTTYoJ7Z5pR4AoRk4/Ge4a+HQ
-	k5s7CGGTEeBuimVvxzeF5PeRGYrxNKHgZgbVs7HstYNamBwuMdVew==
+	:mime-version:references:subject:to; s=pp1; bh=QpzxDfFD94KWII9K+
+	6HadLtwTM81QAZAX1ucAb3kQ9o=; b=qzApvk7S2hlxQl1Bn2Btpu10ZAllpo5Ln
+	KoZtJ5Dc5ebsGHYL7NJYxYDOAJV+QiKhNPjGUzyi5/p4smraFWFFpufSpMGzAkSs
+	ijMES3tEQCL80ZymilIYQDcLGmaNEIE8zYtWSd1n3DnwRCmSMWFFrnWXVIMOvcU4
+	3FTlbLfkovMjrogcNOJQy/OWjWG8T3XeFB0lZLwFpm4+bdXr+w/UwmyypaAsne2r
+	gAzSFTJPL3eValXHYUhK4dMMnMvOe2n9ysA28sfKgF+EgtHkCd2WJoBbECxNmdyG
+	yGLdYwa2Z/ZiCy8108YXetwWubfWr/782ZiXt2qPAO1hZCRLEMGhQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474cxjmf0u-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474dv7v8mc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 17:36:17 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55CHaHOc028261;
+	Thu, 12 Jun 2025 17:36:18 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55CHUNNC007629;
 	Thu, 12 Jun 2025 17:36:17 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474cxjmf0m-1
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474dv7v8m4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 12 Jun 2025 17:36:17 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55CE2lWZ014912;
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55CENRRG027927;
 	Thu, 12 Jun 2025 17:36:16 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750rpdxe4-1
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47518mnu86-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 17:36:15 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55CHaEm611338160
+	Thu, 12 Jun 2025 17:36:16 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55CHaE0J13173194
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 12 Jun 2025 17:36:14 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 00E3020040;
-	Thu, 12 Jun 2025 17:36:14 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E100A2004B;
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F41CA20043;
+	Thu, 12 Jun 2025 17:36:13 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E0ED420040;
 	Thu, 12 Jun 2025 17:36:13 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
 	Thu, 12 Jun 2025 17:36:13 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id 9DA9BE198F; Thu, 12 Jun 2025 19:36:13 +0200 (CEST)
+	id A255BE19B9; Thu, 12 Jun 2025 19:36:13 +0200 (CEST)
 From: Alexander Gordeev <agordeev@linux.ibm.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
@@ -70,9 +70,9 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
         Jeremy Fitzhardinge <jeremy@goop.org>,
         Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH 1/6] mm: Cleanup apply_to_pte_range() routine
-Date: Thu, 12 Jun 2025 19:36:08 +0200
-Message-ID: <b687f16961eaa285960d6b2c5e84360f1c3269df.1749747752.git.agordeev@linux.ibm.com>
+Subject: [PATCH 3/6] mm/debug: Detect wrong arch_enter_lazy_mmu_mode() contexts
+Date: Thu, 12 Jun 2025 19:36:10 +0200
+Message-ID: <2d516308df177f169e3e158687852bf91c95c427.1749747752.git.agordeev@linux.ibm.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1749747752.git.agordeev@linux.ibm.com>
 References: <cover.1749747752.git.agordeev@linux.ibm.com>
@@ -84,91 +84,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: GFSzaItUyEu6yP3gS3meeLbrZ9VQTNp2
-X-Proofpoint-GUID: sqmBLLFPSau8kX6gstpm2ABJeaMXDzrY
-X-Authority-Analysis: v=2.4 cv=fZWty1QF c=1 sm=1 tr=0 ts=684b1012 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=6IFa9wvqVegA:10 a=pGLkceISAAAA:8 a=VnNF1IyMAAAA:8 a=cw6LjJxz1Y3IMotYGxwA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEzMiBTYWx0ZWRfX/1bjcnG+oHBr pQDvf9bYzabUNkDtJTPjUxbszAUvnuseyUY6yPMmqPawboY3JQdlIMe1zE8qPlqEMiTmIRm5hS1 dZl7AQt+DbprJCkJokCTDYCd0VMJnUOxqaxW//MoOIuKhE3bFMliw0UK15vBUQ0lRDM+mrJj2zC
- yUpjswXJHT+h6+EpfvFovs4dCh6L5u4Ykn2tCFCfD453NQH13H8nIpNRXk+HHxhvDrVWycEacW4 /2czHIQffp42M7ictd08dwUcFf3euUuwxOXSbJ5WuxC/Hv/Vzb/9Vv1wFBVJU+FMSP1gFiqJsd0 VvDwZoAVDaHgmVW6Mu34ZDZJ8Cw6qnhtSzv7T/Boq9y8bX+AMp7SzKTkfdMd9g5rnuiIrxSQFrI
- 0E24jrpYAI52CuduE9GnxB2obbmRbpdrR9rNV8uM47GqJ34ZsBxm2r2PUC1QUcejP/SHofJr
+X-Proofpoint-ORIG-GUID: 9voeh4bv5cl5bR8-1UbklMpr0vy5aE9k
+X-Proofpoint-GUID: 9Au_5T7dJBReJY8qjL4lDoqAoOEk9nHN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEzMiBTYWx0ZWRfXwvHzXkw1Ghwo VTWHN+cE0QcyT8/988a5Oy+uAOazKG7OlmsNXf6ZvKU2OyjqEb00Sa9h8VlU6IHLn1MggoDaL63 J4VspSDKrq2+1hsiPGGebKrNx1EbL+82psEcU80PFvDCmekkqaZ0vPpe50F3A5EaUR4LmuwQ/0/
+ 5epCz7Ptq9XMUYKeq1zKwhT+tfKcNQIo5OBB6gHBUbG+j6+i6nLPuvYTfHveUXDpsZodJnk3zhE dYIyrVXtl4+cv0sSN2VcggnidQvKiNBmeIRb1oZr2g8ApheWzI/LFgHDf9f1hikiirl+WDTTu2o hrO0CgP9O7GbjWJ1Qv5gnL+YaCYVb0XAW2qQksVnQpXkvM1+8blus9YJd/GZULoBxkCwuh7NK+D
+ rogA/0jqvGwDi1VvpGA1UI8O2sBoSl5dajC9s32rmbJOY1rQ4pEeWsPUoLCQb5SieKUycFW4
+X-Authority-Analysis: v=2.4 cv=CfMI5Krl c=1 sm=1 tr=0 ts=684b1013 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=6IFa9wvqVegA:10 a=pGLkceISAAAA:8 a=VnNF1IyMAAAA:8 a=RJXGA7rP2o630YCXQOwA:9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- priorityscore=1501 spamscore=0 bulkscore=0 phishscore=0 suspectscore=0
- adultscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=780
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ phishscore=0 priorityscore=1501 clxscore=1011 impostorscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=914 adultscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
  definitions=main-2506120132
 
-Reverse 'create' vs 'mm == &init_mm' conditions and move
-page table mask modification out of the atomic context.
-This is a prerequisite for locking kernel page tables.
+Make default arch_enter|leave|flush_lazy_mmu_mode() callbacks
+complain on enabled preemption to detect wrong contexts. That
+could help to prevent the complicated lazy MMU mode semantics
+misuse, such like one that was solved with commit b9ef323ea168
+("powerpc/64s: Disable preemption in hash lazy mmu mode").
+
+Skip fully preemptible kernels, since in such case taking the
+page table lock does not disable preemption, so the described
+check would be wrong.
+
+Most platforms do not implement the lazy MMU mode callbacks,
+so to aovid a performance impact allow the complaint when
+CONFIG_DEBUG_VM option is enabled only.
 
 Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
 ---
- mm/memory.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ include/linux/pgtable.h | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 8eba595056fe..71b3d3f98999 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3006,24 +3006,28 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 				     pte_fn_t fn, void *data, bool create,
- 				     pgtbl_mod_mask *mask)
- {
-+	int err = create ? -ENOMEM : -EINVAL;
- 	pte_t *pte, *mapped_pte;
--	int err = 0;
- 	spinlock_t *ptl;
- 
--	if (create) {
--		mapped_pte = pte = (mm == &init_mm) ?
--			pte_alloc_kernel_track(pmd, addr, mask) :
--			pte_alloc_map_lock(mm, pmd, addr, &ptl);
-+	if (mm == &init_mm) {
-+		if (create)
-+			pte = pte_alloc_kernel_track(pmd, addr, mask);
-+		else
-+			pte = pte_offset_kernel(pmd, addr);
- 		if (!pte)
--			return -ENOMEM;
-+			return err;
- 	} else {
--		mapped_pte = pte = (mm == &init_mm) ?
--			pte_offset_kernel(pmd, addr) :
--			pte_offset_map_lock(mm, pmd, addr, &ptl);
-+		if (create)
-+			pte = pte_alloc_map_lock(mm, pmd, addr, &ptl);
-+		else
-+			pte = pte_offset_map_lock(mm, pmd, addr, &ptl);
- 		if (!pte)
--			return -EINVAL;
-+			return err;
-+		mapped_pte = pte;
- 	}
- 
-+	err = 0;
- 	arch_enter_lazy_mmu_mode();
- 
- 	if (fn) {
-@@ -3035,12 +3039,14 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 			}
- 		} while (pte++, addr += PAGE_SIZE, addr != end);
- 	}
--	*mask |= PGTBL_PTE_MODIFIED;
- 
- 	arch_leave_lazy_mmu_mode();
- 
- 	if (mm != &init_mm)
- 		pte_unmap_unlock(mapped_pte, ptl);
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index 33bf2b13c219..0cb8abdc58a8 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -232,9 +232,23 @@ static inline int pmd_dirty(pmd_t pmd)
+  * Nesting is not permitted and the mode cannot be used in interrupt context.
+  */
+ #ifndef __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+-#define arch_enter_lazy_mmu_mode()	do {} while (0)
+-#define arch_leave_lazy_mmu_mode()	do {} while (0)
+-#define arch_flush_lazy_mmu_mode()	do {} while (0)
++static inline void arch_enter_lazy_mmu_mode(void)
++{
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++		VM_WARN_ON_ONCE(preemptible());
++}
 +
-+	*mask |= PGTBL_PTE_MODIFIED;
++static inline void arch_leave_lazy_mmu_mode(void)
++{
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++		VM_WARN_ON_ONCE(preemptible());
++}
 +
- 	return err;
- }
++static inline void arch_flush_lazy_mmu_mode(void)
++{
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++		VM_WARN_ON_ONCE(preemptible());
++}
+ #endif
  
+ #ifndef pte_batch_hint
 -- 
 2.48.1
 
