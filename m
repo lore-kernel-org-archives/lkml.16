@@ -1,155 +1,140 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD490EC2
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787292153CB;
+	Thu, 12 Jun 2025 08:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749717274; cv=none; b=kT5JsnMIWHJRtPM96HfYva/4t4F8QrKexrNFY/U66/5SJgYlPW4M5JRihR5wIecKDscnAAnHjzO6OHfWwQ78Su/M4+CvTLul5D+dpJ2+xUYqlzxu2Jy+lmyYsC0BEkoxED+L16rEgyY2E0qJfUHSOjPjLtDTwFJKlmtEzC5qaPM=
+	t=1749717396; cv=none; b=YzzAvT7ayn5TQ63YDUOLrvXNsMAd+2p2qSOLgUG4R8u/Y0bZSsSYupML5Cm6uWY16gvJn8Ju1WI90Xe8/fEUn8jMRKDyF7p+VTJKmns4tCDDGsR5IOObdcjFHUQ9PqKDdibLcXw9pi45ySuRaRplZeMKTbjTW0RqdA/MrkLcqHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749717274; c=relaxed/simple;
-	bh=KmseBCGkBltkQJB+bXiWrUlTYOiIhBbRpBapI2IUh0c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=igqWKDSq2TXfBSMukuiuNZQ3UZKFEUQJgdFS31b+zQ8wPAapqBrPoyCeWqx1///FoIVJsB99e/VzoDZ0NBRElQF1bI2Nx9JV/sf3Na0axdM64aSxbrVdYvl/KEwNcJxOUa9JWxReE7NjM9EFyQjtIIS8nl5tCH8Fr26YEuUC0Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YmThgej+; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749717396; c=relaxed/simple;
+	bh=sVgJ8qvJ2VSa38WpIG5GekK+tQbN3qtzWBhqiJ6QI6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nZyHPCTvScYD8hUTdpJ5rhdb6+PtSaErDDU+HCGRWxoU1WGPNt9KcLG0PJsNspENwWKkGfjZXG94cMztF4nnkdNCfOFtvWnpWt+cnqDBfXDdGil7YmRYA+TJFeoCw5zIurevERM1PP4G7X0WOOhOpp2p/ZwwBOeHDfrxAfi/iSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poeKPkkw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YmThgej+"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad8a8da2376so116296166b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749717271; x=1750322071; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=R7g8CYkJXGi+LouyxL2Tn5ZZ861hnviLISrxqX1kUus=;
-        b=YmThgej+evWuaKj9jRAJaB/6T/nZicY1AvMwtE03QVTf+d05a4KlKLbepIyZlmcHyu
-         pRBYbHfQY+jPxJMoznnfBG+0Ad1BuuNWAGJAgQLjf7ua8Poiw18HojHKtjBDcOKkhCk2
-         3yY26Ourd6RZnnWJrC8lmSC8y99LKQdur8sj9ofx6YX+ioGmfjw7DB5rjW3fnPNiCeOt
-         eDPrCtwTKkHx26omZwe2hirdMENj1uuetR1V90tcid1F8dotqOiKuiiobB+q3BO/wmZ4
-         RCjXlGPSFTlntvlH9nXuZ6aRwpgA11z5wbdKDGwGi/jxPDtpHd2ZNAIuXukKml6R3qg8
-         n1BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749717271; x=1750322071;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R7g8CYkJXGi+LouyxL2Tn5ZZ861hnviLISrxqX1kUus=;
-        b=L5rxUj0hzbwyTFA7CwD2DfNyh3ALTHamKSVPATuyz63yOn8bVLJMlNP3cHd6qFcfRZ
-         eVjTsjB6MqgDQPhnfytKHVytxqLKNwMHIG9Ei+arCeUObI3eS/y+NYPccGgW71wv3g4G
-         l1u7A5BZ6BBxcx7S2EdXydGFbJp88vcd9CbnR3n5mloyoMKdb61+So2NpsE/u4o5opnT
-         kWU+H+/XkU/jHNSQnez19RCbqCTPzfsnLeo2+hxUvswycVMh+0nfoFaOoH3zsollstx/
-         m04EwsYUrPc9PKwvPdk6v/vNGlqfxQRSyp/U2s5YnaxCvpvNcX+6MDLAd/KNSyn1L7B9
-         2oPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWugUO1DK7Cm0z3WqBfKjFObsO3dz2Rj3Dbvnfz6N2mWEmewBPk98ulKBTamrxAZN4pE/lhNcbRvGPD8iQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq7chk0Yw4WfU1Qs67dMWBlezFT/5bLDBJ9G9qQoQxN4/czbKR
-	biaheuvOQu6t6iMbbqEjqG10WuLHRNuDaa6gET2nGYYv3vJFAbQ2TDJVbTkdSg6VX70qF6SvaP8
-	qWFX3zZctfhIeZ2UwoPTgSxxwfbA1thZ+wADQWmbvLw==
-X-Gm-Gg: ASbGnctvRbsT7H2aNMqgL8Bqljjc0dkR/vP9D5utIj/gJHB7GhnQv7+TQlzOLQwrbUk
-	a0Kh4jcPXMGI1El2m9qQM0YjgwqigopXBWxDxssC11KjxOdwJ0AeJmvEWuLUu3lMRw/rGkZLXtR
-	4bCv2Q8+FGO2xMfLbxArwj/bPyISSEN64A2kk25EkdCg==
-X-Google-Smtp-Source: AGHT+IFVugGpngvrzd5noKecu2O4BZGb+svn8vwAenX7BptOiMp6XK92yeX+JaMUqYjvqa9ZA798w5EpZZYsteYSr4c=
-X-Received: by 2002:a17:907:25cb:b0:ade:3b84:8ef6 with SMTP id
- a640c23a62f3a-adea92898f9mr197761666b.23.1749717271081; Thu, 12 Jun 2025
- 01:34:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poeKPkkw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060B5C4CEEA;
+	Thu, 12 Jun 2025 08:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749717395;
+	bh=sVgJ8qvJ2VSa38WpIG5GekK+tQbN3qtzWBhqiJ6QI6c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=poeKPkkwG8en8DfJKEy0RCeiVCsiHOIMUXlvildhQZQOKL99w7Qq7AxVjaIQUU2jA
+	 yIWgbiOi9OVQTpeJLOQ0XBBkYsxsD1CK0F3QrnyKugdfMzZYICRXbBQO1s6sXoZHwg
+	 a+q8BR3JPf22zZWxPOlyTjo7mQa2VTt9+zeLozl+uDwHrytIoRyBYuMq8u6zap+smA
+	 DmkMAQIp0ifOwQgTAjgxr9oaFtRdQNuX9S/AbODm5PyACkhYYy1iCeL2882YdZdmQt
+	 fMy1dxD7rB/7GOndPB/R3EtVXid7fHdVOCdkjC+7KhtWNqM2hhjsn8umQWyRukRUhG
+	 C28nAsCJXlyAw==
+Message-ID: <c3d78272-c80d-47fa-a32d-151c137251e3@kernel.org>
+Date: Thu, 12 Jun 2025 10:36:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512172321.3004779-1-neelx@suse.com> <20250606172811.GY4037@twin.jikos.cz>
-In-Reply-To: <20250606172811.GY4037@twin.jikos.cz>
-From: Daniel Vacek <neelx@suse.com>
-Date: Thu, 12 Jun 2025 10:34:20 +0200
-X-Gm-Features: AX0GCFs0W2NEeBrD98LqU3d1NgoxS3gwTh7DNtFowD5ncNr0sDzIgrfzpQTGXbc
-Message-ID: <CAPjX3FdP0k8YRR7vA+g_deUqEt=1wnRZXV-9gaTHwur43HVJ6w@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: index buffer_tree using node size
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] Move FCH header to a location accessible by all archs
+To: Mario Limonciello <superm1@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Jean Delvare <jdelvare@suse.com>, Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+References: <20250610205817.3912944-1-superm1@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250610205817.3912944-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 6 Jun 2025 at 19:28, David Sterba <dsterba@suse.cz> wrote:
->
-> On Mon, May 12, 2025 at 07:23:20PM +0200, Daniel Vacek wrote:
-> > So far we are deriving the buffer tree index using the sector size. But each
-> > extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
-> >
-> > For example the typical and quite common configuration uses sector size of 4KiB
-> > and node size of 16KiB. In this case it means the buffer tree is using up to
-> > the maximum of 25% of it's slots. Or in other words at least 75% of the tree
-> > slots are wasted as never used.
-> >
-> > We can score significant memory savings on the required tree nodes by indexing
-> > the tree using the node size instead. As a result far less slots are wasted
-> > and the tree can now use up to all 100% of it's slots this way.
-> >
-> > Signed-off-by: Daniel Vacek <neelx@suse.com>
->
-> This is a useful improvement, so we should continue and merge it. The
-> performance improvements should be done so we get some idea. Runtime and
-> slab savings.
+Hi,
 
-Performance-wise this fix is not that significant. With my testing I
-did not notice any changes in runtime performance.
-Slab usage is _relatively_ significant though - about 2/3 of the btrfs
-radix_tree_node objects are saved. Though in _absolute_ numbers
-system-wide it's still within the level of noise. Without this fix
-btrfs uses a bit over 1% of the radix_tree_node slab cache while with
-the fix it falls below half a percent from what I was able to pull
-from the memory.
+On 10-Jun-25 10:58 PM, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> A new header fch.h was created to store registers used by different AMD
+> drivers.  This header was included by i2c-piix4 in
+> commit 624b0d5696a8 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH
+> definitions to <asm/amd/fch.h>"). To prevent compile failures on non-x86
+> archs i2c-piix4 was set to only compile on x86 by commit 7e173eb82ae9717
+> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86").
+> This was not a good decision because loongarch and mips both actually
+> support i2c-piix4 and set it enabled in the defconfig.
+> 
+> Move the header to a location accessible by all architectures.
+> 
+> Fixes: 624b0d5696a89 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH definitions to <asm/amd/fch.h>")
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-> One coding comment, please rename node_bits to nodesize_bits so it's
-> consistent with sectorsize and sectorsize_bits.
+Thanks, patch looks good to me:
 
-Right.
+Reviewed-by: Hans de Goede <hansg@kernel.org>
 
-> >  fs/btrfs/disk-io.c   |  1 +
-> >  fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
-> >  fs/btrfs/fs.h        |  3 ++-
-> >  3 files changed, 18 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-> > index 5bcf11246ba66..dcea5b0a2db50 100644
-> > --- a/fs/btrfs/extent_io.c
-> > +++ b/fs/btrfs/extent_io.c
-> > @@ -4294,9 +4294,9 @@ static int try_release_subpage_extent_buffer(struct folio *folio)
-> >  {
-> >       struct btrfs_fs_info *fs_info = folio_to_fs_info(folio);
-> >       struct extent_buffer *eb;
-> > -     unsigned long start = folio_pos(folio) >> fs_info->sectorsize_bits;
-> > +     unsigned long start = folio_pos(folio) >> fs_info->node_bits;
-> >       unsigned long index = start;
-> > -     unsigned long end = index + (PAGE_SIZE >> fs_info->sectorsize_bits) - 1;
-> > +     unsigned long end = index + (PAGE_SIZE >> fs_info->node_bits) - 1;
->
-> This looks a bit suspicious, page size is 4k node size can be 4k .. 64k.
-> It's in subpage code so sector < page, the shift it's always >= 0. Node
-> can be larger so the shift result would be 0 but as a result of 4k
-> shifted by "16k".
+Regards,
 
-This comes from commit 19d7f65f032f ("btrfs: convert the buffer_radix
-to an xarray").
-You can still have 64 KiB page with 16 KiB node size. So this still
-looks sound to me.
+Hans
 
-> >       int ret;
-> >
-> >       xa_lock_irq(&fs_info->buffer_tree);
-> > diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
-> > index cf805b4032af3..8c9113304fabe 100644
-> > --- a/fs/btrfs/fs.h
-> > +++ b/fs/btrfs/fs.h
-> > @@ -778,8 +778,9 @@ struct btrfs_fs_info {
-> >
-> >       struct btrfs_delayed_root *delayed_root;
-> >
-> > -     /* Entries are eb->start / sectorsize */
-> > +     /* Entries are eb->start >> node_bits */
-> >       struct xarray buffer_tree;
-> > +     int node_bits;
->
-> u32 and pleas move it to nodesize.
 
-Sure.
+
+> ---
+>  arch/x86/kernel/cpu/amd.c                                       | 2 +-
+>  drivers/i2c/busses/i2c-piix4.c                                  | 2 +-
+>  drivers/platform/x86/amd/pmc/pmc-quirks.c                       | 2 +-
+>  .../asm/amd/fch.h => include/linux/platform_data/x86/amd-fch.h  | 0
+>  4 files changed, 3 insertions(+), 3 deletions(-)
+>  rename arch/x86/include/asm/amd/fch.h => include/linux/platform_data/x86/amd-fch.h (100%)
+> 
+> diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+> index 93da466dfe2cb..9543d5de4e7d6 100644
+> --- a/arch/x86/kernel/cpu/amd.c
+> +++ b/arch/x86/kernel/cpu/amd.c
+> @@ -9,7 +9,7 @@
+>  #include <linux/sched/clock.h>
+>  #include <linux/random.h>
+>  #include <linux/topology.h>
+> -#include <asm/amd/fch.h>
+> +#include <linux/platform_data/x86/amd-fch.h>
+>  #include <asm/processor.h>
+>  #include <asm/apic.h>
+>  #include <asm/cacheinfo.h>
+> diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+> index 9d3a4dc2bd60c..ac3bb550303fe 100644
+> --- a/drivers/i2c/busses/i2c-piix4.c
+> +++ b/drivers/i2c/busses/i2c-piix4.c
+> @@ -34,7 +34,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/acpi.h>
+>  #include <linux/io.h>
+> -#include <asm/amd/fch.h>
+> +#include <linux/platform_data/x86/amd-fch.h>
+>  
+>  #include "i2c-piix4.h"
+>  
+> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> index 5c7c01f66cde0..6648fe0dce537 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> @@ -11,7 +11,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+> -#include <asm/amd/fch.h>
+> +#include <linux/platform_data/x86/amd-fch.h>
+>  
+>  #include "pmc.h"
+>  
+> diff --git a/arch/x86/include/asm/amd/fch.h b/include/linux/platform_data/x86/amd-fch.h
+> similarity index 100%
+> rename from arch/x86/include/asm/amd/fch.h
+> rename to include/linux/platform_data/x86/amd-fch.h
+
