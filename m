@@ -1,133 +1,110 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5B654918
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620C972637;
+	Thu, 12 Jun 2025 01:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749692539; cv=none; b=fOQ/Yvw5pMVsjr6w5SfTJIMA8xybDhzXHRSzZPtAD8FbpP9FbD6ayCllpOTgoRcvOgfslDocvYpSJr5eOb/uCdrNbZ5SsBcUQD+1GBok87+02maZRSb1j+Zzc4Tvs64AEfv8zrs8/yYLyNeXhuvuSk/XqqY3kGUZr4YOvqyM+AI=
+	t=1749692598; cv=none; b=kY4UB4ttph84jix2Yei2HeQuhlu0V0BhAYorMtkOBtdAls5cphSCc0I0FngTRNrAoOWZKwBOXWB7kiKYHERtOaZ6NkMPjNUPJa//6rdB4aC9DPFsMDwfpYRdXSauVU8o1HU2CST+pNpbYM5sWOLGzz628v7z+781SjGo+KRg6oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749692539; c=relaxed/simple;
-	bh=yekqGRUYYLfu4rmZNRUCu0QzvWyE3YgMNmc+9ucJ2S0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R5IiPYg5MOIer5SodFflP2Tqts7e6R8Uz4ZDMTrn5SOLzVoGjCQCI1TQ7xTg6CX1MRqiO5KlZV7qa1nRsCyrdjtN98ADwPrShukfnN/c/vu2DnLahKddQkIWfPZ94YnVDmMbD9ZYnMj2KX7maO4fTVj2srhDXRqaxv7lZxmgEPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aS8zANfF; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749692598; c=relaxed/simple;
+	bh=nJiKsD0K+LcGBz7z+sVtXHYGvLqWO6VYpKkpfuszfxI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R1wSdh1iWynbGm1yw38IhjfnuO/WAAmjajmZHYcroDovVxt0AujHXEN5S5+ESxIqgt3PDV7yBKYZoY62coPIU+CCcVKHTY1H2MRUKbm+5TUfmTmCwDIOHwPfZlLOPp6jvaWUmelwLIjB9zJo76snjzmpMIlZzHLuEiGgwUS7/H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKbHMcji; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aS8zANfF"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74800b81f1bso431717b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749692535; x=1750297335; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6GMTYoO/hH1xieNN1bEgiAsAF7Z3yvr8fWaDaLPOgs0=;
-        b=aS8zANfFOoewlnHoxS75gB9a2NKvfc3aVwtpEuYLvBRkUgLVdbajvUugYuQnlpiNgX
-         O1vKvdtO31ytv5O8Mpv6Revr0jOt5r0H3cQboSyBx5UpHSu2FM7rNHau145oNwt24JgM
-         SuPLRI3E8lOxkoeS5jsYVmwIEgpwgtHa1VWEqgKk7D5ZtMSX3gB4Cqk71BJhAsNiyXN7
-         dX0Z3h29YqnKsTl0q3Gv+PLrMWZF6BXjyYldCXIP9LmhSs6CdjrHtCVjTwZqVrkYp5S5
-         W+ktguZtboDEG+3XOVE7id4b+mzh+bJz//xjj3N8qzHy7CnlD4GLKsYG5jWbJ4wm3aZo
-         dfNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749692535; x=1750297335;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6GMTYoO/hH1xieNN1bEgiAsAF7Z3yvr8fWaDaLPOgs0=;
-        b=Ot2qZQkXCc2r2+XSwf0zNbQisR9h6fZIXCiWfJ+t5tI1vQ2mlh80uu51wz/nfCK1RT
-         T9/zL4zBqDYPCPbSTZtqg7CPonMnfJKT7q0bOolThf2url4MHP2DND1qkbi0dDS7gXR7
-         vZahrT7n/AAxpFHSRQjimF9m7KWfjgZ9J/CsnYcleSq0c/7v9yJL+lqsAofaDjCTuXpQ
-         yAHb/Xokmxpxc5jBRDVEhI4oE8tMb91pS6o//AkQ9FtQPE6BU7oaCYQIwJJYwm19ouUS
-         SGQAbQfFuPofp2GetUeSIbbOgeABEStkBhp173jVXLqCNhOmCUqWq+DYf0ITsM7/AqS9
-         yDUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYR1M0its1+g2uYTQ5YjPIQcCqDGwd5DAuNAVKboZC42tTXnW2iesWblwlOZcdQ0+6DXVN9TeYLLycsTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvy7ShpWgqaXXn0rtznbpPVIfw+EmueN9xqTtoC7a/LeKyOztD
-	qYF1FSAFua1Ac4XOjLV+2izgD2k7jtvnNJAEntxBrLwR4X8lCsTNWKFXMT2S87xvRv8=
-X-Gm-Gg: ASbGnctWm/YZUDV9BFHygC0PMeFscswfsgas6d+kg5PUto8cZwX8Cwh4BkVUb/l/lvM
-	ZLrZU1opvt5M3mPR+MAlmmqd/WYTkPcm+C9bSDAL/SubRfTfzM90ZlgKt2Zf3OLbIMeHmWigpTr
-	2Vr+CvNKkQyEpMGMopq2SE/9NsOrxmoxxDnrT7tfXfNxje4wtP34iywFPVFbqXEusYw+eI8NPj8
-	jNNYTM6fVNTw85d2BD0kOGjWpq34spY4T/CGnRWJS3UHpS6jvF1l5Il0Zd5GSVX77l75D9dwsDZ
-	NhXvXpbIaF1Jvg6tnevnARL4uG5HX8/Q1nk6dPL9uZhg4Jawq9WBTaKXya2QSaI=
-X-Google-Smtp-Source: AGHT+IEYQuQrQ9pSkTkNr1pxDJTIIU0K6qyK009mvjKSvoQj1EO38HYFTD6dT0wcT093olcResSw9Q==
-X-Received: by 2002:a17:903:2346:b0:234:d2fb:2d13 with SMTP id d9443c01a7336-2364c8d1932mr20654285ad.18.1749692535270;
-        Wed, 11 Jun 2025 18:42:15 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e7195c0sm2365445ad.209.2025.06.11.18.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 18:42:14 -0700 (PDT)
-Date: Thu, 12 Jun 2025 07:12:10 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Nishanth Menon <nm@ti.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH V2] rust: Use consistent "# Examples" heading style in
- rustdoc
-Message-ID: <20250612014210.bcp2p6ww5ofvy6zh@vireshk-i7>
-References: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKbHMcji"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E914BC4CEE3;
+	Thu, 12 Jun 2025 01:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749692597;
+	bh=nJiKsD0K+LcGBz7z+sVtXHYGvLqWO6VYpKkpfuszfxI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VKbHMcji8PSb4XKBGzmjzrl7uKltVqUOCTWS4x3IRXcVOtBa7zUfbxVPFFCmTyOun
+	 9q/0Vjj7+VR5wjeb1WipUQ/mIlb3VklYTgnROTUg7jM7kzwTZr8iP+4yP74v/ZiXeO
+	 sTiXjL+4qqmwjhTj0Him0vhT13DN8zYMe3xVZcclqGLlCY6VRAzUpv7aekrQUsqneX
+	 gUk92b9kU/4grxbOzKhj1JQMFJcZklHOBzRO016KfyVEDOALHZ+d2tmePLxlQZ2iq5
+	 ZXkgPYp1Mw3xitHqoJ3aFQcm75qAweiXHia+TRHyHi7eHTc+3KebmR/v4/9f5+6Nia
+	 L47qnNFFxUxbQ==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55220699ba8so412162e87.2;
+        Wed, 11 Jun 2025 18:43:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWJQNS4/FO/nAKVp1yvSL8SWwwGkVb/+8S6GkUa0Kc3fFVDgfTSYRsHOrjZ4Zblxu6RJHo4dWH+I2nkRRt8@vger.kernel.org, AJvYcCWzR0QcRDFxQaeorpp8oJaYVcFya0smSPUMtT9oMh34Sbr7MtjxpM+XQL8bkXvPxqffSCnC+sqCjrvu/xc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYM7Rk7e46v3hHGq1ity9Qj9cBsaHUvBeJp9BtCJVsBl8hYlqS
+	I8fpZfA5h5Gf/aWxzULz17LcrCTzWfj6cirt0z89I4bMPznHekjn0SLEv+Otpl+aHrqiLGZENYt
+	AInVqx+nWBw93jgdmVRwYwQAqsBISR/c=
+X-Google-Smtp-Source: AGHT+IEgqdrLF81oZGoIjbzZvL62Q/2Da7sgo63LTROXXrqbMNtJYNAzAGzFyzPHo3Pwq9Lktd6RhaZiiXookJePx7g=
+X-Received: by 2002:a05:6512:3f27:b0:553:2191:d334 with SMTP id
+ 2adb3069b0e04-553a5553ff4mr401422e87.35.1749692596574; Wed, 11 Jun 2025
+ 18:43:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
+References: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
+ <20250611075533.8102A57-hca@linux.ibm.com> <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
+ <8992766a-cc96-40bb-b8c2-60931ad0f065@app.fastmail.com>
+In-Reply-To: <8992766a-cc96-40bb-b8c2-60931ad0f065@app.fastmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 12 Jun 2025 10:42:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
+X-Gm-Features: AX0GCFuUxoOmGTczWadDDYsfiZgY4GcgmY7mmuZAiiHi4A9JMAjLH4-8Od5AZxA
+Message-ID: <CAK7LNAShTuuxL6+foeQBTg4Nf581Q3vy38XGuXRk4hFvEAWjig@mail.gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10-06-25, 14:33, Viresh Kumar wrote:
-> Use a consistent `# Examples` heading in rustdoc across the codebase.
-> 
-> Some modules previously used `## Examples` (even when they should be
-> available as top-level headers), while others used `# Example`, which
-> deviates from the preferred `# Examples` style.
-> 
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Acked-by: Benno Lossin <lossin@kernel.org>
-> ---
-> V1->V2:
-> - Don't change the header level for the example in workqueue.rs.
-> - Update the commit log accordingly.
-> - Add Ack from Benno.
-> 
->  rust/kernel/block/mq.rs  |  2 +-
->  rust/kernel/clk.rs       |  6 +++---
->  rust/kernel/configfs.rs  |  2 +-
->  rust/kernel/cpufreq.rs   |  8 ++++----
->  rust/kernel/cpumask.rs   |  4 ++--
->  rust/kernel/devres.rs    |  4 ++--
->  rust/kernel/firmware.rs  |  4 ++--
->  rust/kernel/opp.rs       | 16 ++++++++--------
->  rust/kernel/pci.rs       |  4 ++--
->  rust/kernel/platform.rs  |  2 +-
->  rust/kernel/sync.rs      |  2 +-
->  rust/kernel/workqueue.rs |  2 +-
->  rust/pin-init/src/lib.rs |  2 +-
->  13 files changed, 29 insertions(+), 29 deletions(-)
+On Wed, Jun 11, 2025 at 11:24=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrot=
+e:
+>
+> On Wed, Jun 11, 2025, at 15:32, Masahiro Yamada wrote:
+> > On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.ibm.c=
+om> wrote:
+> >>
+> >> Don't get me wrong, I can address all of this trivial churn for s390, =
+however
+> >> enforcing so many extra warnings to everyone with W=3D1 builds doesn't=
+ look like
+> >> the right approach to me.
+> >
+> > This is what W=3D1 is for.
+> > 0day bot detects a new W=3D1 warning, so we can avoid new warnings comi=
+ng in.
+> >
+> > People do not know which headers should be included when.
+> > So, this warning must exist at least until we can get rid of
+> > #include <linux/export.h> from include/linux/module.h,
+> > include/linux/linkage.h etc.
+>
+> I think this makes sense in general, but the output here is
+> excessive if it leads to users no longer wanting to enable W=3D1.
+>
+> There are other warnings that I think should be enabled at the
+> W=3D1 level (e.g. -Wformat-security) and eventually by default,
+> but that are still too noisy at that level.
+>
+> My own cutoff would be at a few hundred warnings in allmodconfig
+> builds if there is an effort to reduce it further, but it seems
+> that this one is still at a few thousand, which does not seem ok.
+>
+>      Arnd
 
-Miguel,
+Then, what to do?  Downgrade to W=3D2?
 
-If you are okay, I can also take this via the PM tree along with my other rust
-fixes for next rc.
+I think nobody cares about W=3D2 builds,
+and the problem of all C files including <linux/export.h>
+would remain forever.
 
--- 
-viresh
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
