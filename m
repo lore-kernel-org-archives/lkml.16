@@ -1,272 +1,142 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBAA2417F0
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C483324A079
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738880; cv=none; b=UykIU7Zt6vKl2TMap0gvMu810Lb5Rq5+0eSwzgML0pEOqaRzvRfuAbLEIVTwiL9oNm8twBs2yNXf9y2kM2LkG9isspkmBoXv+6cEd/NwtQAcgJ9PW3Rl7IxdGeI8aRHLdge6I9WTSF6sdHHF02hy7/Ya8ZlSV+JPx8Iv5a3POA0=
+	t=1749738914; cv=none; b=IZBfvug2DpSJm5/HxgNa8TrDr872pTIV67YJbBHlMV2nMrZnrnV/22QphW7rt38hd5fp3sYOKM1hGSv/A6nGCMM2dTturwMIVYv7HbqdEgJQjiTfuc6gvsusb9/doVBxwP0zCj+AWYer1HZZA2IxcjmBTeRjJ8sHgg1FDxQxkMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749738880; c=relaxed/simple;
-	bh=C5qtus052bCsWzLSi4k2AO3g61EBMbo6+ArX0lL6UPo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Y5LgnNbPHVisgszs0I2fY95oqPKLi+q2VeCCnVljNrKVFDkCpbQNyrzvtV8nXBI26ypxkGXVLp86PP4CefYnEX/GmVZXR66oGH8bGTGoRgFuNKZIgjjdRtgyKjUmvl49OFvHVZKt4iC3eKqFPNqVH0DEQI176bB5VUgqR5SN0Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fu6d35Db; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749738914; c=relaxed/simple;
+	bh=jNAynF8yzo2MaHHQ97XS4c/zX3UfIyeqvS8JmkGhBDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DgW1CBHDuWmsAs0HwDLIPFauHOm9EAFmNiX4VMWxCFfXKBCsK1ngp1apkiKGjc3HDaM+VX1n5sksaCHmQlzXawyvdlxLpCibhD5DjtfnV3TVeh8+glhCNu0qTig4gQ/dYHj1eeX8rPeV17CoOVffDNYNDa+solMKRvSDKK+XOtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sEZu2LeR; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fu6d35Db"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311f4f2e6baso1043919a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:34:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sEZu2LeR"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so9365615e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749738877; x=1750343677; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bCkqRQ65xZAC1T38W5bWrrAPN4EJG3gT3DO5Cch9Ys0=;
-        b=fu6d35DbJ94xRMsYAuyfkeh7WzppWlTiJ9ZZv1hEw9OTE9+ycZ1aYQczGAQAuQdci6
-         9+8xi3XLDhu4yBI2LLSb8C0vebg3S6uIyrY+fJPKtsHY3/qsqV3NUSW/AvLuLfCaGfXF
-         F9/DKeYvLnLpOXFMh1F0K1gbXWzbtPF8YjoU2U3KqK03Wrv25XexJXewsgGLtkguLioz
-         KmDFHGwO7t5Pq5hM/u5feFFx2cMNcMN//GNXRnZxCxibe3FuVzOBgehpXp5oElwNR2oN
-         +Rq9GaUBDP4wFD3nU4dIB/ZqPCg3s0UfL6nW/uBTKUhjziBSy3x7jlaTcV7taAdWlemA
-         znIg==
+        d=linaro.org; s=google; t=1749738911; x=1750343711; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Islg/EqCEkW8m6OOg2kXY87sZ2v1kaNiGQHTKgHcYDM=;
+        b=sEZu2LeRk/3OF2LKi+x8o0dk2L2Aw0LlAHF8YhXt7qPgv/0lF7NM1uVmA8SIcvPXhB
+         vyAr2F2U6FbzXU9fTDp8mYyALml6GSKko8yck1k18PrEzCgFZp36Fl7+C2skyAxb/Kvg
+         IRco6d3ZT1uOjTeCvL6MYeoOFGZ/CwIPBAG+cYec8mx8TDXsc01ai9NrVgwJNxna4inF
+         PWvIkm9NnhUaqYyOjoPs2oaLfXdn1FvxP7jB+bin7i5eI/gSfOaT2p9N/WDfEtwmDwQx
+         0ZvGZry4jxNXxiZ1r0WByqFdGxXEkM1tR/71H2kRNMLIQa3mam9ZnSNPNrHGUctSwNNy
+         3PYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749738877; x=1750343677;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bCkqRQ65xZAC1T38W5bWrrAPN4EJG3gT3DO5Cch9Ys0=;
-        b=ic1GfmtSTLbjWicqLuhlXiizoOY2kES5h+OWlCjnRQWAAZ+Gb45DaJQL/+iJpt4VBI
-         A2VNLEE1MEnQ+lIAvDo4kAoleJ9G5i754b2bUvq72sJ/9Ntrvokw16LqYFeLb1XA82rE
-         ojBMp78lv8tt8HzD0Ab9LqrtxxpX4X7r0JiL9gQITk++f5mpKQuHjaPHYG1n18DeXsuB
-         aFjXS9weca7GL0NJGWc5RdpLG1JYHqsoxUP09fTdY7nAr36fZ0lcYe7cImFXgbAX9ds0
-         uzja1EUeNytczxFCVJ1gaDFPiSWVTSMJCTpDPHULEFtKL95NLIRB9RygoTtepcE2hrwp
-         w6qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVACqhEVqk1+Fveaw+EIVKFERgBLb2vZSJpW4hSw6fDgKhsXH3PE3FUPJUHy4SbU52BGBK+thTu2pevkz8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRxf3JA/soL16BtxX4ID3RCx/0ScxqzfsU/k1U7EEEhG4U8Kfe
-	hqZjTqmAWQ+CO5ybTPv1UzOafwVskBKMBvL7ESyJmQDZnzgLuYjJzqKCKgWQXEsJ9+bC4h7bIC+
-	WIMx3Tw==
-X-Google-Smtp-Source: AGHT+IFvgFX45fAef1k8uZ/3DR+A7ppsnjKdR6QYSkMmUdo4ZfmyvklPkUSYEBb4bT/S6wp2Q15cPG3uYow=
-X-Received: from pjbof7.prod.google.com ([2002:a17:90b:39c7:b0:312:e5dd:9248])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:48c1:b0:311:ea13:2e63
- with SMTP id 98e67ed59e1d1-313d7dda00fmr200540a91.13.1749738876902; Thu, 12
- Jun 2025 07:34:36 -0700 (PDT)
-Date: Thu, 12 Jun 2025 07:34:35 -0700
-In-Reply-To: <86tt4lcgs3.wl-maz@kernel.org>
+        d=1e100.net; s=20230601; t=1749738911; x=1750343711;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Islg/EqCEkW8m6OOg2kXY87sZ2v1kaNiGQHTKgHcYDM=;
+        b=XMb6xkdz/F4xVwvfb+RiVSOE0d3hIVcYT+F316TpfMMnCq4rULWSfzqcLW97xqv3hZ
+         JTUv/GYa7WlBIhxirxoHDIfbQR1s5Wd6t3oy87+i4yif8u+GRGnbnNCo06AId4dfz/FW
+         Hjv7ytmnF6SeXrNXICbgtV+G2nd3X6Fr1/6yPI4+A0QQaBMFQplUCIS/R3yRqT3m3sGH
+         85WXIQqjeffes5KFZ6xSrla3Ye7SL3LogkTs5hB8SfLH/9FwkVPcFI2OTKaT64VjQp9l
+         AUufeyZvp1n1wuPuRRhHYqmBg8D7iyEPoNrEFDikTTnDYV/c448Rou3S7y7Tm86MJTgK
+         eXxw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0GMK+JUdyT2fw3gzblvUGU+NOCYEYm7cZAhRgxZQv2yW2lZfiWMbz0y/uObnlvYBf2PVc9IfZKqNa50c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG6cJ/hxXX4lzfyLcPgbkCk7fqzBXJakIYywpK0P2ILUz5QQXz
+	dRX2vJDbdC6QZNwlGZthpGyS3SOekb6Wc1zzDiiBkvFhpvpUnQNP4aY90CjVzXw6g0yDrwkSIbB
+	071cR
+X-Gm-Gg: ASbGnctfyZltep81TRvVcntu36vCxQMi0h+5SeYtkzfNyqzfovNxHwXwGRuR8R023TD
+	aOKFCPFueQNFiodfLXFvNPgTbZ7/EB1QGTxMDb1P3hfIM+IBX0X3PBGCWHWBA9o9POJ1itNN1hS
+	KGu1Fj9mX2nxKSzHaJDR49u+BKyP6Vm7j1VQ2OrQSlzTR1C11Ueq0gxNtFpklIsqOlI8tJ9gbaO
+	G7+VDX+XqLyZcYxD0Z7U7cuNdR602cZ0CbfFJzwO5zloZDi+qgDtFbU4ZNNrQHdfhgbw5aB1aAp
+	fob/4G/YcRUpKwUVnfke9ccixV/9t63vXQPGXSUvKW8Ny5wpudAir6UgyPB+N/S9prI=
+X-Google-Smtp-Source: AGHT+IHGD+FKI853WgGp5aiNF/V4TxjRvLR3P42qPzeJbmR1YHKdgcN+H9zGrdpu4QQZKKNMIaFVqg==
+X-Received: by 2002:a05:6000:4313:b0:3a5:1471:d885 with SMTP id ffacd0b85a97d-3a567a2b4camr116503f8f.56.1749738911096;
+        Thu, 12 Jun 2025 07:35:11 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561a3ce55sm2162802f8f.65.2025.06.12.07.35.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 07:35:10 -0700 (PDT)
+Message-ID: <31a16580-e3ce-4cc8-8310-04a0dd292df5@linaro.org>
+Date: Thu, 12 Jun 2025 15:35:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-4-seanjc@google.com>
- <86tt4lcgs3.wl-maz@kernel.org>
-Message-ID: <aErlezuoFJ8u0ue-@google.com>
-Subject: Re: [PATCH v3 02/62] KVM: arm64: WARN if unmapping vLPI fails
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
-	Lu Baolu <baolu.lu@linux.intel.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Joao Martins <joao.m.martins@oracle.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
-	David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] spi: spi-fsl-dspi: Use non-coherent memory for DMA
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Frank Li <Frank.li@nxp.com>,
+ Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250609-james-nxp-spi-dma-v1-2-2b831e714be2@linaro.org>
+ <aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
+ <de7142ac-f1a3-412f-9f00-502222b20165@app.fastmail.com>
+ <aEhVsrEk0qv+38r3@lizhi-Precision-Tower-5810>
+ <20250611090107.t35zatn47vetnvse@skbuf>
+ <c65c752a-5b60-4f30-8d51-9a903ddd55a6@linaro.org>
+ <20250612111514.rfb3gpmlilznrfxs@skbuf>
+ <ad7e9aa7-74a3-449d-8ed9-cb270fd5c718@linaro.org>
+ <20250612142306.3c3dl46z326xvcud@skbuf>
+ <5b21c4c9-0ef7-41e5-a3bb-5a48a0c73644@linaro.org>
+ <20250612143157.bu4vayvhieohdtbu@skbuf>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250612143157.bu4vayvhieohdtbu@skbuf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025, Marc Zyngier wrote:
-> On Wed, 11 Jun 2025 23:45:05 +0100,
-> Sean Christopherson <seanjc@google.com> wrote:
-> > 
-> > WARN if unmapping a vLPI in kvm_vgic_v4_unset_forwarding() fails, as
-> > failure means an IRTE has likely been left in a bad state, i.e. IRQs
-> > won't go where they should.
+
+
+On 12/06/2025 3:31 pm, Vladimir Oltean wrote:
+> On Thu, Jun 12, 2025 at 03:28:37PM +0100, James Clark wrote:
+>>
+>>
+>> On 12/06/2025 3:23 pm, Vladimir Oltean wrote:
+>>> On Thu, Jun 12, 2025 at 03:14:32PM +0100, James Clark wrote:
+>>>>> That's why I don't like the DMA mode in DSPI, it's still CPU-bound,
+>>>>> because the DMA buffers are very small (you can only provide one TX FIFO
+>>>>> worth of data per DMA transfer, rather than the whole buffer).
+>>>>
+>>>> Is that right? The FIFO size isn't used in any of the DMA codepaths, it
+>>>> looks like the whole DMA buffer is filled before initiating the transfer.
+>>>> And we increase the buffer to 4k in this patchset to fully use the existing
+>>>> allocation.
+>>>
+>>> Uhm, yeah, no?
+>>>
+>>> dspi_dma_xfer():
+>>>
+>>> 	while (dspi->len) {
+>>> 		dspi->words_in_flight = dspi->len / dspi->oper_word_size;
+>>> 		if (dspi->words_in_flight > dspi->devtype_data->fifo_size)
+>>> 			dspi->words_in_flight = dspi->devtype_data->fifo_size;
+>>> 		dspi_next_xfer_dma_submit();
+>>> 	}
+>>
+>> Right but that's before the change in this patchset to use the whole page
+>> that was allocated, hence the next bit:
+>>
+>>> And we increase the buffer to 4k in this patchset to fully use the
+>>    existing allocation.
+>>
+>> We were allocating for the size of the FIFO (multiplied by two to hold the
+>> control words), but dma_alloc_coherent() will be backed by a whole page
+>> anyway, even if you only ask for a few bytes.
+>>
+>> After changing that to make use of the full allocation the FIFO length is no
+>> longer involved.
 > 
-> I have no idea what an IRTE is.
+> Ok, I haven't walked through patch 3 yet, I didn't realize it would be
+> changing that. I will want to test it on LS1028A.
 
-Sorry, x86 IOMMU terminology (Interrupt Remapping Table Entry).  I think the GIC
-terminology would be ITS entry?  Or maybe ITS mapping?
+Yeah testing it somewhere else would be good. Maybe there is some 
+limitation there about the max size of the DMA transfer, but I didn't 
+see it.
 
-> But not having an VLPI mapping for an interrupt at the point where we're
-> tearing down the forwarding is pretty benign. IRQs *still* go where they
-> should, and we don't lose anything.
-
-This is the code I'm trying to refer to:
-
-  static int its_vlpi_unmap(struct irq_data *d)
-  {
-	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-	u32 event = its_get_event_id(d);
-
-	if (!its_dev->event_map.vm || !irqd_is_forwarded_to_vcpu(d))  <=== this shouldn't happen?
-		return -EINVAL;
-
-	/* Drop the virtual mapping */
-	its_send_discard(its_dev, event);
-
-	/* and restore the physical one */
-	irqd_clr_forwarded_to_vcpu(d);
-	its_send_mapti(its_dev, d->hwirq, event);
-	lpi_update_config(d, 0xff, (lpi_prop_prio |
-				    LPI_PROP_ENABLED |
-				    LPI_PROP_GROUP1));
-
-	/* Potentially unmap the VM from this ITS */
-	its_unmap_vm(its_dev->its, its_dev->event_map.vm);
-
-	/*
-	 * Drop the refcount and make the device available again if
-	 * this was the last VLPI.
-	 */
-	if (!--its_dev->event_map.nr_vlpis) {
-		its_dev->event_map.vm = NULL;
-		kfree(its_dev->event_map.vlpi_maps);
-	}
-
-	return 0;
-  }
-
-When called from kvm_vgic_v4_unset_forwarding()
-
-	if (irq->hw) {
-		atomic_dec(&irq->target_vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vlpi_count);
-		irq->hw = false;
-		ret = its_unmap_vlpi(host_irq);
-	}
-
-IIUC, irq->hw is set if and only if KVM has configured the IRQ to be fowarded
-directly to a vCPU.  Based on this comment in its_map_vlpi(): 
-
-	/*
-	 * The host will never see that interrupt firing again, so it
-	 * is vital that we don't do any lazy masking.
-	 */
-
-and this code in its_vlpi_map():
-
-
-		/* Drop the physical mapping */
-		its_send_discard(its_dev, event);
-
-my understanding is that the associated physical IRQ will not be delivered to the
-host while the IRQ is being forwarded to a vCPU.
-
-irq->hw should only become true for MSIs (I'm crossing my fingers that SGIs aren't
-in play here) if its_map_vlpi() succeeds:
-
-	ret = its_map_vlpi(virq, &map);
-	if (ret)
-		goto out_unlock_irq;
-
-	irq->hw		= true;
-	irq->host_irq	= virq;
-	atomic_inc(&map.vpe->vlpi_count);
-
-and so if its_unmap_vlpi() fails in kvm_vgic_v4_unset_forwarding(), then from KVM's
-perspective, the worst case scenario is that an IRQ has been left in a forwarded
-state, i.e. the physical mapping hasn't been reinstalled.
-
-KVM already WARNs if kvm_vgic_v4_unset_forwarding() fails when KVM is reacting to
-a routing change (this is the WARN I want to move into arch code so that
-kvm_arch_update_irqfd_routing() doesn't plumb a pointless error code up the stack):
-
-		if (irqfd->producer &&
-		    kvm_arch_irqfd_route_changed(&old, &irqfd->irq_entry)) {
-			int ret = kvm_arch_update_irqfd_routing(
-					irqfd->kvm, irqfd->producer->irq,
-					irqfd->gsi, 1);
-			WARN_ON(ret);
-		}
-
-It's only the kvm_arch_irq_bypass_del_producer() case where KVM doesn't WARN.  If
-that fails, then the IRQ has potentially been left in a forwarded state, despite
-whatever driver "owns" the physical IRQ having removed its producer.  E.g. if VFIO
-detaches its irqbypass producer and gives the device back to the host, then
-whatever is using the device in the host won't receive IRQs as expected.
-
-Looking at this again, its_free_ite() also WARNs on its_unmap_vlpi() failure, so
-wouldn't it make sense to have its_unmap_vlpi() WARN if irq_set_vcpu_affinity()
-fails?  The only possible failures are that the GIC doesn't have a v4 ITS (from
-its_irq_set_vcpu_affinity()):
-
-	/* Need a v4 ITS */
-	if (!is_v4(its_dev->its))
-		return -EINVAL;
-
-	guard(raw_spinlock)(&its_dev->event_map.vlpi_lock);
-
-	/* Unmap request? */
-	if (!info)
-		return its_vlpi_unmap(d);
-
-or that KVM has gotten out of sync with the GIC/ITS (from its_vlpi_unmap()):
-
-	if (!its_dev->event_map.vm || !irqd_is_forwarded_to_vcpu(d))
-		return -EINVAL;
-
-All of those failure scenario seem like warnable offences when KVM thinks it has
-configured the IRQ to be forwarded to a vCPU.
-
-E.g.
-
---
-diff --git a/arch/arm64/kvm/vgic/vgic-its.c b/arch/arm64/kvm/vgic/vgic-its.c
-index 534049c7c94b..98630dae910d 100644
---- a/arch/arm64/kvm/vgic/vgic-its.c
-+++ b/arch/arm64/kvm/vgic/vgic-its.c
-@@ -758,7 +758,7 @@ static void its_free_ite(struct kvm *kvm, struct its_ite *ite)
-        if (irq) {
-                scoped_guard(raw_spinlock_irqsave, &irq->irq_lock) {
-                        if (irq->hw)
--                               WARN_ON(its_unmap_vlpi(ite->irq->host_irq));
-+                               its_unmap_vlpi(ite->irq->host_irq);
- 
-                        irq->hw = false;
-                }
-diff --git a/arch/arm64/kvm/vgic/vgic-v4.c b/arch/arm64/kvm/vgic/vgic-v4.c
-index 193946108192..911170d4a9c8 100644
---- a/arch/arm64/kvm/vgic/vgic-v4.c
-+++ b/arch/arm64/kvm/vgic/vgic-v4.c
-@@ -545,10 +545,10 @@ int kvm_vgic_v4_unset_forwarding(struct kvm *kvm, int host_irq)
-        if (irq->hw) {
-                atomic_dec(&irq->target_vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vlpi_count);
-                irq->hw = false;
--               ret = its_unmap_vlpi(host_irq);
-+               its_unmap_vlpi(host_irq);
-        }
- 
-        raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-        vgic_put_irq(kvm, irq);
--       return ret;
-+       return 0;
- }
-diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
-index 58c28895f8c4..8455b4a5fbb0 100644
---- a/drivers/irqchip/irq-gic-v4.c
-+++ b/drivers/irqchip/irq-gic-v4.c
-@@ -342,10 +342,10 @@ int its_get_vlpi(int irq, struct its_vlpi_map *map)
-        return irq_set_vcpu_affinity(irq, &info);
- }
- 
--int its_unmap_vlpi(int irq)
-+void its_unmap_vlpi(int irq)
- {
-        irq_clear_status_flags(irq, IRQ_DISABLE_UNLAZY);
--       return irq_set_vcpu_affinity(irq, NULL);
-+       WARN_ON_ONCE(irq_set_vcpu_affinity(irq, NULL));
- }
- 
- int its_prop_update_vlpi(int irq, u8 config, bool inv)
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 7f1f11a5e4e4..0b0887099fd7 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -146,7 +146,7 @@ int its_commit_vpe(struct its_vpe *vpe);
- int its_invall_vpe(struct its_vpe *vpe);
- int its_map_vlpi(int irq, struct its_vlpi_map *map);
- int its_get_vlpi(int irq, struct its_vlpi_map *map);
--int its_unmap_vlpi(int irq);
-+void its_unmap_vlpi(int irq);
- int its_prop_update_vlpi(int irq, u8 config, bool inv);
- int its_prop_update_vsgi(int irq, u8 priority, bool group);
-
+I realise the tense in my original message may have been a bit 
+confusing. I was mixing up the existing code and proposed changes...
 
