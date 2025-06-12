@@ -1,112 +1,207 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B82028F1;
-	Thu, 12 Jun 2025 02:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACE61C1F13;
+	Thu, 12 Jun 2025 02:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749696478; cv=none; b=aPrMTo8NJjqPuw5/JuQ+rWYUv/9XNpQEQ8vydzWTYgxqDQthxU36Lq3f/RERxqbAAXC1L5yeGJD5w8frRYiyopvEGENF7+eDyJ51cpgLWimf0n/8BxrtXkkduBQx4NhZsvlvmA4K3Csx2WGoL1Aptyn2vYDZiHP2wd9+7HdMdL0=
+	t=1749696485; cv=none; b=dUOY9Hl80evHkeQxW2rYj4KRRvyJo2KtwSWtMu4QcpoGl+rb/P/VgZeydLzfOo3b3W5mC7MNYJki4+mrI02+Wu3RUAhQs/4aQd3eKD23xRrimGaxgw3Bj5KCfi9oZ9rlKJy5UQY4ggWNuthqxZWZMhSyqGFR+bKrgRMB+AsnkhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749696478; c=relaxed/simple;
-	bh=V10y+YnoaiOhK9zGqmOgoWpQxvptlZXDaCPhJRexvHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPn1oVjQLj4Ryfg5rmKzeVhktGU0h6SWuxHSteWijD7dX2tRkASD0+kETaMVObZyK3vimMuTCOyyUfrSyUB1TMG6XJ1YExE4IVRcnNZgdh8IBvdt1ckqbC460i8AR92WUQNDlqlemZu2bSpDO+TUxd127YojH/CfWVxMADET9dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KI1QDunI; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1749696485; c=relaxed/simple;
+	bh=f4H7Y+r48HQSZ7EuN5UKYiS6BVNKq79Svws0Lv+F8LI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NGDbAY9KRqMdMEk6CUAIbC0ZGmWyLyhOYWUeY6FFa3ZAOF7a/7Cw5OhMKbq8IV4u8+rYlrKAzVc2rg0IZygA5SgiuwpHDzc1iJejqsl7VS2ZrhDdff0hP0Wiei3rGH66eDkbo/ll8TyXzGBZyRxOi1pjyJKc6/IiY7zPjjtXCJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MYS5Rlpn; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KI1QDunI"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747ef5996edso564771b3a.0;
-        Wed, 11 Jun 2025 19:47:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYS5Rlpn"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a53359dea5so313684f8f.0;
+        Wed, 11 Jun 2025 19:48:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749696476; x=1750301276; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=70dF3f186VX/2MCLOuJcDzIuL4GikkKOnVgxPnn7hR4=;
-        b=KI1QDunIs8T6YzA8WQofRAXa96/I/4u1ape+ryA2pWF7AYrgC5PVkCd7f9zo9E/s4N
-         Vo5ajw9kfIg9ggAEq+bL/6ask/Cbu0IrhLJWcEHZ3sjT6m7xffg6etAYEJEyUwSW+7Mo
-         7wex3t+qzFSeQrEs57cStJoD8e2Or6IoQDCXhimn/ZG+4EFNwVbGUifg7WCpJDaleAAu
-         bk7CXLRptA1yWeePuond9l33lGhD46JPjkHfErFt/lWEAvQBgsje3HRWaV5CLAGPloFs
-         5AiHDFS7L/jV+AJ9gXpm/fRvLZrnTRry/SCd7mTBN4pGAzIUYVC2DeVH15s5F0qE+FWa
-         DH8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749696476; x=1750301276;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749696482; x=1750301282; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=70dF3f186VX/2MCLOuJcDzIuL4GikkKOnVgxPnn7hR4=;
-        b=hpJsgYxVStfY0fmlgKMsDg4dBpgTI0uI5VaP1h3+8ys5KFYnrW/HvXnVseL3btts5Z
-         JEd52lJC54pr1KNODeCAaKU15HLadCFiD3uGRu1EmRIyQhgyZX0gy3fXLYu9mUAaUs7W
-         xQhrHRHJ4hbtDBXGokssq2CMyY3wOcd+97Mhtx0T60odTxxcjm6wntizjTQdnYT+UcUO
-         Q79ReqCPSEstdbPgmy0KkUlN2VhynPJdPbWhMMquxlVeHsNjJH3I4UewT+6kbqExabqG
-         0iOlJUC/7dvjgrlqUzce4bjbTj3WACd/hnvP4NE/oNHTYG2EO9t/8m41ROFxTpuLQrSZ
-         XI1A==
-X-Forwarded-Encrypted: i=1; AJvYcCVGEJY6/edg/sOWUUeLSD7N97rxGBlq48VN2rr5QS2OtRZ5SpDy0rYsyBa+eotwvs/PkFrWdCSxsaQL7vfpEqB0@vger.kernel.org, AJvYcCVlV+IBawa294HhqfkfNspirkIFDFXiOTr7pTBeyUE/WWr/j27e6dfxrCfsraZf7sAE4R89MuVbd+UmekA=@vger.kernel.org, AJvYcCVspWBRHWu2TCwbiODdUskYUQNg8hBbauPb/+tC83pqNCdTBKpkWBXAkoq4OtuD32ymhrh+rD86PcUjUQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr+mJDlc1aXeJzv2G0QCKI2wMGncdawjQv7F8ivlmgLj4qejom
-	y5RuOqkoR9hz89XftVm+F7049ZrImSp1C5WEB+tj3QWtofaIKuwyT3D9ECWL
-X-Gm-Gg: ASbGnctlrEicTsTcC/10yu3jJxARy2BZaKGylRGVZ4apOUJkenI7ukYz+zivjz9n5XO
-	q9hXNkHfuRd2l3srLbWpJFhrWSWcaLFLA5XWZrwtAcEpr75AcrTRSBcETNOMiazGNZwr6750OZ3
-	n0qxefNnCjgvWCBaDPXq3IYzpw9OBgjAI26p8pJom4ewM0o6YyQR7ZUvru47wd6WGJLQsiMAOfQ
-	q8ie4N3W1CpuRUp9wteGfXLQtV4J8jF6HIBuXvt/f0V3fPlIwfBPXVyYxJYyeRCrijQz9m+N3sf
-	nmhFjWrrUgC/dgGMKBiORalmrN9K7qAf1PX+OOvagE9qcjSddOHg9k6Xaf0tJheFm8SHOfJKGBS
-	USA+xSxX5GBeUunQmPk9HRwQ=
-X-Google-Smtp-Source: AGHT+IFRKiugap2uRP5iwvzv3ykxNxJY6sSKFAqSQYORKgyM6ljZEvpw3F28685FefjxRCqFHH0xZg==
-X-Received: by 2002:a05:6a21:48d:b0:206:aa42:8e7c with SMTP id adf61e73a8af0-21f97800f84mr3290374637.18.1749696475840;
-        Wed, 11 Jun 2025 19:47:55 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-748809d3066sm312312b3a.102.2025.06.11.19.47.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 19:47:55 -0700 (PDT)
-Date: Wed, 11 Jun 2025 19:47:54 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, skalluru@marvell.com, manishc@marvell.com,
-	andrew+netdev@lunn.ch, michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com, ajit.khaparde@broadcom.com,
-	sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-	anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
-	tariqt@nvidia.com, saeedm@nvidia.com, louis.peens@corigine.com,
-	shshaikh@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-	ecree.xilinx@gmail.com, horms@kernel.org, dsahern@kernel.org,
-	shuah@kernel.org, ruanjinjie@huawei.com, mheib@redhat.com,
-	linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	linux-rdma@vger.kernel.org, oss-drivers@corigine.com,
-	linux-net-drivers@amd.com, linux-kselftest@vger.kernel.org,
-	leon@kernel.org, Cosmin Ratiu <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next v3 1/4] udp_tunnel: remove rtnl_lock dependency
-Message-ID: <aEo_2hOn5kh6kBpk@mini-arch>
-References: <20250610171522.2119030-1-stfomichev@gmail.com>
- <20250610171522.2119030-2-stfomichev@gmail.com>
- <20250611184345.3b403ad0@kernel.org>
+        bh=vz148ZUApP4uOQdhUfpaPucEXS8RXsBePf4DAtP/7aA=;
+        b=MYS5Rlpnor2/MvAa36QmSikd+Wh3IfhnQrf5mKpflRLvfEMuXWPOIxwvL9Zx0mq+2l
+         hrbvXTlr2mBaxfDRV4vGyzEMw702GLdyIv/nUqnXf0RQejYXy0FsCgYynMZPoatb9aDI
+         po39TTl4Olh3i7ikqU8eUOI0XcGzR5I7kfd7nESJZP4gMO8LdUrkWvhIEGhOBlYYshzZ
+         4wFgentpGZFq5ODhvzBHqGjy1rO4qrX8MBYtGPzch0ebuoHScR0gsdW2BP1P/SQ3lYeB
+         dD+usiIKUEH9w+MgxUPjVDLNkaYTViJuJlTaRz9IYBbYxGPQU8IFjO7Kji4Nq7+Mr6Ic
+         lYsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749696482; x=1750301282;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vz148ZUApP4uOQdhUfpaPucEXS8RXsBePf4DAtP/7aA=;
+        b=fmkInfJqicJiULxw3BGf4mhMX6oyJuVdB8rV7wO3aQ/Sx3rjwc33c9D/YpFmrzHZiA
+         sQ2XdNn7diQAaDnPBJoueLfXWosH1WXBeMrHaXWU399j2YnK0rbsSUmpfFuIo4HlPauP
+         cjerbgx9Adbm0vHX+UkGJuafJbnlMEv09qbE8r/tYIwIZBWbcaVPE9k8Pc7hWIFEXRfh
+         uAxOpVBBhoQf4+GSwS7YE4K9UQmSojWlnmQa2NcnlVsFwMLLSwfe4xyGYYeKQFZ6AwUW
+         Q3jpoaDVs1/QaAkZaiGKmAaDglzME4lg27X56m1Vt3bX2LJAFRUmCyHhgD6lRH9cdorf
+         cN3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUFxwJ2WXxgS3Xyy2AxH8ahBis6KAKHR5CP9nzpjk1+XVgX5SBNQNfJHQVxqPgT1z2RbzZrg+StRR3hwmcs@vger.kernel.org, AJvYcCWj2WKp1dbvjCEwEXptYfw+1ahNzPqT/C9EqlcRk1bGnJ4GbLApYXF6HXMnzcm040QPaJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypeSmdUQ76oHn4S2+TJfzrE1rJquQabjo8eOTyVD3EcfRb6Onm
+	ONUXbfc9g7q40gRrhbppLlLSqUHogmw2XN8FobzxSxbdwYJJF/xpdH9dVBK3RidmaRCyilkN0qE
+	beEysucB21OEeOwJ1kdU+8TUSABmQAW8=
+X-Gm-Gg: ASbGncsxJB8omhMfEz5nIDxdokSGIP40MH+SUgtLSXMZUAAqn90rLNRkAZrmvA45uFu
+	XVTTkFSPMI4EzdI25sb5dwFQzgncezPAwmbWqtOoFPDsSt7AAj16M53LKZcUobvw/ipiFm6NuFr
+	FmzFLz/5y0es5lYAikk/Gcu2h4JhEdMb5loCF4JLk8ptc33IKjQYjC2pa+WX5xJYcTxikxDdpT
+X-Google-Smtp-Source: AGHT+IG0h9jaSAfIckQc+5yClXVhCcGIYDKsgqCETtZ4Rmbkq6wPTIOJFNrLjX1KFcb3wWcy6w1fBUfp7W4VGxZonhY=
+X-Received: by 2002:a05:6000:18a8:b0:3a4:e6d7:6160 with SMTP id
+ ffacd0b85a97d-3a5612f0b3dmr713407f8f.6.1749696481781; Wed, 11 Jun 2025
+ 19:48:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250611184345.3b403ad0@kernel.org>
+References: <cover.1749214572.git.asml.silence@gmail.com> <c4de7ed6e165f54e2166e84bc88632887d87cfdf.1749214572.git.asml.silence@gmail.com>
+In-Reply-To: <c4de7ed6e165f54e2166e84bc88632887d87cfdf.1749214572.git.asml.silence@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 11 Jun 2025 19:47:50 -0700
+X-Gm-Features: AX0GCFsF8TengxXbdw4Na3vitrpKct7_UfoZ8uTTIUrWlnDfIh3GU3rfFF7cuWg
+Message-ID: <CAADnVQJgxnQEL+rtVkp7TB_qQ1JKHiXe=p48tB_-N6F+oaDLyQ@mail.gmail.com>
+Subject: Re: [RFC v2 5/5] io_uring/bpf: add basic kfunc helpers
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: io-uring@vger.kernel.org, Martin KaFai Lau <martin.lau@linux.dev>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/11, Jakub Kicinski wrote:
-> On Tue, 10 Jun 2025 10:15:19 -0700 Stanislav Fomichev wrote:
-> > Drivers that are using ops lock and don't depend on RTNL lock
-> > still need to manage it because udp_tunnel's RTNL dependency.
-> > Introduce new udp_tunnel_nic_lock and use it instead of
-> > rtnl_lock. Drop non-UDP_TUNNEL_NIC_INFO_MAY_SLEEP mode from
-> > udp_tunnel infra (udp_tunnel_nic_device_sync_work needs to
-> > grab udp_tunnel_nic_lock mutex and might sleep).
-> 
-> There are multiple entry points to this code, basically each member of
-> struct udp_tunnel_nic_ops and the netdev notifiers. In this patch only
-> reset and work are locked. I'm a bit confused as to what is the new
-> lock protecting :S
+On Fri, Jun 6, 2025 at 6:58=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.c=
+om> wrote:
+>
+> A handle_events program should be able to parse the CQ and submit new
+> requests, add kfuncs to cover that. The only essential kfunc here is
+> bpf_io_uring_submit_sqes, and the rest are likely be removed in a
+> non-RFC version in favour of a more general approach.
+>
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+>  io_uring/bpf.c | 86 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>
+> diff --git a/io_uring/bpf.c b/io_uring/bpf.c
+> index f86b12f280e8..9494e4289605 100644
+> --- a/io_uring/bpf.c
+> +++ b/io_uring/bpf.c
+> @@ -1,12 +1,92 @@
+>  #include <linux/mutex.h>
+>  #include <linux/bpf_verifier.h>
+>
+> +#include "io_uring.h"
+>  #include "bpf.h"
+>  #include "register.h"
+>
+>  static const struct btf_type *loop_state_type;
+>  DEFINE_MUTEX(io_bpf_ctrl_mutex);
+>
+> +__bpf_kfunc_start_defs();
+> +
+> +__bpf_kfunc int bpf_io_uring_submit_sqes(struct io_ring_ctx *ctx,
+> +                                        unsigned nr)
+> +{
+> +       return io_submit_sqes(ctx, nr);
+> +}
+> +
+> +__bpf_kfunc int bpf_io_uring_post_cqe(struct io_ring_ctx *ctx,
+> +                                     u64 data, u32 res, u32 cflags)
+> +{
+> +       bool posted;
+> +
+> +       posted =3D io_post_aux_cqe(ctx, data, res, cflags);
+> +       return posted ? 0 : -ENOMEM;
+> +}
+> +
+> +__bpf_kfunc int bpf_io_uring_queue_sqe(struct io_ring_ctx *ctx,
+> +                                       void *bpf_sqe, int mem__sz)
+> +{
+> +       unsigned tail =3D ctx->rings->sq.tail;
+> +       struct io_uring_sqe *sqe;
+> +
+> +       if (mem__sz !=3D sizeof(*sqe))
+> +               return -EINVAL;
+> +
+> +       ctx->rings->sq.tail++;
+> +       tail &=3D (ctx->sq_entries - 1);
+> +       /* double index for 128-byte SQEs, twice as long */
+> +       if (ctx->flags & IORING_SETUP_SQE128)
+> +               tail <<=3D 1;
+> +       sqe =3D &ctx->sq_sqes[tail];
+> +       memcpy(sqe, bpf_sqe, sizeof(*sqe));
+> +       return 0;
+> +}
+> +
+> +__bpf_kfunc
+> +struct io_uring_cqe *bpf_io_uring_get_cqe(struct io_ring_ctx *ctx, u32 i=
+dx)
+> +{
+> +       unsigned max_entries =3D ctx->cq_entries;
+> +       struct io_uring_cqe *cqe_array =3D ctx->rings->cqes;
+> +
+> +       if (ctx->flags & IORING_SETUP_CQE32)
+> +               max_entries *=3D 2;
+> +       return &cqe_array[idx & (max_entries - 1)];
+> +}
+> +
+> +__bpf_kfunc
+> +struct io_uring_cqe *bpf_io_uring_extract_next_cqe(struct io_ring_ctx *c=
+tx)
+> +{
+> +       struct io_rings *rings =3D ctx->rings;
+> +       unsigned int mask =3D ctx->cq_entries - 1;
+> +       unsigned head =3D rings->cq.head;
+> +       struct io_uring_cqe *cqe;
+> +
+> +       /* TODO CQE32 */
+> +       if (head =3D=3D rings->cq.tail)
+> +               return NULL;
+> +
+> +       cqe =3D &rings->cqes[head & mask];
+> +       rings->cq.head++;
+> +       return cqe;
+> +}
+> +
+> +__bpf_kfunc_end_defs();
+> +
+> +BTF_KFUNCS_START(io_uring_kfunc_set)
+> +BTF_ID_FLAGS(func, bpf_io_uring_submit_sqes, KF_SLEEPABLE);
+> +BTF_ID_FLAGS(func, bpf_io_uring_post_cqe, KF_SLEEPABLE);
+> +BTF_ID_FLAGS(func, bpf_io_uring_queue_sqe, KF_SLEEPABLE);
+> +BTF_ID_FLAGS(func, bpf_io_uring_get_cqe, 0);
+> +BTF_ID_FLAGS(func, bpf_io_uring_extract_next_cqe, KF_RET_NULL);
+> +BTF_KFUNCS_END(io_uring_kfunc_set)
 
-I though that most of the callers are from do_setlink and there we have
-rtnl and we grab rtnl+lock during the sync. But that doesn't
-address the suspend/resume vs do_setlink race, that's true :-(
+This is not safe in general.
+The verifier doesn't enforce argument safety here.
+As a minimum you need to add KF_TRUSTED_ARGS flag to all kfunc.
+And once you do that you'll see that the verifier
+doesn't recognize the cqe returned from bpf_io_uring_get_cqe*()
+as trusted.
+Looking at your example:
+https://github.com/axboe/liburing/commit/706237127f03e15b4cc9c7c31c16d34dbf=
+f37cdc
+it doesn't care about contents of cqe and doesn't pass it further.
+So sort-of ok-ish right now,
+but if you need to pass cqe to another kfunc
+you would need to add an open coded iterator for cqe-s
+with appropriate KF_ITER* flags
+or maybe add acquire/release semantics for cqe.
+Like, get_cqe will be KF_ACQUIRE, and you'd need
+matching KF_RELEASE kfunc,
+so that 'cqe' is not lost.
+Then 'cqe' will be trusted and you can pass it as actual 'cqe'
+into another kfunc.
+Without KF_ACQUIRE the verifier sees that get_cqe*() kfuncs
+return 'struct io_uring_cqe *' and it's ok for tracing
+or passing into kfuncs like bpf_io_uring_queue_sqe()
+that don't care about a particular type,
+but not ok for full tracking of objects.
 
-Did not look deep into the notifiers, assuming they are a way to push
-the info down to the devices (under rtnl) plus trigger the sync work,
-will take a closer look.
+For next revision please post all selftest, examples,
+and bpf progs on the list,
+so people don't need to search github.
