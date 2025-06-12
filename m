@@ -1,73 +1,90 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD571D7E57
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DB72AE6D;
+	Thu, 12 Jun 2025 05:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749706926; cv=none; b=Y/daajeCABkERaaLmNlamnphWDr6ST3bLWs5jC9Fyw55jVHI3Prg+g6HYA2vMnrvOPrS1odiI3pS7Sbm2dOeMqi73Ec12WW5BmbLGDd2CtAdCRbPcnjP8XOlILDJOvRFkswstikAHKBTehx82usSR4qR7nuy2dhLgOa1YbeVn2M=
+	t=1749707264; cv=none; b=Sw2InG4sY6EA4YrMP6z5bi5NoXWBxvY1NQUKKi7moVXijPqdZ7UoBBg2uoBuDiHBRS39lp5ZxUWSHpLE0wliXVZrtk9VcWs/sI3bKoERlpClPZeF72TDJnU7ZsYJNYLzDCzwcWzi//gDFtY7+KwG55s7lf6KKtisOyf8mSFh0J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749706926; c=relaxed/simple;
-	bh=odpS62rjlgWdog+s+n9elEPssqerJy3q3R0Wl+zkYoo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DgWv4pk8ZD/coGJRG2rHTboFCN9hk9baze2V7vCw/NDIUTN1AIA3WVj1viw5oqnW48h4cl+PYTXj5BMSUms+1rjdFBxlV/J5SwhfGgoI3R01xAFqtZaPNa4/hRvOrx2eQULnZ4/hD8GWJ+el1OHK6ZDqW1CXdKEVZ8CJ90zz30E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <l.goehrs@pengutronix.de>)
-	id 1uPah2-0000LG-81; Thu, 12 Jun 2025 07:41:40 +0200
-Message-ID: <4562e9ad-50ea-4523-b619-8018ad71b8fa@pengutronix.de>
-Date: Thu, 12 Jun 2025 07:41:37 +0200
+	s=arc-20240116; t=1749707264; c=relaxed/simple;
+	bh=bpBqj2lArlhtrojMCZjnpyUXmwKWEvp6eVmI7nnSBvo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jOR3ass9NQcU1OFVK/Zlb2oault4Fo7/kpY7wqAsMeDG/jUQMzpzn+w6VFqWDTxly88QusTsME+YOjwOXAXsfYEfAxjgGKaFeBlx1DRWOFGvrdgL5qqWI5QsGN/4bEYP1jVpdOY4WU1dlW0T1XrFLLGlRe1LC/HQTpCoU+nScKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAgfC+6C; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAgfC+6C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0758C4CEEA;
+	Thu, 12 Jun 2025 05:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749707264;
+	bh=bpBqj2lArlhtrojMCZjnpyUXmwKWEvp6eVmI7nnSBvo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TAgfC+6Cn7HPhSDeiiCI+B08BTYx2qMHEqbqAXFwVGE4onY/q5jmIiHNKKqcbU6HR
+	 /u4C4WH9gMbg/oswsb8h8r40m78/w6BEx0c1QJwqMC8shZzXNBPxJyOTRJxo5v6V8R
+	 2eYr9714oUlSpJW6xP3tk/acKsYFPmbd9uHcBGZvmz8h3Gzypolw9El9op7Fbl8H2J
+	 xEGns+jl7TsgHMpwdBDEhJqhWH510lOhkUVM17b6kGWOBhUpDDFF6/cVBU3yaRUUu5
+	 6z45L3fp2HLK81VnYbE3dtLAXXFdDxWccqZLW0y6OZFh3FevrtQe6XIxZTS0P5FyA+
+	 gw7iXh9IlVFrQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	x86@kernel.org
+Subject: [PATCH] lib/crc: re-disable optimized CRC code on user-mode Linux
+Date: Wed, 11 Jun 2025 22:45:14 -0700
+Message-ID: <20250612054514.142728-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/28] iio: adc: ti-lmp92064: use = { } instead of
- memset()
-To: David Lechner <dlechner@baylibre.com>,
- Michael Hennerich <michael.hennerich@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Heiko Stuebner <heiko@sntech.de>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Francesco Dolcini <francesco@dolcini.it>,
- =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
- <jpaulo.silvagoncalves@gmail.com>, kernel@pengutronix.de,
- Oleksij Rempel <o.rempel@pengutronix.de>, Roan van Dijk <roan@protonic.nl>,
- Jacopo Mondi <jacopo@jmondi.org>,
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
- Mudit Sharma <muditsharma.info@gmail.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, =?UTF-8?Q?Ond=C5=99ej_Jir?=
- =?UTF-8?Q?man?= <megi@xff.cz>, Andreas Klinger <ak@it-klinger.de>,
- Petre Rodan <petre.rodan@subdimension.ro>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
- <20250611-iio-zero-init-stack-with-instead-of-memset-v1-10-ebb2d0a24302@baylibre.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>
-In-Reply-To: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-10-ebb2d0a24302@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.goehrs@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+From: Eric Biggers <ebiggers@google.com>
 
+The reorganization of lib/crc/ unintentionally enabled the x86-optimized
+CRC64 code on user-mode Linux.  (It's enabled when CONFIG_X86_64, which
+is set by arch/x86/um/Kconfig.  Note that this is a different option
+from the "normal" CONFIG_X86_64 which is defined in arch/x86/Kconfig.)
+Since this is not being taken into account, a build error results:
 
-Am 12.06.25 um 00:39 schrieb David Lechner:
-> Use { } instead of memset() to zero-initialize stack memory to simplify
-> the code.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-Reviewed-by: Leonard Göhrs <l.goehrs@pengutronix.de>
+    CC      lib/crc/crc64-main.o
+    cc1: error: ./lib/crc/um: No such file or directory [-Werror=missing-include-dirs]
+    lib/crc/crc64-main.c:58:10: fatal error: crc64.h: No such file or directory
+       58 | #include "crc64.h" /* $(SRCARCH)/crc64.h */
+          |          ^~~~~~~~~
+    compilation terminated.
+    cc1: all warnings being treated as errors
+
+Fix this by re-disabling the optimized CRC code on user-mode Linux.
+
+Fixes: e2fd1883971d ("lib/crc: prepare for arch-optimized code in subdirs of lib/crc/")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ lib/crc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/crc/Kconfig b/lib/crc/Kconfig
+index 5858b3acc6630..70e7a6016de32 100644
+--- a/lib/crc/Kconfig
++++ b/lib/crc/Kconfig
+@@ -85,10 +85,11 @@ config CRC64_ARCH
+ 	default y if RISCV && RISCV_ISA_ZBC && 64BIT
+ 	default y if X86_64
+ 
+ config CRC_OPTIMIZATIONS
+ 	bool "Enable optimized CRC implementations" if EXPERT
++	depends on !UML
+ 	default y
+ 	help
+ 	  Disabling this option reduces code size slightly by disabling the
+ 	  architecture-optimized implementations of any CRC variants that are
+ 	  enabled.  CRC checksumming performance may get much slower.
+
+base-commit: 7234baeec076d4c2ac05d160ed8cdb2f2d033069
+-- 
+2.49.0
+
