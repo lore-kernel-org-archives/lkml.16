@@ -1,42 +1,25 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF1E1F473A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87181F4C84;
+	Thu, 12 Jun 2025 06:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749710495; cv=none; b=bRm0qUQkFSoBiIK6Qd9abAzMZ4EkZkq0aPFFOxmdGbHdyQtwAGTWgad+ymZf/9yqL7bgAL9aiwlWpHMTF1wdegr+3XRNY22X5B1xvvpCPnAS6ffjDrd1uD+rFf4v8DY0AoiC6fpE95LuB9xJvkhho8oXo71tOWi0MqbjgeCugKM=
+	t=1749710703; cv=none; b=u9fU7mwxOlFt6/HA3+WvXFXlgynZERolMLuMWjFmE2fMVTWGhjY2lbo/GmHtcwDagcCRcaJQke7E+qY2hJPHUHfWPZLHOHMig2RWk/OO9F4pkGSrY3ccibXf9q5cXxZf7jfCuRQ60rkNXH76qw1MGwGlsvt8xVdP2nf4ydYm9z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749710495; c=relaxed/simple;
-	bh=A7TqxuB8t9bmTFkapNPal+O9p2AhATY2thZsPhLxr6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:In-Reply-To:
-	 Content-Type:References; b=MpuMGAsaY2UDmj1stl3NDMtpF4IHdDQ6+rbjpsfyg5IkS3GNjOfyPfnFIp1l7eqYMu8lY1UEcRkEZ2sIC46FU9T3vzaxbbK0melYpQAeHJtM3+q/Xxv3Yr4+JGh/VQd5PAQGj7N75DdXP8mmZmg+1mpfkM1rObOIiAoJv9XxVuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=KJGJ7Z2K; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KJGJ7Z2K"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250612064131euoutp02d26bb8d1b8e56ffd4b49cee153602af2~IOGvkL1pn3007030070euoutp02d
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:41:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250612064131euoutp02d26bb8d1b8e56ffd4b49cee153602af2~IOGvkL1pn3007030070euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749710491;
-	bh=7nYk7226mhpYPqAZ23fAfF9iNBbc+f6mM4CczYyFCIQ=;
-	h=Date:Subject:To:From:In-Reply-To:References:From;
-	b=KJGJ7Z2KRe6nwAJupdsYYMq7TGP1oGW628D9+BaS2tIb66lABtfShBULkRLe0EIqL
-	 4UHYM5OfqJzMMG7QTvaRxrC89YEEn4G7ClylxB6iRwEjdRnt1xCwfOW1hH0LMqtRxw
-	 lUuKPj9EisVcUmdK/B1QCR0iyvRRsSmBFu5bLjhU=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250612064130eucas1p1f607c3f7d9b1751ee1bc48ccc5a0eea7~IOGvJlcn80968109681eucas1p15;
-	Thu, 12 Jun 2025 06:41:30 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250612064130eusmtip1b9141f05b400d99bbb5c3913c5bc51a4~IOGuc7ewg2952629526eusmtip1M;
-	Thu, 12 Jun 2025 06:41:30 +0000 (GMT)
-Message-ID: <1da11218-64d4-49bc-a484-77390a5cd9bc@samsung.com>
-Date: Thu, 12 Jun 2025 08:41:29 +0200
+	s=arc-20240116; t=1749710703; c=relaxed/simple;
+	bh=rxKO1BKV4hODD1SbaLCwVicmOFDO4mKDfQbwr7D0Nvo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W06ZC6BzD8AKUH1m+DXAKV+lzM4yWJKFrxVT1NM6MWuNX7I4crsEDlDx4kwkEBumm/gtoa1j1A/tBeTLYyeVtr+5pb/SuZa9OzUIOTvaeu6dNwsbED9LGOGY0kY3KN2lkbqArzSLFaaJIc2R5ixA6c0Pz4S9tFoTeYwO9izAkZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11DE014BF;
+	Wed, 11 Jun 2025 23:44:40 -0700 (PDT)
+Received: from [10.163.33.129] (unknown [10.163.33.129])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 711AB3F59E;
+	Wed, 11 Jun 2025 23:44:52 -0700 (PDT)
+Message-ID: <f89faeb2-1091-41af-ae06-f49bd2d4866a@arm.com>
+Date: Thu, 12 Jun 2025 12:14:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,45 +27,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dma-contiguous: hornor the cma address limit setup by
- user
-To: Feng Tang <feng.tang@linux.alibaba.com>, Robin Murphy
-	<robin.murphy@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Andrew
-	Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/10] arm64: sysreg: Add new PMSFCR_EL1 fields and
+ PMSDSFR_EL1 register
+To: James Clark <james.clark@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, leo.yan@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
+ <20250605-james-perf-feat_spe_eft-v3-1-71b0c9f98093@linaro.org>
 Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250612021417.44929-1-feng.tang@linux.alibaba.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-1-71b0c9f98093@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250612064130eucas1p1f607c3f7d9b1751ee1bc48ccc5a0eea7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250612021422eucas1p16c777f6fa46aa130d9b83ba80c2c11c3
-X-EPHeader: CA
-X-CMS-RootMailID: 20250612021422eucas1p16c777f6fa46aa130d9b83ba80c2c11c3
-References: <CGME20250612021422eucas1p16c777f6fa46aa130d9b83ba80c2c11c3@eucas1p1.samsung.com>
-	<20250612021417.44929-1-feng.tang@linux.alibaba.com>
 
-On 12.06.2025 04:14, Feng Tang wrote:
-> When porting a cma related usage from x86_64 server to arm64 server,
-> the "cma=4G@4G" setup failed on arm64. The reason is arm64 and some
-> other architectures have specific physical address limit for reserved
-> cma area, like 4GB due to the device's need for 32 bit dma. Actually
-> lots of platforms of those architectures don't have this device dma
-> limit, but still have to obey it, and are not able to reserve a huge
-> cma pool.
->
-> This situation could be improved by honoring the user input cma
-> physical address than the arch limit. As when users specify it, they
-> already knows what the default is which probably can't suit them.
->
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+On 05/06/25 4:18 PM, James Clark wrote:
+> Add new fields and register that are introduced for the features
+> FEAT_SPE_EFT (extended filtering) and FEAT_SPE_FDS (data source
+> filtering).
+> 
+> Tested-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  arch/arm64/tools/sysreg | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+> index 8a8cf6874298..2e897d8a4040 100644
+> --- a/arch/arm64/tools/sysreg
+> +++ b/arch/arm64/tools/sysreg
+> @@ -2859,11 +2859,20 @@ Field	0	RND
+>  EndSysreg
+>  
+>  Sysreg	PMSFCR_EL1	3	0	9	9	4
+> -Res0	63:19
+> +Res0	63:53
+> +Field	52	SIMDm
+> +Field	51	FPm
+> +Field	50	STm
+> +Field	49	LDm
+> +Field	48	Bm
+> +Res0	47:21
+> +Field	20	SIMD
+> +Field	19	FP
+>  Field	18	ST
+>  Field	17	LD
+>  Field	16	B
+> -Res0	15:4
+> +Res0	15:5
+> +Field	4	FDS
+>  Field	3	FnE
+>  Field	2	FL
+>  Field	1	FT
+> 
 
-Thanks, applied to dma-mapping-fixes branch.
+These register fields checks out against ARM ARM DDI 0487 (L.b)
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
