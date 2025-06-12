@@ -1,98 +1,222 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCA51A8405;
-	Thu, 12 Jun 2025 13:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736612; cv=pass; b=CMB/jl028r4tdAo+pjYTvDf0gy34fbgQ9TQWpcB1XpEtzyydvhGJnfCXQPA01thtiN4h1WIgf1XKeswfZJ/10b4cW1v4frCclbPuawRSswbbYJ8EvqbSs5yaCLSNtoUS2Thr+Tb+LzNr+z9faD7abjfk6cilelvQYtyZ+soZoDg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736612; c=relaxed/simple;
-	bh=9z9L2t/idxIPWqHtl6feJ5+98mUHvEmO1D71s0ZzRy8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=APt5njTGGXxrDnIXQ48NhGzNAuMtR0jbVKgFpN8gT2bk013tsthWPiMhxY5p7nsDo4wC3R0cf2hdc6arHlzA1h0OhlpSTBUgQtsuFI/PnlZOEt5zUpGxDhAJ7T001YG3uHOjrR0osd0tamQoMVpWPPA4X+uLhxBk07CmlxYeBy8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=n8+WYuf9; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E4B23E331
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749736643; cv=none; b=XAcl12JmiUq8nUr/CkxqiByI+Om014YRcLLN+dx59qDvVtb5J7YhHSCFreHs+0DzEh8jmcjfmM0RT7IDRhgetALR56DBxnB4Po44cd/LA67xa+Dx7fzm/HN5980JD4DtOg+B+0lPgHOjnRJ2VihCNzyhzh/S3oKeskEMaRcBpZA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749736643; c=relaxed/simple;
+	bh=FsjKzATE2fBcfCRDnaoVj2USddLsymJIPPzcUtqYzs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vnjt1MCv35z8MVYPninL17ebl7mGTCtxULL6o+Iky9jt1X7nJTrlbImOcpcA8F/YhrooNTas4ryPUwUo/qav7U6iqogsDRnOBsK/6SIYjzPe7T7nk6vWXohzPM2tAKBmdpTU4TxtAlyjMK9Kd0E/ow49o82aiIM92xPgPKPXPbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D7XScwff; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="n8+WYuf9"
-ARC-Seal: i=1; a=rsa-sha256; t=1749736586; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=lvR1fq3NchjreiyUiIeLyfUSl3q2G2RoAlsQESjIc53+9OOmdW49NG0QOCklpaAxkpzOf+O3J5TOvuWFybfEplwcaG6SlWktPmVS4TBXLl1CE+CNBIWgpw+JPMzHAHvrgK3MAmVcgjWwsLQjgM1OiYYRK5Yzn18WQBKTwVWeYRY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749736586; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Xe+/CWthc6ot+OCxKsW3fGV6MDdG1CZZweZmpwlQwl8=; 
-	b=UDb8x8KAEskyKoSz1q1Mjj674Y9Rt4VlIoYO9Btoo4sS28yUQqBfQK7bS5IbuU518aeieAFSnj+TDZqkC9cgxYZZSvCSmghmOHXVmgKQJMWTPv+DDBO/oEGe4QqVIqZePNHuSv8DtRWGH0koTxGY2nAaixJwK5J2UjvLaqR9j/4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749736586;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Xe+/CWthc6ot+OCxKsW3fGV6MDdG1CZZweZmpwlQwl8=;
-	b=n8+WYuf92DJ5Lm1peHwH0i8dXZkNIOPgt6STqoXZn6bE31CoXzRJ7aDTt1IPiUfh
-	XEjSZx+S0IZMuy5sEy/SA0Ayo2YBiyF/OSXxBVCrX+L6rMKOiyXcJF0k+rFEmYjLIvn
-	5gyhXvQ81zaLxlmvGB/DqrM1LDnuGFFfTwq9TvyjZn32JvK1bv1xeaoMuwh2dnchIPO
-	tzuQGpMYbgc2ttKjYPZsz5dvWbyK1lvofXwv/tFR5IOhFwwxJv1lqD+FwFJDt27KfX0
-	GYrwEKtAQvYBc4LsXL0BBDQZ4y5dpMAJYjJmW46HmjVRr/t43nrfjeHjWv9lVTvViGF
-	1pKHyolYxQ==
-Received: by mx.zohomail.com with SMTPS id 1749736583346329.0335267878131;
-	Thu, 12 Jun 2025 06:56:23 -0700 (PDT)
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Chen-Yu Tsai <wenst@chromium.org>,
-	Sean Wang <sean.wang@mediatek.com>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Icenowy Zheng <uwu@icenowy.me>
-Subject: [PATCH 2/2] arm64: dts: mediatek: mt8173: add hana revision 2
-Date: Thu, 12 Jun 2025 21:55:59 +0800
-Message-ID: <20250612135559.2601139-2-uwu@icenowy.me>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250612135559.2601139-1-uwu@icenowy.me>
-References: <20250612135559.2601139-1-uwu@icenowy.me>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D7XScwff"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-441ab63a415so10609185e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:57:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749736639; x=1750341439; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uWIybPnFMO+iPTF1D7X2vHTnG4Ra9zFxBSdBlVwLzyQ=;
+        b=D7XScwffSPpuo1FjJw7y9xXs8XqQ7kB72+1uyeWPvNCOsOgnVZ5qUmhnLmkkl47P8Q
+         TCIgi/kGRspXC1DAoTSqDTP/XJY+EIM7rJWeG4kQ38b9gEGRUVUw0Nz5hQ8U+THIUuVR
+         gPGD8ftcv/amVRcvZC/Glx6Ealo3sLcRChX4G6JYN6kCrvWewfGpdRkdxZNnunoxRq9m
+         SdDR3kgz94+457XDMuXybhIoPMM3ChGXNb7v0CiVfsm/FiHBStIqc6BMUJKohCum5cbU
+         lQ3iRyu1YDTltneD9t8r9FGqnhz1ZUSzykbBpiiyNWfbZdzyQKr5lZgMYaCZMaCVSaz1
+         MjdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749736639; x=1750341439;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uWIybPnFMO+iPTF1D7X2vHTnG4Ra9zFxBSdBlVwLzyQ=;
+        b=L87gxeZHArp5fDVOvkA+hVwCMq9/v5yyv4cTsos3VRUBgFzl2NQNY1GRHkjPePbFaA
+         vBYxHkJNY+q4ZRgYTsifXwixCZWyy+vmU5tGvpi7kObFweOznB3hn1ySrLtlZSFf83A5
+         MqwyaHsVosp73RWWIfvwdVb8T06D2GxWTDSJTYEWCJrKEHEqDFewQbb/pPq9JUrYotDW
+         mZN57/ETXys0eUW7MIm6FllCumIe2wboyYwlwPHrQ2JuBma7j3PijeMKqdxY/oTMHu+M
+         +ffqbJ63Ap3gMbLLR3ZiCnUWBiJurkiFZAXBPhPR4kW7fFz+BGE9glgGyJOiL7n0C4Dy
+         f96A==
+X-Forwarded-Encrypted: i=1; AJvYcCVnkQV+GjVw1++2eAZcdKxg3zOBsmYDZoIMDJKkf1/rKXMSX0BPXMTUl4y1JccWA/qWVHtk1/cxMrEtwkk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyloM9iN/mtdUjWVpGa1C4ycgq/zkqU2KCRAZrv3+Twu9P0GN1/
+	z10MWV2qhTAPmo4sIGqJjubRMxRyCavj0498om54quHE3KGMn/Qqy9799ZGVJloVUS4=
+X-Gm-Gg: ASbGncsfgak8CyR4a0h3+ACChqirP0L81PqZ/ZFZPVTFJPiRAO08cz1vkWgP+CM7x3Y
+	Ow3pM9rX2pUSedwcGBIsTpWqWyT+Qz1KE/DRcfsp6d0jdHtihUkoPoqxYUzmzqYg5s1To3bVjSv
+	X1WJt32niu9qEIlhDUlq+5K+MbNAhvi6wPfwfa/23SYN9oJiRU38gBwt6MqOjHlRFfmZM1xZS0N
+	5GvhSOhw+8lusxvDfVXlK7zH47ooDlQOQBesat9FsBRuRVakGeSx+yhpg8yJklWSYb/J/9XgUlY
+	DD1yPr+i27V2N4Sodbsdr+TBEKVRM6Q/O/8OEILCjSdodCgK1JomrpW687JyYrlX
+X-Google-Smtp-Source: AGHT+IHHTgsF4plb+4cSFCswnZ1BoRaKntWrXC3dKLfejS0J5Ju71cHUfrXuDzUBs/xWMfkadhCSvw==
+X-Received: by 2002:a05:6000:420b:b0:3a5:52b3:103b with SMTP id ffacd0b85a97d-3a5586dce0bmr5309298f8f.4.1749736639382;
+        Thu, 12 Jun 2025 06:57:19 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e61b65esm14131675ad.12.2025.06.12.06.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 06:57:18 -0700 (PDT)
+Date: Thu, 12 Jun 2025 15:57:00 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
+Subject: Re: [PATCH 4/7] drivers: serial: kgdboc: Check CON_SUSPENDED instead
+ of CON_ENABLED
+Message-ID: <aErcrCKcsi9cpANY@pathway.suse.cz>
+References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
+ <20250606-printk-cleanup-part2-v1-4-f427c743dda0@suse.com>
+ <CAD=FV=XXQyZLYKoszj68ZGFDY=9-cmEUp406WeOeSBVZOHyUHw@mail.gmail.com>
+ <f962e9bab3dc8bf5cae1c7e187a54fb96a543d51.camel@suse.com>
+ <CAD=FV=XFeokpbMUFjAc0OkwJ97vR8aB+4GbnFxRKymvpEY3gnA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-ZohoMail-Owner: <20250612135559.2601139-2-uwu@icenowy.me>+zmo_0_
+In-Reply-To: <CAD=FV=XFeokpbMUFjAc0OkwJ97vR8aB+4GbnFxRKymvpEY3gnA@mail.gmail.com>
 
-The current mt8173-elm-hana.dts file only contains compatible strings
-for revision 3~6, makes boards with revision 0~2 to fail to match a
-revision-specific DTS and may fall back to the rev7 one (which lacks
-some gpio-keys).
+On Tue 2025-06-10 16:18:22, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Jun 10, 2025 at 1:03 PM Marcos Paulo de Souza
+> <mpdesouza@suse.com> wrote:
+> >
+> > On Mon, 2025-06-09 at 13:13 -0700, Doug Anderson wrote:
+> > > Hi,
+> > >
+> > > On Fri, Jun 6, 2025 at 7:54 PM Marcos Paulo de Souza
+> > > <mpdesouza@suse.com> wrote:
+> > > >
+> > > > All consoles found on for_each_console are registered, meaning that
+> > > > all of
+> > > > them are CON_ENABLED. The code tries to find an active console, so
+> > > > check if the
+> > > > console is not suspended instead.
+> > > >
+> > > > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> > > > ---
+> > > >  drivers/tty/serial/kgdboc.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/tty/serial/kgdboc.c
+> > > > b/drivers/tty/serial/kgdboc.c
+> > > > index
+> > > > 85f6c5a76e0fff556f86f0d45ebc5aadf5b191e8..af6d2208b8ddb82d62f33292b
+> > > > 006b2923583a0d2 100644
+> > > > --- a/drivers/tty/serial/kgdboc.c
+> > > > +++ b/drivers/tty/serial/kgdboc.c
+> > > > @@ -577,7 +577,8 @@ static int __init kgdboc_earlycon_init(char
+> > > > *opt)
+> > > >         console_list_lock();
+> > > >         for_each_console(con) {
+> > > >                 if (con->write && con->read &&
+> > > > -                   (con->flags & (CON_BOOT | CON_ENABLED)) &&
+> > > > +                   (con->flags & CON_BOOT) &&
+> > > > +                   ((con->flags & CON_SUSPENDED) == 0) &&
+> > >
+> > > I haven't tried running the code, so I could easily be mistaken,
+> > > but...
+> > >
+> > > ...the above doesn't seem like the correct conversion. The old
+> > > expression was:
+> > >
+> > > (con->flags & (CON_BOOT | CON_ENABLED))
+> > >
+> > > That would evaluate to non-zero (true) if the console was _either_
+> > > "boot" or "enabled".
+> > >
+> > > The new expression is is:
+> > >
+> > > (con->flags & CON_BOOT) && ((con->flags & CON_SUSPENDED) == 0)
+> > >
+> > > That's only true if the console is _both_ "boot" and "not suspended".
+> >
+> > My idea here was that the users of for_each_console would find the
+> > first available console, and by available I would expect them to be
+> > usable. In this case, is there any value for kgdboc to use a console
+> > that is suspended? Would it work in this case?
+> >
+> > I never really used kgdboc, but only checking if the console was
+> > enabled (which it's always the case here) was something that needed to
+> > be fixed.
+> >
+> > Maybe I'm missing something here as well, so please let me know if I
+> > should remove the new check.
+> 
+> So it's been 5 years since I wrote the code, but reading that I was
+> checking for:
+> 
+>   (con->flags & (CON_BOOT | CON_ENABLED))
+> 
+> Makes me believe that this was the case when I wrote the code:
+> 1. Early boot consoles (earlycon) were not marked as CON_ENABLED but
+> were instead marked as CON_BOOT.
+> 2. Once consoles became non-early they were moved to CON_ENABLED.
+> 
+> ...and the code was basically looking for any consoles with a matching
+> name that were either boot consoles or normal/enabled consoles.
+> 
+> Is that a plausible theory? It's also possible that I just was
+> confused when I code things up and that I really meant to write:
 
-As I've got a Lenovo Flex 11 Chromebook with board revision 2, add it to
-the base hana DTB file.
+It is easy to get confused by the register_console() code. And
+it has been even worse some years ago.
 
-Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
----
- arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Anyway, the current code sets CON_ENABLED for all registered
+consoles, including CON_BOOT consoles. The flag is cleared only
+by console_suspend()[*] or unregister_console().
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
-index fcf0cb76a87c3..84638a07587f3 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
-@@ -11,5 +11,5 @@ / {
- 	chassis-type = "laptop";
- 	compatible = "google,hana-rev6", "google,hana-rev5",
- 		     "google,hana-rev4", "google,hana-rev3",
--		     "google,hana", "mediatek,mt8173";
-+		     "google,hana-rev2", "google,hana", "mediatek,mt8173";
- };
--- 
-2.49.0
+IMHO, kgdboc_earlycon_init() does not need to care about
+console_suspend() because the kernel could not be suspended
+during boot. Does this makes sense?
 
+Also it does not need to care about unregister_console() because
+the unregistered console won't be listed by for_each_console().
+
+[*] The 1st patch in this patchset updates console_suspend()
+    to set CON_SUSPENDED instead of clearing CON_ENABLED.
+    It helps to make it clear that it is suspend-related.
+
+
+Resume:
+
+I would remove the check of CON_ENABLED or CON_SUSPENDED
+from kgdboc_earlycon_init() completely.
+
+IMHO, we should keep the check of CON_BOOT because we do not
+want to register "normal" console drivers as kgdboc_earlycon_io_ops.
+It is later removed by kgdboc_earlycon_deinit(). I guess
+that the code is not ready to handle a takeover from normal
+to normal (even the same) console driver.
+
+To make it clear, I would use:
+
+	for_each_console(con) {
+		if (con->write && con->read &&
+		    (con->flags & CON_BOOT) &&
+		    (!opt || !opt[0] || strcmp(con->name, opt) == 0))
+			break;
+	}
+
+And I would do this change as the 1st patch in the patchset
+before we change the flag modified by console_suspend().
+
+Best Regards,
+Petr
