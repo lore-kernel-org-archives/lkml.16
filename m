@@ -1,135 +1,99 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6871A315C
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29E6A55;
+	Thu, 12 Jun 2025 12:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749732360; cv=none; b=s5hruGi63PVgxwG2ZB+ZC8TqW7lzpwHEMyrDwbqTaDn0eNhoZoaLWQu6x3pszKQ6mvqhfHfrSCD21skhXUh29QxVwZ7lft7BK9vUzYrOSR4HU5B5DkNSFP/ERWUTC2HuCSHPVWr6w+6JpuCcmha4MEc3SsIHkkvfSEZ0UN+2P7g=
+	t=1749732401; cv=none; b=IZSwGtDnd3KJsL3d2vXR+pNJx21+vX0EMOR4TPf5t2qb22eMaQ6ryY+bpDOuxSHqpHMnOXOty/QYQ1O69WHVQVOMv0xSYqrbb3X1g+RGpjXvZ9vU+M2A5XtLDCeMEHZAD9IYtdJ6YxgZGyNgjD7edct15Er0aexfGjrJSDJ4GeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749732360; c=relaxed/simple;
-	bh=1HdeTsKzO17uuGONKnmRpLqzCeVNHk7yoQQEiaXqA7E=;
+	s=arc-20240116; t=1749732401; c=relaxed/simple;
+	bh=UEHGNT8OkyV40JRRhSs1RS3iCq1KdL1KzjJCQb2gnEU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YQBR+M7mp/i6lXUbILvylsa5tuR4+V8Hg+unM9YSr3V99C14ZTDz1u7vwtdDx5hI8+1NErpE2WwOmXt4Wk45mOYCsef98r/PlgyJbIQb/I1MrM1gbz6s0opBOMSEO4ar+nEDFXiZCZ1IKklKaUHdxC/k09yaqafvwp+/1/8azh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=X2lQWMd3; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="X2lQWMd3"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5532a30ac41so893009e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:45:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749732357; x=1750337157; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2U7VSbXiyqPZsh+GuDnhbJ8vkS2YTh1A7lk+84P+QSc=;
-        b=X2lQWMd3pZEbMHiKN9S9F7rjaOkARicttsTHwaHb+fSc9TciZ7ouVls5AY8GTiIM/V
-         fM3mYNRN9Z17bojgfx5bA/DgiY6X+6MhOyF36ZfdzqRd6kmfehsfNwgnNY2sttdqy3bn
-         58G5qccGsZA5iUAstRFG+q0xb24wkiIpu7oijB1tE65M9IlHYQmZVx0PUUc3frdEsyjN
-         kCK42wAFyVyIRpINTxfx6pfj0+qSR1M8d2vgbhPimXhO3K4+aHqqtjpZpqQpczf1krGY
-         rzYJITEQrJJftk/oEyZuAOtIbiyIj+EVqUdoZ4T4322fHjrjIU1EUc2VmLfO+TDCHzxa
-         ISmg==
+	 To:Cc:Content-Type; b=dmFfRguUgeHcNn5/Zs3KM7KaUZePXJlAcIRh81Z810uQhCzrd14kQa7SCUQ0TJ+jlum79Pw+r5h/aKFKfqOGlV8ZqJ+Ds56bDBW4OA+a4pJk2vK0YzbgAZJExNe+ruKOz9c9sN4yUaCaNkGpK+Vs9RNQW6WVfaaJ9IQr/l7UAVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e79dde8511so221495137.0;
+        Thu, 12 Jun 2025 05:46:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749732357; x=1750337157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2U7VSbXiyqPZsh+GuDnhbJ8vkS2YTh1A7lk+84P+QSc=;
-        b=gY9PoLj7FJ9HRav1jerfiv+RLaAX8rkkLX0H8UPp9FNJ5l9tnWgUfOiBoK1RLnmZtA
-         VXonuUNlHCJY2r6FTXIEo1maY85VQ3fYMso1I5jEd2WbxWmvmNq1ZKON25Hzho+G13Nb
-         f7tyHUjeZ75qVrInc/Y0hlFpId1xPq8Mz1mpgD6Om036h1woVD9Y6v8KBW1s71wA0rNM
-         66EEYbshLmjFzMLqo/n11FU4ncJ63QyuuBYoLZ+OioXJVzmRNnJf6wS2GVw2ODHLCHMv
-         LxdCfjLGXTQ8lWYQ5RGJTaW/58kLcPMlVPlkleTBxW74k0KN5Un/5T/2XohlFsunwCO1
-         n8hg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPndIg6EMpxz9sGef0ewY5KWix7z8SUD6iA0FxBIqYZ0h4/53+1NAq7XlLaivjYdz6beryok60Zxp1gtQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylBiBwntXqYM07VwNZEwrM/teWJexKncvFCI1Mw3pb8u1ct6Wv
-	yKxRmWAEENTehHBCl/iZhredmDTTKMsruXV+9nOiPBj2RW92zPvFuFEWlDWFGioUhJtdB0duFZz
-	Qo0C9hfVjLpyTCayIPYdXqJf3XIs12KS8xNeG+7bDxw==
-X-Gm-Gg: ASbGnct0lVQEVzOLxB0ZD3fd5RU23AxaF/lKVlzkqrN+Pn9V88UYDBFVsuz5f1zhPfP
-	0vEXO5ouQ/jsntWWRiS1WegWQM2h9TOXFX01nOPtWpTTKEglo4MnCKzpQ8ksFtziHJZYq/VKNGu
-	1N34ZKyOEiWAsGoX9AAX83wwkw3P17YwqOzn7aGKBgeugpGS9NdX5a1VigeXqdw+ibLt901esDb
-	9s=
-X-Google-Smtp-Source: AGHT+IF+0Mekv6FpFqTRyts5+5VmEL5JiWmZ43lLx3r++M9HONAgJixQI4vI3imUBxU9EG9kgVe/b9KcTe0breTR6dg=
-X-Received: by 2002:a05:6512:2354:b0:553:2edd:a7e0 with SMTP id
- 2adb3069b0e04-5539c11671cmr2453917e87.16.1749732357132; Thu, 12 Jun 2025
- 05:45:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749732398; x=1750337198;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8vSAoUstgikUUqDKzXknlBDKU/sYkHZcvI32J0wZveY=;
+        b=uL9+BhKrb7Pjq1gwja1AP+Rkr/iE8ZmbrnZDnOO9srM3cGGgPaJliCw4L22Ddhq+4I
+         FDleCRVWoa8M2NJTktfPRGvKlO73Q50lz9Iwq/fv1qn5PYkrTkeLSnHEtwHb7lh8iuv/
+         PwFJahVCN6uFdVx2w8JT7xRfjh4vv+84A9lrAZfDEPNyJAnXaE/X5ZVe0TchnaWITl7E
+         FhGjmalyem8WYtezoPMlD0xRxf6fCjWmco7wl0BiQVkHrb/b4GBe2wUefdC5ioEtFMew
+         Eq/dz+u9GTs5MpBJ3yUh7uDrfeycadBTUutK3wrqkpHLFhBEhwNuTqsyOBn4NsID/KTF
+         oOZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVUltaUdmULy3tE2rjDDSCHBPwFqngTqZhFw/KOjRnK1VsDbaATmCFnBJttEg7LLr3Wys5/6xvWmhLPodSy@vger.kernel.org, AJvYcCVxoUtd5WuS1PHLkbDGa/DR7VvVD65sC0cOODcCOs0knJ6EXp40i5oSuBZta9J9N1tUeAkNHp4lhSYo@vger.kernel.org, AJvYcCW7abg7JZeof7dRJEZXT4S0gU9LjKs6244WxRzHt6Hmukt0rPcbQYLQ1asVfRn+owGe6iipXSDvO4NDARoYmQUqBYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpT3plPgrCa3aqmKJKtPykMeJD2KWu3EjVOozTuPQ0SnCBO9Q1
+	AXRgz2oH3bit1NJ1sbWh2TxXg6RbuF3nrJce+WWrnm97X7EjU2ipTYxMDNjJyvMU
+X-Gm-Gg: ASbGnctSLV+OzQkvYyddkWacaM3R4rU1g70qefDQChvjtmVpfOxo3so68Jn+90m3p+W
+	P4jbGCk4iEVRsMooyst84y7DZXRwlf6mnqk8s+eIGotRJf8RLHo5ssCYPrXFUtzhIFv2GCdBEPF
+	eKu9QRQmwGRZkK+TgCIEcHzw6fPpIeZZb97tfXAP33jmCfcLqI5tBg8+h9ob4ukDNyugdsf2/m3
+	vKr+UXlF0wSx1H/ohucW2rGAQvecl/9GBVp09TUFnyl8byVYbP+iNxw5gZaqqjGVpgE7zUQu+tj
+	RkySjcE0bwuvirc5sQa6B84wQcwTzEJI7AsMBI4ZaZ1lOzbT957kuae5Wzat9yLqVOcPGUFqEGx
+	AwFgSHraxp8fvNB/TLUunChJZ
+X-Google-Smtp-Source: AGHT+IExtcISPJB/Z1NN8upup1Nmo+XdMxTbnI7RpcquENYOUiQ9fcXAXS5sB20FuvJTq+okYxfq7g==
+X-Received: by 2002:a05:6102:c52:b0:4e5:a83a:3cee with SMTP id ada2fe7eead31-4e7ce96d112mr1956877137.14.1749732397875;
+        Thu, 12 Jun 2025 05:46:37 -0700 (PDT)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7d0907f4dsm221602137.14.2025.06.12.05.46.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 05:46:37 -0700 (PDT)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so212969241.1;
+        Thu, 12 Jun 2025 05:46:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUONZRMuXsMqi3iiLnjeP7ZlByABW5Hde0f0wT1Ti28Yw1z6JNWbf0WIjOBD642pndjpmJ38eVvUNMeowUl@vger.kernel.org, AJvYcCWDEk3ckl+n+hkgNQmh/2uM481QyjXay5TsvKnkWrNRf13/E2tIeoUvRIRV+SEAKwSgaZ+A43guzrGNPVROiCLTZqo=@vger.kernel.org, AJvYcCWTZ6UScguQQjBux+9wo7wDVRurijx7Jp7e+pjN38HmqwNKNB/wscNc+ZzlUijT8LIUJqDxhPty+4iY@vger.kernel.org
+X-Received: by 2002:a05:6102:441e:b0:4da:fc9d:f00 with SMTP id
+ ada2fe7eead31-4e7ce96d107mr2142848137.13.1749732397116; Thu, 12 Jun 2025
+ 05:46:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612-gpiochip-set-rv-pinctrl-cirrus-v1-0-2d45c1f92557@linaro.org>
- <20250612-gpiochip-set-rv-pinctrl-cirrus-v1-2-2d45c1f92557@linaro.org> <aErJz7C7f1iC4Aqm@opensource.cirrus.com>
-In-Reply-To: <aErJz7C7f1iC4Aqm@opensource.cirrus.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 12 Jun 2025 14:45:45 +0200
-X-Gm-Features: AX0GCFu8U5zT7-CTdlghDirLZZrOO8-pxVidLweEpr2lAEyo77Jxgek7rDwDTzo
-Message-ID: <CAMRc=MeSTN51Zjn5Ou9+bbSwS6skPvHh-eGC4Zs9j0uCu=B9Bg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: cirrus: cs42l43: use new GPIO line value
- setter callbacks
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	David Rhodes <david.rhodes@cirrus.com>, patches@opensource.cirrus.com, 
-	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250528140453.181851-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250528140453.181851-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250528140453.181851-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 14:46:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWeXc1zqOgwRPjJ8RLL_oVFUtEAz5Ka_XssBBatXtEtmw@mail.gmail.com>
+X-Gm-Features: AX0GCFs-ouPmndvanqwNIxMC9hDtu7_aRuCPeAypWbiKcZT-yN-JH5KflfL3yXM
+Message-ID: <CAMuHMdWeXc1zqOgwRPjJ8RLL_oVFUtEAz5Ka_XssBBatXtEtmw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r9a09g056: Add USB2.0 support
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025 at 2:36=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
+On Wed, 28 May 2025 at 16:05, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> On Thu, Jun 12, 2025 at 02:19:54PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > struct gpio_chip now has callbacks for setting line values that return
-> > an integer, allowing to indicate failures. Convert the driver to using
-> > them.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> > +static int cs42l43_gpio_set(struct gpio_chip *chip, unsigned int offse=
-t,
-> > +                         int value)
-> >  {
-> >       struct cs42l43_pin *priv =3D gpiochip_get_data(chip);
-> >       unsigned int shift =3D offset + CS42L43_GPIO1_LVL_SHIFT;
-> > @@ -493,23 +494,27 @@ static void cs42l43_gpio_set(struct gpio_chip *ch=
-ip, unsigned int offset, int va
-> >               offset + 1, str_high_low(value));
-> >
-> >       ret =3D pm_runtime_resume_and_get(priv->dev);
-> > -     if (ret) {
-> > -             dev_err(priv->dev, "Failed to resume for set: %d\n", ret)=
-;
-> > -             return;
-> > -     }
-> > +     if (ret)
-> > +             return ret;
+> The Renesas RZ/V2N (R9A09G056) SoC features a single-channel USB2.0
+> interface with host and peripheral (function) support.
 >
-> Is there a reason to lose the error message here? Always nice to
-> know which of the two paths failed when things go bad.
+> Add the ECHI, OHCI, USB2.0 PHY and reset control nodes for USB2.0
+> channel in R9A09G056 SoC DTSI.
 >
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-No reason other than being in line with most other drivers which
-typically just return a value without a message. I don't care much, we
-can restore it.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17.
 
-Bart
+Gr{oetje,eeting}s,
 
-> Thanks,
-> Charles
-> >
-> >       ret =3D regmap_update_bits(priv->regmap, CS42L43_GPIO_CTRL1,
-> >                                BIT(shift), value << shift);
-> >       if (ret)
-> > -             dev_err(priv->dev, "Failed to set gpio%d: %d\n", offset +=
- 1, ret);
-> > +             return ret;
-> >
-> >       pm_runtime_put(priv->dev);
-> > +
-> > +     return 0;
-> >  }
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
