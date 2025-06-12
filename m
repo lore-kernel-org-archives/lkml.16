@@ -1,163 +1,143 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355202C324E;
-	Thu, 12 Jun 2025 17:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEC24C85;
+	Thu, 12 Jun 2025 17:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749749815; cv=none; b=dvCWJHJuxOfHhruKl6xHZlnZmYyyrB23VOHc9fU3X1WlrFpo6ZI3cv7D6TxV2iW6WVXoZZWThOGetTcO/juWeKEsnlX7u27QM8Leba6nE17yMCwwCjSIbufzjaPYkOcnhhUtGd390ssIAWKTfLTxVlyEn0eYwTbdC8xgtTH0jbE=
+	t=1749750021; cv=none; b=WB9f0n/chlV0tlEUwmycnOE0KY1eWZP6QLkijhP63yiEdpK4clfHOktiSWqqLBUJG8xYP/+RVsJQe2yUPHdHl750MlEC9yYmTiFPJcylZJh++ZkCVbD3DFarPZokG5E3QP+3xbMQc7fsVizPlpaVlCSw/JAskhe35HLLQvT7rxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749749815; c=relaxed/simple;
-	bh=xl4bHYuBWgRPL1eYZgOprU46ymtXoM4ePLskkuKph60=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KtC4kjqxoZolhD8BgkTAUFHTEsO/fsXltKpgI1PdBLV2i+HFqkAonRv/5wLriXGcjr7mMgsQCUGNc3ArvBIkcrwHKkJMD4MS2PUaYhH+AMuGpf5RDPncgD93pasVTcEKwBj3EKzw4pzY94mafIisjXIt9AyE2iJWp/VgpEw7KT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CGSHKJxp; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749750021; c=relaxed/simple;
+	bh=SRloaVNpXDaXqvapsg1naBXxSdFMRrgAS0Tqj+PXaAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dAcNOVbDtqUsOketdb/GA2t2SH5+gLGcuWBoZ9mOs2D6xTI9+7KQHKTUYoqWNWyquM68fjmcHKiEv3wmaUU5H8Q78zBQLg16CsHAOnPNEPIXJaoevJhiO3qul/ekpM20w1f6PXW7Bgkr+YbBNFmEmW7Lfx5YTovWWjWCAdP9+rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bibCV43N; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CGSHKJxp"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CF7v0W022393;
-	Thu, 12 Jun 2025 17:36:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=l+Et7RDVrkrD3xSj+
-	ZT9JbsfA8TCXL5kawo+d542qxg=; b=CGSHKJxpAeqSz5W/a/AkSHYJFZv8lW+nh
-	uxHC7vWPjJm4OsnwR6v4hz9f8/GcPwgLyA3qutjEahhsvj2zIAXR15Q620+T14It
-	FHaWO/C+YYyqkGfyKNLYoZRGLnqRlAVl5LmSlHByDnbjBGpbKCvRtLprRYaEd7oh
-	5J9ogX1eJllyxwgYyjA/mR4IpcpPyUjA36BA3prpqLL3/+jvrBlrXfiW9iVZJm+I
-	zDSfTi4nXZF1qPYg3iaKGABx6nExrmBcci8O63LJ77BZRUe9YeZEYxl2gkpYGfKS
-	I6Y6vUvsUHq1Oogn+ejN/LQkS369JvfdVqa5J6qY7W5de0VsVHpPw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4769x01288-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 17:36:17 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55CHWVMp030657;
-	Thu, 12 Jun 2025 17:36:17 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4769x01286-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 17:36:17 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55CE2lWa014912;
-	Thu, 12 Jun 2025 17:36:16 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750rpdxe5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 17:36:16 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55CHaEqc33358430
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Jun 2025 17:36:14 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0C91920043;
-	Thu, 12 Jun 2025 17:36:14 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EC12E20040;
-	Thu, 12 Jun 2025 17:36:13 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 12 Jun 2025 17:36:13 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id A4B20E19BA; Thu, 12 Jun 2025 19:36:13 +0200 (CEST)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        Hugh Dickins <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
-        Jeremy Fitzhardinge <jeremy@goop.org>,
-        Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH 4/6] sparc/mm: Do not disable preemption in lazy MMU mode
-Date: Thu, 12 Jun 2025 19:36:11 +0200
-Message-ID: <db1559396c38c1dfe97a6d929412d7d6244f64b8.1749747752.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1749747752.git.agordeev@linux.ibm.com>
-References: <cover.1749747752.git.agordeev@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bibCV43N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749750020; x=1781286020;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SRloaVNpXDaXqvapsg1naBXxSdFMRrgAS0Tqj+PXaAM=;
+  b=bibCV43Nzu3FIXBJJto9IcNv1/QV8nDt2rVeq2ZtA4sMThoWjNl6BVMm
+   YvuoBjOWaomLqXa5oa8PRItrjfr4DB/HbjQFvejMtLcSvi1jDHCSx9GY3
+   hBMsqY0v/7es+i1bwCkDPtMaYm3XpEi4Xw9WvLe2+jw7Z5qx69UVR6u+b
+   GbuZrmAz6v05PVHoce8VmebLBR9uQK0Ek8mu73EvDnLUiVGeymfeuOpmz
+   vGjYqej1cHRyK9UO6hIHRKEhdlo8D4CHn7u7J14eFarn0r4L255GwVP85
+   9fjcsG858mU8+2I42vYHb/oj2BEQjLk4S7bPqhJylYGFT0RHZn7GrEDhG
+   A==;
+X-CSE-ConnectionGUID: uzE7jQk4RH2t6OgX4Cjrlw==
+X-CSE-MsgGUID: yT3CHNYYS/2bJy56FOlEPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="39557135"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="39557135"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 10:40:19 -0700
+X-CSE-ConnectionGUID: WKrX3G0HQpeZzEORQPlC5g==
+X-CSE-MsgGUID: OasHHfLsQOaZ2CDx7ZAp7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="148081340"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 10:40:19 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id E140B20B5736;
+	Thu, 12 Jun 2025 10:40:17 -0700 (PDT)
+Message-ID: <7961f1f7-d4ef-439c-aead-2b39080f089d@linux.intel.com>
+Date: Thu, 12 Jun 2025 13:40:16 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5A073cfWFciuN2b1brPTe_Vnj2ABgNor
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEzMiBTYWx0ZWRfX3cw7ceB7JmZU d6VxfkA70ad39bsJhjQOMACDU7dhR+379Mps/nEMF5/Xm61VZKQveRqbfzXh/DVjMZ0MwShjckH OtM5ElN6pHeKhDxIDWUCD/pMglKXSvoq8imTovo//BpZ6RwUVH9+vjpOGhCFRVt8y8A/4Bl3ZF+
- v6CF8HwtyU4JDL9lKBw8F0GK0vxxj4t9XvR5rgBIuku+iqnJzzsphSBS/GReDoCb+rZTnHKWlnq RPWDwzbp3QorzE155Z++H0jAHLpMAaYFuoXsnenF/bqmgRHT1lUWRW1zbgilJ+Wn6BAjRAxFWe0 pbzA/SYKln6jnYz2VhQume3b18VSQ7InP15yZ+oOnDWlKT3nsaNQ+eIJZzYp3cBxB4kIuXOZQH0
- iVXVtP4unDNnzh/4Kk90d/VKBbvj+DoHFSQSGh/QOa32UKZrgdVGPB3bpZbuiTPpWKB+gRy+
-X-Authority-Analysis: v=2.4 cv=YKGfyQGx c=1 sm=1 tr=0 ts=684b1012 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=Nsn6zn2YLSyj-wdhBosA:9
-X-Proofpoint-GUID: El7oGGFj-H4_3nAMfB3G6kQ4auHJ7oeL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 mlxscore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 mlxlogscore=711
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506120132
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Fix crashing bug in
+ icl_update_topdown_event
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+References: <20250612143818.2889040-1-kan.liang@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250612143818.2889040-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit a1d416bf9faf ("sparc/mm: disable preemption in lazy mmu mode")
-is not necessary anymore, since the lazy MMU mode is entered with a
-spinlock held and sparc does not support Real-Time. Thus, upon entering
-the lazy mode the preemption is already disabled.
+Hi Peter and Ingo,
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- arch/sparc/include/asm/tlbflush_64.h |  2 +-
- arch/sparc/mm/tlb.c                  | 12 ++++++++----
- 2 files changed, 9 insertions(+), 5 deletions(-)
+On 2025-06-12 10:38 a.m., kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The perf_fuzzer found a hard-lock crash on a RaptorLake
+> machine.
+> 
+> Oops: general protection fault, maybe for address 0xffff89aeceab400: 0000
+> CPU: 23 UID: 0 PID: 0 Comm: swapper/23
+> Tainted: [W]=WARN
+> Hardware name: Dell Inc. Precision 9660/0VJ762
+> RIP: 0010:native_read_pmc+0x7/0x40
+> Code: cc e8 8d a9 01 00 48 89 03 5b cd cc cc cc cc 0f 1f ...
+> RSP: 000:fffb03100273de8 EFLAGS: 00010046
+> ....
+> Call Trace:
+>   <TASK>
+>   icl_update_topdown_event+0x165/0x190
+>   ? ktime_get+0x38/0xd0
+>   intel_pmu_read_event+0xf9/0x210
+>   __perf_event_read+0xf9/0x210
+> 
+> The CPUs 16-23 are e-core CPUs that don't support perf metrics feature.
+> The icl_update_topdown_event() should not be invoked.
+> 
+> It's an regression of the commit f9bdf1f95339 ("perf/x86/intel: Avoid
+> disable PMU if !cpuc->enabled in sample read"). The is_topdown_event()
+> is mistakenly used to replace the is_topdown_count() to check if the
+> topdown functions for the perf metrics feature should be invoked.
+> The is_topdown_event() only checks the event encoding. It's possible
+> that the same encoding 0x0400 is created on an e-core CPU (although
+> there is no valid event with such encoding on e-core).
+> The is_topdown_count() checks the PERF_X86_EVENT_TOPDOWN flag. Only
+> when the topdown events require the perf metrics magic, the flag is set.
+> 
+> It should be a typo when merging the intel_pmu_auto_reload_read() and
+> intel_pmu_read_topdown_event() in the commit.
+> 
+> Fixes: f9bdf1f95339 ("perf/x86/intel: Avoid disable PMU if !cpuc->enabled in sample read")
+> Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+> Closes: https://lore.kernel.org/lkml/352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu/
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-diff --git a/arch/sparc/include/asm/tlbflush_64.h b/arch/sparc/include/asm/tlbflush_64.h
-index 8b8cdaa69272..a6d8068fb211 100644
---- a/arch/sparc/include/asm/tlbflush_64.h
-+++ b/arch/sparc/include/asm/tlbflush_64.h
-@@ -44,7 +44,7 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end);
- void flush_tlb_pending(void);
- void arch_enter_lazy_mmu_mode(void);
- void arch_leave_lazy_mmu_mode(void);
--#define arch_flush_lazy_mmu_mode()      do {} while (0)
-+void arch_flush_lazy_mmu_mode(void);
- 
- /* Local cpu only.  */
- void __flush_tlb_all(void);
-diff --git a/arch/sparc/mm/tlb.c b/arch/sparc/mm/tlb.c
-index a35ddcca5e76..e46dfd5f2583 100644
---- a/arch/sparc/mm/tlb.c
-+++ b/arch/sparc/mm/tlb.c
-@@ -52,10 +52,9 @@ void flush_tlb_pending(void)
- 
- void arch_enter_lazy_mmu_mode(void)
- {
--	struct tlb_batch *tb;
-+	struct tlb_batch *tb = this_cpu_ptr(&tlb_batch);
- 
--	preempt_disable();
--	tb = this_cpu_ptr(&tlb_batch);
-+	VM_WARN_ON_ONCE(preemptible());
- 	tb->active = 1;
- }
- 
-@@ -63,10 +62,15 @@ void arch_leave_lazy_mmu_mode(void)
- {
- 	struct tlb_batch *tb = this_cpu_ptr(&tlb_batch);
- 
-+	VM_WARN_ON_ONCE(preemptible());
- 	if (tb->tlb_nr)
- 		flush_tlb_pending();
- 	tb->active = 0;
--	preempt_enable();
-+}
-+
-+void arch_flush_lazy_mmu_mode(void)
-+{
-+	VM_WARN_ON_ONCE(preemptible());
- }
- 
- static void tlb_batch_add_one(struct mm_struct *mm, unsigned long vaddr,
--- 
-2.48.1
+Please help to add the tested-by tag from Vince if the patch looks good
+to you.
+
+Tested-by: Vince Weaver <vincent.weaver@maine.edu>
+
+https://lore.kernel.org/lkml/da4d8a9a-66a4-32b4-0283-ef4687357349@maine.edu/
+
+Thanks,
+Kan> ---
+>  arch/x86/events/intel/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index c60b6f199f51..38886cd7aa65 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -2826,7 +2826,7 @@ static void intel_pmu_read_event(struct perf_event *event)
+>  		 * If the PEBS counters snapshotting is enabled,
+>  		 * the topdown event is available in PEBS records.
+>  		 */
+> -		if (is_topdown_event(event) && !is_pebs_counter_event_group(event))
+> +		if (is_topdown_count(event) && !is_pebs_counter_event_group(event))
+>  			static_call(intel_pmu_update_topdown_event)(event, NULL);
+>  		else
+>  			intel_pmu_drain_pebs_buffer();
 
