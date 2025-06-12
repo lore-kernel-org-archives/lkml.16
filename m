@@ -1,144 +1,257 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E57195808;
-	Thu, 12 Jun 2025 07:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294051D5CE5
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749711821; cv=none; b=ikgt1RxSckFYevUCmY+CQ/HmpyODgQT0BwSMeOBjKyRD50+S4eXoS+lF4FTR/hz+yanSBj/G2e/veBWKkZYk9cwIBViC+A08aICQfGZ3pLeyhWGjsdMUqEevUn1Wjhb69q3SoI+qBnKP1jRs/khOPBiZY/LO5zEc6tlHR7prA6w=
+	t=1749711972; cv=none; b=cJZVzGIxo7K+gLgPJ60KMuUTffMVFx4emB8584TUYkIeifn4Rj+m2GQBFdfTk2oHDlCToCjqGEbDiMwpVhyBLyJbQdPBMWXyF9dLwdfQsK5xkLlIX4zlTqFcQpl566kDe9YhNDvKo56nRd4ipCMiVNc2ahnKapAkwHmJtm1RpEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749711821; c=relaxed/simple;
-	bh=jcZDLKqbqjAfKbQedgUODPcuNZG2Ql2waANaGALBD0U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rC1dEudVR1WfzuF+LWFpn0jdKIBSmMOUOeexbJQos3yXewzw2IWGKEJT4/K+l23fqQYxiKQjO2zsmjTFNkZpxPja3+9N+nirAy7pLBB3P6MZpnNqoXSeMjzucCh8J1O3+KoxozBCPoMIgAHCy4+TfSWGJIJ4X7yrVWfqfZHCKy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8EnxJfY; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749711972; c=relaxed/simple;
+	bh=f8prUh6/atF+n9TdAF4v1+dLavgeVHSI2BDX3mFj3lc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kU+Gmiur14AZck1mFCaQlKPfj4J+QqwvZO+nr+LiWpH1NnKM0FxDPmV0oUqHkNlbOMEmfuOrn1/LicgtGnFv1LoqnBCNdLgRjA5pcL+ch79/pVAdH1nA9ehEpIbVX1kBxQmX2CayaSZinsKHimPF1bdcW1S1FinUhqailVG7btI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M4MODApM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8EnxJfY"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso932865a91.3;
-        Thu, 12 Jun 2025 00:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749711819; x=1750316619; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a2viZ0fvQanFU5qt8YT35F/R2lomO19AjWDbbjNosEQ=;
-        b=f8EnxJfY9fJ8FBdBej1HnTpTYTzTkJFST6Yfelveguu2KMguJpYBt6dWONPx44hDBk
-         kUoQIueLISJv+VEMj6vtCr0VmRdDSwjRqu6WQS8N6OCPzWqr2eq1oGydCF0vb1PNh2tl
-         YbhijoKeG0PdIm72Ghw7nY15cuVrKLg08zKDK4+rSknNFBhLS7Rtx7l1wp52CSb5YbVA
-         IQmVvyaJ3hT0NDzilPSCiebuDPZL7Urzf7UYDp0XBnNRxEHJC3raxWfSAdKNQs95kBYs
-         1Q1GzaphpXPgrJ1a9Wv/O7phet5QaRb6p39N8q+cBYat2e2vO/IBg/BhldssNOFj9iZN
-         s7IQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M4MODApM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749711970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bgI7EwmjXl77aJdJaolj+NbSd9BnE0i2KDqrsSDfOf8=;
+	b=M4MODApMADTbtWqVE2IOdAHB67Xzrbc6xD0HUW8EAC6HTcx6x+iLzxCOneFmxj5SHg/WbP
+	ZlyaeFdgZJK6AW3drPiy1GFUl8dI17Pa79Dn5Di7S8IjoMKixIfjf5K79o/4UDPPOODJIY
+	09Mx5FYf82FVZiWCoqxAl58ieEawGDo=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-159-sZfcMWs7MFulSB1Ntxhy5Q-1; Thu, 12 Jun 2025 03:06:08 -0400
+X-MC-Unique: sZfcMWs7MFulSB1Ntxhy5Q-1
+X-Mimecast-MFC-AGG-ID: sZfcMWs7MFulSB1Ntxhy5Q_1749711967
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451d2037f1eso3153425e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:06:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749711819; x=1750316619;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a2viZ0fvQanFU5qt8YT35F/R2lomO19AjWDbbjNosEQ=;
-        b=GPv/99SzzqirDz/HDbsbDHU5SQWuvJ6zt9u63jHmK4Ti+mhnl3ZhUchBmARDV4JpAo
-         YWD1fMUazE6cjgqcXzwroL9I2QR05zC1aDBmQTt/H34nhuoqAv7RLRyavZknN98xL2TU
-         26h9e2a4LFKUm9VyFy30JLNlj24QdmkXHOdkcRod5DE4xol0OSjDyKOJG8qlCe4JQRRy
-         1cuuErhrfcyOGN0nh71JksL/EXXDOAIVZjAPI7pj6WZZScjp+9rDr3OY2ZLld/7d89ZJ
-         38p5XfAW4L+Ll6yc7SLiaPLTSFB1n5Tp+eQ5YfgB5UmXb0EuiOtZl6HwI+xTbz6RClgl
-         N1iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCjB+BLCEOpnR4yhDYdF3LhB629MiqQqztEADll8uu0fvW0F5iu9xSrKwF0LJnwpwcvyb9RLqD@vger.kernel.org, AJvYcCV5G/60ORlejLam7cciyO9qiWW9lggIR2E4zPUA7nZsUycRl0M3h3kCLuJQlqiO+UkRTi8MxfAwWjUkvGiQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLlLYPppswl6weeDSjtVoH2OSH/u+wZkgYyfaylrCzKENNR7eD
-	dWlu8mhLW0jpKZRuUEbWJhw1TR8s6SA0fOJBJ2vF25DMAxRkDmSS8esCAU89JL+7wXcUxM9Pjti
-	bxCppVCrVEVNTsq0IkmTDK0pGD/7kWXc=
-X-Gm-Gg: ASbGncuYeQXShSYmAjUtadcjhsxo4ofS35MGN7D5PsUkmRlA8lI2zAZ/OwSBb2k7Dlk
-	sOyGcKHHPifAuhQqUpDs7xI4cps8fTyHRPZxE0hm+0L66HXRwrbeffop1bbIrVIbGel6BNHuZbS
-	LpmCOveLhzy+eAhdSwq8lINgNk2j89nRHMe0FJXp32cAFfkaYsP1N7h6o=
-X-Google-Smtp-Source: AGHT+IENKZbG1UVgSxMkbsR683h8ZS+NANUj8qRCEWN4KJPO/n5K8VlClSz08iFrHEgPCWpYK+IcgPjCIyzqEMtreeY=
-X-Received: by 2002:a17:90a:d60c:b0:313:279d:665c with SMTP id
- 98e67ed59e1d1-313af0fd099mr9895979a91.7.1749711819053; Thu, 12 Jun 2025
- 00:03:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749711967; x=1750316767;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bgI7EwmjXl77aJdJaolj+NbSd9BnE0i2KDqrsSDfOf8=;
+        b=SZfGJtitO19ahUjjXCjrjzNgEywAcmuiOpiGaMpMztqvatEtRqZp0pRYqZ1vmuAQwG
+         LRu+pfDF4oxRicLSLlcUF3wTQdVojuIAzwpk4j6WOWqsonN5R+3csg1vZc7yV/Ydzl3l
+         X+nvPf+5RHFvKTIzCxyhr0WswMi93C+WivmjZjYlsPG6pc8w7vgGLVl1lv+H+J4sr0EP
+         VEGT6RREocPVcSFmvWa/0L1LjqHihNN7EJ88yCDyeXUTPDD9FyzZQqwqasCeCT3yQt3u
+         Ter+W2Kg2gpLK4eYMQt/OfqnZFLMH4WL/fP88PPmWMXbVJmdYWXeLRttRVwnzkTNvrxO
+         4ekg==
+X-Gm-Message-State: AOJu0YzzIMo7p2TlJTSIRpBpKjUyQI4ga+pXlK6RNPw0Zmi6A8XIj6lu
+	JseewihcmLW569GVSigL36PIBY2kXX2rEq11osKaiv6jrGIzePL4gH+Nn+Yz7eu+stUtsX0+Cta
+	/A9DLvB9E7uA55Ob2xv7D3xONm3QSVVpBqlswVZqVyBPsV2zW2V3eN3J0Tsc+6GKgxg==
+X-Gm-Gg: ASbGncu4neXqEN/MzZ/oEAgqW2gA+xiGQBkRiXSPVpvlGifGbFH+IZsTVJs4lqLfWYo
+	76x1bYrIJdaKxaa2lS/uYQklLLRqr93ulqUP3Ja36TH1O0mZ8klsPDUPrSkZZhTRIQEfy66D0MH
+	BTuBZkUUhhhZqWEpXZrqotuVgwbN/F//CPp3Td/FfVJtQdkG5TVkLXFhMDEtZ0FwdC/f/CvEfS0
+	p9xJvAaZZqB3MgfrcU1wMdQ8SLjXoltBtadmsvPeskshhZiK3r/G0eQWdUGHL8Kj5A+Zk6L5gBV
+	lcAz6TgQK3JXSrABFiKjduAtzLI7w82aiG41FXibofuq9yrr5iwlG+FiqLeM5zb9F2hquRAZ7CW
+	M386iiAPB99OSzWEN9tyxcghDByNJJYAgX+3bu5U3TmgK5/x6tA==
+X-Received: by 2002:a05:600c:6092:b0:43e:afca:808f with SMTP id 5b1f17b1804b1-4532d328cd4mr17302015e9.31.1749711967395;
+        Thu, 12 Jun 2025 00:06:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH7ktzxGj9rxgF3e5K2QU/ZuZlrNO09W01BkOtOhNwjn+efDP3YWSRr1Sn0SDBCN08gcUuT0g==
+X-Received: by 2002:a05:600c:6092:b0:43e:afca:808f with SMTP id 5b1f17b1804b1-4532d328cd4mr17301565e9.31.1749711966971;
+        Thu, 12 Jun 2025 00:06:06 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e24420csm10772795e9.20.2025.06.12.00.06.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 00:06:05 -0700 (PDT)
+Message-ID: <0302ec30-856d-4e4b-be7b-1105966733e8@redhat.com>
+Date: Thu, 12 Jun 2025 09:06:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFGhKbwVyxCwYSNrPaQ-GkuP008+uvDg-wNA5syWLLzODCfpcA@mail.gmail.com>
- <68c0649d-d9b3-44f4-9a92-7f72c51a5013@suse.cz> <CAADnVQK+wjvxmBM7WJOGNK=AqeJ7UHBO4tUZR3Gjc4kfgux1sw@mail.gmail.com>
-In-Reply-To: <CAADnVQK+wjvxmBM7WJOGNK=AqeJ7UHBO4tUZR3Gjc4kfgux1sw@mail.gmail.com>
-From: Charlemagne Lasse <charlemagnelasse@gmail.com>
-Date: Thu, 12 Jun 2025 09:03:27 +0200
-X-Gm-Features: AX0GCFvBcJwp9XkOkM0Sw3LXe5H0SSamdpy1Wp3lz3PcgPgcT0LbkH9Bh5kjWlk
-Message-ID: <CAFGhKbwP9e6yWM615FGuq0=eX-57E-f813MMdXZ98D4_+0TveQ@mail.gmail.com>
-Subject: Re: locking/local_lock, mm: sparse warnings about shadowed variable
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Jakub Kicinski <kuba@kernel.org>, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	linux-rt-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pmd()
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
+ Oscar Salvador <osalvador@suse.de>
+References: <20250611120654.545963-1-david@redhat.com>
+ <20250611120654.545963-3-david@redhat.com>
+ <xdkrref3md2rfc3sou6lta2vcevz6e4ckjd6q67znpipkvxbmw@gftpxkrtlqnx>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <xdkrref3md2rfc3sou6lta2vcevz6e4ckjd6q67znpipkvxbmw@gftpxkrtlqnx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Am Mi., 11. Juni 2025 um 20:20 Uhr schrieb Alexei Starovoitov
-<alexei.starovoitov@gmail.com>:
-> I wouldn't bother messing with the code because of sparse.
-> Compilers don't warn here.
+On 12.06.25 04:17, Alistair Popple wrote:
+> On Wed, Jun 11, 2025 at 02:06:53PM +0200, David Hildenbrand wrote:
+>> Marking PMDs that map a "normal" refcounted folios as special is
+>> against our rules documented for vm_normal_page().
+>>
+>> Fortunately, there are not that many pmd_special() check that can be
+>> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
+>> would get this wrong right now are rather harmless: e.g., none so far
+>> bases decisions whether to grab a folio reference on that decision.
+>>
+>> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+>> implications as it seems.
+>>
+>> Getting this right will get more important as we use
+>> folio_normal_page_pmd() in more places.
+>>
+>> Fix it by teaching insert_pfn_pmd() to properly handle folios and
+>> pfns -- moving refcount/mapcount/etc handling in there, renaming it to
+>> insert_pmd(), and distinguishing between both cases using a new simple
+>> "struct folio_or_pfn" structure.
+>>
+>> Use folio_mk_pmd() to create a pmd for a folio cleanly.
+>>
+>> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>   mm/huge_memory.c | 58 ++++++++++++++++++++++++++++++++----------------
+>>   1 file changed, 39 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 49b98082c5401..7e3e9028873e5 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -1372,9 +1372,17 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
+>>   	return __do_huge_pmd_anonymous_page(vmf);
+>>   }
+>>   
+>> -static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>> -		pmd_t *pmd, pfn_t pfn, pgprot_t prot, bool write,
+>> -		pgtable_t pgtable)
+>> +struct folio_or_pfn {
+>> +	union {
+>> +		struct folio *folio;
+>> +		pfn_t pfn;
+>> +	};
+>> +	bool is_folio;
+>> +};
+> 
+> I know it's simple, but I'm still not a fan particularly as these types of
+> patterns tend to proliferate once introduced. See below for a suggestion.
 
-Actually, they do:
+It's much better than abusing pfn_t for folios -- and I don't 
+particularly see a problem with this pattern here as long as it stays in 
+this file.
 
-$ make W=3D2 mm/mlock.o
-[...]
-In file included from ./include/linux/preempt.h:11,
-                from ./include/linux/spinlock.h:56,
-                from ./include/linux/wait.h:9,
-                from ./include/linux/wait_bit.h:8,
-                from ./include/linux/fs.h:7,
-                from ./include/linux/mman.h:5,
-                from mm/mlock.c:10:
-./include/linux/local_lock.h: In function
-=E2=80=98class_local_lock_irqsave_constructor=E2=80=99:
-./include/linux/local_lock_internal.h:100:31: warning: declaration of
-=E2=80=98l=E2=80=99 shadows a parameter [-Wshadow]
- 100 |                 local_lock_t *l;                                    =
-    \
-     |                               ^
-./include/linux/cleanup.h:394:9: note: in definition of macro
-=E2=80=98__DEFINE_LOCK_GUARD_1=E2=80=99
- 394 |         _lock;                                                      =
-    \
-     |         ^~~~~
-./include/linux/local_lock.h:88:1: note: in expansion of macro
-=E2=80=98DEFINE_LOCK_GUARD_1=E2=80=99
-  88 | DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __percpu,
-     | ^~~~~~~~~~~~~~~~~~~
-./include/linux/local_lock_internal.h:128:17: note: in expansion of
-macro =E2=80=98__local_lock_acquire=E2=80=99
- 128 |                 __local_lock_acquire(lock);                     \
-     |                 ^~~~~~~~~~~~~~~~~~~~
-./include/linux/local_lock.h:31:9: note: in expansion of macro
-=E2=80=98__local_lock_irqsave=E2=80=99
-  31 |         __local_lock_irqsave(lock, flags)
-     |         ^~~~~~~~~~~~~~~~~~~~
-./include/linux/local_lock.h:89:21: note: in expansion of macro
-=E2=80=98local_lock_irqsave=E2=80=99
-  89 |                     local_lock_irqsave(_T->lock, _T->flags),
-     |                     ^~~~~~~~~~~~~~~~~~
-./include/linux/cleanup.h:391:68: note: shadowed declaration is here
- 391 | static inline class_##_name##_t class_##_name##_constructor(_type *l=
-)   \
-./include/linux/cleanup.h:410:1: note: in expansion of macro
-=E2=80=98__DEFINE_LOCK_GUARD_1=E2=80=99
- 410 | __DEFINE_LOCK_GUARD_1(_name, _type, _lock)
-     | ^~~~~~~~~~~~~~~~~~~~~
-./include/linux/local_lock.h:88:1: note: in expansion of macro
-=E2=80=98DEFINE_LOCK_GUARD_1=E2=80=99
-  88 | DEFINE_LOCK_GUARD_1
+> 
+>> +static int insert_pmd(struct vm_area_struct *vma, unsigned long addr,
+>> +		pmd_t *pmd, struct folio_or_pfn fop, pgprot_t prot,
+>> +		bool write, pgtable_t pgtable)
+>>   {
+>>   	struct mm_struct *mm = vma->vm_mm;
+>>   	pmd_t entry;
+>> @@ -1382,8 +1390,11 @@ static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>>   	lockdep_assert_held(pmd_lockptr(mm, pmd));
+>>   
+>>   	if (!pmd_none(*pmd)) {
+>> +		const unsigned long pfn = fop.is_folio ? folio_pfn(fop.folio) :
+>> +					  pfn_t_to_pfn(fop.pfn);
+>> +
+>>   		if (write) {
+>> -			if (pmd_pfn(*pmd) != pfn_t_to_pfn(pfn)) {
+>> +			if (pmd_pfn(*pmd) != pfn) {
+>>   				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
+>>   				return -EEXIST;
+>>   			}
+>> @@ -1396,11 +1407,19 @@ static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>>   		return -EEXIST;
+>>   	}
+>>   
+>> -	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
+>> -	if (pfn_t_devmap(pfn))
+>> -		entry = pmd_mkdevmap(entry);
+>> -	else
+>> -		entry = pmd_mkspecial(entry);
+>> +	if (fop.is_folio) {
+>> +		entry = folio_mk_pmd(fop.folio, vma->vm_page_prot);
+>> +
+>> +		folio_get(fop.folio);
+>> +		folio_add_file_rmap_pmd(fop.folio, &fop.folio->page, vma);
+>> +		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PMD_NR);
+>> +	} else {
+>> +		entry = pmd_mkhuge(pfn_t_pmd(fop.pfn, prot));
+>> +		if (pfn_t_devmap(fop.pfn))
+>> +			entry = pmd_mkdevmap(entry);
+>> +		else
+>> +			entry = pmd_mkspecial(entry);
+>> +	}
+> 
+> Could we change insert_pfn_pmd() to insert_pmd_entry() and have callers call
+> something like pfn_to_pmd_entry() or folio_to_pmd_entry() to create the pmd_t
+> entry as appropriate, which is then passed to insert_pmd_entry() to do the bits
+> common to both?
 
+Yeah, I had that idea as well but discarded it, because the 
+refcounting+mapcounting handling is better placed where we are actually 
+inserting the pmd (not possibly only upgrading permissions of an 
+existing mapping). Avoid 4-line comments as the one we are removing in 
+patch #3 ...
 
-$ gcc --version
-gcc (Debian 14.2.0-19) 14.2.0
-Copyright (C) 2024 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-- 
+Cheers,
+
+David / dhildenb
+
