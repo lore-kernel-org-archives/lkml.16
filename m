@@ -1,96 +1,153 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5913610E5;
-	Thu, 12 Jun 2025 16:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067202F430D
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749746779; cv=none; b=EC0xxuuNzSo9wSXD9lx9XXta93/vAAAnkFoctfqfUNnTqlEvmLU5SXbfHWF/Z+ijLIQ+R72hH6VKlCGIAS3CW6YAc3gU8PZKRVM1ZCqS5cfo99imad2L2+65eqRAF7PDDNv97pJK2BwFp1WAagVX6Nu0IeMNk7RA/3KWWSVI8PQ=
+	t=1749746951; cv=none; b=lvfNtwaMvoK/FNbOsyHLtJqxbJ3ZMaRy2Uoui8FN8mvayf6YBTZTMfliKOxMemaZPUOfTaECz8PxTetYHTtOCC7xWls0n6Cksheq87dyQb6ib8OW86UiPP+QX0b+t0wYzkXiFQxiu1HuQ99m68fRf7gmuKVHBwZHeRhN3UURlFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749746779; c=relaxed/simple;
-	bh=CCMK8tQR+66JGqZmkhzAeLW9ppNB/XXNey6niuwUvSY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W+TyBEMuMSBLj9HuaeBXnEttqwUsOFmizGF51/3Ep5xSk/M50OhNX1aVjntpXEilU4v+sZumkuQHi19WZt+XaEWWokj6fqXUcWMCEmXEd6SXUtUcrrgd8d6QAxZUvjd18X5oQyiNbmqAQcHBkNcqtDpAVfg2przNsREYrcvMHAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ7f94VrMz6K9Bc;
-	Fri, 13 Jun 2025 00:44:17 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 818B7140136;
-	Fri, 13 Jun 2025 00:46:13 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Jun
- 2025 18:46:12 +0200
-Date: Thu, 12 Jun 2025 17:46:10 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <PradeepVineshReddy.Kodamati@amd.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <bp@alien8.de>,
-	<ming.li@zohomail.com>, <shiju.jose@huawei.com>, <dan.carpenter@linaro.org>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <kobayashi.da-06@fujitsu.com>,
-	<yanfei.xu@intel.com>, <rrichter@amd.com>, <peterz@infradead.org>,
-	<colyli@suse.de>, <uaisheng.ye@intel.com>,
-	<fabio.m.de.francesco@linux.intel.com>, <ilpo.jarvinen@linux.intel.com>,
-	<yazen.ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v9 11/16] cxl/pci: Update __cxl_handle_cor_ras() to
- return early if no RAS errors
-Message-ID: <20250612174610.000035ee@huawei.com>
-In-Reply-To: <20250603172239.159260-12-terry.bowman@amd.com>
-References: <20250603172239.159260-1-terry.bowman@amd.com>
-	<20250603172239.159260-12-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1749746951; c=relaxed/simple;
+	bh=cnrtHuLSnHhkaw5++Xi2CqlDQT9Sy6ElLKZ+GhU6NKs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=HIJoaLRqBBMJOPmdin346tXDRA6qJcWCBc9OA8zjPkTL/SSpqc1DhYm1JpROYXxkX67VMNwINHrSBcSCb2ajxgE2T+TdthnnA+lf1is3JqoLit/PLFevVEsVKrcdzvrQzZGVGYp7nPc+UFAlLkXMlOV7F6SbGTAuR0fv4Ae8VLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=oULeuCSf; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="oULeuCSf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1749746907; x=1750351707; i=markus.elfring@web.de;
+	bh=v/+L6f/1uHzWnn9d+9wYdEO6UW4NdjChdkgAdlxXmrg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:Cc:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=oULeuCSf9Sbnd3qn8vGzLM1Fvxw/fzfSMKT3bFwAWJMVklyRvL6LpNwZsYp1bEV1
+	 xMKeFvnz1WauR9T7jYaPKffjtP7gl1EPhPwnIHPnhhWSIElS3M6GL9L14upE5GeW3
+	 HHfSWgkn0BabMBL7qNJ/tGSpfLGuOVQhBLfcY9tF3BqLJUQt1qD/bQd7MgxTa1G4O
+	 Wti9SJOeE8L3QO1a1PuuuFEfra4ChN3vl3T1K16qJ9F+x4yBQANcjkg59vQ15Q3cq
+	 6dHVOMxGaXOEGJ3hZYkKInhAgSptyqrOPKvOmQB+1gXYBvD0Y/JzxLZ3d3FPxhX/9
+	 JdFru0RoyB58W8GmPw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.213]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N5CUp-1urDcU1OZJ-00riKD; Thu, 12
+ Jun 2025 18:48:27 +0200
+Message-ID: <77406d43-230f-4690-b306-4d698449c01b@web.de>
+Date: Thu, 12 Jun 2025 18:48:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [cocci] [PATCH v4 1/5] coccinelle: misc: Add field_modify script
+To: Luo Jie <quic_luoj@quicinc.com>, cocci@inria.fr
+References: <20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com>
+ <20250612-field_modify-v4-1-ae4f74da45a6@quicinc.com>
+Content-Language: en-GB, de-DE
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ Andrew Lunn <andrew@lunn.ch>, Catalin Marinas <catalin.marinas@arm.com>,
+ Joey Gouly <joey.gouly@arm.com>, Julia Lawall <Julia.Lawall@inria.fr>,
+ "Kiran Kumar C.S.K" <quic_kkumarcs@quicinc.com>,
+ Lei Wei <quic_leiwei@quicinc.com>, Marc Zyngier <maz@kernel.org>,
+ Nicolas Palix <nicolas.palix@imag.fr>, Oliver Upton
+ <oliver.upton@linux.dev>, Pavithra R <quic_pavir@quicinc.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Suruchi Agarwal <quic_suruchia@quicinc.com>,
+ Suzuki Poulose <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>,
+ Yury Norov <yury.norov@gmail.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ quic_linchen@quicinc.com
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250612-field_modify-v4-1-ae4f74da45a6@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:UzKkftK+8VBIQ8zZF1Grhg2CG5pgrqfHBd7AQzZq0RLtAcod8Gk
+ EMQmvWcuAKpkDnY30sv8oPuXMFXm8WWJdnXJTVbs0wZ+6Wj38MIeOyvcBfJJwhaedbVR9SN
+ K35gc21Uync3Bf6bVP3s22rzYrdFyR9lHgR4PfQ9ir9TLBEv2X+GyQrK37aHesGQ2ZrvNDL
+ 5NQIGiKfHrR0c8C0nbeSw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:xmzVfNKDDmw=;EUX4lV23la1vGW48h/NMjdiIgwW
+ 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
+ HZYrzrjuPjG33emz
 
-On Tue, 3 Jun 2025 12:22:34 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> __cxl_handle_cor_ras() is missing logic to leave the function early in the
-> case there is no RAS error. Update __cxl_handle_cor_ras() to exit early in
-> the case there is no RAS errors detected after applying the mask.
-
-I'm all for this as sensible cleanup, but the 'missing' kind
-of suggest a bug to me whereas I don't see one.
-Perhaps reword?
-
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+=E2=80=A6
 > ---
->  drivers/cxl/core/pci.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 0f4c07fd64a5..f5f87c2c3fd5 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -677,10 +677,11 @@ static void __cxl_handle_cor_ras(struct device *dev, u64 serial,
->  
->  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
-> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> -		trace_cxl_aer_correctable_error(dev, serial, status);
-> -	}
-> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
-> +		return;
-> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> +
-> +	trace_cxl_aer_correctable_error(dev, serial, status);
->  }
->  
->  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+>  scripts/coccinelle/misc/field_modify.cocci | 61 +++++++++++++++++++++++=
++++++++
+=E2=80=A6
 
+Did you overlook the addition of patch version descriptions?
+https://lore.kernel.org/all/?q=3D%22This+looks+like+a+new+version+of+a+pre=
+viously+submitted+patch%22
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.15#n310
+
+
+=E2=80=A6
+> +@ depends on context && !patch && !org && !report@
+=E2=80=A6
+
+I imagine that the condition selections can be simplified.
+
+
+=E2=80=A6
+> +@script:python depends on report@
+> +p << r.p;
+> +x << r.reg;
+> +@@
+> +
+> +msg=3D"WARNING: Consider using FIELD_MODIFY helper on %s" % (x)
+> +coccilib.report.print_report(p[0], msg)
+Do you know that a string construction can also be directly passed
+to such a function call?
+
+Regards,
+Markus
