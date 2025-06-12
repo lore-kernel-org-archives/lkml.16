@@ -1,121 +1,268 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510AD2E0B73;
-	Thu, 12 Jun 2025 20:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6ACC2E0B76
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758596; cv=none; b=svINsYeh156TvHlewtvUat4gXGJObK7b8wtP45F9f6g50LfRWIfgKBW9rLgdrQv4Bt96hxp0iXiRfHrfxN39LFNkHgnCVbWAw8ufriyiUImDxK6yphFwt9MgPFVECxpKqmgPAyI4joUe4FYnJffsGXP8+eWOasamJ07ZYtGzXD8=
+	t=1749758597; cv=none; b=tAh4HjreuxyrMv6//+A0yLtJxyW9fHLHvO7ifIUzZGSEPIqYry9EJ28xClN9xeDot9I/ouDNXGoka/SskxfcvFjSHdouCqgqAmCSE2n+QJ3iEBDtBVVva1/7MTK368sM9LiAZJdSizkNa8d8iO5ADwxFavmA4E4igMPLog2cHKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758596; c=relaxed/simple;
-	bh=p94oIFo4jUglnAhbc3gfVf3Xl1s0WKJ0t3PNRYqQRvE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RzTuRWggctzloCILkr+B2gCAulAugMYk0yG2jSU9M6qlYnuTUap0yi6mL8rtlpYqo8OhFeM+EWWI+E/JTpmkHvOTQ+Quqacyj3Y/Sd2TxuiYVfszPPIcb8KSCWiPrqoE/GU6L0YD/LHdNOkEvIV8YcG5pdPLJFX+teCooKSr+bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=keS+JI32; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749758597; c=relaxed/simple;
+	bh=sK/vNJATvpfu+RL+hfUBX8syzc1mGTFGO/M1Z8mXREQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=etmuVFO20oI3S1dlZb3sC9oJkX5e3evZfJe7DC9vC+5760TBvR1/gnW+QdD4iIqNiu4vfyiiePehHQDdJNB4bI+lYAF8N89ZO541cQTuiudsBM1Ac0gFL88rVXKAOo2iwl1XwIc4xhqhJlZ6t/Pg+96YbGhF8BhPBf9Ifc28OPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U2grcj1c; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="keS+JI32"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-48b7747f971so1513301cf.3;
-        Thu, 12 Jun 2025 13:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749758594; x=1750363394; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GqK4XVmf88e+UTUicEUcYEEd52VK5FIFk2p//V1IESs=;
-        b=keS+JI32l9TQ8njvXDiHqu+5MxZq81deZkT8Kc8/8CpDfx6EQ3nmW4V5TukVNjOG6g
-         UFVeKh3RctIw0Ami27xVyBbCH+6gCO8hT3pNMT9Z3SXom9kN9g/Zft7sn7wND2gwulcA
-         +knRN+r2c7JrMVRlcZzNOVrr2QahTCrdixsQkaQsHTe7muf8mpguVzUZA+LvMpracJ+F
-         PeePpxAxljGsEPybzedKlunfbFDN2JuD6a2QVmyXR9s08uSO0g6cj80bWQEDCdiycgEp
-         cNiQRzX+rxHoXMbn/zL9I8xVU/RVhMw1kvoAYUPtdqbHu8hVrKnjwGJxVP3GzSt4YzGz
-         AEtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749758594; x=1750363394;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GqK4XVmf88e+UTUicEUcYEEd52VK5FIFk2p//V1IESs=;
-        b=LuWCMlJtCo8kg0wyhAJRfu1FNs63hgraV4SdY+VzKManiU9f3VAz9LhTGqu+NG7O1+
-         9kmRZprSU317+7doxFcr91SKjzicLB7t8i23yTEtSWv/Z+CB4S4uoCqgS1nGPZn5zWy2
-         A0hvumPtM2fnUhFEEMTjj9LHEgy02/+enxnzTILa8d9qqKHc0/6chClnWSLh4+4g80Tp
-         Tp6zghTVSnj0u4wdrKl02FkrbX2Iq6pd/ndXoxdgsgF1mAYIm4l+TwlUvPotoS4McApf
-         c4Av4Gb9zO8rrIUPUvTEQMbIO81b0of3SBqNbF4Tihob5yMxI77CHe6LSjgTsmAl0l6x
-         8JMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkmNiFaPoJzGt541P0DGZpqyzuROlEVgAdHE/VYkZ744LZMcioM7zp4W90yXnYv1EL4Pf9xa7lApc=@vger.kernel.org, AJvYcCVwzbuNM2jx+11ANkP1zm9osmzmcpYfLNKRdoFSG1VEbwMHx67F2Hoj/7BPaQM30ABDZ/Wr3HTNCxd18IhaUjuh@vger.kernel.org, AJvYcCWPJCoY0UG0ptVbHNIJuBVlIgpu/aRnAbCexr5RErjB0INCE9zCZtBr3CUUNTNOmjWSbs0jWKm0eoZTjZNz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTI0ev4ZZleUW9V1em597olyNZh6tAgkUeXDEwoK9iveg+3TH9
-	N+Eo+DSSGL5tZTavH4xSsIfUod0nPBMLQxoeiDEbugsKCrsMjezhZmsr
-X-Gm-Gg: ASbGncu6wg5oDF8hSDZ+KoMw3XigD2Y8RRxUDO5Je8CfOlgSS8rZo8M3IeE7L9RIVgI
-	/eGWB+Pzv89mLEHdzLYvclGf8q8fxSm+bN9rB7qJldiirGnWVD5OPsge50u92a11hLFNNAicgqO
-	cZ7b7eUxxuKqJIF+FQaREitVMr1NSodOuC58+8E705HpYgphuyS+1a8c8GW4zGnmz1qGBbqWhAk
-	OmWSvYy+8kU+1V+rSAZdbwAH1jxYIs+v33hDGD9Gf/K6KkoEfIOHPC67/yc20EOCNhSU/IUQ8lt
-	DHWFJzcBdodpGCYRr3UJkddisJ/Laim5NnAxw+PwrqDF/uzwG6AhZnY=
-X-Google-Smtp-Source: AGHT+IHaJ8YHfWK3ymwJNH+TEVoQLf7B7caofHWGb4f5nJ1C2jtwl17bBUz8ImIy+guO+S4h4KW2tA==
-X-Received: by 2002:a05:6214:f29:b0:6fa:ed8e:372c with SMTP id 6a1803df08f44-6fb3e5fc540mr1071226d6.1.1749758594031;
-        Thu, 12 Jun 2025 13:03:14 -0700 (PDT)
-Received: from localhost ([2a03:2880:20ff:1::])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35b20f67sm13696456d6.16.2025.06.12.13.03.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 13:03:13 -0700 (PDT)
-From: Gustavo Luiz Duarte <gustavold@gmail.com>
-Date: Thu, 12 Jun 2025 13:02:14 -0700
-Subject: [PATCH net-next v2 1/5] netconsole: introduce 'msgid' as a new
- sysdata field
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U2grcj1c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749758594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iJ7mPojCKEE6OJlKY8iaMbYbhViUB37efiRbPXkzp0E=;
+	b=U2grcj1cO8RnhSpvKFH1BS1mPhCXegUHfn+1tEUDl2sx+easwZCGlZZFiuADWDTK4D7yYQ
+	Tccr3jbHGf7jmWZ5lPptqwgqOzv8X4N7cAWDiFESFWRWp/zbXomqRTHyncKJMIOw9S8wTG
+	WIYEIfK/GIxIHDqOTszr1C1+aGLzFEU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-623-I2h-rJJ2Ouukkln8-DjHgg-1; Thu,
+ 12 Jun 2025 16:03:10 -0400
+X-MC-Unique: I2h-rJJ2Ouukkln8-DjHgg-1
+X-Mimecast-MFC-AGG-ID: I2h-rJJ2Ouukkln8-DjHgg_1749758588
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA2ED195609D;
+	Thu, 12 Jun 2025 20:03:07 +0000 (UTC)
+Received: from p16v.redhat.com (unknown [10.45.224.169])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C4B8118003FC;
+	Thu, 12 Jun 2025 20:03:00 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: [PATCH net-next v9 10/14] dpll: zl3073x: Implement input pin selection in manual mode
+Date: Thu, 12 Jun 2025 22:01:41 +0200
+Message-ID: <20250612200145.774195-11-ivecera@redhat.com>
+In-Reply-To: <20250612200145.774195-1-ivecera@redhat.com>
+References: <20250612200145.774195-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-netconsole-msgid-v2-1-d4c1abc84bac@gmail.com>
-References: <20250612-netconsole-msgid-v2-0-d4c1abc84bac@gmail.com>
-In-Reply-To: <20250612-netconsole-msgid-v2-0-d4c1abc84bac@gmail.com>
-To: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
- Gustavo Luiz Duarte <gustavold@gmail.com>
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This adds a new sysdata field to enable assigning a per-target unique id
-to each message sent to that target. This id can later be appended as
-part of sysdata, allowing targets to detect dropped netconsole messages.
-Update count_extradata_entries() to take the new field into account.
+Implement input pin state setting if the DPLL is running in manual mode.
+The driver indicates manual mode if the DPLL mode is one of ref-lock,
+forced-holdover, freerun.
 
-Reviewed-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
+Use these modes to implement input pin state change between connected
+and disconnected states. When the user set the particular pin as
+connected the driver marks this input pin as forced reference and
+switches the DPLL mode to ref-lock. When the use set the pin as
+disconnected the driver switches the DPLL to freerun or forced holdover
+mode. The switch to holdover mode is done if the DPLL has holdover
+capability (e.g is currently locked with holdover acquired).
+
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
- drivers/net/netconsole.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dpll/zl3073x/dpll.c | 118 ++++++++++++++++++++++++++++++++++++
+ drivers/dpll/zl3073x/prop.c |   9 ++-
+ 2 files changed, 124 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-index 1eb678e07dd0..5f8c8c6c5393 100644
---- a/drivers/net/netconsole.c
-+++ b/drivers/net/netconsole.c
-@@ -113,6 +113,8 @@ enum sysdata_feature {
- 	SYSDATA_TASKNAME = BIT(1),
- 	/* Kernel release/version as part of sysdata */
- 	SYSDATA_RELEASE = BIT(2),
-+	/* Include a per-target message ID as part of sysdata */
-+	SYSDATA_MSGID = BIT(3),
+diff --git a/drivers/dpll/zl3073x/dpll.c b/drivers/dpll/zl3073x/dpll.c
+index f49ddc30c9eb0..21b9e34d5ab0a 100644
+--- a/drivers/dpll/zl3073x/dpll.c
++++ b/drivers/dpll/zl3073x/dpll.c
+@@ -132,6 +132,81 @@ zl3073x_dpll_selected_ref_get(struct zl3073x_dpll *zldpll, u8 *ref)
+ 	return 0;
+ }
+ 
++/**
++ * zl3073x_dpll_selected_ref_set - select reference in manual mode
++ * @zldpll: pointer to zl3073x_dpll
++ * @ref: input reference to be selected
++ *
++ * Selects the given reference for the DPLL channel it should be
++ * locked to.
++ *
++ * Return: 0 on success, <0 on error
++ */
++static int
++zl3073x_dpll_selected_ref_set(struct zl3073x_dpll *zldpll, u8 ref)
++{
++	struct zl3073x_dev *zldev = zldpll->dev;
++	u8 mode, mode_refsel;
++	int rc;
++
++	mode = zldpll->refsel_mode;
++
++	switch (mode) {
++	case ZL_DPLL_MODE_REFSEL_MODE_REFLOCK:
++		/* Manual mode with ref selected */
++		if (ref == ZL3073X_DPLL_REF_NONE) {
++			switch (zldpll->lock_status) {
++			case DPLL_LOCK_STATUS_LOCKED_HO_ACQ:
++			case DPLL_LOCK_STATUS_HOLDOVER:
++				/* Switch to forced holdover */
++				mode = ZL_DPLL_MODE_REFSEL_MODE_HOLDOVER;
++				break;
++			default:
++				/* Switch to freerun */
++				mode = ZL_DPLL_MODE_REFSEL_MODE_FREERUN;
++				break;
++			}
++			/* Keep selected reference */
++			ref = zldpll->forced_ref;
++		} else if (ref == zldpll->forced_ref) {
++			/* No register update - same mode and same ref */
++			return 0;
++		}
++		break;
++	case ZL_DPLL_MODE_REFSEL_MODE_FREERUN:
++	case ZL_DPLL_MODE_REFSEL_MODE_HOLDOVER:
++		/* Manual mode without no ref */
++		if (ref == ZL3073X_DPLL_REF_NONE)
++			/* No register update - keep current mode */
++			return 0;
++
++		/* Switch to reflock mode and update ref selection */
++		mode = ZL_DPLL_MODE_REFSEL_MODE_REFLOCK;
++		break;
++	default:
++		/* For other modes like automatic or NCO ref cannot be selected
++		 * manually
++		 */
++		return -EOPNOTSUPP;
++	}
++
++	/* Build mode_refsel value */
++	mode_refsel = FIELD_PREP(ZL_DPLL_MODE_REFSEL_MODE, mode) |
++		      FIELD_PREP(ZL_DPLL_MODE_REFSEL_REF, ref);
++
++	/* Update dpll_mode_refsel register */
++	rc = zl3073x_write_u8(zldev, ZL_REG_DPLL_MODE_REFSEL(zldpll->id),
++			      mode_refsel);
++	if (rc)
++		return rc;
++
++	/* Store new mode and forced reference */
++	zldpll->refsel_mode = mode;
++	zldpll->forced_ref = ref;
++
++	return rc;
++}
++
+ /**
+  * zl3073x_dpll_connected_ref_get - get currently connected reference
+  * @zldpll: pointer to zl3073x_dpll
+@@ -283,6 +358,48 @@ zl3073x_dpll_input_pin_state_on_dpll_get(const struct dpll_pin *dpll_pin,
+ 	return zl3073x_dpll_ref_state_get(pin, state);
+ }
+ 
++static int
++zl3073x_dpll_input_pin_state_on_dpll_set(const struct dpll_pin *dpll_pin,
++					 void *pin_priv,
++					 const struct dpll_device *dpll,
++					 void *dpll_priv,
++					 enum dpll_pin_state state,
++					 struct netlink_ext_ack *extack)
++{
++	struct zl3073x_dpll *zldpll = dpll_priv;
++	struct zl3073x_dpll_pin *pin = pin_priv;
++	u8 new_ref;
++	int rc;
++
++	switch (zldpll->refsel_mode) {
++	case ZL_DPLL_MODE_REFSEL_MODE_REFLOCK:
++	case ZL_DPLL_MODE_REFSEL_MODE_FREERUN:
++	case ZL_DPLL_MODE_REFSEL_MODE_HOLDOVER:
++		if (state == DPLL_PIN_STATE_CONNECTED) {
++			/* Choose the pin as new selected reference */
++			new_ref = zl3073x_input_pin_ref_get(pin->id);
++		} else if (state == DPLL_PIN_STATE_DISCONNECTED) {
++			/* No reference */
++			new_ref = ZL3073X_DPLL_REF_NONE;
++		} else {
++			NL_SET_ERR_MSG_MOD(extack,
++					   "Invalid pin state for manual mode");
++			return -EINVAL;
++		}
++
++		rc = zl3073x_dpll_selected_ref_set(zldpll, new_ref);
++		break;
++	default:
++		/* In other modes we cannot change input reference */
++		NL_SET_ERR_MSG(extack,
++			       "Pin state cannot be changed in current mode");
++		rc = -EOPNOTSUPP;
++		break;
++	}
++
++	return rc;
++}
++
+ static int
+ zl3073x_dpll_output_pin_state_on_dpll_get(const struct dpll_pin *dpll_pin,
+ 					  void *pin_priv,
+@@ -358,6 +475,7 @@ zl3073x_dpll_mode_get(const struct dpll_device *dpll, void *dpll_priv,
+ static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
+ 	.direction_get = zl3073x_dpll_pin_direction_get,
+ 	.state_on_dpll_get = zl3073x_dpll_input_pin_state_on_dpll_get,
++	.state_on_dpll_set = zl3073x_dpll_input_pin_state_on_dpll_set,
  };
  
- /**
-@@ -782,6 +784,8 @@ static size_t count_extradata_entries(struct netconsole_target *nt)
- 		entries += 1;
- 	if (nt->sysdata_fields & SYSDATA_RELEASE)
- 		entries += 1;
-+	if (nt->sysdata_fields & SYSDATA_MSGID)
-+		entries += 1;
+ static const struct dpll_pin_ops zl3073x_dpll_output_pin_ops = {
+diff --git a/drivers/dpll/zl3073x/prop.c b/drivers/dpll/zl3073x/prop.c
+index bc8b78cfb5ae0..c3224e78cbf01 100644
+--- a/drivers/dpll/zl3073x/prop.c
++++ b/drivers/dpll/zl3073x/prop.c
+@@ -201,11 +201,14 @@ struct zl3073x_pin_props *zl3073x_pin_props_get(struct zl3073x_dev *zldev,
+ 	if (!props)
+ 		return ERR_PTR(-ENOMEM);
  
- 	return entries;
- }
-
+-	/* Set default pin type */
+-	if (dir == DPLL_PIN_DIRECTION_INPUT)
++	/* Set default pin type and capabilities */
++	if (dir == DPLL_PIN_DIRECTION_INPUT) {
+ 		props->dpll_props.type = DPLL_PIN_TYPE_EXT;
+-	else
++		props->dpll_props.capabilities =
++			DPLL_PIN_CAPABILITIES_STATE_CAN_CHANGE;
++	} else {
+ 		props->dpll_props.type = DPLL_PIN_TYPE_GNSS;
++	}
+ 
+ 	props->dpll_props.phase_range.min = S32_MIN;
+ 	props->dpll_props.phase_range.max = S32_MAX;
 -- 
-2.47.1
+2.49.0
 
