@@ -1,142 +1,162 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF53422173D
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA58223714;
+	Thu, 12 Jun 2025 12:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749730443; cv=none; b=Dl1A5TquR29L/Uz37DxhtKOwDVYyRibmanivWIqHDmt7j5a3lFB7fMJP2pkl1Ou2V7ox7w8QXMIAKM1zcTB7uEsbFHOM/K80RBuRBGSHAb+xZqT3XmxDKKqydV0pSCODPNhGuG678Hll54BhtJqqqCsNajaxi3aYmw0EW5nS4A0=
+	t=1749730481; cv=none; b=quewGoyH0MctZS00elvMWrcVUEa1upfKUcqPlkKIUTPATCuFsODdWVlQuXj0CWYF/kNPMtuC73ms+k41CSU/u4sgoCJfSPa8ECv83LhxMDnxrdD9/REvwwrmdoFMSYSJoOm/SY0fe2CQ+lWqAqiM8NAGGIPj+EJRrnNUsiZYo3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749730443; c=relaxed/simple;
-	bh=EH0s1Pm3IFLOMzDcQLbRoq5Njn1Q4NNObx8IgbEOXA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JxHwYg0b2ZztnBLMOzxyD230u8Hf68zUJ5ClH/ovJDtzOpYv/ZW4dqi7UAJrpuciQmvS9cDV3WAylRhU5+C5ZLOhyoCtO8TdBWAcFHRjAyU3GyMD4R1zpMYx2Qw0DKBwQZ6Ej2xdxoz2X1VxvmUshwx9YSZdsLzQR1FJzB6gSHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GblwlS/J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e2PTDUO1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=su6Ru5rB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9qaCMp9g; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749730481; c=relaxed/simple;
+	bh=5Ff3aJ0jv+xKGQeZHfIxfYOLj+J7heE56PKBBO8OEOA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jvo9biV+dAuPkPz/xyhwQ+yV63J1gacZVIemWDm0Djwvp9ygAsXTQViIxrZxUbOz7ahPQAE9Rif+NPheib2uXoqDNViV6+q2Ox3xcNfJ8warxMwfCfPImmZTYuZzqdJeAxj/0wqMK2zT1K4RoCl+7U/1x4nACnBaW0ky9YaKJk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HEFUCRj7; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GblwlS/J";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e2PTDUO1";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="su6Ru5rB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9qaCMp9g"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0F7652193C;
-	Thu, 12 Jun 2025 12:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749730440; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=igqigvRNjdpiGj091yZDoYG9R3yOYk9WpBChKBlsbF4=;
-	b=GblwlS/J79a405opJXvwzo1rzQH+49MkVzSn7sFw9crJm8cETsZPAZZvwrwh3M+AT2UiFW
-	QKIk6lYRU5T4eJXFk10TkoZVigBlSBBOAWQksCxM56gEVHqYXjlPwQ3X55HB+7UYylteNf
-	7bUz0vx7eOjy9BWKLuucb+hRJLJiXo8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749730440;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=igqigvRNjdpiGj091yZDoYG9R3yOYk9WpBChKBlsbF4=;
-	b=e2PTDUO1PCpz1eIiyr4KInG7UPyNX/hhW2d926JAC1Cp0HyFVHB2nlYQijy8KIQSwYJRZq
-	xp3UMyqp0s8uJ5BA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749730439; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=igqigvRNjdpiGj091yZDoYG9R3yOYk9WpBChKBlsbF4=;
-	b=su6Ru5rBuVDe8e8USTus+8/FW0C3mwhw5wEjer9AqQ4YSkApysFX4FdRFN6vscjkfsfvNt
-	OcZGajUA6VSiNmchDgVavZPL3oyRbhb1fjIcISddpPKuog0KnoeIrEa/LPMF1LXqHWSwV+
-	ksadfgrD5pODxr2LaBD+gGnUIFj/AvU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749730439;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=igqigvRNjdpiGj091yZDoYG9R3yOYk9WpBChKBlsbF4=;
-	b=9qaCMp9g+13w4iccW4v1/P5hNJwYu/0yptYO6cNDHn3ohR2QQKY+1+BQP91HE5qElozVpl
-	7/J7+jF3q5OYslCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B32F9132D8;
-	Thu, 12 Jun 2025 12:13:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nJOpKIXESmhTcgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Thu, 12 Jun 2025 12:13:57 +0000
-Date: Thu, 12 Jun 2025 13:13:52 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Dev Jain <dev.jain@arm.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com, ryan.roberts@arm.com, 
-	mingo@kernel.org, libang.li@antgroup.com, maobibo@loongson.cn, 
-	zhengqi.arch@bytedance.com, baohua@kernel.org, anshuman.khandual@arm.com, 
-	willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com, 
-	baolin.wang@linux.alibaba.com, ziy@nvidia.com, hughd@google.com
-Subject: Re: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
-Message-ID: <jnv4n23bydfkn6kz4cpgtkrryfme2zjybp2frc2v734gnn32zj@3oboohu3bqiy>
-References: <20250610035043.75448-1-dev.jain@arm.com>
- <20250610035043.75448-3-dev.jain@arm.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HEFUCRj7"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749730474; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=sbCEUNMaN9u599ZS8ghGRn/n3p008D7oXfWjfSzogfk=;
+	b=HEFUCRj7A77IfOLBMUicb/3lpV7VBCiU/c2nCCGeStXpkgjQyLj6gUIwOSOl7xpduoEKqqHIbADL7lNJhi7tF2ibiS2nXDejt2/pUytxnXf3IsRcnJcMpa24W2Im/GIVVCoFRZGxFh7Rm/pdgn+VVIk0oq8HwjdCfRGXGtFwUlE=
+Received: from 192.168.0.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdgyX62_1749730473 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 12 Jun 2025 20:14:34 +0800
+Message-ID: <8c6dcf96-adbf-4c25-b1ab-b172bdc91800@linux.alibaba.com>
+Date: Thu, 12 Jun 2025 20:14:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610035043.75448-3-dev.jain@arm.com>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,oracle.com,suse.cz,google.com,kvack.org,vger.kernel.org,redhat.com,arm.com,kernel.org,antgroup.com,loongson.cn,bytedance.com,infradead.org,gmail.com,os.amperecomputing.com,linux.alibaba.com,nvidia.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] selftests: khugepaged: fix the shmem collapse failure
+To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, shuah@kernel.org,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <c16d1d452aa876b449324d12df6465677158a711.1749697399.git.baolin.wang@linux.alibaba.com>
+ <e06530f6-5c2e-4b6f-b175-c7aaab79aa4e@redhat.com>
+ <42b76dbc-d1a1-4d00-b139-c50e0abf8b0c@linux.alibaba.com>
+ <6ceb38ce-c16d-48f2-baca-fef79f8fc058@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <6ceb38ce-c16d-48f2-baca-fef79f8fc058@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 09:20:43AM +0530, Dev Jain wrote:
-> Use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
-> are painted with the contig bit, then ptep_get() will iterate through all 16
-> entries to collect a/d bits. Hence this optimization will result in a 16x
-> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
-> will eventually call contpte_try_unfold() on every contig block, thus
-> flushing the TLB for the complete large folio range. Instead, use
-> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
-> do them on the starting and ending contig block.
+
+
+On 2025/6/12 19:45, David Hildenbrand wrote:
+> On 12.06.25 13:37, Baolin Wang wrote:
+>>
+>>
+>> On 2025/6/12 18:08, David Hildenbrand wrote:
+>>> On 12.06.25 05:54, Baolin Wang wrote:
+>>>> When running the khugepaged selftest for shmem (./khugepaged 
+>>>> all:shmem),
+>>>
+>>> Hmm, this combination is not run automatically through run_tests.sh,
+>>> right? IIUC, it only runs "./khugepaged" which tests anon only ...
+>>>
+>>> Should we add it there? Then I would probably have noticed that myself
+>>> earlier :)
+>>
+>> Yes, see patch 2.
 > 
-> For split folios, there will be no pte batching; nr_ptes will be 1. For
-> pagetable splitting, the ptes will still point to the same large folio;
-> for arm64, this results in the optimization described above, and for other
-> arches (including the general case), a minor improvement is expected due to
-> a reduction in the number of function calls.
+> Yes, was pleasantly surprised when I found that :)
 > 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>
+>>>> I encountered the following test failures:
+>>>> "
+>>>> Run test: collapse_full (khugepaged:shmem)
+>>>> Collapse multiple fully populated PTE table.... Fail
+>>>> ...
+>>>> Run test: collapse_single_pte_entry (khugepaged:shmem)
+>>>> Collapse PTE table with single PTE entry present.... Fail
+>>>> ...
+>>>> Run test: collapse_full_of_compound (khugepaged:shmem)
+>>>> Allocate huge page... OK
+>>>> Split huge page leaving single PTE page table full of compound
+>>>> pages... OK
+>>>> Collapse PTE table full of compound pages.... Fail
+>>>> "
+>>>>
+>>>> The reason for the failure is that, it will set MADV_NOHUGEPAGE to
+>>>> prevent
+>>>> khugepaged from continuing to scan shmem VMA after khugepaged finishes
+>>>> scanning in the wait_for_scan() function. Moreover, shmem requires a
+>>>> refault
+>>>> to establish PMD mappings.
+>>>>
+>>>> However, after commit 2b0f922323cc, PMD mappings are prevented if the
+>>>> VMA is
+>>>> set with MADV_NOHUGEPAGE flag, so shmem cannot establish PMD mappings
+>>>> during
+>>>> refault.
+>>>
+>>> Right. It's always problematic when we have some contradicting
+>>> information in the VMA vs. pagecache.
+>>>
+>>>>
+>>>> To fix this issue, we can set the MADV_NOHUGEPAGE flag after the shmem
+>>>> refault.
+>>>> With this fix, the shmem test case passes.
+>>>>
+>>>> Fixes: 2b0f922323cc ("mm: don't install PMD mappings when THPs are
+>>>> disabled by the hw/process/vma")
+>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>> ---
+>>>>    tools/testing/selftests/mm/khugepaged.c | 3 +--
+>>>>    1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/tools/testing/selftests/mm/khugepaged.c
+>>>> b/tools/testing/selftests/mm/khugepaged.c
+>>>> index 8a4d34cce36b..d462f62d8116 100644
+>>>> --- a/tools/testing/selftests/mm/khugepaged.c
+>>>> +++ b/tools/testing/selftests/mm/khugepaged.c
+>>>> @@ -561,8 +561,6 @@ static bool wait_for_scan(const char *msg, char
+>>>> *p, int nr_hpages,
+>>>>            usleep(TICK);
+>>>>        }
+>>>> -    madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
+>>>> -
+>>>>        return timeout == -1;
+>>>>    }
+>>>> @@ -585,6 +583,7 @@ static void khugepaged_collapse(const char *msg,
+>>>> char *p, int nr_hpages,
+>>>>        if (ops != &__anon_ops)
+>>>>            ops->fault(p, 0, nr_hpages * hpage_pmd_size);
+>>>> +    madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
+>>>>        if (ops->check_huge(p, expect ? nr_hpages : 0))
+>>>>            success("OK");
+>>>>        else
+>>>
+>>> It's a shame we have this weird interface: there is no way we can clear
+>>> VM_HUGEPAGE without setting VM_NOHUGEPAGE :(
+>>
+>> Right.
+>>
+>>> But, do we even care about setting MADV_NOHUGEPAGE at all? IIUC, we'll
+>>> almost immediately later call cleanup_area() where we munmap(), right?
+>>
+>> I tested removing the MADV_NOHUGEPAGE setting, and the khugepaged test
+>> cases all passed.
+>>
+>> However, a potential impact of removing MADV_NOHUGEPAGE is that,
+>> khugepaged might report 'timeout', but check_huge() would still report
+>> 'success' (assuming khugepaged tries to scan the VMA and successfully
+>> collapses it after the timeout). Such test result could be confusing.
+> 
+> If we run into the timeout, we return "true" from wait_for_scan(), and 
+> in khugepaged_collapse() returns immediately.
+> 
+> So we wouldn't issue another check_huge() call in khugepaged_collapse().
+> 
+> Did I miss something?
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-
--- 
-Pedro
+Ah, right. Sorry for the wrong example. Now I'm fine to drop the 
+MADV_NOHUGEPAGE settiing. Thanks.
