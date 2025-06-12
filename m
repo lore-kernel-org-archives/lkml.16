@@ -1,80 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F98324502D;
-	Thu, 12 Jun 2025 13:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F856242D63;
+	Thu, 12 Jun 2025 13:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734301; cv=none; b=aeCI0RRBTZM2Rdx8xQk4opC9zsZ72vi+b3MGAuMg8EOp3K4fgk6dB1qgHMQP0slsJoDaqauEvFVCs4qPgzq8BIdofZ3fzEsxL3cmhAMMGqw7fh5XILDz2eJhdG3tTeEhjFwN2bSFf3l5HM5e89QnCDpmkmv04Wb61JopKxiAVIM=
+	t=1749734338; cv=none; b=BpIViQZOix8qosAumb92KAsUKFAemdI8Of0PRwfHYigQzYyGvQU62qUedH+MDi7SDnneJiigYDWdzmNhSiCFYQ58CbAh7zHnA0Y/Nwka2Aw/OnY5ZYLRh28PlgaREQVRzuiPIVzoWga46136rMsUkrdPG7wo/ToPGwRN0f5szxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734301; c=relaxed/simple;
-	bh=6SZIFnmbLf8JV1vJNHSiq1P6ecTniyk9z2YoaDHDHKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u5jJCuHgbbr25MkmjDtcnIMpzYSHl2jiIppx2MoMbq/afndUx8GbBNzlTYQy9okNZwvcDXzYPMhwVZyn6zdl1N3XW4V+PdCtmiXVojRDggeNtJwCa29a43dOT9GhysT7d74SbBXyebvf7MzXWnHhreCo3CUldDMWAJ3+Sbw2lrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/9gzw+S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749734338; c=relaxed/simple;
+	bh=Onvkn72qbpv6WHAGIv34zbp4AdrM6BtWd6jUL+NK4Is=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q8v3/q9P7A4AhzvNWbSNeE2UYCSNup9ibEBFmGlQRJDyGl5ymOerav3xoqkrOPMpndmf5u067KCV3H3zVbQh34DLBSuEySbX3ZAmJY2aIMdqY79qYpL1W89JObNb9ZTxHp42kg83VNmkSzS3KPDSp9S98y/GqaLQSoaFJ9y3UZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KV5OY+s3; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/9gzw+S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64212C4CEEA;
-	Thu, 12 Jun 2025 13:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749734299;
-	bh=6SZIFnmbLf8JV1vJNHSiq1P6ecTniyk9z2YoaDHDHKU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I/9gzw+Sj9bAnBOePZPc+6llemB2Ta47w3C5ZmsoFID2TgBIBwPUCtuC7idEfc3Hm
-	 cUqipnOxEDiiIWQngNoN8vo3u0n0OUGO9yA5xGq05aVqU66njci5WVvU8XTyFaHBbK
-	 Uw0EE1D+epC9vwieMVa+ezGM7ws02SrNieTt7eRfNStM2sB1tihQAyTjY5p2cDVTDc
-	 9rYGohNGO1LKDlrcDqvQZ4oN3PNoqfnCv1WIM9DlrvW/9lLsKWOOA8KMIXFlLxVIsS
-	 4AJF6sw8nfalyCk8nmYDE2O9AjtRaE0suu/cVTQjxXS/LIu2HgHsVYGRWorRcD/b/O
-	 cpcuuOBf8lGPA==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: shawn.lin@rock-chips.com,
-	lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	heiko@sntech.de,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Hans Zhang <18255117159@163.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	robh@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 0/3] Fix interrupt log message
-Date: Thu, 12 Jun 2025 18:48:09 +0530
-Message-ID: <174973424623.20170.44933782990222558.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250607160201.807043-1-18255117159@163.com>
-References: <20250607160201.807043-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KV5OY+s3"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-607ea238c37so2108288a12.2;
+        Thu, 12 Jun 2025 06:18:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749734335; x=1750339135; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2W6MiZfLRhlv/hbI5L0U2xNDEqKtD2PvAaiIWWuBOf4=;
+        b=KV5OY+s3QiLEwb8DR5P/CtH/COzcwk2goo1I6iXoFC3YS5uSPaXzWBsAGaLHi37Tl2
+         frAz5Si8rmgBwbv0e6o3jOGs6u2cOtgJhXbL0ifxIi6zwrbScMYqdGMr7y2tyZFc3w0g
+         U7RTVEbACrTkjuKhPO1ehId+FdhH0k7VPSeHRP0CDtLJugvFOoxW4Jfd4oYOujk1KbsO
+         3uW3vewyoEZiMNY7YcR8GQMXvW6F5aK77kxyo+P2NPqFCBWsEFMydQ2NEl/R8Jl5bHwP
+         Ay1zG2JmiwvahTY+1wuFc65AF3fEpDlGbcV8pZyH7KdzdOUKKSCGRkzwo9AOGoVxbf5j
+         rPeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749734335; x=1750339135;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2W6MiZfLRhlv/hbI5L0U2xNDEqKtD2PvAaiIWWuBOf4=;
+        b=RUIve/UA/5Db/BNsMYs5iPxUd9E2xxqRRk/U+sP34FWZEgD8IMlEK5krFygCanwB1U
+         CRaq8S7dae7nCHDwWmW+4eSuyJPG9mTR1yH0FI4H8RVn95qH7UcEcPcNZECYGiABONCt
+         3z1ffVrjSmLWdH3sKTLfB6B9Al6NCe1qb0JqXkSQwVXs4oJefwDcmHlPQ5frPta+KYl8
+         owI8rjDl6CuQnBcc0neafxeM640bVZ61cLD9o0WFYSYA2sLpSLlvwKIjOi9X4soVhRYF
+         wjkdL0gbeqWUXyoghEt7Ji9wocsGwFcFrO39gJpV0UoS6XStQauYkFn6XBkbsXSpgdLs
+         k8iQ==
+X-Gm-Message-State: AOJu0YzEBenLcR0kOqSE6mL8nO5rPh/yEqn9Lk1kPZFb9+98vfCD1cXC
+	R+S4nnSyfGfVz00BOUYbWotLG0gyZVDizaijpeX86BW+1vxnu9lELZ++7S5w2XQlxjU=
+X-Gm-Gg: ASbGncva5ftD2iiZ5wJPn+v+6fLe6w/hXSy8MqohlJJG4RGZl9kVQs5ulHN5w++x2xg
+	IltYrpcz75tSMOFIKgChcoQAATZ0luJa1Xyd0bmrtBcazrmoo876pKQ1JWZavDFX/qOK0kwZ9DD
+	ucCtCdABDjFEuJr6c9+kbfppWMm1bD36pSOYBRkzYdRGKRM7X1NlR79RhWRBXC+qSQHqa4qxaq1
+	yY43gJTSuTTMqh8YfTBuFTOZ4gj9lCYqFpjGl/9m3BQ8a2cc4OG7T+U8CcjQevo/bWD+RQOX8wN
+	FGb9U8r6rH90rvALa0jfad4gpGPvIARaf+LmlcBpIZ27TDCV5Oe6gCPZYzU3UW4+dgxKx/83lrj
+	6R6D/4b11nqB89KkN9W0cMhU=
+X-Google-Smtp-Source: AGHT+IF31AIAPCEMcqDEWRQPWUUUfzg6uyT6KgJrI4JjoCX+hz+MfDKC4P7wni5DqpZXX62qMU58oQ==
+X-Received: by 2002:a05:6402:27c8:b0:602:29e0:5e2f with SMTP id 4fb4d7f45d1cf-60846acea9amr6706630a12.10.1749734334875;
+        Thu, 12 Jun 2025 06:18:54 -0700 (PDT)
+Received: from localhost.localdomain ([91.242.54.118])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6088c83526asm842171a12.81.2025.06.12.06.18.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 06:18:54 -0700 (PDT)
+From: Ruslan Semchenko <uncleruc2075@gmail.com>
+To: bpf@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	Ruslan Semchenko <uncleruc2075@gmail.com>
+Subject: [PATCH] potential negative index dereference fix in get_exec_path()
+Date: Thu, 12 Jun 2025 16:18:16 +0300
+Message-ID: <20250612131816.1870-1-uncleruc2075@gmail.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+If readlink() fails, len will be -1, which can cause negative indexing
+and undefined behavior. This patch ensures that len is set to 0 on
+readlink failure, preventing such issues.
 
-On Sun, 08 Jun 2025 00:01:58 +0800, Hans Zhang wrote:
-> Detailed descriptions of interrupts can be seen from RK3399 TRM doc.
-> I found two errors and cleaned up the driver by the way.
-> 
-> This patch series improves the logging accuracy and code cleanliness of
-> the Rockchip PCIe host controller driver:
-> 
-> Log Message Clarifications
-> 
-> [...]
+Signed-off-by: Ruslan Semchenko <uncleruc2075@gmail.com>
+---
+ tools/bpf/bpf_jit_disasm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied, thanks!
-
-[1/3] PCI: rockchip-host: Fix "Unexpected Completion" log message
-      commit: fcc5f586c4edbcc10de23fb9b8c0972a84e945cd
-[2/3] PCI: rockchip-host: Correct non-fatal error log message
-      commit: 917600e630218ce61aa0551079592cb541391668
-[3/3] PCI: rockchip-host: Remove unused header includes
-      commit: 1fdb13f92388dfc936624b0a0d6abae362b0ace3
-
-Best regards,
+diff --git a/tools/bpf/bpf_jit_disasm.c b/tools/bpf/bpf_jit_disasm.c
+index 1baee9e2aba9..5ab8f80e2834 100644
+--- a/tools/bpf/bpf_jit_disasm.c
++++ b/tools/bpf/bpf_jit_disasm.c
+@@ -45,6 +45,8 @@ static void get_exec_path(char *tpath, size_t size)
+ 	assert(path);
+ 
+ 	len = readlink(path, tpath, size);
++	if (len < 0)
++		len = 0;
+ 	tpath[len] = 0;
+ 
+ 	free(path);
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
+2.49.0
+
