@@ -1,59 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E78248F6F;
-	Thu, 12 Jun 2025 14:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8F71B808;
+	Thu, 12 Jun 2025 14:46:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739505; cv=none; b=AJM7arRuCYla5K0ttK/STZREKOd0g9saAF+CAPlpf66wMwqGf2gQQhVI5u1gVBMs2H1YsMUhihkul/ZznZgOty4thpLDON2/edTXqTdRzSAwSDzTbxEVyv6xAkds1iVNBtdFZ/b+yIffTqBtBeeTkhFc47EiQV6WoYsCQUGSZew=
+	t=1749739578; cv=none; b=IT3US6dIYhYiWRyofrh8LJHIgrCL2QMaLfN//+QrQYmexAA+nHnhQ1aodsQCI0WDCfXzEpotnmyva1s2xTVR5Ebrc0MZwgWiujtccrGUjYE9wlqtGUO1X2livLyFNr0uDQGzCaB7IhoMuvkehPdhFqra+vg5XziZnRwtcUBh02Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739505; c=relaxed/simple;
-	bh=rhW2uPY7C6h/BLG/laMfzjLwgKmKRwYa3f9EKStw7xQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ej7uoodgqhWYnKKmz1qsmPDZfsRrEEdWdEBsIy24+lQS+FOo16tehFlPZYHeTwgRRDVzvWlwBkUfCC0oNzEsF7msvHCWmFQ+zPMFz7YvxEAXevPnneUu+XRbP+BN6UiMG1AcsqkaG9EQrB8a/OU99z12JxbT0Uoqa/7RE7UlxFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWN28862; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749739578; c=relaxed/simple;
+	bh=ktOIi/BfUKsUMRQMoHe23J8/rEqdQAIOh2BtMJa3q38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OVF3MrnkjG3UB5aTYc048TREoE/Bqitc+BFe9r7dsdO2R9Xvf//5oRycnjYB/y0y9l1VI4sIvzxcMaSlcYUTCLZjKia38j0F3ATxKesWAHAIeS76RqJ4bbYnqSe014lZ3xl6OYdo14yYygjbrxVpNCuAeAb6bupTx+7k+LEmjwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUqjF7ON; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWN28862"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4174EC4CEEA;
-	Thu, 12 Jun 2025 14:45:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUqjF7ON"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE90C4CEEA;
+	Thu, 12 Jun 2025 14:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749739504;
-	bh=rhW2uPY7C6h/BLG/laMfzjLwgKmKRwYa3f9EKStw7xQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YWN28862BHnhGYH2SwLF8nXQOPAWhB6kiidXReIXS9Uv5OTfa9tgiGl75gYni45mD
-	 WhUq5RfqPQM8TIdoQwMteBUb0ip5b367AzSEJrqdJF7EwSFoV5y4JS57D/zXfqL+aZ
-	 Iqmv+SRjQ3iPttjydeguMOO2wnzYWmqhSngUgXq7SVCsy37I8jI4zhnHq3uj+N1KOR
-	 1p8Y4YWbTD/ICVkGI+fCROQNCGk29SBAmdlt3gR+HoLfro253MrwqpMAjtG4FumiL2
-	 s7rEoNaTagV5Rwy1nPT3NTixgHYQQhX9baHhdDcsVWaVb5+YZB4ClipnwlFHuFFnmr
-	 fooRbFXOvIE+g==
-Date: Thu, 12 Jun 2025 07:45:03 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Joe Damato <joe@dama.to>
-Cc: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next 2/2] netdevsim: collect statistics at RX side
-Message-ID: <20250612074503.1f80b816@kernel.org>
-In-Reply-To: <aErjcH3NPbdP7Usx@MacBook-Air.local>
-References: <20250611-netdevsim_stat-v1-0-c11b657d96bf@debian.org>
-	<20250611-netdevsim_stat-v1-2-c11b657d96bf@debian.org>
-	<aErjcH3NPbdP7Usx@MacBook-Air.local>
+	s=k20201202; t=1749739574;
+	bh=ktOIi/BfUKsUMRQMoHe23J8/rEqdQAIOh2BtMJa3q38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FUqjF7ONFa/8MEpHuAC0lNeK4nPttPf0Hz1juF4yxJk6qw8h112kn2pLn1gxQU2GR
+	 xCfBIrIgpwpX6PMUvf1+rkx53ho53XJD7FhpIpSg6XY583benADFDIXPTpvBIeCOx/
+	 sMkLO/n4wtblZxvr0nsVsALTLT9VlmquhajDWK4k4cCeuh5oK7ZMeTxTEk/TQn2kGV
+	 3urV9802dpwb86AfhMelys5oT6bfUdNxba0TbtaJ//L1qsgnPseh7br0VCwoVkk6NU
+	 fI3ekhZupD9ExVKASnX2ixaxELjUVMbNqc5VPV1WfHXySfMmM735xE4LOD2duATKcy
+	 pQg6+NcnmoIbg==
+Date: Thu, 12 Jun 2025 20:16:03 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v11 10/11] PCI: dwc: Print warning message when
+ cpu_addr_fixup() exists
+Message-ID: <v77jy5tldwuasjzqirlwx45zigt6bpnaiz67e4w7r2lxqrdsek@5qzzobothf5r>
+References: <20250313-pci_fixup_addr-v11-0-01d2313502ab@nxp.com>
+ <20250313-pci_fixup_addr-v11-10-01d2313502ab@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250313-pci_fixup_addr-v11-10-01d2313502ab@nxp.com>
 
-On Thu, 12 Jun 2025 17:25:52 +0300 Joe Damato wrote:
-> It "feels" like other drivers would be bumping RX stats in their NAPI poll
-> function (which is nsim_poll, the naming of the functions is a bit confusing
-> here), so it seems like netdevsim maybe should too?
+On Thu, Mar 13, 2025 at 11:38:46AM -0400, Frank Li wrote:
+> If the parent 'ranges' property in DT correctly describes the address
+> translation, the cpu_addr_fixup() callback is not needed. Print a warning
+> message to inform users to correct their DTB files and prepare to remove
+> cpu_addr_fixup().
+> 
 
-Good point, and then we should probably add the queue length to
-rx_dropped in nsim_queue_free() before we call purge?
+This patch seem to have dropped, but I do see a value in printing the warning to
+encourage developers/users to fix the DTB in some way. Since we fixed the driver
+to parse the DT 'ranges' properly, the presence of cpu_addr_fixup() callback
+indicates that the translation is not properly described in DT. So DT has to be
+fixed.
+
+Bjorn, thoughts?
+
+- Mani
+
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change from v10 to v11
+> - change to dev_warn()
+> - Bjorn: this is opitional patches to encourage user fix their dtb file.
+> 
+> change from v9 to v10
+> - new patch
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 8b546131b97f6..d4dc8bf06d4c1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -1125,6 +1125,8 @@ int dw_pcie_init_parent_bus_offset(struct dw_pcie *pci, const char *reg_name,
+>  
+>  	fixup = pci->ops->cpu_addr_fixup;
+>  	if (fixup) {
+> +		dev_warn(pci->dev, "cpu_addr_fixup() usage detected. Please fix your DTB!\n");
+> +
+>  		fixup_addr = fixup(pci, cpu_phy_addr);
+>  		if (reg_addr == fixup_addr) {
+>  			dev_warn(dev, "%#010llx %s reg[%d] == %#010llx; %ps is redundant\n",
+> 
+> -- 
+> 2.34.1
+> 
+
 -- 
-pw-bot: cr
+மணிவண்ணன் சதாசிவம்
