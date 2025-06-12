@@ -1,194 +1,248 @@
-Received: from outbound-ip191b.ess.barracuda.com (outbound-ip191b.ess.barracuda.com [209.222.82.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A702F432C
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=209.222.82.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749728617; cv=fail; b=s0bd7Eb1s4q2aPd/KaIc+yONwcfH6pb3lkt3ve55qI8+CCFnMVRbyhsOE+jaDmD0UZaGp85CeYSDeHjoN2gn9vNen1hDOcJn0SMq+S2n/94KyKalVEZ5ESRoa5TzfqnhwP0fPhzW3MPV7ztTkUWKSdLOj19Nr85FLImpbX+dFMA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749728617; c=relaxed/simple;
-	bh=9aNLnZMptO7pOWsU+38gtnQUClwHDElX8Vi+JOVocCQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=i/d+zoros3ChGfT4nw/184RaXRIQo1QlhVZPNcPDF7W3rFTo/iNyURfivXDkMCMl/zIugEPjXNG49tSnQasE1pvKQsMJ4gE2zC98h/beotc4RuaJeikcz5fU8+WItMum4HVRPDdmzQGgLhNCKjiC9LUCP4h/E/wiiAl0urvfzEc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ddn.com; spf=pass smtp.mailfrom=ddn.com; dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b=DNsxDZQc; arc=fail smtp.client-ip=209.222.82.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ddn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ddn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F372F431F
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749728763; cv=none; b=hKW1KzwzyztIZfX/ZmAs6NS1dEiWPH1/tl3qYbwT0MTU3d70NIVJb+ICA4uX0U2o1hs2i1KB0BnYEZbK1zl3l/lFUztB8ThzXZlNgiayr1Qqj94qF8FBcu/duFAeOluZCFe6PV3/XI4L3x3kThyaz7aDe7eJtOCXGv61Su53xuE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749728763; c=relaxed/simple;
+	bh=NxzUkoX4YGmqxvw5PZtT0t3w5UUtTn07IM8Xo5Tt8fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=carctj75E0z/b3j8V+h/gTa7xwsy4wUSEqk/TL7mRqThPp6Xx475ZMJHvaFIL3ms+x/6O+jxbTfk/F9uepbna7MD6iuPRcHGYEPY4Dz8RegQEOnqnQA/RuPXquLw3P9AuOj+GUOOk1hHcaE84k2xURDLFgpZ8dg07JWIY8RPv8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SNAHWRfE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b="DNsxDZQc"
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2125.outbound.protection.outlook.com [40.107.94.125]) by mx-outbound43-165.us-east-2c.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Thu, 12 Jun 2025 11:43:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CZ6fFrnHVvp5n7QfGaL1Nn3TgBK1Eaopuu2hPya3ZHerJuM9MluwpUlwpI75HETkaRjUkKOfHeSVwLvFlmm5ygNSS/NspNne6GXaOW30anh9nWCtVDhmD0QPh7swl2Z3l6PlvDpYdxmwiOANhUWOD3YFzlhlSTJxn1RHmZ7oXz+mdCY788OAGe9Vw3QHqzrbGbb/4Rd0YewBNQ1t/2NuztXJBJZUDAsfgHO7XJORGmRIZN0A9JEQZ2p7fZqfEBxn79hhFPV5Tatxe34lIDLplU2StBcRAUfLm/q90bJqCUT2dKZR1ms/SH/npy+GtdvcxU973apcpIfZAYV25ZYRPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iXDJAE0GxIsvXhayphMRUIoOUwXI1S3oKnteslKoa6Y=;
- b=yv/KZeoWxvekjV/YN2Uy4lKrkj92xpl3yAHPeOiQap+sx5AFh2L7WgH1Sg+sZaKsUzPl2XEE3R67Z2iD7x/FDsSJggV03V0jYfTxunXObJXOYybAQrSTGuXfp9+3n1gMNb0Ls1P3G90aSH2DF0Y1OMRyJKlTKKFG4Jdm/itmv+3ARTtz8im0rbzVA4IlYd+WLe05o/jvnI4sCAVjN5iQKwwHGT8t397GBwN/npEkplxt1EX1PDN7ROKXbBLSmslLR7EsSwwJXcJnE+iag9KoBjlXmOtAXqTO9j1qCYE4awVmONZyL3wrfaqvQ6tA1Z4kUKzjzODgcgZIj6eby7KEmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ddn.com; dmarc=pass action=none header.from=ddn.com; dkim=pass
- header.d=ddn.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ddn.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iXDJAE0GxIsvXhayphMRUIoOUwXI1S3oKnteslKoa6Y=;
- b=DNsxDZQcEh7iY4mdsz7zkKs127lfg1nvXcqEKHLZog9ZxmOdI6UVSAwquxSQqBTIMLG9kdzXR0JAqkdR9ts1U7F4EVHFqn8Zr6+MRUeqKAJcZ4ZIhMR5qhEaj9bHbuEnfPmprlOEW/twk7Je0794JAL+IWQmDTOBEUGj8NWK03I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ddn.com;
-Received: from CH2PR19MB3864.namprd19.prod.outlook.com (2603:10b6:610:93::21)
- by PH7PR19MB6532.namprd19.prod.outlook.com (2603:10b6:510:1f4::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.22; Thu, 12 Jun
- 2025 09:09:43 +0000
-Received: from CH2PR19MB3864.namprd19.prod.outlook.com
- ([fe80::abe1:8b29:6aaa:8f03]) by CH2PR19MB3864.namprd19.prod.outlook.com
- ([fe80::abe1:8b29:6aaa:8f03%5]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
- 09:09:42 +0000
-Message-ID: <d50c69ff-c0dd-4429-b75f-98cda2339540@ddn.com>
-Date: Thu, 12 Jun 2025 11:09:37 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: fuse: Consolidate FUSE docs into its own
- subdirectory
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Documentation <linux-doc@vger.kernel.org>,
- Linux Filesystems Development <linux-fsdevel@vger.kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Miklos Szeredi <miklos@szeredi.hu>,
- Luis Henriques <luis@igalia.com>, Amir Goldstein <amir73il@gmail.com>,
- Chen Linxuan <chenlinxuan@uniontech.com>,
- Christian Brauner <brauner@kernel.org>, "Darrick J. Wong"
- <djwong@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- Jan Kara <jack@suse.cz>, James Morse <james.morse@arm.com>
-References: <20250612032239.17561-1-bagasdotme@gmail.com>
-From: Bernd Schubert <bschubert@ddn.com>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <20250612032239.17561-1-bagasdotme@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PR3P191CA0041.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:102:55::16) To MN2PR19MB3872.namprd19.prod.outlook.com
- (2603:10b6:208:1e8::8)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SNAHWRfE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749728760;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NUBrU3Jg/CUyUUQEu0p/rtlfQN+OSb9bogSo5pDhUjs=;
+	b=SNAHWRfEvhfoqP4ZtZabDXWQ1ysgwLBuCWqcd4TDKbKcbAd2w3+ncbTOtWCej5dNlmUSWq
+	pC+01A3208m8CxkfSinp8bdUCegfcnHiu2OpTxufPJ+3PWBvqBx7VocS10ZdcsAI18/Mfu
+	EuDXI4ltXUlP3qNcB3/Lz7pf+4fxCE0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-136-gsvNWuZFOEuFTNK6JupBkg-1; Thu, 12 Jun 2025 07:45:59 -0400
+X-MC-Unique: gsvNWuZFOEuFTNK6JupBkg-1
+X-Mimecast-MFC-AGG-ID: gsvNWuZFOEuFTNK6JupBkg_1749728758
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a52cb5684dso521551f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:45:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749728758; x=1750333558;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NUBrU3Jg/CUyUUQEu0p/rtlfQN+OSb9bogSo5pDhUjs=;
+        b=c4aIf6gxO41Rfw15IXrpqEK2zL7YHDNh6CRFGcDynLyFT6VdoFnpG8XwZWYBZpr/V/
+         ytlMgbdHR1+JzyjE+xccTxLx28E1WvK+N3FcoJO+oe1y3hf4nrH416XUnQ21eaxRvK4S
+         JpInx8HMf+ELg/yt8v9BJlgN3IKj34wy772hZw5wdPDaNhkzjsjfyDawyfL+yfrw9oAc
+         TElvxd46bxaPp53fry5yTqq2S1+ko5BQmJmy/8979r40ypXkVNYLTZOchuK346mAdU84
+         EY42hfe10jDiPJz2b89ziiWhhB9MwvirAqh4BAt+ALtCex/RfyriCCyn998LxzVa+Px3
+         GY5g==
+X-Forwarded-Encrypted: i=1; AJvYcCV5k7Fd1A/YiLimBsM9PjzGg0pY/tpPsAkY0jv9MX9/b7EHE/1RtDCmy6Gh32/euYqQvUTNTonDS0CMQfY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYBZ4CEawPQcHlu62GaAxgpjxO4K61iTe3RDugbYcLYL35/Som
+	6fJRDs88MN/WkaVVE56GrdVRkVNMhd81zIKX4r66FPtilTB3EFE5wEIUj2eoNrAphRiMLGOwkrV
+	t5qKIwoawnaChEqto7kS64sl6xHhiQBlAix1rT+NhAT6VzH6ay6XMX6/CLiC0VQWzPw==
+X-Gm-Gg: ASbGncs3mUPE9fjduYlvVxfjv7SCSQxzkfsTT7hXquSAGjksArFbcVK/57IQrY9Ne6M
+	0P58SMlBjb7mJ3Pu6FfMOjwwdN4hx1yXnZGZ739SgX8xeS/Bt4KjgbXnln3SxHFFGhWHlcKhX4v
+	WqIEp7zj3mXN3/+uffAa5WH1r5k6y5OAeBxgdYD/6KEXEpK6bv/YgVSXUzo0r78DIEI6UPSaFNb
+	8IEg1mk0NIw4VJOWNpGoAQVe2wRDIAfRv/Ng7z+dBrxeqkIJXtbhCuGqXVAL8HdKGYIl5AxnW0d
+	v/xxgBpzCgCZVoWLp68okstJH228vs6VMcw9wCsj7qTLig5pfDVxvQ==
+X-Received: by 2002:a05:6000:26c5:b0:3a4:d0fe:428a with SMTP id ffacd0b85a97d-3a558a27540mr6070610f8f.28.1749728758303;
+        Thu, 12 Jun 2025 04:45:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqazLFzdFqusR3OLSoTLzy3FePbxbU+q7iXp0Vbp++hFW1qVgR9Y3DMj1guKzAU7taGVv88w==
+X-Received: by 2002:a05:6000:26c5:b0:3a4:d0fe:428a with SMTP id ffacd0b85a97d-3a558a27540mr6070581f8f.28.1749728757938;
+        Thu, 12 Jun 2025 04:45:57 -0700 (PDT)
+Received: from [192.168.3.141] (p4fe0f8a8.dip0.t-ipconnect.de. [79.224.248.168])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a56199aa52sm1772249f8f.36.2025.06.12.04.45.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 04:45:57 -0700 (PDT)
+Message-ID: <6ceb38ce-c16d-48f2-baca-fef79f8fc058@redhat.com>
+Date: Thu, 12 Jun 2025 13:45:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR19MB3864:EE_|PH7PR19MB6532:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea1b95fe-2de1-4670-d8e2-08dda990ddcb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|10070799003|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K1dOUGMrWU55RktXSFM5Z0F4UkZTbGxxMWhCWnZ4c2paZm01RE1LQXUvTm9a?=
- =?utf-8?B?b1ZOTUJpYStDQi9sTkZnSHB1ckIwc0ltd0ZNSjFhSlBNSmtkT2pFb3BqOEVB?=
- =?utf-8?B?ZWpSVUNJOHJvMS9jTHd3ZTdwT2dBUHJZa0JSam1PckMwL3dKVU5QZW1rdWg5?=
- =?utf-8?B?dm51ZVNYbmFLWWdYc05ZVkJldUFuNVd6eTZZaHo0aXB5b2ZKTnd1WXFjMzU2?=
- =?utf-8?B?T3NnRFcyV2lYdmZXM1VWR0cyNjFQa2Vuenk1R2Iva3dUVWtrSk5NSUVrbnc3?=
- =?utf-8?B?anV4aGl0cDl2c3hYa3QrZ2swZStMSDVoSDAxNEx2S1J5MS9YMlNLRHFsOWhJ?=
- =?utf-8?B?YTI5RG9EcTRDMU5oR2NCb2FNMEQvaTFXYmtOSEJOSkJsaGtOaFVTMndzNzVW?=
- =?utf-8?B?emtiYmVBK2VueFN0NTVhUUVSaU5ZWG9KQk1iVmtNQ2ZUS3Z3WmdqWTBFZnFx?=
- =?utf-8?B?Y3JzUC8zSE53N2ZsK05lNXQvZ1V5YTFxM1dNSTV1bHBmRENQSXhJZ2o3REhO?=
- =?utf-8?B?VzlCZmdMcUNRRjE0RlNOTnBKeVdZUjE3ckxRTnV0bDhuUlNWTnZxZW9RN2JW?=
- =?utf-8?B?WCtwV2wzT0VwZ1BTa2xyd1NEVXlNWXlUOVNjcDlLVW95WEJEZHdlMVdlVXlq?=
- =?utf-8?B?YWxtWFJrYkU4MUhKR1NEUm9EMURRMHVTRk82eDRueHRUaVIvM2RjTVVpSDB2?=
- =?utf-8?B?eWtXSjl6OWgrYk9OUVU5YituSVhGNUdPcktnVElxd0p6R25HQ3UxTytVb2oz?=
- =?utf-8?B?SEdpbE13U3FLV3VDL2VHVmQ4V1JvVE9nN2VPZm4wQmhpbllwSFY5dzlKc1BT?=
- =?utf-8?B?MldJVmUzSEE0V2tsdExOd3dOOEV4VDlLWWJScmxoRmc1MXBRYXdyZld3Y2xP?=
- =?utf-8?B?RXVLc1NQZ0huQ1VqWEN6dzg5amFnRkJkbTFTWXB2SVNIek4yV1F2ck5Tb3ha?=
- =?utf-8?B?UVh2Unk3NGlLdEtJV2ZPVUs0Ym10b2ZHalg3REtoNUhyS2tqVlFBeC9tY1pz?=
- =?utf-8?B?dGwxazVYalhCVXRvQTVOSFh0bG1KS2lFamZJZlRmMmVCdElJVHgzUVZPNnZC?=
- =?utf-8?B?VlBTY0h0SnpmSUIxVlZSQlY2M1RVNVVSQ2ZjL0thS3lkZ0ZwZStOVjFWbmpZ?=
- =?utf-8?B?eTA2NzY2c3FXa2hQYkFyVXQ3K3E0VVcvWlkrMXBhTEJ5Qlo4WlNjOCtrMm5q?=
- =?utf-8?B?SllYVlp6RVd1eEJkSEt0UXJ6b0tMUzEvQzJhdmJGdnlzM2NWVDlWTk56SnlN?=
- =?utf-8?B?Mlh1UDk5WVUvS2lZQ1J5dGsrYnRYbktiWmJwVmdJL3pUbnhFZHhIVnREbGgw?=
- =?utf-8?B?QzRSL2pPSVRhNlJsWUFRWE9QMFpVbWpsMmRGSG5yWW1xVW9FYyszVjdocUNQ?=
- =?utf-8?B?SDhYL0hIcEFnbGZMR3U2RW55ZHRXaDJQdHlFVW0reXg4YzZSOWhoQmc3U3Zh?=
- =?utf-8?B?ZzV4Lzlmd1RNM1hyRytMK1RsTUlRcE1NVDNneHR0SE1OSmxGYXlzRG43NnhC?=
- =?utf-8?B?VXIxZ05HdkRnd0ExNE9LdTdXbXAvNmxVcXhqRmloak9IMUhGdUdNN1JTN0pK?=
- =?utf-8?B?UTQ0REhHc0xiYXJqMTlSTXpOVlNaMEhzeC9zNGZxWmxBRzJHL1ZXbGloM0pF?=
- =?utf-8?B?OHdPcmFONm1jRlBYTWl5TS9XUng5STJVK2ZTWkpJOXh6bHc2cXExM0VZMUFB?=
- =?utf-8?B?WXNLVVFxYU95OGVhOUltK2taSUJwK3VmL1FwOWhNK2hQNlU3L0lJNWxnclJt?=
- =?utf-8?B?bzVjaExYUVhUNVFlT3gxUkd1Z21URFVWSmNOSk9LYmJQdEZGYkdrdjY5RGFW?=
- =?utf-8?B?MlBoeldhSllWeVM4TVY4dUVYbytidGxxZHl4SUYyWngrcHVmZXFCclpNdklP?=
- =?utf-8?B?djl6cW5xSWpDaXd4VCtRVlVGUytOQkJXSi9CVlF4VTBSK1E9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR19MB3864.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(10070799003)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NFlLc2R2YnBtRkNpS0QzZzlURURyTldwTnFlRmRoYmo5Nm95SGg0SUNPV1hB?=
- =?utf-8?B?L3JVcE0xNmxYaXdSL0ZXUmtCalNJMlVlOXp1T3ZlNkJTNGZWKy9raGhIbk91?=
- =?utf-8?B?MVg2aG5YdEF6b210VkcwTVlqR1A4VDBVVCtFS3hOM3c1RTMwYzFWR1E2NVFR?=
- =?utf-8?B?WFkrRGFsNTRVRGtLaDFHcmxLelAxano4SDZWSEZUZEpLRngzWWwvek8rMFJt?=
- =?utf-8?B?eW4zK1NyT3NSd1BGR0x5M1RsSHU2djMyYnVsbmZJTFhuNjFvWWRkUkdnWlo1?=
- =?utf-8?B?ZldBVFkwTFBONlgrcGhtMVRNVSsxcUhLN1R6NGFpbS9XSzJIZUZhK3Nzd1pE?=
- =?utf-8?B?OVF6UnltUUNyTWNpN0xpRmlqSlRTSTlsRjNVbnRCR1hmV3VySlpWemlYRVNW?=
- =?utf-8?B?TmkzU2RHbWNFWXNRNW5Yc3pQUDFKL2hGakVDdXRWNVdJUTR2QkY2cjVjbk03?=
- =?utf-8?B?S1NoSHVFR21LZGhrVmV3Q1k3NS83WWdXWi93aXBoNTBHVFJxSXVNT1NpMTlu?=
- =?utf-8?B?Mk5iaGlaa3NsaUZ2VEdWQ2NCSVk2ZXJ1MFZQUnhwOVJQb1l3WmJHOXg4Vzk3?=
- =?utf-8?B?SkdOOU1NTVgxZ0JyNjJ6dTlXMjdpdkx6NHh3clVaNjhvRGRFTXBGbzlvQWlq?=
- =?utf-8?B?VXFuMzVwWWM1T3h0WnlrTW1kWHloSHdyRUEraGswT3Q5dXdXNW9ORzh0RVJm?=
- =?utf-8?B?THkzS3Y3WkhZZGZjdFNrRXlMQjR1WEF5Y3k4eldoSloyZFRLMElnMFFKeEQ1?=
- =?utf-8?B?UVJVcUVMS0xQMUxVeE42L0lFSHRsY3luUkdMSGVlSjlENk5zMU5uUUp4V1pV?=
- =?utf-8?B?aVNwdHRwdU5CUnhjRjNSWWVxYVUrdFZJVlh6QXVBd2E4QzZ1QkU3Y3VpSGV1?=
- =?utf-8?B?c0RjdjhmSjB4ZTE2TmZqMk0xRElRZ0ptcmgvUmxqWEl1S203QzZzbTBKcUdk?=
- =?utf-8?B?VmhTU2pNdzNzaE42MWlPSmpOWGJoSGxoZGdMUjRib2FlN0FEbTRMMnBpdWZC?=
- =?utf-8?B?QXVLdUlMYm40K3JGT2F0SzJNWTFBNVVpc25MWWJCS0h0N2VneENzeTNadWlB?=
- =?utf-8?B?QmtYaStpeG9zbkxjTW5mRzc3bkRLdUJWbWpaeUpYZW1qL3p5VjNSU2Z1UlE4?=
- =?utf-8?B?dDRHbm82VWVsenlUY1paeXhPYTYwamNyZm8wVC8yWkNza3BuYzlDWGtOdVEw?=
- =?utf-8?B?THd4MlJaRVhHT0QxaUQzWlhLa01rQ0owUitpSUhMUEU5cnRML2Q3MzhKVXA5?=
- =?utf-8?B?dTk4SXBRNXRMNmI1QlNEWTlXTU5ZZnlKQThxR2c3VExIQ3Q5WklBYUpnQ3hu?=
- =?utf-8?B?cmhUNkFSQkRKVGU3YnFkc3JIWUNybWFEeXR4RGxmUlR3UnB6cWY0NFIzVVZw?=
- =?utf-8?B?QTlDSXBrc2IxZG5VKzQvQ01VZEpGK1RIdDdPZjB0L2p4azNKVEg1VVhqMm1T?=
- =?utf-8?B?eC9pU01HSWJ6MHQycnlRZnFoK0tJMXJ0VmxvV0ovTldqU01lSDI5Zld1YTE3?=
- =?utf-8?B?am1Fc0daaGkyNjlVS3d2TjRRTms2M0xXZHBUMkkwSUk0ZmZPalhmQ2t3VEVQ?=
- =?utf-8?B?OTNXY1czcnl0MHNYMURRanREa3E5ajEyN3l1VW1wN3hrbkNWdHFkWkV1aXpZ?=
- =?utf-8?B?U3NsNGlmZW1RMGFEdG9aOFZaRUgwVURWSFBhaHA4SnI4eDd5VDdVNTVYY1Fw?=
- =?utf-8?B?NzhSMlJVbmFneXJZNGpSR3ZjVTdQOWY0SjVISjNUQ3k2NmpNL3ZVV0FTM05L?=
- =?utf-8?B?cjJITDdQSUxpV21XR0pGaFFrRVVFc05lRlBOTWxwbTIzWFR4UG9XNVNJZEVx?=
- =?utf-8?B?K1FIZEkrLzE5SXdzcWppSFZPNWdOYWtVd0Nram9xRDg4R0ZuT05DaDZ2azdz?=
- =?utf-8?B?N2xGUUJodUdxakVsYU8vdTYyK0RyVnNGd0VUQm1TYUFqQzY4bk4yNmxjVGNq?=
- =?utf-8?B?cEJsa2xYeFVzcEh1RUpUbG50NjM3cXdEM0xVSmhXSWhma1JpUWg0NDRZbGdL?=
- =?utf-8?B?QkVXOHdSV0NrU2VWZW50ZUx0WUlpMXdXWXdFcDlHeUsyNVZyWWlVdWtFRE8z?=
- =?utf-8?B?ZzUyUUZTbDJvKzFjR0NyTC92c2h3eUx1YXN2U04wUlhUUWtIREE3eExQNlEv?=
- =?utf-8?B?WXZwRWhmQTFwK2JCdnpHVmJvOUpmcG5keXFpOU1DQ0FJbTBXbHM3aVI3YndR?=
- =?utf-8?Q?QfMvgBD5VH32u1dCUSFE2+xRwQEHeAeJkNWkqi4sTMlv?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	OPsZPdWHdCnE3kpKVekBbwx26gpwbqletlS+ehuKP+JjUICxZOjh7NMSdjOZoWlYBGacjqxr7v4War+T8tpcRxUIvIGWNN3YheR1XhDNiuKjjg7vjKogDF4sLRgrB5TJc+04qOVvRsbzzvD/T+H55C8T7Ok1umckiStgEWZ2eL5G+/jNW6ZjDM2cwvyH01/9CZtgwYedbnFGuuwRm2RBwWadFJdZxQF/sP/gTvXL6/XBB95TB4BWwUr4jvQAKYGsxk+dt7QYNvVJEm2EFGdF6XGuHAZz4iODxUj6hgRBREqsg4m+WbuluDsdnMxrhpdi7PEtlTXUqnb1Ha+GOcCabQz+gA9OEpychJ2hb4+WhGPemw6XHjC4cm+AnQXnokTeslvvdE0JmEOdfhy0vIb9cE60RD7qaqeVWZJQI7dS9itDkJqNYzc5K6defin2qyCbOw0M0YjbgbdGRBHQXdtdi4qdTdcZjefktNZGs8zjk8HNnpkeyhffAuI46IdoWwVFQ/a2vAtTBPaWe25a6ulmPFnPnru8TbglxxwO4M4rJY/yLQr3mQPTjLYD2BVoDB4E7e0TBzSQRoPQt+FZWfHGshdf7Z5rkOjV7B9nPnZSCGIOjdX4EMcdXqkj5wP+minZ109AOUIEMIgXWnAIOk3i5A==
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea1b95fe-2de1-4670-d8e2-08dda990ddcb
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR19MB3872.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 09:09:42.6583
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 753b6e26-6fd3-43e6-8248-3f1735d59bb4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7zYJIEWHdsoTxZyTkB9WkrC4bXdSWv9LtXCNm1WkpJsY3nNjMoW3piCt+o5b20aycpF8U18fHMqgnQWc6TwvCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR19MB6532
-X-OriginatorOrg: ddn.com
-X-BESS-ID: 1749728611-111173-7575-2136-1
-X-BESS-VER: 2019.1_20250611.1405
-X-BESS-Apparent-Source-IP: 40.107.94.125
-X-BESS-Parts: H4sIAAAAAAACA4uuVkqtKFGyUioBkjpK+cVKViYGBkBGBlAszcDIMinVyCw1Od
-	HSOMXQICUNyDcwNk5OSTK2SLVIVaqNBQDoyKMUQAAAAA==
-X-BESS-Outbound-Spam-Score: 0.01
-X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.265280 [from 
-	cloudscan12-92.us-east-2a.ess.aws.cudaops.com]
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------
-	0.01 BSF_SC7_SA959_1        META: Custom Rule BSF_SC7_SA959_1 
-	0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
-X-BESS-Outbound-Spam-Status: SCORE=0.01 using account:ESS124931 scores of KILL_LEVEL=7.0 tests=BSF_SC7_SA959_1, BSF_BESS_OUTBOUND
-X-BESS-BRTS-Status:1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] selftests: khugepaged: fix the shmem collapse failure
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, shuah@kernel.org,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <c16d1d452aa876b449324d12df6465677158a711.1749697399.git.baolin.wang@linux.alibaba.com>
+ <e06530f6-5c2e-4b6f-b175-c7aaab79aa4e@redhat.com>
+ <42b76dbc-d1a1-4d00-b139-c50e0abf8b0c@linux.alibaba.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <42b76dbc-d1a1-4d00-b139-c50e0abf8b0c@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 6/12/25 05:22, Bagas Sanjaya wrote:
-> [You don't often get email from bagasdotme@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+On 12.06.25 13:37, Baolin Wang wrote:
 > 
-> All four FUSE docs are currently in upper-level
-> Documentation/filesystems/ directory, but these are distinct as a group
-> of its own. Move them into Documentation/filesystems/fuse/ subdirectory.
-Good idea, thank you!
+> 
+> On 2025/6/12 18:08, David Hildenbrand wrote:
+>> On 12.06.25 05:54, Baolin Wang wrote:
+>>> When running the khugepaged selftest for shmem (./khugepaged all:shmem),
+>>
+>> Hmm, this combination is not run automatically through run_tests.sh,
+>> right? IIUC, it only runs "./khugepaged" which tests anon only ...
+>>
+>> Should we add it there? Then I would probably have noticed that myself
+>> earlier :)
+> 
+> Yes, see patch 2.
+
+Yes, was pleasantly surprised when I found that :)
+
+> 
+>>> I encountered the following test failures:
+>>> "
+>>> Run test: collapse_full (khugepaged:shmem)
+>>> Collapse multiple fully populated PTE table.... Fail
+>>> ...
+>>> Run test: collapse_single_pte_entry (khugepaged:shmem)
+>>> Collapse PTE table with single PTE entry present.... Fail
+>>> ...
+>>> Run test: collapse_full_of_compound (khugepaged:shmem)
+>>> Allocate huge page... OK
+>>> Split huge page leaving single PTE page table full of compound
+>>> pages... OK
+>>> Collapse PTE table full of compound pages.... Fail
+>>> "
+>>>
+>>> The reason for the failure is that, it will set MADV_NOHUGEPAGE to
+>>> prevent
+>>> khugepaged from continuing to scan shmem VMA after khugepaged finishes
+>>> scanning in the wait_for_scan() function. Moreover, shmem requires a
+>>> refault
+>>> to establish PMD mappings.
+>>>
+>>> However, after commit 2b0f922323cc, PMD mappings are prevented if the
+>>> VMA is
+>>> set with MADV_NOHUGEPAGE flag, so shmem cannot establish PMD mappings
+>>> during
+>>> refault.
+>>
+>> Right. It's always problematic when we have some contradicting
+>> information in the VMA vs. pagecache.
+>>
+>>>
+>>> To fix this issue, we can set the MADV_NOHUGEPAGE flag after the shmem
+>>> refault.
+>>> With this fix, the shmem test case passes.
+>>>
+>>> Fixes: 2b0f922323cc ("mm: don't install PMD mappings when THPs are
+>>> disabled by the hw/process/vma")
+>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>> ---
+>>>    tools/testing/selftests/mm/khugepaged.c | 3 +--
+>>>    1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/mm/khugepaged.c
+>>> b/tools/testing/selftests/mm/khugepaged.c
+>>> index 8a4d34cce36b..d462f62d8116 100644
+>>> --- a/tools/testing/selftests/mm/khugepaged.c
+>>> +++ b/tools/testing/selftests/mm/khugepaged.c
+>>> @@ -561,8 +561,6 @@ static bool wait_for_scan(const char *msg, char
+>>> *p, int nr_hpages,
+>>>            usleep(TICK);
+>>>        }
+>>> -    madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
+>>> -
+>>>        return timeout == -1;
+>>>    }
+>>> @@ -585,6 +583,7 @@ static void khugepaged_collapse(const char *msg,
+>>> char *p, int nr_hpages,
+>>>        if (ops != &__anon_ops)
+>>>            ops->fault(p, 0, nr_hpages * hpage_pmd_size);
+>>> +    madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
+>>>        if (ops->check_huge(p, expect ? nr_hpages : 0))
+>>>            success("OK");
+>>>        else
+>>
+>> It's a shame we have this weird interface: there is no way we can clear
+>> VM_HUGEPAGE without setting VM_NOHUGEPAGE :(
+> 
+> Right.
+> 
+>> But, do we even care about setting MADV_NOHUGEPAGE at all? IIUC, we'll
+>> almost immediately later call cleanup_area() where we munmap(), right?
+> 
+> I tested removing the MADV_NOHUGEPAGE setting, and the khugepaged test
+> cases all passed.
+> 
+> However, a potential impact of removing MADV_NOHUGEPAGE is that,
+> khugepaged might report 'timeout', but check_huge() would still report
+> 'success' (assuming khugepaged tries to scan the VMA and successfully
+> collapses it after the timeout). Such test result could be confusing.
+
+If we run into the timeout, we return "true" from wait_for_scan(), and 
+in khugepaged_collapse() returns immediately.
+
+So we wouldn't issue another check_huge() call in khugepaged_collapse().
+
+Did I miss something?
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
