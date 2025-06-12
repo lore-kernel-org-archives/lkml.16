@@ -1,306 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from baidu.com (mx24.baidu.com [111.206.215.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D178F221F06;
-	Thu, 12 Jun 2025 07:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47FC21771F;
+	Thu, 12 Jun 2025 07:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749715119; cv=none; b=S07VwD3DuqAj1MOobR/2Bpc092jCkI1GD0WVBoQReGirbHwvnnY1MVGuzSFrc+l/qhotuVB3NLD5KxIW4gQPYP2WzRjKkpWyvQuIcUz1bI4SYJVjRN4nCqf0o1Y0xzwRBMvorXqrr9GrUvynhbWdK7UZj33irdE6A9BZipkj1aY=
+	t=1749715166; cv=none; b=s3RXJDIaPF0jM0K8VX/eTaIp8FcZ4s4ksyLBPrUiqiHO4GHGiPkSFfuqwaDiiW2+25swM3DEmJ3C8Nesf2UO/fq4ssMVZk2dT5GT0pv/OGUNt3YrLLnezqBuesL3d9jhibfuSaPmfmM8Czu6lZenmeLf9NAtkrTo4hrXC3MzHf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749715119; c=relaxed/simple;
-	bh=Q/fYqZCvH9dT1Qvc5roNWpHv8H4YBjizUbKKbXxx11I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=DnIl9bgroFP3diB8NpFrCYp7OcLNacwsiFQjhn0t+UDWxabTyJe+JxkitD78sBZFyypFc2B6oeP8PQCz7mF15vXrLs5pVGh9iQW9p8TBazX+uI/j47zctoRNrFcH0JnJnYGVpMZS2m+lEJ030uBzzIGpk/27lyjZXQkWosnwmHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTsLG0eZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTsLG0eZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DB0C4CEEA;
-	Thu, 12 Jun 2025 07:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749715116;
-	bh=Q/fYqZCvH9dT1Qvc5roNWpHv8H4YBjizUbKKbXxx11I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QTsLG0eZARQyzjAzzffX1z6L/BruEuDhao1qMkFTSqh5eJ6sHgGMNhdPdsdyn8hT4
-	 J+k2FSKs8qu9S+fJfVzbpkCrYHvKmKNUKnO8kj00OsW16PRZthqRgT6Z7ISJcMH8yS
-	 bigENnkvXEEZp+iYcYQXhwSplS5tMEFDYwlLu6XzSc/IZEkmgv8VVYw5y14qTe/X5/
-	 kAAstWdrzMP1q8o0YCxOZzdsI1Zq3kBlSh+sdUa1NOjjEwsPejj6mzuETPw1/E9nzr
-	 fExfmoBgtBTSwFvyqa9ifnGlLQ1Lc0xGEKVvhiUKCAa5NpWscRN8ec+9xjTZvOXf4W
-	 aTSpumwlDDyoA==
+	s=arc-20240116; t=1749715166; c=relaxed/simple;
+	bh=tYh197tkZa5hHOKuUeE8HoOoivjmnDPiZOSGRonpliQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C0AzxRvIZde8o4XV545eXqiU9tcsmgL5D8JMSDAVI7/0hjebCAMIRb3mJrQEcBkftB7+VrQfXA2UndpbFQWm3QbL3mzLZFFFj53dCFavBUBzUeVeYWHGytpHEb+qIcrMipQxK86oyQqZn8MZkZPMexCpKIZ8CUot2lZt0LwvJ7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: Fushuai Wang <wangfushuai@baidu.com>
+To: <alexei.starovoitov@gmail.com>
+CC: <andrii@kernel.org>, <ast@kernel.org>, <bpf@vger.kernel.org>,
+	<daniel@iogearbox.net>, <eddyz87@gmail.com>, <haoluo@google.com>,
+	<jakub@cloudflare.com>, <john.fastabend@gmail.com>, <jolsa@kernel.org>,
+	<kpsingh@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <martin.lau@linux.dev>, <mhal@rbox.co>,
+	<mykolal@fb.com>, <sdf@fomichev.me>, <shuah@kernel.org>, <song@kernel.org>,
+	<thinker.li@gmail.com>, <wangfushuai@baidu.com>, <yonghong.song@linux.dev>
+Subject: Re: [PATCH] selftests/bpf: fix signedness bug in redir_partial()
+Date: Thu, 12 Jun 2025 15:57:00 +0800
+Message-ID: <20250612075700.24193-1-wangfushuai@baidu.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+In-Reply-To: <CAADnVQ+SSPhZNN05F2-MS_79Vhp+mSTWF3Ss1rcoWRnaDjFx+A@mail.gmail.com>
+References: <CAADnVQ+SSPhZNN05F2-MS_79Vhp+mSTWF3Ss1rcoWRnaDjFx+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 09:58:30 +0200
-Message-Id: <DAKE8OYKXUWH.1NRVGV5IKW7I9@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Ingo
- Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
- Lelli" <juri.lelli@redhat.com>, "Vincent Guittot"
- <vincent.guittot@linaro.org>, "Dietmar Eggemann"
- <dietmar.eggemann@arm.com>, "Steven Rostedt" <rostedt@goodmis.org>, "Ben
- Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>, "Valentin
- Schneider" <vschneid@redhat.com>
-Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
-X-Mailer: aerc 0.20.1
-References: <20250603205416.49281-1-dakr@kernel.org>
- <20250603205416.49281-2-dakr@kernel.org>
-In-Reply-To: <20250603205416.49281-2-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: bjkjy-exc7.internal.baidu.com (172.31.50.51) To
+ bjkjy-mail-ex22.internal.baidu.com (172.31.50.16)
+X-FEAS-Client-IP: 172.31.50.16
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
-On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
-> Implement a minimal abstraction for the completion synchronization
-> primitive.
->
-> This initial abstraction only adds complete_all() and
-> wait_for_completion(), since that is what is required for the subsequent
-> Devres patch.
->
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>> When xsend() returns -1 (error), the check 'n < sizeof(buf)' incorrectly
+>> treats it as success due to unsigned promotion. Explicitly check for -1
+>> first.
+>>
+>> Fixes: a4b7193d8efd ("selftests/bpf: Add sockmap test for redirecting partial skb data")
+>> Signed-off-by: wangfushuai <wangfushuai@baidu.com>
+> 
+> Looks good, but please spell out your name as First Last
+> in both From and Signed-off
+> 
+> Also use [PATCH bpf-next] in subject
+> 
+> pw-bot: cr
 
-I have a couple comments on the documentation, but the rest seems good.
-So with those fixed:
+Will fix and send v2 shortly. Thanks for the review!
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
-
-> ---
->  rust/bindings/bindings_helper.h |   1 +
->  rust/helpers/completion.c       |   8 +++
->  rust/helpers/helpers.c          |   1 +
->  rust/kernel/sync.rs             |   2 +
->  rust/kernel/sync/completion.rs  | 111 ++++++++++++++++++++++++++++++++
->  5 files changed, 123 insertions(+)
->  create mode 100644 rust/helpers/completion.c
->  create mode 100644 rust/kernel/sync/completion.rs
->
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_hel=
-per.h
-> index a5a6fb45d405..9da3fe89295c 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -17,6 +17,7 @@
->  #include <linux/blk_types.h>
->  #include <linux/blkdev.h>
->  #include <linux/clk.h>
-> +#include <linux/completion.h>
->  #include <linux/configfs.h>
->  #include <linux/cpu.h>
->  #include <linux/cpufreq.h>
-> diff --git a/rust/helpers/completion.c b/rust/helpers/completion.c
-> new file mode 100644
-> index 000000000000..b2443262a2ae
-> --- /dev/null
-> +++ b/rust/helpers/completion.c
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/completion.h>
-> +
-> +void rust_helper_init_completion(struct completion *x)
-> +{
-> +	init_completion(x);
-> +}
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index 805307018f0e..7a5c520be8cb 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -13,6 +13,7 @@
->  #include "build_assert.c"
->  #include "build_bug.c"
->  #include "clk.c"
-> +#include "completion.c"
->  #include "cpufreq.c"
->  #include "cpumask.c"
->  #include "cred.c"
-> diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-> index 36a719015583..c23a12639924 100644
-> --- a/rust/kernel/sync.rs
-> +++ b/rust/kernel/sync.rs
-> @@ -10,6 +10,7 @@
->  use pin_init;
-> =20
->  mod arc;
-> +pub mod completion;
->  mod condvar;
->  pub mod lock;
->  mod locked_by;
-> @@ -17,6 +18,7 @@
->  pub mod rcu;
-> =20
->  pub use arc::{Arc, ArcBorrow, UniqueArc};
-> +pub use completion::Completion;
->  pub use condvar::{new_condvar, CondVar, CondVarTimeoutResult};
->  pub use lock::global::{global_lock, GlobalGuard, GlobalLock, GlobalLockB=
-ackend, GlobalLockedBy};
->  pub use lock::mutex::{new_mutex, Mutex, MutexGuard};
-> diff --git a/rust/kernel/sync/completion.rs b/rust/kernel/sync/completion=
-.rs
-> new file mode 100644
-> index 000000000000..4ec4c2aa73a5
-> --- /dev/null
-> +++ b/rust/kernel/sync/completion.rs
-> @@ -0,0 +1,111 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Completion support.
-> +//!
-> +//! Reference: <https://docs.kernel.org/scheduler/completion.html>
-> +//!
-> +//! C header: [`include/linux/completion.h`](srctree/include/linux/compl=
-etion.h)
-> +
-> +use crate::{bindings, prelude::*, types::Opaque};
-> +
-> +/// Synchronization primitive to signal when a certain task has been com=
-pleted.
-> +///
-> +/// The [`Completion`] synchronization primitive signales when a certain=
- task has been completed by
-> +/// waking up other tasks that can queue themselves up to wait for the [=
-`Completion`] to be
-
-s/can queue themselves/have been queued/
-
-> +/// completed.
-> +///
-> +/// # Examples
-> +///
-> +/// ```
-> +/// use kernel::sync::{Arc, Completion};
-> +/// use kernel::workqueue::{self, impl_has_work, new_work, Work, WorkIte=
-m};
-> +///
-> +/// #[pin_data]
-> +/// struct MyTask {
-> +///     #[pin]
-> +///     work: Work<MyTask>,
-
-Can we maybe add a dummy value like `Mutex<i32>` here that the task
-changes, so we can print the value of it below (after waiting for the
-task)?
-
-> +///     #[pin]
-> +///     done: Completion,
-> +/// }
-> +///
-> +/// impl_has_work! {
-> +///     impl HasWork<Self> for MyTask { self.work }
-> +/// }
-> +///
-> +/// impl MyTask {
-> +///     fn new() -> Result<Arc<Self>> {
-> +///         let this =3D Arc::pin_init(pin_init!(MyTask {
-> +///             work <- new_work!("MyTask::work"),
-> +///             done <- Completion::new(),
-> +///         }), GFP_KERNEL)?;
-> +///
-> +///         let _ =3D workqueue::system().enqueue(this.clone());
-> +///
-> +///         Ok(this)
-> +///     }
-> +///
-> +///     fn wait_for_completion(&self) {
-> +///         self.done.wait_for_completion();
-> +///
-> +///         pr_info!("Completion: task complete\n");
-> +///     }
-> +/// }
-> +///
-> +/// impl WorkItem for MyTask {
-> +///     type Pointer =3D Arc<MyTask>;
-> +///
-> +///     fn run(this: Arc<MyTask>) {
-> +///         // process this task
-> +///         this.done.complete_all();
-> +///     }
-> +/// }
-> +///
-> +/// let task =3D MyTask::new()?;
-> +/// task.wait_for_completion();
-> +/// # Ok::<(), Error>(())
-> +/// ```
-> +#[pin_data]
-> +pub struct Completion {
-> +    #[pin]
-> +    inner: Opaque<bindings::completion>,
-> +}
-> +
-> +impl Completion {
-> +    /// Create an initializer for a new [`Completion`].
-> +    pub fn new() -> impl PinInit<Self> {
-> +        pin_init!(Self {
-> +            inner <- Opaque::ffi_init(|slot: *mut bindings::completion| =
-{
-> +                // SAFETY: `slot` is a valid pointer to an uninitialized=
- `struct completion`.
-> +                unsafe { bindings::init_completion(slot) };
-> +            }),
-> +        })
-> +    }
-> +
-> +    fn as_raw(&self) -> *mut bindings::completion {
-> +        self.inner.get()
-> +    }
-> +
-> +    /// Signal all tasks waiting on this completion.
-> +    ///
-> +    /// This method wakes up all tasks waiting on this completion; after=
- this operation the
-> +    /// completion is permanently done.
-> +    pub fn complete_all(&self) {
-> +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct compl=
-etion`.
-> +        unsafe { bindings::complete_all(self.as_raw()) };
-> +    }
-> +
-> +    /// Wait for completion of a task.
-> +    ///
-> +    /// This method waits for the completion of a task; it is not interr=
-uptible and there is no
-
-I personally would write:
-
-s/waits for/blocks on/
-
-But if `wait` is the more common kernel term then let's go with your
-version instead.
-
-> +    /// timeout.
-
-I would mention the `complete_all` method above.
-
-> +    pub fn wait_for_completion(&self) {
-> +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct compl=
-etion`.
-> +        unsafe { bindings::wait_for_completion(self.as_raw()) };
-> +    }
-> +}
-> +
-> +// SAFETY: `Completion` is safe to be send to any task.
-> +unsafe impl Send for Completion {}
-> +
-> +// SAFETY: `Completion` is safe to be accessed concurrently.
-> +unsafe impl Sync for Completion {}
-
-Please move these to the struct definition, that way one can more easily
-see them when looking at the code.
-
----
-Cheers,
-Benno
+--
+Regards,
+Wang
+ 
+>> ---
+>>  tools/testing/selftests/bpf/prog_tests/sockmap_listen.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+>> index 1d98eee7a2c3..f1bdccc7e4e7 100644
+>> --- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+>> +++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+>> @@ -924,6 +924,8 @@ static void redir_partial(int family, int sotype, int sock_map, int parser_map)
+>>                 goto close;
+>>
+>>         n = xsend(c1, buf, sizeof(buf), 0);
+>> +       if (n == -1)
+>> +               goto close;
+>>         if (n < sizeof(buf))
+>>                 FAIL("incomplete write");
+>>
+>> --
+>> 2.36.1
