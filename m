@@ -1,206 +1,221 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE08519F130
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498773596B;
+	Thu, 12 Jun 2025 17:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749747722; cv=none; b=k7fjcSPXevCjZN1B+hCOH8Vl1PrWons0k9jjWiiS2paj5m1s+3QOoDPCH5r1/VUGk6uVPF5LVHolmZZg7r2EhjwknVRU90popo5ma1tXkaqiJo7ncqUp5B0xPMIskbJG20cIagVfmKmzK0Aa98NHqPAMm+XgXHrYyeuvKsdhJtU=
+	t=1749747805; cv=none; b=uxs4dDfTtDycGDEgFlargSsa5xsTyx4uXaqMSAnZArAinyLYL+R0IKCoc2Vzp95vOdaj3WwnUJiweYGMIHj8gI01yBtS0JxjvHlLfNd5OANBOlkMftcqyw0Q0oOT9sTs9mIqUas7IzfZaRcH/O54tu7wvC4xv2hQf7mUeOiB+eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749747722; c=relaxed/simple;
-	bh=Wgc0OTFdZiG86Notyo8kKoTGmeK0tIluI4EeOr0pt+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VW3qR+7ZYXaf1DxU8stkn2wL2VqTRjkqLGuK4QBYWCXtQxUtKV682ItX79k9qoKjvnVo77tt49GWS9gG+o1OMTLMOnv9LkYebZ6v4oNd/yMpmRq3M1IcOU/EQqoX4tyBoSDkUbXsiDOy4vnC+Qdd0Bo/mK3s1qK8K0ProaANrVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=gEISTzod; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1749747805; c=relaxed/simple;
+	bh=ifdQDvjlJvxreY4OA2GLiBZqAStcb/FFjKUWkBMQwXQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ih4bSiXxPLujmlZ1hSwh4ZVOyY6fH2w1JzN0NTU+yJhbuwkrsP7kb2rUOy5//OGL7WhAu4zK5wIC+hOyoZIBYlUip6O7ZN32g/Rg4nIEfz2Nt9rjEwTmhJIm7zuiK79a9/MB+eoVS1WXZkempfEsG9J89y+w7YD9v97shTDWndI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XxUEcOI1; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="gEISTzod"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-70e3c6b88dbso8227267b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:02:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxUEcOI1"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b2c3c689d20so819297a12.3;
+        Thu, 12 Jun 2025 10:03:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1749747719; x=1750352519; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j029kDeFHGMi64Isb1RXeOmMbM70WI3AWi7tT+8rWYw=;
-        b=gEISTzodbBybccEYGlddB/PgO1heEVjWhTmyNrIB0wsJTHk/NWvfLXdLvl9A9jokZp
-         HSjjARifYR6wvuq7hxDB/rsShR1DUnEgY+s4PWm0A7OuOkKlsogNri93O+BXYKkfIjBs
-         vTdb30H9QGAwDDKl4uwD4/3pRwjsO1qT0LmkUSMeT6SAgZUMUDj/KzwHiKXNaWvCYxwd
-         pZE/sVqPoGqILKeuVuTsK9HTfXE9BQlpBeS2qBWWuxK/QFUQZtbAmiicRaBusJcfPBBr
-         nu6nnjw6MfMPfxFw4g1zLPJ+9bbl2vNhMA/ZVYXcr6GwhsJWksOXwUIUtyt5bSxfZIPM
-         ROhQ==
+        d=gmail.com; s=20230601; t=1749747803; x=1750352603; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ObgREgS2LbREVTVWt2meuQSNcQMFkiPDU2dHRlXpVkM=;
+        b=XxUEcOI19zGx2I5j3yr1Ob/0XX4Ss4r9Lc+mtYgwkdgikeKK1N0CEoFq1CRh9VsdQA
+         XsPqWTaz8vJxVae3gJz1IMsfa6QBkaBjROkc/AswyPJ+uZVhgwL8eHCp6CUmsOxUVALL
+         NX6sATToMIloxgwoZ3hj9UbGCGiR2yeDB1BjSU+Fu/pc2Evqa56Hxwfxkmr7YytzrhRp
+         J4qEcLpuAxJ4bbFnobhMV88qO2U5a6gzi6sOuvUyVg3j6120iGs97SDfrxrMknjW0HG9
+         6op6K3pn9UWen/aULBR+oW7ZI4WGt+LgdwGTu2jnouOWPmrhEZsI/hQ13uvWXh+BmckD
+         fhIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749747719; x=1750352519;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j029kDeFHGMi64Isb1RXeOmMbM70WI3AWi7tT+8rWYw=;
-        b=qg9no6Xq6rC36VJQIj1lg2HRgsSaoQ57Z0VMTJw1KbOb3ORN9ZCAQFZVDjRg0sCTeo
-         xD9r5assMPNJt0Tib6/HeaHoQ8u4FYBQ00yb7bKdqY9+QjqC59GgilTn0Jju9l6HyF6U
-         vui8eP6jqfKcg7JEsNovOUkmEbX6w1Ic92gncwrhuW0x9skcoVeqHyRwdvdlx/EbkLFF
-         BwEFqiV7ke3zgYQSoZpZ7laLO35wgBJI9ocq3+//2MKxtkGqTpAyReUoSvCJxwybrBTg
-         6CDpwutlFJ5LeLl8ZJlZGl4p2pTnIqgv2Mv9uiV1GQTS+nvMxrrwnSZCn0cTJmlXku3U
-         KjNg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2uq88R+O0yGyl/y91ote45S5mO9FtRwQNeC1HJzyQieQN0lVKLghgndzn7duOjFp5RTA8DWhPZAitw6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9FDRr21Vq6GKLa/mwW4/4SNk/HgQ5YLHwIMY2n5OXinUNgDEi
-	vOEefBkbwD30ZGy6tdhV1MUdDrdLQEc6pejQVx5JuAhRk84S0XMWuv5exDb2GJwUNw+dRa6100w
-	f8Gd851EvPVxXEbqQLynuabQMHo59XUeFGoSNJtvItg==
-X-Gm-Gg: ASbGncvXdToQ+cBjt3/QjqX0LJdPidpafeFkR6q+YZ9n9II0xS2r0cPJ5FjfHyThldt
-	aXsDPC8DK7iBN+ML4UF5MDpoYPoILpk1etyGqNrqju8f7aZRY/MVlOSgt0jdny1u9g6E1YMnpsp
-	I0RehRCYRVm2njTjL82Ac7LCe9z7I7JtrLx0jidFQ+m38ou1/QtWP26fqWH1/u1ZzFEv1a+WAmH
-	eg=
-X-Google-Smtp-Source: AGHT+IFWZ1yI879MI9LNRcbcJT5vdbQHxsUV2ymfSBQjSbZZCzPqE9KkPOMXdGCKFrhSR1K4ddmzhU8KMX8Ev6PyACA=
-X-Received: by 2002:a05:6902:1109:b0:e81:fc77:abe7 with SMTP id
- 3f1490d57ef6-e81fda04c1emr11802525276.10.1749747717864; Thu, 12 Jun 2025
- 10:01:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749747803; x=1750352603;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ObgREgS2LbREVTVWt2meuQSNcQMFkiPDU2dHRlXpVkM=;
+        b=EWoafWGG7fEPyDVjVmJTq/JyCt3io+ILvUvYqA4ZsaqvWNN3JNi80J/uFqV/eISN01
+         Jvoo72Nt1sN1/mxDj5nRR+F/WqdDUT8Bk8+mX/wy8V5U4XRLhazUGjOe8uonaP5cNJfb
+         tIosGfPm05rrLkZ3Elx2ZgzXyFp/vFoDM2elvXZAiX6Ga3vENGRRedhB1BvN0v2yGg1H
+         yM8xTeHoWmzcTnlOmLg5gY/2R/sVeUyIooFM7//MlAKmvDX4vq1BT5gdtLnbby9t4uml
+         9VJ/rs9A04kVdPGYUhUkVnOeniCychJFYXiZlm2pF4WSQ+6YDwuH0RsYYfCOtiKYWEvX
+         6YwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBXpwDiCEWoWNnMvplFtRal3ac/awbVU04Gq8djOWvVwG0ys/z3HuU9ClJohy6v41pbtU8EfwIUPC7pAL2SRd5sQ==@vger.kernel.org, AJvYcCVHBcZzTpvin8nIhqa9iRfvNmCdFHhMWwAcx8TRZ4nal660Xovy+edMjid2wFpCBvLsBGSy6GtkspM=@vger.kernel.org, AJvYcCXgYy3TxOljtVeTi8i6qseoe/5cUMjcONfTubMCkdyolhi/4BSDdmCECsTJNK2ESw7TNETZLwfS4AG+rfA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUUbG7dkTInTW37FtiQDB0XqW/NWNs7p/Gn1z9+HPbmblhh0Ut
+	PXo84AXofaJ1hg+Vtvh6stMiZyjCdRAPS9xrxdzH27LJpC9+nwhomtiY
+X-Gm-Gg: ASbGncsLgwBSteh4MK/16A7alfcJ7y0nYNfq/vTsBwHaHyST1IQtCIX8ONeBN6a0Oh8
+	VAhSzxKhA0v4ic2CAL1vZB5B33BocbgKuzwZweREpyXtHWUpauA7OZfSC9fCxsvlDjYu496muVz
+	a0VdnY6aCZU8mPTVbPvtWuhuX4/Srb3z8zxLCtqWg8BhHgiSY+Fh9XilxQmbr9XqEAknvn2B7co
+	v4B5BI4XANp0P7Q8V1bPgbrYqygWnGsiCN8bKHN8AD4QPkVjQdJUbM7/XVDybvwYWAGLjiZUjvq
+	ORKD9hhRdxUK/fQmEvVW9FPe2NNNKbVDBJa7NmD6XFUFCq3oA3KjdyV/27CY
+X-Google-Smtp-Source: AGHT+IF54y3q62NL+kS/gD45o5e+WyN4FsAe5RdZjZEeztChTbyzYm/Srld6U8FosLrer/YeMYeZ3w==
+X-Received: by 2002:a05:6a21:998a:b0:1f5:5a0b:4768 with SMTP id adf61e73a8af0-21faa58c2c6mr352397637.21.1749747803298;
+        Thu, 12 Jun 2025 10:03:23 -0700 (PDT)
+Received: from hiago-nb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd613fee4sm1647097a12.26.2025.06.12.10.03.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 10:03:22 -0700 (PDT)
+Date: Thu, 12 Jun 2025 14:03:17 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	"Iuliana Prodan (OSS)" <iuliana.prodan@oss.nxp.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 3/3] remoteproc: imx_rproc: detect and attach to
+ pre-booted remote cores
+Message-ID: <20250612170317.k3cok3utmiy5ptq3@hiago-nb>
+References: <20250602131906.25751-1-hiagofranco@gmail.com>
+ <20250602131906.25751-4-hiagofranco@gmail.com>
+ <PAXPR04MB84594F9ABDF0728D9A71FAFE886CA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <20250609173115.qecc2noswkcgr3hm@hiago-nb>
+ <PAXPR04MB8459F651D1D0AC8C51F292A48875A@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612-csi-bgr-rgb-v1-0-dc8a309118f8@kernel.org> <20250612-csi-bgr-rgb-v1-3-dc8a309118f8@kernel.org>
-In-Reply-To: <20250612-csi-bgr-rgb-v1-3-dc8a309118f8@kernel.org>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Thu, 12 Jun 2025 18:01:40 +0100
-X-Gm-Features: AX0GCFth85n8IiuJGK0v5pSTI5beNdQM6diU1H1GZ00d7VoB5jfKLgcoBALSvtw
-Message-ID: <CAPY8ntCYG8ufxpMkgBj1ZpSW-H2HObpcbQNg9tj+EXUM4PGkfQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] media: tc358743: Fix the RGB MBUS format
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Mats Randgaard <matrandg@cisco.com>, Alain Volmat <alain.volmat@foss.st.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB8459F651D1D0AC8C51F292A48875A@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
-Hi Maxime
+Hi Peng,
 
-On Thu, 12 Jun 2025 at 13:54, Maxime Ripard <mripard@kernel.org> wrote:
->
-> The tc358743 is an HDMI to MIPI-CSI2 bridge. It supports two of the
-> three HDMI 1.4 video formats: RGB 4:4:4 and YCbCr 422.
->
-> RGB 4:4:4 is converted to the MIPI-CSI2 RGB888 video format, and listed
-> in the driver as MEDIA_BUS_FMT_RGB888_1X24.
->
-> Most CSI2 receiver drivers then map MEDIA_BUS_FMT_RGB888_1X24 to
-> V4L2_PIX_FMT_RGB24.
->
-> However, V4L2_PIX_FMT_RGB24 is defined as having its color components in
-> the R, G and B order, from left to right. MIPI-CSI2 however defines the
-> RGB888 format with blue first.
->
-> This essentially means that the R and B will be swapped compared to what
-> V4L2_PIX_FMT_RGB24 defines.
->
-> The proper MBUS format would be BGR888, so let's use that.
+On Wed, Jun 11, 2025 at 03:27:09AM +0000, Peng Fan wrote:
+> > 
+> > Sorry for the delay.
+> > 
+> > I tested it now and there must be something missing on my U-Boot:
+> > 
+> > Disable imx8x-cm4 rsrc 278 not owned
+> > Disable imx8x-cm4 rsrc 297 not owned
+> > 
+> > It removes my nodes from the DT before starting the kernel, so I cannot
+> > attach. Do you know what should I do in this case?
+> 
+> In separate partition case, UBoot will check the permission
+> by checking the rsrc-id, saying power domain id.
+> 
+> You may need to remove the power-domains property
+> from M4 node.
 
-I know where you're coming from, but this driver has been in the tree
-since 2015, so there is a reasonable expectation of users. I've had an
-overlay for it in our kernel tree since 4.14 (July 2018), and I know
-of at least PiKVM [1] as a product based on it. I don't know if Cisco
-are still supporting devices with it in.
+Without the power-domains property, rproc gives me a kernel panic:
 
-Whilst the pixel format may now be considered to be incorrect,
-changing it will break userspace applications that have been using it
-for those 10 years if they're explicitly looking for
-MEDIA_BUS_FMT_RGB888_1X24 or the mapping of it through to
-V4L2_PIX_FMT_RGB24.
-The kernel docs at [2] quote Linus as saying
-"If you break existing user space setups THAT IS A REGRESSION.
-It's not ok to say "but we'll fix the user space setup"
-Really. NOT OK."
+[    1.253234] remoteproc remoteproc0: imx-rproc is available
+[    1.258501] remoteproc remoteproc0: attaching to imx-rproc
+[    1.263950] Unable to handle kernel paging request at virtual address ffff80005ae57d39
+[    1.271812] Mem abort info:
+[    1.274575]   ESR = 0x0000000096000005
+[    1.278299]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    1.282581] mmc0: SDHCI controller on 5b010000.mmc [5b010000.mmc] using ADMA
+[    1.283607]   SET = 0, FnV = 0
+[    1.293701]   EA = 0, S1PTW = 0
+[    1.296815]   FSC = 0x05: level 1 translation fault
+[    1.301699] Data abort info:
+[    1.304545]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+[    1.310079]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    1.315073]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    1.320367] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000096bf3000
+[    1.327061] [ffff80005ae57d39] pgd=0000000000000000, p4d=1000000097085003, pud=0000000000000000
+[    1.335750] Internal error: Oops: 0000000096000005 [#1]  SMP
+[    1.341373] Modules linked in:
+[    1.344414] CPU: 3 UID: 0 PID: 47 Comm: kworker/u16:3 Not tainted 6.16.0-rc1-00024-gfe5d6ab20714-dirty
+ #857 PREEMPT
+[    1.354932] Hardware name: Toradex Colibri iMX8QXP on Colibri Evaluation Board V3 (DT)
+[    1.362837] Workqueue: events_unbound deferred_probe_work_func
+[    1.368651] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    1.375601] pc : rproc_handle_resources.constprop.0+0x78/0x1d0
+[    1.381421] lr : rproc_boot+0x368/0x578
+[    1.385242] sp : ffff8000819f3990
+[    1.388542] x29: ffff8000819f3990 x28: ffff80005ae57d3d x27: 0000000000000000
+[    1.395671] x26: 0000000000000000 x25: ffff0000016ee038 x24: ffff800080f3c680
+[    1.402793] x23: ffff8000813d6da8 x22: 00000000d999ad39 x21: ffff0000016ee000
+[    1.409917] x20: 00000000266656c3 x19: ffff80005ae57d39 x18: 0000000000000006
+[    1.417040] x17: ffff000002020600 x16: ffff000002020000 x15: 4addd15cca11c529
+[    1.424164] x14: 73ebceed5d6cd787 x13: 4addd15cca11c529 x12: 73ebceed5d6cd787
+[    1.431288] x11: 95a4e33b6b190664 x10: 9e3cdabdb09ca345 x9 : ab3734eafdd6fd1c
+[    1.438412] x8 : d58a055de4cfb385 x7 : de97fab1791acbbe x6 : 9946d97107d0dcda
+[    1.445535] x5 : ffff0000032b2c00 x4 : 00000000000003fc x3 : ffff0000032b2b80
+[    1.452659] x2 : fffffffffffffff0 x1 : ffff8000814bd000 x0 : ffff8000814bd000
+[    1.459786] Call trace:
+[    1.462215]  rproc_handle_resources.constprop.0+0x78/0x1d0 (P)
+[    1.468036]  rproc_boot+0x368/0x578
+[    1.471510]  rproc_add+0x180/0x18c
+[    1.474898]  imx_rproc_probe+0x3e4/0x540
+[    1.475274] mmc0: new HS400 MMC card at address 0001
+[    1.478799]  platform_probe+0x68/0xc0
+[    1.484628] mmcblk0: mmc0:0001 Q2J55L 7.09 GiB
+[    1.487400]  really_probe+0xc0/0x38c
+[    1.487412]  __driver_probe_device+0x7c/0x15c
+[    1.487424]  driver_probe_device+0x3c/0x10c
+[    1.493941]  mmcblk0: p1 p2
+[    1.495392]  __device_attach_driver+0xbc/0x158
+[    1.495405]  bus_for_each_drv+0x84/0xe0
+[    1.495417]  __device_attach+0x9c/0x1ac
+[    1.500468] mmcblk0boot0: mmc0:0001 Q2J55L 16.0 MiB
+[    1.503906]  device_initial_probe+0x14/0x20
+[    1.503918]  bus_probe_device+0xac/0xb0
+[    1.503929]  deferred_probe_work_func+0x9c/0xec
+[    1.509863] mmcblk0boot1: mmc0:0001 Q2J55L 16.0 MiB
+[    1.511117]  process_one_work+0x14c/0x28c
+[    1.511132]  worker_thread+0x2cc/0x3d4
+[    1.511142]  kthread+0x12c/0x208
+[    1.511157]  ret_from_fork+0x10/0x20
+[    1.517964] mmcblk0rpmb: mmc0:0001 Q2J55L 4.00 MiB, chardev (241:0)
+[    1.518770] Code: 8b36c033 9100127c 54000924 d503201f (b9400261)
+[    1.518777] ---[ end trace 0000000000000000 ]---
 
-I'm thinking of GStreamer if the format has been specified explicitly
-- it'll fail to negotiate due to v4l2src saying it can't handle the
-caps.
+Currently I have the M4 partiton defined into the SCU code:
 
-Yes it sucks as a situation, but I'm not sure what the best solution
-is. Potentially accepting both MEDIA_BUS_FMT_RGB888_1X24 and
-MEDIA_BUS_FMT_BGR888_1X24 as valid MBUS codes for RGB, alongside
-MEDIA_BUS_FMT_UYVY8_1X16 for UYVY?
+            /* Create partition */
+            BRD_ERR(rm_partition_create(pt_boot, &pt_m4_0, SC_FALSE,
+                SC_TRUE, SC_FALSE, SC_TRUE, SC_FALSE, SC_R_M4_0_PID0,
+                rsrc_list, ARRAY_SIZE(rsrc_list),
+                pad_list, ARRAY_SIZE(pad_list),
+                NULL, 0));
 
-  Dave
+            /* Name partition for debug */
+            PARTITION_NAME(pt_m4_0, "MCU0");
+            
+            /* Allow AP to use SYSTEM (not production!) */
+            BRD_ERR(rm_set_peripheral_permissions(SC_PT, SC_R_SYSTEM,
+                pt_boot, SC_RM_PERM_SEC_RW));
 
-[1] https://pikvm.org/
-[2] https://www.kernel.org/doc/html/latest/process/handling-regressions.html#quotes-from-linus-about-regression
+            /* Move M4 0 TCM */
+            BRD_ERR(rm_find_memreg(pt_boot, &mr, 0x034FE0000ULL,
+                0x034FE0000ULL));
+            BRD_ERR(rm_assign_memreg(pt_boot, pt_m4_0, mr));
 
-> Fixes: d32d98642de6 ("[media] Driver for Toshiba TC358743 HDMI to CSI-2 bridge")
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  drivers/media/i2c/tc358743.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
-> index ca0b0b9bda1755313f066ba36ab218873b9ae438..a1c164a7716a10b0cb9ff38f88c0513b45f24771 100644
-> --- a/drivers/media/i2c/tc358743.c
-> +++ b/drivers/media/i2c/tc358743.c
-> @@ -688,11 +688,11 @@ static void tc358743_set_csi_color_space(struct v4l2_subdev *sd)
->                 mutex_lock(&state->confctl_mutex);
->                 i2c_wr16_and_or(sd, CONFCTL, ~MASK_YCBCRFMT,
->                                 MASK_YCBCRFMT_422_8_BIT);
->                 mutex_unlock(&state->confctl_mutex);
->                 break;
-> -       case MEDIA_BUS_FMT_RGB888_1X24:
-> +       case MEDIA_BUS_FMT_BGR888_1X24:
->                 v4l2_dbg(2, debug, sd, "%s: RGB 888 24-bit\n", __func__);
->                 i2c_wr8_and_or(sd, VOUT_SET2,
->                                 ~(MASK_SEL422 | MASK_VOUT_422FIL_100) & 0xff,
->                                 0x00);
->                 i2c_wr8_and_or(sd, VI_REP, ~MASK_VOUT_COLOR_SEL & 0xff,
-> @@ -1353,11 +1353,11 @@ static int tc358743_log_status(struct v4l2_subdev *sd)
->                         (i2c_rd16(sd, CSI_STATUS) & MASK_S_HLT) ?
->                         "yes" : "no");
->         v4l2_info(sd, "Color space: %s\n",
->                         state->mbus_fmt_code == MEDIA_BUS_FMT_UYVY8_1X16 ?
->                         "YCbCr 422 16-bit" :
-> -                       state->mbus_fmt_code == MEDIA_BUS_FMT_RGB888_1X24 ?
-> +                       state->mbus_fmt_code == MEDIA_BUS_FMT_BGR888_1X24 ?
->                         "RGB 888 24-bit" : "Unsupported");
->
->         v4l2_info(sd, "-----%s status-----\n", is_hdmi(sd) ? "HDMI" : "DVI-D");
->         v4l2_info(sd, "HDCP encrypted content: %s\n",
->                         hdmi_sys_status & MASK_S_HDCP ? "yes" : "no");
-> @@ -1691,11 +1691,11 @@ static int tc358743_enum_mbus_code(struct v4l2_subdev *sd,
->                 struct v4l2_subdev_state *sd_state,
->                 struct v4l2_subdev_mbus_code_enum *code)
->  {
->         switch (code->index) {
->         case 0:
-> -               code->code = MEDIA_BUS_FMT_RGB888_1X24;
-> +               code->code = MEDIA_BUS_FMT_BGR888_1X24;
->                 break;
->         case 1:
->                 code->code = MEDIA_BUS_FMT_UYVY8_1X16;
->                 break;
->         default:
-> @@ -1753,11 +1753,11 @@ static int tc358743_set_fmt(struct v4l2_subdev *sd,
->
->         if (ret)
->                 return ret;
->
->         switch (code) {
-> -       case MEDIA_BUS_FMT_RGB888_1X24:
-> +       case MEDIA_BUS_FMT_BGR888_1X24:
->         case MEDIA_BUS_FMT_UYVY8_1X16:
->                 break;
->         default:
->                 return -EINVAL;
->         }
-> @@ -2172,11 +2172,11 @@ static int tc358743_probe(struct i2c_client *client)
->         sd->entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
->         err = media_entity_pads_init(&sd->entity, 1, &state->pad);
->         if (err < 0)
->                 goto err_hdl;
->
-> -       state->mbus_fmt_code = MEDIA_BUS_FMT_RGB888_1X24;
-> +       state->mbus_fmt_code = MEDIA_BUS_FMT_BGR888_1X24;
->
->         sd->dev = &client->dev;
->
->         mutex_init(&state->confctl_mutex);
->
->
-> --
-> 2.49.0
->
+            /* Move partition to be owned by SC */
+            BRD_ERR(rm_set_parent(pt_boot, pt_m4_0, SC_PT));
+
+            /* Check if booting with the no_ap flag set */
+            if (no_ap != SC_FALSE)
+            {
+                /* Move boot to be owned by M4 0 for Android Automotive */
+                BRD_ERR(rm_set_parent(SC_PT, pt_boot, pt_m4_0));
+            }
+        }
+
+        /* Allow all to access the SEMA42s */
+        BRD_ERR(rm_set_peripheral_permissions(SC_PT, SC_R_M4_0_SEMA42,
+            SC_RM_PT_ALL, SC_RM_PERM_FULL));
+
+I believe this SCU code is correct, at least this is more or less what
+NXP provides as example, right?
+
+Best Regards,
+Hiago.
