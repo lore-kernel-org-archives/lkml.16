@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D1722D4F6
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FEE21FF2C
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716103; cv=none; b=jvS3WRUbBhV0hPzqdtPOUTwPlvZmJXANIlnDEami51kPHZ6hpbbO9sfhJrb5i+8C/je9/xH/D9BfbTZ1syyzyhcpdfDsrv+Tu9lTOCaBXaJ3UA6NgfIWLEp9l0sHcdD1CHMI/3qwEi88X1W+LoS96w/eIfn9GR/V02cuAvxgabg=
+	t=1749716112; cv=none; b=lgvsYxvfJIzRIMl1TDOdgPRnJ1D4pkiFB7n3IKwLJGHHhEDIc7Xv/RHTEqkdElbYq9RptWN2nwecKpHZ81y1Q785buN5/zic54Kip5DmpDBWISS/VhTsC0ZzTzBz7SMG66B1gMoEQEkF5FBiarha8NZF2cnnpTHfPnR/yxjDz1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716103; c=relaxed/simple;
-	bh=VSl/cmmDftA9q5LXt7BTkwOCTZhsdMZmQ9CjBdt6jwI=;
+	s=arc-20240116; t=1749716112; c=relaxed/simple;
+	bh=jZhqw3CFkkpAqCC9nzOWg/77t51D878n8OcC+pjLft4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lTkya9Meg9YhHGm9S8kGRuD2dWeW0EttorCBZOoaWgG+kBiZTt61Jm49uhw+Ukn/pSc0OASAvA8pK/EMOOE9JzUUDkaMEIvSTd75sAvx1m+0Ac19k/pWrppjuBOOpCe7XmbCm0pkers2AHXVmsz+Z81LGrtLhhRV+RYY57dBbfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JIwLcGL5; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=Yx6BupsSQUqXLnmtkh1RVUU8+KuGskaSGyuU5RP5OfJWUyEPcpbvTJbYLhXz5eGpGO4Mmk0YJ8WCKm1yjxp10z7T2e7KnsgES6W5dv4CK0X+6R9hewMr9jmH60L74hYvMgsAHdBPDTvliFNne6ASY7yblEBU/9g2ssoXC4tC6PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z4pUZCbo; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JIwLcGL5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4pUZCbo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749716100;
+	s=mimecast20190719; t=1749716109;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8c6ZwDHb3uYxtsAvJpFTLFi4+b+kzhB9wfsMrz7lsLA=;
-	b=JIwLcGL5MiqFlYd8upsh5AQYYhzmQYfXApLeVramHwkrjlXNoZAJnrOlReOv3tx5rXQ3WR
-	L1ZEGS/g7m49MYDACUzf672hWwYIE1CUVXENGZNP81/xO2cDzB0CzBMu1thErDz+8YhE1S
-	nE0QQ4/gHwWEhuoqJ8xZ09F01tnzRVc=
+	bh=mrjs5eOHCyu5GrbKeIZJ6mBciwCyDUhu9m4iaDSEfRE=;
+	b=Z4pUZCboMikpjQEIGQohNgWIPqq3wJEWGnFEIGwJcbmHKiQ89uEla7TJV/E3ENEgxzyfAz
+	N6VTJ5OUrM4XSJiMeQjZ8zW3oiCpyPksIwjwphPPDdhyYA6EwFjL0DNuND5ENzKEppYQY3
+	6L+d62qY7VSSR1lGK2j/FRUw1FLRkxQ=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-314-MkhGcOqRMbOw9FFJgLXpXw-1; Thu,
- 12 Jun 2025 04:14:56 -0400
-X-MC-Unique: MkhGcOqRMbOw9FFJgLXpXw-1
-X-Mimecast-MFC-AGG-ID: MkhGcOqRMbOw9FFJgLXpXw_1749716094
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-537-Gq0W-kJxMnew4ke5I5BZ3A-1; Thu,
+ 12 Jun 2025 04:15:02 -0400
+X-MC-Unique: Gq0W-kJxMnew4ke5I5BZ3A-1
+X-Mimecast-MFC-AGG-ID: Gq0W-kJxMnew4ke5I5BZ3A_1749716099
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D895619560A2;
-	Thu, 12 Jun 2025 08:14:53 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 790891956096;
+	Thu, 12 Jun 2025 08:14:59 +0000 (UTC)
 Received: from hydra.redhat.com (unknown [10.45.225.28])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C045F195609D;
-	Thu, 12 Jun 2025 08:14:48 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5F7F2195609D;
+	Thu, 12 Jun 2025 08:14:54 +0000 (UTC)
 From: Jocelyn Falempe <jfalempe@redhat.com>
 To: Jani Nikula <jani.nikula@linux.intel.com>,
 	Rodrigo Vivi <rodrigo.vivi@intel.com>,
@@ -61,9 +61,9 @@ To: Jani Nikula <jani.nikula@linux.intel.com>,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
 Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v9 8/9] drm/i915/display: Add drm_panic support for 4-tiling with DPT
-Date: Thu, 12 Jun 2025 10:01:05 +0200
-Message-ID: <20250612081344.225200-9-jfalempe@redhat.com>
+Subject: [PATCH v9 9/9] drm/i915/psr: Add intel_psr2_panic_force_full_update
+Date: Thu, 12 Jun 2025 10:01:06 +0200
+Message-ID: <20250612081344.225200-10-jfalempe@redhat.com>
 In-Reply-To: <20250612081344.225200-1-jfalempe@redhat.com>
 References: <20250612081344.225200-1-jfalempe@redhat.com>
 Precedence: bulk
@@ -75,54 +75,97 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Alder Lake and later, it's not possible to disable tiling when DPT
-is enabled.
-So this commit implements 4-Tiling support, to still be able to draw
-the panic screen.
+When the panic handler is called, configure the psr to send the full
+framebuffer to the monitor, otherwise the panic screen is only
+partially visible.
 
 Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
 ---
- .../gpu/drm/i915/display/intel_atomic_plane.c | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
+
+v8:
+ * Added in v8
+
+ .../gpu/drm/i915/display/intel_atomic_plane.c |  7 +++++++
+ drivers/gpu/drm/i915/display/intel_psr.c      | 20 +++++++++++++++++++
+ drivers/gpu/drm/i915/display/intel_psr.h      |  2 ++
+ 3 files changed, 29 insertions(+)
 
 diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index ce5471bd3c43..8c422c6a7186 100644
+index 8c422c6a7186..c9a9f0770205 100644
 --- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
 +++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -1297,6 +1297,25 @@ static unsigned int intel_ytile_get_offset(unsigned int width, unsigned int x, u
- 	return offset;
- }
- 
-+static unsigned int intel_4tile_get_offset(unsigned int width, unsigned int x, unsigned int y)
-+{
-+	u32 offset;
-+	unsigned int swizzle;
-+	unsigned int width_in_blocks = DIV_ROUND_UP(width, 32);
-+
-+	/* Block offset */
-+	offset = ((y / YTILE_HEIGHT) * width_in_blocks + (x / YTILE_WIDTH)) * YTILE_SIZE;
-+
-+	x = x % YTILE_WIDTH;
-+	y = y % YTILE_HEIGHT;
-+
-+	/* bit order inside a block is y4 y3 x4 y2 x3 x2 y1 y0 x1 x0 */
-+	swizzle = (x & 3) | ((y & 3) << 2) | ((x & 0xc) << 2) | (y & 4) << 4 |
-+		  ((x & 0x10) << 3) | ((y & 0x18) << 5);
-+	offset += swizzle * 4;
-+	return offset;
-+}
-+
+@@ -58,6 +58,7 @@
+ #include "intel_fb.h"
+ #include "intel_fb_pin.h"
+ #include "intel_fbdev.h"
++#include "intel_psr.h"
+ #include "skl_scaler.h"
+ #include "skl_universal_plane.h"
+ #include "skl_watermark.h"
+@@ -1319,6 +1320,7 @@ static unsigned int intel_4tile_get_offset(unsigned int width, unsigned int x, u
  static void intel_panic_flush(struct drm_plane *plane)
  {
  	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-@@ -1342,6 +1361,7 @@ static unsigned int (*intel_get_tiling_func(u64 fb_modifier))(unsigned int width
- 	case I915_FORMAT_MOD_4_TILED_MTL_MC_CCS:
- 	case I915_FORMAT_MOD_4_TILED_BMG_CCS:
- 	case I915_FORMAT_MOD_4_TILED_LNL_CCS:
-+		return intel_4tile_get_offset;
- 	case I915_FORMAT_MOD_X_TILED:
- 	case I915_FORMAT_MOD_Yf_TILED:
- 	case I915_FORMAT_MOD_Yf_TILED_CCS:
++	struct intel_crtc_state *crtc_state = to_intel_crtc_state(plane->state->crtc->state);
+ 	struct intel_plane *iplane = to_intel_plane(plane);
+ 	struct intel_display *display = to_intel_display(iplane);
+ 	struct drm_framebuffer *fb = plane_state->hw.fb;
+@@ -1328,6 +1330,11 @@ static void intel_panic_flush(struct drm_plane *plane)
+ 
+ 	intel_bo_panic_finish(obj);
+ 
++	if (crtc_state->enable_psr2_sel_fetch) {
++		/* Force a full update for psr2 */
++		intel_psr2_panic_force_full_update(display, crtc_state);
++	}
++
+ 	/* Flush the cache and don't disable tiling if it's the fbdev framebuffer.*/
+ 	if (to_intel_framebuffer(fb) == intel_fbdev_framebuffer(display->fbdev.fbdev)) {
+ 		struct iosys_map map;
+diff --git a/drivers/gpu/drm/i915/display/intel_psr.c b/drivers/gpu/drm/i915/display/intel_psr.c
+index db7111374293..283ac2618ea5 100644
+--- a/drivers/gpu/drm/i915/display/intel_psr.c
++++ b/drivers/gpu/drm/i915/display/intel_psr.c
+@@ -2888,6 +2888,26 @@ int intel_psr2_sel_fetch_update(struct intel_atomic_state *state,
+ 	return 0;
+ }
+ 
++void intel_psr2_panic_force_full_update(struct intel_display *display,
++					struct intel_crtc_state *crtc_state)
++{
++	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
++	enum transcoder cpu_transcoder = crtc_state->cpu_transcoder;
++	u32 val = man_trk_ctl_enable_bit_get(display);
++
++	/* SF partial frame enable has to be set even on full update */
++	val |= man_trk_ctl_partial_frame_bit_get(display);
++	val |= man_trk_ctl_continuos_full_frame(display);
++
++	/* Directly write the register */
++	intel_de_write_fw(display, PSR2_MAN_TRK_CTL(display, cpu_transcoder), val);
++
++	if (!crtc_state->enable_psr2_su_region_et)
++		return;
++
++	intel_de_write_fw(display, PIPE_SRCSZ_ERLY_TPT(crtc->pipe), 0);
++}
++
+ void intel_psr_pre_plane_update(struct intel_atomic_state *state,
+ 				struct intel_crtc *crtc)
+ {
+diff --git a/drivers/gpu/drm/i915/display/intel_psr.h b/drivers/gpu/drm/i915/display/intel_psr.h
+index 0cf53184f13f..9b061a22361f 100644
+--- a/drivers/gpu/drm/i915/display/intel_psr.h
++++ b/drivers/gpu/drm/i915/display/intel_psr.h
+@@ -57,6 +57,8 @@ int intel_psr2_sel_fetch_update(struct intel_atomic_state *state,
+ 				struct intel_crtc *crtc);
+ void intel_psr2_program_trans_man_trk_ctl(struct intel_dsb *dsb,
+ 					  const struct intel_crtc_state *crtc_state);
++void intel_psr2_panic_force_full_update(struct intel_display *display,
++					struct intel_crtc_state *crtc_state);
+ void intel_psr_pause(struct intel_dp *intel_dp);
+ void intel_psr_resume(struct intel_dp *intel_dp);
+ bool intel_psr_needs_vblank_notification(const struct intel_crtc_state *crtc_state);
 -- 
 2.49.0
 
