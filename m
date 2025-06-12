@@ -1,84 +1,104 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551911CDA3F
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F241CDA3F;
+	Thu, 12 Jun 2025 09:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749719258; cv=none; b=lxN1EdK1YdIQbJYHVQeOa1tlhBoy1PbJXvrX34//fwNEafazutZxIkDeIbZn0psCN9zFIWcOam8OoEvSPq8x0KyAF8w9pNvl5gHN43Adr75Dohcq+haU/IPMlr02bwKJYPeZVvcskRgN8bJkcTuMwvhB2yPRX28D6r4ViLIAn54=
+	t=1749719267; cv=none; b=K2CV36aQ/dc3CWGPWBMmhT/z8Ab7uaK6T8gIR+Ua/x4rCqVVhWRcbd006ciOfeNFlJefH9qx7V5zQ9FVhUhyXpwIHCyi+m/E+yPHj808uMkr8jSnsYqCJM3n0KKhXK8yz2as48l0T1BF4uinHhCXDVhuPf6fE1qBvDbmWeELDS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749719258; c=relaxed/simple;
-	bh=y6b6QvQl+bRwXvl+wjLTqMdjZCkwY36Ul1Tt+SBOz3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uhHpOhIOx01JBAIw6mHta1bdzriszfJw4eRg/DYFcoRIqw6OrvQ0uZMJwX0X3ZZuXI1IdGWJ7i0HJnN3T7juGqueeOS9zSoZzSgQu2OZ9eqfcN08+g6jDWCURf1mtZCoOWsV2RsAYiY85V3k06SlvvaJ084KWZ+MFhRI+augI0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=nQ+delIt; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1749719267; c=relaxed/simple;
+	bh=nPaGWMZ4NG9UTsgXyf6E4c3wv/YhKDdZPZghgszys+k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iRSUf0sEPYWenIkYiv/QI9e+/EajmqdDw5GtLSkCPRtb7q/NwYsYsUi3qnaNdYIgka0jGq138XOeDBs3kG0ihNKngrO7gOIoWYTmN2F9QCFfIqztwpLBxhiJB3QoP2VRYlaQ+hfRLJEwX4MLkld5fWTUDsiSSMkWDYB3TcKJJpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kVbGupnt; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="nQ+delIt"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d2107eb668so118262685a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 02:07:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVbGupnt"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4530e6f4db4so205065e9.2;
+        Thu, 12 Jun 2025 02:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1749719255; x=1750324055; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=y6b6QvQl+bRwXvl+wjLTqMdjZCkwY36Ul1Tt+SBOz3g=;
-        b=nQ+delIt/jYSezvzaZ+DUltnffOECMTuv8Ll+traN0KVyGnPWehTsqQBfzCFQQoXuh
-         JNbncd7vuton5M92AjJViNoD5+hh4SysIRFzewxg6NATJ/C5KsVJVOQsz3M2U6eBBv+r
-         9yfT7LmJW/QnjFMrjBN/YOOZsYFQKV9vCMeF4=
+        d=gmail.com; s=20230601; t=1749719263; x=1750324063; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rBWkeK6hGx5OvRMWT1USZjz50+Of77xDqL2XQmoejP8=;
+        b=kVbGupnt6UEYFqwZUuhNICMrztf8n0YE8PGJM9Mb2WGzCRcxqjhdkEJ5GpoJkCjJ1i
+         V31esfRuCRWYVR5IZDzwLvPwnHbJBMtojhq1cyvIt+W2feEYo9IQkGcbUJi7Oq6BnyXa
+         tZvr/HEefh/dAV+MROsqAwiWtAnkwhBnnQMGpmMuVcOEP9m42W2/hGbWI/8u5bj6Ydkw
+         U15/pRRv4kxB5j3G4pfU190ATgvoFxaFJkNL4kmkMCxSoMijG9PgMarkY3QE70VSq/oJ
+         xsuqySaB1NDEJw9HnMf/AQi0jgHlKfJG/fsN/301N9XMNXsBXuGPv/pfqeTyDKjW2SC9
+         usMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749719255; x=1750324055;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1749719263; x=1750324063;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=y6b6QvQl+bRwXvl+wjLTqMdjZCkwY36Ul1Tt+SBOz3g=;
-        b=BtV/VA2zKJui7yR1JMdwcasT5KMxnkT5TKDKRXTGlCbD06oMVYfD08rllN9S0boGrk
-         +48fw1fIwjWwU2b6Z0JYHNR5a63ffzw7y31mVftt/e8olcsGjIJWKFbwseP4uLnmmyhO
-         +a1It1gBqERMm4lvbohMnU1FJyc7zJQPE4nP/JDLZ9fvrkDjPz/PEf1BRpjzBdggl2ds
-         yW0HybAx9/Qy+jpv9HZTMxaK5k5FgFB6qXDH3vQbs2+XA595Nd0Bz/R1+z0yUOnXHcoP
-         auRqk3Do6vrlh42Ldx+ra3EX3K6cKtKj3AXMHjpjHlzQ528k/OueEUQSoC8lrPH1fHcj
-         xrdA==
-X-Gm-Message-State: AOJu0YxxXFuACd13JZFYqa7f3pcZNNXXkhp++xJrdjHK8nC/5G/XBXsx
-	zjOUWYNJ3uEzrBjCmlJevQ+4JWVXNbJ61J3Y7aWDzWnxE44KIlofqNflsw6R9UFGqInztj2rpx2
-	Ko4mmKPIOr5YLNG/vZK1pUFqR9sZZVRJA1lVc/UECISUWZgbRp3f3
-X-Gm-Gg: ASbGncsRaSNB4C/AnHCzqrLJklDp/klIkFdV+JuFrLG+WQymACIsYpvGPp5/xWl4IsM
-	MbXjdrhejkBR2OaHIr36Qp/dVFFDwKTIFXvZeusu8yhYp13L8leBH0kwsAWr7WnnXZZnTplTmak
-	KJ0L+A7LloLqO+1EH1miSeRcmVsfpAnsWF3Sx71/buxkFM
-X-Google-Smtp-Source: AGHT+IFOnNrzWjLT5ibrVv8Y2BGK48j7B6UvhBgwO8fx8UkM8EQpMGJyxzvavWuXra0V85HOmQFH97ajXAajekRIaps=
-X-Received: by 2002:a05:622a:2596:b0:4a4:2d7a:994b with SMTP id
- d75a77b69052e-4a72293dcadmr52269271cf.19.1749719243891; Thu, 12 Jun 2025
- 02:07:23 -0700 (PDT)
+        bh=rBWkeK6hGx5OvRMWT1USZjz50+Of77xDqL2XQmoejP8=;
+        b=h63R6EUydz97lJuBYtkoGOyQLWuSb3I5ehhUGGUms5aoWsRn3R8DDRz4f6B/MUCSi1
+         yX+FFhPtD8b/Tdoy6qsdB+cDLxcW1FnS+ABDKFVZNhTehNeKTPjCvXoCFgeVWacpiDry
+         jPweSF+z4puDJxM/W5NwgTjCG6OMcGvimfx40q2NP4UYr6ZgXAeoGGzSU8Sn0j5bHZKl
+         G9FNAKOapXc4GlIoevlMExANRpRDg0qsRL2wgQVGQKGQeY8OkQ7gjjB0unboBZxudmzp
+         osmwiCiAp48wcHS4+VltDCGt+lRLm6FONeDxUpUU8VXlLUoxmRB3VVmjSl2ZkXAp86G5
+         ebaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVC5BD5gKLqUGq/7MgQqg75eLqH7oIx9P+QUOlUeAtwPuqERmlBFrN3s9UQnxyEESOgXANBdOf7ZpRuPt4=@vger.kernel.org, AJvYcCVuQsmKZZTkzCvnNqc7rAc5G6CTGxnrjyl3qPbWubr55mqI93Ag3ZlquZoeu/4u9GQJkFftkASSZ8+N+UHI1gY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ/knC3scRBlgoW2cZJaRWNjrpU2OKq1Ktgi4s5Mk3eo3zpC8O
+	Op4hi7u2ORdTwroPsiSQroRkZzC0Ofx9Yz3BWXNJuCkP/6A52exjgIjl
+X-Gm-Gg: ASbGncsMr2xTKecIzoqJt4BfENYVmgw0xo3fjgjW1TT1TcJtAKLgHT1O/RGaYTA8YSg
+	CQOBcoF45bgt/bRapWEDa0hmjumEFQ8MHxqEBNLtPQVeWNCkJjP7IetFGnY4bfkkTzVpPdsKnYZ
+	GN4R9Sj9toXDTXQz1sLKAh5+agtirT0jkYkAVjyyBu99g+NEVvTqx3bHTJvHVyFgqqS4XoSyXHi
+	qIU+BShLTD13AwsImIA7dOebqrNxrLR4gCpoPrHKQrVQHjni3bu19QxTzywPInxwlVJHEuzpP2Z
+	5XRUSXm8RO6BeCuZgzEDlGn/NGuoK3AEJfZaAxYxrHWUs0v2025pS9BNVdflvlCvkRk9yptATTs
+	DZyeNMM8jjC3J0H8=
+X-Google-Smtp-Source: AGHT+IGHbfxT2141g/HEDN48PqEbgPnWCfTrql/YAEm6ytjb6sLkgf9FfpPfKwqSms0MnVYa/zy/Dg==
+X-Received: by 2002:a05:600c:4e0d:b0:439:9fde:da76 with SMTP id 5b1f17b1804b1-453253b0905mr21982685e9.0.1749719262297;
+        Thu, 12 Jun 2025 02:07:42 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:b893:ade0:c175:b695])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532e2522b1sm13756895e9.25.2025.06.12.02.07.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 02:07:41 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drive/realtek/rtlwifi: fix possible memory leak
+Date: Thu, 12 Jun 2025 11:07:19 +0200
+Message-ID: <20250612090724.17777-1-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612032239.17561-1-bagasdotme@gmail.com>
-In-Reply-To: <20250612032239.17561-1-bagasdotme@gmail.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Thu, 12 Jun 2025 11:07:13 +0200
-X-Gm-Features: AX0GCFsOlxUaPAtzGm57tBtxM91bCOFZq--Te855323YXxbAnNwlfNn2nirhb38
-Message-ID: <CAJfpegvKvKB+1Q23Gm8TKAmb4hPNnSHpK5W29JmDjHVWrWk73Q@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: fuse: Consolidate FUSE docs into its own subdirectory
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Documentation <linux-doc@vger.kernel.org>, 
-	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Luis Henriques <luis@igalia.com>, Bernd Schubert <bschubert@ddn.com>, Amir Goldstein <amir73il@gmail.com>, 
-	Chen Linxuan <chenlinxuan@uniontech.com>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>, 
-	James Morse <james.morse@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Jun 2025 at 05:22, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->
-> All four FUSE docs are currently in upper-level
-> Documentation/filesystems/ directory, but these are distinct as a group
-> of its own. Move them into Documentation/filesystems/fuse/ subdirectory.
->
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+When `dma_mapping_error()` is true, if a new `skb` has been allocated,
+then it must be de-allocated.
 
-Applied, thanks.
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/net/wireless/realtek/rtlwifi/pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Miklos
+diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
+index 898f597f70a9..f754f1c3f783 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/pci.c
++++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
+@@ -572,8 +572,11 @@ static int _rtl_pci_init_one_rxdesc(struct ieee80211_hw *hw,
+ 		dma_map_single(&rtlpci->pdev->dev, skb_tail_pointer(skb),
+ 			       rtlpci->rxbuffersize, DMA_FROM_DEVICE);
+ 	bufferaddress = *((dma_addr_t *)skb->cb);
+-	if (dma_mapping_error(&rtlpci->pdev->dev, bufferaddress))
++	if (dma_mapping_error(&rtlpci->pdev->dev, bufferaddress)) {
++		if (!new_skb)
++			kfree_skb(skb)
+ 		return 0;
++	}
+ 	rtlpci->rx_ring[rxring_idx].rx_buf[desc_idx] = skb;
+ 	if (rtlpriv->use_new_trx_flow) {
+ 		/* skb->cb may be 64 bit address */
+-- 
+2.43.0
+
