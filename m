@@ -1,31 +1,31 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF732D8DD6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E74629B227;
 	Thu, 12 Jun 2025 21:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749763504; cv=none; b=LS0qIvupMgrqu1h3NvXqW6N9CmL0C/FeuwuKJ9qmijeoUV72wJHZa2WbXFnDjCzvNU8fvCS+/Z0uInE0SLMe91n5KXSe5I2xoqb+F1819Vv01OAs1TfXkX6U/XD6/0gHh5HJ1l4svjfxzHo3W8zdkDPNcz2WX1SVOPDS7NF5IUQ=
+	t=1749763505; cv=none; b=P+HldpyijcwRLWSyi6Miby5KqKq0yOdWTExUpUHpzvQ4YG/iS/lKy/Au9gjU4cBNc90zUsg0X9aN3sUquWr19pg3Gu8mr1IZgW/gDTCe5rxLOo8nWv7FMzWj8CSTG1GLgAm8R/vGr9bHJAbTWKOM2DAcjC89x+SFKfmUYLW6PkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749763504; c=relaxed/simple;
-	bh=o2WvZF8/Wj9oS5PyPHIu/2Zv1oPNwLjyXdrg1kidN8I=;
+	s=arc-20240116; t=1749763505; c=relaxed/simple;
+	bh=R6GDH+pi/TisbmmlM1tiP9Ycm3BzPweSXNUekosIhWY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=is5SrhlacvjNde1O3wXVujGG9VXgzNvv+drhsogAybINe4L3M9GvuPR1A1T/tgBnnjXZrK/3XQvwwo5HcXA+qVS1Z4sHLP7bCvLpEL7NiPwz5C/PDPiO2UNNATx0ya96TCTDV2tLUwSz/z7wfp4ou6G82H35FqM2xRPU65EV7zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 Content-Type; b=poTWTGuiVyBVArkkRpvvveXlZqTT/h2Z6aFlaPzu4fxgYf0zLzmXVvGJnEM5cjrQ5wI8WMk5bKRHp3Uak6MccwT2HfErfq5htb1VLwR5ulG204wYN8IIsuBH7nO6y5+NCsGdft8gDlVbppg4opfZPLYyFlWpoC4kMVxe/5NePlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 10BEC8020F;
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 7239AC018D;
 	Thu, 12 Jun 2025 21:25:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 662232D;
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id BFCBC17;
 	Thu, 12 Jun 2025 21:24:59 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uPpRT-00000001tQU-33Xw;
-	Thu, 12 Jun 2025 17:26:35 -0400
-Message-ID: <20250612212635.579394128@goodmis.org>
+	id 1uPpRU-00000001tRx-0ySj;
+	Thu, 12 Jun 2025 17:26:36 -0400
+Message-ID: <20250612212636.080305835@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 12 Jun 2025 17:24:11 -0400
+Date: Thu, 12 Jun 2025 17:24:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -36,7 +36,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Carlos  Maiolino <cem@kernel.org>,
  Christoph Hellwig <hch@lst.de>,
  "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH 06/14] xfs: Remove unused trace event xfs_attr_rmtval_set
+Subject: [PATCH 09/14] xfs: Remove unused event xfs_alloc_near_error
 References: <20250612212405.877692069@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,39 +46,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 662232D
-X-Stat-Signature: b36rgichgih6d7pw7rib4uoe553zzq6u
+X-Rspamd-Queue-Id: BFCBC17
+X-Stat-Signature: ze8ij1s4gbrm18ajk6destqyspmp1s3y
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/lS2S6zOc8c8WQzcQZWnqJVZ+11fBpSv0=
-X-HE-Tag: 1749763499-110801
-X-HE-Meta: U2FsdGVkX19//A+Oqj6S60RE4zMlAbdDufoaeXQA1+JPbo0oiGL0sZgtZsNjGbqPgVcCKV8WYUezV56dAf0+myQjlU6aNgGOfWruNQdd7CyOHamajzNCnz+yZsd7OpEzbOLL0knTfNhDICrfa41n56giBulTZY8FdfVBIfTkfhLacae5d0e0sIzgNe6K2dyVfo4yPjBcHj9S0tnY8r8la1nKGv0Zz3fT482C5lX5tg1QFdE+t2pnkT7caO2998vs1oNbPaCkKD0BpB4xUvn1Ya/Egw0Ds228cuYGYP3ChPJeChvt6I28BsuImSJ6fCiGEKkomlgazpFurKeZ4pm5zKSwJ4UphOWIScrSuwUV3k7wWIpcDonxr/LeuzdV6pEFvs6sWYYWoH8B1SZ8Lh4MgQ==
+X-Session-ID: U2FsdGVkX1/76CYWaDEPaZq/fnOJc1E46idQL/K51hg=
+X-HE-Tag: 1749763499-949767
+X-HE-Meta: U2FsdGVkX1/h0PsnFAhUIB6OuHqyBecE2q+w3FXEHtSeX8H57hw+FS1mDWMsATw7n+TCD5kZyntCSlF5kDkCMFDmao5e7Oxd8WUJ8h36s1QfGPgLFL9+U6deZwFJHVv6eRb4u1PteUj8Zzvgf3myDjmuS0J98ZwT9DscpxclULYZo4dFhQrzT1yDxIdCkBsszwYXg8ADl5tpNtOBFSMXnc8s8oOTlSfCVPAwaNuVoX9B94ZZC47q/kgYieClDFkoVF9AYNMo4rQkZ3GwqczUhBgcAIJlwjU4+UsYPHJsyLYR8oBv0PrMvT4H7GtDGeTu5oAi+U/p1zHMpDXETYBD4LoMIY/2N8I+DEBSzxWFHnvLGC7PB76YCLpGtYYqlhR9mplvq0hN/riNjVYtd1y1VA==
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-When the function xfs_attr_rmtval_set() was removed, the call to the
-corresponding trace event was also removed but the trace event itself was
-not. As trace events can take up to 5K of memory in text and meta data
-regardless if they are used or not they should not be created when not
-used. Remove the unused trace event.
+Trace events take up to 5K of memory in text and meta data regardless if
+they are used or not. The call to the event xfs_alloc_near_error was
+removed when the cursor data structure allocation was introduced. Remove
+it as it is no longer used and is just wasting memory.
 
-Fixes: 0e6acf29db6f ("xfs: Remove xfs_attr_rmtval_set")
+Fixes: f5e7dbea1e3e ("xfs: introduce allocation cursor data structure")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
  fs/xfs/xfs_trace.h | 1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index fe22f791de6e..cdc639198bb9 100644
+index 3c15282b2a8a..6ec483341bc4 100644
 --- a/fs/xfs/xfs_trace.h
 +++ b/fs/xfs/xfs_trace.h
-@@ -2471,7 +2471,6 @@ DEFINE_ATTR_EVENT(xfs_attr_fillstate);
- DEFINE_ATTR_EVENT(xfs_attr_refillstate);
- 
- DEFINE_ATTR_EVENT(xfs_attr_rmtval_get);
--DEFINE_ATTR_EVENT(xfs_attr_rmtval_set);
- 
- #define DEFINE_DA_EVENT(name) \
- DEFINE_EVENT(xfs_da_class, name, \
+@@ -2270,7 +2270,6 @@ DEFINE_ALLOC_EVENT(xfs_alloc_cur_right);
+ DEFINE_ALLOC_EVENT(xfs_alloc_cur_left);
+ DEFINE_ALLOC_EVENT(xfs_alloc_cur_lookup);
+ DEFINE_ALLOC_EVENT(xfs_alloc_cur_lookup_done);
+-DEFINE_ALLOC_EVENT(xfs_alloc_near_error);
+ DEFINE_ALLOC_EVENT(xfs_alloc_near_noentry);
+ DEFINE_ALLOC_EVENT(xfs_alloc_near_busy);
+ DEFINE_ALLOC_EVENT(xfs_alloc_size_neither);
 -- 
 2.47.2
 
