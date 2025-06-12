@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75F92E92D9
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF2B2E92D3
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:41:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771713; cv=none; b=pAGvJithJqouzNKb94/NAdZJHuJXZ2BmnaN0wPXrd12JVjJ7hNjdPX5nSaBnCr73ZQG3vnFrS9LiO5KNxyVYihdVTk5bUCso8uabrpwrPngXvlg0pR8KuDaGoGDtNpDVlR+ofBszY+flPMibNvEYAzXuKjwCSe4zZ5T6XMrHHvA=
+	t=1749771716; cv=none; b=Y1RiwfBltbx19dY1yyOpDtGgobWZRSu7DJkUGP+bvX/CCUB7aKJUQIbMBXClWAQERoqwCq325qozKxWshNsdUEphJcC6psgrVj0npaMFxcEZ0ScIUXaWmNbTZ54Sn9r2WbUjXiPgPVEFSbbGRkH2Cat20381Wj4c3Xce/7iDgXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771713; c=relaxed/simple;
-	bh=lSnfTGNvCCHUD1g3OuwoLvAwB3bAKJBfyXYmqNb6quc=;
+	s=arc-20240116; t=1749771716; c=relaxed/simple;
+	bh=fxZA4A0MuuY0Xd61MPGho94Qj3uh9SSI2gFLBw5yCr0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ETJcF+mIQmI+z3IvdeqztrzlHidKNXFXMLBruI7/jAfTb2QYGtpl+LIoIRxNnmStiqJDXqzXynqn8i/NC5ipFOQhDqziPn/mehd+HLTSWDtY5fEbMyCIzU2lt/KUtOUGDAt50cMz6byvJ75gqRPK0DhqiN9bnnwXmEfEuwg5EjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pVY3m3cF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SMyO02Ks; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Ai3EzN9S7yGY4b0DMMyHGkTvUt4OWLOazfwa3RTWniz0zohnCPlCGqszQbu7W19O/O9teeWbEodsIycrab/r2Ch3wN99jFMk/aaPd9Me5s1uXWd7LSatZUA98wlXhDxQ0DhX7KffUFzfqU2qlPzqfk+ZQagwqCsTbadHuZfN0/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tAOWOCNC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P94ySQS9; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pVY3m3cF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SMyO02Ks"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tAOWOCNC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P94ySQS9"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749771710;
+	s=2020; t=1749771713;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CGXqbv3TKuxoI3faR1b+5Z5vqE19ecaVzTdKl1HhrNQ=;
-	b=pVY3m3cFzWy0NkwFKjXWC2unM/Esw2Soz0SmrY+QXUJGP2Ga0ORTNLPJSrf8BYsF1lgswl
-	qyAEOo4gjmmBKV7WgWNxeOXuKkB74x8fa86kYWYVdcAzHnwwDczkrshTpBa1OpvCro9MxI
-	pl2PPd0dwHfeIzVTfiryny/aFUnBRn2BRUCJdVxKu5CTOiRa/ShSN/2KKfQWBJ2q/bZqqr
-	ncwrf2GsgqFqAp//k4hMpJN+sNTWExBb2M7EJw3j/TVUQx06gw94YvccZmlVWSP2wRv0Tk
-	oRwgUkqX+bTMf3sgZywu3GYQut8Gr/iyWDQjLVyjvPmiW4BkrRKt7/72uA1MMw==
+	bh=aucTGch6VIspEvZqsNKH9dxMONrsSTbqBKsLK1ul2nA=;
+	b=tAOWOCNCBOhpXxdL+z8WrRlzXJoy/xnjE2kWAjDNQlFzH2XwLfI6YAwA2CAoQIR45hnf82
+	OWniDYNyTMFUq5WE35nBhb+XM6xHg9oCnRLqUDAo1FPZNG0JZAbFg981+/z/J5x5wBwL07
+	PwH0AjNwO8L/sVwIECQIPXI60GtKokmfmN9omkM88JNQs+w126Vx8oKF29PUIPjWjKjFZR
+	puOyc/IyHg8fSC3g5ngT59EmYvDAWvOwy+FEfa9+KQe6E5KDaOAgsYcETaoLUkwNDYzwf2
+	fYlkYSzG3DMJeCUn/niPT0Eg+7VoLT40z1vXrpHs6Vnywmt1icUoq1BEpqc10w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749771710;
+	s=2020e; t=1749771713;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CGXqbv3TKuxoI3faR1b+5Z5vqE19ecaVzTdKl1HhrNQ=;
-	b=SMyO02KsTHAX/bM0XB1TCVyNRTLXYd0DFXfDHKEDxo1qEtbqT3jxhH5dZr7ZrYPSMPqI8v
-	7DTnHwWdI+v/tjCA==
+	bh=aucTGch6VIspEvZqsNKH9dxMONrsSTbqBKsLK1ul2nA=;
+	b=P94ySQS9ROnKBS5U+6EulaGW9hPjUNt8j4aOY7hNfe4H6nWmQLNI2iZHySlp1OASUnHvwv
+	AYlYd60SpnuWc9Dw==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -54,9 +54,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 27/44] x86/cpu: Use parsed CPUID(0x1)
-Date: Fri, 13 Jun 2025 01:39:53 +0200
-Message-ID: <20250612234010.572636-28-darwi@linutronix.de>
+Subject: [PATCH v3 28/44] x86/cpuid: Parse CPUID(0x2)
+Date: Fri, 13 Jun 2025 01:39:54 +0200
+Message-ID: <20250612234010.572636-29-darwi@linutronix.de>
 In-Reply-To: <20250612234010.572636-1-darwi@linutronix.de>
 References: <20250612234010.572636-1-darwi@linutronix.de>
 Precedence: bulk
@@ -67,55 +67,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use parsed CPUID(0x1) access, instead of a direct CPUID query, at early
-boot CPU detection code.
+Add CPUID(0x2) support to the CPUID parser.
 
-Beside the centralization benefits of the new CPUID model APIs, this
-allows using the auto-generated <cpuid/leaf_types.h> leaf data types and
-their full C99 bitfields instead of performing ugly bitwise operations on
-CPUID register output.
+Keep the leaf marked as invalid at the CPUID table if the whole leaf, or
+all of its output registers, were malformed.
 
+Note, the cpuid_leaf_0x2() logic at <cpuid/api.h> will be removed once
+all the CPUID(0x2) call sites are transformed to the new CPUID model API.
+
+References: fe78079ec07f ("x86/cpu: Introduce and use CPUID leaf 0x2 parsing helpers")
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/kernel/cpu/common.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/cpuid/types.h |  1 +
+ arch/x86/kernel/cpu/cpuid_parser.c | 41 +++++++++++++++++++++++++++---
+ arch/x86/kernel/cpu/cpuid_parser.h |  1 +
+ 3 files changed, 40 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index b3408ae2b144..023613698b15 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -896,6 +896,7 @@ void get_cpu_vendor(struct cpuinfo_x86 *c)
- void cpu_detect(struct cpuinfo_x86 *c)
+diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/types.h
+index d0f0e6a8a457..7bbf0671cb95 100644
+--- a/arch/x86/include/asm/cpuid/types.h
++++ b/arch/x86/include/asm/cpuid/types.h
+@@ -215,6 +215,7 @@ struct cpuid_leaves {
+ 	/*         leaf		subleaf		count */
+ 	CPUID_LEAF(0x0,		0,		1);
+ 	CPUID_LEAF(0x1,		0,		1);
++	CPUID_LEAF(0x2,		0,		1);
+ 	CPUID_LEAF(0x80000000,	0,		1);
+ };
+ 
+diff --git a/arch/x86/kernel/cpu/cpuid_parser.c b/arch/x86/kernel/cpu/cpuid_parser.c
+index eb8975de497a..9bd68b150150 100644
+--- a/arch/x86/kernel/cpu/cpuid_parser.c
++++ b/arch/x86/kernel/cpu/cpuid_parser.c
+@@ -27,9 +27,40 @@ static void cpuid_read_generic(const struct cpuid_parse_entry *e, struct cpuid_r
+ 		cpuid_read_subleaf(e->leaf, e->subleaf + i, output->regs);
+ }
+ 
+-/*
+- * Leaf-independent parser code:
+- */
++static void cpuid_read_0x2(const struct cpuid_parse_entry *e, struct cpuid_read_output *output)
++{
++	union leaf_0x2_regs *regs = (union leaf_0x2_regs *)output->regs;
++	struct leaf_0x2_0 *l = (struct leaf_0x2_0 *)output->regs;
++	int invalid_regs = 0;
++
++	/*
++	 * All Intel CPUs must report an iteration count of 1.  For broken hardware,
++	 * keep the leaf marked as invalid at the CPUID table.
++	 */
++	cpuid_read_subleaf(e->leaf, e->subleaf, l);
++	if (l->iteration_count != 0x01)
++		return;
++
++	/*
++	 * The most significant bit (MSB) of each CPUID(0x2) register must be clear.
++	 * If a register is malformed, replace its 1-byte descriptors with NULL.
++	 */
++	for (int i = 0; i < 4; i++) {
++		if (regs->reg[i].invalid) {
++			regs->regv[i] = 0;
++			invalid_regs++;
++		}
++	}
++
++	/*
++	 * If all of the CPUID(0x2) output registers were malformed, keep the leaf
++	 * marked as invalid at the CPUID table.
++	 */
++	if (invalid_regs == 4)
++		return;
++
++	output->info->nr_entries = 1;
++}
+ 
+ static void cpuid_read_0x80000000(const struct cpuid_parse_entry *e, struct cpuid_read_output *output)
  {
- 	const struct leaf_0x0_0 *l0 = cpuid_leaf(c, 0x0);
-+	const struct leaf_0x1_0 *l1 = cpuid_leaf(c, 0x1);
+@@ -54,6 +85,10 @@ static void cpuid_read_0x80000000(const struct cpuid_parse_entry *e, struct cpui
+ 	output->info->nr_entries = 1;
+ }
  
- 	c->cpuid_level = l0->max_std_leaf;
- 	*(u32 *)&c->x86_vendor_id[0] = l0->cpu_vendorid_0;
-@@ -903,17 +904,14 @@ void cpu_detect(struct cpuinfo_x86 *c)
- 	*(u32 *)&c->x86_vendor_id[8] = l0->cpu_vendorid_2;
++/*
++ * Leaf-independent parser code:
++ */
++
+ static unsigned int cpuid_range_max_leaf(const struct cpuid_table *t, unsigned int range)
+ {
+ 	switch (range) {
+diff --git a/arch/x86/kernel/cpu/cpuid_parser.h b/arch/x86/kernel/cpu/cpuid_parser.h
+index 882e96b000ba..cf999e6a574d 100644
+--- a/arch/x86/kernel/cpu/cpuid_parser.h
++++ b/arch/x86/kernel/cpu/cpuid_parser.h
+@@ -96,6 +96,7 @@ struct cpuid_parse_entry {
+ 	/*		  Leaf		Subleaf		Reader function */		\
+ 	CPUID_PARSE_ENTRY(0x0,		0,		generic),			\
+ 	CPUID_PARSE_ENTRY(0x1,		0,		generic),			\
++	CPUID_PARSE_ENTRY(0x2,		0,		0x2),				\
+ 	CPUID_PARSE_ENTRY(0x80000000,	0,		0x80000000),
  
- 	c->x86 = 4;
--	/* Intel-defined flags: level 0x00000001 */
--	if (c->cpuid_level >= 0x00000001) {
--		u32 junk, tfms, cap0, misc;
- 
--		cpuid(0x00000001, &tfms, &misc, &junk, &cap0);
--		c->x86		= x86_family(tfms);
--		c->x86_model	= x86_model(tfms);
--		c->x86_stepping	= x86_stepping(tfms);
-+	if (l1) {
-+		c->x86		= cpuid_family(l1);
-+		c->x86_model	= cpuid_model(l1);
-+		c->x86_stepping	= l1->stepping;
- 
--		if (cap0 & (1<<19)) {
--			c->x86_clflush_size = ((misc >> 8) & 0xff) * 8;
-+		if (l1->clflush) {
-+			c->x86_clflush_size = l1->clflush_size * 8;
- 			c->x86_cache_alignment = c->x86_clflush_size;
- 		}
- 	}
+ extern const struct cpuid_parse_entry cpuid_common_parse_entries[];
 -- 
 2.49.0
 
