@@ -1,152 +1,116 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3218D79E1
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AD779E1;
+	Thu, 12 Jun 2025 06:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749710975; cv=none; b=BbBH8h+oNl+/ZGcXIaA4YdtmEMmnWiHxMADU6Yc0/8jbDjnHwFMfXY3lVwP17dpiXiDHCjZyFddQEhFOdd32s4I4rn1ZoFEaTItxMKQSWkWiBzrK1BbfU1BgMTMfEip1RSjM3E9RsX7+nevzKf90TpdITwpfezgiHxz6rmTQ2ec=
+	t=1749711010; cv=none; b=cWUF+Wedw8R4yzPzyq36dbAqLrN+LNdKxl2t8fNMAP5KTZ6g46HB9rUwKk+9HiCzgyAi6K8j0mBIxv87ym64ki89rXn6n1G7M47sLPjvSnNNHAv7PVJjoaLcMh3F++W0vrbvy91EkvsCNoD7aWX9/xI2qL7KECamPjNotkDtunY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749710975; c=relaxed/simple;
-	bh=cabyoBfSZnKaZy1A3Be67KEG04uI41hK4t/8aDBkBbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EdG+GzWo4LvrJL5TUupqkLG8KKUFmZiO+qlpyCD2bryk87Q4/BGp9FMT46UqS9X4MrdbpY4CsNr7nwGK7/tNmysGihErhAsfa6yEh/jOYYx0Mq3YyjCrDlqKGyuQD+7aEZsHvLyYeT8LjZxOe2wWkf9mQgitvShzHCZuH5okmYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N6GxGyHo; arc=none smtp.client-ip=209.85.221.177
+	s=arc-20240116; t=1749711010; c=relaxed/simple;
+	bh=08PF/lUsOyzjSZ16g6xMGKxp92gOt1shxG7B2bPWqkw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=P7XHD0Ll42vWNqdlGZgpyJi+AKhz0s2ldaIzlQbjSKS5e6uFvUUNb69gRO+5sJ46wquVLyNcpwq8J2EYVcVz3KD+4rc5ni5ukaXL2FfhUMHaL6eg2ixazdWaWt8UiEhphe+I/kINSOFkpF2+X4atMQyo0yfUDJghIY4kos/CcIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3Ckdrps; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6GxGyHo"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5290be1aedcso1032107e0c.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:49:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3Ckdrps"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso875210b3a.2;
+        Wed, 11 Jun 2025 23:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749710973; x=1750315773; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IIagQ3tKw+VRVzWHIFGN+DFKgeQK8xK9RH2ZXHnRA6U=;
-        b=N6GxGyHoNO+8OzANnHRl4wJYvdRvwRK+YIDKPPCDUw1I+fieASDfeM0yk/A2f1qAWT
-         UVBafDwu0nFruJIQWtCqRksP3uGedSk2q1hhXXU4yqdhKHIJR07i470Z+qaA9Uq1ka8u
-         SPIHAQ1yovjUW6nAl7WoThDohhZcZar6f03lkCqRbJJNwcbmLN4MqQLYxz6sR3rj5/m6
-         liHce9UJ3RNPVUV8bLzL31vJ5VxVEv3d/8kVUPLBwpd8TWqDzawnFbzYqwJosBa+AKpw
-         Ppf2r4MqJbzyfoMBj17Fd45Ep1PAG8uFNofwhn1gCSL2Y2UqIdqQLR7gd/WwD7dnJfnP
-         cNQA==
+        d=gmail.com; s=20230601; t=1749711008; x=1750315808; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GAhUfbavJ/U3RSjlWfBGk3Y1ELwSnt4DpMvXPbLBnqQ=;
+        b=P3CkdrpsfgCihO/vBITaRTJtyJNOl1T99tJbby4B2QSwrwEJX2LFOBDqjvy4iYg/Pt
+         jPyXj8uvzHKz7u5FR7LRcxQooLoJ8BWcfLQx6XEdvmx4GFjlxP+dWFTWDLnaoJWjXSgP
+         jGj6B6f2UfwUP7LYKNVlM8nBJ5qbhf3h8SIp0G2oVdRzd22OLfnhafYQ5bGMYv2bE3jZ
+         RuAvgr0q4gE+OIOJ+szLcXUCC1ZNZLj16juBXmctszbyvIQQwa/UDpABI38YF6nSUdes
+         cY7GKe/C8YHKbmBrYjTt7p4GuRz9QxaofKwau9ZXxAgi5+QnO8XjEWwtOh+AJmjzgmzE
+         9gyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749710973; x=1750315773;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IIagQ3tKw+VRVzWHIFGN+DFKgeQK8xK9RH2ZXHnRA6U=;
-        b=TfSTdDbZveci6VlJM3FP+MBvViAI9zJ6NksAXYIL+EF59kq4S2kcOUDt7qVLtajE86
-         7ir9bjHs2vcFnaK43Hca5W08UNb5MHw6pvzOfKbdAt1nFuZeG1rz+4iFVfhREMhJWoKB
-         QeZAjr/mY0exWe9CTIwBS5i4otEvH0T7KjZM+I3mTv+nKeoOR53NEAqmIEgEDuxkjGoz
-         7uwffXJOAsIhJKrz2f5TbTpQSuP8c+ZTgwi4FrRn/4N8m4XNfBExJsD4q3MGue9lVlby
-         0IBtM35LGbCVslquoNY1M4HnM8ve5hjm+oaS3fxH9qmYkKV7uyhCdfgGeKYcLi14dH8H
-         ARbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUm5I2wCwAlwskOzo5na8C811Tg3VVNg6gm+RCZieyGh0dfTvfhjzGxXUA0SOusNeW/mdNavCDfRssauqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBdpKO+BJJA8+r/nk45he43gBXLCI/xiE/dXHpA25AgSrxNhwe
-	HmeUnR+W0sj2Ggb1OrTKpS18KQtSIeYB+eplzIFpe19woPNSiNY3ib7bnJIZSB7ddINXpGQS5Q8
-	Y9tQKTe8/SN2HJVZCRNhzdHVwsHPO3eBW3IAd
-X-Gm-Gg: ASbGncvfBaKtyNu+VAqDEyLeOk3HewK9aMX7ygg5rGikfe3DNlGDfwHmRPj/0a8FNFt
-	WNpROuygq75Lpo90kD+PZPDQ7LYih2gFfhAIuGDfpYkoFUuF33T8k8rQr0VAyIye/2id+DviYl7
-	21J+SfEiAayEL/6eqBxhUonRtDuC5IAf3ECHcDL6CIkrf2Z5pKwVxGuEfWi0ltdVCIUTg5ytXzf
-	vA=
-X-Google-Smtp-Source: AGHT+IGD3eZR9/mZ47AnHOjtmb2jyKNdWbD8QMM1UbBROZtZgAI+wcvkLYS5Dqd7Dl/ahOh6vfuGKCSVejVpRlBkST4=
-X-Received: by 2002:a05:6871:5a0b:b0:2e9:5d01:effc with SMTP id
- 586e51a60fabf-2eab3fd5893mr950668fac.2.1749710961123; Wed, 11 Jun 2025
- 23:49:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749711008; x=1750315808;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GAhUfbavJ/U3RSjlWfBGk3Y1ELwSnt4DpMvXPbLBnqQ=;
+        b=kd784Or1eaWpXOn/lp4rR+Aeu7p0GOCCkWDZFnfQL2DLG2c2nPeW9HSl8o+W0kQKvE
+         hUJZSf63xsA68lBj13DdMp8vFUcflkrnpcyh9d7g/c6K6WOHBKUzyyXxq7j9Qvh3xjdq
+         0esh+9oM1S9GolEzhBUqlrOsx9ic2+nSSr+6kVGOZFzpzLvf4hstOoGrWIUGgiJsPxKY
+         bgprK2dEsnUkCYiP6jWAxDkQTMt6NkKGXRD833v9G3w9IKtE8IOs5a1nAtOXCkYrNM2E
+         tQxrJJN9UzPzn39wAOEerEeKruM+Wz/gCuTX1ZuWVoLTvAAzWe++NN3eOteaIl4jNMKU
+         SoAA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+qeSbTAYARx6jTSAxKvq4ldYuo9CEQdMIyd6lkJBxEpA93vupfQiyx8Z36onY9ANbwE6SCHcB@vger.kernel.org, AJvYcCV543iciRlo/OjECkgnYDuXeorq2LLRaigN3IeHbKuJbmKHm1s/Ax4mUlkLPCKQNCRtDzc=@vger.kernel.org, AJvYcCVMYh7uSyosH68VWxIJXm1Dh1k6R/7hPxRQwO1cTSRoeXY5/CwhYSiybg4lPqtispCemz7QJPEM35TPJhtr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4tMYJROAEn8/gfsT1jO9/ojYYV7pChTy9BFKufDaZLRhGW14e
+	dfrYYpUUPTkBrt8ew9XzLNws25DB1r/EQmqJdiYP4O9sFpjQ9BapuN4f
+X-Gm-Gg: ASbGncv2FkrhDIORAwxovjzjG/PhZ25VNOd1SwUmWp4UkiX5Kxskigel+6mIiTPjzLT
+	OVGBKYqFzK50BVpjInzZ94wFaCdkv0FluSGXhL7GVmaKWzjz9xqn9kfMBOK1lbslusoQn06qjVx
+	sdAto+rAoOY/uw28S10YPz+jC++Kdo0Kg3644PAuFApFFi0V/sd2H7m2ht/+XYS5wvQ9no6D5Bv
+	sW+xM9C1PTl8pT73rrfF7Tl0h3vuFnUZ9uy2exqaPY4oejfNgywNmY14ZSJK2J48dXniAU4A4oT
+	5lrG0K1AANUP47GYjaKoC0EvUVmhPkVErHxs7tfg5Bj39Ky9Y4nteu68Eq0R25FjxqG68BV6ehW
+	O1ukQRbh8
+X-Google-Smtp-Source: AGHT+IGZ04n2ntr6M6gKmnZGuVgjfZIdYUzO7jRwZ6WSZQWmXFnMB4eiJ3OYjNtknt2vP06p1Txifg==
+X-Received: by 2002:a05:6a21:3994:b0:215:e60b:3bc7 with SMTP id adf61e73a8af0-21f9786f9damr4116995637.26.1749711007658;
+        Wed, 11 Jun 2025 23:50:07 -0700 (PDT)
+Received: from devant.antgroup-inc.local ([47.89.83.0])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd613fee4sm675601a12.26.2025.06.11.23.50.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 23:50:07 -0700 (PDT)
+From: Xuewei Niu <niuxuewei97@gmail.com>
+X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+To: mst@redhat.com
+Cc: Oxffffaa@gmail.com,
+	avkrasnov@salutedevices.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	eperezma@redhat.com,
+	horms@kernel.org,
+	jasowang@redhat.com,
+	kuba@kernel.org,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	niuxuewei.nxw@antgroup.com,
+	niuxuewei97@gmail.com,
+	pabeni@redhat.com,
+	sgarzare@redhat.com,
+	stefanha@redhat.com,
+	virtualization@lists.linux.dev,
+	xuanzhuo@linux.alibaba.com
+Subject: Re: [PATCH net] vsock/virtio: fix `rx_bytes` accounting for stream sockets
+Date: Thu, 12 Jun 2025 14:49:57 +0800
+Message-Id: <20250612064957.978503-1-niuxuewei.nxw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250612023334-mutt-send-email-mst@kernel.org>
+References: <20250612023334-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409095320.224100-1-zhangchunyan@iscas.ac.cn>
- <20250409095320.224100-2-zhangchunyan@iscas.ac.cn> <aEMeKIBDKUTUI3B1@debug.ba.rivosinc.com>
-In-Reply-To: <aEMeKIBDKUTUI3B1@debug.ba.rivosinc.com>
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Date: Thu, 12 Jun 2025 14:48:45 +0800
-X-Gm-Features: AX0GCFsFusn6QO5kIpgi5nARUF3bNqkUVtgblhgNgnSm2q-UjFddMwiMEi3J5as
-Message-ID: <CAAfSe-tUNxzHq-GeN6AhX=46mu5iMYV4OZPNRU1pKf_2xAfGVQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v7 1/3] riscv: Add RISC-V Svrsw60t59b extension support
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: Chunyan Zhang <zhangchunyan@iscas.ac.cn>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Andrew Morton <akpm@linux-foundation.org>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Ved Shanbhogue <ved@rivosinc.com>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Deepak,
+> On Thu, Jun 12, 2025 at 01:32:01PM +0800, Xuewei Niu wrote:
+> > No comments since last month.
+> > 
+> > The patch [1], which adds SIOCINQ ioctl support for vsock, depends on this
+> > patch. Could I get more eyes on this one?
+> > 
+> > [1]: https://lore.kernel.org/lkml/bbn4lvdwh42m2zvi3rdyws66y5ulew32rchtz3kxirqlllkr63@7toa4tcepax3/#t
+> > 
+> > Thanks,
+> > Xuewei
+> 
+> it's been in net for two weeks now, no?
 
-On Sat, 7 Jun 2025 at 00:58, Deepak Gupta <debug@rivosinc.com> wrote:
->
-> On Wed, Apr 09, 2025 at 05:53:18PM +0800, Chunyan Zhang wrote:
-> >The Svrsw60t59b extension allows to free the PTE reserved bits 60
-> >and 59 for software to use.
-> >
-> >Signed-off-by: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
-> >---
-> > arch/riscv/Kconfig             | 13 +++++++++++++
-> > arch/riscv/include/asm/hwcap.h |  1 +
-> > arch/riscv/kernel/cpufeature.c |  1 +
-> > 3 files changed, 15 insertions(+)
-> >
-> >diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> >index bbec87b79309..332fc00243ad 100644
-> >--- a/arch/riscv/Kconfig
-> >+++ b/arch/riscv/Kconfig
-> >@@ -842,6 +842,19 @@ config RISCV_ISA_ZICBOZ
-> >
-> >          If you don't know what to do here, say Y.
-> >
-> >+config RISCV_ISA_SVRSW60T59B
-> >+      bool "Svrsw60t59b extension support for using PTE bits 60 and 59"
-> >+      depends on RISCV_ALTERNATIVE
->
-> depends on MMU && 64BIT as well.
+Umm sorry, I didn't check the date carefully, because there are several
+ongoing patches. Next time I'll check it carefully. Sorry again.
 
-Ok, I will address in the next version.
+It looks like no one is paying attention to this patch. I am requesting
+someone interested in vsock to review this. I'd appreciate that!
 
-Thanks for the review,
-Chunyan
-
->
-> >+      default y
-> >+      help
-> >+        Adds support to dynamically detect the presence of the SVRSW60T59B
-> >+        extension and enable its usage.
-> >+
-> >+        The Svrsw60t59b extension allows to free the PTE reserved bits 60
-> >+        and 59 for software to use.
-> >+
-> >+        If you don't know what to do here, say Y.
-> >+
-> > config TOOLCHAIN_NEEDS_EXPLICIT_ZICSR_ZIFENCEI
-> >       def_bool y
-> >       # https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=aed44286efa8ae8717a77d94b51ac3614e2ca6dc
-> >diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-> >index e3cbf203cdde..985f6dfc80ed 100644
-> >--- a/arch/riscv/include/asm/hwcap.h
-> >+++ b/arch/riscv/include/asm/hwcap.h
-> >@@ -105,6 +105,7 @@
-> > #define RISCV_ISA_EXT_ZVFBFWMA                96
-> > #define RISCV_ISA_EXT_ZAAMO           97
-> > #define RISCV_ISA_EXT_ZALRSC          98
-> >+#define RISCV_ISA_EXT_SVRSW60T59B     99
-> >
-> > #define RISCV_ISA_EXT_XLINUXENVCFG    127
-> >
-> >diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> >index 2054f6c4b0ae..0f0f3027d400 100644
-> >--- a/arch/riscv/kernel/cpufeature.c
-> >+++ b/arch/riscv/kernel/cpufeature.c
-> >@@ -523,6 +523,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
-> >       __RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
-> >       __RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
-> >       __RISCV_ISA_EXT_DATA(svvptc, RISCV_ISA_EXT_SVVPTC),
-> >+      __RISCV_ISA_EXT_DATA(svrsw60t59b, RISCV_ISA_EXT_SVRSW60T59B),
-> > };
-> >
-> > const size_t riscv_isa_ext_count = ARRAY_SIZE(riscv_isa_ext);
-> >--
-> >2.34.1
-> >
+Thanks,
+Xuewei
