@@ -1,84 +1,93 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E3F231825
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692EA22DF84
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724166; cv=none; b=Ju6Sv/QmlfqFPFZZ1od4fAPZnaWJp0qP+5kkY97UjpLip+EqXiO8CC1tdO17kG0cSvsD3mxuDy2JSIy84brZfx8Utzne/ZxlmcVMj1SHCfeXopFwIdeKnPRZNdrOO9d2I1z0PMeDT7HVAYKjgB3NsCBmS+uAbLt3e3n+j6rq2yA=
+	t=1749724188; cv=none; b=iNmvTaQ6WdzfOaBYJJf5UCVs+pJqbIAiYVz9Abk1P082dds+SBAzuCiXBM+Alep6qrgmAu1+x64w+RlWJ8nKkzf8aJFLbKyEfkqyZ3OQxlnaEQ6BbMIIEvW5Es6REJJlrcYcSRwdlxPiCzEZrjNjWTbLpe0G/0Gs4avmgnh9+qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724166; c=relaxed/simple;
-	bh=htBlrFUT9M19CvqUTcyDHjmI1SzQw0rNWL3FGGhAfBw=;
+	s=arc-20240116; t=1749724188; c=relaxed/simple;
+	bh=LBiZjj1c04h2wKgu6SjWXxVcIMRnF5MvTTsJHW2Ksb8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CEN2bUkrK24IFgjNem80IBdvPXOOPjDdrGeRExj9+LuFXjtQsmAWplII4nyKspJGNofzemdRNlrF1arFpU3t59jFal7JcG7XXY2mhI2zEfw/z1w+kCagofgP44UnP/kTkPkBaKfOecNd4gEaQ/dkEnjc/DosROVLVTltiA1dlxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Fv86OAgQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LHTBtuiv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Fnjs6vAO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IfF4q5QI; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=e59pRKYtUQUhElM1orzboSBhKyjjcyiLAnVCNrdPkQQ2ZjM5bsTcBDAbFggKO01lqJIFrCxJzX1Al5+xhMIi+WgCJ8BLlEqCqtyYDEhIMxUb/cMyhPyiT0+wqG650s9ypnEYPxmwRHVHEzMLPRjiGYrHVdCV61nBmGYUTFV17XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZAZH+8yC; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Fv86OAgQ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LHTBtuiv";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Fnjs6vAO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IfF4q5QI"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4FB1D21999;
-	Thu, 12 Jun 2025 10:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749724162; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bwQkMcA9moFJpyocsAYiCQbPPUl6f95kCi3PAYs2Cmg=;
-	b=Fv86OAgQarEjCErWjgqhTfcHtaJe+vvx8WdMwcy+3kh+gzfPsJ8b13ccT9ggO5g7zScIa3
-	Aq4qVSs/aSsIToaKtvRt3WQjntjhmhWwlZQSuhjfHUGzQYjZKiHAPR71/MFPk76WOXD59S
-	QFHpdLwBV0DbgUdFqXrvyaZ6jV3yGRU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749724162;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bwQkMcA9moFJpyocsAYiCQbPPUl6f95kCi3PAYs2Cmg=;
-	b=LHTBtuivW8VdWRAcVxMWc20izkg31bpBySAJYDcK56eKx8/IgKLaOdLfQV6GaEnasMj7NA
-	t5yveAHoAXI6bHDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749724161; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bwQkMcA9moFJpyocsAYiCQbPPUl6f95kCi3PAYs2Cmg=;
-	b=Fnjs6vAO/a7bWsvgEPbJG4R9tY6aH+dCChdVPIBMcghWASCn1mioKadiIuVl7AM/59r9oh
-	XOJ6JRYSmdexwjckLFAPwH3SOVsdvuUViga98CRRQKEXyC+KDhFffHjYBZFFO2dTCZ5jHP
-	J0uRpkb7vSXtpInmUAfNTvI+LiZWAbM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749724161;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bwQkMcA9moFJpyocsAYiCQbPPUl6f95kCi3PAYs2Cmg=;
-	b=IfF4q5QI5bdwbtjKvKof1HEKuZoYCTNxcKq3HfOKcy63m4TsBkuJ9YhCIP17//8SG5yneR
-	CDOBpS2jlcLVgMDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 44666132D8;
-	Thu, 12 Jun 2025 10:29:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7qDPEAGsSmgGUwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 12 Jun 2025 10:29:21 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id F1193A099E; Thu, 12 Jun 2025 12:29:16 +0200 (CEST)
-Date: Thu, 12 Jun 2025 12:29:16 +0200
-From: Jan Kara <jack@suse.cz>
-To: Wei Gao <wegao@suse.com>
-Cc: linux-kernel@vger.kernel.org, jack@suse.com, 
-	linux-ext4@vger.kernel.org
-Subject: Re: [PATCH] ext2: Handle fiemap on empty files to prevent EINVAL
-Message-ID: <ve7pt2nbw6qmdoy2i6dzvtlougxjcl6eye73kjysomhxx4vans@24vgczp5ospk>
-References: <20250612142855.2678267-1-wegao@suse.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZAZH+8yC"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso562756a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749724186; x=1750328986; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=djUr5zaU07dnze6b12sZ98Cx0swbt49r2vx4mVIURNg=;
+        b=ZAZH+8yCPSa6m8A5OO5z0I+JsTAU0Y16O2nTUn0F+56+r4H3gZVnoAs43LeHeEbCeb
+         UU1ENxbcN8vJW7HEkqhS377VhZC/Km7dSCLKUTzgmqpQ0KG/5J7pLYpGferDpDhSFNaZ
+         cnDcxUrkg7pU8gF4FPVKPAtJpx0tWNY9mmXLaq1j+5gE6IHIBR84s5wB5IYhwBshbdr5
+         i0KHpk8mZS2oginkAgTPBGveVcfmeNxyAg01OzNEOfwIAwv6arYqDiFpyCW+FvCXBkEw
+         hFZRX+FKPwJpl1Ocp+Se7/g49JGvOL4Tf09aWrDf6rVJXIVu/pY0xVFJUa4CfQFZhq6/
+         sGJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749724186; x=1750328986;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=djUr5zaU07dnze6b12sZ98Cx0swbt49r2vx4mVIURNg=;
+        b=hngnhbTCN/iVxPgk3I/NL1r+9hszfMjIN+Zjvh5ZhSTjzJaQu9cGMrESD57tJoaqi7
+         eeDYrtofJKx+LndvldzrisXfnYjgtDuXjRnyzBE0b9ycKYonFTgK7F1He+zFGqSG8oQA
+         NmzOK+/Xt5jBkHiwzQyx4bIGhxLbZTu5O9YPLTjV5vYO2hRFIYGCEJvZQ8lWH0g/rnGB
+         3lyJsEdM/WtYQUnugge+QvcghYSMFps4n/DesAC8Llc6729EDhHrTVX960AqyqJmJvLr
+         +TRreuvEOQNpHE0Fo07qBBFQjhp8TvGUzhSEHYUozoetBscm4m2zyHN2dvD9lkRj0tMv
+         jM3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXpgJxTF57/D4k92FPAg6DfD5B4zFgegY+zycQZKegMYKc3gBDsBoIAR0scwpQ6jTm0zBMQ1rteM+GCAMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGSy8NwTFfxRPurGINJl/1Z1/TK26+o7tk9V6wrY0LvNMUMBRF
+	vsoC6EZHm8DcBHBdUzA5ofu9lsVUrNWuFCh9fOXr5pYSME1XQ6OeTvty2PkChyEzJrE=
+X-Gm-Gg: ASbGncsDMK5sxh81tYkNx6o9ywRKYEBxSJ9nlMdbGQZgmiR+Y09f0LaL1qZhxJkwW8V
+	8Pfw8wwwZ720qrPC+ZJ51oDoEFOXYhdoPz+chgk8EBN9s9MWs4pMU5uYtPBuxZCpWEfZbysB3vx
+	NKUht6SwqArXDyNcEid9aVLJJ3oPpeGIGSvnZl4VaOMPLqamMe4usHclhLoYmkSvRto8OAneawK
+	JgN49UY1TeyRNYehj23J1wfDRoNdpqL0XiXHOaOqeeoYLLMcrTOXUpFL1YYd8YAz/7gVMPkHpD2
+	VZPpeDxtDW9OSTZ1snl57zwfBLgX9FJCTsJlrYDF1Glb7NBgDnkdTksA6VFuifvg/0sUq3n2SA=
+	=
+X-Google-Smtp-Source: AGHT+IGj6zH2i6FSYnQuoWZbvieZJ82el41fbjoepfDccYSCZ6jY6ZrPdhwat+GRxvtW+AAp+Hs2QQ==
+X-Received: by 2002:a17:90b:4986:b0:312:e618:bd53 with SMTP id 98e67ed59e1d1-313af1e44a0mr8462248a91.26.1749724185738;
+        Thu, 12 Jun 2025 03:29:45 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e61b4besm10717505ad.27.2025.06.12.03.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 03:29:45 -0700 (PDT)
+Date: Thu, 12 Jun 2025 15:59:42 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>, Nishanth Menon <nm@ti.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH V2] rust: Use consistent "# Examples" heading style in
+ rustdoc
+Message-ID: <20250612102942.iqdqmu3dolmgtmio@vireshk-i7>
+References: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
+ <20250612014210.bcp2p6ww5ofvy6zh@vireshk-i7>
+ <CANiq72=m+O7p==Fte4HA7kmt0DKaKmkeAQ-J1kVtyTKDKibgcA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,90 +96,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612142855.2678267-1-wegao@suse.com>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
+In-Reply-To: <CANiq72=m+O7p==Fte4HA7kmt0DKaKmkeAQ-J1kVtyTKDKibgcA@mail.gmail.com>
 
-On Thu 12-06-25 10:28:55, Wei Gao wrote:
-> Previously, ext2_fiemap would unconditionally apply "len = min_t(u64, len,
-> i_size_read(inode));", When inode->i_size was 0 (for an empty file), this
-> would reduce the requested len to 0. Passing len = 0 to iomap_fiemap could
-> then result in an -EINVAL error, even for valid queries on empty files.
-> The new validation logic directly references ext4_fiemap_check_ranges.
+On 12-06-25, 12:22, Miguel Ojeda wrote:
+> Do you need it there? It is trivial, so it probably does not matter,
+> but mistakes are still possible (like it happened in v1). Since it
+> touches files from a few maintainers, it would be best to put it
+> across the "global" Rust tree (ideally with their Acked-by), and Cc
+> everyone (e.g. Tejun added now).
 > 
-> Link: https://github.com/linux-test-project/ltp/issues/1246
-> Signed-off-by: Wei Gao <wegao@suse.com>
-
-Thanks for the fix. Some comments below:
-
-> diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
-> index 30f8201c155f..e5cc61088f21 100644
-> --- a/fs/ext2/inode.c
-> +++ b/fs/ext2/inode.c
-> @@ -895,10 +895,30 @@ int ext2_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
->  		u64 start, u64 len)
->  {
->  	int ret;
-> +	u64 maxbytes;
->  
->  	inode_lock(inode);
-> -	len = min_t(u64, len, i_size_read(inode));
-
-So I agree this 'len' reduction to i_size looks bogus and can be removed.
-But why are you adding those maxbytes checks when they are done inside
-iomap_fiemap() shorly later?
-
-								Honza
-
-
-> +	maxbytes = inode->i_sb->s_maxbytes;
-> +
-> +	if (len == 0) {
-> +		ret = -EINVAL;
-> +		goto unlock_inode;
-> +	}
-> +
-> +	if (start > maxbytes) {
-> +		ret = -EFBIG;
-> +		goto unlock_inode;
-> +	}
-> +
-> +	/*
-> +	 * Shrink request scope to what the fs can actually handle.
-> +	 */
-> +	if (len > maxbytes || (maxbytes - len) < start)
-> +		len = maxbytes - start;
-> +
->  	ret = iomap_fiemap(inode, fieinfo, start, len, &ext2_iomap_ops);
-> +
-> +unlock_inode:
->  	inode_unlock(inode);
->  
->  	return ret;
-> -- 
-> 2.49.0
+> I also have a fixes PR to send, but I was not planning to take this as
+> a fix since it is not marked as such.
 > 
+> But I don't want to delay you. If you need the changes, then I would
+> suggest just applying the parts that modify your files, and we clean
+> up the rest later.
+
+I don't need this for my request. You can pick it at a later time.
+
+Thanks.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+viresh
