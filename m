@@ -1,138 +1,219 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E841E2858
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A6214A8B;
+	Thu, 12 Jun 2025 06:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749708988; cv=none; b=lLJjLo9/jpXgYy4jnurKDDj0EoRSH8P+1i2hpAYI/RJyNwxq+LyCfzlYp7GxkF2MOqkQvEEXnGvw0MDn5/GV78GsE6vArVQ01iULWakYDjygk9Rt7K9GJP5ddw3VIs7kJbncUcsWwdCGFsjcTFKH9ZcLE5UIFRjrPwcrNdf4w50=
+	t=1749709056; cv=none; b=gxBPTMzFEYvoSCi4K8H5T2l7yjxxa2VwlE9rYIDGYSTPuxvl9W31BV0o162j1ukhMcz61giNsI66ITxL021Hrx9/oCUkN3E7weo0rKuTdesBL4JMMmIB8JeOIgOJ5EzrivLc7mFGd5VghUDR6YgQ2wKBikGiryJaqpTablB0+Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749708988; c=relaxed/simple;
-	bh=kmYwNOfZYNiauWbtvqa6oli6QU+Z8hXUpPbkLQJ/9v4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CqKY3noIYYQokn5BvSujr+4qqXi5mtrIfYyNYHZ2801f6I4WxYaNc/E5A0MhRRQwNoCbLSlR7wngRg1jtdPRRFnFZZaKK3qCjQRtBqzbYCpmP5Dvisto5yvR7jnMhB2lkUU9vg3LU5xKvE9dfLL7jJ4X0KcgKc8TbfmuJVPqEgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=TqpJ+qCH; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1749709056; c=relaxed/simple;
+	bh=CPf/T5G9xmhfOPA7I4FYNybIe2U380iGEg9S5rVqMdQ=;
+	h=Content-Type:Date:Message-Id:From:To:Subject:References:
+	 In-Reply-To; b=HL8XT3gwGu7XcndyID+SDhq6yW2gzx1FNiDwz54KSo0hrlGDJ2o0SB0U8WDCRbt2Noc8MnzScTYY4oh8Icle0ZfXMGDUgekmAYeMQhIxUMWi4ZgD+k5mJSM7dqgJBfL+LiNXGlN9qz9tnmbs+JyV0IP8bJjDCMCiwBtlDM2D0FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFLtT5Lr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="TqpJ+qCH"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so6149015e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1749708985; x=1750313785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ScgjUpaPfHbqDIMCPtaXg6Ano9ZrKG6mzFmgIhysYwY=;
-        b=TqpJ+qCHviRY/tAqZshG/4rp+CJpoRGKhsj3BRsqsVg9lrTcxCBybe6kLmwoVTaNef
-         tQ1fNhrl6Jeda6epcjOn4O9bFlQAJZ/f/TNak1QJ7la4ibpiKoUDmCYhbnwXyi2M/8Um
-         n5ZazGKmE/7kfZ2EsYOFX+dUQcZAmStc1NPG4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749708985; x=1750313785;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ScgjUpaPfHbqDIMCPtaXg6Ano9ZrKG6mzFmgIhysYwY=;
-        b=GNkcwgKTKMwBfo00FGKIfLhaxi6oVo6vwIZLaJHCoxjc9SKDHEZqQ5ZElGJGn0+2qY
-         UUweqwV6lbsnHWjdVQIPFa5y8fLJPgYC/ScaCeDLf5mg2lnZ0MwWsSURzn6dSiyAGpPV
-         q+WWhjU3+nXt5XgyK1tC4fPiuetQP5TRmMvrDCcSmvNmHxXf4FvUb7Q2TcMK0WUG1orW
-         jdgEATA6vPHVvxYVTGUU1I/0ScPisxrQEbCiX9oEA2Vcy34/z3ODnaQ/sNW53JAXOFXb
-         IdqOhw5y/Dsy5ozR1GQddooFAQrqP6HjXBiG1gMWMv2rwVLnyUx2A4frVF/8yPEidS1N
-         0xnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiCBu61rvn9oJqIhSBYV3n8h8deM4FJRBuMQy90qJpTPolIfG1KKUAvc61NZ/68IdpeHoCguWPkAGBH0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxejfiYtpU/tmSuaeFb6QSvpvDAcAlhCD2R7fMKxQQjg5OOh7SN
-	nipJE31jY44xesu3nbzsh2ZSGTC/VDYkTJQJcdqQNeWTSUfv01ag7i8sh91C480R6HbNepPBiR4
-	AEuu60zg=
-X-Gm-Gg: ASbGnctxs95lKaAXUdKqP6d9sBtHXNYvbO8mCr8ii9hcglSBCdVi3eJQK5ybEyFlnio
-	FB1ZpgI+LuVdv7K4o9Cc7b6nizI9aoUdq8pzcQVML+qSsg5aaIr4FBdncG2rhK9APer7HaKxJZN
-	SMK0pL9qVGcMNevzH3EWAxqqYFhq88cXAj9as9GSID2r1t6XxOTb9mizWKpSgs47n9au6oCqiQJ
-	XnZSwNl8ltw/56D8104m/pLMifLj3xJA6vOCjpBDoKVTG6nojJmpRvR868eRSyFWFLiza01AlZ2
-	HrEo4kXjPbQkvUdXMgQqJiFRAv0jF0iGKTVzYXnIGe1djoTuYDLSiUdbcWkiU5/0faLhaUt0jiG
-	X9mZM9TxhLbFgwg==
-X-Google-Smtp-Source: AGHT+IGm81iQMqozoNbGvUNa7Ii3Oga/QDuCjWZCS5lp+cWSAZ4nkHJS8aNtWeIEjp0Xmo8H09kLdA==
-X-Received: by 2002:a05:600c:37c5:b0:442:faa3:fadb with SMTP id 5b1f17b1804b1-4532d2bd72dmr12505585e9.2.1749708985332;
-        Wed, 11 Jun 2025 23:16:25 -0700 (PDT)
-Received: from localhost.localdomain ([2001:b07:6467:4426:b34c:fa23:a49e:c18c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4531fe840a3sm53716255e9.0.2025.06.11.23.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 23:16:24 -0700 (PDT)
-From: Michael Trimarchi <michael@amarulasolutions.com>
-To: Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-amarula@amarulasolutions.com,
-	Michael Trimarchi <michael@amarulasolutions.com>,
-	ath11k@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org
-Subject: [RFC PATCH] wifi: ath11k: Prevent sending WMI commands to firmware during firmware crash
-Date: Thu, 12 Jun 2025 08:16:15 +0200
-Message-ID: <20250612061619.22094-1-michael@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFLtT5Lr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C63C4CEEA;
+	Thu, 12 Jun 2025 06:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749709055;
+	bh=CPf/T5G9xmhfOPA7I4FYNybIe2U380iGEg9S5rVqMdQ=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=hFLtT5LrjC2B2B6y5y9+BWaT/J+LcXSqEIIUkEf5DkTf5xtSWX7yhkF89C/pv+DUE
+	 15xWYHUQeYxqcEQ4T+m1v7EuahV7Q2OfZXMCeuY9q2ZkTNYDllCfL050Zjlmzkmu7Q
+	 fZx/Ly5qTLwJpgBSmdcYRDcRaswLsd4MAykBXxV+kK4ZaCX4nCChl0oOkW9j8w9mEf
+	 zu4hDRz7YOjCN51poYRE06pK/FS9wBx8f6Oo1xTIWOe+v4LNjpLYCepqfOHv5nS1j2
+	 yowDWu/nNB+Z3Uh4OETm+bzUhrw5rTe7JuBOM+tof0D0dSYp4i5w6w5WT+5rf9LVxG
+	 0AbFUI85LHGQg==
+Content-Type: multipart/signed;
+ boundary=0bf826eaf559227e2f90d99249b46fe0d787dc52be8eeb98c992ad854154;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Thu, 12 Jun 2025 08:17:31 +0200
+Message-Id: <DAKC3DIYRP6K.1G9HTSVXDJOLB@kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: <Manikandan.M@microchip.com>, <tudor.ambarus@linaro.org>,
+ <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+ <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+ <claudiu.beznea@tuxon.dev>, <pratyush@kernel.org>,
+ <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+ <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: microchip: sama5d27_wlsom1: Add
+ nvmem-layout in QSPI for EUI48 MAC Address
+X-Mailer: aerc 0.16.0
+References: <20250521070336.402202-1-manikandan.m@microchip.com>
+ <20250521070336.402202-4-manikandan.m@microchip.com>
+ <a15fd377-1828-4cb5-8c7b-7d26ea2a7733@linaro.org>
+ <759e4a1e-6af4-4bf9-9a95-01a7f6faaf46@microchip.com>
+ <DAJJ1UHCLV0M.2GGHO5PDRWMYH@kernel.org>
+ <7c373149-53b9-4488-a8d0-e5560cdee7e0@microchip.com>
+In-Reply-To: <7c373149-53b9-4488-a8d0-e5560cdee7e0@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Set the ATH11K_FLAG_CRASH_FLUSH and ATH11K_FLAG_RECOVERY flags when the
-host driver receives the firmware crash notification from MHI. This
-prevents sending WMI commands to the firmware during recovery.
-We want to prevent the laptop from freezing or becoming extremely slow when
-its firmware repeatedly crashes while attempting to connect to a known Wi-Fi
-network. This often happens with routers that intermittently fail to reconnect
-until the access point is reset. While this solution doesn't fix the underlying
-router issue, it would allow the laptop to select a different Wi-Fi network and
-significant performance degradation during the recovery process.
+--0bf826eaf559227e2f90d99249b46fe0d787dc52be8eeb98c992ad854154
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-[75795.712161] ath11k_pci 0000:02:00.0: firmware crashed: MHI_CB_EE_RDDM
-[75797.738073] ath11k_pci 0000:02:00.0: wmi command 262145 timeout
-[75797.738090] ath11k_pci 0000:02:00.0: Failed to send WMI_PDEV_OBSS_PD_SPATIAL_REUSE_CMDID
-[75797.738101] ath11k_pci 0000:02:00.0: failed to set vdev 0 OBSS PD parameters: -11
-[75800.746321] ath11k_pci 0000:02:00.0: wmi command 20488 timeout
-[75800.746344] ath11k_pci 0000:02:00.0: failed to send WMI_VDEV_SET_PARAM_CMDID
-[75800.746358] ath11k_pci 0000:02:00.0: failed to set vdev 0 dtim policy: -11
-[75803.754345] ath11k_pci 0000:02:00.0: wmi command 237571 timeout
-[75803.754360] ath11k_pci 0000:02:00.0: failed to send WMI_11D_SCAN_STOP_CMDID: -11
-[75803.754371] ath11k_pci 0000:02:00.0: failed to stopt 11d scan vdev 0 ret: -11
-[75806.762259] ath11k_pci 0000:02:00.0: wmi command 28684 timeout
-[75806.762281] ath11k_pci 0000:02:00.0: Failed to send WMI_BSS_COLOR_CHANGE_ENABLE_CMDID
-[75806.762294] ath11k_pci 0000:02:00.0: failed to enable bss color change on vdev 0: -11
-[75809.770916] ath11k_pci 0000:02:00.0: wmi command 172035 timeout
-[75809.770930] ath11k_pci 0000:02:00.0: Failed to send WMI_OBSS_COLOR_COLLISION_DET_CONFIG_CMDID
-[75809.770938] ath11k_pci 0000:02:00.0: failed to set bss color collision on vdev 0: -11
-[75809.770966] wlp2s0: associated
-[75809.771051] wlp2s0: deauthenticating from a0:95:7f:45:e8:47 by local choice (Reason: 3=DEAUTH_LEAVING)
-[75809.782908] ieee80211 phy0: Hardware restart was requested
-[75809.782932] ath11k_pci 0000:02:00.0: failed to lookup peer a0:95:7f:45:e8:47 on vdev 0
-[75812.842136] ath11k_pci 0000:02:00.0: wmi command 20488 timeout
-[75812.842153] ath11k_pci 0000:02:00.0: failed to send WMI_VDEV_SET_PARAM_CMDID
-[75812.842164] ath11k_pci 0000:02:00.0: Failed to set CTS prot for VDEV: 0
-[75815.850227] ath11k_pci 0000:02:00.0: wmi command 20488 timeout
+Hi,
 
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> >>>> Add nvmem-layout in QSPI to read the EUI48 Mac address by the
+> >>>> net drivers using the nvmem property.The offset is set to 0x0
+> >>>> since the factory programmed address is available in the
+> >>>> resource managed space and the size determine if the requested
+> >>>> address is of EUI48 (0x6) or EUI-64 (0x8) type.
+> >>>> This is useful for cases where U-Boot is skipped and the Ethernet
+> >>>> MAC address is needed to be configured by the kernel
+> >>>>
+> >>>> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+> >>>> ---
+> >>>>    .../boot/dts/microchip/at91-sama5d27_wlsom1.dtsi    | 13 ++++++++=
++++++
+> >>>>    1 file changed, 13 insertions(+)
+> >>>>
+> >>>> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b=
+/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> >>>> index b34c5072425a..be06df1b7d66 100644
+> >>>> --- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> >>>> +++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> >>>> @@ -210,6 +210,9 @@ &macb0 {
+> >>>>         #size-cells =3D <0>;
+> >>>>         phy-mode =3D "rmii";
+> >>>>
+> >>>> +     nvmem-cells =3D <&mac_address_eui48>;
+> >>>> +     nvmem-cell-names =3D "mac-address";
+> >>>> +
+> >>>>         ethernet-phy@0 {
+> >>>>                 reg =3D <0x0>;
+> >>>>                 interrupt-parent =3D <&pioA>;
+> >>>> @@ -238,6 +241,16 @@ qspi1_flash: flash@0 {
+> >>>>                 m25p,fast-read;
+> >>>>                 status =3D "disabled";
+> >>>>
+> >>>> +             nvmem-layout {
+> >=20
+> > IMHO this should be "sfdp {".
+> >=20
+> >>>> +                     compatible =3D "fixed-layout";
+> >=20
+> > Please read my feedback on the first version again..
+> >=20
+> > For the DT maintainers. The SFDP is a small table based content that
+> > provide basic information about the flash. There are standard tables
+> > which are specified by the JEDEC standard and there are vendor
+> > tables, most of the time without proper documentation (or none at
+> > all).
+> >=20
+> > Somehow we need to specify at what table we want to look at. I'd
+> > like to see a binding which can potentially expose anything inside
+> > the SFDP.
+> >=20
+> > So I've suggested to use "compatible =3D jedec,sfdp-vendor-table-NNNN"
+> > where NNNN is the table parameter id. Additionally, the standard ids
+> > could have names like "jedec,sfdp-bfpt" (basic flash parameter table).
+> >=20
+> > So in your case that would be:
+> >=20
+> > flash {
+> > 	sfdp {
+> > 		mac_address: table-1 {
+> > 			compatible =3D "jedec,sfdp-idNNNN";
+> > 		};
+> > 	};
+>
+> Should the nvmem-layout be included as a child node under sfdp {}, or=20
+> should it be implemented as a separate vendor-specific driver to handle=
+=20
+> the changes introduced in patch 1/3 ?
 
----
+There is no nvmem-layout involved here.
 
- drivers/net/wireless/ath/ath11k/mhi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+But another possibility is to make it one. Then you have to
+ (1) expose the *entire* sfpd as a nvmem device
+ (2a) write an nvmem-layouts driver (in drivers/nvmem/layouts/)
+ (2b) come up with a DT binding that is generic enough to expose
+      various parameters of the SFDP, not just a one-off for the
+      MAC address use case.
 
-diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
-index acd76e9392d31..af7ff4fc794de 100644
---- a/drivers/net/wireless/ath/ath11k/mhi.c
-+++ b/drivers/net/wireless/ath/ath11k/mhi.c
-@@ -286,8 +286,11 @@ static void ath11k_mhi_op_status_cb(struct mhi_controller *mhi_cntrl,
- 			break;
- 		}
- 
--		if (!(test_bit(ATH11K_FLAG_UNREGISTERING, &ab->dev_flags)))
-+		if (!(test_bit(ATH11K_FLAG_UNREGISTERING, &ab->dev_flags))) {
-+			set_bit(ATH11K_FLAG_CRASH_FLUSH, &ab->dev_flags);
-+			set_bit(ATH11K_FLAG_RECOVERY, &ab->dev_flags);
- 			queue_work(ab->workqueue_aux, &ab->reset_work);
-+		}
- 
- 		break;
- 	default:
--- 
-2.43.0
+Maybe that is even a better fit.
 
-base-commit: 0f70f5b08a47a3bc1a252e5f451a137cde7c98ce
+> > };
+> >=20
+> > I don't know what NNNN is. Could you please provide a dump of the
+> > sfdp of your flash.
+>
+> Please find the entire SFDP data of SST26VF064BEUI flash in Table 11.1=20
+> of 11.0 APPENDIX
+
+Please dump it according to [1], so we have it in a machine readable
+format.
+
+-michael
+
+[1] https://docs.kernel.org/driver-api/mtd/spi-nor.html
+
+
+> > On Mon Jun 9, 2025 at 11:27 AM CEST, Manikandan.M wrote:
+
+>
+> https://ww1.microchip.com/downloads/aemDocuments/documents/MPD/ProductDoc=
+uments/DataSheets/SST26VF064BEUI-Data-Sheet-DS20006138.pdf
+>
+>
+> The vendor parameter ID is 'BF' if I am not wrong.
+> >=20
+> > -michael
+> >=20
+> >>>> +                     #address-cells =3D <1>;
+> >>>> +                     #size-cells =3D <1>;
+> >>>> +
+> >>>> +                     mac_address_eui48: mac-address@0 {
+> >>>> +                             reg =3D <0x0 0x6>;
+> >>>> +                     };
+> >>>
+> >>> How would this work if in the future the mchp vendor table adds some
+> >>> other info that needs to be referenced as nvmem? How do you distingui=
+sh
+> >>> the info from the table?
+> >>> Would it be possible to have some kind of address and size to referen=
+ce
+> >>> the SFDP?
+> >>
+> >> I was previously advised not to hardcode the offset in the Device Tree
+> >> [1]. In the current implementation (patch 1/3), the read callback for
+> >> the MCHP vendor table distinguishes between EUI-48 and EUI-64 MAC
+> >> addresses based on the nvmem size, which corresponds to the size of th=
+e
+> >> respective MAC address.
+> >>
+> >> [1] --> https://lore.kernel.org/lkml/D889HZF97H8U.1UUX54BAVLAC3@kernel=
+.org/
+> >>
+> >>>
+> >>>> +             };
+> >>>> +
+> >>>>                 partitions {
+> >>>>                         compatible =3D "fixed-partitions";
+> >>>>                         #address-cells =3D <1>;
+> >>>
+> >=20
+
+
+--0bf826eaf559227e2f90d99249b46fe0d787dc52be8eeb98c992ad854154
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaEpw+xIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/h0NQGA4XhD74s0TEAR5mAjGQVv1YpzAkmTpXqh
+JlEcY4mNvpEnYeGqbMJkTZi2NzOp5M1kAX9ioaikhRFTDEXTgFRWz8gNfwxw4DS5
+MkAgqH+OeD3bAg01mCejFVo3cEVWc3ICWlg=
+=3i6E
+-----END PGP SIGNATURE-----
+
+--0bf826eaf559227e2f90d99249b46fe0d787dc52be8eeb98c992ad854154--
