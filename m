@@ -1,233 +1,102 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCCD260580
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B12268C66;
+	Thu, 12 Jun 2025 14:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739900; cv=none; b=preb1s7UmlnRZLEPnx19ZTxEawpdp+oILnBhSphb2phEawQ6RD4EF4OvZmYtsO3ekGTvjU6yX9l/YODsV0TOLk+nbDdZdyJgw9S7NGLldMyNm0DulIpbTeDA8Fkt9hElHHVKUwCCSXW3yAJrj+xYDWwcDNLpCu+qISbxqRMwglg=
+	t=1749739911; cv=none; b=gGxj1NYPL9idGtFwZJAbif7qJkU2uda4U+hAaxvXtYRonNy2rlcoKzv7m6zSf/iKSbrJgfm2+NfKKPpdB7O7s9p2q1urHYXFjKcfo5fX7nPXrJeLf8+eSFANln+UbxJIh6pmbqiH0gpGp4SA9B8dmC7kwUfLe4Mb67jkrCkAMKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739900; c=relaxed/simple;
-	bh=H9CvRZ+d3EO8wng9e7dPGuz7tmNjxnR/ZAx77aFKjSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xa3xPK8m1UcQMmR3JpxNOb7mdbjZQOe/FzxcMqSaV5oCAZauUjZDIarfcWrrI1Hwc8E/M+Np15uEyxMy6siHkac13WsSOyEFO5Bp937cIXGyW/sEyV6itS848FHo2pEYm/ba56voB7vVlMHHiJ7ZX1WkEbkRXz23VxPwkeSnaYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D7W/z6VN; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749739911; c=relaxed/simple;
+	bh=M+iZ92QvszXsMUKBpby7ZU3P13f31um/5NFkEJ3pVro=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i2eW2A8f1HRvPKn/dezvS7twtos39JKGCcr6FiFUhfl0DXn33kNOMkoLF3q+Zd6DhhRerANcCylXuvEFvw2pDvaORw04bOXHg/ObmSlW0qjg3YSLA0smT5Rn8cU10J1KbxkGLv6Kaf/cIKwRqjDiWb94enq/uYk0DFDy8GczjAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLSKS37A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D7W/z6VN"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747fba9f962so940094b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749739894; x=1750344694; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZF8QzGPobTCQxU3cK3KGjHnmiAyxl3Hnpr6d0zTgBdg=;
-        b=D7W/z6VNcxok81E/pDlw059MML25KBqBIL5gsRUFkl+vLF98L761hlHoZIMamJC2lZ
-         YJ4A1eNvYg8+Pba5N1zkXLLafZ1EuXKwmYJl3oNO4KjdAhILCt5IRf4JLp/agoHN9yPe
-         Y6KLIxs7y3Ka80+fSY1OW+WXuTDFaxgLmHUhE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749739894; x=1750344694;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZF8QzGPobTCQxU3cK3KGjHnmiAyxl3Hnpr6d0zTgBdg=;
-        b=Sh4XzxijZ1ItuR53cQrJYu1kPQl/rIO0bXDUSb9G/0t4O6B1YuQDu/Ml0wPVg6PIa4
-         YRtsii4A1/5Eq0KHEPOuhwyAqnaHB7xRzkrlbVCONUJ9juiOlMHl/A+44fYfPLosi6MZ
-         PriNfu5RtMd+9f2+a8VI83JbXVO16UQeR3Zou5vu5LOch6U++/gTQjAQl2ZkltNGmwRJ
-         wvZ47GVQX8tAI12+nD25JPs6jOFFSNRfDqUwjZOrfaS+tIgz3vwyLdzsUTUHk1cSt0At
-         QbSWZc3faKCAUqOKt3sZJtoSpshLQxExoCAA4RllLRBBAhBMo90H5R9nYt4foN4ktF8K
-         UDEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvOZOuEB1gDtzyMwfhzrvbPrvpU4p9NsrY7sn6BuVUxBWe2tylMEJtfcfoZDMhyU7yvs/DKXutHTQwW68=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXIXrGlHIqYK9WlofkkGUWeYmdZ08uTlTG4j4XsE9yCOK7O8vP
-	CO7DVnUpJhWGqsK7MLr653EVKqDOwJ2TzfQaHSfUFlDJHgunNVpRqdizeNQPjhV5QXiewUf239G
-	oMqg=
-X-Gm-Gg: ASbGncuITwGlBip8aCBmMSmMlKqsYWD7F4LDLz6dojvbAggLwvw0rJWJEL+qyNZBYOH
-	poyX0LmV4ZLCs6yxEY563V1ZE9PG6thFJlvmLbcu/sOwbbg0T0nE0z2hZqjgYHFEbVuUHw2viph
-	Vj/aouYn1Puc7GnAWAEBJGhK9Dih1hbjOO+S3uPHjzdndHbhqreNJ+ufcUyBjcARtIwgZsHaOOL
-	BEfoygxXLOOeWh74X4/B4tpGKon5m7MoBBjRCxDYo5uhonMkihVhHEUhKavweao9PDm2miReQH7
-	qHz0HXkeAD86YLdqsOoEznxD9fJe99nGejO/BO4xWPu2/z+X1MPshAz+VbsxxcSDAsCpg1eTNZF
-	D8ymqoaupV3P5Syt+ROzg1pqwzb4SBA==
-X-Google-Smtp-Source: AGHT+IFPVc2tlKpeXLp+Y2mCYbnmo1HyliDPKEvs32mDs7+p+Gr6HsdgxgpIDOAyCIAiJAddoT/J+A==
-X-Received: by 2002:a05:6a00:2e1f:b0:740:6f6:7338 with SMTP id d2e1a72fcca58-7487ce16507mr5204044b3a.3.1749739893653;
-        Thu, 12 Jun 2025 07:51:33 -0700 (PDT)
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com. [209.85.214.172])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488087e640sm1547735b3a.4.2025.06.12.07.51.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 07:51:32 -0700 (PDT)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2363e973db1so18288605ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:51:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSS5A/Tceh2ygGCl2+ZIoqFlyMJnjbxYFjOHHbuuB195JhAjB/ZJKjFK0lqg4lmkntaJlDaBH+vWNOQkc=@vger.kernel.org
-X-Received: by 2002:a17:90b:3b90:b0:311:9cdf:a8a4 with SMTP id
- 98e67ed59e1d1-313bfd90bb1mr4862616a91.8.1749739891134; Thu, 12 Jun 2025
- 07:51:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLSKS37A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B290C4CEEA;
+	Thu, 12 Jun 2025 14:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749739911;
+	bh=M+iZ92QvszXsMUKBpby7ZU3P13f31um/5NFkEJ3pVro=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jLSKS37AbbtnWw2hQ2CL61IfUjBbsK1Lhrb6giNpJJd0MWICFb1yAjCH9h5Ris4Hh
+	 GoZ/3Z48rg4IYQn7JUGitVw5DF+ZN4yZdARh4acLRfq5BZyjmi1KcE3YE+Bf6pu0Bu
+	 ztv/jFeTHj+DBxSwIAVYbm1E7ES4AVUvNr6BHAgs1ijncu5ZT2qriNLTJr6FKSMzrg
+	 7zbX1/mqVUg0RLUc6BBH62hL5so2hKVSwDpc6RN+MxpqR7K6qXvtdUjMogd8b8Nxsb
+	 MWq+/23cgrV6DwrPZtJ3Q/KTSzeDKtdlgi5xLMrP65XRg/FWV7uxhCDh5uQk2iwxDD
+	 MuKu69kAa2kvQ==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH 0/4] Improvements for Devres
+Date: Thu, 12 Jun 2025 16:51:37 +0200
+Message-ID: <20250612145145.12143-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611052947.5776-1-j-choudhary@ti.com> <CAD=FV=WvH73d78De3PrbiG7b6OaS_BysGtxQ=mJTj4z-h0LYWA@mail.gmail.com>
- <547a35f4-abc0-4808-9994-ccc70eb3c201@ti.com>
-In-Reply-To: <547a35f4-abc0-4808-9994-ccc70eb3c201@ti.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 12 Jun 2025 07:51:19 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XzSOqnLQCjDiJX7wrGH0UGq839a84v3QT9cj3eK+AeRA@mail.gmail.com>
-X-Gm-Features: AX0GCFvUog-W0Yq8ScavOChYN1RdpooYMU-w84jaSxr5YZftWGA6ukEIfk_PLzY
-Message-ID: <CAD=FV=XzSOqnLQCjDiJX7wrGH0UGq839a84v3QT9cj3eK+AeRA@mail.gmail.com>
-Subject: Re: [PATCH v4] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, 
-	tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com, 
-	ernestvanhoecke@gmail.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, kieran.bingham+renesas@ideasonboard.com, 
-	linux-kernel@vger.kernel.org, max.oss.09@gmail.com, devarsht@ti.com, 
-	geert@linux-m68k.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This patch series provides some optimizations for Devres:
 
-On Wed, Jun 11, 2025 at 9:39=E2=80=AFPM Jayesh Choudhary <j-choudhary@ti.co=
-m> wrote:
->
-> Hello Doug,
->
-> On 12/06/25 03:08, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Tue, Jun 10, 2025 at 10:29=E2=80=AFPM Jayesh Choudhary <j-choudhary@=
-ti.com> wrote:
-> >>
-> >> @@ -1195,9 +1203,17 @@ static enum drm_connector_status ti_sn_bridge_d=
-etect(struct drm_bridge *bridge)
-> >>          struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge)=
-;
-> >>          int val =3D 0;
-> >>
-> >> -       pm_runtime_get_sync(pdata->dev);
-> >> +       /*
-> >> +        * The chip won't report HPD right after being powered on as
-> >> +        * HPD_DEBOUNCED_STATE reflects correct state only after the
-> >> +        * debounce time (~100-400 ms).
-> >> +        * So having pm_runtime_get_sync() and immediately reading
-> >> +        * the register in detect() won't work, and adding delay()
-> >> +        * in detect will have performace impact in display.
-> >> +        * So remove runtime calls here.
-> >
-> > That last sentence makes sense in a commit message, but not long term.
-> > Someone reading the code later won't understand what "remove" means.
-> > If you change "remove" to "omit" then it all makes sense, though. You
-> > could also say that a pm_runtime reference will be grabbed by
-> > ti_sn_bridge_hpd_enable().
->
-> Okay. Will edit this.
->
-> >
-> >
-> >> +        */
-> >> +
-> >>          regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
-> >> -       pm_runtime_put_autosuspend(pdata->dev);
-> >>
-> >>          return val & HPD_DEBOUNCED_STATE ? connector_status_connected
-> >>                                           : connector_status_disconnec=
-ted;
-> >> @@ -1220,6 +1236,20 @@ static void ti_sn65dsi86_debugfs_init(struct dr=
-m_bridge *bridge, struct dentry *
-> >>          debugfs_create_file("status", 0600, debugfs, pdata, &status_f=
-ops);
-> >>   }
-> >>
-> >> +static void ti_sn_bridge_hpd_enable(struct drm_bridge *bridge)
-> >> +{
-> >> +       struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
-> >> +
-> >> +       pm_runtime_get_sync(pdata->dev);
-> >> +}
-> >> +
-> >> +static void ti_sn_bridge_hpd_disable(struct drm_bridge *bridge)
-> >> +{
-> >> +       struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
-> >> +
-> >> +       pm_runtime_put_sync(pdata->dev);
-> >> +}
-> >> +
-> >>   static const struct drm_bridge_funcs ti_sn_bridge_funcs =3D {
-> >>          .attach =3D ti_sn_bridge_attach,
-> >>          .detach =3D ti_sn_bridge_detach,
-> >> @@ -1234,6 +1264,8 @@ static const struct drm_bridge_funcs ti_sn_bridg=
-e_funcs =3D {
-> >>          .atomic_duplicate_state =3D drm_atomic_helper_bridge_duplicat=
-e_state,
-> >>          .atomic_destroy_state =3D drm_atomic_helper_bridge_destroy_st=
-ate,
-> >>          .debugfs_init =3D ti_sn65dsi86_debugfs_init,
-> >> +       .hpd_enable =3D ti_sn_bridge_hpd_enable,
-> >> +       .hpd_disable =3D ti_sn_bridge_hpd_disable,
-> >>   };
-> >>
-> >>   static void ti_sn_bridge_parse_lanes(struct ti_sn65dsi86 *pdata,
-> >> @@ -1322,7 +1354,8 @@ static int ti_sn_bridge_probe(struct auxiliary_d=
-evice *adev,
-> >>                             ? DRM_MODE_CONNECTOR_DisplayPort : DRM_MOD=
-E_CONNECTOR_eDP;
-> >>
-> >>          if (pdata->bridge.type =3D=3D DRM_MODE_CONNECTOR_DisplayPort)
-> >> -               pdata->bridge.ops =3D DRM_BRIDGE_OP_EDID | DRM_BRIDGE_=
-OP_DETECT;
-> >> +               pdata->bridge.ops =3D DRM_BRIDGE_OP_EDID | DRM_BRIDGE_=
-OP_DETECT |
-> >> +                                   DRM_BRIDGE_OP_HPD;
-> >
-> > I think you also need this in the "DRM_MODE_CONNECTOR_DisplayPort" if t=
-est:
-> >
-> > /*
-> >   * If comms were already enabled they would have been enabled
-> >   * with the wrong value of HPD_DISABLE. Update it now. Comms
-> >   * could be enabled if anyone is holding a pm_runtime reference
-> >   * (like if a GPIO is in use). Note that in most cases nobody
-> >   * is doing AUX channel xfers before the bridge is added so
-> >   * HPD doesn't _really_ matter then. The only exception is in
-> >   * the eDP case where the panel wants to read the EDID before
-> >   * the bridge is added. We always consistently have HPD disabled
-> >   * for eDP.
-> >   */
-> > mutex_lock(&pdata->comms_mutex);
-> > if (pdata->comms_enabled)
-> >    regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG,
-> >      HPD_DISABLE, 0);
-> > mutex_unlock(&pdata->comms_mutex);
-> >
-> > Does that sound right?
->
->
-> Here I don't think it is necessary to add this because enable_comms
-> will be called again after probe either in hpd_enable() (in case
-> refclk exist) or pre_enable() (in case it doesn't) with correct value.
+  1) Provide a more lightweight replacement for Devres::new_foreign_owned().
 
-I don't think that's necessarily true, is it? From my memory, this happens:
+  2) Get rid of Devres' inner Arc and instead consume and provide an
+     impl PinInit instead.
 
-1. Main driver probe and we create the sub-devices, like the GPIO,
-backlight, and AUX.
+     Additionally, having the resulting explicit synchronization in
+     Devres::drop() prevents potential subtle undesired side effects of the
+     devres callback dropping the final Arc reference asynchronously within
+     the devres callback.
 
-2. As soon as the GPIO probe happens, someone could conceivably claim
-one of the GPIOs and set it as an output, which would cause a
-"pm_runtime" reference to be held indefinitely.
+  3) An optimization for when we never need to access the resource or release
+     it manually.
 
-3. After AUX probes, we create the bridge sub-device.
+Thanks to Alice for some great offline discussions on this topic.
 
-4. When the bridge probe runs, comms will still be enabled because the
-"pm_runtime" reference keeps them on.
+This patch series depends on the devres fixes [1] the Opaque patch in [2] and
+the pin-init patch in [3], which Benno will provide a signed tag for. A branch
+containing the patches can be found in [4].
 
-...there's also the issue that we use "autosuspend" and thus comms can
-still be left on for a chunk of time even after there are no
-"pm_runtime" references left.
+[1] https://lore.kernel.org/lkml/20250612121817.1621-1-dakr@kernel.org/
+[2] https://lore.kernel.org/lkml/20250610-b4-rust_miscdevice_registrationdata-v6-1-b03f5dfce998@gmail.com/
+[3] https://lore.kernel.org/rust-for-linux/20250529081027.297648-2-lossin@kernel.org/
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/devres
 
--Doug
+Danilo Krummrich (4):
+  rust: revocable: support fallible PinInit types
+  rust: devres: replace Devres::new_foreign_owned()
+  rust: devres: get rid of Devres' inner Arc
+  rust: devres: implement register_foreign_release()
+
+ drivers/gpu/nova-core/driver.rs |   7 +-
+ drivers/gpu/nova-core/gpu.rs    |   6 +-
+ rust/helpers/device.c           |   7 +
+ rust/kernel/cpufreq.rs          |   8 +-
+ rust/kernel/devres.rs           | 338 ++++++++++++++++++++++----------
+ rust/kernel/drm/driver.rs       |  11 +-
+ rust/kernel/pci.rs              |  20 +-
+ rust/kernel/revocable.rs        |   7 +-
+ samples/rust/rust_driver_pci.rs |  19 +-
+ 9 files changed, 280 insertions(+), 143 deletions(-)
+
+
+base-commit: e15a5b4301ec42990448b5b023e3439315b821ce
+-- 
+2.49.0
+
