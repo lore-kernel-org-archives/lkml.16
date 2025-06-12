@@ -1,135 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7ED223DDA;
-	Thu, 12 Jun 2025 10:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B7723315A;
+	Thu, 12 Jun 2025 10:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723616; cv=none; b=gZXbs61ESYv0g9B7sSDo/pYJjLTZIhaQjKx+3CuQzPt1jE8uhXndbbnk7YaIgtxGVdaYtSrTj/NC2HLX6UjJbWVIiVTpRXmvKJzZZsvIl+/v1/5AcYsfFyy/4DzT300MwKy1PPXp5CLd/HPmw3jdLb7MfkD1C9xLscaCKeg/brQ=
+	t=1749723619; cv=none; b=GPfsrAf/NgevQjN21HP4zBTP2fmjck8lKFL2ESqA9+NZtj/uT37c2Nyoky8HPm3nZDlI6MAfuSOTR4XhBHnsTvsk+jc0wz0N8oElOr1uYM8zRn4wq/S8B2SntgFZKqOmbdwRMILbUKRsu2OeBnsBMOmp/NbVOl2zJMoCLbc1M9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723616; c=relaxed/simple;
-	bh=Yhd51y2BToO+EORWMdmoesfgplnRX9zyXUOsExCwkLI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FKDTsoHREIjillDt/QF7ObospUWqe3qTGSGWDmp5IFHtm2f5psomgItwmsv9oPfAvBtWIER4aKXMdWS27+wYVpCkVBDxkOda7upgrbehQ13EsSf52RYUT4kcYIpeFJg5k+F/Qk2UCL4OaeU43dW8qRgQyot0XXg2EygwXt9fZmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvKQkxBU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749723619; c=relaxed/simple;
+	bh=TeQ0oTGNLG+F9KDcQ6FK6W8BtHHFwsQpIJeKJHI9IRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uh+3gU8v4Lpn4DhilTSfhq7T7WjFkVGDFZrGn7MabhQFqECwj6M470AlidMfTYATd/PYd+XI/E84wZaxCJXVLLqM8u77eY/6PGZwhr5yAb5AnCq24V45/HdPdoyxyfAH6MVdPakUeOVs3dE3NVfsanIRWbXvbhvlyu4qwg/Hbwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=g0sfK/qh; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvKQkxBU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D46C4CEF2;
-	Thu, 12 Jun 2025 10:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749723615;
-	bh=Yhd51y2BToO+EORWMdmoesfgplnRX9zyXUOsExCwkLI=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=kvKQkxBUKnFZxiGaeU9WfTuDrfatbON3icHVza+D/Ln3Y34hSoL8wFsxj9dovP4W7
-	 JMSS85arZBXmE7d89NVpHzvIYFx6R4JckvNdiMbnpyUxoM8Z4njYAPLg8KXA0MTiX+
-	 Sz9Julpv2SaC8C/WzfFJjcH/gihCAEnqnRJSNAZra90q8sdDgG4vfTLjTSblKcjcbB
-	 uX3NYFngwUOY6xYBbeAr4xQKtkmzy2oh+UolVm09KUKNSR16+G+HQBJrTyEhxm4pjk
-	 94ZOuyoEQMJaxEAX5XvjOgia0L8Do4DSiGgNkTe48RKSdJv/XvVQX3ps9M6ibKktPH
-	 eoUoH1oDgBSdw==
-Message-ID: <f635caf3-a93f-4a31-9957-4f455f4eafc9@kernel.org>
-Date: Thu, 12 Jun 2025 12:20:07 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="g0sfK/qh"
+Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 65BAED6;
+	Thu, 12 Jun 2025 12:20:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749723607;
+	bh=TeQ0oTGNLG+F9KDcQ6FK6W8BtHHFwsQpIJeKJHI9IRw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g0sfK/qhHn13a85LaU/OuqNIwcGcNqLdDI/HIk1X04rmBhPdvshQdu8NYc7fe4WCk
+	 +GtSUCxMT7WuAaZCmPvP1PSuE4ny7fKcEzkVOTSV/UzTorbFc1y3XYuthDSnH93RW1
+	 ZPH4uma2nTrgVi6wclOlmA/oX9AHFTcQ8QCKhip8=
+Date: Thu, 12 Jun 2025 12:20:13 +0200
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+	Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] media: vsp1: Reset FCP for VSPX
+Message-ID: <rkihvnry5yybz7bjcbanth4yq7svywicmbhksz4ity6buw52ff@tmxefdhvpgaf>
+References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
+ <20250609-vspx-reset-v1-3-9f17277ff1e2@ideasonboard.com>
+ <20250611233611.GR24465@pendragon.ideasonboard.com>
+ <6orphbs6syqu6oruppyln4kkepj42c775cs4nj4oygu4xitpx6@tlvab6mntrrx>
+ <20250612101215.GE25137@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v0 3/5] arm64: dts: aspeed: Add initial AST2700 SoC device
- tree
-To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Nishanth Menon <nm@ti.com>,
- nfraprado@collabora.com, Taniya Das <quic_tdas@quicinc.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Eric Biggers <ebiggers@google.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, soc@lists.linux.dev,
- Mo Elbadry <elbadrym@google.com>, Rom Lemarchand <romlem@google.com>,
- William Kennington <wak@google.com>, Yuxiao Zhang <yuxiaozhang@google.com>,
- wthai@nvidia.com, leohu@nvidia.com, dkodihalli@nvidia.com,
- spuranik@nvidia.com
-References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
- <20250612100933.3007673-4-ryan_chen@aspeedtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250612100933.3007673-4-ryan_chen@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250612101215.GE25137@pendragon.ideasonboard.com>
 
-On 12/06/2025 12:09, Ryan Chen wrote:
-> +
-> +	soc0: soc@10000000 {
-> +		compatible = "simple-bus";
-> +		reg = <0x0 0x10000000 0x10000000>;
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		syscon0: syscon@12c02000 {
-> +			compatible = "aspeed,ast2700-scu0", "syscon", "simple-mfd";
+Hi Laurent
 
-This makes no sense - no children here.
+On Thu, Jun 12, 2025 at 01:12:15PM +0300, Laurent Pinchart wrote:
+> On Thu, Jun 12, 2025 at 11:48:49AM +0200, Jacopo Mondi wrote:
+> > On Thu, Jun 12, 2025 at 02:36:11AM +0300, Laurent Pinchart wrote:
+> > > On Mon, Jun 09, 2025 at 09:01:44PM +0200, Jacopo Mondi wrote:
+> > > > According section "62.3.7.1 "Operation Control Setting
+> > >
+> > > "According to"
+> > >
+> > > > IP set VSPX+FCPVX" of the R-Car Gen4 Hardware Manual, FCPX has to
+> > > > be reset when stopping the image processing.
+> > >
+> > > That's only when stopping "image process of VSPX+FCPVX immediately".
+> > > Note the "immediately", which involves resetting the VSP too. The code
+> > > below waits for the pipeline to stop at the end of the frame. Resetting
+> > > the FCP doesn't seem to be required in that case.
+> >
+> > True, we certainly don't
+> >
+> > 2. Set value 1 to VSPX register VI6_SRESET.SRST0. VSPX will invoke
+> >    termination process immediately.
+> >
+> > but rather wait for the last frame to complete before stopping the
+> > pipeline.
+> >
+> > Do you think this patch should be dropped ?
+>
+> I would say so, I don't think there's a need to reset the FCP when
+> waiting for the pipeline to stop normally. Or have you noticed issues
+> that this patch would solve ?
+>
 
-> +			reg = <0x0 0x12c02000 0x1000>;
-> +			ranges = <0x0 0x0 0 0x12c02000 0x1000>;
+Not really, this comes straight from the upporting of the FCPD reset.
 
-Neither this.
+We've been running with an older of this patch that wasn't actually
+resetting the FCP and we got no issues. At the same time Niklas has
+confirmed running with this version that actually resets the FCP
+doesn't introduce regressions.
 
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
+I'm fine dropping this patch indeed
 
-Nor this.
-
-
-Best regards,
-Krzysztof
+> > > > Softawre reset the FCPX after the vsp1 pipe has stopped.
+> > >
+> > > s/Softawre/Software/
+> > >
+> > > > Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+> > > > ---
+> > > >  drivers/media/platform/renesas/vsp1/vsp1_pipe.c | 7 +++++--
+> > > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
+> > > > index a6e5e10f3ef275c1b081c3d957e6cf356332afce..c6f2417aabc479384012ab8ab99556029ede1f44 100644
+> > > > --- a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
+> > > > +++ b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
+> > > > @@ -499,6 +499,7 @@ bool vsp1_pipeline_stopped(struct vsp1_pipeline *pipe)
+> > > >  int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
+> > > >  {
+> > > >  	struct vsp1_device *vsp1 = pipe->output->entity.vsp1;
+> > > > +	u32 version = vsp1->version & VI6_IP_VERSION_MODEL_MASK;
+> > > >  	struct vsp1_entity *entity;
+> > > >  	unsigned long flags;
+> > > >  	int ret;
+> > > > @@ -515,8 +516,7 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
+> > > >  			spin_unlock_irqrestore(&pipe->irqlock, flags);
+> > > >  		}
+> > > >
+> > > > -		if ((vsp1->version & VI6_IP_VERSION_MODEL_MASK) ==
+> > > > -		    VI6_IP_VERSION_MODEL_VSPD_GEN3)
+> > > > +		if (version == VI6_IP_VERSION_MODEL_VSPD_GEN3)
+> > > >  			ret |= rcar_fcp_soft_reset(vsp1->fcp);
+> > > >
+> > > >  	} else {
+> > > > @@ -529,6 +529,9 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
+> > > >  		ret = wait_event_timeout(pipe->wq, vsp1_pipeline_stopped(pipe),
+> > > >  					 msecs_to_jiffies(500));
+> > > >  		ret = ret == 0 ? -ETIMEDOUT : 0;
+> > > > +
+> > > > +		if (version == VI6_IP_VERSION_MODEL_VSPX_GEN4)
+> > > > +			ret |= rcar_fcp_soft_reset(vsp1->fcp);
+> > > >  	}
+> > > >
+> > > >  	list_for_each_entry(entity, &pipe->entities, list_pipe) {
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
