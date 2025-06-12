@@ -1,234 +1,125 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611D02F24;
-	Thu, 12 Jun 2025 14:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13401247DEA;
+	Thu, 12 Jun 2025 14:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738461; cv=none; b=JL8OxZKea/I4lflhc6j3Pkk9tOCpvYxX18s1TRTIj+xCHsDlDR2Dd+1cCXJ7OhE+tk8RiWl6keQgiz6xgugHBSWaSA9PwBtDRazscfJ2DgpTEIIK2O68o6+TEpc8F0Pl4RvNVxH1XFhaeNM3J9JKr5QduC8qKjt8OGh2E43Dzcg=
+	t=1749738466; cv=none; b=iCE0BcWKBaFcMJMUXHQC31txDlL/IvLu/PIcQBzkHijKQPV+Z2lxKy0GfZKHgWdZ681GvuoNOd84YGdsiM6GrG+iXSAKoNPiE725nE7EGFVxPE2kojuVw0QNMja5k0x8onR+5fxqcajkg/BJ6q0aTch9st7Gx4B15/jZhYTWb5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749738461; c=relaxed/simple;
-	bh=mZtjFVpDF4zOYDZZGfMJaIYLzQRJ1cUipqthavlmgVg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=D+U0irz+fNiK8hEX1tTHk6+D9WLBpMeT7VNyubCpnjC3z4jaKnPWT2LYpdJWkzWvkeUuXEE/cpa/JvXLCN63/IvKR9/GmNiX8EUaJWYH2RxYn7QuGDThbj413YLtgmdtNQgTl7H7UFCOsIJ5Hbuoyy2KmMHuIcTtiutY79YIus8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=xD9XA+tF; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1749738466; c=relaxed/simple;
+	bh=Vc758BeY06sEOUyS5ze/KYna8HJw6VGoT8zRzFVsN6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kEvCPdyp1DQHn8DsTdKsJ4kpWs4KF7bdzXB/iZPdmlkmnNhdZQcWkM/NDE/AKRbc4lL7hK2I4+VFKZ7husOuSBRdLfdPRn9TY7y5RaALpr0jrJEX57eOJGPN6T/4Q5y76LZWa5rEI13v27QbAr7KAlipbl+SNS1JqtubT/VAbN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HQGbMX7H; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UdWCYiUn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="xD9XA+tF"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bJ4Sw0z4Dz9sp3;
-	Thu, 12 Jun 2025 16:21:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1749738064; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HQGbMX7H";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UdWCYiUn"
+Date: Thu, 12 Jun 2025 16:27:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749738462;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LUPnbMKZsQR2YGEzcKKfW5NC/LS9WZVDDt3t+hU+WYU=;
-	b=xD9XA+tF3DtsgZ/TvoLRbK1Aczn2kB03rAMmVtJak3LqwegXNUc9uE/X+ueAQE2lsb3m4z
-	nMS/GAVVbawehSW3oHS+UrMDPUfosntFCueeJu0jdBg7agC7b/icGX2oLwDaaDbb/D3uJL
-	e0PHOod+Rz4m5QK3iAme7eCMyiPKbR5hv1VO4K8fvv7B7PtHCpIMMecJx5sREk1CryUckd
-	v62q0rHqELw4BRYHCKbhp13fonFZXPKIGO8HYmj7yJardsvD2c96JZp/YCYBLIPBPM8h8y
-	a26R8D10Vu/FuGEcVYJVpeR3fZsngtoc6ndZnptXNyVwj5KyXuDzGjrPViZ2IA==
-Message-ID: <f4f326a0ecb98a9996919c3f827b3247b8207feb.camel@mailbox.org>
-Subject: Re: [RFC PATCH 1/6] drm/sched: Avoid memory leaks with cancel_job()
- callback
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, Philipp Stanner
- <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>, Danilo Krummrich
- <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>, Christian
- =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Sumit Semwal
- <sumit.semwal@linaro.org>, Pierre-Eric Pelloux-Prayer
- <pierre-eric.pelloux-prayer@amd.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Date: Thu, 12 Jun 2025 16:20:58 +0200
-In-Reply-To: <62ff8ddb-b2f1-4e52-a026-290561ab5337@igalia.com>
-References: <20250603093130.100159-2-phasta@kernel.org>
-	 <20250603093130.100159-3-phasta@kernel.org>
-	 <62ff8ddb-b2f1-4e52-a026-290561ab5337@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	bh=PYuR96f9aCmk+UgAJ+PfZpTvLkyj7cl7/21Uj0F6GOs=;
+	b=HQGbMX7H99yjouL/7Jw3HK/BsZtXEemHl8G5TOr2xgFVHCrvS5DWCatTfr4U+N9icRzk9z
+	qoeG5qOZ4Si1rZvE9hwIZn1oZy6k8JH3vnRk4Aa0JGQ2cNFODjjvHfQnJnMC7zUGqqKNLQ
+	lNS92xdVzSzYIGVawYcBTW8cr9j9yN2G7rSZ1WWdsXe74/OaFdTkeMzMx8VQTxxMzj+vg7
+	BXYc/8S3C3ZKHhCqpVkhUWLFuaXC36ZbdoqtcW926YrQBzzpHO9bBRs/1ISoGUA+gHE7dB
+	bcxj1iwjRwplkeqwJw1SxUGOTdJNIb2T8NPSzIKukE9XU01B168YkDG8hfHaDA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749738462;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PYuR96f9aCmk+UgAJ+PfZpTvLkyj7cl7/21Uj0F6GOs=;
+	b=UdWCYiUn+dfYE0u8mvZRWfU92Kdcx6mPx8AkMkG3DoQQcUrUsiGAHTPFxMsSam2UIhNUD7
+	Y6fO3mwQ8GhsStBA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Jason Gunthorpe <jgg@nvidia.com>, Nicolin Chen <nicolinc@nvidia.com>
+Cc: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
+	Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
+ into test metadata
+Message-ID: <20250612162151-1fc97a6c-a1c9-4656-997e-fd02f5f9418b@linutronix.de>
+References: <aEh+DNmbZrqg6rHR@nvidia.com>
+ <20250610234657.GO543171@nvidia.com>
+ <aEkqtfcOJDrxAAcs@nvidia.com>
+ <20250611093942-f6c65a06-c72a-4451-aa1e-8cb8de0d69cb@linutronix.de>
+ <aEm6tuzy7WK12sMh@nvidia.com>
+ <aEn5jmXZbC5hARGv@nvidia.com>
+ <aEoUhPYIAizTLADq@nvidia.com>
+ <20250611235117.GR543171@nvidia.com>
+ <aEp6tGUEFCQz1prh@nvidia.com>
+ <20250612135802.GU543171@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: oodnuo5gzpywi6c6hikd3z6f1sf1sei5
-X-MBO-RS-ID: 8a4021f237a81cd6bf4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612135802.GU543171@nvidia.com>
 
-On Thu, 2025-06-12 at 15:17 +0100, Tvrtko Ursulin wrote:
->=20
-> On 03/06/2025 10:31, Philipp Stanner wrote:
-> > Since its inception, the GPU scheduler can leak memory if the
-> > driver
-> > calls drm_sched_fini() while there are still jobs in flight.
-> >=20
-> > The simplest way to solve this in a backwards compatible manner is
-> > by
-> > adding a new callback, drm_sched_backend_ops.cancel_job(), which
-> > instructs the driver to signal the hardware fence associated with
-> > the
-> > job. Afterwards, the scheduler can savely use the established
-> > free_job()
-> > callback for freeing the job.
-> >=20
-> > Implement the new backend_ops callback cancel_job().
-> >=20
-> > Suggested-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
->=20
-> Please just add the link to the patch here (it is only in the cover
-> letter):
->=20
-> Link:=20
-> https://lore.kernel.org/dri-devel/20250418113211.69956-1-tvrtko.ursulin@i=
-galia.com/
+On Thu, Jun 12, 2025 at 10:58:02AM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 11, 2025 at 11:59:00PM -0700, Nicolin Chen wrote:
+> 
+> > We can see the 64MB was rounded up to 512MB by ksys_mmap_pgoff()
+> > when being passed in to hugetlb_file_setup() at:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/mmap.c?h=v6.16-rc1#n594
+> > "		len = ALIGN(len, huge_page_size(hs));  "
+> > 
+> > By looking at the comments here..:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/hugetlbfs/inode.c#n1521
+> > "
+> > /*
+> >  * Note that size should be aligned to proper hugepage size in caller side,
+> >  * otherwise hugetlb_reserve_pages reserves one less hugepages than intended.
+> >  */
+> > struct file *hugetlb_file_setup(const char *name, size_t size,
+> > "
+> > 
+> > ..I guess this function was supposed to fail the not-a-multiple
+> > case as you remarked? But it certainly can't do that, when that
+> > size passed in is already hugepage-aligned..
+> > 
+> > It feels like a kernel bug as you suspect :-/
+> 
+> Certainly is
+>  
+> > And I just found one more weird thing...
+> > 
+> > In iommufd.c selftest code, we have:
+> > "static __attribute__((constructor)) void setup_sizes(void)"
+> > where it does another pair of posix_memalign/mmap, although this
+> > one doesn't flag MAP_HUGETLB and shouldn't impact what is coming
+> > to the next...
+> 
+> This could all just be more weirdness from the above, it doesn't
+> really make alot of sense.
+> 
+> I think change things so the MAP_HUGETLB test all skip if
+> HUGEPAGE_SIZE < buffer_size and move on..
+> 
+> Can't run those tests on ARM64 64k which is unfortunate.. I thought
+> there were patches to give that config a 2M huge page size option
+> based on the new contiguous page support though? Maybe it was only THPS..
 
-That I can do, sure
+If the assumption is that this is most likely a kernel bug,
+shouldn't it be fixed properly rather than worked around?
+After all the job of a selftest is to detect bugs to be fixed.
 
->=20
-> And you probably want to take the unit test modifications from the
-> same=20
-> patch too. You could put them in the same patch or separate.
+But I wasn't able to follow all of your discussions,
+so I may be missing something.
 
-Necessary adjustments for the unit tests are already implemented and
-are waiting for review separately, since this can be done independently
-from this entire series:
-
-https://lore.kernel.org/dri-devel/20250605134154.191764-2-phasta@kernel.org=
-/
+If the test is broken on ARM64 64k in general then I am also wondering how
+it didn't fail before my change to the selftest harness.
 
 
-Thx
-P.
-
->=20
-> Regards,
->=20
-> Tvrtko
->=20
-> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> > ---
-> > =C2=A0 drivers/gpu/drm/scheduler/sched_main.c | 34 ++++++++++++++++----=
--
-> > -----
-> > =C2=A0 include/drm/gpu_scheduler.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 +++++++
-> > =C2=A0 2 files changed, 30 insertions(+), 13 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
-> > b/drivers/gpu/drm/scheduler/sched_main.c
-> > index d20726d7adf0..3f14f1e151fa 100644
-> > --- a/drivers/gpu/drm/scheduler/sched_main.c
-> > +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> > @@ -1352,6 +1352,18 @@ int drm_sched_init(struct drm_gpu_scheduler
-> > *sched, const struct drm_sched_init_
-> > =C2=A0 }
-> > =C2=A0 EXPORT_SYMBOL(drm_sched_init);
-> > =C2=A0=20
-> > +static void drm_sched_kill_remaining_jobs(struct drm_gpu_scheduler
-> > *sched)
-> > +{
-> > +	struct drm_sched_job *job, *tmp;
-> > +
-> > +	/* All other accessors are stopped. No locking necessary.
-> > */
-> > +	list_for_each_entry_safe_reverse(job, tmp, &sched-
-> > >pending_list, list) {
-> > +		sched->ops->cancel_job(job);
-> > +		list_del(&job->list);
-> > +		sched->ops->free_job(job);
-> > +	}
-> > +}
-> > +
-> > =C2=A0 /**
-> > =C2=A0=C2=A0 * drm_sched_fini - Destroy a gpu scheduler
-> > =C2=A0=C2=A0 *
-> > @@ -1359,19 +1371,11 @@ EXPORT_SYMBOL(drm_sched_init);
-> > =C2=A0=C2=A0 *
-> > =C2=A0=C2=A0 * Tears down and cleans up the scheduler.
-> > =C2=A0=C2=A0 *
-> > - * This stops submission of new jobs to the hardware through
-> > - * drm_sched_backend_ops.run_job(). Consequently,
-> > drm_sched_backend_ops.free_job()
-> > - * will not be called for all jobs still in
-> > drm_gpu_scheduler.pending_list.
-> > - * There is no solution for this currently. Thus, it is up to the
-> > driver to make
-> > - * sure that:
-> > - *
-> > - *=C2=A0 a) drm_sched_fini() is only called after for all submitted
-> > jobs
-> > - *=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_backend_ops.free_job() has been c=
-alled or that
-> > - *=C2=A0 b) the jobs for which drm_sched_backend_ops.free_job() has no=
-t
-> > been called
-> > - *=C2=A0=C2=A0=C2=A0=C2=A0 after drm_sched_fini() ran are freed manual=
-ly.
-> > - *
-> > - * FIXME: Take care of the above problem and prevent this function
-> > from leaking
-> > - * the jobs in drm_gpu_scheduler.pending_list under any
-> > circumstances.
-> > + * This stops submission of new jobs to the hardware through
-> > &struct
-> > + * drm_sched_backend_ops.run_job. If &struct
-> > drm_sched_backend_ops.cancel_job
-> > + * is implemented, all jobs will be canceled through it and
-> > afterwards cleaned
-> > + * up through &struct drm_sched_backend_ops.free_job. If
-> > cancel_job is not
-> > + * implemented, memory could leak.
-> > =C2=A0=C2=A0 */
-> > =C2=A0 void drm_sched_fini(struct drm_gpu_scheduler *sched)
-> > =C2=A0 {
-> > @@ -1401,6 +1405,10 @@ void drm_sched_fini(struct drm_gpu_scheduler
-> > *sched)
-> > =C2=A0=C2=A0	/* Confirm no work left behind accessing device structures
-> > */
-> > =C2=A0=C2=A0	cancel_delayed_work_sync(&sched->work_tdr);
-> > =C2=A0=20
-> > +	/* Avoid memory leaks if supported by the driver. */
-> > +	if (sched->ops->cancel_job)
-> > +		drm_sched_kill_remaining_jobs(sched);
-> > +
-> > =C2=A0=C2=A0	if (sched->own_submit_wq)
-> > =C2=A0=C2=A0		destroy_workqueue(sched->submit_wq);
-> > =C2=A0=C2=A0	sched->ready =3D false;
-> > diff --git a/include/drm/gpu_scheduler.h
-> > b/include/drm/gpu_scheduler.h
-> > index e62a7214e052..81dcbfc8c223 100644
-> > --- a/include/drm/gpu_scheduler.h
-> > +++ b/include/drm/gpu_scheduler.h
-> > @@ -512,6 +512,15 @@ struct drm_sched_backend_ops {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * and it's=
- time to clean it up.
-> > =C2=A0=C2=A0	 */
-> > =C2=A0=C2=A0	void (*free_job)(struct drm_sched_job *sched_job);
-> > +
-> > +	/**
-> > +	 * @cancel_job: Used by the scheduler to guarantee
-> > remaining jobs' fences
-> > +	 * get signaled in drm_sched_fini().
-> > +	 *
-> > +	 * Drivers need to signal the passed job's hardware fence
-> > with
-> > +	 * -ECANCELED in this callback. They must not free the
-> > job.
-> > +	 */
-> > +	void (*cancel_job)(struct drm_sched_job *sched_job);
-> > =C2=A0 };
-> > =C2=A0=20
-> > =C2=A0 /**
->=20
-
+Thomas
