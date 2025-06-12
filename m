@@ -1,245 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0E722DA1B;
-	Thu, 12 Jun 2025 12:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47435130E58
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749730715; cv=none; b=F5gCh04YEuTg3mtfsML3Vf242A+MncXzC27ezEI+L16a9pDADPbzOgf4aarZKY61Zq3d39TSZbujT5VdaUx32PHw3f3C6HWWuN5C/4FLCXhSMOM2gCeoBXSnocP5QnXMqH4y8rCboKJtGVHeKOJvs9MdmYnupr331zFAkFXoY6s=
+	t=1749730802; cv=none; b=hXfsbcJYghjOiSZCKormHxoHowdUhJ4jD60QZcUJbVmEkPHFvkYpPX/hIP3QFuVgXAvn9uUTOMNKDHLMnbM6gW1CoXyjy0uUppxOaga7PTGcTHm7XeZtlS0RR6OeLXnlYzcC//Nwtt+eKbfR7CkW23jRcvNJInYkDiuICirzdT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749730715; c=relaxed/simple;
-	bh=JrlAMR6/EfZihab+1FR+Xmwqg+pfXEbbyAcaW58VYRo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=faeKySIb7L3eWzz0LShOqlLMI/EXqfF+GecKiA+m7p1LF003i2kwQopJyXiFuXBNPdu3mZCO3irwzsRCNR9PDxgT1EsDs/53l5Nc9D1JqPc8DOnMp7CVmm061LuEO4qePCu7E68fDavT9nnVYDVxIX/r3GWvsYqJ0Y3wEOJlvac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXLplCyU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749730802; c=relaxed/simple;
+	bh=kJrff3jbL8por8Tpyh7XxSyhDvy3zxp3BXTzZOi6P44=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Z2OKRaCXVokJ5rj3jyyloFMYLdwtYf86h800RUIRJ95h+PgMLYT0AUqYmB1zDkMd50GLFlXzBUi618RMBXnWoZbIJAGqIco5HHKIZCbPytYGakD/AoTvE3UG2g1Z8+IezLUUCxsspMPeeTaFsEkUtKor7/UpaYoHZEE3Gh48Z6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=D1Yji7qa; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXLplCyU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2649CC4CEF1;
-	Thu, 12 Jun 2025 12:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749730715;
-	bh=JrlAMR6/EfZihab+1FR+Xmwqg+pfXEbbyAcaW58VYRo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mXLplCyU1eG9w8+J9nUZKQKVJx2968kKNkl+xQBtaOvFjnl+h+2CfMGU0uyjXbB4p
-	 ipjY9GQzN5P3n5djKm64eVYX6VrrxlhVx52sAsMclXXuWTzXgnQ+iwTb69LFazrm6a
-	 EUHvnfISjYA54aZlqo8K/Svk/TSbx1fXD86ChJZOTbxpxxlvCdsaG8nyYcazEHqrF0
-	 v7aZkpJy4foCWcPQgCbrM7i0joaHbtpyIdkMJ777thoTs/Vc1FOi46h8vDmYywDmfh
-	 B8/OPPMd65VJ4hPLz2rpsDJY9QRcNIEdl/EHwWiDJOHPH0k295m4jCIy0gAkHghX8s
-	 C+qUnAbxHFT+g==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 3/3] rust: devres: fix race in Devres::drop()
-Date: Thu, 12 Jun 2025 14:17:15 +0200
-Message-ID: <20250612121817.1621-4-dakr@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250612121817.1621-1-dakr@kernel.org>
-References: <20250612121817.1621-1-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="D1Yji7qa"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so10882725e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:19:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749730798; x=1750335598; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AqDku5tmeH7VBmpeni41KVYBYrcGjn2Uv65bR/FXI+8=;
+        b=D1Yji7qaWRdRwBq4I8Nk2fGXGc2NL8e2uZu2WZSVzoMHyKkoD+Vc4cHoxLFnl53y7f
+         BFwpX3lZXKtSGouVNLxeDoy5nHc9eWPhHKykCjqUJky/pjnppQeFWFRpk7DZFxKN4s4S
+         B2LfegavI5WrVThGM//gCRZjUkBcV4fqxlYp5O34wT1zgVPOKB4lsOG1Dd2AY8BeVxOR
+         rJyDyWjhhm4fhYugPM6tB/ujIhMte7R/wzOzlJAkeqCY422Ei4Ps3h84dBb7ZCLt11fC
+         /VaU8knDXjgSqLViI6KiuU4Zd9EnaHNjLgdItOy2/zYAlZE7enEOKqedKKY0Arx6WW3n
+         +SfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749730798; x=1750335598;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AqDku5tmeH7VBmpeni41KVYBYrcGjn2Uv65bR/FXI+8=;
+        b=gVPK6LXhA8yHXeazuHh5wHoc0jx+QgHS174XgUVtiLphV6WjB3uHTWiPJXQzfbsiYQ
+         SjYhkwtkftyxpmfb8k6XHW4z0m/K2JpGF4IkY3KPxPqLxvuMGsqEU6W36iq7EvpwSuf5
+         quTaYH7yWDFJ8aEE9r5lmeO4M/5ipl+LYER4GJCu1I0FqPb23VOV5Ij+pF9zYO12S7/P
+         5mlH+eMrp0PhX9ftody0W54ZlpPHoZwhneYJ7dmTJZ8PdejkeS8m2XkFnuJxCAkUc1fQ
+         Ne07LxsuH4sx0rctW0yvRol9DrcMImJTRgQWw7vYgLppGUrr5bGp4vJZapMMkyOIl12u
+         owGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnibc+s2HOCCKGXamzKwV/yrmaYfwumq6rgkXtG7BzvTrwXwnuIaNJIGwbWFsL/EuXKvhNoxs3o+voNaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrgnfEPZS4GUjjoMKFTvb0zGEXf9kPxSX3/h8pficBVf21ZVAw
+	kxDi1WcaW6fijC8sYzCy3XLxi0HPALmOMUzqekY0bzpoZ6AIsHNEOHBBNw935kFYq2A=
+X-Gm-Gg: ASbGnctltljY3p1QG+Wub7gFPJMpwL8dejwLwa1LaQS8cdrtYEbSN5k3sRPG5Y/9/+j
+	fqH2vY8RwkvG/gH3ItgcA4UuXEwTmLg0gB8nCUWgjtI8m/r1OXTXG9a5rMhXj+RIcq54+OdZKDX
+	ax7eBAvF3z5PitPGik4TNY/M0lgHh8t/boDfgkDPsRimrSaZV05mCWS0VxGB2HWVEj5F7US3nip
+	r2qr35SSipteDMU3r1kib1hsDKfjhi/mjlYdJE7ICb9PTmlawz+9tuBNxPCjcOFq0ctPl+IAKkB
+	TKoemt6Pk661Ingysveuf7v42/owGANoY/O9RpJhLuOPhxNqoELtz0np
+X-Google-Smtp-Source: AGHT+IEcc4368CEgerXypRH/60FtXqn6RdvTllN0y6+FlWWV7W7CliDcgoBQka1h/OsUnGpe+1tckw==
+X-Received: by 2002:a05:600c:83c6:b0:453:2433:1c5b with SMTP id 5b1f17b1804b1-4532486c53emr66764545e9.5.1749730798475;
+        Thu, 12 Jun 2025 05:19:58 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8b99:9926:3892:5310])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c229sm19636035e9.6.2025.06.12.05.19.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 05:19:58 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/2] pinctrl: cirrus: use new GPIO line value setter
+ callbacks
+Date: Thu, 12 Jun 2025 14:19:52 +0200
+Message-Id: <20250612-gpiochip-set-rv-pinctrl-cirrus-v1-0-2d45c1f92557@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOjFSmgC/x3NQQqDMBBG4avIrDsQIzHQq5QuyjjVH0oMM1YK4
+ t0bXH6b9w5yNajTvTvIdIdjLQ39rSNZXmVWxtRMMcQUxj7yXLHKgsquG9vOFUU2+7DA7OschyG
+ NOeWQRalFqukbv2vweJ7nH2Kr0FxwAAAA
+X-Change-ID: 20250612-gpiochip-set-rv-pinctrl-cirrus-2335675707ce
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, David Rhodes <david.rhodes@cirrus.com>
+Cc: patches@opensource.cirrus.com, linux-sound@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1006;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=kJrff3jbL8por8Tpyh7XxSyhDvy3zxp3BXTzZOi6P44=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSsXpOXy+LPZCy25UzB46uu9Jfgc6bYrd209b6
+ 2WEdmPciuaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaErF6QAKCRARpy6gFHHX
+ cnr+D/0W5phOfwIzIXQ5w4rBcur8QmFg3lr7rYE15YDOs5OxGlUgbtQzwRcSQKXoWgOy68+M0jG
+ G/qDNaxNNYpPWLjM6YYqpiRZCPW4JaIMwr0wbBClVjW0jucCHl4TMkCKKL52s7w1iVhtWm7MLkB
+ pwsMZpzsmUJgwzkfq5I8yi8Halwwiftm2XUxU2KzLqMmqQqmcCaqcH6dB/I+7OXXD7KR6fLfb55
+ PxnfC82VSUAFh2o8s2ZauD/a0HrB2E5LqXMK6X3qGpOyQGh8CR5ijTkGcHQXRxnyPJus+C5SRDD
+ g1nfhDK6rCcqUTkO1fJkd/z7TTYbmm5xuSvjXBkgTo/OT9JQhjJhj6MWBrOYwaAKPHzhV2+T7jr
+ 6TxsRs1bmUY1LvUBkLz1eNUrlUjedlvCLlq02+p3Km8qTcbi5knGNLP2V/fs18DRsSwdmsBRnFQ
+ zopndNXJw1EyhaNJIOKD869u+DgPDtOJGNdm4j1/3uP3Xyuqe2qXL7HC64g0VO9extFRskOLBoE
+ bZiXsY+Y9rHReClvPtc9QFyvcuxf0DV5Uj26CrCFPKfQY835rpTPXk/sg0ajjjEdrQOT0qfDBWi
+ Xz5Tl5TplI1ft6CxLpWodvBx1RESt0QPD66LZbhb466kn53uf5oFziu1VJzIkGo3O9tJnM+yaYD
+ gDWT5ioayc4evKQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-In Devres::drop() we first remove the devres action and then drop the
-wrapped device resource.
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts all GPIO chips in cirrus pin control drivers.
 
-The design goal is to give the owner of a Devres object control over when
-the device resource is dropped, but limit the overall scope to the
-corresponding device being bound to a driver.
-
-However, there's a race that was introduced with commit 8ff656643d30
-("rust: devres: remove action in `Devres::drop`"), but also has been
-(partially) present from the initial version on.
-
-In Devres::drop(), the devres action is removed successfully and
-subsequently the destructor of the wrapped device resource runs.
-However, there is no guarantee that the destructor of the wrapped device
-resource completes before the driver core is done unbinding the
-corresponding device.
-
-If in Devres::drop(), the devres action can't be removed, it means that
-the devres callback has been executed already, or is still running
-concurrently. In case of the latter, either Devres::drop() wins revoking
-the Revocable or the devres callback wins revoking the Revocable. If
-Devres::drop() wins, we (again) have no guarantee that the destructor of
-the wrapped device resource completes before the driver core is done
-unbinding the corresponding device.
-
-CPU0					CPU1
-------------------------------------------------------------------------
-Devres::drop() {			Devres::devres_callback() {
-   self.data.revoke() {			   this.data.revoke() {
-      is_available.swap() == true
-					      is_available.swap == false
-					   }
-					}
-
-					// [...]
-					// device fully unbound
-      drop_in_place() {
-         // release device resource
-      }
-   }
-}
-
-Depending on the specific device resource, this can potentially lead to
-user-after-free bugs.
-
-In order to fix this, implement the following logic.
-
-In the devres callback, we're always good when we get to revoke the
-device resource ourselves, i.e. Revocable::revoke() returns true.
-
-If Revocable::revoke() returns false, it means that Devres::drop(),
-concurrently, already drops the device resource and we have to wait for
-Devres::drop() to signal that it finished dropping the device resource.
-
-Note that if we hit the case where we need to wait for the completion of
-Devres::drop() in the devres callback, it means that we're actually
-racing with a concurrent Devres::drop() call, which already started
-revoking the device resource for us. This is rather unlikely and means
-that the concurrent Devres::drop() already started doing our work and we
-just need to wait for it to complete it for us. Hence, there should not
-be any additional overhead from that.
-
-(Actually, for now it's even better if Devres::drop() does the work for
-us, since it can bypass the synchronize_rcu() call implied by
-Revocable::revoke(), but this goes away anyways once I get to implement
-the split devres callback approach, which allows us to first flip the
-atomics of all registered Devres objects of a certain device, execute a
-single synchronize_rcu() and then drop all revocable objects.)
-
-In Devres::drop() we try to revoke the device resource. If that is *not*
-successful, it means that the devres callback already did and we're good.
-
-Otherwise, we try to remove the devres action, which, if successful,
-means that we're good, since the device resource has just been revoked
-by us *before* we removed the devres action successfully.
-
-If the devres action could not be removed, it means that the devres
-callback must be running concurrently, hence we signal that the device
-resource has been revoked by us, using the completion.
-
-This makes it safe to drop a Devres object from any task and at any point
-of time, which is one of the design goals.
-
-Fixes: 76c01ded724b ("rust: add devres abstraction")
-Reported-by: Alice Ryhl <aliceryhl@google.com>
-Closes: https://lore.kernel.org/lkml/aD64YNuqbPPZHAa5@google.com/
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- rust/kernel/devres.rs | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+Bartosz Golaszewski (2):
+      pinctrl: cirrus: lochnagar: use new GPIO line value setter callbacks
+      pinctrl: cirrus: cs42l43: use new GPIO line value setter callbacks
 
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 0f79a2ec9474..dedb39d83cbe 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -13,7 +13,7 @@
-     ffi::c_void,
-     prelude::*,
-     revocable::Revocable,
--    sync::Arc,
-+    sync::{Arc, Completion},
-     types::ARef,
- };
- 
-@@ -25,6 +25,8 @@ struct DevresInner<T> {
-     callback: unsafe extern "C" fn(*mut c_void),
-     #[pin]
-     data: Revocable<T>,
-+    #[pin]
-+    revoke: Completion,
- }
- 
- /// This abstraction is meant to be used by subsystems to containerize [`Device`] bound resources to
-@@ -102,6 +104,7 @@ fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>
-                 dev: dev.into(),
-                 callback: Self::devres_callback,
-                 data <- Revocable::new(data),
-+                revoke <- Completion::new(),
-             }),
-             flags,
-         )?;
-@@ -130,26 +133,28 @@ fn as_ptr(&self) -> *const Self {
-         self as _
-     }
- 
--    fn remove_action(this: &Arc<Self>) {
-+    fn remove_action(this: &Arc<Self>) -> bool {
-         // SAFETY:
-         // - `self.inner.dev` is a valid `Device`,
-         // - the `action` and `data` pointers are the exact same ones as given to devm_add_action()
-         //   previously,
-         // - `self` is always valid, even if the action has been released already.
--        let ret = unsafe {
-+        let success = unsafe {
-             bindings::devm_remove_action_nowarn(
-                 this.dev.as_raw(),
-                 Some(this.callback),
-                 this.as_ptr() as _,
-             )
--        };
-+        } == 0;
- 
--        if ret == 0 {
-+        if success {
-             // SAFETY: We leaked an `Arc` reference to devm_add_action() in `DevresInner::new`; if
-             // devm_remove_action_nowarn() was successful we can (and have to) claim back ownership
-             // of this reference.
-             let _ = unsafe { Arc::from_raw(this.as_ptr()) };
-         }
-+
-+        success
-     }
- 
-     #[allow(clippy::missing_safety_doc)]
-@@ -161,7 +166,12 @@ fn remove_action(this: &Arc<Self>) {
-         //         `DevresInner::new`.
-         let inner = unsafe { Arc::from_raw(ptr) };
- 
--        inner.data.revoke();
-+        if !inner.data.revoke() {
-+            // If `revoke()` returns false, it means that `Devres::drop` already started revoking
-+            // `inner.data` for us. Hence we have to wait until `Devres::drop()` signals that it
-+            // completed revoking `inner.data`.
-+            inner.revoke.wait_for_completion();
-+        }
-     }
- }
- 
-@@ -232,6 +242,15 @@ fn deref(&self) -> &Self::Target {
- 
- impl<T> Drop for Devres<T> {
-     fn drop(&mut self) {
--        DevresInner::remove_action(&self.0);
-+        // SAFETY: When `drop` runs, it is guaranteed that nobody is accessing the revocable data
-+        // anymore, hence it is safe not to wait for the grace period to finish.
-+        if unsafe { self.revoke_nosync() } {
-+            // We revoked `self.0.data` before the devres action did, hence try to remove it.
-+            if !DevresInner::remove_action(&self.0) {
-+                // We could not remove the devres action, which means that it now runs concurrently,
-+                // hence signal that `self.0.data` has been revoked successfully.
-+                self.0.revoke.complete_all();
-+            }
-+        }
-     }
- }
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c   | 21 +++++++++++++--------
+ drivers/pinctrl/cirrus/pinctrl-lochnagar.c | 25 +++++++++++++------------
+ 2 files changed, 26 insertions(+), 20 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250612-gpiochip-set-rv-pinctrl-cirrus-2335675707ce
+
+Best regards,
 -- 
-2.49.0
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
