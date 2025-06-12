@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8AF2E3377
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508802E3381
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771646; cv=none; b=UxjmTqDFPkdV/a/12BLkkecZNhSCtgbKzU+H/dKCYMbAaI05/wOncCV4qYOh5OGVTFyQ2vyLOMGlOPpSedOLO1KNiMgAsWzIH59rgddWyPyDS/Iriynirtkd1sdB+ROidannzbO66H11E/GtAXXZuDzikfwBpqFl3zxRVIeRsNU=
+	t=1749771649; cv=none; b=VW4/uk10R8fXUn1ECcUg7Jei9WHzsb0l4y2fF1H9Okb2jalNf53eCctylIVuzD2klNPU+j/rzXp2cl7TbDaZU286qsaY/yqtlf9ix1qNC+7MLDtWnRfyqYtTPz/7Jg04Qf/vaOLr3jADkU0LVrb+nW5X15nKHtoKD0nHnMZLYjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771646; c=relaxed/simple;
-	bh=lyZmPi3B4oF17ev9UTYg2muWF1nVtaEzGetNCY/OynY=;
+	s=arc-20240116; t=1749771649; c=relaxed/simple;
+	bh=SdDAw6XHJi/hxVE/IUBqwt13Gjwva4kHbz+8iCUDa6I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fXUXmewbc0tY7zBnLcsQK/3gvzzN+yYC0jUiyBwQ3ITEvUEzv1WlcI3rAKq0JuqBzHXCqqKVzWzCMzC/UZdd3KrQ7FqtozvpFySuGzBCZHvW47kxvSzbWiqQqQ9YXbnS6Y35Rqzunz3rrt1agTX5kSq8LBpDhzTkWUU/zOTqPn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tTf/M6cP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X3xVFaRj; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=MxnEhPIAP0fvsdrJR4mWeuWDufSl9oYNZwBCd0ItYg4XppOBymL1ohSK6GkOzb2VTw+MRLFhV3fz8KH92BmHnQTXL6sns5Dsf90SIhDwpf+pRbix0M1W5QBuViGN9wbwEg+N2jBXik8u9yp2adRxE+Qh4RFl2JpARpir/3mcvR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uwZ41QvQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cd67XUmh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tTf/M6cP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X3xVFaRj"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uwZ41QvQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cd67XUmh"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749771643;
+	s=2020; t=1749771647;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hL6kR8PIDszFqQWu4ogIAnEYWUoEaYfz8wTwSpB7fkk=;
-	b=tTf/M6cPV9as0BDx/16N4OCAY+yUmobHQ3+ua+0YUn4Xs5l7uyi2vcrMdx2H5Nzt2ERbLr
-	NTosDM83mndNt7qMNLNiAH4B4325L346pcBjCtZILwg6gPUvrB1TOna/kuWbGV5osbMOs4
-	rJn2aVo5jXlDjqy5otv8BZpo1qssKVxL7kgb5/FbpU9eCq5tjtCNXR5EDthqv1nQSnoKNX
-	3yGAFwKoiVn3AaQ4Ueaa6FZE6VWEJydtfeexb2Q7NhaUoNnqu6WTGJAg8AVHD2ffq9RbtN
-	gIwKJ9civeIX0dCj+rbOy44EiUrbIBhyWsmes6txC5wHWzIRE0aSUKBNbi/srQ==
+	bh=5OmPY1kT3M0ja+0CH2Wur4I4FysF/vnqURgtSJeVlIg=;
+	b=uwZ41QvQXJHngjhbPVgP6+RFtEMw3KAsxpBzFH5mDXW5hc6SWxyewiVwdreQljr4SSv6f9
+	VvrlGUCI9g+8QrtUlCIWVwa272x1fFf63r/z3BTpyjlXzBmCRVwPtBX8K2HRsj6ss8gcrq
+	e2glq1Wxcb6AKMa83wdhkk2Rqz1/pjK8uHz3CjJo/+hSTA4ACDvfFgcNJNgvJM8JCVeM7v
+	EGKPLvsOLwQvaVRADYniJRBojVBj8G7oCV8wOhC7OqZwWxak9vIoQrSBzjsxlRLLxmzYJ5
+	D+5ztuVqXo1E8UBjbzvXuRygy6xG0gWPuGdTNLyKwNuvuK4Pru4zpKM5sLuDnQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749771643;
+	s=2020e; t=1749771647;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hL6kR8PIDszFqQWu4ogIAnEYWUoEaYfz8wTwSpB7fkk=;
-	b=X3xVFaRj7N3U2XV9ahXJXbE2OaGNwmI/pHxBWH5YSS0TG3WPMzzzHEQTNbKikm/qzgZav3
-	V+777uhDkssdK0DA==
+	bh=5OmPY1kT3M0ja+0CH2Wur4I4FysF/vnqURgtSJeVlIg=;
+	b=Cd67XUmhDkztUA9je8NtByFuqNgP2JP4GMzduliTPQjMN0jeSpc+XJzLMENTCs5o6ij1L/
+	5FkfjcLPQq8D+ACQ==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -54,9 +54,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 07/44] x86/mce: Reorder core.c headers alphabetically
-Date: Fri, 13 Jun 2025 01:39:33 +0200
-Message-ID: <20250612234010.572636-8-darwi@linutronix.de>
+Subject: [PATCH v3 08/44] x86/paravirt: Reorder headers alphabetically
+Date: Fri, 13 Jun 2025 01:39:34 +0200
+Message-ID: <20250612234010.572636-9-darwi@linutronix.de>
 In-Reply-To: <20250612234010.572636-1-darwi@linutronix.de>
 References: <20250612234010.572636-1-darwi@linutronix.de>
 Precedence: bulk
@@ -73,97 +73,62 @@ be included next.
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/kernel/cpu/mce/core.c | 62 +++++++++++++++++-----------------
- 1 file changed, 31 insertions(+), 31 deletions(-)
+ arch/x86/kernel/paravirt.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index e9b3c5d4a52e..fe9e65f314fb 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -9,52 +9,52 @@
-  * Author: Andi Kleen
-  */
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index ab3e172dcc69..3d745cd25a43 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -6,34 +6,34 @@
+     2007 - x86_64 support added by Glauber de Oliveira Costa, Red Hat Inc
+ */
  
--#include <linux/thread_info.h>
- #include <linux/capability.h>
--#include <linux/miscdevice.h>
--#include <linux/ratelimit.h>
--#include <linux/rcupdate.h>
--#include <linux/kobject.h>
--#include <linux/uaccess.h>
--#include <linux/kdebug.h>
--#include <linux/kernel.h>
--#include <linux/percpu.h>
--#include <linux/string.h>
--#include <linux/device.h>
--#include <linux/syscore_ops.h>
--#include <linux/delay.h>
-+#include <linux/cpu.h>
- #include <linux/ctype.h>
--#include <linux/sched.h>
--#include <linux/sysfs.h>
--#include <linux/types.h>
--#include <linux/slab.h>
-+#include <linux/debugfs.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/export.h>
-+#include <linux/fs.h>
-+#include <linux/hardirq.h>
- #include <linux/init.h>
-+#include <linux/irq_work.h>
-+#include <linux/kdebug.h>
-+#include <linux/kernel.h>
-+#include <linux/kexec.h>
- #include <linux/kmod.h>
--#include <linux/poll.h>
-+#include <linux/kobject.h>
-+#include <linux/miscdevice.h>
-+#include <linux/mm.h>
- #include <linux/nmi.h>
--#include <linux/cpu.h>
-+#include <linux/percpu.h>
-+#include <linux/poll.h>
- #include <linux/ras.h>
--#include <linux/smp.h>
--#include <linux/fs.h>
--#include <linux/mm.h>
--#include <linux/debugfs.h>
--#include <linux/irq_work.h>
--#include <linux/export.h>
-+#include <linux/ratelimit.h>
-+#include <linux/rcupdate.h>
-+#include <linux/sched.h>
- #include <linux/set_memory.h>
-+#include <linux/slab.h>
-+#include <linux/smp.h>
-+#include <linux/string.h>
- #include <linux/sync_core.h>
-+#include <linux/syscore_ops.h>
-+#include <linux/sysfs.h>
- #include <linux/task_work.h>
--#include <linux/hardirq.h>
--#include <linux/kexec.h>
-+#include <linux/thread_info.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
++#include <linux/bcd.h>
++#include <linux/efi.h>
+ #include <linux/errno.h>
+-#include <linux/init.h>
+ #include <linux/export.h>
+-#include <linux/efi.h>
+-#include <linux/bcd.h>
+ #include <linux/highmem.h>
++#include <linux/init.h>
+ #include <linux/kprobes.h>
+ #include <linux/pgtable.h>
+ #include <linux/static_call.h>
  
--#include <asm/fred.h>
- #include <asm/cpu_device_id.h>
--#include <asm/processor.h>
--#include <asm/traps.h>
++#include <asm/apic.h>
+ #include <asm/bug.h>
+-#include <asm/paravirt.h>
+ #include <asm/debugreg.h>
++#include <asm/delay.h>
+ #include <asm/desc.h>
++#include <asm/fixmap.h>
++#include <asm/gsseg.h>
++#include <asm/io_bitmap.h>
++#include <asm/irq.h>
++#include <asm/msr.h>
++#include <asm/paravirt.h>
++#include <asm/pgalloc.h>
+ #include <asm/setup.h>
++#include <asm/special_insns.h>
+ #include <asm/time.h>
+-#include <asm/pgalloc.h>
+-#include <asm/irq.h>
+-#include <asm/delay.h>
+-#include <asm/fixmap.h>
+-#include <asm/apic.h>
 -#include <asm/tlbflush.h>
-+#include <asm/fred.h>
- #include <asm/mce.h>
- #include <asm/msr.h>
-+#include <asm/processor.h>
- #include <asm/reboot.h>
- #include <asm/tdx.h>
+ #include <asm/timer.h>
+-#include <asm/special_insns.h>
+ #include <asm/tlb.h>
+-#include <asm/io_bitmap.h>
+-#include <asm/gsseg.h>
+-#include <asm/msr.h>
 +#include <asm/tlbflush.h>
-+#include <asm/traps.h>
  
- #include "internal.h"
- 
+ /* stub always returning 0. */
+ DEFINE_ASM_FUNC(paravirt_ret0, "xor %eax,%eax", .entry.text);
 -- 
 2.49.0
 
