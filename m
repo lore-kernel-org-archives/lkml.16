@@ -1,214 +1,248 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9862A23A9AD;
-	Thu, 12 Jun 2025 11:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E6F22ACF3
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726004; cv=none; b=ZDoNEKfpiANQZSavBnEbQIeIlH4cCWmeM23YGkIvOfx0pIIS7T5qt2PrhML/xtHUKLKyTeWcKXJF/9hj/2bsOngJVeoRc1nyrVxfNuALuXlH89cXXFmO7+ck2a4EFvEBdUSJYlM2aymgHGseZIdDAEX4P4nK/oxW4/sK/mFqSDA=
+	t=1749726026; cv=none; b=GVKe+DMnmEoBM1UtSP9Cc/N6gfMZ7OEGZiang7pZG0R4TR+zVMKXYKp2Lb+e1RSx6CiJjkr+5WG/0rHchwQGb83+fTmjKWKgwCwN39d5zpoRZMhwv5qlKCcK6caU2qzwAUxCKDvILK6lwGWDfwF72EPG+gyaulkYwRaaigq0vKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726004; c=relaxed/simple;
-	bh=k/q2tI+7tEP2C7OO0lBGT+8cI/YxCdHD6IQB3wGd958=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=Lznkj3zq2t4FzvU4SKFEKtOuF9bx7v1lqhFiJtaHHgxU8XA8p7lC5aagC2JoJ/Qd9nDNJYE7uIhfOQGvI4cit8hpyFx23K9DPgvH+1td4Kw3/lA+41GKNoliTRh3THQkbbZO1ol7bBtZdPwP3ghOsZYWPy+19hpDGnANksr25Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=THqkDFYU; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749726026; c=relaxed/simple;
+	bh=lZHxxBFYZ4hnqLHWM881py/RXYAQZs4DlXkSIdhLSeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=oi6HkIvU+w1p2T8YSxKHlijA4EAjJPOcwNu6Mcns64KxezOEeKKOCq5m8TT2F1dJ8AR6Zekx2JspZCIhDaX89mecXrHfPIv4Q33RSjg9JANZ3HBkshOvfwqUL+3edEBgBsVmv/pZ6mHhIdYjrO0qVhSOAvqOOHYgNQATYgvip2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=IiPL8m8V; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="THqkDFYU"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C10IWf032084;
-	Thu, 12 Jun 2025 10:59:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=upoG1H
-	Xm/JgEgq2xUA+z8prMKZNeNeTVb2PMDEyK4/c=; b=THqkDFYUxUixVyqMFytTsc
-	Kw2NlUJVFAZxK39IyYulgJeQy4oHlqexfWQGKM1tlz79ovJxtPcyUNEb+fp8j/Rt
-	sYWfBEo4RX2zBXN0eQ3QGjrkpD+UJdkJh6yOH/X2reBrVPUUZGGk68LS+0w5+fCU
-	j03D8iE9+hZAVV3wIhMJoZRCnegcRoneXMzi7REl+/2mBzlArnmr40jt9yRXNRJ7
-	od73LjI5V9vzD+BC4hVcsuip2AwnuArOd9bEn7y+z1C15mStFwVC9jAa5U2o7IbY
-	KiXylep25zrjcwiQOI66OBQDwxDfOh3dgE+2Ef1wR22ubgeuYV1yyJGhjyNy2fqg
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474dv7t4w6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 10:59:47 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55CAjXTJ014948;
-	Thu, 12 Jun 2025 10:59:46 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750rpccsk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 10:59:46 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55CAxjcv30933674
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Jun 2025 10:59:45 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C133858056;
-	Thu, 12 Jun 2025 10:59:45 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4A9035803F;
-	Thu, 12 Jun 2025 10:59:45 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.181.231])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 12 Jun 2025 10:59:45 +0000 (GMT)
-Message-ID: <c1ad06ef84170633bdcc7f49b06d646ddbbdc763.camel@linux.ibm.com>
-Subject: Re: [PATCH v2] ima: add a knob ima= to make IMA be able to be
- disabled
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Baoquan He <bhe@redhat.com>, linux-integrity@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, coxu@redhat.com, piliu@redhat.com,
-        pmenzel@molgen.mpg.de, chenste@linux.microsoft.com
-In-Reply-To: <20250611082535.127759-1-bhe@redhat.com>
-References: <20250611082535.127759-1-bhe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Jun 2025 06:59:44 -0400
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IiPL8m8V"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250612110017euoutp02af335e632aed0206ee7003bc98aa7792~IRorleOuc0610406104euoutp02f
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:00:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250612110017euoutp02af335e632aed0206ee7003bc98aa7792~IRorleOuc0610406104euoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749726017;
+	bh=YZp5j+VVZgShQmputK7BZE45uUiLt73KODBpqGcmQiY=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=IiPL8m8VETqD9Le1RoMBF0MXgyUfFtrDcXWcHKzCz1/FOvJk6A1rx5Nt9yjMOSb2M
+	 lm8F9vPyrLV9fIoJwT9kKzuoRZzQAgCLyx4+vvJlz5HeVTUDuDVMN6dQrKdGQc1QGA
+	 pOIlHkPWzLcPVVG2H2BQWuEX9gFedUNai305uJLA=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250612110016eucas1p25af8299c2a6d42b24f6a8b896185a3c8~IRorAQYp50989309893eucas1p2G;
+	Thu, 12 Jun 2025 11:00:16 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250612110016eusmtip1cc92edb82f73467de73439b4c35caf47~IRoqZBr_z2315623156eusmtip1D;
+	Thu, 12 Jun 2025 11:00:16 +0000 (GMT)
+Message-ID: <86f1ca2b-ccd1-4470-a05d-47497f3bf2f5@samsung.com>
+Date: Thu, 12 Jun 2025 13:00:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: LbV20D_8XnbYyJkmnamk7MuArxadswEI
-X-Proofpoint-GUID: LbV20D_8XnbYyJkmnamk7MuArxadswEI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA4MiBTYWx0ZWRfX06WKXTLE7AeP HWo1oKuXzPvrRbnVFBo90alyOVO22qjqoGv2G3tg0iKFto1S0UQAwJCSuNCLmYSl4H5PKlSHbC3 fIR9wwHH6uu3DA/cB7h744tyzFLiDADS9QTpn3POPs86+bIdI/nF9UtjtcPQmqI7YgJASSuALdR
- lgRiTlOai7aI4iRHa/PKCE2M3VDQw3AypL16iIMuKcSl7yja2lkN27pJsX0L1tVwQV28rfZFoVJ n8JlPeFuuNUxGc1urJc7D/ztZG/zXySuiz/PBVS11AKT+NseIaVve0JFlLASxeNwOwj4PT8Hr0R XqSWc3BFsyAi+2gvfQQ7t0RRrSe7xfOev1jhllhg52KMgSYvXhOEWe9Z3ZO65w1058gBrBvKhS0
- sHuCpWynaQzI+FmiQ0/r937hNLTdOm5eVwsGgDeKT6uEo5m6WLQj1J7E8lF/FBaSGFOjV/xu
-X-Authority-Analysis: v=2.4 cv=CfMI5Krl c=1 sm=1 tr=0 ts=684ab323 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=UeMwZWw34uBX8khp:21 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=BtPcbq9k6-QGU93c7UYA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- phishscore=0 priorityscore=1501 clxscore=1015 impostorscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506120082
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] rust: math: Add KernelMathExt trait with a mul_div
+ helper
+To: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex
+	Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
+	<gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+	<bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+	Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
+	Krummrich <dakr@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <DAICPWRW9TCE.356EEFQOHYWFN@kernel.org>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250612110016eucas1p25af8299c2a6d42b24f6a8b896185a3c8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250609215523eucas1p22f6d7d84b403badfb77af7df973b97a9
+X-EPHeader: CA
+X-CMS-RootMailID: 20250609215523eucas1p22f6d7d84b403badfb77af7df973b97a9
+References: <CGME20250609215523eucas1p22f6d7d84b403badfb77af7df973b97a9@eucas1p2.samsung.com>
+	<20250609-math-rust-v1-v1-1-285fac00031f@samsung.com>
+	<DAICPWRW9TCE.356EEFQOHYWFN@kernel.org>
 
-Hi Baoquan,
 
-As discussed
-https://lore.kernel.org/linux-integrity/aC6ezNcUZ%2FulKgpv@MiWiFi-R3L-srv/ =
-the
-Subject line should indicate disabling IMA is limited to kdump.
 
-On Wed, 2025-06-11 at 16:25 +0800, Baoquan He wrote:
-> Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
-> extra memory. It would be very helpful to allow IMA to be disabled for
-> kdump kernel.
->=20
-> Hence add a knob ima=3Don|off here to allow turning IMA off in kdump
-> kernel if needed.
->=20
-> Note that this IMA disabling is only limited to kdump kernel, please don'=
-t
-> abuse it in other kernel and thus serious consequences are caused.
+On 6/10/25 00:21, Benno Lossin wrote:
+> On Mon Jun 9, 2025 at 11:53 PM CEST, Michal Wilczynski wrote:
+>> The PWM subsystem and other kernel modules often need to perform a
+>> 64 by 64-bit multiplication followed by a 64-bit division. Performing
+>> this naively in Rust risks overflow on the intermediate multiplication.
+>> The kernel provides the C helper 'mul_u64_u64_div_u64' for this exact
+>> purpose.
+>>
+>> Introduce a safe Rust wrapper for this function to make it available to
+>> Rust drivers.
+>>
+>> Following feedback from the mailing list [1], this functionality is
+> 
+> You could turn this into a `Suggested-by`.
+> 
+>> provided via a 'KernelMathExt' extension trait. This allows for
+>> idiomatic, method style calls (e.g. val.mul_div()) and provides a
+>> scalable pattern for adding helpers for other integer types in the
+>> future.
+>>
+>> The safe wrapper is named 'mul_div' and not 'mul_u64_u64_div_u64' [2]
+>> because its behavior differs from the underlying C function. The C
+>> helper traps on a division by zero, whereas this safe wrapper returns
+>> `None`, thus exhibiting different and safer behavior.
+>>
+>> This is required for the Rust PWM TH1520 driver [3].
+>>
+>> [1] - https://lore.kernel.org/all/DAFQ19RBBSQL.3OGUXOQ0PA9YH@kernel.org/
+>> [2] - https://lore.kernel.org/all/CANiq72kVvLogBSVKz0eRg6V4LDB1z7b-6y1WPLSQfXXLW7X3cw@mail.gmail.com/
+>> [3] - https://lore.kernel.org/all/20250524-rust-next-pwm-working-fan-for-sending-v1-2-bdd2d5094ff7@samsung.com/
+> 
+> Please use the `Link: https://... [.]` format.
+> 
+>>
+>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>> ---
+>>  rust/kernel/lib.rs  |  1 +
+>>  rust/kernel/math.rs | 34 ++++++++++++++++++++++++++++++++++
+>>  2 files changed, 35 insertions(+)
+>>
+>> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+>> index 6b4774b2b1c37f4da1866e993be6230bc6715841..d652c92633b82525f37e5cd8a040d268e0c191d1 100644
+>> --- a/rust/kernel/lib.rs
+>> +++ b/rust/kernel/lib.rs
+>> @@ -85,6 +85,7 @@
+>>  #[cfg(CONFIG_KUNIT)]
+>>  pub mod kunit;
+>>  pub mod list;
+>> +pub mod math;
+>>  pub mod miscdevice;
+>>  pub mod mm;
+>>  #[cfg(CONFIG_NET)]
+>> diff --git a/rust/kernel/math.rs b/rust/kernel/math.rs
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..b89e23f9266117dcf96561fbf13b1c66a4851b48
+>> --- /dev/null
+>> +++ b/rust/kernel/math.rs
+>> @@ -0,0 +1,34 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
+>> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
+>> +
+>> +//! Safe wrappers for kernel math helpers.
+> 
+> I wouldn't stress the fact that these are safe, they better be!
+> 
+>> +//!
+>> +//! This module provides safe, idiomatic Rust wrappers for C functions, whose
+>> +//! FFI bindings are auto-generated in the `bindings` crate.
+>> +
+>> +use crate::bindings;
+>> +
+>> +/// An extension trait that provides access to kernel math helpers on primitive integer types.
+>> +pub trait KernelMathExt: Sized {
+> 
+> We should add this trait to the prelude.
+> 
+>> +    /// Multiplies self by `multiplier and divides by divisor.
+>> +    ///
+>> +    /// This wrapper around the kernel's `mul_u64_u64_div_u64` C helper ensures that no
+> 
+> The trait shouldn't make a reference to `u64`.
+> 
+>> +    /// overflow occurs during the intermediate multiplication.
+>> +    ///
+>> +    /// # Returns
+>> +    /// * Some(result) if the division is successful.
+> 
+> Use backtics (`) for code in documentation and comments.
+> 
+>> +    /// * None if the divisor is zero.
+>> +    fn mul_div(self, multiplier: Self, divisor: Self) -> Option<Self>;
+>> +}
+>> +
+>> +impl KernelMathExt for u64 {
+> 
+> Can you also implement this for the other types that have a
+> `mul_..._div` function in the kernel?
 
-Remove the word 'only', here, and in other places.
++Uwe
 
->=20
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+Hi Benno,
+
+Thank you for the review and feedback on the patch.
+
+Regarding your suggestion to implement the trait for other types, I've
+taken a closer look at the existing kernel helpers (e.g., in
+lib/math/div64.c). My finding is that while some signed division helpers
+exist, there don't appear to be standard, exported mul_sX_sX_div_sX
+functions that are direct equivalents of the u64 version. This makes the
+generic trait idea less broadly applicable than I initially hoped.
+
+Furthermore, a more significant issue has come to my attention regarding
+the u64 C function itself. The x86-specific static inline implementation
+uses assembly that triggers a #DE (Divide Error) exception if the final
+quotient overflows the 64-bit result. This would lead to a kernel panic.
+
+/*
+ * Will generate an #DE when the result doesn't fit u64, could fix with an
+ * __ex_table[] entry when it becomes an issue.
+ */
+static inline u64 mul_u64_u64_div_u64(...)
+
+Given that a direct FFI binding would expose this potentially panicking
+behavior to safe Rust, I am now reconsidering if binding this function
+is the right approach.
+
+Perhaps this should be handled in pure Rust. For my specific case with
+the PWM driver, it's likely that a simple checked_mul would be
+sufficient. In practice, many drivers use this function for calculations
+like the following, where one of the multiplicands is not a full 64-bit
+value:
+wf->duty_offset_ns = DIV64_U64_ROUND_UP((u64)wfhw->duty_offset_cnt * NSEC_PER_SEC,
+                                        ddata->clk_rate_hz);
+
+In this common pattern, the intermediate multiplication often does not
+risk overflowing a u64. Using checked_mul would be completely safe and
+avoid the FFI complexity and the overflow risk entirely.
+
+Given these points, do you still think pursuing the general-purpose
+KernelMathExt trait via an FFI wrapper is the desired direction? Or
+would you prefer that I pivot to a simpler, safer, pure-Rust approach
+using checked_mul directly within the PWM driver where it is needed?
+
+> 
+>> +    fn mul_div(self, multiplier: u64, divisor: u64) -> Option<u64> {
+>> +        if divisor == 0 {
+>> +            return None;
+>> +        }
+>> +        // SAFETY: The C function `mul_u64_u64_div_u64` is safe to call because the divisor
+>> +        // is guaranteed to be non-zero. The FFI bindings use `u64`, matching our types.
+> 
+> Let's not talk about "safe to call", but rather say it like this:
+> 
+>     // SAFETY: `mul_u64_u64_div_u64` requires the divisor to be non-zero
+>     // which is checked above. It has no other requirements.
+> 
 > ---
-> v1->v2:
-> - Improve patch log and doc description;
-> - Make slight adjustment in code;=20
-> These are all made according to Mimi's great suggestions.=20
->=20
->  .../admin-guide/kernel-parameters.txt         |  5 ++++
->  security/integrity/ima/ima_main.c             | 26 +++++++++++++++++++
->  2 files changed, 31 insertions(+)
->=20
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-> index b3d62f4c370a..1de67b9c20b4 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2214,6 +2214,11 @@
->  			different crypto accelerators. This option can be used
->  			to achieve best performance for particular HW.
-> =20
-> +	ima=3D		[IMA] Enable or disable IMA
-> +			Format: { "off" | "on" }
-> +			Default: "on"
-> +			Note that this is only limited to kdump kernel.
+> Cheers,
+> Benno
+> 
+>> +        Some(unsafe { bindings::mul_u64_u64_div_u64(self, multiplier, divisor) })
+>> +    }
+>> +}
+>>
+>> ---
+>> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+>> change-id: 20250609-math-rust-v1-d3989515e32e
+>>
+>> Best regards,
+> 
+> 
 
-Remove the word 'only' ->  Note that disabling IMA is limited to kdump kern=
-el.
-
-> +
->  	indirect_target_selection=3D [X86,Intel] Mitigation control for Indirec=
-t
->  			Target Selection(ITS) bug in Intel CPUs. Updated
->  			microcode is also required for a fix in IBPB.
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/i=
-ma_main.c
-> index f99ab1a3b0f0..c38f3881d72f 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -27,6 +27,7 @@
->  #include <linux/fs.h>
->  #include <linux/iversion.h>
->  #include <linux/evm.h>
-> +#include <linux/crash_dump.h>
-> =20
->  #include "ima.h"
-> =20
-> @@ -38,11 +39,30 @@ int ima_appraise;
-> =20
->  int __ro_after_init ima_hash_algo =3D HASH_ALGO_SHA1;
->  static int hash_setup_done;
-> +static int ima_disabled __ro_after_init;
-> =20
->  static struct notifier_block ima_lsm_policy_notifier =3D {
->  	.notifier_call =3D ima_lsm_policy_change,
->  };
-> =20
-> +static int __init ima_setup(char *str)
-> +{
-> +	if (!is_kdump_kernel()) {
-> +		pr_info("Warning: ima setup option only permitted in kdump");
-> +		return 1;
-> +	}
-> +
-> +	if (strncmp(str, "off", 3) =3D=3D 0)
-> +		ima_disabled =3D 1;
-> +	else if (strncmp(str, "on", 2) =3D=3D 0)
-> +		ima_disabled =3D 0;
-> +	else
-> +		pr_err("Invalid ima setup option: \"%s\" , please specify ima=3Don|off=
-.", str);
-> +
-> +	return 1;
-> +}
-> +__setup("ima=3D", ima_setup);
-> +
->  static int __init hash_setup(char *str)
->  {
->  	struct ima_template_desc *template_desc =3D ima_template_desc_current()=
-;
-> @@ -1186,6 +1206,12 @@ static int __init init_ima(void)
->  {
->  	int error;
-> =20
-> +	/*Note that turning IMA off is only limited to kdump kernel.*/
-
-Remove the word "only"  -> Note that turning IMA off is intentionally limit=
-ed to
-kdump kernel."
-
-> +	if (ima_disabled && is_kdump_kernel()) {
-> +		pr_info("IMA functionality is disabled");
-> +		return 0;
-> +	}
-> +
->  	ima_appraise_parse_cmdline();
->  	ima_init_template_list();
->  	hash_setup(CONFIG_IMA_DEFAULT_HASH);
-
-Mimi
-
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
