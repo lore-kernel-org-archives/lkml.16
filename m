@@ -1,81 +1,97 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C839128382;
-	Thu, 12 Jun 2025 04:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C1517B506
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749702640; cv=none; b=Hnai8BSU45j/g1GJDFAp4opnzRhWarNI2gLyvqECSLgu1JUd1AhkKmi++BkrQYlDkIwi5JKo2wVmoCD5unwM9/o28rwbwhSK6St+A2RcBlfVWfopZRZc5bekrzRZq2cYPfWnMAcde9IQMJOssCgUz5RwoBSg7kVNsfC7dyjCkJQ=
+	t=1749702642; cv=none; b=sAuCX0A+n7AP8b+2FIOZrkirgpWxhJj642cJqTdcZznS7pyi7UWWloSzzpHcYj7TKt3ARk3PTh1v+KNJTVAS5TRcQYXQFUV2/0T/fCKnZnZcayowTg1p0BzvuOk+i3ntZzfNwKXWBMhuBhxgJi9ghI4i/02qw7TZh32gPVNx5+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749702640; c=relaxed/simple;
-	bh=KtZUjJAg2eQN1hqERrYkxxQnWfsOhN7ohu1dvZH3944=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=VdI+UWobTeui35G0tPUdUXD0jGS2LmPkrIGCSVrVmTlaYqjn7n2IPT1Cum157umVzOA8n2rSkJY3K7k9eYbvy1FIPGIhmDGe+Ffhr6hB0y8xyC8RC2xLRyMUZaY2YI2Ou6XsUUyHy3L5DSVFzEbnvPgmh/a7THZ1x2/62Jay7Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uPZa0-008YSz-KI;
-	Thu, 12 Jun 2025 04:30:20 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1749702642; c=relaxed/simple;
+	bh=AEUIY5bRPA46oXDdDeDoaJOJhIrFHwCXalucwn+fpVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zbe5ICNg4ioZ3xDFWl9wXDfAnKzO5VP96xgQsWXZARbzXkb6mwvm3F3DzUuK4SZ0d7DLis9kVeYTkGZn4eu7wIDU5CD9T67n2h7oLfawW1BVNg9TIsckwuElBcy1p84bFHIBC4c995W+JaagTT6Hc10rO1AEbFevdA6XGlCEmgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uPZZr-0007m0-Ti; Thu, 12 Jun 2025 06:30:11 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uPZZo-0033qj-0b;
+	Thu, 12 Jun 2025 06:30:08 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uPZZo-008lSG-02;
+	Thu, 12 Jun 2025 06:30:08 +0200
+Date: Thu, 12 Jun 2025 06:30:07 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>,
+	Leonard =?utf-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>,
+	kernel@pengutronix.de, Roan van Dijk <roan@protonic.nl>,
+	Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+	Jacopo Mondi <jacopo@jmondi.org>,
+	Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+	Mudit Sharma <muditsharma.info@gmail.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	=?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+	Andreas Klinger <ak@it-klinger.de>,
+	Petre Rodan <petre.rodan@subdimension.ro>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 11/28] iio: adc: ti-tsc2046: use = { } instead of memset()
+Message-ID: <aEpXz8sx6wwAE7it@pengutronix.de>
+References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
+ <20250611-iio-zero-init-stack-with-instead-of-memset-v1-11-ebb2d0a24302@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Miklos Szeredi" <miklos@szeredi.hu>, "Amir Goldstein" <amir73il@gmail.com>,
- "Kees Cook" <kees@kernel.org>, "Joel Granados" <joel.granados@kernel.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <smfrench@gmail.com>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>, netfs@lists.linux.dev,
- linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs/proc: take rcu_read_lock() in proc_sys_compare()
-In-reply-to: <20250611233306.GA1647736@ZenIV>
-References: <>, <20250611233306.GA1647736@ZenIV>
-Date: Thu, 12 Jun 2025 14:30:20 +1000
-Message-id: <174970262010.608730.16666030974664097741@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-11-ebb2d0a24302@baylibre.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, 12 Jun 2025, Al Viro wrote:
-> On Thu, Jun 12, 2025 at 08:57:03AM +1000, NeilBrown wrote:
+On Wed, Jun 11, 2025 at 05:39:03PM -0500, David Lechner wrote:
+> Use { } instead of memset() to zero-initialize stack memory to simplify
+> the code.
 > 
-> > However there is no guarantee that this lock is held by d_same_name()
-> > (the caller of ->d_compare).  In particularly d_alloc_parallel() calls
-> > d_same_name() after rcu_read_unlock().
-> 
-> d_alloc_parallel() calls d_same_name() with dentry being pinned;
-> if it's positive, nothing's going to happen to its inode,
-> rcu_read_lock() or not.  It can go from negative to positive,
-> but that's it.
-> 
-> Why is it needed?  We do care about possibly NULL inode (basically,
-> when RCU dcache lookup runs into a dentry getting evicted right
-> under it), but that's not relevant here.
-> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-Maybe it isn't needed.  Maybe I could fix the warning by removing the
-rcu_dereference() (and the RCU_INIT_POINTER() in inode.c).  But then I
-might have to pretend that I understand the code - and it makes no
-sense.
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-If a second d_alloc_parallel() is called while there is already a
-d_in_lookup() dentry, then ->d_compare will return 1 so a second
-d_in_lookup() will be created and ->lookup will be called twice
-(possibly concurrently) and both will be added to the dcache.  Probably
-not harmful but not really wanted.
-
-And I'm having trouble seeing how sysctl_is_seen() is useful.  If it
-reports that the sysctl is not visible to this process, it'll just
-create a new dentry/inode which is that same as any other that would be
-created... 
-
-NeilBrown
+Thank you!
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
