@@ -1,193 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56351885A5
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB03213252;
+	Thu, 12 Jun 2025 10:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749722879; cv=none; b=JFnZaGVjY/wE+lxHd3WcEqSInFw1zjUwXY1tJgY3lxcelSZ2cvHAHuyC7yKNyErrwRnlQndgzU9zgkudGrzwLEEaKxDZUX3dqhQPfcabZDZ4YQGTtNTOqnzOBFlXt/CfevtckYltqGuCIXb4F+/t9n6CiQaSmRcS9YOoxvwGFW0=
+	t=1749722912; cv=none; b=XhxffW12i74/Rnbzs2hIEacfFy+zD7cKf/5T4WlFp91TD5OrETeU3xGTtWfeFvLO1GBqiAlgJY3U4Ux+B50ummo+Ae1P7rarVwXFXDpiu8HkBmjA3SsIptIfsBCX/RYBhSutOn2XPrvCGAD54pGcGlDCKUSLh49XTwO6HfpyYc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749722879; c=relaxed/simple;
-	bh=U3fo5tP/fWHfIVtMDXqNtzzuDxeFogTCYAFKIcSqweA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=n4w+zNTm1JsvyhfBld6tpgYH2D8igmgUNazdaKuNVbwUWQLH/q8lQlFl8NGjdxxfivLKiFHNlxGs8K0LIDLC5HX7393ZoobFYL1nG4T410bVk322YXkVi6dOSg1H0j6ni1yf9pforViONXlr2l5w2ny0MAG64qElS2EiXS6rcCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TAKCP/+o; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749722912; c=relaxed/simple;
+	bh=4sj4r7Jbmz3nmlhcxBiEyRblCjFF90NxdByUKtg4nfI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dTDuaYwNuud5QBfimGgIcItpdk5g1DuOc8BrziYBxwsrfcI3GBp4/1Q1ARJ25C69+ylHW0sHLeMcmpT5wU0YkjI/IwPim9om/kwLlx5f95XO2YdbHUIO98C0S5s9ldGar//Yf0Ni7nW7zuxUFQSzbDCHKUvqpTuPATaH3HeljdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ey3q5xGa; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TAKCP/+o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749722878; x=1781258878;
-  h=date:from:to:cc:subject:message-id;
-  bh=U3fo5tP/fWHfIVtMDXqNtzzuDxeFogTCYAFKIcSqweA=;
-  b=TAKCP/+o+o53w1zwZ1t5gAZlUzXl2rEpY2rLCMDF/w4QYg4aI4hBxKVa
-   NTqQBjaMJuTU8r68rzxZeRcMuTHH5Iho2Fb71RbxrcM7cxcdyjB9jjrh/
-   c/tgX23cETb8JFMCzN8498MpcJBjV/Vbm23CX8oWkbp9gZ5DQHiei9A9m
-   iWq9hRZ3UB8STvMXjXdzhSoDzhSUZyIsW3jmwClLPX/LcmoDb+LyRNmJy
-   QaJPdrSm8UrpAYYv3GP9/TCdF+lg75aKq1CMC9iyFDzT9BuSShAPiiA6d
-   yEfuuHPEbprkMnPCMZnO124MfHt2tB32K5BDf957pK7ubtZZs7/kTOtxB
-   g==;
-X-CSE-ConnectionGUID: J/n3OahwTCWwgNIfiblFbg==
-X-CSE-MsgGUID: FkyvYH+CQvqzRonOCu+SMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55696194"
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="55696194"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 03:07:57 -0700
-X-CSE-ConnectionGUID: HEL1ZcpiSFObVzfIpNkkYQ==
-X-CSE-MsgGUID: rprmDDBYS+e9mUfKoqGw2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="147966946"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 12 Jun 2025 03:07:56 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPeqf-000BOI-1T;
-	Thu, 12 Jun 2025 10:07:53 +0000
-Date: Thu, 12 Jun 2025 18:07:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- 7cd9a11dd0c3d1dd225795ed1b5b53132888e7b5
-Message-ID: <202506121819.G3aAPNjK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ey3q5xGa"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a442a3a2bfso13584761cf.1;
+        Thu, 12 Jun 2025 03:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749722909; x=1750327709; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z6IAbOLTMbompAY/5ah8ku4/WSIfPEg+nIcbaDG+DSk=;
+        b=Ey3q5xGaFQaFR8lbNexhjcDT8UdwH+0I/RKkJAULLRlb4FLQHTKKrPyMMTFoNAR+MD
+         OIyINHseCu2rhvWYgrW5vEvN6JBdMnD8EDGAoQcBMGPL71FnOigXLR/OrdQNdDDj6Rzi
+         wKQnLpYTvkGLFvwuC2GVCs6StYdbZ4aP2izGtqfoRcQdqu2x/LIqyKQsN4e1nQieYtXG
+         8tFS6riySl7WbOWoSRDLnwTSXDltHpCj4nYxg9lUrdbyStgVDVFWN4TWKzNjGeAM6BPP
+         ikj+vivj2jDvnVzW4x4ZUR/Smqmhy14dyOjhRpl5DqOHscU1J+QBlFDKXsrYniqHUGrO
+         bjpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749722909; x=1750327709;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z6IAbOLTMbompAY/5ah8ku4/WSIfPEg+nIcbaDG+DSk=;
+        b=BpN5DeOOVJIchahb/BmqAoKaATu6amvUaMjBrbev3sY2Vx5Aq5mv8PR3n7Mb7Thwkm
+         3DL7VPX79iLrQEV65eREDt400tfBzFUNw0uxbpAcfTENRDxjY2lT9jpgIN6vMNUJ0plS
+         4RuhdLKARyj2wHzNxYAAw8kgywkWarePsviYXFiHk2UUf+LuKwvX24nS9PiZbV8COP8p
+         Cc8ixWCoE3m+cgG/1HGJjcy31BdVZpjnvsUIubGQg/sjDyBpV7ytDmP+/TG/nYNc8LMy
+         VsoCJst4uInNCjYeERM2n6w6NWdwAcbyadSx+6RSAaw0u/M0bovz7C+hTyKRyF+2PTqM
+         ePbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVU+hZIJ+3br4c5k1e4nQN3UHKXBIJZ5uHWr7gmwBAnvs1lWw5Jw2/JeDBPrdmvXXjMw8S1Ewmrcheo@vger.kernel.org, AJvYcCVUNr9aJ5Da6RIirq8ffeM82ckXlanf+5f0hjxUAjVGqG6yl3dhwY+dVm1LUVDnOhFnGloAvI2uq2/D@vger.kernel.org, AJvYcCXkGjLleTdIrShhDd+cFDNviaXbwS+tKktRdPLghne4xYZKOcIhD81VUk7i8czMZR8GKAqey1c/CbSyKJNJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOco12rQ7HeIdh0fo0ZOsEYJaZ0pDIt3jj0Snh5tDlBUD0iwJX
+	GRz7b8yyJaJRSiDsRhD9KIcl0fKuSnJocQvMsmUlSl0bEAEgMQNGmI3DZRtpyIK9rlE=
+X-Gm-Gg: ASbGnctJr4HEt5MbWOt47WNt+sH/t+YouPTCHQO2xXKCejkgc9NqxIFf7EKZW1aHNPy
+	to92ihHlktRurY0cC0hX9uJNs8t1SyJAiuPvMtLjTqtDyunlz1i9nUYJRC0Pj0RHga8L5qDWuCq
+	DKPtnu+W8bL1If0T5DbwZr4AD9o8Cp87S3WRLmwPJ3YVSc00pj05jXTfS7oN+kFg1PRyedrGdsM
+	1qD+I7kRgbYcjVal81uxTLpWr9uasn7pM3x/y9nlWEkJabsETvWg0Oitdm4Zt9RRYsFeVKeWaBG
+	VSWJmrkbSwgOwId/UaRMK+bhVvJxgwIBnN346bvYDjTyQLOH/xcyrDC9/VqXsObzbvycFcWMVg=
+	=
+X-Google-Smtp-Source: AGHT+IEZSHtYZazqE+Pd9vRLbylCApmsONx6MsgC9pSAn/f4eqtSnaxIFftRIU3DEvYpJx8VLfMudg==
+X-Received: by 2002:a05:6a00:3c88:b0:740:9c57:3907 with SMTP id d2e1a72fcca58-7487c34f26emr4432764b3a.19.1749722899262;
+        Thu, 12 Jun 2025 03:08:19 -0700 (PDT)
+Received: from localhost ([2409:4071:4d30:50e6:899a:ff8f:cff5:9bba])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748808962a7sm1056014b3a.42.2025.06.12.03.08.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 03:08:18 -0700 (PDT)
+From: surajsonawane0215@gmail.com
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	surajsonawane0215@gmail.com
+Subject: [PATCH v2 0/3] iio: chemical: Add Sharp GP2Y1010AU0F dust sensor support
+Date: Thu, 12 Jun 2025 15:37:43 +0530
+Message-ID: <20250612100758.13241-1-surajsonawane0215@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=yes
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
-branch HEAD: 7cd9a11dd0c3d1dd225795ed1b5b53132888e7b5  Revert "mm/execmem: Unify early execmem_cache behaviour"
+From: Suraj Sonawane <surajsonawane0215@gmail.com>
 
-elapsed time: 1477m
+This patch series adds support for the Sharp GP2Y1010AU0F optical
+dust sensor, which measures airborne particulate matter concentration
+in grams per cubic meter (g/m³). The implementation includes:
 
-configs tested: 116
-configs skipped: 4
+1. A new IIO_DENSITY channel type for particulate sensors (Patch 1)
+2. Device tree bindings documentation (Patch 2)
+3. The driver implementation (Patch 3)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The sensor requires:
+- One GPIO for device enable control
+- One ADC channel for analog output measurement
+- Optional LED trigger for synchronized sampling
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                      axs103_smp_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250611    gcc-12.4.0
-arc                   randconfig-002-20250611    gcc-8.5.0
-arc                        vdk_hs38_defconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                            mmp2_defconfig    gcc-15.1.0
-arm                         nhk8815_defconfig    clang-21
-arm                   randconfig-001-20250611    gcc-11.5.0
-arm                   randconfig-002-20250611    clang-21
-arm                   randconfig-003-20250611    gcc-13.3.0
-arm                   randconfig-004-20250611    gcc-13.3.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250611    gcc-8.5.0
-arm64                 randconfig-002-20250611    gcc-9.5.0
-arm64                 randconfig-003-20250611    gcc-13.3.0
-arm64                 randconfig-004-20250611    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250611    gcc-15.1.0
-csky                  randconfig-002-20250611    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250611    clang-21
-hexagon               randconfig-002-20250611    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250611    gcc-12
-i386        buildonly-randconfig-002-20250611    gcc-12
-i386        buildonly-randconfig-003-20250611    clang-20
-i386        buildonly-randconfig-004-20250611    gcc-12
-i386        buildonly-randconfig-005-20250611    gcc-11
-i386        buildonly-randconfig-006-20250611    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch             randconfig-001-20250611    gcc-15.1.0
-loongarch             randconfig-002-20250611    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                        m5307c3_defconfig    gcc-15.1.0
-m68k                        stmark2_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                           gcw0_defconfig    clang-21
-mips                           ip28_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250611    gcc-8.5.0
-nios2                 randconfig-002-20250611    gcc-9.3.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250611    gcc-11.5.0
-parisc                randconfig-002-20250611    gcc-8.5.0
-parisc64                         alldefconfig    gcc-15.1.0
-powerpc                    adder875_defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                  mpc885_ads_defconfig    clang-21
-powerpc               randconfig-001-20250611    gcc-8.5.0
-powerpc               randconfig-002-20250611    gcc-13.3.0
-powerpc               randconfig-003-20250611    clang-21
-powerpc                  storcenter_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250611    clang-21
-powerpc64             randconfig-002-20250611    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250611    clang-21
-riscv                 randconfig-002-20250611    clang-19
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250611    gcc-15.1.0
-s390                  randconfig-002-20250611    gcc-11.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                          lboxre2_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250611    gcc-15.1.0
-sh                    randconfig-002-20250611    gcc-15.1.0
-sh                      rts7751r2d1_defconfig    gcc-15.1.0
-sh                          urquell_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250611    gcc-11.5.0
-sparc                 randconfig-002-20250611    gcc-8.5.0
-sparc64               randconfig-001-20250611    gcc-8.5.0
-sparc64               randconfig-002-20250611    gcc-13.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250611    clang-21
-um                    randconfig-002-20250611    clang-19
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250611    gcc-12
-x86_64      buildonly-randconfig-002-20250611    clang-20
-x86_64      buildonly-randconfig-003-20250611    clang-20
-x86_64      buildonly-randconfig-004-20250611    gcc-12
-x86_64      buildonly-randconfig-005-20250611    gcc-12
-x86_64      buildonly-randconfig-006-20250611    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250611    gcc-13.3.0
-xtensa                randconfig-002-20250611    gcc-10.5.0
+Tested on BeagleBone Black with:
+- P8_12 (GPIO_44) for LED control
+- P9_39 (AIN0) for analog output
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Changes since v1:
+- Added new IIO_DENSITY channel type (Patch 1)
+- Documented ABI for density measurements (g/m³) in sysfs-bus-iio
+- Updated timing properties to match datasheet:
+  * sharp,led-on-delay-us: 280μs (from 40μs)
+  * sharp,measurement-window-us: 280μs (from 200μs)
+- Added reg property for multi-sensor support
+- Moved datasheet reference to tags block
+- Hardware Interface:
+  * Replaced manual power management with devm_regulator_get_enabled()
+  * Consolidated LED timing into single delay operation
+  * Improved error handling in read sequence
+- Removed unnecessary IIO_BUFFER dependencies
+- Alphabetized Makefile entry and header includes
+- Replaced extend_name with proper label callback
+- Standardized on pdev->dev for all device logging
+- Applied IIO formatting conventions ({ } spacing)
+- Changed IIO_VOLTAGE → IIO_DENSITY channel type
+- Updated all timing values to datasheet specifications
+
+V1: [PATCH 1/2] https://lore.kernel.org/lkml/20250425215149.49068-1-surajsonawane0215@gmail.com/
+    [PATCH 2/2] https://lore.kernel.org/lkml/20250425221214.50255-1-surajsonawane0215@gmail.com/
+
+Thanks!
+Suraj Sonawane
+
+Suraj Sonawane (3):
+  iio: Add IIO_DENSITY channel type
+  dt-bindings: iio: chemical: Add sharp,gp2y1010au0f
+  iio: chemical: Add driver for Sharp GP2Y1010AU0F
+
+ Documentation/ABI/testing/sysfs-bus-iio       |   8 ++
+ .../iio/chemical/sharp,gp2y1010au0f.yaml      |  78 +++++++++++
+ MAINTAINERS                                   |   7 +
+ drivers/iio/chemical/Kconfig                  |  10 ++
+ drivers/iio/chemical/Makefile                 |   1 +
+ drivers/iio/chemical/gp2y1010.c               | 126 ++++++++++++++++++
+ include/uapi/linux/iio/types.h                |   1 +
+ 7 files changed, 231 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml
+ create mode 100644 drivers/iio/chemical/gp2y1010.c
+
+-- 
+2.43.0
+
