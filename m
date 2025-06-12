@@ -1,269 +1,2728 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2067.outbound.protection.outlook.com [40.107.237.67])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17557223DD7
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749720637; cv=fail; b=Hgrxwmwbk0QKNdAT2eQ/YI6Z6qS57a0clHjHmgYXSlpLAZROGcNLEgKQXCxqaCJxs7usVcOahcEsNVDPn3NWrdvBeKVMqN/OmadBfxw37BxvSkK0ZW8Z8jOKPa6qcbhTcgz9LWB1zyQHd/rununWkaQ+evQA2a8Mn6pPrveeTtQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749720637; c=relaxed/simple;
-	bh=1jyTsW9PILmj0XBpV+McYcC86fTnK9UMEQBmV/WMgXU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jpgv5FT3HcWXsM72ciqfvtgoJ3hUT1RqNNxgjGQH26f1af578t8HU6JfLIo9Kpvg7jYLFQz+bdUSynhZLBhvsB4yfdFJhEwYUYw8hXnpiMjYLlyHE6fvZNcRkmc/Sav3HWGADYPHN2SaLg8gdw1u6kEGrHq717UF+wBet0U62ZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D1Fmn3bb; arc=fail smtp.client-ip=40.107.237.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79B420371F;
+	Thu, 12 Jun 2025 09:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749720666; cv=none; b=qY2X4AVBGAnFNVF8wQawemlLfxlWBZW4FFizLhKZ+Y03dC5HliGTzNCoxhaHwxJKdqwba6A4Zs4PjoieHsgTryIAiyt1soNsUg5FW4mweiEPnCl62seuCRxelHTm0IPJ7gYyqSL7QWA6+DGkyYyE1HxbDTKwR6W7UdQmBBng2L0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749720666; c=relaxed/simple;
+	bh=GMXia8xTHHjLS+xTJzeKQWOYx6IlzyLhpBUkC3SxmjQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pqzKir8qYxeqyDHuLtnHQnVNQc9eraE7hJWkqVYBOUJwrfkgpbh6T3DxEwa5a3zLlNP9/HnuYJGTEIoHqD6XjnHWWkUWFtqGJ0XrbHFZKjzqdUU4RFUAAJ9cftiPzo2IRPdzpHraS2nn4Ck1S8GwFkKOJq6qE0Z60eiJw4q6cBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=bhImUav7; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D1Fmn3bb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v9pPvVj9o0alJNbvqyyVjV4AaNZ5ivQFvlnDOERTUzdVVQVG0bp9XC5sK+Uye7zc2J7nf1VDpk6J+77fTXPiAP2yLbGrK8e8Uq9XGt+VzBVFc0SW1xT9ZQVHh87LVb9ZSa1pg1dliWzvwKitZMahKfKX9eTuPFFkWaPw9jZU9YUvEd9B4D3Ywo+FbP2dHYZQhReRFYP3Dn89zmVbneW8N+fvw31nFxgdkWDBND+TqOT14QcnQKRZLwo2wCvNO2VBqyQbuNPwMVhnTuJMWg5FxUyD+MedskQRvV4eVmvuZUVsoFXyFKfkckQpapXvWpxTpesDjwY6JnaGyHBQ7sdOSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EuBIGm/9wuDLR1L549iooY2EW0XFzgmRxU3sS0hEMJ8=;
- b=OseCf3aD36yAJo5JRYl0e0xoMES7tnijFGCDSGv5iRZb5KTtmmfqMd/jsKyn+4oj3J+n8nqS7vuJ8qPAwBNBgq+CKjJmL2nt/lw4g9kRvhFc+lZxSwkfN1MXAosqcW7CVG+MXpx/1ex7/aUmbDxEyUhnjm6vPIVuaHdNaZsX7teWhmgpYzWjRXINySTAejMlyvmwA0fkRCXJ6F5VKfbUmRVIXT+sMkA4EVESJzrYNFcfNwFZDUH7Y8irKXXgwdNCaJKvEf874rWZdU65zS9mHcu78O8qN9cuvtlsdTZzAW8Wck2AEZceR3/luCpQx9E29f+pTABxecRt5RN8isACNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EuBIGm/9wuDLR1L549iooY2EW0XFzgmRxU3sS0hEMJ8=;
- b=D1Fmn3bbrNx79ja1qiWNJrkQ5XH8fPzVQ5zO7FPwOTvIZrUiKtcOJlo0QLxn3UM5aBiGkadbgmhR4gVmQEva14SxQLw0LU3n3JMUWqv2ZaV0vdTDdKQ3w1BZJdnlXTtfXDKRNfGFfJ+raSnOwvlcM48qBxCcKxdPD+q36yEA2zc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8)
- by IA1PR12MB6484.namprd12.prod.outlook.com (2603:10b6:208:3a7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Thu, 12 Jun
- 2025 09:30:33 +0000
-Received: from CH3PR12MB8658.namprd12.prod.outlook.com
- ([fe80::d5cc:cc84:5e00:2f42]) by CH3PR12MB8658.namprd12.prod.outlook.com
- ([fe80::d5cc:cc84:5e00:2f42%7]) with mapi id 15.20.8792.040; Thu, 12 Jun 2025
- 09:30:32 +0000
-Message-ID: <5a673979-e96c-4dc2-b84b-849c6c8084ae@amd.com>
-Date: Thu, 12 Jun 2025 15:00:22 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] sched/topology: improve topology_span_sane speed
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- linux-kernel@vger.kernel.org, Vishal Chourasia <vishalc@linux.ibm.com>,
- samir <samir@linux.ibm.com>, Naman Jain <namjain@linux.microsoft.com>,
- Saurabh Singh Sengar <ssengar@linux.microsoft.com>, srivatsa@csail.mit.edu,
- Michael Kelley <mhklinux@outlook.com>, Russ Anderson <rja@hpe.com>,
- Dimitri Sivanich <sivanich@hpe.com>
-References: <20250304160844.75373-1-steve.wahl@hpe.com>
- <20250304160844.75373-2-steve.wahl@hpe.com> <20250610110701.GA256154@unreal>
- <a5da2e4d-c042-4d01-bfc3-f50ca674247b@amd.com>
- <20250610123618.GB10669@unreal>
- <4110e533-6cab-4845-bd11-11279ebc9150@app.fastmail.com>
- <aEiKCqoaEWnZvlCI@swahl-home.5wahls.com> <20250611060607.GM10669@unreal>
- <f5fad97d-f880-49a4-9595-ca3f5b41d9bb@amd.com>
- <20250612074157.GO10669@unreal>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250612074157.GO10669@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0230.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:eb::15) To CH3PR12MB8658.namprd12.prod.outlook.com
- (2603:10b6:610:175::8)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="bhImUav7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1749720645;
+	bh=2Zy4bFoBVzl6nVTabnVpris3XyN2VolT0oRORLqhxgY=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=bhImUav7I27ncKIEx7XNpBDu13ojWS6AeaMzo9E01QgXaxKKj5/viUBC3Li22EwJj
+	 uznKXUZZODbqTppUzWxAmFRMRIdvAq/7jXjmbiCbMSVt/Y5tjHB8ZBqkrP4+qyRBYx
+	 Oc9pjgkkRSKXoufyrJ8oNyOq3jmRFd43Sv7eikeo=
+X-QQ-mid: zesmtpip2t1749720636tcbef0ec9
+X-QQ-Originating-IP: LbLuh+31dWspvgSIPYQRMs7XmdvIPMOO1pEFScbjCQQ=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 12 Jun 2025 17:30:30 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11818956612719598227
+EX-QQ-RecipientCnt: 70
+From: Zhenghan Cheng <chengzhenghan@uniontech.com>
+To: herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterz@infradead.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	rafael@kernel.org,
+	jgross@suse.com,
+	Jason@zx2c4.com,
+	mhiramat@kernel.org,
+	ebiggers@kernel.org,
+	masahiroy@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	lenb@kernel.org,
+	ajay.kaher@broadcom.com,
+	alexey.makhalov@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	ppaalanen@gmail.com,
+	boris.ostrovsky@oracle.com,
+	nathan@kernel.org,
+	nicolas@fjasle.eu,
+	ilpo.jarvinen@linux.intel.com,
+	usamaarif642@gmail.com,
+	ubizjat@gmail.com,
+	dyoung@redhat.com,
+	myrrhperiwinkle@qtmlabs.xyz,
+	guoweikang.kernel@gmail.com,
+	graf@amazon.com,
+	chao.gao@intel.com,
+	chang.seok.bae@intel.com,
+	sohil.mehta@intel.com,
+	vigbalas@amd.com,
+	aruna.ramakrishna@oracle.com,
+	zhangkunbo@huawei.com,
+	fvdl@google.com,
+	gatlin.newhouse@gmail.com,
+	snovitoll@gmail.com,
+	bjohannesmeyer@gmail.com,
+	glider@google.com,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	shivankg@amd.com,
+	peterx@redhat.com,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	kevin.brodsky@arm.com,
+	willy@infradead.org,
+	linux@treblig.org,
+	Neeraj.Upadhyay@amd.com,
+	chengzhenghan@uniontech.com,
+	wangyuli@uniontech.com,
+	linux-crypto@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	"Huacai Chen" <chenhuacai@loongson.cn>,
+	Zhenghan Cheng <your_email@example.com>
+Subject: [PATCH] x86: Fix build warnings about export.h
+Date: Thu, 12 Jun 2025 17:30:21 +0800
+Message-Id: <20250612093021.7187-1-chengzhenghan@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8658:EE_|IA1PR12MB6484:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2bdecefe-035e-4f7d-5a37-08dda993c6d8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c2FjZlZuWUIzZEtvT1c5VDUxOFdTclRuRy9GU2JPNVpzczVMb2ZwVnJ1cFJq?=
- =?utf-8?B?bm1wWWhoVFpvbzE5a1dKUWhDczlDRDZISEE5UWVGdkpRTDZwTjdmRmsrVUVG?=
- =?utf-8?B?Sy9IQ21Ec012TGlzMGllWi90N2VWcmIvSnArZ04veUkwbXkzWmVZY0svOHd2?=
- =?utf-8?B?eEJuME5tRVlGcEpVeUplemsvcFU5dGEyQ2pmbDBVRU1jUGJLSE9pclZ5Q2p5?=
- =?utf-8?B?MzlVdUo2Y1pBdCthT3krRSsxbCtuQ1J2RHBBZUJNZTVmSWorNWl1M1djZ3lF?=
- =?utf-8?B?Sy9aSG10NG9GQnNDSkVtdkxKOVF4MUVSZnVHVFVUOThMWlA2R29JcDRYOVJw?=
- =?utf-8?B?ZXkvV0xJVWhVY1VDM3p6MlI4L3c3bkhxU1kwWjUzU1NvaTVKOXRKWStuYUdV?=
- =?utf-8?B?SkFmSFk0RG03c2hXeUhCckpKR0xJZHhEcFpXNnI3RWtSTFZ1Yld3NmRrcFZ1?=
- =?utf-8?B?Y3lDTmlBYlBaV2IxaXlPQUJ6S1hUdjN3WkZHS2s1ZTNQNFRLMDQ2MHYwZkM2?=
- =?utf-8?B?V0dGdGhDVDdESUZ0NGx4d1NKQXZPQnBDUXpLMHl3VjhZNHorUlBWb2tsWDVX?=
- =?utf-8?B?eHI3aEl1TkVRdFc0YU5MampwajUvWWxBRmpNZEI1NTRpMVZmcXVrdFl1dElw?=
- =?utf-8?B?SFFIZ2ZqNTFtNDJMZEpTSnowbzlFblc1ZXcvcUZ1eFJRMjk1U0lrUHE5Mk9o?=
- =?utf-8?B?TDRCU0w1WC81QmZheEF6U0FOM0o0U2EwakJhdW1pK256eTR4cEpVRXovSE5T?=
- =?utf-8?B?QitCcEEyeTRmQS9DcVZJSnhFWnkxM3ArWkJxTks5dUxkMWFVMmtUQWc1bng4?=
- =?utf-8?B?bFhDM0lEQXNKZkdPYmw2aEVwWnViLzRHMVAzZE9lY0JGWVI2NEg5RVc1OFY1?=
- =?utf-8?B?dnlYQ3RKMVBNRjJyRmlUYklOa2hoYzlXMUptYU1LRGFoVHpYdVZydklKVzdP?=
- =?utf-8?B?eUI2NXFNVW9oTkRiZGw3Qk0zYXRTbS9kQXp2MmpBeG91QWJSV3R2ZXpJWEtK?=
- =?utf-8?B?NUc5TE1lc3hKZGZuMDA0MzU3M0lDd3FNNDZOd0MwQkdpbC9MYVhIRkNvTTJI?=
- =?utf-8?B?OEc1di9FeDhNd0YrdFJjWU1PV1d3ZitZWnlKR0twUlZKMHV1dlBDdjkwV0NY?=
- =?utf-8?B?UDRRSFR4YTVMcVVTZmxWTVNpcjRXenppcjU4Rjh6V2NuQ290UEV0VUc2WmdN?=
- =?utf-8?B?UTB0azd3U3c3TXVRQlpCYU9VTWZzNmN1Z3VpVENMWEhFZVdRS09NdzRxdHNw?=
- =?utf-8?B?M294bCtQTTd3UklZbXpCcTNhK0pReTlZMlJuMHY4WC8wVjFhMXpkZFpjSVh2?=
- =?utf-8?B?OVVhV0ZPTlM5Nzh2Rm5NaUdHR0ZDOVM3cUVTYXRGM2F6L0Q3L09Ca0FZRUlr?=
- =?utf-8?B?b01iNVpVZ1VKUytRanQyM0JZR01JTjBmVmIrVmlJeS9wdWZFd24wUlVVVExQ?=
- =?utf-8?B?RXZzLzlMYlZtTEJudnN0b1JnRC9qbUQ1bE92TmFOTTdaMXFCSG5Tb1ZZeHVY?=
- =?utf-8?B?U0svQUxHVnoycXI4bEl0RzE5cjdiYmJzNGN1dlk3UkR1dFU0d3RuSDMrYXBD?=
- =?utf-8?B?TTl5MlJHSEo1S21Gck1aSDJKelkrbWsrTFFOMVNza21RLzZiVEJjajdab0lw?=
- =?utf-8?B?TDAwOGVwUzk1bWVUSW53aSttVVN6S2tjcEhHcUVaOENuQ0hsVzNjblNzNHdH?=
- =?utf-8?B?eitjTmNibzkyZGc3bUlBeWdJYXloclFUOFVCR3dJUDRwd2Z5ZVBSMDJaZ0c3?=
- =?utf-8?B?YWUrVGFRZi9wSVkvbUU2QzJHbnJGZE54bjVQTm9ybU5aVFA2U0llajZ2N1p4?=
- =?utf-8?B?ekE2cDNubzdjQncyc3BmSEd1Mm14VU83b29sNGltd0Myd0FuUEZUWG12eHl4?=
- =?utf-8?B?ZlYrY2VaMTZvcEpuUitmT1oyRVRPdkY0N2RtNWNUYXBxSkhLcnlQRmZLVVNi?=
- =?utf-8?Q?GEG3CZBEIjk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8658.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aVJ4U2NjcmNzd2lQWEtPdXZ2eFlxTkhVMERWbitvT3hJM1NXZm9heFQ1bkZu?=
- =?utf-8?B?bURjWmdqRzZGTzlqcUo3TUJkWXRwZnBiUGpSSFpEVzlZWnJJaUJlTFVLTndL?=
- =?utf-8?B?SXl4SnhDK1ZUbTEvY2dyYlRDMkMvMXZoTDRjWU9qQnJMcXMrRlQzVCtWWExK?=
- =?utf-8?B?WGRqZnRYb0JpL21EMGN1cUN0cWNEN1NYR1hka1YvbmRnTzZKNUtlZFViLzV6?=
- =?utf-8?B?ZHdNMnBtN1d5ak9uYWRXaWRzc1c3bC95MUFrZTZTeTZOc29FN2g2ME10eWlh?=
- =?utf-8?B?V1ovdUwrL3dFRzhUcVBQS0FuUzFsN2dlVCtmdmdDVEFIVFNCaHBuNGlWQURx?=
- =?utf-8?B?TUQ0VHBFUUtCUUY4NTEvSEFtK0F0U05DWi9WZFU5bGIzZlpxZnNHdFNsdTZq?=
- =?utf-8?B?ZUNRMnhUS2h6RlI5SHRJYURTMllSZEwybWVjM2loZnRiajdvSHpDR0pOMHlR?=
- =?utf-8?B?ZHoxcUpscEljMnhiaFlOdk5ZdVJseGNGcVdOMUhpRFcvQmVEVHUxWWpqa0xJ?=
- =?utf-8?B?bERWbktGNCthYjBLc2xjN2c5KzFBQm1yZDZ6TFF1amE1UDlyNVlZUVlpbVhG?=
- =?utf-8?B?TU1IVzVrS1IwMDRUMFJ0VGhXRjRibG84VlVBeWYzUWppanIrVTFLQ3VsVWMw?=
- =?utf-8?B?UkhjdmdiYVdKSEo0OHlScGVHT3pTVFcwUUhLOWFkNUhYNFA0VmZBNWxyNDho?=
- =?utf-8?B?Z2ppR3p2S0RsU2JmOEN6dy9qelFjRUpLN1o1d0ZnVWxRc3hPTnl6SzRncCs0?=
- =?utf-8?B?enIvRGFwSUZRWEpCK01xcmJycmVteFpqZjFIdmJMWGpZR1NFU3NSL285OE40?=
- =?utf-8?B?OVcyZWVjY2ZYdC9JZlRnSFdQci93dXkzdkFMQTU5eGVqcUtxMWtRcllIUnFX?=
- =?utf-8?B?NmNGLytUQWZUYSs0UGxQR2xsclFtdVY4UkMxcUhTVWpzN2YxTUYyUUhZRkZr?=
- =?utf-8?B?eTJIeEVnbHdSbWhwK2xldUI2ZmxaRXBTbHRFdnFiN1dxL2lMOGtBVGpEZUJ6?=
- =?utf-8?B?MTZ2Y1pDZWxxNll0YnV5Tk1KNGs1bFpxcXBEYTVNclE5N2hkK1hjbGZ0Sy9Y?=
- =?utf-8?B?eHNKcUlnV0lKYnAyQzBYTUwzOW43dWNJNmNWOUZtTDdsRHRRb0F2WVo3RFha?=
- =?utf-8?B?Tk9NVW1kUjNEUVY3RDBTMUhDai9EMFZ5MjhDc29UdmxESmpPNkVhc3NTREds?=
- =?utf-8?B?Yi95bVlhNFMzSEppb3NSQitIVENTUzZjbU1PQlovSW9MejRiNHRFamRjSno2?=
- =?utf-8?B?UlcwVEhDUGlYV01KVFFJWXFiRDYwSUQ3eUo3UXYxclNRLzJ0clIrVGtvSlA0?=
- =?utf-8?B?VE5FUzJ6eFpaU3BWZjdLN1Y2MGdkclE1S2F1bzFnWGhoMVdxaFU0c2xLUFIv?=
- =?utf-8?B?NzRQemhMMlBNNEF2VnNNQThWdDJLL01kZXRTQ3U3MjZ4ODd6NnVnMk9XN2ls?=
- =?utf-8?B?K3p4Sk1MZDlySW1ZMVVpNUcyclRoVWt4UzNJWXV5MGxMWm1KZlppb1FuT0oz?=
- =?utf-8?B?STQ3b1ErY05kalp2Tjg3YWIrNGJWeUtLU0JNZlgxZHQ2NlpadHNEUWVHTFNU?=
- =?utf-8?B?QnJGeTluRXQzVG1WZm8zYWxPeUt5UnBERjArc05HMVdEczNFVk9hM3dXUmtm?=
- =?utf-8?B?NzhLQURXdWFadmVDWTA2OE9YbGlrVzRxYmkwSVdKKzhFYS9uR1hjeEsxbUVY?=
- =?utf-8?B?ZUJrNFV5UmZNOTlEa0pzeHQwZC9WelNDOVhacmhWVlRmdFByK0hZVmJMQlBh?=
- =?utf-8?B?eCtRQy9YV0JHNld4TGhVZmo0SzZsSHMxYWVVdkwzTnRibC8vZnJZNWxGbnBp?=
- =?utf-8?B?dG1GZ0tDTG1oL1VPWUt2ZEpwejErWW9lZFZhRHZzSDNnV2Z2ZG5kZHMwYmMw?=
- =?utf-8?B?dzNWNGNBazFmRDN4aHNoaXFmNm9jUVZQdkhoTGROSHBNKzNISkI1d25QS0o0?=
- =?utf-8?B?NlVYK21yV2gyUmFWRmJUbnRNaHE0OS8zbVpYeVJxMTE2K3JSVitSYnR4MVU3?=
- =?utf-8?B?T2VIZUNJVXZTRDk5OTc5ZDRKdktWaDRGRiswN2lmMkZDc0RBMmdDQ1NuWGNZ?=
- =?utf-8?B?SFk4c2Q0bExQRkhHSVM4ZG9qM0RmbE45RU5wWVhXS3VuMCtMNUhKdXVlSUY2?=
- =?utf-8?Q?2Tqr1kHhH04A+Ebv761s66SG+?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bdecefe-035e-4f7d-5a37-08dda993c6d8
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8658.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 09:30:32.2834
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: izP82vA5VeYBwd2vgmfir8U0YJOXi+Ue/bqUG1H1APGmIyAhDdN0flz1zRQ3jiEtUYxQ+bF7VweerUhbtYq/8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6484
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: M4+GqYRlc6iC0/2XewH4aZosFmxA2lvwvGc+W0psKSGqc2rEdN3lKGbv
+	HaR411+bj+3bR220lTevUctqZW5q3euUvPFS19o/gPMw0ywtpW34jad+qZpzYXHyJ2AvZ9G
+	/WXf6mOcPV17ddd7UbUa1mRSxf8HqrVgpi722nsXwa95acarLqrpS7KTDUkNeyaaOuwLF6O
+	HcpT3Qs3eqTA0V3PqGhzcuZePcAj1+eABECKFjESkOzhdtn1KFBaTOljdDHJfifW+cIT8Zg
+	G2IzcAg2EUeKR3hW0lNDTv3qJi/GMpL/1+aj7vTUXJ+Pq7+IoSR8BQFTRUCH7I+s5+Skqj4
+	FKkrriW4Hod+caEoTWjgdzCK9hE6bvkP0lmWLjtz4TCrgd4eaA0td4fLhEv7Y/mmKaeoYlu
+	vo/U5JZFEC9P5kwHSFNuR7NMBoJKgQuwKHbqC1ncEp+fEmBT4TU/q00oKA8gy+V4c9XEJz8
+	HGqHaYR7CjcBJjz3z2NNIibBcfImNUMlZbs6LqaSjtxqsSVORZu8uBaev0GU/cOaGpbLst4
+	3TOvdLsmf5Gq9W78XrjBM5ZXh0C39N+tSCw7sCxBGicOeJoqj8HxmKkf7JDc8h5Rt2y8fYs
+	mxh/UfQNo1CrJShfEVAdLmMKac+TZDQttPeMs1XdZxUzSwb97sZqickAOgkQSNmm7BMnWYH
+	ZmNCImVm+ELF/pYMMqT+q9SMnr7Z9b/Bt0Fr+kfGR2K7HWJXQC4iP99d7fVBQ6KXKfXRwcv
+	uOLqoc8mf6wZY7uKDwFGIryZgebmO84p3c6hEhAS5dTIlZtAsXGdK2ntmh3xEdAWhfkk206
+	5b6Swe7yfnD0qXLK/cN4cqxL9pTqUiYCxEymsvgGa6OaO3xLWcEdFR0QSbtmZA1uRzLs/2I
+	eVmklbJ4jtiTeoCITweC4LqIaMoPbp4sfEkRp17ineTaPwofwaWwF/SvEseKVFoZMATd940
+	FtGMsY9M//dtxnuaZRsl0+22nNWZ9RQcKOcb25tZuw1tPlW/CiLGsyTBZgmGvmYNnEAWtU9
+	Nv+GK5BxkWw21Vxoi6tcRHJA2Y4hb78qXh/U6soTrbfD2SBaGbPM4ea9NhqOcTiqWXRrdoB
+	g==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-Hello Leon,
+After commit a934a57a42f64a4 ("scripts/misc-check:
+check missing #include <linux/export.h> when W=1")
+and commit 7d95680d64ac8e836c ("scripts/misc-check:
+check unnecessary #include <linux/export.h> when W=1"),
+we get some build warnings with W=1,such as:
 
-Thank you for more info!
+arch/x86/coco/sev/core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+arch/x86/crypto/aria_aesni_avx2_glue.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+arch/x86/kernel/unwind_orc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+arch/x86/kvm/hyperv.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+arch/x86/events/intel/core.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+arch/x86/events/zhaoxin/core.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+arch/x86/kernel/crash.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+arch/x86/kernel/devicetree.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
 
-On 6/12/2025 1:11 PM, Leon Romanovsky wrote:
->   [    0.032188] CPU topo: Max. logical packages:  10
->   [    0.032189] CPU topo: Max. logical dies:      10
->   [    0.032189] CPU topo: Max. dies per package:   1
->   [    0.032194] CPU topo: Max. threads per core:   1
->   [    0.032194] CPU topo: Num. cores per package:     1
->   [    0.032195] CPU topo: Num. threads per package:   1
->   [    0.032195] CPU topo: Allowing 10 present CPUs plus 0 hotplug CPUs
+so fix these build warnings for x86.
 
-This indicates each CPU is a socket leading to 10 sockets ...
+Signed-off-by: "Zhenghan Cheng" <chengzhenghan@uniontech.com>
+Suggested-by: "Huacai Chen" <chenhuacai@loongson.cn>
 
->   [    0.288498] smp: Bringing up secondary CPUs ...
->   [    0.289225] smpboot: x86: Booting SMP configuration:
->   [    0.289900] .... node  #0, CPUs:        #1
->   [    0.290511] .... node  #1, CPUs:    #2  #3
->   [    0.291559] .... node  #2, CPUs:    #4  #5
->   [    0.292557] .... node  #3, CPUs:    #6  #7
->   [    0.293593] .... node  #4, CPUs:    #8  #9
->   [    0.326310] smp: Brought up 5 nodes, 10 CPUs
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index b6db4e0b936b..773b24859037 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -24,6 +24,7 @@
+ #include <linux/io.h>
+ #include <linux/psp-sev.h>
+ #include <linux/dmi.h>
++#include <linux/export.h>
+ #include <uapi/linux/sev-guest.h>
+ #include <crypto/gcm.h>
 
-... and this indicates two sockets are grouped as one NUMA node
-leading to 5 nodes in total. I tried the following:
+diff --git a/arch/x86/crypto/aria_aesni_avx2_glue.c b/arch/x86/crypto/aria_aesni_avx2_glue.c
+index b4bddcd58457..007b250f774c 100644
+--- a/arch/x86/crypto/aria_aesni_avx2_glue.c
++++ b/arch/x86/crypto/aria_aesni_avx2_glue.c
+@@ -9,6 +9,7 @@
+ #include <crypto/aria.h>
+ #include <linux/crypto.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
 
-     qemu-system-x86_64 -enable-kvm \
-     -cpu EPYC-Milan-v2 -m 20G -smp cpus=10,sockets=10 \
-     -machine q35 \
-     -object memory-backend-ram,size=4G,id=m0 \
-     -object memory-backend-ram,size=4G,id=m1 \
-     -object memory-backend-ram,size=4G,id=m2 \
-     -object memory-backend-ram,size=4G,id=m3 \
-     -object memory-backend-ram,size=4G,id=m4 \
-     -numa node,cpus=0-1,memdev=m0,nodeid=0 \
-     -numa node,cpus=2-3,memdev=m1,nodeid=1 \
-     -numa node,cpus=4-5,memdev=m2,nodeid=2 \
-     -numa node,cpus=6-7,memdev=m3,nodeid=3 \
-     -numa node,cpus=8-9,memdev=m4,nodeid=4 \
-     ...
+diff --git a/arch/x86/crypto/aria_aesni_avx_glue.c b/arch/x86/crypto/aria_aesni_avx_glue.c
+index ab9b38d05332..4c88ef4eba82 100644
+--- a/arch/x86/crypto/aria_aesni_avx_glue.c
++++ b/arch/x86/crypto/aria_aesni_avx_glue.c
+@@ -9,6 +9,7 @@
+ #include <crypto/aria.h>
+ #include <linux/crypto.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
 
-but could not hit this issue with v6.16-rc1 kernel and QEMU emulator
-version 10.0.50 (v10.0.0-1610-gd9ce74873a)
+diff --git a/arch/x86/crypto/camellia_aesni_avx_glue.c b/arch/x86/crypto/camellia_aesni_avx_glue.c
+index a7d162388142..5c321f255eb7 100644
+--- a/arch/x86/crypto/camellia_aesni_avx_glue.c
++++ b/arch/x86/crypto/camellia_aesni_avx_glue.c
+@@ -8,6 +8,7 @@
+ #include <crypto/algapi.h>
+ #include <linux/crypto.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
 
->   [    0.327532] smpboot: Total of 10 processors activated (51878.08 BogoMIPS)
->   [    0.329252] ------------[ cut here ]------------
->   [    0.329252] WARNING: CPU: 0 PID: 1 at kernel/sched/topology.c:2486 build_sched_domains+0xe67/0x13a0
->   [    0.330608] Modules linked in:
->   [    0.331050] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.16.0-rc1_for_upstream_min_debug_2025_06_09_14_44 #1 NONE
->   [    0.332386] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
->   [    0.333767] RIP: 0010:build_sched_domains+0xe67/0x13a0
->   [    0.334298] Code: ff ff 8b 6c 24 08 48 8b 44 24 68 65 48 2b 05 60 24 d0 01 0f 85 03 05 00 00 48 83 c4 70 89 e8 5b 5d 41 5c 41 5d 41 5e 41 5f c3 <0f> 0b e9 65 fe ff ff 48 c7 c7 28 fb 08 82 4c 89 44 24 28 c6 05 e4
->   [    0.336635] RSP: 0000:ffff8881002efe30 EFLAGS: 00010202
->   [    0.337326] RAX: 00000000ffffff01 RBX: 0000000000000002 RCX: 00000000ffffff01
->   [    0.338234] RDX: 00000000fffffff6 RSI: 0000000000000300 RDI: ffff888100047168
->   [    0.338523] RBP: 0000000000000000 R08: ffff888100047168 R09: 0000000000000000
->   [    0.339425] R10: ffffffff830dee80 R11: 0000000000000000 R12: ffff888100047168
->   [    0.340323] R13: 0000000000000002 R14: ffff888100193480 R15: ffff888380030f40
->   [    0.341221] FS:  0000000000000000(0000) GS:ffff8881b9b76000(0000) knlGS:0000000000000000
->   [    0.342298] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   [    0.343096] CR2: ffff88843ffff000 CR3: 000000000282c001 CR4: 0000000000370eb0
->   [    0.344042] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->   [    0.344927] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->   [    0.345811] Call Trace:
->   [    0.346191]  <TASK>
->   [    0.346429]  sched_init_smp+0x32/0xa0
->   [    0.346944]  ? stop_machine+0x2c/0x40
->   [    0.347460]  kernel_init_freeable+0xf5/0x260
->   [    0.348031]  ? rest_init+0xc0/0xc0
->   [    0.348513]  kernel_init+0x16/0x120
->   [    0.349008]  ret_from_fork+0x5e/0xd0
->   [    0.349510]  ? rest_init+0xc0/0xc0
->   [    0.349998]  ret_from_fork_asm+0x11/0x20
->   [    0.350464]  </TASK>
->   [    0.350812] ---[ end trace 0000000000000000 ]---
+diff --git a/arch/x86/crypto/camellia_glue.c b/arch/x86/crypto/camellia_glue.c
+index 3bd37d664121..cbede120e5f2 100644
+--- a/arch/x86/crypto/camellia_glue.c
++++ b/arch/x86/crypto/camellia_glue.c
+@@ -10,6 +10,7 @@
 
-Ah! Since this happens so early topology isn't created yet for
-the debug prints to hit! Is it possible to get a dmesg with
-"ignore_loglevel" and "sched_verbose" on an older kernel that
-did not throw this error on the same host?
+ #include <linux/unaligned.h>
+ #include <linux/crypto.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/crypto/curve25519-x86_64.c b/arch/x86/crypto/curve25519-x86_64.c
+index dcfc0de333de..86d4c4d85487 100644
+--- a/arch/x86/crypto/curve25519-x86_64.c
++++ b/arch/x86/crypto/curve25519-x86_64.c
+@@ -8,6 +8,7 @@
+ #include <crypto/internal/kpp.h>
 
-> 
->>
->> Even the qemu cmdline for the guest can help! We can try reproducing
->> it at our end then. Thank you for all the help.
-> 
-> It is custom QEMU with limited access to hypervisor. This crash is
-> inside VM.
+ #include <linux/types.h>
++#include <linux/export.h>
+ #include <linux/jump_label.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+diff --git a/arch/x86/crypto/serpent_avx_glue.c b/arch/x86/crypto/serpent_avx_glue.c
+index e640abc1cb8a..9c8b3a335d5c 100644
+--- a/arch/x86/crypto/serpent_avx_glue.c
++++ b/arch/x86/crypto/serpent_avx_glue.c
+@@ -12,6 +12,7 @@
+ #include <linux/types.h>
+ #include <linux/crypto.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <crypto/algapi.h>
+ #include <crypto/serpent.h>
 
-Noted! Thank a ton for all the data provided.
+diff --git a/arch/x86/crypto/sm4_aesni_avx_glue.c b/arch/x86/crypto/sm4_aesni_avx_glue.c
+index 72867fc49ce8..88caf418a06f 100644
+--- a/arch/x86/crypto/sm4_aesni_avx_glue.c
++++ b/arch/x86/crypto/sm4_aesni_avx_glue.c
+@@ -11,6 +11,7 @@
+ #include <asm/fpu/api.h>
+ #include <linux/module.h>
+ #include <linux/crypto.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <crypto/internal/skcipher.h>
+ #include <crypto/sm4.h>
+diff --git a/arch/x86/crypto/twofish_glue.c b/arch/x86/crypto/twofish_glue.c
+index 4c67184dc573..8e9906d36902 100644
+--- a/arch/x86/crypto/twofish_glue.c
++++ b/arch/x86/crypto/twofish_glue.c
+@@ -40,6 +40,7 @@
 
+ #include <crypto/algapi.h>
+ #include <crypto/twofish.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/crypto/twofish_glue_3way.c b/arch/x86/crypto/twofish_glue_3way.c
+index 1a1ecfa7f72a..8ad77725bf60 100644
+--- a/arch/x86/crypto/twofish_glue_3way.c
++++ b/arch/x86/crypto/twofish_glue_3way.c
+@@ -9,6 +9,7 @@
+ #include <crypto/algapi.h>
+ #include <crypto/twofish.h>
+ #include <linux/crypto.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 741b229f0718..04cf3d1019d9 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -12,7 +12,6 @@
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+-#include <linux/export.h>
+ #include <linux/nmi.h>
+ #include <linux/kvm_host.h>
+
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 7aa59966e7c3..10619c767602 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/perf_event.h>
++#include <linux/export.h>
+ #include <linux/types.h>
+
+ #include <asm/cpu_device_id.h>
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index e8cf29d2b10c..9c772c89b623 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -17,6 +17,8 @@
+ #include <linux/limits.h>
+ #include <linux/slab.h>
+ #include <linux/device.h>
++#include <linux/export.h>
++
+
+ #include <asm/cpuid/api.h>
+ #include <asm/perf_event.h>
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+index 4bdfcf091200..67fa000cf372 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -9,7 +9,6 @@
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+-#include <linux/export.h>
+ #include <linux/nmi.h>
+
+ #include <asm/cpufeature.h>
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 3d1d3547095a..3bd18521cd46 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -29,6 +29,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/mm.h>
+ #include <linux/slab.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/syscore_ops.h>
+diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+index 31f0d29cbc5e..f7627bc8fe49 100644
+--- a/arch/x86/hyperv/irqdomain.c
++++ b/arch/x86/hyperv/irqdomain.c
+@@ -10,6 +10,7 @@
+
+ #include <linux/pci.h>
+ #include <linux/irq.h>
++#include <linux/export.h>
+ #include <asm/mshyperv.h>
+
+ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index e93a2f488ff7..d9c0b3064222 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -7,6 +7,7 @@
+  */
+
+ #include <linux/bitfield.h>
++#include <linux/export.h>
+ #include <linux/types.h>
+ #include <linux/slab.h>
+ #include <linux/cpu.h>
+diff --git a/arch/x86/hyperv/nested.c b/arch/x86/hyperv/nested.c
+index 1083dc8646f9..1413bfe40ea9 100644
+--- a/arch/x86/hyperv/nested.c
++++ b/arch/x86/hyperv/nested.c
+@@ -9,7 +9,7 @@
+  */
+ #define pr_fmt(fmt)  "Hyper-V: " fmt
+
+-
++#include <linux/export.h>
+ #include <linux/types.h>
+ #include <hyperv/hvhdk.h>
+ #include <asm/mshyperv.h>
+diff --git a/arch/x86/kernel/acpi/cppc.c b/arch/x86/kernel/acpi/cppc.c
+index 7047124490f6..e943947ccb3d 100644
+--- a/arch/x86/kernel/acpi/cppc.c
++++ b/arch/x86/kernel/acpi/cppc.c
+@@ -5,6 +5,7 @@
+  */
+
+ #include <linux/bitfield.h>
++#include <linux/export.h>
+
+ #include <acpi/cppc_acpi.h>
+ #include <asm/msr.h>
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index ecfe7b497cad..882d99b1f4fb 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -6,6 +6,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/memory.h>
+ #include <linux/execmem.h>
++#include <linux/export.h>
+
+ #include <asm/text-patching.h>
+ #include <asm/insn.h>
+diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
+index a40176b62eb5..55118dd87116 100644
+--- a/arch/x86/kernel/amd_node.c
++++ b/arch/x86/kernel/amd_node.c
+@@ -9,6 +9,7 @@
+  */
+
+ #include <linux/debugfs.h>
++#include <linux/export.h>
+ #include <asm/amd/node.h>
+
+ /*
+diff --git a/arch/x86/kernel/apic/apic_common.c b/arch/x86/kernel/apic/apic_common.c
+index 9ef3be866832..f7e1cbb70029 100644
+--- a/arch/x86/kernel/apic/apic_common.c
++++ b/arch/x86/kernel/apic/apic_common.c
+@@ -3,6 +3,7 @@
+  *
+  * SPDX-License-Identifier: GPL-2.0
+  */
++#include <linux/export.h>
+ #include <linux/irq.h>
+ #include <asm/apic.h>
+
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 66bc5d3e79db..3f133e24a38e 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -14,6 +14,7 @@
+ #include <linux/dmar.h>
+ #include <linux/hpet.h>
+ #include <linux/msi.h>
++#include <linux/export.h>
+ #include <asm/irqdomain.h>
+ #include <asm/hpet.h>
+ #include <asm/hw_irq.h>
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 93069b13d3af..f35c9184ac30 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -13,6 +13,7 @@
+ #include <linux/init.h>
+ #include <linux/compiler.h>
+ #include <linux/slab.h>
++#include <linux/export.h>
+ #include <asm/irqdomain.h>
+ #include <asm/hw_irq.h>
+ #include <asm/traps.h>
+diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+index 2c5b51aad91a..8f181da43b20 100644
+--- a/arch/x86/kernel/cpu/acrn.c
++++ b/arch/x86/kernel/cpu/acrn.c
+@@ -10,6 +10,7 @@
+  */
+
+ #include <linux/interrupt.h>
++#include <linux/export.h>
+
+ #include <asm/acrn.h>
+ #include <asm/apic.h>
+diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
+index a315b0627dfb..e441400106f8 100644
+--- a/arch/x86/kernel/cpu/aperfmperf.c
++++ b/arch/x86/kernel/cpu/aperfmperf.c
+@@ -8,6 +8,7 @@
+  */
+ #include <linux/cpufreq.h>
+ #include <linux/delay.h>
++#include <linux/export.h>
+ #include <linux/ktime.h>
+ #include <linux/math64.h>
+ #include <linux/percpu.h>
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 7f94e6a5497d..fd136016ff8f 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -16,6 +16,7 @@
+ #include <linux/sched/smt.h>
+ #include <linux/pgtable.h>
+ #include <linux/bpf.h>
++#include <linux/export.h>
+
+ #include <asm/spec-ctrl.h>
+ #include <asm/cmdline.h>
+diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
+index 981f8b1f0792..68105db4dc66 100644
+--- a/arch/x86/kernel/cpu/bus_lock.c
++++ b/arch/x86/kernel/cpu/bus_lock.c
+@@ -6,6 +6,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/delay.h>
+ #include <linux/cpuhotplug.h>
++#include <linux/export.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/cmdline.h>
+ #include <asm/traps.h>
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 9d852c3b2cb5..9b335a939576 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -8,6 +8,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/notifier.h>
+ #include <linux/kobject.h>
++#include <linux/export.h>
+ #include <linux/percpu.h>
+ #include <linux/errno.h>
+ #include <linux/sched.h>
+diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+index 8d023239ce18..4657fdb4810e 100644
+--- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
++++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+@@ -10,6 +10,7 @@
+  */
+
+ #include <linux/miscdevice.h>
++#include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/kmod.h>
+ #include <linux/poll.h>
+diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+index 371ca6eac00e..50b17579ca97 100644
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -14,6 +14,7 @@
+ #include <linux/earlycpio.h>
+ #include <linux/firmware.h>
+ #include <linux/uaccess.h>
++#include <linux/export.h>
+ #include <linux/initrd.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+index 2de01b379aa3..cb9eade755ee 100644
+--- a/arch/x86/kernel/cpu/sgx/main.c
++++ b/arch/x86/kernel/cpu/sgx/main.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*  Copyright(c) 2016-20 Intel Corporation. */
+
++#include <linux/export.h>
+ #include <linux/file.h>
+ #include <linux/freezer.h>
+ #include <linux/highmem.h>
+diff --git a/arch/x86/kernel/cpu/sgx/virt.c b/arch/x86/kernel/cpu/sgx/virt.c
+index 7aaa3652e31d..15ce2a05c260 100644
+--- a/arch/x86/kernel/cpu/sgx/virt.c
++++ b/arch/x86/kernel/cpu/sgx/virt.c
+@@ -5,6 +5,7 @@
+  * Copyright(c) 2021 Intel Corporation.
+  */
+
++#include <linux/export.h>
+ #include <linux/miscdevice.h>
+ #include <linux/mm.h>
+ #include <linux/mman.h>
+diff --git a/arch/x86/kernel/cpu/topology.c b/arch/x86/kernel/cpu/topology.c
+index e35ccdc84910..30df9f9c4b0d 100644
+--- a/arch/x86/kernel/cpu/topology.c
++++ b/arch/x86/kernel/cpu/topology.c
+@@ -23,6 +23,7 @@
+  */
+ #define pr_fmt(fmt) "CPU topo: " fmt
+ #include <linux/cpu.h>
++#include <linux/export.h>
+
+ #include <xen/xen.h>
+
+diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
+index b5a5e1411469..fa841c8b70df 100644
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/cpu.h>
++#include <linux/export.h>
+
+ #include <xen/xen.h>
+
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index bcb534688dfe..3dbabdfe9649 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -21,7 +21,6 @@
+ #include <linux/delay.h>
+ #include <linux/elf.h>
+ #include <linux/elfcore.h>
+-#include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ #include <linux/memblock.h>
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index dd8748c45529..2b72ca27eaac 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -3,7 +3,6 @@
+  * Architecture specific OF callbacks.
+  */
+ #include <linux/acpi.h>
+-#include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/interrupt.h>
+ #include <linux/list.h>
+diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
+index 722fd712e1cf..16f5a7984a46 100644
+--- a/arch/x86/kernel/dumpstack_32.c
++++ b/arch/x86/kernel/dumpstack_32.c
+@@ -9,7 +9,6 @@
+ #include <linux/uaccess.h>
+ #include <linux/hardirq.h>
+ #include <linux/kdebug.h>
+-#include <linux/export.h>
+ #include <linux/ptrace.h>
+ #include <linux/kexec.h>
+ #include <linux/sysfs.h>
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index 6c5defd6569a..4975c5546ba9 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -9,7 +9,6 @@
+ #include <linux/uaccess.h>
+ #include <linux/hardirq.h>
+ #include <linux/kdebug.h>
+-#include <linux/export.h>
+ #include <linux/ptrace.h>
+ #include <linux/kexec.h>
+ #include <linux/sysfs.h>
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index c3acbd26408b..9edbb4ebac31 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -12,6 +12,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/memblock.h>
+ #include <linux/suspend.h>
++#include <linux/export.h>
+ #include <linux/acpi.h>
+ #include <linux/firmware-map.h>
+ #include <linux/sort.h>
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 6b6f32f40cbe..097721a95a8d 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -13,6 +13,7 @@
+ #include <linux/pci.h>
+ #include <linux/acpi.h>
+ #include <linux/delay.h>
++#include <linux/export.h>
+ #include <linux/pci_ids.h>
+ #include <linux/bcma/bcma.h>
+ #include <linux/bcma/bcma_regs.h>
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index ea138583dd92..2e4e37bf9d8f 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -17,6 +17,7 @@
+
+ #include <uapi/asm/kvm.h>
+
++#include <linux/export.h>
+ #include <linux/hardirq.h>
+ #include <linux/pkeys.h>
+ #include <linux/vmalloc.h>
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 9aa9ac8399ae..6e1dcafc457d 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -7,6 +7,7 @@
+ #include <linux/bitops.h>
+ #include <linux/compat.h>
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ #include <linux/mman.h>
+ #include <linux/nospec.h>
+ #include <linux/pkeys.h>
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 533fcf5636fc..b58c6128554f 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -19,6 +19,7 @@
+ #include <linux/memblock.h>
+ #include <linux/cc_platform.h>
+ #include <linux/pgtable.h>
++#include <linux/export.h>
+
+ #include <asm/asm.h>
+ #include <asm/page_64.h>
+diff --git a/arch/x86/kernel/i8259.c b/arch/x86/kernel/i8259.c
+index 2bade73f49e3..212f5e9959e1 100644
+--- a/arch/x86/kernel/i8259.c
++++ b/arch/x86/kernel/i8259.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/linkage.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/signal.h>
+ #include <linux/sched.h>
+ #include <linux/ioport.h>
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 921c1c783bc1..37a94e2a2d46 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -29,6 +29,7 @@
+ #include <linux/syscore_ops.h>
+ #include <linux/cc_platform.h>
+ #include <linux/efi.h>
++#include <linux/export.h>
+ #include <asm/timer.h>
+ #include <asm/cpu.h>
+ #include <asm/traps.h>
+diff --git a/arch/x86/kernel/paravirt-spinlocks.c b/arch/x86/kernel/paravirt-spinlocks.c
+index 9e1ea99ad9df..7f131a15ac9e 100644
+--- a/arch/x86/kernel/paravirt-spinlocks.c
++++ b/arch/x86/kernel/paravirt-spinlocks.c
+@@ -4,7 +4,6 @@
+  * compiled in a FTRACE-compatible way.
+  */
+ #include <linux/spinlock.h>
+-#include <linux/export.h>
+ #include <linux/jump_label.h>
+
+ #include <asm/paravirt.h>
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 095f04bdabdc..dfc8ebc8b0f8 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -22,7 +22,6 @@
+ #include <linux/perf_event.h>
+ #include <linux/hw_breakpoint.h>
+ #include <linux/rcupdate.h>
+-#include <linux/export.h>
+ #include <linux/context_tracking.h>
+ #include <linux/nospec.h>
+
+diff --git a/arch/x86/kernel/pvclock.c b/arch/x86/kernel/pvclock.c
+index b3f81379c2fc..96d944e26dbe 100644
+--- a/arch/x86/kernel/pvclock.c
++++ b/arch/x86/kernel/pvclock.c
+@@ -11,6 +11,7 @@
+ #include <linux/gfp.h>
+ #include <linux/memblock.h>
+ #include <linux/nmi.h>
++#include <linux/export.h>
+
+ #include <asm/fixmap.h>
+ #include <asm/pvclock.h>
+diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
+index a92f18db9610..221014f3d306 100644
+--- a/arch/x86/kernel/quirks.c
++++ b/arch/x86/kernel/quirks.c
+@@ -5,6 +5,7 @@
+ #include <linux/dmi.h>
+ #include <linux/pci.h>
+ #include <linux/irq.h>
++#include <linux/export.h>
+
+ #include <asm/hpet.h>
+ #include <asm/setup.h>
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index fb27be697128..ea43a022f9a8 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -11,6 +11,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/dma-map-ops.h>
+ #include <linux/efi.h>
++#include <linux/export.h>
+ #include <linux/hugetlb.h>
+ #include <linux/ima.h>
+ #include <linux/init_ohci1394_dma.h>
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index ee117fcf46ed..ddce014f29b2 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -7,7 +7,6 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/stacktrace.h>
+-#include <linux/export.h>
+ #include <linux/uaccess.h>
+ #include <asm/stacktrace.h>
+ #include <asm/unwind.h>
+diff --git a/arch/x86/kernel/static_call.c b/arch/x86/kernel/static_call.c
+index 378c388d1b31..3ab922966ab4 100644
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/static_call.h>
++#include <linux/export.h>
+ #include <linux/memory.h>
+ #include <linux/bug.h>
+ #include <asm/text-patching.h>
+diff --git a/arch/x86/kernel/tboot.c b/arch/x86/kernel/tboot.c
+index 46b8f1f16676..b6a1bb741ebd 100644
+--- a/arch/x86/kernel/tboot.c
++++ b/arch/x86/kernel/tboot.c
+@@ -8,7 +8,6 @@
+
+ #include <linux/init_task.h>
+ #include <linux/spinlock.h>
+-#include <linux/export.h>
+ #include <linux/delay.h>
+ #include <linux/sched.h>
+ #include <linux/init.h>
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index c5c897a86418..5a038f66271b 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -22,7 +22,6 @@
+ #include <linux/kdebug.h>
+ #include <linux/kgdb.h>
+ #include <linux/kernel.h>
+-#include <linux/export.h>
+ #include <linux/ptrace.h>
+ #include <linux/uprobes.h>
+ #include <linux/string.h>
+diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+index d8ba93778ae3..f3b893c0e5e7 100644
+--- a/arch/x86/kernel/unwind_frame.c
++++ b/arch/x86/kernel/unwind_frame.c
+@@ -3,6 +3,7 @@
+ #include <linux/sched/task.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/interrupt.h>
++#include <linux/export.h>
+ #include <asm/sections.h>
+ #include <asm/ptrace.h>
+ #include <asm/bitops.h>
+diff --git a/arch/x86/kernel/unwind_guess.c b/arch/x86/kernel/unwind_guess.c
+index 884d68a6e714..86813ae9d57c 100644
+--- a/arch/x86/kernel/unwind_guess.c
++++ b/arch/x86/kernel/unwind_guess.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/sched.h>
+ #include <linux/ftrace.h>
++#include <linux/export.h>
+ #include <asm/ptrace.h>
+ #include <asm/bitops.h>
+ #include <asm/stacktrace.h>
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 977ee75e047c..ec0cd3c54616 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/objtool.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/sort.h>
+ #include <asm/ptrace.h>
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 24f0318c50d7..09f9de4555dd 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -33,6 +33,7 @@
+ #include <linux/sched/cputime.h>
+ #include <linux/spinlock.h>
+ #include <linux/eventfd.h>
++#include <linux/export.h>
+
+ #include <asm/apicdef.h>
+ #include <asm/mshyperv.h>
+diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+index 45dae2d5d2f1..bfa87e74fe18 100644
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -36,7 +36,6 @@
+ #include <linux/hrtimer.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
+-#include <linux/export.h>
+ #include <linux/nospec.h>
+ #include <asm/processor.h>
+ #include <asm/page.h>
+diff --git a/arch/x86/kvm/kvm_onhyperv.c b/arch/x86/kvm/kvm_onhyperv.c
+index ded0bd688c65..73a97e1dcdbd 100644
+--- a/arch/x86/kvm/kvm_onhyperv.c
++++ b/arch/x86/kvm/kvm_onhyperv.c
+@@ -4,6 +4,7 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
++#include <linux/export.h>
+ #include <linux/kvm_host.h>
+ #include <asm/mshyperv.h>
+
+diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
+index 1b17b12393a8..2c407d7edd09 100644
+--- a/arch/x86/kvm/mmu/page_track.c
++++ b/arch/x86/kvm/mmu/page_track.c
+@@ -15,6 +15,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/kvm_host.h>
+ #include <linux/rculist.h>
++#include <linux/export.h>
+
+ #include "mmu.h"
+ #include "mmu_internal.h"
+diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+index cfce03d8f123..217a802e86f9 100644
+--- a/arch/x86/kvm/mmu/spte.c
++++ b/arch/x86/kvm/mmu/spte.c
+@@ -9,6 +9,7 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
++#include <linux/export.h>
+ #include <linux/kvm_host.h>
+ #include "mmu.h"
+ #include "mmu_internal.h"
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index 7f3d7229b2c1..1df1726f506c 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -8,6 +8,7 @@
+ #include "tdp_mmu.h"
+ #include "spte.h"
+
++#include <linux/export.h>
+ #include <asm/cmpxchg.h>
+ #include <trace/events/kvm.h>
+
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 75e9cfc689f8..308a6ae502e3 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -16,6 +16,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/bsearch.h>
+ #include <linux/sort.h>
++#include <linux/export.h>
+ #include <asm/perf_event.h>
+ #include <asm/cpu_device_id.h>
+ #include "x86.h"
+diff --git a/arch/x86/kvm/smm.c b/arch/x86/kvm/smm.c
+index 9864c057187d..4b13a6346f06 100644
+--- a/arch/x86/kvm/smm.c
++++ b/arch/x86/kvm/smm.c
+@@ -2,6 +2,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
+ #include <linux/kvm_host.h>
++#include <linux/export.h>
+ #include "x86.h"
+ #include "kvm_cache_regs.h"
+ #include "kvm_emulate.h"
+diff --git a/arch/x86/lib/atomic64_32.c b/arch/x86/lib/atomic64_32.c
+index a0b4a350daa7..04a6901a8969 100644
+--- a/arch/x86/lib/atomic64_32.c
++++ b/arch/x86/lib/atomic64_32.c
+@@ -1,4 +1,3 @@
+ #define ATOMIC64_EXPORT EXPORT_SYMBOL
+
+-#include <linux/export.h>
+ #include <linux/atomic.h>
+diff --git a/arch/x86/lib/crc-t10dif.c b/arch/x86/lib/crc-t10dif.c
+index db7ce59c31ac..c8c2108675cd 100644
+--- a/arch/x86/lib/crc-t10dif.c
++++ b/arch/x86/lib/crc-t10dif.c
+@@ -6,6 +6,7 @@
+  */
+
+ #include <linux/crc-t10dif.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include "crc-pclmul-template.h"
+
+diff --git a/arch/x86/lib/crc32.c b/arch/x86/lib/crc32.c
+index d09343e2cea9..21e84e3c94eb 100644
+--- a/arch/x86/lib/crc32.c
++++ b/arch/x86/lib/crc32.c
+@@ -8,6 +8,7 @@
+  */
+
+ #include <linux/crc32.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include "crc-pclmul-template.h"
+
+diff --git a/arch/x86/lib/crc64.c b/arch/x86/lib/crc64.c
+index 351a09f5813e..6c1a1beb5c97 100644
+--- a/arch/x86/lib/crc64.c
++++ b/arch/x86/lib/crc64.c
+@@ -6,6 +6,7 @@
+  */
+
+ #include <linux/crc64.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include "crc-pclmul-template.h"
+
+diff --git a/arch/x86/lib/crypto/blake2s-glue.c b/arch/x86/lib/crypto/blake2s-glue.c
+index adc296cd17c9..e65cebbdc043 100644
+--- a/arch/x86/lib/crypto/blake2s-glue.c
++++ b/arch/x86/lib/crypto/blake2s-glue.c
+@@ -8,6 +8,7 @@
+ #include <asm/processor.h>
+ #include <asm/simd.h>
+ #include <crypto/internal/blake2s.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/jump_label.h>
+ #include <linux/kernel.h>
+diff --git a/arch/x86/lib/crypto/chacha_glue.c b/arch/x86/lib/crypto/chacha_glue.c
+index 10b2c945f541..7e3bf4b091f1 100644
+--- a/arch/x86/lib/crypto/chacha_glue.c
++++ b/arch/x86/lib/crypto/chacha_glue.c
+@@ -7,6 +7,7 @@
+
+ #include <asm/simd.h>
+ #include <crypto/chacha.h>
++#include <linux/export.h>
+ #include <linux/jump_label.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+diff --git a/arch/x86/lib/crypto/poly1305_glue.c b/arch/x86/lib/crypto/poly1305_glue.c
+index b7e78a583e07..c2bc5b831551 100644
+--- a/arch/x86/lib/crypto/poly1305_glue.c
++++ b/arch/x86/lib/crypto/poly1305_glue.c
+@@ -6,6 +6,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/fpu/api.h>
+ #include <crypto/internal/poly1305.h>
++#include <linux/export.h>
+ #include <linux/jump_label.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+diff --git a/arch/x86/lib/crypto/sha256.c b/arch/x86/lib/crypto/sha256.c
+index 80380f8fdcee..46d5d174e821 100644
+--- a/arch/x86/lib/crypto/sha256.c
++++ b/arch/x86/lib/crypto/sha256.c
+@@ -6,6 +6,7 @@
+  */
+ #include <asm/fpu/api.h>
+ #include <crypto/internal/sha2.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/static_call.h>
+diff --git a/arch/x86/lib/iomem.c b/arch/x86/lib/iomem.c
+index c20e04764edc..20f90c60e34e 100644
+--- a/arch/x86/lib/iomem.c
++++ b/arch/x86/lib/iomem.c
+@@ -1,5 +1,6 @@
+ #include <linux/string.h>
+ #include <linux/module.h>
++#include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/kmsan-checks.h>
+
+diff --git a/arch/x86/mm/cpu_entry_area.c b/arch/x86/mm/cpu_entry_area.c
+index 575f863f3c75..2ffd4628643b 100644
+--- a/arch/x86/mm/cpu_entry_area.c
++++ b/arch/x86/mm/cpu_entry_area.c
+@@ -5,6 +5,7 @@
+ #include <linux/kallsyms.h>
+ #include <linux/kcore.h>
+ #include <linux/pgtable.h>
++#include <linux/export.h>
+
+ #include <asm/cpu_entry_area.h>
+ #include <asm/fixmap.h>
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index a4700ef6eb64..90df00f4ef88 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -9,6 +9,7 @@
+  */
+
+ #include <linux/debugfs.h>
++#include <linux/export.h>
+ #include <linux/kasan.h>
+ #include <linux/mm.h>
+ #include <linux/init.h>
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 7456df985d96..00c7088c5835 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -8,6 +8,7 @@
+ #include <linux/kmemleak.h>
+ #include <linux/sched/task.h>
+ #include <linux/execmem.h>
++#include <linux/export.h>
+
+ #include <asm/set_memory.h>
+ #include <asm/cpu_device_id.h>
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 607d6a2e66e2..633887c582af 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -31,6 +31,7 @@
+ #include <linux/cpumask.h>
+ #include <linux/gfp.h>
+ #include <linux/execmem.h>
++#include <linux/export.h>
+
+ #include <asm/asm.h>
+ #include <asm/bios_ebda.h>
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index ee66fae9ebcc..e3bd8adea411 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -35,6 +35,7 @@
+ #include <linux/kcore.h>
+ #include <linux/bootmem_info.h>
+ #include <linux/execmem.h>
++#include <linux/export.h>
+
+ #include <asm/processor.h>
+ #include <asm/bios_ebda.h>
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 12c8180ca1ba..4e2101e637ba 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -17,6 +17,7 @@
+ #include <linux/mmiotrace.h>
+ #include <linux/cc_platform.h>
+ #include <linux/efi.h>
++#include <linux/export.h>
+ #include <linux/pgtable.h>
+ #include <linux/kmsan.h>
+
+diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
+index faf3a13fb6ba..cb069276f756 100644
+--- a/arch/x86/mm/mem_encrypt_amd.c
++++ b/arch/x86/mm/mem_encrypt_amd.c
+@@ -18,6 +18,7 @@
+ #include <linux/bitops.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/cc_platform.h>
++#include <linux/export.h>
+
+ #include <asm/tlbflush.h>
+ #include <asm/fixmap.h>
+diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
+index c3317f0650d8..7555c0ef2cf3 100644
+--- a/arch/x86/mm/mmio-mod.c
++++ b/arch/x86/mm/mmio-mod.c
+@@ -21,6 +21,7 @@
+ #include <linux/atomic.h>
+ #include <linux/percpu.h>
+ #include <linux/cpu.h>
++#include <linux/export.h>
+
+ #include "pf_in.h"
+
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index c24890c40138..5e3ac16ceea5 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -14,6 +14,7 @@
+ #include <linux/topology.h>
+ #include <linux/sort.h>
+ #include <linux/numa_memblks.h>
++#include <linux/export.h>
+
+ #include <asm/e820/api.h>
+ #include <asm/proto.h>
+diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+index 2e7923844afe..3eeee5b2384a 100644
+--- a/arch/x86/mm/pat/memtype.c
++++ b/arch/x86/mm/pat/memtype.c
+@@ -34,6 +34,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/memblock.h>
+ #include <linux/debugfs.h>
++#include <linux/export.h>
+ #include <linux/ioport.h>
+ #include <linux/kernel.h>
+ #include <linux/pfn_t.h>
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 46edc11726b7..89973d5e4327 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -22,6 +22,7 @@
+ #include <linux/cc_platform.h>
+ #include <linux/set_memory.h>
+ #include <linux/memregion.h>
++#include <linux/export.h>
+
+ #include <asm/e820/api.h>
+ #include <asm/processor.h>
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index ddf248c3ee7d..92ee7b5cd93b 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/mm.h>
+ #include <linux/gfp.h>
++#include <linux/export.h>
+ #include <linux/hugetlb.h>
+ #include <asm/pgalloc.h>
+ #include <asm/tlb.h>
+diff --git a/arch/x86/mm/pgtable_32.c b/arch/x86/mm/pgtable_32.c
+index c234634e26ba..2acb05736cf1 100644
+--- a/arch/x86/mm/pgtable_32.c
++++ b/arch/x86/mm/pgtable_32.c
+@@ -9,6 +9,7 @@
+ #include <linux/highmem.h>
+ #include <linux/pagemap.h>
+ #include <linux/spinlock.h>
++#include <linux/export.h>
+
+ #include <asm/cpu_entry_area.h>
+ #include <asm/fixmap.h>
+diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
+index 244c643bb0b5..1956cb58e281 100644
+--- a/arch/x86/pci/pcbios.c
++++ b/arch/x86/pci/pcbios.c
+@@ -5,6 +5,7 @@
+
+ #include <linux/bits.h>
+ #include <linux/bitfield.h>
++#include <linux/export.h>
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 463b784499a8..6288436d8ec3 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -35,7 +35,6 @@
+ #include <linux/init.h>
+ #include <linux/efi.h>
+ #include <linux/efi-bgrt.h>
+-#include <linux/export.h>
+ #include <linux/memblock.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index e7e8f77f77f8..627d084c344d 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -27,7 +27,6 @@
+ #include <linux/ioport.h>
+ #include <linux/mc146818rtc.h>
+ #include <linux/efi.h>
+-#include <linux/export.h>
+ #include <linux/uaccess.h>
+ #include <linux/io.h>
+ #include <linux/reboot.h>
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 553f330198f2..4119b2f693bc 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -7,6 +7,7 @@
+ #include <linux/time.h>
+ #include <linux/types.h>
+ #include <linux/efi.h>
++#include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
+ #include <linux/acpi.h>
+diff --git a/arch/x86/platform/intel-mid/intel-mid.c b/arch/x86/platform/intel-mid/intel-mid.c
+index a8e75f8c14fd..a877e52cb38e 100644
+--- a/arch/x86/platform/intel-mid/intel-mid.c
++++ b/arch/x86/platform/intel-mid/intel-mid.c
+@@ -15,7 +15,6 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/scatterlist.h>
+ #include <linux/irq.h>
+-#include <linux/export.h>
+ #include <linux/notifier.h>
+
+ #include <asm/setup.h>
+diff --git a/arch/x86/platform/intel-mid/pwr.c b/arch/x86/platform/intel-mid/pwr.c
+index cd7e0c71adde..77c0ff63ee28 100644
+--- a/arch/x86/platform/intel-mid/pwr.c
++++ b/arch/x86/platform/intel-mid/pwr.c
+@@ -20,7 +20,6 @@
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+-#include <linux/export.h>
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
+
+diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
+index ee25b032c0b3..f97c11d3c1d2 100644
+--- a/arch/x86/platform/intel-quark/imr.c
++++ b/arch/x86/platform/intel-quark/imr.c
+@@ -32,6 +32,7 @@
+ #include <asm/io.h>
+
+ #include <linux/debugfs.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/mm.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/platform/intel/iosf_mbi.c b/arch/x86/platform/intel/iosf_mbi.c
+index 40ae94db20d8..49af88f1deda 100644
+--- a/arch/x86/platform/intel/iosf_mbi.c
++++ b/arch/x86/platform/intel/iosf_mbi.c
+@@ -18,6 +18,7 @@
+ #include <linux/capability.h>
+ #include <linux/pm_qos.h>
+ #include <linux/wait.h>
++#include <linux/export.h>
+
+ #include <asm/iosf_mbi.h>
+
+diff --git a/arch/x86/platform/scx200/scx200_32.c b/arch/x86/platform/scx200/scx200_32.c
+index 80662b72035d..97386353b0f5 100644
+--- a/arch/x86/platform/scx200/scx200_32.c
++++ b/arch/x86/platform/scx200/scx200_32.c
+@@ -7,6 +7,7 @@
+
+ #include <linux/module.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/mutex.h>
+diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video-common.c
+index 81fc97a2a837..57070d9e1a56 100644
+--- a/arch/x86/video/video-common.c
++++ b/arch/x86/video/video-common.c
+@@ -7,6 +7,7 @@
+  *
+  */
+
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/vgaarb.h>
+diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
+index 942372e69b4d..7cd06bb3aa9f 100644
+--- a/arch/x86/virt/svm/sev.c
++++ b/arch/x86/virt/svm/sev.c
+@@ -19,6 +19,7 @@
+ #include <linux/iommu.h>
+ #include <linux/amd-iommu.h>
+ #include <linux/nospec.h>
++#include <linux/export.h>
+
+ #include <asm/sev.h>
+ #include <asm/processor.h>
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index 2457d13c3f9e..e5bb81dc8497 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -12,6 +12,7 @@
+ #include <linux/cache.h>
+ #include <linux/init.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/printk.h>
+ #include <linux/cpu.h>
+ #include <linux/spinlock.h>
+diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
+index 53282dc7d5ac..4b2b038a1ec8 100644
+--- a/arch/x86/xen/enlighten.c
++++ b/arch/x86/xen/enlighten.c
+@@ -2,6 +2,7 @@
+
+ #include <linux/console.h>
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ #include <linux/instrumentation.h>
+ #include <linux/kexec.h>
+ #include <linux/memblock.h>
+diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+index fe57ff85d004..4399a1796861 100644
+--- a/arch/x86/xen/enlighten_hvm.c
++++ b/arch/x86/xen/enlighten_hvm.c
+@@ -2,6 +2,7 @@
+
+ #include <linux/acpi.h>
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ #include <linux/kexec.h>
+ #include <linux/memblock.h>
+ #include <linux/virtio_anchor.h>
+diff --git a/arch/x86/xen/mmu.c b/arch/x86/xen/mmu.c
+index c4c479373249..da38470e6131 100644
+--- a/arch/x86/xen/mmu.c
++++ b/arch/x86/xen/mmu.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+
+ #include <linux/pfn.h>
++#include <linux/export.h>
+ #include <asm/xen/page.h>
+ #include <asm/xen/hypercall.h>
+ #include <xen/interface/memory.h>
+
+Signed-off-by: Zhenghan Cheng <your_email@example.com>
+---
+ arch/x86/coco/sev/core.c                  | 1 +
+ arch/x86/crypto/aria_aesni_avx2_glue.c    | 1 +
+ arch/x86/crypto/aria_aesni_avx_glue.c     | 1 +
+ arch/x86/crypto/camellia_aesni_avx_glue.c | 1 +
+ arch/x86/crypto/camellia_glue.c           | 1 +
+ arch/x86/crypto/curve25519-x86_64.c       | 1 +
+ arch/x86/crypto/serpent_avx_glue.c        | 1 +
+ arch/x86/crypto/sm4_aesni_avx_glue.c      | 1 +
+ arch/x86/crypto/twofish_glue.c            | 1 +
+ arch/x86/crypto/twofish_glue_3way.c       | 1 +
+ arch/x86/events/intel/core.c              | 1 -
+ arch/x86/events/intel/lbr.c               | 1 +
+ arch/x86/events/intel/pt.c                | 2 ++
+ arch/x86/events/zhaoxin/core.c            | 1 -
+ arch/x86/hyperv/hv_init.c                 | 1 +
+ arch/x86/hyperv/irqdomain.c               | 1 +
+ arch/x86/hyperv/ivm.c                     | 1 +
+ arch/x86/hyperv/nested.c                  | 2 +-
+ arch/x86/kernel/acpi/cppc.c               | 1 +
+ arch/x86/kernel/alternative.c             | 1 +
+ arch/x86/kernel/amd_node.c                | 1 +
+ arch/x86/kernel/apic/apic_common.c        | 1 +
+ arch/x86/kernel/apic/msi.c                | 1 +
+ arch/x86/kernel/apic/vector.c             | 1 +
+ arch/x86/kernel/cpu/acrn.c                | 1 +
+ arch/x86/kernel/cpu/aperfmperf.c          | 1 +
+ arch/x86/kernel/cpu/bugs.c                | 1 +
+ arch/x86/kernel/cpu/bus_lock.c            | 1 +
+ arch/x86/kernel/cpu/mce/amd.c             | 1 +
+ arch/x86/kernel/cpu/mce/dev-mcelog.c      | 1 +
+ arch/x86/kernel/cpu/microcode/intel.c     | 1 +
+ arch/x86/kernel/cpu/sgx/main.c            | 1 +
+ arch/x86/kernel/cpu/sgx/virt.c            | 1 +
+ arch/x86/kernel/cpu/topology.c            | 1 +
+ arch/x86/kernel/cpu/topology_common.c     | 1 +
+ arch/x86/kernel/crash.c                   | 1 -
+ arch/x86/kernel/devicetree.c              | 1 -
+ arch/x86/kernel/dumpstack_32.c            | 1 -
+ arch/x86/kernel/dumpstack_64.c            | 1 -
+ arch/x86/kernel/e820.c                    | 1 +
+ arch/x86/kernel/early-quirks.c            | 1 +
+ arch/x86/kernel/fpu/core.c                | 1 +
+ arch/x86/kernel/fpu/xstate.c              | 1 +
+ arch/x86/kernel/head64.c                  | 1 +
+ arch/x86/kernel/i8259.c                   | 1 +
+ arch/x86/kernel/kvm.c                     | 1 +
+ arch/x86/kernel/paravirt-spinlocks.c      | 1 -
+ arch/x86/kernel/ptrace.c                  | 1 -
+ arch/x86/kernel/pvclock.c                 | 1 +
+ arch/x86/kernel/quirks.c                  | 1 +
+ arch/x86/kernel/setup.c                   | 1 +
+ arch/x86/kernel/stacktrace.c              | 1 -
+ arch/x86/kernel/static_call.c             | 1 +
+ arch/x86/kernel/tboot.c                   | 1 -
+ arch/x86/kernel/traps.c                   | 1 -
+ arch/x86/kernel/unwind_frame.c            | 1 +
+ arch/x86/kernel/unwind_guess.c            | 1 +
+ arch/x86/kernel/unwind_orc.c              | 1 +
+ arch/x86/kvm/hyperv.c                     | 1 +
+ arch/x86/kvm/ioapic.c                     | 1 -
+ arch/x86/kvm/kvm_onhyperv.c               | 1 +
+ arch/x86/kvm/mmu/page_track.c             | 1 +
+ arch/x86/kvm/mmu/spte.c                   | 1 +
+ arch/x86/kvm/mmu/tdp_mmu.c                | 1 +
+ arch/x86/kvm/pmu.c                        | 1 +
+ arch/x86/kvm/smm.c                        | 1 +
+ arch/x86/lib/atomic64_32.c                | 1 -
+ arch/x86/lib/crc-t10dif.c                 | 1 +
+ arch/x86/lib/crc32.c                      | 1 +
+ arch/x86/lib/crc64.c                      | 1 +
+ arch/x86/lib/crypto/blake2s-glue.c        | 1 +
+ arch/x86/lib/crypto/chacha_glue.c         | 1 +
+ arch/x86/lib/crypto/poly1305_glue.c       | 1 +
+ arch/x86/lib/crypto/sha256.c              | 1 +
+ arch/x86/lib/iomem.c                      | 1 +
+ arch/x86/mm/cpu_entry_area.c              | 1 +
+ arch/x86/mm/dump_pagetables.c             | 1 +
+ arch/x86/mm/init.c                        | 1 +
+ arch/x86/mm/init_32.c                     | 1 +
+ arch/x86/mm/init_64.c                     | 1 +
+ arch/x86/mm/ioremap.c                     | 1 +
+ arch/x86/mm/mem_encrypt_amd.c             | 1 +
+ arch/x86/mm/mmio-mod.c                    | 1 +
+ arch/x86/mm/numa.c                        | 1 +
+ arch/x86/mm/pat/memtype.c                 | 1 +
+ arch/x86/mm/pat/set_memory.c              | 1 +
+ arch/x86/mm/pgtable.c                     | 1 +
+ arch/x86/mm/pgtable_32.c                  | 1 +
+ arch/x86/pci/pcbios.c                     | 1 +
+ arch/x86/platform/efi/efi.c               | 1 -
+ arch/x86/platform/efi/efi_64.c            | 1 -
+ arch/x86/platform/efi/quirks.c            | 1 +
+ arch/x86/platform/intel-mid/intel-mid.c   | 1 -
+ arch/x86/platform/intel-mid/pwr.c         | 1 -
+ arch/x86/platform/intel-quark/imr.c       | 1 +
+ arch/x86/platform/intel/iosf_mbi.c        | 1 +
+ arch/x86/platform/scx200/scx200_32.c      | 1 +
+ arch/x86/video/video-common.c             | 1 +
+ arch/x86/virt/svm/sev.c                   | 1 +
+ arch/x86/virt/vmx/tdx/tdx.c               | 1 +
+ arch/x86/xen/enlighten.c                  | 1 +
+ arch/x86/xen/enlighten_hvm.c              | 1 +
+ arch/x86/xen/mmu.c                        | 1 +
+ 103 files changed, 87 insertions(+), 18 deletions(-)
+
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index b6db4e0b936b..773b24859037 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -24,6 +24,7 @@
+ #include <linux/io.h>
+ #include <linux/psp-sev.h>
+ #include <linux/dmi.h>
++#include <linux/export.h>
+ #include <uapi/linux/sev-guest.h>
+ #include <crypto/gcm.h>
+ 
+diff --git a/arch/x86/crypto/aria_aesni_avx2_glue.c b/arch/x86/crypto/aria_aesni_avx2_glue.c
+index b4bddcd58457..007b250f774c 100644
+--- a/arch/x86/crypto/aria_aesni_avx2_glue.c
++++ b/arch/x86/crypto/aria_aesni_avx2_glue.c
+@@ -9,6 +9,7 @@
+ #include <crypto/aria.h>
+ #include <linux/crypto.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+ 
+diff --git a/arch/x86/crypto/aria_aesni_avx_glue.c b/arch/x86/crypto/aria_aesni_avx_glue.c
+index ab9b38d05332..4c88ef4eba82 100644
+--- a/arch/x86/crypto/aria_aesni_avx_glue.c
++++ b/arch/x86/crypto/aria_aesni_avx_glue.c
+@@ -9,6 +9,7 @@
+ #include <crypto/aria.h>
+ #include <linux/crypto.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+ 
+diff --git a/arch/x86/crypto/camellia_aesni_avx_glue.c b/arch/x86/crypto/camellia_aesni_avx_glue.c
+index a7d162388142..5c321f255eb7 100644
+--- a/arch/x86/crypto/camellia_aesni_avx_glue.c
++++ b/arch/x86/crypto/camellia_aesni_avx_glue.c
+@@ -8,6 +8,7 @@
+ #include <crypto/algapi.h>
+ #include <linux/crypto.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+ 
+diff --git a/arch/x86/crypto/camellia_glue.c b/arch/x86/crypto/camellia_glue.c
+index 3bd37d664121..cbede120e5f2 100644
+--- a/arch/x86/crypto/camellia_glue.c
++++ b/arch/x86/crypto/camellia_glue.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/unaligned.h>
+ #include <linux/crypto.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/crypto/curve25519-x86_64.c b/arch/x86/crypto/curve25519-x86_64.c
+index dcfc0de333de..86d4c4d85487 100644
+--- a/arch/x86/crypto/curve25519-x86_64.c
++++ b/arch/x86/crypto/curve25519-x86_64.c
+@@ -8,6 +8,7 @@
+ #include <crypto/internal/kpp.h>
+ 
+ #include <linux/types.h>
++#include <linux/export.h>
+ #include <linux/jump_label.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+diff --git a/arch/x86/crypto/serpent_avx_glue.c b/arch/x86/crypto/serpent_avx_glue.c
+index e640abc1cb8a..9c8b3a335d5c 100644
+--- a/arch/x86/crypto/serpent_avx_glue.c
++++ b/arch/x86/crypto/serpent_avx_glue.c
+@@ -12,6 +12,7 @@
+ #include <linux/types.h>
+ #include <linux/crypto.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <crypto/algapi.h>
+ #include <crypto/serpent.h>
+ 
+diff --git a/arch/x86/crypto/sm4_aesni_avx_glue.c b/arch/x86/crypto/sm4_aesni_avx_glue.c
+index 72867fc49ce8..88caf418a06f 100644
+--- a/arch/x86/crypto/sm4_aesni_avx_glue.c
++++ b/arch/x86/crypto/sm4_aesni_avx_glue.c
+@@ -11,6 +11,7 @@
+ #include <asm/fpu/api.h>
+ #include <linux/module.h>
+ #include <linux/crypto.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <crypto/internal/skcipher.h>
+ #include <crypto/sm4.h>
+diff --git a/arch/x86/crypto/twofish_glue.c b/arch/x86/crypto/twofish_glue.c
+index 4c67184dc573..8e9906d36902 100644
+--- a/arch/x86/crypto/twofish_glue.c
++++ b/arch/x86/crypto/twofish_glue.c
+@@ -40,6 +40,7 @@
+ 
+ #include <crypto/algapi.h>
+ #include <crypto/twofish.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/crypto/twofish_glue_3way.c b/arch/x86/crypto/twofish_glue_3way.c
+index 1a1ecfa7f72a..8ad77725bf60 100644
+--- a/arch/x86/crypto/twofish_glue_3way.c
++++ b/arch/x86/crypto/twofish_glue_3way.c
+@@ -9,6 +9,7 @@
+ #include <crypto/algapi.h>
+ #include <crypto/twofish.h>
+ #include <linux/crypto.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 741b229f0718..04cf3d1019d9 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -12,7 +12,6 @@
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+-#include <linux/export.h>
+ #include <linux/nmi.h>
+ #include <linux/kvm_host.h>
+ 
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 7aa59966e7c3..10619c767602 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/perf_event.h>
++#include <linux/export.h>
+ #include <linux/types.h>
+ 
+ #include <asm/cpu_device_id.h>
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index e8cf29d2b10c..9c772c89b623 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -17,6 +17,8 @@
+ #include <linux/limits.h>
+ #include <linux/slab.h>
+ #include <linux/device.h>
++#include <linux/export.h>
++
+ 
+ #include <asm/cpuid/api.h>
+ #include <asm/perf_event.h>
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+index 4bdfcf091200..67fa000cf372 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -9,7 +9,6 @@
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+-#include <linux/export.h>
+ #include <linux/nmi.h>
+ 
+ #include <asm/cpufeature.h>
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 3d1d3547095a..3bd18521cd46 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -29,6 +29,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/mm.h>
+ #include <linux/slab.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/syscore_ops.h>
+diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+index 31f0d29cbc5e..f7627bc8fe49 100644
+--- a/arch/x86/hyperv/irqdomain.c
++++ b/arch/x86/hyperv/irqdomain.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/pci.h>
+ #include <linux/irq.h>
++#include <linux/export.h>
+ #include <asm/mshyperv.h>
+ 
+ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index e93a2f488ff7..d9c0b3064222 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -7,6 +7,7 @@
+  */
+ 
+ #include <linux/bitfield.h>
++#include <linux/export.h>
+ #include <linux/types.h>
+ #include <linux/slab.h>
+ #include <linux/cpu.h>
+diff --git a/arch/x86/hyperv/nested.c b/arch/x86/hyperv/nested.c
+index 1083dc8646f9..1413bfe40ea9 100644
+--- a/arch/x86/hyperv/nested.c
++++ b/arch/x86/hyperv/nested.c
+@@ -9,7 +9,7 @@
+  */
+ #define pr_fmt(fmt)  "Hyper-V: " fmt
+ 
+-
++#include <linux/export.h>
+ #include <linux/types.h>
+ #include <hyperv/hvhdk.h>
+ #include <asm/mshyperv.h>
+diff --git a/arch/x86/kernel/acpi/cppc.c b/arch/x86/kernel/acpi/cppc.c
+index 7047124490f6..e943947ccb3d 100644
+--- a/arch/x86/kernel/acpi/cppc.c
++++ b/arch/x86/kernel/acpi/cppc.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <linux/bitfield.h>
++#include <linux/export.h>
+ 
+ #include <acpi/cppc_acpi.h>
+ #include <asm/msr.h>
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index ecfe7b497cad..882d99b1f4fb 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -6,6 +6,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/memory.h>
+ #include <linux/execmem.h>
++#include <linux/export.h>
+ 
+ #include <asm/text-patching.h>
+ #include <asm/insn.h>
+diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
+index a40176b62eb5..55118dd87116 100644
+--- a/arch/x86/kernel/amd_node.c
++++ b/arch/x86/kernel/amd_node.c
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/debugfs.h>
++#include <linux/export.h>
+ #include <asm/amd/node.h>
+ 
+ /*
+diff --git a/arch/x86/kernel/apic/apic_common.c b/arch/x86/kernel/apic/apic_common.c
+index 9ef3be866832..f7e1cbb70029 100644
+--- a/arch/x86/kernel/apic/apic_common.c
++++ b/arch/x86/kernel/apic/apic_common.c
+@@ -3,6 +3,7 @@
+  *
+  * SPDX-License-Identifier: GPL-2.0
+  */
++#include <linux/export.h>
+ #include <linux/irq.h>
+ #include <asm/apic.h>
+ 
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 66bc5d3e79db..3f133e24a38e 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -14,6 +14,7 @@
+ #include <linux/dmar.h>
+ #include <linux/hpet.h>
+ #include <linux/msi.h>
++#include <linux/export.h>
+ #include <asm/irqdomain.h>
+ #include <asm/hpet.h>
+ #include <asm/hw_irq.h>
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 93069b13d3af..f35c9184ac30 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -13,6 +13,7 @@
+ #include <linux/init.h>
+ #include <linux/compiler.h>
+ #include <linux/slab.h>
++#include <linux/export.h>
+ #include <asm/irqdomain.h>
+ #include <asm/hw_irq.h>
+ #include <asm/traps.h>
+diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+index 2c5b51aad91a..8f181da43b20 100644
+--- a/arch/x86/kernel/cpu/acrn.c
++++ b/arch/x86/kernel/cpu/acrn.c
+@@ -10,6 +10,7 @@
+  */
+ 
+ #include <linux/interrupt.h>
++#include <linux/export.h>
+ 
+ #include <asm/acrn.h>
+ #include <asm/apic.h>
+diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
+index a315b0627dfb..e441400106f8 100644
+--- a/arch/x86/kernel/cpu/aperfmperf.c
++++ b/arch/x86/kernel/cpu/aperfmperf.c
+@@ -8,6 +8,7 @@
+  */
+ #include <linux/cpufreq.h>
+ #include <linux/delay.h>
++#include <linux/export.h>
+ #include <linux/ktime.h>
+ #include <linux/math64.h>
+ #include <linux/percpu.h>
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 7f94e6a5497d..fd136016ff8f 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -16,6 +16,7 @@
+ #include <linux/sched/smt.h>
+ #include <linux/pgtable.h>
+ #include <linux/bpf.h>
++#include <linux/export.h>
+ 
+ #include <asm/spec-ctrl.h>
+ #include <asm/cmdline.h>
+diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
+index 981f8b1f0792..68105db4dc66 100644
+--- a/arch/x86/kernel/cpu/bus_lock.c
++++ b/arch/x86/kernel/cpu/bus_lock.c
+@@ -6,6 +6,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/delay.h>
+ #include <linux/cpuhotplug.h>
++#include <linux/export.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/cmdline.h>
+ #include <asm/traps.h>
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 9d852c3b2cb5..9b335a939576 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -8,6 +8,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/notifier.h>
+ #include <linux/kobject.h>
++#include <linux/export.h>
+ #include <linux/percpu.h>
+ #include <linux/errno.h>
+ #include <linux/sched.h>
+diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+index 8d023239ce18..4657fdb4810e 100644
+--- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
++++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+@@ -10,6 +10,7 @@
+  */
+ 
+ #include <linux/miscdevice.h>
++#include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/kmod.h>
+ #include <linux/poll.h>
+diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+index 371ca6eac00e..50b17579ca97 100644
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -14,6 +14,7 @@
+ #include <linux/earlycpio.h>
+ #include <linux/firmware.h>
+ #include <linux/uaccess.h>
++#include <linux/export.h>
+ #include <linux/initrd.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+index 2de01b379aa3..cb9eade755ee 100644
+--- a/arch/x86/kernel/cpu/sgx/main.c
++++ b/arch/x86/kernel/cpu/sgx/main.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*  Copyright(c) 2016-20 Intel Corporation. */
+ 
++#include <linux/export.h>
+ #include <linux/file.h>
+ #include <linux/freezer.h>
+ #include <linux/highmem.h>
+diff --git a/arch/x86/kernel/cpu/sgx/virt.c b/arch/x86/kernel/cpu/sgx/virt.c
+index 7aaa3652e31d..15ce2a05c260 100644
+--- a/arch/x86/kernel/cpu/sgx/virt.c
++++ b/arch/x86/kernel/cpu/sgx/virt.c
+@@ -5,6 +5,7 @@
+  * Copyright(c) 2021 Intel Corporation.
+  */
+ 
++#include <linux/export.h>
+ #include <linux/miscdevice.h>
+ #include <linux/mm.h>
+ #include <linux/mman.h>
+diff --git a/arch/x86/kernel/cpu/topology.c b/arch/x86/kernel/cpu/topology.c
+index e35ccdc84910..30df9f9c4b0d 100644
+--- a/arch/x86/kernel/cpu/topology.c
++++ b/arch/x86/kernel/cpu/topology.c
+@@ -23,6 +23,7 @@
+  */
+ #define pr_fmt(fmt) "CPU topo: " fmt
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ 
+ #include <xen/xen.h>
+ 
+diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
+index b5a5e1411469..fa841c8b70df 100644
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ 
+ #include <xen/xen.h>
+ 
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index bcb534688dfe..3dbabdfe9649 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -21,7 +21,6 @@
+ #include <linux/delay.h>
+ #include <linux/elf.h>
+ #include <linux/elfcore.h>
+-#include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ #include <linux/memblock.h>
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index dd8748c45529..2b72ca27eaac 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -3,7 +3,6 @@
+  * Architecture specific OF callbacks.
+  */
+ #include <linux/acpi.h>
+-#include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/interrupt.h>
+ #include <linux/list.h>
+diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
+index 722fd712e1cf..16f5a7984a46 100644
+--- a/arch/x86/kernel/dumpstack_32.c
++++ b/arch/x86/kernel/dumpstack_32.c
+@@ -9,7 +9,6 @@
+ #include <linux/uaccess.h>
+ #include <linux/hardirq.h>
+ #include <linux/kdebug.h>
+-#include <linux/export.h>
+ #include <linux/ptrace.h>
+ #include <linux/kexec.h>
+ #include <linux/sysfs.h>
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index 6c5defd6569a..4975c5546ba9 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -9,7 +9,6 @@
+ #include <linux/uaccess.h>
+ #include <linux/hardirq.h>
+ #include <linux/kdebug.h>
+-#include <linux/export.h>
+ #include <linux/ptrace.h>
+ #include <linux/kexec.h>
+ #include <linux/sysfs.h>
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index c3acbd26408b..9edbb4ebac31 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -12,6 +12,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/memblock.h>
+ #include <linux/suspend.h>
++#include <linux/export.h>
+ #include <linux/acpi.h>
+ #include <linux/firmware-map.h>
+ #include <linux/sort.h>
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 6b6f32f40cbe..097721a95a8d 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -13,6 +13,7 @@
+ #include <linux/pci.h>
+ #include <linux/acpi.h>
+ #include <linux/delay.h>
++#include <linux/export.h>
+ #include <linux/pci_ids.h>
+ #include <linux/bcma/bcma.h>
+ #include <linux/bcma/bcma_regs.h>
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index ea138583dd92..2e4e37bf9d8f 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -17,6 +17,7 @@
+ 
+ #include <uapi/asm/kvm.h>
+ 
++#include <linux/export.h>
+ #include <linux/hardirq.h>
+ #include <linux/pkeys.h>
+ #include <linux/vmalloc.h>
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 9aa9ac8399ae..6e1dcafc457d 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -7,6 +7,7 @@
+ #include <linux/bitops.h>
+ #include <linux/compat.h>
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ #include <linux/mman.h>
+ #include <linux/nospec.h>
+ #include <linux/pkeys.h>
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 533fcf5636fc..b58c6128554f 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -19,6 +19,7 @@
+ #include <linux/memblock.h>
+ #include <linux/cc_platform.h>
+ #include <linux/pgtable.h>
++#include <linux/export.h>
+ 
+ #include <asm/asm.h>
+ #include <asm/page_64.h>
+diff --git a/arch/x86/kernel/i8259.c b/arch/x86/kernel/i8259.c
+index 2bade73f49e3..212f5e9959e1 100644
+--- a/arch/x86/kernel/i8259.c
++++ b/arch/x86/kernel/i8259.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/linkage.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/signal.h>
+ #include <linux/sched.h>
+ #include <linux/ioport.h>
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 921c1c783bc1..37a94e2a2d46 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -29,6 +29,7 @@
+ #include <linux/syscore_ops.h>
+ #include <linux/cc_platform.h>
+ #include <linux/efi.h>
++#include <linux/export.h>
+ #include <asm/timer.h>
+ #include <asm/cpu.h>
+ #include <asm/traps.h>
+diff --git a/arch/x86/kernel/paravirt-spinlocks.c b/arch/x86/kernel/paravirt-spinlocks.c
+index 9e1ea99ad9df..7f131a15ac9e 100644
+--- a/arch/x86/kernel/paravirt-spinlocks.c
++++ b/arch/x86/kernel/paravirt-spinlocks.c
+@@ -4,7 +4,6 @@
+  * compiled in a FTRACE-compatible way.
+  */
+ #include <linux/spinlock.h>
+-#include <linux/export.h>
+ #include <linux/jump_label.h>
+ 
+ #include <asm/paravirt.h>
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 095f04bdabdc..dfc8ebc8b0f8 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -22,7 +22,6 @@
+ #include <linux/perf_event.h>
+ #include <linux/hw_breakpoint.h>
+ #include <linux/rcupdate.h>
+-#include <linux/export.h>
+ #include <linux/context_tracking.h>
+ #include <linux/nospec.h>
+ 
+diff --git a/arch/x86/kernel/pvclock.c b/arch/x86/kernel/pvclock.c
+index b3f81379c2fc..96d944e26dbe 100644
+--- a/arch/x86/kernel/pvclock.c
++++ b/arch/x86/kernel/pvclock.c
+@@ -11,6 +11,7 @@
+ #include <linux/gfp.h>
+ #include <linux/memblock.h>
+ #include <linux/nmi.h>
++#include <linux/export.h>
+ 
+ #include <asm/fixmap.h>
+ #include <asm/pvclock.h>
+diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
+index a92f18db9610..221014f3d306 100644
+--- a/arch/x86/kernel/quirks.c
++++ b/arch/x86/kernel/quirks.c
+@@ -5,6 +5,7 @@
+ #include <linux/dmi.h>
+ #include <linux/pci.h>
+ #include <linux/irq.h>
++#include <linux/export.h>
+ 
+ #include <asm/hpet.h>
+ #include <asm/setup.h>
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index fb27be697128..ea43a022f9a8 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -11,6 +11,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/dma-map-ops.h>
+ #include <linux/efi.h>
++#include <linux/export.h>
+ #include <linux/hugetlb.h>
+ #include <linux/ima.h>
+ #include <linux/init_ohci1394_dma.h>
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index ee117fcf46ed..ddce014f29b2 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -7,7 +7,6 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/stacktrace.h>
+-#include <linux/export.h>
+ #include <linux/uaccess.h>
+ #include <asm/stacktrace.h>
+ #include <asm/unwind.h>
+diff --git a/arch/x86/kernel/static_call.c b/arch/x86/kernel/static_call.c
+index 378c388d1b31..3ab922966ab4 100644
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/static_call.h>
++#include <linux/export.h>
+ #include <linux/memory.h>
+ #include <linux/bug.h>
+ #include <asm/text-patching.h>
+diff --git a/arch/x86/kernel/tboot.c b/arch/x86/kernel/tboot.c
+index 46b8f1f16676..b6a1bb741ebd 100644
+--- a/arch/x86/kernel/tboot.c
++++ b/arch/x86/kernel/tboot.c
+@@ -8,7 +8,6 @@
+ 
+ #include <linux/init_task.h>
+ #include <linux/spinlock.h>
+-#include <linux/export.h>
+ #include <linux/delay.h>
+ #include <linux/sched.h>
+ #include <linux/init.h>
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index c5c897a86418..5a038f66271b 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -22,7 +22,6 @@
+ #include <linux/kdebug.h>
+ #include <linux/kgdb.h>
+ #include <linux/kernel.h>
+-#include <linux/export.h>
+ #include <linux/ptrace.h>
+ #include <linux/uprobes.h>
+ #include <linux/string.h>
+diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+index d8ba93778ae3..f3b893c0e5e7 100644
+--- a/arch/x86/kernel/unwind_frame.c
++++ b/arch/x86/kernel/unwind_frame.c
+@@ -3,6 +3,7 @@
+ #include <linux/sched/task.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/interrupt.h>
++#include <linux/export.h>
+ #include <asm/sections.h>
+ #include <asm/ptrace.h>
+ #include <asm/bitops.h>
+diff --git a/arch/x86/kernel/unwind_guess.c b/arch/x86/kernel/unwind_guess.c
+index 884d68a6e714..86813ae9d57c 100644
+--- a/arch/x86/kernel/unwind_guess.c
++++ b/arch/x86/kernel/unwind_guess.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/sched.h>
+ #include <linux/ftrace.h>
++#include <linux/export.h>
+ #include <asm/ptrace.h>
+ #include <asm/bitops.h>
+ #include <asm/stacktrace.h>
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 977ee75e047c..ec0cd3c54616 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/objtool.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/sort.h>
+ #include <asm/ptrace.h>
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 24f0318c50d7..09f9de4555dd 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -33,6 +33,7 @@
+ #include <linux/sched/cputime.h>
+ #include <linux/spinlock.h>
+ #include <linux/eventfd.h>
++#include <linux/export.h>
+ 
+ #include <asm/apicdef.h>
+ #include <asm/mshyperv.h>
+diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+index 45dae2d5d2f1..bfa87e74fe18 100644
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -36,7 +36,6 @@
+ #include <linux/hrtimer.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
+-#include <linux/export.h>
+ #include <linux/nospec.h>
+ #include <asm/processor.h>
+ #include <asm/page.h>
+diff --git a/arch/x86/kvm/kvm_onhyperv.c b/arch/x86/kvm/kvm_onhyperv.c
+index ded0bd688c65..73a97e1dcdbd 100644
+--- a/arch/x86/kvm/kvm_onhyperv.c
++++ b/arch/x86/kvm/kvm_onhyperv.c
+@@ -4,6 +4,7 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/export.h>
+ #include <linux/kvm_host.h>
+ #include <asm/mshyperv.h>
+ 
+diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
+index 1b17b12393a8..2c407d7edd09 100644
+--- a/arch/x86/kvm/mmu/page_track.c
++++ b/arch/x86/kvm/mmu/page_track.c
+@@ -15,6 +15,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/kvm_host.h>
+ #include <linux/rculist.h>
++#include <linux/export.h>
+ 
+ #include "mmu.h"
+ #include "mmu_internal.h"
+diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+index cfce03d8f123..217a802e86f9 100644
+--- a/arch/x86/kvm/mmu/spte.c
++++ b/arch/x86/kvm/mmu/spte.c
+@@ -9,6 +9,7 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/export.h>
+ #include <linux/kvm_host.h>
+ #include "mmu.h"
+ #include "mmu_internal.h"
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index 7f3d7229b2c1..1df1726f506c 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -8,6 +8,7 @@
+ #include "tdp_mmu.h"
+ #include "spte.h"
+ 
++#include <linux/export.h>
+ #include <asm/cmpxchg.h>
+ #include <trace/events/kvm.h>
+ 
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 75e9cfc689f8..308a6ae502e3 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -16,6 +16,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/bsearch.h>
+ #include <linux/sort.h>
++#include <linux/export.h>
+ #include <asm/perf_event.h>
+ #include <asm/cpu_device_id.h>
+ #include "x86.h"
+diff --git a/arch/x86/kvm/smm.c b/arch/x86/kvm/smm.c
+index 9864c057187d..4b13a6346f06 100644
+--- a/arch/x86/kvm/smm.c
++++ b/arch/x86/kvm/smm.c
+@@ -2,6 +2,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/kvm_host.h>
++#include <linux/export.h>
+ #include "x86.h"
+ #include "kvm_cache_regs.h"
+ #include "kvm_emulate.h"
+diff --git a/arch/x86/lib/atomic64_32.c b/arch/x86/lib/atomic64_32.c
+index a0b4a350daa7..04a6901a8969 100644
+--- a/arch/x86/lib/atomic64_32.c
++++ b/arch/x86/lib/atomic64_32.c
+@@ -1,4 +1,3 @@
+ #define ATOMIC64_EXPORT EXPORT_SYMBOL
+ 
+-#include <linux/export.h>
+ #include <linux/atomic.h>
+diff --git a/arch/x86/lib/crc-t10dif.c b/arch/x86/lib/crc-t10dif.c
+index db7ce59c31ac..c8c2108675cd 100644
+--- a/arch/x86/lib/crc-t10dif.c
++++ b/arch/x86/lib/crc-t10dif.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/crc-t10dif.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include "crc-pclmul-template.h"
+ 
+diff --git a/arch/x86/lib/crc32.c b/arch/x86/lib/crc32.c
+index d09343e2cea9..21e84e3c94eb 100644
+--- a/arch/x86/lib/crc32.c
++++ b/arch/x86/lib/crc32.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <linux/crc32.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include "crc-pclmul-template.h"
+ 
+diff --git a/arch/x86/lib/crc64.c b/arch/x86/lib/crc64.c
+index 351a09f5813e..6c1a1beb5c97 100644
+--- a/arch/x86/lib/crc64.c
++++ b/arch/x86/lib/crc64.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/crc64.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include "crc-pclmul-template.h"
+ 
+diff --git a/arch/x86/lib/crypto/blake2s-glue.c b/arch/x86/lib/crypto/blake2s-glue.c
+index adc296cd17c9..e65cebbdc043 100644
+--- a/arch/x86/lib/crypto/blake2s-glue.c
++++ b/arch/x86/lib/crypto/blake2s-glue.c
+@@ -8,6 +8,7 @@
+ #include <asm/processor.h>
+ #include <asm/simd.h>
+ #include <crypto/internal/blake2s.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/jump_label.h>
+ #include <linux/kernel.h>
+diff --git a/arch/x86/lib/crypto/chacha_glue.c b/arch/x86/lib/crypto/chacha_glue.c
+index 10b2c945f541..7e3bf4b091f1 100644
+--- a/arch/x86/lib/crypto/chacha_glue.c
++++ b/arch/x86/lib/crypto/chacha_glue.c
+@@ -7,6 +7,7 @@
+ 
+ #include <asm/simd.h>
+ #include <crypto/chacha.h>
++#include <linux/export.h>
+ #include <linux/jump_label.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+diff --git a/arch/x86/lib/crypto/poly1305_glue.c b/arch/x86/lib/crypto/poly1305_glue.c
+index b7e78a583e07..c2bc5b831551 100644
+--- a/arch/x86/lib/crypto/poly1305_glue.c
++++ b/arch/x86/lib/crypto/poly1305_glue.c
+@@ -6,6 +6,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/fpu/api.h>
+ #include <crypto/internal/poly1305.h>
++#include <linux/export.h>
+ #include <linux/jump_label.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+diff --git a/arch/x86/lib/crypto/sha256.c b/arch/x86/lib/crypto/sha256.c
+index 80380f8fdcee..46d5d174e821 100644
+--- a/arch/x86/lib/crypto/sha256.c
++++ b/arch/x86/lib/crypto/sha256.c
+@@ -6,6 +6,7 @@
+  */
+ #include <asm/fpu/api.h>
+ #include <crypto/internal/sha2.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/static_call.h>
+diff --git a/arch/x86/lib/iomem.c b/arch/x86/lib/iomem.c
+index c20e04764edc..20f90c60e34e 100644
+--- a/arch/x86/lib/iomem.c
++++ b/arch/x86/lib/iomem.c
+@@ -1,5 +1,6 @@
+ #include <linux/string.h>
+ #include <linux/module.h>
++#include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/kmsan-checks.h>
+ 
+diff --git a/arch/x86/mm/cpu_entry_area.c b/arch/x86/mm/cpu_entry_area.c
+index 575f863f3c75..2ffd4628643b 100644
+--- a/arch/x86/mm/cpu_entry_area.c
++++ b/arch/x86/mm/cpu_entry_area.c
+@@ -5,6 +5,7 @@
+ #include <linux/kallsyms.h>
+ #include <linux/kcore.h>
+ #include <linux/pgtable.h>
++#include <linux/export.h>
+ 
+ #include <asm/cpu_entry_area.h>
+ #include <asm/fixmap.h>
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index a4700ef6eb64..90df00f4ef88 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/debugfs.h>
++#include <linux/export.h>
+ #include <linux/kasan.h>
+ #include <linux/mm.h>
+ #include <linux/init.h>
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 7456df985d96..00c7088c5835 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -8,6 +8,7 @@
+ #include <linux/kmemleak.h>
+ #include <linux/sched/task.h>
+ #include <linux/execmem.h>
++#include <linux/export.h>
+ 
+ #include <asm/set_memory.h>
+ #include <asm/cpu_device_id.h>
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 607d6a2e66e2..633887c582af 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -31,6 +31,7 @@
+ #include <linux/cpumask.h>
+ #include <linux/gfp.h>
+ #include <linux/execmem.h>
++#include <linux/export.h>
+ 
+ #include <asm/asm.h>
+ #include <asm/bios_ebda.h>
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index ee66fae9ebcc..e3bd8adea411 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -35,6 +35,7 @@
+ #include <linux/kcore.h>
+ #include <linux/bootmem_info.h>
+ #include <linux/execmem.h>
++#include <linux/export.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/bios_ebda.h>
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 12c8180ca1ba..4e2101e637ba 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -17,6 +17,7 @@
+ #include <linux/mmiotrace.h>
+ #include <linux/cc_platform.h>
+ #include <linux/efi.h>
++#include <linux/export.h>
+ #include <linux/pgtable.h>
+ #include <linux/kmsan.h>
+ 
+diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
+index faf3a13fb6ba..cb069276f756 100644
+--- a/arch/x86/mm/mem_encrypt_amd.c
++++ b/arch/x86/mm/mem_encrypt_amd.c
+@@ -18,6 +18,7 @@
+ #include <linux/bitops.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/cc_platform.h>
++#include <linux/export.h>
+ 
+ #include <asm/tlbflush.h>
+ #include <asm/fixmap.h>
+diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
+index c3317f0650d8..7555c0ef2cf3 100644
+--- a/arch/x86/mm/mmio-mod.c
++++ b/arch/x86/mm/mmio-mod.c
+@@ -21,6 +21,7 @@
+ #include <linux/atomic.h>
+ #include <linux/percpu.h>
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ 
+ #include "pf_in.h"
+ 
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index c24890c40138..5e3ac16ceea5 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -14,6 +14,7 @@
+ #include <linux/topology.h>
+ #include <linux/sort.h>
+ #include <linux/numa_memblks.h>
++#include <linux/export.h>
+ 
+ #include <asm/e820/api.h>
+ #include <asm/proto.h>
+diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+index 2e7923844afe..3eeee5b2384a 100644
+--- a/arch/x86/mm/pat/memtype.c
++++ b/arch/x86/mm/pat/memtype.c
+@@ -34,6 +34,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/memblock.h>
+ #include <linux/debugfs.h>
++#include <linux/export.h>
+ #include <linux/ioport.h>
+ #include <linux/kernel.h>
+ #include <linux/pfn_t.h>
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 46edc11726b7..89973d5e4327 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -22,6 +22,7 @@
+ #include <linux/cc_platform.h>
+ #include <linux/set_memory.h>
+ #include <linux/memregion.h>
++#include <linux/export.h>
+ 
+ #include <asm/e820/api.h>
+ #include <asm/processor.h>
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index ddf248c3ee7d..92ee7b5cd93b 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/mm.h>
+ #include <linux/gfp.h>
++#include <linux/export.h>
+ #include <linux/hugetlb.h>
+ #include <asm/pgalloc.h>
+ #include <asm/tlb.h>
+diff --git a/arch/x86/mm/pgtable_32.c b/arch/x86/mm/pgtable_32.c
+index c234634e26ba..2acb05736cf1 100644
+--- a/arch/x86/mm/pgtable_32.c
++++ b/arch/x86/mm/pgtable_32.c
+@@ -9,6 +9,7 @@
+ #include <linux/highmem.h>
+ #include <linux/pagemap.h>
+ #include <linux/spinlock.h>
++#include <linux/export.h>
+ 
+ #include <asm/cpu_entry_area.h>
+ #include <asm/fixmap.h>
+diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
+index 244c643bb0b5..1956cb58e281 100644
+--- a/arch/x86/pci/pcbios.c
++++ b/arch/x86/pci/pcbios.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/bits.h>
+ #include <linux/bitfield.h>
++#include <linux/export.h>
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 463b784499a8..6288436d8ec3 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -35,7 +35,6 @@
+ #include <linux/init.h>
+ #include <linux/efi.h>
+ #include <linux/efi-bgrt.h>
+-#include <linux/export.h>
+ #include <linux/memblock.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index e7e8f77f77f8..627d084c344d 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -27,7 +27,6 @@
+ #include <linux/ioport.h>
+ #include <linux/mc146818rtc.h>
+ #include <linux/efi.h>
+-#include <linux/export.h>
+ #include <linux/uaccess.h>
+ #include <linux/io.h>
+ #include <linux/reboot.h>
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 553f330198f2..4119b2f693bc 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -7,6 +7,7 @@
+ #include <linux/time.h>
+ #include <linux/types.h>
+ #include <linux/efi.h>
++#include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
+ #include <linux/acpi.h>
+diff --git a/arch/x86/platform/intel-mid/intel-mid.c b/arch/x86/platform/intel-mid/intel-mid.c
+index a8e75f8c14fd..a877e52cb38e 100644
+--- a/arch/x86/platform/intel-mid/intel-mid.c
++++ b/arch/x86/platform/intel-mid/intel-mid.c
+@@ -15,7 +15,6 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/scatterlist.h>
+ #include <linux/irq.h>
+-#include <linux/export.h>
+ #include <linux/notifier.h>
+ 
+ #include <asm/setup.h>
+diff --git a/arch/x86/platform/intel-mid/pwr.c b/arch/x86/platform/intel-mid/pwr.c
+index cd7e0c71adde..77c0ff63ee28 100644
+--- a/arch/x86/platform/intel-mid/pwr.c
++++ b/arch/x86/platform/intel-mid/pwr.c
+@@ -20,7 +20,6 @@
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+-#include <linux/export.h>
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
+ 
+diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
+index ee25b032c0b3..f97c11d3c1d2 100644
+--- a/arch/x86/platform/intel-quark/imr.c
++++ b/arch/x86/platform/intel-quark/imr.c
+@@ -32,6 +32,7 @@
+ #include <asm/io.h>
+ 
+ #include <linux/debugfs.h>
++#include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/mm.h>
+ #include <linux/types.h>
+diff --git a/arch/x86/platform/intel/iosf_mbi.c b/arch/x86/platform/intel/iosf_mbi.c
+index 40ae94db20d8..49af88f1deda 100644
+--- a/arch/x86/platform/intel/iosf_mbi.c
++++ b/arch/x86/platform/intel/iosf_mbi.c
+@@ -18,6 +18,7 @@
+ #include <linux/capability.h>
+ #include <linux/pm_qos.h>
+ #include <linux/wait.h>
++#include <linux/export.h>
+ 
+ #include <asm/iosf_mbi.h>
+ 
+diff --git a/arch/x86/platform/scx200/scx200_32.c b/arch/x86/platform/scx200/scx200_32.c
+index 80662b72035d..97386353b0f5 100644
+--- a/arch/x86/platform/scx200/scx200_32.c
++++ b/arch/x86/platform/scx200/scx200_32.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/mutex.h>
+diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video-common.c
+index 81fc97a2a837..57070d9e1a56 100644
+--- a/arch/x86/video/video-common.c
++++ b/arch/x86/video/video-common.c
+@@ -7,6 +7,7 @@
+  *
+  */
+ 
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/vgaarb.h>
+diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
+index 942372e69b4d..7cd06bb3aa9f 100644
+--- a/arch/x86/virt/svm/sev.c
++++ b/arch/x86/virt/svm/sev.c
+@@ -19,6 +19,7 @@
+ #include <linux/iommu.h>
+ #include <linux/amd-iommu.h>
+ #include <linux/nospec.h>
++#include <linux/export.h>
+ 
+ #include <asm/sev.h>
+ #include <asm/processor.h>
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index 2457d13c3f9e..e5bb81dc8497 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -12,6 +12,7 @@
+ #include <linux/cache.h>
+ #include <linux/init.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/printk.h>
+ #include <linux/cpu.h>
+ #include <linux/spinlock.h>
+diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
+index 53282dc7d5ac..4b2b038a1ec8 100644
+--- a/arch/x86/xen/enlighten.c
++++ b/arch/x86/xen/enlighten.c
+@@ -2,6 +2,7 @@
+ 
+ #include <linux/console.h>
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ #include <linux/instrumentation.h>
+ #include <linux/kexec.h>
+ #include <linux/memblock.h>
+diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+index fe57ff85d004..4399a1796861 100644
+--- a/arch/x86/xen/enlighten_hvm.c
++++ b/arch/x86/xen/enlighten_hvm.c
+@@ -2,6 +2,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/cpu.h>
++#include <linux/export.h>
+ #include <linux/kexec.h>
+ #include <linux/memblock.h>
+ #include <linux/virtio_anchor.h>
+diff --git a/arch/x86/xen/mmu.c b/arch/x86/xen/mmu.c
+index c4c479373249..da38470e6131 100644
+--- a/arch/x86/xen/mmu.c
++++ b/arch/x86/xen/mmu.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ #include <linux/pfn.h>
++#include <linux/export.h>
+ #include <asm/xen/page.h>
+ #include <asm/xen/hypercall.h>
+ #include <xen/interface/memory.h>
 -- 
-Thanks and Regards,
-Prateek
+2.20.1
 
