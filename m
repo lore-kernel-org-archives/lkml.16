@@ -1,79 +1,124 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4E71798F;
-	Thu, 12 Jun 2025 05:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29B3D1798F;
+	Thu, 12 Jun 2025 05:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749706720; cv=none; b=chU/2RZt8DLH5GJwB5R20XFnL7v+8FsqWWIMHWJN+otbTNgAJEI7bmzyFuqM8iBf2HZKzyol6uxX1af2g6x5vUrpFaMRLYRzM+5/4Lc7yDDdGOmjzekxjSHoWSAZuxQRZYbMWVuQPd9ZfEFp9/l1f+N51s7vrjtA+v4JCIuBs68=
+	t=1749706776; cv=none; b=oDELRM4xqAdirHZvGnUSZ40fiPsHYmHaEs3m6kHU/bvyZ+dbn66VqkW50dT8oqr+eusZ4+nvXOjOsh3OxUAiwy8BdwihVlGk+kzipw0i8TRNr0hPlBR3McNWCgqFLufB0IPVx6aoYAtPmDoVSylBNF54dD4NctHYwwsvyMhsAKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749706720; c=relaxed/simple;
-	bh=S4t6wWm9dt6+lgS6bSOCmRYtthZMLHH+VlRRYOFSnZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tZzy2V2xrpDbhcfd7zMyYiXKJSn/c1XANV4i/vxVt0yEaBwYjUksLP9PlzwqZKPReVv0bRURf1BGMjs/gbLi3wkM7dagP1H6oPD4qJ2HGbYJ59/y3HvMuhHT6HuQpxmumn3fCw++EFEdX60AYV8GfRNZfYz2iUlXGRWsHt2yBUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=NQTOTy1t; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1749706776; c=relaxed/simple;
+	bh=D5zs25k5ilJdAfvmjAwbyIJsXuPFkV9J3ttBcMMcEyo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=I4Q8iM/V955IPI5hR81/dYlBppSOzSc0XmuqQnDrAflpU5JWV9r/w989vs70refyZEO8bvBg0NLVso5vDjX7iXtd9/i9kElMwCipDLlKnLCrrmptHoERGqslO1omw3jiWxJVt0/FlxdJDPgsje/d8Zj4qFqf6wnfv0fFUvB7DGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aN8ZsyEl; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="NQTOTy1t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Qz9CYYFLIpHohinfJ8GhpQOes7nBnWlubx3xdUuVdDU=; b=NQTOTy1tg5+zdNbWEJ7Tq+uQZb
-	55kckaQxQdPNWoSk63+18ZOQUL8ScnFU5Sj5b/lCt+rIUl8NJqTtpCJZF2qwhgAZ1s72NYpvjqYnk
-	Zt/6Ee/7RpMTQARDh2TOB3nHzmn/TkP5VTEw+bDMxkingNftuXqva0FVtw/lxQHGFjjxA1c1wRLgC
-	IPU5oL4UzjDWas1mRLtIXyp2QSpEPaeZCAK6xkvNiwL3mYxkOPzdwyDQ48NnYvChVB3m2wBxJ8y9N
-	OQP5ijYbGYCmx23j6RD3h17PVsTOSqu5lAWfYN4lmyyGZ1ion3paAufZSulzk8H5vsW84UQgtv3wB
-	sCYSHKnA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uPads-00CYA1-1i;
-	Thu, 12 Jun 2025 13:38:25 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 12 Jun 2025 13:38:24 +0800
-Date: Thu, 12 Jun 2025 13:38:24 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc: Kristen Accardi <kristen.c.accardi@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: iaa - Fix race condition when probing IAA devices
-Message-ID: <aEpn0B6CrMNcD-Oj@gondor.apana.org.au>
-References: <20250603235531.159711-1-vinicius.gomes@intel.com>
- <aEjnbdoqzLoMifRn@gondor.apana.org.au>
- <878qlyugea.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aN8ZsyEl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=8u
+	xIV25rvzc500OQYm7n7CRS3Jb65U/qpwbuXBGHpLw=; b=aN8ZsyElLBwfE4rdkV
+	oDYF7HowdLbtdoIRzS2zsKZHoDRaIveTc01SoZPzLiIEI1Y/eKIDG9lL4psJx5Hk
+	phhjiNe770/zQMOkMcQjWaecrW/Y0BDQOfiJuM2EFkGidOPFWF68C89FcuVpwy57
+	crAOEsgzxLWkiui9twZtZ4MRA=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgB3lmVFZ0poG_P_CA--.31050S4;
+	Thu, 12 Jun 2025 13:36:21 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: cachen@purestorage.com
+Cc: akpm@linux-foundation.org,
+	cl@gentwo.org,
+	corbet@lwn.net,
+	dennis@kernel.org,
+	hannes@cmpxchg.org,
+	harry.yoo@oracle.com,
+	jackmanb@google.com,
+	kent.overstreet@linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	mhocko@suse.com,
+	rientjes@google.com,
+	roman.gushchin@linux.dev,
+	surenb@google.com,
+	tj@kernel.org,
+	vbabka@suse.cz,
+	yzhong@purestorage.com,
+	ziy@nvidia.com
+Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
+Date: Thu, 12 Jun 2025 13:36:05 +0800
+Message-Id: <20250612053605.5911-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250610233053.973796-1-cachen@purestorage.com>
+References: <20250610233053.973796-1-cachen@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878qlyugea.fsf@intel.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgB3lmVFZ0poG_P_CA--.31050S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw1UKrW8Gry3WFy8GFWfZrb_yoW8tF18pF
+	4UKw1rWF4qqr1xCrn7J3WIga4ft3Z8CFWUJ3yaq34SvF1akryfZrZrKw45uF47CF40yF1U
+	ZFWq9w17Z3W5ZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UxCzNUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAhqqmhKX67XLgAAsK
 
-On Wed, Jun 11, 2025 at 02:17:49PM -0700, Vinicius Costa Gomes wrote:
->
-> >From what I could gather, the idea of the per-cpu workqueue table ("map"
-> really) is more to "spread" the workqueues to different CPUS than to
-> reduce contention.
+Hi, 
+
+On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
+> Add support for tracking per-NUMA node statistics in /proc/allocinfo.
+> Previously, each alloc_tag had a single set of counters (bytes and
+> calls), aggregated across all CPUs. With this change, each CPU can
+> maintain separate counters for each NUMA node, allowing finer-grained
+> memory allocation profiling.
 > 
-> If the question is more about the choice of using per-cpu variables, I
-> can look for alternatives.
+> This feature is controlled by the new
+> CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
+> 
+> * When enabled (=y), the output includes per-node statistics following
+>   the total bytes/calls:
+> 
+> <size> <calls> <tag info>
+> ...
+> 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+>         nid0     94912        2966
+>         nid1     220544       6892
+> 7680         60       mm/dmapool.c:254 func:dma_pool_create
+>         nid0     4224         33
+>         nid1     3456         27
+> 
+> * When disabled (=n), the output remains unchanged:
+> <size> <calls> <tag info>
+> ...
+> 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> 
+> To minimize memory overhead, per-NUMA stats counters are dynamically
+> allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
+> increased to ensure sufficient space for in-kernel alloc_tag counters.
+> 
+> For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
+> allocate counters. These allocations are excluded from the profiling
+> statistics themselves.
 
-Prior to your patch, the compress/decompress paths simply did a
-lockless per-cpu lookup to find the wq.  Now you're taking a global
-spinlock to do the same lookup.
+Considering NUMA balance, I have two questions:
+1. Do we need the granularity of calling sites?
+We need that granularity to identify a possible memory leak, or somewhere
+we can optimize its memory usage.
+But for NUMA unbalance, the calling site would mostly be *innocent*, the
+clue normally lies in the cpu making memory allocation, memory interface, etc...
+The point is, when NUMA unbalance happened, can it be fixed by adjusting the calling sites?
+Isn't <cpu, memory interface/slab name, numa id> enough to be used as key for numa
+stats analysis?
+Any example explaining why you need the information of calling sites and how the
+information of calling site help?
 
-That makes no sense.  Either it should be redesigned to not use
-a spinlock, or the per-cpu data structure should be removed since
-it serves no purpose as you're always taking a global spinlock.
+2. There are other factors affecting NUMA balance, cgroup usage, e.g...
+Could we collect those information at calling sites as well.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+
+Thanks
+David
+
