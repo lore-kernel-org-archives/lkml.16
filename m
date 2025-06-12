@@ -1,130 +1,150 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326E48F40;
-	Thu, 12 Jun 2025 05:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3621DEFC8
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749705582; cv=none; b=vCrvsibBHJvqQ+6SLxI4hp4mMA9G666OhVrUHGiqkAwzqP8lchhryqlo5PobN0/m2E3GvRPk094f4UutwMqBjIUlugvXepMhTn/WnZUQHxdu+PHDm46utA/XS1hw51gWQQZ2XJrFcJ+njYLPctLugycghcRZVwp19S5oQPpA0Zw=
+	t=1749705600; cv=none; b=gsnLQkl1BxNldnZCqJBiB5kYuj5kh5Ae+ZCKkEY7hS0WvyaDU5QROHqJS7pr7QQZjEGrD9OM1q4cwXQE2mYZbuowOc+6sZsvfHY/qsgcpuFuKsaXO9h2BzmNDFwZIZzyHVg4EpXw+EZKyEJ+bUUyKArT+tqHBAfAGH4WPo6AalA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749705582; c=relaxed/simple;
-	bh=Fgg60br5z8Xo62RVtcYOlSHFY8hDvcwBnLt/8Qgc8kw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pjo5c2p0nDBftrM4Twv5vXsNeCHx1HodM4Qk81FwGjR+mXxuBB0v6Mi7jeSV7evchSC/LUHRjnoPpZh4ST08XBkWVxyKs/CysVzI6OIbAM1LW+DmnAksj9gIglTKMLQ2yqnPEGWiM9Zlfc0NE5HyX0bxA/K7MnEr7DDliPFV3rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PwN9NjQq; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749705600; c=relaxed/simple;
+	bh=/P/DJBNjnkE1qjkQdZ+TBvKziziGjZZ0noq0dtdTInY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pWwgDLAyYRP84D7qkHhCkC1bRGFCS1B4LtMQxFN2V33K1CENtsMyoI5t1rKuEnSyuKSf63t5jbQfbHScoofcRTotb/KR+99JujvCpFrtqrl/IXkwA7vVfQCGqR2UTUbIL5lKBU1b/YQOHsVnpP7ufyAD2cGJSFMRFDHmtuDuYLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3QyJY/qX; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PwN9NjQq"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C5JM1d2777716;
-	Thu, 12 Jun 2025 00:19:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749705562;
-	bh=Z/t8lLUiFoXTd5zgRP+4OV8+E8OvgbBaVBJMzxkwCWI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=PwN9NjQqcsSqDe2oXG6CwGyH1Mrjr65I8EpYBao1jJSoP+RHyQSQf+FbbH4Xra024
-	 RsAk1NH0SdfifAui2hIR5DrRmPke6zP2pxI/FSwboeX9KQ9Ynv6LprE7W15aXhaUbj
-	 tz4119hXwH/kIMn0EHkx9cO93VCjo7nFgL0cA/Fw=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C5JM223383057
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 12 Jun 2025 00:19:22 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
- Jun 2025 00:19:22 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 12 Jun 2025 00:19:22 -0500
-Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C5JHui1457466;
-	Thu, 12 Jun 2025 00:19:18 -0500
-Message-ID: <03555d09-e506-4f48-a073-b06b63e1af4a@ti.com>
-Date: Thu, 12 Jun 2025 10:49:17 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3QyJY/qX"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so81295ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:19:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749705598; x=1750310398; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EPdoN3ANegyWeQsOHYYrepeIprAZYiuTk2oe8aUOr7k=;
+        b=3QyJY/qXBgE/3JI1FBWFZSMjw0HV6K0Po6G1v/Hgvink9N4Aoy374zYsIxEG4PIXaN
+         t+R+iguaZq5hkUXQJxHhrRrXArpJYIDkP4rauhz8oAzOkBwb3StW2ZFEPdGclXa8rK3b
+         yrMLJ+pSiR1z/8PNn+XDdEBDIHyAxNkcWDSJIS4kqvPeLuyh0hFjTm+SSX6RynJfSDZ5
+         3FiX2qMUjbSbK6B/2X2ZOudeiCz9Ccsvm4k0tXYW/OSA/5lpefkYLNq89MhFfAa2c7BN
+         9vbeyuBQope0mpZrmE163PPXi2mgrmMXSnpkorZLOUKB9DCyHUWFb2jD0NBqV8vYiD47
+         pCTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749705598; x=1750310398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EPdoN3ANegyWeQsOHYYrepeIprAZYiuTk2oe8aUOr7k=;
+        b=c5TKGJh6+mfxlt1e12aYypAk3jW2VlNN4XuLnTd28VdjBKwxFxYw3mMk4KQ2si83ub
+         B5oKMtl0/snM3F0v5QCGS81A9XheBU5EmYJwH+a2B1NlQu/luZareCIo68wsX5eK5VyW
+         Hjqpk58veMhxAWEWJK2NQfQtZF9A9BxkW7oRXF91VSigv/WzzacvpTGtoAZikQsLZf92
+         i0GdGqr0dnrxACIFasOfL8BEYadoLmafj02Twznz5K53OYOCiONOmp9IEr6wBGv3PTov
+         XOfm+aEU7e7B4ulMEGT/hmotqCA9qe+tHURJU2mwpwvIjlRbgV5r6ExwEKvDNS0p3kE6
+         N5rw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUTW0WzrZaYOB573fjg1JwpXB6RRD7/oiu4hdNx8Si2hdB5ANvb+RgtM4VwsB5zn/J02uyYWhctXanjVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0EuUs+/RCutjojBdIPKTci65kfvVI++mnkzU07RqUlkFwIBFw
+	zwjPAaL0bmIFa0LfHhh39Z0NyHIJqf+RZ4CALvy8iHNxrDppLJIx329kMvbmC0fsiGgPdr9wsAv
+	6BgajVeQaFJW6zVXZl4qMvgDh1aAqrMK2pofH/oNh
+X-Gm-Gg: ASbGncuXCKZhN1kL7u7RPs7uuvL+8hjkCxM5fxvPdCEd3wqHtdK7n9PZajrW9exlYH1
+	aSE+PODuvk7LGqgqEyz4lbCJ8sTEIDMy8sePJmEaZ7frYZgaviMmozs8B2LOWP8eVmYNt05X2EJ
+	SetGirSea94F0O0XljnhWaFZfuapskhbeBl1Hf6hwTiO9S
+X-Google-Smtp-Source: AGHT+IE6oV9iOMyIcpwlHWNYge5b/BoungKrS8bwm6ti65Mcya/37bLaga6JzbosXVWRoP8lK6P3M/Ks+VBczEJ7PTA=
+X-Received: by 2002:a05:6e02:1c2e:b0:3dc:a380:3ab2 with SMTP id
+ e9e14a558f8ab-3ddfbf0ad0dmr1082915ab.21.1749705597948; Wed, 11 Jun 2025
+ 22:19:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: ti: icssg-prueth: Read firmware-names from
- device tree
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Meghana Malladi <m-malladi@ti.com>, Paolo Abeni <pabeni@redhat.com>,
-        Eric
- Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>
-References: <20250610052501.3444441-1-danishanwar@ti.com>
- <20250611170211.7398b083@kernel.org>
-Content-Language: en-US
-From: MD Danish Anwar <danishanwar@ti.com>
-In-Reply-To: <20250611170211.7398b083@kernel.org>
+References: <20250606215246.2419387-1-blakejones@google.com>
+ <aEnLBgCTuuZjeakP@google.com> <CAP_z_Ci2HtnSX8h51Lg=XcW_-5OryGb3PAH7MJjWg60Bjpdpng@mail.gmail.com>
+In-Reply-To: <CAP_z_Ci2HtnSX8h51Lg=XcW_-5OryGb3PAH7MJjWg60Bjpdpng@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 11 Jun 2025 22:19:44 -0700
+X-Gm-Features: AX0GCFte5AogP3jzRMvEYvmxDFDHCWazF4ReJJeWZMJbQRTGtHjlNclFAxfsZPw
+Message-ID: <CAP-5=fW1FhaDcG54OS=_65gxmehjDTR+1XqCPWMX-aw9reJHdA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] perf: generate events for BPF metadata
+To: Blake Jones <blakejones@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	Graham Woodward <graham.woodward@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jakub
+On Wed, Jun 11, 2025 at 5:39=E2=80=AFPM Blake Jones <blakejones@google.com>=
+ wrote:
+>
+> Hi Namhyung,
+>
+> On Wed, Jun 11, 2025 at 11:29=E2=80=AFAM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > I tried to process your patches but it failed to build like below:
+> > [...]
+> > Please run 'make build-test' and send v4.
+>
+> Very sorry about that. I've fixed the two issues you noticed, as well as
+> one additional one where I was using the wrong include path to check for
+> the presence of the libbpf-strings feature.
+>
+> I'm trying to test my fixes using "make build-test", but it's proving a b=
+it
+> of a challenge. I installed libgtk-4-dev, binutils-dev, and libopencsd-de=
+v
+> to fix build problems as they came up; I also installed libtraceevent-dev=
+,
+> but somehow it still wasn't detected by the build process and so I had to
+> use NO_LIBTRACEEVENT=3D1.
+>
+> Even after installing these libraries, I'm still hitting errors when doin=
+g
+> "make build-test" on a copy of the perf source *without* my changes:
+>
+>     In file included from util/disasm_bpf.c:18:
+>     .../tools/include/tools/dis-asm-compat.h:10:6:
+>         error: redeclaration of 'enum disassembler_style'
+>        10 | enum disassembler_style {DISASSEMBLER_STYLE_NOT_EMPTY};
+>           |      ^~~~~~~~~~~~~~~~~~
+>     In file included from util/disasm_bpf.c:15:
+>     /usr/include/dis-asm.h:53:6: note: originally defined here
+>        53 | enum disassembler_style
+>           |      ^~~~~~~~~~~~~~~~~~
+>
+> I noticed that tools/perf/BUILD_TEST_FEATURE_DUMP has
+> "feature-disassembler-four-args=3D0" and "feature-disassembler-init-style=
+d=3D0"
+> as of when this failed, which seems to be upstream of the observed failur=
+e
+> (the version of binutils-dev that I installed seems to have newer-style
+> versions of these interfaces).
 
-On 12/06/25 5:32 am, Jakub Kicinski wrote:
-> On Tue, 10 Jun 2025 10:55:01 +0530 MD Danish Anwar wrote:
->> Refactor the way firmware names are handled for the ICSSG PRUETH driver.
->> Instead of using hardcoded firmware name arrays for different modes (EMAC,
->> SWITCH, HSR), the driver now reads the firmware names from the device tree
->> property "firmware-name". Only the EMAC firmware names are specified in the
->> device tree property. The firmware names for all other supported modes are
->> generated dynamically based on the EMAC firmware names by replacing
->> substrings (e.g., "eth" with "sw" or "hsr") as appropriate.
-> 
-> Could you include an example?
+Fwiw, binutils is GPLv3 and license incompatible with perf which is
+largely GPLv2. This patch series deletes the code in perf using it and
+migrates the BPF disassembly to using capstone or libLLVM:
+https://lore.kernel.org/lkml/20250417230740.86048-1-irogers@google.com/
+The series isn't merged into upstream Linux but is in:
+https://github.com/googleprodkernel/linux-perf
 
-Sure. Below are the firmwares used currently for PRU0 core
+Thanks,
+Ian
 
-EMAC: ti-pruss/am65x-sr2-pru0-prueth-fw.elf
-SW  : ti-pruss/am65x-sr2-pru0-prusw-fw.elf
-HSR : ti-pruss/am65x-sr2-pru0-pruhsr-fw.elf
-
-If you look closely you'll see the names of all three firmwares are same
-except for the operating mode.
-
-In general for PRU0 core, firmware name is,
-
-	ti-pruss/am65x-sr2-pru0-pru<mode>-fw.elf
-
-Since the EMAC firmware names are defined in DT, I am reading those
-directly and for other modes just swapping mode name. i.e. eth -> sw or
-eth -> hsr.
-
-I will add this example in commit msg in next revision.
-
-> 
->> This improves flexibility and allows firmware names to be customized via
->> the device tree, reducing the need for code changes when firmware names
->> change for different platforms.
-> 
-> You seem to be deleting the old constants. Is there no need to keep
-> backward compatibility with DT blobs which don't have the firmware-name
-> properties ?
-
-ICSSG-PRUETH driver is only supported by AM65x and AM64x and both the
-DTs have the firmware name property. So I don't think there is any need
-to maintain the older hard coded values.
-
-AM65x -
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/arch/arm64/boot/dts/ti/k3-am654-icssg2.dtso#n28:~:text=pru2_1%3E%2C%20%3C%26rtu2_1%3E%2C%20%3C%26tx_pru2_1%3E%3B-,firmware%2Dname,-%3D%20%22ti%2Dpruss/am65x
-
-AM64x -
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/arch/arm64/boot/dts/ti/k3-am642-evm.dts#:~:text=tx_pru1_1%3E%3B-,firmware%2Dname,-%3D%20%22ti%2Dpruss
-
-Let me know if this is okay.
-
--- 
-Thanks and Regards,
-Danish
+> Is there anything written up about how to set up a machine so that
+> "make build-test" works reliably?
+>
+> Thanks.
+>
+> Blake
