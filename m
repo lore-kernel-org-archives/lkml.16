@@ -1,244 +1,171 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2047.outbound.protection.outlook.com [40.107.102.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E7017A2EA
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726177; cv=none; b=arxsvS0CxWXmQcUeQBCsbaErQ9KXolcM0zheGVFxX/orHZ0hfNeJWUubno7fBPBV0WvNZ3y9B55eOBZYnag1YcXUX90PQHo1h+OM36I4klfUFZY1D8YdyTy51G5WN4t2a/JEa7IwX8d9Fo4RlAeZyLsd8d8xIIOSb7Vg+iyPwpw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726177; c=relaxed/simple;
-	bh=SsrMCwrPKcWpRPYLXveM/2pcgW5S6XJtyd0QAhzsR4A=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CLPWawUMlQzT2WAJ/Rim+3eyeAH2SVzv4AmfadoalxU8ActeHm2w3wx+ygmGqNCNAyOUDLqii60R0/0fY7twhnRQ9xicECu69tIC6HhyHAlBdW03Bw00hDYHiLvAUBZ/7Z6Qi5lFyKUM936uoI5Cp5EMs8X+3zGlMtfdR/k46B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 32E8E1F78E;
-	Thu, 12 Jun 2025 11:02:53 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB75A139E2;
-	Thu, 12 Jun 2025 11:02:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jQJAONyzSmi4XAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 12 Jun 2025 11:02:52 +0000
-Date: Thu, 12 Jun 2025 13:02:52 +0200
-Message-ID: <87wm9hte77.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ALSA: pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to user_access_begin/user_access_end()
-In-Reply-To: <8df11af98033e4cb4d9b0f16d6e9d5b69110b036.1749724057.git.christophe.leroy@csgroup.eu>
-References: <8df11af98033e4cb4d9b0f16d6e9d5b69110b036.1749724057.git.christophe.leroy@csgroup.eu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827291DFF7;
+	Thu, 12 Jun 2025 11:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749726249; cv=fail; b=jkrVi8RwxQs/yNNqF21QPjNDl8QSnJp0TBZrH+hMCNNASqG6tJ5bnO4K7DUZJgZ3PZxyJ9l28EWa69sn3Wx4+6UTT8LddjiHI+rTkRrBrSI0pKRBIPX34pw18mXibzGEhp5vTRlPOPKtWdCBE4+wGY1lOLmxlBqX0qkuMp99BY0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749726249; c=relaxed/simple;
+	bh=LfKBKl3dxErAfnT94z1U5sdNWxmjnVBrk+oxTHCdGeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fgypzljrsb+iYwWSWhvLD5J1N/2dMsMeLzZSXqCizTeJDDB4NXFSbOgwaxbFuYeNvg3+0KlejKfLq5Le+HQsqLAdkaM34Ja64nF8EsIe2xR407bGbDi2y0Q3Gv6agTA80zMlFcZ0efnH5kVUmoUZi9FgNlnYNJ/DzZvbKA5z9Hk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D+OBUddR; arc=fail smtp.client-ip=40.107.102.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D+OBUddR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cZKQWFshjO0E47nSrWx5x6QG2LdvZzOndhIg/QuDUv30YPOx30WtLXrknal2zvD4gM3MXHsMft+TDlpHqiaNo98TuRqurcXBn777iPJp58SwtLRFoyfuP+RNAs4iL8/UlymEQWjMCy3J5ViPwmzrc0EMlF9rUagHOW/Sx8ar7mGzmGzBP/sk79Bp7bsZIaXVT8xLguMMoGWO0qOQGvErSImfRLLVdylCQd2X2TATIB0czGlnw4X+cNhIFvtJhuKWeziZLSg171gp4U12VXtZa4bOxbSA5Dbu2JHotlTLs6WYNjHQUsEv6a3l1WYTo3AG2pZVZp+Z3Tw9sLbbWVNppQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JMHzS6LgiYW9Q7FQD8uqgNEKgwsC/1bJpQ/My1KNqcg=;
+ b=C++xyDh1bwPrkRc0MhQBZcxIJ96OjBAricpxOrbu2IofxxERHInjqQqyKAudv8LDCp9tUWOBxVzVhFydqsom1D+eBQfJtQt1QSagOk62Sn1OFBVgCmXe8K6SWdUa848G3AiV/GzRKrJxoZ2ofLFza/ulAf2Xhk3tV9U+BCuDvTci4GZubUxjUOtxIinhCAleOhjUWoKjkCvqThudBA+wRaViOgTHEq0tTbG5II1opwW6xw7Kyn2KryJ9y16L6QCFthV7UZYYH9VnZgf9/vMyWmwkJfn2gMRam+3zhSYfElFMR3y3Mg1/myV8UNttwRvWbg2T9/w8AyFIBgtSHsFdpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JMHzS6LgiYW9Q7FQD8uqgNEKgwsC/1bJpQ/My1KNqcg=;
+ b=D+OBUddRGKyyQFBZ4tkcSZttBrZx9S7/4FzuyEmiqsHtV68KNf856iGEAce4piTli89/elCEF8XilNUGGi7IzTO7pVi4R8BIigo9x5LauJnJ6+KBFKccDm5h4xB5QA6aAt0+U4BRmHsyv/y33SRX4qHktn1hNb7SuA6tTsjSZCw=
+Received: from CH2PR07CA0002.namprd07.prod.outlook.com (2603:10b6:610:20::15)
+ by CY8PR12MB7266.namprd12.prod.outlook.com (2603:10b6:930:56::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Thu, 12 Jun
+ 2025 11:04:03 +0000
+Received: from CH2PEPF0000009A.namprd02.prod.outlook.com
+ (2603:10b6:610:20:cafe::20) by CH2PR07CA0002.outlook.office365.com
+ (2603:10b6:610:20::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.22 via Frontend Transport; Thu,
+ 12 Jun 2025 11:04:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF0000009A.mail.protection.outlook.com (10.167.244.22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Thu, 12 Jun 2025 11:04:02 +0000
+Received: from [10.85.38.70] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Jun
+ 2025 06:03:59 -0500
+Message-ID: <55b5827b-6809-47a9-b5d9-57fa68736e9f@amd.com>
+Date: Thu, 12 Jun 2025 16:33:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 32E8E1F78E
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Spam-Score: -4.00
-
-On Thu, 12 Jun 2025 12:39:39 +0200,
-Christophe Leroy wrote:
-> 
-> With user access protection (Called SMAP on x86 or KUAP on powerpc)
-> each and every call to get_user() or put_user() performs heavy
-> operations to unlock and lock kernel access to userspace.
-> 
-> SNDRV_PCM_IOCTL_SYNC_PTR ioctl is a hot path that needs to be
-> optimised. To do that, perform user accesses by blocks using
-> user_access_begin/user_access_end() and unsafe_get_user()/
-> unsafe_put_user() and alike.
-> 
-> Before the patch the 9 calls to put_user() at the
-> end of snd_pcm_ioctl_sync_ptr_compat() imply the following set of
-> instructions about 9 times (access_ok - enable user - write - disable
-> user):
->     0.00 :   c057f858:       3d 20 7f ff     lis     r9,32767
->     0.29 :   c057f85c:       39 5e 00 14     addi    r10,r30,20
->     0.77 :   c057f860:       61 29 ff fc     ori     r9,r9,65532
->     0.32 :   c057f864:       7c 0a 48 40     cmplw   r10,r9
->     0.36 :   c057f868:       41 a1 fb 58     bgt     c057f3c0 <snd_pcm_ioctl+0xbb0>
->     0.30 :   c057f86c:       3d 20 dc 00     lis     r9,-9216
->     1.95 :   c057f870:       7d 3a c3 a6     mtspr   794,r9
->     0.33 :   c057f874:       92 8a 00 00     stw     r20,0(r10)
->     0.27 :   c057f878:       3d 20 de 00     lis     r9,-8704
->     0.28 :   c057f87c:       7d 3a c3 a6     mtspr   794,r9
-> ...
-> 
-> A perf profile shows that in total the 9 put_user() represent 36% of
-> the time spent in snd_pcm_ioctl() and about 80 instructions.
-> 
-> With this patch everything is done in 13 instructions and represent
-> only 15% of the time spent in snd_pcm_ioctl():
-> 
->     0.57 :   c057f5dc:       3d 20 dc 00     lis     r9,-9216
->     0.98 :   c057f5e0:       7d 3a c3 a6     mtspr   794,r9
->     0.16 :   c057f5e4:       92 7f 00 04     stw     r19,4(r31)
->     0.63 :   c057f5e8:       93 df 00 0c     stw     r30,12(r31)
->     0.16 :   c057f5ec:       93 9f 00 10     stw     r28,16(r31)
->     4.95 :   c057f5f0:       92 9f 00 14     stw     r20,20(r31)
->     0.19 :   c057f5f4:       92 5f 00 18     stw     r18,24(r31)
->     0.49 :   c057f5f8:       92 bf 00 1c     stw     r21,28(r31)
->     0.27 :   c057f5fc:       93 7f 00 20     stw     r27,32(r31)
->     5.88 :   c057f600:       93 36 00 00     stw     r25,0(r22)
->     0.11 :   c057f604:       93 17 00 00     stw     r24,0(r23)
->     0.00 :   c057f608:       3d 20 de 00     lis     r9,-8704
->     0.79 :   c057f60c:       7d 3a c3 a6     mtspr   794,r9
-> 
-> Note that here the access_ok() in user_write_access_begin() is skipped
-> because the exact same verification has already been performed at the
-> beginning of the fonction with the call to user_read_access_begin().
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
-> This is a lighter version of previous patch "[PATCH v2] ALSA: pcm: Convert multiple {get/put}_user to user_access_begin/user_access_end()" focussing on identified hot path.
-> Moved and nested the failure labels closer in order to increase readability
-
-Thanks for the revised patch!
-
-Although it's now much lighter, I still believe that we can reduce
-get_user() / put_user() calls significantly by adjusting the struct
-usage.
-
-Could you check whether the patch below can improve?
-(Zero-ing of sstatus can be an overhead here, but there are some
-holes, and these need to be initialized before copying back...)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/59] KVM: iommu: Overhaul device posted IRQs support
+To: Sean Christopherson <seanjc@google.com>
+CC: <baolu.lu@linux.intel.com>, <dmatlack@google.com>, <dwmw2@infradead.org>,
+	<francescolavra.fl@gmail.com>, <iommu@lists.linux.dev>,
+	<joao.m.martins@oracle.com>, <joro@8bytes.org>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <mlevitsk@redhat.com>, <pbonzini@redhat.com>,
+	<vasant.hegde@amd.com>
+References: <20250523010004.3240643-1-seanjc@google.com>
+ <20250609122050.28499-1-sarunkod@amd.com> <aEbw2zBUQwJZ3D98@google.com>
+Content-Language: en-US
+From: Sairaj Kodilkar <sarunkod@amd.com>
+In-Reply-To: <aEbw2zBUQwJZ3D98@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000009A:EE_|CY8PR12MB7266:EE_
+X-MS-Office365-Filtering-Correlation-Id: b77c1179-bc76-43d7-b359-08dda9a0d749
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?akFHNElmZEZFY0t5U2ppdU9FQk00eTljZmFHa0YwUmpITU1rM0pRdFN3MFEr?=
+ =?utf-8?B?WURDOFZHUHA1NnlTUVRzWXFydmFtR3ZqZ3pSd1AzNnAyaTZCbkl6Zm1iaENt?=
+ =?utf-8?B?U1BSRlZoNFI2elZRUkFPVDFmSk91K0g5eFBIRDlQSnFCMlRHcnJLakxoN3NF?=
+ =?utf-8?B?OUNXM2FIbXp5bUVtd3V6d1ExR1lnSzVqVUNlSWh2NHpBS3g4Ly94NkVVdTdJ?=
+ =?utf-8?B?Y0lybEs3RDRiV0dMeVpRRW01YlJLWDl6UXAwVVBlQWxZY0tSQ2hFNDJ3dHJo?=
+ =?utf-8?B?d0hsMHg0NytXRlhCUTk2Z25odG1FOFpQaTVUY21EZnZOejF5aXRiNHd4TStm?=
+ =?utf-8?B?cFc4eFNJdjZFWG95dXpNZ1ZqSHBkeVl6OUgvS0YxN1AyZjF6U3dJMHdEUytL?=
+ =?utf-8?B?cTMzRk5kWDdaTWkreHBrREpTenQxWGs2cEMrL2NIOVZ0dkd1cnY1d3RLTWhG?=
+ =?utf-8?B?dDQxWVBqcndxZS90N1oyelNyNVVreFpYd24wOUwrcGtUVjJCRE40UmZWR1ZH?=
+ =?utf-8?B?OWpDWFdHYnU2dkdNMTZuOXQ4R2MyRE5IM2ZaZTViWjNTVmpiMG1yNXBsdGgw?=
+ =?utf-8?B?RXBsb2U2M0VlNUc3b3EwVHAyVHA3WU1sY2FRTnZRVk9FQzQ2ZlpmRW5MaU9X?=
+ =?utf-8?B?UldvTlFQbTMvdFhvejEyRitaYy93Y2pTUEpqWEl2L01TTVd2dDFrS0NZSmRS?=
+ =?utf-8?B?TXNBTWtXK09VOFMySGlXWktzZHhtTGo1TmtRb015aVlueFRMcjBoYUQwSDRm?=
+ =?utf-8?B?d3U4SmhRZGxXZzdnczNJT2dxd0ttMUVrbm05bUppU0pFdjJqR3dpZVowVlZT?=
+ =?utf-8?B?c1lMZEZHKy9pTTZxUWh2MmtXNkZOWXZtK3B2VlZCTDRSZHZab1lXVXpTQlZI?=
+ =?utf-8?B?TlI1VHNXeWtTZHV1QkdyWm5kcGRPUFRlTXBrVHlkMWN6WWdJVSt4YnFTQXNv?=
+ =?utf-8?B?N1RvRjRBRFZPMG0yM2gvRjRMdytiaGdubVYvSWJ6TVFXLzA0STFPTm5MMFFS?=
+ =?utf-8?B?cFBjSFJCd1pnQ2VqcW5mRVdnQW9DNzQ2TXdWWWFIUktSSnM4YW55cmgzN0Jr?=
+ =?utf-8?B?NHVqbmkyeVRVOXl5azdDdlRvSU5Zc3RiMjJMUUd4VzFXSjI4dUVrT3FOTEM0?=
+ =?utf-8?B?cFpIdHpGeHp3Zkd1MUlBN1Q1ZlBxQ0xtZjNIM2ZaRGxXbXhRcmJTS2JuVkM3?=
+ =?utf-8?B?YUhHZzAwMzB4QmJJREhRNGd4N3lNZmhPazcyTlJDSDZnK05ZY1FGUXlPR0t2?=
+ =?utf-8?B?MG1DQ0tYbWRIU094K2F4WHJUc0JSVklwN2VVYTlPZGJTWVJUNm1ieFVvSEdH?=
+ =?utf-8?B?aTk3azJQQTVXQnhoS2wyOWJNbzFXUWRDVU4rKy9FaWdYWTI3d2R4WFQ2RTNR?=
+ =?utf-8?B?cHQ0UzN6bEdDUHJZaHAyUzZ2cGdYMzFOa2lyVHllbTlsSG41cVdVSjdDR0hh?=
+ =?utf-8?B?cWJGeXZuQkszb0hOZEc2T2lGeHdCOTdDajhjVlNubEFlRVpsSU9YSjEybmtE?=
+ =?utf-8?B?VXRUNlc1b3RBN2d0RXJjeW5vL1ZSRldEN1lqSEs3TWZVUVNmOWZIS21yeXlU?=
+ =?utf-8?B?S2NPQmkxdkQ0S2R6TWliaDBkRWgyRkFEZFBUbmJsY0lGbmNGa2N1RVgvdXlE?=
+ =?utf-8?B?c0ovK3gwVmdJbWVJZnBtN2Z0ekMrTDNTNUxtVDN5NUsyZWdES1FNSFREN3o5?=
+ =?utf-8?B?MnRMZ0ZHcW9tNEFqRklFLzdJMXBIN1hkcCtoVEZIci8rbTRvUjJIOUFJVzNR?=
+ =?utf-8?B?VklmQkp1amtDZVcyYlRKRWlvaU8zSmZjaGxEeG96N2YvOXFUKzdDK1d1cHZa?=
+ =?utf-8?B?bWFOVDhoeGw0dDk2MUdQL2dGWVJOU0ZSazdtZ2dIZjdRT09JSE1hejVzK1Zi?=
+ =?utf-8?B?c1pmbEsrakVSbkRJeTBGc213UVVIbGNGRlVicnNkRnJsZE1CWHlSdkdpTjBw?=
+ =?utf-8?B?bXVLWXU0N3V4KzFBeCszY3djSjk0UTlDWTFuZGF4d0N2SkQ4bFRTTE5JM0xQ?=
+ =?utf-8?B?QkY4K2N5U096ekxSOElXU1lHVGtpMGFQZUdCNlM2d0xyZWFYa2lrOUd3SW8r?=
+ =?utf-8?Q?KpBb04?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 11:04:02.7708
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b77c1179-bc76-43d7-b359-08dda9a0d749
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000009A.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7266
 
 
-Takashi
 
---- a/sound/core/pcm_compat.c
-+++ b/sound/core/pcm_compat.c
-@@ -410,8 +410,8 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
- 	volatile struct snd_pcm_mmap_status *status;
- 	volatile struct snd_pcm_mmap_control *control;
- 	u32 sflags;
--	struct snd_pcm_mmap_control scontrol;
--	struct snd_pcm_mmap_status sstatus;
-+	struct snd_pcm_mmap_control_x32 scontrol;
-+	struct snd_pcm_mmap_status_x32 sstatus = {};
- 	snd_pcm_uframes_t boundary;
- 	int err;
- 
-@@ -419,8 +419,7 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
- 		return -EINVAL;
- 
- 	if (get_user(sflags, &src->flags) ||
--	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    get_user(scontrol.avail_min, &src->c.control.avail_min))
-+	    copy_from_user(&scontrol, &src->c.control))
- 		return -EFAULT;
- 	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
- 		err = snd_pcm_hwsync(substream);
-@@ -444,21 +443,16 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
- 			scontrol.avail_min = control->avail_min;
- 		sstatus.state = status->state;
- 		sstatus.hw_ptr = status->hw_ptr % boundary;
--		sstatus.tstamp = status->tstamp;
-+		sstatus.tstamp_sec = status->tstamp.tv_sec;
-+		sstatus.tstamp_nsec = status->tstamp.tv_nsec;
- 		sstatus.suspended_state = status->suspended_state;
--		sstatus.audio_tstamp = status->audio_tstamp;
-+		sstatus.audio_tstamp_sec = status->audio_tstamp.tv_sec;
-+		sstatus.audio_tstamp_nsec = status->audio_tstamp.tv_nsec;
- 	}
- 	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
- 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
--	if (put_user(sstatus.state, &src->s.status.state) ||
--	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
--	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
--	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
--	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
--	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
--	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
--	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    put_user(scontrol.avail_min, &src->c.control.avail_min))
-+	if (copy_to_user(&src->s.status, &sstatus, sizeof(sstatus)) ||
-+	    copy_to_user(&src->c.control, &scontrol, sizeof(scontrol)))
- 		return -EFAULT;
- 
- 	return 0;
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -3157,8 +3157,8 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
- 	volatile struct snd_pcm_mmap_status *status;
- 	volatile struct snd_pcm_mmap_control *control;
- 	u32 sflags;
--	struct snd_pcm_mmap_control scontrol;
--	struct snd_pcm_mmap_status sstatus;
-+	struct snd_pcm_mmap_control32 scontrol;
-+	struct snd_pcm_mmap_status32 sstatus = {};
- 	snd_pcm_uframes_t boundary;
- 	int err;
- 
-@@ -3166,8 +3166,7 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
- 		return -EINVAL;
- 
- 	if (get_user(sflags, &src->flags) ||
--	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    get_user(scontrol.avail_min, &src->c.control.avail_min))
-+	    copy_from_user(&scontrol, &src->c.control, sizeof(scontrol)))
- 		return -EFAULT;
- 	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
- 		err = snd_pcm_hwsync(substream);
-@@ -3194,21 +3193,16 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
- 			scontrol.avail_min = control->avail_min;
- 		sstatus.state = status->state;
- 		sstatus.hw_ptr = status->hw_ptr % boundary;
--		sstatus.tstamp = status->tstamp;
-+		sstatus.tstamp_sec = status->tstamp.tv_sec;
-+		sstatus.tstamp_nsec = status->tstamp.tv_nsec;
- 		sstatus.suspended_state = status->suspended_state;
--		sstatus.audio_tstamp = status->audio_tstamp;
-+		sstatus.audio_tstamp_sec = status->audio_tstamp.tv_sec;
-+		sstatus.audio_tstamp_nsec = status->audio_tstamp.tv_nsec;
- 	}
- 	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
- 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
--	if (put_user(sstatus.state, &src->s.status.state) ||
--	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
--	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
--	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
--	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
--	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
--	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
--	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    put_user(scontrol.avail_min, &src->c.control.avail_min))
-+	if (copy_to_user(&src->s.status, &sstatus, sizeof(sstatus)) ||
-+	    copy_to_user(&src->c.control, &scontrol, sizeof(scontrol)))
- 		return -EFAULT;
- 
- 	return 0;
+On 6/9/2025 8:04 PM, Sean Christopherson wrote:
+> On Mon, Jun 09, 2025, Sairaj Kodilkar wrote:
+>> Hi Sean,
+>>
+>> Sorry for the delay in testing. All sanity tests are OK. I reran the performance
+>> test on the V2 and noticed that V2 has significantly more GALOG entries than V1
+>> for all three cases. I also noticed that the Guest Nvme interrupt rate has
+>> dropped for the 192 VCPUS.
+> 
+> Hmm, I don't see any obvious bugs or differences (based on a code diffed between
+> v1 and v2).  I'll poke at the GALogIntr behavior just to double check, but my
+> guess is that the differences are due to exernal factors, e.g. guest behavior,
+> timing, scheduling, etc.
+> 
+> IOPS are all nearly identical, so I'm not terribly concerned.
+>   
+>
 
+Yep you are right. I was indeed using different guest kernel to test V2.
+Keeping it same, I can produce almost identical results for both V1 and
+V2.
+
+Only one case that still stands out is with 32 vCPUS, where posted
+interrupt count has increased from 200 to 7000. But IOPS and NVME
+interrupt rate is identical hence I am not concerned about it as well.
+
+
+Thanks
+Sairaj
