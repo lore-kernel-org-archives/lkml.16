@@ -1,227 +1,104 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB6D820328;
-	Thu, 12 Jun 2025 01:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BF020328;
+	Thu, 12 Jun 2025 01:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749690485; cv=none; b=lWWVkRGtDPXLGe4/qT+EM5/YNJf7oom56rJ2C+r1cDuRZYSYQEjH3Hz5+iWbw/42owYRMIrq8LsXlCcVkZUQc6tmJHkFK8wUZfn1TigA+nprY7tYYQ9wt9FSpIGvAUAQXgvCLQAN4avawjaMLpHvsfmlK6hxTyrDDyl/AAkGFdo=
+	t=1749690583; cv=none; b=ZWwUq7LokJHxZYmWQSzRqCgJ8SNPmJXGnaDZ7vY17+G72s2WmSxZsxIwzRMasqWjpuoePBeKe8IWZ95gOityE1MMHpfm7eMSIe9Zh2Pzyb+ZyRqiYVTfLDvlcGYhaqzlle6snu4Q9PvHh9wpTKFoRi22NCwVTo4yKZmTXs/tjEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749690485; c=relaxed/simple;
-	bh=lxh3OcU9lrQDFBUQh3Z5944IL2QKk2zIeSZRZ/Sb4qc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nfe3DlU5nq+khy/TKOiPIdRRlohKW/JjE0KOwb8kWjrOwOX+sw5dntgodjFi1r2QcQDs17amqpazAzVi3DsSja9dY777qN6ikt0bkSskXcj0CzCYnyCTZyTpt/P0KbSyYzfUYpSIE1uEWM56PCh0qNv0/Zeg/rL3RQyTxv7NUj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TicbPZVT; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749690583; c=relaxed/simple;
+	bh=zCSBb3C0bchjKqPuSRcT43zjzPpaIhdbrDvQN2MKDC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XHxpLQ+UagKLzdT5lAHwDlb0LOQ/ifimDH7q/upIyQuzSSPl9YH2tpGmnexFGJkCFJuRmHHsu+5sRhBYBDIVM7EMN0lw9zbN5D1DH9368picdyajL+OYVb/PI5oFhk8PZMnwCpV8Za9aJ5lkEw8NuxcB+4uu9TmWDCDbx8SuZxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYPnzI8C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TicbPZVT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=G5kBzMKk/cML1HYhI3QXW6znFZfK6qdoKbkVSe5acSs=;
-	b=TicbPZVThBQJbi8sp5BzztP4gdpPxoRTqqcixeGJ88cPQR8G3rlXSpy60mIPZW
-	aSCic1E5cFwY0yS73lU6CxYvx4Lvmb/sGpcrYGK6cDXeh0q+6preuWWiVgef2pU8
-	4Z6Hy5FoX66UrUn99mIK1FypJqkXBo4BA4XNYT5MMg/pg=
-Received: from [192.168.18.52] (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgBnKTFdKEpoSUQwBg--.32898S2;
-	Thu, 12 Jun 2025 09:07:42 +0800 (CST)
-Message-ID: <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com>
-Date: Thu, 12 Jun 2025 09:07:40 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYPnzI8C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AD2C4CEE3;
+	Thu, 12 Jun 2025 01:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749690582;
+	bh=zCSBb3C0bchjKqPuSRcT43zjzPpaIhdbrDvQN2MKDC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FYPnzI8C8Z2aNuLmbYW8VmxYocQ1JDoIw+GHWDjVe22j1VrODdHA9V/VnOp+VaBip
+	 ehzGs1Wn8xEBM/NTQ4ktw8EQ0k8toI4mBmb1F87gX3udpc8X5WTSH37cT/a+jFJ64z
+	 QemCNbjw9pN4unzBdd9plF0/LgD8Yqr/jYwiucwt0/VRLEBXyq+q3Jb09WzS/VJfXh
+	 AJaY/pWHxSew1X9XI+0JXGNjg2zle6KIGK5vfxdZ/gSp/2EtQWF2ossNmIZmV7HTiH
+	 Y0+gV0Yd3DYxR1sPhoKPzR4a1wv/0KIJ717LHt077jBbxUbAlDvOvh5nKKKCx8pHqM
+	 cuL6TXV7Q9OWw==
+Date: Wed, 11 Jun 2025 18:09:42 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux ext4 <linux-ext4@vger.kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+Subject: Re: [PATCH] Documentation: ext4: atomic_writes: Remove
+ cross-reference labels
+Message-ID: <20250612010942.GJ6179@frogsfrogsfrogs>
+References: <20250610091200.54075-2-bagasdotme@gmail.com>
+ <20250611164800.GC6134@frogsfrogsfrogs>
+ <87ikl21a5u.fsf@trenco.lwn.net>
+ <aEoaJEhw5qHkd2_w@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
- dw_pcie_clear_and_set_dword helper
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
- kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250611204011.GA868320@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250611204011.GA868320@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PCgvCgBnKTFdKEpoSUQwBg--.32898S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3GrW7uw1kJrWDCF4kKryrXrb_yoW3WFyfpF
-	WjvF4rur4xtr1vg3yxXayYvr48Wr9YqrZ7W3WxG342vr4xJF97tFyftFWUKFy7KrWFv3WI
-	9ryjv3WkW34YkrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UDWrXUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxtqo2hKJLB-XgAAse
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEoaJEhw5qHkd2_w@archie.me>
 
+On Thu, Jun 12, 2025 at 07:07:00AM +0700, Bagas Sanjaya wrote:
+> On Wed, Jun 11, 2025 at 11:05:17AM -0600, Jonathan Corbet wrote:
+> > "Darrick J. Wong" <djwong@kernel.org> writes:
+> > 
+> > > On Tue, Jun 10, 2025 at 04:11:59PM +0700, Bagas Sanjaya wrote:
+> > >> Sphinx reports htmldocs warnings on ext4 atomic block writes docs:
+> > >> 
+> > >> Documentation/filesystems/ext4/atomic_writes.rst:5: WARNING: duplicate label atomic_writes, other instance in Documentation/filesystems/ext4/atomic_writes.rst
+> > >> Documentation/filesystems/ext4/atomic_writes.rst:207: WARNING: duplicate label atomic_write_bdev_support, other instance in Documentation/filesystems/ext4/atomic_writes.rst
+> > >> 
+> > >> These warnings reference duplicated cross-reference labels to themselves in
+> > >> the same doc, which are because atomic_writes.rst is transcluded in
+> > >> overview.rst via include:: directive, thus the culprit docs get processed
+> > >> twice.
+> > >
+> > > <confused> How is that possible?  atomic_writes.rst is only "include::"d
+> > > once in overview.rst.  Is the file implicitly included through some
+> > > other means?
+> > 
+> > Sphinx wants to snarf up every .rst file it sees, regardless of whether
+> > it is explicitly made part of the document tree.  So it will pick up
+> > atomic_writes.rst separately from the include.
 
+Does that mean that overview.rst doesn't need to include the other files
+at all?
 
-On 2025/6/12 04:40, Bjorn Helgaas wrote:
-> On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
->> Register bit manipulation in DesignWare PCIe controllers currently
->> uses repetitive read-modify-write sequences across multiple drivers.
->> This pattern leads to code duplication and increases maintenance
->> complexity as each driver implements similar logic with minor variations.
+> > This could be "fixed" by removing the .rst extension from the included
+> > file.  But, since there is no use of the atomic_writes label to begin
+> > with, it's better to just take it out.  The other fix, removing a cross
+> > reference, is not entirely ideal, but there is little text between the
+> > label and the reference.
 > 
-> When you repost this, can you fix whatever is keeping this series from
-> being threaded?  All the patches should be responses to the 00/13
-> cover letter.  Don't repost until at least a couple of days have
-> elapsed and you make non-trivial changes.
+> So removing the labels looks good to you, right?
+
+I don't care that much either way, but if sphinx is going to include
+every rst file implicitly then maybe we just get rid of the explicit
+includes?
+
+> Confused...
+
+Me too.
+
+--D
+
 > 
+> -- 
+> An old man doll... just what I always wanted! - Clara
 
-Dear Bjorn,
-
-Every time I send an email to the PCI main list, I will send it to 
-myself first, but I have encountered the following problems:
-Whether I send my personal 163 email, Outlook email, or my company's 
-cixtech email, only 10 patches can be sent. So in the end, I sent each 
-patch separately.
-
-This is the first time I have sent an email with a series of more than 
-10 patches. My configuration is as follows:
-smtpserver = smtp.163.com
-smtpserverport = 25
-smtpenablestarttlsauto = true
-smtpuser = 18255117159@163.com
-smtppass = xxx
-
-I suspect it's a problem with China's 163 email. Next, I will try to 
-send it using the company's environment. Or when I send this series of 
-patches next time, I will paste the web link address of each patch in by 
-replying 0000-cover-letter.patch.
-
-
-git send-email --no-chain-reply-to --quiet --to 
-hanshuatuo.zhang@outlook.com patch_hans/dwc_set_dword/*
-......
-Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
-Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
-dw_pcie_clear_and_set_dword helper
-Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
-register bit manipulation
-Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
-dw_pcie_clear_and_set_dword()
-MI:DMC 163 gzga-smtp-mtada-g0-3,_____wA3YOjZJEpouIVyHg--.2947S13 
-1749689566 
-http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzga-smtp-mtada-g0-3&time=1749689566
-
-
-or
-
-
-git send-email --no-chain-reply-to --quiet --to 1053912923@qq.com 
-patch_hans/dwc_set_dword/*
-......
-Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
-Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
-dw_pcie_clear_and_set_dword helper
-Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
-register bit manipulation
-Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
-dw_pcie_clear_and_set_dword()
-MI:DMC 163 gzga-smtp-mtada-g0-1,_____wBnOhQ_JUpoES6WHw--.47108S13 
-1749689667 
-http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzga-smtp-mtada-g0-1&time=1749689667
-
-or
-
-git send-email --no-chain-reply-to --quiet --to hans.zhang@cixtech.com 
-patch_hans/dwc_set_dword/*
-......
-Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): a
-Sent [PATCH 00/13] PCI: dwc: Refactor register access with 
-dw_pcie_clear_and_set_dword helper
-Sent [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for 
-register bit manipulation
-Sent [PATCH 02/13] PCI: dwc: Refactor dwc to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 03/13] PCI: dwc: Refactor dra7xx to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 04/13] PCI: dwc: Refactor imx6 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 05/13] PCI: dwc: Refactor meson to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 06/13] PCI: dwc: Refactor armada8k to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 07/13] PCI: dwc: Refactor bt1 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 08/13] PCI: dwc: Refactor rockchip to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 09/13] PCI: dwc: Refactor fu740 to use 
-dw_pcie_clear_and_set_dword()
-Sent [PATCH 10/13] PCI: dwc: Refactor qcom common to use 
-dw_pcie_clear_and_set_dword()
-MI:DMC 163 gzsmtp2,PSgvCgAnBeWGJUpo7GLnCA--.28592S13 1749689739 
-http://mail.163.com/help/help_spam_16.htm?ip=222.71.101.198&hostid=gzsmtp2&time=1749689739
-
-
-
-
-I'm deeply sorry for the inconvenience caused to everyone's review. The 
-following are the links of each patch.
-
-0001:https://patchwork.kernel.org/project/linux-pci/patch/20250611163057.860353-1-18255117159@163.com/
-0002:https://patchwork.kernel.org/project/linux-pci/patch/20250611163106.860438-1-18255117159@163.com/
-0003:https://patchwork.kernel.org/project/linux-pci/patch/20250611163113.860528-1-18255117159@163.com/
-0004:https://patchwork.kernel.org/project/linux-pci/patch/20250611163121.860619-1-18255117159@163.com/
-0005:https://patchwork.kernel.org/project/linux-pci/patch/20250611163131.860729-1-18255117159@163.com/
-0006:https://patchwork.kernel.org/project/linux-pci/patch/20250611163137.860795-1-18255117159@163.com/
-0007:https://patchwork.kernel.org/project/linux-pci/patch/20250611163148.860884-1-18255117159@163.com/
-0008:https://patchwork.kernel.org/project/linux-pci/patch/20250611163154.860976-1-18255117159@163.com/
-0009:https://patchwork.kernel.org/project/linux-pci/patch/20250611163200.861064-1-18255117159@163.com/
-0010:https://patchwork.kernel.org/project/linux-pci/patch/20250611163209.861171-1-18255117159@163.com/
-0011:https://patchwork.kernel.org/project/linux-pci/patch/20250611163215.861242-1-18255117159@163.com/
-0012:https://patchwork.kernel.org/project/linux-pci/patch/20250611163221.861314-1-18255117159@163.com/
-0013:https://patchwork.kernel.org/project/linux-pci/patch/20250611163227.861403-1-18255117159@163.com/
-
-> My preference is to make the subject lines like:
-> 
->    PCI: dra7xx: Refactor ...
->    PCI: imx6: Refactor ...
-> 
-
-Will change.
-
-> etc.  I think including both dwc and dra7xx is overkill.
-> 
-> You can find the prevailing style with:
-> 
->    git log --no-merges --oneline --pretty=format:"%h (\"%s\")" drivers/pci/controller/dwc
-> 
-> Whoever applies this series can trivially squash patches together if
-> that seems better.
-
-Thank you very much for the hint you gave.
-
-Best regards,
-Hans
 
