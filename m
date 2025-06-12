@@ -1,145 +1,96 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5261DDC1B;
-	Thu, 12 Jun 2025 09:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1A71DDC1B;
+	Thu, 12 Jun 2025 09:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749719982; cv=none; b=Lh+6NRYC3X/u2CIyV5r4hMmdLxiVew1qkFu1rXT7sLYuSIXbLgPzzBVLjn9VQRL0uLrQNW7f154nZFe4u5i2+QzQz2j3RfsggnUEgjL43Gjml14XuIA8ktcUYI4PHe7AmyAllPEdyKZ22DFLFm3LGYZeC5LbUbwtGESRUBt71eM=
+	t=1749720135; cv=none; b=HpgGJiM00Kgodi2Yd3NaHPf13tU08pBXbx/QraN0NGBOcrUYSkm5ASH5bG1RfVNtU9A42X1YPr/TsK1+XRFzyViGqZ+rpj2QLE7AaXYSkxls6P+nQwnsfj+/wM0wNHrhLXvw0X7YcpCsI7emEpKwAUFRG/YRjppZFXDC1r7nIMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749719982; c=relaxed/simple;
-	bh=SrOG5hWQk1zrLTAPc63bdygYKBmfRy2k8EtrfPp+WQg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pbn6Rlf527UkKExYMc8Irj2MAyf6DIYZrZxqhGxcJQXkR4vewdIUk+UnJkMkipgdiqiZbuENV9v+1yxG/1J2yirVYcpVarOE3++MyQnQW7IUBfsBf8G7ZDIoCpLrMNIPRilt36uTg/Uyk2euVT2xPqx8CM8bsOBREb24AyiLvXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iL8t6SGk; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749720135; c=relaxed/simple;
+	bh=csdVaR13d/wScxApjumsCps0/lUheL7VO5t19sO1IxQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bIOq3rSPXp5+RNUAMhoTEAhvGzDlYZEftwWRl8NkD+iPSXYN0FRGo5objbJemGzYamUQOXpZWgBg9tVsdsS9JFcW7gX3qGZiirs3YE+mCDm5/8l4CHOPAnzmvVsGM4CfYPw54s00PD0hgGMD7I1IO/e8/itqelAGKzdL+tPKz/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=J9iywj6e; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iL8t6SGk"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-70e64b430daso6874817b3.3;
-        Thu, 12 Jun 2025 02:19:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749719980; x=1750324780; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X6M9L0+MmrDMuS6KT7R4p+67RYgDJd/r3uFOA4tchHY=;
-        b=iL8t6SGkkIoHmo3+VAfjAXEH+z7VsMuLQLXchET9DyMhiMJme8AtjCqCRiWMCUlCl0
-         PEN6Eu2NhDktenNYTsZfoNgNUEwQXiqCL3RzVpkTiPq5q+bTsh9XAcv0zGchFmAMqcHE
-         ouY+czvHvGUN0i66YDSeWP47gwg3RjJp6l90r5ltg16+2bARfmAS1+MolimXbupV7aRf
-         yTihCTBaeUdGX4rmHOHeIZqVdw5e1QlFr08lxXO7X9mpU1PU1oJEBSDFbxQwy81l3QH2
-         zQZk59jP/fMTbgGO4HzgwGyTu/1AJWA4KtMXDhu9p0CQHC1BUsmMZERWoWWlC+F2GZ8X
-         gz9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749719980; x=1750324780;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X6M9L0+MmrDMuS6KT7R4p+67RYgDJd/r3uFOA4tchHY=;
-        b=Bdd+VmXe+QQibSrodyCsvFJAvaxse69FE9oqJ73dIdIuy13xy6VDziFggz62f6GUrp
-         woxXIIb59sDfk/5hOtSz/KCWTwlyw3GJwFB0/BgEysHLuoho+RRSg2n0Cmwpe8sVrm4k
-         Xd6a7LSNzo9MsRnzer7WhNM51VNjS/SK0FgnBFYGkrqSQ1OYH8AaF1Mq67Y4knyzPgLm
-         tWcQjLrsMnIap+mgl44y5E+Wn7n9lGSoQV19EoVDBilvKp6N3H002NUlc2Yfx/tkgX3W
-         0OaWrpJLOtjnbu91Ynd+GdidX9EZKto8LVNoR2lU1qDybHPCYYpSurc8CpE+k40qsSDg
-         Um5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWraOZY+sTPx0TAqvlMnsJID7BpdW865gj2Gnw2ubAdqGvtO5KzgjclrKsthFpFhkqJJbnLdKIb@vger.kernel.org, AJvYcCWwbXIR/R84ULQpqmZ0nsiezLuDjwyz3JCjoTgHCjFs2AiAJ8d5TFENqKS1YLmD4qPYl4gGFedQxyUqVcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJfY+HsnV8L/AEnB8bRb3/ijapvEAs94CWX0MkpAgTYyoeg7Ob
-	AvPPQLeJF9PvesBIfm10PgGUj5VU1pj0M6bUaH5gFatfpwVC9YusfYr/ZTDxYGx56ogz9EZFDLU
-	WFKEhlycvfZYAP4LwuQNz1ixfyIgSVaA=
-X-Gm-Gg: ASbGncvt7cYWJSMWwriP3d0BFgM3yzQOrfcdnpMXWKlPCkgGE/OhT2BU7KIEBmUEClW
-	EooWACCcD/LWa9jl1paD52DgUj7m1Y8zvQu8N3chHrnTlJnHdxM05+IZ7TTN4X/tjpDfHO52du0
-	GTtKDrWiB5sgx2ATKvt4M/ho5QPxT7fIczm8qtO6S9bw==
-X-Google-Smtp-Source: AGHT+IGH7sDf4LiImDbm/Kz7/EEL16HJlECL7kfxq4SWDE4KT62jEgTnQBGcT2DN2wMasegvdLsVOv+xfegFEGIVF2A=
-X-Received: by 2002:a05:690c:600c:b0:70e:142d:9c6f with SMTP id
- 00721157ae682-71150a8ab4bmr32985267b3.28.1749719980218; Thu, 12 Jun 2025
- 02:19:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="J9iywj6e"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BM9dPk002508;
+	Thu, 12 Jun 2025 09:22:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=ddg27i+DGtDxyoqA+T6jMDHRlbegr4YcOVGp72z3dUU=; b=J9
+	iywj6eKU2ncwZlulKf75MPFQTyrbzY1udcTNIMbnLwLeDRazY+Vi8Jl+om2Tjvtu
+	vILnN3L4FTjLLjpQbvWUXWUkjP1m9o7K3B86ODmxy0M4gAAqORtcuWN7Ah7h2XWS
+	PhsvQ68UyI8JsNCkh5p6h6DbBqReBvx9IGv5hddkTUxCBsP4zMl98jh50/6HudIJ
+	ZmEhAWwnrZAmuoIeYi7+/vKCYMM1GvSaCoKLjnXWhr+uOGuZcfzRvqqwxVikaRXj
+	fsT5okKfqIHnm8Wk3jtrr23Vi+fnTL4ta0gdrWBBp7ylT0VbVwxo/Cr9bF1XxVO9
+	ja5A7VQRA9XOs9jDxIDw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 477jbphfqk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 09:22:10 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55C9M98f008176
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 09:22:09 GMT
+Received: from hu-sayalil-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 12 Jun 2025 02:22:06 -0700
+From: Sayali Lokhande <quic_sayalil@quicinc.com>
+To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc-owner@vger.kernel.org>
+Subject: [PATCH 0/1] Add eMMC support for qcs8300
+Date: Thu, 12 Jun 2025 14:51:45 +0530
+Message-ID: <20250612092146.5170-1-quic_sayalil@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612083747.26531-1-noltari@gmail.com> <20250612083747.26531-15-noltari@gmail.com>
-In-Reply-To: <20250612083747.26531-15-noltari@gmail.com>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Thu, 12 Jun 2025 11:19:29 +0200
-X-Gm-Features: AX0GCFvPK94DAfonjPX3Wgwd7edBJnKtLhpQ4BIlk7FUnpfqSYzn08RnYB1IvXU
-Message-ID: <CAOiHx=ne3Bbkeja=F0uPbHjrqp3Y24Zf460uAfK6OxjLBz7MAg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 14/14] net: dsa: b53: ensure BCM5325 PHYs are enabled
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc: florian.fainelli@broadcom.com, andrew@lunn.ch, olteanv@gmail.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	horms@kernel.org, vivien.didelot@gmail.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dgcbueu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: PcqWjn7XBugI1haU2i1Dcc7XWfTU3Avm
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA3MSBTYWx0ZWRfX5zW8TNempoHJ
+ JuEaQ+zaInoZBN7q11ek6rr4GZKS3K6ztsKPQv30WXYHiU65SM+967QxRW5a1tWVMV6qaa78gYR
+ MJ9YABdALxGcVZBFiXCp66tfWQPN/6GyKOTu1iNIf/AstTCZAoTyq3NwYuHNLcC5SyapGz8xSWy
+ KMmT6NB5v0CJJ0qh8uClt2Zw42hcFaTIz7LW60GfUGBrutOELxswTMm4w5x0tFM/9D4dlVwfmbb
+ 02rT/s63ZDQWtq7I0wW6GQWolMbhZvG0QT1VrMmlzw1ecHrMN8p1BvBTv9VxXGiaJramUAYsr5X
+ I3IlFC9HFo6tUJO4UGBkYrMT7Z/8Z9yQob74tY0ggBjC2bggRRZ4T1glOGhMjckdplL7ozUGCLo
+ tM4sRJ034jUdy30KrDZlNRILWLe8PPjU1UvWrNT0pif94eK/1fMZEGkgYzss2rNhZH0jGM5Z
+X-Proofpoint-ORIG-GUID: PcqWjn7XBugI1haU2i1Dcc7XWfTU3Avm
+X-Authority-Analysis: v=2.4 cv=OLgn3TaB c=1 sm=1 tr=0 ts=684a9c42 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=7Is_6JkwcPGrsfUxyFUA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_06,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=433 suspectscore=0 adultscore=0
+ malwarescore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506120071
 
-On Thu, Jun 12, 2025 at 10:38=E2=80=AFAM =C3=81lvaro Fern=C3=A1ndez Rojas
-<noltari@gmail.com> wrote:
->
-> According to the datasheet, BCM5325 uses B53_PD_MODE_CTRL_25 register to
-> disable clocking to individual PHYs.
-> Only ports 1-4 can be enabled or disabled and the datasheet is explicit
-> about not toggling BIT(0) since it disables the PLL power and the switch.
->
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> ---
->  drivers/net/dsa/b53/b53_common.c | 12 ++++++++++++
->  drivers/net/dsa/b53/b53_regs.h   |  2 ++
->  2 files changed, 14 insertions(+)
->
->  v3: add changes requested by Florian:
->   - Use in_range() helper.
->
->  v2: add changes requested by Florian:
->   - Move B53_PD_MODE_CTRL_25 to b53_setup_port().
->
-> diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_c=
-ommon.c
-> index 3503f363e2419..eac40e95c8c53 100644
-> --- a/drivers/net/dsa/b53/b53_common.c
-> +++ b/drivers/net/dsa/b53/b53_common.c
-> @@ -660,6 +660,18 @@ int b53_setup_port(struct dsa_switch *ds, int port)
->         if (dsa_is_user_port(ds, port))
->                 b53_set_eap_mode(dev, port, EAP_MODE_SIMPLIFIED);
->
-> +       if (is5325(dev) &&
-> +           in_range(port, B53_PD_MODE_PORT_MIN, B53_PD_MODE_PORT_MAX)) {
+Add eMMC support for qcs8300 board.
 
-This happen to match, but the third argument of in_range() isn't the
-maximum, but the range (max - start), so semantically this looks
-wrong.
+Sayali Lokhande (1):
+  arm64: dts: msm: Add eMMC support for qcs8300
 
-> +               u8 reg;
-> +
-> +               b53_read8(dev, B53_CTRL_PAGE, B53_PD_MODE_CTRL_25, &reg);
-> +               if (dsa_is_unused_port(ds, port))
-> +                       reg |=3D BIT(port);
-> +               else
-> +                       reg &=3D ~BIT(port);
-> +               b53_write8(dev, B53_CTRL_PAGE, B53_PD_MODE_CTRL_25, reg);
-> +       }
-> +
->         return 0;
->  }
->  EXPORT_SYMBOL(b53_setup_port);
-> diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_reg=
-s.h
-> index d6849cf6b0a3a..880c67130a9fc 100644
-> --- a/drivers/net/dsa/b53/b53_regs.h
-> +++ b/drivers/net/dsa/b53/b53_regs.h
-> @@ -105,6 +105,8 @@
->
->  /* Power-down mode control */
->  #define B53_PD_MODE_CTRL_25            0x0f
-> +#define  B53_PD_MODE_PORT_MIN          1
-> +#define  B53_PD_MODE_PORT_MAX          4
->
->  /* IP Multicast control (8 bit) */
->  #define B53_IP_MULTICAST_CTRL          0x21
-> --
-> 2.39.5
->
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 33 ++++++++
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi     | 97 +++++++++++++++++++++++
+ 2 files changed, 130 insertions(+)
 
-Regards,
-Jonas
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
