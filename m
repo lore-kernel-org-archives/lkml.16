@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5AC2E3374
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150D82E765D
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749771691; cv=none; b=ssRBWiT7iFQaNz8tv1i+xM+9SJre7DTAvN1+s1Ndemi0UetoXXrUlBetA8bJQtZkiCTdNuIH07NmGnECXzaGEKdsfksJSXcu1Pl2Ku4Tw8Ew/eSRkiSbYMENJm8EkN8RV9YJ7N74Gn6OKyYmklD+Wz9xsx5XZ5M3hpEQs/kHX10=
+	t=1749771694; cv=none; b=mnK8Fg++l0D4lE7hs1I7ZP77iBsbDguUhuaGUaGng1wyHNYBeWNENk3r+Z4GMrCgoP7ds+hMqu+ENtbupl6dErGyJZPpFx2EhGziawo3/76x5yBbl5/f8TUEbA2/kLatwE1uzFfMP40F7d/zGHRxBAKv4NEmMl+CWDW4aUAugnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749771691; c=relaxed/simple;
-	bh=7qlYrd8ADkiSEKc+gzHN8gdQbL+o5MjgLp2U/du+a8Y=;
+	s=arc-20240116; t=1749771694; c=relaxed/simple;
+	bh=Br2MhpkVuZh3+/cv3ccqxj4b9D2nXRTOCHF1OSeOtwY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mNNCciEo84fH4L/9VdjKaX4CTuFF/mDp/+5tcOiOVRn+mmbuSu0HGX8Cv8PSOW0CMgx8jkqBWbAqBj4z2Eoze1ui6+BeN/bAzB+LoRuOlcOMFA7MVHt8hH4JvmENmWvoxeFN3K487J8viNUSSU5LR1c0g+QlUbh4qv0owWSQ49U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bDsy54sl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1o6YCbtR; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Yb4B+/Q0Kht76e4X6KuAG4zD9UKhcpkNWbA5qSB+BvWrTlEWWnG5G47uF2b+R8JvxkvXR1T9KvJBISzbTCA0FQd26oHMaqjwdEN/NwRYdBD3C3UCDfVtgZy/C0cAwWynhUhyQ1uaJRJlFfoD0Tr5U0vFCz1iVL/TiCPTtxTVlaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BhdAAUih; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sBKvciyd; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bDsy54sl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1o6YCbtR"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BhdAAUih";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sBKvciyd"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749771687;
+	s=2020; t=1749771690;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HdOLrTj2U5RFTlroOZyASJWCedyIKcQ0mE4WTpPnqnQ=;
-	b=bDsy54slVWVp23joNbyk0sACA4UFIHUZq05poudKw8mBh3sQBzURIKYAGD4kfxl9pajwRL
-	RxxxMCTp04fTVaNPDIvoTyKQKGoi2T8Lq8/wBokqeRp7bWpUQ/lFHBf/p7jpNsI2JYMp2t
-	d5TGShE8fBh5YnWntqY7ipMsFSk5cvhhRoXIiQgIk0WhZv90QyAueo3kOw2TW3fmfJnDpW
-	8FRXHQ53jXOlnDoO3Z1srwU+LK1nyP2Kup4EIeqCJYVRMt7imNr2ItsFi4dlTxzWpGqdb8
-	168QS81nx8U+X1X/O6D1q5wQVRk1K6/SGuR22D8e45GteI87FRVx50LsWZuvtQ==
+	bh=1sfGuVsoYi10+GGV/LFH78iI6yDFtHz0rLTs8wO6ktc=;
+	b=BhdAAUihBbor8ZkRFrWgW4CBOZffETCG7B2MTFhd5RFhjPzWoz5OonOv+LyQCUkf6/+Tys
+	4vZOWXdSYpjzKeG19zsJoBX6wJuYnRNFlnAZRDgfP0y6yPqLuLXWaLgHwjh2kgAGbuFaVM
+	p4e+PGq+rjRhP4yd1RZR9FszE7A7X6hkXTLkvg42zweUj23K32Mcb8cqzmrZzo0qBE2Zwa
+	CcEx9VXyFqwRjCK+QUuT+t6huw5Zk3j2JiBrMij2D3LiTLx6Eawu5mcxV4IEnmN8qmbpd2
+	uG95op6hA01Z+HI/sP7J3+M1RybyPymHfUfGKBkzgPNybyI0IGu9mQ5u+UfxUw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749771687;
+	s=2020e; t=1749771690;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HdOLrTj2U5RFTlroOZyASJWCedyIKcQ0mE4WTpPnqnQ=;
-	b=1o6YCbtRKBh/UeOiuTZC1MPuBameYd4JOdWNbCNyj/DU1vwSG0Y3GzbI0kkSHPfz5l40ag
-	o2sQ5Akz+3FbdBAQ==
+	bh=1sfGuVsoYi10+GGV/LFH78iI6yDFtHz0rLTs8wO6ktc=;
+	b=sBKvciydEMZCGzJYEe9loYzPAPNVFIIfxsdAE3AsdQW/krKROdDu0VeDh8qNMI2qyZQ0J2
+	3aZ9PGr7aVIqPmCQ==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -54,9 +54,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 20/44] x86/cpuid: Introduce a centralized CPUID data model
-Date: Fri, 13 Jun 2025 01:39:46 +0200
-Message-ID: <20250612234010.572636-21-darwi@linutronix.de>
+Subject: [PATCH v3 21/44] x86/cpuid: Introduce a centralized CPUID parser
+Date: Fri, 13 Jun 2025 01:39:47 +0200
+Message-ID: <20250612234010.572636-22-darwi@linutronix.de>
 In-Reply-To: <20250612234010.572636-1-darwi@linutronix.de>
 References: <20250612234010.572636-1-darwi@linutronix.de>
 Precedence: bulk
@@ -65,561 +65,335 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-** Context
+Introduce a centralized CPUID parser to populate the per-CPU CPUID
+tables.  To ensures consistent and early availablity of parsed CPUID
+data, invoke this parser during both early boot and secondary CPUs bring
+up.
 
-The x86-cpuid-db project generates a C header file with full C99 bitfield
-listings for all known CPUID leaf/subleaf query outputs.
+Since accessing the CPUID leaf output storage areas at 'struct
+cpuid_table' requires compile time tokenization, split the parser
+implementation into two stages: compile time macros for tokenizing the
+leaf/subleaf output offsets within a CPUID table, and generic runtime
+code to access and populate the relevant CPUID leaf/subleaf data
+structures using such offsets.
 
-That header is now merged by parent commits at <asm/cpuid/leaf_types.h>,
-and is in the form:
+For flexible parsing of CPUID leaf/subleaf outputs, support both generic
+and leaf-specific CPUID read functions.
 
-    struct leaf_0x0_0 { /* CPUID(0x0), subleaf 0, C99 bitfields */ };
-    ...
-    struct leaf_0x7_0 { /* CPUID(0x7), subleaf 0, C99 bitfields */ };
-    struct leaf_0x7_1 { /* CPUID(0x7), subleaf 1, C99 bitfields */ };
-    ...
+Note, add three section headers to cpuid_parser.c: "Leaf read functions",
+"Leaf-independent parser code", and "Exported APIs".  Each section will
+be further expanded next.
 
-** Goal
-
-Introduce a structured, size-efficient, per-CPU, CPUID data repository.
-
-Use the x86-cpuid-db auto-generated data types, and custom CPUID leaf
-parsers, to build that repository.  Given a leaf, subleaf, and index,
-provide direct memory access to the parsed and cached per-CPU CPUID
-output.
-
-** Long-term goal
-
-Remove the need for drivers and other areas in the kernel to invoke
-direct CPUID queries.  Only one place in the kernel should be allowed to
-use the CPUID instruction: the CPUID parser code.
-
-** Implementation
-
-Introduce CPUID_LEAF() to build a compact CPUID storage layout in the
-form:
-
-    struct leaf_0x0_0		leaf_0x0_0[1];
-    struct leaf_query_info	leaf_0x0_0_info;
-
-    struct leaf_0x1_0		leaf_0x1_0[1];
-    struct leaf_query_info	leaf_0x0_0_info;
-
-    struct leaf_0x4_0		leaf_0x4_0[8];
-    struct leaf_query_info	leaf_0x4_0_info;
-     ...
-
-where each CPUID leaf 0xN subleaf M query stores its output at the
-designated leaf_0xN_M[] array and has an associated "CPUID query info"
-structure.
-
-Introduce 'struct cpuid_leaves' to group all the parsed CPUID outputs and
-their metadata –in the layout above– in one structure.  Define a 'struct
-cpuid_table' to wrap it, so that global per-table CPUID data can be added
-later.  Embed that 'struct cpuid_table' inside 'struct cpuinfo_x86' to
-ensure early-boot and per-CPU access through the current CPU's capability
-structure.
-
-Given the data layout above, and assuming a CPU capability structure 'c',
-a macro can access CPUID(0x7) subleaf 0 parsed query output using the
-compile time tokenization below:
-
-    const struct leaf_0x7_0 *l7_0;
-
-    l7_0 = cpuid_subleaf(c, 0x7, 0);
-                         |   |   └────────┐
-                         |   └─────────┐  |
-                         *             *  *
-                        &c.cpuid.leaf_0x7_0[0]
-
-Similarly, CPUID(0x7) subleaf 1 output can be accessed using the CPP
-tokenization:
-
-    const struct leaf_0x7_1 *l7_1;
-
-    l7_1 = cpuid_subleaf(c, 0x7, 1);
-                         |   |   └────────┐
-                         |   └─────────┐  |
-                         *             *  *
-                        &c.cpuid.leaf_0x7_1[0]
-
-which all translate to a single assembly instruction offset calculation.
-
-Use an array of CPUID output storage entries for each leaf/subleaf
-combination to accommodate leaves which produce the same output format
-for a large subleaf range.  This is typical for CPUID leaves enumerating
-hierarchical objects; e.g. CPUID(0x4) cache topology enumeration,
-CPUID(0xd) XSAVE enumeration, and CPUID(0x12) SGX Enclave Page Cache
-enumeration.
-
-In the CPUID_LEAF() data layout above, CPUID(0x4) has 8 storage entries
-to accomodate the suleaves 0 to 7, which all have the same bitfield's
-output format.  With that, CPUID(0x4) subleaves 0->7 can be accessed
-using the compile time tokenization:
-
-    const struct leaf_0x4_0 *l4_0, *l4_1, l4_2;
-
-    l4_0 = cpuid_subleaf_index(c, 0x4, 0);
-                               |   |   └──────────┐
-                               |   └─────────┐    |
-                               *             *    v
-                              &c.cpuid.leaf_0x4_0[0]
-
-    l4_1 = cpuid_subleaf_index(c, 0x4, 1);
-                               |   |   └──────────┐
-                               |   └─────────┐    |
-                               *             *    v
-                              &c.cpuid.leaf_0x4_0[1]
-
-    l4_2 = cpuid_subleaf_index(c, 0x4, 2);
-                               |   |   └──────────┐
-                               |   └─────────┐    |
-                               *             *    v
-                              &c.cpuid.leaf_0x4_0[2]
-
-where the indices 0, 1, 2 above can be provided dynamically.  This is by
-design since call-sites hierarchical CPUID enumeration usually passes the
-CPUID subleaf enumeration index dynamically; e.g., within a for loop.
-
-For each of the CPUID leaf/subleaf output storage entries, attach a
-'struct leaf_query_info' leaf_0xN_M_info instance.  It is to be filled by
-the CPUID parsing logic filling the CPUID table(s).  For now, this info
-structure has one element: the number of filled slots by the CPUID
-paraser in the CPUID leaf/subleaf output storage array.
-
-** Call-site APIs
-
-Introduce below APIs for CPUID leaves with static subleaves:
-
-    cpuid_subleaf(_cpuinfo, _leaf, _subleaf)
-    cpuid_leaf(_cpuinfo, _leaf)
-    cpuid_leaf_regs(_cpuinfo, _leaf)
-
-And below APIs for CPUID leaves with dynamic subleaves:
-
-    cpuid_subleaf_count(_cpuinfo, _leaf)
-    cpuid_subleaf_index(_cpuinfo, _leaf, _idx)
-    cpuid_subleaf_index_regs(_cpuinfo, _leaf, _idx)
-
-At <cpuid/api.h>, add a clear rationale for why call sites should use the
-above APIs instead of directly invoking CPUID queries.
-
-** Next steps
-
-For now, define entries for CPUID(0x0) and CPUID(0x1) in the CPUID table.
-Generic CPUID parser logic to fill the per-CPU CPUID tables, along with
-more CPUID leaves support, will be added next.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>	# CPUID data model
-Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>	# x86-cpuid-db schema
-Suggested-by: Ingo Molnar <mingo@kernel.org>		# CPUID APIs restructuring
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-Link: https://lore.kernel.org/lkml/874ixernra.ffs@tglx
-Link: https://gitlab.com/x86-cpuid.org/x86-cpuid-db
 ---
- arch/x86/include/asm/cpuid/api.h   | 254 +++++++++++++++++++++++++++++
- arch/x86/include/asm/cpuid/types.h | 104 ++++++++++++
- arch/x86/include/asm/processor.h   |   1 +
- 3 files changed, 359 insertions(+)
+ arch/x86/include/asm/cpuid/api.h   |   7 ++
+ arch/x86/include/asm/cpuid/types.h |   3 +
+ arch/x86/kernel/cpu/Makefile       |   1 +
+ arch/x86/kernel/cpu/common.c       |   2 +
+ arch/x86/kernel/cpu/cpuid_parser.c | 114 +++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/cpuid_parser.h | 100 +++++++++++++++++++++++++
+ 6 files changed, 227 insertions(+)
+ create mode 100644 arch/x86/kernel/cpu/cpuid_parser.c
+ create mode 100644 arch/x86/kernel/cpu/cpuid_parser.h
 
 diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/api.h
-index 2b9750cc8a75..b277c82e062f 100644
+index b277c82e062f..dbc954e21b7e 100644
 --- a/arch/x86/include/asm/cpuid/api.h
 +++ b/arch/x86/include/asm/cpuid/api.h
-@@ -289,4 +289,258 @@ static inline bool cpuid_amd_hygon_has_l3_cache(void)
- 	return cpuid_edx(0x80000006);
- }
- 
-+/*
-+ * 'struct cpuid_leaves' accessors:
-+ *
-+ * For internal-use by the CPUID parser.  These macros do not perform any
-+ * sanity checks.
-+ */
-+
-+/**
-+ * __cpuid_leaves_subleaf_idx() - Get parsed CPUID output (without sanity checks)
-+ * @_leaves:	&struct cpuid_leaves instance
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format
-+ * @_subleaf:	CPUID subleaf, in compile-time decimal format
-+ * @_idx:	@_leaf/@_subleaf CPUID output's storage array index.  Check
-+ *		__CPUID_LEAF() for info on CPUID output storage arrays indexing.
-+ *
-+ * Returns the parsed CPUID output at @_leaves as a <cpuid/leaf_types.h> data
-+ * type: 'struct leaf_0xN_M', where 0xN is the token provided at @_leaf, and M
-+ * is token provided at @_subleaf.
-+ */
-+#define __cpuid_leaves_subleaf_idx(_leaves, _leaf, _subleaf, _idx)	\
-+	((_leaves)->leaf_ ## _leaf ## _ ## _subleaf)[_idx]
-+
-+/**
-+ * __cpuid_leaves_subleaf_0() - Get parsed CPUID output (without sanity checks)
-+ * @_leaves:	&struct cpuid_leaves instance
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format
-+ *
-+ * Like __cpuid_leaves_subleaf_idx(), but with subleaf = 0 and index = 0.
-+ */
-+#define __cpuid_leaves_subleaf_0(_leaves, _leaf)			\
-+	__cpuid_leaves_subleaf_idx(_leaves, _leaf, 0, 0)
-+
-+/**
-+ * __cpuid_leaves_subleaf_info() - Get CPUID query info for @_leaf/@_subleaf
-+ * @_leaves:	&struct cpuid_leaves instance
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format
-+ * @_subleaf:	CPUID subleaf, in compile-time decimal format
-+ *
-+ * Returns a pointer to the &struct leaf_query_info instance associated with
-+ * the given @_leaf/@_subleaf pair at the CPUID @_leaves data repository. See
-+ * __CPUID_LEAF().
-+ */
-+#define __cpuid_leaves_subleaf_info(_leaves, _leaf, _subleaf)		\
-+	((_leaves)->leaf_ ## _leaf ## _ ## _subleaf ## _ ## info)
-+
-+/*
-+ * 'struct cpuid_table' accessors:
-+ *
-+ * For internal-use by the CPUID parser.  These macros perform the necessary
-+ * sanity checks by default.
-+ */
-+
-+/**
-+ * __cpuid_table_subleaf_idx() - Get parsed CPUID output (with sanity checks)
-+ * @_table:	&struct cpuid_table instance
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format
-+ * @_subleaf:	CPUID subleaf, in compile-time decimal format
-+ * @_idx:	@_leaf/@_subleaf CPUID query output's storage array index.
-+ *		See __CPUID_LEAF().
-+ *
-+ * Return a pointer to the requested parsed CPUID output at @_table, as a
-+ * <cpuid/leaf_types.h> data type: 'struct leaf_0xN_M', where 0xN is the token
-+ * provided at @_leaf, and M is the token provided at @_subleaf; e.g. 'struct
-+ * leaf_0x7_0'.
-+ *
-+ * Returns NULL if the requested CPUID @_leaf/@_subleaf/@_idx query output is
-+ * not present at @_table.
-+ */
-+#define __cpuid_table_subleaf_idx(_table, _leaf, _subleaf, _idx)	\
-+	(((_idx) >= __cpuid_leaves_subleaf_info(&((_table)->leaves), _leaf, _subleaf).nr_entries) ? \
-+	 NULL : &__cpuid_leaves_subleaf_idx(&((_table)->leaves), _leaf, _subleaf, _idx))
-+
-+/**
-+ * __cpuid_table_subleaf() - Get parsed CPUID output (with sanity checks)
-+ * @_table:	&struct cpuid_table instance
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format
-+ * @_subleaf:	CPUID subleaf, in compile-time decimal format
-+ *
-+ * Like __cpuid_table_subleaf_idx(), but with CPUID output storage index = 0.
-+ */
-+#define __cpuid_table_subleaf(_table, _leaf, _subleaf)			\
-+	__cpuid_table_subleaf_idx(_table, _leaf, _subleaf, 0)
-+
-+/*
-+ * External APIs for accessing parsed CPUID data:
-+ *
-+ * Call sites should use below APIs instead of invoking direct CPUID queries.
-+ *
-+ * Benefits include:
-+ *
-+ * - Return CPUID output as typed C structures that are auto-generated from a
-+ *   centralized database (see <cpuid/leaf_types.h).  Such data types have a
-+ *   full C99 bitfield layout per CPUID leaf/subleaf combination.  Call sites
-+ *   can thus avoid doing ugly and cryptic bitwise operations on raw CPUID data.
-+ *
-+ * - Return cached, per-CPU, CPUID output.  Below APIs do not invoke any CPUID
-+ *   queries, thus avoiding their side effects like serialization and VM exits.
-+ *   Call-site-specific hard coded constants and macros for caching CPUID query
-+ *   outputs can also be avoided.
-+ *
-+ * - Return sanitized CPUID data.  Below APIs return NULL if the given CPUID
-+ *   leaf/subleaf input is not supported by hardware, or if the hardware CPUID
-+ *   output was deemed invalid by the CPUID parser.  This centralizes all CPUID
-+ *   data sanitization in one place (the kernel's CPUID parser.)
-+ *
-+ * - A centralized global view of system CPUID data.  Below APIs will reflect
-+ *   any kernel-enforced feature masking or overrides, unlike ad hoc parsing of
-+ *   raw CPUID output by drivers and individual call sites.
-+ */
-+
-+/**
-+ * cpuid_subleaf() - Access parsed CPUID data
-+ * @_cpuinfo:	CPU capability structure reference ('struct cpuinfo_x86')
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format; e.g. 0x7, 0xf
-+ * @_subleaf:	CPUID subleaf, in compile-time decimal format; e.g. 0, 1, 3
-+ *
-+ * Returns a pointer to parsed CPUID output, from the CPUID table inside
-+ * @_cpuinfo, as a <cpuid/leaf_types.h> data type: 'struct leaf_0xN_M', where
-+ * 0xN is the token provided at @_leaf, and M is the token provided at
-+ * @_subleaf; e.g. struct leaf_0x7_0.
-+ *
-+ * Returns NULL if the requested CPUID @_leaf/@_subleaf query output is not
-+ * present at the parsed CPUID table inside @_cpuinfo.  This can happen if:
-+ *
-+ * - The CPUID table inside @_cpuinfo has not yet been populated.
-+ * - The CPUID table inside @_cpuinfo was populated, but the CPU does not
-+ *   implement the requested CPUID @_leaf/@_subleaf combination.
-+ * - The CPUID table inside @_cpuinfo was populated, but the kernel's CPUID
-+ *   parser has predetermined that the requested CPUID @_leaf/@_subleaf
-+ *   hardware output is invalid or unsupported.
-+ *
-+ * Example usage::
-+ *
-+ *	const struct leaf_0x7_0 *l7_0 = cpuid_subleaf(c, 0x7, 0);
-+ *	if (!l7_0) {
-+ *		// Handle error
-+ *	}
-+ *
-+ *	const struct leaf_0x7_1 *l7_1 = cpuid_subleaf(c, 0x7, 1);
-+ *	if (!l7_1) {
-+ *		// Handle error
-+ *	}
-+ */
-+#define cpuid_subleaf(_cpuinfo, _leaf, _subleaf)			\
-+	__cpuid_table_subleaf(&_cpuinfo->cpuid, _leaf, _subleaf)
-+
-+/**
-+ * cpuid_leaf() - Access parsed CPUID data
-+ * @_cpuinfo:	CPU capability structure reference ('struct cpuinfo_x86')
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format; e.g. 0x0, 0x2, 0x80000000
-+ *
-+ * Similar to cpuid_subleaf(), but with a CPUID subleaf = 0.
-+ *
-+ * Example usage::
-+ *
-+ *	const struct leaf_0x0_0 *l0 = cpuid_leaf(c, 0x0);
-+ *	if (!l0) {
-+ *		// Handle error
-+ *	}
-+ *
-+ *	const struct leaf_0x80000000_0 *el0 = cpuid_leaf(c, 0x80000000);
-+ *	if (!el0) {
-+ *		// Handle error
-+ *	}
-+ */
-+#define cpuid_leaf(_cpuinfo, _leaf)					\
-+	cpuid_subleaf(_cpuinfo, _leaf, 0)
-+
-+/**
-+ * cpuid_leaf_regs() - Access parsed CPUID data in raw format
-+ * @_cpuinfo:	CPU capability structure reference ('struct cpuinfo_x86')
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format
-+ *
-+ * Similar to cpuid_leaf(), but returns a raw 'struct cpuid_regs' pointer to
-+ * the parsed CPUID data instead of a "typed" <cpuid/leaf_types.h> pointer.
-+ */
-+#define cpuid_leaf_regs(_cpuinfo, _leaf)				\
-+	((struct cpuid_regs *)(cpuid_leaf(_cpuinfo, _leaf)))
-+
-+#define __cpuid_assert_leaf_has_dynamic_subleaves(_cpuinfo, _leaf)	\
-+	static_assert(ARRAY_SIZE(_cpuinfo->cpuid.leaves.leaf_ ## _leaf ## _0) > 1);
-+
-+/**
-+ * cpuid_subleaf_index() - Access parsed CPUID data at runtime subleaf index
-+ * @_cpuinfo:	CPU capability structure reference ('struct cpuinfo_x86')
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format; e.g. 0x4, 0x8000001d
-+ * @_idx:	Index within CPUID(@_leaf) output storage array.  It must be
-+ *		smaller than "cpuid_subleaf_count(@_cpuinfo, @_leaf)".  Unlike
-+ *		@_leaf, this value can be provided dynamically.
-+ *
-+ * For a given leaf/subleaf combination, the CPUID table inside @_cpuinfo
-+ * contains an array of CPUID output storage entries.  An array of storage
-+ * entries is used to accommodate CPUID leaves which produce the same output
-+ * format for a large subleaf range.  This is common for CPUID hierarchical
-+ * objects enumeration; e.g., CPUID(0x4) and CPUID(0xd).  Check CPUID_LEAF().
-+ *
-+ * CPUID leaves that are to be accessed using this macro are specified at
-+ * <cpuid/types.h>, 'struct cpuid_leaves', with a CPUID_LEAF() count field
-+ * bigger than 1.  A build-time error will be generated otherwise.
-+ *
-+ * Example usage::
-+ *
-+ *	const struct leaf_0x4_0 *l4;
-+ *
-+ *	for (int i = 0; i < cpuid_subleaf_count(c, 0x4); i++) {
-+ *		l4 = cpuid_subleaf_index(c, 0x4, i);
-+ *		if (!l4) {
-+ *			// Handle error
-+ *		}
-+ *
-+ *		// Access CPUID(0x4, i) data; e.g. l4->cache_type
-+ *	}
-+ *
-+ * Beside the standard error situations detailed at cpuid_subleaf(), this
-+ * macro will return NULL if @_idx is out of range.
-+ */
-+#define cpuid_subleaf_index(_cpuinfo, _leaf, _idx)			\
-+({									\
-+	__cpuid_assert_leaf_has_dynamic_subleaves(_cpuinfo, _leaf);	\
-+	__cpuid_table_subleaf_idx(&_cpuinfo->cpuid, _leaf, 0, _idx);	\
-+})
-+
-+/**
-+ * cpuid_subleaf_index_regs() - Access parsed CPUID data at runtime subleaf index
-+ * @_cpuinfo:	CPU capability structure reference ('struct cpuinfo_x86')
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format; e.g. 0x4, 0x8000001d
-+ * @_idx:	Index within CPUID(@_leaf) output storage array.  It must be
-+ *		smaller than "cpuid_subleaf_count(@_cpuinfo, @_leaf)".
-+ *
-+ * Similar to cpuid_subleaf_index(), but returns a raw 'struct cpuid_regs'
-+ * pointer to the parsed CPUID data, instead of a "typed" <cpuid/leaf_types.h>
-+ * pointer.
-+ */
-+#define cpuid_subleaf_index_regs(_cpuinfo, _leaf, _idx)			\
-+	((struct cpuid_regs *)cpuid_subleaf_index(_cpuinfo, _leaf, _idx))
-+
-+/**
-+ * cpuid_subleaf_count() - Number of valid (filled) subleaves for @_leaf
-+ * @_cpuinfo:	CPU capability structure reference ('struct cpuinfo_x86')
-+ * @_leaf:	CPUID leaf, in compile-time 0xN format; e.g. 0x4, 0x8000001d
-+ *
-+ * Return the number of subleaves filled by the CPUID parser for @_leaf. Check
-+ * cpuid_subleaf_index().
-+ *
-+ * CPUID leaves that are to be accessed using this macro are specified at
-+ * <cpuid/types.h>, 'struct cpuid_leaves', with a CPUID_LEAF() count field
-+ * bigger than 1.  A build-time error will be generated otherwise.
-+ */
-+#define cpuid_subleaf_count(_cpuinfo, _leaf)				\
-+({									\
-+	__cpuid_assert_leaf_has_dynamic_subleaves(_cpuinfo, _leaf);	\
-+	__cpuid_leaves_subleaf_info(&_cpuinfo->cpuid.leaves, _leaf, 0).nr_entries;\
-+})
-+
- #endif /* _ASM_X86_CPUID_API_H */
-diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/types.h
-index 8a00364b79de..f1b51ba21ca4 100644
---- a/arch/x86/include/asm/cpuid/types.h
-+++ b/arch/x86/include/asm/cpuid/types.h
-@@ -5,6 +5,8 @@
+@@ -7,6 +7,7 @@
  #include <linux/build_bug.h>
  #include <linux/types.h>
  
-+#include <asm/cpuid/leaf_types.h>
-+
++#include <asm/processor.h>
+ #include <asm/string.h>
+ 
  /*
-  * Types for raw CPUID access:
-  */
-@@ -124,4 +126,106 @@ extern const struct leaf_0x2_table cpuid_0x2_table[256];
-  */
- #define TLB_0x63_2M_4M_ENTRIES		32
+@@ -543,4 +544,10 @@ static inline bool cpuid_amd_hygon_has_l3_cache(void)
+ 	__cpuid_leaves_subleaf_info(&_cpuinfo->cpuid.leaves, _leaf, 0).nr_entries;\
+ })
  
 +/*
-+ * Types for centralized CPUID tables:
-+ *
-+ * For internal use by the CPUID parser.
++ * CPUID parser exported APIs:
 + */
 +
-+/**
-+ * struct leaf_query_info - Parse info for a CPUID leaf/subleaf query
-+ * @nr_entries:	Number of valid output storage entries filled by the CPUID parser
-+ *
-+ * In a CPUID table (struct cpuid_leaves), each CPUID leaf/subleaf query output
-+ * storage entry from <cpuid/leaf_types.h> is paired with a unique instance of
-+ * this type.
-+ */
-+struct leaf_query_info {
-+	unsigned int		nr_entries;
-+};
++void cpuid_parser_scan_cpu(struct cpuinfo_x86 *c);
 +
-+/**
-+ * __CPUID_LEAF() - Define CPUID output storage and query info entry
-+ * @_name:	Struct type name of the CPUID leaf/subleaf (e.g. 'leaf_0x4_0').
-+ *		Such types are defined at <cpuid/leaf_types.h>, and follow the
-+ *		format 'struct leaf_0xN_M', where 0xN is the leaf and M is the
-+ *		subleaf.
-+ * @_count:	Number of storage entries to allocate for this leaf/subleaf
-+ *
-+ * For the given leaf/subleaf combination, define an array of CPUID output
-+ * storage entries and an associated query info structure — both residing in a
-+ * 'struct cpuid_leaves' instance.
-+ *
-+ * Use an array of storage entries to accommodate CPUID leaves which produce
-+ * the same output format for a large subleaf range.  This is common for
-+ * hierarchical objects enumeration; e.g., CPUID(0x4), CPUID(0xd), and
-+ * CPUID(0x12).
-+ *
-+ * The example invocation for CPUID(0x7) storage, subleaves 0->1:
-+ *
-+ *	__CPUID_LEAF(leaf_0x7_0, 1);
-+ *	__CPUID_LEAF(leaf_0x7_1, 1);
-+ *
-+ * generates 'struct cpuid_leaves' storage entries in the form::
-+ *
-+ *	struct leaf_0x7_0		leaf_0x7_0[1];
-+ *	struct leaf_query_info		leaf_0x7_0_info;
-+ *
-+ *	struct leaf_0x7_1		leaf_0x7_1[1];
-+ *	struct leaf_query_info		leaf_0x7_1_info;
-+ *
-+ * The example invocation for CPUID(0x4) storage::
-+ *
-+ *	__CPUID_LEAF(leaf_0x4_0, 8);
-+ *
-+ * generates storage entries in the form:
-+ *
-+ *	struct leaf_0x4_0		leaf_0x4_0[8];
-+ *	struct leaf_query_info		leaf_0x4_0_info;
-+ *
-+ * where the 'leaf_0x4_0[8]' storage array can accommodate the output of
-+ * CPUID(0x4) subleaves 0->7, since they all have the same output format.
-+ */
-+#define __CPUID_LEAF(_name, _count)				\
-+	struct _name		_name[_count];			\
-+	struct leaf_query_info	_name##_info
+ #endif /* _ASM_X86_CPUID_API_H */
+diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/types.h
+index f1b51ba21ca4..320f152675af 100644
+--- a/arch/x86/include/asm/cpuid/types.h
++++ b/arch/x86/include/asm/cpuid/types.h
+@@ -32,6 +32,9 @@ enum cpuid_regs_idx {
+ #define CPUID_LEAF_FREQ		0x16
+ #define CPUID_LEAF_TILE		0x1d
+ 
++#define CPUID_BASE_START	0x0
++#define CPUID_BASE_END		(CPUID_BASE_START + 0xffff)
 +
-+/**
-+ * CPUID_LEAF() - Define a CPUID storage entry in 'struct cpuid_leaves'
-+ * @_leaf:	CPUID Leaf number in the 0xN format; e.g., 0x4.
-+ * @_subleaf:	Subleaf number in decimal
-+ * @_count:	Number of repeated storage entries for this @_leaf/@_subleaf
-+ *
-+ * Convenience wrapper around __CPUID_LEAF().
+ /*
+  * Types for CPUID(0x2) parsing:
+  */
+diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+index 1e26179ff18c..b2421cfb59ed 100644
+--- a/arch/x86/kernel/cpu/Makefile
++++ b/arch/x86/kernel/cpu/Makefile
+@@ -19,6 +19,7 @@ KCSAN_SANITIZE_common.o := n
+ 
+ obj-y			:= cacheinfo.o scattered.o
+ obj-y			+= topology_common.o topology_ext.o topology_amd.o
++obj-y			+= cpuid_parser.o
+ obj-y			+= common.o
+ obj-y			+= rdrand.o
+ obj-y			+= match.o
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 8feb8fd2957a..8aa3ba269c0b 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1716,6 +1716,7 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 
+ 	/* cyrix could have cpuid enabled via c_identify()*/
+ 	if (cpuid_feature()) {
++		cpuid_parser_scan_cpu(c);
+ 		cpu_detect(c);
+ 		get_cpu_vendor(c);
+ 		intel_unlock_cpuid_leafs(c);
+@@ -2096,6 +2097,7 @@ void identify_secondary_cpu(unsigned int cpu)
+ 		*c = boot_cpu_data;
+ 	c->cpu_index = cpu;
+ 
++	cpuid_parser_scan_cpu(c);
+ 	identify_cpu(c);
+ #ifdef CONFIG_X86_32
+ 	enable_sep_cpu();
+diff --git a/arch/x86/kernel/cpu/cpuid_parser.c b/arch/x86/kernel/cpu/cpuid_parser.c
+new file mode 100644
+index 000000000000..3a0215e75795
+--- /dev/null
++++ b/arch/x86/kernel/cpu/cpuid_parser.c
+@@ -0,0 +1,114 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Centralized CPUID parser (for populating the system's CPUID tables.)
 + */
-+#define CPUID_LEAF(_leaf, _subleaf, _count)			\
-+	__CPUID_LEAF(leaf_ ## _leaf ## _ ## _subleaf, _count)
++
++#include <linux/init.h>
++#include <linux/kernel.h>
++
++#include <asm/cpuid/api.h>
++#include <asm/percpu.h>
++#include <asm/processor.h>
++
++#include "cpuid_parser.h"
 +
 +/*
-+ * struct cpuid_leaves - Structured CPUID data repository
++ * Leaf read functions:
 + */
-+struct cpuid_leaves {
-+	/*         leaf		subleaf		count */
-+	CPUID_LEAF(0x0,		0,		1);
-+	CPUID_LEAF(0x1,		0,		1);
-+};
 +
 +/*
-+ * Types for centralized CPUID tables:
++ * Default CPUID parser read function
 + *
-+ * For external use.
++ * Satisfies the requirements stated at 'struct cpuid_parse_entry'->read().
++ */
++static void cpuid_read_generic(const struct cpuid_parse_entry *e, struct cpuid_read_output *output)
++{
++	for (int i = 0; i < e->maxcnt; i++, output->regs++, output->info->nr_entries++)
++		cpuid_read_subleaf(e->leaf, e->subleaf + i, output->regs);
++}
++
++/*
++ * Leaf-independent parser code:
++ */
++
++static unsigned int cpuid_range_max_leaf(const struct cpuid_table *t, unsigned int range)
++{
++	switch (range) {
++	case CPUID_BASE_START:	return __cpuid_leaves_subleaf_0(&t->leaves, 0x0).max_std_leaf;
++	default:		return 0;
++	}
++}
++
++static bool
++cpuid_range_valid(const struct cpuid_table *t, unsigned int leaf, unsigned int start, unsigned int end)
++{
++	if (leaf < start || leaf > end)
++		return false;
++
++	return leaf == start || leaf <= cpuid_range_max_leaf(t, start);
++}
++
++static bool cpuid_leaf_valid(const struct cpuid_table *t, unsigned int leaf)
++{
++	return cpuid_range_valid(t, leaf, CPUID_BASE_START, CPUID_BASE_END);
++}
++
++static const struct cpuid_parse_entry cpuid_common_parse_entries[] = {
++	CPUID_PARSE_ENTRIES
++};
++
++static void
++cpuid_fill_table(struct cpuid_table *t, const struct cpuid_parse_entry entries[], unsigned int nr_entries)
++{
++	const struct cpuid_parse_entry *entry = entries;
++
++	for (unsigned int i = 0; i < nr_entries; i++, entry++) {
++		struct cpuid_read_output output = {
++			.regs	= cpuid_table_query_regs_p(t, entry->regs_offs),
++			.info	= cpuid_table_query_info_p(t, entry->info_offs),
++		};
++
++		if (!cpuid_leaf_valid(t, entry->leaf))
++			continue;
++
++		WARN_ON_ONCE(output.info->nr_entries != 0);
++		entry->read(entry, &output);
++	}
++}
++
++/*
++ * Exported APIs:
 + */
 +
 +/**
-+ * struct cpuid_table - Per-CPU CPUID data repository
-+ * @leaves:	CPUID leaf/subleaf queries' output and metadata
++ * cpuid_parser_scan_cpu() - Populate current CPU's CPUID table
++ * @c:		CPU capability structure associated with the current CPU
 + *
-+ * Embedded inside 'struct cpuinfo_x86' to provide access to stored, parsed,
-+ * and sanitized CPUID output per-CPU.  Thus removing the need for any direct
-+ * CPUID query by call sites.
++ * Populate the CPUID table embedded within @c with parsed CPUID data.  Since all CPUID
++ * instructions are invoked locally, this must be called on the CPU associated with @c.
 + */
-+struct cpuid_table {
-+	struct cpuid_leaves	leaves;
++void cpuid_parser_scan_cpu(struct cpuinfo_x86 *c)
++{
++	struct cpuid_table *table = &c->cpuid;
++
++	/*
++	 * For correctness, clear the CPUID table first.
++	 *
++	 * This is due to the CPUID leaf access APIs at <cpuid/api.h> using the leaf's
++	 * "nr_entries" field as a validity check.  If the field is non-zero, the macros
++	 * assume that the cached leaf outputs are valid and return them.  Otherwise, NULL
++	 * is returned.
++	 *
++	 * On the primary CPU, the CPUID tables are zeroed at boot.  For secondary CPUs,
++	 * the capability structures (containing the CPUID table) are copied from the
++	 * primary CPU.  This would result in a "nr_entries" values carry-over from the
++	 * primary CPU unless the table is explicitly cleared.
++	 *
++	 * Also, for CPUID table re-scans, which are triggered by hardware state changes,
++	 * previously valid CPUID leaves might become invalid.  The CPUID table, and its
++	 * leaves' "nr_entries" fields, must thus be cleared beforehand.
++	 */
++	memset(table, 0, sizeof(*table));
++
++	cpuid_fill_table(table, cpuid_common_parse_entries, ARRAY_SIZE(cpuid_common_parse_entries));
++}
+diff --git a/arch/x86/kernel/cpu/cpuid_parser.h b/arch/x86/kernel/cpu/cpuid_parser.h
+new file mode 100644
+index 000000000000..41499fa36fdc
+--- /dev/null
++++ b/arch/x86/kernel/cpu/cpuid_parser.h
+@@ -0,0 +1,100 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ARCH_X86_CPUID_PARSER_H
++#define _ARCH_X86_CPUID_PARSER_H
++
++#include <asm/cpuid/types.h>
++
++/*
++ * 'struct cpuid_leaves' CPUID query output storage area accessors:
++ *
++ * @_leaf:	CPUID leaf, in compile-time 0xN format
++ * @_subleaf:	CPUID subleaf, in compile-time decimal format
++ *
++ * Since accessing the CPUID leaf output storage areas at 'struct cpuid_leaves' requires
++ * compile time tokenization, split the CPUID parser implementation into two stages:
++ * compile time macros for tokenizing the leaf/subleaf output offsets within the CPUID
++ * table, and generic runtime code to access and populate the relevant CPUID leaf/subleaf
++ * output data structures using such offsets.
++ *
++ * That is, the output of the  __cpuid_leaves_query_*_offset() macros will be cached by a
++ * compile time "parse entry" (see 'struct cpuid_parse_entry').  The runtime parser code
++ * will then utilize such offsets by passing them to cpuid_table_query_*_p() functions.
++ */
++
++#define __cpuid_leaves_query_regs_offset(_leaf, _subleaf)			\
++	offsetof(struct cpuid_leaves, leaf_ ## _leaf ## _ ## _subleaf)
++
++#define __cpuid_leaves_query_info_offset(_leaf, _subleaf)			\
++	offsetof(struct cpuid_leaves, leaf_ ## _leaf ## _ ## _subleaf ## _ ## info)
++
++#define __cpuid_leaves_query_regs_maxcnt(_leaf, _subleaf)			\
++	ARRAY_SIZE(((struct cpuid_leaves *)NULL)->leaf_ ## _leaf ## _ ## _subleaf)
++
++static inline struct cpuid_regs *
++cpuid_table_query_regs_p(const struct cpuid_table *t, unsigned long regs_offset)
++{
++	return (struct cpuid_regs *)((unsigned long)(&t->leaves) + regs_offset);
++}
++
++static inline struct leaf_query_info *
++cpuid_table_query_info_p(const struct cpuid_table *t, unsigned long info_offset)
++{
++	return (struct leaf_query_info *)((unsigned long)(&t->leaves) + info_offset);
++}
++
++/**
++ * struct cpuid_read_output - Output of a CPUID parser read operation
++ * @regs:	Pointer to an array of CPUID outputs, where each array element covers the
++ *		full EAX->EDX output range.
++ * @info:	Pointer to query info; for saving the number of filled @regs array elements.
++ *
++ * A CPUID parser read function like cpuid_read_generic() or cpuid_read_0xN() uses this
++ * structure to save its CPUID query outputs.  Actual storage for @regs and @info is provided
++ * by its caller, and is typically within a CPU's CPUID table (struct cpuid_table.leaves).
++ *
++ * See struct cpuid_parse_entry.read().
++ */
++struct cpuid_read_output {
++	struct cpuid_regs	*regs;
++	struct leaf_query_info	*info;
 +};
 +
- #endif /* _ASM_X86_CPUID_TYPES_H */
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index bde58f6510ac..b5d90b60191b 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -165,6 +165,7 @@ struct cpuinfo_x86 {
- 	char			x86_vendor_id[16];
- 	char			x86_model_id[64];
- 	struct cpuinfo_topology	topo;
-+	struct cpuid_table	cpuid;
- 	/* in KB - valid for CPUS which support this call: */
- 	unsigned int		x86_cache_size;
- 	int			x86_cache_alignment;	/* In bytes */
++/**
++ * struct cpuid_parse_entry - Runtime CPUID parsing context for @leaf/@subleaf
++ * @leaf:	Leaf number to be parsed
++ * @subleaf:	Subleaf number to be parsed
++ * @regs_offs:	Offset within 'struct cpuid_leaves' for saving CPUID @leaf/@subleaf output; to be
++ *		passed to cpuid_table_query_regs_p().
++ * @info_offs:	Offset within 'struct cpuid_leaves' for accessing @leaf/@subleaf parse info; to be
++ *		passed to cpuid_table_query_info_p().
++ * @maxcnt:	Maximum number of output storage entries available for the @leaf/@subleaf query
++ * @read:	Read function for this entry.  It must save the parsed CPUID output to the passed
++ *		'struct cpuid_read_output'->regs registers array of size >= @maxcnt.  It must set
++ *		'struct cpuid_read_output'->info.nr_entries to the actual number of storage output
++ *		entries filled.  A generic implementation is provided at cpuid_read_generic().
++ */
++struct cpuid_parse_entry {
++	unsigned int	leaf;
++	unsigned int	subleaf;
++	unsigned int	regs_offs;
++	unsigned int	info_offs;
++	unsigned int	maxcnt;
++	void		(*read)(const struct cpuid_parse_entry *e, struct cpuid_read_output *o);
++};
++
++#define CPUID_PARSE_ENTRY(_leaf, _subleaf, _reader_fn)					\
++	{										\
++		.leaf		= _leaf,						\
++		.subleaf	= _subleaf,						\
++		.regs_offs	= __cpuid_leaves_query_regs_offset(_leaf, _subleaf),	\
++		.info_offs	= __cpuid_leaves_query_info_offset(_leaf, _subleaf),	\
++		.maxcnt		= __cpuid_leaves_query_regs_maxcnt(_leaf, _subleaf),	\
++		.read		= cpuid_read_ ## _reader_fn,				\
++	}
++
++#define CPUID_PARSE_ENTRIES								\
++	/*		  Leaf		Subleaf		Reader function */		\
++	CPUID_PARSE_ENTRY(0x0,		0,		generic),			\
++	CPUID_PARSE_ENTRY(0x1,		0,		generic),			\
++
++#endif /* _ARCH_X86_CPUID_PARSER_H */
 -- 
 2.49.0
 
