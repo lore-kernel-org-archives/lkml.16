@@ -1,197 +1,259 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2050.outbound.protection.outlook.com [40.107.244.50])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7D317AE1D;
-	Thu, 12 Jun 2025 17:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749750837; cv=fail; b=gsSpPKMwxLe7VVz6YTALsPQbBxrmhMseyyL3eqYsnlnUvgYBuQ0NemIbBmWnM0pzoPxb+QycW5gEkgHVOK0kCSGUQu9OBds7HCo2UBgcMBQjCPkON7tEw3gy4n0/rbksoXw6xac9/8jj+2tiDfVW39sW1u41p0HtpQPGW0PT4rc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749750837; c=relaxed/simple;
-	bh=A9v2XbJXcQ0qhi38p6taiVIIbn1P1+IuNRbUo8xaEr8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dl4OIocWl4up9mzqQqunY96KchadCGBzoOM1D8ATAX90Gk/DcTwdq/Ixfq2yPCeYe39b+r2R0g+5zCFwjvyS2HULtf8r+aadZ70Rq+nF12WW9nlDCYA0GrhAa0fDO2tFrWp7c+S0HOZpkT8Y7BftOvkEFJ4jrugERtuU3fx6x18=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KRplw1eL reason="signature verification failed"; arc=fail smtp.client-ip=40.107.244.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5542E29DB97;
+	Thu, 12 Jun 2025 17:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749750928; cv=none; b=Bygin/VCZPI5mseJoaz3UND/n/laSSaKpMoWR693bp4jhGOu6MAojQrC74FTLYdgxDkyH4L9TBMvkE7gC12K1DKKgxasU6Q6KluyDHSxKJ/lxaMEjYdYOu1zUrAzwZvbfyZUqk/z/MW0uUBdAkMdjH5N/zT1fePFFezaRJqFcXk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749750928; c=relaxed/simple;
+	bh=U14epDudFR2T/XBBsRZuwpcksaEexz7yCA93a0AxNLc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HU+o+NO3yaQOFgGvzJyKAYKduk8P0si7HIhU6lqgobBy0rWqhghsRTS7uHDusEu+W8bXr9bJT1SpnZ5Tohr4DpZd8qAicBoYX5x9fcM0t3Ek/K/atZQ0PbaUFUmFipJHuAnCJDnvBa78reTv0czKlVwFza+E5RKrKPQT4s3kiQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=RpQH8GAS; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KRplw1eL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mMp6VvmFy1Jc7LJwfp3jCAhC8zsOmmBESCYUZtlBr52jyu08BZN3KlJ6DAKJDu6cswVyQZFfsVbjhGirKzwZ6QZsgfpGn8qidUgj5cTnRT8f/UKS0IG+Ebu4mt7HkT0Rxyawfa4PROnanj4yl2EDvEmmea9KJmZgIDClOrHt1a9WOmhiAnGRfDl69tOmPmRs3we4UFARU0Cb8IKHLM59bEBrhSpCX087k6db0DD6fUc7LC0J6nAtf9GkMmeZD85YB1tcq91DS6Ab/TAgDLYLWPLMDmZmnAytsBXwl+DX+wzsEenXsr+c/+uMx+xdpvSbseKCTTuHRg2Pn+A+9jHOsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S1rGNhnJPCxN7is7lvv6LVRQ/pw1+V5+CHJGIBD5veQ=;
- b=tVVXKNYVEHfvnhcusO2BNB5+/CNsaAZX9gr11jgdwFBYIcOc+s3aQV+VWzYBGmb82NP+/cqI+8wM3DPMXHPctVx+29cWoP5UQJbf/RLBMB37tUeolZPA7q73+/pDeCsw4JBbj1aXxG05WdsOWzxkPAmRdK+mpuRzpuf6HwN0BrNd1TVKX9pSjm7jG2vJGqqRQvotmkVJv+tGxauOX0plctoKMClcSleX2chl2T612jgd0fzwhSleGQaaxUSYXsXyPSRgDC8tv8SOiC8xzl+dTCG8DGg0WTEzJ+k8BItqESLK996keRWCn3xfQJG9FkE2Ylsb0LOmYoNc4xawVAHQAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linutronix.de smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S1rGNhnJPCxN7is7lvv6LVRQ/pw1+V5+CHJGIBD5veQ=;
- b=KRplw1eLkAxXWnaohYnN7c8ZoLKPuB4nj8ikrpc3HwP4UAtb+6PkKTkl3TqW+E1xN6j6YJ828JpoobPb1FEQG8Mx+AVuc6IQhw+NbdB9J3UhgJfyazQLKR3sJrE6qBJm53S0+rdEIpooA75ifN8lDEa4p6wlO/K/k3c3+LN08qXoXZ87dLcXrFUMN6GOVsEz12pF8D+pL2QZ03dvJXGS0uq8tPIOwg4cmwQqWdCrK+7ZyW7t27uAMqQPv/BmCf4GSZhpgAM8EKEUTsjGnhI/gShf2hATPt0tjPLrrZsgZXBFuuZDIy7Fxgobo2Z3RPJUkBMmXDmY2XEAW9fk8AG2hA==
-Received: from BYAPR21CA0018.namprd21.prod.outlook.com (2603:10b6:a03:114::28)
- by BN5PR12MB9462.namprd12.prod.outlook.com (2603:10b6:408:2ac::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
- 2025 17:53:50 +0000
-Received: from SJ1PEPF00001CE8.namprd03.prod.outlook.com
- (2603:10b6:a03:114:cafe::31) by BYAPR21CA0018.outlook.office365.com
- (2603:10b6:a03:114::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.16 via Frontend Transport; Thu,
- 12 Jun 2025 17:53:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ1PEPF00001CE8.mail.protection.outlook.com (10.167.242.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Thu, 12 Jun 2025 17:53:50 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 12 Jun
- 2025 10:53:34 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 12 Jun
- 2025 10:53:33 -0700
-Received: from nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Thu, 12 Jun 2025 10:53:30 -0700
-Date: Thu, 12 Jun 2025 10:53:28 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, "Willy
- Tarreau" <w@1wt.eu>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
-	<linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Andy Lutomirski
-	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown
-	<broonie@kernel.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
- into test metadata
-Message-ID: <aEsUGP8xPTDjG0ob@nvidia.com>
-References: <aEm6tuzy7WK12sMh@nvidia.com>
- <aEn5jmXZbC5hARGv@nvidia.com>
- <aEoUhPYIAizTLADq@nvidia.com>
- <20250611235117.GR543171@nvidia.com>
- <aEp6tGUEFCQz1prh@nvidia.com>
- <20250612135802.GU543171@nvidia.com>
- <20250612162151-1fc97a6c-a1c9-4656-997e-fd02f5f9418b@linutronix.de>
- <20250612145801.GV543171@nvidia.com>
- <20250612171437-450fb7d6-c73a-47e3-9e1c-5c009cba7fe1@linutronix.de>
- <20250612154242.GW543171@nvidia.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="RpQH8GAS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1749750918; x=1750355718; i=spasswolf@web.de;
+	bh=iSk6/OoQ6wLcS1kYB8t5xUlwZCaMp8afhUK7G888awM=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=RpQH8GASgLMweyn8b8seICdK8ZR2zvM6vuCXDIqa1IKW5Xir9loe7jUAaCL0mmsv
+	 7DGixNodpJsmcdjMcfyyWAaCaNAW7Z/Aw/rz7s42nXIBKUD7b731rHsF786N0LI4w
+	 v95NHt2/v4Upb1O8sr+5G3MwHzHlHgU4EfGfvBVgri8Lc/QUl5D+Nmrb6nbJrd3PS
+	 gLlzdBOqezPxsa92n8h76IUguCbTV9G42uCi9gMPKQdOnWUmJyWAuEt4eQ8qI96Ul
+	 M5NEvC91FUN5MhQ6iaTAPJdQZsn28kv54tGHM588BB8KgyycEwr5nj0STfrr+rN12
+	 LAW6cRrPl4ufmHMKRw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
+ (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
+ 1M6pYS-1uSVyN2pp8-00FAVO; Thu, 12 Jun 2025 19:55:17 +0200
+From: Bert Karwatzki <spasswolf@web.de>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Bert Karwatzki <spasswolf@web.de>,
+	linux-kernel@vger.kernel.org,
+	linux-next@vger.kernel.org,
+	Waiman Long <longman@redhat.com>,
+	Kees Cook <kees@kernel.org>
+Subject: register_syctl_init error in linux-next-20250612
+Date: Thu, 12 Jun 2025 19:55:13 +0200
+Message-ID: <20250612175515.3251-1-spasswolf@web.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250612154242.GW543171@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE8:EE_|BN5PR12MB9462:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12c780f1-c9af-4e19-8139-08dda9da16c3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|82310400026|36860700013|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?gr2NQMGTXoHDE0K17tVCfGHr92XR8UGFg6U/REVl9IWNeA7gOy24mwY3Ww?=
- =?iso-8859-1?Q?YTJKedvDPmMcjQKaQXx1+bVbUz+ZrK/3DCd43Vq5j0VaL9Ss1/hKoHb7pZ?=
- =?iso-8859-1?Q?3swq95z6U6s+apULGLjcbYQyZjR8pXbrYv8GyTzEBNIx2qya0P+NoXyIUC?=
- =?iso-8859-1?Q?dqOTEhVF3xOFf2yTBj/7z8SbnM+2Uj6TDTeQSBRwEae3O32/VDf16zdlOV?=
- =?iso-8859-1?Q?kPk+n7eiizEjRFIGX3wLH2JvL80FCmLYW7L9BLo1bzIgxIVkQ4iWxwK14X?=
- =?iso-8859-1?Q?W22ILhE/AepWNEQERywoFqCPWQpvR3GOWBUkK8EwUPtyjoL6m3aikPZbHF?=
- =?iso-8859-1?Q?qvvNlopm6qq8MkGveYV49g5EoHgPPaDI20rxzdAFSsZ9o9ykoGvjXXNSMJ?=
- =?iso-8859-1?Q?QKdeM3RxuwFhmVdxKfclHAXfggPLjgiKPYct7E4xFjtgBUxlI2+OaFDjf1?=
- =?iso-8859-1?Q?JXnAHGHucyEsZwmmuYIkadQCF4vTC2MUYrJVKcHQviUgtpS8k3ZCeUcRdz?=
- =?iso-8859-1?Q?tKg3JKpbKFyKx/fVuZiJy+H97YRw33NRjOzLBmTq3ZTtDKbAg0Bm6SQNRR?=
- =?iso-8859-1?Q?lYpPaMDlU2wgQFdQv5Liwtrx4xfwpXkhkVY+f70QlFSQChsJFuKgPJX2hP?=
- =?iso-8859-1?Q?lVBI0hRDeD9nQXcDRyhT1yqLBB5foZixeeNxfrzEL/9ZDo292NUusuyZv4?=
- =?iso-8859-1?Q?/pDxc7GySc27KlQG0gwUrwTVRHLRpcUtqT4YNKeWramE73+UkbF2pYBine?=
- =?iso-8859-1?Q?WhWc8weqRWyIO2I0N7orMBwb0JJ2008MNtdJJQNqFXbjSdzgSBVfsK8234?=
- =?iso-8859-1?Q?4jEyu/L7GAE6YTmnI3FV3HQz+aBDP1Pdp2zb2PtKXd6z4WlMUQGraHR/g5?=
- =?iso-8859-1?Q?i5YpwGN5e/j+oZJcmZkxKXxJn1hGDWF6PMQui8HcpDWhsdJe/DJxD0pTMK?=
- =?iso-8859-1?Q?odSG34wVvWZJ60gNm2mHn6iFkRPXwM7+O9nUynL+jsKujqgk+N05//uVu+?=
- =?iso-8859-1?Q?UL4VMqZbg3PaRlv3FtmSqbvSRq/XV3wIzweKXxfTiwCiKjsGMfDYjUI0sr?=
- =?iso-8859-1?Q?zgLx0aXqhETpK/g4hZCRMKVmscdRCkqXRNwN82PinaGeiz//WWhjhoTTgu?=
- =?iso-8859-1?Q?EkSyWYSdGnhijRLbSWLVLgPfiEwfeMx97VY5m+GaJii4D+xz7bglOCvvkL?=
- =?iso-8859-1?Q?flnIH73o9Ow6PHNRQ5tWl+WG7t2qLZCLf6X+qLsxJGEPU8EIfjY7TfhKwU?=
- =?iso-8859-1?Q?qyqQgk+VlZVk0HltjWTIcSmdUOetiPNmdH0kPgXOpAU5yyII9EKK3FryaW?=
- =?iso-8859-1?Q?n3Y0yjXwiiruDkgPMEn9Cot7vLRNcakRZsdYeQDw4lKGGIAtmn9o0bWf4F?=
- =?iso-8859-1?Q?xybLmYlWhCpHOmhrrHdVpWagJvSdmziBA33ZQK+FBeiyaRSKr9lD/0twFJ?=
- =?iso-8859-1?Q?5xmdVhKj60SLo3j/AyHuIHwCYeY9XSEoryB8rkjv5uBti0s0fD6+5pV4Il?=
- =?iso-8859-1?Q?aOARE7ZC2nLFpqKJPmqehpSzG0t7ZyVL2xG3biGaJWxIFAB4yBEqKX2ihv?=
- =?iso-8859-1?Q?0uiKuDMbthpG/haF9eT7wEuZLCEZ?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 17:53:50.5980
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12c780f1-c9af-4e19-8139-08dda9da16c3
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE8.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN5PR12MB9462
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bLy5k+D/8avNeAwN3RnZG8nBNOul+2jBGHhjG1BoT1Xu+db9623
+ luN18MXhKtof4WJNgbf6K1YlzlgBUKUKD/MCqhMUN9ZoD7ngumVp372fMakII+YyhCQjP7d
+ U+a63RZQ4Zm/LZ/i804HFUWZOfRab2eS5UUmiJ3EOAkoPmZLhieY+QIBSBh0Mw7kPzH3QC1
+ 5dd1U9dT4vqjsdWlRhD1Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:gU+LjsyFAr4=;C5h7OHfKOyrBGpDM+qRAxgpoLC0
+ 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
 
-On Thu, Jun 12, 2025 at 12:42:42PM -0300, Jason Gunthorpe wrote:
-> On Thu, Jun 12, 2025 at 05:23:01PM +0200, Thomas Weißschuh wrote:
-> > On Thu, Jun 12, 2025 at 11:58:01AM -0300, Jason Gunthorpe wrote:
-> > > On Thu, Jun 12, 2025 at 04:27:41PM +0200, Thomas Weißschuh wrote:
-> > > 
-> > > > If the assumption is that this is most likely a kernel bug,
-> > > > shouldn't it be fixed properly rather than worked around?
-> > > > After all the job of a selftest is to detect bugs to be fixed.
-> > > 
-> > > I investigated the history for a bit and it seems likely we cannot
-> > > change the kernel here. Call it an undocumented "feature".
-> > 
-> > I looked a bit and it seems to be mentioned in mmap(2):
-> > 
-> > 	For mmap(), offset must be a multiple of the underlying huge page size.
-> > 	The system automatically aligns length to be a multiple of the underlying huge page size.
-> 
-> Oh there you go then :) Horrible design. No way for userspace to know
-> what the rounded up length actually was and thus no way for
-> userspace to unmap it.
+When starting evolution (gnome email client) on my debian sid with
+linux-next-20250612 I get the following error message on the terminal
+emulator (the Gtk messages also occur  when):
 
-OK. I think we would have to skip those cases then.
+Gtk-Message: 13:34:49.069: Failed to load module "colorreload-gtk-module"
+Gtk-Message: 13:34:49.070: Failed to load module "window-decorations-gtk-m=
+odule"
+Gtk-Message: 13:34:51.012: Failed to load module "colorreload-gtk-module"
+Gtk-Message: 13:34:51.013: Failed to load module "window-decorations-gtk-m=
+odule"
+bwrap: Can't read /proc/sys/kernel/overflowuid: No such file or directory
 
-> > > MAP_HUGETLBFS rounds up the length to some value, userspace has to
-> > > figure that out and not pass incorrect lengths.  The selftest is doing
-> > > that wrong.
-> > 
-> > The selftest would be more robust if MAP_FIXED is replaced by
-> > MAP_FIXED_NOREPLACE. Even with the new explicit skip logic it should
-> > make debugging easier if something goes wrong.
-> 
-> The point is to replace something that is already mapped there, though
-> I no longer remember why it is working like this.
+** (org.gnome.Evolution:3327): ERROR **: 13:34:51.245: Failed to fully lau=
+nch dbus-proxy: Der Kindprozess wurde mit Status 1 beendet
+Trace/Breakpoint ausgel=C3=B6st
 
-By replacing MAP_FIXED with MAP_FIXED_NOREPLACE, at the existing
-two places, the selftest crashed at early setup_sizes...:
+and the following message in dmesg:
 
-iommufd: iommufd.c:53: setup_sizes: Assertion `vrc == buffer' failed.
-/nicolinc/iommufd_selftest.sh: line 19: 21487 Aborted
-		(core dumped) tools/testing/selftests/iommu/iommufd
-strace:
-mmap(0xffff80000000, 1048576, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS|MAP_FIXED_NOREPLACE, -1, 0) = -1 EEXIST (File exists)
+[  305.600587] [      T3327] traps: evolution[3327] trap int3 ip:7f64442d3=
+ab7 sp:7ffc9f4e94d0 error:0 in libglib-2.0.so.0.8400.2[66ab7,7f644428c000+=
+a1000]
 
-This one doesn't MAP_HUGETLBFS btw...
+I bisected this to commit cf47285025e6 ("locking/rtmutex: Move max_lock_de=
+pth
+into rtmutex.c"). The absence of /proc/sys/kernel/overflow{uid,gid} seems =
+to be the related
+to the start failure, in affected kernel version the files are absent whil=
+e they're present
+when evolution starts normally.
 
-Thanks
-Nicolin
+Also when booting next-20250612 I get this error message regarding max_loc=
+k_depth and
+rtmutex_sysctl_table:
+
+[    0.234399] [         T1] sysctl duplicate entry: /kernel/max_lock_dept=
+h
+[    0.234402] [         T1] failed when register_sysctl_sz rtmutex_sysctl=
+_table to kernel
+[    0.234405] [         T1] sysctl duplicate entry: /kernel/max_lock_dept=
+h
+[    0.234407] [         T1] failed when register_sysctl_sz rtmutex_sysctl=
+_table to kernel
+
+Reverting commit cf47285025e6 in next-20250612 fixes the both the "sysctl =
+duplicate
+entry" issue and the missing overflow{gid,uid} files and evolution starts =
+normally again.
+
+As there were conflicts when reverting, here the revert patch for next-202=
+50612
+to illustrate conflict resolution:
+
+diff --git a/include/linux/rtmutex.h b/include/linux/rtmutex.h
+index dc9a51cda97c..7d049883a08a 100644
+=2D-- a/include/linux/rtmutex.h
++++ b/include/linux/rtmutex.h
+@@ -18,6 +18,8 @@
+ #include <linux/rbtree_types.h>
+ #include <linux/spinlock_types_raw.h>
+=20
++extern int max_lock_depth; /* for sysctl */
++
+ struct rt_mutex_base {
+ 	raw_spinlock_t		wait_lock;
+ 	struct rb_root_cached   waiters;
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index 705a0e0fd72a..c80902eacd79 100644
+=2D-- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -29,29 +29,6 @@
+ #include "rtmutex_common.h"
+ #include "lock_events.h"
+=20
+-/*
+- * Max number of times we'll walk the boosting chain:
+- */
+-static int max_lock_depth =3D 1024;
+-
+-static const struct ctl_table rtmutex_sysctl_table[] =3D {
+-	{
+-		.procname	=3D "max_lock_depth",
+-		.data		=3D &max_lock_depth,
+-		.maxlen		=3D sizeof(int),
+-		.mode		=3D 0644,
+-		.proc_handler	=3D proc_dointvec,
+-	},
+-};
+-
+-static int __init init_rtmutex_sysctl(void)
+-{
+-	register_sysctl_init("kernel", rtmutex_sysctl_table);
+-	return 0;
+-}
+-
+-subsys_initcall(init_rtmutex_sysctl);
+-
+ #ifndef WW_RT
+ # define build_ww_mutex()	(false)
+ # define ww_container_of(rtm)	NULL
+diff --git a/kernel/locking/rtmutex_api.c b/kernel/locking/rtmutex_api.c
+index 9e00ea0e5cfa..2d933528a0fa 100644
+=2D-- a/kernel/locking/rtmutex_api.c
++++ b/kernel/locking/rtmutex_api.c
+@@ -8,6 +8,11 @@
+ #define RT_MUTEX_BUILD_MUTEX
+ #include "rtmutex.c"
+=20
++/*
++ * Max number of times we'll walk the boosting chain:
++ */
++int max_lock_depth =3D 1024;
++
+ /*
+  * Debug aware fast / slowpath lock,trylock,unlock
+  *
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 0716c7df7243..82af6e6f5dbb 100644
+=2D-- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -23,6 +23,14 @@
+ #include <linux/uaccess.h>
+ #include <asm/processor.h>
+=20
++#ifdef CONFIG_X86
++#include <asm/nmi.h>
++#include <asm/io.h>
++#endif
++#ifdef CONFIG_RT_MUTEXES
++#include <linux/rtmutex.h>
++#endif
++
+ /* shared constants to be used in various sysctls */
+ const int sysctl_vals[] =3D { 0, 1, 2, 3, 4, 100, 200, 1000, 3000, INT_MA=
+X, 65535, -1 };
+ EXPORT_SYMBOL(sysctl_vals);
+@@ -1525,6 +1533,15 @@ static const struct ctl_table kern_table[] =3D {
+ 		.proc_handler	=3D proc_dointvec,
+ 	},
+ #endif
++#ifdef CONFIG_RT_MUTEXES
++	{
++		.procname	=3D "max_lock_depth",
++		.data		=3D &max_lock_depth,
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0644,
++		.proc_handler	=3D proc_dointvec,
++	},
++#endif
+ };
+=20
+ int __init sysctl_init_bases(void)
+
+
+Bert Karwatzki
