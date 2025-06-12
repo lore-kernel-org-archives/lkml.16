@@ -1,158 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D857FD
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3498F40
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749704223; cv=none; b=PtOnP+oIctmz265AHVNhy6yLud/2HMiyFZneVTnVj36trcyFqrvuVMykV7OdRCaIDICM0OU2uus6b1rrmYSwaMIhJCPu4PoM3PWavzwpXK4GxlydKLKZv5diiRGLr2ULBvJpfGQBO7PbFeIcPH6lLMQsrCjRvnCJCjmEmMeo5RE=
+	t=1749704484; cv=none; b=lbm5S/yXpwpJOZ1qata/zZPZysrGebSOu8lHL00Xv8xlfP4nqysqPU6b8CuUqqSVP8CcnS0lS1iBV4w0FhA3yHmwSIcvf+ssV5kkk8w0FxsSavrx4iRqcddtvNumlbKnJr+axhmVnJ/LSpEPq7oAlRnEGjYyCgMrQUoCnc/SEy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749704223; c=relaxed/simple;
-	bh=+Bgnjkb3c2VvMjqkkvwRWSiFw1ERPOMXEXq8Lh/tg10=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B1JeugJ1ZDBD+fJBs2cRCoTa5NftcQn+jIzyyXzSMRelQsc2QbYZZZJDQRIc/eXOeWxhkAoKHG/RfEx69uUFUAs9hY03yQ/ZA/WoEyb+5JC4eCDNKj75TgPKYeWfCuFmD/hsBTyqpye3TkfaxmCgouIpblajtCSOPtG2eEE3lBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V7ViIpFG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749704484; c=relaxed/simple;
+	bh=9pHjVMGg2ruxdwaHtiPTktq8Zbd4RUe/LdD/4hfxsW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tBGCzhnY8DwkQ5oWuwvcmHgAz/4rWQBNEOFLCam70PpCVm/U0TkWqup4BpetnjvFUDhFAVWmpWrFvryKDJ2tX2iPoRiDqB8tZYLKXeZOTTpcirwiiPSASqEsCPR6G3TkLarJGjUXq0xUx4nSHFYM7q7FHdM8EbQ+7pzATJz8Jx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=viLNnXJn; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V7ViIpFG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749704220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fRcG0KcLrgIKRqjpg+vBPCK7hgCWz7pFJk3ogI8plXs=;
-	b=V7ViIpFGMYX+7qtQcZVT1L30yJrDdMsbo0MS/W0rG1HJgrGuQmK1Wzc7N+CACXL9b94jzB
-	Ugkd9kdzw/tMbl4assG+NYAsvUp7baILbXE5iSTctJMXqh1PEsuxlev0Dcgp61J9KrMt41
-	vy7QXY+dlboUIjiekVbjmF7WqlPdd8g=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-407-QY2dV8c0PvmD8mzPjE2wzQ-1; Thu, 12 Jun 2025 00:56:58 -0400
-X-MC-Unique: QY2dV8c0PvmD8mzPjE2wzQ-1
-X-Mimecast-MFC-AGG-ID: QY2dV8c0PvmD8mzPjE2wzQ_1749704218
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45311704d1fso2369515e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:56:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="viLNnXJn"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234f17910d8so5711705ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749704481; x=1750309281; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ta897ANnsOKw/3ZrDJN+Z/Yd5TG55/Y0TTXdSO5Wgwo=;
+        b=viLNnXJngWrQpc05n6uWOIH+yg1CAoaDc7rhmN8TZqE/BcUNz5fRkH4TA/7J10XIU4
+         bLlDIsTEezVSVLmDgi//cx0s+pPkgNEhlQzceBU4QKLmDFk3SMpc260bVNjkSta4LU9j
+         oW3Tl/sK/FxI+fYwQfhQwXXLWXOKxkRPAh+fIKInhaOW580yODdPTF1+yxwLZUfNpv9W
+         y/CW6bdwqbeEbs5+k9h74F4eqlEMl9aGleAYQltTPbJy0mZhaCObpnWxEr9t+ASzXm4e
+         L1LZKeFoccFh76AoUCGp2BjsfKQRG+au3B7knpxKzDlf8EU9ytWTgNLDPzZ6PFhrBrn9
+         2aLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749704217; x=1750309017;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fRcG0KcLrgIKRqjpg+vBPCK7hgCWz7pFJk3ogI8plXs=;
-        b=mtmOzpcgBDLq0hLrZwjqNhbxHhwGeLDKUy6cIqypzbbHWorOf6tfwso5dJPvjVDUhl
-         g+VjzMzlG8FrSqsnYkE578VLWSWCq4pAfrRtle41NULWsi6OgHDiWk8JbNgYY5hSyYt3
-         k/IBA+egSXF7mEwFyHuUImuprTf477Poz5Ps/hVS+J90dnXuSC7flRn7heyqIaEE2bPM
-         1LSfSEm6ezJNYmggqWqzhSVUj+1fAB+lQ/wdqNRu56Ss1oBImkwExmU8Ad3v6EF66j0Q
-         pk2mfs85cwJVcbsK7skIP64vfDIM0Kx8z9kiL7aqjqgLz/m6v61oo/KTBW+I9kHYV2Wn
-         Agiw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVMHDBILvJ2954zmWwDAeaAx8GQnmBrMj4ean72tXr23VwGiYfJxW2Pd16j4B5c4E7TBteHVMtXPRrZ2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1VhFpQixF9PWXPlOhDTj1sMP2hGvAGU87N13FfLtTmIlY/j3t
-	wH8wskiD2XzsMd57z0PnXrwEcDL8WjogFwfpEAHt6dPPff1TeQO3Yq8ZazG1pOTT97iqtxuPy5O
-	pbwbU6nWUocxLoV7QgdwX6TPpgIxQc5gDMOkh8IdzxkgQKgoRjIVwWh0SsrN3fNYtOA==
-X-Gm-Gg: ASbGncvY3Qvobp9ERvrcHQMcgXGnFAuUJqAdlT2CDts7FUc/L15l9PFdxJu7wJglwQR
-	wKgNysZ6K4LRoX0jClhhgPZl+nJnmnUzWiqHFINaQG8bJihpptZoAYK+bb3HzpTneybGSIKtVFr
-	1l1lj6A/3Z9GR1ZQwoa2fP44piRc6NYwt7sIq3K9RrRW3VplG4OEiRw1BeGkC2Gg1z8MNKTSVNR
-	ewVzDEi8C2y6pxABpm6Bcj4Tf2Zza+0fIrDEZsd24q/KSCtJnFZiLnweNZKL/jsmORz4iSygA1a
-	dbuFgkW1SO8tv1i5ARFqwvFR
-X-Received: by 2002:a05:600c:4f55:b0:450:d07e:ee14 with SMTP id 5b1f17b1804b1-4532b915f13mr24022825e9.17.1749704217622;
-        Wed, 11 Jun 2025 21:56:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFMnYNz9h25utVqlZtqMz+bJcwU577Begx0eWXz015Y6jivdb/FnjiEwBApKkKMSt+HJpyllg==
-X-Received: by 2002:a05:600c:4f55:b0:450:d07e:ee14 with SMTP id 5b1f17b1804b1-4532b915f13mr24022465e9.17.1749704217256;
-        Wed, 11 Jun 2025 21:56:57 -0700 (PDT)
-Received: from [192.168.10.48] ([151.49.64.79])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a56198a3b4sm816727f8f.21.2025.06.11.21.56.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 21:56:56 -0700 (PDT)
-Message-ID: <125bfa5b-4727-4998-a0da-fb50feec6df6@redhat.com>
-Date: Thu, 12 Jun 2025 06:56:53 +0200
+        d=1e100.net; s=20230601; t=1749704481; x=1750309281;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ta897ANnsOKw/3ZrDJN+Z/Yd5TG55/Y0TTXdSO5Wgwo=;
+        b=b5v/s8ju38dLSAJ8alDj4OXlfsvC8jrlUs9PbMUOZDYuKfBXWMCst6L/VuExW63y1C
+         95iKBXya3HQVkKXwjyx7wGJtXwdP9MR1nM6jjCKLDsFxyNLIa8qYp8i9IpnRiRvsF/fU
+         UrGBg03/4HDPGwdQ/lwS8Kah4NftDSU6/jLP+Qlsq/BsKnYw+Yzq6t/C1iKwnJAboVWR
+         WMnC/sYPYULWHDn/uqvj51zTaA/87vf/V7tX3kvD7mNJ6YQV9pvLTpqRMYsSyi6bmGn7
+         +rkVsk8f8HF0nH0SnEVl1FEtIcjXsJl0xUCz5ZNbg/CS20e1litwqZLj5EavHW4NONe1
+         Otgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWe1ALeQCaZQb/sxikRR8+bIpPSBLjA67mGi+yLcit1iaszznvUOMTbtiU3O+esv7kceFpk11zo128zsWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXHRHmye+TZ3EpZr4/TLCFixrZj4B6DnKqGipnC1GGFw3kOOQP
+	7aDf7xKxLKqTZE4LuRfF3mrYgL2CN4rN6Br8A2C3mCpyH5lWFk5/MRWRv68aDm/UidI=
+X-Gm-Gg: ASbGncsKDDwCK6pDzA3gkulbpaYa7d5k5agZejnu9U+dYbkZqMFvj8LoPCJiLIDg79F
+	1H7ufjCjtxjSFQ9w1C2JqeV6GwsiPjahNXL3ccfBKehREuNYDO36Z6XASu9kZTeGm5x0UhL/l91
+	cIOZ+3GLcKYP8ExoQvKliYxTAtIHATt2uRqjwTqIk29TWYujfAbQuzsZ7bZ9Nsjp52XcWWz0Tut
+	gCT3GZXoOc3HnGtnkvTlLRFFMrx9NW6vdbUbJWUnXNPxwMwlYlB3ctD1WaUVTnV5CsmGoBjqnbm
+	l1t37aXf/STJoYSAeoFbRI2tkH0Z8uCHktehRmwvig7tP9VTaD0ts+yyyAr5zd9gldPmvLt3Qw=
+	=
+X-Google-Smtp-Source: AGHT+IHFd17mtrnTaIfhEeysW8IO5ia6VXlIvrfEaCUzdPUvSOMJM3AaKiJKr973WWitYYB9zcOAZA==
+X-Received: by 2002:a17:902:ef0c:b0:234:986c:66f9 with SMTP id d9443c01a7336-2364ca0c6e4mr33957475ad.22.1749704480788;
+        Wed, 11 Jun 2025 22:01:20 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e6d9c45sm4698395ad.140.2025.06.11.22.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 22:01:20 -0700 (PDT)
+Date: Thu, 12 Jun 2025 10:31:17 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	rust-for-linux@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 2/3] rust: Use CpuId in place of raw CPU numbers
+Message-ID: <20250612050117.3oi6belkf5lrreoh@vireshk-i7>
+References: <cover.1749554685.git.viresh.kumar@linaro.org>
+ <e790f17123beb45c6a811135ec3df8f0bd761c0e.1749554685.git.viresh.kumar@linaro.org>
+ <aEmq8fs1fHSB3z4i@tardis.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] KVM: Remove include/kvm, standardize includes
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Anish Ghulati <aghulati@google.com>, Colton Lewis <coltonlewis@google.com>,
- Thomas Huth <thuth@redhat.com>
-References: <20250611001042.170501-1-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20250611001042.170501-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEmq8fs1fHSB3z4i@tardis.local>
 
-On 6/11/25 02:10, Sean Christopherson wrote:
-> Kill off include/kvm (through file moves/renames), and standardize the set of
-> KVM includes across all architectures.
-> 
-> This conflicts with Colton's partioned PMU series[1], but this should work as
-> a nice prepatory cleanup for the partitioned PMU work (and hopefully can land
-> sooner).
-> 
-> Note, these patches were originally posted as part of a much larger and more
-> agressive RFC[1].  We've effectively abandoned upstreaming the multi-KVM idea,
-> but I'm trying to (slowly) upstream the bits and pieces that I think/hope are
-> generally beneficial.
-> 
-> [1] https://lore.kernel.org/all/20250602192702.2125115-1-coltonlewis@google.com
-> [2] https://lore.kernel.org/all/20230916003118.2540661-1-seanjc@google.com
+On 11-06-25, 09:12, Boqun Feng wrote:
+> I generally found that `u32::from(cpu)` is more clear than `cpu.into()`,
+> but it's up to you. Same for the rest of `cpu.into()` cases.
 
-Marc, Oliver, I'd like to commit this to kvm/next sometime soon; I'll 
-wait for your ack since most of the meat here is in arch/arm64.
+Updated as:
 
-Thanks,
+diff --git a/rust/kernel/cpu.rs b/rust/kernel/cpu.rs
+index 7549594fad7f..abc780d7a8ec 100644
+--- a/rust/kernel/cpu.rs
++++ b/rust/kernel/cpu.rs
+@@ -129,7 +129,7 @@ fn from(id: CpuId) -> Self {
+ /// any references to the CPU device within the notifier's callback.
+ pub unsafe fn from_cpu(cpu: CpuId) -> Result<&'static Device> {
+     // SAFETY: It is safe to call `get_cpu_device()` for any CPU.
+-    let ptr = unsafe { bindings::get_cpu_device(cpu.into()) };
++    let ptr = unsafe { bindings::get_cpu_device(u32::from(cpu)) };
+     if ptr.is_null() {
+         return Err(ENODEV);
+     }
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index ea6106db5c29..11b03e9d7e89 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -527,7 +527,7 @@ pub fn generic_suspend(&mut self) -> Result {
+     #[inline]
+     pub fn generic_get(&self) -> Result<u32> {
+         // SAFETY: By the type invariant, the pointer stored in `self` is valid.
+-        Ok(unsafe { bindings::cpufreq_generic_get(self.cpu().into()) })
++        Ok(unsafe { bindings::cpufreq_generic_get(u32::from(self.cpu())) })
+     }
+ 
+     /// Provides a wrapper to the register with energy model using the OPP core.
+@@ -682,7 +682,7 @@ fn clear_data<T: ForeignOwnable>(&mut self) -> Option<T> {
+ impl<'a> PolicyCpu<'a> {
+     fn from_cpu(cpu: CpuId) -> Result<Self> {
+         // SAFETY: It is safe to call `cpufreq_cpu_get` for any valid CPU.
+-        let ptr = from_err_ptr(unsafe { bindings::cpufreq_cpu_get(cpu.into()) })?;
++        let ptr = from_err_ptr(unsafe { bindings::cpufreq_cpu_get(u32::from(cpu)) })?;
+ 
+         Ok(Self(
+             // SAFETY: The `ptr` is guaranteed to be valid and remains valid for the lifetime of
+diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
+index 11ddd43edcb5..19c607709b5f 100644
+--- a/rust/kernel/cpumask.rs
++++ b/rust/kernel/cpumask.rs
+@@ -94,7 +94,7 @@ pub fn as_raw(&self) -> *mut bindings::cpumask {
+     #[inline]
+     pub fn set(&mut self, cpu: CpuId) {
+         // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `__cpumask_set_cpu`.
+-        unsafe { bindings::__cpumask_set_cpu(cpu.into(), self.as_raw()) };
++        unsafe { bindings::__cpumask_set_cpu(u32::from(cpu), self.as_raw()) };
+     }
+ 
+     /// Clear `cpu` in the cpumask.
+@@ -106,7 +106,7 @@ pub fn set(&mut self, cpu: CpuId) {
+     pub fn clear(&mut self, cpu: CpuId) {
+         // SAFETY: By the type invariant, `self.as_raw` is a valid argument to
+         // `__cpumask_clear_cpu`.
+-        unsafe { bindings::__cpumask_clear_cpu(cpu.into(), self.as_raw()) };
++        unsafe { bindings::__cpumask_clear_cpu(i32::from(cpu), self.as_raw()) };
+     }
+ 
+     /// Test `cpu` in the cpumask.
+@@ -115,7 +115,7 @@ pub fn clear(&mut self, cpu: CpuId) {
+     #[inline]
+     pub fn test(&self, cpu: CpuId) -> bool {
+         // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `cpumask_test_cpu`.
+-        unsafe { bindings::cpumask_test_cpu(cpu.into(), self.as_raw()) }
++        unsafe { bindings::cpumask_test_cpu(i32::from(cpu), self.as_raw()) }
+     }
+ 
+     /// Set all CPUs in the cpumask.
 
-Paolo
-
+-- 
+viresh
