@@ -1,161 +1,120 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F872231853
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B333EC2;
+	Thu, 12 Jun 2025 11:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749727196; cv=none; b=Sp4znsO2wTGGpyRVNAR/zzFirgcg8o+Q2+Yb9UFYtQTDEIfAjAQyLVC5eKvCr4dmBW1WLV260R9kYPj864AB1Uf5jFzm6HripgOubd0p+KwBdvjyuLmP+BpxSEwnIaOulIZYXgOmb2rmlGFC/C51qzgLouivdRKfEWeENzZ/BRE=
+	t=1749727203; cv=none; b=Hs9wyQB98zYVW34++ZBJbgeumSGZLmQ1FQh574CNFq8ck5emEr2DVoh2XwtJkuHWO+kZkw9TQP1J4IybRJsKYnDdwKT2XSCaORPLXcYdspoSysnL8Ksntdv3mDq1Wl3QCeyGXxaWV3Jy/6l/SoLTNkbfWkBrwRVhQsEY40TMf1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749727196; c=relaxed/simple;
-	bh=JAdtqs3zGWrmUQ/02QPjTpOUVJpDF9rKNNKxrvc/EwI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hWaKqP8+2KSqMBYUvSRPV0XK2PSCyL8hmz9dtco99Rj12QAzjEpSk0IVX7hyjkKoxgjtW3XsrsHkEraGKU0aBpmbYL5fgQlD31Y+DDIobIe/pe9PqvqJPT0/yVdekHOGXrOg6tTDVq9YxhV7mw5mjP4YhXHPrU41QrgSMMq5/zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PGv+2B6f; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PGv+2B6f"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C7lGZF027235
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:19:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7QIskp7CeaFU7u4UNInC1v8TRYXWF8xfW2XMu+8r6y8=; b=PGv+2B6filVfzlnw
-	qFQC+g29GIxUfp6kN3eTp6J5fHn7JpE2t9AQOpqzwhmTe4fxaw5XQmtP0neba6Y0
-	CQ9ZYkfEjH9uv/hc9IsWVgVAjCWCcfoyS3QrF3V4jCxYJDCI9TrTCfUpS0PXKh+f
-	wRLLgBxL6kTUum7niuaBsRmFG3sJJk/Wv5VFZOpyhIo9evTAMXoPs0o0/QFF2rW6
-	osOusL0EVJ/xfpFvFwUuE2SJSRcRXgEQ8dOl/RfLYka11gvudS5mP3a6si+HbDAE
-	JwWQBNI2kzMFi/1mwakoYz3QB4iI+A6sDSfCwR1zQep/g/3deOSxL0EdVx1jAAAq
-	rDUBWQ==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476jrhf83j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:19:52 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-748269c6516so805206b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:19:52 -0700 (PDT)
+	s=arc-20240116; t=1749727203; c=relaxed/simple;
+	bh=YqHsxaxpI8FsGsfWWK1FEDhyIw1Uvbz7gYjTt9gIXVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RZh4eg6jtyRjI8f2EsAJC4XbxtzVZzJkx+Xe5wUhVO/BBf5VA8O1a1frcrt2NI7Pklk9UTqRBiqtCF4Hb+QD0vV9u/xU9nO0/m9PuKdMCxaed+oFIh2qzQxJ3iBx/EVqPLcnIKdmXQSSRX9Et5ZNzs+EbIehxekLtJgPph2OLRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-53133c3840dso106039e0c.0;
+        Thu, 12 Jun 2025 04:20:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749727191; x=1750331991;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7QIskp7CeaFU7u4UNInC1v8TRYXWF8xfW2XMu+8r6y8=;
-        b=J2/Kxpf+Gvx3FbkJvnveSzQNuqmHAX9scy7SSpvxN1alJ1oZKELfidl5lD/rgqdYca
-         rMdfR0yXtrvpnemzT70bHsbxa8fwGWNEwWp8iIbI30A46FAS5OCc/yQUbd2EpPwxGExr
-         sdXNOWnGbszHi7rrDs8yif2/WLoJC/HTKN2wbCaC4VpBLaI2OLjdgNmaHJSnU23QMlxT
-         D4QAxltPeO9qwxn62LuhTMKVg09d0/j/B2O4oc+CKwWUmDpC/2EopirAemz8VKeAbROm
-         znM3K5YJ6CAMUZsTB815Ffns87Xs2Yfr+3WBGleG6sjW/bI7gmOfKIjj72O92LFFSli/
-         4EJg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3bUU8vBmT+uZWgJEH+ozO5Yef6X3fsN1JANcnR+KUrA5krkKP6qVtyBBLZ3CtLZSGsfj0NFyRubYkOnw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAKQ62SSEzO9UKSy2z2JyP/GTGA5qcz7+2OIdZLgs8CPAgjKyx
-	tPVxsCAq2dbkEQBBGwJa3c3gUU8vHIzpIc09d3hFcpMm+IYNzH57lEBwA/rRjXH4L1OEB9FNBXl
-	7OUpv/970eFHPYszKKNputFnrb2jJSM2KAnIH8to65tAH5f1PNLwWTmNNHOnUYb2jjrQXSKBYIf
-	U=
-X-Gm-Gg: ASbGncvuNFTanSKB9NxZAikfF2465ZFwzu7lDIQfRA2XEPOULDQpo8rRsAxWTMCT/q8
-	Gz03lYw7SG2HUPeuSbbRcjMAcBCE/fxSzNz595m6uVvinec3q0ijcRXOQbgaAwwYoJnjPJv1ZJ8
-	R1ZfzlseXWxUW6R2Uz17eUsnBtIc92jgIYvXyuHiIigHjbjELrdmq6CMHSXpRXefOyBTaCFVoA4
-	W8jokHVilIJ9ctqpecIuSuEJY/wIPlmns4Dgk4fpvOXyT4d7a2OnEzW7efTg0VmPhLf8D33QIxI
-	NMufbmwI0Ds34hVNIy9yi959uhD/8P92sjKFXSWnws28HXeWFEWdaV+bSEiMQiUo
-X-Received: by 2002:a05:6a21:1519:b0:216:1fc7:5d51 with SMTP id adf61e73a8af0-21f86747eecmr11545653637.37.1749727191403;
-        Thu, 12 Jun 2025 04:19:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEymZNRL34fw7cMWDROMev8RqOV8BO00M024ki/BJ4JwmO6XOC+uwIudz/uK7cTSGz1z7G5uw==
-X-Received: by 2002:a05:6a21:1519:b0:216:1fc7:5d51 with SMTP id adf61e73a8af0-21f86747eecmr11545609637.37.1749727190903;
-        Thu, 12 Jun 2025 04:19:50 -0700 (PDT)
-Received: from [10.152.204.0] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488087aa4csm1198848b3a.8.2025.06.12.04.19.48
+        d=1e100.net; s=20230601; t=1749727199; x=1750331999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TD3QIUg5vFTzQEXDYZJibnSN+u3ERO545tprLcdmPQo=;
+        b=nj5GXQUy9YgA8abknxAamAaH1sKCAFAmT3HxeMFac3b40JqJQqf/twwM0tgyAYCr1Y
+         8JS2w4V/mKZOa4oDmvRhVZ7z+JSkFYOJN1BlQJXvpDgngZvE783fSXTPGQ9nuMxz/1G2
+         v9YsrY9Llc8NljM+Ol/iwl0qFHOw5p7KwP5hnDnCO/3ewhRCd2f+wC1BDwzJVwOb18ht
+         OYBUjgZOJMUXdf8Nv+mrb6QrQ/d66tQG6ozH2gMcukYE6X31nMK0XdHa7clQ3sIteVZt
+         k7cdfA9TQhoJe5HUgOEZJFryi5zzJ4pVaENTUPRi4/DZgOhYzBSUC8lHFwrHcloEruwD
+         xf+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWqt1qoR7YQ7SdsXVGdeMl3LirBrrAg1k7JH2XySNZoL1vX3q4oUj20RrU2cerettWuVe4Ggt0ugXt0vDaRZ9rFLKQ=@vger.kernel.org, AJvYcCXMBTHHRkiQ2fgvhDNTwBJD0TRYTxJMVwPRxtjzOtRBHsU+S56fZaqnRpL3vtjmFD+nTiA+eG8z7YLa0Vo=@vger.kernel.org, AJvYcCXXhCpJmcYkrwfn/WJ2+z/b7C0pMUbRuu2Z+pOdRQ7tq/uoy7MT396uM0s4yv429Mr1X1R5QcFAnr5kMP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVPoy704n/vBYn/EPWE/arr/C6HWaXOJiPjwGi+M5syvV7DwmI
+	fyeZPI7L7FVSEvzBlTcQM3H6wo27LIoGlq/lPQlvseQ8bAuL6bDOHZQ599h/akoj
+X-Gm-Gg: ASbGncvw9XEcS4A/YwYn0lk4tU8Bin5i00EPf/Kspsxp685WX6YHRpMQb0GmMtalTIg
+	R0v6ltHytuaNCOyvjC26hipjJ6n016SqW9qpRpev6h1VLGAuhHQIVii2iLD7tftAprwsUTY7/8u
+	OYrLB1+cWqKAmIH2dmQjdy0PGNcQPuShHRRdIh8KAff0RHlT/t6AK+rIjTmgFg2+JuLZzrSBiHp
+	FxuN2u3lp2ObIbp5PxfbtGg6riUNkiEtyetBakbNi8B2qWGCAb6qRy2BUwfqFpTUCuMr5Anv8UB
+	yT1TDc22RPDcfHcN1ANG1tZzNQNRXaZhOlyyGV+09ZVNsmdmOkveQSArKLAcBHHF/b/BxUy9dKm
+	uyS5WDL63wTAKC/VBKQYOT1f0
+X-Google-Smtp-Source: AGHT+IF28ebF8Mg7CzSisDVubvhdnfj5OxKqmZy2OajHlscguj6cAa9QRfsaA5G8EIdpN59aphAKuA==
+X-Received: by 2002:a05:6122:1c1:b0:52a:ee1d:f7fd with SMTP id 71dfb90a1353d-5312227726cmr5129135e0c.8.1749727199067;
+        Thu, 12 Jun 2025 04:19:59 -0700 (PDT)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5312f2ce812sm264785e0c.0.2025.06.12.04.19.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 04:19:50 -0700 (PDT)
-Message-ID: <ec974dc0-962b-f611-7bbb-c07a3872f70f@oss.qualcomm.com>
-Date: Thu, 12 Jun 2025 16:49:47 +0530
+        Thu, 12 Jun 2025 04:19:58 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-87ee848a74bso214453241.2;
+        Thu, 12 Jun 2025 04:19:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUbtXfJGvnSe2dlkjcIGPNwjzPHQsKzCjt+VRyaMqlOGB5vUWF71Kyq4yqlQM3Oi3QP7J9PXwbLUrJv7YMoX8D547U=@vger.kernel.org, AJvYcCX4r+WP9cTxo1o493VUdg9mIzX94nzn3DiNLWSZxHJWLpaxMI6GVFOtUNLzf2oslPSYhh8GIwvLC64hdP0=@vger.kernel.org, AJvYcCXfGvrOQXN83yADEVIewzy/i0JUNuebNsTiF7MzitmG/veJGAUUP5gXGmm6qpnUMv2AvZ2UmPfZ/x0fxpo=@vger.kernel.org
+X-Received: by 2002:a05:6102:c48:b0:4e4:5e11:6832 with SMTP id
+ ada2fe7eead31-4e7bae9d35emr6100563137.7.1749727198094; Thu, 12 Jun 2025
+ 04:19:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] wifi: ath11k: support fetching mac address from nvmem
-Content-Language: en-US
-To: george.moussalem@outlook.com, Jeff Johnson <jjohnson@kernel.org>
-Cc: ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250324-ath11k-nvmem-v1-1-d82bdf72820e@outlook.com>
-From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-In-Reply-To: <20250324-ath11k-nvmem-v1-1-d82bdf72820e@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=EovSrTcA c=1 sm=1 tr=0 ts=684ab7d8 cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=UqCG9HQmAAAA:8 a=wwL4Hbxs1AlHKMMt3U0A:9
- a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-ORIG-GUID: D7oGRjlk5g_HMgWPHVknWhRoEPEHpkgz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA4NyBTYWx0ZWRfXxjkFa61NFjHx
- 2E/mpDvfpvtCcIlR6ENEO1uYRbLR+IYtvRgANi0ZxqQtHBsEvSt4ng0mZlRdJShPm20W5Fwuoa9
- z7VFREcjuShD9GmeMeMS+K6FsDxnGjaOq9WXgGVpUDsRMkUbmFhW/5mhKcHeCimk6j6FJqKbr8e
- A/CLUyQU8qVqrs6+qeKRkR0+co6UxJ+m32b0e/AsGBCVp7a3b2nMIVWsQm0ajJwhdwdroInw/ZY
- kN2rS20rR59PvRH5mr9Ra3eVFYVTHCdz1jwcIc6fMuUxOFQAbmIzQobGrEK0RlNMkNxenmq0I7f
- El9Sk0U4z+k7sfaZgNZBjs+bkhyuvqz0MuiU70KnlnY2dJ5YYqegrgg3+LxntkS6Kr84T3tRUd2
- NCF2XD3CvlxJ2KGphoV3zQ95vb3ffowMBclOnPm3yp8n4ZNVoXPkC4ZZL4chk3zbG5XbtUdX
-X-Proofpoint-GUID: D7oGRjlk5g_HMgWPHVknWhRoEPEHpkgz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=954
- mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506120087
+References: <20250611154445.123412-1-niklas.soderlund+renesas@ragnatech.se>
+ <20250611154445.123412-5-niklas.soderlund+renesas@ragnatech.se>
+ <20250611230412.GO24465@pendragon.ideasonboard.com> <20250612100112.GH330732@ragnatech.se>
+In-Reply-To: <20250612100112.GH330732@ragnatech.se>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 13:19:45 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVueS4Dhu0e5DJSEDD1Pt-3Ay3tmjs5Jm-5Z2xQXr4XVQ@mail.gmail.com>
+X-Gm-Features: AX0GCFu6xrIMQdM-0ntmPWVxsgReft2rzNEKQKIMX4TRdYgrZvSUQ6KwwPHdPFc
+Message-ID: <CAMuHMdVueS4Dhu0e5DJSEDD1Pt-3Ay3tmjs5Jm-5Z2xQXr4XVQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] media: rcar-csi2: Add D-PHY support for V4H
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, linux-media@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, 12 Jun 2025 at 12:01, Niklas S=C3=B6derlund
+<niklas.soderlund+renesas@ragnatech.se> wrote:
+> On 2025-06-12 02:04:12 +0300, Laurent Pinchart wrote:
+> > > --- a/drivers/media/platform/renesas/rcar-csi2.c
+> > > +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> > > +   if (mbps >=3D 80) {
+> > > +           if (mbps >=3D 2560)
+> > > +                   val =3D 6;
+> > > +           else if (mbps >=3D 1280)
+> > > +                   val =3D 5;
+> > > +           else if (mbps >=3D 640)
+> > > +                   val =3D 4;
+> > > +           else if (mbps >=3D 320)
+> > > +                   val =3D 3;
+> > > +           else if (mbps >=3D 160)
+> > > +                   val =3D 2;
+> > > +           else if (mbps >=3D 80)
+> > > +                   val =3D 1;
+> >
+> > You could possibly replace this with
+> >
+> >               val =3D ilog2(mbps / 80) + 1;
+> >
+> > Up to you.
+>
+> I opted to keep it as is to make it easier to match with the datasheet.
+> The ilog2() is clever but I will never remember why it was used ;-)
 
++1 for ilog2() ;-)
 
-On 3/24/2025 11:54 AM, George Moussalem via B4 Relay wrote:
-> From: George Moussalem <george.moussalem@outlook.com>
-> 
-> Many embedded devices with ath11k wifi chips store their mac address in
-> nvmem partitions. Currently, the ath11k driver supports getting the
-> mac address from the 'mac-address', 'local-mac-address', and 'address'
-> device tree properties only. As such, add support for obtaining the mac
-> address from nvmem if defined in a 'mac-address' cell by replacing the
-> call to device_get_mac_address by of_get_mac_address which does exactly
-> the same as the former but tries to get it from nvmem if it is not set
-> by above mentioned DT properties,
+Gr{oetje,eeting}s,
 
-May be not exactly, this also moves from a generic API to DT specific API that
-might impact systems which dont have device tree (x86)?
+                        Geert
 
-> 
-> Tested-on: IPQ5018, QCN6122, and QCN9074
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-You may want to follow the existing Tested-on style.
-
-> 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
->   drivers/net/wireless/ath/ath11k/mac.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
-> index 97816916abac..49af6b9fc867 100644
-> --- a/drivers/net/wireless/ath/ath11k/mac.c
-> +++ b/drivers/net/wireless/ath/ath11k/mac.c
-> @@ -9,6 +9,7 @@
->   #include <linux/etherdevice.h>
->   #include <linux/bitfield.h>
->   #include <linux/inetdevice.h>
-> +#include <linux/of_net.h>
->   #include <net/if_inet6.h>
->   #include <net/ipv6.h>
->   
-> @@ -10379,7 +10380,7 @@ int ath11k_mac_register(struct ath11k_base *ab)
->   	if (ret)
->   		return ret;
->   
-> -	device_get_mac_address(ab->dev, mac_addr);
-> +	of_get_mac_address(ab->dev->of_node, mac_addr);
-
-May be call of_get_mac_address_nvmem() when device_get_mac_address() fails?
-
-Vasanth
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
