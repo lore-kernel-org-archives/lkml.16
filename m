@@ -1,154 +1,146 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7AF2D541E
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6D32D542D;
+	Thu, 12 Jun 2025 20:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758758; cv=none; b=ktGQSrzFQStuUcq+hb8IrTI4F7yYFUE0eIjvCJEsMEz1E1H0tYLr/eFKf1qtWpqeQ9YdZycfAn6+JEvFyfiI2W3DR8iuKBOOYdOUcsAm61JBugtJOi1yZ0cXseZkxYyAVfxC50Xvrb8dY9Hfox7AwtvpBHH6N0cUsuM4qywo+NE=
+	t=1749758814; cv=none; b=tNXU07ctqgkMKLVRQnFMpbGSK4r+z1plONQTJE6mjuXSQXOacWEyd6X3sVWdKU8AWZGVzN6AlDdfL7h+wYm8Q5KI+zImo21BRVfghSfDBGR/VnQqRoasthV9dcYVmkb6VR6o75BGL6HX4jA9m6yIswPvelCU2QR6MtSDjwtrMS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758758; c=relaxed/simple;
-	bh=Re2CW7co8R/M5Q8rcFGXf3tlF1UXLdad4cNsqa8bUlE=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=Yauv+BrFYGkBXE89iwDyEeaG0w4ukI8kRy2qBhCjCOUAjhsyL89qcf6wKGn+B+MJysP8c6CgtTSkfvGYZ8QhmAYEiTAzZnYpUaVYEY00LBgA52eklILryaYIgkijzAMUbP2wkwuvdw5prnFSVbFTlf1hX0SRFCZZrdIKPZoqEhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=SuEck5h2; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749758814; c=relaxed/simple;
+	bh=zDlFT87txcIFmArf/LehUaQjM2xBjRJpDiZIcmFl2SY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tjMxqKGhBPe6DqxHqCrcW8/GhFLi3QlCM4Ar7BOFNxb4ZamajoWLresfIAtJD9DeS/YnSQ+ZtUNsz1tkIZTbblYb2hZ4TrncytUe54pB7Ngy3x4FSmFUEfeYrTLHCqoi/7tqaR4WXGvptfZviADiIIlEiBQyo2E/iCbs9GmVwH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j7JS5W1B; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="SuEck5h2"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7486ca9d396so1072210b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:05:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7JS5W1B"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b2c49373c15so1040869a12.3;
+        Thu, 12 Jun 2025 13:06:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749758756; x=1750363556; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=af51BBEYY6aGbebFxLHnn8CgVDycQQJsTeT80Jnf6RE=;
-        b=SuEck5h23rl7A5mmW4xg7DLt2XBObgIo3T382/kq7tOIlySjncTfm8aFMBmKDM4plj
-         O5988OetrYvtpdzphTccnjwX727gzen3anbo64aq1r9rwH9dXW5lp2U3qErGYtgsA2FR
-         fJnuilMynnhg3ctpKYGVWrhWSgI5BDZOjpPQQF4OzDUNvSchDUWRAf1dAsuet2OTu2A0
-         ZT3jdEbvOYzguvlnG+2O0XfnvjfdKMDPxRr28SAzMw+tAHf6SEAVBv6HMDL3t/V5Dyij
-         01EHMRJPoN8vIcnGQHavsw5uAxG0fdUKYV5YE0jvTuqGeIBqdg+/RATirgUonqK3ojn4
-         K0Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749758756; x=1750363556;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749758812; x=1750363612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=af51BBEYY6aGbebFxLHnn8CgVDycQQJsTeT80Jnf6RE=;
-        b=cCzBhNFB+e2C0LfScZwm6KF3oIs5rUnBr/u1H2jK7PkKqKosrUJj0L6prB6p64ft6g
-         Gk7voEUyWRm6w3Dg+rNFRMomBxGH4Gu7bxoAxnxfZ2AzLdedLeJ/qH+ITknnmx2y/q3p
-         Ttdia8yd38Nkg8dxEkJBZX8MUjbbgxtDZpQuvGkZf5kMZqdIbPteoZllEDCgcjpUy9T8
-         NYZ4FE77ZcA5rkTocEVmxgRab85VurEzwMVCq8bihadXG9jD8paKIp30ipCDXXRIZGpD
-         RJ/Yopwp99/FGkhAYbal8LQgxsyMzpsKWu7lVHMpZ110PFlfgj/xaKcHqguPWUVvEtes
-         OBLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMGbuaP/QvbfWUT2sG2WkUsvz5upSmoQehOZaLziAFbeIoPTdzedMOYmIPcmNEIJCSDh9Ez/HxyBilz+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJpZpSGc40TqShN+Df4meisXQdR/6KHKO23X6ezO9zvITkpQZ7
-	wdeh7W4HMZ/5yc531K0HdTVEMdLTkX1HCRjV0djhgqG8EIw428cohghKkNIUQ6kzpO8=
-X-Gm-Gg: ASbGnct8aciiPi++8p6dDAUQeU3cZznBpLChBCnvCVuv1UlD6rokL+60k1+GylQE0A2
-	u3eu3m+ucmQR3sesDgxn8wNyHPqAL/m5RmaNRw2lIha85bJKEQcQzlH4Y9ST/qyKcZgWsYjHerK
-	SWTF7tx2iuqJLEeDSlj2/HgQT9dwkTn2fOhTyqZ1ss2ubrdzyy3061yM6JuKCxmszR4KjXuWg63
-	ECl7Zd266Av/GsV+3BGf7NLXSFBcUFC+WgAy4c4336vi5/t7H4QGrbI5dQG9T/kRh+g1xwUF2aO
-	Ek2b5G3Tb7fGa2ICJFN2ATJXIGMzay5G7Qpw8j8RFu4I1EniOrJx+Y+z1/nGYS3vaj9WE7Q=
-X-Google-Smtp-Source: AGHT+IH2RoHWF8PmxJBIXY2wg5rdTqPBQh+vVExjeVE43egm/MogvtvtIhJaxeSLVjk+Z689LqbYIQ==
-X-Received: by 2002:a05:6300:8a05:b0:21f:5adb:52c4 with SMTP id adf61e73a8af0-21fad02d0c2mr253713637.30.1749758755672;
-        Thu, 12 Jun 2025 13:05:55 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::7:116a])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-748900063f6sm140856b3a.64.2025.06.12.13.05.55
+        bh=ZTxl14oi+ElrUbf4YIsWM1WNqQ2qYV8l0dhSYWLQAjc=;
+        b=j7JS5W1BurjMj1fEKlmT8fYoRTpAfwNtX+Nnu2ES7EdOEkP8GZdNknDsYWfp3sBMpr
+         npHBXKRmA0YF89v3aR9FUc6kQWIvS8MffuZVsF0dAAiuKP4YmUBPb1Acc+pSSqEv0H7T
+         Juh0psTUfWd90ZeRrjp9M3mvGOWpp6YOOhiip8zXgW6aVRzF9MLlycw8cAMORfe8XgoB
+         v7o9BVwVvQ3/LWrQP+/6B1a2nAqZw7APZ34BpyE1bD5HH5a6Bt4gccRzwA8W2Aqu1T/2
+         bJi5LfTM4w6aaGYM/hvf00jx1F8Cb9c+8fTwSv6II+Jb5T02O50Jy3seqwrWqC2fmUFR
+         ZGFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749758812; x=1750363612;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZTxl14oi+ElrUbf4YIsWM1WNqQ2qYV8l0dhSYWLQAjc=;
+        b=kReQetu9Yup4hb+c7t08y78J4BFp+ovZGRu71dWjLNoFa4+emkcLeZinz3E2llshTU
+         qy6D7gY9Hj3KfA8INWKEVn8vcOnjymxxlE11jMdE7sW89mUuq3VKL9jJ2Y2LSan5UGFf
+         9m+6i/o7M0hvccPxzXiy6u3yVHFYQWfGH4OjLsnjlCLhKe2HfmOlaZkhcnQXTn76vlCJ
+         UX9e2d4kwHrs/6JUzaQ0pWFI90ibtnKOZpCtBBYWH3FtkOpv8RcahlgBbfq/r9Aw0Y3B
+         0d8qSUE2z8aaQ5vhTfvDqPu51cCszbLYF3wCv7GWewG8oEoz4JiM+UsTprPEtMb0UiYW
+         uwdA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKA6B3/rUYDf2xHgxX+DwoGXnPPMpeGC4OaQhJCuNHVpE6HhE/BEPPuUENDlAyROTGqQkP6nM2mdT0JwY=@vger.kernel.org, AJvYcCXcIeqq12cY9w7tURkjpkHqoZm3nRHl9LdZpecYvUIiMYCHr6l6sT6drvdIr868ho+m7QrR/blG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5VOAh33aoG7dh4jpIcfWaToS0kwS32pqkRAK3RbN3chhiM0eP
+	eOAS0gURf5etgiIrFyKc+XIe6K5MTP/4z2z6gKpUbN/O7XhHStWyjW68UC3D9o4+lQ==
+X-Gm-Gg: ASbGncvmLfnd9XSj9nsAXudVGS5xJy0v6Hur4S3C1tgz3li+1+AF55OBhxo+yCwZTtH
+	mLIAuHtuAp30L+EAUrp8XhTNTs18gyXWj7R/+SYlVNVSrO5kwIHm/M/ENYFoajaCXDkb0ojjXYl
+	cg5w1uSe+Knzp72nc99DbqhT/8v9ONQQOvaJ9KDYBiT4bKxOeE1QAaxGow+VIQHO5pRiQviTq1p
+	w6+BIy7i6eKp7YHUJgPR1sEjcPThhL2GkoYpqqv7mw208Iu3CZXiRUothnDk5naH+1+KAdOxWE1
+	5Be9KUy/yH63LmLq8MU7WAhMRlDOFxQskC8bF9w=
+X-Google-Smtp-Source: AGHT+IE9K+Pg3CgqmLqtae3q0IxypD70/IprlW4cyUt1i4GzOuEEtGQyIzTapP99lz40DVts01bYQg==
+X-Received: by 2002:a05:6a20:72a8:b0:21f:543f:f124 with SMTP id adf61e73a8af0-21facc8e6a9mr375732637.24.1749758812279;
+        Thu, 12 Jun 2025 13:06:52 -0700 (PDT)
+Received: from fedora.. ([2601:647:6700:3390::c8d1])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1680408sm148237a12.39.2025.06.12.13.06.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 13:05:55 -0700 (PDT)
-Date: Thu, 12 Jun 2025 13:05:55 -0700 (PDT)
-X-Google-Original-Date: Thu, 12 Jun 2025 13:05:52 PDT (-0700)
-Subject:     Re: [PATCH v3 3/3] vdso: Reject absolute relocations during build
-In-Reply-To: <7ddda233-99f7-468b-842d-8469f0a86e77@ghiti.fr>
-CC: thomas.weissschuh@linutronix.de, Paul Walmsley <paul.walmsley@sifive.com>,
-  aou@eecs.berkeley.edu, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com,
-  justinstitt@google.com, luto@kernel.org, tglx@linutronix.de, vincenzo.frascino@arm.com,
-  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <mhng-4BA05CCD-6D5A-4067-B88A-DEBD4FCDED77@palmerdabbelt-mac>
+        Thu, 12 Jun 2025 13:06:51 -0700 (PDT)
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+To: wangxianying546@gmail.com
+Cc: dsahern@kernel.org,
+	edumazet@google.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com
+Subject: Re: [BUG] BUG_Address_NUMNUMac1414bbbb_on_device_lo_is_missing_its_host_route
+Date: Thu, 12 Jun 2025 13:05:58 -0700
+Message-ID: <20250612200650.4049799-1-kuni1840@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CAOU40uDOh7JY7nVmrS1Pr013zMP2Y=qLwiJeANvgEupNvuHnWw@mail.gmail.com>
+References: <CAOU40uDOh7JY7nVmrS1Pr013zMP2Y=qLwiJeANvgEupNvuHnWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Jun 2025 01:31:20 PDT (-0700), Alexandre Ghiti wrote:
-> Hi Thomas,
->
-> On 6/11/25 11:22, Thomas Weißschuh wrote:
->> All vDSO code needs to be completely position independent.
->> Symbol references are marked as hidden so the compiler emits
->> PC-relative relocations. However there are cases where the compiler may
->> still emit absolute relocations, as they are valid in regular PIC DSO code.
->> These would be resolved by the linker and will break at runtime.
->> This has been observed on arm64 under some circumstances, see
->> commit 0c314cda9325 ("arm64: vdso: Work around invalid absolute relocations from GCC")
->>
->> Introduce a build-time check for absolute relocations.
->> The check is done on the object files as the relocations will not exist
->> anymore in the final DSO. As there is no extension point for the
->> compilation of each object file, perform the validation in vdso_check.
->>
->> Debug information can contain legal absolute relocations and readelf can
->> not print relocations from the .text section only. Make use of the fact
->> that all global vDSO symbols follow the naming pattern "vdso_u_".
->>
->> Link: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
->> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120002
->> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
->> ---
->>   lib/vdso/Makefile.include | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
->> index cedbf15f80874d4bb27c097244bc5b11272f261c..04257d0f28c0ed324e31adbb68497181085752f8 100644
->> --- a/lib/vdso/Makefile.include
->> +++ b/lib/vdso/Makefile.include
->> @@ -12,7 +12,13 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrand
->>   #
->>   # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
->>   # dynamic relocations, ignore R_*_NONE.
->> +#
->> +# Also validate that no absolute relocations against global symbols are present
->> +# in the object files.
->>   quiet_cmd_vdso_check = VDSOCHK $@
->>         cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
->>   		       then (echo >&2 "$@: dynamic relocations are not supported"; \
->> +			     rm -f $@; /bin/false); fi && \
->> +		       if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q " R_\w*_ABS.*vdso_u_"; \
->
->
-> This only works for arm64 relocations right? I can't find any *ABS*
-> relocations in riscv elf abi
-> (https://github.com/riscv-non-isa/riscv-elf-psabi-doc/releases/tag/v1.0).
+From: Xianying Wang <wangxianying546@gmail.com>
+Date: Thu, 12 Jun 2025 10:40:11 +0800
+> Hi,
+> 
+> I discovered a kernel BUG described as
+> "BUG_Address_NUMNUMac1414bbbb_on_device_lo_is_missing_its_host_route."
+> This issue occurs in the IPv6 address configuration logic in the
+> function addrconf_add_ifaddr() within net/ipv6/addrconf.c, where a
+> BUG() assertion is triggered due to a missing host route for an IPv6
+> address assigned to the loopback interface (lo).
+> 
+> In the triggering sequence, the loopback interface is assigned a
+> unicast IPv6 address (e.g., 200:0:ac14:14bb::bb) and subsequently used
+> in a bind() or connect() system call by an IPv6 socket. During this
+> process, the kernel attempts to create a host route for the newly
+> assigned address using ipv6_generate_host_route(), but the route
+> installation fails, triggering a fatal BUG().
+> 
+> Suggested fix direction:
+> 
+> Investigate the logic in ipv6_generate_host_route() and
+> addrconf_add_ifaddr() to ensure that assigning an IPv6 address to lo
+> always either installs the appropriate host route or gracefully fails.
+> Consider special casing the loopback device to avoid invalid or
+> unnecessary host route installations.
+> Add error handling or a fallback to prevent fatal BUG() when
+> ipv6_generate_host_route() fails.
+> 
+> his can be reproduced on:
+> 
+> HEAD commit:
+> 
+> fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
 
-That's because the psABI people do not believe in absolute symbols.  
-They exist in the actual toolchains, though, as they are part of the 
-generic ELF ABI.  In theory they'd work fine in the VDSO as long as 
-we're using absolute addressing instructions for them, which is 
-possible to do (and I think should happen for some global symbols).
+This is v6.13-rc2 and 2 dev cycles behind...
 
-That said, it doesn't really seem worth the effort to get the checking 
-more fine-grained here.  I don't see any reason we'd need an absolute 
-symbol in the VDSO, so unil someone has one we might as well just forbid 
-them entirely.
 
-Some old toolchains had an absolute "__gloabl_pointer$" floating around 
-some of the CRT files, so we might trip over bugs here.  I think we're 
-safe as those shouldn't show up in the VDSO, but not 100% sure.  
-Probably best to get this on next to bake for a bit, just to make sure 
-we're not trippig anyone up.
+> 
+> report: https://pastebin.com/raw/xe3fvj5Z
+> 
+> console output : https://pastebin.com/raw/8XXmK7B8
+> 
+> kernel config : https://pastebin.com/raw/6iC2wRBj
+> 
+> C reproducer : https://pastebin.com/raw/SN7zKXeN
 
-> Thanks,
->
-> Alex
->
->
->> +		       then (echo >&2 "$@: absolute relocations are not supported"; \
->>   			     rm -f $@; /bin/false); fi
->>
+I tired this but didn't reproduce the issue.
+
+---8<---
+# ./repro
+executing program
+[   24.926531] loop0: detected capacity change from 0 to 512
+Bad system call (core dumped)
+# 
+---8<---
+
+
+> 
+> Let me know if you need more details or testing.
+
+Could you test the repro on the latest net-next and do bisection
+if it still reproduce ?
+
+Thanks
