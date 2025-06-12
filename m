@@ -1,282 +1,454 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F82242927;
-	Thu, 12 Jun 2025 13:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4853924A04D
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734738; cv=none; b=tQXAElJtrYAUXYdnqGArPJt29xEiojLZvYxXX2Ux7PjjswI+0zr29CP9IgBXiWKjAvn3dJF+e/BkJeHBxQtnyMfaEk0TEL3Jeqdss+ghyPY/U+BCYLQi6iaflV9BcvWrR8CfOApTaEYtIZTpqWlgc9FvKzjxWow8bhlyMdcsvtA=
+	t=1749734752; cv=none; b=EuC5pwg+/W2ANwci048WkYKGxhBM+qd2lVFpGTCPco0WUfEVqP8bEH3O/CnYeZxXqRix9hvfdDW20ZNGRLGUtjUg7XGMIUFN1BmQLsHmnxpmz4ex072DBqW9USKsBXVI20v3yaSUK3ApF/59TWCYcvXcVAoZqyM/SLthPfz8wvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734738; c=relaxed/simple;
-	bh=x/LX/NF49fH82gw7hAYoUm3U1ut5qzEj5rfuDlwbzng=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F3HBPu+RqUodywqVqXJ31wLIObwZ73h/TH9EYyffPOWlKLexSeFolMVHrmw5KszJqNTxbI7Q836m5NeqCMQtlASJOOEgDCtHkd8dcm9zRM3V4M2tKgADk6GLcz99M+DuCLyrezc6eBnPT65D8Ey56l1sUtPnMB342Z8zYaOw2jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GWiypeyi; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749734752; c=relaxed/simple;
+	bh=fZJR3NV0cRGsrfTg7wRUswvgKBH8YB5HL2MnSD+NlVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YLPWSJ8RnhkB/a8ulwcyGNNe4uJ/QXeyg/G4WCZ1R1r38SkmjLEagsX5xT8AmhUSCDTcDBx6WZLN+l8Brt4DPl8oyEAIfO5nj6tOISzxBjTS4ZDT1BhV5XvuUt/ms3dBGGKTHeB3T7cvLaK+fh15GrfuGQb9S+poqkFTxc3lr54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=LivYC/g0; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWiypeyi"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60727e46168so1744340a12.0;
-        Thu, 12 Jun 2025 06:25:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="LivYC/g0"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3ddda0a8ba2so9722675ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:25:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749734735; x=1750339535; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kWQJ78NSqKK670VP4Vaoznw10u+sraccs8botEaierk=;
-        b=GWiypeyi2PbZmQS8haI3Uc2XJ34KqFG7WWEjQlxygn8mSiwlQtXYXF3QSl3aK7EZgY
-         36EveIbXGHavbs9AsTUQZotkFH+D3TqHNrXjnDgcodivfEM6ZzxiASAE+h6G7TfPLWnU
-         PqS1bMpijoAShhsGJwP8ws/YZpSVg9nJ5qVgUgCy/X6xPDVkpNegXSr2FPu46OheRfCE
-         opI3LS5lPwTbyzuuNz2buLJwOybneAsERyL+Oo7gHg1Osz7XtmNaOhXMQdqR5N+h3W4o
-         KSluUgpiU7LSaRm4JkfMvHWPCkdw4mIRXClQBdy7xblF9DOMuHr4Dg2xBFNLX6ZPu/Tf
-         iC0A==
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1749734749; x=1750339549; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1weUA8id5AE6NfxqG74XbUonfeZX0lj6qhl+0d8DSPM=;
+        b=LivYC/g0sW0HjOG9YOAjc8vE18AajbkRpeNdGTHHeyZCKU221IlRpN8p6d5MlF1cLw
+         uceIE4vr5dp0/zzC1TKb3EY4svKOQMozmXY64GVR3cWTYeq62liol8Dn6710CjfjqlrR
+         I4LW8NZb7lGauy1W8yai70PxjprpjsZtbcbjwmMubLFo0lCO1N/lh80vL4RN4obobK9P
+         mkEHL5OJDQkPVddSbFs13GAg+Af+vVQy0zsnuCxlaCGPMXPx79085lXYKDKi+oI7FPQM
+         Mje5/bREkE86OqaoCvrmb1A7ZnMiUnO4tZhAT7y/kMPMKlHPJfL4uchRP7vSD0OIp3tJ
+         bPRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749734735; x=1750339535;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kWQJ78NSqKK670VP4Vaoznw10u+sraccs8botEaierk=;
-        b=WkYDv3udKeMRbiRXeoGa94Uo5IwwyUq003tNjopJraLvfgAp1YmVGGaJT2UuO7VtJ8
-         ZfyKilDYBZEULs3L24Y2N1wWE19HSLLQUX2hwB5ddiP5EtL8uqwMu8cDCunB2rG+UT3F
-         Ebj8iCTF/LGhypSLokWlv7+mxAiIMtsYBFL8lSnynJQiny18rJgozgUHnj/79UAtYEMJ
-         5Lt94mk6fUYGxA61xsEMlu8xIrW7XMeg8SHgR/4UkXdSAQbXccv6EeQ2pn4cK5mrvH1O
-         sVq1pMHwlIiFw8oqFoBcxLwIvC2oEv6K8Q7VSMVRYuXG/YTl3r6yCZWNcQ0vkaP5ayIU
-         qETw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPoTttE/c8HgY4VKUH8NZx6s8zLOOYMHKlmzkJFKZiSMy2DtQ3ueF/JGVaKrSA0p9x4c1pPuRcUJM59aco@vger.kernel.org, AJvYcCVEf+0CGUMCczzRZOB5bZAbGP8Xb75o6rnQEgB2bwH7by9Ej467F+z53NTfRNK2XjF7m5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOs8Omvuctw9lFV5ZOsVPH8FJvbUsXIp0OqZe9LvsMmfulJjkj
-	gzaMdTbbKWa0apnZZeiZuoUYb64fVyJ3q401q8htO7QxHtp8D3O/faLz
-X-Gm-Gg: ASbGncsunKhxv6aEgZ2xtcMKKqV0t3PQYFh4vXlkRlvNs4RWfWlmtkw4rGFlSmxDDUw
-	bg2j+v9QAaZ15QNXOyYLP+Ui9B5//jIXnI7l2Vwrui1z7+K0Qlny2t4cwKbjSwSh9c7oCuV1KTX
-	VDBqysPkchSNqkyr5gHSNH3SkJtl/mW6BUsC9w5g6zUTl2z3fG0vm0U+IQfYrg74Lkf18D9ft80
-	ZRhVO0N+Zhw0FRkmFbKquGSHKy7FoL2qbT069UhllSbMUKQl7/QftBw4zAxiaaWrtt+KHumyNxm
-	NlUTXI5jmsGCR8B6zfzSbXJ7l1bEDa3TO00rLQIr3EqjlAK/5hqM1gS2gS0lOsQq40JOc1kCwrH
-	Tb8KvUAOuKScE2m/CYw==
-X-Google-Smtp-Source: AGHT+IFZxvwRQiBgTxSNHZLFGXnyUwZuR+Pl8ThdMj5kISrDwLpDREt72ApHyIV8rpIEcy5wIbNuRw==
-X-Received: by 2002:a05:6402:5113:b0:607:323e:8071 with SMTP id 4fb4d7f45d1cf-6086389b344mr3524281a12.14.1749734734468;
-        Thu, 12 Jun 2025 06:25:34 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:be2])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6086b22ab35sm1183704a12.60.2025.06.12.06.25.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 06:25:33 -0700 (PDT)
-Message-ID: <8aa7b962-40a6-4bbc-8646-86dd7ce3380e@gmail.com>
-Date: Thu, 12 Jun 2025 14:26:58 +0100
+        d=1e100.net; s=20230601; t=1749734749; x=1750339549;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1weUA8id5AE6NfxqG74XbUonfeZX0lj6qhl+0d8DSPM=;
+        b=A5RjEU53LnX24s7JbOpe7mI/SyUOzAgnlbpyrzLhLid0oOXfIoqDWqOQR1GHICKFBT
+         WrCjXKnCU9d+n5aToLMcqClwXvs1Cm4udy07oQyEJC8+xbVWXYV2EhJq13CVAUX+yRMJ
+         hHydj3pFKHTAYsNge0pgPAGnN1MCpkPP71+n5IZAssKjnxj15+ltpGyUBmBhYnTF37Oa
+         7iEvndKNQxYSgG+t1jMZLP2F9YmirtmPuaWz3/sW0wtWyJh/UuKEGNpLf/wTwkYlHvGx
+         gv1qk5CsbwpYc8/PzXSba4HIRzwnameA6ehyyzruGFbyjldu1Y8Irxy/pj5lzWoN3Mx+
+         DTIw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7ZleJhPnVHL7zlJYWvtqH0eRWZIhMfOqoqBJ4zfa9hSLM2VhruY16Udwtq2U0x4eK9D5Dw1qii41dpRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPaaF7NMZtKCOoLZ9wVLJVK+fCLhztmIdai8SZihwwoIKC5pSK
+	OYkwJmlN08ZegOiNOqD7b05wAeJjvvDp5c5n6blbmlQnAssjYDjCAXp2jBRiYOBl2KcJLxnvzmT
+	8KGtoCYA+vua5MRU5uLH6WaMKjyU00lEzc+xN0s7PZA==
+X-Gm-Gg: ASbGncvwHc6D/LNp4f3rBbCaeSRaOC7bjQpzu8bn7CwHejjhX6WM64Kyi0DECTbHkuZ
+	BqKVaL2ZqfL39J2nWmD9LOVq2A50ln1AzOJPQMSYc2GlRaDt74CtJTPTVInSxoWQJUMikV/dZLQ
+	16KP3UvPNbcbSnSag6VxE7FHGQnlUpXZvQ5MEwi32WhmME
+X-Google-Smtp-Source: AGHT+IGQ0K6TdD17j0zYHYf4GUMSVEDpfMuaxvlei9cIKMYkpxSB9dCWrPkla92Oi6O709KnFS2hkfcOfCYTHz+udUk=
+X-Received: by 2002:a05:6e02:3b07:b0:3dc:79e5:e6a8 with SMTP id
+ e9e14a558f8ab-3ddf4305361mr85364955ab.15.1749734748967; Thu, 12 Jun 2025
+ 06:25:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 5/5] io_uring/bpf: add basic kfunc helpers
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: io-uring@vger.kernel.org, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <cover.1749214572.git.asml.silence@gmail.com>
- <c4de7ed6e165f54e2166e84bc88632887d87cfdf.1749214572.git.asml.silence@gmail.com>
- <CAADnVQJgxnQEL+rtVkp7TB_qQ1JKHiXe=p48tB_-N6F+oaDLyQ@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAADnVQJgxnQEL+rtVkp7TB_qQ1JKHiXe=p48tB_-N6F+oaDLyQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250523101932.1594077-1-cleger@rivosinc.com> <20250523101932.1594077-14-cleger@rivosinc.com>
+In-Reply-To: <20250523101932.1594077-14-cleger@rivosinc.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Thu, 12 Jun 2025 18:55:37 +0530
+X-Gm-Features: AX0GCFtRWvbG8ZIGWz91EOFFq4Am9HlN0v-k_UzF3rM3BaVpkbYlsqTs93zJo2w
+Message-ID: <CAAhSdy0BYXZazQfKGrxS6MwadTeK5JwQRRT-SRvxCWfAUAj0Bg@mail.gmail.com>
+Subject: Re: [PATCH v8 13/14] RISC-V: KVM: add support for FWFT SBI extension
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+	Samuel Holland <samuel.holland@sifive.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Deepak Gupta <debug@rivosinc.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Atish Patra <atishp@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/12/25 03:47, Alexei Starovoitov wrote:
-> On Fri, Jun 6, 2025 at 6:58 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
-...>> +__bpf_kfunc
->> +struct io_uring_cqe *bpf_io_uring_extract_next_cqe(struct io_ring_ctx *ctx)
->> +{
->> +       struct io_rings *rings = ctx->rings;
->> +       unsigned int mask = ctx->cq_entries - 1;
->> +       unsigned head = rings->cq.head;
->> +       struct io_uring_cqe *cqe;
->> +
->> +       /* TODO CQE32 */
->> +       if (head == rings->cq.tail)
->> +               return NULL;
->> +
->> +       cqe = &rings->cqes[head & mask];
->> +       rings->cq.head++;
->> +       return cqe;
->> +}
->> +
->> +__bpf_kfunc_end_defs();
->> +
->> +BTF_KFUNCS_START(io_uring_kfunc_set)
->> +BTF_ID_FLAGS(func, bpf_io_uring_submit_sqes, KF_SLEEPABLE);
->> +BTF_ID_FLAGS(func, bpf_io_uring_post_cqe, KF_SLEEPABLE);
->> +BTF_ID_FLAGS(func, bpf_io_uring_queue_sqe, KF_SLEEPABLE);
->> +BTF_ID_FLAGS(func, bpf_io_uring_get_cqe, 0);
->> +BTF_ID_FLAGS(func, bpf_io_uring_extract_next_cqe, KF_RET_NULL);
->> +BTF_KFUNCS_END(io_uring_kfunc_set)
-> 
-> This is not safe in general.
-> The verifier doesn't enforce argument safety here.
-> As a minimum you need to add KF_TRUSTED_ARGS flag to all kfunc.
-> And once you do that you'll see that the verifier
-> doesn't recognize the cqe returned from bpf_io_uring_get_cqe*()
-> as trusted.
+On Fri, May 23, 2025 at 3:52=E2=80=AFPM Cl=C3=A9ment L=C3=A9ger <cleger@riv=
+osinc.com> wrote:
+>
+> Add basic infrastructure to support the FWFT extension in KVM.
+>
+> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
-Thanks, will add it. If I read it right, without the flag the
-program can, for example, create a struct io_ring_ctx on stack,
-fill it with nonsense and pass to kfuncs. Is that right?
+Queued this patch for Linux-6.17
 
-> Looking at your example:
-> https://github.com/axboe/liburing/commit/706237127f03e15b4cc9c7c31c16d34dbff37cdc
-> it doesn't care about contents of cqe and doesn't pass it further.
-> So sort-of ok-ish right now,
-> but if you need to pass cqe to another kfunc
-> you would need to add an open coded iterator for cqe-s
-> with appropriate KF_ITER* flags
-> or maybe add acquire/release semantics for cqe.
-> Like, get_cqe will be KF_ACQUIRE, and you'd need
-> matching KF_RELEASE kfunc,
-> so that 'cqe' is not lost.
-> Then 'cqe' will be trusted and you can pass it as actual 'cqe'
-> into another kfunc.
-> Without KF_ACQUIRE the verifier sees that get_cqe*() kfuncs
-> return 'struct io_uring_cqe *' and it's ok for tracing
-> or passing into kfuncs like bpf_io_uring_queue_sqe()
-> that don't care about a particular type,
-> but not ok for full tracking of objects.
+Thanks,
+Anup
 
-I don't need type safety for SQEs / CQEs, they're supposed to be simple
-memory blobs containing userspace data only. SQ / CQ are shared with
-userspace, and the kfuncs can leak the content of passed CQE / SQE to
-userspace. But I'd like to find a way to reject programs stashing
-kernel pointers / data into them.
-
-BPF_PROG(name, struct io_ring_ctx *io_ring)
-{
-     struct io_uring_sqe *cqe = ...;
-     cqe->user_data = io_ring;
-     cqe->res = io_ring->private_field;
-}
-
-And I mentioned in the message, I rather want to get rid of half of the
-kfuncs, and give BPF direct access to the SQ/CQ instead. Schematically
-it should look like this:
-
-BPF_PROG(name, struct io_ring_ctx *ring)
-{
-     struct io_uring_sqe *sqes = get_SQ(ring);
-
-     sqes[ring->sq_tail]->opcode = OP_NOP;
-     bpf_kfunc_submit_sqes(ring, 1);
-
-     struct io_uring_cqe *cqes = get_CQ(ring);
-     print_cqe(&cqes[ring->cq_head]);
-}
-
-I hacked up RET_PTR_TO_MEM for kfuncs, the diff is below, but it'd be
-great to get rid of the constness of the size argument. I need to
-digest arenas first as conceptually they look very close.
-
-> For next revision please post all selftest, examples,
-> and bpf progs on the list,
-> so people don't need to search github.
-
-Did the link in the cover letter not work for you? I'm confused
-since it's all in a branch in my tree, but you linked to the same
-patches but in Jens' tree, and I have zero clue what they're
-doing there or how you found them.
-
-
-diff --git a/io_uring/bpf.c b/io_uring/bpf.c
-index 9494e4289605..400a06a74b5d 100644
---- a/io_uring/bpf.c
-+++ b/io_uring/bpf.c
-@@ -2,6 +2,7 @@
-  #include <linux/bpf_verifier.h>
-  
-  #include "io_uring.h"
-+#include "memmap.h"
-  #include "bpf.h"
-  #include "register.h"
-  
-@@ -72,6 +73,14 @@ struct io_uring_cqe *bpf_io_uring_extract_next_cqe(struct io_ring_ctx *ctx)
-  	return cqe;
-  }
-  
-+__bpf_kfunc
-+void *bpf_io_uring_get_region(struct io_ring_ctx *ctx, u64 size__retsz)
-+{
-+	if (size__retsz > ((u64)ctx->ring_region.nr_pages << PAGE_SHIFT))
-+		return NULL;
-+	return io_region_get_ptr(&ctx->ring_region);
-+}
-+
-  __bpf_kfunc_end_defs();
-  
-  BTF_KFUNCS_START(io_uring_kfunc_set)
-@@ -80,6 +89,7 @@ BTF_ID_FLAGS(func, bpf_io_uring_post_cqe, KF_SLEEPABLE);
-  BTF_ID_FLAGS(func, bpf_io_uring_queue_sqe, KF_SLEEPABLE);
-  BTF_ID_FLAGS(func, bpf_io_uring_get_cqe, 0);
-  BTF_ID_FLAGS(func, bpf_io_uring_extract_next_cqe, KF_RET_NULL);
-+BTF_ID_FLAGS(func, bpf_io_uring_get_region, KF_RET_NULL);
-  BTF_KFUNCS_END(io_uring_kfunc_set)
-  
-  static const struct btf_kfunc_id_set bpf_io_uring_kfunc_set = {
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 54c6953a8b84..ac4803b5933c 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -343,6 +343,7 @@ struct bpf_kfunc_call_arg_meta {
-  		int uid;
-  	} map;
-  	u64 mem_size;
-+	bool mem_size_found;
-  };
-  
-  struct btf *btf_vmlinux;
-@@ -11862,6 +11863,11 @@ static bool is_kfunc_arg_ignore(const struct btf *btf, const struct btf_param *a
-  	return btf_param_match_suffix(btf, arg, "__ign");
-  }
-  
-+static bool is_kfunc_arg_ret_size(const struct btf *btf, const struct btf_param *arg)
-+{
-+	return btf_param_match_suffix(btf, arg, "__retsz");
-+}
-+
-  static bool is_kfunc_arg_map(const struct btf *btf, const struct btf_param *arg)
-  {
-  	return btf_param_match_suffix(btf, arg, "__map");
-@@ -12912,7 +12918,21 @@ static int check_kfunc_args(struct bpf_verifier_env *env, struct bpf_kfunc_call_
-  				return -EINVAL;
-  			}
-  
--			if (is_kfunc_arg_constant(meta->btf, &args[i])) {
-+			if (is_kfunc_arg_ret_size(btf, &args[i])) {
-+				if (!tnum_is_const(reg->var_off)) {
-+					verbose(env, "R%d must be a known constant\n", regno);
-+					return -EINVAL;
-+				}
-+				if (meta->mem_size_found) {
-+					verbose(env, "Only one return size argument is permitted\n");
-+					return -EINVAL;
-+				}
-+				meta->mem_size = reg->var_off.value;
-+				meta->mem_size_found = true;
-+				ret = mark_chain_precision(env, regno);
-+				if (ret)
-+					return ret;
-+			} else if (is_kfunc_arg_constant(meta->btf, &args[i])) {
-  				if (meta->arg_constant.found) {
-  					verbose(env, "verifier internal error: only one constant argument permitted\n");
-  					return -EFAULT;
-@@ -13816,6 +13836,12 @@ static int check_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
-  		} else if (btf_type_is_void(ptr_type)) {
-  			/* kfunc returning 'void *' is equivalent to returning scalar */
-  			mark_reg_unknown(env, regs, BPF_REG_0);
-+
-+			if (meta.mem_size_found) {
-+				mark_reg_known_zero(env, regs, BPF_REG_0);
-+				regs[BPF_REG_0].type = PTR_TO_MEM;
-+				regs[BPF_REG_0].mem_size = meta.mem_size;
-+			}
-  		} else if (!__btf_type_is_struct(ptr_type)) {
-  			if (!meta.r0_size) {
-  				__u32 sz;
-
--- 
-Pavel Begunkov
-
+> ---
+>  arch/riscv/include/asm/kvm_host.h          |   4 +
+>  arch/riscv/include/asm/kvm_vcpu_sbi.h      |   1 +
+>  arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h |  29 +++
+>  arch/riscv/include/uapi/asm/kvm.h          |   1 +
+>  arch/riscv/kvm/Makefile                    |   1 +
+>  arch/riscv/kvm/vcpu_sbi.c                  |   4 +
+>  arch/riscv/kvm/vcpu_sbi_fwft.c             | 216 +++++++++++++++++++++
+>  7 files changed, 256 insertions(+)
+>  create mode 100644 arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+>  create mode 100644 arch/riscv/kvm/vcpu_sbi_fwft.c
+>
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/k=
+vm_host.h
+> index 4fa02e082142..c3f880763b9a 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -19,6 +19,7 @@
+>  #include <asm/kvm_vcpu_fp.h>
+>  #include <asm/kvm_vcpu_insn.h>
+>  #include <asm/kvm_vcpu_sbi.h>
+> +#include <asm/kvm_vcpu_sbi_fwft.h>
+>  #include <asm/kvm_vcpu_timer.h>
+>  #include <asm/kvm_vcpu_pmu.h>
+>
+> @@ -281,6 +282,9 @@ struct kvm_vcpu_arch {
+>         /* Performance monitoring context */
+>         struct kvm_pmu pmu_context;
+>
+> +       /* Firmware feature SBI extension context */
+> +       struct kvm_sbi_fwft fwft_context;
+> +
+>         /* 'static' configurations which are set only once */
+>         struct kvm_vcpu_config cfg;
+>
+> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/a=
+sm/kvm_vcpu_sbi.h
+> index cb68b3a57c8f..ffd03fed0c06 100644
+> --- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
+> +++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+> @@ -98,6 +98,7 @@ extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext=
+_hsm;
+>  extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_dbcn;
+>  extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_susp;
+>  extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_sta;
+> +extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_fwft;
+>  extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_experimental;
+>  extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_vendor;
+>
+> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h b/arch/riscv/incl=
+ude/asm/kvm_vcpu_sbi_fwft.h
+> new file mode 100644
+> index 000000000000..9ba841355758
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+> @@ -0,0 +1,29 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
+> + */
+> +
+> +#ifndef __KVM_VCPU_RISCV_FWFT_H
+> +#define __KVM_VCPU_RISCV_FWFT_H
+> +
+> +#include <asm/sbi.h>
+> +
+> +struct kvm_sbi_fwft_feature;
+> +
+> +struct kvm_sbi_fwft_config {
+> +       const struct kvm_sbi_fwft_feature *feature;
+> +       bool supported;
+> +       unsigned long flags;
+> +};
+> +
+> +/* FWFT data structure per vcpu */
+> +struct kvm_sbi_fwft {
+> +       struct kvm_sbi_fwft_config *configs;
+> +};
+> +
+> +#define vcpu_to_fwft(vcpu) (&(vcpu)->arch.fwft_context)
+> +
+> +#endif /* !__KVM_VCPU_RISCV_FWFT_H */
+> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/=
+asm/kvm.h
+> index 5f59fd226cc5..5ba77a3d9f6e 100644
+> --- a/arch/riscv/include/uapi/asm/kvm.h
+> +++ b/arch/riscv/include/uapi/asm/kvm.h
+> @@ -204,6 +204,7 @@ enum KVM_RISCV_SBI_EXT_ID {
+>         KVM_RISCV_SBI_EXT_DBCN,
+>         KVM_RISCV_SBI_EXT_STA,
+>         KVM_RISCV_SBI_EXT_SUSP,
+> +       KVM_RISCV_SBI_EXT_FWFT,
+>         KVM_RISCV_SBI_EXT_MAX,
+>  };
+>
+> diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
+> index 4e0bba91d284..06e2d52a9b88 100644
+> --- a/arch/riscv/kvm/Makefile
+> +++ b/arch/riscv/kvm/Makefile
+> @@ -26,6 +26,7 @@ kvm-y +=3D vcpu_onereg.o
+>  kvm-$(CONFIG_RISCV_PMU_SBI) +=3D vcpu_pmu.o
+>  kvm-y +=3D vcpu_sbi.o
+>  kvm-y +=3D vcpu_sbi_base.o
+> +kvm-y +=3D vcpu_sbi_fwft.o
+>  kvm-y +=3D vcpu_sbi_hsm.o
+>  kvm-$(CONFIG_RISCV_PMU_SBI) +=3D vcpu_sbi_pmu.o
+>  kvm-y +=3D vcpu_sbi_replace.o
+> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+> index 50be079b5528..0748810c0252 100644
+> --- a/arch/riscv/kvm/vcpu_sbi.c
+> +++ b/arch/riscv/kvm/vcpu_sbi.c
+> @@ -78,6 +78,10 @@ static const struct kvm_riscv_sbi_extension_entry sbi_=
+ext[] =3D {
+>                 .ext_idx =3D KVM_RISCV_SBI_EXT_STA,
+>                 .ext_ptr =3D &vcpu_sbi_ext_sta,
+>         },
+> +       {
+> +               .ext_idx =3D KVM_RISCV_SBI_EXT_FWFT,
+> +               .ext_ptr =3D &vcpu_sbi_ext_fwft,
+> +       },
+>         {
+>                 .ext_idx =3D KVM_RISCV_SBI_EXT_EXPERIMENTAL,
+>                 .ext_ptr =3D &vcpu_sbi_ext_experimental,
+> diff --git a/arch/riscv/kvm/vcpu_sbi_fwft.c b/arch/riscv/kvm/vcpu_sbi_fwf=
+t.c
+> new file mode 100644
+> index 000000000000..b0f66c7bf010
+> --- /dev/null
+> +++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
+> + */
+> +
+> +#include <linux/errno.h>
+> +#include <linux/err.h>
+> +#include <linux/kvm_host.h>
+> +#include <asm/cpufeature.h>
+> +#include <asm/sbi.h>
+> +#include <asm/kvm_vcpu_sbi.h>
+> +#include <asm/kvm_vcpu_sbi_fwft.h>
+> +
+> +struct kvm_sbi_fwft_feature {
+> +       /**
+> +        * @id: Feature ID
+> +        */
+> +       enum sbi_fwft_feature_t id;
+> +
+> +       /**
+> +        * @supported: Check if the feature is supported on the vcpu
+> +        *
+> +        * This callback is optional, if not provided the feature is assu=
+med to
+> +        * be supported
+> +        */
+> +       bool (*supported)(struct kvm_vcpu *vcpu);
+> +
+> +       /**
+> +        * @set: Set the feature value
+> +        *
+> +        * Return SBI_SUCCESS on success or an SBI error (SBI_ERR_*)
+> +        *
+> +        * This callback is mandatory
+> +        */
+> +       long (*set)(struct kvm_vcpu *vcpu, struct kvm_sbi_fwft_config *co=
+nf, unsigned long value);
+> +
+> +       /**
+> +        * @get: Get the feature current value
+> +        *
+> +        * Return SBI_SUCCESS on success or an SBI error (SBI_ERR_*)
+> +        *
+> +        * This callback is mandatory
+> +        */
+> +       long (*get)(struct kvm_vcpu *vcpu, struct kvm_sbi_fwft_config *co=
+nf, unsigned long *value);
+> +};
+> +
+> +static const enum sbi_fwft_feature_t kvm_fwft_defined_features[] =3D {
+> +       SBI_FWFT_MISALIGNED_EXC_DELEG,
+> +       SBI_FWFT_LANDING_PAD,
+> +       SBI_FWFT_SHADOW_STACK,
+> +       SBI_FWFT_DOUBLE_TRAP,
+> +       SBI_FWFT_PTE_AD_HW_UPDATING,
+> +       SBI_FWFT_POINTER_MASKING_PMLEN,
+> +};
+> +
+> +static bool kvm_fwft_is_defined_feature(enum sbi_fwft_feature_t feature)
+> +{
+> +       int i;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(kvm_fwft_defined_features); i++) {
+> +               if (kvm_fwft_defined_features[i] =3D=3D feature)
+> +                       return true;
+> +       }
+> +
+> +       return false;
+> +}
+> +
+> +static const struct kvm_sbi_fwft_feature features[] =3D {
+> +};
+> +
+> +static struct kvm_sbi_fwft_config *
+> +kvm_sbi_fwft_get_config(struct kvm_vcpu *vcpu, enum sbi_fwft_feature_t f=
+eature)
+> +{
+> +       int i;
+> +       struct kvm_sbi_fwft *fwft =3D vcpu_to_fwft(vcpu);
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(features); i++) {
+> +               if (fwft->configs[i].feature->id =3D=3D feature)
+> +                       return &fwft->configs[i];
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +static int kvm_fwft_get_feature(struct kvm_vcpu *vcpu, u32 feature,
+> +                               struct kvm_sbi_fwft_config **conf)
+> +{
+> +       struct kvm_sbi_fwft_config *tconf;
+> +
+> +       tconf =3D kvm_sbi_fwft_get_config(vcpu, feature);
+> +       if (!tconf) {
+> +               if (kvm_fwft_is_defined_feature(feature))
+> +                       return SBI_ERR_NOT_SUPPORTED;
+> +
+> +               return SBI_ERR_DENIED;
+> +       }
+> +
+> +       if (!tconf->supported)
+> +               return SBI_ERR_NOT_SUPPORTED;
+> +
+> +       *conf =3D tconf;
+> +
+> +       return SBI_SUCCESS;
+> +}
+> +
+> +static int kvm_sbi_fwft_set(struct kvm_vcpu *vcpu, u32 feature,
+> +                           unsigned long value, unsigned long flags)
+> +{
+> +       int ret;
+> +       struct kvm_sbi_fwft_config *conf;
+> +
+> +       ret =3D kvm_fwft_get_feature(vcpu, feature, &conf);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if ((flags & ~SBI_FWFT_SET_FLAG_LOCK) !=3D 0)
+> +               return SBI_ERR_INVALID_PARAM;
+> +
+> +       if (conf->flags & SBI_FWFT_SET_FLAG_LOCK)
+> +               return SBI_ERR_DENIED_LOCKED;
+> +
+> +       conf->flags =3D flags;
+> +
+> +       return conf->feature->set(vcpu, conf, value);
+> +}
+> +
+> +static int kvm_sbi_fwft_get(struct kvm_vcpu *vcpu, unsigned long feature=
+,
+> +                           unsigned long *value)
+> +{
+> +       int ret;
+> +       struct kvm_sbi_fwft_config *conf;
+> +
+> +       ret =3D kvm_fwft_get_feature(vcpu, feature, &conf);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return conf->feature->get(vcpu, conf, value);
+> +}
+> +
+> +static int kvm_sbi_ext_fwft_handler(struct kvm_vcpu *vcpu, struct kvm_ru=
+n *run,
+> +                                   struct kvm_vcpu_sbi_return *retdata)
+> +{
+> +       int ret;
+> +       struct kvm_cpu_context *cp =3D &vcpu->arch.guest_context;
+> +       unsigned long funcid =3D cp->a6;
+> +
+> +       switch (funcid) {
+> +       case SBI_EXT_FWFT_SET:
+> +               ret =3D kvm_sbi_fwft_set(vcpu, cp->a0, cp->a1, cp->a2);
+> +               break;
+> +       case SBI_EXT_FWFT_GET:
+> +               ret =3D kvm_sbi_fwft_get(vcpu, cp->a0, &retdata->out_val)=
+;
+> +               break;
+> +       default:
+> +               ret =3D SBI_ERR_NOT_SUPPORTED;
+> +               break;
+> +       }
+> +
+> +       retdata->err_val =3D ret;
+> +
+> +       return 0;
+> +}
+> +
+> +static int kvm_sbi_ext_fwft_init(struct kvm_vcpu *vcpu)
+> +{
+> +       struct kvm_sbi_fwft *fwft =3D vcpu_to_fwft(vcpu);
+> +       const struct kvm_sbi_fwft_feature *feature;
+> +       struct kvm_sbi_fwft_config *conf;
+> +       int i;
+> +
+> +       fwft->configs =3D kcalloc(ARRAY_SIZE(features), sizeof(struct kvm=
+_sbi_fwft_config),
+> +                               GFP_KERNEL);
+> +       if (!fwft->configs)
+> +               return -ENOMEM;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(features); i++) {
+> +               feature =3D &features[i];
+> +               conf =3D &fwft->configs[i];
+> +               if (feature->supported)
+> +                       conf->supported =3D feature->supported(vcpu);
+> +               else
+> +                       conf->supported =3D true;
+> +
+> +               conf->feature =3D feature;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void kvm_sbi_ext_fwft_deinit(struct kvm_vcpu *vcpu)
+> +{
+> +       struct kvm_sbi_fwft *fwft =3D vcpu_to_fwft(vcpu);
+> +
+> +       kfree(fwft->configs);
+> +}
+> +
+> +static void kvm_sbi_ext_fwft_reset(struct kvm_vcpu *vcpu)
+> +{
+> +       int i;
+> +       struct kvm_sbi_fwft *fwft =3D vcpu_to_fwft(vcpu);
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(features); i++)
+> +               fwft->configs[i].flags =3D 0;
+> +}
+> +
+> +const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_fwft =3D {
+> +       .extid_start =3D SBI_EXT_FWFT,
+> +       .extid_end =3D SBI_EXT_FWFT,
+> +       .handler =3D kvm_sbi_ext_fwft_handler,
+> +       .init =3D kvm_sbi_ext_fwft_init,
+> +       .deinit =3D kvm_sbi_ext_fwft_deinit,
+> +       .reset =3D kvm_sbi_ext_fwft_reset,
+> +};
+> --
+> 2.49.0
+>
