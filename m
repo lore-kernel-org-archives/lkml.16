@@ -1,234 +1,95 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F697205AA3
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7FE22B5B8;
+	Thu, 12 Jun 2025 11:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749727428; cv=none; b=oIl7oc909T9uPTGLtRi0eculcabLwLlzOCMsAy+FRA6aG0HnOTFUIobmWvPpL4wSHtfFQ8Lml+Nz383HyQO86uvOKElIdFiyWhT9p1ON9r2s/XSPokuKRLnerNheRC9YeJD0l0gQ67rOvBAJrX6DOx9x1KHRf2O7SkKuu3dqYAc=
+	t=1749727446; cv=none; b=MoqWjgW4RR/61UPwdgi8dEoG7X3hRKKwT7Ve+qYVdnBPtAg/eXZaLVTkkPCIZK7LpzTqk4GMptMZx+thV29dM3W8gEWB1dtMiCx4KGesnBCKCXoPZgB5k/44lBhEpqMTN1gRJDOrGVkoZsSkXn0Cpr0akaoi/5gxqPcmmn5Jvgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749727428; c=relaxed/simple;
-	bh=YsJ6rEnNPS+8TR3CqwwWLYLczfYwYURpGBH4PNaP/Hg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DjsttFOK75lLcqyPxU4krrj+iTQVEddTKsGOv3bMFZ4XmKFnUw/wd1/Vu6KbeQLdr5v/fvvv6I5tTZdScVw0Gmv4Uk/VWbzk+jgediwJzIzK0F786k7ZHzqqOa3tYeEV+Iq9uq90d+t0CmZJHsT+jhrGMizkrib60svm6e4UPn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rq6Bff2d; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rq6Bff2d"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45300c82c1cso2676585e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:23:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749727425; x=1750332225; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=voVo8I9QxBGtkmzh70LjWyku2Zrwfval80U+5bI7i/E=;
-        b=rq6Bff2dkI2W9BsRMu4nrSpdvjSeL4x/k9azam2DNIxBwS22FwsMQdPzhl2Ar80oUf
-         sExzn3BpAZ6dftQKHnKerbe2X69e/kW7l6Fo7GXbew8t/eUeK68oT+D7rXAFFNGzlhtd
-         7eiYvduYlvNcO1DE5qEJNMwEfJppEj9JHumxyvNRjhba0xZIq//BJXlZu6JJfyJZO7rp
-         0q3axj98TDKE4l4TLuICmYCmsrHqJS/43iQj7OFg6RHzYJrURakhu/udAttxtKiy3fLF
-         bht7y1nIAokyOwIiiF0u4crYbKWc4HHerj7UH7QSDNBlE1oCZh9YoDzxSbNqs1XZNeYq
-         DEQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749727425; x=1750332225;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=voVo8I9QxBGtkmzh70LjWyku2Zrwfval80U+5bI7i/E=;
-        b=XSgoBlqXwcpF1ID6V433VU/LLcPO4aDLK32xnDVSy7q/knUNloBMmfSkJvmWMRrAXT
-         Ge27PjrKcPqPfa01rMn5Kn2yj/U8MnsdBLrz0ED4ZFJtrnU17c4dtDkX/K+47sBWlx8L
-         Lyz97BN4DmnQUMnC/wxcgXduoIKk2kmc/4SCwsl37NhWBoZwijjzytxsjZeYdX2jTolS
-         0fS3CjsosSi8C/qg4P4K2lmihBBTFamIAvNiJ0IWckebkqNuWmBIanjipi87+OFNESsP
-         IqHUfM+bUA8sxTK9S3d39dlizsuO/gKjkwHcsXKmXXjsyyWxT+j5sNqN3L1oROKf+4jK
-         0vUw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4JvlGHkot0SyDp0g60BwVuVSof7hWzsokq/UbTN4nNLWOyktmtLgu3f3gNm93mP6w2OiSqPjRCsRu3ks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBwMqscjuAxyedFYoNUqIJIR+nyZeL4YSGLBtqF2RDJQixKTNT
-	triZYkmJY1KD4Pkl8qg6bm88Dh8/wESRckyddeLOLTg9W+zt2obcvuQy2I0W66DWWKmnS0Wfnzk
-	OTXUgn0rju1/6MPv9qgCHPMizJl9YJRKVOGgdpiAw
-X-Gm-Gg: ASbGncsgM734m8EHQLIJhrVNYpXXzmyeZ9uul1sZ409KbCWhK+8u6X+76wTrpcKy8E9
-	4MI87a1ydY4EyxzvtpV4zeobfKYW1o2PsgOymYYS+HRqs4yy5SWVENsO0ONTkW2sFGdgXMoxiif
-	iJ9OVP22bCjOLUYIrKF9xadnJqqz+c95JN6o/+OrbOK9cSgQsx5Z+PM+7uMiolN2exoTghgmzfz
-	Q==
-X-Google-Smtp-Source: AGHT+IHjfHB6y71K2hC5Ih2R5CHYh4ILWbUdAgtXcI2ldvwQBCDT8/0wF1Iz+BMUuAjD5RFmos4CpMmLLSdnWI0AvEI=
-X-Received: by 2002:a05:600c:5246:b0:441:d4e8:76cd with SMTP id
- 5b1f17b1804b1-4532b939503mr32287595e9.29.1749727424476; Thu, 12 Jun 2025
- 04:23:44 -0700 (PDT)
+	s=arc-20240116; t=1749727446; c=relaxed/simple;
+	bh=b1dpQxEoPH0te7nskbJ5fWXIG13EjgExVWrw7POfxI4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=qWd865xircWKp8HJtw6jzxZ80de7nwscDwBg9Zi5MtKtF6FAhCM3xqn893K3LG/GbZK9E4bjlT7j1KmKM9Ww34vZIGkKtE0yr0BDCF/V6SmiBsyTZdnlNY3l2b9W8hI994WWZ5YnhQQnxAG7HLEVwOx1bSVXhPCKaF5IO06Py0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bJ0Xg12mWzKHLvL;
+	Thu, 12 Jun 2025 19:24:03 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 79E811A01A2;
+	Thu, 12 Jun 2025 19:24:01 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCnC2DPuEpoYIcnPQ--.22416S3;
+	Thu, 12 Jun 2025 19:24:01 +0800 (CST)
+Subject: Re: [PATCH v2] md/raid1: Fix stack memory use after return in
+ raid1_reshape
+To: Wang Jinchao <wangjinchao600@gmail.com>, Yu Kuai
+ <yukuai1@huaweicloud.com>, Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250611090203.271488-1-wangjinchao600@gmail.com>
+ <5143c5c3-3a77-919f-0d38-8adb0e8923e9@huaweicloud.com>
+ <06935480-a959-4e3f-8e41-286d7f54754a@gmail.com>
+ <9c7d5e66-4f5f-b984-c291-f19c3d568b85@huaweicloud.com>
+ <938b0969-cace-4998-8e4a-88d445c220b1@gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <8a876d8f-b8d1-46c0-d969-cbabb544eb03@huaweicloud.com>
+Date: Thu, 12 Jun 2025 19:23:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603205416.49281-1-dakr@kernel.org> <20250603205416.49281-2-dakr@kernel.org>
- <DAKE8OYKXUWH.1NRVGV5IKW7I9@kernel.org>
-In-Reply-To: <DAKE8OYKXUWH.1NRVGV5IKW7I9@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 12 Jun 2025 13:23:29 +0200
-X-Gm-Features: AX0GCFvg6RMKsP0uZ5MO2JZ7BZWnOprlzLsuZ4KlUrS0Oike2SOx1MVOlnQegKU
-Message-ID: <CAH5fLgicAeLOnNUm-gMytYe5NmmMvwbWtXBUhWM5w7vY_BUnYw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
-To: Benno Lossin <lossin@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	a.hindborg@kernel.org, tmgross@umich.edu, chrisi.schrefl@gmail.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <938b0969-cace-4998-8e4a-88d445c220b1@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnC2DPuEpoYIcnPQ--.22416S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZrW3Zr48Wr4rGF1fGr15urg_yoW3urXEkF
+	yqgrWIga4UX3Z7u343KF45XrZ8Ka18uryUCayUKFnxXFyvva9xuan2q34ftrWrWrWUJFn0
+	9r9ru3yfZwsagjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUbSfO7UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Thu, Jun 12, 2025 at 9:58=E2=80=AFAM Benno Lossin <lossin@kernel.org> wr=
-ote:
->
-> On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
-> > Implement a minimal abstraction for the completion synchronization
-> > primitive.
-> >
-> > This initial abstraction only adds complete_all() and
-> > wait_for_completion(), since that is what is required for the subsequen=
-t
-> > Devres patch.
-> >
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Juri Lelli <juri.lelli@redhat.com>
-> > Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> > Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Ben Segall <bsegall@google.com>
-> > Cc: Mel Gorman <mgorman@suse.de>
-> > Cc: Valentin Schneider <vschneid@redhat.com>
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->
-> I have a couple comments on the documentation, but the rest seems good.
-> So with those fixed:
->
-> Reviewed-by: Benno Lossin <lossin@kernel.org>
->
-> > ---
-> >  rust/bindings/bindings_helper.h |   1 +
-> >  rust/helpers/completion.c       |   8 +++
-> >  rust/helpers/helpers.c          |   1 +
-> >  rust/kernel/sync.rs             |   2 +
-> >  rust/kernel/sync/completion.rs  | 111 ++++++++++++++++++++++++++++++++
-> >  5 files changed, 123 insertions(+)
-> >  create mode 100644 rust/helpers/completion.c
-> >  create mode 100644 rust/kernel/sync/completion.rs
-> >
-> > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_h=
-elper.h
-> > index a5a6fb45d405..9da3fe89295c 100644
-> > --- a/rust/bindings/bindings_helper.h
-> > +++ b/rust/bindings/bindings_helper.h
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/blk_types.h>
-> >  #include <linux/blkdev.h>
-> >  #include <linux/clk.h>
-> > +#include <linux/completion.h>
-> >  #include <linux/configfs.h>
-> >  #include <linux/cpu.h>
-> >  #include <linux/cpufreq.h>
-> > diff --git a/rust/helpers/completion.c b/rust/helpers/completion.c
-> > new file mode 100644
-> > index 000000000000..b2443262a2ae
-> > --- /dev/null
-> > +++ b/rust/helpers/completion.c
-> > @@ -0,0 +1,8 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/completion.h>
-> > +
-> > +void rust_helper_init_completion(struct completion *x)
-> > +{
-> > +     init_completion(x);
-> > +}
-> > diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> > index 805307018f0e..7a5c520be8cb 100644
-> > --- a/rust/helpers/helpers.c
-> > +++ b/rust/helpers/helpers.c
-> > @@ -13,6 +13,7 @@
-> >  #include "build_assert.c"
-> >  #include "build_bug.c"
-> >  #include "clk.c"
-> > +#include "completion.c"
-> >  #include "cpufreq.c"
-> >  #include "cpumask.c"
-> >  #include "cred.c"
-> > diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-> > index 36a719015583..c23a12639924 100644
-> > --- a/rust/kernel/sync.rs
-> > +++ b/rust/kernel/sync.rs
-> > @@ -10,6 +10,7 @@
-> >  use pin_init;
-> >
-> >  mod arc;
-> > +pub mod completion;
-> >  mod condvar;
-> >  pub mod lock;
-> >  mod locked_by;
-> > @@ -17,6 +18,7 @@
-> >  pub mod rcu;
-> >
-> >  pub use arc::{Arc, ArcBorrow, UniqueArc};
-> > +pub use completion::Completion;
-> >  pub use condvar::{new_condvar, CondVar, CondVarTimeoutResult};
-> >  pub use lock::global::{global_lock, GlobalGuard, GlobalLock, GlobalLoc=
-kBackend, GlobalLockedBy};
-> >  pub use lock::mutex::{new_mutex, Mutex, MutexGuard};
-> > diff --git a/rust/kernel/sync/completion.rs b/rust/kernel/sync/completi=
-on.rs
-> > new file mode 100644
-> > index 000000000000..4ec4c2aa73a5
-> > --- /dev/null
-> > +++ b/rust/kernel/sync/completion.rs
-> > @@ -0,0 +1,111 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +//! Completion support.
-> > +//!
-> > +//! Reference: <https://docs.kernel.org/scheduler/completion.html>
-> > +//!
-> > +//! C header: [`include/linux/completion.h`](srctree/include/linux/com=
-pletion.h)
-> > +
-> > +use crate::{bindings, prelude::*, types::Opaque};
-> > +
-> > +/// Synchronization primitive to signal when a certain task has been c=
-ompleted.
-> > +///
-> > +/// The [`Completion`] synchronization primitive signales when a certa=
-in task has been completed by
-> > +/// waking up other tasks that can queue themselves up to wait for the=
- [`Completion`] to be
->
-> s/can queue themselves/have been queued/
->
-> > +/// completed.
-> > +///
-> > +/// # Examples
-> > +///
-> > +/// ```
-> > +/// use kernel::sync::{Arc, Completion};
-> > +/// use kernel::workqueue::{self, impl_has_work, new_work, Work, WorkI=
-tem};
-> > +///
-> > +/// #[pin_data]
-> > +/// struct MyTask {
-> > +///     #[pin]
-> > +///     work: Work<MyTask>,
->
-> Can we maybe add a dummy value like `Mutex<i32>` here that the task
-> changes, so we can print the value of it below (after waiting for the
-> task)?
+Hi,
 
-If there's something incorrect in the docs, sure, let's fix it. But
-since this is supposed to land as a part of a fix, perhaps it would be
-best to have the work of making these docs perfect be a follow-up that
-can land in the usual merge window?
+在 2025/06/12 17:55, Wang Jinchao 写道:
+> Now that we have the same information, I prefer patch-v1 before 
+> refactoring raid1_reshape,
+> because it’s really simple (only one line) and clearer to show the 
+> backup and restore logic.
+> Another reason is that v2 freezes the RAID longer than v1.
+> Would you like me to provide a v3 patch combining the v2 explanation 
+> with the v1 diff?
+> Thanks for your reviewing.
 
-Alice
+I don't have preference here, feel free to do this.
+
+BTW, I feel raid1_reshape can be better coding with following：
+
+- covert r1bio_pool to use mempool_create_kmalloc_pool(use create
+instead of init to get rid of the werid assigment);
+- no need to reallocate pool_info;
+- convert raid1_info to use krealloc;
+
+Welcome if you are willing to, otherwise I'll find myself sometime.
+
+Thanks,
+Kuai
+
