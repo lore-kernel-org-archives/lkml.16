@@ -1,198 +1,127 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89ED21B0421
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A84199FAF
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749706437; cv=none; b=H3XFKeFxqVcRwE9mYqFUryjodND4ugiuCRphfehBsx2gn4VvtqHoF6P7xLKkv/o7iX+6vwKVB2+/o3m1Xroz6M6sDdO/YMBS0yvLhVJhrYOeH96wlO/tOs1oP+3kD/NPVdtML6/XckeGaxbFv6YMc+DcZIVJq69Vnp+T0ya4Tuo=
+	t=1749706474; cv=none; b=kFPz2WBSfPCcHZL9qlpN8l4NiOejtgVBXMB3tVDnvu/BrlWGnlamK0B22uCvLCRo3ShAWSrXxev9G9wX2FQKJ2FJjbGqOdwacp7JPhzG6anPSYA4eiQG0GPejYEALeFuXzgJT/YsOLSW5VfsmYqkT2OzLQqGoh+qWPmsb9bgEhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749706437; c=relaxed/simple;
-	bh=Esu639NQ3h0pUolsE+L62kqRdItgxrjwHM5dB+O9x3E=;
+	s=arc-20240116; t=1749706474; c=relaxed/simple;
+	bh=UiEigjrBL/PVRdzjBTfpiW4C3SupfyiHMu4I/EEz5WM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJ9o4Ga/QXeVWjrtUDM7GbL2c8rU/pjoMxI/kU13UCe5a7iLCyvtOz+KwOFfr5Ev2uo8aya7OPgoqcHixJFn69pGk1UG/GxmOij63dn0/+GGxHghGVlnwH/nxtVNiA5e0qVWjfHTxnkeiv1zdICwEUJ6tG1/QiNJeEvd8y/NGUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vj4PqL21; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=I12fb2VcUKLIUcDI4ryU50Hnuw7lk+D48DBLPgxiG5IrzzGGCHoXaXK6FPQ6rg0YRzJLtRTaAUbjzxqLRFCangbVjUsB5S3UcACb89wXmwEVwNj9TGH9vomXysQfoKMUv/xnRdHNjujSwVr0D2SsfHAUWNJgp6pcTCg0JeSMOpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PtifOTOw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vj4PqL21"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235ca5eba8cso99835ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749706435; x=1750311235; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0MG8DHTvq/qRGMg3QrUciQGDqEK1excvKUOp84PPj3c=;
-        b=Vj4PqL21xT9R0D4u2FmNnEg5IkKp4mBGq1CFhUAF0xxfGlJ2NVfbrUtwyVA2YUQCYu
-         5NMSW3t7wuAGyMMlz7GqcG5yq0QJID15SPU12kSeVUS/+BVkuFpyyrLSl/+i7hAuFhXC
-         +7+y2DMEB6IuaDiVdG35JzUq+h1rdeF2p5jrycd9nj0+mYUjKD0Vsa9yTpqzMhO9fe0G
-         CXOE+zkRJXZ61N/fK9eLhPtvzy+MvCkv6FD3xtjnxFlQEKD6ahJmJiPJCynuR5x8jjL/
-         Nlw6j/EG4f63+5ok4m5K+KJ06vof40jICqifS61QQ0IAoNxJtZcbsZpaSUcoGrfctNyo
-         QUeA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtifOTOw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749706470;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8X+KEMlrQPZXbF8BZWuOrHRVf8Is3K9LsdqXqaOk30o=;
+	b=PtifOTOwEMGKX9hsspPN7/tUDGzY43BtnC0677bpOmtDJkBFT1qiZphUw7lQXc3zLkjNQJ
+	2VdTYJYlfWuoYF7iV5TN3DKcSc6TfcJnIOKmSRWkf1oeGPOZHESZKUuK2TDLhOsSeGbIVt
+	A8z+WSzz5rtGke5y+l+Nn6529Ul6puI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-408-zPtLtPuYOXCRGyyir2Nkkg-1; Thu, 12 Jun 2025 01:34:29 -0400
+X-MC-Unique: zPtLtPuYOXCRGyyir2Nkkg-1
+X-Mimecast-MFC-AGG-ID: zPtLtPuYOXCRGyyir2Nkkg_1749706468
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a5281ba3a4so205778f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:34:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749706435; x=1750311235;
+        d=1e100.net; s=20230601; t=1749706468; x=1750311268;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0MG8DHTvq/qRGMg3QrUciQGDqEK1excvKUOp84PPj3c=;
-        b=X5y/1YpmnnGFo/mAi0scorzEOy2nIbApfgjyCHDC6iYbGfuSVXh5mhmU04NnyQn3bS
-         b7rn/BlnILZeYM+nP1HzOjuNB/bdculeXbc9X96El+Hlc2PzjBS5/nN6KxOzKxigPT5M
-         Mr9pYXJvx3ORvnk+AdewtBEt+v62e+0O663tD4HwCCzrJmKV8TxVjvS0R7l+6NUmOD+f
-         wm2uLOD7GEeOiKxfdzjqbL1WD3t+BPFXZTikFdsxok0VUQhI4WeGsC2fDiFyfToRIAB7
-         e6ARYloDkfeCxPfXIITutIKSd6a4g1ZG1mQIFW1iiKsNpuU0NRY1myCub8vC6YpS5Jv1
-         pYZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUx5RCvkluv6cd84llu/XeOPy6dGOxYti5N1rI1aatu2mCfNho3ARIlKsShdCS+Q8lWjPKLNd/AOm/cnKw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm/RIC8NDtZCHYet2QwUp0oRAeaI/2ZK3YvGPrgcj8125Yw3QA
-	urUILXWr/GlGp/O1VkL6dX/00K9TZ4vVX9dA2boqdq9Aj9/w7kkDZjQuYpI/cec1j+J8degwNnj
-	VjMeHM12s0X7+D0KnDqoZ22EVys2D5Z39tJoktv3E
-X-Gm-Gg: ASbGncs9ndaYKZneH7tQ8BaQbbxMPKrsbIqsaRyz27acCVljjjcgShOSSOOZpBy2BiH
-	CMovHYM9Wx/zlatpNlXBcxTMLRbtOHBBeUOQl4yTCRxRzr1a5p+dNEu/IWKkowvibLwz6jV7L+w
-	NmRtmW9e766zOg1aPMIYeCnppq4xHjYPQB6FNDwKu1yLfW
-X-Google-Smtp-Source: AGHT+IGXAg/B6LBkZbDCWSh7HnwG3gh9i4+QKa2dl2PrE4nN9ppued4dSt9P5QJ+xN+GLNCTbDB2L7Rfw46DFAwqD5E=
-X-Received: by 2002:a17:902:e545:b0:22c:3cda:df11 with SMTP id
- d9443c01a7336-2364dd812f0mr1702785ad.10.1749706434224; Wed, 11 Jun 2025
- 22:33:54 -0700 (PDT)
+        bh=8X+KEMlrQPZXbF8BZWuOrHRVf8Is3K9LsdqXqaOk30o=;
+        b=NVxN1BE+SIVVoynjD798ylxBvCjnZwoLJJcORVUkAorV+YBAkWbaMv+92PxIP1UMmc
+         ezvMpB0srLVtzCShdnbYtdFfYpMiSZQXzD337XFEOaqtD1lw4hkTokpR12kx6tFczzgS
+         YFSMNcNERn7hwpGBe9cmzOmv1tzPsianqey3LzqpvDnkCvUF9S239M8Fbpb0qeGVd752
+         gyZNu02/+H16cQLxPBPHv8dcwY0eVS4LU/hh49qGP3vgWC9/CmOtpcLCGxrIh/Ih/eEw
+         nLzoAr1VLfpzw5MPKqnnGx0X4ZuvkbTExcJR1wfnr+Cs1rIbT4c8vCi1JL+x4bkVqhPj
+         fyQg==
+X-Gm-Message-State: AOJu0YxRxcRSMl/U2OacQyBVTW4VVmPdSZgg3/6xQHEc8GYkSVU6gfXx
+	g7kafWpw5V/zd1q9d5l5LL6HI+ZJb60nxq5NRrIscZz3gmLRQ7t7MWNdvDRe4S+FAOktd2r8IMG
+	8izKxiQXgjIq4RPs5wjczAqBCl02As15AKO/hU1Fs+KY1VDvQwMZDISzhXH5iCFSukASGgyChke
+	7YkRwRiSG4ut9qPIxxP7bTb1qXqa2GUpLyF5CymTK5
+X-Gm-Gg: ASbGncuNIjkQZFTDf2Je+HDook8z6KjsL1jlLBvEbccEyqyD74q+pm0Hh/nDP7I2YdM
+	9kpQ/IC4uC/7Mpgq6RhCWUTilDYn3L4Zi1mvqQXhdM3VfDc2CQXaNMZB3yCR+oRQl9k5rEPbwtj
+	kbxQ==
+X-Received: by 2002:a05:6000:400e:b0:3a4:c909:ce16 with SMTP id ffacd0b85a97d-3a56078014fmr1332776f8f.49.1749706467820;
+        Wed, 11 Jun 2025 22:34:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUoDrNCJSqWMpRx7BQZQqyz9zBR8eq3rCWjxL1Aa1yJ0Qp62fxKUknBXS+/RHNgWEzx4rc4+UKHNvsCfYaKls=
+X-Received: by 2002:a05:6000:400e:b0:3a4:c909:ce16 with SMTP id
+ ffacd0b85a97d-3a56078014fmr1332754f8f.49.1749706467425; Wed, 11 Jun 2025
+ 22:34:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609145833.990793-1-mbloch@nvidia.com> <20250609145833.990793-11-mbloch@nvidia.com>
-In-Reply-To: <20250609145833.990793-11-mbloch@nvidia.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 11 Jun 2025 22:33:41 -0700
-X-Gm-Features: AX0GCFsYSgx73nrC-SXHzv68aZPiBHRhi1b3Qjgt6e6IXA1Ei-CkUqpGNyxM2ik
-Message-ID: <CAHS8izOX8t-Xu+mseiRBvLDYmk6G+iH=tX6t4SWY2TKBau7r-Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 10/12] net/mlx5e: Implement queue mgmt ops and
- single channel swap
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com, gal@nvidia.com, 
-	leonro@nvidia.com, tariqt@nvidia.com, Leon Romanovsky <leon@kernel.org>, 
-	Simon Horman <horms@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Dragos Tatulea <dtatulea@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>
+References: <20250612044943.151258-1-pbonzini@redhat.com> <cfd99e56-551b-49c5-b486-05c9f6d8cf11@intel.com>
+In-Reply-To: <cfd99e56-551b-49c5-b486-05c9f6d8cf11@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Thu, 12 Jun 2025 07:34:12 +0200
+X-Gm-Features: AX0GCFvR7ruY-7CJzAvpxNmfdGIN_rQ_TTVqOWRNjhewrDtkRemeydBZiVKiJtU
+Message-ID: <CABgObfafukOFkeR09krA5GVb3itfpHNHjBM0aRZj5t4EKJv7Dw@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86/mmu: Reject direct bits in gpa passed to KVM_PRE_FAULT_MEMORY
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com, 
+	yan.y.zhao@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 9, 2025 at 8:08=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrote=
-:
+On Thu, Jun 12, 2025 at 7:29=E2=80=AFAM Xiaoyao Li <xiaoyao.li@intel.com> w=
+rote:
 >
-> From: Saeed Mahameed <saeedm@nvidia.com>
+> On 6/12/2025 12:49 PM, Paolo Bonzini wrote:
+> > Only let userspace pass the same addresses that were used in KVM_SET_US=
+ER_MEMORY_REGION
+> > (or KVM_SET_USER_MEMORY_REGION2); gpas in the the upper half of the add=
+ress space
+> > are an implementation detail of TDX and KVM.
+> >
+> > Extracted from a patch by Sean Christopherson <seanjc@google.com>.
+> >
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >   arch/x86/kvm/mmu/mmu.c | 3 +++
+> >   1 file changed, 3 insertions(+)
+> >
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index a4040578b537..4e06e2e89a8f 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -4903,6 +4903,9 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vc=
+pu *vcpu,
+> >       if (!vcpu->kvm->arch.pre_fault_allowed)
+> >               return -EOPNOTSUPP;
+> >
+> > +     if (kvm_is_gfn_alias(vcpu->kvm, gpa_to_gfn(range->gpa)))
+> > +             return -EINVAL;
 >
-> The bulk of the work is done in mlx5e_queue_mem_alloc, where we allocate
-> and create the new channel resources, similar to
-> mlx5e_safe_switch_params, but here we do it for a single channel using
-> existing params, sort of a clone channel.
-> To swap the old channel with the new one, we deactivate and close the
-> old channel then replace it with the new one, since the swap procedure
-> doesn't fail in mlx5, we do it all in one place (mlx5e_queue_start).
->
-> Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
-> Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
-> ---
->  .../net/ethernet/mellanox/mlx5/core/en_main.c | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/=
-net/ethernet/mellanox/mlx5/core/en_main.c
-> index a51e204bd364..90687392545c 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -5494,6 +5494,102 @@ static const struct netdev_stat_ops mlx5e_stat_op=
-s =3D {
->         .get_base_stats      =3D mlx5e_get_base_stats,
->  };
->
-> +struct mlx5_qmgmt_data {
-> +       struct mlx5e_channel *c;
-> +       struct mlx5e_channel_param cparam;
-> +};
-> +
-> +static int mlx5e_queue_mem_alloc(struct net_device *dev, void *newq,
-> +                                int queue_index)
-> +{
-> +       struct mlx5_qmgmt_data *new =3D (struct mlx5_qmgmt_data *)newq;
-> +       struct mlx5e_priv *priv =3D netdev_priv(dev);
-> +       struct mlx5e_channels *chs =3D &priv->channels;
-> +       struct mlx5e_params params =3D chs->params;
-> +       struct mlx5_core_dev *mdev;
-> +       int err;
-> +
-> +       mutex_lock(&priv->state_lock);
-> +       if (!test_bit(MLX5E_STATE_OPENED, &priv->state)) {
-> +               err =3D -ENODEV;
-> +               goto unlock;
-> +       }
-> +
-> +       if (queue_index >=3D chs->num) {
-> +               err =3D -ERANGE;
-> +               goto unlock;
-> +       }
-> +
-> +       if (MLX5E_GET_PFLAG(&chs->params, MLX5E_PFLAG_TX_PORT_TS) ||
-> +           chs->params.ptp_rx   ||
-> +           chs->params.xdp_prog ||
-> +           priv->htb) {
-> +               netdev_err(priv->netdev,
-> +                          "Cloning channels with Port/rx PTP, XDP or HTB=
- is not supported\n");
-> +               err =3D -EOPNOTSUPP;
-> +               goto unlock;
-> +       }
-> +
-> +       mdev =3D mlx5_sd_ch_ix_get_dev(priv->mdev, queue_index);
-> +       err =3D mlx5e_build_channel_param(mdev, &params, &new->cparam);
-> +       if (err) {
-> +               return err;
-> +               goto unlock;
-> +       }
-> +
-> +       err =3D mlx5e_open_channel(priv, queue_index, &params, NULL, &new=
-->c);
-> +unlock:
-> +       mutex_unlock(&priv->state_lock);
-> +       return err;
-> +}
-> +
-> +static void mlx5e_queue_mem_free(struct net_device *dev, void *mem)
-> +{
-> +       struct mlx5_qmgmt_data *data =3D (struct mlx5_qmgmt_data *)mem;
-> +
-> +       /* not supposed to happen since mlx5e_queue_start never fails
-> +        * but this is how this should be implemented just in case
-> +        */
-> +       if (data->c)
-> +               mlx5e_close_channel(data->c);
-> +}
-> +
-> +static int mlx5e_queue_stop(struct net_device *dev, void *oldq, int queu=
-e_index)
-> +{
-> +       /* mlx5e_queue_start does not fail, we stop the old queue there *=
-/
-> +       return 0;
-> +}
+> Do we need to worry about the case (range->gpa + range->size) becomes ali=
+as?
 
-Is this really better than maintaining uniformity of behavior between
-the drivers that support the queue mgmt api and just doing the
-mlx5e_deactivate_priv_channels and mlx5e_close_channel in the stop
-like core sorta expects?
+No, because the function only processes a single page and everything
+in the non-aliased part of the address space *can* be prefaulted.
 
-We currently use the ndos to restart a queue, but I'm imagining in the
-future we can expand it to create queues on behalf of the queues. The
-stop queue API may be reused in other contexts, like maybe to kill a
-dynamically created devmem queue or something, and this specific
-driver may stop working because stop actually doesn't do anything?
+KVM's generic kvm_vcpu_pre_fault_memory() call will see the EINVAL on
+a later invocation and will stop processing the part of the request
+that is has the shared/direct bit set.
 
---=20
-Thanks,
-Mina
+Paolo
+
+>
+> >       /*
+> >        * reload is efficient when called repeatedly, so we can do it on
+> >        * every iteration.
+>
+
