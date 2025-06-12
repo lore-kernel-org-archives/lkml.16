@@ -1,159 +1,124 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D62202F9A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FCF17A2EA;
+	Thu, 12 Jun 2025 11:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726508; cv=none; b=eFo0bXrBJcwplDC/8smvoy53NTruIWTsdNSZyovR4frUNwmCRNzf6H3nSduytke64Lt44ixxU+GO7RAkzbvkoDgBvEziKQ8qWxEj4tmBsz71xD/RHxF/9c2tgVr8kPU4/AsflwCRohHa9FOJ/eD3rscysRwvrchfLkuz/l6gQ6s=
+	t=1749726652; cv=none; b=Bi9zFm7uZla1dPSWviB2HASddwAXSkn6tZJpPHDt2pW2/eO3imsJ3YtRphlWZB7/TV+TixG1xpqbCkanPtkZw9jytYut/0ZBeM+N+h7TDAtmU7ivml/sPfg0eulnJtfMLem1WYcPSkAJbmA20u9HQWi6CcDOdFJaHnGuW6zEKvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726508; c=relaxed/simple;
-	bh=VUEQpMDxv5SdbtacnxAkIpRyc25HgnZCQ6NI+Dql1P4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oSZgJD8G/7twq6MrJtlddjrYj7cp82uI/UT9skaIjUsQU6fPUDL7GVm3hJS+oZL7VdSP6koDQ2n8NhKMAfh6yaxza4w0/oGEgQstpWPYwqCd15cXjA/kf9g0Uvbukx1eXPBtEkJe4nChu0iGTO3RA9DjdVyYUx/7/bRe1Jeh7bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BxHiCzsJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NHfwxrKX; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yXWtmN9F; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=M1X21LPa; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749726652; c=relaxed/simple;
+	bh=KOsYsfHPzJUa01W4Ouw+7CCGtCRvFtwxmvmgsXHNiaw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=iLy99jjLRYaXeHEcZkopYlQWT9Y6Pbyjl0Ei5OkzjMP4RXcC06eSPasufqrg+li5oCwi6RvDJpm5OzXzzkb90eLDcIMzcSw2lXFbdNCQfIbaoq8A7GMcrNfu8OwUa3zf4hf/rfUKZD5LhXdDFhwgPC7yQlk3pAywA+5zfbVmInk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr6J8A1I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BxHiCzsJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NHfwxrKX";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yXWtmN9F";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="M1X21LPa"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 93DF821209;
-	Thu, 12 Jun 2025 11:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749726504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kfgn7WSHdn26zjp9M0F4QsAyunZl5LBrO/4tS3XYles=;
-	b=BxHiCzsJm+uz7PD7nMWCaswHuP1+qJtAq7VeXApmfnnG5G8LvqY4rJ5qLnetVfEsxPht4R
-	p4szA8+FOuIfIDbZ3PFhk8ul3gO+uNgxdB/RGdO0JhzZPSD9OClGZNyIpGRVVBCez4Xy05
-	aqG85WO+tioctnxfHRoOa/Z12/dX0Ts=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749726504;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kfgn7WSHdn26zjp9M0F4QsAyunZl5LBrO/4tS3XYles=;
-	b=NHfwxrKXFUSnuAdIzOy3ou0iNy5Ljntrj2GWAsF4IE2pNqjBTz0cw+9I0kQ0yF1jitW6ic
-	Zw1GsEZq6y0kylAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749726503; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kfgn7WSHdn26zjp9M0F4QsAyunZl5LBrO/4tS3XYles=;
-	b=yXWtmN9Fn3wWmN4nS7Xld8bsW0MdUT2d2w/vZkxklHkwglOc1CKm25tvtjNX2R5XpbDzPq
-	yUuauNzsZAVz/QwEi2g1FOFgxJuiGv6iTn7QguxMKUfwsMk5g4qPhBGAa+mGft0ObUX18D
-	fjmuXtilH/qcW26s60qG956RbXAGUE4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749726503;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kfgn7WSHdn26zjp9M0F4QsAyunZl5LBrO/4tS3XYles=;
-	b=M1X21LPafXDC2lfhPZ7t4cKNTHiPrF3o8a0W3i5mjm4Md9w2MHU/UGpE4vT7pFwRDDsmsd
-	2AbiOyZRIf90dPCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 89483139E2;
-	Thu, 12 Jun 2025 11:08:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id d+Z5ISe1SmiJXgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 12 Jun 2025 11:08:23 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 52263A099E; Thu, 12 Jun 2025 13:08:19 +0200 (CEST)
-Date: Thu, 12 Jun 2025 13:08:19 +0200
-From: Jan Kara <jack@suse.cz>
-To: Luis Henriques <luis@igalia.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-dev@igalia.com
-Subject: Re: [PATCH] fs: drop assert in file_seek_cur_needs_f_lock
-Message-ID: <tsevuodksvhftqyobfu6ana5ibbbdtbqo46j5r3hir5kvmpozo@g3vcsirgdioe>
-References: <87tt4u4p4h.fsf@igalia.com>
- <20250612094101.6003-1-luis@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr6J8A1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 867C6C4CEED;
+	Thu, 12 Jun 2025 11:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749726652;
+	bh=KOsYsfHPzJUa01W4Ouw+7CCGtCRvFtwxmvmgsXHNiaw=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=gr6J8A1I+Dxj5CkYzHtj1Ftyd5kY+Wb7p/XBZtdOwnozGEVsMia7fIGsm577/dD6c
+	 gT+v+MAnAl1YRAuCO+uprc3Ip5GevSCD3fdy1MH8yLt7qRVvpU8IUuR5H7In2XoNIV
+	 Fpojgv9osfgcqnhTgYPa+sC//cdety58sOOFnD6N4ubPNUFcZjijLCd8k7n4df9JbU
+	 e4Xf2vuFRCm6ezspk6nsdWyU/TybGh2hHF38bRe6jg9fQIkiZ7uIezqWTNv0B8wz+h
+	 c+oVqNy5WPv9kRexn3u8P7UDEn1uJfJnGJIGcUb0zcbx9TiA1PsAA40nJscmRl0H6j
+	 9e/pUF+ekFi7A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612094101.6003-1-luis@igalia.com>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,igalia.com:email,suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Jun 2025 13:10:48 +0200
+Message-Id: <DAKIBXCX5OZ1.2ACJKVK1K4TER@kernel.org>
+To: "Michal Wilczynski" <m.wilczynski@samsung.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Marek Szyprowski" <m.szyprowski@samsung.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH] rust: math: Add KernelMathExt trait with a mul_div
+ helper
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <CGME20250609215523eucas1p22f6d7d84b403badfb77af7df973b97a9@eucas1p2.samsung.com> <20250609-math-rust-v1-v1-1-285fac00031f@samsung.com> <DAICPWRW9TCE.356EEFQOHYWFN@kernel.org> <86f1ca2b-ccd1-4470-a05d-47497f3bf2f5@samsung.com>
+In-Reply-To: <86f1ca2b-ccd1-4470-a05d-47497f3bf2f5@samsung.com>
 
-On Thu 12-06-25 10:41:01, Luis Henriques wrote:
-> The assert in function file_seek_cur_needs_f_lock() can be triggered very
-> easily because, as Jan Kara suggested, the file reference may get
-> incremented after checking it with fdget_pos().
-> 
-> Fixes: da06e3c51794 ("fs: don't needlessly acquire f_lock")
-> Signed-off-by: Luis Henriques <luis@igalia.com>
+On Thu Jun 12, 2025 at 1:00 PM CEST, Michal Wilczynski wrote:
+> On 6/10/25 00:21, Benno Lossin wrote:
+>> On Mon Jun 9, 2025 at 11:53 PM CEST, Michal Wilczynski wrote:
+>>> +    /// * None if the divisor is zero.
+>>> +    fn mul_div(self, multiplier: Self, divisor: Self) -> Option<Self>;
+>>> +}
+>>> +
+>>> +impl KernelMathExt for u64 {
+>>=20
+>> Can you also implement this for the other types that have a
+>> `mul_..._div` function in the kernel?
+>
+> +Uwe
+>
+> Hi Benno,
+>
+> Thank you for the review and feedback on the patch.
+>
+> Regarding your suggestion to implement the trait for other types, I've
+> taken a closer look at the existing kernel helpers (e.g., in
+> lib/math/div64.c). My finding is that while some signed division helpers
+> exist, there don't appear to be standard, exported mul_sX_sX_div_sX
+> functions that are direct equivalents of the u64 version. This makes the
+> generic trait idea less broadly applicable than I initially hoped.
+>
+> Furthermore, a more significant issue has come to my attention regarding
+> the u64 C function itself. The x86-specific static inline implementation
+> uses assembly that triggers a #DE (Divide Error) exception if the final
+> quotient overflows the 64-bit result. This would lead to a kernel panic.
+>
+> /*
+>  * Will generate an #DE when the result doesn't fit u64, could fix with a=
+n
+>  * __ex_table[] entry when it becomes an issue.
+>  */
+> static inline u64 mul_u64_u64_div_u64(...)
+>
+> Given that a direct FFI binding would expose this potentially panicking
+> behavior to safe Rust, I am now reconsidering if binding this function
+> is the right approach.
+>
+> Perhaps this should be handled in pure Rust. For my specific case with
+> the PWM driver, it's likely that a simple checked_mul would be
+> sufficient. In practice, many drivers use this function for calculations
+> like the following, where one of the multiplicands is not a full 64-bit
+> value:
+> wf->duty_offset_ns =3D DIV64_U64_ROUND_UP((u64)wfhw->duty_offset_cnt * NS=
+EC_PER_SEC,
+>                                         ddata->clk_rate_hz);
+>
+> In this common pattern, the intermediate multiplication often does not
+> risk overflowing a u64. Using checked_mul would be completely safe and
+> avoid the FFI complexity and the overflow risk entirely.
+>
+> Given these points, do you still think pursuing the general-purpose
+> KernelMathExt trait via an FFI wrapper is the desired direction? Or
+> would you prefer that I pivot to a simpler, safer, pure-Rust approach
+> using checked_mul directly within the PWM driver where it is needed?
 
-Looks good. Feel free to add:
+My understanding was that your use-case required the multiplication &
+division operation to work even if `a * b` would overflow and only the
+division by `c` would bring it back into u64 range. If you don't need
+that, then I would just use `checked_mul` as it is much simpler.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+We can always reintroduce a `KernelMathExt` trait later when the need
+arises.
 
-								Honza
-> ---
-> Hi Christian,
-> 
-> It wasn't clear whether you'd be queueing this fix yourself.  Since I don't
-> see it on vfs.git, I decided to explicitly send the patch so that it doesn't
-> slip through the cracks.
-> 
-> Cheers,
-> -- 
-> Luis
-> 
->  fs/file.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/fs/file.c b/fs/file.c
-> index 3a3146664cf3..075f07bdc977 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -1198,8 +1198,6 @@ bool file_seek_cur_needs_f_lock(struct file *file)
->  	if (!(file->f_mode & FMODE_ATOMIC_POS) && !file->f_op->iterate_shared)
->  		return false;
->  
-> -	VFS_WARN_ON_ONCE((file_count(file) > 1) &&
-> -			 !mutex_is_locked(&file->f_pos_lock));
->  	return true;
->  }
->  
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+---
+Cheers,
+Benno
