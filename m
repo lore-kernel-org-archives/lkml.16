@@ -1,198 +1,118 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA55A235076
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDC91F8753;
+	Thu, 12 Jun 2025 10:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723524; cv=none; b=X0k1mdiwaMeSQeKMWeAcOdMsUxgaTpG4iYLJHDCR4eUWDI9qi339QuJfDYQrrZJH3De5ZpgRg1KxyLf5CL/rLHFBQdMUaJd2OEOoTliTStKXFZxnjEd6TNgtjjV1SbmPHH6Jer9vjbokyrJhIl29svFT22uzSZeXY8dJwaycWEY=
+	t=1749723537; cv=none; b=qV1GP+zGPK2qalzO1AhVxGwiEggWpRZVKdYsmrakbipxw57mzzzuu3TxUOjCwi1hJwkziu4KOxdaN0+CtMwa62eql3BKKvZeON8UvgYGmv5lSSrc1uo04Rmd+bUwtGR5K8BpfZYLyyKA69NqcM5ebsRj6CybaCC0i+u+uoKER/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723524; c=relaxed/simple;
-	bh=cHxGZ4oCqEP6ZY34NFekAOLYkHp3zwwYssV0hJQJZJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F9BLTlhuQd13Yb7pqeuX15gHADkqj/UD2zEo5ozD3WDivaP9PJ1YvUPj/tU56YYdYR7vn6/IdqRBUvaHbdxFPne8eGsxRlDBtvpdeGoa16J98i9iUTuo0tt6PmYRROO6Qokzu/39LiVseOhg6MYjmZQk0DV4W8Lf2HoEpCmJADw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mfEWIO+9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9EssITg4; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mfEWIO+9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9EssITg4; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749723537; c=relaxed/simple;
+	bh=VTa4Ro0Wz6mnKuHxnSTJzW2oiJlhqXG0bH43lvgxYvM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rLbCbJqGw2X1hjlejTISQJpOaYGGHPuWaUMlYNppxbIdCgHruKTtkaYGl5A/EhTPCnPpuimpI82M1fNK7XqQjYBMlHDIizH9lK2jkGJK0zNFrOGYUqTuXdac4BWQz83Tivk9imA1FRfVcBJLIkSbRGfhvpVcLsYnHXO2i3uys6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAxGOsBy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mfEWIO+9";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9EssITg4";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mfEWIO+9";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9EssITg4"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 067EC1F78E;
-	Thu, 12 Jun 2025 10:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1sbQj5PaZtpmNrKn+KyxsA3+QUNkgR2OaWn0POMIpmM=;
-	b=mfEWIO+9pRR0fr0UwJ3AOpdjt1kF+uz0K1plh8Jz1EHciLtpqsgUiQseZCBybDOCfn7Jzj
-	WO1C6wD2qw6Vv3wMCAoIAYdItCQb1frYIm/WTfAHu8H3zFfkJ8XEnbSvM55vz8JtLhmBoD
-	Y2KytekB7lT6K9vQhxY6DEQUEX/yV7k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723521;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1sbQj5PaZtpmNrKn+KyxsA3+QUNkgR2OaWn0POMIpmM=;
-	b=9EssITg47xLzey9iQ1XkMQueuhMaePHLbiI2cZ7JS6Btg1f01FbPOIoYKNS+kOnci/jh3c
-	K2zzUVuwSqOR+sDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1sbQj5PaZtpmNrKn+KyxsA3+QUNkgR2OaWn0POMIpmM=;
-	b=mfEWIO+9pRR0fr0UwJ3AOpdjt1kF+uz0K1plh8Jz1EHciLtpqsgUiQseZCBybDOCfn7Jzj
-	WO1C6wD2qw6Vv3wMCAoIAYdItCQb1frYIm/WTfAHu8H3zFfkJ8XEnbSvM55vz8JtLhmBoD
-	Y2KytekB7lT6K9vQhxY6DEQUEX/yV7k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723521;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1sbQj5PaZtpmNrKn+KyxsA3+QUNkgR2OaWn0POMIpmM=;
-	b=9EssITg47xLzey9iQ1XkMQueuhMaePHLbiI2cZ7JS6Btg1f01FbPOIoYKNS+kOnci/jh3c
-	K2zzUVuwSqOR+sDg==
-Date: Thu, 12 Jun 2025 12:18:40 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	akpm@linux-foundation.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v5 4/5] kdump: wait for DMA to finish when using CMA
-Message-ID: <aEqpgDIBndZ5LXSo@dwarf.suse.cz>
-References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAxGOsBy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2772C4CEEA;
+	Thu, 12 Jun 2025 10:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749723537;
+	bh=VTa4Ro0Wz6mnKuHxnSTJzW2oiJlhqXG0bH43lvgxYvM=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=jAxGOsByLHV8XjWgZU1BvmIWd2QEVHYNeXAwNDZMTfwXXMVXkQW2n35se3CjHusHj
+	 3uN8l3SmQQudP97K1v5JAaVzJl7F4D7gxnTnBcyKIATLt/oKImbg5mot5Q5r/fORwa
+	 kKu5KiwQ5G7PoEntbBG1oczF5Z1aECfV6OVjYljM4W8REk50Sw5Atgpskqty1MZLwg
+	 llvfDK6qGvM9cDUdbs0y8f8K4z6kZm4ZKX4kI9BnXIz4+sMKFQ8DwJUlT+S5NWoJ8C
+	 nfUeMNPN9WY496b+cIhKfyALR81HvqRiyc4/oXyKm/Pnf5XASwOid/4QpqtUNOLzwu
+	 TTTer+gAr9tJA==
+Message-ID: <648e548d-2aae-4210-a0a1-c378c7a81df9@kernel.org>
+Date: Thu, 12 Jun 2025 12:18:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dwarf.suse.cz:mid,localhost:helo]
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v0 5/5] arm64: configs: Update defconfig for AST2700
+ platform support
+To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Nishanth Menon <nm@ti.com>,
+ nfraprado@collabora.com, Taniya Das <quic_tdas@quicinc.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Eric Biggers <ebiggers@google.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, soc@lists.linux.dev,
+ Mo Elbadry <elbadrym@google.com>, Rom Lemarchand <romlem@google.com>,
+ William Kennington <wak@google.com>, Yuxiao Zhang <yuxiaozhang@google.com>,
+ wthai@nvidia.com, leohu@nvidia.com, dkodihalli@nvidia.com,
+ spuranik@nvidia.com
+References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
+ <20250612100933.3007673-6-ryan_chen@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250612100933.3007673-6-ryan_chen@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When re-using the CMA area for kdump there is a risk of pending DMA
-into pinned user pages in the CMA area.
+On 12/06/2025 12:09, Ryan Chen wrote:
+> - Enable options for ASPEED AST2700 SoC.
 
-Pages residing in CMA areas can usually not get long-term pinned and
-are instead migrated away from the CMA area, so long-term pinning is
-typically not a concern. (BUGs in the kernel might still lead to
-long-term pinning of such pages if everything goes wrong.)
+Why is this "-"? Is this a patch format?
 
-Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
-be the source or destination of a pending DMA transfer.
+Look at other commits to this file. You can use `git log -- PATH` to
+understand how people write commits.
 
-Although there is no clear specification how long a page may be pinned
-without FOLL_LONGTERM, pinning without the flag shows an intent of the
-caller to only use the memory for short-lived DMA transfers, not a transfer
-initiated by a device asynchronously at a random time in the future.
-
-Add a delay of CMA_DMA_TIMEOUT_SEC seconds before starting the kdump
-kernel, giving such short-lived DMA transfers time to finish before
-the CMA memory is re-used by the kdump kernel.
-
-Set CMA_DMA_TIMEOUT_SEC to 10 seconds - chosen arbitrarily as both
-a huge margin for a DMA transfer, yet not increasing the kdump time
-too significantly.
-
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
-Acked-by: David Hildenbrand <david@redhat.com>
-
----
-Changes since v4:
-- reworded the paragraph about long-term pinning
-- simplified crash_cma_clear_pending_dma()
-- dropped cma_dma_timeout_sec variable
-
----
-Changes since v3:
-- renamed CMA_DMA_TIMEOUT_SEC to CMA_DMA_TIMEOUT_MSEC, change delay to 10 seconds
-- introduce a cma_dma_timeout_sec initialized to CMA_DMA_TIMEOUT_SEC
-  to make the timeout trivially tunable if needed in the future
-
----
- kernel/crash_core.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 335b8425dd4b..a4ef79591eb2 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -21,6 +21,7 @@
- #include <linux/reboot.h>
- #include <linux/btf.h>
- #include <linux/objtool.h>
-+#include <linux/delay.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -33,6 +34,11 @@
- /* Per cpu memory for storing cpu states in case of system crash. */
- note_buf_t __percpu *crash_notes;
- 
-+/* time to wait for possible DMA to finish before starting the kdump kernel
-+ * when a CMA reservation is used
-+ */
-+#define CMA_DMA_TIMEOUT_SEC 10
-+
- #ifdef CONFIG_CRASH_DUMP
- 
- int kimage_crash_copy_vmcoreinfo(struct kimage *image)
-@@ -97,6 +103,14 @@ int kexec_crash_loaded(void)
- }
- EXPORT_SYMBOL_GPL(kexec_crash_loaded);
- 
-+static void crash_cma_clear_pending_dma(void)
-+{
-+	if (!crashk_cma_cnt)
-+		return;
-+
-+	mdelay(CMA_DMA_TIMEOUT_SEC * 1000);
-+}
-+
- /*
-  * No panic_cpu check version of crash_kexec().  This function is called
-  * only when panic_cpu holds the current CPU number; this is the only CPU
-@@ -119,6 +133,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
- 			crash_setup_regs(&fixed_regs, regs);
- 			crash_save_vmcoreinfo();
- 			machine_crash_shutdown(&fixed_regs);
-+			crash_cma_clear_pending_dma();
- 			machine_kexec(kexec_crash_image);
- 		}
- 		kexec_unlock();
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
-
+Best regards,
+Krzysztof
