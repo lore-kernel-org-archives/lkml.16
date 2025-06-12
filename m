@@ -1,209 +1,157 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9D929DB97;
-	Thu, 12 Jun 2025 17:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDEB2BDC3E
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749750965; cv=none; b=hYrAShvIWB2XRl/U+zKiOdX5VZcTueKon7uJj6wr99QzHjXRxAIdfLAca6/UHVFZJST3JMaQq/dOsR2F+7Aua7O377odcG2eKgKKq5eGrT6wdwooB5Gp6gRMpfO+NferUetveNJeaIWeEzAXzU4hk4xfSdvKt5uCTobOzvLq8VQ=
+	t=1749751056; cv=none; b=gseQjw893CkwgJBXNcO6q1rndECSbbgSe00kve+a4mTWOcfSmLsvGcE59bH/bomVa00J1P81vYLOaZTybJqc2xTRVi+JzLwJsszHuGQhI+QC5/QTdRvHEpN5ltDVP+KiSs0qt8jTB0U4bWpCUx/m6cgR0WaaHWTKsQffJxxHMOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749750965; c=relaxed/simple;
-	bh=7NbD5EzbriPvyz1s1i70hQjMMOxbxKhc7LyGfM9t5Vg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Df09p68tbIJGPn2l3luQkjsQB1vvA9LqiOpFTwxsHVRF7dcWzyHHlpZYZ1U9b9Bpyv3+SofBKHA+g5JoaS6KZ63A/cCfrd5P7m2HnbCcN+CZDj+xeSaYN5LUXAKNjFcvru7+Ks4jfUpv7e0+Nq7DLzdbHnTIRCnAZXOAzx9tRXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=P8MOdCSu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SflIqit1; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1749751056; c=relaxed/simple;
+	bh=2rzP5TUm+JRajWqIjslt5tlZ6hdbAA9qvgRYJFTZ5zo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=olhNMuU/hD44Fpf5OKvFXHI1Hgix/SIdd4yLSad85jVuzz9KL6lBIcyqGr3DZD4ht2XboP0P4eRQHIrx363/eq48xO/LF7kdtXVvv8hQETtR8u7E18ENv1TCrCTtJGTK3zCaafkGA7gfcOBXXppBYihe6KHZolW6yAkfiHeE3Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wzuh/NUK; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="P8MOdCSu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SflIqit1"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id E4F721140271;
-	Thu, 12 Jun 2025 13:56:00 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 13:56:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749750960;
-	 x=1749837360; bh=X3PFZfCUQBros9qPu/MsUt6kHpLBNUqRMh5dm9jEwls=; b=
-	P8MOdCSuHwbMJgixB48KjbVFAS+s8PDDh9IOcIlJO3T1aESi6U8JIRz6R3PaG4qZ
-	ZjYUoMogHTAfLAu9BwjPEdVmUkGdtFtyTEx5AwzZgPZ5A7xGuR57kF4p8+zNdj4D
-	S7HnhBSrpNj+98B7I6pBc3pba9+08hqI6tL6OCSi8B7sezP9tQ13plCvBFYRQNmt
-	9ZY4G5aHUpBvOIhR8bBazcdK/SrRt8zaxtLTv3EREnZSj/F2e2SsFRM4wsjHTWGv
-	/Xm8MCp0MqNbSCBWTT7CAoNOLLT0W+7W1EQbLH0LTIbKZ5vDQm5Tainvmk6b4W17
-	9Twjd+MfMzogLYucJIBTDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749750960; x=
-	1749837360; bh=X3PFZfCUQBros9qPu/MsUt6kHpLBNUqRMh5dm9jEwls=; b=S
-	flIqit1jgtdN9jNL5V9azAyOQv0hLnAOT+UvhFzAZyji1jY1ZbRvBCUguk5eUHop
-	XXRdVLktD7Ma/7jqvXZ+3/aIofcFj7swqt/RKG7jVZwD4ug02iwGYXUnK+8lJaNR
-	b7ePgoXjFnKOjDO1rSU19AeNUAl64rcLNj7GYqgQT7sZVvLEHbPfRsVw74ne+/oK
-	nlUoCfTABoTQ5+n8d6tabiLHDpRIE3S3YKLU0lGtMfBtnCi00sBt5A3sj3ROshN/
-	svkg1Z6pBuXSWSA9l447yB2wHNy7ZjDrpqv767eBspOOJuD2UH4KXAE+3e6m7PdG
-	aUPdkfIIJWBYZshuH0EXQ==
-X-ME-Sender: <xms:sBRLaL9KyTgPbQW55YDOp4fDhsB9dl1K73d720IfaJMoCUB4EMkMdA>
-    <xme:sBRLaHuJ5tgPdaTTbAamGdfh_O81nSNMS4I0x0AbYkulzA-FSLXh-h1bpYsJFutSm
-    M5KxT74Ziw4Ubh4iwg>
-X-ME-Received: <xmr:sBRLaJBjcdhrhy5pe19p_7fBTCi7Tg-T7zyJ8htRCf7zJJWAeVmd9yXzL9alQCNo9YieAj3J1M6CWRQgKUMb82BeZCoAXZOI0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheejvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
-    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
-    guvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepveet
-    gedtvddvhfdtkeeghfeffeehteehkeekgeefjeduieduueelgedtheekkeetnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhs
-    ohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtghpthhtohepkedpmh
-    houggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgrtghophhordhmohhnughisehiuggv
-    rghsohhnsghorghrugdrtghomhdprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghhrg
-    hrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhgrtghophhordhm
-    ohhnughiodhrvghnvghsrghssehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtth
-    hopehmtghhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkihgvrhgrnhdr
-    sghinhhghhgrmhdorhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtg
-    hpthhtoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhg
-X-ME-Proxy: <xmx:sBRLaHcwXvWGhYMfbEbd9g-_HfFOIDjyTWPUlpdJtBXGcdiXac8eCQ>
-    <xmx:sBRLaANRnTRYtJftVMEvA0cZM2TfTZH3QyM_0Bywh_Zkb3CXpM3UHg>
-    <xmx:sBRLaJnMboe4Hr2wVI14q02Xpf41-L34LYNhcNkswJpXg6xbHEuzoA>
-    <xmx:sBRLaKskqPMX4LKLnm3NXQ8MKwVMyArZOCJC5rb3mmMTjcq2JMTthg>
-    <xmx:sBRLaKAhMYPOBUgpq7jU2J_Kaitf2TieF1xhDxnG7bAxlP8Mo-iz_F2e>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Jun 2025 13:55:59 -0400 (EDT)
-Date: Thu, 12 Jun 2025 19:55:57 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] media: vsp1: Reset FCP for VSPX
-Message-ID: <20250612175557.GJ330732@ragnatech.se>
-References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
- <20250609-vspx-reset-v1-3-9f17277ff1e2@ideasonboard.com>
- <20250611233611.GR24465@pendragon.ideasonboard.com>
- <6orphbs6syqu6oruppyln4kkepj42c775cs4nj4oygu4xitpx6@tlvab6mntrrx>
- <20250612101215.GE25137@pendragon.ideasonboard.com>
- <rkihvnry5yybz7bjcbanth4yq7svywicmbhksz4ity6buw52ff@tmxefdhvpgaf>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wzuh/NUK"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87ec6f5e7c9so390803241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:57:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749751054; x=1750355854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5AiuSztYKPKbeGeOfe2jiG+1OuDsuMpjn4U/nAD/7gA=;
+        b=wzuh/NUK2O8K3fVPoGZArTyf3mXAVIS1huw14nf86GZHcPLKEMJrJj1AgrLowP98W+
+         ymKoULu/8n+gU2EIHc6jVhJjYECU7ZRbxCng4x3bmfb2CFWaVLDfyCOOhJugLHilFMa5
+         JevjYjyWD8EXWnUCC4b+xku8vGJCHK3TeUTLF4s3yHB1Hl24vr4Jez+6ojBNgLRRrKsc
+         4Q1xUtnsJnRDr4dw49iyZhIxfgGwmzrfWfJ3ULDmtM0/DMNIal2VQRlllVIL3LkAOOyt
+         BrRc27riN1IfnwBRCIayUONPfRFPEpTVtUQoSkq2xQZszEPkfTHTitXBunsanA/yK2Sn
+         tJ5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749751054; x=1750355854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5AiuSztYKPKbeGeOfe2jiG+1OuDsuMpjn4U/nAD/7gA=;
+        b=QrcWkInp02LlmUHJCqGxMHQJKa8JGzuNZ4g7LFeUTejM539cjR02Ek1diz9x52o1aJ
+         Fy4WY/IFwcDQDSaMbjfDU1inrYfZSC9MGGpenW/gJfa6EYJt1DXgrOc01oQlgfvZJHQx
+         smyZB92/e0IV6HMjVhiI8dvrh4e0T2FIUK7/6ac8cPYkaNfa6UZ4KZzPd5uvI+oV+Ina
+         pknP8bkVTKCqGDUd4thw59lEcTHSxvl7mqMcZ1CtPE5nha+1+0p77ffFqKX6tYwcEydy
+         DrXAhcbG0RHcLlqTTHDEwHaRW01Ktp3oYWbmeimYF/vctR7MmUQqZOiSY8pxlhdhvA8C
+         iGWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXN2WLXIfqOLLb9X6IjhLTMrQIxO4FE56uvyjum7aOQ4GQ4PQTFxDn1KAx+hoLRQlgZsH5MSdufEDIS+lU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ11cVZ8Wi8E4wciyOMNGJETItpVKmhOn5qWHmTG/dJzgfAKFy
+	WW1JudHurMeT90JFTLDaXqhDBh/LaxJIV+Y4aBlDUbSCm1bW/A+xVWk0xNjSaQn7erKerA26tyo
+	1va5xMs+Qd6WsncqEEwqARNNHKGcQ9VutkuApY5kZ
+X-Gm-Gg: ASbGncvVelB/AWo0xVo5WDwsrP5Ro6SgoR4R4X+DGxhodBo9QYQT6w7tQ0EQtzMZ32h
+	kRpvUjBlEaWIgnenh7OCQXgf1Xx3pIy5K01UwJtRDbO/7mbn0bpbxWxEoSmtdDt7Ol/P0P16YzN
+	VccEr25IDs3QiTOLXswdAIxLfp88sGJ53PvFS0xMf+SQ==
+X-Google-Smtp-Source: AGHT+IGaZUcnCXH+Qe2tMTpBabktqR9W4dWoxFOP0XwT8IwfEVxYQB/9HmvU+nw4/P7dOGGa6Gr7c31sLFSHQtYQGoI=
+X-Received: by 2002:a05:6102:c0a:b0:4e6:ddd0:96ea with SMTP id
+ ada2fe7eead31-4e7e0fb7879mr1011979137.10.1749751053421; Thu, 12 Jun 2025
+ 10:57:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <rkihvnry5yybz7bjcbanth4yq7svywicmbhksz4ity6buw52ff@tmxefdhvpgaf>
+References: <cb354fd2-bece-42ef-9213-de7512e80912@linux.dev>
+ <20250610183459.3395328-1-sean.anderson@linux.dev> <CAGETcx-koKBvSXTHChYYF-qSU-r1cBUbLghJZcqtJOGQZjn3BA@mail.gmail.com>
+ <a52c513c-ff93-4767-a370-3f7c562df7bd@linux.dev> <2025061147-squishier-oversleep-80cd@gregkh>
+ <7d6d8789-e10b-4b06-aa99-5c1a1bdd3b4c@linux.dev>
+In-Reply-To: <7d6d8789-e10b-4b06-aa99-5c1a1bdd3b4c@linux.dev>
+From: Saravana Kannan <saravanak@google.com>
+Date: Thu, 12 Jun 2025 10:56:55 -0700
+X-Gm-Features: AX0GCFu73POcL4_l4HfI9KMdwt9R050XRJyR3Nu3cTV3q1xTTJqKgvrWmdSnY44
+Message-ID: <CAGETcx9E5DB4UtdjjAO2=XfTNXdXocj7uk0JkVZ8hf9YadwNcA@mail.gmail.com>
+Subject: Re: [PATCH] driver core: Prevent deferred probe loops
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	Christoph Hellwig <hch@lst.de>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-06-12 12:20:13 +0200, Jacopo Mondi wrote:
-> Hi Laurent
-> 
-> On Thu, Jun 12, 2025 at 01:12:15PM +0300, Laurent Pinchart wrote:
-> > On Thu, Jun 12, 2025 at 11:48:49AM +0200, Jacopo Mondi wrote:
-> > > On Thu, Jun 12, 2025 at 02:36:11AM +0300, Laurent Pinchart wrote:
-> > > > On Mon, Jun 09, 2025 at 09:01:44PM +0200, Jacopo Mondi wrote:
-> > > > > According section "62.3.7.1 "Operation Control Setting
-> > > >
-> > > > "According to"
-> > > >
-> > > > > IP set VSPX+FCPVX" of the R-Car Gen4 Hardware Manual, FCPX has to
-> > > > > be reset when stopping the image processing.
-> > > >
-> > > > That's only when stopping "image process of VSPX+FCPVX immediately".
-> > > > Note the "immediately", which involves resetting the VSP too. The code
-> > > > below waits for the pipeline to stop at the end of the frame. Resetting
-> > > > the FCP doesn't seem to be required in that case.
-> > >
-> > > True, we certainly don't
-> > >
-> > > 2. Set value 1 to VSPX register VI6_SRESET.SRST0. VSPX will invoke
-> > >    termination process immediately.
-> > >
-> > > but rather wait for the last frame to complete before stopping the
-> > > pipeline.
-> > >
-> > > Do you think this patch should be dropped ?
+On Thu, Jun 12, 2025 at 8:53=E2=80=AFAM Sean Anderson <sean.anderson@linux.=
+dev> wrote:
+>
+> On 6/11/25 08:23, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 10, 2025 at 07:44:27PM -0400, Sean Anderson wrote:
+> >> On 6/10/25 19:32, Saravana Kannan wrote:
+> >> > On Tue, Jun 10, 2025 at 11:35=E2=80=AFAM Sean Anderson <sean.anderso=
+n@linux.dev> wrote:
+> >> >>
+> >> >> A deferred probe loop can occur when a device returns EPROBE_DEFER =
+after
+> >> >> registering a bus with children:
+> >> >
+> >> > This is a broken driver. A parent device shouldn't register child
+> >> > devices unless it is fully read itself. It's not logical to say the
+> >> > child devices are available, if the parent itself isn't fully ready.
+> >> > So, adding child devices/the bus should be the last thing done in th=
+e
+> >> > parent's probe function.
+> >> >
+> >> > I know there are odd exceptions where the parent depends on the chil=
+d,
+> >> > so they might add the child a bit earlier in the probe
+> >>
+> >> This is exactly the case here. So the bus probing cannot happen any
+> >> later than it already does.
 > >
-> > I would say so, I don't think there's a need to reset the FCP when
-> > waiting for the pipeline to stop normally. Or have you noticed issues
-> > that this patch would solve ?
+> > Please fix the driver not to do this.
+>
+> How? The driver needs the PCS to work. And the PCS can live on the MDIO
+> bus.
+
+Obviously I don't know the full details, but you could implement it as
+MFD. So the bus part would not get removed even if the PCS fails to
+probe. Then the PCS can probe when whatever it needs ends up probing.
+
+>
+> >> > but in those cases, the parent's probe should still do all the check=
+s
+> >> > ahead of time.
+> >>
+> >> Such as what? How is the parent going to know the resource is missing
+> >> without checking for it?
+> >>
+> >> > Can you be more specific about the actual failure you are seeing?
+> >>
+> >> MAC is looking for a PCS that's on its internal MDIO bus, but that PCS=
+'s
+> >> driver isn't loaded. The PCS has to be loaded at probe time because
+> >> phylink_create needs it, and phylink is necessary to register the
+> >> netdev. The latter situation is not ideal, but it would be quite a bit
+> >> of work to untangle.
+
+I meant, point to a specific device in a DT and the driver. Provide
+logs of the failure if possible, etc. Tell me which device is failing
+and why, etc. That way, I can take a closer look or give you other
+suggestions.
+
+-Saravana
+
 > >
-> 
-> Not really, this comes straight from the upporting of the FCPD reset.
-> 
-> We've been running with an older of this patch that wasn't actually
-> resetting the FCP and we got no issues. At the same time Niklas has
-> confirmed running with this version that actually resets the FCP
-> doesn't introduce regressions.
-
-I'm not up to snuff on the diff between the two sets. But from our 
-discussion on IRC today I dropped all 3 patches from my testing branch 
-and that broke my stress tests (after a few runs). I will keep these 
-three patches in my ISP branch for now.
-
-Just to be clear the stress tests where fine with the old version too, 
-only dropping all 3 reset patches had an negative effect.
-
-> 
-> I'm fine dropping this patch indeed
-> 
-> > > > > Softawre reset the FCPX after the vsp1 pipe has stopped.
-> > > >
-> > > > s/Softawre/Software/
-> > > >
-> > > > > Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-> > > > > ---
-> > > > >  drivers/media/platform/renesas/vsp1/vsp1_pipe.c | 7 +++++--
-> > > > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-> > > > > index a6e5e10f3ef275c1b081c3d957e6cf356332afce..c6f2417aabc479384012ab8ab99556029ede1f44 100644
-> > > > > --- a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-> > > > > +++ b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-> > > > > @@ -499,6 +499,7 @@ bool vsp1_pipeline_stopped(struct vsp1_pipeline *pipe)
-> > > > >  int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
-> > > > >  {
-> > > > >  	struct vsp1_device *vsp1 = pipe->output->entity.vsp1;
-> > > > > +	u32 version = vsp1->version & VI6_IP_VERSION_MODEL_MASK;
-> > > > >  	struct vsp1_entity *entity;
-> > > > >  	unsigned long flags;
-> > > > >  	int ret;
-> > > > > @@ -515,8 +516,7 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
-> > > > >  			spin_unlock_irqrestore(&pipe->irqlock, flags);
-> > > > >  		}
-> > > > >
-> > > > > -		if ((vsp1->version & VI6_IP_VERSION_MODEL_MASK) ==
-> > > > > -		    VI6_IP_VERSION_MODEL_VSPD_GEN3)
-> > > > > +		if (version == VI6_IP_VERSION_MODEL_VSPD_GEN3)
-> > > > >  			ret |= rcar_fcp_soft_reset(vsp1->fcp);
-> > > > >
-> > > > >  	} else {
-> > > > > @@ -529,6 +529,9 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
-> > > > >  		ret = wait_event_timeout(pipe->wq, vsp1_pipeline_stopped(pipe),
-> > > > >  					 msecs_to_jiffies(500));
-> > > > >  		ret = ret == 0 ? -ETIMEDOUT : 0;
-> > > > > +
-> > > > > +		if (version == VI6_IP_VERSION_MODEL_VSPX_GEN4)
-> > > > > +			ret |= rcar_fcp_soft_reset(vsp1->fcp);
-> > > > >  	}
-> > > > >
-> > > > >  	list_for_each_entry(entity, &pipe->entities, list_pipe) {
-> >
-> > --
-> > Regards,
-> >
-> > Laurent Pinchart
-
--- 
-Kind Regards,
-Niklas Söderlund
+> > Please untangle, don't put stuff in the driver core for broken
+> > subsystems.  That is just pushing the maintaince of this from the drive=
+r
+> > authors to the driver core maintainers for the next 20+ years :(
+>
+> What makes it broken? The "mess" has already been made in netdev. The dri=
+ver
+> authors have already pushed it off onto phylink.
+>
+> And by "quite a bit of work to untangle" I mean the PCS affects settings
+> (ethtool ksettings, MII IOCTL) that are exposed to userspace as soon as
+> the netdev is registered. So we cannot move to a "delayed" lookup
+> without breaking reading/modifying the settings. We could of course fake
+> it, but what happens when e.g. userspace looks at the settings and
+> breaks because we are not reporting the right capabilities (which would
+> have been reported in the past)?
+>
+> --Sean
