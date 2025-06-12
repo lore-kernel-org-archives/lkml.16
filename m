@@ -1,89 +1,109 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE0720C031;
-	Thu, 12 Jun 2025 06:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09AE1F2361
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749708805; cv=none; b=pyxMTfd59ozq/mANlFRtyES5VJ8+BdfWfuxZXSoenNzPI+gTKw0H1HZ8rgyG37dSfrz2nvqAlyYqMCsobntvISq+B0EXV6AREGVup3Do6W/MLhO1H8LlENLpjJLNoKhGhu70CIvhXVXuQwDMzw5H54jGQheZZxCgYQToeerlrxw=
+	t=1749708819; cv=none; b=Aqeq3e5mTyxp7EoZztcSOfDbcJuWCkxwxf6yfCKsKZnbP9YDTotwcY6UZiIn63a+6uJqe1mTlregITw5OL6gLgRUMvjGMMaq6kBMy8dc8y1DP5YlG0612o4Y3nV5OmH+v8vpFUxp2uN/PDs4UzN4OXpo8UxNQrOreP2KVCiy8cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749708805; c=relaxed/simple;
-	bh=oCkNsF4jAbINksOx0fvr5p8N08HQ7Tk5Wej95Tovdlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SixSy7MD8TGFTGeTJtU+/c18y1umLLLu6POfpTKmZomeRqLDcpgifz4HvaFDAYFW1RpIibM2A0X9ym3DWJrHud7GwtYtiznFaN+VT2+wArBZ4ErlktLgt8HTqNahY18RQeFjyjjpACgjyerT35qgbpBUvREslBLyU6JZrnkdK0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=6Tnk2zpk; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1749708819; c=relaxed/simple;
+	bh=howSff6VWPDUG/8EwAo2gdsK+umwDc6lyF7pREy9114=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UEBR2KMwn9rnkWMXYyV0TDq/Pi17ZDj9cjnmIFPIIu2TnO9tCYT50SbFYR2EA7Ozz/Z/QnfEgL7JxlKYqi8VCwN8tgFVn2K6klMS/hqcjnUKWv/LjuZB9Pt8bu2fAlvjEB5O3e2r2Zt/GrTUOYwqmwyLD0Ekr0gfadrFPu9BemI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W9OwK7FF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="6Tnk2zpk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=d0ztJlo825I13kb3bxddMAoPs02kBnZ14ol1fnruaBk=; b=6Tnk2zpkgi0x5+D82Lxct/AdoC
-	iaw89WEFQKaSURM/9N0G/vYHbWPR9syN8Lce4kYsIaHls/rp9AZHk6GIg4yPviQ5BaKOJPzss2E2b
-	zkscX4co+YmrV2qUBBUQrTIlQvK4G2etPhd69AE6xW0gYWthmxZTrgkOJsGgp3CGSZphCn55JLtAZ
-	vWMzvomzcm5v8y89ZxPFFYSeJDY4JqAsmel/43USago5qpkoU+xmXx0ekee6RRzRJNK/R/SDLtei6
-	bE4f14YN7R6E7jJuWc0gSAjM80i2v1UsuEgN884lOfdqJp99+mO93lBpeTsfSgEhWMIBLB3DgbMgK
-	uAOEWfNQ==;
-Date: Thu, 12 Jun 2025 08:12:55 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Andrew Davis <afd@ti.com>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, Tony Lindgren
- <tony@atomide.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Aaro Koskinen
- <aaro.koskinen@iki.fi>, Kevin Hilman <khilman@baylibre.com>, Roger Quadros
- <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, Bajjuri Praneeth
- <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 5/5] arm: omap2plus_defconfig: Enable TPS65219
- regulator
-Message-ID: <20250612081255.255be21e@akair>
-In-Reply-To: <1d87fa3b-c3b9-44fd-9e61-7f1ffadcfb0c@ti.com>
-References: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
-	<20250609-bbg-v2-5-5278026b7498@bootlin.com>
-	<1d87fa3b-c3b9-44fd-9e61-7f1ffadcfb0c@ti.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W9OwK7FF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749708816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P/EyBBdquzcHxre0zmx4LK4Tl/qvbbDBPGbd2Tyb9e0=;
+	b=W9OwK7FF5pIOZNuGJ6Wi+gDFofvyj+LuyIBViXF+B+AKfO8RU6udjymw0YX9nFhCVwvFdU
+	ve+rJI6eRDoAaTs5lN8D2cYTTSSBJhPZIdYn3slGC6IBhg5MkWt2ima5DjMRaG9bjR+6Ed
+	oSl3NrNlf7uA0tSQ01FA16N1K2jIZ1g=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-61-feOsE_liNTWnR7fKqB06Dg-1; Thu, 12 Jun 2025 02:13:34 -0400
+X-MC-Unique: feOsE_liNTWnR7fKqB06Dg-1
+X-Mimecast-MFC-AGG-ID: feOsE_liNTWnR7fKqB06Dg_1749708813
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-311ef4fb5fdso551857a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:13:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749708813; x=1750313613;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P/EyBBdquzcHxre0zmx4LK4Tl/qvbbDBPGbd2Tyb9e0=;
+        b=c+ygLWBUxYbWc5SOpIdJaZ6WNHFptgMtHYSFGZpYw6kcXPiePSm/T21EZuzcZh353c
+         EOcr6PrRSoOX4+mIhdmWlpF8hZmH23poToTk4K1EiMlPTLQnfb/8E5sHJ2S7eAPUiZa7
+         SvzQ1EOk6spJgLKpU2p6PVirUW9W2AqX8OcLs/BzEBqyWWt3mHv++vDyWWtQqflK2Ohz
+         5y5tGcuzFIBg+KTkqLxISj87/nuRBw74Ow8fIyDCpFEYVCqy3FPLmcymu/DMH7LBZs5G
+         JLp52uIuOYc0EPY1Y0ElAQJUBdGTWumpOU4Z7ZrX20DjO41utNCvPbZzr6QrmTkIDrru
+         Ge4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUGzXJpjFyBt8RwAoLgQtomSfg3RPmEsDSu+e7VXHWUzdKkvdLkZSmc4xbpz2ALHZEyI9VsuS/aIrJWeNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcwZgjfjNxrDI3yxYvWWljDNd3zezlajo9QbYQVACn5w2lfEm+
+	N7MLJP5RDsHhT2HHE169LytdxflySNbfXKsINi7FSaAMMeFzSoxCqaAAQSc3ql/pYf3sNSbFLxN
+	EMRzPkB4iuk9jkzgufbV9f05YShjD5QL81ivhrohS5EvVrBMccUtXVzfqZh0jPuNLc0cUac/B06
+	FheAR5N50qn/yBrFdRI0LXal4xuafQr9TiRiXmUI+x
+X-Gm-Gg: ASbGncuj8GbjbuxTE5RTUVZ/q3BFXUTZi41861Unbo+nWBbkeCBoLpQDyspvptF+V+M
+	NIb8uNStjWFAYP9Ef6J03FV1Z4/t2p/DITuGfa2DunOpwi/d/KPq7Fpj/1ZKzgYmBu9dajlWeHH
+	7Nh0T6
+X-Received: by 2002:a17:90b:4a85:b0:311:f30b:c18 with SMTP id 98e67ed59e1d1-313af0f8588mr8593831a91.4.1749708813290;
+        Wed, 11 Jun 2025 23:13:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHRSfn+DFX99Kt8GYBgrMAVtWhiGSmX+yj9Fd1EztN/3C7R1B2uqWnhW/ZwV2Dfc16GV/gaDsxvGQ2v4NwVoR4=
+X-Received: by 2002:a17:90b:4a85:b0:311:f30b:c18 with SMTP id
+ 98e67ed59e1d1-313af0f8588mr8593813a91.4.1749708812881; Wed, 11 Jun 2025
+ 23:13:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250609073430.442159-1-lulu@redhat.com> <20250609073430.442159-4-lulu@redhat.com>
+In-Reply-To: <20250609073430.442159-4-lulu@redhat.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Thu, 12 Jun 2025 14:13:19 +0800
+X-Gm-Features: AX0GCFtAQ6KdmUMQlRn5ycdH_MpDkwuSBIM378dLZRqlkkpE6VbNRTu4Uei-gEI
+Message-ID: <CACGkMEtB_8PRt1Ag0mXV7ycTv1KG_c2PT283hnYukRJrG6h2YQ@mail.gmail.com>
+Subject: Re: [PATCH v11 3/3] vhost: Add configuration controls for vhost
+ worker's mode
+To: Cindy Lu <lulu@redhat.com>
+Cc: mst@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am Wed, 11 Jun 2025 16:13:05 -0500
-schrieb Andrew Davis <afd@ti.com>:
+On Mon, Jun 9, 2025 at 3:34=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrote:
+>
+> This patch introduces functionality to control the vhost worker mode:
+>
+> - Add two new IOCTLs:
+>   * VHOST_SET_FORK_FROM_OWNER: Allows userspace to select between
+>     task mode (fork_owner=3D1) and kthread mode (fork_owner=3D0)
+>   * VHOST_GET_FORK_FROM_OWNER: Retrieves the current thread mode
+>     setting
+>
+> - Expose module parameter 'fork_from_owner_default' to allow system
+>   administrators to configure the default mode for vhost workers
+>
+> - Add KConfig option CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL to
+>   control the availability of these IOCTLs and parameter, allowing
+>   distributions to disable them if not needed
+>
+> - The VHOST_NEW_WORKER functionality requires fork_owner to be set
+>   to true, with validation added to ensure proper configuration
+>
+> Signed-off-by: Cindy Lu <lulu@redhat.com>
 
-> On 6/9/25 10:43 AM, Kory Maincent wrote:
-> > Enable the TPS65219 regulator in the defconfig, as the TPS65214
-> > variant is used by the newly introduced BeagleBoard Green Eco board.
-> > 
-> > Reviewed-by: Andreas Kemnade <andreas@kemnade.info>
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > ---
-> >   arch/arm/configs/omap2plus_defconfig | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-> > index 9f9780c8e62a..2ad669f7b202 100644
-> > --- a/arch/arm/configs/omap2plus_defconfig
-> > +++ b/arch/arm/configs/omap2plus_defconfig  
-> 
-> Why omap2plus_defconfig? OMAP3 and newer are all ARMv7 and
-> boards with those can/should use multi_v7_defconfig.
-> 
-if there are enough drivers enabled there, it would work, but it is not.
-So there need to be a bunch of patches to add the missing stuff.
-omap2plus_defconfig is there and support for boards are added.
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-So I think until multi_v7_defconfig is really usable for OMAP3+, we
-should stick with the name omap2plus_defconfig and add stuff.
-If we rename omap2plus_defconfig to omap2_defconfig, we should imho
-disable OMAP3/4/5 there to avoid confusion.
+Thanks
 
-Regards,
-Andreas
