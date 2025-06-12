@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC621E5B68
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5DA221DA8
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749745233; cv=none; b=PNDAmf13HOpUU96xIrItV4P6AGMTEJaG+H/kthqUIfp1dTrSySiPS3VxXilxdU+EHoiyLPexJZZ6yGhw8VgILKQlBE4qU4L5D91ng8reLZE8k2B4IVEpLu8YuB1a9oj56BYwWd2HroHcJ69Q982HGLC/FuM1yw9G9w2Sl5FicjI=
+	t=1749745298; cv=none; b=epw2KsXFVrFx656dA6dsgmGmo19zVV2PlvXqecy2ZGL1RQ/ox985lkzyUG8eNx4rUnmgiR0J75MnSvxm0w2r4qKKrAUYSY51r/0uLTI+5bjSejyK07qXLbrGKUvN7XlhdixccmiFNzW3bBdbWD7g/pcljCsDR/NccCit71AtRcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749745233; c=relaxed/simple;
-	bh=X+UdTHXDFMte+vwvhwJwB2Z7tZ1dV9rcTCoM9SVT0hs=;
+	s=arc-20240116; t=1749745298; c=relaxed/simple;
+	bh=b9Hf0WPhn4uw3DVMdJKhxVedk7FYy5EqXqMjYHx2F6k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EHd4g1zBsmNCiWBG1rGQb6SKJZ34EVdQXUSz0ukw3iRH+3VXab3llZG4ukyAEBwwWJV7hbamfyummYvNjWK3LjH9yatyxXPvrIEf0MOg+PK4o46UIQc3kdUIsBpRXDDsnMuz+qqbVqkykVlmO6j+Jsw3/GOdSo7K/2/1uMAyh2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPyJ2dWs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JSdInBgN1LBJMfUT6mI9WWwTjEcnMJxTU9FK5UuVQziLKkQvP7ZuTVhbfNJpj59AiM8sneDrqZJy/qL9vI23lljhXZhEDLu5YcfTxtgCY59yUN21Uc1ngVL/bWUc/wNyHDlORCoxP8ON3etnEsmt49qdmSlpl+PN4q7sdnkVedQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2tHT2pj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPyJ2dWs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B66C4CEEE;
-	Thu, 12 Jun 2025 16:20:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2tHT2pj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A41C4CEEA;
+	Thu, 12 Jun 2025 16:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749745233;
-	bh=X+UdTHXDFMte+vwvhwJwB2Z7tZ1dV9rcTCoM9SVT0hs=;
+	s=k20201202; t=1749745297;
+	bh=b9Hf0WPhn4uw3DVMdJKhxVedk7FYy5EqXqMjYHx2F6k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RPyJ2dWsJbyzqBHD0PMyl8dK0RPs99sGSg01vkmm8hOgV86bNu+pxGug0oIm/y81b
-	 jOGoS8UxKiTofeJqilG6Z7djN3h1/Ly3QvOEBlE7VbcP30TF31xEakvNu3FlvgKhlk
-	 hHcOIs0/WnVPw+shOtZsK23BdENywcy3flnjnJ67xsr/eKIGYZ53F2Gm7lwV0bXzIe
-	 NXPaT6szRw06eFc982fGx7qpmGYpicxKDbE+CSQo7a21SXHThms78ptWkh2iit4Wgf
-	 NfXudkexdO2dQtpCvDDuW41+cG9sIrY6UAuzq3vkOD+NndlGjT2hNwRvHScZm/k13l
-	 00aPjaTYzYQtw==
-Date: Thu, 12 Jun 2025 17:20:28 +0100
+	b=K2tHT2pjNNFyGTI7QqFHYxO7jPygLm+ZPhIaIk6lAiIgNavT3XHHy22/3gYN1wOre
+	 Pi3xQLnycnlxVyIANsgk9o5ZaHa80lN3u7tdLrgbGRNVfGnIUaGTJz8UB/Qzp+lss4
+	 VALutvube9kFU1MjAlxyJdTs2nAo43jfUylbtZST1BKfjlm8ebuS/Ql2OV1XGXitMV
+	 sgXFf1gf7uzGkdPNCjLxy6XBox/GtLISdMASHkBaPvDbzsAV/e3jJOVppnfPekR9aA
+	 Z8LjtYm+IoaYdznsutv/8a9k7ifoZqw/ziDcAN2p5bpPn+lDphBhywT9T+hDLVyxsl
+	 HwEaLBfujsu8Q==
+Date: Thu, 12 Jun 2025 17:21:33 +0100
 From: Will Deacon <will@kernel.org>
-To: Mark Brown <broonie@kernel.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/gcs: Don't call gcs_free() during flush_gcs()
-Message-ID: <20250612162027.GA13202@willie-the-truck>
-References: <20250611-arm64-gcs-flush-thread-v1-1-cc26feeddabd@kernel.org>
- <aEm-F04k0sC1tOCp@arm.com>
- <4b354842-2108-4904-9294-fb9b00978986@sirena.org.uk>
- <aErokN0vKT3urlmA@arm.com>
- <93a0f043-d5f6-432f-ac37-266dd5bbe899@sirena.org.uk>
+Subject: Re: [PATCH v1] arm64/mm: Ensure lazy_mmu_mode never nests
+Message-ID: <20250612162132.GB13202@willie-the-truck>
+References: <20250606135654.178300-1-ryan.roberts@arm.com>
+ <aEgeQCCzRt-B8_nW@arm.com>
+ <3cad01ea-b704-4156-807e-7a83643917a8@arm.com>
+ <aEhKSq0zVaUJkomX@arm.com>
+ <b567a16a-8d80-4aab-84c2-21cbc6a6a35d@arm.com>
+ <20250612145906.GB12912@willie-the-truck>
+ <066fa735-98ad-45f4-9316-b983d2e5a3d3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,37 +48,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <93a0f043-d5f6-432f-ac37-266dd5bbe899@sirena.org.uk>
+In-Reply-To: <066fa735-98ad-45f4-9316-b983d2e5a3d3@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, Jun 12, 2025 at 03:51:19PM +0100, Mark Brown wrote:
-> On Thu, Jun 12, 2025 at 03:47:44PM +0100, Catalin Marinas wrote:
-> > On Thu, Jun 12, 2025 at 12:40:42PM +0100, Mark Brown wrote:
-> > > On Wed, Jun 11, 2025 at 06:34:15PM +0100, Catalin Marinas wrote:
+On Thu, Jun 12, 2025 at 05:00:51PM +0100, Ryan Roberts wrote:
+> On 12/06/2025 15:59, Will Deacon wrote:
+> > To be honest, I don't think the proposal in this series is really
+> > improving what we have. Either we support nested lazy mode or we don't;
+> > having __kernel_map_pages() mess around with the lazy mmu state because
+> > it somehow knows that set_memory_valid() is going to use it is fragile
+> > and ugly.
+> > 
+> > So I'm incined to leave the current code as-is, unless we can remove it
+> > in favour of teaching the core code how to handle it instead.
 > 
-> > > > Another caller of gcs_free() is deactivate_mm(). It's not clear to me
-> > > > when we need to free the shadow stack on this path. On the exit_mm()
-> > > > path for example we have mmput() -> exit_mmap() that takes care of
-> > > > unmapping everything. Similarly on the exec_mmap() path.
-> 
-> > > We need that one to clean up the GCS for threads that had it allocated
-> > > for compatibility, you can see the leak that results without it easily
-> > > with the glibc testsuite (or anything else that does threads, the glibc
-> > > tests just spot it).  Most of the checking for arch_release_task_struct()
-> > > is verifying that deactivate_mm() is guaranteed to be called eveywhere
-> > > it's relevant, I need to page that back in.
-> 
-> > Makes sense. I think we should only keep gcs_free() in one place,
-> > ideally deactivate_mm() as that's more related to mm rather than the
-> > task_struct.
-> 
-> Yes, me too - I just need to double check.
+> Yeah fair enough. I'm not going to have time to do the proper nesting support
+> thing. But I'll see if I can find someone internally that I might be able to
+> convince. If not, we'll just leave as is.
 
-Having looking a little at the code, I think that
-arch_release_task_struct() might be better than deactivate_mm(). The
-latter takes an 'mm' parameter which we ignore but I think happens to
-be 'current->mm'and so things work. Given that, and that we don't do any
-GCS management on the activate_mm() path, freeing the GCS in the
-task-centric functions makes more sense to me.
+Sounds fine by me, thanks Ryan.
 
 Will
