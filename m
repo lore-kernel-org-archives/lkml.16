@@ -1,48 +1,40 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258821A3154;
-	Thu, 12 Jun 2025 05:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014902AE6D;
+	Thu, 12 Jun 2025 05:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749707375; cv=none; b=TS9u9fX4OMNre1eKOAaWc7E6EEwBQEKrDXD6pi4QiErxUv2pSk5WD00v/3pVzUTAMH9zfp5Py11zQt5m1Sv6TcvBNDTa8ztL+UBh3ggytbwzDeb4/z0lfec/SmarrzlxleUA0QVQX8NEka6x3cWaWwGFa0grEhbeWBJu1DD7HOg=
+	t=1749707482; cv=none; b=M2du0HGwvX/r3e/9TOFtKmX1IvENfxuAc7Qb4scnmSVDkerxbekXAzrnAb/pBaaWerW+/CfqBd27142z9s+bjR80UwLc3uMOwTa6au6qoeAfrh6gCVZyzogL5rLkTU+6KPbueltbW8RKEtPhkfH4gSLTZ0BFvtxCFDOYMf+WOdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749707375; c=relaxed/simple;
-	bh=oeDseZ1YruLWRioQVS3zDkAVsr+7kPiWpSRYhiOD97o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UZ0fBuRP9dTQF+o8HE2z1JDgqk50tl+8m65vT3NDmFuXhYvrcAT3+FammJbq3RDAYokv3+aWS27/XbRzQ6doG0ozTz+UTSGbvh1fAQtipYtjUwvQP6ijlgU93UlhweKpk5ZRLBRX5P/usk2Mr0lyiotJJfyzdgNIsmaYUIci/bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kSZHA9eb; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749707482; c=relaxed/simple;
+	bh=slvcAQUT+HFsllFYLGyw5Fofz5HxNlsL+2o5mQBM/0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b/73GVBBkoTms+NRRMKWMludeYjJ8oHrR1jepgrNLf0q/EeVQaH6omQPxgho1evyMt4enKkrF4Vv3E+aSZH9pEIGucneBDhHEfi1t+dcCnNjdKjnenPt4PyjIwwIktUsYaNHimE3NDHq7t8i+PaHYuaX2ZunIvAWdfutJnTnXwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TJiONlJ9; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kSZHA9eb"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C5nRUp2782013;
-	Thu, 12 Jun 2025 00:49:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749707367;
-	bh=wQ6UkrjNlmGOI532P0hm6reVg7bumxMRL0dV7Vudxcc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=kSZHA9ebgObsjXOQo1VGDu0Ugbd4T3XbRfKSQwTdtMx7Ies2RVBjaYD6lMYWudeOf
-	 AUUKqZC4OH8ZDNphsjuRSuFhA1Z+JdG5cMo+ZkJSE8zT1gMT1TzFLUkJyQjuQ4+Fwx
-	 I1p058KD5ndbggcvKmYyAlHazvU4ts8jBxvMzZiY=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C5nR251566750
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 12 Jun 2025 00:49:27 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 12
- Jun 2025 00:49:26 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 12 Jun 2025 00:49:26 -0500
-Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C5nNSu1494290;
-	Thu, 12 Jun 2025 00:49:24 -0500
-Message-ID: <b31e87f3-92b1-45fd-be62-48eccc4f0a4c@ti.com>
-Date: Thu, 12 Jun 2025 11:19:23 +0530
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TJiONlJ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749707477;
+	bh=slvcAQUT+HFsllFYLGyw5Fofz5HxNlsL+2o5mQBM/0s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TJiONlJ9E7Ze3sRhwKZBV9R9Z6MEzthUCgwvyz+PCAR+b70XacpHK1Ok/w3otAUFo
+	 xcTXGKlAwRPHZ1F6LQYAfijJx8cPS2ocEIIYr5CIe0ASepzhEjtn3vMGn46lxkk2eW
+	 8psRt03UkK1YeCc6FFFhyESjq4YJXMdOEo/0/I0ziEoIMbfNowwJy5KPqv/k5cZNgZ
+	 MxuwYQMKU4LDB3uCpiJrUHZmeU79iOy4kKyhervclnE+dBW10wK/xsvQM6s/UVMUUa
+	 UcN/1JEs4AAex34cYtPmWbGHMbMtJnA49vF7KX6dJwpN6QDEC+iw572cMrnmH9AY6/
+	 TKCFRDlv01aYQ==
+Received: from [192.168.1.90] (unknown [212.93.144.165])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 19B3E17E0863;
+	Thu, 12 Jun 2025 07:51:17 +0200 (CEST)
+Message-ID: <33376472-679b-406f-aadb-41dd540c47cf@collabora.com>
+Date: Thu, 12 Jun 2025 08:51:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,42 +42,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] crypto: ti: Add driver for DTHE V2 AES Engine
- (ECB, CBC)
-To: Herbert Xu <herbert@gondor.apana.org.au>
-CC: "David S. Miller" <davem@davemloft.net>,
-        Kamlesh Gurudasani
-	<kamlesh@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri
-	<praneeth@ti.com>,
-        Manorit Chawdhry <m-chawdhry@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>
-References: <20250603124217.957116-1-t-pratham@ti.com>
- <20250603124217.957116-3-t-pratham@ti.com>
- <aElNLaBWM56vyFC6@gondor.apana.org.au>
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: Add HDMI PHY PLL clock source
+ to VOP2 on rk3576
+To: Detlev Casanova <detlev.casanova@collabora.com>,
+ Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: kernel@collabora.com, Andy Yan <andyshrk@163.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
+ <20250612-rk3576-hdmitx-fix-v1-3-4b11007d8675@collabora.com>
+ <6011857.DvuYhMxLoT@trenzalore>
 Content-Language: en-US
-From: T Pratham <t-pratham@ti.com>
-In-Reply-To: <aElNLaBWM56vyFC6@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <6011857.DvuYhMxLoT@trenzalore>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 11/06/25 15:02, Herbert Xu wrote:
-> On Tue, Jun 03, 2025 at 06:07:29PM +0530, T Pratham wrote:
+Hi Detlev,
+
+On 6/12/25 3:00 AM, Detlev Casanova wrote:
+> Hi Cristian,
+> 
+> On Wednesday, 11 June 2025 17:47:49 EDT Cristian Ciocaltea wrote:
+>> Since commit c871a311edf0 ("phy: rockchip: samsung-hdptx: Setup TMDS
+>> char rate via phy_configure_opts_hdmi"), the workaround of passing the
+>> rate from DW HDMI QP bridge driver via phy_set_bus_width() became
+>> partially broken, as it cannot reliably handle mode switches anymore.
 >>
->> +static void dthe_cipher_exit_tfm(struct crypto_skcipher *tfm)
->> +{
->> +	struct dthe_tfm_ctx *ctx = crypto_skcipher_ctx(tfm);
->> +
->> +	ctx->keylen = 0;
->> +}
+>> Attempting to fix this up at PHY level would not only introduce
+>> additional hacks, but it would also fail to adequately resolve the
+>> display issues that are a consequence of the system CRU limitations.
+>>
+>> Instead, proceed with the solution already implemented for RK3588: make
+>> use of the HDMI PHY PLL as a better suited DCLK source for VOP2. This
+>> will not only address the aforementioned problem, but it should also
+>> facilitate the proper operation of display modes up to 4K@60Hz.
+>>
+>> It's worth noting that anything above 4K@30Hz still requires high TMDS
+>> clock ratio and scrambling support, which hasn't been mainlined yet.
+>>
+>> Fixes: d74b842cab08 ("arm64: dts: rockchip: Add vop for rk3576")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>>  arch/arm64/boot/dts/rockchip/rk3576.dtsi | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+>> b/arch/arm64/boot/dts/rockchip/rk3576.dtsi index
+>> 6a13fe0c3513fb2ff7cd535aa70e3386c37696e4..b1ac23035dd789f0478bf10c78c74ef16
+>> 7d94904 100644 --- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+>> @@ -1155,12 +1155,14 @@ vop: vop@27d00000 {
+>>  				 <&cru HCLK_VOP>,
+>>  				 <&cru DCLK_VP0>,
+>>  				 <&cru DCLK_VP1>,
+>> -				 <&cru DCLK_VP2>;
+>> +				 <&cru DCLK_VP2>,
+>> +				 <&hdptxphy>;
+>>  			clock-names = "aclk",
+>>  				      "hclk",
+>>  				      "dclk_vp0",
+>>  				      "dclk_vp1",
+>> -				      "dclk_vp2";
+>> +				      "dclk_vp2",
+>> +				      "pll_hdmiphy0";
+>>  			iommus = <&vop_mmu>;
+>>  			power-domains = <&power RK3576_PD_VOP>;
+>>  			rockchip,grf = <&sys_grf>;
 > 
-> This is pointless.  Just get rid of the exit_tfm function.
+> I tested this on the ROCK 4D and can confirm that:
+>  - New modes like 2K are now working
+>  - Mode changes is now correctly supported
 > 
-> Cheers,
+> So,
+> Tested-By: Detlev Casanova <detlev.casanova@collabora.com>
 
-Okay. I was under the impression that init and exit functions were mandatory. Seems like they are not. I'll remove this function.
+Thanks for taking the time to perform all these tests!
 
-Regards
-T Pratham <t-pratham@ti.com>
+Cristian
