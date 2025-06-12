@@ -1,48 +1,25 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F251FBCB0;
-	Thu, 12 Jun 2025 10:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AC5822E3FC;
+	Thu, 12 Jun 2025 10:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723840; cv=none; b=SuybAnMSCSe53cAzSv/6f+wPR1CIbU4lSOoQZYFytrYFDJLpH5ejeIQB4zaxJb3dfSCZIWprE4wqqqttthnd8rIqQkQc+noEM8bZCyAmavnaFu4g2X0G9vK3Kw6yd1iBljKUA3vYoc+8HLW3HfE8vc66KEyyJZGdkepbFYRI2Pk=
+	t=1749723855; cv=none; b=Fz2RWT7pmr4FmkAUkHSzgCLBkDKv2SyaF2ECXn2Q//By/A4KNXba285jNDC/jLcLW4USVwOGXp1EYoVLUa9YT0Qa7yFNcl4v54cEnr+6mHkOpvBS5+wWyseGLzXmPZVG7fsO2oAzLN8ix1M7GZejCGcg07S617Lx8nqMZCu7bzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723840; c=relaxed/simple;
-	bh=p0dTYPdrugmbNsHZAy9XJZqGQfleK/Hn86rsvcPdfv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EnjPamq8pPlDeCzvp3BgpyLEaJ6oVlvT3ltQ146XpPTzEV8hOAnUCNfsJkz2hSKwn+nirLmsjbTjRIjSzV2V5Gt+aMamr8qdeq0PpBvx9Qusk7Bs7phv326QPujk9Le95N8Y0L67CTgCEYXi1IUMQ92Fj0dOy3chhZWhRnGix6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HQWIhtHm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HQWIhtHm"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C7qeKh027189;
-	Thu, 12 Jun 2025 10:23:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	dtDKf/1KTGy32BkhQJYDFCqnaGlZQ83I2ImgYeBlH1E=; b=HQWIhtHmzZPcB1L1
-	/grthliKzgZQBQ2dfoL2TKm8FJcnzGtw4wVieJGM6qfcDxantSOGOPVqkELHei1n
-	oL+RlbWQkVs+A3AQibt7qBZlTkNdt2wxortYmc6uJKbzfGzhYySIxegrBshMwYEr
-	S+sU4sZ9WDBTN3Y1ds0y6GnbuCwKpmKWF2bQfyi8v3e4aH2CF44g8DfIdmes29uA
-	fdkS+voTqmZ/AMTjAXQGDvKCquYgzxAe2CxzlybotCsfeh6JAzbzTB0b+3nd4URR
-	DixuvC5muVKe8GyzTtZI0VYuwnMNPI0Gor/fxpGTcWPLahlZTLp2/ZJ8Y3ulRbwJ
-	ffb0Xg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccvg23h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 10:23:46 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55CANYLR006468
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 10:23:34 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 12 Jun
- 2025 03:23:32 -0700
-Message-ID: <4fc60f88-827f-4dd2-a995-d605082b1ab3@quicinc.com>
-Date: Thu, 12 Jun 2025 18:23:29 +0800
+	s=arc-20240116; t=1749723855; c=relaxed/simple;
+	bh=EfoxGGZwPx0kqgJcWRywOxMTyMFiOL3+lrM4IfhKDB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vb/G/qHjFPRPQOX86+E84pTHQSJs+DwgMnnKr38QWcF8xx3iwYQ4U+e+uE6/UU95vE4QQdV6r76q1saMR0CwVbQjrHq8iUN1x8lgF4HhsNtTga1w/ozrwWbIAj1Ux88YXJgEi/h1KKjgc41GFUv8pbFWcAk9voUJs7mWnNakiJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34AA51424;
+	Thu, 12 Jun 2025 03:23:51 -0700 (PDT)
+Received: from [10.163.33.129] (unknown [10.163.33.129])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7033F3F59E;
+	Thu, 12 Jun 2025 03:24:07 -0700 (PDT)
+Message-ID: <ddc006af-3084-4fef-b822-144fb404bc8d@arm.com>
+Date: Thu, 12 Jun 2025 15:54:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,133 +27,230 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2] wifi: ath11k: mark reset srng lists as uninitialized
-To: Pedro Falcato <pfalcato@suse.de>
-CC: Sergey Senozhatsky <senozhatsky@chromium.org>, <akpm@linux-foundation.org>,
-        Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>
-References: <20250529035708.3136232-1-senozhatsky@chromium.org>
- <5857380e-ced9-4118-b9a0-ce926b25c11c@quicinc.com>
- <rxaibpgtf37w3th5lnt3w574w443yononqjoglyfktlcxe26qg@jpmtkckrotzp>
- <d02bca79-66f1-48b0-8c3b-aeaaa17135a9@quicinc.com>
- <zlzpmburt4o75yizy6uknx4ews4eox6wbr5jleuixp6o6v2tuk@sz6k4x4gcolo>
+Subject: Re: [PATCH V4 1/2] arm64/debug: Drop redundant DBG_MDSCR_* macros
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
+ linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org
+References: <20250612033547.480952-1-anshuman.khandual@arm.com>
+ <20250612033547.480952-2-anshuman.khandual@arm.com>
+ <86wm9hcr14.wl-maz@kernel.org>
 Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <zlzpmburt4o75yizy6uknx4ews4eox6wbr5jleuixp6o6v2tuk@sz6k4x4gcolo>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zyqawkJieCQlv1_S0xrPsRAXLLfOTeIq
-X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=684aaab2 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=wXqGBGp1KCZRk8HKG9kA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: zyqawkJieCQlv1_S0xrPsRAXLLfOTeIq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA4MCBTYWx0ZWRfXz/VgEtL9ttX0
- 2Xq+Y4z4Kc7QOPPWyj9n509KFtPZFnCCuDJH6Wkkv2LGrFh9baU+paZgTxHHkCR95uDW5RwpKJV
- nCYtLx1me5CZ40j2Wi0CbeWZb+OUu4sSz2wED1qYmhgpmTwTET59Q7K+uJJ9SpldHf0w+X15hjX
- GaMDrvd2Y6XbdGYiVCegiZvfV9ejKqmS6tkpFb2vwf5/Wxw+sQ9K0c92TDVx/0rAYQCRWByHBAb
- MavDj/i/1bOpyIw1hUwcooKcSwX09rMax9bxAbnUaWGIWZ2BIN7XgyBNJH6qiRt5jK4qnVAEIOk
- wuzH4hGw/WbQaH8kE2IcOY6BvGckHapI9sTIumuv8hgugAgSbO+H6K0zm53pddcKaylDufsxdyZ
- zlxS57x5RJwSi/a+E74oMbL2hIFqnNmgAg0kSD2MvddRfRjdNRRlpYINwMPBwNmbOrdnp8vn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1011 mlxscore=0
- malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506120080
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <86wm9hcr14.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
-On 6/12/2025 6:01 PM, Pedro Falcato wrote:
-> On Thu, Jun 12, 2025 at 04:01:49PM +0800, Baochen Qiang wrote:
->> [+ kernel mm list]
+On 12/06/25 1:47 PM, Marc Zyngier wrote:
+> On Thu, 12 Jun 2025 04:35:46 +0100,
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 >>
->> On 6/12/2025 1:04 PM, Sergey Senozhatsky wrote:
->>> On (25/06/12 11:30), Baochen Qiang wrote:
->>>> On 5/29/2025 11:56 AM, Sergey Senozhatsky wrote:
->>>>> ath11k_hal_srng_deinit() frees rdp and wrp which are used
->>>>> by srng lists.  Mark srng lists as not-initialized.  This
->>>>> makes sense, for instance, when device fails to resume
->>>>> and the driver calls ath11k_hal_srng_deinit() from
->>>>> ath11k_core_reconfigure_on_crash().
->>>>
->>>> Did you see any issue without your change?
->>>
->>> We do see some issues, yes, on LTS kernels.
->>>
->>> [..]
->>>>> diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
->>>>> index 8cb1505a5a0c..cab11a35f911 100644
->>>>> --- a/drivers/net/wireless/ath/ath11k/hal.c
->>>>> +++ b/drivers/net/wireless/ath/ath11k/hal.c
->>>>> @@ -1346,6 +1346,10 @@ EXPORT_SYMBOL(ath11k_hal_srng_init);
->>>>>  void ath11k_hal_srng_deinit(struct ath11k_base *ab)
->>>>>  {
->>>>>  	struct ath11k_hal *hal = &ab->hal;
->>>>> +	int i;
->>>>> +
->>>>> +	for (i = 0; i < HAL_SRNG_RING_ID_MAX; i++)
->>>>> +		ab->hal.srng_list[i].initialized = 0;
->>>>
->>>> With this flag reset, srng stats would not be dumped in ath11k_hal_dump_srng_stats().
->>>
->>> I think un-initialized lists should not be dumped.
->>>
->>> ath11k_hal_srng_deinit() releases wrp.vaddr and rdp.vaddr, which are
->>> accessed, as far as I understand it, in ath11k_hal_dump_srng_stats()
->>> as *srng->u.src_ring.tp_addr and *srng->u.dst_ring.hp_addr, presumably,
->>> causing things like:
->>>
->>> <1>[173154.396775] BUG: unable to handle page fault for address: ffffb4e4c046f010
->>> <1>[173154.396778] #PF: supervisor read access in kernel mode
->>> <1>[173154.396781] #PF: error_code(0x0000) - not-present page
+>> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
+>> used in all debug monitor related call paths. But using generated sysreg
+>> definitions causes build warnings because there is a mismatch between mdscr
+>> variable (u32) and GENMASK() based masks (long unsigned int). Convert all
+>> variables handling MDSCR_EL1 register as u64 which also reflects its true
+>> width as well.
 >>
->> I am confused here: if the root cause is driver trying to read a freed memory, it should
->> not result in a PF issue. Because even if freed, the page is there and still mapped in
->> kernel page table.
+>> --------------------------------------------------------------------------
+>> arch/arm64/kernel/debug-monitors.c: In function ‘disable_debug_monitors’:
+>> arch/arm64/kernel/debug-monitors.c:108:13: warning: conversion from ‘long
+>> unsigned int’ to ‘u32’ {aka ‘unsigned int’} changes value from
+>> ‘18446744073709518847’ to ‘4294934527’ [-Woverflow]
+>>   108 |   disable = ~MDSCR_EL1_MDE;
+>>       |             ^
+>> --------------------------------------------------------------------------
 >>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/include/asm/assembler.h      |  4 ++--
+>>  arch/arm64/include/asm/debug-monitors.h |  6 ------
+>>  arch/arm64/kernel/debug-monitors.c      | 22 +++++++++++-----------
+>>  arch/arm64/kernel/entry-common.c        |  4 ++--
+>>  4 files changed, 15 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+>> index ad63457a05c5..f229d96616e5 100644
+>> --- a/arch/arm64/include/asm/assembler.h
+>> +++ b/arch/arm64/include/asm/assembler.h
+>> @@ -53,7 +53,7 @@
+>>  	.macro	disable_step_tsk, flgs, tmp
+>>  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
+>>  	mrs	\tmp, mdscr_el1
+>> -	bic	\tmp, \tmp, #DBG_MDSCR_SS
+>> +	bic	\tmp, \tmp, #MDSCR_EL1_SS
+>>  	msr	mdscr_el1, \tmp
+>>  	isb	// Take effect before a subsequent clear of DAIF.D
+>>  9990:
+>> @@ -63,7 +63,7 @@
+>>  	.macro	enable_step_tsk, flgs, tmp
+>>  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
+>>  	mrs	\tmp, mdscr_el1
+>> -	orr	\tmp, \tmp, #DBG_MDSCR_SS
+>> +	orr	\tmp, \tmp, #MDSCR_EL1_SS
+>>  	msr	mdscr_el1, \tmp
+>>  9990:
+>>  	.endm
+>> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
+>> index 8f6ba31b8658..1f37dd01482b 100644
+>> --- a/arch/arm64/include/asm/debug-monitors.h
+>> +++ b/arch/arm64/include/asm/debug-monitors.h
+>> @@ -13,14 +13,8 @@
+>>  #include <asm/ptrace.h>
+>>  
+>>  /* Low-level stepping controls. */
+>> -#define DBG_MDSCR_SS		(1 << 0)
+>>  #define DBG_SPSR_SS		(1 << 21)
+>>  
+>> -/* MDSCR_EL1 enabling bits */
+>> -#define DBG_MDSCR_KDE		(1 << 13)
+>> -#define DBG_MDSCR_MDE		(1 << 15)
+>> -#define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
+>> -
+>>  #define	DBG_ESR_EVT(x)		(((x) >> 27) & 0x7)
+>>  
+>>  /* AArch64 */
+>> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+>> index 58f047de3e1c..08f1d02507cd 100644
+>> --- a/arch/arm64/kernel/debug-monitors.c
+>> +++ b/arch/arm64/kernel/debug-monitors.c
+>> @@ -34,7 +34,7 @@ u8 debug_monitors_arch(void)
+>>  /*
+>>   * MDSCR access routines.
+>>   */
+>> -static void mdscr_write(u32 mdscr)
+>> +static void mdscr_write(u64 mdscr)
+>>  {
+>>  	unsigned long flags;
+>>  	flags = local_daif_save();
+>> @@ -43,7 +43,7 @@ static void mdscr_write(u32 mdscr)
+>>  }
+>>  NOKPROBE_SYMBOL(mdscr_write);
+>>  
+>> -static u32 mdscr_read(void)
+>> +static u64 mdscr_read(void)
+>>  {
+>>  	return read_sysreg(mdscr_el1);
+>>  }
+>> @@ -79,16 +79,16 @@ static DEFINE_PER_CPU(int, kde_ref_count);
+>>  
+>>  void enable_debug_monitors(enum dbg_active_el el)
+>>  {
+>> -	u32 mdscr, enable = 0;
+>> +	u64 mdscr, enable = 0;
+>>  
+>>  	WARN_ON(preemptible());
+>>  
+>>  	if (this_cpu_inc_return(mde_ref_count) == 1)
+>> -		enable = DBG_MDSCR_MDE;
+>> +		enable = MDSCR_EL1_MDE;
+>>  
+>>  	if (el == DBG_ACTIVE_EL1 &&
+>>  	    this_cpu_inc_return(kde_ref_count) == 1)
+>> -		enable |= DBG_MDSCR_KDE;
+>> +		enable |= MDSCR_EL1_KDE;
+>>  
+>>  	if (enable && debug_enabled) {
+>>  		mdscr = mdscr_read();
+>> @@ -100,16 +100,16 @@ NOKPROBE_SYMBOL(enable_debug_monitors);
+>>  
+>>  void disable_debug_monitors(enum dbg_active_el el)
+>>  {
+>> -	u32 mdscr, disable = 0;
+>> +	u64 mdscr, disable = 0;
+>>  
+>>  	WARN_ON(preemptible());
+>>  
+>>  	if (this_cpu_dec_return(mde_ref_count) == 0)
+>> -		disable = ~DBG_MDSCR_MDE;
+>> +		disable = ~MDSCR_EL1_MDE;
+>>  
+>>  	if (el == DBG_ACTIVE_EL1 &&
+>>  	    this_cpu_dec_return(kde_ref_count) == 0)
+>> -		disable &= ~DBG_MDSCR_KDE;
+>> +		disable &= ~MDSCR_EL1_KDE;
+>>  
+>>  	if (disable) {
+>>  		mdscr = mdscr_read();
+>> @@ -415,7 +415,7 @@ void kernel_enable_single_step(struct pt_regs *regs)
+>>  {
+>>  	WARN_ON(!irqs_disabled());
+>>  	set_regs_spsr_ss(regs);
+>> -	mdscr_write(mdscr_read() | DBG_MDSCR_SS);
+>> +	mdscr_write(mdscr_read() | MDSCR_EL1_SS);
+>>  	enable_debug_monitors(DBG_ACTIVE_EL1);
+>>  }
+>>  NOKPROBE_SYMBOL(kernel_enable_single_step);
+>> @@ -423,7 +423,7 @@ NOKPROBE_SYMBOL(kernel_enable_single_step);
+>>  void kernel_disable_single_step(void)
+>>  {
+>>  	WARN_ON(!irqs_disabled());
+>> -	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
+>> +	mdscr_write(mdscr_read() & ~MDSCR_EL1_SS);
+>>  	disable_debug_monitors(DBG_ACTIVE_EL1);
+>>  }
+>>  NOKPROBE_SYMBOL(kernel_disable_single_step);
+>> @@ -431,7 +431,7 @@ NOKPROBE_SYMBOL(kernel_disable_single_step);
+>>  int kernel_active_single_step(void)
+>>  {
+>>  	WARN_ON(!irqs_disabled());
+>> -	return mdscr_read() & DBG_MDSCR_SS;
+>> +	return mdscr_read() & MDSCR_EL1_SS;
+>>  }
+>>  NOKPROBE_SYMBOL(kernel_active_single_step);
+>>  
+>> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+>> index 7c1970b341b8..171f93f2494b 100644
+>> --- a/arch/arm64/kernel/entry-common.c
+>> +++ b/arch/arm64/kernel/entry-common.c
+>> @@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
+>>  
+>>  static void cortex_a76_erratum_1463225_svc_handler(void)
+>>  {
+>> -	u32 reg, val;
+>> +	u64 reg, val;
+>>  
+>>  	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
+>>  		return;
+>> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(void)
+>>  
+>>  	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
+>>  	reg = read_sysreg(mdscr_el1);
+>> -	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
+>> +	val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
+>>  	write_sysreg(val, mdscr_el1);
+>>  	asm volatile("msr daifclr, #8");
+>>  	isb();
 > 
-> Any memory that is virtually-mapped (read: vmalloc, vmap, vm_map_ram, and others)
-> will be unmapped on its subsequent free. I'm not familiar with the DMA subsystem,
-> but the address ffffb4e4c046f010 is vmalloc-like.
+> Whilst you're at it, please also change the open-coded constant in
+> __cpu_setup to MDSCR_EL1_TDCC.
 
-OK, I forget the vmalloc case. And indeed in case IOMMU present, the DMA subsystem is
-preferring vmalloc'ed memory.
+I believe you are suggesting about the following change, will fold
+in the patch. But I guess 'mov' would still be preferred compared
+to 'mov_q' as MDSCR_EL1_TDCC is a 32 bit constant (atleast the non
+zero portion) ?
 
-Thank you, Pedro!
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -454,7 +454,7 @@ SYM_FUNC_START(__cpu_setup)
+        dsb     nsh
 
-> 
->>
->>> <4>[173154.396824] RIP: 0010:ath11k_hal_dump_srng_stats+0x2b4/0x3b0 [ath11k]
->>> <4>[173154.396839] Code: 88 c0 44 89 f2 89 c1 e8 3a 14 06 00 41 be e8 25 00 00 eb 6e 42 0f b6 84 33 78 ff ff ff 89 45 d0 46 8b 7c 33 d8 4a 8b 44 33 e0 <44> 8b 20 46 8b 6c 33 e8 42 8b 04 33 48 89 45 c8 48 8b 3d 45 a3 a0
->>> <4>[173154.396842] RSP: 0018:ffffb4e4dceefc50 EFLAGS: 00010246
->>> <4>[173154.396846] RAX: ffffb4e4c046f010 RBX: ffff90d1c3040000 RCX: a0009634a5d28c00
->>> <4>[173154.396849] RDX: ffffffffb0279d80 RSI: ffffffffb0279d80 RDI: ffff90d2e5d17488
->>> <4>[173154.396851] RBP: ffffb4e4dceefc90 R08: ffffffffb0249d80 R09: 0000000000003b82
->>> <4>[173154.396854] R10: 0000000000000004 R11: 00000000ffffffea R12: ffff90d1c3041c90
->>> <4>[173154.396856] R13: ffff90d1c3040000 R14: 0000000000002828 R15: 0000000000000000
->>> <4>[173154.396859] FS: 0000000000000000(0000) GS:ffff90d2e5d00000(0000) knlGS:0000000000000000
->>> <4>[173154.396862] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> <4>[173154.396865] CR2: ffffb4e4c046f010 CR3: 000000005ca24000 CR4: 0000000000750ee0
->>> <4>[173154.396868] PKRU: 55555554
->>> <4>[173154.396870] Call Trace:
->>> <4>[173154.396874] <TASK>
->>> <4>[173154.396883] ? __die_body+0xae/0xb0
->>> <4>[173154.396890] ? page_fault_oops+0x381/0x3e0
->>> <4>[173154.396896] ? exc_page_fault+0x69/0xa0
->>> <4>[173154.396901] ? asm_exc_page_fault+0x22/0x30
->>> <4>[173154.396908] ? ath11k_hal_dump_srng_stats+0x2b4/0x3b0 [ath11k (HASH:3de7 4)]
->>> <4>[173154.396923] ath11k_qmi_driver_event_work+0xbd/0x1050 [ath11k (HASH:3de7 4)]
->>> <4>[173154.396942] worker_thread+0x390/0x960
->>> <4>[173154.396949] kthread+0x149/0x170
->>
-> 
+        msr     cpacr_el1, xzr                  // Reset cpacr_el1
+-       mov     x1, #1 << 12                    // Reset mdscr_el1 and disable
++       mov     x1, MDSCR_EL1_TDCC              // Reset mdscr_el1 and disable
+        msr     mdscr_el1, x1                   // access to the DCC from EL0
+        reset_pmuserenr_el0 x1                  // Disable PMU access from EL0
+        reset_amuserenr_el0 x1                  // Disable AMU access from EL0
+
 
