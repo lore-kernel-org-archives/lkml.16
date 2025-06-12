@@ -1,105 +1,286 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pmxout2.rz.tu-bs.de (pmxout2.rz.tu-bs.de [134.169.4.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662F0279795;
-	Thu, 12 Jun 2025 15:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AA726E717;
+	Thu, 12 Jun 2025 15:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.169.4.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740628; cv=none; b=WzfBwLkBLUuOb5Vzqax3mCt1WPq+AHFtgQ5jAPtGv+/DbBveZXLvoarIOr5IghKmsUU4VxEtzdD8/kUeVokcX6IDnaqnQaG3mH39Jk81WmiLc3cI4F97Goe1QshcNJRKg6Ku1ghl185An1MbBBEta9/kSbM6F2hsRLZ3rD92NIo=
+	t=1749740672; cv=none; b=MoAvK02sbobyISrcHbk/pvzVUPVxRpaj8Amo8U1i97yRs1xg9SSVQrCj7WMymh2Vy5XSudFMkETysFUAlkAHZWZssaU8PQ/uwwN81nHx9bkY9fHaRaytde+cy34phFAywTXsfPFaG6jGsLJHytCvxwG5mfn8la0YZimNgKSW/ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740628; c=relaxed/simple;
-	bh=ONyFbl7eR0QXU3CRaThaUkea18g1Bd2HJqzSu8H2F5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nVwdg6vIKF1xXsMiRSIRaSzB79GN8FbI2279dR5cLXr4bZVv0UIU/i789xnTwkcMjU6ud8IPiiocrIjnabH8BvyyuiQf5hjjvmx+ygS6MpJYiWjKjyvJ5fBBg7+m5lQglVPKeM+ZPG43Lsnk4v8F6rpnFGFU46wxjIHEWRM3IUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m74s/H9b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749740672; c=relaxed/simple;
+	bh=M7psreqtd7qDN8w7ZaJtjjjh4GKXKbz1dQhsMZmx/og=;
+	h=Message-ID:Date:MIME-Version:To:CC:From:Subject:Content-Type; b=QcuiCwBRWTkrrEZUD1F1eTNRWE0ZxpnOwSgnUdK1sBAtbPkKNOIojO1QFz9nV0u3UVcXoUBqb/VkdJ4MtYbpxta9aU6zfwt4mlhm3mkQZTMGmy2yU/NOSm9Tf/d1gzhCz0KeeD9bbc7D/X0pok8br9FiRWkv1Tv0FLlaPPBsH0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de; spf=pass smtp.mailfrom=tu-braunschweig.de; dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b=tyyE0jJs; arc=none smtp.client-ip=134.169.4.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tu-braunschweig.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m74s/H9b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C65BDC4CEEB;
-	Thu, 12 Jun 2025 15:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749740627;
-	bh=ONyFbl7eR0QXU3CRaThaUkea18g1Bd2HJqzSu8H2F5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m74s/H9bViol79YmIelbep7cXyzEw47hdktzg1MN6vCsg0S24VQ/KqSDwpigubKeE
-	 i41PpwJYbao8dKkGyE2Qqe80rDBt1KLstr08lFXyM7NrBpY5+1GLMitIsyHPH9pCI1
-	 RYqA94+q4srgJ820hmzPT2j5D4utw51hYyphDzfmQ9/qugstzZiKxhOn3D8GrAvQ8j
-	 X4Jo/C2BGR8LyZw47KY7cK2I3lFCTccQP4dr8up2k8RWnzpbNifNYM9Yn3+F7UHZR0
-	 qapgcqmD42kiSJv9F9eFn76HvvhT8koJ4G37SFjrSwz0usnG0i9ighP1aKYvjTYnul
-	 8U9pYzGL/Kbhg==
-Date: Thu, 12 Jun 2025 08:03:47 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tytso@mit.edu,
-	john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com, brauner@kernel.org,
-	martin.petersen@oracle.com, yi.zhang@huawei.com,
-	chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH 01/10] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to
- queue limits features
-Message-ID: <20250612150347.GK6138@frogsfrogsfrogs>
-References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
- <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
- <20250611060900.GA4613@lst.de>
- <343f7f06-9bf6-442f-8e77-0a774203ec3f@huaweicloud.com>
- <20250612044744.GA12828@lst.de>
- <41c21e20-5439-4157-ad73-6f133df42d28@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b="tyyE0jJs"
+Received: from Hermes02.ad.tu-bs.de (hermes02.rz.tu-bs.de [134.169.4.130])
+	by pmxout2.rz.tu-bs.de (Postfix) with ESMTPS id F34534E05E6;
+	Thu, 12 Jun 2025 16:55:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tu-bs.de;
+	s=exchange_neu; t=1749740130;
+	bh=M7psreqtd7qDN8w7ZaJtjjjh4GKXKbz1dQhsMZmx/og=;
+	h=Date:To:CC:From:Subject:From;
+	b=tyyE0jJs1A8u58jMiVSNqeCpSVDjFl8CRZag/xvAwHfg+CJuZ/WwaJdz6YiZqCFZk
+	 F//1n1T0H5JrpbUwn4L1rwVDO6GH9MwG0YyBwFyROHL4QdximACap6HYWbIWTD9i9q
+	 KEwkiU92QtLs8dIuMojO+IPmRWANncU2YUkI3n2whuy7YAn6doQ13v3JPo3Iumpl8c
+	 m20Q5xjjUiQZtA//C8yF3H+6P2NvtNcyn2yXn+GQAshDfxLz7wPbDJDFfAd4OkKJ91
+	 27iO3VxYd+LnDO7m3d8uCU70kRXuOe6+9bpvz9loJU6WKqBYCzhQcL9sUYmnvmQ5mQ
+	 xdCu4b92Vmz3w==
+Received: from [192.168.178.25] (134.169.9.110) by Hermes02.ad.tu-bs.de
+ (134.169.4.130) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 12 Jun
+ 2025 16:55:29 +0200
+Message-ID: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
+Date: Thu, 12 Jun 2025 16:55:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41c21e20-5439-4157-ad73-6f133df42d28@huaweicloud.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Alan Stern <stern@rowland.harvard.edu>, Andrea Parri
+	<parri.andrea@gmail.com>, Will Deacon <will@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin
+	<npiggin@gmail.com>, David Howells <dhowells@redhat.com>, Jade Alglave
+	<j.alglave@ucl.ac.uk>, Luc Maranget <luc.maranget@inria.fr>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Akira Yokosawa <akiyks@gmail.com>, Daniel
+ Lustig <dlustig@nvidia.com>, Joel Fernandes <joelagnelf@nvidia.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<lkmm@lists.linux.dev>
+CC: <hernan.poncedeleon@huaweicloud.com>, <jonas.oberhauser@huaweicloud.com>,
+	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
+From: Thomas Haas <t.haas@tu-bs.de>
+Subject: [RFC] Potential problem in qspinlock due to mixed-size accesses
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: Hermes02.ad.tu-bs.de (134.169.4.130) To
+ Hermes02.ad.tu-bs.de (134.169.4.130)
 
-On Thu, Jun 12, 2025 at 07:20:45PM +0800, Zhang Yi wrote:
-> On 2025/6/12 12:47, Christoph Hellwig wrote:
-> > On Wed, Jun 11, 2025 at 03:31:21PM +0800, Zhang Yi wrote:
-> >>>> +/* supports unmap write zeroes command */
-> >>>> +#define BLK_FEAT_WRITE_ZEROES_UNMAP	((__force blk_features_t)(1u << 17))
-> >>>
-> >>>
-> >>> Should this be exposed through sysfs as a read-only value?
-> >>
-> >> Uh, are you suggesting adding another sysfs interface to expose
-> >> this feature?
-> > 
-> > That was the idea.  Or do we have another way to report this capability?
-> > 
-> 
-> Exposing this feature looks useful, but I think adding a new interface
-> might be somewhat redundant, and it's also difficult to name the new
-> interface. What about extend this interface to include 3 types? When
-> read, it exposes the following:
-> 
->  - none     : the device doesn't support BLK_FEAT_WRITE_ZEROES_UNMAP.
->  - enabled  : the device supports BLK_FEAT_WRITE_ZEROES_UNMAP, but the
->               BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED is not set.
->  - disabled : the device supports BLK_FEAT_WRITE_ZEROES_UNMAP, and the
->               BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED is set.
-> 
-> Users can write '0' and '1' to disable and enable this operation if it
-> is not 'none', thoughts?
+We have been taking a look if mixed-size accesses (MSA) can affect the 
+correctness of qspinlock.
+We are focusing on aarch64 which is the only memory model with MSA 
+support [1].
+For this we extended the dartagnan [2] tool to support MSA and now it 
+reports liveness, synchronization, and mutex issues.
+Notice that we did something similar in the past for LKMM, but we were 
+ignoring MSA [3].
 
-Perhaps it should reuse the enumeration pattern elsewhere in sysfs?
-For example,
+The culprit of all these issues is that atomicity of single load 
+instructions is not guaranteed in the presence of smaller-sized stores 
+(observed on real hardware according to [1] and Fig. 21/22)
+Consider the following pseudo code:
 
-# cat /sys/block/sda/queue/scheduler
-none [mq-deadline]
-# echo none > /sys/block/sda/queue/scheduler
-# cat /sys/block/sda/queue/scheduler
-[none] mq-deadline
+     int16 old = xchg16_rlx(&lock, 42);
+     int32 l = load32_acq(&lock);
 
-(Annoying that this seems to be opencoded wherever it appears...)
+Then the hardware can treat the code as (likely due to store-forwarding)
 
---D
+     int16 old = xchg16_rlx(&lock, 42);
+     int16 l1 = load16_acq(&lock);
+     int16 l2 = load16_acq(&lock + 2); // Assuming byte-precise pointer 
+arithmetic
 
-> Best regards,
-> Yi.
-> 
-> 
+and reorder it to
+
+     int16 l2 = load16_acq(&lock + 2);
+     int16 old = xchg16_rlx(&lock, 42);
+     int16 l1 = load16_acq(&lock);
+
+Now another thread can overwrite "lock" in between the first two 
+accesses so that the original l (l1 and l2) ends up containing
+parts of a lock value that is older than what the xchg observed.
+
+Let us now explain how this can break qspinlock.
+We need 3 threads going the slowpath, T1, T2, and T3.
+T1 is a setup-thread that takes the lock just so that T2 and T3 observe 
+contention and try to enqueue themselves.
+So consider a situation where
+     - T3's node is the only enqueued node (due to previous contention 
+with T1).
+     - T2 is about to enqueue its node.
+     - T3 is about to take the lock because it sees no contention (lock 
+is free, no pending bits are set, it has the only node in the queue).
+     - the lock is released (T1 is already done)
+
+We focus on the following lines of code in qspinlock.c:
+
+         // <- T2 is here, but executes part of line 328 first.
+         277: old = xchg_tail(lock, tail);    // ~ xchg_rlx(&lock->tail, 
+tail)
+         // ...
+         328: val = atomic_cond_read_acquire(&lock->val, !(VAL & 
+_Q_LOCKED_PENDING_MASK));
+         // ...
+         // <- T3 is here
+         352: if ((val & _Q_TAIL_MASK) == tail) {
+                     if (atomic_try_cmpxchg_relaxed(&lock->val, &val, 
+_Q_LOCKED_VAL))
+                         goto release; /* No contention */
+         355: }
+
+
+Then the following sequence of operations is problematic:
+
+(1) T2 reads half of the lock (the half that is not lock->tail, i.e., it 
+"only" reads lock->lock_pending)
+
+         328: val = atomic_cond_read_acquire(&lock->val, !(VAL & 
+_Q_LOCKED_PENDING_MASK)); // P1
+         // Roughly: val_lock_pending = load_acquire(&lock->lock_pending);
+
+      T2 observes a free lock and no pending bits set.
+
+(2) T3 takes the lock because it does not observe contention
+
+         352: if ((val & _Q_TAIL_MASK) == tail) {  // Satisfied because 
+only T3's node is enqueued and lock is free
+                     if (atomic_try_cmpxchg_relaxed(&lock->val, &val, 
+_Q_LOCKED_VAL))
+                         goto release; /* No contention */
+         355: }
+
+     T3 clears the tail and claims the lock. The queue is empty now.
+
+(3) T2 enqueues itself
+
+         277: old = xchg_tail(lock, tail);
+
+     T2 sees an empty queue (old == 0) because T3 just cleared it, and 
+enqueues its node.
+
+(4) T2 reads the remaining half of the lock from (1), reading the tail 
+(lock->tail) it just inserted.
+
+         328: val = atomic_cond_read_acquire(&lock->val, !(VAL & 
+_Q_LOCKED_PENDING_MASK)); // P2
+         // Roughly: val_tail = load_acquire(&lock->tail);
+
+     T2 observes its own tail + lock is free and no pending bits are set 
+(from (1))
+
+
+Now there are two continuations, one leading to broken synchronisation, 
+another leading to non-termination or failure of mutual exclusion.
+We first consider the synchronisation issue.
+
+
+(5a) T3 finishes its critical section and releases the lock
+
+
+(6a) T2 takes the lock with the same code as in point (2):
+
+          352: if ((val & _Q_TAIL_MASK) == tail) {     // Satisfied 
+because only T2's node is enqueued and lock is free
+                     if (atomic_try_cmpxchg_relaxed(&lock->val, &val, 
+_Q_LOCKED_VAL))
+                         goto release; /* No contention */
+          355: }
+
+       Notice that the "atomic_try_cmpxchg_relaxed" would fail if the 
+lock was still taken by T3, because "val" has no lock bits set (as T2 
+observed the lock to be free).
+       Although T2 now properly enters the CS after T3 has finished, the 
+synchronisation is broken since T2 did not perform an acquire operation 
+to synchronise with the lock release.
+       Indeed, dartagnan reports no safety violations (with 3 threads) 
+if the CAS is made an acquire or the CS itself contains an acquire 
+barrier (smb_rmb or smb_mb).
+
+
+Now, let's consider the alternative continuation that leads to 
+non-termination or failure of mutual exclusion.
+
+
+(5b) T2 tries to take the lock as above in (6a) but the CAS fails 
+because the lock is still taken by T3.
+
+
+(6b) Due to the failing CAS, T2 observes contention (at least it thinks 
+so). It sets the lock (although T3 might still have it!) and waits until 
+the (non-existent) "contending thread" enqueues its node:
+
+         /*
+          * Either somebody is queued behind us or _Q_PENDING_VAL got set
+          * which will then detect the remaining tail and queue behind us
+          * ensuring we'll see a @next.
+          */
+         362: set_locked(lock);
+
+         /*
+          * contended path; wait for next if not observed yet, release.
+          */
+         367: if (!next)
+         368:    next = smp_cond_load_relaxed(&node->next, (VAL));
+
+
+   The first comment suggests that the assumed situation is that either 
+another thread enqueued a node or the pending bits got set. But neither is
+   true in the current execution: we got here because the lock was taken.
+   Now there are two outcomes:
+     - Non-termination: the "smp_cond_load_relaxed" waits forever, 
+because there is no other thread that enqueues another node.
+     - Broken mutex: another thread (T4) enqueues a node and therefore 
+releases T2 from its loop. Now T2 enters the CS while T3 still executes 
+its CS.
+        Indeed, dartagnan reports this safety violation only with 4+ 
+threads.
+
+
+NOTE: For the above examples we forced all threads to take the slowpath 
+of qspinlock by removing the fastpath. With the fastpath present, 
+another thread (T0) is needed to force the other threads into the 
+slowpath, i.e., we need 4-5 threads to witness the issues.
+
+### Solutions
+
+The problematic executions rely on the fact that T2 can move half of its 
+load operation (1) to before the xchg_tail (3).
+Preventing this reordering solves all issues. Possible solutions are:
+     - make the xchg_tail full-sized (i.e, also touch lock/pending bits).
+       Note that if the kernel is configured with >= 16k cpus, then the 
+tail becomes larger than 16 bits and needs to be encoded in parts of the 
+pending byte as well.
+       In this case, the kernel makes a full-sized (32-bit) access for 
+the xchg. So the above bugs are only present in the < 16k cpus setting.
+     - make the xchg_tail an acquire operation.
+     - make the xchg_tail a release operation (this is an odd solution 
+by itself but works for aarch64 because it preserves REL->ACQ ordering). 
+In this case, maybe the preceding "smp_wmb()" can be removed.
+     - put some other read-read barrier between the xchg_tail and the load.
+
+
+### Implications for qspinlock executed on non-ARM architectures.
+
+Unfortunately, there are no MSA extensions for other hardware memory 
+models, so we have to speculate based on whether the problematic 
+reordering is permitted if the problematic load was treated as two 
+individual instructions.
+It seems Power and RISCV would have no problem reordering the 
+instructions, so qspinlock might also break on those architectures.
+TSO, on the other hand, does not permit such reordering. Also, the 
+xchg_tail is a rmw operation which acts like a full memory barrier under 
+TSO, so even if load-load reordering was permitted, the rmw would 
+prevent this.
+
+
+[1] https://dl.acm.org/doi/10.1145/3458926
+[2] https://github.com/hernanponcedeleon/Dat3M
+[3] https://lkml.org/lkml/2022/8/26/597
+
+-- 
+=====================================
+
+Thomas Haas
+
+Technische Universität Braunschweig
+Institut für Theoretische Informatik
+Mühlenpfordtstr. 23, Raum IZ 343
+38106 Braunschweig | Germany
+
+t.haas@tu-braunschweig.de
+https://www.tu-braunschweig.de/tcs/team/thomas-haas
+
