@@ -1,60 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB8D153BD9;
-	Thu, 12 Jun 2025 23:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7B021ABC1;
+	Thu, 12 Jun 2025 23:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749772185; cv=none; b=Xq4drNTGQk++GwZKQOV0+hqoGlRxEsLJk0zGja0wBKu8LBQ/yM7kMs7eg4u3pQcepORRjOCwmZjt7rn4TdLCoqycjWhYwDjVQzwnmfjwpa+mBMHvXVrUxJxqxGqmvyn5/baplAlZBKQ7RAoS6Kq84lxlZSvQd2uRZEDugx0Qj2w=
+	t=1749772194; cv=none; b=t60DMqzRSflXTIBy3zWvyv3FLvc4CG/yNn8a11BOQRhpCyNcJj1vLxbXFFx743biMC2xM1OHxh1zr8mkwBc/A1caXtBi0jtE/TE/3Q+HMbpkEkPVJXhXKfklIvfmE6/cql3TsZaljv3Tm+h7djqaIVB10slf7hB3CPmp2B1Mm+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749772185; c=relaxed/simple;
-	bh=uIMcM27gohI3J+ynYmO2SMZAip0Yq+Kvvb6h6OZBqks=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DSQl3gHjbDOtPcmDGSb8Olaaa+3Cim9jMzwihk7rgXzMf9nlK4vnZv96920UqWfEBBAV6VUcstLDAg/dWz7zmNphcn/RfyfamSAs3KQ8zWb0LX4sjyStBhuQEo71h43n5BDo5qfbNA4pp00NayBtrspoh6FpSiCyfPgbwLMT5aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8xmdhrA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749772194; c=relaxed/simple;
+	bh=IGlM1aMwuWlN4KUgs+V/8/qfzdLCjm0iM5gKzBkBrKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qKvCzplF4dVTWqiXrLwL9Dtd6Jj4fj35ZaKbyN+Th7S/v+NfGXZyUYhBAyE4rrbnWDkWAD7ggIjg9XdG1ikKhWJHjMjw56LA9ZISBk7sytNmps0O26VBMzGmnehAan+2y6A4iILKacPxNGe5tJcgwKbMNxHIqUvcz3RpTG3tnCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P7BEwALT; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8xmdhrA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF41BC4CEEA;
-	Thu, 12 Jun 2025 23:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749772185;
-	bh=uIMcM27gohI3J+ynYmO2SMZAip0Yq+Kvvb6h6OZBqks=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r8xmdhrA040Vz6UGOGQEzJoFD62AxIdQFlGIueEU65Rq3IlpTix/urLrKEIC3rd6H
-	 ulXKmLGCbFl3emHATKiXfxEgymtsyY0x+gGjpdKe0v2P49j/FbBx7HPOhLolLPQkte
-	 O91NVwGVcpwY/AgQwtT9O1LKwoTpsxEvBOOxc6QDOTCUh2C4YdBNVUl9Ot3q779fVj
-	 S/xDFfgoKmBQ0N8u334+BjPzPYaePQav/YbyunFOrFF3PkIHPLtsR/f9qRpG10K7Zk
-	 EkguMsG7nsvk/0httMySIGcTQHwU65F2p/Ml5+X21kA41o9Ai9HhfSEdkZyRBf6hAg
-	 Bx1MCZgKt/Teg==
-From: SeongJae Park <sj@kernel.org>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.com,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7BEwALT"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74264d1832eso1725115b3a.0;
+        Thu, 12 Jun 2025 16:49:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749772192; x=1750376992; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yydAhh80AdKqo80zFIdgFeGLonAt34YNlvMq6VZBR8s=;
+        b=P7BEwALThu81hyLunqQniObUZopgz57oIcU2z6AKhx6W75jNDDfh6GClAelHLuNpcm
+         F1PwXEMg0GXb2TADm2lRdsZmDnbdIRvwz6INwOSJPfTaZyHfxSXIjO1ws8633LjOt3rk
+         UCNaQ7+NawdvXzELzXmHfew7KZV0tGKtuezGRXbAPUIOK2Eybk2WMPCFkb4zUE8kY7lA
+         5Zh5sw7sSZAlF7EULQbhcdvera/faDlBMZ4qpGRuRnR+URSsv3YY1WrVA4e1mz/6GT2y
+         MRewrPCLAZhITWRvf7m7TcsiepZjY0FwlL19XCqgUKQqK9PAo9pIFABSFJvxNx08lL76
+         NJig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749772192; x=1750376992;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yydAhh80AdKqo80zFIdgFeGLonAt34YNlvMq6VZBR8s=;
+        b=fmz3TK5r0cejUEQBjw1lcNk1BAr3KJQUKCkWFLZkGto3IahEiBFrn0MPi6UMC2PBh1
+         yVktu7fn9XSufLbQ/yZD+by2yelskm3GuYcM9Rao0hNRYIE26sUJSk1hK/muwum2ktsL
+         YXdOGgQr69ds9FteT82RF1KtUNvLXu9kJmDMbujxnzas3oC58P5dtx+GpaAevDxUi7hD
+         sgOkVTUuMXMAGe24A41y+IF7AOa4GhHLP2k7blIH+gPtiW5lcEqqllnLdFkp+/wPmGLX
+         agJGzBvZhwp8sus0+JIsCCeGAXkQ0VOzWBOmtS+b9i34deQ9UCpHcZ6Wfxizrkgja3hU
+         gqJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUN4fq60KxHeo6eOQkQuNvcYtmqQJ7Co4jZ4P0+RWp8/gYzw7agkFuZvHTuPkcNwl8p5FQLQ5MV1T16XhA=@vger.kernel.org, AJvYcCV50Tb15M8gycUmpF3LtSiNXEP7b79MspcyueCT6uix8uKFYJ7NKktYmLBMK07XmdAFi2NGOBzb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7O75ch9yDryffnZE7aS1LGsqhtBkdXY6EgfJ59kMcgSyU2WIn
+	uxuDI6+2FXFIMPlX6X3UXoPDDDaeCiemJrOayLm3hgD3++kAdwcg0FE=
+X-Gm-Gg: ASbGncsveJGYYcijY3ztBAqQTMar3QhOsNjzfdivQOHwT6kfn91bRv6iPk9A4GJxfqx
+	5jgXJlb2q43XYvR/HGllmeoDQ0CQMH8r1Q1dSYwb2MlcweEY7xStEGKwYPcvS0EZvagx6+jcxYP
+	sYkZur5FMPlTL9MCNcWqoWVxvP5RqWjnpmYl9dz1ol7eOcPmuuaOhV99U4l4ZZgkqwJxNrsj4N3
+	iXbz22jn+fG01Jzu2ddlBecpapp9tXiLfGX4m6bbKxJb6y/wDcc3LXEMgiEGyaaKJYcmyxtLrNn
+	apSTTTe1RqB6zhZFE1cD7xoYp+lPUcJ8hjNuvGs=
+X-Google-Smtp-Source: AGHT+IEK19ZXZEaZ/4s2jK4Oc4ZfOvTW+ytKr0OgAwkaJT19D7NqpmAu5KFzRe9eVhOZEcj2PugcAg==
+X-Received: by 2002:a05:6a00:a86:b0:73f:f816:dd78 with SMTP id d2e1a72fcca58-7488f79d15dmr1253898b3a.15.1749772192135;
+        Thu, 12 Jun 2025 16:49:52 -0700 (PDT)
+Received: from fedora.. ([2601:647:6700:3390::c8d1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b2e30sm325453b3a.128.2025.06.12.16.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 16:49:51 -0700 (PDT)
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+To: syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com
+Cc: 3chas3@gmail.com,
+	linux-atm-general@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	corbet@lwn.net,
-	david@redhat.com,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com
-Subject: Re: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data across nodes
-Date: Thu, 12 Jun 2025 16:49:42 -0700
-Message-Id: <20250612234942.3612-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250612181330.31236-1-bijan311@gmail.com>
-References: 
+	netdev@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	kuniyu@google.com
+Subject: Re: [syzbot] [atm?] KMSAN: uninit-value in atmtcp_c_send
+Date: Thu, 12 Jun 2025 16:49:36 -0700
+Message-ID: <20250612234950.40595-1-kuni1840@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <684b65a6.050a0220.be214.0295.GAE@google.com>
+References: <684b65a6.050a0220.be214.0295.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,142 +79,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Bijan,
-
-On Thu, 12 Jun 2025 13:13:26 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
-
-> From: Bijan Tabatabai <bijantabatab@micron.com>
+From: syzbot <syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com>
+Date: Thu, 12 Jun 2025 16:41:26 -0700
+> Hello,
 > 
-> A recent patch set automatically set the interleave weight for each node
-> according to the node's maximum bandwidth [1]. In another thread, the patch
-> set's author, Joshua Hahn, wondered if/how these weights should be changed
-> if the bandwidth utilization of the system changes [2].
-
-Thank you for sharing the background.  I do agree it is an important question.
-
+> syzbot found the following issue on:
 > 
-> This patch set adds the mechanism for dynamically changing how application
-> data is interleaved across nodes while leaving the policy of what the
-> interleave weights should be to userspace. It does this by adding a new
-> DAMOS action: DAMOS_INTERLEAVE. We implement DAMOS_INTERLEAVE with both
-> paddr and vaddr operations sets. Using the paddr version is useful for
-> managing page placement globally. Using the vaddr version limits tracking
-> to one process per kdamond instance, but the va based tracking better
-> captures spacial locality.
+> HEAD commit:    2c4a1f3fe03e Merge tag 'bpf-fixes' of git://git.kernel.org..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1787d9d4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=42d51b7b9f9e61d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1d3c235276f62963e93a
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1195ed70580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16187682580000
 > 
-> DAMOS_INTERLEAVE interleaves pages within a region across nodes using the
-> interleave weights at /sys/kernel/mm/mempolicy/weighted_interleave/node<N>
-> and the page placement algorithm in weighted_interleave_nid via
-> policy_nodemask.
-
-So, what DAMOS_INTERLEAVE will do is, migrating pages of a given DAMON region
-into multiple nodes, following interleaving weights, right?  We already have
-DAMOS actions for migrating pages of a given DAMON region, namely
-DAMOS_MIGRATE_{HOT,COLD}.  The actions support only single migration target
-node, though.  To my perspective, hence, DAMOS_INTERLEAVE looks like an
-extended version of DAMOS_MIGRATE_{HOT,COLD} for flexible target node
-selections.  In a way, DAMOS_INTERLEAVE is rather a restricted version of
-DAMOS_MIGRATE_{HOT,COLD}, since it prioritizes only hotter regions, if I read
-the second patch correctly.
-
-What about extending DAMOS_MIGRATE_{HOT,COLD} to support your use case?  For
-example, letting users enter special keyword, say, 'weighted_interleave' to
-'target_nid' DAMON sysfs file.  In the case, DAMOS_MIGRATE_{HOT,COLD} would
-work in the way you are implementing DAMOS_INTERLEAVE.
-
-> We chose to reuse the mempolicy weighted interleave
-> infrastructure to avoid reimplementing code. However, this has the awkward
-> side effect that only pages that are mapped to processes using
-> MPOL_WEIGHTED_INTERLEAVE will be migrated according to new interleave
-> weights. This might be fine because workloads that want their data to be
-> dynamically interleaved will want their newly allocated data to be
-> interleaved at the same ratio.
-
-Makes sense to me.  I'm not very familiar with interleaving and memory policy,
-though.
-
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/1313b3ad2bf4/disk-2c4a1f3f.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/15f719cfdf88/vmlinux-2c4a1f3f.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/e7f531b0bef6/bzImage-2c4a1f3f.xz
 > 
-> If exposing policy_nodemask is undesirable,
-
-I see you are exposing it on include/linux/mempolicy.h on the first patch of
-this series, and I agree it is not desirable to unnecessarily expose functions.
-But you could reduce the exposure by exporting it on mm/internal.h instead.
-mempolicy maitnainers and reviewers who you kindly Cc-ed to this mail could
-give us good opinions.
-
-> we have two alternative methods
-> for having DAMON access the interleave weights it should use. We would
-> appreciate feedback on which method is preferred.
-> 1. Use mpol_misplaced instead
->   pros: mpol_misplaced is already exposed publically
->   cons: Would require refactoring mpol_misplaced to take a struct vm_area
->   instead of a struct vm_fault, and require refactoring mpol_misplaced and
->   get_vma_policy to take in a struct task_struct rather than just using
->   current. Also requires processes to use MPOL_WEIGHTED_INTERLEAVE.
-
-I feel cons is larger than pros.  mpolicy people's opinion would matter more,
-though.
-
-> 2. Add a new field to struct damos, similar to target_nid for the
-> MIGRATE_HOT/COLD schemes.
->   pros: Keeps changes contained inside DAMON. Would not require processes
->   to use MPOL_WEIGHTED_INTERLEAVE.
->   cons: Duplicates page placement code. Requires discussion on the sysfs
->   interface to use for users to pass in the interleave weights.
-
-I agree this is also somewhat doable.  In future, we might want to implement
-this anyway, for non-global and flexible memory interleaving.  But if memory
-policy people are ok with reusing policy_nodemask(), I don't think we need to
-do this now.
-
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com
 > 
-> This patchset was tested on an AMD machine with a NUMA node with CPUs
-> attached to DDR memory and a cpu-less NUMA node attached to CXL memory.
-> However, this patch set should generalize to other architectures and number
-> of NUMA nodes.
-
-I show the test results on the commit messages of the second and the fourth
-patches.  In the next version, letting readers know that here would be nice.
-Also adding a short description of what you confirmed with the tests here
-(e.g., with the test we confirmed this patch functions as expected [and
-achieves X % Y metric wins]) would be nice.
-
+> =====================================================
+> BUG: KMSAN: uninit-value in atmtcp_c_send+0x255/0xed0 drivers/atm/atmtcp.c:294
+>  atmtcp_c_send+0x255/0xed0 drivers/atm/atmtcp.c:294
+>  vcc_sendmsg+0xd7c/0xff0 net/atm/common.c:644
+>  sock_sendmsg_nosec net/socket.c:712 [inline]
+>  __sock_sendmsg+0x330/0x3d0 net/socket.c:727
+>  ____sys_sendmsg+0x7e0/0xd80 net/socket.c:2566
+>  ___sys_sendmsg+0x271/0x3b0 net/socket.c:2620
+>  __sys_sendmsg net/socket.c:2652 [inline]
+>  __do_sys_sendmsg net/socket.c:2657 [inline]
+>  __se_sys_sendmsg net/socket.c:2655 [inline]
+>  __x64_sys_sendmsg+0x211/0x3e0 net/socket.c:2655
+>  x64_sys_call+0x32fb/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:47
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 > 
-> Patches Sequence
-> ________________
-> The first patch exposes policy_nodemask() in include/linux/mempolicy.h to
-> let DAMON determine where a page should be placed for interleaving.
-> The second patch implements DAMOS_INTERLEAVE as a paddr action.
-> The third patch moves the DAMON page migration code to ops-common, allowing
-> vaddr actions to use it.
-> Finally, the fourth patch implements a vaddr version of DAMOS_INTERLEAVE.
-
-I'll try to take look on code and add comments if something stands out, but
-let's focus on the high level discussion first, especially whether to implement
-this as a new DAMOS action, or extend DAMOS_MIGRATE_{HOT,COLD} actions.
-
-I think it would also be nice if you could add more explanation about why you
-picked DAMON as a way to implement this feature.  I assume that's because you
-found opportunities to utilize this feature in some access-aware way or
-utilizing DAMOS features.  I was actually able to imagine some such usages.
-For example, we could do the re-interleaving for hot or cold pages of specific
-NUMA nodes or specific virtual address ranges first to make interleaving
-effective faster.
-
-Also we could apply a sort of speed limit for the interleaving-migration to
-ensure it doesn't consume memory bandwidth too much.  The limit could be
-arbitrarily user-defined or auto-tuned for specific system metrics value (e.g.,
-memory bandwidth balance?).
-
-If you have such use case in your mind or your test setups, sharing those here
-or on the next versions of this would be very helpful for reviewers.
-
+> Uninit was created at:
+>  slab_post_alloc_hook mm/slub.c:4154 [inline]
+>  slab_alloc_node mm/slub.c:4197 [inline]
+>  kmem_cache_alloc_node_noprof+0x818/0xf00 mm/slub.c:4249
+>  kmalloc_reserve+0x13c/0x4b0 net/core/skbuff.c:579
+>  __alloc_skb+0x347/0x7d0 net/core/skbuff.c:670
+>  alloc_skb include/linux/skbuff.h:1336 [inline]
+>  vcc_sendmsg+0xb40/0xff0 net/atm/common.c:628
+>  sock_sendmsg_nosec net/socket.c:712 [inline]
+>  __sock_sendmsg+0x330/0x3d0 net/socket.c:727
+>  ____sys_sendmsg+0x7e0/0xd80 net/socket.c:2566
+>  ___sys_sendmsg+0x271/0x3b0 net/socket.c:2620
+>  __sys_sendmsg net/socket.c:2652 [inline]
+>  __do_sys_sendmsg net/socket.c:2657 [inline]
+>  __se_sys_sendmsg net/socket.c:2655 [inline]
+>  __x64_sys_sendmsg+0x211/0x3e0 net/socket.c:2655
+>  x64_sys_call+0x32fb/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:47
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 > 
-> [1] https://lore.kernel.org/linux-mm/20250520141236.2987309-1-joshua.hahnjy@gmail.com/
-> [2] https://lore.kernel.org/linux-mm/20250313155705.1943522-1-joshua.hahnjy@gmail.com/
+> CPU: 1 UID: 0 PID: 5798 Comm: syz-executor192 Not tainted 6.16.0-rc1-syzkaller-00010-g2c4a1f3fe03e #0 PREEMPT(undef) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+> =====================================================
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
 
+#syz test
 
-Thanks,
-SJ
-
-[...]
+diff --git a/drivers/atm/atmtcp.c b/drivers/atm/atmtcp.c
+index d4aa0f353b6c..c74dec9a2759 100644
+--- a/drivers/atm/atmtcp.c
++++ b/drivers/atm/atmtcp.c
+@@ -288,7 +288,11 @@ static int atmtcp_c_send(struct atm_vcc *vcc,struct sk_buff *skb)
+ 	struct sk_buff *new_skb;
+ 	int result = 0;
+ 
+-	if (!skb->len) return 0;
++	if (!skb->len)
++		return 0;
++	if (skb->len < sizeof(atmtcp_hdr))
++		return -EINVAL;
++
+ 	dev = vcc->dev_data;
+ 	hdr = (struct atmtcp_hdr *) skb->data;
+ 	if (hdr->length == ATMTCP_HDR_MAGIC) {
