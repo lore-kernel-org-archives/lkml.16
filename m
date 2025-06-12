@@ -1,104 +1,189 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C34EC2
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE442147EA
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749717066; cv=none; b=tbHuH14urdZZzZMM64BUgnyUng+8fofujWNWXbMsgLl7DNQjJePI42RC7r+FFyVzbprnvaAL30tUjmDZm1YeHrIXsH82lyYZbUjNPy4SnTvlA732HoeHg9L7x9Ywnf6IZxNUsUEhcnk1Gg9ZFObmxobzi160XWPbSMRHAq0zn08=
+	t=1749717072; cv=none; b=VBigTj5Kvv6WB/O0KuYkMD4cx7km5nUrgRR3nep3yFOMycs4U0aD9uHgbMGdOGkywm3PM52/UKorsI3LZadAEVp/RRsKkKkWlR8b+T3VheyVd2vSF4VNdNyg1vesy1K+XX14UanZokFyw3LUi0VAqO8cM6wRI0CY2KY0a0LazZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749717066; c=relaxed/simple;
-	bh=WAcZZoaVqJVBCCp/zyaxoIzZMJP035kLTOD6rXXjCZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqgVlvgg9qv40PgGl6VcYwtfyr59OiqyXx0eFKZqI1QnvA++HgLYxCEhl4st2ZfAMS/RyAJeR9QdX3Hwak8tXekAJkGOHSwvwqZDsxalUYSjixo4vHo+cLVtxYAXQtM8pbmv7taUpo3UqLwL5aPD+q+88+oGQlwdImP1Ob2hvYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lbnTN3Uv; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749717072; c=relaxed/simple;
+	bh=KiXTzl6QEJUXCDIz97CX32nBSoUsT6AJdzJ9NXwvmRs=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=bnQ8YW8g0HOex25GwyemKxuOm+jJiVcDRCebdOsQJ2hyzswpvWENiNsmojiUIHl5GihNWtb0dgbPReqKkPlVzBXOCKCDQjEfNmO26KPixvJFFLefiZzSEKclv5sPcKK9ARwp9+R1c9HD7GSSUkGISP2SOicFc1ERPC6c8uGSQ9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pbUaTiVk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lbnTN3Uv"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so656305b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749717064; x=1750321864; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FpYtQBVzdFUn1mP60IhVAt0dlEC8nasoUhcUFbuwbTM=;
-        b=lbnTN3Uvk9PM1MjBzX3+Q+Ssey5CooiixNsk+Eb5391aed9Tbi3GnPsXakMV7WN2e+
-         2cZEMaM6PTtHxyCrPh4yOsZBP8p5FAn63jph77sxn2+dgxKoVumiPg6cjbTaaEj6N43V
-         6tdpBaQt0ruA0fcEplkiL1//EQtaH/WYA1jL8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749717064; x=1750321864;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FpYtQBVzdFUn1mP60IhVAt0dlEC8nasoUhcUFbuwbTM=;
-        b=eyxtuckTeFKsF9KpKqHQGT9cQL0n8t6+UnUf9ziu97ehERECUrb9UYiBBu5V8X1su6
-         gj4QI2B8e1m3jeFKlhdAxy+IawKYjB+ADjtyWyS5RPey8FixyJSOmE+BWTG8LWRbDAaz
-         sYLmbnEElu1CrOpsnzieTooENowtdo7X05llI7A/+E6WMUHGQX6lOFbcL4hSZLKOPH2i
-         kpl7sCiCZT47jwp3t2ON2mmuF5MZMqBIFgAkxCjNWLXsaRYaez0UilZzLWtaNPY11VW6
-         1pZciILHTGYVpejc4lk0HbwK4T89+q728HLihLHd0NCycpt7rOGGzkI/9E7IXRhbc/+d
-         V33w==
-X-Forwarded-Encrypted: i=1; AJvYcCWJt74U74vnNTGVNLgu72g/jmZozti9JBLrhDcd6AqjDslMvxWt2HfvtP22FgJuGAYx4uNklvV+t0QyU98=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjXPlTZ5aT4VZAkfxpZR1P5LwFy6cdiUhV3vKVYFAkasWGoldQ
-	uXqaMP7iifjWABos27NtANzH++bPlUDb3DxGnbZDpga0HpXzcZlp9I9kDX7L+YboMw==
-X-Gm-Gg: ASbGncsL3pK7e3oXe0AQ5x3RXhGtUfR02cvWWCM2VHdUPdnFq1W1EvGrBDBbpWKpLgU
-	GKHsFxQWOvquG2VteAiCvdz1T8keMv39uvTKAyj0is1R1CtaPvbfS3ybfDHosrJ9ZivP/ZL1d62
-	OGWEPtFlLghtGYZ7AXf1mKM0z3kkYMJsTUKiYlc6ZKqlOTMA6sxyVaEX91SzecuW/BoBDEUagDr
-	2oZ0Aj1jDbT0mSGGWGVp/pCzBmjTCjprvCho9ONR7Sj5LfUjyZ+7fC8AM3CNcDHNvXiYtlBx5gN
-	WCfiF/jFEY1Kj8UEJmW2vtcKrPPrXDrHbVubnaTWIKle6C3wwJMt1HAKTEd3aXPw
-X-Google-Smtp-Source: AGHT+IFBDWKNu3QDY5x77Ut+39tjoSMCPpg9YSXyyw7wdPIMWMB03qAOxrhzC+O4LvEzlruhxyx/fg==
-X-Received: by 2002:aa7:8882:0:b0:73d:ff02:8d83 with SMTP id d2e1a72fcca58-7486cb21c08mr10126036b3a.3.1749717064126;
-        Thu, 12 Jun 2025 01:31:04 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:fcb5:79e0:99d6:8d5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488087aa41sm893458b3a.31.2025.06.12.01.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 01:31:03 -0700 (PDT)
-Date: Thu, 12 Jun 2025 17:31:00 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2] wifi: ath11k: mark reset srng lists as uninitialized
-Message-ID: <kuawjsglndjvwmq2ki2kctvgcdci6mhfp7juux7tzo3g6h5txh@hddxo4o5raea>
-References: <20250529035708.3136232-1-senozhatsky@chromium.org>
- <5857380e-ced9-4118-b9a0-ce926b25c11c@quicinc.com>
- <rxaibpgtf37w3th5lnt3w574w443yononqjoglyfktlcxe26qg@jpmtkckrotzp>
- <2f77045c-6763-4fc4-bf09-50fd9b76a394@quicinc.com>
- <xr3n5pbohquhaloonctfqvpb2r3eu6fi5jly7ms4pgcotqmqzh@msrgbaawafsj>
- <ce3c0e51-4df0-4164-adcd-e98f2edee454@quicinc.com>
- <qqhs2mzhg6mgq23wej5a65iau4ysfjh2raakcsvwc4fuqtpwk2@4ouqfld6mrnd>
- <d48a228a-5f48-4732-b12d-78f03541ae9e@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbUaTiVk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7B1C4CEEA;
+	Thu, 12 Jun 2025 08:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749717072;
+	bh=KiXTzl6QEJUXCDIz97CX32nBSoUsT6AJdzJ9NXwvmRs=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=pbUaTiVkyd+eccgV1xQpVu3H8Afn1UqFuzIlX8s69JZzk1yK0yaHj6YjU5Y1efAKJ
+	 cLliInKdjJztdzQ/kKyZ+ja1DCnrTQ6pxleYEB9uWSiXHw2itQw9a6j/41EMNiQ7lJ
+	 OZmTkYlPTA+n3C8cixytNRTUWS4OFq6MBa+pWyZZzRYQaWm4uZp4vwOCY8eel4L9tT
+	 wq0rE1g3vM9ATgeMKRWyfTqDk559EA5YadgLdhyxfw65PEStHpILDuRkL6hZYKrns2
+	 MYfnxypKcFW9IeFq2E1RQYH49zldN7FZoY4sGCPsiZJLqEaZPwxuot+gE4NoYMW1io
+	 ziPLJOWnTMgsQ==
+Message-ID: <f1b9209e-c2fb-4a53-8d15-a3e42dea8bca@kernel.org>
+Date: Thu, 12 Jun 2025 16:31:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d48a228a-5f48-4732-b12d-78f03541ae9e@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, bo.wu@vivo.com, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Subject: Re: [f2fs-dev] [PATCH] f2fs: continue to allocate pinned section when
+ gc happens EAGAIN
+To: wangzijie <wangzijie1@honor.com>, jaegeuk@kernel.org
+References: <20250612032742.1734852-1-wangzijie1@honor.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250612032742.1734852-1-wangzijie1@honor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On (25/06/12 16:14), Baochen Qiang wrote:
-> > <4>[23562.576034] ath11k_qmi_driver_event_work+0xbd/0x1050 [ath11k (HASH:6cea 4)]
-> > <4>[23562.576058] worker_thread+0x389/0x930
-> > <4>[23562.576065] kthread+0x149/0x170
-> > <4>[23562.576074] ? start_flush_work+0x130/0x130
-> > <4>[23562.576078] ? kthread_associate_blkcg+0xb0/0xb0
-> > <4>[23562.576084] ret_from_fork+0x3b/0x50
-> > <4>[23562.576090] ? kthread_associate_blkcg+0xb0/0xb0
-> > <4>[23562.576096] ret_from_fork_asm+0x11/0x20
-> > 
-> > 
-> > There are clearly two ath11k_hal_dump_srng_stats() calls, the first
-> > one happens before crash recovery, the second happens right after
-> > and presumably causes UAF, because ->initialized flag is not cleared.
+On 6/12/25 11:27, wangzijie wrote:
+> Wu Bo once mentioned a fallocate fail scenario in this link[1].
+> After commit 3fdd89b452c2("f2fs: prevent writing without fallocate()
+> for pinned files"), we cannot directly generate 4K size file and
+> pin it, but we can still generate non-segment aligned pinned file:
 > 
-> So with above we can confirm our guess.
-> 
-> Could you refine your commit message with these details such that readers have a clear
-> understanding of this issue?
+> touch test_file
+> ./f2fs_io pinfile set test_file
+> ./f2fs_io fallocate 0 0 8192 test_file
+> truncate -s 4096 test_file
 
-Sure, I can do that.   I didn't want to throw my guesses into the commit
-message, stale ->initialized flag looked like a good enough justification
-for the patch.  But I can send out v3 with a more detailed commit message.
+Well, shouldn't we avoid such case by adding check condition in setattr?
+
+> 
+> By doing this, pin+fallocate failure(gc happens EAGAIN but f2fs shows
+> enough spare space) may occurs.
+> 
+> From message in commit 2e42b7f817ac("f2fs: stop allocating pinned sections
+> if EAGAIN happens"), gc EAGAIN doesn't guarantee a free section, so we stop
+> allocating. But after commit 48ea8b200414 ("f2fs: fix to avoid panic once 
+> fallocation fails for pinfile"), we have a way to avoid panic caused by
+> concurrent pinfile allocation run out of free section, so I think that we 
+> can continue to allocate pinned section when gc happens EAGAIN. Even if we
+> don't have free section, f2fs_allocate_pinning_section() can fail with ENOSPC.
+
+What do you think of introduce /sys/fs/f2fs/<dev>/reserved_pin_section to
+tune @needed parameter of has_not_enough_free_secs()? If we configure it
+w/ zero, it can avoid f2fs_gc() before preallocation.
+
+---
+ fs/f2fs/f2fs.h  | 3 +++
+ fs/f2fs/file.c  | 5 ++---
+ fs/f2fs/super.c | 3 +++
+ fs/f2fs/sysfs.c | 9 +++++++++
+ 4 files changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 785537576aa8..ffb15da570d7 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1731,6 +1731,9 @@ struct f2fs_sb_info {
+ 	/* for skip statistic */
+ 	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
+
++	/* free sections reserved for pinned file */
++	unsigned int reserved_pin_section;
++
+ 	/* threshold for gc trials on pinned files */
+ 	unsigned short gc_pin_file_threshold;
+ 	struct f2fs_rwsem pin_sem;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 696131e655ed..a909f79db178 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1887,9 +1887,8 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+ 			}
+ 		}
+
+-		if (has_not_enough_free_secs(sbi, 0, f2fs_sb_has_blkzoned(sbi) ?
+-			ZONED_PIN_SEC_REQUIRED_COUNT :
+-			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
++		if (has_not_enough_free_secs(sbi, 0,
++				sbi->reserved_pin_section)) {
+ 			f2fs_down_write(&sbi->gc_lock);
+ 			stat_inc_gc_call_count(sbi, FOREGROUND);
+ 			err = f2fs_gc(sbi, &gc_control);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 57adeff5ef25..48b97a95fd63 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -4975,6 +4975,9 @@ static int f2fs_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sbi->last_valid_block_count = sbi->total_valid_block_count;
+ 	sbi->reserved_blocks = 0;
+ 	sbi->current_reserved_blocks = 0;
++	sbi->reserved_pin_section = f2fs_sb_has_blkzoned(sbi) ?
++			ZONED_PIN_SEC_REQUIRED_COUNT :
++			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi));
+ 	limit_reserve_root(sbi);
+ 	adjust_unusable_cap_perc(sbi);
+
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index 75134d69a0bd..51be7ffb38c5 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -824,6 +824,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+ 		return count;
+ 	}
+
++	if (!strcmp(a->attr.name, "reserved_pin_section")) {
++		if (t > GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))
++			return -EINVAL;
++		*ui = (unsigned int)t;
++		return count;
++	}
++
+ 	*ui = (unsigned int)t;
+
+ 	return count;
+@@ -1130,6 +1137,7 @@ F2FS_SBI_GENERAL_RO_ATTR(unusable_blocks_per_sec);
+ F2FS_SBI_GENERAL_RW_ATTR(blkzone_alloc_policy);
+ #endif
+ F2FS_SBI_GENERAL_RW_ATTR(carve_out);
++F2FS_SBI_GENERAL_RW_ATTR(reserved_pin_section);
+
+ /* STAT_INFO ATTR */
+ #ifdef CONFIG_F2FS_STAT_FS
+@@ -1323,6 +1331,7 @@ static struct attribute *f2fs_attrs[] = {
+ 	ATTR_LIST(last_age_weight),
+ 	ATTR_LIST(max_read_extent_count),
+ 	ATTR_LIST(carve_out),
++	ATTR_LIST(reserved_pin_section),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(f2fs);
+-- 
+2.49.0
+
+
+> 
+> [1] https://lore.kernel.org/linux-f2fs-devel/20231030094024.263707-1-bo.wu@vivo.com/t/#u
+> 
+> Signed-off-by: wangzijie <wangzijie1@honor.com>
+> ---
+>  fs/f2fs/file.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 6bd3de64f..05c80d2b5 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1859,7 +1859,7 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+>  			f2fs_down_write(&sbi->gc_lock);
+>  			stat_inc_gc_call_count(sbi, FOREGROUND);
+>  			err = f2fs_gc(sbi, &gc_control);
+> -			if (err && err != -ENODATA) {
+> +			if (err && err != -ENODATA && err != -EAGAIN) {
+>  				f2fs_up_write(&sbi->pin_sem);
+>  				goto out_err;
+>  			}
+
