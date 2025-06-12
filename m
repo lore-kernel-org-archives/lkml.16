@@ -1,85 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB5922DF95;
-	Thu, 12 Jun 2025 10:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FE922FAC3;
+	Thu, 12 Jun 2025 10:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724294; cv=none; b=L9laf7IEJDcC71KPeCCMIx9FlYS0yMucMIzOhxLeaa+9paJkJB3yAb0f50KS7xI3pT581VKrB+lLM4pQVDJzL7pQNdgoY/dCLw/sKGRqNdABMvw+Div76YFFgHpuWCh6MC9tBCbz827e4WRBvPSw2QwiWdRMXRnlJMdwbV+mCdY=
+	t=1749724344; cv=none; b=T95w6O2JBYqMn/YajTtugrle7AAxK6Qst/zp5a4sZ//rcNU9/uH3lpQVpIXsNe5fvaHWQyyEhgP+ow2iyupwv4Kl05NSACID8nC+blAPIUThsCmEkKkzjDYR/e+U5Lp9eVPNvCJRCQpmrcwiDkAkiV9Zfwq/r5TypQzxNtaGjAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724294; c=relaxed/simple;
-	bh=mDm1RzkSd3lHQVQx0NkoIKQPL1oLiexJUBX7k9eUA3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sWiV1ujZAOgQJDDKmsOUWY7lJuUpvsY8GEoeJBpsXTOhrTjWorFbUA6LS4w2/ilhxk+wy/NKVzvAs414kevDpyh97bu2Jukjblcw0K1hpqawasSXqb95JC7JTgOlvizd/mkZZI98dw96MeSF6nB8X7CHKDLIE29xyJu7/YxMKe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NW6fQ5tz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749724344; c=relaxed/simple;
+	bh=nVMNn0VSngYDSLAUJezTR2b19OzJ86I1XkvSWoGjSbY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pirxhlxAC/a4lnpY40zq/PiWigU8HMe09RZP6vR0sqs7VpFQ4W7abdBpgzm0o2mqK8XGqZj8cj9jJ3v8QxidXfdraDmSOYfhzGvpPm2sjxeC7RYMTRekJX2ut61eObo+Bq7lCuCveM2d5xgeTjaPUsDAfdaf8G0a6ur+m1DzQ94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Frmjlb8d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NW6fQ5tz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1464EC4CEEA;
-	Thu, 12 Jun 2025 10:31:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Frmjlb8d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5EB8C4CEF1;
+	Thu, 12 Jun 2025 10:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749724294;
-	bh=mDm1RzkSd3lHQVQx0NkoIKQPL1oLiexJUBX7k9eUA3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NW6fQ5tzMXCgQ75WPQhzp7TKnDIRKBTHyPzcEXOWWP9UclXy4K5rFulrbnRBcKdLR
-	 bLhz5VPa5+APOcaHn5fzBWCw4OeoI/ZEs4B37Vc0I3L5ldiqyaiHmLVo9JAT/UgDdQ
-	 ckqxI/yyv08Fm1vsn0niDGosHT5DnUwArbWxMS+9KlZjvmZxzPZZxziTQwj1CMWyjo
-	 DV/E0b7bfAaN/NOnJP9n638tkuShnnzJ4PHk7kyUzoVdDs4FgWbexD9we9YpSxH/k7
-	 Hgq0qypV/JXhjBHv4uYFnqubckmDpDkNjk3mMk7O0Jm4uJTI4Vh1aHZiQVsBVvxKoW
-	 IKADhhJe8+F6w==
-Date: Thu, 12 Jun 2025 12:31:28 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] rust: devres: fix race in Devres::drop()
-Message-ID: <aEqsgD2ap2VMpTR9@pollux>
-References: <20250603205416.49281-1-dakr@kernel.org>
- <20250603205416.49281-4-dakr@kernel.org>
- <DAKEK5YPNCAU.3LQGI98GGG4KF@kernel.org>
+	s=k20201202; t=1749724344;
+	bh=nVMNn0VSngYDSLAUJezTR2b19OzJ86I1XkvSWoGjSbY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Frmjlb8dtgO48XvFAdPuTxYhDYKcBFzGt7ZRjxuCJhF4OXj9hpXofqzOG5hb7cMBW
+	 q/J5fRL1xWnQwqkZGL5DhdoNQ/QqbowLv6NdDFqlQ2du9D6KyrmeoAt4dQsWBNL9m+
+	 7YtC2txWNucD27ir6klSf84OifHPrzB3//NGvC5jCxWgrlLohvLWBy9XILJMi/p2vI
+	 7toskAJFDyeA+amwI93kITiDd1A2/WK06bolb1Chq9WFI9noJ3noIgEAapuamHusIq
+	 wKww2EHwIAPIBR0hc7kt06Z+wqemMRhdVVg4X1W4Z7wiM4vLBSB1wPTVN7Au896bh9
+	 WBCk14dlxr1xA==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1uPfEM-00000004yvE-0SLU;
+	Thu, 12 Jun 2025 12:32:22 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Akira Yokosawa" <akiyks@gmail.com>,
+	"Breno Leitao" <leitao@debian.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Donald Hunter" <donald.hunter@gmail.com>,
+	"Eric Dumazet" <edumazet@google.com>,
+	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
+	"Jan Stancek" <jstancek@redhat.com>,
+	"Marco Elver" <elver@google.com>,
+	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	"Paolo Abeni" <pabeni@redhat.com>,
+	"Ruben Wauters" <rubenru09@aol.com>,
+	"Shuah Khan" <skhan@linuxfoundation.org>,
+	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Simon Horman <mchehab+huawei@kernel.org>,
+	joel@joelfernandes.org,
+	linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	lkmm@lists.linux.dev,
+	netdev@vger.kernel.org,
+	peterz@infradead.org,
+	stern@rowland.harvard.edu
+Subject: [PATCH v2 03/12] docs: netlink: don't ignore generated rst files
+Date: Thu, 12 Jun 2025 12:31:55 +0200
+Message-ID: <1cf12ab4c027cf27decf70a40aafdd0e2f669299.1749723671.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1749723671.git.mchehab+huawei@kernel.org>
+References: <cover.1749723671.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAKEK5YPNCAU.3LQGI98GGG4KF@kernel.org>
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On Thu, Jun 12, 2025 at 10:13:29AM +0200, Benno Lossin wrote:
-> On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
-> >  impl<T> Drop for Devres<T> {
-> >      fn drop(&mut self) {
-> > -        DevresInner::remove_action(&self.0);
-> > +        // SAFETY: When `drop` runs, it is guaranteed that nobody is accessing the revocable data
-> > +        // anymore, hence it is safe not to wait for the grace period to finish.
-> > +        if unsafe { self.revoke_nosync() } {
-> > +            // We revoked `self.0.data` before the devres action did, hence try to remove it.
-> > +            if !DevresInner::remove_action(&self.0) {
-> 
-> Shouldn't this not be inverted? (ie 's/!//')
-> 
-> Otherwise this will return `true`, get negated and we don't run the code
-> below and the `inner.data.revoke()` in `devres_callback` will return
-> `false` which will get negated and thus it will never return.
+Currently, the build system generates ReST files inside the
+source directory. This is not a good idea, specially when
+we have renames, as make clean won't get rid of them.
 
-DevresInner::remove_action() returns false it means that the devres action has
-already been taken from the list and will be run eventually, hence we have to
-complete the completion.
+As the first step to address the issue, stop ignoring those
+files. This way, we can see exactly what has been produced
+at build time inside $(srctree):
 
-If DevresInner::remove_action() returns true, it means that we removed the
-action from the list and the callback will never be exectuted, hence nothing to
-do.
+        Documentation/networking/netlink_spec/conntrack.rst
+        Documentation/networking/netlink_spec/devlink.rst
+        Documentation/networking/netlink_spec/dpll.rst
+        Documentation/networking/netlink_spec/ethtool.rst
+        Documentation/networking/netlink_spec/fou.rst
+        Documentation/networking/netlink_spec/handshake.rst
+        Documentation/networking/netlink_spec/index.rst
+        Documentation/networking/netlink_spec/lockd.rst
+        Documentation/networking/netlink_spec/mptcp_pm.rst
+        Documentation/networking/netlink_spec/net_shaper.rst
+        Documentation/networking/netlink_spec/netdev.rst
+        Documentation/networking/netlink_spec/nfsd.rst
+        Documentation/networking/netlink_spec/nftables.rst
+        Documentation/networking/netlink_spec/nl80211.rst
+        Documentation/networking/netlink_spec/nlctrl.rst
+        Documentation/networking/netlink_spec/ovs_datapath.rst
+        Documentation/networking/netlink_spec/ovs_flow.rst
+        Documentation/networking/netlink_spec/ovs_vport.rst
+        Documentation/networking/netlink_spec/rt_addr.rst
+        Documentation/networking/netlink_spec/rt_link.rst
+        Documentation/networking/netlink_spec/rt_neigh.rst
+        Documentation/networking/netlink_spec/rt_route.rst
+        Documentation/networking/netlink_spec/rt_rule.rst
+        Documentation/networking/netlink_spec/tc.rst
+        Documentation/networking/netlink_spec/tcp_metrics.rst
+        Documentation/networking/netlink_spec/team.rst
 
-> > +                // We could not remove the devres action, which means that it now runs concurrently,
-> > +                // hence signal that `self.0.data` has been revoked successfully.
-> > +                self.0.revoke.complete_all();
-> > +            }
-> > +        }
-> >      }
-> >  }
-> 
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/networking/netlink_spec/.gitignore | 1 -
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 Documentation/networking/netlink_spec/.gitignore
+
+diff --git a/Documentation/networking/netlink_spec/.gitignore b/Documentation/networking/netlink_spec/.gitignore
+deleted file mode 100644
+index 30d85567b592..000000000000
+--- a/Documentation/networking/netlink_spec/.gitignore
++++ /dev/null
+@@ -1 +0,0 @@
+-*.rst
+-- 
+2.49.0
+
