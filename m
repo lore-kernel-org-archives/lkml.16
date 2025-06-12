@@ -1,113 +1,88 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1541B1A8F79;
-	Thu, 12 Jun 2025 15:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAFE1B0416;
+	Thu, 12 Jun 2025 15:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749743844; cv=none; b=YRisZLaTtWNuUUl0IhIYF3RHgHCW8J4cl4d20xpKaKpGEe/5pEA2uZnRn8DodP8O4Tmy5eHrqM0f6F4xTZio+YeGrMoWaquxcitdLZJnrTv+Nu8kmLa0jCtefAXaZrexvaQU+qqPNqh1L76mqXTm9zvZhSGYCw3mWVtAmOIAxUM=
+	t=1749743868; cv=none; b=YBVBbOfgsUnIZmknKmtpNWGTOjIKLY/kEf9gda5PfGm4hPIHrM6h+RbRHAOIY2L+cAyGU7PNI1q10q9HCmkAj0LZCq50ZFxKePdKUkE1IpithLZx1sQcUr+2lAON+8wW0jYHvtDy8w5JYDnqVWe7yKtdgZ1uoEXlczTxEKmUqlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749743844; c=relaxed/simple;
-	bh=evcvXqww3OzUJzsgDgW8nVIYByuR/3CzVFzRK8zBncM=;
+	s=arc-20240116; t=1749743868; c=relaxed/simple;
+	bh=I+yj5RaeRFm4XV7nYay72iV3VtIk9fY58cl2ElhN9GY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=phtms5E6VGFX43SS2y4tf5Y5Fjsh7GKom+f35bKOSppyvM4BKTbQo14ERMKnGRY34A24Gv46lCsQdr8ECsvhyhWjvA9FnR2PCKiSrHB8ck5SzEtl9FL0bduvB8+rzmVBEGMmuum6rqzaXxXbkbGSNEriI88nDGBOV0PsbtI6/3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fi+YKDV6; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oOKhmzG43I3qO2lwg4hVwPF+3YhQShu0tpZ3mhYYGxZFT4eOaxkZxOkzqE6YmRg2AJR1ZriaMyqEAu7MwEgG+whGfGGRlUTTe0E85Cj7lRrlqizyG1PgwSmAdyiM2isWhXe8GHGk9QAo0+HOEnbyt0PTztQp4DDiLPhJvB1mZJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kj3syDB7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fi+YKDV6"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55394ee39dfso1166413e87.1;
-        Thu, 12 Jun 2025 08:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749743841; x=1750348641; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9179uFVoT3EW7ZHfseKQ7sHz/HhsAa08rUdpavyALIQ=;
-        b=Fi+YKDV63MV1lYH6Jrhic5JwWmjZZASn7ki6sUt/nK6rh25WPHqWa6u0WJIgx2Zwzx
-         Nmm9CgunGR9XqmnTB7/hNUDpjT9dEWpf20FsJKnFU8yhnO3FSTZO/21E3O/prJZDjVZ1
-         GuGHekRnykeQ2x2VqibXH9EhGntpZ4pthZqEn8DtQIZ/11tr9p1o1O3s4DOhWk0BKXqU
-         AA0Ypf8C4+TMkAtJ0x5CdJ7hIObednTxH4lmHx2yCsFg6CmfKfm1/A1DIjMRJljS3uTr
-         cI8fWDjaaRuIOHwlS7zbuIuCZXgGRuqbp/XUsBYcIqQ5aNuodc7Ns0+gsbZjHDnLnIfQ
-         jsJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749743841; x=1750348641;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9179uFVoT3EW7ZHfseKQ7sHz/HhsAa08rUdpavyALIQ=;
-        b=Hnw0t4NqJ39M6QC8R0be6aKdlrpQdUeoxB/YNHDZxpUQnlJb1CQdn1Wq1aRvU4EQYZ
-         XtVKdwEsN+iPCrhYknh5xIWOi81lTexbKgUnybiQH44Frwr4h5/UcSwdZR/r7XRJFR24
-         dHM4w2ds8xjH3JRA/xywveaxR7KnEMKeGDIK36r5Bq5Z8WoLEs5bCk0Xvw2UU8DxerI5
-         8ju2WjYWwsa2lue7y9/C2NnuSwoYTPdBHzbyYKZLg2O2pF6R3InO4eWm2/A/7/Au/9yD
-         u7dKr1EvuJ0a79Gece2Qbpg7yDRS819ww0gEcGwqBG/CHfPPs6+bG7yNKveTKATR8of7
-         utSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWgrzHSF6f+rQrNbT7y4j13brzMMUp83EO9KcTiTyKCmznvAUYWxShOqRJQB1Bir5u56VWdo792Swh37oM=@vger.kernel.org, AJvYcCXN9kGjBYzBfmwoFznG7CVqg7MYmTzAKPizzCZ0hsDwPV2lz+AR1pE19dNAMhCLH+vKeOl43H1zQdz2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXPUxMghH05jTwUPwZ9TjwVwou+Fb6iKJ1ZSdSypo6jyZQMkFF
-	SNegnZI7+ykJaGjY2HfNmWNEYfVZai2vGZweLb7JgKtcXI0jLTkOnPP2
-X-Gm-Gg: ASbGncvLB6d8p87UhAjGTwVzcbvYegTYPnq+8br/KX+JdcwZLxEFer9kZU7QLhxianw
-	rhVObcHdOgVRzW0HvL/lPSytv/EzNeV4ZKkM4UrqbkP/efkVP7U846kaTbx0eOoZk4m0wVaFtUw
-	HndjH1CmkQt+gZO+fjFqAwYLBGmxVuY9BWuk/11kczjQvECxVBH5hxcIMJFscltyTpTr10ZgKjA
-	y7iT9rVCtt1dE179d66AKYJ5m264p5RVXk4MQkmRV5zCZnFhoPVKjWxmkSQBb7gvhZSo12QVJXQ
-	v3IqnmIfv3+yvtN3Zvb0bua7fNYoeVcn1X2bXPTvmevRRh1kpgQOle/qmPHywBUGmCR28PcqKA4
-	9ex6FgiAvfNBPZpGJ1HKPblo=
-X-Google-Smtp-Source: AGHT+IFFBAnZphSpay7uT97FtpVQuu9LlHxtRNVKszGcz//pBOhulNNZ/P57ZJmOEBGALEIMLq44QA==
-X-Received: by 2002:a05:6512:3a85:b0:553:2884:5fb3 with SMTP id 2adb3069b0e04-553a5442279mr1338988e87.12.1749743840851;
-        Thu, 12 Jun 2025 08:57:20 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([37.78.250.67])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1f7c19sm148313e87.233.2025.06.12.08.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 08:57:20 -0700 (PDT)
-Date: Thu, 12 Jun 2025 18:57:18 +0300
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>, 
-	Christoph Hellwig <hch@infradead.org>
-Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Konstantin Evtushenko <koevtushenko@yandex.com>
-Subject: Re: [PATCH v2] nfsd: Use correct error code when decoding extents
-Message-ID: <lqssee7hdp5bkty34idm6s6xz2hfxpbkthzgqgopc72vbyzrdx@egvanmm3llrg>
-References: <20250611205504.19276-1-sergeybashirov@gmail.com>
- <aEp6-T8Oqe2dI7of@infradead.org>
- <1951a618-a35d-4515-b4b7-131880a780c6@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kj3syDB7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E397C4CEEB;
+	Thu, 12 Jun 2025 15:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749743865;
+	bh=I+yj5RaeRFm4XV7nYay72iV3VtIk9fY58cl2ElhN9GY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kj3syDB7EWGXmmPQEn6faQJJCP8Zx4/ZbWfx7JOkjzRF0b8VXypiFh+vqdaR8hl+p
+	 ioh5TDwlCz6GFe+gIMxEfYVqfpLapRk1/3/fdNPt56AIGQrTtOVSuQlX6VXMXgbPgz
+	 1H1mS98XcOEm0C/62bgT59L+f+uAFOvphLCOqS1N5Ff2+I9VbhNd/R7nmixjuliDT+
+	 0ECTov3sUQ13ituxxnl50KKaOAe7VR/jHdHqVUmefGy91C/DN+y0FzI6a5iphvbODD
+	 q/NVOs5UaO1MPd6POp4EdPrhAFHt+ixI/0LAvQGsIFBVVj8kPrXJc2LfkO+5YDX4IB
+	 YlD+RzbQxcOtg==
+Date: Thu, 12 Jun 2025 15:57:43 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc: Simon Richter <Simon.Richter@hogyros.de>, linux-fscrypt@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net, ceph-devel@vger.kernel.org
+Subject: Re: [PATCH] fscrypt: don't use hardware offload Crypto API drivers
+Message-ID: <20250612155743.GA3529549@google.com>
+References: <20250611205859.80819-1-ebiggers@kernel.org>
+ <7f63be76-289b-4a99-b802-afd72e0512b8@hogyros.de>
+ <20250612005914.GA546455@google.com>
+ <20250612062521.GA1838@sol>
+ <aEqU0iU1tBrLEYUq@gcabiddu-mobl.ger.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1951a618-a35d-4515-b4b7-131880a780c6@oracle.com>
-User-Agent: NeoMutt/20231103
+In-Reply-To: <aEqU0iU1tBrLEYUq@gcabiddu-mobl.ger.corp.intel.com>
 
-On Thu, Jun 12, 2025 at 09:10:11AM -0400, Chuck Lever wrote:
-> On 6/12/25 3:00 AM, Christoph Hellwig wrote:
-> > On Wed, Jun 11, 2025 at 11:55:02PM +0300, Sergey Bashirov wrote:
-> >>  	if (nr_iomaps < 0)
-> >> -		return nfserrno(nr_iomaps);
-> >> +		return cpu_to_be32(-nr_iomaps);
-> >
-> > This still feels like an odd calling convention.  Maybe we should just
-> > change the calling convention to return the __be32 encoded nfs errno
-> > and have a separate output argument for the number of iomaps?
-> >
-> > Chuck, any preference?
-> >
->
-> I thought of using an output argument. This calling convention is not
-> uncommon in NFS code, and I recall that Linus might prefer avoiding
-> output arguments?
->
-> If I were writing fresh code, I think I would use an output argument
-> instead of folding results of two different types into a function's
-> return value.
+On Thu, Jun 12, 2025 at 09:50:26AM +0100, Giovanni Cabiddu wrote:
+> On Wed, Jun 11, 2025 at 11:25:21PM -0700, Eric Biggers wrote:
+> 
+> ...
+> 
+> > FWIW, here's what happens if you try to use the Intel QAT driver with dm-crypt:
+> > https://lore.kernel.org/r/CACsaVZ+mt3CfdXV0_yJh7d50tRcGcRZ12j3n6-hoX2cz3+njsg@mail.gmail.com/
+> 
+> /s/happens/happened/
+> 
+> ... and it got fixed
+> https://lore.kernel.org/all/20220506082327.21605-1-giovanni.cabiddu@intel.com/
 
-In general, I am ok with either of these two approaches. But I agree
-with Christoph that the solution with a separate output argument seems
-more natural to me. Should I submit the v3 patch with a separate output
-argument?
+But it reached users in the first place, including stable kernels.  And
+apparently the issues were going on for years and were known to the authors of
+the driver
+(https://lore.kernel.org/linux-crypto/91fe9f87-54d7-4140-4d1a-eac8e2081a7c@gmail.com/).
 
---
-Sergey Bashirov
+We simply don't have issues like this with the AES-NI or VAES XTS code.
+
+And separately, QAT was reported to be much slower than AES-NI for synchronous use
+(https://lore.kernel.org/linux-crypto/0171515-7267-624-5a22-238af829698f@redhat.com/)
+
+Later, I added VAES accelerated AES-XTS code which is over twice as fast as
+AES-NI on the latest Intel CPUs, so that likely widened the gap even more.
+
+Yet, the QAT driver registers its "xts(aes)" implementation with priority 4001,
+compared to priority 800 for the VAES accelerated one.  So the QAT one is the
+one that will be used by fscrypt!
+
+That seems like a major issue even just from a performance perspective.
+
+I expect this patch will significantly improve fscrypt performance on Intel
+servers that have QAT.
+
+- Eric
