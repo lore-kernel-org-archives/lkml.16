@@ -1,137 +1,102 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01EB2D4B58;
-	Thu, 12 Jun 2025 19:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754848; cv=pass; b=SLzVkiGX1d72C0Cxrz/wFCcCgpRiJdHdd+HcYuMiVq0B27bvDsBV3kQLk0+KdqanvOMHTBvNc2rrt29x6tX1xj48PAGxiMMJeQb4yfSRrD3r5BkI+6QXZxPa0n9p9Ad8BjG7V4cQUjlEAwqZKkGPuB5BILdL6lCHW9d0fXm+E9M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754848; c=relaxed/simple;
-	bh=P3Lo9SBOlK6TEtzGqP7isBkwhCf7n4DdmPBtYyEWVoU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YkxnIlFa615MGrz5snQ0L4Ryy19eLSv3W8lfGKK3fVEoIMP1MG1gVwftWlTiMwDTA1HHbvYhI69WtDAQ0Xghc6bNFYJSXfNv8eHcG50ijOSGVdM4FsZrJNNLAk0PLfKoEf4i7PUebsn8z/w208pXqAbZ+jPyelamugbwq0Hqfuc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=iVhHk5Mw; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FA52D8DB9
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 19:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749754863; cv=none; b=g4fwyUGHm6tSUGCiGypdfbLcXj3NyNaZpXlmnugfMiX0z8WzLVcIkfsHk6PGbdNPdxI3mUk3l40NUhSEU2nF9GhwLgAPL+rSG2aOTxVJWNScVJeUe/37VijZieqIpIfjScF7eZmLWC89100K9w7eQ7r3NXp2OQ7kubDYnYmOHPM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749754863; c=relaxed/simple;
+	bh=ZwlMsaTHjZOtEXv/YqtnnEPbYBwwh6k+wD4c3F2kUr0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GZQFT0auXo0Awx8mK2T2fJasJiOZS5TI0hMaDi75uZNZvHMYGUlnwrIn5151WEkC3FbZu+hhLrnfZFFs+IuI/fQUz9LbCiTvcolskYsfWXglVgr8WB51Zmg1Rp9vpHzI/ysQx/+jQdFV9LKNJnrLwmgYteIW3pec9Kx3OwcJEqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A4L79eJ5; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="iVhHk5Mw"
-ARC-Seal: i=1; a=rsa-sha256; t=1749754782; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=LY2gOReHJeUsgEIhNZvz6CydVgFoOGSGwaO3l0ZuE3mp/sZrxu2OlhGrcKw37Wy6BjH/Vz0Xx2Cx4LqVx3qH95vQVxpj44T8IwywaRqUT5D2e2jY4zTaz45iv96yr0RqawLUCWvBE192yfZ/SADPo5KJ/wGK1tPQMz3sje6Zbhw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749754782; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=LZnMh9VL4aVe9Urf5rkcaSHCLrN/faLOWNkCrDUkPYY=; 
-	b=SLgwS9XUP4ok8yl+FESpXJh/OgRlMDd0MpMUdvCG9/xARXYUCNypI158XB/w2K6sb/tvs3Cif53eFlMlRzvVsYksqu/4bStT3g2U6aEdfXbQO0gw3C5xH9czfEZBZtqT02XVLk+IRhSWA2Dp4R+ftZRbPM+41gfvW8yqeNZO7FQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754782;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=LZnMh9VL4aVe9Urf5rkcaSHCLrN/faLOWNkCrDUkPYY=;
-	b=iVhHk5MwRVtbtvjqdW6+zcRb66lb63uysOR33hf8Sm+i4XHzOKH0BTORJ99toSze
-	5xqvj4XIAUguOAT/+O8bHz3qKxPohh5eGjWxLpFOHYE/TjpEwWOJ/0Q2EZM/HxqhCid
-	FptUsuYAnrnu9fBNyreU1j4d+LtsQGPUqWaee9X4=
-Received: by mx.zohomail.com with SMTPS id 1749754780873810.5793291533364;
-	Thu, 12 Jun 2025 11:59:40 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 12 Jun 2025 20:56:17 +0200
-Subject: [PATCH 15/20] net: stmmac: dwmac-rk: switch to HWORD_UPDATE macro
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A4L79eJ5"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235e389599fso40365ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749754860; x=1750359660; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZwlMsaTHjZOtEXv/YqtnnEPbYBwwh6k+wD4c3F2kUr0=;
+        b=A4L79eJ54S8X/R6hdBRCGJERy7H+zrEjPyMVVBDEq73jX4tDGzH3TXGyFFeViSYU5x
+         IGzAXqwuH26ZZPVqh2BTD5c3EpOFjYyeo1I9HO28R5rcfjJlc2TAXXEdCVOvI8HMDWfp
+         M7wJn59bo/R0KEjXzu89S81WRPMoZVOOhkc21AJp4jsxBc+Z1Ovope1S+Euh07I4obrz
+         XE0AA8khB6StZ406/4PRkf1tmhWHpT5xPcwwyRiaVgrHj8YsHyvkoiansK9tWjlLAHxI
+         FYIg/BMQu0jDDqJ66Tbft8Y7n2iHJ/TnY54dW18edX+W/DKljg8uhbbwI+IRKCUqSyD8
+         Ja2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749754860; x=1750359660;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZwlMsaTHjZOtEXv/YqtnnEPbYBwwh6k+wD4c3F2kUr0=;
+        b=G040Fri07UWfLIS6jpnguV1WQq3o9obx0jKuIujm3nFemt5Y+DF5A3Yy2O+8GgLaQt
+         0nv8tJqZpyzEbMtcHP29cNoc+rQP/9Q+kRTzd0mjer6JzkUIiLk8Wy8cI/4J5ReggQ1O
+         7RxDfivz+Kjoteh5juj+jjyzc+4mvSIWsCsm98QD16A2YsMRGkI3XCrx47swWIhjsXgj
+         8SSyUhtmcz4ILF3/zmk4aUTYZvjZCrbtSbaVuhe4yqScBMCx24bLD5t2uxoQc9h05mec
+         SB71IWIYm9ApEMuE2VlQgBjzUfS363v/gxnNw+3hpe0fzYnlecqODk5cRDvDDzf3/F+I
+         WxqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWMyJ61T4C9drZOJILIxlcg4CKpbCQj4QHbc3wgYTCW5pCayAlkhci859v12xH/kzuqhcOf6Vw2M5tiGu8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfrASuCTjDD37H0DvMTsVR5nTzB0D4y6UjEwYP1S+LRtNG/9y6
+	cpAfQWgXILDxt6CrQWJLf7D4a//LN74aMd2s4LX2nM3KYPZ2WSAnoEXHORlo+mvpZ9kPT63W4l/
+	MOYG77v4AW/TzGYXQPCCp0SxId9SRK+QYm5HNQLfOix85aDF1F6RCV3QA
+X-Gm-Gg: ASbGncsGL7MgeZPQwxt3U7DTse4j4wN1yfT1KB86/wEFGOkHcC+m8BBpHS4FEMmqO+V
+	bDYNCO1KBblf0RovLcU3ijWUT0Vyey7qX+/OcehW0tvmrc4zP/p9OqfvAByJ8ZUMuzdD5pn6Zgj
+	P8LIbumpxCbO7URNzyymn3WrT7sQlOAug4EI5GpaKfAh3QqioXdXZDxxwY4ND4RTeXPeab88fcw
+	w==
+X-Google-Smtp-Source: AGHT+IF+DrhTdw1EVP33Lsxs8pEmeKyxPiFeWCjxcFQq5i+dtpZuy+WTSh+WvsQ3zeAWf1tAffKMVahMPLgaOisNCFA=
+X-Received: by 2002:a17:902:d54a:b0:235:e1d6:5339 with SMTP id
+ d9443c01a7336-2365e950001mr97625ad.26.1749754859927; Thu, 12 Jun 2025
+ 12:00:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-byeword-update-v1-15-f4afb8f6313f@collabora.com>
-References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
-In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
-To: Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shreeya Patel <shreeya.patel@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
- MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
- linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+References: <20250612154648.1161201-1-mbloch@nvidia.com> <20250612154648.1161201-4-mbloch@nvidia.com>
+In-Reply-To: <20250612154648.1161201-4-mbloch@nvidia.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 12 Jun 2025 12:00:45 -0700
+X-Gm-Features: AX0GCFs8bIh3dxPetT87B5xeJSISXmwVqrXxvRLSdCTJ2AOZNbM701RU8f8TtdA
+Message-ID: <CAHS8izNe_g9o92C0RbOe6vtbSfBMbJJJc4K1HubpozN4xwrcuA@mail.gmail.com>
+Subject: Re: [PATCH net-next v5 03/12] page_pool: Add page_pool_dev_alloc_netmems
+ helper
+To: Mark Bloch <mbloch@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>, saeedm@nvidia.com, 
+	gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com, 
+	Leon Romanovsky <leon@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Richard Cochran <richardcochran@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Dragos Tatulea <dtatulea@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-drivers that use constant masks.
+On Thu, Jun 12, 2025 at 8:52=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
+e:
+>
+> From: Dragos Tatulea <dtatulea@nvidia.com>
+>
+> This is the netmem counterpart of page_pool_dev_alloc_pages() which
+> uses the default GFP flags for RX.
+>
+> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
 
-Like many other Rockchip drivers, dwmac-rk has its own HIWORD_UPDATE
-macro. Its semantics allow us to redefine it as a wrapper to the shared
-bitfield.h HWORD_UPDATE macros though.
+Thank you!
 
-Replace the implementation of this driver's very own HIWORD_UPDATE macro
-with an instance of HWORD_UPDATE from bitfield.h. This keeps the diff
-easily reviewable, while giving us more compile-time error checking.
+Reviewed-by: Mina Almasry <almasrymina@google.com>
 
-The related GRF_BIT macro is left alone for now; any attempt to rework
-the code to not use its own solution here would likely end up harder to
-review and less pretty for the time being.
-
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index 700858ff6f7c33fdca08100dd7406aedeff0fc41..38a15aaf7846dc16e5e3f2ff91be0b5e81d29dba 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <linux/stmmac.h>
-+#include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/clk.h>
- #include <linux/phy.h>
-@@ -84,7 +85,7 @@ struct rk_priv_data {
- };
- 
- #define HIWORD_UPDATE(val, mask, shift) \
--		((val) << (shift) | (mask) << ((shift) + 16))
-+		(HWORD_UPDATE((mask) << (shift), (val)))
- 
- #define GRF_BIT(nr)	(BIT(nr) | BIT(nr+16))
- #define GRF_CLR_BIT(nr)	(BIT(nr+16))
-
--- 
-2.49.0
-
+--=20
+Thanks,
+Mina
