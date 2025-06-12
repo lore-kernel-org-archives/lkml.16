@@ -1,33 +1,48 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE992AE6D
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258821A3154;
+	Thu, 12 Jun 2025 05:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749707353; cv=none; b=HGQjyB4+FXjH3diduCuh3/4o75XTdAKzv8CXZg1aQm5Ns6dcQo4cEN0tPf71vjQEN6vilpeuXQTnuH/Aek0DOVsoKp0/fYc3HabK1pMdzFAMKwqbgS/MDwh0gPShkLmIRbrug6xK3qKrKpCNTFyCpMKrwBzXuNoNcoDBXAZ4BDg=
+	t=1749707375; cv=none; b=TS9u9fX4OMNre1eKOAaWc7E6EEwBQEKrDXD6pi4QiErxUv2pSk5WD00v/3pVzUTAMH9zfp5Py11zQt5m1Sv6TcvBNDTa8ztL+UBh3ggytbwzDeb4/z0lfec/SmarrzlxleUA0QVQX8NEka6x3cWaWwGFa0grEhbeWBJu1DD7HOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749707353; c=relaxed/simple;
-	bh=VViRxgcryqTRE2c+oyXvI2REmmuNSHAF8RM8HqAib/Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tyItoDGzOUkbWMgnKP/5qyG8rFa9p+KxYvUyAjGiiTJppPOnry2xWc1qwtc1e8DhxTbfBX9+D5vARX82IPtP93jJve21JKejqAagICBZkWCi3GcRPt2EN/nOO/xnd/dVhX2CP6YMmy3YNca8+ktMVvIWftaCh/+64/iJJsC0zqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=VTYOwtXk; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749707375; c=relaxed/simple;
+	bh=oeDseZ1YruLWRioQVS3zDkAVsr+7kPiWpSRYhiOD97o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UZ0fBuRP9dTQF+o8HE2z1JDgqk50tl+8m65vT3NDmFuXhYvrcAT3+FammJbq3RDAYokv3+aWS27/XbRzQ6doG0ozTz+UTSGbvh1fAQtipYtjUwvQP6ijlgU93UlhweKpk5ZRLBRX5P/usk2Mr0lyiotJJfyzdgNIsmaYUIci/bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kSZHA9eb; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VTYOwtXk"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2AE7B3D5;
-	Thu, 12 Jun 2025 07:48:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749707340;
-	bh=VViRxgcryqTRE2c+oyXvI2REmmuNSHAF8RM8HqAib/Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VTYOwtXkmGcvQ7zP/LAzRZF2Q4NgX0Ef6uLyadALEZk3FCE574MwVj8yUmHEEmrKF
-	 NPeUlQHlvsBlhxk0psYI+EBofYYVZGJi4zdgHvSNQFDcG1tUHyZK1bFcm05xyYfZ+r
-	 NpuzuWfMlzSO7/bhjfN8oQ0Py32A6/hAFD+VAVZM=
-Message-ID: <306f142f-f9c9-44ab-a5b9-c71db76b2b80@ideasonboard.com>
-Date: Thu, 12 Jun 2025 08:49:04 +0300
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kSZHA9eb"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C5nRUp2782013;
+	Thu, 12 Jun 2025 00:49:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749707367;
+	bh=wQ6UkrjNlmGOI532P0hm6reVg7bumxMRL0dV7Vudxcc=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=kSZHA9ebgObsjXOQo1VGDu0Ugbd4T3XbRfKSQwTdtMx7Ies2RVBjaYD6lMYWudeOf
+	 AUUKqZC4OH8ZDNphsjuRSuFhA1Z+JdG5cMo+ZkJSE8zT1gMT1TzFLUkJyQjuQ4+Fwx
+	 I1p058KD5ndbggcvKmYyAlHazvU4ts8jBxvMzZiY=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C5nR251566750
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 12 Jun 2025 00:49:27 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 12
+ Jun 2025 00:49:26 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 12 Jun 2025 00:49:26 -0500
+Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C5nNSu1494290;
+	Thu, 12 Jun 2025 00:49:24 -0500
+Message-ID: <b31e87f3-92b1-45fd-be62-48eccc4f0a4c@ti.com>
+Date: Thu, 12 Jun 2025 11:19:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,153 +50,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 3/4] drm/atomic-helper: Re-order bridge chain
- pre-enable and post-disable
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
- Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>, Nishanth Menon
- <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
- Alexander Sverdlin <alexander.sverdlin@siemens.com>,
- Dmitry Baryshkov <lumag@kernel.org>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
- <20250605171524.27222-4-aradhya.bhatia@linux.dev>
- <CGME20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19@eucas1p2.samsung.com>
- <2c51cf39-13cb-413f-8dd5-53bc1c11467a@samsung.com>
+Subject: Re: [PATCH v5 2/2] crypto: ti: Add driver for DTHE V2 AES Engine
+ (ECB, CBC)
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "David S. Miller" <davem@davemloft.net>,
+        Kamlesh Gurudasani
+	<kamlesh@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri
+	<praneeth@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>
+References: <20250603124217.957116-1-t-pratham@ti.com>
+ <20250603124217.957116-3-t-pratham@ti.com>
+ <aElNLaBWM56vyFC6@gondor.apana.org.au>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <2c51cf39-13cb-413f-8dd5-53bc1c11467a@samsung.com>
-Content-Type: text/plain; charset=UTF-8
+From: T Pratham <t-pratham@ti.com>
+In-Reply-To: <aElNLaBWM56vyFC6@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi,
-
-On 11/06/2025 13:45, Marek Szyprowski wrote:
-> Hi,
+On 11/06/25 15:02, Herbert Xu wrote:
+> On Tue, Jun 03, 2025 at 06:07:29PM +0530, T Pratham wrote:
+>>
+>> +static void dthe_cipher_exit_tfm(struct crypto_skcipher *tfm)
+>> +{
+>> +	struct dthe_tfm_ctx *ctx = crypto_skcipher_ctx(tfm);
+>> +
+>> +	ctx->keylen = 0;
+>> +}
 > 
-> On 05.06.2025 19:15, Aradhya Bhatia wrote:
->> From: Aradhya Bhatia <a-bhatia1@ti.com>
->>
->> Move the bridge pre_enable call before crtc enable, and the bridge
->> post_disable call after the crtc disable.
->>
->> The sequence of enable after this patch will look like:
->>
->> 	bridge[n]_pre_enable
->> 	...
->> 	bridge[1]_pre_enable
->>
->> 	crtc_enable
->> 	encoder_enable
->>
->> 	bridge[1]_enable
->> 	...
->> 	bridge[n]_enable
->>
->> And, the disable sequence for the display pipeline will look like:
->>
->> 	bridge[n]_disable
->> 	...
->> 	bridge[1]_disable
->>
->> 	encoder_disable
->> 	crtc_disable
->>
->> 	bridge[1]_post_disable
->> 	...
->> 	bridge[n]_post_disable
->>
->> The definition of bridge pre_enable hook says that,
->> "The display pipe (i.e. clocks and timing signals) feeding this bridge
->> will not yet be running when this callback is called".
->>
->> Since CRTC is also a source feeding the bridge, it should not be enabled
->> before the bridges in the pipeline are pre_enabled. Fix that by
->> re-ordering the sequence of bridge pre_enable and bridge post_disable.
->>
->> While at it, update the drm bridge API documentation as well.
->>
->> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
->> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
->> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+> This is pointless.  Just get rid of the exit_tfm function.
 > 
-> This patch landed in today's linux-next as commit c9b1150a68d9 
-> ("drm/atomic-helper: Re-order bridge chain pre-enable and 
-> post-disable"). In my tests I found that it breaks booting of Samsung 
-> Exynos 5420/5800 based Chromebooks (Peach-Pit and Peach-Pi). Both of 
-> them use Exynos DRM with Exynos_DP sub-driver (Analogix DP) and EDP 
-> panel. Booting stops at '[drm] Initialized exynos 1.1.0 for exynos-drm 
-> on minor 0' message. On the other hand, the Samsung Exynos5250 based 
-> Snow Chromebook boots fine, but it uses dp-lvds nxp,ptn3460 bridge and 
-> lvds panel instead of edp panels. This looks like some sort of deadlock, 
-> because if I disable FBDEV emulation, those boards boots fine and I'm 
-> able to run modetest and enable the display. Also the DRM kernel logger 
-> seems to be working fine, although I didn't check the screen output yet, 
-> as I only have a remote access to those boards. I will investigate it 
-> further and let You know.
+> Cheers,
 
-Thanks for the report. I was trying to understand the pipeline, but I'm
-a bit confused. Above you say Peach-Pit uses DP and EDP panel, but if I
-look at arch/arm/boot/dts/samsung/exynos5420-peach-pit.dts, it connects
-a dp->lvds bridge (parade,ps8625). Peach-Pi seems to connect to an eDP
-panel.
+Okay. I was under the impression that init and exit functions were mandatory. Seems like they are not. I'll remove this function.
 
-Is the above correct? Do both Peach-Pi and Peach-Pit fail?
-
- Tomi
-
+Regards
+T Pratham <t-pratham@ti.com>
