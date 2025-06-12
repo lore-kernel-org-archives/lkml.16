@@ -1,164 +1,130 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81BF2C327A;
-	Thu, 12 Jun 2025 15:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC82C2F433B;
+	Thu, 12 Jun 2025 15:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742340; cv=none; b=UHeW6Y/nP6Cc6odVdIJPJc8bispbhAydbYF53vDUM2Eljn36+QBTsPFk4hX4C79uesQ1IR03jBn3v/5fGmP8jzum2MN2DDnrgTXsw7PzATTTf3DYkN/BY2bmk2MssJTl7D8j2S1VDrq64bf2Chl643zbpZUYsHmxf3csAK8uHaM=
+	t=1749742367; cv=none; b=QChiNQ2rnCAhHXREwm2l9FdqaLHNwI+dQjQuVBnqjYoEaLlozJwJMGOPwmxF7dyod+nHauHOLO37B8Pm1DdgWNo4aJKJ2Cdhjsn47fwn+l2n31fQBNH1KSz/ac4ea+N/dyDPceFZWkBUK11noEULAjaUhBx320+X2TOPeAtc/GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742340; c=relaxed/simple;
-	bh=DOUOGbeZ0qQ4DsAqlWdYIHJzRPjWZMq7jRdHVK2GQQo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cFFfWJC6xRxin5GpjeAiAyiB+odpk19vXbDBs3V/S3ya1VOmQtJ7pdlDqLpt0qRzuxQX3rzVh6xsLJio7DfYNffdsC7l9ExPxcAQOPq5xngqEx0fA7x3PrvK2iufT4YhSRYwepklg/Usw3EaDRBNuMdlS22Jr2pEcL031mqSrGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13E69153B;
-	Thu, 12 Jun 2025 08:31:57 -0700 (PDT)
-Received: from [10.1.37.36] (e122027.cambridge.arm.com [10.1.37.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8784E3F66E;
-	Thu, 12 Jun 2025 08:32:14 -0700 (PDT)
-Message-ID: <8817e2bf-2283-4536-8a5f-9c32173b3a61@arm.com>
-Date: Thu, 12 Jun 2025 16:32:13 +0100
+	s=arc-20240116; t=1749742367; c=relaxed/simple;
+	bh=ph6Qm/Zu8qima9WKxdl5cyVv5qHWsu81Bj3LUOBhyKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWNK0nb7m9CENp/EYQG8cbo7pt6DQrewSMGCyXZkMsyXA7NI8dP9dD3cSAd26DXDpocq3XJd5orCGHuvz/OboJsZerHHooc4bixCrwyaRlfnMHeNs4CkCtrlhBi3RoYRaa/1nCMURgoZB0r8QDnM+I0ozTrNEzGG/Y2AIFB9qrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z76ZSExR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z76ZSExR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A08E2C4CEEA;
+	Thu, 12 Jun 2025 15:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749742367;
+	bh=ph6Qm/Zu8qima9WKxdl5cyVv5qHWsu81Bj3LUOBhyKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z76ZSExR2NJPvxfNLitwVNJ5/gkyfINE0FpXuI7C7oGqvl8Zn1ZyMS/9uVC2IpR3X
+	 09bfN1i2mar7nJEWgySKEKpoTa/nTnNwSkqxfk70ftJo5X8GIHAU5VswfQVQIOz1+l
+	 8NtZ2bjR6isp5W7bsPpmVofipF2S4kMB/mgB8W814UthCVjfFGusQE032+AC6ap4QG
+	 vk0U/oSHFQMh+cJlifm4SNJAn4BclvKe0pCgcPapGFPk5ATt3WZTA20wZD+p+FM6v0
+	 gwalPJTCRN8jwH0Ji6T1iAlMgO/zBMWQ4cL7Azo29AIBQHj2KqHbKJbi1Zm4psxM9k
+	 mTPuIUKuwqlog==
+Date: Thu, 12 Jun 2025 16:32:42 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: display: panel: document Synaptics TDDI
+ panel driver
+Message-ID: <20250612-agency-mothball-3830177fd43b@spud>
+References: <20250612-panel-synaptics-tddi-v1-0-dfb8a425f76c@disroot.org>
+ <20250612-panel-synaptics-tddi-v1-1-dfb8a425f76c@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 41/43] KVM: arm64: Expose support for private memory
-To: Joey Gouly <joey.gouly@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>, Emi Kisanuki <fj0570is@fujitsu.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-42-steven.price@arm.com>
- <20250612151427.GA1913753@e124191.cambridge.arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250612151427.GA1913753@e124191.cambridge.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="VDw7BB0FAKwf3bbg"
+Content-Disposition: inline
+In-Reply-To: <20250612-panel-synaptics-tddi-v1-1-dfb8a425f76c@disroot.org>
 
-On 12/06/2025 16:14, Joey Gouly wrote:
-> Hi Steven,
-> 
-> On Wed, Jun 11, 2025 at 11:48:38AM +0100, Steven Price wrote:
->> Select KVM_GENERIC_PRIVATE_MEM and provide the necessary support
->> functions.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> Reviewed-by: Gavin Shan <gshan@redhat.com>
->> ---
->> Changes since v2:
->>  * Switch kvm_arch_has_private_mem() to a macro to avoid overhead of a
->>    function call.
->>  * Guard definitions of kvm_arch_{pre,post}_set_memory_attributes() with
->>    #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES.
->>  * Early out in kvm_arch_post_set_memory_attributes() if the WARN_ON
->>    should trigger.
->> ---
->>  arch/arm64/include/asm/kvm_host.h |  6 ++++++
->>  arch/arm64/kvm/Kconfig            |  1 +
->>  arch/arm64/kvm/mmu.c              | 24 ++++++++++++++++++++++++
->>  3 files changed, 31 insertions(+)
->>
->> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->> index a1857802db64..9903b0e8ef3f 100644
->> --- a/arch/arm64/include/asm/kvm_host.h
->> +++ b/arch/arm64/include/asm/kvm_host.h
->> @@ -1514,6 +1514,12 @@ struct kvm *kvm_arch_alloc_vm(void);
->>  
->>  #define vcpu_is_protected(vcpu)		kvm_vm_is_protected((vcpu)->kvm)
->>  
->> +#ifdef CONFIG_KVM_PRIVATE_MEM
->> +#define kvm_arch_has_private_mem(kvm) ((kvm)->arch.is_realm)
->> +#else
->> +#define kvm_arch_has_private_mem(kvm) false
->> +#endif
-> 
-> I don't understand the ifdef here (or below). In the Kconfig you 'select
-> KVM_GENERIC_PRIVATE_MEM', so it will always be on/defined? Unless I'm
-> misunderstanding something.
 
-I have to admit this is somewhat cargo-culted from x86. And I think they
-have more build configurations which don't include KVM_GENERIC_PRIVATE_MEM.
+--VDw7BB0FAKwf3bbg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It is possible to build without KVM_GENERIC_PRIVATE_MEM (by disabling
-CONFIG_KVM). But that's probably not very interesting here - the
-definition shouldn't actually matter in that case.
+On Thu, Jun 12, 2025 at 08:09:40PM +0530, Kaustabh Chakraborty wrote:
+> Document the driver for Synaptics TDDI (Touch/Display Integration) panels.
+> Along with the MIPI-DSI panel, these devices also have an in-built LED
+> backlight device and a touchscreen, all packed together in a single chip.
+> Also, add compatibles for supported panels - TD4101 and TD4300.
+>=20
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  .../bindings/display/panel/synaptics,tddi.yaml     | 92 ++++++++++++++++=
+++++++
+>  1 file changed, 92 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/panel/synaptics,td=
+di.yaml b/Documentation/devicetree/bindings/display/panel/synaptics,tddi.ya=
+ml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..3aae1358a1d764361c072d3b5=
+4f74cdf634f7fa8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/synaptics,tddi.yaml
 
-So I think you're right - there's no need for the #ifdeffery here.
+File called synaptics,tddi
 
-Thanks,
-Steve
+> @@ -0,0 +1,92 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/samsung,tddi.yaml#
 
->> +
->>  int kvm_arm_vcpu_finalize(struct kvm_vcpu *vcpu, int feature);
->>  bool kvm_arm_vcpu_is_finalized(struct kvm_vcpu *vcpu);
->>  
->> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
->> index 713248f240e0..3a04b040869d 100644
->> --- a/arch/arm64/kvm/Kconfig
->> +++ b/arch/arm64/kvm/Kconfig
->> @@ -37,6 +37,7 @@ menuconfig KVM
->>  	select HAVE_KVM_VCPU_RUN_PID_CHANGE
->>  	select SCHED_INFO
->>  	select GUEST_PERF_EVENTS if PERF_EVENTS
->> +	select KVM_GENERIC_PRIVATE_MEM
->>  	help
->>  	  Support hosting virtualized guest machines.
->>  
->> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
->> index 580ed362833c..c866891fd8f9 100644
->> --- a/arch/arm64/kvm/mmu.c
->> +++ b/arch/arm64/kvm/mmu.c
->> @@ -2384,6 +2384,30 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
->>  	return ret;
->>  }
->>  
->> +#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
->> +bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
->> +					struct kvm_gfn_range *range)
->> +{
->> +	WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm));
->> +	return false;
->> +}
->> +
->> +bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
->> +					 struct kvm_gfn_range *range)
->> +{
->> +	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
->> +		return false;
->> +
->> +	if (range->arg.attributes & KVM_MEMORY_ATTRIBUTE_PRIVATE)
->> +		range->attr_filter = KVM_FILTER_SHARED;
->> +	else
->> +		range->attr_filter = KVM_FILTER_PRIVATE;
->> +	kvm_unmap_gfn_range(kvm, range);
->> +
->> +	return false;
->> +}
->> +#endif
->> +
->>  void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *slot)
->>  {
->>  }
->> -- 
->> 2.43.0
->>
-> 
-> Thanks,
-> Joey
+id of samsung,tddi
 
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synaptics TDDI Display Panel Controller
+> +
+> +maintainers:
+> +  - Kaustabh Chakraborty <kauschluss@disroot.org>
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - syna,td4101-panel
+> +      - syna,td4300-panel
+
+compatibles are syna,td####-panel
+
+These should be consistent and tooling should have complained about the
+mismatch between id and filename at the least.
+
+
+--VDw7BB0FAKwf3bbg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaErzGgAKCRB4tDGHoIJi
+0h3oAP9CB4FuHC6Rw0Tmtlumy5MJLtCuVVJfVPJHDzHi2EHfSwEAj7OX7AU+mI7c
++Vxcu5Bly5SfP5x+z5e0plVKW4Jh6Qk=
+=2rxw
+-----END PGP SIGNATURE-----
+
+--VDw7BB0FAKwf3bbg--
