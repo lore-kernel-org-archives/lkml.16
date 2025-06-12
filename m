@@ -1,294 +1,347 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5011D8DFB;
-	Thu, 12 Jun 2025 04:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749702060; cv=fail; b=cN4/R0/nDQvceRIfbVKOd1F/gwjZxFQzUGiegCAh0HJEUKC35YCkXtWyczunsflcyzYrq9pHVgrFNwZQx9YBkf6G9U01w2hKCXmKynZoGOWgjqEn0wMbxtFvCle4kw98oK34gMJGoPcIYmSkSajT6QdTCY3f3aZL3sBnSFJEYlk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6B51A3165
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749702060; cv=none; b=iWymRs/1dl/SoAe9BD9vg6FQNIxYj6pNmbeL/NG4iLvXJCtz2SLZXYBxtZ82QnRkU0FF84ftZHJJh+sHUjxfHKwoj7Olxv4BBBUwgOzmnyNfnpwYFzRvH/RR6JzvZbhKtIxDkLGkbWGIIepm+hh7XidQh/mEgsRsUg1E+mIW0AI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749702060; c=relaxed/simple;
-	bh=Qy22zZoTuN8ofKE4oJ9rZZ0K6IoQLqQtqThaqr6BQTQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=HHXyqoYXZ/7HO84coBOPgOurnm/vlxmbd4cCkVGkhmXalSqOHTgNZVj/f5r0crGNicNnsblZ0a5obd9lCMNqTtJ8E/sKokRjeY1f6PohkgnIe4GOUNS3guO2Nc6xgKwCa7bPIwGrlLm8d1jdFo9wItIy8VJnTdRzOzwOQa0I1LA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fut46eBN; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=TsxN2z8IOm8/jwGSpBka8PYJRa2K7ScElWp5HNUlTS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=un0oKii4BECLznXfvVMhVVEpX5bnFg+IrisF2qTrPy6hYlUXyxCBz7JoRD/bmJimNYI/mjUHARDgiXOG83QQgAobE2zoyTq/RftIRzy9v5vi09GTJrIPVRCjZex0yLcGrpUOkBb0h7sC2LzkYeRYTgRQl7rzjHvzQwjXiG3zl7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KO0qY2Fu; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fut46eBN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749702059; x=1781238059;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Qy22zZoTuN8ofKE4oJ9rZZ0K6IoQLqQtqThaqr6BQTQ=;
-  b=fut46eBNHaQ1/ZSO0Xk45dKd5YKAFgz4Ty2/d4ZXuQ8B7rBz157PgUb1
-   DSD+OMzmwR+hlfuMWAaNIbqFZxWamwutgW6MoweQG+wPfsi1XRWZ0JD8Q
-   cLnRl1lKNKfdmfZiiV6ohwDZntNYrQBLPxZLhJoJ2wpM7mjOODW/ifzhE
-   hyV2N5OP7IM/MQMR5ViqJJkcvaAiEhjLeJ05uFAX617IdXLOoWURaep1Z
-   1zC67wLz310tmkU/m6BW1YOg7BmST14MetynD/P0wdCzYFPAg92a3343L
-   mZeHp8bpRZcyRjSlGpOzbo1XatqatBI5w5WHJeGcXbL+VTgc7eDwn+rVe
-   w==;
-X-CSE-ConnectionGUID: azynuq62RF6PTCMcvG7oAQ==
-X-CSE-MsgGUID: lrpUvvcWRCSoOtj4W22x0w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55533872"
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="55533872"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 21:20:58 -0700
-X-CSE-ConnectionGUID: 2RRSf8qVQ+WZh4Fg3dRU7Q==
-X-CSE-MsgGUID: 6a4zTtikTGW+4qkNtVgnkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="152679277"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 21:20:57 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 11 Jun 2025 21:20:56 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 21:20:56 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (40.107.95.70) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 11 Jun 2025 21:20:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TFqE7oy1Wsv1zQdI7Yh5pAMMP4K7r+m2Kg4Kfgi1JQzh2hNcECWqV9rPDUoamlgCAj4xb34F/Y+8kGtQnh2OdnEkL7UEJVLgR66lh3tnjUf3/9ZmGB/4ln2oflZFQ0rggdgjvdVE2jUVPvnnNSL6eWmMGPujJ1tWyLep6cw822IkMv5bMMOqMDlaa+htKOUsP4u0IQaQvoGjshssL7Out1Gp9aK/yw2rBU+JOavAWIG6e/KlNjV3lJnY1LHvBn4+2dsfetN6a1kTtjJLFN/4bDSd8YnraCTE3w33DWa+8Ffp4y8UKi8R9R7NMdqMCh+N6BL5tNPhqYlh4ffHwd6QUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CDW7dH4y21caWibAdMDvTCSumatm9bLbKxK/L85Mn9w=;
- b=mYvKziI3DQLreNniiDP/TnBbq7vY+/xIrjPxCkI3VbGrjNqeyXUDwl8TcRJlYlKlp8EkUgsyi7jxY19iS7GHWCMqBKEbL5nYe48UPqSHPpx7NllGmZpwSoEEGkcwbB0AL7KJPSI8kKHCYQW2soSxd8m7m639xUi1Yr8tY31iuBzUjTShHujor8K4P4QvN5jh18+TzdxVj8b5PtiE1ARFQ9X3vdf+9JSR4rOu+h3gB7oPbh0OHn1l9CQKhRGVaJ9NrWOzuURhfbuzRD5Te54ygvUMOXFUMItFkGMGU6XmxHdIez6o2v43JYPYouEfhg3bbCPFvhgkPUo2iKZy/y8tYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB7766.namprd11.prod.outlook.com (2603:10b6:8:138::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.32; Thu, 12 Jun
- 2025 04:20:41 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.8813.021; Thu, 12 Jun 2025
- 04:20:41 +0000
-Date: Wed, 11 Jun 2025 21:20:36 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Alistair Popple <apopple@nvidia.com>, David Hildenbrand <david@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
-	<vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
-	<surenb@google.com>, Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Oscar Salvador <osalvador@suse.de>,
-	<marc.herbert@linux.intel.com>
-Subject: Re: [PATCH v2 0/3] mm/huge_memory: vmf_insert_folio_*() and
- vmf_insert_pfn_pud() fixes
-Message-ID: <684a5594eb21d_2491100de@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250611120654.545963-1-david@redhat.com>
- <lpfprux2x34qjgpuk6ufvuq4akzolt3gwn5t4hmfakxcqakgqy@ciiwnsoqsl6j>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <lpfprux2x34qjgpuk6ufvuq4akzolt3gwn5t4hmfakxcqakgqy@ciiwnsoqsl6j>
-X-ClientProxiedBy: SJ0PR13CA0080.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::25) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KO0qY2Fu"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74877ac9d42so420803b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749702058; x=1750306858; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ct43B9dpr2sXOkfVpusyhMVLq0HGGYTToPuza0NtbVc=;
+        b=KO0qY2FuaBUkjt3xzLTK7vTEky+kVlvU87M35wkVIU911ZgcjstwdUP697OFIzHoN9
+         g2VavI9QzYIKS2/hoaXxBoaZId9xetGHq0sdPGWF072dBDe6L9W71I1KJKiFgYY+YeVM
+         bIpQV75/wLkAvS3LogZqguY3I5TOMHVW+2bRdW3+J3zc7vc7bghGkfk7dNeEJmnrSTuL
+         gOEiisGU1+4hbDFEx3HYOx+Etd2fGofMN8i8+RTg3f3OnFUZXPzaS/3uTZumL+OYBmc6
+         krxcCnhXMbXjhgTKL7AsmQwBA3NDoN3DyaOS+cRQ1O4kavymF6Zbma4QNe9tZP428A1n
+         x5Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749702058; x=1750306858;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ct43B9dpr2sXOkfVpusyhMVLq0HGGYTToPuza0NtbVc=;
+        b=GnY0/5YHaiCOlXynIHbz98iewfQB9hhGU7786M7LFIkvW6ccBTnE3PE9xGitNeeEjt
+         NcOWKda+C/oNfcY4iWNCu5/fUAnSrd8Ff7tgVbDy87clE4aGduct9qw/We4Dk458D/E3
+         GP0XjslqtsrsgbhcK0h1Ei2wV2rpnUyCkhvEUy18R8oxABr5Jo9NlweN1DWTUiP13BiH
+         lQiXDW9CKUo3TVUemTecW+nwH7HUaZSjZLOCQjiAp69psTT19LxRK7K7WpaTLRzqQste
+         L7yMU9VNEmPRHZWlJlsYEwIAXLpzmm6t4IelYzAfOjoOjjUNb2nQH9l6CPO2ZaCuySyX
+         ZJyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWB6O7ZEQGR4L1afp0vgVUSYSBMSQoxXzzASQUgjnJrDGBlt7TR7dGo7qj+ILPTiL75qze2DsTRtM5Hd0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxghuMADMs7uZc/4GeTxmOVUyBGJbPHSaE9dnKOuqT+W/GT8E/4
+	Opk9hJoM70sSrnb05EKzNj9V57ttt7IOKf8NgQraLWNHQmh/yfg7b/IDtX+5fA==
+X-Gm-Gg: ASbGncvaSU+ZTKkZX+R6iVE4md8m1ZlSz4HbdKGa8kreve6DXneStPzPhUHmr15hB52
+	3WWJ9miYnvfS+3Sy6II8eefv3bCYoQiTPK2aNNj0LjdsCGxOq1pvvA6bPbGLK8HMqMapc8a6YsD
+	FVPZEHD2HRDmned4UJ70CvAn+TPSm+i+JdRXzewrn9/z5shNLmrxj5MUHhJOoJsTqikFtko6o1a
+	j4x2jgH+4qQt3v5MrpuhU+p4EgRyMzEMo5K0bgJtgzMVFblCtYO5KwclPqwgf6R5qyNVwyklxz9
+	I06l6rFQfUG3GO1VLF814IFFbXDeM+26VkRSoOhT2y/vXmZAlZj6Jkul/5nshVk+K70Hm6o=
+X-Google-Smtp-Source: AGHT+IHp+TrDpYOL2EW1gnU8IlHnV/0vXqH0dISgVaNDvudJhUGB/JfjkFfiHo15CgWdHT+oLPnivw==
+X-Received: by 2002:aa7:88c9:0:b0:748:3a1a:ba72 with SMTP id d2e1a72fcca58-7487e29c60amr2188551b3a.20.1749702057954;
+        Wed, 11 Jun 2025 21:20:57 -0700 (PDT)
+Received: from EBJ9932692.tcent.cn ([103.88.46.15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748809d2b79sm439361b3a.92.2025.06.11.21.20.51
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 11 Jun 2025 21:20:57 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: akpm@linux-foundation.org
+Cc: zi.li@linux.dev,
+	anna.schumaker@oracle.com,
+	boqun.feng@gmail.com,
+	joel.granados@kernel.org,
+	jstultz@google.com,
+	kent.overstreet@linux.dev,
+	leonylgao@tencent.com,
+	linux-kernel@vger.kernel.org,
+	longman@redhat.com,
+	mhiramat@kernel.org,
+	mingo@redhat.com,
+	mingzhe.yang@ly.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	senozhatsky@chromium.org,
+	tfiga@chromium.org,
+	will@kernel.org,
+	Lance Yang <lance.yang@linux.dev>
+Subject: [PATCH RFC 3/3] hung_task: extend hung task blocker tracking to rwsems
+Date: Thu, 12 Jun 2025 12:19:26 +0800
+Message-ID: <20250612042005.99602-4-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250612042005.99602-1-lance.yang@linux.dev>
+References: <20250612042005.99602-1-lance.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7766:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d32fec7-ba04-41d7-0a9f-08dda9687de7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?HX1Fakd9HObILSdGXUXjWK+DTtovts3QDAYXGz12bareOUBTZh73roTArthX?=
- =?us-ascii?Q?zHKEdVU5aGZQRYfLE9dG19HMd37XINBNkmcx/132ZXb1RfrsTvs9XEfDgaL3?=
- =?us-ascii?Q?VMNBeGi6wYmGUYK7WuCN6wHPDDyVK5aAirgGgJM/BY2Sww0RDcL6BwbcA3Nb?=
- =?us-ascii?Q?VCkRk1Ga30Ry5j+U24rLI3No0eKY5NKEieCRKdBJdUxHyxBtFML/neg5Mp/p?=
- =?us-ascii?Q?0D8VCTFOeswvUYOnFRyEPVhhD3lqrCmXImwg1WuraB5bsExGFAzoLCoIt3oG?=
- =?us-ascii?Q?OCISGvwZBkM4mWnM8ACtHEFuZizcKf+WHi3l9B0EkPs87X21vqgx6W7hRU7u?=
- =?us-ascii?Q?0IUoOzoTkwYjkrWzEnBw0d7GyJZ2jS+cwytNpU88XtdlKzS0xychS3za8r+J?=
- =?us-ascii?Q?waYd6qRlLO1AlZHql/7MwEDZaGcjfd233L2pR0avCqTinnCxVgztP0QRC0vM?=
- =?us-ascii?Q?qU5d7hTi6sc8hKzK8NuipspHdAvg8nxuFTVstewDyXqWKI2zIrk3JbbEpzrK?=
- =?us-ascii?Q?0aF9pZv621otVLk+Nuo/lb3IfFedXj8ge0c674ZaHvZp73XfAoNcayN9m/Z+?=
- =?us-ascii?Q?cqY2JRMDFFFr5iOBHMzwBtnzzpbYUVNzWYB/L7mFs0yuuwp2YI3FaarJI0Vr?=
- =?us-ascii?Q?6VvYx9DEFAtKKM+gUF/1eDABN+cP939IzBzuX80o8HX481eS61drMJBS4+KQ?=
- =?us-ascii?Q?oBc9+bP4JGIz2k18aTaJaq4/XTDOEviuVCe7BX3cK9eLKq76EYV8xyDK7SoC?=
- =?us-ascii?Q?RgIhtKjJVTOlrzUOaJsoU/nEWlPHaknekiKVB1kYgPFhEJ7zg1II69t3h0zY?=
- =?us-ascii?Q?q34fhCX6tZOdEZQwBUtJaF+dzQbTCm+Smgy5XidBIpuNeyKGThU4CDj0IFcZ?=
- =?us-ascii?Q?1Xjt6HqFHvDudaOtYP7cbXigo0nbm0W1oBaOdft9vx0SU5pF5VUbcQN6aqGs?=
- =?us-ascii?Q?ODo46CFKptOkVZsWCjIfDojOe5lZ4Dxzjdfy7fKkXN01WKgEooQUI4ZSNtLx?=
- =?us-ascii?Q?UqwMePjRL05bBGYElxWWDzFdv8AstHkTJBJiXvpJ/pUEdCQ0+EHXZTtZ1XTc?=
- =?us-ascii?Q?oqTCtNVEX7rLKi3ZnN4/ADyk7DDI5jorSX15qBdQ3qST6LA9yPxMy+VtlF+x?=
- =?us-ascii?Q?xAUvgA6M37UYVNsor4QFRg1X8Y8xN95vln1CO12MTUdPEtyo+hbiqBj2UaMX?=
- =?us-ascii?Q?nQKHBPt5kSalJrjKv10lvQepRqM5rBQckcf4KDiwWLwtjueNPYomFKF7IEV0?=
- =?us-ascii?Q?bJHjr8YHgoCxPR4ZFtT573K7iqlTVQu/DrqfFctvc+rzv+3JqVzFKYfhwOY3?=
- =?us-ascii?Q?z+RTAyKvl8ZqvMCuq5yRXF0ZT9ApPIUhKCm/iR38vCEyejcFs4IEMqWnSus6?=
- =?us-ascii?Q?kfJJ6bZm4BW9TWSoeYV+jD4fwd5VN7QOcI+nDJ3D6V0CPUtl6pw1OFue+sHu?=
- =?us-ascii?Q?yeUETpzqfiQ=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?4V38w9RCKFRMVsQSIjzQOFcSl0wuW/zRTvP8iKlna3EyqKNPiWQxWlWsTwF4?=
- =?us-ascii?Q?uL8L2lFCT7JMwm4m8o50pX2Hl2bD3nXhgg/1E/PqJWkz/MnnHRViJeYC3ZJm?=
- =?us-ascii?Q?xudtHpNitxKUO1EZHSqPQ267c46pUiKgHUeMxRs/W4GMQFBKxVR9z2tDMXXm?=
- =?us-ascii?Q?9uI3NRzQ4EX8tbib0Lx0I1RlbBCeJXcz6w0l/F0NG91QpfubjBaiteE7KGkA?=
- =?us-ascii?Q?XBSGZFD/EuwnhZZs3m/z1n+SBEhIw4eBqmfvKFSiFCcRAYWA+2OqtGZFOpwY?=
- =?us-ascii?Q?Qxsz1CBLW1tNt034onOG0zVGuzdwk+TOPKkmxUWohG7SGWIgDKp1Z5aSaXi6?=
- =?us-ascii?Q?OqZxKGLmF+/0poszunr59tzuubfb3fQtY/Sri6FM+QFSZEViMuiKKRX9idVh?=
- =?us-ascii?Q?1Qdi9v9l9+0/JLwCNJIucOArdMCHyJPAUGQp3Qxeaf5GTFWa66xp0Ya/I9M/?=
- =?us-ascii?Q?hV3ceB19BagqaZf1PsnP7yGL1zIrkzhxcbb3/sBbdS+n09DyOeGOW5tk0xDZ?=
- =?us-ascii?Q?DlKJ86exU1x0YBUOPJJYcuhbJtWvsTShRYZxmi1cmxfdMFyjzM3UbEbQH6xq?=
- =?us-ascii?Q?Uspxjx1AH+ar8f3ZSc6PWT7bgIG+wzRGSni2sGyBrrKIRuxA/MquHrTwOB78?=
- =?us-ascii?Q?ksgighS3WnwR0avMbzRdArlc1wM7HkM+kg4rhhOzqJ1mUAb8sEaBbn525fR1?=
- =?us-ascii?Q?miC/439acpMNVgubOWnJXiff5SJ+XJFdihh8PdjZtFycXFDyR8Xynio9Vasq?=
- =?us-ascii?Q?dKw3vLEP8edFkM8WbFFPFh1SgbLfM13FSTX42yD97m33Ku6ltfoK9UNRPsNK?=
- =?us-ascii?Q?/9sfhFT6hiqcKOPTVg18gI/mSKVRpvaatUB2Efoz16jVT8GwkJKlQaPjSJnz?=
- =?us-ascii?Q?bMfCVSPi3G+bq7ZEKrvCl7af3F9b1+IsxaKBOagU+HguGS+JNqaibM90nUH9?=
- =?us-ascii?Q?fgdJKSncxE4Ww3ZJ76rrDbpyvpgIyifv4NVdFfCgx4HoGMTt3gqlgZolMcyc?=
- =?us-ascii?Q?JfHvnjK6d4AR6bRPpJfz+uT0KEJmaW04Gporvl9AZQoxVPIZbfb6l2Lx+3P6?=
- =?us-ascii?Q?7QtAV+ZQmBlUCCkai0+kZ34ArGkvWMas6VHKtvTwU4lV5324Ms4OGa/ii/c4?=
- =?us-ascii?Q?2odX49wfXe8q/2FJ4i6pFeE9jFsxBsaLxfIEXdr7SD6Qxqow12T6fd6xRl6Y?=
- =?us-ascii?Q?S2EF89q9WI/Dux7VCozgcwEv6New2ffYtCvT3o9fNqN8szkiG3HyKu7Tqra+?=
- =?us-ascii?Q?5xxV70eIXD57ufC4s3MxhfUQY/Cf11ahfNXAOfQ/uahzWha0VdWvTiZKAjCY?=
- =?us-ascii?Q?Qr8/svEcLTV0SyYLxjenX6/ImfDmANjXiYZh1LO6VTqMrHmVB07rVpERwh6y?=
- =?us-ascii?Q?Y0wN+3FmVSuedkIqX0zPN3LicOpL4mfah9cEqmukn37/wYJedYu1JCteeP31?=
- =?us-ascii?Q?xbC2sfOMdXJuznHoGkXoMH4vjgzQf9WRHL9wjdPtU7THkxeNIOY1RnPSlaQ7?=
- =?us-ascii?Q?J/l2OPsiCAXFLC2lZQ+1mlgJ/3y7mWNWjZDqj0kw+vB//fKMVCVVyiLI7JW7?=
- =?us-ascii?Q?ai3uo+GBWZ911cx9J/pW1GyN2DYpwRewS4ZWYPl+g0R/cpPIIqCIpiHF1En2?=
- =?us-ascii?Q?Nw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d32fec7-ba04-41d7-0a9f-08dda9687de7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 04:20:41.1791
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oSP3E5rYArNY/PKpl3ZkzKfXJDNitRDJfWNMKvH2mPF9utIZX8ZPaIx5zQJ6r0bNhOYIlSTgkG7x3NnDGT0noVDt/48jnZw2Lq2JfRrppMY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7766
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Alistair Popple wrote:
-> On Wed, Jun 11, 2025 at 02:06:51PM +0200, David Hildenbrand wrote:
-> > This is v2 of
-> > 	"[PATCH v1 0/2] mm/huge_memory: don't mark refcounted pages special
-> > 	 in vmf_insert_folio_*()"
-> > Now with one additional fix, based on mm/mm-unstable.
-> > 
-> > While working on improving vm_normal_page() and friends, I stumbled
-> > over this issues: refcounted "normal" pages must not be marked
-> > using pmd_special() / pud_special().
-> > 
-> > Fortunately, so far there doesn't seem to be serious damage.
-> > 
-> > I spent too much time trying to get the ndctl tests mentioned by Dan
-> > running (.config tweaks, memmap= setup, ... ), without getting them to
-> > pass even without these patches. Some SKIP, some FAIL, some sometimes
-> > suddenly SKIP on first invocation, ... instructions unclear or the tests
-> > are shaky. This is how far I got:
-> 
-> FWIW I had a similar experience, although I eventually got the FAIL cases below
-> to pass. I forget exactly what I needed to tweak for that though :-/
+From: Lance Yang <lance.yang@linux.dev>
 
-Add Marc who has been working to clean the documentation up to solve the
-reproducibility problem with standing up new environments to run these
-tests.
+Inspired by mutex blocker tracking[1], and having already extended it to
+semaphores, let's now add support for reader-writer semaphores (rwsems).
 
-http://lore.kernel.org/20250521002640.1700283-1-marc.herbert@linux.intel.com
+The approach is simple: when a task enters TASK_UNINTERRUPTIBLE while
+waiting for an rwsem, we just call hung_task_set_blocker(). The hung task
+detector can then query the rwsem's owner to identify the lock holder.
 
-There is also the run_qemu project that automates build an environment for this.
+Tracking works reliably for writers, as there can only be a single writer
+holding the lock, and its task struct is stored in the owner field.
 
-https://github.com/pmem/run_qemu
+The main challenge lies with readers. The owner field points to only one
+of many concurrent readers, so we might lose track of the blocker if that
+specific reader unlocks, even while others remain. This is not a
+significant issue, however. In practice, long-lasting lock contention is
+almost always caused by a writer. Therefore, reliably tracking the writer
+is the primary goal of this patch series ;)
 
-...but comes with its own set of quirks.
+With this change, the hung task detector can now show blocker task's info
+like below:
 
-I have the following fixups applied to my environment to get his going on
-Fedora 42 with v6.16-rc1:
+[Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 blocked for more than 122 seconds.
+[Thu Jun 12 11:01:33 2025]       Tainted: G S         O        6.16.0-rc1 #1
+[Thu Jun 12 11:01:33 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[Thu Jun 12 11:01:33 2025] task:rw_sem_thread2  state:D stack:0     pid:36526 tgid:36526 ppid:2      task_flags:0x208040 flags:0x00004000
+[Thu Jun 12 11:01:33 2025] Call Trace:
+[Thu Jun 12 11:01:33 2025]  <TASK>
+[Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
+[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? _raw_spin_lock_irq+0x8a/0xe0
+[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
+[Thu Jun 12 11:01:33 2025]  schedule_preempt_disabled+0x15/0x30
+[Thu Jun 12 11:01:33 2025]  rwsem_down_write_slowpath+0x447/0x1090
+[Thu Jun 12 11:01:33 2025]  ? __pfx_rwsem_down_write_slowpath+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx___might_resched+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx_thread2_func+0x10/0x10 [rw_sem_test_2]
+[Thu Jun 12 11:01:33 2025]  down_write+0x125/0x140
+[Thu Jun 12 11:01:33 2025]  ? __pfx_down_write+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? msleep+0x91/0xf0
+[Thu Jun 12 11:01:33 2025]  ? __raw_spin_lock_irqsave+0x8c/0xf0
+[Thu Jun 12 11:01:33 2025]  thread2_func+0x37/0x70 [rw_sem_test_2]
+[Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
+[Thu Jun 12 11:01:33 2025]  </TASK>
+[Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 <writer> blocked on an rw-semaphore likely owned by task rw_sem_thread1:36525 <writer>
+[Thu Jun 12 11:01:33 2025] task:rw_sem_thread1  state:S stack:0     pid:36525 tgid:36525 ppid:2      task_flags:0x208040 flags:0x00004000
+[Thu Jun 12 11:01:33 2025] Call Trace:
+[Thu Jun 12 11:01:33 2025]  <TASK>
+[Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
+[Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __mod_timer+0x304/0xa80
+[Thu Jun 12 11:01:33 2025]  ? irq_work_queue+0x6a/0xa0
+[Thu Jun 12 11:01:33 2025]  ? __pfx_vprintk_emit+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
+[Thu Jun 12 11:01:33 2025]  schedule_timeout+0xfb/0x230
+[Thu Jun 12 11:01:33 2025]  ? __pfx_schedule_timeout+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx_process_timeout+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? down_write+0xc4/0x140
+[Thu Jun 12 11:01:33 2025]  msleep_interruptible+0xbe/0x150
+[Thu Jun 12 11:01:33 2025]  ? __pfx_thread1_func+0x10/0x10 [rw_sem_test_2]
+[Thu Jun 12 11:01:33 2025]  thread1_func+0x37/0x60 [rw_sem_test_2]
+[Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
+[Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
+[Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
+[Thu Jun 12 11:01:33 2025]  </TASK>
 
-diff --git a/README.md b/README.md
-index 37314db7a155..8e06908d5921 100644
---- a/README.md
-+++ b/README.md
-@@ -84,6 +84,11 @@ loaded.  To build and install nfit_test.ko:
-    CONFIG_TRANSPARENT_HUGEPAGE=y
-    ```
+[1] https://lore.kernel.org/all/174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com/
+
+Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Lance Yang <lance.yang@linux.dev>
+---
+ include/linux/hung_task.h | 18 +++++++++---------
+ kernel/hung_task.c        | 29 +++++++++++++++++++++++++----
+ kernel/locking/rwsem.c    | 17 ++++++++++++++++-
+ 3 files changed, 50 insertions(+), 14 deletions(-)
+
+diff --git a/include/linux/hung_task.h b/include/linux/hung_task.h
+index 1bc2b3244613..34e615c76ca5 100644
+--- a/include/linux/hung_task.h
++++ b/include/linux/hung_task.h
+@@ -21,17 +21,17 @@
+  * type.
+  *
+  * Type encoding:
+- * 00 - Blocked on mutex        (BLOCKER_TYPE_MUTEX)
+- * 01 - Blocked on semaphore    (BLOCKER_TYPE_SEM)
+- * 10 - Blocked on rt-mutex     (BLOCKER_TYPE_RTMUTEX)
+- * 11 - Blocked on rw-semaphore (BLOCKER_TYPE_RWSEM)
++ * 00 - Blocked on mutex			(BLOCKER_TYPE_MUTEX)
++ * 01 - Blocked on semaphore			(BLOCKER_TYPE_SEM)
++ * 10 - Blocked on rw-semaphore as READER	(BLOCKER_TYPE_RWSEM_READER)
++ * 11 - Blocked on rw-semaphore as WRITER	(BLOCKER_TYPE_RWSEM_WRITER)
+  */
+-#define BLOCKER_TYPE_MUTEX      0x00UL
+-#define BLOCKER_TYPE_SEM        0x01UL
+-#define BLOCKER_TYPE_RTMUTEX    0x02UL
+-#define BLOCKER_TYPE_RWSEM      0x03UL
++#define BLOCKER_TYPE_MUTEX		0x00UL
++#define BLOCKER_TYPE_SEM		0x01UL
++#define BLOCKER_TYPE_RWSEM_READER	0x02UL
++#define BLOCKER_TYPE_RWSEM_WRITER	0x03UL
  
-+1. Install the following packages, (Fedora instructions):
-+   ```
-+   dnf install e2fsprogs xfsprogs parted jq trace-cmd hostname fio fio-engine-dev-dax
-+   ```
+-#define BLOCKER_TYPE_MASK       0x03UL
++#define BLOCKER_TYPE_MASK		0x03UL
+ 
+ #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+ static inline void hung_task_set_blocker(void *lock, unsigned long type)
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index d2432df2b905..8708a1205f82 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -23,6 +23,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/sysctl.h>
+ #include <linux/hung_task.h>
++#include <linux/rwsem.h>
+ 
+ #include <trace/events/sched.h>
+ 
+@@ -100,6 +101,7 @@ static void debug_show_blocker(struct task_struct *task)
+ {
+ 	struct task_struct *g, *t;
+ 	unsigned long owner, blocker, blocker_type;
++	const char *rwsem_blocked_by, *rwsem_blocked_as;
+ 
+ 	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
+ 
+@@ -111,12 +113,20 @@ static void debug_show_blocker(struct task_struct *task)
+ 
+ 	switch (blocker_type) {
+ 	case BLOCKER_TYPE_MUTEX:
+-		owner = mutex_get_owner(
+-			(struct mutex *)hung_task_blocker_to_lock(blocker));
++		owner = mutex_get_owner(hung_task_blocker_to_lock(blocker));
+ 		break;
+ 	case BLOCKER_TYPE_SEM:
+-		owner = sem_last_holder(
+-			(struct semaphore *)hung_task_blocker_to_lock(blocker));
++		owner = sem_last_holder(hung_task_blocker_to_lock(blocker));
++		break;
++	case BLOCKER_TYPE_RWSEM_READER:
++	case BLOCKER_TYPE_RWSEM_WRITER:
++		owner = (unsigned long)rwsem_owner(
++					hung_task_blocker_to_lock(blocker));
++		rwsem_blocked_as = (blocker_type == BLOCKER_TYPE_RWSEM_READER) ?
++					"reader" : "writer";
++		rwsem_blocked_by = is_rwsem_reader_owned(
++					hung_task_blocker_to_lock(blocker)) ?
++					"reader" : "writer";
+ 		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+@@ -134,6 +144,11 @@ static void debug_show_blocker(struct task_struct *task)
+ 			pr_err("INFO: task %s:%d is blocked on a semaphore, but the last holder is not found.\n",
+ 			       task->comm, task->pid);
+ 			break;
++		case BLOCKER_TYPE_RWSEM_READER:
++		case BLOCKER_TYPE_RWSEM_WRITER:
++			pr_err("INFO: task %s:%d is blocked on an rw-semaphore, but the owner is not found.\n",
++			       task->comm, task->pid);
++			break;
+ 		}
+ 		return;
+ 	}
+@@ -152,6 +167,12 @@ static void debug_show_blocker(struct task_struct *task)
+ 			pr_err("INFO: task %s:%d blocked on a semaphore likely last held by task %s:%d\n",
+ 			       task->comm, task->pid, t->comm, t->pid);
+ 			break;
++		case BLOCKER_TYPE_RWSEM_READER:
++		case BLOCKER_TYPE_RWSEM_WRITER:
++			pr_err("INFO: task %s:%d <%s> blocked on an rw-semaphore likely owned by task %s:%d <%s>\n",
++			       task->comm, task->pid, rwsem_blocked_as, t->comm,
++			       t->pid, rwsem_blocked_by);
++			break;
+ 		}
+ 		sched_show_task(t);
+ 		return;
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index a310eb9896de..92c6332da401 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -27,6 +27,7 @@
+ #include <linux/export.h>
+ #include <linux/rwsem.h>
+ #include <linux/atomic.h>
++#include <linux/hung_task.h>
+ #include <trace/events/lock.h>
+ 
+ #ifndef CONFIG_PREEMPT_RT
+@@ -1065,10 +1066,13 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, long count, unsigned int stat
+ 		wake_up_q(&wake_q);
+ 
+ 	trace_contention_begin(sem, LCB_F_READ);
++	set_current_state(state);
 +
- 1. Build and install the unit test enabled libnvdimm modules in the
-    following order.  The unit test modules need to be in place prior to
-    the `depmod` that runs during the final `modules_install`  
-diff --git a/test/dax.sh b/test/dax.sh
-index 3ffbc8079eba..98faaf0eb9b2 100755
---- a/test/dax.sh
-+++ b/test/dax.sh
-@@ -37,13 +37,14 @@ run_test() {
- 	rc=1
- 	while read -r p; do
- 		[[ $p ]] || continue
-+		[[ $p == cpus=* ]] && continue
- 		if [ "$count" -lt 10 ]; then
- 			if [ "$p" != "0x100" ] && [ "$p" != "NOPAGE" ]; then
- 				cleanup "$1"
- 			fi
- 		fi
- 		count=$((count + 1))
--	done < <(trace-cmd report | awk '{ print $21 }')
-+	done < <(trace-cmd report | awk '{ print $NF }')
++	if (state == TASK_UNINTERRUPTIBLE)
++		hung_task_set_blocker(sem, BLOCKER_TYPE_RWSEM_READER);
  
- 	if [ $count -lt 10 ]; then
- 		cleanup "$1"
+ 	/* wait to be given the lock */
+ 	for (;;) {
+-		set_current_state(state);
+ 		if (!smp_load_acquire(&waiter.task)) {
+ 			/* Matches rwsem_mark_wake()'s smp_store_release(). */
+ 			break;
+@@ -1083,8 +1087,12 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, long count, unsigned int stat
+ 		}
+ 		schedule_preempt_disabled();
+ 		lockevent_inc(rwsem_sleep_reader);
++		set_current_state(state);
+ 	}
+ 
++	if (state == TASK_UNINTERRUPTIBLE)
++		hung_task_clear_blocker();
++
+ 	__set_current_state(TASK_RUNNING);
+ 	lockevent_inc(rwsem_rlock);
+ 	trace_contention_end(sem, 0);
+@@ -1146,6 +1154,9 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ 	set_current_state(state);
+ 	trace_contention_begin(sem, LCB_F_WRITE);
+ 
++	if (state == TASK_UNINTERRUPTIBLE)
++		hung_task_set_blocker(sem, BLOCKER_TYPE_RWSEM_WRITER);
++
+ 	for (;;) {
+ 		if (rwsem_try_write_lock(sem, &waiter)) {
+ 			/* rwsem_try_write_lock() implies ACQUIRE on success */
+@@ -1179,6 +1190,10 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ trylock_again:
+ 		raw_spin_lock_irq(&sem->wait_lock);
+ 	}
++
++	if (state == TASK_UNINTERRUPTIBLE)
++		hung_task_clear_blocker();
++
+ 	__set_current_state(TASK_RUNNING);
+ 	raw_spin_unlock_irq(&sem->wait_lock);
+ 	lockevent_inc(rwsem_wlock);
+-- 
+2.49.0
 
-In the meantime, do not hesitate to ask me to run these tests.
-
-FWIW with these patches on top of -rc1 I get:
-
----
-
-[root@host ndctl]# meson test -C build --suite ndctl:dax
-ninja: Entering directory `/root/git/ndctl/build'
-[168/168] Linking target ndctl/ndctl
- 1/13 ndctl:dax / daxdev-errors.sh          OK              12.60s
- 2/13 ndctl:dax / multi-dax.sh              OK               2.47s
- 3/13 ndctl:dax / sub-section.sh            OK               6.30s
- 4/13 ndctl:dax / dax-dev                   OK               0.04s
- 5/13 ndctl:dax / dax-ext4.sh               OK               3.04s
- 6/13 ndctl:dax / dax-xfs.sh                OK               3.10s
- 7/13 ndctl:dax / device-dax                OK               9.66s
- 8/13 ndctl:dax / revoke-devmem             OK               0.22s
- 9/13 ndctl:dax / device-dax-fio.sh         OK              32.32s
-10/13 ndctl:dax / daxctl-devices.sh         OK               2.31s
-11/13 ndctl:dax / daxctl-create.sh          SKIP             0.25s   exit status 77
-12/13 ndctl:dax / dm.sh                     OK               1.00s
-13/13 ndctl:dax / mmap.sh                   OK              62.27s
-
-Ok:                12  
-Fail:              0   
-Skipped:           1   
-
-Full log written to /root/git/ndctl/build/meson-logs/testlog.txt
-
----
-
-Note that the daxctl-create.sh skip is a known unrelated v6.16-rc1 regression
-fixed with this set:
-
-http://lore.kernel.org/20250607033228.1475625-1-dan.j.williams@intel.com
-
-You can add:
-
-Tested-by: Dan Williams <dan.j.williams@intel.com>
