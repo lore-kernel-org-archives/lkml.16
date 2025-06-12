@@ -1,209 +1,178 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14A4189BB0;
-	Thu, 12 Jun 2025 21:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5885D22A4EE
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 21:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749762975; cv=none; b=OeytKvh7qBJjnNzbLj1dukVqPB7v+S+/eI1EydkEf1uTf+afHk+cEbWjlMYgYSMjftlye2eu7BGw19tWYYYD8Q+EtQQ0kV89o3VBB2aVyaLMMPr8TPxm/zLLeUJs6LNK9FtFkS7TPtadd7O7NK/jlaF91Gew2pTycDqG0md3QS0=
+	t=1749763203; cv=none; b=PKfntVLNYdQdYmg/1lbuY6AnoKY0z9T35V25wzBXpoEZYzbOh0NAOKZaiz1hjPffQsmpy2JrNOsCtmk5yfzeRikVhIg+OxKRPTarSrHwre45qmAG+0/R7bxqCRGhiGh0V1M/+7bqjL83k8Un5a9GesVs0o4fnKVOi9BlknlWxY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749762975; c=relaxed/simple;
-	bh=wwi/478CFjtr+iIOgLvYO1hnkG8AIF7oYR+KlU0yDv0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BOTf56v2sP2NI94Z7TrZU28WZUiOb02I4h6eBdG7hPMnfutpLvs0oAuN7Vy4N/wiatWeh6UWlBkbepoyS1A/3TErPJalcOUhm/60K73y8Y/d0Rr94SP8JUCCWMyo9JWcGvCxv55JMKkqyp/0PzQEYeJkoIrJeIZeSNMPL+VZLZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/feUPbQ; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749763203; c=relaxed/simple;
+	bh=H3ogvr7A5eaCLCoobtUF9Y+ndFSfv9DKlh2LHMiNqnc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vhu//2wElMBRnT40QERQVxYY8zv2kAsbxzuenlSuCh26cxC/wcjhJ/G0NYaJlCIhLfHC8jCViv46EGbLPm5Csfk1ulQyBDcswhR1NWxNpMjqha1YWK2I3GtGiV+rLkPbnEDNpb/ETSazEvSN2Jw7scg1VaUoO4zdGlRYL9MQEX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EaxjjFpJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/feUPbQ"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-313a001d781so1351684a91.3;
-        Thu, 12 Jun 2025 14:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749762973; x=1750367773; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yz8jAmvk6HR1S346M8M0MCZ/MwPYa5CohBqE1ndryfw=;
-        b=K/feUPbQdviTPjCkFWvnLz3jDr+xeZyxczJKPTK4/bMCbshkSXZIcT1y/C4VdLqWjJ
-         RxBgEMtdw4TOJLEFDik8iBplCEIVCkqV4L+HJKFePjTuJVwrt+zk0VUq1wwPySH2keQc
-         JKQVdnTfxEEh/Vn+1fHsMkO1Kqp9M2f3z+Ek3LGigJTQXGKt8JyCII7hyIqU1cllrcO1
-         ouQKHGLRIKW441Qdxo8042mkrz4v9Y7+quLoku+LjoD6mS5/5Aej4nNLXctmIZivA+us
-         gqkyL17QS5SJfNHGbagAD25KFzNINdOEyUuGJdJr6OIJZqCrt66YhLQXk2oGKoe7m2fD
-         yM5g==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EaxjjFpJ"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CGUrCL029627
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 21:20:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3Zmr5+JECjNDrTnuNUMITpmDMpNItBuB/kFf5nbp53s=; b=EaxjjFpJ7wS6WdqT
+	Al1W1Dj40l1WVibjXSMhFBkQf7/kUWFEy7BYQ5Xh1aoIZxivt/1erMUK4pXf9IzK
+	D6GvU6tPk97CzCjDbyjp4RBj9ZR2Q1Hvg6pEjCSoSHTOS3GpK1i0MNQqh6ss9Eg2
+	SsavzA5JlzCtAdLE/i56RtkKXQdF9mkMe7qiHQCpIWSERGU97gZWoXfBPDeAs+Jw
+	GtAZTZSGbvNuZJ46oglDZhV60SoySDp0yIswVG/qv1FuDvK6FXSbAiIjtNYMBxKL
+	RYCYlTJN6LekxjS9R3Ha9R4GwWOjrVcR9JwvsLgw9wJq8Ykq2S9uhRG9dXyOKWIo
+	0C2X8Q==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474d129u8t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 21:20:00 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-313d6d671ffso364993a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:20:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749762973; x=1750367773;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Yz8jAmvk6HR1S346M8M0MCZ/MwPYa5CohBqE1ndryfw=;
-        b=s8UEA1UlHKHUZqR6Xdzz1h9eRfR4Aenk3Sjx6s8OqZxB3JJhr4ODkWAK2Qk7Lq0/is
-         2NgH+WB9i3sFnuYHzha9Izksl05moPYnyfiWQNBwZAwztzn1X7PzUk9BoKmA5z5YCjKV
-         SkdZLwuYHC1raXnbBTym37yGY8FmORgBF7vvvlpHepumn3/E/2HnnDqxQB6r9PoHQlfb
-         t4XxuMphw3NeEPS/CaS7AEUuB5aFlx0alkX+juECQiOWqKU0iDW9Te9Q05UNrl7tYS2C
-         m02iSVs87Oc3RVZ9FhPF09JJNQQj/jZV2cuj612lPy5qJ4yWWEO+iZdMi48IlCDT3xEl
-         K5tw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4zeAiLT9KQXi3xIlZmjKe1Xsaw5X85ZQdRo3XStPgq7HKResMVdYGWi300ez+hw8waOVQd7ItvZDh@vger.kernel.org, AJvYcCWN/JV0UZLrDLoMJWNxSGcEa+v+eeAqlc/81kseUSwmTQ07w+lVDBdXRrisoT8O1c6Nq4FHmT65@vger.kernel.org, AJvYcCXf6KWnpXygJPEOwm3htleH9iZuA8waYZEGZFhatGOK/1DdxO5x5sB0y5X5EFWKRnzt1sKQPY5o0azYPHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW18jEQLKwx86ic4Cxv262Ggg8lrWln4D+FrZbR7pvYuRthKfs
-	QvP9k06Leu4j9N0ATJvCSZKAbw4iSyYwhgyVeSVeCqXtFixL5E6sRs4=
-X-Gm-Gg: ASbGncvMoxcAJDZoXh0TKxOi0Lg9dWX/XgIaaKvI/i2o8/G/QNAeP4vxBwJBaKm6YjE
-	XJtyEzbAyevphLJTk83b4LIseZgm4sZCsr34BbWYsYOcsD8h+hRR3Klm/lU+GoWG0CPePusvrZL
-	A3zWMhY2hCgTLN4FQ8u9LlSdvG4+PmnWMfX+mzJ9FspWUeTAim3qiqyt5Vm48TZ1PNLIyG0b7Mn
-	MdJaQhFXTpHH9QY2lfJmIELf1IANOx1FUM6J5dqrMCCDlyodZnFovhnR9adxLvKIPGWCiLN6PqR
-	JSq4GZHX7mjO6HzpLjUdyeORfVbIHaLaNpAWLtg=
-X-Google-Smtp-Source: AGHT+IEdd9VIoEdJjhncVucyV8vZEYfWcdRmdn0rJv62MJ1or0RV9uQZBDuxBlKoadzf7A7Udvpnyw==
-X-Received: by 2002:a17:90b:28ce:b0:312:26d9:d5b2 with SMTP id 98e67ed59e1d1-313d9943c0fmr1224262a91.0.1749762972946;
-        Thu, 12 Jun 2025 14:16:12 -0700 (PDT)
-Received: from fedora.. ([2601:647:6700:3390::c8d1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a1810sm1868955ad.58.2025.06.12.14.16.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 14:16:12 -0700 (PDT)
-From: Kuniyuki Iwashima <kuni1840@gmail.com>
-To: syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com
-Cc: Dai.Ngo@oracle.com,
-	anna@kernel.org,
-	chuck.lever@oracle.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	horms@kernel.org,
-	jlayton@kernel.org,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	neil@brown.name,
-	netdev@vger.kernel.org,
-	okorniev@redhat.com,
-	pabeni@redhat.com,
-	syzkaller-bugs@googlegroups.com,
-	tom@talpey.com,
-	trondmy@kernel.org
-Subject: Re: [syzbot] [net?] [nfs?] WARNING in remove_proc_entry (8)
-Date: Thu, 12 Jun 2025 14:16:04 -0700
-Message-ID: <20250612211610.4129612-1-kuni1840@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <684b41cf.a00a0220.1eb5f5.0109.GAE@google.com>
-References: <684b41cf.a00a0220.1eb5f5.0109.GAE@google.com>
+        d=1e100.net; s=20230601; t=1749763199; x=1750367999;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Zmr5+JECjNDrTnuNUMITpmDMpNItBuB/kFf5nbp53s=;
+        b=OYeNIdZ/9SLjPruNK92AcmlLcIRn0K5xPKdOnhwUZdn1EqbM5DFxjJVYQrXdDTFEbc
+         FBw7/1B2NnmneSbXEKWoVQWkrSuXpewVgSKl+ox6BX+zLWc6w9cr06uLfMV48etjMqqD
+         RhXtD9nYouVPBMYYfXqSoJ6nBNTyGrLYUEpGSMAzEYdVeJa09TEg5pmyiJr/kSb0HmGq
+         Efvcb2P01D9YmNvTTkn9QzGI0crfQtqy4qkLhs4yAKQx5+Rs/NjAXEZfhnUeu1lSdbl0
+         BAucdB7XeJI48cHtchoBugOSRIw+/kFAsDaR2GZ5s7OSHpkXa5X+19fSUOavFucvSwyz
+         EtUA==
+X-Forwarded-Encrypted: i=1; AJvYcCXx21V6x4+PEIt3AEvNQ6aHD99n6L5110/xQPF5PnsHLu4/JcuEOPbzdXXmcsgpL/5zgFIGxZSpy0ya1Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvpSSVhAwJP3FU1IodSgva4hhCbtS0kHDb2zH/gk/QImUsFhYT
+	UKA5tQR53JQ5euU9pf7OMQG1wSoGyB5o12tJSPV5qMX48mBni+JpfCFCJoTEn9tIW6NRoNQRdC+
+	50vg1YfUMcUe0T0g29XWYK0Xn5mZI3qBNjbgf3po0FCLICboGzknWgQ5r86DfGaVfCtc=
+X-Gm-Gg: ASbGncvh+pu2fj1gvNUhOCtSoGTLcIrIxE+9RTzbfJRVPeJ1l8z6JR+Jm3g4zhc4PTP
+	+LNOQqdSp5qU9D8/F5lVCBedjuab2mlK5Hvz8jseNcKiwQIxzs7hiOrvnqTSP2n0ig2CVJrjR4C
+	hNu3v4thgUYN0wpLDSkagsx5IJRMOS9N7Ya3tTRUrDLkw1/Mpe0hhOWzmqxqjmlF/q9yzN4rtnr
+	6Jau+ts+9E3ssxNImoyKJebHYCy+f8yZr8rX+WnyOsn8phcdW3A+0EQ3j4NjKXMFcpN3OXu/vNG
+	sKLR2i/9gWTJ9cfHyRGbBkwMPbJrg9kp3HA+s9wsOw==
+X-Received: by 2002:a17:90b:1843:b0:30e:712e:5739 with SMTP id 98e67ed59e1d1-313d9d71383mr1065534a91.14.1749763198844;
+        Thu, 12 Jun 2025 14:19:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFcEB2oQFFgVMym1bB2VUhhziP7lQFCJfNjFpbKCnIdWSG44vwJc/VtPEHqnpJDg2SoasT6AQ==
+X-Received: by 2002:a17:90b:1843:b0:30e:712e:5739 with SMTP id 98e67ed59e1d1-313d9d71383mr1065512a91.14.1749763198422;
+        Thu, 12 Jun 2025 14:19:58 -0700 (PDT)
+Received: from [192.168.1.8] ([106.222.228.17])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b5a882sm1990932a91.40.2025.06.12.14.19.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 14:19:57 -0700 (PDT)
+Message-ID: <036e739c-54e4-4252-b6f0-c8eed5557d15@oss.qualcomm.com>
+Date: Fri, 13 Jun 2025 02:49:48 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] Support for Adreno X1-45 GPU
+To: Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
+ <0e6fd97d-9a56-426b-8b98-dc8aa50d02d2@oldschoolsolutions.biz>
+From: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <0e6fd97d-9a56-426b-8b98-dc8aa50d02d2@oldschoolsolutions.biz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 8PRE_dI7_4_s7ZRrAaLW5oiOdQSKnfJg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDE2NCBTYWx0ZWRfXzXPAYweSAs7d
+ 84J3WxZCefo6et/XhtYm2TIptIqzsahSQASPkj7JA1zpDHw0xmt/K3IgUdl5BVJbqgh9S04rR/T
+ vXfDVFfEXqDdzQEWszo4uYG93WpBv2dAqZUX+ryeqRXSrv31OfkWRV5w91l8PyJNC3LeUeg9cIa
+ QDMwhwr15YKJ2oqMiuS30czwZHAglDkqRHCQZXBchjaokKhgPYNTj9CPiVgZNuI2h2a7yZzZ7/c
+ pTu2Wh4Xh75zRsePfhNOLVJ73RE7vPTKh7ak+7xU5BZS3n9tKpPIGSISZXQaHlVwHlPgdB+9f8p
+ szS3+JzU+SRVsx2+/QrHLbtPut5qrfp4KZG4cKp8bmtiCHBWi0AK3Szkiqa1lI2ryyWfXR7NUNi
+ nFvXkCZBWDAEAMtpSmf2piXb7jGWjJp9/PbP3ComupceIm19yUm5NzDssJaj93os6ODNiiUP
+X-Authority-Analysis: v=2.4 cv=GYkXnRXL c=1 sm=1 tr=0 ts=684b4480 cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=8TKXt+tWyFtBY9WE4KDEmA==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=uKUkM4gl_lyc4tR08vMA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-ORIG-GUID: 8PRE_dI7_4_s7ZRrAaLW5oiOdQSKnfJg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506120164
 
-From: syzbot <syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com>
-Date: Thu, 12 Jun 2025 14:08:31 -0700
-> Hello,
+On 6/12/2025 5:32 PM, Jens Glathe wrote:
+> On 6/11/25 13:15, Akhil P Oommen wrote:
 > 
-> syzbot found the following issue on:
+>> Add support for X1-45 GPU found in X1P41200 chipset (8 cpu core
+>> version). X1-45 is a smaller version of X1-85 with lower core count and
+>> smaller memories. From UMD perspective, this is similar to "FD735"
+>> present in Mesa.
+>>
+> Hi Akhil,
 > 
-> HEAD commit:    2c4a1f3fe03e Merge tag 'bpf-fixes' of git://git.kernel.org..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1432610c580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c4c8362784bb7796
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a4cc4ac22daa4a71b87c
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1126ed70580000
+> when loading the driver (still without firmware files) I'm getting a
+> speedbin warning:
 > 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/cd1ec81a3ab8/disk-2c4a1f3f.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/992d9b6a25bf/vmlinux-2c4a1f3f.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/85a9bf583faa/bzImage-2c4a1f3f.xz
+> [    3.318341] adreno 3d00000.gpu: [drm:a6xx_gpu_init [msm]] *ERROR*
+> missing support for speed-bin: 233. Some OPPs may not be supported by
+> hardware
 > 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com
-> 
-> WARNING: CPU: 0 PID: 6182 at fs/proc/generic.c:727 remove_proc_entry+0x45e/0x530 fs/proc/generic.c:727
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 6182 Comm: syz.1.75 Not tainted 6.16.0-rc1-syzkaller-00010-g2c4a1f3fe03e #0 PREEMPT(full) 
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-> RIP: 0010:remove_proc_entry+0x45e/0x530 fs/proc/generic.c:727
-> Code: 3c 02 00 0f 85 85 00 00 00 48 8b 93 d8 00 00 00 4d 89 f0 4c 89 e9 48 c7 c6 40 ba a2 8b 48 c7 c7 60 b9 a2 8b e8 33 81 1d ff 90 <0f> 0b 90 90 e9 5f fe ff ff e8 04 69 5e ff 90 48 b8 00 00 00 00 00
-> RSP: 0018:ffffc90003e5fb08 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: ffff88804e6568c0 RCX: ffffffff817a92c8
-> RDX: ffff88803046da00 RSI: ffffffff817a92d5 RDI: 0000000000000001
-> RBP: ffff8880353bde80 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000001 R11: 0000000000000001 R12: ffff8880353bddc0
-> R13: ffff8880353bdea4 R14: ffff88802556cae4 R15: dffffc0000000000
-> FS:  0000555562486500(0000) GS:ffff888124962000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000c0024fb070 CR3: 000000006b39a000 CR4: 00000000003526f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  sunrpc_exit_net+0x46/0x90 net/sunrpc/sunrpc_syms.c:76
->  ops_exit_list net/core/net_namespace.c:200 [inline]
->  ops_undo_list+0x2eb/0xab0 net/core/net_namespace.c:253
->  setup_net+0x2e1/0x510 net/core/net_namespace.c:457
->  copy_net_ns+0x2a6/0x5f0 net/core/net_namespace.c:574
->  create_new_namespaces+0x3ea/0xa90 kernel/nsproxy.c:110
->  unshare_nsproxy_namespaces+0xc0/0x1f0 kernel/nsproxy.c:218
->  ksys_unshare+0x45b/0xa40 kernel/fork.c:3121
->  __do_sys_unshare kernel/fork.c:3192 [inline]
->  __se_sys_unshare kernel/fork.c:3190 [inline]
->  __x64_sys_unshare+0x31/0x40 kernel/fork.c:3190
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f239858e929
-> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffd08ac9b18 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
-> RAX: ffffffffffffffda RBX: 00007f23987b5fa0 RCX: 00007f239858e929
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000080
-> RBP: 00007f2398610b39 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 00007f23987b5fa0 R14: 00007f23987b5fa0 R15: 0000000000000001
->  </TASK>
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+> I've seen that there is a table for speed bins, this one is not there.
+> Tested on a Lenovo ThinkBook 16 G7 QOY.
 
-#syz test
+Hi Jens,
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 8ab7868807a7..19277e050c09 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -2589,15 +2589,26 @@ EXPORT_SYMBOL_GPL(nfs_net_id);
- static int nfs_net_init(struct net *net)
- {
- 	struct nfs_net *nn = net_generic(net, nfs_net_id);
-+	int err;
- 
- 	nfs_clients_init(net);
- 
- 	if (!rpc_proc_register(net, &nn->rpcstats)) {
--		nfs_clients_exit(net);
--		return -ENOMEM;
-+		goto err_proc_rpc;
-+		err = -ENOMEM;
- 	}
- 
--	return nfs_fs_proc_net_init(net);
-+	err = nfs_fs_proc_net_init(net);
-+	if (err)
-+		goto err_proc_nfs;
-+
-+	return 0;
-+
-+err_proc_nfs:
-+	rpc_proc_unregister(net, "nfs");
-+err_proc_rpc:
-+	nfs_clients_exit(net);
-+	return err;
- }
- 
- static void nfs_net_exit(struct net *net)
+Could you please try the below patch?
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+index 2db748ce7df5..7748f92919b8 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+@@ -1510,7 +1510,8 @@ static const struct adreno_info a7xx_gpus[] = {
+                        { 0,   0 },
+                        { 294, 1 },
+                        { 263, 2 },
+-                       { 141, 3 },
++                       { 233, 3 },
++                       { 141, 4 },
+                ),
+        }
+ };
+
+With this, you should see 1107Mhz as the GPU Fmax.
+
+-Akhil.
+
+> 
+> with best regards
+> 
+> Jens
+> 
+
