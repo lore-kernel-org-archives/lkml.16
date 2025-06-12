@@ -1,106 +1,151 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A80C2F4337;
-	Thu, 12 Jun 2025 16:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4E329C32B;
+	Thu, 12 Jun 2025 16:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749745028; cv=none; b=lC5/JueLK6Ua5HBipUb/ymMHgoWVCn6c1v5TxaBbNNiersNgPenE+vU5Mz//uTeupEG2VQgyZQzZ2EYMVjVKmlMjNdhS+gqQ6+4oXqtMXYR/yd6fAcVNcFGfCBvQqtlsJM9+kNuHGqtvuta5fYEC2+Hj48U5iFoKChBktUWyCmU=
+	t=1749745065; cv=none; b=OuniCBh1vwhvtg/10VbwAMyGDT6+aoboqhoqpowHvzNB40Rr/wLB8m6KovPv2MoJOzzA16xppq+Fnslsu/0Q919FO0I2M74GbtTWa/QO7RUveIM9Ci1Vcu5h/dmxqsDm+rcEnGP6+5/TLeVBp21w2WW6npNOMpI6x7FEIoVRibs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749745028; c=relaxed/simple;
-	bh=ZdAQYl3xLxxVDP9k8YsKDv4QGuAbrDv49F2oSRw6+K0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=f0zOIiwrZ1U2VkMSWwy5GBuLIHy+3yqJfWqB1iPkZxIR1VyjPGeaiq3LHraviNL8X4VnKE05DUFz9QHRW9W5ktLv3/E3SYyocKqJaRcNeXaamHhWqpyoh9MHdc5tfO1RBUxsQIclOdvKOvs6ZlqA0FsXIWV25HoTl0gUkLcQQA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ejZaZXGU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LIUyUDZ/; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1749745065; c=relaxed/simple;
+	bh=P4GkkwYbWhmeh9csBqgTZ7uqaf+uAYctZ+HQnsHZM2A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=FY/aGfjWDYIkPG1UfJY2uZFsWpuuYFM+xp8Njax0oeZjcMJvr4wQgDJmg2+CrPIv8xeqVKZalk3y+8gLrIdjQRJeo+MPWg9GoPmzDo/72sWVgoTHfXkmQ/pZ60nj8f9OGK2DEd4Z6TgvPBepGD87JVMb2JB+SDXAH+Tjchm/5ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1SUe28k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ejZaZXGU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LIUyUDZ/"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 714B313804D5;
-	Thu, 12 Jun 2025 12:17:05 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 12:17:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749745025;
-	 x=1749831425; bh=Y6bA1Hx4Vgb3DM5g7jT8tbjx0SAERhSgVJ2+7reS3V0=; b=
-	ejZaZXGU8rk+h374vHGBo6ngEfcT+M1zwLXPpzRfYGu48EkpsMRWsieBdQCPCrAM
-	neLQAehAGLJY+rJ3bZ+tmRUXKq8dxk6TqQIq4ALbIH2Nl9RzVTWlOLVdSf159kja
-	Rn17ct+YYV2FYwY1yvw+HX96D4SnCgYM5IwCr2TENUbIMhTPuV6CXo714Zp8jeFP
-	ueP4vI+EH8QAW9tP/NJf7k9wEf056ADr0apNoIto/cLsapz2sPnp72NIkxOve2AF
-	GWcRWSvCW34AFJ1JZ5hUKmb2nb4uMBaFTfbXQKCt+dvaiS90mocaxwn+0oPfgnTk
-	U6v3rkOEGK/Yao6V4FaSMQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749745025; x=
-	1749831425; bh=Y6bA1Hx4Vgb3DM5g7jT8tbjx0SAERhSgVJ2+7reS3V0=; b=L
-	IUyUDZ/xYr3nkCJlqsd/YzLB8KnSs0nQRVoFO0k/7zmM9ivM87qpttvNGseYMe1f
-	SpAvrGOZE+Vvsg44wx4nxLzKA57yhlx42ffZTzskfCTHnFy7aadZQ+ekidjWnxvO
-	Y27vVbaAFgBbVjqjJ7zA2MSaEjJt8+CSH+Wcagd7oI2h+An/RPNcA20iXr9sukF/
-	lbuM75r2HUT1pJ46k/l3qlxHguMzEanUwItqTp9b8k4UHLStE86RzwI8nVvmtY5G
-	9OWjyK9+p6RuLUAt61MTc+AH1E8zScHZ/vm/VlwIDqfF4Bb1Altav5r2k/56pKeV
-	u/j49jjHO77RXi7OxTjfw==
-X-ME-Sender: <xms:gP1KaNfcYcrf7nlZhzvY7ZCGvkmb-GhgJRhK4JaTj7Ki39f8JslNew>
-    <xme:gP1KaLNNPmh-gHpwvJlS2cowaJNTPgDX-bMEe1EIrG1SGT4MbJMoh-AGct_MB1Dfh
-    7F_yiq8du2sWCTKQD4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheehfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeej
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsvggrnhhjtgesghhoohhglhgvrd
-    gtohhmpdhrtghpthhtohepmhgrshgrhhhirhhohieskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrg
-    hsrdhstghhihgvrheslhhinhhugidruggvvhdprhgtphhtthhopehhtggrsehlihhnuhig
-    rdhisghmrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgsuhhilhgusehvghgvrhdrkh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdr
-    khgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:gf1KaGg_ui7Z7HMs-tr7oIJfm--Vq1Lo3inmvFlJrAaK_5TLLgd9MA>
-    <xmx:gf1KaG_bByO1SVI0PrYyi20yDuJARiZne68Fgj4XhzdYfYzH9YLFbw>
-    <xmx:gf1KaJvsFcJqlvkEZ7CPINnx-Y4W7IL-CuVcZJrtvGAMAIuBSiKfPw>
-    <xmx:gf1KaFGcs1-5d3H6RcBrgQUcYWSornybixw3MeCpenqPPoCtyoxPeA>
-    <xmx:gf1KaI2qyUhCN8LK30cv-cN8DeELLnARmmaRryhRWzW6Gcqj7bGyy2cc>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E3AF8700062; Thu, 12 Jun 2025 12:17:04 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1SUe28k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25F9DC4CEF8;
+	Thu, 12 Jun 2025 16:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749745064;
+	bh=P4GkkwYbWhmeh9csBqgTZ7uqaf+uAYctZ+HQnsHZM2A=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=c1SUe28kWHoENEz7zJJWNdOCkDzVJ0gX5wNQllCms2F9d6UA/5iMwgh/2ZisCw3Ig
+	 iF2vdcPkN7qmXV4DRZHGsLqDCyz6QyAWlc5r7xfgbhA52uMZzkar3I2NMFrR77l4G9
+	 RMLofZsvxyxChA2TVLjahHNx2+kbY+6nUKMDWVELUbrK9HYcgv9UtIp3pG4HDLG2nK
+	 7P77E6WBT6B2ku7nXOBteVpz96VixU5cwYebEITcusCWIP/r9Dh+kLNLsTeHdkbesh
+	 ASyyLVivCyXXBO+5fqjBE55THBu4OvEFa5LT621WgP+vB2M/BpuTgDQQSyMMd+TL9A
+	 EGup12qZ+6H0g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: T0c97bc968294a699
-Date: Thu, 12 Jun 2025 18:16:43 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Masahiro Yamada" <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: "Heiko Carstens" <hca@linux.ibm.com>,
- "Sean Christopherson" <seanjc@google.com>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas.schier@linux.dev>, linux-kernel@vger.kernel.org
-Message-Id: <e67ad81a-2d26-4418-b632-4d5204b38796@app.fastmail.com>
-In-Reply-To: <20250612160850.3007038-1-masahiroy@kernel.org>
-References: <20250612160850.3007038-1-masahiroy@kernel.org>
-Subject: Re: [PATCH] kbuild: move warnings about linux/export.h from W=1 to W=2
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Jun 2025 18:17:40 +0200
+Message-Id: <DAKOUVS4YP4L.3I6FD9JKN02EU@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] rust: revocable: support fallible PinInit types
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250612145145.12143-1-dakr@kernel.org>
+ <20250612145145.12143-2-dakr@kernel.org>
+ <DAKO8MMSCUE4.1WVR6SBADGP8W@kernel.org> <aEr5FNDaueo5SG5R@cassiopeiae>
+In-Reply-To: <aEr5FNDaueo5SG5R@cassiopeiae>
 
-On Thu, Jun 12, 2025, at 18:08, Masahiro Yamada wrote:
-> This hides excessive warnings, as nobody builds with W=2.
+On Thu Jun 12, 2025 at 5:58 PM CEST, Danilo Krummrich wrote:
+> On Thu, Jun 12, 2025 at 05:48:36PM +0200, Benno Lossin wrote:
+>> On Thu Jun 12, 2025 at 4:51 PM CEST, Danilo Krummrich wrote:
+>> > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+>> > index fa1fd70efa27..41b8fe374af6 100644
+>> > --- a/rust/kernel/revocable.rs
+>> > +++ b/rust/kernel/revocable.rs
+>> > @@ -82,8 +82,11 @@ unsafe impl<T: Sync + Send> Sync for Revocable<T> {=
+}
+>> > =20
+>> >  impl<T> Revocable<T> {
+>> >      /// Creates a new revocable instance of the given data.
+>> > -    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
+>> > -        pin_init!(Self {
+>> > +    pub fn new<E>(data: impl PinInit<T, E>) -> impl PinInit<Self, Err=
+or>
+>> > +    where
+>> > +        Error: From<E>,
+>>=20
+>> I don't think we need this bound as you don't use it in the function
+>> body.
 >
-> Fixes: a934a57a42f6 ("scripts/misc-check: check missing #include 
-> <linux/export.h> when W=1")
-> Fixes: 7d95680d64ac ("scripts/misc-check: check unnecessary #include 
-> <linux/export.h> when W=1")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> I think it's needed by try_pin_init!() below, no?
+>
+> Without it I get the compilation error in [1].
+>
+>> > +    {
+>> > +        try_pin_init!(Self {
+>> >              is_available: AtomicBool::new(true),
+>> >              data <- Opaque::pin_init(data),
+>> >          })
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Does it work with this?
+
+    try_pin_init!(Self {
+        is_available: AtomicBool::new(true),
+        data <- Opaque::pin_init(data),
+    }? E)
+
+---
+Cheers,
+Benno
+
+>>=20
+>
+> [1]
+>
+> error[E0277]: `?` couldn't convert the error to `error::Error`
+>   --> rust/kernel/revocable.rs:87:9
+>    |
+> 87 | /         try_pin_init!(Self {
+> 88 | |             is_available: AtomicBool::new(true),
+> 89 | |             data <- Opaque::pin_init(data),
+> 90 | |         })
+>    | |          ^
+>    | |          |
+>    | |__________this can't be annotated with `?` because it has type `Res=
+ult<_, E>`
+>    |            the trait `core::convert::From<E>` is not implemented for=
+ `error::Error`
+>    |
+>    =3D note: the question mark operation (`?`) implicitly performs a conv=
+ersion on the error value using the `From` trait
+>    =3D note: required for `core::result::Result<revocable::Revocable<T>::=
+new::__InitOk, error::Error>` to implement `core::ops::FromResidual<core::r=
+esult::Result<core::convert::Infallible, E>>`
+>    =3D note: this error originates in the macro `$crate::__init_internal`=
+ which comes from the expansion of the macro `try_pin_init` (in Nightly bui=
+lds, run with -Z macro-backtrace for more info)
+> help: consider introducing a `where` clause, but there might be an altern=
+ative better way to express this requirement
+>    |
+> 83 | impl<T> Revocable<T> where error::Error: core::convert::From<E> {
+>    |                      ++++++++++++++++++++++++++++++++++++++++++
+>
+> error[E0277]: the trait bound `impl PinInit<Revocable<T>, Error>: PinInit=
+<Revocable<T>, E>` is not satisfied
+>   --> rust/kernel/revocable.rs:85:48
+>    |
+> 85 |     pub fn new<E>(data: impl PinInit<T, E>) -> impl PinInit<Self, E>
+>    |                                                ^^^^^^^^^^^^^^^^^^^^^=
+ the trait `pin_init::PinInit<revocable::Revocable<T>, E>` is not implement=
+ed for `impl pin_init::PinInit<revocable::Revocable<T>, error::Error>`
+>    |
+>    =3D help: the following other types implement trait `pin_init::PinInit=
+<T, E>`:
+>              `core::result::Result<T, E>` implements `pin_init::PinInit<T=
+, E>`
+>              `pin_init::ChainInit<I, F, T, E>` implements `pin_init::PinI=
+nit<T, E>`
+>              `pin_init::ChainPinInit<I, F, T, E>` implements `pin_init::P=
+inInit<T, E>`
+>              `pin_init::__internal::AlwaysFail<T>` implements `pin_init::=
+PinInit<T, ()>`
+>    =3D note: the full name for the type has been written to 'kernel.long-=
+type-441004638990533407.txt'
+>    =3D note: consider using `--verbose` to print the full type name to th=
+e console
+
