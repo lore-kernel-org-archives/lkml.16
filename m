@@ -1,190 +1,124 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEC1153BD9
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36C9232392
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749768974; cv=none; b=WgCNZnez/OoBpAphunyhUFibg5wuGERsPkgJEIoUe5XIBnsD/iec6UyEutzQiamHPgJRB1JRuM9UgeIcgPaC/tG3xWVQuXhCZ+nSwDLzQQ7BxJUpTf6rjT/bLO2Lbw7gxRxPuhCzLZJWIsEtafCD5XwteNkVd0yVTStt193nsVg=
+	t=1749768993; cv=none; b=lXrvw7BsPW6VWcZrUqAPvfvUfMI3lAvS/sbrAI0KU+dH3Wzrke32JxR+hg8mZW1mogTW18buWvvmMfuIabm7JXdQtmbajxN/b0UGv8+SObRWOE3rnDBnoCd3w7PNUc2h5u3gajGWn+LlRyu+dfpROuOzISIqHOfsXiOkTDe57ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749768974; c=relaxed/simple;
-	bh=Jiw4lNt+dgmQpa94MwrbvDcNyxfGi5FH7juxU0sBHXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mh++o4TDDaKHXnffH9CkTNPxA5km6sLeSybjjrXaJmpRS+5iayd7oWJe8YboiKjKRaRRbo1ezFXpcs8xoe7l+lFrIlMRUunA+mRbenpyzJBVpaSo+1ybnTK/B1GFZV/z/XWinjPuzL8UBltCftRItQjKEtdOdQpC4kcinBeWJNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kf9/TeE5; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749768993; c=relaxed/simple;
+	bh=rzO2vUG3qFvZz9nVJkEDXegLFrtHvbT/BioXWBPlI5E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oXfU3iZbNxAEE7HXsVMS5CZE+gpImDsHMA+lNu8K2BM7N+a1Efd7ZG8KwtU0ZqIsFYNFIkRlF35yCrb/GDU2xy4MVwJzPutC+Oj0hx3+imJT2x3OFqxaOosBTx8LSTPqdB/hnH1OokPdLk+/6K1wgr/ITu/wjbg2XzKKtm0/Ypg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=TidBy6iv; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kf9/TeE5"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso2611616a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:56:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="TidBy6iv"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3dda399db09so12529055ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:56:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749768970; x=1750373770; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z4s+4tZ4UdwgPrThrnfOwIaYnPl8gTIzP7MXm01FET4=;
-        b=kf9/TeE5utPplQpr58u9BX44wmiMyNRnK86i2XR92QWJshTfOYFl5k4ZcdUhqKZqLj
-         mA0TFi3VL1OOhq4yQSZl/wV+3nU9kp+xChBxolW527LrWhdPRLWeTUSo2U0iB6FA0V7x
-         kFFYTwpZEGIEf3OT3CQacZvXZa/CO76ITriQxplOisqYW8x7XFHRTIdd371H/UcQCowu
-         Bk0lsBorWWI9O1WxgliNqxSSf6x5VBOBtUxMMGIHEgQwwsQ4dy5pCQbS8kFVBCtzaUjB
-         dxddPAW+dtQALvEgVHMbrjbpyDCfblSEc/u3mD9xvpFGPHgKlokn5fol4Ch6mei1fL8q
-         JaqQ==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749768991; x=1750373791; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gIRR5bCoil2FaR591vuDwUpsGCoeLZpb18iQYK0axhg=;
+        b=TidBy6iveGvZoJ65T3YqYJ4/Ryr0IkwmVBLPo+0oBBwqPPYZk28JnmVBBWc4bnEiTU
+         tMS49PFVNh5Hjg3OABx70YCMx1gTypm1ETF3mw5dQkxPnc4NXfAvgqLz6mwTYjJqE47w
+         yMxZrPY626qnJFLudWQrna6LoZhmMEj93GJ0KA0wj5QFS7Iq7yUD+y1l8dUcyfYow/L6
+         11sRT5scTK6zb4/c0mqzNHP3tPJTO7MPSxOIjMgYQv810Z5HRHixSXB8OmHtTJ3+EsXe
+         f2W7+QnmPKQwTeO5qPRC7JOW1DoIvRm89VLI+9YwpgWIy7tjjn8v4iEVZDwJ+cnOYQQt
+         39wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749768970; x=1750373770;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z4s+4tZ4UdwgPrThrnfOwIaYnPl8gTIzP7MXm01FET4=;
-        b=Gh3wbYHHirqJg0Ylg/gikmmcSJVTQUhdkDKuVslIqceFDoT3c+rMzD00rSALqayTwv
-         cg8DCKBjx5LT7vqGIriVI5sWe3WbtkqMX5YiwOm0Ja5oFgXV2N4O7Syr6rhqOT64DFob
-         14XyTXKzPqg1tMnGEYZL4Hi0Yse4dVsFkd/vJ+3Vy9M4FkEVhSeA42FAYo+O5QmZtdN2
-         YZowKgGvsqfbt9vOYkjVvQWcUb1+lXeu7jnyQFMDOC07Eex8+EBeHNeimt8vuIP2x5D3
-         7da3x15xCPn5Gpr1Kyfe9gIiGWm0hw+uN8iC1qWUgVdQFDh5Dee36I5cdvMTy71v4J0i
-         iE4w==
-X-Gm-Message-State: AOJu0Yx+hHp3CVPnf1J4j16OCUO1himBiRc2W2qQUjo9fywkjul8ouJn
-	vyxk/UJk1C7GVef7d7g4R1NLY0NcRqdCPYEG/BjpFtnSyCUCaujCq2FYRdzQmVlVM64zMUom77F
-	/AJffq/gxbI6DA4/lzPIv2ql4wRudPoorqse2cEWs
-X-Gm-Gg: ASbGncuf8fV5quYbIbkfhn7GP4MyscRa0NS0V82cNKx0gVfb5tZB10ygLVEmpKaQZVZ
-	JLjS9zq138VMPl4TF/uSclaCznEksgDbkvLWz1TXJS2XgRoURu1uB4YqCZ5yW9SJaE6hBBTfOsH
-	OrR2HBpcRK+jsViPqHzgnxv5WFyOCSK8nbbEIhwKcrhcdqp3U39QW0xeGi/z2DkEVLdJ+C/Iw=
-X-Google-Smtp-Source: AGHT+IGFxBhbYomjhNyWT2ZAvl6IbMw2CRQO29wihDm8OaPcR+vaf0PqAsPFTJhXVi/PkYq5LhFGzW6B88P0f2OEbYo=
-X-Received: by 2002:a17:907:1b04:b0:ade:32fa:7394 with SMTP id
- a640c23a62f3a-adec5cade15mr84921166b.35.1749768970292; Thu, 12 Jun 2025
- 15:56:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749768991; x=1750373791;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gIRR5bCoil2FaR591vuDwUpsGCoeLZpb18iQYK0axhg=;
+        b=EZ/AJ1vRWF5/ntKFg829yf7QYyyvKgeN7QwAPo3R+hqpmLhhbracCSuPCYh/Dx9n5E
+         OlI0GQn+23S2rU0yA3CGtHmys9KE5A5k9QoIy856hGt66sYKN1ODnYcVcSOe52rxcIU/
+         OTh+1FZI/KAKJNcpnDrQ7Z0kZCWMIIrnkFScA9QkgMcby5pDYyRBYtbzrln1yFqWJ1yR
+         GZqxo9Y+qd8Obi0aEJsXdifY5TocDOZSQrVVxK22qk1G0MV/0OVbJul/fAplq51vOs4J
+         RonLQBpEOhR9/8GpRghHXWRcAGSS7LcHH/Wkd50ovdFtmAHtV+XyKs/R/R20RYkeumG3
+         Ypcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWbNLHNLrAln8++XGh/gxzjUpJEXSvAXlrrI37mUn294FzzneNekowALz2nximzu8AIOAEicv5xzqUfTnk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpg10zyjPm20wGaCfjHnBLZcM6/FVA7Vc2+SfdA98Znqd1aDAE
+	IPW16ooWjSc/HiYdBXbYvp/iFsyFmO91vcVCJree4ktY2gyMxLveTATLw8M9MUGBitw=
+X-Gm-Gg: ASbGncs3c6JAryTYprpSd3eUtxJ/a6VHAOGlEh57XtvL6ZTC0ZqAIdYrvUa/S9fbedg
+	HXKsb+wroYHom4LTqgI6kiL5sFn3HWQZfyHXTUmekBYA6aHJH0TMRbJRISWlz8tgcqKk9oHh8y2
+	OEOJusg0bzuiKU5MDGE7xpsgm4PGpzlm4BLYuiKoON422RocU8Jdb8MoiECnchCgLErrQAli/6a
+	VOpZ6MneZQt6vJscFq8NZM+3M3cFs8Cf5r1DJke282CqQOqslGyUlrYIcJKQ0KKcbvPm3yfXzhF
+	V8sc6lTmMh3vMX10u46hgcWxBh7ZpsKbCDQimHxAKUhgncic1AYESWjDQX3R/QDz2oef0ZH+UC3
+	kqgNcxqKL7I7VR6eZGoauY0kV/Z28h7QhzE1l0/O9iQ==
+X-Google-Smtp-Source: AGHT+IFl/qtFDEOg7fq5AKLUPKjkJzQ1QBSvDDw3zCkODT+b5Ce6LNmP5J2eqcw2VDryqjSPHaqh3g==
+X-Received: by 2002:a05:6e02:184a:b0:3dd:d6c0:cccd with SMTP id e9e14a558f8ab-3de00bd309amr7524375ab.13.1749768990866;
+        Thu, 12 Jun 2025 15:56:30 -0700 (PDT)
+Received: from presto.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de019d0c4bsm209125ab.28.2025.06.12.15.56.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 15:56:30 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: andi.shyti@kernel.org,
+	dlan@gentoo.org,
+	troymitchell988@gmail.com
+Cc: elder@riscstar.com,
+	linux-i2c@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: k1: check for transfer error
+Date: Thu, 12 Jun 2025 17:56:25 -0500
+Message-ID: <20250612225627.1106735-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611233239.3098064-1-ctshao@google.com> <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
- <CAJpZYjVxs3yAS1-Uj_aQjkHGo+hRkHnwCbWxNsS4pT50-rvRPg@mail.gmail.com> <CAP-5=fWvnALUJiHrb_xzHXjseD88HF7LExs4N_Okg+UguuXsXg@mail.gmail.com>
-In-Reply-To: <CAP-5=fWvnALUJiHrb_xzHXjseD88HF7LExs4N_Okg+UguuXsXg@mail.gmail.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Thu, 12 Jun 2025 15:55:59 -0700
-X-Gm-Features: AX0GCFtSIMlqg5rKAFSyl0q3VXJwmniN0QvIX3sWzwypACsultPp20GffeJkwYM
-Message-ID: <CAJpZYjWUUbnNyBYXNSu_mmUrYLhNHHmdro8r08Xe0tN7nAanxg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
-To: Ian Rogers <irogers@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Ian, I actually renamed it to `aggr_nr` in v2 patch so it should be
-better aligned to json mode, which is using `aggregate-nunber`. But
-anyway I think any name other than `cpus` is better.
-v2 patch: lore.kernel.org/20250612225324.3315450-1-ctshao@google.com
+If spacemit_i2c_xfer_msg() times out waiting for a message transfer to
+complete, or if the hardware reports an error, it returns a negative
+error code (-ETIMEDOUT, -EAGAIN, -ENXIO. or -EIO).
 
-Thanks,
-CT
+The sole caller of spacemit_i2c_xfer_msg() is spacemit_i2c_xfer(),
+which is the i2c_algorithm->xfer callback function.  It currently
+does not save the value returned by spacemit_i2c_xfer_msg().
 
+The result is that transfer errors go unreported, and a caller
+has no indication anything is wrong.
 
-On Wed, Jun 11, 2025 at 10:12=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Wed, Jun 11, 2025 at 8:18=E2=80=AFPM Chun-Tse Shao <ctshao@google.com>=
- wrote:
-> >
-> > Thanks for your test, Ian!
-> >
-> > I wonder if `nr_pmus` makes sense, since the column would be shared
-> > with multiple different pmus. WDYT?
->
-> So each PMU in sysfs has a cpumask that specifies which CPUs perf
-> should pass to perf_event_open. For example, on a two socket machine
-> the cpumask will typically have the first CPU of each socket. If the
-> cpumask (or cpus) file isn't present then the cpumask is implicitly
-> all online CPUs. Given that the aggregation number is the number of
-> CPUs in the cpumask multiplied by the number of PMUs, I think the most
-> neutral name is probably "counters" possibly shortened down to "ctrs".
-> I suspect others have better suggestions :-)
->
-> Thanks,
-> Ian
->
-> > -CT
-> >
-> > On Wed, Jun 11, 2025 at 5:16=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > On Wed, Jun 11, 2025 at 4:36=E2=80=AFPM Chun-Tse Shao <ctshao@google.=
-com> wrote:
-> > > >
-> > > > Follow up:
-> > > > lore.kernel.org/CAP-5=3DfVDF4-qYL1Lm7efgiHk7X=3D_nw_nEFMBZFMcsnOOJg=
-X4Kg@mail.gmail.com/
-> > > >
-> > > > The patch adds unit aggregation during evsel merge the aggregated u=
-ncore
-> > > > counters.
-> > > >
-> > > > Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> > > > cpumask=3D"0,120"
-> > > > Before:
-> > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > >   #           time socket cpus             counts unit events
-> > > >        1.001085024 S0        1         9615386315      clockticks
-> > > >        1.001085024 S1        1         9614287448      clockticks
-> > > >   perf stat -e clockticks -I 1000 --per-node
-> > > >   #           time node   cpus             counts unit events
-> > > >        1.001029867 N0        1         3205726984      clockticks
-> > > >        1.001029867 N1        1         3205444421      clockticks
-> > > >        1.001029867 N2        1         3205234018      clockticks
-> > > >        1.001029867 N3        1         3205224660      clockticks
-> > > >        1.001029867 N4        1         3205207213      clockticks
-> > > >        1.001029867 N5        1         3205528246      clockticks
-> > > > After:
-> > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > >   #           time socket cpus             counts unit events
-> > >
-> > > I wonder if there is a better column heading than "cpus" given that
-> > > these are imc PMUs.
-> > >
-> > > >        1.001022937 S0       12         9621463177      clockticks
-> > > >        1.001022937 S1       12         9619804949      clockticks
-> > > >   perf stat -e clockticks -I 1000 --per-node
-> > > >   #           time node   cpus             counts unit events
-> > > >        1.001029867 N0        4         3206782080      clockticks
-> > > >        1.001029867 N1        4         3207025354      clockticks
-> > > >        1.001029867 N2        4         3207067946      clockticks
-> > > >        1.001029867 N3        4         3206871733      clockticks
-> > > >        1.001029867 N4        4         3206199005      clockticks
-> > > >        1.001029867 N5        4         3205525058      clockticks
-> > > >
-> > > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> >
-> > Added Namhyung's ack from the previous email.
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > >
-> > > Tested-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > ---
-> > > >  tools/perf/util/stat.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > > > index 355a7d5c8ab8..52266d773353 100644
-> > > > --- a/tools/perf/util/stat.c
-> > > > +++ b/tools/perf/util/stat.c
-> > > > @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct ev=
-sel *evsel, struct evsel *alias)
-> > > >                 struct perf_counts_values *aggr_counts_b =3D &ps_b-=
->aggr[i].counts;
-> > > >
-> > > >                 /* NB: don't increase aggr.nr for aliases */
-> > > > +               ps_a->aggr[i].nr +=3D ps_b->aggr[i].nr;
-> > > >
-> > > >                 aggr_counts_a->val +=3D aggr_counts_b->val;
-> > > >                 aggr_counts_a->ena +=3D aggr_counts_b->ena;
-> > > > --
-> > > > 2.50.0.rc1.591.g9c95f17f64-goog
-> > > >
+When this code was out for review, the return value *was* checked
+in early versions.  But for some reason, that assignment got dropped
+between versions 5 and 6 of the series, perhaps related to reworking
+the code to merge spacemit_i2c_xfer_core() into spacemit_i2c_xfer().
+
+Simply assigning the value returned to "ret" fixes the problem.
+
+Fixes: 5ea558473fa31 ("i2c: spacemit: add support for SpacemiT K1 SoC")
+Signed-off-by: Alex Elder <elder@riscstar.com>
+Reviewed-by: Troy Mitchell <troymitchell988@gmail.com>
+---
+v2: Added Troy's Reviewed-by
+
+ drivers/i2c/busses/i2c-k1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
+index 5965b4cf6220e..b68a21fff0b56 100644
+--- a/drivers/i2c/busses/i2c-k1.c
++++ b/drivers/i2c/busses/i2c-k1.c
+@@ -477,7 +477,7 @@ static int spacemit_i2c_xfer(struct i2c_adapter *adapt, struct i2c_msg *msgs, in
+ 
+ 	ret = spacemit_i2c_wait_bus_idle(i2c);
+ 	if (!ret)
+-		spacemit_i2c_xfer_msg(i2c);
++		ret = spacemit_i2c_xfer_msg(i2c);
+ 	else if (ret < 0)
+ 		dev_dbg(i2c->dev, "i2c transfer error: %d\n", ret);
+ 	else
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.45.2
+
