@@ -1,81 +1,134 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C4F170A26
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EBF1A9B52
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749760899; cv=none; b=EV69pWeFbLflKT6QNCdnHwBhRlqk1N8nMgzuVckBwnLP0eoFLHbHXxCX74Kgr+eLOQ9W+IKroYc4ShSJJaKhbpVRoqYYDEzThnPue3aCrSsixnhWiGWTvoMKdtLqZvMW6ES8SjqexADTLuK0pvG64fds81vT216Kb3ZzfWjUqlw=
+	t=1749761099; cv=none; b=YTg+icxlvC1II2gBYqwM9kwwAiN3EVJVVyPdP1TheL0Uw+Md3GPdTf1MRbgKQ1Rpw87thw/SV0g4deuOFlR/YUXgP/VBK9an/5gTyfvzFK1AKH7UvuDNR4wggX3FLNbzbmPPoNEEaElwS+gFI76qjBlHdrjc4UtatCcSMl9vyZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749760899; c=relaxed/simple;
-	bh=9wd2xz3vDh/SbwbuD6C2aLJ/5ayOopTtg9nK8hrtGTU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oq/P4oY8o1MHNaJWd5b/quxOStiZssVgEnsJk9h9TyczDtENnnyt7WLEmvOjEjg87xwQiIY0ISRBv9bTa6Z/D8s1hov6GH/HoGfgBlpuCEc7tzRMvVBRIqtUpNE9V7RyENH28a948X/KcuaqtaGRei69ALHMxndvS34mq1rexPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-313336f8438so266420a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:41:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749760897; x=1750365697;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+	s=arc-20240116; t=1749761099; c=relaxed/simple;
+	bh=0shdeU3Nmns13gIvSpekGMtrKZaAuIpc2PTkyCP2Tbc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jRlNRXm5RX6dJ2LwP3i/gnq/XBoE0HMT7ynmhLJgP/gXWmcGdwCwNeLdYUOsnUFC2eNT3EdOVuRBhYhSHfhknZjou9Ow2U6mZQjea2osx9XTzyFr+u4a0dZ0bRFjass39Hct8hCyk2MBhHunApjmC8209zXEFAHYr0MT8ukP3iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I2iLAhFz; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I2iLAhFz"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2348ac8e0b4so18365ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749761097; x=1750365897; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yQbp60ATx7JziJiw8GuEnu8Ha7njwB8B9c7L6mBDOF8=;
-        b=e0HthNov3Hu6na2criVAbHDzdUroqUpCEFJQjO0cVwyo/xNqf4dKZX+hBow+Q5emuO
-         Nx2ICDOO3joi7wbwpm+YhJ3BL77v7noPwpY7JvML5r6+VASuswFI7c3UB+1mS6EaWoqB
-         qwa5yj5n41KTex8W0BnIK4SFEmH/RAczLvU1Rieq7PpiX1HE/B3nDz1xDi3dvZiTZzcs
-         DCgMNec8O2kJ2m13T6gNwg+zPn09n8hNbccG7I3W482hsW6gm8Wep6HfB+mB1dmrqCu0
-         L+Whpywp0jMqgQ9FkdgtXEKTNtHfgurO621Y3U1oiN9I7BBgiho+RtfLth63VyzQxkUe
-         KYPQ==
-X-Gm-Message-State: AOJu0YxmCav2968ePSHVyVuhXa96Zvwqqa/MBDA+0kZR+ya9kG0SuKwo
-	t6/1lTOD0frxoVCRg3Zn2UXJYBPnNtc9EKg6Jv239MIAYFx4zBiBm4aw
-X-Gm-Gg: ASbGncv2rjdNdzsuFl3x4JpqSBvQhnKa/Q0flTyW/kEi6tXkVOF3cXf4b1zjg4mIhk2
-	8hRHsHWTbFcueKOejhvZQmYWPyjnvBilBj9RRyg1CUusI96hlH9HiZOFDru6M1LBzp3wzDu4YH6
-	mI5wqvxQbglsurZJoFrWWCXkj8+N16cKgVBZTNSITZL8x/Sxa/kYS5le5LRjElk6jnmCFsXWVbt
-	wNErczl8K46LaMe4kyOvVBhzP26kaZgDGFSxHIU8Gr52Tmybij4jod/jDyVtYQLPZS9eX7axrRg
-	MviZ8Cs9gQyPBTZU1nUmkbWPvBxwrUgiquZ1uEBzUnI6//xtsoVRfQIag3bU23BQaus0egXbDw=
-	=
-X-Google-Smtp-Source: AGHT+IGaOnIw0uiHP7fASZ0mW6N9GMHWfCfj+WXbjN1fXL186iizSu6YP96D3RlGgK4PotkxuJPyjw==
-X-Received: by 2002:a17:90b:38c7:b0:313:2f9a:13c0 with SMTP id 98e67ed59e1d1-313d9c1dd1bmr297290a91.1.1749760896738;
-        Thu, 12 Jun 2025 13:41:36 -0700 (PDT)
-Received: from [192.168.50.136] ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1bcbc41sm1976096a91.10.2025.06.12.13.41.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 13:41:36 -0700 (PDT)
-Message-ID: <328cf8da-991d-4e55-b89f-1ff0a0b3254f@kzalloc.com>
-Date: Fri, 13 Jun 2025 05:41:32 +0900
+        bh=0shdeU3Nmns13gIvSpekGMtrKZaAuIpc2PTkyCP2Tbc=;
+        b=I2iLAhFzijgdQ1YNvUeyvqvftSrEFW1ueLbsQMK8NMgetrYBJj7Fs12MvPJ7zbLifs
+         yq0SZMlQb66p/GwBtC96c2S/vj+n/byGC/IwccATCNzh3ECLtciyKj+5tVyn/TePniAb
+         R52oTb2kv0+g3xSj3bL1ANoWy1SFuhWqTi7ISqoArdOjj0I9pH8A+izFsDGdvhE6JEHn
+         9VbBRTuGnjqfK23IPzFhmuNgtxCyzw75erN4u18qqlrQraVBNIsnzFgTBYg6oke6I9lB
+         6hqiGgR8nCGG9NZU7zwDzKG4NDYaBt9nPoPJnwTCHEJ9Cry7Xe1VuDmfs4DW1a6Hf1zh
+         oB9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749761097; x=1750365897;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0shdeU3Nmns13gIvSpekGMtrKZaAuIpc2PTkyCP2Tbc=;
+        b=dFWYsWef5tqRUPqWQuNSDWUGz6jBLzpYkSnvbx/C9KSbiOKqJdxaEz79s1RKnswlcT
+         fMAO50UeUff0mkW6vpPapKYWYwreIUdGelKQ5eUZbnAXUKAkK1w6ZtpL7ua2owtpPBbT
+         lb6EJ4zizvChWKellWfC7J0VRSD+o1Vi6JBAI/75dPWKD5Szcg+6AI4gHnzAkpTXwavf
+         p8kWZBecSth9BrKI3ONxx7jLBVtxydr6q5vsgUB2fbd4X3sZ9PPg18aa2WkbJNnJL8pQ
+         jtj9dqNa3QaZISsjX6RFHGvPC5caycehBDQDw0uXs1zQWfA5ikS2DKGV146Ecfk6pvlk
+         ANjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQvZQ9uQJL+DamyCWaF+7uqDHf09ZB4smXwCINBvHwCpgkRrxrJF68OdrqFEcRANkZEFIWUKz1MIRnLZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvEPLegv2QgT87R40Aqp8Pejf464V7MfQhjNtcCyeQuehvXhzU
+	bU0JlswXwFvGAoM9Pn6IIUCmewxbV1vQjo3ry38BF1Q8lKg54i493uZktnN37cE6FscvNJmKvVj
+	bvS3bGi0FFOO8VPQw/SsUsoYx2t62vr9I8TOZcaGo
+X-Gm-Gg: ASbGncuN3sXruJ8Ri3lARoFkUDnMSDZjdRCrj6tASIuXj9SbBwpCacQNLkGIVTHy9h0
+	CPyZow9rfZqBAwOjLpMy9/QlVrg8xY5Klt5/Ey+NlZGZx8DyFMppst/ZmhE95ucVvDGLK/c/nqn
+	0l8t/P+wMfYh1lZoAgZbCs2CBwSeHc168UbURmMA2zo9NPUrMOeupdhxLFcbM9zDoQauupQciO0
+	Q==
+X-Google-Smtp-Source: AGHT+IFQpp/hgcePI2xWrpQ53G9VWOawnMErUaqEJq2tPNn7M+/QfKB23VjAX85ytCeOgogiZvSGZYySA5m/hlCuyso=
+X-Received: by 2002:a17:902:d48d:b0:223:ff93:322f with SMTP id
+ d9443c01a7336-2365e8c8cf4mr545805ad.2.1749761096753; Thu, 12 Jun 2025
+ 13:44:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 00/42] DEPT(DEPendency Tracker)
-To: Byungchul Park <byungchul@sk.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "kernel_team@skhynix.com" <kernel_team@skhynix.com>,
- "kernel-team@lge.com" <kernel-team@lge.com>,
- "harry.yoo@oracle.com" <harry.yoo@oracle.com>,
- Yeo Reum Yun <YeoReum.Yun@arm.com>, Yunseong Kim
- <yunseong.kim@ericsson.com>,
- "max.byungchul.park@gmail.com" <max.byungchul.park@gmail.com>
-References: <20250519091826.19752-1-byungchul@sk.com>
-Content-Language: en-US
-From: Yunseong Kim <ysk@kzalloc.com>
-Organization: kzalloc
-In-Reply-To: <20250519091826.19752-1-byungchul@sk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250609145833.990793-1-mbloch@nvidia.com> <20250609145833.990793-11-mbloch@nvidia.com>
+ <CAHS8izOX8t-Xu+mseiRBvLDYmk6G+iH=tX6t4SWY2TKBau7r-Q@mail.gmail.com> <9107e96e488a741c79e0f5de33dd73261056c033.camel@nvidia.com>
+In-Reply-To: <9107e96e488a741c79e0f5de33dd73261056c033.camel@nvidia.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 12 Jun 2025 13:44:44 -0700
+X-Gm-Features: AX0GCFsbgTfnHYCyryWuORz2W8YB0hxZo0nQDPNGkYposr4yQdjwdikAQJMpVe0
+Message-ID: <CAHS8izOG+LoJ-GvyRu6zSVCUvoW4VzYX5CEdDhCdVLimOSP0KQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 10/12] net/mlx5e: Implement queue mgmt ops and
+ single channel swap
+To: Cosmin Ratiu <cratiu@nvidia.com>
+Cc: Mark Bloch <mbloch@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>, 
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "hawk@kernel.org" <hawk@kernel.org>, 
+	"davem@davemloft.net" <davem@davemloft.net>, "john.fastabend@gmail.com" <john.fastabend@gmail.com>, 
+	"leon@kernel.org" <leon@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, 
+	"ast@kernel.org" <ast@kernel.org>, "richardcochran@gmail.com" <richardcochran@gmail.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, 
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>, "edumazet@google.com" <edumazet@google.com>, 
+	"horms@kernel.org" <horms@kernel.org>, "kuba@kernel.org" <kuba@kernel.org>, 
+	"daniel@iogearbox.net" <daniel@iogearbox.net>, Tariq Toukan <tariqt@nvidia.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	Gal Pressman <gal@nvidia.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Byungchul,
+On Thu, Jun 12, 2025 at 2:05=E2=80=AFAM Cosmin Ratiu <cratiu@nvidia.com> wr=
+ote:
+>
+> On Wed, 2025-06-11 at 22:33 -0700, Mina Almasry wrote:
+> > Is this really better than maintaining uniformity of behavior between
+> > the drivers that support the queue mgmt api and just doing the
+> > mlx5e_deactivate_priv_channels and mlx5e_close_channel in the stop
+> > like core sorta expects?
+> >
+> > We currently use the ndos to restart a queue, but I'm imagining in
+> > the
+> > future we can expand it to create queues on behalf of the queues. The
+> > stop queue API may be reused in other contexts, like maybe to kill a
+> > dynamically created devmem queue or something, and this specific
+> > driver may stop working because stop actually doesn't do anything?
+> >
+>
+> The .ndo_queue_stop operation doesn't make sense by itself for mlx5,
+> because the current mlx5 architecture is to atomically swap in all of
+> the channels.
+> The scenario you are describing, with a hypothetical ndo_queue_stop for
+> dynamically created devmem queues would leave all of the queues stopped
+> and the old channel deallocated in the channel array. Worse problems
+> would happen in that state than with today's approach, which leaves the
+> driver in functional state.
+>
+> Perhaps Saeed can add more details to this?
 
-On 5/19/25 6:17 오후, Byungchul Park wrote:
-> 	5. Fix Kconfig dependency bug (feedbacked by kernel test rebot).
+I see, so essentially mlx5 supports restarting a queue but not
+necessarily stopping and starting a queue as separate actions?
 
-This is minor comments, kernel test robot not rebot you know.
+If so, can maybe the comment on the function be reworded to more
+strongly indicate that this is a limitation? Just asking because
+future driver authors interested in implementing the queue API will
+probably look at one of mlx5/gve/bnxt to see what an existing
+implementation looks like, and I would rather them follow bnxt/gve
+that is more in line with core's expectations if possible. But that's
+a minor concern; I'm fine with this patch.
 
-Thank you!
-Yunseong Kim
+FWIW this may break in the future if core decides to add code that
+actually uses the stop operation as a 'stop', not as a stepping stone
+to 'restart', but I'm not sure we can do anything about that if it's a
+driver limitation.
+
+--=20
+Thanks,
+Mina
