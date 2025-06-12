@@ -1,232 +1,132 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B6623026B;
-	Thu, 12 Jun 2025 16:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744032; cv=fail; b=M9EpzRIQhNvzo+Smb2etz2DF4HCuzzCE7lVjMGbEngIgExz4z8Xo2uT6BOq4FD5nfzjC1lSPzhUGDWw4565joJuCnGVBLhlm54Fm4OnoT6By54sS8e6C3+LXPfHhJK7/GlrrgtziUITveUeG2rjDbEnnoj6zHHlyNk/BBKxAv7Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744032; c=relaxed/simple;
-	bh=C8IdJctjvgBhPwCKHC0xUy8a+N3JVNAdL7t9ao1ydSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GMSXf2olkp4/2MiIzYdJMWXuQNz+uI4F1CaNu/ExZES5++b9rUPRv/HlOnDep2rtVx3DIMdiMarF4mpJ3wqpeLvmBf4Q3KLKEt8mLSxuMBi+6jz9+0uGttHQTbLO3rZWf3W1ALJBbDvWIw+4Rutil07282O1JyL1sE0dz4OWCwg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=POLjBJBc; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=gobD7qd/; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="POLjBJBc";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gobD7qd/"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CEtcjL017312;
-	Thu, 12 Jun 2025 15:59:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=C8IdJctjvgBhPwCKHC
-	0xUy8a+N3JVNAdL7t9ao1ydSA=; b=POLjBJBctfQbdjBxLwJoI9tuacy1pxyhKS
-	RpNB0FOw3y4bCFX2G0f9SssuHlwPlMhCos3NsABRCWXGk0NoB+nUG1wFxJ083hns
-	Q/IKafqsfc24ISHPkaiZUykanNQ/IWt78joe8Rx/YquEgxBPe7jV9PZcjTSCpxYU
-	OjQvlLjOZaYP9DJzSAFma2eWQREoRTY3V5P7NqNbbil/E/Ui7BWjc0fOl8i1webJ
-	NRjyj2k36QlTVJ/fJzFv/8hz5Acm9ALXigQmwgGOyq9JpzK6y3IT8tci+xDgsJte
-	jIRW4WLaWKpmVW/q4WrrJRff3Vh+Ftew72NbxQOxMR8mXUqUmjQQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474dad9wdh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Jun 2025 15:59:24 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55CEpWdp037907;
-	Thu, 12 Jun 2025 15:59:23 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04on2045.outbound.protection.outlook.com [40.107.100.45])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 474bvj0y2q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Jun 2025 15:59:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LSUXuOGrpjqhLRSjjlbyBQKttJdfAI6mBwtzyc4KZdQAV1tM58nw1gyLgT8kO4PwsVfrbGo0gUpT9PTyVOiDsNHeKIdsUbMRk9OHfIW9nuGjEQL041S3jIK3N+z+YoFJGq1YVrHsWPiIohGIRoJgoYZWzdK7CqIOdZ5ot7WzInhrNm5+uWqG65RsWfEdxK8ruu1lG+W3GYzGxYK+PaeT9tHO15pxF59+o7zoLZ+LKKBjPOjeGjK0kSthHuM1XbRs98FRveYJnynD0QPSzbotDuA29R7wMcsyUtb8OKnIuJt6b4K8uTPpaiyl9asmr5RawDp+n8sGiqnxD9ZmA2j4Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C8IdJctjvgBhPwCKHC0xUy8a+N3JVNAdL7t9ao1ydSA=;
- b=wPwp+GboKwqwtsDwRCkIfkd8lelgsGgfJTGFmG8TfqSTZL9njv4KDVIwCRZlNc93HQFHj7ZZl0So0lXZ+/AeGQm9x3tuAe3pJiVrq60BLopqrQNXC8mxqniiIcp+FthPuK2fh9aPFrU2cJ5xQBhBwFYV1l5C1AQOvaMqdpzNBffLlIpmUC+q70DU7LLeZIwBXz49Mb+FaAz7mg8Dil4GSGwBtX3kVq7UcIzBt9jJ7d27dT6GqNwxgFdgHmIXE38QySU0HgT83yVsrN7VyTBZM9w7tO0MvS+cdt3fuLYpZV5rNv16AyHLIxzKIZ6jw5Y/6VOCp3yhXXj+qsquArv2SA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C8IdJctjvgBhPwCKHC0xUy8a+N3JVNAdL7t9ao1ydSA=;
- b=gobD7qd/UC5P6pdqGbhhZPksjHy8MCaB55y7Wb/9f16aBCARWYa/iYqn023VJS5LVyugrljsB7V3ofF6lxxlq3xpMcpGdvyeeG+MQ9H1OIsuKZZuPU/r2EyOCxjM4xrQCySJOfMdTh0F+1LyFtWee1wgKbnpiFD98gI5v75W8v8=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by IA0PR10MB6820.namprd10.prod.outlook.com (2603:10b6:208:437::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.29; Thu, 12 Jun
- 2025 15:59:21 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8813.024; Thu, 12 Jun 2025
- 15:59:21 +0000
-Date: Thu, 12 Jun 2025 16:59:19 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Alistair Popple <apopple@nvidia.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mm/huge_memory: don't ignore queried cachemode in
- vmf_insert_pfn_pud()
-Message-ID: <dfab0736-4a62-4e2f-889e-3d6fdb4564be@lucifer.local>
-References: <20250611120654.545963-1-david@redhat.com>
- <20250611120654.545963-2-david@redhat.com>
- <02d6a55b-52fd-4dae-ba7a-1cccf72386aa@lucifer.local>
- <c6c1924b-54ae-4d75-95f7-30d3e428e3e7@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c6c1924b-54ae-4d75-95f7-30d3e428e3e7@redhat.com>
-X-ClientProxiedBy: LO6P123CA0045.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:2fe::14) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052B019C560
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749744055; cv=none; b=hpR2K8DNLCDcfoiv/Kc/jCZT+7bCejxOZp/H2MJmafb/lFZvgg9LU3YhengMzq6jpbhUyEbxyWdMOPAMn29mjuy9RdThdbDDVEHsFZUXxQACgNWa7+6EqwstFUiF4lui8v/HMaPJepIPfur66SuILWvTxjXA3qaI3ggLbJz2e18=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749744055; c=relaxed/simple;
+	bh=+lhjIRljPNF+vDzpCER5jBDQNCl4vIVi4E8v0yNukeE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R2H1HhBm6mC7xgXUeUXQpY76bGucAUUhDTDL1tEGscQDXIgndd2OkpcCL+SZru8w0vcCKXA2EVuUYCXmWmzh7nnXqNc4BmnQG44Vf6z+MKR3Gji+RN0kC2ho9hyAK2hxnEsUesxpKThORbyROUj4KHk1FEbKDSCx1sj7NUVHMXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D8F9153B;
+	Thu, 12 Jun 2025 09:00:33 -0700 (PDT)
+Received: from [10.57.84.35] (unknown [10.57.84.35])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96C423F66E;
+	Thu, 12 Jun 2025 09:00:52 -0700 (PDT)
+Message-ID: <066fa735-98ad-45f4-9316-b983d2e5a3d3@arm.com>
+Date: Thu, 12 Jun 2025 17:00:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA0PR10MB6820:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cff41d6-6c0a-4196-1d03-08dda9ca1842
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VOqJfqv7unwhUdOoOKWq+GBYGUxkIiR1lm3CcInlId0n6DjAt4VBJsGDMrC+?=
- =?us-ascii?Q?CeAjL3uKqgyPAMeywBmOBi4Qc7VuZMyFXi3Xbk12jVAJ8sOm3gN2Zli86RPQ?=
- =?us-ascii?Q?myjkrXDVt74L4jSONYvsrCHy+XW3NftnJx1Y7NcLZFk2zMj2l5CCwhEzuDum?=
- =?us-ascii?Q?YaQztKD4F2ErDeyQoc11lKoBGuL1radsaUkdVJ3fI9+tgI0ex9jtsFf5FyNU?=
- =?us-ascii?Q?l9u7NNzHrT1tVwm59HkXTta0try4rE3D9+ptTR7/g/G/+Mb7BTyBh0py2fu4?=
- =?us-ascii?Q?HwZqcueKMm7UzMAObVLxloQDtmSfcr38t0t18aMNH/ysZkqFqbNB+FM4MgE5?=
- =?us-ascii?Q?nlO7NUWDPJCB1uXCBYOEQ8s9ICikv1UR4Lb+CTiq3K84U1i8dYjPVwsG1oSu?=
- =?us-ascii?Q?rRt8uja3l4AfnNJka3C8THv9iap6+QO4BuNBgyxevPiGovYrR8+rdPT2pzF5?=
- =?us-ascii?Q?QwhG/aANSn+aBIry5OxO+cTqkOxaEQxLs2w10xxfwV+NgkXVPKxMREnOFM+W?=
- =?us-ascii?Q?in1npKFsqzSt9XH8Eju/4moZWe88mxPAx3KfkaPF5VXacANG7Y/nyRJF5aLy?=
- =?us-ascii?Q?N4kn9lPXEIr84htWdYibt8jI07pmMW4aI2VjbYXyK1yox09zvCxZthzl0bPV?=
- =?us-ascii?Q?JXV9gdf3K9Py8/IA+0IuKvIy8+iqDemTWuVIzO712ijoDU1QKU7OKogL3/b2?=
- =?us-ascii?Q?wEHMjD/wwDw4FKVnC+8H1UqZUKbo6NYA2wA4ZfMucy6LSnfvtu3sOP4Ao5Hw?=
- =?us-ascii?Q?4mFRThSxD1O65QIkmlqd0zmor2MwT/7VieF3s2vYoYF7pYJ781HwgLHeNSaj?=
- =?us-ascii?Q?9Y+Ei0bSwFHa1VLjpoWsSjASyHWiSv2lefT0oS0/UJZwRciL4wh2l5dxehhR?=
- =?us-ascii?Q?bfxz0tIz7BPDFj2VmxIwtICHx7sQIW4Ek0XSIzCmD9NbDzIx/rgUONYa9Ozp?=
- =?us-ascii?Q?QUa0NkSbc6YSMclxp6+5B9+FCM+45m/Odo25RcHA5HMGd80c5BZcsFds9Zys?=
- =?us-ascii?Q?Zmqx0kfScYHFNRrAWjGO1NqTA5jJs5txd6DpyLik/DNUkopqQRBmiWkVEqk+?=
- =?us-ascii?Q?+xY9CgjMnvFw5W5dKR9AerrEz+LLmr0FA/rE/Y+TK2RgN/FbtbQanRC9+KAi?=
- =?us-ascii?Q?am+YszSz/4kGDfW3Phg8AEIQIUy75TfbM7sw+twoQcMbj9zn+jJ0Xcom5Twd?=
- =?us-ascii?Q?FX6voYUqPereEz84q2yEB4ddzrFOvd56gM0SMQ+Faa6XWo50aSdgLPVkHoSu?=
- =?us-ascii?Q?gcw90X+r4izd2KvkCS9eYT6JsemJl8eoX+f1TDf9XHRVxrjjtURr1/bWmHFt?=
- =?us-ascii?Q?F0DhHIr5+3yGONSJD9KFTZmYAmZsFa5fh3aDLEda497QEOT6vtB9f86ITs3g?=
- =?us-ascii?Q?4u9GN6iLBpSs3GC0SkI0sKFbEzB3RBxsHEpRwRWb5q06TB8UuFbsINxp8zgR?=
- =?us-ascii?Q?DO89LMyZcBY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?5PU98pkjxm/3+MMt2wfhFbcPfIDxtVTKngGg5DO8zyeVlJamPq0fl91Cm/W5?=
- =?us-ascii?Q?CNkoJOHZb5wOojyJdWjza+aYvd102FbKfHcW0IKsdw5cqIKxO3EUI0wsNNKX?=
- =?us-ascii?Q?UVhtuvKgMB57vSJ+OKdovIDL+b6GvAEd20qZ9w83+vFqDrB8jqqT1K+jsTBa?=
- =?us-ascii?Q?Lg1qg92iVMn2SlobxNLP+eqtOMc/17t2ZlITEqDwUqwc2y3Ltf8i7AQ+k/M7?=
- =?us-ascii?Q?DEfFp6PbMWc2dmemZo97jR3wwiKxzuBC5IOGhQcZ4ME6bVL4ksEJsM5nkr5p?=
- =?us-ascii?Q?HAH5h+cf3ezaRqYmuYw2ChKXiXSM0i1gsDG8sxUKYdySrRIjtvz9u11baELP?=
- =?us-ascii?Q?zhBkXK3wLcs6qsLj02Mklmls4H0CJn9yxBkpVWryUhIePQpNBHkm8t/HFNTI?=
- =?us-ascii?Q?2jpWNFOFGxXcdA+rr9ipoV+lqDcP5/FCe4v7Y82fKX7N6z7XLkW6uE4Jqle0?=
- =?us-ascii?Q?jlt0m4u1UCg3Fos7PimFOQDqrzr6yqt9f0ybp8Igj1QpxN5vTFqzubU/ngfU?=
- =?us-ascii?Q?MhU7b8mwiavmEImBxAV7cuwvt4BDNY0pzPQfm0miIlhIjguh+2FZ6Tikurbu?=
- =?us-ascii?Q?lo9C+soeBIH1d+pJ4LAEjlwE2kqVqV5iEKBoTt+7nXX+jDNpbEuqkjkd07zP?=
- =?us-ascii?Q?h7rzYCW8rSqDtx3UUoimFGhwvt63fHDt84K7bHiqTDjn4fyAi9nkyih8u6sr?=
- =?us-ascii?Q?K66UOfxF0ZbBAwSn6/PkQQBQAwrImIC5QmuZiwAC8JzNi6wj1mWsihbGY2OZ?=
- =?us-ascii?Q?Uq6l9FCKttNqcX/erGQM57ekh7r41gLrwzKa6C88zAAqMTiEZNlhlmb8SEvy?=
- =?us-ascii?Q?FIgCKDh001UZNWPkqjGd8uIiRu7QWgK5p0tzwhsevFdOYndbG2or/S/FG3j6?=
- =?us-ascii?Q?+cT2HkR5Dq8VJKvvx15gLaLrdVbuqcsQIwTV4JtDIV+mRjaofurV+FnmVZJe?=
- =?us-ascii?Q?mG2G2Z8ycfvHDzt503snwdVvDg01+Xk3Oyx15ufO73gvFhMgMdQf96npHQgo?=
- =?us-ascii?Q?OuBh9AlLGRqUImlRsRUm+hKOgeqRZFpqTA9ioG8bGdfNJq75ZeVmglQHa3H0?=
- =?us-ascii?Q?P9p/lOZ0Hlc9DjdwB8mp7tib+FiMzKNv5xGRQ92vY53QyFRBjWrRmaSdsclm?=
- =?us-ascii?Q?3Kyyd4xgepKfW4Oh4OpoSGk/dd+M0XBO41VfrU6FcjaBu66ne6ayhfbvW18z?=
- =?us-ascii?Q?5Ti7n31Jd1T9eVPAtefDOxUYdMCQiHt8wkzfjav+9pUVfNE0iacQSjdaF7k7?=
- =?us-ascii?Q?2D03x7UhRB1E3vOXJDtpZ6p+HQ/6vpOtilGA3eGedPDjDr0/Zezr6/h1zKJk?=
- =?us-ascii?Q?n6vYv5mHi7LWwfdqVMjvgt29dBWqRfyIPnyF2ky47Re285UVnhLTuFGU7V5i?=
- =?us-ascii?Q?j/OYJh57xZTuWA6wK4Z+nU1p5MoItL8D62gMk/u/yZ4vZkSHyDwhbYG3HGyI?=
- =?us-ascii?Q?cDQjFCKiJ2hB2BaSZDBZL4g2mxcR8VIOEQ+QO9gSLKeNBSu/WmBz/HjD4x03?=
- =?us-ascii?Q?+tbXpkJETSa0wE71iJ7gSuANrz+Mnnm7ipJo3Sp8tMZoqvuscnO9Z33AMqIN?=
- =?us-ascii?Q?7hliUGykA37gUG8tQKXzFJn9EKgHt0d0gEtes/i962SykZoz+Co2LAsFRI2J?=
- =?us-ascii?Q?Xw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	E35agCA2qkorDaBCLcl3S5Y1tlbSgvLrOl0T8RGqeekB/1sCtAh+4Ol+ABrJXbYBqbRoXo39CbTQ+Pzq11bIc/WS7B+25XG2kJbQmG/+Wy6TDUGczJo17Yi7xJOw8GoBgXv/F3pEQSUEo3kvYot3a0XrTTi3nT7lAP4flymu49fP3dwnVXeWEJg5vY/HhAqQPKZo/Ca1JZWHYMmqcn80Db1AWZGmS+R2UX5KFJPmewCcCwLxoOonhZGvNVWWoj0X/SWN901J53x39curxCxskjK4f9zVSRZ5zxH2ZGsNZkvjx3kL775DgD106k8ojhv/Wt/Z/p5JTfhhYN/jQIQJXraxro8KqBmll8IJHuCxKQZeGATTbN0f3ZL8/jAIhP4pdLDsIn3ZONVq5TtYIlY5OtnrEr1l5KiZiXLESD7thz6k9V9jSFTTee4saVVrubge+8FYSZHcM1IjNSvreyc4WTQ65OwVsEMP+DNeJ8IWeY5+taF5CUt1Xvfxq+9cDfSJjCmjFG+k8JN3QMXIhAv9+2FMMUjP7Qhjrzm97aB6Whi6rxLMqy1usD6bBn1a5y62SdFxGIkEHvaT78ozpRFh3CxMmWNgikElmEWzv2NsKxk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cff41d6-6c0a-4196-1d03-08dda9ca1842
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 15:59:21.2794
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C/p+mtrvQcopQMbekKfsMWi9kBGzlHcJ7WJfpOqY1aM65NNG32fDUX5TidAK/4IzN1q/AE5e7fVjxQga4blaqiOLZxvA+tqE1NN5bHU84wg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB6820
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_09,2025-06-12_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
- bulkscore=0 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506120123
-X-Proofpoint-ORIG-GUID: a9urWQtDeksMMKtyl2Tnw_DVJagb2rCz
-X-Authority-Analysis: v=2.4 cv=EJwG00ZC c=1 sm=1 tr=0 ts=684af95c b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=NznJ-deW5rm_l9ViEFMA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:13207
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDEyMyBTYWx0ZWRfX0ESLYM5Bhohr 4TnSpS8SIp95qteqrgMP1SI75m3bIqM69FrtZYpkpKKlWBC/oBppbOHpq67ZQyzAg5f82FEoxi3 MVytG4CpALsZ9ouWp3MXD1L1isjNSy3g1BUYshNJs6c2prYU0z9PWvSlYOfwjVmkEtt2qPjZzgS
- nJheaphidwN3GkiGeXjU/ttryV8ka6zDc8u7AxyQj8D7pcUagnN2V5Mc8ij/XHOWohLq+dENvtx joP4+fUwe51rX4AeVypuH9Yeby49DKGU19Ckaz8CX7SRQW7PC5goGqLMb4Uqj9JC6eTaWE0+Pwb dkMyFS/YqfDcBgBBUzR5YdZcQL+BeJndv+DGSJJVTHo6+lykK99QiKPHlOf9V4/a9/x5wGavg6T
- e6jqhuUegJuKrnw2W2/Ob3oqbPBTiVL2zduBBtI9bNL+qBSOwXxZ3w5yjoDPvLpk8WjRDL6W
-X-Proofpoint-GUID: a9urWQtDeksMMKtyl2Tnw_DVJagb2rCz
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64/mm: Ensure lazy_mmu_mode never nests
+Content-Language: en-GB
+To: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250606135654.178300-1-ryan.roberts@arm.com>
+ <aEgeQCCzRt-B8_nW@arm.com> <3cad01ea-b704-4156-807e-7a83643917a8@arm.com>
+ <aEhKSq0zVaUJkomX@arm.com> <b567a16a-8d80-4aab-84c2-21cbc6a6a35d@arm.com>
+ <20250612145906.GB12912@willie-the-truck>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250612145906.GB12912@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 05:36:35PM +0200, David Hildenbrand wrote:
-> On 12.06.25 17:28, Lorenzo Stoakes wrote:
-> > On Wed, Jun 11, 2025 at 02:06:52PM +0200, David Hildenbrand wrote:
-> > > We setup the cache mode but ... don't forward the updated pgprot to
-> > > insert_pfn_pud().
-> > >
-> > > Only a problem on x86-64 PAT when mapping PFNs using PUDs that
-> > > require a special cachemode.
-> > >
-> > > Fix it by using the proper pgprot where the cachemode was setup.
-> > >
-> > > Identified by code inspection.
-> > >
-> > > Fixes: 7b806d229ef1 ("mm: remove vmf_insert_pfn_xxx_prot() for huge page-table entries")
+On 12/06/2025 15:59, Will Deacon wrote:
+> On Tue, Jun 10, 2025 at 05:37:20PM +0100, Ryan Roberts wrote:
+>> On 10/06/2025 16:07, Catalin Marinas wrote:
+>>> On Tue, Jun 10, 2025 at 02:41:01PM +0100, Ryan Roberts wrote:
+>>>> On 10/06/2025 13:00, Catalin Marinas wrote:
+>>>>> On Fri, Jun 06, 2025 at 02:56:52PM +0100, Ryan Roberts wrote:
+>>>>>> Commit 1ef3095b1405 ("arm64/mm: Permit lazy_mmu_mode to be nested")
+>>>>>> provided a quick fix to ensure that lazy_mmu_mode continues to work when
+>>>>>> CONFIG_DEBUG_PAGEALLOC is enabled, which can cause lazy_mmu_mode to
+>>>>>> nest.
+>>>>>>
+>>>>>> The solution in that patch is the make the implementation tolerant to
+>>>>>
+>>>>> s/is the make/is to make/
+>>>>>
+>>>>>> nesting; when the inner nest exits lazy_mmu_mode, we exit then the outer
+>>>>>> exit becomes a nop. But this sacrifices the optimization opportunity for
+>>>>>> the remainder of the outer user.
+>>>>> [...]
+>>>>>> I wonder if you might be willing to take this for v6.16? I think its a neater
+>>>>>> solution then my first attempt - Commit 1ef3095b1405 ("arm64/mm: Permit
+>>>>>> lazy_mmu_mode to be nested") - which is already in Linus's master.
+>>>>>>
+>>>>>> To be clear, the current solution is safe, I just think this is much neater.
+>>>>>
+>>>>> Maybe better, though I wouldn't say much neater. One concern I have is
+>>>>> about whether we'll get other such nesting in the future and we need to
+>>>>> fix them in generic code. Here we control __kernel_map_pages() but we
+>>>>> may not for other cases.
+>>>>>
+>>>>> Is it the fault of the arch code that uses apply_to_page_range() via
+>>>>> __kernel_map_pages()? It feels like it shouldn't care about the lazy
+>>>>> mode as that's some detail of the apply_to_page_range() implementation.
+>>>>> Maybe this API should just allow nesting.
+>>>>
+>>>> I don't think it is possible to properly support nesting:
+>>>>
+>>>> enter_lazy_mmu
+>>>>     for_each_pte {
+>>>>         read/modify-write pte
+>>>>
+>>>>         alloc_page
+>>>>             enter_lazy_mmu
+>>>>                 make page valid
+>>>>             exit_lazy_mmu
+>>>>
+>>>>         write_to_page
+>>>>     }
+>>>> exit_lazy_mmu
+>>>>
+>>>> This example only works because lazy_mmu doesn't support nesting. The "make page
+>>>> valid" operation is completed by the time of the inner exit_lazy_mmu so that the
+>>>> page can be accessed in write_to_page. If nesting was supported, the inner
+>>>> exit_lazy_mmu would become a nop and write_to_page would explode.
+>>>
+>>> What I meant is for enter/exit_lazy_mmu to handle a kind of de-nesting
+>>> themselves: enter_lazy_mmu would emit the barriers if already in lazy
+>>> mode, clear pending (well, it doesn't need to do this but it may be
+>>> easier to reason about in terms of flattening). exit_lazy_mmu also needs
+>>> to emit the barriers but leave the lazy mode on if already on when last
+>>> entered. This does need some API modifications to return the old mode on
+>>> enter and get an argument for exit. But the correctness wouldn't be
+>>> affected since exit_lazy_mmu still emits the barriers irrespective of
+>>> the nesting level.
+>>
+>> Ahh I see what you mean now; exit always emits barriers but only the last exit
+>> clears TIF_LAZY_MMU.
+>>
+>> I think that's much cleaner, but we are changing the API which needs changes to
+>> all the arches and my attempt at [1] didn't really gain much enthusiasm.
+> 
+> To be honest, I don't think the proposal in this series is really
+> improving what we have. Either we support nested lazy mode or we don't;
+> having __kernel_map_pages() mess around with the lazy mmu state because
+> it somehow knows that set_memory_valid() is going to use it is fragile
+> and ugly.
+> 
+> So I'm incined to leave the current code as-is, unless we can remove it
+> in favour of teaching the core code how to handle it instead.
 
-Ha! I don't even remember doing that patch... hm did I introduce this -ignoring
-cache- thing? Sorry! :P
+Yeah fair enough. I'm not going to have time to do the proper nesting support
+thing. But I'll see if I can find someone internally that I might be able to
+convince. If not, we'll just leave as is.
 
-> > > Cc: <stable@vger.kernel.org>
-> > > Signed-off-by: David Hildenbrand <david@redhat.com>
-> >
-> > Nice catch!
-> >
-> > Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->
-> Thanks! What's your opinion on stable? Really hard to judge the impact ...
-
-I think it makes sense? This is currently incorrect so let's do the right thing
-and backport.
-
-I think as per Dan it's probably difficult to picture this causing a problem,
-but on principle I think this is correct, and I don't see any harm in
-backporting?
-
->
-> --
+> 
 > Cheers,
->
-> David / dhildenb
->
+> 
+> Will
+
