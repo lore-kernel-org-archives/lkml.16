@@ -1,138 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9774723C51E
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C891442F4;
+	Thu, 12 Jun 2025 11:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749728968; cv=none; b=YUJJZVSTAksovE5L1zuMBJH6jgZ0wklusaf40AMCTLEOKsol6hhs8jnHQpijb+n78xVKL7dT0AQbtdJBzUH01rkhoAisEdQLHGiBCSzqG6zac3LCD3T/h6wqc/1kZ7FMWOrZj5Uh21yoioEaPu/aBbJ0bUrui/wsSd7RtQudiJA=
+	t=1749729105; cv=none; b=hpKgLS9tVTK0C9YzPOD+M9tHeKezQ9W9EveLOkli4k9npRl2UdhR9a11ZztdUV30HZHRDgV/egB+RiRbJ7eBL6AD2oqJvSJzm13/qXex7bFbGyatjr7Vc5mpBkESoTntVH8fOQaYpcZMyio11fP+21almYsr+BdwJisbAlMaW/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749728968; c=relaxed/simple;
-	bh=MekC8kWB6iTk5o/hNYg8C7X4E32nXGov9VbtevuaI6c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=duDnn9C4AyvLNxI+r9l8bgIC9xshe5AxTgZKG2mM0CkWTMBMAGO8lNWUY5+gDCE2l0koaOmYUNAYy61JK/6KIRkyybod61N9wgHAxFwvCHVQWb2gf387a/d62L3IHhnqH9F/pj10EISb7voGcGrf1k82twEfuwM0zqDhAXAqgLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y8YwwZbb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749729105; c=relaxed/simple;
+	bh=3vxB5ciP5Q8mkeDoU2cs45u/huhJIF9YPX7zbCUC/TI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MfkalEa5LV4sHRb9SvxBJYtOtwoR0wkkLzqXwd/e8+k1s4m7aX9UXSMzJEPZgsax8CsctUbhVqPANmEwbNzSr5Ac8/Yw2ynHw57ovw1Eh/8xDPfv0divrwHl44r5M6kU2Yh4EtUeGX9oBFvkXTJCg6vgKV8gJf26zgHjOiLIACw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QeU+I3dO; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y8YwwZbb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749728965;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=44j4I4TXCM8K1tAGGoYj0qrHUcxAz/oIThDxTCmpNZk=;
-	b=Y8YwwZbb4Bs13mA25aKTwIwg7XfG/+GfdhezrPL5hXk7SCiGB9ONfLz760dpKtW3YvqL6M
-	lAJ3oFJuWBqSAqqt+HB+7bled9oi09eg/dbH4BWvyBzWgLu94rPAFzVkRqZl+Iv06aYXkZ
-	e9saRw6nP7IoHG9UGFFeqa+lGAzVcsc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-692--Ca1ZE4kMtal1eZT-cuBsg-1; Thu, 12 Jun 2025 07:49:19 -0400
-X-MC-Unique: -Ca1ZE4kMtal1eZT-cuBsg-1
-X-Mimecast-MFC-AGG-ID: -Ca1ZE4kMtal1eZT-cuBsg_1749728958
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4eee2398bso400703f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:49:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749728958; x=1750333758;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=44j4I4TXCM8K1tAGGoYj0qrHUcxAz/oIThDxTCmpNZk=;
-        b=aJ61wu+Vb3k6aKMU5iMuT/Lc14Q7TutQlh6ydUTDZVwLHYP4U/EZ6/zFkYxZtyxae9
-         nmIbdBYAYdHpHZmNnCjuAcT3K3u06KEA3oMAfTyqMTiae6e21QJ9rYAwTfik+LQZTZUw
-         zxQjrYbvH1M4q/n2/2NXhLax7lZju8bxt5GweyUrt+PGsXLHmhzUgdTJ13rH4SCQ/y4g
-         9WRY47WvAZWjGlVwTJcbid6EhlWG53+iMRzIHgNRUEB9g7vVhVue6GUYId9HWqQMM0g2
-         s/8gCB6ovTzpfg5q8Q0aEZyU+Pb4dJhXG3svP7A9Jmu2hxV3yLH2u1ByK5ZLCSejdsll
-         cIRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCGDrs0bmJEED+26p7Khxl6yKiO63gMMkgQAE6VpJRXJblWZG6IqGTxTsoFgHFXR94c6KVMxlCCJM84Ag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykPAxiMpxjfvKvcx2npnSenREGbLEOLlGgkcUtHltAeVRbzz5G
-	2a3poWxPX+xUNCZhPcuYhVNfsFOJkxMi/ZZrmhXm3l+9ppNFuzXQy+mmEyESyWjPiKJofADP0cL
-	q+ED96rpNi1nYSkroqqscMPEXJRS/b5mJ6fos1hD+gwGjRaoFq68wwcJL/Q9nc5sofQ==
-X-Gm-Gg: ASbGncvXths8I6mEsuOO6BFnbIB7siskGbCp8BUvruwbQlE19tZf5J5O22PpzomVVWH
-	JFi2wz+E50HytRZwqa3+2mOm+gsZZpvDR3oUlZ5aktz+6MhAXuVSXG02ezRcl+kUlxGVoq8xJHE
-	wZbQTUy1ZbEmYNZ9Lh2QacO/qvrAzBRjtpXRhPtQBnQBbClj1gK2qiQD8/uOAXWkJnZS17vx0cl
-	M4bKPH4MuEmBmcodD8wufoLHVy8eHHEEuyuQMBWIBm7UIfpe/eo0I5e47B/d/S1zLVB+IQAUHkr
-	fWU3FCVsDcVxQf9Boq/5YI6ArpBzvL1gGSQ3BrJPVK8O2vgEM+qzJ6CW05dXHZ5gfutR2442BHK
-	AA7hO
-X-Received: by 2002:a05:6000:430e:b0:3a4:dbac:2db6 with SMTP id ffacd0b85a97d-3a5586f3553mr5300920f8f.49.1749728958112;
-        Thu, 12 Jun 2025 04:49:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4WzB+LJcR1u2hK9wFwGy2wUTAL8u1WuDKJLfv52nOHBwv65vCbiVqlOIk/P6Twhu+7Lo4ig==
-X-Received: by 2002:a05:6000:430e:b0:3a4:dbac:2db6 with SMTP id ffacd0b85a97d-3a5586f3553mr5300892f8f.49.1749728957713;
-        Thu, 12 Jun 2025 04:49:17 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561b4b88esm1746765f8f.79.2025.06.12.04.49.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 04:49:17 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, John Keeping
- <jkeeping@inmusicbrands.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/ssd130x: fix ssd132x_clear_screen() columns
-In-Reply-To: <fb6d8eb9-cdc1-4d07-8a55-928282c9e7ad@suse.de>
-References: <20250611111307.1814876-1-jkeeping@inmusicbrands.com>
- <87y0tycumu.fsf@minerva.mail-host-address-is-not-set>
- <fb6d8eb9-cdc1-4d07-8a55-928282c9e7ad@suse.de>
-Date: Thu, 12 Jun 2025 13:49:15 +0200
-Message-ID: <87frg5w56s.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QeU+I3dO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749729104; x=1781265104;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3vxB5ciP5Q8mkeDoU2cs45u/huhJIF9YPX7zbCUC/TI=;
+  b=QeU+I3dOncfOWRyb10WaVjt39n5ImdBKl1OuYMoVvBP4UTFuZUX0EH+O
+   90u5EyjhdXOkS6EOyEEJLx4b9Jf96u0uUsh7g6k2K2srFR8JXvK+V088L
+   3fQMvWUc10BBSq5vAvqI/D+TAz7hfSVMM5fuf6C5QHh32rBI/lzSdd3Fr
+   bLbEoP7Yxy6ogW0u8nNHft9whPrGryn8FYh30df900GXy6HiXmu0TKJE+
+   mVzzD98ASk5v12+MproOfwDkf5VG8doGc9L+CAol/+rj/DeWIlD6V3pYD
+   wHmnIeqJWlUhgRVBEgEXYLcBTJPzhjcRo7eMfmamQq9KuaBW1znIrUqrm
+   A==;
+X-CSE-ConnectionGUID: 5ufzmy/iSYmLKzFAWYXHpw==
+X-CSE-MsgGUID: Sc3a9jksSPm+e6eCXSrWeA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62942768"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="62942768"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 04:51:42 -0700
+X-CSE-ConnectionGUID: Vem2LwBBRsySpsqnJ1mrJQ==
+X-CSE-MsgGUID: l3+3aSBiSreXanS90hhqsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="147850054"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 04:51:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uPgT2-00000005wLa-1Io0;
+	Thu, 12 Jun 2025 14:51:36 +0300
+Date: Thu, 12 Jun 2025 14:51:36 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v9 07/11] iio: accel: adxl345: add activity event feature
+Message-ID: <aEq_SJMDzPYGSMu6@smile.fi.intel.com>
+References: <20250610215933.84795-1-l.rubusch@gmail.com>
+ <20250610215933.84795-8-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610215933.84795-8-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
+On Tue, Jun 10, 2025 at 09:59:29PM +0000, Lothar Rubusch wrote:
+> Make the sensor detect and issue interrupts at activity. Activity
+> events are configured by a threshold. Initialize the activity threshold
+> register to a reasonable default value in probe. The value is taken from
+> the older ADXL345 input driver, to provide a similar behavior.
+> 
+> Activity, ODR configuration together with the range setting prepare the
+> activity/inactivity hysteresis setup, implemented in a follow up patch.
+> Thus parts of this patch prepare switch/case setups for the follow up
+> patches.
 
-Hello Thomas,
+...
 
-> Hi
->
-> Am 11.06.25 um 14:47 schrieb Javier Martinez Canillas:
->> John Keeping <jkeeping@inmusicbrands.com> writes:
->>
->> Hello John,
->>
->>> The number of columns relates to the width, not the height.  Use the
->>> correct variable.
->>>
->>> Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
->>> ---
->>>   drivers/gpu/drm/solomon/ssd130x.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/drm/solomon/ssd130x.c b/drivers/gpu/drm/solomon/ssd130x.c
->>> index dd2006d51c7a2..eec43d1a55951 100644
->>> --- a/drivers/gpu/drm/solomon/ssd130x.c
->>> +++ b/drivers/gpu/drm/solomon/ssd130x.c
->>> @@ -974,7 +974,7 @@ static void ssd130x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
->>>   
->>>   static void ssd132x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
->>>   {
->>> -	unsigned int columns = DIV_ROUND_UP(ssd130x->height, SSD132X_SEGMENT_WIDTH);
->>> +	unsigned int columns = DIV_ROUND_UP(ssd130x->width, SSD132X_SEGMENT_WIDTH);
->>>   	unsigned int height = ssd130x->height;
->>>   
->> Ups, indeed. Thanks for fixing it!
->>
->> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
->
-> Could you please add a Fixes tag before merging the patch? Thanks!
->
+> +/* act/inact */
 
-Sure, I'll add the following tag:
+Useless comment. If you want it to stay, decrypt it and make it useful.
 
-Fixes: fdd591e00a9c ("drm/ssd130x: Add support for the SSD132x OLED controller family")
+...
 
-before merging the patch.
+> +static int adxl345_is_act_inact_en(struct adxl345_state *st,
+> +				   enum adxl345_activity_type type)
+> +{
+> +	unsigned int regval;
+> +	u32 axis_ctrl;
+> +	bool en;
+> +	int ret;
+> +
+> +	ret = regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &axis_ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (type) {
+> +	case ADXL345_ACTIVITY:
+> +		en = FIELD_GET(ADXL345_ACT_X_EN, axis_ctrl) |
+> +			FIELD_GET(ADXL345_ACT_Y_EN, axis_ctrl) |
+> +			FIELD_GET(ADXL345_ACT_Z_EN, axis_ctrl);
+
+Something happened to the indentation.
+Ditto for several places in the code (upper and lower from this).
+
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!en)
+> +		return en;
+> +
+> +	/* Check if corresponding interrupts are enabled */
+> +	ret = regmap_read(st->regmap, ADXL345_REG_INT_ENABLE, &regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return adxl345_act_int_reg[type] & regval;
+> +}
+
+...
+
+> +	if (type == ADXL345_ACTIVITY) {
+> +		axis_ctrl = ADXL345_ACT_X_EN | ADXL345_ACT_Y_EN |
+> +				ADXL345_ACT_Z_EN;
+> +	} else {
+> +		axis_ctrl = 0x00;
+> +	}
+
+Besides an indentation issue, {} are redundant.
+
+...
+
+> +	en = false;
+
+This line makes no sense. When it will, it should be there, not in this change.
+
+> +	switch (type) {
+> +	case ADXL345_ACTIVITY:
+> +		en = FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, axis_ctrl) &&
+> +			threshold;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+
+...
+
+>  	switch (type) {
+> +	case IIO_EV_TYPE_MAG:
+> +		switch (info) {
+> +		case IIO_EV_INFO_VALUE:
+> +			switch (dir) {
+> +			case IIO_EV_DIR_RISING:
+> +				ret = regmap_read(st->regmap,
+> +						  adxl345_act_thresh_reg[ADXL345_ACTIVITY],
+> +						  &act_threshold);
+> +				if (ret)
+> +					return ret;
+> +				*val = 62500 * act_threshold;
+> +				*val2 = MICRO;
+> +				return IIO_VAL_FRACTIONAL;
+> +			default:
+> +				return -EINVAL;
+> +			}
+> +		default:
+> +			return -EINVAL;
+> +		}
+
+As I mentioned before, try to avoid nested switch cases like this. Use helpers
+to make this gone to 1 level or so.
+
+>  	case IIO_EV_TYPE_GESTURE:
+>  		switch (info) {
+>  		case IIO_EV_INFO_VALUE:
+
+Ditto for other similar cases.
+
+...
+
+>  static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
+> -			      enum iio_modifier tap_dir)
+> +			      enum iio_modifier tap_dir,
+> +			      enum iio_modifier act_dir)
+
+If the order of parameters is not so important, I would squeeze new one to be
+before the last argument.
 
 -- 
-Best regards,
+With Best Regards,
+Andy Shevchenko
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
 
