@@ -1,219 +1,184 @@
 Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE651F92E;
-	Thu, 12 Jun 2025 09:47:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80A822A7F9;
+	Thu, 12 Jun 2025 09:47:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749721658; cv=none; b=fHpWgLVpc+GRatHLEruMPZLhRZrcjGT3ASC7ggNI4oWTR10suWxpBvQcsdHOoVl53Bv+j1JTVWBmBMEzDVgcelJE0owl9OAGOStvNlYc2e6kS6/A4tvC4vlTpepGqpiITZgIx84QAbvb77oWiLlTnNngApodeofyOujXqKORAaE=
+	t=1749721671; cv=none; b=ioUK+B1Ufb1mzX03aY2h3tmBL4WyXX4xKdcWGzye5r9gTOD7VyUrHYdMbxK0S3ngeEWu0M/HvYvCGqW3+eQaNcqnN0BjbZepG/ikaHOVBWS5+1WyJsQabsWjDHGfGa21FLNGuVauwkSHI3H+4XpXpDsUrzxhCzgK06I4U6itkkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749721658; c=relaxed/simple;
-	bh=4RfTLzjwFzvRBVIbLwlDB8bIxZi8DpBfKPn88UHuL6o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D02CYJC8cs1nmiyz1sbM1Lq0nL3kLNtJMEdZRcWxStXYJNZcp54a/GYP/Ri6IwardD8Y/cRlfvVXVo8UgyLzbf0tIQf3lsOnxiAvH0lW0f2yJ3OHOygYR7Fyf4l7LSelLDxw5Bc5WJCK7lEkJl7Az6DwucbnUfFKl2wUbqhNiYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iV5cmDb5; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1749721671; c=relaxed/simple;
+	bh=rTU6bf46PA0oHIQhlmEaMDf7Kt1hiZXnnDSh281Ox98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBCgqInkicxlheFvG2+bRE1iowLiU0pnAMJvYVvm++Vr5xuir3per3GJ7fDoX2IrrjX5Ms3AUmX7xEUljYRzGIwI7RumVwDPNrag5WOKh3yPbc3x4DaNUAaoChQQmYFW1nPraKPGiHM7btRwQgTD9qFsv1kIYCsIk4CT9pCl28c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fl93twJA; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iV5cmDb5"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-236470b2dceso7454975ad.0;
-        Thu, 12 Jun 2025 02:47:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fl93twJA"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2363616a1a6so6446855ad.3;
+        Thu, 12 Jun 2025 02:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749721656; x=1750326456; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4anYW4XgKhWdrFwLZ/0tNA4p/6Y7eRGkWV12xDwi+ws=;
-        b=iV5cmDb55mzaixKMQ7JKf/HptcG3fqeC0c4GxUXmu+sGg4twWbv5px5ynPgFQiK1QE
-         SYKs+EbRuvtTgx8dsmBi1D3/QEHaR4TbHkqpqhfgyXyyK7OvgvF3UC5MW4HTkDYSYpHP
-         EdKtMpO8YP1L4u6UERgEe6SnNs4YfS/uZI0qexWL8W+XsMlCIbB5L3i0oo4Vo34T4irj
-         K3O6Q+GT4Rt6BGRwaqPbGZdMhQx6Zv/FnfChaPZqUH3fQ8hUHjNublt98GncIgzvT9ek
-         /JJiUSoroD0PswvPytNSI7tlCz9ESTWexmVWTAhb3D1GdqqMyY//1JfUO92ykqGQhsse
-         AUlw==
+        d=gmail.com; s=20230601; t=1749721669; x=1750326469; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xl9Kz303AHWCJmJ1utR89kK9BbAzW0U5PoVQajnmYEE=;
+        b=Fl93twJATuapYTzfMV0Yt5OMVAXe/3VC2HCiCEschrILUinY+GrcQS541Fyo0iaUdk
+         DHrKmvkDDZLyOSHODZYHIVDj+0CKmXq0U1aR0EOkWzxUM8klMn5bfERBwLbB4631AdA/
+         xjSvO+WbE+ZBe3SUi6uGOiKtD3E/nHah871XTRhlAZEAviNVZr6oGvHho17Gs/y35EBS
+         Xy6BzY9zNh8vMquU0zWLyOFS9NHjkTnxbb2JEfJN038mCMMWk/AIA0+Glfc/mdrdIorr
+         r9slYS4hN6IwBCircTlgynXA6qx0Bofv4iAudNg4ZnNKMsSfxBXajBcM9D+cOsIUIbMf
+         XUBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749721656; x=1750326456;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4anYW4XgKhWdrFwLZ/0tNA4p/6Y7eRGkWV12xDwi+ws=;
-        b=sJzl7fojVk3L+iQyFKG+ti9vf6iv5IHVNSlxQ+niWqe7es1cS96okuOD+Y0VMYYZCT
-         /h8HkswQMhZg3XW5WNC5kM6P2O+6J+IkmraIWnQDE6ar0xiV9GZotI6e7b8wd+N1dvjZ
-         nKvery7s32mj9gpWLsyhPjn5Wm1uNgFJng4TebveUanBA+a8OmqMeol0gv6atNV5jzUf
-         D0Na0Btrn2jTVW1jUBpc10dGnwoLv0UU0Bbia0yVcTnCfcGou0W4Qn/RQXaOjq+cdI/g
-         fa8axfctNm7hWOHfhKxSXaZHs3Akxflh/bQAWLZOluHl6diSl5GXUHuxeAahmhswNeTn
-         qylg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLsvjtaXQcM6DCU0DwsRk0fNsKWlqyms4Pk5tid4YKDscJJMkF0ebiw9OLXnupvmVCCttwfTAzq1HtpJk=@vger.kernel.org, AJvYcCVM7FP/49+uEeFYer2KnyV/FfZAvfDzeum2jI7jkz+6i5r8FWJAraGJKoe/HHU68iL+TEm4RKJW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2FTnUEg6CWDTNHOW4KNIDmqLE7EBgDqZuHdg58rvLldMfAAs9
-	q7IYQg5K6jzoQIhcPyAFC+Oc3SIH/VSq2HphDEsjy6fD/c4sEv9ZqoDS8xe/BFnkSZ7hHS6/1Zg
-	SNhogJRMm1xgp5Eg69xKdeiEWPbaeU0Y=
-X-Gm-Gg: ASbGncsgxGRG/Zz0arxSqKsuWyPElQtxLZ0hjN9JehRe2IQLC5bjfxEcnZ0oh55TBw+
-	PFdQM4zvB04ThUu9my+obLwOkSUjVj94hIRE749UXTGgFqMjZQl0hZjPko8X14sqC12VhuzBp5y
-	8dUDpf4mMzthfa6ac8DrYB9ZylRhDmUJ7KqWVR14OJPOuzzkA+zitmYRri610S75Na/P/Rv++QP
-	kgHlQ==
-X-Google-Smtp-Source: AGHT+IEn/yEuL+ZT1F+q5GVdc8O0V6/puSbAUJHNnsnmlV8IC38r0eOnzkKfa3MMKLGaKZ+m3C9HsssmyMgcw1fuDvk=
-X-Received: by 2002:a17:902:ce81:b0:235:eb8d:800b with SMTP id
- d9443c01a7336-2364d8b7ec8mr33520145ad.26.1749721656497; Thu, 12 Jun 2025
- 02:47:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749721669; x=1750326469;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xl9Kz303AHWCJmJ1utR89kK9BbAzW0U5PoVQajnmYEE=;
+        b=G/h4xES5Zh4ESZGs+I5zcZCKwyns0xj8gCo+NEQY48XjpL7k04Dc6ekIGGLtU/n0z/
+         vyOOkYvcciBF+y+hgvu/MeWzDDGAS7POqn4rn8e+ZBRfBYFktuxlnX0kW9jD1Z4RtTgr
+         SaFvUnFfG5kSg8d3jwX0jVH5w6stMEEpo3qlQYZpj5nwiZu8pDlDpBxCuadzHJ6LUYpP
+         AOsl/D1Q5HuHcwlXTxz/9DRAsiPobkXXNiLWTniPOzV5n1hnm7FeP/dnSLa/6nNND0kR
+         J3lTuZ5fmlwcu3Oo2/GAApWsYbqU9u5OWs7YOePzTeNF/tqYu083sxjaGC+Wd88ZxddH
+         A3Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnTTjU27gBOHutTlFiVyysLLBSPoqdnbukeqQZ8mhftWNqR2kSn7xnEBqFC9W6ecNwklbxl9h6Kssy+Tu6@vger.kernel.org, AJvYcCXyIvJAy/3Fx6InbsGDdIW5YvbC2D9mbVFdTb7+ijqajBZKWHrHu53hgz5ItHot1IJ4/ak7rvOOKYwv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyju5XfJWg3bDILCPc1HT+MPK1Qm40cBwC9Thq9NfqsksnxlAui
+	biEBLJW9whjpDiHI85K4/uH4ZpfoDCOAmA2VPjQXBL2m7M6oP0F0sIsY
+X-Gm-Gg: ASbGnctCKUlJ5/HP9g5HhB+Sd5DpPn5tM/OWKIBo8FyUkTqf5mMhEatq5qh1pK14j0k
+	rJf3FSMs7n1I+ottyvOYNpTTn3sEygFvawbYLMljtoW61W/8F65b50Le5tROBZJwrk7l50N2zzL
+	CuXl/GjZsT9LY902HZfjKVQhM63o33sL1matUX4UJ7V5vJrbe1FIMa5DgT+cnqtHn34Svg51Crf
+	0tV/EPpQzVH8ET3Z2H1O8rC7wNby0pISLvs4WyeKQUECXdNgSM+9qr0qL5LiIVcVgT/CmD5UaVO
+	KOGeqrXf75dncECrBJBGePHQ2ogkcEa4GZhfjpUagdenfjemgL59dL2hOLJEyQ==
+X-Google-Smtp-Source: AGHT+IHhLvngJtDRD+nYjK9Btm6MhDv0YP4D2zr7z7HuxF1XD76CH+/kMW6iFysL+jWx2aXWWVzh5w==
+X-Received: by 2002:a17:902:f612:b0:235:f55d:99cc with SMTP id d9443c01a7336-2364d62da39mr36075835ad.2.1749721668549;
+        Thu, 12 Jun 2025 02:47:48 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd613d81dsm966545a12.25.2025.06.12.02.47.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 02:47:47 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id B44D44241817; Thu, 12 Jun 2025 16:47:44 +0700 (WIB)
+Date: Thu, 12 Jun 2025 16:47:44 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Pankaj Gupta <pankaj.gupta@nxp.com>, Jonathan Corbet <corbet@lwn.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v17 1/7] Documentation/firmware: add imx/se to
+ other_interfaces
+Message-ID: <aEqiQEMpbekiG6Hn@archie.me>
+References: <20250426-imx-se-if-v17-0-0c85155a50d1@nxp.com>
+ <20250426-imx-se-if-v17-1-0c85155a50d1@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612083747.26531-1-noltari@gmail.com> <20250612083747.26531-5-noltari@gmail.com>
- <CAOiHx=kxcMNDrmzz5Bqd337YrZ23sYNWP0-nZrUynPJXdt4LLg@mail.gmail.com>
-In-Reply-To: <CAOiHx=kxcMNDrmzz5Bqd337YrZ23sYNWP0-nZrUynPJXdt4LLg@mail.gmail.com>
-From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Date: Thu, 12 Jun 2025 11:47:03 +0200
-X-Gm-Features: AX0GCFve23f_zwO-L2nFeZiFWzohYflBoyr99dafg6h7XIq29CrUZEHbnOB-Q1E
-Message-ID: <CAKR-sGeJ3FWM_0FyuSF=esuvrSDX5w9zwfs7Peof1XDx=sHSpA@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 04/14] net: dsa: b53: detect BCM5325 variants
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: florian.fainelli@broadcom.com, andrew@lunn.ch, olteanv@gmail.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	horms@kernel.org, vivien.didelot@gmail.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dgcbueu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oH2YG5RUiU+HONaV"
+Content-Disposition: inline
+In-Reply-To: <20250426-imx-se-if-v17-1-0c85155a50d1@nxp.com>
+
+
+--oH2YG5RUiU+HONaV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jonas,
+On Sat, Apr 26, 2025 at 12:31:32AM +0530, Pankaj Gupta wrote:
+> +Each 'se-if' comprise of twp layers:
+> +- (C_DEV Layer) User-Space software-access interface.
+> +- (Service Layer) OS-level software-access interface.
+> +
+> +   +--------------------------------------------+
+> +   |            Character Device(C_DEV)         |
+> +   |                                            |
+> +   |   +---------+ +---------+     +---------+  |
+> +   |   | misc #1 | | misc #2 | ... | misc #n |  |
+> +   |   |  dev    | |  dev    |     | dev     |  |
+> +   |   +---------+ +---------+     +---------+  |
+> +   |        +-------------------------+         |
+> +   |        | Misc. Dev Synchr. Logic |         |
+> +   |        +-------------------------+         |
+> +   |                                            |
+> +   +--------------------------------------------+
+> +
+> +   +--------------------------------------------+
+> +   |               Service Layer                |
+> +   |                                            |
+> +   |      +-----------------------------+       |
+> +   |      | Message Serialization Logic |       |
+> +   |      +-----------------------------+       |
+> +   |          +---------------+                 |
+> +   |          |  imx-mailbox  |                 |
+> +   |          |   mailbox.c   |                 |
+> +   |          +---------------+                 |
+> +   |                                            |
+> +   +--------------------------------------------+
+> +
+> <snipped>
+> +
+> +  Misc-device(/dev/<se>_mux_chn) synchronization protocol:
+> +
+> +                                Non-Secure               +   Secure
+> +                                                         |
+> +                                                         |
+> +                  +---------+      +-------------+       |
+> +                  | se_fw.c +<---->+imx-mailbox.c|       |
+> +                  |         |      |  mailbox.c  +<-->+------+    +-----=
+-+
+> +                  +---+-----+      +-------------+    | MU X +<-->+ ELE |
+> +                      |                               +------+    +-----=
+-+
+> +                      +----------------+                 |
+> +                      |                |                 |
+> +                      v                v                 |
+> +                  logical           logical              |
+> +                  receiver          waiter               |
+> +                     +                 +                 |
+> +                     |                 |                 |
+> +                     |                 |                 |
+> +                     |            +----+------+          |
+> +                     |            |           |          |
+> +                     |            |           |          |
+> +              device_ctx     device_ctx     device_ctx   |
+> +                                                         |
+> +                User 0        User 1       User Y        |
+> +                +------+      +------+     +------+      |
+> +                |misc.c|      |misc.c|     |misc.c|      |
+> + kernel space   +------+      +------+     +------+      |
+> +                                                         |
+> + +------------------------------------------------------ |
+> +                    |             |           |          |
+> + userspace     /dev/ele_muXch0    |           |          |
+> +                          /dev/ele_muXch1     |          |
+> +                                        /dev/ele_muXchY  |
+> +                                                         |
+> +
 
-El jue, 12 jun 2025 a las 11:17, Jonas Gorski
-(<jonas.gorski@gmail.com>) escribi=C3=B3:
->
-> On Thu, Jun 12, 2025 at 10:37=E2=80=AFAM =C3=81lvaro Fern=C3=A1ndez Rojas
-> <noltari@gmail.com> wrote:
-> >
-> > Older BCM5325M switches lack some registers that newer BCM5325E have, s=
-o
-> > we need to be able to differentiate them in order to check whether the
-> > registers are available or not.
->
-> Did you test this with a BCM5325M?
+Wrap both diagrams above in literal code block (use double-colon).
 
-Nope, I don't have any device with a BCM5325M.
+Thanks.
 
->
-> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> > ---
-> >  drivers/net/dsa/b53/b53_common.c | 34 ++++++++++++++++++++++++++------
-> >  drivers/net/dsa/b53/b53_priv.h   | 16 +++++++++++++--
-> >  2 files changed, 42 insertions(+), 8 deletions(-)
-> >
-> >  v3: detect BCM5325 variants as requested by Florian.
-> >
-> > diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53=
-_common.c
-> > index 222107223d109..2975dab6ee0bb 100644
-> > --- a/drivers/net/dsa/b53/b53_common.c
-> > +++ b/drivers/net/dsa/b53/b53_common.c
-> > @@ -2490,8 +2490,18 @@ struct b53_chip_data {
-> >
-> >  static const struct b53_chip_data b53_switch_chips[] =3D {
-> >         {
-> > -               .chip_id =3D BCM5325_DEVICE_ID,
-> > -               .dev_name =3D "BCM5325",
-> > +               .chip_id =3D BCM5325M_DEVICE_ID,
-> > +               .dev_name =3D "BCM5325M",
-> > +               .vlans =3D 16,
->
-> Are you sure about BCM5325M supporting VLANs at all? All the
-> documentation I can find implies it does not. And if it does not, not
-> sure if it makes sense to support it.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Since Florian suggested that we should be able to differentiate them I
-assumed we were supporting it, but if it doesn't make sense to support
-it at all we can drop this patch entirely and not check for 5325m in
-B53_VLAN_ID_IDX access of the next patch (5/14).
+--oH2YG5RUiU+HONaV
+Content-Type: application/pgp-signature; name=signature.asc
 
->
-> > +               .enabled_ports =3D 0x3f,
-> > +               .arl_bins =3D 2,
-> > +               .arl_buckets =3D 1024,
-> > +               .imp_port =3D 5,
-> > +               .duplex_reg =3D B53_DUPLEX_STAT_FE,
-> > +       },
-> > +       {
-> > +               .chip_id =3D BCM5325E_DEVICE_ID,
-> > +               .dev_name =3D "BCM5325E",
-> >                 .vlans =3D 16,
-> >                 .enabled_ports =3D 0x3f,
-> >                 .arl_bins =3D 2,
-> > @@ -2938,10 +2948,22 @@ int b53_switch_detect(struct b53_device *dev)
-> >                 b53_write16(dev, B53_VLAN_PAGE, B53_VLAN_TABLE_ACCESS_2=
-5, 0xf);
-> >                 b53_read16(dev, B53_VLAN_PAGE, B53_VLAN_TABLE_ACCESS_25=
-, &tmp);
-> >
-> > -               if (tmp =3D=3D 0xf)
-> > -                       dev->chip_id =3D BCM5325_DEVICE_ID;
-> > -               else
-> > +               if (tmp =3D=3D 0xf) {
-> > +                       u32 phy_id;
-> > +                       int val;
-> > +
-> > +                       val =3D b53_phy_read16(dev->ds, 0, MII_PHYSID1)=
-;
-> > +                       phy_id =3D (val & 0xffff) << 16;
-> > +                       val =3D b53_phy_read16(dev->ds, 0, MII_PHYSID2)=
-;
-> > +                       phy_id |=3D (val & 0xffff);
->
-> You should ignore the least significant nibble, as it encodes the chip re=
-vision.
+-----BEGIN PGP SIGNATURE-----
 
-So the correct would be:
-val =3D b53_phy_read16(dev->ds, 0, MII_PHYSID2);
-phy_id |=3D (val & 0xfff0);
-Right?
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEqiOAAKCRD2uYlJVVFO
+ozyXAP0aBRO1KFa+AGM5cBvWcVeY8OuEyqTxzHKI/v6k+zKsNQEAvGxANofk/mBi
+s+wj3u05E/Xgxa9C5b23RBYacSQLLAE=
+=SdFq
+-----END PGP SIGNATURE-----
 
->
-> > +
-> > +                       if (phy_id =3D=3D 0x0143bc30)
-> > +                               dev->chip_id =3D BCM5325E_DEVICE_ID;
-> > +                       else
-> > +                               dev->chip_id =3D BCM5325M_DEVICE_ID;
-> > +               } else {
-> >                         dev->chip_id =3D BCM5365_DEVICE_ID;
-> > +               }
-> >                 break;
-> >         case BCM5389_DEVICE_ID:
-> >         case BCM5395_DEVICE_ID:
-> > @@ -2975,7 +2997,7 @@ int b53_switch_detect(struct b53_device *dev)
-> >                 }
-> >         }
-> >
-> > -       if (dev->chip_id =3D=3D BCM5325_DEVICE_ID)
-> > +       if (is5325(dev))
-> >                 return b53_read8(dev, B53_STAT_PAGE, B53_REV_ID_25,
-> >                                  &dev->core_rev);
-> >         else
-> > diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_p=
-riv.h
-> > index a5ef7071ba07b..deea4d83f0e93 100644
-> > --- a/drivers/net/dsa/b53/b53_priv.h
-> > +++ b/drivers/net/dsa/b53/b53_priv.h
-> > @@ -60,7 +60,8 @@ struct b53_io_ops {
-> >
-> >  enum {
-> >         BCM4908_DEVICE_ID =3D 0x4908,
-> > -       BCM5325_DEVICE_ID =3D 0x25,
-> > +       BCM5325M_DEVICE_ID =3D 0x25,
-> > +       BCM5325E_DEVICE_ID =3D 0x25e,
->
-> Maybe we should have a b53_priv::variant_id field or so. Other chips
-> also can have variants, so we might want to avoid polluting the chip
-> id space. We currently don't care about them, but might in the future
-> as they have different feature support (e.g. there are bcm531x5
-> variants with and without CFP support).
-
-That makes sense.
-I can rework this patch with a new variant field if differentiating
-the BCM5325M is finally needed.
-
->
-> Regards,
-> Jonas
-
-Best regards,
-=C3=81lvaro.
+--oH2YG5RUiU+HONaV--
