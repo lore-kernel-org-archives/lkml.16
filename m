@@ -1,204 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890581E5B7A;
-	Thu, 12 Jun 2025 06:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3218D79E1
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749710810; cv=none; b=Gx60V14BqCCP3yhrTc6379yCK4R2jo5OHM66iNFUWVmUvdpSGDEkGwsiv3HT7nFn1FP1cLu3SXEmE3RDm3cRfMixpzcQcjuZlgkVzlSRFW57EDfBPPabfUVQUE53E1EvBWWWTsF422qYMEKT8QFDB67X3z4cwh+cBAIdjyY+SHk=
+	t=1749710975; cv=none; b=BbBH8h+oNl+/ZGcXIaA4YdtmEMmnWiHxMADU6Yc0/8jbDjnHwFMfXY3lVwP17dpiXiDHCjZyFddQEhFOdd32s4I4rn1ZoFEaTItxMKQSWkWiBzrK1BbfU1BgMTMfEip1RSjM3E9RsX7+nevzKf90TpdITwpfezgiHxz6rmTQ2ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749710810; c=relaxed/simple;
-	bh=Qhrm6Yqf09Uhu8mGMYsjgqSJmKMNkYbsTliS5amUUQU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ro3UW8sjo2AutK6Jn2Ja6tWNkIvF+iX/QuQ4BREa9cEaiI4K84ZHA2Z+7xiS6IyZ7a+RSYo9509r+7T6jVtZ6Y/ARf87J4RTyi0fgMmSuNBMDhM71VS3o1Lt991z1+GuC4YcJ1byNQmsgDSQevDaXK6N2TXe/RQLoIfRfCeEeoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHiQthmz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749710975; c=relaxed/simple;
+	bh=cabyoBfSZnKaZy1A3Be67KEG04uI41hK4t/8aDBkBbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EdG+GzWo4LvrJL5TUupqkLG8KKUFmZiO+qlpyCD2bryk87Q4/BGp9FMT46UqS9X4MrdbpY4CsNr7nwGK7/tNmysGihErhAsfa6yEh/jOYYx0Mq3YyjCrDlqKGyuQD+7aEZsHvLyYeT8LjZxOe2wWkf9mQgitvShzHCZuH5okmYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N6GxGyHo; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHiQthmz"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 05C4BC4CEEA;
-	Thu, 12 Jun 2025 06:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749710810;
-	bh=Qhrm6Yqf09Uhu8mGMYsjgqSJmKMNkYbsTliS5amUUQU=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=qHiQthmznmSnyemAPmy0Coqq29H4vIa+gJtqedVH2yEvamK0CvaUVyTDXSvm2g0Z9
-	 Y5SSXc7BR3OCgAC/NZ4bWi/69I87ouUSjjY4lWDQ8rZF3EXf39wIUm7M9+x/8d20cO
-	 HaMCScNIpJiEFAr/SvS53hwagosXDowGIaZ9FAWBy+zY24uj5ROtQXaqmEgDS9HRfS
-	 77oLCkIhYfP4D7kViJC7cmIPlyCH3K3qL0/+WhnCWsqUPNBiMltD1cscJekMIvtyLK
-	 QQiljFwH2XKNJ+CscqHlVv3JYpp+bKaQngzcpXvlp7EA+mnkrgqYu/z7cVArlDXUi8
-	 QENnsfwkdYRfA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E130CC61CE8;
-	Thu, 12 Jun 2025 06:46:49 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Subject: [PATCH v13 0/2] Add support for IPQ5018 tsens
-Date: Thu, 12 Jun 2025 10:46:12 +0400
-Message-Id: <20250612-ipq5018-tsens-v13-0-a210f3683240@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6GxGyHo"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5290be1aedcso1032107e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:49:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749710973; x=1750315773; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IIagQ3tKw+VRVzWHIFGN+DFKgeQK8xK9RH2ZXHnRA6U=;
+        b=N6GxGyHoNO+8OzANnHRl4wJYvdRvwRK+YIDKPPCDUw1I+fieASDfeM0yk/A2f1qAWT
+         UVBafDwu0nFruJIQWtCqRksP3uGedSk2q1hhXXU4yqdhKHIJR07i470Z+qaA9Uq1ka8u
+         SPIHAQ1yovjUW6nAl7WoThDohhZcZar6f03lkCqRbJJNwcbmLN4MqQLYxz6sR3rj5/m6
+         liHce9UJ3RNPVUV8bLzL31vJ5VxVEv3d/8kVUPLBwpd8TWqDzawnFbzYqwJosBa+AKpw
+         Ppf2r4MqJbzyfoMBj17Fd45Ep1PAG8uFNofwhn1gCSL2Y2UqIdqQLR7gd/WwD7dnJfnP
+         cNQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749710973; x=1750315773;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IIagQ3tKw+VRVzWHIFGN+DFKgeQK8xK9RH2ZXHnRA6U=;
+        b=TfSTdDbZveci6VlJM3FP+MBvViAI9zJ6NksAXYIL+EF59kq4S2kcOUDt7qVLtajE86
+         7ir9bjHs2vcFnaK43Hca5W08UNb5MHw6pvzOfKbdAt1nFuZeG1rz+4iFVfhREMhJWoKB
+         QeZAjr/mY0exWe9CTIwBS5i4otEvH0T7KjZM+I3mTv+nKeoOR53NEAqmIEgEDuxkjGoz
+         7uwffXJOAsIhJKrz2f5TbTpQSuP8c+ZTgwi4FrRn/4N8m4XNfBExJsD4q3MGue9lVlby
+         0IBtM35LGbCVslquoNY1M4HnM8ve5hjm+oaS3fxH9qmYkKV7uyhCdfgGeKYcLi14dH8H
+         ARbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm5I2wCwAlwskOzo5na8C811Tg3VVNg6gm+RCZieyGh0dfTvfhjzGxXUA0SOusNeW/mdNavCDfRssauqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBdpKO+BJJA8+r/nk45he43gBXLCI/xiE/dXHpA25AgSrxNhwe
+	HmeUnR+W0sj2Ggb1OrTKpS18KQtSIeYB+eplzIFpe19woPNSiNY3ib7bnJIZSB7ddINXpGQS5Q8
+	Y9tQKTe8/SN2HJVZCRNhzdHVwsHPO3eBW3IAd
+X-Gm-Gg: ASbGncvfBaKtyNu+VAqDEyLeOk3HewK9aMX7ygg5rGikfe3DNlGDfwHmRPj/0a8FNFt
+	WNpROuygq75Lpo90kD+PZPDQ7LYih2gFfhAIuGDfpYkoFUuF33T8k8rQr0VAyIye/2id+DviYl7
+	21J+SfEiAayEL/6eqBxhUonRtDuC5IAf3ECHcDL6CIkrf2Z5pKwVxGuEfWi0ltdVCIUTg5ytXzf
+	vA=
+X-Google-Smtp-Source: AGHT+IGD3eZR9/mZ47AnHOjtmb2jyKNdWbD8QMM1UbBROZtZgAI+wcvkLYS5Dqd7Dl/ahOh6vfuGKCSVejVpRlBkST4=
+X-Received: by 2002:a05:6871:5a0b:b0:2e9:5d01:effc with SMTP id
+ 586e51a60fabf-2eab3fd5893mr950668fac.2.1749710961123; Wed, 11 Jun 2025
+ 23:49:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALR3SmgC/53TS2vcMBAH8K8SfK7MzOjd0/p5K5T2WEpR1nYis
- n6s7d22hP3ulQ1tsri0bECXEfr/9GD0HE316Ospen/3HI312U++70KB/N1dtH903UPNfBUmIgK
- SIEAwPxwloGHzVHcTU+K+sbKpOEcdhcww1o3/sYJfvob60U9zP/5c/TMusxEqy4PFQTNjERiyB
- z+zoFWsbp0/sOPJ779Now/7j263VL7bx/u+jRbxTKsSzsPBokTCcK7YgFKagvWfMH8VJsKQRxW
- TFsaEqyH7E/zuOzYc3Nz0Y8tOwzSPtWsB4+PJHQLWvohiFfPP+uMntB9SYwxPC24ySiVADpyQa
- 6ETm2eadlfL4s61w1ihjYexr+L+NB/6/ulFlluZyrzIlcl5kaZQFLqwtnyDrLZyGDyDhKdlxjN
- dZsLgIsONst7KqEiUy0srK2SmuABYZLpRNlu5MGRJFUIUAIAatF5fI79Rtls5yRMhuTYcEtDCS
- m71Imc3ygi/202CCq1+/XfOa/Nzh+CkIyVov9sK+FrAjYAMGCkllbpvKlTuLwL9W6AgOLU0qZM
- SdXUtXC6XX//nKdUkBAAA
-X-Change-ID: 20250404-ipq5018-tsens-64bf95fd3317
-To: Amit Kucheria <amitk@kernel.org>, 
- Thara Gopinath <thara.gopinath@gmail.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- George Moussalem <george.moussalem@outlook.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dmitry Baryshkov <lumag@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749710807; l=5823;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=Qhrm6Yqf09Uhu8mGMYsjgqSJmKMNkYbsTliS5amUUQU=;
- b=qD0XD9VUfnORyj8ViKGVs7gEFaZa0jcmJ9EFimDy5qEhsqDn8rLdTwJpluY/0lNKh1A1h0wv5
- HYUjQBxEMQ1Ao3HO3mJZqiCQhZYlgCic4n/1YsT1s+tmS6D1fkYWzld
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+References: <20250409095320.224100-1-zhangchunyan@iscas.ac.cn>
+ <20250409095320.224100-2-zhangchunyan@iscas.ac.cn> <aEMeKIBDKUTUI3B1@debug.ba.rivosinc.com>
+In-Reply-To: <aEMeKIBDKUTUI3B1@debug.ba.rivosinc.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Date: Thu, 12 Jun 2025 14:48:45 +0800
+X-Gm-Features: AX0GCFsFusn6QO5kIpgi5nARUF3bNqkUVtgblhgNgnSm2q-UjFddMwiMEi3J5as
+Message-ID: <CAAfSe-tUNxzHq-GeN6AhX=46mu5iMYV4OZPNRU1pKf_2xAfGVQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v7 1/3] riscv: Add RISC-V Svrsw60t59b extension support
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: Chunyan Zhang <zhangchunyan@iscas.ac.cn>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Andrew Morton <akpm@linux-foundation.org>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Ved Shanbhogue <ved@rivosinc.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-IPQ5018 has tsens V1.0 IP with 5 sensors, of which 4 are in use,
-and 1 interrupt. There is no RPM present in the soc to do tsens early
-enable. Adding support for the same here.
+Hi Deepak,
 
-Last patch series sent by Qualcomm dates back to Sep 22, 2023.
-Since I'm working on OpenWrt support for IPQ5018 based boards (routers)
-and Sricharan Ramabadhran <quic_srichara@quicinc.com> in below email
-confirmed this SoC is still active, I'm continuing the efforts to send
-patches upstream for Linux kernel support.
-https://lore.kernel.org/all/63dc4054-b1e2-4e7a-94e7-643beb26a6f3@quicinc.com/
+On Sat, 7 Jun 2025 at 00:58, Deepak Gupta <debug@rivosinc.com> wrote:
+>
+> On Wed, Apr 09, 2025 at 05:53:18PM +0800, Chunyan Zhang wrote:
+> >The Svrsw60t59b extension allows to free the PTE reserved bits 60
+> >and 59 for software to use.
+> >
+> >Signed-off-by: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
+> >---
+> > arch/riscv/Kconfig             | 13 +++++++++++++
+> > arch/riscv/include/asm/hwcap.h |  1 +
+> > arch/riscv/kernel/cpufeature.c |  1 +
+> > 3 files changed, 15 insertions(+)
+> >
+> >diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> >index bbec87b79309..332fc00243ad 100644
+> >--- a/arch/riscv/Kconfig
+> >+++ b/arch/riscv/Kconfig
+> >@@ -842,6 +842,19 @@ config RISCV_ISA_ZICBOZ
+> >
+> >          If you don't know what to do here, say Y.
+> >
+> >+config RISCV_ISA_SVRSW60T59B
+> >+      bool "Svrsw60t59b extension support for using PTE bits 60 and 59"
+> >+      depends on RISCV_ALTERNATIVE
+>
+> depends on MMU && 64BIT as well.
 
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
----
-Changes in v13:
-- Dropped polling-delay-passive property as its value of 0 is the
-  default value
-- Updated hysterssis value to 1000 milicelsius in line with other boards
-- Link to v12: https://lore.kernel.org/r/20250611-ipq5018-tsens-v12-0-a61374a5517d@outlook.com
+Ok, I will address in the next version.
 
-Changes in v12:
-- Updated description in dt bindings for IP v1 without RPM
-- Added Fixes tag as this this version of tsens needs to be explicitly
-  reset and enabled in the driver, introduced as part of:
-  commit: 19f9b02ebc8f ("thermal/drivers/qcom/tsens: Add support for tsens v1 without RPM")
-- Link to v11: https://lore.kernel.org/r/20250611-ipq5018-tsens-v11-0-266566bfd16a@outlook.com
+Thanks for the review,
+Chunyan
 
-Changes in v11:
-- Dropped polling-delay property as its value of 0 is the default value
-- Removed comments for TM and SROT in tsens node
-- Replace underscore by hyphen in node name of top-glue-critical trip
-- Added cooling device using CPU freq scaling making use of the passive
-  trip defined under the CPU trips
-- Make qcom,ipq5018-tsens a standalone compatible in the bindings as it
-  should not use qcom,tsens-v1 as a fallback. This also fixes the issue
-  reported by Rob's bot
-
-Changes in v10:
-- Rebased onto updated pull of master to resolve merge conflicts in the
-  DTS patch
-- Link to v9: https://lore.kernel.org/all/DS7PR19MB88836DC6965515E12D70BB2C9DCC2@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-Changes in v9:
-- Updated checks in tsens to more strictly evaluate for v2+ upon enabling
-  v2 features as suggsted by Dmitry.
-- Split patch 3 into two, one to update conditional statements as
-  mentioned above and the other to implement tsens IP v1 without RPM.
-- Added back Dmitry's RB tag on patch 6 which wasn't carried over
-  from v7 to v8
-- Link to v8: https://lore.kernel.org/all/DS7PR19MB88833F7A9C8F4FC484977BA69DCD2@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-Changes in v8:
-- Tsens V1 uses v1 interrupts and watchdog is not present (only on v2.3+).
-  As such, replaced VER_1_X with VER_1_X_NO_RPM in conditons to ensure
-  v1 interrupts are set and watchdog isn't enabled.
-- Tested on Linksys MX2000 and SPNMX56
-- Link to v7: https://lore.kernel.org/all/DS7PR19MB88831624F11516945C63400F9DC22@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-Changes in v7:
-- Updated cover letter
-- Replaced patch 3 with a new one to add support for tsens v1.0 with
-  no RPM and removed Dmitry's 'Reviewed-by tag
-- Refactored patch 4 and split support for IPQ5018 from support for
-  tsens v1.0 without RPM. As such, also removed Dmitry's RB tag.
-- Depends on patch 1 and 2 from patch series to add support for
-  IQP5332 and IPQ5424 applied on Feb 11 2025:
-  https://patchwork.kernel.org/project/linux-arm-msm/cover/20250210120436.821684-1-quic_mmanikan@quicinc.com/
-- Link to v6: https://lore.kernel.org/all/DS7PR19MB88838833C0A3BFC3C7FC481F9DC02@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-Changes in v6:
-- Include (this) cover letter
-- Picked up Dmitry's Reviewed-by tag on patch 5
-- Link to v5: https://lore.kernel.org/all/DS7PR19MB88832FDED68D3EBB0EE7E99F9DC72@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-Changes in v5:
-- Adjusted commit messages to indicate IPQ5018 has 5 sensors of
-  which 4 are described and in use as per downstream driver and dts.
-- Padded addresses of tsens and qfprom nodes with leading zeros.
-- Link to v4: https://lore.kernel.org/all/DS7PR19MB8883BE38C2B500D03213747A9DC72@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-Changes in v4:
-- Documented ipq5018 in qcom,qfprom bindings
-- Constrained ipq5018-tsens to one interrupt with description
-- Added Rob's Acked-by tag
-- Added Dmitry's Reviewed-by tag
-- Fixed modpost warning: added __init to init_common
-- Sorted tsens nodes by address
-- Sorted thermal-zones nodes by name
-- Link to v3: https://lore.kernel.org/all/20230922115116.2748804-1-srichara@win-platform-upstream01.qualcomm.com/
-
-Changes in v3:
-- Added the tsens-ipq5018 as  new binding without rpm
-- Added Dmitry's Reviewed tag
-- Fixed Dmitry's comments for error checks in init_ipq5018
-- Ordered the qfprom device node properties
-- Link to v2: https://lore.kernel.org/all/20230915121504.806672-1-quic_srichara@quicinc.com/
-
-Changes in v2:
-- Sorted the compatible and removed example
-- Fixed the name for new tsens_feature
-- Used tsend_calibrate_common instead of legacy
-  and addressed comments from Dmitry.
-- Squashed patch 3 & 4
-- Fixed node names, order and added qfprom cells
-  for points seprately
-- Squashed patch 6 & 7
-- Link to v1: https://lore.kernel.org/all/1693250307-8910-1-git-send-email-quic_srichara@quicinc.com/
-
----
-George Moussalem (1):
-      dt-bindings: thermal: qcom-tsens: make ipq5018 tsens standalone compatible
-
-Sricharan Ramabadhran (1):
-      arm64: dts: qcom: ipq5018: Add tsens node
-
- .../devicetree/bindings/thermal/qcom-tsens.yaml    |   7 +-
- arch/arm64/boot/dts/qcom/ipq5018.dtsi              | 178 +++++++++++++++++++++
- 2 files changed, 184 insertions(+), 1 deletion(-)
----
-base-commit: afc582fb6563b8eb5cd73f9eca52e55da827567f
-change-id: 20250404-ipq5018-tsens-64bf95fd3317
-
-Best regards,
--- 
-George Moussalem <george.moussalem@outlook.com>
-
-
+>
+> >+      default y
+> >+      help
+> >+        Adds support to dynamically detect the presence of the SVRSW60T59B
+> >+        extension and enable its usage.
+> >+
+> >+        The Svrsw60t59b extension allows to free the PTE reserved bits 60
+> >+        and 59 for software to use.
+> >+
+> >+        If you don't know what to do here, say Y.
+> >+
+> > config TOOLCHAIN_NEEDS_EXPLICIT_ZICSR_ZIFENCEI
+> >       def_bool y
+> >       # https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=aed44286efa8ae8717a77d94b51ac3614e2ca6dc
+> >diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> >index e3cbf203cdde..985f6dfc80ed 100644
+> >--- a/arch/riscv/include/asm/hwcap.h
+> >+++ b/arch/riscv/include/asm/hwcap.h
+> >@@ -105,6 +105,7 @@
+> > #define RISCV_ISA_EXT_ZVFBFWMA                96
+> > #define RISCV_ISA_EXT_ZAAMO           97
+> > #define RISCV_ISA_EXT_ZALRSC          98
+> >+#define RISCV_ISA_EXT_SVRSW60T59B     99
+> >
+> > #define RISCV_ISA_EXT_XLINUXENVCFG    127
+> >
+> >diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> >index 2054f6c4b0ae..0f0f3027d400 100644
+> >--- a/arch/riscv/kernel/cpufeature.c
+> >+++ b/arch/riscv/kernel/cpufeature.c
+> >@@ -523,6 +523,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+> >       __RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+> >       __RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+> >       __RISCV_ISA_EXT_DATA(svvptc, RISCV_ISA_EXT_SVVPTC),
+> >+      __RISCV_ISA_EXT_DATA(svrsw60t59b, RISCV_ISA_EXT_SVRSW60T59B),
+> > };
+> >
+> > const size_t riscv_isa_ext_count = ARRAY_SIZE(riscv_isa_ext);
+> >--
+> >2.34.1
+> >
