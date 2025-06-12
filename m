@@ -1,85 +1,132 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D1B23E331;
-	Thu, 12 Jun 2025 13:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C73723CEE5;
+	Thu, 12 Jun 2025 13:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736180; cv=none; b=YzmklFGKAo97TCR4basqStVeBu8Ot4YrK4goKtdVCeZ+BPvE59JV00/H1sjximZw0na49bQCxT2gBEeq70AtyqJLwouur099+lnGVCBUr5qaGk3053L8PKLAKik/Git95CGoSFsFkM9v07Cj8wWbPflOEGAGwUOD9oztLBeMC1s=
+	t=1749736223; cv=none; b=adVWEt6VDHMJ7zHCMYbL2crhzEBQaxnnlaIIHSnkv04yVgbhqx9Du613xuyIL+3H9f1qjJV0X5VCaW1b9m82kbwlKuiMRm2aBjw88zfTo3vX82+qAzDm8AKmHwZktS+5ci0al/ifEAKUgb08ywsIRSSnrzcJ4MrFsHR4iAYRjQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736180; c=relaxed/simple;
-	bh=vM1Gi5glxeC0aGXXy6A4/jHdYsq0naNODjna/tMhEHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GMRoAsntbmfkwwifeWWkNZ0XTbtl1SEdSZmv5NrNL0GFltAO3/V7JdryvQYdnWonA5jlJEdAqZcBPCTIMSKEAvsNg/vLj1QgYCCe2UJ1YD0jKVkn9MVVErOJMLfjYuwYA/PjHIwAnt/rwHLZNmKpTp1LimoqR/peWFN16lqzGwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id C8A845F824;
-	Thu, 12 Jun 2025 13:49:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id EAF6F2000E;
-	Thu, 12 Jun 2025 13:49:32 +0000 (UTC)
-Date: Thu, 12 Jun 2025 09:49:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-edac@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Borislav Petkov <bp@alien8.de>, Tony Luck
- <tony.luck@intel.com>
-Subject: [PATCH] tracing, AER: Hide PCIe AER event when PCIEAER is not
- configured
-Message-ID: <20250612094932.4a08abd6@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749736223; c=relaxed/simple;
+	bh=oIBpX/GR/d6iEZePAjLKI7DJKIn8Lix1Fu3jd4gxJUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dh5a9zO2KQH0x01S6jQBxI8B/vx3yP4XZVZIeBtTJcoBSTCAMJGDM8xkSSAJBYBwgv4OvokiIvfgacaylyal0oU1wRqfSmCjtH92G6Qa0IsLT0fJ0X/KEcfjWVctuoEkyytkSEyJ0QdB1/7lN16WLG5sXP2o++usiUL9eh2qs3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jOr7YQ6X; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jOr7YQ6X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749736222; x=1781272222;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=oIBpX/GR/d6iEZePAjLKI7DJKIn8Lix1Fu3jd4gxJUI=;
+  b=jOr7YQ6Xu6meBOnkcHsYOTgaYzgLUz5d7E4hcD0RyAg4aRbsaRSaqbwq
+   oEBuIEENSyh88d3AEXa9hhFBx2QQs/2u6C501By8XKh8FXwHycOIlZnAJ
+   qovL20/5+LhK88KBwSuODtVPMA1dhHAYvvymU7s2Q/YMnzaKforeuD0dI
+   reOnOy3U5/0FSh5XBuaKNyU10daToqwW3t1kGBsZFOvMzNK74gIE3q/mu
+   b5M9BZ0RgynhyV2hA8LAJ9LDlZh5bmDL6II6AruIyDEs5fCSb5r45g1Zg
+   5ZlMFv1gZI1AHdI/z/ou2XxbPO/G4b1Hos1ywr4hoLKKf72G9m7mDJ4TG
+   Q==;
+X-CSE-ConnectionGUID: kxVvOc5DQfyPNhzEpc9oLw==
+X-CSE-MsgGUID: QDT2E+GwSkSHkw4XMUjtRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="54544796"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="54544796"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:50:10 -0700
+X-CSE-ConnectionGUID: IsYavwqjREqHO9+0j/jeVw==
+X-CSE-MsgGUID: fo/ynzeLQK2Ge2thxGeyEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="148019040"
+Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.111.188]) ([10.125.111.188])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:50:08 -0700
+Message-ID: <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
+Date: Thu, 12 Jun 2025 06:50:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] add STATIC_PMD_ZERO_PAGE config option
+To: Pankaj Raghav <p.raghav@samsung.com>,
+ Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
+ Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
+ x86@kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
+ gost.dev@samsung.com, kernel@pankajraghav.com, hch@lst.de
+References: <20250612105100.59144-1-p.raghav@samsung.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250612105100.59144-1-p.raghav@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: EAF6F2000E
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: h4h7shhgddtenk6kgi5y5d97tqqa349s
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18qPn9fd4gpyTjIqY3M7LdPyC4AqqEL6vs=
-X-HE-Tag: 1749736172-257217
-X-HE-Meta: U2FsdGVkX1/QpRpaxewuMvZQgpfNj6y0FJfkyv1wp4EKYBLc3jQqFcQaRZEEKaXs9wVBCCR4cOYNqVGE/dVATGTcbxB6SmUgjfJE2my6vmRhmVuvcPh28tKulzk8zi6BMyZo76vRmQfBB9LqUKdS4/PxLDcwy0Swt4ePhrMSysSCpX3FaljMOlVaf3oMYksvhZbGL/Sb/ef1ClFcqj4rIYqcFMMtOBV6YIFuaiyC6L2xGqbN/iZy6hC88GE+wTVVbQuSePEKozKnuKpVAAXQXQ2+jB0dCEyfBzqSCMgnGXGm126ykz9nbgokcpL0y5FWzBU+A4b3t+uK5Jy4gU4lWnaPABOhGjupWbShQLL6G5eCKv0xIsD3Y0yAJvkgQORO
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 6/12/25 03:50, Pankaj Raghav wrote:
+> But to use huge_zero_folio, we need to pass a mm struct and the
+> put_folio needs to be called in the destructor. This makes sense for
+> systems that have memory constraints but for bigger servers, it does not
+> matter if the PMD size is reasonable (like in x86).
 
-The event aer_event is only used when CONFIG_PCIEAER is configured. It
-should not be created when it is not. When an event is created it creates
-around 5K of text and meta data regardless if the tracepoint is used or
-not. Instead of wasting this memory, put #ifdef around the event to not
-create it when it is not used.
+So, what's the problem with calling a destructor?
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Note, I will be adding code soon that will make unused events cause a warning.
-
- include/ras/ras_event.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index 14c9f943d53f..c8cd0f00c845 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -252,6 +252,7 @@ TRACE_EVENT(non_standard_event,
- 		  __print_hex(__get_dynamic_array(buf), __entry->len))
- );
- 
-+#ifdef CONFIG_PCIEAER
- /*
-  * PCIe AER Trace event
-  *
-@@ -337,6 +338,7 @@ TRACE_EVENT(aer_event,
- 			__print_array(__entry->tlp_header, PCIE_STD_MAX_TLP_HEADERLOG, 4) :
- 			"Not available")
- );
-+#endif /* CONFIG_PCIEAER */
- 
- /*
-  * memory-failure recovery action result event
--- 
-2.47.2
-
+In your last patch, surely bio_add_folio() can put the page/folio when
+it's done. Is the real problem that you don't want to call zero page
+specific code at bio teardown?
