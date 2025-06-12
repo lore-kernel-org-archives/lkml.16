@@ -1,32 +1,32 @@
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA136224B07;
-	Thu, 12 Jun 2025 10:25:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33A1238C33;
+	Thu, 12 Jun 2025 10:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723930; cv=none; b=GvUc/SrFqRFS7zzV83fU7G5Vh/PILiO8cDt0a+Din5+/nMb3sSwWH0foAjrRfOuMO1vVVHLrMf3eo2nrF56Da+fG98Qn/gbpDJOGIZzKl/N3kvAmI6MoYWF3szhs4r1u4lkSwMWn4Z1h76q4s4D7m7WbjrFdqwBlLtqk0idfdHw=
+	t=1749723932; cv=none; b=QfpLJHB6XsUybCSZzM78x2gC7RN1h7Zkuj0OmXpbnW/cVqfBIB6e3GmUHXr/xTNqg1JF6uwkLYm7nh97vfto/5U/hWQmlEimWUb757RoOBrmh77lPuluEYmbepewfjyhA3WUwvK/PkqjC/RUtuoS2AS/5svgTCLo9EQP6CzyLpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723930; c=relaxed/simple;
-	bh=2lK/64Bs6RHYi29PgH5zwzI3VqPLMd3FFOWuddDRHEk=;
+	s=arc-20240116; t=1749723932; c=relaxed/simple;
+	bh=Z6Zj5KmS7FYcgL2YQL7XN//TXTmPNWqFxAWqJ56HrJo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y1o7b6U0Vism7x0owLO/vFBpV1eqAJnES+O0EiG6l52Ptf4rrvOApNr/e9W7cwJ6PtCQt/kPJGNLw3QyQ4vkPzLc/p/Os+eKxVaCnLXt3on63i3nCuXqqBMjgUgRG0iJaJt+wMQjAuGgQJBAu6j9g4sBfqirbfJzDVRufzjqeXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=h+GR6OIA; arc=none smtp.client-ip=83.149.199.84
+	 MIME-Version; b=nh9Bv/fsVaPSiYRDdAXy0wQFMW+8sn1euajHID87xprkFyUw4ijBjJZjjJ2o23Ne2/Ul6TBlRYnyaETMU3bwk7fxDGjvmKwOP3z0eTPUbGHHCtzhtSaqPYVKfZFYpuOdoGbOCAysc6rozCLEdO3mOq8c117s/MTuPqkj16snbkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=DvvSd8ON; arc=none smtp.client-ip=83.149.199.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="h+GR6OIA"
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="DvvSd8ON"
 Received: from fedora.intra.ispras.ru (unknown [10.10.165.6])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 5797440737BF;
-	Thu, 12 Jun 2025 10:25:24 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 5797440737BF
+	by mail.ispras.ru (Postfix) with ESMTPSA id 8F33740737CA;
+	Thu, 12 Jun 2025 10:25:25 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 8F33740737CA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1749723924;
-	bh=q+iKj53AzjlvGfyIVOde9/3PywjPjxXpkwx68LAPouo=;
+	s=default; t=1749723925;
+	bh=dCiG/QgCfIturXXE3DzMWFbuSnrkLz750v8RopG6ABE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h+GR6OIAKzYAhOORaHx9De22KMRmf2zAWeovQ5lhUNWKMiAS8kf9kInl1t7lvxPAZ
-	 qEGHRWpl+TBNNSBNg+0QxWOvSSFPno6wTfZaKndzHHyyMYL6e725WxJ42TlJ1+DNW+
-	 GmbfYz6SLJR3NsYXQd4v0+mjC/FdHlcNPkpYrPHw=
+	b=DvvSd8ONWB/dyBYsQ7zVHC592mF5l62titYB+FbwziPTpzUYhBEQYYncR6NQWcMej
+	 222ik8Jlkaj6uNLZbIWWPTXE5q+zDxgL8c0FCSbNcF3YTFQ3c0uawjqim2jhiif0NW
+	 9yhcJnTncqyct/0UBL1HDjcqmJZBntdyGplap1go=
 From: Fedor Pchelkin <pchelkin@ispras.ru>
 To: Carlos Maiolino <cem@kernel.org>,
 	"Darrick J. Wong" <djwong@kernel.org>
@@ -35,9 +35,9 @@ Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
 	linux-xfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	lvc-project@linuxtesting.org
-Subject: [PATCH 3/6] xfs: refactor cmp_two_keys routines to take advantage of cmp_int()
-Date: Thu, 12 Jun 2025 13:24:47 +0300
-Message-ID: <20250612102455.63024-4-pchelkin@ispras.ru>
+Subject: [PATCH 5/6] xfs: use a proper variable name and type for storing a comparison result
+Date: Thu, 12 Jun 2025 13:24:49 +0300
+Message-ID: <20250612102455.63024-6-pchelkin@ispras.ru>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250612102455.63024-1-pchelkin@ispras.ru>
 References: <20250612102455.63024-1-pchelkin@ispras.ru>
@@ -49,357 +49,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The net value of these functions is to determine the result of a
-three-way-comparison between operands of the same type.
+Perhaps that's just my silly imagination but 'diff' doesn't look good for
+the name of a variable to hold a result of a three-way-comparison
+(-1, 0, 1) which is what ->cmp_key_with_cur() does. It implies to contain
+an actual difference between the two integer variables but that's not true
+anymore after recent refactoring.
 
-Simplify the code using cmp_int() to eliminate potential errors with
-opencoded casts and subtractions. This also means we can change the return
-value type of cmp_two_keys routines from int64_t to int and make the
-interface a bit clearer.
+Declaring it as int64_t is also misleading now. Plain integer type is
+more than enough.
 
 Found by Linux Verification Center (linuxtesting.org).
 
-Suggested-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
 ---
- fs/xfs/libxfs/xfs_alloc_btree.c      | 21 ++++++++------------
- fs/xfs/libxfs/xfs_bmap_btree.c       | 18 +++--------------
- fs/xfs/libxfs/xfs_btree.h            |  2 +-
- fs/xfs/libxfs/xfs_ialloc_btree.c     |  6 +++---
- fs/xfs/libxfs/xfs_refcount_btree.c   |  6 +++---
- fs/xfs/libxfs/xfs_rmap_btree.c       | 29 ++++++++++++----------------
- fs/xfs/libxfs/xfs_rtrefcount_btree.c |  6 +++---
- fs/xfs/libxfs/xfs_rtrmap_btree.c     | 29 ++++++++++++----------------
- fs/xfs/scrub/rcbag_btree.c           | 15 +++-----------
- 9 files changed, 48 insertions(+), 84 deletions(-)
+ fs/xfs/libxfs/xfs_btree.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc_btree.c b/fs/xfs/libxfs/xfs_alloc_btree.c
-index d01807e0c4d4..f371f1b32cfb 100644
---- a/fs/xfs/libxfs/xfs_alloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_alloc_btree.c
-@@ -213,7 +213,7 @@ xfs_cntbt_cmp_key_with_cur(
- 	return (int64_t)be32_to_cpu(kp->ar_startblock) - rec->ar_startblock;
- }
- 
--STATIC int64_t
-+STATIC int
- xfs_bnobt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
-@@ -222,29 +222,24 @@ xfs_bnobt_cmp_two_keys(
+diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
+index 99a63a178f25..d3591728998e 100644
+--- a/fs/xfs/libxfs/xfs_btree.c
++++ b/fs/xfs/libxfs/xfs_btree.c
+@@ -1985,7 +1985,7 @@ xfs_btree_lookup(
+ 	int			*stat)	/* success/failure */
  {
- 	ASSERT(!mask || mask->alloc.ar_startblock);
- 
--	return (int64_t)be32_to_cpu(k1->alloc.ar_startblock) -
--			be32_to_cpu(k2->alloc.ar_startblock);
-+	return cmp_int(be32_to_cpu(k1->alloc.ar_startblock),
-+		       be32_to_cpu(k2->alloc.ar_startblock));
- }
- 
--STATIC int64_t
-+STATIC int
- xfs_cntbt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
- 	const union xfs_btree_key	*k2,
- 	const union xfs_btree_key	*mask)
- {
--	int64_t				diff;
--
- 	ASSERT(!mask || (mask->alloc.ar_blockcount &&
- 			 mask->alloc.ar_startblock));
- 
--	diff =  be32_to_cpu(k1->alloc.ar_blockcount) -
--		be32_to_cpu(k2->alloc.ar_blockcount);
--	if (diff)
--		return diff;
--
--	return  be32_to_cpu(k1->alloc.ar_startblock) -
--		be32_to_cpu(k2->alloc.ar_startblock);
-+	return cmp_int(be32_to_cpu(k1->alloc.ar_blockcount),
-+		       be32_to_cpu(k2->alloc.ar_blockcount)) ?:
-+	       cmp_int(be32_to_cpu(k1->alloc.ar_startblock),
-+		       be32_to_cpu(k2->alloc.ar_startblock));
- }
- 
- static xfs_failaddr_t
-diff --git a/fs/xfs/libxfs/xfs_bmap_btree.c b/fs/xfs/libxfs/xfs_bmap_btree.c
-index 0c5dba21d94a..bfe67e5d4d11 100644
---- a/fs/xfs/libxfs/xfs_bmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_bmap_btree.c
-@@ -378,29 +378,17 @@ xfs_bmbt_cmp_key_with_cur(
- 				      cur->bc_rec.b.br_startoff;
- }
- 
--STATIC int64_t
-+STATIC int
- xfs_bmbt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
- 	const union xfs_btree_key	*k2,
- 	const union xfs_btree_key	*mask)
- {
--	uint64_t			a = be64_to_cpu(k1->bmbt.br_startoff);
--	uint64_t			b = be64_to_cpu(k2->bmbt.br_startoff);
--
- 	ASSERT(!mask || mask->bmbt.br_startoff);
- 
--	/*
--	 * Note: This routine previously casted a and b to int64 and subtracted
--	 * them to generate a result.  This lead to problems if b was the
--	 * "maximum" key value (all ones) being signed incorrectly, hence this
--	 * somewhat less efficient version.
--	 */
--	if (a > b)
--		return 1;
--	if (b > a)
--		return -1;
--	return 0;
-+	return cmp_int(be64_to_cpu(k1->bmbt.br_startoff),
-+		       be64_to_cpu(k2->bmbt.br_startoff));
- }
- 
- static xfs_failaddr_t
-diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-index e72a10ba7ee6..fecd9f0b9398 100644
---- a/fs/xfs/libxfs/xfs_btree.h
-+++ b/fs/xfs/libxfs/xfs_btree.h
-@@ -184,7 +184,7 @@ struct xfs_btree_ops {
- 	 * each key field to be used in the comparison must contain a nonzero
- 	 * value.
+ 	struct xfs_btree_block	*block;	/* current btree block */
+-	int64_t			diff;	/* difference for the current key */
++	int			cmp_r;	/* current key comparison result */
+ 	int			error;	/* error return value */
+ 	int			keyno;	/* current key number */
+ 	int			level;	/* level in the btree */
+@@ -2013,13 +2013,13 @@ xfs_btree_lookup(
+ 	 * on the lookup record, then follow the corresponding block
+ 	 * pointer down to the next level.
  	 */
--	int64_t (*cmp_two_keys)(struct xfs_btree_cur *cur,
-+	int	(*cmp_two_keys)(struct xfs_btree_cur *cur,
- 				const union xfs_btree_key *key1,
- 				const union xfs_btree_key *key2,
- 				const union xfs_btree_key *mask);
-diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
-index 0d0c6534259a..ab9fce20b083 100644
---- a/fs/xfs/libxfs/xfs_ialloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
-@@ -274,7 +274,7 @@ xfs_inobt_cmp_key_with_cur(
- 			  cur->bc_rec.i.ir_startino;
- }
+-	for (level = cur->bc_nlevels - 1, diff = 1; level >= 0; level--) {
++	for (level = cur->bc_nlevels - 1, cmp_r = 1; level >= 0; level--) {
+ 		/* Get the block we need to do the lookup on. */
+ 		error = xfs_btree_lookup_get_block(cur, level, pp, &block);
+ 		if (error)
+ 			goto error0;
  
--STATIC int64_t
-+STATIC int
- xfs_inobt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
-@@ -283,8 +283,8 @@ xfs_inobt_cmp_two_keys(
- {
- 	ASSERT(!mask || mask->inobt.ir_startino);
+-		if (diff == 0) {
++		if (cmp_r == 0) {
+ 			/*
+ 			 * If we already had a key match at a higher level, we
+ 			 * know we need to use the first entry in this block.
+@@ -2065,15 +2065,16 @@ xfs_btree_lookup(
+ 						keyno, block, &key);
  
--	return (int64_t)be32_to_cpu(k1->inobt.ir_startino) -
--			be32_to_cpu(k2->inobt.ir_startino);
-+	return cmp_int(be32_to_cpu(k1->inobt.ir_startino),
-+		       be32_to_cpu(k2->inobt.ir_startino));
- }
+ 				/*
+-				 * Compute difference to get next direction:
++				 * Compute comparison result to get next
++				 * direction:
+ 				 *  - less than, move right
+ 				 *  - greater than, move left
+ 				 *  - equal, we're done
+ 				 */
+-				diff = cur->bc_ops->cmp_key_with_cur(cur, kp);
+-				if (diff < 0)
++				cmp_r = cur->bc_ops->cmp_key_with_cur(cur, kp);
++				if (cmp_r < 0)
+ 					low = keyno + 1;
+-				else if (diff > 0)
++				else if (cmp_r > 0)
+ 					high = keyno - 1;
+ 				else
+ 					break;
+@@ -2089,7 +2090,7 @@ xfs_btree_lookup(
+ 			 * If we moved left, need the previous key number,
+ 			 * unless there isn't one.
+ 			 */
+-			if (diff > 0 && --keyno < 1)
++			if (cmp_r > 0 && --keyno < 1)
+ 				keyno = 1;
+ 			pp = xfs_btree_ptr_addr(cur, keyno, block);
  
- static xfs_failaddr_t
-diff --git a/fs/xfs/libxfs/xfs_refcount_btree.c b/fs/xfs/libxfs/xfs_refcount_btree.c
-index 885fc3a0a304..1c3996b11563 100644
---- a/fs/xfs/libxfs/xfs_refcount_btree.c
-+++ b/fs/xfs/libxfs/xfs_refcount_btree.c
-@@ -188,7 +188,7 @@ xfs_refcountbt_cmp_key_with_cur(
- 	return (int64_t)be32_to_cpu(kp->rc_startblock) - start;
- }
- 
--STATIC int64_t
-+STATIC int
- xfs_refcountbt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
-@@ -197,8 +197,8 @@ xfs_refcountbt_cmp_two_keys(
- {
- 	ASSERT(!mask || mask->refc.rc_startblock);
- 
--	return (int64_t)be32_to_cpu(k1->refc.rc_startblock) -
--			be32_to_cpu(k2->refc.rc_startblock);
-+	return cmp_int(be32_to_cpu(k1->refc.rc_startblock),
-+		       be32_to_cpu(k2->refc.rc_startblock));
- }
- 
- STATIC xfs_failaddr_t
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
-index 74288d311b68..3cccdb0d0418 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.c
-@@ -273,7 +273,7 @@ xfs_rmapbt_cmp_key_with_cur(
- 	return 0;
- }
- 
--STATIC int64_t
-+STATIC int
- xfs_rmapbt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
-@@ -282,36 +282,31 @@ xfs_rmapbt_cmp_two_keys(
- {
- 	const struct xfs_rmap_key	*kp1 = &k1->rmap;
- 	const struct xfs_rmap_key	*kp2 = &k2->rmap;
--	int64_t				d;
--	__u64				x, y;
-+	int				d;
- 
- 	/* Doesn't make sense to mask off the physical space part */
- 	ASSERT(!mask || mask->rmap.rm_startblock);
- 
--	d = (int64_t)be32_to_cpu(kp1->rm_startblock) -
--		     be32_to_cpu(kp2->rm_startblock);
-+	d = cmp_int(be32_to_cpu(kp1->rm_startblock),
-+		    be32_to_cpu(kp2->rm_startblock));
- 	if (d)
- 		return d;
- 
- 	if (!mask || mask->rmap.rm_owner) {
--		x = be64_to_cpu(kp1->rm_owner);
--		y = be64_to_cpu(kp2->rm_owner);
--		if (x > y)
--			return 1;
--		else if (y > x)
--			return -1;
-+		d = cmp_int(be64_to_cpu(kp1->rm_owner),
-+			    be64_to_cpu(kp2->rm_owner));
-+		if (d)
-+			return d;
+@@ -2102,7 +2103,7 @@ xfs_btree_lookup(
  	}
  
- 	if (!mask || mask->rmap.rm_offset) {
- 		/* Doesn't make sense to allow offset but not owner */
- 		ASSERT(!mask || mask->rmap.rm_owner);
+ 	/* Done with the search. See if we need to adjust the results. */
+-	if (dir != XFS_LOOKUP_LE && diff < 0) {
++	if (dir != XFS_LOOKUP_LE && cmp_r < 0) {
+ 		keyno++;
+ 		/*
+ 		 * If ge search and we went off the end of the block, but it's
+@@ -2125,14 +2126,14 @@ xfs_btree_lookup(
+ 			*stat = 1;
+ 			return 0;
+ 		}
+-	} else if (dir == XFS_LOOKUP_LE && diff > 0)
++	} else if (dir == XFS_LOOKUP_LE && cmp_r > 0)
+ 		keyno--;
+ 	cur->bc_levels[0].ptr = keyno;
  
--		x = offset_keymask(be64_to_cpu(kp1->rm_offset));
--		y = offset_keymask(be64_to_cpu(kp2->rm_offset));
--		if (x > y)
--			return 1;
--		else if (y > x)
--			return -1;
-+		d = cmp_int(offset_keymask(be64_to_cpu(kp1->rm_offset)),
-+			    offset_keymask(be64_to_cpu(kp2->rm_offset)));
-+		if (d)
-+			return d;
- 	}
- 
- 	return 0;
-diff --git a/fs/xfs/libxfs/xfs_rtrefcount_btree.c b/fs/xfs/libxfs/xfs_rtrefcount_btree.c
-index 864c3aa664d7..d9f79ae579c6 100644
---- a/fs/xfs/libxfs/xfs_rtrefcount_btree.c
-+++ b/fs/xfs/libxfs/xfs_rtrefcount_btree.c
-@@ -170,7 +170,7 @@ xfs_rtrefcountbt_cmp_key_with_cur(
- 	return (int64_t)be32_to_cpu(kp->rc_startblock) - start;
- }
- 
--STATIC int64_t
-+STATIC int
- xfs_rtrefcountbt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
-@@ -179,8 +179,8 @@ xfs_rtrefcountbt_cmp_two_keys(
- {
- 	ASSERT(!mask || mask->refc.rc_startblock);
- 
--	return (int64_t)be32_to_cpu(k1->refc.rc_startblock) -
--			be32_to_cpu(k2->refc.rc_startblock);
-+	return cmp_int(be32_to_cpu(k1->refc.rc_startblock),
-+		       be32_to_cpu(k2->refc.rc_startblock));
- }
- 
- static xfs_failaddr_t
-diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.c b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-index b48336086ca7..231a189ea2fe 100644
---- a/fs/xfs/libxfs/xfs_rtrmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-@@ -215,7 +215,7 @@ xfs_rtrmapbt_cmp_key_with_cur(
- 	return 0;
- }
- 
--STATIC int64_t
-+STATIC int
- xfs_rtrmapbt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
-@@ -224,36 +224,31 @@ xfs_rtrmapbt_cmp_two_keys(
- {
- 	const struct xfs_rmap_key	*kp1 = &k1->rmap;
- 	const struct xfs_rmap_key	*kp2 = &k2->rmap;
--	int64_t				d;
--	__u64				x, y;
-+	int				d;
- 
- 	/* Doesn't make sense to mask off the physical space part */
- 	ASSERT(!mask || mask->rmap.rm_startblock);
- 
--	d = (int64_t)be32_to_cpu(kp1->rm_startblock) -
--		     be32_to_cpu(kp2->rm_startblock);
-+	d = cmp_int(be32_to_cpu(kp1->rm_startblock),
-+		    be32_to_cpu(kp2->rm_startblock));
- 	if (d)
- 		return d;
- 
- 	if (!mask || mask->rmap.rm_owner) {
--		x = be64_to_cpu(kp1->rm_owner);
--		y = be64_to_cpu(kp2->rm_owner);
--		if (x > y)
--			return 1;
--		else if (y > x)
--			return -1;
-+		d = cmp_int(be64_to_cpu(kp1->rm_owner),
-+			    be64_to_cpu(kp2->rm_owner));
-+		if (d)
-+			return d;
- 	}
- 
- 	if (!mask || mask->rmap.rm_offset) {
- 		/* Doesn't make sense to allow offset but not owner */
- 		ASSERT(!mask || mask->rmap.rm_owner);
- 
--		x = offset_keymask(be64_to_cpu(kp1->rm_offset));
--		y = offset_keymask(be64_to_cpu(kp2->rm_offset));
--		if (x > y)
--			return 1;
--		else if (y > x)
--			return -1;
-+		d = cmp_int(offset_keymask(be64_to_cpu(kp1->rm_offset)),
-+			    offset_keymask(be64_to_cpu(kp2->rm_offset)));
-+		if (d)
-+			return d;
- 	}
- 
- 	return 0;
-diff --git a/fs/xfs/scrub/rcbag_btree.c b/fs/xfs/scrub/rcbag_btree.c
-index 523ffd0da77a..46598817b239 100644
---- a/fs/xfs/scrub/rcbag_btree.c
-+++ b/fs/xfs/scrub/rcbag_btree.c
-@@ -68,7 +68,7 @@ rcbagbt_cmp_key_with_cur(
- 	return 0;
- }
- 
--STATIC int64_t
-+STATIC int
- rcbagbt_cmp_two_keys(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_key	*k1,
-@@ -80,17 +80,8 @@ rcbagbt_cmp_two_keys(
- 
- 	ASSERT(mask == NULL);
- 
--	if (kp1->rbg_startblock > kp2->rbg_startblock)
--		return 1;
--	if (kp1->rbg_startblock < kp2->rbg_startblock)
--		return -1;
--
--	if (kp1->rbg_blockcount > kp2->rbg_blockcount)
--		return 1;
--	if (kp1->rbg_blockcount < kp2->rbg_blockcount)
--		return -1;
--
--	return 0;
-+	return cmp_int(kp1->rbg_startblock, kp2->rbg_startblock) ?:
-+	       cmp_int(kp1->rbg_blockcount, kp2->rbg_blockcount);
- }
- 
- STATIC int
+ 	/* Return if we succeeded or not. */
+ 	if (keyno == 0 || keyno > xfs_btree_get_numrecs(block))
+ 		*stat = 0;
+-	else if (dir != XFS_LOOKUP_EQ || diff == 0)
++	else if (dir != XFS_LOOKUP_EQ || cmp_r == 0)
+ 		*stat = 1;
+ 	else
+ 		*stat = 0;
 -- 
 2.49.0
 
