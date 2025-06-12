@@ -1,152 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A162F4326;
-	Thu, 12 Jun 2025 11:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7D92F4321
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749728295; cv=none; b=ilWVmzEKHH1D9+atxFNIOlzTQJ/fDWsirEWOsBRHez1sPgkMBrHrrVyR2qeYqkXuaIm6Up2qEZ1cNS7Xf21eKJTPojjtyTSg+eIrQJR1ln532CR+5NHRUOW/OY9n7ez+rKqmtYF+2QtkqSTrOfffJPdUVOxL5x8r1iOvJsMefqI=
+	t=1749728381; cv=none; b=Yh0lGYNKLzK7tDjX0RyELddJMgEuv14jSvBI8J3d1VhR0nhfLnE941/cminIxVtVIdluccza+/FgC49pCKpdGXJxt1jHOw8sfU2+guRLHvHv+BD2f+Mcsl5pT1W/+YO8y21HTNxv0elgv+Vg3UBje/PkVlmuB8Udciwy+sJbvIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749728295; c=relaxed/simple;
-	bh=hmQ2WB7k05UStqlp8lH+Xb689CCwEJuFoE+8aHNXjQg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=fap6gBqAw1GrJkFNKujMGUNaubrrqCZo3jzdYUDXVMLbbWrKjzrA3L/8VR2DLRX0FGQDvuIGXLR7AnZ5KKcTIRK2jwMhe/vDwNcnYRswTAnRN+JxohDDRm7Xv88zdGxbUSvmtkLx7uMh+d8Lrt/iu8WLiU2gld4/yVy3L1Rk2a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AdLWrbrW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749728381; c=relaxed/simple;
+	bh=czXIVD6xQjvC1tEbZIVsAxrEf357Wbyhje47vKPmNJw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PLtL1BSBd3uCs2SbFuVfni+ayihO/hw7i74+77rWCUBcJ+E0MqRcGQnp7iRCZIQJcInArcgcXFlbGb9J1/6wyujw0txEmcQyABOShGyu6XDbhkd+oCP6WLtOqqK7txBgguUBiltegawCUSOsQRW6zMb0h5Z0C2ASL3UL9YwmrU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FobjXkpf; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AdLWrbrW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407D7C4CEEA;
-	Thu, 12 Jun 2025 11:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749728293;
-	bh=hmQ2WB7k05UStqlp8lH+Xb689CCwEJuFoE+8aHNXjQg=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=AdLWrbrWNFfYyGeiLVfR1indmcgBxobUOK49257ngZvDGAhgA0/Tw5YG7sYD5WLy0
-	 1iOajQJwho1uJU2IKPEibjpDHjsCVXmAjD/5BDKvqkTqP186DBhjnFuEH61x7j/sjc
-	 7fbhwnL3UARPTOA4BAeptwxy2J0XP9hPyPQ+Ok7tACLU379M4W0SfPyut4DG7/ww8F
-	 MbZ53fH1qZk4c1WBoigwIKAUQ7JQSsByDqHi/CdJPcws6cFcZmKLeZjP1R2P7tFrsK
-	 mpOwE46ZQdMJ1u6DGI0U6S+2gMO+Duno4KWUP1jZkFvhLL7OQTjFCzIT/8gO7gB5rw
-	 1EcrCFRIbzNsg==
-Message-ID: <e782e790-3002-4af2-b5ee-c2e478e1e9ef@kernel.org>
-Date: Thu, 12 Jun 2025 13:38:10 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FobjXkpf"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450d08e662fso959335e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749728376; x=1750333176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BH9zpyyeQx03Xpt9F0YSvnLpGJjqpDHk0YVCL6WUMi0=;
+        b=FobjXkpff1OC/6aLAkU+164UgetZbovzhE5f6ioENUEldH2P7mwyUMnNJNspXrgkLg
+         hURsyNj+9N6M6u0qtcI51w4A7mL7x/D/LFal60ZgyPmwbDKf1TgXJFQIR7H4d3a4+3Ql
+         KdBCz5NO8D0H5qFkhauCJytNuq+3qx15LB5lrcH6zR0syBPAkywGdwnpMvNbZwgcj3aU
+         CVUMRFl+CWz0OiFiXI/G645wOaQXTRE/DBDMrR0AgiQ+Im4jqJ91z51Z4MHZaLFrvNtM
+         kKW/6cUGAm6I7XDLanUpuiouWn/OMA3P1ntwq6wj7Qd74smZ6VjFqkanm6FiWSGk7p6N
+         NTaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749728376; x=1750333176;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BH9zpyyeQx03Xpt9F0YSvnLpGJjqpDHk0YVCL6WUMi0=;
+        b=NOZr4OxjnpuAQNJ6VZnqjt6AnBNEzhnYSiltzuznbWftYMXAXgBFXZqzVth+8ueQ9e
+         Pl6XlvpAiEhB08pAcs5BGcWwkTUJsuto2xrBg5VsWV3kJx4XPYVPswaYkl8ulvO7sI23
+         IGIvMhmXnocQ40TlvqnxxKyvyxCcI7SwMIfoioGC8+6snrGgq0tZsgnBnWLylL9fOE6c
+         ex9TN5PPscX8nYZ8mMDahzzD0A+tpCShArIbCWvW+JdNbwMY2bcEapwSBFx9t9DYCxB1
+         yAxbI7WPvVC8ZFJO5gJv1UIEckvv/V1sXveGs8atVfVoPLUE+HyfFSL17T3KVWdOcUau
+         8znA==
+X-Gm-Message-State: AOJu0YxfLYhRiaS4VbGyc9KU47TRVN9JleAttmE1G+3cO9LbJbki4qmq
+	2YiIx/QCYpxmkpTTziPLlX5ZgcN00F8IubWfNe08QiY35L5f+zYjeowG3RtjTJlxKsq89WnT/6P
+	Ps9jQ
+X-Gm-Gg: ASbGncs2sgsYynnfdBF6zSdeVYUuNa/vUsYlgh3EE2d+AxXp7RPkitkpMslT0E2Pbhb
+	JvVxtwznSvFQw5gHzIjUHg+SVYRFfspMvijeHaYApHQ7QA0spZg4TVmsgAQtdgeRJfMpkM59gyq
+	26KAT0WHucaUHBN2tIjubAQKl8ujNzt9H50+JzjUvalukV/6ovffqCmP7j3ZnIDxd/sThPt8c+G
+	4/udHKxEk8vI4H4hq+zYmKsM4QRFt+PEVvCaMCp/8LqbhM8nNmtxV6hD7B0m4sUCGVcD2DOwMt/
+	XU02K87g/WQEMKYRzY4TSblhw7cfJFa58zBUD1F/pA0iVJFf1YvREJDmSMLdM5YqES56E6uh/+1
+	M8sXLp1s=
+X-Google-Smtp-Source: AGHT+IEcpObNjeWZdXRhh+Gz2mVKzNVAOuBcl9lUX8WtlsYJJ+gSEvmYwY5GXQOg2ReoFXO+QM0Mpg==
+X-Received: by 2002:a05:6000:2313:b0:3a4:eeeb:7e79 with SMTP id ffacd0b85a97d-3a55881f23fmr2471607f8f.12.1749728376305;
+        Thu, 12 Jun 2025 04:39:36 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561a3c763sm1750430f8f.62.2025.06.12.04.39.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 04:39:35 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: linux-kernel@vger.kernel.org, 
+ "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: tglx@linutronix.de, Roger Quadros <rogerq@kernel.org>, 
+ Tony Lindgren <tony@atomide.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ linux-omap@vger.kernel.org
+In-Reply-To: <20250611104348.192092-12-jirislaby@kernel.org>
+References: <20250611104348.192092-1-jirislaby@kernel.org>
+ <20250611104348.192092-12-jirislaby@kernel.org>
+Subject: Re: [PATCH] memory: Use dev_fwnode()
+Message-Id: <174972837497.91877.6617168191559505764.b4-ty@linaro.org>
+Date: Thu, 12 Jun 2025 13:39:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memory: Use dev_fwnode()
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, Roger Quadros <rogerq@kernel.org>,
- Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
-References: <20250611104348.192092-1-jirislaby@kernel.org>
- <20250611104348.192092-12-jirislaby@kernel.org>
- <bae87d5b-c1e6-431a-ac25-9b3d7a2a5696@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <bae87d5b-c1e6-431a-ac25-9b3d7a2a5696@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 12/06/2025 13:34, Krzysztof Kozlowski wrote:
-> On 11/06/2025 12:43, Jiri Slaby (SUSE) wrote:
->> irq_domain_create_simple() takes fwnode as the first argument. It can be
->> extracted from the struct device using dev_fwnode() helper instead of
->> using of_node with of_fwnode_handle().
->>
->> So use the dev_fwnode() helper.
->>
->> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
->> Cc: Roger Quadros <rogerq@kernel.org>
->> Cc: Tony Lindgren <tony@atomide.com>
->> Cc: Krzysztof Kozlowski <krzk@kernel.org>
->> Cc: linux-omap@vger.kernel.org
->> ---
-> Please send patches standard way, so without fake in-reply-to. b4 shazam
-> on entire patchset (because this is not a continuation - see subject
-> prefix) grabs entirely wrong patch:
-> 
-> -----------------
-> Grabbing thread from
-> lore.kernel.org/all/20250611104348.192092-12-jirislaby@kernel.org/t.mbox.gz
-> Breaking thread to remove parents of
-> 20250611104348.192092-12-jirislaby@kernel.org
-> Checking for newer revisions
-> Grabbing search results from lore.kernel.org
->   Added from v2: 1 patches
-> Analyzing 10 messages in the thread
-> Analyzing 19 code-review messages
-> Will use the latest revision: v2
-> You can pick other revisions using the -vN flag
-> Checking attestation on all messages, may take a moment...
-> ---
->   ✓ [PATCH v2] iio: adc: stm32-adc: Use dev_fwnode()
->     + Link:
-> https://lore.kernel.org/r/20250612084627.217341-1-jirislaby@kernel.org
-> -----------------
-> 
-> Applying single patch also fails:
-> 
-> 
-> -----------------
-> Grabbing thread from
-> lore.kernel.org/all/20250611104348.192092-12-jirislaby@kernel.org/t.mbox.gz
-> Checking for newer revisions
-> Grabbing search results from lore.kernel.org
->   Added from v2: 1 patches
-> Analyzing 10 messages in the thread
-> Analyzing 19 code-review messages
-> Will use the latest revision: v2
-> You can pick other revisions using the -vN flag
-> Specified msgid is not present in the series, cannot cherrypick
-> -----------------
 
-ok, -v1 helped, but this entire dance could be avoided if you sent it
-standard way, without confusing threading and attaching on patch to
-something else.
+On Wed, 11 Jun 2025 12:43:40 +0200, Jiri Slaby (SUSE) wrote:
+> irq_domain_create_simple() takes fwnode as the first argument. It can be
+> extracted from the struct device using dev_fwnode() helper instead of
+> using of_node with of_fwnode_handle().
+> 
+> So use the dev_fwnode() helper.
+> 
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] memory: Use dev_fwnode()
+      https://git.kernel.org/krzk/linux-mem-ctrl/c/a0be20055d41028a121a5acc140e17c73d7541c5
 
 Best regards,
-Krzysztof
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
