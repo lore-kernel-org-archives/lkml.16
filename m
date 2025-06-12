@@ -1,105 +1,142 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A26221CA14
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08812745C
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714773; cv=none; b=IOyiAoqsLdkpmxil+Mjht3dg37y4uqIsrmL3Rv58EMItWHUnsH4P5GXSJR9HtE+Mbt9KgnufiHQqKnRaJvUrGOm3xLZektJfxX1M7926P1YRzyHFn2TjOkBy4mng2z9EkGEW6l+QSLl01hrpNVRRGAXxwZUQKrKcTfOYI5QLe3U=
+	t=1749714948; cv=none; b=MwdcuD1XOoNK+PU55C1cEtfuGazuqVegOz6abEFscN3dxx4zCw+S8gryjnZ25BDKiylrRWGK/BtBVHO9e5w1UFk6J2lYeE26/CyHvcppkR9Oou7R25ps6Vzas5fRuAuRZykiNLdt2WpOuj4+sC0rl6ZlTEq7gD9tKR/9mCk0W70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714773; c=relaxed/simple;
-	bh=yvHjrzaORTg7HRp2cirzIboSTrREVTHWqhVe9uNJ0K8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=FP+LA2GHVogDJvlpFpqPzYMcEvWkoa2prdZjBTwvkjbzdS0FxAzI2QLaEM3h+jHe6PpToyiEHs2xKSjCkiliYoltdmlNTxd7NnPNjyabGyM2lQ/Zy+BKOYbMifHQvcvEhq15Ofw8E4027Q9ByP9j7lWhf0naZ/36c9PFXpzrBmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=RLCBQkHZ; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
+	s=arc-20240116; t=1749714948; c=relaxed/simple;
+	bh=73V610p+9JZCKE+W4vZAInC+NFR9o3D7SoSIakug6IQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fse9wkRcW0HHp+zUGKr77EDi1t83+Wl8hbS54LECVLNdkYcY9W6Y+0haX3HUOdUqCQiOmeMQ1suLEgwY0XHov7+kAKyZ3+SWyOp68K/cFymJF15aT8XgrR7yrPcH0ri1GnketSv4ZP/cOepiVssBRok3/dFuwjsfXDK6QTLsZeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pAt24u3e; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="RLCBQkHZ"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2363616a1a6so5611035ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:52:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1749714771; x=1750319571; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pazdt4UO8fSmAZ8X2Dzo6ZIiUJV5NstAi6JvpdaZT9Y=;
-        b=RLCBQkHZ8jP6HvGGhegFGnGD6by24ZM1+EnYt0SuYuHMCkZI3EuB1sMwcNgdaot22V
-         Hbz5sqFg44fuByeyE92k8gzzVa72IUP91Jr00FCK9B4Oi024nkPtvDeMuqRY5cH3P60E
-         q5eNouixjCDEvRUwGOIEvPy5dHPi8NpUM5ZTn3OEOXYb3INJeDyxOFx++LBWijhazTQ0
-         eo9lXLzU8bFfTEwgu4EDXTEex7/US3L2dk/Yc1JD4F9Zq9Z5XcKPG1ycSWpEkDR4RWx6
-         awFXekjauMl6Trhe3TGNEwOY7nDS9BtM0NNw8tnOayuQk1L2nd38CFcpS6zsk4iBFr7D
-         7y/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714771; x=1750319571;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pazdt4UO8fSmAZ8X2Dzo6ZIiUJV5NstAi6JvpdaZT9Y=;
-        b=eUf/cyz9+U3DkMLD6gfkAoQA6xjbj3EXG7YDrT3aLhpB55r0cQYOqqT8ff53o6ueIj
-         q/1cNorFnqDQKx7LuY0gvxt2PhrZk76lhuJRK3AikngUS8eCNO04mxLBWyP/1O1yG1ov
-         vLVyOq6y+pueyyqMuXkJ8F2UuPv0AOXySBbR8A0f3TkTyhPihMNFkTe2x/plvXgFl3fL
-         NTEp8W+G34NUpX47eAxPxzXIr4lcnN5Ox0jMPWzTkVgi95TZlSXRsX3p2swB4qmWX0gP
-         4kcyNbGlVIzya91ndPk3zQkUT5quRqbJgXLgjIUqoN3hMRqj76jahQubnVow6HW2j39f
-         FJHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlkXjHKnelvYCXhMnmNlUnInqQemlieR00S7iLqvDacwERg4fLSo2X9A+PY7CVIfpvfjXmy8rabf5dDaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOyyL7C0Ls3z/nvvwU2m4pE61SiBE8FY+uvRPtasPnUE8DicM1
-	NAz0LeUCscWb3RtYQSkMEYCPTA1z83Fq4f6lXSrZBraFG1rNmVwAM3GbbfrqT8Bstg==
-X-Gm-Gg: ASbGnctG+KJAnmzHGlgs3+JA9mTf+p3br2Yqc2kGyJB97r7uHguW+/2o3ztzhvTaZq1
-	GErrbucKj6cdS6t5+5dCAhl1HmOZ1ptOYyOdMNngYGjEr7K0cYSlSE7L04Zxt2fq6GgTY5RXCot
-	fWYeqHmp6FX18i2ZjNZ5Tou+LqR571pajzRE7xHalZ6TZXGmGPuBGQcFoNqViqGGSgbkJVcrKej
-	cy9M/Vqg27E05l5nUDVnPqxLpYOTrNZn0aq6psr7gmX8vvp3rXfaVPLjpONsvELpMD8Q6ryYfIm
-	Z99CFGn86Yv4Qim7MgEhYc/fphu/ZN1njgi60hnw1iI2ZyP6DE9YUdw5NAYCtUK+RepZlyJ7dT0
-	gh4P/GarWdf7GzZL+no1ZSZsP+YgM/yhZQz8x
-X-Google-Smtp-Source: AGHT+IH+iM21neRDkS3iLHmw85CSGogpx1dZt1CBDEgP7B9uVu0yQx7SMX5oOR3fyeuigU6VN7u09A==
-X-Received: by 2002:a17:902:d552:b0:234:b41e:37a4 with SMTP id d9443c01a7336-2364d62da2emr25581555ad.6.1749714771066;
-        Thu, 12 Jun 2025 00:52:51 -0700 (PDT)
-Received: from ?IPV6:2401:4900:1c80:1e2f:fba8:7ac:6a76:1eca? ([2401:4900:1c80:1e2f:fba8:7ac:6a76:1eca])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e719958sm7780205ad.226.2025.06.12.00.52.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 00:52:50 -0700 (PDT)
-Message-ID: <525877c8-6c64-45b3-b4aa-a52768e59b86@beagleboard.org>
-Date: Thu, 12 Jun 2025 13:22:45 +0530
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pAt24u3e"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749714942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6LY4vo/bZ3YMDxVE6i6Ie0OrWW95nPMauCx+hjveabo=;
+	b=pAt24u3e6DtqHI3n6q714oL8sqKPM+Ragc6XP+y6q755JG00eCl7OA+DlnvcPn+25YcBxJ
+	juQr09jumKVG3bXGKcS4eMhi5pCXVXD1jxh+2oWhewoqv3uHp1ewyRGSiHelHz4vt7/eTN
+	blBCVG4IA6VWg16y48+NCwpOQ4HC2jE=
+From: Hao Ge <hao.ge@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	Hao Ge <hao.ge@linux.dev>,
+	Hao Ge <gehao@kylinos.cn>
+Subject: [PATCH 0/5] mm: Restrict the static definition of the per-CPU variable _shared_alloc_tag to s390 and alpha architectures only 
+Date: Thu, 12 Jun 2025 15:54:23 +0800
+Message-Id: <cover.1749698249.git.gehao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: herve.codina@bootlin.com
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- luca.ceresoli@bootlin.com, robh@kernel.org, thomas.petazzoni@bootlin.com,
- wsa+renesas@sang-engineering.com
-References: <20250205173918.600037-1-herve.codina@bootlin.com>
-Subject: Re: [RFC PATCH 0/3] i2c: Introduce i2c bus extensions
-Content-Language: en-US
-From: Ayush Singh <ayush@beagleboard.org>
-In-Reply-To: <20250205173918.600037-1-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-I have tested this patch series for use with pocketbeagle 2 connector 
-driver [0]. To get a better idea how it looks in real devicetree, see 
-the base tree [1] and the overlay [2]. Since it also used gpio and pwm 
-nexus nodes, along with providing pinmux for pins, it can provide a 
-better picture of how the different pieces (export-symbols, nexus nodes, 
-etc) look when combined.
+From: Hao Ge <gehao@kylinos.cn>
 
+Recently discovered this entry while checking kallsyms on ARM64:
+ffff800083e509c0 D _shared_alloc_tag
 
-I also have a question for Herve. Do you already have any working 
-patches for similar extension for SPI and UART in some private tree?
+If ARCH_NEEDS_WEAK_PER_CPU is not defined((it is only defined for
+s390 and alpha architectures),there's no need to statically define
+the percpu variable _shared_alloc_tag. As the number of CPUs
+increases,the wasted memory will grow correspondingly.
 
+Therefore,we need to implement isolation for this purpose.
 
-[0]: https://github.com/Ayush1325/linux/tree/beagle-cape-v1
+However,currently ARCH_NEEDS_WEAK_PER_CPU is a #define and
+is enclosed within the #if defined(MODULE) conditional block.
 
-[1]: 
-https://github.com/Ayush1325/BeagleBoard-DeviceTrees/commit/bf9d981ebf5f1a5704df1e7deba2188c70eb5d6f
+When building the core kernel code for s390 or alpha architectures,
+ARCH_NEEDS_WEAK_PER_CPU remains undefined (as it is gated
+by #if defined(MODULE)). However,when building modules for these
+architectures,the macro is explicitly defined.
 
-[2]: 
-https://github.com/Ayush1325/linux/commit/4ebc8467c98b5df3c30935e1d3736f9a64c1b08d
+Therefore,we need to make ARCH_NEEDS_WEAK_PER_CPU a Kconfig option.
+And replace all instances of ARCH_NEEDS_WEAK_PER_CPU in the kernel
+code with MODULE_NEEDS_WEAK_PER_CPU,gated
+by#ifdef CONFIG_ARCH_NEEDS_WEAK_PER_CPU. Then,when defining the percpu
+variable _shared_alloc_tag,wrap it with the
+CONFIG_ARCH_NEEDS_WEAK_PER_CPU condition.
 
+The following version could be regarded as Version 1:
+https://lore.kernel.org/all/20250529073537.563107-1-hao.ge@linux.dev/
+But unfortunately,it caused build errors on s390.
+Based on Suren's guidance and suggestions,
+I've refined it into this patch series.
+Many thanks to Suren for his patient instruction.
 
-Tested-by: Ayush Singh <ayush@beagleboard.org>
+Verify:
+     1. On Arm64:
+	nm vmlinux | grep "_shared_alloc_tag",no output is returned.
+     2. On S390:
+	Compile tested.
+	nm vmlinux | grep "_shared_alloc_tag"
+	00000000015605b4 r __crc__shared_alloc_tag
+	0000000001585fef r __kstrtab__shared_alloc_tag
+	0000000001586897 r __kstrtabns__shared_alloc_tag
+	00000000014f6548 r __ksymtab__shared_alloc_tag
+	0000000001a8fa28 D _shared_alloc_tag
+	nm net/ceph/libceph.ko | grep "_shared"
+	U _shared_alloc_tag
+     3. On alpha
+	Compile tested.
+	nm vmlinux | grep "_shared_alloc_tag"
+	fffffc0000b080fa r __kstrtab__shared_alloc_tag
+	fffffc0000b07ee7 r __kstrtabns__shared_alloc_tag
+	fffffc0000adee98 r __ksymtab__shared_alloc_tag
+	fffffc0000b83d38 D _shared_alloc_tag
+	nm crypto/cryptomgr.ko | grep "_share"
+	U _shared_alloc_tag
+
+Hao Ge (5):
+  mm/Kconfig: add ARCH_NEEDS_WEAK_PER_CPU option
+  alpha: Modify the definition logic of WEAK_PER_CPU
+  s390: Modify the definition logic of WEAK_PER_CPU
+  mm: use MODULE_NEEDS_WEAK_PER_CPU instead of ARCH_NEEDS_WEAK_PER_CPU
+  mm/alloc_tag: add the CONFIG_ARCH_NEEDS_WEAK_PER_CPU macro when
+    statically defining the percpu variable _shared_alloc_tag
+
+ arch/alpha/Kconfig              | 1 +
+ arch/alpha/include/asm/percpu.h | 4 ++--
+ arch/s390/Kconfig               | 1 +
+ arch/s390/include/asm/percpu.h  | 4 ++--
+ include/linux/alloc_tag.h       | 6 +++---
+ include/linux/percpu-defs.h     | 4 ++--
+ lib/alloc_tag.c                 | 2 ++
+ mm/Kconfig                      | 4 ++++
+ 8 files changed, 17 insertions(+), 9 deletions(-)
+
+-- 
+2.25.1
 
