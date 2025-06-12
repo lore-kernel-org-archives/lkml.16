@@ -1,289 +1,239 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2047.outbound.protection.outlook.com [40.107.220.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782F42040A7
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749712743; cv=none; b=ZVwEK8Wa2qDPvXLkwtniv2SfaW7BB9UUSBwYHWrZU0DZA5I+r9vdnbS3V5TFhSqCyTwFhYqe0rOe0xwyVaDtUbZoKYfThaKcnm8KtDmqo1kyr6HIDt4oOZYtmkwhv/DMdr8lQ+XVLNWxdIpcWX7Dd2/2UewCjKSTgakNPCW3MNY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749712743; c=relaxed/simple;
-	bh=E4o4+NkVdMsSwo6NSZE73XR/7IFF09J3OvpKyCjdrdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bmN1G696hoiHW7+8Dqwncc2Q/qhgJZ5njqsX4nbQEFC5noIgljD9+GDK2Tmg4XynnansnD37zbOPi9VPj1mIgKDZS6p/lc9sroOrzE2ZF5mV9qqT16+WfEGA4DQA6iUEUvJ/qV/5oQKA4jG4jisBKvRE8zZA2c7XGEBr7alZuPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fmKB497N; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C69F20E034;
+	Thu, 12 Jun 2025 07:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749712779; cv=fail; b=gR/yf7VXbk3E+/RVbqU/0neiV9qAy2hkZJBbgD6aMAsIxbJ7Q6MjZbph3gj1WBp2+fCjUtWVVbBvt5K9VP9Q56hNKWsyEzX9grWEoIMZz5ywicGYQbWHZz5KduWSpB1HKQSrIcTa0zBiKehg/54TDKxxmBWQwIbAg6Ju/6zdlrc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749712779; c=relaxed/simple;
+	bh=4ZkYHTs2KQCmR2ARGFzWgmdkx0GZw8C39KNPEF0WyaQ=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=Jqcko8/bhwR3yV9SSRH81mzDhj1X5hkJdB8NUw+3Bz1YE8ubsQdSmsChFFk9Vf8gVqkqjudKeLCpQbCIPrGRVcrKB8BbxC4ebdB8IT5hCYN3ZFceOmLnoODco0PG6b0k9pIRXA2sy/Py+jgFPzxusSZ+U3icpHd2c2gXTvvmLaM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=a/oYhjWT; arc=fail smtp.client-ip=40.107.220.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fmKB497N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749712740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/FORcX77Z/dfz/4nX8LN31ZOLAOS6nLNcf+1RkLQzco=;
-	b=fmKB497NXqhqNvWLva8gBQc372cXhBrvyahq592mjetQ6v/gr3+g4lBrNBWsDNTP3EG03q
-	QYTjpP04JO26j7nz3IV+p5jnXu4YaPhvdUcRDeVQEHoepni2jA4j4RjEFeJ8iagthUbvQI
-	fYgavZw5WQqO8sE7H/UGSc9o5aWWJAQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-225-rtYPPIvJPbeBO-WXyavA9w-1; Thu, 12 Jun 2025 03:18:57 -0400
-X-MC-Unique: rtYPPIvJPbeBO-WXyavA9w-1
-X-Mimecast-MFC-AGG-ID: rtYPPIvJPbeBO-WXyavA9w_1749712736
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f6cc5332so394476f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:18:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749712736; x=1750317536;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/FORcX77Z/dfz/4nX8LN31ZOLAOS6nLNcf+1RkLQzco=;
-        b=p/0mITtrC9RRZXVtxEqB/0hChLFt2zVuz9JxJsFmFrp7gwP/7niZ90XxWLzIhPpmqT
-         ab+rSBQYLWHY3vQJVDsQ58CJR1c0EnzPKijEAzYXv34NytwUKJ3UT+mV9cwZikrtz4RG
-         zEI4xcBN+HtKlELHetBgKjW3pQ7j98IeG0Khs1RuTFeLCOX6s+ed5uTFfN9obJHZIoYU
-         FVtzEpMwQohS/XALuQDorLfYwjP6bSZTCI4Zu2GuD7r5m7pwfhCwAxsehaQjE58HuHRM
-         ltXKZj5IvFsbrloCminH+zfVbdUjQOWZhw8O9lEFuGUUCwVovz8AyfLlXIGAOkqLzt8a
-         g0og==
-X-Gm-Message-State: AOJu0YyY+CTyG9fMZW/bIwXfHXcBkEwGkeHJZzS2OP9ldkCXGnBUWCOi
-	v74GZjQOxP6LIv5R5xP0fIV8+jkbSr2GpiKCTpcOEIg0ypx04p1wTC4gdRLigsdMIrSV7pviN09
-	+s33hMBEEiTAhl5FGjPf83cU00Vzp1TNWSuXvyp3CAhQEPeLmlm/+sEgn+8E1zB81sA==
-X-Gm-Gg: ASbGncvbmTsv/KfSU5rkwpAq+mfkpZkL5FpjCXeJW8FKuwb3+ASzB0STrInAHCzsHPc
-	Sp2M7D8wKhsQw3LUTRKUvVEo9bE2CLxiHTC+SfTpouQODRtx0hg1ACzmKMIPd5W7BTQwO7A2LkR
-	JglWmKaYaYEUayi3B8ivQlAhTGTZ1vkXWEIYhPGP8O4rdztZ0gBi4oENXB9JktVmEfm2IRCZtp3
-	gW1c7Ee3hZ+xodOrnDtPS5Onmr7HuSfREybqCSTke1fkwITyRe0GoksenWcU3aycWsZL7mo0RjW
-	1tQiRDFqhdNB6+s1DMyRdjm27Eo+Uk8QWfEbL+9goFLAEOPbvLZwP7w0+HXCb7kgjxjemDgqLmd
-	7lsIjgAz6KtPM4NvYApEmJqUfpo2rjg+yL77cSuTdKbjK/6P53Q==
-X-Received: by 2002:a05:6000:1acc:b0:3a5:1c3c:8d8d with SMTP id ffacd0b85a97d-3a56080ad40mr1700213f8f.55.1749712735788;
-        Thu, 12 Jun 2025 00:18:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEnuzBb21Wl7Xf5s9zBtEXduPrHUbE8WIdQsQ0ZDweoN2mKdK4HhlsxKte8GKHdxrB+9zyk/A==
-X-Received: by 2002:a05:6000:1acc:b0:3a5:1c3c:8d8d with SMTP id ffacd0b85a97d-3a56080ad40mr1700180f8f.55.1749712735299;
-        Thu, 12 Jun 2025 00:18:55 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5619ab781sm1100303f8f.43.2025.06.12.00.18.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 00:18:54 -0700 (PDT)
-Message-ID: <990ce9cf-0e48-432c-a29f-0bd1704eede4@redhat.com>
-Date: Thu, 12 Jun 2025 09:18:53 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="a/oYhjWT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sdDQ95fL+0uayn/p0qPvKM6KC46BZfNFHLvvfgaWuuCdJwVF8D2IfQX6MkDBT8QP/w55v0E22V2KbTUGKtKg7bIME/Y16uM0xvFEF/IWpTglW3BbUC6E5zPa3Ux7sZSlp63m2y372WaCGrHDrJSe09jydJDFpB12dlbjMRavfaMb5SKJ0irdGieK9oV+9fOKJygwhXX+Q6e95xzRLyCv1tXAhOkOBJ7SGyUySs+Avt9xozNTplGJ5/PCkM2HBrD+Fyy5VbRi1uHHLdCQX9DNVUHssBunelF8TqIJPffa5y4Z+oIpxXBIQ1FAwb2zVKvtOLifw/+/5bbW1bNyiZ8MQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i0i7c4swBpXk6v+pDT7ur5OOGAgWDr/CfHOnU6dcwcA=;
+ b=EG39MSY1e/9aC9whJ9biYNOQTyIS2iiNNRSczfWPfk8a9MXs1CU2FiD0tJQOOE1kch3FpZdCNKw3xSsT2VqMasSQ+kmnfDWHBzjsfX/JGWhkluqx3BiJk47++ACnuX8g2pYN4qhKG+JgPpo9a/FD8+hSjnaPuLRJOVAzi6846+nBYqWsqI+1P2qGc0VW+POh/v07TWVzW89JehLSARH/Qc4Zw5jl2Y+9drO8tWi259B+EZv51eE3b0Qe9RSS5ZeVsnNXc0UvA/hfxhUqNWEG1dBemVYFO71fyGm0Cx25danWHAf/ODEGrUPB60ToiRzdOUiB3Gu10rTKgSxMoJqGMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i0i7c4swBpXk6v+pDT7ur5OOGAgWDr/CfHOnU6dcwcA=;
+ b=a/oYhjWTbVpNA/rzw846Ch7zMwkREa0Fn+UbJE4L1wrjbbrn1WE0c1VtkSf5f0OMyZytGl27x1RCw+oRy1364Wv6Q7JDDj6jAqUMcCbl8Z6UbCjq/pDy4dXUq9LCOtIvIJLAYD8InEzj3O1TKrE0toww01rIBqaqLDMMb1cZiQ+EjpfWGsJqN8WENUuwZLFfupWmd7Y6T2rQXOcPdkg9ImxWfjbfmc06/6bngAuniNJWfX0iUs6QBumf6jqnJRciAw1QZwTEcUXur959r/+QtfKAsRPZjJ850IbMjR8oJmMnbEZWOwf5YpT+QMHk7+WuUWInD6gnITej/gghoRhrjw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by DS0PR12MB7632.namprd12.prod.outlook.com (2603:10b6:8:11f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Thu, 12 Jun
+ 2025 07:19:34 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
+ 07:19:33 +0000
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Jun 2025 16:19:29 +0900
+Message-Id: <DAKDETL7I95F.31L41GTLYNBWO@nvidia.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "John Hubbard"
+ <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>, "Joel Fernandes"
+ <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple"
+ <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 18/20] gpu: nova-core: add types for patching
+ firmware binaries
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-18-05dfd4f39479@nvidia.com>
+ <aEAf3GUUz5oxnuk9@cassiopeiae>
+In-Reply-To: <aEAf3GUUz5oxnuk9@cassiopeiae>
+X-ClientProxiedBy: TYCPR01CA0053.jpnprd01.prod.outlook.com
+ (2603:1096:405:2::17) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] mm/huge_memory: vmf_insert_folio_*() and
- vmf_insert_pfn_pud() fixes
-To: Dan Williams <dan.j.williams@intel.com>,
- Alistair Popple <apopple@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Oscar Salvador <osalvador@suse.de>,
- marc.herbert@linux.intel.com
-References: <20250611120654.545963-1-david@redhat.com>
- <lpfprux2x34qjgpuk6ufvuq4akzolt3gwn5t4hmfakxcqakgqy@ciiwnsoqsl6j>
- <684a5594eb21d_2491100de@dwillia2-xfh.jf.intel.com.notmuch>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <684a5594eb21d_2491100de@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DS0PR12MB7632:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b509496-1143-4ceb-4353-08dda9817a64
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QnkyeGk1cWJtaThCb1J0aXZiRm82S2llWnhxNEhVdWwyVERTTlhqR2NaaFVU?=
+ =?utf-8?B?aVNta2NBTi9KczF5cWUrRmJxMzh2eGkrYjhRb0tHTlhKUFRHcFExNzR6bGlw?=
+ =?utf-8?B?bGxtckFlQlI0UmhxcHh6cGp6bmZaSG00MDFRR09LRE5PanNtUEJaT255cGNK?=
+ =?utf-8?B?c0pIRW9XY3dyOXVLb2YrQU5Fek9iYlBCamhUaUtIQ1ErMEt6V3FEMHdKcG4w?=
+ =?utf-8?B?dE5XOVFvOHFFTHNNbWNPWG5aTXoyNm1OWUYyYTJGcE1mWTFkdU55Qk9YdXR6?=
+ =?utf-8?B?NzFINGJPN1ZDMEFkbTNUTm0ra00yd3ByS3kyZzRIL3gxL01iR1c2WVNEa0JE?=
+ =?utf-8?B?cWJEZU1oN2c2bTZWWjNIYUdiN0ZwRW95ellkVE85SnpzUTk5Y2ovYU51dWt0?=
+ =?utf-8?B?T2d1S0NCS1p0eVNvUDBvd1JPMXVseko5emlIeE1PTFhDWDVvNUtrSHowTWVD?=
+ =?utf-8?B?dDl6RG1iM1E0NDJ3SmJiQzdyVXpkL1duR1FHSkVHV0FCTWwzOVl2eTVTWUlE?=
+ =?utf-8?B?Z1E0Z3RIY3dGdkJXQTRSUkU0T2dpTFFuclo0Tml5WE55MllSQUZQcm5qYy9M?=
+ =?utf-8?B?VXIwd1NTKzBjQ09zRngyT0FWQ2lXR3lBN1Zha20rYlIvdzFGLzI1dGxob3dO?=
+ =?utf-8?B?N1N4SEZFSDRaanAyc09RalNaZjBpMlZWZTdxbW4rT05Td0NTdVlkamR6dTRM?=
+ =?utf-8?B?OGdsMXFQVHBMMWE5MXg4a1ZzMVV1MHh6YnBEMWJHSzVMUTRkajVmR3FUamxJ?=
+ =?utf-8?B?VXpUekdzSzZLN1N6cDRmSUxESGVHMkREeWFETHN3UXdITXZUNGU3VllpVmlJ?=
+ =?utf-8?B?VXJEWHlxQ2gvY1cvVFZGdmh0RDNpQmYyTzV4OHNuaWUvMmx4SXZxOUVlV2Ns?=
+ =?utf-8?B?bU00YXhBRE5hb2pQUGsrb0dRVm1nWXBpbWtlbXZIREJZNVl5TmpPSkpRTUlj?=
+ =?utf-8?B?WSszYnhLZitwQmVvQy9WaFlJcDB6Q2VMK2huRFloZnc1RmZEbzlTdG1hVEVr?=
+ =?utf-8?B?TEtaUzFlb1dEVDlSNTU2Ynk3NzZIcFhOU2VtMGovSUFqVG1Ja2hTeWhrZzJh?=
+ =?utf-8?B?MTdVQWFNUXByOHpSQVJwZ2pUVjFUNGsvR0NJNWlzU2dmQ2NQNlFBRm5abnhP?=
+ =?utf-8?B?NXQxTFZEbm5PK0IwT0VJUEtiTkozTWpUWkFHcEtaMkcwUVpYcjdHaWpXMExY?=
+ =?utf-8?B?NjBDOG45VGpROWNIQ1pUY3RjL3FQOS9VTXlOWDBPVlRROWZuVE9YU3FmN2Rp?=
+ =?utf-8?B?M1c5Z1ZxeGRwbk1SWkdQWDdZbkZsZzY4Rm9JaC91TjZtYW5hTlk5NW9ncFpz?=
+ =?utf-8?B?YzhpdVhhQW1VVFNBVUFmTFZhaS9zMk5Za0RlM2srbDdkSjZhRlY2enFEQW40?=
+ =?utf-8?B?clVoWnB0ZERGaUc0YjlrOEJPTXVaM0p6QVJMUCt6a3crVkUrUjU0c3lBdjkv?=
+ =?utf-8?B?OGZFZVZ2MS92ek8zYi9VZElqZmV2SVhzWGkrMFlKaTNwcmpGYStYWFVPcm1a?=
+ =?utf-8?B?dHJ5YmV1c3dyOWx2VWZYYVVUMXlaRWs0M2NyeU4xY3VzbXJXTElJUlBFV2FR?=
+ =?utf-8?B?OXVaY2JJN1RnaWtqNjJ0YTdBbTRabldyQzhMNEZGL05lVXprdUpzZmVMT3d3?=
+ =?utf-8?B?MG4yR3F5clNuMUYvamdpZ1dlWkNwRE1Yemk5U0ZQbXBQWUtTMzl6TERCVXZL?=
+ =?utf-8?B?RW16eWovVWd0MmgzaFIxNUw2VDAvL1RTTnE2SHFOWVh5R2dlc3BVWFZ0VFZM?=
+ =?utf-8?B?cXpWRzN5T21BRVpKU2VKbGhaclVsSE1DVG9WNStKYXhubVhLWTFBa3NkdDlJ?=
+ =?utf-8?B?WTJFR0o5ek10MkJPcFJzUU9HK09HcU95TW0vWklkQmJubmxkbGdIR3NmcHh3?=
+ =?utf-8?B?dGkrMTgyV3l6TW5RS1pGL1JQVFdzYXUrQnBYaG5LaEdwTmc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(10070799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N1h5TnQySUR1WkJFUVJQcjFXRUVPQnhLSjk4K3N1cGFnaEpGT21KY2M4alBu?=
+ =?utf-8?B?Y1M1aWkyQk9CeTdQMmJOL2NPT0VaUHNVQUVNOVhCcUVGZ1lGdDJEWEVPUlNT?=
+ =?utf-8?B?ZXQwUDNuK1VLVjkxTXNjeEF0RUJIeDBDUjRieTdsam5NejRtNkozc00wK3I3?=
+ =?utf-8?B?a29yM0VxdEtFS0p3V0RBSnVEK1ord0tQNkMxREp4ejhGUkZXS2p5RmRyQisr?=
+ =?utf-8?B?aEsvRWhLZkZQSjFzMUh4ZDJDSkNCQUZHWU51VVFTNzRmNzBNTGdzTE1waHhM?=
+ =?utf-8?B?S3kxeTB2blBqK2R5ZzZ3ZVY0RFFXcCtrSUJGYUlFYUNrM0N4bWtkeXhyeW0r?=
+ =?utf-8?B?d1dkZ1dlbTEzamNTY21RcHJ3UlkxZUFUekExTkJtRVBOa1dORE9CTlY1NHF5?=
+ =?utf-8?B?KzJ0RDdJUjdVVVpGdmdpZWlxcVlxeTNNS0xOeGh2d3A2U0NxRzhEWU4vUmFD?=
+ =?utf-8?B?S0FpenB5dU9qdzlPVUZIdW5RcUdyc1JhZ2NBYXFkVU5UMkFkczl1c3B5UE1T?=
+ =?utf-8?B?MVpFV3FUMWNPUWNlTmJVVVM2cXh4M3psemRyWHYya3BMU1FCbUNQRjJVVGJy?=
+ =?utf-8?B?TDZhR1hGSVM0RnBGZVNZQ0JSM2pkejR5d3pWOUpwSTJ5ODNqclIvVUJNRE0r?=
+ =?utf-8?B?ekRNS2I2cFZoUWhZMDRBbFNoenI3ejBzRnRRNFJiaHNpblVYTXJnaGQ0NFRs?=
+ =?utf-8?B?Y00rN25RdFRkMC9CdE1GenkwK2VhWTVhVGh2MUZzSEkzREZTMkI4SExXYXBL?=
+ =?utf-8?B?bkJiM1JwWTBuMDRzSXJlaHJqZy9WdjdXQXBmb3pXZ2x2WTZGYndqd3FMaGJu?=
+ =?utf-8?B?VSttVmlzWjVRZXRmZWxITGlEWjRCaGVKWHIxcU13TVg3NmMra09aSy9CY3Zs?=
+ =?utf-8?B?Q1V4ZDhuMFNRc1FTd1Y5bW1WTEJtVGs2ZmVaSFBOTFJGTmtGWnROQmQvZ01D?=
+ =?utf-8?B?ZmtoZWtTd05OdGEvNnl1c002NUJ4YkNnQWJVYU5iOFVlV25uWHpHcVlVcVYw?=
+ =?utf-8?B?UUNOQUkwTERIY3ZsWmpzSUtzMk9nelpZY1lRVXZYMFpkTVVNcWNWSjZEc1Nz?=
+ =?utf-8?B?Skp4cDgxOFBRU1JEbVRIYU5JZzMvdStBdGJRdTAzR3MzZU1yR2EwbVQzdHU5?=
+ =?utf-8?B?N1VDVzFIV1N2amJhWjk5U1V5djE0NER4ZjZuMXZJODlDVStJV0kwNWkwU2d5?=
+ =?utf-8?B?NGlNMmpsVDNoK1cyZ2VqcDFObnYweGtJTkZJTHNmaWZaMkdXNVBkcXQ5MFVV?=
+ =?utf-8?B?V2d5TitMWHlKMTE1RGVqbFZqdmtWU2J5RE40WVVRR0x2cXVNWGtwRFBkM2Ra?=
+ =?utf-8?B?V0lYQUdCTHdWQUM1cXN5bExJM2RPd2lyUzRnTWxId2hNWEpqRms5eGgwNWpp?=
+ =?utf-8?B?ZWVBOHc0UjZnd2d0aHpraGhER09vbXNIUWdSUWY1ZHUyeHQ5bmlKdGFBM2wz?=
+ =?utf-8?B?aHJieEFvN0xXdTRkRnE3YkUzbDBrYk9lTjIyZFZwMXhzbHpSTU1NWmpFWUpt?=
+ =?utf-8?B?VjdUQzd4c29WMVZOZUcrTWFSRHQyVCtLcUJpcnZCTDk0RUw1NTRpaFN3NFBy?=
+ =?utf-8?B?dnc1OFpuQXNvQXNIUm1YT3YrZ215RmxKTEVMT2NJYmVKY3g4NGdJSmNwejRr?=
+ =?utf-8?B?aVZnd3JJU1Fvak9pMFkwYTJsZ2RhOFRuYWpWWFBYY3lhV2NyOXdKZEtnZitN?=
+ =?utf-8?B?WjFscWlvQ3pxQ2JFSEM5Z1gycnVLK2VGdmFScC9VTkxyODRoaHd4WWo1R2Vw?=
+ =?utf-8?B?ZkJqSjhCZ3FKbDJyNDRld05YblhDcjBXNnFzRU9qU3kwVHVmbEtWUTFqU1RW?=
+ =?utf-8?B?RWdTcGU2WE9qTHFXRFdUNWtIL0owc2QxaUpveHN2cHRvQkFuQUFrQW5QL1VY?=
+ =?utf-8?B?VnR5TTQ3c2Q1cTFxemJubnh3Ty9XNVZNdWhHZTlHWE13SHJZdkpKbjRMdDZ2?=
+ =?utf-8?B?VVAydTA1bkl6TjVOUUpnN1pGNmRnZzJwSVlRZmhGSjNXM3hFSTlUS0pDM0pW?=
+ =?utf-8?B?Q1pYSHBVVDZaYkFnMHFPYnlZek9vR3gzZjhEWXJRaTV0d2VndDBKTEY3cUlR?=
+ =?utf-8?B?L0tUalRnQ2dVMVg5djJ5azdGWmRTNC9vN2NBTHdRVFRDMURWRU9wQWhlVVg2?=
+ =?utf-8?B?RW4rdVRLQkhudGJWNVR6MEpLeHZFdU13K1FGOUxFMDM5K21jZGR0ZmNIekhy?=
+ =?utf-8?Q?/HbWSz3C195S1q11CYORWR2DzLxu/w02p/fWdPTA+jHi?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b509496-1143-4ceb-4353-08dda9817a64
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 07:19:33.3473
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 95m0OQO2QmnknDlp1onwrTWhz3J2Tp9fjVSLnD6rGMLAmzMT/cG0PzA7NBDjBXc9IJjeuSW4wbVIqkK72N/cVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7632
 
-On 12.06.25 06:20, Dan Williams wrote:
-> Alistair Popple wrote:
->> On Wed, Jun 11, 2025 at 02:06:51PM +0200, David Hildenbrand wrote:
->>> This is v2 of
->>> 	"[PATCH v1 0/2] mm/huge_memory: don't mark refcounted pages special
->>> 	 in vmf_insert_folio_*()"
->>> Now with one additional fix, based on mm/mm-unstable.
->>>
->>> While working on improving vm_normal_page() and friends, I stumbled
->>> over this issues: refcounted "normal" pages must not be marked
->>> using pmd_special() / pud_special().
->>>
->>> Fortunately, so far there doesn't seem to be serious damage.
->>>
->>> I spent too much time trying to get the ndctl tests mentioned by Dan
->>> running (.config tweaks, memmap= setup, ... ), without getting them to
->>> pass even without these patches. Some SKIP, some FAIL, some sometimes
->>> suddenly SKIP on first invocation, ... instructions unclear or the tests
->>> are shaky. This is how far I got:
->>
->> FWIW I had a similar experience, although I eventually got the FAIL cases below
->> to pass. I forget exactly what I needed to tweak for that though :-/
-> 
-> Add Marc who has been working to clean the documentation up to solve the
-> reproducibility problem with standing up new environments to run these
-> tests.
+On Wed Jun 4, 2025 at 7:28 PM JST, Danilo Krummrich wrote:
+> On Wed, May 21, 2025 at 03:45:13PM +0900, Alexandre Courbot wrote:
+>> +/// A [`DmaObject`] containing a specific microcode ready to be loaded =
+into a falcon.
+>> +///
+>> +/// This is module-local and meant for sub-modules to use internally.
+>> +struct FirmwareDmaObject<F: FalconFirmware>(DmaObject, PhantomData<F>);
+>> +
+>> +/// Trait for signatures to be patched directly into a given firmware.
+>> +///
+>> +/// This is module-local and meant for sub-modules to use internally.
+>> +trait FirmwareSignature<F: FalconFirmware>: AsRef<[u8]> {}
+>> +
+>> +#[expect(unused)]
+>> +impl<F: FalconFirmware> FirmwareDmaObject<F> {
+>> +    /// Creates a new `UcodeDmaObject` containing `data`.
+>> +    fn new(dev: &device::Device<device::Bound>, data: &[u8]) -> Result<=
+Self> {
+>> +        DmaObject::from_data(dev, data).map(|dmaobj| Self(dmaobj, Phant=
+omData))
+>> +    }
+>> +
+>> +    /// Patches the firmware at offset `sig_base_img` with `signature`.
+>> +    fn patch_signature<S: FirmwareSignature<F>>(
+>> +        &mut self,
+>> +        signature: &S,
+>> +        sig_base_img: usize,
+>> +    ) -> Result<()> {
+>> +        let signature_bytes =3D signature.as_ref();
+>> +        if sig_base_img + signature_bytes.len() > self.0.size() {
+>> +            return Err(EINVAL);
+>> +        }
+>> +
+>> +        // SAFETY: we are the only user of this object, so there cannot=
+ be any race.
+>> +        let dst =3D unsafe { self.0.start_ptr_mut().add(sig_base_img) }=
+;
+>> +
+>> +        // SAFETY: `signature` and `dst` are valid, properly aligned, a=
+nd do not overlap.
+>> +        unsafe {
+>> +            core::ptr::copy_nonoverlapping(signature_bytes.as_ptr(), ds=
+t, signature_bytes.len())
+>> +        };
+>> +
+>> +        Ok(())
+>> +    }
+>> +}
+>
+> If we can't patch them when the object is created, i.e. in
+> FirmwareDmaObject::new(), I think we should take self by value in
+> FirmwareDmaObject::patch_signature() and return a SignedFirmwareDmaObject=
+ (which
+> can just be a transparent wrapper) instead in order to let the type syste=
+m prove
+> that we did not forget to call patch_signature().
 
-I was about to send some doc improvements myself, but I didn't manage to 
-get the tests running in the first place ... even after trying hard :)
+This one is a bit tricky. Signature patching is actually optional,
+depending on whether there are signatures present at all (it might not
+be the case on development setups). So involving the type system here
+would require storing the result in an enum, and then match that enum
+later in order to do the same thing in both cases - load the binary
+as-is.
 
-I think there is also one issue with a test that requires you to 
-actually install ndctl ... and some tests seem to temporarily fail with 
-weird issues regarding "file size problems with /proc/kallsyms", 
-whereby, ... there are no such file size problems :)
-
-All a bit shaky. The "memmap=" stuff is not documented anywhere for the 
-tests, which is required for some tests I think. Maybe it should be 
-added, not sure how big of an area we actually need, though.
-
-> 
-> http://lore.kernel.org/20250521002640.1700283-1-marc.herbert@linux.intel.com
-> 
-
-I think I have CONFIG_XFS_FS=m (instead of y) and CONFIG_DAX=y (instead 
-of =m), and CONFIG_NFIT_SECURITY_DEBUG not set (instead of =y).
-
-Let me try with these settings adjusted.
-
-> There is also the run_qemu project that automates build an environment for this.
-> 
-> https://github.com/pmem/run_qemu
-> 
-> ...but comes with its own set of quirks.
-> 
-> I have the following fixups applied to my environment to get his going on
-> Fedora 42 with v6.16-rc1:
-> 
-> diff --git a/README.md b/README.md
-> index 37314db7a155..8e06908d5921 100644
-> --- a/README.md
-> +++ b/README.md
-> @@ -84,6 +84,11 @@ loaded.  To build and install nfit_test.ko:
->      CONFIG_TRANSPARENT_HUGEPAGE=y
->      ```
->   
-> +1. Install the following packages, (Fedora instructions):
-> +   ```
-> +   dnf install e2fsprogs xfsprogs parted jq trace-cmd hostname fio fio-engine-dev-dax
-> +   ```
-> +
->   1. Build and install the unit test enabled libnvdimm modules in the
->      following order.  The unit test modules need to be in place prior to
->      the `depmod` that runs during the final `modules_install`
-> diff --git a/test/dax.sh b/test/dax.sh
-> index 3ffbc8079eba..98faaf0eb9b2 100755
-> --- a/test/dax.sh
-> +++ b/test/dax.sh
-> @@ -37,13 +37,14 @@ run_test() {
->   	rc=1
->   	while read -r p; do
->   		[[ $p ]] || continue
-> +		[[ $p == cpus=* ]] && continue
->   		if [ "$count" -lt 10 ]; then
->   			if [ "$p" != "0x100" ] && [ "$p" != "NOPAGE" ]; then
->   				cleanup "$1"
->   			fi
->   		fi
->   		count=$((count + 1))
-> -	done < <(trace-cmd report | awk '{ print $21 }')
-> +	done < <(trace-cmd report | awk '{ print $NF }')
->   
->   	if [ $count -lt 10 ]; then
->   		cleanup "$1"
-> 
-> In the meantime, do not hesitate to ask me to run these tests.
-
-Yes, thanks, and thanks for running these tests.
-
-> 
-> FWIW with these patches on top of -rc1 I get:
-> 
-> ---
-> 
-> [root@host ndctl]# meson test -C build --suite ndctl:dax
-> ninja: Entering directory `/root/git/ndctl/build'
-> [168/168] Linking target ndctl/ndctl
->   1/13 ndctl:dax / daxdev-errors.sh          OK              12.60s
->   2/13 ndctl:dax / multi-dax.sh              OK               2.47s
->   3/13 ndctl:dax / sub-section.sh            OK               6.30s
->   4/13 ndctl:dax / dax-dev                   OK               0.04s
->   5/13 ndctl:dax / dax-ext4.sh               OK               3.04s
->   6/13 ndctl:dax / dax-xfs.sh                OK               3.10s
->   7/13 ndctl:dax / device-dax                OK               9.66s
->   8/13 ndctl:dax / revoke-devmem             OK               0.22s
->   9/13 ndctl:dax / device-dax-fio.sh         OK              32.32s
-> 10/13 ndctl:dax / daxctl-devices.sh         OK               2.31s
-> 11/13 ndctl:dax / daxctl-create.sh          SKIP             0.25s   exit status 77
-> 12/13 ndctl:dax / dm.sh                     OK               1.00s
-> 13/13 ndctl:dax / mmap.sh                   OK              62.27s
-> 
-> Ok:                12
-> Fail:              0
-> Skipped:           1
-> 
-> Full log written to /root/git/ndctl/build/meson-logs/testlog.txt
-> 
-> ---
-> 
-> Note that the daxctl-create.sh skip is a known unrelated v6.16-rc1 regression
-> fixed with this set:
-> 
-> http://lore.kernel.org/20250607033228.1475625-1-dan.j.williams@intel.com
-> 
-> You can add:
-> 
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
-> 
-
-Thanks!
-
--- 
-Cheers,
-
-David / dhildenb
-
+So I guess I would rather leave this one as it currently is, unless
+there is a better way I haven't thought about?
