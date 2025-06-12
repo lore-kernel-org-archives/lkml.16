@@ -1,95 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCB0222576;
-	Thu, 12 Jun 2025 08:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBD042A82;
+	Thu, 12 Jun 2025 08:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716162; cv=none; b=XNMyO+1aX2f2j85GbYnYrt0qb0Pq1B316K4x5CSCTi+LqeAkB9FublO7R4ouV3hFB0ozZqciN/UEWEZWPMqd9fUxZPRwgCxgfsNzzxoXGz5t4+kkmkGpJGBib/0NiuTKhZ/dLW+dM8lqjsS3y0z7/Xo4P1P4N2g2eaqRZync8G4=
+	t=1749716222; cv=none; b=QrkG6JesbLH3fjpc3P4sgsD4Q2PLmhUW4H9xUW8RUVcUtgF7Cq1Tnsm88TKfTVa/zS4coBjOWXdeG08D6mRE0+hU+Z5BRB6Y9GfZJU1f9hXJzO6F+OJmNYhfujFSVlQ4BW/G/pFdKhSW2SFTaPIhbvHIFI/PXSAO6u7cLeT8fPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716162; c=relaxed/simple;
-	bh=ecR8AAQgwILfljLPHk1Tr04bOTKmgHmuYykhJqIE55M=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=Sf9nbOO1pcnfnhipc11MykBAyClQjYOVaX5/d8Jqr5dcDj6U6WNagU+FAwSy2MObjg57S22UHpWyHhJtMzxlgQf+ePkD/4SMiK7MfVzb7hlJR1KA+5MFEZZGfJYvzAqWqsjLLTa8QF0UI3lKjfzDwwec7r424v/cjphVA3Foorg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElXkl7ay; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749716222; c=relaxed/simple;
+	bh=zdD0pGeYxeNtR2mZAMdYcuHzGp8sm1K4vEoldgNKWXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dkDtZpWGjEvAHp5g4HC0OOqwj/eHmltDUMHYT3m4cPegiF49pDr1e8bLw5D2xB9xXtspEoPuU7lEZ+lm6ZUEdBxjLZzIyPnnKk+R2/LqL+6QHXbhf9RkxsZVodUBUWr3otMXoYllLEIfEfWbF0Fpxx3ErIwEzzaT4OjzR4LWygE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=edDjj3Bd; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElXkl7ay"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72906C4CEEA;
-	Thu, 12 Jun 2025 08:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749716161;
-	bh=ecR8AAQgwILfljLPHk1Tr04bOTKmgHmuYykhJqIE55M=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=ElXkl7ayFX0nyVj5sBPIdJzSQFOZ89rlsCiPEDMX+Gwb+Fggx2pUrJEGt1NJc/18W
-	 upKBpAE8ly4I3Was27a0JFBuvjzXH4hMV3J6G1+YkVM1Lr2Ie2GjWiHYfJpK5CE4B0
-	 ECE4Wiz2mLFBy4PXxwsHaRA4DcM6NWUya8gXCUTIzI22RGFWODFecbNtvdW26X6Ba4
-	 QgHp8yEn51noYr3yKx9MzNzmcO+wEHHav63su8Yz/bPNOqjbCMI+0FPw8xinpjVvpB
-	 UK46/nwhxHld7pViCCMNeTxuVvvTXLZKfRKCbWzi78gpLi3OR+S5GBPODl2p8SlBTj
-	 yVp7qq66NmcTw==
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="edDjj3Bd"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id E7AD31F918;
+	Thu, 12 Jun 2025 10:16:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1749716211;
+	bh=3VR5y0yctXr4XPaqy1aKaXDWdxCZQO5tubS3+gM8YMY=; h=From:To:Subject;
+	b=edDjj3BdUD1gnQTpkEmdkcP/wnYtbxZpJQrdMyg+rC/QFXCa+JIfLShC/OZlNzqXg
+	 siW651XVhV8xzKaR41qq0o55LePizdTglIfnsFfkIaei2IWPK3XPjDRCGLc7DtWliH
+	 15l0Ln5GvzV7C3u1AzGxO8E7fdhQ89PfiYARKBmK48unDPrYwQfMQ+8335QnqrCBIP
+	 oKNsXEW1QdCtN8RwAAmRcx1x6nysHGImfBL5SI6TncUmcQVSS6d9MpCKVqT9mRVOfU
+	 ivF4lOQaobzt5BZ2WKmfUn5UbOrNE457dQvNqLFBpOHibGKmiOQM6A4fCPO2K00GKU
+	 kwXJvloiVXvFg==
+Date: Thu, 12 Jun 2025 10:16:46 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>,
+	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
+	kernel@pengutronix.de, Oleksij Rempel <o.rempel@pengutronix.de>,
+	Roan van Dijk <roan@protonic.nl>,
+	Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+	Jacopo Mondi <jacopo@jmondi.org>,
+	Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+	Mudit Sharma <muditsharma.info@gmail.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	=?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+	Andreas Klinger <ak@it-klinger.de>,
+	Petre Rodan <petre.rodan@subdimension.ro>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 09/28] iio: adc: ti-ads1119: use = { } instead of memset()
+Message-ID: <20250612081646.GA316795@francesco-nb>
+References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
+ <20250611-iio-zero-init-stack-with-instead-of-memset-v1-9-ebb2d0a24302@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 10:15:55 +0200
-Message-Id: <DAKEM192U5RZ.3D00TOR520LRY@kernel.org>
-Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Ingo
- Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
- Lelli" <juri.lelli@redhat.com>, "Vincent Guittot"
- <vincent.guittot@linaro.org>, "Dietmar Eggemann"
- <dietmar.eggemann@arm.com>, "Steven Rostedt" <rostedt@goodmis.org>, "Ben
- Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>, "Valentin
- Schneider" <vschneid@redhat.com>
-X-Mailer: aerc 0.20.1
-References: <20250603205416.49281-1-dakr@kernel.org>
- <20250603205416.49281-2-dakr@kernel.org>
-In-Reply-To: <20250603205416.49281-2-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-9-ebb2d0a24302@baylibre.com>
 
-On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
-> +    /// Signal all tasks waiting on this completion.
-> +    ///
-> +    /// This method wakes up all tasks waiting on this completion; after=
- this operation the
-> +    /// completion is permanently done.
-> +    pub fn complete_all(&self) {
-> +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct compl=
-etion`.
-> +        unsafe { bindings::complete_all(self.as_raw()) };
-> +    }
-> +
-> +    /// Wait for completion of a task.
-> +    ///
-> +    /// This method waits for the completion of a task; it is not interr=
-uptible and there is no
-> +    /// timeout.
+On Wed, Jun 11, 2025 at 05:39:01PM -0500, David Lechner wrote:
+> Use { } instead of memset() to zero-initialize stack memory to simplify
+> the code.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-Another thing that we should document is weather this function returns
-immediately when `complete_all` was already called in the past.
-
----
-Cheers,
-Benno
-
-> +    pub fn wait_for_completion(&self) {
-> +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct compl=
-etion`.
-> +        unsafe { bindings::wait_for_completion(self.as_raw()) };
-> +    }
-> +}
-> +
-> +// SAFETY: `Completion` is safe to be send to any task.
-> +unsafe impl Send for Completion {}
-> +
-> +// SAFETY: `Completion` is safe to be accessed concurrently.
-> +unsafe impl Sync for Completion {}
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
