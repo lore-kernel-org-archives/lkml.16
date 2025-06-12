@@ -1,192 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA942DECA5
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7418F2C326E;
+	Thu, 12 Jun 2025 20:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758580; cv=none; b=eMhzNySyxSWp/DsUNRL+3SOZgpj/0R6vmEoyhUvtTbf+yGj6C+/OzTLX5HR9QKDeXyLJm5enVaAkKI4f8jwEzGhdSFflm0imEItClkzEJu3uISx01kYnkBa4SBv+DDF/h8fSZDVhhRPMUW3dk6apeYygzZ/arrcqBlseuXWHf8Y=
+	t=1749758583; cv=none; b=R7ZHOGlRn1bt8vboHsOpkIF9cMCEQlr77MpxZdctC0QZSsA3cK15oT6iLpDyfK/3emVpPKPFDgDLYQ1Fy3/prf3+NLrMDGlmTz5GUawO8PemaqDlujCMnXR3Xmrl56lCy7k+vE6niKD6Bvi3VKA/+HggNxLMgo7xofdW9WxC7O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758580; c=relaxed/simple;
-	bh=xmePPptEt7NJI3Md9oPNPSn9WDpAC6aovDWhz+V9vxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l50ztj2JaY6CBELlVhiCKZRcakS4l9+4CPHky0AcNHL/rNzJeEL5XeeMiZR1TCH+l8aQKgAXoB+tVf/Bkl6INBLW2i+t8OuEc1SEuPT+R2m62ZUiMONUelfDKOtuWHDsWrOUvH56Hx6ibkic8QTETH/QpYsFUZt2inMex5mll+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UPlw+60z; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749758583; c=relaxed/simple;
+	bh=9PAgFh2Rs+8amMX0IEnn4DbVMXUpSwgI04vMhuK5+J4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7l+OO3U9+SKlMTVrrCVnACqpUeusGKtuOj28+pCQ+zdlhOCtJL2sh2c0Bh2gMic6ppm1zSYPnwU5WHbVM9GRXnBzMdGF6KTBiNXXFNVttWx8HYWVfel4C0/u1MMYkeBAJxk+3Xqs3Phhf8I76MyXgrqtEKfEmDpVVqYsUd8OMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=BeCpa18K; arc=none smtp.client-ip=88.97.38.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPlw+60z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749758578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l/9V6hPz32RRYGDqTvd1VaGM9sza1xHAmqYvXn2RTBg=;
-	b=UPlw+60z3zSGffh11BTdCPxgjexbccxKBvDVH/Kryd9FEIHW+aycjA8i/Fzv42EBeO66KX
-	Ib7P1n6YQU76LpNsrTfevzu554dwqrL3rspc8FpdIOCYaLh4OsVcrjK7+9fgLQkl3ZJmLy
-	2nfIlZnPae5ZgVZlhKqNFe8b7cLdeZ4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-324-8E1TSTiZPru4tcazbGuMHQ-1; Thu,
- 12 Jun 2025 16:02:52 -0400
-X-MC-Unique: 8E1TSTiZPru4tcazbGuMHQ-1
-X-Mimecast-MFC-AGG-ID: 8E1TSTiZPru4tcazbGuMHQ_1749758566
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6B2A51944B0C;
-	Thu, 12 Jun 2025 20:02:46 +0000 (UTC)
-Received: from p16v.redhat.com (unknown [10.45.224.169])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C28C918003FC;
-	Thu, 12 Jun 2025 20:02:39 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Michal Schmidt <mschmidt@redhat.com>,
-	Petr Oros <poros@redhat.com>
-Subject: [PATCH net-next v9 07/14] dpll: zl3073x: Add clock_id field
-Date: Thu, 12 Jun 2025 22:01:38 +0200
-Message-ID: <20250612200145.774195-8-ivecera@redhat.com>
-In-Reply-To: <20250612200145.774195-1-ivecera@redhat.com>
-References: <20250612200145.774195-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="BeCpa18K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1749758579; bh=9PAgFh2Rs+8amMX0IEnn4DbVMXUpSwgI04vMhuK5+J4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BeCpa18KugoVstac64qyGfYXu5qhGDNen7Z68UnEzdx3t4DJpZg12auMSbj9OyUd9
+	 L9m8SwGWqwzwnsl9w3Eh7+IcPfIaVVOdqTqZofnGkyuJOUA2OHaLZg1M0JTLxm2Mk1
+	 MwgEHtBxxy6sAz1bIj1Co2aKtWa+gqIEoj505kURR64NRVdXex9aa0tRxKERLwYLa6
+	 6zp2ukmyygLPpJRIUnayQlMr78PU4uxVShIHTEVKSRm+obSbltL/EoO0a6XUd0FeUI
+	 A4C7lQnSPJ/epqNb5FG1ZNZAyIagy3mJGt9DoSZPRuQjq559WYRJZGV84xd6nq/9jE
+	 QMut30DSJ/zKQ==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+	id 16025100069; Thu, 12 Jun 2025 21:02:59 +0100 (BST)
+Date: Thu, 12 Jun 2025 21:02:58 +0100
+From: Sean Young <sean@mess.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] media: rc: ir-spi: constrain carrier frequency
+Message-ID: <aEsycgtDxrypTU0v@gofer.mess.org>
+References: <20250611112348.3576093-1-demonsingur@gmail.com>
+ <20250611112348.3576093-3-demonsingur@gmail.com>
+ <aEnifhd1M6oJjy1S@gofer.mess.org>
+ <24d63ec4-a037-46fd-bbc1-9be2bef34c2b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24d63ec4-a037-46fd-bbc1-9be2bef34c2b@gmail.com>
 
-Add .clock_id to zl3073x_dev structure that will be used by later
-commits introducing DPLL feature. The clock ID is required for DPLL
-device registration.
+On Wed, Jun 11, 2025 at 11:35:21PM +0300, Cosmin Tanislav wrote:
+> On 6/11/25 11:09 PM, Sean Young wrote:
+> > On Wed, Jun 11, 2025 at 02:23:44PM +0300, Cosmin Tanislav wrote:
+> > > Carrier frequency is currently unconstrained, allowing the SPI transfer
+> > > to be allocated and filled only for it to be later rejected by the SPI
+> > > controller since the frequency is too large.
+> > > 
+> > > Add a check to constrain the carrier frequency inside
+> > > ir_spi_set_tx_carrier().
+> > > 
+> > > Also, move the number of bits per pulse to a macro since it is not used
+> > > in multiple places.
+> > > 
+> > > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> > > ---
+> > >   drivers/media/rc/ir-spi.c | 6 +++++-
+> > >   1 file changed, 5 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
+> > > index 50e30e2fae22..bf731204c81e 100644
+> > > --- a/drivers/media/rc/ir-spi.c
+> > > +++ b/drivers/media/rc/ir-spi.c
+> > > @@ -21,6 +21,7 @@
+> > >   #define IR_SPI_DRIVER_NAME		"ir-spi"
+> > >   #define IR_SPI_DEFAULT_FREQUENCY	38000
+> > > +#define IR_SPI_BITS_PER_PULSE		16
+> > >   struct ir_spi_data {
+> > >   	u32 freq;
+> > > @@ -70,7 +71,7 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
+> > >   	memset(&xfer, 0, sizeof(xfer));
+> > > -	xfer.speed_hz = idata->freq * 16;
+> > > +	xfer.speed_hz = idata->freq * IR_SPI_BITS_PER_PULSE;
+> > >   	xfer.len = len * sizeof(*tx_buf);
+> > >   	xfer.tx_buf = tx_buf;
+> > > @@ -98,6 +99,9 @@ static int ir_spi_set_tx_carrier(struct rc_dev *dev, u32 carrier)
+> > >   	if (!carrier)
+> > >   		return -EINVAL;
+> > > +	if (carrier * IR_SPI_BITS_PER_PULSE > idata->spi->max_speed_hz)
+> > > +		return -EINVAL;
+> > 
+> > Just a nitpick.
+> > 
+> > I think carrier * IR_SPI_BITS_PER_PULSE could overflow, and then the check
+> > wouldn't work. It might be better to do:
+> > 
+> > 	if (carrier > idata->spi->max_speed_hz / IR_SPI_BITS_PER_PULSE)
+> > 
+> > However since IR_SPI_BITS_PER_PULSE is 16, which is just a shift left by 4,
+> > I don't think this can be abused in any useful way.
+> > 
+> 
+> I have another concern regarding overflow, inside ir_spi_tx().
+> 
+> DIV_ROUND_CLOSEST() is called with buffer[i] * idata->freq and 1000000.
+> buffer[i] comes from userspace, it's the number of microseconds for this
+> pulse. It's unsigned int. lirc core already checks that each element
+> is not bigger than 500000 microseconds. Issue is, at 500000, it would
+> take a carrier frequency as low as 8590 to overflow the unsigned int.
 
-To generate this ID, use chip ID read during device initialization.
-In case where multiple zl3073x based chips are present, the chip ID
-is shifted and lower bits are filled by an unique value - using
-the I2C device address for I2C connections and the chip-select value
-for SPI connections.
+Interesting, you are right.
 
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/dpll/zl3073x/core.c | 6 +++++-
- drivers/dpll/zl3073x/core.h | 4 +++-
- drivers/dpll/zl3073x/i2c.c  | 4 +++-
- drivers/dpll/zl3073x/spi.c  | 4 +++-
- 4 files changed, 14 insertions(+), 4 deletions(-)
+> Maybe it would make sense to switch this one to mult_frac()? But we
+> would lose rounding.
+> 
+> mult_frac(buffer[i], idata->freq, 1000000)
+> 
+> Optionally, we could cast buffer[i] to u64/unsigned long long, and use
+> DIV_ROUND_CLOSEST_ULL.
+> 
+> DIV_ROUND_CLOSEST_ULL((u64)buffer[i] * idata->freq, 1000000)
+> 
+> Let me know what you think.
 
-diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
-index 3a57c85f902c4..b9809d21d2e52 100644
---- a/drivers/dpll/zl3073x/core.c
-+++ b/drivers/dpll/zl3073x/core.c
-@@ -736,13 +736,14 @@ static void zl3073x_devlink_unregister(void *ptr)
-  * zl3073x_dev_probe - initialize zl3073x device
-  * @zldev: pointer to zl3073x device
-  * @chip_info: chip info based on compatible
-+ * @dev_id: device ID to be used as part of clock ID
-  *
-  * Common initialization of zl3073x device structure.
-  *
-  * Returns: 0 on success, <0 on error
-  */
- int zl3073x_dev_probe(struct zl3073x_dev *zldev,
--		      const struct zl3073x_chip_info *chip_info)
-+		      const struct zl3073x_chip_info *chip_info, u8 dev_id)
- {
- 	u16 id, revision, fw_ver;
- 	struct devlink *devlink;
-@@ -786,6 +787,9 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
- 		FIELD_GET(GENMASK(15, 8), cfg_ver),
- 		FIELD_GET(GENMASK(7, 0), cfg_ver));
- 
-+	/* Use chip ID and given dev ID as clock ID */
-+	zldev->clock_id = ((u64)id << 8) | dev_id;
-+
- 	/* Initialize mutex for operations where multiple reads, writes
- 	 * and/or polls are required to be done atomically.
- 	 */
-diff --git a/drivers/dpll/zl3073x/core.h b/drivers/dpll/zl3073x/core.h
-index 0d052c02065e5..fcf142f3f8cb6 100644
---- a/drivers/dpll/zl3073x/core.h
-+++ b/drivers/dpll/zl3073x/core.h
-@@ -57,6 +57,7 @@ struct zl3073x_synth {
-  * @dev: pointer to device
-  * @regmap: regmap to access device registers
-  * @multiop_lock: to serialize multiple register operations
-+ * @clock_id: clock id of the device
-  * @ref: array of input references' invariants
-  * @out: array of outs' invariants
-  * @synth: array of synths' invariants
-@@ -65,6 +66,7 @@ struct zl3073x_dev {
- 	struct device		*dev;
- 	struct regmap		*regmap;
- 	struct mutex		multiop_lock;
-+	u64			clock_id;
- 
- 	/* Invariants */
- 	struct zl3073x_ref	ref[ZL3073X_NUM_REFS];
-@@ -91,7 +93,7 @@ extern const struct regmap_config zl3073x_regmap_config;
- 
- struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev);
- int zl3073x_dev_probe(struct zl3073x_dev *zldev,
--		      const struct zl3073x_chip_info *chip_info);
-+		      const struct zl3073x_chip_info *chip_info, u8 dev_id);
- 
- /**********************
-  * Registers operations
-diff --git a/drivers/dpll/zl3073x/i2c.c b/drivers/dpll/zl3073x/i2c.c
-index bca1cd729895c..82cc929e543d7 100644
---- a/drivers/dpll/zl3073x/i2c.c
-+++ b/drivers/dpll/zl3073x/i2c.c
-@@ -24,7 +24,9 @@ static int zl3073x_i2c_probe(struct i2c_client *client)
- 		return PTR_ERR(zldev->regmap);
- 	}
- 
--	return zl3073x_dev_probe(zldev, i2c_get_match_data(client));
-+	/* Initialize device and use I2C address as dev ID */
-+	return zl3073x_dev_probe(zldev, i2c_get_match_data(client),
-+				 client->addr);
- }
- 
- static const struct i2c_device_id zl3073x_i2c_id[] = {
-diff --git a/drivers/dpll/zl3073x/spi.c b/drivers/dpll/zl3073x/spi.c
-index 219676da71b78..6327d4c9c8d94 100644
---- a/drivers/dpll/zl3073x/spi.c
-+++ b/drivers/dpll/zl3073x/spi.c
-@@ -24,7 +24,9 @@ static int zl3073x_spi_probe(struct spi_device *spi)
- 		return PTR_ERR(zldev->regmap);
- 	}
- 
--	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi));
-+	/* Initialize device and use SPI chip select value as dev ID */
-+	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi),
-+				 spi_get_chipselect(spi, 0));
- }
- 
- static const struct spi_device_id zl3073x_spi_id[] = {
--- 
-2.49.0
+I've given it some thought and I'm not sure there is a better solution. It's
+an edge case of course, but we should deal with it correctly.
 
+Nice catch, solution looks good.
+
+
+Sean
