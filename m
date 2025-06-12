@@ -1,256 +1,217 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012054.outbound.protection.outlook.com [52.101.71.54])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00941E487;
-	Thu, 12 Jun 2025 02:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11DA18C011
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 02:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749695633; cv=fail; b=ZyYtVpeqry1w4NRBSq1UoQ3C178hmQEf2UUxkfTCyUGpciqkoYHiVg/gnRgiueyfrpFqcJTA+TVnlt5/uKrTDh65zR8jjfqQMqYKtKjSz0B160tkca+pzhu6hvTwGgYzLR0x6ge8kyA50eAxfZbbKRXa2EHOdpwm5auvgP5+/KQ=
+	t=1749695667; cv=fail; b=EDlOYm9yO8qllp8Tx8edqomExZ9ZpWgw3LJscmbPS9bDs857sv/c0VMIwbJiSgzgUPIRRrI4iEdK8Aj3uQqDW+L1+sSjiLdgftL8VSeG7qG+OMoaclOOjTgpJR6xVMx66A2020Z3Nh0Y8m7BhHdrHWJkOrKoH9uV+Cd7YUOKdws=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749695633; c=relaxed/simple;
-	bh=kF6ieQ2kJIj0bIR2SaJ+ErRFQpA7X9ODQVOnzOetSq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=r6TjAD7a+yEpBa046xp6gCvJe33okrnmbAlZdoY4RCtuNezZ89BvJbKJGoTSr5bACQ/6/th1vFv+1yVX+g6R1egQROcLNJwoiImFuP0V/VcSmp+fuK70Vxe2/N7bPZrh0OOwYaakO9dDRwke6CdGiXtS7YYEskMB2pwVywOKQYQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=nhxomPW1; arc=fail smtp.client-ip=52.101.71.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	s=arc-20240116; t=1749695667; c=relaxed/simple;
+	bh=jVvL8J+t1cHYdBPgBGwmKVNdjWGzZMFFR72an3/D2QM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kZYbQPBej6opp1zSMekoJlF4RnqmKQIMsVsCEG4VadG2hS7tKU44m+NME/uME5tFFyWNdz5dZQ5YKynNuOR0KXE1t7dgy34yft77K0ym7XFhPC5C7MurhZHBcYBgmx6fk9ICb6CFG8l+wcJ5BfxtBBirM5cJsEZoK7en2Dt1Qts=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EDXEHJpl; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="nhxomPW1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EDXEHJpl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749695666; x=1781231666;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=jVvL8J+t1cHYdBPgBGwmKVNdjWGzZMFFR72an3/D2QM=;
+  b=EDXEHJplL7pymbUQ4VeMOMtA9iV+QhtnG26sAFHsXLOUT4v/nfqjQsmD
+   OpqYmerjorioEKSkgZ2MwoSzUxwUv8nj/1AXdTYiCS0+TC0zyIctWbsyb
+   Uz8aCGxOHk1LyK8OtaWoEFntPzdzBP4EC7omdAx/pys9ZAHWPRO0vJoOp
+   xwXzqOoInjiZ7NH1b6rHwH6U/PTQhRPFNimg49m2eGeC7c69WFHPa/J0B
+   IHdnoMqfQbc+a/2KK1nzWL0qh7siurYEQS/sxhZPrHOx+/2FKngvbYOVe
+   cUWNBHqn+XhDe7xRedjqx9SlCJh95uVoJpvCP7itmHR1DZP6JINLFhU+y
+   Q==;
+X-CSE-ConnectionGUID: OFA2R/orTbeCQFiAt6Z06A==
+X-CSE-MsgGUID: 7hDUo55jTMuzzWXDv97SIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="69295119"
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="69295119"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 19:34:26 -0700
+X-CSE-ConnectionGUID: eSrTAslTQya7TxEfA2Vzsw==
+X-CSE-MsgGUID: csgiuwN7SIOEiNQ6B7+iuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="148278202"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 19:34:25 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 19:34:24 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 19:34:24 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.51)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 19:34:23 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uwah5lHZd3uHwmPH31RBZ3d5bYsJrWlTELjYoKKbe3M+yho3PqW9EPS5QSsJRsVDZXTYQjw01QCgMLKoaXJeufJNVb6KKlfns8p+YD8CL+ORecXEt4oAsbVaZCUgmCRm4ba7colR8ys7AhkuVYh5GOA7+yeaI51eYdZTkEhUzfSiPKW7nCuEypai/flfGM36/ncQFdFss4tkv0ugawr/RxkrXMd2nUH7zz4XMW4fjsFSG453Ca/UdLqie99bqXVb8SYCRsLtHjMpWh/SQkEYqHk/F6oShmaVbWcSe5YKM2+SJzV0hlCh9fgSx9OSFg27XQ9/Oh8bqqwNsY/LQIb+wQ==
+ b=iKxtNTYGKVKeJEbNiBfMGPKhIv+NJCO7D1Z2ecoWceMjwk4R6/Uy5wVdHQcXQZPv1HBFnK+lYgdFYiaOG+wL+0+e+aFOEjHrNoK6emn4K1FHbJXxJQYwrHQr1xrd8JqTKz3WvuwQ2HRy3eylTAe5eB2yVokYDl0cLZ0s05Jg730zqvlaXyHNXnN3+C640HGxPSAmp2C6DLxXaI5w9qMtShwtqk80FedyLuLDUtLTWV/QKJi6nlXSXfJ4KFPLgAALUhExCkEONi1auilqYZQgLyX2NuSs/rkQhe3E/DPiHR0OCxHy8cGGprMZbdiLeOyVsGqEycRpu9ChyrzdmGmzCA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FRU7ooNIVf0rQwd4utOxJq4l+EGGiKU4yv35DgR8Y8g=;
- b=bVsYTmsExvn7FdszANdq6k2kdA71xBR4LGwA0rIaGzm3NOqbmP8hXft8JAMg6gIxqZQJhNBHqqWAhC/mTjkXGuG5V2joilBtQ64QK/JOHVmUtWr07JVVyjZMXgRoLtbq5eORCZ7UOD5+KFJNebsaRa38nIFtQwe0m0E4+pk08uVtoSdNbM+Wx/XCCjpUjuhLSiGRhhmhEMFc0AG0MlB/xKQ9KFHecHcaX5xrrQTSMbC9hGQ/TQk2/e2JpWPAM5W0oCnhW2QJLDTWHlNfoueRBh+kepJaQKVPJU3Eo1MQxYa3K2KETRP2ycjlBeKpEuZKgVwonCHa1m2hdwLDxpdpww==
+ bh=n8MGChbdNvujck3qDVFexqmTm/TOwOhQBa+Fedq2/7Y=;
+ b=tJS0CQ5p9Y3fPnLnpjLt8zY5wyTVMt2tn+mjkyhKCcu+aTK9y5HWgQFjZ26y7iIA6saP7xlmkwAKh5MOUyPqWUehz+jowjbWP76+Mg9rjgH6nbGAQ2VBxsMprkkz9cSM4qSEPSilhv6gs1TFu76/cJlW7pvNbVIa3/KGVNWiyc+ZjOSBgCCakDGs2Hg2eqMWV5F89m4gxUIjWnUYzLFjzI7Yn9KdibTGuWwyvs8aZLMdDvnJVCd8eyBiZ8+lwuQICzQJIFtmUjQy8bhBSbgAcb1jojkxSAyx96nkcYqPAl0eFLfA4u9h8LHArlELcZDSNWSWI/c6kogER+cTdPEjqg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FRU7ooNIVf0rQwd4utOxJq4l+EGGiKU4yv35DgR8Y8g=;
- b=nhxomPW1L71bYLkFb/hGOgKivtG2Qpm0mZP3bIkPODMtkEKSjRFy9zSjDfpeHcsP81cwoMXn/o+WZXQcHGrWUyLOeVj+Fi3C+aSme1+LjFBWCAEtxxh6AwUmhgXWIu8BGg9o5t61wFZonru8216o5dw/NKThihEXirREfPCW7YpP/JO9fNp/hJfzcKcT6aQA/ztO1AtRdBhTxOwD2djDX4h72XOqwopXpsQGMg36Q4PZkNKwE+x4COYh4Gr5tRFgVTmR+zOCXk/D0iwgBpQyHbhnskn/QohRb5iaglcdlEAlC0LedV9EDaa7tcwFOmonaBMhFpNTAYHFk5epLCVcGw==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by GVXPR04MB10732.eurprd04.prod.outlook.com (2603:10a6:150:215::8) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by CH3PR11MB7793.namprd11.prod.outlook.com (2603:10b6:610:129::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.22; Thu, 12 Jun
- 2025 02:33:45 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8813.024; Thu, 12 Jun 2025
- 02:33:45 +0000
-Date: Thu, 12 Jun 2025 11:43:52 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 0/3] firmware: arm_scmi: perf/cpufreq: Enable
- notification only if supported by platform
-Message-ID: <20250612034351.GA7552@nxa18884-linux>
-References: <20250611-scmi-perf-v1-0-df2b548ba77c@nxp.com>
- <20250611-cherubic-solemn-toucanet-aac5af@sudeepholla>
- <aEmFnJVG8lXTDNmO@pluto>
-Content-Type: text/plain; charset=us-ascii
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.32; Thu, 12 Jun
+ 2025 02:33:53 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8792.034; Thu, 12 Jun 2025
+ 02:33:53 +0000
+Date: Thu, 12 Jun 2025 10:33:46 +0800
+From: Oliver Sang <oliver.sang@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	<oliver.sang@intel.com>
+Subject: Re: [paulmck-rcu:dev.2025.06.04a] [rcutorture]  9605367000:
+ WARNING:at_kernel/rcu/rcutorture.c:#rcu_sync_torture_init_trivial[rcutorture]
+Message-ID: <aEo8in1XPCBD+7Aj@xsang-OptiPlex-9020>
+References: <202506101435.e96fc5f7-lkp@intel.com>
+ <ad8d8a6d-1e81-4ce5-afe7-19cea07ef128@paulmck-laptop>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <aEmFnJVG8lXTDNmO@pluto>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI1PR02CA0024.apcprd02.prod.outlook.com
- (2603:1096:4:1f4::12) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+In-Reply-To: <ad8d8a6d-1e81-4ce5-afe7-19cea07ef128@paulmck-laptop>
+X-ClientProxiedBy: SI2PR01CA0018.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::7) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|GVXPR04MB10732:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5edfc34-ef0d-442d-9bb1-08dda9598def
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|CH3PR11MB7793:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1518f473-a832-48ec-e50b-08dda9599291
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cD4K+O555B6MSTZFrwLmoMT3QKBuetnCf+BhnOBB+uHf3t5ZYIH3rsUaHnok?=
- =?us-ascii?Q?5LEvlza1lLKo+eMMyPyUyakiwN72ppucccEocn37CgVgurtSVXtxHvMqvSwT?=
- =?us-ascii?Q?GbTqR9k4t2qRzVZ0iFUwjGofMzOFs3xB8R5YnWBO3VKwPElGsMNX6CXcLmc1?=
- =?us-ascii?Q?nKUm1Z/0yq9bIz6TgyE60wu+lZY5g/3U1ZAefmB8b4ESbVRXZcVufqpbLcer?=
- =?us-ascii?Q?LRzNGTi3osYdAgQglhFnbyVqU5ycVWqGoC95n+jrXZuqiSIAW6yivQVy+tFr?=
- =?us-ascii?Q?hz9pWI3EedSaEUx0ED1zCjkalZk+/32Nh4IVq/FbbPa0pueuRBaQMPF7X2Yo?=
- =?us-ascii?Q?3QvmzEQoBiAL/5Sc6V2/IKbDu/rkx84tg2OCEpmvMwSm2qibPxQSu9uw5RhI?=
- =?us-ascii?Q?Hlh2GYDVD1Pf0RigYAsWBAYzaeamkdorM02RhfqhKfSmY374gkHwLNsg29CB?=
- =?us-ascii?Q?NHs3UwdZKYBuxAP/NYIH1Vi4qTHzFqizhxCPw39bZvNi9P6A+ef1UZv5kU0K?=
- =?us-ascii?Q?BYn1spu5DaN7P/iFAZYNMvv3N8Bix3RW4MpQxXlHLnAehJ3u4gA2fiX/TV7j?=
- =?us-ascii?Q?/jOyWOOMkkMf+nH5Y8Sck6Aq8i4w6EYkL1zvqxuCer1VYV6rLL8OAKNCMrDu?=
- =?us-ascii?Q?nMgDPZ3TUrFWeECuYi+KPmIfuljnZBYiY6UxxKN0oEe2Wf6CA1vPgtGR+jH9?=
- =?us-ascii?Q?eJa+whzb/gHHtOdMfFZarojZVXwReVXEQaHMZQx4Eh8Mymh9XoPQCQhA5lyB?=
- =?us-ascii?Q?n+W9h5kZeV5IQsBuXp3eMYsD6rJrjhYN79GCk0f3VPsvJzuP7THRcVkJQ7XM?=
- =?us-ascii?Q?nTl2SBSLYCw50MOw+9kr5V3ng4ZVU46FPPFybiiiMIW5tjMYeN6PaxJcEsJw?=
- =?us-ascii?Q?3Leid6z4ewbKjk71srypEB29RPDXmcyGQK0Sc/KHt6W9s6PcvhF2JMuU3j/E?=
- =?us-ascii?Q?nP3kx4e9j+k2AP1XK0QWHHqq1AMY2+k6i7JsQ0FLXIEKfVC6IrmRgIM0N8Dm?=
- =?us-ascii?Q?l1PvL/qm6zNwlnkNgFvE5SxVpeGEydVBnE2JwTVL3peR0P+IpDw1ESb98CLX?=
- =?us-ascii?Q?ubjDbGfH2JyUhME8urqMJ6R3lUEIdSPwPTeYtNL1IjxUb46Bjc1rHJJQ1LhV?=
- =?us-ascii?Q?94LFWHko4vUIniAN0J//zhMsOrHccCXZcW0VFiTFZfn/qAcek5DWmR7REaUu?=
- =?us-ascii?Q?IMLj2sDYHjoB74W6n9IWam82oSVTCFJnV6Bp3jKCW81TqPcVVdHF55XgdGnQ?=
- =?us-ascii?Q?IrrFgwvjLP8Zjw1N5skeqkrWT7GI6ZfhWI4OavjO25tBwGhtlT99BMXpioQL?=
- =?us-ascii?Q?a8uBy3I9ncnyG1yca22COCxiaOmtmsRgDVYkEmPCtlHlgUpqXh+yDObsyRHQ?=
- =?us-ascii?Q?ToFuVXK3gdlHHzNq4MGBwGoD9IopZ+cQCp9/xWtq9/ADCXtDP4vhkOATAWFq?=
- =?us-ascii?Q?zNUqzbzqP+r4LfPUwRsXG25I8nor61hWj1cy8SxE5mC22i55poDAtN1rh0vR?=
- =?us-ascii?Q?QzlGUFC0B65mk8s=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?jQldjZArYHxocvnYh7pKVmSDYaONJzUn0Cd1pgOqVlnUI4p8erdPxDKEld+3?=
+ =?us-ascii?Q?SsGnUy41ALLN9IBuPK4vHxotLkqCyjPPgiHX9aPH5VIBlQQc2zHbJBRHeYmd?=
+ =?us-ascii?Q?qWcpJA2lKPKqLVTDOLZ+t2O0cKNM2dEB7dAJ+eNxvzP7HwwC2j6jWK8csm61?=
+ =?us-ascii?Q?YRNh63lBdz9+yuCOJIyq1dmsGoNk4WD9ve1yStb7w+BzvxVifNbEad7EVSYm?=
+ =?us-ascii?Q?79qig3yOL5uKZ932J0al57bMMN3pUbWkGHu0jdUj3XER/c9auGQ83bazJQ6y?=
+ =?us-ascii?Q?r6Og8LDtKG4fsdMdVn02wUkLxnnQqGyZFEm2DbgmIlWqqf6bvF0T4T/038tR?=
+ =?us-ascii?Q?ZU9iCr7tACv8quntSBNohHGbMksJoSJXysEP00ioZA36OXzhdRtPUFHN/sC+?=
+ =?us-ascii?Q?aDYtNYkPVfmFYGtVJhbk0hZ58NuU+pkxRCo5ZHWJ/bf/S5XSS0XqqYsO5JTh?=
+ =?us-ascii?Q?RpSLnLwFuY4ZGrM1+eerLlHT/ozvepQ+5pqmTsc4/GutGV0+1amQx7UGZ/MZ?=
+ =?us-ascii?Q?IEiXPa/JLdij8gstRycQlnKWRHFod0cvt0guXStGFqtWVdayFwPhAL+C51Me?=
+ =?us-ascii?Q?uz7PillfPlK1WyVT/c0HBF9Yl8Df9gIG5b0RlFsx/HUVCFqTa7e6u58aNEYI?=
+ =?us-ascii?Q?yZMKikNg33C9YeKZDfsVgRolsIAlM6V3d34TEnMX6EOHG9x8lGGD73a/otrk?=
+ =?us-ascii?Q?U4mBmYdszaKo0/HH53rL0m2eAzPSHrh20s4sEGI7NokbXqiKAUYb7CRsgjnn?=
+ =?us-ascii?Q?406V06dGfetDZG1Wi3FvoWuOvOxbeh83waa+M5+cuSzCI2aB5GZcbnsY0wBi?=
+ =?us-ascii?Q?TEhb7h/OMEhbbGybDsvO3sqAqq8zDDQ5Wx2JHWZJ/sjMEZ6xRNa5MRwv7lIZ?=
+ =?us-ascii?Q?sXYK9fmGxMW1mfK1IW0i3dVW49mPK8ZHv5MiV3baOf8NywjliCDtOKX2rFwU?=
+ =?us-ascii?Q?toRUFlu7M69ps1dzWcLymh0x7I75S6CJPA1msd9fzx3vtBPT/aWSEuOpTjjs?=
+ =?us-ascii?Q?fy+NH+XFX+k23a5g6qrkyaTEZ1exyXMc1uARjWShEDwJCxreuw0o4yda/IqN?=
+ =?us-ascii?Q?kJMqZqSHlB0qRn3r6bM7C+DtikH9jmjVnlOID/uY9JstQgJvM6gbxZIxsnID?=
+ =?us-ascii?Q?gXM3mf2HqQmCHUuIomrGKNhbeu6pup4DRbhvzz6a3bwONvWwTGSLJxtL86/V?=
+ =?us-ascii?Q?jzEN7um2eR8CiLAh0GEp+3pp+8plZtHD7aUfoCYZHgrOAd4MLSnU8sp/ndQ5?=
+ =?us-ascii?Q?OMJ+fyAB4ip+bWDnDd0D1TvRh4w/A1rTst4MAA3uhyaZyZdFW66j7gUjLEeN?=
+ =?us-ascii?Q?31LkI254GCx7pWrSMZTGV0iRM4XavCn+s4vB9gcxLACdKhjTsVUD+cLiHYrZ?=
+ =?us-ascii?Q?Hgmo93SsjI2UqavWXkyKpoLx62m4NaUGEqaUvCAkr9Nfxxv7MxybBXaS+G4F?=
+ =?us-ascii?Q?Mq62kwyLiZo=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ooJmSgTSmxjRa5mYPDrIwoeexrDHIv45S7TJ/FvMh2Sq6+PgKv4ak2OMq1rg?=
- =?us-ascii?Q?v+3oscDjj/JAEx1Mi2rVED9Xivr20h+cvQw7BOrTwqXh/6+V62Fc5J5CW73g?=
- =?us-ascii?Q?Cd2oHj/14jyqLJinBmGO0YRGyA2Y/X9zFnVPXObykA8aws9h8FDeKKuG/T0n?=
- =?us-ascii?Q?/CJ19pcxxUEw65lEMpwmaRcD43L7WoUzBq2OeVoGja/WcbkBC0Ll9ZsrO8zj?=
- =?us-ascii?Q?pkYOGh5FjsQ86Q1oVKDQD28f8eWcVs8T7jEXTlr/k1AkgPYrBbg7FSrHDdUJ?=
- =?us-ascii?Q?wu8yCPL8m9UeYoFT8+WaXhs2ojNCy0FfD54ngO0tEBeqfrpsdBIKA80Q6Vk0?=
- =?us-ascii?Q?dNEfYmxPt/niUIqRb6Rmev7eli7m8lBxeAnn7j4Qqzmep5KB3oKTPFC/jFC3?=
- =?us-ascii?Q?HaQLmahuTw8MKMPfJzQiryIzWozb5qg54Ae16GO4F6lzO4vwnbZqEwTZfbW0?=
- =?us-ascii?Q?qghGAmQwI83mTH5O+lB9HszZJ6SBZAygXH0DNgm0j97aVxK1hNYj8to1yQuF?=
- =?us-ascii?Q?PHALCGC5u/5xCOanvGLr51eZHWPHAu4g+DfhHuCETM/B9gMco+thBZHtHEsh?=
- =?us-ascii?Q?2c846cHljBFvBrZaOvwttuhJdY8s/969XRPsYVaIEXlRsVhoTpfzJmdklU9E?=
- =?us-ascii?Q?Jb059vPDwkexUGJHu+KW91G+Qvmvn/3QTjMntXo7MejF83BcqQqNzVC4IqQE?=
- =?us-ascii?Q?eoF2RMpw+88XiOkPnktF6gr656iskIYr1kw4GeXPvT99dtz5+KiAz3wvc+zJ?=
- =?us-ascii?Q?PQcBvzz68J2HMr99wL5SNHzMM6GcUwluJIKscG+7tYiBfEV9K3jyTQL5hNUM?=
- =?us-ascii?Q?6U0be6KVfuaM7MuBi+ccTFBAJKO6yC4+N5nH+TkWa7hMnBotXF320PUF5Te+?=
- =?us-ascii?Q?RvjJMPZzF/wgsnBh/9AyHlMgB/AIMCW+vOHJk8iR1SJ4JLwGBDRg9XCH8hPD?=
- =?us-ascii?Q?4fTTZvaocm99YrEpKr0uzt6yyS/YmRBJIqRkwTs72VHSA9Z2dYsUntVxbM4L?=
- =?us-ascii?Q?A6GjZO52rxnQYZMF+8qfFgf1YKf03q7/L4gksPXjgaYqC1xnFBhku7UcS91C?=
- =?us-ascii?Q?Pgng3OefQ5xMlz7iqf15tZMMjRAwx4YWDW9Zl1vhj75gAgHhrun1vsWgrmFw?=
- =?us-ascii?Q?W0buAzJSx1OrGLWBnTWMR3MRU6uPjdZela9hOiFuCpdKDD4kwAUfzkFBcMCt?=
- =?us-ascii?Q?sZPHJqkophB6JV7mVhBIc/njb9/+TxRQILoPg+oD3w9knF/YxEgciWFtZOtS?=
- =?us-ascii?Q?go4jcKgq42QvFig4BrNDwcUkv8LJUG9tq0WUccCDdieEUwHZrpFQmSzAqang?=
- =?us-ascii?Q?RdFk2gvKg+huKmuR6ujJqVFoYsi29W3I8RN3AFfM2ovSBzaO6OtEBgnXSKt0?=
- =?us-ascii?Q?C5UtK2vlk7gtK0KCUFbA4iIjpovsuhAGbf/R5FwlAyR5uAkGwWjSz4odSlPU?=
- =?us-ascii?Q?Spz8J/plsFYCc+tyyVVxLoaL++zzdbrzLc2EYdZVmX6xu9E7Lz7BTYWuevAR?=
- =?us-ascii?Q?YwZPQB0d1y2dY1mlb8cFq5hMsBckSZlHnEYK6BxzL6RddBRDtKpbtcfDzmEd?=
- =?us-ascii?Q?k2gpH9wo93Ce6m1HMvjHCD2HQm47ll8gxwJRycSS?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5edfc34-ef0d-442d-9bb1-08dda9598def
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mkEDoWSbAAAY/lZnfjoFqmqPmQNCg1cEfCUv0SmnwcA8fpRoKyVpGR6tDYlu?=
+ =?us-ascii?Q?oS7qRAYmGC6HQb7+xid7aenqEc1V7vv3yWID7sOPj9axjUO+MxTPEqXHV4Ph?=
+ =?us-ascii?Q?MYZQZg1ksSnjrR7GWTD8TSsVea3gG5LYzT1SZDTBQBuDOjQdlpE6rRK0DpYY?=
+ =?us-ascii?Q?F1zjYb33lPVi+hZJPFt0UGlcVHl6is2tkw16IPsUw3m143TgIrhvXWnieyJe?=
+ =?us-ascii?Q?LBx/eruoISjRmU7kNi5g5Dxk5CuW1zmu1sz0nbA+7g/50mb1RPOtYrTCndVN?=
+ =?us-ascii?Q?jgMuo+WOgeYLhABj3zOmpC7xUg+OfxZNKfnoLwKoCD8DXxjqBSEjs08PvEez?=
+ =?us-ascii?Q?AW0Rw+LaKdviRm/w+iHHejgOycNB7q0w+IxzUpo0LKDnOe+b0mMZXgbRYSbt?=
+ =?us-ascii?Q?S7F9D0GUhvEa8vfwBzJLZuBJXvfRsJmKr+Ok6IMeuLyCD98w9njy/M0aX1y9?=
+ =?us-ascii?Q?SZYOancNLFZNS3fxu47O3akj2UbxQO+vzOnIhCQI1DRNAj74tOVRJ7j1F+/4?=
+ =?us-ascii?Q?k4VaMox8rv5uyWMxxH9Kkqrq/DeN2wxfD8dWfuh1Ro8sf8rNljHLwRCBH6JX?=
+ =?us-ascii?Q?Uv6bk0pePiy31Z3m9fk9B5SDZs2wkmII++C6a6sFnxHEcdB887A1fwLnck0O?=
+ =?us-ascii?Q?JqVanHTSW0c+YYbMAB6hY7xn75mst543Q6ACsbREYX0YPgAy90BjYE/+NcTF?=
+ =?us-ascii?Q?2GNRtIgzugPNGXLVBOfW2dKYzQ0hHWNVbJSa2GMDL6nqAPRyITBitOknWxPt?=
+ =?us-ascii?Q?btOaQ6QnBw3dPCl/urDBa/U9SUQlWx19gFV3C/5ARy+GawK0tLBwt2YgTZXx?=
+ =?us-ascii?Q?mDVM61i0d0W5gMZidAv3XEg61yKZWdWdV2YgDx4uWnwqWc5aQs2QIpi14K3e?=
+ =?us-ascii?Q?GjD+DETlwC/FUnYUM29TYEtnUfa3KAU8/cQ4UKR2q+0Gt5DVAFHodVMTz5cX?=
+ =?us-ascii?Q?b6QVO/ZS+O0+Z+D63mvY/nqyYhvb40+jCUqgotF2YEnpG/kXEQX/mJY7UP55?=
+ =?us-ascii?Q?DuSInyO9FOHJXpxpq3z3QTdXAbP6m9k2B5D7pqjfoi8c8+IZaFtCRBFAQurU?=
+ =?us-ascii?Q?l3FOcpf4MdArub27jWD+qr70l9noI4Xsd2M84KuwgW1oPQQcSnv7g3Bmg7Iz?=
+ =?us-ascii?Q?6nJavEk69SzWxVqQulsl4sZ9bLOs463aCulfewaVpfSbDR4WVB/Gs2Zk36YD?=
+ =?us-ascii?Q?DcGxp6C3ej0Nb4CKAEPVOBVXxROCeHXrEXpOeeh5ItrE+3wVrYRU+JV36AT6?=
+ =?us-ascii?Q?BoFzLWGzzJBDbhGeky9jDNSlks4aD+W/2eZyHYTr2DXn4h4rS3MrgMve8GNe?=
+ =?us-ascii?Q?4EWfG+APi9e9rTj6Y981CS1DyheBmcia8Dkf52sVATMbzkNQcYHmq6LYRbxM?=
+ =?us-ascii?Q?KuAnrpyWX/oAPTh1vBU1DNnJ5S90p1LqV/DD/ZYQwECSxkLfLHuoWZdGRKQ9?=
+ =?us-ascii?Q?PBVNrpdflXaYPENpwON+K3sPq+gRfaQUZWE78chIVYPQ7EsBKbJYHVk2CiPr?=
+ =?us-ascii?Q?H6e1B6ldp9ruHnpkYDH7DQOOISMIX60GZp443IxTFx5uhtTtF82hml44Y8S0?=
+ =?us-ascii?Q?hQZGH5DXd+P500+ENGqQcZsWVyYAGrdTvDKJf8sD?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1518f473-a832-48ec-e50b-08dda9599291
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 02:33:45.7234
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 02:33:53.5853
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wB0CTJQ9wKzup9EKnZ5Pc4zBqNMfwU7J9yE0C1wTrPOgmfHEPcOURbDPYSM7zIFeQLpW/mtyn4qO6E3pbTs+jA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10732
+X-MS-Exchange-CrossTenant-UserPrincipalName: l0Zb39kcdmJ+MJ2xq0cnnbmmnCIrDvkNYWbyguSc6WBgfBRkmaklZ+n5aKH2IrEoKoIJnYlj49+U/cQYihtLcw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7793
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 11, 2025 at 02:33:37PM +0100, Cristian Marussi wrote:
->On Wed, Jun 11, 2025 at 01:17:11PM +0100, Sudeep Holla wrote:
->> On Wed, Jun 11, 2025 at 03:52:42PM +0800, Peng Fan (OSS) wrote:
->> > PERFORMANCE_NOTIFY_LIMITS and PERFORMANCE_NOTIFY_LEVEL are optional
->> > commands. If use these commands on platforms that not support the two,
->> > there is error log:
->> >   SCMI Notifications - Failed to ENABLE events for key:13000008 !
->> >   scmi-cpufreq scmi_dev.4: failed to register for limits change notifier for domain 8
->> > 
->> 
->
->Hi,
->
->I had a quick look/refresh to this stuff from years ago...
->
->...wont be so short to explain :P
->
->In general when you register a notifier_block for some SCMI events,
->the assumption was that a driver using proto_X_ops could want to register
->NOT only for proto_X events BUT also for other protos...in such a case you
->are NOT guaranteed that such other proto_Y was initialized when your
->driver probes and tries to register the notifier...indeed it could be
->that such proto_Y could be a module that has still to be loaded !
->
->...in this scenario you can end-up quickly in a hell of probe-dependency
->if you write a driver asking for SCMI events that can or cannot be still
->readily available when the driver probes...
->
->....so the decision was to simply place such notifier registration requests
->on hold on a pending list...whenever the needed missing protocol is
->loaded/inialized the notifier registration is completed...if the proto_Y
->never arrives nothing happens...and your driver caller can probe
->successfully anyway...
->
->This means in such a corner-case the notifier registration is sort of
->asynchonous and eventual errors detected later, when the protocol is
->finally initialized and notifiers finalized, cannot be easily reported
->(BUT I think we could improve on this ... thinking about this...)
->
->...BUT....
->
->....this is NOT our case NOR the most common case...the usual scenario,
->like cpufreq, is that a driver using proto_X_ops tries to register for
->that same proto_X events and in such a case we can detect that such
->domain is unsupported and fail while avoiding to send any message indeed....
->
->....so....:P...while I was going through this rabbit-hole....this issues
->started to feel familiar...O_o....
->
->... indeed I realized that the function that you (Peng) now invoke to
->set the per-domain perf_limit_notify flag was introduced just for these
->reasons to check and avoid such situation for all protocols in the core:
->
->
->commit 8733e86a80f5a7abb7b4b6ca3f417b32c3eb68e3
->Author: Cristian Marussi <cristian.marussi@arm.com>
->Date:   Mon Feb 12 12:32:23 2024 +0000
->
->    firmware: arm_scmi: Check for notification support
->    
->    When registering protocol events, use the optional .is_notify_supported
->    callback provided by the protocol to check if that specific notification
->    type is available for that particular resource on the running system,
->    marking it as unsupported otherwise.
->    
->    Then, when a notification enable request is received, return an error if
->    it was previously marked as unsuppported, so avoiding to send a needless
->    notification enable command and check the returned value for failure.
->    
->    Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
->    Link: https://lore.kernel.org/r/20240212123233.1230090-2-cristian.marussi@arm.com
->    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->
->
->...so my suspect is that we are ALREADY avoiding to send unneeded
->messages when a domain does NOT support notifications for ALL
->protocols...it is just that we are a bit too noisy...
->
->@Peng do you observe the message being sent instead ? (so maybe the
->above has a bug...) or it is just the message ?
+hi, Paul,
 
-Just the message.
+On Tue, Jun 10, 2025 at 02:16:02AM -0700, Paul E. McKenney wrote:
+> On Tue, Jun 10, 2025 at 03:16:52PM +0800, kernel test robot wrote:
+> > 
+> > 
+> > Hello,
+> > 
+> > kernel test robot noticed "WARNING:at_kernel/rcu/rcutorture.c:#rcu_sync_torture_init_trivial[rcutorture]" on:
 
-arm-scmi arm-scmi.0.auto: SCMI Notifications - Notification NOT supported - proto_id:19  evt_id:0  src_id:8
-SCMI Notifications - Failed to ENABLE events for key:13000008 !
-scmi-cpufreq scmi_dev.4: failed to register for limits change notifier for domain 8
+[...]
 
-It just make user has a feeling that there must be something wrong, especially
-those not know the internals.
+> > 
+> > [ 1078.542757][ T1445] rcu_sync_torture_init_trivial: Non-zero onoff_interval (0) or shuffle_interval (3) breaks trivial RCU, resetting to zero
+> 
+> This is expected behavior.
+> 
+> You are specifying shuffle_interval=3, and this is not permitted for
+> trivial RCU.  So rcutorture is complaining.  ;-)
+> 
 
-And from the error message, "Failed to ENABLE events for key..", we not
-know which protocol, and whether notification supported.
+[...]
 
-I was thinking to propogate the error value, but __scmi_enable_evt
-always use -EINVAL if not success.
+> > [ 1079.633479][ T1445] trivial-torture:--- Start of test: nreaders=1 nfakewriters=4 stat_interval=60 verbose=1 test_no_idle_hz=1 shuffle_interval=0 stutter=5 irqreader=1 fqs_duration=0 fqs_holdoff=0 fqs_stutter=3 test_boost=1/0 test_boost_interval=7 test_boost_duration=4 test_boost_holdoff=0 shutdown_secs=0 stall_cpu=0 stall_cpu_holdoff=10 stall_cpu_irqsoff=0 stall_cpu_block=0 stall_cpu_repeat=0 n_barrier_cbs=0 onoff_interval=0 onoff_holdoff=0 read_exit_delay=13 read_exit_burst=16 reader_flavor=1 nocbs_nthreads=0 nocbs_toggle=1000 test_nmis=0 preempt_duration=0 preempt_interval=1000 n_up_down=32
+> 
+> It then resets shuffle_interval to zero, which allows the test to proceed
+> without error.
+> 
+> The problem is that non-zero shuffle_interval can cause a task to be
+> migrated twice in a row without actually executing on the specified CPU
+> between the two migrations.  This means that readers on the skipped CPU
+> can extend across the entire trivial-RCU grace period, which of course
+> breaks trivial RCU.
+> 
+> So please set shuffle_interval=0 when testing trivial RCU.
 
->
->> I wonder if it makes sense to quiesce the warnings from the core if the
->> platform doesn't support notifications.
+thanks a lot for these details! we updated test scripts per your education.
 
-If not quiesce, we might need to make it clear from the error message,
-saying whether X events are supported for Y protocols or not, not just
-a "Failed to ENABLE events for key.."
-
-Thanks,
-Peng
+> 
+> 							Thanx, Paul
+> 
+> > -- 
+> > 0-DAY CI Kernel Test Service
+> > https://github.com/intel/lkp-tests/wiki
+> > 
