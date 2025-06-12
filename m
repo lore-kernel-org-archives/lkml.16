@@ -1,171 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FEE21FF2C
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2BE20F069
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716112; cv=none; b=lgvsYxvfJIzRIMl1TDOdgPRnJ1D4pkiFB7n3IKwLJGHHhEDIc7Xv/RHTEqkdElbYq9RptWN2nwecKpHZ81y1Q785buN5/zic54Kip5DmpDBWISS/VhTsC0ZzTzBz7SMG66B1gMoEQEkF5FBiarha8NZF2cnnpTHfPnR/yxjDz1c=
+	t=1749716155; cv=none; b=Qnu/UYL3zOpg//OtOUuqnzP5BWGTSygE8h/r7OasQf6P4fv7RVZ3txfO9Woc4dxQGVK5kqWtSo29ONaVUYvGgOZdt2aE1LCmWO+1yqkR2gb+UI3FFVkdrHOiFS4YJ8vHt6JvBl0kjnDHR+gfu7DzV0WhCUvfXqCFTlV4IwuSR0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716112; c=relaxed/simple;
-	bh=jZhqw3CFkkpAqCC9nzOWg/77t51D878n8OcC+pjLft4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yx6BupsSQUqXLnmtkh1RVUU8+KuGskaSGyuU5RP5OfJWUyEPcpbvTJbYLhXz5eGpGO4Mmk0YJ8WCKm1yjxp10z7T2e7KnsgES6W5dv4CK0X+6R9hewMr9jmH60L74hYvMgsAHdBPDTvliFNne6ASY7yblEBU/9g2ssoXC4tC6PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z4pUZCbo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749716155; c=relaxed/simple;
+	bh=/jeQZnIfpThiYHh9X0HmtQFj4BhvzZaipUw5tvNkriU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uOtD6pnpwbXSLVKygv8yVo4KhUVMryP7CNraYk1Kh2rsBmn0DsW4HEm+lf7z9IOTGadzDxHS71JuVNuwVzJXinhZU/IeecMrhPlJZaQ1nDyKCsoopcIGG98LrGdg+mFcKDZ3DwIILXnzxKov8DeHTJocfwdYqP3hi9c1jnFYShI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yZobqC+f; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4pUZCbo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749716109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mrjs5eOHCyu5GrbKeIZJ6mBciwCyDUhu9m4iaDSEfRE=;
-	b=Z4pUZCboMikpjQEIGQohNgWIPqq3wJEWGnFEIGwJcbmHKiQ89uEla7TJV/E3ENEgxzyfAz
-	N6VTJ5OUrM4XSJiMeQjZ8zW3oiCpyPksIwjwphPPDdhyYA6EwFjL0DNuND5ENzKEppYQY3
-	6L+d62qY7VSSR1lGK2j/FRUw1FLRkxQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-537-Gq0W-kJxMnew4ke5I5BZ3A-1; Thu,
- 12 Jun 2025 04:15:02 -0400
-X-MC-Unique: Gq0W-kJxMnew4ke5I5BZ3A-1
-X-Mimecast-MFC-AGG-ID: Gq0W-kJxMnew4ke5I5BZ3A_1749716099
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 790891956096;
-	Thu, 12 Jun 2025 08:14:59 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.45.225.28])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5F7F2195609D;
-	Thu, 12 Jun 2025 08:14:54 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v9 9/9] drm/i915/psr: Add intel_psr2_panic_force_full_update
-Date: Thu, 12 Jun 2025 10:01:06 +0200
-Message-ID: <20250612081344.225200-10-jfalempe@redhat.com>
-In-Reply-To: <20250612081344.225200-1-jfalempe@redhat.com>
-References: <20250612081344.225200-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yZobqC+f"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so616498f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749716152; x=1750320952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KWyjynHQNpgV3HTjIQYJq/1ALGEGZYiMXXTWfwfkttE=;
+        b=yZobqC+fdx+avId4OuadbxJdWQczeJB1UjAf9V7Sfz7vATwuZBH8cWm6t5OVmE6iCg
+         dRdthVNbkvxYPoyKPwIS6SwHe3/vm7BQ+NXWPbZ/5mRLEDSeUQq1JbtNuf3cGVHqjtbf
+         l4z1Qg4Qz+VRDQbnYSalWnkACBcS+Br5iUukglX6FYVWdsiv9K0i0DTpkSc5nJFnTO1v
+         KJbf2XSO3oHKX5JvaOpF0n+jRmiXlHIdLCuSYwG9SYa6SJksiSjoY4daITlQ2w4uwh3h
+         oRoh0Chyq51hMS/AB/9vKYA/C1QiTVQr8n5HO9mjyb6YgFZzX9wcJAy6FRUx7c6CfYH7
+         6cWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749716152; x=1750320952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KWyjynHQNpgV3HTjIQYJq/1ALGEGZYiMXXTWfwfkttE=;
+        b=ikWK5LehTlWY0icH8qetIY933dI7GxFZA1CmExq8fDu2BkdLfl36HXYSD77wCmuo4/
+         0cMFMlgKyZpX6zg971rVscpOyqtoNV7TBUdi5pWyOGlf4jPV7aIKwio+6KYEPoxiKIKQ
+         6xLjZ6Z8906pjYH75+KyGNcmLK+pFG1aQgHwQW6Dk6aJeZlDI8EMms4HIH0G1FrDVcqO
+         oJYm0cBPmQ2x+ESmPPFlL881ZmGpsryqNz8pXXYwejMlGCnRiegMbGT7bLLtejMhtI32
+         UxeNctKn0c/HnSMvo+pFs3eJAmTp2pG/lSPA8SaUeowJyfAS72wcwUQTEVv+A1q0fPIf
+         s+tw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlhhlQ09E5pzz5NxFzVfTWe9Jj4q1e0vk2Por2zkW3MK9erlHmwZbEtNJWd8Hsj9lGr0XCT7bbYtwDX/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdKmuWCKxb458HBXNW1N7MsjEZ9LU8XYwSuFn9KzgHShVL8xk5
+	5l3/f6Rx1/IdAINjRtCvNPzT39uU//dtVpxxNGIaunRrWHsWRjl/lMy1cecoSI+v12WQb/Uk1pX
+	PGpkNp1v1mRCVSdtYokhAS4Y98Gt7WMnuIHmaCKV+
+X-Gm-Gg: ASbGncvtlFfAlda5wVPUwYLtLjRrhixHVosaP72gged4NhcEpGTQ1nBXCYoEo2YVN/q
+	upIdNN+uNhV01djSruxigy7I6CjpSlvfrda1IxYU2+GP3Hq430DkdITVufBND0KoSJUhjJHrJNi
+	Cn3OlXME1Chk9JB6Je9bDKltGceYBZh5eoG2Au7F8eVGwYk434TXS2ZjNHzm5BgOOUDLULgGf/N
+	g==
+X-Google-Smtp-Source: AGHT+IH30hgR4r6+sEqcFf/3abnlDKHzRPthg4iHGK2e9UxDCWAveCuvDarVkhtnsGCIiTfPZBrtFHOKc3CFAss+V6k=
+X-Received: by 2002:a05:6000:1a8b:b0:3a4:cb4f:ac2a with SMTP id
+ ffacd0b85a97d-3a561369ec6mr1620198f8f.21.1749716151578; Thu, 12 Jun 2025
+ 01:15:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20250603205416.49281-1-dakr@kernel.org> <20250603205416.49281-4-dakr@kernel.org>
+ <DAKEK5YPNCAU.3LQGI98GGG4KF@kernel.org>
+In-Reply-To: <DAKEK5YPNCAU.3LQGI98GGG4KF@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 12 Jun 2025 10:15:38 +0200
+X-Gm-Features: AX0GCFsoCQk7kWRWd9C3B--8QDSmH-75a87FOwEo4gnRqfgaYYHM30s6I935Ods
+Message-ID: <CAH5fLgharxhAHrP6OFZxXrWKSTsMp=vY5sGvUKzca3yhRJEW7A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: devres: fix race in Devres::drop()
+To: Benno Lossin <lossin@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@kernel.org, tmgross@umich.edu, chrisi.schrefl@gmail.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When the panic handler is called, configure the psr to send the full
-framebuffer to the monitor, otherwise the panic screen is only
-partially visible.
+On Thu, Jun 12, 2025 at 10:13=E2=80=AFAM Benno Lossin <lossin@kernel.org> w=
+rote:
+>
+> On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
+> > In Devres::drop() we first remove the devres action and then drop the
+> > wrapped device resource.
+> >
+> > The design goal is to give the owner of a Devres object control over wh=
+en
+> > the device resource is dropped, but limit the overall scope to the
+> > corresponding device being bound to a driver.
+> >
+> > However, there's a race that was introduced with commit 8ff656643d30
+> > ("rust: devres: remove action in `Devres::drop`"), but also has been
+> > (partially) present from the initial version on.
+> >
+> > In Devres::drop(), the devres action is removed successfully and
+> > subsequently the destructor of the wrapped device resource runs.
+> > However, there is no guarantee that the destructor of the wrapped devic=
+e
+> > resource completes before the driver core is done unbinding the
+> > corresponding device.
+> >
+> > If in Devres::drop(), the devres action can't be removed, it means that
+> > the devres callback has been executed already, or is still running
+> > concurrently. In case of the latter, either Devres::drop() wins revokin=
+g
+> > the Revocable or the devres callback wins revoking the Revocable. If
+> > Devres::drop() wins, we (again) have no guarantee that the destructor o=
+f
+> > the wrapped device resource completes before the driver core is done
+> > unbinding the corresponding device.
+>
+> I don't understand the exact sequence of events here. Here is what I got
+> from your explanation:
+>
+> * the driver created a `Devres<T>` associated to their device.
+> * their physical device gets disconnected and thus the driver core
+>   starts unbinding the device.
+> * simultaneously, the driver drops the `Devres<T>` (eg because the
+>   driver initiated the physical removal)
+> * now `devres_callback` is being called from both `Devres::Drop` (which
+>   calls `Devres::remove_action`) and from the driver core.
+> * they both call `inner.data.revoke()`, but only one wins, in our
+>   example `Devres::drop`.
+> * but now the driver core has finished running `devres_callback` and
+>   finalizes unbinding the device, even though the `Devres` still exists
+>   though is almost done being dropped.
+>
+> I don't see a race here. Also the `dev: ARef<Device>` should keep the
+> device alive until the `Devres` is dropped, no?
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
+The race is that Devres is used when the contents *must* be dropped
+before the device is unbound. This example violates that by having
+device unbind finish before the contents are dropped.
 
-v8:
- * Added in v8
-
- .../gpu/drm/i915/display/intel_atomic_plane.c |  7 +++++++
- drivers/gpu/drm/i915/display/intel_psr.c      | 20 +++++++++++++++++++
- drivers/gpu/drm/i915/display/intel_psr.h      |  2 ++
- 3 files changed, 29 insertions(+)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index 8c422c6a7186..c9a9f0770205 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -58,6 +58,7 @@
- #include "intel_fb.h"
- #include "intel_fb_pin.h"
- #include "intel_fbdev.h"
-+#include "intel_psr.h"
- #include "skl_scaler.h"
- #include "skl_universal_plane.h"
- #include "skl_watermark.h"
-@@ -1319,6 +1320,7 @@ static unsigned int intel_4tile_get_offset(unsigned int width, unsigned int x, u
- static void intel_panic_flush(struct drm_plane *plane)
- {
- 	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-+	struct intel_crtc_state *crtc_state = to_intel_crtc_state(plane->state->crtc->state);
- 	struct intel_plane *iplane = to_intel_plane(plane);
- 	struct intel_display *display = to_intel_display(iplane);
- 	struct drm_framebuffer *fb = plane_state->hw.fb;
-@@ -1328,6 +1330,11 @@ static void intel_panic_flush(struct drm_plane *plane)
- 
- 	intel_bo_panic_finish(obj);
- 
-+	if (crtc_state->enable_psr2_sel_fetch) {
-+		/* Force a full update for psr2 */
-+		intel_psr2_panic_force_full_update(display, crtc_state);
-+	}
-+
- 	/* Flush the cache and don't disable tiling if it's the fbdev framebuffer.*/
- 	if (to_intel_framebuffer(fb) == intel_fbdev_framebuffer(display->fbdev.fbdev)) {
- 		struct iosys_map map;
-diff --git a/drivers/gpu/drm/i915/display/intel_psr.c b/drivers/gpu/drm/i915/display/intel_psr.c
-index db7111374293..283ac2618ea5 100644
---- a/drivers/gpu/drm/i915/display/intel_psr.c
-+++ b/drivers/gpu/drm/i915/display/intel_psr.c
-@@ -2888,6 +2888,26 @@ int intel_psr2_sel_fetch_update(struct intel_atomic_state *state,
- 	return 0;
- }
- 
-+void intel_psr2_panic_force_full_update(struct intel_display *display,
-+					struct intel_crtc_state *crtc_state)
-+{
-+	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-+	enum transcoder cpu_transcoder = crtc_state->cpu_transcoder;
-+	u32 val = man_trk_ctl_enable_bit_get(display);
-+
-+	/* SF partial frame enable has to be set even on full update */
-+	val |= man_trk_ctl_partial_frame_bit_get(display);
-+	val |= man_trk_ctl_continuos_full_frame(display);
-+
-+	/* Directly write the register */
-+	intel_de_write_fw(display, PSR2_MAN_TRK_CTL(display, cpu_transcoder), val);
-+
-+	if (!crtc_state->enable_psr2_su_region_et)
-+		return;
-+
-+	intel_de_write_fw(display, PIPE_SRCSZ_ERLY_TPT(crtc->pipe), 0);
-+}
-+
- void intel_psr_pre_plane_update(struct intel_atomic_state *state,
- 				struct intel_crtc *crtc)
- {
-diff --git a/drivers/gpu/drm/i915/display/intel_psr.h b/drivers/gpu/drm/i915/display/intel_psr.h
-index 0cf53184f13f..9b061a22361f 100644
---- a/drivers/gpu/drm/i915/display/intel_psr.h
-+++ b/drivers/gpu/drm/i915/display/intel_psr.h
-@@ -57,6 +57,8 @@ int intel_psr2_sel_fetch_update(struct intel_atomic_state *state,
- 				struct intel_crtc *crtc);
- void intel_psr2_program_trans_man_trk_ctl(struct intel_dsb *dsb,
- 					  const struct intel_crtc_state *crtc_state);
-+void intel_psr2_panic_force_full_update(struct intel_display *display,
-+					struct intel_crtc_state *crtc_state);
- void intel_psr_pause(struct intel_dp *intel_dp);
- void intel_psr_resume(struct intel_dp *intel_dp);
- bool intel_psr_needs_vblank_notification(const struct intel_crtc_state *crtc_state);
--- 
-2.49.0
-
+> > Depending on the specific device resource, this can potentially lead to
+> > user-after-free bugs.
+> >
+> > In order to fix this, implement the following logic.
+> >
+> > In the devres callback, we're always good when we get to revoke the
+> > device resource ourselves, i.e. Revocable::revoke() returns true.
+> >
+> > If Revocable::revoke() returns false, it means that Devres::drop(),
+> > concurrently, already drops the device resource and we have to wait for
+> > Devres::drop() to signal that it finished dropping the device resource.
+> >
+> > Note that if we hit the case where we need to wait for the completion o=
+f
+> > Devres::drop() in the devres callback, it means that we're actually
+> > racing with a concurrent Devres::drop() call, which already started
+> > revoking the device resource for us. This is rather unlikely and means
+> > that the concurrent Devres::drop() already started doing our work and w=
+e
+> > just need to wait for it to complete it for us. Hence, there should not
+> > be any additional overhead from that.
+> >
+> > (Actually, for now it's even better if Devres::drop() does the work for
+> > us, since it can bypass the synchronize_rcu() call implied by
+> > Revocable::revoke(), but this goes away anyways once I get to implement
+> > the split devres callback approach, which allows us to first flip the
+> > atomics of all registered Devres objects of a certain device, execute a
+> > single synchronize_rcu() and then drop all revocable objects.)
+> >
+> > In Devres::drop() we try to revoke the device resource. If that is *not=
+*
+> > successful, it means that the devres callback already did and we're goo=
+d.
+> >
+> > Otherwise, we try to remove the devres action, which, if successful,
+> > means that we're good, since the device resource has just been revoked
+> > by us *before* we removed the devres action successfully.
+> >
+> > If the devres action could not be removed, it means that the devres
+> > callback must be running concurrently, hence we signal that the device
+> > resource has been revoked by us, using the completion.
+> >
+> > This makes it safe to drop a Devres object from any task and at any poi=
+nt
+> > of time, which is one of the design goals.
+> >
+> > Fixes: 8ff656643d30 ("rust: devres: remove action in `Devres::drop`") [=
+1]
+> > Reported-by: Alice Ryhl <aliceryhl@google.com>
+> > Closes: https://lore.kernel.org/lkml/aD64YNuqbPPZHAa5@google.com/
+> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > ---
+> >  rust/kernel/devres.rs | 33 ++++++++++++++++++++++++++-------
+> >  1 file changed, 26 insertions(+), 7 deletions(-)
+>
+> > @@ -161,7 +166,12 @@ fn remove_action(this: &Arc<Self>) {
+> >          //         `DevresInner::new`.
+> >          let inner =3D unsafe { Arc::from_raw(ptr) };
+> >
+> > -        inner.data.revoke();
+> > +        if !inner.data.revoke() {
+> > +            // If `revoke()` returns false, it means that `Devres::dro=
+p` already started revoking
+> > +            // `inner.data` for us. Hence we have to wait until `Devre=
+s::drop()` signals that it
+> > +            // completed revoking `inner.data`.
+> > +            inner.revoke.wait_for_completion();
+> > +        }
+> >      }
+> >  }
+> >
+> > @@ -232,6 +242,15 @@ fn deref(&self) -> &Self::Target {
+> >
+> >  impl<T> Drop for Devres<T> {
+> >      fn drop(&mut self) {
+> > -        DevresInner::remove_action(&self.0);
+> > +        // SAFETY: When `drop` runs, it is guaranteed that nobody is a=
+ccessing the revocable data
+> > +        // anymore, hence it is safe not to wait for the grace period =
+to finish.
+> > +        if unsafe { self.revoke_nosync() } {
+> > +            // We revoked `self.0.data` before the devres action did, =
+hence try to remove it.
+> > +            if !DevresInner::remove_action(&self.0) {
+>
+> Shouldn't this not be inverted? (ie 's/!//')
+>
+> Otherwise this will return `true`, get negated and we don't run the code
+> below and the `inner.data.revoke()` in `devres_callback` will return
+> `false` which will get negated and thus it will never return.
+>
+> ---
+> Cheers,
+> Benno
+>
+> > +                // We could not remove the devres action, which means =
+that it now runs concurrently,
+> > +                // hence signal that `self.0.data` has been revoked su=
+ccessfully.
+> > +                self.0.revoke.complete_all();
+> > +            }
+> > +        }
+> >      }
+> >  }
+>
