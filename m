@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4C2245023;
-	Thu, 12 Jun 2025 13:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FDD246BAC;
+	Thu, 12 Jun 2025 13:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734720; cv=none; b=L7X2MEVJLTnJ1H2UWGhlvR4XB69YZu7bbZ89gztA1hx+BsXwSg7c/FYKAJxaSMsMELXjdyKj0nj0DSM6KXCHcPtJ3+pruuktJQ9W4389L9vesI6QmOLLNiba7pGDr2Gbn0RiGADPfpU+h3N4/EfzbsPNTf745Dk/35Ov1MLuvUs=
+	t=1749734726; cv=none; b=CeJLpCmBfICZNzblqd06B5XU5kLMa/IwHbdoGl7fUcfgP/qXon47tIBjCC61/SZwPvp/iW7qFr+SpkwUrkSUhOb3i+D2zaiNEE33IJhofmTwsqRXpOZOumAs9B2GxLGxKf1Q99q8x7uy27ImswGaF80nA2JqImDDbvAAWfA/Zw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734720; c=relaxed/simple;
-	bh=UYi8yaa4IpCW+5RfkUS3FLlv0ptEwqridhTpzFcNsSI=;
+	s=arc-20240116; t=1749734726; c=relaxed/simple;
+	bh=FSCdKuBZu83ZlNuhWTKve1fHQ1SiZ+gddU/oetdw40o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IAifvedn8zzd4uczLoXqyMxtYGmaesJM/4Zlp39dIi+eILFZ2KKAtywcEjh3/GoNu3sIW3ABppuHUfbzdmXy9/vTAYSaSObUjhcRQTesUYdDvcmtKzQUk4lEgzBF0uwClMzB6bbzYGpI7DupfgE+MSUpHWn4adsCs2AIlrrklUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZlIqWZ4D; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=NVfb+z0h0+myq3KPU6jQucRJzvGWIW/TZFDvFC9BzvV0//bSAZUb1MxrOy08uVE/tl8bwxf6GkXawDD4GWRJXs9YiLQSyFKW01WXXmY7ab2LiKbS0YxmtUDTNRT/tQ9MOFEyN40i9kzs6/8AD0Agr8Pk6aP5cIhkVtGO9fDfMeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VrcCS0kC; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZlIqWZ4D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VrcCS0kC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749734719; x=1781270719;
+  t=1749734725; x=1781270725;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=UYi8yaa4IpCW+5RfkUS3FLlv0ptEwqridhTpzFcNsSI=;
-  b=ZlIqWZ4D9P6prEVmuPcuo8mpVkdawxUSZtDs2TqVlflMNVOtlk74E0lk
-   /YL7FcAJQLQrT38XycfuF8G0oiupdmzHw/eyET+e7QNWKSu9uI4tGevK8
-   xWZRRYvihISvb0YEAvLrNWKcyiozj+gDA5BMdJ7a79jHTQM3Oqywgtgf+
-   nkDCuWjqt61cti15izyfGaa1X8Tl6YI0csJue3IMBchu9txqMvlStdXGx
-   RMcqir4vn+CZTfq0U0zn7qMKCxQUVYXZc+EkM89Go5gqMpr4IOaDu/6Yg
-   J7aicyS7K0w+qd1GEwZNTkb95eBU1WIesQd4UPGxzn6GOGDDu+fuhNqX6
+  bh=FSCdKuBZu83ZlNuhWTKve1fHQ1SiZ+gddU/oetdw40o=;
+  b=VrcCS0kC5EF8KSflOK8XUp+OgUn1f6X5gt+nNA71fMcwPjDnR7TiG1ah
+   iJ8jtYCSOaXv0vI4yPSVssmOKEZRD1mj3OT/tJ8dkSZbw352/2xzr0Nfi
+   fnxSoewiHF4Gyy1yT+GrWd7rti8xYdR0z4kH5XoQJv1DQ28KujAMPLQxF
+   UB/GinVjNEmTFXMsoOxhF2ClJ+l3DempdkmEcve+kkQ8WlSHBvG0XKXFK
+   vUzPCbeevsF7YVhHVqBWqq4qtU5op0K7GG5H2Wk1ODvlgG1f9MiIDkSi/
+   FLIEUywvc6BpMR7Wk9mmQGHTUokUF0LChzWyRbI2rwMOu/95HBEirh9g2
    g==;
-X-CSE-ConnectionGUID: z6RJD09wRXKDnfvKahSLXg==
-X-CSE-MsgGUID: qdL1JyHURqGmo2H8o17Dzw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55588367"
+X-CSE-ConnectionGUID: 6V38+ShUSfC7WXlyONJ5uw==
+X-CSE-MsgGUID: SpGITEZ+Qo6oAkkQcbNGZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55588435"
 X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="55588367"
+   d="scan'208";a="55588435"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:25:01 -0700
-X-CSE-ConnectionGUID: zRqJAooVTe+FH9SoJH/aWg==
-X-CSE-MsgGUID: 1vMdLySZTHWhYthCeGvHQA==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:25:17 -0700
+X-CSE-ConnectionGUID: cDplODooQ4K2E+Qd9V06Vg==
+X-CSE-MsgGUID: B15xZwgSRp6R9xmYa2KJcQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="152509112"
+   d="scan'208";a="152509255"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 12 Jun 2025 06:24:56 -0700
+  by orviesa004.jf.intel.com with ESMTP; 12 Jun 2025 06:25:12 -0700
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To: Lucas De Marchi <lucas.demarchi@intel.com>,
 	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
@@ -61,9 +61,9 @@ Cc: David Airlie <airlied@gmail.com>,
 	intel-xe@lists.freedesktop.org,
 	linux-i2c@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] i2c: designware: Add quirk for Intel Xe
-Date: Thu, 12 Jun 2025 16:24:47 +0300
-Message-ID: <20250612132450.3293248-2-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v3 4/4] drm/xe/xe_i2c: Add support for i2c in survivability mode
+Date: Thu, 12 Jun 2025 16:24:50 +0300
+Message-ID: <20250612132450.3293248-5-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250612132450.3293248-1-heikki.krogerus@linux.intel.com>
 References: <20250612132450.3293248-1-heikki.krogerus@linux.intel.com>
@@ -75,79 +75,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The regmap is coming from the parent also in case of Xe
-GPUs. Reusing the Wangxun quirk for that.
+From: Riana Tauro <riana.tauro@intel.com>
 
-Originally-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Initialize i2c in survivability mode to allow firmware
+update of Add-In Management Controller (AMC) in survivability mode
+
+Signed-off-by: Riana Tauro <riana.tauro@intel.com>
+Reviewed-by: Raag Jadav <raag.jadav@intel.com>
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 ---
- drivers/i2c/busses/i2c-designware-platdrv.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/xe/xe_survivability_mode.c | 23 ++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 879719e91df2..a35e4c64a1d4 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -101,7 +101,7 @@ static int bt1_i2c_request_regs(struct dw_i2c_dev *dev)
- }
- #endif
+diff --git a/drivers/gpu/drm/xe/xe_survivability_mode.c b/drivers/gpu/drm/xe/xe_survivability_mode.c
+index 1f710b3fc599..3800cc855c22 100644
+--- a/drivers/gpu/drm/xe/xe_survivability_mode.c
++++ b/drivers/gpu/drm/xe/xe_survivability_mode.c
+@@ -14,6 +14,7 @@
+ #include "xe_device.h"
+ #include "xe_gt.h"
+ #include "xe_heci_gsc.h"
++#include "xe_i2c.h"
+ #include "xe_mmio.h"
+ #include "xe_pcode_api.h"
+ #include "xe_vsec.h"
+@@ -173,20 +174,26 @@ static int enable_survivability_mode(struct pci_dev *pdev)
+ 	survivability->mode = true;
  
--static int txgbe_i2c_request_regs(struct dw_i2c_dev *dev)
-+static int dw_i2c_get_parent_regmap(struct dw_i2c_dev *dev)
- {
- 	dev->map = dev_get_regmap(dev->dev->parent, NULL);
- 	if (!dev->map)
-@@ -123,12 +123,15 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
- 	struct platform_device *pdev = to_platform_device(dev->dev);
- 	int ret;
+ 	ret = xe_heci_gsc_init(xe);
+-	if (ret) {
+-		/*
+-		 * But if it fails, device can't enter survivability
+-		 * so move it back for correct error handling
+-		 */
+-		survivability->mode = false;
+-		return ret;
+-	}
++	if (ret)
++		goto err;
  
-+	if (device_is_compatible(dev->dev, "intel,xe-i2c"))
-+		return dw_i2c_get_parent_regmap(dev);
+ 	xe_vsec_init(xe);
+ 
++	ret = xe_i2c_probe(xe);
++	if (ret)
++		goto err;
 +
- 	switch (dev->flags & MODEL_MASK) {
- 	case MODEL_BAIKAL_BT1:
- 		ret = bt1_i2c_request_regs(dev);
- 		break;
- 	case MODEL_WANGXUN_SP:
--		ret = txgbe_i2c_request_regs(dev);
-+		ret = dw_i2c_get_parent_regmap(dev);
- 		break;
- 	default:
- 		dev->base = devm_platform_ioremap_resource(pdev, 0);
-@@ -205,25 +208,28 @@ static void i2c_dw_remove_lock_support(struct dw_i2c_dev *dev)
+ 	dev_err(dev, "In Survivability Mode\n");
  
- static int dw_i2c_plat_probe(struct platform_device *pdev)
- {
-+	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
- 	struct device *device = &pdev->dev;
- 	struct i2c_adapter *adap;
- 	struct dw_i2c_dev *dev;
- 	int irq, ret;
+ 	return 0;
++
++err:
++	/*
++	 * But if it fails, device can't enter survivability
++	 * so move it back for correct error handling
++	 */
++	survivability->mode = false;
++	return ret;
+ }
  
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
-+	irq = platform_get_irq_optional(pdev, 0);
-+	if (irq == -ENXIO)
-+		flags |= ACCESS_POLLING;
-+	else if (irq < 0)
- 		return irq;
- 
- 	dev = devm_kzalloc(device, sizeof(*dev), GFP_KERNEL);
- 	if (!dev)
- 		return -ENOMEM;
- 
--	dev->flags = (uintptr_t)device_get_match_data(device);
- 	if (device_property_present(device, "wx,i2c-snps-model"))
--		dev->flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
-+		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
- 
- 	dev->dev = device;
- 	dev->irq = irq;
-+	dev->flags = flags;
- 	platform_set_drvdata(pdev, dev);
- 
- 	ret = dw_i2c_plat_request_regs(dev);
+ /**
 -- 
 2.47.2
 
