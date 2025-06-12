@@ -1,158 +1,158 @@
-Received: from mail.kapsi.fi (mail-auth.kapsi.fi [91.232.154.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5051B770FE;
-	Thu, 12 Jun 2025 01:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.232.154.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFBA770FE
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749693473; cv=none; b=WLa6UPdcpVBmQ8GgAY4xNk3Ei18WWDum3HcFRcDV7yQdWoQ+iXkyb641fOnmDaWws2kHSHlnzchcMR6akYgXKHlFMTE5M40fZhbT9Exorta5SC9M6Z54LWbfYJ8/IOr5Bztdss97Bq7t/GXCdpscFSbNdCVGdvCfPw+ItziaoYQ=
+	t=1749693508; cv=none; b=jA3ARWZmG4v4nVvIznyH+VFqDqS9hU8SG0lrZQmkXuxMlSAL2H9ip6Yhf1b6ySKchst8hvpJpCyCx50WTv+V49cCTr3/aF8yBgqP77gU8Ksyc+DtTlqbv16/IKoF4XxE/Et6gx7GbT+7vBU0iN3jOpUHflNnNtqi7pBTSc5I6P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749693473; c=relaxed/simple;
-	bh=A9TkELkIlKIZrcNNPESM/UHkept+MT+PNaOa2I+ZqYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mgug0BlQHG2vDOvWMk5YLGnM5xKjtT4fiEM0JwOtBFN/pjnmmfkpDkaaGJcWyeZjobtEXqkWDbChKKFRcmxDFVWd19uA6PH2iUZ+jg8Ca8Kg1Slsyu/x5OfbahMxK3oVRhOvVz3bFR9OnnCTHTkvYuQ2/zcqvTJrLtf7uLkfaP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kapsi.fi; spf=pass smtp.mailfrom=kapsi.fi; dkim=pass (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b=I3aYeJZa; arc=none smtp.client-ip=91.232.154.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kapsi.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kapsi.fi
+	s=arc-20240116; t=1749693508; c=relaxed/simple;
+	bh=Ay5oQohGM+cVjnNWHVNcpUKrCpFL8jgt+c4zZIHKDB0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=mPycgPliOmnMXkZWb6yUhkxBybK6pGNXLAvWzthGykHr2DDFO7vZo411O18kJMB0rwO/kSuVfIrvaOAYhR84zRak8P4rKsAg1wuMXXaTC6KDE7Zm+lT6boZvWNHYHyZjsoeuQoExsBKGXNIjUw6vQwKdnBhopyVuytYF77UTds4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuyanghuang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R6mX2mVK; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuyanghuang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="I3aYeJZa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-	s=20161220; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=My7ku61t0R/YRh9ePPMG3Cu/uUDaAwNFOLS11kIAzO8=; b=I3aYeJZa2lk55Pl6fTG+8F/o4w
-	ZcPCbMt7wb6UunSsp0/KS+Esydn0Hy2OmdTwZVIQos5OGtqLa4uutdi2A+eV1+0jFGwaSD+A/ABBP
-	yn6vH0UiUOwwu7MKejqcEa99scRqe/INEt3AfNkpV0d3F7pntla3AESfGF8nm2siLVEK8dyrZlLOz
-	h6goBYqPXg9AJMQYrx9cgrT65Megs03wDemCGJ/jeKC74iNrWjSY8cgcno0HXOqULibwbY3A+N+f1
-	RzG+eN3+9H6Ro00j6ndzcpCR6DYiaoEINqb+iR29j0C0WTpA4qs1kCWg4AQBe1LK3y4YwQWUYpWFj
-	h1/+Fhew==;
-Received: from [2404:7a80:b960:1a00:5eaa:b33c:a197:a90f]
-	by mail.kapsi.fi with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <cyndis@kapsi.fi>)
-	id 1uPXBH-000k9l-2B;
-	Thu, 12 Jun 2025 04:56:39 +0300
-Message-ID: <3293ae49-90c6-454c-b2f4-98ea84302c11@kapsi.fi>
-Date: Thu, 12 Jun 2025 10:55:20 +0900
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R6mX2mVK"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7370e73f690so503108b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:58:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749693506; x=1750298306; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4xOt1jqHtKfWjw2Okk5Lx4VTTX7yg4srSCqsBU9bfdk=;
+        b=R6mX2mVKxWB6gmSSW1uaAXjazlZp2mi1s/I5LqGPVVXXVTcZ+sqt8UQq6Ikhdk1QvQ
+         SwZVh0ZACS1s9rW1ABjJf9xGeM7wcfCD3fOmtzPmd4RGXYxdz3mHXzMUxnlw2bjXfZyu
+         EhlnlgEyD+M5kY40Gv46JXEbqo9f2Run4DDZYzwI8sgLM0TGLMSWOctzkVoUxLjNpElO
+         et6fclmNsz1B4hIyh/RTJgbsemdI8tNizQZZEkAcZVvzVxgvtkzmliFWPhzrcj49fsWS
+         LJQvIVACfUYpZZyXDJbkXVsfWbZnlwQe8MVZKg8McW3EVkz5sh7Bwz1xNhJ++titvFaq
+         wyMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749693506; x=1750298306;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4xOt1jqHtKfWjw2Okk5Lx4VTTX7yg4srSCqsBU9bfdk=;
+        b=W98LlZPkO/A1ZNUuTkaDShBcN40jX+1G/3++qcp6IY9a0fsvL/IcMadETIWQh3OkDf
+         4f2Tza5uqKfwHqq81F47hYSamjNAHH9ZEKxmcGFUXJwLIzv+9GNAkGvMr9nx8HhxEJsP
+         bedSk3vpW8i/9vlhgo7tRZDecyB6tZGeCMX7zldKxrDxut3fQ/+UgkxYCdD1T5aZjLQu
+         wnsCaCrE18j0aK7OKmojgGmSZVpaJyhTARt77EC97WJfft1X+X6+KxBrLuztmHFCQibf
+         9AbZMgrnBfVn6GOi+DOVw6SpolQS4WlwigKCwsRISlFDQkadlK19bNpco2oSb3VowKOZ
+         0X5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXcdhA1jEH2RwcHCzCtuOH+YmG1E1fp4GdbEOKzjIvtx633CUDkKfZgT/ytAMsu1x2yBINcx1aESoPkjNw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwApXUVT7cVf592JFFOdh/brnk4JjklAqgCADirckWY0WOul8sS
+	KD2l8H+eQfNBNIkezrEhrvvSfSTdpqxDAvuQiRYnyZ6ZNFzm03nbMTFMuTtblPwN3rlCFbjp7xU
+	/1N7+gF7Scmit9JJPJQf7N7otKQ==
+X-Google-Smtp-Source: AGHT+IH0xuhQyu7PzeBD2lZe2ItcmrlnVX8CKI5tsgo+GqBtt/K3hLGGc+yQSmUUI1O0fxnFPA7xdeO7SO6ERkuafg==
+X-Received: from pfez22.prod.google.com ([2002:aa7:8896:0:b0:746:257b:1d37])
+ (user=yuyanghuang job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:a60d:b0:21f:8817:f695 with SMTP id adf61e73a8af0-21f8817f6a5mr4714343637.25.1749693506379;
+ Wed, 11 Jun 2025 18:58:26 -0700 (PDT)
+Date: Thu, 12 Jun 2025 10:58:12 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
-To: Thierry Reding <thierry.reding@gmail.com>,
- Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
- <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
- <621a9459-f2dd-4b19-a083-0e62f1a42f50@kapsi.fi>
- <96b721cd-7223-4b28-a3fd-a4d92c9d5142@tecnico.ulisboa.pt>
- <4cibh66elviiatataa45lsfcyeovkqyxe4fjvfh7uqddhsbe6z@svt2dgeafrdh>
-Content-Language: en-US
-From: Mikko Perttunen <cyndis@kapsi.fi>
-In-Reply-To: <4cibh66elviiatataa45lsfcyeovkqyxe4fjvfh7uqddhsbe6z@svt2dgeafrdh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2404:7a80:b960:1a00:5eaa:b33c:a197:a90f
-X-SA-Exim-Mail-From: cyndis@kapsi.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250612015812.2520789-1-yuyanghuang@google.com>
+Subject: [PATCH net-next, v2] selftest: Add selftest for multicast address notifications
+From: Yuyang Huang <yuyanghuang@google.com>
+To: Yuyang Huang <yuyanghuang@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"=?UTF-8?q?Maciej=20=C5=BBenczykowski?=" <maze@google.com>, Lorenzo Colitti <lorenzo@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/12/25 12:06 AM, Thierry Reding wrote:
-> On Wed, Jun 11, 2025 at 01:05:40PM +0100, Diogo Ivo wrote:
->>
->>
->> On 6/10/25 10:52 AM, Mikko Perttunen wrote:
->>> On 6/10/25 6:05 PM, Thierry Reding wrote:
->>>> On Fri, Jun 06, 2025 at 11:45:33AM +0100, Diogo Ivo wrote:
->>>>> Hello,
->>>>>
->>>>> This series adds support for the NVJPG hardware accelerator found in the
->>>>> Tegra210 SoC.
->>>>>
->>>>> The kernel driver is essentially a copy of the NVDEC driver as both
->>>>> engines are Falcon-based.
->>>>>
->>>>> For the userspace part I have written a Mesa Gallium backend [1] that,
->>>>> while still very much experimental, works in decoding images
->>>>> with VA- API.
->>>>>
->>>>> I have been using ffmpeg to call VA-API with the following command:
->>>>>
->>>>> ffmpeg -v verbose -hwaccel vaapi -hwaccel_device
->>>>> /dev/dri/renderD129 -i <input.jpg> -pix_fmt bgra -f fbdev
->>>>> /dev/fb0
->>>>>
->>>>> which decodes <input.jpg> and shows the result in the framebuffer.
->>>>>
->>>>> The firmware for the engine can be obtained from a Linux for Tegra
->>>>> distribution.
->>>>
->>>> By the way, have you tried running this on anything newer than Tegra210?
->>>> Given your progress on this, we can probably start thinking about
->>>> submitting the binaries to linux-firmware.
->>>
->>> FWIW, the impression I have is that NVJPG is basically unchanged all the
->>> way to Tegra234. So if we add stream ID support and the firmwares, it'll
->>> probably just work. Tegra234 has the quirk that it has two instances of
->>> NVJPG -- these have to be distinguished by their different class IDs.
->>> But we should go ahead with the T210 support first.
->>
->> I have a question here, what exactly are the stream IDs? While working
->> on the driver this came up and I didn't manage to figure it out.
-> 
-> Stream IDs are a way to identify memory transactions as belonging to a
-> certain device. This comes into play when working with the IOMMU (which
-> is a Tegra SMMU on Tegra210 and earlier, and an ARM SMMU on Tegra) and
-> is used to isolate DMA capable devices. Basically for every stream ID
-> you get a separate I/O address space. NVJPG will have its own address
-> space, and so will VIC. Each device can only access whatever has been
-> mapped to it's I/O address space. That means NVJPG can't interfere with
-> VIC and vice-versa. And neither can any of these engines read from or
-> write to random system memory if badly programmed.
-> 
-> For Tegra SMMU there's no such thing as programmable stream IDs, so the
-> stream ID is fixed for the given device.
-> 
-> On newer chips (Tegra186 and later, or maybe it wasn't until Tegra194),
+This commit adds a new kernel selftest to verify RTNLGRP_IPV4_MCADDR
+and RTNLGRP_IPV6_MCADDR notifications. The test works by adding and
+removing a dummy interface and then confirming that the system
+correctly receives join and removal notifications for the 224.0.0.1
+and ff02::1 multicast addresses.
 
-Tegra186 and newer -- all chips with the ARM SMMU. To add a little bit, 
-each engine can address two stream IDs, one for firmware and one for 
-data. All user specified buffers are mapped into the data IOMMU domain, 
-and these are switched between jobs / applications.
+The test relies on the iproute2 version to be 6.13+.
 
-As an aside, currently each engine has its own firmware stream ID, but 
-that's a bit wasteful, since the kernel allocates a separate IOMMU 
-domain for each. The firmwares are all read-only so they could be in a 
-shared one. We've had to consolidate these on some platforms that ran 
-out of IOMMU domains otherwise. Not really a concern with upstream 
-platforms, though.
+Tested by the following command:
+$ vng -v --user root --cpus 16 -- \
+make -C tools/testing/selftests TARGETS=3Dnet TEST_PROGS=3Drtnetlink.sh \
+TEST_GEN_PROGS=3D"" run_tests
 
-> certain IP blocks have special registers that can be used to override
-> the stream ID. There's also a way to set the stream ID via command
-> streams, which means that you can have different I/O address spaces (I
-> think we call them memory context) per engine, which means that you can
-> isolate different processes using the same engine from each other.
-> 
-> Again, for Tegra210 that's nothing we need to worry about. For newer
-> chips it's probably just a matter of adding .get_streamid_offset() and
-> .can_use_memory_ctx() implementations.
+Cc: Maciej =C5=BBenczykowski <maze@google.com>
+Cc: Lorenzo Colitti <lorenzo@google.com>
+Signed-off-by: Yuyang Huang <yuyanghuang@google.com>
+---
 
-Also need to program the THI_STREAMID / TRANSCFG registers during boot.
+Changelog since v1:
+- Skip the test if the iproute2 is too old.
 
-Cheers,
-Mikko
+ tools/testing/selftests/net/rtnetlink.sh | 39 ++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-> 
-> Thierry
+diff --git a/tools/testing/selftests/net/rtnetlink.sh b/tools/testing/selft=
+ests/net/rtnetlink.sh
+index 2e8243a65b50..74d4afb55d7c 100755
+--- a/tools/testing/selftests/net/rtnetlink.sh
++++ b/tools/testing/selftests/net/rtnetlink.sh
+@@ -21,6 +21,7 @@ ALL_TESTS=3D"
+ 	kci_test_vrf
+ 	kci_test_encap
+ 	kci_test_macsec
++	kci_test_mcast_addr_notification
+ 	kci_test_ipsec
+ 	kci_test_ipsec_offload
+ 	kci_test_fdb_get
+@@ -1334,6 +1335,44 @@ kci_test_mngtmpaddr()
+ 	return $ret
+ }
+=20
++kci_test_mcast_addr_notification()
++{
++	local tmpfile
++	local monitor_pid
++	local match_result
++
++	tmpfile=3D$(mktemp)
++
++	ip monitor maddr > $tmpfile &
++	monitor_pid=3D$!
++	sleep 1
++	if [ ! -e "/proc/$monitor_pid" ]; then
++		end_test "SKIP: mcast addr notification: iproute2 too old"
++		rm $tmpfile
++		return $ksft_skip
++	fi
++
++	run_cmd ip link add name test-dummy1 type dummy
++	run_cmd ip link set test-dummy1 up
++	run_cmd ip link del dev test-dummy1
++	sleep 1
++
++	match_result=3D$(grep -cE "test-dummy1.*(224.0.0.1|ff02::1)" $tmpfile)
++
++	kill $monitor_pid
++	rm $tmpfile
++	# There should be 4 line matches as follows.
++	# 13: test-dummy1=C2=A0 =C2=A0 inet6 mcast ff02::1 scope global=C2=A0
++	# 13: test-dummy1=C2=A0 =C2=A0 inet mcast 224.0.0.1 scope global=C2=A0
++	# Deleted 13: test-dummy1=C2=A0 =C2=A0 inet mcast 224.0.0.1 scope global=
+=C2=A0
++	# Deleted 13: test-dummy1=C2=A0 =C2=A0 inet6 mcast ff02::1 scope global=
+=C2=A0
++	if [ $match_result -ne 4 ];then
++		end_test "FAIL: mcast addr notification"
++		return 1
++	fi
++	end_test "PASS: mcast addr notification"
++}
++
+ kci_test_rtnl()
+ {
+ 	local current_test
+--=20
+2.49.0.1204.g71687c7c1d-goog
 
