@@ -1,63 +1,63 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E398329CE6;
-	Thu, 12 Jun 2025 00:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A34C72618;
+	Thu, 12 Jun 2025 00:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749688771; cv=none; b=BBjISbvHjTDZBV72N/41gZmyRaxZSJBusu9qJ0rWIr0uHd7eUZUomgWJiRKb09PtKaKidEp1NOzUr6S/kTDc9rLxRqjJ8cX1hENMwSCZacy4Qf/yGRlUUc0hcsQoy5A2Oe4S4Y3w72bPLQ75iO6B7mW4n0BuvEHdZ1VIe+v7Sf0=
+	t=1749688773; cv=none; b=I+rCUqfLc5z3eQtHYGrYlTsRTebV4mWrzXkk7D1hsnZjpjF4xUY3w+k2gt5S/xOKQlW0vz2Klo/NNskHhoC7zsyXucjAPqwZ4fxW5x8JW1rR2NvAaGPaTNKgQGRp1KTu1EoZhm/qFIBC7uNN0cYeRTyod1OHaGEyyGSUOPvC+b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749688771; c=relaxed/simple;
-	bh=pc5IEugCvdYtSbRb0olcPUfngGpQpb1o/qW+d9x1c2I=;
+	s=arc-20240116; t=1749688773; c=relaxed/simple;
+	bh=OCRJy48VjGjdt7maCoRzcrU0HXVOPhE9bV0BifHD7QA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MHgWudAw9WdKA9cjWB1o7Kb4Dstg38+OAvDsxuDBZn0vXGZA+2evh3vZT1ua3KnMlWQxqeygjCH7g600nxFDrL2oO7dENp/fjhOmCjUWN716WfH8l5JHl2JS8fITYvMKGh/heH5Ebp5I8N8nlsnfSCa6irABewBeD7rj18JeHDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fj/iBwTz; arc=none smtp.client-ip=209.85.222.175
+	 MIME-Version; b=EkWfTLV/LEBIFRIuzPRuD67UzroFaIy4vYheip1OfJF1DG6AKFCi1mp7iMzfKRxngWpAUu6VsthEQ/d7V0NM8En4sdv2Ti7gUBAxcX7MhLs05iGtoDYgF4djBfuL/S0IB1/lsS7UYB6sSOLj0KoJK5mB+T4CdDtl1LXQ4sfQtno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aoWBjaOj; arc=none smtp.client-ip=209.85.222.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fj/iBwTz"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d0976776dcso42725285a.2;
-        Wed, 11 Jun 2025 17:39:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoWBjaOj"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c597760323so40461485a.3;
+        Wed, 11 Jun 2025 17:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749688769; x=1750293569; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749688770; x=1750293570; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ht07tlK7uVqjW6eAyQxL9Kr0y3ckT/a8+OLYs3oBRRE=;
-        b=Fj/iBwTzZW9JnR337ujCfm2cheR2WfvYDhd7HBa/Fxt8gpkIso+qOic2a7+UOO0lFV
-         G6eNJ3Yw1jPC+afweBf+phbPBzX39QCLTtmi8uukFvXa65nmNQmTwi0UOR4/7NP4ExKh
-         sbT8hVQg1nzd/gc8hB0IUBWZdJ+jKIrWNballlSU2stRWCsvgPXyhiBlMlPHs9FTLemc
-         FOoxTFsj4CV2oz5kiHvmyGkDUpSGyCF90LpR8TN0Ldu7FAR9raQE6kim0F0Riwaj1BYA
-         UcGUMOE4PTs85exinS68s5pv81X4s6yBr9hE3gYwRweKcDKse/Zw54dD4vlhxqaYTrdg
-         GQKw==
+        bh=/fZSTUHnpCdIkoln/SmuVNeKT4swv6cpg6DfKi1SYao=;
+        b=aoWBjaOjKv+5bI9MgIQN4uDPNpULZrbWCIcAoePzEKzBLbJZf9DkJv+3Aub6XkwHxX
+         I3qvgYlVFEKS9v0M6IQmD/n5BXvqguXAjNTn/Fa4WqCRSuYqcXFKeeAPXEq554XxHvY1
+         0tXyHgt8hygjvdyqf+zE0S9mQ+PXuob7N5DO1dsaxkv1ZJeBKG6yniczSOxkKhDjeyfi
+         nAXxBxJJl2DVlhEZjLs+W1gIRwY7TSODlCpbZK6XliBiu8ryX3gaAQKIz0Pma2QBnyNy
+         jhDWhfvolUdBGg9p17jTrjcOgIMtwaG5FOItgesnIyWUgQtocyx3r2ED0zHgWRtUb5Ux
+         nPvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749688769; x=1750293569;
+        d=1e100.net; s=20230601; t=1749688770; x=1750293570;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ht07tlK7uVqjW6eAyQxL9Kr0y3ckT/a8+OLYs3oBRRE=;
-        b=FbRU4jfw+0Aj+ZbP408h6496zi18Uwg1HRiNrNkdX+6pOAOGxITjvyKe2T7v/g+7jU
-         LNUbT3avtrOmL3KysfXl16smnDqJkJxdhlM20ZNUQnYc/aF+Ik/bxJ7R5IBqoOi64fOa
-         3X9wAIDQinu8mq7HZDav4EvlxxRoZqZodRVwQoy4uNtr4C2fQCjucrA60LHvAALvq5FO
-         D/iLydAuxmB30q6IzN+nda2kYYlxSIMEmeZkSequ21kcOgqjXfa3j+iG7rLfySkuzrLV
-         orQ1MXn+USNdixsDIGzFnm/Jaqs9bnKvQ25PG2m+3d9OCB7GoHqkibPkjOISmJKnVEXo
-         qp3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWbWSC4Ln8RojCDzQ8sjyP/UBMXM/sSjS/8zZNGfN1pLlDuMUE2CX3JaZGUAeeqJAIKVatkX+prPBAY@vger.kernel.org, AJvYcCXL2AvuMoFjdk1YzeYaCrDyasi8TBoHFj3buRcDfbz+qQORBOLm7rnG2FIrlbli4QfSUbqBQW7bGaRMv7Hz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3mbjOwN4jyKADKQqqFH8G+OW6cd9vM3j7qLPZyZjdbXxla4+S
-	Wq8ShywBHXIpx+sWx+iWm/W9C2tqUkrF/jj1HLJ7dOGlIM26Pxw/0qU+
-X-Gm-Gg: ASbGncsrOtw42ZTFX7ze8FNxjYnIL/SuGGB/Nu47vMNEFybc4F/VolihtQWPdk0QZlk
-	0WBT6WUTSmZ4+bvpT4GLf0x5lDfGVkzm28sli2/XU0CG6wx8es9Lv2tvhIlw3cFKEgFz6vuZZrG
-	DDYnpGI4GFRu3b1ztP71eYwvwiHJtwzDrtGN1cUlZmNVcDkHJUEQwIU4tELn1kePYd+JIymEueh
-	po92gasV/FLIvH++xIa1vN6znwBui6uaJ13A9ekAGziol43gCUgqGxvXr4r7R1VO4fyLp4nbTEX
-	De5MILHpQZ94yg0FKvQWhl1PIvJRFcrUAxEyqZqCuZ3RzV2xBpZEBS9ajK7cpIjTcOYgqWrhiVI
-	e180wcwTQdc088DuC7N8OuOp7gAA3VkZBPu4m
-X-Google-Smtp-Source: AGHT+IHj92rjE5qEUlCyMD3EgBcwTmr2UdNmG+KE1Nz52ks8zHt3wuxrHowijrdAL92PLvCq+AMakA==
-X-Received: by 2002:a05:620a:2699:b0:7c5:49b7:237a with SMTP id af79cd13be357-7d3b360025emr167835485a.19.1749688768755;
-        Wed, 11 Jun 2025 17:39:28 -0700 (PDT)
+        bh=/fZSTUHnpCdIkoln/SmuVNeKT4swv6cpg6DfKi1SYao=;
+        b=DluFp01QIe6dPQojITsmSGY+VqbMu+ZXKyd5VY7c01NPAEN3fUZfqMBAzZHJI/YbM8
+         CPpwNTouBVcIPTjaex88aM44x4aOvJ8f7Hbg2i4oRCOPn8WjionmaYbZsOra3HEfhqP0
+         bTVd7Chq+zEdW95QavPUMPSBNlHr+6x7ZgbSImmhWW82aeTPn2lMmopjMmTqd5PgmKBo
+         P2QR/WrZGHCR2A1tOdDpIZ31T3tY1on9ZQQCzPug3LDtTMZVaHQB+UnkKgvoR/tFWVqL
+         JHnCu2+1N9fAAUXiEjB8gaczg+THyhObcWkp2JayR+ndzeY7HiNsNqS7ENbOtgFllK3v
+         r6nA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbcVlSBS7nJ4m4gvqFTeuFg8q+QNZUHTUp/LCw6taoKZqj3/sv+i5ITtZHXZtBsAfCs/XuSGW1zmLggJF/@vger.kernel.org, AJvYcCXzJfcjbq2dGrXGqbDifBxDx+70aDI9vrJqEXaDybKspXVvpi595CkQug1UBe0G8+oiQBhEvsNhf9jX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7BVy5ql0JUejIFIuynTYV9yDP73J/F7bVG54VDzV7H0DOQB6j
+	wv2oyc2pJWh3qFbxqI3G0Mt2rVt6wD6cT7cArg/RDysEotJPfVTWlFD1
+X-Gm-Gg: ASbGncuDV7yW419oONYohPqDXRVN4uPec8vLS4M3rjlzYS/a/FBWbyma/mgmrLkEbGE
+	OPB9aKRBpKFUE0UHTu4X+FHih3SnXY4VMliVuuqXzgt0/sgARgeVCp1vYvwMLsjjBvec7+c/GJe
+	I6gjHdHXQ5zBVvckB5rCeeQciEPF3915koCzYg9fbqFjnlE8go/ts8GWKrtwuRQxPLG3vjQVsKG
+	UvfutTMCoVOH/r0XQzrTocv571VW8zcsfrWS+Z3XYYxLs46DMFA1t60JHSZVBMVZE6S9i5CTQcU
+	FZcQDN+jyJLalfFsfTgy9AKojfVVRpoKgoyWAhM5YsHUEYRe7QJQjeBGU9SolUZsg5WTcTOKqjN
+	pxV9JHJxlRlyL3EwSiaRqZ1ImnuSwbjEn4SlGWyUbF7R4CPc=
+X-Google-Smtp-Source: AGHT+IE0T4IWYcc2xUgd7VquqVdTsmUZWXLcctw/Eb+M2rfGp4uWepFmDd7rs2MYip49/yRfcZCKug==
+X-Received: by 2002:a05:620a:1a21:b0:7cd:2857:331c with SMTP id af79cd13be357-7d3a893a2demr669978285a.42.1749688770447;
+        Wed, 11 Jun 2025 17:39:30 -0700 (PDT)
 Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b528c300sm35935485a.101.2025.06.11.17.39.27
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b528c300sm35935485a.101.2025.06.11.17.39.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 17:39:28 -0700 (PDT)
+        Wed, 11 Jun 2025 17:39:30 -0700 (PDT)
 From: Adam Ford <aford173@gmail.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: aford@beaconembedded.com,
@@ -73,9 +73,9 @@ Cc: aford@beaconembedded.com,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 1/4] arm64: dts: imx8mp: drop gpcv2 vpu power-domains and clocks
-Date: Wed, 11 Jun 2025 19:39:19 -0500
-Message-ID: <20250612003924.178251-2-aford173@gmail.com>
+Subject: [PATCH V2 2/4] arm64: dts: imx8mp: fix VPU_BUS clock setting
+Date: Wed, 11 Jun 2025 19:39:20 -0500
+Message-ID: <20250612003924.178251-3-aford173@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250612003924.178251-1-aford173@gmail.com>
 References: <20250612003924.178251-1-aford173@gmail.com>
@@ -89,42 +89,27 @@ Content-Transfer-Encoding: 8bit
 
 From: Marco Felsch <m.felsch@pengutronix.de>
 
-The GPCv2 G1, G2 and VC8000E power-domain don't need to reference the
-VPUMIX power-domain nor their module clocks since the power and reset
-handling is done by the VPUMIX blkctrl driver.
+The VPU_PLL clock must be set before the VPU_BUS clock which is derived
+from the VPU_PLL clock else the VPU_BUS clock is 300MHz and not 600MHz.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 Signed-off-by: Adam Ford <aford173@gmail.com>
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 948b88cf5e9d..1bf15c502280 100644
+index 1bf15c502280..909555a5da4b 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -876,24 +876,17 @@ pgc_mediamix: power-domain@10 {
- 
- 					pgc_vpu_g1: power-domain@11 {
- 						#power-domain-cells = <0>;
--						power-domains = <&pgc_vpumix>;
- 						reg = <IMX8MP_POWER_DOMAIN_VPU_G1>;
--						clocks = <&clk IMX8MP_CLK_VPU_G1_ROOT>;
- 					};
- 
- 					pgc_vpu_g2: power-domain@12 {
- 						#power-domain-cells = <0>;
--						power-domains = <&pgc_vpumix>;
- 						reg = <IMX8MP_POWER_DOMAIN_VPU_G2>;
--						clocks = <&clk IMX8MP_CLK_VPU_G2_ROOT>;
--
- 					};
- 
- 					pgc_vpu_vc8000e: power-domain@13 {
- 						#power-domain-cells = <0>;
--						power-domains = <&pgc_vpumix>;
- 						reg = <IMX8MP_POWER_DOMAIN_VPU_VC8000E>;
--						clocks = <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
- 					};
- 
- 					pgc_hdmimix: power-domain@14 {
+@@ -2283,8 +2283,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
+ 				 <&clk IMX8MP_CLK_VPU_G2_ROOT>,
+ 				 <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
+ 			clock-names = "g1", "g2", "vc8000e";
+-			assigned-clocks = <&clk IMX8MP_CLK_VPU_BUS>, <&clk IMX8MP_VPU_PLL>;
+-			assigned-clock-parents = <&clk IMX8MP_VPU_PLL_OUT>;
++			assigned-clocks = <&clk IMX8MP_VPU_PLL>, <&clk IMX8MP_CLK_VPU_BUS>;
++			assigned-clock-parents = <0>, <&clk IMX8MP_VPU_PLL_OUT>;
+ 			assigned-clock-rates = <600000000>, <600000000>;
+ 			interconnects = <&noc IMX8MP_ICM_VPU_G1 &noc IMX8MP_ICN_VIDEO>,
+ 					<&noc IMX8MP_ICM_VPU_G2 &noc IMX8MP_ICN_VIDEO>,
 -- 
 2.48.1
 
