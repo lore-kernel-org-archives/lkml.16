@@ -1,122 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE35F23C516
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736594; cv=none; b=THM6fQYfANeY+3eVHxxYQye+oNt0HkyFDsW1JKXy2/RSFBHw8BGgV2eG384gWTinsHalNpXZeGO1s6TrHMfCzA5NTfaHfIT/kpRBN6oyqCDZLwNTDvqXeAwaODSDMqIpHJN5FPdi7xdp6NdRTkbsH9aSUrN4P0fV+lCOd1TUaGo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736594; c=relaxed/simple;
-	bh=WxMzIaZy423sDZIpi9KE0Tvfc7JKlMGJWRWMOOxFmHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nkYo4fHkrcx1pOr8rDUcs4wJz92VPn0oqs38aXVFy8tdzdtc3YzDAnXJbrOmaIe8m4CqurdMHRcPlTlPmcPtcXZtqVt8QWoleAWbQ3RqyUADBy5wx0qvQ67Sba8G7bXK1RI9lpdPEVFhMlGT8TA4e/KAmKishWE2wXwYQqKacmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGPN1uFs; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001E823C4E1;
+	Thu, 12 Jun 2025 13:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749736605; cv=pass; b=h8Kt8//UGXb2dHs8YwjJFGLpMJL0Y8K2U5wBaSObAAKewqtyGYRd9AqgY7yjhJk3oOsP6vXmJBTKl0iAsFTkkrxQxb/dsIvXEuCr73c6oVY8HQxCMt8RiyTV37saTLHdHtEOZrl11pUFgzxSha4GwLPu+PIkjiU/qJwtmJrhX7E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749736605; c=relaxed/simple;
+	bh=jjyzOPli1ra635E/Ffy/tg1VaUvXRkSQuP8371mstPo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A8i5vS2+ZjIfxPfPZ0sipK5ECDs3+7wvqMafdjOCrZcc7gDtxSSu8seg5JNAh0KikCvbNfR1ZivRz9CeUUinkRcHkW6odrjwm5dOa7FaiP3896caEYPNwgiR6C7Qg1+VhO0IhESqEHE8D5xBbMfDhH3AMdRFpImTaTaEJDxcNa4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=cB79ZboY; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGPN1uFs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36678C4CEEA;
-	Thu, 12 Jun 2025 13:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749736593;
-	bh=WxMzIaZy423sDZIpi9KE0Tvfc7JKlMGJWRWMOOxFmHw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=EGPN1uFsB7Gp8Gg3O8/87vCP0sU0gTcHSNGSEGA8FSPJ129gA456eN68+UtFJHfNT
-	 9J43jIC3Anbm0D6b7cnyxhIxt2raxubu+WMLL+MPH5U8QAhEjwE5dmgc/72Kh3MPPD
-	 MPetWzSlSjo53jhTRH2z7ARPEF5nduHLpuo4GAqt4gGi1j/jw01gIF8rUCtcsTG2Fi
-	 o+KUTFWZ8QBOSBTP+0GUnQNTXxhiclH5gwYkrK7VlzsquR4xSQL8kHzUWdmNHdpXp7
-	 G5OrW1YcMbLxHrM6GKwhXrZt/Oj29Jvz11u2JLS+QwUAuOYfX8n5GGS9m4ZfAFXOq/
-	 4Ze3wFmHFL8qQ==
-Date: Thu, 12 Jun 2025 10:56:30 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Sean Christopherson <seanjc@google.com>
-Subject: [PATCH 1/1 fyi] tools headers x86 svm: Sync svm headers with the
- kernel sources
-Message-ID: <aErcjuTTCVEZ-8Nb@x1>
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="cB79ZboY"
+ARC-Seal: i=1; a=rsa-sha256; t=1749736578; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Z9Q6LpwOskFzXu7qFIqDahCinDV85umIMp0V5V90dF7bGYa5NYV89EM6WS0OwHQqd4/Uv2GrLuC17jCqKWGsiS3DgT6YHgWlkx0nVLYDPAGFWkjHJgF1egrIEVsnPr+yAxCQm6AkbkBgWNKa4ARXHPstwsiFDVRpeo62daoIcjA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749736578; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=KUIfLwvoP44U5nDfSmqojpW++w9cxu2WaXPKkzeIK40=; 
+	b=i68huo5HXEszm0XtLDeI3hap5XBQ0TEjonhcTuFAHwLyctmv+zfAdxJP4AYyOPd8EytdSiiU+3o/mbGHoDKTg5IKe0tEmkpcVlco54i1d6deoZqw1NQjgQnM6VIICB5TrmIq5V89n7yuMrsDQX3jW3TUWT/GhE2Med+bYTb+2/w=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749736578;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=KUIfLwvoP44U5nDfSmqojpW++w9cxu2WaXPKkzeIK40=;
+	b=cB79ZboY1lFL9af6mnwgT0N6Y0FcjVW7L4hsO0ita2ELplHFr9csDJsspMYpZ+wM
+	iXN1J/COAX88HG2r91O8+liDKQ6izRy+6ZX5HT6MKqoixIRZP/0CbfNrk5lnI7DeQbd
+	TBdTShZFNU85CZzECc15JWt2HEJ50Peaeil1iaVjkeBp1k8SD5taNTsYM0mU8Wz0QF+
+	7hzKXd4o8bVxpr13ffHrBOSFy6Jw4cREKjzEXFUfwM5e9h8BwKqt6gUhnuKsPW1XfbR
+	b0bg3k2M5B1ZX0UVvHPM698VsCqcF5tzp4MCl/VVL5Z+bAJsfgNJZ0UHYrKPqwM39nb
+	VWTuVDzl5A==
+Received: by mx.zohomail.com with SMTPS id 174973657610749.98040995348208;
+	Thu, 12 Jun 2025 06:56:16 -0700 (PDT)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	Sean Wang <sean.wang@mediatek.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH 1/2] dt-bindings: arm: mediatek: add mt8173-hana rev2
+Date: Thu, 12 Jun 2025 21:55:58 +0800
+Message-ID: <20250612135559.2601139-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-ZohoMail-Owner: <20250612135559.2601139-1-uwu@icenowy.me>+zmo_0_
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+My Lenovo Flex 11 Chromebook contains a board with revision ID 2.
 
-Full explanation:
+Add rev2 to the compatible list of base hana DTB to allow depthcharge to
+match the DTB.
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
-
-See further details at:
-
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
-
-To pick the changes in:
-
-  827547bc3a2a2af6 ("KVM: SVM: Add architectural definitions/assets for Bus Lock Threshold")
-
-That triggers:
-
-  CC      /tmp/build/perf-tools/arch/x86/util/kvm-stat.o
-  LD      /tmp/build/perf-tools/arch/x86/util/perf-util-in.o
-  LD      /tmp/build/perf-tools/arch/x86/perf-util-in.o
-  LD      /tmp/build/perf-tools/arch/perf-util-in.o
-  LD      /tmp/build/perf-tools/perf-util-in.o
-  AR      /tmp/build/perf-tools/libperf-util.a
-  LINK    /tmp/build/perf-tools/perf
-
-The SVM_EXIT_BUS_LOCK exit reason was added to SVM_EXIT_REASONS, used in
-kvm-stat.c.
-
-This addresses this perf build warning:
-
- Warning: Kernel ABI header differences:
-  diff -u tools/arch/x86/include/uapi/asm/svm.h arch/x86/include/uapi/asm/svm.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nikunj A Dadhania <nikunj@amd.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Link: https://lore.kernel.org/r/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
 ---
- tools/arch/x86/include/uapi/asm/svm.h | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/mediatek.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/arch/x86/include/uapi/asm/svm.h b/tools/arch/x86/include/uapi/asm/svm.h
-index ec1321248dac2ab5..9c640a521a67006d 100644
---- a/tools/arch/x86/include/uapi/asm/svm.h
-+++ b/tools/arch/x86/include/uapi/asm/svm.h
-@@ -95,6 +95,7 @@
- #define SVM_EXIT_CR14_WRITE_TRAP		0x09e
- #define SVM_EXIT_CR15_WRITE_TRAP		0x09f
- #define SVM_EXIT_INVPCID       0x0a2
-+#define SVM_EXIT_BUS_LOCK			0x0a5
- #define SVM_EXIT_IDLE_HLT      0x0a6
- #define SVM_EXIT_NPF           0x400
- #define SVM_EXIT_AVIC_INCOMPLETE_IPI		0x401
-@@ -225,6 +226,7 @@
- 	{ SVM_EXIT_CR4_WRITE_TRAP,	"write_cr4_trap" }, \
- 	{ SVM_EXIT_CR8_WRITE_TRAP,	"write_cr8_trap" }, \
- 	{ SVM_EXIT_INVPCID,     "invpcid" }, \
-+	{ SVM_EXIT_BUS_LOCK,     "buslock" }, \
- 	{ SVM_EXIT_IDLE_HLT,     "idle-halt" }, \
- 	{ SVM_EXIT_NPF,         "npf" }, \
- 	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"avic_incomplete_ipi" }, \
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+index 108ae5e0185d9..7d13547ff57ba 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -132,6 +132,7 @@ properties:
+           - const: google,hana-rev5
+           - const: google,hana-rev4
+           - const: google,hana-rev3
++          - const: google,hana-rev2
+           - const: google,hana
+           - const: mediatek,mt8173
+       - description: Google Hana rev7 (Poin2 Chromebook 11C)
 -- 
 2.49.0
 
