@@ -1,138 +1,228 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA541F0E39
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57B922DA02;
+	Thu, 12 Jun 2025 09:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749722170; cv=none; b=hdBZ/weUqVZYkzg5PfqwSqSGpjmuoj6vWp7mnvAMnVPtAndpFtOFmtnsz7ADPQ7s+cpxakqD7PrI2ZUTXcWR4/FAvGun8mcsWm+FsVw0KFmBIYZkfTo4+x7IOk/wclWJCKx5YhHuBXJHI+BkM401rE5VQqXoOltlXEXuqBCHrD8=
+	t=1749722198; cv=none; b=pQrlsMS5lNR78Z1ARrbR4lrCOgU8ubgR8QtOENvCb8sMe0A3HGvyCFQVVyXanSTFZ8CmlvQe8sdWHs/+I0vCAsQjgviQuJN69mtjrlmVkDzK5IBcSEylkzU5GgviN61UAORjMcs/Y+B6HdVMuXptvGEH4SCwFg+f8mMHyPkNKvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749722170; c=relaxed/simple;
-	bh=TO01a4XfI3theHM74fPZdR2rlN2cv6ZWCZ/5/LAF5wA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PaJXOCvD/2rYKS8C+ki2QiAOxAoDZQ+bTaU0WGq6TB+l5WilGJHNbu5iTNpoIuzBLlW8oEbq24XZnB3AAorBj6bRo2jQt3g/yUMAYaWdMtu3sOad7y3q149mIj+tvU/yjC5mSGHU1zkPXUWLNDs8K88XYV8nu2jGNTNOBtzBDi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oh36tfcg; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749722198; c=relaxed/simple;
+	bh=ohiZKLTsCmAX7wUdm2S2t15r7UHYouJjtV3g6qA78Os=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=HXPv8S41oNJtkEvqSML8JCaMxvtBq0UdRO2jAH5Tf2O9uMx6dpZ4oAVapGo9jIirE1R6JDXiv8lUT0e12wZ79D7zN4bSvGOyxPxbXwU9cgdl9UKX6LS1y60S3Dala9/L9ziIsnBmlIxX4ANBaaCyT+LNVldQ/eo+6AzlYUaZppQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o1r8QQSH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oh36tfcg"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4e749d7b2so124470f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 02:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749722167; x=1750326967; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VGWS+hFBWdcB3VYxnV3ZAvnCxB0FbDboNRXSuMWKNAE=;
-        b=oh36tfcga42MUSo3rugjuB/IDGojUziE2Xaa3vQ64zzFKuR9N5yIhUwKHBljedrdnL
-         fFPhGCkQ9Pg5rSFCi4ltMT7ijgHLessV+C51gyELeBigNuhQu8zMJICwMUK61yb8gw3/
-         cvC54pgoDAhJt7XlOb0JUxC8QEUIFMucHafPc5Ad+HFIgWLzB9zPkuOsI7M0z8yL9F1l
-         N9j8crzxFpLTBBlLOgNV8takdSpA1wVUvSlpO64+2U++LtC5dNCgngTRdBkc5sL+pWAP
-         J3GFTuLRbVuuOJLDZvjBMWNOTl3n3tZwpW4f651HLD1QBHiCsvUjcYQC15a3AaiL8Jbe
-         TwsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749722167; x=1750326967;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VGWS+hFBWdcB3VYxnV3ZAvnCxB0FbDboNRXSuMWKNAE=;
-        b=ly6H38YSfnRP18LjMaBE1tFh43Na39eeMwmiFe6h5wKewMQOf5W/GNqTuMLeereAgk
-         ZCHds6s0jGkuReXxOZXPUtBzQzpEvka96B6HOpEObE/XZ/8GPY/Z3XuBY++37NvFIhT+
-         e2Vwv21JkpALlY7jVLo4nvaFAul5jSpepNhAjDlHBkp3nFgYhkaVeTzaVTMfZkUMfUvJ
-         mQwt+T+qtFjbEIb4DLYkqO2eKGiv0CkrbgBO4Kguw19OuqJ4zcjxgiiykdIsao9Ps3hA
-         7t7y1o1TBqj3FAzhuCcSwSqECLp7yMyaycQfwZFGxSrOaGGUOWJW1yer7rvO9W0/zz2G
-         O6Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXIaD9plBh4ND7fwmhcg0zL2YeC0L9hQhNB5KVvJMtl8HpB5skT8cnnlfsuNlCe4nAXDqr6K9kpfMDaKfg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycteIlk8Y4MOY86OxQr2lHFd0dxK8nakS4kSyXENCz6eNaNx6c
-	m+Um/yuxuTCHfcXVb/snAm6Z+XUlpeGBUCQSk+d3INJO3mya392Byjy+qLSwl8cInqw=
-X-Gm-Gg: ASbGnct9upKl9IhG7jZ+TASJrlim/YIh6vMFk3VP93qlVP2spvdqOcfoEKy6I2I3jYl
-	BNKPPPTXP3oNTXGf2tLLesDuW/AXR57GZkC0CQb5i2R3s5SnLhOVRMCYE49YnAPkWcsuMLvfmtT
-	xQlT9JgWXFr/degHLCKloPBqtrQYwmlRwS7cQ1ymwXxR0SQ16PXtbcBNIENLxb/09l5bIL2xXUS
-	Ygpb0kvj95v0iTe99/mKFEyMJiDrJtvQCKP5By/w921GzgmOYYNYQChD5YIfilWfS6oQQ3VPhlA
-	6L8hfV9t9blqeBUEPlnHh3PuUI5yM9NrMi7z6GepMKbeM4lN7wuA9QkV4dnTip9LaKJYHGdnBw=
-	=
-X-Google-Smtp-Source: AGHT+IEunL0h4aObpNd5+z2QDBp6DgiOMvQCjH0pMkcARf474VM+a0aBXZwTAGaoL6LJV3WfcEN4Sw==
-X-Received: by 2002:a05:6000:2507:b0:3a5:1306:3c30 with SMTP id ffacd0b85a97d-3a55864fb5amr1969533f8f.0.1749722167198;
-        Thu, 12 Jun 2025 02:56:07 -0700 (PDT)
-Received: from kuoka.. ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5618d6f4fsm1521857f8f.0.2025.06.12.02.56.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 02:56:06 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 3/3] arm64: dts: exynos5433: Align i2c-gpio node names with dtschema
-Date: Thu, 12 Jun 2025 11:55:50 +0200
-Message-ID: <20250612095549.77954-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250612094807.62532-3-krzysztof.kozlowski@linaro.org>
-References: 
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o1r8QQSH"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C7wA2j029379;
+	Thu, 12 Jun 2025 09:56:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=5l9bQ53EhKSgGSqxRgWh/x
+	Pf61f7VELmbS19DohTVME=; b=o1r8QQSHEcrlZmcyPrTvNx37MOKTkfkLxXOGX9
+	BlliGeOMhy0MQkAu/RmgH7L1Al/Hu+i4CmWnouieh/3lrL3FakdKH3VnWPmJKgRD
+	SaNTq5uOncut2syCrFP/HuWqFMHyoIc1KY8QOIiXm2TK7F042at1j5/9q87YV9+b
+	61tgIQEhT2HZKhFAxJiTujDtOye6FweNR3IZoAvSRAd1jSJZz7MZJNOeCiYgreqr
+	Sy75TuCwd+QfAqaR/Fr6+y1i65KYdYc9ggxJj3aDx/vXLrXR7HZ4TNw4D5yz8GU/
+	YpWs5f4f0wwg26JFQzHN4wCnXVFHdmt39/q1KH6rLGX+/hVg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dn6g2b1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 09:56:23 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55C9uN8J019125
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 09:56:23 GMT
+Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 12 Jun 2025 02:56:16 -0700
+From: Taniya Das <quic_tdas@quicinc.com>
+Subject: [PATCH v9 00/10] Add support for videocc, camcc, dispcc and gpucc
+ on Qualcomm QCS615 platform
+Date: Thu, 12 Jun 2025 15:25:04 +0530
+Message-ID: <20250612-qcs615-mm-v9-clock-controllers-v9-0-b34dc78d6e1b@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1582; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=TO01a4XfI3theHM74fPZdR2rlN2cv6ZWCZ/5/LAF5wA=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoSqQlqR9SVbtLeGVNgV/bocU+ztoJ0ochVHCGW
- 0ZZTgt49FaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEqkJQAKCRDBN2bmhouD
- 13yhD/9L0JG01crZn1btgo03LUraAB8RlG7s1bFXIjs7mpanEp9LFfwL3QVNQkC8Z3TBuWsX04l
- tv8RKOraPDIGnMsH3anmIMP1TZzC7gob36faKQenGQHgq7+30QpSCtXLUwYerdQm8KuGzErOiDn
- EZrzoLLfqZFD7xNAId3XJwVAm1KWFeaA5UYaVXFtIPIJ+JKegECLfavtcka9J+pjLp9jU2MUNJB
- qnLO8peY9Qzc3amwjesEABOGVRXvmUOktIqSoaZo7OYyTBkmg7nlFZi5C7FFzGaBFkjd96ZR+CF
- DizXzKK5gcLNnGnJwRdmp+X5NxHUuSWhhjAyudivR90yzQbEgbQcfpZQY8eleILOn7RANTBpaSi
- sn6++5jvP9gqLsH/wutPpNaQf48/CyqPiMK9NMqD8BefVZNeVD/bg2hsq9rJXAJiAjqUTdUxaT0
- /YQkXqAKrNCEevLQDjn1N6aZFq6pLaTKIwCYTWB2ysaeJOXiRrJ16iu933ZDdYE2s0+HeLqJ2/w
- gZsvM5pI6Y3Ja2GHXZzTGxlBNQ5GjHKvkD5kaKoh2IjD13FE5M1kHS552oyp8jnnDSXZcsFiQVV
- 5WcNhPBJRPeTO+I3+lZ8UTZ/1mSZyDZGFrbis9J3q2sn4ZeGDLUW7J+E+tAgpAk+e3L0Xt+MoCx Ymk1dDEnlah+vGw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPmjSmgC/x3NwQqDMAyA4VeRnBdoCzrqq8gONYtbWG23RGQgv
+ vvKjt/l/w8wVmGDsTtAeReTWhripQN6pvJglHszBBd6N3iPH7LB97iuuEekXOmFVMumNWdWw0R
+ zTOwWvgYHLfJWXuT7H0y38/wBHzclE3AAAAA=
+X-Change-ID: 20250611-qcs615-mm-v9-clock-controllers-acb9ae0fe720
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Will Deacon
+	<will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Dmitry Baryshkov <lumag@kernel.org>
+X-Mailer: b4 0.15-dev-aa3f6
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA3NiBTYWx0ZWRfX8TkfcmSiU+YX
+ DAK3Fni68hRSEVCg4TPlrIpPIfYK8FRd8KEHNzEfDZjnxBmRWyjmeuvzuA/wOLhmC6g6OqC6hgg
+ UJkucM7YzEAlEiPhLZOhY38ZqXUW44J8CFITceBpW25k22i1Zm4w3HjW6Jbz42kbDt2Tjb73yGx
+ mGUQxo101haP6Snf6ElsFDsTACzf8wh7ZXUsh/yyeiFgkN2LkjZJalikeWTc9r6eJs3Goi5hELg
+ /RuuMQBE9EaKf1hZtBx88KId+0r1FUmo51Gu3W6GV+KlPj5i5ok2NKX3D605KDMcBocXGd8DuJX
+ 2WsQTfwSWuhuOUrJNwycTYB+2cdfA5JaSoalDUoWP15eF4j0zP1qbn8SxCpGC7QTcjNpFlpX+IN
+ SMI3ututbuVPRrcEyQ+1CVUW5UM48agcwT22AivpHwaSp++GZ26UgD8VLBvpVFCb+q8LFO+d
+X-Proofpoint-GUID: uFFuPtTjrIr-pKimpVzCa-BywVv_ZZn4
+X-Authority-Analysis: v=2.4 cv=FaQ3xI+6 c=1 sm=1 tr=0 ts=684aa447 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=pGLkceISAAAA:8 a=ibGQlGnF6lNa58M2td8A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: uFFuPtTjrIr-pKimpVzCa-BywVv_ZZn4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506120076
 
-New dtschema v2025.6 enforces different naming on I2C nodes thus new
-dtbs_check warnings appeared for I2C GPIO nodes:
+Add support for multimedia clock controllers on Qualcomm QCS615 platform.
+Update the defconfig to enable these clock controllers.
 
-  exynos5433-tm2.dtb: i2c-gpio-0 (i2c-gpio):
-    $nodename:0: 'i2c-gpio-0' does not match '^i2c(@.+|-[a-z0-9]+)?$'
-  exynos5433-tm2.dtb: i2c-gpio-0 (i2c-gpio):
-    Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'amplifier@31' were unexpected)
+Global clock controller support
+https://lore.kernel.org/all/20241022-qcs615-clock-driver-v4-0-3d716ad0d987@quicinc.com/
 
-Rename the nodes to a generic i2c-[0-9]+ style with numbers continuing
-the SoC I2C controller indexing (3 controllers) for simplicity and
-obviousness, even if the SoC I2C controller is not enabled on given
-board.  The names anyway would not conflict with SoC ones because of
-unit addresses.
+Changes in v9:
+- Reuse the qcom,sm6350-camcc.yaml for QCS615 [Vladimir]
+	- Still carrying the RB-tag from Krzysztof on the CAMCC DT bindings from (v8)
+- Added all the RB-tags received in (v8).
 
-Verified with comparing two fdt (after fdtdump).
+Changes in v8:
+- Drop the properties which are already covered as part of gcc.yaml [Krzysztof]
+- Drop the RB tag for dt-bindings for Camera clock controller.
+- Link to v7: https://lore.kernel.org/r/20250414-qcs615-mm-v7-clock-controllers-v7-0-ebab8e3a96e9@quicinc.com
 
-Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Closes: https://lore.kernel.org/all/aCtD7BH5N_uPGkq7@shikoro/
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Changes in v7:
+- Update DT bindings for CAMCC, DISPCC, VIDEOCC, GPUCC to remove the
+  common bindings and add reference to "qcom,gcc.yaml" [Krzysztof]
+- Fix the following in the alpha pll code [Bjorn]
+	- double space removal in clk_alpha_pll_slew_set_rate
+	- fix the alpha_width from dynamic to 'ALPHA_REG_BITWIDTH'
+	- cleanup the programming of lower/upper_32_bits of 'alpha'
+	- update the comment for 'mb()'
+- Link to v6: https://lore.kernel.org/all/20250313-qcs615-v5-mm-cc-v6-1-ebf4b9a5e916@quicinc.com/
+
+Changes in v6:
+- Remove wrongly RB-By tags which got introduced in v4 and was carried
+  to v5 as well.
+- Adding the reference where the tags were added and dropped.
+  -[01/10] clk: qcom: clk-alpha-pll: Add support for dynamic update for slewing PLLs
+    - RB-By from Imran (v2)
+  -[02/10] dt-bindings: clock: Add Qualcomm QCS615 Camera clock controller
+    - RB-By from Krzysztof (v2), drop wrong RB-By from Dmitry (v5)
+  -[03/10] clk: qcom: camcc-qcs615: Add QCS615 camera clock controller driver
+    - R-By from Bryan (v2)
+  -[04/10] dt-bindings: clock: Add Qualcomm QCS615 Display clock controller
+    - Drop wrong RB-By from Dmitry (v5)
+  -[05/10] clk: qcom: dispcc-qcs615: Add QCS615 display clock controller driver
+    - R-By from Dmitry (v1)
+  -[06/10] dt-bindings: clock: Add Qualcomm QCS615 Graphics clock controller
+    - Drop wrong RB-By from Dmitry(v5)
+  -[07/10] clk: qcom: gpucc-qcs615: Add QCS615 graphics clock controller driver
+    - R-By from Dmitry (v1)
+  -[08/10] dt-bindings: clock: Add Qualcomm QCS615 Video clock controller
+    - Drop wrong RB-By from Dmitry(v5)
+  -[09/10] clk: qcom: videocc-qcs615: Add QCS615 video clock controller driver
+    - R-By from Dmitry and Bryan (v3)
+  -[10/10] arm64: defconfig: Enable QCS615 clock controllers
+    - Drop wrong RB-By from Dmitry (v5)
+- Link to v5: https://lore.kernel.org/r/20250221-qcs615-v5-mm-cc-v5-0-b6d9ddf2f28d@quicinc.com
+
+Changes in v5:
+- Update ARM64 || COMPILE_TEST in all Kconfig to resolve kismet warnings.
+- Fix sparse errors in GPUCC.
+- Link to v4: https://lore.kernel.org/r/20250119-qcs615-mm-v4-clockcontroller-v4-0-5d1bdb5a140c@quicinc.com
+
+Changes in v4:
+- Drop patch Update the support for alpha mode configuration as this
+  patch was picked - https://lore.kernel.org/all/20241021-fix-alpha-mode-config-v1-1-f32c254e02bc@gmail.com/
+- Update the bindings to include "qcom,gcc.yaml" [Dmitry]
+
+Changes in v3:
+- update PLL configs to use BIT and GENMASK for vco_val and vco_mask for all CCs [Bryan O'Donoghue]
+- Link to v2: https://lore.kernel.org/r/20241101-qcs615-mm-clockcontroller-v2-0-d1a4870a4aed@quicinc.com
+
+Changes in v2:
+- cleanups in clk_alpha_pll_slew_update and clk_alpha_pll_slew_enable functions [Christophe]
+- update PLL configs for "vco_val = 0x0" shift(20)  [Bryan O'Donoghue]
+- update PLL configs to use lower case for L value  [Dmitry]
+- Link parents for IFE/IPE/BPS GDSCs as Titan Top GDSC [Bryan O'Donoghue, Dmitry]
+- Remove DT_BI_TCXO_AO from camcc-qcs615           [Dmitry]
+- Remove HW_CTRL_TRIGGER from camcc-qcs615         [Bryan O'Donoghue]
+- Update platform name for default configuration   [Dmitry]
+- Link to v1: https://lore.kernel.org/r/20241019-qcs615-mm-clockcontroller-v1-0-4cfb96d779ae@quicinc.com
+
+Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
 ---
- arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Taniya Das (10):
+      clk: qcom: clk-alpha-pll: Add support for dynamic update for slewing PLLs
+      dt-bindings: clock: Add Qualcomm QCS615 Camera clock controller
+      clk: qcom: camcc-qcs615: Add QCS615 camera clock controller driver
+      dt-bindings: clock: Add Qualcomm QCS615 Display clock controller
+      clk: qcom: dispcc-qcs615: Add QCS615 display clock controller driver
+      dt-bindings: clock: Add Qualcomm QCS615 Graphics clock controller
+      clk: qcom: gpucc-qcs615: Add QCS615 graphics clock controller driver
+      dt-bindings: clock: Add Qualcomm QCS615 Video clock controller
+      clk: qcom: videocc-qcs615: Add QCS615 video clock controller driver
+      arm64: defconfig: Enable QCS615 clock controllers
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-index 8f02de8480b6..a1fb354dea9f 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-@@ -85,7 +85,7 @@ homepage-key {
- 		};
- 	};
- 
--	i2c_max98504: i2c-gpio-0 {
-+	i2c_max98504: i2c-13 {
- 		compatible = "i2c-gpio";
- 		sda-gpios = <&gpd0 1 GPIO_ACTIVE_HIGH>;
- 		scl-gpios = <&gpd0 0 GPIO_ACTIVE_HIGH>;
+ .../bindings/clock/qcom,qcs615-dispcc.yaml         |   55 +
+ .../bindings/clock/qcom,qcs615-gpucc.yaml          |   49 +
+ .../bindings/clock/qcom,qcs615-videocc.yaml        |   47 +
+ .../bindings/clock/qcom,sm6350-camcc.yaml          |   11 +-
+ arch/arm64/configs/defconfig                       |    4 +
+ drivers/clk/qcom/Kconfig                           |   35 +
+ drivers/clk/qcom/Makefile                          |    4 +
+ drivers/clk/qcom/camcc-qcs615.c                    | 1591 ++++++++++++++++++++
+ drivers/clk/qcom/clk-alpha-pll.c                   |  170 +++
+ drivers/clk/qcom/clk-alpha-pll.h                   |    1 +
+ drivers/clk/qcom/dispcc-qcs615.c                   |  786 ++++++++++
+ drivers/clk/qcom/gpucc-qcs615.c                    |  525 +++++++
+ drivers/clk/qcom/videocc-qcs615.c                  |  332 ++++
+ include/dt-bindings/clock/qcom,qcs615-camcc.h      |  110 ++
+ include/dt-bindings/clock/qcom,qcs615-dispcc.h     |   52 +
+ include/dt-bindings/clock/qcom,qcs615-gpucc.h      |   39 +
+ include/dt-bindings/clock/qcom,qcs615-videocc.h    |   30 +
+ 17 files changed, 3838 insertions(+), 3 deletions(-)
+---
+base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
+change-id: 20250611-qcs615-mm-v9-clock-controllers-acb9ae0fe720
+
+Best regards,
 -- 
-2.45.2
+Taniya Das <quic_tdas@quicinc.com>
 
