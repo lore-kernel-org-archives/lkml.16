@@ -1,46 +1,46 @@
 Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBED7214A7C;
-	Thu, 12 Jun 2025 07:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22E120CCE5;
+	Thu, 12 Jun 2025 07:16:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749712559; cv=none; b=CHAcooGhFYnly/EbCnqjjH9GC+U73s7RUxsdUJNq1S80O8AUGcQj54kUQDiFvJntvMmpUZCbkNYkOhcEYVRi9uXOu04EvSuEJhGyjJdr0Oi3+GFuOK2Ez7EhepocNHOBlSIuASpihoa1VOwAf3thNgD4GqE0J684Tvz26ez+Cxc=
+	t=1749712566; cv=none; b=NqbLpKvuX0H5I9AaHyQ39BKxaQK8MYsPpRmuHXLxbD2UK0CNhX3zlK4S2tTLpRmhVl1Ppt7kJWJJFf85dZjlaw6L3DUcgfdU2rF5DlhxWCbsIjlFug6L6IVYhHoPEAoBz1m0m6CnfnwTeFx5H6XeZtWpNtKTkwZaZaCbJ+u5Trg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749712559; c=relaxed/simple;
-	bh=ftBn7SikCju7zI/wzfgqM1wneiRNZIVVAhcB8BTR908=;
+	s=arc-20240116; t=1749712566; c=relaxed/simple;
+	bh=WXKU0aEz8FEyIgO2wKwEgntNjsZ2DLofsMnWQwwEAIY=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MR4oAmaT4EOlP7EolP+lFczM2plLs1vd6V/qhMsFc7aPYuQydFQ+Ua3Rps+wRHrOXHwTH39rHIReTOhe9C3B53gRqG1SfTV8yViGaFpfybPLIVlPCPtxDtzbR+YOjFtxAO2HhUB16Yanxbtxx20hYx24dbeVKnE1+sLIwZg4GqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nRzn1mgi; arc=none smtp.client-ip=198.47.19.246
+	 MIME-Version:Content-Type; b=kKy+RxO0iDy8q3iBm5T8i/MqtAs1a5VZCpCwPefPhIKdRjgaMeTw+x52G8E5QSuO3qRUXHJA4Kopkkc7Fj3WXR73OOZEdX8AMwJI4cMhKn/6SdkiEC4ge/YJ/aWP2ChRnVtCO/3944EryhwEZbbssuO1eotRsqS+mgt0XhsFkaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vjEC6K+y; arc=none smtp.client-ip=198.47.19.246
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nRzn1mgi"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C7FeYw1615106;
-	Thu, 12 Jun 2025 02:15:40 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vjEC6K+y"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C7G0Tw1615135;
+	Thu, 12 Jun 2025 02:16:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749712540;
-	bh=elLIf7fn3ROfjQByGp/TsTtfayAS/aLZr2yQStBrTrY=;
+	s=ti-com-17Q1; t=1749712560;
+	bh=KVLlEqQa1poXEgM2Nxl4MDS4aHX2mENQctaecBIqmhU=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=nRzn1mgi1RLQtAEN5GBggp0UXaHFXZVmEA7CozZdBomXVHHnRyV4NjNjBPkQscARo
-	 mXiUMCLe3nZCTIWXACvMrO5AY5fJ9q4/49aG3Updxv2VooI6O/A4Z8Icf9/zqO6TAu
-	 tZWDGBcVx8uWvoDxU1RF7pvFnsnIgkH0P+4MDBQw=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C7Feh93448243
+	b=vjEC6K+y5p+CmRlhTEmcRWqMRtAAi0hAbCW+ulYfvbX4xp9+WfNzxVzEyuDjBdOrK
+	 gz56HBrIAl3q0tlGcHz2TtiJMTO25dgkaJMqkPeZR1DsXM0QChtD+vMPnfmeedTOBR
+	 0LsSyTRDE9hat75y4osE1YFcYtUaKsaUhd7gI+hk=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C7FxrM1740448
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 12 Jun 2025 02:15:40 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 12 Jun 2025 02:16:00 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
- Jun 2025 02:15:39 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2025 02:15:59 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 12 Jun 2025 02:15:39 -0500
+ Frontend Transport; Thu, 12 Jun 2025 02:15:59 -0500
 Received: from uda0498651.dhcp.ti.com (uda0498651.dhcp.ti.com [172.24.227.7])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C7FTKN1608959;
-	Thu, 12 Jun 2025 02:15:35 -0500
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C7FTKR1608959;
+	Thu, 12 Jun 2025 02:15:55 -0500
 From: Sai Sree Kartheek Adivi <s-adivi@ti.com>
 To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh@kernel.org>,
@@ -53,9 +53,9 @@ To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
         <vigneshr@ti.com>, <u-kumar1@ti.com>, <a-chavda@ti.com>,
         <p-mantena@ti.com>
-Subject: [PATCH v2 01/17] dmaengine: ti: k3-udma: move macros to header file
-Date: Thu, 12 Jun 2025 12:45:05 +0530
-Message-ID: <20250612071521.3116831-2-s-adivi@ti.com>
+Subject: [PATCH v2 05/17] dmaengine: ti: k3-udma: move ring management functions to k3-udma-common.c
+Date: Thu, 12 Jun 2025 12:45:09 +0530
+Message-ID: <20250612071521.3116831-6-s-adivi@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250612071521.3116831-1-s-adivi@ti.com>
 References: <20250612071521.3116831-1-s-adivi@ti.com>
@@ -69,183 +69,254 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Move macros defined in k3-udma.c to k3-udma.h for better separation and
-re-use.
+Relocate the ring management functions such as push, pop, and reset
+from k3-udma.c to k3-udma-common.c file. These operations are
+common across multiple K3 UDMA variants and will be reused by
+future implementations like K3 UDMA v2.
+
+No functional changes intended.
 
 Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
 ---
- drivers/dma/ti/k3-udma.c | 62 ---------------------------------------
- drivers/dma/ti/k3-udma.h | 63 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 63 insertions(+), 62 deletions(-)
+ drivers/dma/ti/k3-udma-common.c | 100 ++++++++++++++++++++++++++++++++
+ drivers/dma/ti/k3-udma.c        | 100 --------------------------------
+ drivers/dma/ti/k3-udma.h        |   4 ++
+ 3 files changed, 104 insertions(+), 100 deletions(-)
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index aa2dc762140f6..4cc64763de1f6 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -39,21 +39,6 @@ struct udma_static_tr {
- 	u16 bstcnt; /* RPSTR1 */
- };
- 
--#define K3_UDMA_MAX_RFLOWS		1024
--#define K3_UDMA_DEFAULT_RING_SIZE	16
--
--/* How SRC/DST tag should be updated by UDMA in the descriptor's Word 3 */
--#define UDMA_RFLOW_SRCTAG_NONE		0
--#define UDMA_RFLOW_SRCTAG_CFG_TAG	1
--#define UDMA_RFLOW_SRCTAG_FLOW_ID	2
--#define UDMA_RFLOW_SRCTAG_SRC_TAG	4
--
--#define UDMA_RFLOW_DSTTAG_NONE		0
--#define UDMA_RFLOW_DSTTAG_CFG_TAG	1
--#define UDMA_RFLOW_DSTTAG_FLOW_ID	2
--#define UDMA_RFLOW_DSTTAG_DST_TAG_LO	4
--#define UDMA_RFLOW_DSTTAG_DST_TAG_HI	5
--
- struct udma_chan;
- 
- enum k3_dma_type {
-@@ -118,15 +103,6 @@ struct udma_oes_offsets {
- 	u32 pktdma_rchan_flow;
- };
- 
--#define UDMA_FLAG_PDMA_ACC32		BIT(0)
--#define UDMA_FLAG_PDMA_BURST		BIT(1)
--#define UDMA_FLAG_TDTYPE		BIT(2)
--#define UDMA_FLAG_BURST_SIZE		BIT(3)
--#define UDMA_FLAGS_J7_CLASS		(UDMA_FLAG_PDMA_ACC32 | \
--					 UDMA_FLAG_PDMA_BURST | \
--					 UDMA_FLAG_TDTYPE | \
--					 UDMA_FLAG_BURST_SIZE)
--
- struct udma_match_data {
- 	enum k3_dma_type type;
- 	u32 psil_base;
-@@ -1837,38 +1813,6 @@ static int udma_alloc_rx_resources(struct udma_chan *uc)
- 	return ret;
- }
- 
--#define TISCI_BCDMA_BCHAN_VALID_PARAMS (			\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_EXTENDED_CH_TYPE_VALID)
--
--#define TISCI_BCDMA_TCHAN_VALID_PARAMS (			\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID)
--
--#define TISCI_BCDMA_RCHAN_VALID_PARAMS (			\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID)
--
--#define TISCI_UDMA_TCHAN_VALID_PARAMS (				\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |		\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |		\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |		\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID)
--
--#define TISCI_UDMA_RCHAN_VALID_PARAMS (				\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |		\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |		\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |		\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID |	\
--	TI_SCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID)
--
- static int udma_tisci_m2m_channel_config(struct udma_chan *uc)
- {
- 	struct udma_dev *ud = uc->ud;
-@@ -5398,12 +5342,6 @@ static enum dmaengine_alignment udma_get_copy_align(struct udma_dev *ud)
+diff --git a/drivers/dma/ti/k3-udma-common.c b/drivers/dma/ti/k3-udma-common.c
+index f719adb781f88..35a3149f03232 100644
+--- a/drivers/dma/ti/k3-udma-common.c
++++ b/drivers/dma/ti/k3-udma-common.c
+@@ -1231,3 +1231,103 @@ void udma_desc_pre_callback(struct virt_dma_chan *vc,
  	}
  }
  
--#define TI_UDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
--				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
--				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
--				 BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
--				 BIT(DMA_SLAVE_BUSWIDTH_8_BYTES))
++int udma_push_to_ring(struct udma_chan *uc, int idx)
++{
++	struct udma_desc *d = uc->desc;
++	struct k3_ring *ring = NULL;
++	dma_addr_t paddr;
++
++	switch (uc->config.dir) {
++	case DMA_DEV_TO_MEM:
++		ring = uc->rflow->fd_ring;
++		break;
++	case DMA_MEM_TO_DEV:
++	case DMA_MEM_TO_MEM:
++		ring = uc->tchan->t_ring;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* RX flush packet: idx == -1 is only passed in case of DEV_TO_MEM */
++	if (idx == -1) {
++		paddr = udma_get_rx_flush_hwdesc_paddr(uc);
++	} else {
++		paddr = udma_curr_cppi5_desc_paddr(d, idx);
++
++		wmb(); /* Ensure that writes are not moved over this point */
++	}
++
++	return k3_ringacc_ring_push(ring, &paddr);
++}
++
++int udma_pop_from_ring(struct udma_chan *uc, dma_addr_t *addr)
++{
++	struct k3_ring *ring = NULL;
++	int ret;
++
++	switch (uc->config.dir) {
++	case DMA_DEV_TO_MEM:
++		ring = uc->rflow->r_ring;
++		break;
++	case DMA_MEM_TO_DEV:
++	case DMA_MEM_TO_MEM:
++		ring = uc->tchan->tc_ring;
++		break;
++	default:
++		return -ENOENT;
++	}
++
++	ret = k3_ringacc_ring_pop(ring, addr);
++	if (ret)
++		return ret;
++
++	rmb(); /* Ensure that reads are not moved before this point */
++
++	/* Teardown completion */
++	if (cppi5_desc_is_tdcm(*addr))
++		return 0;
++
++	/* Check for flush descriptor */
++	if (udma_desc_is_rx_flush(uc, *addr))
++		return -ENOENT;
++
++	return 0;
++}
++
++void udma_reset_rings(struct udma_chan *uc)
++{
++	struct k3_ring *ring1 = NULL;
++	struct k3_ring *ring2 = NULL;
++
++	switch (uc->config.dir) {
++	case DMA_DEV_TO_MEM:
++		if (uc->rchan) {
++			ring1 = uc->rflow->fd_ring;
++			ring2 = uc->rflow->r_ring;
++		}
++		break;
++	case DMA_MEM_TO_DEV:
++	case DMA_MEM_TO_MEM:
++		if (uc->tchan) {
++			ring1 = uc->tchan->t_ring;
++			ring2 = uc->tchan->tc_ring;
++		}
++		break;
++	default:
++		break;
++	}
++
++	if (ring1)
++		k3_ringacc_ring_reset_dma(ring1,
++					  k3_ringacc_ring_get_occ(ring1));
++	if (ring2)
++		k3_ringacc_ring_reset(ring2);
++
++	/* make sure we are not leaking memory by stalled descriptor */
++	if (uc->terminated_desc) {
++		udma_desc_free(&uc->terminated_desc->vd);
++		uc->terminated_desc = NULL;
++	}
++}
++
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 71b8e27d5a59d..efbd16dc3f931 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -174,106 +174,6 @@ static bool udma_is_chan_paused(struct udma_chan *uc)
+ 	return false;
+ }
+ 
+-static int udma_push_to_ring(struct udma_chan *uc, int idx)
+-{
+-	struct udma_desc *d = uc->desc;
+-	struct k3_ring *ring = NULL;
+-	dma_addr_t paddr;
 -
- static int udma_probe(struct platform_device *pdev)
+-	switch (uc->config.dir) {
+-	case DMA_DEV_TO_MEM:
+-		ring = uc->rflow->fd_ring;
+-		break;
+-	case DMA_MEM_TO_DEV:
+-	case DMA_MEM_TO_MEM:
+-		ring = uc->tchan->t_ring;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	/* RX flush packet: idx == -1 is only passed in case of DEV_TO_MEM */
+-	if (idx == -1) {
+-		paddr = udma_get_rx_flush_hwdesc_paddr(uc);
+-	} else {
+-		paddr = udma_curr_cppi5_desc_paddr(d, idx);
+-
+-		wmb(); /* Ensure that writes are not moved over this point */
+-	}
+-
+-	return k3_ringacc_ring_push(ring, &paddr);
+-}
+-
+-static int udma_pop_from_ring(struct udma_chan *uc, dma_addr_t *addr)
+-{
+-	struct k3_ring *ring = NULL;
+-	int ret;
+-
+-	switch (uc->config.dir) {
+-	case DMA_DEV_TO_MEM:
+-		ring = uc->rflow->r_ring;
+-		break;
+-	case DMA_MEM_TO_DEV:
+-	case DMA_MEM_TO_MEM:
+-		ring = uc->tchan->tc_ring;
+-		break;
+-	default:
+-		return -ENOENT;
+-	}
+-
+-	ret = k3_ringacc_ring_pop(ring, addr);
+-	if (ret)
+-		return ret;
+-
+-	rmb(); /* Ensure that reads are not moved before this point */
+-
+-	/* Teardown completion */
+-	if (cppi5_desc_is_tdcm(*addr))
+-		return 0;
+-
+-	/* Check for flush descriptor */
+-	if (udma_desc_is_rx_flush(uc, *addr))
+-		return -ENOENT;
+-
+-	return 0;
+-}
+-
+-static void udma_reset_rings(struct udma_chan *uc)
+-{
+-	struct k3_ring *ring1 = NULL;
+-	struct k3_ring *ring2 = NULL;
+-
+-	switch (uc->config.dir) {
+-	case DMA_DEV_TO_MEM:
+-		if (uc->rchan) {
+-			ring1 = uc->rflow->fd_ring;
+-			ring2 = uc->rflow->r_ring;
+-		}
+-		break;
+-	case DMA_MEM_TO_DEV:
+-	case DMA_MEM_TO_MEM:
+-		if (uc->tchan) {
+-			ring1 = uc->tchan->t_ring;
+-			ring2 = uc->tchan->tc_ring;
+-		}
+-		break;
+-	default:
+-		break;
+-	}
+-
+-	if (ring1)
+-		k3_ringacc_ring_reset_dma(ring1,
+-					  k3_ringacc_ring_get_occ(ring1));
+-	if (ring2)
+-		k3_ringacc_ring_reset(ring2);
+-
+-	/* make sure we are not leaking memory by stalled descriptor */
+-	if (uc->terminated_desc) {
+-		udma_desc_free(&uc->terminated_desc->vd);
+-		uc->terminated_desc = NULL;
+-	}
+-}
+-
+ static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
  {
- 	struct device_node *navss_node = pdev->dev.parent->of_node;
+ 	if (uc->desc->dir == DMA_DEV_TO_MEM) {
 diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
-index 9062a237cd167..750720cd06911 100644
+index 318fdcd91277f..edff919b8b347 100644
 --- a/drivers/dma/ti/k3-udma.h
 +++ b/drivers/dma/ti/k3-udma.h
-@@ -97,6 +97,69 @@
- /* Address Space Select */
- #define K3_ADDRESS_ASEL_SHIFT		48
+@@ -608,6 +608,10 @@ void udma_desc_pre_callback(struct virt_dma_chan *vc,
+ 		struct virt_dma_desc *vd,
+ 		struct dmaengine_result *result);
  
-+#define K3_UDMA_MAX_RFLOWS		1024
-+#define K3_UDMA_DEFAULT_RING_SIZE	16
++int udma_push_to_ring(struct udma_chan *uc, int idx);
++int udma_pop_from_ring(struct udma_chan *uc, dma_addr_t *addr);
++void udma_reset_rings(struct udma_chan *uc);
 +
-+/* How SRC/DST tag should be updated by UDMA in the descriptor's Word 3 */
-+#define UDMA_RFLOW_SRCTAG_NONE		0
-+#define UDMA_RFLOW_SRCTAG_CFG_TAG	1
-+#define UDMA_RFLOW_SRCTAG_FLOW_ID	2
-+#define UDMA_RFLOW_SRCTAG_SRC_TAG	4
-+
-+#define UDMA_RFLOW_DSTTAG_NONE		0
-+#define UDMA_RFLOW_DSTTAG_CFG_TAG	1
-+#define UDMA_RFLOW_DSTTAG_FLOW_ID	2
-+#define UDMA_RFLOW_DSTTAG_DST_TAG_LO	4
-+#define UDMA_RFLOW_DSTTAG_DST_TAG_HI	5
-+
-+#define UDMA_FLAG_PDMA_ACC32		BIT(0)
-+#define UDMA_FLAG_PDMA_BURST		BIT(1)
-+#define UDMA_FLAG_TDTYPE		BIT(2)
-+#define UDMA_FLAG_BURST_SIZE		BIT(3)
-+#define UDMA_FLAGS_J7_CLASS		(UDMA_FLAG_PDMA_ACC32 | \
-+					 UDMA_FLAG_PDMA_BURST | \
-+					 UDMA_FLAG_TDTYPE | \
-+					 UDMA_FLAG_BURST_SIZE)
-+
-+#define TI_UDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
-+				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
-+				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
-+				 BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
-+				 BIT(DMA_SLAVE_BUSWIDTH_8_BYTES))
-+
-+/* TI_SCI Params */
-+#define TISCI_BCDMA_BCHAN_VALID_PARAMS (			\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_EXTENDED_CH_TYPE_VALID)
-+
-+#define TISCI_BCDMA_TCHAN_VALID_PARAMS (			\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID)
-+
-+#define TISCI_BCDMA_RCHAN_VALID_PARAMS (			\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID)
-+
-+#define TISCI_UDMA_TCHAN_VALID_PARAMS (				\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |		\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |		\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |		\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID)
-+
-+#define TISCI_UDMA_RCHAN_VALID_PARAMS (				\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |		\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |		\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |		\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID |	\
-+	TI_SCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID)
-+
- struct udma_dev;
- struct udma_tchan;
- struct udma_rchan;
+ /* Direct access to UDMA low lever resources for the glue layer */
+ int xudma_navss_psil_pair(struct udma_dev *ud, u32 src_thread, u32 dst_thread);
+ int xudma_navss_psil_unpair(struct udma_dev *ud, u32 src_thread,
 -- 
 2.34.1
 
