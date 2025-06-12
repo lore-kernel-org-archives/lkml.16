@@ -1,118 +1,113 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA35922094;
-	Thu, 12 Jun 2025 15:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1541B1A8F79;
+	Thu, 12 Jun 2025 15:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749743653; cv=none; b=Uke2NhumC4gkEPTdixfZ2yMN+WSuMrD1ADmUZEUIX7Tk7EIvX6xWLD6hR2+BuG5WwLBHWE9Gec/3kF4YdYPhbuEqgHBsXzxzQWB9JOQL5UqmoobYZS3B8JvFZH9+s7E5tlDD4mw3hMePuOafVEOrKbo4oETwdlc0hYnYViyewC4=
+	t=1749743844; cv=none; b=YRisZLaTtWNuUUl0IhIYF3RHgHCW8J4cl4d20xpKaKpGEe/5pEA2uZnRn8DodP8O4Tmy5eHrqM0f6F4xTZio+YeGrMoWaquxcitdLZJnrTv+Nu8kmLa0jCtefAXaZrexvaQU+qqPNqh1L76mqXTm9zvZhSGYCw3mWVtAmOIAxUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749743653; c=relaxed/simple;
-	bh=Lozr22R6CO+RNvwVhifH/eSDDg9MlLQKcOlojkNqxc8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XdPRtZ+04TiEXzaDq4DThV1C333xqU4VygjfUKGnyykOEBYDm32UuzpXdo7FxR8irvLNeGIzWaWRt8+kdpaXnUsKiCbeqU5PloBzL/zHH8XSZJxmVykWMifMC0DaVhOkuBTfEZ+Ss6Wk5X1lGhLYGth00d8d1G3DVDIxGsYei0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1749743844; c=relaxed/simple;
+	bh=evcvXqww3OzUJzsgDgW8nVIYByuR/3CzVFzRK8zBncM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=phtms5E6VGFX43SS2y4tf5Y5Fjsh7GKom+f35bKOSppyvM4BKTbQo14ERMKnGRY34A24Gv46lCsQdr8ECsvhyhWjvA9FnR2PCKiSrHB8ck5SzEtl9FL0bduvB8+rzmVBEGMmuum6rqzaXxXbkbGSNEriI88nDGBOV0PsbtI6/3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fi+YKDV6; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-53125ca7837so635169e0c.0;
-        Thu, 12 Jun 2025 08:54:11 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fi+YKDV6"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55394ee39dfso1166413e87.1;
+        Thu, 12 Jun 2025 08:57:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749743841; x=1750348641; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9179uFVoT3EW7ZHfseKQ7sHz/HhsAa08rUdpavyALIQ=;
+        b=Fi+YKDV63MV1lYH6Jrhic5JwWmjZZASn7ki6sUt/nK6rh25WPHqWa6u0WJIgx2Zwzx
+         Nmm9CgunGR9XqmnTB7/hNUDpjT9dEWpf20FsJKnFU8yhnO3FSTZO/21E3O/prJZDjVZ1
+         GuGHekRnykeQ2x2VqibXH9EhGntpZ4pthZqEn8DtQIZ/11tr9p1o1O3s4DOhWk0BKXqU
+         AA0Ypf8C4+TMkAtJ0x5CdJ7hIObednTxH4lmHx2yCsFg6CmfKfm1/A1DIjMRJljS3uTr
+         cI8fWDjaaRuIOHwlS7zbuIuCZXgGRuqbp/XUsBYcIqQ5aNuodc7Ns0+gsbZjHDnLnIfQ
+         jsJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749743649; x=1750348449;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MCWdKGDkn0LPrrpZul9GwNXUtPRdna1q2f9cpPPTLvA=;
-        b=CJnRmZoQ0g9EeciCPu5VSgLQ6+Yp0sVzbIUuG7Hw0r3haTpYwF21HW+9STnyJy6O9c
-         ulAGUTqJFZZfKyYx/K9NAHZq9OU4XUGGSQzDF0D5+rG37dGfugK7tLcJ9ORfzhwnEdQ2
-         ti8J6zb1CBNoqI5l8cnMvtPfjuH+ukszGhAyaFPr5OHh/UeB8CYRcL6oquxChjyuBW1c
-         75JQwTuG2WmdTRREClWXwkFWny5EXotZJgDPDhfxb/VpPjOPKrPKDBDm9xXULB56wR/y
-         lvFSnQs1LIR/19ZvQ0vyI13j1dumLw5yZsi3MMq44nbsnXSUxfJ5PsmbxY6ihEIRP5TX
-         q5zg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOVp7hSMWtR+LrlA6Frd0BnR/loTzLXVGb6IfRJO7daV1nKfwc2ox2u1PSzwU5k4/23/kwwAeqEMm9w3uvmGLhsmg=@vger.kernel.org, AJvYcCUkZcsR3Ss3sCr5/R3dPXHOmKXPpE59twdWjwVLTketmtnJNYDJ3kPULDU99nRe4YSVsXlAh0JNFYH4SYA=@vger.kernel.org, AJvYcCVbnRcHQmj3qmkwUVH4uDHh359MlnmZw+hxJIOKJLUIRCe8QteOwLNd3L6MdTDZ+eKj8BmX18AmuyG77/kodmX/YFI=@vger.kernel.org, AJvYcCWsUzdGiOMYf+//lkaORyRFeoFsvPxny/1EZNLGOuHbmdEiHkak0tkMBCrPcOAZESHHA/eWlS5GaNs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yypo7DB0NRFCzgTV2JyaYjQsPVhDNqsZD6nC0sYs4+DFYO0wRw9
-	IuOIFBrVs9ll+nasIhuD6sCSZpN4pXFZAn6GFed51DM3bval9f63U43ztnW7OMh2
-X-Gm-Gg: ASbGncthSQPf+5XFYpGw9rz9RnmwgYBPMmsSf/aO4NlXWcmxPqrPSxGDsrvwSA9nc4H
-	ggZO0xyU9NMVKfNL9/DIvmHoyCTz6LJlXydyT5ii9OKpBxwbMzA4WWWKHnEt1eOtI0xP5oqIygC
-	BXv7X5BOdhCV0UqHWyPrt92Qw7A56FZ3Qg8EVoZDF5565LsBmqC9jBMZZmi2DDcEd0eihrZDaHv
-	TC3LVQlK8rQJOJrFvxrxWMoJEl68PPviRzP6aON/dNAOtcnjNHHQ0BUfbi0eRLatc2HG+VET7T0
-	p4Cngyb27KvSLopSDYHIODbb0e/lmWwZP/BGq0WtzpTGFLKU7/woo9Ole8Kme1yukA/DyeO0Jhi
-	uLI5Vk/aaialT3Ga+tExBWS59
-X-Google-Smtp-Source: AGHT+IHPQH4Y8zIYDo7jnYGjuCCKNfPDnUxt8yyPNZacUMOEktQBFF58LQrKvZEwDw2RZYYcI0kOoA==
-X-Received: by 2002:a05:6122:81dc:b0:52d:cc6f:81a2 with SMTP id 71dfb90a1353d-5312dc21da3mr2539414e0c.6.1749743649358;
-        Thu, 12 Jun 2025 08:54:09 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f01259249sm340861241.9.2025.06.12.08.54.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 08:54:08 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e7c7680591so656668137.1;
-        Thu, 12 Jun 2025 08:54:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUowVZxKTEwyQURYu7qTx9yNZ323/WGFV047Wy0s8MyKJSqJakBSpr/fIRonZdUt8U/qYz+nzu2uBpnToQ=@vger.kernel.org, AJvYcCVoNcpLFUGR19ERv5s2F4O+s4f3gt2yrCOjsUIjHjkRDU5Ku3VtOHRDbhtwC+IjSZvd/m/n1ATo8/JTQeNO69kadlQ=@vger.kernel.org, AJvYcCWqS1F10E6wubpH3w+gSsedHbklQtjSgYWni/MiuXsqtgfkDi3N7ItySzSw3ImnZ/ZtlX1LjN5gket2VllD36d9ohg=@vger.kernel.org, AJvYcCXRxK2ji42gfTE/fVcDTmDx9S+YlJO6PiHjtQMXYx+6S9XvQe4yrwGqZ8l0aJedtkRtAtuCkiclT4g=@vger.kernel.org
-X-Received: by 2002:a05:6102:5113:b0:4e4:3c3a:f163 with SMTP id
- ada2fe7eead31-4e7cd7a4049mr3737309137.7.1749743648153; Thu, 12 Jun 2025
- 08:54:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749743841; x=1750348641;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9179uFVoT3EW7ZHfseKQ7sHz/HhsAa08rUdpavyALIQ=;
+        b=Hnw0t4NqJ39M6QC8R0be6aKdlrpQdUeoxB/YNHDZxpUQnlJb1CQdn1Wq1aRvU4EQYZ
+         XtVKdwEsN+iPCrhYknh5xIWOi81lTexbKgUnybiQH44Frwr4h5/UcSwdZR/r7XRJFR24
+         dHM4w2ds8xjH3JRA/xywveaxR7KnEMKeGDIK36r5Bq5Z8WoLEs5bCk0Xvw2UU8DxerI5
+         8ju2WjYWwsa2lue7y9/C2NnuSwoYTPdBHzbyYKZLg2O2pF6R3InO4eWm2/A/7/Au/9yD
+         u7dKr1EvuJ0a79Gece2Qbpg7yDRS819ww0gEcGwqBG/CHfPPs6+bG7yNKveTKATR8of7
+         utSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgrzHSF6f+rQrNbT7y4j13brzMMUp83EO9KcTiTyKCmznvAUYWxShOqRJQB1Bir5u56VWdo792Swh37oM=@vger.kernel.org, AJvYcCXN9kGjBYzBfmwoFznG7CVqg7MYmTzAKPizzCZ0hsDwPV2lz+AR1pE19dNAMhCLH+vKeOl43H1zQdz2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXPUxMghH05jTwUPwZ9TjwVwou+Fb6iKJ1ZSdSypo6jyZQMkFF
+	SNegnZI7+ykJaGjY2HfNmWNEYfVZai2vGZweLb7JgKtcXI0jLTkOnPP2
+X-Gm-Gg: ASbGncvLB6d8p87UhAjGTwVzcbvYegTYPnq+8br/KX+JdcwZLxEFer9kZU7QLhxianw
+	rhVObcHdOgVRzW0HvL/lPSytv/EzNeV4ZKkM4UrqbkP/efkVP7U846kaTbx0eOoZk4m0wVaFtUw
+	HndjH1CmkQt+gZO+fjFqAwYLBGmxVuY9BWuk/11kczjQvECxVBH5hxcIMJFscltyTpTr10ZgKjA
+	y7iT9rVCtt1dE179d66AKYJ5m264p5RVXk4MQkmRV5zCZnFhoPVKjWxmkSQBb7gvhZSo12QVJXQ
+	v3IqnmIfv3+yvtN3Zvb0bua7fNYoeVcn1X2bXPTvmevRRh1kpgQOle/qmPHywBUGmCR28PcqKA4
+	9ex6FgiAvfNBPZpGJ1HKPblo=
+X-Google-Smtp-Source: AGHT+IFFBAnZphSpay7uT97FtpVQuu9LlHxtRNVKszGcz//pBOhulNNZ/P57ZJmOEBGALEIMLq44QA==
+X-Received: by 2002:a05:6512:3a85:b0:553:2884:5fb3 with SMTP id 2adb3069b0e04-553a5442279mr1338988e87.12.1749743840851;
+        Thu, 12 Jun 2025 08:57:20 -0700 (PDT)
+Received: from SC-WS-02452.corp.sbercloud.ru ([37.78.250.67])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1f7c19sm148313e87.233.2025.06.12.08.57.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 08:57:20 -0700 (PDT)
+Date: Thu, 12 Jun 2025 18:57:18 +0300
+From: Sergey Bashirov <sergeybashirov@gmail.com>
+To: Chuck Lever <chuck.lever@oracle.com>, 
+	Christoph Hellwig <hch@infradead.org>
+Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Konstantin Evtushenko <koevtushenko@yandex.com>
+Subject: Re: [PATCH v2] nfsd: Use correct error code when decoding extents
+Message-ID: <lqssee7hdp5bkty34idm6s6xz2hfxpbkthzgqgopc72vbyzrdx@egvanmm3llrg>
+References: <20250611205504.19276-1-sergeybashirov@gmail.com>
+ <aEp6-T8Oqe2dI7of@infradead.org>
+ <1951a618-a35d-4515-b4b7-131880a780c6@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610193403161UQCV5cVGXCRVDheTb7jvi@zte.com.cn>
-In-Reply-To: <20250610193403161UQCV5cVGXCRVDheTb7jvi@zte.com.cn>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Jun 2025 17:53:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV2Ar95nrmH=NTwY+pkrg6nD-sNoVG7MJY7ofJF4N3bNA@mail.gmail.com>
-X-Gm-Features: AX0GCFsIwHF9_aoZ54iuAPGFucIDRqFn8Tjpa14cAUcOdjFvqEv5PYmW-DjzBPU
-Message-ID: <CAMuHMdV2Ar95nrmH=NTwY+pkrg6nD-sNoVG7MJY7ofJF4N3bNA@mail.gmail.com>
-Subject: Re: [PATCH v2] pmdomain: Use str_enable_disable-like helpers
-To: shao.mingyin@zte.com.cn
-Cc: ulf.hansson@linaro.org, changhuang.liang@starfivetech.com, 
-	geert+renesas@glider.be, magnus.damm@gmail.com, heiko@sntech.de, 
-	krzk@kernel.org, alim.akhtar@samsung.com, walker.chen@starfivetech.com, 
-	sebastian.reichel@collabora.com, detlev.casanova@collabora.com, 
-	finley.xiao@rock-chips.com, shawn.lin@rock-chips.com, pgwipeout@gmail.com, 
-	qiu.yutan@zte.com.cn, linux-pm@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, yang.yang29@zte.com.cn, 
-	xu.xin16@zte.com.cn, yang.tao172@zte.com.cn, ye.xingchen@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1951a618-a35d-4515-b4b7-131880a780c6@oracle.com>
+User-Agent: NeoMutt/20231103
 
-Hi Mingyin,
-
-On Tue, 10 Jun 2025 at 13:34, <shao.mingyin@zte.com.cn> wrote:
-> From: Shao Mingyin <shao.mingyin@zte.com.cn>
+On Thu, Jun 12, 2025 at 09:10:11AM -0400, Chuck Lever wrote:
+> On 6/12/25 3:00 AM, Christoph Hellwig wrote:
+> > On Wed, Jun 11, 2025 at 11:55:02PM +0300, Sergey Bashirov wrote:
+> >>  	if (nr_iomaps < 0)
+> >> -		return nfserrno(nr_iomaps);
+> >> +		return cpu_to_be32(-nr_iomaps);
+> >
+> > This still feels like an odd calling convention.  Maybe we should just
+> > change the calling convention to return the __be32 encoded nfs errno
+> > and have a separate output argument for the number of iomaps?
+> >
+> > Chuck, any preference?
+> >
 >
-> Replace ternary (condition ? "enable" : "disable") syntax and ternary
-> (condition ? "on" : "off") syntax with helpers from
-> string_choices.h because:
-> 1. Simple function call with one argument is easier to read.  Ternary
->    operator has three arguments and with wrapping might lead to quite
->    long code.
-> 2. Is slightly shorter thus also easier to read.
-> 3. It brings uniformity in the text - same string.
-> 4. Allows deduping by the linker, which results in a smaller binary
->    file.
+> I thought of using an output argument. This calling convention is not
+> uncommon in NFS code, and I recall that Linus might prefer avoiding
+> output arguments?
 >
-> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-> ---
-> v2:
->  %sable ==> %s in jh71xx_pmu_dev()
+> If I were writing fresh code, I think I would use an output argument
+> instead of folding results of two different types into a function's
+> return value.
 
-Thanks for the update!
+In general, I am ok with either of these two approaches. But I agree
+with Christoph that the solution with a separate output argument seems
+more natural to me. Should I submit the v3 patch with a separate output
+argument?
 
-While I already provided my Rb-tag on Krzysztof's original [1], your
-version is whitespace-damaged (TABs replaced by spaces), and thus
-cannot be applied.
-
-[1] https://lore.kernel.org/all/CAMuHMdXJ57mATWW4AnBedn+D7TQ4PadkJ642daquFtAo=wZFrQ@mail.gmail.com/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Sergey Bashirov
