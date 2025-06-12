@@ -1,108 +1,318 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E10246797;
-	Thu, 12 Jun 2025 10:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C4C23BCFA;
+	Thu, 12 Jun 2025 10:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725502; cv=none; b=XDW3gzfJgMUntqhIWA2dl9vcvD2ndXxAO4QF+mhwsipHYvtjKblGOBVfJ909jrXcrOylFGOGvxP/QJK2r5kTrPL7Bi0UwumflkFk0m8CEve4zYkzKU+v0KzV+ik+s3xI+Kw0JCCmDKnJj0KAJ0yFHHS1Jfj0uJwltEhh/QP60a8=
+	t=1749725499; cv=none; b=VDXZNrBqRj3/lqs4WCfZdZrrB/c7pqLABVImtm0YIOPCtDlM00mw6nSsBDYEIkKXuzSWH52T2YoNvSgAOrqg2IuVJphYbWcMxjKcgdU2rOj0+kAjG4L7p9zbDOqvsY+REAhGO7OdQpyiRe55RelNSa+Aohvto+6/GP+sufU/6AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725502; c=relaxed/simple;
-	bh=QNuotDSbXamqQoufAqDmvk9X3kWMiUNh5OnMNgQcFr8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yz47Tywrg3AmBjoS1vlb259TFMLR46u4fXVtjmIuURPUNe6x4Cwma2MY0YXp48sqauKeKDqyfd5zOwdr9R3FM50lve78HLxyRbvngTiIf/dL84ZsmlOL1InkWP1fIbvLTf4SPXJC8yOdsN6epKjTVfqrLNVWlR0TdW5CPZ4/3mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bHzqF3rv5z9std;
-	Thu, 12 Jun 2025 12:51:37 +0200 (CEST)
-From: Pankaj Raghav <p.raghav@samsung.com>
-To: Suren Baghdasaryan <surenb@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nico Pache <npache@redhat.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Zi Yan <ziy@nvidia.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	willy@infradead.org,
-	x86@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH 4/5] mm: add mm_get_static_huge_zero_folio() routine
-Date: Thu, 12 Jun 2025 12:50:59 +0200
-Message-ID: <20250612105100.59144-5-p.raghav@samsung.com>
-In-Reply-To: <20250612105100.59144-1-p.raghav@samsung.com>
-References: <20250612105100.59144-1-p.raghav@samsung.com>
+	s=arc-20240116; t=1749725499; c=relaxed/simple;
+	bh=HKv+RczLAZ17iqylg22JlcAa16U8HVKbqtgbPN/3rrM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E+RGN6qPElqO4qZu9MANSmhjzQz3x76d171L3x/fcbzEpaRPjRbrWLijh+H0l4c6CS9AJTKNxbP3JuV+1pVl2xn6X+7syESGDQ0T8YnHiG+AUhdNVRNg0fztZcdk+t2rKQjxiMahXwVSM5iileMrzL2VLEiXGbL4BY569eDK/D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aO49gxay; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aO49gxay"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E41BC4CEEE;
+	Thu, 12 Jun 2025 10:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749725498;
+	bh=HKv+RczLAZ17iqylg22JlcAa16U8HVKbqtgbPN/3rrM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aO49gxay9bAykPC0QZcmIl7XHKGGMrp1dwVKDmKPefGeezyBbVis/1s3ZqPtBkDN1
+	 ySK0Ocks5vOLZNXFVG45wYhjeEpDo74myMPibgFEjV20ISoa2cC0QItgO/tN1HOroV
+	 INN5vmR+CAnWaJpY1C3sNfIZvARifUgoOWV5ZGw3SZoNRHxgOAQu8E7O/TaAovQw7f
+	 A8DVpW269wF7sRO0VF5FYf3QtoGHUvCvw7H6bffEP0o8MTcWrjnq0kzNXS0ERCs8bI
+	 jDUVdQmAZ07fvUA8ADWHwMh1I7VqDllMzEeEyVhHtuWFt45kceBGgQwNuBBQREq++f
+	 CVE3bzopG+jRQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uPfWx-006DBO-DR;
+	Thu, 12 Jun 2025 11:51:35 +0100
+Date: Thu, 12 Jun 2025 11:51:34 +0100
+Message-ID: <86v7p1cjwp.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH V4 1/2] arm64/debug: Drop redundant DBG_MDSCR_* macros
+In-Reply-To: <ddc006af-3084-4fef-b822-144fb404bc8d@arm.com>
+References: <20250612033547.480952-1-anshuman.khandual@arm.com>
+	<20250612033547.480952-2-anshuman.khandual@arm.com>
+	<86wm9hcr14.wl-maz@kernel.org>
+	<ddc006af-3084-4fef-b822-144fb404bc8d@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com, oliver.upton@linux.dev, joey.gouly@arm.com, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Add mm_get_static_huge_zero_folio() routine so that huge_zero_folio can be
-used without the need to pass any mm struct. This will return ZERO_PAGE
-folio if CONFIG_STATIC_PMD_ZERO_PAGE is disabled.
+On Thu, 12 Jun 2025 11:24:04 +0100,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>=20
+>=20
+>=20
+> On 12/06/25 1:47 PM, Marc Zyngier wrote:
+> > On Thu, 12 Jun 2025 04:35:46 +0100,
+> > Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> >>
+> >> MDSCR_EL1 has already been defined in tools sysreg format and hence ca=
+n be
+> >> used in all debug monitor related call paths. But using generated sysr=
+eg
+> >> definitions causes build warnings because there is a mismatch between =
+mdscr
+> >> variable (u32) and GENMASK() based masks (long unsigned int). Convert =
+all
+> >> variables handling MDSCR_EL1 register as u64 which also reflects its t=
+rue
+> >> width as well.
+> >>
+> >> ----------------------------------------------------------------------=
+----
+> >> arch/arm64/kernel/debug-monitors.c: In function =E2=80=98disable_debug=
+_monitors=E2=80=99:
+> >> arch/arm64/kernel/debug-monitors.c:108:13: warning: conversion from =
+=E2=80=98long
+> >> unsigned int=E2=80=99 to =E2=80=98u32=E2=80=99 {aka =E2=80=98unsigned =
+int=E2=80=99} changes value from
+> >> =E2=80=9818446744073709518847=E2=80=99 to =E2=80=984294934527=E2=80=99=
+ [-Woverflow]
+> >>   108 |   disable =3D ~MDSCR_EL1_MDE;
+> >>       |             ^
+> >> ----------------------------------------------------------------------=
+----
+> >>
+> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >> Cc: Will Deacon <will@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >>  arch/arm64/include/asm/assembler.h      |  4 ++--
+> >>  arch/arm64/include/asm/debug-monitors.h |  6 ------
+> >>  arch/arm64/kernel/debug-monitors.c      | 22 +++++++++++-----------
+> >>  arch/arm64/kernel/entry-common.c        |  4 ++--
+> >>  4 files changed, 15 insertions(+), 21 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/a=
+sm/assembler.h
+> >> index ad63457a05c5..f229d96616e5 100644
+> >> --- a/arch/arm64/include/asm/assembler.h
+> >> +++ b/arch/arm64/include/asm/assembler.h
+> >> @@ -53,7 +53,7 @@
+> >>  	.macro	disable_step_tsk, flgs, tmp
+> >>  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
+> >>  	mrs	\tmp, mdscr_el1
+> >> -	bic	\tmp, \tmp, #DBG_MDSCR_SS
+> >> +	bic	\tmp, \tmp, #MDSCR_EL1_SS
+> >>  	msr	mdscr_el1, \tmp
+> >>  	isb	// Take effect before a subsequent clear of DAIF.D
+> >>  9990:
+> >> @@ -63,7 +63,7 @@
+> >>  	.macro	enable_step_tsk, flgs, tmp
+> >>  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
+> >>  	mrs	\tmp, mdscr_el1
+> >> -	orr	\tmp, \tmp, #DBG_MDSCR_SS
+> >> +	orr	\tmp, \tmp, #MDSCR_EL1_SS
+> >>  	msr	mdscr_el1, \tmp
+> >>  9990:
+> >>  	.endm
+> >> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/incl=
+ude/asm/debug-monitors.h
+> >> index 8f6ba31b8658..1f37dd01482b 100644
+> >> --- a/arch/arm64/include/asm/debug-monitors.h
+> >> +++ b/arch/arm64/include/asm/debug-monitors.h
+> >> @@ -13,14 +13,8 @@
+> >>  #include <asm/ptrace.h>
+> >> =20
+> >>  /* Low-level stepping controls. */
+> >> -#define DBG_MDSCR_SS		(1 << 0)
+> >>  #define DBG_SPSR_SS		(1 << 21)
+> >> =20
+> >> -/* MDSCR_EL1 enabling bits */
+> >> -#define DBG_MDSCR_KDE		(1 << 13)
+> >> -#define DBG_MDSCR_MDE		(1 << 15)
+> >> -#define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
+> >> -
+> >>  #define	DBG_ESR_EVT(x)		(((x) >> 27) & 0x7)
+> >> =20
+> >>  /* AArch64 */
+> >> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/de=
+bug-monitors.c
+> >> index 58f047de3e1c..08f1d02507cd 100644
+> >> --- a/arch/arm64/kernel/debug-monitors.c
+> >> +++ b/arch/arm64/kernel/debug-monitors.c
+> >> @@ -34,7 +34,7 @@ u8 debug_monitors_arch(void)
+> >>  /*
+> >>   * MDSCR access routines.
+> >>   */
+> >> -static void mdscr_write(u32 mdscr)
+> >> +static void mdscr_write(u64 mdscr)
+> >>  {
+> >>  	unsigned long flags;
+> >>  	flags =3D local_daif_save();
+> >> @@ -43,7 +43,7 @@ static void mdscr_write(u32 mdscr)
+> >>  }
+> >>  NOKPROBE_SYMBOL(mdscr_write);
+> >> =20
+> >> -static u32 mdscr_read(void)
+> >> +static u64 mdscr_read(void)
+> >>  {
+> >>  	return read_sysreg(mdscr_el1);
+> >>  }
+> >> @@ -79,16 +79,16 @@ static DEFINE_PER_CPU(int, kde_ref_count);
+> >> =20
+> >>  void enable_debug_monitors(enum dbg_active_el el)
+> >>  {
+> >> -	u32 mdscr, enable =3D 0;
+> >> +	u64 mdscr, enable =3D 0;
+> >> =20
+> >>  	WARN_ON(preemptible());
+> >> =20
+> >>  	if (this_cpu_inc_return(mde_ref_count) =3D=3D 1)
+> >> -		enable =3D DBG_MDSCR_MDE;
+> >> +		enable =3D MDSCR_EL1_MDE;
+> >> =20
+> >>  	if (el =3D=3D DBG_ACTIVE_EL1 &&
+> >>  	    this_cpu_inc_return(kde_ref_count) =3D=3D 1)
+> >> -		enable |=3D DBG_MDSCR_KDE;
+> >> +		enable |=3D MDSCR_EL1_KDE;
+> >> =20
+> >>  	if (enable && debug_enabled) {
+> >>  		mdscr =3D mdscr_read();
+> >> @@ -100,16 +100,16 @@ NOKPROBE_SYMBOL(enable_debug_monitors);
+> >> =20
+> >>  void disable_debug_monitors(enum dbg_active_el el)
+> >>  {
+> >> -	u32 mdscr, disable =3D 0;
+> >> +	u64 mdscr, disable =3D 0;
+> >> =20
+> >>  	WARN_ON(preemptible());
+> >> =20
+> >>  	if (this_cpu_dec_return(mde_ref_count) =3D=3D 0)
+> >> -		disable =3D ~DBG_MDSCR_MDE;
+> >> +		disable =3D ~MDSCR_EL1_MDE;
+> >> =20
+> >>  	if (el =3D=3D DBG_ACTIVE_EL1 &&
+> >>  	    this_cpu_dec_return(kde_ref_count) =3D=3D 0)
+> >> -		disable &=3D ~DBG_MDSCR_KDE;
+> >> +		disable &=3D ~MDSCR_EL1_KDE;
+> >> =20
+> >>  	if (disable) {
+> >>  		mdscr =3D mdscr_read();
+> >> @@ -415,7 +415,7 @@ void kernel_enable_single_step(struct pt_regs *reg=
+s)
+> >>  {
+> >>  	WARN_ON(!irqs_disabled());
+> >>  	set_regs_spsr_ss(regs);
+> >> -	mdscr_write(mdscr_read() | DBG_MDSCR_SS);
+> >> +	mdscr_write(mdscr_read() | MDSCR_EL1_SS);
+> >>  	enable_debug_monitors(DBG_ACTIVE_EL1);
+> >>  }
+> >>  NOKPROBE_SYMBOL(kernel_enable_single_step);
+> >> @@ -423,7 +423,7 @@ NOKPROBE_SYMBOL(kernel_enable_single_step);
+> >>  void kernel_disable_single_step(void)
+> >>  {
+> >>  	WARN_ON(!irqs_disabled());
+> >> -	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
+> >> +	mdscr_write(mdscr_read() & ~MDSCR_EL1_SS);
+> >>  	disable_debug_monitors(DBG_ACTIVE_EL1);
+> >>  }
+> >>  NOKPROBE_SYMBOL(kernel_disable_single_step);
+> >> @@ -431,7 +431,7 @@ NOKPROBE_SYMBOL(kernel_disable_single_step);
+> >>  int kernel_active_single_step(void)
+> >>  {
+> >>  	WARN_ON(!irqs_disabled());
+> >> -	return mdscr_read() & DBG_MDSCR_SS;
+> >> +	return mdscr_read() & MDSCR_EL1_SS;
+> >>  }
+> >>  NOKPROBE_SYMBOL(kernel_active_single_step);
+> >> =20
+> >> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entr=
+y-common.c
+> >> index 7c1970b341b8..171f93f2494b 100644
+> >> --- a/arch/arm64/kernel/entry-common.c
+> >> +++ b/arch/arm64/kernel/entry-common.c
+> >> @@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum=
+_1463225_wa);
+> >> =20
+> >>  static void cortex_a76_erratum_1463225_svc_handler(void)
+> >>  {
+> >> -	u32 reg, val;
+> >> +	u64 reg, val;
+> >> =20
+> >>  	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
+> >>  		return;
+> >> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler=
+(void)
+> >> =20
+> >>  	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
+> >>  	reg =3D read_sysreg(mdscr_el1);
+> >> -	val =3D reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
+> >> +	val =3D reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
+> >>  	write_sysreg(val, mdscr_el1);
+> >>  	asm volatile("msr daifclr, #8");
+> >>  	isb();
+> >=20
+> > Whilst you're at it, please also change the open-coded constant in
+> > __cpu_setup to MDSCR_EL1_TDCC.
+>=20
+> I believe you are suggesting about the following change, will fold
+> in the patch. But I guess 'mov' would still be preferred compared
+> to 'mov_q' as MDSCR_EL1_TDCC is a 32 bit constant (atleast the non
+> zero portion) ?
 
-This routine can also be called even if THP is disabled.
+Digression: I'm not sure why you'd ever consider using mov_q for a
+single-bit constant, irrespective of where that bit is set. The mov
+instruction (and all the logical operations taking an immediate as a
+parameter) can encode any contiguous stream of 1s with an arbitrary
+rotation. See C6.2.247 and co.
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
- include/linux/mm.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+>=20
+> --- a/arch/arm64/mm/proc.S
+> +++ b/arch/arm64/mm/proc.S
+> @@ -454,7 +454,7 @@ SYM_FUNC_START(__cpu_setup)
+>         dsb     nsh
+>=20
+>         msr     cpacr_el1, xzr                  // Reset cpacr_el1
+> -       mov     x1, #1 << 12                    // Reset mdscr_el1 and di=
+sable
+> +       mov     x1, MDSCR_EL1_TDCC              // Reset mdscr_el1 and di=
+sable
+>         msr     mdscr_el1, x1                   // access to the DCC from=
+ EL0
+>         reset_pmuserenr_el0 x1                  // Disable PMU access fro=
+m EL0
+>         reset_amuserenr_el0 x1                  // Disable AMU access fro=
+m EL0
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index b20d60d68b3c..c8805480ff21 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4021,6 +4021,22 @@ static inline bool vma_is_special_huge(const struct vm_area_struct *vma)
- extern struct folio *huge_zero_folio;
- extern unsigned long huge_zero_pfn;
- 
-+/*
-+ * mm_get_static_huge_zero_folio - Get a PMD sized zero folio
-+ *
-+ * This function will return a PMD sized zero folio if CONFIG_STATIC_PMD_ZERO_PAGE
-+ * is enabled. Otherwise, a ZERO_PAGE folio is returned.
-+ *
-+ * Deduce the size of the folio with folio_size instead of assuming the
-+ * folio size.
-+ */
-+static inline struct folio *mm_get_static_huge_zero_folio(void)
-+{
-+	if(IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE))
-+		return READ_ONCE(huge_zero_folio);
-+	return page_folio(ZERO_PAGE(0));
-+}
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- static inline bool is_huge_zero_folio(const struct folio *folio)
- {
--- 
-2.49.0
+Yes.
 
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
