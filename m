@@ -1,245 +1,228 @@
-Received: from rcdn-iport-9.cisco.com (rcdn-iport-9.cisco.com [173.37.86.80])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF9F1EB39;
-	Thu, 12 Jun 2025 01:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=173.37.86.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749690990; cv=fail; b=VQ+JpIkmRW6cXlTaSsXOcvB3oEC7ApAmdp2gaAfwgOvX9aw7dVF/d59Tkf5S7eJjgn/tgfcbLZPj5F8qW97x2gzPQPHb6KGg+jHgHsdcgaOBaTPHjmduboCGaKyPgk1Cw3b8d0kVrtKMt/BjXkRYz/kwWbaer1/rTMIPVakiuYY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749690990; c=relaxed/simple;
-	bh=NMFGBg97Tzh31oUo0fWzy2J6B0PoVIUhDF83etLW9Rs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WE5ED42g6dV3ya+6O00CVpjV4DhNWdNPQVGZwtKmT2YlhW1/Ivmi0+EY4JtwtfKbz6tLu97b1uev2s1FznHTlouvcAagjmhD2aLeM9lRiDTsKb2Z5ZPS35lys6kCC6eGuiYd0JIxJ7oMlJRgxEsH/TeUCfF7nriMsc6W1D5WOnk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=HesrpYoB; arc=fail smtp.client-ip=173.37.86.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626F74207A;
+	Thu, 12 Jun 2025 01:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749691018; cv=none; b=onRmqbZ2BKda3UJFanofmqQ8bp/5XjBjR6ZCtT9/xc8LDABvj0nb+71UO9wSCFwtavShbmhlkcDI/4WzUDuFrmp/ASxZrp4469dVZ6Y8a2lfxdt/0iJjSLuK3cnKOcBrdD9ZFWYScXL2DO7c7XrF6Od5peRmlr7zc1uxI8ZvnMs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749691018; c=relaxed/simple;
+	bh=9cQWUCePEsft2HV53xBGF7MysPCcHtpQG4kJkhSeY4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LW7y/zsN6LtN1SMYpJ0rFIqb7fYuFOPr0KzDE0qWhgh9JbbYSlvEbjNi5OYWG2uths9VVyGXh365VT4tNDhdEi8lJVVFx6ugqrWvhceVxZ1JCT1Bur+zrEuW8fGyud070fP/Tjzk9XqpbI2/eZku86U9x+9YB4zn7MXQ1ST9U5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rk5rSjYz; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="HesrpYoB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=823; q=dns/txt;
-  s=iport01; t=1749690988; x=1750900588;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=NMFGBg97Tzh31oUo0fWzy2J6B0PoVIUhDF83etLW9Rs=;
-  b=HesrpYoBYqNyuEudvLShq8yvZBhFNrXIblAhU8S0K2/XZtZE2dCKM/Oe
-   Wpmd78lF49nOpzOa8DDJeJL5te2r5oBpilxrcLzM2l07jxu4ofixZJX0N
-   MZBh7liNkg0d4HuCDdnJjC07zp6TwfJvmEUhjmSaZi8DXgCRpd2U1rZeq
-   TboAitYQ5TWPkj+l9K83r61Pjgv2ckne33T+L//lHs7G6icpNuk04nIUl
-   BqKqn1q3qWiGySHMHJAoTSuWpVn2aJZWeJmvbYkLU8wfSr29tCKu44B6o
-   M7GDtGEm2VE9qZAOCVoIVP8Iq+q4BwJGWz5Y0SzWPGr/PaA8bzdbiU4zW
-   A==;
-X-CSE-ConnectionGUID: FX682gAVTj6O9mvFvhJHXg==
-X-CSE-MsgGUID: OyUgq7+GQ6itP/Idh+faaQ==
-X-IPAS-Result: =?us-ascii?q?A0AoAAAqKUpo/5UQJK1aHAEBAQEBAQcBARIBAQQEAQFAJ?=
- =?us-ascii?q?YEaBwEBCwGBcVIHghVJiCADhE1fhlWCJJ4WgSUDVw8BAQENAlEEAQGFBwKLZ?=
- =?us-ascii?q?gImNAkOAQIEAQEBAQMCAwEBAQEBAQEBAQEBCwEBBQEBAQIBBwWBDhOGCIZaA?=
- =?us-ascii?q?QEBAQMSKD8QAgEIGB4QMSUCBA4FCBqFTwMBpCwBgUACiit4gTSBAeAlgUkBi?=
- =?us-ascii?q?E8BhWyEdycbgg2BFUKCNzE+hEWEE4IvBIIkRFKNFpQIUngcA1ksAVUTFwsHB?=
- =?us-ascii?q?YEgQwOBDyNLBS0dgg2FGR+Bc4FZAwMWEIQEHIRihEkrT4MigX9lQYNfEgwGc?=
- =?us-ascii?q?g8HSkADC209NxQbBQSBNQWYAYV6gUSWebASCoQbogkXqmGZBKkNAgQCBAUCE?=
- =?us-ascii?q?AEBBoFoPIFZcBWDIlIZD8l4eDwCBwsBAQMJkhQBAQ?=
-IronPort-PHdr: A9a23:20d+MRDcIsk4UQzzIm8AUyQVXRdPi9zP1kY98JErjfdJaqu8us6kN
- 03E7vIrh1jMDs3X6PNB3vLfqLuoGXcB7pCIrG0YfdRSWgUEh8Qbk01oAMOMBUDhav+/Ryc7B
- 89FElRi+hmG
-IronPort-Data: A9a23:Y/yZha8e4OKFJwbggPUADrUD6H+TJUtcMsCJ2f8bNWPcYEJGY0x3n
- GoYWz+GP/uLY2T0ctx1Ot60oB4GupaEz99gT1Bo+S1EQiMRo6IpJzg2wmQcns+2BpeeJK6yx
- 5xGMrEsFOhtEDmE4E3ra+G7xZVF/fngbqLmD+LZMTxGSwZhSSMw4TpugOdRbrRA2bBVOCvT/
- 4qsyyHjEAX9gWMsbDtNs/nrRC5H5ZwehhtJ5jTSWtgT1LPuvyF9JI4SI6i3M0z5TuF8dsamR
- /zOxa2O5WjQ+REgELuNyt4XpWVTH9Y+lSDX4pZnc/DKbipq/0Te4Y5nXBYoUnq7vh3S9zxHJ
- HqhgrTrIeshFvWkdO3wyHC0GQkmVUFN0OevzXRSLaV/wmWeG0YAzcmCA2kYDdNIoOleP11Mq
- 9tJLS4jcBChp9K5lefTpulE3qzPLeHiOIcZ/3UlxjbDALN/G9bIQr7B4plT2zJYasJmRKmFI
- ZFHL2MxKk2cMnWjOX9PYH46tOShnGX+dzRbgFmUvqEwpWPUyWSd1ZC2YIqLK4zQGpw9ckCwg
- XP78H2mQT4jat2D8X2k/nLviObGpHauMG4VPPjinhJwu3WXx2oOGFgVWEG9rP2RlEGzQZRcJ
- lYS9y5oqrI9nGSvT9/gT1ijq2WFlgATVsAWEOAg7gyJjK3O7G6k6nMsRzpFbpki8cQxXzFvj
- wXPlNLyDjspu7qQIZ6AyoqpQfqJEXF9BUcJZDQPSk0O5NyLnW35pkunogpLeEJtsuDIJA==
-IronPort-HdrOrdr: A9a23:EfDb0KFK+mhTTzUCpLqFp5LXdLJyesId70hD6qkvc203TiXIra
- CTdaogtCMc0AxhJk3I+ertBEGBKUmsk6KdkrNhTItKOzOW91dATbsSobcKrAeQYREWmtQtsZ
- uINpIOd+EYbmIKw/oSgjPIburIqePvmMvH9IWuqkuFDzsaF52IhD0JczpzZ3cGPzWucqBJbK
- Z0iPA3wAaISDA8VOj+LH8DWOTIut3Mk7zbQTNuPXQawTjLpwmFrJrhHTal/jp2aV5yKLEZnl
- Ttokjc3OGOovu7whjT2yv49JJNgubszdNFGYilltUVAi+EsHfpWK1RH5m5+BwlquCm71gn1P
- PWpQ07Ash143TNOkmovBrW3RX62jpG0Q6g9bbYuwqgnSXKfkN/NyNzv/MfTvIf0TtngDhI6t
- MP44tejesPMfqPplWk2zGCbWAbqqP9mwtQrQdUtQ0fbWPbA4Uh97D2OyhuYcw9NTO/54Y9HO
- Z0CsbAoP5QbFOBdnjc+nJi2dq2Qx0Ib1y7q2U5y4WoOgJt7ThE5lpdwNZakmYL9Zo7RZUB7+
- PYMr5wnLULSsMNd6pyCOoIXMPyUwX2MF/xGXPXJU6iGLAMOnrLpZKy6LIp5PuycJhNyJcpgp
- zOXF5RqGZ3cUPzDs+F2oFN73n2MS+AdCWoztsb64lyu7X6SrauOSqfSEo2m8/luPkbCt2zYY
- fEBHuXOY6VEYLDI/c84+SlYeghFZA3arxhhuoG
-X-Talos-CUID: 9a23:I5/8VGwsXLAYPW6f3ZN/BgU6Kp51KHL08kvSfWjpDHhHVr23aW+frfY=
-X-Talos-MUID: =?us-ascii?q?9a23=3AF/3/7Qy0ADCiEec3glSuZMG3umiaqIO/NU8UztY?=
- =?us-ascii?q?pgpeFKRQ3Gjudzzq+S7Zyfw=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-Received: from alln-l-core-12.cisco.com ([173.36.16.149])
-  by rcdn-iport-9.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 12 Jun 2025 01:16:26 +0000
-Received: from rcdn-opgw-2.cisco.com (rcdn-opgw-2.cisco.com [72.163.7.163])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by alln-l-core-12.cisco.com (Postfix) with ESMTPS id C0A2C18000154;
-	Thu, 12 Jun 2025 01:16:26 +0000 (GMT)
-X-CSE-ConnectionGUID: smotTEW4TtmSmxyxRB3joA==
-X-CSE-MsgGUID: tCkLHNNjRfKwC6eWDFf6MA==
-Authentication-Results: rcdn-opgw-2.cisco.com; dkim=pass (signature verified) header.i=@cisco.com
-X-IronPort-AV: E=Sophos;i="6.16,229,1744070400"; 
-   d="scan'208";a="33702867"
-Received: from mail-bn8nam12lp2174.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.174])
-  by rcdn-opgw-2.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 12 Jun 2025 01:16:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m/HWm93Vh9AOXi7S7tCDWb0GOkZeXayay7ch3+PDvI74lYx3O5pk8HXpTKOzLsF8mbz4Fxla6R4hGvlh8sqYdZnqLN3ogmuTgqZfZpwaE96EyGe0tBuluQTqxMdD9rH4Is+Zvcy9kG3UGyAj4fBNGTvERpXYpcsxELLF38Vcr7fwh/NP5ix0Fj8a1Q3P2WowUhnD5XPXzBtALPYbiEbexiOgce/yXNmRRpmTwzq2TfWALc9at7JEpNMDUwEG3tz0CZhdIflXB/8+xQVIEkyKjR2MqJ/Po3z+6s7XAUQDHwQSWgCtN7zhF4NEk7/+a8UsYWvwVZeGbtbFrj/IloTWng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NMFGBg97Tzh31oUo0fWzy2J6B0PoVIUhDF83etLW9Rs=;
- b=hv7U0l+nQ0BO8CppqHetvKVnEUW3wHGbWSndrluKhaJlSnBKUx/Y1LFjDrBkwIzccy1LA38jfBNmUO+E4b0MkejccTLowcmtmCxm69b8yeOk4mIpLGw6zl+pEcYMKh7Y33Gc71IMOX820v/LBAlAlDPDjf3L6f5L8K2S9XiTu+cnMWgyVNRzmhojKDiJmBk3T14V4W646lpOHlpudkCfDyQ9PojDypKupS9CPNKYfqhx52vIYBSycO9z6aQ86S9oVCoQILOBd3ft1VavStvfz3h/BBvBF7Ekb4bN2ClsliczzXqaFndm/GktZH3D53ce0VlgfLXK7XERJ8MlI8IqeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
- dkim=pass header.d=cisco.com; arc=none
-Received: from SJ0PR11MB5896.namprd11.prod.outlook.com (2603:10b6:a03:42c::19)
- by SA1PR11MB8396.namprd11.prod.outlook.com (2603:10b6:806:38d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
- 2025 01:16:23 +0000
-Received: from SJ0PR11MB5896.namprd11.prod.outlook.com
- ([fe80::2081:bcd4:cb3e:e2dd]) by SJ0PR11MB5896.namprd11.prod.outlook.com
- ([fe80::2081:bcd4:cb3e:e2dd%5]) with mapi id 15.20.8813.024; Thu, 12 Jun 2025
- 01:16:23 +0000
-From: "Karan Tilak Kumar (kartilak)" <kartilak@cisco.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: "Sesidhar Baddela (sebaddel)" <sebaddel@cisco.com>, "Arulprabhu Ponnusamy
- (arulponn)" <arulponn@cisco.com>, "Dhanraj Jhawar (djhawar)"
-	<djhawar@cisco.com>, "Gian Carlo Boffa (gcboffa)" <gcboffa@cisco.com>, "Masa
- Kai (mkai2)" <mkai2@cisco.com>, "Satish Kharat (satishkh)"
-	<satishkh@cisco.com>, "Arun Easi (aeasi)" <aeasi@cisco.com>,
-	"jejb@linux.ibm.com" <jejb@linux.ibm.com>, "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>, "linux-scsi@vger.kernel.org"
-	<linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "jmeneghi@redhat.com" <jmeneghi@redhat.com>,
-	"revers@redhat.com" <revers@redhat.com>
-Subject: RE: [PATCH 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link down
-Thread-Topic: [PATCH 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link down
-Thread-Index: AQHb2v8hyfrpLxM6FkOIyCBWXxdgvLP+S6+AgABtDNA=
-Date: Thu, 12 Jun 2025 01:16:23 +0000
-Message-ID:
- <SJ0PR11MB589636DDA3D1858440717A9AC374A@SJ0PR11MB5896.namprd11.prod.outlook.com>
-References: <20250611183033.4205-1-kartilak@cisco.com>
- <20250611183033.4205-4-kartilak@cisco.com>
- <aEnOg5B0tYOQIuME@stanley.mountain>
-In-Reply-To: <aEnOg5B0tYOQIuME@stanley.mountain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ0PR11MB5896:EE_|SA1PR11MB8396:EE_
-x-ms-office365-filtering-correlation-id: f442b698-bd21-4bf1-6434-08dda94ebf29
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|10070799003|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?p3conl3O9UwuMRWcFUMM5a8uyHvBsvTPDp1+NNpXU0uo5f92wqkxphipFJQt?=
- =?us-ascii?Q?FxZc9grFxkmqikuIo36CKXRI40jQc84UCpzRR1VhI3Km0MnS93ZkJyZoF/RW?=
- =?us-ascii?Q?FylmaMyQE6ZDRBGJXidcwZ2CMpaGdLPtdTsycGE3YYkcfzt1wY+TbHOCGjBb?=
- =?us-ascii?Q?GawADxQoKcwj986tII0IEhdyePjKD5r2/+jq7eB+qMLA5PG64Aq4QGQUFkhr?=
- =?us-ascii?Q?jIMKqVZV9XIsgXxuzroqKW4hya9HLzIeHCluZb3jVG5Mc2tN8LBG+49ahppY?=
- =?us-ascii?Q?izKsrp9x7VPc1M7L8jyBiZ8Mo0JNCeQ6Z+9BELSGuINInb+fRoq83gSMH4p2?=
- =?us-ascii?Q?syG5eGoHg0NibvQEpkqh++F+DQiBv3Sxs8HEZMLDsIIwRGNrkDKtSB+buwBi?=
- =?us-ascii?Q?wNWiv/EDdC2G+Mj0nVCUo82nFiGDclD6QAiuF3495gDLlcSDwy99OxiortR2?=
- =?us-ascii?Q?fJpzaRdmIDbYOMH8twFxpFDCB0//9aVPIv12rqJ0nAc5/Ees6RBtsmXSruB7?=
- =?us-ascii?Q?wHPdQ8U7H1JUK5x4CucnHy96VIYme0zvLpDK8OiVFb29UaenDlM3E6L93QbT?=
- =?us-ascii?Q?Eki6jXEk/SDCipYT8UPadnIstuz+tQC1dz0w1mQYJxzmyDxd9Tvuj6tlJ8/j?=
- =?us-ascii?Q?lUEfqXHZKfW5L+6R+xnAPkzo7bo1PkySY6yyr3C0IwGC9CvMYcAVpdSF+Uau?=
- =?us-ascii?Q?rq0BbH03ayKmkeZ2UPIcpaNCJw3t7+TAr39fSmI85BBvqx4BFkBz3LhLV/K1?=
- =?us-ascii?Q?m94X5vqDcjcS2QPhkajT5KF9kDdbDNA7lCH4MW7Esq2qJyAAVu4e+5FZoYSJ?=
- =?us-ascii?Q?TKANK2AXTW0lMzu5VD9LwvIiTv3vKBC5q6cPygv1DSTbkxwJQY6t8d8iU/4D?=
- =?us-ascii?Q?Ef9guDSxPhTdw2i5OXD7sZ+dyj0KHos8B5Zlxw4QSnENHBbYOibKxgdDhZKW?=
- =?us-ascii?Q?83wV+jL3J16FSJ7CnLI9a8vBDh3l4UzXXLtfM/TAdreXvWzu/mH1R4oafDlN?=
- =?us-ascii?Q?2IfBzMk35PBxwwxw6/KEl04qlHKp3Vh1/btNzwOlMd/N8SC7RsB6i3eNuNYn?=
- =?us-ascii?Q?mnDf9pwXDQcmnfvXic7EFcJqK+6tdjAzofsTkgPda99kyQe2D43VMlGGakp9?=
- =?us-ascii?Q?uUqsDlVoJRgMcmhSCZXC9R5YRmtdluvP1c1iAus1xQH7d2g8n+4Oixdt++5T?=
- =?us-ascii?Q?jglsERBKcv1JR7btV1GLZg6lvq5od68JxMISeyNbwf9PNvtHKyBC7s9Msupq?=
- =?us-ascii?Q?slVCtlefBdJMc/Kp5JM3J3z8E7rdAVbsIZsJMc5YD4f5ST//mH9TvdpHEavz?=
- =?us-ascii?Q?LxCfZ6a04lH+jyIbbErEhKdVmX6n5ENF+lKamKlajOOHPQ0uYaMa5CIZsIX0?=
- =?us-ascii?Q?WBJk+ynKV6ZJSj2h1DJvq4aHxdqoGf+NLEKr7wY3r/TQpRu4Q8a58LqtZ4Pf?=
- =?us-ascii?Q?PSQg0Z5xsZCd2heoGUTEiRBxt4PIfkzv3EhF6cbqs+gtUr1soXseHA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5896.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(10070799003)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?0IKRBmsBUj4XqFpGYJIAMXfsX5fDlz1KkqJcNQDpWnZGwIpkPqviy8O1AMNV?=
- =?us-ascii?Q?WontELZnQAJmQ8bajiZ+zYkk9BZlCXv++Gf47M7URMtBdLzxHgFYRrnFEdNj?=
- =?us-ascii?Q?xCK9Fv6BLsSAK/tfuIjgjJcDJzvru9eK96GKvq9xW8lrR2ccqh3xR51u3V4s?=
- =?us-ascii?Q?CaoEbMF8U62MPAPfeSbm2/1Q9D9MjZf9Rf8itSV2izQdZkB2zXLkc+5nomdW?=
- =?us-ascii?Q?POET/Zfdongo9xGmuXE0nPBlIfRZEtxXuVMqMAbGz//lZ2IiTse8avpo9fMA?=
- =?us-ascii?Q?bMh3h/OvxNJU8CGIrV7DFN/fBsBuTTf/3PQbT+bM+fK77sbDwQhn3hb4F27X?=
- =?us-ascii?Q?zQfl8HVGE+KYpkphc16+GBIM97RDQjNkzfV/0Xtny1x6slnIROXRPH5BdAPK?=
- =?us-ascii?Q?BDD1pcRXDkKA0Zp7A0MswLhaufNnCuM+xTaSl7civ6zJJx84aaoB7miIAEDX?=
- =?us-ascii?Q?3hzEYVbRGYxK5fzIFOKHBOYcTFZTM2w7ovul20tqum92/dFk5FphJHNdmokT?=
- =?us-ascii?Q?l0JT1KkAFI9N0SzFwjPC4dAJxH1BYjxbKv30rfZuw+4EqRP3ZOGym3ZYFp2b?=
- =?us-ascii?Q?2+gM/KkMD+SNHoJ/x9MMlV4s4iMudg0GPUGmDyIC9ctF3icQ2pJjtvm+xxME?=
- =?us-ascii?Q?c6flvoXhitZg6xE2KRG98uG9Hryx9J6q1uSH8VbmSbUiJUU+e7oLJxV5kd2p?=
- =?us-ascii?Q?tFDBr4hdRGDGtGQNLZI3LS5XJSuzCcJ+72o62aGUO/A/lRNlR/wHnUZMZx1h?=
- =?us-ascii?Q?/ssQV4CDBc+i41ivOmMAoazI0GsnDn95r5tRmnaU8aMgq81HkyMc8bfAA/KE?=
- =?us-ascii?Q?5sqdcZgO0eq4kaz6XfnAD07+VQJAdhK05gd5ld2jNf/qX2KeGTzvdIWDsviD?=
- =?us-ascii?Q?3CWpxcOWxCTZQf+B16s8u7Pw1ZskjUPBKW9x5AwfCyXnuniGg2uni+VyiFzy?=
- =?us-ascii?Q?kVS73DekOGe+okRrPVf8POKBAsiE2WcQbxuNF+L1oF7HRUuGr1P6/UH/2wyC?=
- =?us-ascii?Q?2fA4VrfpRPtfcWDUASv7uLNILkib4w/1q9wfzox+KahhRgKT+bqy+sPD2mXG?=
- =?us-ascii?Q?n2FE8xF5mda/VXKFCbWPL/WifjCDyBOyNV7cbGKTzfqPu73GjwykwCSRUhaK?=
- =?us-ascii?Q?N4ltafoDGLW6xbZ6fuw95UyIl5K2QXTECtiDIGmm1lXlDcPmpmbRK1fXq4Yd?=
- =?us-ascii?Q?U992S25wCDdL+IAhEYOuovPNrUJ5nf7XLZuDEb4SqtSTiKxT+HO1CwDciC34?=
- =?us-ascii?Q?2IgdOc4REh9Aqx1cUOFZAUmSI1a1uu1Oxp3taSXu2nIJCwllkgCCnRP263RC?=
- =?us-ascii?Q?tKaxogfhRPR5yFg362oXJPVHdUKaKyLV+jl9ixooZPPpkfWe9+aqb4AClS9b?=
- =?us-ascii?Q?8jvEb1f+viw9zMVSN/7geqzry2COIZhlysF046r37fyKVIH/BFO9I4R+Os92?=
- =?us-ascii?Q?IEsIDOTdp8nUwXAj3ghfUc6nL3cJ5AJ7Ym1EWDQGjn04Km+KiqB+wl5jU+TQ?=
- =?us-ascii?Q?xIMiv4Ux51BimkwSJk9rFatkC/wxdArLYwMuQaX7ta1M0g/6nB18KXcxfkqj?=
- =?us-ascii?Q?xJZdxk69aMH3nRT8njwUNK27bPtifcjZLVvTLr/Th8LwcuopYRt8VmLyymOH?=
- =?us-ascii?Q?44J6EaIgjITLl/yTdITfezY=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rk5rSjYz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749691017; x=1781227017;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9cQWUCePEsft2HV53xBGF7MysPCcHtpQG4kJkhSeY4s=;
+  b=Rk5rSjYzUjnFFhgXgWRr3NEFK7OIUQUYgS3cGXjlqn+wBfpaadWRmSYD
+   3nw6q1ZWB95xRKyEPJ/qUtFUCiwU8UoSUKMRP39wosxP3j6lulHbHqI7+
+   UQjPNTvtDmut/gQ3+/ZHpin4sFTnOtxK/AxGOkMY9Q+2NEtlR+TAE4/k+
+   B4QU+gYCDp+YM/0SEzQfsStfPFaPDopocSojcJ1fEAO912+aHnrF5GHtc
+   3g/imzUKfy+Ow5mKFoOhoqA/G5hqnbKeQf0oDQu69Idy3JsxKTjd+YKuB
+   YstrM9L5ukupkbXZgHLPRdj2GxP2RqOnCFL/dbY0eaVNoQktlFJUQxHAc
+   w==;
+X-CSE-ConnectionGUID: NIkNL8v/Qtij0RiX/hIOQQ==
+X-CSE-MsgGUID: hyGbfpmsTfCwothX5uvdzA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55656376"
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="55656376"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 18:16:56 -0700
+X-CSE-ConnectionGUID: uEnlmiMNStCycJ50+9Yvkw==
+X-CSE-MsgGUID: FzzCKf4qSVitjP+8e/YByQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="152135888"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 11 Jun 2025 18:16:51 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uPWYj-000AyI-0v;
+	Thu, 12 Jun 2025 01:16:49 +0000
+Date: Thu, 12 Jun 2025 09:16:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nick Hu <nick.hu@sifive.com>, conor+dt@kernel.org, krzk+dt@kernel.org,
+	Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Nick Hu <nick.hu@sifive.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: [PATCH v2 3/3] cpuidle: Add SiFive power provider
+Message-ID: <202506120817.nRfhoHbQ-lkp@intel.com>
+References: <20250611031023.28769-4-nick.hu@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: cisco.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5896.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f442b698-bd21-4bf1-6434-08dda94ebf29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2025 01:16:23.5923
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Nc710vl9cjCaKjU29eapFmIu8Fo9ovxxCp6qw0S64Xmd6vy2/UPC2uJCCA2fblgXKta+2VLpncgJ0BOJEOBM7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8396
-X-Outbound-SMTP-Client: 72.163.7.163, rcdn-opgw-2.cisco.com
-X-Outbound-Node: alln-l-core-12.cisco.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611031023.28769-4-nick.hu@sifive.com>
 
-On Wednesday, June 11, 2025 11:44 AM, Dan Carpenter <dan.carpenter@linaro.o=
-rg> wrote:
->
-> On Wed, Jun 11, 2025 at 11:30:32AM -0700, Karan Tilak Kumar wrote:
-> > When the link goes down and comes up, FDMI requests are not sent out
-> > anymore.
-> > Fix bug by turning off FNIC_FDMI_ACTIVE when the link goes down.
-> >
-> > Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-> > Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-> > Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-> > Reviewed-by: Arun Easi <aeasi@cisco.com>
-> > Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
-> > Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
-> > ---
->
-> Fixes tag etc.
->
-> regards,
-> dan carpenter
->
->
+Hi Nick,
 
-Thanks for your comments, Dan.
-I've fixed them in V3 version of the patch.
+kernel test robot noticed the following build errors:
 
-Regards,
-Karan
+[auto build test ERROR on rafael-pm/linux-next]
+[also build test ERROR on rafael-pm/bleeding-edge robh/for-next linus/master v6.16-rc1 next-20250611]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nick-Hu/cpuidle-riscv-sbi-Work-with-the-external-pmdomain-driver/20250611-121115
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20250611031023.28769-4-nick.hu%40sifive.com
+patch subject: [PATCH v2 3/3] cpuidle: Add SiFive power provider
+config: riscv-randconfig-002-20250612 (https://download.01.org/0day-ci/archive/20250612/202506120817.nRfhoHbQ-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250612/202506120817.nRfhoHbQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506120817.nRfhoHbQ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/cpuidle/cpuidle-sifive-dmc-pd.c:8:
+   In file included from include/linux/of_device.h:5:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:19:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/riscv/include/asm/elf.h:12:
+   In file included from include/linux/compat.h:17:
+   include/linux/fs.h:3975:15: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+    3975 |         if (unlikely(get_user(c, path)))
+         |                      ^
+   arch/riscv/include/asm/uaccess.h:274:3: note: expanded from macro 'get_user'
+     274 |                 __get_user((x), __p) :                          \
+         |                 ^
+   arch/riscv/include/asm/uaccess.h:244:2: note: expanded from macro '__get_user'
+     244 |         __get_user_error(__gu_val, __gu_ptr, __gu_err);         \
+         |         ^
+   arch/riscv/include/asm/uaccess.h:207:2: note: expanded from macro '__get_user_error'
+     207 |         __get_user_nocheck(x, ptr, __gu_failed);                        \
+         |         ^
+   arch/riscv/include/asm/uaccess.h:196:3: note: expanded from macro '__get_user_nocheck'
+     196 |                 __get_user_8((x), __gu_ptr, label);             \
+         |                 ^
+   arch/riscv/include/asm/uaccess.h:130:2: note: expanded from macro '__get_user_8'
+     130 |         u32 __user *__ptr = (u32 __user *)(ptr);                \
+         |         ^
+>> drivers/cpuidle/cpuidle-sifive-dmc-pd.c:42:27: error: use of undeclared identifier 'pm_domain_cpu_gov'
+      42 |         ret = pm_genpd_init(pd, &pm_domain_cpu_gov, false);
+         |                                  ^
+   1 warning and 1 error generated.
+--
+   In file included from drivers/cpuidle/cpuidle-riscv-sbi.c:16:
+   In file included from include/linux/cpu_cooling.h:17:
+   In file included from include/linux/thermal.h:15:
+   In file included from include/linux/device.h:32:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:19:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/riscv/include/asm/elf.h:12:
+   In file included from include/linux/compat.h:17:
+   include/linux/fs.h:3975:15: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+    3975 |         if (unlikely(get_user(c, path)))
+         |                      ^
+   arch/riscv/include/asm/uaccess.h:274:3: note: expanded from macro 'get_user'
+     274 |                 __get_user((x), __p) :                          \
+         |                 ^
+   arch/riscv/include/asm/uaccess.h:244:2: note: expanded from macro '__get_user'
+     244 |         __get_user_error(__gu_val, __gu_ptr, __gu_err);         \
+         |         ^
+   arch/riscv/include/asm/uaccess.h:207:2: note: expanded from macro '__get_user_error'
+     207 |         __get_user_nocheck(x, ptr, __gu_failed);                        \
+         |         ^
+   arch/riscv/include/asm/uaccess.h:196:3: note: expanded from macro '__get_user_nocheck'
+     196 |                 __get_user_8((x), __gu_ptr, label);             \
+         |                 ^
+   arch/riscv/include/asm/uaccess.h:130:2: note: expanded from macro '__get_user_8'
+     130 |         u32 __user *__ptr = (u32 __user *)(ptr);                \
+         |         ^
+>> drivers/cpuidle/cpuidle-riscv-sbi.c:410:25: error: use of undeclared identifier 'pm_domain_cpu_gov'
+     410 |         pd_gov = pd->states ? &pm_domain_cpu_gov : NULL;
+         |                                ^
+   1 warning and 1 error generated.
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS_OF
+   Depends on [n]: PM_GENERIC_DOMAINS [=n] && OF [=y]
+   Selected by [y]:
+   - SIFIVE_DMC_PD_CPUIDLE [=y] && CPU_IDLE [=y] && RISCV [=y] && ARCH_SIFIVE [=y]
+
+
+vim +/pm_domain_cpu_gov +42 drivers/cpuidle/cpuidle-sifive-dmc-pd.c
+
+    26	
+    27	static int sifive_dmc_probe(struct platform_device *pdev)
+    28	{
+    29		struct device *dev = &pdev->dev;
+    30		struct device_node *np = dev->of_node;
+    31		struct generic_pm_domain *pd;
+    32		struct of_phandle_args child, parent;
+    33		int ret = -ENOMEM;
+    34	
+    35		pd = dt_idle_pd_alloc(np, sbi_dt_parse_state_node);
+    36		if (!pd)
+    37			goto fail;
+    38	
+    39		pd->flags |= GENPD_FLAG_IRQ_SAFE | GENPD_FLAG_CPU_DOMAIN;
+    40		pd->power_off = sbi_cpuidle_pd_power_off;
+    41	
+  > 42		ret = pm_genpd_init(pd, &pm_domain_cpu_gov, false);
+    43		if (ret)
+    44			goto free_pd;
+    45	
+    46		ret = of_genpd_add_provider_simple(np, pd);
+    47		if (ret)
+    48			goto remove_pd;
+    49	
+    50		if (of_parse_phandle_with_args(np, "power-domains",
+    51					       "#power-domain-cells", 0,
+    52					       &parent) == 0) {
+    53			child.np = np;
+    54			child.args_count = 0;
+    55	
+    56			if (of_genpd_add_subdomain(&parent, &child))
+    57				pr_warn("%pOF failed to add subdomain: %pOF\n",
+    58					parent.np, child.np);
+    59			else
+    60				pr_debug("%pOF has a child subdomain: %pOF.\n",
+    61					 parent.np, child.np);
+    62		}
+    63	
+    64		platform_set_drvdata(pdev, pd);
+    65		pm_runtime_enable(dev);
+    66		pr_info("%s create success\n", pd->name);
+    67		return 0;
+    68	
+    69	remove_pd:
+    70		pm_genpd_remove(pd);
+    71	free_pd:
+    72		dt_idle_pd_free(pd);
+    73	fail:
+    74		pr_info("%s create fail\n", pd->name);
+    75	
+    76		return ret;
+    77	}
+    78	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
