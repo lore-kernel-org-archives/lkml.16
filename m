@@ -1,132 +1,170 @@
-Received: from rcdn-iport-9.cisco.com (rcdn-iport-9.cisco.com [173.37.86.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0076A47;
-	Thu, 12 Jun 2025 00:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.80
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40B885258;
+	Thu, 12 Jun 2025 00:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749689195; cv=none; b=HHQxhj6ouO/FpK1O+YInj2IdGq31qVdtKEVWyxoq9DI81BGKVWUX8u2n2qxcfz+VMw1tMcKoPk1XYc+n6VxWes7zLssf5pcWY8ovKwyQf9oJQ3sYG3o0MSaFILHVHZsLsk4TUjZoAqdLq6x7iLHDHwGsPBFZM2UoZC78/VnJFzU=
+	t=1749689252; cv=none; b=Gvny2aqC2R3eYemwghmfuLFscVjA8fyj4vaFPbQP3s30oPjdoF5/pDqhMyONBdOf0M3vGNu85SL9qqMlhRl7ecGkWXkL0FFreWeKGMXCtddi5XdM57R9Z7eQ0Hhqf63SjiKjdfuQcQb3GsBF/pl0GkYFQpC8rUxkQuIYc9DoXVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749689195; c=relaxed/simple;
-	bh=W9TMtmNAQox4GJzmyGBKfQRvar8R3C9E12Rn9hMqO80=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mJEdj9KQJoB6NXvLUfbHGaT17C7KIqFEVWnwMl3etukgS3OJjI4tfFTbvcy2c35hnLCDi0+3jCvcQ27N2V5amE0RcFg9RhhktppvCBRXi2h0qfD96O9ZwiU3GiI9/C03JMSI8ONAG6R9D6b95b0GZHWSH1ddal6w50c6X+f2Ifg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=FZ3h8AT1; arc=none smtp.client-ip=173.37.86.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	s=arc-20240116; t=1749689252; c=relaxed/simple;
+	bh=VwBZ7Yuh5Tv0aD9XOFyaCHydRTqIh9M++Jhbg9F5AuE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WPRKURmJYT3vTCeWO/HyC88mAbRUgWpUMOJ1R3L/lrWJznSEFQGAPY32CbkJje6X8w/uDMkkDKQEpTCMPCWVORNSEraOLJqCyzJIBKlRny2HhzYPIL1s8KwZUt/B0E/IJZ5MLRHne6pUZLV3AWluB8zqNOLXHOLQQ2cqwEYTNa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=D9m0YM54; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="FZ3h8AT1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=785; q=dns/txt;
-  s=iport01; t=1749689193; x=1750898793;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vebaEpidSVTCWaBHFi0jPYyqh1hFt65CsSfk9PGHd6Y=;
-  b=FZ3h8AT1F1idhjv7D9Q8Tszibs64w5GILl9w8rwguUsTgtKeG3GP1a7k
-   eXXoKLhprX23wJ51q2apcjydjQNZUlN77SgRwpdckQt53lcRSnSTXa0Bq
-   mBqgS3FuE6NQppinuwwetZC3Efn+AE8TUSRiI93v+2f+fllLqp+l/RloN
-   EksTnuTJobc8zEGVkQUs0Glogt3uHix5fNSsRnYCVbvS6Z/wznUtm8EPP
-   b2h7orYobLxgFbzk/AFa43PmtgN5p6RKAs8hfs8wClGSNs7PWdKOxL9Uy
-   ncm4MMILzVqarqxB3UYGQnBlLOawjx+G4eu1Y+E0BfX/HAjbYgUj/RH8z
-   w==;
-X-CSE-ConnectionGUID: MTug3sQUQCmN2pFaUhv3Ug==
-X-CSE-MsgGUID: nbdUsdZLThqC09GsSYsm8Q==
-X-IPAS-Result: =?us-ascii?q?A0AEAACCIkpo/5IQJK1aGgEBAQEBAQEBAQEDAQEBARIBA?=
- =?us-ascii?q?QEBAgIBAQEBgX8FAQEBAQsBgkqBUkMZMIxwhzSgOoElA1cPAQEBD1EEAQGFB?=
- =?us-ascii?q?wKLZgImNAkOAQIEAQEBAQMCAwEBAQEBAQEBAQEBCwEBBQEBAQIBBwWBDhOGC?=
- =?us-ascii?q?IZbAgEDMgFGEFFWGYMCgm8DsAiCLIEB3jeBboFJAY1McIR3JxUGgUlEhH2BU?=
- =?us-ascii?q?oI4gQaFdwSCJIECFKEeSIEeA1ksAVUTDQoLBwWBYwM1DAsuFW4yHYINhRmCE?=
- =?us-ascii?q?osHhEkrT4UhhQUkcg8HSkADCxgNSBEsNxQbBj5uB5gLg3CBDoExgQ+mAKELh?=
- =?us-ascii?q?CWhUxozqmGZBKk4gWg8gVkzGggbFYMiUhkPyhgmMjwCBwsBAQMJkBeBfQEB?=
-IronPort-Data: A9a23:r3+4DapgwYtyvpYyXFms1+hIycJeBmLIZBIvgKrLsJaIsI4StFCzt
- garIBnSbKyOZjanfoxybN6+oEoEvcfdytNgG1BlrnpkECxEpePIVI+TRqvS04x+DSFioGZPt
- Zh2hgzodZhsJpPkjk7zdOCn9z8ljPvgqoPUUIbsIjp2SRJvVBAvgBdin/9RqoNziLBVOSvV0
- T/Ji5OZYQHNNwJcaDpOtvrd8Uo355wehRtB1rAATaET1LPhvyF94KI3fcmZM3b+S49IKe+2L
- 86r5K255G7Q4yA2AdqjlLvhGmVSKlIFFVHT4pb+c/HKbilq/kTe4I5iXBYvQRs/ZwGyojxE4
- I4lWapc5useFvakdOw1C3G0GszlVEFM0OevzXOX6aR/w6BaGpfh660GMa04AWEX0sNLHG4V7
- sUlERsISEqbqeuLwKzgd+Y506zPLOGzVG8eknhkyTecCbMtRorOBv2bo9RZxzw3wMtJGJ4yZ
- eJANmEpN0qGOkMJYwtJYH49tL/Aan3XcDRCtFORrKkf6GnIxws327/oWDbQUofaFZsKxRbI9
- woq+Uz/CB0nL9Ct7QaF61n018DUphLgXdIrQejQGvlCxQf7KnYoIBEfUx2wqOOhh0iiVsh3L
- 00S8zAp668o+ySDTNT/VTW8oXiZrlgdUd8WGOo/gCmIw7DI4gDfHmUYQyRaZdoOs9U/Tjgnk
- FSOmrvBBzlitrCaSXO17LqYrTqufyMSKAcqfyIaQBEey8PurIE6klTESdMLOKq0iMDlXDL92
- TaHqAAgiLgJy80GzaO2+RbAmT3EjpzISBMlox7cRWON8Ax0fsimapau5Fyd6uxPRLt1VXGIu
- HwC3szb5+cUANTVxWqGQf4GG/ei4PPt3CDgvGOD1qIJr1yFk0NPt6gLiN2iDC+F6vo5RAI=
-IronPort-HdrOrdr: A9a23:qqQv6qzkwWT535gYpnTYKrPwA71zdoMgy1knxilNoNJuHvBw8P
- re+MjzuiWbtN98YhsdcJW7Scq9qBDnhPtICOsqXItKNTOO0ACVxcNZnOnfKlbbdBEWmNQx6Y
- 5QN4BjFdz9CkV7h87m7AT9L8wt27C8gceVbJ/lr0uEiWpRGthdB8ATMHf8LnFL
-X-Talos-CUID: =?us-ascii?q?9a23=3AaeMeiWpD2cIogDg0LpeBNqPmUeUZb3KG107tGmS?=
- =?us-ascii?q?9LzxxZrSoSUHLxawxxg=3D=3D?=
-X-Talos-MUID: =?us-ascii?q?9a23=3AN9lAFA6y71U3IOgr8EItdfb2xoxu6aiTE0w/tak?=
- =?us-ascii?q?GouLcZANrAAaGiWSOF9o=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.16,229,1744070400"; 
-   d="scan'208";a="388673889"
-Received: from alln-l-core-09.cisco.com ([173.36.16.146])
-  by rcdn-iport-9.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 12 Jun 2025 00:46:32 +0000
-Received: from fedora.lan?044cisco.com (unknown [10.188.19.134])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kartilak@cisco.com)
-	by alln-l-core-09.cisco.com (Postfix) with ESMTPSA id 3749B1800023E;
-	Thu, 12 Jun 2025 00:46:31 +0000 (GMT)
-From: Karan Tilak Kumar <kartilak@cisco.com>
-To: sebaddel@cisco.com
-Cc: arulponn@cisco.com,
-	djhawar@cisco.com,
-	gcboffa@cisco.com,
-	mkai2@cisco.com,
-	satishkh@cisco.com,
-	aeasi@cisco.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	revers@redhat.com,
-	dan.carpenter@linaro.org,
-	Karan Tilak Kumar <kartilak@cisco.com>
-Subject: [PATCH v3 5/5] scsi: fnic: Increment driver version number
-Date: Wed, 11 Jun 2025 17:44:26 -0700
-Message-ID: <20250612004426.4661-5-kartilak@cisco.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250612004426.4661-1-kartilak@cisco.com>
-References: <20250612004426.4661-1-kartilak@cisco.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="D9m0YM54"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=evkyIlXKXLPFQLDbjf2bLbo83mRJSCSjVy/4f36wpa0=;
+	b=D9m0YM54n837BL370y4Gbtc7X+JtaUMf63MTy/VZhMjbfwIictEggy2ovW8SU9
+	Wx0oa5iGka3wv1Tv7zJEToJwvwPrXhg8X2q6BCMoixxQaaZWoHmnfGfM970ag88j
+	Fe53WSDnTVEVrLCq56g/b0dpcK/2Q40jBczIaRraMNaow=
+Received: from [192.168.18.52] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wAXRO2AI0poR9RGHg--.20798S2;
+	Thu, 12 Jun 2025 08:46:59 +0800 (CST)
+Message-ID: <1726d3ae-ce10-492a-b19b-4ee6ae6f2c2f@163.com>
+Date: Thu, 12 Jun 2025 08:46:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-User: kartilak@cisco.com
-X-Outbound-SMTP-Client: 10.188.19.134, [10.188.19.134]
-X-Outbound-Node: alln-l-core-09.cisco.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/13] PCI: dwc: Refactor imx6 to use
+ dw_pcie_clear_and_set_dword()
+To: Frank Li <Frank.li@nxp.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
+ kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250611163121.860619-1-18255117159@163.com>
+ <aEnNFgv08BVVxfOQ@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aEnNFgv08BVVxfOQ@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wAXRO2AI0poR9RGHg--.20798S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGw1UCF1kKr4kGw47Cry7GFg_yoWrZFy3pa
+	y2v3WSkF48JF4ruan2ya93ZF1aqasakF4DGanrK34FqFy2yry7Ga10y3y3trn7CrW7tryY
+	kw1Utw43J3W5tF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U16wZUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhhpo2hJ4RvXNwABsS
 
-Increment driver version number.
 
-Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-Reviewed-by: Arun Easi <aeasi@cisco.com>
-Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
----
- drivers/scsi/fnic/fnic.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
-index 6c5f6046b1f5..86e293ce530d 100644
---- a/drivers/scsi/fnic/fnic.h
-+++ b/drivers/scsi/fnic/fnic.h
-@@ -30,7 +30,7 @@
- 
- #define DRV_NAME		"fnic"
- #define DRV_DESCRIPTION		"Cisco FCoE HBA Driver"
--#define DRV_VERSION		"1.8.0.0"
-+#define DRV_VERSION		"1.8.0.1"
- #define PFX			DRV_NAME ": "
- #define DFX                     DRV_NAME "%d: "
- 
--- 
-2.47.1
+On 2025/6/12 02:38, Frank Li wrote:
+> On Thu, Jun 12, 2025 at 12:31:21AM +0800, Hans Zhang wrote:
+> 
+> Subject should be
+> 
+> PCI: dwc: imx6: Refactor code by using dw_pcie_clear_and_set_dword()
+> 
+> tag "imx6:" should after "dwc:"
+> 
+
+Dear Frank,
+
+Thank you very much for your reply and suggestions. Will change.
+
+Best regards,
+Hans
+
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> 
+>> i.MX6 PCIe driver contains multiple read-modify-write sequences for
+>> link training and speed configuration. These operations manually handle
+>> bit masking and shifting to update specific fields in control registers,
+>> particularly for link capabilities and speed change initiation.
+>>
+>> Refactor link capability configuration and speed change handling using
+>> dw_pcie_clear_and_set_dword(). The helper simplifies LNKCAP modification
+>> by encapsulating bit clear/set operations and eliminates intermediate
+>> variables. For speed change control, replace explicit bit manipulation
+>> with direct register updates through the helper.
+>>
+>> Adopting the standard interface reduces code complexity in link training
+>> paths and ensures consistent handling of speed-related bits. The change
+>> also prepares the driver for future enhancements to Gen3 link training
+>> by centralizing bit manipulation logic.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/controller/dwc/pci-imx6.c | 26 ++++++++++----------------
+>>   1 file changed, 10 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+>> index 5a38cfaf989b..3004e432f013 100644
+>> --- a/drivers/pci/controller/dwc/pci-imx6.c
+>> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+>> @@ -941,7 +941,6 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>>   	struct device *dev = pci->dev;
+>>   	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> -	u32 tmp;
+>>   	int ret;
+>>
+>>   	if (!(imx_pcie->drvdata->flags &
+>> @@ -956,10 +955,9 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>   	 * bus will not be detected at all.  This happens with PCIe switches.
+>>   	 */
+>>   	dw_pcie_dbi_ro_wr_en(pci);
+>> -	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>> -	tmp &= ~PCI_EXP_LNKCAP_SLS;
+>> -	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
+>> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+>> +	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
+>> +				    PCI_EXP_LNKCAP_SLS,
+>> +				    PCI_EXP_LNKCAP_SLS_2_5GB);
+>>   	dw_pcie_dbi_ro_wr_dis(pci);
+>>
+>>   	/* Start LTSSM. */
+>> @@ -972,18 +970,16 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>
+>>   		/* Allow faster modes after the link is up */
+>>   		dw_pcie_dbi_ro_wr_en(pci);
+>> -		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>> -		tmp &= ~PCI_EXP_LNKCAP_SLS;
+>> -		tmp |= pci->max_link_speed;
+>> -		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+>> +		dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
+>> +					    PCI_EXP_LNKCAP_SLS,
+>> +					    pci->max_link_speed);
+>>
+>>   		/*
+>>   		 * Start Directed Speed Change so the best possible
+>>   		 * speed both link partners support can be negotiated.
+>>   		 */
+>> -		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>> -		tmp |= PORT_LOGIC_SPEED_CHANGE;
+>> -		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
+>> +		dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
+>> +					    0, PORT_LOGIC_SPEED_CHANGE);
+>>   		dw_pcie_dbi_ro_wr_dis(pci);
+>>
+>>   		ret = imx_pcie_wait_for_speed_change(imx_pcie);
+>> @@ -1295,7 +1291,6 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+>>   {
+>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>> -	u32 val;
+>>
+>>   	if (imx_pcie->drvdata->flags & IMX_PCIE_FLAG_8GT_ECN_ERR051586) {
+>>   		/*
+>> @@ -1310,9 +1305,8 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+>>   		 * to 0.
+>>   		 */
+>>   		dw_pcie_dbi_ro_wr_en(pci);
+>> -		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+>> -		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+>> -		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
+>> +		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
+>> +					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
+>>   		dw_pcie_dbi_ro_wr_dis(pci);
+>>   	}
+>>   }
+>> --
+>> 2.25.1
+>>
 
