@@ -1,117 +1,72 @@
-Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C24C25B301;
-	Thu, 12 Jun 2025 14:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.90.104.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BF825BF02;
+	Thu, 12 Jun 2025 14:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739171; cv=none; b=fxBtWEgnMTA/Fl4fllm5k36QvQFysELiYngLe7IAwXG8q1Lk/Ihs89P+0SCIItsX5/WCuJLpsnGmS3oEUy/Kdkyc83/dInYwScuh2oj2NpaLOIKOJMEgvVTtbC7mCTGsBAehhM06gJNTGPY8414IDR5rAJVdAr9vpEyDdndW0MM=
+	t=1749739171; cv=none; b=Pxepq7KvOdRS/5MVEI8+B07RbSCricvuuHbGfuog779wHZAwcOSI2Y5BWtSKWCcgtGoFim7XPs9NScBIC4wWnZ/8Kp2JmAHto6LxtVuQGxo4uOG8xe+F383GOhbNjIn7wqqsLH9/9nKsCVPL3ehXUOKeh+XphnMY7bnYiNtPX+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749739171; c=relaxed/simple;
-	bh=6/mZP00EM9rJ5UOmw5xRb/tAHJW+hgPGA9vOCXCI5fo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a1z2NeJ4bcH9qWDW8vhC9lcDMUbrLBtmNQFlYr80WfEroTYZS/2/j6jVLXgj52Z26kqpoSS6HmYzGvfogOc3kR+i+a/mcFtKCwvRoomhCoymF/nyY5lQ9iKmOM/GkQVdB0KnaBdqg4PaQIEzgei+A9qe6hrsBblq/fb/fnXoBDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=VH4DPmyT reason="key not found in DNS"; arc=none smtp.client-ip=23.90.104.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+	bh=oocYYW9XhNGhlIxt3VxA0yDbX+cvu/AYrEHlCDzEaEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AwJi/vxYgZYtWZhR+vRFnsbxZJN8asC62tfZ5dJZgTbgj6A7btgjPC1owapw0pdCCM3ARfitKvoIMTXpJpdSN74J3cVBh9rk8hZ+q7gRaCe4qZKEJ7LwymL/2ujOgS4zY/EEB3s/pYzPf1gbWLORsLeA1x2Rj8epM7AD4L7fGAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HeWqqdY5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="VH4DPmyT"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1749739169; x=1781275169;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6/mZP00EM9rJ5UOmw5xRb/tAHJW+hgPGA9vOCXCI5fo=;
-  b=VH4DPmyTHFos//MKp2YWs9r4hvoBIw3NtX6P40Gt3227ue6OMOFCLFKY
-   BI+CGwjpp0S2yo7d+fxMMX1vDTcLA3zP+MPp3h8df54KfDIhK+8Qcu1nN
-   HVSHj8dq7/KIW7J4D7dBXPqGk+MeDMW5qfvzec+kKkI7F8InoWxfeG+Rf
-   8C57CsPQGjwle9DTUL4+UbCZk1b34INCcKbdVIjuQvCeN5HxlOlUC3+4L
-   Oy2aqLNNyUdBbiTPGrArt95gMKSCKUyN4dmbC7MeMjKfcwWfkaf/DW4OV
-   QBp6GbI/B2Wqk6VY1vND4F08zXYd6y/ZY0/q43STDTgOoxYI9qOkRP8oD
-   A==;
-X-CSE-ConnectionGUID: TDDXB1duQWqC8XJ4q7vXag==
-X-CSE-MsgGUID: 3tM+JvTuSrKjBRyJf9JdkQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 17:39:22 +0300
-X-CSE-ConnectionGUID: coDxqz9uTa2+dzqVxqKfCA==
-X-CSE-MsgGUID: JoxQzBbCSY2r56AZOvU54A==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.6])
-  by ces02_data.me-corp.lan with SMTP; 12 Jun 2025 17:39:19 +0300
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Jun 2025 17:39:20 +0300
-From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Anup Patel <anup@brainfault.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Ryo Takakura <takakura@valinux.co.jp>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	sophgo@lists.linux.dev,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Subject: [PATCH v3 6/7] irqchip/aclint-sswi: reduce data scope
-Date: Thu, 12 Jun 2025 17:39:10 +0300
-Message-ID: <20250612143911.3224046-7-vladimir.kondratiev@mobileye.com>
-In-Reply-To: <20250612143911.3224046-1-vladimir.kondratiev@mobileye.com>
-References: <20250609134749.1453835-1-vladimir.kondratiev@mobileye.com>
- <20250612143911.3224046-1-vladimir.kondratiev@mobileye.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HeWqqdY5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB59C4CEF7;
+	Thu, 12 Jun 2025 14:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749739171;
+	bh=oocYYW9XhNGhlIxt3VxA0yDbX+cvu/AYrEHlCDzEaEU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HeWqqdY5vrpn0k5DQvBel2CHEGRBgQDN15MknA6s3IDn1q15iZRQdO9brvYgOw177
+	 3MORk3AUrQAElWBebC92T8aK8le5Ne9IOPe3m79od2/iZRTLPjTEACw4dAxWAq0LIl
+	 Nbfc58jHNiOieAz6Fsf/6ttOegsKnaYKDds6AVzzqhEAAxCA8xy3ZnwYQYmZ3fnJP8
+	 UTaPQwt7hGzhEJQ2KwkG9QfN172sCiD0hPzFBU6c/j1GfBge/+x7BevqT+tFj45XL5
+	 AReWpz5axKrG5sfnaHIuUxRCkUiPptVnl1sbtl9Glk15VhXxSu10ho7aSlzNxaa66x
+	 3k3A5hLKio1LA==
+Date: Thu, 12 Jun 2025 07:39:29 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, skalluru@marvell.com, manishc@marvell.com,
+ andrew+netdev@lunn.ch, michael.chan@broadcom.com,
+ pavan.chebbi@broadcom.com, ajit.khaparde@broadcom.com,
+ sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+ anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+ tariqt@nvidia.com, saeedm@nvidia.com, louis.peens@corigine.com,
+ shshaikh@marvell.com, GR-Linux-NIC-Dev@marvell.com, ecree.xilinx@gmail.com,
+ horms@kernel.org, dsahern@kernel.org, shuah@kernel.org,
+ ruanjinjie@huawei.com, mheib@redhat.com, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
+ oss-drivers@corigine.com, linux-net-drivers@amd.com,
+ linux-kselftest@vger.kernel.org, leon@kernel.org, Cosmin Ratiu
+ <cratiu@nvidia.com>
+Subject: Re: [PATCH net-next v3 1/4] udp_tunnel: remove rtnl_lock dependency
+Message-ID: <20250612073929.151fe6bf@kernel.org>
+In-Reply-To: <aEo_2hOn5kh6kBpk@mini-arch>
+References: <20250610171522.2119030-1-stfomichev@gmail.com>
+	<20250610171522.2119030-2-stfomichev@gmail.com>
+	<20250611184345.3b403ad0@kernel.org>
+	<aEo_2hOn5kh6kBpk@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Move variables to the innermost scope where it is used
+On Wed, 11 Jun 2025 19:47:54 -0700 Stanislav Fomichev wrote:
+> > There are multiple entry points to this code, basically each member of
+> > struct udp_tunnel_nic_ops and the netdev notifiers. In this patch only
+> > reset and work are locked. I'm a bit confused as to what is the new
+> > lock protecting :S  
+> 
+> I though that most of the callers are from do_setlink and there we have
+> rtnl and we grab rtnl+lock during the sync. But that doesn't
+> address the suspend/resume vs do_setlink race, that's true :-(
 
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
----
- drivers/irqchip/irq-aclint-sswi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/irqchip/irq-aclint-sswi.c b/drivers/irqchip/irq-aclint-sswi.c
-index 81d28a53635e..a604c7e1e416 100644
---- a/drivers/irqchip/irq-aclint-sswi.c
-+++ b/drivers/irqchip/irq-aclint-sswi.c
-@@ -68,11 +68,7 @@ static int aclint_sswi_dying_cpu(unsigned int cpu)
- static int __init aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
- 					void __iomem *reg)
- {
--	struct of_phandle_args parent;
--	unsigned long hartid;
--	u32 contexts, i;
--	int rc, cpu;
--	u32 hart_index;
-+	u32 contexts;
- 
- 	contexts = of_irq_count(to_of_node(fwnode));
- 	if (!(contexts)) {
-@@ -80,7 +76,12 @@ static int __init aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
- 		return -EINVAL;
- 	}
- 
--	for (i = 0; i < contexts; i++) {
-+	for (u32 i = 0; i < contexts; i++) {
-+		struct of_phandle_args parent;
-+		unsigned long hartid;
-+		int rc, cpu;
-+		u32 hart_index;
-+
- 		rc = of_irq_parse_one(to_of_node(fwnode), i, &parent);
- 		if (rc)
- 			return rc;
--- 
-2.43.0
-
+It's the UDP tunnels that add and remove the ports usually.
