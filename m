@@ -1,94 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABD024DCF1
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC6024DD19;
+	Thu, 12 Jun 2025 14:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739884; cv=none; b=HaH116bxdGP7T4rEYyGI+z3Wf/Zq+j57+OBxZS68xL4MM5dTstMJdAsGzVHWLFlSGFDQrvpizGL+n44bXlTwjAVgRmI04KjyhQwxkGL3m8fja5MFaxjq8lRccc7M19rGuTpjxNPp/HPD7X5chzs3wkni6n4afwIWTCf0feB7v4M=
+	t=1749739884; cv=none; b=ff1/XWjQWp+wEEynPX9mPcLGV4Nr2dVnSYbqsl6tHMqcMM+4y7onw9zvg6HQC3qDnDwKlqX292J1zjbjJi6NyVO1kdZ0l1z+e3jga62CZ8/JE9FWHRN57bVi/OuvOTIwVO7HvpmhPVJMr1CbJ5c/LEjRwTaj5jaSsO+IeiS46og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749739884; c=relaxed/simple;
-	bh=Xf7pA1iH8R0kEK1Bi68lYJUZWLTkVcu0i//GjSh5l3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iYxp28J57qrfzgt4fWiUZYisKe4yXFmL2kqex/I3h2Rz7lMoNFZE59nNMpSE1gwxip5ChRziQPmNY4GnhrVoxKEXA9liU2kaDPsjLe9b8AOnTdyPXmLSgwT1Xr51lfJnx1o5YWGtqZFmU7aFlUhyGvouPCO9fQbcARv1pinLyxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5izHmlo; arc=none smtp.client-ip=10.30.226.201
+	bh=0qTRo/pmUhEjT80nAp8EEXMwEdEowH/xG6PhDIwPuN8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KtaICpOhIhPm9K+RLSXKaYCnnSkm3yIIyeb5HJUhcsydddW7sMTA7xSrVTp1mfPyMgSwX/EM8/GOzZD1nJukQ+kRDxwpOLLLcoRDOpXQqMIpUGDi3wUSKFRIgPrfQCSr3oWmgEkCDqUWB6vJIkJM6mWUlUGW0OstfMuw29qGllo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YBrPlBKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5izHmlo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB208C4CEEB;
-	Thu, 12 Jun 2025 14:51:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YBrPlBKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99461C4CEEA;
+	Thu, 12 Jun 2025 14:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749739884;
-	bh=Xf7pA1iH8R0kEK1Bi68lYJUZWLTkVcu0i//GjSh5l3Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G5izHmloGxfvmAKtxCBCGoWnKOObEAsaaMsON8o2BrhMNIpeBRzNJEeGl0QzTFC8o
-	 gI6IqastNqKeSsjpXyrXuodJWf/N7uO1+qPu97R4doYc0SmtDbGTNr/1yq3eDMYaSp
-	 0GF5dPC/nShzhzTStxALDZtWfcbly6QUpqwy54DZTgKVHwFgAHFfjS3kPzl1FJZiyD
-	 MV5jAOGevgyzGynH/dH+sjyyd6L2Xn3OEnRKaMQCk0WPTN461x80nkraPr1OkL9lfA
-	 heZh4hysHTNyR+UYAws2Crt7UTvYSgtmiR9Q3xvzak001Z0F+1OTMvT/aD/x7LiPiP
-	 S8CuvVrWccX4A==
-Date: Thu, 12 Jun 2025 15:51:19 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/gcs: Don't call gcs_free() during flush_gcs()
-Message-ID: <93a0f043-d5f6-432f-ac37-266dd5bbe899@sirena.org.uk>
-References: <20250611-arm64-gcs-flush-thread-v1-1-cc26feeddabd@kernel.org>
- <aEm-F04k0sC1tOCp@arm.com>
- <4b354842-2108-4904-9294-fb9b00978986@sirena.org.uk>
- <aErokN0vKT3urlmA@arm.com>
+	bh=0qTRo/pmUhEjT80nAp8EEXMwEdEowH/xG6PhDIwPuN8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YBrPlBKNH2a4/bws8W6neqOmymaes6R2+S7rFQ/FRrqsuxUIS+ukWKJupJBcEj0/d
+	 KsKX/GnYGqtJvT3Bz3/iGnT6cUja76N/vtSr93k8ISCvreiB7Vnwl34/Ow0MobvunE
+	 BRJG/c3t1O/P328EqHMyEWCb3UdWFZgD8LnOqw7cR/mwofBpastZO/GVVDwuyZT/nF
+	 W0HzDGXI7DPXc3tYr/Hi/Gg8IDIWcJ4J7+HGkSWoHU4U19olRiv3OTrbnFnnwAhkKs
+	 2Z8Tv26brwyFn4dJ5lNt35AaDWhy/kcdgpGB/yH7f5kWjvSG+feyD8s55eDCg+dxAT
+	 Byz24fe1YstxA==
+From: Philipp Stanner <phasta@kernel.org>
+To: Matthew Brost <matthew.brost@intel.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH v2] drm/sched: Clarify scenarios for separate workqueues
+Date: Thu, 12 Jun 2025 16:49:54 +0200
+Message-ID: <20250612144953.111829-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Rl3Atc6kzOHHJTuB"
-Content-Disposition: inline
-In-Reply-To: <aErokN0vKT3urlmA@arm.com>
-X-Cookie: Biz is better.
+Content-Transfer-Encoding: 8bit
 
+struct drm_sched_init_args provides the possibility of letting the
+scheduler use user-controlled workqueues, instead of the scheduler
+creating its own workqueues. It's currently not documented who would
+want to use that.
 
---Rl3Atc6kzOHHJTuB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not sharing the submit_wq between driver and scheduler has the advantage
+of no negative intereference between them being able to occur (e.g.,
+MMU notifier callbacks waiting for fences to get signaled).
 
-On Thu, Jun 12, 2025 at 03:47:44PM +0100, Catalin Marinas wrote:
-> On Thu, Jun 12, 2025 at 12:40:42PM +0100, Mark Brown wrote:
-> > On Wed, Jun 11, 2025 at 06:34:15PM +0100, Catalin Marinas wrote:
+Add a new docu section for concurrency in drm/sched.
 
-> > > Another caller of gcs_free() is deactivate_mm(). It's not clear to me
-> > > when we need to free the shadow stack on this path. On the exit_mm()
-> > > path for example we have mmput() -> exit_mmap() that takes care of
-> > > unmapping everything. Similarly on the exec_mmap() path.
+Discourage the usage of own workqueues in the documentation. Document
+when using them can make sense. Warn about pitfalls.
 
-> > We need that one to clean up the GCS for threads that had it allocated
-> > for compatibility, you can see the leak that results without it easily
-> > with the glibc testsuite (or anything else that does threads, the glibc
-> > tests just spot it).  Most of the checking for arch_release_task_struct()
-> > is verifying that deactivate_mm() is guaranteed to be called eveywhere
-> > it's relevant, I need to page that back in.
+Co-authored-by: Danilo Krummrich <dakr@kernel.org>
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+---
+Changes in v2:
+  - Add new docu section for concurrency in the scheduler. (Sima)
+  - Document what an ordered workqueue passed to the scheduler can be
+    useful for. (Christian, Sima)
+  - Warn more detailed about potential deadlocks. (Danilo)
+---
+ include/drm/gpu_scheduler.h | 54 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 51 insertions(+), 3 deletions(-)
 
-> Makes sense. I think we should only keep gcs_free() in one place,
-> ideally deactivate_mm() as that's more related to mm rather than the
-> task_struct.
+diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+index 81dcbfc8c223..00c528e62485 100644
+--- a/include/drm/gpu_scheduler.h
++++ b/include/drm/gpu_scheduler.h
+@@ -21,6 +21,49 @@
+  *
+  */
+ 
++/**
++ * DOC: Concurrency in drm/sched
++ *
++ * The DRM GPU Scheduler interacts with drivers through the callbacks defined in
++ * &struct drm_sched_backend_ops. These callbacks can be invoked by the scheduler
++ * at any point in time if not stated otherwise explicitly in the callback
++ * documentation.
++ *
++ * For most use cases, passing the recommended default parameters in &struct
++ * drm_sched_init_args is sufficient. There are some special circumstances,
++ * though:
++ *
++ * For timeout handling, it makes a lot of sense for drivers with HARDWARE
++ * scheduling to have the timeouts (e.g., for different hardware rings) occur
++ * sequentially, for example to allow for detecting which job timedout first
++ * and, therefore, caused the hang. Thereby, it is determined which &struct
++ * drm_sched_entity has to be killed and which entities' jobs must be
++ * resubmitted after a GPU reset.
++ *
++ * This can be achieved by passing an ordered workqueue in &struct
++ * drm_sched_init_args.timeout_wq. Also take a look at the documentation of
++ * &struct drm_sched_backend_ops.timedout_job.
++ *
++ * Furthermore, for drivers with hardware that supports FIRMWARE scheduling,
++ * the driver design can be simplified a bit by providing one ordered workqueue
++ * for both &struct drm_sched_init_args.timeout_wq and
++ * &struct drm_sched_init_args.submit_wq. Reason being that firmware schedulers
++ * should always have one scheduler instance per firmware runqueue and one
++ * entity per scheduler instance. If that scheduler instance then shares one
++ * ordered workqueue with the driver, locking can be very lightweight or
++ * dropped alltogether.
++ *
++ * NOTE that sharing &struct drm_sched_init_args.submit_wq with the driver
++ * theoretically can deadlock. It must be guaranteed that submit_wq never has
++ * more than max_active - 1 active tasks, or if max_active tasks are reached at
++ * least one of them does not execute operations that may block on dma_fences
++ * that potentially make progress through this scheduler instance. Otherwise,
++ * it is possible that all max_active tasks end up waiting on a dma_fence (that
++ * can only make progress through this schduler instance), while the
++ * scheduler's queued work waits for at least one of the max_active tasks to
++ * finish. Thus, this can result in a deadlock.
++ */
++
+ #ifndef _DRM_GPU_SCHEDULER_H_
+ #define _DRM_GPU_SCHEDULER_H_
+ 
+@@ -499,7 +542,7 @@ struct drm_sched_backend_ops {
+ 	 * timeout handlers of different schedulers. One way to achieve this
+ 	 * synchronization is to create an ordered workqueue (using
+ 	 * alloc_ordered_workqueue()) at the driver level, and pass this queue
+-	 * as drm_sched_init()'s @timeout_wq parameter. This will guarantee
++	 * in &struct drm_sched_init_args.timeout_wq. This will guarantee
+ 	 * that timeout handlers are executed sequentially.
+ 	 *
+ 	 * Return: The scheduler's status, defined by &enum drm_gpu_sched_stat
+@@ -590,14 +633,19 @@ struct drm_gpu_scheduler {
+  *
+  * @ops: backend operations provided by the driver
+  * @submit_wq: workqueue to use for submission. If NULL, an ordered wq is
+- *	       allocated and used.
++ *	       allocated and used. It is recommended to pass NULL unless there
++ *	       is a good reason not to. For details, see &DOC: Concurrency in
++ *	       drm/sched.
+  * @num_rqs: Number of run-queues. This may be at most DRM_SCHED_PRIORITY_COUNT,
+  *	     as there's usually one run-queue per priority, but may be less.
+  * @credit_limit: the number of credits this scheduler can hold from all jobs
+  * @hang_limit: number of times to allow a job to hang before dropping it.
+  *		This mechanism is DEPRECATED. Set it to 0.
+  * @timeout: timeout value in jiffies for submitted jobs.
+- * @timeout_wq: workqueue to use for timeout work. If NULL, the system_wq is used.
++ * @timeout_wq: workqueue to use for timeout work. If NULL, the system_wq is
++ *		used. An ordered workqueue could be passed to achieve timeout
++ *		synchronization. See &DOC: Concurreny in drm/sched and &struct
++ *		drm_sched_backend_ops.timedout_job.
+  * @score: score atomic shared with other schedulers. May be NULL.
+  * @name: name (typically the driver's name). Used for debugging
+  * @dev: associated device. Used for debugging
+-- 
+2.49.0
 
-Yes, me too - I just need to double check.
-
---Rl3Atc6kzOHHJTuB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhK6WYACgkQJNaLcl1U
-h9CXoQf9FPQfd8EjZCLMPaTNqdJWnK+Imm3M4iiBTWQPw5Cs4En1X3aPzX06av/d
-hRgfuipMS/WRm1uJFcj/yvkijXiSwywItHs6CbK2TU+cMrxSvWK8Ilk1gCg2n8Ac
-Kek5jAtdA5ROBw9UZGw5/4mw8utZOP2DlrXpImQtFEU9G7fxMup2ipqfAVcsIoHo
-LgE680V/Gg/ytylXWjP1aA8YpMPivqTUu+bMmPhGfblUzCTj7BYsrqB+9PUtt2ly
-3mDthSe6MCXKm3g01RP5ursX5bnui2kvTIgPoYINxwcEDLz/ELjVbSCUBB9yf/VL
-h4FnRm1zAapoQ/K+wV+s7uLYmO5InQ==
-=FkRy
------END PGP SIGNATURE-----
-
---Rl3Atc6kzOHHJTuB--
