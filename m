@@ -1,181 +1,205 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F0710E5
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749703203; cv=none; b=ncJLj4gQHFH24ELX1j1vUxlxy9L/48xSU1GitV6PP32x/63V9jj+ijMBYpH/Seaj8FDIF9lXOnr78KbD0IPIjJYJRGviAoegsxYK03o6V1HeIVpNxPBUVu6Ss9SlfXBFokOsEU36XUTNNNkgEoDtCUBwxjW+1Q5IYRi/PJuC5Fg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749703203; c=relaxed/simple;
-	bh=TzrB5ln5BEwd6+5oPJTvdv9bORW1mr/Afd6LEpVbqbo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jb0+ZgTXtSRVSnElNFa020X3OJnZmNHqzcpHEbJUpv3nlsLl67p18QEfIQ/ZXJ6OOdlkpFGfwmB9CwUcSuTwA0Z6AqCXS1LdKqi86ccyLK8H8pKjm/ltHGZBc4niVJJ4US+VkA+eG12IogiG9a6J/7d8ix/G4/tyr1PJvxIfskQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=j2LX2uXk; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626821B0414;
+	Thu, 12 Jun 2025 04:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749703233; cv=fail; b=PoPNacGQKG0y9wr1LRB7CUJO0Nl1Yaw+sF/OF78r1m8TH5/Jj9dkJhkagMEl5vRo+yUJTo+iT6ihQhMfGuWVfCOsfXq/igbyckvh6JquQXSKJC853+OMGKP24K/kmeJCXBTOFBVea5f/MvamrR2kaOwJcRIJkYJOrO3ahU7ddqY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749703233; c=relaxed/simple;
+	bh=Z1SrkUzsMRJETIeekxQDQ1mrTj2TLEA6fkqpbZSu0iw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gUsa+RLLOzw1W0Em7Ce8bYxpY7oedZ51/HMqvBNpBd6jLcWPmrN8PDahNbfZUFzl67/rpli6xaov2NjDLvkmevNC0W0nMvuwVvqDX1N8peg4Mer7N6tfpBa52YnEOjZeKmdO+FMa+0HKmde6kwlbElR4F0o1JhUbxUzekCSbSbc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K6aeefg8; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j2LX2uXk"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55C4dWOW1576748;
-	Wed, 11 Jun 2025 23:39:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749703172;
-	bh=hQmgZzGREthGmoNBCC+PlQ5o5+kf+VtcbzCJpE4Ljxw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=j2LX2uXkWeHl+IfDUkTlljjlGwPCLubacRzJvVoBb//c8uF0j5R8ZzRdv++eY/3CT
-	 CcrDWYBvAfSuy0IKCBXU0RwvU0P1dZWg6Xpql3Gawv575pG4n3jDGFtZPTJbNloNlX
-	 Qd4f0agEZLzAZvZgL0vZu0WpSRBwY+tSqKBNBehk=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55C4dWEx3357119
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 11 Jun 2025 23:39:32 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 11
- Jun 2025 23:39:31 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 11 Jun 2025 23:39:31 -0500
-Received: from [172.24.227.14] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.14])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55C4dPMo1577019;
-	Wed, 11 Jun 2025 23:39:26 -0500
-Message-ID: <547a35f4-abc0-4808-9994-ccc70eb3c201@ti.com>
-Date: Thu, 12 Jun 2025 10:09:24 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K6aeefg8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749703231; x=1781239231;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Z1SrkUzsMRJETIeekxQDQ1mrTj2TLEA6fkqpbZSu0iw=;
+  b=K6aeefg84MgT+ue5NK8MwUipHtZtvO7b/7bI5+w0/jKmVTStzQsa4zEU
+   /0VzMhkmWgCj81Lj8hcqpYJw4IW4TK62nwFCtNyPu9y7ptmocnDqWr7Ow
+   JCnYUcnON9KZBLcR0hSb1sS2J3VGDQaFripGHTrJHniodbtcYKBTCdJbr
+   4kllWlJdtgAeS4essyZe3I0OERMAqX1lkGdEZ0qqR7MB+btxRXTnClnQp
+   wWeNKD0l39M5EwEWuS/v9dk3x+eY73KJZZcYfqMHgO2itMh+MkWqa2vzL
+   sjEnjsMUz4QW1PwxKOLOlJLiJDYMH3BJByO2SxYvJyiCfJeGWzDMf/yVP
+   Q==;
+X-CSE-ConnectionGUID: zyaDV6WARpiSxjS+Iv1tsQ==
+X-CSE-MsgGUID: E7o4BhjTRD+3Wk49kvgIzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55535404"
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="55535404"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 21:40:30 -0700
+X-CSE-ConnectionGUID: SK8Q1cglT3KRZtTbQ6J2RA==
+X-CSE-MsgGUID: nWNpeGLyS6G5KmeJp3voLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="152682539"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 21:40:31 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 21:40:30 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 21:40:30 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.72)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 21:40:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mMSi3EirCWyaSs3kxcFCeRqwLEm9B3euIFtlGQVA/YmudGFn4uXARGhDXso0zerPFr7Xoo10egx33wn8ftDX8laaia4tmTIOSeX0bqoP/Bze4SoGQe1mS+0Cd5SgcLwX/RSp6sBwC4jDlILNWS7AfeqVhIq61RKwlaQAb6YAzxdPYPLgG2FCAV6GFxl5xvo6V9c407UlvYGQSu4tE/48CG4eB0eiJHUznzuBLtv9NzVcXB4BWif8ftxR/oP8y7UFQ9jm9LFZYXpDcp0Ij8tpUb3QAwY3Ir55OLAv/fWXU1caMiXLImxYEc3dOEZRD1d28UNXuyTlB8rKyNdi89W74w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PFly3u8PdBtws8pkqduf5yrNd9To6si6LYrmPiMsrnY=;
+ b=I3M2/RbVgR410EkzWbe9xGY0U+dg0fK6K6o1JNQQqSmQY590IpD1bogXvrXcC46SlkR14A9UcF+elsa+Qus1pKS7vhjtBAFQcQ/Nbf28mQTUX7eFb52H04qZYkuH/Bk57LGkIzdKL++RVrvpcBPcoLi7OqxqjY/jmUcZr/lL/xaBOYLRgqvYyWCLwxOwEO/77hUsfc+uyPqQI4VOyyJZfM5jZbRNEZ/14U3C1+pKY70dA78sVtIRNc8HjtEFpyZ73g0p8I5LrgP4SfLnXfI3eYktJNoNFa1uvh3B1KBkSjqwCIh+O++71Qt0/JagNmlZQMvCot5+e++jTBHz4YXu9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
+ by DS7PR11MB7738.namprd11.prod.outlook.com (2603:10b6:8:e0::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8813.30; Thu, 12 Jun 2025 04:40:22 +0000
+Received: from SA3PR11MB8118.namprd11.prod.outlook.com
+ ([fe80::c4e2:f07:bdaa:21ec]) by SA3PR11MB8118.namprd11.prod.outlook.com
+ ([fe80::c4e2:f07:bdaa:21ec%3]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
+ 04:40:22 +0000
+Date: Wed, 11 Jun 2025 21:40:19 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: David Hildenbrand <david@redhat.com>, <linux-kernel@vger.kernel.org>
+CC: <linux-mm@kvack.org>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>, David Hildenbrand <david@redhat.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
+	<Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Zi Yan <ziy@nvidia.com>, Baolin Wang
+	<baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, Ryan Roberts
+	<ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Dan Williams
+	<dan.j.williams@intel.com>, Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v2 3/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pud()
+Message-ID: <684a5a32ee1dd_249110080@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250611120654.545963-1-david@redhat.com>
+ <20250611120654.545963-4-david@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250611120654.545963-4-david@redhat.com>
+X-ClientProxiedBy: BYAPR05CA0009.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::22) To SA3PR11MB8118.namprd11.prod.outlook.com
+ (2603:10b6:806:2f1::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Doug Anderson <dianders@chromium.org>
-CC: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ideasonboard.com>, <max.krummenacher@toradex.com>,
-        <ernestvanhoecke@gmail.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-        <simona@ffwll.ch>, <kieran.bingham+renesas@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>, <max.oss.09@gmail.com>,
-        <devarsht@ti.com>, <geert@linux-m68k.org>
-References: <20250611052947.5776-1-j-choudhary@ti.com>
- <CAD=FV=WvH73d78De3PrbiG7b6OaS_BysGtxQ=mJTj4z-h0LYWA@mail.gmail.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <CAD=FV=WvH73d78De3PrbiG7b6OaS_BysGtxQ=mJTj4z-h0LYWA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|DS7PR11MB7738:EE_
+X-MS-Office365-Filtering-Correlation-Id: 67d316b1-fe49-4f41-6f84-08dda96b3ddb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?CdEKRiSSmeIYUpRqBdakiCJ68Z6Wj4/n5cT0hjKI1t2xGVAbR4skjfBRVqg1?=
+ =?us-ascii?Q?TwaoQhy44Tt7lBQFQTazAN4AyIYaClG3SgvfhyYVuSpyjzKJnd1ogiAINur3?=
+ =?us-ascii?Q?XbtHqLjxTR/rgUj2jZMLfrJqUY6FNVDGq0FwC5miYXfwZ0G0BSWF6+qr2MVW?=
+ =?us-ascii?Q?4RZIXk3OsFjCEugOqrCWCjfHv6xKYWxIAag/ACTFgqSwM6TknT5IDZLK/Tcp?=
+ =?us-ascii?Q?fxJegM7YkISWdiu6A/3vIjgc8pSwAA/YOAzp52mqeWFeJgtQ3mbFkbqX8Iqy?=
+ =?us-ascii?Q?mKtJAmtyor9FvHurOUnN+pNVK13iR3HJLZJQJ1Q+EzFrwL/vq3aa+/EdMe9c?=
+ =?us-ascii?Q?CC26kYsxC0nGBJAQdPxn/rJW4o6/XB8GnWlQeZ+tpzTWw2SUkjnIVa63wIjX?=
+ =?us-ascii?Q?Dn/KpXMz9AgkM4wcuJ41ueoaugUdCuDFF3N7WbuPGEuGbEA+HR3nRNkcK4v1?=
+ =?us-ascii?Q?CZS30i0RAvhPL3/3R6ehoLmD3SPsNwxn94E1J03qmr4TxD7UAaq7EvMY7ST2?=
+ =?us-ascii?Q?k9c5a7NvpAl1J+63SrQjp7JJ/TKnurokEuUsxobj1tXx3U9WVIGe9EQEPhGS?=
+ =?us-ascii?Q?K/9N5GVIJ/AU42CE5os7JmRL/bYZQvE6/HCl9ZGpwlT0LF26k/358PN1rVtq?=
+ =?us-ascii?Q?w7A75GJ48B4oMr1et7Kpxsa6pODnHTHXVf1nAdW+At5ru7Uyi5N5ySU0479d?=
+ =?us-ascii?Q?RSEC1B6WWMMG/IybXpN3xAoyQWE28sOV5dOoMvAnA9gs5xq3r3/68z1pfWHn?=
+ =?us-ascii?Q?XOBWUlfakP1kL3Tw8Ot5RUtf8DzlSFxt6LkOfqXcngUm5JhUEuwJI/gNLazG?=
+ =?us-ascii?Q?1UE65ZkIJltmV7tSw7oIc/gtJjIcmyAL0Dt9TePQNoLOsGAGCr41KrL5iUqm?=
+ =?us-ascii?Q?iF5X7QeIGRfMKqcXhh/pUrof9g4ksLDrvLex95g6HsE8K8Etlr3DrFzv6NEL?=
+ =?us-ascii?Q?RasqMOdi4QEhQVrn4S6UGieHZXrNDwzIleL3djwBjak6iuKPZ2lx7Ezmstkn?=
+ =?us-ascii?Q?gq90k8mN4VF5fdyx+JHQXGLF6yVFDcWfS/2Bh/SV8Bzgz+LnH0ypBa6XzjQx?=
+ =?us-ascii?Q?8OjbJQJ2Q/M7VFMhHIWmT5DE3iRm19bUTXEWT7Mg/HpVsyPg/NQYrP3turPc?=
+ =?us-ascii?Q?Pn/ybDRiF1shPSwhXSjxWMcJvZHY5aYjpWID/EkHRkeZIOcask8upfy85JJ+?=
+ =?us-ascii?Q?2vTEMj6yX5g2o5Hv2SzPcLEC6cKX6YuPeHYqEvtAVcdNw/5C9wMU+z9zVu2A?=
+ =?us-ascii?Q?dDfHZWQbXKg2IGQASQh8fbHoo/DNWQuBQeM9mII6gZb/+bjppphjNo3xDy5J?=
+ =?us-ascii?Q?e9v6ukU1CstS6kWJpxnTKEUU3e2okBGNNZJTbxKA9aVHv1begrX7CVkRk6m+?=
+ =?us-ascii?Q?R+lcXWIZBMbxKUmu+5UrVuxM3VMAE/WWigoyt4Te2nzA1ywLX6CdtPO2Vrl5?=
+ =?us-ascii?Q?O+QcK9xrRvM=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Z9U4svh+B+9FYsD/jybP4EYLWL23CYng0O4l5bvQF7cbJ8EOVME70M3v7FLt?=
+ =?us-ascii?Q?O0/fCVGIHeAz0c7KUMi9t4Xn1xu5z1T6gU4hDgP/qkm3p20BGd5g46cuVl90?=
+ =?us-ascii?Q?+nYvyuGIKXhQ8qxJE93G/7NORmo7cqT/+mnplifGSy7mkL5RjJCox/kIZwMJ?=
+ =?us-ascii?Q?EKTgihmnnnbcmOpvdSxLf9XbgNv7Wyjh25kzZd8pBuyNusdXHaAIra9wKrXP?=
+ =?us-ascii?Q?UWI5CAZgSnqSkSgt6LboLdeJk/ZIVP0AZMsUxf0jUiuGbaHgFgt+4x+c2wKd?=
+ =?us-ascii?Q?PF2qnQkeCDQKEBMAMizZ98ovZ7ZCehENhepDtW/5Hc2Vgch0SnF2baCNEU0O?=
+ =?us-ascii?Q?y978bqLnJPXmKi7pwDCDDJV+gXH3b6RETgSGwB/OtFJ/Iri62EmFXXJC1mBS?=
+ =?us-ascii?Q?0d40YAZ7Fm0lbRl504saKiuc9IPXWdt5fZwcQOY/h2II5oCZfWXqElaVl2Qe?=
+ =?us-ascii?Q?hz7o+gdxA/gna0Bs0SPYcetZ6jlW3RHYwQmGvJcngdrgw/+nS+9C5X57U6aG?=
+ =?us-ascii?Q?CUSVehC72SptOB8QtiLmutmGNK/0sCDaeMzaeLyN7qF3dq3ZTz55U5xMwdco?=
+ =?us-ascii?Q?ge4GIvkz8KeoNSpYkXAcjeqOO/wcjDJt7j7A5Yk0h/r69nz7cSoPlXlihngN?=
+ =?us-ascii?Q?aqzgx/b8wmti1FiShzgsFCQ/Vug9oR1Y0S5pWsWI2rAz/ffYClTnqVeErEK1?=
+ =?us-ascii?Q?P1GCbfDxxyp6Gh/av1IkBC1EDuBRO1u9uTi3PTx8vNW/kqKBq6d4rBFnOphq?=
+ =?us-ascii?Q?XSSjHZdlm+ys3peLfjfBmD9IVmXTsGKf/EjveEJynQZwN7nxDQf7RE4Lt/ks?=
+ =?us-ascii?Q?fQ7ECaUUdmi96FnBhhogshzWzVaTr+7fdXQFbyu2rej7G97FY7sybKaOBNyS?=
+ =?us-ascii?Q?tfpiTwVNQyrpNpBBTqd9s0yL8xVoIbYTen2lK0voHAk5Dur0LuBcxc/0Iq5t?=
+ =?us-ascii?Q?ZQu3Tb6wc1VDRJ9xH+CCpUQL/mIdDM4oWmS0H1gtfWFx3j4s3RZKbM8ej+U9?=
+ =?us-ascii?Q?haomIILFubVUx61mWStYtHS6duMCICRouGZc6DE/CCXPJPsqzDpyxC8EpRcx?=
+ =?us-ascii?Q?s2rg3IHVwda4qbnfg6tsRaulk/F9spqhgBx3g8GxlMTV1ylliLpa1W4jyBfw?=
+ =?us-ascii?Q?QcHV0jx9DFCrN4UDRHAGSuTjzeVkilfolNSCq3XTMqH7l2FZWMjLv8V2SWii?=
+ =?us-ascii?Q?bDM11BsSHAEsQ9pVFcXrkRhJ2ghxNqzo9NVIQXQANfV4elvtclLTr/yNrdea?=
+ =?us-ascii?Q?+k4rJqCF9G0wFw+CUSz4CChp+VMssrGRf9kZQ+G4jnoBegvF/q4RVBARRAno?=
+ =?us-ascii?Q?CKvF/Xz1DkASr1bhFHkX4H21o6YP//wBDwuC07XG9n1QbZTkSrnsST1n+wHk?=
+ =?us-ascii?Q?pfxh2zfWHuHJNio2hUJnAZFgExi83xdPgVUfOCOF2RVAUowqb22igvXeBjwX?=
+ =?us-ascii?Q?It+KHPYRUPVHHOTAz0VA3goCHs+HjIa5+DgGFhylyXaTpdha+rNFQhfh3ip8?=
+ =?us-ascii?Q?9EEYrpAI3feGJ5JMiTbAL259x8eogfB5WHID+SMngVPIYjltIzfRm+ollCZM?=
+ =?us-ascii?Q?UNCdZwxry7uiGZcVPjLeKqUp8ZJNdkaUBUoeh8ubcUbd/utjs79HSyGSL2IE?=
+ =?us-ascii?Q?bQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67d316b1-fe49-4f41-6f84-08dda96b3ddb
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 04:40:22.3838
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mnR6VNuZ2RYN0K0uZz/93+im0KHekeaA8iwpgEnNrCD6KZudFV2E68zmVhN+fmJHYbKtUDsQJtsKuTpDUX2DclLizwKmYAuHGkdw2veITbE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7738
+X-OriginatorOrg: intel.com
 
-Hello Doug,
-
-On 12/06/25 03:08, Doug Anderson wrote:
-> Hi,
+David Hildenbrand wrote:
+> Marking PUDs that map a "normal" refcounted folios as special is
+> against our rules documented for vm_normal_page().
 > 
-> On Tue, Jun 10, 2025 at 10:29 PM Jayesh Choudhary <j-choudhary@ti.com> wrote:
->>
->> @@ -1195,9 +1203,17 @@ static enum drm_connector_status ti_sn_bridge_detect(struct drm_bridge *bridge)
->>          struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
->>          int val = 0;
->>
->> -       pm_runtime_get_sync(pdata->dev);
->> +       /*
->> +        * The chip won't report HPD right after being powered on as
->> +        * HPD_DEBOUNCED_STATE reflects correct state only after the
->> +        * debounce time (~100-400 ms).
->> +        * So having pm_runtime_get_sync() and immediately reading
->> +        * the register in detect() won't work, and adding delay()
->> +        * in detect will have performace impact in display.
->> +        * So remove runtime calls here.
+> Fortunately, there are not that many pud_special() check that can be
+> mislead and are right now rather harmless: e.g., none so far
+> bases decisions whether to grab a folio reference on that decision.
 > 
-> That last sentence makes sense in a commit message, but not long term.
-> Someone reading the code later won't understand what "remove" means.
-> If you change "remove" to "omit" then it all makes sense, though. You
-> could also say that a pm_runtime reference will be grabbed by
-> ti_sn_bridge_hpd_enable().
-
-Okay. Will edit this.
-
+> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+> implications as it seems.
 > 
+> Getting this right will get more important as we introduce
+> folio_normal_page_pud() and start using it in more place where we
+> currently special-case based on other VMA flags.
 > 
->> +        */
->> +
->>          regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
->> -       pm_runtime_put_autosuspend(pdata->dev);
->>
->>          return val & HPD_DEBOUNCED_STATE ? connector_status_connected
->>                                           : connector_status_disconnected;
->> @@ -1220,6 +1236,20 @@ static void ti_sn65dsi86_debugfs_init(struct drm_bridge *bridge, struct dentry *
->>          debugfs_create_file("status", 0600, debugfs, pdata, &status_fops);
->>   }
->>
->> +static void ti_sn_bridge_hpd_enable(struct drm_bridge *bridge)
->> +{
->> +       struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
->> +
->> +       pm_runtime_get_sync(pdata->dev);
->> +}
->> +
->> +static void ti_sn_bridge_hpd_disable(struct drm_bridge *bridge)
->> +{
->> +       struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
->> +
->> +       pm_runtime_put_sync(pdata->dev);
->> +}
->> +
->>   static const struct drm_bridge_funcs ti_sn_bridge_funcs = {
->>          .attach = ti_sn_bridge_attach,
->>          .detach = ti_sn_bridge_detach,
->> @@ -1234,6 +1264,8 @@ static const struct drm_bridge_funcs ti_sn_bridge_funcs = {
->>          .atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
->>          .atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
->>          .debugfs_init = ti_sn65dsi86_debugfs_init,
->> +       .hpd_enable = ti_sn_bridge_hpd_enable,
->> +       .hpd_disable = ti_sn_bridge_hpd_disable,
->>   };
->>
->>   static void ti_sn_bridge_parse_lanes(struct ti_sn65dsi86 *pdata,
->> @@ -1322,7 +1354,8 @@ static int ti_sn_bridge_probe(struct auxiliary_device *adev,
->>                             ? DRM_MODE_CONNECTOR_DisplayPort : DRM_MODE_CONNECTOR_eDP;
->>
->>          if (pdata->bridge.type == DRM_MODE_CONNECTOR_DisplayPort)
->> -               pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT;
->> +               pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT |
->> +                                   DRM_BRIDGE_OP_HPD;
+> Fix it just like we fixed vmf_insert_folio_pmd().
 > 
-> I think you also need this in the "DRM_MODE_CONNECTOR_DisplayPort" if test:
+> Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
 > 
-> /*
->   * If comms were already enabled they would have been enabled
->   * with the wrong value of HPD_DISABLE. Update it now. Comms
->   * could be enabled if anyone is holding a pm_runtime reference
->   * (like if a GPIO is in use). Note that in most cases nobody
->   * is doing AUX channel xfers before the bridge is added so
->   * HPD doesn't _really_ matter then. The only exception is in
->   * the eDP case where the panel wants to read the EDID before
->   * the bridge is added. We always consistently have HPD disabled
->   * for eDP.
->   */
-> mutex_lock(&pdata->comms_mutex);
-> if (pdata->comms_enabled)
->    regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG,
->      HPD_DISABLE, 0);
-> mutex_unlock(&pdata->comms_mutex);
-> 
-> Does that sound right?
+> Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
+Looks good to me.
 
-Here I don't think it is necessary to add this because enable_comms
-will be called again after probe either in hpd_enable() (in case
-refclk exist) or pre_enable() (in case it doesn't) with correct value.
-
-If this seems okay then I will roll v5 with just the typo fixed in the
-comments in detect().
-
-Warm Regards,
-Jayesh
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
