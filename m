@@ -1,192 +1,156 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBFE29CB49
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BF02BCF53;
+	Thu, 12 Jun 2025 15:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742479; cv=none; b=YMEzBZQCY68kgu0Tw78FHlvsjyKSssk3rVoTPx5EIzWJijwLA8x0o4gws9V7sWsChPJZLdRp1MdCstTf4xl+WA88QDTCrsKSWU5RMmzZjvZqSxs0h04OlGspO1F3e7NyvkcXMbHbRgGjrcKJzhfrh010N4c89fU0bUARBQ7LxvE=
+	t=1749742481; cv=none; b=VNyuj7ZFCDQ3BvVkZFiwsO+AiS1vAupUg7bHu2VQXm0uopVHilBTcRGJDovxZq0ZDGrq2MiXLYCdCMoo3kWXDGxdPN/TondYyJnv5kpFrUnqy3YJNVuG1YgjIykSMMaEFttSm4cxMw0XJ/zoZxzERLNGipYnWOtV1dVjVlUIVa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742479; c=relaxed/simple;
-	bh=7lZ21bSBGeyGQ/SwS5L8GOvhz5J/nxCcUYOhf7jAcVc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YeESXrFBWq69xmPE/AmHFuCraRbaNs8O+VTVN6Ms7V9NeHnSu/9kINd4l3v9HQNJ3pDQkTuvN44tKnQazLOOIBwJLYx6PA+qqcgTK4QkUCJBQc48t6j0Su5HrYORDSQkSGZr/kP6Hq6fHxDnwEEbF9oRORD65uWsoXYOpgLy1ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wPP525W0; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749742481; c=relaxed/simple;
+	bh=kgz7hkjs7V+1CTp7FE7nxkTThIrJ7WPiUY0Og7QBt6s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Tq4gTQBFXu3czYK0RKvJ9qHhG3StQkxjTFDV38c+v/xfVdV4/x7AUNDLKZePTIZe9DB4jnTZUKZ1tNFSxZknZOfBzO3YOxluqjfflTrbpVXS8BfLsxH8GddRCXMNpJE0Kef9/z3PB3evtCBulWyliWSI/q2ab7EEGog1VXb1Ang=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fv2yf8lf; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wPP525W0"
-Message-ID: <55f97736-495e-43a3-ad3c-ad84c138dd03@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749742465;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nNpCvm3hfb0gToPq1x4OuSvE8zYv6anebvZhgOON29s=;
-	b=wPP525W08r6pHJXIdMZDJ/+dabFTBAVd810cDqbMxr7INOGlx8gs4FzqoyFnPeVgpgb2w7
-	pyTO0qfvqkaKPHznKqx8iBdwO6RXdeEEAYWtePsnOhwVPtUnXqEuvqPMWCuIDCTPgHYbRQ
-	n8CBeLpt2we6nQVjFuTKM20PVoPbopA=
-Date: Thu, 12 Jun 2025 11:34:16 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fv2yf8lf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749742479; x=1781278479;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kgz7hkjs7V+1CTp7FE7nxkTThIrJ7WPiUY0Og7QBt6s=;
+  b=fv2yf8lf1zBIqIJl6z8W7+pahLoccF1UNEBs2j7tNmstiqnNY6j1cmsx
+   5uA2wn/Nk0WZOmL8J32Fd61wMLKKN2JYQRGQPd8YutjR4YBxuQzTRmyVQ
+   1S653/uGZ+zggLa1xirJtSiag1fCX+f8ek1ny+NdGUEVig+VyPoL2wKgI
+   BQSBaovNeYREuR42McnccoHA1JMQWmU5l9TUHp2BT2yw2Q0GjPCfN6qcf
+   UdGVWLQRUyYLVSHaG7uTbAEIXiYrUWFz2cp//jCkEWlnCdOc/qdQSrQY5
+   4hhrgW40gNBkSb8uVZRIQb18vpyQnjrnk+SSsN+Y6iSAYvVYiENcJmudJ
+   g==;
+X-CSE-ConnectionGUID: blzEp3RwR2KJAWuEa9iIiQ==
+X-CSE-MsgGUID: Fe9AH1UTQ9SMcGC9ZeqKdw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51158626"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="51158626"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 08:34:38 -0700
+X-CSE-ConnectionGUID: KQxa3/YaTiaVpno21ucPrw==
+X-CSE-MsgGUID: 0RPavKa+QLyIObq2Twog7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="152546791"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by orviesa004.jf.intel.com with ESMTP; 12 Jun 2025 08:34:33 -0700
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: donald.hunter@gmail.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch,
+	aleksandr.loktionov@intel.com,
+	milena.olech@intel.com,
+	corbet@lwn.net
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-doc@vger.kernel.org,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Subject: [PATCH net-next v6 0/3]  dpll: add all inputs phase offset monitor
+Date: Thu, 12 Jun 2025 17:28:32 +0200
+Message-Id: <20250612152835.1703397-1-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next PATCH v6 06/10] net: pcs: Add Xilinx PCS driver
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
- Kory Maincent <kory.maincent@bootlin.com>,
- Daniel Golle <daniel@makrotopia.org>, Simon Horman <horms@kernel.org>,
- Christian Marangi <ansuelsmth@gmail.com>, Lei Wei <quic_leiwei@quicinc.com>,
- Michal Simek <michal.simek@amd.com>,
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Robert Hancock <robert.hancock@calian.com>,
- linux-arm-kernel@lists.infradead.org
-References: <20250610233134.3588011-1-sean.anderson@linux.dev>
- <20250610233134.3588011-7-sean.anderson@linux.dev>
- <20250611071114.325fb630@fedora.home>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250611071114.325fb630@fedora.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 6/11/25 01:11, Maxime Chevallier wrote:
-> Hi Sean,
-> 
-> I only 
-> 
-> On Tue, 10 Jun 2025 19:31:30 -0400
-> Sean Anderson <sean.anderson@linux.dev> wrote:
-> 
->> This adds support for the Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII device.
->> This is a soft device which converts between GMII and either SGMII,
->> 1000Base-X, or 2500Base-X. If configured correctly, it can also switch
->> between SGMII and 1000BASE-X at runtime. Thoretically this is also possible
->> for 2500Base-X, but that requires reconfiguring the serdes. The exact
->> capabilities depend on synthesis parameters, so they are read from the
->> devicetree.
->> 
->> This device has a c22-compliant PHY interface, so for the most part we can
->> just use the phylink helpers. This device supports an interrupt which is
->> triggered on autonegotiation completion. I'm not sure how useful this is,
->> since we can never detect a link down (in the PCS).
->> 
->> This device supports sharing some logic between different implementations
->> of the device. In this case, one device contains the "shared logic" and the
->> clocks are connected to other devices. To coordinate this, one device
->> registers a clock that the other devices can request.  The clock is enabled
->> in the probe function by releasing the device from reset. There are no othe
->> software controls, so the clock ops are empty.
->> 
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->> 
->> Changes in v6:
->> - Move axienet_pcs_fixup to AXI Ethernet commit
->> - Use an empty statement for next label
->> 
->> Changes in v5:
->> - Export get_phy_c22_id when it is used
->> - Expose bind attributes, since there is no issue in doing so
->> - Use MDIO_BUS instead of MDIO_DEVICE
->> 
->> Changes in v4:
->> - Re-add documentation for axienet_xilinx_pcs_get that was accidentally
->>   removed
->> 
->> Changes in v3:
->> - Adjust axienet_xilinx_pcs_get for changes to pcs_find_fwnode API
->> - Call devm_pcs_register instead of devm_pcs_register_provider
->> 
->> Changes in v2:
->> - Add support for #pcs-cells
->> - Change compatible to just xlnx,pcs
->> - Drop PCS_ALTERA_TSE which was accidentally added while rebasing
->> - Rework xilinx_pcs_validate to just clear out half-duplex modes instead
->>   of constraining modes based on the interface.
->> 
->>  MAINTAINERS                  |   6 +
->>  drivers/net/pcs/Kconfig      |  22 ++
->>  drivers/net/pcs/Makefile     |   2 +
->>  drivers/net/pcs/pcs-xilinx.c | 427 +++++++++++++++++++++++++++++++++++
->>  drivers/net/phy/phy_device.c |   3 +-
->>  include/linux/phy.h          |   1 +
->>  6 files changed, 460 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/net/pcs/pcs-xilinx.c
->> 
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 0ac6ba5c40cb..496513837921 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -27060,6 +27060,12 @@ L:	netdev@vger.kernel.org
->>  S:	Orphan
->>  F:	drivers/net/ethernet/xilinx/ll_temac*
->>  
->> +XILINX PCS DRIVER
->> +M:	Sean Anderson <sean.anderson@linux.dev>
->> +S:	Maintained
->> +F:	Documentation/devicetree/bindings/net/xilinx,pcs.yaml
->> +F:	drivers/net/pcs/pcs-xilinx.c
->> +
->>  XILINX PWM DRIVER
->>  M:	Sean Anderson <sean.anderson@seco.com>
->>  S:	Maintained
->> diff --git a/drivers/net/pcs/Kconfig b/drivers/net/pcs/Kconfig
->> index f42839a0c332..e0223914362b 100644
->> --- a/drivers/net/pcs/Kconfig
->> +++ b/drivers/net/pcs/Kconfig
->> @@ -52,4 +52,26 @@ config PCS_RZN1_MIIC
->>  	  on RZ/N1 SoCs. This PCS converts MII to RMII/RGMII or can be set in
->>  	  pass-through mode for MII.
->>  
->> +config PCS_XILINX
->> +	tristate "Xilinx PCS driver"
->> +	default XILINX_AXI_EMAC
->> +	select COMMON_CLK
->> +	select GPIOLIB
->> +	select MDIO_BUS
->> +	select OF
->> +	select PCS
->> +	select PHYLINK
->> +	help
->> +	  PCS driver for the Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII device.
->> +	  This device can either act as a PCS+PMA for 1000BASE-X or 2500BASE-X,
->> +	  or as a GMII-to-SGMII bridge. It can also switch between 1000BASE-X
->> +	  and SGMII dynamically if configured correctly when synthesized.
->> +	  Typical applications use this device on an FPGA connected to a GEM or
->> +	  TEMAC on the GMII side. The other side is typically connected to
->> +	  on-device gigabit transceivers, off-device SERDES devices using TBI,
->> +	  or LVDS IO resources directly.
->> +
->> +	  To compile this driver as a module, choose M here: the module
->> +	  will be called pcs-xilinx.
->> +
->>  endmenu
->> diff --git a/drivers/net/pcs/Makefile b/drivers/net/pcs/Makefile
->> index 35e3324fc26e..347afd91f034 100644
->> --- a/drivers/net/pcs/Makefile
->> +++ b/drivers/net/pcs/Makefile
->> @@ -10,3 +10,5 @@ obj-$(CONFIG_PCS_XPCS)		+= pcs_xpcs.o
->>  obj-$(CONFIG_PCS_LYNX)		+= pcs-lynx.o
->>  obj-$(CONFIG_PCS_MTK_LYNXI)	+= pcs-mtk-lynxi.o
->>  obj-$(CONFIG_PCS_RZN1_MIIC)	+= pcs-rzn1-miic.o
->> +obj-$(CONFIG_PCS_ALTERA_TSE)	+= pcs-altera-tse.o
-> 
-> There's something strange going-on here, as pcs-altera-tse was removed
-> in v6.4 :)
+Add dpll device level feature: phase offset monitor.
 
-Ah, well as it happens I have been working on this series since at least
-5.10, so I guess it is left over. I will remove it for v7.
+Phase offset measurement is typically performed against the current active
+source. However, some DPLL (Digital Phase-Locked Loop) devices may offer
+the capability to monitor phase offsets across all available inputs.
+The attribute and current feature state shall be included in the response
+message of the ``DPLL_CMD_DEVICE_GET`` command for supported DPLL devices.
+In such cases, users can also control the feature using the
+``DPLL_CMD_DEVICE_SET`` command by setting the ``enum dpll_feature_state``
+values for the attribute.
+Once enabled the phase offset measurements for the input shall be returned
+in the ``DPLL_A_PIN_PHASE_OFFSET`` attribute.
 
---Sean
+Implement feature support in ice driver for dpll-enabled devices.
+
+Verify capability:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --dump device-get
+[{'clock-id': 4658613174691613800,
+  'id': 0,
+  'lock-status': 'locked-ho-acq',
+  'mode': 'automatic',
+  'mode-supported': ['automatic'],
+  'module-name': 'ice',
+  'type': 'eec'},
+ {'clock-id': 4658613174691613800,
+  'id': 1,
+  'lock-status': 'locked-ho-acq',
+  'mode': 'automatic',
+  'mode-supported': ['automatic'],
+  'module-name': 'ice',
+  'phase-offset-monitor': 'disable',
+  'type': 'pps'}]
+
+Enable the feature:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --do device-set --json '{"id":1, "phase-offset-monitor":"enable"}'
+
+Verify feature is enabled:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --dump device-get
+[
+ [...]
+ {'capabilities': {'all-inputs-phase-offset-monitor'},
+  'clock-id': 4658613174691613800,
+  'id': 1,
+ [...]
+  'phase-offset-monitor': 'enable',
+ [...]]
+
+v6:
+- rebase.
+
+Arkadiusz Kubalewski (3):
+  dpll: add phase-offset-monitor feature to netlink spec
+  dpll: add phase_offset_monitor_get/set callback ops
+  ice: add phase offset monitor for all PPS dpll inputs
+
+ Documentation/driver-api/dpll.rst             |  18 ++
+ Documentation/netlink/specs/dpll.yaml         |  24 +++
+ drivers/dpll/dpll_netlink.c                   |  69 ++++++-
+ drivers/dpll/dpll_nl.c                        |   5 +-
+ .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  20 ++
+ drivers/net/ethernet/intel/ice/ice_common.c   |  26 +++
+ drivers/net/ethernet/intel/ice/ice_common.h   |   3 +
+ drivers/net/ethernet/intel/ice/ice_dpll.c     | 193 +++++++++++++++++-
+ drivers/net/ethernet/intel/ice/ice_dpll.h     |   8 +
+ drivers/net/ethernet/intel/ice/ice_main.c     |   4 +
+ include/linux/dpll.h                          |   8 +
+ include/uapi/linux/dpll.h                     |  12 ++
+ 12 files changed, 384 insertions(+), 6 deletions(-)
+
+
+base-commit: 5d6d67c4cb10a4b4d3ae35758d5eeed6239afdc8
+-- 
+2.38.1
 
