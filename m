@@ -1,145 +1,187 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A090219A86
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2701A2C27;
+	Thu, 12 Jun 2025 07:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714743; cv=none; b=mZpxxqcaLWzM1kPOaO0gK0ZY4HGtEVRYeMLISNtxc9amfApiOyz+uFGbH2qnCu+GsoIQANteMVSFvfuAGbB4beIncDsZjp6qdbnJG2h+NUKhphS1sNciyu0h/ddMQ9+i0MOjnyJXL3HV/8CxYS4Ap7kFEabiiI7L5qx32j2MJBI=
+	t=1749714757; cv=none; b=foKKwFZ4/8AQYFLS60UDWq19gwrZJbesLVScs4sPlg+yzicHipzMUv7FLxcpzTCVlMiA1wHIovsBBEq5txkFxuR/KIITaATzczSWzssBziO05vsIugInQLlNPHibvdcilMBk6yMBT1Xk+FJBXepx5fdjZ0iN3fv166HsFG64uuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714743; c=relaxed/simple;
-	bh=lrfz2Yk3K2QHeSihfduCenLg/V2a6j+mpqjUFZ9a4A8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JtzIG9dG4FDrzd4l+4ceDiQv6gWJbSJWVHs7lPttLkHaywwSQKUtAbpTs3wmIz6+VISEwpl1MXG4gfgJHnRJZ+QKRY4HbpvRotq3M3Ea9XKwrWpIEDVL7VGIqx8m/+/o9sL5wAhGIhtAbBlelWPdMN6S2iYTAGSUxNXFKwzELVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-8730ca8143eso175804939f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:52:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714740; x=1750319540;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pX0pCA/spayx82TVldyOfyWMgTM4hCg5RuWaGrqjgfc=;
-        b=XU7LL2htwrXcyEFcUoORIshJkPna0BeAO0JCBncWRBPzoaVk8OozHlYK0cR0td51lt
-         Dv8+kxSUu+vBETvbOGEVoCmw5PFmXGOSuOvf+//A+iHWIzQpGFAGcy/i0QnNvd/OSdL6
-         VoKEh3zilR+6iwyfKHd7yCmdsin5YcfvN6oaSG5h4meEwwzjI2l06cXDqvz3B7ng1y3q
-         1YLEOO078BBG8DPxPwhe9AAJ6P/2pfxZszK56XWevTADxvcChw+uhWnDi4YC7iO/wt7r
-         AOd6iiFO0T6FGeejKtBoqfMEMNuYVGAEk3GliGBU+MhecPfnHAciCnUerNPKy7vPoMdX
-         IMJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpw2m3+FljZsmnVjJ2gqVga+UThUbrEuKezRKfASggbxLSc7Xuh9vAG948fYKKVf7l52x0Nh6zm9ZJFw4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywlr/Zb8BtXibs9uJwvNslAF9B8NL8QjnnWbqGr0XKv+b/0OKMy
-	mVqK8fMZcAu4ZtJOaT8xnbIlC3AaobFm5hdd2sgzCQjTvLlDLcFma7bI4IiGGsG5dQr2uQlBxDT
-	0j+35jrfe13S+xvXUqOvfvvOEBSoZ7RpveVuVAs5RrtnqZlT4efUzvhfU6Sk=
-X-Google-Smtp-Source: AGHT+IEVLerCXfQhi60ZCYvwG6rBOHBB2+VcrtYagZ28XxW6a87Er+2avDzNoWBfA0n9iNx4qqmAoJ84k0zm9oST1F4jFKKk2Un9
+	s=arc-20240116; t=1749714757; c=relaxed/simple;
+	bh=XDYpiXL0YgJGP5OYcuDOmZzd3y95TyZawtDgvIGv3Gs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=XhfzyyeVer++Nf8DgBkBtdaw9BDE6gFRe4wBEEStkTF0mGfYZRmvVEhGtw+orFCAgFEZCZfsVS2YD2tBYnnzt+58xtfXdAjmVbzRdzy8MlZq6GjSrf7OOJnw+vvepCkHv5yhPHV94DwxUB9I+O2r1M7ThLV2D1gtthmtUQJDjYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvsXXCC7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvsXXCC7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46155C4CEEA;
+	Thu, 12 Jun 2025 07:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749714756;
+	bh=XDYpiXL0YgJGP5OYcuDOmZzd3y95TyZawtDgvIGv3Gs=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=nvsXXCC7wOvekjkL2fqe1+gNHcZZJhVlIQxY9H25drq6mmIufm+EmSvAWgj1BfViE
+	 DTS8nrp86IfrxVCimYwZKtpefyALf6a8m66g62CNdZ7fYxryw9kJFVPIpeIPOzDwxm
+	 ffa6Nu8+pM/YNuFiIm9oyAr5yJECdktEpbgRi/B84Bk/Dno6C/5BQiT4Q4jKIsm+On
+	 rty18bxoRCafn3iXIuUjGDpboVfiHmoVzaSDc0zCAA5g6Itrhy+qeS81ijraDDmr0n
+	 p3x3Wrjcynk3X1mL9qV2v7vSmi6QLEYqLp7tHdcKmbGEfzgNHjUUGNk6D6a0cF7ET5
+	 gZXZVUvyJWRug==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a92:c24d:0:b0:3dd:e6b2:1078 with SMTP id
- e9e14a558f8ab-3ddfadd42camr23973175ab.6.1749714740658; Thu, 12 Jun 2025
- 00:52:20 -0700 (PDT)
-Date: Thu, 12 Jun 2025 00:52:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684a8734.050a0220.be214.028d.GAE@google.com>
-Subject: [syzbot] [bcachefs?] WARNING in __init_work (2)
-From: syzbot <syzbot+011218db4fea20179df3@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Jun 2025 09:52:30 +0200
+Message-Id: <DAKE43J2GFVF.18KWPFWPZKDM@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>, "Luis Chamberlain"
+ <mcgrof@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
+ <nicolas.schier@linux.dev>, "Trevor Gross" <tmgross@umich.edu>, "Adam
+ Bratschi-Kaye" <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
+ Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
+ "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
+ Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
+ <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v12 2/3] rust: add parameter support to the `module!`
+ macro
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
+ <20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org>
+ <D9PW1NI2S6FV.8LA53J87VCML@kernel.org> <87plfazi13.fsf@kernel.org>
+In-Reply-To: <87plfazi13.fsf@kernel.org>
 
-Hello,
+On Wed Jun 11, 2025 at 12:31 PM CEST, Andreas Hindborg wrote:
+> "Benno Lossin" <lossin@kernel.org> writes:
+>> On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
+>>> diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
+>>> index a3ee27e29a6f..16d300ad3d3b 100644
+>>> --- a/rust/macros/helpers.rs
+>>> +++ b/rust/macros/helpers.rs
+>>> @@ -10,6 +10,17 @@ pub(crate) fn try_ident(it: &mut token_stream::IntoI=
+ter) -> Option<String> {
+>>>      }
+>>>  }
+>>> =20
+>>> +pub(crate) fn try_sign(it: &mut token_stream::IntoIter) -> Option<char=
+> {
+>>> +    let peek =3D it.clone().next();
+>>> +    match peek {
+>>> +        Some(TokenTree::Punct(punct)) if punct.as_char() =3D=3D '-' =
+=3D> {
+>>
+>> Should we also allow a leading `+`?
+>
+> I would argue no, because rust literals cannot start with `+`.
 
-syzbot found the following issue on:
+Makes sense.
 
-HEAD commit:    19272b37aa4f Linux 6.16-rc1
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=174ea10c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8409c4d4e51ac27
-dashboard link: https://syzkaller.appspot.com/bug?extid=011218db4fea20179df3
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17096d70580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10976e0c580000
+>>> +            let _ =3D it.next();
+>>> +            Some(punct.as_char())
+>>> +        }
+>>> +        _ =3D> None,
+>>> +    }
+>>> +}
+>>> +
+>>>  pub(crate) fn try_literal(it: &mut token_stream::IntoIter) -> Option<S=
+tring> {
+>>>      if let Some(TokenTree::Literal(literal)) =3D it.next() {
+>>>          Some(literal.to_string())
+>>> @@ -86,3 +97,17 @@ pub(crate) fn function_name(input: TokenStream) -> O=
+ption<Ident> {
+>>>      }
+>>>      None
+>>>  }
+>>> +
+>>> +/// Parse a token stream of the form `expected_name: "value",` and ret=
+urn the
+>>> +/// string in the position of "value".
+>>> +///
+>>> +/// # Panics
+>>> +///
+>>> +/// - On parse error.
+>>> +pub(crate) fn expect_string_field(it: &mut token_stream::IntoIter, exp=
+ected_name: &str) -> String {
+>>> +    assert_eq!(expect_ident(it), expected_name);
+>>> +    assert_eq!(expect_punct(it), ':');
+>>> +    let string =3D expect_string(it);
+>>> +    assert_eq!(expect_punct(it), ',');
+>>
+>> This won't allow omitting the trailing comma.
+>
+> This is in line with the rest of the module macro.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/92d22b0c6493/disk-19272b37.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3fb0142bb63a/vmlinux-19272b37.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3d5f3836ae42/Image-19272b37.gz.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/e49d008f1550/mount_0.gz
+Then we should change that:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+011218db4fea20179df3@syzkaller.appspotmail.com
+    https://github.com/Rust-for-Linux/linux/issues/1172
 
-ODEBUG: object 000000004394caab is on stack 0000000077db2857, but NOT annotated.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 6533 at lib/debugobjects.c:655 debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-WARNING: CPU: 0 PID: 6533 at lib/debugobjects.c:655 lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-WARNING: CPU: 0 PID: 6533 at lib/debugobjects.c:655 __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-Modules linked in:
-CPU: 0 UID: 0 PID: 6533 Comm: bch-copygc/loop Not tainted 6.16.0-rc1-syzkaller-g19272b37aa4f #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-pc : lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-pc : __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-lr : debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-lr : lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-lr : __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-sp : ffff80009bd57700
-x29: ffff80009bd57700 x28: 0000000000000000 x27: dfff800000000000
-x26: ffff800097589000 x25: ffff0000cb6c9ea0 x24: 0000000000000000
-x23: ffff0000cc399428 x22: 0000000000000000 x21: ffff800097467ee8
-x20: ffff80008af00de0 x19: ffff80009bd57bb0 x18: 00000000ffffffff
-x17: ffff800093215000 x16: ffff80008ae5617c x15: 0000000000000001
-x14: 1ffff000137aae58
- x13: 0000000000000000 x12: 0000000000000000
-x11: ffff7000137aae59 x10: 0000000000ff0100 x9 : c1ad3b4b6b986d00
-x8 : c1ad3b4b6b986d00 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff80009bd57098 x4 : ffff80008f657060 x3 : ffff8000807bb744
-x2 : 0000000000000001 x1 : 0000000100000001 x0 : 0000000000000050
-Call trace:
- debug_object_is_on_stack lib/debugobjects.c:-1 [inline] (P)
- lookup_object_or_alloc lib/debugobjects.c:688 [inline] (P)
- __debug_object_init+0x364/0x40c lib/debugobjects.c:743 (P)
- debug_object_init+0x20/0x2c lib/debugobjects.c:779
- __init_work+0x58/0x68 kernel/workqueue.c:677
- rhashtable_init_noprof+0x734/0xa10 lib/rhashtable.c:1085
- bch2_copygc_thread+0xec/0xd40 fs/bcachefs/movinggc.c:353
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-irq event stamp: 18
-hardirqs last  enabled at (17): [<ffff800083e501f4>] get_random_u32+0x2d4/0x540 drivers/char/random.c:554
-hardirqs last disabled at (18): [<ffff80008ae77604>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
-hardirqs last disabled at (18): [<ffff80008ae77604>] _raw_spin_lock_irqsave+0x2c/0x7c kernel/locking/spinlock.c:162
-softirqs last  enabled at (0): [<ffff8000803aab44>] copy_process+0x1134/0x31ec kernel/fork.c:2114
-softirqs last disabled at (0): [<0000000000000000>] 0x0
----[ end trace 0000000000000000 ]---
+>>> +    string
+>>> +}
+>>
+>> [...]
+>>
+>>> @@ -186,33 +336,35 @@ pub(crate) fn module(ts: TokenStream) -> TokenStr=
+eam {
+>>>      let info =3D ModuleInfo::parse(&mut it);
+>>> =20
+>>>      let mut modinfo =3D ModInfoBuilder::new(info.name.as_ref());
+>>> -    if let Some(author) =3D info.author {
+>>> -        modinfo.emit("author", &author);
+>>> +    if let Some(author) =3D &info.author {
+>>> +        modinfo.emit("author", author);
+>>>      }
+>>> -    if let Some(authors) =3D info.authors {
+>>> +    if let Some(authors) =3D &info.authors {
+>>>          for author in authors {
+>>> -            modinfo.emit("author", &author);
+>>> +            modinfo.emit("author", author);
+>>>          }
+>>>      }
+>>> -    if let Some(description) =3D info.description {
+>>> -        modinfo.emit("description", &description);
+>>> +    if let Some(description) =3D &info.description {
+>>> +        modinfo.emit("description", description);
+>>>      }
+>>>      modinfo.emit("license", &info.license);
+>>> -    if let Some(aliases) =3D info.alias {
+>>> +    if let Some(aliases) =3D &info.alias {
+>>>          for alias in aliases {
+>>> -            modinfo.emit("alias", &alias);
+>>> +            modinfo.emit("alias", alias);
+>>>          }
+>>>      }
+>>> -    if let Some(firmware) =3D info.firmware {
+>>> +    if let Some(firmware) =3D &info.firmware {
+>>>          for fw in firmware {
+>>> -            modinfo.emit("firmware", &fw);
+>>> +            modinfo.emit("firmware", fw);
+>>
+>> I don't like that you have to change all of these.
+>
+> Why not? If I was to write this code in the first place, I would have
+> used a reference rather than pass by value.
 
+That's fine, but do it in a separate commit then.
+
+>> Can't you just take a
+>> `&[Parameter]` argument in `emit_params` instead of the whole
+>> `ModuleInfo` struct?
+>
+> I don't think that is a nice solution. I would have to pass the name
+> field as well, increasing the number of parameters to the function.
+
+Ah right makes sense.
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Cheers,
+Benno
