@@ -1,152 +1,82 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890741E5B7A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858A745948;
+	Thu, 12 Jun 2025 06:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749711170; cv=none; b=Wf71eZfefpZGCiwghuyChXDnc5uNZS3zmn/x9LnP+fMQ5CB044aEVc/ZzgzLCl9wUHqOaMSKfZr3SPJWXMV4yiwk0158nDAHmTNbZq6jV+/Swr0KVNFBSD8F6jTfK4qjN8t+MZMD/ghBxEc9NIu3Upm23igoWUTZKxll4I/x2uQ=
+	t=1749711259; cv=none; b=XWgyFaRCTQGHTNNccaflJC42snKWy+Vl8ob/2Zu4UQ1j8yvNidd7AW6xY3QPGxWwW6tuauR33rtPhW0RNgmLKdr6BM7jmQg+FRQEQ4ykVpym/csTHKaDOVJjBTTdzvz++N6Yh1K5155G+VMuARu9EpL0AD1RuM0icjJjtOE7Umg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749711170; c=relaxed/simple;
-	bh=NHtGhXG0yRIPdQyrvbTSVQ6eQX3MJJcgJy07UzpQwa8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HWVjoXzDEe5N7Tne3Ybw4YsIIjqjTl5K7I+cE15Nkk28HzZbYr6QKaiG1wNiyFhmKsip/sWP9SINjPF3VEskZH/AsOeKzx+ogXKLiPUxtwmPKuHqcmAZo3iad03gWfWVU4grp2MCKHrhucNQc9W4zRiFHOqj2LYJibzmwcWme88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R08jiEVZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nDfGp5kE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R08jiEVZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nDfGp5kE; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749711259; c=relaxed/simple;
+	bh=PzPtaGSdBkLz6S2v2qC7RyJk+Y+e0u9UjEVDT2yKpWw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=P+++1CGdE3sbhzm3DhYuF5Gsm2wvoQrCmz5LZtieKQJIcjZZDK6br0U2JmC51OtiIFR9H067PGKYjNRk8vtdAfYw7hMOaxddp7kDKDbitt9bco06TdZ/anKDJlnv/csT2nU+lkaTaQ+rn+SPQiGUS2eDi7YiNNJAbm74KYOyUR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=UAVReQKV; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R08jiEVZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nDfGp5kE";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R08jiEVZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nDfGp5kE"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 67D4D21923;
-	Thu, 12 Jun 2025 06:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749711165; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pgAPjVY/XzqOZpXE9Hs3PERy9wrT1RBjEOvmaGEcsaQ=;
-	b=R08jiEVZgNqzZb5UCuZK5+cZTy4jmBMhO9r8PrLWek67Uwp0Vm+QmMrgkM5NWQD5U29Ybi
-	SqKys5UIXistzS+MXPYj3Sy5HMkY0HGWatde9+hCCZ/x5/bMSnUFVBBPKOcCzdFMm2ZJSb
-	VwRCf4fV5gsPFZ0ROGoQyoi8gYah1pE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749711165;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pgAPjVY/XzqOZpXE9Hs3PERy9wrT1RBjEOvmaGEcsaQ=;
-	b=nDfGp5kEz//bzmNa8BWaOpxmmORew7J1/+206MGFRYLh4FjvmDJQXA1wvw4X0fEKVROhfs
-	jE2lKOUoNw2zRSDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=R08jiEVZ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=nDfGp5kE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749711165; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pgAPjVY/XzqOZpXE9Hs3PERy9wrT1RBjEOvmaGEcsaQ=;
-	b=R08jiEVZgNqzZb5UCuZK5+cZTy4jmBMhO9r8PrLWek67Uwp0Vm+QmMrgkM5NWQD5U29Ybi
-	SqKys5UIXistzS+MXPYj3Sy5HMkY0HGWatde9+hCCZ/x5/bMSnUFVBBPKOcCzdFMm2ZJSb
-	VwRCf4fV5gsPFZ0ROGoQyoi8gYah1pE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749711165;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pgAPjVY/XzqOZpXE9Hs3PERy9wrT1RBjEOvmaGEcsaQ=;
-	b=nDfGp5kEz//bzmNa8BWaOpxmmORew7J1/+206MGFRYLh4FjvmDJQXA1wvw4X0fEKVROhfs
-	jE2lKOUoNw2zRSDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 15CC6139E2;
-	Thu, 12 Jun 2025 06:52:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id a6TsAz15SmgUEAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 12 Jun 2025 06:52:45 +0000
-Date: Thu, 12 Jun 2025 08:52:44 +0200
-Message-ID: <87ikl1v4cj.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	cristian.ciocaltea@collabora.com,
-	franta-linux@frantovo.cz,
-	lina+kernel@asahilina.net,
-	livvy@base.nu,
-	sstistrup@gmail.com,
-	s@srd.tw,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: usb-audio: Convert comma to semicolon
-In-Reply-To: <20250612060228.1518028-1-nichen@iscas.ac.cn>
-References: <20250612060228.1518028-1-nichen@iscas.ac.cn>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="UAVReQKV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=chjwl3pOPxc4IG5rSXNObzcCIHR/xPckR5Zij95VUcg=; b=UAVReQKV0T7x/4Uy+vHtMs/7+l
+	bL8jTpi0hPWhOkJilOchLipTAO7QU8SzxeNhi3mV/Q0L/hXlBkcLEvWyCxj+2S4N3GNW8Zfx9nQIH
+	A0b0ekKTlQPzbbXXRjS3W4wxrDp65OTlbtfxAookQllD1OsaBQ8525ZtOZWwIDZ/37FE=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:59918 helo=[127.0.1.1])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1uPbpF-003wuh-6z; Thu, 12 Jun 2025 08:54:13 +0200
+From: Matthias Fend <matthias.fend@emfend.at>
+Subject: [PATCH 0/3] media: dw9714: support for powerdown pin and minor
+ cleanups
+Date: Thu, 12 Jun 2025 08:54:09 +0200
+Message-Id: <20250612-dw9714-v1-0-1a2d6d682829@emfend.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 67D4D21923
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[perex.cz,suse.com,collabora.com,frantovo.cz,asahilina.net,base.nu,gmail.com,srd.tw,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[kernel];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid]
-X-Spam-Score: -2.01
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJF5SmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0ND3ZRyS3NDE12D5GTTxBRLs0Qjw1QloOKCotS0zAqwQdGxtbUAitd
+ sNFgAAAA=
+X-Change-ID: 20250611-dw9714-0cc5ad96a21e
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Matthias Fend <matthias.fend@emfend.at>, 
+ bsp-development.geo@leica-geosystems.com
+X-Mailer: b4 0.14.2
+X-Spam-Score: 
+X-Spam-Bar: 
+X-Spam-Report: 
 
-On Thu, 12 Jun 2025 08:02:28 +0200,
-Chen Ni wrote:
-> 
-> Replace comma between expressions with semicolons.
-> 
-> Using a ',' in place of a ';' can have unintended side effects.
-> Although that is not the case here, it is seems best to use ';'
-> unless ',' is intended.
-> 
-> Found by inspection.
-> No functional change intended.
-> Compile tested only.
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Besides minor fixes, this series mainly adds support for the powerdown pin.
 
-Thanks, applied now.
+Note: I already sent a single patch for power down pin support, but since
+more things have changed and this has become a series, I've decided to
+start it with V1.
 
-At the next time, though, it'd be appreciated if you can put the
-proper Fixes tag.
+Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+---
+Matthias Fend (3):
+      media: dw9714: coding style fixes
+      media: dw9714: move power sequences to dedicated functions
+      media: dw9714: add support for powerdown pin
 
+ drivers/media/i2c/Kconfig  |  2 +-
+ drivers/media/i2c/dw9714.c | 62 +++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 46 insertions(+), 18 deletions(-)
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250611-dw9714-0cc5ad96a21e
 
-Takashi
+Best regards,
+-- 
+Matthias Fend <matthias.fend@emfend.at>
+
