@@ -1,367 +1,272 @@
-Received: from mail-ej1-f97.google.com (mail-ej1-f97.google.com [209.85.218.97])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CECA2417F0
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBAA2417F0
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738830; cv=none; b=Cp/321PLOHvu7afA/qy/hA/eAeitGHaIad7XC6jYdRWyxgbYv9f8Squ7fBl+FsQJ2oW6sXtF0wRcOlTNwwcOrb4JP6BFx621grLgJ5e3kg80qOhA40UQBZPU87eiHSsMpmVP1rfcZqq79BULvOtJXnLhJfpEZLG/uVp3gQUQpdk=
+	t=1749738880; cv=none; b=UykIU7Zt6vKl2TMap0gvMu810Lb5Rq5+0eSwzgML0pEOqaRzvRfuAbLEIVTwiL9oNm8twBs2yNXf9y2kM2LkG9isspkmBoXv+6cEd/NwtQAcgJ9PW3Rl7IxdGeI8aRHLdge6I9WTSF6sdHHF02hy7/Ya8ZlSV+JPx8Iv5a3POA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749738830; c=relaxed/simple;
-	bh=YSUbtUuizklExpnzU8VpfcNv0fngsTJdsERQci1RWp0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y0x8hTXG4X1X0tUdt44c8ReUIMCMteeBJ/gzR7luFrNTJtNgGivn0QYC/cHDzijhXQ6BE0LQSThCbiUBKnBey9NIQeWyhH3YKX015kkF3Pdb3QCwe4qDI91PxaXiW0FiSd/50aJ3rS19mSb7Q74jv9nrLqyHgUx/bRouaAVxNPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sferalabs.cc; spf=pass smtp.mailfrom=sferalabs.cc; dkim=pass (2048-bit key) header.d=sferalabs.cc header.i=@sferalabs.cc header.b=Do0VcHHd; arc=none smtp.client-ip=209.85.218.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sferalabs.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sferalabs.cc
+	s=arc-20240116; t=1749738880; c=relaxed/simple;
+	bh=C5qtus052bCsWzLSi4k2AO3g61EBMbo6+ArX0lL6UPo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Y5LgnNbPHVisgszs0I2fY95oqPKLi+q2VeCCnVljNrKVFDkCpbQNyrzvtV8nXBI26ypxkGXVLp86PP4CefYnEX/GmVZXR66oGH8bGTGoRgFuNKZIgjjdRtgyKjUmvl49OFvHVZKt4iC3eKqFPNqVH0DEQI176bB5VUgqR5SN0Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fu6d35Db; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sferalabs.cc header.i=@sferalabs.cc header.b="Do0VcHHd"
-Received: by mail-ej1-f97.google.com with SMTP id a640c23a62f3a-ad8a6c202ffso190552766b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:33:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fu6d35Db"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311f4f2e6baso1043919a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:34:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sferalabs.cc; s=google; t=1749738824; x=1750343624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lkFa1Jh0hAp7VXFgDt4c5m6aT1cILx31aOxZ9A4iZ3Q=;
-        b=Do0VcHHdwB3mogd0mPbdmhVLLjHHpGY15RIHUCRRjNfRWuzl2gPeDz45UkPCdO0p3f
-         ED5hNaB2967Ptt1Spu5kA19Rps6cVEp+NLycDL4iH52RhxNBzlVkKs6PlWejtYvO7uv0
-         EmgarXU1KdrI1EbLyRUeMBu/3CeCq6dCs6F/BKPGbd/qgCzyyBxmY4QqmDs6P/091Fik
-         0USQ8+Va7hKxFwIAgVqLI1J0m+Dzvd3yPZRpUG8SWNOif0nQCqEhOJlF3eLWuCk3aHGe
-         rkUEqvLEnEN3ubvAXdSEK5jPrGtQPEo2qG3B7gsZfZeqGBNbovQMlD+fbvlRLp5k6Mu8
-         6qBw==
+        d=google.com; s=20230601; t=1749738877; x=1750343677; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bCkqRQ65xZAC1T38W5bWrrAPN4EJG3gT3DO5Cch9Ys0=;
+        b=fu6d35DbJ94xRMsYAuyfkeh7WzppWlTiJ9ZZv1hEw9OTE9+ycZ1aYQczGAQAuQdci6
+         9+8xi3XLDhu4yBI2LLSb8C0vebg3S6uIyrY+fJPKtsHY3/qsqV3NUSW/AvLuLfCaGfXF
+         F9/DKeYvLnLpOXFMh1F0K1gbXWzbtPF8YjoU2U3KqK03Wrv25XexJXewsgGLtkguLioz
+         KmDFHGwO7t5Pq5hM/u5feFFx2cMNcMN//GNXRnZxCxibe3FuVzOBgehpXp5oElwNR2oN
+         +Rq9GaUBDP4wFD3nU4dIB/ZqPCg3s0UfL6nW/uBTKUhjziBSy3x7jlaTcV7taAdWlemA
+         znIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749738824; x=1750343624;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lkFa1Jh0hAp7VXFgDt4c5m6aT1cILx31aOxZ9A4iZ3Q=;
-        b=DV4zl+mGnxQaKPXCYWvlWHGgSR3YVhd+gfLyAzAzqUtB5PxY18joWUT+XUS3FPhhI5
-         fVhJMLy2LyiYlIlHZKzyPayXrqr58FlYxNdypBg6C3LUnMMrK9IwQFQ7i/MmE9+P7Btb
-         KpYRLjWCHO9tf86NOzgJozFV9Cdb8w/Qw6O3qmb2ojSWUiJOW0LbXL+yzEGKQuHpz+2d
-         /X778YH7PZvweyDxlthZ9eKL3YSTiy1RN4FoMGkS+rfU2MnHpJoW3iX01M7owq/poy0i
-         LCrCH+R9cceORFeI/4zP3p6hHb7uNyC5Kf/XT8HSynbXYoUvbiH4e6D8G7qLcoxITRmf
-         F4hw==
-X-Forwarded-Encrypted: i=1; AJvYcCWk2GPNWDG0xqn81+glORbvs0Mt9Z6U9yVbbXyYkwDpjI2dC8A4IvFJH4O8kBObPp6ETWYR2hvcQIfxaxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTnpn1fhnmfWjnj3Mr3/gR/VWbu8j/fhbQRvJuzxsr7tGjsIZT
-	KnnTC3FuvBvZsj2lybAmZFVaY/u/5TSDGYH52tWXwBfW2kLOwwlbEIxOIXNuWh6+tWvpXr5Jv61
-	nojjv3GUPTPRwiYd6s28IID6f8y7lqe1uv0OQ
-X-Gm-Gg: ASbGnctRzvrz6z/dOym4qFXfb0NVqIc9j5BE0CJsOK4r+bwnu0WAENvh6ATMFEn1n5c
-	ov6YKk3/YceK/yB0gJ/IV/rlheHwjHzPERCoBAsvkEgVT+uLCcZvK3oWeFqlSjKX6wkrVCaH9Gy
-	OvFTKSfO8QSlzWKyc0n/1igbwPaiavBOdh61kcMRigx5UnrSuAxrrnbRpaOmoA2HQZRrL3XDDHS
-	qB/8IE2Swn6dqEk/3J8t+YyxjZ6N1ohiKy88OTclRjcjx+A8gVlyi9WhWOwF6TgW6d5Tq0jGJDF
-	lzq73mHGxg+hxKIcfbq6Afuv8rl6mq8q84N2WefA8dZiFjYNBH73sCPw5ah2HCxJKtV3SMJJLbK
-	ficM=
-X-Google-Smtp-Source: AGHT+IGnhKK23yR1xHZZWzF61fUpeG2TlhMWsxzXLzc1dL1xHOAteivntPVBueKnIToEoqjGc4A6kecpFjzD
-X-Received: by 2002:a17:907:e895:b0:ad1:fa48:da0a with SMTP id a640c23a62f3a-adea9410734mr337093666b.35.1749738824090;
-        Thu, 12 Jun 2025 07:33:44 -0700 (PDT)
-Received: from giampiero.localdomain (net-5-89-7-58.cust.vodafonedsl.it. [5.89.7.58])
-        by smtp-relay.gmail.com with ESMTPS id a640c23a62f3a-adeadb636acsm9220266b.183.2025.06.12.07.33.43
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 12 Jun 2025 07:33:44 -0700 (PDT)
-X-Relaying-Domain: sferalabs.cc
-From: Giampiero Baggiani <giampiero@sferalabs.cc>
-To: alexandre.belloni@bootlin.com
-Cc: Giampiero Baggiani <giampiero@sferalabs.cc>,
-	linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rtc: pcf2127: add power management device properties
-Date: Thu, 12 Jun 2025 16:33:38 +0200
-Message-Id: <20250612143338.45943-1-giampiero@sferalabs.cc>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+        d=1e100.net; s=20230601; t=1749738877; x=1750343677;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bCkqRQ65xZAC1T38W5bWrrAPN4EJG3gT3DO5Cch9Ys0=;
+        b=ic1GfmtSTLbjWicqLuhlXiizoOY2kES5h+OWlCjnRQWAAZ+Gb45DaJQL/+iJpt4VBI
+         A2VNLEE1MEnQ+lIAvDo4kAoleJ9G5i754b2bUvq72sJ/9Ntrvokw16LqYFeLb1XA82rE
+         ojBMp78lv8tt8HzD0Ab9LqrtxxpX4X7r0JiL9gQITk++f5mpKQuHjaPHYG1n18DeXsuB
+         aFjXS9weca7GL0NJGWc5RdpLG1JYHqsoxUP09fTdY7nAr36fZ0lcYe7cImFXgbAX9ds0
+         uzja1EUeNytczxFCVJ1gaDFPiSWVTSMJCTpDPHULEFtKL95NLIRB9RygoTtepcE2hrwp
+         w6qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVACqhEVqk1+Fveaw+EIVKFERgBLb2vZSJpW4hSw6fDgKhsXH3PE3FUPJUHy4SbU52BGBK+thTu2pevkz8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRxf3JA/soL16BtxX4ID3RCx/0ScxqzfsU/k1U7EEEhG4U8Kfe
+	hqZjTqmAWQ+CO5ybTPv1UzOafwVskBKMBvL7ESyJmQDZnzgLuYjJzqKCKgWQXEsJ9+bC4h7bIC+
+	WIMx3Tw==
+X-Google-Smtp-Source: AGHT+IFvgFX45fAef1k8uZ/3DR+A7ppsnjKdR6QYSkMmUdo4ZfmyvklPkUSYEBb4bT/S6wp2Q15cPG3uYow=
+X-Received: from pjbof7.prod.google.com ([2002:a17:90b:39c7:b0:312:e5dd:9248])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:48c1:b0:311:ea13:2e63
+ with SMTP id 98e67ed59e1d1-313d7dda00fmr200540a91.13.1749738876902; Thu, 12
+ Jun 2025 07:34:36 -0700 (PDT)
+Date: Thu, 12 Jun 2025 07:34:35 -0700
+In-Reply-To: <86tt4lcgs3.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-4-seanjc@google.com>
+ <86tt4lcgs3.wl-maz@kernel.org>
+Message-ID: <aErlezuoFJ8u0ue-@google.com>
+Subject: Re: [PATCH v3 02/62] KVM: arm64: WARN if unmapping vLPI fails
+From: Sean Christopherson <seanjc@google.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>, 
+	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Joao Martins <joao.m.martins@oracle.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Added the "backup-switchover-mode" and the "battery-low-detection-set"
-device properties.
-Especially relevant for PCF2131 which comes with BSM and BLD disabled
-by default.
-If the properties are not specified the driver behaves as before, keeping
-the configuration unchanged.
-The "battery-low-detection-set" property solves the current issue of BLD
-config lost when switching between BSMs.
-The RTC_FEATURE_BACKUP_SWITCH_MODE is also set.
+On Thu, Jun 12, 2025, Marc Zyngier wrote:
+> On Wed, 11 Jun 2025 23:45:05 +0100,
+> Sean Christopherson <seanjc@google.com> wrote:
+> > 
+> > WARN if unmapping a vLPI in kvm_vgic_v4_unset_forwarding() fails, as
+> > failure means an IRTE has likely been left in a bad state, i.e. IRQs
+> > won't go where they should.
+> 
+> I have no idea what an IRTE is.
 
-Signed-off-by: Giampiero Baggiani <giampiero@sferalabs.cc>
----
- drivers/rtc/rtc-pcf2127.c | 206 ++++++++++++++++++++++++++++++--------
- 1 file changed, 163 insertions(+), 43 deletions(-)
+Sorry, x86 IOMMU terminology (Interrupt Remapping Table Entry).  I think the GIC
+terminology would be ITS entry?  Or maybe ITS mapping?
 
-diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 31c7dca8f469..b381b31b6d20 100644
---- a/drivers/rtc/rtc-pcf2127.c
-+++ b/drivers/rtc/rtc-pcf2127.c
-@@ -182,6 +182,12 @@ struct pcf21xx_ts_config {
- 	u8 ie_bit; /* Interrupt enable bit. */
- };
+> But not having an VLPI mapping for an interrupt at the point where we're
+> tearing down the forwarding is pretty benign. IRQs *still* go where they
+> should, and we don't lose anything.
+
+This is the code I'm trying to refer to:
+
+  static int its_vlpi_unmap(struct irq_data *d)
+  {
+	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+	u32 event = its_get_event_id(d);
+
+	if (!its_dev->event_map.vm || !irqd_is_forwarded_to_vcpu(d))  <=== this shouldn't happen?
+		return -EINVAL;
+
+	/* Drop the virtual mapping */
+	its_send_discard(its_dev, event);
+
+	/* and restore the physical one */
+	irqd_clr_forwarded_to_vcpu(d);
+	its_send_mapti(its_dev, d->hwirq, event);
+	lpi_update_config(d, 0xff, (lpi_prop_prio |
+				    LPI_PROP_ENABLED |
+				    LPI_PROP_GROUP1));
+
+	/* Potentially unmap the VM from this ITS */
+	its_unmap_vm(its_dev->its, its_dev->event_map.vm);
+
+	/*
+	 * Drop the refcount and make the device available again if
+	 * this was the last VLPI.
+	 */
+	if (!--its_dev->event_map.nr_vlpis) {
+		its_dev->event_map.vm = NULL;
+		kfree(its_dev->event_map.vlpi_maps);
+	}
+
+	return 0;
+  }
+
+When called from kvm_vgic_v4_unset_forwarding()
+
+	if (irq->hw) {
+		atomic_dec(&irq->target_vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vlpi_count);
+		irq->hw = false;
+		ret = its_unmap_vlpi(host_irq);
+	}
+
+IIUC, irq->hw is set if and only if KVM has configured the IRQ to be fowarded
+directly to a vCPU.  Based on this comment in its_map_vlpi(): 
+
+	/*
+	 * The host will never see that interrupt firing again, so it
+	 * is vital that we don't do any lazy masking.
+	 */
+
+and this code in its_vlpi_map():
+
+
+		/* Drop the physical mapping */
+		its_send_discard(its_dev, event);
+
+my understanding is that the associated physical IRQ will not be delivered to the
+host while the IRQ is being forwarded to a vCPU.
+
+irq->hw should only become true for MSIs (I'm crossing my fingers that SGIs aren't
+in play here) if its_map_vlpi() succeeds:
+
+	ret = its_map_vlpi(virq, &map);
+	if (ret)
+		goto out_unlock_irq;
+
+	irq->hw		= true;
+	irq->host_irq	= virq;
+	atomic_inc(&map.vpe->vlpi_count);
+
+and so if its_unmap_vlpi() fails in kvm_vgic_v4_unset_forwarding(), then from KVM's
+perspective, the worst case scenario is that an IRQ has been left in a forwarded
+state, i.e. the physical mapping hasn't been reinstalled.
+
+KVM already WARNs if kvm_vgic_v4_unset_forwarding() fails when KVM is reacting to
+a routing change (this is the WARN I want to move into arch code so that
+kvm_arch_update_irqfd_routing() doesn't plumb a pointless error code up the stack):
+
+		if (irqfd->producer &&
+		    kvm_arch_irqfd_route_changed(&old, &irqfd->irq_entry)) {
+			int ret = kvm_arch_update_irqfd_routing(
+					irqfd->kvm, irqfd->producer->irq,
+					irqfd->gsi, 1);
+			WARN_ON(ret);
+		}
+
+It's only the kvm_arch_irq_bypass_del_producer() case where KVM doesn't WARN.  If
+that fails, then the IRQ has potentially been left in a forwarded state, despite
+whatever driver "owns" the physical IRQ having removed its producer.  E.g. if VFIO
+detaches its irqbypass producer and gives the device back to the host, then
+whatever is using the device in the host won't receive IRQs as expected.
+
+Looking at this again, its_free_ite() also WARNs on its_unmap_vlpi() failure, so
+wouldn't it make sense to have its_unmap_vlpi() WARN if irq_set_vcpu_affinity()
+fails?  The only possible failures are that the GIC doesn't have a v4 ITS (from
+its_irq_set_vcpu_affinity()):
+
+	/* Need a v4 ITS */
+	if (!is_v4(its_dev->its))
+		return -EINVAL;
+
+	guard(raw_spinlock)(&its_dev->event_map.vlpi_lock);
+
+	/* Unmap request? */
+	if (!info)
+		return its_vlpi_unmap(d);
+
+or that KVM has gotten out of sync with the GIC/ITS (from its_vlpi_unmap()):
+
+	if (!its_dev->event_map.vm || !irqd_is_forwarded_to_vcpu(d))
+		return -EINVAL;
+
+All of those failure scenario seem like warnable offences when KVM thinks it has
+configured the IRQ to be forwarded to a vCPU.
+
+E.g.
+
+--
+diff --git a/arch/arm64/kvm/vgic/vgic-its.c b/arch/arm64/kvm/vgic/vgic-its.c
+index 534049c7c94b..98630dae910d 100644
+--- a/arch/arm64/kvm/vgic/vgic-its.c
++++ b/arch/arm64/kvm/vgic/vgic-its.c
+@@ -758,7 +758,7 @@ static void its_free_ite(struct kvm *kvm, struct its_ite *ite)
+        if (irq) {
+                scoped_guard(raw_spinlock_irqsave, &irq->irq_lock) {
+                        if (irq->hw)
+-                               WARN_ON(its_unmap_vlpi(ite->irq->host_irq));
++                               its_unmap_vlpi(ite->irq->host_irq);
  
-+struct pcf21xx_pwrmng_config {
-+	int bsm;
-+	bool bld;
-+	bool pfd;
-+};
-+
- struct pcf21xx_config {
- 	int type; /* IC variant */
- 	int max_register;
-@@ -209,6 +215,7 @@ struct pcf2127 {
- 	bool irq_enabled;
- 	time64_t ts[PCF2127_MAX_TS_SUPPORTED]; /* Timestamp values. */
- 	bool ts_valid[PCF2127_MAX_TS_SUPPORTED];  /* Timestamp valid indication. */
-+	bool bld_set;
- };
+                        irq->hw = false;
+                }
+diff --git a/arch/arm64/kvm/vgic/vgic-v4.c b/arch/arm64/kvm/vgic/vgic-v4.c
+index 193946108192..911170d4a9c8 100644
+--- a/arch/arm64/kvm/vgic/vgic-v4.c
++++ b/arch/arm64/kvm/vgic/vgic-v4.c
+@@ -545,10 +545,10 @@ int kvm_vgic_v4_unset_forwarding(struct kvm *kvm, int host_irq)
+        if (irq->hw) {
+                atomic_dec(&irq->target_vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vlpi_count);
+                irq->hw = false;
+-               ret = its_unmap_vlpi(host_irq);
++               its_unmap_vlpi(host_irq);
+        }
  
- /*
-@@ -333,26 +340,130 @@ static int pcf2127_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	return 0;
+        raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+        vgic_put_irq(kvm, irq);
+-       return ret;
++       return 0;
+ }
+diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
+index 58c28895f8c4..8455b4a5fbb0 100644
+--- a/drivers/irqchip/irq-gic-v4.c
++++ b/drivers/irqchip/irq-gic-v4.c
+@@ -342,10 +342,10 @@ int its_get_vlpi(int irq, struct its_vlpi_map *map)
+        return irq_set_vcpu_affinity(irq, &info);
  }
  
--static int pcf2127_param_get(struct device *dev, struct rtc_param *param)
-+static int pcf2127_rtc_get_pwrmng(struct device *dev,
-+				  struct pcf21xx_pwrmng_config *cfg)
+-int its_unmap_vlpi(int irq)
++void its_unmap_vlpi(int irq)
  {
- 	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
--	u32 value;
-+	unsigned int value;
-+	int ret;
-+
-+	ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	value = FIELD_GET(PCF2127_CTRL3_PM, value);
-+
-+	switch (value) {
-+	case 0:
-+		cfg->bsm = RTC_BSM_LEVEL;
-+		cfg->bld = true;
-+		cfg->pfd = true;
-+		break;
-+
-+	case 1:
-+		cfg->bsm = RTC_BSM_LEVEL;
-+		cfg->bld = false;
-+		cfg->pfd = true;
-+		break;
-+
-+	case 2:
-+		cfg->bsm = RTC_BSM_LEVEL;
-+		cfg->bld = false;
-+		cfg->pfd = false;
-+		break;
-+
-+	case 3:
-+		cfg->bsm = RTC_BSM_DIRECT;
-+		cfg->bld = true;
-+		cfg->pfd = true;
-+		break;
-+
-+	case 4:
-+		cfg->bsm = RTC_BSM_DIRECT;
-+		cfg->bld = false;
-+		cfg->pfd = true;
-+		break;
-+
-+	case 5:
-+		cfg->bsm = RTC_BSM_DIRECT;
-+		cfg->bld = false;
-+		cfg->pfd = false;
-+		break;
-+
-+	case 6:
-+		cfg->bsm = RTC_BSM_DISABLED;
-+		cfg->bld = false;
-+		cfg->pfd = true;
-+		break;
-+
-+	default:
-+		cfg->bsm = RTC_BSM_DISABLED;
-+		cfg->bld = false;
-+		cfg->pfd = false;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pcf2127_rtc_set_pwrmng(struct device *dev,
-+				  struct pcf21xx_pwrmng_config *cfg)
-+{
-+	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
-+	unsigned int value;
-+
-+	if (cfg->bld)
-+		cfg->pfd = true;
-+
-+	switch (cfg->bsm) {
-+	case RTC_BSM_LEVEL:
-+		if (cfg->bld)
-+			value = 0;
-+		else if (cfg->pfd)
-+			value = 1;
-+		else
-+			value = 2;
-+		break;
-+
-+	case RTC_BSM_DIRECT:
-+		if (cfg->bld)
-+			value = 3;
-+		else if (cfg->pfd)
-+			value = 4;
-+		else
-+			value = 5;
-+		break;
-+
-+	case RTC_BSM_DISABLED:
-+		if (cfg->bld)
-+			return -EINVAL;
-+		else if (cfg->pfd)
-+			value = 6;
-+		else
-+			value = 7;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return regmap_update_bits(pcf2127->regmap, PCF2127_REG_CTRL3,
-+				  PCF2127_CTRL3_PM,
-+				  FIELD_PREP(PCF2127_CTRL3_PM, value));
-+}
-+
-+static int pcf2127_param_get(struct device *dev, struct rtc_param *param)
-+{
-+	struct pcf21xx_pwrmng_config cfg;
- 	int ret;
- 
- 	switch (param->param) {
- 	case RTC_PARAM_BACKUP_SWITCH_MODE:
--		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &value);
-+		ret = pcf2127_rtc_get_pwrmng(dev, &cfg);
- 		if (ret < 0)
- 			return ret;
- 
--		value = FIELD_GET(PCF2127_CTRL3_PM, value);
--
--		if (value < 0x3)
--			param->uvalue = RTC_BSM_LEVEL;
--		else if (value < 0x6)
--			param->uvalue = RTC_BSM_DIRECT;
--		else
--			param->uvalue = RTC_BSM_DISABLED;
-+		param->uvalue = cfg.bsm;
- 
- 		break;
- 
-@@ -366,49 +477,23 @@ static int pcf2127_param_get(struct device *dev, struct rtc_param *param)
- static int pcf2127_param_set(struct device *dev, struct rtc_param *param)
- {
- 	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
--	u8 mode = 0;
--	u32 value;
-+	struct pcf21xx_pwrmng_config cfg;
- 	int ret;
- 
- 	switch (param->param) {
- 	case RTC_PARAM_BACKUP_SWITCH_MODE:
--		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL3, &value);
-+		ret = pcf2127_rtc_get_pwrmng(dev, &cfg);
- 		if (ret < 0)
- 			return ret;
- 
--		value = FIELD_GET(PCF2127_CTRL3_PM, value);
--
--		if (value > 5)
--			value -= 5;
--		else if (value > 2)
--			value -= 3;
--
--		switch (param->uvalue) {
--		case RTC_BSM_LEVEL:
--			break;
--		case RTC_BSM_DIRECT:
--			mode = 3;
--			break;
--		case RTC_BSM_DISABLED:
--			if (value == 0)
--				value = 1;
--			mode = 5;
--			break;
--		default:
--			return -EINVAL;
--		}
--
--		return regmap_update_bits(pcf2127->regmap, PCF2127_REG_CTRL3,
--					  PCF2127_CTRL3_PM,
--					  FIELD_PREP(PCF2127_CTRL3_PM, mode + value));
--
--		break;
-+		cfg.bsm = param->uvalue;
-+		if (pcf2127->bld_set && cfg.bsm != RTC_BSM_DISABLED)
-+			cfg.bld = true;
-+		return pcf2127_rtc_set_pwrmng(dev, &cfg);
- 
- 	default:
- 		return -EINVAL;
- 	}
--
--	return 0;
+        irq_clear_status_flags(irq, IRQ_DISABLE_UNLAZY);
+-       return irq_set_vcpu_affinity(irq, NULL);
++       WARN_ON_ONCE(irq_set_vcpu_affinity(irq, NULL));
  }
  
- static int pcf2127_rtc_ioctl(struct device *dev,
-@@ -1181,6 +1266,8 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
- 	struct pcf2127 *pcf2127;
- 	int ret = 0;
- 	unsigned int val;
-+	struct pcf21xx_pwrmng_config pm_cfg;
-+	bool pm_cfg_write = false;
- 
- 	dev_dbg(dev, "%s\n", __func__);
- 
-@@ -1323,6 +1410,39 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
- 		return ret;
- 	}
- 
-+	ret = pcf2127_rtc_get_pwrmng(dev, &pm_cfg);
-+	if (ret) {
-+		dev_err(dev,
-+			"%s: power management config (ctrl3) read failed\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	if (!device_property_read_u32(dev, "backup-switchover-mode",
-+				      &pm_cfg.bsm)) {
-+		pm_cfg_write = true;
-+	}
-+
-+	pcf2127->bld_set = device_property_read_bool(dev,
-+					"battery-low-detection-set");
-+	if (pcf2127->bld_set) {
-+		if (pm_cfg.bsm != RTC_BSM_DISABLED)
-+			pm_cfg.bld = true;
-+		pm_cfg_write = true;
-+	}
-+
-+	if (pm_cfg_write) {
-+		ret = pcf2127_rtc_set_pwrmng(dev, &pm_cfg);
-+		if (ret) {
-+			dev_err(dev,
-+				"%s: power management config (ctrl3) failed\n",
-+				__func__);
-+			return ret;
-+		}
-+	}
-+
-+	set_bit(RTC_FEATURE_BACKUP_SWITCH_MODE, pcf2127->rtc->features);
-+
- 	/*
- 	 * Enable timestamp functions 1 to 4.
- 	 */
--- 
-2.39.2 (Apple Git-143)
+ int its_prop_update_vlpi(int irq, u8 config, bool inv)
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index 7f1f11a5e4e4..0b0887099fd7 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -146,7 +146,7 @@ int its_commit_vpe(struct its_vpe *vpe);
+ int its_invall_vpe(struct its_vpe *vpe);
+ int its_map_vlpi(int irq, struct its_vlpi_map *map);
+ int its_get_vlpi(int irq, struct its_vlpi_map *map);
+-int its_unmap_vlpi(int irq);
++void its_unmap_vlpi(int irq);
+ int its_prop_update_vlpi(int irq, u8 config, bool inv);
+ int its_prop_update_vsgi(int irq, u8 priority, bool group);
+
 
