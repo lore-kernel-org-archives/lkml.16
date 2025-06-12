@@ -1,99 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC69230277;
-	Thu, 12 Jun 2025 14:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE62142048;
+	Thu, 12 Jun 2025 14:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738286; cv=none; b=ehkfyDCRx7sqg/OMxyVK4yTpZWgUOhRWKhxiptf2U0OqFmMedYge+r9kvpPtc4dZTT8Ux6fPQoB5uQkChLSQh950cByo3n881AmBWYKPVSlzXmeoDoKl/jp3vCCP1shP8gPGv+K7Wzh6qigA1MVRBeGmp/0tXkPfxlV5PwNDkkY=
+	t=1749738298; cv=none; b=lgXWC+sm3qtTXS3wgn2vHseB4PudUuORfdlcMdU1aL8ulT5i1H0OUT7vGxtn5SZ3gxgudaTSlOfQ2Pefa4GFwgu2KdWD7hsenAD8l3/Q7iLErxZ/G2vx0YV02ZxeTa4vVUZRJH77AO0CWP1sCf3YZTSLtB+9XdpzWa2tMaSBTQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749738286; c=relaxed/simple;
-	bh=UB9pPWSFelC2u7NTQ7zW5F438SFKXFk/yswKxPVbq8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZwT8gQSHsX2IAJ2qsNgjULx3qXUaZhLfLTgZpO14JtUQpOzfsu4vb3CALEz5f4uEdZ9oddco4YAtq9Wd1dC4eizDDUaD5Kx4qconrlQIo6UsJlBBZqowqULTKHey261WkUuKvo1cqvhdk6t39492havEAbQcfSEI5NLRAnN31Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ir4g4Omd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749738298; c=relaxed/simple;
+	bh=n848NJ06tU1aMhvRmUA+JLpdZq1hoRv/nkLcBgujkYI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VYADbmsDiWza5zGNmTzd5WKSJhTwzbGtNTMX+oEffHZrmTiYak8qq91E3oqrPsZhAQ/ETKWwYFIeUjO36Y30m9X2sxwGZB14+aQ2fG0J0vsyclSjbGXuQ+PgRr0PmFeq8R7gRoY72RyJq9TWr1IZJgd2WZuNxY3KpPXio8n7lX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=NTT0IDBi; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ir4g4Omd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0C4EC4CEEA;
-	Thu, 12 Jun 2025 14:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749738286;
-	bh=UB9pPWSFelC2u7NTQ7zW5F438SFKXFk/yswKxPVbq8M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ir4g4OmdgZV29NnH05kdyoPyE5SQnR4sD6yVdz+YaWOeDgV5x5qXZ7iLriutwPYCw
-	 enkCPPQiXcWYEOUqVU0Mr7vRq78BLacpp0aTY0uF4fnWjWObFP4jp9Zq8f7b62iFWb
-	 ViAL3JscUTolhEyCMQydtMEcNV1nfEE2ZqjHZMQabtOFEt12tuk5U2yqW6CbOV8F1k
-	 JKmGKlPt+6S1NChEg9n3MmmsrUUzqNckBkHroFxymVR9BrBzCGlWnR+O6Y6eRk798T
-	 bZCTX8Z2QOAXYinZnA2j0DlhuMGYaav6cQmMo88W+S+ZKz/CMVtRs5s8ciPG48wWn6
-	 mMmNZcz7hye5Q==
-Date: Thu, 12 Jun 2025 16:24:38 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>, "David
- S. Miller" <davem@davemloft.net>, Ignacio Encinas Rubio
- <ignacio@iencinas.com>, Marco Elver <elver@google.com>, Shuah Khan
- <skhan@linuxfoundation.org>, Donald Hunter <donald.hunter@gmail.com>, Eric
- Dumazet <edumazet@google.com>, Jan Stancek <jstancek@redhat.com>, Paolo
- Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
- joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
- lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
- stern@rowland.harvard.edu, Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v2 0/2] Some extra patches for netlink doc generation
-Message-ID: <20250612162416.507c8a12@sal.lan>
-In-Reply-To: <cover.1749735022.git.mchehab+huawei@kernel.org>
-References: <cover.1749735022.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="NTT0IDBi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=UzBNYBaVd/RU8dYmTTL3ZxJIMxETu61GMjP6ByBX5DU=; b=NTT0IDBi0d3Btt7DjWXLdE87DA
+	eWeujd+N+GTAh25pqbR8HXJH+FdqBKm46xQNazhZQWPEsd0m1V7igMgIgIEESA2tkyrzP0cCoVElQ
+	DE2ugNCUvQ5hn9TXsBr4/pf7KoXfLBMAJrQneOL+i2X96cuu+xb0uBJZ78IKmF/AuW8WXAetKNmh+
+	FuxHGMrAwYFmUIqbXftNhtiZs9S+ZqLGXv99SgcUzHgm6qXBpg9BJuYA02Q8TwKD8QJ30reGVjNO7
+	Bmcov35CgxbsxXbLGlVSGYHclUjxVZJs6nF1dEnGuSWcqaZFWcmtqK511ommXglgZrVvwVkPKMqbA
+	ke3Lg8ug==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uPirH-000ANH-0S;
+	Thu, 12 Jun 2025 16:24:47 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uPirG-000CPH-0f;
+	Thu, 12 Jun 2025 16:24:46 +0200
+Message-ID: <9098ff24-435e-4e5b-a865-f446de933257@iogearbox.net>
+Date: Thu, 12 Jun 2025 16:24:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] potential negative index dereference fix in
+ get_exec_path()
+To: Ruslan Semchenko <uncleruc2075@gmail.com>, bpf@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, ast@kernel.org
+References: <20250612131816.1870-1-uncleruc2075@gmail.com>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <20250612131816.1870-1-uncleruc2075@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250612142438.MED5SEN3C-3RDQI5I1ELC-u8QJEjH8W4vUQRBdyK1tI@z>
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27666/Thu Jun 12 10:37:53 2025)
 
-Em Thu, 12 Jun 2025 15:41:29 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
-
-> This patch series comes after:
-> 	https://lore.kernel.org/linux-doc/cover.1749723671.git.mchehab+huawei@kernel.org/T/#t	
-> The first patch is meant to speedup glob time by not adding all yaml to the parser.
+On 6/12/25 3:18 PM, Ruslan Semchenko wrote:
+> If readlink() fails, len will be -1, which can cause negative indexing
+> and undefined behavior. This patch ensures that len is set to 0 on
+> readlink failure, preventing such issues.
 > 
-> The second one adjusts the location of netlink/specs/index.rst.
+> Signed-off-by: Ruslan Semchenko <uncleruc2075@gmail.com>
+
+Looks reasonable, thanks! When applying patch $subj can be tweaked into:
+
+   "tools/bpf_jit_disasm: Fix potential negative tpath index in get_exec_path()"
+
+(bpf-next tree is fine)
+
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+
+> ---
+>   tools/bpf/bpf_jit_disasm.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> With that, on my AMD Ryzen 9 7900 machine, the time to do a full build after a
-> cleanup is:
-> 
-> real    7m29,196s
-> user    14m21,893s
-> sys     2m28,510s
+> diff --git a/tools/bpf/bpf_jit_disasm.c b/tools/bpf/bpf_jit_disasm.c
+> index 1baee9e2aba9..5ab8f80e2834 100644
+> --- a/tools/bpf/bpf_jit_disasm.c
+> +++ b/tools/bpf/bpf_jit_disasm.c
+> @@ -45,6 +45,8 @@ static void get_exec_path(char *tpath, size_t size)
+>   	assert(path);
+>   
+>   	len = readlink(path, tpath, size);
+> +	if (len < 0)
+> +		len = 0;
+>   	tpath[len] = 0;
+>   
+>   	free(path);
 
-Heh, funny enough, my laptop with i5-10210U CPU @ 1.60GHz builds it faster:
-
-real	6m2,075s
-user	18m47,334s
-sys	1m24,931s
-
-Both are running Sphinx version 8.1.3 with standard Fedora package. At my
-laptop, this is a bit slower than no using the extension:
-
-real	5m13,334s
-user	15m56,441s
-sys	1m4,072s
-
-but it is a lot cleaner, as, with the original way, there are several
-warnings after make cleandocs:
-
-	Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`rt-link<../../networking/netlink_spec/rt-link>`
-	Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`tc<../../networking/netlink_spec/tc>`
-	Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`tc<../../networking/netlink_spec/tc>`
-	Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
-	Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
-
-Because they refer to the temp .rst source files generated inside
-the source directory by the yaml conversion script.
-
-Regards,
-Mauro
