@@ -1,282 +1,494 @@
-Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBD4231855
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4019823185C;
+	Thu, 12 Jun 2025 09:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749722243; cv=none; b=AJqTrjsxvXAf+JACvtxqkN0MmWUtNkqpQxbEOjoYp2UD/rbBNjA0z++RRO0LoYZ6lftpW1q0Irjh2DDzmbmZal6IHUOXe7YM9obGzB0WBtWRJ6LsbDKzWm7JJvVu9HGMxewahNUSARIpsWtTcDd/MLRCiDOu1mADmclScuP+rZ4=
+	t=1749722244; cv=none; b=ZUAXuOthEQiP9ZKqHkEe47Et3BsE+Ro078VRCDw/fEVqimNWg84RZ84TK0GSC53mZauPQ7gakUrOS7Gxp8YqYWmCIxs1bAu2sFEoBXkqwnbxhboxdbS9u/oRNIh7Brkoq8ip7CfevJ8jhrE1NSn6i/qLDzXYCCdxziGFjmQLbMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749722243; c=relaxed/simple;
-	bh=mjMbfgITk2Hkrvt+/q4PsGJdu+bzWTcxSHjfX9ibzcM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MOojD1/Zs/8bMWAC3pkjeufhzTaa3GfLxeXUgUtgRfBMbmZ4shyg87a8mfCpV33lMn+cSJltjV6ChAindee7Nt6JmXa0nNCCMuj0lnCSaODhch5SPEaa01YvZHSDyyErMjlqP/Hlg0DjhVzc0qOarzhPH8+ccqVYP2MdKs3dYfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kwcNEQ46; arc=none smtp.client-ip=209.85.167.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749722244; c=relaxed/simple;
+	bh=srsv/AiJxJgqsSz57F4s8UnZtSOKWbHESiMEHWc796g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=T/L3NTptavpatkjIoCOqm/PDIxMLPVk77uGDIjT/a8fP1ROW5P8HHaIOV7pPX3TBrE+M+G9aN0tltTCzAdA4aG+hcekB+FHR86E+gksHf65Kgm41fBiw4u8Aifhgcn/Ca0riRAwPefO0tpPqndu88szSnQR948fQOy2m1sfw6uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SSyxfZed; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwcNEQ46"
-Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-5535652f42cso713015e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 02:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749722240; x=1750327040; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OSRM9k/RQWSVRwD76HjqRWEnCmz1Hd7ZuhdVaT//i8Y=;
-        b=kwcNEQ46jmAs3TiP1tfv1S+JyogWHL0WQFUvV49bqW6OjHjfffYDo1GAGE5J0eHNtA
-         dX0O7JGeJ0Kc4/dAfhdgxL8pZibTSA3e2/nm6JQB+soYEM3b50mEgYTYaYdOLqTfiCPL
-         v3g+nPUPXjEg7YQH5K0vP8CLbm1aRJ73TwMPWARJOBxOP3I1GKt66owAEb8hSfJvrOMF
-         Sc53G3eyS3xqInINBXLIMQUv5HxFW9jZR0VFr3mr8KC8M4eNUOJk31CyQHHhYqN6w3On
-         aJHkgsWQELwTYuLqAm50tdc6l0KKSEiw5DePliCW8JeCzX0UV0wCJ2FFTXXcQZSrElSs
-         j1gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749722240; x=1750327040;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OSRM9k/RQWSVRwD76HjqRWEnCmz1Hd7ZuhdVaT//i8Y=;
-        b=gLYsRDoKYodSPIgqUtU1m9bh9fBfe9cShxEcaaPmaJ5Yez5ueJIUry1oS9Aj9+0ZIA
-         DbShA6nW5JizLXCQgTrH4ghOagz9HU2BwVhO/ItCB+D5q+wHW0oB+L0at+eNv4+0MksU
-         mfuAmhvmP3h9oIemJWQkL55VPHoHGoWJlu7ul3jrD91K0vGgnIxVEAeITb+Uxiw4j93m
-         IZc+Ch/J+M6MIk6KqhOG+0mc3Uq8072D3NsShV9SbKcWCIllAtWTW0HIsi2oieJ8Woq3
-         H+SbP04lLe7m6WQyYCuQPh5longPDTklFmNuGYYUU4PjP3XpQe2gqgIDVM948mxVjylv
-         lDJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTgPM6woW3H6/G2OzSGhqtcKV6qnZXoKxdOKNPmhJJ88Zp+GjMSAFtiUoH8Ci36tK5zfK/OfZsiZplw7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1T5rARIyKvalbi/q65c4ioxjkcRa0NOqs2yazFkgG64VsAmtg
-	2G1GPGMsmb/IF2eqqlLF5eX2/tzLiOIrWHRHoKbIh0MS33AsQyPEsOXJSCbCy2LPvhDrV1Dxf4W
-	6UdwJpg+FnOVBaLBP6QMe+SbHvlfNZqeBr8httWSCFg==
-X-Gm-Gg: ASbGncu+Qd2uSExvOkpPA9kdYlvndzKf9xh0Rd/nBzsNH0n7SUP96ppZNucjQpW9MH1
-	NLKDbQWX07EjRBDNZnZKBj6umSf0lf59YkIoWsHGVIA1AbVvED3tj4AVYPYMS2YxXvXt+25hb90
-	QYo6rakYR43bKe6SFEGVHwWfbLJGVSDH3don68+lPPt33r
-X-Google-Smtp-Source: AGHT+IHDpQGsT60zVb8sUGzbq4KO1DcNZUxLsEHMr/v9GHtiTAissHONrSbIbh2/G1iA/rwEK5KDCxosAvl8nj/Nbes=
-X-Received: by 2002:a05:6512:3b0d:b0:553:a339:2c37 with SMTP id
- 2adb3069b0e04-553a3392fd3mr1124176e87.56.1749722239363; Thu, 12 Jun 2025
- 02:57:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SSyxfZed"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C8Cnln027397;
+	Thu, 12 Jun 2025 09:57:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Nxfhy0pYx9O/nztLjUmlUM34WDUnca9b7ZpkFADa1A4=; b=SSyxfZedo/0DX6C1
+	kyj1x883iqTYIp0KzC4MwXmux+HZ6/JhS4IDMz6zMKY/kc+ZgdRepGwwLGPp1Amf
+	0Z+dze7vl365d8Rz8e4/8vRf9zBY59TZdfivZac0tSmhtZDP+MtkidD8uQPTu9Sy
+	/lDICHddd4Y8yXJQ/yT31BKkp7YfBaVd1hkeMrAvBCI9whRmDmHt9nUyoRDo2gsg
+	uQh2EA4WuIRBgK84ZlkQN5r9R+KkWJBLndWHa8tmzFh5kB4eAk8rcdPoqQy+6iAm
+	/YOw0fa0e/aFahXn1zYrkgwQP3HTt1+K4zKjNk2uGB5oNavW8OxLRV6d69LFyvsJ
+	PD2etA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476jrhf0xw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 09:57:12 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55C9vBUq024133
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 09:57:11 GMT
+Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 12 Jun 2025 02:57:05 -0700
+From: Taniya Das <quic_tdas@quicinc.com>
+Date: Thu, 12 Jun 2025 15:25:13 +0530
+Subject: [PATCH v9 09/10] clk: qcom: videocc-qcs615: Add QCS615 video clock
+ controller driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407134712.93062-1-hupu.gm@gmail.com> <CANDhNCosvML9XKH8HV1QBXKzxt3zMWxzsPSUfYxoyPCORf6Krw@mail.gmail.com>
- <CADHxFxS+qpmD8r1uxru+VWLj=K616=jLKbBgUR3Ed7ZBY1gidg@mail.gmail.com>
- <CANDhNCqgCGtWubkuMpn=GdfLwP6d5kMEvbhoQL4oef5yf_74ug@mail.gmail.com>
- <CANDhNCqv0iFMJanxj4uTyOHGUGxfCqb18Ku+w5y9JFKRm0M=Rg@mail.gmail.com>
- <CADHxFxQoNOBCOMDsh0iNrdD=ke=YweVZgZrTWbBQRA8SYy9McA@mail.gmail.com>
- <CADHxFxRd66FB6=wgY2-NLxqiMGZui+um+h2LUe4+hwXabdUpVg@mail.gmail.com>
- <CANDhNCq+xE4dpecHio2x6TJXMXxhQjrDk1oCon=NR2b+k0Y9yQ@mail.gmail.com>
- <CADHxFxSVdt_oG=J=aJDfkOcYEBScUxKV=NZNUvgtkAj6sbWvGA@mail.gmail.com>
- <CADHxFxQ8GqndiKGT2z2aUFU5qQQSU1QxQR1CrHsaa8ShrJ6D+Q@mail.gmail.com>
- <CADHxFxRN5yPwk6jVcnz9dpsZaFk8=91Jto9euBiOnrYzqncfdQ@mail.gmail.com>
- <CANDhNCoLYSFfry3bKhdC+YC1JYhtcgDpGLHTt-5v_4yDtR9QQw@mail.gmail.com> <CADHxFxSiHJANrsXaOiSoUoBh8Z5Btrc4dRGHJwzLj4ebvy6ktg@mail.gmail.com>
-In-Reply-To: <CADHxFxSiHJANrsXaOiSoUoBh8Z5Btrc4dRGHJwzLj4ebvy6ktg@mail.gmail.com>
-From: hupu <hupu.gm@gmail.com>
-Date: Thu, 12 Jun 2025 17:57:07 +0800
-X-Gm-Features: AX0GCFsckPRtI8DFoiqf9a2cEts_mAfppzhpELPnrnLM2Nw8xiBumDEw2r-Y_F4
-Message-ID: <CADHxFxR0viFcaDOQAp=7cUhGOoRj_0eTd5trczwygxUu4Dw0gQ@mail.gmail.com>
-Subject: Re: [RFC 1/1] sched: Skip redundant operations for proxy tasks
- needing return migration
-To: John Stultz <jstultz@google.com>
-Cc: peterz@infradead.org, linux-kernel@vger.kernel.org, juri.lelli@redhat.com, 
-	vschneid@redhat.com, mingo@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, hupu@transsion.com, Suleiman Souhlal <suleiman@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250612-qcs615-mm-v9-clock-controllers-v9-9-b34dc78d6e1b@quicinc.com>
+References: <20250612-qcs615-mm-v9-clock-controllers-v9-0-b34dc78d6e1b@quicinc.com>
+In-Reply-To: <20250612-qcs615-mm-v9-clock-controllers-v9-0-b34dc78d6e1b@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Will Deacon
+	<will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<lumag@kernel.org>
+X-Mailer: b4 0.15-dev-aa3f6
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EovSrTcA c=1 sm=1 tr=0 ts=684aa478 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=JAwqC2qxYZ4pZjR4haUA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: zI2Q91wd0casNl_RAWPBHe5KO_RlKIJG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA3NiBTYWx0ZWRfX9ENUA4/v8+RB
+ seFC5kdvLgnDDiF4W98GhQ05adNfku0WRRMGjZXxcH3OLNjzZZ1aPApIraoDxIlnJhaKggh5hHc
+ kdfqhlhV6wHLBAu/GcP4rUtOL+ng0V61zlz7SKEfdb1hxr/lOdI/DKv7H8PDq/hZRkRgBMZ2iaX
+ 8YWd3P5NOV0/zDBeQjgVXi98+uniey7JHWoXD7t85J6ycm/fwndGwbQqsQzTZyYCrnYzWJr5GDQ
+ op/sQdAo7yKpRa5inSmVilnAos8VX15tWIlGy30zj03Ch0gn/V1yqrQP3Dkhm0j3+8twHOcVlxB
+ vs1MX0S8Zmh2ltfKbLIK/esROC7AYuxPpoPjeCAIcnS0G4EBcpFE3kzsOUQqM/BptMYmgyHh8w5
+ 83k6prWKmgIds+t2uDu0VnECuAC6O4OBRZljBthVPsWwLjxna2g37KQG2w65lkhcdB0cyFqO
+X-Proofpoint-GUID: zI2Q91wd0casNl_RAWPBHe5KO_RlKIJG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
+ mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506120076
 
-Hi John
+Add support for the video clock controller for video clients to
+be able to request for the clocks on QCS615 platform.
 
-> Unfortunately I've also been tripping over a crash with the full
-> series (not the portion I'm currently submitting upstream) that often
-> takes 30+ hours to reproduce and extra debugging logic seems to make
-> it even harder to hit.
->
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+---
+ drivers/clk/qcom/Kconfig          |   8 +
+ drivers/clk/qcom/Makefile         |   1 +
+ drivers/clk/qcom/videocc-qcs615.c | 332 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 341 insertions(+)
 
-I encountered a strange crash while running the code from the
-proxy-exec-v17-WIP branch for over 150+ hours. I'm currently unsure if
-this issue is the same as the one you mentioned.
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 2dd2937fd2a75e2ac4a72a45f5580f49dbb83fa0..b739f77b8555326464b2ae56b73d8ba9cca870d0 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -556,6 +556,14 @@ config QCS_GPUCC_615
+ 	  Say Y if you want to support graphics controller devices and
+ 	  functionality such as 3D graphics.
+ 
++config QCS_VIDEOCC_615
++	tristate "QCS615 Video Clock Controller"
++	select QCS_GCC_615
++	help
++	  Support for the video clock controller on QCS615 devices.
++	  Say Y if you want to support video devices and functionality such as
++	  video encode and decode.
++
+ config SC_CAMCC_7180
+ 	tristate "SC7180 Camera Clock Controller"
+ 	depends on ARM64 || COMPILE_TEST
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index f2b95008ee4e682bb3eb67ec9774d0feb05aef3f..76b3af774a17539ef57f939b816d005d96dd779e 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -79,6 +79,7 @@ obj-$(CONFIG_QCS_GCC_404) += gcc-qcs404.o
+ obj-$(CONFIG_QCS_GCC_615) += gcc-qcs615.o
+ obj-$(CONFIG_QCS_GCC_8300) += gcc-qcs8300.o
+ obj-$(CONFIG_QCS_GPUCC_615) += gpucc-qcs615.o
++obj-$(CONFIG_QCS_VIDEOCC_615) += videocc-qcs615.o
+ obj-$(CONFIG_QCS_Q6SSTOP_404) += q6sstop-qcs404.o
+ obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
+ obj-$(CONFIG_QDU_ECPRICC_1000) += ecpricc-qdu1000.o
+diff --git a/drivers/clk/qcom/videocc-qcs615.c b/drivers/clk/qcom/videocc-qcs615.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..14704185d9fa2548ade7dd60f4f9f5d378bb0938
+--- /dev/null
++++ b/drivers/clk/qcom/videocc-qcs615.c
+@@ -0,0 +1,332 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#include <dt-bindings/clock/qcom,qcs615-videocc.h>
++
++#include "clk-alpha-pll.h"
++#include "clk-branch.h"
++#include "clk-pll.h"
++#include "clk-rcg.h"
++#include "clk-regmap.h"
++#include "clk-regmap-divider.h"
++#include "clk-regmap-mux.h"
++#include "common.h"
++#include "gdsc.h"
++#include "reset.h"
++
++enum {
++	DT_BI_TCXO,
++	DT_SLEEP_CLK,
++};
++
++enum {
++	P_BI_TCXO,
++	P_SLEEP_CLK,
++	P_VIDEO_PLL0_OUT_AUX,
++	P_VIDEO_PLL0_OUT_AUX2,
++	P_VIDEO_PLL0_OUT_MAIN,
++};
++
++static const struct pll_vco video_cc_pll0_vco[] = {
++	{ 500000000, 1000000000, 2 },
++};
++
++/* 600MHz configuration VCO - 2 */
++static struct alpha_pll_config video_pll0_config = {
++	.l = 0x1f,
++	.alpha_hi = 0x40,
++	.alpha = 0x00,
++	.alpha_en_mask = BIT(24),
++	.vco_val = BIT(21),
++	.vco_mask = GENMASK(21, 20),
++	.main_output_mask = BIT(0),
++	.config_ctl_val = 0x4001055b,
++	.test_ctl_hi_val = 0x1,
++	.test_ctl_hi_mask = 0x1,
++};
++
++static struct clk_alpha_pll video_pll0 = {
++	.offset = 0x42c,
++	.vco_table = video_cc_pll0_vco,
++	.num_vco = ARRAY_SIZE(video_cc_pll0_vco),
++	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
++	.clkr = {
++		.hw.init = &(const struct clk_init_data) {
++			.name = "video_pll0",
++			.parent_data = &(const struct clk_parent_data) {
++				.index = DT_BI_TCXO,
++			},
++			.num_parents = 1,
++			.ops = &clk_alpha_pll_slew_ops,
++		},
++	},
++};
++
++static const struct parent_map video_cc_parent_map_0[] = {
++	{ P_SLEEP_CLK, 0 },
++};
++
++static const struct clk_parent_data video_cc_parent_data_0_ao[] = {
++	{ .index = DT_SLEEP_CLK },
++};
++
++static const struct parent_map video_cc_parent_map_1[] = {
++	{ P_BI_TCXO, 0 },
++	{ P_VIDEO_PLL0_OUT_MAIN, 1 },
++	{ P_VIDEO_PLL0_OUT_AUX, 2 },
++	{ P_VIDEO_PLL0_OUT_AUX2, 3 },
++};
++
++static const struct clk_parent_data video_cc_parent_data_1[] = {
++	{ .index = DT_BI_TCXO },
++	{ .hw = &video_pll0.clkr.hw },
++	{ .hw = &video_pll0.clkr.hw },
++	{ .hw = &video_pll0.clkr.hw },
++};
++
++static const struct freq_tbl ftbl_video_cc_sleep_clk_src[] = {
++	F(32000, P_SLEEP_CLK, 1, 0, 0),
++	{ }
++};
++
++static struct clk_rcg2 video_cc_sleep_clk_src = {
++	.cmd_rcgr = 0xaf8,
++	.mnd_width = 0,
++	.hid_width = 5,
++	.parent_map = video_cc_parent_map_0,
++	.freq_tbl = ftbl_video_cc_sleep_clk_src,
++	.clkr.hw.init = &(const struct clk_init_data) {
++		.name = "video_cc_sleep_clk_src",
++		.parent_data = video_cc_parent_data_0_ao,
++		.num_parents = ARRAY_SIZE(video_cc_parent_data_0_ao),
++		.ops = &clk_rcg2_ops,
++	},
++};
++
++static const struct freq_tbl ftbl_video_cc_venus_clk_src[] = {
++	F(19200000, P_BI_TCXO, 1, 0, 0),
++	F(133333333, P_VIDEO_PLL0_OUT_MAIN, 4.5, 0, 0),
++	F(240000000, P_VIDEO_PLL0_OUT_MAIN, 2.5, 0, 0),
++	F(300000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
++	F(380000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
++	F(410000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
++	F(460000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
++	{ }
++};
++
++static struct clk_rcg2 video_cc_venus_clk_src = {
++	.cmd_rcgr = 0x7f0,
++	.mnd_width = 0,
++	.hid_width = 5,
++	.parent_map = video_cc_parent_map_1,
++	.freq_tbl = ftbl_video_cc_venus_clk_src,
++	.clkr.hw.init = &(const struct clk_init_data) {
++		.name = "video_cc_venus_clk_src",
++		.parent_data = video_cc_parent_data_1,
++		.num_parents = ARRAY_SIZE(video_cc_parent_data_1),
++		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_rcg2_shared_ops,
++	},
++};
++
++static struct clk_branch video_cc_sleep_clk = {
++	.halt_reg = 0xb18,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0xb18,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "video_cc_sleep_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &video_cc_sleep_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch video_cc_vcodec0_axi_clk = {
++	.halt_reg = 0x8f0,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x8f0,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "video_cc_vcodec0_axi_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch video_cc_vcodec0_core_clk = {
++	.halt_reg = 0x890,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x890,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "video_cc_vcodec0_core_clk",
++			.parent_hws = (const struct clk_hw*[]) {
++				&video_cc_venus_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch video_cc_venus_ahb_clk = {
++	.halt_reg = 0x9b0,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x9b0,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "video_cc_venus_ahb_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch video_cc_venus_ctl_axi_clk = {
++	.halt_reg = 0x8d0,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x8d0,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "video_cc_venus_ctl_axi_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch video_cc_venus_ctl_core_clk = {
++	.halt_reg = 0x850,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x850,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "video_cc_venus_ctl_core_clk",
++			.parent_hws = (const struct clk_hw*[]) {
++				&video_cc_venus_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct gdsc vcodec0_gdsc = {
++	.gdscr = 0x874,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0x6,
++	.pd = {
++		.name = "vcodec0_gdsc",
++	},
++	.pwrsts = PWRSTS_OFF_ON,
++	.flags = HW_CTRL_TRIGGER | POLL_CFG_GDSCR,
++};
++
++static struct gdsc venus_gdsc = {
++	.gdscr = 0x814,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0x6,
++	.pd = {
++		.name = "venus_gdsc",
++	},
++	.pwrsts = PWRSTS_OFF_ON,
++	.flags = POLL_CFG_GDSCR,
++};
++
++static struct clk_regmap *video_cc_qcs615_clocks[] = {
++	[VIDEO_CC_SLEEP_CLK] = &video_cc_sleep_clk.clkr,
++	[VIDEO_CC_SLEEP_CLK_SRC] = &video_cc_sleep_clk_src.clkr,
++	[VIDEO_CC_VCODEC0_AXI_CLK] = &video_cc_vcodec0_axi_clk.clkr,
++	[VIDEO_CC_VCODEC0_CORE_CLK] = &video_cc_vcodec0_core_clk.clkr,
++	[VIDEO_CC_VENUS_AHB_CLK] = &video_cc_venus_ahb_clk.clkr,
++	[VIDEO_CC_VENUS_CLK_SRC] = &video_cc_venus_clk_src.clkr,
++	[VIDEO_CC_VENUS_CTL_AXI_CLK] = &video_cc_venus_ctl_axi_clk.clkr,
++	[VIDEO_CC_VENUS_CTL_CORE_CLK] = &video_cc_venus_ctl_core_clk.clkr,
++	[VIDEO_PLL0] = &video_pll0.clkr,
++};
++
++static struct gdsc *video_cc_qcs615_gdscs[] = {
++	[VCODEC0_GDSC] = &vcodec0_gdsc,
++	[VENUS_GDSC] = &venus_gdsc,
++};
++
++static const struct qcom_reset_map video_cc_qcs615_resets[] = {
++	[VIDEO_CC_INTERFACE_BCR] = { 0x8b0 },
++	[VIDEO_CC_VCODEC0_BCR] = { 0x870 },
++	[VIDEO_CC_VENUS_BCR] = { 0x810 },
++};
++
++static const struct regmap_config video_cc_qcs615_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.max_register = 0xb94,
++	.fast_io = true,
++};
++
++static const struct qcom_cc_desc video_cc_qcs615_desc = {
++	.config = &video_cc_qcs615_regmap_config,
++	.clks = video_cc_qcs615_clocks,
++	.num_clks = ARRAY_SIZE(video_cc_qcs615_clocks),
++	.resets = video_cc_qcs615_resets,
++	.num_resets = ARRAY_SIZE(video_cc_qcs615_resets),
++	.gdscs = video_cc_qcs615_gdscs,
++	.num_gdscs = ARRAY_SIZE(video_cc_qcs615_gdscs),
++};
++
++static const struct of_device_id video_cc_qcs615_match_table[] = {
++	{ .compatible = "qcom,qcs615-videocc" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, video_cc_qcs615_match_table);
++
++static int video_cc_qcs615_probe(struct platform_device *pdev)
++{
++	struct regmap *regmap;
++
++	regmap = qcom_cc_map(pdev, &video_cc_qcs615_desc);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	clk_alpha_pll_configure(&video_pll0, regmap, &video_pll0_config);
++
++	/* Keep some clocks always enabled */
++	qcom_branch_set_clk_en(regmap, 0xab8); /* VIDEO_CC_XO_CLK */
++
++	return qcom_cc_really_probe(&pdev->dev, &video_cc_qcs615_desc, regmap);
++}
++
++static struct platform_driver video_cc_qcs615_driver = {
++	.probe = video_cc_qcs615_probe,
++	.driver = {
++		.name = "videocc-qcs615",
++		.of_match_table = video_cc_qcs615_match_table,
++	},
++};
++
++module_platform_driver(video_cc_qcs615_driver);
++
++MODULE_DESCRIPTION("QTI VIDEOCC QCS615 Driver");
++MODULE_LICENSE("GPL");
 
-Here is the dmesg log at the time of the crash:
+-- 
+2.34.1
 
-[550195.352234][    C2] watchdog: BUG: soft lockup - CPU#2 stuck for
-32s! [lock_torture_wr:139]
-[550195.374670][    C2] Modules linked in:
-[550195.375936][    C2] irq event stamp: 189580674
-[550195.376275][    C2] hardirqs last  enabled at (189580673):
-[<ffff8000813b7840>] exit_to_kernel_mode.isra.6+0xf8/0x130
-[550195.393675][    C2] hardirqs last disabled at (189580674):
-[<ffff8000813b78a4>] el1_interrupt+0x2c/0x70
-[550195.393779][    C2] softirqs last  enabled at (189580644):
-[<ffff80008005f7dc>] handle_softirqs+0x4b4/0x4cc
-[550195.396778][    C2] softirqs last disabled at (189580639):
-[<ffff800080010654>] __do_softirq+0x18/0x20
-[550195.406109][    C2] CPU: 2 UID: 0 PID: 139 Comm: lock_torture_wr
-Not tainted 6.12.0-00050-gf6c6e0ea8a1d-dirty #133
-[550195.406661][    C2] Hardware name: linux,dummy-virt (DT)
-[550195.407172][    C2] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO
--DIT -SSBS BTYPE=--)
-[550195.407396][    C2] pc : queued_spin_lock_slowpath+0x270/0x528
-[550195.408270][    C2] lr : queued_spin_lock_slowpath+0x3a8/0x528
-[550195.408358][    C2] sp : ffff800084d83d20
-[550195.408494][    C2] x29: ffff800084d83d20 x28: 28f5c28f5c28f5c3
-x27: 0000000000000000
-[550195.408985][    C2] x26: ffff800081ef3000 x25: 0000000000000000
-x24: 0000000000000002
-[550195.409158][    C2] x23: ffff800083532000 x22: ffff800082b55000
-x21: ffff00002c286740
-[550195.409322][    C2] x20: ffff800081ef3000 x19: ffff80008355b348
-x18: ffff800081ce6e48
-[550195.409522][    C2] x17: ffff7fffa954e000 x16: 000000006c0014e7
-x15: ffff8000835321f0
-[550195.409681][    C2] x14: 0001f45e95248cf0 x13: 0000000000000100
-x12: 0000000000000000
-[550195.409875][    C2] x11: 00000000002dc6c0 x10: 0000000000000000 x9
-: ffff7fffa9731000
-[550195.410102][    C2] x8 : ffff800081ef3fb8 x7 : 0000000000000000 x6
-: 00000000000c0000
-[550195.410262][    C2] x5 : ffff8000835365e8 x4 : 0000000000000000 x3
-: 0000000000000000
-[550195.410451][    C2] x2 : 0000000000000000 x1 : ffff00002c286740 x0
-: ffff00002c286748
-[550195.410849][    C2] Call trace:
-[550195.410995][    C2]  queued_spin_lock_slowpath+0x270/0x528
-[550195.411265][    C2]  do_raw_spin_lock+0xac/0x11c
-[550195.421183][    C2]  _raw_spin_lock+0x74/0x90
-[550195.421264][    C2]  torture_spin_lock_write_lock+0x1c/0x28
-[550195.421333][    C2]  lock_torture_writer+0x104/0x2f4
-[550195.421397][    C2]  kthread+0x128/0x134
-[550195.421600][    C2]  ret_from_fork+0x10/0x20
-[550195.422007][    C1] watchdog: BUG: soft lockup - CPU#1 stuck for
-32s! [lock_torture_wr:144]
-[550195.422780][    C2] Kernel panic - not syncing: softlockup: hung tasks
-[550195.423616][    C2] CPU: 2 UID: 0 PID: 139 Comm: lock_torture_wr
-Tainted: G             L     6.12.0-00050-gf6c6e0ea8a1d-dirty #133
-[550195.423813][    C2] Tainted: [L]=SOFTLOCKUP
-[550195.423929][    C2] Hardware name: linux,dummy-virt (DT)
-[550195.424123][    C2] Call trace:
-[550195.424174][    C2]  dump_backtrace.part.8+0x8c/0xe8
-[550195.424232][    C2]  show_stack+0x2c/0x38
-[550195.424256][    C2]  dump_stack_lvl+0x6c/0xcc
-[550195.424999][    C2]  dump_stack+0x14/0x1c
-[550195.425050][    C2]  panic+0x150/0x428
-[550195.425121][    C2]  watchdog_timer_fn+0x258/0x2e8
-[550195.426192][    C2]  __hrtimer_run_queues+0x3bc/0x4a0
-[550195.426651][    C2]  hrtimer_interrupt+0xd8/0x248
-[550195.426680][    C2]  arch_timer_handler_virt+0x38/0x58
-[550195.427608][    C2]  handle_percpu_devid_irq+0xac/0x2cc
-[550195.427676][    C2]  generic_handle_domain_irq+0x40/0x58
-[550195.427743][    C2]  gic_handle_irq+0x64/0x124
-[550195.427771][    C2]  call_on_irq_stack+0x24/0x34
-[550195.427832][    C2]  do_interrupt_handler+0x90/0x94
-[550195.427865][    C2]  el1_interrupt+0x3c/0x70
-[550195.427899][    C2]  el1h_64_irq_handler+0x14/0x1c
-[550195.427960][    C2]  el1h_64_irq+0x64/0x68
-[550195.427989][    C2]  queued_spin_lock_slowpath+0x270/0x528
-[550195.428021][    C2]  do_raw_spin_lock+0xac/0x11c
-[550195.428051][    C2]  _raw_spin_lock+0x74/0x90
-[550195.428082][    C2]  torture_spin_lock_write_lock+0x1c/0x28
-[550195.428115][    C2]  lock_torture_writer+0x104/0x2f4
-[550195.428147][    C2]  kthread+0x128/0x134
-[550195.428182][    C2]  ret_from_fork+0x10/0x20
-[550195.428564][    C2] SMP: stopping secondary CPUs
-[550195.448256][    C2] Kernel Offset: disabled
-[550195.450640][    C2] CPU features: 0x00,00000019,40203020,560042af
-[550195.451534][    C2] Memory Limit: none
-[550195.452853][    C2] ---[ end Kernel panic - not syncing:
-softlockup: hung tasks ]---
-
-
-At the time of the crash, all CPU call stacks were identical. From the
-call stack at level #15, it is evident that all threads are waiting
-for the `torture_spinlock` lock in kernel/locking/locktorture.c.
-
--000|cpu_park_loop(inline)
--000|local_cpu_stop(cpu = 0)
--001|panic_smp_self_stop()
--002|panic(:fmt = 0xFFFF800081CFC838)
--003|watchdog_timer_fn(:hrtimer = 0xFFFF00002BEAEE20)
--004|__run_hrtimer(inline)
--004|__hrtimer_run_queues(:cpu_base = 0xFFFF00002BEAE0C0, :now =
-550186225371571, :flags = 192, :active_mask = 15)
--005|hrtimer_interrupt(:dev = 0xFFFF00002BEC4A80)
--006|timer_handler(inline)
--006|arch_timer_handler_virt(:irq = 11, dev_id = 0xFFFF00002BEC4A80)
--007|handle_percpu_devid_irq(desc = 0xFFFF000004C2C400)
--008|generic_handle_irq_desc(inline)
--008|handle_irq_desc(inline)
--008|generic_handle_domain_irq(domain = 0xFFFF000004E50000, :hwirq = 27)
--009|__gic_handle_irq(inline)
--009|__gic_handle_irq_from_irqson(inline)
--009|gic_handle_irq(regs = ?)
--010|call_on_irq_stack(asm)
--011|do_interrupt_handler(:regs = 0xFFFF800084D4BBD0, :handler =
-0xFFFF80008001020C)
--012|__el1_irq(inline)
--012|el1_interrupt(regs = 0xFFFF800084D4BBD0, handler = 0xFFFF80008001020C)
--013|el1h_64_irq_handler(regs = ?)
--014|el1h_64_irq(asm)
--015|trace_contention_begin(inline)
--015|queued_spin_lock_slowpath(:lock = 0xFFFF80008355B348, val = ?)
--016|queued_spin_lock(inline)
--016|do_raw_spin_lock(:lock = 0xFFFF80008355B348)
--017|__raw_spin_lock(inline)
--017|_raw_spin_lock(:lock = 0xFFFF80008355B348)
--018|spin_lock(inline)
--018|torture_spin_lock_write_lock(:tid = 0)
--019|lock_torture_writer(:arg = 0xFFFF0000060A4800)
--020|kthread(_create = 0xFFFF000006074500)
--021|ret_from_fork(asm)
--022|NSX:0x0::0xFFFFFFFFFF5F8000(asm)
- ---|end of frame
-
-crash_arm64> sym torture_spinlock
-ffff80008355b348 (d) torture_spinlock
-crash_arm64>
-
-
-However, based on the crash site, it appears that no thread is
-currently holding the `torture_spinlock` lock, yet other threads on
-different CPUs are still waiting for this lock, which is confusing to
-me.
-
-crash_arm64> struct -x  raw_spinlock 0xFFFF80008355B348
-struct raw_spinlock {
-  raw_lock = {
-    {
-      val = {
-        counter = 0x180000
-      },
-      {
-        locked = 0x0,
-        pending = 0x0
-      },
-      {
-        locked_pending = 0x0,
-        tail = 0x18
-      }
-    }
-  },
-  magic = 0xdead4ead,
-  owner_cpu = 0xffffffff,
-  owner = 0xffffffffffffffff,
-  dep_map = {
-    key = 0xffff80008355b360 <torture_spinlock+24>,
-    class_cache = {0xffff8000841d9e58 <lock_classes+127248>, 0x0},
-    name = 0xffff800081cebe90 "torture_spinlock",
-    wait_type_outer = 0x0,
-    wait_type_inner = 0x3,
-    lock_type = 0x0,
-    cpu = 0x5,
-    ip = 0xffff8000800f30b8
-  }
-}
-crash_arm64>
-
-Although I haven't yet pinpointed the root cause of this issue, I
-would like to confirm whether the problem I'm encountering is the same
-as the one you described.
-
-If possible, could you share the dmesg log and call stack information
-of the crash you encountered?
-
-Thanks.
-hupu
