@@ -1,113 +1,283 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2570B2BDC13;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2200A2BDC00;
 	Thu, 12 Jun 2025 17:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749749328; cv=none; b=bsy09k9mhWlsG6P0B/MqvZk89TKBVtSLXnIwopgHY6W9IlqZ+i6K39Ojfm2zCPuK5XLx8AtJDCJexRfxVgyaiFESo6rxH7Bm8uvuyIk8v9mGQF9QEgaU/VKd0nIrz5bWFnxwogPli47tJpR1Tuq1pagnyMJPibTNkISmdFjpz1U=
+	t=1749749327; cv=none; b=CNHl6dyJBWNOV9eTO7YxnuBB4lqRY3D2zaVYuXNt+kczjXeFU4RhQMNLbx/yoW/ZgZPVbdPbKXY3RF3VR0LKf/FJJURVAfZUJjyAP0sw+sxyrA27C+Om2kc4gd9zWbg/wfQWodXRsaltPxkhipHfl5A/HnYVLZIjVV6fDnr0Gg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749749328; c=relaxed/simple;
-	bh=cVzggo6fwLrjSrHwgdYTjOmIIJBC25mHFWhaLr0wgiM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YGp5p4hFNTO4pcw5WJZAiCWz0ZXOkt01gXbsAUnCwmhza6tDSP7F6qeW7eL62p85kJhrhBvr4cXn6t9aJsieUMf6El8V9nwPpHQRF5xD0mV+fTk2TdNv8JOhLy5kwykTUAJu5NSpYH19Ax5p6cYFjbeAaoJXKoieKyns+YxROpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HPs34fLD; arc=none smtp.client-ip=209.85.219.42
+	s=arc-20240116; t=1749749327; c=relaxed/simple;
+	bh=AozvK/5U+6wBXRp41xZyaThogAWf0PSIUKgwcAN2z2g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YQa92bQ7G1dvmUGxURGaBNHPeiZong7j2dbeYonI3UtFRFjOkb1yEM2Fzlfj+/w25s5jJF63sMeaNp+87Eo3cnDkBczIQHeaKCyTGMptz54gyjcrCLa5lacLB9bj5A+cWaxaF8luAkyX3s23GbwoSozpysFeq4I8ZZmVK3u+7sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Obw8W6sE; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPs34fLD"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6fad4a1dc33so13182356d6.1;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Obw8W6sE"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b26f5f47ba1so1064665a12.1;
         Thu, 12 Jun 2025 10:28:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1749749325; x=1750354125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cVzggo6fwLrjSrHwgdYTjOmIIJBC25mHFWhaLr0wgiM=;
-        b=HPs34fLDKSMvYESblLH9V3YVsR/e8F98chIh2PgE5PC4u5s1pkJf3oznZu1+PkFb+x
-         Uu0dftyeVSLS4O7Q6xYf0XY6aWCr+bt9Kru75wWs2zOLcSHRPO4g7Qx53VL/c1g6IEIL
-         ISrLrWKk3yTFPnA51TH4U5I9KNCv7lRvsf60Sh1xjZcS5vQYv2Pi7EH7qny82eFKnJye
-         WZ2mJIL01dgCscDhTSqLHXtC4vS2AxfqBoGxOQLMfdxRVtsCQxsQeJtDHcw87uV5LjNp
-         2npYbXPIJvx5pJxF4GR//TXgVY2hgjz+r1Nye8RLDfwADRIcOCEqEtCH7/HAdfCN/kq8
-         zX5g==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UmuUO8nQoY3c7DRNnxZ7kn0ESbqmdfBPxrOAUf2SnQg=;
+        b=Obw8W6sEKB6tlBCBbHT84FpdFxrkJ/282T7flXfuDRjQbRiVoGxsRNIpygJQAoU/Dd
+         WwlrgY8gEHhTfnvNhd4Ag8hRcmz/f5HEWMkxCIyjAPVCXy9SGOKjXjxY/CxzLImRbIK6
+         u0rnxHa2DaL1jFRbvCy3JxIu+pXkCPnWONhUQnsHkxdWza0hM4Fg80zyn0Q3cr5ramJK
+         duKj+ZFHgUi38eCfX14o2QIxDyobpiIoopjmoIU7AtPX44KT1dMc0+BUoGPfKLOqDVg8
+         M9D+tiW+53UegtfVM37SDqz7MsxQcoucn2FnYnVfnxEzUiasPWqGfQB/y1suwuleRcwz
+         VyOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1749749325; x=1750354125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cVzggo6fwLrjSrHwgdYTjOmIIJBC25mHFWhaLr0wgiM=;
-        b=baZHbcWlCGIeJyDRXZeasHn+OQOthPwtWY/fbPv4JhuL66nEEa2r2dOJSe5nYnr5ty
-         J5e3IdqCS/3QGaxP+1rJ31t1HJKRAkInh3qf5ZHymdVzrNE6gKp8hmgnUoMSfy3Tz+Ca
-         ZASeqKzW8ei/ZYIfAzjxHUjA45aM0Ql0w7s9KkxdizQ56nkV5uTSuXL+4PSyFmtaEtVh
-         wLSmRJ8NCZz+sH/eW22jvwPhfYkeEQDnv8t2PBH1fdwXV1qclDCBACrwKhTMJli+rLuE
-         2mWdrc0JY/5bP+ViCLtI/QU9v2S/cbwIsRrXJKrJWLRT94MC6aAguK7R/jzZVw7EE6sE
-         3QOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWE5FH30lj65lXp9mridrqUJ97It1x/wLh7WpVAuKe48gu9V7HHUe/PVgHwUfuqN1hH1n07RwewYq+wcjH2@vger.kernel.org, AJvYcCWzRRoHiS4gaJLx1NxB4U+j7B0O+bHJ5og06Y5y8BRa5BjCoHs+fwi3aVtM6NHaboWyDXHRAI4I@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAcTfB+RsTOLR3hK8VnkkLfk65tKgRElBkrJ1BCeyW0ySA379t
-	RNIhXMLQMIdP87iBbiJfHgqLRDxJ0KNXWNy5W5fgY78rwYrOEJGTDWgV4sC8v13BStiKjTekQ1H
-	Og8qX9p+J6nI0LHBybis5sE3jmpw+RMI=
-X-Gm-Gg: ASbGncuiBJqG/VkaDxvXu13dKTdp6xPCCZ+y4xCJ4RpjnhwOzR6Zt1agmFNQDIb9oYq
-	0Hdj+vcf+3bVYuWdYu6M0LG3vKzSnFTPdxD7RmxwTH6EarGZczuVO84xB+zJ0VZIaM6+hHn4c7A
-	9ZD5enHmpqAc8Zba3jpEHXsXOwHxxcnB28vZbaBIUqqBCSMPVhhQ1RFTaGXBk=
-X-Google-Smtp-Source: AGHT+IEXdxdD53pTjTM8GX7O6wNncG5C9alVq4mW+efekyq5EYpQPguf/NrZNanJT1ZnJiDheX47I0CCs9OiXFq+bqQ=
-X-Received: by 2002:ad4:4eee:0:b0:6fb:1db:e9e7 with SMTP id
- 6a1803df08f44-6fb3460dcb6mr74029396d6.10.1749749324580; Thu, 12 Jun 2025
- 10:28:44 -0700 (PDT)
+        bh=UmuUO8nQoY3c7DRNnxZ7kn0ESbqmdfBPxrOAUf2SnQg=;
+        b=eAG10S0cnxwbBHmVVqFvwkjnQY1rWgyzwkdb4CD7DjHbm2+ov5c7Bmf7N4Ked0tf+8
+         9ctIgEPnl6gb5EfP4bF9HwJMCAcNNza0oN2oMPeW6Jcbi7Sw7FZmfXfeBNP2AmimbjpO
+         qPCovezPSjnl0qD9h5+grzJazr5ZFEWLGkQ5H01uyUMq7mUY9xipdeiNPhc/EYg3Mg6d
+         wqmAIHsbCappx4lXjg3egG+h7AE5l2/x53nPIuMdlChMZB7yr9Xu6Bh1BLJtCftKpVbS
+         7GAKAEB3KQCoi+GICClNq3psBLqMc5bkUY0t/Ppkts3QWAipXRDXcOgIV/t1L4o93+Ux
+         kvQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVK7tNxErugodUDPEGxjNXFWuxOdjAVPdpcbVfdXO4yZNyYRCU5T7SAp5PB+lBqxBo6O8AVoYKD09JHfMjz@vger.kernel.org, AJvYcCWY/Ow7pE8N13RLMlFvoSFOkEHHubqFJ7LKjJKjcYF5823g9w585VLctmVqaQOdfqkPidD7shEeqZZe@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlr4il3Lk3HD9Y4zh4YOwHl+p0KIj7kukmTkbRSsc2rh9zzJ3T
+	9R+LJIpxLslw5S9VXCgNQdII1mh/BKTIqlu0KAb6sV40Db4cdP9tHPgY
+X-Gm-Gg: ASbGnctb8OOJZxyA7HrpCx+Cg3zU9XreB2o/vAdCB9DNKwa3cIMy72/pebD7i9ecyCY
+	9pq1rqG8gGfl7dBCERNFRxcJ95CTfKS7j85svJeItA/0fgCIo8sCbZ5yIUDbaZ4jI4+MGIE6Gyj
+	2NbLJJmGoqx6IPBpdKgnojPSmJ+wuaP3PXd5JM8QlvtofXuOpBKpwkmywELOk82VpW23Suk3ipp
+	hW0Yix4A0GZBD5fRf7ag0RiQW+iLid6ty+V7b3+0VquC5XhIj0HWM9SuZCFdCWNLeXf9xNHSx49
+	wRdsLfwRBYLVso0DUkNWwySwXtUuhlfwPy9cip8vzQsen/WTSHohnm2SYHpw/C6bP0BuGJExJgn
+	ANZJdg+nTcuktNSBQ0LSm
+X-Google-Smtp-Source: AGHT+IGD0uYZhWH0OKCohG5z9EZ68VQHAMQbmcy/0Ff19PH2tXQ5aYKeM50xbHDWiR90sfEGEIPptQ==
+X-Received: by 2002:a05:6a20:9e4d:b0:218:bcbf:52f9 with SMTP id adf61e73a8af0-21f978f4abcmr6132869637.42.1749749325294;
+        Thu, 12 Jun 2025 10:28:45 -0700 (PDT)
+Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd6362e28sm1665891a12.66.2025.06.12.10.28.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 10:28:44 -0700 (PDT)
+From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
+Date: Thu, 12 Jun 2025 14:28:10 -0300
+Subject: [PATCH v3 3/3] hwmon: (amc6821) Add cooling device support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612103743.3385842-1-youngjun.park@lge.com>
- <20250612103743.3385842-3-youngjun.park@lge.com> <CAMgjq7BJE9ALFG4N8wb-hdkC+b-8d1+ckXL9D6pbbfgiXfuzPA@mail.gmail.com>
-In-Reply-To: <CAMgjq7BJE9ALFG4N8wb-hdkC+b-8d1+ckXL9D6pbbfgiXfuzPA@mail.gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Thu, 12 Jun 2025 10:28:33 -0700
-X-Gm-Features: AX0GCFuF9SfcQkfWFU5D6MhImUNQ-lwvv6Y8pN7241v7yDw3O3b564ehqU6vmjs
-Message-ID: <CAKEwX=PsGKS5JHqQ-G29Fg8xLssPhM+E-4wV_QakhqrDOsV36g@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] mm: swap: apply per cgroup swap priority
- mechansim on swap layer
-To: Kairui Song <ryncsn@gmail.com>
-Cc: youngjun.park@lge.com, linux-mm@kvack.org, akpm@linux-foundation.org, 
-	hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	shikemeng@huaweicloud.com, bhe@redhat.com, baohua@kernel.org, 
-	chrisl@kernel.org, muchun.song@linux.dev, iamjoonsoo.kim@lge.com, 
-	taejoon.song@lge.com, gunho.lee@lge.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250612-b4-amc6821-cooling-device-support-v3-3-360681a7652c@toradex.com>
+References: <20250612-b4-amc6821-cooling-device-support-v3-0-360681a7652c@toradex.com>
+In-Reply-To: <20250612-b4-amc6821-cooling-device-support-v3-0-360681a7652c@toradex.com>
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Farouk Bouabid <farouk.bouabid@cherry.de>, 
+ Quentin Schulz <quentin.schulz@cherry.de>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
+X-Mailer: b4 0.14.2
 
-On Thu, Jun 12, 2025 at 4:14=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrot=
-e:
->
-> On Thu, Jun 12, 2025 at 6:43=E2=80=AFPM <youngjun.park@lge.com> wrote:
-> >
-> > From: "youngjun.park" <youngjun.park@lge.com>
-> >
->
-> Hi, Youngjun,
->
-> Thanks for sharing this series.
->
-> > This patch implements swap device selection and swap on/off propagation
-> > when a cgroup-specific swap priority is set.
-> >
-> > There is one workaround to this implementation as follows.
-> > Current per-cpu swap cluster enforces swap device selection based solel=
-y
-> > on CPU locality, overriding the swap cgroup's configured priorities.
->
-> I've been thinking about this, we can switch to a per-cgroup-per-cpu
-> next cluster selector, the problem with current code is that swap
+From: João Paulo Gonçalves <joao.goncalves@toradex.com>
 
-What about per-cpu-per-order-per-swap-device :-? Number of swap
-devices is gonna be smaller than number of cgroups, right?
+Add support for using the AMC6821 as a cooling device. The AMC6821
+registers with the thermal framework only if the `cooling-levels`
+property is present in the fan device tree child node. If this property
+is present, the driver assumes the fan will operate in open-loop, and
+the kernel will control it directly. In this case, the driver will
+change the AMC6821 mode to manual (software DCY) and set the initial PWM
+duty cycle to the maximum fan cooling state level as defined in the DT.
+It is worth mentioning that the cooling device is registered on the
+child fan node, not on the fan controller node. Existing behavior is
+unchanged, so the AMC6821 can still be used without the thermal
+framework (hwmon only).
 
-At swap slot allocation time, we check the folio's swap device
-priority list, then pump that all the way to the swap allocator.
+Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
+---
+v3:
+- Fix using fan node after of_node_put()
+- Add setting the pwm duty cycle to max fan cooling state level on
+  initialization
+v2: https://lore.kernel.org/lkml/20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com/
+v1: https://lore.kernel.org/lkml/20250530-b4-v1-amc6821-cooling-device-support-b4-v1-0-7bb98496c969@toradex.com/
+---
+ drivers/hwmon/amc6821.c | 114 +++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 109 insertions(+), 5 deletions(-)
 
-swap allocator, given a priority list, for each priority level, try to
-allocate from that level first. It will get a cluster (either locally
-cached or a new one) from swap devices in that priority level, before
-moving on to the next priority level.
+diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
+index 612895db7d8d4096372310c9fa71c103d642dd07..143a2d6a5593f462a456c5d9a9dad0e97fa73ab5 100644
+--- a/drivers/hwmon/amc6821.c
++++ b/drivers/hwmon/amc6821.c
+@@ -26,6 +26,7 @@
+ #include <linux/pwm.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
++#include <linux/thermal.h>
+ 
+ #include <dt-bindings/pwm/pwm.h>
+ 
+@@ -126,6 +127,9 @@ module_param(init, int, 0444);
+ struct amc6821_data {
+ 	struct regmap *regmap;
+ 	struct mutex update_lock;
++	unsigned long fan_state;
++	unsigned long fan_max_state;
++	unsigned int *fan_cooling_levels;
+ 	enum pwm_polarity pwm_polarity;
+ };
+ 
+@@ -805,6 +809,65 @@ static const struct hwmon_chip_info amc6821_chip_info = {
+ 	.info = amc6821_info,
+ };
+ 
++static int amc6821_set_sw_dcy(struct amc6821_data *data, u8 duty_cycle)
++{
++	int ret;
++
++	ret = regmap_write(data->regmap, AMC6821_REG_DCY, duty_cycle);
++	if (ret)
++		return ret;
++
++	return regmap_update_bits(data->regmap, AMC6821_REG_CONF1,
++				  AMC6821_CONF1_FDRC0 | AMC6821_CONF1_FDRC1, 0);
++}
++
++static int amc6821_get_max_state(struct thermal_cooling_device *cdev, unsigned long *state)
++{
++	struct amc6821_data *data = cdev->devdata;
++
++	if (!data)
++		return -EINVAL;
++
++	*state = data->fan_max_state;
++
++	return 0;
++}
++
++static int amc6821_get_cur_state(struct thermal_cooling_device *cdev, unsigned long *state)
++{
++	struct amc6821_data *data = cdev->devdata;
++
++	if (!data)
++		return -EINVAL;
++
++	*state = data->fan_state;
++
++	return 0;
++}
++
++static int amc6821_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
++{
++	struct amc6821_data *data = cdev->devdata;
++	int ret;
++
++	if (!data || state > data->fan_max_state)
++		return -EINVAL;
++
++	ret = amc6821_set_sw_dcy(data, data->fan_cooling_levels[state]);
++	if (ret)
++		return ret;
++
++	data->fan_state = state;
++
++	return 0;
++}
++
++static const struct thermal_cooling_device_ops amc6821_cooling_ops = {
++	.get_max_state = amc6821_get_max_state,
++	.get_cur_state = amc6821_get_cur_state,
++	.set_cur_state = amc6821_set_cur_state,
++};
++
+ /* Return 0 if detection is successful, -ENODEV otherwise */
+ static int amc6821_detect(struct i2c_client *client, struct i2c_board_info *info)
+ {
+@@ -877,11 +940,29 @@ static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client,
+ 	return polarity;
+ }
+ 
+-static void amc6821_of_fan_read_data(struct i2c_client *client,
+-				     struct amc6821_data *data,
+-				     struct device_node *fan_np)
++static int amc6821_of_fan_read_data(struct i2c_client *client,
++				    struct amc6821_data *data,
++				    struct device_node *fan_np)
+ {
++	int num;
++
+ 	data->pwm_polarity = amc6821_pwm_polarity(client, fan_np);
++
++	num = of_property_count_u32_elems(fan_np, "cooling-levels");
++	if (num <= 0)
++		return 0;
++
++	data->fan_max_state = num - 1;
++
++	data->fan_cooling_levels = devm_kcalloc(&client->dev, num,
++						sizeof(u32),
++						GFP_KERNEL);
++
++	if (!data->fan_cooling_levels)
++		return -ENOMEM;
++
++	return of_property_read_u32_array(fan_np, "cooling-levels",
++					  data->fan_cooling_levels, num);
+ }
+ 
+ static int amc6821_init_client(struct i2c_client *client, struct amc6821_data *data)
+@@ -914,6 +995,14 @@ static int amc6821_init_client(struct i2c_client *client, struct amc6821_data *d
+ 					 regval);
+ 		if (err)
+ 			return err;
++
++		/* Software DCY-control mode with fan enabled when cooling-levels present */
++		if (data->fan_cooling_levels) {
++			err = amc6821_set_sw_dcy(data,
++						 data->fan_cooling_levels[data->fan_max_state]);
++			if (err)
++				return err;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -962,7 +1051,11 @@ static int amc6821_probe(struct i2c_client *client)
+ 
+ 	fan_np = of_get_child_by_name(dev->of_node, "fan");
+ 	if (fan_np)
+-		amc6821_of_fan_read_data(client, data, fan_np);
++		err = amc6821_of_fan_read_data(client, data, fan_np);
++
++	if (err)
++		return dev_err_probe(dev, err,
++				     "Failed to read fan device tree data\n");
+ 
+ 	err = amc6821_init_client(client, data);
+ 	if (err)
+@@ -978,7 +1071,18 @@ static int amc6821_probe(struct i2c_client *client)
+ 	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
+ 							 data, &amc6821_chip_info,
+ 							 amc6821_groups);
+-	return PTR_ERR_OR_ZERO(hwmon_dev);
++	if (IS_ERR(hwmon_dev))
++		return dev_err_probe(dev, PTR_ERR(hwmon_dev),
++				     "Failed to initialize hwmon\n");
++
++	if (IS_ENABLED(CONFIG_THERMAL) && fan_np && data->fan_cooling_levels)
++		return PTR_ERR_OR_ZERO(devm_thermal_of_cooling_device_register(dev,
++									       fan_np,
++									       client->name,
++									       data,
++									       &amc6821_cooling_ops));
++
++	return 0;
+ }
+ 
+ static const struct i2c_device_id amc6821_id[] = {
+
+-- 
+2.43.0
+
