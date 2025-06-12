@@ -1,194 +1,242 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013045.outbound.protection.outlook.com [40.107.162.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE92AA55;
-	Thu, 12 Jun 2025 16:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744203; cv=fail; b=RbmTmoi8+TH2ghx2C0Jb9ORri/0TiFV5cA8bHkA9Vi1nt3LwDxMbw3ADDzLXQ0VxzdwYiE5dsLZttTiSuRQjoKVHzkeffhvb7++jzq2Ni3e7W0qEcHQE3GMBH9RuGBXeC1BNmlui2jbJT4OmTO/OOVtHQ2pcCCmH6QI6jCNqOEg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744203; c=relaxed/simple;
-	bh=Kn7L+fiY/X171XHjbF2kMEOq/dMu/VoyCUK2LN9Sn9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=t+fR+6OaWgaPGgpxgpxFT81n8z5zMLf2EkdNXo9sQHm3oCLVRoD2yIdpqTcJe1WXIrZMAifB3pRG2im07rM28LbUchIUOZz8N7o38M1TO5sTyruOOhqd0DA/Qq8ukWadcimN9mTFzFiHeYXRkL6Wt2viHATojcqjSABHQZ0Lw5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mTHA8NTp; arc=fail smtp.client-ip=40.107.162.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CDF29993B
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749744288; cv=none; b=c+xoDsfsNSlfKIox12KEVSi5g7F8i6Fnam6cQ3czwjd00BU0+MlloNBhUdh45JJeQMJaBWnlSDquJ+o22CmE4Gq3RELHEU2IBmB9sfFtDU+v3euFWDLyrqWql8NZZhofVY+Xjl25Bant0IK7vytt1W7J2+gsdPsiyZJDx1M2NZY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749744288; c=relaxed/simple;
+	bh=1swm+qRP4rEjYhsWtFX5dlTgsOkPhwCfkrUE/ZbOmaM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=LG0pLKFFJoIWcAPln27BPBy83QCIt1v3ehMsKndQKnn6y8nxOCuG7cwfk/i3QNNEba8PiAXOJUIwtSoUB8znFJvFz0QPFEceQQ+xpS4tdYXdsHlJ0q2rk/5/D2WtgQtM6BEw222s62T5Tu6sAJD4yVn6a6bJzfzOCbG8dfsDLUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WkBSKmxg; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mTHA8NTp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u0na2guu+Wk8WIc0T95IIFRXcIohGF6M61OZK+ZCZ/L9pFHZ9PeXGTxFtZVQL7FRy8dyl1CujsUxmt6a21GsJrpntmatzn/crYH0zqDwfhmohJnIv0RVodIezcsFYYKFEijOxD20okc1N0IOblJpwq1cU2odX21yMLyJNY4sYtWJNK8UzzCWbXxjwNRBJsr0QDM47hMWrU/BZq8VAG2fNuuPMEMJb/W2NLBL0dBHc50CQHTmAcnotZVlvJFw0H2W/ex2t9UM9gIhXJ8ZmGWQIcvUfgygSKRh1+3Z5AB1O5UUBs9jFzukHIJcEdYxDbGisdHqhBjL7vDkD633Y6k3qQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AGk/riKjEZ4e8PuPy3S2DeQ6Jp1lAKkl1KdE8Ngtxkg=;
- b=xslxiJmic6PumuoNzPFsfvIyso4msJ6HXFBCSnngn0QfedjcwYVRZYq+HcPujruyzrglx4+3dnHYu1LMW3VAn9mAVv/A9icH01gU+BXcLKnWyI34b8dR8uYNAflL9jz+0pWmODWFQIVJdyAY2lN2ytKdQyJ+R1Q3mTUAgkfjbT1U4s94HdZtJQvX5wtPghiVtqA9JRDJvCMULRvfu+e2s6CJfdqHyI/p6+P9IIU8cdRhuXVe5NfVAidBhnq6/cRFatifCfIcNpEbxnt8GcsHqPASVgEa+jP4Al8q70IHkd5cLh7X2q5jEI3Fmn1pT4eOXu65UMDOf1Goh5xVDU66kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AGk/riKjEZ4e8PuPy3S2DeQ6Jp1lAKkl1KdE8Ngtxkg=;
- b=mTHA8NTpDi8QLpA/iTVJj6933l1tT3K++LO0GczxAnZp0i6eR9FA59lH9Ad9qw37BDMVdt2XUtv64fKhH/ak+fO/qjx7m0dDh7o+F7/TRlyST31UnH8icxWuvqli+JTIe1eniK/gSxbXetUUu6igqQNMh3ibWckxMYU2jigOowTcK8Ek5F9nnY3Wqpnvz2eLIqDC/Mzp7nbrxE8K/+611qEWwz+pI5wndpHmTkF5nya4q8/8+4maWDC24cv5K9BAROsFaCLSC5Zrn4nViAFbWw25LDiATBqA4Q2tQ0UqwkfzUDvH2D8dRDfspjIS8oNj9jzEluQaho2T0XIqfnBdXQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU0PR04MB9347.eurprd04.prod.outlook.com (2603:10a6:10:357::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.22; Thu, 12 Jun
- 2025 16:03:15 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8813.024; Thu, 12 Jun 2025
- 16:03:15 +0000
-Date: Thu, 12 Jun 2025 12:03:07 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: samuel.kayode@savoirfairelinux.com
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, imx@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
-	Abel Vesa <abelvesa@kernel.org>, Abel Vesa <abelvesa@linux.com>,
-	Robin Gong <b38343@freescale.com>, Robin Gong <yibin.gong@nxp.com>,
-	Enric Balletbo i Serra <eballetbo@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v7 6/6] MAINTAINERS: add an entry for pf1550 mfd driver
-Message-ID: <aEr6OyUokESLlrCs@lizhi-Precision-Tower-5810>
-References: <20250612-pf1550-v7-0-0e393b0f45d7@savoirfairelinux.com>
- <20250612-pf1550-v7-6-0e393b0f45d7@savoirfairelinux.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612-pf1550-v7-6-0e393b0f45d7@savoirfairelinux.com>
-X-ClientProxiedBy: PH5P222CA0009.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:510:34b::14) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WkBSKmxg"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so14286475e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:04:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749744285; x=1750349085; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yVt7yi9oobDjgSWlzKDtexUp1A9xv8eXiTMakhYwEZ8=;
+        b=WkBSKmxgkk3qGDrm4k58QsytUFYM6QUJfcINZA5ySzylVARMVf4Nn+oT9WXUbIyUHk
+         Wx+oIHZE2cMjMME1nJSrK0LRRHlY9IKripzszijwRGI2UC0baKBM5EQtVbJEfeTnB7lv
+         JgoDnUpzPd/XllsKVRpjhZEUhGUCyGQb5yfxORIGvLaT+TQpOsarsqVnhaSZsylVWFTO
+         qWovD+8A94vW80A0yivOPJlb8KC5Vfk6XZ10qZdX9sDgO3j4Nytw0rQOuPhLj7lYjitD
+         UlvDB/mviT3UNUR0jGfgDn3W3w4hMEWz5z+quDNJEcPJrxzL7S8O+M0c/SGZKkLqGnRZ
+         e8TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749744285; x=1750349085;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yVt7yi9oobDjgSWlzKDtexUp1A9xv8eXiTMakhYwEZ8=;
+        b=n1aRzmBz4Qze9G3kNDkYUYHFQM2gCVarnSX/5pLpej8zGmEtyQ3sjR1xnZ9jR25UXD
+         z+W15SONB1l4O7H+PP93ZerOEAJmdLcjupMoZwZCH6NZ+RcYRr2rqMHUAvR/YP6JkYBV
+         6ap+Ci0GuGNuGCavxrHX7jf20bdoqxjVK4qBTO3hTyDAeUCy8/co9gpRTzqciS1TEQdC
+         HzQrz6eb5xWe8Q8SjButQNbFQSnltYV1ZHfvvQaXzq1ttvfJ+dkcDKYaWqff7uPOLti1
+         jayKjxzY2ayXA01Lsoj9ydg2pAqbmdz0Mk0qX671cX5GWwbwE0dVsjTdM0amz1ZPo0Ik
+         uJGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWv4uJKWx9lMk7NszCrjBNDJibQvvY/r7KZhyWFSQeELs/Fi/NTcm4KILEbs20ZQBJ/6Jyjhkd5cNjYz2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYPkWtrQdq4cdxhcnUjxpafn3mZfCOhPf0agLnJQz/l1iEK7hK
+	D8hXamIlMl0MRVRiRrykMrsPJuBSMm66BMz8V5LuEq1mn/+IeUmFGJTApub9+LzUAIk=
+X-Gm-Gg: ASbGncvk+8f5BALz2vSHf7cFq9zHo6VMqXlZuBZOKD3hYDcfFcG8ADQ3MUGveXtEBYQ
+	BrbOQu2X8VmgUULsU/mnbFU2bwz4Y8PjDihRsHs7XqlIiACiB+8OyMgR4VzS0O9M010Tr45gu6k
+	3XyiCrFdFnfaF6fzVp1rzhQGVCVK+JccC11rxna6ZDkqoqr3wwMoj06F56q7U3Nv6Zp9wd7STjW
+	hcBRRemWkv+lu2lpNDOPazoKU2h/0LRXCnZybPsXFMnvE3x/3ZOJpezf0CKjlEIsY9VW7Z5AWHa
+	DPqhymglquLTTs7KjDNF8bmghhmiNGL1nNJwR2TEAeB1Tu4N/ZPt5KjYYefRYK4QnLc=
+X-Google-Smtp-Source: AGHT+IFJV6N61R7eQMpTQxieQIe+uvVO8hNtuqS1gL43rMcL+iiwLE0vyR8mjdp5Mfj8xXlJDzQq4w==
+X-Received: by 2002:a05:600c:83c6:b0:453:2433:1c5b with SMTP id 5b1f17b1804b1-4532486c53emr75837335e9.5.1749744284644;
+        Thu, 12 Jun 2025 09:04:44 -0700 (PDT)
+Received: from localhost ([2a00:2381:fd67:101:6c39:59e6:b76d:825])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5619762dcsm2359430f8f.20.2025.06.12.09.04.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 09:04:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU0PR04MB9347:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd44cf38-f0ca-4b65-461e-08dda9caa3fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|366016|376014|7416014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?XnJZHRGVel1puzM8SXQSjT90ql/q00My1xMvBOWqHafrDTU1PrdIiQKH01aq?=
- =?us-ascii?Q?8Ae0z9HTiQ0w7O+z9ZAbAntmVbdvF74qj11r1jE4cDk+Uv/pQoMlHZelqTrJ?=
- =?us-ascii?Q?bq/PdWem2OsZ6X9rlIVf01z3gtkLfOrauyckQCPGky6oH+Z5/s4mY5dEYFFJ?=
- =?us-ascii?Q?jZ9zrdW9+9s0BGX+PNept9H1Yzf12S0VA2sR3meVHF4NT+pkaFC4lx5+lgkj?=
- =?us-ascii?Q?GDtAyt3pFKj2PqMUMYGiztSRViI9B92UWSALouN1tT+IqSkdjTe2jCHnu4bA?=
- =?us-ascii?Q?KrDXiH3x9ctXMqyW+19mXhMmW2UT5DV2WvC3YGBdE1mng3fYPle96pFCrLSS?=
- =?us-ascii?Q?yG/3qBU8F4PQz6l/csAVwJUSc1drmOO19Zj4MWQyh41LNVKqeRAVSTn+ZOZU?=
- =?us-ascii?Q?8AkVsSSmQbx+5LZ97JVfxU0AG7INhEJRwOcJIK3bH6m96q4OcrFA/xtcpc+9?=
- =?us-ascii?Q?qFI+ZpBVdVj92Ai2qmVVrQfrQKjV1aclo/6SIeWUgz1LPWqpkyxHtNMhPlcw?=
- =?us-ascii?Q?E2mp0I5rQ5Urf68iE5vZAUuTvlQl3g41H2+XL+y+1nqaeAO2UZWV+UtqDhfy?=
- =?us-ascii?Q?Lh+vq7Xz0hccQsFYqONKFc+H9LX0y9V4C2W936la3RN5rGBcMBAQAsd9WjEX?=
- =?us-ascii?Q?G2i02PEqoYfaSSUXsQAUXif8jjtInW6vi8FtXmSAYQ8PAXSWJoh1Bx0JmiR5?=
- =?us-ascii?Q?s8hhAEdaH2hLtipmsICBBC1CHn77Pjh00jcj+LmzVBrb9/9tz8bDojc1BEdW?=
- =?us-ascii?Q?AtwWZbTKWaJXR6mbSvH4nL1s+E960Hl+dw53wO/fUTLebNEAYgBPA8SBHi1b?=
- =?us-ascii?Q?mXdXXw8QQem1SVG+UFVmlnFzpvO7NjR7sT63GWZgAmmkmghRB1OuabEHIuwL?=
- =?us-ascii?Q?tzerf22ZnFL+mQZU9AgiLCDpa3a87CnapgRoMLqsVISjMImpCSOGL5/ZIhNH?=
- =?us-ascii?Q?HPVo36nt0CUWmuEJ1EpNmCNiQaasxaJZP+cFOsrvvwdMAZI9FvEYH9wZww/G?=
- =?us-ascii?Q?mO2ADrbbJCxQecjyrkIgfkgOfatQq0lo30RfplvWjSfsKfT5a6Mcezh4OgO+?=
- =?us-ascii?Q?XoDyJg4ndLahVE83LTEiH6EInD5Xw/qzzcU4SFRd2Tf1dM1cGQAN8E3un3Ie?=
- =?us-ascii?Q?A2KpIzJErWa/nRZcoRELqv4NcNf7rCgjKI4qVplH9x4aIKKyIGmC2Dzl1Uh/?=
- =?us-ascii?Q?6aMe9YmxFo+kOprWcGRIHvwpkEEOyHgKKb1GL+0/ZaTzmwrBw7YJ5w+Q1Ah/?=
- =?us-ascii?Q?ETzT+Cp1mPJFlT0EaKuGEzecR4YlXE2n/nmV07o4jSPnS6mR3NkiEGgdMEOG?=
- =?us-ascii?Q?gEnKqma96VV/QE6hWGblYk1E6i7wqiBihbGOVL3NFWugRT6YNFDTapH61pi6?=
- =?us-ascii?Q?/WYRLh2o9QjCaTTYfHq9OYBb1E+jDjEp2QIBd9qfE8d86xm90BzwP75W1cCp?=
- =?us-ascii?Q?245LQNh9GHnzjGUyBKLLkp13392jpwAyqGjYsM2mU6exPsb3c3HpIg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(366016)(376014)(7416014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?M7rhADnV1VmZyeRoXaEwKRucWJyan6KJVChVJOMSvsgUnu0saEWFZ7Ea3iQ4?=
- =?us-ascii?Q?v+pzcq/I8ACKDQpUARXtJjkoddWgF98olamBLcBHo/0hOqn58yTblyRFLx1o?=
- =?us-ascii?Q?epCQ/6xxTdSZ0uNe1df7AJpEL6In4EiGu06UvDgI35Yy7hNuMwpt1QpJ8M3i?=
- =?us-ascii?Q?4UDyPdwnoSA+MlGo1FtZtbnVoQk3cu/DywRMHAPsDxRz4j/PFNnYlBiph9p7?=
- =?us-ascii?Q?rgEGuafn0MfFAVWsozcdBip4glWVGMVU8TDSo4O3KKaHrAZFQwyqLjuKpIsQ?=
- =?us-ascii?Q?Yr0CyFV+WGwJuD7a2wCkTbrLTHDf9ouqblN+E0msENr31h6KwSlBAH6lpPL9?=
- =?us-ascii?Q?aQN/ymtn9BOw+kO7JJXt825Q1Fi9rZA3k/xVZ3+U94yQ0VyFa3j3amPTQyN5?=
- =?us-ascii?Q?3a5onI0wny/TkkUyh1dbBzMt81pZXmjB89UA+tUxIW0TgrYN4d9pQjJdgl/4?=
- =?us-ascii?Q?Rq3x3PTlcFTRaL95Phzn7XQ+lkM4EFCYVM22lPq94nv7DMdEWpi5HcX5/l8C?=
- =?us-ascii?Q?m6eZww6xTit9J/FiUUyy9A8854M6qELS3LqL6+duTk/fSdVadFVHu/KsTXWg?=
- =?us-ascii?Q?5O/jkxO7FwpKpQ3aO5CIbCxJn/9QmcE1BPSIhj0zhAz5Bbj71wjciFwp1++p?=
- =?us-ascii?Q?wfQzWkT7vHFTUe31ugJfeyXagZ+ZE9j8kcucAew22hvj/cHZJojR1K3pCZFI?=
- =?us-ascii?Q?+ZNq7gHvx5zktc0TATX5rm91FINoChD0Zm47igabdsdvxoRN4WRiWOaaVcuz?=
- =?us-ascii?Q?79bfa8EHRYS80+nb9KoH4yIyUH7Ms3hJmkrP3/1JjOSFnQUJxPIQC1Jyx8gF?=
- =?us-ascii?Q?w5a3vL7FaGGwQwmxTO0g+FHLW+t0SFoGp7nBxMZt4qKJMPHSTQU/gOMD8eRN?=
- =?us-ascii?Q?I5z5YzRzat7jaxSptigqpwFnwhJum/SZol2uuY3xYzP/W4bh1e+iojwaELrz?=
- =?us-ascii?Q?r6YIiCITZDhkdzxtcuyLnHyQvnV3zGkgi5PCAFtgNgCPTSmwc3jLh0C5wj29?=
- =?us-ascii?Q?LV0hhnasdRckcsXlHolsaQf8qe+JnTb/sKyAlky2s5rfQHzlcSxZMDA3it8r?=
- =?us-ascii?Q?CEvX07kgmf6eKS8OFZ10E2XSQHJN4IKsynxenRWb80PT3wAbLK7IHLQ1uNlD?=
- =?us-ascii?Q?34U4l/UJs95OzTRdyZLSD+ByF48gIFWT4mtjoz3NLZppi0c9y8GvNk+dVSzu?=
- =?us-ascii?Q?hqVPwFrwaCKpughLht0IqqFyoN9ABYvuATv+WtqEPd6WrFUwIy84Nvcu2xCF?=
- =?us-ascii?Q?ORHkiMWA/xAWywBsHtvZlQjLXORhjB5NEBSoiJsklhMYXPU3YKzbhsZ/jTkg?=
- =?us-ascii?Q?CIKBuZoiubGL3cH1ztEVRsUpWjpODno6BsvKOXxdCXiikEONYnF6ebXL7xTu?=
- =?us-ascii?Q?JrK2SLuDN9lAoFVp2YlvyJXykuA59Ma5QebK480PDlfN5GQ2Nq/yblahlT2d?=
- =?us-ascii?Q?uU/l57CJp6s53FlKZ46v58Px5vmDrCaMU1KqlypUMVOlW06T5osdWw1wlrfS?=
- =?us-ascii?Q?GwbVHUlQ/1Rbp8KgCcCums3pe0svw7prbNModLfv+OLFskSWm9kNMU5j9IuT?=
- =?us-ascii?Q?EtzSKJhNdpgCp0QXKR0k9v+LFSh46Y8fsmckbORG?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd44cf38-f0ca-4b65-461e-08dda9caa3fc
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 16:03:15.7661
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rANvMHrTOW1u59XwiLAHgRPQjJ7fzSL7iG/imVXZJMGo6sXKTw4wQtR+Ka1p7YgKbk08xGRlLmoF3rua5mbd7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9347
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Jun 2025 17:04:43 +0100
+Message-Id: <DAKOKYU9O323.M7OSA1CFHQWX@linaro.org>
+Cc: <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>,
+ "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>, "Rob Clark"
+ <robdclark@gmail.com>, "Sean Paul" <sean@poorly.run>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Abhinav Kumar" <quic_abhinavk@quicinc.com>,
+ "Dmitry Baryshkov" <lumag@kernel.org>, "Marijn Suijten"
+ <marijn.suijten@somainline.org>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "open list"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] drm/msm/adreno: Check for recognized GPU before
+ bind
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Rob Clark" <robin.clark@oss.qualcomm.com>,
+ <dri-devel@lists.freedesktop.org>
+X-Mailer: aerc 0.20.0
+References: <20250609182439.28432-1-robin.clark@oss.qualcomm.com>
+ <20250609182439.28432-4-robin.clark@oss.qualcomm.com>
+In-Reply-To: <20250609182439.28432-4-robin.clark@oss.qualcomm.com>
 
-On Thu, Jun 12, 2025 at 10:55:48AM -0400, Samuel Kayode via B4 Relay wrote:
-> From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+On Mon Jun 9, 2025 at 7:24 PM BST, Rob Clark wrote:
+> If we have a newer dtb than kernel, we could end up in a situation where
+> the GPU device is present in the dtb, but not in the drivers device
+> table.  We don't want this to prevent the display from probing.  So
+> check that we recognize the GPU before adding the GPU component.
 >
-> Add MAINTAINERS entry for pf1550 PMIC.
+> v2: use %pOF
 >
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
 > ---
-> v6:
->  - Add imx mailing list
-> ---
->  MAINTAINERS | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/gpu/drm/msm/adreno/adreno_device.c | 29 ++++++++++++++++++----
+>  drivers/gpu/drm/msm/msm_drv.c              |  2 +-
+>  drivers/gpu/drm/msm/msm_gpu.h              |  1 +
+>  3 files changed, 26 insertions(+), 6 deletions(-)
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 98201e1f4ab5908ff49d32d19275e123cedb4b66..5547fdafa7e1bb11903d5d5bef246c2e1a20fbca 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17853,6 +17853,17 @@ F:	Documentation/devicetree/bindings/clock/imx*
->  F:	drivers/clk/imx/
->  F:	include/dt-bindings/clock/imx*
->
-> +NXP PF1550 PMIC MFD DRIVER
-> +M:	Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-> +L:	imx@lists.linux.dev
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/mfd/nxp,pf1550.yaml
-> +F:	drivers/input/misc/pf1550-onkey.c
-> +F:	drivers/mfd/pf1550.c
-> +F:	drivers/power/supply/pf1550-charger.c
-> +F:	drivers/regulator/pf1550-regulator.c
-> +F:	include/linux/mfd/pfd1550.h
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm=
+/msm/adreno/adreno_device.c
+> index 778e6ae7f137..0d12454b1f2e 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -178,6 +178,26 @@ static int find_chipid(struct device_node *node, uin=
+t32_t *chipid)
+>  	return 0;
+>  }
+> =20
+> +bool adreno_has_gpu(struct device_node *node)
+> +{
+> +	const struct adreno_info *info;
+> +	uint32_t chip_id;
+> +	int ret;
 > +
->  NXP PF8100/PF8121A/PF8200 PMIC REGULATOR DEVICE DRIVER
->  M:	Jagan Teki <jagan@amarulasolutions.com>
->  S:	Maintained
->
-> --
-> 2.49.0
->
->
+> +	ret =3D find_chipid(node, &chip_id);
+> +	if (ret)
+> +		return false;
+> +
+> +	info =3D adreno_info(chip_id);
+> +	if (!info) {
+> +		pr_warn("%pOF: Unknown GPU revision: %"ADRENO_CHIPID_FMT"\n",
+> +			node, ADRENO_CHIPID_ARGS(chip_id));
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>  static int adreno_bind(struct device *dev, struct device *master, void *=
+data)
+>  {
+>  	static struct adreno_platform_config config =3D {};
+> @@ -188,18 +208,17 @@ static int adreno_bind(struct device *dev, struct d=
+evice *master, void *data)
+>  	int ret;
+> =20
+>  	ret =3D find_chipid(dev->of_node, &config.chip_id);
+> -	if (ret)
+> +	/* We shouldn't have gotten this far if we can't parse the chip_id */
+> +	if (WARN_ON(ret))
+>  		return ret;
+
+I just hit this with linux-next on qrb2210 RB1 [1].
+
+Is it expected an warning now or do we miss some device tree updates on
+linux-next for RB1?
+
+I don't recall seeing such warnings previously.
+
+Thanks,
+Alexey
+
+[1]:
+
+ msm_dpu 5e01000.display-controller: bound 5e94000.dsi (ops dsi_ops [msm])
+ ------------[ cut here ]------------
+ WARNING: CPU: 0 PID: 242 at drivers/gpu/drm/msm/adreno/adreno_device.c:224=
+ adreno_bind+0x90/0x120 [msm]
+ Modules linked in: q6asm_dai q6routing q6afe_dai q6adm q6asm q6afe_clocks =
+snd_q6dsp_common q6afe q6core apr pdr_interface qrtr_smd qcom_pd_mapper qco=
+m_pdr_msg mcp251xfd ath10k_snoc snd_soc_wsa881x_i2c snd_soc_wsa881x_common =
+can_dev lontium_lt9611uxc(+) ath10k_core ath mac80211 hci_uart btqca btbcm =
+libarc4 msm snd_soc_sm8250 qrtr bluetooth drm_exec snd_soc_qcom_sdw qcom_q6=
+v5_pas llcc_qcom snd_soc_qcom_common lmh qcom_wdt ocmem cfg80211 ecdh_gener=
+ic qcom_pil_info pinctrl_sm6115_lpass_lpi gpu_sched ecc drm_display_helper =
+rfkill qcom_q6v5 pinctrl_lpass_lpi qcom_sysmon pwrseq_core lpasscc_sm6115 d=
+ispcc_qcm2290 qcom_common snd_soc_lpass_va_macro cec snd_soc_lpass_rx_macro=
+ drm_dp_aux_bus snd_soc_lpass_tx_macro qcom_glink_smem gpucc_qcm2290 snd_so=
+c_pm4125 mdt_loader snd_soc_lpass_macro_common qmi_helpers snd_soc_pm4125_s=
+dw soundwire_qcom regmap_sdw slimbus qcom_pmic_tcpm qcom_usb_vbus_regulator=
+ drm_client_lib tcpm rtc_pm8xxx snd_soc_wcd_mbhc aux_hpd_bridge qcom_pon qc=
+rypto soundwire_bus sha256 qcom_stats gpi
+  spi_geni_qcom i2c_qcom_geni rpmsg_ctrl libsha256_generic libsha256 rpmsg_=
+char qcom_rng sha256_arm64 authenc icc_bwmon phy_qcom_qmp_usbc libdes typec=
+ phy_qcom_qusb2 display_connector i2c_gpio rmtfs_mem drm_kms_helper socinfo=
+ fuse drm backlight dm_mod ip_tables x_tables ipv6
+ CPU: 0 UID: 0 PID: 242 Comm: (udev-worker) Not tainted 6.16.0-rc1-next-202=
+50612-00025-g0ce0d3974333-dirty #2 PREEMPT=20
+ Hardware name: Qualcomm Technologies, Inc. Robotics RB1 (DT)
+ pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+ pc : adreno_bind+0x90/0x120 [msm]
+ lr : adreno_bind+0x50/0x120 [msm]
+ sp : ffff8000813f3580
+ x29: ffff8000813f3580 x28: ffff000008ae8800 x27: ffff000007c63700
+ x26: ffffca4a2814b860 x25: ffff000008b26880 x24: ffffca4a24922000
+ x23: ffffca4a249229d8 x22: ffff000009838800 x21: ffff000008b26880
+ x20: ffff000002ce4410 x19: ffffca4a2495a710 x18: 0000000000000006
+ x17: 6f5f697364207370 x16: 6f28206973642e30 x15: 0720072007200720
+ x14: 0000000000000000 x13: 0000000000000000 x12: 0101010101010101
+ x11: 7f7f7f7f7f7f7f7f x10: ffffca4a2866e1b2 x9 : 0000000000000002
+ x8 : 0101010101010101 x7 : 7f7f7f7f7f7f7f7f x6 : fefefeff2f383131
+ x5 : ffff00007fc1b968 x4 : 0000000000000000 x3 : 000000000000001e
+ x2 : 0000000000000001 x1 : 0000000007000200 x0 : ffffca4a2495a710
+ Call trace:
+  adreno_bind+0x90/0x120 [msm] (P)
+  component_bind_all+0x100/0x23c
+  msm_drm_bind+0x148/0x3e0 [msm]
+  try_to_bring_up_aggregate_device+0x16c/0x1e0
+  __component_add+0xa4/0x174
+  component_add+0x14/0x20
+  dsi_dev_attach+0x20/0x34 [msm]
+  dsi_host_attach+0x58/0x98 [msm]
+  devm_mipi_dsi_attach+0x34/0x90
+  lt9611uxc_attach_dsi.isra.0+0x94/0x124 [lontium_lt9611uxc]
+  lt9611uxc_probe+0x568/0x604 [lontium_lt9611uxc]
+  i2c_device_probe+0x158/0x32c
+  really_probe+0xbc/0x2b4
+  __driver_probe_device+0x78/0x120
+  driver_probe_device+0x3c/0x154
+  __driver_attach+0x90/0x1a0
+  bus_for_each_dev+0x68/0xb8
+  driver_attach+0x24/0x30
+  bus_add_driver+0xe4/0x208
+  driver_register+0x68/0x124
+  i2c_register_driver+0x48/0xcc
+  lt9611uxc_driver_init+0x20/0x1000 [lontium_lt9611uxc]
+  do_one_initcall+0x60/0x1d4
+  do_init_module+0x54/0x23c
+  load_module+0x1730/0x1cc0
+  init_module_from_file+0x74/0xa0
+  __arm64_sys_finit_module+0x130/0x2f8
+  invoke_syscall+0x48/0x104
+  el0_svc_common.constprop.0+0xc0/0xe0
+  do_el0_svc+0x1c/0x28
+  el0_svc+0x2c/0x80
+  el0t_64_sync_handler+0x10c/0x138
+  el0t_64_sync+0x198/0x19c
+ ---[ end trace 0000000000000000 ]---
+ adreno 5900000.gpu: supply vdd not found, using dummy regulator
+ adreno 5900000.gpu: supply vddcx not found, using dummy regulator
+ msm_dpu 5e01000.display-controller: bound 5900000.gpu (ops a3xx_ops [msm])
+ [drm:dpu_kms_hw_init:1173] dpu hardware revision:0x60050000
+ dummy 1-0045: No cache used with register defaults set!
+ [drm] Initialized msm 1.12.0 for 5e01000.display-controller on minor 0
+ msm_dpu 5e01000.display-controller: [drm:adreno_request_fw [msm]] loaded q=
+com/a702_sqe.fw from new location
+
+
