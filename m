@@ -1,110 +1,77 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AC122F384;
-	Thu, 12 Jun 2025 22:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E16B79E1;
+	Thu, 12 Jun 2025 22:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749765859; cv=none; b=eQ5iV9Ee48lWkBVZPs9G/yHSuqMcsZYlc+hZHEGrcrs+sGWwNxdP1fDpMpIXszfiJDMn7sf/t42Cawvx19Z9G+ySstMCCsyqqHC3QBGTilPAoKPyLDu42K5IRQoEU5+25WBnP9mdKFmZQBbKk1BVFAP8wF4grhGn5FOFXKegHOY=
+	t=1749765944; cv=none; b=C/GJ29c4u8Nz29esdnMKwC3Zz86EwMBG578znJBwEny31/4r3J5PgGvFa2h17JFTX1XnkQIG8zPhBqN/hwZgX8SI2kCHoGOt81Rel1zSu3iRCpdUXWGnnQbw64IQnGU69WraveWpGm8hZkONr5krpdP6TIDPO5+yJMy0+HUpJMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749765859; c=relaxed/simple;
-	bh=RfJASzZb1qIDSgBLejNVBaFi6NPTYNHOZJlPRicbjt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LofIjno9hIt3KDavCRaF4v9qptEYbnbKvDMRX8A7Ch0Ig4m2txEWI4Os39dIa/3xGc9rqjrGDPRaC7/Y806Rxe2zHji1lPeD28jzp4WU2n6SrSM/XH0omXRap8u5oApv9ToBJj149GYkzGC0S1EtgSFV0OH+oqJp0sO12vMMsOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7x+XiF9; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749765944; c=relaxed/simple;
+	bh=0Ec/5pPmG5khox1fV4h8x10KFEPU9qR+cjWZHft8eqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jw2y+6+t+z3FNmYMeAnxawK40BGNudPdv1u14egiaAecYv0Pm2BRJlWprOWzm2VTl04jNOkgj942NUMqEOfPTIbAR+JU6jt3QQJCDRwVKq48FAW4BaXBGjufIJkhZfovmBXg+M21F/rmqTWzDhbFvVTmj5eA3iXfqw3MXl0HEvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QlUeoS/v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7x+XiF9"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso1367172b3a.3;
-        Thu, 12 Jun 2025 15:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749765857; x=1750370657; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fr4KrCMJQ5nXA8cX+HqskZUQjva7UZ3MKq/H78lqt7M=;
-        b=R7x+XiF9QVE1gkOvRrOYpQtsknWIu+ERzT06CdDGAfYG3yoL6pb3TQbdIQEqEQNQpc
-         cLRwYlm3TVBEyLZBxtvI5L6Z324WX5FwlZNydpsVE7G/qHYxTnNW7Q77+laGWSIZTSgz
-         Zbap7AaD6BkHFd63o+YfFbKYfMbieooSuuphCicmWGi7GNfdDSAuYTHea0WLnNPRKday
-         +QQK78AB3wnosYzojHQwVwMORaJxnjwTujEOr6PTlr9uPebbW3WHI3YSdWXZRNmuGfno
-         U1rwKXTHSkTwvDwU+Idm3WwxJ3IQgjPMk0uzRsDSSY1WG0U/bX3KPtOU1Bm7mHsFuMsT
-         2wtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749765857; x=1750370657;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fr4KrCMJQ5nXA8cX+HqskZUQjva7UZ3MKq/H78lqt7M=;
-        b=iVyGX8HcERwBQHdI7LUnGzIXxQI8aEQMGe6Y5lwOnhCHqi8IGwnM5F7c7aZzkFVQ3S
-         NS62SRB1vuxhNQdE60okvt5HjO2Hc93QRZX1Xsu8HUEeBweixAwPf705DWxX99R73b+q
-         WFf2wA4cq5TW2EGwzNPoW66WD1rJtxmEpvaLRVf2r3sdJUeGt8Vy491G640DhUFwps2t
-         IvGpFgfR4dBjnhXOCDNQtMDXYEWk2prxuHBdKqBphRCLkYj5SaZ5jkHk6O+dxgemTCqC
-         4RhuYKuiFTWmWg2+Cl8PK8o44NdMdBvmNvHJwrDhwj0DVho3dS/Nr5s+dEHFURBxv8xy
-         txEA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0ZW5UCYtVkbNqHFhEeTSzFSq+zaTNn1KJNUrWHHKLSWW/e5WW6/x+lV9ze/OGTk3jkv814i0N9PAp@vger.kernel.org, AJvYcCVSEkmQXDSrVzvB52wgsAyiN3CE+yd5ZtD7HIcvXE+/TzlFn2mRLZSKMvUR8aoU83gVFUlNAHDeUGhRpVdW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXpR2Ug8RL35RuPI+/vWoTydBRd8b+hMMWepxSJsGoI9ChUFqZ
-	ajXGEHcvPhDoLn3Bziq0Gr4KtRYAKXBroSM8g7iPjKyUnXDww1sClDFt
-X-Gm-Gg: ASbGncss+d4QRWB2p7Au57rjb2GDicu2u4cp7wEbp2Sp8kbh9Fu1GPzlDMjj3+9ffOj
-	QFQNcy69yhDE5d5FntzpK30pgLpCw0TmG/76RLUXfTNB7HCqRFWI/S5dtMoXdOXSV0IKgpSjejH
-	ZajlyR7DzWs420UaNKp6REudR7Lq/c+BBXr1KhzFky64QKWZaHHUnNKbqGMkXvyXpxOhxyAjFv6
-	UTgqWRBBLLnjQSocGgTcUmviQ6upUg6Few3rT+lu2rsendq8I7vGhyJuGY7Nwz+yOh3s4EnW8ON
-	Wxbi8P4Z3mF4IHIqNOOUBpKhCkUIut1CzPojeq1RjhkjI63IcgTeXS1SLnqTtUeRNCgg0jk=
-X-Google-Smtp-Source: AGHT+IEBFgndZ4ma3VrBmFJWbwgQqLDt8H4cuSSrnRjAzD9LoUAsVC3TnK5FcePSUnq9KPVeQ5WVFg==
-X-Received: by 2002:a05:6a00:3a04:b0:736:5438:ccc with SMTP id d2e1a72fcca58-7488f70d83amr1057601b3a.9.1749765856965;
-        Thu, 12 Jun 2025 15:04:16 -0700 (PDT)
-Received: from localhost ([121.250.214.124])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-748900d1ceesm230724b3a.161.2025.06.12.15.04.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 15:04:16 -0700 (PDT)
-Date: Fri, 13 Jun 2025 06:03:08 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Conor Dooley <conor@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Yu Yuan <yu.yuan@sjtu.edu.cn>, Yixun Lan <dlan@gentoo.org>, Ze Huang <huangze@whut.edu.cn>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH RFC 0/3] riscv: sophgo: add top syscon device for cv18xx
-Message-ID: <wyidzvmwepooa2pnmceea57x7ggvar6vyowgom47qgcjbhf3dr@2hxq466muptb>
-References: <20250611082452.1218817-1-inochiama@gmail.com>
- <20250611-doodle-storage-f1f23230adee@spud>
- <t26cj5xhmkqro5wgf3vqycvgwqhtwv3x6mo25hde3zretbl5uu@xy5igj6vqejx>
- <20250612-specks-banter-adac9a126ec4@spud>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QlUeoS/v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768CFC4CEEA;
+	Thu, 12 Jun 2025 22:05:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749765943;
+	bh=0Ec/5pPmG5khox1fV4h8x10KFEPU9qR+cjWZHft8eqE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QlUeoS/vDT/Q2HLbqsoTNtBbzmzsWMbMuo4KrRBCX9PtPSgH92WxHze7a/GyrTUHd
+	 9fbc9hiyzvx5mdksaHcCT20AwNbgD6MJpbJATaI9DTrgusJhzRKMrS4CgJNwaFNfIn
+	 /EF6CsSgxCnaME8DrXG1PZddZgmWFCsYs6SBboFhh8l95SfMpE9fvm+GES5TCm3IAI
+	 I5Yeg5dUb2O3r/pLy9OnqFRprZQXqvGirSKY3KAxXosQwNypz6NDucVfNvfoBoKp+q
+	 UtRAIVLE/V694GP1ZzNqwmyouh1ZKSKQKZbYNwPeCGpo1bn8BfH/x3QlV077tVS29D
+	 7VTXeAX9e8ADA==
+Date: Thu, 12 Jun 2025 15:05:42 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan
+ <shuah@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next v2 7/7] selftest: netconsole: add test for
+ cmdline configuration
+Message-ID: <20250612150542.0b4a7d71@kernel.org>
+In-Reply-To: <20250611-rework-v2-7-ab1d92b458ca@debian.org>
+References: <20250611-rework-v2-0-ab1d92b458ca@debian.org>
+	<20250611-rework-v2-7-ab1d92b458ca@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612-specks-banter-adac9a126ec4@spud>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 04:58:39PM +0100, Conor Dooley wrote:
-> On Thu, Jun 12, 2025 at 08:30:17AM +0800, Inochi Amaoto wrote:
-> > On Wed, Jun 11, 2025 at 05:14:59PM +0100, Conor Dooley wrote:
-> > > On Wed, Jun 11, 2025 at 04:24:48PM +0800, Inochi Amaoto wrote:
-> > > > Add top syscon device bindings related DTS change for CV1800.
-> > > > 
-> > > > The patch required the following 3 patch series.
-> > > > 1. https://lore.kernel.org/all/20250611075321.1160973-1-inochiama@gmail.com
-> > > > 2. https://lore.kernel.org/all/20250611081804.1196397-1-inochiama@gmail.com
-> > > > 3. https://lore.kernel.org/all/20250611081000.1187374-1-inochiama@gmail.com
-> > > 
-> > > What is RFC about this?
-> > 
-> > I use RFC to ignore the patch check, as the dependency are not merged.
-> > This series itself require the binding from link 2 3, which provdes
-> > binding of the USB2 phy and DMA multiplexer.
+On Wed, 11 Jun 2025 07:18:56 -0700 Breno Leitao wrote:
+> Add a new selftest to verify netconsole module loading with command
+> line arguments. This test exercises the init_netconsole() path and
+> validates proper parsing of the netconsole= parameter format.
 > 
-> In the future, please provide a reason for things being RFC in the cover
-> letter or patches themselves. 
+> The test:
+> - Loads netconsole module with cmdline configuration instead of
+>   dynamic reconfiguration
+> - Validates message transmission through the configured target
+> - Adds helper functions for cmdline string generation and module
+>   validation
+> 
+> This complements existing netconsole selftests by covering the
+> module initialization code path that processes boot-time parameters.
+> This test is useful to test issues like the one described in [1].
 
-Sure, I will.
+I think this leaks the IP address, because if netcons_overflow.sh
+runs afterwards it skips with:
 
-Regards,
-Inochi
+#     inet 192.0.2.1/24 scope global eni370np1
+# SKIP: IPs already in use. Skipping it
+
+
+if netcons_overflow.sh runs first everything is fine.
+-- 
+pw-bot: cr
