@@ -1,63 +1,63 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6559E24DCE8
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E05825486E
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749737193; cv=none; b=AdOBXcg7KpX5PtJZGi7cTN0HL/nzd+inV21pUQ5dhvedTc3s9ya9DZ7AEbLhFh25IKB7++8HCKnwfNtZwryHOB+4LVCI0NjusxIUeg587JaYC/1xhqS/3y0s1djD4XoqgKIMBaeC0Q7wB3w0DpF2KaKgJgT35B7vEqQ02MM+Wus=
+	t=1749737194; cv=none; b=dBOgSpjL2khDNuWC8++tY8jr2KoxVk45sctIUedK0QTrX9Gv/m0jp8pV+lssvoV/wXmzHNBmRNNkHlWH4HZps7Z5XIyLQzoMqpwWRcTzixsoh+c2gy2zcwGdSyg4Qa3UKTWzzxT9WDpwbJgvA3aGhFcu7lTMQJSzbw90q8eUHAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749737193; c=relaxed/simple;
-	bh=FZoq1YD3TUV43K8H/bkJmTG+zygwAdPDC0bLGs1RiQs=;
+	s=arc-20240116; t=1749737194; c=relaxed/simple;
+	bh=ISjEXdBvNbTD5hi9yBqTGZRlg/doEfn4IjaexdEVwoU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rr5GHwSqtZDmwoG53VNlDCfHXCn4UsFznLBrwlvbG/Ci1Ax31ZGLIpuH5pDZoJA05C9XynTVf8jyiZ1bzCVq3SmSfPOTVtsPl29RuSLs0Ps3BG56ordQZaUvu549vZ3LOj/eZcuW4RO5q4LGOkh/tln6BchN1JOYweyZARQ9y8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=DTR7QY8x; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=oqM63eQ0aAKUT+cpAp2TnOtmmp2lZJ7TbSAQJv/fjsGDM3S2SinE3dqWb8ImmqMoBCNK1Hx6aIKFV+gTu9npw2Xe7QPp5WEHTJQUNhXFALGpVWuB/N9+9bE3yS9hrGisQ9rSB2uyJVWHcwPNTKXR+KygNGe1/K2hUUVjJ1dw+Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=bLGQeiel; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="DTR7QY8x"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-442f9043f56so5922035e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:06:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="bLGQeiel"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a5257748e1so827130f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:06:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1749737188; x=1750341988; darn=vger.kernel.org;
+        d=9elements.com; s=google; t=1749737190; x=1750341990; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NTQZFYiB4NXt/ECryK4Vh1lbcJp1CEfXh3FvCrufPYY=;
-        b=DTR7QY8x71NEhR7m7hdTBtYXAAc0woUt3quV+uRjvzBcE5B1E90JYYPkx0vst0rQ5y
-         ULzIDOg53gc1ijbP1LnstuRzLFUEMT5LKXl+5x1T+NHCzvmaP2/HYU0P+55YJzmvGPg6
-         s4cskxom7+0wfU/0rDn09k0OIeEN5WWDFr67Yx/SgpsPEzu5inAMo7jq+wA+HdybK7sj
-         fniT/CImKk/UQortyowWwl2gQ8MvdmIsreaw5s084Dy2HV/cvVqRW5TZyB3RFkep26Ow
-         2PJTV8XkU08zuAjgLArMSgXvV0QjXFAjw2UFkd/cG7vK45RFLhhEohVd/3prQGY5a/zF
-         DwEQ==
+        bh=KUgqA1Jc2xYoZNZTuzlLkXS4uHvCEdWe1k/c6jbnK/M=;
+        b=bLGQeielRAZQuCSkRfcO/xn7d/5dXDC+ehwgRz1xPN+5JKzp5z9oMJR5cietlIXNV4
+         bkcwahyA2CwyfyP7aWP8xS0i24ZiZC3M2JaRMhbIhx31WGa0wcOygfnYq3Ib1uEE3jlj
+         v+Hm6kzy5cdnXnzewM4XoHyf2HBwI4JnajS0Ft90AJiZHCW5xyMwKieTv7Wl65ke/l7C
+         l6AlP6qWJPfnDy5lv3XVLCNRR1FTSG9ih329+qy5odW7ODurwrseR5mIQjBO4up+fWjg
+         2JQjUEPucVJbJaGE9wFVDvJHqz7y8H8JXwCHVEvM68S+QGajc9n1AE7qMpDE/dnpbIW9
+         Paww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749737188; x=1750341988;
+        d=1e100.net; s=20230601; t=1749737190; x=1750341990;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NTQZFYiB4NXt/ECryK4Vh1lbcJp1CEfXh3FvCrufPYY=;
-        b=BxRfeX6UXO70hgTkx4KPcKc0XrU0UUVFyLfBDktdF9ygatrmjTBoaVlCszwci2p7TF
-         aA90s1EsQb3O+UMTYAh5v60jjVex2sSUhqgiEIJpOI4r+Qz9wkiKCOTvCTuDRfvT1Ghb
-         oZIkzya7qmzaLTdKrwXepeAeKRshbvhhvy6KWQGS6uq++JBCJ2+h6NCgPbABW9xrCs6E
-         IGNVF2DUbLhM4C1nGu++zzJmKjHhWeLOUCKL5Nf9yqv1Dj5dRnjFSfA5SC4ojgdJBMk2
-         1T1VIi8Orq1WbcewyxnwPpCYpSSfnyc3K6fQVFQoZQWvZbAT2MvD8ItwVruuFx4UaOdK
-         51EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3gHom6aXwX37ZxRbE9HNOz6i06iW+bTMG1i2uY13UcQhiP3vWXAm86BzjSMW/QxOoes+m6tUZ12RKQhc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5u3bUwFdr6Ini/XZNhgqhXOlkkn8X3dgOOSy7NHY993xoYqLn
-	TGiuh2RFOLo/BuWJkmKLd8CBuuH1RcZTVD4+7UkIUMKPLI82q5Pw6soTJCJjE7dh+w==
-X-Gm-Gg: ASbGnctDIpPlxloOWYPisNvKCyq2zLGa/jStRkOTYIVK/8RJ0D2HAmNofDi4VnrdiWL
-	9s0wo5MUfqRZoIYb6Q0sVLFLYJNWKi29PJ0SGpdNP/L0U0AhA4k31JgwCT81aMpOXle54oQMG/j
-	jMvpe8kpjVQL2rgQbj+wL5FLQVWCGoN5N9ipmTrFFRt3GTOp2xSa640JO5/DBuoRW3+HbGzzO29
-	hQ/fiRkdlVKED2ebGpdKUC98v3IDXWsrag4ckomsHBsg2eJHWRFhz0Jij8WHCOZT1aT0nYuS4uQ
-	7GC0LMBVuvIsERCCajUGmn7epMJIxDfQennLCUv5+WD4owHET9mH2t9/Pde15quDbZDhznw59CW
-	hxsUpqgULcaZucm8BWk7Gr1l71z4k4qGleSJ1veXDfdbkZ0xTaejqCmtrR7InBQ==
-X-Google-Smtp-Source: AGHT+IGI00Q6YIMHbSANMSDLS5LglERhtsWYB9gZJltWUzVNiYCfyWZ6zBltyt3gAZHRC+E6Vgy1RA==
-X-Received: by 2002:a5d:64c8:0:b0:3a4:d0ed:257b with SMTP id ffacd0b85a97d-3a567987728mr33280f8f.22.1749737188086;
-        Thu, 12 Jun 2025 07:06:28 -0700 (PDT)
+        bh=KUgqA1Jc2xYoZNZTuzlLkXS4uHvCEdWe1k/c6jbnK/M=;
+        b=X978Vk5I5/LAxe1ET4Sf1G8gIw/4+3P9q2j2mWcILDywNBQQN9h4V7zngy8wPXic/c
+         40wKCJTL4bc6/iTuQQhtQ2A5dwFiNCaBNsIOJiS+0/sS4C+7DsvWTVz0FeJIdkOq8Zbb
+         VoRkwNLUpty0FOrOHgaMJdKCD3hzRx2pymk8UH57iGCwDAMRHqmCEKgFujYZ8wmQ61lo
+         KVuDAGU7ZAiKrjeuvcahWwfd9hLQbIMGRskfdvNVOn45act6rVGeO/f9gUw6DYv5AcN+
+         2/o86VOjxZ9N6gC2wv81HLrDiuWSdf4Bw8OSmoEgSnuFexTcCtHGBhhP2Lxa+JY8W2Uk
+         v9tA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjyLxxAXiob5YdHsWe03MxedBgxbkpqMAWfY98iB8BFAgcqDlNtQ2jjSCfIJkyg0HgcjlA8vc9acsZNAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJf/Za44m9LWDnEMZjK3VtG4NATnKZIW8xrykcyEXUrKWskB6f
+	sD5vClUbtGUlC0GjlrjSFADT6I2eTmzpoBh7igoorFk0R8E1kqmid3xtjcHwO6LmSg==
+X-Gm-Gg: ASbGncuSybgZOPrypBWh41cGWDkDTmnLqXOf0vRGkOTavEnshAsxRkY2AehGj2POfkS
+	a6yglm7hQ1kttGppGUuDDcLR3xgrUjiPbFxpcan5auuHagy20JfYvhaQK/Mv2AiL/9TmMm7u2rF
+	YIDy0OwvhLycjIjENApqfm0M2LsmtPJsxcekN4n9c5TiCU+2J0XuEcv0ToW/0QqE+lsGLuZUPlC
+	V0rxF/78vRjsbMstveQxyvZJj9FENTdx5LZCO7ldbnuORz/wz82oR8UL6LGD6xwob1iMEq8arXu
+	2PQPd09/i6LFpATYgWpOtDpu/uOOWwbBTjq98RuPXIyvAixbD4gI8ZQZIEaH/58U03/BKTSuNvx
+	X7Ep/LtIntvqUNvRI4/5/ZJH8WGZjHrkpU+pgLFJiXh2pRAUKGsmq2PO64UxtGpwFwD0TVnKR
+X-Google-Smtp-Source: AGHT+IEMmU+OYqOh2rsuirqXNprzlh+QwHNDiMIm/ZI5vCsQSWsOSemy/DSfB7Z5oVT8jFgyb+HdDw==
+X-Received: by 2002:a05:6000:250e:b0:3a4:f66a:9d31 with SMTP id ffacd0b85a97d-3a56798747fmr45030f8f.16.1749737189462;
+        Thu, 12 Jun 2025 07:06:29 -0700 (PDT)
 Received: from cyber-t14sg4.sec.9e.network (ip-078-094-000-050.um19.pools.vodafone-ip.de. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561a3ce6bsm2078875f8f.49.2025.06.12.07.06.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561a3ce6bsm2078875f8f.49.2025.06.12.07.06.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 07:06:27 -0700 (PDT)
+        Thu, 12 Jun 2025 07:06:29 -0700 (PDT)
 From: Michal Gorlas <michal.gorlas@9elements.com>
 To: Tzung-Bi Shih <tzungbi@kernel.org>,
 	Brian Norris <briannorris@chromium.org>,
@@ -66,9 +66,9 @@ Cc: marcello.bauer@9elements.com,
 	Michal Gorlas <michal.gorlas@9elements.com>,
 	chrome-platform@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] firmware: coreboot: support for parsing SMM related informations from coreboot tables
-Date: Thu, 12 Jun 2025 16:05:48 +0200
-Message-ID: <815080fae73a4e879bae4851367ac7c0ad2cd551.1749734094.git.michal.gorlas@9elements.com>
+Subject: [PATCH v1 2/3] firmware: coreboot: loader for Linux-owned SMI handler
+Date: Thu, 12 Jun 2025 16:05:49 +0200
+Message-ID: <6cfb5bae79c153c54da298c396adb8a28b5e785a.1749734094.git.michal.gorlas@9elements.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749734094.git.michal.gorlas@9elements.com>
 References: <cover.1749734094.git.michal.gorlas@9elements.com>
@@ -80,259 +80,254 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-coreboot exposes (S)MM related data in the coreboot table. Extends existing interface,
-with structure corresponding to (S)MM data, and adds parser. Parser exposes this data
-to the modules executed later.
+Places a blob with Linux-owned SMI handler in the lower 4GB of memory, calculates
+entry points for the it and triggers SMI to coreboot's SMI handler
+informing it where to look for Linux-owned SMI handler.
 
 Signed-off-by: Michal Gorlas <michal.gorlas@9elements.com>
 ---
- drivers/firmware/google/Kconfig          | 12 +++++
- drivers/firmware/google/Makefile         |  3 ++
- drivers/firmware/google/coreboot_table.h | 34 ++++++++-----
- drivers/firmware/google/mm_info.c        | 63 ++++++++++++++++++++++++
- drivers/firmware/google/mm_payload.h     | 58 ++++++++++++++++++++++
- 5 files changed, 158 insertions(+), 12 deletions(-)
- create mode 100644 drivers/firmware/google/mm_info.c
- create mode 100644 drivers/firmware/google/mm_payload.h
+ drivers/firmware/google/Makefile    |   9 ++
+ drivers/firmware/google/mm_blob.S   |  20 +++
+ drivers/firmware/google/mm_loader.c | 186 ++++++++++++++++++++++++++++
+ 3 files changed, 215 insertions(+)
+ create mode 100644 drivers/firmware/google/mm_blob.S
+ create mode 100644 drivers/firmware/google/mm_loader.c
 
-diff --git a/drivers/firmware/google/Kconfig b/drivers/firmware/google/Kconfig
-index 41b78f5cb735..5d918c076f25 100644
---- a/drivers/firmware/google/Kconfig
-+++ b/drivers/firmware/google/Kconfig
-@@ -81,4 +81,16 @@ config GOOGLE_VPD
- 	  This option enables the kernel to expose the content of Google VPD
- 	  under /sys/firmware/vpd.
- 
-+config COREBOOT_PAYLOAD_MM
-+	tristate "SMI handling in Linux (LinuxBootSMM)"
-+	depends on GOOGLE_COREBOOT_TABLE
-+	help
-+	  Enables support for SMI handling by Linux-owned code.
-+	  coreboot reserves region for payload-owned SMI handler, the Linux
-+	  driver prepares its SMI handler outside of SMRAM, and lets coreboot
-+	  know where the handler is placed by issuing an SMI. On this SMI, the
-+	  handler is being placed in SMRAM and all supported SMIs from that point
-+	  on are handled by Linux-owned SMI handler.
-+	  If in doubt, say N.
-+
- endif # GOOGLE_FIRMWARE
 diff --git a/drivers/firmware/google/Makefile b/drivers/firmware/google/Makefile
-index 8151e323cc43..d2a690e8379d 100644
+index d2a690e8379d..eab5a62d7500 100644
 --- a/drivers/firmware/google/Makefile
 +++ b/drivers/firmware/google/Makefile
-@@ -12,3 +12,6 @@ obj-$(CONFIG_GOOGLE_CBMEM)		+= cbmem.o
+@@ -15,3 +15,12 @@ obj-$(CONFIG_GOOGLE_VPD)		+= vpd-sysfs.o
  
- vpd-sysfs-y := vpd.o vpd_decode.o
- obj-$(CONFIG_GOOGLE_VPD)		+= vpd-sysfs.o
+ # LinuxBootSMM related.
+ obj-$(CONFIG_COREBOOT_PAYLOAD_MM)		+= mm_info.o
++payload-mm-$(CONFIG_COREBOOT_PAYLOAD_MM)	:= mm_loader.o mm_blob.o
 +
-+# LinuxBootSMM related.
-+obj-$(CONFIG_COREBOOT_PAYLOAD_MM)		+= mm_info.o
-diff --git a/drivers/firmware/google/coreboot_table.h b/drivers/firmware/google/coreboot_table.h
-index bb6f0f7299b4..e0b087933c5a 100644
---- a/drivers/firmware/google/coreboot_table.h
-+++ b/drivers/firmware/google/coreboot_table.h
-@@ -41,7 +41,6 @@ struct lb_cbmem_ref {
- };
- 
- #define LB_TAG_CBMEM_ENTRY 0x31
--
- /* Corresponds to LB_TAG_CBMEM_ENTRY */
- struct lb_cbmem_entry {
- 	u32 tag;
-@@ -52,6 +51,16 @@ struct lb_cbmem_entry {
- 	u32 id;
- };
- 
-+/* Corresponds to LB_TAG_PLD_MM_INTERFACE_INFO */
-+#define LB_TAG_PLD_MM_INTERFACE_INFO 0x3b
-+struct lb_pld_mm_interface_info {
-+	u32 tag;
-+	u32 size;
-+	u8 revision;
-+	u8 requires_long_mode_call;
-+	u8 register_mm_entry_command;
-+};
++subdir-						:= mm_handler
++obj-$(CONFIG_COREBOOT_PAYLOAD_MM)		+= payload-mm.o
 +
- /* Describes framebuffer setup by coreboot */
- struct lb_framebuffer {
- 	u32 tag;
-@@ -61,15 +70,15 @@ struct lb_framebuffer {
- 	u32 x_resolution;
- 	u32 y_resolution;
- 	u32 bytes_per_line;
--	u8  bits_per_pixel;
--	u8  red_mask_pos;
--	u8  red_mask_size;
--	u8  green_mask_pos;
--	u8  green_mask_size;
--	u8  blue_mask_pos;
--	u8  blue_mask_size;
--	u8  reserved_mask_pos;
--	u8  reserved_mask_size;
-+	u8 bits_per_pixel;
-+	u8 red_mask_pos;
-+	u8 red_mask_size;
-+	u8 green_mask_pos;
-+	u8 green_mask_size;
-+	u8 blue_mask_pos;
-+	u8 blue_mask_size;
-+	u8 reserved_mask_pos;
-+	u8 reserved_mask_size;
- };
- 
- /* A device, additionally with information from coreboot. */
-@@ -80,6 +89,7 @@ struct coreboot_device {
- 		struct lb_cbmem_ref cbmem_ref;
- 		struct lb_cbmem_entry cbmem_entry;
- 		struct lb_framebuffer framebuffer;
-+		struct lb_pld_mm_interface_info mm_info;
- 		DECLARE_FLEX_ARRAY(u8, raw);
- 	};
- };
-@@ -112,8 +122,8 @@ void coreboot_driver_unregister(struct coreboot_driver *driver);
-  * boilerplate.  Each module may only use this macro once, and
-  * calling it replaces module_init() and module_exit()
-  */
--#define module_coreboot_driver(__coreboot_driver) \
-+#define module_coreboot_driver(__coreboot_driver)                  \
- 	module_driver(__coreboot_driver, coreboot_driver_register, \
--			coreboot_driver_unregister)
-+		      coreboot_driver_unregister)
- 
- #endif /* __COREBOOT_TABLE_H */
-diff --git a/drivers/firmware/google/mm_info.c b/drivers/firmware/google/mm_info.c
++$(obj)/mm_blob.o: $(obj)/mm_handler/handler.bin
++
++$(obj)/mm_handler/handler.bin: FORCE
++	$(Q)$(MAKE) $(build)=$(obj)/mm_handler $@
+diff --git a/drivers/firmware/google/mm_blob.S b/drivers/firmware/google/mm_blob.S
 new file mode 100644
-index 000000000000..55bcdc8b8d53
+index 000000000000..87557d67c47b
 --- /dev/null
-+++ b/drivers/firmware/google/mm_info.c
-@@ -0,0 +1,63 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/firmware/google/mm_blob.S
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Derived from rmpiggy.S.
++ *
++ * Wrapper script for the MM payload binary as a transport object
++ * before copying to SMRAM memory.
++ */
++#include <linux/linkage.h>
++#include <asm/page_types.h>
++
++	.section ".init.data","aw"
++
++	.balign PAGE_SIZE
++
++SYM_DATA_START(mm_blob)
++	.incbin	"drivers/firmware/google/mm_handler/handler.bin"
++SYM_DATA_END_LABEL(mm_blob, SYM_L_GLOBAL, mm_blob_end)
++
++SYM_DATA_START(mm_relocs)
++	.incbin	"drivers/firmware/google/mm_handler/handler.relocs"
++SYM_DATA_END(mm_relocs)
+diff --git a/drivers/firmware/google/mm_loader.c b/drivers/firmware/google/mm_loader.c
+new file mode 100644
+index 000000000000..51fbfd07f525
+--- /dev/null
++++ b/drivers/firmware/google/mm_loader.c
+@@ -0,0 +1,186 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * mm_info.c
++ * Driver for installing Linux-owned SMI handler
 + *
-+ * Driver for exporting MM payload information from coreboot table.
++ * Copyright (c) 2025 9elements GmbH
 + *
-+ * Copyright 2025 9elements gmbh
-+ * Copyright 2025 Michal Gorlas <michal.gorlas@9elements.com>
++ * Author: Michal Gorlas <michal.gorlas@9elements.com>
 + */
 +
-+#include <linux/device.h>
 +#include <linux/module.h>
-+#include <linux/slab.h>
++#include <linux/init.h>
++#include <linux/cpu.h>
++#include <linux/delay.h>
++#include <linux/gfp.h>
++#include <linux/mm.h>
 +
-+#include "coreboot_table.h"
 +#include "mm_payload.h"
 +
-+static struct lb_pld_mm_interface_info *mm_cbtable_info;
-+struct mm_info *mm_info;
++#define DRIVER_NAME "mm_loader"
 +
-+static int mm_driver_probe(struct coreboot_device *dev)
++struct mm_header *mm_header;
++
++static void *shared_buffer;
++static size_t blob_size;
++
++/*
++ * This is x86_64 specific, assuming that we want this to also work on i386,
++ * we either need to have "trigger_smi32" bounded by preprocessor guards(?)
++ * or mm_loader32 and then mm_loader$(BITS) in Makefile(?).
++ */
++static int trigger_smi(u64 cmd, u64 arg, u64 retry)
 +{
-+	mm_cbtable_info = &dev->mm_info;
-+	if (mm_cbtable_info->tag != LB_TAG_PLD_MM_INTERFACE_INFO)
-+		return -ENXIO;
++	u64 status;
++	u16 apmc_port = 0xb2;
 +
-+	mm_info = kmalloc(sizeof(*mm_info), GFP_KERNEL);
-+	mm_info->revision = mm_cbtable_info->revision;
-+	mm_info->requires_long_mode_call =
-+		mm_cbtable_info->requires_long_mode_call;
-+	mm_info->register_mm_entry_command =
-+		mm_cbtable_info->register_mm_entry_command;
++	asm volatile("movq	%[cmd],  %%rax\n\t"
++		     "movq   %%rax,	%%rcx\n\t"
++		     "movq	%[arg],  %%rbx\n\t"
++		     "movq   %[retry],  %%r8\n\t"
++		     ".trigger:\n\t"
++		     "mov	%[apmc_port], %%dx\n\t"
++		     "outb	%%al, %%dx\n\t"
++		     "cmpq	%%rcx, %%rax\n\t"
++		     "jne .return_changed\n\t"
++		     "pushq  %%rcx\n\t"
++		     "movq   $10000, %%rcx\n\t"
++		     "rep    nop\n\t"
++		     "popq   %%rcx\n\t"
++		     "cmpq   $0, %%r8\n\t"
++		     "je     .return_not_changed\n\t"
++		     "decq   %%r8\n\t"
++		     "jmp    .trigger\n\t"
++		     ".return_changed:\n\t"
++		     "movq	%%rax, %[status]\n\t"
++		     "jmp	.end\n\t"
++		     ".return_not_changed:"
++		     "movq	%%rcx, %[status]\n\t"
++		     ".end:\n\t"
++		     : [status] "=r"(status)
++		     : [cmd] "r"(cmd), [arg] "r"(arg), [retry] "r"(retry),
++		       [apmc_port] "r"(apmc_port)
++		     : "%rax", "%rbx", "%rdx", "%rcx", "%r8");
++
++	if (status == cmd || status == PAYLOAD_MM_RET_FAILURE)
++		status = PAYLOAD_MM_RET_FAILURE;
++	else
++		status = PAYLOAD_MM_RET_SUCCESS;
++
++	return status;
++}
++
++static int register_entry_point(struct mm_info *data, uint32_t entry_point)
++{
++	u64 cmd;
++	u8 status;
++
++	cmd = data->register_mm_entry_command |
++	      (PAYLOAD_MM_REGISTER_ENTRY << 8);
++	status = trigger_smi(cmd, entry_point, 5);
++	pr_info(DRIVER_NAME ": %s: SMI returned %x\n", __func__, status);
++
++	return status;
++}
++
++static u32 __init place_handler(void)
++{
++	/*
++	 * The handler (aka MM blob) has to be placed in low 4GB of the memory.
++	 * This is because we can not assume that coreboot will be in long mode
++	 * while trying to copy the blob to SMRAM. Even if so, (can be checked by
++	 * reading cb_data->mm_info.requires_long_mode_call), it would make our life
++	 * way too complicated (e.g. no need for shared page table).
++	 */
++	size_t entry32_offset;
++	size_t entry64_offset;
++	u16 real_mode_seg;
++	const u32 *rel;
++	u32 count;
++	unsigned long phys_base;
++
++	blob_size = mm_payload_size_needed();
++	shared_buffer = (void *)__get_free_pages(GFP_DMA32, get_order(blob_size));
++
++	memcpy(shared_buffer, mm_blob, blob_size);
++	wbinvd();
++
++	/*
++	 * Based on arch/x86/realmode/init.c
++	 * The sole purpose of doing relocations is to be able to calculate the offsets
++	 * for entry points. While the absolute addresses are not valid anymore after the
++	 * blob is copied to SMRAM, the distances between sections stay the same, so we
++	 * can still calculate the correct entry point based on coreboot's bitness.
++	 */
++	phys_base = __pa(shared_buffer);
++	real_mode_seg = phys_base >> 4;
++	rel = (u32 *)mm_relocs;
++
++	/* 16-bit segment relocations. */
++	count = *rel++;
++	while (count--) {
++		u16 *seg = (u16 *)(shared_buffer + *rel++);
++		*seg = real_mode_seg;
++	}
++
++	/* 32-bit linear relocations. */
++	count = *rel++;
++	while (count--) {
++		u32 *ptr = (u32 *)(shared_buffer + *rel++);
++		*ptr += phys_base;
++	}
++
++	mm_header =  (struct mm_header *)shared_buffer;
++
++	mm_header->mm_signature = REALMODE_END_SIGNATURE;
++	mm_header->mm_blob_size = mm_payload_size_needed();
++
++	/* At this point relocations are done and we can do some cool
++	 * pointer arithmetics to help coreboot determine correct entry
++	 * point based on offsets.
++	 */
++	entry32_offset = mm_header->mm_entry_32 - (unsigned long)shared_buffer;
++	entry64_offset = mm_header->mm_entry_64 - (unsigned long)shared_buffer;
++
++	mm_header->mm_entry_32 = entry32_offset;
++	mm_header->mm_entry_64 = entry64_offset;
++
++	return (unsigned long)shared_buffer;
++}
++
++static int __init mm_loader_init(void)
++{
++	u32 entry_point;
++
++	if (!mm_info)
++		return -ENOMEM;
++
++	entry_point = place_handler();
++
++	if (register_entry_point(mm_info, entry_point)) {
++		pr_warn(DRIVER_NAME ": registering entry point for MM payload failed.\n");
++		kfree(mm_info);
++		mm_info = NULL;
++		free_pages((unsigned long)shared_buffer, get_order(blob_size));
++		return -1;
++	}
++
++	mdelay(100);
++
++	kfree(mm_info);
++	mm_info = NULL;
++	free_pages((unsigned long)shared_buffer, get_order(blob_size));
++
 +	return 0;
 +}
-+EXPORT_SYMBOL(mm_info);
 +
-+static void mm_driver_remove(struct coreboot_device *dev)
++static void __exit mm_loader_exit(void)
 +{
-+	if (mm_info)
-+		kfree(mm_info);
++	pr_info(DRIVER_NAME ": DONE\n");
 +}
 +
-+static const struct coreboot_device_id mm_info_ids[] = {
-+	{ .tag = LB_TAG_PLD_MM_INTERFACE_INFO },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(coreboot, mm_info_ids);
-+
-+static struct coreboot_driver mm_driver = {
-+	.probe = mm_driver_probe,
-+	.remove = mm_driver_remove,
-+	.drv = {
-+		.name = "mm_info",
-+	},
-+	.id_table = mm_info_ids,
-+};
-+
-+module_coreboot_driver(mm_driver);
++module_init(mm_loader_init);
++module_exit(mm_loader_exit);
 +
 +MODULE_AUTHOR("Michal Gorlas <michal.gorlas@9elements.com>");
-+MODULE_DESCRIPTION("Driver for exporting MM info from coreboot table");
++MODULE_DESCRIPTION("MM Payload loader - installs Linux-owned SMI handler");
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/firmware/google/mm_payload.h b/drivers/firmware/google/mm_payload.h
-new file mode 100644
-index 000000000000..bb2f55c4f240
---- /dev/null
-+++ b/drivers/firmware/google/mm_payload.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * mm_payload.h
-+ *
-+ * Internal header for MM payload driver.
-+ *
-+ * Copyright 2025 9elements gmbh
-+ * Copyright 2025 Michal Gorlas <michal.gorlas@9elements.com>
-+ */
-+
-+#ifndef __MM_PAYLOAD_H
-+#define __MM_PAYLOAD_H
-+
-+#define PAYLOAD_MM_RET_SUCCESS 0
-+#define PAYLOAD_MM_RET_FAILURE 1
-+#define PAYLOAD_MM_REGISTER_ENTRY 2
-+
-+#define REALMODE_END_SIGNATURE	0x65a22c82
-+
-+struct mm_info {
-+	u8 revision;
-+	u8 requires_long_mode_call;
-+	u8 register_mm_entry_command;
-+};
-+
-+extern struct mm_info *mm_info;
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <linux/types.h>
-+
-+/* This must match data at mm_handler/mm_header.S */
-+struct mm_header {
-+	u32	text_start;
-+	u32	mm_entry_32;
-+	u32	mm_entry_64;
-+	u32	mm_signature;
-+	u32	mm_blob_size;
-+};
-+
-+extern struct mm_header *mm_header;
-+extern unsigned char mm_blob_end[];
-+
-+extern unsigned char mm_blob[];
-+extern unsigned char mm_relocs[];
-+
-+/*
-+ * This has to be under 1MB (see tseg_region.c in coreboot source tree).
-+ * The actual check for this is made in coreboot after we fill the header
-+ * (see above) with the blob size.
-+ */
-+static inline size_t mm_payload_size_needed(void)
-+{
-+	return mm_blob_end - mm_blob;
-+}
-+
-+#endif /* __ASSEMBLER__ */
-+#endif /* __MM_PAYLOAD_H */
 -- 
 2.49.0
 
