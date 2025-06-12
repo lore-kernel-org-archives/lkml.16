@@ -1,190 +1,126 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4D1248878
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DC419007D
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749738470; cv=none; b=pME0kyuJiXYLXvze5+ci0VXddEfK/ZYVWhfWQnJQn1j+LJiWMDlbTKbdPpUvjWLq7B8sBgX98bUoCbMAjHsB/GETdhXWPxhbHslTU6h6fcMRRHSxSu/kXqBr++0hiAGOzv2dLNwH5cHtlXOu+YpMdGFmYpXfmDfVtBvPuI1DrXs=
+	t=1749738522; cv=none; b=tvUDdjms3XJWwW72GiF6b6TeWtc7sWy+Bcn52lhP+2P4vwaWEAx3vc/alUG4TVyYeYr2YaPs6S47HYcByXmKE0N2P9NDJ7Ii9SFEXE4d218fRPV57W+3ksNO1t9g8KIAC+lsXRnowXEk2QoB1rpINPqSAGdWqHgcl83hIlOXe04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749738470; c=relaxed/simple;
-	bh=lR4rRyT8kEmeAFgFbTyrlgyEKk+f9LUnBbC9banrJsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MRAA5zUWoCSxqTlSBJbhb0zqoEnP32r1gjfzYHcRMqptNX5k5tYRBp7IqktWAwA5jbNZlSbn5/qyoZsyi7MyjujyUp8NjErFSZJulsAUVlI8a3oaeKN9OPS0RtH9K7dSG1bvALCMSeiiQ0It2fAYToWsHI2rRbew4GbghqkJnTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BYYBoRRh; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749738522; c=relaxed/simple;
+	bh=EJUn+HxEphkXa3Tmo0WpUA6X64DPGMauzWeB2gIGvQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H3RrZb+MN/CbAoh7F6JlUfm0rPu154n4frzTPXfCaG1QW2Pc+HFTuGbQkaNJMe5FagcQDP8FsiQt6CaWfG6OTIBETvX/kV4SVtESDY8izQk4UVDcwGO4ZA/cB33xjVjNEorzIJI2MgTA1lJUBAR5bjkphJvasp6nB03u1oEaH2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G2njMlsj; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BYYBoRRh"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749738464;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=TPwDoP+jbnUa8bxVZg836/xmpXU4SXa+id2ZO0eScw4=;
-	b=BYYBoRRhyn3yzwB6sJ3KgEfbbn9MSqYPlWwxFGIib6wKVgDgzAHWo/gcqDmus3hZ9U68IK
-	kKwuzq3dOAz4MwpWzI7VoAYYmfB/9ZlRZoij3Of4DPisYZBoWPRwwx+qpDN4XBduR/A4B8
-	CG1PQPRwy10HjYZ2v+NgwfIKMNMDRbU=
-From: Yajun Deng <yajun.deng@linux.dev>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yajun Deng <yajun.deng@linux.dev>
-Subject: [PATCH RESEND net-next v2] net: sysfs: Implement is_visible for phys_(port_id, port_name, switch_id)
-Date: Thu, 12 Jun 2025 14:27:07 +0000
-Message-ID: <20250612142707.4644-1-yajun.deng@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G2njMlsj"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so888886f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749738518; x=1750343318; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y7rIsWA2briWQ8Yb8DhTmywFqeEer3lbSfSQBbj2pps=;
+        b=G2njMlsj+SEOIHr/5PYGj2oKnSU4DzwqxrpaaZCFD7xIhwRbgdQr/qY9Ek324Y+L0i
+         8AbK8b48Hdus62jPwS9AiMSS9XN0C2YfzeOj6BMssc2vNfKorIz4m614vOuMhrncGIoY
+         CwVGNO5eeQnqNHgv/m4mhgM9DfBVHjkIAMGn0rgr9aCZnRde/gqt2TUJeR3a9XcfGuW8
+         7KKz+KktGOo1ozruMtgURfxTlTVgu1A5DGBbKDExbMw3qt9gaXaVjFWj0X4N8cmsiFOv
+         Qa8W9UZ6g9IBNUlluzFqA4uQtr5kzZAneTFA8KyIzPo5pnnShLPp6DhDSbdZ/Q4wuI9U
+         iysQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749738518; x=1750343318;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y7rIsWA2briWQ8Yb8DhTmywFqeEer3lbSfSQBbj2pps=;
+        b=hxrCNE6YP5llhg3ZYkl8d7MpRH/eQ4N6LoFlGYa516X/9hqsMxrkdUulflP03Fr7aJ
+         VlXpX/6zot5Z+Efm9Zt3cJdamKZzt7DdNmzsBvcR5XRUkDOw9LrV5Y2Gw1t9YWeBCNRA
+         dNxL45JjclmMujDq0IcOoEdbqTV2xNAVIYRqQ1IgEUOd/LcZNCstDD8/hMw5ddALMWz/
+         f8nveVqV0Mwf0kqApbsqp8DrsdafYPsCLCmJcDzIpP/oF6qUl+sb4f+SUUQwNA19Krlt
+         BsZXhqEbjEe+GSSS6BbNfSBf7YssPfFmXe73yopWxgvsrWWXmc634LXwfFGagR/v7a1m
+         2sqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsCQI2smeA+H/Q4ae6//sYJspFv4pszkiRFWWyxcm0Px/A+sxteqJMmsoOUkGxECmLiDUI1Vnu0FUz3YA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFvTnzx97vhEtsAPZvOElOusej1nBn83QZSXpPo9lESMj6UIff
+	la4Fz3jEJJrfyCQN8VLgzcrAvbnAytZRaxYHFrrEc7CVPDdK2jcOkDDOSYUU9YbX0rM=
+X-Gm-Gg: ASbGncuVAwCmjQwPndro2nr0xKUqOzDXPJFSV7grJ2/4g9VlPZdNkFmYgdpn/uxcWJS
+	Pv23O5iU34yq29zeJs8lpcewiEy28se7RIfAdPMkH45eRZ8bf1PVDlf/t5HmWByIrrUGgLEtFZu
+	ni5quJbR0EGpflIOITOgwmnhknxYX/v5u9l025D2uuzzGiqpAoL+uCGKaHfuPttnTfpo8vYLeje
+	DJyx+Mhy/f1XXn6JccM6YOharLKhFBzH8KJ3cLZBg4+FY1wtvDcKSdk848Cdt1CFZFO6YPwJ7J9
+	OZtlgL6lXoFjt0VSt+HOD4rDc8qi54X3DtD7V24I5paWgAYAtN7OH9ctNXk2wksHWDs=
+X-Google-Smtp-Source: AGHT+IGSIQRcM7fVzWirS8YoPF0tFI1UZjJkmBNxvk3+G8I7l0PWiFBYrTUOa1vhtpeoVhEQXQLGMA==
+X-Received: by 2002:a05:6000:3106:b0:3a4:d975:7d6f with SMTP id ffacd0b85a97d-3a56076b241mr3276014f8f.39.1749738518473;
+        Thu, 12 Jun 2025 07:28:38 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561a3cdb4sm2152087f8f.54.2025.06.12.07.28.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 07:28:38 -0700 (PDT)
+Message-ID: <5b21c4c9-0ef7-41e5-a3bb-5a48a0c73644@linaro.org>
+Date: Thu, 12 Jun 2025 15:28:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] spi: spi-fsl-dspi: Use non-coherent memory for DMA
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Frank Li <Frank.li@nxp.com>,
+ Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
+ <20250609-james-nxp-spi-dma-v1-2-2b831e714be2@linaro.org>
+ <aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
+ <de7142ac-f1a3-412f-9f00-502222b20165@app.fastmail.com>
+ <aEhVsrEk0qv+38r3@lizhi-Precision-Tower-5810>
+ <20250611090107.t35zatn47vetnvse@skbuf>
+ <c65c752a-5b60-4f30-8d51-9a903ddd55a6@linaro.org>
+ <20250612111514.rfb3gpmlilznrfxs@skbuf>
+ <ad7e9aa7-74a3-449d-8ed9-cb270fd5c718@linaro.org>
+ <20250612142306.3c3dl46z326xvcud@skbuf>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250612142306.3c3dl46z326xvcud@skbuf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-phys_port_id_show, phys_port_name_show and phys_switch_id_show would
-return -EOPNOTSUPP if the netdev didn't implement the corresponding
-method.
 
-There is no point in creating these files if they are unsupported.
 
-Put these attributes in netdev_phys_group and implement the is_visible
-method. make phys_(port_id, port_name, switch_id) invisible if the netdev
-dosen't implement the corresponding method.
+On 12/06/2025 3:23 pm, Vladimir Oltean wrote:
+> On Thu, Jun 12, 2025 at 03:14:32PM +0100, James Clark wrote:
+>>> That's why I don't like the DMA mode in DSPI, it's still CPU-bound,
+>>> because the DMA buffers are very small (you can only provide one TX FIFO
+>>> worth of data per DMA transfer, rather than the whole buffer).
+>>
+>> Is that right? The FIFO size isn't used in any of the DMA codepaths, it
+>> looks like the whole DMA buffer is filled before initiating the transfer.
+>> And we increase the buffer to 4k in this patchset to fully use the existing
+>> allocation.
+> 
+> Uhm, yeah, no?
+> 
+> dspi_dma_xfer():
+> 
+> 	while (dspi->len) {
+> 		dspi->words_in_flight = dspi->len / dspi->oper_word_size;
+> 		if (dspi->words_in_flight > dspi->devtype_data->fifo_size)
+> 			dspi->words_in_flight = dspi->devtype_data->fifo_size;
+> 		dspi_next_xfer_dma_submit();
+> 	}
 
-Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-v2: Remove worthless comments.
-v1: https://lore.kernel.org/all/20250515130205.3274-1-yajun.deng@linux.dev/
----
- include/linux/netdevice.h |  2 +-
- net/core/net-sysfs.c      | 59 +++++++++++++++++++++++----------------
- 2 files changed, 36 insertions(+), 25 deletions(-)
+Right but that's before the change in this patchset to use the whole 
+page that was allocated, hence the next bit:
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index adb14db25798..9cbc4e54b7e4 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -2388,7 +2388,7 @@ struct net_device {
- 	struct dm_hw_stat_delta __rcu *dm_private;
- #endif
- 	struct device		dev;
--	const struct attribute_group *sysfs_groups[4];
-+	const struct attribute_group *sysfs_groups[5];
- 	const struct attribute_group *sysfs_rx_queue_group;
- 
- 	const struct rtnl_link_ops *rtnl_link_ops;
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index 1ace0cd01adc..c9b969386399 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -641,12 +641,6 @@ static ssize_t phys_port_id_show(struct device *dev,
- 	struct netdev_phys_item_id ppid;
- 	ssize_t ret;
- 
--	/* The check is also done in dev_get_phys_port_id; this helps returning
--	 * early without hitting the locking section below.
--	 */
--	if (!netdev->netdev_ops->ndo_get_phys_port_id)
--		return -EOPNOTSUPP;
--
- 	ret = sysfs_rtnl_lock(&dev->kobj, &attr->attr, netdev);
- 	if (ret)
- 		return ret;
-@@ -668,13 +662,6 @@ static ssize_t phys_port_name_show(struct device *dev,
- 	char name[IFNAMSIZ];
- 	ssize_t ret;
- 
--	/* The checks are also done in dev_get_phys_port_name; this helps
--	 * returning early without hitting the locking section below.
--	 */
--	if (!netdev->netdev_ops->ndo_get_phys_port_name &&
--	    !netdev->devlink_port)
--		return -EOPNOTSUPP;
--
- 	ret = sysfs_rtnl_lock(&dev->kobj, &attr->attr, netdev);
- 	if (ret)
- 		return ret;
-@@ -696,14 +683,6 @@ static ssize_t phys_switch_id_show(struct device *dev,
- 	struct netdev_phys_item_id ppid = { };
- 	ssize_t ret;
- 
--	/* The checks are also done in dev_get_phys_port_name; this helps
--	 * returning early without hitting the locking section below. This works
--	 * because recurse is false when calling dev_get_port_parent_id.
--	 */
--	if (!netdev->netdev_ops->ndo_get_port_parent_id &&
--	    !netdev->devlink_port)
--		return -EOPNOTSUPP;
--
- 	ret = sysfs_rtnl_lock(&dev->kobj, &attr->attr, netdev);
- 	if (ret)
- 		return ret;
-@@ -718,6 +697,40 @@ static ssize_t phys_switch_id_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(phys_switch_id);
- 
-+static struct attribute *netdev_phys_attrs[] __ro_after_init = {
-+	&dev_attr_phys_port_id.attr,
-+	&dev_attr_phys_port_name.attr,
-+	&dev_attr_phys_switch_id.attr,
-+	NULL,
-+};
-+
-+static umode_t netdev_phys_is_visible(struct kobject *kobj,
-+				      struct attribute *attr, int index)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct net_device *netdev = to_net_dev(dev);
-+
-+	if (attr == &dev_attr_phys_port_id.attr) {
-+		if (!netdev->netdev_ops->ndo_get_phys_port_id)
-+			return 0;
-+	} else if (attr == &dev_attr_phys_port_name.attr) {
-+		if (!netdev->netdev_ops->ndo_get_phys_port_name &&
-+		    !netdev->devlink_port)
-+			return 0;
-+	} else if (attr == &dev_attr_phys_switch_id.attr) {
-+		if (!netdev->netdev_ops->ndo_get_port_parent_id &&
-+		    !netdev->devlink_port)
-+			return 0;
-+	}
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group netdev_phys_group = {
-+	.attrs = netdev_phys_attrs,
-+	.is_visible = netdev_phys_is_visible,
-+};
-+
- static ssize_t threaded_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
- {
-@@ -783,9 +796,6 @@ static struct attribute *net_class_attrs[] __ro_after_init = {
- 	&dev_attr_tx_queue_len.attr,
- 	&dev_attr_gro_flush_timeout.attr,
- 	&dev_attr_napi_defer_hard_irqs.attr,
--	&dev_attr_phys_port_id.attr,
--	&dev_attr_phys_port_name.attr,
--	&dev_attr_phys_switch_id.attr,
- 	&dev_attr_proto_down.attr,
- 	&dev_attr_carrier_up_count.attr,
- 	&dev_attr_carrier_down_count.attr,
-@@ -2328,6 +2338,7 @@ int netdev_register_kobject(struct net_device *ndev)
- 		groups++;
- 
- 	*groups++ = &netstat_group;
-+	*groups++ = &netdev_phys_group;
- 
- 	if (wireless_group_needed(ndev))
- 		*groups++ = &wireless_group;
--- 
-2.25.1
+ > And we increase the buffer to 4k in this patchset to fully use the
+   existing allocation.
+
+We were allocating for the size of the FIFO (multiplied by two to hold 
+the control words), but dma_alloc_coherent() will be backed by a whole 
+page anyway, even if you only ask for a few bytes.
+
+After changing that to make use of the full allocation the FIFO length 
+is no longer involved.
 
