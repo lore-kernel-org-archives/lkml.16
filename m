@@ -1,105 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8FEF1F583D;
-	Thu, 12 Jun 2025 09:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566431F583D;
+	Thu, 12 Jun 2025 09:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749720966; cv=none; b=j/Eqsj4gyTrG0pwLpaciQ2jFmXviboUsY8G1RMAsRgWjcG2HTMgVoSAwmaVFHEN+YBH3n8Ik+QRtJXnOvK9teE5DKkUr+iDKo17Tn3SgLGYJ9gO1dGSiRGJEvtZpAvVFUPjR6M4X7l0aqcwDsow9/0pIQuZOFaDk/2sbE2Ctfvc=
+	t=1749721015; cv=none; b=DHUS0CkNkaM4fyTvvhQY3cBqgX2fjK4R1WnSOE+Z/mmFyN9ioIhWmxZeAIYehyz7SUBpNSnVDk5j6v6IkxN+99vIBbtEL5WDNt7PcqNamnwoujagIDxItxICh4xP4K8Lp1QaOMY4s+dKQIuNdyl5kYOeOE1hja4+P2dXCkUD/Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749720966; c=relaxed/simple;
-	bh=pxEIxUzdt1AT4nWSXvcVmvl8JoaRHII85IQOZaXzROU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZlK00411r497TwHba3BGmdFdyyrhoyHNOWeAl6DfnCBCybC2cgHA7NuA7sWOHRMcpOB3lBtaX6jQ7/GjxMGE87I46Ab5EM/jGJGDBhs1N8qwM2mvs2MzHsoX0yPWH4VkqktRHkYnleVN+6/f/RqYORoePMHFNcqWCt+2WejkJTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4A4314BF;
-	Thu, 12 Jun 2025 02:35:37 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5133E3F66E;
-	Thu, 12 Jun 2025 02:35:56 -0700 (PDT)
-Date: Thu, 12 Jun 2025 10:35:53 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-	<arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] clk: scmi: Fix children encountered before parents
- case
-Message-ID: <20250612-vivacious-bipedal-beetle-b04714@sudeepholla>
-References: <20250612-clk-scmi-children-parent-fix-v2-1-125b26a311f6@pengutronix.de>
- <20250612-eccentric-fresh-bee-e52db4@sudeepholla>
- <aEqTNLTp0EzcC2aa@pengutronix.de>
+	s=arc-20240116; t=1749721015; c=relaxed/simple;
+	bh=zzNM1NRpWtTljNxxKqwlEBrzD8clwdhi+hEHCOXqPPY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nYU0O1YPDB/P55q74Ujrjmln6knOOs3QRLHZpIe0G5L8lqm1qEIWFQRWnKQ/dFkzvyYmBSrW1KFjtzODJ7LuRODi+Rsv/UR0D5+0LppowFjA78y0dVc5Jeef3N2aHK7hTt0uIKxDNADUmfj/WsykDUkFTNnOuU6KQiPh5J8A0f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-527a2b89a11so287989e0c.2;
+        Thu, 12 Jun 2025 02:36:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749721012; x=1750325812;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MlKXKGVlwoBPp0PAkcRb9oaTjUaq4FXxnfqiTqHWy3A=;
+        b=UBWbS9UadkQzq4enQ+bLMqY4YFV8sDHfL9h1RhaV8FKvhtencOOmJPvnYfzkep6gzJ
+         VvYwFoDhpcVeCtTWdvR8/Tp1hhuTkhxHUTolSVdi+RHEt8B/ioieQpJCM3kpbm7qWfCK
+         7U4IgCX3KomIbLJHbLByM0J+UfXAkPeyWax3GW8ZKRmmrcdwnxo53UOxjH88v0+/INq7
+         Y9lL0MU+IDwpxjYOXAHLvhzEZw1/7i1bfrRcjs/w+81UDhBihN4QBwpE6/SW6P3ShloA
+         V96bK1XbD/R22ggUfHOnQtI/Wr1PhuTrjfEIt8FnEWSEyDI65czmrCEa54lUCjsgXXBu
+         MA+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUPJXOcj1uUthccqZ6jEmM9KycXUjDPlTT9v40QJtFhksifp6CcqoHYVSzJnhdLU9ITAW1t+jwGzecMGYb9Nc59rME=@vger.kernel.org, AJvYcCVzJ1eNer9GNGdXApse5hpGDSDEjW9usZJTQndlirJ14xNlbkYu+w4W0POoT63vnxG5Zzsyl8ga25By+qo=@vger.kernel.org, AJvYcCWLBV+aKTm3HvAGNbhl9K+RR9hlDEeSBxm0rKeDw7Y7WPD7GvYtolewSL3pDSVsaZS1wwJmwIU0B+2RplM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywnd8rXug/jDUqOsdAhdMHjNMNHGhU+3FeQIhfaaqoum0RDwGXC
+	dz4ccuyNHbK/Cx1pT1dLu/glUcWdQzXLHSaSHP9ar4FntYU06pnVVx8Ly5D9P66P
+X-Gm-Gg: ASbGnct0TAbqhZRCsjydpCJ2Q6MbCJdJ4v2Ldh8/t6cpfyHuP+3N40Vg6QMZ7h6+7zw
+	tD64uD+HdcRoaF1g+dVcpx9T1TBHIn2oWGL5nBIprMeQFKCfAPU8hDB5b6ISxtQEy5mBGHdwe7F
+	YrgGU5XDFVicLCcH01qACnG2OmFqOhFs9lYPgg5iZX778PcPu8SMpdoWH4JRcxuBTsxhstOVOPl
+	/BFoX1wRERzn7nlH6dYErmsOeQaglm658D8RbtOdZLQiXLmv0xDDG1POh4LUbnv0oDKSYC85cta
+	QFGRKXwRrQosJShFOeEHK/ssRgweNeaPte6dHN2dXqLhZsEJikJIWaIoRBMJdcVd712n1IJmKve
+	cw4+ulHf7uWMXvi21vUC5q7/E
+X-Google-Smtp-Source: AGHT+IE7G3+nzLIpxcptvLHLTiA+tKRj0R3+LBkMd4mPtM4xHC0/iJ0GLeVpBwedX8XExy8z2nX96A==
+X-Received: by 2002:a05:6122:1d9f:b0:531:2afc:461c with SMTP id 71dfb90a1353d-5312afc4de3mr4328581e0c.7.1749721011791;
+        Thu, 12 Jun 2025 02:36:51 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5312f670ae2sm226427e0c.38.2025.06.12.02.36.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 02:36:51 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4c9cea30173so177554137.3;
+        Thu, 12 Jun 2025 02:36:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUR6OoZXJKTGqjpsKEnJ7HRdvJGKBNWCyJu8CvAz6Ea53Dp5WLteQ2PhqMfgUJ6ajIBZQrzMIcGzI9r/mw=@vger.kernel.org, AJvYcCXtB2uGn4VIGkQJgn5cQFoS2VZCJrwSD/Gvm2owo1hpb50E3nRfak1hH4rjVaouvKcKpoRLDZ/JB4x1a+yorzdccgo=@vger.kernel.org, AJvYcCXxDaixyf+2H1HRXCwZ/1XvENovbubVnEVMgKf4mRKSRjHtofhid4mniFqDeJndoSBm9fJ6Id8BcbVmxmQ=@vger.kernel.org
+X-Received: by 2002:a05:6102:4b8b:b0:4e4:5ed0:19bb with SMTP id
+ ada2fe7eead31-4e7bafda80fmr6504211137.22.1749721011180; Thu, 12 Jun 2025
+ 02:36:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEqTNLTp0EzcC2aa@pengutronix.de>
+References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
+ <20250609-vspx-reset-v1-2-9f17277ff1e2@ideasonboard.com> <20250611232956.GQ24465@pendragon.ideasonboard.com>
+In-Reply-To: <20250611232956.GQ24465@pendragon.ideasonboard.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 11:36:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWm2KCea7yJc5O3M13XemzTYwB9+2zxGrwD0O7UVA+vRg@mail.gmail.com>
+X-Gm-Features: AX0GCFuSWiY9GrYiJHYatrVtXsEGNwmZ1WJ7mSFq_nJisU5eexe41JDPFmO9OmE
+Message-ID: <CAMuHMdWm2KCea7yJc5O3M13XemzTYwB9+2zxGrwD0O7UVA+vRg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] media: vsp1: Reset FCP for VSPD
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, 
+	LUU HOAI <hoai.luu.ub@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 12, 2025 at 10:43:32AM +0200, Sascha Hauer wrote:
-> On Thu, Jun 12, 2025 at 09:29:16AM +0100, Sudeep Holla wrote:
-> > On Thu, Jun 12, 2025 at 09:36:58AM +0200, Sascha Hauer wrote:
-> > > When it comes to clocks with parents the SCMI clk driver assumes that
-> > > parents are always initialized before their children which might not
-> > > always be the case.
-> > > 
-> > > During initialization of the parent_data array we have:
-> > > 
-> > > 	sclk->parent_data[i].hw = hws[sclk->info->parents[i]];
-> > > 
-> > > hws[sclk->info->parents[i]] will not yet be initialized when children
-> > > are encountered before their possible parents. Solve this by allocating
-> > > all struct scmi_clk as an array first and populating all hws[] upfront.
-> > > 
-> > 
-> > LGTM. I would like to add a note that we don't free individual scmi_clk
-> > if for some reason it fails to setup. I can do that when I apply, just
-> > checking if anyone has any objections. Please shout out if you have.
-> 
-> Feel free to add that note. I should have added this myself since it's
-> not entirely obvious that the devm_kfree() has to be removed with this
-> patch.
-> 
+On Thu, 12 Jun 2025 at 09:19, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Mon, Jun 09, 2025 at 09:01:43PM +0200, Jacopo Mondi wrote:
+> > From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+> >
+> > According to H/W manual v1.00, VSPD must be excecuted
+> > FCP_RST.SOFTRST after VI6_SRESET.SRST. So this patch adds it.
+> > VSPDL is not applicable.
+>
+> According to the R-Car Gen3 H/W manual v1.00, the FCP must be reset
+> after resetting the VSPD, except for the VSPDL. Do so.
 
-I did that and realised only bit later that I usually route SCMI clk driver
-changes via clk tree.
+And s/Reset FCP for VSPD/Reset FCP after VSPD/g in the one-line
+summary.
 
-Please repost with
+Gr{oetje,eeting}s,
 
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+                        Geert
 
-I am sharing below the commit message update I did when I applied.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Regards,
-Sudeep
-
--->8
-
-clk: scmi: Handle case where child clocks are initialized before their parents
-
-The SCMI clock driver currently assumes that parent clocks are always
-initialized before their children. However, this assumption can fail if
-a child clock is encountered before its parent during probe.
-
-This leads to an issue during initialization of the parent_data array:
-
-    sclk->parent_data[i].hw = hws[sclk->info->parents[i]];
-
-If the parent clock's hardware structure has not been initialized yet,
-this assignment results in invalid data.
-
-To resolve this, allocate all struct scmi_clk instances as a contiguous
-array at the beginning of the probe and populate the hws[] array upfront.
-This ensures that any parent referenced later is already initialized,
-regardless of the order in which clocks are processed.
-
-Note that we can no longer free individual scmi_clk instances if
-scmi_clk_ops_init() fails which shouldn't be a problem if the SCMI
-platform has proper per-agent clock discovery.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
