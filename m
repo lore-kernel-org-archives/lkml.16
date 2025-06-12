@@ -1,207 +1,141 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACE61C1F13;
-	Thu, 12 Jun 2025 02:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82AD28F1;
+	Thu, 12 Jun 2025 02:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749696485; cv=none; b=dUOY9Hl80evHkeQxW2rYj4KRRvyJo2KtwSWtMu4QcpoGl+rb/P/VgZeydLzfOo3b3W5mC7MNYJki4+mrI02+Wu3RUAhQs/4aQd3eKD23xRrimGaxgw3Bj5KCfi9oZ9rlKJy5UQY4ggWNuthqxZWZMhSyqGFR+bKrgRMB+AsnkhI=
+	t=1749696533; cv=none; b=SatiBa71BU26S+WA0/jXOkZzcAV5CbCm+dDtNzwgsKOJgCu9CEiwr2GOKDFOZZOjsRa5upJPRH+I/U/VF2xeT1qcZWKW9LXSBcTFtlplcVku2X146YCQFBFFo3OrYQggUhY0fKxclzlJUm0x4Tu62zr47QBj93K5L2ryFAbUNbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749696485; c=relaxed/simple;
-	bh=f4H7Y+r48HQSZ7EuN5UKYiS6BVNKq79Svws0Lv+F8LI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NGDbAY9KRqMdMEk6CUAIbC0ZGmWyLyhOYWUeY6FFa3ZAOF7a/7Cw5OhMKbq8IV4u8+rYlrKAzVc2rg0IZygA5SgiuwpHDzc1iJejqsl7VS2ZrhDdff0hP0Wiei3rGH66eDkbo/ll8TyXzGBZyRxOi1pjyJKc6/IiY7zPjjtXCJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MYS5Rlpn; arc=none smtp.client-ip=209.85.221.53
+	s=arc-20240116; t=1749696533; c=relaxed/simple;
+	bh=uOnIiEnqoE5mn6tpYF1c7GMhpFzVKgaFnmNewUSAzWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z7lPkaYefP4W8UgmTbOrcg7zkM749gAqb9oARAGmjwuaWt3rmc/JwtKZ0vhaGi40lNw1f3LEkP9oY5wrcRSqlL8+eG6+HLXjH35TMCnZMjzLsE9jLeApm0e+AnHvWDsBPB3zFo4p/Gplcj47gZEl0wg/+CMJyoW916zIPBdi21Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBtW6R2Q; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYS5Rlpn"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a53359dea5so313684f8f.0;
-        Wed, 11 Jun 2025 19:48:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBtW6R2Q"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7486ca9d396so391850b3a.1;
+        Wed, 11 Jun 2025 19:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749696482; x=1750301282; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vz148ZUApP4uOQdhUfpaPucEXS8RXsBePf4DAtP/7aA=;
-        b=MYS5Rlpnor2/MvAa36QmSikd+Wh3IfhnQrf5mKpflRLvfEMuXWPOIxwvL9Zx0mq+2l
-         hrbvXTlr2mBaxfDRV4vGyzEMw702GLdyIv/nUqnXf0RQejYXy0FsCgYynMZPoatb9aDI
-         po39TTl4Olh3i7ikqU8eUOI0XcGzR5I7kfd7nESJZP4gMO8LdUrkWvhIEGhOBlYYshzZ
-         4wFgentpGZFq5ODhvzBHqGjy1rO4qrX8MBYtGPzch0ebuoHScR0gsdW2BP1P/SQ3lYeB
-         dD+usiIKUEH9w+MgxUPjVDLNkaYTViJuJlTaRz9IYBbYxGPQU8IFjO7Kji4Nq7+Mr6Ic
-         lYsg==
+        d=gmail.com; s=20230601; t=1749696531; x=1750301331; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ahiOgmSZ189HLN8mvTYFQfG9zC9TWM2CIiM/X5I190M=;
+        b=hBtW6R2QRxfBPt+LLGGgK7sUF9Edswg7zSUiVxR9fxaeepSDt1MCwmBTlRC1lCMUzT
+         AIq5fLNZuUXES4cNXYtRn06c2CsFtgz9tD+Wjko0n/dauUfJN70OKIvV/gbylGEgakgw
+         nybrWltl52BJQgPzs/objccg+darBT/tPxoPR3GRi64saI2T+I1G40qBZRbWju0MQFdQ
+         Kjc3gV4ZIXezqvEG4MHmA38ZJ1MaJPku13szMGbpgshT9Bf/IZK6PatUzybE4bR7Wb32
+         oEXvQMKVIFyVfylkvezw1F54lQx5fKh8FqczJ3B4H7381Oc8m0yIYficL56LXzp/++WJ
+         IQGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749696482; x=1750301282;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vz148ZUApP4uOQdhUfpaPucEXS8RXsBePf4DAtP/7aA=;
-        b=fmkInfJqicJiULxw3BGf4mhMX6oyJuVdB8rV7wO3aQ/Sx3rjwc33c9D/YpFmrzHZiA
-         sQ2XdNn7diQAaDnPBJoueLfXWosH1WXBeMrHaXWU399j2YnK0rbsSUmpfFuIo4HlPauP
-         cjerbgx9Adbm0vHX+UkGJuafJbnlMEv09qbE8r/tYIwIZBWbcaVPE9k8Pc7hWIFEXRfh
-         uAxOpVBBhoQf4+GSwS7YE4K9UQmSojWlnmQa2NcnlVsFwMLLSwfe4xyGYYeKQFZ6AwUW
-         Q3jpoaDVs1/QaAkZaiGKmAaDglzME4lg27X56m1Vt3bX2LJAFRUmCyHhgD6lRH9cdorf
-         cN3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUFxwJ2WXxgS3Xyy2AxH8ahBis6KAKHR5CP9nzpjk1+XVgX5SBNQNfJHQVxqPgT1z2RbzZrg+StRR3hwmcs@vger.kernel.org, AJvYcCWj2WKp1dbvjCEwEXptYfw+1ahNzPqT/C9EqlcRk1bGnJ4GbLApYXF6HXMnzcm040QPaJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypeSmdUQ76oHn4S2+TJfzrE1rJquQabjo8eOTyVD3EcfRb6Onm
-	ONUXbfc9g7q40gRrhbppLlLSqUHogmw2XN8FobzxSxbdwYJJF/xpdH9dVBK3RidmaRCyilkN0qE
-	beEysucB21OEeOwJ1kdU+8TUSABmQAW8=
-X-Gm-Gg: ASbGncsxJB8omhMfEz5nIDxdokSGIP40MH+SUgtLSXMZUAAqn90rLNRkAZrmvA45uFu
-	XVTTkFSPMI4EzdI25sb5dwFQzgncezPAwmbWqtOoFPDsSt7AAj16M53LKZcUobvw/ipiFm6NuFr
-	FmzFLz/5y0es5lYAikk/Gcu2h4JhEdMb5loCF4JLk8ptc33IKjQYjC2pa+WX5xJYcTxikxDdpT
-X-Google-Smtp-Source: AGHT+IG0h9jaSAfIckQc+5yClXVhCcGIYDKsgqCETtZ4Rmbkq6wPTIOJFNrLjX1KFcb3wWcy6w1fBUfp7W4VGxZonhY=
-X-Received: by 2002:a05:6000:18a8:b0:3a4:e6d7:6160 with SMTP id
- ffacd0b85a97d-3a5612f0b3dmr713407f8f.6.1749696481781; Wed, 11 Jun 2025
- 19:48:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749696531; x=1750301331;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ahiOgmSZ189HLN8mvTYFQfG9zC9TWM2CIiM/X5I190M=;
+        b=mzSxPodVTIcm+wlhtKU3GaENsu0qeTD3ldHdtJ53DBSsJV6KPGPFNvFfilKrQbzCWI
+         ouUsKHIA+tLRKOYlgGhQn5S/ETiWhPjSKo2sYN65+UPGvNt1tjmPepcynCyo+dLcNxKw
+         FPTxPOVOQxs69cx58B1O6XOO7K3dAVN2a/m6skhDMRz+ypgvntyC3/fIHKlapPxBL2js
+         2x8ZGxPZ7lKwwz+D8kov8W4PKNsRBmGSOqjj6wG4d9ruMZKH3Pmz5oESRPxyhRD56po7
+         oCaRsHfbIXwp9QCNd5e7YFeqP0A7ZfTDF17kHprvty6CDUosciXPDvuh+1Cxc4BJKUyq
+         GFlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbJw6UofpJ2N6b/vFA9ot6FGqsRfTHeyXhQu+m3P2/L48xs6uP4vryOGAO+iLVDKtCrjzk5FUuc7s+Rg==@vger.kernel.org, AJvYcCV/vaJV3DfMwEpL0r1D1ENDalKIfVCisiorp0/p0aAFdklIIOmWy5jkCVKj293JaVv9WvgP0tmdCp4=@vger.kernel.org, AJvYcCWGrshnJKs5rnm0Gc1pfJyN8pFd7fkez4WKoHlKCSs0IXPpzmrxb8HAoEI0JiY/x8xka98KqlIS93HZvus4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6udsMFzEP57ZEaR6z2jeVs+2iZNItZczN9QLs6v1SAaUtBr78
+	hDeUzFjaYoM/VOROGpYKjZ8UR4eICkdCltCm8qz54qmWTcHk/Fb6lZz7
+X-Gm-Gg: ASbGncub3GN2P8UfU7MIg1x+fHh2TCNewgM9eMv7NZaoXStFwKKNOBfKkEbjrp+YSTz
+	PCV2ytLydDH9TbpM6pPDhbY8W4pT0lcp6C+HmPHt8d9crL6hWg21aqJMIblH590ggPGrwAxGwT1
+	k5PtYbVsAK4sRbAPhCuQ5eKmsNlgdAPChEnyADF6zJfoqyipo7qr/YfvxmwQ1uUrXTjfIiMhOJf
+	puntMZxx+zNRH0myy4jQZTyBoFsAOkR3ZrAuiO92b2XGdl3BYvpsYmPY/e73/6Mp5q4kCNrOAa0
+	Zdt0H5knePsuFEgOAGapqjq5KD0N3deruabFSGS1KmFt5JSL9G/w9n4HU1qt+Q==
+X-Google-Smtp-Source: AGHT+IEPXTV4XHn9uDXHGaK/gbEBhU8EdhLwd5PI+auaZzZZJ3JyAqtwA3diSRBeECjUiD83gObbpw==
+X-Received: by 2002:a05:6a21:8dc8:b0:21f:5c9d:499a with SMTP id adf61e73a8af0-21f865baf0emr8969453637.4.1749696531007;
+        Wed, 11 Jun 2025 19:48:51 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748809d2ad2sm321652b3a.107.2025.06.11.19.48.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 19:48:49 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 51567424180B; Thu, 12 Jun 2025 09:48:47 +0700 (WIB)
+Date: Thu, 12 Jun 2025 09:48:47 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux ext4 <linux-ext4@vger.kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+Subject: Re: [PATCH] Documentation: ext4: atomic_writes: Remove
+ cross-reference labels
+Message-ID: <aEpAD2jcemzvoJlQ@archie.me>
+References: <20250610091200.54075-2-bagasdotme@gmail.com>
+ <20250611164800.GC6134@frogsfrogsfrogs>
+ <87ikl21a5u.fsf@trenco.lwn.net>
+ <aEoaJEhw5qHkd2_w@archie.me>
+ <20250612010942.GJ6179@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1749214572.git.asml.silence@gmail.com> <c4de7ed6e165f54e2166e84bc88632887d87cfdf.1749214572.git.asml.silence@gmail.com>
-In-Reply-To: <c4de7ed6e165f54e2166e84bc88632887d87cfdf.1749214572.git.asml.silence@gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 11 Jun 2025 19:47:50 -0700
-X-Gm-Features: AX0GCFsF8TengxXbdw4Na3vitrpKct7_UfoZ8uTTIUrWlnDfIh3GU3rfFF7cuWg
-Message-ID: <CAADnVQJgxnQEL+rtVkp7TB_qQ1JKHiXe=p48tB_-N6F+oaDLyQ@mail.gmail.com>
-Subject: Re: [RFC v2 5/5] io_uring/bpf: add basic kfunc helpers
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: io-uring@vger.kernel.org, Martin KaFai Lau <martin.lau@linux.dev>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3EZ4Rlku9TfdJSmj"
+Content-Disposition: inline
+In-Reply-To: <20250612010942.GJ6179@frogsfrogsfrogs>
+
+
+--3EZ4Rlku9TfdJSmj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 6, 2025 at 6:58=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.c=
-om> wrote:
->
-> A handle_events program should be able to parse the CQ and submit new
-> requests, add kfuncs to cover that. The only essential kfunc here is
-> bpf_io_uring_submit_sqes, and the rest are likely be removed in a
-> non-RFC version in favour of a more general approach.
->
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  io_uring/bpf.c | 86 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->
-> diff --git a/io_uring/bpf.c b/io_uring/bpf.c
-> index f86b12f280e8..9494e4289605 100644
-> --- a/io_uring/bpf.c
-> +++ b/io_uring/bpf.c
-> @@ -1,12 +1,92 @@
->  #include <linux/mutex.h>
->  #include <linux/bpf_verifier.h>
->
-> +#include "io_uring.h"
->  #include "bpf.h"
->  #include "register.h"
->
->  static const struct btf_type *loop_state_type;
->  DEFINE_MUTEX(io_bpf_ctrl_mutex);
->
-> +__bpf_kfunc_start_defs();
-> +
-> +__bpf_kfunc int bpf_io_uring_submit_sqes(struct io_ring_ctx *ctx,
-> +                                        unsigned nr)
-> +{
-> +       return io_submit_sqes(ctx, nr);
-> +}
-> +
-> +__bpf_kfunc int bpf_io_uring_post_cqe(struct io_ring_ctx *ctx,
-> +                                     u64 data, u32 res, u32 cflags)
-> +{
-> +       bool posted;
-> +
-> +       posted =3D io_post_aux_cqe(ctx, data, res, cflags);
-> +       return posted ? 0 : -ENOMEM;
-> +}
-> +
-> +__bpf_kfunc int bpf_io_uring_queue_sqe(struct io_ring_ctx *ctx,
-> +                                       void *bpf_sqe, int mem__sz)
-> +{
-> +       unsigned tail =3D ctx->rings->sq.tail;
-> +       struct io_uring_sqe *sqe;
-> +
-> +       if (mem__sz !=3D sizeof(*sqe))
-> +               return -EINVAL;
-> +
-> +       ctx->rings->sq.tail++;
-> +       tail &=3D (ctx->sq_entries - 1);
-> +       /* double index for 128-byte SQEs, twice as long */
-> +       if (ctx->flags & IORING_SETUP_SQE128)
-> +               tail <<=3D 1;
-> +       sqe =3D &ctx->sq_sqes[tail];
-> +       memcpy(sqe, bpf_sqe, sizeof(*sqe));
-> +       return 0;
-> +}
-> +
-> +__bpf_kfunc
-> +struct io_uring_cqe *bpf_io_uring_get_cqe(struct io_ring_ctx *ctx, u32 i=
-dx)
-> +{
-> +       unsigned max_entries =3D ctx->cq_entries;
-> +       struct io_uring_cqe *cqe_array =3D ctx->rings->cqes;
-> +
-> +       if (ctx->flags & IORING_SETUP_CQE32)
-> +               max_entries *=3D 2;
-> +       return &cqe_array[idx & (max_entries - 1)];
-> +}
-> +
-> +__bpf_kfunc
-> +struct io_uring_cqe *bpf_io_uring_extract_next_cqe(struct io_ring_ctx *c=
-tx)
-> +{
-> +       struct io_rings *rings =3D ctx->rings;
-> +       unsigned int mask =3D ctx->cq_entries - 1;
-> +       unsigned head =3D rings->cq.head;
-> +       struct io_uring_cqe *cqe;
-> +
-> +       /* TODO CQE32 */
-> +       if (head =3D=3D rings->cq.tail)
-> +               return NULL;
-> +
-> +       cqe =3D &rings->cqes[head & mask];
-> +       rings->cq.head++;
-> +       return cqe;
-> +}
-> +
-> +__bpf_kfunc_end_defs();
-> +
-> +BTF_KFUNCS_START(io_uring_kfunc_set)
-> +BTF_ID_FLAGS(func, bpf_io_uring_submit_sqes, KF_SLEEPABLE);
-> +BTF_ID_FLAGS(func, bpf_io_uring_post_cqe, KF_SLEEPABLE);
-> +BTF_ID_FLAGS(func, bpf_io_uring_queue_sqe, KF_SLEEPABLE);
-> +BTF_ID_FLAGS(func, bpf_io_uring_get_cqe, 0);
-> +BTF_ID_FLAGS(func, bpf_io_uring_extract_next_cqe, KF_RET_NULL);
-> +BTF_KFUNCS_END(io_uring_kfunc_set)
+On Wed, Jun 11, 2025 at 06:09:42PM -0700, Darrick J. Wong wrote:
+> On Thu, Jun 12, 2025 at 07:07:00AM +0700, Bagas Sanjaya wrote:
+> > On Wed, Jun 11, 2025 at 11:05:17AM -0600, Jonathan Corbet wrote:
+> > > Sphinx wants to snarf up every .rst file it sees, regardless of wheth=
+er
+> > > it is explicitly made part of the document tree.  So it will pick up
+> > > atomic_writes.rst separately from the include.
+>=20
+> Does that mean that overview.rst doesn't need to include the other files
+> at all?
 
-This is not safe in general.
-The verifier doesn't enforce argument safety here.
-As a minimum you need to add KF_TRUSTED_ARGS flag to all kfunc.
-And once you do that you'll see that the verifier
-doesn't recognize the cqe returned from bpf_io_uring_get_cqe*()
-as trusted.
-Looking at your example:
-https://github.com/axboe/liburing/commit/706237127f03e15b4cc9c7c31c16d34dbf=
-f37cdc
-it doesn't care about contents of cqe and doesn't pass it further.
-So sort-of ok-ish right now,
-but if you need to pass cqe to another kfunc
-you would need to add an open coded iterator for cqe-s
-with appropriate KF_ITER* flags
-or maybe add acquire/release semantics for cqe.
-Like, get_cqe will be KF_ACQUIRE, and you'd need
-matching KF_RELEASE kfunc,
-so that 'cqe' is not lost.
-Then 'cqe' will be trusted and you can pass it as actual 'cqe'
-into another kfunc.
-Without KF_ACQUIRE the verifier sees that get_cqe*() kfuncs
-return 'struct io_uring_cqe *' and it's ok for tracing
-or passing into kfuncs like bpf_io_uring_queue_sqe()
-that don't care about a particular type,
-but not ok for full tracking of objects.
+I think overview.rst can be turned into toctree index.
 
-For next revision please post all selftest, examples,
-and bpf progs on the list,
-so people don't need to search github.
+>=20
+> > > This could be "fixed" by removing the .rst extension from the included
+> > > file.  But, since there is no use of the atomic_writes label to begin
+> > > with, it's better to just take it out.  The other fix, removing a cro=
+ss
+> > > reference, is not entirely ideal, but there is little text between the
+> > > label and the reference.
+> >=20
+> > So removing the labels looks good to you, right?
+>=20
+> I don't care that much either way, but if sphinx is going to include
+> every rst file implicitly then maybe we just get rid of the explicit
+> includes?
+
+OK then.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--3EZ4Rlku9TfdJSmj
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEpACgAKCRD2uYlJVVFO
+o7eOAQCdeMUtvQb2DPxQBBJkiVZfYB8zlwVecHaK5nJE1VUS1gEAtQ27FccaLbs2
+anyE3yTXXMGeHhBy5V+RkXLr2Dp8YQ8=
+=zJ3y
+-----END PGP SIGNATURE-----
+
+--3EZ4Rlku9TfdJSmj--
