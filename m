@@ -1,128 +1,225 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C9F21D3F4;
-	Thu, 12 Jun 2025 08:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1CF221710;
+	Thu, 12 Jun 2025 08:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716432; cv=none; b=dYUG5CJNVp693ewlXLmm59YXK+LScYr0ZDt91+OzZqyWN4ApvMtC3CLsUDR9ji2nBSn71bMyfq0bHf7AaNQR6OWlA7wOPhdlzdVJYF5eqEz4DKH+XSuEz8VBTrRW6OeuwVSCrg5pXmY+DFBgB5eVaphs4W/gm7sDZScgc5UwhOQ=
+	t=1749716436; cv=none; b=BM16TjvKIMye5cEBIs9E+/XIIk/JaTSDGYzX1IzzSz+zmegp6XFx3jGP/cw2SwH3cjd/GE6LoPWpzL5Lrew+HkmoBmq3E3+kLCS5ROks7NgEJuPuNQdoVPpxKNF+ZyA0wiqZfRX56OzV0GFB90yvIVa0/+QaAdHz+sr455I5kI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716432; c=relaxed/simple;
-	bh=WVgG2tnnkYpGMxVKQjyY3rF80ora3aJX6lpro4BS+uo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O4bkmgZDmH1aoayv++j/7xEIZQljpadpI3fiMne13W4eRTS+LRYbsL9r97FBEr+7bIHWlB966+TiYSqsq/w2HPSCrlPXwpBoQjFF9GeFtQSJLmElPzk6sBE5rfbCvmJLd1rSyDEQkgkolswluuyx69/WVAaTKmqCY0Tqa//FGxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDRAKLMm; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749716436; c=relaxed/simple;
+	bh=RS+upILC1WIEDP/qN69yWKf/6fEfZxwdMOccv2bkOYQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SoxbygBFNtbOi16e2PXQI/xaJEZudhCYNxIbAQGAeqyUeYcx56j8AebAq5fuwyk0o60NiCt94HTpFb2U6eLhNIeF65tK7WEZGJxCdH33WmmcEKWq5jukTJutaQo+JDFwIgQUpKOVLXUjYEse4H27a1ejc0D+HYucZY9s08uSETo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iDvV7c23; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDRAKLMm"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-404e580bf09so172075b6e.1;
-        Thu, 12 Jun 2025 01:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749716430; x=1750321230; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iHaOjqwhY79rHl7CZbeFzNKnbLFycykRZVNCnsxTjBw=;
-        b=iDRAKLMmIfcWwJ8mhVQ3C35Ysd2kEYiNlM7t4MrGl0OzVjR5eGYxO3ELWdJEzc6czU
-         lSyIv5pUi1TGhaCACEv9a+un5PMx53mF2oTViitxJruWe4tsrbWX+LGeSx0zsQiHhiEL
-         XBuALKGj4xAL/ST6c9wRL6K48Qofe9eYve7V+8/FxSwIYZnPczywZ+Re4vFtxYjNjVV1
-         2ChOHuu7C3In6OZC2C+WMNLRAmJK59ENO1HxHIvnGGg7MFU+p1thi5UQN2chzSKvq9uO
-         L6M4DSyS5kAQoN5jwYSRVpTeR1jpWDS7ZV9rZePz9BbYfywSBw1RXPgqGNiB/hA3sTWx
-         IZKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749716430; x=1750321230;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iHaOjqwhY79rHl7CZbeFzNKnbLFycykRZVNCnsxTjBw=;
-        b=pUzdv1mEQx9PMMpBG6BD9kBtSAYpbGYE8TVxywe0viH7PVSR0rFJCaHRC/ReibYfKz
-         4KfRijE+1hoQtlWySzjzDzHa5yNVxLekD+5UyqfIPfFziJBY+0PCs/X6DbSZWodbWtPj
-         YcwKQzeD+tFT+e1AHKtNz9a4ANqY7qPAAF5B1ezAOf4cfXIyQt67Uk+xKM5FKSGpuGQa
-         Ly1Ke1Er88S0jzZgujoMm1KdCui4B1vFBjDbi+gODHinbiECcR7EmJXgpMXXn1ophOmY
-         vZfkqUqZp0bidA1/46CVr2SQscWzJm7/PaKo3dJLABaKAcMErs9p2GIkcFYSWE1OHq4u
-         Odww==
-X-Forwarded-Encrypted: i=1; AJvYcCWcds0Kx8+RiE5HgsUgBuQ/vaKTpKk+i5F07t5W6HXS1wg0uLtbyrLw/sEvs06VSXNElK5mjWy+Mic0sO0Xsw==@vger.kernel.org, AJvYcCWkAmuoPxdWeQ9FDGnIMY2+hS/JxjGYuWv4iwXPshlbFw8V7waxQvZfL/46Omw/+uGiOCc3+ljqmGtZJfH4@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgBDkmAtFdzUN4X90VkebeF8eRFLwspzL07OuJFw4/VpNOhpYM
-	yLvInIC2WYtW2m1NTesr4rkSSzHrOaUKEU/80C/K/rk/gApQl4dzlg7P5DU2s40Z
-X-Gm-Gg: ASbGnctqR6hXVpuRmx2rRXIi4JshofZ65eVMCCoUqnaC49GcMtfYAlqV58gXOKB+EVI
-	oNh1OwoRna1sbJInkrNqffQtwQCKEC8iDHj3uu6RlydywA9J0KVctdnCOFitBX2tpIU5xqHXbvI
-	TUxh1142ekCLqxtA/w2tDTrOA3naWr+z7+1u0oovbCltEinVaEFAe/qSc9GSv3a8rx3KUkBVjj9
-	Sr/oq1MqcOWGoYhpxXwKcBt4hxcrpDGIcr+Ero4/OtOnJDPDJMgePIH4sk31pv6BzybBKERHTrC
-	zNMUvicPC4qm3+E1u1k9rYB70UWwEag0ImuHQTzBU8iUUHExX0ckdHE33PhOnm4=
-X-Google-Smtp-Source: AGHT+IHgoouR9wdzwq9AQYrVJwXB6hntvSFWGTLZ5QK5PWgpDBD8wu5ti9LLCSM1L4N6sdRNdH53Ag==
-X-Received: by 2002:a05:6808:690c:b0:406:7186:5114 with SMTP id 5614622812f47-40a660ce8d6mr1224140b6e.36.1749716430280;
-        Thu, 12 Jun 2025 01:20:30 -0700 (PDT)
-Received: from s-machine2.. ([2806:2f0:5501:d07c:2c0e:c0ab:c58f:2cd])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a6830b980sm211965b6e.33.2025.06.12.01.20.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 01:20:29 -0700 (PDT)
-From: Sergio Perez Gonzalez <sperezglz@gmail.com>
-To: kent.overstreet@linux.dev,
-	linux-bcachefs@vger.kernel.org
-Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	shuah@kernel.org,
-	syzbot+e577022d4fba380653be@syzkaller.appspotmail.com
-Subject: [PATCH] bcachefs: fix size used to calculate `nr` of devices in member_to_text()
-Date: Thu, 12 Jun 2025 02:19:26 -0600
-Message-ID: <20250612081935.161598-1-sperezglz@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iDvV7c23"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749716432;
+	bh=RS+upILC1WIEDP/qN69yWKf/6fEfZxwdMOccv2bkOYQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iDvV7c23cJIBHz0BopV6owPlUYC18ZwICA0/JCoqFdBQIfjIYDtX6xeprk7qkAbf0
+	 o8pslap598KCoFnOCMeFQ6zKqweZDcam/B4ZL2ok/4L7I03Y3YuAFoRwNnOZzdAixI
+	 EwvQO8RI1upC2eR6NlilB0jS0aEoNaIWvQJJtosqBcbehDBw5g3vOL7mjYaU3nHybE
+	 SYxFVzCsne2fiHWeewz4q5dUJ02ywJhjIBZ0Wh1Ks+5ktEet2mKlgeJYH9DJyo1WcU
+	 eagwwawdURj90P1uS/Eir6ZwV7IQAOAYmpvV+RteKI5iPOCCj3uiHg/54SelkSiW5X
+	 sEpJyx25XWP3g==
+Received: from [192.168.1.90] (unknown [212.93.144.165])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C069B17E00A3;
+	Thu, 12 Jun 2025 10:20:31 +0200 (CEST)
+Message-ID: <797aab41-fe81-4fdd-9399-b67818898f31@collabora.com>
+Date: Thu, 12 Jun 2025 11:20:20 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/11] HID: playstation: Make use of bitfield macros
+To: Roderick Colenbrander <thunderbird2k@gmail.com>
+Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ Henrik Rydberg <rydberg@bitmath.org>, kernel@collabora.com,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
+ <20250526-dualsense-hid-jack-v1-1-a65fee4a60cc@collabora.com>
+ <CAEc3jaAjUHgv7U59u7RSZ7TK9ycXmYs22b6MsHvSjt-_Do7cjg@mail.gmail.com>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <CAEc3jaAjUHgv7U59u7RSZ7TK9ycXmYs22b6MsHvSjt-_Do7cjg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In bch2_sb_members_v1_to_text() there is an incorrect size used to
-calculate the number of devices.
+Hi Roderick,
 
-The correct size should be `BCH_MEMBER_V1_BYTES` as implied by:
+On 6/10/25 7:07 AM, Roderick Colenbrander wrote:
+> Hi Christian,
+> 
+> Thanks for the effort into this patch. Personally this is a patch I
+> would rather drop. There is the trade-off between magical numbers and
+> code readability. I think this patch makes things much less readable.
+> Having to introduce more macros and FIELD_PREP vs a single bitshift
+> here and there.
 
-static struct bch_member *members_v1_get_mut(struct bch_sb_field_members_v1 *mi, int i)
-{
-	return (void *) mi->_members + (i * BCH_MEMBER_V1_BYTES);
-}
+I think the usage of bitfield macros is a general recommendation of 
+making code more robust, and this should also help improve overall 
+readability - e.g. this reduced code duplication by replacing the open 
+coded bit operations for computing touch point coordinates.
 
-Also invert the pointers used in the calculation, given that they yield a
-negative number.
+Sorry for the noise generated by the alignment correction!
 
-Reported-by: syzbot+e577022d4fba380653be@syzkaller.appspotmail.com
-Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
----
- fs/bcachefs/sb-members.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks,
+Cristian
 
-diff --git a/fs/bcachefs/sb-members.c b/fs/bcachefs/sb-members.c
-index c673e76ca27f..cc51313ebcf6 100644
---- a/fs/bcachefs/sb-members.c
-+++ b/fs/bcachefs/sb-members.c
-@@ -325,10 +325,10 @@ static void bch2_sb_members_v1_to_text(struct printbuf *out, struct bch_sb *sb,
- {
- 	struct bch_sb_field_members_v1 *mi = field_to_type(f, members_v1);
- 	struct bch_sb_field_disk_groups *gi = bch2_sb_field_get(sb, disk_groups);
--	int nr = (vstruct_end(&mi->field) - (void *) &gi->entries[0]) / sizeof(gi->entries[0]);
-+	int nr = ((void *) &gi->entries[0] - vstruct_end(&mi->field)) / BCH_MEMBER_V1_BYTES;
- 
- 	if (nr != sb->nr_devices)
--		prt_printf(out, "nr_devices mismatch: have %i entries, should be %u", nr, sb->nr_devices);
-+		prt_printf(out, "nr_devices mismatch: have %i entries, should be %u\n", nr, sb->nr_devices);
- 
- 	for (int i = 0; i < nr; i++)
- 		member_to_text(out, members_v1_get(mi, i), gi, sb, i);
-@@ -344,10 +344,10 @@ static void bch2_sb_members_v2_to_text(struct printbuf *out, struct bch_sb *sb,
- {
- 	struct bch_sb_field_members_v2 *mi = field_to_type(f, members_v2);
- 	struct bch_sb_field_disk_groups *gi = bch2_sb_field_get(sb, disk_groups);
--	int nr = (vstruct_end(&mi->field) - (void *) &gi->entries[0]) / le16_to_cpu(mi->member_bytes);
-+	int nr = ((void *) &gi->entries[0] - vstruct_end(&mi->field)) / le16_to_cpu(mi->member_bytes);
- 
- 	if (nr != sb->nr_devices)
--		prt_printf(out, "nr_devices mismatch: have %i entries, should be %u", nr, sb->nr_devices);
-+		prt_printf(out, "nr_devices mismatch: have %i entries, should be %u\n", nr, sb->nr_devices);
- 
- 	/*
- 	 * We call to_text() on superblock sections that haven't passed
--- 
-2.43.0
+> 
+> Thanks,
+> Roderick
+> 
+> On Mon, May 26, 2025 at 5:52 AM Cristian Ciocaltea
+> <cristian.ciocaltea@collabora.com> wrote:
+>>
+>> Improve code readability by replacing open coded bit operations with the
+>> equivalent bitfield macros.
+>>
+>> While at it, vertically align all DS_OUTPUT_* bit constants.
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>>  drivers/hid/hid-playstation.c | 68 ++++++++++++++++++++++++++-----------------
+>>  1 file changed, 41 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/hid/hid-playstation.c b/drivers/hid/hid-playstation.c
+>> index 1468fb11e39dffc883181663a4ad44252e0a7ebb..538194ce8902fe1383b57ac59743f32838dcb0df 100644
+>> --- a/drivers/hid/hid-playstation.c
+>> +++ b/drivers/hid/hid-playstation.c
+>> @@ -5,6 +5,7 @@
+>>   *  Copyright (c) 2020-2022 Sony Interactive Entertainment
+>>   */
+>>
+>> +#include <linux/bitfield.h>
+>>  #include <linux/bits.h>
+>>  #include <linux/crc32.h>
+>>  #include <linux/device.h>
+>> @@ -116,29 +117,41 @@ struct ps_led_info {
+>>  #define DS_STATUS_CHARGING_SHIFT       4
+>>
+>>  /* Feature version from DualSense Firmware Info report. */
+>> -#define DS_FEATURE_VERSION(major, minor) ((major & 0xff) << 8 | (minor & 0xff))
+>> -
+>> +#define DS_FEATURE_VERSION_MINOR               GENMASK(7, 0)
+>> +#define DS_FEATURE_VERSION_MAJOR               GENMASK(15, 8)
+>> +#define DS_FEATURE_VERSION(major, minor)       (FIELD_PREP(DS_FEATURE_VERSION_MAJOR, major) | \
+>> +                                                FIELD_PREP(DS_FEATURE_VERSION_MINOR, minor))
+>>  /*
+>>   * Status of a DualSense touch point contact.
+>>   * Contact IDs, with highest bit set are 'inactive'
+>>   * and any associated data is then invalid.
+>>   */
+>> -#define DS_TOUCH_POINT_INACTIVE BIT(7)
+>> +#define DS_TOUCH_POINT_INACTIVE                        BIT(7)
+>> +#define DS_TOUCH_POINT_X_LO                    GENMASK(7, 0)
+>> +#define DS_TOUCH_POINT_X_HI                    GENMASK(11, 8)
+>> +#define DS_TOUCH_POINT_X(hi, lo)               (FIELD_PREP(DS_TOUCH_POINT_X_HI, hi) | \
+>> +                                                FIELD_PREP(DS_TOUCH_POINT_X_LO, lo))
+>> +#define DS_TOUCH_POINT_Y_LO                    GENMASK(3, 0)
+>> +#define DS_TOUCH_POINT_Y_HI                    GENMASK(11, 4)
+>> +#define DS_TOUCH_POINT_Y(hi, lo)               (FIELD_PREP(DS_TOUCH_POINT_Y_HI, hi) | \
+>> +                                                FIELD_PREP(DS_TOUCH_POINT_Y_LO, lo))
+>>
+>>   /* Magic value required in tag field of Bluetooth output report. */
+>> -#define DS_OUTPUT_TAG 0x10
+>> +#define DS_OUTPUT_TAG                          0x10
+>> +#define DS_OUTPUT_SEQ_TAG                      GENMASK(3, 0)
+>> +#define DS_OUTPUT_SEQ_NO                       GENMASK(7, 4)
+>>  /* Flags for DualSense output report. */
+>> -#define DS_OUTPUT_VALID_FLAG0_COMPATIBLE_VIBRATION BIT(0)
+>> -#define DS_OUTPUT_VALID_FLAG0_HAPTICS_SELECT BIT(1)
+>> -#define DS_OUTPUT_VALID_FLAG1_MIC_MUTE_LED_CONTROL_ENABLE BIT(0)
+>> -#define DS_OUTPUT_VALID_FLAG1_POWER_SAVE_CONTROL_ENABLE BIT(1)
+>> -#define DS_OUTPUT_VALID_FLAG1_LIGHTBAR_CONTROL_ENABLE BIT(2)
+>> -#define DS_OUTPUT_VALID_FLAG1_RELEASE_LEDS BIT(3)
+>> -#define DS_OUTPUT_VALID_FLAG1_PLAYER_INDICATOR_CONTROL_ENABLE BIT(4)
+>> -#define DS_OUTPUT_VALID_FLAG2_LIGHTBAR_SETUP_CONTROL_ENABLE BIT(1)
+>> -#define DS_OUTPUT_VALID_FLAG2_COMPATIBLE_VIBRATION2 BIT(2)
+>> -#define DS_OUTPUT_POWER_SAVE_CONTROL_MIC_MUTE BIT(4)
+>> -#define DS_OUTPUT_LIGHTBAR_SETUP_LIGHT_OUT BIT(1)
+>> +#define DS_OUTPUT_VALID_FLAG0_COMPATIBLE_VIBRATION             BIT(0)
+>> +#define DS_OUTPUT_VALID_FLAG0_HAPTICS_SELECT                   BIT(1)
+>> +#define DS_OUTPUT_VALID_FLAG1_MIC_MUTE_LED_CONTROL_ENABLE      BIT(0)
+>> +#define DS_OUTPUT_VALID_FLAG1_POWER_SAVE_CONTROL_ENABLE                BIT(1)
+>> +#define DS_OUTPUT_VALID_FLAG1_LIGHTBAR_CONTROL_ENABLE          BIT(2)
+>> +#define DS_OUTPUT_VALID_FLAG1_RELEASE_LEDS                     BIT(3)
+>> +#define DS_OUTPUT_VALID_FLAG1_PLAYER_INDICATOR_CONTROL_ENABLE  BIT(4)
+>> +#define DS_OUTPUT_VALID_FLAG2_LIGHTBAR_SETUP_CONTROL_ENABLE    BIT(1)
+>> +#define DS_OUTPUT_VALID_FLAG2_COMPATIBLE_VIBRATION2            BIT(2)
+>> +#define DS_OUTPUT_POWER_SAVE_CONTROL_MIC_MUTE                  BIT(4)
+>> +#define DS_OUTPUT_LIGHTBAR_SETUP_LIGHT_OUT                     BIT(1)
+>>
+>>  /* DualSense hardware limits */
+>>  #define DS_ACC_RES_PER_G       8192
+>> @@ -315,7 +328,9 @@ struct dualsense_output_report {
+>>   * Contact IDs, with highest bit set are 'inactive'
+>>   * and any associated data is then invalid.
+>>   */
+>> -#define DS4_TOUCH_POINT_INACTIVE BIT(7)
+>> +#define DS4_TOUCH_POINT_INACTIVE       BIT(7)
+>> +#define DS4_TOUCH_POINT_X(hi, lo)      DS_TOUCH_POINT_X(hi, lo)
+>> +#define DS4_TOUCH_POINT_Y(hi, lo)      DS_TOUCH_POINT_Y(hi, lo)
+>>
+>>  /* Status field of DualShock4 input report. */
+>>  #define DS4_STATUS0_BATTERY_CAPACITY   GENMASK(3, 0)
+>> @@ -1194,7 +1209,8 @@ static void dualsense_init_output_report(struct dualsense *ds, struct dualsense_
+>>                  * Highest 4-bit is a sequence number, which needs to be increased
+>>                  * every report. Lowest 4-bit is tag and can be zero for now.
+>>                  */
+>> -               bt->seq_tag = (ds->output_seq << 4) | 0x0;
+>> +               bt->seq_tag = FIELD_PREP(DS_OUTPUT_SEQ_NO, ds->output_seq) |
+>> +                             FIELD_PREP(DS_OUTPUT_SEQ_TAG, 0x0);
+>>                 if (++ds->output_seq == 16)
+>>                         ds->output_seq = 0;
+>>
+>> @@ -1439,11 +1455,10 @@ static int dualsense_parse_report(struct ps_device *ps_dev, struct hid_report *r
+>>                 input_mt_report_slot_state(ds->touchpad, MT_TOOL_FINGER, active);
+>>
+>>                 if (active) {
+>> -                       int x = (point->x_hi << 8) | point->x_lo;
+>> -                       int y = (point->y_hi << 4) | point->y_lo;
+>> -
+>> -                       input_report_abs(ds->touchpad, ABS_MT_POSITION_X, x);
+>> -                       input_report_abs(ds->touchpad, ABS_MT_POSITION_Y, y);
+>> +                       input_report_abs(ds->touchpad, ABS_MT_POSITION_X,
+>> +                                        DS_TOUCH_POINT_X(point->x_hi, point->x_lo));
+>> +                       input_report_abs(ds->touchpad, ABS_MT_POSITION_Y,
+>> +                                        DS_TOUCH_POINT_Y(point->y_hi, point->y_lo));
+>>                 }
+>>         }
+>>         input_mt_sync_frame(ds->touchpad);
+>> @@ -2351,11 +2366,10 @@ static int dualshock4_parse_report(struct ps_device *ps_dev, struct hid_report *
+>>                         input_mt_report_slot_state(ds4->touchpad, MT_TOOL_FINGER, active);
+>>
+>>                         if (active) {
+>> -                               int x = (point->x_hi << 8) | point->x_lo;
+>> -                               int y = (point->y_hi << 4) | point->y_lo;
+>> -
+>> -                               input_report_abs(ds4->touchpad, ABS_MT_POSITION_X, x);
+>> -                               input_report_abs(ds4->touchpad, ABS_MT_POSITION_Y, y);
+>> +                               input_report_abs(ds4->touchpad, ABS_MT_POSITION_X,
+>> +                                                DS4_TOUCH_POINT_X(point->x_hi, point->x_lo));
+>> +                               input_report_abs(ds4->touchpad, ABS_MT_POSITION_Y,
+>> +                                                DS4_TOUCH_POINT_Y(point->y_hi, point->y_lo));
+>>                         }
+>>                 }
+>>                 input_mt_sync_frame(ds4->touchpad);
+>>
+>> --
+>> 2.49.0
+>>
+>>
 
