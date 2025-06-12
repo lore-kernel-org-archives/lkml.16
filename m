@@ -1,33 +1,31 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE6923A99F;
-	Thu, 12 Jun 2025 11:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4909AEC2;
+	Thu, 12 Jun 2025 11:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749727789; cv=none; b=Vis9NN6+HS9HxezLZQ1T36yAZs0L0hhyYazCYg6AXU0CBY4nA4fmrz9z5i7f7UW5OmPyU/uhxx7bNZ1xG2iTaBdgwceIqc+OZkDnHI61FEiRLGAFs6od/d8u8Qj1Sf6Z1lfRfu27BM6a8wFTLZWyF0RQGLs3ouDsV9uJDsqLf3g=
+	t=1749727862; cv=none; b=FkHaEnvnJnk9c61S6BipXncaH5aVPw0hTmq0LGpKkKEtvxOh43f7/U4tKVWaQGwyVt6BnIhvb4Wsn5ajWuETUT7zs15n23cafKjTNwqO/j3lws5QH6M10m+3oWehYRZ26GPzfW5bn1R04Mi6gzxxcglGiWnbx+OzqnLpF8q4QEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749727789; c=relaxed/simple;
-	bh=h0T3I7+TyMc8TPOcdKVmcbRavVxEBpO6mjA9/hD7GHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ccns66A+UA6r5RqIuhn4ubox8uTQluhlZKJS99aCMDEdkx3/4kFJY928geWH9Z6paQ2lhaETwdeGwxnyb3jNayvUZUZIj4I0lAtZel55QDJB2bV6z9sXBz9FLOuYf9GvsOp+RYTHFsF2mokvcys2OdUiAFrB59CInilRzdK6nyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RfdUCG1Y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RfdUCG1Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3110C4CEEA;
-	Thu, 12 Jun 2025 11:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749727788;
-	bh=h0T3I7+TyMc8TPOcdKVmcbRavVxEBpO6mjA9/hD7GHQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RfdUCG1Y+NMTMgwC6sdb2WUIdBETLGR2cl+QEVneNbfasc66xvmqmDv2xqr/J1+zY
-	 ZpEjTI2ohRf2iuWtU3DGYamY10vvSjHiNI8ghanj3moN/B2+SLBBovKMZff6FBjSIn
-	 1KNzOVCtmn4kwkoHEqGceFJrtIMjmgXDIZL4sQa/glz7+3tRYqJE2e3kcAcOo2VfCo
-	 seeQ7z/Ps4D8JyratgoT2PloZk7fYuE7iQWFR+lcQDXYdnta4+SCWKS9FyvtaXS3bI
-	 uCPwkiXSbNK9wgkbMTTMF1w33nFG5GI9Q0LURf1SkCTnFWI3aBNhl6sLTbsbRQcQx4
-	 u0TJCoCx1BV1w==
-Message-ID: <750da319-d25f-454d-b376-ebbc194e0e41@kernel.org>
-Date: Thu, 12 Jun 2025 13:29:40 +0200
+	s=arc-20240116; t=1749727862; c=relaxed/simple;
+	bh=t34Qsq3FLgijejopvQb4g/9oC3yiNefOtHAPCHcuUWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SCWTXNBBkFr9CPi7qPzuRucw1i4xHa9RFTQuonhjZW5+m8ww+EFbHFeTiF9SVVkST3Z6fD/dvYdyt/pHvE40kgh57CFiJfA7M7f6rFJPKuAPzmaearqIJ+USYkvC7kSdsbK2XFsFYTCssNAJ5RmV331mnTPNAah8w15sB/1y0ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bJ0jS2tnqz2QTyj;
+	Thu, 12 Jun 2025 19:31:40 +0800 (CST)
+Received: from kwepemg500008.china.huawei.com (unknown [7.202.181.45])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9A1DA1A0188;
+	Thu, 12 Jun 2025 19:30:47 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.71) by kwepemg500008.china.huawei.com
+ (7.202.181.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 12 Jun
+ 2025 19:30:46 +0800
+Message-ID: <4fd0b1b9-6054-42ea-9cb3-250910f644c7@huawei.com>
+Date: Thu, 12 Jun 2025 19:30:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,96 +33,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] dt-bindings: opp: adreno: Update regex of OPP
- entry
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>,
- Akhil P Oommen <akhilpo@oss.qualcomm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
- Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
- Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
- <20250611-x1p-adreno-v2-1-5074907bebbd@oss.qualcomm.com>
- <492417fe-c086-4980-b108-0487bad08155@kernel.org>
- <d482653e-5c0e-4b03-98d6-2c898b445917@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 0/4] ext4: better scalability for ext4 block allocation
+To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+CC: <linux-ext4@vger.kernel.org>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
+	<jack@suse.cz>, <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, Baokun Li <libaokun@huaweicloud.com>
+References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
+ <aDchmYDc_OOAu2yC@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <f21507f9-ebc6-43ce-97c4-cd055c53747e@huawei.com>
+ <aEgfwKvcJzt9gkGq@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <bff134da-e056-4eaf-b5ac-cace99208e40@huawei.com>
+ <aEk8xcy9Zykrx3m3@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <d482653e-5c0e-4b03-98d6-2c898b445917@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <aEk8xcy9Zykrx3m3@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemg500008.china.huawei.com (7.202.181.45)
 
-On 11/06/2025 14:24, Akhil P Oommen wrote:
->>>  
->>>  patternProperties:
->>> -  '^opp-[0-9]+$':
->>> +  '^opp(-?[0-9]+)*$':
+On 2025/6/11 16:22, Ojaswin Mujoo wrote:
+> On Tue, Jun 10, 2025 at 09:48:30PM +0800, Baokun Li wrote:
+>> On 2025/6/10 20:06, Ojaswin Mujoo wrote:
+>>> On Thu, May 29, 2025 at 08:24:14PM +0800, Baokun Li wrote:
+>>>> On 2025/5/28 22:53, Ojaswin Mujoo wrote:
+>>>>> On Fri, May 23, 2025 at 04:58:17PM +0800, libaokun@huaweicloud.com wrote:
+>>>> ----------------------------------------------------------
+>>>>                        |       base      |      patched    |
+>>>> ---------------------|--------|--------|--------|--------|
+>>>> mb_optimize_scan     | linear |opt_scan| linear |opt_scan|
+>>>> ---------------------|--------|--------|--------|--------|
+>>>> bw(MiB/s)            | 217    | 219    | 5685   | 5670   |
+>>>> Avg. free extent size| 1943732| 1943728| 1439608| 1368328|
+>>>> Avg. extents per file| 261879 | 262039 | 744    | 2084   |
+>>>> Avg. size per extent | 4      | 4      | 1408   | 503    |
+>>>> Fragmentation score  | 100    | 100    | 2      | 6      |
+>>>> ----------------------------------------------------------
+>>> Hi Baokun,
+>>>
+>>> Thanks for the info and data and apologies for being late, I caught a
+>>> viral last week :/
+>> Hi Ojaswin,
 >>
->> Not correct regex. You allow "opp", "opp1" and all other unusual
->> variants. Commit does not explain what problem you are solving, so I
->> have no clue what you want here, but for sure opp1 is wrong.
-> 
-> Just to confirm, would this be fine for the requirement I mentioned above?
-> 
-> "'^opp(-[0-9]+)*$'"
+>> Being sick really takes a toll.
+>> Please get some good rest and take care of yourself.
+> Thanks Baokun!
+>
+> <snip>
+>
+>>>> Another reason is that opt_scan tends to allocate from groups that have
+>>>> just received freed blocks, causing it to constantly "jump around"
+>>>> between certain groups.
+>>>>
+>>>> This leads to intense contention between allocation and release, and even
+>>>> between release events. In contrast, linear traversal always moves forward
+>>>> without revisiting groups, resulting in less contention between allocation
+>>>> and release.
+>>> By just received free blocks, you mean the blocks got freed in the group
+>>> right?
+>> Yes.
+>>> I was under the impression that when we free blocks and the group's
+>>> largest order/ avg fragment changes, the group is added to the end of
+>>> the free fragment list/order list so it should be the last to be picked.
+>>> Is that not the case?
+>> Yes, we are indeed adding the group to the list tail. However, because
+>> we traverse all ordered lists from low to high, a group might end up
+>> "bouncing" repeatedly between order_0 and order_1 here.
+>>
+>> For instance, if order_1 only contains group 1, linear traversal would
+>> rarely revisit it after the initial pass. However, after a non-linear
+>> allocation, this group is moved from the order_1 list to the order_0 list.
+>> When blocks are freed, it's moved back to the order_1 list, and then
+>> non-linear traversal prioritizes allocation in this same group again...
+> Right, I get what you mean now. Thanks.
+>
+>>>> However, because linear involves more groups in allocation, journal
+>>>> becomes a bottleneck. If opt_scan first attempts to traverse block groups
+>>>> to the right from the target group in all lists, and then from index 0 to
+>>>> the left in all lists, competition between block groups would be
+>>>> significantly reduced.
+>>>>
+>>>> To enable ordered traversal, we attempted to convert list_head to an
+>>>> ordered xarray. This ordering prevents "bouncing" during retries.
+>>>> Additionally, traversing all right-side groups before left-side groups
+>>>> significantly reduced contention. Performance improved from 10430 to 17730.
+>>> Do you maybe have some code you can share of this?
+>> Yes, V2 will include those changes.
+> Okay sure
+>
+> <snip
+>
+>>>> In a single container, create a file, then repeatedly append 8KB using
+>>>> fallocate until the file reaches 1MB. After that, truncate the file to
+>>>> 0 and continue appending 8KB with fallocate. The 64 containers will
+>>>> occupy a maximum of 64MB of disk space in total, so they won't fill the
+>>>> entire file system.
+>>> Also, as per your theory, if we do similar experiments in a fragmented
+>>> FS we should see opt_scan perform better right? I'd like to test this as
+>>> well. I'll try to play with the scripts you have shared.
+>>>
+>> Yes, mb_optimize_scan performs well when free space fragmentation is
+>> severe. We have a 600TB disk array where the write bandwidth is
+>> approximately 5 GB/s when empty. When space utilization reaches 95%,
+>> linear traversal drops bandwidth to 1 GB/s, whereas enabling
+>> mb_optimize_scan restores it to 4.2 GB/s.
+> Got it, thanks for confirming. Seems like in mostly empty FS linear
+> traversal seems to do better. Makes me wonder if we should use some
+> heurestic to switch between linear and opt_scan based allocation, for
+> example opt_scan can be used if FS is 60% full or has a fragmentation
+> score of X. (or something like that..)
+Yes, it would be nice if we could switch at the right point in time so we
+could have the best of both allocations. But we need some data to support
+us in choosing the right strategy, but that can come later.
+> But Im also curious about your improved optimize scan implementation
+> with ordered traversal, so lets see how that goes first.
+>
+The v2 version of the patch is currently being tested and if it goes
+well, it could be sent out next week.
 
-No, You did not solve half of the problems - still allows "opp" and
-commit msg does not explain why "opp" is now correct. Describe the
-actual problem and then write the regex solving it in specific way, not
-causing other effects.
 
-Best regards,
-Krzysztof
+Cheers,
+Baokun
+
