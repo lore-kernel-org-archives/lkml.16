@@ -1,195 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BE12BE7D7;
-	Thu, 12 Jun 2025 20:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA152BE7D7;
+	Thu, 12 Jun 2025 20:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749761801; cv=none; b=sjC01dqdYyioOFdZR+kkjgqicpQGezFbCdYLoNCFxSsnqbE5TuADFSdUBDNcyDCTUkVDJu5GdbxrozU+yplT6RQDEUn0jGlG18fz+LvA/OqAl1x9SDsmwq4mGDyqwhd5cCZQFIIRXvPsfYOMbbbG5zLgJCTejwjq90YpSvJPsNI=
+	t=1749761827; cv=none; b=PuYTNyZXaZeQ5xwRNaB0QWMnxLjbSwQFawEifqHgXoxeHSJNQdB4NCbniU/qOhqt5bX65Ie2rCke57vtjC/c6L+BQFI6U95Gcvn6WlMx8ZAWIAGzHHn6Ebv3V4AfJJXJJCumw8C2cCMEVSoSMAyQpqo/3Zo8sH51hW6lzPb+L7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749761801; c=relaxed/simple;
-	bh=Q7/yCJU0sRWCWTU+gCQd77lWIP8Smikay90QqwpiGKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A1VbTGG42qFEBcJeOTIheYp8iOevLkw2ncR0Jc6TGSA+skLWwYULDKuIWuO/gWe0lsUKsdPw9cJy3kasDRQ7+991ywDOa8LGoxymY7RmzAEuswQY3+4NW9X05hPGAuEr2Y4LHBJow8xm0r6A257MAgzJQaXrUgv4qT9dlIPb5JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cPgG72MV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749761827; c=relaxed/simple;
+	bh=kAl3X4icEH5G4v1NzozyHJMjAuQKgTZctpyS+kOvNY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qH90YGs0SKS2KzAwMkGMY3XGO1xy9UxmbgshDJIELCN0/M3lVUOeKprkCbYokbmelHVQmVLhE2LVMIVWhumiQc+4znRousQSFtJJ/qSw01JThuxiGyAQ8hyf7EyuYoWwYWfxKpdkKfHHAYFmzAW9nPFIbly929LARe4a9Jb+rYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EGlSL/Q1; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPgG72MV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6114FC4CEEA;
-	Thu, 12 Jun 2025 20:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749761800;
-	bh=Q7/yCJU0sRWCWTU+gCQd77lWIP8Smikay90QqwpiGKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cPgG72MVD0J43GOY3mJujBjh7d7uFTm2VTXww4ih8AdKUjB5JwKYbfrcMwVvRmwZE
-	 dLjCmQvqlD9XOz29qgBEH1o54cQvqbMj47yk3i3YiIzA2RhHmXZODjZUxrzVnVU9L/
-	 dnbffE3meVjq1tIzp2/azmVC2aOAEtoGcfDMW2fIxgoS9JhyEcRBAs50DJ1kpTGT1+
-	 bQbcXeVQFqJpcixzRCPgWI8NaGST1yfH8pcg3VnYufeep1+pK7UN8QVirnetFNsTiC
-	 pUnOfTdxd84BmL9zrIhh572ndFNAw7H/EGHLFfTBcddUqmARKWbnb7T/IknXfA1Vzk
-	 Tj+W6R4pLP3vA==
-Date: Thu, 12 Jun 2025 13:56:37 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>, 
-	Miroslav Benes <mbenes@suse.cz>, Joe Lawrence <joe.lawrence@redhat.com>, 
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, 
-	Jiri Kosina <jikos@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>, 
-	Weinan Liu <wnliu@google.com>, Fazla Mehrab <a.mehrab@bytedance.com>, 
-	Chen Zhongjin <chenzhongjin@huawei.com>, Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 00/62] objtool,livepatch: klp-build livepatch module
- generation
-Message-ID: <2mmkbpkj2b3a7qxrkk32vyg7hiwuo3dh2blispfgdb6u7wrysx@xbcthy36wx6q>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGlSL/Q1"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b2fd091f826so1116092a12.1;
+        Thu, 12 Jun 2025 13:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749761825; x=1750366625; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=SO25S69Dc2ZBc+IW2rDjwj7tPPckqcvCvVz6zrWP9r8=;
+        b=EGlSL/Q1C9lAaa1VH29agydaq8CG2AJnxZrQIbyLDhkOTGT+bofknQ3ud3fbk2B7Qr
+         GOWu5Qg+fcVY+nKPh2DtyqUDp1RhxEjpf3viYAZWjXiWfJQ8k4B41v5bLShKRIB0iXyo
+         VQw2Wmy31trR9J3QelF2rlMoAkGWBjS5TUrxJf+YY+xcNmKwibAxEqojzhLBz0ZzS6m/
+         p0wqhGVh4zGh74KNtORMEPmsaY4cdWqJ2JsjF/4dv3ILboqQ3W3HIxtFpzozp9K4oNzT
+         JutRWZNslhaZFRn8RxfIlClAN5AuWewxI4xmn80NM/FGuJKYecstltbH66pjSVx6tztM
+         A3iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749761825; x=1750366625;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SO25S69Dc2ZBc+IW2rDjwj7tPPckqcvCvVz6zrWP9r8=;
+        b=k/4kkWKU/kPhb9eaST8al0/+fXnl1RngEn0I/dLNX0eag8CCyC79IBQHbqp/D4JANZ
+         vWw5HdgGiLtw61h28j8I8w/GPbLoS2BLyYGJyYqM4EzriaTLM03ovErMnHLSMXT+klc+
+         zuLwhoavbM1rgMEonpeTgPjZXFwBrbTJWIefR4uEGUV6DdED74vqQ0/H5pKUmhxARmcx
+         ill2dvaxcRkum5ZIb7g74fl+9ebzJ0/gupUEmuU+VIhdlF54vRroxLrD68lbfeV6Ox4b
+         nzsWlCEwY5dHJmakVpsar98xcrDpibYvBRbM4E2GUedYFEvfkL4hezaiTtrQQ3WpmrzZ
+         mjQA==
+X-Forwarded-Encrypted: i=1; AJvYcCULnEq1XgJS5t/Y5H6Wh/M8gejhcWmnwRMu/M8cBh/I/fpUCU87h9KxwZ2EO7KuXRQQbiPIZx2AZ/s/hxEq@vger.kernel.org, AJvYcCWYFhIeRhdkEaQjMtKntj6UMZmu/cpsWiOyDxIAqCQlcThN799m8bP6LizNbZDjsHZOQCEJiKH9Ji0qcA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YznZ0TduvrjhPRj5cunEBWWHMCq0mw98xgGlA/goid9EKy5jVMD
+	M81xdCUFAHq47f6BlBk8aQP7Q8yvadwVIOHEc1KBPCyeYDpGCgfLRpcs
+X-Gm-Gg: ASbGncuBhEv5HvTh/sRfE7e7hxINosZiYuf5AGYoERpuOuUsT6Z0SWiwm249uQ3/XXq
+	GuGaTWSRFj4v23LCoqQsz3yo3wt/z4G/h3SIs5AYkvE0OSWK3yfClyk4FLF9X7Upsm/XSfeACQ0
+	iv2CqFGRtUiCUgcoYSCx8iwlNVd3WO2gIiUsDq9iPmWG3WqjpheS8qXg2Fqc/RbZMmFWM6WQgBM
+	PkIV62FsX2HUaHgBA5R3DgAFjDnzhxjjvs0ymjW4M0nDlhed157KYsT8NxeLs7YYHoUVXESK4d2
+	yXf6kKtPHk5jwDDVgEOtTkrT+ksQJJ41NscFKL5bCVY7MIbweaMekR63RTe/l0/8kH4giJwMT0q
+	t5G2M8DAqcwGsSLyFThbK7ZZytjSTtDois6w=
+X-Google-Smtp-Source: AGHT+IG1CLr1UQc+7vAWzJP2B6z34wP4geJYT455p72hMk1PVCxCMq69xuMkl5bn1nIl1Lua1u6JJQ==
+X-Received: by 2002:a17:90b:2c8d:b0:313:17d0:b066 with SMTP id 98e67ed59e1d1-313dc2344d4mr19655a91.7.1749761824543;
+        Thu, 12 Jun 2025 13:57:04 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1bdb39bsm1955186a91.20.2025.06.12.13.57.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 13:57:03 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <62bca511-8cc2-4d26-96e2-bb35c96dce72@roeck-us.net>
+Date: Thu, 12 Jun 2025 13:57:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1746821544.git.jpoimboe@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hwmon: ibmaem: match return type of
+ wait_for_completion_timeout
+To: Qiushi Wu <qiushi@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org, zohar@linux.ibm.com,
+ qiushi.wu@ibm.com
+References: <20250612184324.1355854-1-qiushi@linux.ibm.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <20250612184324.1355854-1-qiushi@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 09, 2025 at 01:16:24PM -0700, Josh Poimboeuf wrote:
-> I've tested with a variety of patches on defconfig and Fedora-config
-> kernels with both GCC and Clang.
+On 6/12/25 11:43, Qiushi Wu wrote:
+> Return type of wait_for_completion_timeout is unsigned long not int.
+> Check its return value inline instead of introducing a throw-away
+> variable.
 > 
-> These patches can also be found at:
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: Qiushi Wu <qiushi@linux.ibm.com>
+> ---
+>   drivers/hwmon/ibmaem.c | 11 +++--------
+>   1 file changed, 3 insertions(+), 8 deletions(-)
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git klp-build-v2
-> 
-> Please test!
+> diff --git a/drivers/hwmon/ibmaem.c b/drivers/hwmon/ibmaem.c
+> index 157e232aace0..e52e937a396c 100644
+> --- a/drivers/hwmon/ibmaem.c
+> +++ b/drivers/hwmon/ibmaem.c
+> @@ -383,8 +383,7 @@ static int aem_read_sensor(struct aem_data *data, u8 elt, u8 reg,
+>   
+>   	aem_send_message(ipmi);
+>   
+> -	res = wait_for_completion_timeout(&ipmi->read_complete, IPMI_TIMEOUT);
+> -	if (!res) {
+> +	if (!wait_for_completion_timeout(&ipmi->read_complete, IPMI_TIMEOUT)) {
+>   		res = -ETIMEDOUT;
+>   		goto out;
 
-I found a nasty bug while trying to patch copy_process().  The wrong
-version of __refcount_add.constprop.0() was being called due to a bad
-klp rela sympos value, causing refcount overflow/UAF warnings and hangs.
+If you want to clean up the code:
 
-The problem was a mismatch between the sympos order of the vmlinux.o
-archive (which klp-diff uses) and the final vmlinux.
+		return -ETIMEDOUT;
 
-The linker script manually emits .text.unlikely before .text instead of
-emitting in them in section table order.  So if a function name exists
-in both sections, the calculated sympos (based on vmlinux.o) is wrong.
+Also drop the second goto and return directly, drop res and the out: label
+entirely, and return 0; at the end. That goto is really pointless.
 
-In my test kernel with GCC 14, only 25 out of 136,931 functions (0.018%)
-have this problem.  It was my lucky day.
+Guenter
 
-The below hack fixes it by starting the sympos counting with
-.text.unlikely*.  It's a bit fragile, but it works fine for now.
+>   	}
+> @@ -491,7 +490,6 @@ static void aem_delete(struct aem_data *data)
+>   /* Retrieve version and module handle for an AEM1 instance */
+>   static int aem_find_aem1_count(struct aem_ipmi_data *data)
+>   {
+> -	int res;
+>   	struct aem_find_firmware_req	ff_req;
+>   	struct aem_find_firmware_resp	ff_resp;
+>   
+> @@ -508,8 +506,7 @@ static int aem_find_aem1_count(struct aem_ipmi_data *data)
+>   
+>   	aem_send_message(data);
+>   
+> -	res = wait_for_completion_timeout(&data->read_complete, IPMI_TIMEOUT);
+> -	if (!res)
+> +	if (!wait_for_completion_timeout(&data->read_complete, IPMI_TIMEOUT))
+>   		return -ETIMEDOUT;
+>   
+>   	if (data->rx_result || data->rx_msg_len != sizeof(ff_resp) ||
+> @@ -632,7 +629,6 @@ static int aem_find_aem2(struct aem_ipmi_data *data,
+>   			    struct aem_find_instance_resp *fi_resp,
+>   			    int instance_num)
+>   {
+> -	int res;
+>   	struct aem_find_instance_req fi_req;
+>   
+>   	fi_req.id = system_x_id;
+> @@ -648,8 +644,7 @@ static int aem_find_aem2(struct aem_ipmi_data *data,
+>   
+>   	aem_send_message(data);
+>   
+> -	res = wait_for_completion_timeout(&data->read_complete, IPMI_TIMEOUT);
+> -	if (!res)
+> +	if (!wait_for_completion_timeout(&data->read_complete, IPMI_TIMEOUT))
+>   		return -ETIMEDOUT;
+>   
+>   	if (data->rx_result || data->rx_msg_len != sizeof(*fi_resp) ||
 
-I'm thinking the final fix would involve adding a checksum field to
-kallsyms.  Then sympos would no longer be needed.  But that will need to
-come later.
-
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index 8499f509f03e..51ad3cf4fa82 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -44,6 +44,20 @@ static inline bool strstarts(const char *str, const char *prefix)
- 	return strncmp(str, prefix, strlen(prefix)) == 0;
- }
- 
-+/*
-+ * Checks if a string ends with another.
-+ */
-+static inline bool str_ends_with(const char *str, const char *substr)
-+{
-+	size_t len = strlen(str);
-+	size_t sublen = strlen(substr);
-+
-+	if (sublen > len)
-+		return false;
-+
-+	return !strcmp(str + len - sublen, substr);
-+}
-+
- extern char * __must_check skip_spaces(const char *);
- 
- extern char *strim(char *);
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index b5494b5ca78f..47ee010a7852 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -187,20 +187,6 @@ static bool is_sibling_call(struct instruction *insn)
- 	return (is_static_jump(insn) && insn_call_dest(insn));
- }
- 
--/*
-- * Checks if a string ends with another.
-- */
--static bool str_ends_with(const char *s, const char *sub)
--{
--	const int slen = strlen(s);
--	const int sublen = strlen(sub);
--
--	if (sublen > slen)
--		return 0;
--
--	return !memcmp(s + slen - sublen, sub, sublen);
--}
--
- /*
-  * Checks if a function is a Rust "noreturn" one.
-  */
-diff --git a/tools/objtool/klp-diff.c b/tools/objtool/klp-diff.c
-index 5276964ef123..0290cbc90c16 100644
---- a/tools/objtool/klp-diff.c
-+++ b/tools/objtool/klp-diff.c
-@@ -439,6 +439,7 @@ static int correlate_symbols(struct elfs *e)
- /* "sympos" is used by livepatch to disambiguate duplicate symbol names */
- static unsigned long find_sympos(struct elf *elf, struct symbol *sym)
- {
-+	bool vmlinux = str_ends_with(objname, "vmlinux.o");
- 	unsigned long sympos = 0, nr_matches = 0;
- 	bool has_dup = false;
- 	struct symbol *s;
-@@ -446,13 +447,43 @@ static unsigned long find_sympos(struct elf *elf, struct symbol *sym)
- 	if (sym->bind != STB_LOCAL)
- 		return 0;
- 
--	for_each_sym(elf, s) {
--		if (!strcmp(s->name, sym->name)) {
--			nr_matches++;
--			if (s == sym)
--				sympos = nr_matches;
--			else
--				has_dup = true;
-+	if (vmlinux && sym->type == STT_FUNC) {
-+		/*
-+		 * HACK: Unfortunately, symbol ordering can differ between
-+		 * vmlinux.o and vmlinux due to the linker script emitting
-+		 * .text.unlikely* before .text*.  Count .text.unlikely* first.
-+		 *
-+		 * TODO: Disambiguate symbols more reliably (checksums?)
-+		 */
-+		for_each_sym(elf, s) {
-+			if (strstarts(s->sec->name, ".text.unlikely") &&
-+			    !strcmp(s->name, sym->name)) {
-+				nr_matches++;
-+				if (s == sym)
-+					sympos = nr_matches;
-+				else
-+					has_dup = true;
-+			}
-+		}
-+		for_each_sym(elf, s) {
-+			if (!strstarts(s->sec->name, ".text.unlikely") &&
-+			    !strcmp(s->name, sym->name)) {
-+				nr_matches++;
-+				if (s == sym)
-+					sympos = nr_matches;
-+				else
-+					has_dup = true;
-+			}
-+		}
-+	} else {
-+		for_each_sym(elf, s) {
-+			if (!strcmp(s->name, sym->name)) {
-+				nr_matches++;
-+				if (s == sym)
-+					sympos = nr_matches;
-+				else
-+					has_dup = true;
-+			}
- 		}
- 	}
- 
