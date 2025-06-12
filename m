@@ -1,89 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E087FD
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E5F182B4
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749703794; cv=none; b=PrnHLsCy8uJHoWEHrle236huduv9OjhzcfA+kxfi1/ELNgAn5HmMewDOcyZd3ceh9UyCHaKV2eYIzoWvsMYHHV6azWG0nTaxPN19yyspJznNvI0qXXEEo4p+1xHpJfSMz7wIQhZJ4oAs66kdsDB7cFrgViOjFkQjrsrLlfv6eBM=
+	t=1749703984; cv=none; b=j8T8tyTXFtm2PFt77s/WPZEDQAR2USrxD+0dwT9snUTjMb4SqPOGj1ndRSJX/mmzlWHK/kkupKxqCxI3cyJsp7tw+iIrdOVZXU1IXX20v3cn0W5mXdsdnQjhxvn0F4TXLu5fbeVFVs87tmFmWBBugUi1AcM7mCsQV+rBVs/knmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749703794; c=relaxed/simple;
-	bh=GR66hGVXdlKu7SEarFLErk8993y72ho0y/Vqw0tX3WU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VUxMCaZdu0aBc53Xpt6zABcJOpatLqkEHfZmRHaRY9sbNguqS2KodBQQpdVkxuxJbOblcy129m0yxu4tGlciZG71q7h5QWzqjeU8Str8Oy/I/9/sAyT3XWaZApftZfn6GzV3RHCbMp+YrxKeGy6/d5FIK015AS3Nx78c5vZWASg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hf9chkZ5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749703984; c=relaxed/simple;
+	bh=JN7PESSUpb2dkcTr3UklwuIC/3db+uAVTehxCFYg+YA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CfD+xl+3hEvaQjrXSfCCMpHX1q3+viMDX50sAsd0+uA1/pK22NVLE3gNlzyhXiMA/YayjxFHyKQABJZKJDSluake4C0GoyGrh+kvQnktqY4HcXjoOkQcPBTJwNDXfg91CPjYnePY3QvlaGK7kF8Xu1sAb4CNpLO7HgrE8WF82B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dxKpNa9H; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hf9chkZ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749703791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OBYtJIhsv8X1JURlzf2kgMeWsta7f4jIzlInsevvCtw=;
-	b=Hf9chkZ51CWFAGZ+RPu1fUj71Wj96Jpi/nji8ymCe6aH4GdkEqWA+/Oqm2rCy8c+eRLw2Q
-	60+xAz+7Rp6/VK4qQjN0nLGDfWT/1TroCLPT3ixE2efGjTUIaBhoF00SsnF3pJLywfC2AQ
-	khGrB9/lgqLVWIhN9knJgt/fvysj0b4=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-547-r1I6eT35O1Kf6RL3nzOTaQ-1; Thu,
- 12 Jun 2025 00:49:46 -0400
-X-MC-Unique: r1I6eT35O1Kf6RL3nzOTaQ-1
-X-Mimecast-MFC-AGG-ID: r1I6eT35O1Kf6RL3nzOTaQ_1749703785
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 29F3D195608A;
-	Thu, 12 Jun 2025 04:49:45 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 43E1119560AF;
-	Thu, 12 Jun 2025 04:49:44 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	xiaoyao.li@intel.com,
-	yan.y.zhao@intel.com
-Subject: [PATCH] KVM: x86/mmu: Reject direct bits in gpa passed to KVM_PRE_FAULT_MEMORY
-Date: Thu, 12 Jun 2025 00:49:43 -0400
-Message-ID: <20250612044943.151258-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dxKpNa9H"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2348ac8e0b4so78155ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749703981; x=1750308781; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JN7PESSUpb2dkcTr3UklwuIC/3db+uAVTehxCFYg+YA=;
+        b=dxKpNa9H18qiZ6tvNSAz0QyFo/O0CYgjxzrbWCG8vcNHgpxje6TEUVMylZtMEbpuJN
+         Q27VPEthzqWLeaVKfUbWmmffwHaTYNfHI9gtXgHdr6VxxSnOAhbTEq/rB70k9gITnHmH
+         ktWZ6oRiYsJwCW/MMRGTreFeKDe7sYFBYgvTaEldOOOiM2DlTP7P5sWrkTMl6wVRx8Mr
+         0oW2IvVNshJ90bBbGvsI5VgIEtmO7LmMsWiqA2W+RorZB2+0CMj8WnNjRX8wzFAKj5sS
+         Bs7shYT7j9uzQ8dl/flyPtrkdwPuv74pDUMObzgOEclhbPRfdsP0Td4bJwNEZk+l7Z0S
+         mIjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749703981; x=1750308781;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JN7PESSUpb2dkcTr3UklwuIC/3db+uAVTehxCFYg+YA=;
+        b=IW9Zfmwlvx5SKyg6zW/wVU4aa3FBgfCBBVMyQ44yi1dnO+Bcdvv27vo2K4jkKvIACI
+         5b9SoCe95CPVRdz6NkfBjDD4GOXlDbFOFRJyUQ4WSP5wm7O0k4+u/j2oLkPpVmdEWj4G
+         MxpiNjEW5TD2YaUym9kz24yQ1lTxcq0s6Txgy1D8rYL43dxXaPwA4oNQjbKjS5XCbFbg
+         aWTvFKJdHzWNX2vvfDA2aatFrgdsqcm8LdNvQNvqg4tsYxciXJtNcRyk5WZY6nIjhTUa
+         tEz1m61QkoF9TRoXsZgyerYqm1R1W5b0jf2RzlgZKMwjPrecAuCYmFyq203CQ9v6a8Sz
+         Eyjg==
+X-Forwarded-Encrypted: i=1; AJvYcCU45mOvUHkqZ53aBmMFTELE+7R2yUL6ibyszbuTAEgiMLGh/kZ6Wo/PqVavpyyKint1vbUV4CUVXj8oAj0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiwQmXNryTPka7sxy5+JP6H3YU9efcaIiRnWq5kp7oKSBjiYCo
+	cOseKIIAzUYVOP6qsMmeDLS6u8oICSdYAy2/VwEt8kIsmdDx+Nr51KCd/V+V6p0xXpDVV0JnILx
+	BMuVisfRfVTDC7t/f8ZWw7hrLIl6Suf4H6oVVbPbl
+X-Gm-Gg: ASbGncuhplbq/U18zd485DUaRIu9L8qJPnuBpxhTDUOW+g8PCagWZePpri3O+cXi3p4
+	wZQEGoVLcjm35qsNmaHYp5+AiSi3ir644FhOs8qncSY3i6urVDk6dD7MNTzz3R9K9GH0XBz1Azx
+	/CcduizAwkQc++Fb8A9odxGezEC4sm+w6irAIheC7Nu1nG
+X-Google-Smtp-Source: AGHT+IF9sI2+TSVjeDsyCsMhNK2tYq652eey2qbdj9oGkvAU4h9hMqqw9fQg0pUIUw6GrHibgaGuCKYfworr/47Spj4=
+X-Received: by 2002:a17:902:f54b:b0:231:ddc9:7b82 with SMTP id
+ d9443c01a7336-2364eb2b4ebmr978315ad.13.1749703980736; Wed, 11 Jun 2025
+ 21:53:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20250610150950.1094376-1-mbloch@nvidia.com> <20250610150950.1094376-2-mbloch@nvidia.com>
+In-Reply-To: <20250610150950.1094376-2-mbloch@nvidia.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 11 Jun 2025 21:52:47 -0700
+X-Gm-Features: AX0GCFvzBtcSK4oFAp7AxIqQXQSZWU21N-dciM4Bw9ZhMgTYOZ3S9uS4MIxcR6Y
+Message-ID: <CAHS8izOzZnNRbBvMohGzB2rxhuLun8ZcPKg38Z1TbXo3stqZew@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 01/11] net: Allow const args for of page_to_netmem()
+To: Mark Bloch <mbloch@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com, gal@nvidia.com, 
+	leonro@nvidia.com, tariqt@nvidia.com, Leon Romanovsky <leon@kernel.org>, 
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Dragos Tatulea <dtatulea@nvidia.com>, 
+	Cosmin Ratiu <cratiu@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Only let userspace pass the same addresses that were used in KVM_SET_USER_MEMORY_REGION
-(or KVM_SET_USER_MEMORY_REGION2); gpas in the the upper half of the address space
-are an implementation detail of TDX and KVM.
+On Tue, Jun 10, 2025 at 8:15=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
+e:
+>
+> From: Dragos Tatulea <dtatulea@nvidia.com>
+>
+> This allows calling page_to_netmem() with a const page * argument.
+>
+> Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
 
-Extracted from a patch by Sean Christopherson <seanjc@google.com>.
+This is slightly better, it returns a const netmem_ref if const struct page=
+:
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/mmu/mmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+https://lore.kernel.org/netdev/20250609043225.77229-6-byungchul@sk.com/
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index a4040578b537..4e06e2e89a8f 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4903,6 +4903,9 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
- 	if (!vcpu->kvm->arch.pre_fault_allowed)
- 		return -EOPNOTSUPP;
- 
-+	if (kvm_is_gfn_alias(vcpu->kvm, gpa_to_gfn(range->gpa)))
-+		return -EINVAL;
-+
- 	/*
- 	 * reload is efficient when called repeatedly, so we can do it on
- 	 * every iteration.
--- 
-2.43.5
+It's probably too much of a hassle to block your series until
+Byungchul's change to this helper goes in for you, so this seems fine
+to me in the interim.
 
+Reviewed-by: Mina Almasry <almasrymina@google.com>
+
+--=20
+Thanks,
+Mina
