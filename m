@@ -1,95 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DFB26FA7E;
-	Thu, 12 Jun 2025 14:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0F026C397;
+	Thu, 12 Jun 2025 14:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739941; cv=none; b=diW8ENv5UfyxTIDzKsTZd6mJSVVQrti0OTf8Tf+Oz9AaOGD5sfYneudjcVgrZNgsdD9fSiN9m6dBH0HvsXLv/JG/CEJWF0ihJUFoaOxDUPs0SQajQ1Fo0a30sjLFFd6MQiPZa630UfxuddoiEdD6qVemFvEF+CW0Bo3MmaCizTU=
+	t=1749739958; cv=none; b=c9I8W12YzzWVZu4mTPAVKsEk5seYehqEtVeAmuME51M6+T38ILa0Rb6WilqoCRnYDFdfwZr/DXVV+znXmAkDI5rx0+YnjCjwX0ytMxYEAnAwAs+GjuQqwjGe5+tNYt466OdNyVqD6tdbkdi3jIAoKPRb3eNYRfLxixvxeC7Q4mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739941; c=relaxed/simple;
-	bh=m6NyqVWcWAB8aZ/nz34ATunc9qSW/wqIr84I2Z9j8i0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=UxWIZJsR6XlCvd3n7x3DBb8tCzxptwXrkck5RExjq2m3ZrJ7q2bF9tHEeOGJfMvGnWCSIguwu7bMc1UHzKLnTlwCZJ8Bp5dSXqQduPMAXJ6A1Cqw8KWbFaBid1vntWxfRRIVyClSjDZ+CNhmpu8Z9DvYsTiwAPXIS/BVrAWV6xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeYAYC1p; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeYAYC1p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0121C4CEEA;
-	Thu, 12 Jun 2025 14:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749739941;
-	bh=m6NyqVWcWAB8aZ/nz34ATunc9qSW/wqIr84I2Z9j8i0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JeYAYC1pgOTLgRtJQR3ro4v2evFDxPvv7OltvZWSAFXXZ+ZiA/at2rRH9xdJ7vF97
-	 VJdO1LiOYdXjl5huYnGF9lJ5T0UfW2s/OmeDhw+DxTDhq9oSP17wuFALaZOWk0pNHi
-	 3/P/nSDT+R3NLsuqFpQHMvc2pceSxnbawpMU8L0AZbL6x2PsvGjaahoz7iHio6/xHA
-	 fQZ0TDQol/WMTztVVX3RKvTepsVgprKEOT1NNj/xDLdM1RrkyfFcDY3OASbC9FVW3o
-	 x0vQKXphjHf+WGhTQB1TKOEiLMVN7syh9AkTcoeH2pNhM0bcSBgflp5aX2Jcm1BDLD
-	 MvFiGhn+6l8tA==
+	s=arc-20240116; t=1749739958; c=relaxed/simple;
+	bh=SNJt80qACwYsMfBYoQhUvMzRumLNnmU93cx7xgvWIhA=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=a+4Xd1Q3GB2UuDcVg2a4IiLLVzHtVfdtdoA/p+vq1rjY0GeDmERupajVOzpPp+BNqw238XzHKP/3wHLCnuXUXORm6rGk+3DMnDgLv2zjHecRWuMwhNi/YbV7w9YIVlG1xdPoHycPAC+bk2HBHSWGka4fshwTdc+LpVd0ww8fsM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 14D5E16172E;
+	Thu, 12 Jun 2025 14:52:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 50B2120027;
+	Thu, 12 Jun 2025 14:52:32 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uPjJf-00000001lO7-3fv0;
+	Thu, 12 Jun 2025 10:54:07 -0400
+Message-ID: <20250612145310.563358597@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 12 Jun 2025 10:53:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 0/4] PM: tracing: Don't compile in unused trace events
+X-Rspamd-Queue-Id: 50B2120027
+X-Stat-Signature: 671yypn3d1k3f91qa3qgzfbjcctxm555
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+HKFgC2IAPMdV6bVqFLIbbF0jglEfehXs=
+X-HE-Tag: 1749739952-202480
+X-HE-Meta: U2FsdGVkX18Zx3d1zrK96W9dRamojZiOj5sofUya+o14Daoe7ojSHmOmb2s5GCt5YqPHpM1G8bLnUG/WIUTBXwRBtJwYtlfgrxTX17b23DSwS0eZSUvTQkJFnB1mcwNkl+rR+yNlKs3HsGqZZZ/lU0baogzv2nP/UhAXHDG1oSB1QhuzC4BYT4Fr94+ZQJSMoxez9+vSEX6GDuWdy6ulboooEBha/F2H9AGjz8NDn6k4bqAf61sU3pb9w5KRCdc/TsCnaSiurMzym7k84yRzZW3IhWukYIFB5JY/R4GhyA8=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 16:52:15 +0200
-Message-Id: <DAKN1HO7WUXY.QS098VXTDICU@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
- Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
- <viresh.kumar@linaro.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] rust: types: require
- `ForeignOwnable::into_foreign` return non-null
-X-Mailer: aerc 0.20.1
-References: <20250612-pointed-to-v3-0-b009006d86a1@kernel.org>
- <20250612-pointed-to-v3-2-b009006d86a1@kernel.org>
-In-Reply-To: <20250612-pointed-to-v3-2-b009006d86a1@kernel.org>
 
-On Thu Jun 12, 2025 at 3:09 PM CEST, Andreas Hindborg wrote:
-> The intended implementations of `ForeignOwnable` will not return null
-> pointers from `into_foreign`, as this would render the implementation of
-> `try_from_foreign` useless. Current users of `ForeignOwnable` rely on
-> `into_foreign` returning non-null pointers. So require `into_foreign` to
-> return non-null pointers.
->
-> Suggested-by: Benno Lossin <lossin@kernel.org>
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> ---
->  rust/kernel/types.rs | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index c156808a78d3..63a2559a545f 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -43,6 +43,7 @@ pub unsafe trait ForeignOwnable: Sized {
->      /// # Guarantees
->      ///
->      /// - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN=
-`].
-> +    /// - The returned pointer is not null.
 
-This also needs to be mentioned in the `Safety` section of this trait.
-Alternatively you can put "Implementers must ensure the guarantees on
-[`into_foreign`] are upheld." or similar.
+I have code that makes unsued events trigger a warning. I'm currently cleaning
+up the kernel to remove the majority of events that are defined but not used.
+When an event is defined, it can take up to 5K of text and meta data per
+event. An event should not be created if it is not being used.
 
----
-Cheers,
-Benno
+The powernv_throttle event is only used by the powernv code so I moved it to
+its own header file and it gets created when the powernv code is compiled in.
 
->      ///
->      /// [`from_foreign`]: Self::from_foreign
->      /// [`try_from_foreign`]: Self::try_from_foreign
+For the other power events, I just added #ifdef around them with the configs
+that enable them.
 
+Steven Rostedt (4):
+      PM: cpufreq: powernv/tracing: Move powernv_throttle trace event
+      PM: tracing: Hide psci_domain_idle events under ARM_PSCI_CPUIDLE
+      PM: tracing: Hide device_pm_callback events under PM_SLEEP
+      PM: tracing: Hide power_domain_target event under ARCH_OMAP2PLUS
+
+----
+ drivers/cpufreq/Makefile          |  1 +
+ drivers/cpufreq/powernv-cpufreq.c |  4 +++-
+ drivers/cpufreq/powernv-trace.h   | 44 +++++++++++++++++++++++++++++++++++++++
+ include/trace/events/power.h      | 28 ++++++-------------------
+ kernel/trace/power-traces.c       |  1 -
+ 5 files changed, 54 insertions(+), 24 deletions(-)
+ create mode 100644 drivers/cpufreq/powernv-trace.h
