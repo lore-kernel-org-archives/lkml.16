@@ -1,104 +1,104 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB3A1442F4;
-	Thu, 12 Jun 2025 11:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47794229B36
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749729111; cv=none; b=EnibaDNu/IL3YTmHE4YDPpBeWH87naLe7XhoDMbAZAaMs4BLP/lvA4WkHQmvqIkIT1RRbTgzvdQC5qKSEXGc7I/Ks4Wz5IxCJAMVI0+z6qzh8eUiREI/4N4x3+V37lE7AECtOm/sVYSKNJOFtQJa5SFei+r8xJYJOi3K4GYMYIY=
+	t=1749729120; cv=none; b=VvXOVz9JbDbRdcRTPViwImTahWBoIusiV84L0CXxyGD2rFuF2OpMW7zqobu5WZbxNVICGAQf4XOttS+Q2xMMfy1kqqbU2MjZu5/4ELcAvQCJwJHjqruAy/9IqpncWelnEW95TPzbmcUU802GskOuXnL+fs4G20ShKVCgSrborho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749729111; c=relaxed/simple;
-	bh=PdDzwXq5efcwhoojhVqsKxNYcVXXyqdpXYauJg8SHrY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Szzdybs0vsksuC0dRtAhjKNktJcB4RX4sKkOx/xv30zgPKLUxWqmpEomsRHwfacerSEZVPUUqYp6QM5xZCxOUIv2NanUgV70xxXlVZZBuTGS4ABJb+6bLKYhRMJUHI5Paot4ICt6qwCWYuzK4kVzP7ZG5vL8/sE55i/NHrJd7oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4lWnG5u; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749729120; c=relaxed/simple;
+	bh=rpaoB6Kdgo30xP8EggVBx+Midw7SMjcJzLqwV3FyulY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=JsG+3rMErT0IGydgzc9fpvDLL8iVRamauBGK9Cg9RkGwbDhCcwH0rLFPTdaBxb/nhioKz+TMkeBe7OT2NLVP1RIOJfG5Kj6oJqqXNv8KVcGfKKZlkrzESVtX9eguNtDlUxLT4Z0C5AXy0wJh3bJChrSIT7y1c+Qckc4iaGQ0HSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ojci9aEQ; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4lWnG5u"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-313756c602fso131300a91.3;
-        Thu, 12 Jun 2025 04:51:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ojci9aEQ"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-450d9f96f61so5489085e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749729109; x=1750333909; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PdDzwXq5efcwhoojhVqsKxNYcVXXyqdpXYauJg8SHrY=;
-        b=Y4lWnG5uBtNIkztbKAfFPLgt48pJhuTTeWSItwuRC0UOM5QZ28isMsBUUihcOKoJ+g
-         24/YMJruzU6xTA4tK19o4nuijOouQCsP7nfN/O5j2u5n9S4p4YcXNl8U18hccuMHjkeN
-         gyGYlVd29CR6VQCGNmkje2UjcvwlyhEGYM/H8IjhWrbQBDKchkNwO4IKEI9hB6hB3NBK
-         /UaAuI5VT4EWvHxb5/h9FnvckisUQGfZjyzg80WglRL6U3GPmV/nyQBLOw+zDK8PfkcO
-         K96xyt4FRyLynerQGH22U9f74FmZHC+Sic4AFIZ/I7y+wrjAY99zT0PCqHlwI0sxungW
-         gAXw==
+        d=google.com; s=20230601; t=1749729118; x=1750333918; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LAzmGILo7rrIxQG7aEQAZf7smERdqkspR5utlYUtpd8=;
+        b=Ojci9aEQrBh485tfzv7GvvIhoDv/t9jkNfNwJ+/O8qwZ2LMc9AsO5CRjTezdP5Oz2F
+         PF51PX+X9OcfVLAUkTInFwtES4lndDA0dv5B4zYjml0JaMhzHK0r5Zunp2NfBqkheyc7
+         g/cQxfsO/Zjo08dXZIqzKdmQlMgl8Eg7DQ9zgPQcqCfoOTd4NZDgjxdg4n2kSazJ3b09
+         xsN3+OCDhHcTX2o9QypyoldVZnAS9r+qAqehn+0r45I+uceJPC71OeVVsrWn7sUGaq3a
+         IeiHj1O13UwlHGNvFyNuLjMy0/fZ2fBeHS02XWIZNP6W/zbOW6oNvG8Vh9A/ySUkdsyq
+         KyWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749729109; x=1750333909;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PdDzwXq5efcwhoojhVqsKxNYcVXXyqdpXYauJg8SHrY=;
-        b=K7XUjl7qqTIaz/ahG7segNo9zMJ/2gBvPSaMa6zkWzgrAHimgeOyjXzwG1qDv/BAsT
-         FeSfF/0P30/NLQ9L3CHu6VMMY0gaAU+216DE+9CtEXKlOplRu33y16zhFxL70kVsq/IV
-         123lWzafA9Rmjs12zMdD1CzgzM+pH4GwwSRrr211UJqel1XEbYassaHuy8R0u26du890
-         3PFKNkz28dzAFPXpDIWaJIXG6RYT6dTwDrWwwB1mfgFGyfPS78x137XzUsV+kC5SzIdx
-         Q9MpdmuInceF4EVz1eu5Offm1P7fAXL28nf4Yg/P3YkRfNrnAln9VYB1o6Pxcdikwfrw
-         vvng==
-X-Forwarded-Encrypted: i=1; AJvYcCUFqFplsiuSMCgikXhbNv1Pw0PEKBbmM9dB8ibSfF/lFfNAE2/zmEfFj1JGQ3WkaI3VmsaTjzV94JBs1ek=@vger.kernel.org, AJvYcCUo8U0oGxfq0oJ7lcuzU/ItIeiAMaX82jKhAAiOzJN94KBIen14M12CiPb7WvVmiwlRx/CeIN7FDgVPa8Db6wQ=@vger.kernel.org, AJvYcCVFrgUHL3sWTYmjiPj4TEr4x35tSTZHX48I19bWmCrlC2hxrdKCgCZeOPZwh1063zeQgGxBgLlAA1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYfnfvANETjUoar1EmrczeNPQi4zaaJRIqaF3G1P/FDt++nBac
-	qR8qnnZMNtKNgntOQWuwiO3bu/M29oXxZfalFPf/fIHBmay0Ki7eX8ZKXO1fPef2wHI4PNIXgDH
-	QLmRGamWfSJnwwehTnp1QMzoNKVvg0HA=
-X-Gm-Gg: ASbGncsbqytzDoClDt0tem3CT7osY/z5oG/7h5rZLtchFg8SLss9ihQkjY+plMOHQ1y
-	21e/OiqMzF2yirhOXStry2OOZd0nYsQcmoI0ZG5eFIL75YV21JAmXapTSWl0X05LQXxa633o6BP
-	u52Hyf/FJ2kge5CKUUgiLYVPSb2PkgxuzmIcdIVXc4cec=
-X-Google-Smtp-Source: AGHT+IH7THszr02geeayihPmfwjMV6SGbVO16iehszdy4de7QDOCkC+RAYCpDksbfEQmD+yJ1XW+OU5DT6T8YKP/lfo=
-X-Received: by 2002:a17:90b:3a86:b0:311:e8cc:4250 with SMTP id
- 98e67ed59e1d1-313af235741mr3849605a91.3.1749729109591; Thu, 12 Jun 2025
- 04:51:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749729118; x=1750333918;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LAzmGILo7rrIxQG7aEQAZf7smERdqkspR5utlYUtpd8=;
+        b=W9/+oMgkvRYAhLA9lOf58S9NOmWlZYw8rs877XajmIJvzZiJUPaD2BQnj2FW82YJJu
+         SP2nyuy7g/m4LYz13oRKG0ZZTKMpAw7QrsPa54NaDoMWuPMwZjnfmSXKDG3Nyp5PFjxn
+         SlpEWcVSLVMqAVt2kx69bdV3//8x4ZJRbRYlWBpSQMxamtcdxx+fC26s0du60OQzcj2U
+         to6lO2c7QMyaXQ1QdCfyi6nbAHCw4zawA+ozuj73RxdROb3VsjzhrrSd45XF04hP8A09
+         4/pvzbnUoAhDTPC1UWuNZoITNBQbZ57DZuicBEqlaXZYBKGag4p8DQO0z0BcWy0uKpWI
+         U8GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWV+K2e3NOhYo/y16Eu4nKLNf6DxsY7SzHHyF3yhNHyLiJqQt+bd2bnph/CSMvv/P2zIXxDDeaeOGjXmkY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0RcYOWHaugtq/CHZSy6dB8UOXYU3LhAXBtB7sHjOwTpiFR2Rs
+	sMKZQhoQAOZ6BgVDKNUTHm1Yl0oOw7tDRMSlw/rGfmFsAxzkFqUcovn3YbbK8aSCEB2D4lPJyGv
+	+0mS3lQ==
+X-Google-Smtp-Source: AGHT+IEsZKWdgHnANRx2ktnzmqvZGLXgx1+Ck47ZJza7y/Io0sU2Wnsif1R3hfmp7+yITN1T3BAdCVc/W1Q=
+X-Received: from wmbei22.prod.google.com ([2002:a05:600c:3f16:b0:453:99d:39ff])
+ (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:6304:b0:442:d9f2:c74e
+ with SMTP id 5b1f17b1804b1-453248cadc7mr58292805e9.23.1749729117681; Thu, 12
+ Jun 2025 04:51:57 -0700 (PDT)
+Date: Thu, 12 Jun 2025 13:51:55 +0200
+In-Reply-To: <20250602.ko3thoc7ooL4@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250612104253.10413-1-abhinav.ogl@gmail.com>
-In-Reply-To: <20250612104253.10413-1-abhinav.ogl@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 12 Jun 2025 13:51:37 +0200
-X-Gm-Features: AX0GCFuuEiFXuG9m5B4w8TQVGIVEkX8OwIZ3GxfOrh5kNvLiPuGk1EGTbyzD1mQ
-Message-ID: <CANiq72kReki1=sbKhurkj-WVt47h4u=rz4Jn0RjmeB1wgPGtug@mail.gmail.com>
-Subject: Re: [PATCH v2] rust : Update the bios_limit_callback to use the C FFI
- types #1170
-To: Abhinav Ananthu <abhinav.ogl@gmail.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250228.b3794e33d5c0@gnoack.org> <20250304.aroh3Aifiiz9@digikod.net>
+ <20250310.990b29c809af@gnoack.org> <20250311.aefai7vo6huW@digikod.net>
+ <20250518.be040c48937c@gnoack.org> <20250518.xeevoom3kieY@digikod.net>
+ <aDmvpOMlaAZOXrji@google.com> <20250530.ozeuZufee5yu@digikod.net>
+ <aDncH8D9FoyAIsTv@google.com> <20250602.ko3thoc7ooL4@digikod.net>
+Message-ID: <aEq_IAsYm2wFjA0c@google.com>
+Subject: Re: [RFC 1/2] landlock: Multithreading support for landlock_restrict_self()
+From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
+To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Cc: Casey Schaufler <casey@schaufler-ca.com>, 
+	"=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack3000@gmail.com>, Paul Moore <paul@paul-moore.com>, sergeh@kernel.org, 
+	David Howells <dhowells@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	linux-security-module@vger.kernel.org, 
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Jann Horn <jannh@google.com>, 
+	linux-kernel@vger.kernel.org, Peter Newman <peternewman@google.com>, 
+	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
+	Jarkko Sakkinen <jarkko@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025 at 12:43=E2=80=AFPM Abhinav Ananthu <abhinav.ogl@gmail=
-.com> wrote:
->
-> Update the `bios_limit_callback` function to use `c_int` and `c_uint` typ=
-es,
-> which match the C ABI for the corresponding callback function. These type=
-s are
-> imported from the prelude.
->
-> This change ensures the Rust function signature exactly matches its expec=
-ted
-> C counterpart, avoiding potential issues with type mismatches in the FFI
-> boundary.
->
-> Reported-by: Miguel Ojeda <ojeda@kernel.org>
-> Closes: https://lore.kernel.org/rust-for-linux/CANiq72=3DWpuGELzLbH-fxdOe=
-Jy9fiDFwatz6ynERDh=3DHP2z2MBw@mail.gmail.com/.
-> Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
+On Mon, Jun 02, 2025 at 08:45:06AM +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+> On Fri, May 30, 2025 at 06:26:07PM +0200, G=C3=BCnther Noack wrote:
+> >      As Jann pointed out in [1], the tasklist_lock and siglock are not =
+sleepable
+> >      and can't be used while waiting, which is why he proposed an appro=
+ach where
+> >      we retry in a loop until no new threads show up any more, while ge=
+tting the
+> >      existing threads stuck in the task_work as well (where they can't =
+spawn new
+> >      threads).
+>=20
+> This looks good.  Too bad we need to block all threads.
 
-This seems to be a duplicate email.
+OK, I'll take that route then.
 
-Cheers,
-Miguel
+In my understanding, if we are already blocking all threads, we might as we=
+ll
+use prepare_creds() in these threads again. -- It does not cost us much mor=
+e to
+collect these potential errors now.  Does that sound reasonable?
+
+=E2=80=94G=C3=BCnther
