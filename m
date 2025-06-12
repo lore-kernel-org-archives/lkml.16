@@ -1,70 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A530722068B;
-	Thu, 12 Jun 2025 08:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63F226D00
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749717562; cv=none; b=UeqxkVVbJ5oq0whWJt4QnsjTlN9l0X2BjfbsyosO5PEUl71k8wBSq/jpNqf/wjHMqGTXpHsHjMYHivRhm6gAF61THlVL9uVIo/YFL9UaW2gtxqH6+6HXEm4grrzfmLNzJp98J/Wes0rxcy5htElUMoND+dQDvDbKQyF9QN6vNc8=
+	t=1749717573; cv=none; b=d5GiG9oaNfNtHIPAPzzk5ejs2AMBs6+BefFCJT+BIb1bREA035N30VOI5jKsY9w+vzHnDbcVxLpOi75Z7sGGlSENuIPGEO5CWRsRkkC8D9agUXdOA7gAlJ1mH5N53BhAbrRMGV+Xws+n8hxKzEifwWbFUdUVWeVXJImv4TEX9n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749717562; c=relaxed/simple;
-	bh=EG6MrUIK8bDEZbJtlqA/oFzIvyqQ2bxzxg+Ocg8pvME=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=C8mG1pjrkYIAWAqMWxqX8OjTuvlLjEWLBDRIr8O/KV2VoCM0kRsyo6TU35F5IqdQPv316CSpycaub4OW/loncsK+twHBW2cZOJyMCVirziF2Pv+luoUEQWeMvBukE+rgk7TTb7W1OOsozSDGDb4eNFCo4Iheg7PhMQltNN3aFaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFRHiofW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749717573; c=relaxed/simple;
+	bh=hJ7X/tNOTl73bwX25xhIlJdNu9sTqCaD1Ms/vj4d5r8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GPAnT5NG2v74HVOZJzUWKPj9rEhTS0WuRhpZcdb9TA9HaKQ3knmfA6w3vwatcHVY1z0kNoyHRwq9BTSvwK3EIxZBkFgfsQ0VH47s4w/NweUijBZD30+/EOmmi+OposU4XImRW54+QWS07QRPBbzMg+b5tWD7Pcbbsdn76ojXbLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f6HpwNVF; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFRHiofW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C17C4CEEE;
-	Thu, 12 Jun 2025 08:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749717562;
-	bh=EG6MrUIK8bDEZbJtlqA/oFzIvyqQ2bxzxg+Ocg8pvME=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XFRHiofWxjXT8XObRCLVnEQXa0Be2I85wb8J9FBQzxpGwxTWjia1+gMtFkfMeleL5
-	 G7bL0cZ2R3nofV1AqR3YohX5qRZvuCSuhzYdH/EEvb9wNiKBLh/AiR4OQvoJbl9yKD
-	 GUHyice4JT25pioogoykQo8nUCrJmPLXSajOEjoHg2IJsKxVKJHvpR1zY022hpBaRi
-	 +okvWuw4qLBT5bKslO5ZAE4Lohfubc2jxjjeZ41lKMHDwx/xOWD7rrnQiE0F7d5OzQ
-	 dojZhwhf0EElF4OqO1uTonWo7Bt1SZWWtYYlO11ihLqJttpkiWariX2owxlz37bh8y
-	 Ta6+JY99DevXQ==
-From: Leon Romanovsky <leon@kernel.org>
-To: linux-rdma@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, 
- Potnuri Bharat Teja <bharat@chelsio.com>, 
- Markus Elfring <Markus.Elfring@web.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
-In-Reply-To: <cdc577a5-cebd-404a-b762-cc6fee0870dc@web.de>
-References: <cdc577a5-cebd-404a-b762-cc6fee0870dc@web.de>
-Subject: Re: [PATCH] RDMA/cxgb4: Delete an unnecessary check before kfree()
- in c4iw_rdev_open()
-Message-Id: <174971755850.3783297.3332209818695020969.b4-ty@kernel.org>
-Date: Thu, 12 Jun 2025 04:39:18 -0400
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f6HpwNVF"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a510432236so665315f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 01:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749717570; x=1750322370; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xMn86gBGFQBElUD4C04aCEWWj1Sy8fLs55GPp5ijFjA=;
+        b=f6HpwNVFfRi6W2Sms6MVNsmZYI8KveHZfl5sXNiONtB3sWnyVSGfRsYBZTYaCAhKHS
+         ow9wJHssthE1f/VBDrhhCvzvLJpgdxwdcPQ4hsd+rOMAkPPTpKzX4X+tzcK636E2lwDc
+         jd8hF1Zx0dpZcHRNNRvRrl7dXNWfyVu4tdI47FliadoQX2UoRhBGLT0pRe54aOZZp4Nr
+         /qmJO86dAlFVhMP2YP5q9V5VOefgEry+/t6ZSO2lUrGzJ832ddopLSwIfnNU2RLBc0ED
+         8TROy/N9a8W7zpmJWHf/SfccoGJs1Z96uOA/OK+lDTI41JBkfAH/nQa/xNrFrpz8KKz/
+         lNWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749717570; x=1750322370;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xMn86gBGFQBElUD4C04aCEWWj1Sy8fLs55GPp5ijFjA=;
+        b=u4lVNx7ljw7/SsSNHACpEFma9HNte8uhg8Sl2zAy69ElKxOZs9FDDVV/MnS+daBPu9
+         v7VxSR+fiE+Fg1QrxAzHj1BxxJ6eLlUfHaqj3pl5werCW+jlD7hIh50gpAcbd5S/QSlN
+         zAWcUzR+pnAJr9jMxwIwXE97+aWKR72IfxXGX2efHlERglZgN/8T6ad/d4MR+w7Nhw2x
+         dIoCmaqe/T+EWchYRFCB09z1yNa488PbonN0zWiIdkhR37FHKZkhg8gGIsVD8bPUJfdd
+         dMbOWWDM2oa1MANRI1kkKXIP7THompdG4+lnYf7HfSkVRxgtb85Wx0u0bEqRhr0AfVm/
+         Vsog==
+X-Forwarded-Encrypted: i=1; AJvYcCWr5KxwztAM5wMl8YiDwh66XCNJxrotIkkG7MNxTzmMjuUHdECjBn0u1JExVxPhdbjLF2Ko9pPGIds0l2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3uVvXdZB99EE0e9RhZwk522ehKa4hHTZpN+USfRbknZMDdPzY
+	lcGW5dAOq3M1hQfSsyPh5gmGKH4Y4I8XSQ7SqQZD/V5nYqYOzpQz15N/zqBWe/I3Xx4=
+X-Gm-Gg: ASbGncsnhG/8ZM/GjbAcxkEPrS7dHpB1wa9RIbO7drea65jtZcVdwymV4D5uy+lCF3A
+	VupezXVImDldt94t3dL7AQuSiL6Vf2ypM4GgOx+dKVMJUxAIhoLrgG3KVu2QSWF5ct5AZWuC9ju
+	lGm3Z+zo4srUgFO0ck5iT4FGkfVSfYbuidPDXZ755QYPRlWeU9EUmweKJoQnX928VXuRCgChKOB
+	O0q/M6bZJpUQrGIqlr7hSw1vHxsVoLd5KS+2covNBFU1DeHerMBuhvvx5P9QYcA3Mn3EnblrtNL
+	BDLqJsQbsJS//X2MRag7fFVoI9cupv2V6aSuoKVh/2W7a1mZARz8OYo9gHmDZCUsVPk=
+X-Google-Smtp-Source: AGHT+IF/U38N89Oos/Ii+uKueDvpQelJtkG4+ZSkUxRWatEFCL62scczRT/E2Bk0UmIqZpbCKrbN4g==
+X-Received: by 2002:a05:6000:178a:b0:3a4:f038:af76 with SMTP id ffacd0b85a97d-3a56130bf3emr1772951f8f.53.1749717570107;
+        Thu, 12 Jun 2025 01:39:30 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a561b4bb17sm1299122f8f.68.2025.06.12.01.39.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 01:39:29 -0700 (PDT)
+Date: Thu, 12 Jun 2025 11:39:25 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Karan Tilak Kumar <kartilak@cisco.com>
+Cc: sebaddel@cisco.com, arulponn@cisco.com, djhawar@cisco.com,
+	gcboffa@cisco.com, mkai2@cisco.com, satishkh@cisco.com,
+	aeasi@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jmeneghi@redhat.com, revers@redhat.com, stable@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler
+ when FDMI times out
+Message-ID: <aEqSPahh0b5h39J0@stanley.mountain>
+References: <20250612004426.4661-1-kartilak@cisco.com>
+ <20250612004426.4661-2-kartilak@cisco.com>
+ <aEqE5okf2jfV9kwt@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-37811
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEqE5okf2jfV9kwt@stanley.mountain>
 
-
-On Tue, 10 Jun 2025 14:20:17 +0200, Markus Elfring wrote:
-> It can be known that the function “kfree” performs a null pointer check
-> for its input parameter.
-> It is therefore not needed to repeat such a check before its call.
+On Thu, Jun 12, 2025 at 10:42:30AM +0300, Dan Carpenter wrote:
+> On Wed, Jun 11, 2025 at 05:44:23PM -0700, Karan Tilak Kumar wrote:
+> > When both the RHBA and RPA FDMI requests time out, fnic reuses a frame
+> > to send ABTS for each of them. On send completion, this causes an
+> > attempt to free the same frame twice that leads to a crash.
+> > 
+> > Fix crash by allocating separate frames for RHBA and RPA,
+> > and modify ABTS logic accordingly.
+> > 
+> > Tested by checking MDS for FDMI information.
+> > Tested by using instrumented driver to:
+> > Drop PLOGI response
+> > Drop RHBA response
+> > Drop RPA response
+> > Drop RHBA and RPA response
+> > Drop PLOGI response + ABTS response
+> > Drop RHBA response + ABTS response
+> > Drop RPA response + ABTS response
+> > Drop RHBA and RPA response + ABTS response for both of them
+> > 
+> > Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
+> > Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
+> > Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
+> > Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
+> > Tested-by: Arun Easi <aeasi@cisco.com>
+> > Co-developed-by: Arun Easi <aeasi@cisco.com>
+> > Signed-off-by: Arun Easi <aeasi@cisco.com>
+> > Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
+> > Cc: <stable@vger.kernel.org> # 6.14.x Please see patch description
 > 
-> Thus remove a redundant pointer check.
+> I'm a bit confused.  Why do we need to specify 6.14.x?  I would have
+> assumed that the Fixes tag was enough information.  What are we supposed
+> to see in the patch description?
 > 
-> The source code was transformed by using the Coccinelle software.
-> 
-> [...]
+> I suspect you're making this too complicated...  Just put
+> Cc: <stable@vger.kernel.org> and a Fixes tag and let the scripts figure
+> it out.  Or put in the commit description, "The Fixes tag points to
+> an older kernel because XXX but really this should only be backported
+> to 6.14.x because YYY."
 
-Applied, thanks!
+But here even with the comment in the commit description, you would still
+just say:
 
-[1/1] RDMA/cxgb4: Delete an unnecessary check before kfree() in c4iw_rdev_open()
-      https://git.kernel.org/rdma/rdma/c/fd383bf8b6954d
+Cc: <stable@vger.kernel.org> # 6.14.x
 
-Best regards,
--- 
-Leon Romanovsky <leon@kernel.org>
+The stable maintainers trust you to list the correct kernel and don't
+need to know the reasoning.
+
+I much prefer to keep it simple whenever possible.  We had bad CVE where
+someone left off the Fixes tag and instead specified
+"Cc: <stable@vger.kernel.org> # 4.1" where 4.1 was the oldest supported
+kernel on kernel.org.  The patch should have been applied to the older
+vendor kernels but it wasn't because the the tag was wrong.
+
+regards,
+dan carpenter
 
