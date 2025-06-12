@@ -1,206 +1,87 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB07B19644B;
-	Thu, 12 Jun 2025 03:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3316A10957;
+	Thu, 12 Jun 2025 03:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749698568; cv=none; b=gLRMY2DrYHDzaR6BornZANcOakOVd7XeAD+iu44HEDUIXs5FDl3vMY/N8F+JybeoUvAc/BLkTndva4df1Vz3Rqol7S0yOX4LAmBUaf7hNmKhkPpxgkqjhLREDUaR08mse+RVCzE+SdYASKOqddVAfQlZFjgDTXsM/ua3Ug+h1LQ=
+	t=1749698810; cv=none; b=qk4fzX7VqSrUrDR0Jlr9h3uWV5fBHL1UrLvN6tPifDjcxWIYCVWBf3qdLtjzubvesgKSMAymFNxQ+/mpKZ+ri2b3B0OZ3DLiK/3Q6IwV13d+bkxTneB+HaYHJz6a4I4gjOw1rPPItw6LQLpWZ6ps32FgNYD5ao/RS0kfDOlvz24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749698568; c=relaxed/simple;
-	bh=BrSkfwr2fEUkp4ke6mpxarWl8wHtq54sqWB/PYbJtZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H5cH4k6WX/+KqYPi2K2hAMhMcfqJRishcmhxsl7yYglGovwljTrF8v/uDPIQQaUTrRCLt2sVK6cvVI7x5lugvZjLtgoKRTpEpnXGjzM+hcs9ivb9mgGZGpM5FRBUfviroP0SU2wbKTxEJxjEiTN2IaBfvfEYng2BPyW3pQkn520=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZzuX1X/k; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749698810; c=relaxed/simple;
+	bh=fMSjX1XneikPjeYMLuohvrYv1PB55ij71zTFtcYndz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TnfKZi3iynMjJBepxipEsx4i2jd/gTAak5r5syknEoz4Kr1QGJIfRbNUwl5S4ANxqxFRk2r01n752rDb+dg5YMj0ShQieoorWCkvXVN43m1qvingN2QIWuCXxwP/wz/sgtAb/ydrrRKfCw3r5C6GdWS6eWitYgHzBDDsS6bRspU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZVMGi3f1; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzuX1X/k"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747ef5996edso581840b3a.0;
-        Wed, 11 Jun 2025 20:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749698566; x=1750303366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o5BrchDvLAnoGuJ9lm9D6RimRbXBnEt7ZlMQvCcmHq4=;
-        b=ZzuX1X/kWB7QVZhrxFKDBx8KwlPifKJdpdPsXI87yjybMeA9tAKCz0zM8BJP/BQWyu
-         5uNya1TW6YylOjXdp+BIDOpAlW6aH0LEF0g0XeKpD4vFze3RHv20D9phqRixZ1VDGIGe
-         CyD0KEDurZtACwZfOkkpgV56+wKn+7FslWKphcgXSFPlwRMvNJ+oKMfyhC6jXOvSJJ0C
-         9vfz/ujX8tlXYg09fEMcM5VJNmj7ZJNZCjEsh8s9gZxY4fa5fQwN81kpVpPln0B/1eGX
-         dO7w8CXbYcFcQQ6kTUUQlvuF8Qt4L1vfYfMp7tdE5eN7A2GElXtUqrN040RfdKuIk7X6
-         I+CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749698566; x=1750303366;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o5BrchDvLAnoGuJ9lm9D6RimRbXBnEt7ZlMQvCcmHq4=;
-        b=wLj0ej3IoGxKdcjmy5lB9PGnbYe+0y5nCCuzxmjr4Pm9s+uDAhisA9Br+vJnl6CI5l
-         nmfli2FZDuwKTphbCb2EyKKj/qukw/77bplTfIVYdm1VqB/hE22F/UrZ9phIeRLPmzii
-         vyYE1MCxiL4jxYHuKEmMtuK3oPuPvUKV+F4cwXre02XtkqrSDHbxVZNS97sxXNj5mp9f
-         4hXmr0+uIiw6KsCMjrJa1N87u+cLzpaejOJY3f+OtND6XoaG/taouMzyrnyqh/Ivtp7r
-         XdxG/OWoSMq3M/E9S60XUKD3Ett0aZeWrVZ8EpJoZ46Mm90sKTaKwn3ekLhM/uI/C0Ad
-         5vRg==
-X-Forwarded-Encrypted: i=1; AJvYcCV++pvThQcF9TKNkylXz0oUpQAe2BrS7PTkBUe2Bj9bpn/KK6fHkn5cIdF+0G3IrLGl7mLY9uYQ7B+cdfCLzA==@vger.kernel.org, AJvYcCWGeI1XAozjUIkoRqj0OqZf+9FCevXGnGKoX3CXq51R/5mp2Tvzn65aIPr07pIzLyjeqTFGUj6/XLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXwQAKDuJ2NJ7unCDFd/R7tckC7vYnoxr+z1A75wE4LuxFsaNU
-	Kqk5yEJ11ZmjtpnWJFstc4+XbHXz/yyDPaK5DHIqDKcYQmbCdqRoAxo/
-X-Gm-Gg: ASbGncuyNUJ7Ew6kOaPLF/oyrbSorD9Uq6xLUFSuN8iktuapoDPtD3vndBkKUF+LoKg
-	JO2eIT2KtYbvxh0LsYZAxaqkDtRleFMN6Pvx8lqg/rtwXNN6EV9R3vO9yXP3M7mh3AWcOGIoJfi
-	JBjVLVlx3bdA7IIAvcVTlTsHAzwyviPj58WjdSg7fTjAL3yw0uSJ07FWg5vMkJ6wT3j02k7Yeir
-	Q+94TsY4oNuTj/DKuApzHkzokhpHrtqtRTsEYrZ+pFNa2ak7CMkziyss/4Lrnr6qKRS3/txq7Xg
-	7DnsYFo2GAVYJEme7sqLltjEdnyNCgaygTrDt65WKkt/tv1FyDEOYwxILFgoug==
-X-Google-Smtp-Source: AGHT+IH20S/NhBMoKYIZBWMUE+n8bVvzIS8OCFFPusGhzVlpdxZ284oURaUPgBmg+Tuye6NAdfA06A==
-X-Received: by 2002:a05:6a20:7d86:b0:21f:568c:713a with SMTP id adf61e73a8af0-21f977e8f6fmr3123090637.17.1749698566083;
-        Wed, 11 Jun 2025 20:22:46 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd6295233sm348019a12.37.2025.06.11.20.22.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 20:22:45 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 9B72E424180B; Thu, 12 Jun 2025 10:22:42 +0700 (WIB)
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Luis Henriques <luis@igalia.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	James Morse <james.morse@arm.com>
-Subject: [PATCH] Documentation: fuse: Consolidate FUSE docs into its own subdirectory
-Date: Thu, 12 Jun 2025 10:22:39 +0700
-Message-ID: <20250612032239.17561-1-bagasdotme@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZVMGi3f1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1749698801;
+	bh=pvm9Ym0WC6I6HYqTJLkuD9MN4dqMu1pJN8zQYxlhxfY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZVMGi3f19E29S9UkDCpq+aNJmInzjQeVNVSB6+J6qusGN+OG49M763mwPKN/5h80v
+	 Vb8Ya5wPcaKBS0koZ+6YTrQMdyOSpbFQttJuAQ0JEZiNjKF6kn4tyb10KXxXQyPFIt
+	 dan3ABUJBstXbTPj5k3yCYveDeYHrgkh9egGOSJtlD9P5wmAzV4fWu5nCCaflNRZLB
+	 S/j8Y4hW0j7V+iSMkuBWhc2w+ako5GJ0Tg1//kaTBxJdJQrES5WUFdBtr+IKQNSLyk
+	 qPcLN1ef76wazOTFrMtaWJp1AVhmgC/wWJxteFcnkZ5ExcjAkOAlW4iJskntXQRjDm
+	 tgARjpQziz1Ag==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bHnxr6d1Zz4wb0;
+	Thu, 12 Jun 2025 13:26:40 +1000 (AEST)
+Date: Thu, 12 Jun 2025 13:26:38 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the block tree
+Message-ID: <20250612132638.193de386@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4174; i=bagasdotme@gmail.com; h=from:subject; bh=BrSkfwr2fEUkp4ke6mpxarWl8wHtq54sqWB/PYbJtZw=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBle7q4TP35qt069wq+S5O5/afr+O4u2ntb/nDeXZbafv ZV383rfjlIWBjEuBlkxRZZJiXxNp3cZiVxoX+sIM4eVCWQIAxenAExktxzD/+AFB1WkDmx4Lql/ InKXlS9PfnR3UFvFvCnRUzkZZt39uIuRobeVW/2oPqc/086/r/S0ruh99WDIsWgsetih0sDFa+r ABQA=
-X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/v+PwzsKkNWXLMa5eE9UzOH3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-All four FUSE docs are currently in upper-level
-Documentation/filesystems/ directory, but these are distinct as a group
-of its own. Move them into Documentation/filesystems/fuse/ subdirectory.
+--Sig_/v+PwzsKkNWXLMa5eE9UzOH3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
----
- .../filesystems/{ => fuse}/fuse-io-uring.rst       |  0
- Documentation/filesystems/{ => fuse}/fuse-io.rst   |  2 +-
- .../filesystems/{ => fuse}/fuse-passthrough.rst    |  0
- Documentation/filesystems/{ => fuse}/fuse.rst      |  6 +++---
- Documentation/filesystems/fuse/index.rst           | 14 ++++++++++++++
- Documentation/filesystems/index.rst                |  5 +----
- MAINTAINERS                                        |  2 +-
- 7 files changed, 20 insertions(+), 9 deletions(-)
- rename Documentation/filesystems/{ => fuse}/fuse-io-uring.rst (100%)
- rename Documentation/filesystems/{ => fuse}/fuse-io.rst (99%)
- rename Documentation/filesystems/{ => fuse}/fuse-passthrough.rst (100%)
- rename Documentation/filesystems/{ => fuse}/fuse.rst (99%)
- create mode 100644 Documentation/filesystems/fuse/index.rst
+Hi all,
 
-diff --git a/Documentation/filesystems/fuse-io-uring.rst b/Documentation/filesystems/fuse/fuse-io-uring.rst
-similarity index 100%
-rename from Documentation/filesystems/fuse-io-uring.rst
-rename to Documentation/filesystems/fuse/fuse-io-uring.rst
-diff --git a/Documentation/filesystems/fuse-io.rst b/Documentation/filesystems/fuse/fuse-io.rst
-similarity index 99%
-rename from Documentation/filesystems/fuse-io.rst
-rename to Documentation/filesystems/fuse/fuse-io.rst
-index 6464de4266ad50..d736ac4cb48370 100644
---- a/Documentation/filesystems/fuse-io.rst
-+++ b/Documentation/filesystems/fuse/fuse-io.rst
-@@ -1,7 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
- ==============
--Fuse I/O Modes
-+FUSE I/O Modes
- ==============
- 
- Fuse supports the following I/O modes:
-diff --git a/Documentation/filesystems/fuse-passthrough.rst b/Documentation/filesystems/fuse/fuse-passthrough.rst
-similarity index 100%
-rename from Documentation/filesystems/fuse-passthrough.rst
-rename to Documentation/filesystems/fuse/fuse-passthrough.rst
-diff --git a/Documentation/filesystems/fuse.rst b/Documentation/filesystems/fuse/fuse.rst
-similarity index 99%
-rename from Documentation/filesystems/fuse.rst
-rename to Documentation/filesystems/fuse/fuse.rst
-index 1e31e87aee68c5..5976828586f8df 100644
---- a/Documentation/filesystems/fuse.rst
-+++ b/Documentation/filesystems/fuse/fuse.rst
-@@ -1,8 +1,8 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
--====
--FUSE
--====
-+=============
-+FUSE Overview
-+=============
- 
- Definitions
- ===========
-diff --git a/Documentation/filesystems/fuse/index.rst b/Documentation/filesystems/fuse/index.rst
-new file mode 100644
-index 00000000000000..393a845214da95
---- /dev/null
-+++ b/Documentation/filesystems/fuse/index.rst
-@@ -0,0 +1,14 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================================
-+FUSE (Filesystem in Userspace) Technical Documentation
-+======================================================
-+
-+.. toctree::
-+   :maxdepth: 2
-+   :numbered:
-+
-+   fuse
-+   fuse-io
-+   fuse-io-uring
-+   fuse-passthrough
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 11a599387266a4..84c5a0d11b6df7 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -96,10 +96,7 @@ Documentation for filesystem implementations.
-    hfs
-    hfsplus
-    hpfs
--   fuse
--   fuse-io
--   fuse-io-uring
--   fuse-passthrough
-+   fuse/index
-    inotify
-    isofs
-    nilfs2
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa163f..026afb50000346 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9898,7 +9898,7 @@ L:	linux-fsdevel@vger.kernel.org
- S:	Maintained
- W:	https://github.com/libfuse/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
--F:	Documentation/filesystems/fuse*
-+F:	Documentation/filesystems/fuse/*
- F:	fs/fuse/
- F:	include/uapi/linux/fuse.h
- 
+After merging the block tree, today's linux-next build (htmldocs)
+produced this warning:
 
-base-commit: d3f825032091fc14c7d5e34bcd54317ae4246903
--- 
-An old man doll... just what I always wanted! - Clara
+Documentation/block/ublk.rst:414: ERROR: Unexpected indentation. [docutils]
 
+Introduced by commit
+
+  ff20c516485e ("ublk: document auto buffer registration(UBLK_F_AUTO_BUF_RE=
+G)")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/v+PwzsKkNWXLMa5eE9UzOH3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhKSO4ACgkQAVBC80lX
+0Gwtawf+I9DCdPfuQaou1Z7CSgXKwO9gG16PetdWs+YVM/aL1iWzzximELR9fUyg
+F4hCdJKGteAmqEwIcbL2LED/CPedHwNyym5Prtc+JzzaAU5lf9YcdnnfTFAhBAbw
+ZaExTn46+TE0t3VmoW0CqkDoXX6K3vslarj8hf/t37m7q8skUzjyUobpUmbKoMm9
+f1/3HI1jTmOzv2cd4csEIwD+s21RLus9WPxVBdku3LhtGgYWfr6O/x2ki/QCbvfV
+9FLU5ihVkcjPh9x7mhUovHMIOzK3qkvK7qI1cwy1V0g8X2Ow42zAQFAqBSiv30DU
+QqmjQYAqrAplDqbyC1Wkpnc3SZZa9w==
+=ysv2
+-----END PGP SIGNATURE-----
+
+--Sig_/v+PwzsKkNWXLMa5eE9UzOH3--
