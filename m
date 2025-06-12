@@ -1,186 +1,250 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2D5223339
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD8B523AB9F;
+	Thu, 12 Jun 2025 10:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725304; cv=none; b=R27pa3CPPbdaAotD7h06tzqZIFY2jNn5Cj/nn1IsdORaNsQmJygbzZZEOJ8EKOknCFSWLoANWAVwGOsepYf/Dkkt2rsY7/WiOjfU75RGhAJwm9pOp4pwgsx35xLbn+dYl9qe2j2VJzoWgwKPgcixXOpZVzGv9umK3Q0wkKK7ucs=
+	t=1749725309; cv=none; b=Xn15GS4ywfps/hCGjzVAnjtN0gmfQpFOjDriT/mymcwLzY1sHRUnnZFRTyWYCI264cZFc08kj3Zbj8wzLYacNdl/3dMfTPJOHS1y3GuSUsavmfkpZwDlWU2BzRpqmac4FFcSSg3Tgbj9DuWbaDTLMrUoZqEUL1ry+DddyF9eI+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725304; c=relaxed/simple;
-	bh=HNDqJvbrM3YoJTFiv4uqxRukmDC/kioQTcqiuAA2cac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E++7//TjKGmdoHkKnCclSpd9S47Th6ps5RIJnJVWzGf5K7gGnBgSMIRwiZu8YiTFEpHLKCPl27OpNICxIhzKDAp8DWwhEirOi5FodmmGBSlza8DLW3ZB3aiHw0lHvK7WJZabFcIjAy9rpg9gYKf0DUMszTAOVJP/+7dKCseNHb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VKGzRxSh; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VKGzRxSh"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a54700a463so486515f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 03:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749725301; x=1750330101; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O9eVd27nL1eqHZbw4F9ds6pBpZa05pK5xdu04RGTqP0=;
-        b=VKGzRxSh71/QF8p8wnUQ7PEGwC0EUpZkw7hv4LYxPDa7j4XDSOth5nk828JYDek1HH
-         gyVQZfml7PkpMgWORHIN6L5J4O0dbGuWYWf3SdM6mHoN69ENGQC3uHa1nBqkq0siUJi3
-         5Hs6IsYvlv41WztZIOdtoOof0W+m9AvXIw20bVXixzeqjj04ZJIbyem3HTHuXpFUoJnh
-         kocp75cCpvXWbWxRNgYl83NQdPsX8kN1A8iBNUh6QUK+C0M4Q+1QUx+csaDXMRxRAGKl
-         RdBq+F4t5VAEuNsA2bNtnC3/F5zoQpcYX/F46KVzSg2QMSF0mA59uuKAnBlfYLBe2uMc
-         tbUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749725301; x=1750330101;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O9eVd27nL1eqHZbw4F9ds6pBpZa05pK5xdu04RGTqP0=;
-        b=FcBlBibvuGtLhPDaKdcx6J+YkpJsZyzdigGdL6ZoWeqJgdSYEZgul58j+c3tyomW8S
-         jyRRyPn1dnJU+GerGSWtkM573aliSsziDmIvyTYjXc1NrNQSOa4vzrPQnp+PYJPs4ysU
-         hHShi9+GKVt9SBq5N199u6qbvj8/97VKEY8PwSxhd4Nb2jiwiKkSgd9ZZCT9KWHYZxZ+
-         MGmPRMcco58T3fwNcL/E6byQ4mZZBjFxaRSR6hhNpsnDTzi7QBYYpaBewFhmPNw4tk/p
-         zTpodRfQwB3Qf9Kd3ukNrrjidDoP8Rajv2qNycXb0AohIaC5AynW/d+Mx/NjQg9Fc47z
-         7/iw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmWmaX5t9HdC8nOMSZhGRRHbUUqGDeeknaFKjvfzZcAP1a+he67dADeMAmFExPRmMRzWLAdaftFR0xnPo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGl2z+1YQ87KCI6bFmJyR18o2yUIdQSUY2GHRyNT6KXT1CTV/C
-	psp130HJGSiuVbwoMq20k+dkZFXuX3GSAEcoCCyrFrrvi9Oe6r7vt+HxYZyLk0mz/F0=
-X-Gm-Gg: ASbGncuMibqtL+q0emK6H9fCkBeMIw3w5gGBnI+sGDWwvErNEk8LyItyQw8VUfItGA2
-	uLz6AvdAg/+BqoaSgZUNFF82VCcX2HXXHr2RfpjnfkZj6Z+HensLipBLNj7hss43GSdh4ZmJxcm
-	xYmQ36bGcwdXyo+uUwGyTOzFFAGAo9MUM4MvoWoJKM+dlqCAXGVN/1uRJo01PZ9JFl+V5UyVH2W
-	Puan9JulWWseQlSnsZ9Nvc5qQXCdD6t+z9tfKBj+w8U81QhtsYnKVxwIx6WW49zrNckYPoH0KCP
-	x7gTa9FPOeoCaozpRMuCeouis1wcWJRuw2IM8ygHSRW06Hc5HZX/TzPKf+PsIiLzJrRsBvxHNHo
-	jXmXs
-X-Google-Smtp-Source: AGHT+IEaAyozngycLd0mG65hkJuHuQ/++UMGDBEwmcvUNmlN9HEgHszswErmF9JjhOS7OFHmrHQ5zA==
-X-Received: by 2002:a05:6000:3107:b0:3a4:ed9a:7016 with SMTP id ffacd0b85a97d-3a560827df3mr1956811f8f.26.1749725300756;
-        Thu, 12 Jun 2025 03:48:20 -0700 (PDT)
-Received: from [10.0.1.22] (109-81-1-248.rct.o2.cz. [109.81.1.248])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561976a20sm1655934f8f.19.2025.06.12.03.48.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 03:48:20 -0700 (PDT)
-Message-ID: <c7dbb33d-98b6-45da-be77-e86b9e6787ee@suse.com>
-Date: Thu, 12 Jun 2025 12:48:19 +0200
+	s=arc-20240116; t=1749725309; c=relaxed/simple;
+	bh=E++j0VEKWl4vXpOMr+jNQnxTUhTcRw3k4Jgt5LDWoPA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KdFwiqpuNid49Yzk/VAX+XqmuuJv5djyiWEDfcdoFvmtLl8s2H5XxW1mUJ+HMUSty7WYgL08fwNKIw/d/cssXGKDOJ4ELOjuepm1kDcy9/d3SNJjjEqbwDMZtesBMry1EmnuVxkYJqTKxIB+ghcScdbb3/sTrpoTM6QkFEUC9MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app1 (Coremail) with SMTP id TAJkCgBXexFusEpo9nueAA--.22791S2;
+	Thu, 12 Jun 2025 18:48:16 +0800 (CST)
+From: Yulin Lu <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	zhengyu@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	Yulin Lu <luyulin@eswincomputing.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v5 1/2] dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
+Date: Thu, 12 Jun 2025 18:48:11 +0800
+Message-Id: <20250612104811.1206-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250612104539.2011-1-luyulin@eswincomputing.com>
+References: <20250612104539.2011-1-luyulin@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] module: Fix memory deallocation on error path in
- move_module()
-To: Daniel Gomez <da.gomez@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250607161823.409691-1-petr.pavlu@suse.com>
- <20250607161823.409691-2-petr.pavlu@suse.com>
- <ae967353-71fa-4438-a84b-8f7e2815f485@kernel.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <ae967353-71fa-4438-a84b-8f7e2815f485@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgBXexFusEpo9nueAA--.22791S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3XFW8KrWDGw45GryUZry7ZFb_yoW7Kr1xpF
+	43W34fJF1qqr1xGa9Ivw109F1fJan7AF9xAFyjyry3Xw1Yq3WSyr4ayr45WFWUWr4kJ343
+	Xayjqa4jqF4UCrJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9C14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Wrv_ZF1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxK
+	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
+	0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRna93UUUUU=
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-On 6/10/25 8:51 PM, Daniel Gomez wrote:
-> On 07/06/2025 18.16, Petr Pavlu wrote:
->> The function move_module() uses the variable t to track how many memory
->> types it has allocated and consequently how many should be freed if an
->> error occurs.
->>
->> The variable is initially set to 0 and is updated when a call to
->> module_memory_alloc() fails. However, move_module() can fail for other
->> reasons as well, in which case t remains set to 0 and no memory is freed.
-> 
-> Do you have a way to reproduce the leak?
+Add EIC7700 pinctrl device for all configurable pins.
+For the EIC7700 pinctrl registers, each register (32 bits)
+controls the characteristics of a single pin.
+It supports setting function multiplexing, Schmitt trigger,
+drive strength, pull-up/pull-down, and input enable.
 
-I was only able to test it by directly inserting errors in
-move_module().
+Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++++++++++++++++
+ 1 file changed, 156 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
 
-> 
->>
->> Fix the problem by setting t to MOD_MEM_NUM_TYPES after all memory types
->> have been allocated. Additionally, make the deallocation loop more robust
->> by not relying on the mod_mem_type_t enum having a signed integer as its
->> underlying type.
->>
->> Fixes: c7ee8aebf6c0 ("module: add stop-grap sanity check on module memcpy()")
->> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
->> ---
->>  kernel/module/main.c | 7 ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/kernel/module/main.c b/kernel/module/main.c
->> index 08b59c37735e..322b38c0a782 100644
->> --- a/kernel/module/main.c
->> +++ b/kernel/module/main.c
->> @@ -2614,7 +2614,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
->>  static int move_module(struct module *mod, struct load_info *info)
->>  {
->>  	int i;
->> -	enum mod_mem_type t = 0;
->> +	enum mod_mem_type t;
->>  	int ret = -ENOMEM;
->>  	bool codetag_section_found = false;
->>  
->> @@ -2630,6 +2630,7 @@ static int move_module(struct module *mod, struct load_info *info)
->>  			goto out_err;
->>  		}
->>  	}
->> +	t = MOD_MEM_NUM_TYPES;
-> 
-> Why forcing to this? I think we want to loop from the last type found, in case
-> move_module() fails after this point. Here's my suggestion:
-> 
-> diff --git a/kernel/module/main.c b/kernel/module/main.c
-> index ada44860a868..c66881d2fb62 100644
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -2697,7 +2697,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
->  static int move_module(struct module *mod, struct load_info *info)
->  {
->         int i;
-> -       enum mod_mem_type t;
-> +       enum mod_mem_type t = MOD_TEXT;
->         int ret;
->         bool codetag_section_found = false;
-> 
-> @@ -2708,12 +2708,10 @@ static int move_module(struct module *mod, struct load_info *info)
->                 }
-> 
->                 ret = module_memory_alloc(mod, type);
-> -               if (ret) {
-> -                       t = type;
-> +               t = type;
-> +               if (ret)
->                         goto out_err;
-> -               }
->         }
-> -       t = MOD_MEM_NUM_TYPES;
-> 
->         /* Transfer each section which specifies SHF_ALLOC */
->         pr_debug("Final section addresses for %s:\n", mod->name)
-
-This seems to be off by one. For instance, if the loop reaches the last
-valid type in mod_mem_type, MOD_INIT_RODATA, and successfully allocates
-its memory, the variable t gets set to MOD_INIT_RODATA. Subsequently, if
-an error occurs later in move_module() and control is transferred to
-out_err, the deallocation starts from t-1, and therefore MOD_INIT_RODATA
-doesn't get freed.
-
-If we want to always start from the last type found, the code would need
-to be:
-
-		[...]
-		ret = module_memory_alloc(mod, type);
-		if (ret)
-			goto out_err;
-		t = type + 1;
-	}
-
-I can adjust it in this way if it is preferred.
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+new file mode 100644
+index 000000000000..d46e7ee6372d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+@@ -0,0 +1,156 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/eswin,eic7700-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Eswin Eic7700 Pinctrl
++
++maintainers:
++  - Yulin Lu <luyulin@eswincomputing.com>
++
++allOf:
++  - $ref: pinctrl.yaml#
++
++description: |
++  eic7700 pin configuration nodes act as a container for an arbitrary number of
++  subnodes. Each of these subnodes represents some desired configuration for one or
++  more pins. This configuration can include the mux function to select on those pin(s),
++  and various pin configuration parameters, such as input-enable, pull-up, etc.
++
++properties:
++  compatible:
++    const: eswin,eic7700-pinctrl
++
++  reg:
++    maxItems: 1
++
++  vrgmii-supply:
++    description:
++      Regulator supply for the RGMII interface IO power domain.
++      This property should reference a regulator that provides either 1.8V or 3.3V,
++      depending on the board-level voltage configuration required by the RGMII interface.
++
++patternProperties:
++  '-grp$':
++    type: object
++    additionalProperties: false
++
++    patternProperties:
++      '-pins$':
++        type: object
++
++        properties:
++          pins:
++            description:
++              For eic7700, specifies the name(s) of one or more pins to be configured by
++              this node.
++            items:
++              enum: [ chip_mode, mode_set0, mode_set1, mode_set2, mode_set3, xin,
++                      rst_out_n, key_reset_n, gpio0, por_sel, jtag0_tck, jtag0_tms,
++                      jtag0_tdi, jtag0_tdo, gpio5, spi2_cs0_n, jtag1_tck, jtag1_tms,
++                      jtag1_tdi, jtag1_tdo, gpio11, spi2_cs1_n, pcie_clkreq_n,
++                      pcie_wake_n, pcie_perst_n, hdmi_scl, hdmi_sda, hdmi_cec,
++                      jtag2_trst, rgmii0_clk_125, rgmii0_txen, rgmii0_txclk,
++                      rgmii0_txd0, rgmii0_txd1, rgmii0_txd2, rgmii0_txd3, i2s0_bclk,
++                      i2s0_wclk, i2s0_sdi, i2s0_sdo, i2s_mclk, rgmii0_rxclk,
++                      rgmii0_rxdv, rgmii0_rxd0, rgmii0_rxd1, rgmii0_rxd2, rgmii0_rxd3,
++                      i2s2_bclk, i2s2_wclk, i2s2_sdi, i2s2_sdo, gpio27, gpio28, gpio29,
++                      rgmii0_mdc, rgmii0_mdio, rgmii0_intb, rgmii1_clk_125, rgmii1_txen,
++                      rgmii1_txclk, rgmii1_txd0, rgmii1_txd1, rgmii1_txd2, rgmii1_txd3,
++                      i2s1_bclk, i2s1_wclk, i2s1_sdi, i2s1_sdo, gpio34, rgmii1_rxclk,
++                      rgmii1_rxdv, rgmii1_rxd0, rgmii1_rxd1, rgmii1_rxd2, rgmii1_rxd3,
++                      spi1_cs0_n, spi1_clk, spi1_d0, spi1_d1, spi1_d2, spi1_d3, spi1_cs1_n,
++                      rgmii1_mdc, rgmii1_mdio, rgmii1_intb, usb0_pwren, usb1_pwren,
++                      i2c0_scl, i2c0_sda, i2c1_scl, i2c1_sda, i2c2_scl, i2c2_sda,
++                      i2c3_scl, i2c3_sda, i2c4_scl, i2c4_sda, i2c5_scl, i2c5_sda,
++                      uart0_tx, uart0_rx, uart1_tx, uart1_rx, uart1_cts, uart1_rts,
++                      uart2_tx, uart2_rx, jtag2_tck, jtag2_tms, jtag2_tdi, jtag2_tdo,
++                      fan_pwm, fan_tach, mipi_csi0_xvs, mipi_csi0_xhs, mipi_csi0_mclk,
++                      mipi_csi1_xvs, mipi_csi1_xhs, mipi_csi1_mclk, mipi_csi2_xvs,
++                      mipi_csi2_xhs, mipi_csi2_mclk, mipi_csi3_xvs, mipi_csi3_xhs,
++                      mipi_csi3_mclk, mipi_csi4_xvs, mipi_csi4_xhs, mipi_csi4_mclk,
++                      mipi_csi5_xvs, mipi_csi5_xhs, mipi_csi5_mclk, spi3_cs_n, spi3_clk,
++                      spi3_di, spi3_do, gpio92, gpio93, s_mode, gpio95, spi0_cs_n,
++                      spi0_clk, spi0_d0, spi0_d1, spi0_d2, spi0_d3, i2c10_scl,
++                      i2c10_sda, i2c11_scl, i2c11_sda, gpio106, boot_sel0, boot_sel1,
++                      boot_sel2, boot_sel3, gpio111, lpddr_ref_clk ]
++
++          function:
++            description:
++              Specify the alternative function to be configured for the
++              given pins.
++            enum: [ disabled, boot_sel, chip_mode, emmc, fan_tach,
++                    gpio, hdmi, i2c, i2s, jtag, ddr_ref_clk_sel,
++                    lpddr_ref_clk, mipi_csi, osc, pcie, pwm,
++                    rgmii, reset, sata, sdio, spi, s_mode, uart, usb ]
++
++          input-schmitt-enable: true
++
++          input-schmitt-disable: true
++
++          bias-disable: true
++
++          bias-pull-down: true
++
++          bias-pull-up: true
++
++          input-enable: true
++
++          input-disable: true
++
++          drive-strength-microamp: true
++
++        required:
++          - pins
++
++        additionalProperties: false
++
++        allOf:
++          - $ref: pincfg-node.yaml#
++          - $ref: pinmux-node.yaml#
++
++          - if:
++              properties:
++                pins:
++                  anyOf:
++                    - pattern: '^rgmii'
++                    - const: lpddr_ref_clk
++            then:
++              properties:
++                drive-strength-microamp:
++                  enum: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000]
++            else:
++              properties:
++                drive-strength-microamp:
++                  enum: [6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000]
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    pinctrl@51600080 {
++      compatible = "eswin,eic7700-pinctrl";
++      reg = <0x51600080 0x1fff80>;
++      vrgmii-supply = <&vcc_1v8>;
++
++      dev-active-grp {
++        /* group node defining 1 standard pin */
++        gpio10-pins {
++          pins = "jtag1_tdo";
++          function = "gpio";
++          input-enable;
++          bias-pull-up;
++        };
++
++        /* group node defining 2 I2C pins */
++        i2c6-pins {
++          pins = "uart1_cts", "uart1_rts";
++          function = "i2c";
++        };
++      };
++    };
 -- 
-Thanks,
-Petr
+2.25.1
+
