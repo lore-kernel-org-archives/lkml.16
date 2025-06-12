@@ -1,111 +1,86 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DD929ACEA
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BAF29B773;
+	Thu, 12 Jun 2025 15:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742071; cv=none; b=qDj5myTY3ig6vpGUmJihMbyk+9itVZKGGscseY57ohwHxyV8frQRfIGEf9dAj/4fHNvSe8PzpuIdVF2mXS+XYyQp0FdbCjcnXqBcobdMITiOmQEeWH8+IrWnSsTt7cPsEs/eA31pADKwqV8Q0rl3KsDwxOlOyUG02lqeyiMGKfo=
+	t=1749742129; cv=none; b=AA4LR8fpUfFR3c5CXM/I22kXdBjzdVN6195liavH7Pf7NwxHs3Nd4Wkk5DNSIAz9nZ8pxwX5APNA6KFLlvl36mYdSlsdrqOSl65gtoDHU9k0wnpT/DoI5bfDuyZFASPxVdVT5Xii0m40HZZ+j8Tx/A95k9qe/eAvvo9UYhV5mc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742071; c=relaxed/simple;
-	bh=esuWoF4+5YSzorn3pD3qgA/Q6prQMzRn7YoirPdkwGE=;
+	s=arc-20240116; t=1749742129; c=relaxed/simple;
+	bh=t7kFj3CUvv/CS73sWzGwnm3tHKJMaqfmiaX3ddssg0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YiaIq1NVQj/wU54FcbvR55fesqgwcbw2zQwMj/j1SM/ppGdIJouzjbzm77pQquCgkiLjh45aEVwLmiRrn37r07ZT5vQrtRqbHnb94rTK73g4XbgsNHC6yjOMIGQ6PzVNd2ENUIC1FuM6VTBMeMiVnrlrfhwqrjlVRyMLXByFNE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tQ2BBo8I; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=mn34dc3f7uuDPxkvkZnuJ9iM7nyNLiwNgQ8rczeeM4TMErR0m2UuBZAzCV7MMGNFzxkIunAvEKgT1s+DmzCfSvnFAT5+Cu4nsSXEUDH8IOTordB689DGTwW2+M/X2M/eVDN+wWexn90S6a/6l2N/xEMpYErQZtxtrA0KC5BUrSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NBJ1AJLi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tQ2BBo8I"
-Date: Thu, 12 Jun 2025 11:27:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749742056;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=08IhqjOYS8NhpwOoqkODfXYHq76eNMAzxpdSMQvwlzE=;
-	b=tQ2BBo8IZP4++LYAWvzkW8nFdDKhmcM78bX6gkBqyb9LbN29WQ35Q31/RW6e+dAONNZrVq
-	92TnNzFy2I5mAp7RfSl7YINC/69Te+qD/3biYnw4SsANIZiRe+OSzsqnRuvZV+HXy2L6YI
-	YKbwu4MouK0vyWi8uCuUgZp7E0eCa1w=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Sergio Perez Gonzalez <sperezglz@gmail.com>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	shuah@kernel.org, syzbot+e577022d4fba380653be@syzkaller.appspotmail.com
-Subject: Re: [PATCH] bcachefs: fix size used to calculate `nr` of devices in
- member_to_text()
-Message-ID: <4n6rpfi4vi4gsrk3oiodqhjtjzaygkgg3yamsmn76trrw4o3zv@xxndklof3j6r>
-References: <20250612081935.161598-1-sperezglz@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NBJ1AJLi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58504C4CEEA;
+	Thu, 12 Jun 2025 15:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749742129;
+	bh=t7kFj3CUvv/CS73sWzGwnm3tHKJMaqfmiaX3ddssg0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NBJ1AJLi2/VBvcn8K3zZFaIdebMiKc4pC4pqU1oD174Nyic3I5Vc0tYsWBUagR3AR
+	 dhN5uG49SFhLwzEphylzAUlEdaqgzBH9qYOpNbvbXJ84CycsJnzwvt1OMWLIBi+/sk
+	 AelZxxiwy4IWq8CJ9KwdfplFJa1ffrGvIdnEov3hsqdrPZgOEbnQT3F0xN79BxCSxM
+	 64O1AJCB+RBxUMbwUd5fdM9v2Bvbxt6vn90YdmeRBiat3KXXlYDWlG3U/INFGhf5hI
+	 oJKLvjpF5D5LPgwG3pmKaH2CQcRlHkhj98dnUFeDAtcKm2u/VAOjF72WtKJvSvYIdT
+	 PwREXpzfhGKKw==
+Date: Thu, 12 Jun 2025 16:28:43 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: phy: samsung,mipi-video-phy: document
+ exynos7870 MIPI phy
+Message-ID: <20250612-unpaid-slacker-edaf80ce160b@spud>
+References: <20250612-exynos7870-mipi-phy-v1-0-3fff0b62d9d3@disroot.org>
+ <20250612-exynos7870-mipi-phy-v1-1-3fff0b62d9d3@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="f30wP9juoNGzy1L/"
+Content-Disposition: inline
+In-Reply-To: <20250612-exynos7870-mipi-phy-v1-1-3fff0b62d9d3@disroot.org>
+
+
+--f30wP9juoNGzy1L/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612081935.161598-1-sperezglz@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025 at 02:19:26AM -0600, Sergio Perez Gonzalez wrote:
-> In bch2_sb_members_v1_to_text() there is an incorrect size used to
-> calculate the number of devices.
-> 
-> The correct size should be `BCH_MEMBER_V1_BYTES` as implied by:
-> 
-> static struct bch_member *members_v1_get_mut(struct bch_sb_field_members_v1 *mi, int i)
-> {
-> 	return (void *) mi->_members + (i * BCH_MEMBER_V1_BYTES);
-> }
-> 
-> Also invert the pointers used in the calculation, given that they yield a
-> negative number.
-> 
-> Reported-by: syzbot+e577022d4fba380653be@syzkaller.appspotmail.com
-> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-> ---
->  fs/bcachefs/sb-members.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/bcachefs/sb-members.c b/fs/bcachefs/sb-members.c
-> index c673e76ca27f..cc51313ebcf6 100644
-> --- a/fs/bcachefs/sb-members.c
-> +++ b/fs/bcachefs/sb-members.c
-> @@ -325,10 +325,10 @@ static void bch2_sb_members_v1_to_text(struct printbuf *out, struct bch_sb *sb,
->  {
->  	struct bch_sb_field_members_v1 *mi = field_to_type(f, members_v1);
->  	struct bch_sb_field_disk_groups *gi = bch2_sb_field_get(sb, disk_groups);
-> -	int nr = (vstruct_end(&mi->field) - (void *) &gi->entries[0]) / sizeof(gi->entries[0]);
-> +	int nr = ((void *) &gi->entries[0] - vstruct_end(&mi->field)) / BCH_MEMBER_V1_BYTES;
->  
+On Thu, Jun 12, 2025 at 08:39:29PM +0530, Kaustabh Chakraborty wrote:
+> The Exynos7870 MIPI PHY device contains one DSIM PHY block and three
+> CSIS PHY blocks. It also requires two sysregs, one for display, and the
+> other for cameras. Document this device.
+>=20
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 
-Actually, this shouldn't be referencing gi at all - brainfart on my end,
-that's a completely different superblock section. That's where the
-negative number came from.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
->  	if (nr != sb->nr_devices)
-> -		prt_printf(out, "nr_devices mismatch: have %i entries, should be %u", nr, sb->nr_devices);
-> +		prt_printf(out, "nr_devices mismatch: have %i entries, should be %u\n", nr, sb->nr_devices);
+--f30wP9juoNGzy1L/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yeah, it should have a newline.
+-----BEGIN PGP SIGNATURE-----
 
-I'll fold that in.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEryKwAKCRB4tDGHoIJi
+0mqJAP9DJbUlkADvUrHdf81purqcXzTVeDAzhbMUmKO+F21UFAD/QjLSgELcwtip
+njn3vQB/7wZoDC6VzVfnBVgIdy1XAwg=
+=Bir7
+-----END PGP SIGNATURE-----
 
->  
->  	for (int i = 0; i < nr; i++)
->  		member_to_text(out, members_v1_get(mi, i), gi, sb, i);
-> @@ -344,10 +344,10 @@ static void bch2_sb_members_v2_to_text(struct printbuf *out, struct bch_sb *sb,
->  {
->  	struct bch_sb_field_members_v2 *mi = field_to_type(f, members_v2);
->  	struct bch_sb_field_disk_groups *gi = bch2_sb_field_get(sb, disk_groups);
-> -	int nr = (vstruct_end(&mi->field) - (void *) &gi->entries[0]) / le16_to_cpu(mi->member_bytes);
-> +	int nr = ((void *) &gi->entries[0] - vstruct_end(&mi->field)) / le16_to_cpu(mi->member_bytes);
->  
->  	if (nr != sb->nr_devices)
-> -		prt_printf(out, "nr_devices mismatch: have %i entries, should be %u", nr, sb->nr_devices);
-> +		prt_printf(out, "nr_devices mismatch: have %i entries, should be %u\n", nr, sb->nr_devices);
->  
->  	/*
->  	 * We call to_text() on superblock sections that haven't passed
-> -- 
-> 2.43.0
-> 
+--f30wP9juoNGzy1L/--
