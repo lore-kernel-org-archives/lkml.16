@@ -1,138 +1,187 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B6C231848
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 18:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754655; cv=none; b=OnL39xYbkrGr3TTu6KknR8aatisJF0deR/9Z55HxQM7yK3eNUgbeFhdN+v8e8wotLqwEC1TevdVzxHT+PfHQ10t7/epuYlHN9PGflfCkMMcHPY95r/EwVlxcXMgVLGTeKF9S7u7LixtNUmecE56XIkhoaPJ6r1I3bt3Eo7plJGk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754655; c=relaxed/simple;
-	bh=9eDZKkMKnknr9qWRRa5DzD/Ls7bNDjR407jRhY4X0SA=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=sXrpaxt4iy8JgASQdt+Vejq/sjyn9YmTeTu6RIeCTrv8qLM9FLvfOgakKPoc0u3Q0Og6a9zhAw9eGM/bxVaWVChX87L8HH+47Mzu093nWjSecs9m+0VJgTc2/ef8K8UU8A/89VOhXoSvXpMZQTsqG67cLUDnoulI4D81LHeRCNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=mnNSqGF2; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC93429B79A;
+	Thu, 12 Jun 2025 18:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749754666; cv=pass; b=CdfuQOfkrxx1YsSAoWiLn/32KcTzQ6j9Z5T2e8qh3CpStaY4cqMAm0iY1ZkmyuObez+wLM728E12tGyu8gc+1E3XOZ7co8v6xuCibB2DfyEJSYCdoV8Xdqq+mhDtZC48O2Wrhqab+0/jJEeT5PkGXXonoFzZ5sNuOwkzQxP7rFQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749754666; c=relaxed/simple;
+	bh=DOjLcN7JYMWYvv8PMGFF9zi/uwWzwjQlakjixJIMOh0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qLxYLr/xbhaUv3g4R3JN4hC88SU5WrNe3nebsmi4t35b6vMSHmAKBWlnY8vLueDbxbZLaHjXvuuU8sKHMSLitWgJvP+l9bNFvfH6Q8Ax9DYUqLAQrXaMx0qtMnWZKriA12Zo80ErbDFW8aTsuOI4H3jjOFcRfMEZR00/jx5x2jo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=DDS22aPh; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="mnNSqGF2"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234d3261631so9891465ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 11:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749754653; x=1750359453; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MRriOQjwYrLCtkslAVC8UMCVhN/d3luvPuUoipDEo9Y=;
-        b=mnNSqGF2cW7YwJEm0cQVNkI3Zi6tjPgvdZD3dZVxTu728BoKaN5oNP3+rPyHRIWH1u
-         2dtNOJiUfBJRybozyFmANR/nxyGj4fEG7eCM+0E5zdvoNP+gdh76C8Z54MOQCvzN0ACJ
-         Y/lx/hYZCUvULlEWsn8q912FMl3P3NnkT89gSrNAb6SwXPMnqpDdHMaH1LwcuJdkrrnk
-         ZhRDukoZs0kda9nfUUVGIGaLsVuPhXBpu9jC6QHIQGdcDamNw2wpV0K9OcqXlfxTQHH+
-         A0yjYWwyw7UzE5CETl4K9Jio9DVCkIO63YEESpkNptwavoattegvoHVRCS8cxSHD1CCp
-         RJ7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749754653; x=1750359453;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MRriOQjwYrLCtkslAVC8UMCVhN/d3luvPuUoipDEo9Y=;
-        b=LXHPUuRnuWiIOYCbvlRcKupZWt19vvFeLq5BgkzZI+i2//llbKtw16OtuVgc+cVNgH
-         kOfHoRvKMJvVolDBibJzNNRIMAdFEgAtxDjfKxDKarKj2G/S+P7koFCO1LRygat8cr/A
-         YUh7LVK4sKBWxornWivqYll9ROjtvUk4Sx8IiHRzDhHLqA0Q2urG9wyH4Fecm4EOebT0
-         sV1Vkf9LZGYPNAwy+1t+VtttM6hLuGyaHfIRYf3W4QC94sRSpcQoC/KmcX7w4jo0QHSc
-         249uNMzeqF6XO4jX7dTicbjqFoL1c2Vbtu7zsOGSywQ/GNb4D1ghX7y/qRIzg+Zsykwb
-         gohQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJhRpG/++fGtMBxLeqUz8DrgtzhfUXwtmGN6wRM0jghIXPNEpZg2WscW0ndbzwlp+ueU3ywppNFsiHZj0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKOF/lYgOYKJFwLZuUdi7I8iXerjVMPUmk0t/B1FSwjGHWyztq
-	sKX0goMraAjSidCz2jkCLBm7mgGIxqpUD4I981NMR2owpY7xYx1+utUFnyZ4xfppBqU=
-X-Gm-Gg: ASbGncsEhKGu/8nbq2e3R3NedxttKxgWvxj/MXkcrqG9glzMZ6u/R0QG3gaJS+deMIl
-	wF9ruJDXRKK6IfjjfUii+amrYZyzpRz7Ov5bh2iW0LbJbaK68aVHbjuSvGq+9HGAAaO7wWoVTc/
-	kjsnDGXPj1QSfo5+R24rqPYNX9GrfM+M9pG1KO340Unok66M9RbImhvYfmFllt9QG/Sz4j1hpvi
-	P/Ec8dR0ktGLtDSd7GX0Ji+LUy5ADvb2498hfCaRBWhbIGJLb0vpGuUuePNlAzqfVEhV3pdseAg
-	c9I1NGb7c6tKBINtInry/Y0D4PNiNX5GzMaygHn+/RmLD41Qh4TDrhNLCxGz
-X-Google-Smtp-Source: AGHT+IHb1WoqMR2DTGzMl28JEVGljgw7Pu+7yw8Q/cYEW3M+CVBNmCMmaIsDvjDf9/pnPWIpZxZksQ==
-X-Received: by 2002:a17:903:2305:b0:235:e1d6:4e45 with SMTP id d9443c01a7336-2365da06422mr2349555ad.25.1749754653208;
-        Thu, 12 Jun 2025 11:57:33 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::7:116a])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365d8a4278sm625105ad.78.2025.06.12.11.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 11:57:32 -0700 (PDT)
-Date: Thu, 12 Jun 2025 11:57:32 -0700 (PDT)
-X-Google-Original-Date: Thu, 12 Jun 2025 11:56:53 PDT (-0700)
-Subject:     Re: [PATCH] riscv: defconfig: run savedefconfig to reorder it
-In-Reply-To: <221b0b7c-1879-4944-b9c4-cfb9fad9ae91@ghiti.fr>
-CC: dlan@gentoo.org, Conor Dooley <conor@kernel.org>,
-  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, guodong@riscstar.com, linux-riscv@lists.infradead.org,
-  linux-kernel@vger.kernel.org, spacemit@lists.linux.dev
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <mhng-131B0C4B-6AD9-4B65-BC91-927FD725E63F@palmerdabbelt-mac>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="DDS22aPh"
+ARC-Seal: i=1; a=rsa-sha256; t=1749754599; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VjTrVaWfz9jfeFDYITSFocj41PBevLpWCKD+yFugt6G1+9d/Hw9jBQso8N/gjAPvpi60iwOZlPdJti4Lm1c8Stdx7ZAV2s32I+igmfs7sfjSiZzNcOGemQ8U3YJi+genYO6P68iKZU887RanvFG2jmIT4EG6ifQWvG3TTwOzVmc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749754599; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IjOHGVHF7xIfJfArpDhRS/Px27x14OeLJOrr4ltwi/o=; 
+	b=Hv21Y4ICiKV6kkRup/0kBvaRTAUVqzMvXMTU7oOyjqRyNnKpWlnVTSU85nEPPqG4UtY6ATHj7UGqD9ilByEshaOxWumLRru0Myi5xN/KMure37YfQFtqQmaal02l69q9GpbUglMNHzB8ITpQ0V3kVy+XbtmczpJfHsjaGkX3vq4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754599;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=IjOHGVHF7xIfJfArpDhRS/Px27x14OeLJOrr4ltwi/o=;
+	b=DDS22aPhBDFhm0N/TbbfWtmcvGpPgih6ABqWtgdiQi1WLz5vBE40IBeFLnhixWy+
+	XeH5bQ1OypUI3HKN9tCAk6z/OJYWnm4DYfBAd0Uz/qp47NLT/xrxRESq5KVRWH0tPYk
+	0l1ydpt0eehm25ZaFWLKUMNlC9fEHBBWV4iUkEww=
+Received: by mx.zohomail.com with SMTPS id 1749754596390629.9899321699246;
+	Thu, 12 Jun 2025 11:56:36 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Thu, 12 Jun 2025 20:56:03 +0200
+Subject: [PATCH 01/20] bitfield: introduce HWORD_UPDATE bitfield macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250612-byeword-update-v1-1-f4afb8f6313f@collabora.com>
+References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+To: Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Shreeya Patel <shreeya.patel@collabora.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Shawn Lin <shawn.lin@rock-chips.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+ MyungJoo Ham <myungjoo.ham@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Thu, 12 Jun 2025 06:12:09 PDT (-0700), Alexandre Ghiti wrote:
-> On 6/12/25 11:32, Yixun Lan wrote:
->> Hi Alexandre,
->>
->> On 10:37 Thu 12 Jun     , Alexandre Ghiti wrote:
->>> Hi Yixun,
->>>
->>> On 6/11/25 16:56, Yixun Lan wrote:
->>>> Changes to defconfig should be always updated via 'make
->>>> savedefconfig', run this command to make it aligned again.
->>>>
->>>> This will ease the effort of reviewing changes of defconfig
->>>> in the future.
->>>>
->>>> Signed-off-by: Yixun Lan <dlan@gentoo.org>
->>>> ---
->>>> Update PDMA config bring in unnecessary changes[1], let's fix
->>>> it by run savedefconfig first.
->>>
->>> It would be easier if this patch was part of the PDMA series since the
->>> last patch will depend on it: @Guodong can you integrate this patch to
->>> your next revision of your patchset?
->>>
->> I'd rather make this patch independent, as nothing strongly ralated with PDMA,
->> and it probably would take several rounds for PDMA patch to be settled down..
+Hardware of various vendors, but very notably Rockchip, often uses
+32-bit registers where the upper 16-bit half of the register is a
+write-enable mask for the lower half.
 
-Ya, I agree.
+This type of hardware setup allows for more granular concurrent register
+write access.
 
->> Besides, there is no problem for PDMA patch to depend on this patch if
->> needed (easy to use b4 to handle this..)
+Over the years, many drivers have hand-rolled their own version of this
+macro, usually without any checks, often called something like
+HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
+semantics between them.
 
-Yep, something like "b4 shazam -lts --merge --merge-base 958097bdf88"
-should do it on the merge side -- and maybe you don't even need the 
-merge base, if all the b4 send side stuff picks it up right.
+Clearly there is a demand for such a macro, and thus the demand should
+be satisfied in a common header file.
 
->> The idea here is to get this patch merged as early as possible, as it's
->> quite straightforward, and other people may have similar problem instead
->> of PDMA here
->
->
-> Ok makes sense, so let's Guodong deal with that then.
+Add two macros: HWORD_UPDATE, and HWORD_UPDATE_CONST. The latter is a
+version that can be used in initializers, like FIELD_PREP_CONST. The
+macro names are chosen to not clash with any potential other macros that
+drivers may already have implemented themselves, while retaining a
+familiar name.
 
-(for some reason this isn't showing up in patchwork)
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+ include/linux/bitfield.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-I'm going to merge it as a single patch into for-next.  It'll loop 
-through the tester, but things look in good shape so it shouldn't take 
-too long.  This way there's a stable hash people can base stuff off, 
-rather than waiting for some other patch set.
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 6d9a53db54b66c0833973c880444bd289d9667b1..b90d88db7405f95b78cdd6f3426263086bab5aa6 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -8,6 +8,7 @@
+ #define _LINUX_BITFIELD_H
+ 
+ #include <linux/build_bug.h>
++#include <linux/limits.h>
+ #include <linux/typecheck.h>
+ #include <asm/byteorder.h>
+ 
+@@ -142,6 +143,52 @@
+ 		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
+ 	)
+ 
++/**
++ * HWORD_UPDATE() - prepare a bitfield element with a mask in the upper half
++ * @_mask: shifted mask defining the field's length and position
++ * @_val:  value to put in the field
++ *
++ * HWORD_UPDATE() masks and shifts up the value, as well as bitwise ORs the
++ * result with the mask shifted up by 16.
++ *
++ * This is useful for a common design of hardware registers where the upper
++ * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
++ * register, a bit in the lower half is only updated if the corresponding bit
++ * in the upper half is high.
++ */
++#define HWORD_UPDATE(_mask, _val)					 \
++	({								 \
++		__BF_FIELD_CHECK(_mask, ((u16) 0U), _val,		 \
++				 "HWORD_UPDATE: ");			 \
++		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask)) | \
++		((_mask) << 16);					 \
++	})
++
++/**
++ * HWORD_UPDATE_CONST() - prepare a constant bitfield element with a mask in
++ *                        the upper half
++ * @_mask: shifted mask defining the field's length and position
++ * @_val:  value to put in the field
++ *
++ * HWORD_UPDATE_CONST() masks and shifts up the value, as well as bitwise ORs
++ * the result with the mask shifted up by 16.
++ *
++ * This is useful for a common design of hardware registers where the upper
++ * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
++ * register, a bit in the lower half is only updated if the corresponding bit
++ * in the upper half is high.
++ *
++ * Unlike HWORD_UPDATE(), this is a constant expression and can therefore
++ * be used in initializers. Error checking is less comfortable for this
++ * version.
++ */
++#define HWORD_UPDATE_CONST(_mask, _val)					  \
++	(								  \
++		FIELD_PREP_CONST(_mask, _val) |				  \
++		(BUILD_BUG_ON_ZERO(const_true((u64) (_mask) > U16_MAX)) + \
++		 ((_mask) << 16))					  \
++	)
++
+ /**
+  * FIELD_GET() - extract a bitfield element
+  * @_mask: shifted mask defining the field's length and position
 
->
-> Thanks,
->
-> Alex
->
->
->>
->>> Thanks,
->>>
->>> Alex
->>>
+-- 
+2.49.0
+
