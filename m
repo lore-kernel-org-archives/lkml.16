@@ -1,226 +1,129 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25568199938
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0BD1A9B32;
+	Thu, 12 Jun 2025 10:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723403; cv=none; b=XG9bgPjqJ9qJVdmXGHvpn8d4d1DmJuUoZ+ISAX/4MpAIHgQkwKz6YFRvkFx2FbloR1gdDzucXMYFg3Ls3HU8AHvw8QZPTyDWXlf7krt7HwC+5A1pZI0qW+lKHkXKkp6W+j43Efws3pfnoLGAotNKEvTMNueRGqXQ4toUnE2GA3I=
+	t=1749723423; cv=none; b=ujv6Ey6YWQfd+pkw7fTeGtySEjKqFnj/qW1FoYOgGekc8oF4hWbrqS1xSRGVe9sXsvq5wlKQfdHVXNK+zK5fmRQn12RzI7v8xUFYa3kmr3oCAoxtXC9t28pRXgHja8KYcXSsiU5ip6Q0jgUTVmrNtUIai5OtQlQCCmnHjcvcdnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723403; c=relaxed/simple;
-	bh=3z1Gxms1hsCWaQfv2zZ0YvYdmuinnztXbscw4X76L6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IsWKWQGY01xSm+/PPNTXbs2sm5zAEUqLq2b1RvQoCx3XS6JO7mcrzNrLb5K3qGeAdfeaMsZDjy21CaYJDec8cl3rtXEOh+u7S1yvILezifA7ccEq3jbt8CTllUkPMCvtDy63QDgDLSBWY/lIVM2wxQcddJ5sLbCEIxuMOcCyUeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=k6p/ALhF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6dZSZLY2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=k6p/ALhF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6dZSZLY2; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749723423; c=relaxed/simple;
+	bh=m+13JVvNe4Aqqrmb5JHan1JbgajcNao6ikZ970Xy6QU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RnatmRBxan+YE+n4+/Vpa6aJN26OvgPkVDNm5lvWAJcl98KSPLR+3eJeX3ioRbUKAnXr9heBC58Oshfg2I5fXYZ70XBCYsxnkn0Z9AUlGCIxm9nh3J4wzlwO9tCwTtYA0yX+DAKNvKND81Tc2FYsn7x+PFKeUrLuJXVx9ejhwtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VFdCXSsf; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="k6p/ALhF";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6dZSZLY2";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="k6p/ALhF";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6dZSZLY2"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 1FCB321990;
-	Thu, 12 Jun 2025 10:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=;
-	b=k6p/ALhF5HRPSo+BcrFp3uGnBwVOQK7ikDwiJCs9fJ6QLnPgPGwsIGgJOCygS1WHUtzSsn
-	HbcEUdE26M3PQ3h+J5bo+9gF1BAJ+4np9zpgpLYkajpQ/xfesYeDeIH+UUzF1Dq5qmcVIL
-	gNdiWmw234+hB0LDhI6NoZes9fKapmA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723399;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=;
-	b=6dZSZLY2h3uqjIRKqk+K6mMc//YiUkR8WcZADFOETmuSblqTy7TT4X3EuAjxrxpMhtKkCs
-	GyUdnKVG37ywPGCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=;
-	b=k6p/ALhF5HRPSo+BcrFp3uGnBwVOQK7ikDwiJCs9fJ6QLnPgPGwsIGgJOCygS1WHUtzSsn
-	HbcEUdE26M3PQ3h+J5bo+9gF1BAJ+4np9zpgpLYkajpQ/xfesYeDeIH+UUzF1Dq5qmcVIL
-	gNdiWmw234+hB0LDhI6NoZes9fKapmA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723399;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t0I69Q6okrmyzWr4g4aPQMY2okpT3dU9pMhNsbKY4CQ=;
-	b=6dZSZLY2h3uqjIRKqk+K6mMc//YiUkR8WcZADFOETmuSblqTy7TT4X3EuAjxrxpMhtKkCs
-	GyUdnKVG37ywPGCQ==
-Date: Thu, 12 Jun 2025 12:16:39 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	akpm@linux-foundation.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v5 2/5] kdump: implement reserve_crashkernel_cma
-Message-ID: <aEqpBwOy_ekm0gw9@dwarf.suse.cz>
-References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VFdCXSsf"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55CAGt8R1639154;
+	Thu, 12 Jun 2025 05:16:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749723415;
+	bh=xtLHyzIXT1AKmPX6hD2tyAPsnEPd735Ph5uIX9qO/h4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=VFdCXSsf0KSKsQa22pRTYSnZ1S4x/nh8NF14mSgUoGcU9dNoby7E8Bn0QM52seN29
+	 enIuIrYqHHmGuraGByLDM0hgOwjHsE/tGE1sbSYnYiNbiircAOBbAh15P3V4yJhb01
+	 uNukUwu5asUVlNUiCgsLcsgX9Tm38dtUYQHmprEM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55CAGtGX1734427
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 12 Jun 2025 05:16:55 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
+ Jun 2025 05:16:55 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 12 Jun 2025 05:16:55 -0500
+Received: from [172.24.227.4] (hp-z2-tower.dhcp.ti.com [172.24.227.4])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55CAGpPr1835014;
+	Thu, 12 Jun 2025 05:16:51 -0500
+Message-ID: <f6a57a82-c534-4439-a337-8592c2e121c5@ti.com>
+Date: Thu, 12 Jun 2025 15:46:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dwarf.suse.cz:mid,localhost:helo]
-X-Spam-Level: 
-
-reserve_crashkernel_cma() reserves CMA ranges for the
-crash kernel. If allocating the requested size fails,
-try to reserve in smaller blocks.
-
-Store the reserved ranges in the crashk_cma_ranges array
-and the number of ranges in crashk_cma_cnt.
-
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
-
----
-Changes since v3:
-- make reserve_crashkernel_cma() return early when cma_size == 0
-  to avoid printing out the 0 cma-allocated size
-
----
- include/linux/crash_reserve.h | 12 ++++++++
- kernel/crash_reserve.c        | 52 +++++++++++++++++++++++++++++++++++
- 2 files changed, 64 insertions(+)
-
-diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
-index e784aaff2f5a..7b44b41d0a20 100644
---- a/include/linux/crash_reserve.h
-+++ b/include/linux/crash_reserve.h
-@@ -13,12 +13,24 @@
-  */
- extern struct resource crashk_res;
- extern struct resource crashk_low_res;
-+extern struct range crashk_cma_ranges[];
-+#if defined(CONFIG_CMA) && defined(CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION)
-+#define CRASHKERNEL_CMA
-+#define CRASHKERNEL_CMA_RANGES_MAX 4
-+extern int crashk_cma_cnt;
-+#else
-+#define crashk_cma_cnt 0
-+#define CRASHKERNEL_CMA_RANGES_MAX 0
-+#endif
-+
- 
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base,
- 		unsigned long long *low_size, unsigned long long *cma_size,
- 		bool *high);
- 
-+void __init reserve_crashkernel_cma(unsigned long long cma_size);
-+
- #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
- #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index a8861f3f64fe..ae32ea707678 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -14,6 +14,8 @@
- #include <linux/cpuhotplug.h>
- #include <linux/memblock.h>
- #include <linux/kmemleak.h>
-+#include <linux/cma.h>
-+#include <linux/crash_reserve.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -469,6 +471,56 @@ void __init reserve_crashkernel_generic(unsigned long long crash_size,
- #endif
- }
- 
-+struct range crashk_cma_ranges[CRASHKERNEL_CMA_RANGES_MAX];
-+#ifdef CRASHKERNEL_CMA
-+int crashk_cma_cnt;
-+void __init reserve_crashkernel_cma(unsigned long long cma_size)
-+{
-+	unsigned long long request_size = roundup(cma_size, PAGE_SIZE);
-+	unsigned long long reserved_size = 0;
-+
-+	if (!cma_size)
-+		return;
-+
-+	while (cma_size > reserved_size &&
-+	       crashk_cma_cnt < CRASHKERNEL_CMA_RANGES_MAX) {
-+
-+		struct cma *res;
-+
-+		if (cma_declare_contiguous(0, request_size, 0, 0, 0, false,
-+				       "crashkernel", &res)) {
-+			/* reservation failed, try half-sized blocks */
-+			if (request_size <= PAGE_SIZE)
-+				break;
-+
-+			request_size = roundup(request_size / 2, PAGE_SIZE);
-+			continue;
-+		}
-+
-+		crashk_cma_ranges[crashk_cma_cnt].start = cma_get_base(res);
-+		crashk_cma_ranges[crashk_cma_cnt].end =
-+			crashk_cma_ranges[crashk_cma_cnt].start +
-+			cma_get_size(res) - 1;
-+		++crashk_cma_cnt;
-+		reserved_size += request_size;
-+	}
-+
-+	if (cma_size > reserved_size)
-+		pr_warn("crashkernel CMA reservation failed: %lld MB requested, %lld MB reserved in %d ranges\n",
-+			cma_size >> 20, reserved_size >> 20, crashk_cma_cnt);
-+	else
-+		pr_info("crashkernel CMA reserved: %lld MB in %d ranges\n",
-+			reserved_size >> 20, crashk_cma_cnt);
-+}
-+
-+#else /* CRASHKERNEL_CMA */
-+void __init reserve_crashkernel_cma(unsigned long long cma_size)
-+{
-+	if (cma_size)
-+		pr_warn("crashkernel CMA reservation not supported\n");
-+}
-+#endif
-+
- #ifndef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
- static __init int insert_crashkernel_resources(void)
- {
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am642-evm-pcie0-ep: Add boot phase
+ tag to "pcie0_ep"
+To: Vignesh Raghavendra <vigneshr@ti.com>, <nm@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <s-vadapalli@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <danishanwar@ti.com>, Hrushikesh Salunke <h-salunke@ti.com>
+References: <20250610054920.2395509-1-h-salunke@ti.com>
+ <98e04654-a693-494d-9f60-930b6a4cd84a@ti.com>
+ <b24a97fc-8dac-443b-aec7-317b9e393f2d@ti.com>
+Content-Language: en-US
+From: Hrushikesh Salunke <h-salunke@ti.com>
+In-Reply-To: <b24a97fc-8dac-443b-aec7-317b9e393f2d@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 
+
+On 11/06/25 14:17, Hrushikesh Salunke wrote:
+> 
+> 
+> On 11/06/25 14:14, Vignesh Raghavendra wrote:
+>>
+>>
+>> On 10/06/25 11:19, Hrushikesh Salunke wrote:
+>>> AM64X SoC has one instance of PCIe which is PCIe0. To support PCIe boot
+>>> on AM64X SoC, PCIe0 needs to be in endpoint mode and it needs to be
+>>> functional at all stages of PCIe boot process. Thus add the
+>>> "bootph-all" boot phase tag to "pcie0_ep" device tree node.
+>>>
+>>> Signed-off-by: Hrushikesh Salunke <h-salunke@ti.com>
+>>> ---
+>>> This patch is based on commit
+>>> 475c850a7fdd Add linux-next specific files for 20250606
+>>>
+>>> Changes since v1
+>>> As per feedback from Nishanth, changed the position of "bootph-all"
+>>> tag, according to ordering rules for device tree properties.
+>>>
+>>> v1 : 
+>>> https://lore.kernel.org/all/20250609115930.w2s6jzg7xii55dlu@speckled/
+>>>
+>>>   arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso 
+>>> b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
+>>> index 432751774853..a7e8d4ea98ac 100644
+>>> --- a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
+>>> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
+>>> @@ -46,6 +46,7 @@ pcie0_ep: pcie-ep@f102000 {
+>>>           max-functions = /bits/ 8 <1>;
+>>>           phys = <&serdes0_pcie_link>;
+>>>           phy-names = "pcie-phy";
+>>> +        bootph-all;
+>>>           ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
+>>>       };
+>>>   };
+>>
+>> Are the patches for PCIe boot support merged to U-Boot or such other
+>> bootloader repo?
+>> No, they are not in the U-Boot yet. I will be posting patches for PCIe
+> boot support for U-Boot this week.
+> 
+
+I have posted Patch series for the PCIe boot support in Uboot.
+
+1.https://patchwork.ozlabs.org/project/uboot/patch/20250612084910.3457060-1-h-salunke@ti.com/
+2. 
+https://patchwork.ozlabs.org/project/uboot/cover/20250612085023.3457117-1-h-salunke@ti.com/
+3. 
+https://patchwork.ozlabs.org/project/uboot/cover/20250612085534.3457522-1-h-salunke@ti.com/
+
+
+Regards,
+Hrushikesh.
