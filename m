@@ -1,166 +1,196 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AC02D8764
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B99E61D79A5
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749761259; cv=none; b=Jgeqmb8EJzUuVBtHW4oDlQ9bdg/L71whk3HLjnvA2G10YTIIzqvfrkGiHbAQAE+IeJ625JVvFK5+xmK9wHHZPCxWC7DAR4+pqkdYYdw0XzfZ7PZri0V9xleS3Br+02NMp/i5+CGanm68yFOCKJqq8uu6alztOvHUWXzIiaHpGG4=
+	t=1749761366; cv=none; b=llXFj8oD3fuMuRzSVrsiOc0W84vYODaq7vYCd7cxcgGFaH8G2v+LGCMGda9kG0ACml09K94SCcoq52DAODLcvdL2r9P8iSAtLnOP7/VNdS9fEeHdXMqKZ9W+fanF2LtbI2XC1+vvOmgQ9ANE7loIK2bHRL+hrAbpHkzkBhf8YZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749761259; c=relaxed/simple;
-	bh=AS3GrOSonbp9zk0Fa7DpmuxsDZ28EABxhA5RZzrO9pE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XwQBqz+eg8frWBsJRPpTE65Bmjc8lLYxSsJW7RRmnWmCJ1VqQbjvIHjeOgdqV+U7RDFm1FPgwp24iJVWFUh1kjzgdJLO5WkfpTY06Zc+dpslyZiylFD8c1LXscabGMuQaXt8FMuvM42AMUnInj2Hbn8jay8kprSgRA1inoXYIVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MEiW5nBN; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MEiW5nBN"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235e389599fso69605ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749761257; x=1750366057; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nr6kooDbksDJJfxzyC1WbIX3H7ZZ58tLys9ggXzUeA4=;
-        b=MEiW5nBNJVmhSyrlp538SY8kqa/Sv93YQR9JC0ln68o2HTZ1UMiECmL+FU818Y53RX
-         jJhsgcCc14Hy1FOCuu21GOdPFa3iywZAFECERp4JJ4N04qj/dcFnSGwmMGw7IWsGV6LI
-         nTROSBQGtaA4l668fQaUOpiKo+Bvd0rCJYsAs9pjaiJIGzPdyXxmmciy8mMz/LiiSno9
-         6v2JIwZA8ctGzbkOPpwnK34CRF73KTYN5Fy/GhrKdsg18w81GynqSWlWWXcFrtkspRRm
-         rVrauDvYBeGoc7gBVL8N7AU4bYE7UaGv8pPHd+OKmSazCMVBN26a4fmTZm8l3HikmFWq
-         WS/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749761257; x=1750366057;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nr6kooDbksDJJfxzyC1WbIX3H7ZZ58tLys9ggXzUeA4=;
-        b=U3VR/ghjUkr+0uBdVgdhATsHOrOlqapFS0QLTdhy++LHMTvVeyIJ490zqDwGRD6fc5
-         ifqgtkk16aYnrG1+UrNHivJWQh4mpSe0ysoPmhVAByGC1dKGAf93aFvXcVeRW28F0ykh
-         Iz2ULg4YuEYzzJewRIwIYB+9AiUe8YhaRoC3XL91ogT2259/0sBdrbY2RFBXIF+sqqzI
-         1qZCKe4FsBYFJexnFJyeMXmQrxB9UM8IZYKm4xZBFBHrPMGSOZbRLnHx2XHeRqiqsdmz
-         nVEfHUh/ZODy1pDlJhNe9ee9fT8pniYW9c9E+tm9OpDomVO6ja+iwfeN9AbVXqQnzDKV
-         Nyvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQaSpf75/atuIrW+ugfTXIi/m5QpJngKbtK1bE3ZTnvvPb3zwgxrdvFCl0O/mHV+rRaJ59vVYk/unBpY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF0AsTZJrOXql5xIaIXULN1/AoURyXq8xByyp6eTjnH4zKXi54
-	wVrjCGnaK3vNv4ysvMqPoN4gDzV6QWYcK7ZwgnQIn4BcxYJWL/x3XvqYOndCC1dOO8i5oQSAmcC
-	r2Hlayf73qk701jPFlVCrR81m/D54pJ6smeQ1Z4ZL
-X-Gm-Gg: ASbGnctKTJWQX6QpYQp1hnhxRZYE6YIKgtwOpkQP9VVSBjwwJLeujE5egKWdKoDCKJU
-	FahAAj61PxUJzU5IIa2aHgrhFuvhc6piHTNglCLG3hhWFjWaBDjTiyYk2zNxs8gCkKgrQHY2uJ1
-	OuE4VdYTlsQJ56zmMsZVyvh6JC1x/bHf//5fXRDy1feXsvV0gbXh97XqPiX7JEClVNvosLTFHc0
-	Q==
-X-Google-Smtp-Source: AGHT+IEHoeUeqPp+cnSpet6RlgQGrs8OfW2u94ffFxvnZOLY+RPrDzdl21M2RwfhrxNi9bgdnG9KgQPYqe5L7gJzi1I=
-X-Received: by 2002:a17:903:185:b0:231:d0ef:e8ff with SMTP id
- d9443c01a7336-2365e85307amr600125ad.8.1749761256479; Thu, 12 Jun 2025
- 13:47:36 -0700 (PDT)
+	s=arc-20240116; t=1749761366; c=relaxed/simple;
+	bh=rKR1E6Lcyyud785ve9rSwgT0vGLvbeDkgIqfSguNV2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q9ic9R0KJkOZKS89nsWZPkgsoKW2ZfWpmVkfPPIVSB9CeXVpX3c7TfB+BfGRPc/427cEBootnD/wJpQEvSBsqQgT9a7MD7LCu+I4g5oGiVYaqOUkC6seHloJEbJo01C58sIcDtipIZvgo+7sUsRrFjGq/diNjJ6kL9eECV+GiH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AE59152B;
+	Thu, 12 Jun 2025 13:49:02 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D2543F673;
+	Thu, 12 Jun 2025 13:49:19 -0700 (PDT)
+Date: Thu, 12 Jun 2025 22:49:09 +0200
+From: Beata Michalska <beata.michalska@arm.com>
+To: Lifeng Zheng <zhenglifeng1@huawei.com>, Will Deacon <will@kernel.org>
+Cc: sudeep.holla@arm.com, catalin.marinas@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxarm@huawei.com, jonathan.cameron@huawei.com,
+	viresh.kumar@linaro.org, yangyicong@hisilicon.com,
+	zhanjie9@hisilicon.com, lihuisong@huawei.com, yubowen8@huawei.com,
+	vincent.guittot@linaro.org
+Subject: Re: [PATCH] arm64: topology: Setup amu fie when cpu hotplugging
+Message-ID: <aEs9RRs95IrHBBX6@arm.com>
+References: <20250607094533.416368-1-zhenglifeng1@huawei.com>
+ <20250612151736.GC12912@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610150950.1094376-1-mbloch@nvidia.com> <20250610150950.1094376-9-mbloch@nvidia.com>
- <CAHS8izOEn+C5QexSPZT3_ekUr2zR1dm9R6OsoGBPaqg5MFvBRQ@mail.gmail.com> <6nd3d7z5dmpzpegbwfkhszmtjqmsb4af5ts36mpv5m6jfavo23@lwijppu24jjf>
-In-Reply-To: <6nd3d7z5dmpzpegbwfkhszmtjqmsb4af5ts36mpv5m6jfavo23@lwijppu24jjf>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 12 Jun 2025 13:47:24 -0700
-X-Gm-Features: AX0GCFuekM7pseu4CUTgDEgxUud4AkQ-D4uoz7Py55DS2ZIX3Eg9EwW7G8lnVfc
-Message-ID: <CAHS8izNyFtcWd0wPGoCdZXtZkjqWk6VgLAyk4anfCQjGP2uk-w@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 08/11] net/mlx5e: Add support for UNREADABLE
- netmem page pools
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: Mark Bloch <mbloch@nvidia.com>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com, gal@nvidia.com, 
-	leonro@nvidia.com, tariqt@nvidia.com, Leon Romanovsky <leon@kernel.org>, 
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Cosmin Ratiu <cratiu@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612151736.GC12912@willie-the-truck>
 
-On Thu, Jun 12, 2025 at 1:46=E2=80=AFAM Dragos Tatulea <dtatulea@nvidia.com=
-> wrote:
->
-> On Wed, Jun 11, 2025 at 10:16:18PM -0700, Mina Almasry wrote:
-> > On Tue, Jun 10, 2025 at 8:20=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> =
-wrote:
-> > >
-> > > From: Saeed Mahameed <saeedm@nvidia.com>
-> > >
-> > > On netdev_rx_queue_restart, a special type of page pool maybe expecte=
-d.
-> > >
-> > > In this patch declare support for UNREADABLE netmem iov pages in the
-> > > pool params only when header data split shampo RQ mode is enabled, al=
-so
-> > > set the queue index in the page pool params struct.
-> > >
-> > > Shampo mode requirement: Without header split rx needs to peek at the=
- data,
-> > > we can't do UNREADABLE_NETMEM.
-> > >
-> > > The patch also enables the use of a separate page pool for headers wh=
-en
-> > > a memory provider is installed for the queue, otherwise the same comm=
-on
-> > > page pool continues to be used.
-> > >
-> > > Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
-> > > Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
-> > > Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
-> > > Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> > > Signed-off-by: Mark Bloch <mbloch@nvidia.com>
-> > > ---
-> > >  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/driv=
-ers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > > index 5e649705e35f..a51e204bd364 100644
-> > > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > > @@ -749,7 +749,9 @@ static void mlx5e_rq_shampo_hd_info_free(struct m=
-lx5e_rq *rq)
-> > >
-> > >  static bool mlx5_rq_needs_separate_hd_pool(struct mlx5e_rq *rq)
-> > >  {
-> > > -       return false;
-> > > +       struct netdev_rx_queue *rxq =3D __netif_get_rx_queue(rq->netd=
-ev, rq->ix);
-> > > +
-> > > +       return !!rxq->mp_params.mp_ops;
+On Thu, Jun 12, 2025 at 04:17:36PM +0100, Will Deacon wrote:
+> [+arm topology folks]
+> 
+> On Sat, Jun 07, 2025 at 05:45:33PM +0800, Lifeng Zheng wrote:
+> > Amu fie was set up by a cpufreq policy notifier after the policy was
+> > created. This caused some problems:
+> > 
+> > 1. The cpus related to the same policy would all fail to set up amu fie if
+> > one of them couldn't pass the freq_counters_valid() check.
 > >
-> > This is kinda assuming that all future memory providers will return
-> > unreadable memory, which is not a restriction I have in mind... in
-> > theory there is nothing wrong with memory providers that feed readable
-> > pages. Technically the right thing to do here is to define a new
-> > helper page_pool_is_readable() and have the mp report to the pp if
-> > it's all readable or not.
-> >
-> The API is already there: page_pool_is_unreadable(). But it uses the
-> same logic...
->
+I believe that was actually deliberate - it's all or nothing.
+On the other hand, that validation is pretty straightforward.
+Would you mind sharing some more details on the setup that triggers it?
+> > 2. The cpus fail to set up amu fie would never have a chance to set up
+> > again.
+> 
+I'd say that's the consequence of 1.
+> I don't fully understand this (we don't tend to use the past tense in commit
+> messages), but it sounds like you're saying that the singleton nature of
+> the AMU driver is causing you problems with late CPU hotplug. Is that
+> correct? Can you perhaps be a bit more specific about what goes wrong and
+> how to reproduce the issue, please?
+> 
+> > When boot with maxcpu=1 restrict, the support amu flags of the offline cpus
+> > would never be setup. After that, when cpufreq policy was being created,
+> > the online cpu might set up amu fie fail because the other cpus related to
+> > the same policy couldn't pass the freq_counters_valid() check. Hotplug the
+> > offline cpus, since the policy was already created, amu_fie_setup() would
+> > never be called again. All cpus couldn't setup amu fie in this situation.
+> > 
+> > After commit 1f023007f5e7 ("arm64/amu: Use capacity_ref_freq() to set AMU
+> > ratio"), the max_freq stores in policy data is never needed when setting up
+> > amu fie.  This indicates that the setting up of amu fie does not depend on
+> > the policy any more. So each cpu can set up amu fie separately during
+> > hotplug and the problems above will be solved.
+I do not think this is the conclusion I would draw from that change.
+It aligns the AMU FIE code to use the right ratio based on the reference freq
+instead of cpuinfo.max_freq
+> > 
+> > Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> > ---
+> >  arch/arm64/kernel/topology.c | 56 ++++++++++++++----------------------
+> >  1 file changed, 21 insertions(+), 35 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> > index 5d07ee85bdae..207eab4fa31f 100644
+> > --- a/arch/arm64/kernel/topology.c
+> > +++ b/arch/arm64/kernel/topology.c
+> > @@ -351,63 +351,49 @@ int arch_freq_get_on_cpu(int cpu)
+> >  	return freq;
+> >  }
+> >  
+> > -static void amu_fie_setup(const struct cpumask *cpus)
+> > +static void amu_fie_setup(unsigned int cpu)
+> >  {
+> > -	int cpu;
+> > -
+> > -	/* We are already set since the last insmod of cpufreq driver */
+> >  	if (cpumask_available(amu_fie_cpus) &&
+> > -	    unlikely(cpumask_subset(cpus, amu_fie_cpus)))
+> > +	    cpumask_test_cpu(cpu, amu_fie_cpus))
+> >  		return;
+> >  
+> > -	for_each_cpu(cpu, cpus)
+> > -		if (!freq_counters_valid(cpu))
+> > -			return;
+> > +	if (!freq_counters_valid(cpu))
+> > +		return;
+> >  
+> >  	if (!cpumask_available(amu_fie_cpus) &&
+> >  	    !zalloc_cpumask_var(&amu_fie_cpus, GFP_KERNEL)) {
+> > -		WARN_ONCE(1, "Failed to allocate FIE cpumask for CPUs[%*pbl]\n",
+> > -			  cpumask_pr_args(cpus));
+> > +		WARN_ONCE(1, "Failed to allocate FIE cpumask for CPUs[%u]\n",
+> > +			  cpu);
+> >  		return;
+> >  	}
+> >  
+> > -	cpumask_or(amu_fie_cpus, amu_fie_cpus, cpus);
+> > +	cpumask_set_cpu(cpu, amu_fie_cpus);
+> >  
+> >  	topology_set_scale_freq_source(&amu_sfd, amu_fie_cpus);
+> 
+> Isn't it going to be potentially expensive to call this every time a CPU
+> comes online?
+> 
+It does seem *bit excessive - I guess this should use single-CPU mask, to start
+with.
+> Will
+> 
+> [left the rest of the patch below for the folks I added]
 
-Ugh, I was evidently not paying attention when that was added. I guess
-everyone thinks memory provider =3D=3D unreadable memory. I think it's
-more a coincidence that the first 2 memory providers give unreadable
-memory. Whatever I guess; it's good enough for now :D
+I think I kinda get the idea, but having more details would help to clarify
+things.
 
-> However, having a pp level API is a bit limiting: as Cosmin pointed out,
-> mlx5 can't use it because it needs to know in advance if this page_pool
-> is for unreadable memory to correctly size the data page_pool (with or
-> without headers).
->
-
-Yeah, in that case mlx5 would do something like:
-
-return !rxq->mp_params.mp_ops->is_readable();
-
-If we decided that mp's could report if they're readable or not. For
-now I guess assuming all mps are unreadable is fine.
-
-
---=20
-Thanks,
-Mina
+---
+BR
+Beata
+> 
+> >  
+> > -	pr_debug("CPUs[%*pbl]: counters will be used for FIE.",
+> > -		 cpumask_pr_args(cpus));
+> > +	pr_debug("CPUs[%u]: counters will be used for FIE.", cpu);
+> >  }
+> >  
+> > -static int init_amu_fie_callback(struct notifier_block *nb, unsigned long val,
+> > -				 void *data)
+> > +static int cpuhp_topology_online(unsigned int cpu)
+> >  {
+> > -	struct cpufreq_policy *policy = data;
+> > -
+> > -	if (val == CPUFREQ_CREATE_POLICY)
+> > -		amu_fie_setup(policy->related_cpus);
+> > -
+> > -	/*
+> > -	 * We don't need to handle CPUFREQ_REMOVE_POLICY event as the AMU
+> > -	 * counters don't have any dependency on cpufreq driver once we have
+> > -	 * initialized AMU support and enabled invariance. The AMU counters will
+> > -	 * keep on working just fine in the absence of the cpufreq driver, and
+> > -	 * for the CPUs for which there are no counters available, the last set
+> > -	 * value of arch_freq_scale will remain valid as that is the frequency
+> > -	 * those CPUs are running at.
+> > -	 */
+> > +	amu_fie_setup(cpu);
+> >  
+> >  	return 0;
+> >  }
+> >  
+> > -static struct notifier_block init_amu_fie_notifier = {
+> > -	.notifier_call = init_amu_fie_callback,
+> > -};
+> > -
+> >  static int __init init_amu_fie(void)
+> >  {
+> > -	return cpufreq_register_notifier(&init_amu_fie_notifier,
+> > -					CPUFREQ_POLICY_NOTIFIER);
+> > +	int ret;
+> > +
+> > +	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+> > +				"arm64/topology:online",
+> > +				cpuhp_topology_online,
+> > +				NULL);
+> > +
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return 0;
+> >  }
+> >  core_initcall(init_amu_fie);
+> >  
+> > -- 
+> > 2.33.0
+> > 
