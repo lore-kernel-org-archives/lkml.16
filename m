@@ -1,99 +1,159 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F60F2F4314;
-	Thu, 12 Jun 2025 22:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFC82DECAE;
+	Thu, 12 Jun 2025 22:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749766227; cv=none; b=KpMfPmG//zorsnsdW09Iq5CdMVkoNg2N/HzDTS+JXEsz0Ql8yhVH3zFmijIb0RUPBhIUGfqhnhEpFTfqY9wMVDYmc+Wi89mkd6L64h8KyT9SBZ/ICv/2RshNJwQ2EaOMGv5ygAbp9vbjZ6q8EyutRC9peRcL+4LfZ8M8hIkZXDE=
+	t=1749766258; cv=none; b=tVBNoqUyw5bjNisVvyJY4DS4o9chEosPbCcUNfaDEQv9bS8gjMp2XaxxXSMWAEX6w5+txB0Fx9mvqgkj4Vrw4w6gBX4RS9ZKi1kRpSd9oAhQNFMgTrLP9OCPnJTi3hHl3LDNYCgpXU/02gq3u4q/4kC8EdoPSVTKkvCOlluUvmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749766227; c=relaxed/simple;
-	bh=S2gYPM0sCGujSem+8EB0TwnL2THsHZCvkt/WFygqnu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NzZGpY2CMYiI4mAWEfIkaJvvZE/VQoX7E23v95Kp3uDUU149BUjQZ/0ox52sK3I8cIq4CXclUgIpP8kvuYZwKzcwjMvcSZTJN/pXbeRZZp73DnZ4ixUnNbDwsC6efR04/Vl8IBQCIwaFJX31CHWQTI499WqH/d3o7m7BWYtKYC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=lLM8nIe+; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1749766258; c=relaxed/simple;
+	bh=X4UYrbhCkqofW05LY1qWOtvrFlFxZeee9uJgB4Rayds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qusNS2dVwAWTJ5J7mqZvL4AkwBEdF5ClvatYCIc200FekrGYwtWtzMObauBXfFyrMHBvYpKq1fKzGvSVDTiEgyAePMdYTo8DMRmDRaRk31nCbK/w1wmlBY/7YUDGPSq39M94htdPQ6pl1h+KzaLgoMS8ZTnd+hPfTI/WLg0PZvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PoyRQ5sV; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lLM8nIe+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1749766217;
-	bh=ZkD44VQb3HGi61nG/Jp9UAmY1hNv2SG1ewR9gzzSnd0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=lLM8nIe+dOs+QiDkr46X8ZCl831unz0Pihh+PuYoJEp2SQzTP0kLT3fQZkCh45gT/
-	 FR6PunO832RjhFjggjnXs0edDaAeadsbvGjoZhnBiN1eWHe09j5aIG8UDKAg0QcgVq
-	 wpwtGhh1BTuz1f5m6I1EHrZG5HqJs8m7g78PpIbOpwMztXVqGyo7zmVa74xsKi4D3v
-	 WeKxwoaeLR3WyquAkhjCWrd3rymAQ5QEvX2A4cKWVBaMfdnvRqeXce4o/D7GwoGftO
-	 BATx2KcMTj6BUc8U3IWWEN0XkiIcK6ZDIjy5QAmgYXDvaRetG9tBkrVf2NmsIJxXrq
-	 ZPlE1K83UVOvw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bJGtK0SSTz4wbd;
-	Fri, 13 Jun 2025 08:10:16 +1000 (AEST)
-Date: Fri, 13 Jun 2025 08:10:15 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
- <johan.hedberg@gmail.com>, David Miller <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Networking
- <netdev@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patches in the bluetooth tree
-Message-ID: <20250613081015.55da05b6@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PoyRQ5sV"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234f17910d8so15842025ad.3;
+        Thu, 12 Jun 2025 15:10:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749766256; x=1750371056; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KriEKHEYlCTi88JAOccOhUjD8CzVygMM4sUtYzcDb5g=;
+        b=PoyRQ5sVmrGNsX40y3KgBCM0VTbhFJ6YVoMdRh8/zwOUK5NCec3Nh6aXy8MpBJ/ek9
+         10p/AoAA46TOkxKUfK0WFwpnL63Trv1yB4gzbZosqa7KJ76CzQ+sGWmHRXpu630LQpQx
+         GnO5lRdMlaSbAFN9/S9kq9DLEte+YPPZlItacqZpCYHr2ZUNCyQttsIZC41QAxui/Gic
+         GqLGmxhTEGu8WvrjadjbDYuER/szk1xGjka/srSoO8ve8A9QtPkc4CJEcsCC2DLKdbBW
+         kjGpL/ofOu47W/6nOSFXEN81dXMnkHFq2NFb+AF0oW61HUVtpzOZv6xzpGJuq9ou9ZVE
+         qQuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749766256; x=1750371056;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KriEKHEYlCTi88JAOccOhUjD8CzVygMM4sUtYzcDb5g=;
+        b=c/lDtSfjYkkUzpdCPasvGEN9gGtPcxj78kICkYEXwZIX7YJhmtVolt4Zs80BRpZF7U
+         bCquktTY4pbzWUFnIHmLZjZYk8otN5y2fjaV51FFSHudD3t/ayKnBpvUux/5NBDt/4f5
+         9cI8k9SYQOGc0RxFDH0YXz2/pUtIURI88MCbiqBSpbrFevCsAB9zr3XxpILS8omy33iy
+         Y4GmEZ8KiNURsKuLv6In8KMgMPPoH/tF8Ys+buQ/6P/JsNgnXFzmAsKwgg2tAtrpbZ83
+         k4X4p3vfesAQI9elcDg0IWFpc8kctFKYdOM95AtnIpuDCBLMw63ESV3niKHJ+iO38I29
+         TODw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+caKx6V/9RhYiJOE63GX6sbe7G96Jst6e33BP3CuVcb6puepRSebhBzU2Jpmx8R0+9IoU+PpMV28FAZ90@vger.kernel.org, AJvYcCUsbZM250mO4HOXrdI9iMgXr4PcOcIXIdlLA8sNo+PGCRmEdvlm/9UI2nbSJCUTFLJezQOgZ8tPVwmx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDf6Fgalz/LI766b2tEn6TwWAe0hxDjFyL/1YC2j5OBGG3vwbs
+	WfeUHTxHRAQm9qG+v+C6rWGcKC4NmbfJLQngUZSBMdnf+zn2eSde2qZO
+X-Gm-Gg: ASbGncuPvl1n/Ya+GFf5ZcuEEMdXTc8WbmtqXD2I5eHfK34KkHKZDRxE61e5QOD7NPW
+	683DUB58RMuHKK1oy1AXfMOTWYxPHGtMn36I62sPo+NdYQtXOAMOV/W1NZVeeJlDiMA9jo8SfxX
+	imlTpxgJP4vv2dpll7PBxJB85rxLqvVBt8MPabg4iXzPmxdJ1FabCfhMGRDw0Rpja8Ef7PPryeW
+	ybXDa9Ei94Qw+7U6WFsK/+me9rLc7LY9l8uclqpOhyugql+EawKGsSym7nWvJ5wFnh8HjPOpB6w
+	VBUCszxAzhUdp1XaRlH/ER4gkcDqlGMCAvG+/g==
+X-Google-Smtp-Source: AGHT+IF3VWf9CLIOpaSuBO7CmtrEXj75DaYp06Yzj+Kv4Xtv5ablupO9zYlfs0wiUHGpvDYApyEsXg==
+X-Received: by 2002:a17:903:98b:b0:234:d7c5:a0f6 with SMTP id d9443c01a7336-2365da06f72mr9323335ad.31.1749766256233;
+        Thu, 12 Jun 2025 15:10:56 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365decc11fsm2092655ad.222.2025.06.12.15.10.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 15:10:55 -0700 (PDT)
+Date: Fri, 13 Jun 2025 06:09:47 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Conor Dooley <conor@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	Yu Yuan <yu.yuan@sjtu.edu.cn>, Yixun Lan <dlan@gentoo.org>, Ze Huang <huangze@whut.edu.cn>, 
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH RFC 1/3] dt-bindings: soc: sophgo: add TOP syscon for
+ CV18XX/SG200X series SoC
+Message-ID: <y6dkhbc4x5qvd3z2yyh3ba7zkq7gphcnrc5757fxlmpz3zh2nb@tk65ldng6oyl>
+References: <20250611082452.1218817-1-inochiama@gmail.com>
+ <20250611082452.1218817-2-inochiama@gmail.com>
+ <20250612-culpable-roman-295df1360198@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Dwbecz444FCaAcDuhrHyS84";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612-culpable-roman-295df1360198@spud>
 
---Sig_/Dwbecz444FCaAcDuhrHyS84
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 12, 2025 at 05:04:46PM +0100, Conor Dooley wrote:
+> On Wed, Jun 11, 2025 at 04:24:49PM +0800, Inochi Amaoto wrote:
+> > The Sophgo CV1800/SG2000 SoC top misc system controller provides register
+> > access to configure related modules. It includes a usb2 phy and a dma
+> > multiplexer.
+> > 
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > ---
+> >  .../soc/sophgo/sophgo,cv1800b-top-syscon.yaml | 57 +++++++++++++++++++
+> >  1 file changed, 57 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-top-syscon.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-top-syscon.yaml b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-top-syscon.yaml
+> > new file mode 100644
+> > index 000000000000..e8093a558c4e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-top-syscon.yaml
+> > @@ -0,0 +1,57 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/soc/sophgo/sophgo,cv1800b-top-syscon.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Sophgo CV18XX/SG200X SoC top system controller
+> > +
+> > +maintainers:
+> > +  - Inochi Amaoto <inochiama@outlook.com>
+> > +
+> > +description:
+> > +  The Sophgo CV18XX/SG200X SoC top misc system controller provides
+> > +  register access to configure related modules.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - const: sophgo,cv1800b-top-syscon
+> > +          - const: syscon
+> > +          - const: simple-mfd
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 1
+> > +
+> > +patternProperties:
+> > +  "dma-router@[0-9a-f]+$":
+> > +    $ref: /schemas/dma/sophgo,cv1800b-dmamux.yaml#
+> 
+> I think you're supposed to add "unevaluatedProperties: false" to each of
+> these nodes.
+> 
 
-Hi all,
+This is is OK for me.
 
-The following commits are also in Linus Torvalds' tree as different
-commits (but the same patches):
+> > +
+> > +  "phy@[0-9a-f]+$":
+> > +    $ref: /schemas/phy/sophgo,cv1800b-usb2-phy.yaml#
+> 
+> Why are these permitting random addresses? Are they not at fixed
+> addreses given that you only support one platform (modulo the rebrand)?
+> 
 
-  2814f02508c4 ("Bluetooth: eir: Fix possible crashes on eir_create_adv_dat=
-a")
-  31b3d39c89f9 ("Bluetooth: btintel_pcie: Fix driver not posting maximum rx=
- buffers")
-  3812bd9eae38 ("Bluetooth: MGMT: Protect mgmt_pending list with its own lo=
-ck")
-  618cabed8257 ("Bluetooth: ISO: Fix using BT_SK_PA_SYNC to detect BIS sock=
-ets")
-  6c5d0010e8a4 ("Bluetooth: hci_core: fix list_for_each_entry_rcu usage")
-  73700cd6bd6a ("Bluetooth: Fix NULL pointer deference on eir_get_service_d=
-ata")
-  dcd2b35c9b56 ("Bluetooth: ISO: Fix not using bc_sid as advertisement SID")
-  e849b59c9db0 ("Bluetooth: btintel_pcie: Increase the tx and rx descriptor=
- count")
-  fa2c8bfe6794 ("Bluetooth: btintel_pcie: Reduce driver buffer posting to p=
-revent race condition")
+IIRC, they are fixed address. I use random addresses as I see many one
+in binding do the same. Should I switch to the fixed one?
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Dwbecz444FCaAcDuhrHyS84
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhLUEcACgkQAVBC80lX
-0Gylxwf+Ly/SHyn6+RwVqTc3G6k1lMM8G0ZHH3TQiQ6HHULrALmdhCBsXdMKkRDv
-26/+93wcr5vl4wEJfh1jxACrQ4QXrMsBWGpmsALh+/896H0TxTLXRqWhAd9ZTML1
-VFNNtNQEjQEYcrdpB7BuDvkQ+Ef+VDcYJyPCSp+chsRErV9AFm+kG+yOp3hUXJEB
-V/ZFpm0J6BvXPkaa9i/Q+Nos7jgTgHGwvoes2FcW9abvxLALAhn6jNKIF7b03lox
-euOD1IyhmzO5OWmGDamw409nf0/n16QSpjDdZPTNvyhYRQquMtrvEifSf8sBjqXu
-syUB4cnyqHnIPtKwfORG4Z58pdloQg==
-=72vQ
------END PGP SIGNATURE-----
-
---Sig_/Dwbecz444FCaAcDuhrHyS84--
+Regards,
+Inochi
