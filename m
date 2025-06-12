@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7776A23909C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A9D239E8F;
 	Thu, 12 Jun 2025 10:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724344; cv=none; b=N+go2CUAKExizw6oA9tgDxvNqJ4NP4roGTFs5Dn0jKy7h+IdSW7tBSLB0y1hSD3moCAPCazzEM4wmEkvSn1lwhuUTWSMWMsqGkXnj2CEG37NJzSJXpg2a2oAEw0Qgmo45jPJjUUsyi9ljDDle22iTsPDOWDQkY1fhaxJZFIXHR8=
+	t=1749724344; cv=none; b=eVP7s2P+2lrhzkKqBnqh8nLcqNOgj2Dwh2O+zVM0l1gP12bbcEFBThxlBmco33T5CpJlEUOwEKHfVJyD+RamNOJW3TLoPtURvoImtCNZOGvAWmi9MDOW9GceC630j78pJSbjv9X6OoXPFLV+fFbc5dKWtDq58sbsKkx4znRCwnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749724344; c=relaxed/simple;
-	bh=FtB7UQx8Rq2PDYZjw/X+61j5J92UiusLvQz1RbjcG2k=;
+	bh=FsS6lOMAqt6O4kSiWFDk/a19S4XMRpll04UTzLeJcwU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nLZ8NSlTvJIuoIXSIMjFpiDs7FGvfuebx4fwBxE2a74wuCPncej5cUv1m5dCxkSfDA/WpCJK0s528px+zXL3YQgc1NNPB9qcblOK6cKPBumWHmYMUTY9SaOQtgawxLNwl6LEbI3g4b8sMHxNc+IRsotAeT6om86CiueqTE7rt1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkoLfvry; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=UJlaePbfY0kSMLaYSnDlSUW6XakcJaBn4f7aVAJFYW1zZ6u0d6fGcqnkLlH3Wh1zo2cwtiFNCt3GGkqBYOX80vkdXCJp/vpoABaIX2g/g6L7YD+UcMWFVty+1O6wQRjrVixZCEyZQZndFzhs0dTJy1kj0LaLJSPXXGadGQBFvb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujSnLxIC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkoLfvry"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3826AC4CEF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujSnLxIC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C7CC4CEF1;
 	Thu, 12 Jun 2025 10:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749724344;
-	bh=FtB7UQx8Rq2PDYZjw/X+61j5J92UiusLvQz1RbjcG2k=;
+	bh=FsS6lOMAqt6O4kSiWFDk/a19S4XMRpll04UTzLeJcwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BkoLfvrygnc5ptuYiGlC+Zwuzy8lKOdn39aQi+UObLiY48VzPIhKT75tRzHsgnNlz
-	 qTaqHe8LOvXeed/++/r4K+wbuzicyeHMysxGEMITll1rKQoCjfNQlPyykMcMzBHR69
-	 qsu65cbXL8GiTnH986TH6jjgcYlDlcwl49gWz+/RAfbIj2uj3JO5K7dfVVYrqZmIfH
-	 6vueI1fLI9QDlbaTOYYkMDANkV8qJhGa7zEUqTozl1NfOs5NKu9RTam7rUvI951yAE
-	 rsblgoarkBScIq9PGrac4pjnunrnQbGikju6/YsZsRgZNp58XRZoo8X2dRgoTbxPbY
-	 lqtQS3ZRDWvaQ==
+	b=ujSnLxICL70uRitMOPt/pnPTa/kFVygsYa0jIvSAG9tlCqpWPSwjmVNxSYp0tpcOB
+	 a5kbJR4AymcTNl/x84W+ouVtaF3Xw4qUAAaBnv7Ck3pfNgIz1gKBiP+ZHBwequMRrY
+	 G7CaHwLKENVKceJ+GkAO4e0FwAi90fNgdBW5dCAaz+GpaM3wfguIg/n6hdMJ5BrRp2
+	 D9OceGstlxS9o4h8WueMjv8vJA1IGgrs9MslYE4NXiyPR2t3GVkRiNuoOVljXWmVeb
+	 4p4qEQ5l2fzCm9igqYue45sO7y+kj8GR01XW/0VgxvAxBSOZ5R7nbm5+p7dkKc99Wo
+	 ak8+WA+tiYX2A==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uPfEM-00000004yvY-1j8a;
+	id 1uPfEM-00000004yvo-2h1n;
 	Thu, 12 Jun 2025 12:32:22 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -46,7 +46,6 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Paolo Abeni" <pabeni@redhat.com>,
 	"Ruben Wauters" <rubenru09@aol.com>,
 	"Shuah Khan" <skhan@linuxfoundation.org>,
-	Jakub Kicinski <mchehab+huawei@kernel.org>,
 	joel@joelfernandes.org,
 	linux-kernel-mentees@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
@@ -54,9 +53,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v2 08/12] scripts: netlink_yml_parser.py: improve index.rst generation
-Date: Thu, 12 Jun 2025 12:32:00 +0200
-Message-ID: <ea083e487f1b0fcc95f117d269cba8b70e12c566.1749723671.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 12/12] docs: conf.py: don't handle yaml files outside Netlink specs
+Date: Thu, 12 Jun 2025 12:32:04 +0200
+Message-ID: <d4b8d090ce728fce9ff06557565409539a8b936b.1749723671.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749723671.git.mchehab+huawei@kernel.org>
 References: <cover.1749723671.git.mchehab+huawei@kernel.org>
@@ -66,47 +65,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Handle both .yaml and .rst extensions. This way, one can generate
-an index file inside the sources with:
+The parser_yaml extension already has a logic to prevent
+handing all yaml documents. However, if we don't also exclude
+the patterns at conf.py, the build time would increase a lot,
+and warnings like those would be generated:
 
-	tools/net/ynl/pyynl/ynl_gen_rst.py -x  -v -o Documentation/netlink/specs/index.rst
+    Documentation/netlink/genetlink.yaml: WARNING: o documento não está incluído em nenhum toctree
+    Documentation/netlink/genetlink-c.yaml: WARNING: o documento não está incluído em nenhum toctree
+    Documentation/netlink/genetlink-legacy.yaml: WARNING: o documento não está incluído em nenhum toctree
+    Documentation/netlink/index.rst: WARNING: o documento não está incluído em nenhum toctree
+    Documentation/netlink/netlink-raw.yaml: WARNING: o documento não está incluído em nenhum toctree
+
+Add some exclusion rules to prevent that.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/lib/netlink_yml_parser.py | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ Documentation/conf.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/lib/netlink_yml_parser.py b/scripts/lib/netlink_yml_parser.py
-index 65981b86875f..3ba28a9a4338 100755
---- a/scripts/lib/netlink_yml_parser.py
-+++ b/scripts/lib/netlink_yml_parser.py
-@@ -372,15 +372,20 @@ class NetlinkYamlParser:
-         lines.append(self.fmt.rst_toctree(1))
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index add6ce78dd80..b8668bcaf090 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -222,7 +222,11 @@ language = 'en'
  
-         index_fname = os.path.basename(output)
--        base, ext = os.path.splitext(index_fname)
+ # List of patterns, relative to source directory, that match files and
+ # directories to ignore when looking for source files.
+-exclude_patterns = ['output']
++exclude_patterns = [
++	'output',
++	'devicetree/bindings/**.yaml',
++	'netlink/*.yaml',
++]
  
-         if not index_dir:
-             index_dir = os.path.dirname(output)
- 
--        logging.debug(f"Looking for {ext} files in %s", index_dir)
-+        exts = [ ".yaml", ".rst" ]
-+
-+        logging.debug(f"Looking for files in %s", index_dir)
-         for filename in sorted(os.listdir(index_dir)):
--            if not filename.endswith(ext) or filename == index_fname:
-+            if filename == index_fname:
-                 continue
-+
-+            for ext in exts:
-+                if not filename.endswith(ext):
-+                    continue
-             base, ext = os.path.splitext(filename)
-             lines.append(f"   {base}\n")
- 
+ # The reST default role (used for this markup: `text`) to use for all
+ # documents.
 -- 
 2.49.0
 
