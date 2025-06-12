@@ -1,91 +1,42 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F8929898B;
-	Thu, 12 Jun 2025 19:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9FB4A1E;
+	Thu, 12 Jun 2025 19:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749755422; cv=none; b=OkRe7CWvlTnHhIV6o6yFLrElAjj1x6HeLE7RRGj9st27jTp8UujfAD+GZEYmNlRPw2pQc02qsZyuIrH8kv0LHIIWvNV1wh/APjQt18epCU8JYZXjyXcApVqr4dbRBqFUZFvsMS4CPTR6CsxhlVe/YyViDKs4q6xKfQYs9nnw44o=
+	t=1749755492; cv=none; b=GY3m9FzF1MPVAxmr4VDlVC22aHXc3P4LZp8uMd5LJC7j6PJgM1USV4sLOiDB4F6tdb0wZ3O0FLXRo00WgvP/buZE7WnYBVHWKSEFdAawNyTbfTT9Nh8Uy9fO7d2YEnoWwHj2RN1pvc/41TOmWgL45TONriiAZRVHkjc59Liv+pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749755422; c=relaxed/simple;
-	bh=BQ0TV5Stz/vWyyu62ZhSbJbmlu58TvJYqNpEEOYBVC0=;
+	s=arc-20240116; t=1749755492; c=relaxed/simple;
+	bh=mHIboB/8+98iLbDnR9XcHUg73vr4yYdA3IntcaSKlYA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e90xr5c+oLFWYE99NwvIP3ohDbuG29+KN4rVNb29U5msZTnlg83ow2E8+n7pxxEWAcPD3MbACxHx43zD7D6TA9igbw63eIxVT04W+D13+X2una8wVC7Ru4bDAcNHc6wIuBp+Cs0Jr8fSmfG02rJkbQ7dRX25g4S/pcpOW1frKWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GkZqj9zZ; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WT42GewIa9FfeHEl6bwg79ttUI1/N9v669ynzPpOjPg0PnwD6kaJSqHqnIg5Ayy2/YXkmn7UXvDONP3vpFOZLjVb8BT/sTnxcHGEsN7IClph/EtMhdU10iaRnLPneuTNejTbmNRfaU5Nwu+vTCwpsn1H+qK5JfeG7VYNpC7/Fvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jhz9u3bT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GkZqj9zZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749755422; x=1781291422;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BQ0TV5Stz/vWyyu62ZhSbJbmlu58TvJYqNpEEOYBVC0=;
-  b=GkZqj9zZAh6+L9J73XsL+f0yQ35oiUsyVJz4Sx+w62ysjQ8JyaCoJ1mV
-   ETts5XFckit8gA1w5G0bsoyEY2p6uB3G6LiqUOmQwuMOllbYR4m8dwXqr
-   KClqbKO/FuU5hLG7Q6TCXcMQ612q+p/PBJ5KHeM4qhMiOgFWb7xejuvsJ
-   AnWosiPvaq2YYUsx15liZEWOgj/H6m7WGNbbnlR55tt9u4qo6WA/6ot1g
-   G/axo7vVzhQ0LWFFupKzZEIN+oXGAvPM0wnQO8+t74P7r5oYeIMyioBSM
-   WbtWgpy5SrDPfHvzUdgDdr1S2XR7VuyvxbQ9U2D3mxFeg4Ah2JSlMo+aV
-   g==;
-X-CSE-ConnectionGUID: GFSTUfQdQBOH8IzSqSP2AA==
-X-CSE-MsgGUID: LNJq3U4kRu6TIEeQd3hu9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="52093210"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="52093210"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 12:10:21 -0700
-X-CSE-ConnectionGUID: e9iD3O3SS36bVUZFVNkguw==
-X-CSE-MsgGUID: lSBa5jyTT9mJ70WAU7t4XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="184852801"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 12:10:13 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uPnJQ-000000061me-0q0g;
-	Thu, 12 Jun 2025 22:10:08 +0300
-Date: Thu, 12 Jun 2025 22:10:07 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	David Lechner <dlechner@baylibre.com>,
-	linux-rockchip@lists.infradead.org,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	kernel@pengutronix.de, Oleksij Rempel <o.rempel@pengutronix.de>,
-	Roan van Dijk <roan@protonic.nl>,
-	Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-	Jacopo Mondi <jacopo@jmondi.org>,
-	Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
-	Mudit Sharma <muditsharma.info@gmail.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	=?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
-	Andreas Klinger <ak@it-klinger.de>,
-	Petre Rodan <petre.rodan@subdimension.ro>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 00/28] iio: zero init stack with { } instead of memset()
-Message-ID: <aEsmDyc44P8amm5p@smile.fi.intel.com>
-References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
- <aEqbQPvz0FsLXt0Z@duo.ucw.cz>
- <2243943.irdbgypaU6@workhorse>
- <aEsiTy++yKGe1p9W@duo.ucw.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jhz9u3bT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB64BC4CEEA;
+	Thu, 12 Jun 2025 19:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749755492;
+	bh=mHIboB/8+98iLbDnR9XcHUg73vr4yYdA3IntcaSKlYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jhz9u3bTuLAYjGvkNhkFN5YcFERAePZZdskOOxvSAWxTg79NU7BpCW7GEH6usoYQ0
+	 r8aZ5FGYsayc1MaJN7ZeHAymvnAuOFg2HSGFLgnQRBeR2e7S8oy5cWgyymlN/kQk+q
+	 I57n06724+6/ABRtveWGVVGRuLtnNv0woz2p2yL3R4D0qP6OekijzEPMTVtQIw1XJP
+	 QaM2H/7V5xKTpoBPhB4zb9k7b8Kj8Nrl0akeGy39z5HHmEcunlW7JGw6LePIyHZ37P
+	 6pfVpfkqWFpCa3wA7J/+UIcCWGi9lDYzjLM01/2JWke6UWe9cZBX72sbIg9piH2V6E
+	 5DChYCUSWtBMg==
+Date: Thu, 12 Jun 2025 12:11:05 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: John Johansen <john.johansen@canonical.com>
+Cc: apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] apparmor: use SHA-256 library API instead of
+ crypto_shash API
+Message-ID: <20250612191105.GE1283@sol>
+References: <20250428190430.850240-1-ebiggers@kernel.org>
+ <20250514042147.GA2073@sol>
+ <4f37c07c-3a39-4c98-b9c4-13356f5a10dc@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,38 +45,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEsiTy++yKGe1p9W@duo.ucw.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <4f37c07c-3a39-4c98-b9c4-13356f5a10dc@canonical.com>
 
-On Thu, Jun 12, 2025 at 08:54:07PM +0200, Pavel Machek wrote:
-> > On Thursday, 12 June 2025 11:17:52 Central European Summer Time Pavel Machek wrote:
+On Sat, May 17, 2025 at 12:43:30AM -0700, John Johansen wrote:
+> On 5/13/25 21:21, Eric Biggers wrote:
+> > On Mon, Apr 28, 2025 at 12:04:30PM -0700, Eric Biggers wrote:
+> > > From: Eric Biggers <ebiggers@google.com>
 > > > 
-> > > > Jonathan mentioned recently that he would like to get away from using
-> > > > memset() to zero-initialize stack memory in the IIO subsystem. And we
-> > > > have it on good authority that initializing a struct or array with = { }
-> > > > is the preferred way to do this in the kernel [1]. So here is a series
-> > > > to take care of that.
+> > > This user of SHA-256 does not support any other algorithm, so the
+> > > crypto_shash abstraction provides no value.  Just use the SHA-256
+> > > library API instead, which is much simpler and easier to use.
 > > > 
-> > > 1) Is it worth the churn?
+> > > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > > ---
 > > > 
-> > > 2) Will this fail to initialize padding with some obscure compiler?
+> > > This patch is targeting the apparmor tree for 6.16.
+> > > 
+> > >   security/apparmor/Kconfig  |  3 +-
+> > >   security/apparmor/crypto.c | 85 ++++++--------------------------------
+> > >   2 files changed, 13 insertions(+), 75 deletions(-)
 > > 
-> > as of right now, the only two C compilers that are supported are
-> > GCC >= 8.1, and Clang >= 13.0.1. If anyone even manages to get the
-> > kernel
-> 
-> Well... I'm pretty sure parts of this would make it into -stable as a
-> dependency, or because AUTOSEL decides it is a bugfix. So..
-> 
-> GNU C                  4.9              gcc --version
-> Clang/LLVM (optional)  10.0.1           clang --version
+> > Any interest in taking this patch through the apparmor or security trees?
+> > 
+> I can take it through my tree
 
-Even though, what the kernel versions are you referring to? I am sure there
-plenty of cases with {} there.
+Thanks!  I notice this isn't in v6.16-rc1.  Do you have a pull request planned?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+- Eric
