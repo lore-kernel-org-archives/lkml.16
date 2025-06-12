@@ -1,77 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC6C72616;
-	Thu, 12 Jun 2025 00:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BAE3A944;
+	Thu, 12 Jun 2025 00:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749689408; cv=none; b=JJ5KoAQPnxOIp5weJU0tHRDunfgB0r0+cAhN/LJmA8ACakSm3RaWyAAHsrK+G+YojEL2cl4qGq+RK6zx7Y5cruOCmf+49Ioj2qjU/jKbrX+I+ycPiYRN7hnvzqU52M4Sj/egVwTq5DD093ckB+Pp0pqzG6hTUre50rGuELH4o48=
+	t=1749689449; cv=none; b=rVs6WgbY2ofpfbVDGgk0LnNlxvi1Iwbq7YGdg7a8lPr3Yu7VkdAWzoIJURgVHjEzTb63/ZkwIAosu7zdSVHDVVNrfvMFv8h5/F5c5itVDsNepdjeIeoDNklKu7DGOvBd0tyO66CAP6z2E3yeDM7OD/PoUKWvuNduQBw0M6pk984=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749689408; c=relaxed/simple;
-	bh=LhIRh8KdmKAkbr3/t5AAbCmWmT+ExP2OEERaew9pFEE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QHwzwszz5aK0q1uwANMhfSTzysf2tItFcRoPhRRUTm8L1FYwmD/vsjQF/pUtjJfGivrqsKlGVNw9FejwO6cspKlaJEklNrmIYkGI7dBdkDtXUJaHFop3QntcvfL91m6fS/e0CM5VvKWw7GpJdpaVwPXFW4l29gs20YUOB4R27lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dt7Bjd45; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749689449; c=relaxed/simple;
+	bh=TO+esTbBV563zHhYclGKbQ4Kk44uqSY4io8/BVfQCA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=csdQGFOV2TghZ5/PJxR6uxCgP7QmQ5bsdulp8uy37u62rLliWR6Oajg+nY9aPOjbJGmsxCm/rxociZ7thvkqdgxXZVWIeR+M/3JyVj4TVHIDV4WNWZAzUW4qijgbE9vhiQYZe9qrXmcrjW0I7uuqcfNfBDWKU0Fz3AsKlnz8upc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=irQTORLM; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dt7Bjd45"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEE32C4CEF2;
-	Thu, 12 Jun 2025 00:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749689407;
-	bh=LhIRh8KdmKAkbr3/t5AAbCmWmT+ExP2OEERaew9pFEE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Dt7Bjd455bJztzFHzt+igJQ9iYn274xKgPd0VMqsy/0KMdf/9QCj51OcyzMLMgsN1
-	 R3GCQnMryjAOQW4VNglYf8iJBR8nFv4gWeGNf1cnHusyZKbuO0Nh3pP0GA6JQh9U11
-	 4E/jUSdD0Cec/zZGsR+Vw/slAaiILPAbAcPIn3p6VxFBMvyTNMXb9+5Bg0X5G2deCP
-	 fKHL8gsfv2hikrKH45NyTmlGV0wDbh6kWoUgC+L3MsfTu/QIZMfI3bmIjE5CgYRItB
-	 YRdy1RWpPMNQgI1OlAXv5STRsXFDJWDUztvHSjzba3ZAfAIjdZ/Q2sgjRL7c+ixF5O
-	 TahPxpirBQsFw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B1B3822D1A;
-	Thu, 12 Jun 2025 00:50:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="irQTORLM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=1dOaqnFjZKRJyblr+6PCERlCBnX9Gn93vnPzUMgrd8k=;
+	b=irQTORLMsWATNz5nl8DuuEHMsyzgXw2/Mm0Pwo5Enw/7WdeqAA3TJoT5dG8wEX
+	sK6NKHxsegaCxEosMrr7uFg7/Gq9Hm6UKGgCnium7S3a6JwyQyiq6uPEw8yXG1Js
+	dy7rlCVvn8b0aTKdzU5rEhn6O9+TDwFPoHbFJSgHDnm9E=
+Received: from [192.168.18.52] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wBX7slSJEpoBHmaHw--.5481S2;
+	Thu, 12 Jun 2025 08:50:28 +0800 (CST)
+Message-ID: <bd7f1053-f00e-4a1b-9923-9c3e1d1605b2@163.com>
+Date: Thu, 12 Jun 2025 08:50:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3] net: macb: Add shutdown operation support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174968943799.3552664.1746704463270362055.git-patchwork-notify@kernel.org>
-Date: Thu, 12 Jun 2025 00:50:37 +0000
-References: <20250610114111.1708614-1-abin.joseph@amd.com>
-In-Reply-To: <20250610114111.1708614-1-abin.joseph@amd.com>
-To: Abin Joseph <abin.joseph@amd.com>
-Cc: nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, git@amd.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/13] PCI: dwc: Refactor imx6 to use
+ dw_pcie_clear_and_set_dword()
+To: Frank Li <Frank.li@nxp.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
+ kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250611163121.860619-1-18255117159@163.com>
+ <aEnNFgv08BVVxfOQ@lizhi-Precision-Tower-5810>
+ <aEnO4QSrAzEHzoAe@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aEnO4QSrAzEHzoAe@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wBX7slSJEpoBHmaHw--.5481S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Xw1fAw17Kw4fuw1fAw4kCrg_yoW7GrW7p3
+	y2vF4SkF48JrWruwsFvas5ZF13tasakr1DW3W7G340qF9Fyry7Ga1jyrW3Krn7Gr4Utryj
+	kr1UJws3Aa4YyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ujg4fUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwNqo2hKH5lxbwABs+
 
-Hello:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 10 Jun 2025 17:11:11 +0530 you wrote:
-> Implement the shutdown hook to ensure clean and complete deactivation of
-> MACB controller. The shutdown sequence is protected with 'rtnl_lock()'
-> to serialize access and prevent race conditions while detaching and
-> closing the network device. This ensure a safe transition when the Kexec
-> utility calls the shutdown hook, facilitating seamless loading and
-> booting of a new kernel from the currently running one.
+On 2025/6/12 02:45, Frank Li wrote:
+> On Wed, Jun 11, 2025 at 02:38:14PM -0400, Frank Li wrote:
+>> On Thu, Jun 12, 2025 at 12:31:21AM +0800, Hans Zhang wrote:
+>>
+>> Subject should be
+>>
+>> PCI: dwc: imx6: Refactor code by using dw_pcie_clear_and_set_dword()
+>>
+>> tag "imx6:" should after "dwc:"
+>>
+>> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 > 
-> [...]
+> I sent out too quick, please don't applied my review tag at next version
+> because I found a issue, see:
+> 
+> https://lore.kernel.org/linux-pci/aEnONwJUSEMdMAUD@lizhi-Precision-Tower-5810/
+> 
 
-Here is the summary with links:
-  - [net-next,v3] net: macb: Add shutdown operation support
-    https://git.kernel.org/netdev/net-next/c/5e84d5b36b5b
+Dear Frank,
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Thank you very much for your reply.
 
+I have replied to you in the previous email. Bjorn also raised a 
+question as to why the entire series is not under 
+0000-cover-letter.patch. I will reply to Bjorn in the email and try to 
+solve this problem.
+
+Best regards,
+Hans
+
+> Frank
+>>
+>>> i.MX6 PCIe driver contains multiple read-modify-write sequences for
+>>> link training and speed configuration. These operations manually handle
+>>> bit masking and shifting to update specific fields in control registers,
+>>> particularly for link capabilities and speed change initiation.
+>>>
+>>> Refactor link capability configuration and speed change handling using
+>>> dw_pcie_clear_and_set_dword(). The helper simplifies LNKCAP modification
+>>> by encapsulating bit clear/set operations and eliminates intermediate
+>>> variables. For speed change control, replace explicit bit manipulation
+>>> with direct register updates through the helper.
+>>>
+>>> Adopting the standard interface reduces code complexity in link training
+>>> paths and ensures consistent handling of speed-related bits. The change
+>>> also prepares the driver for future enhancements to Gen3 link training
+>>> by centralizing bit manipulation logic.
+>>>
+>>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>>> ---
+>>>   drivers/pci/controller/dwc/pci-imx6.c | 26 ++++++++++----------------
+>>>   1 file changed, 10 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+>>> index 5a38cfaf989b..3004e432f013 100644
+>>> --- a/drivers/pci/controller/dwc/pci-imx6.c
+>>> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+>>> @@ -941,7 +941,6 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>>>   	struct device *dev = pci->dev;
+>>>   	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>>> -	u32 tmp;
+>>>   	int ret;
+>>>
+>>>   	if (!(imx_pcie->drvdata->flags &
+>>> @@ -956,10 +955,9 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>>   	 * bus will not be detected at all.  This happens with PCIe switches.
+>>>   	 */
+>>>   	dw_pcie_dbi_ro_wr_en(pci);
+>>> -	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>>> -	tmp &= ~PCI_EXP_LNKCAP_SLS;
+>>> -	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
+>>> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+>>> +	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
+>>> +				    PCI_EXP_LNKCAP_SLS,
+>>> +				    PCI_EXP_LNKCAP_SLS_2_5GB);
+>>>   	dw_pcie_dbi_ro_wr_dis(pci);
+>>>
+>>>   	/* Start LTSSM. */
+>>> @@ -972,18 +970,16 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>>
+>>>   		/* Allow faster modes after the link is up */
+>>>   		dw_pcie_dbi_ro_wr_en(pci);
+>>> -		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>>> -		tmp &= ~PCI_EXP_LNKCAP_SLS;
+>>> -		tmp |= pci->max_link_speed;
+>>> -		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+>>> +		dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
+>>> +					    PCI_EXP_LNKCAP_SLS,
+>>> +					    pci->max_link_speed);
+>>>
+>>>   		/*
+>>>   		 * Start Directed Speed Change so the best possible
+>>>   		 * speed both link partners support can be negotiated.
+>>>   		 */
+>>> -		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>>> -		tmp |= PORT_LOGIC_SPEED_CHANGE;
+>>> -		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
+>>> +		dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
+>>> +					    0, PORT_LOGIC_SPEED_CHANGE);
+>>>   		dw_pcie_dbi_ro_wr_dis(pci);
+>>>
+>>>   		ret = imx_pcie_wait_for_speed_change(imx_pcie);
+>>> @@ -1295,7 +1291,6 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+>>>   {
+>>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>>> -	u32 val;
+>>>
+>>>   	if (imx_pcie->drvdata->flags & IMX_PCIE_FLAG_8GT_ECN_ERR051586) {
+>>>   		/*
+>>> @@ -1310,9 +1305,8 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+>>>   		 * to 0.
+>>>   		 */
+>>>   		dw_pcie_dbi_ro_wr_en(pci);
+>>> -		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+>>> -		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+>>> -		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
+>>> +		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
+>>> +					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
+>>>   		dw_pcie_dbi_ro_wr_dis(pci);
+>>>   	}
+>>>   }
+>>> --
+>>> 2.25.1
+>>>
 
