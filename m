@@ -1,66 +1,60 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0A123CF12;
-	Thu, 12 Jun 2025 13:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0484519007D;
+	Thu, 12 Jun 2025 13:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734025; cv=none; b=t/pbLOEsc8X/pw2zDb8I18dU+f9RvTTCBefDv3E9/HTqnSw9zbDnVH3uXIWBPvCaU77L/zb+UKoTs6Hetkg946U8G/R9zugfxcuSxKiP6YNu+MubROR+MF/murUpVC7bhbx6WB+Ob3qsMhPn1X1PomWdgNj7eGFeSuLAqEam55A=
+	t=1749734088; cv=none; b=iV4aqajoqM/vOoCuVzsnBiSTKvfEz4SpXiZZUIoDqlxHMGhDt3FyXZH/jViA3d9aoHCK4x1Vrz8ATJXQBDo4LO4aX+RRGzeOmybMwXIdKvEEdv1SgvuyjR4i+KAoYi3f9uyfvT/ohFYM42HBJdkGqz4/v7BodVFgowAS4NxznzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734025; c=relaxed/simple;
-	bh=Hpkszy4R4gKBs1ci8NemFAGhYsjN2JJG1PCs680W1Bk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=I1DVoNCdSkfilnskhtU1BgiLob+6+CVMC6EgINSUOt4rH+tIrwSib08BLuKen2soJKC/MUExXHNks26kgCyGulRP+SJpkKIfQa/rLH99uxnbqluoTelQmITGCBp3PUjC0cyZ6dLd2eiHdIZIjj9nG0UHdEOelnh7axqzxX5PRhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M06dl3FD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xOjACYNL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749734088; c=relaxed/simple;
+	bh=H8siLxp5Z7goMxpeQu3rlbqVTGHHoq3nq4mTKGcVgFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EcxeYHO33LH680BmkfALTErxUYuM1zPW7hlAWrF2tlPjE0R1Im8bdbavE7ExUynCIxVTEIErVxPhlXU6IzjvbRAHNflxm0fkAfmNdBFdmT8Lhxjy9Aw5iUmo95SjUbxwKm9JiXR6JvOuEsOW+KrhTOwsh5G2A5rnTSJnhxTCI7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTA4Ez8l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M06dl3FD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xOjACYNL"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749734021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hpkszy4R4gKBs1ci8NemFAGhYsjN2JJG1PCs680W1Bk=;
-	b=M06dl3FDgyblDeVNKZj/yTlCPQuTi5lglWWdG2fLDEa0yiWH+n/8DIu/xzlfNYZD+zaHUS
-	NwYh/XCRLph1/KEpcPnzstacSex8ScncDgwgnpPXVn7g2jrog/Hj5ZDk+be2Goi7woxayD
-	wmJKvsTFt5bkzz/ljwqQClfOluoE9C4lXuv9+XcY4E+JqZCjgeV+4tyDhoH9wWizEE1RTz
-	RCdB05zcQ1Bw8mXZRn2yVxiG7QJ3jmNW7PvjZRdQIbOZyqRBzp5WCKRyrW0r7tbIpAI+bH
-	abJ/PyV5aLeYKr4y2o2vq2Vp2nGWLBa+bwyfQzwoTKqn2+resawyMDuCIverYQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749734021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hpkszy4R4gKBs1ci8NemFAGhYsjN2JJG1PCs680W1Bk=;
-	b=xOjACYNL5x1DYbrzNbVBtmHmwfo1EBoeFj+Lc947zL1lqIq/3pbaOQPzaSgmnTGMU9JGiu
-	OEhLM1RDfhQlUFBQ==
-To: Markus Stockhausen <markus.stockhausen@gmx.de>,
- tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org, s.gottschall@dd-wrt.com
-Cc: Markus Stockhausen <markus.stockhausen@gmx.de>
-Subject: Re: [PATCH v2] irqchip/mips-gic: allow forced affinity
-In-Reply-To: <20250526134149.3239623-1-markus.stockhausen@gmx.de>
-References: <20250526134149.3239623-1-markus.stockhausen@gmx.de>
-Date: Thu, 12 Jun 2025 15:13:41 +0200
-Message-ID: <87bjqtrtkq.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTA4Ez8l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E1BC4CEEA;
+	Thu, 12 Jun 2025 13:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749734087;
+	bh=H8siLxp5Z7goMxpeQu3rlbqVTGHHoq3nq4mTKGcVgFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MTA4Ez8lND8qAvz0fGv20t9F/RcjBzsUoe6V1Z5L05otD8DEbdW4B9jUSVw52ui7s
+	 WkJ+69yExjhlmvbhOpGbGOQ2EijJg1COIAHojqFF7h1V9r6ioZUMtpZMDgHnKFSj+1
+	 543exs5xHN7lLA7jXLYjA47PWDsjOqF3G6Fkhqbw3BlPrIXHUELkd6HMNI87VUCWHo
+	 YnwDTj/3bjgN34NGUczRIwRQA4ZPfsME3v6wBnkxGxFsS4fLRagvhY/Ey3c05iow2C
+	 w0dtJ0T2vrn3RUj2FUN9/0hPhCdVZ0bl+kvTqMDdfDr1LMSq+gVRcfTiH+1ppLEWyC
+	 emwxFqWPFpyrw==
+Date: Thu, 12 Jun 2025 14:14:43 +0100
+From: Simon Horman <horms@kernel.org>
+To: Shannon Nelson <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, brett.creeley@amd.com
+Subject: Re: [PATCH net-next 1/3] ionic: print firmware heartbeat as unsigned
+Message-ID: <20250612131443.GB414686@horms.kernel.org>
+References: <20250609214644.64851-1-shannon.nelson@amd.com>
+ <20250609214644.64851-2-shannon.nelson@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609214644.64851-2-shannon.nelson@amd.com>
 
-On Mon, May 26 2025 at 09:41, Markus Stockhausen wrote:
->
-> Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
-> Signed-off-by: Sebastian Gottschall <s.gottschall@dd-wrt.com>
+On Mon, Jun 09, 2025 at 02:46:42PM -0700, Shannon Nelson wrote:
+> The firmware heartbeat value is an unsigned number, and seeing
+> a negative number when it gets big is a little disconcerting.
+> Example:
+>     ionic 0000:24:00.0: FW heartbeat stalled at -1342169688
+> 
+> Print using the unsigned flag.
+> 
+> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
 
-This Signed-off-by chain is broken.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
-
-and the following paragraphs explain it.
