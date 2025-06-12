@@ -1,188 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F6A234971;
-	Thu, 12 Jun 2025 11:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C157A238C3B;
+	Thu, 12 Jun 2025 11:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726343; cv=none; b=ELiBgyTCT7bgNHpI01z7nILYPPKc/YKVeMLsXbj9c222DqLzvaUsukKJvrK5VlEGwpuBfuYIj9CF/u6MB08jjDJSvg8Sq2xu4iCdM610oqo3o8V+u2NJg1MI3rFSvZRupgV26teE8ApJaH4wuS5OCV5fVoyDmN0f4yGbdScFI7Y=
+	t=1749726354; cv=none; b=VCb5kAJu/XCYsob01HrLwbgRqg14HiEIEuAaLxzHaHPtQYL4doREP/rAlHff5lDMaCqgKMV3iowV5GwlzTISCvy4Qek1P0lhqpFDckXIqCdRvQoqbeUh9P36shuvsqhitQrTdHJWMzgC6YwpzKb3VFqO4BTxuu1Sx9YzCCkrlbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726343; c=relaxed/simple;
-	bh=nLSFvNhhkH/i0AW4xZZyeVQQGE39E68tSVlCKIweu8U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qecp6fc5ByBtxrjn44cgLbaxqJj9dK2td29uwJYb8QxJMBys4JsNVc/md1AxIQ7hAi4yPMzrbSZv4jLKtgW20wi9qIflLb3POXlDinLbtu9l5sdP3WMVcsTHfpUMs/o4Dj/n9omeE9+UiH6nLS0w5r0D4e7Im/WzrDWSUxCrOXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDdWQQHx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749726354; c=relaxed/simple;
+	bh=RDVb19xxFHSj+C5sinLQCxAAgDhQxroXOYkiUH+Qd4g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQ5L6u++aG/BeKk4aLWL2ha3HGDrd+49oxrFmXgfzx/0UDks3edXu55znofBf4J4giM5HyCz1Hz2XkVyjWnRZDVO/PMk0IuCkxf8gTFbEqSMDYoHsn/UYfVCZVt0FY4hPi9wot0ntk+QxDIMuIvC+TPoZVKJh+7PgJN8ZvPMaKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fxJDxrI9; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDdWQQHx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84DCAC4CEEA;
-	Thu, 12 Jun 2025 11:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749726342;
-	bh=nLSFvNhhkH/i0AW4xZZyeVQQGE39E68tSVlCKIweu8U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=qDdWQQHxflEwGgvLGrA7yFYTJaUyXMY2fWh33EJgxUQf54sqNCRzWvq76JLo+wqKI
-	 wi3//16+vXlwMPBe+pMBxdCoW1pvfstM/90sFC6bYA4GKXJ/DLO/RZxmYHp9Lno0w+
-	 2R937/rFXe/6yomj5pTMk1Gf1JtK2KJ4KfIspUApGy4+FMb0U0+QsZ1bRhrt14Bc3h
-	 fBgKSF5Qnm0sXp8MqYuolV1Z1evNWPWq5k7aTJd+f3igWa3/8h9n/DO2UJvUXfWCap
-	 d/WkhRasnbpjeKRrIuV4W1x2gm694q5S79rMhRutgVESoT516W6GsN0lhDFbFaINY/
-	 uS4LAnQAnBqOA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
- <nathan@kernel.org>,  "Luis Chamberlain" <mcgrof@kernel.org>,  "Danilo
- Krummrich" <dakr@kernel.org>,  "Nicolas Schier"
- <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,  "Adam
- Bratschi-Kaye" <ark.email@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-kbuild@vger.kernel.org>,  "Petr
- Pavlu" <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
-  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
- <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,  "Fiona
- Behrens" <me@kloenk.dev>,  "Daniel Almeida"
- <daniel.almeida@collabora.com>,  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v12 2/3] rust: add parameter support to the `module!` macro
-In-Reply-To: <DAKE43J2GFVF.18KWPFWPZKDM@kernel.org> (Benno Lossin's message of
-	"Thu, 12 Jun 2025 09:52:30 +0200")
-References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
-	<20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org>
-	<D9PW1NI2S6FV.8LA53J87VCML@kernel.org> <87plfazi13.fsf@kernel.org>
-	<V29kiTfRcPU-AK3Dk6vAhU4ERR2auWVQO6PRp1TJrOmq3AgagkEMmShjxYAQSx9IkfVtHEVwhYM93UQQhiElJA==@protonmail.internalid>
-	<DAKE43J2GFVF.18KWPFWPZKDM@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Thu, 12 Jun 2025 13:05:31 +0200
-Message-ID: <87ikl1xls4.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fxJDxrI9"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55CB5hd92898988;
+	Thu, 12 Jun 2025 06:05:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749726343;
+	bh=O+6Lsaau/SvLorn3/KuyZs0zfk4cChLknIsmfvwpl2A=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=fxJDxrI9Fq+6OuWJw5UeXo1W6YnR+zWvsvi+svR9gf9goaxzkk6AuSVsFeoWPrZYe
+	 84rOkvasz7vdXxDxllCtpok7rIJCitKHngVWxn6qgqIW9EradsEp3pCjDKLQjiYeLZ
+	 V4Xf0WfT2XU3fk2JqI12mBG/iW2PBoC+vxh2ZZuU=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55CB5hUj2534115
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 12 Jun 2025 06:05:43 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
+ Jun 2025 06:05:43 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 12 Jun 2025 06:05:43 -0500
+Received: from localhost (dhcp-172-24-227-169.dhcp.ti.com [172.24.227.169])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55CB5gsw1886634;
+	Thu, 12 Jun 2025 06:05:42 -0500
+Date: Thu, 12 Jun 2025 16:35:42 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+CC: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh
+ Shilimkar <ssantosh@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
+        <vigneshr@ti.com>, <u-kumar1@ti.com>, <a-chavda@ti.com>,
+        <p-mantena@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH v2 03/17] dmaengine: ti: k3-udma: move static inline
+ helper functions to header file
+Message-ID: <acc1217d-50ce-4851-829d-38294b0a4d81@ti.com>
+References: <20250612071521.3116831-1-s-adivi@ti.com>
+ <20250612071521.3116831-4-s-adivi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250612071521.3116831-4-s-adivi@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-"Benno Lossin" <lossin@kernel.org> writes:
+On Thu, Jun 12, 2025 at 12:45:07PM +0530, Sai Sree Kartheek Adivi wrote:
+> Move static inline helper functions in k3-udma.c to k3-udma.h header
+> file for better separation and re-use.
+> 
+> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+> ---
+>  drivers/dma/ti/k3-udma.c | 108 --------------------------------------
+>  drivers/dma/ti/k3-udma.h | 109 +++++++++++++++++++++++++++++++++++++++
 
-> On Wed Jun 11, 2025 at 12:31 PM CEST, Andreas Hindborg wrote:
->> "Benno Lossin" <lossin@kernel.org> writes:
->>> On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
->>>> diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
->>>> index a3ee27e29a6f..16d300ad3d3b 100644
->>>> --- a/rust/macros/helpers.rs
->>>> +++ b/rust/macros/helpers.rs
->>>> @@ -10,6 +10,17 @@ pub(crate) fn try_ident(it: &mut token_stream::Into=
-Iter) -> Option<String> {
->>>>      }
->>>>  }
->>>>
->>>> +pub(crate) fn try_sign(it: &mut token_stream::IntoIter) -> Option<cha=
-r> {
->>>> +    let peek =3D it.clone().next();
->>>> +    match peek {
->>>> +        Some(TokenTree::Punct(punct)) if punct.as_char() =3D=3D '-' =
-=3D> {
->>>
->>> Should we also allow a leading `+`?
->>
->> I would argue no, because rust literals cannot start with `+`.
->
-> Makes sense.
->
->>>> +            let _ =3D it.next();
->>>> +            Some(punct.as_char())
->>>> +        }
->>>> +        _ =3D> None,
->>>> +    }
->>>> +}
->>>> +
->>>>  pub(crate) fn try_literal(it: &mut token_stream::IntoIter) -> Option<=
-String> {
->>>>      if let Some(TokenTree::Literal(literal)) =3D it.next() {
->>>>          Some(literal.to_string())
->>>> @@ -86,3 +97,17 @@ pub(crate) fn function_name(input: TokenStream) -> =
-Option<Ident> {
->>>>      }
->>>>      None
->>>>  }
->>>> +
->>>> +/// Parse a token stream of the form `expected_name: "value",` and re=
-turn the
->>>> +/// string in the position of "value".
->>>> +///
->>>> +/// # Panics
->>>> +///
->>>> +/// - On parse error.
->>>> +pub(crate) fn expect_string_field(it: &mut token_stream::IntoIter, ex=
-pected_name: &str) -> String {
->>>> +    assert_eq!(expect_ident(it), expected_name);
->>>> +    assert_eq!(expect_punct(it), ':');
->>>> +    let string =3D expect_string(it);
->>>> +    assert_eq!(expect_punct(it), ',');
->>>
->>> This won't allow omitting the trailing comma.
->>
->> This is in line with the rest of the module macro.
->
-> Then we should change that:
->
->     https://github.com/Rust-for-Linux/linux/issues/1172
->
->>>> +    string
->>>> +}
->>>
->>> [...]
->>>
->>>> @@ -186,33 +336,35 @@ pub(crate) fn module(ts: TokenStream) -> TokenSt=
-ream {
->>>>      let info =3D ModuleInfo::parse(&mut it);
->>>>
->>>>      let mut modinfo =3D ModInfoBuilder::new(info.name.as_ref());
->>>> -    if let Some(author) =3D info.author {
->>>> -        modinfo.emit("author", &author);
->>>> +    if let Some(author) =3D &info.author {
->>>> +        modinfo.emit("author", author);
->>>>      }
->>>> -    if let Some(authors) =3D info.authors {
->>>> +    if let Some(authors) =3D &info.authors {
->>>>          for author in authors {
->>>> -            modinfo.emit("author", &author);
->>>> +            modinfo.emit("author", author);
->>>>          }
->>>>      }
->>>> -    if let Some(description) =3D info.description {
->>>> -        modinfo.emit("description", &description);
->>>> +    if let Some(description) =3D &info.description {
->>>> +        modinfo.emit("description", description);
->>>>      }
->>>>      modinfo.emit("license", &info.license);
->>>> -    if let Some(aliases) =3D info.alias {
->>>> +    if let Some(aliases) =3D &info.alias {
->>>>          for alias in aliases {
->>>> -            modinfo.emit("alias", &alias);
->>>> +            modinfo.emit("alias", alias);
->>>>          }
->>>>      }
->>>> -    if let Some(firmware) =3D info.firmware {
->>>> +    if let Some(firmware) =3D &info.firmware {
->>>>          for fw in firmware {
->>>> -            modinfo.emit("firmware", &fw);
->>>> +            modinfo.emit("firmware", fw);
->>>
->>> I don't like that you have to change all of these.
->>
->> Why not? If I was to write this code in the first place, I would have
->> used a reference rather than pass by value.
->
-> That's fine, but do it in a separate commit then.
+Since this patch and the previous two patches seem to have the same
+objective of moving contents from "k3-udma.c" to "k3-udma.h" for the
+purpose of re-use, could they be squashed?
 
-OK, I can do that =F0=9F=91=8D
-
-
-Best regards,
-Andreas Hindborg
-
-
-
+Regards,
+Siddharth.
