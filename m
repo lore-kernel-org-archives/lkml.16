@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A642122423F;
-	Thu, 12 Jun 2025 10:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC3B22FF37;
+	Thu, 12 Jun 2025 10:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723253; cv=none; b=NLjlAqoJeFj+DVHoVBWCxJPNZ0w229cNC9hXFEwsednZN0GsDTatK5RJxUWx3ZnxN3VHthd8HW0y4M/81WVTPFcF17LKZ+7Nqb4qi20umzq479lNXw5d2Zb4FZuQjbyXDS4wqSsnMo0aGFUAGTuPnCD3n1KNiF414AKBh6hsMpY=
+	t=1749723288; cv=none; b=FWR+LofdwzoDr9NmSlLiOjXS8rSSem/QzRuQmk5H5zhZcQXHyfXp2p5INrYZNLprf6nLAEt5FUttASjvTpH+v7Gzyv8tLqDpT10W9xDl6yCbrAPnOFr+O8oHOPF0bfTxMlYTWbkiaa+01eVQ3jID8ClD07jIQvseBzyOhWhbp4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723253; c=relaxed/simple;
-	bh=GlwJT56CuE3DrE9U/6MGegpQYrYWCyocuP3+ulwLTRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gq96r0tyNhjQe4yreT6xaKnreTPIm91F9Np4BvQHYxhDt+uhDYSIt1JZqYrHXOMDRagFL4iWtciwDlQ9p6URPd/VUEcShjTxBztVe2+WtESQgkzg9tPctQhIdGZOJpQ2064S8Q+YZMuWYQtUu+Ns61xLd/Wcyc1nQ3nbrQ0QM/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilZDYkBd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749723288; c=relaxed/simple;
+	bh=i2cHV/Yqlp5Wqq3ytl1FXkrfZHTvJKGGxfV2IqHWh3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=IpYhUk2DNphSz5AXNPPHJdTHS24e8MnF88hlDkvq2nbXHqI8+Zm0TbGsgmodI+DYLtdY3XyEx/gQfurIaz1ENfebMXjBYuRS5+7FIlnQPqG4Aq8QS9LORzlCwlTqaCcToSgL9B7WU96BY82o+b2LMyIJUBc4J8weXJWyHV7spQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAcrUhXd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilZDYkBd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2410C4CEEA;
-	Thu, 12 Jun 2025 10:14:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAcrUhXd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE77C4CEEA;
+	Thu, 12 Jun 2025 10:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749723253;
-	bh=GlwJT56CuE3DrE9U/6MGegpQYrYWCyocuP3+ulwLTRQ=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ilZDYkBdI3GBvYmaHrX8W8rReWkv4w3jXneJ6NFEb6o32F0+ftO5oGTSRHhyjBVrI
-	 9+NmykFf63/1Fa2P05ziOzF11o05F52e3ftmigNdvrrRrrYWuPKxz5SrgXWsX/I+OP
-	 He+eiNHgFRHV2ZsoHWi9sncHMOa8AgR8saThDctY+3HM+rB5moZlJ3mbkb0Ne/LibX
-	 P/X3OjJKpaY9+ud1ueS3zUhvgdyQbyD5uPpuUsLCVvlW12KUs+xoOt2ibu8P1dKGkO
-	 3cOlWxUcq49tMt8G3UL6vIN3DIJk6u6qiO4rUIkeDrws7auIH4JPXAy/7cYlLFwD1H
-	 87EZf83pvmrjg==
-Message-ID: <7d4d4c53-d18b-421b-8279-6325771a1cb9@kernel.org>
-Date: Thu, 12 Jun 2025 12:14:05 +0200
+	s=k20201202; t=1749723288;
+	bh=i2cHV/Yqlp5Wqq3ytl1FXkrfZHTvJKGGxfV2IqHWh3Y=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=vAcrUhXd6EcHsF0iKvHsD3Y5X6hl+NdM9KDJMh4DLnOgu2j7J/aaLaEJycI7wPEOR
+	 EvylEAEpKln6BP5S30djNorLdSXiYMcdW0LOAynlrPkn+p7sMqGYSJnq327Kmdzp5Z
+	 bv7sipOQg95+hFJqd4vdXf1ne2kvpNtrEC5e02M/UGZpFtnBMt2scFmUNzgqxActkm
+	 p8eelP3YfvcQwekC9vs4u+oLvq5ufnNFQ0QlVLjEHJ0EkOcyPujRiiz701mm7T8uCh
+	 hvmbyMfI0FYedCNm7R/+zlZXfmpQLFYV1xIZgruS+LjWDwTiAEQiJ91Brvtvo1U/g9
+	 7kZr1jjkuL8FQ==
+Message-ID: <0b404d5c-2315-45cd-b25e-d5ab92040887@kernel.org>
+Date: Thu, 12 Jun 2025 12:14:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,6 +36,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v0 4/5] arm64: dts: aspeed: Add AST2700 EVB device tree
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
@@ -56,7 +57,7 @@ To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
  spuranik@nvidia.com
 References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
  <20250612100933.3007673-5-ryan_chen@aspeedtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <7d4d4c53-d18b-421b-8279-6325771a1cb9@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -101,27 +102,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250612100933.3007673-5-ryan_chen@aspeedtech.com>
+In-Reply-To: <7d4d4c53-d18b-421b-8279-6325771a1cb9@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/06/2025 12:09, Ryan Chen wrote:
-> - Add ast2700-evb.dts for the ASPEED AST2700 Evaluation Board.
-> - Set board model and compatible strings: "aspeed,ast2700-evb",
-> "aspeed,ast2700".
-> - Reference the common AST2700 SoC device tree aspeed-g7.dtsi.
-> - Define memory layout and reserved-memory regions for
-> MCU firmware, ATF, and OP-TEE.
-> - Add OP-TEE firmware node with SMC method.
-> - Set up serial12 as the default console.
+On 12/06/2025 12:14, Krzysztof Kozlowski wrote:
+> On 12/06/2025 12:09, Ryan Chen wrote:
+>> - Add ast2700-evb.dts for the ASPEED AST2700 Evaluation Board.
+>> - Set board model and compatible strings: "aspeed,ast2700-evb",
+>> "aspeed,ast2700".
+>> - Reference the common AST2700 SoC device tree aspeed-g7.dtsi.
+>> - Define memory layout and reserved-memory regions for
+>> MCU firmware, ATF, and OP-TEE.
+>> - Add OP-TEE firmware node with SMC method.
+>> - Set up serial12 as the default console.
+>>
+>> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
 > 
-> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
+> How this can be patch 0?
+> 
 
-How this can be patch 0?
+I meant: v0.
 
-You need to start using standard tools: git and b4 (see submitting
-patches and other process docs).
-
+> You need to start using standard tools: git and b4 (see submitting
+> patches and other process docs).
+> 
+> 
 
 Best regards,
 Krzysztof
