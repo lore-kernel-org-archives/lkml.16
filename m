@@ -1,118 +1,92 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C9326FDA9;
-	Thu, 12 Jun 2025 14:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6662842048;
+	Thu, 12 Jun 2025 14:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740009; cv=none; b=K7K2gmGqa3ejaAIcM4TBYekUzVq2afN028R6ODwpMwU3OcY0uirwqm/MdT4yVwu+2qssxAJFZ4TAAQYkcn+Z94ea73cxo+2q+eqw8YCFZ6oyZqLiH98VTuIGHqhKIJdT2gMy08So+98DGWYGX8TuZenJpeLcuJ2dMDYXMv6OKjE=
+	t=1749740053; cv=none; b=KaWp9gcncOAUrrODarmFeIflhsLgEZef+b1VHvGnWwUD2LuW6jBq/Zlj13ybY+PI01iBhjvSHtzuZqepaD4YZjlT5A7Fj2/tIQsnMhFfDHmEkYkmjXZljt7fefomV1WHj7bZE+bWthYGNrtgpClRz49TXCmE+/4GhykWLZD1sPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740009; c=relaxed/simple;
-	bh=Z46/+1bEbzFmd4IlLZVdFclzKMNgK/pNVt4Y2XAb92I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tr01n6uOM9xxohqqIWkeZi0nQ5o68Wt9NcRD7Ap5EHUAwwBCu2GmV9X5ACC+h6U+52tfslDFgtvg/pb7FmtZpZrzQtH4HNT7oUxpbPSIlvRBEtxA4inVX9SslqIndy0na/K1tAzFYp+USWG+nsJB5Im501v1/grtwa0I/FiwvG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e770bb7b45so294234137.0;
-        Thu, 12 Jun 2025 07:53:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749740005; x=1750344805;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7x1d1vTJCh0XRTGcbKT1jF2AwaSX3xRvHIeZZnEYTPA=;
-        b=aeMG4SnLTMNsDdQXgvn0yiWyZVhhwz+uw9kMgNv1FsvN8DTLQLbpDm+VPoUtmZClQE
-         rgD7JNsmWST84ObVcIvB7fnH8AJlDf7dkqf81Cphj+SftTicU+t04QUOwPa0V4EmVSSK
-         soJMwwxs8P+xSSQJHXotDBPhYo+8pbrpF6+P132JwSWaQLmqFa+AYky3FrJmHaaagPvg
-         DcU5X64SmZk99wBPZvryvW3esGngrsCj+Lg5iX0XC+euGiR/gOJiS2l0F8m+XVr7v2uR
-         lFYtiGUpkPpQAfNvyK+0UmmyQNUv1CfL4EeV0oXI03sLFp3c+feQwstuYA0LvVQyc7nc
-         im6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4F/6kBGkej55avODavwCYGLcA1/Y50I8o973WULOYeyVdLZTs2d+oW2JwBXyFYUmwhR0T+dClH5zK@vger.kernel.org, AJvYcCVgK1BzzD/msE3rtkkiWyEFK+V7zQp8qrnG7JGtLtLZ7RZramT26G8k4YnDrvCSy0oFRQhwy6IUqJZLmwOb@vger.kernel.org, AJvYcCVlN9a050deTHhxjAfELqTQXwoF91kCt+a6tp5oBIPfYR2WldlRgNf/If01ZNSzmVQhOjIXRwM7uSG1Mjn2H/B0+7E=@vger.kernel.org, AJvYcCVz3Hc2zkwAhuL2ELxBYNz2pupa7byUaziqspUUTvNXLmHFZ/6ArI532KYtG6GMBvk8QNUKZA1wp7B9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4pMmGVd+W/NnztnN3W1TWy7lkH9QHJSbdV4F8OqJaLXez6mKZ
-	qOpLuuHZHOj8dLL0jK6sPj8gx4u+CuAM+H4nO45TVTAfKzYpzRmoUocctHqGOoDo
-X-Gm-Gg: ASbGncvMlQv/aSc9MxE3jcld8bdExMkCcGHKGPxTiM3qYLjiEYosD/Z07eDmtQMNaFp
-	33cehI/8YOy66a3hhpFsYdkngrw5w6fSrgLemZEi9MzHZWSH/rHCVixDvPrPwT/KQ97sqbiecKp
-	bUMzbdHTOHgokh2EmAPozZyWYE246rvAMQIboDVUIOAstk1jYnZizpadDfzJp4mZmpT/98re8xg
-	rnXi8Tyl3V6+MlurXchNx+vbMIfINvcim3X4oszvdzgSSj1OFsEnLO2mJ2UqAWjHxxMLj/FRO3q
-	wn45yKi2Z0ClzfhEI3ySeifW3s2ENN5fgEfx8rJSNfxgQql9zgpepa942NP417ZprbFWJXNkY/F
-	aP/S6ey5pQRJVL4Zwe3WiKxIn
-X-Google-Smtp-Source: AGHT+IHNTEaD5MAYAS1XrNXevImlvWWqfgcOUd/i+I88jXPZE13e9nNIBOhdvn+4/Zk5cBzty9BsdA==
-X-Received: by 2002:a05:6102:41a0:b0:4ba:971a:41fd with SMTP id ada2fe7eead31-4e7ccd8a30bmr4525569137.19.1749740005004;
-        Thu, 12 Jun 2025 07:53:25 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7d07d5642sm257908137.8.2025.06.12.07.53.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 07:53:24 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4e7b397cc2aso280563137.2;
-        Thu, 12 Jun 2025 07:53:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgCBVjETYr783K4eEaqbsOnauVPF1M+LvQ0Jk+I9Oz/CcQaYKqw7WzJFDFrj+sPP2Ke4mB+VQfx7vT@vger.kernel.org, AJvYcCUx8aNtcwXM0bhU5EJf7pHF8eP2tM0+eFAcXUwkIu9Tq/Qds+sQsMviOe35mp9uP63VrYDgQ3roKFxNkFSW@vger.kernel.org, AJvYcCWq8OLCkZ8pU4pcabnGDRAnsV1MSaS0Mnrb3gDjfeLs1QMynM3Z1EfBv+sBsymV/F/ejpNYzXhcLjauXeB9e8pfbd0=@vger.kernel.org, AJvYcCXfRxXcxIQiKu2EF8JlErngYdb1THpBsH9vx5Sr7JrjmSFxpi5yEhaRJnddtu6txfm+gcr5dJBfjBfT@vger.kernel.org
-X-Received: by 2002:a05:6102:5808:b0:4e7:b338:5352 with SMTP id
- ada2fe7eead31-4e7ccbf01fdmr4242757137.10.1749740004083; Thu, 12 Jun 2025
- 07:53:24 -0700 (PDT)
+	s=arc-20240116; t=1749740053; c=relaxed/simple;
+	bh=JLpyd2g/Xe7Snc8TZSz2U73JR+zRBfDYm2l2i1X5yzQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KwRkUKH2Cjyxvjipfo0AQSaJ54B6ODdr8rzFJBz0CfIuyyJgfwcDtoUynTXB7AMkjxHagcgVTy3FfDzdPvZxg97RdC12abZHvNO/0K5Q2d4v76P+9yeH4eXJaOuEJBaQsP2igxgINTUuPgCr0keRBCEqIPg8DdXf5/NYr1esD9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v01xndwn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z3l0ZEVL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v01xndwn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z3l0ZEVL"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749740050;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fjwRLX2hmKU2M12T6FDQVTqpIRNQy8PjR1/oqRxiAuE=;
+	b=v01xndwn5kle1gJ1WXpR+eVWH9xR6k3hd9zUVmVFQY5M3ZZKcS0c9v+BJ81BpCiBmjci6N
+	WhJT6ONx/K4adk7NKGktPQ1mtHpSh7t0+LtFUEznSVH2+qo6PriILKAQRwS9si1BJaxXRT
+	zZkZ4NJJNfVy7b2s5hqc/u7T3xyTE0NZoRnnZNXqQNQex3jOQjbgE4V5NuI7dlUAzpOpZh
+	CfcqvUXgqXqPmFW9z/0yu5kqEGziJ4hXAPIP3F/CryyX5Ag7nCuh4dvUMoOr9UNb2jUBdl
+	fV2HtBLZucMJJ53J+HX/2Jcn99Xu+O3pgNsLgQ+z0hXdiSK9sIekRWfWwsHwkA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749740050;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fjwRLX2hmKU2M12T6FDQVTqpIRNQy8PjR1/oqRxiAuE=;
+	b=z3l0ZEVLqs494vuwhRCC0AaGkmClNHH1GPTRWwPaNjgLw32+8aA4HOCM937JRU6lsBanMG
+	uXOGy5rmwF4lnCDg==
+Subject: [PATCH 0/3] module: make structure definitions always visible
+Date: Thu, 12 Jun 2025 16:53:53 +0200
+Message-Id: <20250612-kunit-ifdef-modules-v1-0-fdccd42dcff8@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250609203656.333138-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250609203656.333138-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Jun 2025 16:53:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXbo7vytuCX0RW9w0PjPs9tWaNzuOAWCUrO7gF8xKC8Sw@mail.gmail.com>
-X-Gm-Features: AX0GCFvi9455CjPDjLvZYIZKJZiEyx6KQ3aIhyUXcJMYE57S6zBSPXwrVsAtHMg
-Message-ID: <CAMuHMdXbo7vytuCX0RW9w0PjPs9tWaNzuOAWCUrO7gF8xKC8Sw@mail.gmail.com>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: Add initial support for RZ/N2H EVK
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAALqSmgC/x3MQQqDMBBG4avIrB3IKHbhVaSLYP5pBzWRpEpBv
+ HtDl9/ivYsKsqHQ2FyUcVqxFCukbWh++/gCW6imznWDe4jwckT7sGmA8pbCsaKwU2iQ3kOGnmq
+ 5Z6h9/9fped8/RgDNVmUAAAA=
+X-Change-ID: 20250611-kunit-ifdef-modules-0fefd13ae153
+To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+ Sami Tolvanen <samitolvanen@google.com>, 
+ Daniel Gomez <da.gomez@samsung.com>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749740050; l=828;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=JLpyd2g/Xe7Snc8TZSz2U73JR+zRBfDYm2l2i1X5yzQ=;
+ b=XWVHF8VTdoJM/mSgo4aVnOylh7DnsaPHQ6m/W9id/IzvZjlna/thD6sw9RK/dlNajeAj1CSjS
+ BermlnFdJ+yBemtIP2L8WVwRdD3Z9sXScrW5+34Z0JkngBs9V4d4jwi
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi Prabhakar,
+Code using IS_ENABLED(CONFIG_MODULES) as a C expression may need access
+to the module structure definitions to compile.
+Make sure these structure definitions are always visible.
 
-On Mon, 9 Jun 2025 at 22:37, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Paul Barker <paul.barker.ct@bp.renesas.com>
->
-> Add an initial devicetree file for the Renesas RZ/N2H Evaluation Board
-> (EVK).
->
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Thomas Weißschuh (3):
+      module: move 'struct module_use' to internal.h
+      module: make structure definitions always visible
+      kunit: test: Drop CONFIG_MODULE ifdeffery
 
-Thanks for your patch!
+ include/linux/module.h   | 30 ++++++++++++------------------
+ kernel/module/internal.h |  7 +++++++
+ lib/kunit/test.c         |  8 --------
+ 3 files changed, 19 insertions(+), 26 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250611-kunit-ifdef-modules-0fefd13ae153
 
-
-> --- a/arch/arm64/boot/dts/renesas/Makefile
-> +++ b/arch/arm64/boot/dts/renesas/Makefile
-> @@ -166,6 +166,7 @@ dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h44-rzv2h-evk.dtb
->  dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h48-kakip.dtb
->
->  dtb-$(CONFIG_ARCH_R9A09G077) += r9a09g077m44-rzt2h-evk.dtb
-
-Please insert a blank line here, so group DTBs for the same SoC.
-
-> +dtb-$(CONFIG_ARCH_R9A09G087) += r9a09g087m44-rzn2h-evk.dtb
->
->  dtb-$(CONFIG_ARCH_RCAR_GEN3) += draak-ebisu-panel-aa104xd12.dtbo
->  dtb-$(CONFIG_ARCH_RCAR_GEN3) += salvator-panel-aa104xd12.dtbo
-
-The rest LGTM, so
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-with the above fixed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Best regards,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
