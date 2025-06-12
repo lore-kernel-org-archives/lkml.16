@@ -1,132 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C73723CEE5;
-	Thu, 12 Jun 2025 13:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E7C18FC91;
+	Thu, 12 Jun 2025 13:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736223; cv=none; b=adVWEt6VDHMJ7zHCMYbL2crhzEBQaxnnlaIIHSnkv04yVgbhqx9Du613xuyIL+3H9f1qjJV0X5VCaW1b9m82kbwlKuiMRm2aBjw88zfTo3vX82+qAzDm8AKmHwZktS+5ci0al/ifEAKUgb08ywsIRSSnrzcJ4MrFsHR4iAYRjQ4=
+	t=1749736310; cv=none; b=hiQO59GOY5FbhM02PuA70MkizKIK0d5Ls2Ze2uwbkXaooxvAsBuoRkUxxqLqEZgFpJYzumFsYO8qhZZwagkkYTK1bhLTCxN6Oy28/6yo4CXoOrGUihi22+8D4eCyhvN5ZyhCuq/9kqSy/J7KXa84cN4QuTGPRdZeUE44jKPxR6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736223; c=relaxed/simple;
-	bh=oIBpX/GR/d6iEZePAjLKI7DJKIn8Lix1Fu3jd4gxJUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dh5a9zO2KQH0x01S6jQBxI8B/vx3yP4XZVZIeBtTJcoBSTCAMJGDM8xkSSAJBYBwgv4OvokiIvfgacaylyal0oU1wRqfSmCjtH92G6Qa0IsLT0fJ0X/KEcfjWVctuoEkyytkSEyJ0QdB1/7lN16WLG5sXP2o++usiUL9eh2qs3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jOr7YQ6X; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jOr7YQ6X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749736222; x=1781272222;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oIBpX/GR/d6iEZePAjLKI7DJKIn8Lix1Fu3jd4gxJUI=;
-  b=jOr7YQ6Xu6meBOnkcHsYOTgaYzgLUz5d7E4hcD0RyAg4aRbsaRSaqbwq
-   oEBuIEENSyh88d3AEXa9hhFBx2QQs/2u6C501By8XKh8FXwHycOIlZnAJ
-   qovL20/5+LhK88KBwSuODtVPMA1dhHAYvvymU7s2Q/YMnzaKforeuD0dI
-   reOnOy3U5/0FSh5XBuaKNyU10daToqwW3t1kGBsZFOvMzNK74gIE3q/mu
-   b5M9BZ0RgynhyV2hA8LAJ9LDlZh5bmDL6II6AruIyDEs5fCSb5r45g1Zg
-   5ZlMFv1gZI1AHdI/z/ou2XxbPO/G4b1Hos1ywr4hoLKKf72G9m7mDJ4TG
-   Q==;
-X-CSE-ConnectionGUID: kxVvOc5DQfyPNhzEpc9oLw==
-X-CSE-MsgGUID: QDT2E+GwSkSHkw4XMUjtRw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="54544796"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="54544796"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:50:10 -0700
-X-CSE-ConnectionGUID: IsYavwqjREqHO9+0j/jeVw==
-X-CSE-MsgGUID: fo/ynzeLQK2Ge2thxGeyEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="148019040"
-Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.111.188]) ([10.125.111.188])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:50:08 -0700
-Message-ID: <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
-Date: Thu, 12 Jun 2025 06:50:07 -0700
+	s=arc-20240116; t=1749736310; c=relaxed/simple;
+	bh=Kyg7eb1AAplC4+EEmiu7P/7vwpj2UgJh+0WoDayuqFg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kDLCKcpW8/ILO853GEOH1eBeqZk17k+P4FqijLzko1RD6R8Q7T6loUkuqm9RlGmdTQ//6sYy7C/q7jGWULRvSyl4g2ms28mEeubU0ocZdNcPe88llxuGRwhah0UX/DRnzsujdryWs5UiXt0jhCGv2pFd011C3mIaNfs76zwTBns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e7b7b09887so596817137.1;
+        Thu, 12 Jun 2025 06:51:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749736307; x=1750341107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sU+E14nHPWkzbgTxZjHrHqv/1thIS6lIF8oB6Qh0++4=;
+        b=s5D1PEiq/LuH/pqAnMS+6DGYjYo1qcy6ddzeDDIp2CX6mQlPOqSggCc8AnQamJXSrg
+         FCwka4MyZySqneK+6NgCdLg7uKm/GLR4Rb2k7iEiHhUH852cqIa1LqyeTlZxLzHwxmVV
+         SbhxnlG3obthUDKJCqLtlgh9Pjuf9/27SbWHrBYfx8kSaradQ1ohI7QtXtVp7sNZI6WA
+         Sqxc6JU9gFuAOHFbGN9YkeZeBILiwOELqXTrh1l2c8KjixHEC/gYPZbcjDYp4sBxsxBO
+         7EsdK1/4GGVSh8fjgikKtSzCktQk8996rt56qWRN27Xzrr5yuKNQrXTXWnc4K0gBMFT/
+         DfPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJHTW15742UbZJJEBi44n9ADVsAMjWUw4+ZZLB2peMgd6xQP30S4m5WbDAidbOCsSb2gHHviBxbVBd@vger.kernel.org, AJvYcCVHP1VHuIQlzHGZSsQGZkg1zPOU06voe3p0NGVCb8KqKsA6cBF0P7Huw8+s9CUGcUzaFlMOtnhAUeJrF7Uj@vger.kernel.org, AJvYcCWQeqI1R76kr8Igmhj7w/dnCgRDs1drIyWhaAJLFRblQN0EmW0guKrq98flZkrwkH97m1kmC0mTOYREK8dQSPdsODs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywZdrN3V9St0B9rFzkEGHSEpJZYqPYGnpgBQ9Bt0vyZhlQLPbU
+	xxJTzipE1XhuR8axPqj7tg9Rdj6hn/vq2Qi0+1/tKGn83aOTw5GekKQxgCUgzhEt
+X-Gm-Gg: ASbGncu0+zMSGHaOWPeFDjq9Dw2M4MRl4sKMkW2bAubBanWgH75vpkdfbNbdoCTMrA+
+	kJlQQnHWZJ2ImmYGpgj6w1ST3KuDMTE/UGeQ2qgaAxI7hsxxuWl5YTC7v9XrPgI7AmUB8JZSzS/
+	vDDer4+vs3H4KCgvW0yTBLAQUPMn5QbfTiEhsQMYqcKnbYVx39SPkB2ib8sSAI8TMmBZwBaqSTG
+	0F1GhCu/NHWV03TNIbfSx4zCSAUnjkN73AylaqzGa/lSrrzPzbYY5xNUeIXcYbOn1mkS73eDvZu
+	JIBD77dC4mTbY9Zo5QmDjxbriXxkTyWco7Xogo/YoHUC15c3CpwAVDBRuBraffYDmwnV0xxSeXa
+	izo1Ln5vahtM35wq+SvrA+5sJ
+X-Google-Smtp-Source: AGHT+IFbb1t4T7FuJxbzRzr5OMuz1N/p+RH8WPh5kWXq1AugQkPRBB57PrwIAN1c0vJj10z37Pgt0A==
+X-Received: by 2002:a05:6102:8028:b0:4e6:f86b:143c with SMTP id ada2fe7eead31-4e7ce7fd855mr2685077137.1.1749736306986;
+        Thu, 12 Jun 2025 06:51:46 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7d095851esm232106137.20.2025.06.12.06.51.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 06:51:46 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e773c50385so567969137.0;
+        Thu, 12 Jun 2025 06:51:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUHOMcxC1eQNDW9ijh2LlciEopvd2JxA9FU/9ak7tW1PM/PD2FxIAG0UrFiTQSuV4Qn+l1cOaUvNkUS/X3Vimr8IM0=@vger.kernel.org, AJvYcCWFxeGyN8I7QCrABzu1ualR6zPP2+uRMq4e6uv3VwG1S7Zu4En23uqLoGy9caqQtbC1VUslZz5xrgHr@vger.kernel.org, AJvYcCXWPuggxZMsSoMiEsWUe/Dh0xlbNCvquILGmCvOZG9vT5WoCJvrTf0raMfJ7MBqMQa1EjQeruZOCMCCwHUj@vger.kernel.org
+X-Received: by 2002:a05:6102:2909:b0:4e6:df73:f147 with SMTP id
+ ada2fe7eead31-4e7ce872d4fmr2881027137.11.1749736306438; Thu, 12 Jun 2025
+ 06:51:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] add STATIC_PMD_ZERO_PAGE config option
-To: Pankaj Raghav <p.raghav@samsung.com>,
- Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
- Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
- Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
- x86@kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
- gost.dev@samsung.com, kernel@pankajraghav.com, hch@lst.de
-References: <20250612105100.59144-1-p.raghav@samsung.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250612105100.59144-1-p.raghav@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250528140453.181851-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250528140453.181851-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVa4axB+aKhH18KxK4DVafeix6wn407PEhMxV_6xfpraA@mail.gmail.com> <CA+V-a8stpis6RuFZ8X+g=nnQhQQNJN8X8kpma6kf2Hmi+3hf4w@mail.gmail.com>
+In-Reply-To: <CA+V-a8stpis6RuFZ8X+g=nnQhQQNJN8X8kpma6kf2Hmi+3hf4w@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 15:51:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVEA=agcGwLRvXRX9LCz48YaYT45HL2-nVN10KSjLs3Hw@mail.gmail.com>
+X-Gm-Features: AX0GCFtajsvn3HK0qkSch9g_tEIAAi_atdi1vGvi0U17ZoPSqNBB7DzSH5TlpbM
+Message-ID: <CAMuHMdVEA=agcGwLRvXRX9LCz48YaYT45HL2-nVN10KSjLs3Hw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable
+ USB2.0 support
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/12/25 03:50, Pankaj Raghav wrote:
-> But to use huge_zero_folio, we need to pass a mm struct and the
-> put_folio needs to be called in the destructor. This makes sense for
-> systems that have memory constraints but for bigger servers, it does not
-> matter if the PMD size is reasonable (like in x86).
+Hi Prabhakar,
 
-So, what's the problem with calling a destructor?
+On Thu, 12 Jun 2025 at 15:25, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> On Thu, Jun 12, 2025 at 1:49=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > On Wed, 28 May 2025 at 16:05, Prabhakar <prabhakar.csengg@gmail.com> wr=
+ote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Enable USB2.0 support on the RZ/V2N EVK board, CN2 connector on the E=
+VK
+> > > supports host/function operation.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+> > > +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+> > > @@ -302,6 +317,16 @@ sd1-dat-cmd {
+> > >                         slew-rate =3D <0>;
+> > >                 };
+> > >         };
+> > > +
+> > > +       usb20_pins: usb20 {
+> > > +               ovc {
+> > > +                       pinmux =3D  <RZV2N_PORT_PINMUX(9, 6, 14)>; /*=
+ OVC */
+> >
+> > Any specific reason why OVC needs "bias-pull-up" on RZ/V2H EVK, but
+> > not on RZ/V2N EVK?
+> >
+> On the RZ/V2N EVK for the USB20_OVRCUR pin we have R13110K0603 pullup
+> resistor, this was missing on the earlier version of the RZ/V2H EVK
+> due to which we saw false OC condition (as seen below). Said that the
 
-In your last patch, surely bio_add_folio() can put the page/folio when
-it's done. Is the real problem that you don't want to call zero page
-specific code at bio teardown?
+Thanks, I missed following one branch on the schematics :-(
+
+> actual EVKs for RZ/V2H for which support is being added do have this
+> pullup resistor. After testing I will post a patch to drop the
+> `bias-pull-up` property from the RZ/V2H DTS (thanks for reminding me
+> :-)).
+
+Great, thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
