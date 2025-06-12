@@ -1,140 +1,108 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652AF23D2A3;
-	Thu, 12 Jun 2025 09:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2BB222D9ED;
+	Thu, 12 Jun 2025 09:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749722246; cv=none; b=mJVTKAmj65ZTIKWhHWdZglLPMGYtOTntoILDOSDfSVbriHnZ+j5q/7NZhmRxQPd5LW26rbC3u3C0T5ihAtLSuiuLhw/LEGLMqwK9q+/246QuFYdk0+Fbvg9Uc2B+dasX4Q6LRIGqurN0RDex8yeYd7Quordz0yZIKRpm8DxINsw=
+	t=1749722298; cv=none; b=rg74puPt14FCE24/z0GzDuCAKw0b/4fPSyWc1lkfP6Qv0XN4Pn6RUxkW7AliBMwnjCNkauDS62OOrf3/tXXUz3VHekWEvD1HHZ2cPm9SGGJ4r6JINlrw0PTOxwt+60Oi1dgzirNJyod8pqNeYdb3Qj08kNYZecOw0R+U8Zq0Z5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749722246; c=relaxed/simple;
-	bh=YBA6jnA9sM4kNyLA2idKAgmx5/jFGbrObUJsm+MgpzI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=EGMwoJiPVp3RhFe7fMIDOqcPnTPtC44WM6fM8/vJkttiLflXqu4Jj91mMV+ZfDeCm5rn5KoUoc1QP73n/84uElywmTsKc6TCui4jGsgQ4RZeJD6SK9xY7U/JjU/vcIlBqEN0g4++yzF4yT61wNYGpjkhhHbnfif1Q1xj1YUWsO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lDM0dIjL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749722298; c=relaxed/simple;
+	bh=5lm3CROQoCKhao5Ca1yh00q3aQ56aGBHBbVoD/37i5w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Aep6nx+HiXaeP7DVpy+gRxz8M311au0h4TdiEQ4Q2vyWinogz1umqlybWn27+my1Z05PYxFjmqSJylBmeXFZ2dU2EAv3+YGb4ZF7kBCxnFaqz/d5Y4QthUkbBLbkTjj4rJBtSjik9dEzdlMWlrK9b0ZA0McCUqair4WVf6NRvwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tDJJkjCS; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lDM0dIjL"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C7k3rN011004;
-	Thu, 12 Jun 2025 09:57:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	KV2raVMltn4SFpAF4A6GQbfks1PnBbrURU9IoC05gfg=; b=lDM0dIjLfn75399c
-	6vA2SBAqGmUaKxliuNOradf9dY4vXx9psuNYiGpkkpRVVpXYdtTXHN0R2ezOXubW
-	G8MTyHTGkvg6RSLtKmigaGaZPTczIcpZ6K34v3fucoCUvp0tWYNyvUugeRwKDofN
-	FG0QOFvjHqWuePTN9buR1dc128E68P+3dcvXmBX+El/k9uPctuFZ+rGjbeVABAZl
-	kq6CyrOtMFRi0iG8vZeF3IlpRfIQhBIG+j6x1uCb/CnaNqJlQc8NgshQo1KVeftk
-	YeTowCIpY40Mo0sLFO9lMIANb4eJKWJy02/RAYcFLY8mHTQb9ZvZnwJ3JnwHy5TT
-	KOempA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ekpyrk3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 09:57:17 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55C9vGQE013708
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Jun 2025 09:57:16 GMT
-Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 12 Jun 2025 02:57:11 -0700
-From: Taniya Das <quic_tdas@quicinc.com>
-Date: Thu, 12 Jun 2025 15:25:14 +0530
-Subject: [PATCH v9 10/10] arm64: defconfig: Enable QCS615 clock controllers
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tDJJkjCS"
+Received: from [100.79.224.160] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 91B9A201C768;
+	Thu, 12 Jun 2025 02:57:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 91B9A201C768
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749722295;
+	bh=eV3A+ddBcibHRVaqFJxwXvFIGtWcCdCwh7KjLBme/sQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tDJJkjCSRPy1hYNPAJtUISF1WSrCFZjdUEcEOdGWKAqv01iv5hJcEcllquwSVNAjF
+	 q6us+/HaBIBYi1tNhaYqZ9/ZpX81sTqUj9rNVlp0pkdgFUWydBJs/cT+uNCqPNoGR6
+	 7cUs3sg09Mbn3wLax4jFUWttwF/QfkOeeZy88ftA=
+Message-ID: <42abc705-bdb5-4be0-9fe7-b49d0a0d9507@linux.microsoft.com>
+Date: Thu, 12 Jun 2025 15:27:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86: Fix build warnings about export.h
+To: Zhenghan Cheng <chengzhenghan@uniontech.com>,
+ herbert@gondor.apana.org.au, davem@davemloft.net, peterz@infradead.org,
+ acme@kernel.org, namhyung@kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ rafael@kernel.org, jgross@suse.com, Jason@zx2c4.com, mhiramat@kernel.org,
+ ebiggers@kernel.org, masahiroy@kernel.org
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, lenb@kernel.org,
+ ajay.kaher@broadcom.com, alexey.makhalov@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, ppaalanen@gmail.com,
+ boris.ostrovsky@oracle.com, nathan@kernel.org, nicolas@fjasle.eu,
+ ilpo.jarvinen@linux.intel.com, usamaarif642@gmail.com, ubizjat@gmail.com,
+ dyoung@redhat.com, myrrhperiwinkle@qtmlabs.xyz, guoweikang.kernel@gmail.com,
+ graf@amazon.com, chao.gao@intel.com, chang.seok.bae@intel.com,
+ sohil.mehta@intel.com, vigbalas@amd.com, aruna.ramakrishna@oracle.com,
+ zhangkunbo@huawei.com, fvdl@google.com, gatlin.newhouse@gmail.com,
+ snovitoll@gmail.com, bjohannesmeyer@gmail.com, glider@google.com,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ shivankg@amd.com, peterx@redhat.com, dan.j.williams@intel.com,
+ dave.jiang@intel.com, kevin.brodsky@arm.com, willy@infradead.org,
+ linux@treblig.org, Neeraj.Upadhyay@amd.com, wangyuli@uniontech.com,
+ linux-crypto@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+ Zhenghan Cheng <your_email@example.com>
+References: <20250612093021.7187-1-chengzhenghan@uniontech.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <20250612093021.7187-1-chengzhenghan@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250612-qcs615-mm-v9-clock-controllers-v9-10-b34dc78d6e1b@quicinc.com>
-References: <20250612-qcs615-mm-v9-clock-controllers-v9-0-b34dc78d6e1b@quicinc.com>
-In-Reply-To: <20250612-qcs615-mm-v9-clock-controllers-v9-0-b34dc78d6e1b@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Will Deacon
-	<will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-X-Mailer: b4 0.15-dev-aa3f6
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=JcO8rVKV c=1 sm=1 tr=0 ts=684aa47d cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=AElZlkIX1ip-SmTVEvQA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA3NiBTYWx0ZWRfX4eEC9irIRCCB
- c0GJ/pkCEIfIqhs3M28ZoMazSJqoAZJbws+0H8GsYQzj+z1GhQ/oKmW7oB37oKZTi54qkNC6qGO
- XRwgIscx2lig/Omu40GvFgHeRO96nGKv0+ib3QhGcaUGfBUhHh3eY0IpGevnwbbY06ObiLk+h+K
- RhC3XCQm9lxKXsXgXeX3YkdImowYU2pH8oW23q3u2OJ3jNXHHOeae3yM0puGeHGpHqdySKxTPQc
- v+cqvT9I+9qhyKNj0BGZ9gKtqqU1bAFv6e5PGUDC2m3Abz/BGXtYH/2G9sDoxGK2RNeVa+rEQ/F
- NR9sJNl6kNXwucu2twQnG0IBXev0LcOEcF5rSfmYK7qFq+ZXyro4Oyzf0/i+v++0J503/R9Z6mw
- acfXJCCf31lCoO7COzaFAtF2I6QNm0eqocn3HLkqetdhY1oga8Wzdp0DKL2wkvWFXg2tkuwC
-X-Proofpoint-GUID: vAnuZamaiF99YRnPZgpojiHxJpLaqJmW
-X-Proofpoint-ORIG-GUID: vAnuZamaiF99YRnPZgpojiHxJpLaqJmW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=762 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506120076
 
-Enable the QCS615 display, video, camera and graphics clock controller
-for their respective functionalities on the Qualcomm QCS615 ride
-platform.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
----
- arch/arm64/configs/defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 510e0d0a3397929bb267f558d4c2ace87eb3979b..2f053ef2c84a637a0161edaa0c9c1e19dc4e9c1e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1376,11 +1376,15 @@ CONFIG_MSM_GCC_8998=y
- CONFIG_MSM_MMCC_8998=m
- CONFIG_QCM_GCC_2290=y
- CONFIG_QCM_DISPCC_2290=m
-+CONFIG_QCS_DISPCC_615=m
-+CONFIG_QCS_CAMCC_615=m
- CONFIG_QCS_GCC_404=y
- CONFIG_QCS_GCC_615=y
- CONFIG_QCS_GCC_8300=y
- CONFIG_SC_CAMCC_7280=m
- CONFIG_SA_CAMCC_8775P=m
-+CONFIG_QCS_GPUCC_615=m
-+CONFIG_QCS_VIDEOCC_615=m
- CONFIG_QDU_GCC_1000=y
- CONFIG_SC_CAMCC_8280XP=m
- CONFIG_SC_DISPCC_7280=m
+On 6/12/2025 3:00 PM, Zhenghan Cheng wrote:
+> After commit a934a57a42f64a4 ("scripts/misc-check:
+> check missing #include <linux/export.h> when W=1")
+> and commit 7d95680d64ac8e836c ("scripts/misc-check:
+> check unnecessary #include <linux/export.h> when W=1"),
+> we get some build warnings with W=1,such as:
+> 
+> arch/x86/coco/sev/core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> arch/x86/crypto/aria_aesni_avx2_glue.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> arch/x86/kernel/unwind_orc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> arch/x86/kvm/hyperv.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> arch/x86/events/intel/core.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+> arch/x86/events/zhaoxin/core.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+> arch/x86/kernel/crash.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+> arch/x86/kernel/devicetree.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+> 
+> so fix these build warnings for x86.
+> 
+> Signed-off-by: "Zhenghan Cheng" <chengzhenghan@uniontech.com>
+> Suggested-by: "Huacai Chen" <chenhuacai@loongson.cn>
+> 
 
--- 
-2.34.1
+
+Thanks for sharing.
+
+FYI, I sent a patch to fix these warnings in Hyper-V related drivers
+here:
+https://lore.kernel.org/all/20250611100459.92900-1-namjain@linux.microsoft.com/
+
+Some of the files are common to the ones in your patch.
+
+Regards,
+Naman
+
 
