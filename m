@@ -1,145 +1,306 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC8A21D3EC
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D178F221F06;
+	Thu, 12 Jun 2025 07:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749715106; cv=none; b=gACy1kr0OQ2+yddJSZnawSEnbP3R3UbCCEg5SYvOPk40WCIDdZMoAzWz/WQPXvK+qmM1MnRMjicT6opeEq0hPYqtPTfqcU5lCdvDJFT1/AkR/t/ib/u2jdc7B/zV7vcos0uuYj3H6Ch1/Kz27BihxqCFoukucjeqK7WLSVoKqOY=
+	t=1749715119; cv=none; b=S07VwD3DuqAj1MOobR/2Bpc092jCkI1GD0WVBoQReGirbHwvnnY1MVGuzSFrc+l/qhotuVB3NLD5KxIW4gQPYP2WzRjKkpWyvQuIcUz1bI4SYJVjRN4nCqf0o1Y0xzwRBMvorXqrr9GrUvynhbWdK7UZj33irdE6A9BZipkj1aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749715106; c=relaxed/simple;
-	bh=m7f6LnCqLuKAy3Gi20gsFjFzCCZMcpkuQ8x0mccGp0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PTUJQnyr244fed40ooMyPw3JL4ArB2sd39aIsLp4stLHC8z0C8sKEczAzjZPzNRC/cvUdtebSafg0zEDQEUogAGlJl2e9URHHxmINU/J271mQzBjM9XV8k1dMIryUEFVAWWdP1avAlrGd8dYHiR3O8Vd6pi+99RR6AzYx0Xj69w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=UPRfnn08; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749715119; c=relaxed/simple;
+	bh=Q/fYqZCvH9dT1Qvc5roNWpHv8H4YBjizUbKKbXxx11I=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=DnIl9bgroFP3diB8NpFrCYp7OcLNacwsiFQjhn0t+UDWxabTyJe+JxkitD78sBZFyypFc2B6oeP8PQCz7mF15vXrLs5pVGh9iQW9p8TBazX+uI/j47zctoRNrFcH0JnJnYGVpMZS2m+lEJ030uBzzIGpk/27lyjZXQkWosnwmHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTsLG0eZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UPRfnn08"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 550F6D6;
-	Thu, 12 Jun 2025 09:58:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749715093;
-	bh=m7f6LnCqLuKAy3Gi20gsFjFzCCZMcpkuQ8x0mccGp0w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UPRfnn08AaC2BjPcestxx8Y+JXeyOrA8T1Lw6d1PlwlICAHH1h7h5tf4jxG0SSJBL
-	 a9cyY3jEZW2Jh+uxBf/1/QTOC7alxDptmrpQ8jyosOLizhH3/N4bpifa/DcyqHOnT5
-	 TyxB4wTfemNqGJBkYC00hsQ2Op46CqtDi0QUcVRo=
-Message-ID: <f4e42ca9-d6f2-401b-9a53-d3b41915c6a0@ideasonboard.com>
-Date: Thu, 12 Jun 2025 10:58:17 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTsLG0eZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DB0C4CEEA;
+	Thu, 12 Jun 2025 07:58:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749715116;
+	bh=Q/fYqZCvH9dT1Qvc5roNWpHv8H4YBjizUbKKbXxx11I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QTsLG0eZARQyzjAzzffX1z6L/BruEuDhao1qMkFTSqh5eJ6sHgGMNhdPdsdyn8hT4
+	 J+k2FSKs8qu9S+fJfVzbpkCrYHvKmKNUKnO8kj00OsW16PRZthqRgT6Z7ISJcMH8yS
+	 bigENnkvXEEZp+iYcYQXhwSplS5tMEFDYwlLu6XzSc/IZEkmgv8VVYw5y14qTe/X5/
+	 kAAstWdrzMP1q8o0YCxOZzdsI1Zq3kBlSh+sdUa1NOjjEwsPejj6mzuETPw1/E9nzr
+	 fExfmoBgtBTSwFvyqa9ifnGlLQ1Lc0xGEKVvhiUKCAa5NpWscRN8ec+9xjTZvOXf4W
+	 aTSpumwlDDyoA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm: omapdrm: reduce clang stack usage
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- "Dr. David Alan Gilbert" <linux@treblig.org>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Nathan Chancellor <nathan@kernel.org>
-References: <20250610092737.2641862-1-arnd@kernel.org>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250610092737.2641862-1-arnd@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Thu, 12 Jun 2025 09:58:30 +0200
+Message-Id: <DAKE8OYKXUWH.1NRVGV5IKW7I9@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
+ Lelli" <juri.lelli@redhat.com>, "Vincent Guittot"
+ <vincent.guittot@linaro.org>, "Dietmar Eggemann"
+ <dietmar.eggemann@arm.com>, "Steven Rostedt" <rostedt@goodmis.org>, "Ben
+ Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>, "Valentin
+ Schneider" <vschneid@redhat.com>
+Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
+X-Mailer: aerc 0.20.1
+References: <20250603205416.49281-1-dakr@kernel.org>
+ <20250603205416.49281-2-dakr@kernel.org>
+In-Reply-To: <20250603205416.49281-2-dakr@kernel.org>
 
-Hi,
+On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
+> Implement a minimal abstraction for the completion synchronization
+> primitive.
+>
+> This initial abstraction only adds complete_all() and
+> wait_for_completion(), since that is what is required for the subsequent
+> Devres patch.
+>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-On 10/06/2025 12:27, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The thread sanitizer makes the stack usage explode from extra variable
-> spills in dispc_runtime_resume:
-> 
-> drivers/gpu/drm/omapdrm/dss/dispc.c:4735:27: error: stack frame size (1824) exceeds limit (1280) in 'dispc_runtime_resume' [-Werror,-Wframe-larger-than]
-> 
-> I could not figure out what exactly is going on here, but I see that
-> whenever dispc_restore_context() is not inlined, that function
-> and its caller shrink below 900 bytes combined of stack usage.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+I have a couple comments on the documentation, but the rest seems good.
+So with those fixed:
+
+Reviewed-by: Benno Lossin <lossin@kernel.org>
+
 > ---
->  drivers/gpu/drm/omapdrm/dss/dispc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
-> index 533f70e8a4a6..cf055815077c 100644
-> --- a/drivers/gpu/drm/omapdrm/dss/dispc.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
-> @@ -524,7 +524,7 @@ static void dispc_save_context(struct dispc_device *dispc)
->  	DSSDBG("context saved\n");
->  }
->  
-> -static void dispc_restore_context(struct dispc_device *dispc)
-> +static noinline_for_stack void dispc_restore_context(struct dispc_device *dispc)
->  {
->  	int i, j;
->  
+>  rust/bindings/bindings_helper.h |   1 +
+>  rust/helpers/completion.c       |   8 +++
+>  rust/helpers/helpers.c          |   1 +
+>  rust/kernel/sync.rs             |   2 +
+>  rust/kernel/sync/completion.rs  | 111 ++++++++++++++++++++++++++++++++
+>  5 files changed, 123 insertions(+)
+>  create mode 100644 rust/helpers/completion.c
+>  create mode 100644 rust/kernel/sync/completion.rs
+>
+> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_hel=
+per.h
+> index a5a6fb45d405..9da3fe89295c 100644
+> --- a/rust/bindings/bindings_helper.h
+> +++ b/rust/bindings/bindings_helper.h
+> @@ -17,6 +17,7 @@
+>  #include <linux/blk_types.h>
+>  #include <linux/blkdev.h>
+>  #include <linux/clk.h>
+> +#include <linux/completion.h>
+>  #include <linux/configfs.h>
+>  #include <linux/cpu.h>
+>  #include <linux/cpufreq.h>
+> diff --git a/rust/helpers/completion.c b/rust/helpers/completion.c
+> new file mode 100644
+> index 000000000000..b2443262a2ae
+> --- /dev/null
+> +++ b/rust/helpers/completion.c
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/completion.h>
+> +
+> +void rust_helper_init_completion(struct completion *x)
+> +{
+> +	init_completion(x);
+> +}
+> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> index 805307018f0e..7a5c520be8cb 100644
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@ -13,6 +13,7 @@
+>  #include "build_assert.c"
+>  #include "build_bug.c"
+>  #include "clk.c"
+> +#include "completion.c"
+>  #include "cpufreq.c"
+>  #include "cpumask.c"
+>  #include "cred.c"
+> diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+> index 36a719015583..c23a12639924 100644
+> --- a/rust/kernel/sync.rs
+> +++ b/rust/kernel/sync.rs
+> @@ -10,6 +10,7 @@
+>  use pin_init;
+> =20
+>  mod arc;
+> +pub mod completion;
+>  mod condvar;
+>  pub mod lock;
+>  mod locked_by;
+> @@ -17,6 +18,7 @@
+>  pub mod rcu;
+> =20
+>  pub use arc::{Arc, ArcBorrow, UniqueArc};
+> +pub use completion::Completion;
+>  pub use condvar::{new_condvar, CondVar, CondVarTimeoutResult};
+>  pub use lock::global::{global_lock, GlobalGuard, GlobalLock, GlobalLockB=
+ackend, GlobalLockedBy};
+>  pub use lock::mutex::{new_mutex, Mutex, MutexGuard};
+> diff --git a/rust/kernel/sync/completion.rs b/rust/kernel/sync/completion=
+.rs
+> new file mode 100644
+> index 000000000000..4ec4c2aa73a5
+> --- /dev/null
+> +++ b/rust/kernel/sync/completion.rs
+> @@ -0,0 +1,111 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Completion support.
+> +//!
+> +//! Reference: <https://docs.kernel.org/scheduler/completion.html>
+> +//!
+> +//! C header: [`include/linux/completion.h`](srctree/include/linux/compl=
+etion.h)
+> +
+> +use crate::{bindings, prelude::*, types::Opaque};
+> +
+> +/// Synchronization primitive to signal when a certain task has been com=
+pleted.
+> +///
+> +/// The [`Completion`] synchronization primitive signales when a certain=
+ task has been completed by
+> +/// waking up other tasks that can queue themselves up to wait for the [=
+`Completion`] to be
 
-While I don't think this causes any harm, but... What's going on here?
-If I compile with gcc (x86 or arm), I see stack usage in few hundreds of
-bytes. If I compile with LLVM=1, the stack usage jumps to over a thousand.
+s/can queue themselves/have been queued/
 
-Is clang just broken? I don't see anything special with
-dispc_restore_context() or dispc_runtime_resume(), so is this same thing
-happening all around the kernel, and we need to sprinkle noinlines
-everywhere?
+> +/// completed.
+> +///
+> +/// # Examples
+> +///
+> +/// ```
+> +/// use kernel::sync::{Arc, Completion};
+> +/// use kernel::workqueue::{self, impl_has_work, new_work, Work, WorkIte=
+m};
+> +///
+> +/// #[pin_data]
+> +/// struct MyTask {
+> +///     #[pin]
+> +///     work: Work<MyTask>,
 
-Or do we get some extra debugging feature enabled only on clang with
-allmodconfig, and that is eating the stack?
+Can we maybe add a dummy value like `Mutex<i32>` here that the task
+changes, so we can print the value of it below (after waiting for the
+task)?
 
- Tomi
+> +///     #[pin]
+> +///     done: Completion,
+> +/// }
+> +///
+> +/// impl_has_work! {
+> +///     impl HasWork<Self> for MyTask { self.work }
+> +/// }
+> +///
+> +/// impl MyTask {
+> +///     fn new() -> Result<Arc<Self>> {
+> +///         let this =3D Arc::pin_init(pin_init!(MyTask {
+> +///             work <- new_work!("MyTask::work"),
+> +///             done <- Completion::new(),
+> +///         }), GFP_KERNEL)?;
+> +///
+> +///         let _ =3D workqueue::system().enqueue(this.clone());
+> +///
+> +///         Ok(this)
+> +///     }
+> +///
+> +///     fn wait_for_completion(&self) {
+> +///         self.done.wait_for_completion();
+> +///
+> +///         pr_info!("Completion: task complete\n");
+> +///     }
+> +/// }
+> +///
+> +/// impl WorkItem for MyTask {
+> +///     type Pointer =3D Arc<MyTask>;
+> +///
+> +///     fn run(this: Arc<MyTask>) {
+> +///         // process this task
+> +///         this.done.complete_all();
+> +///     }
+> +/// }
+> +///
+> +/// let task =3D MyTask::new()?;
+> +/// task.wait_for_completion();
+> +/// # Ok::<(), Error>(())
+> +/// ```
+> +#[pin_data]
+> +pub struct Completion {
+> +    #[pin]
+> +    inner: Opaque<bindings::completion>,
+> +}
+> +
+> +impl Completion {
+> +    /// Create an initializer for a new [`Completion`].
+> +    pub fn new() -> impl PinInit<Self> {
+> +        pin_init!(Self {
+> +            inner <- Opaque::ffi_init(|slot: *mut bindings::completion| =
+{
+> +                // SAFETY: `slot` is a valid pointer to an uninitialized=
+ `struct completion`.
+> +                unsafe { bindings::init_completion(slot) };
+> +            }),
+> +        })
+> +    }
+> +
+> +    fn as_raw(&self) -> *mut bindings::completion {
+> +        self.inner.get()
+> +    }
+> +
+> +    /// Signal all tasks waiting on this completion.
+> +    ///
+> +    /// This method wakes up all tasks waiting on this completion; after=
+ this operation the
+> +    /// completion is permanently done.
+> +    pub fn complete_all(&self) {
+> +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct compl=
+etion`.
+> +        unsafe { bindings::complete_all(self.as_raw()) };
+> +    }
+> +
+> +    /// Wait for completion of a task.
+> +    ///
+> +    /// This method waits for the completion of a task; it is not interr=
+uptible and there is no
 
+I personally would write:
+
+s/waits for/blocks on/
+
+But if `wait` is the more common kernel term then let's go with your
+version instead.
+
+> +    /// timeout.
+
+I would mention the `complete_all` method above.
+
+> +    pub fn wait_for_completion(&self) {
+> +        // SAFETY: `self.as_raw()` is a pointer to a valid `struct compl=
+etion`.
+> +        unsafe { bindings::wait_for_completion(self.as_raw()) };
+> +    }
+> +}
+> +
+> +// SAFETY: `Completion` is safe to be send to any task.
+> +unsafe impl Send for Completion {}
+> +
+> +// SAFETY: `Completion` is safe to be accessed concurrently.
+> +unsafe impl Sync for Completion {}
+
+Please move these to the struct definition, that way one can more easily
+see them when looking at the code.
+
+---
+Cheers,
+Benno
