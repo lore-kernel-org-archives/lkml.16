@@ -1,106 +1,314 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E183B1A3A80;
-	Thu, 12 Jun 2025 21:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4BB79E1;
+	Thu, 12 Jun 2025 21:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749764413; cv=none; b=g9zuGuLXag7AF8Zw+zfC9MtwDNsTiphmtC+OS1rQKd0vUO3QRoBx4Ir47ifpA8n/c6Ay/aAz7M9XQGT9mJCThXToJagfJBV5UxgF8xaoJhCcMeL1pmBYc2N1T8jVMpNiE9zn672gheaDZEvDGFJ6fRi13fqQ6XjY48Z4VsAwXhs=
+	t=1749764604; cv=none; b=iX+DBXZ80WSsrYEIXtPLHBR1Sj9nXSDPnRZkrsnopi2kjyNSnYgCefN4+EsJ5XmG2ZQtEG388/brEgt/ePY6VlkNguYjHRtP+ZqwVAxDjjreFNGBu7UQPNy77WuaJd5hGA0bAeeo5I13X1zyPlQwHiRZ6vcVN+wv/1W6qqksxko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749764413; c=relaxed/simple;
-	bh=RPvF7yyUWcSy2PX6aAivYbB49HGUVy/mo5k0lxAWZ2Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QCXH3srJ3fPbDVfN2ouoOcIr5a3vfHIpUEEz3MtHPuOByxGGSChm1nVkr2RIxPOxO3z3UGoFTw5CSDBKEZnP1ZEEUn22QJckzCY/xEubAZVQIUjzPxv6aMwAdnNf9lHWE0YckXT1fTmVJGfalrxlrr3AdEO6m+FsY43IIHFwoMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VXoFXJaN; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1749764604; c=relaxed/simple;
+	bh=p33m3E3cKoTgqwe0eGO0wIR/NLLZAKnQ2C+i2252anA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uY0LE+gmCHLc4O7lLP2/y40QK2vJNJgolrPVbgT+ca+1SBTpgWpCBN/rQv6yWohJ0UiIGsTeBr13YXSFRjDOgGa3RFcpb5kE4bvlW/LgpE5A/9M5tEs+GDwb/LPY6V0vXrhcFffT8P3581egb2Ud3cYLGaUeo8UkX2KmtaU9RlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DE5H4xbI; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXoFXJaN"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso942548f8f.2;
-        Thu, 12 Jun 2025 14:40:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DE5H4xbI"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55365c63fa5so1255135e87.1;
+        Thu, 12 Jun 2025 14:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749764410; x=1750369210; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RPvF7yyUWcSy2PX6aAivYbB49HGUVy/mo5k0lxAWZ2Q=;
-        b=VXoFXJaNxwi3TBWJc3wR/S7H+9PEx0qX+cXQH/HebyrEPXcgTT+SuljHCFR0f/6wl6
-         kPmGsg3f1GKM588aRNDKP0/knMXKpucwVTXJwfSJmxptFd2u7Kp2WVoyewkJcxAqYUOl
-         kzQDeo6Ky1vHJHgcK3Rwlv4MgHoLEKBfIwJPyEy3LukXj60ASOXS2Lf/I8MRozt4mdXy
-         8jzl0LpPEqpzXdNJHxDIvS38gMRMBS8iuI6IYDm9LXexuc8jjCSEMdGg51mSNi5yFyq/
-         hjhcVsv6FhXpeQ2OKwO87gTQGnKcYpXqPBBU3ACfCdgEy3pAKcvfLbzyBkaoUloyXCVy
-         dr2Q==
+        d=gmail.com; s=20230601; t=1749764600; x=1750369400; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AEWzg4Rut5bf/yTovcaRoJHduEB/xJB76yd6WDJanMo=;
+        b=DE5H4xbIIzbnZMezG1kiVCrOtPCttwEWpEccOBFzqctUwqZn51T4uOXE1At02RN5j6
+         pWm2R7Ywz1GpLSCjeW8B+vBOBBTgU/cONShz7pdmawEolufF/DHNlt43usadINjj4+V3
+         5v74nO4gRxSU4/nfcVXmaGjZDgeQgaCQy2OLHnlDGXEBVufeTb+g4NLYAM6fgBX0o6A4
+         DL5MgwH4i4tHDzZX7ZA22LT3hdzEG7aGbEztmkmIAsC89sd7iaW80eMuQL+WXywe0I2V
+         EG3s9mHe9JN0MTnDkS8pOA7wie+JZc0hjdqxxKHPdaHDnEJYkzXZCnavqUdTxfyojevf
+         BQKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749764410; x=1750369210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RPvF7yyUWcSy2PX6aAivYbB49HGUVy/mo5k0lxAWZ2Q=;
-        b=Azu6sgH86Qh/pSMjPUSOWJ++ga4AvP8u23VW689ki0bcrsoFRdxd8tnXJylC2OZUYY
-         onRv4zrjyAok+j23N4X28cA2nh79D86CxFzNCpx0Gy0vFuIXvw7646Nqg4AKXfLZBX/I
-         +i+JMr7J2uSb1FxYffJzJ1T5r7G+X7JHL7gb1F+3Ijfx98EHx3IXGw1F/PZ1wvF1jTgS
-         k/bmMWr4Gf08pGX64oOtcuWZN+973Quo+eMupA53Yg4V6YOg147jVAGyKTvYZT23YehO
-         JOIIyYFQov3xaypaWUJTe24IXOYXLpB/arLx7lwBvQVHW4fQklqw+drTRl8KrwnKrT11
-         xR0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVUVN+8AniNsXCPSRaQSaTSZS8HuGuGT+3PbC9BNXvmlyy2rFf4mzibY/bs0I6HbZDvuMiLeO/fUJGtbui4QMtEhdpw@vger.kernel.org, AJvYcCVV8Zacolv16RTqa6Eom2E+LBpnLO77zU0Vm+dIXzQIV6hbDSoH4QBoDVJNgmue3WTN5Sg=@vger.kernel.org, AJvYcCVk/WQnV53VKAapuTv+9SHEZsZ/XaVPHqUmkrUkWDuJzS0geyqE848Lu98A9dm55CvLVU+jZdbPwqZ0Qb9/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQpmpgfOdMYZns9k2uEzqPvFKIRgXFs6P4c3RmX/RVRA8vjpaM
-	QYC4elmxkZQ4LjR4noXXiOU3Rvz4qN//Vvwcue1BLAQrmjg0wiFl/GelwHJciR2MC9I/x24/LXN
-	Oh3hBtSAf8XZDuw7XteMPqzXf84vAwJY=
-X-Gm-Gg: ASbGncteFCl7pGWXU83z74gFi231MmGZqCMsF/ohIaTn08/1TypBpitgKeCn09Cx264
-	NafCqMbTjarcQqfMz6ZCN3i9uSMi7KH7tCVsF4beCs/teiHLIkLCk1jp4BU7USvgOOJOKwILqo3
-	US4I0Vwp8pc6ugTKCEL3r8gh74we1T6SDotsCYiQBaJMGIwLJKiTJla0K9TyDUlZ7ZiZu4/Ymy
-X-Google-Smtp-Source: AGHT+IFeYr6ctux/zy8hwjaabSEzMUj9d1MyId/RpAWfmzJWBK2rMfrirzJHHaDH38PFMbuabdFgusD5cVGmmO5u0JE=
-X-Received: by 2002:a05:6000:3108:b0:3a5:52b2:fa65 with SMTP id
- ffacd0b85a97d-3a568655e36mr685844f8f.5.1749764410108; Thu, 12 Jun 2025
- 14:40:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749764600; x=1750369400;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AEWzg4Rut5bf/yTovcaRoJHduEB/xJB76yd6WDJanMo=;
+        b=djg6txEhpOGBc0hth31yC8rzCefN2oFlTBEkSHQvRFxsl+TBRMftzwDsBR1wxLD+R+
+         FOC6wojWRzlOThRAsK2rUfeAgPvT47zDDL0ofquL92dABpJJvVT3imUcL+W/uifWte9O
+         ncsE8CjNdn+IrKktw7/MBHxBPty1pC+TpA+HktRx2+R35acGm8hNi5zQKcCVPIMok6uI
+         ZFttwc9TDnG6+1PcEFbO+sShD6/JVKw+RtM0bASm/INl7jzNTy/Z+9p0djtOZtIB4bHO
+         LhDCr3athbJ1QDo++PO4LtITlf1ZXikpUcXYJUcfyGhN0G68yV2LEZJzmjAY6z5IShr8
+         ntbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXzR0r1/7fp2XxW9YCOpP7kJI2svR5xN88sWs+NhlBwJu93iAXVAa9/KOsyqvRHp1RPVsOEWMdbwj7B5bU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+a7XksJeHbxd0yXxOhOpJf6HZvuVWX3RFY5bUWOxyrdUd8gaT
+	QYj6+KcCkiv5jaPCrvO/B9hocZJsioAxQeJ0XVKn3+Gg9xp8OgNk6Gww
+X-Gm-Gg: ASbGncs5ksoMPe6f+t8aKgrdPhgVwX0XRWPIrTmxQUUrqxmFwRiWeQpbICBuI+Ciaph
+	LESozwUgfyYJoUS7xbW5T5hLrHHQ/h4i9TTlK7a/O8WVPW0nh0W8LefDKf7oV9x4bwea+K3+ke6
+	y1+599LhnmpKXtAlYBZq10JhJnPiMN/mHOMda0HKQHcaWg3q/KVrBK17/HLyHppyw60NQrPeTWf
+	hWequNSfXtHDIwD0kebyIpnrEpt/cyXr6Zl+t0IEiwSHf5pzQfJbGHiTRn5O7koy3NcIs7UWXoH
+	QhY3GLABqltYpV36x0ayq+fSonnt30IJZ5/E1anh460Q/EObnddRmWLucZsFM/SYyr8JanCUfrp
+	A5vqidIwSJZTQ
+X-Google-Smtp-Source: AGHT+IFWH8RiieHbgsmFZAD7atmeam6vayBGNyDMY8+PUHvXu0NqGXEHE+OngqMpTMJ86irE8ezQcA==
+X-Received: by 2002:a05:6512:4004:b0:553:2874:8ef5 with SMTP id 2adb3069b0e04-553af941b23mr190814e87.16.1749764600183;
+        Thu, 12 Jun 2025 14:43:20 -0700 (PDT)
+Received: from SC-WS-02452.corp.sbercloud.ru ([37.78.250.67])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1f7951sm228972e87.227.2025.06.12.14.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 14:43:19 -0700 (PDT)
+From: Sergey Bashirov <sergeybashirov@gmail.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konstantin Evtushenko <koevtushenko@yandex.com>,
+	Sergey Bashirov <sergeybashirov@gmail.com>
+Subject: [PATCH v3] nfsd: Use correct error code when decoding extents
+Date: Fri, 13 Jun 2025 00:42:49 +0300
+Message-ID: <20250612214303.35782-1-sergeybashirov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611154859.259682-1-chen.dylane@linux.dev> <CAEf4Bzbn=RVhMOR7RapYwi+s8gbVS=1msOuZ7MhPvgz8zHiE9w@mail.gmail.com>
-In-Reply-To: <CAEf4Bzbn=RVhMOR7RapYwi+s8gbVS=1msOuZ7MhPvgz8zHiE9w@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 12 Jun 2025 14:39:58 -0700
-X-Gm-Features: AX0GCFtP9Jmz1JjocGS_Azx6COZBhnw5DjFCQGuhbAiJJGtlvApnraG4ttP7qBU
-Message-ID: <CAADnVQJ8cVi4KyJqWgEfyWYs+zSYQ73PevrNszPkisrdPSjYMg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: clear user buf when bpf_d_path failed
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Tao Chen <chen.dylane@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 12, 2025 at 2:29=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Wed, Jun 11, 2025 at 8:49=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> =
-wrote:
-> >
-> > The bpf_d_path() function may fail. If it does,
-> > clear the user buf, like bpf_probe_read etc.
-> >
->
-> But that doesn't mean we *have to* do memset(0) for bpf_d_path(),
-> though. Especially given that path buffer can be pretty large (4KB).
->
-> Is there an issue you are trying to address with this, or is it more
-> of a consistency clean up? Note, that more or less recently we made
-> this zero filling behavior an option with an extra flag
-> (BPF_F_PAD_ZEROS) for newer APIs. And if anything, bpf_d_path() is
-> more akin to variable-sized string probing APIs rather than
-> fixed-sized bpf_probe_read* family.
+Update error codes in decoding functions of block and scsi layout
+drivers to match the core nfsd code. NFS4ERR_EINVAL means that the
+server was able to decode the request, but the decoded values are
+invalid. Use NFS4ERR_BADXDR instead to indicate a decoding error.
+And ENOMEM is changed to nfs code NFS4ERR_DELAY.
 
-All old helpers had this BPF_F_PAD_ZEROS behavior
-(or rather should have had).
-So it makes sense to zero in this helper too for consistency.
-I don't share performance concerns. This is an error path.
+Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+---
+Changes in v3:
+ - Add nfserr_delay define
+ - Return number of iomaps and nfserror as separate values
+
+ fs/nfsd/blocklayout.c    | 20 ++++++-----
+ fs/nfsd/blocklayoutxdr.c | 71 +++++++++++++++++++++++++++++++---------
+ fs/nfsd/blocklayoutxdr.h |  8 ++---
+ fs/nfsd/nfsd.h           |  1 +
+ 4 files changed, 73 insertions(+), 27 deletions(-)
+
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index 08a20e5bcf7f..19078a043e85 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -178,11 +178,13 @@ nfsd4_block_proc_layoutcommit(struct inode *inode,
+ {
+ 	struct iomap *iomaps;
+ 	int nr_iomaps;
++	__be32 nfserr;
+ 
+-	nr_iomaps = nfsd4_block_decode_layoutupdate(lcp->lc_up_layout,
+-			lcp->lc_up_len, &iomaps, i_blocksize(inode));
+-	if (nr_iomaps < 0)
+-		return nfserrno(nr_iomaps);
++	nfserr = nfsd4_block_decode_layoutupdate(lcp->lc_up_layout,
++			lcp->lc_up_len, &iomaps, &nr_iomaps,
++			i_blocksize(inode));
++	if (nfserr != nfs_ok)
++		return nfserr;
+ 
+ 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
+ }
+@@ -316,11 +318,13 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode,
+ {
+ 	struct iomap *iomaps;
+ 	int nr_iomaps;
++	__be32 nfserr;
+ 
+-	nr_iomaps = nfsd4_scsi_decode_layoutupdate(lcp->lc_up_layout,
+-			lcp->lc_up_len, &iomaps, i_blocksize(inode));
+-	if (nr_iomaps < 0)
+-		return nfserrno(nr_iomaps);
++	nfserr = nfsd4_scsi_decode_layoutupdate(lcp->lc_up_layout,
++			lcp->lc_up_len, &iomaps, &nr_iomaps,
++			i_blocksize(inode));
++	if (nfserr != nfs_ok)
++		return nfserr;
+ 
+ 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
+ }
+diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
+index ce78f74715ee..669ff8e6e966 100644
+--- a/fs/nfsd/blocklayoutxdr.c
++++ b/fs/nfsd/blocklayoutxdr.c
+@@ -112,34 +112,54 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+ 	return 0;
+ }
+ 
+-int
++/**
++ * nfsd4_block_decode_layoutupdate - decode the block layout extent array
++ * @p: pointer to the xdr data
++ * @len: number of bytes to decode
++ * @iomapp: pointer to store the decoded extent array
++ * @nr_iomapsp: pointer to store the number of extents
++ * @block_size: alignment of extent offset and length
++ *
++ * This function decodes the opaque field of the layoutupdate4 structure
++ * in a layoutcommit request for the block layout driver. The field is
++ * actually an array of extents sent by the client. It also checks that
++ * the file offset, storage offset and length of each extent are aligned
++ * by @block_size.
++ *
++ * Return values:
++ *   %nfs_ok: Successful decoding, @iomapp and @nr_iomapsp are valid
++ *   %nfserr_bad_xdr: The encoded array in @p is invalid
++ *   %nfserr_inval: An unaligned extent found
++ *   %nfserr_delay: Failed to allocate memory for @iomapp
++ */
++__be32
+ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+-		u32 block_size)
++		int *nr_iomapsp, u32 block_size)
+ {
+ 	struct iomap *iomaps;
+ 	u32 nr_iomaps, i;
+ 
+ 	if (len < sizeof(u32)) {
+ 		dprintk("%s: extent array too small: %u\n", __func__, len);
+-		return -EINVAL;
++		return nfserr_bad_xdr;
+ 	}
+ 	len -= sizeof(u32);
+ 	if (len % PNFS_BLOCK_EXTENT_SIZE) {
+ 		dprintk("%s: extent array invalid: %u\n", __func__, len);
+-		return -EINVAL;
++		return nfserr_bad_xdr;
+ 	}
+ 
+ 	nr_iomaps = be32_to_cpup(p++);
+ 	if (nr_iomaps != len / PNFS_BLOCK_EXTENT_SIZE) {
+ 		dprintk("%s: extent array size mismatch: %u/%u\n",
+ 			__func__, len, nr_iomaps);
+-		return -EINVAL;
++		return nfserr_bad_xdr;
+ 	}
+ 
+ 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+ 	if (!iomaps) {
+ 		dprintk("%s: failed to allocate extent array\n", __func__);
+-		return -ENOMEM;
++		return nfserr_delay;
+ 	}
+ 
+ 	for (i = 0; i < nr_iomaps; i++) {
+@@ -178,22 +198,42 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 	}
+ 
+ 	*iomapp = iomaps;
+-	return nr_iomaps;
++	*nr_iomapsp = nr_iomaps;
++	return nfs_ok;
+ fail:
+ 	kfree(iomaps);
+-	return -EINVAL;
++	return nfserr_inval;
+ }
+ 
+-int
++/**
++ * nfsd4_scsi_decode_layoutupdate - decode the scsi layout extent array
++ * @p: pointer to the xdr data
++ * @len: number of bytes to decode
++ * @iomapp: pointer to store the decoded extent array
++ * @nr_iomapsp: pointer to store the number of extents
++ * @block_size: alignment of extent offset and length
++ *
++ * This function decodes the opaque field of the layoutupdate4 structure
++ * in a layoutcommit request for the scsi layout driver. The field is
++ * actually an array of extents sent by the client. It also checks that
++ * the offset and length of each extent are aligned by @block_size.
++ *
++ * Return values:
++ *   %nfs_ok: Successful decoding, @iomapp and @nr_iomapsp are valid
++ *   %nfserr_bad_xdr: The encoded array in @p is invalid
++ *   %nfserr_inval: An unaligned extent found
++ *   %nfserr_delay: Failed to allocate memory for @iomapp
++ */
++__be32
+ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+-		u32 block_size)
++		int *nr_iomapsp, u32 block_size)
+ {
+ 	struct iomap *iomaps;
+ 	u32 nr_iomaps, expected, i;
+ 
+ 	if (len < sizeof(u32)) {
+ 		dprintk("%s: extent array too small: %u\n", __func__, len);
+-		return -EINVAL;
++		return nfserr_bad_xdr;
+ 	}
+ 
+ 	nr_iomaps = be32_to_cpup(p++);
+@@ -201,13 +241,13 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 	if (len != expected) {
+ 		dprintk("%s: extent array size mismatch: %u/%u\n",
+ 			__func__, len, expected);
+-		return -EINVAL;
++		return nfserr_bad_xdr;
+ 	}
+ 
+ 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+ 	if (!iomaps) {
+ 		dprintk("%s: failed to allocate extent array\n", __func__);
+-		return -ENOMEM;
++		return nfserr_delay;
+ 	}
+ 
+ 	for (i = 0; i < nr_iomaps; i++) {
+@@ -229,8 +269,9 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 	}
+ 
+ 	*iomapp = iomaps;
+-	return nr_iomaps;
++	*nr_iomapsp = nr_iomaps;
++	return nfs_ok;
+ fail:
+ 	kfree(iomaps);
+-	return -EINVAL;
++	return nfserr_inval;
+ }
+diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
+index 4e28ac8f1127..15b3569f3d9a 100644
+--- a/fs/nfsd/blocklayoutxdr.h
++++ b/fs/nfsd/blocklayoutxdr.h
+@@ -54,9 +54,9 @@ __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+ 		const struct nfsd4_getdeviceinfo *gdp);
+ __be32 nfsd4_block_encode_layoutget(struct xdr_stream *xdr,
+ 		const struct nfsd4_layoutget *lgp);
+-int nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+-		u32 block_size);
+-int nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+-		u32 block_size);
++__be32 nfsd4_block_decode_layoutupdate(__be32 *p, u32 len,
++		struct iomap **iomapp, int *nr_iomapsp, u32 block_size);
++__be32 nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len,
++		struct iomap **iomapp, int *nr_iomapsp, u32 block_size);
+ 
+ #endif /* _NFSD_BLOCKLAYOUTXDR_H */
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 1bfd0b4e9af7..3ffd2cac10ad 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -283,6 +283,7 @@ void		nfsd_lockd_shutdown(void);
+ #define	nfserr_cb_path_down	cpu_to_be32(NFSERR_CB_PATH_DOWN)
+ #define	nfserr_locked		cpu_to_be32(NFSERR_LOCKED)
+ #define	nfserr_wrongsec		cpu_to_be32(NFSERR_WRONGSEC)
++#define nfserr_delay			cpu_to_be32(NFS4ERR_DELAY)
+ #define nfserr_badiomode		cpu_to_be32(NFS4ERR_BADIOMODE)
+ #define nfserr_badlayout		cpu_to_be32(NFS4ERR_BADLAYOUT)
+ #define nfserr_bad_session_digest	cpu_to_be32(NFS4ERR_BAD_SESSION_DIGEST)
+-- 
+2.43.0
+
