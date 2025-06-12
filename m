@@ -1,79 +1,69 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9196230BD0;
-	Thu, 12 Jun 2025 10:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9787523027C
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723040; cv=none; b=JyE1HDAttSB0iDslIBNQBrpcNwX7MGYTE4QBZzfxF2D2W7RjagMbuYC+fMdltFs4eHYHjbaM3+IN4VYdw6ApV6PiwlWh8GdR4UDSxclnbdNUexuKhY8ZkiXta4yLY7Ciwy54oWAk79SxI+AYqucfMFh0HQSuoSW6Isne4LUyPS4=
+	t=1749723083; cv=none; b=lg2WzGri6oW0LxethLdVbhT3jd0G0RqMHWBhPn1k13riH6zh9eBhq76hBLqysuVHRP/dsSChgPfqswZ75EVHVj8dlaaAGSJthu1lfmfbm7SEPgnyQzMNtooeTBGP5UUEIDAAFhsW+/o2KiistI3dtp4XuogvHsBpXo3tJUPzj10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723040; c=relaxed/simple;
-	bh=DF3s7CDEfVSdY/c3E2qn4/BepOIfr1L9K/VwKfaLyCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4zEHe2/sYhOWqQ7ojtUV8X21Q4rjgK/mt2XAHKbf8bvUq2OVyL64VLeCuqiYHQPaXsHiTnZ5pE/AK8rdqM1ViRU7kmXMCfHlUf4Rnnpo6IE3ie3IG4JrhhxoKXMERC2C2y1F/YCI2ybVfryvE8OhwLa2g7/kSmgMCWoMIrW5mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a9PW3aKO; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749723083; c=relaxed/simple;
+	bh=0e4k4P4C/MFFrOkfxYQtEsZCb9pEL2JyFtAlMCvfg18=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=azmq5N8vq1LtZ1JUnIFlST56pioNFm/vOoNb7K4sbRrdfL6woe9yFHvwRx5YkF5PR28Bo+4Rd6TfcJ8mDeNIhxf4Kr9UWe6B3Hh6kS96PAeOzuQREg6ICDjb6JLSMKTZ+kTANTAVoA9Lq/1SfjWSXQB7UI8BLSwEoppxu9BRzKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3GxPco8F; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VtKoCqHS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3GxPco8F; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VtKoCqHS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9PW3aKO"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b26d7ddbfd7so748760a12.0;
-        Thu, 12 Jun 2025 03:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749723038; x=1750327838; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Od+pGMVaUocwgiaa7SUEUwfatBuJRDmXSED8IyxGGqQ=;
-        b=a9PW3aKOofPs5mcApsFKc3ofGrx+jM/XpIidoHhxAaq+WC8T6g7Rew3zp4iRI0l7ZH
-         cYc2iKUDbo4F0vaD19mDXYgnGfPU19KmxuEENUHxD0H5inGIB3UxlTllP3/8lg+L3UM4
-         7IEMvojkm+881OVrr2NSwN1RZfNCGXLSt8/Ft/bw8r0zexVATUZAotq5vf0yor+Ja9s2
-         +x6LKmtjMckqZGNvWIcrjOr8ReYmN5i602fxksnanY7kp/E4yF8386pGeB+AsPI7Ig52
-         ePZaxX8YTRYOOCFrn4IXVweiXz0LnTbSvxWYAmhoQSJ8O3A+jlTXsOd+L1nQM1N97xDV
-         dhMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749723038; x=1750327838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Od+pGMVaUocwgiaa7SUEUwfatBuJRDmXSED8IyxGGqQ=;
-        b=I1stqGKJs9hZgi5t7I6Ocz0SKWy55UPj4OwVo3ZlghG57/IclXAr4142Y636LlxxrT
-         B8GCcCA7pzIB0oF8IM6/qLHzwBt0uINXRhFDHavVq8/rr6EOL84tJCFqsL2BOhAn3ANI
-         JlKrSJKS3iI1biugt0nt+VWqnqqxhIGHn+hMigCojydWUpOfAOjPRx4lNXIs4PaA3QX0
-         prs2+eZNOtPX3G8SCGKGmmU840T0OgrqEY6HSTDNDuTkYIggeeGsu620IUcF+gA48FkK
-         WLZcAD8cEkZlhShVGzy16q2X1hitIOsa9gyL9BrrIzuYTEOmrH+u2dz8ynXOw6HV+NDH
-         958w==
-X-Forwarded-Encrypted: i=1; AJvYcCUxv22IJB5vkzvqqPnd1O/whvewzoC/nJr/aplQenBJbIa9mYF4SdiLhBOsJOZuKtR9QRT2WKDLH6B/@vger.kernel.org, AJvYcCV+HAd47Zb1MY7nGqA5sGIm6+B1/8oqhEP/2MsC3EqvFp03mVcwnfM5GHcg9qg+qmFWGa/04mygUdCqIL5B@vger.kernel.org, AJvYcCVC3FvpUxIauJIdilnpxn6FrVHZnxGQnSgjhbhiMoKOt32VNPsHgGdMkNSdPhF8Mkf8AHoqXvKgsijI@vger.kernel.org, AJvYcCWp9a8M5lezVdm17sYCsaWEK50xBAHZpRaCGhkWBU4CnC/7+JNAHPCLwQvINTVzGCRj5L+8VuRxrI8s@vger.kernel.org, AJvYcCXcDLGoEUW53Wgrd1DBThxsIcEjYgCdXiRtcaEfPk7LoZAvoNvmJn/13CBOkHsiusTIfE3wHYEI6f6p@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBL2VgXZoMIU7nhOitMF4OfPEdAgTZu7o8Khwj4VwiQN3wOi8r
-	HeEuCdazMovyHnKR6M/N13jy2nlZkJlKO9f1KjXDd1cSc4KgDzEDILiE
-X-Gm-Gg: ASbGnct2oW47nit60wlY0qAl0xAfXw1NtzdVbNdZAlNHJ03HUQRIi4Je0yjXphS1sKP
-	jQHvJlgJkLNba+xgeVtlmIZaGUQYGGZEQyHkLgZIRKzniERdrqTWlfRL0FRG7rP2plq6zpKdpis
-	aPgjofxEOCrni3Ge6vDEMxGWoGhieuhI4CAyPfKFGljKs7ELzbAKQihStCNIoSgYzF1VvAT+gQ6
-	GqYZ5VpkVdjP+YeQYUSpiRLC9SuHWcaRqYhll+Qg3uuzAq4Zdxx3W5bTPeb7R8f106t7oW2SsPp
-	cE+qDoR5ri+loygT26p/2jqL9Hz5F9UKzkKm99ad1UMkJZaf1GKAnIZaEAJbJ+ZCTjAqaF9GVcb
-	HUia4Tw==
-X-Google-Smtp-Source: AGHT+IHE/u8jw54XOOI+Ok2LBdze/j4Nou5XfGAkiYCq4HwLigmdJXOqdaEnDwzuzqBGwSO5pN8fnQ==
-X-Received: by 2002:a17:902:fc4b:b0:234:ed31:fcae with SMTP id d9443c01a7336-23641abeaefmr111981645ad.22.1749723037928;
-        Thu, 12 Jun 2025 03:10:37 -0700 (PDT)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([137.71.226.91])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e63d49asm10303055ad.85.2025.06.12.03.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 03:10:37 -0700 (PDT)
-Date: Thu, 12 Jun 2025 12:10:25 +0200
-From: Jorge Marques <gastmaier@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] Documentation: ABI: add oversampling frequency in
- sysfs-bus-iio
-Message-ID: <6gn3kr3vlddousquogcxcdnojcawjt24onnvkf3wvl77bhqoxe@qwehcxjdeab5>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
- <20250610-iio-driver-ad4052-v3-1-cf1e44c516d4@analog.com>
- <20250611180252.76f1fe7f@jic23-huawei>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3GxPco8F";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VtKoCqHS";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3GxPco8F";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VtKoCqHS"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 9C90C211AD;
+	Thu, 12 Jun 2025 10:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749723079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
+	b=3GxPco8FwKweWzkZrHtRpXQ2bI+yP35opo0TeKuXJtG4rkQmmYP4zMYtS7qZy2EiBy+gZ9
+	YmW3g6CxTWzqEQy5nHSKxaO3s5V+PCu1OBQ9UcycwxwFHNnQ3WAV3W7HwRbgdfcYfA34ru
+	h8T+Hwk28Rw4sOSib2BHwaiLmeLMjvU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749723079;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
+	b=VtKoCqHSn017kwnlVAlt2h+lBjmFTxlif8sEjD7H7JgJTlvWgylCvyspLdXmgGS4wmy9Q7
+	6dBVtoQziFKimwCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749723079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
+	b=3GxPco8FwKweWzkZrHtRpXQ2bI+yP35opo0TeKuXJtG4rkQmmYP4zMYtS7qZy2EiBy+gZ9
+	YmW3g6CxTWzqEQy5nHSKxaO3s5V+PCu1OBQ9UcycwxwFHNnQ3WAV3W7HwRbgdfcYfA34ru
+	h8T+Hwk28Rw4sOSib2BHwaiLmeLMjvU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749723079;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
+	b=VtKoCqHSn017kwnlVAlt2h+lBjmFTxlif8sEjD7H7JgJTlvWgylCvyspLdXmgGS4wmy9Q7
+	6dBVtoQziFKimwCw==
+Date: Thu, 12 Jun 2025 12:11:19 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	akpm@linux-foundation.org
+Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: [PATCH v5 0/5] kdump: crashkernel reservation from CMA
+Message-ID: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,82 +72,185 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611180252.76f1fe7f@jic23-huawei>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Wed, Jun 11, 2025 at 06:02:52PM +0100, Jonathan Cameron wrote:
-> On Tue, 10 Jun 2025 09:34:34 +0200
-> Jorge Marques <jorge.marques@analog.com> wrote:
-> 
-> Trivial: 
-> In the patch title use the actual file name of the new ABI.
-> 
-> add oversampling_frequency in sysfs-bus-iio
-> 
+Hi,
 
-Ack.
-> 
-> > Some devices have an internal clock used to space out the conversion
-> > trigger for the oversampling filter, Consider an ADC with conversion and
-> > data ready pins topology:
-> > 
-> >   Sampling trigger |       |       |       |       |
-> >   ADC conversion   ++++    ++++    ++++    ++++    ++++
-> >   ADC data ready      *       *       *       *       *
-> > 
-> > With the oversampling frequency, conversions are spaced:
-> > 
-> >   Sampling trigger |       |       |       |       |
-> >   ADC conversion   + + + + + + + + + + + + + + + + + + + +
-> >   ADC data ready         *       *       *       *       *
-> > 
-> > In some devices and ranges, this internal clock can be used to evenly
-> > space the conversions between the sampling edge. In other devices the
-> > oversampling frequency is fixed or is computed based on the sampling
-> > frequency parameter, and the parameter is read only.
-> > 
-> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> > index ef52c427a015cf47bb9847782e13afbee01e9f31..e60367255be89a9acc827ec1a749b729735f60e6 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-iio
-> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> > @@ -139,6 +139,23 @@ Contact:	linux-iio@vger.kernel.org
-> >  Description:
-> >  		Hardware dependent values supported by the oversampling filter.
-> >  
-> > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
-> > +KernelVersion:	6.17
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Some devices have internal clocks for oversampling.
-> 
-> Wrapping on each sentence is unusual. David pointed this out in v2.
-> Wrap at 80 chars as a single paragraph.
-> 
+this series implements a way to reserve additional crash kernel
+memory using CMA.
 
-Yep, sorry.
-Hopefully I develop muscle memory for vim's Vgq soon.
+Link to the v1 discussion:
+https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
+See below for the changes since v1 and how concerns from the 
+discussion have been addressed.
 
-Best regards,
-Jorge
+Currently, all the memory for the crash kernel is not usable by
+the 1st (production) kernel. It is also unmapped so that it can't
+be corrupted by the fault that will eventually trigger the crash.
+This makes sense for the memory actually used by the kexec-loaded
+crash kernel image and initrd and the data prepared during the
+load (vmcoreinfo, ...). However, the reserved space needs to be
+much larger than that to provide enough run-time memory for the
+crash kernel and the kdump userspace. Estimating the amount of
+memory to reserve is difficult. Being too careful makes kdump
+likely to end in OOM, being too generous takes even more memory
+from the production system. Also, the reservation only allows
+reserving a single contiguous block (or two with the "low"
+suffix). I've seen systems where this fails because the physical
+memory is fragmented.
 
-> > +		Sets the resulting frequency in Hz to trigger a conversion used by
-> > +		the oversampling filter.
-> > +		If the device has a fixed internal clock or is computed based on
-> > +		the sampling frequency parameter, the parameter is read only.
-> > +
-> > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
-> > +KernelVersion:	6.17
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Hardware dependent values supported by the oversampling
-> > +		frequency.
-> > +
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
-> > 
-> 
+By reserving additional crashkernel memory from CMA, the main
+crashkernel reservation can be just large enough to fit the
+kernel and initrd image, minimizing the memory taken away from
+the production system. Most of the run-time memory for the crash
+kernel will be memory previously available to userspace in the
+production system. As this memory is no longer wasted, the
+reservation can be done with a generous margin, making kdump more
+reliable. Kernel memory that we need to preserve for dumping is
+normally not allocated from CMA, unless it is explicitly
+allocated as movable. Currently this is only the case for memory
+ballooning and zswap. Such movable memory will be missing from
+the vmcore. User data is typically not dumped by makedumpfile.
+When dumping of user data is intended this new CMA reservation
+cannot be used.
+
+There are five patches in this series:
+
+The first adds a new ",cma" suffix to the recenly introduced generic
+crashkernel parsing code. parse_crashkernel() takes one more
+argument to store the cma reservation size.
+
+The second patch implements reserve_crashkernel_cma() which
+performs the reservation. If the requested size is not available
+in a single range, multiple smaller ranges will be reserved.
+
+The third patch updates Documentation/, explicitly mentioning the
+potential DMA corruption of the CMA-reserved memory.
+
+The fourth patch adds a short delay before booting the kdump
+kernel, allowing pending DMA transfers to finish.
+
+The fifth patch enables the functionality for x86 as a proof of
+concept. There are just three things every arch needs to do:
+- call reserve_crashkernel_cma()
+- include the CMA-reserved ranges in the physical memory map
+- exclude the CMA-reserved ranges from the memory available
+  through /proc/vmcore by excluding them from the vmcoreinfo
+  PT_LOAD ranges.
+
+Adding other architectures is easy and I can do that as soon as
+this series is merged.
+
+With this series applied, specifying
+	crashkernel=100M craskhernel=1G,cma
+on the command line will make a standard crashkernel reservation
+of 100M, where kexec will load the kernel and initrd.
+
+An additional 1G will be reserved from CMA, still usable by the
+production system. The crash kernel will have 1.1G memory
+available. The 100M can be reliably predicted based on the size
+of the kernel and initrd.
+
+The new cma suffix is completely optional. When no
+crashkernel=size,cma is specified, everything works as before.
+
+---
+Changes since v4:
+
+- v5 is identical to v4 for all patches except patch 4/5,
+  where v5 incorporates feedback from David Hildenbrand
+
+---
+Changes since v3:
+
+- updated for 6.15
+- reworked the delay patch:
+  - delay changed to 10 s based on David Hildenbrand's comments
+  - constant changed to variable so that the delay can be easily made
+    configurable in the future
+- made reserve_crashkernel_cma() return early when cma_size == 0
+  to avoid printing out the 0-sized cma allocation
+
+---
+Changes since v2:
+
+based on feedback from Baoquan He and David Hildenbrand:
+- kept original formatting of suffix_tbl[]
+- updated documentation to mention movable pages missing from vmcore
+- fixed whitespace in documentation
+- moved the call crash_cma_clear_pending_dma() after
+  machine_crash_shutdown() so that non-crash CPUs and timers are
+  shut down before the delay
+
+---
+Changes since v1:
+
+The key concern raised in the v1 discussion was that pages in the
+CMA region may be pinned and used for a DMA transfer, potentially
+corrupting the new kernel's memory. When the cma suffix is used, kdump
+may be less reliable and the corruption hard to debug
+
+This v2 series addresses this concern in two ways:
+
+1) Clearly stating the potential problem in the updated
+Documentation and setting the expectation (patch 3/5)
+
+Documentation now explicitly states that:
+- the risk of kdump failure is increased
+- the CMA reservation is intended for users who can not or don't
+  want to sacrifice enough memory for a standard crashkernel reservation
+  and who prefer less reliable kdump to no kdump at all
+
+This is consistent with the documentation of the
+crash_kexec_post_notifiers option, which can also increase the
+risk of kdump failure, yet may be the only way to use kdump on
+some systems. And just like the crash_kexec_post_notifiers
+option, the cma crashkernel suffix is completely optional:
+the series has zero effect when the suffix is not used.
+
+2) Giving DMA time to finish before booting the kdump kernel
+   (patch 4/5)
+
+Pages can be pinned for long term use using the FOLL_LONGTERM
+flag. Then they are migrated outside the CMA region. Pinning
+without this flag shows that the intent of their user is to only
+use them for short-lived DMA transfers. 
+
+Delay the boot of the kdump kernel when the CMA reservation is
+used, giving potential pending DMA transfers time to finish.
+
+Other minor changes since v1:
+- updated for 6.14-rc2
+- moved #ifdefs and #defines to header files
+- added __always_unused in parse_crashkernel() to silence a false
+  unused variable warning
+ 
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
