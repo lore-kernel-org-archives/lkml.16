@@ -1,76 +1,117 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FDD222593
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 21:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17CD222593;
+	Thu, 12 Jun 2025 21:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749764288; cv=none; b=HSOwQeOAOncijuKFdPP8OQbAF78epj8eTdlSkAZU90r7+p3jnRloVpk4LCFkUjHnVnPwnPW5JONfYOjjbUoHH6IDr8Zr8SkvRfKLDJc9LQFPiyuQ76sqtGhLDZMYJIhqT41f2EQhkNUeIdj/0EeIYXE8sb+Va4wzvXh16KBJ22s=
+	t=1749764363; cv=none; b=jKzzfxlFEPXqRw+RC7UAGtAAfsGkzzDdlKWlCB/Gnvuws0EZbABIZsABFB451/hB54rWxZsBpZ4sg1hHSQvdrnrsjosteo+zm1AlZE3JZT//8ao9UiU6W5obAFdYUdsID8vm34QbpO+h/CbNkUTO5gmclpwmUSctCUw8ku4Oji4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749764288; c=relaxed/simple;
-	bh=ghXJGWovtlevUxhJ6b02bvIr70MGxHrQEahbVyzbrUc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ENeY7yh4+d8joKkcGHkfFTxpPkZgndUHpNhNq/9+oriEPVQ347+h849GvrcswkAUlLVk9PwInoWUmYj/crpHciTMWR39Yx5blkZnsSDVsBW1NodDMoKUGLoxdx0DmSUDSZz1v9rB/1N89GW4nZ3UbpR203o1dU6fjhPvWh7h2wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddcb80387dso14808285ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:38:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749764286; x=1750369086;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jEPUJZD4frWaLI++xX7CIld0+KosWT7GVS1O1Tac6wg=;
-        b=vh7qndQa4UWvWwZf7vjjiVCzEkAJQ9di5J8XlmQrnwViWbnV/q2rUUjw0ZyimYgpnR
-         0WYVV1d4iTd+7+IVeGWcX8EdU1GTEZzTtOaaEsTgs4kahPtRZHyhzruSxj4heOwZbuwt
-         pwrFfN4nstv9EpVqbTWfafH+0EKltOIY8kkve0SPR2/bpQ6K0v80DsUNunkLb3UjY/Pj
-         OknHHVL9AbqLCEtZFjWv3lF4nRvhHNwKLve7/Qx1nQ2ivWsZSQkEs+MWlNMSsW8of2JA
-         Tqoqzs+8K4QdOGd/3rXZzLJk8vWI8dVmdWWXEpnsfxFdf0oomEfr9ZMC/U+qx6tFxwlj
-         GeHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZoze0lcXzjKKwEPJ2lh+d/bgwawuVvHduJBIgOcsOlPyogiIsIJqfzGKnW60z6r0dchiVvrpQW7JiR4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOhXwJPpP6YHaP+YKu7erXXYXzS31d00XZmlDE58BNZzuezYoy
-	nVmng7n+TGAMKN2mn47n7PEvgWfz42QbGDinEKOJWJhI1fUD3Ey4h0GmBxaYD/BZgOaxBgMebKO
-	tmXi1zBznLiTUJJM3EQy8BUUvQLtrP7WYqQ924PIuFY1uuXDGjDaDCYcHSyU=
-X-Google-Smtp-Source: AGHT+IF+g3z+jimjn66TfaQax+CXm+mlRYr8TXr4NCKN/KCdEPYOvVhC6OITFg0tBDAXeokvhpFRmFoDLM7MgO8PxvmHpu81LDA7
+	s=arc-20240116; t=1749764363; c=relaxed/simple;
+	bh=ZyW9CC2m0bNFb9ilfuOaP1nCJW0SwsDvuFBWBKIasAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gIZxU4RqyfQKlXKrg6pJzbNhKFeOQs8ZtGnJN+Mb0PxY8hnnCO/fxljyZmeyuoUp9fc5AwavsIRh4+Li9g0f0N2zlZUNm3VQVaKLum+0PTtuttS/T8DN51mdf7FMuQruhfOh12Egw/SOSDWK3rJ5O/Acb7M6VLjB2CxGWdn+kfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=BF/S71gY; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BF/S71gY"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B8242CF;
+	Thu, 12 Jun 2025 23:39:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749764349;
+	bh=ZyW9CC2m0bNFb9ilfuOaP1nCJW0SwsDvuFBWBKIasAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BF/S71gYm9GbMULR6/KJIharW2yyWhJQUZMcEHsuFzMX/ZdSK5t6F2Wy33e6a3kAm
+	 HIJbqi/ZbYq2BtJf9ZftMylJWjLHf7aRq0WleQLKY8aQRCr3lg3T1XR4pMxBiyA5Of
+	 iRbKQn40FsFWdEYqhOtRClCWnObK/gCMxsNknq7Q=
+Date: Fri, 13 Jun 2025 00:39:04 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: sakari.ailus@linux.intel.com, tomi.valkeinen@ideasonboard.com,
+	jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl,
+	kieran.bingham@ideasonboard.com, naush@raspberrypi.com,
+	mchehab@kernel.org, hdegoede@redhat.com,
+	dave.stevenson@raspberrypi.com, arnd@arndb.de,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v5] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <20250612213904.GC10542@pendragon.ideasonboard.com>
+References: <20250521104115.176950-1-mehdi.djait@linux.intel.com>
+ <mwh7xx675kulx6tdebuvqtdjfa4ih3ehi2brrcdxfemfnvxsrs@i5nxkvfskfhe>
+ <20250521110944.GG12514@pendragon.ideasonboard.com>
+ <hgczrxw25a7jn6ubuwijga7yn7epek4yhtya2gnd77awsgxdgs@lv2oxey567hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3605:b0:3dd:b540:b795 with SMTP id
- e9e14a558f8ab-3de0167404dmr1585665ab.3.1749764286354; Thu, 12 Jun 2025
- 14:38:06 -0700 (PDT)
-Date: Thu, 12 Jun 2025 14:38:06 -0700
-In-Reply-To: <20250612211610.4129612-1-kuni1840@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684b48be.050a0220.be214.0292.GAE@google.com>
-Subject: Re: [syzbot] [net?] [nfs?] WARNING in remove_proc_entry (8)
-From: syzbot <syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com>
-To: anna@kernel.org, chuck.lever@oracle.com, dai.ngo@oracle.com, 
-	davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	jlayton@kernel.org, kuba@kernel.org, kuni1840@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neil@brown.name, 
-	netdev@vger.kernel.org, okorniev@redhat.com, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, tom@talpey.com, trondmy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <hgczrxw25a7jn6ubuwijga7yn7epek4yhtya2gnd77awsgxdgs@lv2oxey567hu>
 
-Hello,
+On Thu, Jun 12, 2025 at 02:15:10PM +0200, Mehdi Djait wrote:
+> Hi Laurent,
+> 
+> Thank you for the review!
+> 
+> A very small question below.
+> 
+> On Wed, May 21, 2025 at 01:09:44PM +0200, Laurent Pinchart wrote:
+> > On Wed, May 21, 2025 at 12:52:08PM +0200, Mehdi Djait wrote:
+> 
+> > > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+> > > > +{
+> > > > +	const char *clk_id __free(kfree) = NULL;
+> > > > +	struct clk_hw *clk_hw;
+> > > > +	struct clk *clk;
+> > > > +	u32 rate;
+> > > > +	int ret;
+> > > > +
+> > > > +	clk = devm_clk_get_optional(dev, id);
+> > > > +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> > > > +
+> > > > +	if (clk) {
+> > > > +		if (!ret) {
+> > > > +			ret = clk_set_rate(clk, rate);
+> > > > +			if (ret)
+> > > > +				dev_warn(dev, "Failed to set clock rate: %u\n",
+> > > > +					 rate);
+> > 
+> > I would return ERR_PTR(ret) here.
+> > 
+> > > > +		}
+> > > > +
+> > > > +		return clk;
+> > > > +	}
+> > > > +
+> > > > +	if (ret)
+> > > > +		return ERR_PTR(ret);
+> > 
+> > And here, return a fixed error code, maybe -ENOENT, as propagating the
+> > device_property_read_u32() error could result in strange error code for
+> > the user.
+> 
+> device_property_read_u32() returns the following:
+> 
+> Return: number of values if @val was %NULL,
+>         %0 if the property was found (success),
+>           %-EINVAL if given arguments are not valid,
+>           %-ENODATA if the property does not have a value,
+>           %-EPROTO if the property is not an array of numbers,
+>           %-EOVERFLOW if the size of the property is not as expected.
+>           %-ENXIO if no suitable firmware interface is present.
+> 
+> Don't you think it is better to keep the return value and not overshadow
+> it ? The function is well documented and this may help understand where
+> the problem comes from if getting the clk fails.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I don't mind too much either way. If we want to make debugging easier,
+may an error message would be appropriate.
 
-Reported-by: syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com
-Tested-by: syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com
+-- 
+Regards,
 
-Tested on:
-
-commit:         27605c8c Merge tag 'net-6.16-rc2' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1033d9d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c4c8362784bb7796
-dashboard link: https://syzkaller.appspot.com/bug?extid=a4cc4ac22daa4a71b87c
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1143d9d4580000
-
-Note: testing is done by a robot and is best-effort only.
+Laurent Pinchart
