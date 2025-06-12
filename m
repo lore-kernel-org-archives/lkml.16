@@ -1,43 +1,44 @@
 Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001E823C4E1;
-	Thu, 12 Jun 2025 13:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCA51A8405;
+	Thu, 12 Jun 2025 13:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736605; cv=pass; b=h8Kt8//UGXb2dHs8YwjJFGLpMJL0Y8K2U5wBaSObAAKewqtyGYRd9AqgY7yjhJk3oOsP6vXmJBTKl0iAsFTkkrxQxb/dsIvXEuCr73c6oVY8HQxCMt8RiyTV37saTLHdHtEOZrl11pUFgzxSha4GwLPu+PIkjiU/qJwtmJrhX7E=
+	t=1749736612; cv=pass; b=CMB/jl028r4tdAo+pjYTvDf0gy34fbgQ9TQWpcB1XpEtzyydvhGJnfCXQPA01thtiN4h1WIgf1XKeswfZJ/10b4cW1v4frCclbPuawRSswbbYJ8EvqbSs5yaCLSNtoUS2Thr+Tb+LzNr+z9faD7abjfk6cilelvQYtyZ+soZoDg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736605; c=relaxed/simple;
-	bh=jjyzOPli1ra635E/Ffy/tg1VaUvXRkSQuP8371mstPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A8i5vS2+ZjIfxPfPZ0sipK5ECDs3+7wvqMafdjOCrZcc7gDtxSSu8seg5JNAh0KikCvbNfR1ZivRz9CeUUinkRcHkW6odrjwm5dOa7FaiP3896caEYPNwgiR6C7Qg1+VhO0IhESqEHE8D5xBbMfDhH3AMdRFpImTaTaEJDxcNa4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=cB79ZboY; arc=pass smtp.client-ip=136.143.188.15
+	s=arc-20240116; t=1749736612; c=relaxed/simple;
+	bh=9z9L2t/idxIPWqHtl6feJ5+98mUHvEmO1D71s0ZzRy8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=APt5njTGGXxrDnIXQ48NhGzNAuMtR0jbVKgFpN8gT2bk013tsthWPiMhxY5p7nsDo4wC3R0cf2hdc6arHlzA1h0OhlpSTBUgQtsuFI/PnlZOEt5zUpGxDhAJ7T001YG3uHOjrR0osd0tamQoMVpWPPA4X+uLhxBk07CmlxYeBy8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=n8+WYuf9; arc=pass smtp.client-ip=136.143.188.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="cB79ZboY"
-ARC-Seal: i=1; a=rsa-sha256; t=1749736578; cv=none; 
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="n8+WYuf9"
+ARC-Seal: i=1; a=rsa-sha256; t=1749736586; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Z9Q6LpwOskFzXu7qFIqDahCinDV85umIMp0V5V90dF7bGYa5NYV89EM6WS0OwHQqd4/Uv2GrLuC17jCqKWGsiS3DgT6YHgWlkx0nVLYDPAGFWkjHJgF1egrIEVsnPr+yAxCQm6AkbkBgWNKa4ARXHPstwsiFDVRpeo62daoIcjA=
+	b=lvR1fq3NchjreiyUiIeLyfUSl3q2G2RoAlsQESjIc53+9OOmdW49NG0QOCklpaAxkpzOf+O3J5TOvuWFybfEplwcaG6SlWktPmVS4TBXLl1CE+CNBIWgpw+JPMzHAHvrgK3MAmVcgjWwsLQjgM1OiYYRK5Yzn18WQBKTwVWeYRY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749736578; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=KUIfLwvoP44U5nDfSmqojpW++w9cxu2WaXPKkzeIK40=; 
-	b=i68huo5HXEszm0XtLDeI3hap5XBQ0TEjonhcTuFAHwLyctmv+zfAdxJP4AYyOPd8EytdSiiU+3o/mbGHoDKTg5IKe0tEmkpcVlco54i1d6deoZqw1NQjgQnM6VIICB5TrmIq5V89n7yuMrsDQX3jW3TUWT/GhE2Med+bYTb+2/w=
+	t=1749736586; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Xe+/CWthc6ot+OCxKsW3fGV6MDdG1CZZweZmpwlQwl8=; 
+	b=UDb8x8KAEskyKoSz1q1Mjj674Y9Rt4VlIoYO9Btoo4sS28yUQqBfQK7bS5IbuU518aeieAFSnj+TDZqkC9cgxYZZSvCSmghmOHXVmgKQJMWTPv+DDBO/oEGe4QqVIqZePNHuSv8DtRWGH0koTxGY2nAaixJwK5J2UjvLaqR9j/4=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=icenowy.me;
 	spf=pass  smtp.mailfrom=uwu@icenowy.me;
 	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749736578;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749736586;
 	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=KUIfLwvoP44U5nDfSmqojpW++w9cxu2WaXPKkzeIK40=;
-	b=cB79ZboY1lFL9af6mnwgT0N6Y0FcjVW7L4hsO0ita2ELplHFr9csDJsspMYpZ+wM
-	iXN1J/COAX88HG2r91O8+liDKQ6izRy+6ZX5HT6MKqoixIRZP/0CbfNrk5lnI7DeQbd
-	TBdTShZFNU85CZzECc15JWt2HEJ50Peaeil1iaVjkeBp1k8SD5taNTsYM0mU8Wz0QF+
-	7hzKXd4o8bVxpr13ffHrBOSFy6Jw4cREKjzEXFUfwM5e9h8BwKqt6gUhnuKsPW1XfbR
-	b0bg3k2M5B1ZX0UVvHPM698VsCqcF5tzp4MCl/VVL5Z+bAJsfgNJZ0UHYrKPqwM39nb
-	VWTuVDzl5A==
-Received: by mx.zohomail.com with SMTPS id 174973657610749.98040995348208;
-	Thu, 12 Jun 2025 06:56:16 -0700 (PDT)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Xe+/CWthc6ot+OCxKsW3fGV6MDdG1CZZweZmpwlQwl8=;
+	b=n8+WYuf92DJ5Lm1peHwH0i8dXZkNIOPgt6STqoXZn6bE31CoXzRJ7aDTt1IPiUfh
+	XEjSZx+S0IZMuy5sEy/SA0Ayo2YBiyF/OSXxBVCrX+L6rMKOiyXcJF0k+rFEmYjLIvn
+	5gyhXvQ81zaLxlmvGB/DqrM1LDnuGFFfTwq9TvyjZn32JvK1bv1xeaoMuwh2dnchIPO
+	tzuQGpMYbgc2ttKjYPZsz5dvWbyK1lvofXwv/tFR5IOhFwwxJv1lqD+FwFJDt27KfX0
+	GYrwEKtAQvYBc4LsXL0BBDQZ4y5dpMAJYjJmW46HmjVRr/t43nrfjeHjWv9lVTvViGF
+	1pKHyolYxQ==
+Received: by mx.zohomail.com with SMTPS id 1749736583346329.0335267878131;
+	Thu, 12 Jun 2025 06:56:23 -0700 (PDT)
 From: Icenowy Zheng <uwu@icenowy.me>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -52,10 +53,12 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	Icenowy Zheng <uwu@icenowy.me>
-Subject: [PATCH 1/2] dt-bindings: arm: mediatek: add mt8173-hana rev2
-Date: Thu, 12 Jun 2025 21:55:58 +0800
-Message-ID: <20250612135559.2601139-1-uwu@icenowy.me>
+Subject: [PATCH 2/2] arm64: dts: mediatek: mt8173: add hana revision 2
+Date: Thu, 12 Jun 2025 21:55:59 +0800
+Message-ID: <20250612135559.2601139-2-uwu@icenowy.me>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250612135559.2601139-1-uwu@icenowy.me>
+References: <20250612135559.2601139-1-uwu@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,30 +67,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
-X-ZohoMail-Owner: <20250612135559.2601139-1-uwu@icenowy.me>+zmo_0_
+X-ZohoMail-Owner: <20250612135559.2601139-2-uwu@icenowy.me>+zmo_0_
 
-My Lenovo Flex 11 Chromebook contains a board with revision ID 2.
+The current mt8173-elm-hana.dts file only contains compatible strings
+for revision 3~6, makes boards with revision 0~2 to fail to match a
+revision-specific DTS and may fall back to the rev7 one (which lacks
+some gpio-keys).
 
-Add rev2 to the compatible list of base hana DTB to allow depthcharge to
-match the DTB.
+As I've got a Lenovo Flex 11 Chromebook with board revision 2, add it to
+the base hana DTB file.
 
 Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
 ---
- Documentation/devicetree/bindings/arm/mediatek.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-index 108ae5e0185d9..7d13547ff57ba 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-+++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-@@ -132,6 +132,7 @@ properties:
-           - const: google,hana-rev5
-           - const: google,hana-rev4
-           - const: google,hana-rev3
-+          - const: google,hana-rev2
-           - const: google,hana
-           - const: mediatek,mt8173
-       - description: Google Hana rev7 (Poin2 Chromebook 11C)
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+index fcf0cb76a87c3..84638a07587f3 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+@@ -11,5 +11,5 @@ / {
+ 	chassis-type = "laptop";
+ 	compatible = "google,hana-rev6", "google,hana-rev5",
+ 		     "google,hana-rev4", "google,hana-rev3",
+-		     "google,hana", "mediatek,mt8173";
++		     "google,hana-rev2", "google,hana", "mediatek,mt8173";
+ };
 -- 
 2.49.0
 
