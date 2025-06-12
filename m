@@ -1,155 +1,145 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A869E25BF03
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740B52744D;
+	Thu, 12 Jun 2025 13:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734148; cv=none; b=TTJBwAtl0O8Gz47ThQlFy10LjucAK7n2QUXgIfXFG/d8sKA+piQ5UDglJl7/ejvPmk7h96frLkbzf4uTF2pSOlKhTi+KemNguLmnuCdPQ/3a1RlY+R4MdVrA2vVwvhCqHb3aM2wGnM+U7FD3iYTeSrV9aXfZJCzrXN509sQYe+I=
+	t=1749734223; cv=none; b=djPz2oHq1kZLa2wFGWs6d4bgnSJJzm6izmkMtaCtK6E18KRMbVKrzVfwtVcXjV9P1DfywkJVaHJGBreOR5g7OGB6ltXhlM/hvI0JfRTM4gKZhdSsjcTxl9qO2qlQjZbQRAhBajhSmanjTUgUNwwkqLluLy7PDNrNhsmqJywOAhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734148; c=relaxed/simple;
-	bh=5pAhRcgO1+EuPNUIzj/fNOn0kIQ0uu1BHYpfqb2hKXU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qRkS3/5eL3U8gp2zqVZlkrimErX9wPCZ/Gk66Nowj1UBoHJ2kqz4E8Ph/NjNXsxpd+D3ZkE+J7GIPwj84RrzASHOXn6n6UKBMF1WH4bXh2Rs8+mUK9+OcilzrqCivIUB3LGTIBHkPZe2lQtZFHs0rMlHYgtlReylqdxqRYYW9Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=A7ibo2MN; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="A7ibo2MN"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so1510045f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749734144; x=1750338944; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qXOeSoBKwd4+haJ3JvgSLXQF+sIOgqi9Fow9Bw5pk0w=;
-        b=A7ibo2MNMC4mdQzPUxLJ38BUt6sOocs1SmvIrjFQX02eFgUqL96WGSikFuneY5HoFY
-         IeEOkK69k+TEL1lNhP7FCu0u/93B06QREGxdgVf718tvD6e3FfHJr/REZ+ug0y3fddMk
-         Q6Ss5NwNQKDouQHGKk51AZNSYJrey5+1yMu2hkqAZtN9Yh/PpNkhsFat8n0at+qzqfK5
-         WFFJFh19oVo26HFXiaz2qrZF71r8mW/L8jgDQ8wTfZjuZp9AfSq/hFsQAsKQ7dvaGntL
-         l2h478T1XP+/2R6bdnX1JS5EAs5Zm48oOQm/AlldJSqDWW9YnvcZNo0z89UZgGa80H00
-         MoQw==
+	s=arc-20240116; t=1749734223; c=relaxed/simple;
+	bh=k4w6XpEXch4GCu7oMZGMsN4hvcVpxo8CKqiDW6bTfUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qWOjLKnbiiUlXkWCkkZGirarBaOeyuN3m9Ramrv/d5cuEG/2RQWTs33KblpDuVsAv5nPysHNszMtllImfbfF4Vv3rSs7phBJXL96o7ZMUwd8fBw99Mz+Wbq69tCSFEL9ht2zV+I5qfnmJ6m7bg95O7p35pC9c03/e7uiVr88wmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2cc57330163so624481fac.2;
+        Thu, 12 Jun 2025 06:17:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749734144; x=1750338944;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qXOeSoBKwd4+haJ3JvgSLXQF+sIOgqi9Fow9Bw5pk0w=;
-        b=DVc+ykBP68vfcJXxN3vhfpY5TSvpl3CnaNNJUv8d111pDUuqw+V492VXJ/FDvtP0mI
-         TJPVacSHOtYwrN3tcOp9XiqU4bg4LgdbXurSNnVCGyz9xP0KAsj3VEh+OuSLshg+GfXI
-         X+GZQ3uNpim0yAmR3sTT1exuQ3FvAIH5c/yf81i8oQ7kR4uSabyBqdeSDp4sU5VtMJqF
-         hn4VnhRbQY1CAT+Z5+dXr+s6+D30b4+2TYbDVoM/4gGd6ontd20HDfDhwkK7ATuS5WA7
-         rl+ZXT0d/r5iwieuJ2MiR8MjpevynPFewLv4KcxLXFolhhGbevMEc4Un8vbBF6Yujc79
-         tLlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUO1Vd2WJdEA7uhYECOK0BY3Z+GV1x4RYuO+SHPkcHos5RtAxM9P0d8tU58T6VAI9kQ5c2/KfjK9xMYltY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5CVwsu7/iWF2/XROvqaTdX69AL3ivXXR1rzRki5PvEGTjI+Te
-	Iuixyjc0XafHaROHXiJkeAEwY2IMANEXhBZ9E3cGwJ03XPimMKjnvfD78gLUJ4oRKbjod2QBHaY
-	icWVzbtI=
-X-Gm-Gg: ASbGncsKJshUwUvOqhsQA+Csavhv14OoR17iLiGsPs8LDqkP9yYW2e6TxK221yK9HS3
-	mFHbdU7fguu0Mdt8Jyp/xTsWNdshY2+APbqzYoE5J2VpgoJEeUfyo8bR1dH/561FHHGzX7HlQV/
-	8hAM9UiTASwe6agva6sByiMVojW2pAfuOzFS+g5HapB5esqjJPd+cw/vsnaFghXZqanX7iNXHCB
-	DUmGOmcwsDr5SIU71OrksGS8Z70PRO9Um3Z4Sz+bGrKYULX+pTGLbBhlklQ1yqFGTQGdeJo8+cL
-	QafDwOMtpT7CxA8eyYewsV0wX5ow4Yb2b+qP/U6PaeRk7acNU3IKJP4=
-X-Google-Smtp-Source: AGHT+IEnpJ6Q4AZ8oPyYmaUzcDZGuReMq7lbniJezZBAPId2TYPV/p2NnMGPvdWDp/pysd3sY6Avhg==
-X-Received: by 2002:a05:6000:1acc:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3a5607fa6a9mr2707038f8f.16.1749734143769;
-        Thu, 12 Jun 2025 06:15:43 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8b99:9926:3892:5310])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea17d7sm20619795e9.10.2025.06.12.06.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 06:15:43 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 12 Jun 2025 15:15:25 +0200
-Subject: [PATCH 16/16] pinctrl: amdisp: use new GPIO line value setter
- callbacks
+        d=1e100.net; s=20230601; t=1749734219; x=1750339019;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TNonWCq6tQmbQ5Q8JG6wz2OIxHKwlgX2o++VTeBoqTY=;
+        b=EoTNoCSz0afw5lpwbcGC0ld79ohtzQg3hXSS3EIdYiu/JObsI5otdeeJ8kjJ5cDA7K
+         Kav5kazRlypZxpt9iH+skpvbvpF6FEP1FJKFu4v115+bZfVAUiHyNDugZsY879bOjnxI
+         /rmiGqEOXAkpATd2iLEQG/CzzXEMf0Z0IAbdMLOKdQvZe/q6VF7n5aHsM+hP+E7Onc/u
+         wIpdl0dHiPeZO3TS4p/ixgE8fTcnZrZkWkm8VGsWCSfg7q7QhBVkN0xIPHDJG0cB+nYE
+         N7YGIARZo6KqKfbBUoxC7GU5eiXsA09KGsRian9a9oakNpRcCF1KQEYlWCxfmDmh1Cem
+         WPjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUH+FvWR02nRqke880uBC8fM5abm6XI8w4ijY+hDp/aj0M+b+1YzSovrrbZ19adYXDrJu2zyhxWKHy6m0zmvIdU+yo=@vger.kernel.org, AJvYcCUf3fAj83kpQ++KfeZVmGDMJUsKM/Ja6gFckeWbvp/XoLIJePVALN/RrAPvVZwdbtuJ3pvNmPmftTQH@vger.kernel.org, AJvYcCVHNPLSURwmh/bTx1AWsJid7CXx2lgnjhI1Ysh4PrlnRpekHsg7rxxZZUHam6/72uM+xS3y5c2ELKWv@vger.kernel.org, AJvYcCX0ZxZvl40gNv6oVcNF6nrC8i1KM9mFUNC9lGkfyC/Sx2FY0/dKd6adlJhek38XLQr05w7JyN+hW8YHsGOm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxggYUxDTghCT93JLvq0uGdfR15TQL+JE0MvAombKQ+cJL6tQHq
+	4u9LPccvA4malAaaPdip6T6OKTKJgWHWTr0FkG7tBYoELd1IH7S3sB5pmMy8yx8F
+X-Gm-Gg: ASbGncs4Xseb3tFFpYoUEX3aJ6JxuOiFbzIJdmUk34IGbGmXYzLU9cv0qYOq7pdQ0C5
+	9Y2Fi4bjPD3xxH5RIDo5GaBoT5ZMz+YtYTb/PtTdd0xKJGtnbYnErGKOl1xuTt31iK8FwMsGIST
+	cfGFN1HvvtPTjTITNmx8D2sBqexPzcdjeHhDIPCY5o2WJB15QXu3+0jZRWdcddGDkdK3LfaiIea
+	L+epG7YKK6Olh6OuAMyO1eHT7HV208+gN1b7ac+5s6XgXCdFcN2mIl23mI6NkRoxhwLyuWTdCAy
+	6WxPoeQ2FFYgyiGtanf6Ou7uUtNZbbXvRBo3GkmpiMth4FVZWr904BcOzjuXll/mv1Mqwwky5TT
+	/XaNekJOGmJXGIgEkPqN5zczpJdcD
+X-Google-Smtp-Source: AGHT+IFrc2S7d8JXsxh6+5kpeaxchbVsS6LjK7xsAVK86NxxgIJvIS7pTe2FPklIeBdpO1mSSQXc/w==
+X-Received: by 2002:a05:6870:d68b:b0:2d5:2955:aa6b with SMTP id 586e51a60fabf-2ea96b7aee4mr4294786fac.5.1749734219489;
+        Thu, 12 Jun 2025 06:16:59 -0700 (PDT)
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com. [209.85.167.177])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2eab8e6cdbasm291000fac.38.2025.06.12.06.16.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jun 2025 06:16:59 -0700 (PDT)
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-4066a0d0256so593029b6e.3;
+        Thu, 12 Jun 2025 06:16:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUnAEC3Ao9uHOeCTwb3roLaguny9bhdWOj2AtKHSFhg6A4h5riFRk5AiOdaAr40PwGeH2dGDoepx0ni/xWYY195UOo=@vger.kernel.org, AJvYcCVt+i/lAzvxxZiFJy/2fDAo8R91zfgOvVKqsFSUQLhVSfN/X2P5Nyh4NW1XUIvdK1FXr5pPhHssRdOj@vger.kernel.org, AJvYcCXYDlM4qHE7LYXao/2bFM/fTX0ydW+IYjqsG5Go3N91HZ715ybzUgTWISFo9uQzlKhZ3vGFdBaXHo2+@vger.kernel.org, AJvYcCXmUon39oCc6wzPb4tx4yoqZwyPUC63/sCzgSzJ7dL98x1nRBKYv2pxbsL+mVrvx0vd7U3LITgSuwvl9FM6@vger.kernel.org
+X-Received: by 2002:a05:6808:1794:b0:406:6e31:18a1 with SMTP id
+ 5614622812f47-40a5d05f586mr5488096b6e.2.1749734218150; Thu, 12 Jun 2025
+ 06:16:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-16-556b0a530cd4@linaro.org>
-References: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
-In-Reply-To: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
-To: Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, 
- Support Opensource <support.opensource@diasemi.com>, 
- Baruch Siach <baruch@tkos.co.il>, Sven Peter <sven@kernel.org>, 
- Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Neal Gompa <neal@gompa.dev>, Viresh Kumar <vireshk@kernel.org>, 
- Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, asahi@lists.linux.dev, soc@lists.linux.dev, 
- linux-sunxi@lists.linux.dev, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1643;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=ME7t3PhskqpuTEodGS0joNb0JvX701e6DVecRBqhzik=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoStLn8MZgPfXtIzTahad3jneTgIaic/QOkZGyI
- SGVy3H/f3GJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaErS5wAKCRARpy6gFHHX
- cmoRD/0a+ixlOlllZnxdQ3IwiZjofhYGTNWzylVmVuilwkjx74Ac0WhwgNOgk5uCmmF2NGn47Lz
- E435pD4buRkFabuolt2o9TL8wMz/0RDBg32C9bjwz9fezuo6zTgzSwOjEh5cRd647C84rRl0KWc
- YHu+TOoz2o4uLlV75o3nQTqLM3l1jFVZ3+VSt31kn1Zavk6/31+PgUYiSjgTIsxlT/Gdps4VRtH
- wa/aiQgsQsiFHtCM7iv1U583mqmt1fyy3DcZukPCRuIyWOIBMDvi/gqk9leFU29A9h0srxVog+b
- 2atd0fQ4ad1OubxK41SjP79dMWtYCixfFespdF2IrwaZrVN03CtyobPyUeIkzlYqy+j+XcVocDO
- NjjWKIYMEYJkruZsAOCp6RnA720dgwIaPMSHCb9EL/t1FuLODewQSnenP5FeWSZaiw/y0s0HNWE
- u5xsj/scBHbfLBGmsXxgSr7mOO9hzjyNxYki8z8+PdJQHiEWRq0F1D+FoXcIHUqQ4YrQK5Dawhw
- aQuOGjzWqV36vIoUCA26atb3hiQS/pIePKqxAtnWOg9w2ghzZB8deMzBPTGDg632LEnQYGzr5eV
- 2jZt4jkSxcUYLzAs2RNnPoiDh546HzSIvkw36qrNT2LHX7VrBQPLJOJDSZX0Wb2L7MnN8xnEan/
- UkQWDDMnqWN8GnA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <20250607194541.79176-1-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250607194541.79176-1-marek.vasut+renesas@mailbox.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Jun 2025 15:16:45 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW_89naftFMo881zp=7QGJDznFzzqLQ-kLEuyJ=KJWQnA@mail.gmail.com>
+X-Gm-Features: AX0GCFuXLlnarexsZjEK1q0rakNUWi7gsoLxdkLO2FqaNoBwunA3MuELiFSEafs
+Message-ID: <CAMuHMdW_89naftFMo881zp=7QGJDznFzzqLQ-kLEuyJ=KJWQnA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
+ driver for PCI slots
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Anand Moon <linux.amoon@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Sat, 7 Jun 2025 at 21:46, Marek Vasut
+<marek.vasut+renesas@mailbox.org> wrote:
+> Add the ability to enable optional slot clock into the pwrctrl driver.
+> This is used to enable slot clock in split-clock topologies, where the
+> PCIe host/controller supply and PCIe slot supply are not provided by
+> the same clock. The PCIe host/controller clock should be described in
+> the controller node as the controller clock, while the slot clock should
+> be described in controller bridge/slot subnode.
+>
+> Example DT snippet:
+> &pcicontroller {
+>     clocks = <&clk_dif 0>;             /* PCIe controller clock */
+>
+>     pci@0,0 {
+>         #address-cells = <3>;
+>         #size-cells = <2>;
+>         reg = <0x0 0x0 0x0 0x0 0x0>;
+>         compatible = "pciclass,0604";
+>         device_type = "pci";
+>         clocks = <&clk_dif 1>;         /* PCIe slot clock */
+>         vpcie3v3-supply = <&reg_3p3v>;
+>         ranges;
+>     };
+> };
+>
+> Example clock topology:
+>  ____________                    ____________
+> |  PCIe host |                  | PCIe slot  |
+> |            |                  |            |
+> |    PCIe RX<|==================|>PCIe TX    |
+> |    PCIe TX<|==================|>PCIe RX    |
+> |            |                  |            |
+> |   PCIe CLK<|======..  ..======|>PCIe CLK   |
+> '------------'      ||  ||      '------------'
+>                     ||  ||
+>  ____________       ||  ||
+> |  9FGV0441  |      ||  ||
+> |            |      ||  ||
+> |   CLK DIF0<|======''  ||
+> |   CLK DIF1<|==========''
+> |   CLK DIF2<|
+> |   CLK DIF3<|
+> '------------'
+>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Reviewed-by: Anand Moon <linux.amoon@gmail.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/pinctrl-amdisp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Bartosz: Any chance you can apply this patch to an immutable branch,
+so I can merge that before taking the other two patches?
+The alternative is to postpone the DTS patches for one cycle.
 
-diff --git a/drivers/pinctrl/pinctrl-amdisp.c b/drivers/pinctrl/pinctrl-amdisp.c
-index 9256ed67bb20e9eefef6c6574f1b60d71814cdc0..2e706bf8bcde0536b9e09614665d46130e12c406 100644
---- a/drivers/pinctrl/pinctrl-amdisp.c
-+++ b/drivers/pinctrl/pinctrl-amdisp.c
-@@ -117,7 +117,7 @@ static int amdisp_gpio_get(struct gpio_chip *gc, unsigned int gpio)
- 	return !!(pin_reg & BIT(GPIO_CONTROL_PIN));
- }
- 
--static void amdisp_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
-+static int amdisp_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
- {
- 	unsigned long flags;
- 	u32 pin_reg;
-@@ -131,6 +131,8 @@ static void amdisp_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
- 		pin_reg &= ~BIT(GPIO_CONTROL_PIN);
- 	writel(pin_reg, pctrl->gpiobase + gpio_offset[gpio]);
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
- }
- 
- static int amdisp_gpiochip_add(struct platform_device *pdev,
-@@ -149,7 +151,7 @@ static int amdisp_gpiochip_add(struct platform_device *pdev,
- 	gc->direction_input	= amdisp_gpio_direction_input;
- 	gc->direction_output	= amdisp_gpio_direction_output;
- 	gc->get			= amdisp_gpio_get;
--	gc->set			= amdisp_gpio_set;
-+	gc->set_rv		= amdisp_gpio_set;
- 	gc->base		= -1;
- 	gc->ngpio		= ARRAY_SIZE(amdisp_range_pins);
- 
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-2.48.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
