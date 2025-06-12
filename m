@@ -1,165 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886CA15573F;
-	Thu, 12 Jun 2025 21:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5952D1AAE17;
+	Thu, 12 Jun 2025 21:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749764800; cv=none; b=EntbIr5jQrqj+k/EcmqTX+CxeAT1VoXeqvSQMIaJhglLsi6e1g0XriqEq2BHQHu9M+V2nDPOn+vLuBiXIfhOLExxuBsVUjT5Myh44DydJIHc+jckjLH9b6U5yp/6hjEfJYYLGpNSSOL2C2QPjg3Ln7Kan7AMSPkl+tc2j/CnhJY=
+	t=1749765028; cv=none; b=BRUvxXSOZ2u3USkiZK5uGpH0nCAPDr2LlMkzRY9s3+T37rvMKXOgdJzDr8CPQgWnCvRWPESzdCBEFGxtTx0xmHyhxpBoEHkUG3ExGm5859G1NjPCoUmgs/lPDnl3imp9AwKqjjFefmHxu6uVRi5G1tcEx8UWdGIN6Y7p0UoY22k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749764800; c=relaxed/simple;
-	bh=RTmqsomeWtafA+h15XBxSg8+mkeXrsZtwgDgRzPDGCk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=peFqUfbYXdeJRAk5xb1SwuhqGoONQ/OaYuuGgjYi61cwRDO90lEwNeKl9mnTKO36JVbshsefxm1E5Q0OWQIlJL5rKKLif50KjSyEfs65SOtNZxwQJkTvqbvcEQ1Bvq65wCkXcBsC7+cJKt++xVIO+HY529gilcglSzz0BlPW4EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YQR1kxkf; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1749765028; c=relaxed/simple;
+	bh=/raPSIZSWZZj4n+fwc8niF30vvTlX7BXAu0879ygFwg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KNEjxSyrdcB4IL2TcllDCUcoLfl6194g82Ajpe8A1cE5wXTONXjmdavEfRjY/iSkv5vjcG0ixczWlOf/n+QsGQ9O0EEKYSvAOdZ8gvGuNHiRpgHRczwthybV+eINqx3olpaEhQtE8WUaObe2dsmiU+QdDFb+b4XLm67W3ztBgC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C8jRJYOS; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YQR1kxkf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C8jRJYOS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749764798; x=1781300798;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RTmqsomeWtafA+h15XBxSg8+mkeXrsZtwgDgRzPDGCk=;
-  b=YQR1kxkfM8GPzrgfCyQ8an9zGA1FqLbZ+bn2ZTPI8Pp7Jdr0uJuPVplL
-   oI46fbo7m9THYi43bNcsKfwysyVVBIBtay6T12MnlCmcadJgjDte5kxrx
-   Mg2SvtSE+Bqx2lIE6m0X92qxbQzdZnoAZtChQzwvZzV6S169ssBLUoFTx
-   ox3irPQXGk1z9rn1s6lY2ju8GtCY+KsKj/HCmB7AsjBOtrTTpfi3QMpUq
-   w1kDEyChbvjREa8mzwA1fyDclV6A7/0WrFD1x6xMQvii7Nwp7b4cDkGvT
-   UwPwOOHL8/F1wGNp/eCFsviVx7FXeLHQBJZ0I7GJRlKjdkNQwDQIQI/W5
-   A==;
-X-CSE-ConnectionGUID: 4lRhQyeVT7alrzth6buwNQ==
-X-CSE-MsgGUID: Qj05L7/gRtuPGZ0s2IYVDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="63317720"
+  t=1749765026; x=1781301026;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/raPSIZSWZZj4n+fwc8niF30vvTlX7BXAu0879ygFwg=;
+  b=C8jRJYOSoI1RcF6CfgBZGvGgw4fiDgKiEeHG2my7ivx20kGJoLCaYeaN
+   79RYQzhf3AULZuQFk0EHpVl8Mityo1VJ1KBpzptGkcU3em2Tcb47x6GGg
+   QKpATvIsIip00r/uzBtuJGiR0j0gDRj3T/VoPpKvgRC4fHb3xTpXQ/9SJ
+   Gb3wyll3vs1OUEMbNOIo1QrFvLC0PeHvezNonnsrE1SCq8upMqYI1lGXO
+   S9pjaOreC9gmeFoIUfOmZvo6g+++qnY+Y/HLa1xbcpEO/JwvGdIJi5s/L
+   8vz2/ubyUhgGMfskVVuIUQb/St8jXnuXGQJzJ1NdRE4d06/CVChB5pE7+
+   Q==;
+X-CSE-ConnectionGUID: KO9Tb3+tQH+6nIn0/+YtwA==
+X-CSE-MsgGUID: Ee9q89g+SySxyyS+qWyxvQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="52065282"
 X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="63317720"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 14:46:36 -0700
-X-CSE-ConnectionGUID: XERu/DrMS1CayZ3QYjj0DQ==
-X-CSE-MsgGUID: Wiz34SAuRXO2pltw1w3T4A==
+   d="scan'208";a="52065282"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 14:50:25 -0700
+X-CSE-ConnectionGUID: uNxYaw0STgevhIIGnpvmjA==
+X-CSE-MsgGUID: OHAXHIIIRlqcKT46b9Xztw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="147627431"
-Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.111.188]) ([10.125.111.188])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 14:46:36 -0700
-Message-ID: <76a48d80-7eb0-4196-972d-ecdcbd4ae709@intel.com>
-Date: Thu, 12 Jun 2025 14:46:34 -0700
+   d="scan'208";a="184881931"
+Received: from sohilmeh.sc.intel.com ([172.25.103.65])
+  by orviesa001.jf.intel.com with ESMTP; 12 Jun 2025 14:50:24 -0700
+From: Sohil Mehta <sohil.mehta@intel.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Xin Li <xin@zytor.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v7 00/10] x86: Add support for NMI-source reporting with FRED
+Date: Thu, 12 Jun 2025 14:48:39 -0700
+Message-ID: <20250612214849.3950094-1-sohil.mehta@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] add STATIC_PMD_ZERO_PAGE config option
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: Pankaj Raghav <p.raghav@samsung.com>,
- Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
- Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
- Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
- x86@kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
- gost.dev@samsung.com, hch@lst.de
-References: <20250612105100.59144-1-p.raghav@samsung.com>
- <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
- <nsquvkkywghoeloxexlgqman2ks7s6o6isxzvkehaipayaxnth@6er73cdqopmo>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <nsquvkkywghoeloxexlgqman2ks7s6o6isxzvkehaipayaxnth@6er73cdqopmo>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/12/25 13:36, Pankaj Raghav (Samsung) wrote:
-> On Thu, Jun 12, 2025 at 06:50:07AM -0700, Dave Hansen wrote:
->> On 6/12/25 03:50, Pankaj Raghav wrote:
->>> But to use huge_zero_folio, we need to pass a mm struct and the
->>> put_folio needs to be called in the destructor. This makes sense for
->>> systems that have memory constraints but for bigger servers, it does not
->>> matter if the PMD size is reasonable (like in x86).
->>
->> So, what's the problem with calling a destructor?
->>
->> In your last patch, surely bio_add_folio() can put the page/folio when
->> it's done. Is the real problem that you don't want to call zero page
->> specific code at bio teardown?
-> 
-> Yeah, it feels like a lot of code on the caller just to use a zero page.
-> It would be nice just to have a call similar to ZERO_PAGE() in these
-> subsystems where we can have guarantee of getting huge zero page.
-> 
-> Apart from that, these are the following problems if we use
-> mm_get_huge_zero_folio() at the moment:
-> 
-> - We might end up allocating 512MB PMD on ARM systems with 64k base page
->   size, which is undesirable. With the patch series posted, we will only
->   enable the static huge page for sane architectures and page sizes.
+Changes since v6
+================
+This series is a minor update from v6, with the following changes:
 
-Does *anybody* want the 512MB huge zero page? Maybe it should be an
-opt-in at runtime or something.
+ * Includes a pre-patch to provide separate KVM IRQ and NMI entry
+   wrappers for FRED (Sean).
+ * Uses an enum to allocate NMI-source vectors (DaveH).
+ * Picks up review tags from Xin.
+ * Rebased on top of 6.16-rc1.
 
-> - In the current implementation we always call mm_put_huge_zero_folio()
->   in __mmput()[1]. I am not sure if model will work for all subsystems. For
->   example bio completions can be async, i.e, we might need a reference
->   to the zero page even if the process is no longer alive.
+The patchset seems to be maturing, so while reviewing this version, please 
+consider providing Acks and Review tags if the patches look okay.
 
-The mm is a nice convenient place to stick an mm but there are other
-ways to keep an efficient refcount around. For instance, you could just
-bump a per-cpu refcount and then have the shrinker sum up all the
-refcounts to see if there are any outstanding on the system as a whole.
+v6: https://lore.kernel.org/lkml/20250513203803.2636561-1-sohil.mehta@intel.com/
 
-I understand that the current refcounts are tied to an mm, but you could
-either replace the mm-specific ones or add something in parallel for
-when there's no mm.
+Background
+==========
+NMI-source reporting with FRED [1] provides a new mechanism for
+identifying the source of NMIs. As part of the FRED event delivery
+framework, a 16-bit vector bitmap is provided that identifies one or
+more sources that caused the NMI.
+
+Using the source bitmap, the kernel can precisely run the relevant NMI
+handlers instead of polling the entire NMI handler list. Additionally,
+the source information would be invaluable for debugging misbehaving
+handlers and unknown NMIs.
+
+Overview of NMI-source usage
+============================
+Code snippets:
+
+// Allocate a static source vector at compile time
+#define NMIS_VECTOR_TEST	1
+
+// Register an NMI handler with the vector
+register_nmi_handler(NMI_LOCAL, test_handler, 0, "nmi_test", NMIS_VECTOR_TEST);
+
+// Generate an NMI with the source vector using NMI encoded delivery
+__apic_send_IPI_mask(cpumask, APIC_DM_NMI | NMIS_VECTOR_TEST);
+
+// Handle an NMI with or without the source information (oversimplified)
+source_bitmap = fred_event_data(regs);
+if (!source_bitmap || (source_bitmap & BIT(NMIS_VECTOR_TEST)))
+	test_handler();
+
+// Unregister handler along with the vector
+unregister_nmi_handler(NMI_LOCAL, "nmi_test");
+
+Patch structure
+===============
+Patch 1-3: Prepare FRED/KVM and enumerate NMI-source reporting
+Patch 4-6: Register and handle NMI-source vectors 
+Patch 7-9: APIC changes to generate NMIs with vectors
+Patch  10: Improve debug print with NMI-source information
+
+Many thanks to Sean Christopherson, Xin Li, H. Peter Anvin, Andi Kleen,
+Tony Luck, Kan Liang, Jacob Pan Jun, Zeng Guang, Peter Zijlstra,
+Sandipan Das, Steven Rostedt, Dave Hansen and others for their
+contributions, reviews and feedback.
+
+Future work
+===========
+I am considering a few additional changes related to debugging and
+tracing, as well as KVM support, that would be valuable for enhancing
+NMI handling in the kernel.
+
+Refer the v6 cover letter for more details:
+v6: https://lore.kernel.org/lkml/20250513203803.2636561-1-sohil.mehta@intel.com/
+
+Links
+=====
+[1]: Chapter 9, https://www.intel.com/content/www/us/en/content-details/819481/flexible-return-and-event-delivery-fred-specification.html
+
+Jacob Pan (1):
+  perf/x86: Enable NMI-source reporting for perfmon
+
+Sean Christopherson (1):
+  x86/fred: Provide separate IRQ vs. NMI wrappers for entry from KVM
+
+Sohil Mehta (8):
+  x86/fred: Pass event data to the NMI entry point from KVM
+  x86/cpufeatures: Add the CPUID feature bit for NMI-source reporting
+  x86/nmi: Extend the registration interface to include the NMI-source
+    vector
+  x86/nmi: Assign and register NMI-source vectors
+  x86/nmi: Add support to handle NMIs with source information
+  x86/nmi: Prepare for the new NMI-source vector encoding
+  x86/nmi: Enable NMI-source for IPIs delivered as NMIs
+  x86/nmi: Print source information with the unknown NMI console message
+
+ arch/x86/entry/entry_64_fred.S      |  2 +-
+ arch/x86/events/amd/ibs.c           |  2 +-
+ arch/x86/events/core.c              |  6 +--
+ arch/x86/events/intel/core.c        |  6 +--
+ arch/x86/include/asm/apic.h         | 39 ++++++++++++++++++
+ arch/x86/include/asm/apicdef.h      |  2 +-
+ arch/x86/include/asm/cpufeatures.h  |  1 +
+ arch/x86/include/asm/fred.h         | 35 +++++++++++-----
+ arch/x86/include/asm/nmi.h          | 62 ++++++++++++++++++++++++++++-
+ arch/x86/kernel/apic/hw_nmi.c       |  5 +--
+ arch/x86/kernel/apic/ipi.c          |  4 +-
+ arch/x86/kernel/apic/local.h        | 24 ++++++-----
+ arch/x86/kernel/cpu/cpuid-deps.c    |  1 +
+ arch/x86/kernel/cpu/mce/inject.c    |  4 +-
+ arch/x86/kernel/cpu/mshyperv.c      |  2 +-
+ arch/x86/kernel/kgdb.c              |  8 ++--
+ arch/x86/kernel/kvm.c               |  9 +----
+ arch/x86/kernel/nmi.c               | 40 +++++++++++++++++++
+ arch/x86/kernel/nmi_selftest.c      |  8 ++--
+ arch/x86/kernel/smp.c               |  6 +--
+ arch/x86/kvm/vmx/vmx.c              |  4 +-
+ arch/x86/platform/uv/uv_nmi.c       |  4 +-
+ drivers/acpi/apei/ghes.c            |  2 +-
+ drivers/char/ipmi/ipmi_watchdog.c   |  3 +-
+ drivers/edac/igen6_edac.c           |  3 +-
+ drivers/thermal/intel/therm_throt.c |  2 +-
+ drivers/watchdog/hpwdt.c            |  6 +--
+ 27 files changed, 218 insertions(+), 72 deletions(-)
+
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.43.0
+
