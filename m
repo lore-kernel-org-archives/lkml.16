@@ -1,71 +1,71 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E5F182B4
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCF7125B2
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 04:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749703984; cv=none; b=j8T8tyTXFtm2PFt77s/WPZEDQAR2USrxD+0dwT9snUTjMb4SqPOGj1ndRSJX/mmzlWHK/kkupKxqCxI3cyJsp7tw+iIrdOVZXU1IXX20v3cn0W5mXdsdnQjhxvn0F4TXLu5fbeVFVs87tmFmWBBugUi1AcM7mCsQV+rBVs/knmQ=
+	t=1749704055; cv=none; b=D8Nt0zVWJgt74ZRTMsBz3E2c+UBXXrld9MQ5YUuiCZBhZ6U8dQGp+7yPkacWDfkWU4tdVxALhWPtZMhDS87f4xhWmq7jlcXdlP7oqwJN4YmAwsnSdQ0aONIw1bcpFRCv2VXza0XY0wkEiTLyWRG6g1qv4cNus6+8PEjlPkZFdUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749703984; c=relaxed/simple;
-	bh=JN7PESSUpb2dkcTr3UklwuIC/3db+uAVTehxCFYg+YA=;
+	s=arc-20240116; t=1749704055; c=relaxed/simple;
+	bh=l4CpCFkEPXhArGhHe83cXPQrO0QgByATLePmdZUTeKY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CfD+xl+3hEvaQjrXSfCCMpHX1q3+viMDX50sAsd0+uA1/pK22NVLE3gNlzyhXiMA/YayjxFHyKQABJZKJDSluake4C0GoyGrh+kvQnktqY4HcXjoOkQcPBTJwNDXfg91CPjYnePY3QvlaGK7kF8Xu1sAb4CNpLO7HgrE8WF82B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dxKpNa9H; arc=none smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=aa1GCCJGxcN0x1h0h2Cvi//5tZn5Fn4LyUUuODjVusLiR7IGa3SGs2x+weIvdWWuDcCdBi6+woSxjTb+rMDRYgrbJR5BqN8ririDE5wyWaNhVgMUyycyF9+V4ta9v91tK4OaOBq+qIAP/Wd6K67pqsl2E+bhVIt2uaCPWybaGcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q4kfd1zk; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dxKpNa9H"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2348ac8e0b4so78155ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:53:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q4kfd1zk"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2348ac8e0b4so78375ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:54:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749703981; x=1750308781; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749704053; x=1750308853; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JN7PESSUpb2dkcTr3UklwuIC/3db+uAVTehxCFYg+YA=;
-        b=dxKpNa9H18qiZ6tvNSAz0QyFo/O0CYgjxzrbWCG8vcNHgpxje6TEUVMylZtMEbpuJN
-         Q27VPEthzqWLeaVKfUbWmmffwHaTYNfHI9gtXgHdr6VxxSnOAhbTEq/rB70k9gITnHmH
-         ktWZ6oRiYsJwCW/MMRGTreFeKDe7sYFBYgvTaEldOOOiM2DlTP7P5sWrkTMl6wVRx8Mr
-         0oW2IvVNshJ90bBbGvsI5VgIEtmO7LmMsWiqA2W+RorZB2+0CMj8WnNjRX8wzFAKj5sS
-         Bs7shYT7j9uzQ8dl/flyPtrkdwPuv74pDUMObzgOEclhbPRfdsP0Td4bJwNEZk+l7Z0S
-         mIjQ==
+        bh=l4CpCFkEPXhArGhHe83cXPQrO0QgByATLePmdZUTeKY=;
+        b=Q4kfd1zkMaouobxcJRzKKiMW7dPz89+qy9Kxq+1zUUjVcJarwNReDWyzlIHHaIe85K
+         6nF6FaCTaal6vEFsBor/3qrQbPtBWT6L+oxNJS79M+z3XSzRhqZwVZM2kKm0KjFxd08R
+         lqBevYnwSMJCf9lRXTOkauj5MkjG8a+8WDZME6s/ZvXm3wJF160z4thLtKnC0ugam67Z
+         1jzEaqqaIPe0CYrnGcqKuTYHUIVYICDhGrR3gRe+N/JkW29Px27vbIWtH2JpvFezxsVu
+         7JMCEyYvIuMBCOlBkf86MjI3HmSABM9CAH74e/xQqI+6Py42PV1rG1DnxvTSrL4b7t9u
+         dcLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749703981; x=1750308781;
+        d=1e100.net; s=20230601; t=1749704053; x=1750308853;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JN7PESSUpb2dkcTr3UklwuIC/3db+uAVTehxCFYg+YA=;
-        b=IW9Zfmwlvx5SKyg6zW/wVU4aa3FBgfCBBVMyQ44yi1dnO+Bcdvv27vo2K4jkKvIACI
-         5b9SoCe95CPVRdz6NkfBjDD4GOXlDbFOFRJyUQ4WSP5wm7O0k4+u/j2oLkPpVmdEWj4G
-         MxpiNjEW5TD2YaUym9kz24yQ1lTxcq0s6Txgy1D8rYL43dxXaPwA4oNQjbKjS5XCbFbg
-         aWTvFKJdHzWNX2vvfDA2aatFrgdsqcm8LdNvQNvqg4tsYxciXJtNcRyk5WZY6nIjhTUa
-         tEz1m61QkoF9TRoXsZgyerYqm1R1W5b0jf2RzlgZKMwjPrecAuCYmFyq203CQ9v6a8Sz
-         Eyjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU45mOvUHkqZ53aBmMFTELE+7R2yUL6ibyszbuTAEgiMLGh/kZ6Wo/PqVavpyyKint1vbUV4CUVXj8oAj0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiwQmXNryTPka7sxy5+JP6H3YU9efcaIiRnWq5kp7oKSBjiYCo
-	cOseKIIAzUYVOP6qsMmeDLS6u8oICSdYAy2/VwEt8kIsmdDx+Nr51KCd/V+V6p0xXpDVV0JnILx
-	BMuVisfRfVTDC7t/f8ZWw7hrLIl6Suf4H6oVVbPbl
-X-Gm-Gg: ASbGncuhplbq/U18zd485DUaRIu9L8qJPnuBpxhTDUOW+g8PCagWZePpri3O+cXi3p4
-	wZQEGoVLcjm35qsNmaHYp5+AiSi3ir644FhOs8qncSY3i6urVDk6dD7MNTzz3R9K9GH0XBz1Azx
-	/CcduizAwkQc++Fb8A9odxGezEC4sm+w6irAIheC7Nu1nG
-X-Google-Smtp-Source: AGHT+IF9sI2+TSVjeDsyCsMhNK2tYq652eey2qbdj9oGkvAU4h9hMqqw9fQg0pUIUw6GrHibgaGuCKYfworr/47Spj4=
-X-Received: by 2002:a17:902:f54b:b0:231:ddc9:7b82 with SMTP id
- d9443c01a7336-2364eb2b4ebmr978315ad.13.1749703980736; Wed, 11 Jun 2025
- 21:53:00 -0700 (PDT)
+        bh=l4CpCFkEPXhArGhHe83cXPQrO0QgByATLePmdZUTeKY=;
+        b=LyV2C5WazvkUlOb5gVlGCyplN+O1wJDBuEChWGZxHgl5oPgiZJyqDhHvEfVYPqHZli
+         rAhh5o8ZqgcCPiwvIQZotpX7AzcLe3PXyIzLQTux7UTCkyuX14DoHmBPQ5NXGOWfyliZ
+         +dR5Nlt11JlKok9xN8EbrHC1imNu4E6ZoKd2GlJ9+dC/eAkSCaUkXXpqdkhAsEV+LHMA
+         CaOSADGARBIjp4tZhQ5dF8aByZ7lBtd0TepNFXO4nxSuaAe0BMYCOAoRH6XplH/7Eytg
+         xaavqdt+fPSPk7mecZOSn9oQcX7u0JVrnnGefYSnAbyo/zdZPH8j5ef34CZ23Y0m1Mog
+         Hw+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUaZylEiNnPjqTUUaP1iT0/egDC1hCnICERO68p8OGKMMh8dG4SzPYwlJgO8VHSgqpj0s2LiXBXtohp8Nw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZZoBoi+IRZ4qMPnN9biLutygtaMggt6xs1eqI/m2/FXBRuRdR
+	6lCzT8xALVwgYbUtehwT7r9QpApPmIIE7LWjDKgeZ5CG/ou/n0lNmxQeUGDMlzicPrHxYu06tQ3
+	8LOIUfvEgKtmFO2uiXgTHTKUP8i7NZwJJYqPZGyaI
+X-Gm-Gg: ASbGncvHlyovV4I1/YTn/RCk08waCSATIXp7SoPQ8N13KEHtHym5VEvWcaLC+vscnpD
+	gUWLn82XruYN1XwnbcFhrsH60PcGra61yInKAVtpi8irv9t+8fvKrNnX9di3EY98gh2WxHNKVcv
+	XgQJKxh876KUjiGOe8hMhoikMaeVi4ODuTE6rzimM98OR2
+X-Google-Smtp-Source: AGHT+IEc4yvJ/9Le4p12BfieudAYYkFpP8yqL8EfRyMPHwRNm6LtkDe0Pch4N7grSHz8SvB2PpoiZJSPEu8nZuAg4kw=
+X-Received: by 2002:a17:903:3bce:b0:234:b441:4d4c with SMTP id
+ d9443c01a7336-2364ead3babmr944025ad.5.1749704052655; Wed, 11 Jun 2025
+ 21:54:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610150950.1094376-1-mbloch@nvidia.com> <20250610150950.1094376-2-mbloch@nvidia.com>
-In-Reply-To: <20250610150950.1094376-2-mbloch@nvidia.com>
+References: <20250610150950.1094376-1-mbloch@nvidia.com> <20250610150950.1094376-3-mbloch@nvidia.com>
+In-Reply-To: <20250610150950.1094376-3-mbloch@nvidia.com>
 From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 11 Jun 2025 21:52:47 -0700
-X-Gm-Features: AX0GCFvzBtcSK4oFAp7AxIqQXQSZWU21N-dciM4Bw9ZhMgTYOZ3S9uS4MIxcR6Y
-Message-ID: <CAHS8izOzZnNRbBvMohGzB2rxhuLun8ZcPKg38Z1TbXo3stqZew@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 01/11] net: Allow const args for of page_to_netmem()
+Date: Wed, 11 Jun 2025 21:53:59 -0700
+X-Gm-Features: AX0GCFvtush-ZCCdKGvUFlqRp4N3jBvWu7laru6O0slTkkxc74LRPuZDIkdxgp0
+Message-ID: <CAHS8izMBTLr2ZVt9e3XZq=JNzHjbxLEXQCd+FZtN72-RowH16Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 02/11] net: Add skb_can_coalesce for netmem
 To: Mark Bloch <mbloch@nvidia.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
 	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
@@ -77,25 +77,17 @@ Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 8:15=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
+On Tue, Jun 10, 2025 at 8:11=E2=80=AFAM Mark Bloch <mbloch@nvidia.com> wrot=
 e:
 >
 > From: Dragos Tatulea <dtatulea@nvidia.com>
 >
-> This allows calling page_to_netmem() with a const page * argument.
+> Allow drivers that have moved over to netmem to do fragment coalescing.
 >
 > Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+> Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
+> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 > Signed-off-by: Mark Bloch <mbloch@nvidia.com>
-
-This is slightly better, it returns a const netmem_ref if const struct page=
-:
-
-https://lore.kernel.org/netdev/20250609043225.77229-6-byungchul@sk.com/
-
-It's probably too much of a hassle to block your series until
-Byungchul's change to this helper goes in for you, so this seems fine
-to me in the interim.
 
 Reviewed-by: Mina Almasry <almasrymina@google.com>
 
