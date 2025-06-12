@@ -1,133 +1,105 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD3E299A82;
-	Thu, 12 Jun 2025 16:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A53B23026B;
+	Thu, 12 Jun 2025 16:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744786; cv=none; b=Slzm3cvswmQTUhG2mRs868laL8v8enBEGkunhYDo+tJL1KeWbTORgGi4KS44IVRA1GmjC3cnJC8YSCubyXrlp3LyOR9DBdYjRIcSY9oCyol4+r48jAlV10NFLu8CnTrHxsfiecY5rmESyFuJLFY4EV3W7EBpuNLdoTe54Bppe1E=
+	t=1749744903; cv=none; b=DPZQIt8YkmU/fGYpcFxDMdW3zXPw7LiR+2a3AUj8ln6OtEKU1L6uqxVdCGxQOTxTDe4vMGQtF+n4GhmSCy/3R33MhYNKCfQDYLolOv06wE7uARNIRKJqBqzVsILSsr70UwSQfdRLOZXd4LmKabWDF0jyk/3ISXDpXZFVoOX0Z0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744786; c=relaxed/simple;
-	bh=zAVkyIooyMat1eNJwc2FV9L0fbEJZLL7QPWVbExBqdQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ufT3jeZqm/Cet3hIEWe2D3kwKL2ZUMTsnUbyvFtj8mlRQwKuN/1naYUwEsBQdmMd0v2ziMX1T2wTj+0uRJQ7yeFJgCPLiXsUpwJGQzPTq9HGz4x2snaD3dv4xXA5i9OCFjM7fJFjBEOv6AymZnsltfsQ9YDJMHhqXNt2WCw4+DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dPq9n5FS; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749744903; c=relaxed/simple;
+	bh=j9dHCfR61zJv1bBAavSABckZ8ziVHjZSd9lKDPsxLKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o2WhOEVHpIepbBO6Vlj8ZjG6wVnImk/vsQ8J4yUvRrWTmFsj+AaQ8Rv5dpicTnperhd5GQlnp8CgYwVH8tjbcB5fXcuBVVLhFNw6hwF205Ez5wWFyNx8dwEu7OHvg1ZT/IEBnN+2T3Wjt6Ge0UsKzRjvEkBg87qCZ4NIW78HaOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cb58meQa; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dPq9n5FS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=7r
-	ztfc6dZ+PrkFfJa9/o6oD1yqpDmBSs0eJuIxIy4h4=; b=dPq9n5FSzlngOtGcPJ
-	zIsC2FrZzSRhp05F2FiO5sOc03biHtqOkujDa61eWjdwVW6FLa7ZueuE6FRv+aJL
-	UCPHeauLIPw+rqzC21XayVFKwJWwbL1aWmkv+lZtwcrhgA/rq5C55sqG3Uuy2mGi
-	Qx55kVS3xkVB2VhyDYW22DnTE=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD3J19t_EpodUoJHw--.37531S2;
-	Fri, 13 Jun 2025 00:12:30 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	mani@kernel.org
-Cc: robh@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI: dwc: Simplify boolean condition returns in debugfs
-Date: Fri, 13 Jun 2025 00:12:26 +0800
-Message-Id: <20250612161226.950937-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cb58meQa"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8589A40E016E;
+	Thu, 12 Jun 2025 16:14:56 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id HPo35jQCHO70; Thu, 12 Jun 2025 16:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1749744892; bh=G81B13AGBkDrjM176tc3zsIP4c1VrBnBegshc5rd/4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cb58meQaJBswr4e49MzIndfxacpUT5LNxnqw/dUrs9Y+Tm8iZQs47tiyKkOnJsxqp
+	 Z0fP9OUFYzCmuQlk4BM9NdDU9Wcqqi2MPmz80soOq0clzEHnqUtw228ZsUf1a3PIe2
+	 L38Rl7XXrxNfQeJlhM6KsjHM7J6/PikXHGtsyddVnUnkIAGN+qGRLTCSetUyIVvwtB
+	 Su3bk2kR0EzAxGTAWcQUiZBQQOXogmgpFMtmRFXzBWCCHkRf1F6n6TsroczbKhMQg0
+	 j+QrPv38vcM5/Lw0Who64w6QieeC4HTeRLVaqeQ8YvaqZWILEsdwhoKN5bUxE/EFp4
+	 Jl8r9Zjm+qEoZf5yh5S63JvzGH/TX8Ww0DHQrRn1+y7Sxbre8enQS0BwCuItT/Qgys
+	 6lRLbxoK4lENhhjON8eYy1No59ry5YEMDaG2NBaVOKrkh049Ftirwz8Kv97M41cZYF
+	 DwBYLOkrhsBBIwgtw6q7EDhLuO87YGJGDtcZcTKA6VIZ2cm9pkfJb9Wv1zkwNhz7Ff
+	 H+uplzlYv+mZHZNtaormDQ+agZMLJNk01ti1uPOtzv/h9pGfyDD7ZhjQ1FvdklfFEW
+	 x6c2f2P+ytQ9HJmOUr76/12AutrjYGwo9i7KkGINuqr0BoF6PD5bfDExT9vL+jdRXo
+	 lCeC89djme1AiWanCxp0OHTM=
+Received: by mail.alien8.de (SuperMail on ZX Spectrum 128k, from userid 1005)
+	id 6BC0F40E0184; Thu, 12 Jun 2025 16:14:52 +0000 (UTC)
+Date: Thu, 12 Jun 2025 16:14:52 +0000
+From: Borislav Petkov <bp@alien8.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-edac@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH] tracing, AER: Hide PCIe AER event when PCIEAER is not
+ configured
+Message-ID: <20250612161452.GAaEr8/PdA2jeKC7ld@fat_crate.local>
+References: <20250612094932.4a08abd6@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3J19t_EpodUoJHw--.37531S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WFy5Ar48Cr48Kr47AF45Awb_yoW8Kr45p3
-	y8ZFWFyFs0ya45ZFs3A3WfZF1Skr93AF1DJasxta4xu3W2gFsrWr1DA34a934ftrWUWr17
-	Ka1xAFWxAr1ayFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEl1vDUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQxdqo2hK9tiWLAABsq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250612094932.4a08abd6@batman.local.home>
 
-Replace redundant ternary conditional expressions with direct boolean
-returns in PTM visibility functions. Specifically change this pattern:
+On Thu, Jun 12, 2025 at 09:49:32AM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The event aer_event is only used when CONFIG_PCIEAER is configured. It
+> should not be created when it is not. When an event is created it creates
+> around 5K of text and meta data regardless if the tracepoint is used or
+> not. Instead of wasting this memory, put #ifdef around the event to not
+> create it when it is not used.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Note, I will be adding code soon that will make unused events cause a warning.
+> 
+>  include/ras/ras_event.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+> index 14c9f943d53f..c8cd0f00c845 100644
+> --- a/include/ras/ras_event.h
+> +++ b/include/ras/ras_event.h
+> @@ -252,6 +252,7 @@ TRACE_EVENT(non_standard_event,
+>  		  __print_hex(__get_dynamic_array(buf), __entry->len))
+>  );
+>  
+> +#ifdef CONFIG_PCIEAER
+>  /*
+>   * PCIe AER Trace event
+>   *
+> @@ -337,6 +338,7 @@ TRACE_EVENT(aer_event,
+>  			__print_array(__entry->tlp_header, PCIE_STD_MAX_TLP_HEADERLOG, 4) :
+>  			"Not available")
+>  );
+> +#endif /* CONFIG_PCIEAER */
+>  
+>  /*
+>   * memory-failure recovery action result event
+> -- 
 
-    return (condition) ? true : false;
-
-to the simpler:
-
-    return condition;
-
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- .../pci/controller/dwc/pcie-designware-debugfs.c   | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-index c67601096c48..6f438a36f840 100644
---- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-@@ -814,14 +814,14 @@ static bool dw_pcie_ptm_context_update_visible(void *drvdata)
- {
- 	struct dw_pcie *pci = drvdata;
- 
--	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
-+	return pci->mode == DW_PCIE_EP_TYPE;
- }
- 
- static bool dw_pcie_ptm_context_valid_visible(void *drvdata)
- {
- 	struct dw_pcie *pci = drvdata;
- 
--	return (pci->mode == DW_PCIE_RC_TYPE) ? true : false;
-+	return pci->mode == DW_PCIE_RC_TYPE;
- }
- 
- static bool dw_pcie_ptm_local_clock_visible(void *drvdata)
-@@ -834,35 +834,35 @@ static bool dw_pcie_ptm_master_clock_visible(void *drvdata)
- {
- 	struct dw_pcie *pci = drvdata;
- 
--	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
-+	return pci->mode == DW_PCIE_EP_TYPE;
- }
- 
- static bool dw_pcie_ptm_t1_visible(void *drvdata)
- {
- 	struct dw_pcie *pci = drvdata;
- 
--	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
-+	return pci->mode == DW_PCIE_EP_TYPE;
- }
- 
- static bool dw_pcie_ptm_t2_visible(void *drvdata)
- {
- 	struct dw_pcie *pci = drvdata;
- 
--	return (pci->mode == DW_PCIE_RC_TYPE) ? true : false;
-+	return pci->mode == DW_PCIE_RC_TYPE;
- }
- 
- static bool dw_pcie_ptm_t3_visible(void *drvdata)
- {
- 	struct dw_pcie *pci = drvdata;
- 
--	return (pci->mode == DW_PCIE_RC_TYPE) ? true : false;
-+	return pci->mode == DW_PCIE_RC_TYPE;
- }
- 
- static bool dw_pcie_ptm_t4_visible(void *drvdata)
- {
- 	struct dw_pcie *pci = drvdata;
- 
--	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
-+	return pci->mode == DW_PCIE_EP_TYPE;
- }
- 
- const struct pcie_ptm_ops dw_pcie_ptm_ops = {
-
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.25.1
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
 
