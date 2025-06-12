@@ -1,289 +1,384 @@
-Received: from rcdn-iport-4.cisco.com (rcdn-iport-4.cisco.com [173.37.86.75])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7781B2C325E;
-	Thu, 12 Jun 2025 22:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C8B2F4314;
+	Thu, 12 Jun 2025 22:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749766848; cv=none; b=L6BduqBH6gzUq956hYMa97NZo4v2L2BRzW548bNamUROdBwW56hMP5shKAZpPqwzb3dnraIKm0ZkcAceiFxT8+RXaDdH6IQ4betNuwef0yuHcknvTx9cfIfbwcSbBTKVWBO9ZoRr2T92c0gvhhVQNVggAamf/xd15wO68wtiE2M=
+	t=1749766881; cv=none; b=iVxO0xHeH3zcItNUemLWbB0eFL12SohCGroaYRGG1+c+FjQT5zF10xERhapYs+ys8kNBfDKsP5DLGwqMF9ChlgKX072ini1m4nhsxAxYVF6L1909ohWX3RSAzxRm9oKrJgX90SMff5q0llER0dWPkTD7gPQrtBAqLohpOKfwg5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749766848; c=relaxed/simple;
-	bh=7xJdS0NlV0f6qVbfi2ht7mxeyl33GYCtR2uTV02K/aE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d445EMl5hcS4Te/wpGyUFPIYI1694/l72BjaSNCncBOuS88jnhBa7zMgT1FzN0q9SGRwK3q86cYYtqCACooPT97N+0dz/olZEqkHpaAjNPYLTVHSfyrs8bZaxf1XGz0JJWJ6BDfw0Yy7mcVqTCNBEBQXSkKgtxSYNuwsZ++Dfb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=d+q3hSYw; arc=none smtp.client-ip=173.37.86.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	s=arc-20240116; t=1749766881; c=relaxed/simple;
+	bh=fGrU0pENieBMN6H+BAjvxFzCsdQ9vYgW2Q9x715RgZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A9yuctkEsvTwYivaZrrguhniti4a820vXnWbzsRIKnwsXx7QJYy+HFBwOL/yVqpH7uyjtflRW16M3Zjppx6mt2BDu2KHKYGTxf/x0AexYg9VsXKzIQTNKGIeNrTGvZ4LM29hKHCCnoUeoTznfZI7/FiyTTL2lu3QNy45e3BBNHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=EtzeKLJ9; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="d+q3hSYw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=7741; q=dns/txt;
-  s=iport01; t=1749766836; x=1750976436;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=F2+bixmuNLdcMxgRBtx96vs2b1DYzsJQTdepEWzrFTc=;
-  b=d+q3hSYwYmpMQ6qD6dJDVFa2fkNsqa3huUkvjsHnl7oV6Z0ECflRZrcA
-   /npluTCZBpr85UnQ62WJThvJH5MWxkOx70CJ1JfUcgZKIvrh8qYcFsE2k
-   1dG05TfCECrWCcgSgOQNEIEyObYRHxAW0pIa5AuTcKDoatqwgIL/csHBM
-   aUuyH+3xUcYzhBZcryRMmmabsTFx4UTkr3+Vws2Qj4Tbrrq0DJfAK26jI
-   ZMkivwrKrt36reagrU4P3iSHm55G/vLPQYEfD1Jqz1zSPii29bQGjF1zU
-   0hgw6xyXHxjTFdL0CzQzkzWt9xkhJ31Pl7jvGj04akQPmWFMoeOKdp9bk
-   g==;
-X-CSE-ConnectionGUID: 9HKOKLw7Tw6EKZE+ouVpmg==
-X-CSE-MsgGUID: bU280ej7QHCfeHJxu8HlyQ==
-X-IPAS-Result: =?us-ascii?q?A0AEAACoUUto/5MQJK1aGgEBAQEBAQEBAQEDAQEBARIBA?=
- =?us-ascii?q?QEBAgIBAQEBgX8FAQEBAQsBgkqBUkMZMIxwhzSCIZ4ZgSUDVw8BAQEPUQQBA?=
- =?us-ascii?q?YUHAotmAiY0CQ4BAgQBAQEBAwIDAQEBAQEBAQEBAQELAQEFAQEBAgEHBYEOE?=
- =?us-ascii?q?4YIhlsCAQMnCwFGEFFWGYMCgm8DsAaBeTOBAd43gW6BSQGNTHCEdycVBoFJR?=
- =?us-ascii?q?IEVgnlvgVKJNQSDOo9oYIFqgjGMO0iBHgNZLAFVEw0KCwcFgWMDNQwLLhUyP?=
- =?us-ascii?q?DIdgg2FGYISiwiESStPhSGFByRyDwZHQAMLGA1IESw3FBsGPm4HmAmDaQeBD?=
- =?us-ascii?q?hSBZEgekyQLkjOBNZ9WhCWhUxozqmGZBKN/hTmBaDyBWTMaCBsVgyJSGQ+OL?=
- =?us-ascii?q?Ra7VSYyPAIHCwEBAwmPdQeBFmABAQ?=
-IronPort-Data: A9a23:3muMNK4MjlD6XhmMwBs2MQxRtOjGchMFZxGqfqrLsTDasY5as4F+v
- jFJWWyHPq3fZjfzc94ga4vl8EgFvZTSndJlTVFvqnw3Zn8b8sCt6fZ1gavT04J+CuWZESqLO
- u1HMoGowPgcFyGa/lH3dOG49xGQ7InQLpLkEunIJyttcgFtTSYlmHpLlvUw6mJSqYDR7zil5
- 5Wr/aUzBHf/g2QpajxNsfrZwP9SlK2aVA0w7wRWic9j5Dcyp1FNZLoDKKe4KWfPQ4U8NoaSW
- +bZwbilyXjS9hErB8nNuu6TnpoiG+O60aCm0xK6aoD66vRwjnVaPpUTaJLwXXxqZwChxLid/
- jniWauYEm/FNoWU8AgUvoIx/ytWZcWq85efSZSzXFD6I0DuKxPRL/tS4E4ebK073cVTHj5y6
- qI1CwIgLReeufqzz+fuIgVsrpxLwMjDNYcbvDRkiDreF/tjGMiFSKTR7tge1zA17ixMNa+BP
- IxCN3w2MlKZP0In1lQ/UPrSmM+rj2PjcjlRq3qepLE85C7YywkZPL3Fa4uNIYzRH5gK9qqej
- mj7pTShDxNFDfy0xzel0GKx1s/LjBquDer+E5X9rJaGmma7ymUVThYfT0O2p+W0kGa6WtRWM
- UtS/TAhxYAw+U6hZt38WQCo5n+Ou1gXXN84O+gz8h2MzOzM7hqUHHMJSBZGctUtsMJwTjsvv
- neLmt7vCDNvsZWPRH6d/6vSpjS3UQAPIHEPfzQsVwYJ49D/5oo0i3rnStdlDb7wjdDvHzz06
- y6FoTJ4hLgJi8MPkaKh8jjvhzOqu4iMVQUu5y3JUW+/qAB0foioY8qv81ez0BpbBI+dSl/Eu
- D0PnNKTqblWS5qMjyeKBu4KGdlF+sq4DdEVunY3d7FJythn0yfLkVx4iN2mGHpUDw==
-IronPort-HdrOrdr: A9a23:rgMA6a7xs/bt0AP6tQPXwOfXdLJyesId70hD6qm+c3Bom6uj5q
- STdZsguyMc5Ax6ZJhko6HiBEDiewK4yXcW2+gs1N6ZNWGMhILrFvAB0WKI+VLd8kPFm9J15O
- NJb7V+BNrsDVJzkMr2pDWjH81I+qjhzEnRv4fjJ7MHd3ASV0mmhD0JbDqmLg==
-X-Talos-CUID: =?us-ascii?q?9a23=3AT8zBcWuQn177kHcaDliK99IP6It0Ul7671PPfHO?=
- =?us-ascii?q?nV0tKepDWTkKu4KZrxp8=3D?=
-X-Talos-MUID: 9a23:yyobSwRrAPG8fnmPRXTmuWsybMpqvJ2OI04AsbcWppmkMT1JbmI=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.16,231,1744070400"; 
-   d="scan'208";a="390383257"
-Received: from alln-l-core-10.cisco.com ([173.36.16.147])
-  by rcdn-iport-4.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 12 Jun 2025 22:19:26 +0000
-Received: from fedora.lan?044cisco.com (unknown [10.188.19.134])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kartilak@cisco.com)
-	by alln-l-core-10.cisco.com (Postfix) with ESMTPSA id 52A5318000161;
-	Thu, 12 Jun 2025 22:19:25 +0000 (GMT)
-From: Karan Tilak Kumar <kartilak@cisco.com>
-To: sebaddel@cisco.com
-Cc: arulponn@cisco.com,
-	djhawar@cisco.com,
-	gcboffa@cisco.com,
-	mkai2@cisco.com,
-	satishkh@cisco.com,
-	aeasi@cisco.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	revers@redhat.com,
-	dan.carpenter@linaro.org,
-	Karan Tilak Kumar <kartilak@cisco.com>
-Subject: [PATCH v4 3/5] scsi: fnic: Add and improve logs in FDMI and FDMI ABTS paths
-Date: Thu, 12 Jun 2025 15:18:03 -0700
-Message-ID: <20250612221805.4066-3-kartilak@cisco.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250612221805.4066-1-kartilak@cisco.com>
-References: <20250612221805.4066-1-kartilak@cisco.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="EtzeKLJ9"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D292589A;
+	Fri, 13 Jun 2025 00:21:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749766867;
+	bh=fGrU0pENieBMN6H+BAjvxFzCsdQ9vYgW2Q9x715RgZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EtzeKLJ9fNofpu8CN6miWfsa35oVpgTUg6oZwKbbR1lpP1VDLZFTgrdhGzoAYvo/w
+	 3FBDhElP3o5W0lfoMQBQPJS1U2qfs92R8cPFAsKdmOFnOstnj5p2vOPWIzbWSjIrcj
+	 v+Geba43pj0ltitHrttq7eFd92sqQTk/jyp0nwZg=
+Date: Fri, 13 Jun 2025 01:21:00 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] media: rcar-csi2: Add D-PHY support for V4H
+Message-ID: <20250612222100.GD10542@pendragon.ideasonboard.com>
+References: <20250612175904.1126717-1-niklas.soderlund+renesas@ragnatech.se>
+ <20250612175904.1126717-5-niklas.soderlund+renesas@ragnatech.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Authenticated-User: kartilak@cisco.com
-X-Outbound-SMTP-Client: 10.188.19.134, [10.188.19.134]
-X-Outbound-Node: alln-l-core-10.cisco.com
+In-Reply-To: <20250612175904.1126717-5-niklas.soderlund+renesas@ragnatech.se>
 
-Add logs in FDMI and FDMI ABTS paths.
-Modify log text in these paths.
+Hi Niklas,
 
-Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-Reviewed-by: Arun Easi <aeasi@cisco.com>
-Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
----
- drivers/scsi/fnic/fdls_disc.c | 65 +++++++++++++++++++++++++++++++----
- 1 file changed, 58 insertions(+), 7 deletions(-)
+Thank you for the patch.
 
-diff --git a/drivers/scsi/fnic/fdls_disc.c b/drivers/scsi/fnic/fdls_disc.c
-index 0ee1b74967b9..9e9939d41fa8 100644
---- a/drivers/scsi/fnic/fdls_disc.c
-+++ b/drivers/scsi/fnic/fdls_disc.c
-@@ -791,6 +791,7 @@ static uint8_t *fdls_alloc_init_fdmi_abts_frame(struct fnic_iport_s *iport,
- static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- {
- 	uint8_t *frame;
-+	struct fnic *fnic = iport->fnic;
- 	unsigned long fdmi_tov;
- 	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
- 			sizeof(struct fc_frame_header);
-@@ -801,6 +802,9 @@ static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- 		if (frame == NULL)
- 			return;
- 
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: FDLS send FDMI PLOGI abts. iport->fabric.state: %d oxid: 0x%x",
-+			 iport->fcid, iport->fabric.state, iport->active_oxid_fdmi_plogi);
- 		fnic_send_fcoe_frame(iport, frame, frame_size);
- 	} else {
- 		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING) {
-@@ -809,6 +813,9 @@ static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- 			if (frame == NULL)
- 				return;
- 
-+			FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+				 "0x%x: FDLS send FDMI RHBA abts. iport->fabric.state: %d oxid: 0x%x",
-+				 iport->fcid, iport->fabric.state, iport->active_oxid_fdmi_rhba);
- 			fnic_send_fcoe_frame(iport, frame, frame_size);
- 		}
- 		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING) {
-@@ -821,6 +828,9 @@ static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- 					return;
- 			}
- 
-+			FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+				 "0x%x: FDLS send FDMI RPA abts. iport->fabric.state: %d oxid: 0x%x",
-+				 iport->fcid, iport->fabric.state, iport->active_oxid_fdmi_rpa);
- 			fnic_send_fcoe_frame(iport, frame, frame_size);
- 		}
- 	}
-@@ -829,6 +839,10 @@ static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
- 	fdmi_tov = jiffies + msecs_to_jiffies(2 * iport->e_d_tov);
- 	mod_timer(&iport->fabric.fdmi_timer, round_jiffies(fdmi_tov));
- 	iport->fabric.fdmi_pending |= FDLS_FDMI_ABORT_PENDING;
-+
-+	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+		 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+		 iport->fcid, iport->fabric.fdmi_pending);
- }
- 
- static void fdls_send_fabric_flogi(struct fnic_iport_s *iport)
-@@ -2292,7 +2306,7 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
- 	spin_lock_irqsave(&fnic->fnic_lock, flags);
- 
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 
- 	if (!iport->fabric.fdmi_pending) {
- 		/* timer expired after fdmi responses received. */
-@@ -2300,7 +2314,7 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
- 		return;
- 	}
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 
- 	/* if not abort pending, send an abort */
- 	if (!(iport->fabric.fdmi_pending & FDLS_FDMI_ABORT_PENDING)) {
-@@ -2309,26 +2323,37 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
- 		return;
- 	}
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 
- 	/* ABTS pending for an active fdmi request that is pending.
- 	 * That means FDMI ABTS timed out
- 	 * Schedule to free the OXID after 2*r_a_tov and proceed
- 	 */
- 	if (iport->fabric.fdmi_pending & FDLS_FDMI_PLOGI_PENDING) {
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			"FDMI PLOGI ABTS timed out. Schedule oxid free: 0x%x\n",
-+			iport->active_oxid_fdmi_plogi);
- 		fdls_schedule_oxid_free(iport, &iport->active_oxid_fdmi_plogi);
- 	} else {
--		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING)
-+		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING) {
-+			FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+						"FDMI RHBA ABTS timed out. Schedule oxid free: 0x%x\n",
-+						iport->active_oxid_fdmi_rhba);
- 			fdls_schedule_oxid_free(iport, &iport->active_oxid_fdmi_rhba);
--		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING)
-+		}
-+		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING) {
-+			FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+						"FDMI RPA ABTS timed out. Schedule oxid free: 0x%x\n",
-+						iport->active_oxid_fdmi_rpa);
- 			fdls_schedule_oxid_free(iport, &iport->active_oxid_fdmi_rpa);
-+		}
- 	}
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 
- 	fdls_fdmi_retry_plogi(iport);
- 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
--		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
-+		"iport->fabric.fdmi_pending: 0x%x\n", iport->fabric.fdmi_pending);
- 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
- }
- 
-@@ -3743,12 +3768,26 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
- 
- 	switch (FNIC_FRAME_TYPE(oxid)) {
- 	case FNIC_FRAME_TYPE_FDMI_PLOGI:
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			"Received FDMI PLOGI ABTS rsp with oxid: 0x%x", oxid);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
- 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_plogi);
- 
- 		iport->fabric.fdmi_pending &= ~FDLS_FDMI_PLOGI_PENDING;
- 		iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
- 		break;
- 	case FNIC_FRAME_TYPE_FDMI_RHBA:
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			"Received FDMI RHBA ABTS rsp with oxid: 0x%x", oxid);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
-+
- 		iport->fabric.fdmi_pending &= ~FDLS_FDMI_REG_HBA_PENDING;
- 
- 		/* If RPA is still pending, don't turn off ABORT PENDING.
-@@ -3759,8 +3798,17 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
- 			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
- 
- 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rhba);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
- 		break;
- 	case FNIC_FRAME_TYPE_FDMI_RPA:
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			"Received FDMI RPA ABTS rsp with oxid: 0x%x", oxid);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
-+
- 		iport->fabric.fdmi_pending &= ~FDLS_FDMI_RPA_PENDING;
- 
- 		/* If RHBA is still pending, don't turn off ABORT PENDING.
-@@ -3771,6 +3819,9 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
- 			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
- 
- 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rpa);
-+		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-+			 "0x%x: iport->fabric.fdmi_pending: 0x%x",
-+			 iport->fcid, iport->fabric.fdmi_pending);
- 		break;
- 	default:
- 		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+On Thu, Jun 12, 2025 at 07:59:04PM +0200, Niklas Söderlund wrote:
+> Add D-PHY support for V4H in addition to the already supported C-PHY.
+> The common start-up procedure for C-PHY and D-PHY is shared, only PHY
+> setup differ. Extend the V4H setup with D-PHY support as documented in
+> the datasheet (Rev.1.21).
+> 
+> Most of the start-up procedure is only documented as magic values in
+> tables, there is little documentation to make the settings more clear.
+> Wherever possible formulas or lookup tables are used as they are
+> documented in the datasheet.
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Tested-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+> * Fixes since v3
+> - Improve spelling in commit message and fix a comment style issue.
+> - Use DIV_ROUND_UP() instead of roundup().
+> - Correct bad mbps comparison in rcsi2_d_phy_setting_v4h_lut_lookup().
+> - Use ilog2() instead of a stacked if .. else if .. else if .. else ..
+>   construct.
+> 
+> * Fixes since v2
+> - Stire DESKEW settings in an array and loop over it instead of opene
+>   coding it.
+> 
+> * Fixes since v1
+> - Init cphy  variables to not trigger false -Wmaybe-uninitialized
+>   warning.
+> - Adjust line lengths.
+> ---
+>  drivers/media/platform/renesas/rcar-csi2.c | 230 ++++++++++++++++++++-
+>  1 file changed, 220 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index 7ba637d8683b..0350eb76df36 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -172,6 +172,7 @@ struct rcar_csi2;
+>  #define V4H_PPI_RW_LPDCOCAL_TWAIT_CONFIG_REG		0x21c0a
+>  #define V4H_PPI_RW_LPDCOCAL_VT_CONFIG_REG		0x21c0c
+>  #define V4H_PPI_RW_LPDCOCAL_COARSE_CFG_REG		0x21c10
+> +#define V4H_PPI_RW_DDLCAL_CFG_n_REG(n)			(0x21c40 + ((n) * 2)) /* n = 0 - 7 */
+>  #define V4H_PPI_RW_COMMON_CFG_REG			0x21c6c
+>  #define V4H_PPI_RW_TERMCAL_CFG_0_REG			0x21c80
+>  #define V4H_PPI_RW_OFFSETCAL_CFG_0_REG			0x21ca0
+> @@ -185,6 +186,13 @@ struct rcar_csi2;
+>  #define V4H_CORE_DIG_IOCTRL_RW_AFE_CB_CTRL_2_REG(n)	(0x23840 + ((n) * 2)) /* n = 0 - 11 */
+>  #define V4H_CORE_DIG_RW_COMMON_REG(n)			(0x23880 + ((n) * 2)) /* n = 0 - 15 */
+>  #define V4H_CORE_DIG_ANACTRL_RW_COMMON_ANACTRL_REG(n)	(0x239e0 + ((n) * 2)) /* n = 0 - 3 */
+> +#define V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG	0x23fe0
+> +
+> +#define V4H_CORE_DIG_DLANE_l_RW_CFG_n_REG(l, n)		(0x26000 + ((l) * 0x400) + ((n) * 2))
+> +#define V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, n)		(0x26080 + ((l) * 0x400) + ((n) * 2))
+> +#define V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, n)	(0x26100 + ((l) * 0x400) + ((n) * 2))
+> +#define V4H_CORE_DIG_DLANE_CLK_RW_LP_n_REG(n)		V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(4, (n))
+> +#define V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(n)	V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(4, (n))
+>  
+>  /* V4H C-PHY */
+>  #define V4H_CORE_DIG_RW_TRIO0_REG(n)			(0x22100 + ((n) * 2)) /* n = 0 - 3 */
+> @@ -1282,11 +1290,193 @@ rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int mbps)
+>  	return conf;
+>  }
+>  
+> +struct rcsi2_d_phy_setting_v4h_lut_value {
+> +	unsigned int mbps;
+> +	unsigned char cfg_1;
+> +	unsigned char cfg_5_94;
+> +	unsigned char cfg_5_30;
+> +	unsigned char lane_ctrl_2_8;
+> +	unsigned char rw_hs_rx_3_83;
+> +	unsigned char rw_hs_rx_3_20;
+> +	unsigned char rw_hs_rx_6;
+> +	unsigned char rw_hs_rx_1;
+> +};
+> +
+> +static const struct rcsi2_d_phy_setting_v4h_lut_value *
+> +rcsi2_d_phy_setting_v4h_lut_lookup(int mbps)
+> +{
+> +	static const struct rcsi2_d_phy_setting_v4h_lut_value values[] = {
+> +		{ 4500, 0x3f, 0x07, 0x00, 0x01, 0x02, 0x01, 0x0d, 0x10 },
+> +		{ 4000, 0x47, 0x08, 0x01, 0x01, 0x05, 0x01, 0x0f, 0x0d },
+> +		{ 3600, 0x4f, 0x09, 0x01, 0x01, 0x06, 0x01, 0x10, 0x0b },
+> +		{ 3230, 0x57, 0x0a, 0x01, 0x01, 0x06, 0x01, 0x12, 0x09 },
+> +		{ 3000, 0x47, 0x08, 0x00, 0x00, 0x03, 0x01, 0x0f, 0x0c },
+> +		{ 2700, 0x4f, 0x09, 0x01, 0x00, 0x06, 0x01, 0x10, 0x0b },
+> +		{ 2455, 0x57, 0x0a, 0x01, 0x00, 0x06, 0x01, 0x12, 0x09 },
+> +		{ 2250, 0x5f, 0x0b, 0x01, 0x00, 0x08, 0x01, 0x13, 0x08 },
+> +		{ 2077, 0x67, 0x0c, 0x01, 0x00, 0x06, 0x02, 0x15, 0x0d },
+> +		{ 1929, 0x6f, 0x0d, 0x02, 0x00, 0x06, 0x02, 0x17, 0x0d },
+> +		{ 1800, 0x77, 0x0e, 0x02, 0x00, 0x06, 0x02, 0x18, 0x0d },
+> +		{ 1688, 0x7f, 0x0f, 0x02, 0x00, 0x08, 0x02, 0x1a, 0x0d },
+> +		{ 1588, 0x87, 0x10, 0x02, 0x00, 0x08, 0x02, 0x1b, 0x0d },
+> +		{ 1500, 0x8f, 0x11, 0x03, 0x00, 0x08, 0x02, 0x1d, 0x0c },
+> +	};
+> +
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(values); i++)
+> +		if (mbps >= values[i].mbps)
+> +			return &values[i];
+> +
+> +	return NULL;
+> +}
+> +
+> +static int rcsi2_d_phy_setting_v4h(struct rcar_csi2 *priv, int mbps)
+> +{
+> +	const struct rcsi2_d_phy_setting_v4h_lut_value *lut =
+> +		rcsi2_d_phy_setting_v4h_lut_lookup(mbps);
+> +	u16 val;
+> +
+> +	rcsi2_write16(priv, V4H_CORE_DIG_RW_COMMON_REG(7), 0x0000);
+> +	rcsi2_write16(priv, V4H_PPI_STARTUP_RW_COMMON_DPHY_REG(7), mbps > 1500 ? 0x0028 : 0x0068);
+> +	rcsi2_write16(priv, V4H_PPI_STARTUP_RW_COMMON_DPHY_REG(8), 0x0050);
+> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(0), 0x0063);
+> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(7), 0x1132);
+> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(1), 0x1340);
+> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(2), 0x4b13);
+> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(4), 0x000a);
+> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(6), 0x800a);
+> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(7), 0x1109);
+> +
+> +	if (mbps > 1500) {
+> +		val = DIV_ROUND_UP(5 * mbps, 64);
+> +		rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(3), val);
+> +	}
+> +
+> +	if (lut) {
+> +		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(1),
+> +			       lut->cfg_1, 0x00ff);
+> +		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(5),
+> +			       lut->cfg_5_94 << 4, 0x03f0);
+> +		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(5),
+> +			       lut->cfg_5_30 << 0, 0x000f);
+> +
+> +		for (unsigned int l = 0; l < 5; l++)
+> +			rcsi2_modify16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 8),
+> +				       lut->lane_ctrl_2_8 << 12, 0x1000);
+> +	}
+> +
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, 0), 0x463c);
+> +
+> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(0, 2), 0x0000);
+> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(1, 2), 0x0000);
+> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(2, 2), 0x0001);
+> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(3, 2), 0x0000);
+> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(4, 2), 0x0000);
+> +
+> +	rcsi2_write16(priv, V4H_CORE_DIG_RW_COMMON_REG(6), 0x0009);
+> +
+> +	val = mbps > 1500 ? 0x0800 : 0x0802;
+> +	for (unsigned int l = 0; l < 5; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 12), val);
+> +
+> +	val = mbps > 1500 ? 0x0000 : 0x0002;
+> +	for (unsigned int l = 0; l < 5; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 13), val);
+> +
+> +	if (mbps >= 80) {
+> +		/* 2560: 6, 1280: 5, 640: 4, 320: 3, 160: 2, 80: 1 */
+> +		val = ilog2(mbps / 80) + 1;
+> +		rcsi2_modify16(priv,
+> +			       V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(2, 9),
+> +			       val << 5, 0xe0);
+> +	}
+> +
+> +	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(0), 0x091c);
+> +	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(7), 0x3b06);
+> +
+> +	val = DIV_ROUND_UP(1200, mbps) + 12;
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 0), val << 8, 0xf0);
+> +
+> +	val = mbps > 1500 ? 0x0004 : 0x0008;
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_CFG_n_REG(l, 1), val);
+> +
+> +	val = mbps > 2500 ? 0x669a : mbps > 1500 ? 0xe69a : 0xe69b;
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 2), val);
+> +
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, 0), 0x163c);
+> +	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_LP_n_REG(0), 0x163c);
+> +
+> +	if (lut) {
+> +		for (unsigned int l = 0; l < 4; l++)
+> +			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 1),
+> +				       lut->rw_hs_rx_1, 0xff);
+> +	}
+> +
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 3), 0x9209);
+> +
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 4), 0x0096);
+> +
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 5), 0x0100);
+> +
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 6), 0x2d02);
+> +
+> +	for (unsigned int l = 0; l < 4; l++)
+> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 7), 0x1b06);
+> +
+> +	if (lut) {
+> +		/*
+> +		 * Documentation LUT have two values but document writing both
+> +		 * values in a single write.
+> +		 */
+> +		for (unsigned int l = 0; l < 4; l++)
+> +			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 3),
+> +				       lut->rw_hs_rx_3_83 << 3 | lut->rw_hs_rx_3_20, 0x1ff);
+> +
+> +		for (unsigned int l = 0; l < 4; l++)
+> +			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 6),
+> +				       lut->rw_hs_rx_6 << 8, 0xff00);
+> +	}
+> +
+> +	static const u16 deskew_fine[] = {
+> +		0x0404, 0x040c, 0x0414, 0x041c, 0x0423, 0x0429, 0x0430, 0x043a,
+> +		0x0445, 0x044a, 0x0450, 0x045a, 0x0465, 0x0469, 0x0472, 0x047a,
+> +		0x0485, 0x0489, 0x0490, 0x049a, 0x04a4, 0x04ac, 0x04b4, 0x04bc,
+> +		0x04c4, 0x04cc, 0x04d4, 0x04dc, 0x04e4, 0x04ec, 0x04f4, 0x04fc,
+> +		0x0504, 0x050c, 0x0514, 0x051c, 0x0523, 0x0529, 0x0530, 0x053a,
+> +		0x0545, 0x054a, 0x0550, 0x055a, 0x0565, 0x0569, 0x0572, 0x057a,
+> +		0x0585, 0x0589, 0x0590, 0x059a, 0x05a4, 0x05ac, 0x05b4, 0x05bc,
+> +		0x05c4, 0x05cc, 0x05d4, 0x05dc, 0x05e4, 0x05ec, 0x05f4, 0x05fc,
+> +		0x0604, 0x060c, 0x0614, 0x061c, 0x0623, 0x0629, 0x0632, 0x063a,
+> +		0x0645, 0x064a, 0x0650, 0x065a, 0x0665, 0x0669, 0x0672, 0x067a,
+> +		0x0685, 0x0689, 0x0690, 0x069a, 0x06a4, 0x06ac, 0x06b4, 0x06bc,
+> +		0x06c4, 0x06cc, 0x06d4, 0x06dc, 0x06e4, 0x06ec, 0x06f4, 0x06fc,
+> +		0x0704, 0x070c, 0x0714, 0x071c, 0x0723, 0x072a, 0x0730, 0x073a,
+> +		0x0745, 0x074a, 0x0750, 0x075a, 0x0765, 0x0769, 0x0772, 0x077a,
+> +		0x0785, 0x0789, 0x0790, 0x079a, 0x07a4, 0x07ac, 0x07b4, 0x07bc,
+> +		0x07c4, 0x07cc, 0x07d4, 0x07dc, 0x07e4, 0x07ec, 0x07f4, 0x07fc,
+> +	};
+> +
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(deskew_fine); i++) {
+> +		rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
+> +			      deskew_fine[i]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  				    struct v4l2_subdev_state *state)
+>  {
+> +	const struct rcsi2_cphy_setting *cphy = NULL;
+>  	const struct rcar_csi2_format *format;
+> -	const struct rcsi2_cphy_setting *cphy;
+>  	const struct v4l2_mbus_framefmt *fmt;
+>  	unsigned int lanes;
+>  	int mbps;
+> @@ -1318,7 +1508,8 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	rcsi2_write(priv, V4H_FLDC_REG, 0);
+>  	rcsi2_write(priv, V4H_FLDD_REG, 0);
+>  	rcsi2_write(priv, V4H_IDIC_REG, 0);
+> -	rcsi2_write(priv, V4H_PHY_MODE_REG, V4H_PHY_MODE_CPHY);
+> +	rcsi2_write(priv, V4H_PHY_MODE_REG,
+> +		    priv->cphy ? V4H_PHY_MODE_CPHY : V4H_PHY_MODE_DPHY);
+>  	rcsi2_write(priv, V4H_N_LANES_REG, lanes - 1);
+>  
+>  	rcsi2_write(priv, V4M_FRXM_REG,
+> @@ -1361,9 +1552,15 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_CB_CTRL_2_REG(5), 0x4000);
+>  
+>  	/* T3: PHY settings */
+> -	cphy = rcsi2_c_phy_setting_v4h(priv, mbps);
+> -	if (!cphy)
+> -		return -ERANGE;
+> +	if (priv->cphy) {
+> +		cphy = rcsi2_c_phy_setting_v4h(priv, mbps);
+> +		if (!cphy)
+> +			return -ERANGE;
+> +	} else {
+> +		ret = rcsi2_d_phy_setting_v4h(priv, mbps);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	/* T4: Leave Shutdown mode */
+>  	rcsi2_write(priv, V4H_DPHY_RSTZ_REG, BIT(0));
+> @@ -1376,11 +1573,23 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	}
+>  
+>  	/* T6: Analog programming */
+> -	for (unsigned int l = 0; l < 3; l++) {
+> -		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
+> -			      cphy->lane29);
+> -		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 7),
+> -			      cphy->lane27);
+> +	if (priv->cphy) {
+> +		for (unsigned int l = 0; l < 3; l++) {
+> +			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
+> +				      cphy->lane29);
+> +			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 7),
+> +				      cphy->lane27);
+> +		}
+> +	} else {
+> +		u16 val_2_9 = mbps > 2500 ? 0x14 : mbps > 1500 ? 0x04 : 0x00;
+> +		u16 val_2_15 = mbps > 1500 ? 0x03 : 0x00;
+> +
+> +		for (unsigned int l = 0; l < 5; l++) {
+> +			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
+> +				      val_2_9);
+> +			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 15),
+> +				      val_2_15);
+> +		}
+>  	}
+>  
+>  	/* T7: Wait for stop state */
+> @@ -2245,6 +2454,7 @@ static const struct rcar_csi2_info rcar_csi2_info_r8a779g0 = {
+>  	.start_receiver = rcsi2_start_receiver_v4h,
+>  	.use_isp = true,
+>  	.support_cphy = true,
+> +	.support_dphy = true,
+>  };
+>  
+>  static const struct rcsi2_register_layout rcsi2_registers_v4m = {
+
 -- 
-2.47.1
+Regards,
 
+Laurent Pinchart
