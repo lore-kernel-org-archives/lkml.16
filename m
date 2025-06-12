@@ -1,243 +1,114 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDD4231848;
-	Thu, 12 Jun 2025 18:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754686; cv=pass; b=afo6nMTAwb78YRZW2q8eMZLAf0bfRlauUXLoTGOIgPUHknmxN4X9pTsz/vwJPIqSgc63iV6bqujmdFUaWbtcKuz0O5DYXCAQ2ugWksy4I6IJMH3vPPJu/CDP1liG77K9x3fC2Ii7Rw0hksQHyrH7uLnTvwGv4TEFs9yYMcJEguA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754686; c=relaxed/simple;
-	bh=AIQoQATVol1rj7v1ZDNNG07K9IayffXbUHxdJWtXKu4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VnB95T8inbydA9poT8dH7r0c8IHxmupGAO9OplOsuqpMr9PbeJXs2bccwujPjZSr/0gwPqfSWFYW+0sfDo82G9TBt4uU6EFhDO1Br0ID2N3E08PhOV2qptNegFMNekZCv1P0nteCLrTV54yhUkOdDDhju7+71uex0Fi6GufEwls=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=de58JhJo; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580CC2D3232;
+	Thu, 12 Jun 2025 18:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749754693; cv=none; b=AA4wEWMHWqvUHuDSoJZqBlZmS/bjXUPbi4VtFDsl4Za7M24OCKLBozcpxqUw9D+mTjVFeCq3E6f3XtIg3AXqkCuJpz0QaY9xj9RolNGyQgc1hB1q0VudB+SvpT5RB+x76JWsqiODyGpte+HwwluV1djwbg2fXBZ83MLkgzg0CNQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749754693; c=relaxed/simple;
+	bh=zaz/qKtnA1eAwQLge9799svVuaz0bK6tpHPHFb9I4nM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O/LXU7PQ+5KhQfzIxPS1+lGnTbS/aeohLDpYXp6MdIvKXvJN8U8ESF2alWa52yqg/0o9qoVnTrgkZ5x30yL5qHiMABUE6R6d7NjxvnT4FcVL0jdfo0m7h5Q+Flc+Ik/zcgpkb5NAo1annXNcWuVZCRW1r6NEsLn3jL1DAFtW/lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CEg1rSys; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="de58JhJo"
-ARC-Seal: i=1; a=rsa-sha256; t=1749754625; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Eq6D11DxLAntAQr02UMEuLrYmx7BlmU2oz5dYJFRNAvpvOEqP2Mtx3iUw5inY+zZ4arI0Yi4BJNpZBH4nVa7KFf6BGusYW5vfMJ66sfsjwhhWfcs+xlSekpVPQDh1yTiNnij4SgayQ7F8nt72I/sbLx7VlizGK6llQocaRWaVNE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749754625; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=lXbvL+h2IoWMpyp646+wlvm85iJG007PO2FAhrIMERY=; 
-	b=UdSNqGZRjJL5oH9gqN+PzlBlj/EZq6nuUjSsyahRiLZZdPVN2EyHL90Bn6C6jURO7SyF27DXFZXpA1OY/TRYx18TwDkEA7lv5GeIUZNlUrBPdp56UwlsCm8fm0CFNP8VTOzoyIOKPC63AFLAXw7Sw1c2fe1PjEqrNPxhPNZ+Zbw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749754625;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=lXbvL+h2IoWMpyp646+wlvm85iJG007PO2FAhrIMERY=;
-	b=de58JhJo8iXiXeTlRf88LEU+7V1qn/WSgk5UGGyx/9Vldjwp/17WxYFBvIN6urHy
-	cbEELR1lvjcI0O3jHdtlafxBuq60PaInKI2RxsC+EsMT+3tQhoq8Xw64ulxtJ8AVwRO
-	Yo+jKxkL9SHpUmUZF97LHA51Tr8T/60y2Z1kKCj4=
-Received: by mx.zohomail.com with SMTPS id 1749754622914325.8461884591545;
-	Thu, 12 Jun 2025 11:57:02 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 12 Jun 2025 20:56:05 +0200
-Subject: [PATCH 03/20] soc: rockchip: grf: switch to HWORD_UPDATE_CONST
- macro
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CEg1rSys"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749754691; x=1781290691;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=zaz/qKtnA1eAwQLge9799svVuaz0bK6tpHPHFb9I4nM=;
+  b=CEg1rSys/Y2NLC4wWixgGwXmLlSPQWQhLb7m094voWW5DimLs1UjmQic
+   XACSHgiYE1D+OsEqq9fBKm6Sx9iVbuzS+/2D99zrcFl4zhHlrGc1TJ6Cr
+   S1Ybh+SWqfeyLtu5gpCASIuqecEtyg9e1X7QElulhJlt1omm4io8cbKDt
+   EdiDS0drTUj6PVTfWIxbih1+NL0Bmao56oaVZjnFHHaO3DwbjqAFTjVpt
+   wJF7KObc6rz2bm3gM8ve6oWgoQrF6l4wItGSBPW6WWeDBLXO7QF0Azdvj
+   mWTzxOMzmaVUArNzR7s5A/twIkbyjsHZGPeR7FQKimQg+HD6FTiAJe2cd
+   Q==;
+X-CSE-ConnectionGUID: HW4d9bCOTKSQF9iiyuHR4Q==
+X-CSE-MsgGUID: wo45PT2mQKOpJu4BfxfbiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55627070"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="55627070"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 11:58:11 -0700
+X-CSE-ConnectionGUID: lqZL7g11Tj2E3L7ZXAXFgg==
+X-CSE-MsgGUID: yTjIVX5zS5G2SFZ75CZymQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="152766963"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 11:58:08 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uPn7l-000000061eI-2CMG;
+	Thu, 12 Jun 2025 21:58:05 +0300
+Date: Thu, 12 Jun 2025 21:58:05 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] iio: amplifiers: ada4250: move offset_uv in struct
+Message-ID: <aEsjPffnVdhMXXFK@smile.fi.intel.com>
+References: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-0-bf85ddea79f2@baylibre.com>
+ <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-4-bf85ddea79f2@baylibre.com>
+ <aErQVKul7Gnxvu3F@smile.fi.intel.com>
+ <275cf035-f0ca-4aa6-a41f-b0c21d7c9374@baylibre.com>
+ <CAHp75VeewKdOQk9qoO-2Ann90hwAGE0goOtiOG9BRjJ4cn6h=g@mail.gmail.com>
+ <846f5979-778a-41f0-b5d2-52d639607315@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-byeword-update-v1-3-f4afb8f6313f@collabora.com>
-References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
-In-Reply-To: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
-To: Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shreeya Patel <shreeya.patel@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
- MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, 
- linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <846f5979-778a-41f0-b5d2-52d639607315@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
-drivers that use constant masks.
+On Thu, Jun 12, 2025 at 01:45:16PM -0500, David Lechner wrote:
+> On 6/12/25 1:34 PM, Andy Shevchenko wrote:
+> > On Thu, Jun 12, 2025 at 6:31 PM David Lechner <dlechner@baylibre.com> wrote:
+> >> On 6/12/25 8:04 AM, Andy Shevchenko wrote:
+> >>> On Wed, Jun 11, 2025 at 04:33:04PM -0500, David Lechner wrote:
+> >>>> Move offset_uv in struct ada4250_state. This keeps things logically
+> >>>> grouped and reduces holes in the struct.
+> >>>
+> >>> Can the (smallest part of) the diff for `pahole` runs be added here?
+> >>
+> >> Well, I didn't use pahole. I could just tell by looking at it. There
+> >> was int followed by two u8 followed by int, so we know there was a 2
+> >> byte hole before the last int.
+> > 
+> > Yes, but since we have a tool for such cases, why not use it?
+> 
+> In cases like this, I don't think the we are getting much value
+> from it compared to the amount of time it would take me to do it.
 
-Switch the rockchip grf driver to the HWORD_UPDATE_CONST macro, which
-brings with it more error checking while still being able to be used in
-initializers.
+It helps reviewers to see the difference without checking themselves.
+Also, it's not a waste of 15 minutes (that's my experience with pahole
+when I started it first time), it's an investment to the future similar
+changes by you or others. Believe me, as a reviewer you will find this tool
+very helpful.
 
-All HIWORD_UPDATE instances and its definition are removed from the
-driver, as the conversion here is obvious, and static_asserts were used
-during development to make sure the ones greater than one bit in width
-were really equivalent.
-
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- drivers/soc/rockchip/grf.c | 35 +++++++++++++++++------------------
- 1 file changed, 17 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/soc/rockchip/grf.c b/drivers/soc/rockchip/grf.c
-index 1eab4bb0eacffe19a8f0af0b71bdaa5c0b506629..a4a075ec98309cfcf7fc0bbbd310678ffcbe45da 100644
---- a/drivers/soc/rockchip/grf.c
-+++ b/drivers/soc/rockchip/grf.c
-@@ -5,14 +5,13 @@
-  * Copyright (c) 2016 Heiko Stuebner <heiko@sntech.de>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/err.h>
- #include <linux/mfd/syscon.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- 
--#define HIWORD_UPDATE(val, mask, shift) \
--		((val) << (shift) | (mask) << ((shift) + 16))
- 
- struct rockchip_grf_value {
- 	const char *desc;
-@@ -32,7 +31,7 @@ static const struct rockchip_grf_value rk3036_defaults[] __initconst = {
- 	 * Disable auto jtag/sdmmc switching that causes issues with the
- 	 * clock-framework and the mmc controllers making them unreliable.
- 	 */
--	{ "jtag switching", RK3036_GRF_SOC_CON0, HIWORD_UPDATE(0, 1, 11) },
-+	{ "jtag switching", RK3036_GRF_SOC_CON0, HWORD_UPDATE_CONST(BIT(11), 0) },
- };
- 
- static const struct rockchip_grf_info rk3036_grf __initconst = {
-@@ -44,8 +43,8 @@ static const struct rockchip_grf_info rk3036_grf __initconst = {
- #define RK3128_GRF_SOC_CON1		0x144
- 
- static const struct rockchip_grf_value rk3128_defaults[] __initconst = {
--	{ "jtag switching", RK3128_GRF_SOC_CON0, HIWORD_UPDATE(0, 1, 8) },
--	{ "vpu main clock", RK3128_GRF_SOC_CON1, HIWORD_UPDATE(0, 1, 10) },
-+	{ "jtag switching", RK3128_GRF_SOC_CON0, HWORD_UPDATE_CONST(BIT(8), 0) },
-+	{ "vpu main clock", RK3128_GRF_SOC_CON1, HWORD_UPDATE_CONST(BIT(10), 0) },
- };
- 
- static const struct rockchip_grf_info rk3128_grf __initconst = {
-@@ -56,7 +55,7 @@ static const struct rockchip_grf_info rk3128_grf __initconst = {
- #define RK3228_GRF_SOC_CON6		0x418
- 
- static const struct rockchip_grf_value rk3228_defaults[] __initconst = {
--	{ "jtag switching", RK3228_GRF_SOC_CON6, HIWORD_UPDATE(0, 1, 8) },
-+	{ "jtag switching", RK3228_GRF_SOC_CON6, HWORD_UPDATE_CONST(BIT(8), 0) },
- };
- 
- static const struct rockchip_grf_info rk3228_grf __initconst = {
-@@ -68,8 +67,8 @@ static const struct rockchip_grf_info rk3228_grf __initconst = {
- #define RK3288_GRF_SOC_CON2		0x24c
- 
- static const struct rockchip_grf_value rk3288_defaults[] __initconst = {
--	{ "jtag switching", RK3288_GRF_SOC_CON0, HIWORD_UPDATE(0, 1, 12) },
--	{ "pwm select", RK3288_GRF_SOC_CON2, HIWORD_UPDATE(1, 1, 0) },
-+	{ "jtag switching", RK3288_GRF_SOC_CON0, HWORD_UPDATE_CONST(BIT(12), 0) },
-+	{ "pwm select", RK3288_GRF_SOC_CON2, HWORD_UPDATE_CONST(BIT(0), 1) },
- };
- 
- static const struct rockchip_grf_info rk3288_grf __initconst = {
-@@ -80,7 +79,7 @@ static const struct rockchip_grf_info rk3288_grf __initconst = {
- #define RK3328_GRF_SOC_CON4		0x410
- 
- static const struct rockchip_grf_value rk3328_defaults[] __initconst = {
--	{ "jtag switching", RK3328_GRF_SOC_CON4, HIWORD_UPDATE(0, 1, 12) },
-+	{ "jtag switching", RK3328_GRF_SOC_CON4, HWORD_UPDATE_CONST(BIT(12), 0) },
- };
- 
- static const struct rockchip_grf_info rk3328_grf __initconst = {
-@@ -91,7 +90,7 @@ static const struct rockchip_grf_info rk3328_grf __initconst = {
- #define RK3368_GRF_SOC_CON15		0x43c
- 
- static const struct rockchip_grf_value rk3368_defaults[] __initconst = {
--	{ "jtag switching", RK3368_GRF_SOC_CON15, HIWORD_UPDATE(0, 1, 13) },
-+	{ "jtag switching", RK3368_GRF_SOC_CON15, HWORD_UPDATE_CONST(BIT(13), 0) },
- };
- 
- static const struct rockchip_grf_info rk3368_grf __initconst = {
-@@ -102,7 +101,7 @@ static const struct rockchip_grf_info rk3368_grf __initconst = {
- #define RK3399_GRF_SOC_CON7		0xe21c
- 
- static const struct rockchip_grf_value rk3399_defaults[] __initconst = {
--	{ "jtag switching", RK3399_GRF_SOC_CON7, HIWORD_UPDATE(0, 1, 12) },
-+	{ "jtag switching", RK3399_GRF_SOC_CON7, HWORD_UPDATE_CONST(BIT(12), 0) },
- };
- 
- static const struct rockchip_grf_info rk3399_grf __initconst = {
-@@ -113,9 +112,9 @@ static const struct rockchip_grf_info rk3399_grf __initconst = {
- #define RK3566_GRF_USB3OTG0_CON1	0x0104
- 
- static const struct rockchip_grf_value rk3566_defaults[] __initconst = {
--	{ "usb3otg port switch", RK3566_GRF_USB3OTG0_CON1, HIWORD_UPDATE(0, 1, 12) },
--	{ "usb3otg clock switch", RK3566_GRF_USB3OTG0_CON1, HIWORD_UPDATE(1, 1, 7) },
--	{ "usb3otg disable usb3", RK3566_GRF_USB3OTG0_CON1, HIWORD_UPDATE(1, 1, 0) },
-+	{ "usb3otg port switch", RK3566_GRF_USB3OTG0_CON1, HWORD_UPDATE_CONST(BIT(12), 0) },
-+	{ "usb3otg clock switch", RK3566_GRF_USB3OTG0_CON1, HWORD_UPDATE_CONST(BIT(7), 1) },
-+	{ "usb3otg disable usb3", RK3566_GRF_USB3OTG0_CON1, HWORD_UPDATE_CONST(BIT(0), 1) },
- };
- 
- static const struct rockchip_grf_info rk3566_pipegrf __initconst = {
-@@ -126,8 +125,8 @@ static const struct rockchip_grf_info rk3566_pipegrf __initconst = {
- #define RK3576_SYSGRF_SOC_CON1		0x0004
- 
- static const struct rockchip_grf_value rk3576_defaults_sys_grf[] __initconst = {
--	{ "i3c0 weakpull", RK3576_SYSGRF_SOC_CON1, HIWORD_UPDATE(3, 3, 6) },
--	{ "i3c1 weakpull", RK3576_SYSGRF_SOC_CON1, HIWORD_UPDATE(3, 3, 8) },
-+	{ "i3c0 weakpull", RK3576_SYSGRF_SOC_CON1, HWORD_UPDATE_CONST(GENMASK(7, 6), 3) },
-+	{ "i3c1 weakpull", RK3576_SYSGRF_SOC_CON1, HWORD_UPDATE_CONST(GENMASK(9, 8), 3) },
- };
- 
- static const struct rockchip_grf_info rk3576_sysgrf __initconst = {
-@@ -138,7 +137,7 @@ static const struct rockchip_grf_info rk3576_sysgrf __initconst = {
- #define RK3576_IOCGRF_MISC_CON		0x04F0
- 
- static const struct rockchip_grf_value rk3576_defaults_ioc_grf[] __initconst = {
--	{ "jtag switching", RK3576_IOCGRF_MISC_CON, HIWORD_UPDATE(0, 1, 1) },
-+	{ "jtag switching", RK3576_IOCGRF_MISC_CON, HWORD_UPDATE_CONST(BIT(1), 0) },
- };
- 
- static const struct rockchip_grf_info rk3576_iocgrf __initconst = {
-@@ -149,7 +148,7 @@ static const struct rockchip_grf_info rk3576_iocgrf __initconst = {
- #define RK3588_GRF_SOC_CON6		0x0318
- 
- static const struct rockchip_grf_value rk3588_defaults[] __initconst = {
--	{ "jtag switching", RK3588_GRF_SOC_CON6, HIWORD_UPDATE(0, 1, 14) },
-+	{ "jtag switching", RK3588_GRF_SOC_CON6, HWORD_UPDATE_CONST(BIT(14), 0) },
- };
- 
- static const struct rockchip_grf_info rk3588_sysgrf __initconst = {
+So, please try it once and then you will know how to do that again much
+quicker.
 
 -- 
-2.49.0
+With Best Regards,
+Andy Shevchenko
+
 
