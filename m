@@ -1,129 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB6114A8B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FCC1F3B96
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749710029; cv=none; b=Rgv8zUsywcgkYwxGqKhHyffE+q5Uk1Ivmu/glXXTGb0QS9Xa2adT8AogJS+TWxvGuTwdGSczi6EQIZR8exulVYfq9i2zlVmaFKlOHqtlqiq0YzJrM5eP2KYrrMX0a3jg0jZhX+u7i23fHQjsnXTYD8dS37NLvF+U0AoVjceqjWI=
+	t=1749710040; cv=none; b=ZdBFaGWYXsxjDHGajkrCPZY+dGgHtdNUiSsbQcIkLHxXzcs89/Yrd5lGgEZ2/b64Wx8eETsUg9x0/3Jg37kno4Lq8JoPtDfbhROMiJ9RMQUqS+njaqItsonr6CScoqF241lEMx8PuBT162oKC7okIpybxz/hBLYqr91rrAOa47M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749710029; c=relaxed/simple;
-	bh=efaVr7x4DyfPYiYGhfU7gIrNkZWvEaUcvLN7XhkIyA4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qba/Bf5WJtlA1VejZEAYzKPUJS0wtxcuM3CRY0BG9evRkCw3p/QgYjXalplFgEwiIC7RwV8tkD9/To5V1FBSvR78B4fygqXacRqfhO51skTz9qJPaSrKNuKcbBaeXAw7zuNmL96O+vuGEIvveiY+UeaI6gGTVmUR2PnAe34XttU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkQX2ljS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749710040; c=relaxed/simple;
+	bh=0RFsYK4/bVTOu8PeXbzz5JHWzOqZR66/rgr6E+bl00g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LbJw153o8BryoGspVgORgcU4mv4UfA8h1zYsfqWLX/7CrYuhL8rNQ8FsbmwNjJUqmLoSWuG7ZXyMpa49GjgXyKu1vlFQxYihI6bkOBXXoFtvHTaV8X95OwHr7XY5tnT0fHl6z0+I15wfYQ9KkylDDqnmA98IpeyV3DbQl5k2VV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FG1YAw4d; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkQX2ljS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE244C4CEEA;
-	Thu, 12 Jun 2025 06:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749710028;
-	bh=efaVr7x4DyfPYiYGhfU7gIrNkZWvEaUcvLN7XhkIyA4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IkQX2ljSLK7qpNmxvKCm2f3cCS4vshkU+IKzyIJAxjA5bZgIlZssxZR43mje9/kKX
-	 cy1KCc3w5JiMRgWDJ/BLC+l6dC8eHsHwjslwXLr75+W0u5sRcp/LNp/w7awEFcy2U+
-	 PfAeLQ2GgZOlFulpuBJqfHrZr0y7926RhJ21BqoETwJpaVKFI5JdKvF5qljSHl90t0
-	 wlDSxcLsAOyRmMWNquJ8Gk94VzD7pCyTZbJk75nSrrUj9dE05IG+/DbdSfKIBk3lT9
-	 MUrGCi2rjOXNCVidMHEodkkM4RiufSFT8IVOG58fTduTTZYD4X1PEEBRGYGDtTrn7S
-	 pLhYwY+h9qDDw==
-Received: from 91-161-240-24.subs.proxad.net ([91.161.240.24] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uPbVS-0068PW-Bv;
-	Thu, 12 Jun 2025 07:33:46 +0100
-Date: Thu, 12 Jun 2025 07:33:46 +0100
-Message-ID: <87ikl1foz9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	oliver.upton@linux.dev,
-	ardb@kernel.org,
-	frederic@kernel.org,
-	james.morse@arm.com,
-	joey.gouly@arm.com,
-	scott@os.amperecomputing.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] arm64/Kconfig: add LSUI Kconfig
-In-Reply-To: <aEnC6img102ZygDy@e129823.arm.com>
-References: <20250611104916.10636-1-yeoreum.yun@arm.com>
-	<20250611104916.10636-3-yeoreum.yun@arm.com>
-	<86zfeecnog.wl-maz@kernel.org>
-	<aEnC6img102ZygDy@e129823.arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FG1YAw4d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749710037;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nm9TV6R7Y41QOfPJ6MP5oIIesRRVBP6gVfG7mX/j6mc=;
+	b=FG1YAw4d5dkWe3aoJEA7k7DHsnFyilE+sHssLrobtcImsqeN8yXlGpYSL8GTHTbqZVtcwp
+	0O8z1LOLDlxi4boGFzxM6Sg8g2H99Y5m5Z96AEz9AP7sJD87Riht5JMfic4YiS4c6F7AQ0
+	OepoAyps9JWEDcVbG9IWYoz5EiZXFxQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-668-4KgT8TcmN9OSjNtfwl84nA-1; Thu, 12 Jun 2025 02:33:54 -0400
+X-MC-Unique: 4KgT8TcmN9OSjNtfwl84nA-1
+X-Mimecast-MFC-AGG-ID: 4KgT8TcmN9OSjNtfwl84nA_1749710033
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45311704d22so3159655e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:33:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749710033; x=1750314833;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nm9TV6R7Y41QOfPJ6MP5oIIesRRVBP6gVfG7mX/j6mc=;
+        b=TMAAWFKsooqIXHI9e97nRFVSCPhf24Z9HqAyDp7Fa7uQt7sQ5V5WqIcjrEW2/gZFBI
+         j3pswUEn9XuWegP3Z4vLbU0XxqWY1ixhx06vqaUdwueSQEL4ALJUa42A6TeSS2mZbruq
+         eMd2BYY+jKl8MpkQ/zmCLeNr/8ZexV8JNRARMRRsz1THfe+AA0zHQN3/DlyN+aH9RZcX
+         rz73/qCI5zU+uCblMeT6q7Mi3Q0sZ1BP4y4/RDAjNcoaE8ZerpG+JXj+QjrQYpCmJ0eQ
+         Lj6/GtHYXmTwODdHFDkK+UcKBjmxemrEtlYlIG1IFHeSPKZEWVThypzzP9Y8kHJBgXC9
+         cznQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoga+SUHljJ+BAnQGiuMcUX9o/NEBQUO0LBObIDm1WUvWbPIfxXpviKwipCY0D79HABc8XaOfuMoFdzAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyMKobiMAtdnk6BBqU5sCFQefoDhmfDOpFnGhdniCGrmEhscIX
+	K6E+xrW6pmTchgM0pQzFaw8EzDbdvwzfT0QCgJQ4jR0THmPJTu10Tr0ONCXYPJc4q+iYQtH1raZ
+	AcenWOCNhNu8v2KnNAAMa0iu+dr392fhkC/dIqdxCbwg3IFDisORxl3RI6IDCJvSb3A==
+X-Gm-Gg: ASbGncttglkyUFR6WNJBHJL6fPT0gUzPpV/Ir5Q2QEbnhB0zTCZMH7Fm645bN9XZkX9
+	TXE69thGUJTcQTH0UZpegR75STJA+OiR+zBqSkINKr5OH2LDa2G9mnIgZI/XG6c6SgwGB76dWaH
+	dV3AwyDVauNMj71lp0euWjRRNFrTlXDM8Lk2RATAqCYTyf6fQpCyyxvqLx/PWxYFoS6XL2AN7Wy
+	pSPewHYiQIra+6vGBcWDV/gcU0QBFry14J8o4GcRhIFC0EeH+seoPoRiyA75YMzGJw+I0B7t34I
+	mIqPqUXos05BCYNh
+X-Received: by 2002:a05:600c:c162:b0:43c:fffc:786c with SMTP id 5b1f17b1804b1-4532d2f7108mr14039445e9.19.1749710033345;
+        Wed, 11 Jun 2025 23:33:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEUPXH7B83FgsgIbWOCFa8wLAry7d4eNcJALWMalXCx0ZQ4ODVUAv9DRXGbLvxZDae4zuYiyw==
+X-Received: by 2002:a05:600c:c162:b0:43c:fffc:786c with SMTP id 5b1f17b1804b1-4532d2f7108mr14039215e9.19.1749710032990;
+        Wed, 11 Jun 2025 23:33:52 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4531fe8526bsm43377245e9.0.2025.06.11.23.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 23:33:51 -0700 (PDT)
+Date: Thu, 12 Jun 2025 02:33:48 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Xuewei Niu <niuxuewei97@gmail.com>
+Cc: sgarzare@redhat.com, Oxffffaa@gmail.com, avkrasnov@salutedevices.com,
+	davem@davemloft.net, edumazet@google.com, eperezma@redhat.com,
+	horms@kernel.org, jasowang@redhat.com, kuba@kernel.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, pabeni@redhat.com, stefanha@redhat.com,
+	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com,
+	Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Subject: Re: [PATCH net] vsock/virtio: fix `rx_bytes` accounting for stream
+ sockets
+Message-ID: <20250612023334-mutt-send-email-mst@kernel.org>
+References: <20250521121705.196379-1-sgarzare@redhat.com>
+ <20250612053201.959017-1-niuxuewei.nxw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 91.161.240.24
-X-SA-Exim-Rcpt-To: yeoreum.yun@arm.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, oliver.upton@linux.dev, ardb@kernel.org, frederic@kernel.org, james.morse@arm.com, joey.gouly@arm.com, scott@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612053201.959017-1-niuxuewei.nxw@antgroup.com>
 
-On Wed, 11 Jun 2025 18:54:50 +0100,
-Yeoreum Yun <yeoreum.yun@arm.com> wrote:
+On Thu, Jun 12, 2025 at 01:32:01PM +0800, Xuewei Niu wrote:
+> No comments since last month.
 > 
-> Hi Marc,
+> The patch [1], which adds SIOCINQ ioctl support for vsock, depends on this
+> patch. Could I get more eyes on this one?
 > 
-> > On Wed, 11 Jun 2025 11:49:12 +0100,
-> > Yeoreum Yun <yeoreum.yun@arm.com> wrote:
-> > >
-> > > Since Armv9.6, FEAT_LSUI supplies the load/store instructions for
-> > > previleged level to access to access user memory without clearing
-> > > PSTATE.PAN bit.
-> > > It's enough to add CONFIG_AS_HAS_LSUI only because the code for LUSI uses
-> > > indiviual `.arch_extension` entries.
-> > >
-> > > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> > > ---
-> > >  arch/arm64/Kconfig | 8 +++++++-
-> > >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > index 55fc331af337..20f360eef2ac 100644
-> > > --- a/arch/arm64/Kconfig
-> > > +++ b/arch/arm64/Kconfig
-> > > @@ -2237,6 +2237,13 @@ config ARM64_GCS
-> > >
-> > >  endmenu # "v9.4 architectural features"
-> > >
-> > > +menu "v9.6 architectural features"
-> > > +
-> > > +config AS_HAS_LSUI
-> > > +	def_bool $(as-instr,.arch_extension lsui)
-> > > +
-> > > +endmenu # "v9.6 architectural features"
-> > > +
-> > >  config ARM64_SVE
-> > >  	bool "ARM Scalable Vector Extension support"
-> > >  	default y
-> > > @@ -2498,4 +2505,3 @@ endmenu # "CPU Power Management"
-> > >  source "drivers/acpi/Kconfig"
-> > >
-> > >  source "arch/arm64/kvm/Kconfig"
-> > > -
-> >
-> > Can you please document what toolchain versions have support for this?
-> >
-> > Thanks,
+> [1]: https://lore.kernel.org/lkml/bbn4lvdwh42m2zvi3rdyws66y5ulew32rchtz3kxirqlllkr63@7toa4tcepax3/#t
 > 
-> Okay. But here with comment or Is any other suggested place for
-> this?
+> Thanks,
+> Xuewei
 
-The help section in the Kconfig option you are introducing would be a
-good start.
+it's been in net for two weeks now, no?
 
-Thanks,
-
-	M.
-
--- 
-Jazz isn't dead. It just smells funny.
