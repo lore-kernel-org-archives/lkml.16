@@ -1,98 +1,72 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B93433A8;
-	Thu, 12 Jun 2025 14:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DB02701B3
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740342; cv=none; b=OKwFaIDjWeDF0OWz7Qp+PqnJuQknEp6lYfYqbQXbUQWnwzg2XeAf/BN5OmqwkHe+qhyhjlt5vOIS2H4BTTF7jNnM0G63w9B6gjUy4Zwuept3gpW9NgkverP411LoKcQPWocJG0hcQ97+CVut5gGMsPhMdi6G1m0AY0vLK+hT/fg=
+	t=1749740346; cv=none; b=ToRnI8mQivCq35iFYSic6KoM/OSJYT+LHwdf5vrx3frYFHg14wYMVPMAUy2SLToYxCLAMhki2m+u1upTMXrBGM86InqlKOx22CUDpsw17sBaq1CpQ+Lx8z48Q8zKpvyAlsuRTmH9gYmB5dBBN086HxvvZmKlMeOK8n9wTQPyYBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740342; c=relaxed/simple;
-	bh=YFbcPaCUWz0JNm0nMAA5mwjarfFNlAjkrukhxmWA728=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R0QmA1xuTqp6tOgjqEturY/O0aSk9tNS+NSrKpdQrHvohISecLUWkFmcev+UmKqv/v4We8KunRlpjB/bxmD29LzGeSc1s97bRXek3ZSEDcDmqt5+KxzgUzFSd0NMpyK9Xk7IFAkV3QuL+gYvDH08rXcHj+3OiSqWv+PJIzHdzBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87ecc02528aso278221241.2;
-        Thu, 12 Jun 2025 07:59:00 -0700 (PDT)
+	s=arc-20240116; t=1749740346; c=relaxed/simple;
+	bh=ZJhWfpILzLlDcso0xE4N+QABzMQhOOl2FbUEOU4VFw8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Ya9rLkjMJ0oVVlXI/W/6uy3lAhHh6CAGOyN95XSzjyZQchCyPfZKCVkUvJ0rMrBiixRuoeF2IYoK2q9WrebEgVUIL16XiW+AG0sFGHbhutszkJKjtJFv5KWKU8zY77veiR1IKxK+k75APpKRpHLvvadn1/Zf+0S0BkTMqQVv2v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddc65f95b8so22122585ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:59:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749740339; x=1750345139;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j7urv+43q9m5//eN/fBrHnA2GxbG1zcAPVe31MZBFY0=;
-        b=c6Ey3fC9hMKr3W11NPKrXWFGN4XX8YN6isVY0F92hSCVmrIXxXcY21MzbO8fVQP/z7
-         4JuUeQo7a5tOgirhMvvhroIF4w1wPv1BrbIhsSLDNR7iswNTT7BUq5A0ctdBUFWPEL8d
-         U04I3RzIFTo2XH4mDDTbxGYaKmbgPuSkqW7n7q6yEvLOS3xMYTdtRALJXICZZS4+44st
-         gQY/41V67dm6uXXJ1ZRh1zjU9MmrbKyOgOGurITEZLEE2wco5SX1U2yYxnjYmQuf/ohS
-         VmyZUBPmPLD2vAIUCDrZwXChvG7ETpQUvG1B1Ab7VNJQShNB+fFKXeutbcKEDhFDKLVm
-         NTog==
-X-Forwarded-Encrypted: i=1; AJvYcCVDpXy/hevvmJcsUMjbIGpJpUDKMbpr4q0ZLopDNj1Pr4gOGPnt5f239X2MOFtqxiDneG9XXak5y/ko48ErWGKCA5M=@vger.kernel.org, AJvYcCVtVxVl1tOakQ6p2vo+K3sZ+GOhj1T15yRpphta0YGQLu8kVze8lW4zLNHpBB1U4Ygfd1YUrPSwGNA4@vger.kernel.org, AJvYcCXRd4sQc+A6TDsPNSISSt9k6pqvrxnBOeg/7pfyf0MxQvAjsN8NStq+nTldThf8JbeF4OyIbFNPT5EpNl90@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNLX+eha3Irbr6X/Lw88ScUY9AaDZxUdB+J25+0CNQUnw6yPLn
-	Ts/Ue94/oRLLpMUAgaBKgT3S3sNyiAaHXYzbNQ/kKDNTfY3an+LJaD0x/EniPQT9
-X-Gm-Gg: ASbGncsJtNEE+teuZl1JCHy3Uzl1PbuirD03MgA40Pgi6NdfLYrXvbiESl4+CQHE7pg
-	X5VqPaCgrv4xJy7KcByRLINu+FJiwwDATOCNE/duuEn27zAqVTkBudSJocafGH1KrAaWXMxYlsJ
-	FUiWLgWpSKqdATpBDzfO/pLw9jSczSGZSE7SasCANSqP7F3p9tcDVViHHLiznqfnNwFPYxqIXxz
-	iEX9ubrS+BOpPugZql3Hx528i9gQQgIIAQe6P0DXb+6iY23RdUuEJamJhinsoVQgBF0crFJ4AoS
-	B9pj3hwxnuB2a5K3uyrKzTSLUAAGdMya0YbZEsBNaQ8JwhfKq4/4eN9/o0bWSIoD8DZTeqixkdt
-	fngwdB+dkjBckGjjpXJ5z8ISP
-X-Google-Smtp-Source: AGHT+IErGQ4S796F23yq83bC6pdXSd7l+w0+o7liA23ok20eocm3/qzhDW5BLU3W0WGTYqS7iG0RFA==
-X-Received: by 2002:a05:6122:2024:b0:530:5996:63a2 with SMTP id 71dfb90a1353d-5312ce5ba11mr4520968e0c.7.1749740338992;
-        Thu, 12 Jun 2025 07:58:58 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5312f6513b0sm315024e0c.26.2025.06.12.07.58.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 07:58:58 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e7ade16082so285256137.1;
-        Thu, 12 Jun 2025 07:58:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrGJAvCGRxUDWoUiT/d1qlvxkzRYwebZYjzma6t6BKENAGAdHwPv0zPCAp9w+bDy7VgEnN3QB96h5l@vger.kernel.org, AJvYcCWijaO/jlTLDGvPlSLpYvLHZu0F3TFQriaPeJr+KEDo/OsGMRiA4dLc47AJU7z7MpoMXYFaAOBIZISOK59WqdJgtdc=@vger.kernel.org, AJvYcCWqtH9WhQNEmVdXq+VDEnWzGP2PxKYF2PJQrQZjkY8LE1qt/awYJbkfjNXM3tCSleGGbCA9kDkh+8rrO+B/@vger.kernel.org
-X-Received: by 2002:a05:6102:3046:b0:4e6:a338:a41d with SMTP id
- ada2fe7eead31-4e7ccb9decbmr4392145137.11.1749740338109; Thu, 12 Jun 2025
- 07:58:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749740343; x=1750345143;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sOuni93krcVzrqUP8hSv6r9zVP8Vzg1n3zjGp8M4uxA=;
+        b=wA/2J8X/seOOJOtafNw1lvZ+wKMSz9VfAGgOywPNpmv9bgUFIj3rkz1hLyFxthDSuA
+         BbDJEgYktx7N+0rI9qqdEDoqdF+ea5Loy3wtW2HkRIhGSL06iMmzgFgqhlZ31/0659TI
+         b+iziLd4f3KyHdQJCaBTq2KkuqHOX4hqu9QDTnEMXvhvEfBx2hV4FX0Jld5HA6T9qSlq
+         pZd9TXQ8o71sF3yrogL/8S/+X1QqzP544OvV+NcTH+cX2kWLjDICrqMJXYIbocXUIFIi
+         vw0RUg9EWPqPS2ss9BU/pv4C4+1KgQfgioge/jzXhet3AOcIlue3l83gmxlS3PG2dnyf
+         9UEw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2TGq2aVR1NdLzguNA9KfMEp4tZqKnlMb1yVyhEl7RuS1lJn88SJY3DA3ZL53SL14ImxqxLoCwaPZ6pYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEyuKG0+mwHjFYy6zjyhGY0ciT1mAfSTRNm6a8Y6KV445Rg6Tg
+	aYkQc3/KB+ZFp8nB2hmVOR7BKvQyJkpCskgfpB0W2maqtgo9Ja0abujkPQltskNHAFhMN04vfQh
+	4f3GA0r1E0QfJ+zKXRrpp5mtFoi0i/ZQlPPkc2LGA7ezK7wm0u4KX3g5viX8=
+X-Google-Smtp-Source: AGHT+IGWrdfRPv6vUBq5+VE7qbsc40CR8IzZ0G5xPaE8pPhS5TDXjN/61aMhnCxyqJP9ZVTIdlS81r9qqFALVpj5KW+OAiUWrQOT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpiochip-set-rv-soc-v1-0-1a0c36c9deed@linaro.org> <20250610-gpiochip-set-rv-soc-v1-2-1a0c36c9deed@linaro.org>
-In-Reply-To: <20250610-gpiochip-set-rv-soc-v1-2-1a0c36c9deed@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Jun 2025 16:58:46 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXt7W+XLoeQWqjNR8dBS3oCwFKBydVZueqtYg2uka0WxQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuo1dTCSfHZ3zIJsOn9_JIHrUSOYlkHewmTg8yRd6ll7bXt9Le_Qc4mtYM
-Message-ID: <CAMuHMdXt7W+XLoeQWqjNR8dBS3oCwFKBydVZueqtYg2uka0WxQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] soc: renesas: pwc-rzv2m: use new GPIO line value
- setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Received: by 2002:a05:6e02:1aa8:b0:3dd:d189:6511 with SMTP id
+ e9e14a558f8ab-3ddf43010a1mr94787295ab.21.1749740343737; Thu, 12 Jun 2025
+ 07:59:03 -0700 (PDT)
+Date: Thu, 12 Jun 2025 07:59:03 -0700
+In-Reply-To: <tencent_AF9E831B6F4B5F1B1A251EBA5ABBBA33E808@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684aeb37.a00a0220.e7731.0037.GAE@google.com>
+Subject: Re: [syzbot] [overlayfs?] WARNING in ovl_listxattr
+From: syzbot <syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 10 Jun 2025 at 14:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hello,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.17.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Gr{oetje,eeting}s,
+Reported-by: syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com
+Tested-by: syzbot+4125590f2a9f5b3cdf43@syzkaller.appspotmail.com
 
-                        Geert
+Tested on:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+commit:         2c4a1f3f Merge tag 'bpf-fixes' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b4ed70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
+dashboard link: https://syzkaller.appspot.com/bug?extid=4125590f2a9f5b3cdf43
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1524ed70580000
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Note: testing is done by a robot and is best-effort only.
