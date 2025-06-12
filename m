@@ -1,84 +1,108 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10F291F2B88
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221651D7999
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749708771; cv=none; b=F1YMVj3dc5VjLcOVclkCJ+r+dp1ejBlQBCqlBdYOxdb4Et0aHY9j5S3ges2XXjDP/SGvL6vh92j/DkuflC6bu5UTc6wAJK3Ngm33lnjPNHHl1TrSfKVHKHzqS1/TPaQI4qRMKGELFpkgqlZAmfpXju1nU0s+DjlCSA8IbMKimmc=
+	t=1749708799; cv=none; b=aEQcuQc6JP5LuZGIirpeY/jb+sJ9kaarrj+J+oGBC5Ijn+caj+3OjbP4VKgrYH6WGt6hJOpeZWe/Zq9UyDksBOMMHbT0CEJqyKmw++D/rlVTFTFwC5FbNwdbQHg3T+RKYN0nB6XfqmS7eQqaKdkeUr1JGqKJIxa++6wjbfbJ+tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749708771; c=relaxed/simple;
-	bh=0mNvayiA4tnzp8kDTCtTD6lvIrDP/VYeD+91qYRCn74=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=VPdRgcm/joNTSM2KPBg0yGfubSuivO5qY0qvZCLoLW0qsjIaGzp8lbiKXMowNcKYS9sz7l8nHY1tj0M2EntVHW4uOMcuNnsJHy/GdRL4yCn6/mM+1yDhdvQiUIdO99LsTTng1SQaP8aIjdUzK7S6K5fm0CW6Rf/p6azMw6WhTeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=CcLJrhIV reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749708799; c=relaxed/simple;
+	bh=EJKWY9PXO9AEb/f1L2N3iMJtGt3gECQJ/G5K4KX8CuU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IWBtyC1sKlIxXIOFwElyI2VpnFplNE97JTQatk+ApzAiNSPxKSLvC+V8vjbLBmQMru4gzZFkN+uMsiIWNdHDZdvPdb0olacX12pj79H59j1kE5fWVK7/AxW8Cgtxmi6/LeYUxUTjLKeh+4JnbVC2oOi+I08Umwm9oPuqt5zgUPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I/hKtq33; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="CcLJrhIV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=uqsR+yBXJaeE7Gc/RSa8YhyVSpecmvVTUqnfn/mFK0k=; b=C
-	cLJrhIVjF8wuN2+QsJ1M6HPkdsCWjG/xaKOhP6mySJWs7itSwCEKfpzaxPPYmU2z
-	abGKCLAUZAb6MqeVwYAbmjnbu3LIhs6m+VzFcMBNtBAc0WYI23PimHBp/g6wSUXX
-	cc37VpOttrVx/HfAp1WGwvCVZdlABqwEfFReyhHXzA=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-106 (Coremail) ; Thu, 12 Jun 2025 14:11:37 +0800
- (CST)
-Date: Thu, 12 Jun 2025 14:11:37 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Heiko Stuebner" <heiko@sntech.de>
-Cc: hjc@rock-chips.com, andy.yan@rock-chips.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re:[PATCH] drm/rockchip: vop2: fail cleanly if missing a primary
- plane for a video-port
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250610212748.1062375-1-heiko@sntech.de>
-References: <20250610212748.1062375-1-heiko@sntech.de>
-X-NTES-SC: AL_Qu2fC/ubt04i4SmdZ+kfmkcVgOw9UcO5v/Qk3oZXOJF8jCDp5y4hcHpTPUXy9sWDKyGinQiHTBd1y8NDfahcdIMob9tkaclLAvXdvK0Y9HVFTw==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I/hKtq33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749708796;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=In8v1EfpVjcg2E248nCE4I3xXAAON+cdnDkylyyJFH8=;
+	b=I/hKtq33tqeRJciOT7PkDckL4+FUPoeNpsmDwdBY8nv+FrKeFtLBWnLF4aQ1QCe08Bq1WH
+	wfe7ZaFYpKmgVplylJLvOFjZlbW7Lgse4QoW+PBEg+CqFhE61y724qTLwwEtgdeBCUaetq
+	vSdU+x3fvgglP2n4M7zh7UBh6hbVN+M=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-551-G0DVnRZLM8mxaoi4B5MVpw-1; Thu, 12 Jun 2025 02:13:14 -0400
+X-MC-Unique: G0DVnRZLM8mxaoi4B5MVpw-1
+X-Mimecast-MFC-AGG-ID: G0DVnRZLM8mxaoi4B5MVpw_1749708794
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-74847a38e5eso431563b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:13:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749708793; x=1750313593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=In8v1EfpVjcg2E248nCE4I3xXAAON+cdnDkylyyJFH8=;
+        b=E4D/wEXAxHwSmmUvMQ7noQdAXVGE7EWh+trqwkQ19Pm2tebJiSIQTSEgcq97Bizyur
+         KPgarsUtQk/9NAjA3g5HGyoCL6IIFO1YlxHAlZ7A5Hu1sLZAJj5wKCM0hdxIJw+AMjMv
+         inyaUmsk5LsNQGWf0z/CdFjeepeCTrSSCrgR7U0JxkLIcm4yFxjHsLeH7CopgMyQMb1L
+         UWyRIXT12dC0qVC/pvmayt17RXOS7877xW6ClNJ92v5L+C89QI7+qONR/UgHpngRCVU8
+         cECbGJp3tnK1vU01ORF/7JfS+hBoiQElNby1khfM/Gd+j2NRTx1Jop+yyA3UHYP4RHYD
+         9Oeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVD4yGGNu1Ey7gF3gbyxQPJG2jZX6UU/9PGqw2f935v0EDc3zggTClaNhHnK8zoDyGRfpqAHGZq9Kec8wk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBiufMp01r22cd3Mr7L3TPpGxL/qmuj6gPby8bSrie74Wr91I8
+	ZXu2h8FPynz39YmIorfbQ/2DBvh3z+fYLGJ3bbUA32BkB8rX9+WP/vZHfG3QAI7js+vWgszNzxr
+	jWPra1v77++RoFborio+1ZXxkvQmRo5EDdjGs6o8GZA1bkOeUWIarD87nK+OcRjAA/yXtITKT60
+	6PSmc6TVEVg9oaizPIQt2RbmVUpc3x/bqWywFxJjsc
+X-Gm-Gg: ASbGnctG6cWR3OetyWFX6RgZdyY8AMDgRt70217d0fYXmbyrvaG4bKu52nJ7a9zR/yh
+	LjhK8LkXqPJd/vjAGbrzWohPFoTP/HtOrvtu2jLIfBiNrPLPC0+pPYuAehKERWeXQn/ohwaso0l
+	ynGBXq
+X-Received: by 2002:a05:6a00:189b:b0:736:450c:fa54 with SMTP id d2e1a72fcca58-7487e10153dmr2269234b3a.6.1749708793576;
+        Wed, 11 Jun 2025 23:13:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG6GGvfSmuAQ9kMEV18/KRIrYuFrvcTgJ6zriYOViLm9mz7ikKRvCvtL51y/UBgyEUqoyUT9U0TXEnim8kM7c4=
+X-Received: by 2002:a05:6a00:189b:b0:736:450c:fa54 with SMTP id
+ d2e1a72fcca58-7487e10153dmr2269210b3a.6.1749708793175; Wed, 11 Jun 2025
+ 23:13:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4a19525.4f96.19762c3f163.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:aigvCgD3H3Oab0pooEUaAA--.55529W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqB9qXmhKaNasWgABso
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+References: <20250609073430.442159-1-lulu@redhat.com> <20250609073430.442159-3-lulu@redhat.com>
+In-Reply-To: <20250609073430.442159-3-lulu@redhat.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Thu, 12 Jun 2025 14:13:00 +0800
+X-Gm-Features: AX0GCFvcFRxL8oSigntqa1RjBnlkRGKNKVefC9UxsmF9GK_By08eLAA_95tszrM
+Message-ID: <CACGkMEvargUzv3DpAYZ+wS1fi_kNVmXppcX0Qtmy85F22z=OLw@mail.gmail.com>
+Subject: Re: [PATCH v11 2/3] vhost: Reintroduce kthread mode support in vhost
+To: Cindy Lu <lulu@redhat.com>
+Cc: mst@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-CkhpIEhlaWtv77yMCkF0IDIwMjUtMDYtMTEgMDU6Mjc6NDgsICJIZWlrbyBTdHVlYm5lciIgPGhl
-aWtvQHNudGVjaC5kZT4gd3JvdGU6Cj5FYWNoIHdpbmRvdyBvZiBhIHZvcDIgaXMgdXNhYmxlIGJ5
-IGEgc3BlY2lmaWMgc2V0IG9mIHZpZGVvIHBvcnRzLCBzbyB3aGlsZQo+YmluZGluZyB0aGUgdm9w
-Miwgd2UgbG9vayB0aHJvdWdoIHRoZSBsaXN0IG9mIGF2YWlsYWJsZSB3aW5kb3dzIHRyeWluZyB0
-bwo+ZmluZCBvbmUgZGVzaWduYXRlZCBhcyBwcmltYXJ5LXBsYW5lIGFuZCB1c2FibGUgYnkgdGhh
-dCBzcGVjaWZpYyBwb3J0Lgo+Cj5UaGUgY29kZSBsYXRlciB3YW50cyB0byB1c2UgZHJtX2NydGNf
-aW5pdF93aXRoX3BsYW5lcyB3aXRoIHRoYXQgZm91bmQKPnByaW1hcnkgcGxhbmUsIGJ1dCBub3Ro
-aW5nIGhhcyBjaGVja2VkIHNvIGZhciBpZiBhIHByaW1hcnkgcGxhbmUgd2FzCj5hY3R1YWxseSBm
-b3VuZC4KPgo+Rm9yIHdoYXRldmVyIHJlYXNvbiwgdGhlIHJrMzU3NiB2cDIgZG9lcyBub3QgaGF2
-ZSBhIHVzYWJsZSBwcmltYXJ5IHdpbmRvdwo+KGlmIHZwMCBpcyBhbHNvIGluIHVzZSkgd2hpY2gg
-YnJvdWdodCB0aGUgaXNzdWUgdG8gbGlnaHQgYW5kIGVuZGVkIGluIGEKPm51bGwtcG9pbnRlciBk
-ZXJlZmVyZW5jZSBmdXJ0aGVyIGRvd24uCj4KPkFzIHdlIGV4cGVjdCBhIHByaW1hcnktcGxhbmUg
-dG8gZXhpc3QgZm9yIGEgdmlkZW8tcG9ydCwgYWRkIGEgY2hlY2sgYXQKPnRoZSBlbmQgb2YgdGhl
-IHdpbmRvdy1pdGVyYXRpb24gYW5kIGZhaWwgcHJvYmluZyBpZiBub25lIHdhcyBmb3VuZC4KPgo+
-Rml4ZXM6IDYwNGJlODU1NDdjZSAoImRybS9yb2NrY2hpcDogQWRkIFZPUDIgZHJpdmVyIikKPlNp
-Z25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+CgpSZXZpZXdlZC1i
-eTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgoKVGhhbmtzCgoKPi0tLQo+IGRy
-aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wMi5jIHwgNCArKysrCj4gMSBm
-aWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+Cj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AyLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2No
-aXAvcm9ja2NoaXBfZHJtX3ZvcDIuYwo+aW5kZXggN2RkZjMxMWIzOGM2Li5hOGRjMmU1NTgxMmEg
-MTAwNjQ0Cj4tLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcDIu
-Ywo+KysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AyLmMKPkBA
-IC0yNDI1LDYgKzI0MjUsMTAgQEAgc3RhdGljIGludCB2b3AyX2NyZWF0ZV9jcnRjcyhzdHJ1Y3Qg
-dm9wMiAqdm9wMikKPiAJCQkJYnJlYWs7Cj4gCQkJfQo+IAkJfQo+Kwo+KwkJaWYgKCF2cC0+cHJp
-bWFyeV9wbGFuZSkKPisJCQlyZXR1cm4gZGV2X2Vycl9wcm9iZShkcm0tPmRldiwgLUVOT0VOVCwK
-PisJCQkJCSAgICAgIm5vIHByaW1hcnkgcGxhbmUgZm9yIHZwICVkXG4iLCBpKTsKPiAJfQo+IAo+
-IAkvKiBSZWdpc3RlciBhbGwgdW51c2VkIHdpbmRvdyBhcyBvdmVybGF5IHBsYW5lICovCj4tLSAK
-PjIuNDcuMgo+Cg==
+On Mon, Jun 9, 2025 at 3:34=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrote:
+>
+> This patch reintroduces kthread mode support in vhost,
+> It also introduces struct vhost_worker_ops to abstract
+> worker create/stop/wakeup operations.
+>
+> * Bring back the original vhost_worker() implementation,
+>   and renamed to vhost_run_work_kthread_list().
+>
+> * Add cgroup support for the kthread
+>
+> * Introduce struct vhost_worker_ops:
+>   - Encapsulates create / stop / wake=E2=80=91up callbacks.
+>   - vhost_worker_create() selects the proper ops according to
+>     inherit_owner.
+>
+> This partially reverts or improves upon:
+> commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads")
+> commit 1cdaafa1b8b4 ("vhost: replace single worker pointer with xarray")
+>
+> Signed-off-by: Cindy Lu <lulu@redhat.com>
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+Thanks
+
