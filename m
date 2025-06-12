@@ -1,149 +1,188 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179761465A1;
-	Thu, 12 Jun 2025 00:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 518575258;
+	Thu, 12 Jun 2025 00:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749688776; cv=none; b=E3Vzbgan4/CnZKCxDvQQdTN2l2vwFt4VMf7dEOAdvPXJX8uNChuK5adfGSyjPlJVOS3lm+jnpZzKEJ9/eihifiY3j+29f6EpbjMd26jcRfcM4ZcmO26x2n4NHoZvWwltbQzA75nrVwsP+YKOGbAiZp/RAzsCXb0qwx+r0ZdWp/s=
+	t=1749688809; cv=none; b=akNkf5l+r+7iov0/ybiFvOkri6zy6dOiDAvfL4TTxXdGoPdnNacf5BdWQQyyCnLrJASnn/w70cmhi+/xw5mPyMKea4Rlnpm4nnxDAangFFg2TOMF/VXdCr0RdoJZ82Z3tbPKVWAzcZUifh0Sw68Lw5Yb36jv/Gax/9eeiFxhXZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749688776; c=relaxed/simple;
-	bh=9qiaGT5spkiZqJJJHPCBqPrhM9VOU1z/Z2IVaS4z1Vk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MwFHsRIeinygsH4liN5UODWgN2ANjXtpnoVzWzfEugwND1vE4v4YKPHYevWWip9kW7HaHjuq47QTpPwEfCRqYRg9inShzBH0X7aRti1WvVCFdbQWMZ0IZo5koEyvlAZF1cPBEBU4AAPYZ8palUmyTSHrRYmdTzIq8SbLpbA7JMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GGoFMz0r; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGoFMz0r"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d09ab17244so42417885a.0;
-        Wed, 11 Jun 2025 17:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749688774; x=1750293574; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VyLSDtp3/79+REpFtOfivoiwhQtWS2WlyGvRoudAipo=;
-        b=GGoFMz0ra1E3WtxAVhb+KWEJU/zIQ+/ATH5PZ1uoojdjUJmRx7WW5dDYQk/fINl1R/
-         tRDOl4AfpFR0Ukc5uPqX8YX2IcvXODnxjmbu0WX5ysEenkV+6tgV1YI4eRFmcV/XqU5p
-         qwM9uTPmQbMSTI4fXP+IREVwKuQnChssvKNSzRG7Le7pvxJ8EkS9dmPdG6rZu8EGLdKT
-         ISUfoRub+36chLs+3Mvkmaq0L21V/3qyPd3gzB2jCEv+D3Wm6Iss+Myqenj9YI4zIAAK
-         cApHzXT0O4YrNmmhO3XxBMqpn0BWhGiCQfLYsf9PfMcTuGqfEmF5T/DM3esGc/P7Gm/t
-         7loA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749688774; x=1750293574;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VyLSDtp3/79+REpFtOfivoiwhQtWS2WlyGvRoudAipo=;
-        b=GZ6E8wH2kkY9avVva7cVwuTx9+2Ni8RvvM9Hyv90QVG0wS5B3dhIvjPmI9nqKVoxwh
-         pSWoHfnRjWmX/su5PB64VN3PfCPW9MvMs3uQf+k7cm9i+kH8CFCYUzDXOvBysElRHzDb
-         3qeJ8I/q1ARV0Q5cq1Xi1pA4P/8jFaB3Wx+nEhfqTltiO2p4qqvO87WbKTXOpioJV2Jm
-         sjzH7QQc0GXzcS44JcQaWwpiwIQMMj0eKssWAEYFX+rQXaPFXQMNUKBprxAYBCJ3MdAp
-         cVLDE5gK3zobJMoCH9rAPlJRXcCnEwHkYvtjAEDFRR95ouC4sHVbYT/dXj7DMhUuSiyF
-         8oaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUm2QeitrhTqzZpD8McNznCuqBKysYmKABFc1nJ3P1FQRwWuC6H995kR1/fjB57tQQjPFLR6V7cPh8S@vger.kernel.org, AJvYcCXH8T/qXBdyHMc5jBvrl/xXyQHsdT4KxHr3iKDmlJG1esAb0mXobnsQg0+ugpdzgGonxP+H092A0zkn60di@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjpMqZQdt1b4C4BhjMkx2OL+1XhNTZw9oEZ+LL3bvr5A09N6sT
-	P88loWDrwOXmwrdTAZwFsFzf60y+mpFXpDKXwE2+jWBQFyxdU7iE9lLJ
-X-Gm-Gg: ASbGncucP6TTYqpKtKeWCMfbEwYvMBMWvaCCsKJZCE4IVuchH0DrTHSt+qpczbzW2/a
-	J71d9/3CWyqNhp0qZ/sfiuoMxGfL4xVLEOp2gWMvsr6WAzvOZ5OoVnK+4QGpApEIjAck2MbEZY3
-	gOZ3d24g8u2MpsPGI4SrUn7336YfT8aFigzRuDmxKtD9XM2usOT9Pe2VuW/uNmGyVkGWCSY9/0b
-	abhPA3f6yT1FdTe2H5FfsOgmjY2Q0r5al7KGgvFimRfnKhJ1wB4koAfx6iuuXWDkx3Bhjauuk9C
-	7sxLTTtJejo4zLtTcXezfaEVbCFClP3oDkXK3teJ1DSylkfDlqaL7Znk+53V6tVVAH+jG4Nut0g
-	DCEQum2u5JoGCqdmLcyiwwG8SAoX66jYM40mM
-X-Google-Smtp-Source: AGHT+IG1wkiN8hZKQxPPHMcYnO6q68DrpDvat0v3sRECZKC1dxLK1aUfI6nU+MNWxjZ/Pnf7eAsbVg==
-X-Received: by 2002:a05:620a:450e:b0:7c0:b523:e1b6 with SMTP id af79cd13be357-7d3b2a0001dmr241481285a.11.1749688773986;
-        Wed, 11 Jun 2025 17:39:33 -0700 (PDT)
-Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b528c300sm35935485a.101.2025.06.11.17.39.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 17:39:33 -0700 (PDT)
-From: Adam Ford <aford173@gmail.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: aford@beaconembedded.com,
-	m.felsch@pengutronix.de,
-	Adam Ford <aford173@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 4/4] arm64: dts: imx8mp: Configure VPU clocks for overdrive
-Date: Wed, 11 Jun 2025 19:39:22 -0500
-Message-ID: <20250612003924.178251-5-aford173@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250612003924.178251-1-aford173@gmail.com>
-References: <20250612003924.178251-1-aford173@gmail.com>
+	s=arc-20240116; t=1749688809; c=relaxed/simple;
+	bh=NyPPNQeFrrcMeaekAXsQqeAlWSYzdoBw9X5oLRlU1Eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d4tJZ7qFBCAR8frgg0o4ykpHkSV9XQbPkNkCM0Ns8Ser9+B2qteQmfG5FDMVZBKpvWMBMr10dVZlkaV8QDJU+2fEGset4AX65Pz1JGDYiE9k3qUgJpkqFQOg3Vgnz3uW4ViQ1BgkPIG68HbingqSayIx6c8zsvwPoOiIFCT3jjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-7f-684a21dbc596
+Date: Thu, 12 Jun 2025 09:39:49 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH net-next 9/9] page_pool: access ->pp_magic through struct
+ netmem_desc in page_pool_page_is_pp()
+Message-ID: <20250612003949.GA41589@system.software.com>
+References: <20250609043225.77229-1-byungchul@sk.com>
+ <20250609043225.77229-10-byungchul@sk.com>
+ <CAHS8izMLnyJNnK-K-kR1cSt0LOaZ5iGSYsM2R=QhTQDSjCm8pg@mail.gmail.com>
+ <20250610014500.GB65598@system.software.com>
+ <937e62c5-0d12-4bea-b0c1-a267c491cf72@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <937e62c5-0d12-4bea-b0c1-a267c491cf72@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHfc95d3YcDo7T6tWgcBKBoaYZPVRG9CGOfeliRHdbeWojXTLT
+	plDMMixLi5LMuWomqZk1WjanidkybymZZq2Ll9Tph65uJZZ2cZPIbz/+//d9fs+Hh6VlxaJA
+	VqU+LGjUigQ5I8GSTz7XQ98GrVMutvRGgsFUwcCtcS2U9ltFYCi3IPj2460YXA1NDBQXjdFg
+	eJaJ4bvpJw2OxgEx9JUMY6jNqqJh4FwzAzmZEzQct5ZR0GHJFUHezxs0VOn6xdBVY2Cgt+KP
+	CIZtORha9Dcx9OWuhkbjbBh7+hFBg6mKgrGzVxi42GlkYDCzD0Hn4wEMhRm5CEx1dhFMjBuY
+	1UF85c3XFF+t7xHzRnMKf68shM+2d9K8ufw0w5udF8T8u5e1DN98eQLz1VYXxeec+Mzwo443
+	mP9S183wpspuzLcZG8S8yzxvA7ddsjJeSFClCprwVXskytz8SZzUGqQ92dFO6ZAjIBuxLOGi
+	yNDrzdnI24M1Iy/EbsbcAlJa89DDDLeQ2O0/aDf7c4vIh1e2qVzC0txHETFlWbC78ONSSNaz
+	854PUg7Il8G7nkcy7gxFxk+58HThS1oKhjxMT02dvNpJu5egubmk9Dc7Hc8nJ+4XemTeXDRp
+	b24WuXkWF0zqLU2UeybhrCwpyqnH01sHkEdldnwe+epnKPQzFPr/Cv0MhRHhciRTqVMTFaqE
+	qDBlmlqlDdt3KNGMpk6n5OjkDitydsTaEMciuY/UqoxRykSK1OS0RBsiLC33l872m4qk8Yq0
+	dEFzKE6TkiAk29BcFsvnSCPHjsTLuAOKw8JBQUgSNP9aivUO1KHY/r1d/RuvhOhi2i99vWbb
+	VTfoG5OoXXlU7LAmjdy57TU/KXj7krhC+aeGwP09Z7bqHtTubom7tn6Z0RmhDrfmm12FzvCd
+	+9+vefK8dVThc7U0eh0bnbHNZCtbmq31+n56+aSFYgq25K0okTtfpZf/al3btDZoU+iSDT6h
+	x44PtWXp5ThZqYgIoTXJir/o4XKSNgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRiH+Z/bjsPV8baO+iFahGR0owtvdLM+1CkogwipiDrVoY3clE3F
+	RYHlanbZukI2ZyxE55aw8rKtMaympGblrcs0zbA2gyzzkmhKNheR3x5+v/d93i8vjUfryQRa
+	ocoS1Co+XUaJCfHu9flL3y/YKV9RMxAPZkcFBffHc8H60U2C2e5EMDrxXgQj9Q0UlNwbw8Hc
+	oiPgp+MXDoFnfSLoLQsS4NW7cOi72kiBQTeJwzl3OQZ1xU0ktDqNJNz6VYqDK++jCDo8Zgo+
+	VEyTEPQZCGgy2QjoNabAM4sUxpoHENQ7XBiMXSmm4Ga7hYJPul4E7XV9BBSdNSJw1PpJmBw3
+	UykyrtrWiXGPTD0izlKZzVWVJ3OX/O04V2m/SHGVwzdEXPdbL8U1Fk4S3CP3CMYZ8r9T3FCg
+	i+AGa99QXMmXHxjnqH5DcC8s9aI9UQfEG44L6YocQb180xGx3Hh7ish8viD3fOtLLA8F4i+h
+	CJplVrOe/teiGSaYRazV8zjMFJPE+v0T+AzHMkvYr+98oVxM48wAyTr0TmKmiGGyWX3LtfCC
+	hAF28NPD8FA0cxljxwtGiL9FFNt053OY8ZB16m57yEqHOJG1/qb/xvPZ/Jqi8LEIZiP7srGR
+	nOE4ZiH7xNmAXUNzTLNMplkm03+TaZbJggg7ilWocpS8In3NMs1JuValyF12LENZiULvUXZm
+	6robjXZs9yGGRrJIiVu+Qx5N8jkardKHWBqXxUqkMaFIcpzXnhLUGYfV2emCxocSaUI2T7Iz
+	TTgSzZzgs4STgpApqP+1GB2RkIesBbVHTb7kLXuD3sKk2lWJem9wNPI6HRX3dl9kolRr/xY8
+	mxpPDqaWXK442C9dlzqtel5UBc2vFj+oaLM8bQ74DrV5beP9t+5MDJ22uTJLtl3Y2sB7koZ3
+	GbpLD8cUv3Bt1qVdnGO8v0mZ3dW6H1X10Ie+rG3TFDi1hXWqzrlXZYRGzq9MxtUa/g/f9oLO
+	GgMAAA==
+X-CFilter-Loop: Reflected
 
-The defaults for this SoC are configured for overdrive mode, but
-the VPU clocks are currently configured for nominal mode.
-Increase VPU_G1_CLK_ROOT to 800MHZ from 600MHz,
-Increase VPU_G2_CLK_ROOT to 700MHZ from 500MHz, and
-Increase VPU_BUS_CLK_ROOT to 800MHz from 600MHz.
+On Wed, Jun 11, 2025 at 03:30:28PM +0100, Pavel Begunkov wrote:
+> On 6/10/25 02:45, Byungchul Park wrote:
+> > On Mon, Jun 09, 2025 at 10:39:06AM -0700, Mina Almasry wrote:
+> > > On Sun, Jun 8, 2025 at 9:32 PM Byungchul Park <byungchul@sk.com> wrote:
+> > > > 
+> > > > To simplify struct page, the effort to separate its own descriptor from
+> > > > struct page is required and the work for page pool is on going.
+> > > > 
+> > > > To achieve that, all the code should avoid directly accessing page pool
+> > > > members of struct page.
+> > > > 
+> > > > Access ->pp_magic through struct netmem_desc instead of directly
+> > > > accessing it through struct page in page_pool_page_is_pp().  Plus, move
+> > > > page_pool_page_is_pp() from mm.h to netmem.h to use struct netmem_desc
+> > > > without header dependency issue.
+> > > > 
+> > > > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > > > Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> > > > ---
+> > > >   include/linux/mm.h   | 12 ------------
+> > > >   include/net/netmem.h | 14 ++++++++++++++
+> > > >   mm/page_alloc.c      |  1 +
+> > > >   3 files changed, 15 insertions(+), 12 deletions(-)
+> > > > 
+> > > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > > > index e51dba8398f7..f23560853447 100644
+> > > > --- a/include/linux/mm.h
+> > > > +++ b/include/linux/mm.h
+> > > > @@ -4311,16 +4311,4 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+> > > >    */
+> > > >   #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+> > > > 
+> > > > -#ifdef CONFIG_PAGE_POOL
+> > > > -static inline bool page_pool_page_is_pp(struct page *page)
+> > > > -{
+> > > > -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> > > > -}
+> > > > -#else
+> > > > -static inline bool page_pool_page_is_pp(struct page *page)
+> > > > -{
+> > > > -       return false;
+> > > > -}
+> > > > -#endif
+> > > > -
+> > > >   #endif /* _LINUX_MM_H */
+> > > > diff --git a/include/net/netmem.h b/include/net/netmem.h
+> > > > index d84ab624b489..8f354ae7d5c3 100644
+> > > > --- a/include/net/netmem.h
+> > > > +++ b/include/net/netmem.h
+> > > > @@ -56,6 +56,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+> > > >    */
+> > > >   static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
+> > > > 
+> > > > +#ifdef CONFIG_PAGE_POOL
+> > > > +static inline bool page_pool_page_is_pp(struct page *page)
+> > > > +{
+> > > > +       struct netmem_desc *desc = (struct netmem_desc *)page;
+> > > > +
+> > > > +       return (desc->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> > > > +}
+> > > > +#else
+> > > > +static inline bool page_pool_page_is_pp(struct page *page)
+> > > > +{
+> > > > +       return false;
+> > > > +}
+> > > > +#endif
+> > > > +
+> > > >   /* net_iov */
+> > > > 
+> > > >   DECLARE_STATIC_KEY_FALSE(page_pool_mem_providers);
+> > > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > > > index 4f29e393f6af..be0752c0ac92 100644
+> > > > --- a/mm/page_alloc.c
+> > > > +++ b/mm/page_alloc.c
+> > > > @@ -55,6 +55,7 @@
+> > > >   #include <linux/delayacct.h>
+> > > >   #include <linux/cacheinfo.h>
+> > > >   #include <linux/pgalloc_tag.h>
+> > > > +#include <net/netmem.h>
+> > > 
+> > > mm files starting to include netmem.h is a bit interesting. I did not
+> > > expect/want dependencies outside of net. If anything the netmem stuff
+> > > include linux/mm.h
+> > 
+> > That's what I also concerned.  However, now that there are no way to
+> > check the type of memory in a general way but require to use one of pp
+> > fields, page_pool_page_is_pp() should be served by pp code e.i. network
+> > subsystem.
+> > 
+> > This should be changed once either 1) mm provides a general way to check
+> > the type or 2) pp code is moved to mm code.  I think this approach
+> > should acceptable until then.
+> 
+> I'd argue in the end the helper should be in mm.h as mm is going to
+> dictate how to check the type and keep them enumerated.
 
-This requires adjusting the clock parents. Since there is already
-800MHz clock references, move the VPU_BUS and G1 clocks to it.
-This frees up the VPU_PLL to be configured at 700MHz to run
-the G2 clock at 700MHz.
+Definitely yes, I agree.  However, mm cannot do that for now.  With the
+current way, it should be served by pp code since the type checking is
+done through the pp fields.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
----
-V2:  Move VPU_PLL assignment into the G2 node, since it's only needed
-     for it.
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 909555a5da4b..8884b3fe5e60 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -2256,8 +2256,8 @@ vpu_g1: video-codec@38300000 {
- 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk IMX8MP_CLK_VPU_G1_ROOT>;
- 			assigned-clocks = <&clk IMX8MP_CLK_VPU_G1>;
--			assigned-clock-parents = <&clk IMX8MP_VPU_PLL_OUT>;
--			assigned-clock-rates = <600000000>;
-+			assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_800M>;
-+			assigned-clock-rates = <800000000>;
- 			power-domains = <&vpumix_blk_ctrl IMX8MP_VPUBLK_PD_G1>;
- 		};
- 
-@@ -2266,9 +2266,9 @@ vpu_g2: video-codec@38310000 {
- 			reg = <0x38310000 0x10000>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk IMX8MP_CLK_VPU_G2_ROOT>;
--			assigned-clocks = <&clk IMX8MP_CLK_VPU_G2>;
--			assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_1000M>;
--			assigned-clock-rates = <500000000>;
-+			assigned-clocks = <&clk IMX8MP_CLK_VPU_G2>, <&clk IMX8MP_VPU_PLL_OUT>;
-+			assigned-clock-parents = <&clk IMX8MP_VPU_PLL_OUT>;
-+			assigned-clock-rates = <700000000>, <700000000>;
- 			power-domains = <&vpumix_blk_ctrl IMX8MP_VPUBLK_PD_G2>;
- 		};
- 
-@@ -2283,9 +2283,9 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
- 				 <&clk IMX8MP_CLK_VPU_G2_ROOT>,
- 				 <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
- 			clock-names = "g1", "g2", "vc8000e";
--			assigned-clocks = <&clk IMX8MP_VPU_PLL>, <&clk IMX8MP_CLK_VPU_BUS>;
--			assigned-clock-parents = <0>, <&clk IMX8MP_VPU_PLL_OUT>;
--			assigned-clock-rates = <600000000>, <600000000>;
-+			assigned-clocks = <&clk IMX8MP_CLK_VPU_BUS>;
-+			assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_800M>;
-+			assigned-clock-rates = <800000000>;
- 			interconnects = <&noc IMX8MP_ICM_VPU_G1 &noc IMX8MP_ICN_VIDEO>,
- 					<&noc IMX8MP_ICM_VPU_G2 &noc IMX8MP_ICN_VIDEO>,
- 					<&noc IMX8MP_ICM_VPU_H1 &noc IMX8MP_ICN_VIDEO>;
--- 
-2.48.1
-
+	Byungchul
+> 
+> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+> 
+> -- 
+> Pavel Begunkov
