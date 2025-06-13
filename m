@@ -1,37 +1,71 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267421A01B9
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770191DF268;
+	Fri, 13 Jun 2025 02:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749780665; cv=none; b=qMpOHrk837sZvq5r6ilLHUTcFFkZ19LpZTTkNkLyW56/n+ftF30r9mG7GurLejfjOHaKTFia7L3lWSiGm/JWjhDnDQrOwU20IU4B+e75rKilorothGOI4LgIxQcQQCA3DYlXQP8GMs/3tZQl6zmSDN5KKgnEWpVg2H3SElOYxbQ=
+	t=1749780737; cv=none; b=QfACml63QkDQdjjpeOXAqRQxNeFqG5YFvt2ohnTaFYl4ITWdF6nlK4JIgGH3GVOa7hWxbsVFv24xYhu4WZUwd/THSpEoR7bxI7UG2ub46zgEKfDjRpKdxdFEsKmw9OVPqPooUYEPJZ8Ee1TW9W+M7Hps+ENHZTYBp/Z+i5xvgsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749780665; c=relaxed/simple;
-	bh=AASYvjJY+a+e63K9/2ymTSWXr0lIeyAHE2bIYsoyJFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kxEL48UcOJ4TwgzpySf+kCBfDShDr2BZGsSGi2oEuF9+ENBcw2cNh9tc3vNRkli3ehuGA459UfnUsfYHMztvWJNpxoyon2j0TuFmakEJ3EGtz35yI6Cm+mFaTtOaEwkzU+duCmqdSNCD9KwhOD9EB/8+9gy/1bcByF5oVQsnu64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vr3g1N1K; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749780737; c=relaxed/simple;
+	bh=oV2F7jyiXlkuJRhDsFyY1YWgqEbzKbiBKXchw7JTdGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kF2Fm6ObhuHWtIvBdN6ENDygvfkpDencYn1ICPakUq8zj+vE+OK5PP1k9mTnsWDArsQrtkWQef0CrT278+kclLYuZtdVLz+ORrdYGXRIUzCV3WYEmYe25EB0tAXEQzmTyy8U4qi7V/02twaPv0Dfi0V3gH+UBdDFQvhTFKaz3qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MfCvXX0b; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vr3g1N1K"
-Date: Thu, 12 Jun 2025 22:10:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749780651;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=YGhHosSHDbMOkNnQE2jm7PRGL2uaPimeOOlGmR/awso=;
-	b=Vr3g1N1KHgEFvMhIUVkRQEqdhn4oBEPmGM/L3eveCLY8rEOqdLk1V93imqfPm6sxuZuBOT
-	MNq97cuUXSker50b7j+CVZaAvrTp114OsLjTL+wTOiaHCv+yKU1x+km75wkNYd4glfrlNH
-	rkmddDn8PAtMseaDz5S44/UwGl2oNEA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs fixes for 6.16-rc2
-Message-ID: <oxjgqivjmn43zo5dj2u43u432gmfexxjc6xxqcig5jovna3fe3@youegmmszsip>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfCvXX0b"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2350fc2591dso15683405ad.1;
+        Thu, 12 Jun 2025 19:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749780735; x=1750385535; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/hna0O+LUaLx+0oktXX+K8llS+HEe3f1PFlR9cMiAfc=;
+        b=MfCvXX0br3I4InM6lyJ+7/ORK5J2GlhY+0CTcFfRHnnG7TfkMqJhlVwPdwBppsvzml
+         NUGAxoVKFz5pviO1nYtUph+MVM8jhjXtcuAWGuUvT9I64O0fhqsprkf2upchB/n4WGAz
+         7ATeYR6awWaNTzCRo5NPg/E0LYxrBHZMIuQkpRdyjrAWg4cT/fSb0BJqWg4ZVB3dRorv
+         VmA8YBrBRgDzzXbwepiUhAhvltY1B+/9dsGwS58Fz0P1YQzcGzuUWaKd03CqRgrTFGTe
+         bwsmYhYmxYmPMWrt9kziLWuB21HO9AfJ/qgpUBZY9UI99SR+nlx7+tW4eH511UnQEZJE
+         dQ8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749780735; x=1750385535;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/hna0O+LUaLx+0oktXX+K8llS+HEe3f1PFlR9cMiAfc=;
+        b=q9U7vM+IbrV3z5Nb/T8PpKGFk5e23djOblUsqU7xTgoGtxp25aQEmpF3tF6oaxXUpu
+         x1m+ijQxtRGPLG0n9QxLH2MByC4IFjLOBlvQqwq1gnqCioR7jdY0CQEgNJcdR5u3lPQ8
+         ItOI0kZ+2+yM1P1w04tVbgL5iMd/pXzyLbizrh/e9z1p8L/mGgqaqcIG8lkAIjmXU53y
+         zJZuqpdOgq9b20fudDXckWMN5SD5OMsBId5s00Yo4ynx1bVJTjzvyAG4tGS5gcww9geh
+         NdeGjQE+lWT70Ys0i5v1JMnISLfkI/iCbiXeDO1ayTzo9xJwtJ2weWOUMFzTmj2Kw9ll
+         hxGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXfEnlqkxY8Gx+guEayWQZTqfsN7tWOhYcaEZ1JZqHNDzLLpc8pXxOrtVdXodQzBPx0aBo22z6+MAtdn/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO/yHmPEPhumUkIFmd8TJSRqe0HV07ouebS1QqWeOd+WgzZBjh
+	yEg/XcMHT50dnxvyh1ju1Y1BC2QU47JNgoEsQiv4f52yZDhb210qXpMe
+X-Gm-Gg: ASbGnct/yfTOChKpUj3T3mYOR5pj1paYyM2hARUZcE7JieA3bJlCis+39tX93lHXtjG
+	DFVxc9A6z9zDJsFbfnUeY8SQBdvNARj1TbijgedFZ9WuXUdBQEXVqosw3DYQ+RI4y7hRh7EH2OH
+	8l5qegLC9Ee6NCUoOSwCzYWB3jP3gaV5jN+WzUAtz7uu8O7nDlLgFuKKCzkEMlMBiCDR4lt2siG
+	TtOJW3dWPUFIldFyIE6/u3oVtODOkxj/VYElHcV247Xq5p8Zaw9RrTxk/Wno5Sf1G0OueCAyzpJ
+	3OQeXOiiFEPdYfWGd23H3QppCEln0m4yM3lgyMnuAT1AdnWjOfxvqw==
+X-Google-Smtp-Source: AGHT+IEn+f3gutrZsuGdkCNgFErV5PdSC6Hef2d/nsG5l9WFwb349LMISTX9gwCyLloUOhY8JzqgdQ==
+X-Received: by 2002:a17:902:ecc1:b0:21f:5063:d3ca with SMTP id d9443c01a7336-2365fb3dde4mr12310335ad.16.1749780734677;
+        Thu, 12 Jun 2025 19:12:14 -0700 (PDT)
+Received: from localhost ([2602:f919:106::1b8])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b2fe1639e5bsm403153a12.2.2025.06.12.19.12.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 19:12:14 -0700 (PDT)
+Date: Fri, 13 Jun 2025 10:12:07 +0800
+From: Troy Mitchell <troymitchell988@gmail.com>
+To: Alex Elder <elder@riscstar.com>, andi.shyti@kernel.org, dlan@gentoo.org,
+	troymitchell988@gmail.com
+Cc: linux-i2c@vger.kernel.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Troy Mitchell <troy.mitchell@linux.dev>
+Subject: Re: [PATCH] i2c: k1: check for transfer error
+Message-ID: <aEuI9-QWCv6CRUyX@troy-wujie14pro-arch>
+References: <20250612225627.1106735-1-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,122 +74,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250612225627.1106735-1-elder@riscstar.com>
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+On Thu, Jun 12, 2025 at 05:56:25PM -0500, Alex Elder wrote:
+> If spacemit_i2c_xfer_msg() times out waiting for a message transfer to
+> complete, or if the hardware reports an error, it returns a negative
+> error code (-ETIMEDOUT, -EAGAIN, -ENXIO. or -EIO).
+> 
+> The sole caller of spacemit_i2c_xfer_msg() is spacemit_i2c_xfer(),
+> which is the i2c_algorithm->xfer callback function.  It currently
+> does not save the value returned by spacemit_i2c_xfer_msg().
+> 
+> The result is that transfer errors go unreported, and a caller
+> has no indication anything is wrong.
+> 
+> When this code was out for review, the return value *was* checked
+> in early versions.  But for some reason, that assignment got dropped
+> between versions 5 and 6 of the series, perhaps related to reworking
+> the code to merge spacemit_i2c_xfer_core() into spacemit_i2c_xfer().
+> 
+> Simply assigning the value returned to "ret" fixes the problem.
+> 
+> Fixes: 5ea558473fa31 ("i2c: spacemit: add support for SpacemiT K1 SoC")
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> Reviewed-by: Troy Mitchell <troymitchell988@gmail.com>
+> ---
+> v2: Added Troy's Reviewed-by
+Hi Alex, you added the changelog, but the subject line 
+doesn't have the "V2" suffix. Is this a mistake?
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+            - Troy
 
-are available in the Git repository at:
-
-  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-06-12
-
-for you to fetch changes up to aef22f6fe7a630d536f9eaa0a7a2ed0f90ea369e:
-
-  bcachefs: Don't trace should_be_locked unless changing (2025-06-11 23:25:41 -0400)
-
-----------------------------------------------------------------
-bcachefs fixes for 6.16-rc2
-
-As usual, highlighting the ones users have been noticing:
-
-- Fix a small issue with has_case_insensitive not being propagated on
-  snapshot creation; this led to fsck errors, which we're harmless
-  because we're not using this flag yet (it's for overlayfs +
-  casefolding).
-
-- Log the error being corrected in the journal when we're doing fsck
-  repair: this was one of the "lessons learned" from the i_nlink 0 ->
-  subvolume deletion bug, where reconstructing what had happened by
-  analyzing the journal was a bit more difficult than it needed to be.
-
-- Don't schedule btree node scan to run in the superblock: this fixes a
-  regression from the 6.16 recovery passes rework, and let to it running
-  unnecessarily.
-
-  The real issue here is that we don't have online, "self healing" style
-  topology repair yet: topology repair currently has to run before we go
-  RW, which means that we may schedule it unnecessarily after a
-  transient error. This will be fixed in the future.
-
-- We now track, in btree node flags, the reason it was scheduled to be
-  rewritten. We discovered a deadlock in recovery when many btree nodes
-  need to be rewritten because they're degraded: fully fixing this will
-  take some work but it's now easier to see what's going on.
-
-  For the bug report where this came up, a device had been kicked RO due
-  to transient errors: manually setting it back to RW was sufficient to
-  allow recovery to succeed.
-
-- Mark a few more fsck errors as autofix: as a reminder to users, please
-  do keep reporting cases where something needs to be repaired and is
-  not repaired automatically (i.e. cases where -o fix_errors or fsck -y
-  is required).
-
-- rcu_pending.c now works with PREEMPT_RT
-
-- 'bcachefs device add', then umount, then remount wasn't working - we
-  now emit a uevent so that the new device's new superblock is correctly
-  picked up
-
-- Assorted repair fixes: btree node scan will no longer incorrectly
-  update sb->version_min,
-
-- Assorted syzbot fixes
-
-----------------------------------------------------------------
-Alan Huang (1):
-      bcachefs: Fix possible console lock involved deadlock
-
-Arnd Bergmann (1):
-      bcachefs: ioctl: avoid stack overflow warning
-
-Kent Overstreet (21):
-      bcachefs: Add missing restart handling to check_topology()
-      bcachefs: Log fsck errors in the journal
-      bcachefs: Add range being updated to btree_update_to_text()
-      bcachefs: Add more flags to btree nodes for rewrite reason
-      bcachefs: Update /dev/disk/by-uuid on device add
-      bcachefs: Mark need_discard_freespace_key_bad autofix
-      bcachefs: Only run 'increase_depth' for keys from btree node csan
-      bcachefs: Read error message now prints if self healing
-      bcachefs: Don't persistently run scan_for_btree_nodes
-      bcachefs: mark more errors autofix
-      bcachefs: Make sure opts.read_only gets propagated back to VFS
-      bcachefs: Don't put rhashtable on stack
-      bcachefs: Fix downgrade_table_extra()
-      bcachefs: Fix rcu_pending for PREEMPT_RT
-      bcachefs: Fix leak in bch2_fs_recovery() error path
-      bcachefs: Don't pass trans to fsck_err() in gc_accounting_done
-      bcachefs: Fix version checks in validate_bset()
-      bcachefs: Don't trust sb->nr_devices in members_to_text()
-      bcachefs: Print devices we're mounting on multi device filesystems
-      bcachefs: Ensure that snapshot creation propagates has_case_insensitive
-      bcachefs: Don't trace should_be_locked unless changing
-
- fs/bcachefs/bcachefs.h              |  1 -
- fs/bcachefs/btree_gc.c              | 95 +++++++++++++++++++++++--------------
- fs/bcachefs/btree_io.c              | 26 +++++++---
- fs/bcachefs/btree_locking.c         |  2 +-
- fs/bcachefs/btree_locking.h         |  6 ++-
- fs/bcachefs/btree_types.h           | 29 +++++++++++
- fs/bcachefs/btree_update_interior.c | 33 ++++++++++++-
- fs/bcachefs/btree_update_interior.h |  7 +++
- fs/bcachefs/chardev.c               |  4 +-
- fs/bcachefs/disk_accounting.c       |  4 +-
- fs/bcachefs/error.c                 |  5 +-
- fs/bcachefs/fs.c                    |  8 ++++
- fs/bcachefs/io_read.c               | 11 ++++-
- fs/bcachefs/io_read.h               |  1 +
- fs/bcachefs/movinggc.c              | 22 +++++----
- fs/bcachefs/namei.c                 | 10 ++++
- fs/bcachefs/rcu_pending.c           | 22 ++++-----
- fs/bcachefs/recovery.c              | 27 ++++++++---
- fs/bcachefs/recovery_passes.c       | 14 ++++--
- fs/bcachefs/sb-downgrade.c          |  5 +-
- fs/bcachefs/sb-errors_format.h      | 10 ++--
- fs/bcachefs/sb-members.c            | 34 +++++++++++--
- fs/bcachefs/super.c                 | 47 ++++++++++++------
- fs/bcachefs/util.c                  | 10 +---
- fs/bcachefs/util.h                  |  2 +-
- 25 files changed, 319 insertions(+), 116 deletions(-)
+> 
+>  drivers/i2c/busses/i2c-k1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
+> index 5965b4cf6220e..b68a21fff0b56 100644
+> --- a/drivers/i2c/busses/i2c-k1.c
+> +++ b/drivers/i2c/busses/i2c-k1.c
+> @@ -477,7 +477,7 @@ static int spacemit_i2c_xfer(struct i2c_adapter *adapt, struct i2c_msg *msgs, in
+>  
+>  	ret = spacemit_i2c_wait_bus_idle(i2c);
+>  	if (!ret)
+> -		spacemit_i2c_xfer_msg(i2c);
+> +		ret = spacemit_i2c_xfer_msg(i2c);
+>  	else if (ret < 0)
+>  		dev_dbg(i2c->dev, "i2c transfer error: %d\n", ret);
+>  	else
+> 
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> -- 
+> 2.45.2
+> 
