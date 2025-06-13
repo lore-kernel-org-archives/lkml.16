@@ -1,96 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5410C1487F6;
-	Fri, 13 Jun 2025 13:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B352E1487F6;
+	Fri, 13 Jun 2025 13:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749821950; cv=none; b=kCnBKUf42swrT/cKCAGKyD+5SRL4MGMVOktR9oNSpryWV87bgI1bLUR3/scI1hxNloH2SsvBJuQWEwmhc7q6Lk1t0siZ4PWdEbtkz8/fq25PqoOnnpg2RW/kfpE/E+STMHQRm25CD/wg8dFeC0NMbZnS0fpfHghKb2Vz0k1dTfw=
+	t=1749821957; cv=none; b=D/rVNmoQ4yyeA7vCspEH5UG49JXEz3LFxZHmDQFcAeIExj93B0QYEM25AFr33uTyT5bYvNun7GKsnXj5Sf8XRPSXPWS19fyGBLqhBCB0VRxrbE+V2U50IsbfKHAYILY8vaYaDZdhUJvz3Fvy86QrIOEBV+JIqGGZpZkCGW0QDbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749821950; c=relaxed/simple;
-	bh=tv0qelqtNz6A1VNaJr9dPmZmZ3/5a9wk1n07oPAIAbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4J3R0SfEp4IX3rW0pnb0r82iIsm7sd/GYooIqQ7hZ15f4ggrv0q7IZ+F0shKj0sh19inTxaUfQ/bLaytGhagabxii2UG71J5MDF8Zlt3VA1nyCUttfNhtzWtXpGqFOaX/iGbc/GOfwaanr6N82kvvvoub9GgYhqtlHpoGeJxMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/qZk5dE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749821957; c=relaxed/simple;
+	bh=d4zt0JOBC2hdaumNtVVwuXPV9bmTleS7AL76KtydixI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=apz75ZD7q7H9lSRIAjxxtb95avzBQi2vKGcoiGRtNZb9mOvg8u58USy/AZRMjlmvtICg24BwCi3CC6N/NMlszk/OcYqU//jSN4b0L6NbzxZd9LNtv6uJBLhyARTbbjGbUCCxtSMpsbYmcF5kNKIDfNGckIVTohPRHoeGOkZ5bzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orDS8zZi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/qZk5dE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C61C4CEE3;
-	Fri, 13 Jun 2025 13:39:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orDS8zZi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 82919C4CEF0;
+	Fri, 13 Jun 2025 13:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749821949;
-	bh=tv0qelqtNz6A1VNaJr9dPmZmZ3/5a9wk1n07oPAIAbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O/qZk5dEIYWkTkNTdU20vhnNav7QaKfLPRvY4HV9QM8kIviX5g8z7MK9xQLLjsz6f
-	 G90pwbfpRygug/jMAf1sUBIidsIAwSDjSXrMXcTCSPZio0ZDb1U4r0ZD5q073Um7H4
-	 74VzZJPwm0d3QYzVkhjelyRu3D4yr0bjpi4BfSWC1I96H8IvHQ7iJ+wQotSit/Usu5
-	 ZuCrrCvYKU76Gbh6psHswjqlTbHSC8h/wWW06B7de4RIodj7YRkrQqVrd+fIEzoqtA
-	 4DARAJTM5Kd2uIcNM18K2Ld5G80RVt90psPvD7Jf/uG7PjwRIQ/nxF0OmpDJ4nZfR4
-	 K3M7iTQGIDtfw==
-Date: Fri, 13 Jun 2025 14:39:05 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jirislaby@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] mfd: Remove node variables that are unused with
- CONFIG_OF=n
-Message-ID: <20250613133905.GA897353@google.com>
-References: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
- <20250528160603.GA1172935@ax162>
+	s=k20201202; t=1749821957;
+	bh=d4zt0JOBC2hdaumNtVVwuXPV9bmTleS7AL76KtydixI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=orDS8zZiDiEvC5a+Xj68U/brImg3QVNBSWNpgk6qGEmLsw/AI1tiuhPfPDAZjpmiW
+	 BYA+lqYM31aNms+BlF8Zbpmj9FeoBX4Yb6QpMtIB/+wU+9AdFogYYVGhBLz5yD3fL5
+	 nV0YshzW/JvB+p/57A8rn5ixtyHetU5qmr2QHKPYVlIZASM96n+RO0PjiDnSGx7AGK
+	 /4tAFOPTgBXW+mPDpfWtgo/iXa7x/eNgrnwM7O4czC3ZDjJcnQ0zTCmayIIkttqYlx
+	 J+lIIUtEADx/EA/PUSrk0o+irqkaAJh4yXHpw48pPbD40fbWN5msgTrCb/poyI6xbD
+	 R7p7bTacb8jpg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735CEC71136;
+	Fri, 13 Jun 2025 13:39:17 +0000 (UTC)
+From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
+Date: Fri, 13 Jun 2025 15:39:13 +0200
+Subject: [PATCH v3 1/2] dt-bindings: arm: amlogic: Add Ugoos AM3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250528160603.GA1172935@ax162>
+Message-Id: <20250613-ugoos-am3-v3-1-f8a43e6bbfdb@posteo.net>
+References: <20250613-ugoos-am3-v3-0-f8a43e6bbfdb@posteo.net>
+In-Reply-To: <20250613-ugoos-am3-v3-0-f8a43e6bbfdb@posteo.net>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749821956; l=1125;
+ i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
+ bh=kZwR93fnBy9N7Bg/HslF5gmhIegfe1/51WU15kA7fXw=;
+ b=dd33tXb2gztAfCgLiRlEw/IQQQHH7LtYQY6rjV/dGwaie7Sf3Bs/24sa4q3zEyvnbtipEILxQ
+ +B+Tk3SGZRBDguFUxz4AzBcLk1SvJ10VqAaApauwVEK22UxHof8QINI
+X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
+ pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
+X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
+ auth_id=156
+X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+Reply-To: j.ne@posteo.net
 
-On Wed, 28 May 2025, Nathan Chancellor wrote:
+From: "J. Neuschäfer" <j.ne@posteo.net>
 
-> Hi Thomas,
-> 
-> On Thu, May 08, 2025 at 04:57:24PM +0100, Nathan Chancellor wrote:
-> > A recent cleanup introduced a few instances of -Wunused-variable in
-> > configurations without CONFIG_OF because of_fwnode_handle() does not
-> > reference its argument in that case:
-> > 
-> >   drivers/mfd/twl4030-irq.c: In function 'twl4030_init_irq':
-> >   drivers/mfd/twl4030-irq.c:679:46: warning: unused variable 'node' [-Wunused-variable]
-> >     679 |         struct                  device_node *node = dev->of_node;
-> >         |                                              ^~~~
-> >   drivers/mfd/max8925-core.c: In function 'max8925_irq_init':
-> >   drivers/mfd/max8925-core.c:659:29: warning: unused variable 'node' [-Wunused-variable]
-> >     659 |         struct device_node *node = chip->dev->of_node;
-> >         |                             ^~~~
-> >   drivers/mfd/88pm860x-core.c: In function 'device_irq_init':
-> >   drivers/mfd/88pm860x-core.c:576:29: warning: unused variable 'node' [-Wunused-variable]
-> >     576 |         struct device_node *node = i2c->dev.of_node;
-> >         |                             ^~~~
-> 
-> These warnings are now present in mainline after the merge of the
-> irq/cleanups branch...
-> 
-> > Use the value of these variables as the argument to of_fwnode_handle()
-> > directly, clearing up the warnings.
-> > 
-> > Fixes: e3d44f11da04 ("mfd: Switch to irq_domain_create_*()")
-> 
-> but this hash has changed, so this should be
-> 
-> Fixes: a36aa0f7226a ("mfd: Switch to irq_domain_create_*()")
-> 
-> but the rest of the change is still applicable. Would you like a new
-> change or can you adjust that when applying?
+The Ugoos AM3 is a small set-top box based on the Amlogic S912 SoC.
 
-Okay, please rebase and resubmit.
+  https://ugoos.com/ugoos-am3-16g
 
-I suspect at least one of these has been fixed by Arnd already.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+---
+
+V3:
+- add Martin's R-b tag
+
+V2:
+- fix vendor name in patch subject
+- add Krzysztof's ACK
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 05edf22e6c30368bfee7be61bbb4b682bfbc1d5e..2a096e060ed3d30f243d39b47817d2a5a36361b3 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -135,6 +135,7 @@ properties:
+               - minix,neo-u9h
+               - nexbox,a1
+               - tronsmart,vega-s96
++              - ugoos,am3
+               - videostrong,gxm-kiii-pro
+               - wetek,core2
+           - const: amlogic,s912
 
 -- 
-Lee Jones [李琼斯]
+2.48.0.rc1.219.gb6b6757d772
+
+
