@@ -1,155 +1,82 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB96D1E871
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F862E11B5;
+	Fri, 13 Jun 2025 16:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749832187; cv=none; b=MFo9Wex1PCpEC4p6f9mtB9p1vkokYjP9LLyVGGiyUQ4EhS8tm2AHfnpFu7s0mlaFjmzm3ZfSrmMwJo9oDeC60v8HvoIcIGm48zkY51mhYkhKhagtjSvdTwEfINP6J+NzTsorUehRhvFPGbtN1BmalgSUcu5nqR4GU1K3qUXg4DQ=
+	t=1749832255; cv=none; b=PP+Oi5sbqyfNtSuLdilpx8dmsnJ/X7/riALrx3ntx/f8Zco4SQVOJEVbfYrq1pPmOed9YQ96m+GRhbehNIsyXDCyjVx3vzMaK/kvWC0vVX2VfzL8LqjZZ4Tyi411SEsMb4cIoOiYHLJCQRcgw1xZKJtNmH5bZ9EM7SLjBdR+9o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749832187; c=relaxed/simple;
-	bh=xlPuueSQaXyTx+4IzMqTdEWHdFgIskksxZhypIg+SOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q2RLJ69yuCUB3FbPsxg3JScBTKILTIQ7XzkqqiLdkF7QFwmMRvjvo5SVwZDULdWVlJSouIaJcpOITcKNYxXDQWttqiQ0H3B5SsUOuwCSy6HtWLXKN4SOwUXBKRwJjNuB954pUt2ElXvAe2frm+zMQmzmXhqlfJho+JVuPS2J6Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhYvSLHD; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749832255; c=relaxed/simple;
+	bh=bIXR0RtQXeFW3KLfEoanD7YjVun66GxkFtLLTTFpops=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=DheBmXoc3dtZIHKawdPTstmWyKgEiS+JOGZa5UatSUhrQuhrveoilV1LFmPcAAcTQeejjvbVoeD/ACSFPnVm1EcRPIAG4LSO+X82j6f4aDCMOCWcqwELfA7I6eNlcA6WKvdzzX3jqR7q4SZf28d6jLEurT7VbtSSeY3uMD7rECs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjye9jxe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhYvSLHD"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-236377f00a1so22591355ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749832185; x=1750436985; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p/ypjyt/NbZiloplOW749e3kAa0t1FCbJIVyOgIwQ5Q=;
-        b=UhYvSLHDvN2jOBz0CEkh1tpwtJPqHgv8uJMqb7QxS923jJsWW50czTbG8KZh+u8Pn/
-         LSPcWrfzSZgmtQPyDXN/jaXQU24D+oWzbEo7i6hbFdO25gK4wajz65Dd5S8MJaxvwvB0
-         7AODv6lpQf2w0P6erJjX1w439E21+mvj6hQ2RZVrKS2JaN+bnV4UcD1ONwamgjSol7G9
-         J7jBlS8N5UDgbdZE15dobKdemFkSWSXGrZGVsIj/uhdiSwHMVVf6FD2XGj7igYYUcXx3
-         zvVs2aTMqTvDZYVTKqDsT4glbPxll1mBcmeBQq1DigswGLh5ww97aYeNFzPMhagrrKSv
-         yTcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749832185; x=1750436985;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p/ypjyt/NbZiloplOW749e3kAa0t1FCbJIVyOgIwQ5Q=;
-        b=E4W3mMz+VRygLxOJFnCwMxoYcAgXF+t23ZQclqT9bXi0sFkD0pkWgWbnllpkw8UB66
-         0NgmXTeIcTQPiG2wBcCqW+uZnkcvTMVDkYjATOQpPKOuVzCPho4/GCu2+03UzEwthksa
-         IRxYRFiywcg+4Z3ciQxpZOAxK2QMyEt4Zv9Ifd7Ve+6XsaH8VeME/XgKtoUn/MRnmklX
-         CR8I4Yx+bZ19tT215nfV2gbogbPnEyd7NOn96lXRKaHji4JFDKxrl791Mfk6eaN65Uc+
-         G0cuynUQpYz4Mm4B25Jxw8GcCwuuGDbZ170f+T1zkv4+R36R1prT0E5e6lK9san5awxI
-         8lFg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4rf+shRKHmNJAEtYGo+YMCLmXW05wl02W6ItPCuM8n/CxNyZND01ptTNrIB5Zg4wjyxLpJfKDwhu/AA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZRf+adxEenNOe41akq/S2CJIcP66OR5jxsktlsHvYNAQF0LOv
-	MDX8hx7oOs6hr4xirTYOl9Vll4i3sPul6pIoe7wENiXChGOHQrVrXKYp
-X-Gm-Gg: ASbGncsLfmm60Zd4Mvfc9NwfMkuQskIiLda3cp4CAdbOZ13inoVr+xou1mHnfGD9Jq+
-	iTTiQK8Se58TZ1mPfgeiel/i5RMHrVlhnX9qmCI+2aYXsDaG+Oyajh38dcioQw2sVrm3H1zk83+
-	PlTlibjLYBY+ZNIis4vbVY0O4G2/2jr+aTH1POCg2n+esy8LN26go1VS9n50MLZkA6u4/fVdRJa
-	Xc0ogI+iROdqEUKt1Yw7nSWukFrOwXFw3rtO61T2imtvBQmKWqRV8zsukUiG3pQRi/GxbcAnNS0
-	wksTjg1uiVQE6LksA3RoKQWxh8NwwawosIe4Er+kZf5xQEBl0CkkPB3N2nxQlw==
-X-Google-Smtp-Source: AGHT+IH2Q6jNPlcyooCkJYo0Fcu02BJRlAAzKKPUGHXL14Rupr4ubntd70CKpZu4F+L3qRNas6M5nw==
-X-Received: by 2002:a17:903:3c25:b0:234:8a4a:ada5 with SMTP id d9443c01a7336-2366b137c14mr2651695ad.37.1749832184720;
-        Fri, 13 Jun 2025 09:29:44 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88c0besm16529615ad.42.2025.06.13.09.29.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 09:29:44 -0700 (PDT)
-Date: Fri, 13 Jun 2025 12:29:41 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: I Hsin Cheng <richard120310@gmail.com>, linux@rasmusvillemoes.dk,
-	jstultz@google.com, sboyd@kernel.org, linux-kernel@vger.kernel.org,
-	eleanor15x@gmail.com, visitorckw@gmail.com, jserv@ccns.ncku.edu.tw,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [RFC PATCH 2/2] clocksource: Use cpumask_first_but() in
- clocksource_verify_choose_cpus()
-Message-ID: <aExR9fLgCNHOaBMS@yury>
-References: <20250613033447.3531709-1-richard120310@gmail.com>
- <20250613033447.3531709-3-richard120310@gmail.com>
- <aEuw7ls9hieUv_Ox@yury>
- <87ldpvsyr8.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjye9jxe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FF4AC4CEF0;
+	Fri, 13 Jun 2025 16:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749832255;
+	bh=bIXR0RtQXeFW3KLfEoanD7YjVun66GxkFtLLTTFpops=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=pjye9jxexYyAYq48QAbnMwYeEveYvxrBJ7rAc7kkDAEyxScpsmKS4QElVWoqbJ4ZP
+	 cbrFdyQThi3v/yp3uC7MelfyG8x0szKC03Pcv4AVfrQ3APL+oOho0PfCnEFR7KipwA
+	 g440GtxtOAJQROKcABAXGtBEofdGTc81pGzX60Q8Mz3lBmg65D/EATeRFRDaN6jt0J
+	 oiqPlpihNIHAl5uosEy/iSw7n3zKmVFz29vVRHeicthVXZw7XeHJfWGWSjPA5R0D1R
+	 CT26SGoBQB9FCcirYQ50PeWqIzGV8E46Qc4QbjcpRLXLBmCEjZM7o2fcIs1WqzbwjE
+	 mDV9SVuKiKr7Q==
+From: Mark Brown <broonie@kernel.org>
+To: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thangaraj Samynathan <thangaraj.s@microchip.com>
+Cc: UNGLinuxDriver@microchip.com
+In-Reply-To: <20250612023059.71726-1-thangaraj.s@microchip.com>
+References: <20250612023059.71726-1-thangaraj.s@microchip.com>
+Subject: Re: [PATCH v1 for-next] spi: spi-pci1xxxx: Drop MSI-X usage as
+ unsupported by DMA engine
+Message-Id: <174983225399.209053.17415046905781410107.b4-ty@kernel.org>
+Date: Fri, 13 Jun 2025 17:30:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ldpvsyr8.ffs@tglx>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Fri, Jun 13, 2025 at 12:48:43PM +0200, Thomas Gleixner wrote:
-> Yury!
+On Thu, 12 Jun 2025 08:00:59 +0530, Thangaraj Samynathan wrote:
+> Removes MSI-X from the interrupt request path, as the DMA engine used by
+> the SPI controller does not support MSI-X interrupts.
 > 
-> On Fri, Jun 13 2025 at 01:02, Yury Norov wrote:
-> > This exact change has already been submitted by me and is under review.
-> >
-> > https://lore.kernel.org/all/20250604232550.40491-2-yury.norov@gmail.com/
-> >
-> > I don't understand why are you undercutting my work, and moreover do it 
-> > for the second time.
-> >
-> > For the first time you submitted something that duplicates my another
-> > patch from the exact same series. John Stultz has pointed that, so you're
-> > surely aware.
-> >
-> > https://lore.kernel.org/all/CANDhNCoJ_MmpEfyuL+JWav+NUfQDH3dm196JSE-Mv3QrPUzi3g@mail.gmail.com/
-> >
-> > Kernel development process implies that one makes sure that his work
-> > is unique and doesn't break someone else's development, at one's best
-> > knowledge.
-> >
-> > What you're doing not only breaks this rule. You're in fact trying to
-> > get credit for the work that is done by someone else. This is the
-> > definition of fraud.
-> >
-> > I cannot make sure that any other patches from you are unique and
-> > written by actually you. Therefore, I will not take your work anymore.
-> >
-> > I encourage everyone else to be careful working with I Hsing Cheng
-> > and check his patches for uniqueness, at minimum.  
 > 
-> There is absolutely no justification for accusing Hsin of fraud or other
-> nasty intentions.
 
-No, there is. It looks like a pure plagiarism - a sort of fraud.
+Applied to
 
-You see, in the other email in this thread Kuan-Wei Chiu complains
-about the lack of credit, as well.
- 
-> It's sufficient to point him to your series and tell him that it's
-> already been dealt with.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-He'd been pointed at least once. Obviously, it's not sufficient in
-this case.
+Thanks!
 
-> I deal with redundant and conflicting patches every other day. That's part
-> of how open source development works and it's trivial enough to either
-> pick one of the patches or ask the involved parties to sort the
-> conflicts out.
+[1/1] spi: spi-pci1xxxx: Drop MSI-X usage as unsupported by DMA engine
+      commit: 9f0ad43b158d07bc7144d219ceabdea36e28e392
 
-It's not about conflicts. I know how conflicts look and how to manage
-them. Check this example from the last merge window:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-        791a9b25ce2e6ecbe404ee32eed8a96a17e52896
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-I work on kernel for over 15 years, and contribute regularly for at least
-a decade, and such thing happens to me for the first time. If it's indeed
-a normal workflow, can you please share a couple recent examples where
-people submit someone else's patchsets in whole with different commit
-messages and with absolutely no credit, despite being warned? I'll then
-consider to adjust my tolerance level to such things.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Nevertheless.
-
-At this point it looks more like a lack of professionalism rather than
-an evil will, and I hope he'll do better next time.
-
-This doesn't mean that I revoke my NAK, or willing to give him any
-credit for this work. But I will review and take his patches in case
-he'll send something valuable to me; with reasonable precautions.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Yury
+Mark
+
