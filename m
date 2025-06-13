@@ -1,68 +1,67 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759271632DD;
-	Fri, 13 Jun 2025 07:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A10727466E;
+	Fri, 13 Jun 2025 07:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749798509; cv=none; b=bpKNFuGdpm4txVDCharWdQOMjLuzfjdq5VlJ+t69PnMM/HAv9h6v3cw1PeFpxdEkitAOn1Y36K+xL+SZuzq+0O+aJsC+JmMfcfQmlfP1mMZWfMzyz6cZlbBNcflcLvG3qlmUgBbf6t4oL84pV9jTFLnXv5ZE4wmHXD4uXua0WFo=
+	t=1749798561; cv=none; b=aEqK7BbV6VkYZPnPp8xSUG1U204pOyZmYoEZlTxOak6N9IviAQkj1UPXx8wfaRnzlU1KIG/0UkQD0OlHx7VM9FSP0clwnlHPv4pdct+cNmt2mcHSVGla/c49PbMPFAdp2yHH2pK1CRoFLdo9DcJUewa+qLp6Fa6OO9tKSHCBHsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749798509; c=relaxed/simple;
-	bh=D0lbE0R+FUdn+WoBoKcNI9HgS1w92fraWDayJ3fxKs0=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=F4hxhdbRZUjY0Xu4292DTRJumzs2r81UEzVzJIA0U/9n+GUfAF1N/44T9Ricrxu1yFnQ6qKrPpcNRAymO+OIUGWyyw6Z5YTjrRK1dYSic8GDD5H1c8AVzfpzmn3IJ2mEGO3arAORrdYJYlxu+nBT5M/egmt7MJ7A6zXRHe7mBYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uPyWN-00A9fw-3B;
-	Fri, 13 Jun 2025 07:08:15 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1749798561; c=relaxed/simple;
+	bh=Mb1jyZOQPN9JATWBbLyCYwDfAwrKONx5/T3Sp8j0edM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NBmJvkLH1e8HLDtEW2GG3nOHxKvNOSjhb2Bb60Gt7RB7Z/wLLPyyKJTbdb7jcQ+r2WpqyrOHcxSkesp0SNrhMFkyzJg69x2/8KNbUOaomyc/+sd59VW2TXQz1Qn9gmwYTGLD4DMNg8n5nAKXsyMbT5pBwfPSHVSqqpd3VGXx4Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZwQHguT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZwQHguT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B5FBC4CEE3;
+	Fri, 13 Jun 2025 07:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749798560;
+	bh=Mb1jyZOQPN9JATWBbLyCYwDfAwrKONx5/T3Sp8j0edM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IZwQHguTjI+NHlRsb7p7gV+3FKXQu+3OLuSJEcdfaIGSV2gdb7kqoFAuVmO8RtoGy
+	 YSexCJqBy9HH7z6rdB4ncYzn0sQJRQ2tIiiLI5ZXtXrafaSwzkhpuKJwwGzteOqeat
+	 rx3apaWgVPrAvilPBQz6dzvdLUAKHsKAsozM3OeLx7/tavaDMgbS7P+DWMLygIShXu
+	 nul2JIp5r1GNuDRSlJY7y47EjVAvEn+Vs3TAZqL21edg5qr7OOx7oHmbVUrnEeGsQF
+	 aHAae6TGanDR7WGD/rRzPzvCTYS4ReA4IrmXNdwwuuF5LsOxycNtOQjalBmowu8hg8
+	 SAgXKROHdhbWQ==
+Date: Fri, 13 Jun 2025 09:09:18 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Sangwon Jee <jeesw@melfas.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 1/5] dt-bindings: input: melfas-mip4: convert to
+ dtschema
+Message-ID: <20250613-big-firefly-of-aptitude-a88cbe@kuoka>
+References: <20250613-mip4-touchkey-v2-0-9bbbe14c016d@disroot.org>
+ <20250613-mip4-touchkey-v2-1-9bbbe14c016d@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Miklos Szeredi" <miklos@szeredi.hu>
-Cc: "Al Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Amir Goldstein" <amir73il@gmail.com>, "Kees Cook" <kees@kernel.org>,
- "Joel Granados" <joel.granados@kernel.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <smfrench@gmail.com>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>, netfs@lists.linux.dev,
- linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Subject: Re: [PATCH 1/2] VFS: change old_dir and new_dir in struct renamedata
- to dentrys
-In-reply-to:
- <CAJfpeguiOZJ4dZU-mc0V8bwvWoJ-Q0JubYvYPpmr-f8uguF2LQ@mail.gmail.com>
-References:
- <>, <CAJfpeguiOZJ4dZU-mc0V8bwvWoJ-Q0JubYvYPpmr-f8uguF2LQ@mail.gmail.com>
-Date: Fri, 13 Jun 2025 17:08:13 +1000
-Message-id: <174979849395.608730.16231142843321576358@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250613-mip4-touchkey-v2-1-9bbbe14c016d@disroot.org>
 
-On Thu, 12 Jun 2025, Miklos Szeredi wrote:
-> On Thu, 12 Jun 2025 at 01:38, Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Fri, Jun 13, 2025 at 01:11:33AM GMT, Kaustabh Chakraborty wrote:
+> Port the documentation file melfas_mip4.txt over to melfas,mip4_ts.yaml.
 > 
-> > Umm...  No objections, as long as overlayfs part is correct; it seems
-> > to be, but I hadn't checked every chunk there...
-> 
-> Overlayfs parts looks okay too.
-> 
-> A followup would be nice (e.g. make ovl_cleanup() take a dentry for
-> the directory as well, etc) so that there's no need to have local
-> variables for both the inode and dentry of the directory.
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  .../bindings/input/touchscreen/melfas,mip4_ts.yaml | 55 ++++++++++++++++++++++
+>  .../bindings/input/touchscreen/melfas_mip4.txt     | 20 --------
+>  2 files changed, 55 insertions(+), 20 deletions(-)
 
-I am planning some followups and will include that in them.
-I'll also be sure to test with fs-tests after consulting README.overlay
-as you suggest elsewhere - thanks.
+You need to fix MAINTAINERS as well. With that:
 
-NeilBrown
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
