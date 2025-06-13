@@ -1,160 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C301149DE8;
-	Fri, 13 Jun 2025 15:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5EC1A5BBD;
+	Fri, 13 Jun 2025 15:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749827349; cv=none; b=s9+K4iSwGzFEkmLW0/5EgBEQGqvPPWJIZyQMKbrNnmkCDw7V7BALbGXsiHQoQblsQC3Liv1TlSQNOCmqUTY+URu0vDWYIsjMKTq/IZcKl+7m8GN5gVTypHXvAmfLptwxM9zS5pBLjLeJXdbGul9pdQ3dC5uf+oTj6VMiKZ0Povc=
+	t=1749827380; cv=none; b=jlqr1y34+kAX4poxkZHPDI7eUYY7sQqXxtmswshQBlrppz4962D2ckys8wIqhKHuYT7C5IBMRf7cNFmhzIpzk9rYAuC9JHRpiH33NavR5mY++ErdWFv/vEJKD5lGI4mKYxggGwt3JdqDxrNWLqBt4FitEoiDKZG8Ksbv9li7hB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749827349; c=relaxed/simple;
-	bh=+jvCD2kowkTgOqSg81LszSYq2ncrCtuKus8a/WXzonI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dx+ROeslW7sgf4KE7vueXcZmvhXUGU45OAi2nz23lk5O0cwb6xT54nORShNSSXsjlF5iRjLuhe8Z1F8aSYVPZmPmFUIfzBOCGgaQDCTvhBh2AWjE77qwjsiT6qgxAzFXSwrv4GxicGbL7JJqVYV+qLrdcBB/bzQRnQ5HvG2HKUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LL5LRNFx; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749827380; c=relaxed/simple;
+	bh=z/B4crK4//VWrh72iGUgU3FOvjCigqNKpzaJajGP9V8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tMYiq0Znnj1aTgvu2o3JOU+xMD+I6OKGAF/DWO61PoGOQ7Ovmhtn0pgZfGZuc9PBq9gmmKFGwVxqGsRoCEWTogvmOnUI7vnX7OqtOLJuFlOIwfKsreECOWWLfFjoYC7xBFSIie1Xr8wzL+f5uxNMqCef97QFnYEYH+yLdYNBqH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACT9Ctvy; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LL5LRNFx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749827347; x=1781363347;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+jvCD2kowkTgOqSg81LszSYq2ncrCtuKus8a/WXzonI=;
-  b=LL5LRNFxkK+n+uDitU2AODCGcui2GZmnT9ztDi0s3cNqhlJgM+zCilwL
-   EsWUaaKQeYf1kaPCBtqmNNQu+U7iG2VFYa7hzLZXlLJ38XbQ1IAa6hXGg
-   lyZabSP/gD++TzF9+aVAytY7yIfj9fH1s5sm7k04ineQHoelpAbNhwLZF
-   jQ04LbtKQ87vXr4m5qpSCwIa6Q7dGKWBI2vMVeuFwHFqQMbAon4uQAb0L
-   U5Ycm9dFUAZgBaD9H7g51d8YHBEp7immRoYSUZjakoectbiI5HBmZLVcM
-   6XAOPbHKu7n4pXBngGKq+y3W1OC5Bbbx2u7hPDgvzqKyCzU5PdtB3Rv3L
-   g==;
-X-CSE-ConnectionGUID: PD5xtQstS8+SBLvNza0M0A==
-X-CSE-MsgGUID: fJubu7CsSyydh+wYWiQGlw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="74580021"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="74580021"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:09:07 -0700
-X-CSE-ConnectionGUID: ImMIdTIDRsC69PqAeUGuEg==
-X-CSE-MsgGUID: yEqvY+VAR7iEFMmi7VNQHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="152617176"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:09:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uQ61d-00000006HNs-1Z1M;
-	Fri, 13 Jun 2025 18:09:01 +0300
-Date: Fri, 13 Jun 2025 18:09:01 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Marek Vasut <marek.vasut+bmc150@mailbox.org>,
-	Hans de Goede <hansg@kernel.org>
-Cc: linux-iio@vger.kernel.org,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Julien Stephan <jstephan@baylibre.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
- IRQ connected
-Message-ID: <aEw_DcqpCpcsBGd0@smile.fi.intel.com>
-References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACT9Ctvy"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e40e3f316so16288647b3.0;
+        Fri, 13 Jun 2025 08:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749827378; x=1750432178; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XWqMgx2TvmM3ycijogqU+1oUaN+kSDJ1tpwyXgBX/1Q=;
+        b=ACT9CtvyPK9T8l9/nDC5wx19mATVqkBZitaPQ7wNcq2THXMTzIiDwGztTvnHomh2R4
+         C3Xsg4DgQmnv7RrLOoXUYjvmHXZx/Hj90CltaogJwPSrwpC5s/JRNwTSTqflRuBCX+EW
+         7MCcFb3uIaV5iCPTAVIFoPaV2oD7qpavVKYp/Aht5XDHrRhCLzs88Sb3+sCT+mD+wTqB
+         FKGNqDvWZfUFVBni35ikQvo8PTftCglZ6DM1xYWHuMNg0JwlDwlINytv5T5J4cZQLMwc
+         0NHXY2Z7H+z4Z9cjAXzu23urFbazHLssp2RbgFMbmExFcBEx8OBROAkX7sn54+rAjAd3
+         vA1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749827378; x=1750432178;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XWqMgx2TvmM3ycijogqU+1oUaN+kSDJ1tpwyXgBX/1Q=;
+        b=rWm76/jfrIRtPPXBkEZBD7kirhG+xMRk6X7EcgZ3CFqgbRliFy6e4zNaPrG4pgmlqe
+         hPz4ql4wJSHueGsrSUTPt9/QEnrJddVuPqt536qSIQIk9enU8C1XQhnSt+cSqFQkhtUg
+         BsSFCT19fCw3i2DNpFVcQN5gDa1youf7kLsE/zVb3KimUWYqmngGdz4UrrwmL/NOUQtS
+         zJ2E2xWuGqzopL2zgDHX9YL3NmbCaz0R+8eq4tChU6sGjVw5aYQnhkGnFu14/wmmBnMx
+         9T7aQtqvzA71QPeOGRj/NuWiJcm9hsDgMC0o0lXlOs4uw21To+Q62SYPe+2uhAUbJPhp
+         3dyw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0vnZonVlXO0LHRC6jSz6gYNPqGQytcqrQag2YLBVjclKJuLtPalr+7tDnqgRx1CmQ9cAAfpRpPgyMIA==@vger.kernel.org, AJvYcCUXkFGRSAxO53rVNUZzBO7sIY2qdoy15mt2RQ+bimQMhty4ByqVm2PPPG0N+aZftLWEyxEkknWosl3H/got@vger.kernel.org, AJvYcCUc5Fom9C5tBBdpqR61OYMLqQOqHe+fO2uyPDdHYs8oH3d+liyJp0uLbH5LH/MSTTN1TYTX2jeJwdDtQ7IWGng=@vger.kernel.org, AJvYcCUy6CZH/EzPRXqrLnmwZcURtknqByoNv5gSQ8PvM6ZOM9qH6TuSJUsZzAN80EsTW820db+EDUYy@vger.kernel.org, AJvYcCV2Iv0hjLoVizO4MRuHJ4Lq+DmOL3TLUNaR50K7qRsaqrw44p6hgK5fzcguS2+twUIhoOvb2K8+Gjgf@vger.kernel.org, AJvYcCVdKWgyJY0a8vj68k+NZ+UxCIU0KhZ5MjtFcLStV3Z5hRmONl3QMJ/+M8kk0f6zEzS2w2pt8Waw78M=@vger.kernel.org, AJvYcCXZ8/u9MRKgeh8+RgHjqMFJ1Z242R6eevyM0K8Sg9cpdD+c9rJdZGU04PYonCERdESKqEnw1vOKwYlAvuo=@vger.kernel.org, AJvYcCXc0ZAJxm08X16nAJUFlr0XiZJj4iDskQhX2ax48z4NLNZ0dnw3bd8SS2zxWId+LyCEe7JdiYoxATgA@vger.kernel.org, AJvYcCXoUuvAPGfwwRCfMdLHfmF1QC1xNpmC2RznnRwfW3aQ6IXfg+Is4+WX/OI2GXHdzo+no0mhbJb/ei6Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfOsNHNGxfAUJhpnBkDUcsUiuW3V7YXy9emSKLzhM1Eoh4zmGk
+	aPzFbrFOc8kh+eu7RHv0Wyzz0ssBFP4mVgu5efh5y18SAZzZpNvaL8udlWbnNO+x5UqY43UGRJh
+	dHomxiI4LXHx5T0k3Uqby5Qc/C07HkqE=
+X-Gm-Gg: ASbGncvvjw2N2zsZL9ipEnakjN9kg6JMtFTcfavfkKre1EIDDYR/6z/6thr8rtsEMxx
+	hDfB7LKuD/q4b9AFrw0oocaTATvYjY0Za+BgkGpZjwKo/kIB9X09Dn/dZfPeW3k8RNFHlxv1Mc9
+	JOGT0jT/eV3uCi899Z51j76WtiTLOIPM3E3HPsggyguwk=
+X-Google-Smtp-Source: AGHT+IFEZW5Zweega7Vs4Va9mvrBEoLdKArCyxKoyJ0+pHn1zEerFQ5BhPKVvvzu3kXh6ZeNdgy1Z3Yu68TbnLlhnSk=
+X-Received: by 2002:a05:690c:fcb:b0:70d:f338:8333 with SMTP id
+ 00721157ae682-7116371fb14mr50260087b3.22.1749827373395; Fri, 13 Jun 2025
+ 08:09:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20250604041418.1188792-1-tmyu0@nuvoton.com> <20250604041418.1188792-2-tmyu0@nuvoton.com>
+ <20250612140041.GF381401@google.com> <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
+ <20250612152313.GP381401@google.com> <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
+ <20250613131133.GR381401@google.com>
+In-Reply-To: <20250613131133.GR381401@google.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Fri, 13 Jun 2025 23:09:22 +0800
+X-Gm-Features: AX0GCFvsLelkG587zTzgv7nzzjr9mHXHWsTBgmTxfQezIbWJWpZn_6A6aO9a14A
+Message-ID: <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Lee Jones <lee@kernel.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Ming Yu <tmyu0@nuvoton.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Strange I don't see Hans in the Cc list, so added.
-Thanks for the report and patch, my comments below.
+Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8813=E6=97=A5 =E9=
+=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=889:11=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Fri, 13 Jun 2025, Ming Yu wrote:
+>
+> > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8812=E6=97=A5=
+ =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:23=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > On Thu, 12 Jun 2025, Ming Yu wrote:
+> > >
+> > > > Dear Lee,
+> > > >
+> > > > Thank you for reviewing,
+> > > >
+> > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8812=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:00=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > > > >
+> > > > ...
+> > > > > > +static const struct mfd_cell nct6694_devs[] =3D {
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > > > > +
+> > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+> > > > >
+> > > > > Why have we gone back to this silly numbering scheme?
+> > > > >
+> > > > > What happened to using IDA in the child driver?
+> > > > >
+> > > >
+> > > > In a previous version, I tried to maintain a static IDA in each
+> > > > sub-driver. However, I didn=E2=80=99t consider the case where multi=
+ple NCT6694
+> > > > devices are bound to the same driver =E2=80=94 in that case, the ID=
+s are not
+> > > > fixed and become unusable for my purpose.
+> > >
+> > > Not sure I understand.
+> > >
+> >
+> > As far as I know, if I maintain the IDA in the sub-drivers and use
+> > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
+> > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
+> > However, when a second NCT6694 device is connected to the system, it
+> > will receive IDs 16~31.
+> > Because of this behavior, I switched back to using platform_device->id.
+>
+> Each of the devices will probe once.
+>
+> The first one will be given 0, the second will be given 1, etc.
+>
+> Why would you give multiple IDs to a single device bound to a driver?
+>
 
-On Fri, Jun 13, 2025 at 02:45:22PM +0200, Marek Vasut wrote:
-> The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
-> which leads to bmc150_accel_core_probe() being called with irq=0, which
-> leads to bmc150_accel_interrupts_setup() never being called, which leads
-> to struct bmc150_accel_data *data ->interrupts[i].info being left unset
-> to NULL. Later, userspace can indirectly trigger bmc150_accel_set_interrupt()
-> which depends on struct bmc150_accel_data *data ->interrupts[i].info being
-> non-NULL, and which triggers NULL pointer dereference. This is triggered
-> e.g. from iio-sensor-proxy.
-> 
-> Fix this by skipping the IRQ register configuration in case there is no
-> IRQ connected in hardware, in a manner similar to what the driver did in
-> the very first commit which added the driver.
-> 
-> ACPI table dump:
+The device exposes multiple peripherals =E2=80=94 16 GPIO controllers, 6 I2=
+C
+adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
+is independently addressable, has its own register region, and can
+operate in isolation. The IDs are used to distinguish between these
+instances.
+For example, the GPIO driver will be probed 16 times, allocating 16
+separate gpio_chip instances to control 8 GPIO lines each.
 
->         Device (BMA2)
->         {
->             Name (_ADR, Zero)  // _ADR: Address
->             Name (_HID, "BOSC0200")  // _HID: Hardware ID
->             Name (_CID, "BOSC0200")  // _CID: Compatible ID
->             Name (_DDN, "Accelerometer")  // _DDN: DOS Device Name
->             Name (_UID, One)  // _UID: Unique ID
->             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
->             {
->                 Name (RBUF, ResourceTemplate ()
->                 {
->                     I2cSerialBusV2 (0x0019, ControllerInitiated, 0x00061A80,
->                         AddressingMode7Bit, "\\_SB.PCI0.I2C0",
->                         0x00, ResourceConsumer, , Exclusive,
->                         )
->                 })
->                 Return (RBUF) /* \_SB_.PCI0.I2C0.BMA2._CRS.RBUF */
->             }
-
-These lines...
-
->             Method (ROTM, 0, NotSerialized)
->             {
->                 Name (SBUF, Package (0x03)
->                 {
->                     "0 1 0",
->                     "1 0 0 ",
->                     "0 0 1"
->                 })
->                 Return (SBUF) /* \_SB_.PCI0.I2C0.BMA2.ROTM.SBUF */
->             }
-> 
->             Method (_STA, 0, NotSerialized)  // _STA: Status
->             {
->                 Return (0x0F)
->             }
-
-...are irrelevant.
-
->         }
-> "
-> 
-> Splat, collected from debian unstable, probably not very useful:
-
-Oh my gosh, please leave only ~3-5 *important* lines out of this, or move it
-completely to the comment block (after '---' cutter line).
-
-This is requirement written in Submitting Patches.
-
-...
-
-As for the solution, are you sure the line is not wired at all?
-IIRC Hans had a broken tales where it was simply forgotten, meaning
-the Android / Windows driver simply hardcoded needed info.
-
-If it's the case, it should be solved differently around PDx86 special quirk
-driver for the cases like this.
-
--- 
-With Best Regards,
-Andy Shevchenko
+If another device binds to this driver, it is expected to expose
+peripherals with the same structure and behavior.
 
 
+Thanks,
+Ming
