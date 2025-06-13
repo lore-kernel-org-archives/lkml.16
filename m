@@ -1,121 +1,125 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A94E20297D;
-	Fri, 13 Jun 2025 16:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095351E5206
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749832523; cv=none; b=VbTqvFH4NMIatDju5FsYRZec8cXPTslnPxN44O7nvmePV7F3pEAINaoPPBbyKy4M6eNFnLhmWNnOSFM4KMLGxQh2oOSmIKXPCFoUJIY1iIHSltBHGLG3mBTg+idR2bJUttZ0nEDrwc6M+nSKwm0frgnmV5gYwopZPVv9oDSdSdQ=
+	t=1749832581; cv=none; b=V6jWKXj3WYA8UuGnVndvHTZSsYoWkjINvJm2Ha6vvk+SXD3AFkapO9V9SwWvfwcLSrcI1VRoWo1PpBPNtfPCj3/9y55FHmQoqyLiF2u9yKwY0xXIWUzpiGYCKPprCOo2Ima7FgmADm+XDOiD9q84ZOdA76Hp9ssnIcWAmksjYUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749832523; c=relaxed/simple;
-	bh=QXE8CKFwmIeb+JPAQUReJotkuCcr6O5N8pxWfDgAg1c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pnlCh7YldDXPsYgfZOBhCsBAlnZQd4avyRmOYVt8fbPHUDTLE2UBNkOhhtYhHatRdkg9+3aWKWPLKMwuoUEv9zCm3CiP5lBSgISNDaEFMQX16yRtNu9yhZ0jkpkokZpCvRnWnjbNwcx1tfWcsCKJDoeag5hiPKFKt7WeeQMx8/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Olh/xIyA; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749832581; c=relaxed/simple;
+	bh=6IDK3mFK3aUcD6DqmEoL/rBAW6jbXc5FxEXCTke0bD8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sQIT1qw5lV6viHxNFEWChMvpskA3pZZJc2mjZwkj10AR3uvyBaK0MUSwAv7lF7nqq5cq2Uagw+mFzzln799YXVGfQ+E8hrtZsQuq+ckaY12LT52EKdE0Vc2xq+A9ljzyNIEn5X416jTAO9MJRs3sx1Yr65B29Qa38GAQ4e6ROWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PI5Rveho; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Olh/xIyA"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-312116d75a6so2114124a91.3;
-        Fri, 13 Jun 2025 09:35:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PI5Rveho"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-adb47e0644dso401290866b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:36:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749832521; x=1750437321; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FHPrpo9d42nRJm72Dq1MnICc6IUuyfQPRBp7KXTIMQ4=;
-        b=Olh/xIyAOI1IXUkpB0UgFWAOtNYq+AcIofwCd9Opc0LBO4IX6esV39SnyQ9fksa11Z
-         2cDtKZeSG1QGLshmmWqOij2R5ehI75+okNuqaQXEQnXEAYyISUefsSYObmEkXRq0jg4o
-         hoJ7KwscBSW3qs1VZNDmKkCXLPy0GfJxsSVHJc/+I6CblortqkrkfrZjvlUT0MleKegt
-         NqlycJiqtdnB5ngMY/0kacEYUnjgL+bDcU6GU4qowuJ6Bm/fHfyX5utWEYWzj8RUnCn7
-         ohpzKfc3BJDNiS3SIgSBPKCGUgSSV3LthLEE+U/Rq34HCH2y0+uQI7QD09EgsOMeZ/GI
-         j2dQ==
+        d=linux-foundation.org; s=google; t=1749832578; x=1750437378; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=76g08zX1QgiOXgDWQ+4Q63FmolLqjqLzmJdnqen2jZI=;
+        b=PI5RvehogUMvTtnZ9NT+nSQkeUjvDQn3WINLD3naZhlnHdHoiwzfw4PB8oyeNV7oDE
+         VrHfQJGMeqLG/pNd3WOoWMrlR6AladBALeW/89jAhhvNPpu5dfKbt2xlyQEemCm0h6s4
+         FDkroMjWJCWEClLaDHi+R/BMqAC4Nlc/tEs3Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749832521; x=1750437321;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1749832578; x=1750437378;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FHPrpo9d42nRJm72Dq1MnICc6IUuyfQPRBp7KXTIMQ4=;
-        b=apAAWp1J1tflonUXU7d+5r5BKEemHi8SyC1ErpAZb0gnN7HORo3vUrfNXOuqTJT76g
-         3XTsbeKv3O3QjtLH1bOO3onYCFlqZew89AMT+YTzHdH6WLZRuCo8F4mLgQ6skfq3Fg+S
-         iK5hnxDnLwr5So+8G6VQyATW3CNIl0Qz3zVhRVlVkgthCG1OTA1xpUs4Kh8reGfG8/Rr
-         IeJy6ouGM4uoTG//FiJC3Yb+bc9QToQuCw5twpHUvG22sPIcNOg23CSAq/qN8y+ZWF24
-         IPiIxa+GxW9F5OO1FrpdTk6HMB0H9ggsr3Sw/vTvC8mgKJXpaGANj+c8Zzfezs5348jE
-         s7RA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9/s8xlSyQe0w86nGmosU8mLpEgYbnPwnVbMpl9SGYF3lq6V5Oa0y6EXv4laFsWtqWsRMUwIL+cHJzoSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpft0Tt2oChOFd5kAmzkJ6dJLMzBEgswAKF3ye84IzpEcJOs8a
-	RHjeF79hEd2y8XFqNwVgxA06h8phFenmf6FWpAKQpPegbynD/WCcKYWJ
-X-Gm-Gg: ASbGnct9FMFrmmAbSXwIwlW4D3n0CqeQGVgF/xNrlmY8dX5fILdiT5t7kfJm7B/gs2B
-	gpVTURGRWa3G/Bw5ZwNYY5c4gjPvof5AvoUDgfB95VR69XuqQsZtF+7qgPhd40k9J8I7yBXMZ06
-	ekDXTs8nxJ8iqMZJIfXinG/xEQgwXWgTTXPFxBPA7x821/3qbtPYPZtikAprO36loWL8/TJ7qAH
-	BX9PqpYsNIy/KfDeHsp0HtJ1Bt0PjTGKpLJPU4U1OvQaOMm5SFWcAZvNgdATT67H7YoSqRWMqeO
-	vLdjPgnwszxp+tMNK+q6FBBIr09A8r7IZr5muxKKZmKuhysUat+yujJge+Il9AB1A3HmJOJD7PM
-	NWTluj5TxJl3UvdJ9Wn7l
-X-Google-Smtp-Source: AGHT+IGIuAqQa292qV7dqgToWK54149pBTrBaPodmpn2s350eBZtY87Pv6smrPbvL/pWn7OY37TTsA==
-X-Received: by 2002:a17:90b:1c04:b0:30a:4874:5397 with SMTP id 98e67ed59e1d1-313f1ca7f9cmr519630a91.9.1749832521202;
-        Fri, 13 Jun 2025 09:35:21 -0700 (PDT)
-Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b5a85dsm3568672a91.38.2025.06.13.09.35.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 09:35:20 -0700 (PDT)
-From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
-Date: Fri, 13 Jun 2025 13:35:04 -0300
-Subject: [PATCH] arm64: dts: freescale: imx8mp-toradex-smarc: add fan
- cooling levels
+        bh=76g08zX1QgiOXgDWQ+4Q63FmolLqjqLzmJdnqen2jZI=;
+        b=j3VpCIxMtL2R7E9VtPnWTgdYYuz//tqitDHa7dkr19MICdw86PREbHY5UHaiFH50Wx
+         6UiMsNDLDsFzpJf74vA7KzjpEBv49ob+rt1ygjT9Yn0eq6ddWJCPVELEFI7cdWqXVWN6
+         nd9ciHT0bNyQjyKWnxE0rIFsnaVTbrBNKI36Wy+Btzvoyq8L6rdiaSt5xkndkPJPaWG0
+         cis/EU6aheB2u7Gtw3GI/rLSPmZfJAopNKaEToIXcDNneZfg/HF3r7o2KWU/vxk+WUyn
+         NeAyJAb/Ei/2IoDFnm9JkY3mHZl25Xv3PhTGHp9DWlWLvbXweYAvaRp6rx1zIybjWEte
+         chHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJJJ45j9UQ9RejeMaXNT7yTmBk28sNnd5ARXV+5f6pcihKTjl4d0rSgfgxBAS3HHZNimKAYWF+GWnnlGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGg9gG0LQeg8RhvI3VFthuf5tqxezlq6sqNpuWTbC1S6RyitYp
+	324XI1n9LzxmwL+5kSx7B03NxwqJ7kViZhSkFxbPvQ+D0LmmOAYYtS4I7LtjzigwBLs3GvAGcKs
+	rlAxUbq13Eg==
+X-Gm-Gg: ASbGnct0TfpN5/aXNsqnD1s4lFNVc/ChGrhh1qMpk90P9E882IAJZ8lQEEdcCzmEad2
+	bzAE++T3Y+hWSTqAMiDJNNkD+YfKsLgyVkhaCjE2B/DnhjvUXAeIuzYPV++RSWBxVgbmlOs1M9V
+	R4ByZYzSha7/Vqxz2i8g6D043mZ2r2TnoIVXQAawoHDe/7Z7GgTkMADaWnkU6oViIz4092J1w+5
+	2TJekhkywUoGffyMODAxZ4qh8T6bzUzOW/co50LHKLh6pdkK+Yp/ha7l46Lr+vp+/mHDFS/ZxhJ
+	Ugonb9er8O0b9J986MLYNbgkDKoZpLSUjEqW1XT8lh2wiG1jkgaKh3GPGXARSnLtV+Zl25W10rk
+	jwGnUdBhBcOArlS08sM4z7Cu/6y+pyfRPUngCiPaBvsE7PdE=
+X-Google-Smtp-Source: AGHT+IHe58E0f98I716Nsk4qI2jJPVYh5sqhOd5fc0ps0G3fZ4Y1x1tT0zvgdBGHrVbruzFhEZMYrQ==
+X-Received: by 2002:a17:907:3e91:b0:ad8:93f6:6637 with SMTP id a640c23a62f3a-adf4f35150emr138635866b.21.1749832578194;
+        Fri, 13 Jun 2025 09:36:18 -0700 (PDT)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec892b90csm152783666b.142.2025.06.13.09.36.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 09:36:16 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-607873cc6c4so4726789a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:36:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW+gJdiXStdFNJ8kFNym0yknIhZNCcBGkclwkoHBM1K6oRWFzjNc8NblDcp7ziKsKgRQjL7gw2FUBweAeQ=@vger.kernel.org
+X-Received: by 2002:a05:6402:35cd:b0:602:427c:452b with SMTP id
+ 4fb4d7f45d1cf-608ce49d897mr365341a12.3.1749832576184; Fri, 13 Jun 2025
+ 09:36:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250613-tdx-smarc-imx8mp-fan-cooling-level-v1-1-59aae8fee2db@toradex.com>
-X-B4-Tracking: v=1; b=H4sIADdTTGgC/x3NTQqDMBBA4avIrB3Q1KTqVUoXMRntQH4kKRIQ7
- 25w+W3eOyFTYsowNyckOjhzDBV924D56bARsq0G0QnZqf6Ff1swe50Msi+j33HVAU2MjsOGjg5
- yuKi3UFKTMMMENbQnWrk8k8/3um7Lrur0dAAAAA==
-X-Change-ID: 20250613-tdx-smarc-imx8mp-fan-cooling-level-b67265ae2c49
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
-X-Mailer: b4 0.14.2
+References: <20250611020923.1482701-8-ebiggers@kernel.org> <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
+ <20250611033957.GA1484147@sol> <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
+ <20250611035842.GB1484147@sol> <20250613053624.GA163131@sol>
+ <aEu5cyDOMcKteW_b@gondor.apana.org.au> <20250613055439.GB163131@sol>
+ <CAMj1kXEDCRfCgvtuhRc+a=m1kVt-zkcCqi_=_WOFTmt4Hz2gGg@mail.gmail.com> <aEvjrhkLnB_GEKnV@gondor.apana.org.au>
+In-Reply-To: <aEvjrhkLnB_GEKnV@gondor.apana.org.au>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 13 Jun 2025 09:35:59 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiewoOfhK=NVQT2uf+29Kngv9F9J6ObJRFUKi6n-=B06g@mail.gmail.com>
+X-Gm-Features: AX0GCFu7lGsyyFJqLRh6z7a562txhJJOyTpVqIIzlie72BRGPF0wH2A3ccvLGV0
+Message-ID: <CAHk-=wiewoOfhK=NVQT2uf+29Kngv9F9J6ObJRFUKi6n-=B06g@mail.gmail.com>
+Subject: Re: [PATCH 07/16] crypto: sha512 - replace sha512_generic with
+ wrapper around SHA-512 library
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org, 
+	Jason@zx2c4.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: João Paulo Gonçalves <joao.goncalves@toradex.com>
+On Fri, 13 Jun 2025 at 01:39, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> First of all the export format is being made consistent so that
+> any hardware hash can switch over to a software fallback after
+> it has started, e.g., in the event of a memory allocation failure.
 
-The fan controller on this board cannot work in automatic mode, and
-requires software control, the reason is that it has no temperature
-sensor connected.
+Can we please instead aim to *simplify* the crypto thing?
 
-Given that this board is a development kit and does not have any
-specific fan, add a default single cooling level that would enable the
-fan to spin with a 100% duty cycle, enabling a safe default.
+Just say that hw accelerators that have this kind of issue shouldn't
+be used. At all. And certainly not be catered to by generic code.
 
-Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
----
- arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts | 1 +
- 1 file changed, 1 insertion(+)
+The whole hw acceleration is very dubious to begin with unless it's
+directly tied to the source (or destination) of the data in the first
+place, so that there isn't extra data movement.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts b/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
-index 55b8c5c14fb4f3e7407243760ac01b0aca0dacf5..5f233304cea747d3f04a748265f96696668c9d6b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
-@@ -213,6 +213,7 @@ fan_controller: fan@18 {
- 		#pwm-cells = <2>;
- 
- 		fan {
-+			cooling-levels = <255>;
- 			pwms = <&fan_controller 40000 PWM_POLARITY_INVERTED>;
- 		};
- 	};
+And if there are any software fallbacks, that "dubious to begin with"
+pretty much becomes "entirely pointless".
 
----
-base-commit: 1a2ad59da68dd294f994efbf68c5d671f6b42fad
-change-id: 20250613-tdx-smarc-imx8mp-fan-cooling-level-b67265ae2c49
+If the point is that there are existing stupid hw drivers that already
+do that fallback internally, then please just *keep* that kind of
+idiocy and workarounds in the drivers.
 
-Best regards,
--- 
-João Paulo Gonçalves <joao.goncalves@toradex.com>
+It's actually *better* to have a broken garbage hardware driver - that
+you can easily just disable on its own - than having a broken garbage
+generic crypto layer that people just don't want to use at all because
+it's such a ess.
 
+This whole "make the mess that is the crypto layer EVEN MORE OF A
+MESS" model of development is completely broken in my opinion.
+
+There's a reason people prefer to have just the sw library without any
+of the indirection or complexity of the crypto layer.
+
+           Linus
