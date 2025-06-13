@@ -1,48 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3212DA77F;
-	Fri, 13 Jun 2025 08:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955E0279DB0;
+	Fri, 13 Jun 2025 08:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749804508; cv=none; b=f75pSRcI071eBghbe85tS+1Gm8qWjS6CkJi4Voa1bgqVBxy5gvGysjZnKNQMljVCBoc1iuxsUUUawpHEVgFw7KUnrluA++Vm9trBIuZkFvPl1a2/g5+/PyYnw07MVZc0ub/9GCK8aSPc3trH52ZRPChlU20wtbOYQBa2eoF97To=
+	t=1749804511; cv=none; b=tNtYuvLj1GrBJjLavyHfbBtwOkaZc9vYNa6IDiT4MZlPXpV5rNksE+EbOITU74yMrE+erTqyO38dko7Gw96dPbaByrcPLlVxlf5D+bViVRMpZDdiMZektNsQr15bTuGM3cAJhoX/xX3dyMHlETTLMBXMN23Y0GhFpffrgRJza/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749804508; c=relaxed/simple;
-	bh=O7k/4Pgn8A5nTO/mi5w7P4nJ4sG7zxwFfsGVf+oO26Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y5+yJEvV2rXHcMxApAsBJDYBL1rS20d1FM0TPHOTJxb6zQB0KB/wgSnUtCrLqDgkvRWO0YQXCtf64n5djUPjlFSa7pwy/mOI1LG2eIgDcYmtX4HnPexy6DdnjIjpxXak8q6RtEHpasV7zbU5zdWClf4oSUGBvgIN913sfntA+Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/meLyf7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749804511; c=relaxed/simple;
+	bh=ii9mJGPrdiEf6M11++Ri3L388P4ein6nqY804ksJ9ww=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=fsOEYRThHimZXHMIKY3Iz8jFDTvOXnWfv6uwFRb7PuWfKwZiZr4do8S7ri3dDSJ/A+n8bbHiEKhXuqAfd4NG/bKHljGrN3BXketB4TEJRdNgwBjCMCGBrupd/vZ9L+Kzy9QaQugeGzNTplCFts2V3En7+WToYXMtKebPVar4okA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nWAy60Fb; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/meLyf7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45DB2C4CEEB;
-	Fri, 13 Jun 2025 08:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749804507;
-	bh=O7k/4Pgn8A5nTO/mi5w7P4nJ4sG7zxwFfsGVf+oO26Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D/meLyf7/VqgXC6zV62+515BR00HaMPB9Y4WA4AxXnYeX3NHDi3cJ7jG+sgvdTNsz
-	 q9zDO4Be/fER25kId/NYYVOZlP/XdiDLXIfsLs/1VjnqIFouY50+Qwb0OSNYXIq5kE
-	 LSmM7QhTjtohiR5+lYI40rHfKxEQ3/k9tWqDkvvsKyOzf8BBheDbzN9VfgcdMz/014
-	 CJdKev21jV45+Ymf0I3AhrI2jFw2JJ5HSSuVvY5bB7nGUcSoqvOc4xKqApyp11LrME
-	 +sMJo6s9lRuzKZMUWG8NbypSVxQXRgxNNsDTsQ7l2gzTHQmu+YkrGcdNfSGqLIS3U8
-	 b5YAp90OozQjQ==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: bhelgaas@google.com,
-	kwilczynski@kernel.org,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Hans Zhang <18255117159@163.com>
-Cc: ilpo.jarvinen@linux.intel.com,
-	jhp@endlessos.org,
-	daniel.stodden@gmail.com,
-	ajayagarwal@google.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/ASPM: Use boolean type for aspm_disabled and aspm_force
-Date: Fri, 13 Jun 2025 14:18:15 +0530
-Message-ID: <174980448910.32070.2549853564061158337.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250517154939.139237-1-18255117159@163.com>
-References: <20250517154939.139237-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nWAy60Fb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749804509; x=1781340509;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=ii9mJGPrdiEf6M11++Ri3L388P4ein6nqY804ksJ9ww=;
+  b=nWAy60FbnsECxj0UVHpXaH5Sdg+sw5jCgXyqv7DklX8tVYzSHUgeMKoV
+   h86tdeJEQx3S99T9uRoX+EK7h6s1QEC1pkPo+Rj/vogse33cNnXaEzZ4V
+   3AC9hFAWFaoPysGvgm69tsrudxQs/73xYiP2wCYqw/qNtqrIUQV990Q7w
+   TwHNsQerdee6iWKWm6Tk81q5Xpp6viK6XbQUJp65IjqlTeBJU6jO0RKEn
+   eXmhegf1EygjFHzTQdyYUAcHRnnS0AXA9okxDRFy7xNuN6okr8KTsucid
+   P71xQOToRVCrEqbpLuSyHhQuH0lFfKUSal05nUxb6kh4oSPnd1B2iF3s6
+   Q==;
+X-CSE-ConnectionGUID: nf7VjoewRiq5ysWGAY7T7w==
+X-CSE-MsgGUID: kcXTYfkCQd+L6gmdUv6Ljg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51993215"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="51993215"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:29 -0700
+X-CSE-ConnectionGUID: 3yksSGsWSD6Yf/MyVUAN4Q==
+X-CSE-MsgGUID: Y6e25UhET/upSLsiqEP5jA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="148659601"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:25 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+ Hans de Goede <hansg@kernel.org>, Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Tero Kristo <tero.kristo@linux.intel.com>, 
+ Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250610093459.2646337-1-arnd@kernel.org>
+References: <20250610093459.2646337-1-arnd@kernel.org>
+Subject: Re: [PATCH] platform/x86/intel-uncore-freq: avoid non-literal
+ format string
+Message-Id: <174980450175.1640.12062242383746628445.b4-ty@linux.intel.com>
+Date: Fri, 13 Jun 2025 11:48:21 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,21 +63,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
+On Tue, 10 Jun 2025 11:34:55 +0200, Arnd Bergmann wrote:
 
-On Sat, 17 May 2025 23:49:39 +0800, Hans Zhang wrote:
-> The aspm_disabled and aspm_force variables are used as boolean flags.
-> Change their type from int to bool and update assignments to use
-> true/false instead of 1/0. This improves code clarity.
+> Using a string variable in place of a format string causes a W=1 build warning:
 > 
+> drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c:61:40: error: format string is not a string literal (potentially insecure) [-Werror,-Wformat-security]
+>    61 |                 length += sysfs_emit_at(buf, length, agent_name[agent]);
+>       |                                                      ^~~~~~~~~~~~~~~~~
 > 
+> Use the safer "%s" format string to print it instead.
+> 
+> [...]
 
-Applied, thanks!
 
-[1/1] PCI/ASPM: Use boolean type for aspm_disabled and aspm_force
-      commit: 7a04f18b95bdefdc8d976ccc8a4c0443b460039a
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-Best regards,
--- 
-Manivannan Sadhasivam <mani@kernel.org>
+The list of commits applied:
+[1/1] platform/x86/intel-uncore-freq: avoid non-literal format string
+      commit: 0c44b46f51a17baa7ab67de1464427116e9c4eaa
+
+--
+ i.
+
