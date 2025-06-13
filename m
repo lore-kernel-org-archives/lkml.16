@@ -1,60 +1,60 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC302D239C;
-	Fri, 13 Jun 2025 10:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA862D23B2;
+	Fri, 13 Jun 2025 10:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749809703; cv=none; b=slmkhR3rVcWragRsmmk2ummkknfXbKwCDtezdopeuMgX2CSCr10Zqz3vhe1zIt3sMVy/x/N1Blm3NmnHihhBvVGhPDMjRnkN9S0R4tNXMM50aJGpSKgpo4R211vn3IYtkGFKCdJzgG6x3Ym9bVmvmHv3k0vwdAbrA1QQ7dhnkY0=
+	t=1749809713; cv=none; b=TTCCN1cH0x1oi6c3Fzv4768hdXvJVe1RQoAOTK0aMEEldv4NHjUuxxGo68MZHFYws7AoBgeRDFVCAtxThrNbgWKX2+8uY+WOvRD8UxdXuHUyX94dEkB3t1LkanXNtnp6r71F3e7vXN4G/hzrLrXYzs+boxEIXkQGGP1aVq702VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749809703; c=relaxed/simple;
-	bh=YlLsluq3mXcNSZNlcrQ//1Xj7C/wlH96chhBrJyLBgk=;
+	s=arc-20240116; t=1749809713; c=relaxed/simple;
+	bh=Mmx2wiHujPu/dQ2+A7mZP3qk4H3KDRZF79BQL/Bhfx0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UmI3nHoIV81tZ0l1q5YZE6971LrsSmnjyy5Oxu2Nd6hKn0SrA7WLO3N7A5fsP/GM72K9g95JL+jjTwQoQ+4BXLTS8eWrh1clZThkzG0h8LakpsAWkvJT/qfPB8TUtQEMlo4p1EqqoCuo2gTF5HYeCKEyq2PY1A7gR0H6ndP9Rcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TDNtv0/Z; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=Ip4d1I7p63jRK/efvmxap2BvrLg7Ibi491loqy9VnGLLrVDjAai2AfA4/qlgRoQ7LvgN3pDpjrK9JHKSe9FkAQLuJsIBSHoZffkIJzXaOgKB/ljmaWj8e5JUbqxI8FM2Iidm6QXrUTTG+4ji6nfK2syCAkqzkq/YB5yi55pZzQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pi0t6+BN; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TDNtv0/Z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pi0t6+BN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749809702; x=1781345702;
+  t=1749809712; x=1781345712;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=YlLsluq3mXcNSZNlcrQ//1Xj7C/wlH96chhBrJyLBgk=;
-  b=TDNtv0/Z/k7+HQRgRG/NquTZmgyVo6YqsAFow7DL646hlkRLI0rJ64Bx
-   XpYPgUi2HRpID+/YK9HATPnlXVeuNwe8PqoWQyyCNiOG97O4Kn3cdqBsR
-   dBd60EGxHdDdcslh+Y0AjEsEEAyexbIZpHL8kUJAeqR8bdZa7DPXv5ZC+
-   7ok7NKqqar1vtOLVwsg0twx9b3QozC5qfR+Vn1C6Ke1bOnKZ45JBwY9I8
-   qtODmEbafrfutAfzYY62NNW2r8NeCB0xtiog2cZEul96k7gIXoJhHX/Hh
-   tBaBmqAtoc3aYtEzQJGJ9wwgWKCM/dimLR55kWBozLLxn9LcQpzCA3eiK
-   w==;
-X-CSE-ConnectionGUID: o7nhCueGR82+GlCTFjchsw==
-X-CSE-MsgGUID: 2brbrA3WQWOSSI3fQouB3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69595203"
+  bh=Mmx2wiHujPu/dQ2+A7mZP3qk4H3KDRZF79BQL/Bhfx0=;
+  b=Pi0t6+BN5QbZKy0c+V8aRc6gTaw3m6txMA1Me76F0L//94c16nW4v8Rp
+   FUBSPCfWRuKmmk9ondUcJ9l7xJVvwFqJ4K3ZUTo6r1REj/DYXa2sAK1Ic
+   isnE0ZS3mdwFKcMjnlhDUAhZyJdTxkOsATfTDlRjokUDHcZMabPB9BsXc
+   0nxFl6A761IGcratxh/qBPMUm99xN+EdwyuC+V094og5GExnf9uzHGcKs
+   5f+M3qiOd0+IodJWVE0AAy6Ar5SvwEVg1OTDB6fJ6n0SU28UMaWTeeA7T
+   Ve4vp6k9YBxN9Neu7w8Rt7t8WmGq83+cyDA3HfhPVzJBPCK0aV+j26EHM
+   A==;
+X-CSE-ConnectionGUID: dY4/PBCtThyLyggm1nHXaw==
+X-CSE-MsgGUID: 4qeVeGCtQ3eWG8CMORz7ZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69595223"
 X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="69595203"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:15:02 -0700
-X-CSE-ConnectionGUID: e2W88mERT2SEtyL77VNuuA==
-X-CSE-MsgGUID: a3ScIIzWQ06pz+McM3+tgw==
+   d="scan'208";a="69595223"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:15:11 -0700
+X-CSE-ConnectionGUID: fM9L2VxHQGKMqkw/wYZJbQ==
+X-CSE-MsgGUID: vM/HAJK6TtecF+C6VezkBg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="178690147"
+   d="scan'208";a="147635800"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:14:59 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:15:07 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Jerome Brunet <jbrunet@baylibre.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250610-yoga-aux-v1-1-d6115aa1683c@baylibre.com>
-References: <20250610-yoga-aux-v1-1-d6115aa1683c@baylibre.com>
-Subject: Re: [PATCH] platform: arm64: lenovo-yoga-c630: use the auxiliary
- device creation helper
-Message-Id: <174980969410.26331.7330681024042786417.b4-ty@linux.intel.com>
-Date: Fri, 13 Jun 2025 13:14:54 +0300
+To: Dell.Client.Kernel@dell.com, jithu.joseph@intel.com, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: hdegoede@redhat.com, corbet@lwn.net, 
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250610055526.23688-1-W_Armin@gmx.de>
+References: <20250610055526.23688-1-W_Armin@gmx.de>
+Subject: Re: [PATCH 1/2] Documentation: ABI: Update WMI device paths in ABI
+ docs
+Message-Id: <174980970219.26331.6171635150526759589.b4-ty@linux.intel.com>
+Date: Fri, 13 Jun 2025 13:15:02 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,12 +65,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Tue, 10 Jun 2025 10:41:07 +0200, Jerome Brunet wrote:
+On Tue, 10 Jun 2025 07:55:25 +0200, Armin Wolf wrote:
 
-> The auxiliary device creation of this driver is simple enough to
-> use the available auxiliary device creation helper.
-> 
-> Use it and remove some boilerplate code.
+> The WMI driver core might append an ID to the WMI device name to avoid
+> name collisions in case multiple WMI devices with the same GUID are
+> present. Update all sysfs path referring to WMI devices to inform
+> users about this important detail.
 > 
 > 
 
@@ -81,8 +81,10 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform: arm64: lenovo-yoga-c630: use the auxiliary device creation helper
-      commit: d2b16853ad704ac7e1550d6faacdc53925494ebf
+[1/2] Documentation: ABI: Update WMI device paths in ABI docs
+      commit: c9de2e5c15cba9e9be7fd124a74b9067560d4746
+[2/2] platform/x86: wmi: Fix WMI device naming issue
+      commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
 
 --
  i.
