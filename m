@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5339A2E7F11;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC412E7F17;
 	Fri, 13 Jun 2025 11:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814967; cv=none; b=UoRywwoQleQ2e7slaSIqXhZr7YFSHHktmp8jTQSQLnpJFkjI8VtCGXf/ZM44LDn3bSYhtD0S9Wa/JhgmL2a+hMDsPnxWnfRceUJY0+4LNzaJ01vljqd9J6RRtxF36PTboYhg6x4gXhcbJC1fqUAyd5+S4Rtm2lYcfQ/agzye1jw=
+	t=1749814967; cv=none; b=ATowjSd7MGeaQ6mA7D12tKGv6kPgNkmKbumDIqJdc+4rAKyRMJyJaxORq+ggbLB1KdRZkD5QFuwSoxmz/UVuI943aOoSvYbu4yw5dXlbRH85XFSjAR+pQiwI15juoghKdgAnKG7fipaasvdBWDRo6tKh7vKJ1Z8xjRLUDQXzYDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749814967; c=relaxed/simple;
-	bh=RRdlkBDEmtJLl36U7brH9gBLYzEATksRx+v4nftXEzw=;
+	bh=jazvmyYFMnGYOxxVZMEBOjTd9mMz+TrushWEPpOXIDU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OYM1h6YwA+J//k0wi6OlRHSbr1j0FoB3GI+lrG0Rp3qyxO11PrEUCybvWE86nE2ngcDcxLZE7ee4jwJF9ErmMZmWsKPjNFBUdkxatbkl5/QVYOlMvOYDrgJU1Vj4S7wS20b5VI89Syw4/M3pvP5Os8ptltso0Oq1JwmvGA2s7O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmGIdAIs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=O4F31+cNvfKmlw62gFu34Rlu+wkYxz5vJIFlBDZx+6FnnkUHdIYmltDqUa38SUT5m/nBu3Yd+0Z6hikJS8hCquruXJh7oAvfg9saK5do4I6e41TPyFnmQgezVGFPUWEzVvmqTc0B0hjpRFyYGOpz9CIJ+v8iAyu9HThtB/GuygY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCZ5OEll; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmGIdAIs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D376FC4CEFB;
-	Fri, 13 Jun 2025 11:42:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCZ5OEll"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32BEFC4CEF0;
+	Fri, 13 Jun 2025 11:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749814966;
-	bh=RRdlkBDEmtJLl36U7brH9gBLYzEATksRx+v4nftXEzw=;
+	s=k20201202; t=1749814967;
+	bh=jazvmyYFMnGYOxxVZMEBOjTd9mMz+TrushWEPpOXIDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZmGIdAIsF0j6fvs/aNpGs7XICMloa8BBj4qNnaJyZorcJMurW0D9UgxrAAkTS9/0v
-	 8SyEXLnnRagkMuh8G8DicDy8CXClaNLOu73Qyc25xezUaV7RkEh1k6b4t8KImyj7b7
-	 rkdIKn7Ko2x6qegq3cgYFn02kZ/2PnQoBzY0JWRnwbmjgprHDWxZF8vSdfnjv77LV9
-	 u8z3BPMS1m4YtSMzK5FwscoklNgc+D3VknGw2ud2mNCER6cBdHIjLZTjh2mdMA+4yL
-	 oBQedOA7OyLgaUqb0hChwXizST/9aaG/Sa/k0ZNHhzhP3+Ttp2uFd0WYIKLdkW/74p
-	 3WvLkzbJztGkw==
+	b=BCZ5OEll50G95vHVAMlJ4oAHPBCfNFX3WUcZFFup++oyru4a1NoZa4Sq8j+h/KvWG
+	 YH2FBzmyxbYLNcA8LxeeCh52QyoUbXXjnfi7rbg+ur7NCwctf2WkRzCmzDeS63mF+E
+	 OGbcHd0lKDPspvm7fW+FUxEPHz4NgkjD4VDEXDDCRVI1uN+8YUvIHE9DQONsF80N5p
+	 XOS2jR0pCwppCQAoR4A0q18cd1hr77zSnQ8vRH/YoxTsiqeVHI+ea9ROobCLPk8BiV
+	 lytCcoR9GaSCr0SDEu7nEBuqodSoQE8te0qJSL22O0U+7TepL1MCf10RNEAeu5gs0d
+	 3Ru45k/lEE3mg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uQ2o1-00000005dFL-0H9X;
+	id 1uQ2o1-00000005dFj-1lXM;
 	Fri, 13 Jun 2025 13:42:45 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -53,9 +53,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v3 10/16] docs: sphinx: parser_yaml.py: add Netlink specs parser
-Date: Fri, 13 Jun 2025 13:42:31 +0200
-Message-ID: <095fba5224a22b86a7604773ddaf9b5193157bc1.1749812870.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 16/16] docs: Makefile: disable check rules on make cleandocs
+Date: Fri, 13 Jun 2025 13:42:37 +0200
+Message-ID: <18a6c2c8a9f331b3d1abc6e943d0e5aa2bc18655.1749812870.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749812870.git.mchehab+huawei@kernel.org>
 References: <cover.1749812870.git.mchehab+huawei@kernel.org>
@@ -68,101 +68,34 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Place the code at parser_yaml.py to handle Netlink specs. All
-other yaml files are ignored.
+It doesn't make sense to check for missing ABI and documents
+when cleaning the tree.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .pylintrc                           |  2 +-
- Documentation/sphinx/parser_yaml.py | 39 +++++++++++++++++++++--------
- 2 files changed, 29 insertions(+), 12 deletions(-)
+ Documentation/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/.pylintrc b/.pylintrc
-index 30b8ae1659f8..f1d21379254b 100644
---- a/.pylintrc
-+++ b/.pylintrc
-@@ -1,2 +1,2 @@
- [MASTER]
--init-hook='import sys; sys.path += ["scripts/lib/kdoc", "scripts/lib/abi"]'
-+init-hook='import sys; sys.path += ["scripts/lib", "scripts/lib/kdoc", "scripts/lib/abi"]'
-diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
-index b3cde9cf7aac..eb32e3249274 100755
---- a/Documentation/sphinx/parser_yaml.py
-+++ b/Documentation/sphinx/parser_yaml.py
-@@ -3,6 +3,10 @@ Sphinx extension for processing YAML files
- """
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index 9185680b1e86..820f07e0afe6 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -5,6 +5,7 @@
+ # for cleaning
+ subdir- := devicetree/bindings
  
- import os
-+import re
-+import sys
-+
-+from pprint import pformat
++ifneq ($(MAKECMDGOALS),cleandocs)
+ # Check for broken documentation file references
+ ifeq ($(CONFIG_WARN_MISSING_DOCUMENTS),y)
+ $(shell $(srctree)/scripts/documentation-file-ref-check --warn)
+@@ -14,6 +15,7 @@ endif
+ ifeq ($(CONFIG_WARN_ABI_ERRORS),y)
+ $(shell $(srctree)/scripts/get_abi.py --dir $(srctree)/Documentation/ABI validate)
+ endif
++endif
  
- from docutils.parsers.rst import Parser as RSTParser
- from docutils.statemachine import ViewList
-@@ -10,7 +14,10 @@ from docutils.statemachine import ViewList
- from sphinx.util import logging
- from sphinx.parsers import Parser
- 
--from pprint import pformat
-+srctree = os.path.abspath(os.environ["srctree"])
-+sys.path.insert(0, os.path.join(srctree, "scripts/lib"))
-+
-+from netlink_yml_parser import NetlinkYamlParser      # pylint: disable=C0413
- 
- logger = logging.getLogger(__name__)
- 
-@@ -19,8 +26,9 @@ class YamlParser(Parser):
- 
-     supported = ('yaml', 'yml')
- 
--    # Overrides docutils.parsers.Parser. See sphinx.parsers.RSTParser
--    def parse(self, inputstring, document):
-+    netlink_parser = NetlinkYamlParser()
-+
-+    def do_parse(self, inputstring, document, msg):
-         """Parse YAML and generate a document tree."""
- 
-         self.setup_parse(inputstring, document)
-@@ -28,14 +36,6 @@ class YamlParser(Parser):
-         result = ViewList()
- 
-         try:
--            # FIXME: Test logic to generate some ReST content
--            basename = os.path.basename(document.current_source)
--            title = os.path.splitext(basename)[0].replace('_', ' ').title()
--
--            msg = f"{title}\n"
--            msg += "=" * len(title) + "\n\n"
--            msg += "Something\n"
--
-             # Parse message with RSTParser
-             for i, line in enumerate(msg.split('\n')):
-                 result.append(line, document.current_source, i)
-@@ -48,6 +48,23 @@ class YamlParser(Parser):
- 
-         self.finish_parse()
- 
-+    # Overrides docutils.parsers.Parser. See sphinx.parsers.RSTParser
-+    def parse(self, inputstring, document):
-+        """Check if a YAML is meant to be parsed."""
-+
-+        fname = document.current_source
-+
-+        # Handle netlink yaml specs
-+        if re.search("/netlink/specs/", fname):
-+            if fname.endswith("index.yaml"):
-+                msg = self.netlink_parser.generate_main_index_rst(fname, None)
-+            else:
-+                msg = self.netlink_parser.parse_yaml_file(fname)
-+
-+            self.do_parse(inputstring, document, msg)
-+
-+        # All other yaml files are ignored
-+
- def setup(app):
-     """Setup function for the Sphinx extension."""
- 
+ # You can set these variables from the command line.
+ SPHINXBUILD   = sphinx-build
 -- 
 2.49.0
 
