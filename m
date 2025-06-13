@@ -1,92 +1,122 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942D6202C4E;
-	Fri, 13 Jun 2025 15:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D167B3594F;
+	Fri, 13 Jun 2025 15:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830158; cv=none; b=OKn6gFLjQSy/vlStNCO2k9JiUBU1sSOVOBb3Mzw4f0acCdNinZeTaEIkvaypzPXOdAPxHVKBzNNBpFtPs93wjqriSaXNncVmohEKLESON+t/00+8ZyUeDGnD423onUadf0SkTZ5xkaGUMUfZMEac/QcxzCbgPzbdELW9JCTKioI=
+	t=1749830201; cv=none; b=G0hprV+0SxBX3SwZe/+Emahywq5ll5KgqezUT1OJqKYoTrcYZUuePXUlBWiibLLttRynUnBYaR7OPwap8q3unZs53zHO99MPyGxZ76MZl7v4Ec6SBdiASiOg7QKwFMnH59wctAgBMF+p165C8hgIAqPuj9Wy5YNCOKgS8jO6grA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830158; c=relaxed/simple;
-	bh=8L2z4739RHjaRoJpohe/Bhxsg8DT+gCJ7gSEEvxTp74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDvqd1/DMfT5EBz+1M83VXZDsM5izRuClTDdwT/tCybkGve+GMItLlk8Q0zeOEqS4Uz9DSK8dE7VuVU2QxZX8wkoZBbU9f+NTKUC/1PZqn6XRukGtrQQ+RSSNiDpBu2MGasFiBwZCVtzqG2wRq4s1PAIUy2ix5MqtJ2HjFjnVVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ade48b24c97so338185866b.2;
-        Fri, 13 Jun 2025 08:55:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749830155; x=1750434955;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fKXlTaD3M0r62w1mi9jV25qZkxT133cf8Hl+KW9P6fs=;
-        b=KkvFOE2DUepFvJY8znlkGyGdhoA6P78+wDy+SwyEPE4II+cscS2v0aGKSyubDraa61
-         AvBG7+reanuGqKfdWIf3PZy7s4i6Dpx0/Mqwa7iZze3C10DwNSxAvsxJ1yZWuRO1YuIp
-         ssmiRamZwc0g1jQbh33f7EJ5eAFr9P714ft0dPslwR/u48ILUPqeUQCKq6q9sGBgCfBx
-         QvEfibXaSNBmIi/e8KPi24xBA39quoj7L9SfSWp0Nziva84nuVTGhdTXn3OZ496zRegm
-         g+itucQ4Jp/pVxIPTR1TEOa/AElunqZ20wNDvx9qPzCtpB2vGXpS3am13C0NIjlrC5vd
-         BLlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUquF3FOy1nasaX1eUC9m/ZsFqfdUsESgz9bHsrXxZuaPn9VIAjhG4VtU4PVsOu8pnqnOIRPyON@vger.kernel.org, AJvYcCV2ndKdod16ddCyDIryKB8dydIx1ESIOk0Yk+jzOOojRwiDfjShZi+/UXSh3YoMEJ7VMPzHmxnjVpkqb2PK+Yex@vger.kernel.org, AJvYcCVSv7z0RL0lld02rkrrmYh94fU8v+PRamZ1h1QAl1Fa4+HlTU7A33wmLvymwVZvxJ3G5NsSfM0KLbKsRU0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoqQvDiuF0dg4S0w5vIlWkMe8GzBzIv6LUGaISjhKLHYInYad2
-	4dUH00CucuEbLPrtYnP5XKad9Iyj50wcBPoYssKSqLFMD3VUlDn7SAEt
-X-Gm-Gg: ASbGncuoO79QLOQGYVxjzNufbd7JB2Etth9xAGs6sovjeoNPsc8B9Ps2nGSZDOvxMXl
-	0fJ6BqE3NQ7+g0dExXyYAMg9/mtMBSaCYAFcB8Ggc14JCMdw9MaDFAvHNUT2NqzVvUjCDT1Eknw
-	FgDpy1HofhoyaKzG5/CFWvoR1Ul/3giV7oVeKkjPUAfCgyUiOApCosFQG7BQOblI6wuFnPLr8PV
-	qVuxL80/ZqF77Fgse/tipOBkgw8CNXuwmXI4X5Xp22ofFvVlpqYeqrh/hsHs3Y5MQ+y0lS58epg
-	Y9VszL0GePkRfb/BtMHnBfmPiGS9Ok2mHX2y//YjDhxmDA0l5CXUqyqDJSYorwk=
-X-Google-Smtp-Source: AGHT+IED168YgdZ6ChAOGCYrIy+tjPXzyGNF+en6Tv4Mzzs1Jkpfmk+mA53ktu5RHoF63IkhjvTPZQ==
-X-Received: by 2002:a17:906:9f8c:b0:ad8:9041:7724 with SMTP id a640c23a62f3a-adec5cd770fmr316366766b.61.1749830154753;
-        Fri, 13 Jun 2025 08:55:54 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:2::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec892b92asm147813266b.133.2025.06.13.08.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 08:55:54 -0700 (PDT)
-Date: Fri, 13 Jun 2025 08:55:52 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	David Wei <dw@davidwei.uk>, Shuah Khan <shuah@kernel.org>,
-	Simon Horman <horms@kernel.org>, joe@dama.to,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next v2 4/4] netdevsim: account dropped packet length
- in stats on queue free
-Message-ID: <aExKCMX4SLM772xi@gmail.com>
-References: <20250613-netdevsim_stat-v2-0-98fa38836c48@debian.org>
- <20250613-netdevsim_stat-v2-4-98fa38836c48@debian.org>
- <aEw579mm+3aiXti+@gmail.com>
- <20250613075507.2b857743@kernel.org>
+	s=arc-20240116; t=1749830201; c=relaxed/simple;
+	bh=T32rF5Ppsy5mjl762Ap1LKWpRnK50PIiK7HeE2yoxkk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RWSdf6PgvKtbZJvp2qKB/toXVzygFZpO5z4QQezrvcODNuZDtWf8SI5ohzBh5GWfntu49+fm9hzjgCKaEcZjm7H0FPlRo5r/OmzVbJwBnG/4WQVg8HDhDg70zkFyi7Fzp9JGs8z4pzkfUi+rAbTm20rb3G2dpyTdT2lhdkrZvKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LebIydd3; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LebIydd3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749830199; x=1781366199;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=T32rF5Ppsy5mjl762Ap1LKWpRnK50PIiK7HeE2yoxkk=;
+  b=LebIydd3yb4lCSnWtHpuWawqXGb0KuB5W7SB8uhXhtpTosdpxLneYNEN
+   nnIWqdQXNesKjPWhiJfshNmGakSUvz0ON/TcHzE8rL1rsHqBJkzkxN04z
+   IFX4unHSd/oZAAu2TGbuyJQJCSkQzBcPADYpH2M5iTi0v7U2Y93MBRSvk
+   xmA3kOL5M+WFXq5MEM1X61Hr0+fF06z4Cn2wYTK/0uJz8H+CuCC43lbn9
+   4Tri7dPBpNoJZvndxxNrJWOZA1I76cHN2suu2I+hW0zVzZ4oLv3G44K4l
+   27ALOyNohZJCqgzkd8aIAip5Jnq8+gotPa0VIrIaHurpvAggOC0FT986Z
+   A==;
+X-CSE-ConnectionGUID: 3oo6Laf3T8KQbcJRe410hw==
+X-CSE-MsgGUID: fGCwrwDpSAG+pB9w+rbvtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="39660878"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="39660878"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:56:38 -0700
+X-CSE-ConnectionGUID: 6y7GbN6TTkO5xEqqlI6GqQ==
+X-CSE-MsgGUID: pwLhQMyvQ+il9thN61lIOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="178842443"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.232]) ([10.125.111.232])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:56:36 -0700
+Message-ID: <ada06e3d-598f-4d6d-a468-f007be3f29ca@intel.com>
+Date: Fri, 13 Jun 2025 08:56:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613075507.2b857743@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] cxl/edac: Fix potential memory leak issues
+To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250613011648.102840-1-ming.li@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250613011648.102840-1-ming.li@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 07:55:07AM -0700, Jakub Kicinski wrote:
-> On Fri, 13 Jun 2025 07:47:11 -0700 Breno Leitao wrote:
-> > >  static void nsim_queue_free(struct nsim_rq *rq)
-> > >  {
-> > > +	struct net_device *dev = rq->napi.dev;
-> > > +
-> > >  	hrtimer_cancel(&rq->napi_timer);
-> > > +	dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);  
-> > 
-> > This is wrong and it will cause the kernel to crash in some cases, given
-> > we can get here with dev == NULL, in the following path:
+
+
+On 6/12/25 6:16 PM, Li Ming wrote:
+> In cxl_store_rec_gen_media() and cxl_store_rec_dram(), use kmemdup() to
+> duplicate a cxl gen_media/dram event to store the event in a xarray by
+> xa_store(). The cxl gen_media/dram event allocated by kmemdup() should
+> be freed in the case that the xa_store() fails.
 > 
-> It's probably because NAPI wasn't registered yet in some paths.
-> You can pass dev in from the callers, it always exists, and all 
-> callers have it.
+> Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> Tested-by: Shiju Jose <shiju.jose@huawei.com>
+> Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+> v2:
+> * Use kfree() instead of __free(kfree). (Jonathan)
+> 
+> base-commit: 87b42c114cdda76c8ad3002f2096699ad5146cb3 cxl/next
 
-Right, that is a better approach.
+Applied to cxl/fixes
 
-I will update and send another version soon,
---breno
+In the future, probably best to base against Linus's latest rc rather than cxl/next. Thanks.
+
+> ---
+>  drivers/cxl/core/edac.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+> index 2cbc664e5d62..628786def464 100644
+> --- a/drivers/cxl/core/edac.c
+> +++ b/drivers/cxl/core/edac.c
+> @@ -1099,8 +1099,10 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
+>  	old_rec = xa_store(&array_rec->rec_gen_media,
+>  			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
+>  			   GFP_KERNEL);
+> -	if (xa_is_err(old_rec))
+> +	if (xa_is_err(old_rec)) {
+> +		kfree(rec);
+>  		return xa_err(old_rec);
+> +	}
+>  
+>  	kfree(old_rec);
+>  
+> @@ -1127,8 +1129,10 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
+>  	old_rec = xa_store(&array_rec->rec_dram,
+>  			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
+>  			   GFP_KERNEL);
+> -	if (xa_is_err(old_rec))
+> +	if (xa_is_err(old_rec)) {
+> +		kfree(rec);
+>  		return xa_err(old_rec);
+> +	}
+>  
+>  	kfree(old_rec);
+>  
+
