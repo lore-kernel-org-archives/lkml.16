@@ -1,126 +1,127 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8727B2DA748;
-	Fri, 13 Jun 2025 08:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE872DA748;
+	Fri, 13 Jun 2025 08:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749805118; cv=none; b=cKepygy+ahkUOcxlMAnXjc6xqQUMH0E+bwG9XYuSKrMffGg7+2jS2/83yPvOCLze1Zg0NW8dnAnkzE5jOM6pXhrWNeQJhyc2YChD0TAAEvc2oymBY9arpRr5mqiQPvo+S1kKS7/ZD/HKbHl4W9R4elOSR6auP4MOxn6jvkLoXHw=
+	t=1749805181; cv=none; b=j/CbQLK0OWJ5W3KzvineBey/vcGWSjVYKn7jlYf5pB2KXl2uBWJui5oPk/BpuXl6cPHYi+auDtks2bd17ZtrUhDRdlbVfm67hnpBTZBqfkQzzx+nFc6OosWWAcbLut+nOWpmFUX7kTSQNIuhbBVHHvH9CplIbRn608Fw27Y6t/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749805118; c=relaxed/simple;
-	bh=dagkQ97GqIPDCbUOnDxBpmhXyMshaVbJQJOl8c1sM34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SiS9DKCxmqdYMpEAJa9ZyB/gY2TcAeGmQMWbROdcb4/UnX7Q/upc7K47oQBQEbqZyadqJpwwHAQsGN4aDAvOzyR5x6WOftMEMd8bR1+0ruM9k5c8nN90xabjXKKZk8EZHRCK45YXGBEIdOtQEGzdQChYkqrr/kxcrxet0hj/bOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=MMO1xn8w; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1749805181; c=relaxed/simple;
+	bh=SUCUXJtX/FQ0n2RuIYjo9mN42TY+/sRw81vNJDMJO0A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=otDG2pwOpEwfoRcZm5DeBXwY1gezBTz9M959EOZ+MlhWOtEFtz2heQfAADYs0JyENUa6oSfODakKCzU8zJaefz24tjm5TAaAU6cudjCddkH9xMVUzRM6uqmo07jr/Dbl+mELXB6hJ5SmekkJsjnrvp7TKwT0ORUkAjCr2en8i9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=odU2qoVO; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="MMO1xn8w"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bJYGJ2fvjz9t8V;
-	Fri, 13 Jun 2025 10:58:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1749805112;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="odU2qoVO"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3DEFE42E7E;
+	Fri, 13 Jun 2025 08:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749805174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z2jomFBz2wMuPndwQd5iG25ynyxt9aXkujr5axP6UUI=;
-	b=MMO1xn8wlpONqE+KPlWLozUOErEPYd4E2YI69SMPEhvG6j+lBhWvUDviiofp3xrQpunbMn
-	vgh1XyuaMAqxStcd/Xi6bQ/Z+9hXlS8osru9te+iMAE1+scQL6No6y5ZuadwHlCDOdqPAK
-	1BMB6cfqjP3UDQ8nZlzXNr8BlbUTiACKxL/lleuJWXbCdh2tcA96k+2BKtDECL3kOCHcDa
-	H373TlNzoB6xivpxumubb5noY2fROfyPUa5RgpLNS24sN12yBvH4jHPDGT79nAV9LoYT+H
-	+wJlczYGnY0Pv7e0MKOlPE/UyQrx5ycxApN0BFCN0coNPujQQdgmzK0/YDsL1w==
-Date: Fri, 13 Jun 2025 10:58:15 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Pankaj Raghav <p.raghav@samsung.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, willy@infradead.org, x86@kernel.org, linux-block@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
-	gost.dev@samsung.com, hch@lst.de
-Subject: Re: [PATCH 0/5] add STATIC_PMD_ZERO_PAGE config option
-Message-ID: <jpuz2xprvhklazsziqofy6y66pjxy5eypj3pcypmkp6c2xkmpt@bblq4q5w7l7h>
-References: <20250612105100.59144-1-p.raghav@samsung.com>
- <30a3048f-efbe-4999-a051-d48056bafe0b@intel.com>
- <nsquvkkywghoeloxexlgqman2ks7s6o6isxzvkehaipayaxnth@6er73cdqopmo>
- <76a48d80-7eb0-4196-972d-ecdcbd4ae709@intel.com>
+	bh=SUCUXJtX/FQ0n2RuIYjo9mN42TY+/sRw81vNJDMJO0A=;
+	b=odU2qoVOJqtmWsv4zb4lepGDdwIrGFVx1azJXmapyDqL96WcBHU3wmTN7q7dQPmyKFqCHI
+	rAqafMySpH/EFaSvZ1mPA8XPB64itYMWMRjLI+y9JhypSBAVbn7uBWi7ZcMRo/IBOnvwbQ
+	5esOyHBXJvmN2G+ljk317R7i3D4fcRlCkLEQ6ICe/sb+aRuObTcakshd3/wdZEUJ2LrUgk
+	5TMr9mGozxkHTrm+MRwSTF64qE4g2cgcgr48VeDhBLpdVtT0mS0PBL7DckMWmv65tfLxtu
+	MspFh3LUUD6IifvG5Ga5z6d3PYGcXoafBp+C4hw7u5Y8qm4JyGJ0DAuSLAMGzw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76a48d80-7eb0-4196-972d-ecdcbd4ae709@intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 13 Jun 2025 10:59:28 +0200
+Message-Id: <DALA5WYA04OG.1283TZDOVLBPS@bootlin.com>
+Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
+ <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>, "Martin
+ KaFai Lau" <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>,
+ "Song Liu" <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>,
+ "John Fastabend" <john.fastabend@gmail.com>, "KP Singh"
+ <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
+ <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, "David Ahern" <dsahern@kernel.org>, "Thomas
+ Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Menglong Dong"
+ <imagedong@tencent.com>, =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?=
+ <bjorn@kernel.org>, "Pu Lehui" <pulehui@huawei.com>, "Puranjay Mohan"
+ <puranjay@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer
+ Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Alexandre Ghiti" <alex@ghiti.fr>, "Ilya Leoshkevich" <iii@linux.ibm.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger"
+ <borntraeger@linux.ibm.com>, "Sven Schnelle" <svens@linux.ibm.com>, "Hari
+ Bathini" <hbathini@linux.ibm.com>, "Christophe Leroy"
+ <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>,
+ "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman"
+ <mpe@ellerman.id.au>, "Nicholas Piggin" <npiggin@gmail.com>, "Mykola
+ Lysenko" <mykolal@fb.com>, "Shuah Khan" <shuah@kernel.org>, "Maxime
+ Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
+ <alexandre.torgue@foss.st.com>, <ebpf@linuxfoundation.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Bastien Curutchet"
+ <bastien.curutchet@bootlin.com>, <netdev@vger.kernel.org>,
+ <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
+ <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+ <linuxppc-dev@lists.ozlabs.org>, <linux-kselftest@vger.kernel.org>,
+ <linux-stm32@st-md-mailman.stormreply.com>,
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH bpf 2/7] bpf/x86: prevent trampoline attachment when
+ args location on stack is uncertain
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+To: "Peter Zijlstra" <peterz@infradead.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250613-deny_trampoline_structs_on_stack-v1-0-5be9211768c3@bootlin.com> <20250613-deny_trampoline_structs_on_stack-v1-2-5be9211768c3@bootlin.com> <20250613081150.GJ2273038@noisy.programming.kicks-ass.net> <DAL9GRMH74F4.2IV0HN0NGU65X@bootlin.com> <20250613083232.GL2273038@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250613083232.GL2273038@noisy.programming.kicks-ass.net>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddujeehfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkfevuffhvffofhgjsehtqhertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleekheeihfefheevhfdtgeeuleekheffffffuedvkeekkeduvdeugeeugfeiueeknecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekhedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehkedprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpt
+ hhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihonhhghhhonhhgrdhsohhngheslhhinhhugidruggvvh
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-On Thu, Jun 12, 2025 at 02:46:34PM -0700, Dave Hansen wrote:
-> On 6/12/25 13:36, Pankaj Raghav (Samsung) wrote:
-> > On Thu, Jun 12, 2025 at 06:50:07AM -0700, Dave Hansen wrote:
-> >> On 6/12/25 03:50, Pankaj Raghav wrote:
-> >>> But to use huge_zero_folio, we need to pass a mm struct and the
-> >>> put_folio needs to be called in the destructor. This makes sense for
-> >>> systems that have memory constraints but for bigger servers, it does not
-> >>> matter if the PMD size is reasonable (like in x86).
-> >>
-> >> So, what's the problem with calling a destructor?
-> >>
-> >> In your last patch, surely bio_add_folio() can put the page/folio when
-> >> it's done. Is the real problem that you don't want to call zero page
-> >> specific code at bio teardown?
-> > 
-> > Yeah, it feels like a lot of code on the caller just to use a zero page.
-> > It would be nice just to have a call similar to ZERO_PAGE() in these
-> > subsystems where we can have guarantee of getting huge zero page.
-> > 
-> > Apart from that, these are the following problems if we use
-> > mm_get_huge_zero_folio() at the moment:
-> > 
-> > - We might end up allocating 512MB PMD on ARM systems with 64k base page
-> >   size, which is undesirable. With the patch series posted, we will only
-> >   enable the static huge page for sane architectures and page sizes.
-> 
-> Does *anybody* want the 512MB huge zero page? Maybe it should be an
-> opt-in at runtime or something.
-> 
-Yeah, I think that needs to be fixed. David also pointed this out in one
-of his earlier reviews[1].
+On Fri Jun 13, 2025 at 10:32 AM CEST, Peter Zijlstra wrote:
+> On Fri, Jun 13, 2025 at 10:26:37AM +0200, Alexis Lothor=C3=A9 wrote:
+>> Hi Peter,
+>>=20
+>> On Fri Jun 13, 2025 at 10:11 AM CEST, Peter Zijlstra wrote:
+>> > On Fri, Jun 13, 2025 at 09:37:11AM +0200, Alexis Lothor=C3=A9 (eBPF Fo=
+undation) wrote:
 
-> > - In the current implementation we always call mm_put_huge_zero_folio()
-> >   in __mmput()[1]. I am not sure if model will work for all subsystems. For
-> >   example bio completions can be async, i.e, we might need a reference
-> >   to the zero page even if the process is no longer alive.
-> 
-> The mm is a nice convenient place to stick an mm but there are other
-> ways to keep an efficient refcount around. For instance, you could just
-> bump a per-cpu refcount and then have the shrinker sum up all the
-> refcounts to see if there are any outstanding on the system as a whole.
-> 
-> I understand that the current refcounts are tied to an mm, but you could
-> either replace the mm-specific ones or add something in parallel for
-> when there's no mm.
+[...]
 
-But the whole idea of allocating a static PMD page for sane
-architectures like x86 started with the intent of avoiding the refcounts and
-shrinker.
+>> Maybe my commit wording is not precise enough, but indeed, there's not
+>> doubt about whether the struct value is passed on the stack or through a
+>> register/a pair of registers. The doubt is rather about the struct locat=
+ion
+>> when it is passed _by value_ and _on the stack_: the ABI indeed clearly
+>> states that "Structures and unions assume the alignment of their most
+>> strictly aligned component" (p.13), but this rule is "silently broken" w=
+hen
+>> a struct has an __attribute__((packed)) or and __attribute__((aligned(X)=
+)),
+>> and AFAICT this case can not be detected at runtime with current BTF inf=
+o.
+>
+> Ah, okay. So it is a failure of BTF. That was indeed not clear.
 
-This was the initial feedback I got[2]:
+If I need to respin, I'll rewrite the commit message to include the details
+above.
 
-I mean, the whole thing about dynamically allocating/freeing it was for 
-memory-constrained systems. For large systems, we just don't care.
+Alexis
 
 
-[1] https://lore.kernel.org/linux-mm/1e571419-9709-4898-9349-3d2eef0f8709@redhat.com/
-[2] https://lore.kernel.org/linux-mm/cb52312d-348b-49d5-b0d7-0613fb38a558@redhat.com/
---
-Pankaj
+
+
+--=20
+Alexis Lothor=C3=A9, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
