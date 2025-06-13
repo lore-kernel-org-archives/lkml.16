@@ -1,128 +1,153 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1354C2343B6
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77C72343B6;
+	Fri, 13 Jun 2025 20:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749845561; cv=none; b=fd/RcctUxzEAMOpc8yOet2Boqnov65Ln0zeHFi0kr/u3GGJFM8ArHriqWFOLfkgjefDluxlC0qLj1ohGN4Q+FZvtfWg7Ua+zkGDBGhluZvT8BsYja0TJOi4Y0/cikulkefFRShIqkYOAJgmpvw2Il1PCqWcVrMg9kW+PTd6924w=
+	t=1749845583; cv=none; b=eX/+chosiQxGfX6pnBTXNRwloztWZGd7wSoFOZ6W3ced9nTd50DcLxp210xI3uKqUNJzg1rag6ksZHFPIb9qMu26MiWaN2TZIA+Qn7QTlob6lbLvipqzPcKrTkGsn1eMhcVtQ4ZL2ivfZalmLkJRkDyqGZZzFIKcM8fGPmvbUGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749845561; c=relaxed/simple;
-	bh=iyGFDId6gNGGAgQ3Tspa6TixUr1kWvUB+RXOYO05TZE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SyZYbceamqbSj0XbYp5+zwjMCo+DlywaUECOQJpACXCuftszN8f3EoDoJgZ12un2QD833Pu3eXruxWHO1wF/bTwMgPgftEdaLk9i8iDGN/AQViMnnDYrHxSVzoqk/9b9c8x0IxPZQiqohGtW5uqgzsAavtTIBdLIjOQ3mrCefsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=OIgDRmNG; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
+	s=arc-20240116; t=1749845583; c=relaxed/simple;
+	bh=kD2ynVceQcdQa7T8ECS2SFeAwaNQpSN34BKH9Gb6w4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ljoaBQrxQ0nJ6jtTpgkvzxWRc4gd/bBeKwIgmiTg291ALIVhuJ5UNtMk/AVgh81d5MBLZj0eTY4gpkipkFYSj/LFKHmSAqtoqVauFL1rUIPRJvzrSQ2JlOCEon2dXC2jOZlZ8ArQV52YhdKfpODCjqSDsj3whDFQnHRh8zkLpUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iCtdbqq6; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="OIgDRmNG"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so4175939a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neon.tech; s=google; t=1749845558; x=1750450358; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NweKF8SVH3injbfSiS2fNVqMZQ6C6K10QpkWTAAVIKo=;
-        b=OIgDRmNGeKzw/3vBMT+6UjAK1VTHfoRvaT5mpKXyfe5ocdDMkLOMXV/MJHelMhGeUG
-         AuBUUUMRWGtZdgLafMcwDjajuMtTcagxyk0F8dPFFNG9aCX4I759BLk2HdIWx6GJl2Xw
-         koijXseWKn64X3y75S2epVvU6ulVeEjQVfQW8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749845558; x=1750450358;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NweKF8SVH3injbfSiS2fNVqMZQ6C6K10QpkWTAAVIKo=;
-        b=lbnWx8JvnRd9BNCt833ZhEpxKIqvj/ZNH898R3ut9iROO+8QtgHRdJqGE/gJncjrsC
-         Xw3KPwwgPpHdRBabCBsRcL2lNQjbpcCW0UT+LWvVRnn7xtWym+AJCrI9fojt78Q1sVPu
-         Jg7MpXIX3jI7uu9RnVjYIKdCpHRLzIXBTJ0Fjj9bKmt8lU4xvp1l4XGrVv6s7JhfqQC4
-         ydgu6JU974jH5zmg1QTkzNUI3iaD7op81Lan1wHrKqAeWOP9xeDwyAjgd8v/WSxswPx9
-         uJC/QNklDg8LPssoORzdV1pcyudVexq2KQpaV1Tb3CKvgt+kP3SGbTHrMl0XM5MBhveV
-         2N8A==
-X-Gm-Message-State: AOJu0YypeBkge9EG17qyezJXY5iUR/NFJeQVu7w2bXgyYuIMTPL5mn4Z
-	vybO5T4oaujhNQzB9L6sDip63blBjENle14v2XwxazWVdZM2YBTmZCLot1381NssbrXyXVCoDfU
-	MD6bOoYc=
-X-Gm-Gg: ASbGncvZetVtCpfa/MVy/FluTYZfkou/BVVGHs6hu6l7KzCSX8Tp0a51go26s+dQKI3
-	Z56+Ziu3tm6of4oYaMLdBztY6dvQmed4KdTCtRQNPFu3Z0Tuf8k+bF5JwUuG0qek3DpJLFqIxu+
-	WIalEy09LDWbU7eJlEO7ZA1tYeZ+fXijzyVEhiq5yMmD312gKb8Go5/aax7f3rjQz+ahV/hQ5jt
-	b5GEz/wRmNtHlEdWowNvV16PNBuDRSxfs0+u1BKKuNGHeVHS5cbCY4oRP/2cg8g8ZKgEbfMBdcj
-	K0jr8LD+pRtY/aA/nWynwc7QfdX/XS5IGLPfm0axi1unuqJ8x9rycvHFbHZilPQhBA==
-X-Google-Smtp-Source: AGHT+IHZOIdE98Xx/meIwe4RQMdXHRB+vSVgcGbiS6IiDa0l13qNjjNb8DTbd8V27rMfCiXEpAIELg==
-X-Received: by 2002:a05:6402:d0b:b0:607:3344:6ef1 with SMTP id 4fb4d7f45d1cf-608d0979c1emr379552a12.29.1749845557982;
-        Fri, 13 Jun 2025 13:12:37 -0700 (PDT)
-Received: from [192.168.86.142] ([84.65.228.220])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48a8bf8sm1640985a12.11.2025.06.13.13.12.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 13:12:37 -0700 (PDT)
-Message-ID: <a7a5d7e9-76cf-4b3f-ad31-19f8a239ee53@neon.tech>
-Date: Fri, 13 Jun 2025 21:12:36 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iCtdbqq6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749845582; x=1781381582;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kD2ynVceQcdQa7T8ECS2SFeAwaNQpSN34BKH9Gb6w4Q=;
+  b=iCtdbqq6EDT+33VTE5R8i30vEAMwsDu1vuYNsEePH2EM27XR+5x1JOLg
+   WOlMrwY23bDLeZZpQ7/Md/BoY/oUWmyS20RzazGkwwe3n+gdKBbFsJDf0
+   u/obkquMH9Fv0oNgq3oxgqq8RQtC7wwtOr923JoaEmVAGV7EOzI1z3rrL
+   UjA/R9zsbNguUEX/PMw9vVKjpsuDz5FXkMkunnueTp5DYAenPcGwqboPa
+   fiE6OaVJL4zRUxoCAiazzTklgzXCKC1pMeoLKhMiWMxnnRcdBkWMYacxU
+   bVLDVjXRo6Q17dolnckMoiYAcZy/wi7mOW5KVtDTM2kvONiYZEuEWbvpf
+   g==;
+X-CSE-ConnectionGUID: z+OmUUhmTMmc+GNKRZg55Q==
+X-CSE-MsgGUID: srKTznbiT9aohxIpD8g2Nw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51300341"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="51300341"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 13:13:01 -0700
+X-CSE-ConnectionGUID: 7Rh7IRO2T12iXHL5n4lJng==
+X-CSE-MsgGUID: Civ3vyrtQKiNN7pquM/9PA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="148456793"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by orviesa007.jf.intel.com with ESMTP; 13 Jun 2025 13:12:56 -0700
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: donald.hunter@gmail.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch,
+	aleksandr.loktionov@intel.com,
+	corbet@lwn.net
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Subject: [PATCH net-next v6 0/3] dpll: add Reference SYNC feature
+Date: Fri, 13 Jun 2025 22:06:52 +0200
+Message-Id: <20250613200655.1712561-1-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v4 4/4] x86/mm: Use GFP_KERNEL for alloc_low_pages() after
- boot
-From: Em Sharnoff <sharnoff@neon.tech>
-To: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
- Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-References: <7d0d307d-71eb-4913-8023-bccc7a8a4a3d@neon.tech>
-Content-Language: en-US
-In-Reply-To: <7d0d307d-71eb-4913-8023-bccc7a8a4a3d@neon.tech>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Currently it's GFP_ATOMIC. GFP_KERNEL seems more correct.
+The device may support the Reference SYNC feature, which allows the
+combination of two inputs into a input pair. In this configuration,
+clock signals from both inputs are used to synchronize the DPLL device.
+The higher frequency signal is utilized for the loop bandwidth of the DPLL,
+while the lower frequency signal is used to syntonize the output signal of
+the DPLL device. This feature enables the provision of a high-quality loop
+bandwidth signal from an external source.
 
-From Ingo M. [1]
+A capable input provides a list of inputs that can be bound with to create
+Reference SYNC. To control this feature, the user must request a
+desired state for a target pin: use ``DPLL_PIN_STATE_CONNECTED`` to
+enable or ``DPLL_PIN_STATE_DISCONNECTED`` to disable the feature. An input
+pin can be bound to only one other pin at any given time.
 
-> There's no real reason why it should be GFP_ATOMIC AFAICS, other than
-> some historic inertia that nobody bothered to fix.
+Verify pins bind state/capabilities:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --do pin-get \
+ --json '{"id":0}'
+{'board-label': 'CVL-SDP22',
+ 'id': 0,
+ [...]
+ 'reference-sync': [{'id': 1, 'state': 'disconnected'}],
+ [...]}
 
-and previously Mike R. [2]
+Bind the pins by setting connected state between them:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --do pin-set \
+ --json '{"id":0, "reference-sync":{"id":1, "state":"connected"}}'
 
-> The few callers that effectively use page allocator for the direct map
-> updates are gart_iommu_init() and memory hotplug. Neither of them
-> happen in an atomic context so there is no reason to use GFP_ATOMIC
-> for these allocations.
->
-> Replace GFP_ATOMIC with GFP_KERNEL to avoid using atomic reserves for
-> allocations that do not require that.
+Verify pins bind state:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --do pin-get \
+ --json '{"id":0}'
+{'board-label': 'CVL-SDP22',
+ 'id': 0,
+ [...]
+ 'reference-sync': [{'id': 1, 'state': 'connected'}],
+ [...]}
 
-[1]: https://lore.kernel.org/all/aEE6_S2a-1tk1dtI@gmail.com/
-[2]: https://lore.kernel.org/all/20211111110241.25968-5-rppt@kernel.org/
+Unbind the pins by setting disconnected state between them:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --do pin-set \
+ --json '{"id":0, "reference-sync":{"id":1, "state":"disconnected"}}'
 
-Signed-off-by: Em Sharnoff <sharnoff@neon.tech>
----
-Changelog:
-- v2: Add this patch
-- v3: No changes
-- v4: No changes
----
- arch/x86/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v6:
+- rebase,
+- 'dpll' -> 'DPLL'.
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 1dc8fbd8cb63..80eddcef992b 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -131,7 +131,7 @@ __ref void *alloc_low_pages(unsigned int num)
- 		unsigned int order;
- 
- 		order = get_order((unsigned long)num << PAGE_SHIFT);
--		return (void *)__get_free_pages(GFP_ATOMIC | __GFP_ZERO, order);
-+		return (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, order);
- 	}
- 
- 	if ((pgt_buf_end + num) > pgt_buf_top || !can_use_brk_pgt) {
+Arkadiusz Kubalewski (3):
+  dpll: add reference-sync netlink attribute
+  dpll: add reference sync get/set
+  ice: add ref-sync dpll pins
+
+ Documentation/driver-api/dpll.rst             |  25 ++
+ Documentation/netlink/specs/dpll.yaml         |  19 ++
+ drivers/dpll/dpll_core.c                      |  45 +++
+ drivers/dpll/dpll_core.h                      |   2 +
+ drivers/dpll/dpll_netlink.c                   | 190 ++++++++++--
+ drivers/dpll/dpll_netlink.h                   |   2 +
+ drivers/dpll/dpll_nl.c                        |  10 +-
+ drivers/dpll/dpll_nl.h                        |   1 +
+ .../net/ethernet/intel/ice/ice_adminq_cmd.h   |   2 +
+ drivers/net/ethernet/intel/ice/ice_dpll.c     | 284 ++++++++++++++++++
+ drivers/net/ethernet/intel/ice/ice_dpll.h     |   2 +
+ include/linux/dpll.h                          |  13 +
+ include/uapi/linux/dpll.h                     |   1 +
+ 13 files changed, 575 insertions(+), 21 deletions(-)
+
+
+base-commit: 08207f42d3ffee43c97f16baf03d7426a3c353ca
 -- 
-2.39.5
+2.38.1
 
