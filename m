@@ -1,136 +1,194 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09D81E00A0
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1904207F;
+	Fri, 13 Jun 2025 16:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833310; cv=none; b=VWL5R4elaq0LphhvNbp0y7I2TgA8Y9sJtTE4D7+C0Bmjf7lJ49b0qgDA9gPCTzN0mR4Y76e9kIc62RdTfwutPC3xiUQead5T8M48D8n+wlsXXntfWcniI8N69x7mmb/aPP3wlHapfXoF/LT4yro+d0T8POxuOqa44LHyYz674gE=
+	t=1749833352; cv=none; b=CZiyJWuEHPulJ4gSywhOWzyvBZj8bxkXgrlxXECqOiLuE61om1JvV4Qpi8yN73sR0mahhANSkQwp6pfdyi+F73KW3fDIzx8+cnVvmledvRPIEGJKX703pDST34H3D659gmfEESv7TwshsE5kIVC3miA3+2FxKSn2ev1QjRcdGNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833310; c=relaxed/simple;
-	bh=Rp7vJTlMPsaoen5NOBgjQfwezWAotk4TV69xzCO7TNQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MjSSbbT7Smsw45VjkGQRMZf6g2WFOdD17Djk9pB873DuGbsDQQ+xoXDcVQGOMpwnpQyDycmeuGVzQcAYh/Abn9vwf8ArA7PXq4hmQMyVap2xMBPOA2OhAQqI7grtO9GrmOgJV5wNfi3IKi4uxx+HhoOxlor96flUXQRN4gDwHig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so60239755ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:48:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749833308; x=1750438108;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nUBlTmct8R22pPkzLTix51atGwB3+I8WO1dU4QJBzjk=;
-        b=uNMlIui7cUfNk1kGNYCoRDp5E9zbxmu1cMfuNTA8Ys2161Fjb7OOHBDiqD1q64UmzQ
-         UfzDbaCnTxn0LWcvKe3JuhXQyZQsuulY7GriLOHTGggmg2P5/jAumXlxuCZnBgcPQZDp
-         iHc7lQCyQ9ydUWXI/IBtDs+cUSgavIEoNFpXFEoaedA4NMQgrga+UKtIpXApY0jhMaC1
-         OspwI7lUpT5D+SVE9jsPDwoowUxAqQbvB6a7W6JPwdke2+4aMoYVSs9POhCUD/FswUcW
-         FKm3AdLuYbE/3gbUkdUbaDT9xV7lsroEKzo1cg8Sn0AyV0dxANuSwPmzMePvR9ReThyd
-         c19w==
-X-Forwarded-Encrypted: i=1; AJvYcCVf9/eEqkcUlwOILO7EVrallD2Luwl0L3ZQUof8KoNilC86F3swBaDwDJ/B3oU/+hk7YNNxygp5WJ+klNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXWjyIOeJBbpzd4/Z3fo/Cw9qgNeDftOfIVUgpAxIyq2QfaBnl
-	Ki7QKRxnY9oKQXxJEObOTwAXXsc5v4YhIOhq2C8vvnVnUW7/fowOp0oAUm/f4ycwrKapK8k7ybg
-	ab4+cyc4TMKVlBQl720xjZRowsiuEL1eyBOmPt0VVb857R0Dgm/+Aqe5hQvo=
-X-Google-Smtp-Source: AGHT+IE2fqAVde6MrvtCnAC4SuVWHIlQw+FwU8+kzEz67aL6Ahlu7EHoBf2WFhN3lVy9ywM1JHWJdwsJrKUwldbDSiIRDuDdovku
+	s=arc-20240116; t=1749833352; c=relaxed/simple;
+	bh=Kzcv1y0IlQTrRjySbtAFTooNBaHArg/VI4VIiCWODrQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lH6Mfym1ahPKnheK2QLJs5RQi+TIJJPGKddMt3pQIP0R7PqEl2Vfl/BXVoI3AcpIKvG+iMbTbCVQ2kVhUnyiXfWk5PS07KNaVJA2qeVATknEJc8lsc8GnGRLvDoBI8WiVTndj71QcLZsa5yqvaU0f6hNoqxg6+bDabymzPnwVLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bJlKM0wr0zsSKX;
+	Sat, 14 Jun 2025 00:31:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 806121402FC;
+	Sat, 14 Jun 2025 00:32:57 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwCnLUyYUkxomp2vCQ--.58407S2;
+	Fri, 13 Jun 2025 17:32:56 +0100 (CET)
+Message-ID: <5dbd2f9d79e0ffee006c5c9f448d486737d93b6a.camel@huaweicloud.com>
+Subject: Re: Module signing and post-quantum crypto public key algorithms
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>, David Howells
+ <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, Stephan
+ Mueller <smueller@chronox.de>, Simo Sorce <simo@redhat.com>,
+ torvalds@linux-foundation.org, Paul Moore <paul@paul-moore.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Ignat Korchagin <ignat@cloudflare.com>, 
+ Clemens Lang <cllang@redhat.com>, David Bohannon <dbohanno@redhat.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>, keyrings@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Date: Fri, 13 Jun 2025 18:32:21 +0200
+In-Reply-To: <01f2f3171dd0f1cd9dcb496ac66bc6903767a2d2.camel@HansenPartnership.com>
+References: <501216.1749826470@warthog.procyon.org.uk>
+	 <01f2f3171dd0f1cd9dcb496ac66bc6903767a2d2.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a2b:b0:3dd:d746:25eb with SMTP id
- e9e14a558f8ab-3de07cd170amr3843025ab.16.1749833307733; Fri, 13 Jun 2025
- 09:48:27 -0700 (PDT)
-Date: Fri, 13 Jun 2025 09:48:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684c565b.a00a0220.279073.0014.GAE@google.com>
-Subject: [syzbot] [bcachefs?] BUG: unable to handle kernel NULL pointer
- dereference in bch2_btree_update_start
-From: syzbot <syzbot+2f3859bd28f20fa682e6@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-CM-TRANSID:LxC2BwCnLUyYUkxomp2vCQ--.58407S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3GFykJr45Zr43ZF45CrWDtwb_yoW7ZFW3pF
+	W5tFWYkrWkJFn2yFn2ka18KF4Fyws3Jw45Jr9xG348Z3Z8XFnxAr1IkFWYvFZrCrs3G3WY
+	vrWSyrn2kws5ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvmb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYY7kG6xAYrwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7IU5pmh7UUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQASBGhLzecHGAACsD
 
-Hello,
+On Fri, 2025-06-13 at 12:13 -0400, James Bottomley wrote:
+> On Fri, 2025-06-13 at 15:54 +0100, David Howells wrote:
+> > Hi,
+> >=20
+> > So we need to do something about the impending quantum-related
+> > obsolescence of the RSA signatures that we use for module signing,
+> > kexec, BPF signing, IMA and a bunch of other things.
+>=20
+> Wait, that's not necessarily the whole threat.  There are two possible
+> ways quantum could compromise us.  One is a computer that has enough
+> qbits to run the shor algorithm and break non-quantum crypto.  The
+> other is that a computer comes along with enough qbits to speed up the
+> brute force attacks using the grover algorithm.  NIST still believes
+> the latter will happen way before the former, so our first step should
+> be doubling the number of security bits in existing algorithms, which
+> means ECC of at least 512 bits (so curve25519 needs replacing with at
+> least curve448) and for all practical purposes deprecating RSA (unless
+> someone wants to play with huge keys).
+>=20
+> > From my point of view, the simplest way would be to implement key
+> > verification in the kernel for one (or more) of the available post-
+> > quantum algorithms (of which there are at least three), driving this
+> > with appropriate changes to the X.509 certificate to indicate that's
+> > what we want to use.
+>=20
+> Can you at least enumerate them?  There's still a dispute going on
+> about whether we should use pure post-quantum or hybrid.  I tend to
+> think myself that hybrid is best for durable things like digital
+> signatures but given the NIST advice, we should be using > 512 bit
+> curves for that.
+>=20
+> > The good news is that Stephan Mueller has an implemementation that
+> > includes
+> > kernel bits that we can use, or, at least, adapt:
+> >=20
+> > 	https://github.com/smuellerDD/leancrypto/
+>=20
+> So the only hybrid scheme in there is dilithium+25519 which doesn't
+> quite fit the bill (although I'm assuming dilithium+448 could easily be
+> implemented)
+>=20
+> >=20
+> > Note that we only need the signature verification bits.=C2=A0 One
+> > question, though: he's done it as a standalone "leancrypto" module,
+> > not integrated into crypto/, but should it be integrated into crypto/
+> > or is the standalone fine?
+> >=20
+> > The not so good news, as I understand it, though, is that the X.509
+> > bits are not yet standardised.
+> >=20
+> >=20
+> > However!=C2=A0 Not everyone agrees with this.=C2=A0 An alternative prop=
+osal
+> > would rather get the signature verification code out of the kernel
+> > entirely.=C2=A0 Simo Sorce's proposal, for example, AIUI, is to compile
+> > all the hashes we need into the kernel at build time, possibly with a
+> > hashed hash list to be loaded later to reduce the amount of
+> > uncompressible code in the kernel.=C2=A0 If signatures are needed at al=
+l,
+> > then this should be offloaded to a userspace program (which would
+> > also have to be hashed and marked unptraceable and I think
+> > unswappable) to do the checking.
+> >=20
+> > I don't think we can dispense with signature checking entirely,
+> > though: we need it for third party module loading, quick single-
+> > module driver updates and all the non-module checking stuff.=C2=A0 If i=
+t
+> > were to be done in userspace, this might entail an upcall for each
+> > signature we want to check - either that, or the kernel has to run a
+> > server process that it can delegate checking to.
+>=20
+> I agree we can't predict everything at build time, so we need a runtime
+> scheme (like signatures) as well.  However, I'm not convinced it should
+> be run outside the kernel.  The expansion of the TCB plus the amount of
+> checking the kernel has to do to make sure the upcall is secure adds to
+> the vulnerability over in-kernel where everything just works.
+>=20
+> > It's also been suggested that PQ algorithms are really slow.=C2=A0 For
+> > kernel modules that might not matter too much as we may well not load
+> > more than 200 or so during boot - but there are other users that may
+> > get used more frequently (IMA, for example).
+>=20
+> If we go with a hybrid signature scheme, we can start off with only
+> verifying the pre-quantum signature and have a switch to verify both.
+>=20
+> > Now, there's also a possible hybrid approach, if I understand Roberto
+> > Sassu's proposal correctly, whereby it caches bundles of hashes
+> > obtained from, say, the hashes included in an RPM.=C2=A0 These bundles =
+of
+> > hashes can be checked by signature generated by the package signing
+> > process.=C2=A0 This would reduce the PQ overhead to checking a bundle a=
+nd
+> > would also make IMA's measuring easier as the hashes can be added in
+> > the right order, rather than being dependent on the order that the
+> > binaries are used.
+>=20
+> I think you're referring to the IMA digest list extension proposal:
+>=20
+> https://github.com/initlove/linux/wiki/IMA-Digest-Lists-Extension
+>=20
+> I'm not sure it's been progressed much.
 
-syzbot found the following issue on:
+The latest iteration can be found here:
 
-HEAD commit:    19272b37aa4f Linux 6.16-rc1
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a7f682580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8409c4d4e51ac27
-dashboard link: https://syzkaller.appspot.com/bug?extid=2f3859bd28f20fa682e6
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
+https://lore.kernel.org/linux-integrity/20241119104922.2772571-1-roberto.sa=
+ssu@huaweicloud.com/
 
-Unfortunately, I don't have any reproducer for this issue yet.
+It is more or less ready for upstreaming (from my point of view), with
+the exception of a few comments that I still need to address.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/92d22b0c6493/disk-19272b37.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3fb0142bb63a/vmlinux-19272b37.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3d5f3836ae42/Image-19272b37.gz.xz
+The main problem was parsing the RPM headers in the kernel, that Linus
+didn't like, but I believe I solved it now with Mimi's suggestion of
+making the digest list parsers pluggable (so the RPM parser has been
+removed from this submission, and moved to a kernel module that is
+expected to be signed by distros).
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2f3859bd28f20fa682e6@syzkaller.appspotmail.com
+I explored the alternative of moving the parser to user space, but as
+you mentioned, it is a more risky approach.
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-Mem abort info:
-  ESR = 0x0000000086000006
-  EC = 0x21: IABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x06: level 2 translation fault
-user pgtable: 4k pages, 48-bit VAs, pgdp=000000014106a000
-[0000000000000000] pgd=0800000128c8b403, p4d=0800000128c8b403, pud=0800000132b39403, pmd=0000000000000000
-Internal error: Oops: 0000000086000006 [#1]  SMP
-Modules linked in:
-CPU: 1 UID: 0 PID: 7230 Comm: syz.5.20 Not tainted 6.16.0-rc1-syzkaller-g19272b37aa4f #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : 0x0
-lr : mempool_alloc_noprof+0x150/0x3f4 mm/mempool.c:402
-sp : ffff80009dc06c80
-x29: ffff80009dc06d80 x28: 0000000000000000 x27: 1fffe0001ee507df
-x26: 0000000000092800 x25: ffff700013b80d9c x24: ffff0000f7283ef0
-x23: 0000000000092c40 x22: ffff0000f7283ef8 x21: 0000000000000400
-x20: 1fffe0001ee507de x19: ffff0000f7283ea0 x18: 00000000ffffffff
-x17: ffff800093215000 x16: ffff80008051b344 x15: ffff800092d9eb80
-x14: ffff0000c4812910 x13: ffff800093014c08 x12: ffff0000c4812930
-x11: 0000000000008004 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : 0000000000000000 x7 : ffff800080b774a8 x6 : 0000000000000000
-x5 : 0000000000000020 x4 : ffff80009dc06a20 x3 : 0000000000000000
-x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000092800
-Call trace:
- 0x0 (P)
- bch2_btree_update_start+0x488/0x1398 fs/bcachefs/btree_update_interior.c:1212
- bch2_btree_node_rewrite+0x190/0xd34 fs/bcachefs/btree_update_interior.c:2226
- bch2_move_btree+0x538/0xa8c fs/bcachefs/move.c:1145
- bch2_scan_old_btree_nodes+0x80/0x21c fs/bcachefs/move.c:1266
- bch2_data_job+0x570/0x7cc fs/bcachefs/move.c:1404
- bch2_data_thread+0xb4/0x1cc fs/bcachefs/chardev.c:315
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-Code: ???????? ???????? ???????? ???????? (????????) 
----[ end trace 0000000000000000 ]---
+Other than that, yes, it makes IMA much faster in my benchmarks (~34
+seconds to lookup 12312 digests and verify 303 ECDSA signatures, as
+opposed to ~98 seconds to verify 12312 ECDSA signatures).
 
+Roberto
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
