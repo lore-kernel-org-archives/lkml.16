@@ -1,68 +1,228 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8730191493;
-	Fri, 13 Jun 2025 14:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0E1198E8C;
+	Fri, 13 Jun 2025 14:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749825621; cv=none; b=exc1C6IZOuIZqc5lIkU6eigtSy6Qd0KTAVOsCRF19WehPfcD2iGepLyCaL1/CLTRmKp/J+twDZb5X8RXqtcDpG/f2bqBciKl6/fiXCLwoVpJp+v/toIMckZRTxbgkXOl7UV+4+j+5fZiHWGjcpiNddAr4C12z8cSlHz82M8Tg7E=
+	t=1749825626; cv=none; b=QrHZE3MKcL/IyX6R5kYR+QFLke7Q+fdchC3Ic2ISm8aqp25U8HlFWS7F8RwMeHizVU++EKMP4+6IOjZ39ydZOuT4DSWPYn1MB+LhGNVJODq1DAF18nKkRqZJymHnyRqUqur880MlGKcyEshSuPoQOfxsorQBPDQMkgjLvVCctu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749825621; c=relaxed/simple;
-	bh=ITZFyS21U+zCOStvhgK2RHhgm5QwQidWMeeety/ts8c=;
+	s=arc-20240116; t=1749825626; c=relaxed/simple;
+	bh=G8rFJk861KqPrLLERWkejR/HukON16JAfyXw01ERfwA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gt8Kn9STA1Liqu6bJ68OsL59rDT9oGV0ES1bFxXXD5CYcRPwuxWR3YoKJVgxYB1LqSmMlyH5j1f3Z3yoUS+VsJ1IxRaC+0tCBnfhX3ZLi2qhc+n74V4GX5wKMEKdStjUrJxSGWflpA/JG4xx8ZfvpboNwkORtp3RXhr4RXAMJg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5+6qd3P; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gvoyncSRnre+dcxWdTlY/og4ihZMBowYlHyyVueL/xnH6duezZbQq/wHxpv/JfNWazYhO9qdnqyS9lt5IWWZHmPdwfVuyG5hllb5DoUhkgxPWwrTmTCzetF2OycYC3AdiFjDkszbKQjFIXo2NldSsrQI3Wr/JSDDdEXfwGvMwfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5Ov7966; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5+6qd3P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F4BC4CEE3;
-	Fri, 13 Jun 2025 14:40:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5Ov7966"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3544DC4CEED;
+	Fri, 13 Jun 2025 14:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749825620;
-	bh=ITZFyS21U+zCOStvhgK2RHhgm5QwQidWMeeety/ts8c=;
+	s=k20201202; t=1749825625;
+	bh=G8rFJk861KqPrLLERWkejR/HukON16JAfyXw01ERfwA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d5+6qd3P1WztJuri2EhMxUbC311PrDjV6+k7vmYn5h9vsxp9hWZmJ3UByPxlb6DIx
-	 rheKtGV6B0v7/rTXW1cEwu2QwD0ggEKqEje7dGOcyg/chHtMvq0rRhoaljeztbANlz
-	 LGocFuU0OX5ovZ9PJ20vb4mbdA71niDR2s4I6RonOo9tVOClMTh8k3LYSLbqPIkQ2p
-	 /4Smqm/74Jc73703K3dngeLNzy9mTCQ2c8ClYWV9wuGZ9+g0MdOZf6PuVnnYbdzWt6
-	 o6JnIrM0lkPjg27vCTy5W1Cmx3M6Xe6eu2fEKnD7WElgytQV/Gp1gTvR+DUd1EhXMV
-	 s3SA2Iysdr5PQ==
-Date: Fri, 13 Jun 2025 16:40:11 +0200
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
-	Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
-	Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
-	Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
-	Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, 
-	Kevin Hilman <khilman@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, 
-	linux-omap@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 03/12] gpio: moxtet: use new GPIO line value setter
- callbacks
-Message-ID: <lekcp6p4s5hbkrul2aq4ukmc722qajitvpxs7mtrqg5nlmfxd5@b5c7zzh2lb5u>
-References: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org>
- <20250610-gpiochip-set-rv-gpio-v1-3-3a9a3c1472ff@linaro.org>
+	b=H5Ov7966R6z4xv/MxB6xeP3MSov3C71Yy6dhRWaVmXU0CRIwm2F81FTy7nWn6BYJR
+	 PfcTjxfe871A+TruQy+g0g2INu3sNALpOSlL/PwzCHV6R9sNVkE24mhpocsxDv29vc
+	 4Ldtjm6RPjOVCOOLk7aEwygkcynzRn7flyEIyMCj85N/YCf0LP+V+XwwvuPbZTJojC
+	 KwEZrmSztugFFB025xw/Tcv36xaFYzz0NWFLFdUzTnUEK9sL6AI/luKlMaecR4Z0YO
+	 qHHqiGFJTAqxfXMn+rJp4CNUdPbyGiwN7Kl4k2TTmoXY4si2zgy+q0nqoMZ/cfad8k
+	 n1QmfXxfSl5tg==
+Date: Fri, 13 Jun 2025 15:40:21 +0100
+From: Conor Dooley <conor@kernel.org>
+To: victor.duicu@microchip.com
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marius.cristea@microchip.com,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: temperature: add support for
+ MCP998X
+Message-ID: <20250613-undergo-reviving-a97dca8f3b69@spud>
+References: <20250613130207.8560-1-victor.duicu@microchip.com>
+ <20250613130207.8560-2-victor.duicu@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GiFAnyVgEONdrGXM"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610-gpiochip-set-rv-gpio-v1-3-3a9a3c1472ff@linaro.org>
+In-Reply-To: <20250613130207.8560-2-victor.duicu@microchip.com>
 
-On Tue, Jun 10, 2025 at 02:33:13PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+--GiFAnyVgEONdrGXM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jun 13, 2025 at 04:02:06PM +0300, victor.duicu@microchip.com wrote:
+> From: Victor Duicu <victor.duicu@microchip.com>
+>=20
+> This is the devicetree schema for Microchip MCP998X/33 and
+> MCP998XD/33D Automotive Temperature Monitor Family.
+>=20
+> Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
 > ---
+>  .../iio/temperature/microchip,mcp9982.yaml    | 211 ++++++++++++++++++
+>  1 file changed, 211 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/mic=
+rochip,mcp9982.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/temperature/microchip,=
+mcp9982.yaml b/Documentation/devicetree/bindings/iio/temperature/microchip,=
+mcp9982.yaml
+> new file mode 100644
+> index 000000000000..ec939d463612
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982=
+=2Eyaml
+> @@ -0,0 +1,211 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/temperature/microchip,mcp9982.yam=
+l#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip MCP998X/33 and MCP998XD/33D Multichannel Automotive
+> +       Temperature Monitor Family
+> +
+> +maintainers:
+> +  - Victor Duicu <victor.duicu@microchip.com>
+> +
+> +description: |
+> +  The MCP998X/33 and MCP998XD/33D family is a high-accuracy 2-wire multi=
+channel
+> +  automotive temperature monitor.
+> +  The datasheet can be found here:
+> +    https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/Prod=
+uctDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,mcp9933
+> +      - microchip,mcp9933d
+> +      - microchip,mcp9982
+> +      - microchip,mcp9982d
+> +      - microchip,mcp9983
+> +      - microchip,mcp9983d
+> +      - microchip,mcp9984
+> +      - microchip,mcp9984d
+> +      - microchip,mcp9985
+> +      - microchip,mcp9985d
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  interrupt-names:
+> +    description:
+> +      -alert-therm is used to handle a HIGH or LOW limit.
+> +      -therm-addr is used to handle a THERM limit on chips
+> +      without "D" in the name.
+> +      -sys-shutdown is used to handle a THERM limit on chips
+> +      with "D" in the name.
+> +    items:
+> +      - const: alert-therm
+> +      - const: therm-addr
+> +      - const: sys-shutdown
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  microchip,enable-anti-parallel:
+> +    description:
+> +      Enable anti-parallel diode mode operation.
+> +      MCP9984/84D/85/85D and MCP9933/33D support reading two external di=
+odes
+> +      in anti-parallel connection on the same set of pins.
+> +    type: boolean
+> +
+> +  microchip,beta1:
+> +    description:
+> +      Set beta compensation value for external channel 1.
+> +      <0> 0.050
+> +      <1> 0.066
+> +      <2> 0.087
+> +      <3> 0.114
+> +      <4> 0.150
+> +      <5> 0.197
+> +      <6> 0.260
+> +      <7> 0.342
+> +      <8> 0.449
+> +      <9> 0.591
+> +      <10> 0.778
+> +      <11> 1.024
+> +      <12> 1.348
+> +      <13> 1.773
+> +      <14> 2.333
+> +      <15> Diode_Mode
+> +      <16> Auto
+> +      - Diode_Mode is used when measuring a discrete thermal diode
+> +      or a CPU diode that functions like a discrete thermal diode.
+> +      - Auto enables beta auto-detection. The chip monitors
+> +      external diode/transistor and determines the optimum
+> +      setting.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    default: 16
 
-Reviewed-by: Marek Behún <kabel@kernel.org>
+Missing max/min constraints on the property.
+
+> +
+> +  microchip,beta2:
+> +    description:
+> +      Set beta compensation value for external channel 2.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    default: 16
+> +
+> +  microchip,resistance-comp-ch1-2-enable:
+> +    description:
+> +      Enable resistance error correction(REC) for external channels 1 an=
+d 2.
+> +      The chip internal hardware counterbalances the parasitic resistanc=
+e in
+> +      series with the external diodes. The compensation can be activated=
+ or
+> +      disabled in hardware for both channels 1 and 2 at the same time.
+> +    type: boolean
+
+On the previous version I objected to this wording for the property,
+where it is being used as an enable, and instead said that it should
+indicate the presence of the parasitic resistance. Did I miss some sort
+of new justification for it still talking about being an enable?
+
+
+> +  microchip,resistance-comp-ch3-4-enable:
+> +    description:
+> +      Enable resistance error correction(REC) for external channels 3 an=
+d 4.
+> +      The chip internal hardware counterbalances the parasitic resistanc=
+e in
+> +      series with the external diodes. The compensation can be activated=
+ or
+> +      disabled in hardware for both channels 3 and 4 at the same time.
+> +    type: boolean
+
+Cheers,
+Conor.
+
+--GiFAnyVgEONdrGXM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEw4VAAKCRB4tDGHoIJi
+0mwmAQDew5SpZ30kpLSUmEH21jXuflCEUQxJr1shipMAysEfxQD/VU4aDW13CHd/
+NSLDi+a1WL4+sorUxL4dtXWJmVWKdQs=
+=e2Hw
+-----END PGP SIGNATURE-----
+
+--GiFAnyVgEONdrGXM--
