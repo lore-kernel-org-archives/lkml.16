@@ -1,207 +1,325 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010052.outbound.protection.outlook.com [52.101.69.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F4919FA93;
-	Fri, 13 Jun 2025 14:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E0019938D;
+	Fri, 13 Jun 2025 14:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826399; cv=fail; b=h+GMFEaV7OjyG68uMOgJ7yvquJbWsww/hGsaEiv1n50iH4YQ3VJaeGr0zaing7MSzKjmmrxXHm2BPBmt5V/GdzqHn784BOlFpdjuCU0X7CQSjlQHTIpeUmfbnuTUGobBGQtBjpj/pwZbB3jMZkdIxzPI4G6No5LtgQ0zGBmDLZA=
+	t=1749826419; cv=fail; b=JTywJY0X531u/L3GaqikbVEl3GuMnlAs70A9vNIANVY9vPJjtUBr9ym/bgT2ThkpXR+Hmglnlhv8ItmzEQZ1svnyc1VVRLbIX2x5wd5l8YzVZaQviH1ZAkQs7bARLRwkr/HIbECY+pK6jZKvs312q7iIz+gPtOBnOuMlKokeqS4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826399; c=relaxed/simple;
-	bh=xtSccUSIKO8vabOgAJm6bwuB7wDORVPDnhkm9QdFKG0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dKLsyLshIfuBhrezMW1xUlsMZPwgsMzIHho4dwIN8ZdBSIMMmmj6D0KQz+rYHV7Bi3xSKQd2jr3KXA2qpLBGHyC9/MxZzAXsSOxQDlOtyXNW07y9YHXVnMpsYXZDqpNeiPNqe0OOZ+cB/bcKmbNuOv3fbG3lWzIlj8GfMRkrOmA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=j2C32GJ3; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=nHus9rs4; arc=fail smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1749826419; c=relaxed/simple;
+	bh=lx0ya6OeCLJMQRyZKOIMd0SgKOHRzMOWy1jeOhEkv1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Au7DLlKWtn42PjtMpF0hKGvgaWcbKxH7EL/0jTnntQr+0XdlUuGLMHxS/PDoB9PgkP/KGiiEUU5UysaljueBazH7j4xx7neK7hdXApOT4YzHID8upvw2I8nSlz6ik398NJM9GTxfjoEj+IjoqkSF8gd0ErLKBW3WMn+k9Nm3dG8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=F4hJ/D7v; arc=fail smtp.client-ip=52.101.69.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="j2C32GJ3";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="nHus9rs4"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55D6SgDd031504;
-	Fri, 13 Jun 2025 09:53:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=VnV3z1A75Pbx8bdw
-	N6JiXIZbCMeK4tWls3Dng3s9QUo=; b=j2C32GJ3ChBFU0jHmsTdul4Z/83GlPcT
-	8JAOALxgbn/bH86bXGwhXBjV4+g3bBcibhSUofKDVNnqUBQkZEQU4Ys4r4YbyUB/
-	raj/y8qzvhun6ln3GEiQ3Ch0Do7+pWu6aYVwtSLXNk4udhJFSTEwcmTm/gedqtfg
-	3tm+1PJy9pV48cmNWOTJyLIVXjt0eemaQJWGqhIMlq4yZPKBwbBymsicDE6hcOqO
-	HrUAsN2v2imP5iCmiErHwoV9IoEhmKHCH3CErGbVknAleaExtxIw9BLUdqZOkuu2
-	oqFIiGJ4yN9X3RE3tGSGVsc7SskeYnAi3jtgkRJSnt95hZZj39DnGg==
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11on2121.outbound.protection.outlook.com [40.107.223.121])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 4760mwxw2d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 09:53:08 -0500 (CDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="F4hJ/D7v"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jtHi/yLpVOgzxZ5hO7vFhhGs04b60qrgUxD14J5doCpKXs/OZ0dmDZalP00W901uCIdB20CSMprkEx6ExwhfiferEC8u1CL1jLdv6to0E9zqNDpp3RD+2lvDAjfQlUlmv6N+59IybDeTgDiC4L4VG4BVpDL88XGIIJPJfOKB/mWS0HpcerClAUpDtgMgGvkBgAQVombRr/7S8MbanQIE9oDa0e2VZSWyVtnJFUZnxz7GFezi1KMxuJRCjndZzUsZVAP1vBT9XLm+3r5/zSYXNkU5TA5EYG/fkA+Op5d1V7532UR6LD+4ik0Sw9EPx2SRdYkXPVklKfmEVQFRbMdOzA==
+ b=Q5RxybD5qfJEv3EEGQ5QH0KzeK57z2Y2YJuOOaeGLne/cxur/hVc3DkxDWM2c65sEyI+pfNpW9UqUZAlOuXFBg/uNAa8GDkqoO0V7Utn1O57k0VliQcO0IUnptSwvLktPIPz63NLd0ICB3feihbVoytkNtxEfgINLSdD63nshxSEG6Uu8coTcK/8J/PuLOryMOh3lxWiZ9HVaz4dEmODqu992ncBhx/3utslr7NHeQ8TIcXPv6IJcCCxtVAGVcWbOSLaWbW1qewuGEKlhpENaQyk6DRKYwY7VGx7tIEeYBsDJ5lT+yqUs/v2n/Ux9bqx1XdYZtYRK9+XOIYB96Srfw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VnV3z1A75Pbx8bdwN6JiXIZbCMeK4tWls3Dng3s9QUo=;
- b=kJj+odCNXoDgktOvbxFKRpmd2X6aNSHzu/KtjlwT3WWzdNvBQk682VQwfCp0nVUcMSwjzXW0dabagofvATu6xooJdKbN/E34DQcA8B3GSMi8mHVE6b0dm6eaNWd2YVHZnSzfm9KlubGHwj083gNH4zreDc+lMURi9B621c1TMQFboDZ9dCJBc6HF11KumhUBz9UYJ58TriOYv+OuvuSzco599rorkefK6al/mekMbU4cabHB1WbwKizhL949FG75vFK/Kv2UZ6UmmnV6OR1+fjS0NzuuEO14EXFfeFJZ8ZpN+shdUsGAFHfjgOvGc4oHqLJR6wSk2RLdfnpEE/o9WQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com
- smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=opensource.cirrus.com; dkim=none (message not
- signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ bh=juNQORmBoFtZVvDJ3lz7p2sZbFi154fMU61LracQ6H0=;
+ b=qTQzwInVaFNulYp3ejy/F4HOvKPLb25zIu1w3U5AzQJuTJ+nM3s2DgMZsbROZ5pPhxo2ZEYOyX2T7teUOBpvn+Kd9RmLkw7VjV/tJDw/cMQrU0rGyqYMw2fwmZAQ+iMDAXQqwsCcO6yaR42fJPQVbKGTzefFbPTlRiZInM1XLPHpZz7XOOMs2BeFPeP3ZaqvYtzjDmANC6lAEwKjrf6UK61D5hntLJwm12/IqlkqwQjnfYibPkA21fkC2wZrJO6J2RpI0IopEeQ7926nt7cM1YFYh34tS8ot1loSc/pNPZvcju3FWpvXgwP437CK8ExtG2EnCKSWhXecnh0RjOc+dQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VnV3z1A75Pbx8bdwN6JiXIZbCMeK4tWls3Dng3s9QUo=;
- b=nHus9rs4C2j1/ya97OKsDo036nfa9icvVtjbCGXvvRDv4ilK4fgRHhjykFvLE6b0M1ggvNg3LhXViyxQatf06kApuDR0KM5SlD843Iec7dcQPJvhHAId0bq7TYmbndGib5+pdvd/qi0JEHWxzvXIWAzCTzwXtXC8o5DsyLCXpIs=
-Received: from BYAPR01CA0027.prod.exchangelabs.com (2603:10b6:a02:80::40) by
- DS7PR19MB4552.namprd19.prod.outlook.com (2603:10b6:5:2c4::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.18; Fri, 13 Jun 2025 14:53:04 +0000
-Received: from SJ1PEPF000026C3.namprd04.prod.outlook.com
- (2603:10b6:a02:80:cafe::27) by BYAPR01CA0027.outlook.office365.com
- (2603:10b6:a02:80::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Fri,
- 13 Jun 2025 14:53:09 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
- does not designate 84.19.233.75 as permitted sender)
- receiver=protection.outlook.com; client-ip=84.19.233.75;
- helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- SJ1PEPF000026C3.mail.protection.outlook.com (10.167.244.100) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Fri, 13 Jun 2025 14:53:03 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 65602406541;
-	Fri, 13 Jun 2025 14:53:01 +0000 (UTC)
-Received: from lonswws01.ad.cirrus.com (lonswws01.ad.cirrus.com [198.90.188.26])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 23BB182024A;
-	Fri, 13 Jun 2025 14:53:01 +0000 (UTC)
-From: Simon Trimmer <simont@opensource.cirrus.com>
-To: tiwai@suse.com
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com, nefelim4ag@gmail.com,
-        Simon Trimmer <simont@opensource.cirrus.com>
-Subject: [PATCH] ALSA: hda/realtek: Add quirk for Asus GA605K
-Date: Fri, 13 Jun 2025 14:52:51 +0000
-Message-ID: <20250613145251.397500-1-simont@opensource.cirrus.com>
-X-Mailer: git-send-email 2.43.0
+ bh=juNQORmBoFtZVvDJ3lz7p2sZbFi154fMU61LracQ6H0=;
+ b=F4hJ/D7vct3D3ZJw2d2wyuwzosJGnmDFJAOmUcFSAjFJ4UAqgzEsOapVDY+j00h8fNLNmgzlSpLRajjm/itcCU3w1kCvrcfXphECp0f/kY3O7vsNmwa2f+F7/jQhgZTuZZ7/YZYOIhJToXpYBryxW0cEPKqA3DSGIz3H9mVfQoxhzZhU6TKCbQFOeo/XZv/8O1vIwiaGUpxh/NeuT39jaR4s4SAPbG8dkFQnWW4XaCf+3KGVLmoeOX0UM30GNmX4urjfpmRO350fMY7jqDUg7GEV9bqjJ7djuo+mEN86S38XqWdAUr3Nk6l0KUFX9c+A48dSgJ4KPO7O58QJDetdtw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA4PR04MB7567.eurprd04.prod.outlook.com (2603:10a6:102:e5::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.22; Fri, 13 Jun
+ 2025 14:53:32 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
+ 14:53:31 +0000
+Date: Fri, 13 Jun 2025 10:53:23 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Peter Chen <peter.chen@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-usb@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, s32@nxp.com,
+	linaro-s32@linaro.org, Larisa Grigore <larisa.grigore@nxp.com>,
+	Ionut Vicovan <Ionut.Vicovan@nxp.com>,
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+Subject: Re: [PATCH 2/3 v2] usb: chipidea: s32g: Add usb support for s32g2
+Message-ID: <aEw7Y0FAlSTqiN5t@lizhi-Precision-Tower-5810>
+References: <cover.1749747898.git.dan.carpenter@linaro.org>
+ <b5da1cf4e5813d60fdbd9dd5952cd1908ee880e5.1749747898.git.dan.carpenter@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b5da1cf4e5813d60fdbd9dd5952cd1908ee880e5.1749747898.git.dan.carpenter@linaro.org>
+X-ClientProxiedBy: PH5P220CA0012.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:34a::9) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C3:EE_|DS7PR19MB4552:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 56881f84-e119-4af1-2829-08ddaa89ffbf
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA4PR04MB7567:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0010268a-66d3-47f6-5932-08ddaa8a1077
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|61400799027|376014|82310400026|7053199007;
+	BCL:0;ARA:13230040|52116014|376014|7416014|366016|1800799024|38350700014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?anmQdNmBelOaks8XOrTryw9+qmRPY3Tt3GxnsZ3V2ewsMpr8FuDeakEGObee?=
- =?us-ascii?Q?8Cty5HlpVYtq761WBfcC2WeJlFrWVuOCBXk2YecEKsoF6Kd/WkXlBen5g+k2?=
- =?us-ascii?Q?mzGdwSCv+HdJecwFPUNaxIB0ESOLyE2CWsCwxjlucolFkKKeQ8D/fCYaTJXU?=
- =?us-ascii?Q?tj7vYeEmRC/BAqB8gmkESvNpEGaWqnJmUjuAW4nA2O6SyLJ9r0TnOBothzUV?=
- =?us-ascii?Q?RVhS0yonk7KZa8Fwm8aoo3EefbTcWy+mUu+A0spINWa/sgLoDs6SumKAb3dd?=
- =?us-ascii?Q?ct/7gjybCS+nBADoTx5qf4rIoQG/BQE3r23Z0J/XUZrW1I4h0zyy1u/h37pr?=
- =?us-ascii?Q?qHQzBJBkF2YTY3SrVp33GsmZ/NdHf8sSDwnSd/8bEoPsiIjIMjro1REf4R1o?=
- =?us-ascii?Q?k3yEzC1qRP6Q50+DCjLauSSPcaGbp8yb1gVoEZmINshp02+tE1U7991gZH5o?=
- =?us-ascii?Q?ECTWf0n0V6qmGQKTQUQM2OhYmKbiSLgCOiQzLRHzjGAffbyC7JmzS5AnA5ap?=
- =?us-ascii?Q?CCjskL5DIX2fks2zmhT+gBnKKo78EjIHu5O8EYDbFo872xyK8ogD80ut/j1T?=
- =?us-ascii?Q?3dfaYZcM8hpi/dL1CDTtJHHkQXlcb2JAdZhgI7jTZsvnOWj1GbFVq9OVj9kz?=
- =?us-ascii?Q?gPhsMzfOvBxPI3Nbyi/2r5YwSk+IyRlQQ4VOLK2zCeW+nu8oLBr2wBS3Tcfm?=
- =?us-ascii?Q?aQFjeDrS5u87FAG54xFHJDPTyKJICNaiLY3ek7sXcHI+p+Jx3jxeE2P4Ecim?=
- =?us-ascii?Q?+s15kcmYWeiUyPpAt6gbUxiWl3hQwYGak11j9M4c1PHX2hZYpcOs6OW89aBh?=
- =?us-ascii?Q?7hirIJr0GNIOmTF6KSuv2h2mi9rf4IwS4KQrmKPx6A5YGW5vTQnZzknoJvp1?=
- =?us-ascii?Q?AaeI3W0tOGVsuc96Uya07FP0KEirc1on2DSnuGiUyYLA43urCGeE/c4YLS07?=
- =?us-ascii?Q?3+Z/Rl7Boe3XfV1V6BYXlx6xB378nNCOirojZVxISXgCYBQ3lMU8Vd1NySeo?=
- =?us-ascii?Q?nHsFVhLzT6MyLkKrmgAyBESVCCu4u0vU7bhLRotGOAYT/0iBEhIxwCnB999K?=
- =?us-ascii?Q?WkWMDUQ1t53c/pqADiipdYlrHDSCR2G1K6gOFXqMj/PknGySIxXaENN6AWuv?=
- =?us-ascii?Q?bplTCnv1YQ32gie0EHeL18YERMznztaIpgnrRkExYgBj6Cb+kPH7mzebI34Z?=
- =?us-ascii?Q?tFO+Y5/OVQuqYkFEqnCWSYwkkwsg3j8J/kZi3FUCtej1AfVFtAyeTdGn2QX7?=
- =?us-ascii?Q?P+6r+SaKfqgA6oTgbOanxJ+L3cYvoA6F1zplktPocdFGn0lRgx6DQ21hLPtB?=
- =?us-ascii?Q?qi8vnN2TuVnllKVUdDJEo5eJWVeisajhle2RX0xuMEe3sl5dqpSi+3Hoq4aS?=
- =?us-ascii?Q?3XBXZDZmIJU/FGgE3D/zh/ZQlR8vng8UJLHdTPMXL1PAtHPuCFcn5/gnbzaL?=
- =?us-ascii?Q?C/sIKdpOYXA588oCikv8Y18R8krnV3BLEXqMZLmx+xLBSrJ6+67fWoUUTRzl?=
- =?us-ascii?Q?0EtOYwA478XNYNi8073lNBkRFETyDvQxvctnsBXpo3uf7z3esfrjC3YgWA?=
- =?us-ascii?Q?=3D=3D?=
+	=?us-ascii?Q?2ApNc6xN34Eax+DAFVdymxL5I1GNbgOYkOT1YQohFOhrSmGbKHTuwzpunf0P?=
+ =?us-ascii?Q?IRTdnF//X7j1mLDwm6TbM6AoFr0Y+aWN6UkvZruYwG/ZGgn+XxQjltEfI14v?=
+ =?us-ascii?Q?7FD/hvx9iVRF4DOaxU7LNW7v0p0WwogfrF+fFWSl52gKl+2ICYOMRcI8M7uL?=
+ =?us-ascii?Q?nVA0nly+R3fDfHWkLecVkdNdG+eIdMM+70CVl3bC1Mp+CRQiw8tcw4X9ckaa?=
+ =?us-ascii?Q?Zqzbf5r4zwKkNmTsSxasji5aMMwhSirZvpIjhxU5IS8U21+/YWgykEJjxjEK?=
+ =?us-ascii?Q?7PyvzXViqQzpKLQkd4p9yd5qD9SU3YJL/OP2yJzqI1YipYnabTS5v0IsCoKn?=
+ =?us-ascii?Q?8H88On78TT8WnL6VLTE4POAC/tf4H5nqBOKOG/XlmJci0n66QtRsSXstF+T0?=
+ =?us-ascii?Q?ZKVvSI7x8RCJ+MKqoBx5oOktE/+2+GXnl0Xuo3cuVL1cXt0kiGLd8lwgAIf9?=
+ =?us-ascii?Q?ApUGVklPTtKjEzoTabNDaqb4y7+c3FFOGDEOZbydNb5zC+7PuJ/qXnudv7r8?=
+ =?us-ascii?Q?XqfnruuD8x458iEN3a1cpt+ZHSwATtJ7xJhDHaPFPlxHrEaGm07M4TiLHM6j?=
+ =?us-ascii?Q?fAz2OQUeKLWNhbrjYUVOuW2rtSv9iglmoN41M+bv95E/5t6dGcwBn/KEVKhi?=
+ =?us-ascii?Q?C/5fWGouxFqsSEm9V7nF2UM0zKYtYMueIFSqJZlfwSSzEVd3erMMGvdQhdDw?=
+ =?us-ascii?Q?19QY0M000c2e3txhtP9jTMws9SphR/qGUrwgKqVh/FzSHA3kKVDXVVbigrA/?=
+ =?us-ascii?Q?OhaXkCULw/ghzqjt/ae1u1D6oYCz/eWA+RWi9osiYmodZAMjXkgPPMhjjw+3?=
+ =?us-ascii?Q?PB4hE3AM2DcedbrJ9o4twstNLa0tveF/P0yNaUoeconJJ3lUK6UZ/t2EAPqO?=
+ =?us-ascii?Q?3NpS+Hrebd4/j7wzoEsfDsFBo88KKi72GjAlA4e5ad44/1MDoQEcArE6CmFK?=
+ =?us-ascii?Q?sg/VIUt/O4fnuJ3fGiFUfTq8jh0+9RBje6luIstZQGUpHqEIatSgfQBTeP4Q?=
+ =?us-ascii?Q?ZucfCoOpakQSvo2Ul3D1GODUZ84bJVO42DDxHUNFWqlGTWcGmSynHDZsQQeJ?=
+ =?us-ascii?Q?iPcZJ5rEeZ7UjgXU7tvk6nUMwJ96xIaNDteJXWZgF/zmFFytCGvou4Uuz0ag?=
+ =?us-ascii?Q?9PmMt+KlqsVmRT911N4otlt0SZuNzf+b0KUiTbx8W7MyeJFMcFjXUjrqs8VU?=
+ =?us-ascii?Q?Vn+K1fH6qxET52PT+iytN1kELBnvDz7eZedJxTbP/+BY85cRfvUWj60GDxAJ?=
+ =?us-ascii?Q?1u3aBl/BTrVB5ArOklEaBeSHJaMSrECG98xTjzQkc+AmpupGMFBjFYJ3VAFO?=
+ =?us-ascii?Q?ZtPNyDHPRaOM4rDeB4n1h5gMTJjf8WzdvINOIkZZbR3soWk0B0bwM6nPJp+3?=
+ =?us-ascii?Q?N5hO1ZA53zV67VL+1woR/Pv4TQ2gGOw8pnD9KgBQIcmZ2tX8QRd5Z8o37Rd6?=
+ =?us-ascii?Q?+rMuy561JkV65xxQkFGxulkmh5XMmclgMeNWL/gLWH+uZKT1gWZUfg=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(61400799027)(376014)(82310400026)(7053199007);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 14:53:03.1094
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(7416014)(366016)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ipCCtarvW3KFXwNnu00yPOaT3S10GIpDw7S4uM7uVzcDItFDZhLEZPnI8omg?=
+ =?us-ascii?Q?5inWpQRiSTq2aiz6ihl0gZImOmUGQGHgHI+gIfDBig37b+XkH0VaeYBv9HFr?=
+ =?us-ascii?Q?/+Sr8dQaBdMSAawlkYTc4GuytAS7oTIr2yxYOQ+5+XmjP5XJFsLFCNiwsRSy?=
+ =?us-ascii?Q?fVOhleTwAfcZICknARweOgT+WA6BZ24uDSeZjuzFfYURQE0MzvmfS2CODK1q?=
+ =?us-ascii?Q?eY5PwsJcwRHazgiBiIgPr0T0bs6IK7g6xplKv1Mqy+PjqVwLqbrnh0EjmeCp?=
+ =?us-ascii?Q?Owttjg5261qVRojZynoMxo5JSUhP6CoO9hBBDTFRVA2LLbOi0b6bnP+ViNSV?=
+ =?us-ascii?Q?M2WDISwIa0OjNtTh2bFGuuP4l9bfyHS84cl4tBlYgefWNieM189s6qSIIQDM?=
+ =?us-ascii?Q?zeZlBjNgiU9M0FTLAez6EKK4m96zwwrnaEE3aoPZqgtMQyGsxQJlwJYbDsq1?=
+ =?us-ascii?Q?t3mwXKLFhv15E1z/CsbF4zbBHrOCHJMK18z64CP6dV2IMVQQIf6PqfuILe4e?=
+ =?us-ascii?Q?Q1z5ngTgBLdVsW6Grj0M96h3VloY9cwwvwZr9BZ3LksXtUPnv7uLCDKGCkE5?=
+ =?us-ascii?Q?yQXbnvigA3SHReiF1DyDQukUHuKLCsUvdl41ZyGtGiP7uQXqeyMLApmXfg4P?=
+ =?us-ascii?Q?5uRJRNEgs+ofIVR+AKJp/8pcZnVGLwG9ThsA4IP+xZRBzq7wr7LOJlWpHNxP?=
+ =?us-ascii?Q?Qxhfwy7E2mx0UDSDI2xzgZ1J9N8i4e/WDhYB5SDpsWZfMP8wYSzmftuqYqKU?=
+ =?us-ascii?Q?oYcfu+FDp6Eh1+keZ1Nu9ZlRN/vF6D866lHX6Aby3lmAcMkqGMJ8nN+6GCne?=
+ =?us-ascii?Q?AAq3feZPjHxDZlRS6EZk7Ze3HGcpfUhLI17k2ZG9o97LERkH9l5xexQ/qeYh?=
+ =?us-ascii?Q?4O/TIOFx5JG4uxZgVa6MD9V0WhgGrDoQlLbGoZYplsPsAMS+UDFtGUV+MPcY?=
+ =?us-ascii?Q?wssDdoqAVWdOdlNt3ww0CJv3bAyf1VM1fhGUQZM5C96EGa1A9bvfLIj3xuG0?=
+ =?us-ascii?Q?JJhQ+lLMgcpyqhCPmHYv0zf6vIYPauoVCMWfppwtcWniVnQLMQrTT6cxdeWa?=
+ =?us-ascii?Q?nptdSQ7ozR3RiEnkLHwKiWYS9VjYbOD9KSJv/u50dRs/mIh04vbHdvOUEoEg?=
+ =?us-ascii?Q?uaTvyb/i3wzIzjoJ8Yuc70TeSc50Iu4s6dSFOiBxHWGGMKEGiTJl56eGwIvV?=
+ =?us-ascii?Q?3y5MTVCF/LGM8qSfZGKU74ykypHGnuRYEGRqHa8ouO58d0yci5PD5ii53Q66?=
+ =?us-ascii?Q?aosrCNDcZ/C7zvejJR92TerPCBuUE1o3xBFJaaj2jE7pWxYslIO8+pBOdH1b?=
+ =?us-ascii?Q?60Sif4iZyJ8mCu8oWj2BjNmQshQO9eoWUHfsUydf7znZE0kyQ6wB52ueFv3t?=
+ =?us-ascii?Q?U6Zr/h4eDIOxad5s7DE38hTdrbqg7u2N6DzuW0lSMWTRtvuHEKguq9fkm2jf?=
+ =?us-ascii?Q?tD5XHXqN9LDBoUD3fIzGx8zOflbe+zBymDMVF3//o/bURf6qcf7oH9L3C8l4?=
+ =?us-ascii?Q?RfuBhZ/DcHAwt8pbKFkUHtvdhb5TmJf+AzWTb3Gx1tYaj6X+7T1uyOzN8CBy?=
+ =?us-ascii?Q?ee/5aybHDVWAiv1staRJKCsxtq/lYZV0hiZwcGxx?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0010268a-66d3-47f6-5932-08ddaa8a1077
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 14:53:31.6404
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56881f84-e119-4af1-2829-08ddaa89ffbf
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000026C3.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR19MB4552
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDEwNyBTYWx0ZWRfX4iwQPArefw3V 8mi7dQ2SA8nhwMvzNeE2bAXipWSk2/33lDUeCVHoNYtgWZiBtjUpTSUQHLynnL7AlkehBWkSng1 BzThJJHHIj6rOaXhBgZqpbm94zpzP+v0C23WMQew14ORYmStSPO7Ion6is5mC9rQKYRHvPL0bNX
- a0JHAncKIUWbLZDZ8EVVePp6zgguAAyi3mAX9+gSvHyNv3YaCiOhhljanJHW/iMFeCKkCWl+v/y LsCuhMawfwSDcssVJH1tiDiF5jRYyFd1EldjEg7H8imfZXbUSmHFP1OXcvSWWlrR9oHAICsmvDo fb2ERMeM58bTbUAzdhbumD2lYVHVE0n/vy0pMMqlq40joYXUSqTxwBe3OBX0ZqxCC4iIPw1vkVG
- Qh97ewjWzOGtEfdko9y73Uhl9hfS9hdurbVVnxESiC2bikLkf0NDt5twM6c1fNMkVUnwm9cv
-X-Authority-Analysis: v=2.4 cv=coCbk04i c=1 sm=1 tr=0 ts=684c3b54 cx=c_pps a=V1iWK7uDBm2tx9d+rKTUiQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=6IFa9wvqVegA:10
- a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=NEAV23lmAAAA:8 a=w1d2syhTAAAA:8 a=pGLkceISAAAA:8 a=qQBMiwKV7t5ryLTBdsoA:9
-X-Proofpoint-ORIG-GUID: 3yzoX3ZTherJoddyyJjSRCQPGC-lDhMU
-X-Proofpoint-GUID: 3yzoX3ZTherJoddyyJjSRCQPGC-lDhMU
-X-Proofpoint-Spam-Reason: safe
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5tWY9vkbayHc+9Y4Ti7MqB+gwDYMaNvyP70JYOplpEtQFSw5HA0JulG0othzYwNMTSsPK8QBpmqdXWnXZ+2maw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7567
 
-The GA605K has similar audio hardware to the GA403U so apply the
-same quirk.
+On Thu, Jun 12, 2025 at 09:50:59PM +0300, Dan Carpenter wrote:
+> From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+>
+> Enable USB driver for s32g2.  This chip has an errata ERR050474,
 
-Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
-Tested-by: Timofey Titovets <nefelim4ag@gmail.com>
-Link: https://github.com/alsa-project/alsa-ucm-conf/issues/578
----
- sound/pci/hda/patch_realtek.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Can you provide errata link here?
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 7db62477b785..3df6f4ecc203 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -8036,6 +8036,8 @@ enum {
- 	ALC294_FIXUP_ASUS_CS35L41_SPI_2,
- 	ALC274_FIXUP_HP_AIO_BIND_DACS,
- 	ALC287_FIXUP_PREDATOR_SPK_CS35L41_I2C_2,
-+	ALC285_FIXUP_ASUS_GA605K_HEADSET_MIC,
-+	ALC285_FIXUP_ASUS_GA605K_I2C_SPEAKER2_TO_DAC1,
- };
- 
- /* A special fixup for Lenovo C940 and Yoga Duet 7;
-@@ -10424,6 +10426,20 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc274_fixup_hp_aio_bind_dacs,
- 	},
-+	[ALC285_FIXUP_ASUS_GA605K_HEADSET_MIC] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x03a11050 },
-+			{ 0x1b, 0x03a11c30 },
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC285_FIXUP_ASUS_GA605K_I2C_SPEAKER2_TO_DAC1
-+	},
-+	[ALC285_FIXUP_ASUS_GA605K_I2C_SPEAKER2_TO_DAC1] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_speaker2_to_dac1,
-+	},
- };
- 
- static const struct hda_quirk alc269_fixup_tbl[] = {
-@@ -10942,6 +10958,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1043, 0x12e0, "ASUS X541SA", ALC256_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x12f0, "ASUS X541UV", ALC256_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x1313, "Asus K42JZ", ALC269VB_FIXUP_ASUS_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1043, 0x1314, "ASUS GA605K", ALC285_FIXUP_ASUS_GA605K_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x13b0, "ASUS Z550SA", ALC256_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
- 	SND_PCI_QUIRK(0x1043, 0x1433, "ASUS GX650PY/PZ/PV/PU/PYV/PZV/PIV/PVV", ALC285_FIXUP_ASUS_I2C_HEADSET_MIC),
--- 
-2.43.0
-
+> so we need to set S32G_UCMALLBE for it to handle packages which
+> aren't 4 byte aligned correctly.
+>
+> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> Changes since v1:
+> * Update the copyright
+> * Use the .power_lost_check callback.
+>
+>  drivers/usb/chipidea/ci_hdrc_imx.c |  6 +++
+>  drivers/usb/chipidea/usbmisc_imx.c | 74 ++++++++++++++++++++++++++++++
+>  2 files changed, 80 insertions(+)
+>
+> diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+> index 780f4d151345..e8c847eab8e3 100644
+> --- a/drivers/usb/chipidea/ci_hdrc_imx.c
+> +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0+
+>  /*
+>   * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright 2025 NXP
+>   * Copyright (C) 2012 Marek Vasut <marex@denx.de>
+>   * on behalf of DENX Software Engineering GmbH
+>   */
+> @@ -78,6 +79,10 @@ static const struct ci_hdrc_imx_platform_flag imx8ulp_usb_data = {
+>  		CI_HDRC_HAS_PORTSC_PEC_MISSED,
+>  };
+>
+> +static const struct ci_hdrc_imx_platform_flag s32g_usb_data = {
+> +	.flags = CI_HDRC_DISABLE_HOST_STREAMING,
+> +};
+> +
+>  static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
+>  	{ .compatible = "fsl,imx23-usb", .data = &imx23_usb_data},
+>  	{ .compatible = "fsl,imx28-usb", .data = &imx28_usb_data},
+> @@ -89,6 +94,7 @@ static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
+>  	{ .compatible = "fsl,imx7d-usb", .data = &imx7d_usb_data},
+>  	{ .compatible = "fsl,imx7ulp-usb", .data = &imx7ulp_usb_data},
+>  	{ .compatible = "fsl,imx8ulp-usb", .data = &imx8ulp_usb_data},
+> +	{ .compatible = "nxp,s32g2-usb", .data = &s32g_usb_data},
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, ci_hdrc_imx_dt_ids);
+> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+> index 118b9a68496b..67ff073ad806 100644
+> --- a/drivers/usb/chipidea/usbmisc_imx.c
+> +++ b/drivers/usb/chipidea/usbmisc_imx.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0+
+>  /*
+>   * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright 2025 NXP
+>   */
+>
+>  #include <linux/module.h>
+> @@ -155,6 +156,18 @@
+>  					 BLKCTL_OTG_VBUS_WAKEUP_EN | \
+>  					 BLKCTL_OTG_DPDM_WAKEUP_EN)
+>
+> +#define S32G_WAKEUP_IE		BIT(0)
+> +#define S32G_CORE_IE		BIT(1)
+> +#define S32G_PWRFLTEN		BIT(7)
+> +#define S32G_WAKEUPCTRL		BIT(10)
+> +#define S32G_WAKEUPEN		BIT(11)
+> +
+> +/* Workaround errata ERR050474 (handle packages that aren't 4 byte aligned) */
+> +#define S32G_UCMALLBE		BIT(15)
+> +
+> +#define S32G_WAKEUP_BITS (S32G_WAKEUP_IE | S32G_CORE_IE | S32G_WAKEUPEN | \
+> +			  S32G_WAKEUPCTRL)
+> +
+>  struct usbmisc_ops {
+>  	/* It's called once when probe a usb device */
+>  	int (*init)(struct imx_usbmisc_data *data);
+> @@ -614,6 +627,52 @@ static int usbmisc_vf610_init(struct imx_usbmisc_data *data)
+>  	return 0;
+>  }
+>
+> +static int usbmisc_s32g_set_wakeup(struct imx_usbmisc_data *data, bool enabled)
+> +{
+> +	struct imx_usbmisc *usbmisc = dev_get_drvdata(data->dev);
+> +	unsigned long flags;
+> +	u32 reg;
+> +
+> +	spin_lock_irqsave(&usbmisc->lock, flags);
+> +
+> +	reg = readl(usbmisc->base);
+> +	if (enabled)
+> +		reg |= S32G_WAKEUP_BITS;
+> +	else
+> +		reg &= ~S32G_WAKEUP_BITS;
+> +
+> +	writel(reg, usbmisc->base);
+> +	spin_unlock_irqrestore(&usbmisc->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int usbmisc_s32g_init(struct imx_usbmisc_data *data, u32 extra_flags)
+> +{
+> +	struct imx_usbmisc *usbmisc = dev_get_drvdata(data->dev);
+> +	unsigned long flags;
+> +	u32 reg;
+> +
+> +	spin_lock_irqsave(&usbmisc->lock, flags);
+> +
+> +	reg = readl(usbmisc->base);
+> +
+> +	reg |= S32G_PWRFLTEN;
+> +	reg |= extra_flags;
+> +
+> +	writel(reg, usbmisc->base);
+> +
+> +	spin_unlock_irqrestore(&usbmisc->lock, flags);
+> +	usbmisc_s32g_set_wakeup(data, false);
+> +
+> +	return 0;
+> +}
+> +
+> +static int usbmisc_s32g2_init(struct imx_usbmisc_data *data)
+> +{
+> +	return usbmisc_s32g_init(data, S32G_UCMALLBE);
+> +}
+> +
+>  static int usbmisc_imx7d_set_wakeup
+>  	(struct imx_usbmisc_data *data, bool enabled)
+>  {
+> @@ -1033,6 +1092,11 @@ static int usbmisc_imx6sx_power_lost_check(struct imx_usbmisc_data *data)
+>  		return 0;
+>  }
+>
+> +static int usbmisc_s32g_power_lost_check(struct imx_usbmisc_data *data)
+> +{
+> +	return 1;
+> +}
+> +
+>  static u32 usbmisc_blkctl_wakeup_setting(struct imx_usbmisc_data *data)
+>  {
+>  	u32 wakeup_setting = BLKCTL_WAKEUP_SOURCE;
+> @@ -1131,6 +1195,12 @@ static const struct usbmisc_ops imx95_usbmisc_ops = {
+>  	.vbus_comparator_on = usbmisc_imx7d_vbus_comparator_on,
+>  };
+>
+> +static const struct usbmisc_ops s32g2_usbmisc_ops = {
+> +	.init = usbmisc_s32g2_init,
+> +	.set_wakeup = usbmisc_s32g_set_wakeup,
+> +	.power_lost_check = usbmisc_s32g_power_lost_check,
+> +};
+> +
+>  static inline bool is_imx53_usbmisc(struct imx_usbmisc_data *data)
+>  {
+>  	struct imx_usbmisc *usbmisc = dev_get_drvdata(data->dev);
+> @@ -1356,6 +1426,10 @@ static const struct of_device_id usbmisc_imx_dt_ids[] = {
+>  		.compatible = "fsl,imx95-usbmisc",
+>  		.data = &imx95_usbmisc_ops,
+>  	},
+> +	{
+> +		.compatible = "nxp,s32g2-usbmisc",
+> +		.data = &s32g2_usbmisc_ops,
+> +	},
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, usbmisc_imx_dt_ids);
+> --
+> 2.47.2
+>
