@@ -1,99 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F36A54670;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC9A347DD;
 	Fri, 13 Jun 2025 12:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749819232; cv=none; b=azv7nqu8Xclr+NYRZIL2jlj0X5Q8JvfHlyQMc3OQ5M+qWg9BHozJR8WpCXsGbbQKEvzIbSL2GAD5PgAjZXDLkOwaIM3DXeQiAaBIFjmq5pl4T5RPX0pvDKSBDmZNLG/16lTNPTgx0C7fGEVCeDdo/A9rIk2yOP64+M3Kzg9kl7k=
+	t=1749819234; cv=none; b=Q4v2tvKWOG2Ilvn3XK3DJT/581+IRIsSORmLnsqIjgWE3F/5ptu02lTCyVIHWeLDqYmbCkiwL8PlDhUx0L/IBFUIRkyOXD9YmtcSv7FM6GAZaaKcldazBnJIZYKlS/FbQvdqC2r3g0rL+DTnFTmrS/YARHBvVFuz44dWcVx5QH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749819232; c=relaxed/simple;
-	bh=9NILGPi+IgsNtn81oQYyesjFnsHS92zOjt5H9tpm4W4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YgUV7WoJYtYn1BcSzdxpsyiIjiDAeE+cGQQUxPYTR0jAv+Jz0NJOVxEM9FIg4F22OMb8AFN6IgFnOjRh8If/GTwbePZzZnDgq2YtEZBwwynWKHOWgR3IQ2U78kByZKdDNlRZcxLWk99pOOdTo1tftLid/AEqb0XjOUI4xYQEh2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0RVRQl8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749819234; c=relaxed/simple;
+	bh=xsyK3DDIp1rgLxrUI+jVN6D+Sh2hh46tvv4RC/83r74=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FBNIqPkccJQf55a4MsJMzbwO8nYgO26h8e/Hc7Lb/DMHOndqLOZoTgMQeDndn0GOlSrRRUECsYonAh7VX8ECHO2MpNBF2pgD8a/ThLWQjHU7qdrwBCVIoi4pgyhBBkKKfMu7K6INihmzxp0ZoCPKwAlY4LYo5xFrEtDI2M9+Bs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FeLqN/GS; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0RVRQl8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9940DC4CEE3;
-	Fri, 13 Jun 2025 12:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749819231;
-	bh=9NILGPi+IgsNtn81oQYyesjFnsHS92zOjt5H9tpm4W4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=m0RVRQl8cpn/vhBcA5bbs+XJt5w1gkbye0vIjR3iei/AbcVq7md2bmYkOWjXT8Ffg
-	 Kuod1g3bSdyhlGPqfpmlOth0iU5bxSebpLlXyq7JhxpgVVln9n+n8cKBMCauhjPx+7
-	 bAX6PX5FgWOhK4tIHzcNUQorZaXeXZ5vd5pdYeVDfXAzARVQcpLbOP71l9SD9W2ugZ
-	 ZwyVP2uy9OyzMt94KQzCJ6NXQIdFUME2F/FcFJj+4ggyq1ravIXSDENoNpzG3b11yY
-	 naauGWtr7HIzpOgG7cvPDSbYSUl8R0wvpWQqYBsUCPUDKiMDr9kDkdmpKlZiuUAYYm
-	 KgCNLWYnWTroA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  "Bjorn Helgaas" <bhelgaas@google.com>,
-  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  "Greg
- Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  "Tamir Duberstein" <tamird@gmail.com>,  "Viresh Kumar"
- <viresh.kumar@linaro.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] rust: types: require
- `ForeignOwnable::into_foreign` return non-null
-In-Reply-To: <DAKN1HO7WUXY.QS098VXTDICU@kernel.org> (Benno Lossin's message of
-	"Thu, 12 Jun 2025 16:52:15 +0200")
-References: <20250612-pointed-to-v3-0-b009006d86a1@kernel.org>
-	<20250612-pointed-to-v3-2-b009006d86a1@kernel.org>
-	<ftVceLHmGCX4uHfwZ7aGMOkv5d4ALLIYrsQarySS4pU1gDD6qnxOY3rArV9Kp0tazReT-IfOQGGpK-jNthUKkA==@protonmail.internalid>
-	<DAKN1HO7WUXY.QS098VXTDICU@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Fri, 13 Jun 2025 14:53:42 +0200
-Message-ID: <87sek3by5l.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FeLqN/GS"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-407a6c6a6d4so662619b6e.1;
+        Fri, 13 Jun 2025 05:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749819232; x=1750424032; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9uK7NfXjMZE9zyAnGAVVRnIGOP/qUCD+jt4heNuFuQs=;
+        b=FeLqN/GS2KD26DEN+Vt45XA4RqnQxDOxHo3/3vi1jaa3HClIXhOXgW/TMgQE/yTRwA
+         vyADfkfJl9ePvVZTEYNhLw7xLpz+SUl9ifZ6BUST5yrPp0nVRn47p2qlb0gzj4y0RRce
+         /qwgYznWGVOTdC07kFbcKWTAz26lK/61ictgbrteDDfNr1D/Znt8MWx4ti5WxBe50AYg
+         jgInfiy4jhKfMOXEveEAd8Rr5JJUrtMrUEgdboDc9mUDiNWhhGQUBOXXqUVSA7uTRYo7
+         /WtalYvTuds64RrAw++oxhM4UNjklODYlW3+0HtSf5gMn7b6C+aGJiDDIsUNuWdE3bYw
+         sRRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749819232; x=1750424032;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9uK7NfXjMZE9zyAnGAVVRnIGOP/qUCD+jt4heNuFuQs=;
+        b=GHnv9WfCdBpeE2gtEBPhs1NeiYJ9ily+4EThHb2i9I8NitzEDEKo+qNecyk3FMjtAn
+         f/+T10RtS0cG4uNsWHdM5ppHUdVtUpaSsjmP3jgVl95uXtq38NvV0qGwgPc47bUu38hI
+         eiwIIOyrdQZS5KTd/3NI9GTjFgVKJbI4Dmg4cU4qOoW5W4XeTQqVTJx3FNTI1NnSoxxs
+         dDPqqLh+2AVY7bsIPApoM1CC6Hfocz7H9kmicPQeQGeTNhdMBmkQjP4faVaJB4gJ7ZFm
+         M3ZGZST7YzVUPSaSp8ohRsU7y5QBtr71YWg5Nb0PGr836AwgNIsIqmEJYf5QkW7APmhW
+         pX6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUd7h0FT+t6Y0ldHEl7tXiQYorjr1YF59hm8jHYm9RbEemD836CMxKiKdEpUHzNIQQHikaxnjPEgF1MK58=@vger.kernel.org, AJvYcCWZfoGtjHuGcIvzGymiNEBujgt+REPRRZnmylMC+O2ak7gG5bS/bgHgOGcvAF2dHJZA2tgSUqHA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxReKGjMDaRetfyMxZj6k6LTDu4m3gYEBs1A0dTPCbO1YyCP+N0
+	sHakQxAiGvYxNLpWpXtUdTtsPq7lKyIMO101V8H0gXLg4zvkti9BA4yL0HiWuES4gBuqkIBMLdK
+	EsuW55LrjAXQtmSxnMm4Ofn4TQwGyb8Q=
+X-Gm-Gg: ASbGncsKqwT88ql9sruHK+mOf8P8B/GuxUaexwF78AGub4czwNa8bzbbE548TX80I+T
+	1qL77QRTbF4oYsxfzi6FLOB93jfhNC5vWvXEu09x5pf6E/Lp36ERN2bFh4mS7vGk7ct47oy1uX9
+	opGZiXIQaEec/urBQ7JWlPF3zSM8nKxF0odmx6f/9Q3y5zui+pNVUfnfNQMrDBg1Q+MavPjbocv
+	g==
+X-Google-Smtp-Source: AGHT+IG4oeSmNbFar9MLWvDxuCLCzS1cvjPlujNGI66zalqzF9G7WhJe/7gNkuUgdZQZqQaDPQKfIQiwXIfWMIU4QXY=
+X-Received: by 2002:a05:6808:4fe9:b0:404:dd07:9703 with SMTP id
+ 5614622812f47-40a723a0827mr2330242b6e.26.1749819231675; Fri, 13 Jun 2025
+ 05:53:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <cover.1749723671.git.mchehab+huawei@kernel.org>
+ <08ac4b3457b99037c7ec91d7a2589d4c820fd63a.1749723671.git.mchehab+huawei@kernel.org>
+ <m2y0tvnb0e.fsf@gmail.com> <20250613144014.5ae14ae0@foz.lan>
+In-Reply-To: <20250613144014.5ae14ae0@foz.lan>
+From: Donald Hunter <donald.hunter@gmail.com>
+Date: Fri, 13 Jun 2025 13:53:40 +0100
+X-Gm-Features: AX0GCFueKdzQLScURrrCaq--58okmj1NFh4Gy-SFqVk9_ecMKypyt0JhaFhZIuE
+Message-ID: <CAD4GDZwLW0yogWitN5vbfkDhpZZ=0YCnDh+taRzwnv_CY9Miag@mail.gmail.com>
+Subject: Re: [PATCH v2 06/12] scripts: lib: netlink_yml_parser.py: use classes
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Akira Yokosawa <akiyks@gmail.com>, Breno Leitao <leitao@debian.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Ignacio Encinas Rubio <ignacio@iencinas.com>, Jan Stancek <jstancek@redhat.com>, 
+	Marco Elver <elver@google.com>, Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org, 
+	stern@rowland.harvard.edu
+Content-Type: text/plain; charset="UTF-8"
 
-"Benno Lossin" <lossin@kernel.org> writes:
-
-> On Thu Jun 12, 2025 at 3:09 PM CEST, Andreas Hindborg wrote:
->> The intended implementations of `ForeignOwnable` will not return null
->> pointers from `into_foreign`, as this would render the implementation of
->> `try_from_foreign` useless. Current users of `ForeignOwnable` rely on
->> `into_foreign` returning non-null pointers. So require `into_foreign` to
->> return non-null pointers.
->>
->> Suggested-by: Benno Lossin <lossin@kernel.org>
->> Suggested-by: Alice Ryhl <aliceryhl@google.com>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->> ---
->>  rust/kernel/types.rs | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->> index c156808a78d3..63a2559a545f 100644
->> --- a/rust/kernel/types.rs
->> +++ b/rust/kernel/types.rs
->> @@ -43,6 +43,7 @@ pub unsafe trait ForeignOwnable: Sized {
->>      /// # Guarantees
->>      ///
->>      /// - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN`].
->> +    /// - The returned pointer is not null.
+On Fri, 13 Jun 2025 at 13:40, Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
 >
-> This also needs to be mentioned in the `Safety` section of this trait.
-> Alternatively you can put "Implementers must ensure the guarantees on
-> [`into_foreign`] are upheld." or similar.
+> Em Fri, 13 Jun 2025 12:20:33 +0100
+> Donald Hunter <donald.hunter@gmail.com> escreveu:
+>
+> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> >
+> > > As we'll be importing netlink parser into a Sphinx extension,
+> > > move all functions and global variables inside two classes:
+> > >
+> > > - RstFormatters, containing ReST formatter logic, which are
+> > >   YAML independent;
+> > > - NetlinkYamlParser: contains the actual parser classes. That's
+> > >   the only class that needs to be imported by the script or by
+> > >   a Sphinx extension.
+> >
+> > I suggest a third class for the doc generator that is separate from the
+> > yaml parsing.
+>
+> Do you mean moving those two (or three? [*]) methods to a new class?
+>
+>     def parse_yaml(self, obj: Dict[str, Any]) -> str:
+>     def parse_yaml_file(self, filename: str) -> str:
+>     def generate_main_index_rst(self, output: str, index_dir: str) -> None:
+>
+> Also, how should I name it to avoid confusion with NetlinkYamlParser?
+> Maybe YnlParser?
 
-Which is exactly what I did :)
+On second thoughts, I see that the rst generation is actually spread
+through all the parse_* methods so they are all related to doc generation.
 
+I suggest putting all the parse_* methods into a class called
+YnlDocGenerator, so just the 2 classes.
 
-Best regards,
-Andreas Hindborg
+And I'm hoping that generate_main_index_rst can be removed.
 
+> [*] generate_main_index_rst is probably deprecated. eventually
+>     we may drop it or keep it just at the command line stript.
+>
+> > The yaml parsing should really be refactored to reuse
+> > tools/net/ynl/pyynl/lib/nlspec.py at some point.
+>
+> Makes sense, but such change is out of the scope of this series.
 
+Agreed
 
+Thanks,
+Donald.
