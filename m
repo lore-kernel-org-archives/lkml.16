@@ -1,209 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13123595A
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C006F3595A;
+	Fri, 13 Jun 2025 19:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749842128; cv=none; b=Ny7buOHS7SCzo6NwQlQVrw9R5VyJbUwpmgoWwFmERU2Y+t6JyzvHUZI/mQDP36g7TRfl9p6QJB/iOqJaKCfX8lsOKhYLlTPb4Fu9oaq2awRaKbzNrFX3oe+uZz8HpEFcRGm2PO3c1xEUzhSuWQIzGlEWt57CCfpmjIfI7zyrb1c=
+	t=1749842197; cv=none; b=Lhw5bGgSaF4c2dHjhkKY50nnrdlJCqTKBAA2RZyYwhJnICMU1z5XKwWaeFg7BZx6ydeB09tDYFnaGmUlZ7f8cm7iYfQiPV1yD7PGz9Rdxz3uDe4DJ2uH1xBJd07mGlqsOHkjyvE7yw6J0BrmPWwNPxspLtcjpipJD0ETgv0DwcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749842128; c=relaxed/simple;
-	bh=9SnSyYVg0kedc8JO1gYNGqXb9FJt5NkPMvIQXigRwus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dx8jZqMi9LOsyOsfbv2LTiR6xQ7Md08kirOgxLe02EY1BNzV2DMJ+lz98SuJZ6qPf5O5vhZ0guq0OAGVtylZ13z6MkVJ8zfiEJ+8GcN8GjKDqLFpwKwOsY77Kaz6XLl0o3WGj+h1+PIbEKBXqCY2b4XRpC0DICu5AXaSKCpE7kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jDB/Mqrf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749842197; c=relaxed/simple;
+	bh=9UpM1Ni+bJU9NoQyrUI1I313v8+VKBabwKwOdKSP5YQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LNXa283S7bO/7348HFq0pzfq8/OCmwvH/yaTU2gN/nSPzlKt6gVNROfQ4Yh6UD7Co3uSw0YBCQk5jEMotZV4JygUeOAqQFI0S8UvbuyYZHfPwsn/iv1awH33a3sPbaDIneMTUe6Wma7WwsXyE1AX44VBb1QS+LwEWdfPZDYHCPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VCt3JuwL; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jDB/Mqrf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749842125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VJfPFlcDvR8fJBRiXniq1f1GzMtYJTiekQUbf2DHnUc=;
-	b=jDB/Mqrfw2O0iLp1WFKdfkrN7PNDFj7KoHKzOVcW03DGFJXbdVh2EgcoJSaJUOk49jRTUu
-	jFze//puEyj/fIHCWkkLoWbv6nNzqKZTR9sOcFGLGqMQbXSmFPp49htCaRkbobTL3KKtpw
-	iuOWp8rhPrkXWzS3iw9y07Qr0UuvUKA=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-8RlyaNb7NDG_rm0SSJCtOw-1; Fri, 13 Jun 2025 15:15:24 -0400
-X-MC-Unique: 8RlyaNb7NDG_rm0SSJCtOw-1
-X-Mimecast-MFC-AGG-ID: 8RlyaNb7NDG_rm0SSJCtOw_1749842124
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d2107d6b30so374141085a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:15:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749842124; x=1750446924;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VJfPFlcDvR8fJBRiXniq1f1GzMtYJTiekQUbf2DHnUc=;
-        b=aodYNkGp8yubgVQ97u3VvK+pS2NQyb7zPgqSIr+YX7w9+Umzt1wP7ZpaFLqMdrfLMR
-         EWTeZiH3tg/RNaprSwY2XequoHNhAkJj39m8IROWiZE2YvXiVRU3dUCe1eMlqgdmgFrQ
-         oi3hsajQr/Z5CuXhjIK9y0vVNrLV6gBQ8jOjo7rkiU22sRaQW5MaDnjGNC9KwD4Gmg+l
-         1UNkQGe6yLz1Y5w5KmgdUjlAnMWUn0Oj8MLVYVVKxsPxEPFNORjj/Xl6LD3bMNNeVTpH
-         d8IlFuOmQ7N1+y9qvnpBkXO37dqpCHWRi/DEVz+hq8nICnqv6CRj3Ks4RUvWcOUopTuL
-         7dEw==
-X-Gm-Message-State: AOJu0YyZPt8cioO16rNAb2Ihy/DQxJhKzPLwzGR41DCucEkhsP3W6NRx
-	DmrmPZz0druG+iVP4UmjoV1x0GyxKshwqmCCFuIUCNZO6B+6MGTFUG0B1E92pRj/kDR/FePGg81
-	IS8Ze8Qe4/8q6Hcfhz95cuK9DxX8yesH1+uDT85b32GZl1xp2xRD1DdmFCvlYrtWN+A==
-X-Gm-Gg: ASbGnctWR17w+VXaDVs1Oa1MFMhamMEE/EtOUjD31RgbBj42vIRdNcUtf+H7pddPERF
-	3etIt/Ebf/995Pp4QCN8qcD6FArtfy434h960eRf+KxVSc8s8oQNduQjylFioknCC20Q8F8WORk
-	FIxw6sPXqWUsTrvR3yx0t9BjtWQQhFSv0a+8bqUFGxbfBcRAZZTUftlp4pos7xjRC0i72mDrE0i
-	KR2b4I7KCrTdWrikEm+/Holh6B5oppXV2EAhAHC+xnvkSIZLoutQXR/R8mm1BHcWAEr5e6ol64b
-	uqHPaBx8szNd6A==
-X-Received: by 2002:a05:620a:4690:b0:7cd:3f01:7c83 with SMTP id af79cd13be357-7d3c6ced959mr86689585a.39.1749842123785;
-        Fri, 13 Jun 2025 12:15:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHHk+tLwiHsLDG8K2pZBbbo9MT0cMiJjdHUPCCmygz28zS6TQo7hCodBcEzueO0HEuES3dSRA==
-X-Received: by 2002:a05:620a:4690:b0:7cd:3f01:7c83 with SMTP id af79cd13be357-7d3c6ced959mr86685785a.39.1749842123343;
-        Fri, 13 Jun 2025 12:15:23 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eac910sm208179585a.72.2025.06.13.12.15.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 12:15:22 -0700 (PDT)
-Date: Fri, 13 Jun 2025 15:15:19 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <aEx4x_tvXzgrIanl@x1.local>
-References: <20250613134111.469884-1-peterx@redhat.com>
- <20250613134111.469884-6-peterx@redhat.com>
- <20250613142903.GL1174925@nvidia.com>
- <aExDMO5fZ_VkSPqP@x1.local>
- <20250613160956.GN1174925@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VCt3JuwL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749842196; x=1781378196;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9UpM1Ni+bJU9NoQyrUI1I313v8+VKBabwKwOdKSP5YQ=;
+  b=VCt3JuwL5nymkct3F1gsWR3ByzxnXFjWb9naC+2OhPpZhK2/UgQAYoSo
+   auYf9eaqFOxzUuZIU9lMnHwpkMhjRGZ8+QpHEoDWSGsIzpjH2I9TKTiIn
+   86QmN+teMlOD9dZJA4bMR7vP3mwngyX9CXA2ZuEw5OzhcpNXbEw7kPnG5
+   L/q9ZJs9+SqMydMTHvTtkaOnBUx85lTTnesr2Uu0WH3mBDjhlh8KtG4Ob
+   hAPY4urQ0o8zHuMpdJpWxDYwD/Nl+mSyQZ78JLVLZ+wFUC17Lg6w2PzcJ
+   ltqVs7ukoENmoew9Q7ZBI01k9HLiIDD4l9a8EE2ZeppZz8ADAuTZCyF74
+   Q==;
+X-CSE-ConnectionGUID: mscgwMpLS1mRIQBVKdIObg==
+X-CSE-MsgGUID: 7wszPhskQw2bIKHIUk/SKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51296773"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="51296773"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 12:16:35 -0700
+X-CSE-ConnectionGUID: A/faDkYaSrWRcpw/QtAq8w==
+X-CSE-MsgGUID: S9vjPXWHRxCq9e0GOwEWPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="148444294"
+Received: from unknown (HELO hyperion.jf.intel.com) ([10.243.61.29])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 12:16:35 -0700
+From: marc.herbert@linux.intel.com
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	rafael.j.wysocki@intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Ben Cheatham <Benjamin.Cheatham@amd.com>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: Marc Herbert <marc.herbert@linux.intel.com>
+Subject: [PATCH] driver core: faux: fix Undefined Behavior in faux_device_destroy()
+Date: Fri, 13 Jun 2025 19:15:56 +0000
+Message-ID: <20250613191556.4184103-1-marc.herbert@linux.intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250613160956.GN1174925@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 01:09:56PM -0300, Jason Gunthorpe wrote:
-> On Fri, Jun 13, 2025 at 11:26:40AM -0400, Peter Xu wrote:
-> > On Fri, Jun 13, 2025 at 11:29:03AM -0300, Jason Gunthorpe wrote:
-> > > On Fri, Jun 13, 2025 at 09:41:11AM -0400, Peter Xu wrote:
-> > > 
-> > > > +	/* Choose the alignment */
-> > > > +	if (IS_ENABLED(CONFIG_ARCH_SUPPORTS_PUD_PFNMAP) && phys_len >= PUD_SIZE) {
-> > > > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
-> > > > +						   flags, PUD_SIZE, 0);
-> > > > +		if (ret)
-> > > > +			return ret;
-> > > > +	}
-> > > > +
-> > > > +	if (phys_len >= PMD_SIZE) {
-> > > > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
-> > > > +						   flags, PMD_SIZE, 0);
-> > > > +		if (ret)
-> > > > +			return ret;
-> > > > +	}
-> > > 
-> > > Hurm, we have contiguous pages now, so PMD_SIZE is not so great, eg on
-> > > 4k ARM with we can have a 16*2M=32MB contiguity, and 16k ARM uses
-> > > contiguity to get a 32*16k=1GB option.
-> > > 
-> > > Forcing to only align to the PMD or PUD seems suboptimal..
-> > 
-> > Right, however the cont-pte / cont-pmd are still not supported in huge
-> > pfnmaps in general?  It'll definitely be nice if someone could look at that
-> > from ARM perspective, then provide support of both in one shot.
-> 
-> Maybe leave behind a comment about this. I've been poking around if
-> somone would do the ARM PFNMAP support but can't report any commitment.
+From: Marc Herbert <marc.herbert@linux.intel.com>
 
-I didn't know what's the best part to take a note for the whole pfnmap
-effort, but I added a note into the commit message on this patch:
+Fixes undefined behavior that was spotted by Jonathan Cameron in
+https://lore.kernel.org/linux-cxl/20250609170509.00003625@huawei.com/
 
-        Note 2: Currently continuous pgtable entries (for example, cont-pte) is not
-        yet supported for huge pfnmaps in general.  It also is not considered in
-        this patch so far.  Separate work will be needed to enable continuous
-        pgtable entries on archs that support it.
+The possible consequences of the undefined behavior fixed here are fairly
+well documented across the Internet but to save research time and avoid
+doubts, I include a very short and simple demo below. I imagine kernel
+compilation flags and various other conditions may not make the
+consequences as bad as this example, however those conditions could change
+and this type of code is still Undefined Behavior no matter what.
+One of the best articles - there are many others:
+https://blog.llvm.org/2011/05/what-every-c-programmer-should-know.html
 
-> 
-> > > > +fallback:
-> > > > +	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
-> > > 
-> > > Why not put this into mm_get_unmapped_area_vmflags() and get rid of
-> > > thp_get_unmapped_area_vmflags() too?
-> > > 
-> > > Is there any reason the caller should have to do a retry?
-> > 
-> > We would still need thp_get_unmapped_area_vmflags() because that encodes
-> > PMD_SIZE for THPs; we need the flexibility of providing any size alignment
-> > as a generic helper.
-> 
-> There is only one caller for thp_get_unmapped_area_vmflags(), just
-> open code PMD_SIZE there and thin this whole thing out. It reads
-> better like that anyhow:
-> 
-> 	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && !file
-> 		   && !addr /* no hint */
-> 		   && IS_ALIGNED(len, PMD_SIZE)) {
-> 		/* Ensures that larger anonymous mappings are THP aligned. */
-> 		addr = mm_get_unmapped_area_aligned(file, 0, len, pgoff,
-> 						    flags, vm_flags, PMD_SIZE);
-> 
-> > That was ok, however that loses some flexibility when the caller wants to
-> > try with different alignments, exactly like above: currently, it was trying
-> > to do a first attempt of PUD mapping then fallback to PMD if that fails.
-> 
-> Oh, that's a good point, I didn't notice that subtle bit.
-> 
-> But then maybe that is showing the API is just wrong and the core code
-> should be trying to find the best alignment not the caller. Like we
-> can have those PUD/PMD size ifdefs inside the mm instead of in VFIO?
-> 
-> VFIO would just pass the BAR size, implying the best alignment, and
-> the core implementation will try to get the largest VMA alignment that
-> snaps to an arch supported page contiguity, testing each of the arches
-> page size possibilities in turn.
-> 
-> That sounds like a much better API than pushing this into drivers??
+Since commit b5ec6fd286dfa4 ("kbuild: Drop -Wdeclaration-after-statement"),
+it's now possible to use C99 declarations; the kernel is not constrained
+anymore to group all declarations at the top of a block like single-pass
+compilers used to require. This allows combining declarations and
+definitions in one place - like literally every other language and project
+does - and trivially fix undefined behavior like this.  This also reduces
+variable scope and avoids misuse between declaration and definition like
+uninitialized reads or writing to the wrong variable by mistake. C99
+declarations also allow using a lot more `const` (the default in some
+languages) which avoids some misuse after legitimate use.
+tl;dr: C99 declarations are not just a "codestyle" or "taste" issue;
+they are an important (and not mandatory) feature.
 
-Yes it would be nice if the core mm can evolve to make supporting such
-easier.  Though the question is how to pass information over to core mm.
+cc --version
+  cc (GCC) 15.1.1 20250425
 
-For example, currently a vfio device file represents the whole device, and
-it's also VFIO that defines what the MMIO region offsets means. So core mm
-has no simple idea which BAR VFIO is mapping if it only receives a mmap()
-request.  So even if we assume the core mm provides some vma flag showing
-that, it won't be per-vma, but need to be case by case of the mmap()
-request at least relevant to pgoff and len being mapped.
+for i in 0 1 2 g; do printf "gcc -O$i: "; gcc -O$i nullptrUB.c &&
+   ./a.out; done
 
-And it's definitely the case that for one device its BAR sizes are
-different, hence it asks for different alignments when mmap() even if on
-the same device fd.
+gcc -O0: Segmentation fault (core dumped)
+gcc -O1: ptr is zero
+gcc -O2: ptr is NOT zero!!!
+gcc -O3: ptr is NOT zero!!!
+gcc -Og: ptr is zero
 
-It's similar to many other use cases of get_unmapped_area() users.  For
-example, see v4l2_m2m_get_unmapped_area() which has similar treatment on at
-least knowing which part of the file was being mapped:
+clang --version
+  clang version 19.1.7
 
-	if (offset < DST_QUEUE_OFF_BASE) {
-		vq = v4l2_m2m_get_src_vq(fh->m2m_ctx);
-	} else {
-		vq = v4l2_m2m_get_dst_vq(fh->m2m_ctx);
-		pgoff -= (DST_QUEUE_OFF_BASE >> PAGE_SHIFT);
-	}
+clang -O0: Segmentation fault (core dumped)
+clang -O1: ptr is NOT zero!!!
+clang -O2: ptr is NOT zero!!!
+clang -O3: ptr is NOT zero!!!
+clang -Og: ptr is NOT zero!!!
 
-Such flexibility might still be needed for now until we know how to provide
-the abstraction.
+int faux_device_destroy(int *ptr)
+{
+  int i = *ptr;  i++;
 
-Meanwhile, there can be other constraints to existing get_unmapped_area()
-users that a decision might be done with any parameter passed into it
-besides the pgoff.. so even if we provide the whole pgoff info, it might
-not be enough.
+  // Because we dereferenced ptr, the compiler knows the pointer cannot
+  // be null (even when it is!) and can optimize this away.
+  if (!ptr) {
+    printf("ptr is zero\n");
+    return 0;
+  }
 
+  printf("ptr is NOT zero!!!\n");
+  return 1;
+}
+
+int main()
+{
+  struct timespec t1, t2;
+  clock_gettime(CLOCK_MONOTONIC, &t1);
+  clock_gettime(CLOCK_MONOTONIC, &t2);
+
+  // Use the clock to hide zero from the compiler
+  int * zeroptr = (int *)(t2.tv_sec - t1.tv_sec);
+
+  return faux_device_destroy(zeroptr);
+}
+
+Fixes: 35fa2d88ca94 ("driver core: add a faux bus for use when a simple device/bus is needed")
+Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
+---
+ drivers/base/faux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/base/faux.c b/drivers/base/faux.c
+index 9054d346bd7f..94392d397986 100644
+--- a/drivers/base/faux.c
++++ b/drivers/base/faux.c
+@@ -218,11 +218,11 @@ EXPORT_SYMBOL_GPL(faux_device_create);
+  */
+ void faux_device_destroy(struct faux_device *faux_dev)
+ {
+-	struct device *dev = &faux_dev->dev;
+-
+ 	if (!faux_dev)
+ 		return;
+ 
++	struct device *dev = &faux_dev->dev;
++
+ 	device_del(dev);
+ 
+ 	/* The final put_device() will clean up the memory we allocated for this device. */
 -- 
-Peter Xu
+2.49.0
 
