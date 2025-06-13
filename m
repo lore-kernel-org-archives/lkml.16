@@ -1,371 +1,217 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C352B279DB7
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F44279DB2;
+	Fri, 13 Jun 2025 09:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749805880; cv=none; b=V7SGoFgpTesGljucDtW5+BZeuAO2xzhbTNipZUoUeESNufriJVx+40Z4IKC77pQ3ZZkbKrNiFiHLov8vSQBoZ9HTtbIG+ZW+FSotyEcBksYQyREui1t29E2YZvRohKWERaKm+UNEysS7JI2+orZjC8Qm+nDQxBVwMc24SE8RVOU=
+	t=1749805890; cv=none; b=OlDjo9h5fUJ86G45STdM6HxwA7McojK0ZInBUodhxrPRlFLvNhIeQiUNSLT5koGDcvCnkF78p+NxGkSK66gj40ZmuSCD8kWE7HLk+fGD75eKU+T+DvhkmgIc11FN9J9dc3HQoNjbAFVxaof/Zd8Zu+WOMJsZHtSvCjQr80p+7ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749805880; c=relaxed/simple;
-	bh=Ycdh6Mx42Kd4GZcxn6FTALt14ZmWACOgludo3NTSD14=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Vr+s47hCQ7jNRqVFynTqGwyymch+kgtgt4CMY1wm/Jb+/LMrcJcAtCX6htsvoHchfjSPiusIQl4LAyANUmRooPq7ZXBzkKsM9pS2r0c/DCYKKij3/dkAlUXkD/DSBXfbLU00XZVP+DfdWqcKGzCoftQK+uPOwKsxrjqPDo0YTrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h2AI4VNO; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749805890; c=relaxed/simple;
+	bh=+hp27uzMfVa0zIe3WW68Yss4qmnl+KhoEv8qvXFQGfI=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=aJoEPYl8DqqvP13iU2Rvv8hG1oQAqf9b+FYBifZ6ivjSGTSbrVtkpMz74710R16to1NDfqwA4bad6/rSK//6MlvjwpRpE/6KKKIlaidxwpKLyFDMnE+8Zs3mF50qCV65hLiYyvmv+fOyzZFxM+4M+M2ayZms8mDoewvWGUpN150=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hc806x/c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QNBY0Vsi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h2AI4VNO"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so1149802f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749805876; x=1750410676; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=629JP4RloYd0AtRr7iHTTkC9nVi9eInO64mnKOCzxxc=;
-        b=h2AI4VNOsQ41fKId+ey9I0zYlZl04XZKt1d4aFHSdYxhf2NQW4p3kUghvOkj4DYmEt
-         PLCIs7LU1Yae5t9RgzaJu+ZjTmrhSCfclm2qlC2FFk5ueRlqeEXmmc6GivmQnycbGpoj
-         TQHApNf8igAo0XzNCDaMW5DETAVfBBl7GTonmbbGIBCj0USgTYEum9CE2aqBuYXfv1Jd
-         L7Cq96DEj1qNWP2AEgU9k/NsuDEDZQEKVYwDYsZdY2Kpgscz5EfwPu8RKRoI48NNvKT+
-         ScOs28FN5/cTDRfX+uX0GNKcsKcYC+f+mAx0uw2fMw9yu9NQPeUXL+W1pt9SuUn+9m5G
-         6+iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749805876; x=1750410676;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=629JP4RloYd0AtRr7iHTTkC9nVi9eInO64mnKOCzxxc=;
-        b=g/lyz0CsYLzR9RONbF8hcAUmDqBWPHNKTtXnx8CcdAx4DISCYYj4VXnJoiy5jzNdJ0
-         BCKdTSgyhIZ+FaZXk3WylVyXtfxaJmX18pEvgooqwYTL67mPICJ93PgeI6q+bB5m1MWI
-         HUSRpVUVX6ECadgja3d0AolhznBEaoa29M1pT9LCY3jzvwPvrwdRvCSWLY6ZF/lExyp9
-         /nr5bJlv9PWc4YxKwzOGHIZkFZOWbZCPDGeTby6zuK5iHWPNnjQRy9Dw5GgBGSZJWmrj
-         p+6AIlMm06J7KVtM57vEh/Yo9Hw1f8xQbM7vQrPC6qKiUzlfg7Oi9o1l2WybKjT2854M
-         32Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCXpFMyJxByfPVHuXVLYAsnhL+4JyvIt0NbO9rfZjRmYeBvgOgwca4Lgf1NUdetBEJbV/1HTyK890gH+9mg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ7nra7+7Y/IvuWQmGgHMNB96gtI4h+4wHg+J1uMLyQac9AFVd
-	14bT/AZU1eHODAcmGFj8ttkcYTomgLU4RkqhTTWEASaiqLYjeJObF2y3JUM9PvS0g/Y=
-X-Gm-Gg: ASbGncsn6IgPNXX7PCvzSrwpsK63Dfu7OJ4x3AFP8468pgrVbkNQfyUWAZpzKNVqX5q
-	d6uweVFrGXD9Brb3ChFyH+s7UYoMwUYNATEwD/ZCWUlPtZixnTB/cWoGHYXkYFV5/aYnBouZbJN
-	hBbgNW+1B2bYMwUUzR0oBBsFGN7nLHpu+S4LBVtsnDqkeYI36B6riohzLQzlTCWAm08wKB3trb1
-	hOoAvtuhZHlPgKjVOSKBEZJSa+ZR0v4ymipukwW6maiN+99sUcmuyw7ve2S1/FdmfWtQvMb0jRn
-	v2GKjcA4JBwG7Dr9hzln+MRg8l5N6eRZb8MxFLeARRj1UIl11a2nWFCg9rdSdAMYo3fHHJjGwTn
-	s9RRSo5Un054HrX3RsImKTK+gYHPe6oq5aYUzVOQ=
-X-Google-Smtp-Source: AGHT+IEVkOGummRuxHpBo62hdZ3+dBUw2XniYXFN1l2NS66hsifQhIkXqnGbhatOYQWkJjKohoEfGw==
-X-Received: by 2002:a05:6000:2585:b0:3a5:2dae:970c with SMTP id ffacd0b85a97d-3a56876b13dmr1880731f8f.37.1749805875958;
-        Fri, 13 Jun 2025 02:11:15 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:4144:6a84:fe1d:3aae? ([2a01:e0a:3d9:2080:4144:6a84:fe1d:3aae])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54d74sm1791133f8f.10.2025.06.13.02.11.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 02:11:15 -0700 (PDT)
-Message-ID: <d6031204-9bb5-4b0f-adf9-109b305e89e2@linaro.org>
-Date: Fri, 13 Jun 2025 11:11:14 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hc806x/c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QNBY0Vsi"
+Date: Fri, 13 Jun 2025 09:11:25 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749805886;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=qZ3rbog1PU0jvG/JDcCla2wMAk/TziTP/l1vKVODhcY=;
+	b=hc806x/cwuffVt7lmhRcjROuusk84E5DdOuVpelj0srNd6qu7Z0M8SeTswKockatLP7QOa
+	odZN0efsaKVXAC4AB4rbia99OXp3m5ZiltLbASD/esSuoc5q+vLKuqxFLiprLIOONu3hkQ
+	V3oDBG2h1H4OPXCW2k9yJtwY1ExI38xezwz6QAf6CA/+nTmVvbYnucknlbfE2sWlt4MHYV
+	cxuqAHY0VUWbHC0UrpAC3N+1m/YubNqy2+/zfnMkXfMj9XaAbaeHRgyamV0/eTF0oj2b/r
+	c78s7nqiR+692OeWjmHlnhOmwQVCDnDFG2CSo+C6TRl+aYDwG99t4w6bNdUa2g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749805886;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=qZ3rbog1PU0jvG/JDcCla2wMAk/TziTP/l1vKVODhcY=;
+	b=QNBY0VsiLy1z9PBd545f9DhUju68L7PntEbtNEX/BDLjSe5KpWvZNYwaC3gUjn+wb+r2u/
+	VkwJsyveUj2t9pCA==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/kconfig] x86/kconfig: Remove the CONFIG_DRM_I915=y driver
+ from the defconfig
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ David Woodhouse <dwmw@amazon.co.uk>, "H. Peter Anvin" <hpa@zytor.com>,
+ jgross@suse.com, Linus Torvalds <torvalds@linux-foundation.org>,
+ Masahiro Yamada <yamada.masahiro@socionext.com>,
+ Michal Marek <michal.lkml@markovi.net>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 5/9] phy: exyons5-usbdrd: support HS combo phy for
- ExynosAutov920
-To: Pritam Manohar Sutar <pritam.sutar@samsung.com>, vkoul@kernel.org,
- kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- alim.akhtar@samsung.com, andre.draszik@linaro.org, peter.griffin@linaro.org,
- kauschluss@disroot.org, ivo.ivanov.ivanov1@gmail.com,
- m.szyprowski@samsung.com, s.nawrocki@samsung.com
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
- dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
- selvarasu.g@samsung.com
-References: <20250613055613.866909-1-pritam.sutar@samsung.com>
- <CGME20250613055053epcas5p377269bcc2c8567c00a2298d86c0d26a4@epcas5p3.samsung.com>
- <20250613055613.866909-6-pritam.sutar@samsung.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250613055613.866909-6-pritam.sutar@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <174980588551.406.17181283015896978758.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13/06/2025 07:56, Pritam Manohar Sutar wrote:
-> This SoC has a single USB 3.1 DRD combo phy that supports both
-> UTMI+ (HS) and PIPE3 (SS) and three USB2.0 DRD HS phy controllers
-> those only support the UTMI+ (HS) interface.
-> 
-> Support UTMI+ combo phy for this SoC which is somewhat simmilar to
-> what the existing Exynos850 support does. The difference is that
-> some register offsets and bit fields are defferent from Exynos850.
-> 
-> Add required change in phy driver to support combo HS phy for this SoC.
-> 
-> Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-> ---
->   drivers/phy/samsung/phy-exynos5-usbdrd.c | 202 +++++++++++++++++++++++
->   1 file changed, 202 insertions(+)
-> 
-> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> index 15965b4c6f78..ac7bc1d1afd2 100644
-> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> @@ -41,6 +41,13 @@
->   #define EXYNOS2200_CLKRST_LINK_PCLK_SEL		BIT(1)
->   
->   #define EXYNOS2200_DRD_UTMI			0x10
-> +
-> +/* ExynosAutov920 bits */
-> +#define UTMICTL_FORCE_UTMI_SUSPEND		BIT(13)
-> +#define UTMICTL_FORCE_UTMI_SLEEP		BIT(12)
-> +#define UTMICTL_FORCE_DPPULLDOWN		BIT(9)
-> +#define UTMICTL_FORCE_DMPULLDOWN		BIT(8)
-> +
->   #define EXYNOS2200_UTMI_FORCE_VBUSVALID		BIT(1)
->   #define EXYNOS2200_UTMI_FORCE_BVALID		BIT(0)
->   
-> @@ -250,6 +257,22 @@
->   #define EXYNOS850_DRD_HSP_TEST			0x5c
->   #define HSP_TEST_SIDDQ				BIT(24)
->   
-> +#define EXYNOSAUTOV920_DRD_HSP_CLKRST		0x100
-> +#define HSPCLKRST_PHY20_SW_PORTRESET		BIT(3)
-> +#define HSPCLKRST_PHY20_SW_POR			BIT(1)
-> +#define HSPCLKRST_PHY20_SW_POR_SEL		BIT(0)
-> +
-> +#define EXYNOSAUTOV920_DRD_HSPCTL		0x104
-> +#define HSPCTRL_VBUSVLDEXTSEL			BIT(13)
-> +#define HSPCTRL_VBUSVLDEXT			BIT(12)
-> +#define HSPCTRL_EN_UTMISUSPEND			BIT(9)
-> +#define HSPCTRL_COMMONONN			BIT(8)
-> +
-> +#define EXYNOSAUTOV920_DRD_HSP_TEST		0x10c
-> +
-> +#define EXYNOSAUTOV920_DRD_HSPPLLTUNE		0x110
-> +#define HSPPLLTUNE_FSEL				GENMASK(18, 16)
-> +
->   /* Exynos9 - GS101 */
->   #define EXYNOS850_DRD_SECPMACTL			0x48
->   #define SECPMACTL_PMA_ROPLL_REF_CLK_SEL		GENMASK(13, 12)
-> @@ -2025,6 +2048,182 @@ static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
->   	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
->   };
->   
-> +static void
-> +exynosautov920_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
-> +{
-> +	void __iomem *reg_phy = phy_drd->reg_phy;
-> +	u32 reg;
-> +
-> +	/*
-> +	 * Disable HWACG (hardware auto clock gating control). This
-> +	 * forces QACTIVE signal in Q-Channel interface to HIGH level,
-> +	 * to make sure the PHY clock is not gated by the hardware.
-> +	 */
-> +	reg = readl(reg_phy + EXYNOS850_DRD_LINKCTRL);
-> +	reg |= LINKCTRL_FORCE_QACT;
-> +	writel(reg, reg_phy + EXYNOS850_DRD_LINKCTRL);
-> +
-> +	/* De-assert link reset */
-> +	reg = readl(reg_phy + EXYNOS2200_DRD_CLKRST);
-> +	reg &= ~CLKRST_LINK_SW_RST;
-> +	writel(reg, reg_phy + EXYNOS2200_DRD_CLKRST);
-> +
-> +	/* Set PHY POR High */
-> +	reg = readl(reg_phy + EXYNOSAUTOV920_DRD_HSP_CLKRST);
-> +	reg |= HSPCLKRST_PHY20_SW_POR | HSPCLKRST_PHY20_SW_POR_SEL;
-> +	writel(reg, reg_phy + EXYNOSAUTOV920_DRD_HSP_CLKRST);
-> +
-> +	/* Enable UTMI+ */
-> +	reg = readl(reg_phy + EXYNOS2200_DRD_UTMI);
-> +	reg &= ~(UTMICTL_FORCE_UTMI_SUSPEND | UTMICTL_FORCE_UTMI_SLEEP |
-> +		UTMICTL_FORCE_DPPULLDOWN | UTMICTL_FORCE_DMPULLDOWN);
-> +	writel(reg, reg_phy + EXYNOS2200_DRD_UTMI);
-> +
-> +	/* set phy clock & control HS phy */
-> +	reg = readl(reg_phy + EXYNOSAUTOV920_DRD_HSPCTL);
-> +	reg |= HSPCTRL_EN_UTMISUSPEND | HSPCTRL_COMMONONN;
-> +	writel(reg, reg_phy + EXYNOSAUTOV920_DRD_HSPCTL);
-> +
-> +	usleep_range(100, 105);
-> +
-> +	/* Set VBUS Valid and DP-Pull up control by VBUS pad usage */
-> +	reg = readl(reg_phy + EXYNOS850_DRD_LINKCTRL);
-> +	reg |= FIELD_PREP_CONST(LINKCTRL_BUS_FILTER_BYPASS, 0xf);
-> +	writel(reg, reg_phy + EXYNOS850_DRD_LINKCTRL);
-> +
-> +	reg = readl(reg_phy + EXYNOS2200_DRD_UTMI);
-> +	reg |= EXYNOS2200_UTMI_FORCE_VBUSVALID | EXYNOS2200_UTMI_FORCE_BVALID;
-> +	writel(reg, reg_phy + EXYNOS2200_DRD_UTMI);
-> +
-> +	reg = readl(reg_phy + EXYNOSAUTOV920_DRD_HSPCTL);
-> +	reg |= HSPCTRL_VBUSVLDEXTSEL | HSPCTRL_VBUSVLDEXT;
-> +	writel(reg, reg_phy + EXYNOSAUTOV920_DRD_HSPCTL);
-> +
-> +	/* Setting FSEL for refference clock */
-> +	reg = readl(reg_phy + EXYNOSAUTOV920_DRD_HSPPLLTUNE);
-> +	reg &= ~HSPPLLTUNE_FSEL;
-> +	switch (phy_drd->extrefclk) {
-> +	case EXYNOS5_FSEL_50MHZ:
-> +		reg |= FIELD_PREP(HSPPLLTUNE_FSEL, 7);
-> +		break;
-> +	case EXYNOS5_FSEL_26MHZ:
-> +		reg |= FIELD_PREP(HSPPLLTUNE_FSEL, 6);
-> +		break;
-> +	case EXYNOS5_FSEL_24MHZ:
-> +		reg |= FIELD_PREP(HSPPLLTUNE_FSEL, 2);
-> +		break;
-> +	case EXYNOS5_FSEL_20MHZ:
-> +		reg |= FIELD_PREP(HSPPLLTUNE_FSEL, 1);
-> +		break;
-> +	case EXYNOS5_FSEL_19MHZ2:
-> +		reg |= FIELD_PREP(HSPPLLTUNE_FSEL, 0);
-> +		break;
-> +	default:
-> +		dev_warn(phy_drd->dev, "unsupported ref clk: %#.2x\n",
-> +			 phy_drd->extrefclk);
-> +		break;
-> +	}
-> +	writel(reg, reg_phy + EXYNOSAUTOV920_DRD_HSPPLLTUNE);
-> +
-> +	/* Enable PHY Power Mode */
-> +	reg = readl(reg_phy + EXYNOSAUTOV920_DRD_HSP_TEST);
-> +	reg &= ~HSP_TEST_SIDDQ;
-> +	writel(reg, reg_phy + EXYNOSAUTOV920_DRD_HSP_TEST);
-> +
-> +	/* before POR low, 10us delay is needed to Finish PHY reset */
-> +	usleep_range(10, 15);
-> +
-> +	/* Set PHY POR Low */
-> +	reg = readl(reg_phy + EXYNOSAUTOV920_DRD_HSP_CLKRST);
-> +	reg |= HSPCLKRST_PHY20_SW_POR_SEL;
-> +	reg &= ~(HSPCLKRST_PHY20_SW_POR | HSPCLKRST_PHY20_SW_PORTRESET);
-> +	writel(reg, reg_phy + EXYNOSAUTOV920_DRD_HSP_CLKRST);
-> +
-> +	/* after POR low and delay 75us, PHYCLOCK is guaranteed. */
-> +	usleep_range(75, 80);
-> +
-> +	/* force pipe3 signal for link */
-> +	reg = readl(reg_phy + EXYNOS850_DRD_LINKCTRL);
-> +	reg |= LINKCTRL_FORCE_PIPE_EN;
-> +	reg &= ~LINKCTRL_FORCE_PHYSTATUS;
-> +	reg |= LINKCTRL_FORCE_RXELECIDLE;
-> +	writel(reg, reg_phy + EXYNOS850_DRD_LINKCTRL);
-> +}
-> +
-> +static void
-> +exynosautov920_usbdrd_hsphy_disable(struct exynos5_usbdrd_phy *phy_drd)
-> +{
-> +	u32 reg;
-> +	void __iomem *reg_phy = phy_drd->reg_phy;
-> +
-> +	/* set phy clock & control HS phy */
-> +	reg = readl(reg_phy + EXYNOS2200_DRD_UTMI);
-> +	reg |= UTMICTL_FORCE_UTMI_SUSPEND | UTMICTL_FORCE_UTMI_SLEEP;
-> +	reg &= ~(UTMICTL_FORCE_DPPULLDOWN | UTMICTL_FORCE_DMPULLDOWN);
-> +	writel(reg, reg_phy + EXYNOS2200_DRD_UTMI);
-> +
-> +	/* Disable PHY Power Mode */
-> +	reg = readl(reg_phy + EXYNOSAUTOV920_DRD_HSP_TEST);
-> +	reg |= HSP_TEST_SIDDQ;
-> +	writel(reg, reg_phy + EXYNOSAUTOV920_DRD_HSP_TEST);
-> +
-> +	/* clear force q-channel */
-> +	reg = readl(reg_phy + EXYNOS850_DRD_LINKCTRL);
-> +	reg &= ~LINKCTRL_FORCE_QACT;
-> +	writel(reg, reg_phy + EXYNOS850_DRD_LINKCTRL);
-> +
-> +	/* link sw reset is need for USB_DP/DM high-z in host mode */
-> +	reg = readl(reg_phy + EXYNOS2200_DRD_CLKRST);
-> +	reg |= CLKRST_LINK_SW_RST;
-> +	writel(reg, reg_phy + EXYNOS2200_DRD_CLKRST);
-> +}
-> +
-> +static int exynosautov920_usbdrd_phy_init(struct phy *phy)
-> +{
-> +	return exynos850_usbdrd_phy_init(phy);
-> +}
-> +
-> +static int exynosautov920_usbdrd_phy_exit(struct phy *phy)
-> +{
-> +	struct phy_usb_instance *inst = phy_get_drvdata(phy);
-> +	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
-> +	int ret = 0;
-> +
-> +	ret = clk_bulk_prepare_enable(phy_drd->drv_data->n_clks, phy_drd->clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
-> +		exynosautov920_usbdrd_hsphy_disable(phy_drd);
-> +
-> +	clk_bulk_disable_unprepare(phy_drd->drv_data->n_clks, phy_drd->clks);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops exynosautov920_usb31drd_phy_ops = {
-> +	.init		= exynosautov920_usbdrd_phy_init,
-> +	.exit		= exynosautov920_usbdrd_phy_exit,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static const struct
-> +exynos5_usbdrd_phy_config usbdrd_hsphy_cfg_exynosautov920[] = {
-> +	{
-> +		.id		= EXYNOS5_DRDPHY_UTMI,
-> +		.phy_init	= exynosautov920_usbdrd_utmi_init,
-> +	},
-> +};
-> +
-> +static const struct exynos5_usbdrd_phy_drvdata exynosautov920_usbdrd_hsphy = {
-> +	.phy_cfg		= usbdrd_hsphy_cfg_exynosautov920,
-> +	.phy_ops		= &exynosautov920_usb31drd_phy_ops,
-> +	.clk_names		= exynos5_clk_names,
-> +	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
-> +	.core_clk_names		= exynos5_core_clk_names,
-> +	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
-> +};
-> +
->   static const struct phy_ops exynosautov920_usbdrd_phy_ops = {
->   	.init		= exynos850_usbdrd_phy_init,
->   	.exit		= exynos850_usbdrd_phy_exit,
-> @@ -2250,6 +2449,9 @@ static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
->   	}, {
->   		.compatible = "samsung,exynos850-usbdrd-phy",
->   		.data = &exynos850_usbdrd_phy
-> +	}, {
-> +		.compatible = "samsung,exynosautov920-usbdrd-hsphy",
-> +		.data = &exynosautov920_usbdrd_hsphy
->   	}, {
->   		.compatible = "samsung,exynosautov920-usbdrd-phy",
->   		.data = &exynosautov920_usbdrd_phy
+The following commit has been merged into the x86/kconfig branch of tip:
 
-With the subject fixed:
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Commit-ID:     c86ec5635d079e62a66e767422ee71a06f930c86
+Gitweb:        https://git.kernel.org/tip/c86ec5635d079e62a66e767422ee71a06f9=
+30c86
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Fri, 13 Jun 2025 10:49:04 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 13 Jun 2025 11:02:41 +02:00
+
+x86/kconfig: Remove the CONFIG_DRM_I915=3Dy driver from the defconfig
+
+The i915 driver was enabled in the x86 defconfig in 2008 via:
+
+  5cb04df8d3f0 ("x86: defconfig updates")
+
+... basically as part of a slimmed-down distro config.
+
+But we don't really enable AMD or Nvidia GPU drivers,
+and the i915 driver adds +10% to the defconfig build time,
+as reported by Peter Zijlstra and quantified by my testing:
+
+  starship:~/tip> perf stat --null --repeat 3 --sync --pre=3D'make clean >/de=
+v/null' make -j128 bzImage >/dev/null
+
+  | CONFIG_DRM_I915=3Dy
+  38.726 +- 0.529 seconds time elapsed  ( +-  1.37% )
+
+  | # CONFIG_DRM_I915 is not set
+  34.446 +- 0.659 seconds time elapsed  ( +-  1.91% )
+
+So disable this driver.
+
+Note that disabling this driver has a number of side-effects
+on the options enabled in the defconfigs.
+
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/x86/configs/i386_defconfig   | 6 ------
+ arch/x86/configs/x86_64_defconfig | 5 -----
+ 2 files changed, 11 deletions(-)
+
+diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
+index fac0f57..aeba958 100644
+--- a/arch/x86/configs/i386_defconfig
++++ b/arch/x86/configs/i386_defconfig
+@@ -158,7 +158,6 @@ CONFIG_NET_CLS_ACT=3Dy
+ CONFIG_CGROUP_NET_PRIO=3Dy
+ CONFIG_CFG80211=3Dy
+ CONFIG_MAC80211=3Dy
+-CONFIG_MAC80211_LEDS=3Dy
+ CONFIG_RFKILL=3Dy
+ CONFIG_RFKILL_INPUT=3Dy
+ CONFIG_NET_9P=3Dy
+@@ -240,7 +239,6 @@ CONFIG_AGP=3Dy
+ CONFIG_AGP_AMD64=3Dy
+ CONFIG_AGP_INTEL=3Dy
+ CONFIG_DRM=3Dy
+-CONFIG_DRM_I915=3Dy
+ CONFIG_DRM_VIRTIO_GPU=3Dy
+ CONFIG_DRM_HYPERV=3Dy
+ CONFIG_SOUND=3Dy
+@@ -252,7 +250,6 @@ CONFIG_SND_HDA_INTEL=3Dy
+ CONFIG_SND_HDA_HWDEP=3Dy
+ CONFIG_HIDRAW=3Dy
+ CONFIG_HID_A4TECH=3Dy
+-CONFIG_HID_APPLE=3Dy
+ CONFIG_HID_BELKIN=3Dy
+ CONFIG_HID_CHERRY=3Dy
+ CONFIG_HID_CHICONY=3Dy
+@@ -269,7 +266,6 @@ CONFIG_HID_PANTHERLORD=3Dy
+ CONFIG_PANTHERLORD_FF=3Dy
+ CONFIG_HID_PETALYNX=3Dy
+ CONFIG_HID_SAMSUNG=3Dy
+-CONFIG_HID_SONY=3Dy
+ CONFIG_HID_SUNPLUS=3Dy
+ CONFIG_HID_HYPERV_MOUSE=3Dy
+ CONFIG_HID_TOPSEED=3Dy
+@@ -292,7 +288,6 @@ CONFIG_VIRTIO_INPUT=3Dy
+ CONFIG_HYPERV=3Dy
+ CONFIG_HYPERV_UTILS=3Dy
+ CONFIG_HYPERV_BALLOON=3Dy
+-CONFIG_EEEPC_LAPTOP=3Dy
+ CONFIG_INTEL_IOMMU=3Dy
+ # CONFIG_INTEL_IOMMU_DEFAULT_ON is not set
+ CONFIG_EXT4_FS=3Dy
+@@ -308,7 +303,6 @@ CONFIG_ZISOFS=3Dy
+ CONFIG_MSDOS_FS=3Dy
+ CONFIG_VFAT_FS=3Dy
+ CONFIG_PROC_KCORE=3Dy
+-CONFIG_TMPFS_POSIX_ACL=3Dy
+ CONFIG_HUGETLBFS=3Dy
+ CONFIG_NFS_FS=3Dy
+ CONFIG_NFS_V3_ACL=3Dy
+diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defc=
+onfig
+index 09362bc..c20100d 100644
+--- a/arch/x86/configs/x86_64_defconfig
++++ b/arch/x86/configs/x86_64_defconfig
+@@ -173,7 +173,6 @@ CONFIG_NET_CLS_ACT=3Dy
+ CONFIG_CGROUP_NET_PRIO=3Dy
+ CONFIG_CFG80211=3Dy
+ CONFIG_MAC80211=3Dy
+-CONFIG_MAC80211_LEDS=3Dy
+ CONFIG_RFKILL=3Dy
+ CONFIG_NET_9P=3Dy
+ CONFIG_NET_9P_VIRTIO=3Dy
+@@ -249,7 +248,6 @@ CONFIG_AGP=3Dy
+ CONFIG_AGP_AMD64=3Dy
+ CONFIG_AGP_INTEL=3Dy
+ CONFIG_DRM=3Dy
+-CONFIG_DRM_I915=3Dy
+ CONFIG_DRM_VIRTIO_GPU=3Dy
+ CONFIG_DRM_HYPERV=3Dy
+ CONFIG_SOUND=3Dy
+@@ -266,7 +264,6 @@ CONFIG_HID_PANTHERLORD=3Dy
+ CONFIG_PANTHERLORD_FF=3Dy
+ CONFIG_HID_PETALYNX=3Dy
+ CONFIG_HID_SAMSUNG=3Dy
+-CONFIG_HID_SONY=3Dy
+ CONFIG_HID_SUNPLUS=3Dy
+ CONFIG_HID_HYPERV_MOUSE=3Dy
+ CONFIG_HID_TOPSEED=3Dy
+@@ -289,7 +286,6 @@ CONFIG_VIRTIO_INPUT=3Dy
+ CONFIG_HYPERV=3Dy
+ CONFIG_HYPERV_UTILS=3Dy
+ CONFIG_HYPERV_BALLOON=3Dy
+-CONFIG_EEEPC_LAPTOP=3Dy
+ CONFIG_AMD_IOMMU=3Dy
+ CONFIG_INTEL_IOMMU=3Dy
+ # CONFIG_INTEL_IOMMU_DEFAULT_ON is not set
+@@ -306,7 +302,6 @@ CONFIG_ZISOFS=3Dy
+ CONFIG_MSDOS_FS=3Dy
+ CONFIG_VFAT_FS=3Dy
+ CONFIG_PROC_KCORE=3Dy
+-CONFIG_TMPFS_POSIX_ACL=3Dy
+ CONFIG_HUGETLBFS=3Dy
+ CONFIG_NFS_FS=3Dy
+ CONFIG_NFS_V3_ACL=3Dy
