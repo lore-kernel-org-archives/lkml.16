@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515042E7F0E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C5C2E3367;
 	Fri, 13 Jun 2025 11:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814967; cv=none; b=AxFUYCCynBo46xf/5JQaw8tOb8MZqlFW4u59VeNu89ssSBvILV9RAcv8/DrF5+Kl1XSxcIlyS2ZhZ57ysLfWkgAg0ysscGU9UeWmOyv0iTCKcbAmio86S+HT1jFyVJdfOyLu/ixj0GDI3niTaFo844iW+nHIKC/qYsN4jr4GjQ4=
+	t=1749814967; cv=none; b=CbonMphlUj1cwEKwLqN/3SdGkUKX2+Hn/wtmzAm2+PwDK0wrRdOErPga9Ka6VXdhviX2CebfvEDViCOhFskNiBB2zYN5oc07L6+L8670AwgyfxKRSOOaP9h7mY1PlYstao5qeWn9QEJmUrVpEM+yYDvl4laLsqNBHXXqPLYVnAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749814967; c=relaxed/simple;
-	bh=YBkjGXm+GCy8o/xx1o50ol5uO7XCwqyBr79mwHQ/z4o=;
+	bh=Rf32VUtonyL0iZQ1xHiMQTgxmKbimCiZo2NoOWu5xrw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F/NLc+ox9zW5/e65YRhe98XGdHhN/tmbS1UueCq3/l+pMLQjVSnKFngI+nrjyWg1XO+f0feXGcS3y5xN6RyPix5jcE8abW6iA89ODSZFOdgRGBSRoxAUSLJxnFd64GlQkrRbxCWzzvDrZSxd9qxBOEov2v3gNe8rAJWnR97W1r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gy3mxKtn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZEp07LfzaIKUOLzqeCBqLV19fNA79cJJ1wsctazHV6CBJcBLxmC//CfEYEIoPb2l9d0xTRZuNvYEsOrJI9TpOFa10z/pYOOh2XAyjIx4qLhLa/UMfL4+Hzr2EYwp9zcE8wLvpRITlNNEWppQsDtqzMsGViNHkh+djX6YmCxjHAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RMaQTBic; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gy3mxKtn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD90DC4CEFC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RMaQTBic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A428EC4CEF9;
 	Fri, 13 Jun 2025 11:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749814966;
-	bh=YBkjGXm+GCy8o/xx1o50ol5uO7XCwqyBr79mwHQ/z4o=;
+	bh=Rf32VUtonyL0iZQ1xHiMQTgxmKbimCiZo2NoOWu5xrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gy3mxKtnerMdNmaAfxLjcCdYev3j4LJ4Ma6S4xmXIuYZOG5rTcqSp0P2bRHTcy7p3
-	 Q9XbPn9aViuqPD94eHh5mePfrxKwfdO7i1SHNE9dNOkIH+Vui3LO7z8csPWQqnIkhm
-	 dBzRPx2+UYNo/UsfKSPD6YnB40Xu2cuBZfAnko6dOv/IC/ydzWYY/NNUWLBzIUJ2YD
-	 D+rn48dAvUPrssNOtTYiC5OfHMtzPvyVATuWmTz6n7Arh6x4Jz54HMIw7GZ073lPpL
-	 bjRdJpknjpciPMeJ5Trr37i0QpZNlbMzlA+vgsC3X6qXhowmDSdOm1kBJn4vqIYxMU
-	 0jS65AuRqEnEA==
+	b=RMaQTBic+5JE0FIiL22N2OUWULZGc+gSP+/x/sySaChWMoobcAGvsuWXUC2TusgT5
+	 dR7GFYHUXcSe8R+cFWrQrxORxu8CB3PrX2fdcyJSSLcPAQKpHBW8HGmU9yhJb5iHCd
+	 yVXa/MpjU6Tj1qZokB4p+namheErBleBPnHxgU48jRILltgPHJrEtooDfoBdyuVK4C
+	 9rubKh+QhalxPE123lVev7zpjeFyPUnc/HSaz4lMN0bbemUG29pDmlgFHOAXKkXBTN
+	 5qhj9bLszgPDUsHj40fgpFWOKYf+sR3s8f0RgJxIr2K9TcYMMFGQmJ77cSMwY7pCRT
+	 HIzBA4OsbfQRg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uQ2o1-00000005dFP-0XeS;
-	Fri, 13 Jun 2025 13:42:45 +0200
+	id 1uQ2o0-00000005dF9-3hXJ;
+	Fri, 13 Jun 2025 13:42:44 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
@@ -55,9 +55,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v3 11/16] docs: use parser_yaml extension to handle Netlink specs
-Date: Fri, 13 Jun 2025 13:42:32 +0200
-Message-ID: <931e46a6fdda4fa67df731b052c121b9094fbd8a.1749812870.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 07/16] tools: ynl_gen_rst.py: do some coding style cleanups
+Date: Fri, 13 Jun 2025 13:42:28 +0200
+Message-ID: <bf60cde6ca45ecd1d1b78c5d0bf133ed74b9ebfc.1749812870.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749812870.git.mchehab+huawei@kernel.org>
 References: <cover.1749812870.git.mchehab+huawei@kernel.org>
@@ -70,166 +70,332 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Instead of manually calling ynl_gen_rst.py, use a Sphinx extension.
-This way, no .rst files would be written to the Kernel source
-directories.
+Do some coding style cleanups to make pylint and flake8 happier.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/Makefile                        | 17 ---------
- Documentation/conf.py                         | 11 +++---
- Documentation/netlink/specs/index.rst         | 38 +++++++++++++++++++
- Documentation/networking/index.rst            |  2 +-
- .../networking/netlink_spec/readme.txt        |  4 --
- Documentation/sphinx/parser_yaml.py           |  2 +-
- 6 files changed, 46 insertions(+), 28 deletions(-)
- create mode 100644 Documentation/netlink/specs/index.rst
- delete mode 100644 Documentation/networking/netlink_spec/readme.txt
+ scripts/lib/netlink_yml_parser.py  | 74 +++++++++++-------------------
+ tools/net/ynl/pyynl/ynl_gen_rst.py |  2 +-
+ 2 files changed, 28 insertions(+), 48 deletions(-)
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index d30d66ddf1ad..9185680b1e86 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -102,22 +102,6 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
- 		cp $(if $(patsubst /%,,$(DOCS_CSS)),$(abspath $(srctree)/$(DOCS_CSS)),$(DOCS_CSS)) $(BUILDDIR)/$3/_static/; \
- 	fi
+diff --git a/scripts/lib/netlink_yml_parser.py b/scripts/lib/netlink_yml_parser.py
+index 8d7961a1a256..65981b86875f 100755
+--- a/scripts/lib/netlink_yml_parser.py
++++ b/scripts/lib/netlink_yml_parser.py
+@@ -19,16 +19,13 @@
  
--YNL_INDEX:=$(srctree)/Documentation/networking/netlink_spec/index.rst
--YNL_RST_DIR:=$(srctree)/Documentation/networking/netlink_spec
--YNL_YAML_DIR:=$(srctree)/Documentation/netlink/specs
--YNL_TOOL:=$(srctree)/tools/net/ynl/pyynl/ynl_gen_rst.py
--
--YNL_RST_FILES_TMP := $(patsubst %.yaml,%.rst,$(wildcard $(YNL_YAML_DIR)/*.yaml))
--YNL_RST_FILES := $(patsubst $(YNL_YAML_DIR)%,$(YNL_RST_DIR)%, $(YNL_RST_FILES_TMP))
--
--$(YNL_INDEX): $(YNL_RST_FILES)
--	$(Q)$(YNL_TOOL) -o $@ -x
--
--$(YNL_RST_DIR)/%.rst: $(YNL_YAML_DIR)/%.yaml $(YNL_TOOL)
--	$(Q)$(YNL_TOOL) -i $< -o $@
--
--htmldocs texinfodocs latexdocs epubdocs xmldocs: $(YNL_INDEX)
--
- htmldocs:
- 	@$(srctree)/scripts/sphinx-pre-install --version-check
- 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var)))
-@@ -184,7 +168,6 @@ refcheckdocs:
- 	$(Q)cd $(srctree);scripts/documentation-file-ref-check
+ from typing import Any, Dict, List
+ import os.path
+-import sys
+-import argparse
+ import logging
+ import yaml
  
- cleandocs:
--	$(Q)rm -f $(YNL_INDEX) $(YNL_RST_FILES)
- 	$(Q)rm -rf $(BUILDDIR)
- 	$(Q)$(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/userspace-api/media clean
  
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 12de52a2b17e..add6ce78dd80 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -45,7 +45,7 @@ needs_sphinx = '3.4.3'
- extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include',
-               'kfigure', 'sphinx.ext.ifconfig', 'automarkup',
-               'maintainers_include', 'sphinx.ext.autosectionlabel',
--              'kernel_abi', 'kernel_feat', 'translations']
-+              'kernel_abi', 'kernel_feat', 'translations', 'parser_yaml']
- 
- # Since Sphinx version 3, the C function parser is more pedantic with regards
- # to type checking. Due to that, having macros at c:function cause problems.
-@@ -143,10 +143,11 @@ else:
- # Add any paths that contain templates here, relative to this directory.
- templates_path = ['sphinx/templates']
- 
--# The suffix(es) of source filenames.
--# You can specify multiple suffix as a list of string:
--# source_suffix = ['.rst', '.md']
--source_suffix = '.rst'
-+# The suffixes of source filenames that will be automatically parsed
-+source_suffix = {
-+        '.rst': 'restructuredtext',
-+        '.yaml': 'yaml',
-+}
- 
- # The encoding of source files.
- #source_encoding = 'utf-8-sig'
-diff --git a/Documentation/netlink/specs/index.rst b/Documentation/netlink/specs/index.rst
-new file mode 100644
-index 000000000000..ca0bf816dc3f
---- /dev/null
-+++ b/Documentation/netlink/specs/index.rst
-@@ -0,0 +1,38 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. NOTE: This document was auto-generated.
+-# ==============
+-# RST Formatters
+-# ==============
+ class RstFormatters:
++    """RST Formatters"""
 +
-+.. _specs:
-+
-+=============================
-+Netlink Family Specifications
-+=============================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   conntrack
-+   devlink
-+   dpll
-+   ethtool
-+   fou
-+   handshake
-+   lockd
-+   mptcp_pm
-+   net_shaper
-+   netdev
-+   nfsd
-+   nftables
-+   nl80211
-+   nlctrl
-+   ovpn
-+   ovs_datapath
-+   ovs_flow
-+   ovs_vport
-+   rt-addr
-+   rt-link
-+   rt-neigh
-+   rt-route
-+   rt-rule
-+   tc
-+   tcp_metrics
-+   team
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index ac90b82f3ce9..b7a4969e9bc9 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -57,7 +57,7 @@ Contents:
-    filter
-    generic-hdlc
-    generic_netlink
--   netlink_spec/index
-+   ../netlink/specs/index
-    gen_stats
-    gtp
-    ila
-diff --git a/Documentation/networking/netlink_spec/readme.txt b/Documentation/networking/netlink_spec/readme.txt
-deleted file mode 100644
-index 030b44aca4e6..000000000000
---- a/Documentation/networking/netlink_spec/readme.txt
-+++ /dev/null
-@@ -1,4 +0,0 @@
--SPDX-License-Identifier: GPL-2.0
--
--This file is populated during the build of the documentation (htmldocs) by the
--tools/net/ynl/pyynl/ynl_gen_rst.py script.
-diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
-index eb32e3249274..cdcafe5b3937 100755
---- a/Documentation/sphinx/parser_yaml.py
-+++ b/Documentation/sphinx/parser_yaml.py
-@@ -55,7 +55,7 @@ class YamlParser(Parser):
-         fname = document.current_source
+     SPACE_PER_LEVEL = 4
  
-         # Handle netlink yaml specs
--        if re.search("/netlink/specs/", fname):
-+        if re.search("netlink/specs/", fname):
-             if fname.endswith("index.yaml"):
-                 msg = self.netlink_parser.generate_main_index_rst(fname, None)
+     @staticmethod
+@@ -36,81 +33,67 @@ class RstFormatters:
+         """Return space to format"""
+         return " " * (level * RstFormatters.SPACE_PER_LEVEL)
+ 
+-
+     @staticmethod
+     def bold(text: str) -> str:
+         """Format bold text"""
+         return f"**{text}**"
+ 
+-
+     @staticmethod
+     def inline(text: str) -> str:
+         """Format inline text"""
+         return f"``{text}``"
+ 
+-
+     @staticmethod
+     def sanitize(text: str) -> str:
+         """Remove newlines and multiple spaces"""
+         # This is useful for some fields that are spread across multiple lines
+         return str(text).replace("\n", " ").strip()
+ 
+-
+     def rst_fields(self, key: str, value: str, level: int = 0) -> str:
+         """Return a RST formatted field"""
+         return self.headroom(level) + f":{key}: {value}"
+ 
+-
+     def rst_definition(self, key: str, value: Any, level: int = 0) -> str:
+         """Format a single rst definition"""
+         return self.headroom(level) + key + "\n" + self.headroom(level + 1) + str(value)
+ 
+-
+     def rst_paragraph(self, paragraph: str, level: int = 0) -> str:
+         """Return a formatted paragraph"""
+         return self.headroom(level) + paragraph
+ 
+-
+     def rst_bullet(self, item: str, level: int = 0) -> str:
+         """Return a formatted a bullet"""
+         return self.headroom(level) + f"- {item}"
+ 
+-
+     @staticmethod
+     def rst_subsection(title: str) -> str:
+         """Add a sub-section to the document"""
+         return f"{title}\n" + "-" * len(title)
+ 
+-
+     @staticmethod
+     def rst_subsubsection(title: str) -> str:
+         """Add a sub-sub-section to the document"""
+         return f"{title}\n" + "~" * len(title)
+ 
+-
+     @staticmethod
+     def rst_section(namespace: str, prefix: str, title: str) -> str:
+         """Add a section to the document"""
+         return f".. _{namespace}-{prefix}-{title}:\n\n{title}\n" + "=" * len(title)
+ 
+-
+     @staticmethod
+     def rst_subtitle(title: str) -> str:
+         """Add a subtitle to the document"""
+         return "\n" + "-" * len(title) + f"\n{title}\n" + "-" * len(title) + "\n\n"
+ 
+-
+     @staticmethod
+     def rst_title(title: str) -> str:
+         """Add a title to the document"""
+         return "=" * len(title) + f"\n{title}\n" + "=" * len(title) + "\n\n"
+ 
+-
+     def rst_list_inline(self, list_: List[str], level: int = 0) -> str:
+         """Format a list using inlines"""
+         return self.headroom(level) + "[" + ", ".join(self.inline(i) for i in list_) + "]"
+ 
+-
+     @staticmethod
+     def rst_ref(namespace: str, prefix: str, name: str) -> str:
+         """Add a hyperlink to the document"""
+@@ -119,10 +102,9 @@ class RstFormatters:
+                     'nested-attributes': 'attribute-set',
+                     'struct': 'definition'}
+         if prefix in mappings:
+-            prefix = mappings[prefix]
++            prefix = mappings.get(prefix, "")
+         return f":ref:`{namespace}-{prefix}-{name}`"
+ 
+-
+     def rst_header(self) -> str:
+         """The headers for all the auto generated RST files"""
+         lines = []
+@@ -132,7 +114,6 @@ class RstFormatters:
+ 
+         return "\n".join(lines)
+ 
+-
+     @staticmethod
+     def rst_toctree(maxdepth: int = 2) -> str:
+         """Generate a toctree RST primitive"""
+@@ -143,16 +124,14 @@ class RstFormatters:
+ 
+         return "\n".join(lines)
+ 
+-
+     @staticmethod
+     def rst_label(title: str) -> str:
+         """Return a formatted label"""
+         return f".. _{title}:\n\n"
+ 
+-# =======
+-# Parsers
+-# =======
++
+ class NetlinkYamlParser:
++    """YAML Netlink specs Parser"""
+ 
+     fmt = RstFormatters()
+ 
+@@ -164,7 +143,6 @@ class NetlinkYamlParser:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_do(self, do_dict: Dict[str, Any], level: int = 0) -> str:
+         """Parse 'do' section and return a formatted string"""
+         lines = []
+@@ -177,16 +155,16 @@ class NetlinkYamlParser:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_do_attributes(self, attrs: Dict[str, Any], level: int = 0) -> str:
+         """Parse 'attributes' section"""
+         if "attributes" not in attrs:
+             return ""
+-        lines = [self.fmt.rst_fields("attributes", self.fmt.rst_list_inline(attrs["attributes"]), level + 1)]
++        lines = [self.fmt.rst_fields("attributes",
++                                     self.fmt.rst_list_inline(attrs["attributes"]),
++                                     level + 1)]
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_operations(self, operations: List[Dict[str, Any]], namespace: str) -> str:
+         """Parse operations block"""
+         preprocessed = ["name", "doc", "title", "do", "dump", "flags"]
+@@ -194,7 +172,8 @@ class NetlinkYamlParser:
+         lines = []
+ 
+         for operation in operations:
+-            lines.append(self.fmt.rst_section(namespace, 'operation', operation["name"]))
++            lines.append(self.fmt.rst_section(namespace, 'operation',
++                                              operation["name"]))
+             lines.append(self.fmt.rst_paragraph(operation["doc"]) + "\n")
+ 
+             for key in operation.keys():
+@@ -206,7 +185,8 @@ class NetlinkYamlParser:
+                     value = self.fmt.rst_ref(namespace, key, value)
+                 lines.append(self.fmt.rst_fields(key, value, 0))
+             if 'flags' in operation:
+-                lines.append(self.fmt.rst_fields('flags', self.fmt.rst_list_inline(operation['flags'])))
++                lines.append(self.fmt.rst_fields('flags',
++                                                 self.fmt.rst_list_inline(operation['flags'])))
+ 
+             if "do" in operation:
+                 lines.append(self.fmt.rst_paragraph(":do:", 0))
+@@ -220,7 +200,6 @@ class NetlinkYamlParser:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_entries(self, entries: List[Dict[str, Any]], level: int) -> str:
+         """Parse a list of entries"""
+         ignored = ["pad"]
+@@ -235,17 +214,19 @@ class NetlinkYamlParser:
+                 if type_:
+                     field_name += f" ({self.fmt.inline(type_)})"
+                 lines.append(
+-                    self.fmt.rst_fields(field_name, self.fmt.sanitize(entry.get("doc", "")), level)
++                    self.fmt.rst_fields(field_name,
++                                        self.fmt.sanitize(entry.get("doc", "")),
++                                        level)
+                 )
+             elif isinstance(entry, list):
+                 lines.append(self.fmt.rst_list_inline(entry, level))
              else:
+-                lines.append(self.fmt.rst_bullet(self.fmt.inline(self.fmt.sanitize(entry)), level))
++                lines.append(self.fmt.rst_bullet(self.fmt.inline(self.fmt.sanitize(entry)),
++                                                 level))
+ 
+         lines.append("\n")
+         return "\n".join(lines)
+ 
+-
+     def parse_definitions(self, defs: Dict[str, Any], namespace: str) -> str:
+         """Parse definitions section"""
+         preprocessed = ["name", "entries", "members"]
+@@ -270,7 +251,6 @@ class NetlinkYamlParser:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_attr_sets(self, entries: List[Dict[str, Any]], namespace: str) -> str:
+         """Parse attribute from attribute-set"""
+         preprocessed = ["name", "type"]
+@@ -279,7 +259,8 @@ class NetlinkYamlParser:
+         lines = []
+ 
+         for entry in entries:
+-            lines.append(self.fmt.rst_section(namespace, 'attribute-set', entry["name"]))
++            lines.append(self.fmt.rst_section(namespace, 'attribute-set',
++                                              entry["name"]))
+             for attr in entry["attributes"]:
+                 type_ = attr.get("type")
+                 attr_line = attr["name"]
+@@ -301,13 +282,13 @@ class NetlinkYamlParser:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_sub_messages(self, entries: List[Dict[str, Any]], namespace: str) -> str:
+         """Parse sub-message definitions"""
+         lines = []
+ 
+         for entry in entries:
+-            lines.append(self.fmt.rst_section(namespace, 'sub-message', entry["name"]))
++            lines.append(self.fmt.rst_section(namespace, 'sub-message',
++                                              entry["name"]))
+             for fmt in entry["formats"]:
+                 value = fmt["value"]
+ 
+@@ -315,13 +296,14 @@ class NetlinkYamlParser:
+                 for attr in ['fixed-header', 'attribute-set']:
+                     if attr in fmt:
+                         lines.append(self.fmt.rst_fields(attr,
+-                                                self.fmt.rst_ref(namespace, attr, fmt[attr]),
+-                                                1))
++                                                         self.fmt.rst_ref(namespace,
++                                                                          attr,
++                                                                          fmt[attr]),
++                                                         1))
+                 lines.append("\n")
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_yaml(self, obj: Dict[str, Any]) -> str:
+         """Format the whole YAML into a RST string"""
+         lines = []
+@@ -344,7 +326,8 @@ class NetlinkYamlParser:
+         # Operations
+         if "operations" in obj:
+             lines.append(self.fmt.rst_subtitle("Operations"))
+-            lines.append(self.parse_operations(obj["operations"]["list"], family))
++            lines.append(self.parse_operations(obj["operations"]["list"],
++                                               family))
+ 
+         # Multicast groups
+         if "mcast-groups" in obj:
+@@ -368,11 +351,9 @@ class NetlinkYamlParser:
+ 
+         return "\n".join(lines)
+ 
+-
+     # Main functions
+     # ==============
+ 
+-
+     def parse_yaml_file(self, filename: str) -> str:
+         """Transform the YAML specified by filename into an RST-formatted string"""
+         with open(filename, "r", encoding="utf-8") as spec_file:
+@@ -381,7 +362,6 @@ class NetlinkYamlParser:
+ 
+         return content
+ 
+-
+     def generate_main_index_rst(self, output: str, index_dir: str) -> None:
+         """Generate the `networking_spec/index` content and write to the file"""
+         lines = []
+diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
+index 257288f707af..317093623dab 100755
+--- a/tools/net/ynl/pyynl/ynl_gen_rst.py
++++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
+@@ -23,7 +23,7 @@ SRC_DIR = os.path.dirname(os.path.realpath(__file__))
+ 
+ sys.path.insert(0, os.path.join(SRC_DIR, LIB_DIR))
+ 
+-from netlink_yml_parser import NetlinkYamlParser
++from netlink_yml_parser import NetlinkYamlParser      # pylint: disable=C0413
+ 
+ 
+ def parse_arguments() -> argparse.Namespace:
 -- 
 2.49.0
 
