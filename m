@@ -1,213 +1,332 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893321E0DE8;
-	Fri, 13 Jun 2025 11:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814469; cv=none; b=eBlaS4Qt8CZdIvn6mbFe7kMRuiClCUdkFy6fyG5fKLL3x9cyhbOFgJmCUSZYW56C2GwkFDOk5zIt2ax7N/VXLOkQSyTQn3A/UtiNkA+hjk1QdEoYUxbFuILP0sgLAq0bcXYPC0zhR8WGd/d9ZuymqusSgx5G/SvFQRQkQ9gs4jA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814469; c=relaxed/simple;
-	bh=xA+zEpZ1FkdZXdfe1TRGnTDv0gMFvhRy+g6ZUqPvvs4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tVxa4gYr8t8zqhvDJfDkP0WJmkNgYI8QMcEDyO87zBIe4O8Vx0rUxPknjtUfkhvOnSJAl95bwxayNw9jYGWw43KXVFtBJES3rbQE3fWFrJ/53RyzwHPDktcXBt3nsEaPQDE/yQ6HtsgUrqlnjsoiQEbgF4nEV0VhsYGltD0AQWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bJck66GWDz9sfB;
-	Fri, 13 Jun 2025 13:34:22 +0200 (CEST)
-Message-ID: <10680b25-2953-4dbb-9ff1-362bcf0f84cc@timmermann.space>
-Date: Fri, 13 Jun 2025 13:34:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253FD2D2392;
+	Fri, 13 Jun 2025 11:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749814519; cv=pass; b=WZ88mDkQk9Neoi8B3QDCd4fF7+gjuTVmrb2sjrmebPSStu+n6cuvBYVxD/l3BI2FNnYmN1+Ujma/ztAuzOOfLEs8zj3Qe2HH3qFmKe2CbAM9xHYBo6hAI64/cIVaPkYVE2Z4eUVedfeststBnu9tPXQtN5a38+wUV7wRqHzq5ws=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749814519; c=relaxed/simple;
+	bh=FwF5gcy/sg4T3XYi70dfrvpopDl97RJ7KYLH2cJ4P4M=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aqYetkR/SzgBDTSF/32fbjbEtGkPG5MAdOgP9OqS1DC+nFfwGpvFRiSPaM0T5iG6XS/7fMYt2WzGSBgnAfgDKmya74G+JnezJpDvvDgFHAEuqH8BIkNtCmlXPalRpnqRipHCv3EGfX7bwQptMROH6GDsVwcs3g6zQIsKEpKIeVY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=U19sVfz6; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="U19sVfz6"
+ARC-Seal: i=1; a=rsa-sha256; t=1749814474; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lETLoGB93kdeds4S0KtNgOM7REQiwh+NZ6/JULXJtNWu0wDh7njH+EAT21aIV0vuQZBgZL6HhZL4qjblaCJJms7usXnNucSq6ioJtIRNjT9eEctgPyUG1Wd7dbpxaZasVZszsHIlNh4DLEm0BzZ37fHfFGceOU/LKs8iM0ABrTw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749814474; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=63O4HhVlmCIQH37e2yHnmXGKXhP1A6hZ3WnVeHzeLEY=; 
+	b=kMZGZWpT0GGC+aDITWLFTMZkO6X0afeAstC8/ug09xlUzVnHv5bfYJHm8LqcdKp2SWXr5pSNumIC/Zza/QdMmDVqhj7haDn1ojsa8ucnNtgfYU1vN1oMTjRwTuqgwHsW5lDBu72GxB4jj8xfbEIqaAH0oL6WGks2uBj+btQmkqI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749814474;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=63O4HhVlmCIQH37e2yHnmXGKXhP1A6hZ3WnVeHzeLEY=;
+	b=U19sVfz6Zbmlpv0eumTx1fIYHMVk7lX/xpIlvbmK7WXwJQbF8yOpD64+dbqp7Ib/
+	Gt3+S9ia5k/c/e30enP+saH+RNyJHoB0/39CvJEu5Pm0szVrVZVSQ1VdPW+aD+fOe12
+	/6zI5fopVgzD3SIYhrF1pyvafdR+9Vb6r/7P35Io=
+Received: by mx.zohomail.com with SMTPS id 174981447219438.66651306626147;
+	Fri, 13 Jun 2025 04:34:32 -0700 (PDT)
+Message-ID: <73496f2a-ae0d-42c8-8013-9e157177c477@collabora.com>
+Date: Fri, 13 Jun 2025 16:34:20 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 2/2] leds: as3668: Driver for the ams Osram 4-channel
- i2c LED driver
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, lee@kernel.org,
- pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250611083151.22150-1-linux@timmermann.space>
- <20250611083151.22150-3-linux@timmermann.space>
- <5e131f07-9753-4d2f-a043-35751c278a63@wanadoo.fr>
-Content-Language: en-US, de-DE
-From: Lukas Timmermann <linux@timmermann.space>
-In-Reply-To: <5e131f07-9753-4d2f-a043-35751c278a63@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@collabora.com, kernel@collabora.com,
+ sebastian.reichel@collabora.com, Jeff Johnson
+ <jeff.johnson@oss.qualcomm.com>, Baochen Qiang <quic_bqiang@quicinc.com>,
+ Sumit Garg <sumit.garg@kernel.org>, mhi@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ ath12k@lists.infradead.org, Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+ Jeff Johnson <jjohnson@kernel.org>,
+ Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+ Youssef Samir <quic_yabdulra@quicinc.com>,
+ Matthew Leung <quic_mattleun@quicinc.com>,
+ Carl Vanderlip <quic_carlv@quicinc.com>,
+ "Dr. David Alan Gilbert" <linux@treblig.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Troy Hanson <quic_thanson@quicinc.com>, Alex Elder <elder@kernel.org>,
+ Yan Zhen <yanzhen@vivo.com>, Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: [PATCH v6] bus: mhi: host: don't free bhie tables during
+ suspend/hibernation
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+References: <20250516184952.878726-1-usama.anjum@collabora.com>
+ <819f15f9-1b16-4b96-8273-3f95c1e071bb@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <819f15f9-1b16-4b96-8273-3f95c1e071bb@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
 Hi,
 
-okay thanks, I will wait a week or two until sending the next patch.
+Reminder
 
-I've never worked with this email-based workflow before. That's the 
-reason I've chosen this simple driver as a first patch in the first 
-place. Just to get a little bit of experience under my belt. I know I'm 
-making a few very obvious mistakes. I'm getting a bit overwhelmed by all 
-the things to remember, I guess.
-
-Apologies for the noise.
-
-Best regards,
-Lukas Timmermann
-
-Am 12.06.25 um 22:27 schrieb Christophe JAILLET:
-> Le 11/06/2025 à 10:31, Lukas Timmermann a écrit :
->> Since there were no existing drivers for the AS3668 or related devices,
->> a new driver was introduced in a separate file. Similar devices were
->> reviewed, but none shared enough characteristics to justify code reuse.
->> As a result, this driver is written specifically for the AS3668.
+On 5/28/25 10:25 AM, Muhammad Usama Anjum wrote:
+> Soft reminder
+> 
+> On 5/16/25 11:49 PM, Muhammad Usama Anjum wrote:
+>> Fix dma_direct_alloc() failure at resume time during bhie_table
+>> allocation because of memory pressure. There is a report where at
+>> resume time, the memory from the dma doesn't get allocated and MHI
+>> fails to re-initialize.
 >>
->> Signed-off-by: Lukas Timmermann <linux@timmermann.space>
-> 
-> Hi,
-> 
-> first, I should that you should wait longer before sending each new 
-> version, so that you can collect more feedback.
-> 
+>> To fix it, don't free the memory at power down during suspend /
+>> hibernation. Instead, use the same allocated memory again after every
+>> resume / hibernation. This patch has been tested with resume and
+>> hibernation both.
+>>
+>> Optimize the rddm and fbc bhie allocations. The rddm is of constant
+>> size for a given hardware. While the fbc_image size depends on the
+>> firmware. If the firmware changes, we'll free and allocate new memory
+>> for it. This patch is motivated from the ath12k [1] and ath11k [2]
+>> patches. They don't free the memory and reuse the same memory if new
+>> size is same. The firmware caching hasn't been implemented for the
+>> drivers other than in the nouveau. (The changing of firmware isn't
+>> tested/supported for wireless drivers. But let's follow the example
+>> patches here.)
+>>
+>> [1] https://lore.kernel.org/all/20240419034034.2842-1-quic_bqiang@quicinc.com/
+>> [2] https://lore.kernel.org/all/20220506141448.10340-1-quic_akolli@quicinc.com/
+>>
+>> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+>> Tested-on: WCN7850 hw2.0 WLAN.HMT.1.1.c5-00284-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+>>
+>> Acked-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+>> Tested-by: Baochen Qiang <quic_bqiang@quicinc.com>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 >> ---
->>   MAINTAINERS                |   1 +
->>   drivers/leds/Kconfig       |  13 +++
->>   drivers/leds/Makefile      |   1 +
->>   drivers/leds/leds-as3668.c | 204 +++++++++++++++++++++++++++++++++++++
->>   4 files changed, 219 insertions(+)
->>   create mode 100644 drivers/leds/leds-as3668.c
-> 
-> ...
-> 
->> +static int as3668_dt_init(struct as3668 *as3668)
+>> Changes since v1:
+>> - Don't free bhie tables during suspend/hibernation only
+>> - Handle fbc_image changed size correctly
+>> - Remove fbc_image getting set to NULL in *free_bhie_table()
+>>
+>> Changes since v2:
+>> - Remove the new mhi_partial_unprepare_after_power_down() and instead
+>>   update mhi_power_down_keep_dev() to use
+>>   mhi_power_down_unprepare_keep_dev() as suggested by Mani
+>> - Update all users of this API such as ath12k (previously only ath11k
+>>   was updated)
+>> - Define prev_fw_sz in docs
+>> - Do better alignment of comments
+>>
+>> Changes since v3:
+>> - Fix state machine of ath12k by setting ATH12K_MHI_DEINIT with
+>>   ATH12K_MHI_POWER_OFF_KEEP_DEV state (Thanks Sebastian for testing and
+>>   finding the problem)
+>> - Use static with mhi_power_down_unprepare_keep_dev()
+>> - Remove crash log as it was showing that kworker wasn't able to
+>>   allocate memory.
+>>
+>> Changes since v4:
+>> - Update description
+>> - Use __mhi_power_down_unprepare_keep_dev() in
+>>   mhi_unprepare_after_power_down()
+>>
+>> Changes since v5:
+>> - Update description to don't give an impression that all bhie
+>>   allocations are being fixed. mhi_load_image_bhie() doesn't require
+>>   this optimization.
+>>
+>> This patch doesn't have fixes tag as we are avoiding error in case of
+>> memory pressure. We are just making this driver more robust by not
+>> freeing the memory and using the same after resuming.
+>> ---
+>>  drivers/bus/mhi/host/boot.c           | 15 +++++++++++----
+>>  drivers/bus/mhi/host/init.c           | 18 ++++++++++++------
+>>  drivers/bus/mhi/host/internal.h       |  2 ++
+>>  drivers/bus/mhi/host/pm.c             |  1 +
+>>  drivers/net/wireless/ath/ath11k/mhi.c |  8 ++++----
+>>  drivers/net/wireless/ath/ath12k/mhi.c | 14 ++++++++++----
+>>  include/linux/mhi.h                   |  2 ++
+>>  7 files changed, 42 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+>> index efa3b6dddf4d2..bc8459798bbee 100644
+>> --- a/drivers/bus/mhi/host/boot.c
+>> +++ b/drivers/bus/mhi/host/boot.c
+>> @@ -584,10 +584,17 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+>>  	 * device transitioning into MHI READY state
+>>  	 */
+>>  	if (fw_load_type == MHI_FW_LOAD_FBC) {
+>> -		ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
+>> -		if (ret) {
+>> -			release_firmware(firmware);
+>> -			goto error_fw_load;
+>> +		if (mhi_cntrl->fbc_image && fw_sz != mhi_cntrl->prev_fw_sz) {
+>> +			mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
+>> +			mhi_cntrl->fbc_image = NULL;
+>> +		}
+>> +		if (!mhi_cntrl->fbc_image) {
+>> +			ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
+>> +			if (ret) {
+>> +				release_firmware(firmware);
+>> +				goto error_fw_load;
+>> +			}
+>> +			mhi_cntrl->prev_fw_sz = fw_sz;
+>>  		}
+>>  
+>>  		/* Load the firmware into BHIE vec table */
+>> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+>> index 13e7a55f54ff4..8419ea8a5419b 100644
+>> --- a/drivers/bus/mhi/host/init.c
+>> +++ b/drivers/bus/mhi/host/init.c
+>> @@ -1173,8 +1173,9 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
+>>  		/*
+>>  		 * Allocate RDDM table for debugging purpose if specified
+>>  		 */
+>> -		mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
+>> -				     mhi_cntrl->rddm_size);
+>> +		if (!mhi_cntrl->rddm_image)
+>> +			mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
+>> +					     mhi_cntrl->rddm_size);
+>>  		if (mhi_cntrl->rddm_image) {
+>>  			ret = mhi_rddm_prepare(mhi_cntrl,
+>>  					       mhi_cntrl->rddm_image);
+>> @@ -1200,6 +1201,14 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
+>>  }
+>>  EXPORT_SYMBOL_GPL(mhi_prepare_for_power_up);
+>>  
+>> +void __mhi_unprepare_keep_dev(struct mhi_controller *mhi_cntrl)
 >> +{
->> +    struct device *dev = &as3668->client->dev;
->> +    struct as3668_led *led;
->> +    struct led_init_data init_data = {};
->> +    int err;
->> +    u32 reg;
+>> +	mhi_cntrl->bhi = NULL;
+>> +	mhi_cntrl->bhie = NULL;
 >> +
->> +    for_each_available_child_of_node_scoped(dev_of_node(dev), child) {
->> +        err = of_property_read_u32(child, "reg", &reg);
->> +        if (err) {
->> +            dev_err(dev, "unable to read device tree led reg, err 
->> %d\n", err);
-> 
-> as3668_dt_init() is only called from the probe. Sometimes maintainers 
-> prefer using "return dev_err_probe()" in such a case, to have less 
-> verbose code.
-> (I don't know if it is the case for the leds subsystem)
-> 
->> +            return err;
->> +        }
->> +
->> +        if (reg < 0 || reg > AS3668_MAX_LEDS) {
->> +            dev_err(dev, "unsupported led reg %d\n", reg);
->> +            return -EOPNOTSUPP;
-> 
-> Same.
-> 
->> +        }
->> +
->> +        led = &as3668->leds[reg];
->> +        led->fwnode = of_fwnode_handle(child);
->> +
->> +        led->num = reg;
->> +        led->chip = as3668;
->> +
->> +        led->cdev.max_brightness = U8_MAX;
->> +        led->cdev.brightness_get = as3668_brightness_get;
->> +        led->cdev.brightness_set = as3668_brightness_set;
->> +
->> +        init_data.fwnode = led->fwnode;
->> +        init_data.default_label = ":";
->> +
->> +        err = devm_led_classdev_register_ext(dev, &led->cdev, 
->> &init_data);
->> +        if (err) {
->> +            dev_err(dev, "failed to register %d LED\n", reg);
->> +            return err;
-> 
-> Same.
-> 
->> +        }
->> +    }
->> +
->> +    return 0;
+>> +	mhi_deinit_dev_ctxt(mhi_cntrl);
 >> +}
 >> +
->> +static int as3668_probe(struct i2c_client *client)
->> +{
->> +    u8 chip_id1, chip_id2, chip_serial, chip_rev;
->> +    struct as3668 *as3668;
+>>  void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
+>>  {
+>>  	if (mhi_cntrl->fbc_image) {
+>> @@ -1212,10 +1221,7 @@ void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
+>>  		mhi_cntrl->rddm_image = NULL;
+>>  	}
+>>  
+>> -	mhi_cntrl->bhi = NULL;
+>> -	mhi_cntrl->bhie = NULL;
+>> -
+>> -	mhi_deinit_dev_ctxt(mhi_cntrl);
+>> +	__mhi_unprepare_keep_dev(mhi_cntrl);
+>>  }
+>>  EXPORT_SYMBOL_GPL(mhi_unprepare_after_power_down);
+>>  
+>> diff --git a/drivers/bus/mhi/host/internal.h b/drivers/bus/mhi/host/internal.h
+>> index ce566f7d2e924..41b3fb835880b 100644
+>> --- a/drivers/bus/mhi/host/internal.h
+>> +++ b/drivers/bus/mhi/host/internal.h
+>> @@ -427,4 +427,6 @@ void mhi_unmap_single_no_bb(struct mhi_controller *mhi_cntrl,
+>>  void mhi_unmap_single_use_bb(struct mhi_controller *mhi_cntrl,
+>>  			     struct mhi_buf_info *buf_info);
+>>  
+>> +void __mhi_unprepare_keep_dev(struct mhi_controller *mhi_cntrl);
 >> +
->> +    /* Check for sensible i2c address */
->> +    if (client->addr != 0x42)
->> +        return dev_err_probe(&client->dev, -EFAULT,
->> +                     "unexpected address for as3668 device\n");
+>>  #endif /* _MHI_INT_H */
+>> diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
+>> index e6c3ff62bab1d..c2c09c308b9b7 100644
+>> --- a/drivers/bus/mhi/host/pm.c
+>> +++ b/drivers/bus/mhi/host/pm.c
+>> @@ -1263,6 +1263,7 @@ void mhi_power_down_keep_dev(struct mhi_controller *mhi_cntrl,
+>>  			       bool graceful)
+>>  {
+>>  	__mhi_power_down(mhi_cntrl, graceful, false);
+>> +	__mhi_unprepare_keep_dev(mhi_cntrl);
+>>  }
+>>  EXPORT_SYMBOL_GPL(mhi_power_down_keep_dev);
+>>  
+>> diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
+>> index acd76e9392d31..c5dc776b23643 100644
+>> --- a/drivers/net/wireless/ath/ath11k/mhi.c
+>> +++ b/drivers/net/wireless/ath/ath11k/mhi.c
+>> @@ -460,12 +460,12 @@ void ath11k_mhi_stop(struct ath11k_pci *ab_pci, bool is_suspend)
+>>  	 * workaround, otherwise ath11k_core_resume() will timeout
+>>  	 * during resume.
+>>  	 */
+>> -	if (is_suspend)
+>> +	if (is_suspend) {
+>>  		mhi_power_down_keep_dev(ab_pci->mhi_ctrl, true);
+>> -	else
+>> +	} else {
+>>  		mhi_power_down(ab_pci->mhi_ctrl, true);
+>> -
+>> -	mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
+>> +		mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
+>> +	}
+>>  }
+>>  
+>>  int ath11k_mhi_suspend(struct ath11k_pci *ab_pci)
+>> diff --git a/drivers/net/wireless/ath/ath12k/mhi.c b/drivers/net/wireless/ath/ath12k/mhi.c
+>> index 08f44baf182a5..3af524ccf4a5a 100644
+>> --- a/drivers/net/wireless/ath/ath12k/mhi.c
+>> +++ b/drivers/net/wireless/ath/ath12k/mhi.c
+>> @@ -601,6 +601,12 @@ static int ath12k_mhi_set_state(struct ath12k_pci *ab_pci,
+>>  
+>>  	ath12k_mhi_set_state_bit(ab_pci, mhi_state);
+>>  
+>> +	/* mhi_power_down_keep_dev() has been updated to DEINIT without
+>> +	 * freeing bhie tables
+>> +	 */
+>> +	if (mhi_state == ATH12K_MHI_POWER_OFF_KEEP_DEV)
+>> +		ath12k_mhi_set_state_bit(ab_pci, ATH12K_MHI_DEINIT);
 >> +
->> +    /* Read identifier from chip */
->> +    chip_id1 = as3668_read_value(client, AS3668_CHIP_ID1);
->> +
->> +    if (chip_id1 != AS3668_CHIP_IDENT)
->> +        return dev_err_probe(&client->dev, -ENODEV,
->> +                "chip reported wrong id: 0x%02x\n", chip_id1);
->> +
->> +    /* Check the revision */
->> +    chip_id2 = as3668_read_value(client, AS3668_CHIP_ID2);
->> +    chip_serial = FIELD_GET(AS3668_CHIP_ID2_SERIAL_MASK, chip_id2);
->> +    chip_rev = FIELD_GET(AS3668_CHIP_ID2_REV_MASK, chip_id2);
->> +
->> +    if (chip_rev != AS3668_CHIP_REV1)
->> +        dev_warn(&client->dev, "unexpected chip revision\n");
->> +
->> +    /* Print out information about the chip */
->> +    dev_dbg(&client->dev,
->> +        "chip_id: 0x%02x | chip_id2: 0x%02x | chip_serial: 0x%02x | 
->> chip_rev: 0x%02x\n",
->> +        chip_id1, chip_id2, chip_serial, chip_rev);
->> +
->> +    as3668 = devm_kzalloc(&client->dev, sizeof(*as3668), GFP_KERNEL);
->> +
+>>  	return 0;
+>>  
+>>  out:
+>> @@ -635,12 +641,12 @@ void ath12k_mhi_stop(struct ath12k_pci *ab_pci, bool is_suspend)
+>>  	 * workaround, otherwise ath12k_core_resume() will timeout
+>>  	 * during resume.
+>>  	 */
+>> -	if (is_suspend)
+>> +	if (is_suspend) {
+>>  		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_POWER_OFF_KEEP_DEV);
+>> -	else
+>> +	} else {
+>>  		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_POWER_OFF);
+>> -
+>> -	ath12k_mhi_set_state(ab_pci, ATH12K_MHI_DEINIT);
+>> +		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_DEINIT);
+>> +	}
+>>  }
+>>  
+>>  void ath12k_mhi_suspend(struct ath12k_pci *ab_pci)
+>> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+>> index dd372b0123a6d..6fd218a877855 100644
+>> --- a/include/linux/mhi.h
+>> +++ b/include/linux/mhi.h
+>> @@ -306,6 +306,7 @@ struct mhi_controller_config {
+>>   *           if fw_image is NULL and fbc_download is true (optional)
+>>   * @fw_sz: Firmware image data size for normal booting, used only if fw_image
+>>   *         is NULL and fbc_download is true (optional)
+>> + * @prev_fw_sz: Previous firmware image data size, when fbc_download is true
+>>   * @edl_image: Firmware image name for emergency download mode (optional)
+>>   * @rddm_size: RAM dump size that host should allocate for debugging purpose
+>>   * @sbl_size: SBL image size downloaded through BHIe (optional)
+>> @@ -382,6 +383,7 @@ struct mhi_controller {
+>>  	const char *fw_image;
+>>  	const u8 *fw_data;
+>>  	size_t fw_sz;
+>> +	size_t prev_fw_sz;
+>>  	const char *edl_image;
+>>  	size_t rddm_size;
+>>  	size_t sbl_size;
 > 
-> Unneeded new line.
-> 
->> +    if (!as3668)
->> +        return -ENOMEM;
->> +
->> +    as3668->client = client;
->> +    int err = as3668_dt_init(as3668);
-> 
-> Would be better, IMHO, if err was declared at the top of the function.
-> 
->> +
-> 
-> Unneeded new line.
-> 
->> +    if (err) {
->> +        dev_err(&client->dev, "failed to initialize device, err 
->> %d\n", err);
-> 
-> return dev_err_probe() to be consistent with the code above.
-> 
->> +        return err;
->> +    }
->> +
->> +    /* Initialize the chip */
->> +    as3668_write_value(client, AS3668_CURRX_CONTROL, 0x55);
->> +    as3668_write_value(client, AS3668_CURR1, 0x00);
->> +    as3668_write_value(client, AS3668_CURR2, 0x00);
->> +    as3668_write_value(client, AS3668_CURR3, 0x00);
->> +    as3668_write_value(client, AS3668_CURR4, 0x00);
->> +
->> +    return 0;
->> +}
-> 
-> ...
-> 
-> CJ
 > 
 
+
+-- 
+Regards,
+Usama
