@@ -1,125 +1,156 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2741EEA47;
-	Fri, 13 Jun 2025 15:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D501EEA47;
+	Fri, 13 Jun 2025 15:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828985; cv=none; b=PYuEkf4culmXJlCrGND3RlizDFQVz9kn8HsAl8Dq2iyEcGd2pyLFTMkA4VLGqhRNx7tJw6SJv6N4HPI35m3ba26sPREqB9aKPIH5cm6U6I5kJj+eZWAn7nbQDGh4jBVZKsneRvnzyCV2JagkPzKUgFvT2RXEIEePIW6zyd89MOI=
+	t=1749829104; cv=none; b=l55P2Oeq38l0qFR+Nl4BFkSgtZbO2GVKiA8zJtYv6YUt1UGLnLwC6Y5yggbyYCP/OcwxaHtQ69f7cSSII2wIVKvx6GK/9u3dCLbrrzVh6nRbzmIp/Ms1IGmRhWXGc9eHP6ojp8FEpOsOtLv9mG5S0I/2dsi76E0tdlIUgY51snM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828985; c=relaxed/simple;
-	bh=hi30N7hPTdM+W7CSNwd8BBlcNYK6rfxQAwLj1o7h+o8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=a2UkM76iJVfYQyUk75RB3u5qWGbZfBI+p0a0i0qe6r+sPnC/PPGJEu7eYSZHAKxK2OBXhd4C6kpMN7DGk6WWh9qxNt4J3QvSG5tYFmCJpqdw/n5AccXy62sCxrgbrLsb47y9OD2vnQDeoonY0kQdfOHiPHEQxcmcKMqLu2FH5nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VjSmWRHV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8A83mT6R; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749829104; c=relaxed/simple;
+	bh=HQhTZfTnw4diVZnHhB7ZoGRrWk9EQDmPViI90O1QwPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r+tM1otCyOo9rcYN+AEDpoXDwdqV5HHolGO13VhDEqO2e0q4eeDudSwEVRQyqr3q7U4FFnTP/VuU6r/p/dhvXjHRhcHpA+l7XzkrcOmoIRZmLAEi16eDpn4Za+830pwB6sN4oaHAntuFKipSc3HuE4VWDK0HsP/WuKaBSDzWYX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HP+PCI1p; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VjSmWRHV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8A83mT6R"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749828982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kl/6EkwsEpqgCUA5P8YrSajTCAuCE0EZwn0pBl3AfZU=;
-	b=VjSmWRHVDVG+nz4CIbGQz42VQ8TH8Zf+HXs9/usjzOzyXiZU30Ud+NRBCxX2CdNPI2b02h
-	rIcBChhAX6q7ZcrJqPSJoY8NR/tx5a7vTK+mPgr6/4L9/Yfs7b4HTZALqmDspKJtoxKdua
-	TM1HP0AeJAgcRicnW3CpQqT6X0v9XrOKOAKyve4+37Z3XiRY/RZBjijwLRx064XbT8x+c4
-	aeeQtWhk+bLxYuyn2u5asQd6PZiUV2YkiOPRG/IES26cMEP8YhSr+nTbJz5OV8SKjQJLSB
-	rWcnDK0p7W5kxLdDRZyolj4RM+ja7z2noCJQCr3WwudMFwe8WTM2jT8Wfzc2cA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749828982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kl/6EkwsEpqgCUA5P8YrSajTCAuCE0EZwn0pBl3AfZU=;
-	b=8A83mT6RVGbiO5VdlNc0EukD58Nw0/Gu1WWIv8vYi7JqEy6zT0DWmxkUk6/xrizwGDAinN
-	+4XaDX7rQr0YGpBQ==
-To: Anup Patel <apatel@ventanamicro.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J .
- Wysocki" <rafael@kernel.org>, Mika Westerberg
- <mika.westerberg@linux.intel.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Uwe
- =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Len Brown <lenb@kernel.org>, Sunil V L
- <sunilvl@ventanamicro.com>, Rahul Pathak <rpathak@ventanamicro.com>,
- Leyfoon Tan <leyfoon.tan@starfivetech.com>, Atish Patra
- <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, Samuel
- Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel
- <apatel@ventanamicro.com>
-Subject: Re: [PATCH v5 21/23] irqchip/riscv-rpmi-sysmsi: Add ACPI support
-In-Reply-To: <20250611062238.636753-22-apatel@ventanamicro.com>
-References: <20250611062238.636753-1-apatel@ventanamicro.com>
- <20250611062238.636753-22-apatel@ventanamicro.com>
-Date: Fri, 13 Jun 2025 17:36:21 +0200
-Message-ID: <87frg3irgq.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HP+PCI1p"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a375e72473so1410695f8f.0;
+        Fri, 13 Jun 2025 08:38:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749829101; x=1750433901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wci3OULWlGFVwJ58oYx/jmZbLNoBsgngvOoZDnSz/1o=;
+        b=HP+PCI1p2WndYBorGxD0G72q7j3QdzuvcFRtKgRln+9DJsUJMW/XpODPJ2ADnKryMw
+         /fmh0c9U0aIc8r7taRf3Yu3hkYkYxiIAX5GEXz8coBaTSoWmK6iLMnhJ1qcI2emkaXTn
+         CjUxgruPMQBVPAO5tBjYYPvb5dMcpLX11DHPCAlVoz01owY7itpbY7VMSCs1ulO7QjAO
+         WG8DyHDvF8eEa40mH5wu4egRk9gWK4eNBAMq2UFt/C8EBNQyl1vaXJ3GlV3yvv6j8+6l
+         COmC0HWTFIQMpyXxeSpHuJdoQPdH1+qqAFzAn+LgD+yDS0K8SySKQHx9sHFk11P8gUb1
+         Y0dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749829101; x=1750433901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wci3OULWlGFVwJ58oYx/jmZbLNoBsgngvOoZDnSz/1o=;
+        b=DViOGAcnPVEYvQ31/U6IXxI3NUS6j3n/1RJ8QsvfM9UA6p31ld8SMvftPqs6x2/Mha
+         vCNWSTPy24ABMryH92E0RqNiGUX3UnUjkdJd74+eFPyUViojNrB6cVQpLb/q2IQ54yaX
+         cSinGFKKf7FbGl7HFjgtmUQT6tDgNRGwPhuB1udT4hzo48ODUQP5K++FJQY9quOoUQIs
+         uIJdUvszCvB/IkUa7uFQ6PZZZpVVE0LvZ3yio7XSJvMPbd3rpGEy9+AQ43/mSF0LvzvR
+         Ie0f+Zm7HHoqWVyejTjW1hHU1xkRyJdF9aDfN510Yl4UBm6ese6Nwf4dNbUqByWgAp7/
+         wd0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUNIVbZ//jtnLBVpd3QEWlt1UoIABjvcS4DQmfp81Pc0lsYD63cJ7jIy0i3QWiHBXDRuJzOxeX7mdli@vger.kernel.org, AJvYcCVFWLrUCz9j3TXAD4TlCggzyFwQEu3h+J8net6hcpGNcuwBg3AvHtm2Oifv0Q60ldcgroD6sJq33hCvnTf1@vger.kernel.org, AJvYcCVhjly38mA8nCQ1f3FeVMnQXOg4hVOnPFdilGSixJ6RR/hD5YKtHoccGdqmv0YYnAlm+KSBh8sQqOEym0yIEs68wKo=@vger.kernel.org, AJvYcCWMmll+UlWzQs5rVG+xJuiKlRaTHFsPidpI8Nf97uEzlWLtU0NPNMNkFj7Rp1+Z9S3HpNMP4jwCcibW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgF+D8fOUCoyPUITcdWrEky5De3DOgaaRmCpWT6m1X90lpJwU4
+	i9mN3P72OqrIsuQd0okUrQ+8hA0TRqVxYIe/9SjcTzyJNfxoHKVyof5Pwmjf83FIJkWMHIFI9yx
+	JaNCiawnIAKMQBFeDLBsc+io9tuXEc0o=
+X-Gm-Gg: ASbGncsmIujHSql7BtgCkfQD5NjSOhX6AX37cRx31+Etsc+vY44cBO9hEME3faqmc6h
+	XBhTTgNgHNxCzeo9M/RDEl/1Ob0ibt8K6aEV1lebaiqQCJplKHQcVCNNtpj11ItVYkqxUgl4Q3I
+	ksgpx4VAdNdTyP5QT4bH1JFNOlE9Dkj0sYyCQE7K79Ye8=
+X-Google-Smtp-Source: AGHT+IEMrjsiK9P909xoQb43iNVR6qh9Ty1yLTa5JLGU6Mssh8oQxVdmG4OaKVUa4OkcVm1Om/tDr6y6PKQ/juNx3+8=
+X-Received: by 2002:a05:6000:2c0f:b0:3a4:ef2c:2e03 with SMTP id
+ ffacd0b85a97d-3a5723a2c47mr224793f8f.33.1749829100900; Fri, 13 Jun 2025
+ 08:38:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250609232253.514220-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWoWqrMKgNSYN_NDOtROD-SAq7ProhREPJTEBTOPCeH=A@mail.gmail.com>
+In-Reply-To: <CAMuHMdWoWqrMKgNSYN_NDOtROD-SAq7ProhREPJTEBTOPCeH=A@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 13 Jun 2025 16:37:55 +0100
+X-Gm-Features: AX0GCFvZCGvYpOP-G07AbNUHUOwIj4rYaSPCHj8y71th97TvgAtpMZZM4unZwDg
+Message-ID: <CA+V-a8sBhF-FwV0BXCxpHkuhdAg5YcwDsWPFRPSV_BdmNpLWYA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mmc: renesas,sdhi: Document RZ/T2H and
+ RZ/N2H support
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11 2025 at 11:52, Anup Patel wrote:
-> @@ -211,6 +213,9 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct rpmi_sysmsi_priv *priv;
-> +	struct irq_domain *msi_domain;
-> +	struct fwnode_handle *fwnode;
-> +	u32 id;
->  	int rc;
->  
->  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> @@ -241,6 +246,22 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
->  	}
->  	priv->nr_irqs = rc;
->  
-> +	fwnode = dev_fwnode(dev);
-> +	if (is_acpi_node(fwnode)) {
-> +		u32 nr_irqs;
-> +
-> +		rc = riscv_acpi_get_gsi_info(fwnode, &priv->gsi_base, &id,
-> +					     &nr_irqs, NULL);
-> +		if (rc) {
-> +			dev_err(dev, "failed to find GSI mapping\n");
-> +			return rc;
-> +		}
-> +
-> +		/* Update with actual GSI range */
-> +		if (nr_irqs != priv->nr_irqs)
-> +			riscv_acpi_update_gsi_range(priv->gsi_base, priv->nr_irqs);
-> +	}
-> +
->  	/* Set the device MSI domain if not available */
->  	if (!dev_get_msi_domain(dev)) {
->  		/*
-> @@ -250,8 +271,13 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
->  		 * then we need to set it explicitly before using any platform
->  		 * MSI functions.
->  		 */
-> -		if (dev_of_node(dev))
-> +		if (is_of_node(fwnode)) {
->  			of_msi_configure(dev, dev_of_node(dev));
-> +		} else if (is_acpi_device_node(fwnode)) {
-> +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
-> +							      DOMAIN_BUS_PLATFORM_MSI);
+Hi Geert,
 
-msi_domain is only used here and so it should be declared in this scope
-and not at the top of the function.
+Thank you for the review.
 
-> +			dev_set_msi_domain(dev, msi_domain);
-> +		}
+On Thu, Jun 12, 2025 at 4:47=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, 10 Jun 2025 at 01:23, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add SDHI bindings for the Renesas RZ/T2H (a.k.a R9A09G077) and RZ/N2H
+> > (a.k.a R9A09G087) SoCs. Use `renesas,sdhi-r9a09g057` as a fallback sinc=
+e
+> > the SD/MMC block on these SoCs is identical to the one on RZ/V2H(P),
+> > allowing reuse of the existing driver without modifications.
+> >
+> > Update the binding schema to reflect differences: unlike RZ/V2H(P),
+> > RZ/T2H and RZ/N2H do not require the `resets` property and use only a
+> > single clock instead of four.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> > +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> > @@ -129,59 +131,75 @@ allOf:
+> >          compatible:
+> >            contains:
+> >              enum:
+> > -              - renesas,sdhi-r9a09g057
+> > -              - renesas,rzg2l-sdhi
+> > +              - renesas,sdhi-r9a09g077
+> > +              - renesas,sdhi-r9a09g087
+> >      then:
+> >        properties:
+> > +        resets: false
+> >          clocks:
+> > -          items:
+> > -            - description: IMCLK, SDHI channel main clock1.
+> > -            - description: CLK_HS, SDHI channel High speed clock which=
+ operates
+> > -                           4 times that of SDHI channel main clock1.
+> > -            - description: IMCLK2, SDHI channel main clock2. When this=
+ clock is
+> > -                           turned off, external SD card detection cann=
+ot be
+> > -                           detected.
+> > -            - description: ACLK, SDHI channel bus clock.
+> > +          description: ACLK, SDHI channel bus clock.
+>
+> According to the documentation, this is the SDHI high speed clock...
+>
+Agreed, I will update it to `CLKHS, SDHI channel High speed clock.`
 
-Other than that:
+> > +          maxItems: 1
+> >          clock-names:
+> > -          items:
+> > -            - const: core
+> > -            - const: clkh
+> > -            - const: cd
+> > -            - const: aclk
+> > -      required:
+> > -        - clock-names
+> > -        - resets
+> > +          const: aclk
+>
+> ... i.e. clkhs.
+s/clkhs/clkh
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cheers,
+Prabhakar
