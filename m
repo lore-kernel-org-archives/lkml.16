@@ -1,149 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765DD1F3B83
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DD42E11AE;
+	Fri, 13 Jun 2025 18:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749838452; cv=none; b=B5mWWkApf1ZIHf4FBZC8mB/7DRQmnHQGmVtDwhVwcjkQxPFsKwJIG21l1u1XA7a34imUZ0OFg8kYrH41csWi8ogQGxouKd7QKPXD9LJXL985nWemMww05HjxF1641ZcI7lszXWjJM/293Gd2LUGpEDnNzw6zicVHc+qiYaqobRo=
+	t=1749838496; cv=none; b=hZpy1UqtiNA9PbJnsQ5GbbY+nlDxcFGq+GkZpB64snhGt0JTaRoHTEzv+aZvcswDf7LDdzdYP+5WYZy8i35V3hLYrAnavNhb2jlIpQ8r37wakvT43V5O11/iOce/A8jVZlTEJ5+t/lqQylB3ASDhe0FqzVxPVY9NtO1zbR1tK48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749838452; c=relaxed/simple;
-	bh=pHIhBgCbxbw/wEXaEwfr43QBMvmKgvIYdQnGS+UjHQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mzAI4zY/UuKZwNAg13+TocV3KMqDCBY32+uYbNjX30pdJ74Pym9syWesfyUJyhENZr3zFSLX9dO1ELWrwOoiVgpR4uCb0XX6EJocCHKMg4e9SiAJKqMYz1ojG0Egv8BUBjN6H7w2UM5EVf6aIm1JPDogNbA9TcuaBOFO5dOHxdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BlsijBi4; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749838496; c=relaxed/simple;
+	bh=KjYY4bsTZUm05TpfR2l4YdrK8TqDiMRSIg8azQwn+r8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r+0tKsyQuv/00ta0/2TInysyq5G2CgcwIj3etfFSF+IczCuuZ1H++h1oA9SWGTY9mrRu888y50JAomGCPGbJw3/VjGL7YVvLgAhhgU69guF1kJLLdQIH5ekqea8cORi3QjO4B/JFDLBgm0gMI5QUJed/zJu+x0n7hZjihbc39Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rc/SufIb; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BlsijBi4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749838450; x=1781374450;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pHIhBgCbxbw/wEXaEwfr43QBMvmKgvIYdQnGS+UjHQ4=;
-  b=BlsijBi4Y7uejLfacpDZX5KSfTmh7MFnz5k40/BMan58y3PkFqTqNZK5
-   9EptlxZmPDTKVSi3Y+J4P863Qvid9mdy7LVAycokPO+bVA5mFa4htPe0x
-   17wMxXsMQwbsW10o5NKx1ICZl2q7+9jO4fxpI9R6IoVikF3mheFKEyJba
-   n/YJg5HK6nLE4fZgLrvxPVSDS6X/LG7alb5cxg21XRsbSvvgEbqyt+gaw
-   JQqYnaq2pZZZXLpmdGODPunRIQaQ5iohLsz73MOq49PCzJMbF+iSkpWC4
-   MWlMS2Dn3EFnY87UJrVXyPphKrX68sldDnRcnVJSpjiRjgNK4V+u9dbT2
-   A==;
-X-CSE-ConnectionGUID: 55rKjbwlQQO4+j3tgfM2ZA==
-X-CSE-MsgGUID: USNu6Cz+RzO+1/Bi2KleGg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="52159415"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="52159415"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 11:14:09 -0700
-X-CSE-ConnectionGUID: ET1ejHN3TSmOXldNjbfPqg==
-X-CSE-MsgGUID: Y5kKJ9lMTG20hLZ8siEUqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="148363399"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 11:14:08 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id CE84D20B5736;
-	Fri, 13 Jun 2025 11:14:06 -0700 (PDT)
-Message-ID: <067e0923-d904-4382-bf49-34083f9927e7@linux.intel.com>
-Date: Fri, 13 Jun 2025 14:14:05 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rc/SufIb"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-235a6b89dfaso3343005ad.3;
+        Fri, 13 Jun 2025 11:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749838494; x=1750443294; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wF4gp/2m+krKdbuHM8VFo8aUcpegmRfbsaqd6bWd3zs=;
+        b=Rc/SufIbtuMmpD6Mno48+Skl8X3xzck1mg4EWxe6804WHz7pH+EKgPkswvbcEreSu5
+         55oqAjn/WPxKlODXvgqYjSkFBCqL1PKYy600xyIsvMHPH1REnw8Ojtr/BDShRpubjeJN
+         ChUiAy3pCMUuKVUJof1Md+byZ9whV3SJxm7JwR/1509jvdE1gjBNJHIdSLnFdoRJ9/LO
+         9gEr1lBKgiqaa9Jp+3R/RP+TjyjPzLG6jSJXMRfcZPUlO3V3d3vCyyDb5fRGHECh5BQj
+         8ItRs+1gNF+br83shz+NqLHQiRChLMODrK1bmne9LMXgfjFawxW454wsP6mutWOOOI86
+         XPpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749838494; x=1750443294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wF4gp/2m+krKdbuHM8VFo8aUcpegmRfbsaqd6bWd3zs=;
+        b=a1nh24khltTWa4mq05V0VzYI57drDu/r8guM0wAOrPkxvvSoLE69Rj4ChrKjmLdVyR
+         //hLa/Efx2F1Qmr1HIwOBV/5RxTD8bA7dHmGLiNs6D+Xld3gMC3iLkd0keR0f5wTchVP
+         damEV7SwcZhLOQPWvvq14wZyF4AolRuSx7nhOdElbEabZBs7yPGxJziNsa6Gwlng1Rzl
+         qBvTOkWOZFgZiuSQhgi1zpmvALOrXafvyxQME7CBzNNAY25Wrd9zRSNk7LpWDnxBOxxH
+         2gyTDSZ7GUpOXTib6lJfR7ScPsF1MOJM7Lkc5g/X5vzERBI5QkFO4UzV69GW+QYN/xgv
+         IldA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3LN9yfgUSWIJHmnl8PNaFAmvjXZk3bcW457RiAKzEBiQ68wmU5SzrBjQA73MBBbv4xgrlVXaSZMGe@vger.kernel.org, AJvYcCUHdPdao90MhiLwLKsAwfVqHpmXqGlgVTMFtmSNd+eL93lbVdR24OLce0dymDr3LqcjwNYcVLgO@vger.kernel.org, AJvYcCUPaoZiGpnoKO4M72G3wLUM28MVs/1Fnrbfduv+rnqymyOhIXeO5It7dUOHpWAp1D3jH68pxI16SfK5wZQ=@vger.kernel.org, AJvYcCUzM1y4jq8dbckYTzfQgVanNb98jKiF7T4PB9AAHhmpfalKuY6gsjeWD+a4RHXyplrZ7IW/yv2kW7MixE4S@vger.kernel.org, AJvYcCVhXaiv16f12Fl5+p9ZAuu/cBk/u2Ndk90zp6hmkclL09yM5xwTUwgKQVKQtsb/Cc7WXm/Jmh1cD6LPVEDJiSY=@vger.kernel.org, AJvYcCW/6sPwSn0aJXdOaSH9OOT5wp3BYbITyCZgVDn/VB3qQMOfe+STW3AyL99n2SraDQBNQeDok7v5rUl9Tjh0@vger.kernel.org, AJvYcCWb2K0JENWU1RB1FxUR/0SMZ9RfuULepOHJUw5IimNlklWCiR2eTZiAm3tjMQfgXnWtaShyimVgwshb@vger.kernel.org, AJvYcCXZhCj3LEzW4HlFMEEA3xlCJmf1p5VezLoZGJuwb6hZ5nInK7KF0MMlKoQ8NktyIO1jcC43gIUgSrHGLb67BwKv@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqd+YBtiMxx7BsSJ/M5sHvCtilN4OrfwatALPNxn3Ygy5Efjz4
+	qIHmkoLMatb55QfBME9BxxU/x66CVXSxxPVYAQiqldGEq8ZAxZyZm1kWZeYhbT92R+NgFnKqG5q
+	aadVQaRdXX52b3AlwbnXma/9VwLbUJUY=
+X-Gm-Gg: ASbGnctTTRR7XYh0Ygs0sWzTsWBS55j+naRltlgMTgeBbp7l20bOQ972SXXRs15/tUv
+	Ib9FkNxMiUp+eOsk9vjFK8dZ7mLKHtVoaspcQyXqnzljU3tcovx7+DN9qSopHuRxK7BiSMGBP3T
+	5RTBQZwqOTHOs/LKZrSQcoOWQ6LcONv6QLdo8km5vUGxQ=
+X-Google-Smtp-Source: AGHT+IFYalb1OTW7qnfDKSlOci9VWDAXekpMbN5b2vtf3GW8ZUpuOTwRiHQFxL1wuWQtjgsw7eVkO7CajlLxN6YkM2A=
+X-Received: by 2002:a17:902:d48d:b0:234:d14c:50ff with SMTP id
+ d9443c01a7336-2366b00ba59mr2634725ad.6.1749838494222; Fri, 13 Jun 2025
+ 11:14:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 05/12] perf/x86: Support XMM register for non-PEBS and
- REGS_USER
-To: Dave Hansen <dave.hansen@intel.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
- dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
- jolsa@kernel.org, alexander.shishkin@linux.intel.com,
- linux-kernel@vger.kernel.org
-Cc: dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
-References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
- <20250613134943.3186517-6-kan.liang@linux.intel.com>
- <9054bf0d-85db-4bd4-9f67-7c71d7866e6a@intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <9054bf0d-85db-4bd4-9f67-7c71d7866e6a@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250611-ptr-as-ptr-v11-0-ce5b41c6e9c6@gmail.com>
+In-Reply-To: <20250611-ptr-as-ptr-v11-0-ce5b41c6e9c6@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 13 Jun 2025 20:14:41 +0200
+X-Gm-Features: AX0GCFtsUq0DPj-o5G6erQ-PfWcX7A0QtacSDQOlDe1Lx8EsxSkeObOaFNw6_Co
+Message-ID: <CANiq72m1ZWxPgCda1C-8X5XOvEq9Z9JfJZqhU4ZUzZ64=N+2fQ@mail.gmail.com>
+Subject: Re: [PATCH v11 0/6] rust: reduce `as` casts, enable related lints
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 11, 2025 at 12:23=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+>
+> This series depends on "rust: retain pointer mut-ness in
+> `container_of!`"[1].
 
+Not anymore! :)
 
-On 2025-06-13 11:34 a.m., Dave Hansen wrote:
-> On 6/13/25 06:49, kan.liang@linux.intel.com wrote:
->> +static void x86_pmu_get_ext_regs(struct x86_perf_regs *perf_regs, u64 mask)
->> +{
->> +	void *xsave = (void *)ALIGN((unsigned long)per_cpu(ext_regs_buf, smp_processor_id()), 64);
->> +	struct xregs_state *xregs_xsave = xsave;
->> +	u64 xcomp_bv;
->> +
->> +	if (WARN_ON_ONCE(!xsave))
->> +		return;
->> +
->> +	xsaves_nmi(xsave, mask);
->> +
->> +	xcomp_bv = xregs_xsave->header.xcomp_bv;
->> +	if (mask & XFEATURE_MASK_SSE && xcomp_bv & XFEATURE_SSE)
->> +		perf_regs->xmm_regs = (u64 *)xregs_xsave->i387.xmm_space;
->> +}
-> 
-> Now that I'm thinking about the init optimization... This is buggy.
-> 
-> Isn't XSAVE fun?
-> 
-> Here's a little primer:
-> 
-> 	xcomp_bv - tells you what the format of the buffer is.
-> 		   Which states are where.
-> 	xstate_bv - (aka. xfeatures) tells you which things XSAVES
-> 		    wrote to the buffer.
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-I got the definitions of the two reversed. :(
+Thanks for rebasing, Tamir, I appreciate it.
 
-> 
-> It's totally valid to have a feature set in xcomp_bv but not xstate_bv.
-> 
-> xcomp_bv is actually pretty boring:
-> 
-> 	The XSAVES instructions sets bit 63 of the XCOMP_BV field of the
-> 	XSAVE header while writing RFBM[62:0] to XCOMP_BV[62:0]
-> 
-> Since you know the RFBM, you also know xstate_bv. You don't need to read
-> it out of the buffer even.
-> 
-> Oh, and what's with the:
-> 
-> 	xcomp_bv & XFEATURE_SSE
-> 
-> ? xcomp_bv is a bitmap, just like 'mask'
-> 
-> So, what do you do when
-> 
-> 	if (!(xregs_xsave->header.xfeatures & XFEATURE_MASK_SSE))
-> 		... here?
-> 
-> The "XSAVE-Enabled Registers Group" docs say:
-> 
-> 	The first eight bytes include the XSAVES instruction’s XSTATE_BV
-> 	bit vector (reflecting INIT optimization). This field
-> 	is in XCR0 format.
-> 
-> So the PEBS parsing code has to know how to deal with this situation too
-> and not copy the xmm_regs out to users.
+This has a bunch of hits in configfs, cpufreq and Nova [1]. I guess
+you built without those enabled.
 
-Now, perf will copy all 0 to users if !perf_regs->xmm_regs. But 0 should
-be a valid value for the xmm_regs. Perf probably need to dump a bitmap
-which indicates what regs are really collected. It may be slightly
-different from the requested bitmap because of the above case.
+Could you please fix those? Since this affects other maintainers that
+we need to ask the Acked-by to, let's try to at least give them the
+final state.
 
-Thanks,
-Kan
+Thanks!
 
+Cheers,
+Miguel
+
+[1]
+
+warning: reference as raw pointer
+   --> rust/kernel/configfs.rs:429:9
+
+warning: reference as raw pointer
+   --> rust/kernel/configfs.rs:467:9
+
+warning: reference as raw pointer
+   --> rust/kernel/configfs.rs:479:9
+
+warning: `as` casting between raw pointers without changing their constness
+   --> rust/kernel/configfs.rs:564:48
+
+warning: reference as raw pointer
+   --> rust/kernel/configfs.rs:721:39
+
+warning: reference as raw pointer
+   --> rust/kernel/configfs.rs:764:35
+
+warning: reference as raw pointer
+   --> rust/kernel/configfs.rs:783:35
+
+warning: reference as raw pointer
+   --> rust/kernel/configfs.rs:764:35
+
+warning: reference as raw pointer
+   --> rust/kernel/configfs.rs:783:35
+
+warning: using `as _` conversion
+   --> rust/kernel/cpufreq.rs:650:45
+
+warning: `as` casting between raw pointers without changing their constness
+   --> rust/kernel/cpufreq.rs:650:45
+
+warning: using `as _` conversion
+  --> drivers/gpu/nova-core/driver.rs:22:64
+
+warning: casts from `u8` to `u32` can be expressed infallibly using `From`
+   --> drivers/gpu/nova-core/regs/macros.rs:267:26
+
+warning: casts from `u8` to `u32` can be expressed infallibly using `From`
+   --> drivers/gpu/nova-core/regs/macros.rs:267:26
+
+warning: casts from `u8` to `u32` can be expressed infallibly using `From`
+   --> drivers/gpu/nova-core/regs/macros.rs:267:26
+
+warning: casts from `u8` to `u32` can be expressed infallibly using `From`
+   --> drivers/gpu/nova-core/regs/macros.rs:267:26
+
+warning: casts from `u8` to `u32` can be expressed infallibly using `From`
+   --> drivers/gpu/nova-core/regs/macros.rs:267:26
+
+warning: casts from `u8` to `u32` can be expressed infallibly using `From`
+  --> drivers/gpu/nova-core/regs.rs:35:65
