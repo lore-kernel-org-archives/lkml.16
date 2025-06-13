@@ -1,86 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C878472
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E8E8472;
+	Fri, 13 Jun 2025 17:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749834186; cv=none; b=db98+oW8wyGwL0uc6BcEKfZE8O7aP10IvYnei0Ouh/08MBNHLtQE/jLsI5qzYWsyZBQjKLpftwrhPsb5FHS9/9JYfojMTIlEF0SKOxqJ3Temn1lPpr6+v9u7fPXbAI5Wf2KImF2xj/Orj9RKP3f62LJ0J1WxKMV7o8rXiozZV5c=
+	t=1749834200; cv=none; b=sU0ZSUJlpREoAYdqfKZRkcIecWqwk2+Yfm+OWOR35kK9e3gJ7n6eDBPtCy/cW3dJmXmm3cZZ835UknoVM+TnGHhiG5zqmM5FXC79nrzuV7yU17plRAdD3XaWeFrDV0YQgX0GFHZ5gzw5+HaE3vndl1sZ3DOQTCnQtVS5g05kH6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749834186; c=relaxed/simple;
-	bh=/r40uZR/KO3gsL0fdXn7quqO1Y7noMETxV4Ji86P3s4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Dlrtr+U2w4wHdnEKCrPAoUjZNVZ355a0yCz8oI9K9NF7l5euG4WfvQenzhV2Atk8rAhvNIBdXZkFs80J9s+e/+g+g+v0Hq7Wc+XvG4tb+Ac9sV1+Qxuv1DiwHLj3mPbzUUZ3J+vsJd9oEuiLvYLZYfTCcov75VI6LPZqGMmWFsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wVAhFgzS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PuY4vm91; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749834200; c=relaxed/simple;
+	bh=i3N5soifklKhyAjJV53/9YiYbKyCfF9CiOMetskADLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XCIty2vxsZO4CKHsf3UVFlJKMxj1uHzvmmUkxjr6LlZEBlHYptGg6OTMjQ2yQswwMzWsojkGVmMxpyhqu3FknAaKUxu3Z9FDY21S3DP0nB/+C4ANCCvQLyfhN0RY9bSo5+qPngX458K7v2Q46WpZwmfIloPrKLB3nl3/YJ6HIwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PqRhi5Av; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wVAhFgzS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PuY4vm91"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749834183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7NfgeF2dC2QINSkCwFY7dOB7Pf1iyEUqChtxCjfUjFw=;
-	b=wVAhFgzSVm6kS9Ztjloehah17EJj+npVOpu28Rq3gsN1hS4V1h2mSEIlJRWU4AJnlIKbNr
-	z38NJ4+88VYuLXah9EzRxhATJpgB7BfnVQMwRHnq3LMRjnn22QT471Fut4bYze/PZTh53K
-	QkBBHHbXkwDjPtVFNpidWFJEh8nI0Ou4cLwB4utWMAFkFxE2AayA43MMus4D8+3hKGLjNi
-	P15woFv/kylxgiqQ1+7dzJ3xxqrGUXRVzi13pluT9BCFaP26jwgWtgJYZnUmMnBd8SZpxu
-	HghbHz9XBwav8SlKFMjlEPeuZQD67QyKELdrAFb3tomsEjRn28zUicyAFOBwyA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749834183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7NfgeF2dC2QINSkCwFY7dOB7Pf1iyEUqChtxCjfUjFw=;
-	b=PuY4vm91yJw+AZX3wKbnV/GEGRYKRqnpCNpkt4TvNPtP58geJXOrMmrJCjwm5Dj+AgqFE+
-	lFRWNWHAW5SxrFBQ==
-To: patchwork-bot+linux-riscv@kernel.org, Andrew Bresticker
- <abrestic@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, anup@brainfault.org,
- palmer@dabbelt.com, alex@ghiti.fr, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] irqchip/riscv-imsic: Start local sync timer on correct CPU
-In-Reply-To: <174957291849.2454024.7268696984666677694.git-patchwork-notify@kernel.org>
-References: <20250514171320.3494917-1-abrestic@rivosinc.com>
- <174957291849.2454024.7268696984666677694.git-patchwork-notify@kernel.org>
-Date: Fri, 13 Jun 2025 19:03:02 +0200
-Message-ID: <87sek3poah.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PqRhi5Av"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af51596da56so2112669a12.0;
+        Fri, 13 Jun 2025 10:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749834197; x=1750438997; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Kn1ckhgHo64BPoEpHx9buqHUv1Oyd0BS8vEud6lPxjA=;
+        b=PqRhi5AvmBf6bTsk4iyLpXL3YiVFDQ456aS8ZxxI/ao2nz574fOiY35KUDfibK9hiM
+         Go409wS0o18nTpH9oJtXM5EsC8EOIeFsT46aFv3a3buKKsZ/wDnrBCgjYamfuZGRkJ9O
+         J0Zyj/l17aHpI4dDfoZMOto7JxIFkwv8E29EAwgaTSC2zu/QnuWwQI0fcFMuXC4Esw3N
+         r/YV+EA+cFQ9rZb7Rb623Fe+peo9KqkWT9Y/T3WjOwyykZZjH8i9ywKOdUALsLruXYq4
+         YklveAg2oRDNheFnNglNdjZTVHyxYf7T3WfrINLpzzu0NsyufaJPcrU6a4J0ldKbFmGP
+         grjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749834197; x=1750438997;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kn1ckhgHo64BPoEpHx9buqHUv1Oyd0BS8vEud6lPxjA=;
+        b=Vs7rfHCKBdQD6VXZrNz2Bsc5dyw/iGxZqN3qJViU2cQH10W2NCZ6ZJ1vfIzN4cqu/8
+         gS68CKJFmF7Z7+rdlyPtYu7w9NJ8mvjjfUFu3N7L1PXu/XoO4qi6tSxA6fSCUluaJ590
+         3i/gBf56FzyyaF3Jj0aNDk3jWW5CSwUaX4T2aEB9SaxfO8q9UDONHyC50sVmjAJrRxAr
+         yF2CI0bKpOrg3UYppSCvkFYJItRZYczvjiKMj6WWAhyRUaCjfNjOF1xCHQE21lVNrrac
+         3u+26Ij5QixYhpCmd14nT1gmq5a8pCQUnoVwsThA4J5HWuZ455DdHjei4+F4nT+lRlws
+         f4YA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPd6VZu2bdQViVDn9a3GTkL7XDOPP4wNiOrSwjYg7QH0OKwYAAfiMU3odNvdBkFivBX2gND15ubGVU@vger.kernel.org, AJvYcCXFyIrquaPiPfpCoKyE/wLwGq5mMCjd4iWe5ip7CTrLqoRNUfpl3ZotEcynjp/oyroaFWtdpWfpmgm1zTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcBH9s+7DMOGJEpMsNOfvyFCsg31PW05HJh9SZ6xV/QC9JVkHD
+	LfWlSLiBod3Hy52LkViER6Qle3Tesuv8WTsXsQKCesISfzL1iydxPSNl
+X-Gm-Gg: ASbGnctA1MaASLxV6cGUoIwrM2GeQ/u31bY3X6MbqGdF4r2u3j3C8kryiGldtYFjuuz
+	uZDpzAqoB5jYp+TWSelE+D+YE/603KUIDPcxTgThloVxfHYKB2xQ43NFowz4j+WyIYgOQ7Ocnj7
+	I5pZMhJzZWdDq0FNcXF4dzYTyyONkL5oqEc/dddtLL3FvwKzJltxbPgKL7U27nG6fj9jijF3UkT
+	kayQuOLZKwUE9vWx58gsWs00BGhWOqkst811kQ7Tvex+UfFIEdqrqp9fAxEWAfOZhQCeeOxR1jc
+	8QkvcijvoOp+XFkInxHfT/eId0dTrI3zg3tJASvQIYGIRbRMfw==
+X-Google-Smtp-Source: AGHT+IE0ysRgafNmvzcIEeHIwfE133KfLqRER/QsYHGgAAkVNDFrgTlsHHQwGU1Al9+VxkGy+d6OGA==
+X-Received: by 2002:a17:90a:d2c8:b0:312:959:dc3e with SMTP id 98e67ed59e1d1-313f1ca0fe1mr613630a91.10.1749834196976;
+        Fri, 13 Jun 2025 10:03:16 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:8497::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea8ccbsm16758555ad.167.2025.06.13.10.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 10:03:16 -0700 (PDT)
+Date: Fri, 13 Jun 2025 14:03:06 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v5 0/4] PCI: rockchip: Improve driver quality
+Message-ID: <cover.1749833986.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Jun 10 2025 at 16:28, patchwork-bot wrote:
-> Hello:
->
-> This patch was applied to riscv/linux.git (fixes)
-> by Thomas Gleixner <tglx@linutronix.de>:
+During a 30-day debugging-run fighting quirky PCIe devices on RK3399
+some quality improvements began to take form and this is my attempt
+at upstreaming it. It will ensure maximum chance of retraining to Gen2
+5.0GT/s, on all four lanes and plus if anybody is debugging the PHY
+they'll now get real values from TEST_I[3:0] for every TEST_ADDR[4:0]
+without risk of locking up kernel like with present broken async
+strobe TEST_WRITE.
 
-No. I never apply patches to the riscv tree :)
+---
+V4 -> V5: fix build failure, reflow commit messages and also convert
+registers for EP operation, all suggested by Ilpo
+V3 -> V4: fix setting-up of TLS in Link Control and Status Register 2,
+also adjust commit titles
+V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
+suggestion
+V1 -> V2: use standard PCIe defines as suggested by Bjorn
 
-> On Wed, 14 May 2025 10:13:20 -0700 you wrote:
->> When starting the local sync timer to synchronize the state of a remote
->> CPU it should be added on the CPU to be synchronized, not the initiating
->> CPU. This results in interrupt delivery being delayed until the timer
->> eventually runs (due to another mask/unmask/migrate operation) on the
->> target CPU.
->> 
->> Fixes: 0f67911e821c ("irqchip/riscv-imsic: Separate next and previous pointers in IMSIC vector")
->> Signed-off-by: Andrew Bresticker <abrestic@rivosinc.com>
->> 
->> [...]
->
-> Here is the summary with links:
->   - irqchip/riscv-imsic: Start local sync timer on correct CPU
->     https://git.kernel.org/riscv/c/08fb624802d8
->
-> You are awesome, thank you!
 
-That patch has been committed to the tip tree and is already upstream.
+Geraldo Nascimento (4):
+  PCI: rockchip: Use standard PCIe defines
+  PCI: rockchip: Set Target Link Speed before retraining
+  phy: rockchip-pcie: Enable all four lanes
+  phy: rockchip-pcie: Adjust read mask and write
 
-Can you fix your bot scripts please?
+ drivers/pci/controller/pcie-rockchip-ep.c   |  4 +-
+ drivers/pci/controller/pcie-rockchip-host.c | 49 ++++++++++++---------
+ drivers/pci/controller/pcie-rockchip.h      | 12 +----
+ drivers/phy/rockchip/phy-rockchip-pcie.c    | 16 ++++---
+ 4 files changed, 39 insertions(+), 42 deletions(-)
+
+-- 
+2.49.0
+
