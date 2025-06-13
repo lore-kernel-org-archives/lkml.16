@@ -1,127 +1,238 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B1324BD1F
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A95293C6F
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749842506; cv=none; b=jdBlcPVKY+32eDjFHbBTUShWNSrFzZg23a/rxUUtL4my4ky6ofdF+1tphIv/A/aAYLqgDJogRuNuxmLz+bosduZ4lVHVJKQNlpqfJuNIlg9ZXaVpJKKmjXRFJwnwsBHNudVZpRWfxe8KfB7kJBB1OG0fnUct+k3M0NsP36siFbg=
+	t=1749842508; cv=none; b=biU3KOAMp1t6KUmGB9sPNToHXCO4R1+Y5N9HaaJwzFRdZdGrsPEW+WPG81kbbIUgcNsMI7bbaLC7xVh1Kk2GArD7QXj+bXy6j/xplk8up3cRTfmS+P4CTy/cpratOwlROJdznu7JEcp8em1Jywr/lGhX1upOiC2Vp6iLtjI020o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749842506; c=relaxed/simple;
-	bh=YLKpZILOwVtOfA0AbaKsPcVtXLdl14+iX8YDYOFnlek=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DTU4CJOcgAI0z4NM9Wc7E6cvkudcCAlpf2jkGZsvH8pqWrIzfv91hchrDorMh5jpbJf5jKuGajjkDpl2DlD1KI5me1xp9lK+3cXmA31/+FaSeJLkSnECk4cmMcRyelIztpJh5gs0hozda+uCJ7eXjCSbRc5hPDvQnfBbnANn8l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ObXxzX29; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749842508; c=relaxed/simple;
+	bh=DI9goXjsgHd0CIIpoV89sIa4Moo1ngQqqygfMWTuukY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h2zKKGETgmEiC83z/wfi0v7Euru+7r42cEh3T8qFZT+1x9JstnOdFB06isLjRE5HzciVF5QAE+7sCE90AD/8DBV/3rH9Sxj7UY7QGNPE+9RALIPowUI2B1cE+MpgjpWGz9eJ6JRnm3S6k07PHMM1n/O8qfx9wx5Tq2URkwWvu2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B+xCHb1m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ObXxzX29"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-47e9fea29easo72671cf.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B+xCHb1m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749842505;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=47EwzNRArjARKfaIAn0KmpmAVReUeeJkM/EwClBQZtg=;
+	b=B+xCHb1m8QA6i4FwnZKQLXd+mYZ9LBwCA6IRoYLbN1UGNz6BE7P7ZgFvF+6n9rk3Ezv+2J
+	eJvKpDqnYt5tJ/lsFxWxa1VW0k+q9tTLlMRD92kTVvFnqFVTaLUStQdAB4B47IVhTT/PfR
+	8olFfFVNDBfM1GFWMMZVjme+xsslQ4c=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-249-SYVqQTAjMdOrXA4F7WFzgA-1; Fri, 13 Jun 2025 15:21:44 -0400
+X-MC-Unique: SYVqQTAjMdOrXA4F7WFzgA-1
+X-Mimecast-MFC-AGG-ID: SYVqQTAjMdOrXA4F7WFzgA_1749842504
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d38f565974so624409485a.1
         for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749842503; x=1750447303; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SwsnYZZ63LvvlkMeoABDBQxLgrkaQY4fLJ1Enbyh2EY=;
-        b=ObXxzX29rZndd1MbjB6+7vqnl/35j6kXZZSxI803hD3AlyUcxnG4uoUeZ2BMbch15U
-         dZQfU1FIitEgdFJb+8FkQvqWoH4IhH6IX+jNPdFNnSSdqmSyhuqVwZTXgZdTTUpu+tOT
-         8Ya5f75I3Nqfi4N9gnv5+khvSLMMgjpQDNROa5maDl/yI/WuzTLsb8rBD1S5vXiNVP+O
-         V7SLh8PDQcodamaBmnAx9ioXgNtCb2OoFakp1cPw5EuGcMChNsz7kAGxOjn6BLfuZBGs
-         ldLuU8DmvcMc82QIQuWc3CWnyRu5AuvxIgUxFymCe2c1YKZIEujUm3a41SI4G1UzNUwT
-         8JJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1749842503; x=1750447303;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SwsnYZZ63LvvlkMeoABDBQxLgrkaQY4fLJ1Enbyh2EY=;
-        b=j/iZAFl30DDKp7AyrdFyZ3z5X4YYtAoSInDm5gA60fyFI9kkEymliLMqfKm0HbValx
-         huGO7iEBorv6y5d7ErkXDgwm9ULtbegk4U6BEcsiV5fGW02MLX6Ci0MRgJ1lM5GSjis1
-         w+gFKl0o/BJ3593pUmuOMSZD76sqJj35KtM7HGYzRw7IjRLBZO/veCKZc9KmBvRI9qIs
-         RA2tZOkvLRhssV7ZDV4ve1lmGH9bGNNqMlbfgBmolbI/z/FPtnO4FMfbhRNY4/8Z6zk6
-         csxK3BT0D5CwiPb047wGSoabeFLPH7HXPICgJ2kVYS9jQJIYtLN3kmJot0fVIolLbJkM
-         gHfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvlII7COhgRoiyxOqCzWYDJFdhg0nNSUykVHscde9x1St81Z367pS+RddmpvF5kzB//Qt/6jVsZze3Nqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCnjhI5Xu9PmyJOvLxe3hzlqxFNs1L33AtbHzBNyVjt6OUtUYB
-	n7Kx3ZEA8YffhQlqdo+rBqQUegcezCvUxpXk1Mp+PSkNhH98iSvD9hgSQ4PBopTPOkVuPMT3dE7
-	BTMT60dieM3Es5Np4Lts0yB7sZjJQ7K1kly+AX+5H
-X-Gm-Gg: ASbGncsZfbmDf2puAw1vXwugmnKeh7vpWSsqgEoa7fX3yWpHrdtRT1EQReDPSGd8XHJ
-	t3tYVsgYPHaBZGFuv3IkdgHDDAfYWOFTnTrcCGEuGP5cHUChYUYaHbmcNJXFzJ3KJWiL7FgbpYy
-	II4MPzY1tI+RiEQTSJIh8meCCCZXzOEjs5HLycCjZ7Fw==
-X-Google-Smtp-Source: AGHT+IEO+7tih5cXcAlJg0Vw2/Sois18XRurWIS2/frgQdC8+3vTxmNKORl6AWRcNFb2EewoNPpA6PIVNKd9BEEx0hI=
-X-Received: by 2002:ac8:5883:0:b0:47b:840:7f5b with SMTP id
- d75a77b69052e-4a73c763a87mr516731cf.29.1749842503097; Fri, 13 Jun 2025
- 12:21:43 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=47EwzNRArjARKfaIAn0KmpmAVReUeeJkM/EwClBQZtg=;
+        b=Q19jyQBHl7lIO37VwxzwSsRl0BOUHxy7S2P4R27HfYhK1S06UFIzpDg4qLUHgsfaS1
+         M/tG9YGXGzC8D/S68qwZpTqCpgrksfffMnGxWdIWoJVGipqTQPeckTagYBoLr7VtvD+o
+         fkrCxML94GyGhWswJM2jYLICN7fzcqpAWMPnFr/T1judqvJMP49oc9OUFfVSFaufWYs2
+         ylUaeuJDb2IaqLbWubHc0FxZ0/KW2Atsd7q0gx9EvUukA1wSLXWdeXWk+BzN1OJ1YZaK
+         UJwvA1vKhKdcqEf/wG4mq66R0eTXXn0QdOHH3eE0wJZKPMzJ3DH2nrdv3lvKlCE2MK+U
+         kLhQ==
+X-Gm-Message-State: AOJu0YwJN46PTFgTQKeMCpAApntjp8A2aAbdHS1VvWX4D1Wt8qutIPS5
+	MyKpmDKRrTuoizQerj2vSpqGrJcGx7MBL6FUQuYyFEzA+Kv7CeON6yFa1xHcg3GLOdjd8ABClai
+	/DU48pR61YZ4laaO84ovbHeAzai/uJrzzyfcVisUXr6p2G1Lx3+FOnEfZe4GiT7Qa3g==
+X-Gm-Gg: ASbGncvGhCgYJTnnwKqBKPa4FjOQHK/WD3Htje5LM4hLH7IiMjnBLHCeD+yh7DfDWGE
+	hW7Gt+0PK8i8U9YhPky6GNK73grsh+CXfppOurFL5G4CUpCSdaZpSug08dx2r2ZPJd+owmPszwa
+	dhSY9fRBkhYtaabPCtaxRwYO1PXA2eFAJ+QV+TstlUsFShnJculYY/VL/NA3x4ka9Ma7IS5SVtB
+	++H7roGPBaIqmXrnOev0uZud47boaMYP5dJPAHBVaLsaJ51U6mjIzneALCiAoYpz1VXHtOveLGe
+	92alsGhdHAePTQ==
+X-Received: by 2002:a05:620a:410c:b0:7cd:3ef0:d1ac with SMTP id af79cd13be357-7d3c6841c5fmr163742485a.15.1749842503534;
+        Fri, 13 Jun 2025 12:21:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYPw1DvF4R6o67TB67rLDMELDw3huktfBOSn9E7o8cN6pBp5XOkigzzTV9lHJHGKVi6V/qow==
+X-Received: by 2002:a05:620a:410c:b0:7cd:3ef0:d1ac with SMTP id af79cd13be357-7d3c6841c5fmr163739085a.15.1749842503116;
+        Fri, 13 Jun 2025 12:21:43 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8df8ee8sm209361985a.28.2025.06.13.12.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 12:21:42 -0700 (PDT)
+Date: Fri, 13 Jun 2025 15:21:39 -0400
+From: Peter Xu <peterx@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	Alex Mastro <amastro@fb.com>, Nico Pache <npache@redhat.com>
+Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
+ mappings
+Message-ID: <aEx6Qyl3cgiarXZD@x1.local>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-6-peterx@redhat.com>
+ <d6fbee39-a38f-4f94-bffb-938f7be73681@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1749779391.git.gehao@kylinos.cn> <099651f46b0b57f6c7890a64608dc7ca44df7764.1749779391.git.gehao@kylinos.cn>
-In-Reply-To: <099651f46b0b57f6c7890a64608dc7ca44df7764.1749779391.git.gehao@kylinos.cn>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 13 Jun 2025 12:21:32 -0700
-X-Gm-Features: AX0GCFu-OOwfRLFxcwNjR_GNWx_Buv2sRyKB524WUep1Vz9r7UOBtNhv2b7PdpU
-Message-ID: <CAJuCfpGkUk5RXm-HDLB2mr_mRbSxPV+kx116FFBhyYsf6pXNCg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] mm/alloc_tag: add the CONFIG_ARCH_NEEDS_WEAK_PER_CPU
- macro when statically defining the percpu variable _shared_alloc_tag
-To: Hao Ge <hao.ge@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Kent Overstreet <kent.overstreet@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-s390@vger.kernel.org, Hao Ge <gehao@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d6fbee39-a38f-4f94-bffb-938f7be73681@redhat.com>
 
-On Thu, Jun 12, 2025 at 8:06=E2=80=AFPM Hao Ge <hao.ge@linux.dev> wrote:
->
-> From: Hao Ge <gehao@kylinos.cn>
->
-> Recently discovered this entry while checking kallsyms on ARM64:
-> ffff800083e509c0 D _shared_alloc_tag
->
-> If CONFIG_ARCH_NEEDS_WEAK_PER_CPU is not defined(it is only defined for
-> s390 and alpha architectures),there's no need to statically define
-> the percpu variable _shared_alloc_tag. As the number of CPUs
-> increases,the wasted memory will grow correspondingly.
+On Fri, Jun 13, 2025 at 08:09:41PM +0200, David Hildenbrand wrote:
+> On 13.06.25 15:41, Peter Xu wrote:
+> > This patch enables best-effort mmap() for vfio-pci bars even without
+> > MAP_FIXED, so as to utilize huge pfnmaps as much as possible.  It should
+> > also avoid userspace changes (switching to MAP_FIXED with pre-aligned VA
+> > addresses) to start enabling huge pfnmaps on VFIO bars.
+> > 
+> > Here the trick is making sure the MMIO PFNs will be aligned with the VAs
+> > allocated from mmap() when !MAP_FIXED, so that whatever returned from
+> > mmap(!MAP_FIXED) of vfio-pci MMIO regions will be automatically suitable
+> > for huge pfnmaps as much as possible.
+> > 
+> > To achieve that, a custom vfio_device's get_unmapped_area() for vfio-pci
+> > devices is needed.
+> > 
+> > Note that MMIO physical addresses should normally be guaranteed to be
+> > always bar-size aligned, hence the bar offset can logically be directly
+> > used to do the calculation.  However to make it strict and clear (rather
+> > than relying on spec details), we still try to fetch the bar's physical
+> > addresses from pci_dev.resource[].
+> > 
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> 
+> There is likely a
+> 
+> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
+> 
+> missing?
 
-I don't think this patch needs all this background. Just say that
-_shared_alloc_tag is not used when CONFIG_ARCH_NEEDS_WEAK_PER_CPU=3Dn,
-so you want to compile it out.
+Would it mean the same if we use the two SoBs like what this patch uses?
+I sincerely don't know the difference..  I hope it's fine to show that this
+patch was developed together.  Please let me know otherwise.
 
->
-> Enclose the definition of _shared_alloc_tag within the
-> CONFIG_ARCH_NEEDS_WEAK_PER_CPU condition.
->
-> Suggested-by: Suren Baghdasaryan <surenb@google.com>
-> Signed-off-by: Hao Ge <gehao@kylinos.cn>
-> ---
->  lib/alloc_tag.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-> index c7f602fa7b23..14fd66f26e42 100644
-> --- a/lib/alloc_tag.c
-> +++ b/lib/alloc_tag.c
-> @@ -24,8 +24,10 @@ static bool mem_profiling_support;
->
->  static struct codetag_type *alloc_tag_cttype;
->
-> +#ifdef CONFIG_ARCH_NEEDS_WEAK_PER_CPU
->  DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
->  EXPORT_SYMBOL(_shared_alloc_tag);
-> +#endif
->
->  DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
->                         mem_alloc_profiling_key);
-> --
-> 2.25.1
->
+> 
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > ---
+> >   drivers/vfio/pci/vfio_pci.c      |  3 ++
+> >   drivers/vfio/pci/vfio_pci_core.c | 65 ++++++++++++++++++++++++++++++++
+> >   include/linux/vfio_pci_core.h    |  6 +++
+> >   3 files changed, 74 insertions(+)
+> > 
+> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> > index 5ba39f7623bb..d9ae6cdbea28 100644
+> > --- a/drivers/vfio/pci/vfio_pci.c
+> > +++ b/drivers/vfio/pci/vfio_pci.c
+> > @@ -144,6 +144,9 @@ static const struct vfio_device_ops vfio_pci_ops = {
+> >   	.detach_ioas	= vfio_iommufd_physical_detach_ioas,
+> >   	.pasid_attach_ioas	= vfio_iommufd_physical_pasid_attach_ioas,
+> >   	.pasid_detach_ioas	= vfio_iommufd_physical_pasid_detach_ioas,
+> > +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
+> > +	.get_unmapped_area	= vfio_pci_core_get_unmapped_area,
+> > +#endif
+> >   };
+> >   static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> > index 6328c3a05bcd..835bc168f8b7 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> > @@ -1641,6 +1641,71 @@ static unsigned long vma_to_pfn(struct vm_area_struct *vma)
+> >   	return (pci_resource_start(vdev->pdev, index) >> PAGE_SHIFT) + pgoff;
+> >   }
+> > +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
+> > +/*
+> > + * Hint function to provide mmap() virtual address candidate so as to be
+> > + * able to map huge pfnmaps as much as possible.  It is done by aligning
+> > + * the VA to the PFN to be mapped in the specific bar.
+> > + *
+> > + * Note that this function does the minimum check on mmap() parameters to
+> > + * make the PFN calculation valid only. The majority of mmap() sanity check
+> > + * will be done later in mmap().
+> > + */
+> > +unsigned long vfio_pci_core_get_unmapped_area(struct vfio_device *device,
+> > +					      struct file *file,
+> > +					      unsigned long addr,
+> > +					      unsigned long len,
+> > +					      unsigned long pgoff,
+> > +					      unsigned long flags)
+> 
+> A very suboptimal way to indent this many parameters; just use two tabs at
+> the beginning.
+
+This is the default indentation from Emacs c-mode.
+
+Since this is a VFIO file, I checked the file and looks like there's not
+yet a strict rule of indentation across the whole file.  I can switch to
+two-tabs for sure if nobody else disagrees.
+
+> 
+> > +{
+> > +	struct vfio_pci_core_device *vdev =
+> > +		container_of(device, struct vfio_pci_core_device, vdev);
+> > +	struct pci_dev *pdev = vdev->pdev;
+> > +	unsigned long ret, phys_len, req_start, phys_addr;
+> > +	unsigned int index;
+> > +
+> > +	index = pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
+> 
+> Could do
+> 
+> unsigned int index =  pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
+> 
+> at the very top.
+
+Sure.
+
+> 
+> > +
+> > +	/* Currently, only bars 0-5 supports huge pfnmap */
+> > +	if (index >= VFIO_PCI_ROM_REGION_INDEX)
+> > +		goto fallback;
+> > +
+> > +	/* Bar offset */
+> > +	req_start = (pgoff << PAGE_SHIFT) & ((1UL << VFIO_PCI_OFFSET_SHIFT) - 1);
+> > +	phys_len = PAGE_ALIGN(pci_resource_len(pdev, index));
+> > +
+> > +	/*
+> > +	 * Make sure we at least can get a valid physical address to do the
+> > +	 * math.  If this happens, it will probably fail mmap() later..
+> > +	 */
+> > +	if (req_start >= phys_len)
+> > +		goto fallback;
+> > +
+> > +	phys_len = MIN(phys_len, len);
+> > +	/* Calculate the start of physical address to be mapped */
+> > +	phys_addr = pci_resource_start(pdev, index) + req_start;
+> > +
+> > +	/* Choose the alignment */
+> > +	if (IS_ENABLED(CONFIG_ARCH_SUPPORTS_PUD_PFNMAP) && phys_len >= PUD_SIZE) {
+> > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
+> > +						   flags, PUD_SIZE, 0);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	if (phys_len >= PMD_SIZE) {
+> > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
+> > +						   flags, PMD_SIZE, 0);
+> > +		if (ret)
+> > +			return ret;
+> 
+> Similar to Jason, I wonder if that logic should reside in the core, and we
+> only indicate the maximum page table level we support.
+
+I replied.  We can continue the discussion there.
+
+Thanks,
+
+-- 
+Peter Xu
+
