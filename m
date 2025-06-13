@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260942E62B8;
-	Fri, 13 Jun 2025 07:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA8A2E6D1F;
+	Fri, 13 Jun 2025 07:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800236; cv=none; b=chAZtH0f0I/WyP8SJ+Af4xr1P4jfpG6rNhkTg5vDmvV86NIFTbWS/PqcZpvcfm7wxVDL0vOInbHKoRIJJO/0biZNcHKAqHVNDf30EqpcMwdfsLyOwqKonRZvk4P0yeBhVIZOdUgJUEflvJ2fqTdZe89VVSrBUs/4GTy1TbWxkoQ=
+	t=1749800238; cv=none; b=MDnKHIZjqBVWjTvIndwvGxaMHz2LGOycBaBZohFsMgK1H9wP7Zm91UmWAZjpeoMUja7TZqfb/Zwj9M9pqG83FIYporwxS1GJ6fL7jjeGhXfR3NFqhDeCpiX3TKeEZF0sWO21jNr1nNOVM4G7MYIiP6Yongofe6/PLcwfH+G38tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800236; c=relaxed/simple;
-	bh=xHqVOf7sR7yTN4fH1+2WL5Kd1VippEZggYgoYlUDtas=;
+	s=arc-20240116; t=1749800238; c=relaxed/simple;
+	bh=n8RGjjnkkuldS8rW6nK+AuyZymoYFUJUJ+HcJ4J807w=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=eKeqKhJnZkIPjMhUI/GoT42fn08CaXxjU3ka6nU7vkc9/zW58itte05leIDM0diY80qQvuUTo/QNvVUoAnMYJrnYLuqh6odXwNE+soHF+SgUS+MbhwUU8kCJ2JNimdfto1F500DUlW7lfhzA/p4LsjdwUDTNoR5gUx4CtcvW/xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4dGCjmuB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pl4hmhx9; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=aL7dAGR1SOUyVlLf5UEWzkjy4zZR8sNbc3qhfk/R7RSU/NSpHSX/yJuGwKQCzW8BRfTIGEzy/ZqR6hTQZz5sSVfBrczNVSwEtsCvRWTi/+es4u+YBz9hdKr2MTio6tAqdWrIJg0Q8bP8PQuX/z26UHKB5HPlvzYXCDW0hRFRFV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=giBakqLL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=APVoq9S8; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4dGCjmuB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pl4hmhx9"
-Date: Fri, 13 Jun 2025 07:37:12 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="giBakqLL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="APVoq9S8"
+Date: Fri, 13 Jun 2025 07:37:14 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749800233;
+	s=2020; t=1749800235;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KImaK3d0N7Q6FIVTzUJj3FWEMFCJkYtn0RnOcXdASgo=;
-	b=4dGCjmuBjtZJyRiTIITlm/7+aAv2No+9z5BY5xfn28XtufF6Ntu1oSMTI8SPkEMtt00guE
-	Zg5FalW4hPmRnYY7FB5V+hU/ymwLjyFr0dRF5e9fatnaPynEup26iGtQ/FQbweq28Dd5db
-	3FglQRkEGkAhZQSwwWopFsoBEOUZPLCiXsh3CPvW1XabuVnGrst3NYKqROdEavLpgat9pb
-	Osh9NJFwi4EMFGqlZ9axti/rEUepxmqpzdAieSkYs9d9COkj8xFfeciHHnrpJn1XGO/UTc
-	oB1vXIKMX8W7DJjHz/xLj8/GGwVAUcD4JOBUFdkcWRuDfqhzvWNKwOvcTqLn4A==
+	bh=DtXzndXqQJoWN9/9oNVG8rhnzsGOsU7qA7JbvD0N67M=;
+	b=giBakqLLsadUNmcJVPOmgpphdBPFichkTDjQ7Y4EDeQ4hSztxQjrTLFVjVITe2RwxDbh7t
+	UCJdhP6xjvUkTO8tZWRLH4EhtgUVz7kWSq3tjmOCg6iqCsCPcWgLo7XRI1tvru38JU+BWy
+	CNQZOypLmhd+7pjEYeM0calQsemq5FSzwZusEgPGCX2fmby1aSHvgQ4lJhkqgV9QFm4qc3
+	Yd6O5fCn58rpxcYL/2W0T2RnPeA2mIc0b5p8W4wR3k1r2Fl1EvRi91ps4bKP9uREuDHjYI
+	hNemKTzdMxKS0OqKgIYQA76UQ4Yg8LcefDwKoSWeNN00k6TUmf2V8Gjvx4zgAw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749800233;
+	s=2020e; t=1749800235;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KImaK3d0N7Q6FIVTzUJj3FWEMFCJkYtn0RnOcXdASgo=;
-	b=Pl4hmhx9D8EYA0Y3h5jC/SZToHskgGAP2DsFUcXqPEJ6wSBqblwZ4BIHa5ZCwWJ6T6rgBH
-	d1LWFP79y28TCyDQ==
+	bh=DtXzndXqQJoWN9/9oNVG8rhnzsGOsU7qA7JbvD0N67M=;
+	b=APVoq9S8ULL0oUNlo08lBLXkevsKCOcvRfyPAMjeQ3dkTgobzsPkc5M1mw8OuHW6u/dke4
+	DlpMhlIiNz5dM8DQ==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/smp: Use the SMP version of the stop-CPU
- scheduling class
+Subject: [tip: sched/core] sched/smp: Use the SMP version of
+ sched_update_asym_prefer_cpu()
 Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Juri Lelli <juri.lelli@redhat.com>,
@@ -56,15 +56,15 @@ Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Valentin Schneider <vschneid@redhat.com>,
  Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250528080924.2273858-36-mingo@kernel.org>
-References: <20250528080924.2273858-36-mingo@kernel.org>
+In-Reply-To: <20250528080924.2273858-34-mingo@kernel.org>
+References: <20250528080924.2273858-34-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174980023243.406.520810220477726843.tip-bot2@tip-bot2>
+Message-ID: <174980023420.406.3320852878387182188.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -74,17 +74,17 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     caf5bde9c542f0cbdf2c91db7ea9743e33941d91
-Gitweb:        https://git.kernel.org/tip/caf5bde9c542f0cbdf2c91db7ea9743e33941d91
+Commit-ID:     6c8d251621c131274fa05b46fc138f296b00f6e4
+Gitweb:        https://git.kernel.org/tip/6c8d251621c131274fa05b46fc138f296b00f6e4
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 28 May 2025 10:09:16 +02:00
+AuthorDate:    Wed, 28 May 2025 10:09:14 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 13 Jun 2025 08:47:21 +02:00
 
-sched/smp: Use the SMP version of the stop-CPU scheduling class
+sched/smp: Use the SMP version of sched_update_asym_prefer_cpu()
 
-Simplify the scheduler by making CONFIG_SMP=y code in the stop-CPU
-scheduling class unconditional.
+Simplify the scheduler by making CONFIG_SMP=y code in
+sched_update_asym_prefer_cpu() unconditional.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
@@ -97,40 +97,28 @@ Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lore.kernel.org/r/20250528080924.2273858-36-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250528080924.2273858-34-mingo@kernel.org
 ---
- kernel/sched/stop_task.c | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/sched/topology.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
-index 1c1bbc6..2d4e279 100644
---- a/kernel/sched/stop_task.c
-+++ b/kernel/sched/stop_task.c
-@@ -9,7 +9,6 @@
-  */
- #include "sched.h"
- 
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index f2c1016..8e06b1d 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1323,7 +1323,6 @@ next:
+ /* Update the "asym_prefer_cpu" when arch_asym_cpu_priority() changes. */
+ void sched_update_asym_prefer_cpu(int cpu, int old_prio, int new_prio)
+ {
 -#ifdef CONFIG_SMP
- static int
- select_task_rq_stop(struct task_struct *p, int cpu, int flags)
- {
-@@ -21,7 +20,6 @@ balance_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- {
- 	return sched_stop_runnable(rq);
- }
+ 	int asym_prefer_cpu = cpu;
+ 	struct sched_domain *sd;
+ 
+@@ -1373,7 +1372,6 @@ void sched_update_asym_prefer_cpu(int cpu, int old_prio, int new_prio)
+ 
+ 		WRITE_ONCE(sg->asym_prefer_cpu, asym_prefer_cpu);
+ 	}
 -#endif /* CONFIG_SMP */
+ }
  
- static void
- wakeup_preempt_stop(struct rq *rq, struct task_struct *p, int flags)
-@@ -107,11 +105,9 @@ DEFINE_SCHED_CLASS(stop) = {
- 	.put_prev_task		= put_prev_task_stop,
- 	.set_next_task          = set_next_task_stop,
- 
--#ifdef CONFIG_SMP
- 	.balance		= balance_stop,
- 	.select_task_rq		= select_task_rq_stop,
- 	.set_cpus_allowed	= set_cpus_allowed_common,
--#endif
- 
- 	.task_tick		= task_tick_stop,
- 
+ /*
