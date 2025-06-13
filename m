@@ -1,103 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC07A20DD4B;
-	Fri, 13 Jun 2025 14:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E29B20DD4B
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749823847; cv=none; b=GSGwAn1t8PNCwb1sfAU0bCulQLAUUhGM6sHxLN39eiOhOmZ86jjfn9ZAGsriSdrhyAMPT+r9Lx2pqF4W8pXGF4UdX4+gfcUO99upG/nnBezfO6CEknA5Gml5dgSHcF1XmhnjZwArweJxBFgo9XWPO+wAS0Zf91GYcaGZEe/42S0=
+	t=1749823857; cv=none; b=kg759WmV87xGvQxKmh8YcMLB3kbJ5j6h/Wsr3HxB/zIjDOM5bkq42v8LOi9/mpLqAHNJIT0WwzL+OdE2ga0HIedmWWfRtGdKaX/xP4SrzA20+Ogn5i90h4q3ipL1z0ofJxxr4aBu0EAW4ntSuV5KMToDxz7IgIs7zJLbwyurlRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749823847; c=relaxed/simple;
-	bh=eP/zLTuwOfoP5vAhzw0ClxIdUUHuuKIgpOGHAKnN7mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KTWV9ELYcGjHnnPKELh0wKHuhFuQQbQl2GpC+4Ort/kidotF83sAywZoFN39AMVZO/+W7Iire53cQP9evqv//kVI7xUHLC2cHlPf9IfluPZOpC3HsY2rilDnz6jI04tZcZ/QKk1E/FU7Al7kXjNsDaG90eRLcZvpidzxJknKqPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EqVBCvPe; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749823857; c=relaxed/simple;
+	bh=I/hB+x3yRCXCcEoIeWGWVXGO6fU3JqeyxrlJeHAWf8Y=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=IuLDUoo0UAr3MQZfpIlzqLGV7Fk5vME/tJJarbZZ9K9YAlAK+fULgwb/wHx2ekFCBUd4JJv1oz/ObcTdgIIp8SRzETeXmpZoH0u3OjtFV1yLj0AsQKAU4oSy5huPr1kKLH6MaacSlWcwUO9Ojep9ykoDlit/5240xhMZEV+1CLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=i1oJ3lYm; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EqVBCvPe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749823846; x=1781359846;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eP/zLTuwOfoP5vAhzw0ClxIdUUHuuKIgpOGHAKnN7mg=;
-  b=EqVBCvPe9IvKkNBemVCUc6G33l8AOZuKlz8WEAxxGuo+1rbXNYV+ecaW
-   mNgE9rKQf0HluHdllBVHJN7EI0A0wUsJ2ghwUOcWs/CndxFPUgtoqVaPk
-   7UJovy9ndgtg2f7NtidHa+M7FNob/bUHbAaOWPFkyRF43L3VNUx6Xl00m
-   b+lbmAmBUn55LrrynmRZ7XfZJXcaslCkS3nHfPfJslbP5w6rklYFDKj8W
-   AEhSTU/UfyQEjRLaiIU1+Rm3UOKWL5mm9RicnSgq6w9LZRs8Gbu8moQd4
-   YZGEmGCbwb3OBbzEcNsKYr0vMebsDIX4lfefqFD7hhdXZ00UjPFiRwlPG
-   g==;
-X-CSE-ConnectionGUID: U5mxmRVBRQuJejHSgbezBg==
-X-CSE-MsgGUID: lxCrfSrGSfuof2iXFevkAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51920488"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="51920488"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 07:10:45 -0700
-X-CSE-ConnectionGUID: aOa8+CR4RdWDgxcLFMnOQg==
-X-CSE-MsgGUID: Q2Eg1+bKTHmgIOxNNWBurg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="152993991"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 13 Jun 2025 07:10:42 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQ57A-000ChG-1q;
-	Fri, 13 Jun 2025 14:10:40 +0000
-Date: Fri, 13 Jun 2025 22:09:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Salomon Dushimirimana <salomondush@google.com>,
-	Jack Wang <jinpu.wang@cloud.ionos.com>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Salomon Dushimirimana <salomondush@google.com>
-Subject: Re: [PATCH] scsi: pm80xx: add controller scsi host fatal error
- uevents
-Message-ID: <202506132133.ML6A1QnK-lkp@intel.com>
-References: <20250612212504.512786-1-salomondush@google.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="i1oJ3lYm"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450828af36aso1604105e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1749823854; x=1750428654; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YCwDooc5Gsj0hNyVB/vl+qIPOuR8M4GMrDeO1ReDJTw=;
+        b=i1oJ3lYm5kzcpzh4bHcl0ucn6Pq8bD8ryDFsIL++VB2zrCryzhGO2Uf7UwgOj6fxzt
+         QPHlVWCxNoItm+kJ/AR487JMWu1douMgaxaaRU+NAFmTJrcU7dly81MdplUdesqApmJg
+         kDe44vHAUVaui4RTDmJWCTeTtAEtscjQ1Yh+Nu+xNK1lZjsyUjEEwa8ZKJHNhROeWyO2
+         qNFuPwCj26grxfJ6PT2/8RAQFmbXpasKdSZc7tYS5eHyB0jod+LnHXQQvcaDW+O5bJgJ
+         wd2H60v+nibkMDiOBWDnZb7YIP+8sxVy7MGftn1OzVy0Eydx21j+I2xKst1Zj04cy2QM
+         d1Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749823854; x=1750428654;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YCwDooc5Gsj0hNyVB/vl+qIPOuR8M4GMrDeO1ReDJTw=;
+        b=ITPWbAlrjtwl5ZJeWgYzaCKfcs455EkrS+KAqx9KUkBOf5cPxZkm5Ou5fimNSBdVn4
+         E/n2ezKWkaKSq7pqBbUOmBTiYRWuqPhrcyx5602hpYFDPxAoazWsjCZ9ufPRn2d0igKB
+         NzTYo25V5MxBofb/AJ/k4yAXv9Xip/05awxbTDH8IymkGEvA+xGPpGy+RlTOUgEhXtr+
+         i8Y6Rx+YLPEpj4FkAaYzxvj8c8OClQg9mW2qXp+24DaupcgmHKAgxMbOuVJ1F7aV5Zvc
+         e1amLA6GcvI0RGLIPJ8qAOdbj+dCVNGgJmgzzpEQ2SV8TFCs8fO0e7YUcWbl0HFg0/J7
+         0Xag==
+X-Forwarded-Encrypted: i=1; AJvYcCVhAwkcsP43NimSz4X9zeA9Jvmguclgy3pUSmmowOUKeawz89LbNyRRCx3/titp5TvGVh3JQB90Z7y43sU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtmUxN7/PnORo2Re16Ez3FbrfWwmWpPIXWnoFAasVUk5wK5t3y
+	pMAjKoj+9RUkYOXoW1kqhh7jfYMYmywTeKF8xzl30itz6TivALNEhiSDU/OTYjTJHPY=
+X-Gm-Gg: ASbGnctcImmqtrW8oUUlUqLVTXj+iZHSg5mT4NmrAEXmszAifztXpXiYSpIe3LAb8EH
+	Vu+uRyF869gqDPmWgyVPojxQZrmkYtYTxFM1d5pQ6y7BouX5hksoz8E/Sthn5CTpbNpwYbtYT7S
+	GBsp9MsGCedKcwvtf/XYHEaYFYYl/qLHZcMhppCsNGuA75GQ2gtOsVp/7hbKQgKroB0yzW4psqs
+	emJ5wgHlqKZ5M2dPz3WgBScoeQqIpb86moHm8qCRzHvkh/dwdVGoWkpePKc6tD4vfTs8rVtSuUb
+	9Of+Ro/WmHo9Lwbko6UihX0USf7yDqwjh1Gy0NPxYx28Fk6UA3Dd2du4Bq/vPzSWrXjhJcAY71S
+	Y8CZi
+X-Google-Smtp-Source: AGHT+IG4GeDYIccMx3Bp09h1EiucZJUl0jOo1LzwGgmCUjMutG0m5EDpaCILXiv1gNh0ijozMoQ+aA==
+X-Received: by 2002:a05:600c:a414:b0:453:9b3:5b70 with SMTP id 5b1f17b1804b1-45334b07e86mr10021225e9.8.1749823853636;
+        Fri, 13 Jun 2025 07:10:53 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:3c9f:2b68:ce36:f64b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea15b0sm54247605e9.11.2025.06.13.07.10.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 07:10:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612212504.512786-1-salomondush@google.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 13 Jun 2025 16:10:52 +0200
+Message-Id: <DALGSCDW0GIG.10I22KD2SCSNX@ventanamicro.com>
+Subject: Re: [PATCH 2/2] RISC-V: make use of variadic sbi_ecall
+Cc: <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Paul
+ Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
+ <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
+ Ghiti" <alex@ghiti.fr>, "Atish Patra" <atishp@rivosinc.com>, "Andrew Jones"
+ <ajones@ventanamicro.com>, =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?=
+ <cleger@rivosinc.com>, "Anup Patel" <apatel@ventanamicro.com>
+To: "David Laight" <david.laight.linux@gmail.com>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250612145754.2126147-2-rkrcmar@ventanamicro.com>
+ <20250612145754.2126147-4-rkrcmar@ventanamicro.com>
+ <20250613115459.6293f929@pumpkin>
+In-Reply-To: <20250613115459.6293f929@pumpkin>
 
-Hi Salomon,
+2025-06-13T11:54:59+01:00, David Laight <david.laight.linux@gmail.com>:
+> On Thu, 12 Jun 2025 16:57:55 +0200
+> Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com> wrote:
+>
+>> The new sbi_ecall doesn't have to list all 8 arguments anymore, so only
+>> pass the actual numbers of arguments for each SBI function.
+>>=20
+>> Trailing 0 is sometimes intentional.
+> ...
+>> @@ -630,10 +630,10 @@ static int pmu_sbi_snapshot_setup(struct riscv_pmu=
+ *pmu, int cpu)
+>>  	if (IS_ENABLED(CONFIG_32BIT))
+>>  		ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
+>>  				cpu_hw_evt->snapshot_addr_phys,
+>> -				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32, 0, 0, 0, 0);
+>> +				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32);
+>
+> That doesn't look right (and other similar ones).
 
-kernel test robot noticed the following build warnings:
+This one is wrong, but because I missed the flags.  This patch should
+have been:
 
-[auto build test WARNING on jejb-scsi/for-next]
-[also build test WARNING on mkp-scsi/for-next linus/master v6.16-rc1 next-20250613]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+		ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
+				cpu_hw_evt->snapshot_addr_phys,
+				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32, 0);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Salomon-Dushimirimana/scsi-pm80xx-add-controller-scsi-host-fatal-error-uevents/20250613-052945
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git for-next
-patch link:    https://lore.kernel.org/r/20250612212504.512786-1-salomondush%40google.com
-patch subject: [PATCH] scsi: pm80xx: add controller scsi host fatal error uevents
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20250613/202506132133.ML6A1QnK-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506132133.ML6A1QnK-lkp@intel.com/reproduce)
+I'll fix that in v2, thanks.  I think you might be referring to the fact
+that the code would make more sense as:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506132133.ML6A1QnK-lkp@intel.com/
+		ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
+				lower_32_bits(cpu_hw_evt->snapshot_addr_phys),
+				upper_32_bits(cpu_hw_evt->snapshot_addr_phys))
 
-All warnings (new ones prefixed by >>):
+I fully agree with that, but it's a different patch... I would even
+special case the `if` with CONFIG_32BIT && CONFIG_PHYS_ADDR_T_64BIT to
+make it extra clear why we're doing such a weird thing.
 
->> Warning: drivers/scsi/pm8001/pm80xx_hwi.c:1560 function parameter 'error_reporter' not described in 'pm80xx_fatal_error_uevent_emit'
->> Warning: drivers/scsi/pm8001/pm80xx_hwi.c:1560 Excess function parameter 'error_type' description in 'pm80xx_fatal_error_uevent_emit'
+> The values are still 64bit - so get passed as two 32bit values (in some w=
+ay)
+> so that varargs code will get the wrong values.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The SBI function prototype looks like this in the specification:
+
+  struct sbiret sbi_pmu_snapshot_set_shmem(unsigned long shmem_phys_lo,
+                                           unsigned long shmem_phys_hi,
+                                           unsigned long flags)
+
+SBI defines long to be the native register width, 32-bit with
+CONFIG_32BIT, and therefore uses 2 registers to pass the physical
+address, because the physical address can be up to 34 bits on RV32.
+
+The macro will result in the same arguments as before, and it is what
+the sbi_ecall actually should do.
+
+> I guess the previous change wasn't tested on 32bit?
+
+It wasn't even compiled, because 64-bit phys_addr_t on CONFIG_32BIT
+requires CONFIG_PHYS_ADDR_T_64BIT, but that config combination seems
+impossible at this point.
+"(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32)" is a fancy way to say 0.
+
+If we were able to compile with CONFIG_PHYS_ADDR_T_64BIT, I think the
+patch would produce the desired result, hopefully with a warning that
+we're implicitly casting u64 to u32, but that was there even before this
+patch.
+
+Enabling CONFIG_PHYS_ADDR_T_64BIT will have its share of issues --
+I noticed a bug where other 32-bit function (SBI_EXT_NACL_SET_SHMEM)
+forgets to pass the upper part of the physical address, but I didn't
+include it in this series, because it made no difference right now.
