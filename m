@@ -1,148 +1,153 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5090EEBA;
-	Fri, 13 Jun 2025 00:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01436EEBA
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749775085; cv=none; b=FGJAmrEhjjejPifLJH92KpwU+NtDyYMDhj8eVMb9E/jYSHr+RYoCr0GCZTbBNMt28mO64y/e1BmuNS44BBXwW26+BT+LaMtVKDKS6Rt4dGPnN68VAEOVF6wSde9kcKdQbXd/lm9NOPD4hqVXHCabBL848vQudiEZPXpj12YxhlQ=
+	t=1749775292; cv=none; b=LCDMSV/2eKpvHgP/lX0U4vB7JOUU0wDI77oRfjmcerde+ENVUXkYw+nzJVCnbNWZ8pDC1O+aLThWcBVde5w4HEhRxC40azQE+F4EyQqDAYAwOPRjNuTv/NPvwGyO7lIORIbOkuotbbeXyU4r5EPrgOw+Ll4zJRboM++WF8CQFLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749775085; c=relaxed/simple;
-	bh=iqS/z3Gqo+8xCdoolb1OxJ6f5y0nNxZmycHc2wANlf4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=mNHV3LDIhUf68JOj5Wc5ixok4iZAmFLbYlDn+T7Kmz6fB4TSC5U0qZctZuoCJgjxtHUmwuH0TzQPGl0tKDhsFD3HxxI/AwCuF6v/5Zr9X3QbN7i45pYMH1auyht40e7dz9hpvq0Mi2gJFg0irbD90dCfQmx+aXCTwNKpJ+/bnmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uPsQh-009bhR-Km;
-	Fri, 13 Jun 2025 00:37:59 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1749775292; c=relaxed/simple;
+	bh=h0dTag/f2Tf1Jb1EmZHoJhgiudzt8TPEN9QKw1XND5c=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GCbyxlhfk9+XCQvZQkRJj8/zdshzUuX2wMlpJlDeKGY617i38jPl5xFk6Q3j7q2a62T3z5zNuo3p4f5ZHYlTMvS/5ZGobrKVZuKlUd0iUP/YeJnHKFMtmuwT1Q1T7YiFxyrdmm54sgoFLRFm2M7MrARxRcPF22Ss5zUlE6SPGHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6SqmxmY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6SqmxmY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74FB7C4CEEA;
+	Fri, 13 Jun 2025 00:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749775291;
+	bh=h0dTag/f2Tf1Jb1EmZHoJhgiudzt8TPEN9QKw1XND5c=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=A6SqmxmYNzHDsNm47GY+Y9MGSWa4MKctOiMLbemix20NShU7NFsq9d4koWGl74TFN
+	 9saNIwJVBVnYtNKIXIJQ/aq1Z7FvvxEOYO5lJMqGRIdGznOrVFxaAnxt4J0cBDElFJ
+	 kFIHt7O14TzxxoBRtrCqyt79Eiiky6aW1Ksq9bCk0XpxOWnnvQcjlrO6+rm1V+lziM
+	 hcKmBTEE2zmYsl3jQFLi+bsbbgAThi7tN/kwNBdwgL9H5ujWsznM4osnfmc05rcedp
+	 uU6BpRKpNO80bWpVbWhWGbeC83RPTAquTiFoexkvOD5oPNIcTIL0OkKE9CpbtGp1bC
+	 I6nM+c7ERz1vg==
+Message-ID: <376f506f-becd-457a-8cad-294396acd1da@kernel.org>
+Date: Fri, 13 Jun 2025 08:41:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: Al Viro <viro@zeniv.linux.org.uk>, Kees Cook <kees@kernel.org>,Joel
- Granados <joel.granados@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] proc_sysctl: Fix up ->is_seen() handling
-Date: Fri, 13 Jun 2025 10:37:58 +1000
-Message-id: <174977507817.608730.3467596162021780258@noble.neil.brown.name>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] f2fs: Apply bio flags to direct I/O
+To: Daniel Lee <chullee@google.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20250611233706.572784-1-chullee@google.com>
+ <20250611233706.572784-2-chullee@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250611233706.572784-2-chullee@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 2025/6/12 7:37, Daniel Lee wrote:
+> Bio flags like REQ_PRIO, REQ_META, and REQ_FUA, determined by
+> f2fs_io_flags(), were not being applied to direct I/O (DIO) writes.
+> This meant that DIO writes would not respect filesystem-level hints
+> (for REQ_META/FUA) or inode-level hints (like F2FS_IOPRIO_WRITE).
+> 
+> This patch refactors f2fs_io_flags() to use a direct inode pointer
+> instead of deriving it from a page. The function is then called from
+> the DIO write path, ensuring that bio flags are handled consistently
+> for both buffered and DIO writes.
+> 
+> Signed-off-by: Daniel Lee <chullee@google.com>
+> ---
+>   fs/f2fs/data.c |  8 ++++----
+>   fs/f2fs/f2fs.h |  2 ++
+>   fs/f2fs/file.c | 12 ++++++++++++
+>   3 files changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 31e892842625..966cea75874c 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -416,10 +416,9 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
+>   	return 0;
+>   }
+>   
+> -static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
+> +blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
+>   {
+>   	unsigned int temp_mask = GENMASK(NR_TEMP_TYPE - 1, 0);
+> -	struct folio *fio_folio = page_folio(fio->page);
+>   	unsigned int fua_flag, meta_flag, io_flag;
+>   	blk_opf_t op_flags = 0;
+>   
+> @@ -446,8 +445,8 @@ static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
+>   	if (BIT(fio->temp) & fua_flag)
+>   		op_flags |= REQ_FUA;
+>   
+> -	if (fio->type == DATA &&
+> -	    F2FS_I(fio_folio->mapping->host)->ioprio_hint == F2FS_IOPRIO_WRITE)
+> +	if (fio->inode && fio->type == DATA &&
 
-Some sysctl tables can provide an is_seen() function which reports if
-the sysctl should be visible to the current process.  This is currently
-used to cause d_compare to fail for invisible sysctls.
+It seems that it changes the logic, if fio->inode is NULL we will not tag
+op_flags w/ REQ_PRIO, path like GC? do we need to assign fio.inode for all
+paths?
 
-This technique might have worked in 2.6.26 when it was implemented, but
-it cannot work now.  In particular if ->d_compare always fails for a
-particular name, then d_alloc_parallel() will always create a new dentry
-and pass it to lookup() resulting in a new inode for every lookup.  I
-tested this by changing sysctl_is_seen() to always return 0.  When
-all sysctls were still visible and repeated lookups (ls -li) reported
-different inode numbers.
+Thanks,
 
-This patch discards proc_sys_compare (the d_compare function) and
-instead adds the is_seen functionality into proc_sys_revalidate (the
-d_revalidate function).  If the sysctl table is unregistering, 0 is
-returned.  Otherwise if is_seen() exists but fails, -ENOENT is returned.
-
-The rcu_dereference() and RCU_INIT_POINTER() for ->sysctl are removed as
-the field is not rcu-managed.  It is only changed when the inode is
-created and when it is evicted, and in these cases there can be no
-possible concurrent access.
-
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/proc/inode.c       |  2 +-
- fs/proc/proc_sysctl.c | 35 ++++-------------------------------
- 2 files changed, 5 insertions(+), 32 deletions(-)
-
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index a3eb3b740f76..c3991dd314d9 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -42,7 +42,7 @@ static void proc_evict_inode(struct inode *inode)
-=20
- 	head =3D ei->sysctl;
- 	if (head) {
--		RCU_INIT_POINTER(ei->sysctl, NULL);
-+		ei->sysctl =3D NULL;
- 		proc_sys_evict_inode(inode, head);
- 	}
- }
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index cc9d74a06ff0..dbf652b50909 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -884,21 +884,15 @@ static const struct inode_operations proc_sys_dir_opera=
-tions =3D {
- 	.getattr	=3D proc_sys_getattr,
- };
-=20
--static int proc_sys_revalidate(struct inode *dir, const struct qstr *name,
--			       struct dentry *dentry, unsigned int flags)
--{
--	if (flags & LOOKUP_RCU)
--		return -ECHILD;
--	return !PROC_I(d_inode(dentry))->sysctl->unregistering;
--}
--
- static int proc_sys_delete(const struct dentry *dentry)
- {
- 	return !!PROC_I(d_inode(dentry))->sysctl->unregistering;
- }
-=20
--static int sysctl_is_seen(struct ctl_table_header *p)
-+static int proc_sys_revalidate(struct inode *dir, const struct qstr *name,
-+			       struct dentry *dentry, unsigned int flags)
- {
-+	struct ctl_table_header *p =3D PROC_I(d_inode(dentry))->sysctl;
- 	struct ctl_table_set *set =3D p->set;
- 	int res;
- 	spin_lock(&sysctl_lock);
-@@ -907,35 +901,14 @@ static int sysctl_is_seen(struct ctl_table_header *p)
- 	else if (!set->is_seen)
- 		res =3D 1;
- 	else
--		res =3D set->is_seen(set);
-+		res =3D set->is_seen(set) ? 1 : -ENOENT;
- 	spin_unlock(&sysctl_lock);
- 	return res;
- }
-=20
--static int proc_sys_compare(const struct dentry *dentry,
--		unsigned int len, const char *str, const struct qstr *name)
--{
--	struct ctl_table_header *head;
--	struct inode *inode;
--
--	/* Although proc doesn't have negative dentries, rcu-walk means
--	 * that inode here can be NULL */
--	/* AV: can it, indeed? */
--	inode =3D d_inode_rcu(dentry);
--	if (!inode)
--		return 1;
--	if (name->len !=3D len)
--		return 1;
--	if (memcmp(name->name, str, len))
--		return 1;
--	head =3D rcu_dereference(PROC_I(inode)->sysctl);
--	return !head || !sysctl_is_seen(head);
--}
--
- static const struct dentry_operations proc_sys_dentry_operations =3D {
- 	.d_revalidate	=3D proc_sys_revalidate,
- 	.d_delete	=3D proc_sys_delete,
--	.d_compare	=3D proc_sys_compare,
- };
-=20
- static struct ctl_dir *find_subdir(struct ctl_dir *dir,
---=20
-2.49.0
+> +	    F2FS_I(fio->inode)->ioprio_hint == F2FS_IOPRIO_WRITE)
+>   		op_flags |= REQ_PRIO;
+>   
+>   	return op_flags;
+> @@ -2783,6 +2782,7 @@ int f2fs_write_single_data_page(struct folio *folio, int *submitted,
+>   	int err = 0;
+>   	struct f2fs_io_info fio = {
+>   		.sbi = sbi,
+> +		.inode = inode,
+>   		.ino = inode->i_ino,
+>   		.type = DATA,
+>   		.op = REQ_OP_WRITE,
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 9333a22b9a01..162d79a3c1a5 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -1233,6 +1233,7 @@ enum iostat_type {
+>   
+>   struct f2fs_io_info {
+>   	struct f2fs_sb_info *sbi;	/* f2fs_sb_info pointer */
+> +	struct inode *inode;
+>   	nid_t ino;		/* inode number */
+>   	enum page_type type;	/* contains DATA/NODE/META/META_FLUSH */
+>   	enum temp_type temp;	/* contains HOT/WARM/COLD */
+> @@ -3972,6 +3973,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio);
+>   struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
+>   		block_t blk_addr, sector_t *sector);
+>   int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr);
+> +blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio);
+>   void f2fs_set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr);
+>   void f2fs_update_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr);
+>   int f2fs_reserve_new_blocks(struct dnode_of_data *dn, blkcnt_t count);
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 696131e655ed..4fd45e94661a 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -5015,6 +5015,18 @@ static void f2fs_dio_write_submit_io(const struct iomap_iter *iter,
+>   	enum log_type type = f2fs_rw_hint_to_seg_type(sbi, inode->i_write_hint);
+>   	enum temp_type temp = f2fs_get_segment_temp(sbi, type);
+>   
+> +	/* if fadvise set to hot, override the temperature */
+> +	struct f2fs_io_info fio = {
+> +		.sbi = sbi,
+> +		.inode = inode,
+> +		.type = DATA,
+> +		.op = REQ_OP_WRITE,
+> +		.temp = file_is_hot(inode) ? HOT : temp,
+> +		.op_flags = bio->bi_opf,
+> +		.page = NULL,
+> +	};
+> +	bio->bi_opf |= f2fs_io_flags(&fio);
+> +
+>   	bio->bi_write_hint = f2fs_io_type_to_rw_hint(sbi, DATA, temp);
+>   	submit_bio(bio);
+>   }
 
