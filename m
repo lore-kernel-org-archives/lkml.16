@@ -1,379 +1,349 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE5A20F09B
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4449233159;
+	Fri, 13 Jun 2025 18:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749840633; cv=none; b=d+eZAgO/igkQqS3wOWfN9AaXBWhigJcEuw2XFazwXHZL7/9BXFc+vq4tpMm+FiUeaIarr+9OOk5ECytNuzB/7ypJFVsuMXw5PdNKabKSTiZhIkrXCnbgxZO9TWmwW3ZZT/xukUv3G3umzrJSepFWgHSQkAqJg1NDjfVXzjwTOTs=
+	t=1749840639; cv=none; b=YVtnM8Jpei5fNFGsDFNW37FyivYhuzUQLkvOy+BdQ18TV927NxIEvr7GTN8I+tACwThWtbGIac373+NzMT/k5NA229LPASu2yGtkytKtpn5rjuZnfHTZ02NOMwhqwP1SvDt/blYcbQ/5MR2GaZvQ+V68kXR9OzP2RT5F1ophIwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749840633; c=relaxed/simple;
-	bh=i/Gfxl/wiPrxxvaYYAkwLreZvqrQzGxv+RxlokwTDU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mDueW5G4e70tHqIaRDuXB8P1UNZFxhEBvF/tOTDUKPmqptbGaY2RZOvFdl6sl5v38jxPYRfgEOVo/vGHbzP6ELuOZVlPC9LP7hVFAB80sNYOH/vwxMU+4Mw0jMftV27qUcs/VNHAvE2dPQdWelaJtQQmBeKyu83DKELhOouZX6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gq+Eqh9e; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749840639; c=relaxed/simple;
+	bh=vOJoLHa2gnZMY8Ii+Yxcw8/mzZATpgoYQs1ixFqDEVA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=gE25crCDVfu5plCZthXw1JzLsRXCC9DTGtW9upLW/qNqAxW8lo7pLPAX9iXE5J2z+wP0Mm0x8S0wos5UfOkeLPt8bmbdHVAVS43wb7Spq9edIePoUy1jYgKdIUuVeHDr6vVGemgozlrt0+QY2dyPS+DZCXBHciE1Kkn6pkqIUQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TKSRbwtF; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gq+Eqh9e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749840631; x=1781376631;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=i/Gfxl/wiPrxxvaYYAkwLreZvqrQzGxv+RxlokwTDU0=;
-  b=gq+Eqh9eiWZoYtp4hdtZhPDovHHLXO7DWywB0BSwzbdEHxIOUJQvpPah
-   4d4+fd8i82XXPpqqSXOnCeyzeprPaxKcnNzDUQv/cENEP/TNO1OPausKz
-   Ak5B97Sy/7k8deGUy0B5n6OcxlCcuPel/3yS/OWEix3ddDGcRMH8/jOPT
-   hW4mIbuHswu6a0SpbYBj1lAiYKVfVdT35fgzrVV/MtLJs48cJrCdBeVvl
-   qJ1/9oOBJ29d7/KdKrr3EY9QZcfdZLnVrL8+nWALca02+lJGDix04ckaR
-   QD2qcslZ8o89HvcDOBc9oD3yDoDv6kHcWUk1FBO/GZhmRIjFUGMFVsVhL
-   w==;
-X-CSE-ConnectionGUID: dfDS4zfGT7iqTMNBCOAfcQ==
-X-CSE-MsgGUID: UxATOltySAaRLJySzGDD3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51983739"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="51983739"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 11:50:30 -0700
-X-CSE-ConnectionGUID: ajKwJW+JRo2+gvj049xEag==
-X-CSE-MsgGUID: XvjvCcJmQc6A877hJNAUOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="178795645"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 11:50:29 -0700
-Date: Fri, 13 Jun 2025 11:50:27 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: James Morse <james.morse@arm.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v5 00/29] x86/resctrl telemetry monitoring
-Message-ID: <aExy8_zLNMrH2UeZ@agluck-desk3>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <61133be0-1ace-457c-9b0f-d6dde3003389@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKSRbwtF"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d38b84984dso386934085a.0;
+        Fri, 13 Jun 2025 11:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749840636; x=1750445436; darn=vger.kernel.org;
+        h=in-reply-to:subject:autocrypt:from:content-language:references:cc
+         :to:user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ssas791YCXeKD/QD+JlJCVMdCAPoseQHAAr8HsPhqJM=;
+        b=TKSRbwtFbvLD7Qr8Tv0P4HGpN2GzPntER55jHjfeOiUOLzDMeG6kvUQNcny3vUpxB4
+         x+wiylrDFmKXYXPkFkNhz+U4Sgxs2HQz24sgwU1ueNAa0kevTfxwb4FBVGla9/d2y8NH
+         IDuou4I5jzonWQCp8TlJG8++BnnCckYYjiNizCxHlYv0pbjTMZu3HjbmkOUszqPRKp5g
+         5CjvWH3i+qaNNausGfI/SIxeImBBVw/xujYBx61bnN1S4mGOb/wtePL3wLgQQ8wnK4+F
+         cLgv2701sNpuNkMx2w1MBm2FFnAYhkBjolXolHyoKk92NqUGBsR2nMZbHo1d+u77aiav
+         0peQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749840636; x=1750445436;
+        h=in-reply-to:subject:autocrypt:from:content-language:references:cc
+         :to:user-agent:mime-version:date:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ssas791YCXeKD/QD+JlJCVMdCAPoseQHAAr8HsPhqJM=;
+        b=nT3l6S58B709wV8ySqpLEKpTmA9fbP2hs8Pv1MEGEmSlcTvGJSkFWEGcei2m8GNKz0
+         r7GObssPsfoVlRzyVb3FgxutQWuqA4OpZdrdWTwOLYWuA6RzEK59MU3RuBH7EarvpMOx
+         +0SaMSoFc5WVRqTM9zwJMuoRO4pVD/AA7LVnHfPVmiQXj7+I63rzA+G2njC6quxtzn8+
+         wFQT4D6Ebd3N7qLPl+mIJiCbhqgqA0brzz4ZZcUgA0bHZKVWMe3w0XsLdCjzEWtrgcG7
+         zOf2h2wioYtm27eUxadgoagAQMgahMVqqBGXL4oVzZI8lqg07TKCv1AbMnGLU3kjbt7z
+         vTHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnaLOLCmW1qJ7L/jin11B0dAFAC0jxLGeDU+F/DY9Z/9BK18KT6rJPK/AiSl9eiTlmsoi9lu10UAhFAFQ=@vger.kernel.org, AJvYcCWRygxjaai86+Iymt8C0ernr+vMtxrSjwH+OU+KAw1UK9sqhF7f9sMy+bsly1MFsVy262ZJFvMsDtFI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzU8y6Wni9ofbXQaIyqVGHg2ElU+LksL854pnfYVsMMMcaGgGr
+	wj33iyNi6cZeqMaSOsX2grItYzF8V3PxaFnWOoOjrm3+EUjKA6PpnacV
+X-Gm-Gg: ASbGncuMrb+gQZ02NOJ5AjE+1wXC9tHsWe0hBc+uuLd4Vvqy9Mu+4mttgVmVmbe9L+b
+	kCtlXnHfipQp/EM/uzlTnBAZUoJ6SBaGnNn37A+6YUw+/QwgpK4LM3r6bCf4cDnXgW+MaD1nDkA
+	NmI2jEbFkQIqRLejLLpzi3J47qYOCLzsT7rmkK9GPbDkSe33x7TYvfWe9o/fdiDeOfdx+oM0pPS
+	vMTZWvUddtRdpBykHsJGcsz3c1Kklb/W+CdsmDiLIQc3tqK6aPPSaYt5rwGACwpCXFSQ29zs33n
+	N2fBf+M5nuUZ2tfktps1+dS2oe9/j2SyE27ApSuH+aBAYX06x7RL9fyXeojclLBdcr6ghlxEP1q
+	P/w==
+X-Google-Smtp-Source: AGHT+IEMXtw/Ah6KNxMdjC6SeMqIZcruyHPplmMh9NTFdcpBcc3v52YYh7xDRoVcF1IT5KrTdD5JBw==
+X-Received: by 2002:a05:620a:4085:b0:7ce:ca97:a6bf with SMTP id af79cd13be357-7d3c6ce53ccmr83023585a.41.1749840636357;
+        Fri, 13 Jun 2025 11:50:36 -0700 (PDT)
+Received: from [10.138.10.6] ([89.187.178.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8e0535csm205804985a.41.2025.06.13.11.50.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 11:50:35 -0700 (PDT)
+Message-ID: <6b661c62-c322-4f2b-8e4a-da1d5c5e48a1@gmail.com>
+Date: Fri, 13 Jun 2025 14:50:01 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <61133be0-1ace-457c-9b0f-d6dde3003389@arm.com>
+User-Agent: Mozilla Thunderbird
+To: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, virtualization@lists.linux.dev,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org, devel@spectrum-os.org,
+ Alyssa Ross <hi@alyssa.is>, Thomas Gleixner <tglx@linutronix.de>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
+ <20250613181345.GA1350149@myrica>
+Content-Language: en-US
+From: Demi Marie Obenour <demiobenour@gmail.com>
+Autocrypt: addr=demiobenour@gmail.com; keydata=
+ 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
+ +MYSfkEjBz0E8CLOcAw7JIwAaeBT
+Subject: Re: Virtio interrupt remapping
+In-Reply-To: <20250613181345.GA1350149@myrica>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------0ETCOYWHDk5RxNgLbpT3afON"
 
-On Fri, Jun 13, 2025 at 05:57:26PM +0100, James Morse wrote:
-> Hi Tony,
-> 
-> I'm still going through this, but here is my attempt to describe what equivalents arm has
-> in this area.
-> 
-> 
-> On 21/05/2025 23:50, Tony Luck wrote:
-> > Background
-> > ----------
-> > 
-> > Telemetry features are being implemented in conjunction with the
-> > IA32_PQR_ASSOC.RMID value on each logical CPU. This is used to send
-> > counts for various events to a collector in a nearby OOBMSM device to be
-> > accumulated with counts for each <RMID, event> pair received from other
-> > CPUs. Cores send event counts when the RMID value changes, or after each
-> > 2ms elapsed time.
-> 
-> This is a shared memory area where an external agent (the OOBMSM) has logged measurement data?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------0ETCOYWHDk5RxNgLbpT3afON
+Content-Type: multipart/mixed; boundary="------------Ek0jj2uxDXMmtwViAPvvUiRK";
+ protected-headers="v1"
+From: Demi Marie Obenour <demiobenour@gmail.com>
+To: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, virtualization@lists.linux.dev,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org, devel@spectrum-os.org,
+ Alyssa Ross <hi@alyssa.is>, Thomas Gleixner <tglx@linutronix.de>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Message-ID: <6b661c62-c322-4f2b-8e4a-da1d5c5e48a1@gmail.com>
+Subject: Re: Virtio interrupt remapping
+References: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
+ <20250613181345.GA1350149@myrica>
+In-Reply-To: <20250613181345.GA1350149@myrica>
 
-Yes. Effectively shared memory (but in another address space so need to
-use readq(addr) rather than just *addr to read values to keep sparse
-happy).
+--------------Ek0jj2uxDXMmtwViAPvvUiRK
+Content-Type: multipart/mixed; boundary="------------409V4M9fXd47lv2pMEw2XfDL"
 
-> Arm's equivalent to this is two things.
-> For things close to the CPU (e.g. stalls_llc_miss) these would be an PMU (possibly uncore
-> PMU) which follow a convention on their register layout meaning the general purpose pmu
-> driver should be able to drive them. The meaning of the events is described to user-space
-> via the perf json file. The kernel knows how to read event:6, but not what event:6 means.
-> The spec for this mentions MPAM, values can be monitored by ~RMID, but none of this is
-> managed by the MPAM driver.
-> 
-> The other thing arm has that is a bit like this is SCMI, which is a packet format for
-> talking to an on-die microcontroller to get platform specific temperature, voltage and
-> clock values. Again, this is another bit of kernel infrastructure that has its own way of
-> doing things. I don't see this filtering things by ~RMID ... but I guess its possible.
-> That can have shared memory areas (termed 'fast channels'). I think they are an array of
-> counter values, and something in the packet stream tells you which one is which.
-> 
-> 
-> Neither of these need picking up by the MPAM driver to expose via resctrl. But I'd like to
-> get that information across where possible so that user-space can be portable.
-> 
-> 
-> > Each OOBMSM device may implement multiple event collectors with each
-> > servicing a subset of the logical CPUs on a package.  In the initial
-> > hardware implementation, there are two categories of events: energy
-> > and perf.
-> > 
-> > 1) Energy - Two counters
-> > core_energy: This is an estimate of Joules consumed by each core. It is
-> > calculated based on the types of instructions executed, not from a power
-> > meter. This counter is useful to understand how much energy a workload
-> > is consuming.
-> > 
-> > activity: This measures "accumulated dynamic capacitance". Users who
-> > want to optimize energy consumption for a workload may use this rather
-> > than core_energy because it provides consistent results independent of
-> > any frequency or voltage changes that may occur during the runtime of
-> > the application (e.g. entry/exit from turbo mode).
-> 
-> > 2) Performance - Seven counters
-> > These are similar events to those available via the Linux "perf" tool,
-> > but collected in a way with much lower overhead (no need to collect data
-> > on every context switch).
-> > 
-> > stalls_llc_hit - Counts the total number of unhalted core clock cycles
-> > when the core is stalled due to a demand load miss which hit in the LLC
-> > 
-> > c1_res - Counts the total C1 residency across all cores. The underlying
-> > counter increments on 100MHz clock ticks
-> > 
-> > unhalted_core_cycles - Counts the total number of unhalted core clock
-> > cycles
-> > 
-> > stalls_llc_miss - Counts the total number of unhalted core clock cycles
-> > when the core is stalled due to a demand load miss which missed all the
-> > local caches
-> > 
-> > c6_res - Counts the total C6 residency. The underlying counter increments
-> > on crystal clock (25MHz) ticks
-> > 
-> > unhalted_ref_cycles - Counts the total number of unhalted reference clock
-> > (TSC) cycles
-> > 
-> > uops_retired - Counts the total number of uops retired
-> > 
-> > The counters are arranged in groups in MMIO space of the OOBMSM device.
-> > E.g. for the energy counters the layout is:
-> > 
-> > Offset: Counter
-> > 0x00	core energy for RMID 0
-> > 0x08	core activity for RMID 0
-> > 0x10	core energy for RMID 1
-> > 0x18	core activity for RMID 1
-> > ...
-> 
-> For the performance counters especially, on arm I'd be trying to get these values by
-> teaching perf about the CLOSID/RMID values, so that perf events are only incremented for
-> tasks in a particular control/monitor group.
-> (why that might be relevant is below)
+--------------409V4M9fXd47lv2pMEw2XfDL
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Yes. If perf is enhanced to take CLOSID/RMID into account when
-accumulating event counts it can provide the same functionality.
+On 6/13/25 14:13, Jean-Philippe Brucker wrote:
+> Hi,
+>=20
+> On Fri, Jun 13, 2025 at 01:08:07PM -0400, Demi Marie Obenour wrote:
+>> I=E2=80=99m working on virtio-IOMMU interrupt remapping for Spectrum O=
+S [1],
+>> and am running into a problem.  All of the current interrupt remapping=
 
-Higher overhead since perf needs to sample event counters of
-interest on every context switch instead of data collection
-being handled by hardware.
+>> drivers use __init code during initialization, and I=E2=80=99m not sur=
+e how to
+>> plumb the struct virtio_device * into the IOMMU initialization code.
+>>
+>> What is the proper way to do this, where =E2=80=9Cproper=E2=80=9D mean=
+s that it doesn=E2=80=99t
+>> do something disgusting like =E2=80=9Cstuff the virtio device in a glo=
+bal
+>> variable=E2=80=9D?
+>=20
+> I'm not familiar at all with interrupt remapping, but I suspect a major=
 
-On the other hand the perf approach is more flexible as you can
-pick any event to sample per-RMID instead of the fixed set that
-the h/w designer chose.
+> hurdle will be device probing order: the PCI subsystem probes the
+> virtio-pci transport device relatively late during boot, and the virtio=
 
-> 
-> > Resctrl User Interface
-> > ----------------------
-> > 
-> > Because there may be multiple OOBMSM collection agents per processor
-> > package, resctrl accumulates event counts from all agents on a package
-> > and presents a single value to users. This will provide a consistent
-> > user interface on future platforms that vary the number of collectors,
-> > or the mappings from logical CPUs to collectors.
-> 
-> Great!
-> 
-> 
-> > Users will continue to see the legacy monitoring files in the "L3"
-> > directories and the telemetry files in the new "PERF_PKG" directories
-> > (with each file providing the aggregated value from all OOBMSM collectors
-> > on that package).
-> > 
-> > $ tree /sys/fs/resctrl/mon_data/
-> > /sys/fs/resctrl/mon_data/
-> > ├── mon_L3_00
-> > │   ├── llc_occupancy
-> > │   ├── mbm_local_bytes
-> > │   └── mbm_total_bytes
-> > ├── mon_L3_01
-> > │   ├── llc_occupancy
-> > │   ├── mbm_local_bytes
-> > │   └── mbm_total_bytes
-> 
-> > ├── mon_PERF_PKG_00
-> 
-> Where do the package ids come from? How can user-space find out which CPUs are in package-0?
+> driver probes the virtio-iommu device afterwards, at which point we can=
 
-Resctrl gets the id from topology_physical_package_id(cpu);
-> 
-> I don't see a package_id in either /sys/devices/system/cpu/cpu0/topology or
-> Documentation/ABI/stable/sysfs-devices-system-cpu.
+> call viommu_probe() and inspect the device features and config.  This c=
+an
+> be quite late in userspace if virtio and virtio-iommu get loaded as
+> modules (which distros tend to do).>=20
+> The way we know to hold off initializing dependent devices before the
+> IOMMU is ready is by reading the firmware tables. In devicetree the
+> "msi-parent" and "msi-map" properties point to the interrupt remapping
+> device, so by reading those Linux knows to wait for the probe of the
+> remapping device before setting up those endpoints. The ACPI VIOT
+> describes this topology as well, although at the moment it does not hav=
+e
+> separate graphs for MMU and interrupts, like devicetree does (could
+> probably be added to the spec if needed, but I'm guessing the topologie=
+s
+> may be the same for a VM).  If the interrupt infrastructure supports
+> probe deferral, then that's probably the way to go.
 
-These package IDs show up on x86 with these file names:
+I don't see any examples of probe deferral in the codebase.  Would it
+instead be possible to require virtio-iommu (and thus virtio) to be
+built-in rather than modules?
 
-$ grep ^ /sys/devices/system/cpu/cpu0/topology/*package*
-/sys/devices/system/cpu/cpu0/topology/package_cpus:0000,00000fff,ffffff00,0000000f,ffffffff
-/sys/devices/system/cpu/cpu0/topology/package_cpus_list:0-35,72-107
-/sys/devices/system/cpu/cpu0/topology/physical_package_id:0
+CCing the IRQ and PCI maintainers as well.
+--=20
+Sincerely,
+Demi Marie Obenour (she/her/hers)
+--------------409V4M9fXd47lv2pMEw2XfDL
+Content-Type: application/pgp-keys; name="OpenPGP_0xB288B55FFF9C22C1.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB288B55FFF9C22C1.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > │   ├── activity
-> > │   ├── c1_res
-> > │   ├── c6_res
-> > │   ├── core_energy
-> > │   ├── stalls_llc_hit
-> > │   ├── stalls_llc_miss
-> > │   ├── unhalted_core_cycles
-> > │   ├── unhalted_ref_cycles
-> > │   └── uops_retired
-> > └── mon_PERF_PKG_01
-> >     ├── activity
-> >     ├── c1_res
-> >     ├── c6_res
-> >     ├── core_energy
-> >     ├── stalls_llc_hit
-> >     ├── stalls_llc_miss
-> >     ├── unhalted_core_cycles
-> >     ├── unhalted_ref_cycles
-> >     └── uops_retired
-> 
-> Looks good to me.
-> 
-> The difficulty MPAM platforms have had with mbm_total_bytes et al is the "starts counting
-> from the beginning of time" property. Having to enable mbm_total_bytes before it counts
-> would have allowed MPAM to report an error if it couldn't enable more than N counters at a
-> time. (ABMC suggests AMD platforms have a similar problem).
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Resctrl goes to some lengths to have mbm_total_bytes start from zero
-when you mkdir a group even when some old RMID is re-used that has
-got some left over value from its previous lifetime. This isn't
-overly painful because resctrl has to carry lots of per-RMID state
-to handle the wraparound of the narrow counters.
+xsFNBFp+A0oBEADffj6anl9/BHhUSxGTICeVl2tob7hPDdhHNgPR4C8xlYt5q49y
+B+l2nipdaq+4Gk6FZfqC825TKl7eRpUjMriwle4r3R0ydSIGcy4M6eb0IcxmuPYf
+bWpr/si88QKgyGSVZ7GeNW1UnzTdhYHuFlk8dBSmB1fzhEYEk0RcJqg4AKoq6/3/
+UorR+FaSuVwT7rqzGrTlscnTDlPWgRzrQ3jssesI7sZLm82E3pJSgaUoCdCOlL7M
+MPCJwI8JpPlBedRpe9tfVyfu3euTPLPxwcV3L/cfWPGSL4PofBtB8NUU6QwYiQ9H
+zx4xOyn67zW73/G0Q2vPPRst8LBDqlxLjbtx/WLR6h3nBc3eyuZ+q62HS1pJ5EvU
+T1vjyJ1ySrqtUXWQ4XlZyoEFUfpJxJoN0A9HCxmHGVckzTRl5FMWo8TCniHynNXs
+BtDQbabt7aNEOaAJdE7to0AH3T/Bvwzcp0ZJtBk0EM6YeMLtotUut7h2Bkg1b//r
+6bTBswMBXVJ5H44Qf0+eKeUg7whSC9qpYOzzrm7+0r9F5u3qF8ZTx55TJc2g656C
+9a1P1MYVysLvkLvS4H+crmxA/i08Tc1h+x9RRvqba4lSzZ6/Tmt60DPM5Sc4R0nS
+m9BBff0Nm0bSNRS8InXdO1Aq3362QKX2NOwcL5YaStwODNyZUqF7izjK4QARAQAB
+zTxEZW1pIE9iZW5vdXIgKElUTCBFbWFpbCBLZXkpIDxhdGhlbmFAaW52aXNpYmxl
+dGhpbmdzbGFiLmNvbT7CwY4EEwEIADgWIQR2h02fEza6IlkHHHGyiLVf/5wiwQUC
+X6YJvQIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRCyiLVf/5wiwWRhD/0Y
+R+YYC5Kduv/2LBgQJIygMsFiRHbR4+tWXuTFqgrxxFSlMktZ6gQrQCWe38WnOXkB
+oY6n/5lSJdfnuGd2UagZ/9dkaGMUkqt+5WshLFly4BnP7pSsWReKgMP7etRTwn3S
+zk1OwFx2lzY1EnnconPLfPBc6rWG2moA6l0WX+3WNR1B1ndqpl2hPSjT2jUCBWDV
+rGOUSX7r5f1WgtBeNYnEXPBCUUM51pFGESmfHIXQrqFDA7nBNiIVFDJTmQzuEqIy
+Jl67pKNgooij5mKzRhFKHfjLRAH4mmWZlB9UjDStAfFBAoDFHwd1HL5VQCNQdqEc
+/9lZDApqWuCPadZN+pGouqLysesIYsNxUhJ7dtWOWHl0vs7/3qkWmWun/2uOJMQh
+ra2u8nA9g91FbOobWqjrDd6x3ZJoGQf4zLqjmn/P514gb697788e573WN/MpQ5XI
+Fl7aM2d6/GJiq6LC9T2gSUW4rbPBiqOCeiUx7Kd/sVm41p9TOA7fEG4bYddCfDsN
+xaQJH6VRK3NOuBUGeL+iQEVF5Xs6Yp+U+jwvv2M5Lel3EqAYo5xXTx4ls0xaxDCu
+fudcAh8CMMqx3fguSb7Mi31WlnZpk0fDuWQVNKyDP7lYpwc4nCCGNKCj622ZSocH
+AcQmX28L8pJdLYacv9pU3jPy4fHcQYvmTavTqowGnM08RGVtaSBNYXJpZSBPYmVu
+b3VyIChsb3ZlciBvZiBjb2RpbmcpIDxkZW1pb2Jlbm91ckBnbWFpbC5jb20+wsF4
+BBMBAgAiBQJafgNKAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyiLVf
+/5wiwYa/EACv8a2+MMou9cSCNoZBQaU+fTmyzft9hUE+0d5W2UY1RY3OsjFIzm9R
+/4SVccfsqOYLEo+S0vQMIIIqFEq3FCpXXwPzyimotps05VA8U3Bd7yseojFygOgK
+sAMOAee2RCaDDOnoJue01dfZMzzHPO/TVdp3OvnpWipfv5G1Xg96rwbhMLE3tg6N
+xwAHa31Bv4/Xq8CJOoIWvx6fcmZQpz01/lSvsYn0KrfEbTKkuUf0vM9JrCTCP2oz
+VNN5BYzqaq2M4r+jmSyeXLim922VOWqGkUEQ85BSEemqrRS06IU6NtEMsF8EWt/b
+hWjk/9GDKTcnpdJHTrMxTspExBiNrvpI2t+YPU5B/dJJAUxvmhFrbSIbdB8umBZs
+I3AMYrEmpAbh5x7jEjoskUC7uN3o9vpg1oCLS2ePDLtAtyBtbHnkA4xGD7ar8mem
+xpH9lY/i+sC6CyyIUWcUDnnagKyJP0m9ks0GLsTeOCA0bft2XA6rD6aaCnMUsndT
+ctrab42CV5XypjmC4U1rPJ8JQJUh1/3P48/8sMH+3krxpJ06KNWNFaUbaMTGiltZ
+7x9DngklSYrX0T+2G4kVXNmjaljwkoLahwLla2gUWwBSyofXdqyhQdwZsp01KXNQ
+UCyT/Pg+aDcm/E7OMV3d4lf7g/CSxiX2GSEe6BlhSz+Lmd7ZJ3g32M1ARGVtaSBN
+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
+EtJuZYM5blWncBOJCoWMnBEcTEo/viU3GgcVRw=3D=3D
+=3Dx94R
+-----END PGP PUBLIC KEY BLOCK-----
 
-The Intel telemetry counters are 63 bits (lose one bit for the VALID
-indication). So wrap around is no concern at all for most of them
-as it happens in centuries/millennia. Potentially the uops_retired
-counter might wrap in months, but that only happens if every logical
-CPU is running with the same RMID for that whole time. So I've chosen
-to ignore wraparound. As a result counters don't start from zero when
-a group is created. I don't see this as an issue because all use cases
-are "read a counter; wait some interval; re-read the counter; compute
-the rate" which doesn't require starting from zero.
+--------------409V4M9fXd47lv2pMEw2XfDL--
 
-> 
-> How do you feel about having to enable these before they start counting?
-> 
-> This would allow the MPAM driver to open the event via perf if it has a corresponding
-> feature/counter, then provide the value from perf via resctrl.
+--------------Ek0jj2uxDXMmtwViAPvvUiRK--
 
-You'd have resctrl report "Unavailable" for these until connecting the
-plumbing to perf to provide data?
+--------------0ETCOYWHDk5RxNgLbpT3afON
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-> 
-> Another headache is how we describe the format of the contents of these files... a  made
-> up example: residency counts could be in absolute time, or percentages. I've been bitten
-> by the existing schemata strings being implicitly in a particular format, meaning
-> conversions have to happen. I'm not sure whether some architecture/platform would trip
-> over the same problem here.
+-----BEGIN PGP SIGNATURE-----
 
-Reinette is adamant that format of each resctrl event file must be
-fixed. So if different systems report residency in different ways,
-you'd either have to convert to some common format, or if that isn't
-possible, those would have to appear in resctrl as different filenames.
-E.g. "residency_absolute" and "residency_percentage".
+iQIzBAEBCAAdFiEEopQtqVJW1aeuo9/sszaHOrMp8lMFAmhMctoACgkQszaHOrMp
+8lOvBBAAh8KgX6d3oz8RWKXcHQG6DrdVlgotwhqJPPl1VZ3hW2/BKnXohAuKth1/
+zMfrbBYjJbD0ehx7riLKWFVbOCRoGV2P23GXVopqlFRuu6+q36KRrWOakjIm2g8O
+87Z5YRiXN855M2UBxv64217Zp8HUmB2bnA3kqF9KWLFLNCzJMjMONHJZ0lQeFhZH
+Lzv4vhKeY65D4NAygC/uJegvSS1CCqihKkRNE15hUmga5eGLQi1ufD/HxudA28Ps
+Jd80rrqosp24380c/zpQ2yzAFkZ64qHbzTyioLmIFGbKYrIb+B3JW1/ROMzU69Ue
+88Df1Xfktq90LenkDeDJJjI0c5qxTxEE6N+uq/mkJ69Aw2zAu/1iBCidlkOa+AEB
+muG8ausoSxIvFGab8WkfAeBZnEZkXI5znAMi4uFD2tCtnqPTtNn8re2UtW5wknqz
+8vp8HxsA2ujn43NOqz/Felzpcq/HhYKFlcz875FWZNUyNlUtTxC9bCKt3CVUNvn7
+PXkM4yTfC14O9JMuiRy7o9FVk4eSUpnTqiLkPdRAJfOMGDzDAzWYP59Nxx/WEis6
+Rk82FGWdPTqy/YjiBe0M3K/3gSYnE/DcnEaCAKgfiV8IIKFifdPSM+kI7sSCcBN1
+O3I9+lohiKkEbrANtw9cOfJWkJ93EEEkuP3UbdGKTmuwLDj+Dos=
+=L13m
+-----END PGP SIGNATURE-----
 
-> 
-> > Resctrl Implementation
-> > ----------------------
-> > 
-> > The OOBMSM driver exposes "intel_pmt_get_regions_by_feature()"
-> > that returns an array of structures describing the per-RMID groups it
-> > found from the VSEC enumeration. Linux looks at the unique identifiers
-> > for each group and enables resctrl for all groups with known unique
-> > identifiers.
-> > 
-> > The memory map for the counters for each <RMID, event> pair is described
-> > by the XML file. This is too unwieldy to use in the Linux kernel, so a
-> > simplified representation is built into the resctrl code.
-> 
-> (I hope there are only a few combinations!)
-
-Almost certain to have a new description for each CPU generation since
-the number of RMIDs is embedded in the description. If the overall
-structure stays the same, then each new instance is described by a
-dozen or so lines of code to initialize a data structure, so I think
-an acceptable level of pain.
-
-> 
-> > Note that the
-> > counters are in MMIO space instead of accessed using the IA32_QM_EVTSEL
-> > and IA32_QM_CTR MSRs. This means there is no need for cross-processor
-> > calls to read counters from a CPU in a specific domain.
-> 
-> Huzzah! RISC-V has this property, and many MPAM platforms do, (...but not all...)
-> 
-> 
-> > The counters can be read from any CPU.
-> > 
-> > High level description of code changes:
-> > 
-> > 1) New scope RESCTRL_PACKAGE
-> > 2) New struct rdt_resource RDT_RESOURCE_PERF_PKG
-> > 3) Refactor monitor code paths to split existing L3 paths from new ones. In some cases this ends up with:
-> >         switch (r->rid) {
-> >         case RDT_RESOURCE_L3:
-> >                 helper for L3
-> >                 break;
-> >         case RDT_RESOURCE_PERF_PKG:
-> >                 helper for PKG
-> >                 break;
-> >         }
-> > 4) New source code file "intel_aet.c" for the code to enumerate, configure, and report event counts.
-> > 
-> > With only one platform providing this feature, it's tricky to tell
-> > exactly where it is going to go. I've made the event definitions
-> > platform specific (based on the unique ID from the VSEC enumeration). It
-> > seems possible/likely that the list of events may change from generation
-> > to generation.
-> 
-> My thinking about this from a perf angle was to have named events for those things that
-> resctrl supports, but allow events to be specified by number, and funnel those through
-> resctrl_arch_rmid_read() so that the arch code can interpret them as a counter type-id or
-> an offset in some array. The idea was to allow platform specific counters to be read
-> without any kernel changes, reducing the pressure to add resctrl support for counters that
-> may only ever be present in a single platform.
-> 
-> With the XML data you have, would it be possible to add new 'events' to this interface via
-> sysfs/configfs? Or does too much depend on the data identified by that GUID...
-
-Maybe. There are a number of parameters that need to be provided for an
-event:
-1) Scope. Must be something that resctrl already knows (and is actively
-using?) L2/L3 cache, node, package.
-2) Base address(es) for counters for this event.
-3) Parameters for F(RMID) to compute offset from base
-4) Type of access (mmio_read, MSR_read, other?)
-5) post-process needed after read (check for valid? maybe other things)
-
-Might be best to try some PoC implementation to see which of those are
-required vs. overkill. Also to see whatI missed from the list.
-> 
-> 
-> Thanks,
-> 
-> James
-
--Tony
+--------------0ETCOYWHDk5RxNgLbpT3afON--
