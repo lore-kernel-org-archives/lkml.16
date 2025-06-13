@@ -1,210 +1,299 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147091FE477
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749836040; cv=none; b=gvXTCSMDKe7lmUf6QmFLp+db4AN/DFCmMp+cVOMcqID4DYX+r4Ke69w8xx1Bg8J2X3Za1xXNE36A2mtzFbHBpg05Vj2iRi3DVmJAVbtyCFFcC/sl4BytTSf0hTafbBRpm1uaCMCLFXwwQqDDyeZrKw8UDt4Tu5c40sW88h61LuI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749836040; c=relaxed/simple;
-	bh=Fsmd/OynqYi+2X+eZIkhZcMjAjmYuRs7XyREgNHQA98=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iGvBDLAE/TOs4d35zfNPBtuWarjEpYo8JCW9e3gEZyZneukcbFHyZPPvOjN9dC4U+egPiqlzISyDCMcTz0Z9ycE9X284U6Flb8j0Lpd+8aSNgViUD2rYVENRDOSObUiYeM7mwsR869bfrKCKWT0p/dKS3SWXk06wq8Sz+lOaHZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TJwrIgsg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93412132111;
+	Fri, 13 Jun 2025 17:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749836133; cv=fail; b=W7htNGKFyNk0FdNsvKgDqWYPNE0BiVODaxc0ni/JnFmFSHg/CrHF/pxa2CoQ0GmlsSuqsS6UErQUQ6fbfqMnB9JpolWsgLz5vO4I9h4y3e2dJ/QY5kCPUmRFfiwb+F3TQL1VxkIkICSUM7AR05Ixf8TiXrGlNOWmRJ0951X/8SU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749836133; c=relaxed/simple;
+	bh=LpZaHfGO4rwQwA62pqUFyh97Mcq1zLMnlN8bMNZfaBQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=VlkdaRMQeUjncBkcfDXkU/vYevrfopnedYmFhpMvBrc/n3PLkp0AvPQzTepRLjFarW2hXSKGMW7dzSAjtiJPY/tUVWHO/WtCdr2mcm44c+WjFmNOL8tuqXQL7iPHuVCS0iUpUnbXWqrID7ar7RZ9yC25GSgDvE5fKaM0m67aVKM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tbD0YO+U; arc=fail smtp.client-ip=40.107.93.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJwrIgsg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749836038;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EVmS4EGgEnkwhO7NDVdPntY5DfSrUnrO5NX0r8I9Gzg=;
-	b=TJwrIgsgPCh3Fs0nRfXJ6CTmqJ7CoXH9SYTwGgkd1QOYNdNonsZuUe0OsocyJeifl1IQUI
-	wOqDQS+HPOdl/Q884aoNVOpxpLb1gnOII+xQawSvypZ358eOOZogTnkLbXhTe2JABGESaD
-	4FhgP1EgExDfI34ZpgDuZqYX6ce5azc=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-527-o7ObVKDmOviLAYGs4rhEHQ-1; Fri, 13 Jun 2025 13:33:56 -0400
-X-MC-Unique: o7ObVKDmOviLAYGs4rhEHQ-1
-X-Mimecast-MFC-AGG-ID: o7ObVKDmOviLAYGs4rhEHQ_1749836036
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c791987cf6so519653985a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:33:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749836036; x=1750440836;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EVmS4EGgEnkwhO7NDVdPntY5DfSrUnrO5NX0r8I9Gzg=;
-        b=mJ5/qK4Y2GAfexyrDojNyl8jZRjhLHILzRq9i3Q96pcNPj38bUt4gQAxJdjgQnG9ns
-         5B5l7F3BFZ7oWcVulP56UTg4eHQCaM8IkTIzC+nSfjqw5tjmZtHuqleQwQNudGm+7r+U
-         fEQ9GA2rMjgjAqXvIV09trcdWuc5M06N8bknN4JLzaN2OU4Mdzgq3KRjQ1C+EkmfOgLU
-         g8hxPZlGns3a4sxP5F4DTkVbkqdlJoXoSuzSkTg9GBN1xhaJQlNE5+JP4suVXhJzpHv/
-         gVSL5H3448jBJGeMgu8l4PAOFuU1lKRBiNpay8s92ICmdVMwOlSzxGV7DWMdn5hp2y9k
-         m5jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/tbuCOOGOpsvbGzVPWZ4vvVqxAQTEcmKYHoHo5h8WHTKEDPmc8MeZlgoEaDyoSWGdE6Dwo87RxUQ0fQo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiVdkrzfXJnl+7SHXiPcYNO2PLUnMMr2FtwrNEcx+eUYcptXsG
-	8wekBUUJyNnv2cWorkI2BeYqFAkePW+Xg+feuLSi7o1qFHaQBL+ntgYdkGL6dZ5P5uuw1x0WbFW
-	By7M17ZXl1wBWR8ArRT7mn2oxjmqxAmMeOHKdwOWoI+9rKi1Zcg8wQXmC5irAZbiNxw==
-X-Gm-Gg: ASbGncvb5HE3EtNxgbrRYOZT/kSs4Z/ep11VyloIVFn+/V/+CyEnOJp41TuqojzGR89
-	mbsgP/ZmyvMBEWEX29lkXPNLTvstvYZMuzEAKEFDMTaBZHT9YRjLFyk+JGf9OXq/uvx1yg61hiN
-	RGG+2dSVTSHPIPhyO1J+EyvvisvUACnrirxcdzhr+3c+yH7zKZrOaLIBuJePgXk6ol2FkB6YPPU
-	nJmhsR/vV7h9Np1H98dmJN1oVuL0El3Nh8eyDuHWHwluhklLCFZIgacoyIrYzoOdrBVhihtIAyU
-	IXQw8jMPN1aC776p
-X-Received: by 2002:a05:620a:2448:b0:7d3:9da3:4840 with SMTP id af79cd13be357-7d3c6cebbfcmr42869785a.38.1749836036227;
-        Fri, 13 Jun 2025 10:33:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFjAs87IdqSCJ1lmVEc2pJUic+CnTFOXiehkUdG1cJmxJpjMU8c5tMJHN8cq1l3mKPRRfNkzA==
-X-Received: by 2002:a05:620a:2448:b0:7d3:9da3:4840 with SMTP id af79cd13be357-7d3c6cebbfcmr42866685a.38.1749836035856;
-        Fri, 13 Jun 2025 10:33:55 -0700 (PDT)
-Received: from m8.users.ipa.redhat.com ([2603:7000:9400:fe80::baf])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eaca83sm197229685a.60.2025.06.13.10.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 10:33:55 -0700 (PDT)
-Message-ID: <de070353cc7ef2cd6ad68f899f3244917030c39b.camel@redhat.com>
-Subject: Re: Module signing and post-quantum crypto public key algorithms
-From: Simo Sorce <simo@redhat.com>
-To: Ignat Korchagin <ignat@cloudflare.com>, David Howells
- <dhowells@redhat.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Stephan Mueller
-	 <smueller@chronox.de>, torvalds@linux-foundation.org, Paul Moore
-	 <paul@paul-moore.com>, Lukas Wunner <lukas@wunner.de>, Clemens Lang
-	 <cllang@redhat.com>, David Bohannon <dbohanno@redhat.com>, Roberto Sassu
-	 <roberto.sassu@huawei.com>, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 13 Jun 2025 13:33:54 -0400
-In-Reply-To: <CALrw=nGkM9V12y7dB8y84UHKnroregUwiLBrtn5Xyf3k4pREsg@mail.gmail.com>
-References: <501216.1749826470@warthog.procyon.org.uk>
-	 <CALrw=nGkM9V12y7dB8y84UHKnroregUwiLBrtn5Xyf3k4pREsg@mail.gmail.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tbD0YO+U"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mIxAGLpPgt5OZl5YvRkjeCRpBVs1TMlzJH1h5SIc3i3ggclinNXJl+ByrK0DSW3v+EX9IFnWES/kMZLL2ahegdMVyg+N9sWTAFhGwSBiSRJ8a7AffYE3Y+96ZDnBM2bO/qc7MxNe0AruLJWb6rkvMSOB9BTEDmzPOQ6HG8tZfhXKoxQYwhi8dn1UhB/khYDAEDNAQdkWz/y7QxEBtYZVs7vFtEP5wWJrmQzPNnBOy6+SmilrO8zMDwMCacCzmKJ74aakkIlT8GRBoRDtMIz8XHWtOGWh49nvW5llSNKy9+pdDwDlUcMmGZPNLZWqwmzueHGWnASmtUzQ9+YJrBo28Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6cINPyb2NTHR88aD711CjKx1Vz1pFkDrT453wsJ6uI8=;
+ b=ICy8PRGOjIPDpQ+LxPuUUuL+4PgLyUvdLRYqW8SW1e6rSwRzhBl9EFdrsJqQOmq7odZOggeCb9HVu7NRULH1pC3P+2lGXClNnvePoodrvIi7VMDMGAH67y8lBUMBRb4GvaqPD57eyE7yfYEvoDzicUfx+7w+bx6dUyMrYsEGykXGjLtsaHdT6QkmzVxoCii3mP3ParAfRqUZndjKPuKy2HlhWlZKKcJHWiRtreHs1X/z9P+Zgugnn9U015jlXtmo3W+F+RFroP0syz6mfmcsXoubIDcBeWJjh+mKUxzJADFr2bXRMRX3QT7RQe6hgpYlT9oe08ok8BhMMVK9lHr2MQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6cINPyb2NTHR88aD711CjKx1Vz1pFkDrT453wsJ6uI8=;
+ b=tbD0YO+U+WAbCBxqNpmWbbCl9XZvYtC7HSCosOLZ8Bla5F473pfhYRRBj9vUQfHTfeuR8V6UZa5rlWw4b/VyBCQyR+ujPsRX4WupNJwptNZ4GqqM1gLpAdFpV0dCtBmOTxYefXuwqfHg88o6+vIm5tX9dtvK6b8PqQ84a4XtPih+muCcOI0I+Z76LMBxgCaagGUFCrptrfMRsCQH7ao9s6XgrUT6y2BY6MYg8V9MnPo4vw6jdlcLnm32JlSjXkU+CpoNv0uY4Ix5kq74TooPNqma/mkNsF2Aq+S30Z4N0GNtcrPdsjZ0YVRVxpnrM/+vLqDOJbC+qSoIEBzYscmaZw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by DM4PR12MB6423.namprd12.prod.outlook.com (2603:10b6:8:bd::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.19; Fri, 13 Jun 2025 17:35:27 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8792.034; Fri, 13 Jun 2025
+ 17:35:26 +0000
+Message-ID: <a8200977-689d-4041-936b-3a92eac1bbe9@nvidia.com>
+Date: Fri, 13 Jun 2025 13:35:23 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/10] Add a deadline server for sched_ext tasks
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
+ bpf@vger.kernel.org
+References: <20250613051734.4023260-1-joelagnelf@nvidia.com>
+Content-Language: en-US
+From: Joel Fernandes <joelagnelf@nvidia.com>
+In-Reply-To: <20250613051734.4023260-1-joelagnelf@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR04CA0002.namprd04.prod.outlook.com
+ (2603:10b6:208:d4::15) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-Premise: this problem can't be ignored, even if you think Quantum
-Computers are BS, various government regulations are pushing all
-commercial entities to require PQ signatures, so we have to deal with
-this problem.
-
-On Fri, 2025-06-13 at 16:21 +0100, Ignat Korchagin wrote:
-> Hi David,
->=20
-> On Fri, Jun 13, 2025 at 3:54=E2=80=AFPM David Howells <dhowells@redhat.co=
-m> wrote:
-> >=20
-> > Hi,
-> >=20
-> > So we need to do something about the impending quantum-related obsolesc=
-ence of
-> > the RSA signatures that we use for module signing, kexec, BPF signing, =
-IMA and
-> > a bunch of other things.
->=20
-> Is it that impending? At least for now it seems people are more
-> concerned about quantum-safe TLS, so their communications cannot be
-> decrypted later. But breaking signatures of open source modules
-> probably only makes sense when there is an actual capability to break
-> RSA (or ECDSA)
-
-We do not know when Q-day (or Y2Q if you prefer) will strike, "never"
-is still a possibility.
-
-But, as a data point, IBM just announced a roadmap for a contraption
-with 200 error corrected logic qubits.
-That is substantial progress, so we cannot assume it will never happen,
-the risk is too high (it is not me saying this, it is the cryptography
-community consensus).
-
-In terms of impending, what is pressing businesses at this time is the
-CNSA 2.0 requirements, which wants software and firmware signatures to
-transition to PQ algorithm in 2025 (yes this year) with complete phase
-off of classic signatures by 2030 (it is an aggressive timeline, yes).
-
-This is because a lot of the keys are embedded in HW (think Secure
-Boot), so you can't wait until *after* you have a machine that can
-generate forged signatures to protect your software update process.
-
-A Quantum computer capable of breaking RSA =3D=3D you can load any code in
-a kernel that uses RSA/ECC signed modules.
-
-
-
-> We need to consider cases, for example, when a python script calls
-> some binaries via system(3) or similar in a tight loop. Yes, with IMA
-> we would verify only once, but still there are cases, when software
-> updates happen frequently or config management "templates" the
-> binaries, so they change all the time.
-
-In general, if you care about performance what you want to do is to
-limit the amount of signatures you have to check to the bare minimum,
-that is why I proposed to David the use of hashes, where you can have a
-whole bundle of them and a single signature covering them all. This is
-paramount for something like IMA if you want to make it usable wrt
-performance.
-
-> > I don't think we can dispense with signature checking entirely, though:=
- we
-> > need it for third party module loading, quick single-module driver upda=
-tes and
-> > all the non-module checking stuff.  If it were to be done in userspace,=
- this
-> > might entail an upcall for each signature we want to check - either tha=
-t, or
-> > the kernel has to run a server process that it can delegate checking to=
-.
->=20
-> Agreed - we should have an in-kernel option
->=20
-> > It's also been suggested that PQ algorithms are really slow.  For kerne=
-l
-> > modules that might not matter too much as we may well not load more tha=
-n 200
-> > or so during boot - but there are other users that may get used more
-> > frequently (IMA, for example).
->=20
-> Yep, mentioned above.
-
-Note that PQ algorithms are not all slow, but mostly signatures are
-large, much larger than hashes, which is another reason to move to
-storing hashes in the kernel, rather than signatures.
-
-Where the smaller classic signatures (ECC) are 32 bytes, the smallest
-produced by ML-DSA are 2420 bytes (with a public key of 1312).
-For SLH-DSA the smaller signature is 7856 bytes (but hey! 32 bytes
-pubic key).
-
-The proposed FN-DSA standard has smaller signature sizes (the smallest
-in the drafts is ~666B with a 897B public key, numbers are still
-subject to change), yet it requires a IEEE-754 FPU to implement and is
-a bit crazy, and it is generally not recommended for software
-signatures.
-
-Some algorithm is also slow (eg SLH-DSA with strong parameters), but
-ML-DSA is comparable to ECC in performance.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|DM4PR12MB6423:EE_
+X-MS-Office365-Filtering-Correlation-Id: 936606e4-c73e-4b34-7f9e-08ddaaa0aee2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y2RZVWFUb0lidGNYdGhzL3NmaGNDS05SZk8rT1lCd0M5SitWWUZBV0d1R2RZ?=
+ =?utf-8?B?a1ZndVNPZVd1TXdOVGxRV0lTMjVSMHBVek5hajM1YVE1VWp6djZpRmR5cldU?=
+ =?utf-8?B?MWxQbnhRN2RrSVhlL1RkV3pTZUZVTm90UUU5SXV2MENLUFFjMVZDVVdsem14?=
+ =?utf-8?B?MytkZTlBL0JqaXpsOGc3QXNtQUdWZTVqZ2pSa01jcVRCdTdQcVFLRDJoOCtM?=
+ =?utf-8?B?emQ4c3RQclFaai82NjB1OUx6T0x6ZFdCN2NXV3d2bTZ4SmdpVURuVEprbjNY?=
+ =?utf-8?B?dmVOUmJTMjllejlXYUF1VXBZL3kyYit6NmQyc29hUzlOVDJvZk5GTWxzdDA2?=
+ =?utf-8?B?WG9kazBDWXNOQnRRSjl5K3UvMm9aQVVYTVJnSStKa0NFKzQ0YjdJNmRNTGxw?=
+ =?utf-8?B?VWlZT09XRThMc2ttanpEMGk5QmVQeFFyRWdUZG5BeEtGVmJFc3RlbVdUdWp3?=
+ =?utf-8?B?d0FaMEdKTkNaNmIybStCRHlUVGVTNkdlNGtaNXlVSmpTZ3gydXpINStwY3E3?=
+ =?utf-8?B?dWpmYmd6RjNUUCtZdExoc25OYmlvUUhjdEZXRUVHdHR1MUZ6b0YzOTRtRVVY?=
+ =?utf-8?B?NVJtQ01XQ05BbnRCKzFibDJ0RTRITE4wbVJrQzdZUTBSeURhQ3FSL0RWUU1W?=
+ =?utf-8?B?T1pScHJBTFNCemRqYlcwNEQ5cWw4OGMwcmlpSVE3dEo0Tk1peUxGb2UzVzZC?=
+ =?utf-8?B?WFh6MG9TRllxYmd0UkV6WEsvYkVnZWgvMHNIR3VRUUJ0R2M5ZFlXdlk2Q1Z6?=
+ =?utf-8?B?R2gyTENkb205VXE0d0Q0TUY0TzZrUG5WYlhIN1JPZnNqS0NybSt1NkRwZ2tC?=
+ =?utf-8?B?VFRTTjhwd3FCTEIxMEFMdVZKRk83Q2NnKy9nRGExSnVsTnpBY01WeGRmY0E5?=
+ =?utf-8?B?cE5jQk1aNkV2RkdCQytzWDllMkprcWRyZXNZR2N2MjhVbzRoRnFpZDJpV1Rz?=
+ =?utf-8?B?NkVheGNwSnROeUxCekVPSWtIQ25xckJTaW5LN0QxQi8zUVM2SFdOZm50QXR1?=
+ =?utf-8?B?Mkt4QVNRdzBMUmxhZVdIcnlWdWV0OSs4Q3ZRZUMzb1J2Kzh0SmFsN3MxNmh3?=
+ =?utf-8?B?Z3N6c2JleTMrRVp4Y1dpL0NTYUZRN09FTW5iUWJMaS9hTktoeXp4N2ptc0xQ?=
+ =?utf-8?B?WTdRbDQ1ZkZqR0p0eHRXRHlEQ1JwRkMzUnNzRll6MnI5V2VLZEJQTVBxRWRZ?=
+ =?utf-8?B?TG54MzVLQ0VOMVNCamcvcm1yMzlyTjZTRzY4V1BhZTVhc1FJOU1md3Y0MEJK?=
+ =?utf-8?B?MEhhYWVDZmhmYUFpZm9NMlBNVHRTNkZaVmw2RmVqMnhPR1k4SkhMUVFjS21z?=
+ =?utf-8?B?bkFqa2xVT3ExanVucERDcFRrMCs4L1VKZ2hXaWxubkZGWmZhU0o0cXdZMzQ1?=
+ =?utf-8?B?RnJPWnY1YTNtcitoUW80QXllNzJyVE5LcmxBb3krQ2lmTm14Ry9tTlkxcXZE?=
+ =?utf-8?B?QzhIZXR5dUJMRExiUzlZeUR0bFV6d29yajZ2ME5NL1N6U0s3ZW1HbThpODFh?=
+ =?utf-8?B?bE9WMG1EWk9raUtUWm9OcitHMmtlRng5MXNYZjlZbUdvR1BZbExtVTg5eTk0?=
+ =?utf-8?B?cHp5djBDVHJZeDQyelRoU1EwS2tWL1NzUUJqZ0YwOXBtanNrak5EVGNXVlVQ?=
+ =?utf-8?B?TUhvdmVoWEpsU1FiYzZrT2tRQ3gvTFFXUERmTUorTHlDamlhSlQ0Ri9jZVFu?=
+ =?utf-8?B?V1VUU01QZkQxclMvd3l1cjNnd2NhaENYY2lYcVFhUzZkeTJ3QWJ4K1JkQ0do?=
+ =?utf-8?B?Lyt4QnJwVUM3K2hNV2Mya1pycTZ5cTR0aHdVYlViMUNlczBwT2hkZER6SHQy?=
+ =?utf-8?B?aGpucGVQRTZMTm94ZzJHVGN0TnBEL1BtV3ZIVWNEVHVQWXpmTDUrdFg4REVG?=
+ =?utf-8?B?aWVWdlZEWjFUbnNKWENicmlyWUc2OG9tR0JqeXRPNDkzWDhrWUJiMHNvS3RB?=
+ =?utf-8?Q?wGfC1rdntl0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WmgyckprNVBYRjFBcm8vRHhKK01aZThXOHJhN0gzcTVOemxhWWZSL1UrWCtY?=
+ =?utf-8?B?YzhxTkZXOHBObEVUcGljeGxzcTNTRmFiTmp2eno5VDY2bTFYY2dNc09QNEN2?=
+ =?utf-8?B?SjhnU3JzTmtZb3hScEwzQ3pySjA3M0dLeHFScEZRV3ljOVAxQU4wd1cxZVZQ?=
+ =?utf-8?B?WkU3ZU1FbG9PVlN6WHJJazVjbmxZZ2h1TS9laHZHRlE0bEVMRVJNK20zeHNK?=
+ =?utf-8?B?WEFSQnVuVFJrckdVb3ZLbFhYcFVveXJ3Q29vd2E1MGZhT05PT2pzd0drbTZY?=
+ =?utf-8?B?TlBoRFNoVDhGK1hxU0FLbk1WOW5oUGZOR0dmOXpYWk53dlMxOWlxMnU2Q01p?=
+ =?utf-8?B?MVAwdmZINmtKMHhobExhV2hDQ0Z3MTlhN3I2S0psQkRDZXlmeEpSY1kwTURZ?=
+ =?utf-8?B?dFJJV1Jua0xnU3EvQnZrU1ZTQ0JnV3RaWi9uTGdkMXVkZjdvNnVoOWFudnk2?=
+ =?utf-8?B?ZlBTZGNNbVl6SWlIeklGcWhOSCtCdEdVaXUwTm94S3N1WHVrT2c1VE9UK3NX?=
+ =?utf-8?B?SVNTTjZoWjVJL05rTVdOSDM0b1dIazIwbEFCM09yWVFZMXM3VG5aTThrTk5C?=
+ =?utf-8?B?eitlckRFcVhzUU95ZjlKS0JOOWlMQmwrTnVCeS9OOUw3Z3lSeTlCV1RoM1Vw?=
+ =?utf-8?B?K012MFJlSHlJaThkbGtvSU5iUnZHLzNtbWNDZHRIZzZvRHgxUUx1akkzeTlt?=
+ =?utf-8?B?ZWtBbFVvWUNPU2dpRE9jS3hzRTA5Q2ZBQzV3R0xOSkNPTUZqUXloR0krZXBv?=
+ =?utf-8?B?YktHWkRzcWpMSkNWdEpHLzNMcThEM0ZXSFhiYU5MYnlUbHFXYXo2b2hSYzhy?=
+ =?utf-8?B?dTJQTzduQ2dpakRybE9yR3lIVnpPUGJXeExwTUFEV2sxNHIwa2hnejJXZnhk?=
+ =?utf-8?B?c0FXWUhzT2xVUHdCQnJ4aTlUR0x3eEVJQXFkZ3g2MFdIK2MwaWVnYU8yZUU4?=
+ =?utf-8?B?Y0R3V0dBUnFTRHY5bzFFaHFLcTFwdHA4SjhaSE1vb0d5alM4QjM4cHBLQlNC?=
+ =?utf-8?B?Nmk5WHVIQjJrdFB4V1JBdEZTc3ErVTc0K2pucjMxSGFBWE54bkJSNU10a2hR?=
+ =?utf-8?B?Z3B5UUQ5ek9ncVp2MWhuSnE3UDBUVWR5enMwL0dJNlhNaENYcmdSWFpTWmlV?=
+ =?utf-8?B?OFFEb000Uk9wR0J1NWtmTEJabE1PWGVQd1BZWmZCak0rdXZ3MlpoSENtaU5B?=
+ =?utf-8?B?WEx4NFhQbmJsNWVkUDJ0aEVEMEVHWGVVL2Y2TGVJQi9jOExPVU1lWFJvTWNB?=
+ =?utf-8?B?UHpqYlBFa0lYV21zVEFheUtIM0NZQ1d6ZlNhb0hVbXFINHltMjZEMnRDeWZ4?=
+ =?utf-8?B?MVoxL0lQeEVNeG9jc3ZqN1N6RXdHeTVxZUhmMDFMdGk3SUpnNDFUWjlqNEwy?=
+ =?utf-8?B?ay9scnZTTnQ2WXhHSUt4VktadlFsVFY4VUN4NVZweFgvUjVRUU5GRWozTHl4?=
+ =?utf-8?B?VUNPZWdkb0R0R1Bnd3cxNlZyWlROSzhLOWZGTitnV3NTL3laa3Jod29tcHpC?=
+ =?utf-8?B?TXVaSTVmb0o4UUd1emdpRkpERW8ySjRnd01JVTQ4Ujh6czVJK210Ujg1M3Mw?=
+ =?utf-8?B?bUlVZFRIUWhXWEhKekJZREdpdXJqQ29uL1J0RTlZU2ZtK3lHTTRBRXVTVzhU?=
+ =?utf-8?B?d2hjK2dqLytPdTdJZVdZRFJKUzVic2JrVE1obU4xSm1NRmNSclhOanFJelFZ?=
+ =?utf-8?B?MlNrQUhiTncrY214Z2c0b3ppYnhnUWNNM1d5bGM1Y2Rqc29CR0dzR2FpbGdD?=
+ =?utf-8?B?dkpWL1kwZjMrNnlkUE5UQ05QY09aZkF3aEtLOXVwY0xEM0d4aklreE90YS9k?=
+ =?utf-8?B?dXBFMGErTm1MSVZYKzhlaFlpVm12ZHdhSHJZUXVpLzFXcFJsQWd0cUxaRGlF?=
+ =?utf-8?B?SHA5QWRTR1NaMkJQR3BFYUREbUFyc2h3QTYvL2VzSllJYzNnRVBERFlxUlBi?=
+ =?utf-8?B?ajdmbVZCZmVzcnBmUlVRaGg2Y1B4cnB1OFhPdVBsRDJ0YkVVQ1ZUZG9yQUp0?=
+ =?utf-8?B?aW1YNHhEWURneVlmanFCWTUxL2R5M0hrYzJkQjFtRE42aE9aRzJyZFMxR2Y1?=
+ =?utf-8?B?ZHNFRFIrS29KQ0hqL1hnMnc2VGNEZ2E3SjZsRXVGeEF2ZlU1b0JCUi9SWitL?=
+ =?utf-8?Q?9/6P0m46zXZCe+Wfa2hfirjUK?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 936606e4-c73e-4b34-7f9e-08ddaaa0aee2
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 17:35:26.4134
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vHeEW6mRVY/McLifo9hRakhjGpzxX6Vdh4fZIddMHafk4ZURhWfFC0XbKUrdoSbhwtu3AZNcbLCKejrtfGLj6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6423
 
 
-In any case reducing the number of verification operations is a net
-positive for kernel boot/operations performance so moving to hash-based
-checks instead of full signature verification wherever possible just
-makes general engineering sense, even if it can make loading of hash
-lists slightly more complicated.
 
-HTH,
-Simo.
+On 6/13/2025 1:17 AM, Joel Fernandes wrote:
+> sched_ext tasks currently are starved by RT hoggers especially since RT
+> throttling was replaced by deadline servers to boost only CFS tasks. Several
+> users in the community have reported issues with RT stalling sched_ext tasks.
+> Add a sched_ext deadline server as well so that sched_ext tasks are also
+> boosted and do not suffer starvation.
+> 
+> A kselftest is also provided to verify the starvation issues are now fixed.
+> 
+> Btw, there is still something funky going on with CPU hotplug and the
+> relinquish patch. Sometimes the sched_ext's hotplug self-test locks up
+> (./runner -t hotplug). Reverting that patch fixes it, so I am suspecting
+> something is off in dl_server_remove_params() when it is being called on
+> offline CPUs.
 
---=20
-Simo Sorce
-Distinguished Engineer
-RHEL Crypto Team
-Red Hat, Inc
+I think I got somewhere here with this sched_ext hotplug test but still not
+there yet. Juri, Andrea, Tejun, can you take a look at the below when you get a
+chance?
+
+In the hotplug test, when the CPU is brought online, I see the following warning
+fire [1]. Basically, dl_server_apply_params() fails with -EBUSY due to overflow
+checks.
+
+@@ -1657,8 +1657,7 @@ void dl_server_start(struct sched_dl_entity *dl_se)
+                u64 runtime =  50 * NSEC_PER_MSEC;
+                u64 period = 1000 * NSEC_PER_MSEC;
+
+-               dl_server_apply_params(dl_se, runtime, period, 1);
+-
++               WARN_ON_ONCE(dl_server_apply_params(dl_se, runtime, period, 1));
+                dl_se->dl_server = 1;
+                dl_se->dl_defer = 1;
+                setup_new_dl_entity(dl_se);
+
+I dug deeper, and it seems CPU 1 was previously brought offline and then online
+before the warning happened during *that onlining*. During the onlining,
+enqueue_task_scx() -> dl_server_start() was called but dl_server_apply_params()
+returned -EBUSY.
+
+In dl_server_apply_params() -> __dl_overflow(), it appears dl_bw_cpus()=0 and
+cap=0. That is really odd and probably the reason for warning. Is that because
+the CPU was offlined earlier and is not yet attached to the root domain?
+
+The problem also comes down to why does this happen only when calling my
+dl_server_remove_params() only and not otherwise, and why on earth is
+dl_bw_cpus() returning 0. There's at least 2 other CPUs online at the time.
+
+Anyway, other than this mystery, I fixed all other bandwidth-related warnings
+due to dl_server_remove_params() and the updated patch below [2].
+
+[1] Warning:
+
+[   11.878005] DL server bandwidth overflow on CPU 1: dl_b->bw=996147, cap=0,
+total_bw=0, old_bw=0, new_bw=52428, dl_bw_cpus=0
+[   11.878356] ------------[ cut here ]------------
+[   11.878528] WARNING: CPU: 0 PID: 145 at
+               kernel/sched/deadline.c:1670 dl_server_start+0x96/0xa0
+[   11.879400] Sched_ext: hotplug_cbs (enabled+all), task: runnable_at=+0ms
+
+       [   11.879404] RIP: 0010:dl_server_start+0x96/0xa0
+[   11.879732] Code: 53 10 75 1d 49 8b 86 10 0c 00 00 48 8b
+[   11.882510] Call Trace:
+[   11.882592]  <TASK>
+[   11.882685]  enqueue_task_scx+0x190/0x280
+[   11.882802]  ttwu_do_activate+0xaa/0x2a0
+[   11.882925]  try_to_wake_up+0x371/0x600
+[   11.883047]  cpuhp_bringup_ap+0xd6/0x170
+
+       [   11.883172]  cpuhp_invoke_callback+0x142/0x540
+
+              [   11.883327]  _cpu_up+0x15b/0x270
+[   11.883450]  cpu_up+0x52/0xb0
+[   11.883576]  cpu_subsys_online+0x32/0x120
+[   11.883704]  online_store+0x98/0x130
+[   11.883824]  kernfs_fop_write_iter+0xeb/0x170
+[   11.883972]  vfs_write+0x2c7/0x430
+
+       [   11.884091]  ksys_write+0x70/0xe0
+[   11.884209]  do_syscall_64+0xd6/0x250
+[   11.884327]  ? clear_bhb_loop+0x40/0x90
+
+       [   11.884443]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+
+[2]: Updated patch "sched/ext: Relinquish DL server reservations when not needed":
+https://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git/commit/?h=sched/scx-dlserver-boost-rebase&id=56581c2a6bb8e78593df80ad47520a8399055eae
+
+thanks,
+
+ - Joel
+
+
+> 
+> v2->v3:
+>  - Removed code duplication in debugfs. Made ext interface separate.
+>  - Fixed issue where rq_lock_irqsave was not used in the relinquish patch.
+>  - Fixed running bw accounting issue in dl_server_remove_params.
+> 
+> Link to v1: https://lore.kernel.org/all/20250315022158.2354454-1-joelagnelf@nvidia.com/
+> Link to v2: https://lore.kernel.org/all/20250602180110.816225-1-joelagnelf@nvidia.com/
+> 
+> Andrea Righi (1):
+>   selftests/sched_ext: Add test for sched_ext dl_server
+> 
+> Joel Fernandes (9):
+>   sched/debug: Fix updating of ppos on server write ops
+>   sched/debug: Stop and start server based on if it was active
+>   sched/deadline: Clear the defer params
+>   sched: Add support to pick functions to take rf
+>   sched: Add a server arg to dl_server_update_idle_time()
+>   sched/ext: Add a DL server for sched_ext tasks
+>   sched/debug: Add support to change sched_ext server params
+>   sched/deadline: Add support to remove DL server bandwidth
+>   sched/ext: Relinquish DL server reservations when not needed
+> 
+>  include/linux/sched.h                         |   2 +-
+>  kernel/sched/core.c                           |  19 +-
+>  kernel/sched/deadline.c                       |  78 +++++--
+>  kernel/sched/debug.c                          | 171 +++++++++++---
+>  kernel/sched/ext.c                            | 108 ++++++++-
+>  kernel/sched/fair.c                           |  15 +-
+>  kernel/sched/idle.c                           |   4 +-
+>  kernel/sched/rt.c                             |   2 +-
+>  kernel/sched/sched.h                          |  13 +-
+>  kernel/sched/stop_task.c                      |   2 +-
+>  tools/testing/selftests/sched_ext/Makefile    |   1 +
+>  .../selftests/sched_ext/rt_stall.bpf.c        |  23 ++
+>  tools/testing/selftests/sched_ext/rt_stall.c  | 213 ++++++++++++++++++
+>  13 files changed, 579 insertions(+), 72 deletions(-)
+>  create mode 100644 tools/testing/selftests/sched_ext/rt_stall.bpf.c
+>  create mode 100644 tools/testing/selftests/sched_ext/rt_stall.c
+> 
 
