@@ -1,246 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E824C62;
-	Fri, 13 Jun 2025 12:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883814C97
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749818502; cv=none; b=TDwmU2GqYp9TgmYS905Z3DzH8dn1OM98akOeg3ildABfKubl5eEwwp26hzsZvFCJJwu6pWtnXZqgBpxGbtpJU5tXIKRds48MRM0aPyEJheeaUrEmB+yrugVMO+mk7rsbNb0mwehvsJnJX9sBrA6hwaSDAH/HdRTXyK8H7z2vfwg=
+	t=1749818526; cv=none; b=eOyUiH7y0gVpcN3Bo34uknaEUKPUGgKDVVFzVqp/GWMfQi69GnZAVMybU2B7rNVssiTXTIX2dwmEunjUiF/eTW1xFvRDhOwBXyLSyWsk+nd6KXeynj5FbGf4Bsvf8AH6P9Z9HSGqxI9XToY2cGBs4ynyEBq26E24QP63gcLXUBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749818502; c=relaxed/simple;
-	bh=giTLJ+/2RucH/mkRA5+WDxp59D+0mIMggRIn0VNkEv4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hsMMaYX+mch9y1goVgn8W8q/TyJTCMBH11iHtv8VCh1Qdm6Bgri9y/sMKCg1R9TyZLxHBf4ayamLDspXVJpPD4EyttpIxYMWYqTophSbb2wTLhYa4IxxCCMglDWzlE0GM6McKZzpNG78GWUL6VJ5rVrYdUTSeWioMqFDQLeDGZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OlEp+BOn; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749818526; c=relaxed/simple;
+	bh=NF/1irqy4jJ1L6V66mqdBPhra41pySte+a4okmBQcdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V1sCnYgla+puEVDy1rrchec1HxK7rSZ1/vuV9pedelufwSpStzNFVkNw7/jbRXDE3SsocN1vqooaoQ/Gt0bNOP5f1GgFrAmgNQuUFFMnj8MtMVPUKAjHy439FIrvKkxhTqVjQxJq7zuFrSJqcOyTCnRdmeMwsnu2VVpGlOW6iOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=SKpLxp5u; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OlEp+BOn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749818501; x=1781354501;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=giTLJ+/2RucH/mkRA5+WDxp59D+0mIMggRIn0VNkEv4=;
-  b=OlEp+BOnaww7ekBQzluPItDcrZxD/CKKRnqx3XZsI+n0nk5Ehsz4+XGP
-   5Q5PY03qY6kS+d3j49XpagSaXiaFT//VT8huFdg/cpUgIJdT/T5I9IB6M
-   HEINZ9sflBIs6CmaTN7r/o0BjC5Ho/IsYNx8B0dSYo4TYDNp52Bx5QdCk
-   c+rVO/8PGeUMD8aWPo8giWMZL/4YRtY4YW11cUl9gwT2YZ89HA8Ga+z+E
-   1o1DhHJtDkmQ4E6OhWJzLTj+IMr/rSz0oPZNS83A9NqGGzucsXG0vspT1
-   Qf+5Ux+R8icAJIL3otOm02oiey/UDp1b/l74xw5rGyOHmmTLyNTfRtPNT
-   Q==;
-X-CSE-ConnectionGUID: azB1cd1PQ5KugktCkPM7AQ==
-X-CSE-MsgGUID: eRyoq8J0TYGz2WzekQsN5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51950724"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="51950724"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:41:40 -0700
-X-CSE-ConnectionGUID: n8tF8Yz0QwiCWknZ06KL+g==
-X-CSE-MsgGUID: vMnjFekSRBC0d5y9HQttIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="153110069"
-Received: from ubuntu.bj.intel.com ([10.238.156.109])
-  by orviesa005.jf.intel.com with ESMTP; 13 Jun 2025 05:41:37 -0700
-From: Jun Miao <jun.miao@intel.com>
-To: kuba@kernel.org,
-	oneukum@suse.com,
-	sbhatta@marvell.com
-Cc: netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jun.miao@intel.com,
-	qiang.zhang@linux.dev
-Subject: [PATCH v1] net: usb: Convert tasklet API to new bottom half workqueue mechanism
-Date: Fri, 13 Jun 2025 20:43:18 +0800
-Message-Id: <20250613124318.2451947-1-jun.miao@intel.com>
-X-Mailer: git-send-email 2.32.0
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SKpLxp5u"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-476a720e806so18325771cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 05:42:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1749818523; x=1750423323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jl1a0a1dTiH9ND4pj3QHpu2/HcDZNYc3TWBsAo2QFhs=;
+        b=SKpLxp5uj0/JBSb9b4/QWSr77CmXm/WgIT8Tt0tCIDbDpbsmNgrUrIN2IIFq6h4ao5
+         xl4p2P3WBeSGPaAlzxzVK94E8LxnCte0yc/QleiOvr+XuSJXbd8g197GV+8FkBK3iV0R
+         dC0ISxpV5QDlFCipBK3+za1m2VuFMk4u70Z3qWRdM+REXL7LiUnBCxEIoeTwZQmFPmM+
+         fRTsukJJ0lHRq6MijiWF0N17OnH5/6OS0zZUb49ep4UEphD5UAxy0ViRB+EPS4pNoI3+
+         O+ZU508PJCfJYjG8WjIZB70u/iX88QIqs5w58T77/Yn/jF0nGg0xQ48ZmPbB33ctRxOK
+         ZDJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749818523; x=1750423323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jl1a0a1dTiH9ND4pj3QHpu2/HcDZNYc3TWBsAo2QFhs=;
+        b=BJ3rAzBIc3dNCuR1b5LPxhUZFKVT8JxOEywNxuAFPNc5B1uO1oW97QSo0uC8pTDZgU
+         1Qiaj571ufFkfWHYjkWy+twNVw7ERGxWZSa8lEt061ADnNQ19jdjuLAvjev2edHdUU/7
+         rH2dpl3fMm5QgAoA/se4qCqYRy1kdFIa0qqO2nd5nB6vtQCW0/vYd4pnXH5zdHRMTe2Z
+         RQ6uZDoDNI9A1zsYNdFBhwQ4kZd+QFQpdv3f5rDbnvTG08WkOrZiiRnnQfXkmN6dCUtE
+         Zu9FJbvKrbGXr1m5XUQm/Z6ZCefvx8ee4CrG4ehqjCv8YO2dkSR4/lWHG8gOJtSn/szb
+         3nZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXerdRPdIj/KmVwAYYAWUwDS1CyaLiqmCgqmK6L4GNM1ompml9C7TmT8ylhdXN2EKb3uvxCK5rMueRQeA4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtNc5SeqX1xVYVZ9hFgEmmL5WnAskx5vOTKt3LgfTSVHiy4ePS
+	cG4GNhwU6hrgJpLZEHbpDjyYvv2l8xuY60zKNB5H37qAIDegxiqFAms2Hs0ycs6cYIaT1s2+CHk
+	Cc+Yv
+X-Gm-Gg: ASbGncvSZ6cHMglI5fM6gami0YJgLsLX5bnYo6i6Wb7PWaTYPGlWLSR5xr1VwG0NuNQ
+	qEuh375Z62mAklpo44Be4ZqvQ8zvp5rVPZ54He7MlwKqzKTDW94nV8xzujlrK6iXPsS/1+KNMSW
+	BdsmvrW5QDeNWhsm1WLAKB4vhg04r/FaYPwknQMD2+AMzT3W6PlVkpBE5uC7oDLK/GFXaOtNXHa
+	iR47Xy6x38KY8uclhgHHXlUkMDcVDyDD2yEiMTxq4dDkFFRyYFNzlUqytX2z2zGURhuCRy+Z3lb
+	0cdG7G5YImMIrlAQQ5YRtPaAq/L54NGNg3LZc4CiChOQlwIfqLSBJxmO1h1e6Iuy4iDX3w4bW3d
+	/ZMyjdCOxKjr11/fCZ2M4WdKsoOuZRMbZTRYVj08DPbv8Jo+/
+X-Google-Smtp-Source: AGHT+IEMxc1apCXqPdiscCu3+jTMN5egyKcnrKpFBxG3GqFbDqJieLgrbOGckcJ4ZD2K8JgzUZhGZQ==
+X-Received: by 2002:a05:622a:1e85:b0:4a4:4af2:5cff with SMTP id d75a77b69052e-4a72fe5b8d7mr51010151cf.3.1749818523244;
+        Fri, 13 Jun 2025 05:42:03 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a50985csm16302801cf.72.2025.06.13.05.42.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 05:42:02 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uQ3jO-00000004qLu-0nK4;
+	Fri, 13 Jun 2025 09:42:02 -0300
+Date: Fri, 13 Jun 2025 09:42:02 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH] iommufd: Destroy vdevice on device unbind
+Message-ID: <20250613124202.GD1130869@ziepe.ca>
+References: <20250610065146.1321816-1-aneesh.kumar@kernel.org>
+ <BN9PR11MB527606182417BB7A35349F598C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20250612172645.GA1011960@ziepe.ca>
+ <BN9PR11MB5276B467ADCC57BC6571CA458C77A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB5276B467ADCC57BC6571CA458C77A@BN9PR11MB5276.namprd11.prod.outlook.com>
 
-Migrate tasklet APIs to the new bottom half workqueue mechanism. It
-replaces all occurrences of tasklet usage with the appropriate workqueue
-APIs throughout the usbnet driver. This transition ensures compatibility
-with the latest design and enhances performance.
+On Fri, Jun 13, 2025 at 07:31:48AM +0000, Tian, Kevin wrote:
+> yeah that seems to be the option if the said life-cycle dependency
+> cannot be removed...
+> 
+> conceptually it's still a bit unclean as the user needs to know that
+> the vdevice object is special after idevice is unbound i.e. it can only
+> be destroyed instead of supporting any other kind of operations.
 
-Signed-off-by: Jun Miao <jun.miao@intel.com>
----
- drivers/net/usb/usbnet.c   | 36 ++++++++++++++++++------------------
- include/linux/usb/usbnet.h |  2 +-
- 2 files changed, 19 insertions(+), 19 deletions(-)
+I would say userspace is somewhat malfunctioning if it destroys vfio
+before the vdevice. So the main aim here should be to contain the
+resulting mess, but still expect userspace to destroy the vdevice
+without a failure.
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index c04e715a4c2a..566127b4e0ba 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
- 
- 	__skb_queue_tail(&dev->done, skb);
- 	if (dev->done.qlen == 1)
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	spin_unlock(&dev->done.lock);
- 	spin_unlock_irqrestore(&list->lock, flags);
- 	return old_state;
-@@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 		default:
- 			netif_dbg(dev, rx_err, dev->net,
- 				  "rx submit, %d\n", retval);
--			tasklet_schedule (&dev->bh);
-+			queue_work(system_bh_wq, &dev->bh_work);
- 			break;
- 		case 0:
- 			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-@@ -709,7 +709,7 @@ void usbnet_resume_rx(struct usbnet *dev)
- 		num++;
- 	}
- 
--	tasklet_schedule(&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 
- 	netif_dbg(dev, rx_status, dev->net,
- 		  "paused rx queue disabled, %d skbs requeued\n", num);
-@@ -778,7 +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)
- {
- 	if (netif_running(dev->net)) {
- 		(void) unlink_urbs (dev, &dev->rxq);
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	}
- }
- EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
-@@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
- 	/* deferred work (timer, softirq, task) must also stop */
- 	dev->flags = 0;
- 	timer_delete_sync(&dev->delay);
--	tasklet_kill(&dev->bh);
-+	disable_work_sync(&dev->bh_work);
- 	cancel_work_sync(&dev->kevent);
- 
- 	/* We have cyclic dependencies. Those calls are needed
- 	 * to break a cycle. We cannot fall into the gaps because
- 	 * we have a flag
- 	 */
--	tasklet_kill(&dev->bh);
-+	disable_work_sync(&dev->bh_work);
- 	timer_delete_sync(&dev->delay);
- 	cancel_work_sync(&dev->kevent);
- 
-@@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
- 	clear_bit(EVENT_RX_KILL, &dev->flags);
- 
- 	// delay posting reads until we're fully open
--	tasklet_schedule (&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 	if (info->manage_power) {
- 		retval = info->manage_power(dev, 1);
- 		if (retval < 0) {
-@@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *dev)
- 		 */
- 	} else {
- 		/* submitting URBs for reading packets */
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	}
- 
- 	/* hard_mtu or rx_urb_size may change during link change */
-@@ -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
- 		} else {
- 			clear_bit (EVENT_RX_HALT, &dev->flags);
- 			if (!usbnet_going_away(dev))
--				tasklet_schedule(&dev->bh);
-+				queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
--	/* tasklet could resubmit itself forever if memory is tight */
-+	/* workqueue could resubmit itself forever if memory is tight */
- 	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
- 		struct urb	*urb = NULL;
- 		int resched = 1;
-@@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct *work)
- fail_lowmem:
- 			if (resched)
- 				if (!usbnet_going_away(dev))
--					tasklet_schedule(&dev->bh);
-+					queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
-@@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net, unsigned int txqueue)
- 	struct usbnet		*dev = netdev_priv(net);
- 
- 	unlink_urbs (dev, &dev->txq);
--	tasklet_schedule (&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 	/* this needs to be handled individually because the generic layer
- 	 * doesn't know what is sufficient and could not restore private
- 	 * information if a remedy of an unconditional reset were used.
-@@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff *skb)
- 
- /*-------------------------------------------------------------------------*/
- 
--// tasklet (work deferred from completions, in_irq) or timer
-+// workqueue (work deferred from completions, in_irq) or timer
- 
- static void usbnet_bh (struct timer_list *t)
- {
-@@ -1601,16 +1601,16 @@ static void usbnet_bh (struct timer_list *t)
- 					  "rxqlen %d --> %d\n",
- 					  temp, dev->rxq.qlen);
- 			if (dev->rxq.qlen < RX_QLEN(dev))
--				tasklet_schedule (&dev->bh);
-+				queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 		if (dev->txq.qlen < TX_QLEN (dev))
- 			netif_wake_queue (dev->net);
- 	}
- }
- 
--static void usbnet_bh_tasklet(struct tasklet_struct *t)
-+static void usbnet_bh_workqueue(struct work_struct *work)
- {
--	struct usbnet *dev = from_tasklet(dev, t, bh);
-+	struct usbnet *dev = from_work(dev, work, bh_work);
- 
- 	usbnet_bh(&dev->delay);
- }
-@@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
- 	skb_queue_head_init (&dev->txq);
- 	skb_queue_head_init (&dev->done);
- 	skb_queue_head_init(&dev->rxq_pause);
--	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
-+	INIT_WORK (&dev->bh_work, usbnet_bh_workqueue);
- 	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
- 	init_usb_anchor(&dev->deferred);
- 	timer_setup(&dev->delay, usbnet_bh, 0);
-@@ -1971,7 +1971,7 @@ int usbnet_resume (struct usb_interface *intf)
- 
- 			if (!(dev->txq.qlen >= TX_QLEN(dev)))
- 				netif_tx_wake_all_queues(dev->net);
--			tasklet_schedule (&dev->bh);
-+			queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
-diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
-index 0b9f1e598e3a..208682f77179 100644
---- a/include/linux/usb/usbnet.h
-+++ b/include/linux/usb/usbnet.h
-@@ -58,7 +58,7 @@ struct usbnet {
- 	unsigned		interrupt_count;
- 	struct mutex		interrupt_mutex;
- 	struct usb_anchor	deferred;
--	struct tasklet_struct	bh;
-+	struct work_struct	bh_work;
- 
- 	struct work_struct	kevent;
- 	unsigned long		flags;
--- 
-2.32.0
+> hmm if the user needs to build certain knowledge anyway can we 
+> go one step further to state that the vdevice will be destroyed
+> automatically once its idevice is unbound so the user shouldn't
+> attempt to explicitly destroy it again after unbind?
 
+I would assume a malfunctioning userspace is probably going to destroy
+the vdevice explicitly. If it had proper knowledge it wouldn't have
+done this in the first place :)
+
+Jason
