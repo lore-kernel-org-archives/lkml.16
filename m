@@ -1,96 +1,103 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075F279E1
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAD02D3238;
+	Fri, 13 Jun 2025 10:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749810711; cv=none; b=JumrWAG0NNVbs2No76nhcdmPWeRC3RhhUlYDdqu7bHizGMCdAHkFXvxqdMsOfjVYE1tm4r2swl+ICVLD9Dlua0e2ZRjRIl6jKgv45mwyaGdZJUCDBr9r99YltcRV9YDW1MYMstBly0HVMxRe8MwPEL98lJMf+Fl+QgyU+fp3S04=
+	t=1749810715; cv=none; b=T0yThhAl1adp3MxWObS1vxe43/H1W6cF7JrKFcS/O7ZBCY6VE/bNR1TByCU0uYj8N4GoR85DfFgyuc38kRXRCdt98errQmcYw+nTROsi8M8EGTAVkE2R/h59ITCek3Jxf0/CJS9wUUzL++g1125pcn7SkMI0cKeb8h6YIleBFVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749810711; c=relaxed/simple;
-	bh=5sYCKbI/gYwb2bYGM83dav3w5RvtEDcqGbT6doQZFr8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AORLR/+uX04eXSSip0k0XjgiOiEJ1L3/lV3I2LC7lC1NroMT8OJZhiNN54L1lT5Z4a8AK9dyBJN8595LD5RUlkNBQegCenL7ky3JKCyxYQOMW6+xUX7yPnprzPzAn1u5nTf6oZfywWiFo87xWG4cE0FL7B368il0kPoj6M7YBhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--anvithdosapati.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fTIKz+Zw; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--anvithdosapati.bounces.google.com
+	s=arc-20240116; t=1749810715; c=relaxed/simple;
+	bh=Jo2S1Vhmz+DHyBwpm2/Wakx8tkEoQUYYmyKwEmiczVc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=hbJ2E3kPaJOYwcUqRqnMhadFRTQFNHOkbcBCBg9+1xJdo8DGhVDFW6yB0fgLkyw+GzbypOSNVg/ybptL/oztlNls9jIe0x/Z8TjVlHw1gHC5tQ6WjdOU9Qachr+Hal59uSFShczDh4hJlh88f2TFae89VWaYa+XmdnpT6GGDa08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B76Sqbjv; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fTIKz+Zw"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31215090074so2878031a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 03:31:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B76Sqbjv"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so16486211fa.2;
+        Fri, 13 Jun 2025 03:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749810709; x=1750415509; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UBgGeCMx8gjAEWFHsQLbpWrzg0KQfIHdDSSpVmi3jJM=;
-        b=fTIKz+ZwDhHs43FT02Lo4UYsAkHrWbXe7NJUspOT1jkcDXGWmwZKs7xy9M0lKTQ+mT
-         YeXdsFPByjJVzbST5IHGiM2V/VpvZhFNoxKmaa8x+omu67TIDPt5nQBJT9i0ayumLBnL
-         Q2Bw47J88YlPYhfGj6+z/HGHjQoqmKPr/FDlToDKHTntZ4X9zCQmuhlhIW4fSY2nSr1w
-         CTC3FDBkrVCVEEgLg/lWKbBW31xMdoiHlqKG9qWGYn1A2iu58WW87slITb9FgZFY1b/T
-         wXFk+SGbgIzPWz4zPtzwPzyXo6R14fCoNLu2+bGfOUv+xZRpEHZaKRL2X0Y49KvtaXuY
-         qmwg==
+        d=gmail.com; s=20230601; t=1749810712; x=1750415512; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qFr8LwPYLDgF3kaOI6zifGZaMW4ZcZipWwfZcZc5XZU=;
+        b=B76SqbjvGuUztFvEC3+Lax67vR0xtVZJoerpgY1ljk59lPI4d3dWdwzmqUCYtN5i/M
+         iqJsAPPwGEIBjSCcojF27Y/gdznp7w2yuQGoOGXEApMKrxg3NQgOM6xUdxhY0e3Cv6+P
+         X1RmVqATrOrYYrV3u2JqDQS8A4aRt2FHhJE4k7dWVToKRvdJ4ByMlBqISt76Rg5/om3g
+         vicV5vrWzq91r+sdLVmhvOOXLB06LlKDF/MZS43Bq4HfNhaw0FyWD2wfi6MicgUpUjSl
+         LtjYP1tnDS/8Cnm11P1Rp5lYHm5Qm8E2mHz0zjbJ+y37q8+oV68vOIXiVlJ+TeUsxcrs
+         3GZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749810709; x=1750415509;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UBgGeCMx8gjAEWFHsQLbpWrzg0KQfIHdDSSpVmi3jJM=;
-        b=PDkJt9y87jPsMPAu8EjVPim+gQCEBPqZjWBUT9pYEsLd3EPY8B17phxEn6gjSpC5m6
-         5yOfdIdVr5yrTU6bexh8TWrtvdb9bLfQcVLEiLspzR2FlndqgyDQByjpltmcarPlFqAs
-         +K8eTub8isCwPOy5L7qEXD78K9rxvLZDUdqdhEio4FtHz7WXTVDOp/H9LPIyBs/pt72S
-         BKbTew3c6mGNy9xWqC77FOu7YE0I/HlDmV6AInK9l9Uy3a9/9pI6G39dh/iYNRu3aTOD
-         O/K98VX8tq/9bbbb3rygvZkGqSnHdQnV068i5aszM9QINXPhBrAoT9acCJyNlBTy/2FR
-         Co5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWK/29yBXYSg5lqMFoR173jfmZeLIVg0VSl2pFeUfh3t58CEbBCOs0zqwF4y6jvLWx89Ay6UheELxXNfEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/tShqhPgTxjZLDdteUdiVt3yj5yDGyHHGubDP6WnqSz+xTFjF
-	Os6rRy7dvFNqFfnfCEnrLfaSniF3WhsGkh5yhm3cfxHUkMXYkAzO+HZqOEYUvfh7a0gfvVlwaiC
-	UJmMA/kZ7ZdqAb04XrWPi3k8yVA3zH4AiSe9Kqg==
-X-Google-Smtp-Source: AGHT+IFpOXWYhxEUl6O5fDMwAb82LX3FW4BHRXpXdIWBE1hUY35o1nAM35Pi421kZPrVIRLuOBb519VynBJDAAkMFkBcow==
-X-Received: from pjuj5.prod.google.com ([2002:a17:90a:d005:b0:2fc:3022:36b8])
- (user=anvithdosapati job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:5628:b0:312:1b53:5e9f with SMTP id 98e67ed59e1d1-313d9eba5b5mr4431826a91.24.1749810709445;
- Fri, 13 Jun 2025 03:31:49 -0700 (PDT)
-Date: Fri, 13 Jun 2025 10:31:40 +0000
+        d=1e100.net; s=20230601; t=1749810712; x=1750415512;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qFr8LwPYLDgF3kaOI6zifGZaMW4ZcZipWwfZcZc5XZU=;
+        b=Thv4xscUDqLqwGM+1/m4709q1wY+4dLQtWjh/8vwg1mPlY1RyC9h56AJQfaEk9geQr
+         Cu9xYqTeSY/VP6BkQT009u/994JzMfkc0KUyAggBu+cfn5uQJbxt2uNcOVaQt5aaoMWe
+         bq3PIe/QUurUmbqBtRSFQ9gcSePMwNvUJQnsnYIMYLVVKtAHarwq8sQu5n7LLgpZG+3L
+         9LKc4by6l+8lpesyRfNnjOfH0ifRbdwAtlRBwvjKCJPtV6KZAaNNN3YzLIQr/e401oKu
+         u5H+u9gMuAxsvVRZ7SbTiGNqWWXIck5Htg/VHQkwdhZwML2cOELzflGHAIPNh/gPiRRH
+         azsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+qw9jIbwqT2uJFV5LaIylPeO9i62vagyz07VpXK66w9EczO2y0OuxkjR5LxPbgSHGqtcH+T3k2tQ8lawAZ+M=@vger.kernel.org, AJvYcCWChJCVNdP+irOGUKFDTATsToNaKMAcK5TgygES1fyp/V5otiUHMn+1IscLonSyN77a+5ozsAkaHXVwFzk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlkGM0TAh7qgQEdaBEaABz7Z9j0neeeRoYIqk9kGIMkPaAVhLm
+	lTLftdz1FCKLgwwgzww68oE5RNsluc4k8GIQ8RCBv+EIspTWQDUjqptxYtSIapYF
+X-Gm-Gg: ASbGnctYwbfcCVHx1LKdm+pVrIuVmKvWeDzUVSFGqBQ4xhtgiuQNScnHHbISXebKFjN
+	gCl8HN1Eq+LEUF4fKdo9p0PdruZ91I+NDaHIWE0OxehbJ3wDvsS7BzrENJWAIKTWcRgbIl7MSiM
+	rqBqmjQC6wjioUplKJd5F7CBOn4OSf8l+kxEkJ73UxsxYv8kAkSpIJrJSvoDlkwSUJ8dfy/exVU
+	RocYjFmoJAHXooSBJt/TE1FAUNV9cCcXbKcninRlgQmmWB4Y5FWSrAWZfNUu032f3Ow8BoivUmq
+	DrUZQjTpblAt6WnchuViJdZ/kysgFM0cFLtemuyGtjQyPZPc0IXoEzNNbUvZoap5FG93pLViYmE
+	KRQcSfpokboV62CeId0FsXstRP5M37SMnW/P4WA0=
+X-Google-Smtp-Source: AGHT+IFRFFHwGOays8LaUCDYJXNXCmkVUhd04lr0fFAv7SLkPad+uB9OtTwn3owIn4pP4b0UsMJj7Q==
+X-Received: by 2002:a2e:be9f:0:b0:32b:3cf5:7358 with SMTP id 38308e7fff4ca-32b3eb6edc0mr7716691fa.28.1749810711440;
+        Fri, 13 Jun 2025 03:31:51 -0700 (PDT)
+Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b33189c36sm4876741fa.76.2025.06.13.03.31.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 03:31:50 -0700 (PDT)
+Message-ID: <2d269d74-6151-4871-95a3-08089111358d@gmail.com>
+Date: Fri, 13 Jun 2025 13:31:50 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250613103140.1121621-1-anvithdosapati@google.com>
-Subject: [PATCH] scsi: ufs: core: Do clk scaling conditionally in reset and restore
-From: Anvith Dosapati <anvithdosapati@google.com>
-To: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
-	Bart Van Assche <bvanassche@acm.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, linux-scsi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, manugautam@google.com, vamshigajjela@google.com, 
-	anvithdosapati <anvithdosapati@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] rust: dma: add as_slice/write functions for
+ CoherentAllocation
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+To: Alexandre Courbot <acourbot@nvidia.com>, dakr@kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
+ rust-for-linux@vger.kernel.org,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250602085444.1925053-1-abdiel.janulgue@gmail.com>
+ <20250602085444.1925053-4-abdiel.janulgue@gmail.com>
+ <DAC2ILD2DSIZ.3TF8W39X5DDH8@nvidia.com>
+ <0b71832f-f3a9-4109-baa1-f29a8327d872@gmail.com>
+Content-Language: en-US
+In-Reply-To: <0b71832f-f3a9-4109-baa1-f29a8327d872@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: anvithdosapati <anvithdosapati@google.com>
 
-In ufshcd_host_reset_and_restore, scale up clocks only when clock
-scaling is supported. Without this change cpu latency is voted for 0
-(ufshcd_pm_qos_update) during resume unconditionally.
+On 13/06/2025 12:45, Abdiel Janulgue wrote:
+> that the subsequent paragraph makes it clear that the unit is in bytes 
+> unit? 
 
-Signed-off-by: anvithdosapati <anvithdosapati@google.com>
----
- drivers/ufs/core/ufshcd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 4410e7d93b7d..fac381ea2b3a 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -7802,7 +7802,8 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
- 	hba->silence_err_logs = false;
- 
- 	/* scale up clocks to max frequency before full reinitialization */
--	ufshcd_scale_clks(hba, ULONG_MAX, true);
-+	if (ufshcd_is_clkscaling_supported(hba))
-+		ufshcd_scale_clks(hba, ULONG_MAX, true);
- 
- 	err = ufshcd_hba_enable(hba);
- 
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
-
+Sorry, I mean *not* in bytes unit.
