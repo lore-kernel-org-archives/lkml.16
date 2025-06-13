@@ -1,91 +1,68 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2671EE7C6;
-	Fri, 13 Jun 2025 07:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759271632DD;
+	Fri, 13 Jun 2025 07:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749798398; cv=none; b=g9IdsBEvnWDNOpfEZI1OraYDjB6MuIyQTe52MRrL+CFMCXL+2obR+JEmatf0dG+JuawlO3SPF8oMMKOjZ+5sVMF3SvXW9b0TjLX6cLinAArPtdQNuTk4mK2sKZEUVf4qt3vo6ylFiM9Hs/4F0wfCVGIYaqnjGRZwLKB+nkZaABc=
+	t=1749798509; cv=none; b=bpKNFuGdpm4txVDCharWdQOMjLuzfjdq5VlJ+t69PnMM/HAv9h6v3cw1PeFpxdEkitAOn1Y36K+xL+SZuzq+0O+aJsC+JmMfcfQmlfP1mMZWfMzyz6cZlbBNcflcLvG3qlmUgBbf6t4oL84pV9jTFLnXv5ZE4wmHXD4uXua0WFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749798398; c=relaxed/simple;
-	bh=IHAV7nN6wCNIFQtTRtd4JrisWL7tQ9SP/C8Yiz9z6NE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4CyhQMgyUQr776wjy6rB6kFoEtQAUG2Bd2HOCxpkUwtxsBxYErGGWEEaKI7WQ/4eaRylHnO8yJkeC7B2QsbAuiV76HZjWw2iQT86ESweclL/Rq5pMrTzMKwYNwGB4mPuk6uu5ElAnx6tBqsR83U6pYzaUuZbbOCElNIFD1DgZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XpRr+gSf; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XpRr+gSf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UgEEh5fEgXDb+CnFS0SJsFPqsYxRiY/6CHzoXKuVSq0=; b=XpRr+gSf7eHZm/SvMSk2BRK55i
-	zvnTYKkkC7UhTM8baykOP0fG89XftqUEIJloIJ4aaUPnObzFpe+DTVSsj82sLbztMVoAFD5qBCgQF
-	Coeq/L+duldKcBhXbKAgQPbwU3W4mbxU0zzEA7iPmRuFo0eD53oqnXwF53Yr8hRVHfGIwVaef8NKy
-	dmh3P4kPB3j0WtLBnRvPaOgEt1jeA3hQkwcPQ93IMlD2GylVDpKMNKiSPc50+OyjGUGF/oMspCSBp
-	uwzdSgTgti/cYWtaAx352O5rqlxqRBzcKA5i/GLYcmTQbhLRj6KRpTkz6hv08xFllPEFop+1e8Tk0
-	4Ey7LRQA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPyUZ-00000002sn4-1cF9;
-	Fri, 13 Jun 2025 07:06:23 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 273C530BC56; Fri, 13 Jun 2025 09:06:19 +0200 (CEST)
-Date: Fri, 13 Jun 2025 09:06:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/10] x86: Add support for NMI-source reporting with
- FRED
-Message-ID: <20250613070619.GF2273038@noisy.programming.kicks-ass.net>
-References: <20250612214849.3950094-1-sohil.mehta@intel.com>
+	s=arc-20240116; t=1749798509; c=relaxed/simple;
+	bh=D0lbE0R+FUdn+WoBoKcNI9HgS1w92fraWDayJ3fxKs0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=F4hxhdbRZUjY0Xu4292DTRJumzs2r81UEzVzJIA0U/9n+GUfAF1N/44T9Ricrxu1yFnQ6qKrPpcNRAymO+OIUGWyyw6Z5YTjrRK1dYSic8GDD5H1c8AVzfpzmn3IJ2mEGO3arAORrdYJYlxu+nBT5M/egmt7MJ7A6zXRHe7mBYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uPyWN-00A9fw-3B;
+	Fri, 13 Jun 2025 07:08:15 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612214849.3950094-1-sohil.mehta@intel.com>
+From: "NeilBrown" <neil@brown.name>
+To: "Miklos Szeredi" <miklos@szeredi.hu>
+Cc: "Al Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>, "Kees Cook" <kees@kernel.org>,
+ "Joel Granados" <joel.granados@kernel.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <smfrench@gmail.com>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>, netfs@lists.linux.dev,
+ linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change old_dir and new_dir in struct renamedata
+ to dentrys
+In-reply-to:
+ <CAJfpeguiOZJ4dZU-mc0V8bwvWoJ-Q0JubYvYPpmr-f8uguF2LQ@mail.gmail.com>
+References:
+ <>, <CAJfpeguiOZJ4dZU-mc0V8bwvWoJ-Q0JubYvYPpmr-f8uguF2LQ@mail.gmail.com>
+Date: Fri, 13 Jun 2025 17:08:13 +1000
+Message-id: <174979849395.608730.16231142843321576358@noble.neil.brown.name>
 
-On Thu, Jun 12, 2025 at 02:48:39PM -0700, Sohil Mehta wrote:
-
-> Jacob Pan (1):
->   perf/x86: Enable NMI-source reporting for perfmon
+On Thu, 12 Jun 2025, Miklos Szeredi wrote:
+> On Thu, 12 Jun 2025 at 01:38, Al Viro <viro@zeniv.linux.org.uk> wrote:
 > 
-> Sean Christopherson (1):
->   x86/fred: Provide separate IRQ vs. NMI wrappers for entry from KVM
+> > Umm...  No objections, as long as overlayfs part is correct; it seems
+> > to be, but I hadn't checked every chunk there...
 > 
-> Sohil Mehta (8):
->   x86/fred: Pass event data to the NMI entry point from KVM
->   x86/cpufeatures: Add the CPUID feature bit for NMI-source reporting
->   x86/nmi: Extend the registration interface to include the NMI-source
->     vector
->   x86/nmi: Assign and register NMI-source vectors
->   x86/nmi: Add support to handle NMIs with source information
->   x86/nmi: Prepare for the new NMI-source vector encoding
->   x86/nmi: Enable NMI-source for IPIs delivered as NMIs
->   x86/nmi: Print source information with the unknown NMI console message
+> Overlayfs parts looks okay too.
+> 
+> A followup would be nice (e.g. make ovl_cleanup() take a dentry for
+> the directory as well, etc) so that there's no need to have local
+> variables for both the inode and dentry of the directory.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+I am planning some followups and will include that in them.
+I'll also be sure to test with fs-tests after consulting README.overlay
+as you suggest elsewhere - thanks.
 
+NeilBrown
