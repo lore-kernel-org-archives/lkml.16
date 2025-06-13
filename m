@@ -1,63 +1,37 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D05E23FC54
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142BE2356A4
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749840269; cv=none; b=VP6MQvhxh1Ty6aJeYK6h1A8x4Saouozety/OkTm0D12Q/xC+FZZanelpsdwk2T+xMOMyqbrV2tzEaWdSPW8T0kWcOzVB0eFDgwYjMWLq9Ja2dDiJLteazdQV8NmIP64SY/fdf5OLoDH4M1RKGP9GQaZ05p270B5OfXvKVPjNK5M=
+	t=1749840275; cv=none; b=CTROVRpKKcGR0kTMXPsE7xEYQh4Ka7J1o5032/wIRoK+6Gozh38wNt/2ff0ttb48yG/QHOluM5eeF++cPZ66YoE/sxsnRfW4AB/lVOcx7ccoyp5fgzNhwxPWo3dd6SAb0SqaWQ5XTLBN9UXEqVHBMkTvcxYxRBxN1BhC/Yd8z5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749840269; c=relaxed/simple;
-	bh=3b7axUpbAuU9SlpN71lwKlTvySJnDInVui/A5UkWlDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=L6cV9n2M3BpHhb+M2Bw9Ku4rz0J8zcnkM+EAUqt6UMsHOGChZCyegyR3n+EI+Oqm626wQdjRYVGodun8Df4UUZrFy7je89OWOyyw99Aob7p9WWvG3+7lGXTi/M0CavupOitg4WHg1PO5wbhcCRy1PfXEatsJkjwhPQcYTHgicZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Yl39qKKt; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1749840275; c=relaxed/simple;
+	bh=SY3au0yzA3HEOKXPqFrWhQ0sywrDNnJSnuxoSj5lngs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dP8W6iVp8Oh1KaZ5R8Bq1eCTRYNrRvABSbSGAm3RkW1Qr55nPqbK/Ci1ff0eilCdZKEBdD1EtzsS1YpkzwmGdQCiKxulI2K/kQuw5DN+8Ojqdsl6v9tX3mPz/hmkwro8HFjC+vNOKIEJF8Lzv5/fgOPsTEdjzq6Golwoky2297Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KgrB1Vou; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Yl39qKKt"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2f0faeb994so2731363a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1749840267; x=1750445067; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZHeYqEVybulKIAJ/SLz1vtqwVOqbhPS/lmlXAmsbCt8=;
-        b=Yl39qKKttWEwqolcMtqmQ2xv+ecmtcQ03Wvdq8hTRriZ+lJe+oGPu0umwbHYbVmsvH
-         XPQHsg0g6jAoSDHlaaGRpZyAR80ALCXQVbmtmnvorTQhSvgzGYMc2bZDIfdTtAGyd6p4
-         oHMc4VFlDBNMN2btR6xMXmzrTPlxiwq4WEOcE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749840267; x=1750445067;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZHeYqEVybulKIAJ/SLz1vtqwVOqbhPS/lmlXAmsbCt8=;
-        b=Uc/qiqa18A/56+K/9NnFvaAHgQTwt8kTspQ4zksBDg2T5PsqVvhGefmqi7sp5nKbt4
-         mKBmD8Xm7gINYCsopAKzGtqE2TARosB37M21nObFOaD9mCdAZKkQyorJz11wolpWc+Dl
-         VqhK6WX7ulrJtuEGUmysDiXqaKDieDc3dH6qe0w3TdOBBlR0GDoD+WOorHu0ph7nVpph
-         Iq8CIxGyET/etZ0nD+U/lf13WTlIwe8JqGqX/6thZ9v7ibXqgA2zpDA6scoteQjihz/1
-         q6E6Ay6ARsZ5Vxi5jgQO447YTNr3Mr72fNRsar8XoYQ2w48E0QsvI8GhLVdkl060bpoO
-         bJPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWuJptE35XRUJlaAQdOq1ctaWzG2DxxkPqRi+JtMFJX6kop0bhQR2XjV937lUhsQEj/d2+snbyVKBgJN7A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgJHnmFdTSUbcQxJkOaiY6yi7wKqPTax0pyd1T0QAOw0pQ51X7
-	vTIXERFOVpK1H1IywPg7kUew+whM/lb/d2qcJBIEaIwgw13+Vh2H0QHXftFdcjoUNQ==
-X-Gm-Gg: ASbGncuSH0PLWZcCeT/Lb2cOjkGWxoOw/xe5zfMwF6YkJvtvJa/P0Cg/FLYc6intkp3
-	52HycRtzrLlLydsBTuCK36Y5LKwMgHgZdQ8qBzkgIu2CwSSJTzZahHgBA5drvbdKsX5F+PXZgHe
-	8PvUG0963hRiB1+k7oySW+KNcxw6lO+Xv332TfClaTZ+aeSQc0Bv0GMKWcrdKTbbMfJ2f86be1w
-	/CxWDr+xis7PC9dsiS68PXok+kDhGBqHpKQHTbVgDV7fdNDhVnkJ/qo8Pod3j0vDRzBjS7LXiFC
-	kpkHzlcbbKeGZkBFmG08cm1xP+7UOwbg72K/3sh8dOT+iQa7MRtiyueBvYchlGYgpwkvROjZ4x6
-	TBjONOlGRP8GbJetrqFk6mBUVvw==
-X-Google-Smtp-Source: AGHT+IE3l/ieo58PZuP/VXIQXaNY72ns5eLc69FqJbf0YSdSZl1/lgIYYyrYbd3f+TjZzr4aXsSomQ==
-X-Received: by 2002:a17:90b:4cd1:b0:311:f2f6:44ff with SMTP id 98e67ed59e1d1-313f1db806fmr1227482a91.17.1749840266701;
-        Fri, 13 Jun 2025 11:44:26 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1bca4c7sm3729100a91.3.2025.06.13.11.44.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 11:44:23 -0700 (PDT)
-Message-ID: <d995799f-b4d9-4c90-a1a0-2e8e212a6b59@broadcom.com>
-Date: Fri, 13 Jun 2025 11:44:22 -0700
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KgrB1Vou"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DB586443E2;
+	Fri, 13 Jun 2025 18:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749840271;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=AfdlRJboDNDCkxliN5rbPn/rIKXN49FRYiHeS4kyeNQ=;
+	b=KgrB1VouEajLuqk3SlebmHEak0dWSBDEQ/NyOY9HzglxXfN+fkBxI6Fc9aj/VRH/a76O0R
+	BwqDfnqnjWXw9szFM2qJ9n5tYp1w2L4vuawExUbUXculGX42AedJcSVF2o/HavwIkvOUL4
+	PlI5vXCSoiLHw3uZOMJ0tiwNI5ocZLGjknFb0g5dBFuk6CRZSOh3giu1IJ/C24N2DoWm+N
+	hh+mEAWpIfs3cm7sj2UUfeQh5OzVs8QjnSBrCdFibPodhrBTfOj7bgAHOUVYzHxuPFtHAj
+	nGbw978EGLV/Wp95co6D8VmlTvOrD5KYImrwNca8BCQPvBnOAPoJUIoWip6BQA==
+Message-ID: <fb153302-4816-4a62-b59f-dc9e1963c1bf@bootlin.com>
+Date: Fri, 13 Jun 2025 20:44:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,61 +39,237 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: brcmstb-avs: Fully open-code compatible for
- grepping
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Markus Mayer <mmayer@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250613071643.46754-2-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 6/8] drm/vkms: Change YUV helpers to support u16 inputs
+ for conversion
+To: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, nicolejadeyee@google.com
+References: <20250530-b4-new-color-formats-v4-0-ef5f9f48376c@bootlin.com>
+ <20250530-b4-new-color-formats-v4-6-ef5f9f48376c@bootlin.com>
+ <0d522681-8a48-4f66-9b4c-32966068c6b8@igalia.com>
 Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250613071643.46754-2-krzysztof.kozlowski@linaro.org>
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <0d522681-8a48-4f66-9b4c-32966068c6b8@igalia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeejtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeeivedtfeegtdekheethedttddtfefhhfegjeeljeejleduvdfhudegvdekheevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedukeehrddutdegrddufeekrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedukeehrddutdegrddufeekrdelgedphhgvlhhopegluddtrddutddurddtrdeiiegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtohepmhgtrghnrghlsehighgrlhhirgdrtghomhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrihhrrggtrghnrghlsehrihhsvghuphdrnhgvthdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrr
+ ghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On 6/13/25 00:16, Krzysztof Kozlowski wrote:
-> It is very useful to find driver implementing compatibles with `git grep
-> compatible`, so driver should not use defines for that string, even if
-> this means string will be effectively duplicated.
+
+
+Le 11/06/2025 à 22:24, Maíra Canal a écrit :
+> Hi Louis,
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> On 5/30/25 11:06, Louis Chauvet wrote:
+>> Some YUV format uses 16 bit values, so change the helper function for
+>> conversion to support those new formats.
+>>
+>> Add support for the YUV format P010
+> 
+> Hum, I don't think this patch added support for P010.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Obviously not... It only adds support for 16 bits yuv conversions.
+
+>>
+>> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+>> ---
+>>    drivers/gpu/drm/vkms/tests/vkms_format_test.c | 103 +++++++++++++-------------
+>>    drivers/gpu/drm/vkms/vkms_formats.c           |  26 ++++---
+>>    drivers/gpu/drm/vkms/vkms_formats.h           |   4 +-
+>>    3 files changed, 68 insertions(+), 65 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/vkms/tests/vkms_format_test.c b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+>> index 2e1daef94831..272e18a82f9c 100644
+>> --- a/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+>> +++ b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+>> @@ -23,7 +23,7 @@ MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+>>     *     machine endianness
+>>     */
+>>    struct pixel_yuv_u8 {
+>> -	u8 y, u, v;
+>> +	u16 y, u, v;
+>>    };
+>>    
+>>    /*
+>> @@ -64,7 +64,7 @@ static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+>>    	 *                     in_bits = 16,
+>>    	 *                     in_legal = False,
+>>    	 *                     in_int = True,
+>> -	 *                     out_bits = 8,
+>> +	 *                     out_bits = 16,
+>>    	 *                     out_legal = False,
+>>    	 *                     out_int = True)
+>>    	 *
+>> @@ -76,13 +76,13 @@ static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
+>>    		.range = DRM_COLOR_YCBCR_FULL_RANGE,
+>>    		.n_colors = 6,
+>>    		.colors = {
+>> -			{ "white", { 0xff, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
+>> -			{ "gray",  { 0x80, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
+>> -			{ "black", { 0x00, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
+>> -			{ "red",   { 0x4c, 0x55, 0xff }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
+>> -			{ "green", { 0x96, 0x2c, 0x15 }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
+>> -			{ "blue",  { 0x1d, 0xff, 0x6b }, { 0xffff, 0x0000, 0x0000, 0xffff }},
+>> -		},
+>> +			{ "white",	{ 0xffff, 0x8000, 0x8000 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
+>> +			{ "gray",	{ 0x8080, 0x8000, 0x8000 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
+>> +			{ "black",	{ 0x0000, 0x8000, 0x8000 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
+>> +			{ "red",	{ 0x4c8b, 0x54ce, 0xffff }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
+>> +			{ "green",	{ 0x9645, 0x2b33, 0x14d1 }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
+>> +			{ "blue",	{ 0x1d2f, 0xffff, 0x6b2f }, { 0xffff, 0x0000, 0x0000, 0xffff }},
+> 
+> Is there an explicit need of those tabs? They make the line length
+> exceed 100 columns.
+
+No explicit need, I don't know how I missed the checkpatch warning...
+Fixed for v2.
+
+> [...]
+> 
+>> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+>> index 5106441f916b..261e822e9618 100644
+>> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+>> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+>> @@ -279,16 +279,17 @@ static struct pixel_argb_u16 argb_u16_from_BGR565(const __le16 *pixel)
+>>    	return out_pixel;
+>>    }
+>>    
+>> -VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 channel_1, u8 channel_2,
+>> -							    const struct conversion_matrix *matrix)
+>> +VISIBLE_IF_KUNIT
+>> +struct pixel_argb_u16 argb_u16_from_yuv161616(const struct conversion_matrix *matrix,
+>> +					      u16 y, u16 channel_1, u16 channel_2)
+>>    {
+>>    	u16 r, g, b;
+>>    	s64 fp_y, fp_channel_1, fp_channel_2;
+>>    	s64 fp_r, fp_g, fp_b;
+>>    
+>> -	fp_y = drm_int2fixp(((int)y - matrix->y_offset) * 257);
+>> -	fp_channel_1 = drm_int2fixp(((int)channel_1 - 128) * 257);
+>> -	fp_channel_2 = drm_int2fixp(((int)channel_2 - 128) * 257);
+>> +	fp_y = drm_int2fixp((int)y - matrix->y_offset * 257);
+>> +	fp_channel_1 = drm_int2fixp((int)channel_1 - 128 * 257);
+>> +	fp_channel_2 = drm_int2fixp((int)channel_2 - 128 * 257);
+>   >   >   	fp_r = drm_fixp_mul(matrix->matrix[0][0], fp_y) +
+>>    	       drm_fixp_mul(matrix->matrix[0][1], fp_channel_1) +
+>> @@ -310,7 +311,7 @@ VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 channel_1,
+>>    
+>>    	return argb_u16_from_u16161616(0xffff, r, g, b);
+>>    }
+>> -EXPORT_SYMBOL_IF_KUNIT(argb_u16_from_yuv888);
+>> +EXPORT_SYMBOL_IF_KUNIT(argb_u16_from_yuv161616);
+>>    
+>>    /**
+>>     * READ_LINE() - Generic generator for a read_line function which can be used for format with one
+>> @@ -504,8 +505,8 @@ static void semi_planar_yuv_read_line(const struct vkms_plane_state *plane, int
+>>    	const struct conversion_matrix *conversion_matrix = &plane->conversion_matrix;
+>>    
+>>    	for (int i = 0; i < count; i++) {
+>> -		*out_pixel = argb_u16_from_yuv888(y_plane[0], uv_plane[0], uv_plane[1],
+>> -						  conversion_matrix);
+>> +		*out_pixel = argb_u16_from_yuv161616(conversion_matrix, y_plane[0] * 257,
+>> +						     uv_plane[0] * 257, uv_plane[1] * 257);
+>>    		out_pixel += 1;
+>>    		y_plane += step_y;
+>>    		if ((i + subsampling_offset + 1) % subsampling == 0)
+>> @@ -549,8 +550,9 @@ static void planar_yuv_read_line(const struct vkms_plane_state *plane, int x_sta
+>>    	const struct conversion_matrix *conversion_matrix = &plane->conversion_matrix;
+>>    
+>>    	for (int i = 0; i < count; i++) {
+>> -		*out_pixel = argb_u16_from_yuv888(*y_plane, *channel_1_plane, *channel_2_plane,
+>> -						  conversion_matrix);
+>> +		*out_pixel = argb_u16_from_yuv161616(conversion_matrix,
+>> +						     *y_plane * 257, *channel_1_plane * 257,
+>> +						     *channel_2_plane * 257);
+>>    		out_pixel += 1;
+>>    		y_plane += step_y;
+>>    		if ((i + subsampling_offset + 1) % subsampling == 0) {
+>> @@ -690,9 +692,9 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+>>    	case DRM_FORMAT_BGRX8888:
+>>    		return &BGRX8888_read_line;
+>>    	case DRM_FORMAT_RGB888:
+>> -		return RGB888_read_line;
+>> +		return &RGB888_read_line;
+>>    	case DRM_FORMAT_BGR888:
+>> -		return BGR888_read_line;
+>> +		return &BGR888_read_line;
+> 
+> This should be in the previous patch.
+
+Fixed for v5.
+
+> Best Regards,
+> - Maíra
+> 
+
 -- 
-Florian
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
