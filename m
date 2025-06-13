@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A212F2C6F;
-	Fri, 13 Jun 2025 07:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550BB2727E3;
+	Fri, 13 Jun 2025 07:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800264; cv=none; b=k7yBMueX1fa10I3X3YjSj7NbPRlH5KK0hVh9mkxCqDnUyrRCp8CzqhNyPtzS1YLryFturiUTbrUBEV4zECreg+NnhxZjJUAzU/7w4gKoD+4NPJzTZz0rhXHV3y6Wdma0VFc+us94hjg/lkBzqRyCrU1ADnOtQoSIOt68GNgkPm4=
+	t=1749800265; cv=none; b=ZAlLAHMhJ2woeuVvyoOd5mkP7wTVMz9ddWlN+hMi9ojULRjqkudG6XmZm7KCuqf1DuSjJsqbpvAOjqVgZ+xDvNcj2NcVUxS35d2P0OSgKivUO32/jrrLcMxV5qrWdPS+lCbITVLkAvQBJYH8oyaSYX+EPbnjR75Ve9aPNKeVNek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800264; c=relaxed/simple;
-	bh=Q73yOLQlVIS6OiC/W8GPANJukbKUs96du6dF4LBRFn8=;
+	s=arc-20240116; t=1749800265; c=relaxed/simple;
+	bh=0AMZfhnIwRwuu7V5o03IRrgJNauRsXnWGnny+4IU1Gw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Xy95BOBVHPdXEogMqCCJdAmnjT8NADRw3N5XSVfrWUobxi/CJVnrLZVPVT34p8iLbCfiQecNMxLpmDABopQf1dsy36ygNExHCAb9oUgX7sIvb2oUCRLHoCVdiVL0vFBCVLFCrLsicfyM5bjIkEeLOv8NhnWvuli15/UfOSyfYy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ENuFzEHR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BbRQB2Km; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=IQM+DrKNMZculYFPEKTz0JDoJqyvDAS/zO0zTXOlT//Wm7fl/fSUVYmIdq7HOy1uCXFD8a2XMJPNHQd/vurJ7o3uR7zB0aFYFp3iullUBolUR3aOl9AQdBY24SsfDiVggH8BfZN9CQHe/ApgoBPeIc7nxtl1mrX5Su/+wrdu1Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qFnoV5bJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tC8FYBtd; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ENuFzEHR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BbRQB2Km"
-Date: Fri, 13 Jun 2025 07:37:37 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qFnoV5bJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tC8FYBtd"
+Date: Fri, 13 Jun 2025 07:37:40 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749800258;
+	s=2020; t=1749800262;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0d0WdsswS/ZAhTi5m15Z62fN2YBiMGYIsIv+bvMkD6I=;
-	b=ENuFzEHRek9AFHqiWaqzsnWQG3kvglUfUMnGs9Fdjpftiu9MuHYWA5cC+8AFl9Dqpu8unp
-	vluHcOL5bWkZAEpDlcxsJV5Kt0DyIcVZEE+5ElnMWWvJqaG0ZaU4hTV2mWDdsjlPba3flX
-	QIKdR6RgKCIGyP9hhhxiZZlnRGk4X9kGIMtXJakKFgG8uLkab0LfaY8dBajzmTPBJYWjPR
-	7nCpOOIi9SF0QjA/R3Axz1lIBO/+6UOCy7O6xM28ExVTNjEEy539Z1+mC0AdCg4boo0jRW
-	QMzbIXc1Ud0lRkdSH9jxzxbe2fKAYro9PPkUEF6k9cvcxlH4/0DNZ3RdU9dgAQ==
+	bh=2OV0rqunmkX8amKY64c+YpHiWIM9kTzdckatMyzPHrs=;
+	b=qFnoV5bJEYdH/XCkf6d4N0b3kWAqPNBhYzoZuc5gT9vYDfFaJgURYryotjmSuMgQNI5PNe
+	wyMrMM0A5IWozaYa1X3/O4hrQOZKFWxdWwmPVidPatheoJ9gufsMn/ceeWrc5tvrT6PRr1
+	Jgkl7J5Hi6pJK7BHXhlKLDl1RLkVMoI2hnbq7nurWzu5uN0l57f8ySRVcegUmw65FjLawK
+	AMFdc0sHPDEmmUidaOa/xU7aNySq4a+C/GOI2waHgKj8sbicN0637wx31HCnmUtXoWzmhc
+	Z2MFloseDWLO3eD2UmtAZv42JXwmbZOmMAsVd1AvvHusfKHviR5miAGCMOcI4g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749800258;
+	s=2020e; t=1749800262;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0d0WdsswS/ZAhTi5m15Z62fN2YBiMGYIsIv+bvMkD6I=;
-	b=BbRQB2KmQUy6Hgr8fuPPTye2XAJcnz7nfS7KOMxnOBljK3TjboqBtKgWxUbDt2w6ztqsCF
-	z2KleH3xWiev6xCw==
+	bh=2OV0rqunmkX8amKY64c+YpHiWIM9kTzdckatMyzPHrs=;
+	b=tC8FYBtdjLXNFQpY/u+rjnmihZjMjh0UrfVHL4vUj8utEhRjI/mB17CSa7WOQKnkY9MOkl
+	fG1yH36/di56TbAg==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject: [tip: sched/core] sched: Clean up and standardize #if/#else/#endif
- markers in sched/cputime.c
+ markers in sched/clock.c
 Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Juri Lelli <juri.lelli@redhat.com>,
@@ -56,15 +56,15 @@ Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Valentin Schneider <vschneid@redhat.com>,
  Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250528080924.2273858-7-mingo@kernel.org>
-References: <20250528080924.2273858-7-mingo@kernel.org>
+In-Reply-To: <20250528080924.2273858-3-mingo@kernel.org>
+References: <20250528080924.2273858-3-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174980025724.406.16811415050982520847.tip-bot2@tip-bot2>
+Message-ID: <174980026088.406.3159322197524205354.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -74,14 +74,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     4aec8669ff3c7ea7ab62c10bb6442c70c0d1b1eb
-Gitweb:        https://git.kernel.org/tip/4aec8669ff3c7ea7ab62c10bb6442c70c0d1b1eb
+Commit-ID:     bbb1b274e85b739ade5f9bc060a8c4fa00388e29
+Gitweb:        https://git.kernel.org/tip/bbb1b274e85b739ade5f9bc060a8c4fa00388e29
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 28 May 2025 10:08:47 +02:00
+AuthorDate:    Wed, 28 May 2025 10:08:43 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 13 Jun 2025 08:47:15 +02:00
+CommitterDate: Fri, 13 Jun 2025 08:47:14 +02:00
 
-sched: Clean up and standardize #if/#else/#endif markers in sched/cputime.c
+sched: Clean up and standardize #if/#else/#endif markers in sched/clock.c
 
  - Use the standard #ifdef marker format for larger blocks,
    where appropriate:
@@ -103,71 +103,30 @@ Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lore.kernel.org/r/20250528080924.2273858-7-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250528080924.2273858-3-mingo@kernel.org
 ---
- kernel/sched/cputime.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ kernel/sched/clock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index f01f17a..7097de2 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -91,7 +91,7 @@ static u64 irqtime_tick_accounted(u64 maxtime)
- 	return delta;
+diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
+index e62b551..f5e6dd6 100644
+--- a/kernel/sched/clock.c
++++ b/kernel/sched/clock.c
+@@ -474,7 +474,7 @@ notrace void sched_clock_idle_wakeup_event(void)
  }
+ EXPORT_SYMBOL_GPL(sched_clock_idle_wakeup_event);
  
--#else /* CONFIG_IRQ_TIME_ACCOUNTING */
-+#else /* !CONFIG_IRQ_TIME_ACCOUNTING: */
+-#else /* CONFIG_HAVE_UNSTABLE_SCHED_CLOCK */
++#else /* !CONFIG_HAVE_UNSTABLE_SCHED_CLOCK: */
  
- static u64 irqtime_tick_accounted(u64 dummy)
+ void __init sched_clock_init(void)
  {
-@@ -244,7 +244,7 @@ void __account_forceidle_time(struct task_struct *p, u64 delta)
- 
- 	task_group_account_field(p, CPUTIME_FORCEIDLE, delta);
+@@ -492,7 +492,7 @@ notrace u64 sched_clock_cpu(int cpu)
+ 	return sched_clock();
  }
--#endif
-+#endif /* CONFIG_SCHED_CORE */
+ 
+-#endif /* CONFIG_HAVE_UNSTABLE_SCHED_CLOCK */
++#endif /* !CONFIG_HAVE_UNSTABLE_SCHED_CLOCK */
  
  /*
-  * When a guest is interrupted for a longer amount of time, missed clock
-@@ -265,7 +265,7 @@ static __always_inline u64 steal_account_process_time(u64 maxtime)
- 
- 		return steal;
- 	}
--#endif
-+#endif /* CONFIG_PARAVIRT */
- 	return 0;
- }
- 
-@@ -291,7 +291,7 @@ static inline u64 read_sum_exec_runtime(struct task_struct *t)
- {
- 	return t->se.sum_exec_runtime;
- }
--#else
-+#else /* !CONFIG_64BIT: */
- static u64 read_sum_exec_runtime(struct task_struct *t)
- {
- 	u64 ns;
-@@ -304,7 +304,7 @@ static u64 read_sum_exec_runtime(struct task_struct *t)
- 
- 	return ns;
- }
--#endif
-+#endif /* !CONFIG_64BIT */
- 
- /*
-  * Accumulate raw cputime values of dead tasks (sig->[us]time) and live
-@@ -414,11 +414,11 @@ static void irqtime_account_idle_ticks(int ticks)
- {
- 	irqtime_account_process_tick(current, 0, ticks);
- }
--#else /* CONFIG_IRQ_TIME_ACCOUNTING */
-+#else /* !CONFIG_IRQ_TIME_ACCOUNTING: */
- static inline void irqtime_account_idle_ticks(int ticks) { }
- static inline void irqtime_account_process_tick(struct task_struct *p, int user_tick,
- 						int nr_ticks) { }
--#endif /* CONFIG_IRQ_TIME_ACCOUNTING */
-+#endif /* !CONFIG_IRQ_TIME_ACCOUNTING */
- 
- /*
-  * Use precise platform statistics if available:
+  * Running clock - returns the time that has elapsed while a guest has been
