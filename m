@@ -1,111 +1,73 @@
-Received: from mail-m1973182.qiye.163.com (mail-m1973182.qiye.163.com [220.197.31.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2850424DD1A;
-	Fri, 13 Jun 2025 09:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9441C24DD1A;
+	Fri, 13 Jun 2025 09:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806704; cv=none; b=FWF9Rh1gez4KFsGkLjrAPo2kVXLbG7xbEtwEqj0CXc92QbfOLCAB2micIRStqctZsxRoww2lfKdckKp2DCoO3Ou9GHV9lDM5jq288yIc3ZQZtT2bgDpzHDzOOExBwZHRVsnpzVdaS3LWeYkcfif2ByM0QX+sG1htklO/PMte4v4=
+	t=1749806741; cv=none; b=KtONEp44NXAh5zIRoolr8SuDk5WFs6iwPfJtHdMMexvY5cg/gcYz1MdnCfoOLT/co1j4iMGfpnVgbtmnrdh+Osy8vrkLBWSRpZpObPrrtQ68myOtK57Rt+jzxEo7DcVcflZEK11MWKRS2SzYu63EZr9jVPWSX8AeSaP3zaHziQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806704; c=relaxed/simple;
-	bh=zfk3I70U/S1a7wWOZU0zLfDlYSHLaTIkBupmVtsOcQ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hxPMot9Z1SEYaOnD791mfmho6bdHl10H0HzTpf1p+gdeUeoJzHvk4gDvRIjibPqySKIW6ar6IpxoWXq3w4zkly4Q+fp1AehVndwt0KihQ14N/PrCDQncJ+Yy2oE3re31HmkLJkdpMdu75c4HvUj2eIxFmEDqcMRD5N/duuiN9nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hillstonenet.com; spf=pass smtp.mailfrom=hillstonenet.com; dkim=pass (1024-bit key) header.d=hillstonenet.com header.i=@hillstonenet.com header.b=wwSatz74; arc=none smtp.client-ip=220.197.31.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hillstonenet.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hillstonenet.com
+	s=arc-20240116; t=1749806741; c=relaxed/simple;
+	bh=Q79Q0wJ80wAUt812TKUrCQwFzZWf1wf8H78inR8+4Wo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S1ghjK1nwhpSNWxjW8ftkSRV771uPu9d9Fa870g33IqPLzqzj013jujoI7aiHNMZKeXhl7dHOPGK27H12VsKb9RToelntPx1+O/A/SOxUtkGJTGnL5Defn59UG5eVeT3phoVfz/GFxAOIQYt7lqURmvMAHD8vY+z5Z0RV9y+yEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNo4cM+5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hillstonenet.com header.i=@hillstonenet.com header.b="wwSatz74"
-Received: from localhost.localdomain (unknown [111.199.5.197])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 188a5f404;
-	Fri, 13 Jun 2025 13:55:48 +0800 (GMT+08:00)
-From: Haixia Qu <hxqu@hillstonenet.com>
-To: Jon Maloy <jmaloy@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: Haixia Qu <hxqu@hillstonenet.com>,
-	netdev@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNo4cM+5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2AF0C4CEE3;
+	Fri, 13 Jun 2025 09:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749806741;
+	bh=Q79Q0wJ80wAUt812TKUrCQwFzZWf1wf8H78inR8+4Wo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DNo4cM+5mzh5Qo9WBpVpnLDCpZnGTw020BZN/LZhvbCtkJMkhqZod3dbS0sx5dXMR
+	 N5s1DCeCJZYeTqZESUszBvrWPcPUQ+w4jEQxetpKnzHr8JbNuOtbqmdgEcx++xMwe3
+	 2y2Evq6gmIUF1yVjfTApds5GtoAWwb9DYZpKTfe7R8fn8/3NaBos9s59d3Vhmn1jjU
+	 IWTq4nufDSmBJ8Q3nJSUN8X0BahLQuYDBfTKDtutvfmO/XmsTVjKdaYWcNs4CmYSF5
+	 ZtjBCoVNrPmdyuU8bT9qyAhpNSG7ecC32hEOvjyuCsPkjgB1FJzjDPYUv8PSMFkRKK
+	 1+ufqLRg5rKVQ==
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Arnd Bergmann <arnd@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] tipc: fix panic in tipc_udp_nl_dump_remoteip() using bearer as udp without check
-Date: Fri, 13 Jun 2025 05:55:06 +0000
-Message-ID: <20250613055506.95836-1-hxqu@hillstonenet.com>
+Subject: Re: [PATCH] pci: altera: remove unused 'node' variable
+Date: Fri, 13 Jun 2025 14:55:28 +0530
+Message-ID: <174980672103.33830.4953083744774912018.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250521163329.2137973-1-arnd@kernel.org>
+References: <20250521163329.2137973-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSE8eVhgeGEwaQhoYGEtOGFYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSkpVSkJCVU5VSkJMWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
-	VKQktLWQY+
-X-HM-Tid: 0a9767dbcff609dakunm0183899d96fc76
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6KzI6PSo6DDE4VlFLHQ4sEDQf
-	PEgaFE5VSlVKTE9CTEJPSk9CT0JCVTMWGhIXVRMDCg47ExIXFwgPFBUeFR4PVRgUFkVZV1kSC1lB
-	WUpKSlVKQkJVTlVKQkxZV1kIAVlBSU9JQjcG
-DKIM-Signature:a=rsa-sha256;
-	b=wwSatz74OxiXnkMspGWlFdozbCPhPwIR2B1y8y9C8KbtZJTfLAdpjjNmzN8lI2IPy05DRiLM43KCzBTM40GsLBQuVDjkPhUh+QqW23Te/RmbyzyiHFbV6nbcS4E7zqNbag5AUWLEIfks7KZC4W+SySEgVcw4O9thyx7guHnjJzI=; s=default; c=relaxed/relaxed; d=hillstonenet.com; v=1;
-	bh=CZ6k5m8GOuN3if7SPQ1hTZoDDUTFYnMwwwYr/8JUHSA=;
-	h=date:mime-version:subject:message-id:from;
 
-When TIPC_NL_UDP_GET_REMOTEIP cmd calls tipc_udp_nl_dump_remoteip() 
-with media name set to a l2 name, kernel panics [1].
 
-The reproduction steps:
-1. create a tun interface
-2. enable l2 bearer
-3. TIPC_NL_UDP_GET_REMOTEIP with media name set to tun
+On Wed, 21 May 2025 18:29:48 +0200, Arnd Bergmann wrote:
+> This variable is only used when CONFIG_OF is enabled:
+> 
+> drivers/pci/controller/pcie-altera.c: In function 'altera_pcie_init_irq_domain':
+> drivers/pci/controller/pcie-altera.c:855:29: error: unused variable 'node' [-Werror=unused-variable]
+>   855 |         struct device_node *node = dev->of_node;
+> 
+> Use dev_fwnode() in place of of_node_to_fwnode() to avoid this.
+> 
+> [...]
 
-the ub was in fact a struct dev.
+Applied, thanks!
 
-when bid != 0 && skip_cnt != 0, bearer_list[bid] may be NULL or 
-other media when other thread changes it.
+[1/1] pci: altera: remove unused 'node' variable
+      commit: 693594d0e5d8d236fc4172c864afdcbe6993a2bd
 
-fix this by checking media_id.
-
-[1]
-tipc: Started in network mode
-tipc: Node identity 8af312d38a21, cluster identity 4711
-tipc: Enabled bearer <eth:syz_tun>, priority 1
-Oops: general protection fault
-KASAN: null-ptr-deref in range 
-CPU: 1 UID: 1000 PID: 559 Comm: poc Not tainted 6.16.0-rc1+ #117 PREEMPT
-Hardware name: QEMU Ubuntu 24.04 PC
-RIP: 0010:tipc_udp_nl_dump_remoteip+0x4a4/0x8f0
-
-Signed-off-by: Haixia Qu <hxqu@hillstonenet.com>
----
- net/tipc/udp_media.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c
-index 108a4cc2e001..258d6aa4f21a 100644
---- a/net/tipc/udp_media.c
-+++ b/net/tipc/udp_media.c
-@@ -489,7 +489,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb, struct netlink_callback *cb)
- 
- 		rtnl_lock();
- 		b = tipc_bearer_find(net, bname);
--		if (!b) {
-+		if (!b || b->bcast_addr.media_id != TIPC_MEDIA_TYPE_UDP) {
- 			rtnl_unlock();
- 			return -EINVAL;
- 		}
-@@ -500,7 +500,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb, struct netlink_callback *cb)
- 
- 		rtnl_lock();
- 		b = rtnl_dereference(tn->bearer_list[bid]);
--		if (!b) {
-+		if (!b || b->bcast_addr.media_id != TIPC_MEDIA_TYPE_UDP) {
- 			rtnl_unlock();
- 			return -EINVAL;
- 		}
+Best regards,
 -- 
-2.43.0
-
+Manivannan Sadhasivam <mani@kernel.org>
