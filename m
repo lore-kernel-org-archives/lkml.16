@@ -1,166 +1,174 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E557263C;
-	Fri, 13 Jun 2025 09:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F85D258CEC;
+	Fri, 13 Jun 2025 09:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749805542; cv=none; b=eDEGAf7IzzMvswpcdBN+fx2KeilN7eaVA8Z/ElCg9Tx1Gi6PursIJJDPCYFt8ypG+jBoxh6wXCs+cYJ1yR9g2AzVMC7arIOfW9xNfDNEiRYjedrfBe17RnW6ws1tyJtzFV2qnXen/EoYtvIoBJxlhc/IvqnErWjsALwNgdHniNU=
+	t=1749805646; cv=none; b=ti9+bmmD/eY03hgLeziM2JIR1q1mFhFuWOi1WaXBI7z1Xgr23TC7Z9qYzLWz87ul+pTPg8SyI6k7O12cD/QKEGV1n/JtGm+HLntjzRmQmA1C3WizK2br+VcE35Jn39Ekoze5wwWZUPzlUEsroAjy9yt8QRfPU+IxIvlDnSdzHH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749805542; c=relaxed/simple;
-	bh=8FvV1SciI0lOYrVif+0+YROqsYbPPO/U7ZW0LQOwq4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UwGXpzJoXivtDLt8o+C6M2cWOlNKBWl2+CF9a7fpupYQ02NzyRXfuO/me1IQe9qkFJ/P/lHxUAh7YPBeqkagqE0wd/tIkIxfwI4AQ9OWnROya/fK1/+BrNhn1QPjT9+YpFYj2Y2EKC1hfb6PY5MSm0pA16OMqLwhD4/k4G9YBF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HhFno71t; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1749805646; c=relaxed/simple;
+	bh=SSoLBs1Dj9VaOQGgLvM3js2Zg2+so1xSH1u+6KrD7sE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sRN/Pjdr2cIm6/M80R0Fn30LZszIAczt9A3xrDZ0SPitATB3lJsAM/ct26Mkg9+Pj8IabQW5ThKvhXBS3+q5U2FsQq5Vfs91w3/P/5YUcNFXaBNM6y1q/yzOV7xNzQSxDrabD/Sov00Tlm9kRIwtrUkJ9E5cAhhrPBNdllVpExs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CoxbCyoD; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HhFno71t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0ft0fSiF67mpk/bqWwyG78k/NSeUXV83RntIl505nZ8=; b=HhFno71tY6laiYHIebx8aooC/C
-	k8u9+Ahb6Zsw5wwOMmwYjB7f9u7qxC53lo6igl2YfouCukeiwhieToj1Bn+Abw96R/6IniwPqHqdu
-	9RL2BGvbCdtpjMRM5+xGCuBfp3EWJhGH9Lb8mpmxldx8pmnN9k4teTxOkWrJ5vYZIpN55WN7d2W0a
-	buLJ7fPlHTenPbf78hLj3tOt5Gdm1d/1gxqjggukmXKotwyoN8FRLo1iDuDGPDMn/WqBt11b0ncFp
-	rsr2D+KeJopg2q28biYZ3/Ki1t6LbRea+t12AWthWDDOJgz0AzdsKg8Py8fvW0cjWFmmST232jzAi
-	KKV2uyCg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45694)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uQ0Lm-0000av-24;
-	Fri, 13 Jun 2025 10:05:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uQ0Lj-0001fm-1F;
-	Fri, 13 Jun 2025 10:05:23 +0100
-Date: Fri, 13 Jun 2025 10:05:23 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <aEvp01pIuK-LUdjR@shell.armlinux.org.uk>
-References: <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
- <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
- <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
- <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
- <aElArNHIwm1--GUn@shell.armlinux.org.uk>
- <fc7ad44b922ec931e935adb96dcc33b89e9293b0.camel@icenowy.me>
- <f82a86d3-6e06-4f24-beb5-68231383e635@lunn.ch>
- <40fc8f3fec4da0ed2b59e8d2612345fb42b1fdd3.camel@icenowy.me>
- <aEvi5DTBj-cltE5w@shell.armlinux.org.uk>
- <9922727607de39da7ed75d1edaf1873147e26336.camel@icenowy.me>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CoxbCyoD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749805644; x=1781341644;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=SSoLBs1Dj9VaOQGgLvM3js2Zg2+so1xSH1u+6KrD7sE=;
+  b=CoxbCyoDxK5NWXSI93BEDQkNZlOnP65edoWFyOfUajRP9z/lBQKsn3kk
+   kdcHjijrHUMAxWTNmhRQEZkrbnosVibpctAfypzwcpql12Fwa4Yo/uBt3
+   SJvMyBx/8n6J6VVvBv/QSWH86kbi0eX0oJSmXb6bFO4XF6di2bonFsG3A
+   k2L+Ao9yTbmGJJ6p5PBeT0dxYMRMy2AmPX5pBfzsNUFXdwvCWDXm1EAQi
+   is845YOwvb2RplL0xt+Q39+iT9w87MK4Yir2U6ALkcjvM2AeA6+TfJrpI
+   QejTtKsZgvEyIwxc+SB4B7SxEEW+AIz0bqhKeVd5qbIkGtmDbqvp01cYn
+   w==;
+X-CSE-ConnectionGUID: LiwomMADSBmLs/nLwpFJfQ==
+X-CSE-MsgGUID: o2T5Fj4UTKepwPDevYmYLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51994958"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="51994958"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 02:07:23 -0700
+X-CSE-ConnectionGUID: +Sn6F1J4S7S/IR6NZecJ1w==
+X-CSE-MsgGUID: bpdT6QYLQEitc82RVDRyZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="148665506"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 02:07:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 13 Jun 2025 12:07:14 +0300 (EEST)
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    "Cody T . H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>, 
+    Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 0/6] platform/x86: Add Lenovo WMI Gaming Series
+ Drivers
+In-Reply-To: <20250609185027.7378-1-derekjohn.clark@gmail.com>
+Message-ID: <facbb66b-ea34-bc57-d673-adb84f79fb8d@linux.intel.com>
+References: <20250609185027.7378-1-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9922727607de39da7ed75d1edaf1873147e26336.camel@icenowy.me>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Jun 13, 2025 at 04:43:14PM +0800, Icenowy Zheng wrote:
-> 在 2025-06-13星期五的 09:35 +0100，Russell King (Oracle)写道：
-> > On Fri, Jun 13, 2025 at 04:01:37PM +0800, Icenowy Zheng wrote:
-> > > 在 2025-06-11星期三的 17:28 +0200，Andrew Lunn写道：
-> > > > > Well in fact I have an additional question: when the MAC has
-> > > > > any
-> > > > > extra
-> > > > > [tr]x-internal-delay-ps property, what's the threshold of MAC
-> > > > > triggering patching phy mode? (The property might be only used
-> > > > > for
-> > > > > a
-> > > > > slight a few hundred ps delay for tweak instead of the full 2ns
-> > > > > one)
-> > > > 
-> > > > Maybe you should read the text.
-> > > > 
-> > > > The text says:
-> > > > 
-> > > >   In the MAC node, the Device Tree properties 'rx-internal-delay-
-> > > > ps'
-> > > >   and 'tx-internal-delay-ps' should be used to indicate fine
-> > > > tuning
-> > > >   performed by the MAC. The values expected here are small. A
-> > > > value
-> > > > of
-> > > >   2000ps, i.e 2ns, and a phy-mode of 'rgmii' will not be accepted
-> > > > by
-> > > >   Reviewers.
-> > > > 
-> > > > So a few hundred ps delay is fine. The MAC is not providing the
-> > > > 2ns
-> > > > delay, the PHY needs to do that, so you don't mask the value.
-> > > 
-> > > Thus if the MAC delay is set to 1xxx ps (e.g. 1800ps), should the
-> > > MAC
-> > > do the masking?
-> > > 
-> > > What should be the threshold? 1ns?
-> > 
-> > Why should there be a "threshold" ? It's really a case by case issue
-> > where the capabilities of the hardware need to be provided and
-> > considered before a decision can be made.
-> > 
-> > In order to first understand this, one needs to understand the
-> > requirements of RGMII. RGMII v1.3 states:
-> > 
-> > Symbol  Parameter               Min     Typ     Max     Units
-> > TskewT  Data to Clock output    -500    0       500     ps
-> >         skew at clock tx
-> > TskewR  Data to Clock input     1               2.6     ns
-> >         skew at clock rx
-> > 
-> > The RGMII specification is written based upon the clock transmitter
-> > and receiver having no built-in delays, and the delay is achieved
-> > purely by trace routing. So, where delays are provided by the
-> > transmitter or receiver (whether that's the MAC or the PHY depends
-> > on whether TXC or RXC is being examined) these figures need to be
-> > thought about.
-> > 
-> > However, the range for the delay at the receiver is -1ns to +0.6ns.
-> > 
-> > In your example, you're talking about needing a 1800ps delay. I
-> > would suggest that, *assuming the PCB tracks introduce a 200ps skew
-> > between the data and clock*, then using the PHY's built-in 2ns delay
-> > is perfectly within the requirements of the RGMII specification.
-> > 
-> > That bit "assuming" is where the discussion needs to happen, and why
-> > it would be case by case. If the skew due to trace routing were
-> > 800ps, then enabling the PHY's built-in 2ns delay would take the
-> > delay out of spec.
-> > 
-> > Thrown into this would also be temperature effects, so trying to get
-> > to as near as the 2ns delay as possible is probably a good idea.
-> > 
-> > Lastly, there's the question whether the software engineer even
-> > knows what the skew provided by the hardware actually is.
+On Mon, 9 Jun 2025, Derek J. Clark wrote:
+
+> Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+> WMI interfaces that control various power settings. There are multiple WMI
+> interfaces that work in concert to provide getting and setting values as
+> well as validation of input. Currently only the "Gamezone", "Other
+> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+> I attempted to structure the driver so that adding the "Custom Mode",
+> "Lighting", and other data block interfaces would be trivial in later
+> patches.
 > 
-> Sigh, my experience is that the only thing I can get is some magic
-> numbers from HW vendor... *facepalm*
+> This driver attempts to standardize the exposed sysfs by mirroring the
+> asus-armoury driver currently under review. As such, a lot of
+> inspiration has been drawn from that driver.
+> https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-luke@ljones.dev/#t
+> 
+> The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+> S.
+> 
+> Suggested-by: Mario Limonciello <superm1@kernel.org>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> v12:
+>  - Fix warnings from make W=1
+> v11:
+> v10:
+> https://lore.kernel.org/platform-driver-x86/20250515182224.8277-1-derekjohn.clark@gmail.com/
+> v9:
+> https://lore.kernel.org/platform-driver-x86/20250508235217.12256-1-derekjohn.clark@gmail.com/
+> v8:
+> https://lore.kernel.org/platform-driver-x86/20250505010659.1450984-1-derekjohn.clark@gmail.com/
+> v7:
+> https://lore.kernel.org/platform-driver-x86/20250503000142.1190354-1-derekjohn.clark@gmail.com/
+> v6:
+> https://lore.kernel.org/platform-driver-x86/20250428012029.970017-1-derekjohn.clark@gmail.com/
+> v5:
+> https://lore.kernel.org/platform-driver-x86/20250408012815.1032357-1-derekjohn.clark@gmail.com/
+> v4:
+> https://lore.kernel.org/platform-driver-x86/20250317144326.5850-1-derekjohn.clark@gmail.com/
+> v3:
+> https://lore.kernel.org/platform-driver-x86/20250225220037.16073-1-derekjohn.clark@gmail.com/
+> v2:
+> https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/
+> v1:
+> https://lore.kernel.org/platform-driver-x86/20241217230645.15027-1-derekjohn.clark@gmail.com/
+> 
+> Derek J. Clark (6):
+>   platform/x86: Add lenovo-wmi-* driver Documentation
+>   platform/x86: Add lenovo-wmi-helpers
+>   platform/x86: Add Lenovo WMI Events Driver
+>   platform/x86: Add Lenovo Capability Data 01 WMI Driver
+>   platform/x86: Add Lenovo Gamezone WMI Driver
+>   platform/x86: Add Lenovo Other Mode WMI Driver
+> 
+>  .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++
+>  .../wmi/devices/lenovo-wmi-other.rst          | 108 +++
+>  MAINTAINERS                                   |  12 +
+>  drivers/platform/x86/Kconfig                  |  41 ++
+>  drivers/platform/x86/Makefile                 |   5 +
+>  drivers/platform/x86/lenovo-wmi-capdata01.c   | 302 ++++++++
+>  drivers/platform/x86/lenovo-wmi-capdata01.h   |  25 +
+>  drivers/platform/x86/lenovo-wmi-events.c      | 196 ++++++
+>  drivers/platform/x86/lenovo-wmi-events.h      |  20 +
+>  drivers/platform/x86/lenovo-wmi-gamezone.c    | 409 +++++++++++
+>  drivers/platform/x86/lenovo-wmi-gamezone.h    |  20 +
+>  drivers/platform/x86/lenovo-wmi-helpers.c     |  74 ++
+>  drivers/platform/x86/lenovo-wmi-helpers.h     |  20 +
+>  drivers/platform/x86/lenovo-wmi-other.c       | 665 ++++++++++++++++++
+>  drivers/platform/x86/lenovo-wmi-other.h       |  16 +
+>  15 files changed, 2116 insertions(+)
+>  create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>  create mode 100644 Documentation/wmi/devices/lenovo-wmi-other.rst
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
 
-I may have missed it if you've given the details, but tell us what
-information you have, what the capabilities of the hardware is, and
-we should be able to make suggestions.
+Hi Derek,
+
+Could you please rebase this on top of for-next placing the files under 
+lenovo/ folder which we just created. I could have easily changed the 
+placement of the files themselves, but making the Kconfig & Makefile 
+changes into the new files while applying would have been more 
+complicated. It is better you do it so I won't end up messing up anything.
+
+There's the lenovo-target in lenovo/Makefile which will auto add the 
+'lenovo-' prefix to the files so you can basically rename the files like 
+this:
+
+drivers/platform/x86/lenovo-wmi-other.c ->
+drivers/platform/x86/lenovo/wmi-other.c
+
+...and add them using that lenovo-target.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+ i.
+
