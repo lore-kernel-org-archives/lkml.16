@@ -1,118 +1,137 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB5228F53B;
-	Fri, 13 Jun 2025 23:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDB18F6C
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749857017; cv=none; b=dmx8wPhIrJ0Rea512tLOkT6ozGQ3Bcf6s57g5/ZU/uG2XLXOPdyj2JocJmQzQToJqVU5jtbFU+su8O8X1tteexD850Wc8r8LWaTOr3ZWKwvpEpazsL2vu7YkwS4B+ZkAk4T4ItoO17dKhrbKTomLbweo9N/FX4LQcsS/HcGNUSo=
+	t=1749857157; cv=none; b=bFxOwGHMNqRgzfyd3obGu5Kz5hB6HvKdBFJpifJRXIREBIxWWNnXpeKn/TRqu+uNv3dXrHJoQJZB69s7aD6EM7h9q9+zeTXN/+8izVN4NrdxqUfN7uMY4bNKYixhB4vP40v4WpCIqw9Bt9cpL+sIh24PA8t41JxnhZ7uXgx7HOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749857017; c=relaxed/simple;
-	bh=pRm7WMTK6GQB+xb+SK8ZYb/NBI8HnY5C0U4VYNWXWY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nG/ztDfFQEql5dP8XK6n/lkUjYb4RR4peFbcrka9cyo33tU8q3kCwspyq6BIcC4nI5uqJO5LW/Xrh1Xu0MFgvxzlEferA3qkyfliqa866ghJ4YC3bKoJbKC5D2ZS6shWAAurH0Edc4U3e07SpuKyrFNPQ1nrn7V6l8IgMiK148Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=O79mGOIC; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1749857157; c=relaxed/simple;
+	bh=IEXN+n5qdOk1V2msHLry4HZSsSFYxaYDfiuyJL9kEN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPslikIFBcFykjC9qiCxXNQueXSyPxnYxvea5vQZu6ts6yh8grcDn3ywXdHiwuub9bxQdpbbvEaNmGxlaBH0qdqdxrBooOPdGEGtBvTwLI6PywBpQ8D2O2Umd6vT9LQK+9Y2iyDMuM/gWj+rd9ei1grj+uN8oiH3/tt7tO0HkkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fqxci/jt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="O79mGOIC"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55DNMvmW3983901
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 13 Jun 2025 16:22:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55DNMvmW3983901
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749856982;
-	bh=7glF6PEEG/lXgRBaYYYqaMO2g9seEsh5Mc9ESfeo/Do=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O79mGOIClp71Ense6p47/0kGYgPQEEf4iqqQR06Gyc4az/8HUpsk1nfo4haGvsJmc
-	 QH3a8foDfnlJN6Qf2HomMrt/mmvVYmAUy62En+8SeD+JyiK+72S+mVsp/1E/2kuA6M
-	 YqN3IPohxdGcKBtHAgTqz+v9Ab/6CcVvVoQZxUfLesNlx0x0gyPj5WYtfdUa5kK9MN
-	 BX6Rcj2SV1TpBQvztBppeRMbLnQkRIp8ApjLp8Yvj8zf2KmEFkbTYy2CzJ11pqYuMs
-	 oc9D7ioHxAZY6WILY2XO/i0Cwx2HllN8g6JFko9iBW+Rt/+r71DC+CpDoYHd2JyF7K
-	 ZQ7M2JpFpoPcw==
-Message-ID: <c93b8a59-9466-4d2f-8141-81142f5ead8c@zytor.com>
-Date: Fri, 13 Jun 2025 16:22:57 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fqxci/jt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D166C4CEE3;
+	Fri, 13 Jun 2025 23:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749857157;
+	bh=IEXN+n5qdOk1V2msHLry4HZSsSFYxaYDfiuyJL9kEN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fqxci/jtE8dSY+VbfwQDsuTR/y7+u89TK5XEOk/silkA5ZYPWKkU40oJFRAw1H3wA
+	 yeDwgnf1jWM1JyuN57+pGWTXLgf/UK5B69sbErIH2ab1XE5dqRRnLSn30rs33Zgpeg
+	 VWBJNM4xdv/SonSj1OR/0SJv62VguUVUtNGtT6i9erdWqOj8CbcWSDv9gDRAXXE7id
+	 Z0dEiRVQvoLPmT1rc2Fhlu+uWMQSsYBIRO5BzIAMituWGwHgmP4dz4Xqbzesbk8Bex
+	 4f2oDoQuq5q97DOFuV/hOluez42AiPptOtUWGY1rRdqH5/oSsTj15f6SywOkWtN3Zq
+	 oG5AH6sE1wecA==
+Date: Fri, 13 Jun 2025 13:25:56 -1000
+From: Tejun Heo <tj@kernel.org>
+To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 2/2 sched_ext/for-6.16-fixes] sched_ext, sched/core: Don't
+ call scx_group_set_weight() prematurely from sched_create_group()
+Message-ID: <aEyzhBAl5zkP6Ku-@slm.duckdns.org>
+References: <aEyy27BecPPHDWHc@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/3] x86/traps: Fix DR6/DR7 inintialization
-To: Sohil Mehta <sohil.mehta@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
-        brgerst@gmail.com, tony.luck@intel.com, fenghuay@nvidia.com
-References: <20250613070118.3694407-1-xin@zytor.com>
- <ac28b350-91a4-4e6d-bca6-4e0c80f4f503@intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <ac28b350-91a4-4e6d-bca6-4e0c80f4f503@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEyy27BecPPHDWHc@slm.duckdns.org>
 
-On 6/13/2025 3:43 PM, Sohil Mehta wrote:
-> On 6/13/2025 12:01 AM, Xin Li (Intel) wrote:
-> 
->>
->> Xin Li (Intel) (3):
->>    x86/traps: Move DR7_RESET_VALUE to <uapi/asm/debugreg.h>
->>    x86/traps: Initialize DR7 by writing its architectural reset value
->>    x86/traps: Initialize DR6 by writing its architectural reset value
->>
-> 
-> The patches fix the false bus_lock warning that I was observing with the
-> infinite sigtrap selftest.
-> 
-> Tested-by: Sohil Mehta <sohil.mehta@intel.com>
-> 
-> I'll try it out again once you send the updated version.
+During task_group creation, sched_create_group() calls
+scx_group_set_weight() with CGROUP_WEIGHT_DFL to initialize the sched_ext
+portion. This is premature and ends up calling ops.cgroup_set_weight() with
+an incorrect @cgrp before ops.cgroup_init() is called.
 
-Thank you very much!
+sched_create_group() should just initialize SCX related fields in the new
+task_group. Fix it by factoring out scx_tg_init() from sched_init() and
+making sched_create_group() call that function instead of
+scx_group_set_weight().
 
-> 
-> In future, should we incorporate a #DB (or bus_lock) specific selftest
-> to detect such DR6/7 initialization issues?
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 819513666966 ("sched_ext: Add cgroup support")
+Cc: stable@vger.kernel.org # v6.12+
+---
+Ingo, Peter, while this touches kernel/sched/core.c, the changes are trivial
+and only affect sched_ext. I'm planning to route it through
+sched_ext/for-6.14-fixes. Please holler if you want it routed through tip.
 
+Thanks.
 
-I cant think of how to tests it.  Any suggestion about a new test?
+ kernel/sched/core.c |    9 ++++-----
+ kernel/sched/ext.c  |    5 +++++
+ kernel/sched/ext.h  |    2 ++
+ 3 files changed, 11 insertions(+), 5 deletions(-)
 
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8544,17 +8544,16 @@ void __init sched_init(void)
+ 		root_task_group.shares = ROOT_TASK_GROUP_LOAD;
+ 		init_cfs_bandwidth(&root_task_group.cfs_bandwidth, NULL);
+ #endif /* CONFIG_FAIR_GROUP_SCHED */
+-#ifdef CONFIG_EXT_GROUP_SCHED
+-		root_task_group.scx_weight = CGROUP_WEIGHT_DFL;
+-#endif /* CONFIG_EXT_GROUP_SCHED */
++
+ #ifdef CONFIG_RT_GROUP_SCHED
+ 		root_task_group.rt_se = (struct sched_rt_entity **)ptr;
+ 		ptr += nr_cpu_ids * sizeof(void **);
+ 
+ 		root_task_group.rt_rq = (struct rt_rq **)ptr;
+ 		ptr += nr_cpu_ids * sizeof(void **);
+-
+ #endif /* CONFIG_RT_GROUP_SCHED */
++
++		scx_tg_init(&root_task_group);
+ 	}
+ 
+ #ifdef CONFIG_SMP
+@@ -8985,7 +8984,7 @@ struct task_group *sched_create_group(st
+ 	if (!alloc_rt_sched_group(tg, parent))
+ 		goto err;
+ 
+-	scx_group_set_weight(tg, CGROUP_WEIGHT_DFL);
++	scx_tg_init(tg);
+ 	alloc_uclamp_sched_group(tg, parent);
+ 
+ 	return tg;
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -4092,6 +4092,11 @@ bool scx_can_stop_tick(struct rq *rq)
+ DEFINE_STATIC_PERCPU_RWSEM(scx_cgroup_rwsem);
+ static bool scx_cgroup_enabled;
+ 
++void scx_tg_init(struct task_group *tg)
++{
++	tg->scx_weight = CGROUP_WEIGHT_DFL;
++}
++
+ int scx_tg_online(struct task_group *tg)
+ {
+ 	struct scx_sched *sch = scx_root;
+--- a/kernel/sched/ext.h
++++ b/kernel/sched/ext.h
+@@ -79,6 +79,7 @@ static inline void scx_update_idle(struc
+ 
+ #ifdef CONFIG_CGROUP_SCHED
+ #ifdef CONFIG_EXT_GROUP_SCHED
++void scx_tg_init(struct task_group *tg);
+ int scx_tg_online(struct task_group *tg);
+ void scx_tg_offline(struct task_group *tg);
+ int scx_cgroup_can_attach(struct cgroup_taskset *tset);
+@@ -88,6 +89,7 @@ void scx_cgroup_cancel_attach(struct cgr
+ void scx_group_set_weight(struct task_group *tg, unsigned long cgrp_weight);
+ void scx_group_set_idle(struct task_group *tg, bool idle);
+ #else	/* CONFIG_EXT_GROUP_SCHED */
++static inline void scx_tg_init(struct task_group *tg) {}
+ static inline int scx_tg_online(struct task_group *tg) { return 0; }
+ static inline void scx_tg_offline(struct task_group *tg) {}
+ static inline int scx_cgroup_can_attach(struct cgroup_taskset *tset) { return 0; }
