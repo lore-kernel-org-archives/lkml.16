@@ -1,418 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from caracal.birch.relay.mailchannels.net (caracal.birch.relay.mailchannels.net [23.83.209.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AFF231A57;
-	Fri, 13 Jun 2025 18:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749839953; cv=none; b=petm5FcZPwXRYX8gI3ZLI4OH6f2hO7eCw1yfSXB1MnCl/GXl+1Z3jZ4FAmb/OaazmSYpteXDwVhDJbdDSJHI0w21EaNaub1D295LtGl+Qzce9tiQultQfZ8gP9F80sICOWcPAKC5MsZpxX+3o3ay83/RA9akQ8rcUw6WO5JMd0Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749839953; c=relaxed/simple;
-	bh=+scNn74TP1gB3uaExUowjPcO7j2GnDZeXdT2PCkyqF4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IwJROt2H/C/ZfbG/FTl4hqeS9t0QtwBJ5eNFDqzfLRPxBXscttMeQzpwMevciYo4OClt1L9WFxAnhE8GidStxrdHbPUczH3Cc3E9JosaLLiNc2l2AQwtSn5QWKo8psuTnqS1FAVdAox49o046iQ6U6QrI4ioTE0eYhgo1dBnQf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdS4gT1r; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAAB20F09B;
+	Fri, 13 Jun 2025 18:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.30
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749840050; cv=pass; b=TmA1B6KPd5KW5OrrB2W4boh682OyUpKkIVadIvdTE9Ld3h+79J3ajk6Xx6NP1VcOueGxIwLB1OaQ1SGrNpBR6QqP/548dOVn49IqbpBLDqvqtiDuPiSckhNFh72Y8PvFGBZsHC/Xg1BkeWomA7XWIg5SpS1Jb2j6L6XtZEPI2/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749840050; c=relaxed/simple;
+	bh=ytylsNEaw7BOebZLWEcNq8otpQNwRAvusM0Tiwxfvgk=;
+	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc:Date; b=VDn4qivS4RWKxH2XrMxsbI4K1zuQx+9NoNja+LwxuO4pm1zc9L7a1tgb0N/A6eYDB8ENVP2T5Ci5gLmx4U1frtTOPi30owNfa8w/BZIhhRnRLLeh6DTNp+HO+z/0j7Axzz4WlZW3YSZj3uSoIV721pufmlSO7vXS6KIfFTng7ss=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=U2YbOscy; arc=pass smtp.client-ip=23.83.209.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdS4gT1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B35D5C4CEF2;
-	Fri, 13 Jun 2025 18:39:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749839953;
-	bh=+scNn74TP1gB3uaExUowjPcO7j2GnDZeXdT2PCkyqF4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FdS4gT1rF5AwmxBEXf/SxWH2rzz47c/1nrtqZY7HldtMNWt+Io3tNCrEaR9L+bGT8
-	 gYN5o97tfojw8ta1kxEcFqzp76XN4jUKGabZFJ8nyPc68QaqW7tc4sPne9wx34LRmf
-	 g9FNmejWTEx9+bNgrLRYz1YiRVQvdlsRqRiXkASm7TaDRMzv/nheYX8uk2KnZf7Q4H
-	 YPBGV2WtEmOqW3OE12DvlKX9KqZ6AP0nICTeqPsWgdZj8fpSD1BVrteL5Cl+qyOPin
-	 iOJB1N6ljBFTN0JxkNEdkiS0WWdWSk6uJ0pwehPTy/Z7MmsOraAtXFH+k0M06NGPev
-	 m+vEZmxyBWTrw==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-btrfs@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Subject: [PATCH 2/2] crypto/crc32[c]: register only "-lib" drivers
-Date: Fri, 13 Jun 2025 11:37:53 -0700
-Message-ID: <20250613183753.31864-3-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250613183753.31864-1-ebiggers@kernel.org>
-References: <20250613183753.31864-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="U2YbOscy"
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 49C344473E;
+	Fri, 13 Jun 2025 17:51:08 +0000 (UTC)
+Received: from fr-int-smtpout9.hostinger.io (100-96-77-9.trex-nlb.outbound.svc.cluster.local [100.96.77.9])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 2BA9642CD9;
+	Fri, 13 Jun 2025 17:51:00 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749837064; a=rsa-sha256;
+	cv=none;
+	b=UjML1ZOdb7ixNA767ni/qu8ztakofh70zW3XslOMsj9RjtCo0tpu38zruTujgTYx0OQedc
+	0iG9ZvdCQ95Y73d6b7NnDhYm8Kj73kWkId+s6/40YAkRt7ERXD6AFMHYNIxOVnYW1ohAIL
+	9VzkvQ3g3PeG8SvlXQCKyVUbyXOD0nT7OPdO+kAuzD4Yopbe8ZOZeslqrxLYsZrvQJylug
+	Ltz3bz6elu/p0G0MBllq8lXD9sbTABRDPb21SU2aQvD6PKdRdXwNhMfah5ocDGGjBrea0N
+	c3AXfhjirxNLT/3TW1uNFDRxfhIwYllcMW/xUrULSpEe7zJSGsDZT0RsnONtxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1749837064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=jxHgqR517CZvKTP1m9cgQuCwxXu5oH1+UHhadRlTZR8=;
+	b=oIQDhxQiz6dE+ql9a+Zo4USeDN4pTU4Pzx5sbXurrDBh4lpjrj0FDgVG9Q2spNB/DZS/j1
+	xMHjNF7T8gYc7kL3h6dUMa9VGLV86xHWRw8SGatvgG/Sn4OHrdFeqMlWB2VEQHAYPiKjPB
+	YWnIcMGpFS8/2SX23rBVBO/D2R2ZKxoaMrSV5A2zj5aXyE/sTvQSQrJ+uIu4JAJ3YfPGz0
+	FRJXseSzkrPLcxMj9tUVMDrRrpBcZqvzqLUcRBgsACuoxWLW0oXyRrFJkQooXwPDkB6tYa
+	fu3MWBQQdAy36NDtyehDWaIIbZqnzRi5WD6Xo7de7gGo+Wf1zBtLLoaPQ1A8Qw==
+ARC-Authentication-Results: i=1;
+	rspamd-5859dfb5d9-fwlfl;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Daffy-Cold: 306173e8455c9aee_1749837066505_3073936017
+X-MC-Loop-Signature: 1749837066504:1924555187
+X-MC-Ingress-Time: 1749837066500
+Received: from fr-int-smtpout9.hostinger.io (fr-int-smtpout9.hostinger.io
+ [89.116.146.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.77.9 (trex/7.0.3);
+	Fri, 13 Jun 2025 17:51:06 +0000
+Received: from [172.17.0.2] (unknown [36.79.97.133])
+	(Authenticated sender: linux@smankusors.com)
+	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bJn432cT1zH9gL4;
+	Fri, 13 Jun 2025 17:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
+	s=hostingermail-a; t=1749837055;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jxHgqR517CZvKTP1m9cgQuCwxXu5oH1+UHhadRlTZR8=;
+	b=U2YbOscyLMgGrZP6Zm0CtDcQ2NT9G5oZhmIP9bvuOahDNxVvvhBCWFn0JTNEdViqZsIB97
+	jsx+PKyn3zi0uU0H7rc7fj4R4BytFt8mlednesHK7vrcwQrV0DqolGUkLaIIgHAv8u5Wwn
+	mnRhSHgg26p+Qxotaw5/FIxj5TW2amCh0NR6eNpzW3aksz84h+JBynPe38JpZcufh8CAcO
+	50UBHm1O5AgFxVMLQsbFRO9tZnGPkyzp+NaLLFp60CC+PNXUW1giPc3dysW57PFhAZaYQ0
+	LikmvV+MMplq9CNMLH2NgEGZBX3RT9F6apz/AwWufmHSosE3q+BTgXaICnSRng==
+From: Antony Kurniawan Soemardi <linux@smankusors.com>
+Subject: [PATCH 3/5] ARM: dts: qcom: msm8960: disable gsbi1 and gsbi5 nodes
+ in msm8960 dtsi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250614-msm8960-sdcard-v1-3-ccce629428b6@smankusors.com>
+References: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
+In-Reply-To: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Antony Kurniawan Soemardi <linux@smankusors.com>, 
+ Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749837006; l=1481;
+ i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
+ bh=ytylsNEaw7BOebZLWEcNq8otpQNwRAvusM0Tiwxfvgk=;
+ b=zfsHrldamADV1lbxzbx1l0ugp/YH8W3JIjELL54neC2GhzDKktfhbdEZqxOSUJHRJzSzj5lm7
+ F6k4idQUqw8DHfGVsT3U/r2iKtTC12BAAIQls9xp5kYoaIweMznNub4
+X-Developer-Key: i=linux@smankusors.com; a=ed25519;
+ pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
+Date: Fri, 13 Jun 2025 17:50:27 +0000 (UTC)
+X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=684c64ff a=/sUT9SOQbq9tkq2xjVjq6Q==:117 a=/sUT9SOQbq9tkq2xjVjq6Q==:17 a=IkcTkHD0fZMA:10 a=wxLWbCv9AAAA:8 a=DTDndxlCylVmyPESURwA:9 a=QEXdDO2ut3YA:10 a=QJY96suAAestDpCc5Gi9:22
+X-CM-Envelope: MS4xfKjy+0cxVUYN+Yx3caG+1LpYjVS3jaMAjB//DQKsmP29fmT3R/k9r4Usk2mf3yNAnvf1EtgNZcEo2IIl8tsJpxwUMn+F9FqnHTbJ3Y0gaUOKq+6qOdVW gHGoDJ5lE8gw+ClBfFLSyuwM5xxm9M2vw2cMfgMv6AQsHtiG81Xcb9mES96KedLp+s8FohrXwFKq57+VPIYH35rhfITAP9j2zMu82RZ8QDLEqjLnLgxTwlMD lkuLquLRJYs0mq5lr+a1jj0FRhiigYSZzrQc7dYtjZlL1ahbaDCf5fl7hZL/SDHc1pcOqAvOVseqmpMqhTTJrU4V4qxdY9V1+nU9qYPYkuJCWndxwCtyTTGB JQ6a1/JhE9fCOsGeM3eLsdf43O+bctdNIQr2L5RWthZEu5fHqsbpYxRMHUPoUsQg1LfxxY+ekgprLAuMdDgoJPsgOvrpGLA8yhgbGfI1FQlMYNsmjk94M83t BtpvfT0ckEomFcV8arEOPhmxBPPRVEWf/PkMV1PfGjEwwoMFPwfThKig8kM=
+X-AuthUser: linux@smankusors.com
 
-From: Eric Biggers <ebiggers@google.com>
+Not all devices use gsbi1 and gsbi5, so these nodes should be disabled
+in the SoC dtsi, following the existing pattern used for gsbi3. The
+upstream samsung-expressatt and msm8960-cdp devices already have status
+"okay" for these nodes, so this change should not break existing
+functionality.
 
-For the "crc32" and "crc32c" shash algorithms, instead of registering
-"*-generic" drivers as well as conditionally registering "*-$(ARCH)"
-drivers, instead just register "*-lib" drivers.  These just use the
-regular library functions crc32_le() and crc32c(), so they just do the
-right thing and are fully accelerated when supported by the CPU.
+This eliminates the following error messages when gsbi nodes are not
+configured in the board's device tree:
+[    1.109723] gsbi 16000000.gsbi: missing mode configuration
+[    1.109797] gsbi 16000000.gsbi: probe with driver gsbi failed with error -22
 
-This eliminates the need for the CRC library to export crc32_le_base()
-and crc32c_base().  Separate patches make those static functions.
+(Note: Xperia SP doesn't use gsbi5)
 
-Since this patch removes the "crc32-generic" and "crc32c-generic" driver
-names which crypto/testmgr.c expects to exist, update crypto/testmgr.c
-accordingly.  This does mean that crypto/testmgr.c will no longer
-fuzz-test the "generic" implementation against the "arch" implementation
-for crc32 and crc32c, but this was redundant with crc_kunit anyway.
-
-Besides the above, and btrfs_init_csum_hash() which the previous patch
-fixed, no code appears to have been relying on the "crc32-generic" or
-"crc32c-generic" driver names specifically.
-
-btrfs does export the checksum driver name in
-/sys/fs/btrfs/$uuid/checksum.  This patch makes that file contain
-"crc32c-lib" instead of "crc32c-generic" or "crc32c-$(ARCH)".  This
-should be fine, since in practice the purpose of this file seems to have
-been just to allow users to manually check whether they needed to enable
-the optimized CRC32C code.  This was needed only because of the bug in
-old kernels where the optimized CRC32C code defaulted to off and even
-needed to be explicitly added to the ramdisk to be used.  Now that it
-just works in Linux 6.14 and later, there's no need for users to take
-any action and this file is basically obsolete.  (Also, note that the
-contents of this file already changed in 6.14.)
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
 ---
- crypto/Makefile  |  2 --
- crypto/crc32.c   | 65 +++++------------------------------------------
- crypto/crc32c.c  | 66 ++++--------------------------------------------
- crypto/testmgr.c |  2 ++
- 4 files changed, 13 insertions(+), 122 deletions(-)
+ arch/arm/boot/dts/qcom/qcom-msm8960.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/crypto/Makefile b/crypto/Makefile
-index 017df3a2e4bb3..55dd56332dc80 100644
---- a/crypto/Makefile
-+++ b/crypto/Makefile
-@@ -152,14 +152,12 @@ obj-$(CONFIG_CRYPTO_CHACHA20) += chacha.o
- CFLAGS_chacha.o += -DARCH=$(ARCH)
- obj-$(CONFIG_CRYPTO_DEFLATE) += deflate.o
- obj-$(CONFIG_CRYPTO_MICHAEL_MIC) += michael_mic.o
- obj-$(CONFIG_CRYPTO_CRC32C) += crc32c-cryptoapi.o
- crc32c-cryptoapi-y := crc32c.o
--CFLAGS_crc32c.o += -DARCH=$(ARCH)
- obj-$(CONFIG_CRYPTO_CRC32) += crc32-cryptoapi.o
- crc32-cryptoapi-y := crc32.o
--CFLAGS_crc32.o += -DARCH=$(ARCH)
- obj-$(CONFIG_CRYPTO_AUTHENC) += authenc.o authencesn.o
- obj-$(CONFIG_CRYPTO_KRB5ENC) += krb5enc.o
- obj-$(CONFIG_CRYPTO_LZO) += lzo.o lzo-rle.o
- obj-$(CONFIG_CRYPTO_LZ4) += lz4.o
- obj-$(CONFIG_CRYPTO_LZ4HC) += lz4hc.o
-diff --git a/crypto/crc32.c b/crypto/crc32.c
-index cc371d42601fd..489cbed9422e2 100644
---- a/crypto/crc32.c
-+++ b/crypto/crc32.c
-@@ -57,33 +57,16 @@ static int crc32_init(struct shash_desc *desc)
- static int crc32_update(struct shash_desc *desc, const u8 *data,
- 			unsigned int len)
- {
- 	u32 *crcp = shash_desc_ctx(desc);
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+index 66071ad498e49c4f54ba105fa94640575fe08da6..84d4d1bffa9f73b5e395e4290b8dc856e0966e9b 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+@@ -321,6 +321,7 @@ gsbi5: gsbi@16400000 {
+ 			ranges;
  
--	*crcp = crc32_le_base(*crcp, data, len);
--	return 0;
--}
--
--static int crc32_update_arch(struct shash_desc *desc, const u8 *data,
--			     unsigned int len)
--{
--	u32 *crcp = shash_desc_ctx(desc);
--
- 	*crcp = crc32_le(*crcp, data, len);
- 	return 0;
- }
+ 			syscon-tcsr = <&tcsr>;
++			status = "disabled";
  
- /* No final XOR 0xFFFFFFFF, like crc32_le */
--static int __crc32_finup(u32 *crcp, const u8 *data, unsigned int len,
--			 u8 *out)
--{
--	put_unaligned_le32(crc32_le_base(*crcp, data, len), out);
--	return 0;
--}
--
--static int __crc32_finup_arch(u32 *crcp, const u8 *data, unsigned int len,
--			      u8 *out)
-+static int __crc32_finup(u32 *crcp, const u8 *data, unsigned int len, u8 *out)
- {
- 	put_unaligned_le32(crc32_le(*crcp, data, len), out);
- 	return 0;
- }
+ 			gsbi5_serial: serial@16440000 {
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+@@ -440,6 +441,7 @@ gsbi1: gsbi@16000000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
++			status = "disabled";
  
-@@ -91,16 +74,10 @@ static int crc32_finup(struct shash_desc *desc, const u8 *data,
- 		       unsigned int len, u8 *out)
- {
- 	return __crc32_finup(shash_desc_ctx(desc), data, len, out);
- }
- 
--static int crc32_finup_arch(struct shash_desc *desc, const u8 *data,
--		       unsigned int len, u8 *out)
--{
--	return __crc32_finup_arch(shash_desc_ctx(desc), data, len, out);
--}
--
- static int crc32_final(struct shash_desc *desc, u8 *out)
- {
- 	u32 *crcp = shash_desc_ctx(desc);
- 
- 	put_unaligned_le32(*crcp, out);
-@@ -111,72 +88,42 @@ static int crc32_digest(struct shash_desc *desc, const u8 *data,
- 			unsigned int len, u8 *out)
- {
- 	return __crc32_finup(crypto_shash_ctx(desc->tfm), data, len, out);
- }
- 
--static int crc32_digest_arch(struct shash_desc *desc, const u8 *data,
--			     unsigned int len, u8 *out)
--{
--	return __crc32_finup_arch(crypto_shash_ctx(desc->tfm), data, len, out);
--}
--
--static struct shash_alg algs[] = {{
-+static struct shash_alg alg = {
- 	.setkey			= crc32_setkey,
- 	.init			= crc32_init,
- 	.update			= crc32_update,
- 	.final			= crc32_final,
- 	.finup			= crc32_finup,
- 	.digest			= crc32_digest,
- 	.descsize		= sizeof(u32),
- 	.digestsize		= CHKSUM_DIGEST_SIZE,
- 
- 	.base.cra_name		= "crc32",
--	.base.cra_driver_name	= "crc32-generic",
-+	.base.cra_driver_name	= "crc32-lib",
- 	.base.cra_priority	= 100,
- 	.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY,
- 	.base.cra_blocksize	= CHKSUM_BLOCK_SIZE,
- 	.base.cra_ctxsize	= sizeof(u32),
- 	.base.cra_module	= THIS_MODULE,
- 	.base.cra_init		= crc32_cra_init,
--}, {
--	.setkey			= crc32_setkey,
--	.init			= crc32_init,
--	.update			= crc32_update_arch,
--	.final			= crc32_final,
--	.finup			= crc32_finup_arch,
--	.digest			= crc32_digest_arch,
--	.descsize		= sizeof(u32),
--	.digestsize		= CHKSUM_DIGEST_SIZE,
--
--	.base.cra_name		= "crc32",
--	.base.cra_driver_name	= "crc32-" __stringify(ARCH),
--	.base.cra_priority	= 150,
--	.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY,
--	.base.cra_blocksize	= CHKSUM_BLOCK_SIZE,
--	.base.cra_ctxsize	= sizeof(u32),
--	.base.cra_module	= THIS_MODULE,
--	.base.cra_init		= crc32_cra_init,
--}};
--
--static int num_algs;
-+};
- 
- static int __init crc32_mod_init(void)
- {
--	/* register the arch flavor only if it differs from the generic one */
--	num_algs = 1 + ((crc32_optimizations() & CRC32_LE_OPTIMIZATION) != 0);
--
--	return crypto_register_shashes(algs, num_algs);
-+	return crypto_register_shash(&alg);
- }
- 
- static void __exit crc32_mod_fini(void)
- {
--	crypto_unregister_shashes(algs, num_algs);
-+	crypto_unregister_shash(&alg);
- }
- 
- module_init(crc32_mod_init);
- module_exit(crc32_mod_fini);
- 
- MODULE_AUTHOR("Alexander Boyko <alexander_boyko@xyratex.com>");
- MODULE_DESCRIPTION("CRC32 calculations wrapper for lib/crc32");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS_CRYPTO("crc32");
--MODULE_ALIAS_CRYPTO("crc32-generic");
-diff --git a/crypto/crc32c.c b/crypto/crc32c.c
-index e5377898414a2..1eff54dde2f74 100644
---- a/crypto/crc32c.c
-+++ b/crypto/crc32c.c
-@@ -83,19 +83,10 @@ static int chksum_setkey(struct crypto_shash *tfm, const u8 *key,
- static int chksum_update(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length)
- {
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
--	ctx->crc = crc32c_base(ctx->crc, data, length);
--	return 0;
--}
--
--static int chksum_update_arch(struct shash_desc *desc, const u8 *data,
--			      unsigned int length)
--{
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
- 	ctx->crc = crc32c(ctx->crc, data, length);
- 	return 0;
- }
- 
- static int chksum_final(struct shash_desc *desc, u8 *out)
-@@ -105,17 +96,10 @@ static int chksum_final(struct shash_desc *desc, u8 *out)
- 	put_unaligned_le32(~ctx->crc, out);
- 	return 0;
- }
- 
- static int __chksum_finup(u32 *crcp, const u8 *data, unsigned int len, u8 *out)
--{
--	put_unaligned_le32(~crc32c_base(*crcp, data, len), out);
--	return 0;
--}
--
--static int __chksum_finup_arch(u32 *crcp, const u8 *data, unsigned int len,
--			       u8 *out)
- {
- 	put_unaligned_le32(~crc32c(*crcp, data, len), out);
- 	return 0;
- }
- 
-@@ -125,98 +109,58 @@ static int chksum_finup(struct shash_desc *desc, const u8 *data,
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
- 	return __chksum_finup(&ctx->crc, data, len, out);
- }
- 
--static int chksum_finup_arch(struct shash_desc *desc, const u8 *data,
--			     unsigned int len, u8 *out)
--{
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
--	return __chksum_finup_arch(&ctx->crc, data, len, out);
--}
--
- static int chksum_digest(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length, u8 *out)
- {
- 	struct chksum_ctx *mctx = crypto_shash_ctx(desc->tfm);
- 
- 	return __chksum_finup(&mctx->key, data, length, out);
- }
- 
--static int chksum_digest_arch(struct shash_desc *desc, const u8 *data,
--			      unsigned int length, u8 *out)
--{
--	struct chksum_ctx *mctx = crypto_shash_ctx(desc->tfm);
--
--	return __chksum_finup_arch(&mctx->key, data, length, out);
--}
--
- static int crc32c_cra_init(struct crypto_tfm *tfm)
- {
- 	struct chksum_ctx *mctx = crypto_tfm_ctx(tfm);
- 
- 	mctx->key = ~0;
- 	return 0;
- }
- 
--static struct shash_alg algs[] = {{
-+static struct shash_alg alg = {
- 	.digestsize		= CHKSUM_DIGEST_SIZE,
- 	.setkey			= chksum_setkey,
- 	.init			= chksum_init,
- 	.update			= chksum_update,
- 	.final			= chksum_final,
- 	.finup			= chksum_finup,
- 	.digest			= chksum_digest,
- 	.descsize		= sizeof(struct chksum_desc_ctx),
- 
- 	.base.cra_name		= "crc32c",
--	.base.cra_driver_name	= "crc32c-generic",
-+	.base.cra_driver_name	= "crc32c-lib",
- 	.base.cra_priority	= 100,
- 	.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY,
- 	.base.cra_blocksize	= CHKSUM_BLOCK_SIZE,
- 	.base.cra_ctxsize	= sizeof(struct chksum_ctx),
- 	.base.cra_module	= THIS_MODULE,
- 	.base.cra_init		= crc32c_cra_init,
--}, {
--	.digestsize		= CHKSUM_DIGEST_SIZE,
--	.setkey			= chksum_setkey,
--	.init			= chksum_init,
--	.update			= chksum_update_arch,
--	.final			= chksum_final,
--	.finup			= chksum_finup_arch,
--	.digest			= chksum_digest_arch,
--	.descsize		= sizeof(struct chksum_desc_ctx),
--
--	.base.cra_name		= "crc32c",
--	.base.cra_driver_name	= "crc32c-" __stringify(ARCH),
--	.base.cra_priority	= 150,
--	.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY,
--	.base.cra_blocksize	= CHKSUM_BLOCK_SIZE,
--	.base.cra_ctxsize	= sizeof(struct chksum_ctx),
--	.base.cra_module	= THIS_MODULE,
--	.base.cra_init		= crc32c_cra_init,
--}};
--
--static int num_algs;
-+};
- 
- static int __init crc32c_mod_init(void)
- {
--	/* register the arch flavor only if it differs from the generic one */
--	num_algs = 1 + ((crc32_optimizations() & CRC32C_OPTIMIZATION) != 0);
--
--	return crypto_register_shashes(algs, num_algs);
-+	return crypto_register_shash(&alg);
- }
- 
- static void __exit crc32c_mod_fini(void)
- {
--	crypto_unregister_shashes(algs, num_algs);
-+	crypto_unregister_shash(&alg);
- }
- 
- module_init(crc32c_mod_init);
- module_exit(crc32c_mod_fini);
- 
- MODULE_AUTHOR("Clay Haapala <chaapala@cisco.com>");
- MODULE_DESCRIPTION("CRC32c (Castagnoli) calculations wrapper for lib/crc32c");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS_CRYPTO("crc32c");
--MODULE_ALIAS_CRYPTO("crc32c-generic");
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 72005074a5c26..3b947b828ff83 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -4544,17 +4544,19 @@ static const struct alg_test_desc alg_test_descs[] = {
- 		.suite = {
- 			.hash = __VECS(sm4_cmac128_tv_template)
- 		}
- 	}, {
- 		.alg = "crc32",
-+		.generic_driver = "crc32-lib",
- 		.test = alg_test_hash,
- 		.fips_allowed = 1,
- 		.suite = {
- 			.hash = __VECS(crc32_tv_template)
- 		}
- 	}, {
- 		.alg = "crc32c",
-+		.generic_driver = "crc32c-lib",
- 		.test = alg_test_crc32c,
- 		.fips_allowed = 1,
- 		.suite = {
- 			.hash = __VECS(crc32c_tv_template)
- 		}
+ 			gsbi1_spi: spi@16080000 {
+ 				compatible = "qcom,spi-qup-v1.1.1";
+
 -- 
-2.49.0
+2.34.1
 
