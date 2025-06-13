@@ -1,208 +1,258 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mail-10624.protonmail.ch (mail-10624.protonmail.ch [79.135.106.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF5822E3E8;
-	Fri, 13 Jun 2025 21:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3C522E3E8
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749848413; cv=none; b=Sklbzq4y2lr8qeOyZcYXxEQbC7+Nn5fqZEAhP61W7q0ebGk/p46OC4vHcUZKiuZvyO+a0cUVq4pArYYOEH1Jhl9AxDkh17Shc95rIuDRU/FJ8bJH2T3yXfDgqwtdEGpQa8WIXAV/JY3nJKSotuvAFVzFIEk0VydSM3gHBCIL4/w=
+	t=1749848420; cv=none; b=J5FSmhxQ3vFf2qn5FmQ3h63JJU2GeIANSq7Bwe8gVZ5FaRU/J/NKQ7eClv+UTh6Z2NfhsFntDdY2PGTv3tQ9ssY1CtrcQFFrms7EIZeVnuSwjQqH8oDq6ch/xGww6dNwdok1OEZ4p70hQapu036g5JBU9fHjiiHENvcIVhNAjcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749848413; c=relaxed/simple;
-	bh=mjGWWtujoYhy5cCleo4PgS2R+2xwhBGR26LvyJv/P+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UcHyR8Jg1dA7aSusmNh+kB55o2EerkzH/aSnN4ruKH1JXPKhpDfI+8xMM/6+Xu3HbnqMKKhPcfl/kqmgPMmPJ36xki6WtfcrZUkaRjF6YU0qUzJx+dT8ugNQfHdbcGmH3NnfmHo8EGEUwoQea0UvgOwx59unBMfOVjfONLhGR6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oanep1MC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749848420; c=relaxed/simple;
+	bh=C5INVxTN3i9TinbiyttmYCtTvarHSwnt7ggmuh4hcDo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MO4YHLroKndFvhpsf5bFAEht3m+JJKgHY+jOohwtCB6MPEwFKNYtxRWhoU8qhZJ9k8eF89wFVSR5Fzi9cwSrXB5n59cOBN6FFCzcCmaxsKcJ5tBlojHPJKxFivBWq1xwnVF4CtyOrYKUiWT46hkRkE+LDsidSV32SK3DFLXB1iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca; spf=pass smtp.mailfrom=gianis.ca; dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b=KBIrKz5Y; arc=none smtp.client-ip=79.135.106.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gianis.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oanep1MC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749848412; x=1781384412;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mjGWWtujoYhy5cCleo4PgS2R+2xwhBGR26LvyJv/P+g=;
-  b=Oanep1MCoEtRrRbdjY7EtxQqlnNbTRx3ZMxAffG+HlYV5s1Br+wJ83Ll
-   sYZUiEKWZ38+WCcxNy4Klvk1YiWIheLXPskUteT2DHa2XHKROZxSMP6L3
-   qJXyc71qgdIsgdlCCH5ohJVImXBAYDFFyg4FSzSgerJdEffrB/ykgOpVg
-   lpniPvK9u/DDsJ2D1oG9E3JiLHDAy0zNWzd74YwXH2v7x5l5RZXFiKqUt
-   jndyvMF4TnX47WpjGMIJzsrMjfPklLQUD3tioJ2ZeKDQQuQcbfI9stYAi
-   mD04gaz/qdqPF7hMd+Y/TGErH6DdXlvUR/0jMZ/dd6Uk8zUA4Azwu4MJ5
-   Q==;
-X-CSE-ConnectionGUID: 2m5tqCsWQkmQxh4hPE+B7Q==
-X-CSE-MsgGUID: ylq1eLOHSZ2Qhjucryws9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="63484314"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="63484314"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 14:00:12 -0700
-X-CSE-ConnectionGUID: xjnRpg7eRhy9VZ7Yjm4AAg==
-X-CSE-MsgGUID: LJoIEtIVRlSkzMpQBsk4pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="147808011"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.232]) ([10.125.111.232])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 14:00:10 -0700
-Message-ID: <92b75e74-4bd9-4dc7-ac33-5e21ed8d4f8f@intel.com>
-Date: Fri, 13 Jun 2025 14:00:07 -0700
+	dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b="KBIrKz5Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gianis.ca;
+	s=protonmail; t=1749848408; x=1750107608;
+	bh=C5INVxTN3i9TinbiyttmYCtTvarHSwnt7ggmuh4hcDo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=KBIrKz5YmjSdNIw8QGslRLkCgdFwNVRQcd2rb6SDokDiGiJio75kNPZKPlkYoc0e7
+	 hnAEuvy6G6A/5X25uMal49sjgwuBXMwTXOKIeSKhsQlBz+zVTAhWdOACoObmQmdQHo
+	 ll1vgg+YB8jeC6Tfe3486oIgP6vBcd739TyXl9Zxz/BQFpeJao2zvIuwXzxTp3Inur
+	 4BTwXtnLT/w829X5hPKHGfPPjuGSICzI3HInoIsIqflQXaDp4TazIYoQHzO/SU8Owg
+	 AeSrD7Umq2cvRqzRV9Fvn8IhNSM3EzcvDI7bMz1w/bp80OlP2qE8lsayT1sagTb86N
+	 GDtkOKOE6LMAQ==
+Date: Fri, 13 Jun 2025 21:00:02 +0000
+To: Vincent Guittot <vincent.guittot@linaro.org>
+From: dhaval@gianis.ca
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] sched/fair: Increase max lag clamping
+Message-ID: <yaV6Pl8Nz9T25r41NdQTNSmI2lbTQ6VG0XmOoKTw77RLE0pRZAorDIQU1Cgv3XpvPpUkAPHWeJyEXwaEChcctVoxuzS_24jaMzI8-yds744=@gianis.ca>
+In-Reply-To: <20250613140514.2781138-3-vincent.guittot@linaro.org>
+References: <20250613140514.2781138-1-vincent.guittot@linaro.org> <20250613140514.2781138-3-vincent.guittot@linaro.org>
+Feedback-ID: 128275035:user:proton
+X-Pm-Message-ID: 26529d53c215b8acd269a1975c0a6ced1a8a6443
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dmaengine: idxd: Add Max SGL Size Support for DSA3.0
-To: Yi Sun <yi.sun@intel.com>, vinicius.gomes@intel.com,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: gordon.jin@intel.com, fenghuay@nvidia.com,
- anil.s.keshavamurthy@intel.com, philip.lantz@intel.com
-References: <20250613161834.2912353-1-yi.sun@intel.com>
- <20250613161834.2912353-3-yi.sun@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250613161834.2912353-3-yi.sun@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On 6/13/25 9:18 AM, Yi Sun wrote:
-> Certain DSA 3.0 opcodes, such as Gather copy and Gather reduce requires max
-> SGL configured for workqueues prior to support these opcodes.
-> 
-> Configure the maximum scatter-gather list (SGL) size for workqueues during
-> setup on the supported HW. Application can then properly handle the SGL
-> size without explicitly setting it.
-> 
-> Signed-off-by: Yi Sun <yi.sun@intel.com>
-> Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> index 5cf419fe6b46..1c10b030bea7 100644
-> --- a/drivers/dma/idxd/device.c
-> +++ b/drivers/dma/idxd/device.c
-> @@ -375,6 +375,7 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
->  	memset(wq->name, 0, WQ_NAME_SIZE);
->  	wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
->  	idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-> +	idxd_wq_set_init_max_sgl_size(idxd, wq);
->  	if (wq->opcap_bmap)
->  		bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
->  }
-> @@ -974,6 +975,8 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
->  	/* bytes 12-15 */
->  	wq->wqcfg->max_xfer_shift = ilog2(wq->max_xfer_bytes);
->  	idxd_wqcfg_set_max_batch_shift(idxd->data->type, wq->wqcfg, ilog2(wq->max_batch_size));
-> +	if (idxd_sgl_supported(idxd))
-> +		wq->wqcfg->max_sgl_shift = ilog2(wq->max_sgl_size);
->  
->  	/* bytes 32-63 */
->  	if (idxd->hw.wq_cap.op_config && wq->opcap_bmap) {
-> @@ -1152,6 +1155,8 @@ static int idxd_wq_load_config(struct idxd_wq *wq)
->  
->  	wq->max_xfer_bytes = 1ULL << wq->wqcfg->max_xfer_shift;
->  	idxd_wq_set_max_batch_size(idxd->data->type, wq, 1U << wq->wqcfg->max_batch_shift);
-> +	if (idxd_sgl_supported(idxd))
-> +		wq->max_sgl_size = 1U << wq->wqcfg->max_sgl_shift;
->  
->  	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
->  		wqcfg_offset = WQCFG_OFFSET(idxd, wq->id, i);
-> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> index cc0a3fe1c957..fe5af50b58a4 100644
-> --- a/drivers/dma/idxd/idxd.h
-> +++ b/drivers/dma/idxd/idxd.h
-> @@ -227,6 +227,7 @@ struct idxd_wq {
->  	char name[WQ_NAME_SIZE + 1];
->  	u64 max_xfer_bytes;
->  	u32 max_batch_size;
-> +	u32 max_sgl_size;
->  
->  	/* Lock to protect upasid_xa access. */
->  	struct mutex uc_lock;
-> @@ -348,6 +349,7 @@ struct idxd_device {
->  
->  	u64 max_xfer_bytes;
->  	u32 max_batch_size;
-> +	u32 max_sgl_size;
->  	int max_groups;
->  	int max_engines;
->  	int max_rdbufs;
-> @@ -692,6 +694,20 @@ static inline void idxd_wq_set_max_batch_size(int idxd_type, struct idxd_wq *wq,
->  		wq->max_batch_size = max_batch_size;
->  }
->  
-> +static bool idxd_sgl_supported(struct idxd_device *idxd)
+
+
+On Friday, June 13th, 2025 at 7:14 AM, Vincent Guittot <vincent.guittot@lin=
+aro.org> wrote:
+
+>=20
+>=20
+> From: Peter Zijlstra peterz@infradead.org
+>=20
+>=20
+> sched_entity's lag is currently limited to the maximum between the tick
+> and twice its slice. This is too short compared to the maximum custom
+> slice that can be set and accumulated by other tasks.
+> A task can accumulate up to its slice of negative lag while running to
+> parity and the other runnable tasks can accumulate the same positive lag
+> while waiting to run. This positive lag could be lost during dequeue when
+> clamping it to twice task's slice if a task's slice is 100ms and others
+> use a smaller value like the default 2.8ms.
+> Clamp the lag of a task to the maximum slice of enqueued entities plus
+> a tick as the update can be delayed to the next tick.
+>=20
+> Signed-off-by: Peter Zijlstra (Intel) peterz@infradead.org
+>=20
+>=20
+> [ Rebased and Fix max slice computation ]
+>=20
+> Signed-off-by: Vincent Guittot vincent.guittot@linaro.org
+>=20
+> ---
+> include/linux/sched.h | 1 +
+> kernel/sched/fair.c | 41 +++++++++++++++++++++++++++++++++++++----
+> 2 files changed, 38 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 4f78a64beb52..89855ab45c43 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -576,6 +576,7 @@ struct sched_entity {
+> u64 deadline;
+> u64 min_vruntime;
+> u64 min_slice;
+> + u64 max_slice;
+>=20
+
+I am just wondering if it makes sense to maybe add a few comments here on w=
+hat each of these fields are for. Maybe not this series, but if you are ope=
+n to it, I will spin one up next week.
+
+> struct list_head group_node;
+> unsigned char on_rq;
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 44a09de38ddf..479b38dc307a 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -676,6 +676,8 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+> return cfs_rq->min_vruntime + avg;
+>=20
+> }
+>=20
+> +static inline u64 cfs_rq_max_slice(struct cfs_rq cfs_rq);
+> +
+> /
+> * lag_i =3D S - s_i =3D w_i * (V - v_i)
+> *
+> @@ -689,17 +691,16 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+> * EEVDF gives the following limit for a steady state system:
+> *
+> * -r_max < lag < max(r_max, q)
+> - *
+> - * XXX could add max_slice to the augmented data to track this.
+> */
+> static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity =
+*se)
+> {
+> + u64 max_slice =3D cfs_rq_max_slice(cfs_rq) + TICK_NSEC;
+> s64 vlag, limit;
+>=20
+> WARN_ON_ONCE(!se->on_rq);
+>=20
+>=20
+> vlag =3D avg_vruntime(cfs_rq) - se->vruntime;
+>=20
+> - limit =3D calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
+>=20
+> + limit =3D calc_delta_fair(max_slice, se);
+>=20
+> se->vlag =3D clamp(vlag, -limit, limit);
+>=20
+
+As an aside, I have a test for Theorem 1 from the paper which shows we are =
+clamping here even in conditions I do not expect. Almost always a cgroup se=
+ems to be involved. I was out dealing with sickness last couple of weeks, s=
+o I have not debugged further.
+
+> }
+> @@ -795,6 +796,21 @@ static inline u64 cfs_rq_min_slice(struct cfs_rq *cf=
+s_rq)
+> return min_slice;
+> }
+>=20
+> +static inline u64 cfs_rq_max_slice(struct cfs_rq *cfs_rq)
 > +{
-> +	return idxd->hw.dsacap0.sgl_formats &&
-> +	       idxd->data->type == IDXD_TYPE_DSA &&
-> +	       idxd->hw.version >= DEVICE_VERSION_3;
+> + struct sched_entity *root =3D __pick_root_entity(cfs_rq);
+> + struct sched_entity *curr =3D cfs_rq->curr;
+>=20
+> + u64 max_slice =3D 0ULL;
+> +
+> + if (curr && curr->on_rq)
+>=20
+> + max_slice =3D curr->slice;
+>=20
+> +
+> + if (root)
+> + max_slice =3D max(max_slice, root->max_slice);
+>=20
+> +
+> + return max_slice;
 > +}
 > +
-> +static inline void idxd_wq_set_init_max_sgl_size(struct idxd_device *idxd,
-> +						 struct idxd_wq *wq)
+> static inline bool __entity_less(struct rb_node *a, const struct rb_node =
+*b)
+> {
+> return entity_before(__node_2_se(a), __node_2_se(b));
+> @@ -820,6 +836,16 @@ static inline void __min_slice_update(struct sched_e=
+ntity *se, struct rb_node *n
+> }
+> }
+>=20
+> +static inline void __max_slice_update(struct sched_entity *se, struct rb=
+_node *node)
 > +{
-> +	if (idxd_sgl_supported(idxd))
-> +		wq->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
+> + if (node) {
+> + struct sched_entity *rse =3D __node_2_se(node);
+> +
+> + if (rse->max_slice > se->max_slice)
+>=20
+> + se->max_slice =3D rse->max_slice;
+>=20
+> + }
 > +}
 > +
->  static inline void idxd_wqcfg_set_max_batch_shift(int idxd_type, union wqcfg *wqcfg,
->  						  u32 max_batch_shift)
->  {
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index cc8203320d40..f37a7d7b537a 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -217,6 +217,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
->  		init_completion(&wq->wq_resurrect);
->  		wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
->  		idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-> +		idxd_wq_set_init_max_sgl_size(idxd, wq);
->  		wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
->  		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
->  		if (!wq->wqcfg) {
-> @@ -585,6 +586,10 @@ static void idxd_read_caps(struct idxd_device *idxd)
->  	idxd->hw.dsacap0.bits = ioread64(idxd->reg_base + IDXD_DSACAP0_OFFSET);
->  	idxd->hw.dsacap1.bits = ioread64(idxd->reg_base + IDXD_DSACAP1_OFFSET);
->  	idxd->hw.dsacap2.bits = ioread64(idxd->reg_base + IDXD_DSACAP2_OFFSET);
-> +	if (idxd_sgl_supported(idxd)) {
-> +		idxd->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-> +		dev_dbg(dev, "max sgl size: %u\n", idxd->max_sgl_size);
-> +	}
->  
->  	/* read iaa cap */
->  	if (idxd->data->type == IDXD_TYPE_IAX && idxd->hw.version >= DEVICE_VERSION_2)
-> diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-> index 45485ecd7bb6..0401cfc95f27 100644
-> --- a/drivers/dma/idxd/registers.h
-> +++ b/drivers/dma/idxd/registers.h
-> @@ -385,7 +385,8 @@ union wqcfg {
->  		/* bytes 12-15 */
->  		u32 max_xfer_shift:5;
->  		u32 max_batch_shift:4;
-> -		u32 rsvd4:23;
-> +		u32 max_sgl_shift:4;
-> +		u32 rsvd4:19;
->  
->  		/* bytes 16-19 */
->  		u16 occupancy_inth;
-> @@ -585,6 +586,15 @@ union evl_status_reg {
->  
->  #define IDXD_DSACAP0_OFFSET		0x180
->  union dsacap0_reg {
-> +	struct {
-> +		u64 max_sgl_shift:4;
-> +		u64 max_gr_block_shift:4;
-> +		u64 ops_inter_domain:7;
-> +		u64 rsvd1:17;
-> +		u64 sgl_formats:16;
-> +		u64 max_sg_process:8;
-> +		u64 rsvd2:8;
-> +	};
->  	u64 bits;
->  };
->  
+> /*
+> * se->min_vruntime =3D min(se->vruntime, {left,right}->min_vruntime)
+>=20
+> */
+> @@ -827,6 +853,7 @@ static inline bool min_vruntime_update(struct sched_e=
+ntity *se, bool exit)
+> {
+> u64 old_min_vruntime =3D se->min_vruntime;
+>=20
+> u64 old_min_slice =3D se->min_slice;
+>=20
+> + u64 old_max_slice =3D se->max_slice;
+>=20
+> struct rb_node *node =3D &se->run_node;
+>=20
+>=20
+> se->min_vruntime =3D se->vruntime;
+>=20
+> @@ -837,8 +864,13 @@ static inline bool min_vruntime_update(struct sched_=
+entity *se, bool exit)
+> __min_slice_update(se, node->rb_right);
+>=20
+> __min_slice_update(se, node->rb_left);
+>=20
+>=20
+> + se->max_slice =3D se->slice;
+>=20
+> + __max_slice_update(se, node->rb_right);
+>=20
+> + __max_slice_update(se, node->rb_left);
+>=20
+> +
+> return se->min_vruntime =3D=3D old_min_vruntime &&
+>=20
+> - se->min_slice =3D=3D old_min_slice;
+>=20
+> + se->min_slice =3D=3D old_min_slice &&
+>=20
+> + se->max_slice =3D=3D old_max_slice;
+>=20
+> }
+>=20
+> RB_DECLARE_CALLBACKS(static, min_vruntime_cb, struct sched_entity,
+> @@ -852,6 +884,7 @@ static void __enqueue_entity(struct cfs_rq *cfs_rq, s=
+truct sched_entity *se)
+> avg_vruntime_add(cfs_rq, se);
+> se->min_vruntime =3D se->vruntime;
+>=20
+> se->min_slice =3D se->slice;
+>=20
+> + se->max_slice =3D se->slice;
+>=20
+> rb_add_augmented_cached(&se->run_node, &cfs_rq->tasks_timeline,
+>=20
+> __entity_less, &min_vruntime_cb);
+> }
+
+otherwise
+
+Reviewed-by: Dhaval Giani (AMD) <dhaval@gianis.ca>
+
+> --
+> 2.43.0
+
 
