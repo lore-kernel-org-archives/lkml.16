@@ -1,166 +1,191 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0008519ABC3;
-	Fri, 13 Jun 2025 13:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B02C19C55E;
+	Fri, 13 Jun 2025 13:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822179; cv=none; b=PvYs3jBta4aStgU5lVD8IWKX1ugSGp68uVBfh0amtxNCw39jlqT/OeZeAaEZmA/ffCpJ4i3YGDL2lmfwgpqiRIU+2vqOIq4KR+puo+ek334ousTsBK0S1VEjumD4yxE1NOE6nJ/krt6gSQuxTlYciMw12G1eZgpQYhzk+docuUo=
+	t=1749822179; cv=none; b=fElW1HBuTELDmaS6J1t8WRenVwLPZxC0sbZ1aMcdpEfbrOHTTSt3JaGNHdJ59JMIGr6s0tXTqFvgbH5q43Ic295w+KF8nqTFmjWp5cUCIF0BAoG+6xR4A4V3wr/bhDYCyN8oaAmDqrAfnodtTvYb0jdYtt1NJyioG0ocbZoLNwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749822179; c=relaxed/simple;
-	bh=kdiPdMh5+sRzNgtYRKj/S0sAtUte5v+zpvWVg0DO3wo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=agahtGzEi54B5F9LWYM2obbjelhTKsP4y6E4jM7+vclUwcRulwghAyYSd33cOTL+zbF9Ze2kCxVJQTxyD+eQkrtOryTwMWREnv989Cp1FVqHtfp0Jjss8tFA+DtiBqzszymrN1jqpr83SAzuJWesPoOKTy0Kd2bpgMTROXC2qRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7v/a5nX; arc=none smtp.client-ip=209.85.221.42
+	bh=X/nB8WLx7zz4/NBfeOTzqK6Hg2MbKXiI163jTQh1DBs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WTgZM12CgU7TcwfFfthHAdnuYWVQ/5BG7F/4Sd03e4AbC07vxeN7J30v8eyk/57MGGNGBDbG+tQXuyymofUxNXlZHBVPDarbcbr97tYRFuxcavk8OtVkbpPrgwKBf1cRHDYavoi+oNEqZoT3XnDCnRYWskRkpGDiA/ACKt+8wIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9QQTxMR; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7v/a5nX"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so1321383f8f.1;
-        Fri, 13 Jun 2025 06:42:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9QQTxMR"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so1732435b3a.1;
+        Fri, 13 Jun 2025 06:42:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749822176; x=1750426976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
-        b=R7v/a5nXcZ1hPE6Teu5COQktZBWtmrg/3WLFDI76xAH+IXsPChYDLZn8tiuJRBYTz9
-         EKuCdOqmJ61pXl42KLC1KUai109P75Ilxhp54/U7+jOVVKsnfp4oUTLeaRD/N+xZAt5t
-         rKi4yi1V0WyIm45f3gUCPw//XcteD2qyJid6JdwigcwwFeGjNsiIyfyN3skSEVSWrQWO
-         o7Nn9UlUzTxosVxpSmcCtFAv39dpIblLW22vvw3Bh+f3pP3QdfmyLs/rimoR6FuoACMx
-         VAupx4hNzyhcAfOaN1vflNlD35cN6RRsCpIsTh+vexXkb/XhlhnSO8KvQkrU5OzMfJ2F
-         864g==
+        d=gmail.com; s=20230601; t=1749822178; x=1750426978; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d6Y1ZQon7Ei1dxPdOS13fefVnxKxvM6C2HzI9CWHYO4=;
+        b=A9QQTxMRaiTs0BF3IF17wLDIN9iL3NxaF9cD7K9uwjNI+/+AZpH9tsLYdvR2ObLEBN
+         4hdwBEIR7YDAF2pi+m7Awq7x3E1GesI+zFfzuoU3vISzKkjJ8byKHSYl3jQqXXhdQc/S
+         bI3h5iZZutUhNGt2TQ1uau4huOiMaJVMt2SirXitQGPSrqKDRX+U/cJ9KJ/HsUa2BM6b
+         2uZbjgVNsiQHYhvvDuLWQKzXZFBBrRFi79oWkxfnIg0m3xUODrAyNnIMz/7JWkx+QBUw
+         XJFAT+0GJR6Z+VSVNMoBMhZklb4rc4A4qH9mQKUhlgvyqa3l7xgpdxVSe/v3cJzTfbPD
+         +zNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749822176; x=1750426976;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
-        b=jgJg5xApEVd5GObHb0rcdjuNhkgut3i9e1Ej++JJuX/P0Ag8f48y0WAaoyMGWVqWkY
-         C6VEz6fvzv2fQ+YrLn0JaVBFjnGICc2Xx/E8wKKVGea2wUmFnXD4zSLEEs5IfJtk3chV
-         9VGAm//GHQ+IMHo6owS7/+cC0IVTDISXTZi8oil9BvaWc+wU907mEi5ThIUtTxlKLdPH
-         NH6MKomyzYMmUdMz3XszwC3bSFTnZQj1DVBIckn+QPQvdmbAXVzQiCNZKYYCcL9zsfsd
-         OP9yh6CDIc0j3Wkj611MlrJfC8gghsQqk8zZG7iZ+3L7M1Qwi/1Phda0LJHJf4xjbYZW
-         dCqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0gFAbaeid7/3HggGnefgYoBGxR0eKF4+uZNJSfMTFEq6+zGoUBtsMmg2ZKBoGirbZ7JYIhvnNuK6B@vger.kernel.org, AJvYcCVpRdUF+JZa4zIAGjUH9wVugoQWQY4Bwi9GeIMHxmK82W6cT6c8Y1KmJ6HUFuMbMRr5AsKoB+YMvvcQqjp9@vger.kernel.org, AJvYcCXa5awEUU15FKTB+w9AFPT33AFQcsW3VH9EZ0HyaNKHvRkTZR+1Y0L+ugE+Zc0c3EyjmLSwWFcbmRG1NzoB6l8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxlc7uWb4F+kIHEseMR4wm1uJ0lYGHOw7lnVsF3P8cCOZGnYKie
-	20aOHtbb2F0lheUYhv2nlw/XNQWYFnoQkTx8vTf3lmkxF00OEtwi+x6S
-X-Gm-Gg: ASbGnct+brE7dCcVj5rYzSqwu4mTmfjeB6bEtLyxy1VOj+9iL7GOXRD/Z6f4u9QHMGt
-	LoxTYqdUxYqZ78/nN4sQa1YIK64PB+OYDCm55fEnuahwNQHEvLh7A9IhWnGEcvs0gvBrZtQzauG
-	5YdWbE8Pqs2JxZPixIn3Kg7LCL2xySfcgkHBpBdbg9eANJEBHg04K9slDsCY0rfi7DddcjqaE5a
-	3uBmlZMtnO7QYbX+C/NxgRFqP3mWP4Ehqy41gbwIJ8N/YCYdU+qu0kc1kZq86AdoDXbt/U6mwF8
-	tLtwtHThyXteKd+zInqBJPo9Me8/tllOLlSmxZ1J7///oN77kzOX6bJWtkPQjN6F0nk0/dVS88l
-	y8nLPRDSueRcs/tQhm6JMp1ASpa+zBLeqO+B+Gg8=
-X-Google-Smtp-Source: AGHT+IErpZfMNcD4uCLvcP/jWyCe4iFHGIQImMSC9pURAYXJyAQlvgrclcjpnEZwyzObV9itosVjVQ==
-X-Received: by 2002:a5d:584c:0:b0:3a4:e5ea:1ac0 with SMTP id ffacd0b85a97d-3a5686e3f89mr3290245f8f.5.1749822175949;
-        Fri, 13 Jun 2025 06:42:55 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4531febf905sm93542555e9.0.2025.06.13.06.42.55
+        d=1e100.net; s=20230601; t=1749822178; x=1750426978;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d6Y1ZQon7Ei1dxPdOS13fefVnxKxvM6C2HzI9CWHYO4=;
+        b=q4FLd+oSY48+BFOYN+tD2BrETcOYKrLhFwpzUuL91TNXo6rA7i4+5ipA7uFYcTWHmk
+         EerR42Da7V4UwJVLRFP+z26nQsaFrkUgrKWY/uhzjCA3MJWX6uOpcGuKruLjqYjGK+7M
+         tebQrdWK3RnDgMXeoqE9Tra/Ld0oZpL3tW1KN4vrnCqVYjcJ4Eyj/92D6QLlTMlpX0ux
+         2jXG8xQK4CSh27eDvfMXqb/weao/4sdFAMOPDZqVHm9+Z07QwPwmgT9aWR7bVqtSQRS/
+         dr3aIIKa8Blr4KjF2naTu53zYV+3dThb7/YFkkoqTcqz3hi+OT0hD1SBbbP4LmdA4ehP
+         vA9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUyaXZz3U0UH3kNZdaT8VqLRmlCk7sUJ+av8DD94oEgHYhHkEc4Es/sqOCkmNoUp0HlKIKrargOMs4f9/HV@vger.kernel.org, AJvYcCX2Q40ZLBwG4cUC7UfIC26r4XCoxyft0n5PzuJvqXL3zW02Wui5nzupgG+1YnAJMNO325IME2YnSY+z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr+/8hgdaInonc82HbMyfaKJZTGHPy999QSoPspmheBfOIj2z9
+	jti8YVo0jfLMRVgenhkiu6HCXnwbf0XX5ayUcj6jFCEOq+0B/adU/UNZ
+X-Gm-Gg: ASbGncv1FkzG6LNqB4HyL/F5dIum0axanMQfprV/KYUg3sQkF5TS2/o81hglA8ujnh5
+	MJns4AImmW6mGZIb89DMOjIIg/um6c/DLxAJ7Nk3WDQvkXtXJQDu7ccRg9eUXeBrlExZqJlpz3V
+	ZquFMpuJTf4YvsYc/PACANK+TRpyGoWL/pDecjbTV+qX1sqg07JzNCfTe74UXSnbVgnnT9Y77/c
+	My6rg+q7i8uWGZm52SWpvTMFs/t5DFx+wpVw3vq1d48ybi2kA0XJXbiFN6H0Kz4+TI1sFs2ZyeC
+	qRqd/a8LISAPblQYYVrE3sOmccCZSyszsoEnWaWJInQ+2kMvOXRKnD7pUKOwCwnqO0Zcey+39nK
+	QUkTHbIYqkYhFPZc4Z/VR
+X-Google-Smtp-Source: AGHT+IG2MCMgeN0/FLKpk9+/1bFsnlSCRDdiLGKQPQyMkmIj3t0cVzXbZ9nOGNKrFJ+kZbes+D61BA==
+X-Received: by 2002:a05:6a00:3c89:b0:748:6a12:1b47 with SMTP id d2e1a72fcca58-74898845eb2mr879795b3a.10.1749822177608;
+        Fri, 13 Jun 2025 06:42:57 -0700 (PDT)
+Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b2d8asm1605826b3a.132.2025.06.13.06.42.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:42:55 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v6 2/6] rust: driver: Consolidate `Adapter::of_id_info` methods using `#[cfg]`
-Date: Fri, 13 Jun 2025 14:40:53 +0100
-Message-ID: <20250613134053.1230903-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
-References: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
+        Fri, 13 Jun 2025 06:42:57 -0700 (PDT)
+From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
+Date: Fri, 13 Jun 2025 10:42:39 -0300
+Subject: [PATCH v4 2/3] hwmon: (amc6821) Move reading fan data from OF to a
+ function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250613-b4-amc6821-cooling-device-support-v4-2-a8fc063c55de@toradex.com>
+References: <20250613-b4-amc6821-cooling-device-support-v4-0-a8fc063c55de@toradex.com>
+In-Reply-To: <20250613-b4-amc6821-cooling-device-support-v4-0-a8fc063c55de@toradex.com>
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Farouk Bouabid <farouk.bouabid@cherry.de>, 
+ Quentin Schulz <quentin.schulz@cherry.de>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
+X-Mailer: b4 0.14.2
 
-Refactor the `of_id_info` methods in the `Adapter` trait to reduce
-duplication. Previously, the method had two versions selected
-via `#[cfg(...)]` and `#[cfg(not(...))]`. This change merges them into a
-single method by using `#[cfg]` blocks within the method body.
+From: João Paulo Gonçalves <joao.goncalves@toradex.com>
 
-Suggested-by: Benno Lossin <lossin@kernel.org>
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+Move fan property reading from OF to a separate function. This keeps OF
+data handling separate from the code logic and makes it easier to add
+features like cooling device support that use the same fan node.
+
+Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
 ---
- rust/kernel/driver.rs | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+v4: Unchanged
+v3: https://lore.kernel.org/lkml/20250612-b4-amc6821-cooling-device-support-v3-0-360681a7652c@toradex.com/
+- Change call to of_node_put() on fan node to be scope based
+v2: https://lore.kernel.org/lkml/20250603-b4-amc6821-cooling-device-support-v2-0-74943c889a2d@toradex.com/
+- Remove devm_action on release and call of_node_put() manually
+- Change of_pwm_polarity to store resulting pwm polarity on driver private data
+v1: https://lore.kernel.org/lkml/20250530-b4-v1-amc6821-cooling-device-support-b4-v1-0-7bb98496c969@toradex.com/
+---
+ drivers/hwmon/amc6821.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index ec9166cedfa7..cb62b75a0c0e 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -147,30 +147,32 @@ pub trait Adapter {
-     /// Returns the driver's private data from the matching entry in the [`of::IdTable`], if any.
-     ///
-     /// If this returns `None`, it means there is no match with an entry in the [`of::IdTable`].
--    #[cfg(CONFIG_OF)]
-     fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        let table = Self::of_id_table()?;
-+        #[cfg(not(CONFIG_OF))]
-+        {
-+            let _ = dev;
-+            return None;
-+        }
+diff --git a/drivers/hwmon/amc6821.c b/drivers/hwmon/amc6821.c
+index 13a789cc85d24da282430eb2d4edf0003617fe6b..612895db7d8d4096372310c9fa71c103d642dd07 100644
+--- a/drivers/hwmon/amc6821.c
++++ b/drivers/hwmon/amc6821.c
+@@ -126,6 +126,7 @@ module_param(init, int, 0444);
+ struct amc6821_data {
+ 	struct regmap *regmap;
+ 	struct mutex update_lock;
++	enum pwm_polarity pwm_polarity;
+ };
  
--        // SAFETY:
--        // - `table` has static lifetime, hence it's valid for read,
--        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
--        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
-+        #[cfg(CONFIG_OF)]
-+        {
-+            let table = Self::of_id_table()?;
+ /*
+@@ -848,11 +849,11 @@ static int amc6821_detect(struct i2c_client *client, struct i2c_board_info *info
+ 	return 0;
+ }
  
--        if raw_id.is_null() {
--            None
--        } else {
--            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
--            // does not add additional invariants, so it's safe to transmute.
--            let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
-+            // SAFETY:
-+            // - `table` has static lifetime, hence it's valid for read,
-+            // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
-+            let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
+-static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client)
++static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client,
++					      struct device_node *fan_np)
+ {
+ 	enum pwm_polarity polarity = PWM_POLARITY_NORMAL;
+ 	struct of_phandle_args args;
+-	struct device_node *fan_np;
  
--            Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
--        }
--    }
-+            if raw_id.is_null() {
-+                None
-+            } else {
-+                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-+                // does not add additional invariants, so it's safe to transmute.
-+                let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
+ 	/*
+ 	 * For backward compatibility, the pwminv module parameter takes
+@@ -863,10 +864,6 @@ static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client)
+ 	if (pwminv > 0)
+ 		return PWM_POLARITY_INVERSED;
  
--    #[cfg(not(CONFIG_OF))]
--    #[allow(missing_docs)]
--    fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        None
-+                Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-+            }
-+        }
-     }
+-	fan_np = of_get_child_by_name(client->dev.of_node, "fan");
+-	if (!fan_np)
+-		return PWM_POLARITY_NORMAL;
+-
+ 	if (of_parse_phandle_with_args(fan_np, "pwms", "#pwm-cells", 0, &args))
+ 		goto out;
+ 	of_node_put(args.np);
+@@ -877,10 +874,16 @@ static enum pwm_polarity amc6821_pwm_polarity(struct i2c_client *client)
+ 	if (args.args[1] & PWM_POLARITY_INVERTED)
+ 		polarity = PWM_POLARITY_INVERSED;
+ out:
+-	of_node_put(fan_np);
+ 	return polarity;
+ }
  
-     /// Returns the driver's private data from the matching entry of any of the ID tables, if any.
++static void amc6821_of_fan_read_data(struct i2c_client *client,
++				     struct amc6821_data *data,
++				     struct device_node *fan_np)
++{
++	data->pwm_polarity = amc6821_pwm_polarity(client, fan_np);
++}
++
+ static int amc6821_init_client(struct i2c_client *client, struct amc6821_data *data)
+ {
+ 	struct regmap *regmap = data->regmap;
+@@ -902,7 +905,7 @@ static int amc6821_init_client(struct i2c_client *client, struct amc6821_data *d
+ 			return err;
+ 
+ 		regval = AMC6821_CONF1_START;
+-		if (amc6821_pwm_polarity(client) == PWM_POLARITY_INVERSED)
++		if (data->pwm_polarity == PWM_POLARITY_INVERSED)
+ 			regval |= AMC6821_CONF1_PWMINV;
+ 
+ 		err = regmap_update_bits(regmap, AMC6821_REG_CONF1,
+@@ -944,6 +947,7 @@ static int amc6821_probe(struct i2c_client *client)
+ 	struct amc6821_data *data;
+ 	struct device *hwmon_dev;
+ 	struct regmap *regmap;
++	struct device_node *fan_np __free(device_node) = NULL;
+ 	int err;
+ 
+ 	data = devm_kzalloc(dev, sizeof(struct amc6821_data), GFP_KERNEL);
+@@ -956,6 +960,10 @@ static int amc6821_probe(struct i2c_client *client)
+ 				     "Failed to initialize regmap\n");
+ 	data->regmap = regmap;
+ 
++	fan_np = of_get_child_by_name(dev->of_node, "fan");
++	if (fan_np)
++		amc6821_of_fan_read_data(client, data, fan_np);
++
+ 	err = amc6821_init_client(client, data);
+ 	if (err)
+ 		return err;
+
 -- 
 2.43.0
 
