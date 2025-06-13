@@ -1,116 +1,79 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478561420DD;
-	Fri, 13 Jun 2025 01:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7851420DD;
+	Fri, 13 Jun 2025 01:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749777526; cv=none; b=oe7gL8JyEriNEUzM3cGzL9ajkGYJY29vMbY02iGqkTueIS3uzn3dSLaRuW/le+moSvEhqn9do/xLf/v2v3qGqfMIGE+dcHcf3E+TSk6tlHFAaTw/9ZK8c5a+zw51HZAt4xGat8SM3WzuHrMpS+fMJ83+ARPwRnCHsmXYyF+QH5M=
+	t=1749777599; cv=none; b=QMdGBB0FHk3QH5H15yaB2YzTtylkAuHniF7gkQQy/1DyW7bvcHoF1tdWOAPOEA29wM4qzPnZCHjsC/BNwd0mYWWkASod2Jr9HWLbLT6fZt89Z246NeiukOE8Fo7ManyzNBPwiYePVxCbuagWf83WzS5IekKR9EuV7NfFUd5yeDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749777526; c=relaxed/simple;
-	bh=mzLaYBl+Y/d7BQANb7I+GDNo+dl/a7Akffi+nhcQ84s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gIofHeg0p+JCWPZ9ykS4EnbVBTXkFGUmp+D6Dep1vfPCbkIiUId3iZUXH24XIR6bhvuIPctuEXe2vE6YyeSgtK7r8vUdZi2UgwKokpelHDtjtb3Q+Wpz+ewr0HdpbadxrtadNQzdsYhraHgQsPnJwmTL8vpb2k0iLvH0OZpWpb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=hGHoMLUZ; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1749777599; c=relaxed/simple;
+	bh=r4mE97ua+bkOvUmTWRgQCtRNdee4YOd1InjvmIXuWH8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lG4FuI4nRB+WBEIz6e8URLQoChELrPqNkAlpJXg8JKtUiJgMjl61a83fSi0jhszYhoWAuAb0LKgIPgEPPJx9ITT94kWd2SMT9OZoqfTeVZIwFJuvWqyTgB6xPdmr0gzTncaFbh4KebW2YJugwS7R3DuPgf1R8nv2bq9MU8YvOu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b35X8M09; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="hGHoMLUZ"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id DABF822394;
-	Fri, 13 Jun 2025 01:12:46 +0000 (UTC)
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id AEA6726260;
-	Fri, 13 Jun 2025 01:12:37 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay3.mymailcheap.com (Postfix) with ESMTPS id 021413E8B6;
-	Fri, 13 Jun 2025 01:12:30 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 9E57C40078;
-	Fri, 13 Jun 2025 01:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1749777149; bh=mzLaYBl+Y/d7BQANb7I+GDNo+dl/a7Akffi+nhcQ84s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hGHoMLUZOLZCVgdW8cq0dvyersBeAz3xkHIZ2Omj7r5z+HuEW/pPNfTDO8K0Wrsxy
-	 PaFq534iNvtvMVkds2hnrsbyeuvgvQ1VD72sjrEnooOrYdKWIsbh3LCCSoX7Uq4NJ5
-	 mQuhUKNKnd4AYL5C3TFHvzaRDPGNyi6nx0e1X6nE=
-Received: from [19.191.1.9] (unknown [223.76.243.206])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id ED8D5411D6;
-	Fri, 13 Jun 2025 01:12:20 +0000 (UTC)
-Message-ID: <60cb6d5e-45f1-45a1-b142-22e3dfd203f9@aosc.io>
-Date: Fri, 13 Jun 2025 09:12:12 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b35X8M09"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA456C4CEEA;
+	Fri, 13 Jun 2025 01:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749777599;
+	bh=r4mE97ua+bkOvUmTWRgQCtRNdee4YOd1InjvmIXuWH8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=b35X8M09pnfbvYnyfomGmGYFUvR+aONRM1j6E+yph+2Vfzmx59MI/sQ+LI1wLo2je
+	 6goO+zuuLO5wA+7LFWOrd6W5Cv5NRoxaDJF3pquW4GnU8fMhqT/mx1XWjh/0TH26lD
+	 Ek0txaKJtybY3cPaqI4eKJQ3SNW7ymmM+eaV4CWC7aNwiany00JDyGmOst4AQ0AXkZ
+	 wSWsrLPanDLDqViCgQAPKTmatbzAogjzV+j4gWjxKiEgIaNDqlF0oIT5RJ97Ftrvc8
+	 aOjdLLwMrNNH9o0OwtEUP5C8mr+SbAyEzL+J8nQDLfaSDVy6xZp/AVf+4XiXjKNUAl
+	 xRdUxMwZxTIzw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EACBA39EFFCF;
+	Fri, 13 Jun 2025 01:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] drm/xe: enable driver usage on non-4KiB kernels
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Francois Dugast
- <francois.dugast@intel.com>,
- =?UTF-8?Q?Zbigniew_Kempczy=C5=84ski?= <zbigniew.kempczynski@intel.com>,
- =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
- Mauro Carvalho Chehab <mauro.chehab@linux.intel.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Zhanjun Dong <zhanjun.dong@intel.com>, Matt Roper
- <matthew.d.roper@intel.com>, Alan Previn
- <alan.previn.teres.alexis@intel.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Mateusz Naklicki <mateusz.naklicki@intel.com>,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Kexy Biscuit <kexybiscuit@aosc.io>, Shang Yatsen <429839446@qq.com>,
- Wenbin Fang <fangwenbin@vip.qq.com>, Haien Liang <27873200@qq.com>,
- Jianfeng Liu <liujianfeng1994@gmail.com>, Shirong Liu <lsr1024@qq.com>,
- Haofeng Wu <s2600cw2@126.com>
-References: <20250604-upstream-xe-non-4k-v2-v2-0-ce7905da7b08@aosc.io>
- <yyzxfqydczvfxddfsa4ebi7kyj5ezl2v4wbl5fopkdz6qwvjrg@fnhpcvfsp2dm>
-Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <yyzxfqydczvfxddfsa4ebi7kyj5ezl2v4wbl5fopkdz6qwvjrg@fnhpcvfsp2dm>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Queue-Id: 9E57C40078
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[ce7905da7b08.aosc.io:server fail];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[linux.intel.com,intel.com,gmail.com,ffwll.ch,kernel.org,suse.de,lists.freedesktop.org,vger.kernel.org,aosc.io,qq.com,vip.qq.com,126.com];
-	FREEMAIL_ENVRCPT(0.00)[126.com,gmail.com,qq.com,vip.qq.com];
-	TO_DN_SOME(0.00)[]
+Subject: Re: [PATCH net] ionic: Prevent driver/fw getting out of sync on
+ devcmd(s)
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174977762875.176894.10298712830260716394.git-patchwork-notify@kernel.org>
+Date: Fri, 13 Jun 2025 01:20:28 +0000
+References: <20250609212827.53842-1-shannon.nelson@amd.com>
+In-Reply-To: <20250609212827.53842-1-shannon.nelson@amd.com>
+To: Shannon Nelson <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, brett.creeley@amd.com
 
-Hi Lucas
+Hello:
 
-在 2025/6/13 08:13, Lucas De Marchi 写道:
-> For some reason this patch series didn't make it to any mailing
-> list... it only shows the b4-sent and stable:
-> https://lore.kernel.org/intel-xe/20250604-upstream-xe-non-4k-v2-v2-0- 
-> ce7905da7b08@aosc.io/
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 9 Jun 2025 14:28:27 -0700 you wrote:
+> From: Brett Creeley <brett.creeley@amd.com>
 > 
-> Could you resend this series?
+> Some stress/negative firmware testing around devcmd(s) returning
+> EAGAIN found that the done bit could get out of sync in the
+> firmware when it wasn't cleared in a retry case.
+> 
+> While here, change the type of the local done variable to a bool
+> to match the return type from ionic_dev_cmd_done().
+> 
+> [...]
 
-That's strange... I have just resent the series.
+Here is the summary with links:
+  - [net] ionic: Prevent driver/fw getting out of sync on devcmd(s)
+    https://git.kernel.org/netdev/net/c/5466491c9e33
 
-Best Regards,
-Mingcong Bai
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
