@@ -1,242 +1,223 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2054.outbound.protection.outlook.com [40.107.237.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D9024C68D
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 05:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749794119; cv=none; b=W53tsRA3kfffGT4Fyyszc3Li5ZUbVQ6kv2WJgCcoPAlmrwswPCQNetoQw1A+PyUPr1v0WFrfrpaGgBphoOhMKgfRsjm+v6oMtwcQP4ENpSgoL1x6PflmQuDniGKx/P9n1KzmJVnyGeKhpdx2q1SkOgGrF6ibf3xy6IDKwqkKxMo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749794119; c=relaxed/simple;
-	bh=+cOmmUM74/tpV+I2t2dxh2EFwz5r9R46rJVnaQ++8g0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UzpsohOQcwyuHYNTQTe5DLbns8DMilVT7wMA0yL8LvEv1NEYLyGN0PxARJB7NAonuD3mrZnUT5B3CHz+quDDU66MJPOXptaNQK8SE9NCcw6VGFE0MvOoK0wvdqgKGYTFdW0qvm2cx1SizOPebpapf7KLeAneyAbgsQZ6lV/v6eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTbAHZCB; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27238255F52;
+	Fri, 13 Jun 2025 05:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749794124; cv=fail; b=eVtg80MUb+5NvOCh+ynhryUe2MjzLzwMx4mtWGndrXC4/Se/Xw0fghCOqnVEKaL4o3CSrdbw2jfOUtwVVFUSyQi9IbkpL5aHB5CYid53aw2xq9KKuTl6AwBfWt6F9RkzsK1ethwDoGMgjKnH4snHbTHOLDR8grvfDEV+AqkRrbg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749794124; c=relaxed/simple;
+	bh=lD9OssPeLDcFaVmnsNlx17jnINKQrkAssSZATSKkFLo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MMb638q/Xj2iDB2TcAirACdND4hnDI8cyoXYx1oGLu0WNF+lV8O6jutA6XGXCbDSOciRf/O+OuSOyHt3WbrP4rarVxgRntbKkaMWW/c7VWuT4RyWyNziIeQbF2ZY6vWxDKpxXNZQvD3CVmSCc0B/der+SQdWvSHr/KifgnnRNjM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uiWB5SVE; arc=fail smtp.client-ip=40.107.237.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTbAHZCB"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747d59045a0so1373899b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749794117; x=1750398917; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CJsbsFtvJh3mi6WqBDy/sZhRMjZIt1uqQYKG02JO95o=;
-        b=MTbAHZCBDTMi/ZiDL7e93JhaGz//QtPVZNjGtJFrNpZaK/QZKw3Ggv5ZduMOQ6dE2O
-         eE0ZtUBl5y5Fh2vNGD3rk8LkRdgSn2LdHYp3MGEHrWNvOAj5BCmbXgTf+PdW1GbdWbz4
-         OwHADPmKGt+svodbzkv72Pgt/Yrrx3sKFD+xI2h/389D9SN/NHHr/d4/WFL8gsDGji0X
-         JKWlpB4RVA5pt3iKTqbzpMeB9XeKdb+IB+xg+hmbzw4++4qmvxvSMNIxKZyhM0EEe07T
-         fNppyy6rzTQoFJ/9BjfQNjr92Q4OToFmOGKnMXhWFc0bYc1XyPPV+F6VIyaIAqdSYCNL
-         O7Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749794117; x=1750398917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CJsbsFtvJh3mi6WqBDy/sZhRMjZIt1uqQYKG02JO95o=;
-        b=w4juRXAgeM+K9dCNxSWqf9FGo29jzwWu52n2G4ocV901Fq8QeU2uB1WWzbeIibPIT9
-         v8w0zxfjPQ7FgL4EHav0pfM6juiI0qsjy5h0jie4YzgtpSkm4p6OrlzktBds5TSyuc8r
-         hrhA72u0CBNykVrzRCgvsIDBDnICJNABKmevRjLCng5ZtBNSTFzM/IjbTZm3HnoDYbu4
-         1MtvTFqdaGTCwBSnxwjvq7VxgEL0rBVPPVJi9uQBvkM2r42mE4IkjxmhMLS0/y8+vrxs
-         ORKlqIyEZECFIa+EeP1m5DOinwMio6l53K/VQT7qKVBu7pcessoBrfdbdvvByJn+Id2F
-         VI2g==
-X-Forwarded-Encrypted: i=1; AJvYcCX+Gmrf48ZGh4qeR4sNM9stLmaUq6r0UBglaVhpKrGwij2mY6XLLYI1ZOYp+dpEtRlXQwLwvGYs20gnTL8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuigveDx0sfmU+tdsTU77DfC8s4rPzS7lHV3o7DLPgSnqQ3s1H
-	2Ai+/50S3ugZTl++zHBxL9ebqV3Zl9lrEDFnNIQAKV7CerGa6BbFS8B/
-X-Gm-Gg: ASbGncsr8WVHnhRHuuLYrA8+LdwuSxPu7PFl7zcuOvYRDbIX1X3ahu1DDxDcJSY33hJ
-	VNsoZ7sxwc5oPsU/tPVkIydl39OExp6w3TreyiXz2yfGQ/qp6oUvQIh4yM7d5C/0aFn3s5Q5tE9
-	Zqo9t67C97t07lM3kpbokjA4x9R7IAjR1Mq2fuoTqzYTnh8fW9NARUlzt9iIx2TxluVl5gEVyLd
-	JDKLYa8Mz76A2JAAzziv7GMKv8lL33x8rYtTibcYii93YRdXeWs8ixVxqQhMy6j8HKuLxqIt1C5
-	RjH4AmH3J+pNBMS7Y5Pq6DeP8faowaSpPMHnpP0xTok4hEtbvUilfoq+1SJEaEM3XIuxVjsQu3Z
-	oRGrZET8YPklmM6uZ11Nm2mri
-X-Google-Smtp-Source: AGHT+IFjqHaZvYT40439kqyyUl4MX/IbwIFjcF+jlPyoakwJlY3Ti84Z7N4Ww7tyqJbqNmhIaeDdjQ==
-X-Received: by 2002:a05:6a00:2386:b0:725:96f2:9e63 with SMTP id d2e1a72fcca58-7488f73fb81mr3066784b3a.24.1749794116817;
-        Thu, 12 Jun 2025 22:55:16 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d29a2sm777511b3a.175.2025.06.12.22.55.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 22:55:16 -0700 (PDT)
-Date: Fri, 13 Jun 2025 13:55:13 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: yury.norov@gmail.com, linux@rasmusvillemoes.dk, jstultz@google.com,
-	tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org,
-	eleanor15x@gmail.com, jserv@ccns.ncku.edu.tw,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [RFC PATCH 1/2] cpumask: Introduce cpumask_first_but()
-Message-ID: <aEu9QQ0n8PEsLvRq@visitorckw-System-Product-Name>
-References: <20250613033447.3531709-1-richard120310@gmail.com>
- <20250613033447.3531709-2-richard120310@gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uiWB5SVE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=njPXilzUHWsfvzrIcDjBkmfXWw5koNLxre8tLhDKkFLd2KCdnxigQ66qzlOLU+wbdqyWNR3BckR8TvfRolCa+tXiAx0AWXFt4DRPYf1XuNy+9EqoTuTctOVuZdFebzb/Jx2RaS4byq95Z4GXPPFK5E1ho8u4q+hmQlsNm9RrxG4Xoahtuc7Vt/8nHPHqrJqWLtcLENfgxd2qIB7h6uT1dGQ57o4bbePZkLZKt9ClEAVXEe1NxWVKK/3TQyKdV754VNV/lmIJMPgMdZemv1Ui7AE1eBKG2GYemcfkYexB+rHUZ7kVKSiiW7wQd0hDUGb8bC7XLkcjwGfdxOqoUpsXgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j1JZqpVBtQZ8TcmJshh6ANh+ioAyPZNpxL5iFw4wUGc=;
+ b=oNQkgWIHRxGqalr3FSSjQ1Rj+RmrfVehs01Xdr0zGpbFQx5j2oYQJAT3KJv856Dlh1DOhUa1pVrK8yFdVuVUnCOIwSrSqzEPTpQVrJqK1D14deyea/vkQ5ALZptFro1/76HcLBsiam1liq3BhtDuOw8BfoqfaJnzLFQ8/SebtF83TM0Ybyn6U68CaJsCajwCwJ8KgFJTiM8mXsW295ydd0co6Q+1Lm3l0qVYZ43LR+euEaFcqPFd8aJXZV+tjG64stBcuzf2Pp85M8dFfvtLxe7NKhjmXZ8NRWYGgr3jZG21ULoaNqiYgf2OOlmMCce4uQjmMlFViCqjWVBn/SuO5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linutronix.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j1JZqpVBtQZ8TcmJshh6ANh+ioAyPZNpxL5iFw4wUGc=;
+ b=uiWB5SVE3DvCsNsP3oPVVq1YKURvVcAK64ISCtdJWDEbcjpURruZBSOPhqO59/GynBxqMV2u0RZLe1UUFS+60Gc/VIUwbCcU4Jk7RajZssQeCXaR28rVCYJ8JUSKOUnw12LJycAp1XAy036tg6KSoWQeVYDJNITX5GNVASZoOaWEUltOH1eMMa4fw09ilmJFszlDU7zVBLf8+sE/OGJ/Ez7/AkXgc4iiqWjEL8OdPAkLkgD8oixOvl6UbFiqQNSm5K26ckQBBlOOH7tasJI+72h2dOJJBhACsu6zR8Vv4frZnhqCkW1tVcvbJc3P4N8PF4QLcfVQryKtKTYxXI7nVw==
+Received: from SJ2PR07CA0012.namprd07.prod.outlook.com (2603:10b6:a03:505::13)
+ by MW3PR12MB4425.namprd12.prod.outlook.com (2603:10b6:303:5e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.20; Fri, 13 Jun
+ 2025 05:55:16 +0000
+Received: from SJ1PEPF0000231E.namprd03.prod.outlook.com
+ (2603:10b6:a03:505:cafe::98) by SJ2PR07CA0012.outlook.office365.com
+ (2603:10b6:a03:505::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.25 via Frontend Transport; Fri,
+ 13 Jun 2025 05:55:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SJ1PEPF0000231E.mail.protection.outlook.com (10.167.242.230) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 05:55:15 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 12 Jun
+ 2025 22:55:09 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 12 Jun 2025 22:55:08 -0700
+Received: from nvidia.com (10.127.8.9) by mail.nvidia.com (10.126.190.182)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 12 Jun 2025 22:55:05 -0700
+Date: Thu, 12 Jun 2025 22:55:03 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, "Willy
+ Tarreau" <w@1wt.eu>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
+	<linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Andy Lutomirski
+	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown
+	<broonie@kernel.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
+ into test metadata
+Message-ID: <aEu9N7f0mfQM5w49@nvidia.com>
+References: <20250612135802.GU543171@nvidia.com>
+ <20250612162151-1fc97a6c-a1c9-4656-997e-fd02f5f9418b@linutronix.de>
+ <20250612145801.GV543171@nvidia.com>
+ <20250612171437-450fb7d6-c73a-47e3-9e1c-5c009cba7fe1@linutronix.de>
+ <20250612154242.GW543171@nvidia.com>
+ <aEsUGP8xPTDjG0ob@nvidia.com>
+ <aEsiJFku+wR9KxE8@nvidia.com>
+ <20250612185613.GX543171@nvidia.com>
+ <aEskchlFcNL3T6sO@nvidia.com>
+ <20250612233138.GY543171@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250613033447.3531709-2-richard120310@gmail.com>
+In-Reply-To: <20250612233138.GY543171@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF0000231E:EE_|MW3PR12MB4425:EE_
+X-MS-Office365-Filtering-Correlation-Id: 959c6dbb-848f-43b4-f1f7-08ddaa3edebb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|7416014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cbY+NIlGTkcu0ibctWYbZnjcuox700vl+ptVs1JrIA6Ygzcc7cT1ZfWfpWU8?=
+ =?us-ascii?Q?FiRu6/7sZz8FcEvzlQKdxblG5vKoLPC/ynuzUTrgwqVxHSuvIbjwhm3GWAyu?=
+ =?us-ascii?Q?infFDVLwfl4PB6wI72w1kMJKikY7gcjjOwSquD1eojcSf0oYgMZMoC6m59kL?=
+ =?us-ascii?Q?07RnF0jVrOxSJ1A4XkWr8X/FFi9Tb+Yo4aGlxTagBFtdffUKL5HJqN2dsBvQ?=
+ =?us-ascii?Q?CUkCRQ7bwyP+Sjz63I9CXqUmySwAHab/qn1fBWRE9iUSaXETLbwrbO+z3364?=
+ =?us-ascii?Q?fES1N7ettkSEBM6cN5eW8mhhHf4JK72KNODZo1aLSsByS56GMc4zMNCs/Cow?=
+ =?us-ascii?Q?1xQaL9AkQ+KFxSWVwtZ1Azr8OIrN1ZmuUL82GcqTkT6FBhKN9Sy+z5E7uPMO?=
+ =?us-ascii?Q?MlXwKoJzKxcllKJIyFlLsxXIwPaAMnZdaS+B8LLo4qQ690UIRin7c5N5rSIz?=
+ =?us-ascii?Q?3fmzdmlGfECU0rPc6v1yt8ktvbpkTbk27jpZORhclQIFJza8Nz52awVBN+zc?=
+ =?us-ascii?Q?fpK834d65Si0ZPUZ0TOx8b5NOK1O7S8NwSCDtfzb6w/IKGpnjSDowkt73YEa?=
+ =?us-ascii?Q?7oNxpCdHMmeO9iZxhICh0kdsk0c4gX8zLkx/6uRcnIgUJTBdc+LYBtJ0pELr?=
+ =?us-ascii?Q?V0mNZ8dbg184c/lnR4pngUuRIa1bdM+YwbI22BX0nrKNHF2Tq/adOcU8XERC?=
+ =?us-ascii?Q?9XnmL8LDL/18tJIKCy0SNi5XnNPBLBdK71lHRRqd67Fcb0P7IBbQCxTD4aJA?=
+ =?us-ascii?Q?ge9E04sG+wRcwfQWNXhUPhbfP0VD1cgBQ0t7HjBY7fz8e/mvIYzHvkPAB7Qv?=
+ =?us-ascii?Q?yJhDRs62ofwjBi23gu/bmr9JwK/BL4W68106/l7Vtohsrb49cyyz2FOPqxd9?=
+ =?us-ascii?Q?i1ofHqPYkn8AtzyqV7mbrmfMzhdcDj5T82IwUuCHHk1A38EOoN3m8UkaoZYF?=
+ =?us-ascii?Q?j31WTevKw4+HjptAfD+Onfd5m8V7z1fUh29+qWieS+2SqMQ9DqC2i6b5ey+k?=
+ =?us-ascii?Q?ZjLxKC6Xj/XCdJECuHnVT5o0YQ/GCbjUU6RHKvnZxTf2UdOio+eIm0sKg4tk?=
+ =?us-ascii?Q?qvKSu3+ubwlaHIBxUJlMDr+ffh3ffXztZSjwLvFhyZ3VM6wdyUD2ThPbAn+6?=
+ =?us-ascii?Q?JyfMsrf0cJkBP5W9UkZPL+HvLGCKMmQX3B2xCyT0pcT8E7IrLda8pmdptk5S?=
+ =?us-ascii?Q?93+xrqiwJQhstCrsscDJGJh7uG0IGuWaWiPaulcSFTDGj/UwnrwcLG/b8vLh?=
+ =?us-ascii?Q?u2wWMTlar2Zp/MMxyDZkELvHyXCGddCTC0scMtb3+IE7l7LO4SqaIjyazbos?=
+ =?us-ascii?Q?9WwPSEHKuUrZH+wMi5YOT4864nA6oZePTCe7hHxee9s1bYwLh3ugexnUMSbO?=
+ =?us-ascii?Q?TYUe/YWqJOU6+0H4shc+oWW8TslUkKFAYZa3ZsWWoC8NjJ5lILQXxeR9IGIO?=
+ =?us-ascii?Q?SbyeHTfbCQ+5wzsZ0zBqO62rm9b+LX9UoP+7iqxjgEDA335se/EExFOyv8M+?=
+ =?us-ascii?Q?+OLBCH+Z0nrIJvaH79RQmXufAKtlP2FtpawN?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 05:55:15.7584
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 959c6dbb-848f-43b4-f1f7-08ddaa3edebb
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF0000231E.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4425
 
-On Fri, Jun 13, 2025 at 11:34:46AM +0800, I Hsin Cheng wrote:
-> Switch the implementation of cpumask_any_but() to cpumask_first_but().
-> Elimate the need to looping and make cpumask_any_but() a macro to wrap
-> around cpumask_first_but(), just like cpumask_any() does, to make it
-> more consistence.
+On Thu, Jun 12, 2025 at 08:31:38PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jun 12, 2025 at 12:03:14PM -0700, Nicolin Chen wrote:
+> > On Thu, Jun 12, 2025 at 03:56:13PM -0300, Jason Gunthorpe wrote:
+> > > On Thu, Jun 12, 2025 at 11:53:24AM -0700, Nicolin Chen wrote:
+> > > > @@ -2022,7 +2023,19 @@ FIXTURE_SETUP(iommufd_dirty_tracking)
+> > > >         self->fd = open("/dev/iommu", O_RDWR);
+> > > >         ASSERT_NE(-1, self->fd);
+> > > > 
+> > > > -       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
+> > > > +       if (variant->hugepages) {
+> > > > +               /*
+> > > > +                * Allocation must be aligned to the HUGEPAGE_SIZE, because the
+> > > > +                * following mmap() will automatically align the length to be a
+> > > > +                * multiple of the underlying huge page size. Failing to do the
+> > > > +                * same at this allocation will result in a memory overwrite by
+> > > > +                * the mmap().
+> > > > +                */
+> > > > +               size = __ALIGN_KERNEL(variant->buffer_size, HUGEPAGE_SIZE);
+> > > > +       } else {
+> > > > +               size = variant->buffer_size;
+> > > > +       }
+> > > > +       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, size);
+> > > >         if (rc || !self->buffer) {
+> > > >                 SKIP(return, "Skipping buffer_size=%lu due to errno=%d",
+> > > >                            variant->buffer_size, rc);
+> > > > 
+> > > > It can just upsize the allocation, i.e. the test case will only
+> > > > use the first 64M or 128MB out of the reserved 512MB huge page.
+> > > 
+> > > The MAP_HUGETLBFS is required that is the whole point of what it is
+> > > doing..
+> > 
+> > I am not quite following this.. MAP_HUGETLB will be still set.
+> > 
+> > And the underlying selftest case is using:
+> > 	MOCK_HUGE_PAGE_SIZE = 512 * MOCK_IO_PAGE_SIZE
+> > 
+> > Does it matter if the underlying allocation has an overshot?
 > 
-> The change brings some benefit in terms of code size shrinking of
-> vmlinux, for NR_CPUS=64, it reduce 78 bytes in total, for
-> NR_CPUS=4096, it reduce 2 bytes in total. The details are shown in the
-> table [1].
+> I expect munmap won't work with the wrong size and the test will OOM?
 > 
-> Performance test is done using the test script [2]. Running the test for
-> 10000 times, the origin implementation of cpumask_any_but() use 19665287
-> nanoseconds in total, the new version of it, which is a wrapper around
-> cpumask_first_but(), uses 19545574 nanoseconds. The difference is 119713
-> nanoseconds.
-> 
-> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> You'd be better to correct the actual variant->buffer_size..
 
-This looks like an invalid SoB chain.
-In our private discussion, I did agree that you're free to build upon
-my previous patch for further development. Since this patch is almost
-identical to mine, I assume you intended to include me and Yu-Chun as
-co-authors. If that's the case, you should also add a Co-developed-by:
-tag for me. It might also be helpful to add a Link: tag pointing to my
-original patch for better traceability.
+I saw test passing, before I posted that.
 
-https://docs.kernel.org/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+But you are certainly right: while mmap() handling MAP_HUGETLB will
+align up the size, the munmap() doesn't. So, passing in to them the
+same variant->buffer_size will result in a size mismatch.
 
-Regards,
-Kuan-Wei
+I don't think we should change the variant->buffer_size, because it
+affects the bitmap sizes in those dirty_tracking test cases. And if
+we align up every single variant->buffer_size, the variants of 64MB
+and 128Mb will be two duplicated 512MB cases, right?
 
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
-> [1]:
-> 
-> For NR_CPUS=64:
-> $ ./scripts/bloat-o-meter vmlinux_old vmlinux_new
-> add/remove: 0/0 grow/shrink: 3/7 up/down: 46/-124 (-78)
-> Function                                     old     new   delta
-> irq_migrate_all_off_this_cpu                 716     745     +29
-> try_to_unmap_one                            3380    3391     +11
-> try_to_migrate_one                          2451    2457      +6
-> uncore_event_cpu_offline                     343     342      -1
-> calibrate_delay_is_known                     236     235      -1
-> tsc_store_and_check_tsc_adjust               506     495     -11
-> arch_tlbbatch_flush                          302     288     -14
-> tmigr_cpu_offline                            406     382     -24
-> perf_event_exit_cpu_context                  592     565     -27
-> flush_tlb_mm_range                          1561    1515     -46
-> Total: Before=23390770, After=23390692, chg -0.00%
-> 
-> For NR_CPUS=4096:
-> $ ./scripts/bloat-o-meter vmlinux_old vmlinux_new
-> add/remove: 0/0 grow/shrink: 7/3 up/down: 136/-138 (-2)
-> Function                                     old     new   delta
-> uncore_event_cpu_offline                     291     333     +42
-> try_to_migrate_one                          2378    2413     +35
-> flush_tlb_mm_range                          1476    1503     +27
-> irq_migrate_all_off_this_cpu                 741     754     +13
-> tmigr_cpu_offline                            353     362      +9
-> calibrate_delay_is_known                     183     192      +9
-> arch_tlbbatch_flush                          296     297      +1
-> tsc_store_and_check_tsc_adjust               484     482      -2
-> perf_event_exit_cpu_context                  546     528     -18
-> try_to_unmap_one                            3560    3442    -118
-> Total: Before=23448698, After=23448696, chg -0.00%
-> 
-> [2]:
-> static int __init test_init(void)
-> {
->     struct cpumask test_mask;
->     ktime_t start_time, end_time;
->     s64 elapsed_ns;
->     unsigned int result;
->     unsigned int random_cpu;
->     int i;
-> 
->     cpumask_copy(&test_mask, cpu_online_mask);
-> 
->     start_time = ktime_get();
-> 
->     for (i = 0; i < 100000; i++) {
->         get_random_bytes(&random_cpu, sizeof(random_cpu));
->         random_cpu = random_cpu % nr_cpu_ids;
->         result = cpumask_any_but(&test_mask, random_cpu);
->     }
-> 
->     end_time = ktime_get();
-> 
->     elapsed_ns = ktime_to_ns(ktime_sub(end_time, start_time));
-> 
-> 	pr_info("Total time: %lld ns\n", elapsed_ns);
-> 
->     return 0;
-> }
-> 
-> The test is running in the form of kernel module.
-> The test machine is running ubuntu 24.04 on x86_64 machine with kernel
-> version of v6.14.0, CPU type is AMD Ryzen 7 5700X3D 8-Core Processor.
-> 
-> Best regards,
-> I Hsin Cheng
-> ---
->  include/linux/cpumask.h | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-> index f9a868384083..d91630a97d76 100644
-> --- a/include/linux/cpumask.h
-> +++ b/include/linux/cpumask.h
-> @@ -408,22 +408,22 @@ unsigned int cpumask_next_wrap(int n, const struct cpumask *src)
->  	for_each_set_bit_from(cpu, cpumask_bits(mask), small_cpumask_bits)
->  
->  /**
-> - * cpumask_any_but - return an arbitrary cpu in a cpumask, but not this one.
-> + * cpumask_first_but - return the first cpu in a cpumask, but not this one.
->   * @mask: the cpumask to search
->   * @cpu: the cpu to ignore.
->   *
-> - * Often used to find any cpu but smp_processor_id() in a mask.
-> + * Often used to find the first cpu but smp_processor_id() in a mask.
->   * Return: >= nr_cpu_ids if no cpus set.
->   */
->  static __always_inline
-> -unsigned int cpumask_any_but(const struct cpumask *mask, unsigned int cpu)
-> +unsigned int cpumask_first_but(const struct cpumask *mask, unsigned int cpu)
->  {
->  	unsigned int i;
->  
->  	cpumask_check(cpu);
-> -	for_each_cpu(i, mask)
-> -		if (i != cpu)
-> -			break;
-> +	i = cpumask_first(mask);
-> +	if (i == cpu)
-> +		i = cpumask_next(i, mask);
->  	return i;
->  }
->  
-> @@ -864,6 +864,16 @@ void cpumask_copy(struct cpumask *dstp, const struct cpumask *srcp)
->   */
->  #define cpumask_any(srcp) cpumask_first(srcp)
->  
-> +/**
-> + * cpumask_any_but - pick an arbitrary cpu from *srcp but not the given cpu
-> + * @srcp: the input cpumask
-> + * @cpu: the cpu to ignore
-> + *
-> + * Often used to find any cpu but smp_processor_id() in a mask.
-> + * Return: >= nr_cpu_ids if no cpus set.
-> + */
-> +#define cpumask_any_but(srcp, cpu) cpumask_first_but(srcp, cpu)
-> +
->  /**
->   * cpumask_any_and - pick an arbitrary cpu from *mask1 & *mask2
->   * @mask1: the first input cpumask
-> -- 
-> 2.43.0
-> 
+I think we can just add this on top of that:
+
+ FIXTURE_TEARDOWN(iommufd_dirty_tracking)
+ {
+-       munmap(self->buffer, variant->buffer_size);
+-       munmap(self->bitmap, DIV_ROUND_UP(self->bitmap_size, BITS_PER_BYTE));
++       unsigned long size = variant->buffer_size;
++
++       if (variant->hugepages)
++               size = __ALIGN_KERNEL(size, HUGEPAGE_SIZE);
++       munmap(self->buffer, size);
++       free(self->buffer);
++       free(self->bitmap);
+        teardown_iommufd(self->fd, _metadata);
+ }
+
+This FIXTURE_TEARDOWN() didn't free the memory allocated by the two
+posix_memalign calls in the FIXTURE_SETUP()..
+
+Thanks
+Nicolin
