@@ -1,234 +1,516 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2081.outbound.protection.outlook.com [40.107.92.81])
+Received: from olivedrab.birch.relay.mailchannels.net (olivedrab.birch.relay.mailchannels.net [23.83.209.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6162E11AE;
-	Fri, 13 Jun 2025 18:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9BB2E11AE;
+	Fri, 13 Jun 2025 18:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.135
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749838054; cv=fail; b=grS7dvbywVcAx/w/bSoeBbyEvmx0Wimhrb4Z8OHorv4vJXKfDQtsmh/gFtC9+zEfCx2kTwZSh9Zqb54AU9QJ5Pv7IRBU+NLUDLj+SIQ6jMDpL8AQ0JBGcjUIAPxYI2wHqPEFONWQDlsvH/rEuAKfnptz97O4lqPke8IVAFzLSqY=
+	t=1749838134; cv=pass; b=OgaDWy0yr/YkSqak4RUawI/tZLf3asamY0tjeJG/5eMHd4YLlQrQGCOlVN7Iiau+vL1OTqk+NE1wfMQMEqQLrWTwjCXOW48dZmYJpx4c46DpyF3oZs90FEM7i7F53FxDcbA9ZCX0rJ0RDGeeC8kVPpDPs6HkUR4EyHw3Jnh+kqo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749838054; c=relaxed/simple;
-	bh=NHt3YGR9OY2ddqvs2c5SVLPUQef2efUUaoYW/f2rsNU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Oh565imODeYc2R0l1nWoA7yFpisem5hBiMTQkVX9aIx7Opm2iY+NBJCPr1MiHVHggYEDjja6SIdQ8A2VM99MpDeFVWHwkSNVsAxqlpTTJ/x9ak0MOZ1r/IszY9JMUNQJNEglR2/u67Td2SyuPe71eYMPqz4McbPU6LxBjzzkPp4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eFXFJcwQ; arc=fail smtp.client-ip=40.107.92.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1749838134; c=relaxed/simple;
+	bh=J8kKyaakj1aYx0rm37/TO+tMsW2zUNsq8DTgJmYfnVE=;
+	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc:Date; b=lKR9BhMkoiBJo72yR01c7uCKgmAJ2v20+KxxyGLKg8bwkMLMoOz6tGe3z03vot1rx2VwazrKioWC4DUrm2Nh0lg9jvJ8DN1nfbnQB1D8ohmxTKZ4MuIMQ2tcbiqSDCiMAlAjiVQzuWrmNmFgmEj43xw5YiqWzWy6bS2rYjqVjNY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=JceNp00k; arc=pass smtp.client-ip=23.83.209.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eFXFJcwQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mIlTSqqLXh9AhfDdg63INuhFySrorElZIZQwsna27H+RxSnG8J0kspgdz9jodAsZL2Vxi1YUZe+YDFRrRkqFIDWhz08fDMhW0k6z9zCKc8vyIzrJP9OQUhdApVF7SCNjXhxSLEvBTnmyOd+fkjvc+DSCjbHKtTBbLNlOc111zpmIBtIgEwceu4ZoMqs4wY42wIam3o+UbEU221uB2LPsCit8Ex0sAuge9ul2VgTz8RH/WBZ/haYTiHuQFt3xHj6Yo+XVFu81PCsBM7OxL4aq98dUIVnGqho9d+6I/bBtGedQmaFLkBuwrWcYRqdPkvmu885Ua5YdFfFEJo9LtOgP9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZQh0SgtUPiLNJWwW+ahdOCkhtqbSbgyB1+T2GC4AenI=;
- b=qmtpqlppfwQEMjNC2yHM0daDrHJY7h0/AsQ2hizLLyYNH0p8Y4mGva9hPrbo1JIwW6jtU9RgkuyWSxH1XrctYlauNGhRlaUh8lT0b3vN8Dh5hj74MksvXtGbPNE2BkdOLBbDtUXZEPa1SIUppjwl359+CcFZdnmoVGri1yf2TAjyjM7OFGDJvxQ1BaZFJub2uFeER3X9/1aHIwWZ1URYVJJVPK6UIsHlWJxjxBb26UttsTnFYo9KoneFGb9gmnkAg3AUpzNn3pD4HhJwVeOpXM2K6eGESjGG128TGM2pLCb3ljMiDgwYi8CEwx1V5UAWJJGs4LFEU7o37TuIObOwwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZQh0SgtUPiLNJWwW+ahdOCkhtqbSbgyB1+T2GC4AenI=;
- b=eFXFJcwQ99KDvyvhm+qN03gB2JRqePmc2XRFd4t38DCLysjs3eljAvWB19jsiSuYH9BgbIVTySpgH8QNiVri079byZ3WCmLaCa9QkfsQ76xaw6ES/2rAk+lWMI/Uaa8j/Ln1jZ1VyeyiMxiM0Fbmdr9f4vRuNaIZ+KUZq3pmSzQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH2PR12MB4956.namprd12.prod.outlook.com (2603:10b6:610:69::11)
- by CH3PR12MB9147.namprd12.prod.outlook.com (2603:10b6:610:19a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.24; Fri, 13 Jun
- 2025 18:07:29 +0000
-Received: from CH2PR12MB4956.namprd12.prod.outlook.com
- ([fe80::fa2c:c4d3:e069:248d]) by CH2PR12MB4956.namprd12.prod.outlook.com
- ([fe80::fa2c:c4d3:e069:248d%4]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
- 18:07:29 +0000
-Message-ID: <bc42aa9c-2dc3-454e-800b-43928ac60a6d@amd.com>
-Date: Fri, 13 Jun 2025 13:07:27 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: tanmay.shah@amd.com
-Subject: Re: [PATCH v2] remoteproc: xlnx: allow single core use in split mode
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250610192738.3095247-1-tanmay.shah@amd.com>
- <aExdUKf4JYjZt_nf@p14s>
-Content-Language: en-US
-From: Tanmay Shah <tanmay.shah@amd.com>
-In-Reply-To: <aExdUKf4JYjZt_nf@p14s>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR11CA0069.namprd11.prod.outlook.com
- (2603:10b6:5:14c::46) To CH2PR12MB4956.namprd12.prod.outlook.com
- (2603:10b6:610:69::11)
+	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="JceNp00k"
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 054222C5C53;
+	Fri, 13 Jun 2025 17:51:19 +0000 (UTC)
+Received: from fr-int-smtpout9.hostinger.io (trex-green-2.trex.outbound.svc.cluster.local [100.96.75.158])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 021AA2C4FC5;
+	Fri, 13 Jun 2025 17:51:13 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749837076; a=rsa-sha256;
+	cv=none;
+	b=DCtDkgRNYob1nmrIuTuDxwgJO62lmyI0VXLhpyteLj04M7DyrSY1Jncmym66JzZh9IalMS
+	Jv36CrabE9drhhLe5/BQT1dKClcDsAgFGiAUekWR8JgAWMZdQdhSRUmCi/PVQ98EqKUuPj
+	liM2K1zKyNmyIVIxx9N9BnZVAJYwN4ONMXk3Uzzg8Thk8NLUi2R68j9rz42tmufzayAX1d
+	W+ZDKx3cMoz6m+6G1U92Iy2upNexdowOgcmfO6xq+oahjK7L55FjtMB4bqRw4W2FSVyWyS
+	PEqHqE/tyTJhUIxyPiDGKEwgCJ+3qX/kw93g9vcgOqZfxjMxNcMDNEM8+rfD4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1749837076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=ywr5D5/TX6NEUGOjUEwyjTA/Ckv+ZE65Ks4KW4iIrX8=;
+	b=tmMwonuFNdub6knG8QJqaMHxk2NUaX6Ico/v3aQ11nDFX8JINlI26h12wSymvsO/pxOiY6
+	7GHzFh1nZYNu9uBfqhVC/PvcR+laBXYBPc7zAwW/foZhbubTx2SXckDgRX9VkpEwhvhwUM
+	bzPAJseEKzmmKpfCkVrp6yKMPuJAsg2gL7V3gJmYlzx0m4zBl2sN5Ivo0j2kPiL3l9kDIW
+	2HkXsiCCUh9yaL+uK3rxdpLJB/im8I8e+wK1daB4FvcbXqAvcfYhS1JYAMPiAgvI33OIGH
+	Tg7T4JboqECgmeIK49DZKEAPHW2ClTSsgtOV6bfV6NwPhpw6Q/Msfr+4iuEpew==
+ARC-Authentication-Results: i=1;
+	rspamd-5859dfb5d9-lnjzv;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
+X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Battle-Descriptive: 0e5a00b20322edec_1749837078694_2226515485
+X-MC-Loop-Signature: 1749837078694:2937717600
+X-MC-Ingress-Time: 1749837078694
+Received: from fr-int-smtpout9.hostinger.io (fr-int-smtpout9.hostinger.io
+ [89.116.146.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.75.158 (trex/7.0.3);
+	Fri, 13 Jun 2025 17:51:18 +0000
+Received: from [172.17.0.2] (unknown [36.79.97.133])
+	(Authenticated sender: linux@smankusors.com)
+	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bJn4n3LjnzH9gKX;
+	Fri, 13 Jun 2025 17:51:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
+	s=hostingermail-a; t=1749837068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ywr5D5/TX6NEUGOjUEwyjTA/Ckv+ZE65Ks4KW4iIrX8=;
+	b=JceNp00kgbv3+mzs3RPmS0Mu9vhDfJWkAUf+jnWew9OBrwqyJqGPjRKT3wOCaKk1btDT1c
+	zbTKaRHwonIlRdLAw2rqgkdJ3qUVgoTOOV/vIUdkIwkMrA0sZfj/naO7xaVlFm8gkzEpNh
+	kpQyn5zAdyvc197kg/Y5qjBEeT0cJe/qm++uqZDPQZgH+Uwuswk0J4OtsmGzSk57OaNDfm
+	EVPWE7tZs1GMUZN5/RtuQysnWY07ahPletNRceIpc8eMCHrKbR37lS/YB8p4LTixMkCYEJ
+	mYnXx0O95h+l9o0XDgSMzLmYIzlDJd/AwFB0CvbWnAzad9xhU+N8PoQDxUmo+g==
+From: Antony Kurniawan Soemardi <linux@smankusors.com>
+Subject: [PATCH 5/5] ARM: dts: qcom: add device tree for Sony Xperia SP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4956:EE_|CH3PR12MB9147:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28927054-6890-4ec9-27fc-08ddaaa52911
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c0tZZHpzbGVzb3poKy9Oc3FXOStvVUU0WHdzZ1JSelF3ZmtpU0FINkdoT2lk?=
- =?utf-8?B?MTIwMEVvSDQrTk12a1lZTDFXRlZUalZUUllmNlZ2akpMYkN3NHJHaFVGaEFQ?=
- =?utf-8?B?T1hPOUhSYWtaTEN5bnF4dit2TmtMNnlCR1BKTkRuNkF6QXdMNkIwOXY0SUVH?=
- =?utf-8?B?clFwWGNjNHNzTlFzT214bjgzRVpnektERFFmczQ5SWxacUgvQjZRUGhGNnNZ?=
- =?utf-8?B?SXNFczJKK0lXQnRsOW1yZlRGVzIxdmFCUEVqN0k1UEJpT3F4K3lCalYrd1My?=
- =?utf-8?B?NldicnVqNm5vZ0MvTnQ5YWFxK0FHLzlOK01NQVV5bHhKM3E0VWM4VFROMmpE?=
- =?utf-8?B?WXpvVHk0R2crZ2dtMHJCL2I3L2lCYTc2NFpCbnlUZjlJZVhEdVRZdjZPTVN2?=
- =?utf-8?B?Z0d4Yyt4bzdHS3pLRzRUL1lySVU3WkJMY2FvbW5vV3pwL2NDUkdScGthNHV4?=
- =?utf-8?B?QWs5dCtFQjNhUWkyRFVyTFVJM0J3djRDMVNJKys2ZU9nZWZGQjFBVnpHd0V5?=
- =?utf-8?B?SmJDbHYzbEg2QTVYQ3NlU3NKSnIwM0dhQzYvM05WSWpaUWd0WVlkbyt2QUdJ?=
- =?utf-8?B?S0VwM3A2SmhQU1RSaDI3UFhpVmgwWUJaRzFoR1NHbk9rSGhVOFZwdFFBdi9h?=
- =?utf-8?B?SUlMTldqdlVpbGlpcUw2TGxJOVhaRldEMHNieHoyTnl5eHZuamNha25yd2Jn?=
- =?utf-8?B?UXdwNldTRloxa2Z5MlRXdWdiWkxZOTN3emVTM0oxOGhFMzFoN0U3MXZtQXEw?=
- =?utf-8?B?NWU0NnNFbm1BeXlwZVd2cXdERHFYZTh0SVgzZE0rSmNZTTE1WFl2ZGxNazVV?=
- =?utf-8?B?UXVqZ0djRlpEQlMwZThncDZ2cEpFbTh2MlpsNWNHdHR4Vjg1TzBzY2lhT3k5?=
- =?utf-8?B?aU5PTVJMQ0ZXaVRiU0tkOU5TOE1ZOHR5UGZBWEdDY2F1UGxnenRzSGs4dGNy?=
- =?utf-8?B?d0YzdFFIV1ZIanpHQThMWjV0WmVVRVhhdWttUnN2OWRuSG53cldINFRTTHR6?=
- =?utf-8?B?QzNEQlY2VC9SZDRRcjlnUW1NMWFLa1J4SW5rUGg1a2tmL2NHbXI2eHVHRzFr?=
- =?utf-8?B?UVhjeW1wWUpKSUZ1NWFKRnRNSTBtZlp3WEVjdTNVYmZxWHhOVVpqSVRKZzhX?=
- =?utf-8?B?N0NZbEVqOHJ5U1RWamVKbDBNeDhkdFU1eDR4R1pPdUJnZ3ZNZExCREFLSHJ5?=
- =?utf-8?B?eitxRTRFanUxVFBuZEQzbVdLUGg2dDZseVJIS1ozVmpVamNJR1dCYTNGQVh1?=
- =?utf-8?B?Q2x5ajE3MytQTERUbys2MjVGWkRUS3ExM1N5K0w1eEEzclBzc1cvZy85OGpE?=
- =?utf-8?B?Qkl1T3lUMmxCelZHY1pNeUNLdnB5REtUMnljclgyM0NiY1B3Rk1yN3BCcmhF?=
- =?utf-8?B?bWhBdXZqRUtUb0VhTTNoRnlLRUR6cHFTZmZCSGR6L3NWYVZzZ0ZUNnJmdTAz?=
- =?utf-8?B?MnY3bUpkc0pVVzZLRE1aS1NXOUJQVmdWRXV4RVJwZ1Iza21wNFNMR25HbFdr?=
- =?utf-8?B?QmowNXVYUk04ZTVmWEJzZEs3MkFVU1lJUWVRVVk0QjZXcWV2aUZPbE4zdTIx?=
- =?utf-8?B?R3c0V2NxQVpEMmljZnVhTWRITHBlY3Q5dWVkTDMyNGtKV2FEYm5UZ1ZMMlF6?=
- =?utf-8?B?SzhBQ2VmWXcrcjRrai9FQ2NPcjhnekl5QTM3a1N6QUwwTXZ2cExzVjlqcncy?=
- =?utf-8?B?b1ZUdlh4TXY4TWMzc3dwTjFrVHFRQ21sL2hSNHA1RE4rM1g2eXZSWDRJd2NX?=
- =?utf-8?B?Qk8wOWJEZ0lYNGtHMzJieGpkQ01HbndZN0hVNnRwNDVaRlowSDdLcVRPbmJS?=
- =?utf-8?B?TGlBMmhoTFU1NGNuNk4rRUl1MWRITndZNXhYNGR2bDU1SnBVS3NyYUNHaUUv?=
- =?utf-8?B?K0lRNkxXOVVvOE52SnRJN0dzSlVaZnRtaFBvRE5EQlZGWkZLMFFuWEZnT2ty?=
- =?utf-8?Q?5FfbzzYbFEA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4956.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UU1CcmllM3VKNGpnVXU0d3lrZ0VweUFUak1yMTU5dloydjZMNUNkWEoveHN6?=
- =?utf-8?B?cWpjK2oxdDZxNTZyZ2h2QytrWEZYZTdZaFNxaXNCaExhWWpzdGYzZXFjZ2VB?=
- =?utf-8?B?VzEyUEgyR0xQZUZQSzQ3ejhhRlJHLzQrbm9NdzRvN1VQakhkU2VhRlpxRGNw?=
- =?utf-8?B?MnJ6N0VEc3pGeUxmQmV3ZmxpcEg2V1RjYU9sZXV4NFBhNmM4QnpzL2QxdGpR?=
- =?utf-8?B?SFgrL2RkR05Zb056Wi90KzZYZGRLQlRkdm1mbkllbUNwNTVMem9FYlcxTTB6?=
- =?utf-8?B?UnpPZVZGcmNmYWU0djM2YjlKRmcrZDM2eS9lYTRlN1lZZjRTTjRnUmJzOUh5?=
- =?utf-8?B?cnYyY3A3cVN4OC9jU1MzNWtaQnpMYlhqRnBlbjdVTW9PeHE0QlVnRW40VS80?=
- =?utf-8?B?ZTFFQ0p1M3h4QnRKaVFRUmxTMUs1UWVCVTBha2pWT1JkeU84RmN0ZzNOaVFq?=
- =?utf-8?B?YXA3Rk9HcXowN3JMc1JmUklDNVVUOHBCMFowUWZUbktzMHVKVzBuaDhrTnpR?=
- =?utf-8?B?d2VocG9zSDFEMVdRMXR5TWNKT1huZENvS3kwakNLVjhYaTlYVWlHMVpmM2ky?=
- =?utf-8?B?dFlTb0EwZ245THR4M05rTjh1b29hNWRpeXp5eVJzalVCQUJxVDJSbU9xeUp1?=
- =?utf-8?B?V1dleVVMZjJPUGFZYzRCOTZEaXYwNDdQWTVvaVRYSVZKZ1A1dGhMclI5aS9Y?=
- =?utf-8?B?eHkyKzYzMy80WDdnRWltYTFQMGdqbno2QlRZQkpEYStnNDc0ZkoySithcjN1?=
- =?utf-8?B?VHpiWmNXL0NGM0Z0SVk1ZUFQOVg4UDFZSTFPanFPemNOblFFdFpFRWcyM3ZT?=
- =?utf-8?B?Q1F6RGtvdkEvUGVPOXFXaGY5d0xhcHpjc2JVcVlTT09McHFydmwwdzhuYUJK?=
- =?utf-8?B?Tks4OU4ybHpQTkRFUFRpdmR5U0UvK1MyYzBWN1BkOE1McVRSUnJZaFdrS0xl?=
- =?utf-8?B?dDVNbFNXR3RadnhsZVlRMEpLSWtXaEpWY3I3TGM4SUgwbU9pUHVqWDV4QXZ0?=
- =?utf-8?B?cThvc0hhb2JQMTZBZTNoSitCUXJsamlubmpmb1JNdW5HNUNzbkpCSEwxVXdo?=
- =?utf-8?B?UjF1QTZBQ1JTUHdnK1M1NENuUmZlVWJySE5hT2tvZS9lS0VsVUYvMjFUY2hG?=
- =?utf-8?B?NzZTb2tlTkY2NnMxNm15YVd1WHM1ZUM0cFozZS84bmZ4MGJ2R2FsRHArVVJx?=
- =?utf-8?B?emxNSW9WT3dCbTRObzMxN2wyQlZ5UGVPa0RHS3N6eXB2Z1NHQVhVeFFwTHpS?=
- =?utf-8?B?MHpRbHlZMXlZYmtINkZzKy9rNCsvNjBHZU1NeXVMZkFzRVJnSHRJK0JoZ2x0?=
- =?utf-8?B?ME5lV3F0MmlVdFA0ck1sVm9pT2oxSElNNklHTkhacm5IZFREM0xWMWEvb3dy?=
- =?utf-8?B?dUNEdkNoclhkVUl1SXM3VEMrSEJ0Rm5SWDBPQXZ2bVVwRER2YnZBYW02QXda?=
- =?utf-8?B?TXNRT0g1eEFKaG1Rb1pGN2dWbGo2Qk1haGVkeW1FR1BkKzBDS2VBaE1wY1d1?=
- =?utf-8?B?QWx5Z3krVVRPcEpWckxNV3V3UE9NdmxTOEU2bkZ2clhNNXhGUXpiaVNLOWhh?=
- =?utf-8?B?UHJycS85cUswNUNnYldnakpXeEprVjN1UzhraXZIN1BDTzhmS0lKU1dFNEl0?=
- =?utf-8?B?TDlSQktrc2xwTUlBaTdBTTFxSUZYQTQyV3pWdFFSb1RLcDJHQjZtN203c2ps?=
- =?utf-8?B?VjEyL0Irc25oTEpOSDZaZ2JlbEJoaEV4NmFWUlNpU09QdWRrYzRmZ1ZPZm1M?=
- =?utf-8?B?OGZyQjhwbldKb1hNaXlJTG80ZEQ4Z1FjSk5JZkxBTjFnUGtDNlFQQkdWOHZO?=
- =?utf-8?B?aTZIaFg4aE5GWGswalNIZnVYZ2dNTjdLNVoxNW1nR1dBL3pQSEppTy91RC9t?=
- =?utf-8?B?UmZhTHpWVDhEbUtLNHJqbTNrSEMyNk9WcDAya3pBWWRxWi9JR1JLbHFtUFpR?=
- =?utf-8?B?ZGljOFBjV2ZpU1Z3YTZTVjJ3SjlubE16WDNVM1RBT29yd1Y3SStCVDdEYSs0?=
- =?utf-8?B?NjBIY0RPM0ZZUGYzNytoNHE3TUNNV0ppQUJ6QTgzdUFrUjJSRENrWUsrd1pm?=
- =?utf-8?B?aHByMXhOZ1lZa0Zicjl0YTloYkhOMWZSaUdVQmFMd3BLZ2hOZEVuckRpU0tR?=
- =?utf-8?Q?3KJ7pLIemcAeSHFBIyc2DR977?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28927054-6890-4ec9-27fc-08ddaaa52911
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4956.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 18:07:29.3304
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dMNjWEMbcW4TpqRnAIxB92R7Nt2zzqhPDFwcFZ3wy0kI3BpZoJNApYTKemF5IZuR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9147
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250614-msm8960-sdcard-v1-5-ccce629428b6@smankusors.com>
+References: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
+In-Reply-To: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Antony Kurniawan Soemardi <linux@smankusors.com>, 
+ Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749837006; l=9928;
+ i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
+ bh=J8kKyaakj1aYx0rm37/TO+tMsW2zUNsq8DTgJmYfnVE=;
+ b=QJpr4VybUGg/Ex9xMz6khaGn3HDqeMI69niccYMhcnCOEqQbbZeA1ldju2DTb4zwqFuwcpHkH
+ 4mt4AvJdxGeBNV/kEPm440/PdWk00/vTrCtieM4OnXds/MNHEd7J+/A
+X-Developer-Key: i=linux@smankusors.com; a=ed25519;
+ pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
+Date: Fri, 13 Jun 2025 17:51:05 +0000 (UTC)
+X-CM-Envelope: MS4xfG5a+boJu2i93CZIsVZh3X6/H/Fb5bihLyJ8U+xsoCbM8+HcAoN4/S0f0Bl+lbqt+oENd7cN5gsl855fSHkJ5T9CgaibSNRjk+ENGU7PCGOxA3SHJVtX a7HIWe8NgaRbeY0G52TVb1AD5EdlViE84fjeTYWwfo4575OipChVkoAclUtDKap6ebB5G/c7kTg2yC7MrBUV9iojLHpRN28WylvviSTuQeP+XiNEJ5WxFiJo 5Mi4lzpFkAn2u/6l24sBez6ukIYKtWLHeKMI9FbL3v0ahvs58+lDBN7d6l/bXNSKYliOPLFXI9zb5+9qNDtIWrTQTJQq0QslIeABJrVeQtZMEN1I6+Mrd31t jSBRVA3XhK0PoQBZUFq8mR6mgKV7u43BESkBS1bD2bfIPsO7KBpriYDrV41umaFgcgkhikccAk33b9yomB2Fs89u3rwLIsZnUS6X/rstiu+eSo15o260e4i3 kpaBs4l/MZKnl5W9jBPgucQZIW4nySkvTAa0PIIeFrzSpgt754tiyS2hflY=
+X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=684c650c a=/sUT9SOQbq9tkq2xjVjq6Q==:117 a=/sUT9SOQbq9tkq2xjVjq6Q==:17 a=IkcTkHD0fZMA:10 a=wxLWbCv9AAAA:8 a=SKXNq62mckHbbuXN77oA:9 a=QEXdDO2ut3YA:10 a=QJY96suAAestDpCc5Gi9:22
+X-AuthUser: linux@smankusors.com
 
+Add initial device tree support for the Sony Xperia SP (codename:
+sony-huashan), a smartphone based on the Qualcomm MSM8960T SoC.
 
+There are two variants of the Xperia SP, one without LTE and one with
+LTE. This device tree should work for both variants, though it has only
+been tested on the non-LTE variant.
 
-On 6/13/25 12:18 PM, Mathieu Poirier wrote:
-> Good day,
-> 
-> On Tue, Jun 10, 2025 at 12:27:38PM -0700, Tanmay Shah wrote:
->> It's a valid use case to have only one core enabled in cluster in split
->> mode. Remove exact core count expecatation from the driver.
-> 
-> I suggest:
-> 
-> "When operating in split mode, it is a valid usecase to have only one core
-> enabled in the cluster. Remove..."
-> 
+The following are currently supported:
+- Serial console support via gsbi8
+- GPIO keys for volume up/down buttons
+- PM8921 keypad with camera focus/capture keys
+- eMMC (sdcc1) and micro SD card (sdcc3) support
+- USB OTG support
 
-Ack, will update commit message in next rev.
+Other hardware features are not yet implemented.
 
->>
->> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
->> ---
->>
->> Change in v2:
->>    - limit core_count to max 2
->>
->>   drivers/remoteproc/xlnx_r5_remoteproc.c | 5 +----
->>   1 file changed, 1 insertion(+), 4 deletions(-)
->>
->> diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
->> index 1af89782e116..a1beaa2acc96 100644
->> --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
->> +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
->> @@ -1336,12 +1336,9 @@ static int zynqmp_r5_cluster_init(struct zynqmp_r5_cluster *cluster)
->>   	 * and ignore core1 dt node.
->>   	 */
->>   	core_count = of_get_available_child_count(dev_node);
->> -	if (core_count == 0) {
->> +	if (core_count == 0 || core_count > 2) {
->>   		dev_err(dev, "Invalid number of r5 cores %d", core_count);
->>   		return -EINVAL;
->> -	} else if (cluster_mode == SPLIT_MODE && core_count != 2) {
->> -		dev_err(dev, "Invalid number of r5 cores for split mode\n");
->> -		return -EINVAL;
->>   	} else if (cluster_mode == LOCKSTEP_MODE && core_count == 2) {
->>   		dev_warn(dev, "Only r5 core0 will be used\n");
->>   		core_count = 1;
-> 
-> When thinking about the specific usecase where, in split mode, a single core is
-> enabled - can it be either core0 or core1 or does it have to be core0?
-> 
+Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
+---
+ arch/arm/boot/dts/qcom/Makefile                    |   1 +
+ .../boot/dts/qcom/qcom-msm8960-sony-huashan.dts    | 361 +++++++++++++++++++++
+ 2 files changed, 362 insertions(+)
 
-Correct. It doesn't have to be core0.
+diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
+index 0c1d116f6e84f76994aa8c8286350bdcd1657a42..220ee204c8569e7039edae090bf1d0db379ba54e 100644
+--- a/arch/arm/boot/dts/qcom/Makefile
++++ b/arch/arm/boot/dts/qcom/Makefile
+@@ -43,6 +43,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-msm8926-samsung-matisselte.dtb \
+ 	qcom-msm8960-cdp.dtb \
+ 	qcom-msm8960-samsung-expressatt.dtb \
++	qcom-msm8960-sony-huashan.dtb \
+ 	qcom-msm8974-lge-nexus5-hammerhead.dtb \
+ 	qcom-msm8974-samsung-hlte.dtb \
+ 	qcom-msm8974-sony-xperia-rhine-amami.dtb \
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960-sony-huashan.dts b/arch/arm/boot/dts/qcom/qcom-msm8960-sony-huashan.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..f2f59fc8b9b61e18b0ec4ed1fc2d813585a75f15
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom/qcom-msm8960-sony-huashan.dts
+@@ -0,0 +1,361 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2025, Antony Kurniawan Soemardi <linux@smankusors.com>
++ */
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/reset/qcom,gcc-msm8960.h>
++
++#include "qcom-msm8960.dtsi"
++#include "pm8921.dtsi"
++
++/ {
++	model = "Sony Xperia SP";
++	compatible = "sony,huashan", "qcom,msm8960t", "qcom,msm8960";
++	chassis-type = "handset";
++
++	aliases {
++		serial0 = &gsbi8_serial;
++		mmc0 = &sdcc1; /* SDCC1 eMMC slot */
++		mmc1 = &sdcc3; /* SDCC3 SD card slot */
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		key-volume-up {
++			label = "Volume Up";
++			gpios = <&pm8921_gpio 21 GPIO_ACTIVE_LOW>;
++			debounce-interval = <10>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
++
++		key-volume-down {
++			label = "Volume Down";
++			gpios = <&pm8921_gpio 20 GPIO_ACTIVE_LOW>;
++			debounce-interval = <10>;
++			linux,code = <KEY_VOLUMEDOWN>;
++		};
++	};
++};
++
++&gsbi8 {
++	qcom,mode = <GSBI_PROT_I2C_UART>;
++	status = "okay";
++};
++
++&gsbi8_serial {
++	status = "okay";
++};
++
++&pm8921 {
++	interrupts-extended = <&msmgpio 104 IRQ_TYPE_LEVEL_LOW>;
++};
++
++&pm8921_gpio {
++	keypad_default_state: keypad-default-state {
++		keypad-sense-pins {
++			pins = "gpio1", "gpio2", "gpio3", "gpio4", "gpio5";
++			function = PMIC_GPIO_FUNC_NORMAL;
++			bias-pull-up;
++			input-enable;
++			power-source = <PM8921_GPIO_S4>;
++			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
++			qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_31P5>;
++		};
++
++		keypad-drive-pins {
++			pins = "gpio9", "gpio10";
++			function = PMIC_GPIO_FUNC_FUNC1;
++			bias-disable;
++			drive-open-drain;
++			output-low;
++			power-source = <PM8921_GPIO_S4>;
++			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
++		};
++	};
++};
++
++&pm8921_keypad {
++	linux,keymap = <
++		MATRIX_KEY(1, 0, KEY_CAMERA_FOCUS)
++		MATRIX_KEY(1, 1, KEY_CAMERA)
++	>;
++	keypad,num-rows = <2>;
++	keypad,num-columns = <5>;
++
++	pinctrl-0 = <&keypad_default_state>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
++
++&rpm {
++	regulators {
++		compatible = "qcom,rpm-pm8921-regulators";
++		vin_lvs1_3_6-supply = <&pm8921_s4>;
++		vin_lvs2-supply = <&pm8921_s4>;
++		vin_lvs4_5_7-supply = <&pm8921_s4>;
++		vdd_ncp-supply = <&pm8921_l6>;
++		vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
++		vdd_l21_l23_l29-supply = <&pm8921_s8>;
++		vdd_l24-supply = <&pm8921_s1>;
++		vdd_l25-supply = <&pm8921_s1>;
++		vdd_l26-supply = <&pm8921_s7>;
++		vdd_l27-supply = <&pm8921_s7>;
++		vdd_l28-supply = <&pm8921_s7>;
++		vdd_l29-supply = <&pm8921_s8>;
++
++		/* Buck SMPS */
++		pm8921_s1: s1 {
++			regulator-always-on;
++			regulator-min-microvolt = <1225000>;
++			regulator-max-microvolt = <1225000>;
++			qcom,switch-mode-frequency = <3200000>;
++			bias-pull-down;
++		};
++
++		pm8921_s2: s2 {
++			regulator-min-microvolt = <1300000>;
++			regulator-max-microvolt = <1300000>;
++			qcom,switch-mode-frequency = <1600000>;
++			bias-pull-down;
++		};
++
++		pm8921_s3: s3 {
++			regulator-min-microvolt = <500000>;
++			regulator-max-microvolt = <1150000>;
++			qcom,switch-mode-frequency = <4800000>;
++			bias-pull-down;
++		};
++
++		pm8921_s4: s4 {
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			qcom,switch-mode-frequency = <1600000>;
++			bias-pull-down;
++			qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
++		};
++
++		pm8921_s7: s7 {
++			regulator-min-microvolt = <1150000>;
++			regulator-max-microvolt = <1150000>;
++			qcom,switch-mode-frequency = <3200000>;
++			bias-pull-down;
++		};
++
++		pm8921_s8: s8 {
++			regulator-always-on;
++			regulator-min-microvolt = <2050000>;
++			regulator-max-microvolt = <2050000>;
++			qcom,switch-mode-frequency = <1600000>;
++			bias-pull-down;
++		};
++
++		/* PMOS LDO */
++		pm8921_l1: l1 {
++			regulator-always-on;
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++			bias-pull-down;
++		};
++
++		pm8921_l2: l2 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			bias-pull-down;
++		};
++
++		pm8921_l3: l3 {
++			regulator-min-microvolt = <3075000>;
++			regulator-max-microvolt = <3075000>;
++			bias-pull-down;
++		};
++
++		pm8921_l4: l4 {
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			bias-pull-down;
++		};
++
++		pm8921_l5: l5 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++			bias-pull-down;
++		};
++
++		pm8921_l6: l6 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++			bias-pull-down;
++		};
++
++		pm8921_l7: l7 {
++			regulator-always-on;
++			regulator-min-microvolt = <1850000>;
++			regulator-max-microvolt = <2950000>;
++			bias-pull-down;
++		};
++
++		pm8921_l8: l8 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		pm8921_l9: l9 {
++			regulator-min-microvolt = <2850000>;
++			regulator-max-microvolt = <2850000>;
++			bias-pull-down;
++		};
++
++		pm8921_l10: l10 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		pm8921_l11: l11 {
++			regulator-min-microvolt = <2600000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		pm8921_l12: l12 {
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1200000>;
++			bias-pull-down;
++		};
++
++		pm8921_l14: l14 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			bias-pull-down;
++		};
++
++		pm8921_l15: l15 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
++			bias-pull-down;
++		};
++
++		pm8921_l16: l16 {
++			regulator-min-microvolt = <2600000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		pm8921_l17: l17 {
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		pm8921_l18: l18 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			bias-pull-down;
++		};
++
++		pm8921_l21: l21 {
++			regulator-min-microvolt = <1900000>;
++			regulator-max-microvolt = <1900000>;
++			bias-pull-down;
++		};
++
++		pm8921_l22: l22 {
++			regulator-min-microvolt = <2750000>;
++			regulator-max-microvolt = <2750000>;
++			bias-pull-down;
++		};
++
++		pm8921_l23: l23 {
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			bias-pull-down;
++		};
++
++		pm8921_l24: l24 {
++			regulator-min-microvolt = <750000>;
++			regulator-max-microvolt = <1150000>;
++			bias-pull-down;
++		};
++
++		pm8921_l25: l25 {
++			regulator-always-on;
++			regulator-min-microvolt = <1225000>;
++			regulator-max-microvolt = <1225000>;
++			bias-pull-down;
++		};
++
++		/* Low Voltage Switch */
++		pm8921_lvs1: lvs1 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs2: lvs2 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs3: lvs3 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs4: lvs4 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs5: lvs5 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs6: lvs6 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs7: lvs7 {
++			bias-pull-down;
++		};
++
++		pm8921_ncp: ncp {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			qcom,switch-mode-frequency = <1600000>;
++		};
++	};
++};
++
++&sdcc1 {
++	vmmc-supply = <&pm8921_l5>;
++	status = "okay";
++};
++
++&sdcc3 {
++	vmmc-supply = <&pm8921_l6>;
++	vqmmc-supply = <&pm8921_l7>;
++
++	pinctrl-0 = <&sdcc3_default_state>;
++	pinctrl-1 = <&sdcc3_sleep_state>;
++	pinctrl-names = "default", "sleep";
++
++	status = "okay";
++};
++
++&usb_hs1_phy {
++	v3p3-supply = <&pm8921_l3>;
++	v1p8-supply = <&pm8921_l4>;
++};
++
++&usb1 {
++	dr_mode = "otg";
++	status = "okay";
++};
 
-> Is the code in the driver ready to handle this configuration?
-> 
-
-Yes, driver will handle all following cases correctly.
-
-Case 1: core0 enabled, core1 disabled
-Case 2: core0 disabled, core1 enabled
-Case 3: core0 enabled, core 1 enabled
-
-I will document all cases in the comment in the driver.
-
-> The inline comments you already have to explain the possible configurations
-> need to be update to address this new usecase.
-> 
-> Thanks,
-> Mathieu
-> 
->>
->> base-commit: dc8417021bcd01914a416bf8bab811a6c5e7d99a
->> -- 
->> 2.34.1
->>
+-- 
+2.34.1
 
