@@ -1,51 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C382E2EE6;
-	Fri, 13 Jun 2025 07:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2452E2F1F;
+	Fri, 13 Jun 2025 07:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800233; cv=none; b=GVmHmxP8SzsaukR2qe04v6GpSUNSFg+B2GL6A3xhqtsscvsZIE1Z7yvfMsA91S/2GUMfJmvdpP2IhOs+BMcrKifKRG8oNPAhwXGb881/OSbTALVxUvp7ib9ZFG36FuL4FImfCRgOG4wAZ9qAZP0nbxCt4tggbuPkEJ0or1F88wk=
+	t=1749800234; cv=none; b=RlbUkeTHDcJv2lP6+O5Wnq4ZwrIW2SoSsTuepwjjmSUSDq8cFbDTmBykSlON6sj8jSuUeijNOMHm4yGqo7yeSvOxCGIMNF9o/QAKD+6HBFMrTn5aKqrgjQzQbL322TAQdU69/DocEQp/zXKgOS0xFTH8VdrXG+51QaxSu8h57uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800233; c=relaxed/simple;
-	bh=AfG9iK28CCQ/FFcsce8EWv4GmK8bHlpaH4L3jEfLz+o=;
+	s=arc-20240116; t=1749800234; c=relaxed/simple;
+	bh=DeFzKLp0RRss+6LiK7R1kh8o7qRT6nGEm2tnVGQXwl8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=iY661TWsMM+7pOzQPNQzeDCGBN0kuQKFZiSEoXKWNMMGnfED2Hnt3EbqEYydhdvhYygEVRM58vLA046LLLUUT783jKaB8K28u1L1y+wnk5JfmB/VJbqOaIRrSNhNrNwO5srWusX0M+oQvFRgmz2HqEno6GiErjGfwcfuHaxluxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L1jZ7gIh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7MflSPQC; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=fH0pToF1NlwPLOb1vJXILyEyYN9plS56zk3Qutw7PrlYKJHMz1Ac1Fke7Sg8+GabmsuOesTvXSu8fxD9Xmd5aVCs/v46xshuhLm0dDFXVwe/V0sfqaT9P7pb+Mg1lzPvVrdEFkeAdYgoGOlrBOO6ARldZO/JS4mfo1kvNv5/jDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=07EkbRQ8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bC8CnbAv; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L1jZ7gIh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7MflSPQC"
-Date: Fri, 13 Jun 2025 07:37:08 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="07EkbRQ8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bC8CnbAv"
+Date: Fri, 13 Jun 2025 07:37:10 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749800229;
+	s=2020; t=1749800231;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=07yrROB7fDjWCnoHF3fXKbswM0HmzDqggK1YrGRUPJQ=;
-	b=L1jZ7gIhZudHJQ8qM+tBxlCgXaWJ78qAth+CsBhViM7cLCSnnVkJAF0LwUurBH0IXNh8ci
-	EbqI/QkBWm776OnyYdxuQw33toALiV/RslTgDScAe86vwr8iOqjjm6Rwv/rErzvFeFFaid
-	4d4UC4paeWZFIDacQ13T+B61ri+Si0HvL3VMYwgdPivas9/B3Oyxyuq/s7TeUwTz5N3Lu/
-	ckTzGzcwPUjEzlMTY4x0vbIB71V/1Upu1873422oXrD0w8LQCtsb7dKStLIW7LVTy5TEqP
-	yTxwNBqmyrtN28BroG0uJk+IfkgG3YF8Bnsgj24E0EMMhRoIldnIMSePLrq61A==
+	bh=GsQaRyS9PAM2JbusZC2EbUKNW0cw3KThaVumd+KbEkw=;
+	b=07EkbRQ8lXctM6Mz2aK46TImX7DURDCQTSCLWFadJtoX5Sf/dyjct4eqa8csb1Ifag8zmu
+	QfRwofAXcGwhP/+aJTO8lhRExBhBj6yBfKIH8hr7oOHkf7FQSmbP/YkpaiczpA5/BNSN3G
+	QcASAjgbXhqfFN9d+8s+thch+iGMzqfnoL3+bWNPMZ1ZZ/jh+8zlY7vRHMZjvQj/w5DBWU
+	IOgVAbXL0Y3ZM7mROJuIlfCOJiAYyYnCi/L/wn4sPFgTOamUltS76As1yOC6ibTGCUgYbM
+	rA3kykHnSoLmth2u1dUxwYVrhDjR4x4SJWwhxdEBJHRi279/BnTBKbvaMezg+w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749800229;
+	s=2020e; t=1749800231;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=07yrROB7fDjWCnoHF3fXKbswM0HmzDqggK1YrGRUPJQ=;
-	b=7MflSPQCo4j89gMJQ3wi1Wqsx2Opdxsz4wle6bFpbU2iy7wcHu2VfgIbD4rwo+TyJ1KtEx
-	3Z77U8N1Yc3Mq+BQ==
+	bh=GsQaRyS9PAM2JbusZC2EbUKNW0cw3KThaVumd+KbEkw=;
+	b=bC8CnbAvjY+sNiC64d1Tlhzw5EG70NZO9rR66bUwMBnT4zGJ6gCygEUWp4O+8aXwHmYvPr
+	ZxFBaWk6VDOvBoBg==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/smp: Use the SMP version of task_on_cpu()
+Subject:
+ [tip: sched/core] sched/smp: Use the SMP version of is_migration_disabled()
 Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Juri Lelli <juri.lelli@redhat.com>,
@@ -55,15 +56,15 @@ Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Valentin Schneider <vschneid@redhat.com>,
  Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250528080924.2273858-40-mingo@kernel.org>
-References: <20250528080924.2273858-40-mingo@kernel.org>
+In-Reply-To: <20250528080924.2273858-38-mingo@kernel.org>
+References: <20250528080924.2273858-38-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174980022841.406.13900619431800115144.tip-bot2@tip-bot2>
+Message-ID: <174980023057.406.4482693033699016443.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,17 +74,17 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     ea100b31eed459ea32d6df4489cf70219fd83a07
-Gitweb:        https://git.kernel.org/tip/ea100b31eed459ea32d6df4489cf70219fd83a07
+Commit-ID:     9fd5da7989ba6175fe71439738ddcf4c030d3d51
+Gitweb:        https://git.kernel.org/tip/9fd5da7989ba6175fe71439738ddcf4c030d3d51
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 28 May 2025 10:09:20 +02:00
+AuthorDate:    Wed, 28 May 2025 10:09:18 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 13 Jun 2025 08:47:22 +02:00
 
-sched/smp: Use the SMP version of task_on_cpu()
+sched/smp: Use the SMP version of is_migration_disabled()
 
-Simplify the scheduler by making CONFIG_SMP=y code in task_on_cpu()
-unconditional.
+Simplify the scheduler by making the CONFIG_SMP-only code in
+is_migration_disabled() unconditional.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
@@ -96,24 +97,24 @@ Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lore.kernel.org/r/20250528080924.2273858-40-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250528080924.2273858-38-mingo@kernel.org
 ---
  kernel/sched/sched.h | 4 ----
  1 file changed, 4 deletions(-)
 
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index f4bac9f..7490473 100644
+index 234dd28..b184c3d 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -2238,11 +2238,7 @@ static inline int task_current_donor(struct rq *rq, struct task_struct *p)
+@@ -1301,11 +1301,7 @@ static inline int cpu_of(struct rq *rq)
  
- static inline int task_on_cpu(struct rq *rq, struct task_struct *p)
+ static inline bool is_migration_disabled(struct task_struct *p)
  {
 -#ifdef CONFIG_SMP
- 	return p->on_cpu;
+ 	return p->migration_disabled;
 -#else
--	return task_current(rq, p);
+-	return false;
 -#endif
  }
  
- static inline int task_on_rq_queued(struct task_struct *p)
+ DECLARE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
