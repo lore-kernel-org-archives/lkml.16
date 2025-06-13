@@ -1,99 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92EE1ADC90;
-	Fri, 13 Jun 2025 15:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5468833E1;
+	Fri, 13 Jun 2025 15:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749827411; cv=none; b=KOxwLRp1BMXIOzy1Wt8hXJUjCqhbE+RsVQNmOKeDiJI03zx4KvWSJtSSJI38tzg7nY9gGXbd766Br+ICEhBZ7x6FONmDX321JrsoHBlP6s9gsIwtfTHUC6y6eAUXAoaQwpSZIfx4o/6vMFNnys73XRNkLCKXOxFiWBU/DiVD6Yg=
+	t=1749827632; cv=none; b=XL38S6duzo5HjhOGk9T13qszqL2uoSPe7y0n2h5Cirh6ft+qrRdHocXELU46WhcKTNGe+FTTqn52BlUSm8+ITxngzv00moO76gExnFGvr9PxdRHLYmRB1QFyO0q4BMaaku8y33mCANVO3lQ37sGseeTNaewLsA6KPMKlqUvHoAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749827411; c=relaxed/simple;
-	bh=1q4LLuNBoOm7qovwVHckGrY6ZpW00QK+k9OVNRIclGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G7tzW/eYBMPWY02shKnIYArdq5JErDH5uriC5i5cynLRxg3tI3Q1bUNNkz6El5bAzFYCkK6sZqA1uk49HomR1iQgosUhmig7FQfdc2dd9CIg/cPTu8fyx6i8M9zeUh7S6pmjQRTFAhYIfah7i8DrLziCnGatwn8Bp3tm4gsunS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JRAeVeQn; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749827632; c=relaxed/simple;
+	bh=FM3IrbmJmnE9i2+qWqWQlZ+E4ahHxHM5H66AV9WmBoI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Dq36IfNbEVm9mO9K0ZciCY8C3qNThCVE+B7fyRRrwOzMqXaYkJcwd7kiHQZizPejlH8WsugRQP0RkpQ/YWmfiDp+sQFEhelP9bdOjOGivPeIBMRESXaC1eY+OmvjqXMTZaEB/d/cQR9cKirlKcERu0cu92rXJb0LXfxhPhnBGzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kly87QeW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JRAeVeQn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749827410; x=1781363410;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1q4LLuNBoOm7qovwVHckGrY6ZpW00QK+k9OVNRIclGg=;
-  b=JRAeVeQnD6ILSm4bLYF6Wmobp/bbtUxuPsUb/KwI6l0yOYQEm5gxN87t
-   mVFR3/W7KSj5/s/H3mgcSfCTxCTga7OoG/1pXrwU7atZMFmtCdFKuyZge
-   NY4PdE5bg8QRuFNCUilcy3RQRWnhn6zJy05+pOJ7WCoeIELB3DJClI/W1
-   r0F2g2muyIVnrkAfJe0NsmktdNmT1EUF0kgWuNKWe2W0g/r6Ck/n8mm9P
-   kFdHVBn2nCPFgGH8+j/XpKQckguYj05Vnm263/Wpt0UrbKQ7ohqsaSAKH
-   usVN0AfJDYg/uo1pKChIPL3q/MhjvIaLflC82fHH3lRsodygig29f5qPd
-   w==;
-X-CSE-ConnectionGUID: lLbb/PvwQ7yo2fCf7CSo2A==
-X-CSE-MsgGUID: paVMZ5ygRE2jqH/kjrLf/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="62322705"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="62322705"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:10:01 -0700
-X-CSE-ConnectionGUID: st1U9hqITMex1xpYW26LNw==
-X-CSE-MsgGUID: OsGMEyXwS2eq+wa2xAy8Lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="147689565"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:09:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uQ62V-00000006HOU-0Xmv;
-	Fri, 13 Jun 2025 18:09:55 +0300
-Date: Fri, 13 Jun 2025 18:09:54 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>, Hans de Goede <hansg@kernel.org>
-Cc: Marek Vasut <marek.vasut+bmc150@mailbox.org>, linux-iio@vger.kernel.org,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Julien Stephan <jstephan@baylibre.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
- IRQ connected
-Message-ID: <aEw_QrVk9m1TJof3@smile.fi.intel.com>
-References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
- <8f7656ed-0a28-4ba0-accc-b19817bbb38b@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kly87QeW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51532C4CEE3;
+	Fri, 13 Jun 2025 15:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749827631;
+	bh=FM3IrbmJmnE9i2+qWqWQlZ+E4ahHxHM5H66AV9WmBoI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=kly87QeWZT/wrbptR1YPxy1l9gyVEOhvNZZmEaevtRPT9WyrvZ0TX/4+fp6YZ7aiQ
+	 afAh/kZ7hLMkf8CdrnaxRQeBQ+vnOjBT4liAml1ERCct5+1CFWyxZ4uBOdQicDrROD
+	 gRjB2u5eTm/qsBQse/skOXLuIfmS6EB7pL6ZkklPLOBw5wiIX00+2l5CRJrtz2QLlA
+	 hvNVejusVTbhm3bvR/PInaoduM3LlFHlrAFsoFTmFlQRRf59XWc4E1QguZkSoAwF1k
+	 sbn+dhQN1ND+j3porT3PrSJizbAMCdW/Y8zn8uT4C7Qf290YS0GAHbcfQHpyC6CaU6
+	 UB+VG3EAUGLqQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  jasonmiu@google.com,
+  graf@amazon.com,  changyuanl@google.com,  rppt@kernel.org,
+  dmatlack@google.com,  rientjes@google.com,  corbet@lwn.net,
+  rdunlap@infradead.org,  ilpo.jarvinen@linux.intel.com,
+  kanie@linux.alibaba.com,  ojeda@kernel.org,  aliceryhl@google.com,
+  masahiroy@kernel.org,  akpm@linux-foundation.org,  tj@kernel.org,
+  yoann.congal@smile.fr,  mmaurer@google.com,  roman.gushchin@linux.dev,
+  chenridong@huawei.com,  axboe@kernel.dk,  mark.rutland@arm.com,
+  jannh@google.com,  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
+  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
+  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
+  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
+  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
+  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
+  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
+  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
+  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
+  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
+  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
+  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
+  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
+  stuart.w.hayes@gmail.com
+Subject: Re: [RFC v2 11/16] luo: luo_sysfs: add sysfs state monitoring
+In-Reply-To: <CA+CK2bCnMpRy=wYtt02Xy+R7BFhrY_RsdaZ7X4i+CUASv5Uo0Q@mail.gmail.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+	<20250515182322.117840-12-pasha.tatashin@soleen.com>
+	<mafs0plfirwh3.fsf@kernel.org>
+	<CA+CK2bCnMpRy=wYtt02Xy+R7BFhrY_RsdaZ7X4i+CUASv5Uo0Q@mail.gmail.com>
+Date: Fri, 13 Jun 2025 17:13:43 +0200
+Message-ID: <mafs0ldpvn07s.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f7656ed-0a28-4ba0-accc-b19817bbb38b@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
- +Hans here as well.
+On Sun, Jun 08 2025, Pasha Tatashin wrote:
 
-On Fri, Jun 13, 2025 at 10:03:34AM -0500, David Lechner wrote:
-> On 6/13/25 7:45 AM, Marek Vasut wrote:
-> > The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
-> > which leads to bmc150_accel_core_probe() being called with irq=0, which
-> > leads to bmc150_accel_interrupts_setup() never being called, which leads
-> > to struct bmc150_accel_data *data ->interrupts[i].info being left unset
-> > to NULL. Later, userspace can indirectly trigger bmc150_accel_set_interrupt()
-> > which depends on struct bmc150_accel_data *data ->interrupts[i].info being
-> > non-NULL, and which triggers NULL pointer dereference. This is triggered
-> > e.g. from iio-sensor-proxy.
-> 
-> Is the interrupt not wired up or is it just missing from the table?
+> On Thu, Jun 5, 2025 at 12:20=E2=80=AFPM Pratyush Yadav <pratyush@kernel.o=
+rg> wrote:
+>>
+>> On Thu, May 15 2025, Pasha Tatashin wrote:
+>>
+>> > Introduce a sysfs interface for the Live Update Orchestrator
+>> > under /sys/kernel/liveupdate/. This interface provides a way for
+>> > userspace tools and scripts to monitor the current state of the LUO
+>> > state machine.
+>>
+>> I am not sure if adding and maintaining a new UAPI that does the same
+>> thing is worth it. Can't we just have commandline utilities that can do
+>> the ioctls and fetch the LUO state, and those can be called from tools
+>> and scripts?
+>>
+>
+> This is based on discussion from SystemD people. It is much simpler
+> for units to check the current 'state' via sysfs, and act accordingly.
 
-Same Q I just asked :-)
+Ok, fair enough.
 
--- 
-With Best Regards,
-Andy Shevchenko
+[...]
 
-
+--=20
+Regards,
+Pratyush Yadav
