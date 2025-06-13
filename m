@@ -1,458 +1,281 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2086.outbound.protection.outlook.com [40.107.94.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F2772608
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749845419; cv=none; b=A6nAzgQRzi11w33lXyKTbLM5OMgprXFUHunj2IIiDlkuOBoYrMBmh0iYZQaLGSN4/6F9pYPCz2q1QmNMoUJ47wcm/pGyQQicdB8W91xBmFat7u8MM1FRg7IQTInIfkc8gfI0Omz1QJwWmbdfVs2QGFR2akmqmyDzQ/zMV7jNk6s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749845419; c=relaxed/simple;
-	bh=fWgEQj+r02C6XrfVY1RzYmPj4qIMY/NY9bAmjoct/Mg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hZJNg5EEc66rko/RX9XLN5zKKvvM5RqWMDUy4dgRNflhkC8pQQHQS87pfvPXxdwaAjnPbKb/IVlcUUxaB322utbcssPZw/8gI2b41/s5x1Ch3qs/MXm51XBRHiR4Tb9Zl5OOw14ZyeN8Hb9cR3ZWKdKsdRrhJFAUGtTkjpHf0Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=XT/pYkqm; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E50F72608;
+	Fri, 13 Jun 2025 20:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749845448; cv=fail; b=nyaoKaktMoyph17YspSyz+64n9JrNekmmTGvBq83GB8SOGfLTqZE1itCozL0s3NDnQkukE3IHuthpylS7MW8l7NZTIQmZhq/ipjY7IdFdy0MdCLlmrxQGurXs4A3eG4CDbnFvCJCV2ArTmf9kmH7FRu3RJwbGYMCm5Vj4sUoZKw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749845448; c=relaxed/simple;
+	bh=7Za2T1SV+WgznoTFphFzikdxSqC/8xhNPjXeov9f0XU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Hcvs2nSqKKLP3LdpzO2XvlcHKnI44RDP+acq1EWRfSrIXz1lsSbMH1UfiUCo6JFvmpkg/Ubxp7LBfvs4vpGopqnX947FpFDP9RQdhIf114SQBigxZcg9xVTGlZMQoDsKlzP7iEjNnHIVh5+LitgIrU+77ixlKRQq8JNdgOYhxus=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ICiyLEPf; arc=fail smtp.client-ip=40.107.94.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="XT/pYkqm"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-606fdbd20afso4870584a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neon.tech; s=google; t=1749845415; x=1750450215; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HdeF68xR6GC/wjGYdz/zqG29CgX3dAqhdfESrVGyzJ8=;
-        b=XT/pYkqml9wmPiQzJTVSkfRwDjHyCNhGCvffMUZSpBnbcy+CT8779zWzXU5SnYCG26
-         WMeip6KFyglhdZrLloaxF09/qNOW4cTya2xxmb7Nx0JXU62jhpjK+G1sCaL7HQ7EUnPr
-         Zv3EkpxAc3sMQoZtFJaLxVVItWW37jDOdKs/M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749845415; x=1750450215;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HdeF68xR6GC/wjGYdz/zqG29CgX3dAqhdfESrVGyzJ8=;
-        b=JKAFrQaikJuIuGxV17qL1GxNz+LfOYNGtQUFue4kMzQ1Me4c+SnTeZFzF7oLr6Qnr/
-         IY0VqNLra7//a7K+FCswAv7XqSKojsKG/Lv1vn6XFKwPcqNNcULoioi2hmz3HfocBTiK
-         ftbsVs0acJWnxYV45uuuOA6oS2xnr1tYF3uFdxstMS6lMNoRW7+a4ZydTIzlnRvVhyMY
-         qCNRdltLsBDa60B9/KMdPUgBpkeillJl0ynMMnhkL9GoPfcf6rD21oERTQKk3jZ/n2dy
-         dc18/8HwC5opEW9r8JKFB1dee3CxuDvZa1yKlro6dU9J+HeFTrfcT8sKWAaCXnSl8EA9
-         Z6bQ==
-X-Gm-Message-State: AOJu0YxY8oRDRdyF7Z67R+p5Xw07o8Jwv7ofxFapzM8220ImeDS+o9n0
-	QI88Gn+nGI7pCj8+MnGK63bL1h6TUakadiefVBkAT4LdP6DjfKdIQL9e02SS4QFuKwiuGq/5JoC
-	Rp0rEQ+A=
-X-Gm-Gg: ASbGncvkYweQqH4Q0xGCYo8mwXz0NvNxzGRJW6x/xNQpqM85cTYHGymfOwuyOzQypls
-	y+7SzrMLLK2xNucImIKSn9HJNzsm/vvkmf6EuGtP2sw0g+DByviBbYYSHg51SMn74/pMngq1dLX
-	Uz7bDJcIsAmm3vPLR+xy1L0jBvtRDTwKtG7WJMjV/zIcy2C++Srkyr2IJIMapZhaKTlDCj9pq62
-	zUYe0sTcOyFp8fNthqZ5a6J+ljRXseyya4wQY8fmGQiyqRZWs4y+LAd30a1tbSsXG42tjH4nbRr
-	MKgw3Y9yldWtSSa8uSdfsgPRdAUf9+W8O4mYAvaE+NLEhTVKjveTOzkeKt3zz95RcZTtuV5b7g6
-	p
-X-Google-Smtp-Source: AGHT+IFEvm0Xpn9ySXG9NpB9ymgE7br5qW9afaQGRT4NGMiC5EQVxt7wMazyNoKPE1tRNxJz70C3bQ==
-X-Received: by 2002:a05:6402:27c8:b0:608:66a3:fec with SMTP id 4fb4d7f45d1cf-608d088d800mr452063a12.2.1749845415004;
-        Fri, 13 Jun 2025 13:10:15 -0700 (PDT)
-Received: from [192.168.86.142] ([84.65.228.220])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48cd687sm1663842a12.18.2025.06.13.13.10.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 13:10:14 -0700 (PDT)
-Message-ID: <3e767aa4-c783-4857-b34e-fdf3f20bd94f@neon.tech>
-Date: Fri, 13 Jun 2025 21:10:13 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ICiyLEPf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l/dBptB7g/qIEEnEOA1el/DDBlpNQaBmE7HHmTl1yfyECCtn3sPlkbMf1UnMCcjDGW90w6B9YRHx1Rjb0DXsptOkg4fFK6ikLdo87oHYCfyLMVayer5arp5dYgDvD6YPSa46Tl/ZoPfaZ8dHcw0fvQfnrmvU9FgyK0RW94Tkw4zIhVMW9t+E2Oh4cfeBBiNpj/lo6jzWzvCr3tLgLuLMuNeRA+H6KMwGB//1hpodKzjYlAhP58diOzjNjjjcADN2uCscUUFcEn+DATB/OiH8nShIqJ0nO4RcMY2YCEuL/Slyhy/hl6pLn7CXUBSFQSjeEvFHFpOMbQ+LgYGO3CB5pw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+G4ETwy8NmomOgQflad0FMk3DhrQYsxB2j2kJAJaSyk=;
+ b=BKNldtdWs8yM5mHthJF863elZeJTv2Z5wLQnuz8kxoQtt0QEDQffVEWnX0+XL7CF9lEukLr2X46Y+eRUeg3agHiH3W3znpwl9puGULSKlT7764LqyUp096FVEspwC0Hnns37moR6d72UkEGszL2AGu/u1h7RPwZo0S1jrfh/q1XSDGMOyKaM/F57e2bsH/vTS000Bm5aRfssg8sqhUqWtL/9WS62L600K4juudjGzC7BMe05WJTFAJsIKyq7rLIbC/SVE2Y5hnVEbe3qju4awRts0lFCPT7SxLwkKib514tPDkhX75WHQ5NCR2Zzxm62y8RYTCAPKf75XMGE4pgkNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+G4ETwy8NmomOgQflad0FMk3DhrQYsxB2j2kJAJaSyk=;
+ b=ICiyLEPfPM1Zi+qyCNOfCLtpb3NbbWHHuQD+ra9qXogQVRW4v0fPY9Fpc1AgPCOgscPX8zTw0aHjfbd62Zlpt38cQedQd2UMnQZjFAFpCHi9lFNTrcd2vFdWt437NOAiEOutwYCAZ8XgHaZTESznUusbsIIsmkg7Fkd18zJcqMY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ IA4PR12MB9835.namprd12.prod.outlook.com (2603:10b6:208:54f::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.23; Fri, 13 Jun 2025 20:10:42 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8792.038; Fri, 13 Jun 2025
+ 20:10:42 +0000
+Date: Fri, 13 Jun 2025 16:10:34 -0400
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-edac@vger.kernel.org, git@amd.com,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>
+Subject: Re: [PATCH v7 2/5] cdx: Export Symbols for MCDI RPC and
+ Initialization
+Message-ID: <20250613201034.GC171759@yaz-khff2.amd.com>
+References: <20250529070017.7288-1-shubhrajyoti.datta@amd.com>
+ <20250529070017.7288-3-shubhrajyoti.datta@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529070017.7288-3-shubhrajyoti.datta@amd.com>
+X-ClientProxiedBy: SA1PR02CA0007.namprd02.prod.outlook.com
+ (2603:10b6:806:2cf::18) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v4 1/4] x86/mm: Update mapped addresses in
- phys_{pmd,pud}_init()
-From: Em Sharnoff <sharnoff@neon.tech>
-To: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
- Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-References: <7d0d307d-71eb-4913-8023-bccc7a8a4a3d@neon.tech>
-Content-Language: en-US
-In-Reply-To: <7d0d307d-71eb-4913-8023-bccc7a8a4a3d@neon.tech>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|IA4PR12MB9835:EE_
+X-MS-Office365-Filtering-Correlation-Id: fa0bdfeb-f7c5-4481-cf2b-08ddaab65fca
+X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8Qyc0Fre0hnqoZUWwKwMsFhZeaXd6x8FFd61b9FLsDPmhZu+jhoZbc5E+8L9?=
+ =?us-ascii?Q?1aYO7nJyyeT+OxNHmlHe3M4jkQxIMRFKe46km0uMYjpIYI/znEorUFUDhKqu?=
+ =?us-ascii?Q?iSlCWdy7jxHAf1w/i/xGWvyufRMn9SaEPJYcelvVuKFLVsSW5CZlsYtNFGGH?=
+ =?us-ascii?Q?V7MJNcFx25vdyZfvLMzNe//5P0O396xuqm5y0a1DF9ZBybkhE18RG4wZFYDV?=
+ =?us-ascii?Q?wUPbRKutqkO5z0TwcE8X53iEpgIEEcY9mA1fSt/ZxnCd0nckDDkT5Maem6Ie?=
+ =?us-ascii?Q?sDs0+SEnvVHUGTD3R6+vfFOZmOLrz1zBPHDLS44TkhvhdgytjvMu/lUfbgeW?=
+ =?us-ascii?Q?D/3ze+g5uecT9X+ghgmAdaABJ8IVBMGluT3RH9e1x8+YLplBTxtAJXsGFz1A?=
+ =?us-ascii?Q?9UwVko3lsslLesmhQrqMS/a51hYt7Q1db0/tv+MPkmv6lICg51+lZJTDzWBg?=
+ =?us-ascii?Q?8homShSn2AiGP8FYDcWslQAQQ2mbeIW8NGiAzYNeSyBYAdqzGPPQkHCdzwwX?=
+ =?us-ascii?Q?ki2evujPEH+o6N8vVe/DaAj9TErDLMKixVMEbW84bMGhweoIMN3wy8oG8xft?=
+ =?us-ascii?Q?7I9OYyJEqVk2eJLYVRTAR0cFFFAoZf3k/Nvp1HW8Uaz6xKRrzLoa0jkDz147?=
+ =?us-ascii?Q?XhNqX8SR77j9l7+nJMSSepz/kfamoTEli5P5Cy1Po6Bz+BbsOrLuVUA4FzUC?=
+ =?us-ascii?Q?S+HIMbyp5IVGT/HURrdHCuOBSewGZpt6ihj5gsskePN5g2+rgX6qWSlM91+K?=
+ =?us-ascii?Q?Nah7OzUIBCn13g285rsKXcsd48hGVwsfqALupYJz/axRpvl4+CVeiX0B2hg6?=
+ =?us-ascii?Q?wj+tUPUNx4mYXEky4pb8Z1QfmuRem4EAZDMCK/+c7WwKScq1MCQum8a/HGav?=
+ =?us-ascii?Q?1u1Q7bw7agUlzNd83c5fX9lgAz8L8SyXW7+3RrcfX+RJM4a2s2tR2CzEnQou?=
+ =?us-ascii?Q?/hIEP/Ncgbzgl37xaxCNch0VejucoIzda98elBU2ta93SYlW+XDTOVxXosBa?=
+ =?us-ascii?Q?cJPcbADdvW6NwGCiGD/Kea1hyPRxyOJn99A4DJ0zdtgKKr0tLRqA9xayHpwq?=
+ =?us-ascii?Q?JEZz48mczdu1QfSARJ9VaAzRd2enVz3Ar2v0/givewP/2fSZKafLTz6rMfEX?=
+ =?us-ascii?Q?KsGUEKxigR/lAej+vH7khMKtWhYAQ6EHsBpcW3qaya+1ASxXdmNcUyqrPa1h?=
+ =?us-ascii?Q?1iqVyLi5JIEk9FewbhUgU9CchWe/QpMTSUX1tLdZBxxALjv0hhI9ODMGC8Oc?=
+ =?us-ascii?Q?9iREGqD6qjPe1/7B0XY85dw7QQ4cy7Rem+LNpgmADd645bZqAb8pfcBmP/Z4?=
+ =?us-ascii?Q?SSx3k3t0fuGbOnWmvJPBjMjMvb/g9LOqeDO2sDLzacpInhP211A1LYigYRFy?=
+ =?us-ascii?Q?XPQLMx23BPPzVZye0vWRNbIf85OOMrMToaJG6hWhudmHaCPlMxil0QykFTDQ?=
+ =?us-ascii?Q?RQNyPW4udko=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KzuJb7YI7/CfSpskMhzP+NiONsCFvpD6moPxBWlfTUbg9GQz0MQaFhjq6ybo?=
+ =?us-ascii?Q?j07NxJWygQTqfnCegv3sPpdoDW4VCfd2JvYo1Zs87zfnPapxshKmEMrvV6u/?=
+ =?us-ascii?Q?wPX1noT2oHDUaOhpwniKSv4KkfeiSu/2o638mr5cYAwlI1eLnLOAQo9UNLKe?=
+ =?us-ascii?Q?x9/WDMmtB3V9AHychXSgdmsKOUWG0r7pY4R/sxhjgfKTBx8ydolBe3rh40Xi?=
+ =?us-ascii?Q?j+VqgQnk3le8Emy0aJt2yOMG8gdzT/FQuEx8Qf5plsrVs5b36EOHInO5/nWT?=
+ =?us-ascii?Q?ncL9iOYD2DYKQ5wHX3c2BkynXEdQgfIpxhXo1s7R5jDqEJO2so+SNZ8CBQAc?=
+ =?us-ascii?Q?vowuxtmpZIzF++yhNyXYjbqQB8vkN4LvWGXLJTQzqE7GhK7gNtt6VjSI86fJ?=
+ =?us-ascii?Q?W5pwHUfWcDDzS9cP6P0MylTTic2WOzCqUzjlF+hq5XQkrIU5mS2wDLBk/Xef?=
+ =?us-ascii?Q?d+O8sPliTXYg9d+9CejLRfRW3WNziesQ7Qe84Xwu18m4RxjmjReJP/Ts1XKX?=
+ =?us-ascii?Q?sQY4crRdWnEmdkcRlV0n1J+2a3z3mPtcKOWhPEA+pc3QnrfVMsRJEuaTHvRX?=
+ =?us-ascii?Q?843uyaShmndwBuRUQUlnbxY21JqgtG2xB/FSeWQqHThIUvR/qKfnz9ja4wYA?=
+ =?us-ascii?Q?bL9UphSd4pAC3V1xIAVe674Jk+JI7kq/Q7d+iUGaJd938zk8qnHgC5jFGvO7?=
+ =?us-ascii?Q?LyjLWQ7VQslu+MxFwxlxY0vjYwTVRVDsdqPvJn7zPHXykpUzpJ4YCCx/ALGM?=
+ =?us-ascii?Q?4RSFvVco4W46xpfp7AfAsWqtpJPDl8DahBsxKZFTRZX0f6EB7B+X86upyrTl?=
+ =?us-ascii?Q?HpMOj2cw0L7qRiYcUoGhOj2oPqM8yuSiUgYnHk5/RxOb1D8F1NCME5/BltBh?=
+ =?us-ascii?Q?Ofu0a4htRuyMmW2kimmC/krO9ltQhvJo9BiOhf+3EYX7/3PMzlpQXv1tsH6c?=
+ =?us-ascii?Q?B/Njwp0lcNKu0H7+/7l8tW/kKNXoIPeT74jSNklTup68zY50PeySCcUzQNba?=
+ =?us-ascii?Q?UnvpZLMmR9XXlbU2wznKcQQa1eHCYwoKierEk8htY6O6jI0Xv+ctkkUDkE83?=
+ =?us-ascii?Q?4rP9ji4ELYpbPo675Mn/o9xJMTjy6+EJNznKmqTuhRZBo4V+/sWYLTVn1DqN?=
+ =?us-ascii?Q?MlmoH1RH1hV5GqKhY0cFfGomfOfIgKqgkiFmZKe5AXlGEo2uuZ9gEMtmLdg+?=
+ =?us-ascii?Q?MoIh+TBV/zosbyQRYMt+gL0s3wmqw7njXG27/S8jQSAvNbY2R/W0ndsP37d4?=
+ =?us-ascii?Q?kNxxzWs8LS0MnM5jFr/298OuwWuqNWFcq4aztyyfmOJ4nb5y10mu5CgC5oPm?=
+ =?us-ascii?Q?teKDPEf+dm90tHSiVdVHPrltuLDLaWQo+LPSbLypc7Rw7d7sB3iYUZFI806n?=
+ =?us-ascii?Q?KvqOl2iu0bzxJKwhyb4bL2a6xiruLcz0TFv4Y7zO8fpVt38VumasmXNa49xe?=
+ =?us-ascii?Q?EsQ2nnujC2qZM/ygmwsmGUgNxC9945oCvmND1Su52u1oJ+fBnMktpjBCDYNE?=
+ =?us-ascii?Q?RVd4/Jv4APUAx6n6S8W1et4lFjOPDebdrojWxkkd9ww4H8Yf/imNTRoDtwXE?=
+ =?us-ascii?Q?khz6ebjnlbqql7Zgx3CPIV0WXSOtX+lUagjjZDeW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa0bdfeb-f7c5-4481-cf2b-08ddaab65fca
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 20:10:42.7673
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /63UdLHbMnLJeAQo0HBuvNxx6j9BISZ60KphQp2S/EwYUxeMSAu3sdHQGDjP11E4z1XCGiEEFQqJMeSoqHx4YQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR12MB9835
 
-Currently kernel_physical_mapping_init() and its dependents return the
-last physical address mapped ('paddr_last'). This makes it harder to
-cleanly handle allocation errors in those functions.
+On Thu, May 29, 2025 at 12:30:14PM +0530, Shubhrajyoti Datta wrote:
+> The cdx_mcdi_init, cdx_mcdi_process_cmd, and cdx_mcdi_rpc functions are
+> needed by VersalNET EDAC modules that interact with the MCDI (Management
+> Controller Direct Interface) framework. These functions facilitate
+> communication between different hardware components by enabling command
+> execution and status management.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+> ---
+> 
+> Changes in v7:
+> - Add the kernel doc description
+> - Add the prototype from first patch to here
+> 
+> Changes in v6:
+> - Update commit description
+> 
+> Changes in v2:
+> - Export the symbols for module compilation
+> 
+>  drivers/cdx/controller/mcdi.c | 29 +++++++++++++++++++++++++++++
+>  include/linux/cdx/mcdi.h      |  6 ++++++
 
-'paddr_last' is used to update 'pfn_mapped'/'max_pfn_mapped', so:
+You've added the function prototypes to this new global header.
 
-1. Introduce add_paddr_range_mapped() to do the update, translating from
-   physical addresses to pfns
-2. Call add_paddr_range_mapped() in phys_pud_init() where 'paddr_last'
-   would otherwise be updated due to 1Gi pages.
-   - Note: this includes places where we set 'paddr_last = paddr_next',
-     as was added in 20167d3421a0 ("x86-64: Fix accounting in
-     kernel_physical_mapping_init()")
+But you didn't remove them from the local header.
+  drivers/cdx/controller/mcdi.h
 
-add_paddr_range_mapped() is probably too expensive to be called every
-time a page is updated, so instead, phys_pte_init() continues to return
-'paddr_last', and phys_pmd_init() calls add_paddr_range_mapped() only at
-the end of the loop (should mean it's called every 1Gi).
+Also, you haven't included the new global header in the cdx/controller
+code.
 
-Signed-off-by: Em Sharnoff <sharnoff@neon.tech>
----
-Changelog:
-- v4: Add this patch
----
- arch/x86/include/asm/pgtable.h |  3 +-
- arch/x86/mm/init.c             | 23 +++++----
- arch/x86/mm/init_32.c          |  6 ++-
- arch/x86/mm/init_64.c          | 88 +++++++++++++++++-----------------
- arch/x86/mm/mm_internal.h      | 13 +++--
- 5 files changed, 69 insertions(+), 64 deletions(-)
+Even though this does compile, it doesn't seem proper.
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 7bd6bd6df4a1..138d55f48a4f 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -1244,8 +1244,7 @@ extern int direct_gbpages;
- void init_mem_mapping(void);
- void early_alloc_pgt_buf(void);
- void __init poking_init(void);
--unsigned long init_memory_mapping(unsigned long start,
--				  unsigned long end, pgprot_t prot);
-+void init_memory_mapping(unsigned long start, unsigned long end, pgprot_t prot);
- 
- #ifdef CONFIG_X86_64
- extern pgd_t trampoline_pgd_entry;
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index bfa444a7dbb0..1461873b44f1 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -529,16 +529,24 @@ bool pfn_range_is_mapped(unsigned long start_pfn, unsigned long end_pfn)
- 	return false;
- }
- 
-+/*
-+ * Update max_pfn_mapped and range_pfn_mapped with the range of physical
-+ * addresses mapped. The range may overlap with previous calls to this function.
-+ */
-+void add_paddr_range_mapped(unsigned long start_paddr, unsigned long end_paddr)
-+{
-+	add_pfn_range_mapped(start_paddr >> PAGE_SHIFT, end_paddr >> PAGE_SHIFT);
-+}
-+
- /*
-  * Setup the direct mapping of the physical memory at PAGE_OFFSET.
-  * This runs before bootmem is initialized and gets pages directly from
-  * the physical memory. To access them they are temporarily mapped.
-  */
--unsigned long __ref init_memory_mapping(unsigned long start,
--					unsigned long end, pgprot_t prot)
-+void __ref init_memory_mapping(unsigned long start,
-+			       unsigned long end, pgprot_t prot)
- {
- 	struct map_range mr[NR_RANGE_MR];
--	unsigned long ret = 0;
- 	int nr_range, i;
- 
- 	pr_debug("init_memory_mapping: [mem %#010lx-%#010lx]\n",
-@@ -548,13 +556,10 @@ unsigned long __ref init_memory_mapping(unsigned long start,
- 	nr_range = split_mem_range(mr, 0, start, end);
- 
- 	for (i = 0; i < nr_range; i++)
--		ret = kernel_physical_mapping_init(mr[i].start, mr[i].end,
--						   mr[i].page_size_mask,
--						   prot);
-+		kernel_physical_mapping_init(mr[i].start, mr[i].end,
-+					     mr[i].page_size_mask, prot);
- 
--	add_pfn_range_mapped(start >> PAGE_SHIFT, ret >> PAGE_SHIFT);
--
--	return ret >> PAGE_SHIFT;
-+	return;
- }
- 
- /*
-diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-index ad662cc4605c..4427ac433041 100644
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -245,7 +245,7 @@ static inline int is_x86_32_kernel_text(unsigned long addr)
-  * of max_low_pfn pages, by creating page tables starting from address
-  * PAGE_OFFSET:
-  */
--unsigned long __init
-+void __init
- kernel_physical_mapping_init(unsigned long start,
- 			     unsigned long end,
- 			     unsigned long page_size_mask,
-@@ -382,7 +382,9 @@ kernel_physical_mapping_init(unsigned long start,
- 		mapping_iter = 2;
- 		goto repeat;
- 	}
--	return last_map_addr;
-+
-+	add_paddr_range_mapped(start, last_map_addr);
-+	return;
- }
- 
- #ifdef CONFIG_HIGHMEM
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 7c4f6f591f2b..e729108bee30 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -502,13 +502,13 @@ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
- /*
-  * Create PMD level page table mapping for physical addresses. The virtual
-  * and physical address have to be aligned at this level.
-- * It returns the last physical address mapped.
-  */
--static unsigned long __meminit
-+static void __meminit
- phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
- 	      unsigned long page_size_mask, pgprot_t prot, bool init)
- {
- 	unsigned long pages = 0, paddr_next;
-+	unsigned long paddr_first = paddr;
- 	unsigned long paddr_last = paddr_end;
- 
- 	int i = pmd_index(paddr);
-@@ -579,21 +579,25 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
- 		spin_unlock(&init_mm.page_table_lock);
- 	}
- 	update_page_count(PG_LEVEL_2M, pages);
--	return paddr_last;
-+	/*
-+	 * In case of recovery from previous state, add_paddr_range_mapped() may
-+	 * be called with an overlapping range from previous operations.
-+	 * It is idempotent, so this is ok.
-+	 */
-+	add_paddr_range_mapped(paddr_first, paddr_last);
-+	return;
- }
- 
- /*
-  * Create PUD level page table mapping for physical addresses. The virtual
-  * and physical address do not have to be aligned at this level. KASLR can
-  * randomize virtual addresses up to this level.
-- * It returns the last physical address mapped.
-  */
--static unsigned long __meminit
-+static void __meminit
- phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
- 	      unsigned long page_size_mask, pgprot_t _prot, bool init)
- {
- 	unsigned long pages = 0, paddr_next;
--	unsigned long paddr_last = paddr_end;
- 	unsigned long vaddr = (unsigned long)__va(paddr);
- 	int i = pud_index(vaddr);
- 
-@@ -619,10 +623,8 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
- 		if (!pud_none(*pud)) {
- 			if (!pud_leaf(*pud)) {
- 				pmd = pmd_offset(pud, 0);
--				paddr_last = phys_pmd_init(pmd, paddr,
--							   paddr_end,
--							   page_size_mask,
--							   prot, init);
-+				phys_pmd_init(pmd, paddr, paddr_end,
-+					      page_size_mask, prot, init);
- 				continue;
- 			}
- 			/*
-@@ -640,7 +642,7 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
- 			if (page_size_mask & (1 << PG_LEVEL_1G)) {
- 				if (!after_bootmem)
- 					pages++;
--				paddr_last = paddr_next;
-+				add_paddr_range_mapped(paddr, paddr_next);
- 				continue;
- 			}
- 			prot = pte_pgprot(pte_clrhuge(*(pte_t *)pud));
-@@ -653,13 +655,13 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
- 				     pfn_pud(paddr >> PAGE_SHIFT, prot_sethuge(prot)),
- 				     init);
- 			spin_unlock(&init_mm.page_table_lock);
--			paddr_last = paddr_next;
-+			add_paddr_range_mapped(paddr, paddr_next);
- 			continue;
- 		}
- 
- 		pmd = alloc_low_page();
--		paddr_last = phys_pmd_init(pmd, paddr, paddr_end,
--					   page_size_mask, prot, init);
-+		phys_pmd_init(pmd, paddr, paddr_end,
-+			      page_size_mask, prot, init);
- 
- 		spin_lock(&init_mm.page_table_lock);
- 		pud_populate_init(&init_mm, pud, pmd, init);
-@@ -668,22 +670,23 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
- 
- 	update_page_count(PG_LEVEL_1G, pages);
- 
--	return paddr_last;
-+	return;
- }
- 
--static unsigned long __meminit
-+static void __meminit
- phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
- 	      unsigned long page_size_mask, pgprot_t prot, bool init)
- {
--	unsigned long vaddr, vaddr_end, vaddr_next, paddr_next, paddr_last;
-+	unsigned long vaddr, vaddr_end, vaddr_next, paddr_next;
- 
--	paddr_last = paddr_end;
- 	vaddr = (unsigned long)__va(paddr);
- 	vaddr_end = (unsigned long)__va(paddr_end);
- 
--	if (!pgtable_l5_enabled())
--		return phys_pud_init((pud_t *) p4d_page, paddr, paddr_end,
--				     page_size_mask, prot, init);
-+	if (!pgtable_l5_enabled()) {
-+		phys_pud_init((pud_t *) p4d_page, paddr, paddr_end,
-+			      page_size_mask, prot, init);
-+		return;
-+	}
- 
- 	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
- 		p4d_t *p4d = p4d_page + p4d_index(vaddr);
-@@ -705,33 +708,32 @@ phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
- 
- 		if (!p4d_none(*p4d)) {
- 			pud = pud_offset(p4d, 0);
--			paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
--					page_size_mask, prot, init);
-+			phys_pud_init(pud, paddr, __pa(vaddr_end),
-+				      page_size_mask, prot, init);
- 			continue;
- 		}
- 
- 		pud = alloc_low_page();
--		paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
--					   page_size_mask, prot, init);
-+		phys_pud_init(pud, paddr, __pa(vaddr_end),
-+			      page_size_mask, prot, init);
- 
- 		spin_lock(&init_mm.page_table_lock);
- 		p4d_populate_init(&init_mm, p4d, pud, init);
- 		spin_unlock(&init_mm.page_table_lock);
- 	}
- 
--	return paddr_last;
-+	return;
- }
- 
--static unsigned long __meminit
-+static void __meminit
- __kernel_physical_mapping_init(unsigned long paddr_start,
- 			       unsigned long paddr_end,
- 			       unsigned long page_size_mask,
- 			       pgprot_t prot, bool init)
- {
- 	bool pgd_changed = false;
--	unsigned long vaddr, vaddr_start, vaddr_end, vaddr_next, paddr_last;
-+	unsigned long vaddr, vaddr_start, vaddr_end, vaddr_next;
- 
--	paddr_last = paddr_end;
- 	vaddr = (unsigned long)__va(paddr_start);
- 	vaddr_end = (unsigned long)__va(paddr_end);
- 	vaddr_start = vaddr;
-@@ -744,16 +746,14 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
- 
- 		if (pgd_val(*pgd)) {
- 			p4d = (p4d_t *)pgd_page_vaddr(*pgd);
--			paddr_last = phys_p4d_init(p4d, __pa(vaddr),
--						   __pa(vaddr_end),
--						   page_size_mask,
--						   prot, init);
-+			phys_p4d_init(p4d, __pa(vaddr), __pa(vaddr_end),
-+				      page_size_mask, prot, init);
- 			continue;
- 		}
- 
- 		p4d = alloc_low_page();
--		paddr_last = phys_p4d_init(p4d, __pa(vaddr), __pa(vaddr_end),
--					   page_size_mask, prot, init);
-+		phys_p4d_init(p4d, __pa(vaddr), __pa(vaddr_end),
-+			      page_size_mask, prot, init);
- 
- 		spin_lock(&init_mm.page_table_lock);
- 		if (pgtable_l5_enabled())
-@@ -769,7 +769,7 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
- 	if (pgd_changed)
- 		sync_global_pgds(vaddr_start, vaddr_end - 1);
- 
--	return paddr_last;
-+	return;
- }
- 
- 
-@@ -777,15 +777,15 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
-  * Create page table mapping for the physical memory for specific physical
-  * addresses. Note that it can only be used to populate non-present entries.
-  * The virtual and physical addresses have to be aligned on PMD level
-- * down. It returns the last physical address mapped.
-+ * down.
-  */
--unsigned long __meminit
-+void __meminit
- kernel_physical_mapping_init(unsigned long paddr_start,
- 			     unsigned long paddr_end,
- 			     unsigned long page_size_mask, pgprot_t prot)
- {
--	return __kernel_physical_mapping_init(paddr_start, paddr_end,
--					      page_size_mask, prot, true);
-+	__kernel_physical_mapping_init(paddr_start, paddr_end,
-+				       page_size_mask, prot, true);
- }
- 
- /*
-@@ -794,14 +794,14 @@ kernel_physical_mapping_init(unsigned long paddr_start,
-  * when updating the mapping. The caller is responsible to flush the TLBs after
-  * the function returns.
-  */
--unsigned long __meminit
-+void __meminit
- kernel_physical_mapping_change(unsigned long paddr_start,
- 			       unsigned long paddr_end,
- 			       unsigned long page_size_mask)
- {
--	return __kernel_physical_mapping_init(paddr_start, paddr_end,
--					      page_size_mask, PAGE_KERNEL,
--					      false);
-+	__kernel_physical_mapping_init(paddr_start, paddr_end,
-+				       page_size_mask, PAGE_KERNEL,
-+				       false);
- }
- 
- #ifndef CONFIG_NUMA
-diff --git a/arch/x86/mm/mm_internal.h b/arch/x86/mm/mm_internal.h
-index 3f37b5c80bb3..6fea5f7edd48 100644
---- a/arch/x86/mm/mm_internal.h
-+++ b/arch/x86/mm/mm_internal.h
-@@ -10,13 +10,12 @@ static inline void *alloc_low_page(void)
- 
- void early_ioremap_page_table_range_init(void);
- 
--unsigned long kernel_physical_mapping_init(unsigned long start,
--					     unsigned long end,
--					     unsigned long page_size_mask,
--					     pgprot_t prot);
--unsigned long kernel_physical_mapping_change(unsigned long start,
--					     unsigned long end,
--					     unsigned long page_size_mask);
-+void add_paddr_range_mapped(unsigned long start_paddr, unsigned long end_paddr);
-+
-+void kernel_physical_mapping_init(unsigned long start, unsigned long end,
-+								  unsigned long page_size_mask, pgprot_t prot);
-+void kernel_physical_mapping_change(unsigned long start, unsigned long end,
-+								    unsigned long page_size_mask);
- void zone_sizes_init(void);
- 
- extern int after_bootmem;
--- 
-2.39.5
+I expect you would want to do the following:
 
+1) Add the common code to the global header.
+2) Remove the common code from the local header.
+3) Include the global header everywhere the common code is needed.
+
+Keeping the diff below for reference.
+
+Thanks,
+Yazen
+
+>  2 files changed, 35 insertions(+)
+> 
+> diff --git a/drivers/cdx/controller/mcdi.c b/drivers/cdx/controller/mcdi.c
+> index e760f8d347cc..f3cca4c884ff 100644
+> --- a/drivers/cdx/controller/mcdi.c
+> +++ b/drivers/cdx/controller/mcdi.c
+> @@ -99,6 +99,19 @@ static unsigned long cdx_mcdi_rpc_timeout(struct cdx_mcdi *cdx, unsigned int cmd
+>  		return cdx->mcdi_ops->mcdi_rpc_timeout(cdx, cmd);
+>  }
+>  
+> +/**
+> + * cdx_mcdi_init - Initialize MCDI (Management Controller Driver Interface) state
+> + * @cdx: NIC through which to issue the command
+> + *
+> + * This function allocates and initializes internal MCDI structures and resources
+> + * for the CDX device, including the workqueue, locking primitives, and command
+> + * tracking mechanisms. It sets the initial operating mode and prepares the device
+> + * for MCDI operations.
+> + *
+> + * Return:
+> + * * 0        - on success
+> + * * -ENOMEM  - if memory allocation or workqueue creation fails
+> + */
+>  int cdx_mcdi_init(struct cdx_mcdi *cdx)
+>  {
+>  	struct cdx_mcdi_iface *mcdi;
+> @@ -128,6 +141,7 @@ int cdx_mcdi_init(struct cdx_mcdi *cdx)
+>  fail:
+>  	return rc;
+>  }
+> +EXPORT_SYMBOL_GPL(cdx_mcdi_init);
+>  
+>  void cdx_mcdi_finish(struct cdx_mcdi *cdx)
+>  {
+> @@ -553,6 +567,19 @@ static void cdx_mcdi_start_or_queue(struct cdx_mcdi_iface *mcdi,
+>  			cdx_mcdi_cmd_start_or_queue(mcdi, cmd);
+>  }
+>  
+> +/**
+> + * cdx_mcdi_process_cmd - Process an incoming MCDI response
+> + * @cdx: NIC through which to issue the command
+> + * @outbuf:  Pointer to the response buffer received from the management controller
+> + * @len:     Length of the response buffer in bytes
+> + *
+> + * This function handles a response from the management controller. It locates the
+> + * corresponding command using the sequence number embedded in the header,
+> + * completes the command if it is still pending, and initiates any necessary cleanup.
+> + *
+> + * The function assumes that the response buffer is well-formed and at least one
+> + * dword in size.
+> + */
+>  void cdx_mcdi_process_cmd(struct cdx_mcdi *cdx, struct cdx_dword *outbuf, int len)
+>  {
+>  	struct cdx_mcdi_iface *mcdi;
+> @@ -590,6 +617,7 @@ void cdx_mcdi_process_cmd(struct cdx_mcdi *cdx, struct cdx_dword *outbuf, int le
+>  
+>  	cdx_mcdi_process_cleanup_list(mcdi->cdx, &cleanup_list);
+>  }
+> +EXPORT_SYMBOL_GPL(cdx_mcdi_process_cmd);
+>  
+>  static void cdx_mcdi_cmd_work(struct work_struct *context)
+>  {
+> @@ -757,6 +785,7 @@ int cdx_mcdi_rpc(struct cdx_mcdi *cdx, unsigned int cmd,
+>  	return cdx_mcdi_rpc_sync(cdx, cmd, inbuf, inlen, outbuf, outlen,
+>  				 outlen_actual, false);
+>  }
+> +EXPORT_SYMBOL_GPL(cdx_mcdi_rpc);
+>  
+>  /**
+>   * cdx_mcdi_rpc_async - Schedule an MCDI command to run asynchronously
+> diff --git a/include/linux/cdx/mcdi.h b/include/linux/cdx/mcdi.h
+> index 46e3f63b062a..1344119e9a2c 100644
+> --- a/include/linux/cdx/mcdi.h
+> +++ b/include/linux/cdx/mcdi.h
+> @@ -169,6 +169,12 @@ struct cdx_mcdi_data {
+>  	u32 fn_flags;
+>  };
+>  
+> +int cdx_mcdi_init(struct cdx_mcdi *cdx);
+> +void cdx_mcdi_process_cmd(struct cdx_mcdi *cdx, struct cdx_dword *outbuf, int len);
+> +int cdx_mcdi_rpc(struct cdx_mcdi *cdx, unsigned int cmd,
+> +		 const struct cdx_dword *inbuf, size_t inlen,
+> +		 struct cdx_dword *outbuf, size_t outlen, size_t *outlen_actual);
+> +
+>  /*
+>   * We expect that 16- and 32-bit fields in MCDI requests and responses
+>   * are appropriately aligned, but 64-bit fields are only
+> -- 
+> 2.34.1
+> 
