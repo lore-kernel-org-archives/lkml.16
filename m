@@ -1,103 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAD02DA745;
-	Fri, 13 Jun 2025 08:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD5A26B769
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803374; cv=none; b=f4mNvJaThz9YGptlwXCzIQl275ZvF2som9/wK262kzlJvQv0uWOeD4woCbywj4lDAu5l3I9pj4T8x/0Wae+0LqWTbg+hkekyrVUEvO0MZmH/WDzUYkSBesbgRwM+KMdAIelXSQBd5TqS95v1VVE0OFYbNYohwXjVlZEiclvsr54=
+	t=1749803389; cv=none; b=i89ICIGe6fuBK+lXLRr17a9kFjboWskFHsGqO5DpgmYiFGuu6my0oH1skLmrWO7pe5x0YxI6O6PM1PVObalB75i1kT2XLZOYBnYlNRKkwx7kagCjJ4iCGyeJ+tmzfz0y4dfhQEedb12CSfJFezj5P4oziv7WEtxswOQYhPcGoLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803374; c=relaxed/simple;
-	bh=ynppvBS7PNRniwt6jOu2/9HHz7kUhD/2Ep+aNoLGk94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FzLe9Lvz5tvqtvusSw2am03d2NYaT82EcF9lDB1KSWy3SmjZ+cpKrqP71eYyNbwdlJpYAoZB4F460tqdwrjAQ8X9su+k9f3SsbvxPLyFm77P/deJWo6iLHXw4l4cnhqCnOJBZo/mcQD7z5Y4WrIWfcqn9jdT0fOhoB1h+TYZT60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T48YS3Uj; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749803389; c=relaxed/simple;
+	bh=J6YZxriHaTmvz6OM5J/vKP3i63y+j8fechcV8d+0YjE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gO3KoMWm+bZRAqwIACfr+YSrGm3opntvGBPPcpg4L/iUU3TpwAwagCE9kbDPfYeN3Gf3b46sPjdQdjRzhp+iVIkVoLrSQ/hXCA4dusSRMKjfgjzoGGEm7vrcQ97/V/PNfRPQYJIs3Qszbuuy0tk19+SCz0Q/TPpLZbjMivDJx7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RsNOyIeC; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T48YS3Uj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749803373; x=1781339373;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ynppvBS7PNRniwt6jOu2/9HHz7kUhD/2Ep+aNoLGk94=;
-  b=T48YS3UjLwtUBFlyp1arXQKhymPfIgskQcFLi01Y4SQpWIjkxHR6RMC+
-   sScvZNh9tdLeawYs5IOHmLDFeM+ZqzGhLSfhLKXB64n5txDDWObm3x4OF
-   kVqU2YBQOG7nV2CXXMuxu4VlfpD4J6h8WYEyevinUyVBDc7oYjNBy7MQT
-   4X+U5b8gkyNlV/np3u9xPyuw0CYwh1M/V3JwH2F0P+epW+x5bos4bMZEq
-   nvHtVfuAVs2fVblyhnM45oPql/SOnJSBn+StvJ8VW4DLQR5l5UyafBB6k
-   d4KovBlbta/gURdWbipCAzrQWtGnE/UZuw7ZSi4R/d/3ce07GJpZfk0Rh
-   A==;
-X-CSE-ConnectionGUID: 07QNFQfxQ5K6oSgKFsD1uA==
-X-CSE-MsgGUID: g8kz78nYRWeUPWswP1UjSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55682058"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="55682058"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:29:32 -0700
-X-CSE-ConnectionGUID: s9SNfEIzSs2VTbCEU2SyUQ==
-X-CSE-MsgGUID: 4rQClN4nQmGiI9l0dJIRuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="151592123"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:29:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uPzmw-00000006BfK-40rq;
-	Fri, 13 Jun 2025 11:29:26 +0300
-Date: Fri, 13 Jun 2025 11:29:26 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: jean-baptiste.maneyrol@tdk.com
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] iio: imu: inv_icm42600: add WoM support
-Message-ID: <aEvhZiXHLLIRe41-@smile.fi.intel.com>
-References: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
- <20250613-losd-3-inv-icm42600-add-wom-support-v4-1-7e5f554201bf@tdk.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsNOyIeC"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23636167afeso18667765ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749803387; x=1750408187; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=td07OU6/JzFFs4bmH5Tm3DQk5V9dUyw12AEZ8RsjVnc=;
+        b=RsNOyIeCXAs2kky5OztzoC3MX15yQWcyYg8P3ha+ko0z6trwkdvP2THDxcyhmx9rX7
+         8raaK7HIasxLjMXmf6jJvJ+jey1vsgNyU1HE34G8c9ufIno2xBn4wPH/W/saXYp0BIj4
+         BLuzfbyP/86dbJb1SEEhmP8xk7v/ihRHAQpMNCLcfvqTdHJ90EpvY5fTSGu0kdcfEuaY
+         oNUOhlZUglbYfwmOINOU3zjZK7zDhyFHoYLcYUyF90OqL8b1GnhVzRdZaqk+JytZWG1u
+         P7h6WfEYiuHtlBlyLFGaGgugueKw01v4+opYyV0qN/fl2arfT2QOX4kQP6DvCVoX/L4t
+         L/LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749803387; x=1750408187;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=td07OU6/JzFFs4bmH5Tm3DQk5V9dUyw12AEZ8RsjVnc=;
+        b=kaU6N+4m6+gR9OjCvPpv/7KnCEL/tH5Tt4iid3kFiG6A5bCej7NSToNMAVp7Yo33lS
+         eizaVbcaTlfrWAAu0PTuxN+i6hwuAUOcNg65U8F3o4u2kGTQNsYsRyvAtfLxt3e9pust
+         YjPeR5qMPNdj7chvaiWydwPhOVLliQQmkA02fYYKfKwl8hs4ZpRIVZsO3FA7w4bzOw3e
+         SqPWNAPeaGf4yT8CYNLi9gKdP54LrU8wpuaLKovamSgj09uN2Ng5Z42wvumM4vR7FNpX
+         F/DchojpMW6Kpx5TpxCf1NWS0Brk/2NA3tFWYJxhplmy2QsAVbXe9TLzYesBi+3k8zul
+         ZDWw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9YGsli5xMxSG3w9ASV5kCYnZTUKa9JxGvvYJOVrZmun7Z0bxAQtm7/PXU05D8Be+V+88bDUrolgYJTk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW5GH7Tf6uB4khn9lymHyZuRjZeewrrQL5Ama4areg4QQpsjFR
+	gcJxSV+l0Rb4bMwGERLDZ5yFeguSR2pFpCS7XwrScoTVGhFBY7bddxkV
+X-Gm-Gg: ASbGncuJE8tbIQh377Jg949a8WJkkGLKjNxeiaCVmJR/QJzSlKdovtDoOuvGUyMDTIt
+	kTQiYmUm14o3UuF4aKsGWdAmM3JXAbZusRsILDuAYLB8oVhO5dLyNVrquNdU/n5qMpMvRd0dVEX
+	Wxu60KvYvTUcl0Tfx6EPT6b5ZKA2dudzTuaE4z0SLsSLhKWWWH2dXMWRJ6HTHtloH6+F6Nskx22
+	+F6O/1V2z0BCiQEEQ1Nrl84UDl5f2OWcUsSmaDbglLgrSUTgmwzl7vfdr3+4PCyTPmgQMmpCa6V
+	nuYV6B//VBJfl2SFEktPo4JxpC2OFyjY/tMr0DCfIHOP6PgUPkla0obVkG0WMTfT
+X-Google-Smtp-Source: AGHT+IETz9S2vC3DeAV5L/Z/4+EDQPLntlfWleDBPPajqXQm/k03d/6YVkB6j/50621Nj6VxoLsLwA==
+X-Received: by 2002:a17:903:1103:b0:234:c5c1:9b63 with SMTP id d9443c01a7336-2365d89ebb3mr24672145ad.18.1749803387516;
+        Fri, 13 Jun 2025 01:29:47 -0700 (PDT)
+Received: from localhost ([180.172.46.169])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb4e27sm9324335ad.176.2025.06.13.01.29.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 01:29:46 -0700 (PDT)
+From: Jemmy Wong <jemmywong512@gmail.com>
+To: kprateek.nayak@amd.com
+Cc: bsegall@google.com,
+	dietmar.eggemann@arm.com,
+	juri.lelli@redhat.com,
+	linux-kernel@vger.kernel.org,
+	mgorman@suse.de,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	vincent.guittot@linaro.org,
+	vschneid@redhat.com,
+	jemmywong512@gmail.com
+Subject: [PATCH v2 0/1] sched/topology: Add lock guard support
+Date: Fri, 13 Jun 2025 16:29:40 +0800
+Message-ID: <20250613082941.18129-1-jemmywong512@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613-losd-3-inv-icm42600-add-wom-support-v4-1-7e5f554201bf@tdk.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 09:34:26AM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
-> 
-> Add WoM as accel roc rising x|y|z event.
+Changes in v2:
+- guard inside sched_init_domains instead of outside
+- replace do{}while(0) with sched_global_validate func
+- wrap commments at 80 characters
 
-...
+Changes in v1:
+- Convert scoped_guard to guard
+https://lore.kernel.org/all/20250605120424.14756-1-jemmywong512@gmail.com/
 
-> +	if (sleep_ms)
-> +		msleep(sleep_ms);
+v0 link:
+https://lore.kernel.org/all/20250604185049.374165-1-jemmywong512@gmail.com/
 
-I still wonder if we can get rid of the conditional here.
-Would the
+Jemmy Wong (1):
+  sched/topology: Add lock guard support
 
-	fsleep(sleep_ms * USEC_PER_MSEC)
-
-actually work as expected?
-
-Ditto for other case(s) like this.
-
-...
-
-Overall, looking to this patch again, I think it would be better to prepend it
-by replacing *int*_t types by the respective uXX ones. Because in this patch
-we add dozens of new ones which increases an unneeded churn in the future.
+ include/linux/sched.h   |   9 ++--
+ kernel/sched/core.c     |   2 -
+ kernel/sched/debug.c    |  13 ++---
+ kernel/sched/rt.c       |  47 +++++++++-------
+ kernel/sched/topology.c | 117 ++++++++++++++++++----------------------
+ 5 files changed, 88 insertions(+), 100 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
