@@ -1,123 +1,126 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A57291C0A;
-	Fri, 13 Jun 2025 08:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749804706; cv=none; b=Qgg9pjw78Zz5oe/Z+hcCfuugAgFN9M01PhgTHhaXOu9aMuIu//GaiyisZxCu3eBubBUih2ffsm/wmXDoDZHA0OpX7q8HPieMpWc0YNvyMydVvm5QZvPO5LH3eKtZoRlYYkNiKfmFgQvtI38ZqnKlHLimWqdbQmGgtC8Wn4D065o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749804706; c=relaxed/simple;
-	bh=XjnRFn+DLVFoTo5zHOySZabgyaoUWVbhHCCtwku0/2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ec4Ul/uqug03vfAwxsekUQA4LY2U+Fx6GNBJlDF7c8zDIkJ/RlmbTptrLQamru+Qj0YdTSgPO+/d56xw2FB2mWl2oPXKYqt6ohj9dALoQdcXx/zkYCih/GP9OPZRV1cqSrOCz4+C23bxDeRiaK8u+ulhK+Svn0XdxQBfY0qjako=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ejeNYxJx; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AAE291C1C;
+	Fri, 13 Jun 2025 08:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749804709; cv=pass; b=hmPfthybez/6yZmiTISLtQDpaV2uQ3kGDHx4TJU8UVCa9OQBZEtLJGcIQXnwb4UNwd5yfQ5UR/N8cXcLyf0zf5KsybuW8FrwGItKJZ6McR5MsRRTWC9amXlgAuW2DKJH6raOc/WBbZzh+GMBpHfRwerbf4com1Z8ChIyOFRA+d0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749804709; c=relaxed/simple;
+	bh=D3HaEDiRSIXxKlHSWFGGoal45EeRfaXUo6u8WNz/3/A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q07H3WLGqsGaHEt+b/9XH/2I/2Gzs9H/M5VWXlxoxoEFQJQ6i/BICxZx4eqsiCmcI+qvy5y3CV2cXkzUUPSHbgiNYCDuh9GHtg09dAQXR8HlmWQxBjSgSbHMmhR5NM3z8KQw4i1JCmBET/PGolsKcAclmtVXW5r8ywyWAs4StlA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech; spf=pass smtp.mailfrom=pigmoral.tech; dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b=eH9sbo8O; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pigmoral.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ejeNYxJx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=wMKt/wPLq9KRfU6Jf04/z1jGFWH/wF4jH0NXJm6Bhlo=; b=ejeNYxJxjqQkEf+Qtb4/A1GtfZ
-	b7jAaCx+igD/opjcpb3XKwVwchdM/PXR4tiwHprFmt4/L2Xs+ZpChWQHUuX2LYsCxrUU+eiustbeA
-	ZKVolER6TWQLfjepmarO/P1DHA89vwzY7ArJk9gDAzisKwslfsuuBqb/Wg3/aWQPZOOjQoyMRELCP
-	8Xbl2WNglxWI/mZ9MWHvlGbxuFigF+67XenNjqAmRVolrvDDN1QbLFg2RHZ/qe/i3LN+yRpvaWrJm
-	DTsKHT9mnfmMylzfbbw6eoUAmVq33jZS3a+a6lk6aGGMWMPA7TQxzmLPlMLIij5j0NMLYobmukZhv
-	QJp9aG1g==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uQ08Q-00CsF4-2w;
-	Fri, 13 Jun 2025 16:51:39 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 13 Jun 2025 16:51:38 +0800
-Date: Fri, 13 Jun 2025 16:51:38 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
-	Jason@zx2c4.com, torvalds@linux-foundation.org
-Subject: [PATCH] crypto: ahash - Stop legacy tfms from using the set_virt
- fallback path
-Message-ID: <aEvmmr0huGGd2Psv@gondor.apana.org.au>
-References: <20250611020923.1482701-8-ebiggers@kernel.org>
- <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
- <20250611033957.GA1484147@sol>
- <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
- <20250611035842.GB1484147@sol>
- <20250613053624.GA163131@sol>
- <aEu5cyDOMcKteW_b@gondor.apana.org.au>
- <20250613055439.GB163131@sol>
+	dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b="eH9sbo8O"
+ARC-Seal: i=1; a=rsa-sha256; t=1749804679; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=OJNixlvG4wt1EB6V7xJ36lJQpuFR4Z6q5XvGw6dJ1w6sQbPpCNGY1Lw6jVij81YWVqqbSpnMFGyWkFIXfbfZ0JIGcgP6HANw5XFms9Ji0ja6d8F6YQHNGRYmXtx/IfXEHe0W90wpoRLho+QlUzPrdqLjIFCoqPi5NbNizbHr+24=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749804679; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=8VeSyupMjDgT9uU0kgEi/NVyk9eHor94fs7ZydFVgBM=; 
+	b=C9qrDq3vJKsSjeFl21S4guauElMPw6G4YH2Gprg2dcTuF3YRrpiWr6sxPYO+HDy0or/h9Sx5m5RGNr8oZUlWQ65RZYsiT5kj5dC2LkbapjNU9239AMDqK2zu0Gv5w8M2hUZNHWtXjkZonl+9PyHBQbkT1hpopt/HuOf7W7gJApM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=pigmoral.tech;
+	spf=pass  smtp.mailfrom=junhui.liu@pigmoral.tech;
+	dmarc=pass header.from=<junhui.liu@pigmoral.tech>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749804679;
+	s=zmail; d=pigmoral.tech; i=junhui.liu@pigmoral.tech;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=8VeSyupMjDgT9uU0kgEi/NVyk9eHor94fs7ZydFVgBM=;
+	b=eH9sbo8OmuigiUuDZlqnTC29j0xHHigWIXbP4PntsV5PJ6x5Fi7EINKlgczUlkRf
+	jWPi0LipngBx/R+YupPwBGzng9xprBBsghTUztmxI6tFwLqdNucTlyrN167lGkcAf90
+	eGXSY+dg4yaHfqlnO7+g77XwK8AzHaH51XG1Um/c=
+Received: by mx.zohomail.com with SMTPS id 1749804677016890.5791024555222;
+	Fri, 13 Jun 2025 01:51:17 -0700 (PDT)
+From: Junhui Liu <junhui.liu@pigmoral.tech>
+Subject: [PATCH v4 0/2] reset: canaan: add Kendryte K230 reset support
+Date: Fri, 13 Jun 2025 16:49:22 +0800
+Message-Id: <20250613-k230-reset-v4-0-e5266d2be440@pigmoral.tech>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613055439.GB163131@sol>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABLmS2gC/13OQQ6CMBCF4auYri2ZTlsprriHcYFlkEalpEWiM
+ dzdgjEGl2+S78+8WKTgKLL95sUCjS4636Whthtm26o7E3d12gwBNShQ/IISeKBIA5dYmNzuGqB
+ aswT6QI17LLHDMe3WxcGH59IexXydMwoKXGVGwYHXYGsrRGEKOpX+Ply9v2TW39gcGvGL0w8IK
+ 4wJN+KkKhA7UtKUvTvffKiu2UC2/XD54xryFZeJW6PTV7lBqvQ/n6bpDbpTKlkkAQAA
+X-Change-ID: 20250404-k230-reset-32987c6f0ed5
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Junhui Liu <junhui.liu@pigmoral.tech>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>, 
+ Chen Wang <unicorn_wang@outlook.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749804649; l=2310;
+ i=junhui.liu@pigmoral.tech; s=20250507; h=from:subject:message-id;
+ bh=D3HaEDiRSIXxKlHSWFGGoal45EeRfaXUo6u8WNz/3/A=;
+ b=270SMOZN9VeCr1u/EstBgtALe5pCAD14I1lcpbLv/83MnUzFEfNQcytMprC09IOJ/CB99zJlC
+ 7LEfy9Rz+ixD3GPUanD/OV1mZByBTYhX6/wS95IwG6esQ85Ie6YAjpJ
+X-Developer-Key: i=junhui.liu@pigmoral.tech; a=ed25519;
+ pk=d3i4H2mg9LUn4SQemoLAjLRQy0nTcyknIv6zgKMwiBA=
+X-ZohoMailClient: External
 
-On Thu, Jun 12, 2025 at 10:54:39PM -0700, Eric Biggers wrote:
->
-> Actually, crypto_ahash::base::fb is initialized if CRYPTO_ALG_NEED_FALLBACK,
-> which many of the drivers already set.  Then crypto_ahash_update() calls
-> ahash_do_req_chain() if the algorithm does *not* have
-> CRYPTO_AHASH_ALG_BLOCK_ONLY set.  Which then exports the driver's custom state
-> and tries to import it into the fallback.
-> 
-> As far as I can tell, it's just broken for most of the existing drivers.
+This patch series add reset controller support for the Canaan Kendryte
+K230 SoC.
 
-This fallback path is only meant to be used for drivers that have
-been converted.  But you're right there is a check missing in there.
+Tested on CanMV-K230-V1.1 board. Some of the HW_DONE and SW_DONE reset
+type was tested by reseting the submodule and checking the reset
+register value[1]. The CPU reset type was tested by a temporary rproc
+driver[2][3].
 
-Thanks,
+link: https://gist.github.com/pigmoral/cc45de673775575750ac7fe49d4456a2 [1]
+link: https://github.com/pigmoral/linux/tree/k230/rproc-cpu0 [2]
+link: https://github.com/pigmoral/linux/tree/k230/rproc-cpu1 [3]
 
----8<---
-Ensure that drivers that have not been converted to the ahash API
-do not use the ahash_request_set_virt fallback path as they cannot
-use the software fallback.
+---
+Changes in v4:
+- Rebase to v6.16-rc1 and test on CanMV-K230-V1.1 board
+- Collect and update tags
+- Link to v3: https://lore.kernel.org/r/20250507-k230-reset-v3-0-c85240782ea5@pigmoral.tech
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 9d7a0ab1c753 ("crypto: ahash - Handle partial blocks in API")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Changes in v3:
+- Update copyright/license in driver and bindings headers
+- Rename HS/LS to HISYS/LOSYS in DT bindings
+- Add reset-timing notes at the top of reset-k230.c
+- Replace long udelay(200) to fsleep(200) for HW_DONE paths
+- Remove rstc->dev, store device in rstc->rcdev.dev
+- Link to v2: https://lore.kernel.org/r/20250420-k230-reset-v2-0-f1b4a016e438@pigmoral.tech
 
-diff --git a/crypto/ahash.c b/crypto/ahash.c
-index e10bc2659ae4..992228a9f283 100644
---- a/crypto/ahash.c
-+++ b/crypto/ahash.c
-@@ -347,6 +347,9 @@ static int ahash_do_req_chain(struct ahash_request *req,
- 	if (crypto_ahash_statesize(tfm) > HASH_MAX_STATESIZE)
- 		return -ENOSYS;
- 
-+	if (crypto_hash_no_export_core(tfm))
-+		return -ENOSYS;
-+
- 	{
- 		u8 state[HASH_MAX_STATESIZE];
- 
-diff --git a/include/crypto/internal/hash.h b/include/crypto/internal/hash.h
-index 0f85c543f80b..f052afa6e7b0 100644
---- a/include/crypto/internal/hash.h
-+++ b/include/crypto/internal/hash.h
-@@ -91,6 +91,12 @@ static inline bool crypto_hash_alg_needs_key(struct hash_alg_common *alg)
- 		!(alg->base.cra_flags & CRYPTO_ALG_OPTIONAL_KEY);
- }
- 
-+static inline bool crypto_hash_no_export_core(struct crypto_ahash *tfm)
-+{
-+	return crypto_hash_alg_common(tfm)->base.cra_flags &
-+	       CRYPTO_AHASH_ALG_NO_EXPORT_CORE;
-+}
-+
- int crypto_grab_ahash(struct crypto_ahash_spawn *spawn,
- 		      struct crypto_instance *inst,
- 		      const char *name, u32 type, u32 mask);
+Changes in v2:
+- Turn to_k230_rst from macro to inline function
+- Use guard to replace spin_lock_irqsave and spin_unlock_irqrestore
+- Remove assert and deassert operations for self-clearing reset types,
+  only reserve the reset operation
+- Add delay to accommodate the reset time
+- Remove blank line inside read-modify-write operations
+- Remove redundant default case in enum switch
+- Update copyright dates and my email address
+- Link to v1: https://lore.kernel.org/r/20240924-k230-reset-v1-0-d0cdc11989eb@outlook.com
+
+---
+Junhui Liu (2):
+      dt-bindings: reset: add support for canaan,k230-rst
+      reset: canaan: add reset driver for Kendryte K230
+
+ .../devicetree/bindings/reset/canaan,k230-rst.yaml |  39 +++
+ drivers/reset/Kconfig                              |   9 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-k230.c                         | 371 +++++++++++++++++++++
+ include/dt-bindings/reset/canaan,k230-rst.h        |  90 +++++
+ 5 files changed, 510 insertions(+)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250404-k230-reset-32987c6f0ed5
+
+Best regards,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Junhui Liu <junhui.liu@pigmoral.tech>
+
