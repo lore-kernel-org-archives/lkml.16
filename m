@@ -1,74 +1,64 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AA416F265;
-	Fri, 13 Jun 2025 15:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D73F1E3775
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749827123; cv=none; b=HiopXN6/5V9O4ypfPO0eeZzZaGoTGp5ymLxs1pqcpW/D3hRNG+X7AU3gryKPDWnmu5ZWDrrl0d9sklOQlZkmaslFloS6iZxzfg45MW16W6HcZ1WYLXI/VipL3BVcWZiCVN/91joeDMfBrEdzJTEc34APHK+ze0dx4WN896mkwuA=
+	t=1749827129; cv=none; b=cvNQ7I54P+UCU2Y5/1nZnan/utw2h2tqoRKbTcIAql/sbCBp1ECnFfaSRtx7h+F2OX58K8pL2nBERgnRVAdKtlOuc3qrNLAEbuXM5yN8bBdFFjoKeGRKoHpL4+wlsdMCjujtFt37vuwNcNMNbO1YCX7IRJoVPxol8iTCW4IcDbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749827123; c=relaxed/simple;
-	bh=ZUzbXl+uC0IGlwd+pRzkC/+knfBPi0nX8Q5kONj9Cnc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=A6oSX507fr2l8vtccBWZYMca2otxF/tQp5TqlXJ+VRJ1yNcwkqag+UKLZX9awfYKafT0Xgwq4GHuGOAafSx7AlP8wsXU6n5RrbAZengS6Ex1IqlbZa5QanKarM9HtUi7QgWk3hK47txdy+RrGYvKYGB7tI/Pml/N6V8pIHc0AYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZxOX/3pm; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749827129; c=relaxed/simple;
+	bh=5htOi7Xq7BJFop/zGyQ8bAo3uW48aC6mu64egcsnLl8=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=l/Yadiy05Bl3QH8zT/w3Y6GwDx2cXclYdL/OVM7SqxTTjgrCU+liYaEJPXVALCxHSt+amdD/ZZfUOaUvAFswsh7PXDGl1D6TKhsuE1lvzg8UZIwYCAdWUSic+yDDOwlOEqQwW0ITydFnSDZ6diZfhvAudWsk81Ln9KuS9dr3zgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XiKUzjJd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxOX/3pm"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-31223a4cddeso1808576a91.1;
-        Fri, 13 Jun 2025 08:05:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749827122; x=1750431922; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KF3cFtJQTcMBQy4lM7jXXcjLVtEEtKJIoATzivLkWQQ=;
-        b=ZxOX/3pmuqRyg1eDeuj+dK+J6SdbvK1zTh1QyiOsoHuNE5hsH5IklmSgio/nobpIij
-         MFPi9XbAW+xyJvDLM5zJBrKIXlx12RUxsxsDDoHop0fqJxBOxPJmB4ngstGv85qrataC
-         Y0k99MAoqqW+sdt68+DviTqjHGlTcOY++wos5ATNPqIGGR8kVB5weKwJjt5a3ikcndl1
-         cvnHAArwYgPKpsMYm2piBx7awLfHw8IP8Z+km+OR/a/kS3qWVElKxOV5HvqBU9CWQH9L
-         XFyOinVe+1oezoJegCKWNd35R5ls0tobTQBxXERzqa8Rj+Z1HAoRVg3o55LcDn6f+6el
-         Osdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749827122; x=1750431922;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KF3cFtJQTcMBQy4lM7jXXcjLVtEEtKJIoATzivLkWQQ=;
-        b=J8/qkxGXWBwJd1w6ZZNcXkY6f4dVAx6vrBkn0rOsNd5VKltSWWssxQRw/vTCMeH+Q6
-         LfDWkCUK+Qx6H40SxEQOcem9C0Jw5w2LwpyoTldH1AXgiqPGPjmEU8kW4nmkhJYuqPjL
-         qGn1vM8ucCCvfImu/TUwkRFNXbv3UAOcfTGwRO+lMakor4+md765qF1T6HjcRMPbPfK3
-         xe64rnk94VTjrHMKIQNtAeyvCHrNLefDJLpehkCYeLwBn8IrdHgmkObcmG4Ym3ClFOya
-         IrKCXsgQ+irSBwcSpkkOfUjCtagrlQcoLbHd22YyVQ/kaV1Vrl31G+bf7lUU3zC1Vf1S
-         nnBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVa5fUs+OoRi5xiXlaXjUftE+CFPIVdmqqlABd+kRWIMyakZTUkX3g7UmxGYvSz3T9KZCUZuu/PMowhIFE=@vger.kernel.org, AJvYcCWGiUIERApJTqlfSfidoiuGFLLzvsDFAugRZOjRAiAQLqlUHg+w5B+QWXXKUfIOJq+WM/HKRgU5hk4D@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDZtZQLWUrgse5nWWPyeD19/lEtS7MnMcEGOKVt6pNP5bVsWCy
-	UXnptREE7iEM69W9XCM99aF63ijswTwIPHLqzjCIGeCkIntZ4K6uQAjCmxW1lEAS
-X-Gm-Gg: ASbGncvzd4Ux79mkUsMNGZcSOBKAau/+gonFFa6VfdnfItNdmiuSL93IXJmPm6jWhye
-	JiBV/0qNmTSrftOMNl0vYRqa5XfcpwU9srd/u25Kn8Z/ExZNPR6179sorwPdYDfW2ov+fqIpVUw
-	X1ZyK/NWpqFIKUOheMSAxuDrxxT8P/vL+3PTsowCffHtzrpNXC3kAVPx2xyS8RQuT1Smcc9Ftmn
-	gYfT8ZCKxsYPE2zTINF+jST+6Ej5aU6rW1uhPQEYWMYiiZNjaACdr4I3jpJx6MJbMCYGPgl8s8D
-	a0qzTgnNmgmLxNPLJ8wnYHsVQFvAyxbveA6/GrbuYLfW8h7bcA==
-X-Google-Smtp-Source: AGHT+IHdK8qQo3ZG3V7b3Hz4SJ4IVpLiY2VBl4h1vhl+f3MfcXfp7Rgjw/llpCTAemK6u+3no+kgZA==
-X-Received: by 2002:a17:90b:582d:b0:312:f0d0:bc4 with SMTP id 98e67ed59e1d1-313f1be5b9dmr93821a91.5.1749827121457;
-        Fri, 13 Jun 2025 08:05:21 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:838f::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deca008sm15308325ad.193.2025.06.13.08.05.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 08:05:20 -0700 (PDT)
-Date: Fri, 13 Jun 2025 12:05:15 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RESEND RFC PATCH v4 0/5] PCI: rockchip: Improve driver quality
-Message-ID: <cover.1749827015.git.geraldogabriel@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XiKUzjJd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749827125;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=eydungCzbjJFbEm6WAZhTNuaULfp1EVCeqjKqKlnSWY=;
+	b=XiKUzjJdhJyRiHsaISh/latfGA2pfZzbjFleM9sld5tFFF0qw7y77I/kCWHVdblvUBTueB
+	Hp/pdBWGd4xrYagreXV6GRZLe/HUdtEc9h6cvXWTzxWndBKwR32UoqyBl3MDaAqZU++Uyx
+	xYHT8WwdLkp3R/LIO9nCggT7FwhQuW8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-262-weIA_g6MMquHGSonfW0XDg-1; Fri,
+ 13 Jun 2025 11:05:22 -0400
+X-MC-Unique: weIA_g6MMquHGSonfW0XDg-1
+X-Mimecast-MFC-AGG-ID: weIA_g6MMquHGSonfW0XDg_1749827119
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A73AD1800295;
+	Fri, 13 Jun 2025 15:05:18 +0000 (UTC)
+Received: from localhost (unknown [10.22.65.24])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 918ED195E340;
+	Fri, 13 Jun 2025 15:05:16 +0000 (UTC)
+Date: Fri, 13 Jun 2025 12:05:14 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
+	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>,
+	DietmarEggemann@uudg.org, dietmar.eggemann@arm.com,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Wander Lairson Costa <wander@redhat.com>
+Subject: [RESEND PATCH v4] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <aEw-KjUjjP2gYH6z@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,34 +67,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-During a 30-day debugging-run fighting quirky PCIe devices on RK3399
-some quality improvements began to take form and this is my attempt
-at upstreaming it. It will ensure maximum chance of retraining to Gen2
-5.0GT/s, on all four lanes and plus if anybody is debugging the PHY
-they'll now get real values from TEST_I[3:0] for every TEST_ADDR[4:0]
-without risk of locking up kernel like with present broken async
-strobe TEST_WRITE.
+With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
+from rt_mutex_adjust_prio_chain() could happen in preemptible context and
+with a mutex enqueued. That could lead to this sequence:
 
+        rt_mutex_adjust_prio_chain()
+          put_task_struct()
+            __put_task_struct()
+              sched_ext_free()
+                spin_lock_irqsave()
+                  rtlock_lock() --->  TRIGGERS
+                                      lockdep_assert(!current->pi_blocked_on);
+
+Fix that by unconditionally resorting to the deferred call to
+__put_task_struct() if PREEMPT_RT is enabled.
+
+Suggested-by: Crystal Wood <crwood@redhat.com>
+Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
 ---
-V3 -> V4: fix setting-up of TLS in Link Control and Status Register 2,
-also adjust commit titles
-V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
-suggestion
-V1 -> V2: use standard PCIe defines as suggested by Bjorn
 
-Geraldo Nascimento (5):
-  PCI: rockchip: Use standard PCIe defines
-  PCI: rockchip: Drop unused custom registers and bitfields
-  PCI: rockchip: Set Target Link Speed before retraining
-  phy: rockchip-pcie: Enable all four lanes
-  phy: rockchip-pcie: Adjust read mask and write
+Resent as a gentle reminder, because this issue results in scary backtraces,
+not obvious to debug and pinpoint root cause.
 
- drivers/pci/controller/pcie-rockchip-host.c | 48 +++++++++++----------
- drivers/pci/controller/pcie-rockchip.h      | 11 +----
- drivers/phy/rockchip/phy-rockchip-pcie.c    | 16 ++++---
- 3 files changed, 36 insertions(+), 39 deletions(-)
+v2: (Rostedt) remove the #ifdef from put_task_struct() and create
+    tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
+v3: (Sebastian, PeterZ) always call the deferred __put_task_struct() on RT.
+v4: Fix the implementation of what was requested on v3.
 
--- 
-2.49.0
+ include/linux/sched/task.h |   17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 0f2aeb37bbb04..51678a541477a 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -134,11 +134,8 @@ static inline void put_task_struct(struct task_struct *t)
+ 	if (!refcount_dec_and_test(&t->usage))
+ 		return;
+ 
+-	/*
+-	 * In !RT, it is always safe to call __put_task_struct().
+-	 * Under RT, we can only call it in preemptible context.
+-	 */
+-	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
++	/* In !RT, it is always safe to call __put_task_struct(). */
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
+ 		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
+ 
+ 		lock_map_acquire_try(&put_task_map);
+@@ -148,11 +145,13 @@ static inline void put_task_struct(struct task_struct *t)
+ 	}
+ 
+ 	/*
+-	 * under PREEMPT_RT, we can't call put_task_struct
++	 * Under PREEMPT_RT, we can't call __put_task_struct
+ 	 * in atomic context because it will indirectly
+-	 * acquire sleeping locks.
++	 * acquire sleeping locks. The same is true if the
++	 * current process has a mutex enqueued (blocked on
++	 * a PI chain).
+ 	 *
+-	 * call_rcu() will schedule delayed_put_task_struct_rcu()
++	 * call_rcu() will schedule __put_task_struct_rcu_cb()
+ 	 * to be called in process context.
+ 	 *
+ 	 * __put_task_struct() is called when
+@@ -165,7 +164,7 @@ static inline void put_task_struct(struct task_struct *t)
+ 	 *
+ 	 * delayed_free_task() also uses ->rcu, but it is only called
+ 	 * when it fails to fork a process. Therefore, there is no
+-	 * way it can conflict with put_task_struct().
++	 * way it can conflict with __put_task_struct().
+ 	 */
+ 	call_rcu(&t->rcu, __put_task_struct_rcu_cb);
+ }
+
+----- End forwarded message -----
 
