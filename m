@@ -1,120 +1,88 @@
-Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A341879E1
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1834825B30C;
+	Fri, 13 Jun 2025 10:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749811118; cv=none; b=jMtZ7vLrXG4JuPcnodMRoS8q7gtGkuXOJBWbDhUgMV5UkqVX86PyzSlTb1g0NAxE5rajAST0tqUKpbRon1Lxd8g0Drlnr/x9z+ygfiCtxAVhQX2tDt889rDTOeje1U/gYpqOPtOomprle6auG5D4qf5nU9g/LXlbXZod/LqP1sc=
+	t=1749811153; cv=none; b=J2CKboSAzoKohBM6ovL1hSoJEUvsxY7vXnMNL/Kpt06EVSgYlBbZTchMxATu6s2oACB37MSyOlCQfM89Anf3G7jjf+BnrI2AWrXqMU3TerYImHOiyMqxIsXedNgH7yjr8UhLcl5rPtEOoEuUmZaQNtwcTZE9je1LjqSNIdG6kng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749811118; c=relaxed/simple;
-	bh=GmyPyeWQVV5WBtGunWOAp07ZwC+/wYZ+4d1J4CFpw5c=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aTf/ZoeSChg79DMZ6Z9+NP4Q+PKxhrVt0JkPcwYbnCmYrP95ZGSO1DjRP+W86ccmHbc4pG7rgmoHf565f1O2qRTVRO6vgCT9p+t/+4FdRjCvW0YN18ZAp9bkQrxMFmvzrANAnMbsA2D+Edu5Oha0GjQyfcFUZHnNwr77TNM7l0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w012.hihonor.com (unknown [10.68.27.189])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bJbRM57LHzYl4Jq;
-	Fri, 13 Jun 2025 18:36:31 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w012.hihonor.com
- (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
- 2025 18:38:31 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
- 2025 18:38:31 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-	<niuzhiguo84@gmail.com>, <bintian.wang@honor.com>, <feng.han@honor.com>,
-	wangzijie <wangzijie1@honor.com>
-Subject: [f2fs-dev] [PATCH] f2fs: avoid non-section-aligned size pinned file generation
-Date: Fri, 13 Jun 2025 18:38:29 +0800
-Message-ID: <20250613103829.1895191-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1749811153; c=relaxed/simple;
+	bh=lTnmuJ4Zw3G9dBvu7NKjvEJCyXHzKDQ65nEqpiNtDFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CY5OIvqZg3QXWZWVJ+Kqxqm44tukEUjHOBvygeU6q/RIA24A6LSg9QMdiOOv2YZYvMCBkRdQpSQpGnF5Da50+7bKK9kOZvF4JULTKkWxN/TRrl0Gs/V0RLd+WCgkzk1/ZrmwdCXflyTmfb3m66DEVJYLYgegpDlUsuesstlaEkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ISfiiyr2; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ISfiiyr2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749811152; x=1781347152;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lTnmuJ4Zw3G9dBvu7NKjvEJCyXHzKDQ65nEqpiNtDFo=;
+  b=ISfiiyr2K+jMxxDWgM+dxw9NOjBxUPzwe+CgNrH5OuKFMhuNDOE2Ks0D
+   9zVpqWBR/cjCDbLFIIDZdXHIb74Ju5QiIFNrfcSTuBSR1deRe8CUNFEUs
+   v3PHG+vroJWXRZmD7RLcwGzthePlAIGiU+T5hmxyx8UVis+ruOhjjrQRC
+   oJOZaPhL2MWVyuWe24YXaN1lYvdb6tm9zQvaXN/ksR3thP3tfQ6uSLwvi
+   XVPTC8ehz4zvadBt4m53fI43Cr65Bxmbzv4qVg06/eAcHpSNBWjb9YI4s
+   OUGqL614yxXEy+qtXY8Rm0Gvm1WppmYdF1T3VfZo6zWQVRcN2mvIlx6Al
+   A==;
+X-CSE-ConnectionGUID: beQ8ftboT4aRlwvmqmDqew==
+X-CSE-MsgGUID: 6LtwW3ypQ6eN2MoLlbsZxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="63375282"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="63375282"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:39:11 -0700
+X-CSE-ConnectionGUID: rEJYELCnQN2xerUUmvLz7g==
+X-CSE-MsgGUID: RmyrZvILRR6G+bZEy6+kkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="148681207"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:39:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uQ1oR-00000006DOa-32d4;
+	Fri, 13 Jun 2025 13:39:07 +0300
+Date: Fri, 13 Jun 2025 13:39:07 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v1 1/1] MIPS: Alchemy: Remove unused forward declaration
+Message-ID: <aEv_y5Lfe3Dul48I@smile.fi.intel.com>
+References: <20250531194346.3630898-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w001.hihonor.com (10.68.25.235) To a011.hihonor.com
- (10.68.31.243)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250531194346.3630898-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-To prevent non-section-aligned size pinned file generated from truncation,
-add check condition in setattr. Meanwhile, clean up F2FS_I_SB.
++Cc: Bart.
 
-Signed-off-by: wangzijie <wangzijie1@honor.com>
----
- fs/f2fs/file.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+On Sat, May 31, 2025 at 10:43:46PM +0300, Andy Shevchenko wrote:
+> The 'struct gpio' is not used in the code, remove unneeded forward declaration.
+> This seems to be a leftover for a 5 years.
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 6bd3de64f..31ecf615b 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1026,9 +1026,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- {
- 	struct inode *inode = d_inode(dentry);
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-+	block_t sec_blks = CAP_BLKS_PER_SEC(sbi);
- 	int err;
- 
--	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
-+	if (unlikely(f2fs_cp_error(sbi)))
- 		return -EIO;
- 
- 	if (unlikely(IS_IMMUTABLE(inode)))
-@@ -1047,6 +1049,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 			!IS_ALIGNED(attr->ia_size,
- 			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
- 			return -EINVAL;
-+		if (f2fs_is_pinned_file(inode) &&
-+			attr->ia_size < i_size_read(inode) &&
-+			!IS_ALIGNED(attr->ia_size,
-+			F2FS_BLK_TO_BYTES(sec_blks)))
-+			return -EINVAL;
- 	}
- 
- 	err = setattr_prepare(idmap, dentry, attr);
-@@ -1068,12 +1075,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	}
- 	if (i_uid_needs_update(idmap, attr, inode) ||
- 	    i_gid_needs_update(idmap, attr, inode)) {
--		f2fs_lock_op(F2FS_I_SB(inode));
-+		f2fs_lock_op(sbi);
- 		err = dquot_transfer(idmap, inode, attr);
- 		if (err) {
--			set_sbi_flag(F2FS_I_SB(inode),
--					SBI_QUOTA_NEED_REPAIR);
--			f2fs_unlock_op(F2FS_I_SB(inode));
-+			set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+			f2fs_unlock_op(sbi);
- 			return err;
- 		}
- 		/*
-@@ -1083,7 +1089,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 		i_uid_update(idmap, attr, inode);
- 		i_gid_update(idmap, attr, inode);
- 		f2fs_mark_inode_dirty_sync(inode, true);
--		f2fs_unlock_op(F2FS_I_SB(inode));
-+		f2fs_unlock_op(sbi);
- 	}
- 
- 	if (attr->ia_valid & ATTR_SIZE) {
-@@ -1144,7 +1150,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	f2fs_mark_inode_dirty_sync(inode, true);
- 
- 	/* inode change will produce dirty node pages flushed by checkpoint */
--	f2fs_balance_fs(F2FS_I_SB(inode), true);
-+	f2fs_balance_fs(sbi, true);
- 
- 	return err;
- }
+Any comments on this, please?
+
+It prevents us from moving forward with the killing the GPIO legacy APIs
+(it's not critical at all in this case, just an inconvenience for a `grep`,
+but still...).
+
+I think we can take it via GPIO tree if there is no reply.
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
