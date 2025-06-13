@@ -1,42 +1,42 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28692E11C6;
-	Fri, 13 Jun 2025 15:34:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2741EEA47;
+	Fri, 13 Jun 2025 15:36:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828850; cv=none; b=ODJPTmumzfVGd66gp4ubtLPihYvoVjibS0EVTUUc3gYHMq87o81vmU+piQszuMI6IrxO9H456JIQX43DHqKf7o4MY+2kLPPIfSnAkPDSk6ndRsvTp8crmi+YzYspZldgj4BEfhmfAayCsJrT42WnmMrQmxn1Xc/HHZiR41IytFE=
+	t=1749828985; cv=none; b=PYuEkf4culmXJlCrGND3RlizDFQVz9kn8HsAl8Dq2iyEcGd2pyLFTMkA4VLGqhRNx7tJw6SJv6N4HPI35m3ba26sPREqB9aKPIH5cm6U6I5kJj+eZWAn7nbQDGh4jBVZKsneRvnzyCV2JagkPzKUgFvT2RXEIEePIW6zyd89MOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828850; c=relaxed/simple;
-	bh=ftUktIWQ3FpQ+oNWq9GjbTfGde+p4uG7iLxKXxZnMeg=;
+	s=arc-20240116; t=1749828985; c=relaxed/simple;
+	bh=hi30N7hPTdM+W7CSNwd8BBlcNYK6rfxQAwLj1o7h+o8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FF7t8D8+6fVmNZ2W3p2+3dPIIoS0btsJIov2vqjpFuH53jq/kKs9Xu1q+7wv/jU2bUin/x0brvt7iSxjl+QGVLcil9y/kcdCHWs9lHdYFj3xVEDOpACx9KmE91LcSkGtzm6bfSQqXDAcHfAOlLonuaIa59woKcXXk11R+QFQ08o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qk//4p7P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SfGRvKSO; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=a2UkM76iJVfYQyUk75RB3u5qWGbZfBI+p0a0i0qe6r+sPnC/PPGJEu7eYSZHAKxK2OBXhd4C6kpMN7DGk6WWh9qxNt4J3QvSG5tYFmCJpqdw/n5AccXy62sCxrgbrLsb47y9OD2vnQDeoonY0kQdfOHiPHEQxcmcKMqLu2FH5nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VjSmWRHV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8A83mT6R; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qk//4p7P";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SfGRvKSO"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VjSmWRHV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8A83mT6R"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749828847;
+	s=2020; t=1749828982;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ftUktIWQ3FpQ+oNWq9GjbTfGde+p4uG7iLxKXxZnMeg=;
-	b=Qk//4p7Pe3ee5tQzv2DP0kCIu9gs47/kMgqEMHEB5VmmrmVvrqS27+Myn5Z6Rk3cObLRpJ
-	sWQiPe7ZFPm0q4XjbnL3uVipcCZ7Rt4edDBwMGDOKB0LJ90FAwmYESDXKrzXVpVBvuZybb
-	g0xzINxXqmmGQRMN19BKSzywUOVaAPhnXxtFf6TEvX00lC00z4Kzr10YPAR/xjoI9VtSsq
-	0CXvmTrDysgu+SavVCQLeTJmNNHKq6qQK5o3RuOI/5qeYaW8KeSKRCEmBAS7AknAuzCy80
-	MlFwxTntd52wy03m2jPjaTHP41BWmNuYgLypxGTxuzPssnd6jibdhCYw1hO2HA==
+	bh=Kl/6EkwsEpqgCUA5P8YrSajTCAuCE0EZwn0pBl3AfZU=;
+	b=VjSmWRHVDVG+nz4CIbGQz42VQ8TH8Zf+HXs9/usjzOzyXiZU30Ud+NRBCxX2CdNPI2b02h
+	rIcBChhAX6q7ZcrJqPSJoY8NR/tx5a7vTK+mPgr6/4L9/Yfs7b4HTZALqmDspKJtoxKdua
+	TM1HP0AeJAgcRicnW3CpQqT6X0v9XrOKOAKyve4+37Z3XiRY/RZBjijwLRx064XbT8x+c4
+	aeeQtWhk+bLxYuyn2u5asQd6PZiUV2YkiOPRG/IES26cMEP8YhSr+nTbJz5OV8SKjQJLSB
+	rWcnDK0p7W5kxLdDRZyolj4RM+ja7z2noCJQCr3WwudMFwe8WTM2jT8Wfzc2cA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749828847;
+	s=2020e; t=1749828982;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ftUktIWQ3FpQ+oNWq9GjbTfGde+p4uG7iLxKXxZnMeg=;
-	b=SfGRvKSODKoa8qpc4nvk4dakrEGL44D3qm1o3/S5XU+7X5Wip5K5G4kEDIanl/giVAnCJH
-	rgLLj2B+ihreNmAw==
+	bh=Kl/6EkwsEpqgCUA5P8YrSajTCAuCE0EZwn0pBl3AfZU=;
+	b=8A83mT6RVGbiO5VdlNc0EukD58Nw0/Gu1WWIv8vYi7JqEy6zT0DWmxkUk6/xrizwGDAinN
+	+4XaDX7rQr0YGpBQ==
 To: Anup Patel <apatel@ventanamicro.com>, Michael Turquette
  <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
  <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -55,13 +55,12 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
  linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel
  <apatel@ventanamicro.com>
-Subject: Re: [PATCH v5 19/23] irqchip/irq-riscv-imsic-early: Export
- imsic_acpi_get_fwnode()
-In-Reply-To: <20250611062238.636753-20-apatel@ventanamicro.com>
+Subject: Re: [PATCH v5 21/23] irqchip/riscv-rpmi-sysmsi: Add ACPI support
+In-Reply-To: <20250611062238.636753-22-apatel@ventanamicro.com>
 References: <20250611062238.636753-1-apatel@ventanamicro.com>
- <20250611062238.636753-20-apatel@ventanamicro.com>
-Date: Fri, 13 Jun 2025 17:34:06 +0200
-Message-ID: <87ikkzirkh.ffs@tglx>
+ <20250611062238.636753-22-apatel@ventanamicro.com>
+Date: Fri, 13 Jun 2025 17:36:21 +0200
+Message-ID: <87frg3irgq.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,14 +70,56 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 On Wed, Jun 11 2025 at 11:52, Anup Patel wrote:
+> @@ -211,6 +213,9 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct rpmi_sysmsi_priv *priv;
+> +	struct irq_domain *msi_domain;
+> +	struct fwnode_handle *fwnode;
+> +	u32 id;
+>  	int rc;
+>  
+>  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> @@ -241,6 +246,22 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
+>  	}
+>  	priv->nr_irqs = rc;
+>  
+> +	fwnode = dev_fwnode(dev);
+> +	if (is_acpi_node(fwnode)) {
+> +		u32 nr_irqs;
+> +
+> +		rc = riscv_acpi_get_gsi_info(fwnode, &priv->gsi_base, &id,
+> +					     &nr_irqs, NULL);
+> +		if (rc) {
+> +			dev_err(dev, "failed to find GSI mapping\n");
+> +			return rc;
+> +		}
+> +
+> +		/* Update with actual GSI range */
+> +		if (nr_irqs != priv->nr_irqs)
+> +			riscv_acpi_update_gsi_range(priv->gsi_base, priv->nr_irqs);
+> +	}
+> +
+>  	/* Set the device MSI domain if not available */
+>  	if (!dev_get_msi_domain(dev)) {
+>  		/*
+> @@ -250,8 +271,13 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
+>  		 * then we need to set it explicitly before using any platform
+>  		 * MSI functions.
+>  		 */
+> -		if (dev_of_node(dev))
+> +		if (is_of_node(fwnode)) {
+>  			of_msi_configure(dev, dev_of_node(dev));
+> +		} else if (is_acpi_device_node(fwnode)) {
+> +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
+> +							      DOMAIN_BUS_PLATFORM_MSI);
 
-> From: Sunil V L <sunilvl@ventanamicro.com>
->
-> ACPI based loadable drivers which need MSIs will also need
-> imsic_acpi_get_fwnode() to update the device MSI domain so
-> export this function.
->
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+msi_domain is only used here and so it should be declared in this scope
+and not at the top of the function.
+
+> +			dev_set_msi_domain(dev, msi_domain);
+> +		}
+
+Other than that:
 
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
