@@ -1,197 +1,172 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6D326B761
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F02279DA5
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814649; cv=none; b=Dpmfc03mV4vdACbbHJEIz8vQLDTgwoWYyC9E6td2QhlyL9cZ7pZJul9x5t7Y1VIgKz3kJLp2dphYSq/1egb2LkTppbXr9+vj8KRDQMuZ7ergoj8xPiawDLxPmnFm65iCjyBB9cxJslI68aGunofGLnHbsZ95iLfcnSUkuTfWiPs=
+	t=1749814666; cv=none; b=LuJN3ZBAv72gcDRBUa3GsBLhnPzalmLcgrduoAML1z/P+AbFozcrnkC2qBgdLfEXoRF97+4QoJoAg9F0KQP5u5hu1pFCRLFSjY63BooAI7Z7huCek9Ev43zkRw+NulFmVDhXYugzAwyx9K4d7wxd/nEAYTojIefidLwsCWsE0s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814649; c=relaxed/simple;
-	bh=CGazjHvtPLR+n+nraHqXK60GXztxc5Ty1HT6JYo1GE8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=sS0eLrmhAdFZxblJJNCW7RnTf/fREbOy6bYHNUwApS+fOvbV7AWhpJBMmwDXrcN8CYSbmVnwYmXePDr9TjVOsO28CA/1xwGuvVrqqaMxmxCYPeGTt8U5fSheUwhf5wlAyYDDl4FobTy8tpnL4wS06/Rg3NkjLvEE11Yf3xfpDVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86d0aa2dc99so171194439f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 04:37:27 -0700 (PDT)
+	s=arc-20240116; t=1749814666; c=relaxed/simple;
+	bh=9nOSWkmKXGxZeCKeJfHc4BTvtEPmtKmuPEyXTrCEXE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DYRaEKKNJpQ4+g0UwwVf+Et/URnl/89XVHm08C9rAcG/VtxYCLH+L7UGDJ4uuefPbGbOwXHQpIQOTj1RsbSLeiIkV634oKq8FEpKsmj2y4jXC8Qvb5ghBDUlQq6y6Ha1rhKgBUnFrZAImY3c4e2orLi3HoTyyDF2bgK3nMBHjRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5SsUNlb; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5SsUNlb"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3122a63201bso1975500a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 04:37:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749814664; x=1750419464; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jKGg0bB1/QQAEHL8cmKXw80iv4zUBwrxD0VPEgJGB1c=;
+        b=G5SsUNlbZdpTr6yWGmJA50GoUYeEdVRDIO8W8EQtDv5YgG2Ouf3oX76kLA3SqaiiER
+         ReuivOQLX6UuHUaEpayxecR+U1z0l0CRsWqN+Z869DEIqHPwzf8/bhX+kwgdpgoCkg6B
+         CGOzfhkeAhDGQJjXFr2BIYX8raZ8xIWOoqiIrb4/7CYf78sUbBC4//JArHNflVdfUrat
+         OcNBsCueXFpb6GZ/b9PyZ08coxfoQzs6RL98ZqqT0tOrf0kFpgOJbuAwPJl5zP84287D
+         M9U7coFIzqOhm3kpT0Dr1oPXU3WgI4xWYTQQbBO13zqjMM7I+spneN1KfYLuxaDldLxg
+         sahw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749814647; x=1750419447;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=01E6f5NyJDwmtzVDXOANJOOLyRyTfojGhsVBy8J5eMM=;
-        b=DnvtzEGhx0XptfSle3zptGikWAUwUxJ2AZsBlnGaEvLlXZ7XmfAGhKMOInLnSVUA3y
-         GmYuVjzz+Y6VqjqLMrubFvG3AI7Nd8ASdyjDFQPlHnkwUNrlHvSj1lGRpWRIPF76Aqmz
-         +wpyhGSUgYH9YZSLhkgFtZaW+1WgF7ugWpXT86p95xF6/0nroZv1PM0ivShiT5UMOuWF
-         FUQvc7NVZY5vzgqs7sZ6zRkQONUbQU9phCH1i98xvCImqvYwaqH1VCMSeS4nbAUZY6Uw
-         KQ29ZrqdazXjYjfzcloNbH6THerQV9PUL+lVVlQPIIEZreOLXpiDnBlu23SCB3t56ayn
-         dQDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUu3uM8WAVbrAxcQWqGjO4VQ0ekNlI9i7YenuCLgaKu+yWSvCPMncZBi6ETjSFVdPl6jeMmQ/t7XIjh0Qg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNIZu78kOtpALZKRvkPz3XyAiE1PM4uRc+kAsuKqO4EqmYqT0q
-	Y+gpeB+gGPgEu3QQwMo46G0EQsPds3Mu2txqgD+ReUWFAeWiiCflr5ng0sVaZ5wN6555bJb/gRu
-	w9GRQDND7cV7zIaKL3IB3HXqwfmauN/BbnRHBHUXRK+obHzFU0aJofkxk5Ts=
-X-Google-Smtp-Source: AGHT+IH2V3mFt2EYaks4rh55v1OqK2tPnYn9+0ROvQwt36ptpn6T1KZuMAgjcxi2hbyb3ZYrloTySqAcaaa65Y+SxNsKdL3q7uKc
+        d=1e100.net; s=20230601; t=1749814664; x=1750419464;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jKGg0bB1/QQAEHL8cmKXw80iv4zUBwrxD0VPEgJGB1c=;
+        b=iKvVZl4/KeRtNRDG7AAxQKKGcgBcYrpIYnvdd2N724B31Ix7cuaPH/GnBDhmKc4EQo
+         5+OcduHq3t4Wr6eo2oltOlS3D3U4aYNB2pWPMgwBvVt+EnR5fKuZaV3GyxExRr+h3JPn
+         SkIMa10zEw5paascN2Bc9TTkc9Z1VkfMw5zzQepKMyT5h2Pzx6oZ2BZYSAVgUUOMXPU4
+         ZWUfXdLpeXPbeCV7fmfRi+AJLIw6MifCJ30TY4F19b4/nIzDu5tz1/Tw3A1RtsjYjxsG
+         jn58KRR6sW687IJHOtB4wdVcvg7Mc1v+k5u6fgad9jCEnQ2JHJwOZoiMjXBeogi0X1xz
+         +TLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgEVB4FFJKXlNjjgX5ylEzm7Y06FQ8xzq05h1/eFufequyeBk8zrsFVJDYFvjCQkWXfyFrWtSV6SgVpFE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzODd73Nh4jcUH8h8siBs3HT+TE6/IbuTqja/Br44qHnyyCZ+uD
+	0AoCnDNhtTdSRh4ZEj5X7nRgjHv/kV+WXK2/ky/xLxIHK9Bg9dmrs+67
+X-Gm-Gg: ASbGnctnBT3lV9DfpXytYbpIxN1yKO7ZMYNrW26nS6uwkj6eMJzWrlnSYCYw8d+Ssu7
+	eI5xN9w8zp8EGqgNXot97cnyS3WSSFvtxI6ILCn4nenMvBlXe32miAxWFP49EBqWk4giId6X8nj
+	sYoZuU/81GsI0lFGKsfcjuekvyPO1lmcxkQrtPdH3Dto9ZtuModTlvg8NyD/0Ob/J7xMYaQ/0ZV
+	RjY+q9J5DUNdqPo/7F9WPoQApE2YG6xoVpPkq+xGWe6UJBmvJrsf7qxFpZcEGlfGf99YAq7cEtl
+	QQXNIGGWTUDdTwEZLsCaLSiqZMbrq7KR9FHLvAIjClczAAPhZ/4s/0JVRyy78cql8Bx4txYpgm4
+	rfeI=
+X-Google-Smtp-Source: AGHT+IEtO7AJctbwySDiG4IYWUnqbCXmYhViiO2826Yp+/7UzXYJWcG/B84cs6yfhKmrpN1By8fMng==
+X-Received: by 2002:a17:90b:4b41:b0:312:18e:d930 with SMTP id 98e67ed59e1d1-313d9eaec51mr3970567a91.19.1749814663686;
+        Fri, 13 Jun 2025 04:37:43 -0700 (PDT)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:10a9:4163:7b48:3809])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365decaf4csm12097125ad.218.2025.06.13.04.37.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 04:37:43 -0700 (PDT)
+Date: Fri, 13 Jun 2025 19:37:39 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Yury Norov <yury.norov@gmail.com>, linux@rasmusvillemoes.dk,
+	jstultz@google.com, sboyd@kernel.org, linux-kernel@vger.kernel.org,
+	eleanor15x@gmail.com, visitorckw@gmail.com, jserv@ccns.ncku.edu.tw,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [RFC PATCH 2/2] clocksource: Use cpumask_first_but() in
+ clocksource_verify_choose_cpus()
+Message-ID: <aEwNg-chMazUvS6-@vaxr-BM6660-BM6360>
+References: <20250613033447.3531709-1-richard120310@gmail.com>
+ <20250613033447.3531709-3-richard120310@gmail.com>
+ <aEuw7ls9hieUv_Ox@yury>
+ <87ldpvsyr8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2593:b0:3dd:d995:5a97 with SMTP id
- e9e14a558f8ab-3de00bea30dmr26645245ab.12.1749814647001; Fri, 13 Jun 2025
- 04:37:27 -0700 (PDT)
-Date: Fri, 13 Jun 2025 04:37:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684c0d76.050a0220.be214.029f.GAE@google.com>
-Subject: [syzbot] [gfs2?] kernel BUG in gfs2_jindex_free (2)
-From: syzbot <syzbot+150563285f78ac3e9bd4@syzkaller.appspotmail.com>
-To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ldpvsyr8.ffs@tglx>
 
-Hello,
+On Fri, Jun 13, 2025 at 12:48:43PM +0200, Thomas Gleixner wrote:
+> Yury!
+> 
+> On Fri, Jun 13 2025 at 01:02, Yury Norov wrote:
+> > This exact change has already been submitted by me and is under review.
+> >
+> > https://lore.kernel.org/all/20250604232550.40491-2-yury.norov@gmail.com/
+> >
+> > I don't understand why are you undercutting my work, and moreover do it 
+> > for the second time.
+> >
+> > For the first time you submitted something that duplicates my another
+> > patch from the exact same series. John Stultz has pointed that, so you're
+> > surely aware.
+> >
+> > https://lore.kernel.org/all/CANDhNCoJ_MmpEfyuL+JWav+NUfQDH3dm196JSE-Mv3QrPUzi3g@mail.gmail.com/
+> >
+> > Kernel development process implies that one makes sure that his work
+> > is unique and doesn't break someone else's development, at one's best
+> > knowledge.
+> >
+> > What you're doing not only breaks this rule. You're in fact trying to
+> > get credit for the work that is done by someone else. This is the
+> > definition of fraud.
+> >
+> > I cannot make sure that any other patches from you are unique and
+> > written by actually you. Therefore, I will not take your work anymore.
+> >
+> > I encourage everyone else to be careful working with I Hsing Cheng
+> > and check his patches for uniqueness, at minimum.  
+> 
+> There is absolutely no justification for accusing Hsin of fraud or other
+> nasty intentions.
+> 
+> It's sufficient to point him to your series and tell him that it's
+> already been dealt with.
+> 
+> I deal with redundant and conflicting patches every other day. That's part
+> of how open source development works and it's trivial enough to either
+> pick one of the patches or ask the involved parties to sort the
+> conflicts out.
+> 
+> Thanks,
+> 
+>         tglx
 
-syzbot found the following issue on:
+Hello Thomas,
 
-HEAD commit:    19272b37aa4f Linux 6.16-rc1
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=108dca82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c07f08ee4bcfb276
-dashboard link: https://syzkaller.appspot.com/bug?extid=150563285f78ac3e9bd4
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+Thanks for your word, really appreciate it.
+Though I can understand abit why Yury was annoyed for this patch, at the
+patch [1] I sent earlier, it already collide with Yury's patch, he did
+paste the link of his patch for me, but I only take a look at the patch
+in the link, not the whole patch series.
+And then I send this patch, again collide with his work, if it were me, I
+might feel the same like alittle bit of offended.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I send this patch because after I send this patch [2] , I think of
+Kuan-Wei's patch [3] months ago and see there might be a use case here,
+so I ask Kuan-Wei whether I can pick up his work.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-19272b37.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b70bcabfccd8/vmlinux-19272b37.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/57e93b736a7a/bzImage-19272b37.xz
+I admit I wasn't paying attention to detail enough when looking at other's
+work, neither did I subscribe the mailing list cuz I don't want my mail
+box to be exploded with mails that aren't sent to me.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+150563285f78ac3e9bd4@syzkaller.appspotmail.com
+My workflow for patches was making sure it works as expected, and then
+use scripts to check patch format, get maintainers, and then send it. I
+know there's always room for improvments or something I might've done
+inappropriately, that's why I always send the first patch with RFC tag.
 
-loop0: detected capacity change from 0 to 1024
-hfsplus: failed to load root directory
-loop0: detected capacity change from 0 to 32768
-gfs2: fsid=syz:syz: Trying to join cluster "lock_nolock", "syz:syz"
-gfs2: fsid=syz:syz: Now mounting FS (format 1801)...
-gfs2: fsid=syz:syz.0: journal 0 mapped with 1 extents in 0ms
-gfs2: fsid=syz:syz.0: first mount done, others may mount
-gfs2: fsid=syz:syz.0: fatal: I/O error - block = 9377, function = gfs2_ail1_empty_one, file = fs/gfs2/log.c, line = 328
-gfs2: fsid=syz:syz.0: about to withdraw this file system
-gfs2: fsid=syz:syz.0: Journal recovery skipped for jid 0 until next mount.
-gfs2: fsid=syz:syz.0: Glock dequeues delayed: 0
-gfs2: fsid=syz:syz.0: File system withdrawn
-CPU: 0 UID: 0 PID: 5325 Comm: syz.0.0 Not tainted 6.16.0-rc1-syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- gfs2_withdraw+0x111e/0x14f0 fs/gfs2/util.c:354
- revoke_lo_before_commit+0x2f/0xe60 fs/gfs2/lops.c:857
- lops_before_commit fs/gfs2/lops.h:42 [inline]
- gfs2_log_flush+0xb8b/0x24c0 fs/gfs2/log.c:1105
- gfs2_sync_fs+0x6d/0xb0 fs/gfs2/super.c:662
- sync_filesystem+0x1cf/0x230 fs/sync.c:66
- gfs2_reconfigure+0xbb/0xb20 fs/gfs2/ops_fstype.c:1555
- reconfigure_super+0x224/0x890 fs/super.c:1075
- vfs_cmd_reconfigure fs/fsopen.c:262 [inline]
- vfs_fsconfig_locked+0x171/0x320 fs/fsopen.c:291
- __do_sys_fsconfig fs/fsopen.c:467 [inline]
- __se_sys_fsconfig+0x78e/0x8d0 fs/fsopen.c:344
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f3a8ed8e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f3a8fb52038 EFLAGS: 00000246 ORIG_RAX: 00000000000001af
-RAX: ffffffffffffffda RBX: 00007f3a8efb5fa0 RCX: 00007f3a8ed8e929
-RDX: 0000000000000000 RSI: 0000000000000007 RDI: 000000000000000c
-RBP: 00007f3a8ee10b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f3a8efb5fa0 R15: 00007fff7917f738
- </TASK>
-------------[ cut here ]------------
-kernel BUG at fs/gfs2/super.c:76!
-Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 5325 Comm: syz.0.0 Not tainted 6.16.0-rc1-syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:gfs2_jindex_free+0x43e/0x440 fs/gfs2/super.c:76
-Code: cc cc cc cc cc 89 f9 80 e1 07 80 c1 03 38 c1 0f 8c ea fd ff ff e8 52 d1 2b fe e9 e0 fd ff ff e8 08 02 6e 07 e8 13 59 c8 fd 90 <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00
-RSP: 0018:ffffc9000fec7800 EFLAGS: 00010293
-RAX: ffffffff83f805dd RBX: dead000000000122 RCX: ffff888000514880
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: 00000000ffffffff
-RBP: ffffc9000fec78c0 R08: ffff888042458d4f R09: 1ffff1100848b1a9
-R10: dffffc0000000000 R11: ffffed100848b1aa R12: ffff888042458818
-R13: dffffc0000000000 R14: ffff888035c49400 R15: ffff888035c49478
-FS:  0000000000000000(0000) GS:ffff88808d252000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055c2ed7e1b88 CR3: 0000000011bd9000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- gfs2_put_super+0x8af/0x950 fs/gfs2/super.c:638
- generic_shutdown_super+0x135/0x2c0 fs/super.c:643
- kill_block_super+0x44/0x90 fs/super.c:1753
- deactivate_locked_super+0xb9/0x130 fs/super.c:474
- cleanup_mnt+0x425/0x4c0 fs/namespace.c:1417
- task_work_run+0x1d1/0x260 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0x6ad/0x22e0 kernel/exit.c:955
- do_group_exit+0x21c/0x2d0 kernel/exit.c:1104
- get_signal+0x1286/0x1340 kernel/signal.c:3034
- arch_do_signal_or_restart+0x9a/0x750 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop+0x75/0x110 kernel/entry/common.c:111
- exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
- do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f3a8ed8e929
-Code: Unable to access opcode bytes at 0x7f3a8ed8e8ff.
-RSP: 002b:00007f3a8fb52038 EFLAGS: 00000246 ORIG_RAX: 00000000000001af
-RAX: fffffffffffffffb RBX: 00007f3a8efb5fa0 RCX: 00007f3a8ed8e929
-RDX: 0000000000000000 RSI: 0000000000000007 RDI: 000000000000000c
-RBP: 00007f3a8ee10b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f3a8efb5fa0 R15: 00007fff7917f738
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:gfs2_jindex_free+0x43e/0x440 fs/gfs2/super.c:76
-Code: cc cc cc cc cc 89 f9 80 e1 07 80 c1 03 38 c1 0f 8c ea fd ff ff e8 52 d1 2b fe e9 e0 fd ff ff e8 08 02 6e 07 e8 13 59 c8 fd 90 <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00
-RSP: 0018:ffffc9000fec7800 EFLAGS: 00010293
-RAX: ffffffff83f805dd RBX: dead000000000122 RCX: ffff888000514880
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: 00000000ffffffff
-RBP: ffffc9000fec78c0 R08: ffff888042458d4f R09: 1ffff1100848b1a9
-R10: dffffc0000000000 R11: ffffed100848b1aa R12: ffff888042458818
-R13: dffffc0000000000 R14: ffff888035c49400 R15: ffff888035c49478
-FS:  0000000000000000(0000) GS:ffff88808d252000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055c2ed7e1b88 CR3: 00000000122c6000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+That's the whole story, I am sorry to Yury, but again I think the
+accusation is too over, like I said earlier, if I mean to steal
+someone's work, why would I send it directly to the author ?
+
+Still, I respect Yury and his professions, months ago he gave me many
+suggesetions and help in another patch.
+
+That's why I send my patch [2] to him to asked him for some comments
+even though he's not in the maintainers list of that file.
+I would never want to offend someone I respect, I hope he can
+understand.
+
+[1]: https://lore.kernel.org/lkml/20250611104506.2270561-1-richard120310@gmail.com/
+[2]: https://lore.kernel.org/lkml/20250609194611.690678-1-richard120310@gmail.com/
+[3]: https://lore.kernel.org/lkml/20250117142658.297325-1-visitorckw@gmail.com/
+
+Best regards,
+I Hsin Cheng
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
