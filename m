@@ -1,200 +1,95 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82AB279DB7
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C164291C04
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749805951; cv=none; b=t4KcPRwjYLXcIm2jfBCj4qRpvVRrORAjjyhcuBpooR36rGLszolmlQZbQafCdNEI7yuD87LJIoD8ByrDNrD/OblqKamQSjHcOCwBosGXDCuXH50RTr+0+3/bwf0vdZ5H0Kk25VBhBPNFrGViMQfoSRFZrLN7+qOvOTP0Zy+NjOY=
+	t=1749805957; cv=none; b=T94QCW9p0kzYYkWBB+dfXHF3RhUbMxlMOtqUg4Cwqcj971nEQYNTZwujffHy9h5ETC6bp+6PBnHNtgWbYi+cMt9SDbGl/jsRQqA46PDdejLtKFfC2InUMz18LJtU82BPoZexxO1/jE+oHCRfpBVpGRFAjJoE6mMGs2gpFbRoF2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749805951; c=relaxed/simple;
-	bh=rhBgtIz5rbF4vZpFi/4hzu5iAms/cKtPyMWFvJqcEMU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=eGLyZcO4ZhXX4T4L2A0Suce7htV5EXFQAenhcJ4eYZ3pvWlaGz8XGrzkrCQM2Hla06Mgp5LGYVKxaDTSscXQCk2aalDGYvlHuOLW8RZqWx7JpZMJS7U/KKvPGS9BHraR4RT1Kv7+8IuxUuzw/aHifxaJSFgOd/xByWpbUUXOkVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V8tlO3Sw; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749805957; c=relaxed/simple;
+	bh=ytASqrm4mDPNVLNks+mjpMY4nIBPTx8wa4OlEcXVUrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ViLY/0+w1U8H5L+NOHP+/K4fzQRjCy4OIHH62Xb5Gtek72kD2luW5z/j8N+73E/gcOpGg3IdaUR5IoQVHpd20yOrmz7zEpNJRywgUlHftKkagleMkh+kxYr58kUIFtqplyYctIZ2xAfqKVpHMr3UQobRynnasIKn+JkEM48FFg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Squ5aHPw; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V8tlO3Sw"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451d3f72391so24899115e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749805948; x=1750410748; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yaEX4dDgKDNxKZX0+vcnih4XjDWoAZY8oCSw4SAHFH8=;
-        b=V8tlO3SwRlknI3jgXnyOSk6WaUnBTGw00l5DTX5LpBcwuZJHrn0w+R/AEUY2FKjh7i
-         0F7zqd0bRK00EWKdkW678WFj8m+bhB+nqKQUrYeyNb1roJVvsApTqAYm+w2E4nLKp5tF
-         E/qmK+Ml4eFPPnXI+jYs4W3DL3OotV8+0/ZC45gjTGNvv89XXh+CmgS6eiCLNYmclK2r
-         GegUi3G5qvpCIa2o518lst7FTjLkFX/RHL2bmuTdUtSD0aU2yGSE6VfKU9pch+Lckclc
-         fTvGuD/8ccZCAK/ikSC7zaxC/xL7iAfIwCOBYEzRrw2BLsrUIb8G+RXr3BVP1K0MHb16
-         8cVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749805948; x=1750410748;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yaEX4dDgKDNxKZX0+vcnih4XjDWoAZY8oCSw4SAHFH8=;
-        b=kpImn/k3RI7hl8Lxe8OmTg5Cl3ZfRu2ZJSBDCuY7yoFEQguN5HCovU52jv9qs3X8Fb
-         PHdfTKGQeFGkTZywXATlsztRnLV0XtopM+PH8k+7EWrPTEyQZs+ba1+NZxS81aOPw4eA
-         538WOQHVjFchGxg+NmH3tSsayILeXb1haizJxOwNwnITbiZOzPP0qYwcZ0SLRpIKfPiH
-         IVg8eTgAUBsb0H+vD0n5oJCwm8tFl6QPzSSLjlsPfhaMtDmqVOrDQt9YLNDoRnaFIk+b
-         HXrNIgKqGUjtJfWu0j9RoJ+SjaEKpACb+DjXBYNvpP1kxYnfy2AzxDHV0MOD5g3zbzi5
-         ekcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXo2joJfQvQI/JjFyi4e+3oF1FDwnm4gC+y6gmcns+vpvwf7/G8zB0kfhiqSAnptN7Kaip1eT+6PxxjRts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEn7VjmlkQU/ljgcA9j0pUpWvFdJn2cRAhf8j8g8H1HKEM78S+
-	J4/5Y3lehTO0GJ2Y8eT6nAJh3h9rJSSb+1V2Ig1e6av5Ou22klPni/CgIAmr2oo8gQk=
-X-Gm-Gg: ASbGncu4tHsdC67szkfmw/FWoOfw0540PJp9MyeiV+g8eeRcv1jLRFUNAOomQgSOl5T
-	1ejYOD4+XM6K4wfoh12Vc+xvnLGjFI/MPy1DIqGkSjYTGwj1aTqYSPNXYO2XEuHRbR1sKeLlUmy
-	ZOpgx/lzS3uTMNoXutLYU7JIFbiidbd407z4mHPWm0QHh4OTfOIrY776hjqYrZONNmZgWYJegFz
-	vgiZqoJWh8hJpR4sIA5+vqD4HMOk+mxSXVLfw+uDNQPSxr4gMPyNFu8M/AUBtVYg29gfG6qYTkB
-	zd5xFKTrEKXr0tyziTwniRgp8KitkBn0dCXyiJ9/Ce7eSQyX65KmXR0hWMwQekwb8jMBPpBVmzK
-	RrdITqD2bhy7i5gIk0HDw1QxkWM1mgoDTPQ1wKvhmMEi5fsKMOA==
-X-Google-Smtp-Source: AGHT+IGfNqq5N/dXfqPTy6lk5lwkJCrvfc3vLmcZOn5YDfPCKU4e2XDDXROymQQp9fqDHIQhZiR3NQ==
-X-Received: by 2002:a05:600c:34c7:b0:442:f8e7:25ef with SMTP id 5b1f17b1804b1-45334ad3f41mr21047235e9.11.1749805948257;
-        Fri, 13 Jun 2025 02:12:28 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:4144:6a84:fe1d:3aae? ([2a01:e0a:3d9:2080:4144:6a84:fe1d:3aae])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2446b0sm45162715e9.21.2025.06.13.02.12.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 02:12:27 -0700 (PDT)
-Message-ID: <9455a4e1-6352-4832-ac9f-2816f889c3a4@linaro.org>
-Date: Fri, 13 Jun 2025 11:12:26 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Squ5aHPw"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749805951; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=mChSD/u8wIZMVmHw/Zc0kj2t+KuBko5/1GsKc3/KtCc=;
+	b=Squ5aHPwL/z24oK8Z1nSD0/eccTHJmoX0v2tYK0b2DuGlZqhuvBze0Ui24m0GpAZxp5fp1W+K7OpYKG621NmNrYs0SB7pMtoYD3Tu3PUMW1QSVOEKpgDMKa0W0O41Ck6CGr1jWARp/G4x7TfZF1hit3v8HzXSKHy7eGywbZDs1c=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wdjy3Cr_1749805950 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Jun 2025 17:12:30 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com
+Cc: ziy@nvidia.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: huge_memory: fix the check for allowed huge orders in shmem
+Date: Fri, 13 Jun 2025 17:12:19 +0800
+Message-ID: <529affb3220153d0d5a542960b535cdfc33f51d7.1749804835.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 9/9] arm64: dts: exynos: ExynosAutov920: add USB and
- USB SS combo phy nodes
-To: Pritam Manohar Sutar <pritam.sutar@samsung.com>, vkoul@kernel.org,
- kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- alim.akhtar@samsung.com, andre.draszik@linaro.org, peter.griffin@linaro.org,
- kauschluss@disroot.org, ivo.ivanov.ivanov1@gmail.com,
- m.szyprowski@samsung.com, s.nawrocki@samsung.com
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
- dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
- selvarasu.g@samsung.com
-References: <20250613055613.866909-1-pritam.sutar@samsung.com>
- <CGME20250613055106epcas5p46a2e5e2d6f0e8811644643f6282fd9ca@epcas5p4.samsung.com>
- <20250613055613.866909-10-pritam.sutar@samsung.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250613055613.866909-10-pritam.sutar@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/06/2025 07:56, Pritam Manohar Sutar wrote:
-> Update the USB 3.1 DRD controller and USB31DRD phy nodes to support
-> SS combo phy for this soc.
-> 
-> The USB 3.1 DRD controller has the following features:
-> * DWC3 compatible
-> * compliant with both USB device 3.1 and USB device 2.0 standards
-> * compliant with USB host 3.1 and USB host 2.0 standards
-> * supports USB device 3.1 and USB device 2.0 interfaces
-> * supports USB host 3.1 and USB host 2.0 interfaces
-> * full-speed (12 Mbps) and high-speed (480 Mbps) modes with USB device
->    2.0 interface
-> * super-speed (5 Gbps) mode with USB device 3.1 Gen1 interface
-> * super-speed plus (10 Gbps) mode with USB device 3.1 Gen2 interface
-> * single USB port which can be used for USB 3.1 or USB 2.0
-> * on-chip USB PHY transceiver
-> * supports up to 16 bi-directional endpoints
-> * compliant with xHCI 1.1 specification
-> 
-> USB3.1 SSP+(10Gbps) is supported in this commit and SS phy in combo
-> phy only supports PIPE3 interface and it is added in index 0 of SS phy.
-> UTMI+ and PIPE3 PHY interfaces are specified in "phys" property,
-> UTMI+ (index 0 HS phy) and PIPE3 (index 0 SS phy).
-> 
-> Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-> ---
->   .../arm64/boot/dts/exynos/exynosautov920-sadk.dts |  4 ++++
->   arch/arm64/boot/dts/exynos/exynosautov920.dtsi    | 15 +++++++++++++--
->   2 files changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
-> index a21386bd9af3..40588f7c9998 100644
-> --- a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
-> @@ -88,6 +88,10 @@ &xtcxo {
->   };
->   
->   /* usb */
-> +&usbdrd31_ssphy {
-> +	status = "okay";
-> +};
-> +
->   &usbdrd31_hsphy {
->   	status = "okay";
->   };
-> diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-> index 4efc005cae80..5ee7fad346b9 100644
-> --- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-> @@ -1048,6 +1048,17 @@ pinctrl_hsi1: pinctrl@16450000 {
->   			interrupts = <GIC_SPI 456 IRQ_TYPE_LEVEL_HIGH>;
->   		};
->   
-> +		usbdrd31_ssphy: phy@16480000 {
-> +			compatible = "samsung,exynosautov920-usb31drd-ssphy";
-> +			reg = <0x16480000 0x0200>;
-> +			clocks = <&cmu_hsi1 CLK_MOUT_HSI1_NOC_USER>,
-> +				 <&cmu_hsi1 CLK_MOUT_HSI1_USBDRD>;
-> +			clock-names = "phy", "ref";
-> +			#phy-cells = <1>;
-> +			samsung,pmu-syscon = <&pmu_system_controller>;
-> +			status = "disabled";
-> +		};
-> +
->   		usbdrd31_hsphy: phy@16490000 {
->   			compatible = "samsung,exynosautov920-usbdrd-hsphy";
->   			reg = <0x16490000 0x0200>;
-> @@ -1109,8 +1120,8 @@ usbdrd31_dwc3: usb@0 {
->   					 <&cmu_hsi1 CLK_MOUT_HSI1_USBDRD>;
->   				clock-names = "ref", "susp_clk";
->   				interrupts = <GIC_SPI 491 IRQ_TYPE_LEVEL_HIGH>;
-> -				phys = <&usbdrd31_hsphy 0>;
-> -				phy-names = "usb2-phy";
-> +				phys = <&usbdrd31_hsphy 0>, <&usbdrd31_ssphy 0>;
-> +				phy-names = "usb2-phy", "usb3-phy";
->   				snps,has-lpm-erratum;
->   				snps,dis_u2_susphy_quirk;
->   				snps,dis_u3_susphy_quirk;
+Shmem already supports mTHP, and shmem_allowable_huge_orders() will return
+the huge orders allowed by shmem. However, there is no check against the
+'orders' parameter passed by __thp_vma_allowable_orders(), which can lead
+to incorrect check results for __thp_vma_allowable_orders().
 
-I think at least patch 6 & 9 should be squashed.
+For example, when a user wants to check if shmem supports PMD-sized THP
+by thp_vma_allowable_order(), if shmem only enables 64K mTHP, the current
+logic would cause thp_vma_allowable_order() to return true, implying that
+shmem allows PMD-sized THP allocation, which it actually does not.
 
-Neil
+I don't think this will cause a significant impact on users, and this will
+only have some impact on the shmem THP collapse. That is to say, even though
+the shmem sysfs setting does not enable the PMD-sized THP, the
+thp_vma_allowable_order() still indicates that shmem allows PMD-sized collapse,
+meaning it might successfully collapse into THP, or it might not (for example,
+thp_vma_suitable_order() check failed in the collapse process). However, this
+still does not align with the shmem sysfs configuration, fix it.
+
+Fixes: 26c7d8413aaf ("mm: thp: support "THPeligible" semantics for mTHP with anonymous shmem")
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+Note: this general change is suitable to be split out as a bugfix patch
+based on the discussions in the previous thread[1].
+
+[1] https://lore.kernel.org/all/86bf2dcd-4be9-4fd9-98cc-da55aea52be0@lucifer.local/
+---
+ mm/huge_memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index d3e66136e41a..a8cfa37cae72 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -166,7 +166,7 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+ 	 * own flags.
+ 	 */
+ 	if (!in_pf && shmem_file(vma->vm_file))
+-		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
++		return orders & shmem_allowable_huge_orders(file_inode(vma->vm_file),
+ 						   vma, vma->vm_pgoff, 0,
+ 						   !enforce_sysfs);
+ 
+-- 
+2.43.5
+
