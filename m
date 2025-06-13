@@ -1,292 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011065.outbound.protection.outlook.com [52.101.65.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0192550A4;
-	Fri, 13 Jun 2025 06:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749795239; cv=none; b=lo4tRgBwNRP7gcw+yERhnfzHKMOpqxwYPL5pk+8pXvHXNSqTwTC3fC8TSqmPB7JMCtuyVphb/uFlfi9HfBawcTOVWGAQ+TGuwDJTiVnGWOZkVD7lSpyOrBYV82Fgm80aA2VKwrOCZ/dy3VbXcfi/iHW0pPE0il88rT5LRg7WSlE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749795239; c=relaxed/simple;
-	bh=s2CjwCTkvEKYGIX42P5S34bwxEMhqXxZ9rUwspKC5dQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=suwrtIOWJwskPINIqJsfQBSpu1EaazyIKPIMBbA1Jw08e+xaZc23LnDHdTfMq+a5wLElsMAhBRWlCZk9y3ka8T8/SGak2rQ9zsGZtYri52fVCwhYCRw620NjE5+EP8SaMwWvHIC3mkekJUOCDcSsWuYgEzdZwDdYGwgwinOdEXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eumd1Pd6; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28931B95B;
+	Fri, 13 Jun 2025 06:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749795241; cv=fail; b=V24RP0qBN2yk8CRObXz+yEt2Y5J1ZnziwFeKBKm/l/zhvo4KUNeIH6PXBrt0cuBKVRHAjVLUWn2TzwxiCrthjtiq25bVEN06WPkiSNUcGnMYYYplUbIZd5TmSVkkOLKD/ZGv6ciYT1zUA14DzRElLZELO6sKLyc/BPGTMyG3YhI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749795241; c=relaxed/simple;
+	bh=f/GcgsXHUhlzhtAEdazRJMkmtIz2FI0Oad30LtZ8Mwk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SU8w3H/GiTnqrTj7MhPEF1C7dENssZo647sZ7vJaPLjaIFRqQ7GQ6Fg7muLMKUlkg6tsHF6M3huAMXtuggkU+QNDS+ZoJFW1m4TWMZYm2K0R+38V/I8GLpBFQSzyI4igQ6kvRGR6CqBkCfrwaFBIpy5Wu7R2KtStelUrYPOrw9A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=UEorM+y0; arc=fail smtp.client-ip=52.101.65.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eumd1Pd6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93119C4CEE3;
-	Fri, 13 Jun 2025 06:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749795237;
-	bh=s2CjwCTkvEKYGIX42P5S34bwxEMhqXxZ9rUwspKC5dQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Eumd1Pd6rWFxIXhB0WmQaxmE6oq4xHwfHKyeO+SkY0fiJCC1tErHIZNvyXOovyDIS
-	 HfX+Y9Ng3AXDkvJ7i2CAFZsFI74CLH1sDd5kTatKX5zBz8EkQdQDKBIRvDFqwKDPEP
-	 +yuGrY7qOnndE2i/PjXG+MboxW6sfZC/u4532jP7q884aCeavdjJDU63IiefGpRy7q
-	 /UAJk2cjvtE9wg7Tf47OXIgIBQ1XnLwOPB0BS5vP6/mMWVCxTArfIf9VRFyuAbtOzh
-	 1KPyGAT76THHoaH5G6Zy+0PIwfVEkjuegtGm8kcmlJg1dSozQsdJVXrCr7kqpFttCm
-	 lsn6WG/TaKNYg==
-Message-ID: <36765047-7b88-4899-966c-e4c4362127ff@kernel.org>
-Date: Fri, 13 Jun 2025 08:13:50 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="UEorM+y0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nm6ijUZ1WdMvWlIoqiDl7ZGi7PQA64//epUDA5DLfFeqh2yNEzH1napEgWQPBcoVTsbCD3TmUdGCVXbkrbhoQtNDGjYIZlWtkOShvR+aDZipbfIw5qhEni4K+LAMZgmPPTa/+a6i3+gdpUMqM/B/Bvu8jgno8rAaFUnqMasA3sSvvQhdE0hlhXz+3dMaCPP2fHNgjw7kwF+NJu34XniTSR7mY8EGhXJXhdbqWQzlPAYql6t/VXGsac6jlrCGKhhpCkAJ4LxhReAWj3LXCwuQrpZa0C1BldDEDHt6EybU91o/Hfa268kWgI3W92cd+j68V1JvrYybn3GUVgo9tx8wVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f/GcgsXHUhlzhtAEdazRJMkmtIz2FI0Oad30LtZ8Mwk=;
+ b=m/ojkukdq5Sn5dxfNJt1cvQv3wqnKFxI174EPXOIX5I7zd0PoxYs9FE7ejCNCYNs8mu0dSgVrmpECV8ZnQ0DweePvPfXpJ3nmZS4sgD85Kp+snpJvgm+fccJ5k7AMvXGVFbm0B7RWkTcWh6ul55ZTK1ncwLPPoq2N4lZzW0zekEbteBhs5Z9CgRenhraMpCpzFYs7Hk8x+JIY8oLxwZCNPXPnrPwn/xGNn8mZpIKlOYAymIkBqDfUQJ478WN/gmYRl0eTwctUpyb3Sf7Rq0uySvvA5PiCmTUdmnDM7aCwDsbayYx4SKmAw5vIrdWwQqXpiGE4BB2yQyrqyZOIdixZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f/GcgsXHUhlzhtAEdazRJMkmtIz2FI0Oad30LtZ8Mwk=;
+ b=UEorM+y0J0Tf5R+YqjJhtAcQcXutgObTH4eXx+TrMsDKSVfq6y+o8blbMBI+T2ddh44RCMkmteXlG3c7jrKW2JElOAw0NRwujAuWsCDQ3KvTkk7SWVNnMo4ZdOk0LeQsiyAGkUq+5Sxvy4Uns3h7JEoSfOcdokkKjNFRQWYlG8hC1tcJCaMMDdEK2pe7xpwF2J97LzD2Qx1FFY4/E/N7YRLJw64rF5u/tBGMiDgFNWQib1ouDB12nSBR5MU4/E2hGOPxRJbJYYcqgfq4qXh+40T7ylJmiYP/6FNKBJVWmnoGkWe/IFAqsY7wqW0VQbKeJkG+apTnq6dnnGthhp0RPw==
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by DU2PR04MB8535.eurprd04.prod.outlook.com (2603:10a6:10:2d6::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Fri, 13 Jun
+ 2025 06:13:56 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8835.023; Fri, 13 Jun 2025
+ 06:13:56 +0000
+From: Hongxing Zhu <hongxing.zhu@nxp.com>
+To: "tharvey@gateworks.com" <tharvey@gateworks.com>, Frank Li
+	<frank.li@nxp.com>
+CC: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de"
+	<kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/2] PCI: imx6: Remove apps_reset toggle in _core_reset
+ functions
+Thread-Topic: [PATCH v2 1/2] PCI: imx6: Remove apps_reset toggle in
+ _core_reset functions
+Thread-Index: AQHb20HdMtjlU3ox3UWRJCXhOZGdU7P/styAgAA8ZACAAG1fgA==
+Date: Fri, 13 Jun 2025 06:13:56 +0000
+Message-ID:
+ <AS8PR04MB8676883A907B64E70CEC3B9C8C77A@AS8PR04MB8676.eurprd04.prod.outlook.com>
+References: <20250612022747.1206053-1-hongxing.zhu@nxp.com>
+ <20250612022747.1206053-2-hongxing.zhu@nxp.com>
+ <aEr8PxcHp55Bo5Os@lizhi-Precision-Tower-5810>
+ <CAJ+vNU3vyznybZ_QZBrB+nc1=2+BcC8csOtR5=6-gmgn6sb5tQ@mail.gmail.com>
+In-Reply-To:
+ <CAJ+vNU3vyznybZ_QZBrB+nc1=2+BcC8csOtR5=6-gmgn6sb5tQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR04MB8676:EE_|DU2PR04MB8535:EE_
+x-ms-office365-filtering-correlation-id: e7a4b6a3-8031-4d3a-629d-08ddaa417a7e
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?cytiRXJ4TjkxZXUvWFJ3VEMyWXppblZDS2NsdytYOEVCZ29QelNiMHhNN2Fa?=
+ =?utf-8?B?cmYzbnY5SUhVK2hMeE9GNjMrNGlWdmEveUY4Q2dtaERFV2VnLytQK0E1d3lQ?=
+ =?utf-8?B?KzNpd0hLa1JWL0pzQ2lhNFoyQ2hNTkZoZUV0eDlYUmVJQzVwbUd5aVBXQjU0?=
+ =?utf-8?B?SXRYemtDdUNtaGh5WHNqYUJNMFQrTHRidEMxYUgyUDVqZlJ5Z21uRTZtaEJ5?=
+ =?utf-8?B?a3V2WWZ6ZmI4KzF0bzN0OE0rWWhNMzJSWmExOExjQVR1Ym0rM0ZFellmUjVq?=
+ =?utf-8?B?WGFPUFFmcU5FdHBuVW9RQndDRTVWcUJLSm1uVVRnUjloUGVSMjFqQzh5UWFo?=
+ =?utf-8?B?djUwUTY4TmV4c2tGRWVmNHlrV2p1OVVFV1VpL3QzU0l4OHhrcnpzNW9aMXV5?=
+ =?utf-8?B?Slg1dnJNS1UwVjJ0REpNOHluclJETGZMaFNVdUVQU29kcStmelhoNTNkNy9Q?=
+ =?utf-8?B?R2FLcWRKQ0FLYmsxeUttR0pzS2JBZDRBUDR2bG80NTh1OTNrRXpSSlBSNjI2?=
+ =?utf-8?B?enNHMnYyaitacE5vL2h4QmkwTEFRZVVOaUJLQlpEOTJPMjRRdGdia0YxWGt2?=
+ =?utf-8?B?YmNuOHUwM05MS0xUNXdYejJseU9TRnoxd1RhMm5BTUpydmVKUlJoQUMycUti?=
+ =?utf-8?B?c0Y1aituUklpd2RzRyt0VG5oM3ZXU0syNjZyQTRFWDBPRjFlMmg2cnJ1UlVU?=
+ =?utf-8?B?UVdPSExoZnBQdUdCS2MzbjdJR1BwekI3b3BSQXE5TU9Rdk80cE5VVlZvdHY4?=
+ =?utf-8?B?Mnpoc2FubytCN095WUdFb1VMQk1RU0ZIb3BXQlpIZEVyM3JMVEFHcHAzWDZZ?=
+ =?utf-8?B?b1VQZkF3Z2JTVXU4YTRHL3BLVjhmeFNiYVAyL3pLR0RtMnRkWEl1VDFhNFJO?=
+ =?utf-8?B?b2x6VkluRUp2T1JPeVEyblVlUS9QK1FLN1JMWFBIb2VhdUl5YUxzWVFGbnRx?=
+ =?utf-8?B?SnhJQzZJYlF1L0V4TmprOTBwV1dhRm5GMTZab3F1aU1iY2p5VFFRQ0dlM3l0?=
+ =?utf-8?B?NkdPRVJ1RXBGVnl5MnovWklMMmxBaDkzL3g5TTZQS3ZqVE14TWd3NHNBSFNV?=
+ =?utf-8?B?aDAzd1hPRm52NnZyWDFVeFd1czdxcmpoUWVXRWZCVGNLY0Z3eXNtcHY0Nzh6?=
+ =?utf-8?B?R3Vua2g5d2d5M1VISTVTeUVyQTU1MnB3UERHYWNhaEJlcXBCNnUvNXpNY3I0?=
+ =?utf-8?B?bkdXZmxVOGZJa3VFSngzQk9lRGxkVXVCT0lQdTVvMzZEc3hOSGtYZGRlUEdr?=
+ =?utf-8?B?eU1NWUNBbTBOLzhueS9OK0RaVWxWRjdVT2hBRFVyMDhMOVNDVmxwL1g1Q25O?=
+ =?utf-8?B?VG5lK01BVHlMRjBHTjEyNWRQY2YzZTVOVVBoSFI0dXNLK0VTNDJKV01DQS9G?=
+ =?utf-8?B?SUtTRTczcmI3K2V5TnNobzBxc0V1Ry8zek9GbS9KUmZjWmtsZ3NERHM4R3Rr?=
+ =?utf-8?B?bUk4VUhtVHJtYmJYKzFPWEZSRm9ZaS9zZWdRc1dKYWMweG9tZlNXUUdSMmVH?=
+ =?utf-8?B?ZFFRbmZqT0s1bjBzRlhmQzFYS0xDRFFrNWQ0Ly9qQVdZT3BrdEkwZ0pZMmxn?=
+ =?utf-8?B?QWR3eXIvOHRlZnAxcVVoaS9tcU40VnlkRU4wQzdMbHAvVnEyR1cxdzI2dUxj?=
+ =?utf-8?B?dEc5K0hqTmVrb2ZEWFpMZFNzamEyekVQcUZDN05TMkgzYk9hWE05cXNDTUdJ?=
+ =?utf-8?B?b0JrakRyTk9iQmhOL3BiclB6SzRibUVqMWt6d3RVdFFPMmo4T29iMXNTTldp?=
+ =?utf-8?B?d1hvbmk2QmNFa25zN1EvNStaWnpQMFVZeGliQ2NkeCtMUEJpS3BYVnNYRzA2?=
+ =?utf-8?B?eEl0TFY3azdBMnB0S080aFFtYURqMk12d3NFUi9kMjJUVkdxUC9aUGxkUnYx?=
+ =?utf-8?B?Zm5HZjZ0M2lKL2FkaVZ4SnFQa0ZpajZkT1R3ekVoTU5ialJuZDducXkzWitz?=
+ =?utf-8?B?em9EeGtIUjlXa2tnRmlXNEhYRmpVd3BsUGhPTVppVDRkTGdaOTAveVZDN0sy?=
+ =?utf-8?Q?TSvXe7dH07ReFa4/NtHcvMBji9mm8E=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?UUN3aXpzQWJmdnJNQTJqalF1VjExQ0NPcHZKMUdaaTJHWmJPdUZ5cllJeVZh?=
+ =?utf-8?B?WVMrT1pmci9PVmw2SnVjckZrK0hISk8wcmpmWkNXWW9BS211cGdpV2dhMlZv?=
+ =?utf-8?B?R0V0TmEvaGJkeXJmNmVMTHFXeHk5OCsvcFdKeUxWTjVmWHhRbkhGK3FBQ25F?=
+ =?utf-8?B?cDZpbi91OWdzOGRqSTlLZEZrN25Lb3NsKzBTanVHQjg0YkRObHROeEpmNDVa?=
+ =?utf-8?B?c2RaT2lGNUdrNmg2b2s5clNPNFcyZEU1aXczM012Ulk3NitoZWE0bytsbTRC?=
+ =?utf-8?B?NFFVTFhmcklOZStKeW1nVmQ3NzVkc00vR0loM3pYaXg4dGo5OFB2RzFyMnVP?=
+ =?utf-8?B?ZXo2MTdyN0pDVDFsQ2JFYTlIWVNWUzlKQmhkMjNWMTVLd2NIZ0wxWFphZ1da?=
+ =?utf-8?B?c1FaMFUzRXlTY0JsVFRwcEZHR05qR2g0VHlOTy9Yd1Y5NmNwOWxzcnZ3R1BL?=
+ =?utf-8?B?dGZGdTdvRFowUnJqQ0hVaWUxdzRGVlpJb0xmSG5PbWQvU0tDc1NwNFd3Zk4r?=
+ =?utf-8?B?dXNBeXArbmpPaUxTL1ZSZnUwdllCcDdMaWFGRzlTMUpzcGNGaUt6TTk4dGdv?=
+ =?utf-8?B?Ump5YUI2dlBVc1IvRXNUellsbEp3SG84bjBvT053WGovamZ3K0RBSkhSbDJk?=
+ =?utf-8?B?dU1qa2lPTXN2cFhueENJWENuZXlxNUl6OHFteG1FTCtocU0veE5uOGJKalZo?=
+ =?utf-8?B?d1VYV3VYNVlNRGhTb2V6MEZHQVJ2Z0swRTc2WVlDRXQyNkh6QmRGUURIbHlo?=
+ =?utf-8?B?b0sxVWg1UXlrY2ZRQnJYUFFadkN1bzhncHFmb0NDUktmYUxWY1VCTEFTNExZ?=
+ =?utf-8?B?d3Q0dnZybVlCN1BOYzcwaXhFSVl1MmdMeU5Bc2VlZlVMcWpEcjRkdS9ESjh5?=
+ =?utf-8?B?U2VoYXczQWp2alZmYkJwK0kxb0lQWjh5RlNKSXJGdHY3eUN4a0F1MDNUNHll?=
+ =?utf-8?B?L25nRFZ5a2p2WlhBRmxVekdzZWJlWmw5TG9qTVpPcXY1MjNONXAwaHZ1MXJh?=
+ =?utf-8?B?K3JTTjZyU3JKazY2UEZHbUczc3hZQ05GbmlYZ3g2cnZTZnVsQllyMGhFZ2ZE?=
+ =?utf-8?B?MFdhTEpXcVdKTHpDNGxTNTZKMlhKdnlQdVkwZ3FBT05oRlNlWXA0d2Mxb1Zp?=
+ =?utf-8?B?UUNoeUNFSC9WZHI0RG5ucFVGYWorZnY5Wnd2UmM3YWw3dWhBQlVSaENnTmM5?=
+ =?utf-8?B?aVhxQ1lpTDVqMjBLZ3NxNVh3OXVqT2tJZmFSalExM3NWMENnalpDV3BiSE5i?=
+ =?utf-8?B?VEI5MFBzaUM3dlBJSVc1Q2k4Q1BtWVRSSUl3VzhaS0RYVzIzNnRrZGtsTHU0?=
+ =?utf-8?B?SFBJL1NQNXdVeUowM044ZkpZcFVGUGxrWllsWWVIZms2K0NPem1ZL2lleHZl?=
+ =?utf-8?B?TlBIM3V6SUhXYU0yNzJ0NTgveUVzdXREeThtamxaZUNQOUtyaDBKbUYyeElK?=
+ =?utf-8?B?WUVHdVRUMGN0Wk02UmZ5MnVLZlcwUWNiUkVuS0NYLzhYb1QzS3l5dlJFYlpp?=
+ =?utf-8?B?NG16VVJleW9HdmRvbTFxVDZZbXNNUkxwT2JsOE5wU0JTODV2aUI2TUtSZFRD?=
+ =?utf-8?B?RFViL3g5VUJ0YjJIMFA5RFpiNjJYU2xoaldkTEV1N2Rjd2F2TDJGTGV2S1li?=
+ =?utf-8?B?NFJCVGpDdTVhL0cyTnRJM0Z6TTdocXdKbDdzaXFsTUhaUUpVdmtNMXlOY0Zv?=
+ =?utf-8?B?d1pULzEyaEsyNTA3bXl3UlMxeHlpMUx4dXdvMlJwWDVoQWxCclB5QW9jT2J0?=
+ =?utf-8?B?VUVjbDcrc3ZWN1VjeG4zd2VxRWJEYXpESG8zSWNTMFRUVW9GaW15K3pNdCtO?=
+ =?utf-8?B?bHFGTTN2SGJzbjJReU94RFlQTTNSQXpsY2lNb2t0VHdBRTQ3Z09QQkZodjkw?=
+ =?utf-8?B?QVVaRG5HR2x4b2NlSVVycHpTNzVRL1ZtZ0xwNWNLTWZTYXFnaW0zZjkydTNZ?=
+ =?utf-8?B?dEIwcGwrQnVSaTBmcmZUTWh5TFlXTnQyckZXaERYZEtMeUQvYko3ZW5RZmFE?=
+ =?utf-8?B?Sm00MWRac2RMNEttK245K1YrcUdFRUl1ck90ODJoRGxxNkVnTmhwdW1lWTVI?=
+ =?utf-8?B?RmlsS1k2MU9VTHpTU2o0NVZPMmJTSWxVODgwckpRNTNXUDR5T3FkZHBOV2t4?=
+ =?utf-8?Q?OLooFlNfWt2Ta6SiTLiCGIrxb?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: mediatek: add gpio pin to reset bt
-To: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>,
- Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Von Dentz <luiz.dentz@gmail.com>
-Cc: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
- Aaron Hou <aaron.hou@mediatek.com>, Chris Lu <chris.lu@mediatek.com>,
- Hao Qin <Hao.qin@mediatek.com>,
- linux-bluetooth <linux-bluetooth@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- linux-mediatek <linux-mediatek@lists.infradead.org>
-References: <20250612072230.12537-1-ot_zhangchao.zhang@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250612072230.12537-1-ot_zhangchao.zhang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7a4b6a3-8031-4d3a-629d-08ddaa417a7e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2025 06:13:56.1117
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4vTRafQHjztyrUG46okMmSNkLX5dJ5j6YCEmGYBmi2bEaoPIhLku+32yoDghQv6DknmZUoe7ma1KtcqMFD7qgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8535
 
-On 12/06/2025 09:22, Zhangchao Zhang wrote:
-> This V2 patch provides two methods btmtk_reset_by_gpio,
-
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-
-And v2 makes no sense here. Describe the commit, why you are doing this,
-what you are doing here, not your process.
-
-> btmtk_reset_by_gpio_work for mediatek controller,
-> it has been tested locally many times and can reset normally.
-> 
-> The pin is configured in dts files, bluetooth is reset by pulling
-
-That's redundant. Do not explain us how DTS works. We all know it.
-Explain WHY you are doing this, what sort of problem or hardware you are
-dealing here with.
-
-> the pin, when exception or coredump occurs, the above methods will
-> be used to reset the bluetooth, if the pin is not found, it also can
-> reset bluetooth successfully by software reset.
-> 
-> Compared with the previously submitted version, the following
-> information has been revised in version V2
-
-This goes to changelog or cover letter. See submitting patches.
-
-And that's a v3, because you already sent v2.
-
-
-> 1)-Changed the capitalization of co-developer names,
->    using the correct capitalization of abbreviations and full
->    name, and corrected obvious spelling errors.
-> 2)-Add a revision history.
-> 3)-Remove the "BT Driver" in the prefix.
-> 4)-Add the bt-binding document, include inforamtion related to reset
->    pin and compatibility matching.
-> 5)-Add a comment before the schedule_delayed_work function call,
->    although schedule_delayed_work is asynchronous, there is no risk.
->    Even if it is not completed within 200ms, it will only postpone
->    the subsequent probe and will not have any impact.
-> 6-)Add a comment before the btmtk_reset_by_gpio function call,
->    if the compatibility filed or pin cannot be found in the dts
->    files, it can still reset bluetooth using software reset.
-> 
-> Co-developed-by Hao Qin <hao.qin@mediatek.com>
-> Co-developed-Chris Lu <chris.lu@mediatek.com>
-> Co-developed-Jiande Lu <jiande.lu@mediatek.com>
-> Signed-off-by: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
-> ---
->  .../bluetooth/mediatek,mt7925-bluetooth.yaml  | 54 +++++++++++++++
-
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
-
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-
->  drivers/bluetooth/btmtk.c                     | 69 +++++++++++++++++++
->  drivers/bluetooth/btmtk.h                     |  5 ++
->  3 files changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7925-bluetooth.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7925-bluetooth.yaml b/Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7925-bluetooth.yaml
-> new file mode 100644
-> index 000000000000..bcdb46effdba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7925-bluetooth.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/bluetooth/mediatek,mt7925-bluetooth.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek MT7925 Bluetooth
-> +
-> +maintainers:
-> +  - Zhangchao Zhang <zhangchao.zhang@mediatek.com>
-> +
-> +description:
-> +  7925 uses the USB bus to communicate with the host.
-> +  Two methods are used to reset Bluetooth.
-> +  When Bluetooth crashes or core dumps,
-> +  the pin will be pulled low, then held for 200ms,
-> +  and then pulled high again before next probe.
-> +
-> +allOf:
-> +  - $ref: bluetooth-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt7925-bluetooth
-> +
-> +  reg:
-> +    const: 2
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description:
-> +      An active-high reset pin for the Bluetooth core;
-
-Blank line and drop final ;
-
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    &xhci0 {
-> +      vbus-supply = <&pp5000_usb>;
-> +      usb2-lpm-disable;
-
-Drop node above
-
-> +
-> +      status = "okay";
-
-Drop
-
-> +
-> +      bt_reset: bt-reset{
-
-Messy style, missing space. See DTS coding style.
-
-> +        compatible = "mediatek,usb-bluetooth";
-
-Look at your binding which you *just* wrote.
-
-> +        reset-gpios = <&pio 248 GPIO_ACTIVE_HIGH>;
-
-That's so incomplete... and will fail tests. You need to write COMPLETE
-binding and then COMPLETE example.
-
-> +      };
-> +    };
-> \ No newline at end of file
-
-You have patch warnings.
-
-
-> diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
-> index 4390fd571dbd..3e5f3ca6f0d5 100644
-> --- a/drivers/bluetooth/btmtk.c
-> +++ b/drivers/bluetooth/btmtk.c
-> @@ -6,6 +6,8 @@
->  #include <linux/firmware.h>
->  #include <linux/usb.h>
->  #include <linux/iopoll.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/unaligned.h>
->  
->  #include <net/bluetooth/bluetooth.h>
-> @@ -109,6 +111,65 @@ static void btmtk_coredump_notify(struct hci_dev *hdev, int state)
->  	}
->  }
->  
-> +static void btmtk_reset_by_gpio_work(struct work_struct *work)
-> +{
-> +	struct btmtk_reset_gpio *reset_gpio_data =
-> +			container_of(work, struct btmtk_reset_gpio, reset_work.work);
-> +
-> +	gpio_direction_output(reset_gpio_data->gpio_number, 1);
-> +	kfree(reset_gpio_data);
-> +}
-> +
-> +static int btmtk_reset_by_gpio(struct hci_dev *hdev)
-> +{
-> +	struct btmtk_data *data = hci_get_priv(hdev);
-> +	struct btmtk_reset_gpio *reset_gpio_data;
-> +	struct device_node *node;
-> +	int reset_gpio_number;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "mediatek,usb-bluetooth");
-
-Same comment as before. Nothing improved.
-
-Best regards,
-Krzysztof
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBUaW0gSGFydmV5IDx0aGFydmV5
+QGdhdGV3b3Jrcy5jb20+DQo+IFNlbnQ6IDIwMjXlubQ25pyIMTPml6UgMzo0OA0KPiBUbzogRnJh
+bmsgTGkgPGZyYW5rLmxpQG54cC5jb20+DQo+IENjOiBIb25neGluZyBaaHUgPGhvbmd4aW5nLnpo
+dUBueHAuY29tPjsgbC5zdGFjaEBwZW5ndXRyb25peC5kZTsNCj4gbHBpZXJhbGlzaUBrZXJuZWwu
+b3JnOyBrd0BsaW51eC5jb207IG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnOw0KPiBy
+b2JoQGtlcm5lbC5vcmc7IGJoZWxnYWFzQGdvb2dsZS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7
+DQo+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2
+YW1AZ21haWwuY29tOw0KPiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGlteEBsaXN0cy5saW51eC5kZXY7IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAxLzJdIFBDSTog
+aW14NjogUmVtb3ZlIGFwcHNfcmVzZXQgdG9nZ2xlIGluIF9jb3JlX3Jlc2V0DQo+IGZ1bmN0aW9u
+cw0KPiANCj4gT24gVGh1LCBKdW4gMTIsIDIwMjUgYXQgOToxMeKAr0FNIEZyYW5rIExpIDxGcmFu
+ay5saUBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IE9uIFRodSwgSnVuIDEyLCAyMDI1IGF0IDEw
+OjI3OjQ2QU0gKzA4MDAsIFJpY2hhcmQgWmh1IHdyb3RlOg0KPiA+ID4gYXBwc19yZXNldCBpcyBM
+VFNTTV9FTiBvbiBpLk1YNywgaS5NWDhNUSwgaS5NWDhNTSBhbmQgaS5NWDhNUA0KPiBwbGF0Zm9y
+bXMuDQo+ID4gPiBTaW5jZSB0aGUgYXNzZXJ0aW9uL2RlLWFzc2VydGlvbiBvZiBhcHBzX3Jlc2V0
+KExUU1NNX0VOIGJpdCkgaGFkDQo+ID4gPiBiZWVuIHdyYXBwZXJlZCBpbiBpbXhfcGNpZV9sdHNz
+bV9lbmFibGUoKSBhbmQNCj4gPiA+IGlteF9wY2llX2x0c3NtX2Rpc2FibGUoKTsNCj4gPiA+DQo+
+ID4gPiBSZW1vdmUgYXBwc19yZXNldCB0b2dnbGUgaW4gaW14X3BjaWVfYXNzZXJ0X2NvcmVfcmVz
+ZXQoKSBhbmQNCj4gPiA+IGlteF9wY2llX2RlYXNzZXJ0X2NvcmVfcmVzZXQoKSBmdW5jdGlvbnMu
+IFVzZQ0KPiA+ID4gaW14X3BjaWVfbHRzc21fZW5hYmxlKCkgYW5kIGlteF9wY2llX2x0c3NtX2Rp
+c2FibGUoKSB0byBjb25maWd1cmUNCj4gYXBwc19yZXNldCBkaXJlY3RseS4NCj4gPiA+DQo+ID4g
+PiBGaXggZmFpbCB0byBlbnVtZXJhdGUgcmVsaWFibHkgUEk3QzlYMkc2MDhHUCAoaG90cGx1Zykg
+YXQgaS5NWDhNTSwNCj4gPiA+IHdoaWNoIHJlcG9ydGVkIEJ5IFRpbS4NCj4gPiA+DQo+ID4NCj4g
+PiBZb3UgbWF5IHJlbmFtZSBhcHBzX3Jlc2V0IHRvIGx0c3NtX3Jlc2V0IHRvIGF2b2lkIGNvbmZ1
+c2UgZm9yIGxlZ2FuY3kNCj4gPiBwbGF0Zm9ybSBsYXRlci4NCj4gDQo+IEhpIEZyYW5rIGFuZCBS
+aWNoYXJkLA0KPiANCj4gSSB3YXMgdGhpbmtpbmcgb2YgbWFraW5nIHRoZSBzYW1lIHN1Z2dlc3Rp
+b24gaG93ZXZlciB0aGUgYXBwcyByZXNldCBpcyBpbg0KPiBzZXZlcmFsIHBsYWNlczoNCj4gLSBp
+bXg4bSouZHRzaSBwY2kgbm9kZSBhcyAncmVzZXQtbmFtZXMnIGFuZCByZXNldCBpbmRleCBudW1i
+ZXIgI2RlZmluZQ0KPiAtIGlteDhtKi1yZXNldC5oIGJpbmRpbmdzIGFzIHJlc2V0IGluZGV4IG51
+bWJlci9kZWZpbmUNCj4gLSBwY2ktaW14LmMgZHJpdmVyDQo+IA0KPiBHcmFudGVkIGl0IGlzIHVz
+ZWQgYnkgaW14N2QuZHRzaSwgZnNsLGlteDhtcS1wY2llLCBmc2wsaW14OG1tLXBjaWUsDQo+IGZz
+bCxpbXg4bXAtcGNpZSBhbmQgaW4gZXZlcnkgb25lIG9mIHRob3NlIHJlZmVyZW5jZSBtYW51YWxz
+IGl0J3MgYml0NiBvZg0KPiBTUkNfUENJRVBIX1JDUiBuYW1lZCBQQ0lFX0NUUkxfQVBQU19FTiBi
+dXQgZGVzY3JpYmVkIGFzDQo+ICdQY2llX2N0cmxfYXBwX2x0c3NtX2VuYWJsZScuIENhbiB5b3Ug
+YXNrIHlvdXIgcmVmZXJlbmNlcyB0byBnZXQgbW9yZQ0KPiBkZWZpbml0aW9uIGZvciB0aGlzIGJp
+dD8gSSdtIHN0aWxsIHVuY2xlYXIgd2h5ICdkZS1hc3NlcnRpbmcnIGl0IHR3aWNlIHdhcyBhbiBp
+c3N1ZS4NCkkgc3VzcGVjdCB0aGF0IHRoZSBsaW5rIGhhZCBiZWVuIGFibm9ybWFsIGFscmVhZHkg
+YmVmb3JlICdkZS1hc3NlcnRpbmcnDQogdGhlIGx0c3NtX2VuIGJpdCBhdCB0d2ljZSB0aW1lLiBU
+aGUgcmVnbWFwX3JlYWQoKSB0cmlnZ2VyIHRoZSBoYW5nIGluDQogeW91ciB1c2UgY2FzZSBhY3R1
+YWxseS4NCg0KQmVzdCBSZWdhcmRzDQpSaWNoYXJkIFpodQ0KPiANCj4gUmVnYXJkbGVzcywgYW55
+IGNsZWFudXAgY2hhbmdpbmcgdGhlIG5hbWUgY2FuIGJlIGEgc2VwZXJhdGUgcGF0Y2ggaW4gbXkN
+Cj4gb3Bpbmlvbi4NCj4gDQo+IEJlc3QgUmVnYXJkcywNCj4gDQo+IFRpbQ0KPiANCj4gDQo+ID4N
+Cj4gPiBSZXZpZXdlZC1ieTogRnJhbmsgTGkgPEZyYW5rLkxpQG54cC5jb20+DQo+ID4NCj4gPg0K
+PiA+ID4gUmVwb3J0ZWQtYnk6IFRpbSBIYXJ2ZXkgPHRoYXJ2ZXlAZ2F0ZXdvcmtzLmNvbT4NCj4g
+PiA+IENsb3NlczoNCj4gPiA+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0
+bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmxvDQo+ID4gPg0KPiByZS5rZXJuZWwub3JnJTJG
+YWxsJTJGQ0FKJTJCdk5VM29oUjJZS1R3QzR4b1lyYzF6LW5lRG9IMlRUWmNNSER5JQ0KPiAyQnAN
+Cj4gPiA+DQo+IG9qOSUzRGpTeSUyQnclNDBtYWlsLmdtYWlsLmNvbSUyRiZkYXRhPTA1JTdDMDIl
+N0Nob25neGluZy56aHUlNDANCj4gbnhwLg0KPiA+ID4NCj4gY29tJTdDM2QxYjNmZmEzOGVmNDAz
+ODA2M2EwOGRkYTllYTBjNjMlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWMNCj4gNWMzDQo+ID4g
+Pg0KPiAwMTYzNSU3QzAlN0MwJTdDNjM4ODUzNTQ0ODgxNjcxOTU0JTdDVW5rbm93biU3Q1RXRnBi
+R1pzYjNkOGUNCj4geUpGYlhCMGUNCj4gPiA+DQo+IFUxaGNHa2lPblJ5ZFdVc0lsWWlPaUl3TGpB
+dU1EQXdNQ0lzSWxBaU9pSlhhVzR6TWlJc0lrRk9Jam9pVFdGcGJDSXNJDQo+ID4gPg0KPiBsZFVJ
+am95ZlElM0QlM0QlN0MwJTdDJTdDJTdDJnNkYXRhPTd2VjVIeUVhbHVZZjRpNGwyYW5FWCUyRmI2
+ejN4DQo+IFVQYzANCj4gPiA+IHVyaEhOSWRUUEt3VSUzRCZyZXNlcnZlZD0wDQo+ID4gPiBGaXhl
+czogZWY2MWM3ZDhkMDMyICgiUENJOiBpbXg2OiBEZWFzc2VydCBhcHBzX3Jlc2V0IGluDQo+ID4g
+PiBpbXhfcGNpZV9kZWFzc2VydF9jb3JlX3Jlc2V0KCkiKQ0KPiA+ID4gU2lnbmVkLW9mZi1ieTog
+UmljaGFyZCBaaHUgPGhvbmd4aW5nLnpodUBueHAuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgZHJp
+dmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWlteDYuYyB8IDUgKysrLS0NCj4gPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+ID4NCj4gPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktaW14Ni5jDQo+ID4g
+PiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1pbXg2LmMNCj4gPiA+IGluZGV4IDVm
+MjY3ZGQyNjFiNS4uZjRlMDM0MmY0ZDU2IDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9kd2MvcGNpLWlteDYuYw0KPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJv
+bGxlci9kd2MvcGNpLWlteDYuYw0KPiA+ID4gQEAgLTc3Niw3ICs3NzYsNiBAQCBzdGF0aWMgaW50
+IGlteDdkX3BjaWVfY29yZV9yZXNldChzdHJ1Y3QgaW14X3BjaWUNCj4gPiA+ICppbXhfcGNpZSwg
+Ym9vbCBhc3NlcnQpICBzdGF0aWMgdm9pZA0KPiA+ID4gaW14X3BjaWVfYXNzZXJ0X2NvcmVfcmVz
+ZXQoc3RydWN0IGlteF9wY2llICppbXhfcGNpZSkgIHsNCj4gPiA+ICAgICAgIHJlc2V0X2NvbnRy
+b2xfYXNzZXJ0KGlteF9wY2llLT5wY2llcGh5X3Jlc2V0KTsNCj4gPiA+IC0gICAgIHJlc2V0X2Nv
+bnRyb2xfYXNzZXJ0KGlteF9wY2llLT5hcHBzX3Jlc2V0KTsNCj4gPiA+DQo+ID4gPiAgICAgICBp
+ZiAoaW14X3BjaWUtPmRydmRhdGEtPmNvcmVfcmVzZXQpDQo+ID4gPiAgICAgICAgICAgICAgIGlt
+eF9wY2llLT5kcnZkYXRhLT5jb3JlX3Jlc2V0KGlteF9wY2llLCB0cnVlKTsgQEANCj4gPiA+IC03
+ODgsNyArNzg3LDYgQEAgc3RhdGljIHZvaWQgaW14X3BjaWVfYXNzZXJ0X2NvcmVfcmVzZXQoc3Ry
+dWN0DQo+ID4gPiBpbXhfcGNpZSAqaW14X3BjaWUpICBzdGF0aWMgaW50IGlteF9wY2llX2RlYXNz
+ZXJ0X2NvcmVfcmVzZXQoc3RydWN0DQo+ID4gPiBpbXhfcGNpZSAqaW14X3BjaWUpICB7DQo+ID4g
+PiAgICAgICByZXNldF9jb250cm9sX2RlYXNzZXJ0KGlteF9wY2llLT5wY2llcGh5X3Jlc2V0KTsN
+Cj4gPiA+IC0gICAgIHJlc2V0X2NvbnRyb2xfZGVhc3NlcnQoaW14X3BjaWUtPmFwcHNfcmVzZXQp
+Ow0KPiA+ID4NCj4gPiA+ICAgICAgIGlmIChpbXhfcGNpZS0+ZHJ2ZGF0YS0+Y29yZV9yZXNldCkN
+Cj4gPiA+ICAgICAgICAgICAgICAgaW14X3BjaWUtPmRydmRhdGEtPmNvcmVfcmVzZXQoaW14X3Bj
+aWUsIGZhbHNlKTsgQEANCj4gPiA+IC0xMTc2LDYgKzExNzQsOSBAQCBzdGF0aWMgaW50IGlteF9w
+Y2llX2hvc3RfaW5pdChzdHJ1Y3QgZHdfcGNpZV9ycCAqcHApDQo+ID4gPiAgICAgICAgICAgICAg
+IH0NCj4gPiA+ICAgICAgIH0NCj4gPiA+DQo+ID4gPiArICAgICAvKiBNYWtlIHN1cmUgdGhhdCBQ
+Q0llIExUU1NNIGlzIGNsZWFyZWQgKi8NCj4gPiA+ICsgICAgIGlteF9wY2llX2x0c3NtX2Rpc2Fi
+bGUoZGV2KTsNCj4gPiA+ICsNCj4gPiA+ICAgICAgIHJldCA9IGlteF9wY2llX2RlYXNzZXJ0X2Nv
+cmVfcmVzZXQoaW14X3BjaWUpOw0KPiA+ID4gICAgICAgaWYgKHJldCA8IDApIHsNCj4gPiA+ICAg
+ICAgICAgICAgICAgZGV2X2VycihkZXYsICJwY2llIGRlYXNzZXJ0IGNvcmUgcmVzZXQgZmFpbGVk
+OiAlZFxuIiwNCj4gPiA+IHJldCk7DQo+ID4gPiAtLQ0KPiA+ID4gMi4zNy4xDQo+ID4gPg0K
