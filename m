@@ -1,139 +1,159 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5671946AA
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F203192B84;
+	Fri, 13 Jun 2025 14:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749825715; cv=none; b=mNAm0I4Qpg1Dhod8xA9eZRIjrVAuFDhnH5Z70SjIpGZtByTbZCt1kyyLM/JRXurtNk6bMgVL2AkRh06eW3KTRm0aRXimSmubp3wjIZVi1+73muleY7hw64evcB4Zsj8P8XDeNhABsoD1fSJww3r0I1ge1kxSOCB1R4Sinpb4s7s=
+	t=1749825753; cv=none; b=r3IjctX5mn5IEwW7kjeu1fvSsVsULrUHUKfY14LMEhSDr5Tf4/ZZFf34Mg95uqt0mRukrZrl/fKFSU2mxRZvNJmxezJA7EH7dJXpD5rxG1IUPP1Tk0v/DIzCqwhdmddvRDI3jpcSOgQXgoW6kc6odBemcXKmUgZ/vbqJ7oAAkcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749825715; c=relaxed/simple;
-	bh=xR59NA9k6u+fku9xip3VLu0AuEwpmUQHbSWP6W9jjqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LJPLIhqvAeoRJfpcdVabrue2/ph/gakEYn6OVOT9GGIKq42Rm75AMpQ99yb8Ov2xfFlQX/fiOzfkKKYw77raJm7lvWbJkGVpfwoUq0TOtv6G44Ir3K5c/llEsoRWO9DiFCQFIxrTPEiMJwjddtURk+nYtno+dOvPwkjRenh487s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pay6qyGV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749825753; c=relaxed/simple;
+	bh=/EhcpIn8oZkspRCHdGD8A6ppdJP/935NyccMYNOS7y0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DOHd/w+7jABXNBTcyxKB3u3nLthaUYgn6nXAKnMwvydqfsCOcK6mW+huYzoSH0fItDlqW/xRyEgTDzVvpC0bUfd1xcr9VuMPdTE0cKBUK/ZkaHe31IzEH0tkIi4sm3sH02JrnokMmeQLYGg/0tWxSobfGWBH0plHonyE/GpXQ/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yew09Y+L; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pay6qyGV"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55DCjS8g003834
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:41:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=f8LvzWRSramzprfrBFvO2s+C1Hm+tEbtLlK
-	RSfKO3eY=; b=pay6qyGVBWCIHRDWXvnRM8KGHFLmvqXlScGFJW1m0kP6ycHs2uS
-	12j1vP2HUfI22Sr7degxe/C8v4R6fxxYhLv57pLOoCbayh9KEayLx7+NK7O6hgL9
-	GH+9vx7+SGAgNh/saaT/p5Mp/MKWG+EyfGDn420awxfDOvJssKc2T8S4x582lllJ
-	gq1YxzsYSN/h2RX9lAiWznmrGMSyuzMbADosqAZFJ0+CCue9LRI671oLRcPz7/0n
-	EeQHxpoK7V1diHe/VDtMgNat+5fbczjHOaiQZoEU1dGPr0i13bLtFLbYckKQ8Ce3
-	XrhamGf/gXNpoNmmdyQ98akCJ6PWmTBC1wQ==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 477jbpn8f8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:41:52 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b2c36d3f884so1571604a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:41:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749825711; x=1750430511;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f8LvzWRSramzprfrBFvO2s+C1Hm+tEbtLlKRSfKO3eY=;
-        b=ts3+KLZSla7jtEgwkPaysT3v0+VY+R+kpxNoA8H81lPvp5eRRkVqp1PFw1YuwUlKRA
-         Rqt5sbfzp9WetUasUU1Te5+nVoQA6tSWfDUmN7iCtucndfYHw+Bk6PK3f3YutFnOJvt7
-         3uPh1xjhgEynHtS2MU9vQgWr49+vOkxnDNfRNDtjzc/FAfczlEkyWjQZyOW1BkQ2qBtK
-         8G5NFwhPw2NvzWPdPyzfjdsqetxKv6+JUzINO29Wu0wLeGqjNQW658uY+fLuTt2eCOo0
-         jJe9HwSjQQ32dIn72XwjxrVNnjv11O17aZEO706tIxNm/hM+5oClzNEceb6x7W6JT2un
-         eYiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfy8f9jJhf6k/xI4HgrrWE5qDV8wb0/mbYdQga0mAijW4pWu2kUUAh4dMJhhKPG1Z4rwj2VmMhnh6Nd68=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAImCUG5pfmdBUdXANaINpMjTBknvEz2fnmKdbFzAb4GNDEei9
-	1iHAg87CFLIyCsjzBTWnqPpicF2PxpS5hu4U1khKw6OcD4NfpK1amLvHIZisLCRIVIkrRC38/Bs
-	pWlb/aNjiPJ7Nae/g6EVRmGlikgec9KyQ06rUvFCDquUt2bdvC59zP7A/L91ElmtUf8rDwKAc2m
-	o=
-X-Gm-Gg: ASbGncvsZjRx33TO08wgD5Qi5HB3loP/55dfDZLN8g+QcKsMJPjzedfSv8QeEsVh8Fx
-	hvbGUiAjFRL6X+aJQK/6jsIoJptEZ/MlLChnfJ9EcG0aNnk5OfjKeDhox0wYFmlcuJ9nP0bQxqq
-	wg/8GKUM1oym/FstZSmgDJSAOdvyk6DEYt53uKfNxCY95TORhwUxOpbHPhs97z/acqoSm19PDlK
-	qVbjtdPo44UkBSwB+ZETt0HKswfHHK5aQSOvg23gmFoYt6Jc9LnK3wJQ/Dg0vcl/Ds/QHWqPtEB
-	Km3n8mYTZnqYHF+51AGQHmivjL/Qww49
-X-Received: by 2002:a05:6a20:748c:b0:21f:a883:d1dd with SMTP id adf61e73a8af0-21facbdebf9mr4553245637.14.1749825710759;
-        Fri, 13 Jun 2025 07:41:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE7GnAOt+z7rv+BSeU7ZHDxFM735EmwOZ4MxONhEpinIvFL7k6YOrMe2Cgq92R1/zv8XQne8A==
-X-Received: by 2002:a05:6a20:748c:b0:21f:a883:d1dd with SMTP id adf61e73a8af0-21facbdebf9mr4553202637.14.1749825710353;
-        Fri, 13 Jun 2025 07:41:50 -0700 (PDT)
-Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1680c5fsm1775491a12.49.2025.06.13.07.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 07:41:50 -0700 (PDT)
-From: Rob Clark <robin.clark@oss.qualcomm.com>
-To: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Rob Clark <robin.clark@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm: Fix inverted WARN_ON() logic
-Date: Fri, 13 Jun 2025 07:41:44 -0700
-Message-ID: <20250613144144.27945-1-robin.clark@oss.qualcomm.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yew09Y+L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749825752; x=1781361752;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=/EhcpIn8oZkspRCHdGD8A6ppdJP/935NyccMYNOS7y0=;
+  b=Yew09Y+LL3upH25QsD7nTbxl1pfi3bzPZ1qOBuEMeZRaNpudISTkY2de
+   XYTRpD/2fBWp4BqieZN1u8eyCGgUYnitBnoLLUeaR0uyG6nDmlkh/kdTm
+   79n6yOWGcxVqgJurkr3/CXi1zaL4hCB4Kn/uoJgJ152SxEn+3mdXs+dhC
+   aZqq9JRxecVZGQT6JDPhdhTX7DUiqBDVSBERRV+FxYtCjojaN7SfcgoB8
+   WiLOpyoGpxd12/2LclXw+HNUXOrE1au9aQd4F6JTVKyD5LmC0YYIeYIto
+   ItM0ipl/AURYkBN29Cg83tkXd87LvgB1dVkQuVTRghLztNxgT10eA9K1r
+   g==;
+X-CSE-ConnectionGUID: k/2k6r/eTHWf/2oIofmgig==
+X-CSE-MsgGUID: b8H505LrTAKTWSmrX3smDQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="62695415"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="62695415"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 07:41:53 -0700
+X-CSE-ConnectionGUID: SbKS1l3EShyEXFd005Xpng==
+X-CSE-MsgGUID: 48PhrhZGTlqAX5HpXiOnmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="148736678"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 07:41:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uQ5bI-00000006GwF-0764;
+	Fri, 13 Jun 2025 17:41:48 +0300
+Date: Fri, 13 Jun 2025 17:41:47 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] iio: imu: inv_icm42600: add WoM support
+Message-ID: <aEw4q3p12q1iI7vC@smile.fi.intel.com>
+References: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
+ <20250613-losd-3-inv-icm42600-add-wom-support-v4-1-7e5f554201bf@tdk.com>
+ <aEvhZiXHLLIRe41-@smile.fi.intel.com>
+ <FR3P281MB17578B82AC67F49552E24EB3CE77A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+ <aEwfUMgLTnQxOh_k@smile.fi.intel.com>
+ <aEwfgP3tiio52Rj-@smile.fi.intel.com>
+ <FR3P281MB1757AEF932A3CE2AB9637046CE77A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: x8HWGARxb57_wJXrziWAXzp7V-3SDDUH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDEwNiBTYWx0ZWRfX85CrwCx4pwl1
- lEXK5QfYnCfuiVQ1S3heA+S6qijDrW+31qBuNVHnMgHOkEldsCbQ8Ct47TQajNrAwFdbha7rILi
- 07mvmJZvbfxgG/BKOkxK6qTZ9VUvGGqtC6ui6tNwi1X1sBKpEEuzw+RP38wkykWBw9/vXimKv0f
- VPuUQezx3NzMu05xkXaOJCbkpzUXCHw1/yzgDRBKC4nWUACGKEw0SC9v1tcgQV2bSt+tW5Z0TOZ
- iy6lPivYErl7GuLhJxm7nshW9cfJBm5Z49Ip//dtk3k35uEtWAXSlb7xZqAoCfJQ6JU4OQ4vHC7
- aDBGKCV4NOHdzWR+unCrG0VIwB64YT3rJjWBEaXo0Nqak+tUS/r535lOjF40iZ0rGwTjXsHuv6w
- W/dfgYGBAQ26TxSV3B7FgxfDyOzB20ffwGkERLLv3iYYyAZrFFSoiGtG/Td2bqpjtK6ahIhh
-X-Proofpoint-ORIG-GUID: x8HWGARxb57_wJXrziWAXzp7V-3SDDUH
-X-Authority-Analysis: v=2.4 cv=OLgn3TaB c=1 sm=1 tr=0 ts=684c38b0 cx=c_pps
- a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
- a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=4MAclHcQAAAA:8 a=r-1N9bTl5XODNADl1y4A:9
- a=x9snwWr2DeNwDh03kgHS:22 a=cvBusfyB2V15izCimMoJ:22 a=6vtlOZhwcO7ZS_iRoh4Z:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-13_01,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
- malwarescore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506130106
+In-Reply-To: <FR3P281MB1757AEF932A3CE2AB9637046CE77A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-We want to WARN_ON() if info is NULL.
+On Fri, Jun 13, 2025 at 01:43:58PM +0000, Jean-Baptiste Maneyrol wrote:
+> >From: Andy Shevchenko <andriy.shevchenko@intel.com>
+> >Sent: Friday, June 13, 2025 14:54
+> >On Fri, Jun 13, 2025 at 03:53:36PM +0300, Andy Shevchenko wrote:
+> >> On Fri, Jun 13, 2025 at 12:46:46PM +0000, Jean-Baptiste Maneyrol wrote:
+> >> > >From: Andy Shevchenko <andriy.shevchenko@intel.com>
+> >> > >Sent: Friday, June 13, 2025 10:29
+> >> > >On Fri, Jun 13, 2025 at 09:34:26AM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
 
-Suggested-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Fixes: 0838fc3e6718 ("drm/msm/adreno: Check for recognized GPU before bind")
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
----
- drivers/gpu/drm/msm/adreno/adreno_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index 0d12454b1f2e..5c52d392427f 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -217,7 +217,7 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
- 
- 	info = adreno_info(config.chip_id);
- 	/* We shouldn't have gotten this far if we don't recognize the GPU: */
--	if (!WARN_ON(info))
-+	if (WARN_ON(!info))
- 		return -ENXIO;
- 
- 	config.info = info;
+> >> > >Overall, looking to this patch again, I think it would be better to prepend it
+> >> > >by replacing *int*_t types by the respective uXX ones. Because in this patch
+> >> > >we add dozens of new ones which increases an unneeded churn in the future.
+> >> > >
+> >> > In my opinion, to respect the rule don't mix *int*_t and uXX types, it is better
+> >> > to keep *int*_t types. If it need to be changed, we can change afterward the
+> >> > whole driver types with a replace tool and send it in a separate patch.
+> >> 
+> >> It will be never ending story, sorry. We need someone to solve this tech debt.
+> >> And since this patch adds more than 3 new users of it, I think it's a candidate
+> >> to embrace the burden.
+> >
+> >For your convenience I can mock-up a change...
+> 
+> It looks like there's something I don't understand in the kernel Documentation about
+> types then.
+> Quoting Documentation/process/coding-style.rst, section 5.d:
+> ---
+> New types which are identical to standard C99 types, in certain exceptional circumstances.
+> 
+> Although it would only take a short amount of time for the eyes and brain to become accustomed
+> to the standard types like uint32_t, some people object to their use anyway.
+> 
+> Therefore, the Linux-specific u8/u16/u32/u64 types and their signed equivalents which are
+> identical to standard types are permitted -- although they are not mandatory in new code
+> of your own.
+> 
+> When editing existing code which already uses one or the other set of types, you should
+> conform to the existing choices in that code.
+> ---
+> 
+> My understanding is that uXX are not mandatory for new code. You can use types like *int*_t.
+> But you need to conform afterward to the existing choice. That's why this driver was
+> done initially with *int*_t types, and that patches are conforming to this choice.
+
+This part of the documentation has a lot of room for different interpretations.
+One [1] may consider this as uXX superior, another, like you, that it's okay
+to use.  In any case Greg KH prefers uXX over uintXX_t. And he is also in
+the chain of maintainers here. Feel free to amend the Documentation. But
+be sure all stakeholders will see your proposal (like Greg KH and other
+key maintainers).
+
+> By looking at all Linux drivers, there are plenty of them using *int*_t, even
+> inside iio:
+
+$ git grep -l 'u\?int[0-9][0-9]\?_t' -- drivers/iio/ | wc -l
+59
+
+$ git ls-files drivers/iio*.c | wc -l
+640
+
+Less than 10%.
+
+> Then, why it is mandatory to change this driver to use uXX instead?
+
+TO be consistent. With the above wording in the documentation I may argue that
+entire subsystem should be consistent and at least in IIO we have tons of patch
+series that are against the whole subsystem to do one style change or another
+(look at the recent memset() vs. {} for initialisation).
+
+[1] https://lore.kernel.org/all/20250409180953.398686-1-matchstick@neverthere.org/
+
 -- 
-2.49.0
+With Best Regards,
+Andy Shevchenko
+
 
