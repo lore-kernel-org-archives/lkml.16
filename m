@@ -1,173 +1,157 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559FC2C159F
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AB3291C20;
+	Fri, 13 Jun 2025 09:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806970; cv=none; b=azrT/OO8wv795qKoqN6VVAmjM0nVFPg/nPcPgwaRWRv+RWyt4kGN14BcuB9/EKZ7odtxJYqqAZLpCYh2dOTatjteXtwFCNVACcnp1cZSbquetwV6CMAK2bSyjXsCCo/9hBgqkoF0sr9ehm0Kl1M1UcSBO9ZO08z50yTCRkUs5o0=
+	t=1749806992; cv=none; b=US7ARzxGSxY/QppRTpkOWbjMW1l5mTXU5wLCFZtwEmaOYcRB/pcPKvPOCGatuUx5ojhTRMwSUA3sU4RSwVBNp6O59jPBEdEKgMKIDd3STrJ+SMjqzcYtGz3Vx8kdgBKCZPta4pkcT7annXPPFOadkjLTUJixBwZUB0tgvx7gM8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806970; c=relaxed/simple;
-	bh=olRfOaHDgzZ8i+4C3kFg3nNnJTByQvbKuBFGHGjLU/8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=G2CL8VCmnLMuWWFwmH00skxe3na7AxkyNXBnp4Vg4+oKD/hnpN62TGfxSjSSUOIFQcXre5CASFisScxf23HdT/D/QnQDWj/+En/Tvj0RbKdvn51Z1h2K2tq5HWEzJXus/Nu0rYavUv4Mews2JdUo+S49wIHxj+NKJua1ZLmUjpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kClpTe2R; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kClpTe2R"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d7b50815so15729265e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749806967; x=1750411767; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VyHiR7U3e06QyZLuhEr1yr+WmILkiHQ+84NE+rNpfGI=;
-        b=kClpTe2Rt8+YTYkvpNpK1xvPRimGIdDtdo+oZuTN9Iw+xKtDNxmjSwlFYTM2sOWPUc
-         v5G5G91XehbCbDvd5FkFHvtHXLfzOtfpWZH12nP/qC8apgK7cd3xFc2BxadeLO1BMGm4
-         LxGGFcpRRxKYzA/KRdzJa9kwiJORiw48QKVBeUBlvNfLf739qZ81tmdodZ5wAESoucHK
-         6XapDMAvYCQ/0giQM/S/nJQ9cIIrOwpnZ1AFY4pcNxZuOLASBva96GfvqywEaN0qL2ow
-         5oWeGstQPLhC5dASsk5+YO32u48c7YDLYMSK1S1gnkQJ3KvVpXgSjAarA0zU5AdFd3DS
-         xvVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749806967; x=1750411767;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VyHiR7U3e06QyZLuhEr1yr+WmILkiHQ+84NE+rNpfGI=;
-        b=vlUza1myRsvGPM+V2Mo8shr2debiD/bqgg/Vbe6QvKY+xlDzWg01vsWq1x67whkZGY
-         cx0K2FIQK3hBdZIWh4hgOB0QNPYYkhguu7QlkYJTpC4lpL1Ih9OANzDDXaAY3nP5Os2z
-         mdgBG6uRh/2p2Ml9bgc6CupQeieBBnfqPF6NbjDMprjQSbz27dmgKOeLhuNnDXd36ey5
-         CKfULDcl2K43pZlJmKZJQGh5br+uSfrCjSQpJ7Lu4oRuuvKfV/n3JKz0UXjKfU24Nx8q
-         0sgm95WOUtFi6O+fOLdb52eBoBNFOXXpgrfFgiTbeQWmHGMg3DT065huAMuEFbsNPfj7
-         1lDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkpw10jWvf9UX3p3RasFmsp9bD4hMDvsiN5kx1aZXzjsJrkI8pydmAAogCGJ12r3741fPxwaX0lSRkjsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcfOGXgAJcr9cq++FHhN5opFWkOUXvYRNKQhdPfIeiI+06N+zp
-	SLEYqIO8/Ou0OCtbU438oDJiFKImYaxpk+vrOM4yjemLYCKYXiBC9h3D8RuI5xahA711iGXD1NC
-	lB7vJ
-X-Gm-Gg: ASbGncurJdTvGbaEoAM5273jovk1qeMZ9yCbicpDqL0jItVj1XEk7HVjlgGqX+liLmz
-	5R4l675iuFwjCMrWKCXcm6IdJtYSqaQ82vNQoc6/q7qmjX3IJ6Lw7ab6+NXg8bBfx8tl8RH6Zzk
-	+e2mu3wXkxujKY/1a2WwXPai7W+CORzdV0Pma8kudae686KgJ4AZDuBkO4kAvcx3XFNXxtgW5u+
-	oBIpZqnsUgNGwL+Z/y1Tf44U+9jivgUmhN6paS4ufq/edu+tzlN+6lxLuvpXBEVfbNTOxwc7x73
-	CCoTfynF8Vi0YZt6Fb2vOikd/qMy2PVRG5C8KQTDUUm0Bh0+KkaoT3TYoOXOEn6rj5kQHaA=
-X-Google-Smtp-Source: AGHT+IFGL5ebfXnS6+SsaO2dpfkoeJy4mYNicoKfeWryjtieYLtsaUUUpvT+btcO05B9ZGq86PLAnw==
-X-Received: by 2002:a05:600c:8b08:b0:450:ceb2:67dd with SMTP id 5b1f17b1804b1-45334b80acemr20305265e9.33.1749806966724;
-        Fri, 13 Jun 2025 02:29:26 -0700 (PDT)
-Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08a2bsm1805946f8f.62.2025.06.13.02.29.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 02:29:26 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Fri, 13 Jun 2025 10:29:00 +0100
-Subject: [PATCH v2 5/5] spi: spi-fsl-dspi: Report FIFO overflows as errors
+	s=arc-20240116; t=1749806992; c=relaxed/simple;
+	bh=dTFe4i14xDT19JSJo8KCeKJsJ0q9GY1gJEdMW/eHGHw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=rYh/kBDAoJ4O+QspnLbtCaooFJeZKR8/t4GHFWd605UcYrEQPXqdCR24ofezuYnlj9/m5KVC6zm2N4eBgYt4pmgZaH0dQzWcmMDzSIz06XfQSVfMHAuJzbNgXyKLJWB1gqQxLxjc2RCzENIJbQaJxuR2qoNxdJzl9WzXKytD/q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bJYyM5MHfzYQvlF;
+	Fri, 13 Jun 2025 17:29:47 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id B75C21A1538;
+	Fri, 13 Jun 2025 17:29:46 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgBHrGCJ70toVayHPQ--.51121S3;
+	Fri, 13 Jun 2025 17:29:46 +0800 (CST)
+Subject: Re: [PATCH] md/raid1,raid10: fix IO handle for REQ_NOWAIT
+To: Zheng Qixing <zhengqixing@huaweicloud.com>, song@kernel.org
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com, zhengqixing@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <dfbb5d06-68aa-9acc-a13c-0863f5a25193@huaweicloud.com>
+Date: Fri, 13 Jun 2025 17:29:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-james-nxp-spi-dma-v2-5-017eecf24aab@linaro.org>
-References: <20250613-james-nxp-spi-dma-v2-0-017eecf24aab@linaro.org>
-In-Reply-To: <20250613-james-nxp-spi-dma-v2-0-017eecf24aab@linaro.org>
-To: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>, 
- Arnd Bergmann <arnd@arndb.de>, Larisa Grigore <larisa.grigore@nxp.com>, 
- Frank Li <Frank.li@nxp.com>, linux-spi@vger.kernel.org, imx@lists.linux.dev, 
- linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+In-Reply-To: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBHrGCJ70toVayHPQ--.51121S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJF4xuw45Gr47XF4xZrW3Awb_yoW5tr48p3
+	yUGa9Yv39rGFWUu3WDtFWUZayF9w4Ygay7C3yUJ34xXas09FZ8Aa1DJ34YgF4DXrWfuw4a
+	q3ZYgw4DCFWayFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUot
+	CzDUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-In target mode, the host sending more data than can be consumed would be
-a common problem for any message exceeding the FIFO or DMA buffer size.
-Cancel the whole message as soon as this condition is hit as the message
-will be corrupted.
+Hi,
 
-Only do this for target mode in a DMA transfer because we need to add a
-register read. In IRQ and polling modes always do it because SPI_SR was
-already read and it might catch some host mode programming/buffer
-management errors too.
+ÔÚ 2025/06/12 21:21, Zheng Qixing Ð´µÀ:
+> From: Zheng Qixing <zhengqixing@huawei.com>
+> 
+> IO with REQ_NOWAIT should not set R1BIO_Uptodate when it fails,
+> and bad blocks should also be cleared when REQ_NOWAIT IO succeeds.
+> 
+> Fixes: 9f346f7d4ea7 ("md/raid1,raid10: don't handle IO error for REQ_RAHEAD and REQ_NOWAIT")
+> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+> ---
+>   drivers/md/raid1.c  | 11 ++++++-----
+>   drivers/md/raid10.c |  9 +++++----
+>   2 files changed, 11 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index 19c5a0ce5a40..a1cddd24b178 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -455,13 +455,13 @@ static void raid1_end_write_request(struct bio *bio)
+>   	struct md_rdev *rdev = conf->mirrors[mirror].rdev;
+>   	sector_t lo = r1_bio->sector;
+>   	sector_t hi = r1_bio->sector + r1_bio->sectors;
+> -	bool ignore_error = !raid1_should_handle_error(bio) ||
+> -		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
+> +	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
+>   
+>   	/*
+>   	 * 'one mirror IO has finished' event handler:
+>   	 */
+> -	if (bio->bi_status && !ignore_error) {
+> +	if (bio->bi_status && !discard_error &&
+> +	    raid1_should_handle_error(bio)) {
+>   		set_bit(WriteErrorSeen,	&rdev->flags);
+>   		if (!test_and_set_bit(WantReplacement, &rdev->flags))
+>   			set_bit(MD_RECOVERY_NEEDED, &
+> @@ -507,12 +507,13 @@ static void raid1_end_write_request(struct bio *bio)
+>   		 * check this here.
+>   		 */
+>   		if (test_bit(In_sync, &rdev->flags) &&
+> -		    !test_bit(Faulty, &rdev->flags))
+> +		    !test_bit(Faulty, &rdev->flags) &&
+> +		    (!bio->bi_status || discard_error))
+>   			set_bit(R1BIO_Uptodate, &r1_bio->state);
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- drivers/spi/spi-fsl-dspi.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+BTW, for nowait, the error value returned to user should be -EAGAIN, not
+-EIO, you'd better cook another patch to change this.
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 31432d533dea..f62f99f272b2 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -556,12 +556,24 @@ static void dspi_rx_dma_callback(void *arg)
- 	complete(&dma->cmd_rx_complete);
- }
- 
-+static int dspi_fifo_error(struct fsl_dspi *dspi, u32 spi_sr)
-+{
-+	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
-+		dev_err_ratelimited(&dspi->pdev->dev, "FIFO errors:%s%s\n",
-+				    spi_sr & SPI_SR_TFUF ? " TX underflow," : "",
-+				    spi_sr & SPI_SR_RFOF ? " RX overflow," : "");
-+		return -EIO;
-+	}
-+	return 0;
-+}
-+
- static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
- {
- 	size_t size = dspi_dma_transfer_size(dspi);
- 	struct device *dev = &dspi->pdev->dev;
- 	struct fsl_dspi_dma *dma = dspi->dma;
- 	int time_left;
-+	u32 spi_sr;
- 	int i;
- 
- 	for (i = 0; i < dspi->words_in_flight; i++)
-@@ -610,7 +622,8 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
- 
- 	if (spi_controller_is_target(dspi->ctlr)) {
- 		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
--		return 0;
-+		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
-+		return dspi_fifo_error(dspi, spi_sr);
- 	}
- 
- 	time_left = wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
-@@ -1055,6 +1068,10 @@ static void dspi_poll(struct fsl_dspi *dspi)
- 
- 			if (spi_sr & SPI_SR_CMDTCF)
- 				break;
-+
-+			dspi->cur_msg->status = dspi_fifo_error(dspi, spi_sr);
-+			if (dspi->cur_msg->status)
-+				return;
- 		} while (--tries);
- 
- 		if (!tries) {
-@@ -1071,6 +1088,7 @@ static void dspi_poll(struct fsl_dspi *dspi)
- static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- {
- 	struct fsl_dspi *dspi = (struct fsl_dspi *)dev_id;
-+	int status;
- 	u32 spi_sr;
- 
- 	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
-@@ -1079,6 +1097,14 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	if (!(spi_sr & SPI_SR_CMDTCF))
- 		return IRQ_NONE;
- 
-+	status = dspi_fifo_error(dspi, spi_sr);
-+	if (status) {
-+		if (dspi->cur_msg)
-+			WRITE_ONCE(dspi->cur_msg->status, status);
-+		complete(&dspi->xfer_done);
-+		return IRQ_HANDLED;
-+	}
-+
- 	dspi_rxtx(dspi);
- 
- 	if (!dspi->len) {
+Thanks,
+Kuai
 
--- 
-2.34.1
+>   
+>   		/* Maybe we can clear some bad blocks. */
+>   		if (rdev_has_badblock(rdev, r1_bio->sector, r1_bio->sectors) &&
+> -		    !ignore_error) {
+> +		    !bio->bi_status) {
+>   			r1_bio->bios[mirror] = IO_MADE_GOOD;
+>   			set_bit(R1BIO_MadeGood, &r1_bio->state);
+>   		}
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index b74780af4c22..1848947b0a6d 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -458,8 +458,8 @@ static void raid10_end_write_request(struct bio *bio)
+>   	int slot, repl;
+>   	struct md_rdev *rdev = NULL;
+>   	struct bio *to_put = NULL;
+> -	bool ignore_error = !raid1_should_handle_error(bio) ||
+> -		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
+> +	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
+> +	bool ignore_error = !raid1_should_handle_error(bio) || discard_error;
+>   
+>   	dev = find_bio_disk(conf, r10_bio, bio, &slot, &repl);
+>   
+> @@ -522,13 +522,14 @@ static void raid10_end_write_request(struct bio *bio)
+>   		 * check this here.
+>   		 */
+>   		if (test_bit(In_sync, &rdev->flags) &&
+> -		    !test_bit(Faulty, &rdev->flags))
+> +		    !test_bit(Faulty, &rdev->flags) &&
+> +		    (!bio->bi_status || discard_error))
+>   			set_bit(R10BIO_Uptodate, &r10_bio->state);
+>   
+>   		/* Maybe we can clear some bad blocks. */
+>   		if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
+>   				      r10_bio->sectors) &&
+> -		    !ignore_error) {
+> +		    !bio->bi_status) {
+>   			bio_put(bio);
+>   			if (repl)
+>   				r10_bio->devs[slot].repl_bio = IO_MADE_GOOD;
+> 
 
