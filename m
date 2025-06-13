@@ -1,339 +1,588 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6D32AE6A
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926251C5F35;
+	Fri, 13 Jun 2025 15:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828029; cv=none; b=URR1yA6sdHzt1MQJcdyiAvjZLBzFmTXnK6J/NtT/pHl8tf8X6apH5HfLDU8Ox9eWXDKh4245GLMQbrMBr91yQvyNfURx5hu9cIJrBP9OzmufPsPPWJLMXwAAenp2DoZDFdoH0FBGHhSWb2ckiN3E5SfTKokLSSgrt7QuRLzMgVE=
+	t=1749828051; cv=none; b=HtqzA6miehTDMyjVF5Pi6eg55U96U4/zvTsaLL641VcRl7UlvL3K+tt+JufeuCd5/RTTuDnTOAc4A+ONvFycFHQCklfhXujMUcarJnafUdoT+HclS1bfkRK9vOXiurfJ/7w7mwn/M4X/5CkTPibFeVB0ptVSnh1WrEsaHcRCXtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828029; c=relaxed/simple;
-	bh=bHZCmRyoCFqPaolfBcOdZMuw2qzfLKgx2uxtsbOw/I0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SZUnmfkDiLJ4mFDIb8DzlWpxh8JxVXyO0U53axMj4HmEJKTctZ8Fg7CWMqiRbsL7F1jelq5H6VCBOKfGlOwITsdcCa+EW3Al6D9Hl6XIQ59U7KBnnW4tPvW98x734QC8PWmucFQd6KD7ZQZWeh4NxzUxaDB0WuLyozRDL11mFLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FlqJBSah; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749828051; c=relaxed/simple;
+	bh=yJh8wUe8O6yisKujC2BvncPhHYlHY60Fj/MEkh60iAs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EHDnC8yItQ1R0OGHz1JefLFxNMWE1Zfv0Af1B0MGKkWlPOl4Wo6F9DyqG+gdjOhFVpSsW6Yjs5BPiLLL2Wvj2zFbtxbA6mUjtoTmVuhRQuetThrQSRMaZ36hnIYOt2LZffwU73CoS6Ro4m4rKHVzcRLvyRNNzAlAjLlvQl0UHyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x9b4L8Y7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e3XRZCur; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FlqJBSah"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4533bf4d817so1062405e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:20:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749828025; x=1750432825; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IKghZF40bURJv6c1/M9CEvL/tJPBCTMeZ3wBhbe2yAU=;
-        b=FlqJBSahzSpbI9dAsRkte9fmFMq2L/gH9rgzJMmosPJirhF2cKzwgHV1Wcvujf/2DR
-         VbsO0P/E1nWuoQUR9MqsCmicsNQm+NQuGGxJiZN6uywnlSSrdQQ7Jv//xuBKK1kN8VjO
-         V7Az0WYoLLg6URg98f3PgUZpINs/uGHJbqka2Cu+VL1a3ZxbvcO5hsV8OLxyV/Y2Entn
-         BuwtjTcicUVE9YCaC5eDMEWvEaSlDsibafMdbPpI6OkUJ1O2Hd2pVtr1k2+XzFxiYASN
-         vtNbrAVwWAAFxAQpnZGC0xrG42VNEHpKcrdTxPXV51m9EyfMs/ln4StS9kEOePWPYyZu
-         46DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749828025; x=1750432825;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IKghZF40bURJv6c1/M9CEvL/tJPBCTMeZ3wBhbe2yAU=;
-        b=CjPRAYFM+i084RscUNOPCEwoDWbeCWTqG3FIjpBwCWviiBB42RGf+zuAMPu/hEGBFG
-         OFkFQNoJgfgIqP3OxcPQCIda49K0NIfxokQT9+0t6RqxtA7GFTKsSsLwLj1CBqEBmJj+
-         lkuhAc3HqY02gMnuUr3sBttwloWbZdtKkHDrdOSIfJJQGOrGyaj+nsCP08d4Fyz+Uf/N
-         HLGsZ3H/MaKMKzqCqnLGRTIAvN/JXgS7oaC6+LBu9y9TNVSGjgSK2cIdxeWPHFbRmfcz
-         q4z8n44Opr3Zf0DWgPskR4rJ1WwCLY+/dhYjTirBld5ShUh5HV8vfJ7L1uMtDeZkWSnv
-         3/oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoLczuehJzrw0/WaGUv5aBu7EueUoiytIAjnPZ8X7+h0YvPI/oQHX/EsexSe7mmCb+9hUqB+r/pxVkoCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwRiC15AjApty4txV6AYxVhK8l635VQP3Aithr7G29iPtcHwtM
-	ba1mRxkNsJ1voFZB2uJToZztQIMzmtsfXkrpN6UeT9wuQjxcd6MV/fj2o346xDgPlK0=
-X-Gm-Gg: ASbGnctFVLQ5kV3H0DpXIRAsqtDxOkxmbiLJgoSVHyeJOFFtvZcZcxOb2AMYkB36Hop
-	1CHDRnJc20HMLfXzcLskJXkuAf5lMpumYkCi9pyJjO99knP++zlDp++nfamCM9kliK/7zjZ/oNX
-	M07OsGP3znhF0YQ4Qfq3EnvszH85LOOUW92qlHhmHA40vDCls05IAIxXbxdoASiV21SGJ8BG/VF
-	PawKJF+A/jrYzwhzRxvNdFt/1v5/MKA77lqLUV+/tkRcPZQ87wgvTMDYwmc+DH79IstqSvgCLhE
-	GmOOYZVqqE17XhMfWsWgl5GFthh7X3SM7Y2IHsEW7ef+MKXzS+1xmV6SSdqnvAyV
-X-Google-Smtp-Source: AGHT+IG0wPBdTWS6wVof0adSsVA4MK43CPoXzZFMCGpr9V6ukNZIjbxKLrOISAjwEQzvtDU5jyZr4A==
-X-Received: by 2002:a05:6000:25eb:b0:3a3:65b5:51d7 with SMTP id ffacd0b85a97d-3a572e2df7bmr142313f8f.26.1749828025451;
-        Fri, 13 Jun 2025 08:20:25 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1691d7fsm1835856a12.69.2025.06.13.08.20.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 08:20:24 -0700 (PDT)
-Date: Fri, 13 Jun 2025 17:20:03 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
-Subject: Re: [PATCH 2/7] printk: Use consoles_suspended flag when
- suspending/resuming all consoles
-Message-ID: <aExBo-8cVOy6GegR@pathway.suse.cz>
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
- <20250606-printk-cleanup-part2-v1-2-f427c743dda0@suse.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x9b4L8Y7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e3XRZCur"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749828047;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y99w5xbXZlHqhJmkAcWt6eHp7e8pIBnfekQ+uOBgfiE=;
+	b=x9b4L8Y7SBiWYB8qWlXkFprlFSc/Ls96RG2dLrdtphpZ/yzJpMxEHqYrtiEMW/sP3Unb6g
+	xhcEO1hp8dH1qdzLUBpP14vhIEhpxffxdcbjZj/DJyNVP4+ZYqnsCm3poTZj9Ge+pU/UMF
+	Ih7ls63dI39vdPuZCxSv7l25TYLvtOehtM5GAYYG+7uQT3YqtYC1C/aN+Z5TMgSUZhUOh8
+	JBn2dQ99+6j5U167frLC82ejquMPfGAj1n+0vC2CZsbsaJr3IgO9Bs4854wygZH4cqcBYl
+	T1JoWo6qRWvMHCPwn/En+FDu+Ycq/yJD3BNJX093cIgLP9bNiJWgglQF/DVSHg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749828047;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y99w5xbXZlHqhJmkAcWt6eHp7e8pIBnfekQ+uOBgfiE=;
+	b=e3XRZCurYlkq925qA3nri43KFntODZa6XTRWPoo/RM5f3sSE1mNxdnfmSyFcMwxBr9Ih5B
+	ljFe1qJP3yUEoLAg==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+In-Reply-To: <20250610114252.21077-3-zhangtianyang@loongson.cn>
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+ <20250610114252.21077-3-zhangtianyang@loongson.cn>
+Date: Fri, 13 Jun 2025 17:20:46 +0200
+Message-ID: <87o6uris6p.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606-printk-cleanup-part2-v1-2-f427c743dda0@suse.com>
+Content-Type: text/plain
 
-On Fri 2025-06-06 23:53:44, Marcos Paulo de Souza wrote:
-> Instead of update a per-console CON_SUSPENDED flag, use the console_list
-> locks to protect this flag. This is also applied to console_is_usable
-> functions, which now also checks if consoles_suspend is set.
-> 
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> ---
->  kernel/printk/internal.h |  7 ++++++-
->  kernel/printk/nbcon.c    |  8 ++++----
->  kernel/printk/printk.c   | 23 ++++++++++-------------
->  3 files changed, 20 insertions(+), 18 deletions(-)
-> 
-> diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
-> index 48a24e7b309db20fdd7419f7aeda68ea7c79fd80..752101904f44b13059b6a922519d88e24c9f32c0 100644
-> --- a/kernel/printk/internal.h
-> +++ b/kernel/printk/internal.h
-> @@ -118,8 +118,12 @@ void nbcon_kthreads_wake(void);
->   * which can also play a role in deciding if @con can be used to print
->   * records.
->   */
-> -static inline bool console_is_usable(struct console *con, short flags, bool use_atomic)
-> +static inline bool console_is_usable(struct console *con, short flags,
-> +				     bool use_atomic, bool consoles_suspended)
+On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
+>  		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
+> -			return 0;
+> +			/*
+> +			 * The new affinity configuration has taken effect,
+> +			 * and returning IRQ_SET_MASK_OK_DONE here indicates that no further
+> +			 * changes need to be made in the subsequent process
+
+This is not what IRQ_SET_MASK_OK_DONE is about. The documentation
+clearly says:
+
+ * IRQ_SET_MASK_OK_DONE - Same as IRQ_SET_MASK_OK for core. Special code to
+ *                        support stacked irqchips, which indicates skipping
+ *                        all descendant irqchips.
+
+It's not about further changes. It's about preventing invoking
+set_affinity() callbacks down the hierarchy.
+
+And you still fail to explain why this change is correct for the
+existing code. That explanation wants to be in the changelog of the
+seperate patch doing this change.
+
+And then you can spare the comment, which is btw. also violating the
+bracket rules in the tip maintainers documentation.
+
+
+> +			 */
+> +			return IRQ_SET_MASK_OK_DONE;
+>  
+>  		cpumask_and(&intersect_mask, dest, cpu_online_mask);
+>  
+> @@ -121,7 +116,8 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
+>  		adata->cpu = cpu;
+>  		adata->vec = vector;
+>  		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
+> -		avecintc_sync(adata);
+> +		if (!cpu_has_redirectint)
+> +			avecintc_sync(adata);
+>  	}
+>  
+>  	irq_data_update_effective_affinity(data, cpumask_of(cpu));
+> @@ -412,6 +408,9 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+>  
+>  static inline int __init acpi_cascade_irqdomain_init(void)
 >  {
-> +	if (consoles_suspended)
-> +		return false;
+> +	if (cpu_has_redirectint)
+> +		return redirect_acpi_init(loongarch_avec.domain);
 > +
->  	if (!(flags & CON_ENABLED))
->  		return false;
+>  	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+>  }
 >  
-> @@ -212,6 +216,7 @@ extern bool have_boot_console;
->  extern bool have_nbcon_console;
->  extern bool have_legacy_console;
->  extern bool legacy_allow_panic_sync;
-> +extern bool consoles_suspended;
->  
->  /**
->   * struct console_flush_type - Define available console flush methods
-> diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-> index fd12efcc4aeda8883773d9807bc215f6e5cdf71a..72de12396e6f1bc5234acfdf6dcc393acf88d216 100644
-> --- a/kernel/printk/nbcon.c
-> +++ b/kernel/printk/nbcon.c
-> @@ -1147,7 +1147,7 @@ static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_contex
->  	cookie = console_srcu_read_lock();
->  
->  	flags = console_srcu_read_flags(con);
-> -	if (console_is_usable(con, flags, false)) {
-> +	if (console_is_usable(con, flags, false, consoles_suspended)) {
+> diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
+> new file mode 100644
+> index 000000000000..ae42ec5028d2
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-loongarch-ir.c
+> @@ -0,0 +1,562 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Loongson Technologies, Inc.
+> + */
+> +
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/msi.h>
+> +
+> +#include <asm/irq.h>
+> +#include <asm/loongarch.h>
+> +#include <asm/setup.h>
+> +#include <larchintrin.h>
+> +
+> +#include "irq-loongson.h"
+> +#include "irq-msi-lib.h"
+> +
+> +#define IRD_ENTRIES			65536
+> +
+> +/* redirect entry size 128bits */
+> +#define IRD_PAGE_ORDER			(20 - PAGE_SHIFT)
+> +
+> +/* irt cache invalid queue */
+> +#define	INVALID_QUEUE_SIZE		4096
 
-The new global console_suspended value has the be synchronized the
-same way as the current CON_SUSPENDED per-console flag.
-It means that the value must be:
+Use SPACE after #define, not TAB. All over the place...
 
-  + updated only under console_list_lock together with
-    synchronize_rcu().
+> +#define INVALID_QUEUE_PAGE_ORDER	(16 - PAGE_SHIFT)
 
-  + read using READ_ONCE() under console_srcu_read_lock()
+I'm pretty sure that the above magic numbers have dependencies in some
+way, right? So why is it not expressed in a way which makes this obvious? 
 
+These magic numbers are just incomprehensible as they make the reader
+guess what this is about. Here is my (probably not so) wild guess:
 
-I am going to propose more solutions because no one is obviously
-the best one.
+#define IRD_ENTRY_SIZE			16
 
-Variant A:
-=========
+#define IRD_ENTRIES			65536
+#define IRD_PAGE_ORDER			get_order(IRD_ENTRIES * IRD_ENTRY_SIZE)
 
-Create a helper functions, similar to
-console_srcu_read_flags() and console_srcu_write_flags():
+#define	INVALID_QUEUE_SIZE		4096
+#define IRD_INVALID__QUEUE_PAGE_ORDER	get_order(INVALID_QUEUE_SIZE * IRD_ENTRY_SIZE)
 
-Something like:
+No?
 
-static inline bool console_srcu_read_consoles_suspended()
-{
-	WARN_ON_ONCE(!console_srcu_read_lock_is_held());
+> +#define GPID_ADDR_MASK			0x3ffffffffffULL
 
-	/*
-	 * The READ_ONCE() matches the WRITE_ONCE() when the value
-	 * is modified console_srcu_write_consoles_suspended().
-	 */
-	return data_race(READ_ONCE(consoles_suspended));
-}
+GENMASK()
 
-static inline void console_srcu_write_consoles_suspended(bool suspended)
-{
-	lockdep_assert_console_list_lock_held();
+> +#define GPID_ADDR_SHIFT			6
+> +
+> +#define CQB_SIZE_SHIFT			0
+> +#define CQB_SIZE_MASK			0xf
+> +#define CQB_ADDR_SHIFT			12
+> +#define CQB_ADDR_MASK			(0xfffffffffULL)
 
-	/* This matches the READ_ONCE() in console_srcu_read_consoles_suspended(). */
-	WRITE_ONCE(consoles_suspended, suspended);
-}
+GENMASK()
 
-This has the drawback that most console_is_usable() callers would need
-to get and pass both variables, for example:
-
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -1137,6 +1137,7 @@ static bool nbcon_emit_one(struct nbcon_write_context *wctxt, bool use_atomic)
-  */
- static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_context *ctxt)
- {
-+	bool cons_suspended;
- 	bool ret = false;
- 	short flags;
- 	int cookie;
-@@ -1147,7 +1148,8 @@ static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_contex
- 	cookie = console_srcu_read_lock();
- 
- 	flags = console_srcu_read_flags(con);
--	if (console_is_usable(con, flags, false)) {
-+	cons_suspended = console_srcu_read_consoles_suspended();
-+	if (console_is_usable(con, flags, false, cons_suspended)) {
- 		/* Bring the sequence in @ctxt up to date */
- 		ctxt->seq = nbcon_seq_read(con);
-
-Pros:
-
-   + always correct
-
-Cons:
-
-   + not user friendly
+> +#define CFG_DISABLE_IDLE		2
+> +#define INVALID_INDEX			0
+> +
+> +#define MAX_IR_ENGINES			16
 
 
+> +struct redirect_gpid {
+> +	u64	pir[4];      /* Pending interrupt requested */
+> +	u8	en	: 1, /* doorbell */
 
-Variant B:
-==========
+Use C++ style tail comments for this as documented. Do you I really have
+to point out every single item in the documentation explicitely or can
+you just read all of it and follow the guidelines?
 
-Do not pass @consoles_suspended as a parameter. Instead, read it
-in console_us_usable() directly.
+> +struct irde_desc {
+> +	struct	redirect_table	ird_table;
+> +	struct	redirect_queue	inv_queue;
+> +	int	finish;
 
-I do not like this because it is not consistent with the con->flags
-handling and it is not clear why.
+Groan.
 
+"Struct declarations should align the struct member names in a tabular fashion:
 
-Variant C:
-==========
+ struct bar_order {
+        unsigned int    guest_id;
+        int             ordered_item;
+        struct menu     *menu;
+ };"
 
-Remove even @flags parameter from console_is_usable() and read both
-values there directly.
+It clearly says to align the struct member names, no?
 
-Many callers read @flags only because they call console_is_usable().
-The change would simplify the code.
+Otherwise the example would be:
 
-But there are few exceptions:
+ struct bar_order {
+        unsigned int    guest_id;
+        int             ordered_item;
+        struct 		menu     	*menu;
+ };
 
-  1. __nbcon_atomic_flush_pending(), console_flush_all(),
-     and legacy_kthread_should_wakeup() pass @flags to
-     console_is_usable() and also check CON_NBCON flag.
+which is unreadable garbage obviously.
 
-     But CON_NBCON flag is special. It is statically initialized
-     and never set/cleared at runtime. It can be checked without
-     READ_ONCE(). Well, we still might want to be sure that
-     the struct console can't disappear.
+> +};
 
-     IMHO, this can be solved by a helper function:
+> +static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
+> +{
+> +	struct irde_inv_cmd *inv_addr;
+> +	u32 tail;
+> +
+> +	guard(raw_spinlock_irqsave)(&rqueue->lock);
+> +
+> +	while (invalid_queue_is_full(rqueue->node, &tail))
+> +		cpu_relax();
+> +
+> +	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+> +	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
 
-	/**
-	 * console_srcu_is_nbcon - Locklessly check whether the console is nbcon
-	 * @con:	struct console pointer of console to check
-	 *
-	 * Requires console_srcu_read_lock to be held, which implies that @con might
-	 * be a registered console. The purpose of holding console_srcu_read_lock is
-	 * to guarantee that no exit/cleanup routines will run if the console
-	 * is currently undergoing unregistration.
-	 *
-	 * If the caller is holding the console_list_lock or it is _certain_ that
-	 * @con is not and will not become registered, the caller may read
-	 * @con->flags directly instead.
-	 *
-	 * Context: Any context.
-	 * Return: True when CON_NBCON flag is set.
-	 */
-	static inline bool console_is_nbcon(const struct console *con)
-	{
-		WARN_ON_ONCE(!console_srcu_read_lock_is_held());
+Seriously?
 
-		/*
-		 * The CON_NBCON flag is statically initialized and is never
-		 * set or cleared at runtime.
-		return data_race(con->flags & CON_NBCON);
-	}
+struct redirect_queue {
+	int				node;
+        union {
+ 		u64			base;
+                struct irde_inv_cmd	*cmds;
+        };
+	u32				max_size;
+        ...
+};
 
+and then this becomes
 
-   2. Another exception is __pr_flush() where console_is_usable() is
-      called twice with @use_atomic set "true" and "false".
+    	memcpy(&rqueue->cmds[tail], cmd, sizeof(cmd));
 
-      We would want to read "con->flags" only once here. A solution
-      would be to add a parameter to check both con->write_atomic
-      and con->write_thread in a single call.
+That's too comprehensible, right?
 
-      But it might actually be enough to check is with the "false"
-      value because "con->write_thread()" is mandatory for nbcon
-      consoles. And legacy consoles do not distinguish atomic mode.
+> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
 
+Why is this before the barrier? The barrier does not do anything about
+this and you can simplify this. See below.
 
-Variant D:
-==========
+> +	/*
+> +	 * the barrier ensure that the previously written data is visible
 
-We need to distinguish the global and per-console "suspended" flag
-because they might be nested. But we could use a separate flag
-for the global setting.
+This barrier ensures .....
 
-I mean that:
+> +	 * before updating the tail register
 
-    + console_suspend() would set CON_SUSPENDED flag
-    + console_suspend_all() would set CON_SUSPENDED_ALL flag
+And as there is no rmb() counterpart you want to explain that this is
+serializing against the hardware.
 
-They both will be in con->flags.
+> +	 */
+> +	wmb();
+> +
+> +	write_queue_tail(rqueue->node, tail);
 
-Pros:
+	write_queue_tail(rqueue->node, (tail + 1) & INVALID_QUEUE_MASK);
 
-    + It is easy to implement.
+No?
 
-Cons:
+> +}
+> +
+> +static void irde_invlid_entry_node(struct redirect_item *item)
+> +{
+> +	struct redirect_queue *rqueue;
+> +	struct irde_inv_cmd cmd;
+> +	volatile u64 raddr = 0;
 
-    + It feels a bit ugly.
+No. See Documentation/process/volatile-considered-harmful.rst
 
+> +static void redirect_table_free(struct redirect_item *item)
+> +{
+> +	struct redirect_table *ird_table;
+> +	struct redirect_entry *entry;
+> +
+> +	ird_table = item->table;
+> +
+> +	entry = item->entry;
+> +	memset(entry, 0, sizeof(struct redirect_entry));
 
-My opinion:
-===========
+        memset(entry, 0, sizeof(entry));
 
-I personally prefer the variant C because:
+It's obvious why using sizeof(type) is a bad idea.
 
-  + Removes one parameter from console_is_usable().
+> +	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
 
-  + The lockless synchronization of both global and per-console
-    flags is hidden in console_is_usable().
+raw_spinlock_irq as this code can never be invoked from an interrupt
+disabled region.
 
-  + The global console_suspended flag will be stored in global
-    variable (in compare with variant D).
+> +		bitmap_release_region(ird_table->bitmap, item->index, 0);
+> +
+> +	kfree(item->gpid);
+> +
+> +	irde_invlid_entry_node(item);
+> +}
 
-What do you think, please?
+> +static inline void redirect_domain_prepare_entry(struct redirect_item *item,
+> +						 struct avecintc_data *adata)
+> +{
+> +	struct redirect_entry *entry = item->entry;
+> +
+> +	item->gpid->en = 1;
+> +	item->gpid->irqnum = adata->vec;
+> +	item->gpid->dst = adata->cpu;
+> +
+> +	entry->lo.valid = 1;
+> +	entry->lo.gpid = ((long)item->gpid >> GPID_ADDR_SHIFT) & (GPID_ADDR_MASK);
 
-Best Regards,
-Petr
+Hardware addresses are type unsigned long and not long.
 
+> +	entry->lo.vector = 0xff;
+> +}
 
-PS: The commit message and the cover letter should better explain
-    the background of this change.
+> +static void redirect_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
+> +{
+> +	struct redirect_item *item;
+> +
+> +	item = irq_data_get_irq_chip_data(d);
 
-    It would be great if the cover letter described the bigger
-    picture, especially the history of the console_suspended,
-    CON_SUSPENDED, and CON_ENABLED flags. It might use info
-    from
-    https://lore.kernel.org/lkml/ZyoNZfLT6tlVAWjO@pathway.suse.cz/
-    and maybe even this link.
+Just move the initialization into the declaration line.
 
-    Also this commit message should mention that it partly reverts
-    the commit 9e70a5e109a4a233678 ("printk: Add per-console
-    suspended state"). But it is not simple revert because
-    we need to preserve the synchronization using
-    the console_list_lock for writing and SRCU for reading.
+> +	msg->address_lo = (msi_base_addr | 1 << 2 | ((item->index & 0xffff) << 4));
+> +	msg->address_hi = 0x0;
+> +	msg->data = 0x0;
+> +}
+
+> +static void redirect_free_resources(struct irq_domain *domain, unsigned int virq,
+> +				    unsigned int nr_irqs)
+> +{
+> +	for (int i = 0; i < nr_irqs; i++) {
+> +		struct irq_data *irq_data;
+> +
+> +		irq_data = irq_domain_get_irq_data(domain, virq  + i);
+
+Ditto.
+
+> +		if (irq_data && irq_data->chip_data) {
+> +			struct redirect_item *item;
+> +
+> +			item = irq_data->chip_data;
+
+Same and all over the place.
+
+> +			redirect_table_free(item);
+> +			kfree(item);
+> +		}
+> +	}
+> +}
+> +
+> +static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +			unsigned int nr_irqs, void *arg)
+
+I asked you before to align the arguments of the second line properly
+and according to documentation..
+
+> +{
+> +	struct redirect_table *ird_table;
+> +	struct avecintc_data *avec_data;
+> +	struct irq_data *irq_data;
+> +	msi_alloc_info_t *info;
+> +	int ret, i, node;
+> +
+> +	info = (msi_alloc_info_t *)arg;
+
+What's that type cast for?
+
+> +	node = dev_to_node(info->desc->dev);
+> +	ird_table = &irde_descs[node].ird_table;
+> +
+> +	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		struct redirect_item *item;
+> +
+> +		item = kzalloc(sizeof(struct redirect_item), GFP_KERNEL);
+> +		if (!item) {
+> +			pr_err("Alloc redirect descriptor failed\n");
+> +			goto out_free_resources;
+> +		}
+> +
+> +		irq_data = irq_domain_get_irq_data(domain, virq + i);
+> +
+> +		avec_data = irq_data_get_avec_data(irq_data);
+
+Neither irq_data nor avec_data are used here and only required way
+down. Can you structure your code so it makes sense?
+
+> +		ret = redirect_table_alloc(item, ird_table);
+> +		if (ret) {
+> +			pr_err("Alloc redirect table entry failed\n");
+> +			goto out_free_resources;
+> +		}
+> +
+> +		item->gpid = kzalloc_node(sizeof(struct redirect_gpid), GFP_KERNEL, node);
+> +		if (!item->gpid) {
+> +			pr_err("Alloc redirect GPID failed\n");
+> +			goto out_free_resources;
+> +		}
+
+Why do you need this extra allocation here instead of simply embedding
+gpid into item?
+
+> +		irq_data->chip_data = item;
+> +		irq_data->chip = &loongarch_redirect_chip;
+> +		redirect_domain_prepare_entry(item, avec_data);
+> +	}
+> +	return 0;
+
+> +	iocsr_write64(((rqueue->base & (CQB_ADDR_MASK << CQB_ADDR_SHIFT)) |
+> +				(CQB_SIZE_MASK << CQB_SIZE_SHIFT)), LOONGARCH_IOCSR_REDIRECT_CQB);
+
+Align second line properly.
+
+> +	return 0;
+> +}
+> +
+> +static int redirect_table_init(int node)
+> +{
+> +	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
+
+Remove the pointless brackets.
+
+> +	unsigned long *bitmap;
+> +	struct page *pages;
+> +	int ret;
+> +
+> +	pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
+> +	if (!pages) {
+> +		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
+> +		return -ENOMEM;
+> +	}
+> +	ird_table->page = pages;
+> +	ird_table->table = page_address(pages);
+> +
+> +	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
+> +	if (!bitmap) {
+> +		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
+> +		ret = -ENOMEM;
+> +		goto free_pages;
+> +	}
+> +
+> +	ird_table->bitmap = bitmap;
+> +	ird_table->nr_ird = IRD_ENTRIES;
+> +	ird_table->node = node;
+> +
+> +	raw_spin_lock_init(&ird_table->lock);
+> +
+> +	if (redirect_queue_init(node)) {
+> +		ret = -EINVAL;
+> +		goto free_bitmap;
+
+So redirect_queue_init() returns -ENOMEM which is then converted to
+-EINVAL here. That makes absolutely no sense at all.
+
+Neither makes the 'ret' variable sense because all failures should
+return -ENOMEM and therefore you can make redirect_queue_init() return
+bool (true on success) and return -ENOMEM in the failure path.
+
+No?
+
+> +static void redirect_table_fini(int node)
+> +{
+> +	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
+> +	struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
+
+No brackets. They have no value and just disturb reading.
+
+> +static int redirect_cpu_online(unsigned int cpu)
+> +{
+> +	int ret, node = cpu_to_node(cpu);
+> +
+> +	if (cpu != cpumask_first(cpumask_of_node(node)))
+> +		return 0;
+> +
+> +	if (irde_descs[node].finish)
+> +		return 0;
+
+What's this finish thing about?
+
+Neither the CPU mask check nor this finish hack is required:
+
+        if (irde_descs[node].pages)
+        	return 0;
+
+covers all of it, no?
+
+> +	ret = redirect_table_init(node);
+> +	if (ret) {
+> +		redirect_table_fini(node);
+
+What is this for? You already mopped up the mess in the failure path of
+redirect_table_init(), so doing it again makes no sense.
+
+Just get rid of the failure path in redirect_table_init() and let that
+return a bool (true on success) and invoke redirect_table_fini() here
+
+> +		return -EINVAL;
+
+Seriously? The failure condition is -ENOMEM so why do you want to change
+that?
+
+> +	}
+> +
+> +	irde_descs[node].finish = 1;
+> +	return 0;
+> +}
+> +
+> +#ifdef	CONFIG_ACPI
+
+What's the TAB for?
+
+> +static int __init redirect_reg_base_init(void)
+> +{
+> +	acpi_status status;
+> +	uint64_t addr;
+> +
+> +	if (acpi_disabled)
+> +		return 0;
+> +
+> +	status = acpi_evaluate_integer(NULL, "\\_SB.NO00", NULL, &addr);
+> +	if (ACPI_FAILURE(status))
+> +		pr_info("redirect_iocsr_base used default 0x1fe00000\n");
+> +	else
+> +		redirect_reg_base = addr;
+> +
+> +	return 0;
+> +}
+> +subsys_initcall_sync(redirect_reg_base_init);
+> +
+> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+> +		const unsigned long end)
+
+Sigh.
+
+> +int __init redirect_acpi_init(struct irq_domain *parent)
+> +{
+> +	struct fwnode_handle *fwnode;
+> +	struct irq_domain *domain;
+> +	int ret;
+> +
+> +	fwnode = irq_domain_alloc_named_fwnode("redirect");
+> +	if (!fwnode) {
+> +		pr_err("Unable to alloc redirect domain handle\n");
+> +		goto fail;
+> +	}
+> +
+> +	domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
+> +					     &redirect_domain_ops, irde_descs);
+> +	if (!domain) {
+> +		pr_err("Unable to alloc redirect domain\n");
+> +		goto out_free_fwnode;
+> +	}
+> +
+> +	redirect_domain = domain;
+
+What's the point of this local domain variable?
+
+> +	ret = redirect_table_init(0);
+> +	if (ret)
+> +		goto out_free_table;
+> +
+
+Oh well...
+
+Thanks,
+
+        tglx
