@@ -1,129 +1,191 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702FB224AE0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6469E223DCF
 	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833080; cv=none; b=EMWRS9Wl3uFFsDK0FteZHMdKFwAqBg4kbBqGWKEkBekzMU8oWPpsRMUWK33iUYQ7rq3xA0SxtTnsS5EIXfQCheYFPXaZdfG8RWN0c5kPn2Q5wcdR0EkErz1ePVx8ALZ4aAudwt8Hw8VqLiFya8xVr/wkBV82d4dD1YoBOeAfVFI=
+	t=1749833080; cv=none; b=KUKqS3LHN7fO+E+D4AjamMSCtoJO/50Ukv0ItZNE2YIe4zJp+cTnHwKlGV2cjX/HlWdrSEez6BJGzt49SNn+Y1ztlTI4m1wqx+ICWwxnVetpzU2B0OoIVJsU5A0yDK6D/jMLIh4+6tbyujjki8gCcLX0dWSbYCSIEL9k1gnrAOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749833080; c=relaxed/simple;
-	bh=r7qQKEx8Bs/vEO2/ZvJIvxTm3r9PYSaliMfR9QFkUaM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IpA0T0GYfMRw/0sLE3eoizV8RLqYFB/M0js6XU22C44d3Lvw0OijKBbIhqhjzyXdCbkuMAmWLi+Qg3awT/QJxejmetDA57qlwwG8MUZVT0cn95ShOYFg6rAJxTbES5tsv8yHGYDERU/VWnxZK1AdlgtKWvcohbQQ8sQkRkgKLHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+	bh=UOI7+ktaAQl6abi1s30hD25aKpctjf5gVnDzOaQ7Lqs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pXYNhAjxt5YsSHa3zS1NSb+AUnf+9td+A+GPrJBNrmtfZvIQRgQvaSW/n2Gx8qD1lkrfMaiFPCGxTBxxBU9FFYAtq5rAbQw0mYveZB61B+FYGp4V94Ud2kq5hifZdC9a6CiKeiL/ZojxQ6Cjf4TQdPjcgwPCTiooFD8YLi4SrOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddc6d66787so30710705ab.3
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-8730f2293fcso222982939f.3
         for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:44:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1749833077; x=1750437877;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=sUWyrXZ9+k7DvMBTzMjpAiIqdpXMDVWGB3TGXjg/3go=;
-        b=VrNDwBPlQSVa1pL56A/f4a2dLOpc7cl8uuVAq9XobB/5uQ1x5Lh0VPUOOpEKtjfaPx
-         beWAgUXlXtNJy45whnFRvgCIERLOsp0xIBUsrJrFjTdESRq3NsAWFe8SNS4B48x/6KHX
-         ADU/HrBylpuoakw7KUyiU7DsmTXQTJofOZPhC0eQWa9FWQ48maONVCXDcQ2yyZykyof/
-         KCOmxMZPxQP+JM2LckeNysBPbjWfOe2UvyXaeosGSyYNCMEex+4lmfVgfBcwpN+ypejE
-         LKy2xiEv6hFDnt7w+17L+9Iqqj/627qF6lKCWiaXhLFxK8o1YI8J64G8PMlJUbFm4DXj
-         XSyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURDIhh0Dtr23q+iuIrPl3H4e0veWCClOxr0Wc3xRT7zyzPyQtx3V2KaSFyU9p0ed319kd+xwGSIGalAtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyegYJnVFwir4Mo1U4uFzkuPI/3BiKcVPKcaRh5q2G8j7eXvB5O
-	BbV5kgMD89WdBLq1yB8a+1L9HpuIbktBCp0XjMvTBfM+Shv43ZOrzm8JzYYUhxyQZzf8GmyFWxA
-	ePl2IiLfxtt4cnkxYv1qnOKeNM1cH6Ux19csaOdeA8LZY5gszJZfUVzvvdX8=
-X-Google-Smtp-Source: AGHT+IHl+6VE44ikwCAKlGs96ipfefRKXfSHqUgXZOAH9TRgJUJDCMsI+1/7pKEAgZuqSGYv2WPtsLjL01zPUrG3djAxbGRHR6GR
+        bh=pn3igpYazOZPbjAx5+cQ1Nj5ricVsiPAoL5mPDgYTys=;
+        b=IOV3MwlUaV7NWrSO1IuHUkbQWRceJLhIMcoEYPRcp5A+t0JWEaVYVDNyHgvQVSeMUh
+         HXgAow+O3mhPKpys5+FN5ASqt7Io4Gs4zOhOrqOyvXFchah/OkvRxsKmP/du/6O6DnKF
+         UftDiLypgh81SCpJX4nPIocd1AUh2XvIp97yMJDIvi3oabKxrZ8mnnYe8lEri90QA9if
+         cnYeHqmDbFI+BDY/rea+ouDJ9q3sPhtH/3+n999X/EitNLqUw2261pIbCMIFYK3gfd+P
+         b1QZJZqK7vyQtPVHhTsZwUzlJiOd309MIY/yw2O/IIaZCfnf2dOhTD1Z20Vq+BBUzuki
+         1JIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmZ3ju3idp0UzTUgwLX7ZgV95FAIGpe+0ZPwF+FA9B9EGAb+kcccrl6r/d67GNpj8sSZ0PK2oWGeQ43NA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtQt9jZXNTNNYmix5jnSTjse5aWPt+jNXZhgDDibyH7qLiTSZk
+	H7QwTsd2L+NcT4SFxGfyuqOWEgLs/KjKTtWPE/gn5yZToCSLcw2b6bGOYhPZCsm2wAsrz5BBldE
+	OphHQSkDvV4rPyEmt4c8DPiWSVXZdbCnz7rUd0kRxBE7XAoPXO4wDkdyRw/o=
+X-Google-Smtp-Source: AGHT+IG1Q4iNiUn++8XEpjqsv6tiGyArUlxH+3F1GmU61g6xl33TI+0mmYdk7sTO9/Iw4SgKVyV2xCFGs60+amkgzKoNwOdB5bn3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2583:b0:3dd:edef:894c with SMTP id
- e9e14a558f8ab-3de07cc0d80mr4157355ab.14.1749833077617; Fri, 13 Jun 2025
+X-Received: by 2002:a05:6e02:184a:b0:3dd:f745:89 with SMTP id
+ e9e14a558f8ab-3de07cf7df0mr3530435ab.20.1749833077323; Fri, 13 Jun 2025
  09:44:37 -0700 (PDT)
 Date: Fri, 13 Jun 2025 09:44:37 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684c5575.a00a0220.279073.0013.GAE@google.com>
-Subject: [syzbot] [net?] WARNING in taprio_get_start_time (2)
-From: syzbot <syzbot+398e1ee4ca2cac05fddb@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, vinicius.gomes@intel.com, 
-	xiyou.wangcong@gmail.com
+Message-ID: <684c5575.a00a0220.279073.0012.GAE@google.com>
+Subject: [syzbot] [bcachefs?] KASAN: use-after-free Read in poly1305_update
+From: syzbot <syzbot+bfaeaa8e26281970158d@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    b549faa950e6 Merge branch 'net-bcmasp-add-support-for-gro'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1003d10c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c07f08ee4bcfb276
-dashboard link: https://syzkaller.appspot.com/bug?extid=398e1ee4ca2cac05fddb
+HEAD commit:    19272b37aa4f Linux 6.16-rc1
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=159ab9d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8409c4d4e51ac27
+dashboard link: https://syzkaller.appspot.com/bug?extid=bfaeaa8e26281970158d
 compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-
-Unfortunately, I don't have any reproducer for this issue yet.
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15c3f682580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1340310c580000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6f82898e05e9/disk-b549faa9.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/df2850948ac5/vmlinux-b549faa9.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2d4c1db8f02d/bzImage-b549faa9.xz
+disk image: https://storage.googleapis.com/syzbot-assets/92d22b0c6493/disk-19272b37.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3fb0142bb63a/vmlinux-19272b37.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3d5f3836ae42/Image-19272b37.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/d19ea34ad935/mount_0.gz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+398e1ee4ca2cac05fddb@syzkaller.appspotmail.com
+Reported-by: syzbot+bfaeaa8e26281970158d@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 11372 at net/sched/sch_taprio.c:1223 taprio_get_start_time+0x15e/0x190 net/sched/sch_taprio.c:1223
-Modules linked in:
-CPU: 1 UID: 0 PID: 11372 Comm: syz.0.1394 Not tainted 6.16.0-rc1-syzkaller-00189-gb549faa950e6 #0 PREEMPT(full) 
+  ret fsck_errors_not_fixed
+bcachefs (loop0): error reading btree root btree=xattrs level=0: btree_node_read_error, fixing
+==================================================================
+BUG: KASAN: use-after-free in poly1305_update+0x138/0x188 lib/crypto/poly1305.c:44
+Read of size 8 at addr ffff0000e4b60070 by task syz-executor339/6486
+
+CPU: 1 UID: 0 PID: 6486 Comm: syz-executor339 Not tainted 6.16.0-rc1-syzkaller-g19272b37aa4f #0 PREEMPT 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:taprio_get_start_time+0x15e/0x190 net/sched/sch_taprio.c:1223
-Code: 42 80 3c 28 00 74 08 48 89 df e8 5d bd 9d f8 4c 89 23 31 c0 5b 41 5c 41 5d 41 5e 41 5f 5d e9 99 ef e2 01 cc e8 e3 44 3a f8 90 <0f> 0b 90 b8 f2 ff ff ff eb e0 44 89 e9 80 e1 07 80 c1 03 38 c1 0f
-RSP: 0018:ffffc9000478eee8 EFLAGS: 00010287
-RAX: ffffffff89861a0d RBX: ffffc9000478efd8 RCX: 0000000000080000
-RDX: ffffc9000f4da000 RSI: 0000000000000c35 RDI: 0000000000000c36
-RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
-R10: dffffc0000000000 R11: ffffffff81679c10 R12: 184898a57a6335ad
-R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  00007f0656dd56c0(0000) GS:ffff888125d52000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000010000 CR3: 000000006029c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- taprio_change+0x2da5/0x3f60 net/sched/sch_taprio.c:1938
- taprio_init+0x959/0xbd0 net/sched/sch_taprio.c:2112
- qdisc_create+0x7ac/0xea0 net/sched/sch_api.c:1333
- __tc_modify_qdisc net/sched/sch_api.c:1758 [inline]
- tc_modify_qdisc+0x1426/0x2010 net/sched/sch_api.c:1822
- rtnetlink_rcv_msg+0x779/0xb70 net/core/rtnetlink.c:6953
- netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f0658f8e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f0656dd5038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f06591b6160 RCX: 00007f0658f8e929
-RDX: 0000000000000000 RSI: 00002000000007c0 RDI: 000000000000000e
-RBP: 00007f0659010b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f06591b6160 R15: 00007ffc8579ea48
- </TASK>
+Call trace:
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
+ __dump_stack+0x30/0x40 lib/dump_stack.c:94
+ dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
+ print_address_description+0xa8/0x254 mm/kasan/report.c:408
+ print_report+0x68/0x84 mm/kasan/report.c:521
+ kasan_report+0xb0/0x110 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:-1 [inline]
+ kasan_check_range+0x264/0x2a4 mm/kasan/generic.c:189
+ __asan_memcpy+0x3c/0x84 mm/kasan/shadow.c:105
+ poly1305_update+0x138/0x188 lib/crypto/poly1305.c:44
+ bch2_checksum+0x1d4/0x4ac fs/bcachefs/checksum.c:157
+ bch2_btree_node_read_done+0x968/0x432c fs/bcachefs/btree_io.c:1148
+ btree_node_read_work+0x328/0xc1c fs/bcachefs/btree_io.c:1399
+ bch2_btree_node_read+0x814/0x23f8 fs/bcachefs/btree_io.c:-1
+ __bch2_btree_root_read fs/bcachefs/btree_io.c:1865 [inline]
+ bch2_btree_root_read+0x280/0x3c8 fs/bcachefs/btree_io.c:1887
+ read_btree_roots+0x218/0x6bc fs/bcachefs/recovery.c:591
+ bch2_fs_recovery+0x1d1c/0x2fd4 fs/bcachefs/recovery.c:964
+ bch2_fs_start+0x914/0xbc0 fs/bcachefs/super.c:1200
+ bch2_fs_get_tree+0x890/0xfd0 fs/bcachefs/fs.c:2489
+ vfs_get_tree+0x90/0x28c fs/super.c:1802
+ do_new_mount+0x228/0x814 fs/namespace.c:3885
+ path_mount+0x5b4/0xde0 fs/namespace.c:4209
+ do_mount fs/namespace.c:4222 [inline]
+ __do_sys_mount fs/namespace.c:4433 [inline]
+ __se_sys_mount fs/namespace.c:4410 [inline]
+ __arm64_sys_mount+0x3e8/0x468 fs/namespace.c:4410
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x124b60
+flags: 0x5ffc00000000000(node=0|zone=2|lastcpupid=0x7ff)
+raw: 05ffc00000000000 fffffdffc392d808 fffffdffc392d808 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff0000e4b5ff00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff0000e4b5ff80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff0000e4b60000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                                             ^
+ ffff0000e4b60080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff0000e4b60100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+bcachefs (loop0): btree node read error at btree alloc level 0/0
+  u64s 11 type btree_ptr_v2 U64_MAX:18446744073709551365:U32_MAX len 0 ver 0: seq 1818ce08861e3527 written 40 min_key POS_MIN durability: 1 ptr: 0:26:0 gen 0
+  loop0 node offset 0/40 bset u64s 65531: checksum error, type chacha20_poly1305_128: got d1207b6f1073532ce6802ea238ac7a29 should be a1c0cae4d1c6eac9087fba7ada6f601b
+  flagging btree alloc lost data
+  running recovery pass check_alloc_info (13), currently at recovery_pass_empty (0)
+  ret fsck_errors_not_fixed
+bcachefs (loop0): error reading btree root btree=alloc level=0: btree_node_read_error, fixing
+bcachefs (loop0): btree node read error at btree freespace level 0/0
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq b6c44d07df4e9bb7 written 48 min_key POS_MIN durability: 1 ptr: 0:29:0 gen 0
+  loop0 node offset 8/48 bset u64s 35: checksum error, type chacha20_poly1305_128: got ed761e9f1d4c73c28012c6926fffa8ec should be 696606121d98d113a1b1dc69c6e72339
+  flagging btree freespace lost data
+  ret fsck_errors_not_fixed
+bcachefs (loop0): error reading btree root btree=freespace level=0: btree_node_read_error, fixing
+bcachefs (loop0): btree node read error at btree backpointers level 0/0
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 3b468546fb27822d written 24 min_key POS_MIN durability: 1 ptr: 0:36:0 gen 0
+  loop0 node offset 16/24 bset u64s 14: checksum error, type chacha20_poly1305_128: got a67d0bb2ddad47adce7ef65cfcb4dbe2 should be 6399ef4aeb6d8a4369c39b0b9ed27362
+  flagging btree backpointers lost data
+  running recovery pass check_btree_backpointers (15), currently at recovery_pass_empty (0)
+  ret fsck_errors_not_fixed
+bcachefs (loop0): error reading btree root btree=backpointers level=0: btree_node_read_error, fixing
+bcachefs (loop0): scan_for_btree_nodes...
+bcachefs (loop0): btree node scan found 7 nodes after overwrites
+ done
+bcachefs (loop0): check_topology...
+bcachefs (loop0): btree root inodes unreadable, must recover from scan
+bcachefs (loop0): bch2_get_scanned_nodes(): recovery btree=inodes level=0 POS_MIN - SPOS_MAX
+bcachefs (loop0): bch2_get_scanned_nodes(): recovering u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 2a20405ac3f40602 written 24 min_key POS_MIN durability: 1 ptr: 0:38:0 gen 0
+bcachefs (loop0): empty interior btree node at btree=inodes level=1
+  u64s 5 type btree_ptr SPOS_MAX len 0 ver 0, fixing
+bcachefs (loop0): empty btree root inodes
+bcachefs (loop0): btree root dirents unreadable, must recover from scan
+bcachefs (loop0): bch2_get_scanned_nodes(): recovery btree=dirents level=0 POS_MIN - SPOS_MAX
+bcachefs (loop0): bch2_get_scanned_nodes(): recovering u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 267fcf747c875937 written 24 min_key POS_MIN durability: 1 ptr: 0:41:0 gen 0
+bcachefs (loop0): empty interior btree node at btree=dirents level=1
+  u64s 5 type btree_ptr SPOS_MAX len 0 ver 0, fixing
+bcachefs (loop0): empty btree root dirents
+bcachefs (loop0): btree root xattrs unreadable, must recover from scan
+bcachefs (loop0): bch2_get_scanned_nodes(): recovery btree=xattrs level=0 POS_MIN - SPOS_MAX
+bcachefs (loop0): bch2_get_scanned_nodes(): recovering u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 1b881868e2a6abe1 written 16 min_key POS_MIN durability: 1 ptr: 0:31:0 gen 0
+bcachefs (loop0): empty interior btree node at btree=xattrs level=1
+  u64s 5 type btree_ptr SPOS_MAX len 0 ver 0, fixing
+bcachefs (loop0): empty btree root xattrs
+ done
+bcachefs (loop0): scan_for_btree_nodes... done
+bcachefs (loop0): accounting_read... done
+bcachefs (loop0): alloc_read... done
+bcachefs (loop0): snapshots_read... done
+bcachefs (loop0): Fixed errors, running fsck a second time to verify fs is clean
+bcachefs (loop0): done starting filesystem
+bcachefs (loop0): missing subvolume 1
+bcachefs (loop0): bch2_fs_get_tree(): error mounting: error getting root inode ENOENT_bkey_type_mismatch
+bcachefs (loop0): shutting down
+bcachefs (loop0): shutdown complete
+bcachefs: bch2_fs_get_tree() error: ENOENT_bkey_type_mismatch
 
 
 ---
@@ -136,6 +198,10 @@ https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
 If the report is already addressed, let syzbot know by replying with:
 #syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
 If you want to overwrite report's subsystems, reply with:
 #syz set subsystems: new-subsystem
