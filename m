@@ -1,206 +1,414 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998A03BB48
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F48220A5E1;
+	Fri, 13 Jun 2025 16:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749831895; cv=none; b=n0+p6Y7Il/ifHZBZ2Qalue9UwHMBAScuq++F4HSIpnwaGYqf9298XquB0wjSN/VKjsEPvuq0WJqZNsTbAPKlPzohCdjIIgXKCRJGTd3YangvPS2wJ6LVJw5x/jJLMwcirhtimDXU3m7SXgrtuR2Sg9CCZo+iqp7q6pwGoGck2ss=
+	t=1749831925; cv=none; b=DPIWeid3Wc0m01Mhfic6cNPBJPkrgaDrdoTgcW3JNgjWBv7uSlTcsxRHuzuYGfscvHgFYgEevrXpsT7mgivhWhAHqKmwvPmZx35MlwO/Bs5UT8NvNUEivq/OAZiszk5ac/gmEaulf6JgmWr2WLC28bgW5KZNpIrYTmypeeGbC2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749831895; c=relaxed/simple;
-	bh=ezAPkeMmfcqGy1OO+aJ5oa0dXrm8ejKbGu1v5Dg5Cqk=;
+	s=arc-20240116; t=1749831925; c=relaxed/simple;
+	bh=BM2FgpTzaD2zd78I4ZKBdnv9f+Oc3qCLdtrCliUCFYs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RIU5LvvUqIxC7tlUC2xTz9O7ykSwoRoAKMpfE1ncnqT+Utki6T6+Jbvee5O+q9fGqPzR7HhFVGk/ymDbLIHRP1+1SYQsOL3lpww0s5O8tlO4X5FyFoezVjRgqOrXcRkMRDCGMc0ZTGE1bwnk2GDjQ5CTuazbdeJfIfwZH4Ry4y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KbP3WCl0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=n3Z4UK0zifQXmd9rOMClYjOxmeVesA/J1NsKmxkxpE73i/hMD0+EQmosjiachCxUvw6ki40vOEyWABvY/O8Nx3aBmGV4Xj14Cnv0YWFA+xrj3Oy+xGikNiw3Rk9isvMTe1VfUc+uW7n1VMLQBxoqsRLvSPH1Rd0ZxqEKvKYxfs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XA4G0HxW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KbP3WCl0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749831892;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M6UPs3wZZzH8Vr1Vmqrw6Xud3sdfgHi+vy7XvS9r/Jo=;
-	b=KbP3WCl02qpicGvfxzdqnFSb33QNf35cCteVkipvi4J2KVoYS3rs7isZcVklLR21jfkhUd
-	jaaoLYNZoE2xbdZj+RESMUXTtS8zitareKv2K9KVR72mdFC9AX+JDpPb54/sA+HlFAhqS+
-	yQl5+yZHhynvdM1FmI0okXQsdK0S17U=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-354-HTkBLpbcOLC_JPZi22giLQ-1; Fri, 13 Jun 2025 12:24:49 -0400
-X-MC-Unique: HTkBLpbcOLC_JPZi22giLQ-1
-X-Mimecast-MFC-AGG-ID: HTkBLpbcOLC_JPZi22giLQ_1749831889
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a42c569a9aso54257821cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:24:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749831889; x=1750436689;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M6UPs3wZZzH8Vr1Vmqrw6Xud3sdfgHi+vy7XvS9r/Jo=;
-        b=ZGiiZsTgnjPCnMKlRWxIob4Tcl1lB/Hs/a1BSHE5kqW/6QWv91wBhuaYYQDvP8ROqi
-         S1bC+9RGwyVd5lVfYBFVZykiMFcowtPiIN9YzDhfJQWD1qjSdb5pjdk0AYjLV5oi0Oo7
-         kiqPsRqh2FG00jgBFEUYT26LuywT2bgzttUTwXMjPjn0SCMCm3wxpE7AvmWRulaFnuXI
-         Ulo4CW4nM4gsArkB7rf2pntlMWJE4fY4XGtUzqiGYjyupLDdxbBeAwiiYZEfFDiAOVES
-         nCoFlhReyZkYjdrSSXJ2atMkWzP0z8U0MvA06seBOUWJzLhEjKYEgRVXwHUyRIof3apW
-         2Wkg==
-X-Gm-Message-State: AOJu0YyOtXSVYKA4RXmJgLJEg1iJZR1pbwXoFAR+guMjGaTajhCM2Qfw
-	0224iKCBA4cEuxM7BCFNLVLaTTa+fH4QwRkP65Sp3W85NFFk37gFZG8Xcrc2+ARG7a0iXKcMTNk
-	bWffdivxTNqrFKx1vvG2wXXSxHTBtjUuK0avBalSo1Jwlrw+DlrB+7IUmYOtM3eeT9g==
-X-Gm-Gg: ASbGncvnfnU43Z0r7e/HXdfWGh20JPXB84yCbsTUET4RQuWxRM8o68EuS3JMOUIf+Xh
-	AoRf9zyNTXKYaCY/p3qIkaoxr/kjd9QDuSd0dH2vUqd6PajFUtp8IvM34PRXX2hpq3BNaPs5p/D
-	179U67aTYptaizfEZmqlhulWZPB+qFjwQG5vpaPpfHL5y4ePp9gEIkCsMkr2Vg47sU/QURUvYFW
-	KL2KxKA+Hpq+UTixlmtY4is3fW7VJFVwXECdqMw0Gh4sRaDOqvcB/DXuJD3zFU5NEBDGb7vRBVQ
-	0m9uHmB2KCvxlQ==
-X-Received: by 2002:a05:622a:44:b0:4a6:fa1f:46a5 with SMTP id d75a77b69052e-4a73b69e837mr6261681cf.2.1749831888560;
-        Fri, 13 Jun 2025 09:24:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGwE/aMkplM3bTE+98WG9z6ojodJYRohckJBl51t/zS9y9pPDUtOdEYutdKcOPE5vAqv+nUow==
-X-Received: by 2002:a05:622a:44:b0:4a6:fa1f:46a5 with SMTP id d75a77b69052e-4a73b69e837mr6261261cf.2.1749831888182;
-        Fri, 13 Jun 2025 09:24:48 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4cf7desm18773181cf.53.2025.06.13.09.24.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 09:24:47 -0700 (PDT)
-Date: Fri, 13 Jun 2025 12:24:43 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org
-Subject: Re: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
-Message-ID: <aExQy6xMDc9Igm5v@x1.local>
-References: <20250613134111.469884-1-peterx@redhat.com>
- <20250613134111.469884-3-peterx@redhat.com>
- <050B65EF-6A1E-44A8-87D5-152FA9A60641@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XA4G0HxW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E891FC4CEE3;
+	Fri, 13 Jun 2025 16:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749831924;
+	bh=BM2FgpTzaD2zd78I4ZKBdnv9f+Oc3qCLdtrCliUCFYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XA4G0HxWC+kpGJr1471Z48mcpDBki2o5Fks9nWD72NYir3gCQ4lpKKRWB7kV3mQbZ
+	 BN2avrLw1cCppqt+eRCCKaI1LR4/W5aWPXcldBUcfOy5dwmCT1y5SSz7QdgXtyQQAA
+	 74KrNz3VfZSNlH0peEMaQwEMfIff4le1hJ/Fx0EEml8Mn93xwC9tKY804nx+61kHf0
+	 dCr5cKI8I6xUM0X3aHnmAhPbvoetXBgO+nd/f5/rSWAgvbTMbr0Gos++p31fCrDa8N
+	 8WUub7b+9pkQdjgrUauNkHSUZdSOsQQPhob/GcrCjDnHMHC1zrRb8uw0LsK998tcqj
+	 w7lHZs+1StGZA==
+Date: Fri, 13 Jun 2025 19:25:18 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: jane.chu@oracle.com
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Tyler Hicks <code@tyhicks.com>, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Subject: Re: [RFC PATCH 1/1] nvdimm: allow exposing RAM carveouts as NVDIMM
+ DIMM devices
+Message-ID: <aExQ7nSejklEeVn0@kernel.org>
+References: <20250612083153.48624-1-rppt@kernel.org>
+ <20250612083153.48624-2-rppt@kernel.org>
+ <9d75cf8a-42ae-4e61-90e9-6ddd937ddb01@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <050B65EF-6A1E-44A8-87D5-152FA9A60641@nvidia.com>
+In-Reply-To: <9d75cf8a-42ae-4e61-90e9-6ddd937ddb01@oracle.com>
 
-On Fri, Jun 13, 2025 at 11:13:50AM -0400, Zi Yan wrote:
-> On 13 Jun 2025, at 9:41, Peter Xu wrote:
+On Thu, Jun 12, 2025 at 02:12:42PM -0700, jane.chu@oracle.com wrote:
 > 
-> > Only mips and loongarch implemented this API, however what it does was
-> > checking against stack overflow for either len or addr.  That's already
-> > done in arch's arch_get_unmapped_area*() functions, hence not needed.
-> >
-> > It means the whole API is pretty much obsolete at least now, remove it
-> > completely.
-> >
-> > Cc: Huacai Chen <chenhuacai@kernel.org>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Muchun Song <muchun.song@linux.dev>
-> > Cc: Oscar Salvador <osalvador@suse.de>
-> > Cc: loongarch@lists.linux.dev
-> > Cc: linux-mips@vger.kernel.org
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> On 6/12/2025 1:31 AM, Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > There are use cases, for example virtual machine hosts, that create
+> > "persistent" memory regions using memmap= option on x86 or dummy
+> > pmem-region device tree nodes on DT based systems.
+> > 
+> > Both these options are inflexible because they create static regions and
+> > the layout of the "persistent" memory cannot be adjusted without reboot.
+> > 
+> > Add a ramdax driver that allows creation of DIMM devices on top of
+> > E820_TYPE_PRAM regions and devicetree pmem-region nodes.
+> > 
+> > The DIMMs support label space management on the "device" and provide a
+> > flexible way to access RAM using fsdax and devdax.
+> 
+> Just curious, how does the new driver work with Michal Clapinski's recent
+> patch that adds
+> "nd_e820.pmem=ss[KMG],nn[KMG][,mode=fsdax/devdax,align=aa[KMG]]" kernel
+> parameter ?
+
+The new driver and nd_e820 are mutually exclusive. 
+ 
+> thanks,
+> -jane
+> 
+> > 
+> > Signed-off-by: Mike Rapoport (Mircosoft) <rppt@kernel.org>
 > > ---
-> >  arch/loongarch/include/asm/hugetlb.h | 14 --------------
-> >  arch/mips/include/asm/hugetlb.h      | 14 --------------
-> >  fs/hugetlbfs/inode.c                 |  8 ++------
-> >  include/asm-generic/hugetlb.h        |  8 --------
-> >  include/linux/hugetlb.h              |  6 ------
-> >  5 files changed, 2 insertions(+), 48 deletions(-)
-> >
-> > diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
-> > index 4dc4b3e04225..ab68b594f889 100644
-> > --- a/arch/loongarch/include/asm/hugetlb.h
-> > +++ b/arch/loongarch/include/asm/hugetlb.h
-> > @@ -10,20 +10,6 @@
-> >
-> >  uint64_t pmd_to_entrylo(unsigned long pmd_val);
-> >
-> > -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> > -static inline int prepare_hugepage_range(struct file *file,
-> > -					 unsigned long addr,
-> > -					 unsigned long len)
-> > -{
-> > -	unsigned long task_size = STACK_TOP;
-> > -
-> > -	if (len > task_size)
-> > -		return -ENOMEM;
-> > -	if (task_size - len < addr)
-> > -		return -EINVAL;
-> > -	return 0;
-> > -}
-> > -
-> >  #define __HAVE_ARCH_HUGE_PTE_CLEAR
-> >  static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
-> >  				  pte_t *ptep, unsigned long sz)
-> > diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
-> > index fbc71ddcf0f6..8c460ce01ffe 100644
-> > --- a/arch/mips/include/asm/hugetlb.h
-> > +++ b/arch/mips/include/asm/hugetlb.h
-> > @@ -11,20 +11,6 @@
-> >
-> >  #include <asm/page.h>
-> >
-> > -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> > -static inline int prepare_hugepage_range(struct file *file,
-> > -					 unsigned long addr,
-> > -					 unsigned long len)
-> > -{
-> > -	unsigned long task_size = STACK_TOP;
-> > -
-> > -	if (len > task_size)
-> > -		return -ENOMEM;
+> >   drivers/nvdimm/Kconfig  |  15 +++
+> >   drivers/nvdimm/Makefile |   1 +
+> >   drivers/nvdimm/ramdax.c | 279 ++++++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 295 insertions(+)
+> >   create mode 100644 drivers/nvdimm/ramdax.c
+> > 
+> > diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
+> > index fde3e17c836c..7aae74a29f10 100644
+> > --- a/drivers/nvdimm/Kconfig
+> > +++ b/drivers/nvdimm/Kconfig
+> > @@ -97,6 +97,21 @@ config OF_PMEM
+> >   	  Select Y if unsure.
+> > +config RAMDAX
+> > +	tristate "Support persistent memory interfaces on RAM carveouts"
+> > +	depends on OF || (X86 && X86_PMEM_LEGACY=n)
+> > +	select X86_PMEM_LEGACY_DEVICE
+> > +	default LIBNVDIMM
+> > +	help
+> > +	  Allows creation of DAX devices on RAM carveouts.
+> > +
+> > +	  Memory ranges that are manually specified by the
+> > +	  'memmap=nn[KMG]!ss[KMG]' kernel command line or defined by dummy
+> > +	  pmem-region device tree nodes would be managed by this driver as DIMM
+> > +	  devices with support for dynamic layout of namespaces.
+> > +
+> > +	  Select N if unsure.
+> > +
+> >   config NVDIMM_KEYS
+> >   	def_bool y
+> >   	depends on ENCRYPTED_KEYS
+> > diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
+> > index ba0296dca9db..8c268814936c 100644
+> > --- a/drivers/nvdimm/Makefile
+> > +++ b/drivers/nvdimm/Makefile
+> > @@ -5,6 +5,7 @@ obj-$(CONFIG_ND_BTT) += nd_btt.o
+> >   obj-$(CONFIG_X86_PMEM_LEGACY) += nd_e820.o
+> >   obj-$(CONFIG_OF_PMEM) += of_pmem.o
+> >   obj-$(CONFIG_VIRTIO_PMEM) += virtio_pmem.o nd_virtio.o
+> > +obj-$(CONFIG_RAMDAX) += ramdax.o
+> >   nd_pmem-y := pmem.o
+> > diff --git a/drivers/nvdimm/ramdax.c b/drivers/nvdimm/ramdax.c
+> > new file mode 100644
+> > index 000000000000..67b0a240c0ae
+> > --- /dev/null
+> > +++ b/drivers/nvdimm/ramdax.c
+> > @@ -0,0 +1,279 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (c) 2015, Mike Rapoport, Microsoft
+> > + *
+> > + * Based on e820 pmem driver:
+> > + * Copyright (c) 2015, Christoph Hellwig.
+> > + * Copyright (c) 2015, Intel Corporation.
+> > + */
+> > +#include <linux/platform_device.h>
+> > +#include <linux/memory_hotplug.h>
+> > +#include <linux/libnvdimm.h>
+> > +#include <linux/module.h>
+> > +#include <linux/numa.h>
+> > +#include <linux/io.h>
+> > +#include <linux/of.h>
+> > +
+> > +#include <uapi/linux/ndctl.h>
+> > +
+> > +#define LABEL_AREA_SIZE	SZ_128K
+> > +
+> > +struct ramdax_dimm {
+> > +	struct nvdimm *nvdimm;
+> > +	void *label_area;
+> > +};
+> > +
+> > +static void ramdax_remove(struct platform_device *pdev)
+> > +{
+> > +	struct nvdimm_bus *nvdimm_bus = platform_get_drvdata(pdev);
+> > +
+> > +	/* FIXME: cleanup dimm and region devices */
+> > +
+> > +	nvdimm_bus_unregister(nvdimm_bus);
+> > +}
+> > +
+> > +static int ramdax_register_region(struct resource *res,
+> > +				    struct nvdimm *nvdimm,
+> > +				    struct nvdimm_bus *nvdimm_bus)
+> > +{
+> > +	struct nd_mapping_desc mapping;
+> > +	struct nd_region_desc ndr_desc;
+> > +	struct nd_interleave_set *nd_set;
+> > +	int nid = phys_to_target_node(res->start);
+> > +
+> > +	nd_set = kzalloc(sizeof(*nd_set), GFP_KERNEL);
+> > +	if (!nd_set)
+> > +		return -ENOMEM;
+> > +
+> > +	nd_set->cookie1 = get_random_u64();
+> > +	nd_set->cookie2 = nd_set->cookie1;
+> > +
+> > +	memset(&mapping, 0, sizeof(mapping));
+> > +	mapping.nvdimm = nvdimm;
+> > +	mapping.start = 0;
+> > +	mapping.size = resource_size(res) - LABEL_AREA_SIZE;
+> > +
+> > +	memset(&ndr_desc, 0, sizeof(ndr_desc));
+> > +	ndr_desc.res = res;
+> > +	ndr_desc.numa_node = numa_map_to_online_node(nid);
+> > +	ndr_desc.target_node = nid;
+> > +	ndr_desc.num_mappings = 1;
+> > +	ndr_desc.mapping = &mapping;
+> > +	ndr_desc.nd_set = nd_set;
+> > +
+> > +	if (!nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc))
+> > +		goto err_free_nd_set;
+> > +
+> > +	return 0;
+> > +
+> > +err_free_nd_set:
+> > +	kfree(nd_set);
+> > +	return -ENXIO;
+> > +}
+> > +
+> > +static int ramdax_register_dimm(struct resource *res, void *data)
+> > +{
+> > +	resource_size_t start = res->start;
+> > +	resource_size_t size = resource_size(res);
+> > +	unsigned long flags = 0, cmd_mask = 0;
+> > +	struct nvdimm_bus *nvdimm_bus = data;
+> > +	struct ramdax_dimm *dimm;
+> > +	int err;
+> > +
+> > +	dimm = kzalloc(sizeof(*dimm), GFP_KERNEL);
+> > +	if (!dimm)
+> > +		return -ENOMEM;
+> > +
+> > +	dimm->label_area = memremap(start + size - LABEL_AREA_SIZE,
+> > +				    LABEL_AREA_SIZE, MEMREMAP_WB);
+> > +	if (!dimm->label_area)
+> > +		goto err_free_dimm;
+> > +
+> > +	set_bit(NDD_LABELING, &flags);
+> > +	set_bit(NDD_REGISTER_SYNC, &flags);
+> > +	set_bit(ND_CMD_GET_CONFIG_SIZE, &cmd_mask);
+> > +	set_bit(ND_CMD_GET_CONFIG_DATA, &cmd_mask);
+> > +	set_bit(ND_CMD_SET_CONFIG_DATA, &cmd_mask);
+> > +	dimm->nvdimm = nvdimm_create(nvdimm_bus, dimm,
+> > +				     /* dimm_attribute_groups */ NULL,
+> > +				     flags, cmd_mask, 0, NULL);
+> > +	if (!dimm->nvdimm) {
+> > +		err = -ENOMEM;
+> > +		goto err_unmap_label;
+> > +	}
+> > +
+> > +	err = ramdax_register_region(res, dimm->nvdimm, nvdimm_bus);
+> > +	if (err)
+> > +		goto err_remove_nvdimm;
+> > +
+> > +	return 0;
+> > +
+> > +err_remove_nvdimm:
+> > +	nvdimm_delete(dimm->nvdimm);
+> > +err_unmap_label:
+> > +	memunmap(dimm->label_area);
+> > +err_free_dimm:
+> > +	kfree(dimm);
+> > +	return err;
+> > +}
+> > +
+> > +static int ramdax_get_config_size(struct nvdimm *nvdimm, int buf_len,
+> > +				    struct nd_cmd_get_config_size *cmd)
+> > +{
+> > +	if (sizeof(*cmd) > buf_len)
+> > +		return -EINVAL;
+> > +
+> > +	*cmd = (struct nd_cmd_get_config_size){
+> > +		.status = 0,
+> > +		.config_size = LABEL_AREA_SIZE,
+> > +		.max_xfer = 8,
+> > +	};
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ramdax_get_config_data(struct nvdimm *nvdimm, int buf_len,
+> > +				    struct nd_cmd_get_config_data_hdr *cmd)
+> > +{
+> > +	struct ramdax_dimm *dimm = nvdimm_provider_data(nvdimm);
+> > +
+> > +	if (sizeof(*cmd) > buf_len)
+> > +		return -EINVAL;
+> > +	if (struct_size(cmd, out_buf, cmd->in_length) > buf_len)
+> > +		return -EINVAL;
+> > +	if (cmd->in_offset + cmd->in_length > LABEL_AREA_SIZE)
+> > +		return -EINVAL;
+> > +
+> > +	memcpy(cmd->out_buf, dimm->label_area + cmd->in_offset, buf_len);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ramdax_set_config_data(struct nvdimm *nvdimm, int buf_len,
+> > +				    struct nd_cmd_set_config_hdr *cmd)
+> > +{
+> > +	struct ramdax_dimm *dimm = nvdimm_provider_data(nvdimm);
+> > +
+> > +	if (sizeof(*cmd) > buf_len)
+> > +		return -EINVAL;
+> > +	if (struct_size(cmd, in_buf, cmd->in_length) > buf_len)
+> > +		return -EINVAL;
+> > +	if (cmd->in_offset + cmd->in_length > LABEL_AREA_SIZE)
+> > +		return -EINVAL;
+> > +
+> > +	memcpy(dimm->label_area + cmd->in_offset, cmd->in_buf, buf_len);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ramdax_nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd,
+> > +			       void *buf, unsigned int buf_len)
+> > +{
+> > +	unsigned long cmd_mask = nvdimm_cmd_mask(nvdimm);
+> > +
+> > +	if (!test_bit(cmd, &cmd_mask))
+> > +		return -ENOTTY;
+> > +
+> > +	switch (cmd) {
+> > +	case ND_CMD_GET_CONFIG_SIZE:
+> > +		return ramdax_get_config_size(nvdimm, buf_len, buf);
+> > +	case ND_CMD_GET_CONFIG_DATA:
+> > +		return ramdax_get_config_data(nvdimm, buf_len, buf);
+> > +	case ND_CMD_SET_CONFIG_DATA:
+> > +		return ramdax_set_config_data(nvdimm, buf_len, buf);
+> > +	default:
+> > +		return -ENOTTY;
+> > +	}
+> > +}
+> > +
+> > +static int ramdax_ctl(struct nvdimm_bus_descriptor *nd_desc,
+> > +			 struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+> > +			 unsigned int buf_len, int *cmd_rc)
+> > +{
+> > +	/*
+> > +	 * No firmware response to translate, let the transport error
+> > +	 * code take precedence.
+> > +	 */
+> > +	*cmd_rc = 0;
+> > +
+> > +	if (!nvdimm)
+> > +		return -ENOTTY;
+> > +	return ramdax_nvdimm_ctl(nvdimm, cmd, buf, buf_len);
+> > +}
+> > +
+> > +static int ramdax_probe_of(struct platform_device *pdev,
+> > +			     struct nvdimm_bus *bus, struct device_node *np)
+> > +{
+> > +	int err;
+> > +
+> > +	for (int i = 0; i < pdev->num_resources; i++) {
+> > +		err = ramdax_register_dimm(&pdev->resource[i], bus);
+> > +		if (err)
+> > +			goto err_unregister;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err_unregister:
+> > +	/*
+> > +	 * FIXME: should we unregister the dimms that were registered
+> > +	 * successfully
+> > +	 */
+> > +	return err;
+> > +}
+> > +
+> > +static int ramdax_probe(struct platform_device *pdev)
+> > +{
+> > +	static struct nvdimm_bus_descriptor nd_desc;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct nvdimm_bus *nvdimm_bus;
+> > +	struct device_node *np;
+> > +	int rc = -ENXIO;
+> > +
+> > +	nd_desc.provider_name = "ramdax";
+> > +	nd_desc.module = THIS_MODULE;
+> > +	nd_desc.ndctl = ramdax_ctl;
+> > +	nvdimm_bus = nvdimm_bus_register(dev, &nd_desc);
+> > +	if (!nvdimm_bus)
+> > +		goto err;
+> > +
+> > +	np = dev_of_node(&pdev->dev);
+> > +	if (np)
+> > +		rc = ramdax_probe_of(pdev, nvdimm_bus, np);
+> > +	else
+> > +		rc = walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY_LEGACY,
+> > +					 IORESOURCE_MEM, 0, -1, nvdimm_bus,
+> > +					 ramdax_register_dimm);
+> > +	if (rc)
+> > +		goto err;
+> > +
+> > +	platform_set_drvdata(pdev, nvdimm_bus);
+> > +
+> > +	return 0;
+> > +err:
+> > +	nvdimm_bus_unregister(nvdimm_bus);
+> > +	return rc;
+> > +}
+> > +
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id ramdax_of_matches[] = {
+> > +	{ .compatible = "pmem-region", },
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ramdax_of_matches);
+> > +#endif
+> > +
+> > +static struct platform_driver ramdax_driver = {
+> > +	.probe = ramdax_probe,
+> > +	.remove = ramdax_remove,
+> > +	.driver = {
+> > +		.name = "e820_pmem",
+> > +		.of_match_table = of_match_ptr(ramdax_of_matches),
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(ramdax_driver);
+> > +
+> > +MODULE_DESCRIPTION("NVDIMM support for e820 type-12 memory and OF pmem-region");
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_AUTHOR("Microsoft Corporation");
 > 
-> arch_get_unmapped_area_topdown() has this check.
-> 
-> > -	if (task_size - len < addr)
-> > -		return -EINVAL;
-> 
-> For this one, arch_get_unmapped_area_topdown() instead will try to
-> provide a different addr if the check fails.
-> 
-> So this patch changes the original code behavior, right?
-
-It almost shouldn't change.  Note that prepare_hugepage_range() is only
-used for MAP_FIXED before this patch:
-
-hugetlb_get_unmapped_area():
-        if (flags & MAP_FIXED) {
-                if (addr & ~huge_page_mask(h))
-                        return -EINVAL;
-                if (prepare_hugepage_range(file, addr, len))
-                        return -EINVAL;
-        }
-
-Then for MAP_FIXED, on MIPS:
-
-arch_get_unmapped_area_common():
-        ...
-	if (flags & MAP_FIXED) {
-		/* Even MAP_FIXED mappings must reside within TASK_SIZE */
-		if (TASK_SIZE - len < addr)
-			return -EINVAL;
-                ...
-        }
-
-But if we want to be super accurate, it's indeed different, in that the old
-hugetlb code was checking stack top with STACK_TOP, which is
-mips_stack_top() for MIPS: it's a value that might be slightly less than
-TASK_SIZE..
-
-So strictly speaking, there's indeed a trivial difference on the oddity of
-defining stack top, but my guess is nothing will be affected.  I can add
-some explanation into the commit message in that case.
-
-Thanks,
 
 -- 
-Peter Xu
-
+Sincerely yours,
+Mike.
