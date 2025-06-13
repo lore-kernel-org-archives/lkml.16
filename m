@@ -1,233 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB10F18DB2A;
-	Fri, 13 Jun 2025 13:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43F1111BF;
+	Fri, 13 Jun 2025 13:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749821958; cv=none; b=YTzzCRSFVimKMdjpnoYvbQ7sQLp8MuyqP1j2zVJFgau531DnoNyBhwsS0sA6ZFnUdMIvzF3lVh6QU0D9Q7TSZzPuEuJxHSPn31ITYFVH1Hb26lQIH0KL/N0KB+DJyQ4iRR7Xs27MeXmFNuQJ0l58WI6lQZu5Ia13Qd2xKhW5PJY=
+	t=1749822050; cv=none; b=Z1+7TtycwgbNtAC7hKdrbpOIv2HiJR2PKHGjy4ZyBTCHvh6aZaGfDAIYNBZ+b/L5LsHh7cBUpP0N0yqJD6EbiDSOFvGfPzMLs2PgsODD6BSi2xjeTXokWgrIjXAclSUw3xXxojFuuZjCK5LwkRh0KXgDUcym1rP0KVzb41jKaH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749821958; c=relaxed/simple;
-	bh=TH0hgxyh5i3gv/6kqXf5Rz6s4iXGUSUXb14mkxEA5pc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y125S2HhzFwYDb3cWzoNkE1NM5pxAJWZGGqlt96mvgmGGz2mtHjXmv+kec8xHHOeM8h1lqFdgClZOLqm17EJA3RcOU8wCSRouiELJpP9azbBjm7rCx9tQ85gAoUrdgQZ488mxxeO9ISPH9thDIpDm7WzexvY/YSD6bRcxgBpxyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgFY64J2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749822050; c=relaxed/simple;
+	bh=fLM1J7jVqqiZf/ld7d1JFGfRWVz+teNjK6y084/tbPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BNSV5vms5Kwbtlbhq6bjk/VgU1NkfplM+jeg7FEJImv0lUpQmLatZyS3RynIE0hx/xHMs3qNFmJpvpokQRZt1VXVajgeDoA9i2xAFrpmxqg8fFqh0ZjlCh9Skx7HoR3sbRpTS4lO2uAd1Ou9KcCvqx/7wq3BiSjuC+cANMmGIEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JqRVk66n; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgFY64J2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 90679C4CEEF;
-	Fri, 13 Jun 2025 13:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749821957;
-	bh=TH0hgxyh5i3gv/6kqXf5Rz6s4iXGUSUXb14mkxEA5pc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=SgFY64J2G7OvEznEUgDW5TKPZBLxZxJIOtNPq38iXO+cYayvQvhUCz1VqkicWLscZ
-	 zltE3AgMrlyMGGjTpMpInqpTcK9VBVUOxsfLN4JI/t9m2QxGeQKZNZyBo5q+/38ovF
-	 M6mpxDTc2xNSMIJIijdgQchI2rvC8Oh5rcy/dOkhTG0mlj6cacJfmLzYYxFrlh+45b
-	 lj1f0h/J972WYKwqh8RfZRBM89yzHvHrjkFCJ6SqEY12mActDWAOTu2lvyHRLAIHKf
-	 pJNnRSDD9AkulyRmZdXWA0anIgpwxYlRhxZ1oxuHel1bBmdTWIj7GG+Mds18ojquA5
-	 kttIMW+8YTuAQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8185DC71151;
-	Fri, 13 Jun 2025 13:39:17 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Fri, 13 Jun 2025 15:39:14 +0200
-Subject: [PATCH v3 2/2] arm64: dts: amlogic: Add Ugoos AM3
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqRVk66n"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso17390995e9.2;
+        Fri, 13 Jun 2025 06:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749822047; x=1750426847; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oudxA8JPC06HRjXurKEPIdr/6i2EGFIADSPFZLQo5s0=;
+        b=JqRVk66nenFwP3UFJSa2v0lIxzb6/hIo1iqOQqNzCbibJEMr/GQ7I2ZZ38jAw7Fe8s
+         6LhmobPA7CVC+WrrO9OB1gjz7tsXUCnq3J9ps515xDnl2kFCPVDufBS4T7kCCS6xSLwO
+         IP8CkfzAbgm/vDgtiAsAUM0ewRwXkSN4m0cgmeJklKbHDs2Zw9b5jdoApSiPCYj+apwk
+         v5Fhsi48PlEtIMENJxTcLGNXgW5Lx7qUOc81aKa83cmn88EuZljftGpE0EPITSFPxaYh
+         rHK44fBmJ11GkuP0gBqN8JlQ1LAJREviY+rDCjM9n/i3c8D+UXG8Kfw5jAf+Rwp+0svE
+         EKBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749822047; x=1750426847;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oudxA8JPC06HRjXurKEPIdr/6i2EGFIADSPFZLQo5s0=;
+        b=uH9MzXXREWtXXMYb12JNtv5x5RJJmjUXOI55KGpB2MW2h6Brje5YhzS+NkKXNAKy1j
+         BZcB/N7Y3Yiwjo8cRSWIRdztI/SVpEbhKk+CVp/8mYmFlQnNEvs9vaW8/r4XAGEeRLnR
+         dgycMXfGWzKE44ujr+m6AFBewDEvkTGAZXLcHKtZFw9QZHjUVFgxvkJ3vAWS8R6MSq7o
+         zseuIxSmyu5ZOBokwCrRjQU7W52u8/6b89E85DQPNZKY2mdByc/OyRJ8KmVDDK/Rds0T
+         kzHbVCPtMa5RB12Ua+e4n/pouGvLcznPTpPDRsaSMuhYyZEBFtx2gwHsoPLeSUaqVM8N
+         MNQw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8Th2+3U+a8mUPgRhSoViDu3bgqmJeuW04EQ6iok8ZSJAdim+3XEhfa0PLcs76GFxjGF8z44HVTKsrr8AEFKc=@vger.kernel.org, AJvYcCXCEbqv2XD4Qe0SLUPoO5zbz7zobkMSx5sWQ85oJuM68fsI6vCpvwdUwYS9aBmbk1hn9eAVER1KX8wE@vger.kernel.org, AJvYcCXfeBZ9Cxws57v8dfPEW94gUFOJIeiC6mFGK78ntU9E5ZxSBZIAJCob0A/iu8NsFkD8qf/m8DpqyEaU/Kc5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW1WvD6Cks/+uJgZwlTZ8Hb5P79ycPDQiT1v5yX6k/ly6rVEmD
+	+JYsFORkenmFJHRxyiJkH5LIRItQ6MMyvJzSvg54X0kqNL4T3LOc8b44
+X-Gm-Gg: ASbGncs1rVaRP0NNeLvEhH3cYIcPO4H+N9Ick/E0aPfPQSPrSbiKAyZE5/Fx99RrUdf
+	pje+Sm0EbFORPt6ES+H/hvTG9a+MykO4r6Jx7dPm9wFYyESwOuTjywMMGAlzIvNEVCzhaNtfDTR
+	U5xX1f/4q+D3wmbuwQLU6iUZkTC/irVEQZMIj/6bzgVXugspqglAMBnOkE3egtMGthuXdPxPlB3
+	8sprvqY7CLdxMdgL1waVlOosHpJqXqqd8VilOAgyEhFO3tYDMo4aWduf5LmjpuFBglwl8RjQeuI
+	a+akTIYlvS9pbfsMxiPOIcAWYBfcoE7hz+w3x0I6EQFTRnLBWvXRROMcGney8kPdCh1W0bV+4xB
+	iI+EefVSMyokKt8PWPl87yH1jBxsdk8Hn+XxyXppqKFsiuNc=
+X-Google-Smtp-Source: AGHT+IGSQQDsmwIh4IRTyDRinr32zbDXqbTyjcQINJTodAgQ41yIYuwm/iuMJcEHUctW6KpfLD9UWA==
+X-Received: by 2002:a05:600c:4f53:b0:43d:9f2:6274 with SMTP id 5b1f17b1804b1-45334ad2eb9mr35369995e9.14.1749822046739;
+        Fri, 13 Jun 2025 06:40:46 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b48564sm2361368f8f.82.2025.06.13.06.40.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 06:40:46 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	rafael@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	lenb@kernel.org,
+	wedsonaf@gmail.com,
+	viresh.kumar@linaro.org,
+	alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: [PATCH v6 1/6] rust: acpi: add `acpi::DeviceId` abstraction
+Date: Fri, 13 Jun 2025 14:38:42 +0100
+Message-ID: <20250613133842.1230254-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
+References: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250613-ugoos-am3-v3-2-f8a43e6bbfdb@posteo.net>
-References: <20250613-ugoos-am3-v3-0-f8a43e6bbfdb@posteo.net>
-In-Reply-To: <20250613-ugoos-am3-v3-0-f8a43e6bbfdb@posteo.net>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749821956; l=4767;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=eeJa1pnKTo6xuMFOpShBZIU9ngPVs1Np32jvFt+1klM=;
- b=YFPM/fT/9mGlgV5aDi8wMRvX9l0IZXutthl2o4gOiuo7TL+9G+quyg78GmlyMbevHzbHknBk1
- ElPxI6fEwMTC3drHI4+kccHZMJ7ombo7DLCIs4NFBHtTZYdSe6J3hrO
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+`acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
 
-The Ugoos AM3 is a small set-top box based on the Amlogic S912 SoC,
-with a board design that is very close to the Q20x development boards.
-The MMC max-frequency properties are copied from the downstream device
-tree.
+This is used by subsequent patches, in particular the i2c driver
+abstractions, to create ACPI device ID tables.
 
-  https://ugoos.com/ugoos-am3-16g
-
-The following functionality has been tested and is known to work:
- - debug serial port
- - "update" button inside the case
- - USB host mode, on all three ports
- - HDMI video/audio output
- - eMMC, MicroSD, and SDIO WLAN
- - S/PDIF audio output
- - Ethernet
- - Infrared remote control input
-
-The following functionality doesn't seem to work:
- - USB role switching and device mode on the "OTG" port
- - case LED
-
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
 ---
+ MAINTAINERS         |  1 +
+ rust/kernel/acpi.rs | 61 +++++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs  |  1 +
+ 3 files changed, 63 insertions(+)
+ create mode 100644 rust/kernel/acpi.rs
 
-V3:
-- Add Martin's and Neil's R-b tags
-
-V2:
-- Fix vendor name in patch subject
-- Remove incorrect override of SDIO pwrseq reset line
----
- arch/arm64/boot/dts/amlogic/Makefile               |  1 +
- .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  2 +-
- .../arm64/boot/dts/amlogic/meson-gxm-ugoos-am3.dts | 91 ++++++++++++++++++++++
- 3 files changed, 93 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 15e7901c126876964b858d2afaaaa5a5c86f1c22..619dce79b0204d286d1f45443fd681c9b58e7f2d 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -80,6 +80,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-libretech-pc.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxm-ugoos-am3.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-wetek-core2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-s4-s805x2-aq222.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-index 6da1316d97c60c8445477375bddb161fc0c6a7f4..b4f88ed6273b8f0db956d163451ea6855c45fe48 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-@@ -97,7 +97,7 @@ sdio_pwrseq: sdio-pwrseq {
- 		clock-names = "ext_clock";
- 	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a92290fffa16..6c809ea30e6a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -302,6 +302,7 @@ F:	include/linux/acpi.h
+ F:	include/linux/fwnode.h
+ F:	include/linux/fw_table.h
+ F:	lib/fw_table.c
++F:	rust/kernel/acpi.rs
+ F:	tools/power/acpi/
  
--	cvbs-connector {
-+	cvbs_connector: cvbs-connector {
- 		compatible = "composite-video-connector";
- 
- 		port {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-ugoos-am3.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-ugoos-am3.dts
+ ACPI APEI
+diff --git a/rust/kernel/acpi.rs b/rust/kernel/acpi.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..ba871f3f53bb99b47b325bae228b59b722c5123b
+index 000000000000..f9a98dc4eb8a
 --- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-ugoos-am3.dts
-@@ -0,0 +1,91 @@
++++ b/rust/kernel/acpi.rs
+@@ -0,0 +1,61 @@
 +// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 J. Neuschäfer <j.ne@posteo.net>
-+ *
-+ * Debug UART (3.3V, 115200 baud) at the corner of the board:
-+ *   (4) (3) (2) [1]
-+ *   Vcc RXD TXD GND
-+ */
 +
-+/dts-v1/;
++//! Advanced Configuration and Power Interface abstractions.
 +
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/amlogic,meson-g12a-gpio-intc.h>
++use crate::{bindings, device_id::RawDeviceId, prelude::*};
 +
-+#include "meson-gxm.dtsi"
-+#include "meson-gx-p23x-q20x.dtsi"
++/// IdTable type for ACPI drivers.
++pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
 +
-+/ {
-+	compatible = "ugoos,am3", "amlogic,s912", "amlogic,meson-gxm";
-+	model = "Ugoos AM3";
++/// An ACPI device id.
++#[repr(transparent)]
++#[derive(Clone, Copy)]
++pub struct DeviceId(bindings::acpi_device_id);
 +
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1710000>;
++// SAFETY:
++// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct acpi_device_id` and does not add
++//   additional invariants, so it's safe to transmute to `RawType`.
++// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
++unsafe impl RawDeviceId for DeviceId {
++    type RawType = bindings::acpi_device_id;
 +
-+		button-function {
-+			label = "Update";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <10000>;
-+		};
-+	};
-+};
++    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::acpi_device_id, driver_data);
 +
-+&cvbs_connector {
-+	/* Not used on this board */
-+	status = "disabled";
-+};
++    fn index(&self) -> usize {
++        self.0.driver_data as _
++    }
++}
 +
-+&ethmac {
-+	pinctrl-0 = <&eth_pins>;
-+	pinctrl-names = "default";
++impl DeviceId {
++    const ACPI_ID_LEN: usize = 16;
 +
-+	/* Select external PHY by default */
-+	phy-handle = <&external_phy>;
++    /// Create a new device id from an ACPI 'id' string.
++    pub const fn new(id: &'static CStr) -> Self {
++        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
++        let src = id.as_bytes_with_nul();
++        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
++        // SAFETY: FFI type is valid to be zero-initialized.
++        let mut acpi: bindings::acpi_device_id = unsafe { core::mem::zeroed() };
++        let mut i = 0;
++        while i < src.len() {
++            acpi.id[i] = src[i];
++            i += 1;
++        }
 +
-+	amlogic,tx-delay-ns = <2>;
++        Self(acpi)
++    }
++}
 +
-+	/* External PHY is in RGMII */
-+	phy-mode = "rgmii";
++/// Create an ACPI `IdTable` with an "alias" for modpost.
++#[macro_export]
++macro_rules! acpi_device_table {
++    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
++        const $table_name: $crate::device_id::IdArray<
++            $crate::acpi::DeviceId,
++            $id_info_type,
++            { $table_data.len() },
++        > = $crate::device_id::IdArray::new($table_data);
 +
-+	status = "okay";
-+};
-+
-+&external_mdio {
-+	external_phy: ethernet-phy@0 {
-+		/* Realtek RTL8211F (0x001cc916) */
-+		reg = <0>;
-+
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <80000>;
-+		reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
-+
-+		interrupt-parent = <&gpio_intc>;
-+		/* MAC_INTR on GPIOZ_15 */
-+		interrupts = <25 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&i2c_B {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c_b_pins>;
-+
-+	rtc: rtc@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+/* WLAN: Atheros 10k (QCA9377) */
-+&sd_emmc_a {
-+	max-frequency = <200000000>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	max-frequency = <100000000>;
-+};
-
++        $crate::module_device_table!("acpi", $module_table_name, $table_name);
++    };
++}
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 6b4774b2b1c3..5bbf3627212f 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -51,6 +51,7 @@
+ 
+ pub use ffi;
+ 
++pub mod acpi;
+ pub mod alloc;
+ #[cfg(CONFIG_AUXILIARY_BUS)]
+ pub mod auxiliary;
 -- 
-2.48.0.rc1.219.gb6b6757d772
-
+2.43.0
 
