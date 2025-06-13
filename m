@@ -1,231 +1,315 @@
-Received: from ZR1P278CU001.outbound.protection.outlook.com (mail-switzerlandnorthazon11022075.outbound.protection.outlook.com [40.107.168.75])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06AD23814C;
-	Fri, 13 Jun 2025 22:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.168.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749854244; cv=fail; b=f0xZchZJ1pM3PriRJUj0CA7hC53GZO8okmHWGrlfNyr3vmXBy0ZSDNLleisdJ3yNiK/13oSiYCqIQhtPAWc78vJgoyxJdSbcT03fJNvBU5rYeOtJBO1JVQ2QPPlPxKRCF04muZwxXibPiZvCVkdGuZMUQD6FhBobTznPGbVXExU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749854244; c=relaxed/simple;
-	bh=krNfD5+0FFxWTjiDjKSBgkSztqNBpVbxIW1K4epZsdU=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=l4N9nGJH3CwdI9+pPqFhxVnLmBH9qpnbwLVrlZI93YUVfZnTe54MFaRroQHo/jis81kUcblDqxZ4i/oLUd1wQjJIoxbQGcYzsi3sraw72Wgdykn37c1UTKuI8oHcCp1Ix9fE4pLZo55G+Mr0/byuqEkFI/w9K3ZWGHcWdsNgulA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cern.ch; spf=pass smtp.mailfrom=cern.ch; dkim=pass (1024-bit key) header.d=cern.ch header.i=@cern.ch header.b=FBr4v7bu; dkim=pass (1024-bit key) header.d=cern.ch header.i=@cern.ch header.b=FBr4v7bu; arc=fail smtp.client-ip=40.107.168.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cern.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cern.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AA028135D
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 22:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749854369; cv=none; b=njrzKiiNCFL0vqxXUzqRpM92aXahuUX6cMUI1z9rllLzc/QwUPM4tiF2UmGF86/IqxIZayDSCCyWXrA6AYWZAguMySHi3zeT7/7tZDOBSY1eNSxxCUCFShbOKDf90EOGwjyGdYMUl1zBNtGt/rxWdKtDTB/8eZBdEFoFKKF250k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749854369; c=relaxed/simple;
+	bh=VMwh7u7GSXcQqv+7EQuiAzvaIkdTZQ3lYV24xsoAH5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=i6BE955BWaiszgFDeeKnYdBWA0BbsElWFt12cpbYJp6Ebj/GWxrZqDwRrepmysRgNJud/FBd6XFvFxRN7Cio7XbZssf2A7bLdd7B6PC9E8/UaQzsBL+9WBmpUq7dE6yD7mGfywIC5sgk0HHP92HzV8X50ZKKK4ynhcyLdTgzPNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNMPKsHj; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cern.ch header.i=@cern.ch header.b="FBr4v7bu";
-	dkim=pass (1024-bit key) header.d=cern.ch header.i=@cern.ch header.b="FBr4v7bu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ltAEHNSa6XcFCOr1ghhV5CODdeUmik/stHKC4OE05xmylCaFnqrkucqSYmHq0meastKajA2wYv+GuYPddZ3y5wyWdJl+3YfeJ+h1jK+ypqvWQ6MFEYM4tDHRDtRwnb1ZmxbC9KUIoELMVEmNEWuxh1yZVcKyDNCchKtbIpjI41LZS+qdX5U2HZGRnO2nsbHaEuJK8ddSMjZqY3OXoQhTqD/IELd7vhvauV9XyLoPyay+gWxU8Hw3DTKNj6HHFPEmAF0SXnX61jGCwf/o+cD1sDB2T8mkqQ6uRp9d6kxdVML+DBYVOZzXCBjV4Mx7yEhtFpDy8WN69uYQg77jEhwI+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Z3aNk1xr12pOXy1C12NrwzIgjcvgy11wyH0F3/ujP4=;
- b=cHEahUKg7ZoN9hkbaCnYqSoR1tlJsa3S8jAbxbC2hDUgyAR2WIfxxmT8A1cxHfBamHUNZY02Knq8cJAGMoB6gZy5N157vLlVZqs6DnmDE6WFIjoGS4Plcr0ou9THo9wOMCCkbqWgEf2V1m+hc1WSXIk6saj7SjsE7Zj075A2eks9zPNVxR9Ekk6MxiGQEKVAt+0n+NX0QKaGHuEIu/sq12l/uSK49BD3M434llnMxunLFKKdzym/3Gn/Djia0BqQyMw5OtqGFn0KuOt5b74IQ6oULLUhpHO0301AjYP33O2XlF+yMBQg7OjZKrHlgvZG6DtarhM8XhXYjrbRNOc+kQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 51.103.219.121) smtp.rcpttodomain=davemloft.net smtp.mailfrom=cern.ch;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=cern.ch;
- dkim=pass (signature was verified) header.d=cern.ch; arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.ch; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Z3aNk1xr12pOXy1C12NrwzIgjcvgy11wyH0F3/ujP4=;
- b=FBr4v7bul3wZiV7YMgxjxa3xTbQhrHPCJDpwm8xjwkxazfOYqUJhGpLwIfoGJdF/Q8kgosiymx1oCmC3nOMyJExEpJ4fb+BTmKthEjl/D4fx1IrMizptMS+dEM0paChGwd9WAYPyJUJwaytvP4uK7Et6l0Fh0yBO5k+6ME0r6PY=
-Received: from PR0P264CA0214.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1f::34)
- by GV0P278MB1767.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:70::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.23; Fri, 13 Jun
- 2025 22:37:18 +0000
-Received: from AMS0EPF000001B0.eurprd05.prod.outlook.com
- (2603:10a6:100:1f:cafe::e6) by PR0P264CA0214.outlook.office365.com
- (2603:10a6:100:1f::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Fri,
- 13 Jun 2025 22:37:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 51.103.219.121)
- smtp.mailfrom=cern.ch; dkim=pass (signature was verified)
- header.d=cern.ch;dmarc=pass action=none header.from=cern.ch;
-Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
- 51.103.219.121 as permitted sender) receiver=protection.outlook.com;
- client-ip=51.103.219.121; helo=mx1.crn.activeguard.cloud; pr=C
-Received: from mx1.crn.activeguard.cloud (51.103.219.121) by
- AMS0EPF000001B0.mail.protection.outlook.com (10.167.16.164) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Fri, 13 Jun 2025 22:37:16 +0000
-Authentication-Results-Original: auth.opendkim.xorlab.com;	dkim=pass (1024-bit
- key; unprotected) header.d=cern.ch header.i=@cern.ch header.a=rsa-sha256
- header.s=selector1 header.b=FBr4v7bu
-Received: from GVAP278CU002.outbound.protection.outlook.com (mail-switzerlandwestazlp17010002.outbound.protection.outlook.com [40.93.86.2])
-	by mx1.crn.activeguard.cloud (Postfix) with ESMTPS id 388D7FC37B;
-	Sat, 14 Jun 2025 00:37:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.ch; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Z3aNk1xr12pOXy1C12NrwzIgjcvgy11wyH0F3/ujP4=;
- b=FBr4v7bul3wZiV7YMgxjxa3xTbQhrHPCJDpwm8xjwkxazfOYqUJhGpLwIfoGJdF/Q8kgosiymx1oCmC3nOMyJExEpJ4fb+BTmKthEjl/D4fx1IrMizptMS+dEM0paChGwd9WAYPyJUJwaytvP4uK7Et6l0Fh0yBO5k+6ME0r6PY=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cern.ch;
-Received: from GVAP278MB0470.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:37::7) by
- GV0P278MB1617.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:66::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.26; Fri, 13 Jun 2025 22:37:15 +0000
-Received: from GVAP278MB0470.CHEP278.PROD.OUTLOOK.COM
- ([fe80::a1a4:4bf:9fd5:2598]) by GVAP278MB0470.CHEP278.PROD.OUTLOOK.COM
- ([fe80::a1a4:4bf:9fd5:2598%4]) with mapi id 15.20.8835.026; Fri, 13 Jun 2025
- 22:37:09 +0000
-Message-ID: <25d73457-cfb7-4e65-bb19-a3a826790f32@cern.ch>
-Date: Sat, 14 Jun 2025 00:37:07 +0200
-User-Agent: Mozilla Thunderbird
-Cc: petr.zejdl@cern.ch, "David S. Miller" <davem@davemloft.net>,
- David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ipv4: ipconfig: Support RFC 4361/3315 DHCP client ID
- in hex format
-To: Jakub Kicinski <kuba@kernel.org>
-References: <20250610143504.731114-1-petr.zejdl@cern.ch>
- <20250612191726.2a226cdf@kernel.org>
-Content-Language: en-GB
-From: Petr Zejdl <petr.zejdl@cern.ch>
-In-Reply-To: <20250612191726.2a226cdf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MRXP264CA0037.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:500:14::25) To GVAP278MB0470.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:710:37::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNMPKsHj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749854367; x=1781390367;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=VMwh7u7GSXcQqv+7EQuiAzvaIkdTZQ3lYV24xsoAH5I=;
+  b=dNMPKsHjx39msGZSqZRHwNF5icW7xsGDvl3BTfFGZCAvZeq8r5W7NU95
+   IBMLCkYqNmbz2wth6B8OK8H/ifF2LjmX9j8TXPMQUNF4N3NxtZcXLy7gq
+   2CWxvQ+jvrOJlDg6wjXT4przfe/sJTIP7pwHYrkfnLYzgx448aiE/eUpJ
+   MBeYQnAfw01KNoEqGgay7vcdBIheqFIc7ig4ytdng3JfHo2kbYb2KRaKY
+   wJlN5OIwNUpoPoHBUL0hCOPBuRYNQxutwI1KPrPhDKI5OSpIxZIZiUDpP
+   uICE6W61FB6bePraWQayROqnURUZoV5fl+KlU3fUfdDI1AQqZDgqOcm4f
+   A==;
+X-CSE-ConnectionGUID: eXefORvwSv63MfP8rOxUSw==
+X-CSE-MsgGUID: IU7hEWbWQN2+LUMpGW1S9w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="77471994"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="77471994"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 15:39:27 -0700
+X-CSE-ConnectionGUID: ypMulCcnTfqdcJe/j0GTUw==
+X-CSE-MsgGUID: 6jW9DguNR/GIPh0iHlXQhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="151763247"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 13 Jun 2025 15:39:25 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQD3T-000D3G-13;
+	Fri, 13 Jun 2025 22:39:23 +0000
+Date: Sat, 14 Jun 2025 06:39:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Akshata Jahagirdar <akshata.jahagirdar@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Matt Roper <matthew.d.roper@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>
+Subject: drivers/gpu/drm/xe/xe_migrate.c:304:52: error: result of comparison
+ of constant 274877906944 with expression of type 'resource_size_t' (aka
+ 'unsigned int') is always true
+Message-ID: <202506140651.jm3HRodM-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GVAP278MB0470:EE_|GV0P278MB1617:EE_|AMS0EPF000001B0:EE_|GV0P278MB1767:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8239a936-a66c-40d8-2429-08ddaacad9ad
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?V2E0b3ZKbmZGSTg4bDZpd05OVkw2NEtiUnJLc1ZlRVBnTWVmK3JYWlNYa2tH?=
- =?utf-8?B?cmNqcTdQenp6OFFvMEJHOWZxbzNVc3psdmFPNVk3VEVzeEdRL3JpMUx3ei95?=
- =?utf-8?B?MFFodFY0TnpwMGJPZmtpS1pHOXZGNHd6Q0Nsc05LWVpKYTNwQjQzQk5Jenhq?=
- =?utf-8?B?aE1iQUl6YXNrQXNvM2NQc2hEbFZnNkJMTGtxTGVxZGJrL0tNVHNXNWsrd2lQ?=
- =?utf-8?B?MlpOcW11VTNQTzdSdkxKd3l0QVV5NUVZQU5ld0NZVVVrYWRwSjg1RGZ1QjZv?=
- =?utf-8?B?ZEZDNnllYWdjUzRJNmhUY2VpOW5jelNUWXhxbXNSQ0xqZC9kTlBON3hvUGFZ?=
- =?utf-8?B?YWRZc0ZsdWZGUFJIM3ppdGE5dUNHMUIwT1Y4cktrY0JTbWlVVDBtamE3Qkd6?=
- =?utf-8?B?MmVEdFZaQ0hQdCs2NlQyaVJiK0dVVXY3KzJXRHkvQVRhRmQ2MjQ2U2JlNTRE?=
- =?utf-8?B?VUQzVG12K2l0OUtHejdva2t2Q0ZwRzhIanVOV1JmZkhmSGRsQ1JkMkwrNjBO?=
- =?utf-8?B?UWxtSHhqclVYc3RxMzd1T2o2VEhneFNjQjQ3Mko3eHNsa1BwN3lLeEpDVE4w?=
- =?utf-8?B?WUszRGI4NDN1QlViWkVDSnlsNnRIY1U3RDRoUE9ocXU1VXlyekxFVEsybTJN?=
- =?utf-8?B?ZDFlSkIvMEF0UmZWQXRWNFk1LzlTUzhwUkNEYkNTaEd4RVVMdG8zRnYxMGEz?=
- =?utf-8?B?a0tpOTNqUVRPKzNmL1pnUEhWeml6clhFb3JWajNhWSs5bUhMZUk4eE9UZitj?=
- =?utf-8?B?dWxsU0ZTV0hONzRVN25IcEh5YzFqQjNKSlZRQWZiU3NlSXpweXBFdmpjbUFK?=
- =?utf-8?B?WXA2cjJIejZDcG5VT0JoeSs0TXpoV0FnMWVTOUpHSVRkaEt2bmhJNlZzL09L?=
- =?utf-8?B?RDEwU1RBZ1VKeDQ3Z1NDd3UvNEhVaFliTjdCZDVnV3lZSlRJL0k2TjJmRjlD?=
- =?utf-8?B?NzBnUzljTTQ0aHp1Wk9WeXA3Qk16V3htaS9qOVJCZjdWSWtVU2FLdlA3NEk4?=
- =?utf-8?B?OFVMdWhFMFN5cHFEL3FWVEphYlV5N1VtYmp4c1dIWXBnUXc1Y2RRWDBQaklD?=
- =?utf-8?B?RTdKbEp6RS9oU0tBTlA5MDRJMVIram1rZHF4aXk2bHdCZEpYSmczQWtzZk1r?=
- =?utf-8?B?VnpFTndNbWdqYllSWGZaZjE0OEV0OTY0NXBPa3FjWGJWVzREUENTeUtOV3Q1?=
- =?utf-8?B?bnJBZHl2WHRjZ2JGbFdmU0hZcmRCUC9SWldiYkU1bEhLelI1Tk41RFF3UU1P?=
- =?utf-8?B?OGg0cEhEUGJMejJzdnZ3aXNRM0s1T2lzMlE4TWlsSTJ1dzRTRWdVclZNaVJH?=
- =?utf-8?B?RENzUVhhOC9PVEtjSzJCU1RCZ3BkWW10NVFPMHVaVkF5Mm1XTzdKMDI3Znpm?=
- =?utf-8?B?NFkzemlPbXZtWlRvNWZreFFnRTBBNTdvaHZocnFZaGNFWGp6eWxzODRHRlNz?=
- =?utf-8?B?Rkxnb0tEdHQvd2pzMU1uYjJnbys4elF4N0dBS0xrM1NJbW5sZGhUYTR1YWVq?=
- =?utf-8?B?eGF2MU9kRUdRazR5SHo3MExHU2pQeUF6eDhDVWtDVWNRdVhac3lqdWQzZFVV?=
- =?utf-8?B?a0pkUmlpTnRIYWc5U01CNEo2TFpoNVlsYWdsR0U2c0xmUjJxSUJ4QlRvWkdh?=
- =?utf-8?B?SmZKK2F0Yy9NNGhqSVBJNmptRFV5a0VZNis1VXRHNVFSczN4bFlqZVFTV2d5?=
- =?utf-8?B?enVMR2VSZ2MydlB0cFBTbm9pb0d2OVRtT3pvbFJ5YVJCYXVDdVFvSk13ai9v?=
- =?utf-8?B?UlhEekVPRytxdHFFc0t0NGNwWW5jeTFDazJYdDVNaXNpcmNJeUowREJEeklC?=
- =?utf-8?B?SU5LbFNxOTBwN3F2cXEwMEdCVm81ek4xTGdLM0VwUFB0V0w2cXRmZ0VmcjVw?=
- =?utf-8?B?SGtJSkJ4NUsrY1FKSTBtaitwcEM1dFMyZ01BTWYwSE14d1lIL1hBVjBkWXdh?=
- =?utf-8?Q?Sax3RVBTHLE=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVAP278MB0470.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB1617
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AMS0EPF000001B0.eurprd05.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	543ef5ba-62a0-4839-09eb-08ddaacad4ea
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|36860700013|82310400026|1800799024|376014|35042699022;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SGtRRzd2K1pUVHJSTEVjK2daTzNKU3o2RUs3K3RtSUM4NFJ0ZXEvbStKUm1o?=
- =?utf-8?B?MDgyUmNjMHpjVHZ4MFBHY3lJbEd2d1ZBeEVSMEJxNEdiRkU0YlM0MnBoOCt1?=
- =?utf-8?B?dGZMVUt2WFUzeHpoUUtxVWxVQ1RwYTA4dXFicnFZV0pwL1dmaStoMG5yeXNk?=
- =?utf-8?B?VUhLcy9RcmQyUTU2UFlqT1dDeDJWbXFITHBjOUl5cjNvNnVQK0REaFV5dWxE?=
- =?utf-8?B?aVAyVzFRbTNPc0dpYVh5WnlJL3V4OFd5b09XZ0J5NlNGNTd2U1JacEUvQ05y?=
- =?utf-8?B?UUZEdng5SzVQRUppUmVEV1hRVVFsaUJUK0lzYXNkS2VKRDlsZmFMb2pydnRj?=
- =?utf-8?B?Wk5ObjVnaWlrQTFtL05yRHYrQ1dwMnhOTjVwYm5LV2hxMVNGZXBJN2RsMjll?=
- =?utf-8?B?YUhPUzRwZ0hnK3RBeHF6N1dzVFhrTytxRW9TN1MxNUZFb0UyYjc4d0xJb1Nl?=
- =?utf-8?B?TXB4WkI3UlhoZDY4MlZub3IrbzBFUE1CUHNRb3FVanQ5THltSjhiVmNINlB2?=
- =?utf-8?B?d2tXamEySTB6Sjgwb24vOVVES1hEOGo4WThLek5iUE05SG0yNGFGL3p4YzJj?=
- =?utf-8?B?S05FMC9ySGhsSHJTWUlENEpieHBVWEViTDM1ZHhIbFNNZS9kL0JDRDRrc2h3?=
- =?utf-8?B?dE0wdU9tUGRYSmNtZDVWMDd0aTJEb25jMnZSRW9WNXhINHpaamtISU50TFQv?=
- =?utf-8?B?cGpQNEUyRlBYOGM0UVdndE4rNEh0KzYzSFEzekdtRDFyV1RQNnZjUGRlMy9i?=
- =?utf-8?B?VEppMDR3aHlTUEVlWEZQem4xVHhkWmtsMFhuNWs3U3ZURGhZcjJKWGt3a2hv?=
- =?utf-8?B?czgxcHNqdmpaQytkTlNqM0h0M3FVSXNlaTg4MnZTRFNZLzZqZWZrUzZ0ZEJE?=
- =?utf-8?B?ZHhjU01GVkJBQkI2Ukh5OEx2akh6cUdpbHoxUTUwUGV5V2FkNkNGYU9WV2Js?=
- =?utf-8?B?RllOOHRNbTc5TmN3Ymtyb2htTVB6QnFJMk1HRHZDM1NseWFwRVF4cGNTeGFi?=
- =?utf-8?B?SU1vVUgxVXR1aUY1dklEOGFQamFuMDFUSitWUnJSR3pWTmVyVzZnRkFzSUhY?=
- =?utf-8?B?a2dVT29pbE1mR2xDelMzalQ1enVPQXdOZWgvby80QmZsTE1MNlQ5UndTaGd2?=
- =?utf-8?B?dE85VmkzdEhJNU1xNzR2NFdIbEttdG83aE9hNFNNaWtFemN1bEE4SEVkR2kr?=
- =?utf-8?B?bzV2Ykg0Yzc2bmZhWTJQL0I4S1lBVkZWMjYxdHE5eUlNWFZnc1h2K0xjeTNM?=
- =?utf-8?B?WjVnbnJ1TWhtUklsak0ycnFUMytlS3k0amdhY21WWmFoYUJ5b0lGV3RCZy9O?=
- =?utf-8?B?UkhRbGo3TS9qdXMvTFhxdnU4WEFMRHFDWk9abDdJODliR3UrL2J4NE5YT3ZH?=
- =?utf-8?B?RURGeHpvc0h3TFpzQldLZmZlWGdwLy9hZXJnNGNJNVZoTklDMmhvS2QyK3dl?=
- =?utf-8?B?blU2YzY2Q0lacUxDWUNoQmMrZ1ZFSFU1R2plY0l3NTM1djFpTU5zM0JLQXlW?=
- =?utf-8?B?cGNzaWtpWjFVUnl3c1hRWU5NS2N1M1lxWldxc2IyWWFBMmt2SzlkSnVhVkQ5?=
- =?utf-8?B?ZHNZeVVTNk9UVkV1alhLMllQRVpsMGhOVC8rSTNCdW41ZVJhaTNiSnhBQncx?=
- =?utf-8?B?T3NYbDZqdjJaM1hrZHFydy9lR2pJQ1picklxOGwvNnZjaTREWDdhRHBJZjIw?=
- =?utf-8?B?VWhvUytXNE15NnEyeHVrV3JadmJpQWczU09vb0kyVnpSZHVHbzl2bjBQcExQ?=
- =?utf-8?B?a2NXY0EwNS9zMENkZ0hjenBZbWJxeldoLzJURk45OVpLSFhyZjVUVzBaTnlt?=
- =?utf-8?B?Wkc4NVRvN3JHZGhwa0Mrd2QvWFVSNi8rRHViUjdKQUFmYnlDc0xLY2lONTN4?=
- =?utf-8?B?S0NHVDJLVVFVTk5PQVpHazk3OGhnREoxV1M2czNOK0hkTmRKMUNBKzR0Tk1y?=
- =?utf-8?B?YjBTaG11MFJoRUtZVDVCSDF6WlM5RkhQVlgzQkVTY2cxMnptNlEzOUU1SXJp?=
- =?utf-8?B?THRmZnRRaDFqeXIzQmZEQzN4aTRMOWlQOWUzQWJIRklEaXVpT2RQakc1cHhi?=
- =?utf-8?Q?8eENFx?=
-X-Forefront-Antispam-Report:
-	CIP:51.103.219.121;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mx1.crn.activeguard.cloud;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(36860700013)(82310400026)(1800799024)(376014)(35042699022);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cern.ch
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 22:37:16.7768
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8239a936-a66c-40d8-2429-08ddaacad9ad
-X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[51.103.219.121];Helo=[mx1.crn.activeguard.cloud]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001B0.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB1767
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm sorry, now in the correct format.
+Hi Akshata,
 
-On 13.06.2025 4:17, Jakub Kicinski wrote:
-> On Tue, 10 Jun 2025 16:35:03 +0200 Petr Zejdl wrote:
->> -		len = strlen(dhcp_client_identifier + 1);
-> maybe keep using len here? Assign dhcp_client_identifier_len to it?
-> I don't think switching to dhcp_client_identifier_len improves the
-> readability and it inflates the diff.
+FYI, the error/warning still remains.
 
-Indeed.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   18531f4d1c8c47c4796289dbbc1ab657ffa063d2
+commit: 8d79acd567db183e675cccc6cc737d2959e2a2d9 drm/xe/migrate: Add helper function to program identity map
+date:   11 months ago
+config: i386-randconfig-016-20250614 (https://download.01.org/0day-ci/archive/20250614/202506140651.jm3HRodM-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506140651.jm3HRodM-lkp@intel.com/reproduce)
 
->> +/*
->> + *  Parses DHCP Client ID in the hex form "XX:XX ... :XX" (like MAC address).
->> + *  Returns the length (min 2, max 253) or -EINVAL on parsing error.
->> + */
->> +static int __init parse_client_id(const char *s, u8 *buf)
->> ...
-> Feels like this helper should live in lib/net_utils.c or lib/hexdump.c
-> as a generic thing?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506140651.jm3HRodM-lkp@intel.com/
 
-Sounds good, will come with a new version.
+All errors (new ones prefixed by >>):
 
-I should also update 'Documentation/admin-guide/nfs/nfsroot.rst' with
-the new Client ID format.
+   In file included from drivers/gpu/drm/xe/xe_migrate.c:12:
+   In file included from include/drm/ttm/ttm_tt.h:30:
+   In file included from include/linux/pagemap.h:8:
+   In file included from include/linux/mm.h:2253:
+   include/linux/vmstat.h:514:36: error: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Werror,-Wenum-enum-conversion]
+     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/gpu/drm/xe/xe_migrate.c:304:52: error: result of comparison of constant 274877906944 with expression of type 'resource_size_t' (aka 'unsigned int') is always true [-Werror,-Wtautological-constant-out-of-range-compare]
+     304 |                 xe_assert(xe, (xe->mem.vram.actual_physical_size <= SZ_256G));
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+   drivers/gpu/drm/xe/xe_assert.h:108:54: note: expanded from macro 'xe_assert'
+     108 | #define xe_assert(xe, condition) xe_assert_msg((xe), condition, "")
+         |                                  ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+   drivers/gpu/drm/xe/xe_assert.h:111:24: note: expanded from macro 'xe_assert_msg'
+     111 |         __xe_assert_msg(__xe, condition,                                                        \
+         |         ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     112 |                         "platform: %s subplatform: %d\n"                                        \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     113 |                         "graphics: %s %u.%02u step %s\n"                                        \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     114 |                         "media: %s %u.%02u step %s\n"                                           \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     115 |                         msg,                                                                    \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     116 |                         __xe->info.platform_name, __xe->info.subplatform,                       \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     117 |                         __xe->info.graphics_name,                                               \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     118 |                         __xe->info.graphics_verx100 / 100,                                      \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     119 |                         __xe->info.graphics_verx100 % 100,                                      \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     120 |                         xe_step_name(__xe->info.step.graphics),                                 \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     121 |                         __xe->info.media_name,                                                  \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     122 |                         __xe->info.media_verx100 / 100,                                         \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     123 |                         __xe->info.media_verx100 % 100,                                         \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     124 |                         xe_step_name(__xe->info.step.media),                                    \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     125 |                         ## arg);                                                                \
+         |                         ~~~~~~~
+   drivers/gpu/drm/xe/xe_assert.h:84:31: note: expanded from macro '__xe_assert_msg'
+      84 |         (void)drm_WARN(&(xe)->drm, !(condition), "[" DRM_NAME "] Assertion `%s` failed!\n" msg, \
+         |               ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      85 |                        __stringify(condition), ## arg);                                         \
+         |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/drm/drm_print.h:635:7: note: expanded from macro 'drm_WARN'
+     635 |         WARN(condition, "%s %s: [drm] " format,                         \
+         |         ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     636 |                         dev_driver_string((drm)->dev),                  \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     637 |                         dev_name((drm)->dev), ## arg)
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/bug.h:132:25: note: expanded from macro 'WARN'
+     132 |         int __ret_warn_on = !!(condition);                              \
+         |                                ^~~~~~~~~
+   2 errors generated.
 
-Thank you for the review.
 
-Best regards,
-Petr
+vim +304 drivers/gpu/drm/xe/xe_migrate.c
 
+   177	
+   178	static int xe_migrate_prepare_vm(struct xe_tile *tile, struct xe_migrate *m,
+   179					 struct xe_vm *vm)
+   180	{
+   181		struct xe_device *xe = tile_to_xe(tile);
+   182		u16 pat_index = xe->pat.idx[XE_CACHE_WB];
+   183		u8 id = tile->id;
+   184		u32 num_entries = NUM_PT_SLOTS, num_level = vm->pt_root[id]->level,
+   185		    num_setup = num_level + 1;
+   186		u32 map_ofs, level, i;
+   187		struct xe_bo *bo, *batch = tile->mem.kernel_bb_pool->bo;
+   188		u64 entry, pt30_ofs;
+   189	
+   190		/* Can't bump NUM_PT_SLOTS too high */
+   191		BUILD_BUG_ON(NUM_PT_SLOTS > SZ_2M/XE_PAGE_SIZE);
+   192		/* Must be a multiple of 64K to support all platforms */
+   193		BUILD_BUG_ON(NUM_PT_SLOTS * XE_PAGE_SIZE % SZ_64K);
+   194		/* And one slot reserved for the 4KiB page table updates */
+   195		BUILD_BUG_ON(!(NUM_KERNEL_PDE & 1));
+   196	
+   197		/* Need to be sure everything fits in the first PT, or create more */
+   198		xe_tile_assert(tile, m->batch_base_ofs + batch->size < SZ_2M);
+   199	
+   200		bo = xe_bo_create_pin_map(vm->xe, tile, vm,
+   201					  num_entries * XE_PAGE_SIZE,
+   202					  ttm_bo_type_kernel,
+   203					  XE_BO_FLAG_VRAM_IF_DGFX(tile) |
+   204					  XE_BO_FLAG_PINNED);
+   205		if (IS_ERR(bo))
+   206			return PTR_ERR(bo);
+   207	
+   208		/* PT31 reserved for 2M identity map */
+   209		pt30_ofs = bo->size - 2 * XE_PAGE_SIZE;
+   210		entry = vm->pt_ops->pde_encode_bo(bo, pt30_ofs, pat_index);
+   211		xe_pt_write(xe, &vm->pt_root[id]->bo->vmap, 0, entry);
+   212	
+   213		map_ofs = (num_entries - num_setup) * XE_PAGE_SIZE;
+   214	
+   215		/* Map the entire BO in our level 0 pt */
+   216		for (i = 0, level = 0; i < num_entries; level++) {
+   217			entry = vm->pt_ops->pte_encode_bo(bo, i * XE_PAGE_SIZE,
+   218							  pat_index, 0);
+   219	
+   220			xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64, entry);
+   221	
+   222			if (vm->flags & XE_VM_FLAG_64K)
+   223				i += 16;
+   224			else
+   225				i += 1;
+   226		}
+   227	
+   228		if (!IS_DGFX(xe)) {
+   229			/* Write out batch too */
+   230			m->batch_base_ofs = NUM_PT_SLOTS * XE_PAGE_SIZE;
+   231			for (i = 0; i < batch->size;
+   232			     i += vm->flags & XE_VM_FLAG_64K ? XE_64K_PAGE_SIZE :
+   233			     XE_PAGE_SIZE) {
+   234				entry = vm->pt_ops->pte_encode_bo(batch, i,
+   235								  pat_index, 0);
+   236	
+   237				xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64,
+   238					  entry);
+   239				level++;
+   240			}
+   241			if (xe->info.has_usm) {
+   242				xe_tile_assert(tile, batch->size == SZ_1M);
+   243	
+   244				batch = tile->primary_gt->usm.bb_pool->bo;
+   245				m->usm_batch_base_ofs = m->batch_base_ofs + SZ_1M;
+   246				xe_tile_assert(tile, batch->size == SZ_512K);
+   247	
+   248				for (i = 0; i < batch->size;
+   249				     i += vm->flags & XE_VM_FLAG_64K ? XE_64K_PAGE_SIZE :
+   250				     XE_PAGE_SIZE) {
+   251					entry = vm->pt_ops->pte_encode_bo(batch, i,
+   252									  pat_index, 0);
+   253	
+   254					xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64,
+   255						  entry);
+   256					level++;
+   257				}
+   258			}
+   259		} else {
+   260			u64 batch_addr = xe_bo_addr(batch, 0, XE_PAGE_SIZE);
+   261	
+   262			m->batch_base_ofs = xe_migrate_vram_ofs(xe, batch_addr);
+   263	
+   264			if (xe->info.has_usm) {
+   265				batch = tile->primary_gt->usm.bb_pool->bo;
+   266				batch_addr = xe_bo_addr(batch, 0, XE_PAGE_SIZE);
+   267				m->usm_batch_base_ofs = xe_migrate_vram_ofs(xe, batch_addr);
+   268			}
+   269		}
+   270	
+   271		for (level = 1; level < num_level; level++) {
+   272			u32 flags = 0;
+   273	
+   274			if (vm->flags & XE_VM_FLAG_64K && level == 1)
+   275				flags = XE_PDE_64K;
+   276	
+   277			entry = vm->pt_ops->pde_encode_bo(bo, map_ofs + (u64)(level - 1) *
+   278							  XE_PAGE_SIZE, pat_index);
+   279			xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE * level, u64,
+   280				  entry | flags);
+   281		}
+   282	
+   283		/* Write PDE's that point to our BO. */
+   284		for (i = 0; i < map_ofs / PAGE_SIZE; i++) {
+   285			entry = vm->pt_ops->pde_encode_bo(bo, (u64)i * XE_PAGE_SIZE,
+   286							  pat_index);
+   287	
+   288			xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE +
+   289				  (i + 1) * 8, u64, entry);
+   290		}
+   291	
+   292		/* Set up a 1GiB NULL mapping at 255GiB offset. */
+   293		level = 2;
+   294		xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE * level + 255 * 8, u64,
+   295			  vm->pt_ops->pte_encode_addr(xe, 0, pat_index, level, IS_DGFX(xe), 0)
+   296			  | XE_PTE_NULL);
+   297		m->cleared_mem_ofs = (255ULL << xe_pt_shift(level));
+   298	
+   299		/* Identity map the entire vram at 256GiB offset */
+   300		if (IS_DGFX(xe)) {
+   301			u64 pt31_ofs = bo->size - XE_PAGE_SIZE;
+   302	
+   303			xe_migrate_program_identity(xe, vm, bo, map_ofs, 256, pat_index, pt31_ofs);
+ > 304			xe_assert(xe, (xe->mem.vram.actual_physical_size <= SZ_256G));
+   305		}
+   306	
+   307		/*
+   308		 * Example layout created above, with root level = 3:
+   309		 * [PT0...PT7]: kernel PT's for copy/clear; 64 or 4KiB PTE's
+   310		 * [PT8]: Kernel PT for VM_BIND, 4 KiB PTE's
+   311		 * [PT9...PT27]: Userspace PT's for VM_BIND, 4 KiB PTE's
+   312		 * [PT28 = PDE 0] [PT29 = PDE 1] [PT30 = PDE 2] [PT31 = 2M vram identity map]
+   313		 *
+   314		 * This makes the lowest part of the VM point to the pagetables.
+   315		 * Hence the lowest 2M in the vm should point to itself, with a few writes
+   316		 * and flushes, other parts of the VM can be used either for copying and
+   317		 * clearing.
+   318		 *
+   319		 * For performance, the kernel reserves PDE's, so about 20 are left
+   320		 * for async VM updates.
+   321		 *
+   322		 * To make it easier to work, each scratch PT is put in slot (1 + PT #)
+   323		 * everywhere, this allows lockless updates to scratch pages by using
+   324		 * the different addresses in VM.
+   325		 */
+   326	#define NUM_VMUSA_UNIT_PER_PAGE	32
+   327	#define VM_SA_UPDATE_UNIT_SIZE		(XE_PAGE_SIZE / NUM_VMUSA_UNIT_PER_PAGE)
+   328	#define NUM_VMUSA_WRITES_PER_UNIT	(VM_SA_UPDATE_UNIT_SIZE / sizeof(u64))
+   329		drm_suballoc_manager_init(&m->vm_update_sa,
+   330					  (size_t)(map_ofs / XE_PAGE_SIZE - NUM_KERNEL_PDE) *
+   331					  NUM_VMUSA_UNIT_PER_PAGE, 0);
+   332	
+   333		m->pt_bo = bo;
+   334		return 0;
+   335	}
+   336	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
