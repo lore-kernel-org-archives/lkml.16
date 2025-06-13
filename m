@@ -1,116 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28D6239E85;
-	Fri, 13 Jun 2025 22:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66783255E23
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 22:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749853666; cv=none; b=FULDPT4vxwk0lD0BmuPylY3m6NDWvBs6eylhKvHIyTqGwnMexIZc24EWvaFh5HCvKNbfeANNWRd7tGZh1R3Iely5UOeDeyWiaiaGIgndi7uhOsfk+8L8FlovDBmzVm3LlBHNiIJf2Mc4W6Csswa1m4qAdlsAHCwko5srNyUvnGY=
+	t=1749853762; cv=none; b=T9bgFXm4HLirCBT/sth00A2QzRjFwDisaKbkwkbH0lGETuTK8uW+ClgRIocbZqrlwjjXsMtUh8uU85kuhJB+JpooKM/0fikLUpsnuNZ9F4LsFcsKMapCT5zLZUjAm9UEAD9jGkF48mAUhhcVNH/0Jpmahu1VWzNrUdSdyqBBe5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749853666; c=relaxed/simple;
-	bh=oz5GGeZK5HuwW8R1dyYQv0i5Y3h3LLimhUbd5OgIOdY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IEHmnPbVgTR2ADXhd1IXWHX0voc+u4JRkUCUs1FGHqLP2/ge9eiRIoAzjTaFoATUeGyU8AUO7AUWl7uDrsIKpWGomP1k7/7qnRxbBck19MjvaPZNESIrYukKbWvh4MrfIIKrCtOUmhWraGiOof1bu1MmXETGudOaDmHo4zFlPQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCkjVS5F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749853762; c=relaxed/simple;
+	bh=7dCRP5RC5vW665I3kmTd5GcphWE+dNmrueqC0walbck=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jVWu5L2Zz6RwmA6edzkO336wPpsfJxnza0pX9fKV1e/4FBa/tri0+orz9l7qol5yGTRMfQ33wgzS6QyM0ANP4tCEUjV4nKLfw8Iah6n0AMf6z9Y0bVZcwzulyQj3Ed/t6pXFWxa/UvBYjxnPqv4i0G5TxbJn2LARi8qqlK1LHJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CrR0hz8m; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCkjVS5F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22397C4CEFB;
-	Fri, 13 Jun 2025 22:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749853666;
-	bh=oz5GGeZK5HuwW8R1dyYQv0i5Y3h3LLimhUbd5OgIOdY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aCkjVS5FxDgUtqX8oVnyg6xn4mxlqiQ+M/pLPDwe7I1MJALISNIrn8GKHULqV7I4r
-	 kHChX13gq3l+CUgS3Ahb8tWITO9+Abym2+X1naKmv8Xk9Nv+M9jqWDQUjRm0AStq5Y
-	 /z+Nnk5/MQ1Y7+FzBlcCPnhGnrkJj0ntECW8wehUAb6YANOKl8OIzPNANCXoeCnmXD
-	 +IWgTHzuUuJ3TLN3TJTOnP5h0F+BHynHLfJMUlGMpGlFLPKU8oHpFt21kTAQAnCCIi
-	 K8eLxeBqRFU7NGRIiDDI3DJm5a86FcM5ihi8Dsy3/NleQ6KDM9mXRB2G7zs++c5XAd
-	 fYWWaNz+AMVFg==
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a44b0ed780so37103631cf.3;
-        Fri, 13 Jun 2025 15:27:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU35ZTP4YvEhF85h6pFJS83pZ4ZUMhLOPKk8I6DN8WO7kongiQ1AN2irMlkVwIAk55Gm28ae8C0ls3NAJN8@vger.kernel.org, AJvYcCUMthNvS9kkROTE9Oip4uc5uTFdNU0z8Fxg3+/FSWVj1kQCNTM/v08HKi+yssbkpmYqV4MMkOmGodctboBHNEcnq7X9NrN4@vger.kernel.org, AJvYcCWSbouNWmziph6Bni3TFS8ymb9TfeuLNyu6eF88l68Uy3l8iihr+iQ1Fll+uFuhRG/EtkcjHQXXX/Q18ILt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBlLQ3mptT7IMaf39zPj7ShTbDqnYXmyRKq/dgXtyiPJzzA8iF
-	VSgOq1+DUtfEYqQ+fFrH9Lt4K/1bCwCi42tZr27CgORx1wQ9ugiPHlQ6rcVWQ8URQL3jMuVk7on
-	3f+rxkh6Sy4dSf3zFueR+h0xwlDe5L7c=
-X-Google-Smtp-Source: AGHT+IGWkjVtdv83eE0pBs/jdfMfaxcVMpueUKvLdi3qvZP9yMR8Onxx6KI7dzY5aOnj72v0w6SET/QZNJny9oMPl7I=
-X-Received: by 2002:ac8:5a43:0:b0:4a3:fcc7:c73c with SMTP id
- d75a77b69052e-4a73c4fd271mr14044651cf.8.1749853665106; Fri, 13 Jun 2025
- 15:27:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CrR0hz8m"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31315427249so2567244a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749853760; x=1750458560; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ntrF63Vv2zoH9u2B2bhtc6n4yroInyt7sGzPvAgo8Rk=;
+        b=CrR0hz8mdmzWNoevcFIiL0BXOwYdobJn9kLJUVj8ID21WkH/byxo6YSFDncLoZZLJu
+         5qVAAJHARoCaSw0mq89Iz+5NcYVH9S2TSA0/8bh9+tfA5oxctk4H1VIZqZZgwT71jDVF
+         rNnyly+WCB5Yt2/NxxEhNe4PoZpCIRFiP2MgNFuRrySP9c7i3mwAVxEZi/8154/cNSab
+         AHwVpOcUCBab3RbytavDuO3r3z2pGtrj/6oK6JYzRsv6CAqwZYqjodCJK+J6QliJCKY1
+         UhzFH3mcL4t9H/jY0IN7OgrFb3ziY0Bj940ZDLWu/jR2SDqNsObzs1n4xPMz3fPW+Mw+
+         7Tug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749853760; x=1750458560;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ntrF63Vv2zoH9u2B2bhtc6n4yroInyt7sGzPvAgo8Rk=;
+        b=B9dDkiyYLAhWTg3EGSAHZwxNT3BxDTs9Udfm8Eq3djevdrJefi7X58+mRMSo8HAEOb
+         NZNq3OtIR/XQFjtB864qUmpMp9izVNG3Uo9SDozGa2V6m3C9Z2qX8LZvEK5WmeIk69Zq
+         9y3HB3Yjlq9wv35l7tKnNIo4wA9QwNBYLX4NYOle4TxcVwaFF+m+1Rk64itoQzT3iVrl
+         YGac5qJ+em0fuuBd14bciMny9kSxnV9LbIIbg/btSahc68fa9VVdho/5OJ5TXfUHwl69
+         n/Ru1KPGm4mxlJL0NhroFstYCcavBhN5Ed+2ro0wsKMEfvkrkBn9LU7ERXxsqFtUdt0Y
+         h/Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTsMBYqfQJkNqOpUhGJhv/bKDD6mdY1x6hBapPtFi/FVOAYk9SSGraQbIBXYYyRSHEM9YBCvhfzL8xsRE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXEY1cCq3SUXOn2S0POi1R1tBm8vOaNz9ZFOPnzZCtax/+aDgV
+	5CiURKv0PLMA7Sf40tzp5L7Yectog65p/W7Y0+no1maXcD+fZQKbybHRYPdFoNWFiwQlv+sdMQS
+	nX8r4FQ==
+X-Google-Smtp-Source: AGHT+IGywTlpl0dHWnufpJSJlj4XpNlHL6UkXqc9RZbcriTQyKRR+zlmrTb17NJPljis76xDw4xc0g5PFgU=
+X-Received: from pjbsr4.prod.google.com ([2002:a17:90b:4e84:b0:313:2ad9:17ec])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2dd2:b0:312:f88d:25f9
+ with SMTP id 98e67ed59e1d1-313f1c7dacfmr2043479a91.7.1749853760694; Fri, 13
+ Jun 2025 15:29:20 -0700 (PDT)
+Date: Fri, 13 Jun 2025 15:29:19 -0700
+In-Reply-To: <20250612-70c2e573983d05c4fbc41102@orel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250611220220.3681382-1-song@kernel.org> <20250611220220.3681382-2-song@kernel.org>
- <174977345565.608730.2655286329643493783@noble.neil.brown.name>
-In-Reply-To: <174977345565.608730.2655286329643493783@noble.neil.brown.name>
-From: Song Liu <song@kernel.org>
-Date: Fri, 13 Jun 2025 15:27:33 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7V9MWXBqiEFbFipUVASwysbB1pX3Lz0NCncFJ9Gjpo5w@mail.gmail.com>
-X-Gm-Features: AX0GCFsvU1L3eassdPC77vEMHxMtYL1v9e9xJtapswAl6ledQxqg87gGstBk2wM
-Message-ID: <CAPhsuW7V9MWXBqiEFbFipUVASwysbB1pX3Lz0NCncFJ9Gjpo5w@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 1/5] namei: Introduce new helper function path_walk_parent()
-To: NeilBrown <neil@brown.name>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, 
-	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
-	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, gnoack@google.com, 
-	m@maowtm.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <50989f0a02790f9d7dc804c2ade6387c4e7fbdbc.1749634392.git.zhouquan@iscas.ac.cn>
+ <20250611-352bef23df9a4ec55fe5cb68@orel> <aEmsIOuz3bLwjBW_@google.com> <20250612-70c2e573983d05c4fbc41102@orel>
+Message-ID: <aEymPwNM59fafP04@google.com>
+Subject: Re: [PATCH] RISC-V: KVM: Avoid re-acquiring memslot in kvm_riscv_gstage_map()
+From: Sean Christopherson <seanjc@google.com>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: zhouquan@iscas.ac.cn, anup@brainfault.org, atishp@atishpatra.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Jun 12, 2025 at 5:11=E2=80=AFPM NeilBrown <neil@brown.name> wrote:
-[...]
-> > +
-> > +false_out:
-> > +     path_put(path);
-> > +     memset(path, 0, sizeof(*path));
-> > +     return false;
-> > +}
->
-> I think the public function should return 0 on success and -error on
-> failure.  That is a well established pattern.
+On Thu, Jun 12, 2025, Andrew Jones wrote:
+> On Wed, Jun 11, 2025 at 09:17:36AM -0700, Sean Christopherson wrote:
+> > Looks like y'all also have a bug where an -EEXIST will be returned to userspace,
+> > and will generate what's probably a spurious kvm_err() message.
+> 
+> On 32-bit riscv, due to losing the upper bits of the physical address? Or
+> is there yet another thing to fix?
 
-Yeah, I think we can use this pattern.
+Another bug, I think.  gstage_set_pte() returns -EEXIST if a PTE exists, and I
+_assume_ that's supposed to be benign?  But this code returns it blindly:
 
-> I also think you
-> shouldn't assume that all callers will want the same flags.
+	if (writable) {
+		mark_page_dirty(kvm, gfn);
+		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
+				      vma_pagesize, false, true);
+	} else {
+		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
+				      vma_pagesize, true, true);
+	}
 
-__path_walk_parent() only handles two LOOKUP_ flags, so
-it is a bit weird to allow all the flags. But if folks think this is a
-good idea, I don't have strong objections to taking various flags.
+	if (ret)
+		kvm_err("Failed to map in G-stage\n");
 
->
-> And it isn't clear to me why you want to path_put() on failure.
+out_unlock:
+	kvm_release_faultin_page(kvm, page, ret && ret != -EEXIST, writable);
+	spin_unlock(&kvm->mmu_lock);
+	return ret;
 
-In earlier versions, we would keep "path" unchanged when the
-walk stopped. However, this is not the case in this version
-(choose_mountpoint() =3D> in_root =3D> return -EXDEV). So I
-decided to just release it, so that we will not leak a path that
-the walk should not get to.
+and gstage_page_fault() forwards negative return codes:
 
->
-> I wonder if there might be other potential users in the kernel.
-> If so we should consider how well the interface meets their needs.
->
-> autofs, devpts, nfsd, landlock all call follow_up...
-> maybe they should be using the new interface...
-> nfsd is the most likely to benefit - particularly nfsd_lookup_parent().
+	ret = kvm_riscv_gstage_map(vcpu, memslot, fault_addr, hva,
+		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false);
+	if (ret < 0)
+		return ret;
 
-AFAICT, autofs and devpts can just use follow_up().
-For nfsd, nfsd_lookup_parent() and nfsd4_encode_pathname4() can
-use path_walk_parent. And 2/5 covers landlock.
+and so eventually -EEXIST will propagate to userspace.
 
-I think we can update nfsd in a follow up patch, just to keep this set
-simpler.
+I haven't looked too closely at the RISC-V MMU, but I would be surprised if
+encountering what ends up being a spurious fault is completely impossible.
 
-Thanks,
-Song
+> The diff looks good to me, should I test and post it for you?
 
-> Just a thought..
-
-[...]
+If you test it, I'll happily write changelogs and post patches.
