@@ -1,123 +1,113 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD272236FC;
-	Fri, 13 Jun 2025 18:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E82231A55
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749840780; cv=none; b=YfCKAa2bVPMRqCMkGaB81nLGA6QmItn+V05+AF3wsFUDFcM+v1wUK4V9PDkvkNTSy7CW6sgjrWCpItAz6lv/TRSfi7TaunlCvZUfRIqTQJ1rz60UOkwbYp5i4StSEKGsWorWEAhDh4H9grc6o/w2Xf46arQlGnaq1E8MU4kRZVM=
+	t=1749840809; cv=none; b=Qa0ZAbC/ku2CbVDpCIyZ6NPLgKgrIJhb0LUWdykBFiAwVT8yLy9lu0NyQjkm1rN/35kcW5Lo02Hvk4YiOflA5Imfv2AyKXZrx+uh/WG1CsWZx5PZ36f68Lpfe2DPTVEU/mT6K1jM8gHijjWSbhVgRShMK65qdC/KeAWgr4l1O4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749840780; c=relaxed/simple;
-	bh=4GG8h4VrUJ72KYx3JStbtJGGYIPOY8UMQiZqMjt0b+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PVSuNH+q72NLW8JSoS7br9yeIsX6emboCWphAWY2REIJaqJ/z2zFVSwu02jLrtTHpW1czbjeXBRG+BM6f70yKClGCXOVuQ3JawNNzlWOga4OILUGefTQ+KH0OhtUk5ef/+IZHSDuzTMC/itzZDsbSaoA+D26N+HMzqVutjNXk6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FRvw/CvV; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749840809; c=relaxed/simple;
+	bh=Cjzm5zcRZnsOAuwyO76t9n9NJxkUtHR+IqjmAsTAsmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iCP6wrK8JGn6dTZBWa72nX3l3hsc5lTAcQVf7NbpKafOmiV6GgWwgf1X/M0NU8Az5RzfAE93JWWVOYU0JHYA4rIWJefgjGU1CkCryWMS/LGOLV6klfHuU0HoWIFuF4dVYjvzqf2VllxIDEOR2Gt2Zv03s00fEd+FPe6V4nqvwCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXhis2Bo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRvw/CvV"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a5123c1533so1535870f8f.2;
-        Fri, 13 Jun 2025 11:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749840777; x=1750445577; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WiNV/nTakryBZy7/aqri35p4mFreiS8n/RLeN55SiFs=;
-        b=FRvw/CvVt9iEZ/wVY2zWSzRMqZ+mQKZPJSUYW8hd2Qx/Lzy+vfsVuUeUX2OsBSpqxf
-         aUhQcjYnVkVEvkWkwlB1V21ZM3zCxST+A8CxFRg76oDLQLalYcE3/y07l7o8t1h/x+HF
-         LkS05mzYXMbZ1ftfmEYgTz/S2lW6Zhj2Apl9rZGk9TBc5snzDuKVffyYCGYN3c2vYQ9N
-         /SOh60SV1LMI8ZU8aqPK7KE/iZP5VB2qKPf1PzRM6BGR+MKaRYGpv0a9lBE6RXVqnIrv
-         Jg/3maNwRITLRyabsLjL9fHeOP0y+T/JFEDZOlrBtgG9TclPrCjEBOU5/8HQlBMeYmQI
-         sjew==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXhis2Bo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749840806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gftgj3F7KbsxQl1OCCcu039clX1oCiOXcGuSy3kjDUU=;
+	b=NXhis2Bohhjx35yIU7p1KrkiM6itgQeQF5GKDpWp+5jaOhSKhaDUNUn9J3AjBq2uqAxxpT
+	pNfGWAxMVFozcWEjvfg73nSgeyDSBF5sk4ZsYAF4A7XMIgfuyucEMDp+RyNySdheqzswbg
+	8PzurdxNveLTXoFPvxHTi9XBEKkZgcQ=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-3-G5hWuziCPW-5RqaxGq5Z0A-1; Fri, 13 Jun 2025 14:53:25 -0400
+X-MC-Unique: G5hWuziCPW-5RqaxGq5Z0A-1
+X-Mimecast-MFC-AGG-ID: G5hWuziCPW-5RqaxGq5Z0A_1749840805
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5750ca8b2so341456485a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:53:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749840777; x=1750445577;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WiNV/nTakryBZy7/aqri35p4mFreiS8n/RLeN55SiFs=;
-        b=qFHmmqHCMsGrvLq9FceZHxDBuI8kzzBPDnAQ3/r+8Pn2T+gXYWVCbm+FfTpzN2S3pe
-         lSiRDtVu/t5M8B8QEa8pnz0oKX6iEDzwN7CJcb94CnQaQaNeEpB3Kcp12P8cE4hJi8aX
-         Lr3JSuhf3fuxSukz/viT2f6OkuXNBoEBTvET6ysY2bSHKN8NjE3YULf9W7LkrY8f7Dzw
-         X5C7DBLF99f/lAPt46UEEAqjYHLSPdaIn6H8USxK9qZmMVzsYY8qIRrwuGk48DwfDpgV
-         mZau0ez5IOcvu6GJInIK5R2yf8Us+CCD9TkV+FEVoKNaNU3gKcyrJJOKGiEWQ5sojwhJ
-         Tnzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVB01RnAdl9OiILaq9BkNmZlJlybiLRacs2Nzq69JL2UEjPx2QBcu/ruUx7z1QgqaX+DwNsg4Y9n8O7PWpvdGdKNdKw@vger.kernel.org, AJvYcCWbPgq0K8hE+nCZMlpIGOVadDiJHWDHy434oT3DEx5k0c5kEf5Ezq9ZnF+jwW4VgkIHN5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaUj8i+mAjfIg10Aox+HObipyB1PhBF9t3bRNShkXcQ1UJthK0
-	kGALmRelPk7R1IBhpIrTYtFK7UIh7JCrthUtdcxQNWfLo7H5ww28FWU8iH3xGijMsch3a7G3j/U
-	zcRsqpZV9IRpM5TbyXQesi+e35X+MQZ8=
-X-Gm-Gg: ASbGncv+QX02F2vU+VlEc079VS1grM3+N7KA1fpRmTSfc0PETNroo4HKtBpHnatOQnG
-	mZb60yxky8cFMGO4UQ4GI6XhjDCLuTAyrrMv2BDMBRMHiiLk9HXFy3jOxESy1BbBB1qLyMhecNY
-	BrZCcYN17OHXEfoI9bSw0iWVt6yhT5H5uD1UZOOwoEzkmMmftCtUbzb2PA8pFf+MAnJTxo7Vr/
-X-Google-Smtp-Source: AGHT+IGjeC/2sHP/3xV2aREWxija/hCdRDjn++PYArbmyRHRCDcQw+76Cm4ulAFCUyk5xiXD43VC13Za3SnnbIQp1UA=
-X-Received: by 2002:a05:6000:144e:b0:3a4:eb92:b5eb with SMTP id
- ffacd0b85a97d-3a572e998a0mr718423f8f.50.1749840776759; Fri, 13 Jun 2025
- 11:52:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749840803; x=1750445603;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gftgj3F7KbsxQl1OCCcu039clX1oCiOXcGuSy3kjDUU=;
+        b=lrDtLxRENShrhHYeDZcUYTtd6SFeKUjfbrVR8JS+YITtsdkw7LMVDiQB1jX6C9Swn7
+         DgNrxPjwuSHFBVsEBojOLlWF1XNsuWg3bvrWxXjCuQCUVtNlIDEsfLj9DMYf2LKKKODc
+         /k8mEBSjxOnpo8XWWbHjDfKVBMsc594gQbFfFvaN7Mjo0WP7qke2ZtsFjTouY0vTUEpp
+         zeWqnAo5Em5d2Ckfa0Bbj5MEVx7IpMuynz46ckAqsEgqqkdWOhWz7w+BoghU+VotufYC
+         BRn1rZh7PNFyeayVvM34/9yM1BE8VMKYSbM4GF5oMFzwL2wW1gQkBtnetyh6cTWpKf1R
+         TfyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ2V45lc/+ivqbVc9j66eTaVSYowpCnbBsnecmUsbhtUbNB09tMoKzHzNvwa9mIh3PrD1K8GY5hzoizu4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYHRh1HhmMfdCA6lfLKtNMBmjuuM+5kO+KqJAOuEW9d+yMpcA2
+	RmE/kHeRRTo4oOIm7ThvOn+OD8RKXUVlPsDUW2hd9CYsDdb000kxunbeDBC2EyUJ5zGXAi4soEm
+	bOFUiGU40XrbNbsCG500OiQq2SDkhVN/jYfZwBDkRunn+Mw/IhvS0DJyrGrAlC7+GwgVFHUlPXg
+	==
+X-Gm-Gg: ASbGncugB7ZPAVleL3t+bzclZY71SgJhYMM2OZv7iY3nw1cZeXBIjREed8/eyQYeIUN
+	HNh464aK4/7wDR7WgfXwNzd+GUcaa4vjBRVj+apHagC0H+cAMNod4hn3C/6HslDdDahmbChJXym
+	9TMsbjGaRQ++0I6d+QeVCUfhrZRAVwfj1D80JTV+MCEi6Ooij1jIVw0BDoHq68kauR0gdk5Bpp5
+	KpSQx1nf6ZD733MUWHr22nTe2dZ91shZKhKmzdrymORO4hp1Y+eQeKofUtdp8Fbr5c5EpGQQx3G
+	ZuTpNposZTKh5g==
+X-Received: by 2002:a05:620a:29d0:b0:7d3:a6f2:74f2 with SMTP id af79cd13be357-7d3c6cff068mr94635985a.55.1749840802680;
+        Fri, 13 Jun 2025 11:53:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXcJDc+6SfZZjG6WukyvvwVpmRG1A1uzOdQlYb7eX3XEFjC1NczC7Ki5Dki/oYEcd/wf85cQ==
+X-Received: by 2002:a05:620a:29d0:b0:7d3:a6f2:74f2 with SMTP id af79cd13be357-7d3c6cff068mr94631685a.55.1749840802254;
+        Fri, 13 Jun 2025 11:53:22 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8dce692sm207001285a.14.2025.06.13.11.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 11:53:21 -0700 (PDT)
+Date: Fri, 13 Jun 2025 14:53:19 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Alex Mastro <amastro@fb.com>
+Cc: akpm@linux-foundation.org, alex.williamson@redhat.com, david@redhat.com,
+	jgg@nvidia.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, npache@redhat.com, ziy@nvidia.com
+Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
+ mappings
+Message-ID: <aExzn1CFGpA9szrq@x1.local>
+References: <20250613134111.469884-6-peterx@redhat.com>
+ <20250613174442.1589882-1-amastro@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612182023.78397b76@batman.local.home> <CAADnVQKEosaLbpLg4Zk_CcDSKT+Jzb3ScKQWBA51vLHt-AoQ8A@mail.gmail.com>
- <20250612222652.229eaa9c@batman.local.home>
-In-Reply-To: <20250612222652.229eaa9c@batman.local.home>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 13 Jun 2025 11:52:44 -0700
-X-Gm-Features: AX0GCFssdBMjywfJptOVExlGYdngzOBaGqfQs8frgcbBiaOQYEqFjNxYC18X14I
-Message-ID: <CAADnVQLkLPv6uvxXz0iWaA06KYXW8_P5fPPX2-WpXOYuXT-B5Q@mail.gmail.com>
-Subject: Re: [PATCH v2] xdp: tracing: Hide some xdp events under CONFIG_BPF_SYSCALL
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250613174442.1589882-1-amastro@fb.com>
 
-On Thu, Jun 12, 2025 at 7:27=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 12 Jun 2025 19:16:33 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > On Thu, Jun 12, 2025 at 3:20=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
-.org> wrote:
-> > >
-> > > From: Steven Rostedt <rostedt@goodmis.org>
-> > >
-> > > The events xdp_cpumap_kthread, xdp_cpumap_enqueue and xdp_devmap_xmit=
- are
-> > > only called when CONFIG_BPF_SYSCALL is defined.  As each event can ta=
-ke up
-> > > to 5K regardless if they are used or not, it's best not to define the=
-m
-> > > when they are not used. Add #ifdef around these events when they are =
-not
-> > > used.
-> > >
-> > > Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-> > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > > ---
-> > > Changes since v1: https://lore.kernel.org/20250612101612.3d4509cc@bat=
-man.local.home
-> > >
-> > > - Rebased on top of bpf-next
-> >
-> > We can certainly take it, but you mentioned you're working
-> > on some patches that will warn when tracepoint is not used.
-> > So do you need this to land sooner than the next merge window ?
->
-> No. I plan on sending that code near the end of the next merge window
-> to let these patches get in before they start to add warnings.
->
-> I'm also going to wait till near the end of this cycle before I add
-> that code to linux-next to keep the warnings happening there too soon.
->
-> So, please take it. That way there's less likelihood of another
-> conflict.
+On Fri, Jun 13, 2025 at 10:44:42AM -0700, Alex Mastro wrote:
+> Thank you Peter!
+> 
+> I packported this series to our 6.13.2 tree and validated that it does indeed
+> provide equivalent, optimal faulting to our manual alignment approach when we
+> mmap with !MAP_FIXED. This addresses the issue we discovered in [1].
+> 
+> The test case is performing mmap with offset=0x40006000000, size=0xdf9e00000,
+> and we see that the head and tail (975) are faulted at 2M, and middle (54) at
+> 1G. The vma returned by mmap looks nice: 0x7f8646000000.
+> 
+> $ sudo bpftrace -q -e 'fexit:vfio_pci_mmap_huge_fault { printf("order=%d, ret=0x%x\n", args.order, retval); }' 2>&1 > ~/dump
+> $ cat ~/dump | sort | uniq -c | sort -nr
+>     975 order=9, ret=0x100
+>      54 order=18, ret=0x100
+>       2 order=18, ret=0x800
+> 
+> [1] https://lore.kernel.org/linux-pci/20250529214414.1508155-1-amastro@fb.com/
+> 
+> Tested-by: Alex Mastro <amastro@fb.com>
 
-It was applied to bpf-next/net yesterday.
-pw-bot didn't notice.
+Great to know it works as expected, thanks for the quick feedback!
+
+-- 
+Peter Xu
+
