@@ -1,117 +1,227 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD7B2E11B1
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF3A20F079
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835663; cv=none; b=Bx8WOTnOkxe3jYAaLLUU/iQN36lNWWPQw6oPM7gYda+F8TnZeepMjc7LVacspgHqUaOonlts2oDpiiRlpngoqu72C/EBEGAzhDGtuAoKaDHKDQttY7WhMVXtAu/9/IcMGs822zRtYKrjx32mvvxFtjbOGZDu6W8xv9k6KGJ67xo=
+	t=1749835745; cv=none; b=HO9J5EKUAwupHqTwxmM/cv60HR2A91aeRGve1LD2fhw+c8MTiUUwhDQ5vd9VvrTsYTZvysAe6EUvDog6vZJXXhUaIvT/HWAFyDdAe6VZf5AOYAgIxWKwf39PGzOLgJzVH4WS5ujzYjwPEK9HpLGUwK4TexquFnH7FCOIOcHJMKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835663; c=relaxed/simple;
-	bh=pdf3rqtSJWicFOpYX+TUwUicneTlx6LcwlH4TfWiZAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R2rLWGumVEwqvxWGfDcw9XJm6PjTVi/mLSXoQsU9uYhey4VRonXJu5baFYRu6C2CsMmenirPLeUb03UL0LzQKeLnr4XyixVTf7wgO4kZGLbb5aRuPbc051WtHHfAf3iDZ2viYasK3BVgccLBooUduLZyouE7vukFSrJGSQ+jkFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bpup1IH8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749835745; c=relaxed/simple;
+	bh=zxG4kcYf0IqDrP5j/PxbnwMv6Qx5WyymZLFw7Gpsk1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EexfOaZTcJ1+fxMYxdWPeYTAegU8kLCDN1aqa5icTT0DyzhvtTVf8Q6tFvh6Kdfhqkb2Afz/6wQDO83jyQ+caJX7sBLaoofNfkXigDzrcQ7W26jNtN6Ae7KWS2vNxEPtq027cp9SKuSTyP+VC8YzxOtCys62DbUsdkUvNMrvoKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hlXDQyyG; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bpup1IH8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749835661;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hlXDQyyG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9133D44451;
+	Fri, 13 Jun 2025 17:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749835741;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dHfylN3K1/V0HnMVjNxiIhUPIWtFFj9Wr15mzi0PzWc=;
-	b=Bpup1IH8GEgyALQxs8mq+SZvWiup6wrEV/OAhIFPtpN2lbouY07uI43ctqLb2xW/dBBWS4
-	UWABg5Dqv9Vo4fhNlYt6/yAGKbi+Bk5M79aBw87BO4A8tao+O/QMccJmY/XCPJvOfUNx2X
-	RxhsQmokL3TC2KEwGykkydP5pVvgwbE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-85-PKjtGrgLMSeYFf9Yb3R15Q-1; Fri,
- 13 Jun 2025 13:27:37 -0400
-X-MC-Unique: PKjtGrgLMSeYFf9Yb3R15Q-1
-X-Mimecast-MFC-AGG-ID: PKjtGrgLMSeYFf9Yb3R15Q_1749835656
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AC3E3195608F;
-	Fri, 13 Jun 2025 17:27:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.88])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 35F3D19560AF;
-	Fri, 13 Jun 2025 17:27:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 13 Jun 2025 19:26:54 +0200 (CEST)
-Date: Fri, 13 Jun 2025 19:26:50 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: =?iso-8859-1?Q?Beno=EEt?= Sevens <bsevens@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>
-Cc: Zander Work <zdw@google.com>, security@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] posix-cpu-timers: fix race between handle_posix_cpu_timers()
- and posix_cpu_timer_del()
-Message-ID: <20250613172650.GA26022@redhat.com>
-References: <CAGCho0V0x_Y2+vg5G8-r45Xc6uftLbZK5K1=vpavd_4783fogQ@mail.gmail.com>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NIvF1qv3q2mPekX9cThcZh3+0e4WEHsvxF4etRx9qGk=;
+	b=hlXDQyyG5LP6QYGgduy7owkuKHXxcEVTPwaTUY1n3MeuZNihXL6kLGJZ5RPKcRoaUM8gGX
+	BG+2uasGb7G/2O+0hyMk2tgCvWpTSO4P4pUcbCo3FM4Xof2euXhrSRW9ugVWAKP8wTPh5H
+	6gbFMdeWSGcDk/Vr/mdFnFm6ZTuwUiYuuCDLYFQJWh7pmVA/7iHdS9rvwn3ndilLVDEqlP
+	IlprL4j9Xg7F3PkwPpg4LgJlSwsf1f/p57BM9f34iVQtxp9fgvVV1zWuPo1AYvIL2LAuW7
+	jhxQJd9kojAd0IRKzhy8/EZjTkmg5ql6a4RKbgos2thArrRav5fsDQjp3xtqhw==
+Message-ID: <115564ae-4b61-47be-9a9d-9c27acd4192c@bootlin.com>
+Date: Fri, 13 Jun 2025 19:28:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/8] drm/vkms: Add support for ARGB8888 formats
+To: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, nicolejadeyee@google.com
+References: <20250530-b4-new-color-formats-v4-0-ef5f9f48376c@bootlin.com>
+ <20250530-b4-new-color-formats-v4-2-ef5f9f48376c@bootlin.com>
+ <eba688fe-d270-420b-9619-121fb4b8ba1d@igalia.com>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ xsFNBGCG5KEBEAD1yQ5C7eS4rxD0Wj7JRYZ07UhWTbBpbSjHjYJQWx/qupQdzzxe6sdrxYSY
+ 5K81kIWbtQX91pD/wH5UapRF4kwMXTAqof8+m3XfYcEDVG31Kf8QkJTG/gLBi1UfJgGBahbY
+ hjP40kuUR/mr7M7bKoBP9Uh0uaEM+DuKl6bSXMSrJ6fOtEPOtnfBY0xVPmqIKfLFEkjh800v
+ jD1fdwWKtAIXf+cQtC9QWvcdzAmQIwmyFBmbg+ccqao1OIXTgu+qMAHfgKDjYctESvo+Szmb
+ DFBZudPbyTAlf2mVKpoHKMGy3ndPZ19RboKUP0wjrF+Snif6zRFisHK7D/mqpgUftoV4HjEH
+ bQO9bTJZXIoPJMSb+Lyds0m83/LYfjcWP8w889bNyD4Lzzzu+hWIu/OObJeGEQqY01etOLMh
+ deuSuCG9tFr0DY6l37d4VK4dqq4Snmm87IRCb3AHAEMJ5SsO8WmRYF8ReLIk0tJJPrALv8DD
+ lnLnwadBJ9H8djZMj24+GC6MJjN8dDNWctpBXgGZKuCM7Ggaex+RLHP/+14Vl+lSLdFiUb3U
+ ljBXuc9v5/9+D8fWlH03q+NCa1dVgUtsP2lpolOV3EE85q1HdMyt5K91oB0hLNFdTFYwn1bW
+ WJ2FaRhiC1yV4kn/z8g7fAp57VyIb6lQfS1Wwuj5/53XYjdipQARAQABzSlMb3VpcyBDaGF1
+ dmV0IDxsb3Vpcy5jaGF1dmV0QGJvb3RsaW4uY29tPsLBlAQTAQgAPgIbAwULCQgHAgYVCgkI
+ CwIEFgIDAQIeAQIXgBYhBItxBK6aJy1mk/Un8uwYg/VeC0ClBQJmlnw+BQkH8MsdAAoJEOwY
+ g/VeC0ClyhwP/Ra6H+5F2NEW6/IMVHeXmhuly8CcZ3kyoKeGNowghIcTBo59dFh0atGCvr+y
+ K9YD5Pyg9aX4Ropw1R1RVIMrWoUNZUKebRTu6iNHkE6tmURJaKLzR+9la+789jznQvbV+9gM
+ YTBppX4/0cWY58jiDiDV4aJ77JDo7aWNK4hz8mZsB+Y7ezMuS4jy2r4b7dZ+YL/T9/k3/emO
+ PkAuFkVhkNhytMEyOBsT7SjL4IUBeYWvOw9MIaXEl4qW/5HLGtMuNhS94NsviDXZquoOHOby
+ 2uuRAI0bLz1qcsnY90yyPlDJ0pMuJHbi0DBzPTIYkyuwoyplfWxnUPp1wfsjiy/B6mRKTbdE
+ a/K6jNzdVC1LLjTD4EjwnCE8IZBRWH1NVC1suOkw3Sr1FYcHFSYqNDrrzO+RKtR1JMrIe8/3
+ Xhe2/UNUhppsK3SaFaIsu98mVQY3bA/Xn9wYcuAAzRzhEHgrbp8LPzYdi6Qtlqpt4HcPV3Ya
+ H9BkCacgyLHcdeQbBXaup9JbF5oqbdtwev3waAmNfhWhrQeqQ0tkrpJ46l9slEGEdao5Dcct
+ QDRjmJz7Gx/rKJngQrbboOQz+rhiHPoJc/n75lgOqtHRePNEf9xmtteHYpiAXh/YNooXJvdA
+ tgR1jAsCsxuXZnW2DpVClm1WSHNfLSWona8cTkcoSTeYCrnXzsFNBGCG6KUBEADZhvm9TZ25
+ JZa7wbKMOpvSH36K8wl74FhuVuv7ykeFPKH2oC7zmP1oqs1IF1UXQQzNkCHsBpIZq+TSE74a
+ mG4sEhZP0irrG/w3JQ9Vbxds7PzlQzDarJ1WJvS2KZ4AVnwc/ucirNuxinAuAmmNBUNF8w6o
+ Y97sdgFuIZUP6h972Tby5bu7wmy1hWL3+2QV+LEKmRpr0D9jDtJrKfm25sLwoHIojdQtGv2g
+ JbQ9Oh9+k3QG9Kh6tiQoOrzgJ9pNjamYsnti9M2XHhlX489eXq/E6bWOBRa0UmD0tuQKNgK1
+ n8EDmFPW3L0vEnytAl4QyZEzPhO30GEcgtNkaJVQwiXtn4FMw4R5ncqXVvzR7rnEuXwyO9RF
+ tjqhwxsfRlORo6vMKqvDxFfgIkVnlc2KBa563qDNARB6caG6kRaLVcy0pGVlCiHLjl6ygP+G
+ GCNfoh/PADQz7gaobN2WZzXbsVS5LDb9w/TqskSRhkgXpxt6k2rqNgdfeyomlkQnruvkIIjs
+ Sk2X68nwHJlCjze3IgSngS2Gc0NC/DDoUBMblP6a2LJwuF/nvaW+QzPquy5KjKUO2UqIO9y+
+ movZqE777uayqmMeIy4cd/gg/yTBBcGvWVm0Dh7dE6G6WXJUhWIUtXCzxKMmkvSmZy+gt1rN
+ OyCd65HgUXPBf+hioCzGVFSoqQARAQABwsOyBBgBCAAmAhsuFiEEi3EErponLWaT9Sfy7BiD
+ 9V4LQKUFAmaWfGYFCQfwx0ECQAkQ7BiD9V4LQKXBdCAEGQEIAB0WIQRPj7g/vng8MQxQWQQg
+ rS7GWxAs4gUCYIbopQAKCRAgrS7GWxAs4gfGEACcA0XVNesbVIyvs5SJpJy+6csrH4yy233o
+ GclX2P7pcCls55wiV6ywCtRaXWFjztYmklQieaZ/zq+pUuUDtBZo95rUP20E56gYV2XFB18W
+ YeekTwH5d2d/j++60iHExWTB+sgMEv3CEGikUBj7iaMX2KtaB1k9K+3K6dx/s1KWxOClFkbJ
+ EV/tmeq7Ta8LiytQM9b4yY550tzC0pEEeFcLFXo1m5KcJauYnAqrlOVY48NFpFUd9oAZf/Pz
+ p3oEs+zn/8zK2PBrZZCD6AhrbotRy7irE5eimhxcsFm1+MG5ufnaQUWHrRYXVuFhvkSoqZ8j
+ GPgPEpFor4NjRyX/PMLglQ7S5snkvKcr3Lun44aybXEHq/1FTzW2kOh6kFHFFOPbMv1voJKM
+ IzrmDoDS+xANt/La7OwpCylCgF6t9oHHTTGfAfwtfYZbiepC66FDe/Jt/QLwkIXeIoeSS1O4
+ 6rJdGWG2kHthUM+uIbUbaRJW8AkJpzP1Mz7TieR/9jO4YPeUm9tGL5kP2yyNtzFilcoOeox1
+ NSFNAPz+zPcovVmxAaSDGcSzhQVJVlk8xPib8g4fnI8qJ3Gj7xyw8D9dzxhCR2DIFmZL84En
+ N7Rj+k4VIGY7M/cVvxL81jlbMGMERMmb96Cua9z1ROviGA1He2gbHOcp6qmLNu3nprleG8PL
+ ZRNdEAC0iZapoyiXlVCKLFIwUPnxUz5iarqIfQU8sa1VXYYd/AAAFI6Wv3zfNtGicjgHP8rN
+ CIegqm2Av1939XXGZJVI9f3hEoUn04rvxCgcDcUvn7I0WTZ4JB9G5qAGvQLXeXK6Byu77qTx
+ eC7PUIIEKN3X47e8xTSj2reVTlanDr8yeqZhxpKHaS0laF8RbD85geZtAK67qEByX2KC9DUo
+ eHBFuXpYMzGQnf2SG105ePI2f4h5iAfbTW9VWH989fx4f2hVlDwTe08/NhPdwq/Houov9f/+
+ uPpYEMlHCNwE8GRV7aEjd/dvu87PQPm4zFtC3jgQaUKCbYYlHmYYRlrLQenX3QSorrQNPbfz
+ uQkNLDVcjgD2fxBpemT7EhHYBz+ugsfbtdsH+4jVCo5WLb/HxE6o5zvSIkXknWh1DhFj/qe9
+ Zb9PGmfp8T8Ty+c/hjE5x6SrkRCX8qPXIvfSWLlb8M0lpcpFK+tB+kZlu5I3ycQDNLTk3qmf
+ PdjUMWb5Ld21PSyCrtGc/hTKwxMoHsOZPy6UB8YJ5omZdsavcjKMrDpybguOfxUmGYs2H3MJ
+ ghIUQMMOe0267uQcmMNDPRueGWTLXcuyz0Tpe62Whekc3gNMl0JrNz6Gty8OBb/ETijfSHPE
+ qGHYuyAZJo9A/IazHuJ+4n+gm4kQl1WLfxoRMzYHCA==
+In-Reply-To: <eba688fe-d270-420b-9619-121fb4b8ba1d@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGCho0V0x_Y2+vg5G8-r45Xc6uftLbZK5K1=vpavd_4783fogQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeehhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeeivedtfeegtdekheethedttddtfefhhfegjeeljeejleduvdfhudegvdekheevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedukeehrddutdegrddufeekrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedukeehrddutdegrddufeekrdelgedphhgvlhhopegluddtrddutddurddtrdeiiegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtohepmhgtrghnrghlsehighgrlhhirgdrtghomhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrihhrrggtrghnrghlsehrihhsvghuphdrnhgvthdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrr
+ ghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-If an exiting non-autoreaping task has already passed exit_notify() and
-calls handle_posix_cpu_timers() from IRQ, it can be reaped by its parent
-or debugger right after unlock_task_sighand().
 
-If a concurrent posix_cpu_timer_del() runs at that moment, it won't be
-able to detect timer->it.cpu.firing != 0: cpu_timer_task_rcu() and/or
-lock_task_sighand() will fail.
 
-Add the tsk->exit_state check into run_posix_cpu_timers() to fix this.
+Le 11/06/2025 à 21:55, Maíra Canal a écrit :
+> Hi Louis,
+> 
+> On 5/30/25 11:05, Louis Chauvet wrote:
+>> The formats XRGB8888 and ARGB8888 were already supported.
+>> Add the support for:
+>> - XBGR8888
+>> - RGBX8888
+>> - BGRX8888
+>> - ABGR8888
+>> - RGBA8888
+>> - BGRA8888
+>>
+>> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+>> ---
+> 
+> [...]
+> 
+>> +READ_LINE_ARGB8888(RGBX8888_read_line, px, 0xFF, px[3], px[2], px[1])
+>> +READ_LINE_ARGB8888(BGRX8888_read_line, px, 0xFF, px[1], px[2], px[3])
+> 
+> How did you test those two formats? I noticed that IGT (kms_plane tests)
+> doesn't test them.
 
-This fix is not needed if CONFIG_POSIX_CPU_TIMERS_TASK_WORK=y, because
-exit_task_work() is called before exit_notify(). But the check still
-makes sense, task_work_add(&tsk->posix_cputimers_work.work) will fail
-anyway in this case.
+Hi Maíra,
 
-Cc: stable@vger.kernel.org
-Reported-by: Beno�t Sevens <bsevens@google.com>
-Fixes: 0bdd2ed4138e ("sched: run_posix_cpu_timers: Don't check ->exit_state, use lock_task_sighand()")
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/time/posix-cpu-timers.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Thanks for your review!
 
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index 50e8d04ab661..2e5b89d7d866 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -1405,6 +1405,15 @@ void run_posix_cpu_timers(void)
- 
- 	lockdep_assert_irqs_disabled();
- 
-+	/*
-+	 * Ensure that release_task(tsk) can't happen while
-+	 * handle_posix_cpu_timers() is running. Otherwise, a concurrent
-+	 * posix_cpu_timer_del() may fail to lock_task_sighand(tsk) and
-+	 * miss timer->it.cpu.firing != 0.
-+	 */
-+	if (tsk->exit_state)
-+		return;
-+
- 	/*
- 	 * If the actual expiry is deferred to task work context and the
- 	 * work is already scheduled there is no point to do anything here.
+I wrote this a long time ago, so I don't remember. I was probably greedy 
+and added all the "trivial" formats I was able to do and missed that 
+this format was not tested.
+
+For this revision, I just started kms_plane to check if it was happy 
+after the rebase, I did not check the formats one by one.
+
+Do you want me to remove those formats? I think it costs nothing to keep 
+them, especially with the new READ_LINE_ARGB8888 macro, but I will 
+comply if you think we should only merge tested formats.
+
+Thanks,
+Louis Chauvet
+
+> Best Regards,
+> - Maíra
+> 
+>>    
+>>    READ_LINE_ARGB8888(ARGB8888_read_line, px, px[3], px[2], px[1], px[0])
+>>    READ_LINE_ARGB8888(ABGR8888_read_line, px, px[3], px[0], px[1], px[2])
+>> +READ_LINE_ARGB8888(RGBA8888_read_line, px, px[0], px[3], px[2], px[1])
+>> +READ_LINE_ARGB8888(BGRA8888_read_line, px, px[0], px[1], px[2], px[3])
+>>    
+>>    READ_LINE_le16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0])
+>>    READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[1], px[0])
+>> @@ -644,10 +649,20 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+>>    	switch (format) {
+>>    	case DRM_FORMAT_ARGB8888:
+>>    		return &ARGB8888_read_line;
+>> -	case DRM_FORMAT_XRGB8888:
+>> -		return &XRGB8888_read_line;
+>>    	case DRM_FORMAT_ABGR8888:
+>>    		return &ABGR8888_read_line;
+>> +	case DRM_FORMAT_BGRA8888:
+>> +		return &BGRA8888_read_line;
+>> +	case DRM_FORMAT_RGBA8888:
+>> +		return &RGBA8888_read_line;
+>> +	case DRM_FORMAT_XRGB8888:
+>> +		return &XRGB8888_read_line;
+>> +	case DRM_FORMAT_XBGR8888:
+>> +		return &XBGR8888_read_line;
+>> +	case DRM_FORMAT_RGBX8888:
+>> +		return &RGBX8888_read_line;
+>> +	case DRM_FORMAT_BGRX8888:
+>> +		return &BGRX8888_read_line;
+>>    	case DRM_FORMAT_ARGB16161616:
+>>    		return &ARGB16161616_read_line;
+>>    	case DRM_FORMAT_XRGB16161616:
+>> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+>> index e3fdd161d0f0..b7f498944c50 100644
+>> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+>> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+>> @@ -14,8 +14,13 @@
+>>    
+>>    static const u32 vkms_formats[] = {
+>>    	DRM_FORMAT_ARGB8888,
+>> -	DRM_FORMAT_XRGB8888,
+>>    	DRM_FORMAT_ABGR8888,
+>> +	DRM_FORMAT_BGRA8888,
+>> +	DRM_FORMAT_RGBA8888,
+>> +	DRM_FORMAT_XRGB8888,
+>> +	DRM_FORMAT_XBGR8888,
+>> +	DRM_FORMAT_RGBX8888,
+>> +	DRM_FORMAT_BGRX8888,
+>>    	DRM_FORMAT_XRGB16161616,
+>>    	DRM_FORMAT_ARGB16161616,
+>>    	DRM_FORMAT_RGB565,
+>>
+> 
+
 -- 
-2.25.1.362.g51ebf55
-
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
