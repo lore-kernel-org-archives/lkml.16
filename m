@@ -1,534 +1,159 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2051.outbound.protection.outlook.com [40.107.101.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD349C148;
-	Fri, 13 Jun 2025 20:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749847444; cv=none; b=UlQI8zqth+ZK4rX/gYXOhQkA27MOSz5SCE39QeTTmPyGX+Cgb9lMohV8NZq+p4a4vJX4o/PZJ77rN6iT3pfT21XrPdEfCfpFwrwqHbklyIXwtNoWRX5xsqoLt4AnZ9tlRQUUenBboZsh7idCW+66bspgsJ8oVSF8xfPUo2o0va0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749847444; c=relaxed/simple;
-	bh=yvWh0lIEDEWEW0SFkOmqQZWAfvPWW7DHpBiWSYBGyqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R2x7MPaIEUn5yTagbfj5tBiR9+XQQLQBzSQhOZNrxOGWBvtoJ1zwqeQzmUntu2RVpBNty4XtsaHlfTFjy2HP8vYaSOxAWP9R6E5ofxMXtRVAMfsPjOp8REop+NjA294KDFAgATEPlIoVPLNBsEttBZWSyPesrOU98Cdo5KBzlMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=VnnLbHjR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HAEeskTc; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE73F20E002
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749847539; cv=fail; b=lZ0UEyqXob9zveBc2vSxJIJLR5/CQYw7C2qc4RjHwxANCnlyUxzoGxNTFmzBLffHpAUm3fokp/3ELskkm21CZGmBJoAzUFHMtLCo2dCMXV6bbo4BRuu4vkdoB3m99npGfyT6Au0NP19E+WbEawZ6d0hVyWHnIAP7+xfsWsW0YCA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749847539; c=relaxed/simple;
+	bh=rgxhmLm/ok6HD70vpWuCTaMB/hIhr/1othYzsavDl3k=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FexblL+WNq4DaDwhRAC1W6gI7ZwrDjmKt+nNwc8GzH3OdInpzNUxcfbfAnfvjxI0k2/XtvgRFnpg3Nx4Q55SCn24LtV4r6CjkANUj4ql4CA4LvWjJnsNWqGKvBoNRKk47MJnfNEp4ZMBOrAmBTVK6XOphpavZjF3TTZ9l8GkQQ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=izPo5r/Z; arc=fail smtp.client-ip=40.107.101.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="VnnLbHjR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HAEeskTc"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id B0FD9254011E;
-	Fri, 13 Jun 2025 16:44:00 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Fri, 13 Jun 2025 16:44:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749847440;
-	 x=1749933840; bh=uBdPCfWU5L3xn2W+RKOFRrSf2OnXHHdavH4eeLdG1+4=; b=
-	VnnLbHjR2UA/AYNG85HcPntBSU/bjzmsEJPosEY4ixlx4K53hxgEWePusc691qSq
-	Scqj2S1WBsBgMCWeniIdoIMtSZTCsgd/7ilR1uyb0C63tfr0pU3PJyRPltbm8TIp
-	CmRadsItkIrtnh8Ii8UUiRF3wwMuSTUwDpk7ibXamqtp7S3Y90XZrAHHqqsMTiaq
-	cFrvg5QGJCkpfp0qNMjqdrtEkPYNlpa7EA+G4gcbE+TEWR+uLrw1HOJAjDk03EcG
-	9mxWI10LgXsBgOm65d5tmdFa64Qxqi5epkHiKxf7OJimxWh1i9eNFmY/My+eExXQ
-	yxGJ2ElkqTfbqibrUtapMQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749847440; x=
-	1749933840; bh=uBdPCfWU5L3xn2W+RKOFRrSf2OnXHHdavH4eeLdG1+4=; b=H
-	AEeskTcWjs/oP1eMrOqCwRhebktRwAZRSZRnZIQ8PeGFths9qhRHI4gdqRT5Sf2z
-	nuHJzNcgmOplUJDphDS9UoMmbDIHBX4NbWYtkjOWVp1FJnHTvt93SyUlS50/2FuL
-	VF5ghtfhYhqkQIlHpqfZQe47xLUgbqJ0BDHZ2ix9DRa8w68yL6hjz6CID1q9U4d1
-	7ucsIistbpbIWJl/iFfIG2+jhrEnLahgAUzpVb1kTZXh1A79j9OBdA7QPsVy82L1
-	w4lwM1yhqyLwXIIzCw8ODccatxhTGe3iMRJRb/uRV/MKAu/p+zxJ+gCVS6DbbFuD
-	Kh8Y7ogpva7nleRrp6TQw==
-X-ME-Sender: <xms:kI1MaDn9o8O6YfRImEp1McG7wYXjaurMTwsXisQqZL3Wt33kyNWjJQ>
-    <xme:kI1MaG0j1sh6V5TQ5WTZgiDIvJdorlH7MxtWPC6Mp9U0f0P--_wG3xH9ih2MzIAt6
-    MDZdfidKOdvlTLFExQ>
-X-ME-Received: <xmr:kI1MaJpb3QzfhBcDPXajjYxCJ1Ec_YyDwuIYVqXZOznIgVO6kLc4ivx0Cnx-WRAsq3a_CacMH6_0rTMenY-pdMY4IK6aODjCqw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeelgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
-    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
-    guvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepveet
-    gedtvddvhfdtkeeghfeffeehteehkeekgeefjeduieduueelgedtheekkeetnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhs
-    ohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtghpthhtohepkedpmh
-    houggvpehsmhhtphhouhhtpdhrtghpthhtoheplhgruhhrvghnthdrphhinhgthhgrrhht
-    sehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjrggtohhpohdrmhhonh
-    guihesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhgrtghophhordhm
-    ohhnughiodhrvghnvghsrghssehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtth
-    hopehkihgvrhgrnhdrsghinhhghhgrmhdorhgvnhgvshgrshesihguvggrshhonhgsohgr
-    rhgurdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhg
-X-ME-Proxy: <xmx:kI1MaLnIZ52IPNrjVvPldfOWlH88GuzadT1zjQji3owhrmZKIn-Qqg>
-    <xmx:kI1MaB1xVvjHiDlUy-FeTd-_KV-nIzTQqDJ16DaUcnME95uZQTBugA>
-    <xmx:kI1MaKvTEFRYmaqmb-SQ44-KMuJqYD6czeExvXoPpyuMsvC72Vj4WQ>
-    <xmx:kI1MaFVTl8dK37pNVqZNmYo8LOCo9JpuF--FMdUxL1vCs-KoFg2PLg>
-    <xmx:kI1MaCo9_8JflBHmq7ETENk5p4qwu2vMjypuAUUgvzHxDY6H6CLd5JES>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 13 Jun 2025 16:43:59 -0400 (EDT)
-Date: Fri, 13 Jun 2025 22:43:57 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>,
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v10] media: vsp1: Add VSPX support
-Message-ID: <20250613204357.GA1100579@ragnatech.se>
-References: <20250529-b4-vspx-v10-1-02a9cb000853@ideasonboard.com>
- <20250607143808.GF2780410@ragnatech.se>
- <4lnsdnsv5h2aza2bkup3bwgqwrlt3i4wtj3jkde24fqingnqlc@2drah4ntnrzz>
- <20250609144208.GJ2780410@ragnatech.se>
- <20250613002417.GJ10542@pendragon.ideasonboard.com>
- <20250613102745.GD1002387@ragnatech.se>
- <20250613193601.GA14438@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="izPo5r/Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jY1edbxiesN2yJURNoO9F1wrKIakTRm1HpEgVO8Nw2nIf3Gqxo1YmA9yy4lbK1yXxUiopsBKwhkH7oKwBtdnywE7+1knCmJ4Axu42cr2BeTzDZmomTnx3x7Z5G345yRgsY9hFQkw38xQUpMU7TKqA7ca0XId8qK5SZOrXNw29WDfC1Ukpm9hj+XztT5uXRYIgNBBlyxMDCeVYbJH9hJ5/vOeGr8ERPitUvjV0QT/JFDxeB4Aeya6pFOMzIuAuY/ZmaitOUUuJCnZYAWg7czemhdDmO+nUBAg1HMGnXSyxhyglPixq4PSW+EVMe6lK9d9Nzg/pvOAr9JEohj6RGz/ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4JvqcqrO9jEjwbsPAiWl//LJizxHS7de0HL0faHw9hg=;
+ b=DApJiwImljdosfL0tIMs5Mcz5b8KPjpCEnvOos9U8nbNmiLKQfnCjuoEjGxzLam5DHJwVqZT3syOCxXxbscaKyj4yntvT5T/7ONwbab+7Jb3qOMjiL1d1jRFWurjF45pja8I8RYbOMEepqmSC5PT8tZl4lrPyK8vZ3e7j2NDclk/ZXqrkd6E7DsoHS+qqbG8tyL856V5tk8/bqCDRLRvPzy00B+3ckSC0ybO8PBP//ZRT/MwdtvnbOUhHmc9w95gr35BKs/N5Dg6P5iGf27SdMySM/06hFKqfBlMUxxw8IKWyHBipqy9+UlsPod/mK40ec/r8FCZpDQemUX2bOTOYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4JvqcqrO9jEjwbsPAiWl//LJizxHS7de0HL0faHw9hg=;
+ b=izPo5r/ZW4apfGCTe46Kpea0OHdTQJ7sg6V82xzaS9EWMwVJurOll/wZiiE0aZ847wASVd3kt2L8hsQekE5kfHcl1Ln26xKKAtzHSE6j0HtvVscK4aeI2DMdJrR3QncQUemrkXUFxSJLcKUEe3TOvo3Tg3pb+XsPdvQl0ZJQ/gsPTzwjUZNf0WPhyASZrHbR+gzvU18lXLQSF81AMAp7vWgldJwKfts2ShBj7Ql9SihzcO1ax8dO4kxq+nAEBK7D6alfcKXOPbh3AEjVFtkoS9PhZrZdd3+YtcaMIf0u7GDHel/9aP1hoJ+V8Mgf6wEIZEejX/NYGLQjNPH+8k5nfA==
+Received: from BYAPR05CA0099.namprd05.prod.outlook.com (2603:10b6:a03:e0::40)
+ by LV3PR12MB9168.namprd12.prod.outlook.com (2603:10b6:408:19a::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.22; Fri, 13 Jun
+ 2025 20:45:31 +0000
+Received: from CO1PEPF000044F6.namprd21.prod.outlook.com
+ (2603:10b6:a03:e0:cafe::11) by BYAPR05CA0099.outlook.office365.com
+ (2603:10b6:a03:e0::40) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.21 via Frontend Transport; Fri,
+ 13 Jun 2025 20:45:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1PEPF000044F6.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8880.0 via Frontend Transport; Fri, 13 Jun 2025 20:45:31 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 13 Jun
+ 2025 13:45:12 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 13 Jun
+ 2025 13:45:12 -0700
+Received: from nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 13 Jun 2025 13:45:08 -0700
+Date: Fri, 13 Jun 2025 13:45:06 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <kevin.tian@intel.com>, <will@kernel.org>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <ddutile@redhat.com>, <yi.l.liu@intel.com>,
+	<peterz@infradead.org>, <jsnitsel@redhat.com>, <praan@google.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>,
+	<baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v1 05/12] iommu: Introduce get_viommu_size and
+ viommu_init ops
+Message-ID: <aEyN0oY/Y8n0gsVb@nvidia.com>
+References: <cover.1749488870.git.nicolinc@nvidia.com>
+ <bc2c57254c40028e4dc74f32ac350826a26b3d8c.1749488870.git.nicolinc@nvidia.com>
+ <20250613134117.GD1174925@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250613193601.GA14438@pendragon.ideasonboard.com>
+In-Reply-To: <20250613134117.GD1174925@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F6:EE_|LV3PR12MB9168:EE_
+X-MS-Office365-Filtering-Correlation-Id: b85714c8-ee46-4977-cb9b-08ddaabb3cc3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GPk0Rdw0jXAYSuwpikzNkhSoknGHF41/hDJpqRx+FFC8Jp3mWOlK1bmxgqY3?=
+ =?us-ascii?Q?EHhWuheV7UthF2ABwvKg0tWPPA7311031BEkfeyKT73h2I78FiSeIx6n4GM0?=
+ =?us-ascii?Q?lBQZf44R4Rl/Ja5Y9PFHxJ8i8qwyr3/iEvuhDMfhxu8xEuhVykehNort1xU9?=
+ =?us-ascii?Q?bQyhsVRI9n9w3oyWhXsayRYQ1wtH3zdZLa6kfSwriuYH7q8Q3JWp5vUOYA7K?=
+ =?us-ascii?Q?+iuyBG/yMXXwzZecGUdcBt/1rBJuI4BbCsFKH8h1ChhK+tii/dQ7smAqkDOm?=
+ =?us-ascii?Q?95J6pJ6qLXkjABGhkoqB2HlYX8T6waPD1DwBqnILMJhulGHeZ11RxtUnvslB?=
+ =?us-ascii?Q?79YX0vX9HkOK/9fS1yn5qW+2SAVkYcwOHPsgscKs4hFhno3XqhURcZbcdGUT?=
+ =?us-ascii?Q?KPjzBBioDnaRgMpOvAnui4XPLX8rxRtTDaOaj7FhB5ywGJShjiXEyb/qetzx?=
+ =?us-ascii?Q?tNmAgjZZlpWMXFg3zaXvL5Mi1AWpihUtyUN0SKu2yde9ntQQ5GUZj3pEOtUr?=
+ =?us-ascii?Q?dyHtHABXl1O/PeDSkMGeMn9wRsYAVeq8+9pLVWS5zCCnvh9ZU22l4odPWJ4L?=
+ =?us-ascii?Q?lG3NfgTANoDVSCbzrHprS/Hqv3sHjjcPpYN+Lyaowx42Xurg0/iMEFRIO/F0?=
+ =?us-ascii?Q?WLzj7IOgZDiUEmXOKTW8sx6IJkYUcxcz+UFy4OW03oToQyyILu5E9Te68LTU?=
+ =?us-ascii?Q?QZHH9fRP67rKRPl1j5fO/Fcpps7bEoDw5cIJJUO22q5mPzTn4jzCEjxie86m?=
+ =?us-ascii?Q?Me0O59C2OY9pIeLWzeDETGZmhx6yRaAAdWo0FkDYO1VMQXYrisuPGjsSLC37?=
+ =?us-ascii?Q?5vhyE/znQwEv8Y79EHUY71Q1kh55N2ymy5YXljfPJZl+rqsk3AgjiowLPtfA?=
+ =?us-ascii?Q?lnDNrXWSU5cKRrIOnRiX+OoVoVkB33qT/wjhUapigaJean3iP1uGPxk8MpRy?=
+ =?us-ascii?Q?4dVAqgJnqQDg6DXxCA8eLWErbqHDhccYAULNl/6gLhauSFxRrf//IWLOw2Cx?=
+ =?us-ascii?Q?Wz8eZtpJhlXY+ThXxYdA+13uXan1ZBN+2bqh0k9rG0PGCUnvjbMYDofMi35L?=
+ =?us-ascii?Q?o4qvHM4rUto+mZLyyWil9R6xxpS5U7rTcjDDIs/nlRJ9S+USeJwDEIKmOyuS?=
+ =?us-ascii?Q?TxU8hu58pGRsKV5iA59Q3yuexdOx4w4A07WJ8Ud25zMUXwgTDXFW47XWDi/y?=
+ =?us-ascii?Q?5mCrTAYRQ3/VrvxbB8sSGV3L8AcrE1DdU0pb9a6sTC5DlHFmHyEr4IIOYX7Z?=
+ =?us-ascii?Q?F+pBniY5NBMzf8JSECudpe7eYVUTmVyPjVuyKaKALnyDgjqSbiqiPGvhwc03?=
+ =?us-ascii?Q?U8Dhizzd1/C1DvxYbSNaKgfENRRVap2ZsxpFFJZLerXcHdlJuMawMGJirVbE?=
+ =?us-ascii?Q?tCMbXe7s6b0k8VKr86Sk1xQaUJwqzSN1mTQvDC9tXoyKqLyYxs2T01pW9Y6Y?=
+ =?us-ascii?Q?4ERllhVWQnAxFhk/JW9fOCfjmrWVOqQP7Gk1ZHHiWmQWba28n0bR6Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 20:45:31.0144
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b85714c8-ee46-4977-cb9b-08ddaabb3cc3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F6.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9168
 
-On 2025-06-13 22:36:01 +0300, Laurent Pinchart wrote:
-> On Fri, Jun 13, 2025 at 12:27:45PM +0200, Niklas Söderlund wrote:
-> > On 2025-06-13 03:24:17 +0300, Laurent Pinchart wrote:
-> > > On Mon, Jun 09, 2025 at 04:42:08PM +0200, Niklas Söderlund wrote:
-> > > > On 2025-06-09 15:24:56 +0200, Jacopo Mondi wrote:
-> > > > > On Sat, Jun 07, 2025 at 04:38:08PM +0200, Niklas Söderlund wrote:
-> > > > > > On 2025-05-29 18:44:17 +0200, Jacopo Mondi wrote:
-> > > > > > > Add support for VSPX, a specialized version of the VSP2 that
-> > > > > > > transfers data to the ISP. The VSPX is composed of two RPF units
-> > > > > > > to read data from external memory and an IIF instance that performs
-> > > > > > > transfer towards the ISP.
-> > > > > > >
-> > > > > > > The VSPX is supported through a newly introduced vsp1_vspx.c file that
-> > > > > > > exposes two interfaces: vsp1_vspx interface, declared in vsp1_vspx.h
-> > > > > > > for the vsp1 core to initialize and cleanup the VSPX, and a vsp1_isp
-> > > > > > > interface, declared in include/media/vsp1.h for the ISP driver to
-> > > > > > > control the VSPX operations.
-> > > > > > >
-> > > > > > > Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-> > > > > 
-> > > > > [snip]
-> > > > > 
-> > > > > > > +
-> > > > > > > +	/* Configure WPF0 to enable RPF0 as source. */
-> > > > > > > +	vsp1_entity_route_setup(&pipe->output->entity, pipe, dlb);
-> > > > > > > +	vsp1_entity_configure_stream(&pipe->output->entity,
-> > > > > > > +				     pipe->output->entity.state, pipe,
-> > > > > > > +				     dl, dlb);
-> > > > > > > +
-> > > > > > > +	if (job->config.pairs) {
-> > > > > > > +		/*
-> > > > > > > +		 * Configure RPF0 for ConfigDMA data. Transfer the number of
-> > > > > > > +		 * configuration pairs plus 2 words for the header.
-> > > > > > > +		 */
-> > > > > > > +		ret = vsp1_vspx_pipeline_configure(vsp1, job->config.mem,
-> > > > > > > +						   V4L2_META_FMT_GENERIC_8,
-> > > > > > > +						   job->config.pairs * 2 + 2, 1,
-> > > > > > > +						   job->config.pairs * 2 + 2,
-> > > > > > > +						   VSPX_IIF_SINK_PAD_CONFIG,
-> > > > > > > +						   dl, dlb);
-> > > > > >
-> > > > > > I have run into a new "feature" of the ConfigDMA interface. It don't
-> > > > > > seem to be to happy when feed too small config buffers. Feeding it
-> > > > > > configuration data containing 16 or less pairs effects operation in bad
-> > > > > > ways.
-> > > > > >
-> > > > > > Feeding it less then 16 pairs causes corruption of the image buffer
-> > > > > > which follows the config buffer. Feeding it exactly 16 pairs freezes the
-> > > > > > VSPX. While feeding it 17 or more pairs all seems to work perfectly. I'm
-> > > > > > not sure why this is, maybe the minimum buffer constrains are kicking
-> > > > > > in?
-> > > > > >
-> > > > > > This is not a blocker IMHO, we can pad the config buffer with dummy
-> > > > > > writes or fallback to MMIO for small buffers. For now in the ISP driver
-> > > > > > I opted for the later as this proves VSPX can function without config
-> > > > > > DMA while also proving MMIO operation works. The later will become
-> > > > > > important if we ever try to use the ISP in-line as that mode of
-> > > > > > operation don't support Config DMA.
-> > > > > >
-> > > > > > Maybe a bounds check would be useful here so the VSPX refuses config
-> > > > > > buffers that are too small?
-> > > > > 
-> > > > > The datasheet reports a minimum input size for the IIF of 128x32
-> > > > > pixels.
-> > > > > 
-> > > > > Now, we know that the configDMA is a 1D buffer retroffitted to match a
-> > > > > 2D API which expresses buffers size as WxH. We currently program an
-> > > > > height of 1, so I'm not sure where those minimum in the datasheet come from.
-> > > > > 
-> > > > > Would padding the config with 0s work in your testing ?
-> > > > 
-> > > > I did test adding padding, but not with 0 but with dummy writes to RPP 
-> > > > registers that had no effect. I'm a bit scared of adding random register 
-> > > > writes such as writing 0 to address 0 to the config buffer.
-> > > > 
-> > > > But padding with basically nop writes worked.
-> > > 
-> > > The config buffer starts with the number of register/value pairs,
-> > > followed by the pairs. Do you experience bad behaviour when the buffer
-> > > is larger than 16 pairs but the number of pairs in the first field is
-> > > smaller than 16 ?
-> > 
-> > As we don't know how many pairs are needed when we allocate the buffer 
-> > the current design always allocates space for (1024 - 1) pairs [*].
-> > 
-> > For all tests done the buffer is always the same size. The difference is 
-> > the number of pairs set in the header word, if set to a value bellow 
-> > (bad image), equal (vsp freeze) or larger then 16 (good image).
+On Fri, Jun 13, 2025 at 10:41:17AM -0300, Jason Gunthorpe wrote:
+> On Mon, Jun 09, 2025 at 10:13:28AM -0700, Nicolin Chen wrote:
+> > @@ -654,6 +665,10 @@ struct iommu_ops {
+> >  
+> >  	int (*def_domain_type)(struct device *dev);
+> >  
+> > +	int (*get_viommu_size)(enum iommu_viommu_type viommu_type,
+> > +			       struct device *dev, size_t *viommu_size);
 > 
-> Looking at the code I think there's another difference. The buffer size
-> may always be the same, but the size transferred by the VSPX is equal to
-> job->config.pairs * 2 + 2. What I'm wondering is if the hardware would
-> misbehave if we always transferred at least 17 * 2 + 2 = 36 bytes, with
-> the number of pairs in the header being smaller than 16.
+> I'd return the size in a size_t instead of using an output
+> pointer. Make 0 mean not supported..
 
-That is indeed an interesting point. I did a quick experiment with 
-transferring 36 and 64 bytes to the Config DMA using VSPX while the 
-header pair count matching the needed number of actual pairs needed for 
-the config operation. Unfortunately the result is the same. Having 16 or 
-less pairs in the header word effects the output image as described 
-before.
+Yes. Kevin pointed out the same.
 
-However we learnt that that using the VSPX to send a larger chunk of 
-data then needed have no ill effect as long as the header word count is 
-correct and less then the chunk sent. The blocks needing more then 16 
-pairs to be configured worked as expected, while the one needing fewer 
-pairs had an negative effect on the outputted image.
+I found that the final version only has EOPNOTSUPP errno (had one
+of WIP versions reporting EINVAL). So, yea, doing a ssize_t would
+be cleaner and EOPNOTSUPP is probably enough. Will change in v2.
 
-> 
-> > *: It do check for overflows and will not allow more then that to be 
-> > written to the buffer and warns about it so we can increase it if we 
-> > ever need to. But with current blocks enabled we have space to grow.  
-> > This limit is also a purely internal thing not exposed to user-space.
-> > 
-> > > > > > > +		if (ret)
-> > > > > > > +			goto error_put_dl;
-> > > > > > > +
-> > > > > > > +		second_dl = vsp1_dl_list_get(pipe->output->dlm);
-> > > > > > > +		if (!second_dl) {
-> > > > > > > +			ret = -ENOMEM;
-> > > > > > > +			goto error_put_dl;
-> > > > > > > +		}
-> > > > > > > +
-> > > > > > > +		dl = second_dl;
-> > > > > > > +		dlb = vsp1_dl_list_get_body0(dl);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	/* Configure RPF0 for RAW image transfer. */
-> > > > > > > +	pix_mp = &job->img.fmt.fmt.pix_mp;
-> > > > > >
-> > > > > > I think adding a check on V4L2_TYPE_IS_MULTIPLANAR(job->img.fmt.type) or
-> > > > > > something similar could be added here. When using this interface I once
-> > > > > > waked into the trap of feeding it a non-planar confirmation which it
-> > > > > > happy accepted.
-> > > > > 
-> > > > > This might be a good idea. We could also switch on (job->img.fmt.type)
-> > > > > so that we can chose which member of the fmt union to use.
-> > > > > 
-> > > > > I recall initially I had a struct v4l2_pix_format_mplane, but the we
-> > > > > decided to pass the whole struct v4l2_format. Do you remember why ?
-> > > > 
-> > > > We discussed it briefly and opted to go for the whole struct to make 
-> > > > the API future proof IIRC.
-> > > 
-> > > I don't recall why. I don't mind much either way, but given that new
-> > > drivers should always use the multi-planar API, maybe
-> > > v4l2_pix_format_mplane is all we need ?
-> > > 
-> > > > > > These two small issues aside this iteration works perfectly, nice work!
-> > > > > > My stress test can't provoke any issues and the algorithms I have
-> > > > > > enabled on the ISP are happy and so are the libcamera pipeline and
-> > > > > > output images.
-> > > > > 
-> > > > > That's very good news, looking forward to developments on the
-> > > > > libcamera side then!
-> > > > > 
-> > > > > > > +	ret = vsp1_vspx_pipeline_configure(vsp1, job->img.mem,
-> > > > > > > +					   pix_mp->pixelformat,
-> > > > > > > +					   pix_mp->width, pix_mp->height,
-> > > > > > > +					   pix_mp->plane_fmt[0].bytesperline,
-> > > > > > > +					   VSPX_IIF_SINK_PAD_IMG, dl, dlb);
-> > > > > > > +	if (ret)
-> > > > > > > +		goto error_put_dl;
-> > > > > > > +
-> > > > > > > +	if (second_dl)
-> > > > > > > +		vsp1_dl_list_add_chain(job->dl, second_dl);
-> > > > > > > +
-> > > > > > > +	return 0;
-> > > > > > > +
-> > > > > > > +error_put_dl:
-> > > > > > > +	if (second_dl)
-> > > > > > > +		vsp1_dl_list_put(second_dl);
-> > > > > > > +	vsp1_dl_list_put(job->dl);
-> > > > > > > +	return ret;
-> > > > > > > +}
-> > > > > > > +EXPORT_SYMBOL_GPL(vsp1_isp_job_prepare);
-> > > > > > > +
-> > > > > > > +/**
-> > > > > > > + * vsp1_isp_job_run - Run a buffer transfer job
-> > > > > > > + * @dev: The VSP1 struct device
-> > > > > > > + * @job: The job to be run
-> > > > > > > + *
-> > > > > > > + * Run the display list contained in the job description provided by the caller.
-> > > > > > > + * The job must have been prepared with a call to vsp1_isp_job_prepare() and
-> > > > > > > + * the job's display list shall be valid.
-> > > > > > > + *
-> > > > > > > + * Return: %0 on success or a negative error code on failure
-> > > > > > > + */
-> > > > > > > +int vsp1_isp_job_run(struct device *dev, struct vsp1_isp_job_desc *job)
-> > > > > > > +{
-> > > > > > > +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
-> > > > > > > +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
-> > > > > > > +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
-> > > > > > > +	u32 value;
-> > > > > > > +
-> > > > > > > +	/* Make sure VSPX is not busy processing a frame. */
-> > > > > > > +	value = vsp1_read(vsp1, VI6_CMD(0));
-> > > > > > > +	if (value) {
-> > > > > > > +		dev_err(vsp1->dev,
-> > > > > > > +			"%s: Starting of WPF0 already reserved\n", __func__);
-> > > > > > > +		return -EBUSY;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	scoped_guard(spinlock_irqsave, &vspx_pipe->lock) {
-> > > > > > > +		/*
-> > > > > > > +		 * If a new job is scheduled when the VSPX is stopping, do
-> > > > > > > +		 * not run it.
-> > > > > > > +		 */
-> > > > > > > +		if (!vspx_pipe->enabled)
-> > > > > > > +			return 0;
-> > > > > > > +
-> > > > > > > +		vsp1_dl_list_commit(job->dl, 0);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	scoped_guard(spinlock_irqsave, &pipe->irqlock) {
-> > > > > > > +		vsp1_pipeline_run(pipe);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	return 0;
-> > > > > > > +}
-> > > > > > > +EXPORT_SYMBOL_GPL(vsp1_isp_job_run);
-> > > > > > > +
-> > > > > > > +/**
-> > > > > > > + * vsp1_isp_job_release - Release a non processed transfer job
-> > > > > > > + * @dev: The VSP1 struct device
-> > > > > > > + * @job: The job to release
-> > > > > > > + *
-> > > > > > > + * Release a job prepared by a call to vsp1_isp_job_prepare() and not yet
-> > > > > > > + * run. All pending jobs shall be released after streaming has been stopped.
-> > > > > > > + */
-> > > > > > > +void vsp1_isp_job_release(struct device *dev,
-> > > > > > > +			  struct vsp1_isp_job_desc *job)
-> > > > > > > +{
-> > > > > > > +	vsp1_dl_list_put(job->dl);
-> > > > > > > +}
-> > > > > > > +EXPORT_SYMBOL_GPL(vsp1_isp_job_release);
-> > > > > > > +
-> > > > > > > +/* -----------------------------------------------------------------------------
-> > > > > > > + * Initialization and cleanup
-> > > > > > > + */
-> > > > > > > +
-> > > > > > > +int vsp1_vspx_init(struct vsp1_device *vsp1)
-> > > > > > > +{
-> > > > > > > +	struct vsp1_vspx_pipeline *vspx_pipe;
-> > > > > > > +	struct vsp1_pipeline *pipe;
-> > > > > > > +
-> > > > > > > +	vsp1->vspx = devm_kzalloc(vsp1->dev, sizeof(*vsp1->vspx), GFP_KERNEL);
-> > > > > > > +	if (!vsp1->vspx)
-> > > > > > > +		return -ENOMEM;
-> > > > > > > +
-> > > > > > > +	vsp1->vspx->vsp1 = vsp1;
-> > > > > > > +
-> > > > > > > +	vspx_pipe = &vsp1->vspx->pipe;
-> > > > > > > +	vspx_pipe->enabled = false;
-> > > > > > > +
-> > > > > > > +	pipe = &vspx_pipe->pipe;
-> > > > > > > +
-> > > > > > > +	vsp1_pipeline_init(pipe);
-> > > > > > > +
-> > > > > > > +	pipe->partitions = 1;
-> > > > > > > +	pipe->part_table = &vspx_pipe->partition;
-> > > > > > > +	pipe->interlaced = false;
-> > > > > > > +	pipe->frame_end = vsp1_vspx_pipeline_frame_end;
-> > > > > > > +
-> > > > > > > +	spin_lock_init(&vspx_pipe->lock);
-> > > > > > > +
-> > > > > > > +	/*
-> > > > > > > +	 * Initialize RPF0 as input for VSPX and use it unconditionally for
-> > > > > > > +	 * now.
-> > > > > > > +	 */
-> > > > > > > +	pipe->inputs[0] = vsp1->rpf[0];
-> > > > > > > +	pipe->inputs[0]->entity.pipe = pipe;
-> > > > > > > +	pipe->inputs[0]->entity.sink = &vsp1->iif->entity;
-> > > > > > > +	list_add_tail(&pipe->inputs[0]->entity.list_pipe, &pipe->entities);
-> > > > > > > +
-> > > > > > > +	pipe->iif = &vsp1->iif->entity;
-> > > > > > > +	pipe->iif->pipe = pipe;
-> > > > > > > +	pipe->iif->sink = &vsp1->wpf[0]->entity;
-> > > > > > > +	pipe->iif->sink_pad = RWPF_PAD_SINK;
-> > > > > > > +	list_add_tail(&pipe->iif->list_pipe, &pipe->entities);
-> > > > > > > +
-> > > > > > > +	pipe->output = vsp1->wpf[0];
-> > > > > > > +	pipe->output->entity.pipe = pipe;
-> > > > > > > +	list_add_tail(&pipe->output->entity.list_pipe, &pipe->entities);
-> > > > > > > +
-> > > > > > > +	return 0;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +void vsp1_vspx_cleanup(struct vsp1_device *vsp1)
-> > > > > > > +{
-> > > > > > > +}
-> > > > > > > diff --git a/drivers/media/platform/renesas/vsp1/vsp1_vspx.h b/drivers/media/platform/renesas/vsp1/vsp1_vspx.h
-> > > > > > > new file mode 100644
-> > > > > > > index 000000000000..f871bf9e7dec
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/drivers/media/platform/renesas/vsp1/vsp1_vspx.h
-> > > > > > > @@ -0,0 +1,16 @@
-> > > > > > > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > > > > > > +/*
-> > > > > > > + * vsp1_vspx.h  --  R-Car Gen 4 VSPX
-> > > > > > > + *
-> > > > > > > + * Copyright (C) 2025 Ideas On Board Oy
-> > > > > > > + * Copyright (C) 2025 Renesas Electronics Corporation
-> > > > > > > + */
-> > > > > > > +#ifndef __VSP1_VSPX_H__
-> > > > > > > +#define __VSP1_VSPX_H__
-> > > > > > > +
-> > > > > > > +#include "vsp1.h"
-> > > > > > > +
-> > > > > > > +int vsp1_vspx_init(struct vsp1_device *vsp1);
-> > > > > > > +void vsp1_vspx_cleanup(struct vsp1_device *vsp1);
-> > > > > > > +
-> > > > > > > +#endif /* __VSP1_VSPX_H__ */
-> > > > > > > diff --git a/include/media/vsp1.h b/include/media/vsp1.h
-> > > > > > > index 4ea6352fd63f..5148c782580d 100644
-> > > > > > > --- a/include/media/vsp1.h
-> > > > > > > +++ b/include/media/vsp1.h
-> > > > > > > @@ -15,6 +15,10 @@
-> > > > > > >
-> > > > > > >  struct device;
-> > > > > > >
-> > > > > > > +/* -----------------------------------------------------------------------------
-> > > > > > > + * VSP1 DU interface
-> > > > > > > + */
-> > > > > > > +
-> > > > > > >  int vsp1_du_init(struct device *dev);
-> > > > > > >
-> > > > > > >  #define VSP1_DU_STATUS_COMPLETE		BIT(0)
-> > > > > > > @@ -121,4 +125,84 @@ void vsp1_du_atomic_flush(struct device *dev, unsigned int pipe_index,
-> > > > > > >  int vsp1_du_map_sg(struct device *dev, struct sg_table *sgt);
-> > > > > > >  void vsp1_du_unmap_sg(struct device *dev, struct sg_table *sgt);
-> > > > > > >
-> > > > > > > +/* -----------------------------------------------------------------------------
-> > > > > > > + * VSP1 ISP interface
-> > > > > > > + */
-> > > > > > > +
-> > > > > > > +/**
-> > > > > > > + * struct vsp1_isp_buffer_desc - Describe a buffer allocated by VSPX
-> > > > > > > + * @size: Byte size of the buffer allocated by VSPX
-> > > > > > > + * @cpu_addr: CPU-mapped address of a buffer allocated by VSPX
-> > > > > > > + * @dma_addr: bus address of a buffer allocated by VSPX
-> > > > > > > + */
-> > > > > > > +struct vsp1_isp_buffer_desc {
-> > > > > > > +	size_t size;
-> > > > > > > +	void *cpu_addr;
-> > > > > > > +	dma_addr_t dma_addr;
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +/**
-> > > > > > > + * struct vsp1_isp_job_desc - Describe a VSPX buffer transfer request
-> > > > > > > + * @config: ConfigDMA buffer descriptor
-> > > > > > > + * @config.pairs: number of reg-value pairs in the ConfigDMA buffer
-> > > > > > > + * @config.mem: bus address of the ConfigDMA buffer
-> > > > > > > + * @img: RAW image buffer descriptor
-> > > > > > > + * @img.fmt: RAW image format
-> > > > > > > + * @img.mem: bus address of the RAW image buffer
-> > > > > > > + * @dl: pointer to the display list populated by the VSPX driver in the
-> > > > > > > + *      vsp1_isp_job_prepare() function
-> > > > > > > + *
-> > > > > > > + * Describe a transfer request for the VSPX to perform on behalf of the ISP.
-> > > > > > > + * The job descriptor contains an optional ConfigDMA buffer and one RAW image
-> > > > > > > + * buffer. Set config.pairs to 0 if no ConfigDMA buffer should be transferred.
-> > > > > > > + *
-> > > > > > > + * The ISP driver shall pass an instance this type to the vsp1_isp_job_prepare()
-> > > > > > > + * function that will populate the display list pointer @dl using the @config
-> > > > > > > + * and @img descriptors. When the job has to be run on the VSPX, the descriptor
-> > > > > > > + * shall be passed to vsp1_isp_job_run() which consumes the display list.
-> > > > > > > + *
-> > > > > > > + * Job descriptors not yet run shall be released with a call to
-> > > > > > > + * vsp1_isp_job_release() when stopping the streaming in order to properly
-> > > > > > > + * release the resources acquired by vsp1_isp_job_prepare().
-> > > > > > > + */
-> > > > > > > +struct vsp1_dl_list;
-> > > > > > > +struct vsp1_isp_job_desc {
-> > > > > > > +	struct {
-> > > > > > > +		unsigned int pairs;
-> > > > > > > +		dma_addr_t mem;
-> > > > > > > +	} config;
-> > > > > > > +	struct {
-> > > > > > > +		struct v4l2_format fmt;
-> > > > > > > +		dma_addr_t mem;
-> > > > > > > +	} img;
-> > > > > > > +	struct vsp1_dl_list *dl;
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +/**
-> > > > > > > + * struct vsp1_vspx_frame_end - VSPX frame end callback data
-> > > > > > > + * @vspx_frame_end: Frame end callback. Called after a transfer job has been
-> > > > > > > + *		    completed. If the job includes both a ConfigDMA and a
-> > > > > > > + *		    RAW image, the callback is called after both have been
-> > > > > > > + *		    transferred
-> > > > > > > + * @frame_end_data: Frame end callback data, passed to vspx_frame_end
-> > > > > > > + */
-> > > > > > > +struct vsp1_vspx_frame_end {
-> > > > > > > +	void (*vspx_frame_end)(void *data);
-> > > > > > > +	void *frame_end_data;
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +int vsp1_isp_init(struct device *dev);
-> > > > > > > +struct device *vsp1_isp_get_bus_master(struct device *dev);
-> > > > > > > +int vsp1_isp_alloc_buffer(struct device *dev, size_t size,
-> > > > > > > +			  struct vsp1_isp_buffer_desc *buffer_desc);
-> > > > > > > +void vsp1_isp_free_buffer(struct device *dev,
-> > > > > > > +			  struct vsp1_isp_buffer_desc *buffer_desc);
-> > > > > > > +int vsp1_isp_start_streaming(struct device *dev,
-> > > > > > > +			     struct vsp1_vspx_frame_end *frame_end);
-> > > > > > > +void vsp1_isp_stop_streaming(struct device *dev);
-> > > > > > > +int vsp1_isp_job_prepare(struct device *dev,
-> > > > > > > +			 struct vsp1_isp_job_desc *job);
-> > > > > > > +int vsp1_isp_job_run(struct device *dev, struct vsp1_isp_job_desc *job);
-> > > > > > > +void vsp1_isp_job_release(struct device *dev,  struct vsp1_isp_job_desc *job);
-> > > > > > > +
-> > > > > > >  #endif /* __MEDIA_VSP1_H__ */
-> > > > > > >
-> > > > > > > ---
-> > > > > > > base-commit: 1d41f477d6ff5f5eb0b78b37644ffac0785602c9
-> > > > > > > change-id: 20250502-b4-vspx-90c815bff6dd
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-
--- 
-Kind Regards,
-Niklas Söderlund
+Thanks
+Nicolin
