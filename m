@@ -1,154 +1,125 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E29B20DD4B
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6E2293C51
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749823857; cv=none; b=kg759WmV87xGvQxKmh8YcMLB3kbJ5j6h/Wsr3HxB/zIjDOM5bkq42v8LOi9/mpLqAHNJIT0WwzL+OdE2ga0HIedmWWfRtGdKaX/xP4SrzA20+Ogn5i90h4q3ipL1z0ofJxxr4aBu0EAW4ntSuV5KMToDxz7IgIs7zJLbwyurlRQ=
+	t=1749823861; cv=none; b=qkXgNp0SvHz9ln71aqRnGqxsEakcjpPavsEETIWTcznIZhfkBs4lJ2Jls2Lu2vQJt5PNpFe04jcdVpog4pXudWo3VTmmE3VD321Ip6jC3ty7xjkOevpeyDANBuQu+6n3FGcM2danTXvarHWw9Zm5S1fsWXcDmEy90DMOSzf4tAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749823857; c=relaxed/simple;
-	bh=I/hB+x3yRCXCcEoIeWGWVXGO6fU3JqeyxrlJeHAWf8Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=IuLDUoo0UAr3MQZfpIlzqLGV7Fk5vME/tJJarbZZ9K9YAlAK+fULgwb/wHx2ekFCBUd4JJv1oz/ObcTdgIIp8SRzETeXmpZoH0u3OjtFV1yLj0AsQKAU4oSy5huPr1kKLH6MaacSlWcwUO9Ojep9ykoDlit/5240xhMZEV+1CLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=i1oJ3lYm; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1749823861; c=relaxed/simple;
+	bh=KsMsyRZXElvuHkJ96w1G569AzFpOqniYxrD/MRoCgA0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=RIGMlXQsbcf+Kdw0f1zHTRIqz5rznaR801RPgFNq0bkGxa7rD0WFDI5ncIaNea7JyqsPswyfQztCcgbuGv3ETjRu4f2/JDu8wNEAguyvA/fMQ+0hgz2fMSLlBTrdx89hL5ZMz1Lmd7jUH5V0RB1VJqGDyJxu01rpo264bZ1/xSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eLSN0g7I; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="i1oJ3lYm"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450828af36aso1604105e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:10:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eLSN0g7I"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-6c8f99fef10so2503540a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:10:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749823854; x=1750428654; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YCwDooc5Gsj0hNyVB/vl+qIPOuR8M4GMrDeO1ReDJTw=;
-        b=i1oJ3lYm5kzcpzh4bHcl0ucn6Pq8bD8ryDFsIL++VB2zrCryzhGO2Uf7UwgOj6fxzt
-         QPHlVWCxNoItm+kJ/AR487JMWu1douMgaxaaRU+NAFmTJrcU7dly81MdplUdesqApmJg
-         kDe44vHAUVaui4RTDmJWCTeTtAEtscjQ1Yh+Nu+xNK1lZjsyUjEEwa8ZKJHNhROeWyO2
-         qNFuPwCj26grxfJ6PT2/8RAQFmbXpasKdSZc7tYS5eHyB0jod+LnHXQQvcaDW+O5bJgJ
-         wd2H60v+nibkMDiOBWDnZb7YIP+8sxVy7MGftn1OzVy0Eydx21j+I2xKst1Zj04cy2QM
-         d1Cg==
+        d=google.com; s=20230601; t=1749823859; x=1750428659; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KFKxciq4Ln4zlYp2JiFF7Swu6ECCNV/1MfY2qSFQNn4=;
+        b=eLSN0g7IgA3pRVM4dOdej9OHNVsITq1iUTAM3EFnSvc9xnx9nrag9ftxSAe9POLEiU
+         ypr75AuFPYgNLHLSYJil1vckV1UXQgf83EB7z2Xmq1FT8Zg02D3UZRgr1HE6bTN1y84I
+         ZJAi1g7TTRg/HyfM6TlKgzuaRTNt6JvStpNPHoI+L7jpdwOwAAlr4eZGMdx8690ZXUig
+         kmsUhY8G30wghnAAa++QPJQtCXvx8DMG5yN1m63y6FI3bn+1sjndO+6yZQUmd6+W81l8
+         ls5+9ODcvpBMUL4qQvlsHfjspi+5PE7fpqog6xKePI2yFCqI+c6XqhiuRvnUaKTD9btd
+         c7FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749823854; x=1750428654;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YCwDooc5Gsj0hNyVB/vl+qIPOuR8M4GMrDeO1ReDJTw=;
-        b=ITPWbAlrjtwl5ZJeWgYzaCKfcs455EkrS+KAqx9KUkBOf5cPxZkm5Ou5fimNSBdVn4
-         E/n2ezKWkaKSq7pqBbUOmBTiYRWuqPhrcyx5602hpYFDPxAoazWsjCZ9ufPRn2d0igKB
-         NzTYo25V5MxBofb/AJ/k4yAXv9Xip/05awxbTDH8IymkGEvA+xGPpGy+RlTOUgEhXtr+
-         i8Y6Rx+YLPEpj4FkAaYzxvj8c8OClQg9mW2qXp+24DaupcgmHKAgxMbOuVJ1F7aV5Zvc
-         e1amLA6GcvI0RGLIPJ8qAOdbj+dCVNGgJmgzzpEQ2SV8TFCs8fO0e7YUcWbl0HFg0/J7
-         0Xag==
-X-Forwarded-Encrypted: i=1; AJvYcCVhAwkcsP43NimSz4X9zeA9Jvmguclgy3pUSmmowOUKeawz89LbNyRRCx3/titp5TvGVh3JQB90Z7y43sU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtmUxN7/PnORo2Re16Ez3FbrfWwmWpPIXWnoFAasVUk5wK5t3y
-	pMAjKoj+9RUkYOXoW1kqhh7jfYMYmywTeKF8xzl30itz6TivALNEhiSDU/OTYjTJHPY=
-X-Gm-Gg: ASbGnctcImmqtrW8oUUlUqLVTXj+iZHSg5mT4NmrAEXmszAifztXpXiYSpIe3LAb8EH
-	Vu+uRyF869gqDPmWgyVPojxQZrmkYtYTxFM1d5pQ6y7BouX5hksoz8E/Sthn5CTpbNpwYbtYT7S
-	GBsp9MsGCedKcwvtf/XYHEaYFYYl/qLHZcMhppCsNGuA75GQ2gtOsVp/7hbKQgKroB0yzW4psqs
-	emJ5wgHlqKZ5M2dPz3WgBScoeQqIpb86moHm8qCRzHvkh/dwdVGoWkpePKc6tD4vfTs8rVtSuUb
-	9Of+Ro/WmHo9Lwbko6UihX0USf7yDqwjh1Gy0NPxYx28Fk6UA3Dd2du4Bq/vPzSWrXjhJcAY71S
-	Y8CZi
-X-Google-Smtp-Source: AGHT+IG4GeDYIccMx3Bp09h1EiucZJUl0jOo1LzwGgmCUjMutG0m5EDpaCILXiv1gNh0ijozMoQ+aA==
-X-Received: by 2002:a05:600c:a414:b0:453:9b3:5b70 with SMTP id 5b1f17b1804b1-45334b07e86mr10021225e9.8.1749823853636;
-        Fri, 13 Jun 2025 07:10:53 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:3c9f:2b68:ce36:f64b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea15b0sm54247605e9.11.2025.06.13.07.10.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 07:10:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749823859; x=1750428659;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KFKxciq4Ln4zlYp2JiFF7Swu6ECCNV/1MfY2qSFQNn4=;
+        b=plhd4hq9x/GKNMSoVJQnfh0E1bUA/e1lfxFFalCDE4CHCrHPtyfNF46G65jgdIWUMh
+         WwU8jygxW2K2eJ1HNQRCb8W3M6johaxxlmoq1KQwFT2lZ6HcTzVKUEd+dRT+2ee55jge
+         oTsYUIA69UGreMU887jXVu0J9NQ0vT/ZqMnfvxZPEeCjnj2XAI/gN6HTAHeMvYcq3EC+
+         ED9QJ0hVx1kRYrqOPoea8T0kjoMRPLdkn0f80QF+A/Y3Z6hcsNv4gDcTmUiX7L9wbmKV
+         AuxsW+lSIbQzxq2Y4u4nF5CPXPLU11qbH2KG3tcPp8ljxkKb3h1Gr9fdLD8M0IHoBJx8
+         INnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOmc0ENkgw7AB3xo90Ut8KDSsfmkGEso1gTJn4gpM14DRHUkNwdFpYbuIzzEZpIYaCOi5eILeACZRFsg8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFrNX+loPQxyAYZI5L+Zue06DjXXopFEtzB8symd8k+YV6qDly
+	tCf31dOM140kvUngf2P8dIk+wqKJkcOZ0SEGT+vxE3CekB3i1CjlgEB5/vWsFLKxG9AvTPmel7d
+	WYwPn9Q==
+X-Google-Smtp-Source: AGHT+IFN3c4N91I5ZhjfG8LYZwpTxT5er4jDbXzzE1DZU2whHqoP1gUgS61lLn6FCV62f4VbZN+4TFLFz4w=
+X-Received: from pgam16.prod.google.com ([2002:a05:6a02:2b50:b0:b2e:c0d6:cbd3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a127:b0:21f:5b6f:36d5
+ with SMTP id adf61e73a8af0-21facb26d8bmr4729208637.10.1749823859107; Fri, 13
+ Jun 2025 07:10:59 -0700 (PDT)
+Date: Fri, 13 Jun 2025 07:10:57 -0700
+In-Reply-To: <20250613071536.GG2273038@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 13 Jun 2025 16:10:52 +0200
-Message-Id: <DALGSCDW0GIG.10I22KD2SCSNX@ventanamicro.com>
-Subject: Re: [PATCH 2/2] RISC-V: make use of variadic sbi_ecall
-Cc: <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Paul
- Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, "Atish Patra" <atishp@rivosinc.com>, "Andrew Jones"
- <ajones@ventanamicro.com>, =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?=
- <cleger@rivosinc.com>, "Anup Patel" <apatel@ventanamicro.com>
-To: "David Laight" <david.laight.linux@gmail.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250612145754.2126147-2-rkrcmar@ventanamicro.com>
- <20250612145754.2126147-4-rkrcmar@ventanamicro.com>
- <20250613115459.6293f929@pumpkin>
-In-Reply-To: <20250613115459.6293f929@pumpkin>
+References: <20250613070118.3694407-1-xin@zytor.com> <20250613070118.3694407-3-xin@zytor.com>
+ <20250613071536.GG2273038@noisy.programming.kicks-ass.net>
+Message-ID: <aEwxcVzQubz3BmmJ@google.com>
+Subject: Re: [PATCH v1 2/3] x86/traps: Initialize DR7 by writing its
+ architectural reset value
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	pbonzini@redhat.com, brgerst@gmail.com, tony.luck@intel.com, 
+	fenghuay@nvidia.com
+Content-Type: text/plain; charset="us-ascii"
 
-2025-06-13T11:54:59+01:00, David Laight <david.laight.linux@gmail.com>:
-> On Thu, 12 Jun 2025 16:57:55 +0200
-> Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com> wrote:
->
->> The new sbi_ecall doesn't have to list all 8 arguments anymore, so only
->> pass the actual numbers of arguments for each SBI function.
->>=20
->> Trailing 0 is sometimes intentional.
-> ...
->> @@ -630,10 +630,10 @@ static int pmu_sbi_snapshot_setup(struct riscv_pmu=
- *pmu, int cpu)
->>  	if (IS_ENABLED(CONFIG_32BIT))
->>  		ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
->>  				cpu_hw_evt->snapshot_addr_phys,
->> -				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32, 0, 0, 0, 0);
->> +				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32);
->
-> That doesn't look right (and other similar ones).
+On Fri, Jun 13, 2025, Peter Zijlstra wrote:
+> On Fri, Jun 13, 2025 at 12:01:16AM -0700, Xin Li (Intel) wrote:
+> 
+> > While at it, replace the hardcoded debug register number 7 with the
+> > existing DR_CONTROL macro for clarity.
+> 
+> Yeah, not really a fan of that... IMO that obfuscates the code more than
+> it helps, consider:
 
-This one is wrong, but because I missed the flags.  This patch should
-have been:
++1, and NAK to the KVM changes.  Pretty much everything in KVM deals with the
+"raw" names.  The use of dr6 and dr7 is pervasive throughout the VMX and SVM
+architectures:
 
-		ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
-				cpu_hw_evt->snapshot_addr_phys,
-				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32, 0);
+ vmcs.GUEST_DR7
+ vmcb.save.dr6
+ vmcb.save.dr7
 
-I'll fix that in v2, thanks.  I think you might be referring to the fact
-that the code would make more sense as:
+And is cemented in KVM's uAPI:
 
-		ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
-				lower_32_bits(cpu_hw_evt->snapshot_addr_phys),
-				upper_32_bits(cpu_hw_evt->snapshot_addr_phys))
+ kvm_debug_exit_arch.dr6
+ kvm_debug_exit_arch.dr7
+ kvm_debugregs.dr6
+ kvm_debugregs.dr7
 
-I fully agree with that, but it's a different patch... I would even
-special case the `if` with CONFIG_32BIT && CONFIG_PHYS_ADDR_T_64BIT to
-make it extra clear why we're doing such a weird thing.
+Using DR_STATUS and DR_CONTROL is not an improvement when everything else is using
+'6' and '7'.  E.g. I skipped the changelog and was very confused by the '6' =>
+DR_STATUS change in the next patch.
 
-> The values are still 64bit - so get passed as two 32bit values (in some w=
-ay)
-> so that varargs code will get the wrong values.
+And don't even think about renaming the prefixes on these :-)
 
-The SBI function prototype looks like this in the specification:
+#define DR6_BUS_LOCK   (1 << 11)
+#define DR6_BD		(1 << 13)
+#define DR6_BS		(1 << 14)
+#define DR6_BT		(1 << 15)
+#define DR6_RTM		(1 << 16)
+/*
+ * DR6_ACTIVE_LOW combines fixed-1 and active-low bits.
+ * We can regard all the bits in DR6_FIXED_1 as active_low bits;
+ * they will never be 0 for now, but when they are defined
+ * in the future it will require no code change.
+ *
+ * DR6_ACTIVE_LOW is also used as the init/reset value for DR6.
+ */
+#define DR6_ACTIVE_LOW	0xffff0ff0
+#define DR6_VOLATILE	0x0001e80f
+#define DR6_FIXED_1	(DR6_ACTIVE_LOW & ~DR6_VOLATILE)
 
-  struct sbiret sbi_pmu_snapshot_set_shmem(unsigned long shmem_phys_lo,
-                                           unsigned long shmem_phys_hi,
-                                           unsigned long flags)
-
-SBI defines long to be the native register width, 32-bit with
-CONFIG_32BIT, and therefore uses 2 registers to pass the physical
-address, because the physical address can be up to 34 bits on RV32.
-
-The macro will result in the same arguments as before, and it is what
-the sbi_ecall actually should do.
-
-> I guess the previous change wasn't tested on 32bit?
-
-It wasn't even compiled, because 64-bit phys_addr_t on CONFIG_32BIT
-requires CONFIG_PHYS_ADDR_T_64BIT, but that config combination seems
-impossible at this point.
-"(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32)" is a fancy way to say 0.
-
-If we were able to compile with CONFIG_PHYS_ADDR_T_64BIT, I think the
-patch would produce the desired result, hopefully with a warning that
-we're implicitly casting u64 to u32, but that was there even before this
-patch.
-
-Enabling CONFIG_PHYS_ADDR_T_64BIT will have its share of issues --
-I noticed a bug where other 32-bit function (SBI_EXT_NACL_SET_SHMEM)
-forgets to pass the upper part of the physical address, but I didn't
-include it in this series, because it made no difference right now.
+#define DR7_BP_EN_MASK	0x000000ff
+#define DR7_GE		(1 << 9)
+#define DR7_GD		(1 << 13)
+#define DR7_FIXED_1	0x00000400
+#define DR7_VOLATILE	0xffff2bff
