@@ -1,113 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D0C28D8CA;
-	Fri, 13 Jun 2025 23:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123A4239E85
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749856852; cv=none; b=mGZ2/bCK68iRVYfAc/OFsS+ksXOHQZRv2BczG28I8wZ3/Xy2sCREBtnazds7Miy3klV/g9kYRU7/UAC/JqgzYXjrN5qpADl7EgbFJE6+VwwB8S2VH4cLVngQMJDwh4Sf5arBo8psnXHRg45bP/mAp38UJ/wX5C6bMDnO9IEm810=
+	t=1749856891; cv=none; b=f/DmFH8r1wNXI79XpmZu0TmYB2M6clnVR13OLgwoLyyeYerJE3qvG31zq2gEjgXiR1t24ORFMqpcsIKv1gbpsoeSV4Z1fRi+Z7aN0lcpNo4XdzPvS/76UdTcF/N1uHI+GVFmLY/++sdNwaRjfWs5y0kV9/71NPgCAu+kQMenZAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749856852; c=relaxed/simple;
-	bh=DQPacqRFq47t4t1mV2H6DBnnyvNPrh7szv6ag9li9Nk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Tv3yJL8kYpB7VfcowH8SRH3Hxkwev7+Bc6KkfOOOHnQmOlyyBWh2weolXK627TyVzyo3hxzhyVjrefqThIoAjvFAH9f+rnV9SF5g6+KeL4AuTL21i/NCXOMvqVuOefCVFQvE1LXlJxWteZaEqp6qBpix76dFHC2mMitocYL672Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drSQKrh8; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1749856891; c=relaxed/simple;
+	bh=CkQw8hEYOjzT7iA+OJ9iPhX2fX0r83O60TEUigKhQlg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AR7mhidIyzrPWUuThjX0lSP/hCEIdoKqsAt95teqZyDkUOQE7+S2aysvYb5ws1rFIdUmTNAxRFfz3VMVXoTsfC/i3P4WN8abr+zXV5p8xCncxjrbgQ0X7RTazEmY2JbZR4YGlRe6oUf9WXKkdmoBJL0jwtUrtpV0L3vABLH1Ppk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kpWZehQL; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drSQKrh8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kpWZehQL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749856850; x=1781392850;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=DQPacqRFq47t4t1mV2H6DBnnyvNPrh7szv6ag9li9Nk=;
-  b=drSQKrh8eAkiTvL7Rt5SC8/3EhJDztI7w80WNe57FTpzVqomJv3vZWju
-   lNmQ49BT78ZbjQDdKoJKdQh9PLji8hzwBeDetEYIz5197b9UHOiHp0z+b
-   NYGRmuaZMKxqGRa/4l7/fk+qiYgb4XSFK/oUfYeEavAwWHp56UHW7/kbH
-   03ntG96naNxMlKUY7iN8rqVlwaZtZEHK7ZdRz1kxaBrLUOikfSsrCaeF1
-   mWuZLFWS1hL/bTsoqM/yayOTrKlhuRfErdKxlyyL9GmpinLcUpxlpwrUS
-   rW0vFuNzAPr0gIWfLPTC97a05Ejywz8SS3wTDdVcLy/g1JIDKR+Db2Vpw
-   w==;
-X-CSE-ConnectionGUID: FIhbxJyZRqiz9fxYoUBeBg==
-X-CSE-MsgGUID: KsAF46G2SCqqmSudv1FtiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="69524360"
+  t=1749856890; x=1781392890;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=CkQw8hEYOjzT7iA+OJ9iPhX2fX0r83O60TEUigKhQlg=;
+  b=kpWZehQLNV6schf0GVnIFDYiYZLHDGr8ojBduzgpDL+yl1aBoqZfena+
+   TnrDgMAhYQnlTJWBIsNEfz/iPWQIO6zAsX7Dtv2nldVuSVwCf/O3aeSfL
+   xOkOTGm8qf4hNAwqXWVvZBKEeZD5KJ+56jGu6oezPFumrwQ+VkoOH1yJ+
+   YBIABkOi0hEgBj7M3TAtyb+p20/PMUMQgUY1eCPD5zGO/l5p/BZbtZvpM
+   NmtL8ADHL7BvK+xS20Xvnq/nNkdRZtXlcZrnoYK788k6f5QICNHUhn3+d
+   vC9YccdBeVG94c4QV3iDxas/cpREwgqpVSTKhnm/l02pMJ/thOrK1ZwKW
+   g==;
+X-CSE-ConnectionGUID: FduROf89SAi+Ixl9jDQwcQ==
+X-CSE-MsgGUID: UbQZ5wq1RQe6n7XYoJFQ5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="55883035"
 X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
-   d="scan'208";a="69524360"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 16:20:50 -0700
-X-CSE-ConnectionGUID: CMo9xzuVSAe6vQIZ/paMhg==
-X-CSE-MsgGUID: rpd3kJhgQDe0Q5mg2fQqxA==
+   d="scan'208";a="55883035"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 16:21:29 -0700
+X-CSE-ConnectionGUID: u8oyM5ZFQEGoSSbyTTNGGQ==
+X-CSE-MsgGUID: erUIcK6iQZS5DAQFiqUFSA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
-   d="scan'208";a="147788027"
-Received: from mgoodin-mobl3.amr.corp.intel.com (HELO vcostago-mobl3) ([10.124.222.194])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 16:20:49 -0700
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Yi Sun <yi.sun@intel.com>, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: yi.sun@intel.com, gordon.jin@intel.com
-Subject: Re: [PATCH v2 2/2] dmaengine: idxd: Fix refcount underflow on
- module unload
-In-Reply-To: <20250607130616.514984-3-yi.sun@intel.com>
-References: <20250607130616.514984-1-yi.sun@intel.com>
- <20250607130616.514984-3-yi.sun@intel.com>
-Date: Fri, 13 Jun 2025 16:20:48 -0700
-Message-ID: <87h60j8bzj.fsf@intel.com>
+   d="scan'208";a="153117013"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 13 Jun 2025 16:21:28 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQDiA-000D54-1I;
+	Fri, 13 Jun 2025 23:21:26 +0000
+Date: Sat, 14 Jun 2025 07:20:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Subject: drivers/char/ipmi/ipmi_watchdog.c:1251:2: warning: 'strcpy' source
+ argument is the same as destination
+Message-ID: <202506140756.EFXXvIP4-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yi Sun <yi.sun@intel.com> writes:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   18531f4d1c8c47c4796289dbbc1ab657ffa063d2
+commit: de6b4f99010ad22f0242f1fc0f75c0752a56e9bb s390/string: Remove strcpy() implementation
+date:   6 weeks ago
+config: s390-randconfig-002-20250614 (https://download.01.org/0day-ci/archive/20250614/202506140756.EFXXvIP4-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506140756.EFXXvIP4-lkp@intel.com/reproduce)
 
-> A recent refactor introduced a misplaced put_device() call, leading to a
-> reference count underflow during module unload.
->
-> There is no need to add additional put_device() calls for idxd groups,
-> engines, or workqueues. Although commit a409e919ca3 claims:"Note, this
-> also fixes the missing put_device() for idxd groups, engines, and wqs."
-> It appears no such omission existed. The required cleanup is already
-> handled by the call chain:
-> idxd_unregister_devices() -> device_unregister() -> put_device()
->
-> Extend idxd_cleanup() to perform the necessary cleanup, and remove
-> idxd_cleanup_internals() which was not originally part of the driver
-> unload path and introduced unintended reference count underflow.
->
-> Fixes: a409e919ca32 ("dmaengine: idxd: Refactor remove call with idxd_cleanup() helper")
-> Signed-off-by: Yi Sun <yi.sun@intel.com>
->
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index 504aca0fd597..a5eabeb6a8bd 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -1321,7 +1321,12 @@ static void idxd_remove(struct pci_dev *pdev)
->  	device_unregister(idxd_confdev(idxd));
->  	idxd_shutdown(pdev);
->  	idxd_device_remove_debugfs(idxd);
-> -	idxd_cleanup(idxd);
-> +	perfmon_pmu_remove(idxd);
-> +	idxd_cleanup_interrupts(idxd);
-> +	if (device_pasid_enabled(idxd))
-> +		idxd_disable_system_pasid(idxd);
-> +	if (device_user_pasid_enabled(idxd))
-> +		idxd_disable_sva(idxd->pdev);
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506140756.EFXXvIP4-lkp@intel.com/
 
-idxd_disable_sva() got removed in commit 853b01b5efd7 ("dmaengine: idxd:
-Remove unnecessary IOMMU_DEV_FEAT_IOPF")
+All warnings (new ones prefixed by >>):
 
->  	pci_iounmap(pdev, idxd->reg_base);
->  	put_device(idxd_confdev(idxd));
->  	pci_disable_device(pdev);
-> -- 
-> 2.43.0
->
+   drivers/char/ipmi/ipmi_watchdog.c: In function 'ipmi_wdog_init':
+>> drivers/char/ipmi/ipmi_watchdog.c:1251:2: warning: 'strcpy' source argument is the same as destination [-Wrestrict]
+    1251 |  strcpy(preop, inval);
+         |  ^~~~~~~~~~~~~~~~~~~~
+   drivers/char/ipmi/ipmi_watchdog.c:1231:2: warning: 'strcpy' source argument is the same as destination [-Wrestrict]
+    1231 |  strcpy(preaction, inval);
+         |  ^~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/char/ipmi/ipmi_watchdog.c:1207:2: warning: 'strcpy' source argument is the same as destination [-Wrestrict]
+    1207 |  strcpy(action, inval);
+         |  ^~~~~~~~~~~~~~~~~~~~~
 
 
-Cheers,
+vim +/strcpy +1251 drivers/char/ipmi/ipmi_watchdog.c
+
+^1da177e4c3f41 Linus Torvalds 2005-04-16  1234  
+cc4673eecdcc4a Corey Minyard  2005-11-07  1235  static int preop_op(const char *inval, char *outval)
+cc4673eecdcc4a Corey Minyard  2005-11-07  1236  {
+cc4673eecdcc4a Corey Minyard  2005-11-07  1237  	if (outval)
+cc4673eecdcc4a Corey Minyard  2005-11-07  1238  		strcpy(outval, preop);
+cc4673eecdcc4a Corey Minyard  2005-11-07  1239  
+cc4673eecdcc4a Corey Minyard  2005-11-07  1240  	if (!inval)
+cc4673eecdcc4a Corey Minyard  2005-11-07  1241  		return 0;
+cc4673eecdcc4a Corey Minyard  2005-11-07  1242  
+cc4673eecdcc4a Corey Minyard  2005-11-07  1243  	if (strcmp(inval, "preop_none") == 0)
+^1da177e4c3f41 Linus Torvalds 2005-04-16  1244  		preop_val = WDOG_PREOP_NONE;
+cc4673eecdcc4a Corey Minyard  2005-11-07  1245  	else if (strcmp(inval, "preop_panic") == 0)
+^1da177e4c3f41 Linus Torvalds 2005-04-16  1246  		preop_val = WDOG_PREOP_PANIC;
+cc4673eecdcc4a Corey Minyard  2005-11-07  1247  	else if (strcmp(inval, "preop_give_data") == 0)
+^1da177e4c3f41 Linus Torvalds 2005-04-16  1248  		preop_val = WDOG_PREOP_GIVE_DATA;
+cc4673eecdcc4a Corey Minyard  2005-11-07  1249  	else
+cc4673eecdcc4a Corey Minyard  2005-11-07  1250  		return -EINVAL;
+cc4673eecdcc4a Corey Minyard  2005-11-07 @1251  	strcpy(preop, inval);
+cc4673eecdcc4a Corey Minyard  2005-11-07  1252  	return 0;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  1253  }
+^1da177e4c3f41 Linus Torvalds 2005-04-16  1254  
+
+:::::: The code at line 1251 was first introduced by commit
+:::::: cc4673eecdcc4a918e4d8796295d798b5e98d602 [PATCH] ipmi: watchdog parms in sysfs
+
+:::::: TO: Corey Minyard <minyard@acm.org>
+:::::: CC: Linus Torvalds <torvalds@g5.osdl.org>
+
 -- 
-Vinicius
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
