@@ -1,150 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1959444;
-	Fri, 13 Jun 2025 15:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2689444
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828424; cv=none; b=AKMlvRDSz08PuxFiMcJrnFjI8FKR4I48ePlNs2jxR3b0Kl2P+Ul9727tORlp5I/Ijhtnh2HQtnmPkf6gLoDA+fg2SybTCd16xFAxAC84dg0G49Ralt3rFYZGVwIHNehDj5Eh/5Uk458Q/D2lkQQkysv1g4N+r8Z+bxEHZ/qyBbQ=
+	t=1749828432; cv=none; b=iFMdOPioET0q2VlDprJpcgM3EcEeUuqvKsiMayXMX11GBcpHG9FEfCrx2nRD2Xgi5LGbu3y0jlCeT+ULUvrCwBHbivdCrmfoSL8XM+rlZ68vTu/i6/GlaIA5/nxVx6A1Ix1CdfDeNMry7Sj78hGvbjsrmNOllrj63fTk586vnxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828424; c=relaxed/simple;
-	bh=QDmODICNWiBtCvM/b89KqBEr7GNxx9lEwD2x/dRQD5k=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SHgdytjlQqhPQWzn3Em4f90r5Kpphosd2quF3JciwwVehVfjoiZNMwVo/6JePEqp1/C7Fju8qsim1rWeLfDurPn1zM5RQDE218SaNwAoY1JihulRvsebP6rA8eLLt5atGA5AsUyxFOhqI5CNqn/mxo3/QXM1gCp+AIxwb0nNIfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OneHVLcc; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749828432; c=relaxed/simple;
+	bh=dTLeBokCk+Qu5G4dlYAvuaZ2u1EV60MG1tXSrQgsAWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iescPkYesshbb9RJ7A8RJKyVzVr3gr7JO2DihzeMKlyxSaZG+8DQsJPmL54AN7wo2lBrvqYCEkNj5oouSGE9cjOeJ7N92p7XCetOiW3Ijyn4HmYjx4ayhBCFrUaAl9+iPiXYACdbFa5DWmtGzJ2k+AVDAugpsnGO5qC4QUDNARQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g0vX3vYQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OneHVLcc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749828423; x=1781364423;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=QDmODICNWiBtCvM/b89KqBEr7GNxx9lEwD2x/dRQD5k=;
-  b=OneHVLccc231CZDVurFZmORvRteIa6ghXW5hwIgLlngPbPEhwO2fkvTk
-   I5yH6TaaVtITWNVo5W9UWA4Gs4LLGs2YsshQ7EitYU4ngjJIGlcU+HQ1t
-   qKaHJwkzO28xBiq4dKExwR+cEoBaHetJC7IZYw7n9PNunFJqlsYtkPhAR
-   GAqovOx+dSeKvI2j0ExUv0Auz049dM8j9z3/zbZLAwKahYa+B2VVljLPH
-   fU+a8+kmsOYf/cAOohnr/5iLBOgaZbXv7pl8FxEC/f7Xb9TpE4Auv1B0n
-   RnE6efj427K0zzcGKsEsh5JtF+TM6AlCxsjJ4X/+Go7qz9nD0GRah7uzn
-   w==;
-X-CSE-ConnectionGUID: r7g6SKVYRBKmY5PA6J7gKQ==
-X-CSE-MsgGUID: J2MZgEhUTY+52wk9oKidBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="69626440"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="69626440"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:27:02 -0700
-X-CSE-ConnectionGUID: eiLse6EbSKa+9117fseorQ==
-X-CSE-MsgGUID: wA+9VSQeRj6fWsmzEAVkKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="152743439"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:25:53 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 13 Jun 2025 18:25:50 +0300 (EEST)
-To: Geraldo Nascimento <geraldogabriel@gmail.com>
-cc: linux-rockchip@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-    Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-    linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
-    linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v4 2/5] PCI: rockchip: Drop unused custom registers
- and bitfields
-In-Reply-To: <aExBeNdkOtFtW87z@geday>
-Message-ID: <b4dc6d96-b268-7da4-e41f-cc922ae6941c@linux.intel.com>
-References: <cover.1749826250.git.geraldogabriel@gmail.com> <ed25d30f2761e963164efffcfbe35502feb3adc2.1749826250.git.geraldogabriel@gmail.com> <97114c68-5eb7-18b0-adbd-227e1d7957c6@linux.intel.com> <aExBeNdkOtFtW87z@geday>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0vX3vYQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749828429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ffGF128HVtw6a+HHD8uShTa3yQQnx4ItFakvkjkmL6Q=;
+	b=g0vX3vYQ5PgJ03QQwM45dLLmXJb7BY0MWbIU28u0LhPfLYTMo8Tp/DSMmXSxwdSyuPuGRw
+	SrhzTF5HIGSjZRW81sKTVs4i81yq0cnVTToe84XTUAM4gM1y2/5ep7qjb2eyJUVNRwmsx6
+	ed50W5knfUKI0zSQ6texP+qLsqOkvHk=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-580-YkAygli8PFinD-_FkymMBg-1; Fri, 13 Jun 2025 11:27:08 -0400
+X-MC-Unique: YkAygli8PFinD-_FkymMBg-1
+X-Mimecast-MFC-AGG-ID: YkAygli8PFinD-_FkymMBg_1749828428
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86cfccca327so493138739f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:27:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749828428; x=1750433228;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ffGF128HVtw6a+HHD8uShTa3yQQnx4ItFakvkjkmL6Q=;
+        b=FUJkEWWwBVUI0+sAPLaevO3nW6FtgUQap1UBiNC1rYHb7U7AZf7oWOjzgGS7g6mym/
+         Nu+vVw3FFcLi0YFGgymgmCQbSC1m/Pidp8pcaJEpmVkmfMxat/hjJ9fVd/P0iN9fQhGS
+         PulWCRM52VT50kgzmjUuzucIUhDVnPKzCrDQrJutiWohimeIQP+rqw6Xfam/HtCaxkq3
+         +DhRkK3YospLYGgrsVw2dI7qsg/Bmb5v0G97jlAbO740uuW5Z0RYGiLrZWx7nzxhvIPr
+         TrhmhC8bAlFORokjdetpBTLvAMKfKUzU67fRTGXa/JiVdwb5DyVtRXkSdPscVNAM1tNo
+         TDzg==
+X-Gm-Message-State: AOJu0Yx76q9K+J6gn8TzC0Mbi14xxbUrXbqhA9WLYxEgnit+M5d2XPyy
+	A1UI3VdmlgrFIaFqVfYsZ1XYT0a9LJzHND1guMcVtYtdtElgwK1r9G+088xWfy0NoWL8t+KR3Zl
+	Lh3fyVvahjZGYJx5s3zZBopw50g98yIHsVvDFHxtbhBKONF1hBzbpUaJ82WVYaiIJM/13UweDOA
+	==
+X-Gm-Gg: ASbGncvnEQWEroDgflaxIPSLbh+wiuqfrDpSuZfSGE1tylZR2hec5V8yEs1fJV5I5ls
+	L5iGjKqjJOlWUBn0jbfUsRMrq2bjSehT84I0RKq/MqKZ77D0MzyrGTIBwaE8rFOc/urNIlBxPD7
+	WwK/oCy47zxc5nUUr0YNW8OU6oDQxUYKfafE8uhDfR2FOSX63BLJbY0lIWcvcZYG2pL3BxrGPLR
+	vM5Y+wFZ+LGSztJtoUJ+csBrRCDDgWVytcpZSw5J40r4go+Ozy1uugOCOLmUDcE5QFVkR6tEWbF
+	G7cf7lZWMTJgig==
+X-Received: by 2002:a05:6602:b85:b0:85a:e279:1ed6 with SMTP id ca18e2360f4ac-875d3d047e8mr419246239f.11.1749828415813;
+        Fri, 13 Jun 2025 08:26:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8djcjjfItHRHrDNgzteRBKJ058qY0Qze27Tb0GmaT85bQCB0E8VSqwOBOZ5ggANoXHojH2Q==
+X-Received: by 2002:a05:6214:2343:b0:6fb:3537:fcfe with SMTP id 6a1803df08f44-6fb3e602ce6mr52125976d6.22.1749828404861;
+        Fri, 13 Jun 2025 08:26:44 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c55ff4sm22627546d6.92.2025.06.13.08.26.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 08:26:44 -0700 (PDT)
+Date: Fri, 13 Jun 2025 11:26:40 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>
+Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
+ mappings
+Message-ID: <aExDMO5fZ_VkSPqP@x1.local>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-6-peterx@redhat.com>
+ <20250613142903.GL1174925@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-642005326-1749828350=:948"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-642005326-1749828350=:948
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Disposition: inline
+In-Reply-To: <20250613142903.GL1174925@nvidia.com>
 
-On Fri, 13 Jun 2025, Geraldo Nascimento wrote:
+On Fri, Jun 13, 2025 at 11:29:03AM -0300, Jason Gunthorpe wrote:
+> On Fri, Jun 13, 2025 at 09:41:11AM -0400, Peter Xu wrote:
+> 
+> > +	/* Choose the alignment */
+> > +	if (IS_ENABLED(CONFIG_ARCH_SUPPORTS_PUD_PFNMAP) && phys_len >= PUD_SIZE) {
+> > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
+> > +						   flags, PUD_SIZE, 0);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	if (phys_len >= PMD_SIZE) {
+> > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
+> > +						   flags, PMD_SIZE, 0);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> 
+> Hurm, we have contiguous pages now, so PMD_SIZE is not so great, eg on
+> 4k ARM with we can have a 16*2M=32MB contiguity, and 16k ARM uses
+> contiguity to get a 32*16k=1GB option.
+> 
+> Forcing to only align to the PMD or PUD seems suboptimal..
 
-> On Fri, Jun 13, 2025 at 06:03:14PM +0300, Ilpo J=C3=A4rvinen wrote:
-> > On Fri, 13 Jun 2025, Geraldo Nascimento wrote:
-> >=20
-> > > Since we are now using standard PCIe defines, drop
-> > > unused custom-defined ones, which are now referenced
-> > > from offset at added Capabilities Register.
-> >=20
-> > These are quite short lines, please reflow the changelog paragraphs to =
-the=20
-> > usual length.
->=20
-> Hi Ilpo,
->=20
-> I'll reflow for v5.
->=20
-> >=20
-> > > Suggested-By: Bjorn Helgaas <bhelgaas@google.com>
-> > > Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-rockchip.h | 11 +----------
-> > >  1 file changed, 1 insertion(+), 10 deletions(-)
-> > >=20
-> > > diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/con=
-troller/pcie-rockchip.h
-> > > index 5864a20323f2..f611599988d7 100644
-> > > --- a/drivers/pci/controller/pcie-rockchip.h
-> > > +++ b/drivers/pci/controller/pcie-rockchip.h
-> > > @@ -155,16 +155,7 @@
-> > >  #define PCIE_EP_CONFIG_DID_VID=09=09(PCIE_EP_CONFIG_BASE + 0x00)
-> > >  #define PCIE_EP_CONFIG_LCS=09=09(PCIE_EP_CONFIG_BASE + 0xd0)
-> > >  #define PCIE_RC_CONFIG_RID_CCR=09=09(PCIE_RC_CONFIG_BASE + 0x08)
-> > > -#define PCIE_RC_CONFIG_DCR=09=09(PCIE_RC_CONFIG_BASE + 0xc4)
-> > > -#define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT=09=0918
-> > > -#define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT=09=090xff
-> > > -#define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT=09=0926
-> > > -#define PCIE_RC_CONFIG_DCSR=09=09(PCIE_RC_CONFIG_BASE + 0xc8)
-> > > -#define   PCIE_RC_CONFIG_DCSR_MPS_MASK=09=09GENMASK(7, 5)
-> > > -#define   PCIE_RC_CONFIG_DCSR_MPS_256=09=09(0x1 << 5)
-> > > -#define PCIE_RC_CONFIG_LINK_CAP=09=09(PCIE_RC_CONFIG_BASE + 0xcc)
-> > > -#define   PCIE_RC_CONFIG_LINK_CAP_L0S=09=09BIT(10)
-> > > -#define PCIE_RC_CONFIG_LCS=09=09(PCIE_RC_CONFIG_BASE + 0xd0)
-> > > +#define PCIE_RC_CONFIG_CR=09=09(PCIE_RC_CONFIG_BASE + 0xc0)
-> >=20
-> > This will cause a build failure because PCIE_RC_CONFIG_CR is used in 1/=
-5=20
-> > but only introduced here so you'll need to do this in the same patch as=
-=20
-> > any step within a series must build too. IMO it would anyway make sense=
- to=20
-> > combine patches 1 & 2.
->=20
-> Ah, interesting angle. I'll fix it.
->=20
-> >=20
-> > >  #define PCIE_EP_CONFIG_LCS=09=09(PCIE_EP_CONFIG_BASE + 0xd0)
-> >=20
-> > Aren't you going to convert this as well?
->=20
-> I can, but I can't test it however! But I'll Cc: someone who hopefully
-> can.
+Right, however the cont-pte / cont-pmd are still not supported in huge
+pfnmaps in general?  It'll definitely be nice if someone could look at that
+from ARM perspective, then provide support of both in one shot.
 
-TBH, the risk getting it wrong / changing the resulting object is pretty=20
-low. :-)
+> 
+> > +fallback:
+> > +	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
+> 
+> Why not put this into mm_get_unmapped_area_vmflags() and get rid of
+> thp_get_unmapped_area_vmflags() too?
+> 
+> Is there any reason the caller should have to do a retry?
 
-It might be that scripts/objdiff tool could prove there were no changes in=
-=20
-the binary code output as it looks just a pre-preprocessor change.
+We would still need thp_get_unmapped_area_vmflags() because that encodes
+PMD_SIZE for THPs; we need the flexibility of providing any size alignment
+as a generic helper.
 
---=20
- i.
+But I get your point.  For example, mm_get_unmapped_area_aligned() can
+still fallback to mm_get_unmapped_area_vmflags() automatically.
 
---8323328-642005326-1749828350=:948--
+That was ok, however that loses some flexibility when the caller wants to
+try with different alignments, exactly like above: currently, it was trying
+to do a first attempt of PUD mapping then fallback to PMD if that fails.
+
+Indeed I don't know whether such fallback would help in our unit tests. But
+logically speaking we'll need to look into every arch's va allocator to
+know when it might fail with bigger allocations, and if PUD fails it's
+still sensible one wants to retry with PMD if available.  From that POV, we
+don't want to immediately fallback to 4K if 1G fails.
+
+Thanks,
+
+-- 
+Peter Xu
+
