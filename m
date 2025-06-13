@@ -1,307 +1,1571 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF844239E8B;
-	Fri, 13 Jun 2025 07:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749801147; cv=fail; b=g9EVjbALDzsahokshuhhU1yp1AbQCq5BGZfQUg81AmfY6KJRaiVowS7kCHGiUKasohP44bgXmCXwxJyw/EBLSNd8o24yu/EuuwMgke4jmsseRq4xlggRsFe8VykW2hLvG9b3j0nxLW4MNKM66JQYmY7sXYp/lkyNfkB+Amu73kE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749801147; c=relaxed/simple;
-	bh=w6WLLCIyDkM+H9Y+fKHu2fIw2kdSh2hT9Zt18dmsq9I=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Hm5OCRAN4vFu5Fyj6DHNJesKH7z03J6zCCBD18HNVqvctNyfLJQ9QwjfWx8FaQhNIQrTQ+BTX55M4zEaDWZaT+qktrwXj0gH6x9pkbdeeRiGLuSTQCD+Np62VXPKCPgmRFY2a0t8BZvDXB1lWRHh9iCGyJDsY/6CUsnsAuVsKgs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bNZW2e57; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DA22DA747
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749801273; cv=none; b=TF0Kb9tmRfDLTqCB1efT1CjLE/gBvviCQRCFQhXa0nGu7pcffkzWTFwbC2zqFQzUxzr/evWRy0tf3TdEq8/VkHl+tbXVLMlY3S/Q5+2ZT6na0JIZnVz5p7ZD/+QbJfNkavpBcxbv2t3fy8Gy0jNrqe81FkSf896BG6QU7vd5O6E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749801273; c=relaxed/simple;
+	bh=/ydbkO75fzGLscwLK3Yw2uuWmHPl1Pq9m04VzIquLYs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=cgudAL0olTpsLJKuI4HOqfXhQdP6O6XCwIX0pBBNnHq2xde4NUiD0WX+9fHrxoDNNNrLhIXBLRpiekqItyHIcVvw5B/VK4Lmxtk/NRfACcHgRuyUhoqDrvyXx6BA80cFZ7WduF+WjtfQe7Lc6ptk4771z97oQbPEivaqWgK2etc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l/7gpIeE; arc=none smtp.client-ip=209.85.128.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bNZW2e57"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749801146; x=1781337146;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=w6WLLCIyDkM+H9Y+fKHu2fIw2kdSh2hT9Zt18dmsq9I=;
-  b=bNZW2e57XC11XdmmLC+ghlwjQGghRGfxmEILeokXcNYXx3lAp1GuWrDj
-   UtKHbRqQZ8L+Cm0AjxPUfwwrEodn5b5lxX9DuG9CvAmsZLGcVZo+2yQ0F
-   oZQFJKa7UFRY0zDIWGwsIJxdxsjkMmkSKnYTXW4tRm11N8cxTmC2EWCNy
-   i2ik6a7U3X81YvKSfmVH6VDUXG6jDZggeIcKVEkmgR+YY0SiSiZVQE84N
-   9ckBiv1x83zLq47cZC6oe9VzZ8/O8BZf52TB2lK93mZerlRphF+lRwjy0
-   RFSkTX4fI6gweFuN92bOhM3XLUONbCjPx1WGvhBkDFkIrul1XzXKLyLWz
-   A==;
-X-CSE-ConnectionGUID: +yzqvxoHToCdIUkIykhERQ==
-X-CSE-MsgGUID: mS7bWbt5QEaw2P2uVH6ESA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51234309"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="51234309"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 00:52:23 -0700
-X-CSE-ConnectionGUID: wWQhLD0OR1icxPrSRuZITA==
-X-CSE-MsgGUID: CNsKmgBbTtqwm8f2bzfvwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="178657031"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 00:52:23 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 13 Jun 2025 00:52:22 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 13 Jun 2025 00:52:22 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.48)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 13 Jun 2025 00:52:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y3Y2mMKmDC7TXIDQECJ509dR2hqF0F3Bp7JPaexT5xu2bjYdv3WP4veU/qof4R6LKEuPSRLnyS8Iq8pzPLyY6GXFVdyyidP/YM2tVhXZt4Z1Eym3/fcFWaEtlj/Z6Ae8o8IJlBW82DtsI6G366sd7f4LoI8/0+QmTYeX7Sl2dwgv9xaQBu3tgHJlaz5ZpYXgkMdZgCBcs9FYlcVPNCiK095KHMO1/ITHUPEEl+9h+WT+DfteESZjGIPFzM6JhAznlN8NhPPLdyP7Frdd2s/EKe1Gs/yJSmaqxyf6dPEKZdVRZwZ3R3h+SHQKKmLjLBm6WOEY5+HYj421xFfQLJufUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SufQij5w+lX8naf4lveRVfL0J5mHN00/6i3PifPc718=;
- b=IC504OcTxLr1Inp//p9WLV3weMe/Nh1pkPZyYzdGPB767AifMkv/WarOORICxEF8mNEtNdd2u2dnWEJt6dbHVcIcTcG0V69v4y2mQrBPT5PY1eOcm8bCpGmZxpRM1ldvV9paptWF2exzafmYWAChdXBoTO5kMTmpfoOcw17xJPQPAQEZlhjisQ+s5aiVtKzJBPcufEm48097Fu88nzDmd9o0KVXB0AnY1EwsPo8MzNEOpRUrxpnqQdCo6oPGu0Inho9ZGb7LyPngktVU7WnCRnvCSZeRO4Ma9cYrh6SoXvHGSA2ycca4lFHTEfnkpIhNrx4beSnhQxzh8sVgrD119g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA3PR11MB8986.namprd11.prod.outlook.com (2603:10b6:208:577::21)
- by SN7PR11MB7638.namprd11.prod.outlook.com (2603:10b6:806:34b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Fri, 13 Jun
- 2025 07:52:18 +0000
-Received: from IA3PR11MB8986.namprd11.prod.outlook.com
- ([fe80::395e:7a7f:e74c:5408]) by IA3PR11MB8986.namprd11.prod.outlook.com
- ([fe80::395e:7a7f:e74c:5408%7]) with mapi id 15.20.8769.022; Fri, 13 Jun 2025
- 07:52:17 +0000
-From: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
-To: "Lobakin, Aleksander" <aleksander.lobakin@intel.com>,
-	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
-CC: "Lobakin, Aleksander" <aleksander.lobakin@intel.com>, "Kubiak, Michal"
-	<michal.kubiak@intel.com>, "Fijalkowski, Maciej"
-	<maciej.fijalkowski@intel.com>, "Nguyen, Anthony L"
-	<anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
-	<przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Alexei
- Starovoitov" <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper
- Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
-	Simon Horman <horms@kernel.org>, "nex.sw.ncis.osdt.itp.upstreaming@intel.com"
-	<nex.sw.ncis.osdt.itp.upstreaming@intel.com>, "bpf@vger.kernel.org"
-	<bpf@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH iwl-next v2 01/17] libeth, libie: clean
- symbol exports up a little
-Thread-Topic: [Intel-wired-lan] [PATCH iwl-next v2 01/17] libeth, libie: clean
- symbol exports up a little
-Thread-Index: AQHb28JVyUjs0lWBoEaABvNpUeWIurQAuJsg
-Date: Fri, 13 Jun 2025 07:52:17 +0000
-Message-ID: <IA3PR11MB89860787AABFDDEFC24ECDDDE577A@IA3PR11MB8986.namprd11.prod.outlook.com>
-References: <20250612160234.68682-1-aleksander.lobakin@intel.com>
- <20250612160234.68682-2-aleksander.lobakin@intel.com>
-In-Reply-To: <20250612160234.68682-2-aleksander.lobakin@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA3PR11MB8986:EE_|SN7PR11MB7638:EE_
-x-ms-office365-filtering-correlation-id: 96cd9c02-61b2-44d3-eee4-08ddaa4f380f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018|7053199007;
-x-microsoft-antispam-message-info: =?us-ascii?Q?+o9YYDg6Gs+tXXzx0R07R7o9z8LYue519J9CVCX0reqT0XOq8asdbPcPLZF/?=
- =?us-ascii?Q?s6ex1IB9DURbv0YJ0Qkgnws91hf8+pBF3N2ZW55QoTw+QTL1GDC3bO5jz0xH?=
- =?us-ascii?Q?bglkwL1J/wwCnlRhO9xeX1UvmJJYEecYI2rb5gPL8ZOx5KCuvgvYh+Fg0w5G?=
- =?us-ascii?Q?GSre7Z8DY0zAYYmJUvhmO3nUkJ7czNMHem+q75X0OL9CfqsgMnBnHHUHZ/UX?=
- =?us-ascii?Q?6qLTLBZRgNnIDjXA33XSaWggJDMz0y4RV9RhvRCUIly1zRXgPz/FabmKqfXQ?=
- =?us-ascii?Q?UBFYOmpc293CURF8KEVailonEsNffo7kxZKmBnsrNgFpGxI1JV45VlP8Hm5E?=
- =?us-ascii?Q?UaMOTHsIFl5T+fL/xTAuoBssCq3J4dcRo6p8SRfipV+x5jp7SGGCsTCta1zl?=
- =?us-ascii?Q?EFkKLUrL3h9UvRyPEUbVhFOhN52sX+3uIZRBz6MxHSdOYSFuDHMP8Jupti71?=
- =?us-ascii?Q?t7tIfCxqdGvoSbKdACoiFNwKoFhikNKDAKFpE8RNc8gCsPDEp20fpQ3dTdAh?=
- =?us-ascii?Q?bb43lodHQWZewJbmDiWvqAo07tbHNBPKci+PwuLyxPk+5TOz2R8bknyenmAB?=
- =?us-ascii?Q?X2GqDK7TP1tJm4iVkTkj+ntOmYBo8U3Me44xtOUnWjlZ7LB8WzvqRgzXt9KN?=
- =?us-ascii?Q?q78eFU9GTnpyMoS53xNgmkl9fLdfF3Knq8c1062Mlhjrff+II/WMIcC9Q863?=
- =?us-ascii?Q?TynzKekttb3vy1Ngv8WoyDjmqPX5j0iAQbsPV1gAXDMPaveMFuqSudO2LerO?=
- =?us-ascii?Q?IPiGmAMXTDTFpCju48Mc93gnfTc/8GeQQSC9ZvbOpQy6EtgKInaEfDverz0O?=
- =?us-ascii?Q?KZarNQ3kNpio2fDhH+kSJN7kDEefTivtBGrF3nWIyf5f4yn76zUb3BitfGFp?=
- =?us-ascii?Q?yeVjcNIkKXJbCugRt0bEP+MxoInb3tCs046T+5ADKY7bfxKPSQ8GwgKkM1XI?=
- =?us-ascii?Q?ZUKBJ5HxXAP3qMg0eelSqdKTM+zfPJVhLVOWG+OE745sJGGhPsi90DaYWr+6?=
- =?us-ascii?Q?ZTKyUaZtL0DF/6pCswb+vOiSV43mxiupFh/1Agri8hQKRz5g4Nii5wb3B5LU?=
- =?us-ascii?Q?EDqDdka9sBp9Krc4Tu3BTKAVtRtDnyhGLGCF+pqPl5juN462EjiXktFXo26P?=
- =?us-ascii?Q?3LMHa6ybRC3s8Li79UXbPmPSmkn4NVaqfnKWWoK6GMtJqA7zZgon73tt18e1?=
- =?us-ascii?Q?BK/N5eQJr9/XBA8TI8EpERA/rhZq4kK6jPedtlDDKo1d02oDmFo+dHYJ8e0G?=
- =?us-ascii?Q?KavgiOvBdkbJkEP9I3TYhLqMVXaROU2k3zIY8O9keeowsDIiv3cmAuZxS1wb?=
- =?us-ascii?Q?VKCS8Z7HOzvU8tn/3FbBx9nxF5ZfuiL4lv+KmGfa5YGjwtBrNBjypiZ4wqxf?=
- =?us-ascii?Q?aRipgaE4MuF6O08K3nFIA5C/5vMNo9TW1C465Um5yT6FUoFJV/pL6BptQKMR?=
- =?us-ascii?Q?svQEOhbw12wIQM0EDCjto/zw7NxP2D4eizAukK0yM1dB5RDwGFxDig=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA3PR11MB8986.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?01uQnP1EnJ3xym4/br+cZQcExU/mxH9e+XNNbkgCncpkERYNt5DioIpHGHJq?=
- =?us-ascii?Q?EdLkTjdvm/F+F84z+DREE03yxm4eGkukMV3+PRqNpkx7jaWcBy88XF6MdUIh?=
- =?us-ascii?Q?N+nOZaKk8A2bVNrMzX2inX0NCL2aMxzQCl0eN4g6rg4H5Xxsvp/MsLCLG7EA?=
- =?us-ascii?Q?TpjN6d8X+aZr30JQ7vtDSKT7CqQ/5asMyryA+oBLtfucvquCU7EuELPOcypE?=
- =?us-ascii?Q?p1gyOhvwG6MfSEYOkwaTqGgL4H/TKTIUYywnflYjXQOp9qvQJ0nZ2uOTGO+Q?=
- =?us-ascii?Q?5v80+qp6v/G0O7WLtuycKmC8G7eW5EQLTlnSlLhIbISz6WZNZac/jdXapPIu?=
- =?us-ascii?Q?WUOMe/6TwmgXGCV/oHaUkaSxC/YTXXvef5DhnFrAXH77efAnK3WeEZ1BfyHF?=
- =?us-ascii?Q?nCdylP3vZrrTmNKW+mnOTD7mpHV7O/CDAqfngDzPfOT27p0DmhfIdj7Z+cri?=
- =?us-ascii?Q?2JmG1hZIPmVXtiTIlFhwqoSO+11SMv8ji7zW6uMpRQ60gmJ4jt1FuZ6g0tY6?=
- =?us-ascii?Q?wLfWk0krX3i/u7TDU1qKgDlKGOtIEFLIW0krlTPdtz+neDxLrjqLqHMreEea?=
- =?us-ascii?Q?hqc99107GNQCRCbR9eM6fxkrJKBDMFB7irZKIp3+fZuZKXjzIKOH23M1GeU4?=
- =?us-ascii?Q?waJHcoF9AJbj3IjSDmbAtnC4Kxmtfwj46X17QT0rxg8kBIqsMqKg/PiMv+EF?=
- =?us-ascii?Q?Ap27Yj6HEXMn550xa6bLyD9Bso1FiqyJ6hUj+pBhMPQR6+CMXkbGi5hls0Nn?=
- =?us-ascii?Q?tbIXcarkCYR3v/reyqZJzv3t1Cs7+YtlkMBWM29tXxzzX59GC1FE/X63iyQ/?=
- =?us-ascii?Q?I+jDQv4Dh2GURUs4kzr8uDMtGDkKAIHPdHUPaYaLO+w/Wi8qYp3Cg+LQFk/O?=
- =?us-ascii?Q?RnDfwGUkHHawWOdQdqvhGitxgQ1SW/Sen/EdwpK4dOYjyIu/2VqUMXV2Wggj?=
- =?us-ascii?Q?p/LA712f1BtobiPMiuRCrJx49JoKXc9eU+DEEFJ76WCbm6K9ZGDviHb2uBfh?=
- =?us-ascii?Q?KdU0Z96EdHZc/IPlw7O5t18a9a+bejc7LyJRJ4ZakNl+KKMA+9QqRL0DJwT8?=
- =?us-ascii?Q?NvPIhxGQI+E8EETSp0X3RmhecdC1fFE6Yu7l+THWC16hpAH6KZMfhMOCL1tr?=
- =?us-ascii?Q?gSfpdZQ43NiE5VzDNJT1jAbqlzzGdubu0h1MkpXtiMKVwHvV18k8KMMKv9L5?=
- =?us-ascii?Q?h8vVdhNLlCIaZ1IpbjTKnnw4cBA8E/ctAMlmhxwXrZLiklTZk7NMHliQs9IN?=
- =?us-ascii?Q?Be+Rt3iQjqEthhxSv+iBr63Y+r8dS1CXFfeiNewDNuQ6TH9kP+9emBZGSy+W?=
- =?us-ascii?Q?fMI2gbUxIlHyiwwJz2/mOg7AsRIuYJHKbbKetQXubahRpni0sTCOLyuZtrr/?=
- =?us-ascii?Q?VLsJdtQqMY/uc/87g0fZTN7ui7gDi+7GThLbRNf4XgT+rS4D4oaTVrbQspCR?=
- =?us-ascii?Q?yrvWeVMHxXuxSZV8pu9fcevjTYPFxiPFAXyEUXRg4Y4WxnV0yfPHPxYFA7pK?=
- =?us-ascii?Q?/8cBJKipVX80hXEyyMjZjwHFRiIJg23NhrTbgSfvCHDKsAqkbjxI/xqwzhwc?=
- =?us-ascii?Q?3Iqe9jcm6T7HzD9ejHCSzyKOG7pe2kWkaUBkWewETlN6BIoZ5YzfzQ5RRqdu?=
- =?us-ascii?Q?6A=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/7gpIeE"
+Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-70e3c6b88dbso12513687b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749801270; x=1750406070; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IrUHRxNvC5qvMfk9+A3Zb0lL6rMECA5ZyykCitO0g80=;
+        b=l/7gpIeE7/SsdQVEUeFgpOsH71CXStBAo8pjvHdmJ3sG5GjN9dN7OmFbj7k2AJKrxT
+         yO/7RCGzTed1n5JgkgYGRNa+IUqInVY/BP6tbvvXEqIQi4yVXGENgN3Z1PoPSahKhSoV
+         hvihsvJk9bC9loO/8CSW8e2Sa6IjluZA5Zs7Ct1hwM5cUzKYUCCkuVF9JImoaphRrEjQ
+         rFT+YlFqC6IzX5xmbcdkqnFRg9MvwzSLpVLejWvX0GQlcKl5HABus7X5pBB0okVFoZlN
+         RNLJp3qi00I0YljOMqjtcWhkecHN7XzZvcFxYip0VVCCoO5dh2j+d9Ancrw7WligWG5k
+         vrXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749801270; x=1750406070;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IrUHRxNvC5qvMfk9+A3Zb0lL6rMECA5ZyykCitO0g80=;
+        b=c5cQbPnumBH9iGosoc+4r4DAVb/ODkTVGlWEW3GxYmPiY5L6mX+fd7/+u6vxoHaG1P
+         UawGiUWqkjlOlkrhHhGVI0Ry16x99e+u0QeAi9ga7N68HzVql+01a0iKqnkTLf8tsEPT
+         G5vwqDJl9HAbhTT/NeHDYBBLzBY6x1n4RMcywlYwocwzWCuXuYvGkXVkwm/6pWFaZ6kE
+         A/dXPN40HvAXzepUifmMrXJZXc2gBoBIqHsNdExH3LaySytX88MVPwBssWDszQ6p6XyR
+         9nhxOJRu55ZWlsrJu0vGxd0NdNekaE6hIUo/4NpH/KuMMfnlt7CIaRRIcaksm62YXsId
+         wuwQ==
+X-Gm-Message-State: AOJu0YzLuwU/Sz4E9ilkEyEL88AYPOjPTnmZktjZLUnkwsEjucrB3q+x
+	VVfM0rxrQn1jFExUVfUreJQMWDh0auYf4aVacUFj89pVyQJ+N2c5jCT/l/asOerZPW6dATAD02+
+	LgF/6RvP9lTun25CEVBHhyR6W9ZKEVpO2Z0QSzgWQkg==
+X-Gm-Gg: ASbGncvjY3ZrEHTSlAhe0a6aI3f13BTkX6FhQjbCG/+S8AprX/mKASIu6Jj4r6ui3Tt
+	EIFToUct4iDBWwLz1tr4rvH5WDiScM3Wefzhl0Hb7Abidwix0Om2wIqnaeONUsytKD9YdDTbCp1
+	waedzHPZ5Ru93L3B1Yc0kaVlPaD6VCJfui0zm8e8GkozPgIrPEK1LS5ju+ZL+gCccI2y0PpS/61
+	7V4fA==
+X-Google-Smtp-Source: AGHT+IGWv6jnHW3oq82KZZlgIjYkS1Cs2TxKg0swUyDrqfnyO2Yev8NersGkidaUACQUb6EGcAH5ekQ9j7Xdq+Nejdo=
+X-Received: by 2002:a05:690c:368f:b0:710:f46d:cec0 with SMTP id
+ 00721157ae682-71163605f78mr33626217b3.1.1749801269129; Fri, 13 Jun 2025
+ 00:54:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA3PR11MB8986.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96cd9c02-61b2-44d3-eee4-08ddaa4f380f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2025 07:52:17.5913
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yfOLf7ig6XPwn7JscUqDQqkyLu3lM3BjbHeF3dMkQZkt1F6Xm7DdMeGjKjLd8QXe4xL9VYut7k4QMxpXAsxTNlrrGOLcKAQeDKu4IJCjylA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7638
-X-OriginatorOrg: intel.com
+From: Amit <amitchoudhary0523@gmail.com>
+Date: Fri, 13 Jun 2025 13:24:17 +0530
+X-Gm-Features: AX0GCFvC1-KZ7dAjj639U8_rmfO-UxiX4Qk4TBB4jfoUr-EUzSrPS9sEf3kr1q4
+Message-ID: <CAFf+5zi918RpvzgqmeZBJ6OkBOWzXD-KK4fP0nxNzvqXnF7jkQ@mail.gmail.com>
+Subject: Generic Doubly Linked List Library (Five Files: generic_doubly_linked_list_library.c,
+ generic_doubly_linked_list_library.h, test_generic_doubly_linked_list_library_as_map.c,
+ test_generic_doubly_linked_list_library_as_list.c, and ReadMe.txt).
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+
+Generic Doubly Linked List Library (Five Files:
+generic_doubly_linked_list_library.c,
+generic_doubly_linked_list_library.h,
+test_generic_doubly_linked_list_library_as_map.c,
+test_generic_doubly_linked_list_library_as_list.c, and ReadMe.txt).
+
+----
+"generic_doubly_linked_list_library.c" can be used as a C++ STL list,
+map, set,
+stack, queue, deque, multimap, multiset, unordered_map, unordered_set,
+unordered_multimap, and unordered_multiset (basically as all C++ STL
+data
+structures except vector).
+----
+
+------------------------------------------------
+generic_doubly_linked_list_library.c
+------------------------------------------------
 
 
+/*
+ * License:
+ *
+ * This file has been released under "unlicense" license
+ * (https://unlicense.org).
+ *
+ * This is free and unencumbered software released into the public domain.
+ *
+ * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
+ * this software, either in source code form or as a compiled binary, for any
+ * purpose, commercial or non-commercial, and by any means.
+ *
+ * For more information about this license, please visit - https://unlicense.org
+ */
 
-> -----Original Message-----
-> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf
-> Of Alexander Lobakin
-> Sent: Thursday, June 12, 2025 6:02 PM
-> To: intel-wired-lan@lists.osuosl.org
-> Cc: Lobakin, Aleksander <aleksander.lobakin@intel.com>; Kubiak, Michal
-> <michal.kubiak@intel.com>; Fijalkowski, Maciej
-> <maciej.fijalkowski@intel.com>; Nguyen, Anthony L
-> <anthony.l.nguyen@intel.com>; Kitszel, Przemyslaw
-> <przemyslaw.kitszel@intel.com>; Andrew Lunn <andrew+netdev@lunn.ch>;
-> David S. Miller <davem@davemloft.net>; Eric Dumazet
-> <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni
-> <pabeni@redhat.com>; Alexei Starovoitov <ast@kernel.org>; Daniel
-> Borkmann <daniel@iogearbox.net>; Jesper Dangaard Brouer
-> <hawk@kernel.org>; John Fastabend <john.fastabend@gmail.com>; Simon
-> Horman <horms@kernel.org>; nex.sw.ncis.osdt.itp.upstreaming@intel.com;
-> bpf@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [Intel-wired-lan] [PATCH iwl-next v2 01/17] libeth, libie:
-> clean symbol exports up a little
->=20
-> Change EXPORT_SYMBOL_NS_GPL(x, "LIBETH") to EXPORT_SYMBOL_GPL(x) +
-> DEFAULT_SYMBOL_NAMESPACE "LIBETH" to make the code more compact.
-> Also, explicitly include <linux/export.h> to satisfy new requirements
-> from scripts/misc-check.
->=20
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
-> ---
->  drivers/net/ethernet/intel/libeth/rx.c | 14 +++++++++-----
-> drivers/net/ethernet/intel/libie/rx.c  |  7 +++++--
->  2 files changed, 14 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/intel/libeth/rx.c
-> b/drivers/net/ethernet/intel/libeth/rx.c
-> index 66d1d23b8ad2..c2c53552c440 100644
-> --- a/drivers/net/ethernet/intel/libeth/rx.c
-> +++ b/drivers/net/ethernet/intel/libeth/rx.c
-> @@ -1,5 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0-only
-> -/* Copyright (C) 2024 Intel Corporation */
-> +/* Copyright (C) 2024-2025 Intel Corporation */
-> +
-> +#define DEFAULT_SYMBOL_NAMESPACE	"LIBETH"
-> +
-> +#include <linux/export.h>
->=20
->  #include <net/libeth/rx.h>
->=20
-> @@ -186,7 +190,7 @@ int libeth_rx_fq_create(struct libeth_fq *fq,
-> struct napi_struct *napi)
->=20
->  	return -ENOMEM;
->  }
-> -EXPORT_SYMBOL_NS_GPL(libeth_rx_fq_create, "LIBETH");
-> +EXPORT_SYMBOL_GPL(libeth_rx_fq_create);
->=20
->  /**
->   * libeth_rx_fq_destroy - destroy a &page_pool created by libeth @@ -
-> 197,7 +201,7 @@ void libeth_rx_fq_destroy(struct libeth_fq *fq)
->  	kvfree(fq->fqes);
->  	page_pool_destroy(fq->pp);
->  }
-> -EXPORT_SYMBOL_NS_GPL(libeth_rx_fq_destroy, "LIBETH");
-> +EXPORT_SYMBOL_GPL(libeth_rx_fq_destroy);
->=20
->  /**
->   * libeth_rx_recycle_slow - recycle a libeth page from the NAPI
-> context @@ -209,7 +213,7 @@ void libeth_rx_recycle_slow(struct page
-> *page)  {
->  	page_pool_recycle_direct(page->pp, page);  } -
-> EXPORT_SYMBOL_NS_GPL(libeth_rx_recycle_slow, "LIBETH");
-> +EXPORT_SYMBOL_GPL(libeth_rx_recycle_slow);
->=20
->  /* Converting abstract packet type numbers into a software structure
-> with
->   * the packet parameters to do O(1) lookup on Rx.
-> @@ -251,7 +255,7 @@ void libeth_rx_pt_gen_hash_type(struct
-> libeth_rx_pt *pt)
->  	pt->hash_type |=3D libeth_rx_pt_xdp_iprot[pt->inner_prot];
->  	pt->hash_type |=3D libeth_rx_pt_xdp_pl[pt->payload_layer];
->  }
-> -EXPORT_SYMBOL_NS_GPL(libeth_rx_pt_gen_hash_type, "LIBETH");
-> +EXPORT_SYMBOL_GPL(libeth_rx_pt_gen_hash_type);
->=20
->  /* Module */
->=20
-> diff --git a/drivers/net/ethernet/intel/libie/rx.c
-> b/drivers/net/ethernet/intel/libie/rx.c
-> index 66a9825fe11f..6fda656afa9c 100644
-> --- a/drivers/net/ethernet/intel/libie/rx.c
-> +++ b/drivers/net/ethernet/intel/libie/rx.c
-> @@ -1,6 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0-only
-> -/* Copyright (C) 2024 Intel Corporation */
-> +/* Copyright (C) 2024-2025 Intel Corporation */
->=20
-> +#define DEFAULT_SYMBOL_NAMESPACE	"LIBIE"
-> +
-> +#include <linux/export.h>
->  #include <linux/net/intel/libie/rx.h>
->=20
->  /* O(1) converting i40e/ice/iavf's 8/10-bit hardware packet type to a
-> parsed @@ -116,7 +119,7 @@ const struct libeth_rx_pt
-> libie_rx_pt_lut[LIBIE_RX_PT_NUM] =3D {
->  	LIBIE_RX_PT_IP(4),
->  	LIBIE_RX_PT_IP(6),
->  };
-> -EXPORT_SYMBOL_NS_GPL(libie_rx_pt_lut, "LIBIE");
-> +EXPORT_SYMBOL_GPL(libie_rx_pt_lut);
->=20
->  MODULE_DESCRIPTION("Intel(R) Ethernet common library");
-> MODULE_IMPORT_NS("LIBETH");
-> --
-> 2.49.0
+/*
+ * Author: Amit Choudhary
+ * Email: amitchoudhary0523 AT gmail DOT com
+ */
 
+#include "generic_doubly_linked_list_library.h"
+
+#include <stdlib.h>
+#include <string.h>
+
+static struct element *gdlll_create_standalone_element(void *data_ptr,
+                                                       long data_size);
+static void gdlll_remove_element_from_list(struct gdll_container *gdllc_ptr,
+                                           struct element *elem_ptr);
+static void gdlll_insert_element_before_element(
+                            struct gdll_container *gdllc_ptr,
+                            struct element *elem_to_insert_ptr,
+                            struct element *elem_before_which_to_insert_ptr);
+
+struct gdll_container *gdlll_init_gdll_container(
+                            void *function_ptr_to_call_before_deleting_data)
+{
+
+    struct gdll_container *gdllc_ptr = calloc(sizeof(*gdllc_ptr), 1);
+
+    if (!gdllc_ptr)
+        return NULL;
+
+    gdllc_ptr->first = NULL;
+    gdllc_ptr->last = NULL;
+    gdllc_ptr->total_number_of_elements = 0;
+    gdllc_ptr->call_function_before_deleting_data =
+                                    function_ptr_to_call_before_deleting_data;
+
+    return gdllc_ptr;
+
+} // end of gdlll_init_gdll_container() function
+
+long gdlll_get_total_number_of_elements_in_gdll_container(
+                                            struct gdll_container *gdllc_ptr)
+{
+
+    if (!gdllc_ptr) {
+        return 0;
+    }
+
+    return (gdllc_ptr->total_number_of_elements);
+
+} // end of gdlll_get_total_number_of_elements_in_gdll_container() function
+
+int gdlll_add_element_to_front(struct gdll_container *gdllc_ptr, void *data_ptr,
+                               long data_size)
+{
+
+    struct element *elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return GDLLL_GDLLC_PTR_IS_NULL;
+    }
+
+    if (!data_ptr) {
+        return GDLLL_DATA_PTR_IS_NULL;
+    }
+
+    if (data_size <= 0) {
+        return GDLLL_DATA_SIZE_IS_INVALID;
+    }
+
+    elem_ptr = gdlll_create_standalone_element(data_ptr, data_size);
+
+    if (!elem_ptr) {
+        return GDLLL_NO_MEMORY;
+    }
+
+    if (gdllc_ptr->first == NULL) {
+        gdllc_ptr->first = elem_ptr;
+        gdllc_ptr->last = elem_ptr;
+    } else {
+        elem_ptr->next = gdllc_ptr->first;
+        elem_ptr->next->prev = elem_ptr;
+        gdllc_ptr->first = elem_ptr;
+    }
+
+    gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements + 1;
+
+    return GDLLL_SUCCESS;
+
+} // end of gdlll_add_element_to_front() function
+
+int gdlll_add_element_to_back(struct gdll_container *gdllc_ptr, void *data_ptr,
+                              long data_size)
+{
+
+    struct element *elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return GDLLL_GDLLC_PTR_IS_NULL;
+    }
+
+    if (!data_ptr) {
+        return GDLLL_DATA_PTR_IS_NULL;
+    }
+
+    if (data_size <= 0) {
+        return GDLLL_DATA_SIZE_IS_INVALID;
+    }
+
+    elem_ptr = gdlll_create_standalone_element(data_ptr, data_size);
+
+    if (!elem_ptr) {
+        return GDLLL_NO_MEMORY;
+    }
+
+    if (gdllc_ptr->first == NULL) {
+        gdllc_ptr->first = elem_ptr;
+        gdllc_ptr->last = elem_ptr;
+    } else {
+        gdllc_ptr->last->next = elem_ptr;
+        elem_ptr->prev = gdllc_ptr->last;
+        gdllc_ptr->last = elem_ptr;
+    }
+
+    gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements + 1;
+
+    return GDLLL_SUCCESS;
+
+} // end of gdlll_add_element_to_back() function
+
+int gdlll_add_element_sorted_ascending(struct gdll_container *gdllc_ptr,
+                                       void *data_ptr, long data_size,
+                                       compare_elements_function comp_func)
+{
+
+    struct element *elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return GDLLL_GDLLC_PTR_IS_NULL;
+    }
+
+    if (!data_ptr) {
+        return GDLLL_DATA_PTR_IS_NULL;
+    }
+
+    if (data_size <= 0) {
+        return GDLLL_DATA_SIZE_IS_INVALID;
+    }
+
+    if (!comp_func) {
+        return GDLLL_COMPARE_ELEMENTS_FUNC_PTR_IS_NULL;
+    }
+
+    elem_ptr = gdlll_create_standalone_element(data_ptr, data_size);
+
+    if (!elem_ptr) {
+        return GDLLL_NO_MEMORY;
+    }
+
+    if (gdllc_ptr->first == NULL) {
+        gdllc_ptr->first = elem_ptr;
+        gdllc_ptr->last = elem_ptr;
+    } else {
+        struct element *temp = gdllc_ptr->first;
+        while ((temp) && (comp_func(elem_ptr, temp) > 0)) {
+            temp = temp->next;
+        }
+        // insert elem_ptr before temp
+        gdlll_insert_element_before_element(gdllc_ptr, elem_ptr, temp);
+    }
+
+    gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements + 1;
+
+    return GDLLL_SUCCESS;
+
+} // end of gdlll_add_element_sorted_ascending() function
+
+int gdlll_add_element_sorted_descending(struct gdll_container *gdllc_ptr,
+                                        void *data_ptr, long data_size,
+                                        compare_elements_function comp_func)
+{
+
+    struct element *elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return GDLLL_GDLLC_PTR_IS_NULL;
+    }
+
+    if (!data_ptr) {
+        return GDLLL_DATA_PTR_IS_NULL;
+    }
+
+    if (data_size <= 0) {
+        return GDLLL_DATA_SIZE_IS_INVALID;
+    }
+
+    if (!comp_func) {
+        return GDLLL_COMPARE_ELEMENTS_FUNC_PTR_IS_NULL;
+    }
+
+    elem_ptr = gdlll_create_standalone_element(data_ptr, data_size);
+
+    if (!elem_ptr) {
+        return GDLLL_NO_MEMORY;
+    }
+
+    if (gdllc_ptr->first == NULL) {
+        gdllc_ptr->first = elem_ptr;
+        gdllc_ptr->last = elem_ptr;
+    } else {
+        struct element *temp = gdllc_ptr->first;
+        while ((temp) && (comp_func(elem_ptr, temp) < 0)) {
+            temp = temp->next;
+        }
+        // insert elem_ptr before temp
+        gdlll_insert_element_before_element(gdllc_ptr, elem_ptr, temp);
+    }
+
+    gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements + 1;
+
+    return GDLLL_SUCCESS;
+
+} // end of gdlll_add_element_sorted_descending() function
+
+struct element *gdlll_get_front_element(struct gdll_container *gdllc_ptr)
+{
+
+    struct element *temp = NULL;
+
+    if (!gdllc_ptr) {
+        return NULL;
+    }
+
+    if (gdllc_ptr->total_number_of_elements == 0) {
+        return NULL;
+    }
+
+    temp = gdllc_ptr->first;
+
+    gdlll_remove_element_from_list(gdllc_ptr, gdllc_ptr->first);
+
+    gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements - 1;
+
+    return temp;
+
+} // end of gdlll_get_front_element() function
+
+struct element *gdlll_get_last_element(struct gdll_container *gdllc_ptr)
+{
+
+    struct element *temp = NULL;
+
+    if (!gdllc_ptr) {
+        return NULL;
+    }
+
+    if (gdllc_ptr->total_number_of_elements == 0) {
+        return NULL;
+    }
+
+    temp = gdllc_ptr->last;
+
+    gdlll_remove_element_from_list(gdllc_ptr, gdllc_ptr->last);
+
+    gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements - 1;
+
+    return temp;
+
+} // end of gdlll_get_last_element() function
+
+struct element *gdlll_get_matching_element(struct gdll_container *gdllc_ptr,
+                                           void *data_ptr, long data_size,
+                                           compare_elements_function comp_func)
+{
+
+    struct element *matching_elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return NULL;
+    }
+
+    if (!data_ptr) {
+        return NULL;
+    }
+
+    if (data_size <= 0) {
+        return NULL;
+    }
+
+    if (!comp_func) {
+        return NULL;
+    }
+
+    if (gdllc_ptr->total_number_of_elements == 0) {
+        return NULL;
+    }
+
+    matching_elem_ptr = gdlll_peek_matching_element(gdllc_ptr, data_ptr,
+                                                    data_size, comp_func);
+
+    if (matching_elem_ptr == NULL) {
+        return NULL;
+    }
+
+    gdlll_remove_element_from_list(gdllc_ptr, matching_elem_ptr);
+
+    gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements - 1;
+
+    return matching_elem_ptr;
+
+} // end of gdlll_get_matching_element() function
+
+// This function doesn't check the validity of its arguments. It is the
+// responsibility of the calling function to check the arguments it is passing
+// to this function.
+static struct element *gdlll_create_standalone_element(void *data_ptr,
+                                                       long data_size)
+{
+    struct element *elem_ptr = NULL;
+
+    elem_ptr = calloc(sizeof(*elem_ptr), 1);
+    if (!elem_ptr) {
+        return NULL;
+    }
+
+    elem_ptr->data_ptr = calloc((size_t)(data_size), 1);
+    if (!(elem_ptr->data_ptr)) {
+        free(elem_ptr);
+        return NULL;
+    }
+
+    memmove(elem_ptr->data_ptr, data_ptr, (size_t)(data_size));
+    elem_ptr->data_size = data_size;
+
+    elem_ptr->prev = NULL;
+    elem_ptr->next = NULL;
+
+    return elem_ptr;
+
+} // end of gdlll_create_standalone_element() function
+
+// This function doesn't check the validity of its arguments. It is the
+// responsibility of the calling function to check the arguments it is passing
+// to this function. This function just removes the element from the list,
+// it doesn't decrement total_number_of_elements by 1. Decrementing has to be
+// done in the calling function. This function should not be called if the
+// number of elements in the container is 0. The calling function should first
+// check whether the number of elements in the container is 0 or not.
+static void gdlll_remove_element_from_list(struct gdll_container *gdllc_ptr,
+                                           struct element *elem_ptr)
+{
+
+    if (elem_ptr == gdllc_ptr->first) {
+        gdllc_ptr->first = elem_ptr->next;
+        if (gdllc_ptr->first == NULL) {
+            gdllc_ptr->last = NULL;
+        } else {
+            gdllc_ptr->first->prev = NULL;
+        }
+    } else if (elem_ptr == gdllc_ptr->last) {
+        gdllc_ptr->last = elem_ptr->prev;
+        if (gdllc_ptr->last == NULL) {
+            gdllc_ptr->first = NULL;
+        } else {
+            gdllc_ptr->last->next = NULL;
+        }
+    } else {
+        elem_ptr->prev->next = elem_ptr->next;
+        elem_ptr->next->prev = elem_ptr->prev;
+    }
+
+    elem_ptr->prev = NULL;
+    elem_ptr->next = NULL;
+
+} // end of gdlll_remove_element_from_list() function
+
+// This function doesn't check the validity of its arguments. It is the
+// responsibility of the calling function to check the arguments it is passing
+// to this function. This function just inserts the element in the list at the
+// appropriate place, it doesn't increment total_number_of_elements by 1.
+// Incrementing has to be done in the calling function. This function should not
+// be called if the number of elements in the container is 0. The calling
+// function should first check whether the number of elements in the container
+// is 0 or not.
+static void gdlll_insert_element_before_element(
+                                            struct gdll_container *gdllc_ptr,
+                                          struct element *elem_to_insert_ptr,
+                             struct element *elem_before_which_to_insert_ptr)
+{
+
+    if (elem_before_which_to_insert_ptr == NULL) {
+
+        // add elem_to_insert_ptr to back
+        gdllc_ptr->last->next = elem_to_insert_ptr;
+        elem_to_insert_ptr->prev = gdllc_ptr->last;
+        gdllc_ptr->last = elem_to_insert_ptr;
+
+    } else if (elem_before_which_to_insert_ptr == gdllc_ptr->first) {
+
+        // add elem_to_insert_ptr to front
+        elem_to_insert_ptr->next = gdllc_ptr->first;
+        elem_to_insert_ptr->next->prev = elem_to_insert_ptr;
+        gdllc_ptr->first = elem_to_insert_ptr;
+
+    } else {
+
+        // insert elem_to_insert_ptr before elem_before_which_to_insert_ptr
+        elem_to_insert_ptr->next = elem_before_which_to_insert_ptr;
+        elem_to_insert_ptr->prev = elem_before_which_to_insert_ptr->prev;
+        elem_before_which_to_insert_ptr->prev = elem_to_insert_ptr;
+        elem_to_insert_ptr->prev->next = elem_to_insert_ptr;
+
+    }
+
+} // end of gdlll_insert_element_before_element() function
+
+struct element *gdlll_peek_front_element(struct gdll_container *gdllc_ptr)
+{
+
+    if (!gdllc_ptr) {
+        return NULL;
+    }
+
+    return (gdllc_ptr->first);
+
+} // end of gdlll_peek_front_element() function
+
+struct element *gdlll_peek_last_element(struct gdll_container *gdllc_ptr)
+{
+
+    if (!gdllc_ptr) {
+        return NULL;
+    }
+
+    return (gdllc_ptr->last);
+
+} // end of gdlll_peek_last_element() function
+
+struct element *gdlll_peek_matching_element(struct gdll_container *gdllc_ptr,
+                                            void *data_ptr, long data_size,
+                                            compare_elements_function comp_func)
+{
+
+    struct element *elem_ptr = NULL;
+    struct element *temp = NULL;
+
+    if (!gdllc_ptr) {
+        return NULL;
+    }
+
+    if (!data_ptr) {
+        return NULL;
+    }
+
+    if (data_size <= 0) {
+        return NULL;
+    }
+
+    if (!comp_func) {
+        return NULL;
+    }
+
+    if (gdllc_ptr->total_number_of_elements == 0) {
+        return NULL;
+    }
+
+    elem_ptr = gdlll_create_standalone_element(data_ptr, data_size);
+
+    if (!elem_ptr) {
+        return NULL;
+    }
+
+    temp = gdllc_ptr->first;
+
+    while ((temp) && (comp_func(elem_ptr, temp) != 0)) {
+        temp = temp->next;
+    }
+
+    // free the memory allocated in gdlll_create_standalone_element()
+    free(elem_ptr->data_ptr);
+    free(elem_ptr);
+
+    return temp;
+
+} // end of gdlll_peek_matching_element() function
+
+int gdlll_replace_data_in_matching_element(struct gdll_container *gdllc_ptr,
+                                         void *old_data_ptr, long old_data_size,
+                                         void *new_data_ptr, long new_data_size,
+                                         compare_elements_function comp_func)
+{
+
+    struct element *matching_elem_ptr = NULL;
+    void *temp_data_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return GDLLL_GDLLC_PTR_IS_NULL;
+    }
+
+    if (!old_data_ptr) {
+        return GDLLL_DATA_PTR_IS_NULL;
+    }
+
+    if (old_data_size <= 0) {
+        return GDLLL_DATA_SIZE_IS_INVALID;
+    }
+
+    if (!new_data_ptr) {
+        return GDLLL_DATA_PTR_IS_NULL;
+    }
+
+    if (new_data_size <= 0) {
+        return GDLLL_DATA_SIZE_IS_INVALID;
+    }
+
+    if (!comp_func) {
+        return GDLLL_COMPARE_ELEMENTS_FUNC_PTR_IS_NULL;
+    }
+
+    if (gdllc_ptr->total_number_of_elements == 0) {
+        return GDLLL_CONTAINER_IS_EMPTY;
+    }
+
+    matching_elem_ptr = gdlll_peek_matching_element(gdllc_ptr, old_data_ptr,
+                                                    old_data_size, comp_func);
+
+    if (matching_elem_ptr == NULL) {
+        return GDLLL_MATCHING_ELEMENT_NOT_FOUND;
+    }
+
+    temp_data_ptr = calloc((size_t)(new_data_size), 1);
+    if (!temp_data_ptr) {
+        return GDLLL_NO_MEMORY;
+    }
+
+    // Now, call the call_function_before_deleting_data() for 'data_ptr' of the
+    // matching element and then free the 'data_ptr' of the matching element
+    if (gdllc_ptr->call_function_before_deleting_data) {
+        gdllc_ptr->call_function_before_deleting_data(
+                                                matching_elem_ptr->data_ptr);
+    }
+    free(matching_elem_ptr->data_ptr);
+
+    matching_elem_ptr->data_ptr = temp_data_ptr;
+    memmove(matching_elem_ptr->data_ptr, new_data_ptr, (size_t)(new_data_size));
+    matching_elem_ptr->data_size = new_data_size;
+
+    return GDLLL_SUCCESS;
+
+} // end of gdlll_replace_data_in_matching_element() function
+
+void gdlll_delete_front_element(struct gdll_container *gdllc_ptr)
+{
+
+    struct element *temp_elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return;
+    }
+
+    temp_elem_ptr = gdllc_ptr->first;
+
+    if (temp_elem_ptr) {
+        gdlll_remove_element_from_list(gdllc_ptr, temp_elem_ptr);
+        gdlll_delete_standalone_element(gdllc_ptr, temp_elem_ptr);
+        gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements - 1;
+    }
+
+    return;
+
+} // end of gdlll_delete_front_element() function
+
+void gdlll_delete_last_element(struct gdll_container *gdllc_ptr)
+{
+
+    struct element *temp_elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return;
+    }
+
+    temp_elem_ptr = gdllc_ptr->last;
+
+    if (temp_elem_ptr) {
+        gdlll_remove_element_from_list(gdllc_ptr, temp_elem_ptr);
+        gdlll_delete_standalone_element(gdllc_ptr, temp_elem_ptr);
+        gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements - 1;
+    }
+
+    return;
+
+} // end of gdlll_delete_last_element() function
+
+void gdlll_delete_matching_element(struct gdll_container *gdllc_ptr,
+                                   void *data_ptr, long data_size,
+                                   compare_elements_function comp_func)
+{
+
+    struct element *matching_elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return;
+    }
+
+    if (!data_ptr) {
+        return;
+    }
+
+    if (data_size <= 0) {
+        return;
+    }
+
+    if (!comp_func) {
+        return;
+    }
+
+    if (gdllc_ptr->total_number_of_elements == 0) {
+        return;
+    }
+
+    matching_elem_ptr = gdlll_peek_matching_element(gdllc_ptr, data_ptr,
+                                                    data_size, comp_func);
+
+    if (matching_elem_ptr == NULL) {
+        return;
+    }
+
+    gdlll_remove_element_from_list(gdllc_ptr, matching_elem_ptr);
+    gdlll_delete_standalone_element(gdllc_ptr, matching_elem_ptr);
+    gdllc_ptr->total_number_of_elements =
+                                    gdllc_ptr->total_number_of_elements - 1;
+
+    return;
+
+} // end of gdlll_delete_matching_element() function
+
+void gdlll_delete_standalone_element(struct gdll_container *gdllc_ptr,
+                                     struct element *element_to_delete)
+{
+
+    if (!gdllc_ptr) {
+        return;
+    }
+
+    if (!element_to_delete) {
+        return;
+    }
+
+    // Call the call_function_before_deleting_data() for 'data_ptr' of
+    // 'element_to_delete' and then free the 'data_ptr' of 'element_to_delete'.
+    // Then free the 'element_to_delete'.
+    if (gdllc_ptr->call_function_before_deleting_data) {
+        gdllc_ptr->call_function_before_deleting_data(
+                                                element_to_delete->data_ptr);
+    }
+
+    free(element_to_delete->data_ptr);
+
+    free(element_to_delete);
+
+    return;
+
+} // end of gdlll_delete_standalone_element() function
+
+void gdlll_delete_all_elements_in_gdll_container(
+                                            struct gdll_container *gdllc_ptr)
+{
+
+    struct element *temp_elem_ptr = NULL;
+
+    if (!gdllc_ptr) {
+        return;
+    }
+
+    if (gdllc_ptr->total_number_of_elements == 0) {
+        return;
+    }
+
+    temp_elem_ptr = gdllc_ptr->first;
+
+    while (temp_elem_ptr) {
+        gdlll_delete_front_element(gdllc_ptr);
+        temp_elem_ptr = gdllc_ptr->first;
+    }
+
+    return;
+
+} // end of gdlll_delete_all_elements_in_gdll_container() function
+
+void gdlll_delete_gdll_container(struct gdll_container *gdllc_ptr)
+{
+
+    if (!gdllc_ptr) {
+        return;
+    }
+
+    gdlll_delete_all_elements_in_gdll_container(gdllc_ptr);
+
+    free(gdllc_ptr);
+
+    return;
+
+} // end of gdlll_delete_gdll_container() function
+
+------------------------------------------------
+generic_doubly_linked_list_library.h
+------------------------------------------------
+
+/*
+ * License:
+ *
+ * This file has been released under "unlicense" license
+ * (https://unlicense.org).
+ *
+ * This is free and unencumbered software released into the public domain.
+ *
+ * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
+ * this software, either in source code form or as a compiled binary, for any
+ * purpose, commercial or non-commercial, and by any means.
+ *
+ * For more information about this license, please visit - https://unlicense.org
+ */
+
+/*
+ * Author: Amit Choudhary
+ * Email: amitchoudhary0523 AT gmail DOT com
+ */
+
+#ifndef _GENERIC_DOUBLY_LINKED_LIST_LIBRARY_H_
+#define _GENERIC_DOUBLY_LINKED_LIST_LIBRARY_H_
+
+// gdlll means generic doubly linked list library.
+// gdllc means generic doubly linked list container.
+// gdll means generic doubly linked list.
+
+// Everything happened successfully.
+#define GDLLL_SUCCESS 0
+
+// 'gdllc_ptr' argument is NULL.
+#define GDLLL_GDLLC_PTR_IS_NULL -1
+
+// 'data_ptr' argument is NULL.
+#define GDLLL_DATA_PTR_IS_NULL -2
+
+// 'data_size' argument is <= 0.
+#define GDLLL_DATA_SIZE_IS_INVALID -3
+
+// There are no elements in the container.
+#define GDLLL_CONTAINER_IS_EMPTY -4
+
+// No memory available.
+#define GDLLL_NO_MEMORY -5
+
+// Matching element was not found in the list.
+#define GDLLL_MATCHING_ELEMENT_NOT_FOUND -6
+
+// The function pointer given by the user for comparing elements is NULL.
+#define GDLLL_COMPARE_ELEMENTS_FUNC_PTR_IS_NULL -7
+
+// This is used only for initializing error variables.
+#define GDLLL_ERROR_INIT_VALUE -99
+
+struct element
+{
+    void *data_ptr;
+    long data_size;
+    struct element *prev;
+    struct element *next;
+};
+
+/*
+ * The user needs to give a function pointer to compare elements in some
+ * functions of this library. Below is the signature of the elements comparator
+ * function.
+ *
+ * The return value of this function should be -1 if 'first' is less than the
+ * 'second', 0 if 'first' is equal to the 'second', and 1 if 'first' is greater
+ * than the 'second'.
+ */
+typedef int (*compare_elements_function)(struct element *first,
+                                         struct element *second);
+
+struct gdll_container
+{
+    struct element *first;
+    struct element *last;
+    long total_number_of_elements;
+    // This function pointer will be called before freeing 'data_ptr' member of
+    // the element structure. This will be needed if the user has allocated some
+    // memory in 'data_ptr' and the user wants to free it before the 'data_ptr'
+    // member is freed by this library. So, if the user has a need for it then
+    // the user can give a valid function pointer to call when initializing this
+    // library (by calling the function 'gdlll_init_gdll_container'). The user
+    // may also give NULL function pointer if the user doesn't need this
+    // functionality.
+    void (*call_function_before_deleting_data)(void *data_ptr);
+};
+
+struct gdll_container *gdlll_init_gdll_container(
+                            void *function_ptr_to_call_before_deleting_data);
+
+// If gdllc_ptr is NULL, then this function returns 0
+long gdlll_get_total_number_of_elements_in_gdll_container(
+                                            struct gdll_container *gdllc_ptr);
+
+int gdlll_add_element_to_front(struct gdll_container *gdllc_ptr, void *data_ptr,
+                               long data_size);
+
+int gdlll_add_element_to_back(struct gdll_container *gdllc_ptr, void *data_ptr,
+                              long data_size);
+
+int gdlll_add_element_sorted_ascending(struct gdll_container *gdllc_ptr,
+                                       void *data_ptr, long data_size,
+                                       compare_elements_function comp_func);
+
+int gdlll_add_element_sorted_descending(struct gdll_container *gdllc_ptr,
+                                        void *data_ptr, long data_size,
+                                        compare_elements_function comp_func);
+
+// All gdlll_get_* functions remove the element from the list and then return
+// the element. If you don't want the element to be removed from the list then
+// use gdlll_peek_* functions. If there are no elements in the container
+// then NULL is returned.
+struct element *gdlll_get_front_element(struct gdll_container *gdllc_ptr);
+
+struct element *gdlll_get_last_element(struct gdll_container *gdllc_ptr);
+
+struct element *gdlll_get_matching_element(struct gdll_container *gdllc_ptr,
+                                           void *data_ptr, long data_size,
+                                           compare_elements_function comp_func);
+
+// All gdlll_peek_* functions return the element without removing it from the
+// list. If there are no elements in the container then NULL is returned.
+struct element *gdlll_peek_front_element(struct gdll_container *gdllc_ptr);
+
+struct element *gdlll_peek_last_element(struct gdll_container *gdllc_ptr);
+
+struct element *gdlll_peek_matching_element(struct gdll_container *gdllc_ptr,
+                                            void *data_ptr, long data_size,
+                                           compare_elements_function comp_func);
+
+int gdlll_replace_data_in_matching_element(struct gdll_container *gdllc_ptr,
+                                         void *old_data_ptr, long old_data_size,
+                                         void *new_data_ptr, long new_data_size,
+                                         compare_elements_function comp_func);
+
+void gdlll_delete_front_element(struct gdll_container *gdllc_ptr);
+
+void gdlll_delete_last_element(struct gdll_container *gdllc_ptr);
+
+void gdlll_delete_matching_element(struct gdll_container *gdllc_ptr,
+                                   void *data_ptr, long data_size,
+                                   compare_elements_function comp_func);
+
+void gdlll_delete_standalone_element(struct gdll_container *gdllc_ptr,
+                                     struct element *element_to_delete);
+
+void gdlll_delete_all_elements_in_gdll_container(
+                                            struct gdll_container *gdllc_ptr);
+
+void gdlll_delete_gdll_container(struct gdll_container *gdllc_ptr);
+
+#endif
+
+-------------------------------------------------------------------
+test_generic_doubly_linked_list_library_as_map.c
+-------------------------------------------------------------------
+
+/*
+ * License:
+ *
+ * This file has been released under "unlicense" license
+ * (https://unlicense.org).
+ *
+ * This is free and unencumbered software released into the public domain.
+ *
+ * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
+ * this software, either in source code form or as a compiled binary, for any
+ * purpose, commercial or non-commercial, and by any means.
+ *
+ * For more information about this license, please visit - https://unlicense.org
+ */
+
+/*
+ * Author: Amit Choudhary
+ * Email: amitchoudhary0523 AT gmail DOT com
+ */
+
+#include "generic_doubly_linked_list_library.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_STR_SIZE 256
+#define NUM_ELEMENTS 5
+
+#define ASC  1 // ascending order.
+#define DESC 2 // descending order. Any value other than 1 (ASC).
+
+struct mymap {
+    char *key_str;
+    long val;
+};
+
+// function prototypes for gcc flag -Werror-implicit-function-declaration
+static char *get_input_from_stdin_and_discard_extra_characters(char *str,
+                                                               long size);
+static int compare_elems(struct element *first, struct element *second);
+static void free_key_str(struct mymap *mm);
+static void populate_map(struct gdll_container *gc, struct mymap *mm,
+                         long count, int sorting_order);
+static void print_key_and_value_without_removing_elements(
+                                                    struct gdll_container *gc);
+static void print_key_and_value_by_removing_elements(struct gdll_container *gc);
+static void populate_and_print_map(struct gdll_container *gc, struct mymap *mm,
+                                   long count, int sorting_order);
+
+static char *get_input_from_stdin_and_discard_extra_characters(char *str,
+                                                               long size)
+{
+
+    int c = 0;
+    long i = 0;
+
+    // If 'size' is 0 then this function will discard all input and return NULL.
+    // No need to check 'str' if 'size' is 0.
+    if (size == 0) {
+        // discard all input
+        while ((c = getchar()) && (c != '\n') && (c != EOF));
+        return NULL;
+    }
+
+    if (str == NULL)
+        return NULL;
+
+    if (size < 0)
+        return NULL;
+
+    for (i = 0; i < (size - 1); i = i + 1) {
+
+        c = getchar();
+
+        if ((c == '\n') || (c == EOF)) {
+            str[i] = 0;
+            return str;
+        }
+
+        str[i] = (char)(c);
+
+    } // end of for loop
+
+    str[i] = 0;
+
+    // discard rest of input
+    while ((c = getchar()) && (c != '\n') && (c != EOF));
+
+    return str;
+
+} // end of function get_input_from_stdin_and_discard_extra_characters()
+
+static int compare_elems(struct element *first, struct element *second)
+{
+
+    if ((first == NULL) || (second == NULL)) {
+        printf("Error: %s(): One or more arguments are NULL. Exiting..\n\n",
+               __FUNCTION__);
+        exit(1);
+    }
+
+    char *i = ((struct mymap *)(first->data_ptr))->key_str;
+    char *j = ((struct mymap *)(second->data_ptr))->key_str;
+
+    return strcmp(i, j);
+
+} // end of function compare_elems()
+
+static void free_key_str(struct mymap *mm)
+{
+
+    if (mm == NULL) {
+        printf("Error: %s(): Argument 'mm' is NULL.\n", __FUNCTION__);
+        return;
+    }
+
+    //printf("DEBUG: Freeing key_str.\n");
+
+    free(mm->key_str);
+
+    return;
+
+} // end of function free_key_str()
+
+// populate the map
+static void populate_map(struct gdll_container *gc, struct mymap *mm,
+                         long count, int sorting_order)
+{
+
+    struct element *dup_elem = NULL;
+
+    if ((gc == NULL) || (mm == NULL) || (count <= 0)) {
+        printf("Error: %s(): One or more arguments are invalid.\n",
+               __FUNCTION__);
+        return;
+    }
+
+    printf("\n");
+
+    printf("---------------------------------------------------\n");
+    printf("Please input the data.\n");
+    printf("You will be asked to input the data for %ld elements.\n", count);
+    printf("The map elements will be stored in \"%s\" order of keys.\n",
+            (sorting_order == ASC) ? "ASCENDING" : "DESCENDING");
+    printf("---------------------------------------------------\n");
+
+    while (count-- > 0) {
+
+        printf("\n");
+
+        // Don't free mm->key_str. It will be freed by your callback function
+        // when the element will be deleted.
+        mm->key_str = calloc(MAX_STR_SIZE, 1);
+        if ((mm->key_str) == NULL) {
+            printf("No memory..Exiting..\n\n");
+            free(mm); // free it here as this one isn't in the library yet
+            gdlll_delete_gdll_container(gc);
+            exit(1);
+        }
+
+        mm->val = -1;
+
+        printf("Please enter a valid string (key) (input is not checked): ");
+        get_input_from_stdin_and_discard_extra_characters(mm->key_str,
+                                                          MAX_STR_SIZE);
+        printf("Please enter a valid integer (input is not checked): ");
+        scanf("%ld", &(mm->val));
+        get_input_from_stdin_and_discard_extra_characters(NULL, 0);
+        dup_elem = gdlll_peek_matching_element(gc, mm, sizeof(*mm),
+                                               compare_elems);
+        if (dup_elem == NULL) {
+            if (sorting_order == ASC) {
+                gdlll_add_element_sorted_ascending(gc, mm, sizeof(*mm),
+                                                   compare_elems);
+            } else {
+                gdlll_add_element_sorted_descending(gc, mm, sizeof(*mm),
+                                                    compare_elems);
+            }
+        } else { // if you want to replace the exisiting value of the key
+            gdlll_replace_data_in_matching_element(gc, dup_elem->data_ptr,
+                                 sizeof (*(struct mymap *)(dup_elem->data_ptr)),
+                                 mm, sizeof(*mm), compare_elems);
+        }
+
+    } // end of while loop
+
+    return;
+
+} // end of function populate_map()
+
+static void print_key_and_value_without_removing_elements(
+                                                    struct gdll_container *gc)
+{
+
+    struct element *elem = NULL;
+    struct mymap *elem_mm = NULL;
+
+    if (gc == NULL) {
+        printf("%s(): Argument 'gc' is NULL.\n", __FUNCTION__);
+        return;
+    }
+
+    printf("\n");
+
+    printf("--------------------------------------\n");
+    printf("Printing keys and values from the map without removing the elements"
+           " from the map.\n");
+    printf("--------------------------------------\n");
+
+    for (elem = gc->first; elem != NULL; elem=elem->next) {
+        elem_mm = (struct mymap *)(elem->data_ptr);
+        printf("key:%s, value:%ld\n", elem_mm->key_str, elem_mm->val);
+    }
+
+} // end of function print_key_and_value_without_removing_elements()
+
+static void print_key_and_value_by_removing_elements(struct gdll_container *gc)
+{
+
+    struct element *elem = NULL;
+    struct mymap *elem_mm = NULL;
+
+    if (gc == NULL) {
+        printf("%s(): Argument 'gc' is NULL.\n", __FUNCTION__);
+        return;
+    }
+
+    printf("\n");
+
+    printf("--------------------------------------\n");
+    printf("Printing keys and values from the map by removing the elements"
+           " from the map.\n");
+    printf("--------------------------------------\n");
+
+    elem = gdlll_get_front_element(gc);
+    while (elem != NULL) {
+        elem_mm = (struct mymap *)(elem->data_ptr);
+        printf("key:%s, value:%ld\n", elem_mm->key_str, elem_mm->val);
+        gdlll_delete_standalone_element(gc, elem);
+        elem = gdlll_get_front_element(gc);
+    }
+
+} // end of function print_key_and_value_by_removing_elements()
+
+static void populate_and_print_map(struct gdll_container *gc, struct mymap *mm,
+                                   long count, int sorting_order)
+{
+
+    if ((gc == NULL) || (mm == NULL) || (count <= 0)) {
+        printf("Error: %s(): One or more arguments are invalid.\n",
+               __FUNCTION__);
+        return;
+    }
+
+    // populate the map
+    populate_map(gc, mm, count, sorting_order);
+
+    printf("\n\n");
+
+    printf("-------------------------------------------\n");
+    printf("Total number of elements in the map = %ld\n",
+            gdlll_get_total_number_of_elements_in_gdll_container(gc));
+    printf("-------------------------------------------\n");
+
+    // print all keys and values from the map without removing the elements
+    // from the map
+    print_key_and_value_without_removing_elements(gc);
+
+    // print all keys and values from the map by removing the elements
+    // from the map
+    print_key_and_value_by_removing_elements(gc);
+
+} // end of function populate_and_print_map()
+
+int main (void)
+{
+
+    struct gdll_container *gc = NULL;
+    struct mymap *mm = {0};
+    long count = NUM_ELEMENTS;
+
+    gc = gdlll_init_gdll_container(free_key_str);
+    if (gc == NULL) {
+        printf("No memory..Exiting..\n\n");
+        exit(1);
+    }
+
+    // free 'mm' before exiting the program.
+    mm = calloc(1, sizeof(*mm));
+    if (mm == NULL) {
+        printf("No memory..Exiting..\n\n");
+        gdlll_delete_gdll_container(gc);
+        exit(1);
+    }
+
+    // populate and print the map (in ascending order of keys)
+    populate_and_print_map(gc, mm, count, ASC);
+
+    printf("\n\n\n");
+
+    // populate and print the map (in descending order of keys)
+    populate_and_print_map(gc, mm, count, DESC);
+
+    printf("\n");
+
+    free(mm);
+
+    gdlll_delete_gdll_container(gc);
+
+    return 0;
+
+} // end of function main()
+
+-----------------------------------------------------------------
+test_generic_doubly_linked_list_library_as_list.c
+-----------------------------------------------------------------
+
+/*
+ * License:
+ *
+ * This file has been released under "unlicense" license
+ * (https://unlicense.org).
+ *
+ * This is free and unencumbered software released into the public domain.
+ *
+ * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
+ * this software, either in source code form or as a compiled binary, for any
+ * purpose, commercial or non-commercial, and by any means.
+ *
+ * For more information about this license, please visit - https://unlicense.org
+ */
+
+/*
+ * Author: Amit Choudhary
+ * Email: amitchoudhary0523 AT gmail DOT com
+ */
+
+#include "generic_doubly_linked_list_library.h"
+
+#include <stdio.h>
+
+// function prototype for gcc flag -Werror-implicit-function-declaration
+static int compare(struct element *first, struct element *second);
+
+static int compare(struct element *first, struct element *second)
+{
+    long i = *(long *)(first->data_ptr);
+    long j = *(long *)(second->data_ptr);
+
+    if (i < j) {
+        return -1;
+    } else if (i == j) {
+        return 0;
+    } else {
+        return 1;
+    }
+
+} // end of function compare()
+
+int main (void)
+{
+
+    int c = 0;
+    long i = 0;
+    long count = 5;
+    struct element *elem = NULL;
+
+    struct gdll_container * gc = gdlll_init_gdll_container(NULL);
+
+    printf("\n");
+
+    printf("---------------------------------------------------\n");
+    printf("Please input the data.\n");
+    printf("You will be asked to input the data for %ld elements.\n", count);
+    printf("The list elements will be stored in \"DESCENDING\" order.\n");
+    printf("---------------------------------------------------\n");
+
+    while (count-- > 0) {
+        i = -1;
+        printf("\n");
+        printf("Please enter a valid integer (input is not checked): ");
+        scanf("%ld", &i);
+        // discard extra characters from stdin
+        while ((c = getchar()) && (c != '\n') && (c != EOF));
+        gdlll_add_element_sorted_descending(gc, &i, sizeof(i), compare);
+    }
+
+    printf("\n\n");
+
+    printf("Total number of elements in the list = %ld\n\n",
+                gdlll_get_total_number_of_elements_in_gdll_container(gc));
+
+    printf("------------------------------\n");
+    printf("Printing values from the list:\n");
+    printf("------------------------------\n");
+
+    elem = gdlll_get_front_element(gc);
+    while (elem != NULL) {
+        printf("%ld\n", *(long *)(elem->data_ptr));
+        gdlll_delete_standalone_element(gc, elem);
+        elem = gdlll_get_front_element(gc);
+    }
+
+    printf("\n");
+
+    gdlll_delete_gdll_container(gc);
+
+    return 0;
+
+} // end of function main()
+
+----------------
+ReadMe.txt
+----------------
+
+"generic_doubly_linked_list_library.c" can be used as a C++ STL list, map, set,
+stack, queue, deque, multimap, multiset, unordered_map, unordered_set,
+unordered_multimap, and unordered_multiset (basically as all C++ STL data
+structures except vector).
+
+For using this library as different C++ STL data structures you have to use
+different combinations of functions provided in this library. This library has
+only 22 functions (including 3 static functions).
+
+So, now the developers don't need to write code for implementing data
+structure(s) (like list, etc.), they can simply use this library and speed up
+their development.
+
+Another unique feature of this library is that it copies user's data into its
+elements, so the user doesn't have to keep his/her copy of data around. User's
+data safely resides in the elements. However, the library can't do deep copy
+because it doesn't know whether the user data has pointers. So, the user can
+free its top level data but the user should not free embedded pointers. These
+embedded pointers will be freed by the user's callback function when an element
+is getting deleted.
+
+Example:
+
+Let's say that you have a structure (as shown below) that you are storing in the
+element.
+
+struct mydata {
+  char *str;
+  int val;
+}
+
+struct mydata *md = malloc(sizeof(*md));
+md->str = malloc(10);
+gdlll_add_element_to_front(..., md, ...);
+free(md);
+
+Now, you can free 'md' but you should not free 'md->str'. 'md->str' will be
+freed by calling your free function (function_ptr_to_call_before_deleting_data)
+when the element is getting deleted. This function was provided by you when you
+initialized the container:
+gdlll_init_gdll_container(void *function_ptr_to_call_before_deleting_data).
+
+I have uploaded the code of the C library (generic_doubly_linked_list_library.c)
+and also the code of the test programs that show how to use this library as a
+'sorted list' and as a 'map'.
+
+
+----------------------------------------
+The source files in this repository are:
+
+generic_doubly_linked_list_library.c
+generic_doubly_linked_list_library.h
+test_generic_doubly_linked_list_library_as_list.c
+test_generic_doubly_linked_list_library_as_map.c
+
+The functions available in this library are:
+
+gdlll_init_gdll_container()
+gdlll_get_total_number_of_elements_in_gdll_container()
+gdlll_add_element_to_front()
+gdlll_add_element_to_back()
+gdlll_add_element_sorted_ascending()
+gdlll_add_element_sorted_descending()
+gdlll_get_front_element()
+gdlll_get_last_element()
+gdlll_get_matching_element()
+gdlll_peek_front_element()
+gdlll_peek_last_element()
+gdlll_peek_matching_element()
+gdlll_replace_data_in_matching_element()
+gdlll_delete_front_element()
+gdlll_delete_last_element()
+gdlll_delete_matching_element()
+gdlll_delete_standalone_element()
+gdlll_delete_all_elements_in_gdll_container()
+gdlll_delete_gdll_container()
+
+/* static functions */
+gdlll_create_standalone_element()
+gdlll_remove_element_from_list()
+gdlll_insert_element_before_element()
+----------------------------------------
+
+
+----------------------------------------
+Some pseudocode for using this library as a 'list' is:
+
+gdlll_add_element_to_front(...);
+or,
+gdlll_add_element_to_back(...);
+...
+...
+elem = gdlll_get_front_element(...);
+or,
+elem = gdlll_get_last_element(...);
+or,
+elem = gdlll_get_matching_element(...);
+----------------------------------------
+
+
+----------------------------------------
+Some pseudocode for using this library as a 'sorted list' is:
+
+gdlll_add_element_sorted_ascending(...);
+or,
+gdlll_add_element_sorted_descending(...);
+...
+...
+elem = gdlll_get_front_element(...);
+or,
+elem = gdlll_get_last_element(...);
+or,
+elem = gdlll_get_matching_element(...);
+----------------------------------------
+
+
+----------------------------------------
+Some pseudocode for using this library as a 'set' is:
+
+
+if (gdlll_peek_matching_element(...) == NULL) {
+    gdlll_add_element_sorted_ascending(...);
+    or,
+    gdlll_add_element_sorted_descending(...);
+}
+----------------------------------------
+
+
+----------------------------------------
+Some pseudocode for using this library as an 'unordered_set' is:
+
+
+if (gdlll_peek_matching_element(...) == NULL) {
+    gdlll_add_element_to_front(...);
+    or,
+    gdlll_add_element_to_back(...);
+}
+----------------------------------------
+
+
+----------------------------------------
+Some pseudocode for using this library as a 'map' is:
+
+For using this library as a 'map', etc, your 'data_ptr' must point to a
+structure that has a 'key' member and a 'value' member.
+
+struct mymap
+{
+    char *key;
+    int value;
+};
+
+struct mymap *mm;
+mm = malloc(sizeof(*mm));
+mm->key = malloc(10);
+strncpy(mm->key, "abcd", 10);
+mm->key[4] = 0;
+mm->value = 20;
+
+dup_elem = gdlll_peek_matching_element(gc, mm, sizeof(*mm), compare_elems);
+if (dup_elem == NULL) {
+    gdlll_add_element_sorted_ascending(gc, mm, sizeof(*mm), compare_elems);
+} else { // if you want to replace exisiting value of the key
+    gdlll_replace_data_in_matching_element(gc, dup_elem->data_ptr,
+                               sizeof (*(struct mymap *)(dup_elem->data_ptr)),
+                               mm, sizeof(*mm), compare_elems);
+}
+...
+...
+elem = gdlll_get_front_element(...);
+or,
+elem = gdlll_get_last_element(...);
+or,
+elem = gdlll_get_matching_element(...);
+----------------------------------------
+
+---- End of ReadMe ----
