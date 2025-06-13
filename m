@@ -1,105 +1,136 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79961E50E
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5CA145323;
+	Fri, 13 Jun 2025 00:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749775932; cv=none; b=OmvDswNZK5Z3nXWTTPpQidWks6n/ZHWhDwBqqFMPXO7ymF2cFeW8T/v7+CZazVCNm85CFKAwNS4tr/eAwUA2JAxtVl53aA0aQ7zrTa4mXKdB5X7L0lXDUrGm/cmnRz9XXTR1w8PQS3WK1G0IurdSmQbTK+NOrJ9AeWknSajA4T0=
+	t=1749775946; cv=none; b=UMMyldtZVD2jrGBAXidrDnc2A9rsgDt5+oDFm6S2ayOn2llIgsLAZSHqTgZHB/zgr6B6C0gisiUE7UJkJPgvf499Q9i4EldwHeoeYxTQYqdd4LxiFWdGLarXtri562IZCpiKH5Dpb4R+FWPwwrlsv7FBtnfGcYstCbJcA1faG1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749775932; c=relaxed/simple;
-	bh=Y9fqouMbWC/u7E8qeV6xHLgjMBcplZOEarKz0u0J7p4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oGxuhH4yoYLQFvChgXxxG3ImNPNYN0zYunPW3TlY7pUqfJ7/JmsOUKyUk/f15C/UVhpD410j7UNpD8/5k/66kzAHrPUYrpHktRStWLzF5L/sBTytuITJupZ2sw6hQnZ7ykYSy5MYV8E6rYhkiJQxt7QP797m+AfXukiVKkaLEqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nJN1GafN; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749775946; c=relaxed/simple;
+	bh=EsRJTlab3QCXz7ZpM9mVcFTl4rwFsKjGezndHiqVAmw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nHFgJzoPJO/3R219wfjlVG16ye6rVCRYP7hstWLCBcHEQqCrmMTc2CcyV1QCKrmuXS4irK5hAGvlgejYKtCMku0nGbXl4SM+jJ4hKAQhdX8zX0pQy42kn94DVV5oDkLAJJaVRBNMCIyOTK/BI8YCYU48GkmcZNO6LM4aK0neZuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=aCJsRkh1; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nJN1GafN"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31327b2f8e4so1630282a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:52:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="aCJsRkh1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749775930; x=1750380730; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PDC3Bp47VQywmziigkfie6PRv+RxREIJYB54etTSg38=;
-        b=nJN1GafNcYIIYHCylTtQsiickAZj/+ObplQp9+olRdXE48HZFo/neusYMT2v+Gg6GX
-         ncKHPNTQ5UB146VlB2quRvLaAo8Fugob8acu5XdVoccCLSdeXs3WG/aR3V3e6J6GO1JK
-         eN1Ji8Z7ku9H2bIPv15U5k8rUYaRC3HRYozOZzMqxTm9/8PBOPBcGYf1Zx8vTgxDEJbE
-         q9sdDIhm8R55zPc33o9JBDv8OXuZlWBOkv1VW3nJKM0e+1TehQiGtnBpBeUkxnzOLugo
-         QQG43AAVnCXQ+DBYZXkc0iFiW8mq43yUK8YAawfol71wRxjifFk+IOv+Z53uD+459EZO
-         li3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749775930; x=1750380730;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PDC3Bp47VQywmziigkfie6PRv+RxREIJYB54etTSg38=;
-        b=o1ycGG4Bx66I9gRpR7SsPhjmiPt98m1twtBkopiUUj3t5hX+7o96WzgoteDw5aIhcB
-         erS9cXrsqpenPBdBkOUqWxXqiQdsPy8iARdzwEf38chuq8zqUVq8GfIjnXt+Ye20HkOD
-         HNhprJLfcgZvJKgPu/JBQ13vlviRCGxbGpmOt0v5t7Sv+603ee+DJ3MZeOhu98QMl/O0
-         /AhvWmkwIfEcrFPAzbuNEcLat/OkjVKEIJcjRUEtYg1TIJn1NSeycKUe6uNo6ZlOuXo3
-         6SI2qJtg/hkUJ8rXl2uNHU729D3kZwkQ3/XNO74sNHFqclLXNO2leHTsi2jRxa+NA0qB
-         cCaA==
-X-Forwarded-Encrypted: i=1; AJvYcCXiRdg+JOb2sXBYElRUA012hoLXr9ajjzXBS5rSle5lcZ6Jk5EXnlEAd77iaKTIxwCwOPvWhIY/M/z6OVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSojd9ccpJQ54X/jdP/rOedQ1HU7MjIFqC1jTBC6Dokx8IOcsX
-	6tjxNech2NM6zuRoUl2siCHuQ1t/7Jl4eqwBnFt16JoZs9POV5DpuchYqcOL+voRttw0KbfUNcL
-	Jsdeqyw==
-X-Google-Smtp-Source: AGHT+IE30h8WRYs3H2+xmcIORsn3vKqEjAqKMkjQebOpzu1U+lCJn7zscxn66JCbNPDKoCUmHkAqtEgJO8c=
-X-Received: from pjbqi16.prod.google.com ([2002:a17:90b:2750:b0:312:f650:c7aa])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c0f:b0:311:b0ec:1360
- with SMTP id 98e67ed59e1d1-313d9ede996mr1653895a91.29.1749775930174; Thu, 12
- Jun 2025 17:52:10 -0700 (PDT)
-Date: Thu, 12 Jun 2025 17:52:08 -0700
-In-Reply-To: <ec9cf2ed3f2db01fccf9a01e2739623297b3ca9d.camel@intel.com>
+	d=codeconstruct.com.au; s=2022a; t=1749775942;
+	bh=EsRJTlab3QCXz7ZpM9mVcFTl4rwFsKjGezndHiqVAmw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=aCJsRkh1nxpMaD3O/wx9w4RKEqg/Ztqmt7W38ro3nCePkl8nZK2zLygRTCCetBKVG
+	 AMBK5X0onSXKizQt/qt2EhAnWsL5Hywo04xCMGIrPCOsEPHbH5iYY7mU7ouKBJktCr
+	 hmEmXU5ZGmRBqpHfum0iFGZo1d4G3wC1OqyVR7lFgs+K4W206PhgfGjTuH/X8hY9eo
+	 0eTIu5KFYuc05vCl5kAdm5M24YvFXYorep22Zg5fKX7Myf7noJujpV8Cb505FxceEG
+	 J54veGIP/HCugIQHN0DOyGC9vV0MC8p5Cr8CR8lu2TTqCFim+eaPqlb2h04nTtLi+p
+	 JW4WK0sr4f/qA==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id A3B926445B;
+	Fri, 13 Jun 2025 08:52:20 +0800 (AWST)
+Message-ID: <d79fe0b5db34b14e64eee3bc8a187cb25e3d67b1.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v8 2/2] ARM: dts: aspeed: ventura: add Meta Ventura BMC
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Jason Hsu <jasonhell19@gmail.com>, robh@kernel.org, krzk+dt@kernel.org, 
+ conor+dt@kernel.org, joel@jms.id.au, patrick@stwcx.xyz,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org,  linux-kernel@vger.kernel.org
+Cc: yang.chen@quantatw.com, jerry.lin@quantatw.com
+Date: Fri, 13 Jun 2025 10:22:19 +0930
+In-Reply-To: <20250611112650.595554-3-jasonhell19@gmail.com>
+References: <20250611112650.595554-1-jasonhell19@gmail.com>
+	 <20250611112650.595554-3-jasonhell19@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611213557.294358-1-seanjc@google.com> <20250611213557.294358-7-seanjc@google.com>
- <ec9cf2ed3f2db01fccf9a01e2739623297b3ca9d.camel@intel.com>
-Message-ID: <aEt2OOQgj2yaW9lo@google.com>
-Subject: Re: [PATCH v2 06/18] KVM: x86: Move KVM_{GET,SET}_IRQCHIP ioctl
- helpers to irq.c
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "vkuznets@redhat.com" <vkuznets@redhat.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 
-On Thu, Jun 12, 2025, Kai Huang wrote:
-> On Wed, 2025-06-11 at 14:35 -0700, Sean Christopherson wrote:
-> > Move the ioctl helpers for getting/setting fully in-kernel IRQ chip state
-> > to irq.c, partly to trim down x86.c, but mostly in preparation for adding
-> > a Kconfig to control support for in-kernel I/O APIC, PIC, and PIT
-> > emulation.
-> > 
-> > No functional change intended.
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> 
-> Acked-by: Kai Huang <kai.huang@intel.com>
-> 
-> [...]
-> 
-> > --- a/arch/x86/kvm/irq.h
-> > +++ b/arch/x86/kvm/irq.h
-> > @@ -66,6 +66,9 @@ void kvm_pic_update_irq(struct kvm_pic *s);
-> >  int kvm_pic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
-> >  		    int irq_source_id, int level, bool line_status);
-> >  
-> > +int kvm_vm_ioctl_get_irqchip(struct kvm *kvm, struct kvm_irqchip *chip);
-> > +int kvm_vm_ioctl_set_irqchip(struct kvm *kvm, struct kvm_irqchip *chip);
-> > +
-> 
-> I think we need to include <uapi/linux/kvm.h> for 'struct kvm_irqchip', just
-> like you did for "i8254.h" in previous patch?
+SGkgSmFzb24sCgpPbiBXZWQsIDIwMjUtMDYtMTEgYXQgMTk6MjYgKzA4MDAsIEphc29uIEhzdSB3
+cm90ZToKPiBBZGQgTGludXggZGV2aWNlIHRyZWUgcmVsYXRlZCB0byBNZXRhKEZhY2Vib29rKSBW
+ZW50dXJhIHNwZWNpZmljCgpXZSdyZSB3cml0aW5nIHByb3NlLCBub3QgYSBDIGZ1bmN0aW9uIGlu
+dm9jYXRpb24uIENhbiB5b3UgcGxlYXNlIGFkZCBhCnNwYWNlIGFmdGVyICdNZXRhJzoKCiAgIE1l
+dGEgKEZhY2Vib29rKQoKPiBkZXZpY2VzIGNvbm5lY3RlZCB0byBCTUMoQVNUMjYwMCkgU29DLgoK
+Q2FuIHlvdSBwcm92aWRlIGEgYml0IG9mIGEgZGVzY3JpcHRpb24gb2YgdGhlIHBsYXRmb3JtIGRl
+c2lnbj8gVGhpcwp3aWxsIGhlbHAgcmV2aWV3IHRoZSBkZXZpY2V0cmVlIGNvbnRlbnQuCgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IEphc29uIEhzdSA8amFzb25oZWxsMTlAZ21haWwuY29tPgo+IC0tLQo+
+IMKgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIHzCoMKgwqAgMSArCj4gwqAuLi4vYXNwZWVkL2FzcGVlZC1ibWMtZmFjZWJvb2stdmVudHVy
+YS5kdHPCoMKgwqAgfCAxNDgxICsrKysrKysrKysrKysrKysrCj4gwqAyIGZpbGVzIGNoYW5nZWQs
+IDE0ODIgaW5zZXJ0aW9ucygrKQo+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2FzcGVlZC9hc3BlZWQtYm1jLWZhY2Vib29rLXZlbnR1cmEuZHRzCj4gCj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2FzcGVlZC9NYWtlZmlsZQo+IGluZGV4IDJlNWY0ODMzYTA3My4uZTA3NjY2ZDkwMmZiIDEwMDY0
+NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9NYWtlZmlsZQo+ICsrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2FzcGVlZC9NYWtlZmlsZQo+IEBAIC0yOCw2ICsyOCw3IEBAIGR0Yi0kKENP
+TkZJR19BUkNIX0FTUEVFRCkgKz0gXAo+IMKgwqDCoMKgwqDCoMKgwqBhc3BlZWQtYm1jLWZhY2Vi
+b29rLW1pbmVydmEuZHRiIFwKPiDCoMKgwqDCoMKgwqDCoMKgYXNwZWVkLWJtYy1mYWNlYm9vay1t
+aW5pcGFjay5kdGIgXAo+IMKgwqDCoMKgwqDCoMKgwqBhc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dh
+cGFzcy5kdGIgXAo+ICvCoMKgwqDCoMKgwqDCoGFzcGVlZC1ibWMtZmFjZWJvb2stdmVudHVyYS5k
+dGIgXAo+IMKgwqDCoMKgwqDCoMKgwqBhc3BlZWQtYm1jLWZhY2Vib29rLXdlZGdlNDAuZHRiIFwK
+PiDCoMKgwqDCoMKgwqDCoMKgYXNwZWVkLWJtYy1mYWNlYm9vay13ZWRnZTEwMC5kdGIgXAo+IMKg
+wqDCoMKgwqDCoMKgwqBhc3BlZWQtYm1jLWZhY2Vib29rLXdlZGdlNDAwLmR0YiBcCj4gZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9hc3BlZWQtYm1jLWZhY2Vib29rLXZlbnR1
+cmEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkL2FzcGVlZC1ibWMtZmFjZWJvb2stdmVu
+dHVyYS5kdHMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uMzRh
+M2VmM2EwZWZlCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVl
+ZC9hc3BlZWQtYm1jLWZhY2Vib29rLXZlbnR1cmEuZHRzCj4gQEAgLTAsMCArMSwxNDgxIEBACj4g
+Ky8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKwo+ICsvLyBDb3B5cmlnaHQgKGMp
+IDIwMjMgRmFjZWJvb2sgSW5jLgo+ICsvZHRzLXYxLzsKPiArCj4gKyNpbmNsdWRlICJhc3BlZWQt
+ZzYuZHRzaSIKPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2kyYy9pMmMuaD4KPiArI2luY2x1ZGUg
+PGR0LWJpbmRpbmdzL2dwaW8vYXNwZWVkLWdwaW8uaD4KPiArCj4gKwoKLi4uCgo+ICsmaTJjNSB7
+Cj4gK8KgwqDCoMKgwqDCoMKgc3RhdHVzID0gIm9rYXkiOwo+ICsKPiArwqDCoMKgwqDCoMKgwqAv
+LyBSTUMgRlJVCj4gK8KgwqDCoMKgwqDCoMKgZWVwcm9tQDU0IHsKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJhdG1lbCwyNGMxMjgiOwo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqByZWcgPSA8MHg1ND47Cj4gK8KgwqDCoMKgwqDCoMKgfTsKPiAr
+wqDCoMKgwqDCoMKgwqAvLyBWUiBURU1QIFUzOTkKPiArwqDCoMKgwqDCoMKgwqB0ZW1wZXJhdHVy
+ZS1zZW5zb3JANGMgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxl
+ID0gInRpLHRtcDc1IjsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnID0gPDB4
+NGM+Owo+ICvCoMKgwqDCoMKgwqDCoH07CgpDYW4geW91IHBsZWFzZSBtYWtlIHN1cmUgdGhlIG5v
+ZGUgb3JkZXJpbmcgYWRoZXJlcyB0byB0aGUgZG9jdW1lbnRhdGlvbgpoZXJlOgoKaHR0cHM6Ly9k
+b2NzLmtlcm5lbC5vcmcvZGV2aWNldHJlZS9iaW5kaW5ncy9kdHMtY29kaW5nLXN0eWxlLmh0bWwj
+b3JkZXItb2Ytbm9kZXMKClBsZWFzZSBjaGVjayB0aGUgcmVzdCBvZiB0aGUgZGV2aWNldHJlZS4K
+Cj4gK8KgwqDCoMKgwqDCoMKgLy8gVlIgVEVNUCBVMzk3Cj4gK8KgwqDCoMKgwqDCoMKgdGVtcGVy
+YXR1cmUtc2Vuc29yQDRkIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0
+aWJsZSA9ICJ0aSx0bXA3NSI7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9
+IDwweDRkPjsKPiArwqDCoMKgwqDCoMKgwqB9Owo+ICvCoMKgwqDCoMKgwqDCoC8vIEJSSUNLIFRF
+TVAgVTM5OAo+ICvCoMKgwqDCoMKgwqDCoHRlbXBlcmF0dXJlLXNlbnNvckA0ZSB7Cj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAidGksdG1wNzUiOwo+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZWcgPSA8MHg0ZT47Cj4gK8KgwqDCoMKgwqDCoMKg
+fTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgdGVtcGVyYXR1cmUtc2Vuc29yQDRmIHsKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJ0aSx0bXA3NSI7Cj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwweDRmPjsKPiArwqDCoMKgwqDCoMKgwqB9
+Owo+ICt9Owo+ICsKPiArJmkyYzYgewo+ICvCoMKgwqDCoMKgwqDCoHN0YXR1cyA9ICJva2F5IjsK
+PiArCj4gK8KgwqDCoMKgwqDCoMKgZ3Bpb0AyMCB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoGNvbXBhdGlibGUgPSAibnhwLHBjYTk1NTUiOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqByZWcgPSA8MHgyMD47Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oGdwaW8tY29udHJvbGxlcjsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI2dwaW8t
+Y2VsbHMgPSA8Mj47Cj4gK8KgwqDCoMKgwqDCoMKgfTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgZ3Bp
+b0AyMSB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAibnhw
+LHBjYTk1NTUiOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZWcgPSA8MHgyMT47
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdwaW8tY29udHJvbGxlcjsKPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI2dwaW8tY2VsbHMgPSA8Mj47Cj4gK8KgwqDCoMKg
+wqDCoMKgfTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgZ3Bpb0AyMiB7Cj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAibnhwLHBjYTk1NTUiOwo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqByZWcgPSA8MHgyMj47Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoGdwaW8tY29udHJvbGxlcjsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgI2dwaW8tY2VsbHMgPSA8Mj47Cj4gK8KgwqDCoMKgwqDCoMKgfTsKPiArCj4gK8KgwqDCoMKg
+wqDCoMKgcnRjQDUxIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJs
+ZSA9ICJueHAscGNmODU2MyI7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9
+IDwweDUxPjsKPiArwqDCoMKgwqDCoMKgwqB9Owo+ICt9Owo+ICsKPiArJmkyYzcgewo+ICvCoMKg
+wqDCoMKgwqDCoHN0YXR1cyA9ICJva2F5IjsKPiArwqDCoMKgwqDCoMKgwqBidXMtZnJlcXVlbmN5
+ID0gPDEwMDAwMD47Cj4gK8KgwqDCoMKgwqDCoMKgbXVsdGktbWFzdGVyOwo+ICvCoMKgwqDCoMKg
+wqDCoGFzcGVlZCxody10aW1lb3V0LW1zID0gPDEwMDA+OwoKRGlkIHlvdSB0ZXN0IHRoaXMgd2l0
+aCBgbWFrZSBkdGJzX2NoZWNrYD8gSSBleHBlY3Qgbm90LCBhcyBpdCBjYXVzZXMgYQp3YXJuaW5n
+IGlkZW50aWZpZWQgYnkgUm9iJ3MgYm90OgoKYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkL2FzcGVl
+ZC1ibWMtZmFjZWJvb2stdmVudHVyYS5kdGI6IGkyY0A0MDAgKGFzcGVlZCxhc3QyNjAwLWkyYy1i
+dXMpOiBVbmV2YWx1YXRlZCBwcm9wZXJ0aWVzIGFyZSBub3QgYWxsb3dlZCAoJ2FzcGVlZCxody10
+aW1lb3V0LW1zJyB3YXMgdW5leHBlY3RlZCkKCWZyb20gc2NoZW1hICRpZDogaHR0cDovL2Rldmlj
+ZXRyZWUub3JnL3NjaGVtYXMvaTJjL2FzcGVlZCxpMmMueWFtbCMKCkNhbiB5b3UgcGxlYXNlIGZp
+eCB0aGF0PwoKQW5kcmV3Cg==
 
-It gets pulled in by linux/kvm_host.h.  i8254.h didn't have that one (though
-amusingly, later on it does get kvm_host.h indirectly via ioapic.h).
-
-> I checked the "irq.h" and it doesn't seem to be obvious that we don't need
-> it.
