@@ -1,75 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71552293C43;
-	Fri, 13 Jun 2025 13:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F901235364
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749823040; cv=none; b=VZM35EFG0XnG6KdEEoM7oNLAXaVFP6hmRhNXhj7dYpjjdWODkCtDPY3/zOqX5TSzKGGikP4nwA6sbRwocEv0WTECK3zKtoJuWfpAbvATnJ6zuGUnRISyA+8KJ3/8j+sXDTyxRaeWwrWIXZfSuCrIbYCIfJ5BpZwLqQds4LJ/XIg=
+	t=1749823090; cv=none; b=ter7L/eHWQ1MKeJ/el9qvbl3MJcixVmc5dPAfAGdtuiPVbmE+jget5rUAcVWUTjNdXI8V/hHh8eiXvX+coZJIGRPe9NeruFz3uYqjDeHdS41EZpud5Q7GB0V16LffUt9KrJlIhoI9yDMzxFT5EB69kcDXvRI4TdscWsxzYsfsAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749823040; c=relaxed/simple;
-	bh=Ap3YfoMrAAPUvNenAlN6PgDCXyKScfqGCsqAZOV8aE0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=U/fQmeEAfRyLsVSbHtUl/hzEe6MQi9c4RK+MJhJL/ygDqHqH+CeI5+0SXPlJrMAsZF6PwKBYLso/VSUmWGmSV34wT7horJnlr9BDDp4XyaPLNjh3zVnZ1ERdTLqeFhOB9PmznrQ59QtBqaEFrjSy+2feg0PQs0Tuxukumt8jvfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0YJdYSB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749823090; c=relaxed/simple;
+	bh=5bMCUhx2FJDvCL3dmyeWzgVODh/Wh2Gp5mOcFXa8+No=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=btROPPiwWmcc9/70Tj8lgMPMyy+H/P6/Ri9fQLiwZ4N4XOHzrhiL2Z0rlgoHSWtrwlFuKBBp9aW7RMAKnhWBTJv6+bKp6hdSa8HH+cSwu+6cRlgPqqyeqYjmevIzL2to/PDma2RYOQAKZrzg24Fv3gPZcdWFDIMNlDtLoheEnWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=snR3cfTR; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0YJdYSB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F558C4CEEF;
-	Fri, 13 Jun 2025 13:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749823040;
-	bh=Ap3YfoMrAAPUvNenAlN6PgDCXyKScfqGCsqAZOV8aE0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=f0YJdYSBM0NhkuR+ilaaiG+/5suEAkg6qQuSWwqD3/t3vGt6i6iY6Jy80l2nyrq0+
-	 ffodXlfZP5yW3t0K9NdkZ/3yYqP7rsy6xkOWF8lOIhHT1nlzwziFnL3v8Feefxc/JS
-	 pxr+pksRSwTJ4ujPRXd0aGwlC5yq0ktpox+/ynb2N4PLfyYzfkAySNAg8R08EjUJDX
-	 SNz0+U2Heyh40/Uru2pNo4yoNuXLvnN6L8ttdcqbXx6FW5inZpl5tgaocbCx94IxKe
-	 RSm3rk9bRz/y5BGo5U+alYKWtttJ8B2MT7IRoo/HmAcCf9Es2ZMStJZox7i7jksnwl
-	 4ooZuaNqRwMiA==
-From: Lee Jones <lee@kernel.org>
-To: linux-kernel@vger.kernel.org, 
- Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: michael@amarulasolutions.com, Frank Li <Frank.Li@nxp.com>, 
- linux-amarula@amarulasolutions.com, 
- Conor Dooley <conor.dooley@microchip.com>, 
- Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20250530160748.2476088-2-dario.binacchi@amarulasolutions.com>
-References: <20250530160748.2476088-1-dario.binacchi@amarulasolutions.com>
- <20250530160748.2476088-2-dario.binacchi@amarulasolutions.com>
-Subject: Re: (subset) [PATCH v5 1/6] dt-bindings: mfd: convert mxs-lradc
- bindings to json-schema
-Message-Id: <174982303687.920028.789914432686351362.b4-ty@kernel.org>
-Date: Fri, 13 Jun 2025 14:57:16 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="snR3cfTR"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74877ac9ca7so1764189b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:58:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749823088; x=1750427888; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cw34bWGdNs6U3Zmr/YWwfuHV5hoEENlr6dqR1JyEE6w=;
+        b=snR3cfTRcs1a7ysEURvNkUhJcxG8t7ST8f2CkEDruMUeo7yMQS6yXrg0eCBhRo8foD
+         t88eKxPnVrPr/D0bkdfWDCI4eGU9eGQ8vkjuDhxHIeiDH3GNjfHkrv2zJpZHBvLqM2rC
+         EpdaLlZM8AEXhyvOFPCTmkHezBoQ7WmnQJFO9ueZkL7gQFo3TBOx1uuiOjMFfXra0+1j
+         MNXlm6vCUW4ms5fO3sU9tZ28exjh0y95nGrJM6SXIQfsvcCP7Dk4GEMZqQysL1OX53nE
+         aHIAuW0WulZhJlXZuuU9YSNGg5PK77AYkkjfHVibIj3oaPkpHr7xK2ziJjzaeOxuepuy
+         Fevw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749823088; x=1750427888;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cw34bWGdNs6U3Zmr/YWwfuHV5hoEENlr6dqR1JyEE6w=;
+        b=OAAAbqlMoqj3t0Kfzk3RVvTTkJJVd3uXAn4ZGYfOTkEJjtAuuWHtiSOBgBP49koZtD
+         CZ8AfYLdHymUM54guKHoPgLLzooymyaRywUqVtTSVYF4sEptAb7Mmz58lqiWli5myyFi
+         /gSxQ+NsP0qyLhICNf5hK0AAFKXf2E672cVHQLkOV+pQbyFkZ1iLWC35KEuvEE7H5/HV
+         oKDemc1Cf5ptDPjMb3VfD+Dj/G2558VOBzZZ0W9e/xGpZ4A9LVEf14n0uaSDScg1Tix7
+         U/KKPe6CGjqVTKzk41j+MIKs4YhXSYAyt3CTO/vZl8zGq+DzYTYYH5bIm2XHqLApBVud
+         48WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2+lS3EaX3GMmwYJzpPtC1mB2tj8+3vxkoEFeKbMk896M27mpZM1l+9AS7wHCgCNVWrVeZBF3wBPhwY9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMPDEKGfQgPPPwqlaxWrlJESGsJMnAVtugJ3iNkx/yWjXHwdFR
+	l1gMZ86qr3GdrC3rC3aXMZjGN9+T04baUjIFtLn7+4DvnZu2AQK8w4QWtE8Js2KXg9MxXPXlyWG
+	tp6jR8Q==
+X-Google-Smtp-Source: AGHT+IEcfXkTGRbkHRYdyT8D30MoPwDEoq+7AlXGLoG8amQXdRCwWKDLujzKvgNaM96tWefKmXgidNIDqIg=
+X-Received: from pgbfe14.prod.google.com ([2002:a05:6a02:288e:b0:b2f:a20d:7451])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:a42:b0:21a:cc71:2894
+ with SMTP id adf61e73a8af0-21fb95d7e05mr1060858637.17.1749823088565; Fri, 13
+ Jun 2025 06:58:08 -0700 (PDT)
+Date: Fri, 13 Jun 2025 06:58:02 -0700
+In-Reply-To: <20250613111023.786265-1-abinashsinghlalotra@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-459a0
+Mime-Version: 1.0
+References: <20250613111023.786265-1-abinashsinghlalotra@gmail.com>
+Message-ID: <aEwualvoLvbtbqef@google.com>
+Subject: Re: [RFC PATCH] KVM: x86: Dynamically allocate bitmap to fix
+ -Wframe-larger-than error
+From: Sean Christopherson <seanjc@google.com>
+To: avinashlalotra <abinashlalotra@gmail.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, vkuznets@redhat.com, 
+	pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	avinashlalotra <abinashsinghlalotra@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 30 May 2025 18:07:32 +0200, Dario Binacchi wrote:
-> Convert the Freescale MXS Low-Resoulution ADC (LRADC) device tree
-> binding documentation to json-schema.
+On Fri, Jun 13, 2025, avinashlalotra wrote:
+> Building the kernel with LLVM fails due to
+> a stack frame size overflow in `kvm_hv_flush_tlb()`:
 > 
-> The clocks and #io-channel-cells properties have also been added; They
-> are present in the respective SoC DTSI files but were missing from the
-> old mxs-lradc.txt file.
+>     arch/x86/kvm/hyperv.c:2001:12: error: stack frame size (1336) exceeds limit (1024) in 'kvm_hv_flush_tlb' [-Werror,-Wframe-larger-than]
 > 
-> [...]
+> The issue is caused by a large bitmap allocated on the stack. To resolve
+> this, dynamically allocate the bitmap using `bitmap_zalloc()` and free it with
+> `bitmap_free()` after use. This reduces the function's stack usage and avoids
+> the compiler error when `-Werror` is set.
 
-Applied, thanks!
+Can you provide your full .config?  It's not at all difficult to get this function
+(and others) to exceed the frame size with various sanitizers and/or deubg options
+enabled, which is why KVM_WERROR depends on EXPERT=y or KASAN=n.
 
-[1/6] dt-bindings: mfd: convert mxs-lradc bindings to json-schema
-      commit: e528f715cd30110137fb4830eceea6c817285163
+  config KVM_WERROR
+	bool "Compile KVM with -Werror"
+	# Disallow KVM's -Werror if KASAN is enabled, e.g. to guard against
+	# randomized configs from selecting KVM_WERROR=y, which doesn't play
+	# nice with KASAN.  KASAN builds generates warnings for the default
+	# FRAME_WARN, i.e. KVM_WERROR=y with KASAN=y requires special tuning.
+	# Building KVM with -Werror and KASAN is still doable via enabling
+	# the kernel-wide WERROR=y.
+	depends on KVM && ((EXPERT && !KASAN) || WERROR)
 
---
-Lee Jones [李琼斯]
+And also why kernel/configs/debug.config bumps the size to 2048.
 
+	CONFIG_FRAME_WARN=2048
+
+> Please provide me feedback about this patch . There were more warnings like
+> that, So If this is the correct way to fic such issues then I will submit
+> patches for them.
+
+As above, this may just be a "bad" .config.  
