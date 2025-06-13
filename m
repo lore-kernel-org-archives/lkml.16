@@ -1,182 +1,156 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1281F8751
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DC22E11D5;
+	Fri, 13 Jun 2025 16:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830611; cv=none; b=Dr11RZ+s0/znQzgoMPVQ3x2nNqeSGEJ7apDMAz5IkbO8FSX9JnY8VGXC9OIpB+rdSKZB1XmsQQ0EMiKbKYtYWZ/aYzkL9ypmIdOGLFIsdpfcnRb8GpYifbG+u2DcGfuLlNbQXtxxqJqACAsyu9iHV/6+Luf65s4lQQZQJlczCzk=
+	t=1749830646; cv=none; b=uB98rYn96ZWN6n8Kgn6wHlC3Vw5S4zu3RnAG5zKv6X5tuDgVkNDh+3H9XsSNb0NpIVUbejqxiDCQKwATeDq8OBAbD4VS20grHlo0hFsBnapgXJyCFb29Nt2S5NgsIuF12j0hvNl0fA0UUXeg6kSsDyycn3YPohFcTpv0FCtPL6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830611; c=relaxed/simple;
-	bh=gF8fryLDgUE7R04Y9/mL18frQKys+kanlKjViPMBr2g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s4aFh4NlE/kXkBrMrNcG+l4PgFxJPwxEiv32DY7dKd9pXsntUyTKE0WIfZdKRksns1DhCkhZqjY65gruFimlYVMNBZTMlACuzuJm0ia1trH5VP8312LtpCtFxkBUe3GocDSZmHfWmbAqNGyCNwNMd/4ewJDdq6+fRB+I+wbnLCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=rwv58qo4; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749830646; c=relaxed/simple;
+	bh=0n5QzoiMfCLdBOr7a1+45mwTEFhEEf0kM4ULFWDUNiQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s7pZF/c/uwHRKhN7SeZbvKw7vQLNRZ8argIFV0Vakk3f7VIRnmQHjFGCev/u93Rj9XnPhVpVUe5h5S+1MokTEHqRR6YkYfHH01pwuLL7wIwuJOYqH5srO6euJRtMbHyAfyk3wy17SUFgWIxo2UipNpnh5oqc9/im3ghKfZC4iIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7aG2+U4; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rwv58qo4"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-60efc773b5fso1227060eaf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:03:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7aG2+U4"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-311ef4fb43dso1917220a91.3;
+        Fri, 13 Jun 2025 09:04:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749830608; x=1750435408; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3w4DwQ7UKG+tZltk5EBs0uLUOBu/ZiYws0KL7s9WN3A=;
-        b=rwv58qo4n83JoPsWhczCiGTdjd7Yw91HumehZvkXWYVkebCdV3LCSp+SoJaDWT/t7A
-         YTlfr/vV6eOBYsmqfak8xLZkm3Ue4FeogKx4z14+Ap01MH+96O1bNp2rq96K1gx17Qiy
-         MsoXOHVfFkWcFem287dleU7p4Y0mHt5YZyK1ckgJNqiqUPCxVFIqQRdyokd2t6aS07kg
-         iYfodVce04X8SCzARZV3XO7Ms7PqrNX3QY8j65TQOtAOYMyVkulqj1cMLFm+0DR+oqU/
-         IRwLpacH45uN8GBdk/Y2XhKel6qhH3zx0CFhQkhcF+B4ajVjKQhMH/MqekO0X7JTZA72
-         Pl8A==
+        d=gmail.com; s=20230601; t=1749830644; x=1750435444; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LIx/s1fLM7oASpmGNlYR11nYoIb2Cm/n5JB6pYZptGc=;
+        b=K7aG2+U4QGd12cix4iO9QOGAHRixqSQavKK74EUzr0aAdNvtvtPPGQI8fWVfctUFbJ
+         3NiO1qDCz5G5u7kuZza50yGRDjN1meHGc+gy7J5ISynOafLY32fTZQZUO8QVGVsOmRMa
+         nN6hzhLsXxNCh6Ya5sKVS9ttrDuu+Hrnw0S4fwx6ibcSSzh88bMjAPSMrN/V5z5ddR0O
+         8imy9RVMtUDRAeuboJSWigoYstiED1nw5to4Jr02rP1jQvUiwAhp2Wj+W9MUkT50GcHU
+         AbBGZHCng436fB7N1bLko9DyTmwcQbTTS1Nj/GWZ/UJlrqMWMReAy4e50BiviM1gXLsU
+         LtAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749830608; x=1750435408;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3w4DwQ7UKG+tZltk5EBs0uLUOBu/ZiYws0KL7s9WN3A=;
-        b=Yasb8DtIptuLA5GMoqJnB9BzFsQtnl6t7TM3kQFXaA7A56iMp/x+GpeZQRK6AAc315
-         TKsYFqNzJojyaZiCnGT86bpYxJZcMQEXY4pSQPXv9pjoLpD6Z3v9VAjb1d5PhDzm2QWS
-         gWq3vOMh+1V8KkTY2Mlpg+aYrLHDynFwPzfcfHMnPuhxy3M22cL+yjRZcLYDQVFhc23Z
-         Ugb2mTUbSS3fETn3PHnUWIct6/m31jGwCZfw42RZgjsxZ8Ce7ASivXHbpy2WHkgHuEg5
-         7fdWbErE/JqvogYKWNQazTnx1uOMO+Cti7iUWqOYg/QBz/r1bhSx4+x5/y+sG3nr37Wl
-         X+TA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcmSd4+1HN/46AbAjq7zfF/pLOsl8+Lz8WOo+cNUmoTSJCy/Z4oZLw0LBbtjqB+UgoCT4+SlNkHN48drk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc2xkFZTMGiAF2rK+d7e/zL5sO9IP1nHzyWgTt2ltDrUuhRREk
-	19HPjRWldQVLgZ7ucJI9Qd9umUvP4NWVWq/vtIron+iDguR7h8w4PfVuWi3Se4fSDlU=
-X-Gm-Gg: ASbGnct+6aQK0n6z1qs4UjvNXKMu7vgu6+nxInER1G855pEtnRSVp8P5m/e/x3iK0wO
-	f656at7LKIewZvooEl9GaVoLgEFCkXUr8Wgluq7WcWAlIhSZ/owVamwDAXfGAI32pWMFEaJM3Re
-	AbYvv6ndqaeEuG11k2lbra/qpw51s7V+4eqaD4yRKG8tR3fuedmVeAeavNT1N3KtPRcEgL0qfI6
-	Rjj1AnmpBBdTwy8ddKsA7468sVeYRTUrjWYkWLLfH4kH0tPV9QpdOi4rzfAF2GmJzDv2lnax2Qy
-	Dk0Va0PJK23ckb/yy7XSmpgqJnhjfOabHsa6eo8v15PfKNVC57otvAaAUUebngGzPrlmofT6Nds
-	oR/y4eGYOs+28M79VMC2QGV6mWjNFVNCOEMqZ
-X-Google-Smtp-Source: AGHT+IG1cpKE0bia+SjE3FQwyZTQRUfn6nnKjTjoQlx5gtEmca7DeH8NU/jmjN2PD3CGmwwp8AHo0Q==
-X-Received: by 2002:a05:6820:221a:b0:60f:3ed8:3984 with SMTP id 006d021491bc7-61110efe2acmr49835eaf.3.1749830607445;
-        Fri, 13 Jun 2025 09:03:27 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4647:c57:a73c:39d8? ([2600:8803:e7e4:1d00:4647:c57:a73c:39d8])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-61108f07e08sm214090eaf.27.2025.06.13.09.03.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 09:03:25 -0700 (PDT)
-Message-ID: <fa403d19-13c5-4845-9364-58eea1b62e61@baylibre.com>
-Date: Fri, 13 Jun 2025 11:03:24 -0500
+        d=1e100.net; s=20230601; t=1749830644; x=1750435444;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LIx/s1fLM7oASpmGNlYR11nYoIb2Cm/n5JB6pYZptGc=;
+        b=GlP+Cfh6TKcC2QjIhvhsJlJB46iZtzUt60nDbLFYwKiELRK16Ie0PhD+0ivBBf7GbX
+         YTwuPm40fzfcwIb1dhToJ5CUuosrKG1lM+2UrYvILogmTlmORPzaVxcXnRmCm3DBC2by
+         /JEMiUF/xp3nKMBeLDN2R08HKoFxhWF/QNeJipAZgy7F6XUZ73NzA6JEHhLY5I80qTSZ
+         ySoPtlQV4k8OdS/d90T3XGhpwNybY9W+ggjVt7vTlcov4c5cVkr0mp1u3wolPfYTASry
+         LS8OqSuyJKzyt8VkTfOV+cYcId5OuDzAg9nZuzSz1s47T52HFJqnuEu9z/Ff9pwcXl+5
+         bI9g==
+X-Forwarded-Encrypted: i=1; AJvYcCU31D5eW3r7tPkGVHEhsWlarbdlCfURRr841ewugim+d5ukjbxvl+1Vm1gVndivk84GvBMtkY0zh8Ww@vger.kernel.org, AJvYcCV0vy1hqj3JTr0ALF8Yf9tEhelJJfIR/lBBtUEbv3OJuSadw1iz/BPYqd8neFnK2URT7+RLxIlKLfwBkppJ@vger.kernel.org, AJvYcCXJi26VvxIzSMyvxHtSRL7d+UedCBLR5s9/yeDOCFSIZhE+eFG2SGQExVT3R0dzzhkIR4j0u1aByKXmTA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8t9cezrdQ3dAUropSG94epX2QSTZh0I97Q2Rdvxjp8QsysqqR
+	Q6UOLttAdpUrtrgffwy6SdZHhVufguLUG2q9bbdRKuhgREmRUssYj/zUYwQsiQFqn55058uvRqM
+	+7ywF2kVxWTBJMXyRUresl0PFTVjnG6Y=
+X-Gm-Gg: ASbGncuhdVHahw+9Nvo655y2aVQCbZCCmw+tljabp/yW/9l1irYPs90mhBBPHl1aDIV
+	Z0Wib7TaLUyVtvOKu/YdAUfFJ8OsMiNM/OWyVqfRAP81l8deSaTtajJY9oBxjws5ygFG3xcBT6/
+	YgbDctn7RkJvtQ2nEWejlaz9gHU7qbPdJZmHwBowqvc0Wm
+X-Google-Smtp-Source: AGHT+IHFgiH5HjETXUszXCCwzEfhtW8cTqAP7ltCqcNEVDNkL6tPknfSKyxzH3jtTc/k4SqGh4wjfftSKNIbMh9mxWM=
+X-Received: by 2002:a17:90b:5150:b0:312:1143:cf8c with SMTP id
+ 98e67ed59e1d1-313f1cafae6mr392935a91.16.1749830643828; Fri, 13 Jun 2025
+ 09:04:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 8/8] iio: adc: Add events support to ad4052
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Jorge Marques <jorge.marques@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
- <20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
- <afc85a4b-1535-406d-ad14-143049267b98@baylibre.com>
- <gvigk6helnl3yeouy636dgvay7tqux7lnxns3256fivzz4l3er@7ts7fz7vitff>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <gvigk6helnl3yeouy636dgvay7tqux7lnxns3256fivzz4l3er@7ts7fz7vitff>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250613-bbg-v3-0-514cdc768448@bootlin.com> <20250613-bbg-v3-5-514cdc768448@bootlin.com>
+In-Reply-To: <20250613-bbg-v3-5-514cdc768448@bootlin.com>
+From: Robert Nelson <robertcnelson@gmail.com>
+Date: Fri, 13 Jun 2025 11:03:34 -0500
+X-Gm-Features: AX0GCFurF1g54l3WTWzQbUwvJlyASryoeejULyaNk0cqsLvcLVcw9tytAa-3sIo
+Message-ID: <CAOCHtYj8QsnzEKV8qG2_8CDuYzN-fUCdoN=YEE_EZ37yvEQ0yw@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] arm: dts: omap: Add support for BeagleBone Green
+ Eco board
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, 
+	Kevin Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Paul Barker <paul.barker@sancloud.com>, 
+	Marc Murphy <marc.murphy@sancloud.com>, Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>, 
+	Bajjuri Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/13/25 5:02 AM, Jorge Marques wrote:
-> Hi David,
-> On Thu, Jun 12, 2025 at 02:38:45PM -0500, David Lechner wrote:
->> On 6/10/25 2:34 AM, Jorge Marques wrote:
->>> The AD4052 family supports autonomous monitoring readings for threshold
->>> crossings. Add support for catching the GPIO interrupt and expose as an IIO
->>> event. The device allows to set either, rising and falling directions. Only
->>> either threshold crossing is implemented.
->>>
->>> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
->>> ---
->>
->> ...
->>
->>> +
->>> +static ssize_t ad4052_events_frequency_store(struct device *dev,
->>> +					     struct device_attribute *attr,
->>> +					     const char *buf,
->>> +					     size_t len)
->>> +{
->>> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
->>> +	struct ad4052_state *st = iio_priv(indio_dev);
->>> +	int ret;
->>> +
->>> +	if (!iio_device_claim_direct(indio_dev))
->>> +		return -EBUSY;
->>> +	if (st->wait_event) {
->>> +		ret = -EBUSY;
->>> +		goto out_release;
->>> +	}
->>
->> I'm wondering if we should instead have some kind of iio_device_claim_monitor_mode()
->> so that we don't have to implement this manually everywhere. If monitor mode was
->> claimed, then iio_device_claim_direct() and iio_device_claim_buffer_mode() would
->> both return -EBUSY. If buffer mode was claimed, iio_device_claim_monitor_mode()
->> would fail. If direct mode was claimed, iio_device_claim_monitor_mode() would wait.
->>
-> I don't think this would scale with other vendors and devices, it is a
+On Fri, Jun 13, 2025 at 10:50=E2=80=AFAM Kory Maincent
+<kory.maincent@bootlin.com> wrote:
+>
+> SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Gree=
+n
+> (BBG). It has minor differences from the BBG, such as a different PMIC,
+> a different Ethernet PHY, and a larger eMMC.
+>
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+>
+> Changes in v3:
+> - Move the omap.yaml binding change in another patch.
+>
+> Changes in v2:
+> - Used generic pmic node name.
+> - Add regulator prefix to fixed regulator node name.
+> - Add the compatible to omap.yaml binding
+> ---
+>  arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
+>  arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 169 +++++++++++++++=
+++++++
+>  2 files changed, 170 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/ti/omap/Makefile b/arch/arm/boot/dts/ti/om=
+ap/Makefile
+> index 95c68135dd0c..1aef60eef671 100644
+> --- a/arch/arm/boot/dts/ti/omap/Makefile
+> +++ b/arch/arm/boot/dts/ti/omap/Makefile
+> @@ -93,6 +93,7 @@ dtb-$(CONFIG_SOC_AM33XX) +=3D \
+>         am335x-boneblue.dtb \
+>         am335x-bonegreen.dtb \
+>         am335x-bonegreen-wireless.dtb \
+> +       am335x-bonegreen-eco.dtb \
+>         am335x-chiliboard.dtb \
+>         am335x-cm-t335.dtb \
+>         am335x-evm.dtb \
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts b/arch/ar=
+m/boot/dts/ti/omap/am335x-bonegreen-eco.dts
+> new file mode 100644
+> index 000000000000..2e6050bd2da1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2025 Bootlin
+> + */
+> +/dts-v1/;
+> +
+> +#include "am33xx.dtsi"
+> +#include "am335x-bone-common.dtsi"
+> +#include "am335x-bonegreen-common.dtsi"
+> +#include <dt-bindings/net/ti-dp83867.h>
+> +
+> +/ {
+> +       model =3D "TI AM335x BeagleBone Green Eco";
+> +       compatible =3D "seeed,am335x-bone-green-eco", "ti,am33xx";
 
-Why not? I've seen lots of devices that have some sort of monitor mode
-where they are internally continuously comparing measurements to something
-and only signal an interrupt when some condition is met.
+Based on [2/7] ARM: dts: omap: Remove incorrect compatible strings
+from device trees  this should be???
 
-> limitation of ADI:ADC:SPI requiring to enter configuration mode to read
+> +       model =3D "Seeed AM335x BeagleBone Green Eco";
+> +       compatible =3D "seeed,am335x-bone-green-eco", "ti,am33xx";
 
-I don't see how it could be a limitiation exclusive to this combination of
-vendor, sensor type and bus type.
+I feel bad as I'm the one who wrote most of these wrong in the first
+place that you are claning up for me!
 
-> registers. A deep dive into the other drivers that use IIO Events is
-> needed.
->>> +
+Regards,
 
-...
-
->>> +
->>> +static int ad4052_monitor_mode_disable(struct ad4052_state *st)
->>> +{
->>> +	int ret;
->>> +
->>> +	pm_runtime_mark_last_busy(&st->spi->dev);
->>> +	pm_runtime_put_autosuspend(&st->spi->dev);
->>> +
->>> +	ret = ad4052_exit_command(st);
->>> +	if (ret)
->>> +		return ret;
->>> +	return regmap_write(st->regmap, AD4052_REG_DEVICE_STATUS,
->>> +			    AD4052_REG_DEVICE_STATUS_MAX_FLAG |
->>> +			    AD4052_REG_DEVICE_STATUS_MIN_FLAG);
->>> +}
->>> +
->>
->> It seems like we need to make sure monitor mode is disabled when the
->> driver is removed. Otherwise we could end up with unbalanced calls to
->> the pm_runtime stuff and leave the chip running.
->>
->>
-> When monitor mode is enabled, pm is already disabled (won't enter low
-> power). I expect the pm to handle the clean-up properly since devm is
-> used.
-> The .remove() I suggest is reg access to:
-> 
-> * Put in configuration mode, if not.
-> * Put on low power mode, if not.
-> 
-I was just thinking something like:
-
-	if (st->wait_event)
-		ad4052_monitor_mode_disable(st);
-
-Also might need to use devm_add_action_or_reset() instead of .remove
-to get correct ordering.
+--=20
+Robert Nelson
+https://rcn-ee.com/
