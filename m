@@ -1,69 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C1F198E81
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E547819C558
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822086; cv=none; b=HtN9kPQkIky4YyV/0Nxfl0fpak/afUMwdtxcHJM7+oyuHA1A3yLCYxqaFItj15YhKi+GZntcolB7wfPOZ1Kgnk/UVV82fSGRfZ2VAtitaCYXLMiHFu8soc/cZeMynseNOpBsIeSI+AezNe/B2XbKcH56q8BzdSjkzkBShZ0Tt7c=
+	t=1749822087; cv=none; b=uE3V6q+4l0LClHUQLT6b1x925LwZN+LSY5uzhdMGxwpCdZuNdVCa3ysK5Htw54y1XymTJw81OW8cE81+B+LM7JLTVVach0UAsec37H4yPz5P2DIR3BgN2tTcL/7w0anlxTh4YY/HTvzs0HwkIA8trwOK7vOZ6PYT3ady7i632UI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822086; c=relaxed/simple;
-	bh=IG4FGgbLqBxGp2REQK9VMac2EIQLzuWAExl8Q4V6oog=;
+	s=arc-20240116; t=1749822087; c=relaxed/simple;
+	bh=gTS/EUIP8VCBOB3dazG/2BtugSlfm9QH354rN6o3IrE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JjKEygQpPQ640U5+Twy0KzTQNiPrdxAjp0sZC6GB9xkpdUnXRpyTOE9zu164LOsQaVWmg67BqP6FbDLXvOmEZZEo/FAQ5iMxxFu+2tTM+NZKdesiXqdp+5WOAzJrkFh8/w55ti/GSLOpjyBKxuBAJBvquWIqxSD61RCbT7pKzc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dDs1l449; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=d6egHUScEtO/LqBtqTnsYX5fUDb2oqogjaqL4/8LMiQ0/eJ/d1zakyDslLh8P99k6+WOB5JmSIxtYr4ZB61ncO5lK1o5YdHi8vlrEO/fIUdFBr1Nakty9Sg7mzhbCkoxgoWkkKvLRizsDe0DfL9voQE0b5jLYNHTmtt6NTqh15M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fKPAeiDH; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dDs1l449"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKPAeiDH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749822083;
+	s=mimecast20190719; t=1749822084;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=v/F+9x18GPW2fMOX0xB9ZVXh7FNtANzBJLNRs0BqoEY=;
-	b=dDs1l4492mDuV6Q8jCpSPfGVB2xRLgwKgnCi8UT8kSFeaAJPlQIhM5pD8JK3egdgNUyote
-	XSnm7TseQn94+SG1Rk5DtVeJOK8QPRxOgbt5hlcUXRSNChDOgnncMDRRX5eOGRBR+ka7MD
-	9B0i22oVcY843feKY4oDdzfY7EpynuA=
+	bh=z7W5IE9G9/u3/1BfK2SYpnNa28U9EpjOusASuWz1vAk=;
+	b=fKPAeiDHVTjBPT8xl0lpCcQp1oU46UnHsQYLFppnvM7elKT83o3bavMS4jGmxNb5jtO/Ph
+	+aJxz2b6SBaMuU5Y2L+2VRkenVVqGodRUihxo2aUhJlPTtu9aY5x0Rm6DumcPk5Mgv/2jh
+	uN+v4AxqXGCrfKCP8U7meLkRfnPLgsk=
 Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
  [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-377-eylsNshfPSa450f6MxbVBQ-1; Fri, 13 Jun 2025 09:41:22 -0400
-X-MC-Unique: eylsNshfPSa450f6MxbVBQ-1
-X-Mimecast-MFC-AGG-ID: eylsNshfPSa450f6MxbVBQ_1749822082
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5bb68b386so685978085a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:41:22 -0700 (PDT)
+ us-mta-70-B_jeZO5gNUSjzW_XQoZyQA-1; Fri, 13 Jun 2025 09:41:18 -0400
+X-MC-Unique: B_jeZO5gNUSjzW_XQoZyQA-1
+X-Mimecast-MFC-AGG-ID: B_jeZO5gNUSjzW_XQoZyQA_1749822078
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5d608e6f5so534686585a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749822081; x=1750426881;
+        d=1e100.net; s=20230601; t=1749822077; x=1750426877;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=v/F+9x18GPW2fMOX0xB9ZVXh7FNtANzBJLNRs0BqoEY=;
-        b=H0Jy+NFHYsO89ZT2Jp54g0Ou6+W0uZt41tfKJRFixFQOYbCrYKe23dPlw1AP3Xp4Bq
-         aw5FlbDnKwVDsokvSk5C0z7AIqzwCgFb0hB/KseW/8uCQYJa8lLeCs3GyxAj5cafPWZE
-         yDxWj3ZPyY+X33FKSPY/iF0epn9DTjiF78y4nAd+NiZAyzOdi7reJPs9yYVwB937J7aG
-         fiYqLyEXQPpH8Trfmu9vO/h9hy+SHt9rYHNp0Qi5q6TuuxDb24F8/dNnLeA5uPftBA1b
-         BjDUP9ZVA4m2aNx0jOgaLVKVZAcwm3Exh2Uhp5oX/19B3K1z1WesASoKu7s44de6f2jp
-         Wrqw==
-X-Gm-Message-State: AOJu0Yw8yLOuaqjfygxyWIUrevOMWksPXJlbe/+5YwsnaNB0jHD7ITpp
-	LQTrEXRwC88JpnZD4YAsI2ibXqnAcxWYpff6G+RNfTT88Iqq4nxiW6i6Zc4VkVeKGxcBrNw+TiF
-	DKP8ajeR0o+Haj5VVODLQujnP2DwyB/s8knN4ad4oAANkUifkLWZoEvy9haER3kWKVsiPsvc9W8
-	QD9G3A5C6As7ruUW97c41l8hpsf/vqRuZagJxoqi2Dz3WVwRI=
-X-Gm-Gg: ASbGnctv3N/UtmZk+XIS7OIgf257oehxgHYmPaqzQ8qwBiRjqW0R6LCPIY1kziOe88/
-	LKfr7IpU+YAoABQHY2nDtoSkykCpaByJQxNMwG3oZizalpfOshPM6CAhJiEZYOJXfKyz0DvL5fv
-	bv6LPya6jVMlag1PGXdcUojVgF1NXpe09R62BT945ACw57YJuskV6lyfppskFqtr0S2iErQ3yn4
-	4OLa+1o33RgLNajVG9jiOgYd2k4r7SmRMvZG9QSI41qUrlE4tILXbgqOTNRvlMyqKRqtNe4pgZl
-	Ow5U1CEZuL8=
-X-Received: by 2002:a05:620a:2628:b0:7d3:ad22:7851 with SMTP id af79cd13be357-7d3bc47c25bmr596013085a.54.1749822081385;
-        Fri, 13 Jun 2025 06:41:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IED+auoBj/loYopQZCrkvQWTc00gLx9IMXiqmfkt7NzTeF6mlRUzM1RQY37rgcn1p4Rs3RbhA==
-X-Received: by 2002:a05:620a:2628:b0:7d3:ad22:7851 with SMTP id af79cd13be357-7d3bc47c25bmr596008385a.54.1749822080787;
-        Fri, 13 Jun 2025 06:41:20 -0700 (PDT)
+        bh=z7W5IE9G9/u3/1BfK2SYpnNa28U9EpjOusASuWz1vAk=;
+        b=qf25tW34iq8KbFZJ/y+tT4RpTjwwWm69ACqI/xadiVY1cZ8X7bu6b7RauTRu1sV1un
+         2GPKnO09WsOFREntsXS9hwB96cxENN9RE01h9A0SC+euzCyNRn/sdeuuLQNBushstU8T
+         u8+asU1KpuB+n7uOMrc/ppSRHEUHPgCokm1zkgyqYtSRHda+1WnjkUdNc988rwTyBxHj
+         Il7iqXKPkYQ5dX6vyBja8pf/8RfJ1E4jnNW67NzJ2WhnORLTbaA9R8FZgNaqtgxBNcQv
+         IAkhLA1ERUq/xewM5Iany7H7bsz+pBLWtb7Y9Vjbqzzamc6jBgnh8BpvysgVwkdbuTft
+         qbEg==
+X-Gm-Message-State: AOJu0Yw9Zc3vtXnxeMriVIUBYagK+ek5RLlrU+CnyshiMOGQotqTX8NV
+	FnEhqW6QahIx8HKPUakA/Lkgij/gqB0BXMWaXJcH/4M0mnw2h9/i5QznbcZ3VE0CpupM6521PoA
+	lH9drjxZI1RDT0SfeXJ8XqTgr0PKQ2+ho9bney5e8NB+2tcHvMbz/njWEXch5X0P72XQXvvl77J
+	WXy9CkjeL+47SMpI6e7NJhMN9Z12vkNwh1tUI8YnSCmPdpR0o=
+X-Gm-Gg: ASbGncu1Cme7mCD8M2X74Ibuny3w3QPMV3K0cuLW0ZVvjF70Di1CRYqhNrTgmqoc4sS
+	ctaSK1JNgPCdwifv9Iv7cv0Auqsixt7C5KgpN2+muS4wh4eBQVUXART4cqkU2DOroZ4wnriw3WL
+	HdTPSPXShWa3FZq08y9eQTFSTcLTSAShWsHjxNMO9YDnLtGXSgw6fxyRfCTygXD9eXAEwXgiHSg
+	CqFL3RxoFfAGJr+XY4XM7z6/jzRm5Qiqx42HevQZgKaCYDcsvSReJcelvMeYLrUahN3htXJyjVD
+	Dhp1Fq9SvT0=
+X-Received: by 2002:a05:620a:3728:b0:7d3:914b:abe8 with SMTP id af79cd13be357-7d3bc4475a7mr706293885a.36.1749822077573;
+        Fri, 13 Jun 2025 06:41:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFLW9momYNJwfmPgxDbKad4mtJlNzLyJURmiqrfzObWILrSALY5rlf3s+E58Q/NYKr9xf6MiQ==
+X-Received: by 2002:a05:620a:3728:b0:7d3:914b:abe8 with SMTP id af79cd13be357-7d3bc4475a7mr706288985a.36.1749822077027;
+        Fri, 13 Jun 2025 06:41:17 -0700 (PDT)
 Received: from x1.com ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.19
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:41:19 -0700 (PDT)
+        Fri, 13 Jun 2025 06:41:15 -0700 (PDT)
 From: Peter Xu <peterx@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -75,16 +75,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Alex Mastro <amastro@fb.com>,
 	David Hildenbrand <david@redhat.com>,
 	Nico Pache <npache@redhat.com>,
-	peterx@redhat.com,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>
-Subject: [PATCH 3/5] mm: Rename __thp_get_unmapped_area to mm_get_unmapped_area_aligned
-Date: Fri, 13 Jun 2025 09:41:09 -0400
-Message-ID: <20250613134111.469884-4-peterx@redhat.com>
+	peterx@redhat.com
+Subject: [PATCH 1/5] mm: Deduplicate mm_get_unmapped_area()
+Date: Fri, 13 Jun 2025 09:41:07 -0400
+Message-ID: <20250613134111.469884-2-peterx@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250613134111.469884-1-peterx@redhat.com>
 References: <20250613134111.469884-1-peterx@redhat.com>
@@ -96,92 +90,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This function is pretty handy for any type of VMA to provide a size-aligned
-VMA address when mmap().  Rename the function and export it.
+Essentially it sets vm_flags==0 for mm_get_unmapped_area_vmflags().  Use
+the helper instead to dedup the lines.
 
-About the rename:
-
-  - Dropping "THP" because it doesn't really have much to do with THP
-    internally.
-
-  - The suffix "_aligned" imply it is a helper to generate aligned virtual
-    address based on what is specified (which can be not PMD_SIZE).
-
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Dev Jain <dev.jain@arm.com>
-Cc: Barry Song <baohua@kernel.org>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- include/linux/huge_mm.h | 14 +++++++++++++-
- mm/huge_memory.c        |  6 ++++--
- 2 files changed, 17 insertions(+), 3 deletions(-)
+ mm/mmap.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 2f190c90192d..706488d92bb6 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -339,7 +339,10 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
- unsigned long thp_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
- 		unsigned long len, unsigned long pgoff, unsigned long flags,
- 		vm_flags_t vm_flags);
--
-+unsigned long mm_get_unmapped_area_aligned(struct file *filp,
-+		unsigned long addr, unsigned long len,
-+		loff_t off, unsigned long flags, unsigned long size,
-+		vm_flags_t vm_flags);
- bool can_split_folio(struct folio *folio, int caller_pins, int *pextra_pins);
- int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
- 		unsigned int new_order);
-@@ -543,6 +546,15 @@ thp_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
- 	return 0;
- }
- 
-+static inline unsigned long
-+mm_get_unmapped_area_aligned(struct file *filp,
-+			     unsigned long addr, unsigned long len,
-+			     loff_t off, unsigned long flags, unsigned long size,
-+			     vm_flags_t vm_flags)
-+{
-+	return 0;
-+}
-+
- static inline bool
- can_split_folio(struct folio *folio, int caller_pins, int *pextra_pins)
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 09c563c95112..422f5b9d9660 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -871,9 +871,8 @@ mm_get_unmapped_area(struct mm_struct *mm, struct file *file,
+ 		     unsigned long addr, unsigned long len,
+ 		     unsigned long pgoff, unsigned long flags)
  {
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 4734de1dc0ae..52f13a70562f 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1088,7 +1088,7 @@ static inline bool is_transparent_hugepage(const struct folio *folio)
- 		folio_test_large_rmappable(folio);
+-	if (test_bit(MMF_TOPDOWN, &mm->flags))
+-		return arch_get_unmapped_area_topdown(file, addr, len, pgoff, flags, 0);
+-	return arch_get_unmapped_area(file, addr, len, pgoff, flags, 0);
++	return mm_get_unmapped_area_vmflags(mm, file, addr, len,
++					    pgoff, flags, 0);
  }
- 
--static unsigned long __thp_get_unmapped_area(struct file *filp,
-+unsigned long mm_get_unmapped_area_aligned(struct file *filp,
- 		unsigned long addr, unsigned long len,
- 		loff_t off, unsigned long flags, unsigned long size,
- 		vm_flags_t vm_flags)
-@@ -1132,6 +1132,7 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
- 	ret += off_sub;
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(mm_get_unmapped_area_aligned);
- 
- unsigned long thp_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
- 		unsigned long len, unsigned long pgoff, unsigned long flags,
-@@ -1140,7 +1141,8 @@ unsigned long thp_get_unmapped_area_vmflags(struct file *filp, unsigned long add
- 	unsigned long ret;
- 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
- 
--	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE, vm_flags);
-+	ret = mm_get_unmapped_area_aligned(filp, addr, len, off, flags,
-+					   PMD_SIZE, vm_flags);
- 	if (ret)
- 		return ret;
+ EXPORT_SYMBOL(mm_get_unmapped_area);
  
 -- 
 2.49.0
