@@ -1,277 +1,320 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32019146A72
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861B42E11BB
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749841918; cv=none; b=tzX+IwgMhjSuUKyxmbfruiWJsS+MetctYgFpxZ698AYaY5PF29r/qi+drFzcailmUla/6iaRzUnWzIJDg638VdyZOW/81pHAeObnX7hxWWizWDHR7+sdCkC49AnZ+nBUfj156hYr5ScgUoB8C7xFDF+FeESwIkiBeqj2dluDA/o=
+	t=1749842044; cv=none; b=HNFFs3m+uALOAsk1fJehS6cWQeiEeu33Eo8OCKpohv4MVHW4vkrHgDM/EPrxrB9yR86Vk/DMrZw0VHAW3xdOiANYayMplYGPK/5v/T+lOnWcdBFr+N0an9uGU/GC8Zdk5cSb/Lk7GfeyRwNlRTBmz7RkTG9wSaVXsVOaaXPBku0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749841918; c=relaxed/simple;
-	bh=SGtE0l1MW17H7LDg5MmX9lFL2Ia41F3/cPofyObujdY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LH++ihrHFg0u/mtkD9euksmdaHIhvzyAzfsYUQzRjFbuKhKe/PffEgcjVyVAyXux6Neayf2CfB2ELXQLT2O0nZJAZWodz7WrW3xn2vcUlHQnHqryVYyBOC3wBYz16grf+3iMqdkLdg8XfbLHlMWRHTpKmTf+d42wfhOMZwSjWfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=buj9gY8E; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749842044; c=relaxed/simple;
+	bh=kA4jhqp4xBUNaxg/pjNO8NYIx+j2PDUAkyr5hujtTvE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WU4yNWoRK9qhsbFXpAHbF4sK4GmKQEKli/I/DcRDTq9fIj2AHTYXh+QQOQejsnnKINZ+7Bjf1LeW54mzl6bMn0iBxYqHB/7a1a2x5+sKfr78GQfaP2qPma2NVb+wSueO4WRdNzZWsT7KV3wYTkZf7IOi46dAJ7AKchKOs8FL8Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v2xDjngk; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="buj9gY8E"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47e9fea29easo68911cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:11:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749841916; x=1750446716; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3MLioFcu25SrzT1JXLpM40JWU5zBFcetADxV3Ug7jaY=;
-        b=buj9gY8EZPI/uPl9AwToUmtpRBDqog+TuIhxb7fT2ZG4nDAtJ4G2dX1IuK4cLIgGUa
-         5Oti0y56pUT4rxJanyI5H3a5cykOT279dro0NawPaEoi3vdKu0WHOSSMWheOpwkzWqe7
-         7Fl0ALYbgRUzmwxD2qxMozCgeKjl3xpS1Z3BYG/1QeoDShLH4ER73vgjNwEnXtIarf6m
-         TklXnR7EHqF81PRbjqE/GRZ5PyrzGrODGjL/VccDfxaTfMSFcP1bcpUY8ePnrBgdf//v
-         eHs2p2KSoM8LAKvRoNENIy2pnC4AVBuXEvZkT8kLsUOoKoMducW4OAXGvgCIrkgW/qjd
-         Q9yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749841916; x=1750446716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3MLioFcu25SrzT1JXLpM40JWU5zBFcetADxV3Ug7jaY=;
-        b=xIClCUphlJrNFIykOoOY0teorQB/6hSjNi1lboNYOb1rlkG31ejYSv5FnF0ufBzEsF
-         8J2gCBGI27uxmYjPUeupCEBPAyUb29K6+2pyfR3gu6CpiopFvkBbj3N70vARNHqoa9fm
-         fGtXLghtoFQ3Vug5pTVx7NBcGvi4bFywcN3x6OPENB61NpslkCxC6iWqd74eAetw8aEq
-         0KngkY5qYOwH33Mbwcl/1V5NsESvZ5GYnf65I2njSb1GDwd9vJamGQhIOKSjE+6dM5G5
-         WU+SIPfWGi2Gm0PRRN6G5f8sr/QaftPRsN+KClIfxN/nGG1gnCrQmYMTbRz5ID2xJ9mY
-         B12w==
-X-Forwarded-Encrypted: i=1; AJvYcCUtS9ePR1ZV+0Q5Ky5gSgyTb8dggRZ8F3iNHWVw8qPk+8GeQrglVdQAs5xw7Z2mKWLo6b5T+Bpbr7DlQWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqXmCt9gZ+ZsN6qUQ5u5zPjkk65lG2/0IF6s3gf2Dve8x1YwPl
-	MG4eE2GxaD7WKfzEq4NR/gUNXF6WjR2q6w4/CHkTrHCxCg04j1oC05h8XGNl3pb4yPxFAU4Dk00
-	B/ta7ITSXyhoOvPulC8Lxb1i/j4VOsQknoP6EMC0u
-X-Gm-Gg: ASbGnctwVyMxRnvlu8ssUM7Q6EJOo2SzeuAvZWql+FoOTJb4VUQ9IqVJiRwwueha/qC
-	fkaWIrTTEZarHl4GatRjHwCh5phjX+SL41V0FjkY21SLu00qLsU9xqLK3l3QQffQd/q7AcE+jse
-	DBB3VpdOQJAjxW22kEyNnyUtLkF3Z57QHQmDKxU0p5xQ==
-X-Google-Smtp-Source: AGHT+IFvnQIut+5bnSYDZt2/+KLVzB00ESAWF3T/ASeTAbTQtzNN2t7bhybaTsWELXSkO5KBPEuQ4qfCSd8Vl9SZ45Q=
-X-Received: by 2002:a05:622a:118a:b0:494:763e:d971 with SMTP id
- d75a77b69052e-4a73c74bad2mr380121cf.23.1749841915704; Fri, 13 Jun 2025
- 12:11:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v2xDjngk"
+Message-ID: <c3400787-7279-4a50-a61a-92a100b3b4b9@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749842030;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nMLY4DUZwczzWxX+mHe4l4o0st/9I1jgbNlgxZD7LaY=;
+	b=v2xDjngkqnMOazJSUlqgaQsgSXXpA93WGGhUq8DjjLk1zCK+nhxQkqb5YR6ZToXdoSQfyC
+	+YaL9O+WQKi+9bQcKwRunZ1e3zFsfqjWZQe8F+93kheOLwjPxVUWs/HEtc3YMcm9QFJoy/
+	9QhIY4dMRPpt6B0hx4/bmrYTPA7tGCI=
+Date: Fri, 13 Jun 2025 20:13:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604231151.799834-1-surenb@google.com> <e1863f40-39ab-4e5b-984a-c48765ffde1c@lucifer.local>
-In-Reply-To: <e1863f40-39ab-4e5b-984a-c48765ffde1c@lucifer.local>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 13 Jun 2025 12:11:43 -0700
-X-Gm-Features: AX0GCFvFrVv3MRasBZx4Viw_BkVYZSdZQVHNBuDMFpy95J_U6Iwdmy5s59K2S_Y
-Message-ID: <CAJuCfpFCucv9+-MBtaqbA3=omb8rT2jJ5_vjdtX7DZLzN3xG6A@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] use per-vma locks for /proc/pid/maps reads and PROCMAP_QUERY
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, david@redhat.com, 
-	vbabka@suse.cz, peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, 
-	mhocko@kernel.org, paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
-	brauner@kernel.org, josef@toxicpanda.com, yebin10@huawei.com, 
-	linux@weissschuh.net, willy@infradead.org, osalvador@suse.de, 
-	andrii@kernel.org, ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
-	tjmercier@google.com, kaleshsingh@google.com, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next v9 06/14] dpll: zl3073x: Fetch invariants during
+ probe
+To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
+Cc: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
+References: <20250612200145.774195-1-ivecera@redhat.com>
+ <20250612200145.774195-7-ivecera@redhat.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250612200145.774195-7-ivecera@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jun 13, 2025 at 8:01=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> Hi Suren,
->
-> I promised I'd share VMA merging scenarios so we can be absolutely sure w=
-e have
-> all cases covered, I share that below. I also included information on spl=
-it.
+On 12/06/2025 21:01, Ivan Vecera wrote:
+> Several configuration parameters will remain constant at runtime,
+> so we can load them during probe to avoid excessive reads from
+> the hardware.
+> 
+> Read the following parameters from the device during probe and store
+> them for later use:
+> 
+> * enablement status and frequencies of the synthesizers and their
+>    associated DPLL channels
+> * enablement status and type (single-ended or differential) of input pins
+> * associated synthesizers, signal format, and enablement status of
+>    outputs
+> 
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> ---
+>   drivers/dpll/zl3073x/core.c | 248 +++++++++++++++++++++++++++++++
+>   drivers/dpll/zl3073x/core.h | 286 ++++++++++++++++++++++++++++++++++++
+>   drivers/dpll/zl3073x/regs.h |  65 ++++++++
+>   3 files changed, 599 insertions(+)
+> 
+> diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
+> index 60344761545d8..3a57c85f902c4 100644
+> --- a/drivers/dpll/zl3073x/core.c
+> +++ b/drivers/dpll/zl3073x/core.c
+> @@ -6,6 +6,7 @@
+>   #include <linux/dev_printk.h>
+>   #include <linux/device.h>
+>   #include <linux/export.h>
+> +#include <linux/math64.h>
+>   #include <linux/module.h>
+>   #include <linux/netlink.h>
+>   #include <linux/regmap.h>
+> @@ -376,6 +377,25 @@ int zl3073x_poll_zero_u8(struct zl3073x_dev *zldev, unsigned int reg, u8 mask)
+>   					ZL_POLL_SLEEP_US, ZL_POLL_TIMEOUT_US);
+>   }
+>   
+> +int zl3073x_mb_op(struct zl3073x_dev *zldev, unsigned int op_reg, u8 op_val,
+> +		  unsigned int mask_reg, u16 mask_val)
+> +{
+> +	int rc;
+> +
+> +	/* Set mask for the operation */
+> +	rc = zl3073x_write_u16(zldev, mask_reg, mask_val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Trigger the operation */
+> +	rc = zl3073x_write_u8(zldev, op_reg, op_val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Wait for the operation to actually finish */
+> +	return zl3073x_poll_zero_u8(zldev, op_reg, op_val);
+> +}
+> +
+>   /**
+>    * zl3073x_devlink_info_get - Devlink device info callback
+>    * @devlink: devlink structure pointer
+> @@ -484,6 +504,229 @@ struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(zl3073x_devm_alloc, "ZL3073X");
+>   
+> +/**
+> + * zl3073x_ref_state_fetch - get input reference state
+> + * @zldev: pointer to zl3073x_dev structure
+> + * @index: input reference index to fetch state for
+> + *
+> + * Function fetches information for the given input reference that are
+> + * invariant and stores them for later use.
+> + *
+> + * Return: 0 on success, <0 on error
+> + */
+> +static int
+> +zl3073x_ref_state_fetch(struct zl3073x_dev *zldev, u8 index)
+> +{
+> +	struct zl3073x_ref *input = &zldev->ref[index];
+> +	u8 ref_config;
+> +	int rc;
+> +
+> +	/* If the input is differential then the configuration for N-pin
+> +	 * reference is ignored and P-pin config is used for both.
+> +	 */
+> +	if (zl3073x_is_n_pin(index) &&
+> +	    zl3073x_ref_is_diff(zldev, index - 1)) {
+> +		input->enabled = zl3073x_ref_is_enabled(zldev, index - 1);
+> +		input->diff = true;
+> +
+> +		return 0;
+> +	}
+> +
+> +	guard(mutex)(&zldev->multiop_lock);
+> +
+> +	/* Read reference configuration */
+> +	rc = zl3073x_mb_op(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_RD,
+> +			   ZL_REG_REF_MB_MASK, BIT(index));
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Read ref_config register */
+> +	rc = zl3073x_read_u8(zldev, ZL_REG_REF_CONFIG, &ref_config);
+> +	if (rc)
+> +		return rc;
+> +
+> +	input->enabled = FIELD_GET(ZL_REF_CONFIG_ENABLE, ref_config);
+> +	input->diff = FIELD_GET(ZL_REF_CONFIG_DIFF_EN, ref_config);
+> +
+> +	dev_dbg(zldev->dev, "REF%u is %s and configured as %s\n", index,
+> +		input->enabled ? "enabled" : "disabled",
+> +		input->diff ? "differential" : "single-ended");
+> +
+> +	return rc;
+> +}
+> +
+> +/**
+> + * zl3073x_out_state_fetch - get output state
+> + * @zldev: pointer to zl3073x_dev structure
+> + * @index: output index to fetch state for
+> + *
+> + * Function fetches information for the given output (not output pin)
+> + * that are invariant and stores them for later use.
+> + *
+> + * Return: 0 on success, <0 on error
+> + */
+> +static int
+> +zl3073x_out_state_fetch(struct zl3073x_dev *zldev, u8 index)
+> +{
+> +	struct zl3073x_out *out = &zldev->out[index];
+> +	u8 output_ctrl, output_mode;
+> +	int rc;
+> +
+> +	/* Read output configuration */
+> +	rc = zl3073x_read_u8(zldev, ZL_REG_OUTPUT_CTRL(index), &output_ctrl);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Store info about output enablement and synthesizer the output
+> +	 * is connected to.
+> +	 */
+> +	out->enabled = FIELD_GET(ZL_OUTPUT_CTRL_EN, output_ctrl);
+> +	out->synth = FIELD_GET(ZL_OUTPUT_CTRL_SYNTH_SEL, output_ctrl);
+> +
+> +	dev_dbg(zldev->dev, "OUT%u is %s and connected to SYNTH%u\n", index,
+> +		out->enabled ? "enabled" : "disabled", out->synth);
+> +
+> +	guard(mutex)(&zldev->multiop_lock);
+> +
+> +	/* Read output configuration */
+> +	rc = zl3073x_mb_op(zldev, ZL_REG_OUTPUT_MB_SEM, ZL_OUTPUT_MB_SEM_RD,
+> +			   ZL_REG_OUTPUT_MB_MASK, BIT(index));
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Read output_mode */
+> +	rc = zl3073x_read_u8(zldev, ZL_REG_OUTPUT_MODE, &output_mode);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Extract and store output signal format */
+> +	out->signal_format = FIELD_GET(ZL_OUTPUT_MODE_SIGNAL_FORMAT,
+> +				       output_mode);
+> +
+> +	dev_dbg(zldev->dev, "OUT%u has signal format 0x%02x\n", index,
+> +		out->signal_format);
+> +
+> +	return rc;
+> +}
+> +
+> +/**
+> + * zl3073x_synth_state_fetch - get synth state
+> + * @zldev: pointer to zl3073x_dev structure
+> + * @index: synth index to fetch state for
+> + *
+> + * Function fetches information for the given synthesizer that are
+> + * invariant and stores them for later use.
+> + *
+> + * Return: 0 on success, <0 on error
+> + */
+> +static int
+> +zl3073x_synth_state_fetch(struct zl3073x_dev *zldev, u8 index)
+> +{
+> +	struct zl3073x_synth *synth = &zldev->synth[index];
+> +	u16 base, m, n;
+> +	u8 synth_ctrl;
+> +	u32 mult;
+> +	int rc;
+> +
+> +	/* Read synth control register */
+> +	rc = zl3073x_read_u8(zldev, ZL_REG_SYNTH_CTRL(index), &synth_ctrl);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Store info about synth enablement and DPLL channel the synth is
+> +	 * driven by.
+> +	 */
+> +	synth->enabled = FIELD_GET(ZL_SYNTH_CTRL_EN, synth_ctrl);
+> +	synth->dpll = FIELD_GET(ZL_SYNTH_CTRL_DPLL_SEL, synth_ctrl);
+> +
+> +	dev_dbg(zldev->dev, "SYNTH%u is %s and driven by DPLL%u\n", index,
+> +		synth->enabled ? "enabled" : "disabled", synth->dpll);
+> +
+> +	guard(mutex)(&zldev->multiop_lock);
 
-Thanks Lorenzo! This is great and very helpful.
+Not a strong suggestion, but it would be good to follow netdev style
+(same for some previous functions):
 
->
-> Hopefully this is useful! And maybe we can somehow put in a comment or co=
-mmit
-> msg or something somewhere? Not sure if a bit much for that though :)
+https://docs.kernel.org/process/maintainer-netdev.html#using-device-managed-and-cleanup-h-constructs
 
-I'll see if I can add a short version into my next cover letter.
+"Use of guard() is discouraged within any function longer than 20 lines,
+scoped_guard() is considered more readable. Using normal lock/unlock is 
+still (weakly) preferred."
 
->
-> Note that in all of the below we hold exclusive mmap, vma + rmap write lo=
-cks.
->
-> ## Merge with change to EXISTING VMA
->
-> ### Merge both
->
->                       start    end
->                          |<---->|
->                  |-------********-------|
->                    prev   middle   next
->                   extend  delete  delete
->
-> 1. Set prev VMA range [prev->vm_start, next->vmend)
-> 2. Overwrite prev, middle, next nodes in maple tree with prev
-> 3. Detach middle VMA
-> 4. Free middle VMA
-> 5. Detach next VMA
-> 6. Free next VMA
+> +
+> +	/* Read synth configuration */
+> +	rc = zl3073x_mb_op(zldev, ZL_REG_SYNTH_MB_SEM, ZL_SYNTH_MB_SEM_RD,
+> +			   ZL_REG_SYNTH_MB_MASK, BIT(index));
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* The output frequency is determined by the following formula:
+> +	 * base * multiplier * numerator / denominator
+> +	 *
+> +	 * Read registers with these values
+> +	 */
+> +	rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_BASE, &base);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = zl3073x_read_u32(zldev, ZL_REG_SYNTH_FREQ_MULT, &mult);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_M, &m);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = zl3073x_read_u16(zldev, ZL_REG_SYNTH_FREQ_N, &n);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Check denominator for zero to avoid div by 0 */
+> +	if (!n) {
+> +		dev_err(zldev->dev,
+> +			"Zero divisor for SYNTH%u retrieved from device\n",
+> +			index);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Compute and store synth frequency */
+> +	zldev->synth[index].freq = div_u64(mul_u32_u32(base * m, mult), n);
+> +
+> +	dev_dbg(zldev->dev, "SYNTH%u frequency: %u Hz\n", index,
+> +		zldev->synth[index].freq);
+> +
+> +	return rc;
+> +}
+> +
+[...]
 
-This case should be fine with per-vma locks while reading
-/proc/pid/maps. In the worst case we will report some of the original
-vmas before the merge and then the final merged vma, so prev might be
-seen twice but no gaps should be observed.
-
->
-> ### Merge left full
->
->                        start        end
->                          |<--------->|
->                  |-------*************
->                    prev     middle
->                   extend    delete
->
-> 1. Set prev VMA range [prev->vm_start, end)
-> 2. Overwrite prev, middle nodes in maple tree with prev
-> 3. Detach middle VMA
-> 4. Free middle VMA
-
-Same as the previous case. Worst case we report prev twice - once
-before the merge, once after the merge.
-
->
-> ### Merge left partial
->
->                        start   end
->                          |<---->|
->                  |-------*************
->                    prev     middle
->                   extend  partial overwrite
->
-> 1. Set prev VMA range [prev->vm_start, end)
-> 2. Set middle range [end, middle->vm_end)
-> 3. Overwrite prev, middle (partial) nodes in maple tree with prev
-
-We might report prev twice here and this might cause us to retry if we
-see a temporary gap between old prev and new middle vma. But retry
-should handle this case, so I think we are good here.
-
->
-> ### Merge right full
->
->                start        end
->                  |<--------->|
->                  *************-------|
->                     middle     next
->                     delete    extend
->
-> 1. Set next range [start, next->vm_end)
-> 2. Overwrite middle, next nodes in maple tree with next
-> 3. Detach middle VMA
-> 4. Free middle VMA
-
-Worst case we report middle twice.
-
->
-> ### Merge right partial
->
->                    start    end
->                      |<----->|
->                  *************-------|
->                     middle     next
->                     shrink    extend
->
-> 1. Set middle range [middle->vm_start, start)
-> 2. Set next range [start, next->vm_end)
-> 3. Overwrite middle (partial), next nodes in maple tree with next
-
-Worse case we retry and report middle twice.
-
->
-> ## Merge due to introduction of proposed NEW VMA
->
-> These cases are easier as there's no existing VMA to either remove or par=
-tially
-> adjust.
->
-> ### Merge both
->
->                        start     end
->                          |<------>|
->                  |-------..........-------|
->                    prev  (proposed)  next
->                   extend            delete
->
-> 1. Set prev VMA range [prev->vm_start, next->vm_end)
-> 2. Overwrite prev, next nodes in maple tree with prev
-> 3. Detach next VMA
-> 4. Delete next VMA
-
-Worst case we report prev twice after retry.
-
->
-> ### Merge left
->
->                        start     end
->                          |<------>|
->                  |-------..........
->                    prev  (proposed)
->                   extend
->
-> 1. Set prev VMA range [prev->vm_start, end)
-> 2. Overwrite prev node in maple tree with newly extended prev
-
-Worst case we report prev twice.
-
->
-> (This is what's used for brk() and bprm_mm_init() stack relocation in
-> relocate_vma_down() too)
->
-> ### Merge right
->
->                        start     end
->                          |<------>|
->                          ..........-------|
->                          (proposed)  next
->                                     extend
->
-> 1. Set next VMA range [start, next->vm_end)
-> 2. Overwrite next node in maple tree with newly extended next
-
-This will show either a legit gap + original next or the extended next
-with no gap. Both ways we are fine.
-
->
-> ## Split VMA
->
-> If new below:
->
->                     addr
->                 |-----.-----|
->                 | new .     |
->                 |-----.-----|
->                      vma
-> Otherwise:
->
->                     addr
->                 |-----.-----|
->                 |     . new |
->                 |-----.-----|
->                      vma
->
-> 1. Duplicate vma
-> 2. If new below, set new range to [vma-vm_start, addr)
-> 3. Otherwise, set new range to [addr, vma->vm_end)
-> 4. If new below, Set vma range to [addr, vma->vm_end)
-> 5. Otherwise, set vma range to [vma->vm_start, addr)
-> 6. Partially overwrite vma node in maple tree with new
-
-These are fine too. We will either report before-split view or after-split =
-view.
-Thanks,
-Suren.
-
->
-> Cheers, Lorenzo
