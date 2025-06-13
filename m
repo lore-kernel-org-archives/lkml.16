@@ -1,115 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21302DECB4
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DB2275AE2;
+	Fri, 13 Jun 2025 12:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749816761; cv=none; b=a3HyP0QgcIAJen1jmN28YPqnZcnDUpCqv6o7SpThQUhjt8ehvui0YpQtamOUs7l3iVNfrcT/3NYgN7xdZwz8G4fEdl8IFzxztrj7FOYnIeR4a/wwFJ4ztoTJf++hmg55Cut0nGQnV8dwZNXsSt1uNS+umilBpwj5epP6KcBjVJY=
+	t=1749816843; cv=none; b=aXW1c9HiHtzlyS4tXpQ9MJ/0atGwZxLUlp1vYMlNuOrD257/pc8G4+Y4qVmWTg3eR/whFDUz5rl5e9WWg9N06A+HAT1QIbCNYyaInn97R0G48CjvCgofAguoRvX4z3DX0TvykMDzgJQDRa5EO/CNy68z4XP914KkVhkAdP2ulIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749816761; c=relaxed/simple;
-	bh=4knsc7FbAH7Q5O0jXH0nJt0AVmU/rcq+p8uTWlA4IDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qjXc2PT0vapp+JkXTNC5+SBNXKm5GPs/aA6+5JT8UqUFsFTpZ9IStP5sAUV3uScSGTrhv8rBlOZp1/pakuGj3reIjg1dSfTXyzYFgyw4u+4isjWa3rHGhKYo8YLURM9pJffuXoW9yHimkZoNjYoh31YCuv6ClOk//KmCmW/LY1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HMZMN8Xg; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749816843; c=relaxed/simple;
+	bh=9n6iNHBCKV0GZHwkyD9XOEtgWinRTZGyTm0zXHbGTj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WZqw8yd8aCKIoaeRj0fE4KaKnJTKrCSeJ5GvlP39DxLQzpInp4Lbvy2oNoMHx16MsFigaBDhjKadSYMC9TF5cB+YXj5Rta/1SlzDU01CA4Oubrl6J7yHGbGdkEUG9SnHk83tQyVVBgQgr27X6nlluDnmczzvHon7X6q5jYO+aqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Spvbua0w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HMZMN8Xg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749816758; x=1781352758;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4knsc7FbAH7Q5O0jXH0nJt0AVmU/rcq+p8uTWlA4IDk=;
-  b=HMZMN8Xg0lpfUPQjlTCXhnKyEPJyxTaLnQk0OFYoYssekh0/Y3N3HoKw
-   oMf6W2IZFu6BG4jbpyniyjsvIcU6pifgyPYSGF4GR4B09Pb1cyNYj/W+n
-   yVfvvj0QvfUWQLjpnHlrkBWiKgSpVDhgTg8e9k/uIWLv31glV0ECcMq2i
-   m1jFM0W7w6hn835NGc02QRjglECyO453nvTQdhIp131uJnkLbrTQgpoNV
-   0lLJ9Jg0dvwT+ahbSBhbvcZ0D/rmdp2gPfGHmN6m9eZ+nNDODNKzFqEbf
-   Xk8QEkGzmycTzvv60IOLwYANctxK7cgr+PjQjWupAlMQZuZUrwDcKLy/U
-   A==;
-X-CSE-ConnectionGUID: DCj6H23yS06w2ZxoC4KeEQ==
-X-CSE-MsgGUID: FBIGlRxyT/ip1Ln7LKq3YA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="63383151"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="63383151"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:12:32 -0700
-X-CSE-ConnectionGUID: zPaqIg7gTWW8AEgSuaJUUw==
-X-CSE-MsgGUID: 1qLkft/DSV+tezTu08XGoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="148184525"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2025 05:12:31 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQ3Gm-000CZq-2q;
-	Fri, 13 Jun 2025 12:12:28 +0000
-Date: Fri, 13 Jun 2025 20:11:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Michal Gorlas <michal.gorlas@9elements.com>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Brian Norris <briannorris@chromium.org>,
-	Julius Werner <jwerner@chromium.org>
-Cc: oe-kbuild-all@lists.linux.dev, marcello.bauer@9elements.com,
-	Michal Gorlas <michal.gorlas@9elements.com>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] firmware: coreboot: Linux-owned SMI handler to be
- loaded by coreboot
-Message-ID: <202506132239.FTTwSHeX-lkp@intel.com>
-References: <410d4d62b031d0e751e1933cf746540d5cb1682c.1749734094.git.michal.gorlas@9elements.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Spvbua0w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60EFC4CEE3;
+	Fri, 13 Jun 2025 12:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749816842;
+	bh=9n6iNHBCKV0GZHwkyD9XOEtgWinRTZGyTm0zXHbGTj8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Spvbua0wsLdsGl5pDN19EMUXpC4ap8aSfq/9e9wylKUORzwKiKC/eNMxcHvmlp6iS
+	 HGzt1oOFYFui3i5bzUxJrp4QJLXm4uDqKT917RdGSBgR1P05c7RTu+qApgsEKbGteN
+	 FJrU2V940EcGMDbgH9IWPd3vx4PkgrE9VAeuluvKjPM/F/AuMI0K5DQ60jmRwiN0xl
+	 wHs2vYRwUN/TybSEuzXJwbnt+sThgy8PYj7FxntZjkiftHz15Qohgbyf0e73RsR7Gy
+	 WYq/UkJCSNn2C00jwVkgJITijJk3xwriOK9420MiOmYpFhl8YuHPTibazxW/EVtUnW
+	 xwU1ercHPPxRA==
+Date: Fri, 13 Jun 2025 14:13:55 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Donald Hunter <donald.hunter@gmail.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, linux-kernel@vger.kernel.org, Akira Yokosawa
+ <akiyks@gmail.com>, "David S. Miller" <davem@davemloft.net>, Ignacio
+ Encinas Rubio <ignacio@iencinas.com>, Marco Elver <elver@google.com>, Shuah
+ Khan <skhan@linuxfoundation.org>, Eric Dumazet <edumazet@google.com>, Jan
+ Stancek <jstancek@redhat.com>, Paolo Abeni <pabeni@redhat.com>, Ruben
+ Wauters <rubenru09@aol.com>, joel@joelfernandes.org,
+ linux-kernel-mentees@lists.linux.dev, lkmm@lists.linux.dev,
+ netdev@vger.kernel.org, peterz@infradead.org, stern@rowland.harvard.edu,
+ Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v2 00/12] Don't generate netlink .rst files inside
+ $(srctree)
+Message-ID: <20250613141355.1bba92fc@foz.lan>
+In-Reply-To: <m27c1foq97.fsf@gmail.com>
+References: <cover.1749723671.git.mchehab+huawei@kernel.org>
+	<m27c1foq97.fsf@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <410d4d62b031d0e751e1933cf746540d5cb1682c.1749734094.git.michal.gorlas@9elements.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Michal,
+Em Fri, 13 Jun 2025 12:05:56 +0100
+Donald Hunter <donald.hunter@gmail.com> escreveu:
 
-kernel test robot noticed the following build errors:
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> 
+> > As discussed at:
+> >    https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
+> >
+> > changeset f061c9f7d058 ("Documentation: Document each netlink family")
+> > added a logic which generates *.rst files inside $(srctree). This is bad when
+> > O=<BUILDDIR> is used.
+> >
+> > A recent change renamed the yaml files used by Netlink, revealing a bad
+> > side effect: as "make cleandocs" don't clean the produced files, symbols 
+> > appear duplicated for people that don't build the kernel from scratch.
+> >
+> > There are some possible solutions for that. The simplest one, which is what
+> > this series address, places the build files inside Documentation/output. 
+> > The changes to do that are simple enough, but has one drawback,
+> > as it requires a (simple) template file for every netlink family file from
+> > netlink/specs. The template is simple enough:
+> >
+> >         .. kernel-include:: $BUILDDIR/networking/netlink_spec/<family>.rst  
+> 
+> I think we could skip describing this since it was an approach that has
+> now been dropped.
 
-[auto build test ERROR on chrome-platform/for-next]
-[also build test ERROR on chrome-platform/for-firmware-next linus/master v6.16-rc1 next-20250613]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Ok. Will drop on next versions.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Michal-Gorlas/firmware-coreboot-support-for-parsing-SMM-related-informations-from-coreboot-tables/20250612-221612
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git for-next
-patch link:    https://lore.kernel.org/r/410d4d62b031d0e751e1933cf746540d5cb1682c.1749734094.git.michal.gorlas%409elements.com
-patch subject: [PATCH v1 3/3] firmware: coreboot: Linux-owned SMI handler to be loaded by coreboot
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250613/202506132239.FTTwSHeX-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506132239.FTTwSHeX-lkp@intel.com/reproduce)
+> 
+> > Part of the issue is that sphinx-build only produces html files for sources
+> > inside the source tree (Documentation/). 
+> >
+> > To address that, add an yaml parser extension to Sphinx.
+> >
+> > It should be noticed that this version has one drawback: it increases the
+> > documentation build time. I suspect that the culprit is inside Sphinx
+> > glob logic and the way it handles exclude_patterns. What happens is that
+> > sphinx/project.py uses glob, which, on my own experiences, it is slow
+> > (due to that, I ended implementing my own glob logic for kernel-doc).
+> >
+> > On the plus side, the extension is flexible enough to handle other types
+> > of yaml files, as the actual yaml conversion logic is outside the extension.  
+> 
+> I don't think the extension would handle anything other than the Netlink
+> yaml specs, and I don't think that should be a goal of this patchset.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506132239.FTTwSHeX-lkp@intel.com/
+Not necessarily. We do have already DT yaml files (although there's
+a separate process to handle those outside the tree). Nothing prevents
+we end having more. See, the way Sphinx parser works is that it will cover
+all files with *.yaml extension no matter where it is located within the
+tree. We may end needing to use it for something else as well (*).
 
-All errors (new ones prefixed by >>):
+(*) at the last Media Summit, we did have some discussions about using
+    either yaml or rst for sensor documentation.
 
->> drivers/firmware/google/mm_handler/mm_header.S:7:10: fatal error: asm/page_types.h: No such file or directory
-       7 | #include <asm/page_types.h>
-         |          ^~~~~~~~~~~~~~~~~~
-   compilation terminated.
---
->> drivers/firmware/google/mm_handler/mm_handler.S:11:10: fatal error: asm/pgtable_types.h: No such file or directory
-      11 | #include <asm/pgtable_types.h>
-         |          ^~~~~~~~~~~~~~~~~~~~~
-   compilation terminated.
+> > With this version, there's no need to add any template file per netlink/spec
+> > file. Yet, the Documentation/netlink/spec.index.rst require updates as
+> > spec files are added/renamed/removed. The already-existing script can
+> > handle it automatically by running:
+> >
+> >             tools/net/ynl/pyynl/ynl_gen_rst.py -x  -v -o Documentation/netlink/specs/index.rst  
+> 
+> I think this can be avoided by using the toctree glob directive in the
+> index, like this:
+> 
+> =============================
+> Netlink Family Specifications
+> =============================
+> 
+> .. toctree::
+>    :maxdepth: 1
+>    :glob:
+> 
+>    *
+> 
+> This would let you have a static index file.
 
+Didn't know about such option. If it works with the parser, it sounds good 
+enough.
 
-vim +7 drivers/firmware/google/mm_handler/mm_header.S
+> 
+> > ---
+> >
+> > v2:
+> > - Use a Sphinx extension to handle netlink files.
+> >
+> > v1:
+> > - Statically add template files to as networking/netlink_spec/<family>.rst
+> >
+> > Mauro Carvalho Chehab (12):
+> >   tools: ynl_gen_rst.py: create a top-level reference
+> >   docs: netlink: netlink-raw.rst: use :ref: instead of :doc:  
+> 
+> I suggest combining the first 2 patches.
+> 
+> >   docs: netlink: don't ignore generated rst files  
+> 
+> Maybe leave this patch to the end and change the description to be a
+> cleanup of the remants of the old approach.
 
-   > 7	#include <asm/page_types.h>
+Ok for me, but I usually prefer keeping one patch per logical change.
+In this case, one patch adding support at the tool; the other one
+improving docs to benefit from the new feature.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Further comments on specific commits
+> 
+> >   tools: ynl_gen_rst.py: make the index parser more generic
+> >   tools: ynl_gen_rst.py: Split library from command line tool
+> >   scripts: lib: netlink_yml_parser.py: use classes
+> >   tools: ynl_gen_rst.py: do some coding style cleanups
+> >   scripts: netlink_yml_parser.py: improve index.rst generation
+> >   docs: sphinx: add a parser template for yaml files
+> >   docs: sphinx: parser_yaml.py: add Netlink specs parser  
+> 
+> Please combine these 2 patches. The template patch just introduces noise
+> into the series and makes it harder to review.
+
+Ok.
+
+> >   docs: use parser_yaml extension to handle Netlink specs
+> >   docs: conf.py: don't handle yaml files outside Netlink specs
+> >
+> >  .pylintrc                                     |   2 +-
+> >  Documentation/Makefile                        |  17 -
+> >  Documentation/conf.py                         |  17 +-
+> >  Documentation/netlink/specs/index.rst         |  38 ++
+> >  Documentation/networking/index.rst            |   2 +-
+> >  .../networking/netlink_spec/.gitignore        |   1 -
+> >  .../networking/netlink_spec/readme.txt        |   4 -
+> >  Documentation/sphinx/parser_yaml.py           |  80 ++++
+> >  .../userspace-api/netlink/netlink-raw.rst     |   6 +-
+> >  scripts/lib/netlink_yml_parser.py             | 394 ++++++++++++++++++
+> >  tools/net/ynl/pyynl/ynl_gen_rst.py            | 378 +----------------
+> >  11 files changed, 544 insertions(+), 395 deletions(-)
+> >  create mode 100644 Documentation/netlink/specs/index.rst
+> >  delete mode 100644 Documentation/networking/netlink_spec/.gitignore
+> >  delete mode 100644 Documentation/networking/netlink_spec/readme.txt
+> >  create mode 100755 Documentation/sphinx/parser_yaml.py
+> >  create mode 100755 scripts/lib/netlink_yml_parser.py  
+
+Thanks,
+Mauro
