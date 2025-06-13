@@ -1,134 +1,148 @@
-Received: from lgeamrelo07.lge.com (lgeamrelo07.lge.com [156.147.51.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CFC1DF268
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.51.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3BE274677
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749798665; cv=none; b=SjVWlggyCkq77kkQHNpgcDX8c2OwTvta4YC/V9bfIiXjl0CVlmUwjgwMdWtsw0gda/qQHZtduxUOLQpseY1qiUFRWwJExJK/TjWVQtaOhLEyRvjnPOX5CiKoP0ZFLpHyHjoZSnS79qEOUNWx2rBtDdgWuz4dQKF8JdfYYvD82nc=
+	t=1749798761; cv=none; b=a9Kde6E+upZXxJzqaOnAEf2/f4cYmvzkv2SX3vXm8SscxSFACwj9c9Fxt3/mucptgKitNsc/321Xc4OjQHRelqMNQQbew6NraVKHODsftb/6LfFPnjvxmGZ1yehMkiDQMg+FJJnRDjPewtUUdJ0rf59l/p7s+kx1qT4+9BZ8/HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749798665; c=relaxed/simple;
-	bh=YmQRwLeplfR8Z0cr1iI/OSU1EFcSFHPSi4tlQU+eg2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tMpmBcKbBr1wMMkaNRsWDpmDMa70pn4rBNzZpOwWaPz1fqLg+1vRBS9YPk7idvcC0G8/z0n3zvKvJGCa+sef549H4fQ5IvnUt3C4YGLDHujglzQpDMjMfUr9/4Kfg/lPkHgt0csDEVkHRRA8Jh7P5iWo4OfN7R38TK00KEhFbWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.51.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
-Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
-	by 156.147.51.103 with ESMTP; 13 Jun 2025 16:11:01 +0900
-X-Original-SENDERIP: 10.177.112.156
-X-Original-MAILFROM: youngjun.park@lge.com
-Date: Fri, 13 Jun 2025 16:11:01 +0900
-From: YoungJun Park <youngjun.park@lge.com>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Kairui Song <ryncsn@gmail.com>, linux-mm@kvack.org,
-	akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	shikemeng@huaweicloud.com, bhe@redhat.com, baohua@kernel.org,
-	chrisl@kernel.org, muchun.song@linux.dev, iamjoonsoo.kim@lge.com,
-	taejoon.song@lge.com, gunho.lee@lge.com
-Subject: Re: [RFC PATCH 2/2] mm: swap: apply per cgroup swap priority
- mechansim on swap layer
-Message-ID: <aEvPBSObBrrQCsa3@yjaykim-PowerEdge-T330>
-References: <20250612103743.3385842-1-youngjun.park@lge.com>
- <20250612103743.3385842-3-youngjun.park@lge.com>
- <CAMgjq7BJE9ALFG4N8wb-hdkC+b-8d1+ckXL9D6pbbfgiXfuzPA@mail.gmail.com>
- <CAKEwX=PsGKS5JHqQ-G29Fg8xLssPhM+E-4wV_QakhqrDOsV36g@mail.gmail.com>
- <CAMgjq7Aq1LW9wFgyQ4oCS5Su23X62S+5ZW_d5OydJj-pp2n21Q@mail.gmail.com>
- <CAKEwX=PD+P_wugkAJ83ti6YRo4-6QNM7HDFs+KDURVwx2JrnZg@mail.gmail.com>
+	s=arc-20240116; t=1749798761; c=relaxed/simple;
+	bh=sWyWIfwI7kTzqivc7bTrOqy9Tj8LyGdscPOXHhGCi4s=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rx0XYLc1tO/wvBBtQ2OJJdrNOrVgC1D5fcPIuIl0+9vrXTZkqlEe+52lxmTpSwQEzF/dYCdDxb7v455/bxtCDhbCaENG/lRLvh0JzwfA5JJDaN17rHkRqy5vHET0VP+1WanWJEEYyMglXyjzhcA8Fbf818S2rlgI3wUyYiMe8RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86f4f032308so357063839f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:12:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749798757; x=1750403557;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=juhYk1wKYKfUnaUV/pQ8ZEVYMZB94Oi+kC5HvDlYkTc=;
+        b=vmarQzM/kAYaTbbugDole9YcTgqMNYcf8sjdZgy3DCs1pM4w5K9pWDxv0wct7xZLQw
+         h8stO9klirb31fQ5dmNCuUp8QJAUk+8HRsCac/jKCDUpSlaUVZaRXxUz4kd7Ovwtpje7
+         LPtlOrwnh1cwcXsIzXJOlevtUxA0QZq38W1AXB008EEy6HMzK1iBnTf5F6NpA+vQGjjw
+         REpwjkc5w7Z9busv4lnx6J8/Fjv3SBxgbQ+JPmxGH4AkRy3+Oz9DgenfQxzihVOLqJ4k
+         qxwAfpeEyG+wwW7qLnXGAtAHnNeTAtR8xpdOI00jKFl0qlXnbIQgrjpl8/lux1ligPyt
+         70Og==
+X-Forwarded-Encrypted: i=1; AJvYcCUIcnGYzR+WW8yavYEtHo3xqxfU3mAeodnhpQy/NWcnQbODReO3KFaIOaDTMbGgJ3sjkxa/SVUd1lvTPJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNO/clvR/T9H+SwWrYenr54bOkHKp1HRbtIAN5hR1hS0149L8X
+	hv0jq6Q58czZnlZPfxMbm+5PXUjzHim4aVYXqA01yO09RX+puvYB9B3J6yRjAaUBsz6Rpst0Ml7
+	xObEAScLSFWgnFNfOKDKm4i4xNcda/p7Cdrvl/tS2Vcn96ivAJ7v7XyeGpAk=
+X-Google-Smtp-Source: AGHT+IGBwD/2/C4kc9h6TIClenfR5iYoIenohZ5RomSbIQ0maGl/dTNKfi63zAkyRk+LR/aAQ38VdNauGcbMCQtdfWzn00FnCnPE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKEwX=PD+P_wugkAJ83ti6YRo4-6QNM7HDFs+KDURVwx2JrnZg@mail.gmail.com>
+X-Received: by 2002:a05:6e02:2196:b0:3dd:ecc8:9773 with SMTP id
+ e9e14a558f8ab-3de00c0951fmr18522855ab.19.1749798757590; Fri, 13 Jun 2025
+ 00:12:37 -0700 (PDT)
+Date: Fri, 13 Jun 2025 00:12:37 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684bcf65.050a0220.be214.029b.GAE@google.com>
+Subject: [syzbot] [bpf?] WARNING in do_check
+From: syzbot <syzbot+a36aac327960ff474804@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
+	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 12, 2025 at 01:08:08PM -0700, Nhat Pham wrote:
-> On Thu, Jun 12, 2025 at 11:20 AM Kairui Song <ryncsn@gmail.com> wrote:
-> >
-> > On Fri, Jun 13, 2025 at 1:28 AM Nhat Pham <nphamcs@gmail.com> wrote:
-> > >
-> > > On Thu, Jun 12, 2025 at 4:14 AM Kairui Song <ryncsn@gmail.com> wrote:
-> > > >
-> > > > On Thu, Jun 12, 2025 at 6:43 PM <youngjun.park@lge.com> wrote:
-> > > > >
-> > > > > From: "youngjun.park" <youngjun.park@lge.com>
-> > > > >
-> > > >
-> > > > Hi, Youngjun,
-> > > >
-> > > > Thanks for sharing this series.
-> > > >
-> > > > > This patch implements swap device selection and swap on/off propagation
-> > > > > when a cgroup-specific swap priority is set.
-> > > > >
-> > > > > There is one workaround to this implementation as follows.
-> > > > > Current per-cpu swap cluster enforces swap device selection based solely
-> > > > > on CPU locality, overriding the swap cgroup's configured priorities.
-> > > >
-> > > > I've been thinking about this, we can switch to a per-cgroup-per-cpu
-> > > > next cluster selector, the problem with current code is that swap
-> > >
-> > > What about per-cpu-per-order-per-swap-device :-? Number of swap
-> > > devices is gonna be smaller than number of cgroups, right?
-> >
-> > Hi Nhat,
-> >
-> > The problem is per cgroup makes more sense (I was suggested to use
-> > cgroup level locality at the very beginning of the implementation of
-> > the allocator in the mail list, but it was hard to do so at that
-> > time), for container environments, a cgroup is a container that runs
-> > one type of workload, so it has its own locality. Things like systemd
-> > also organize different desktop workloads into cgroups. The whole
-> > point is about cgroup.
-> 
-> Yeah I know what cgroup represents. Which is why I mentioned in the
-> next paragraph that are still making decisions based per-cgroup - we
-> just organize the per-cpu cache based on swap devices. This way, two
-> cgroups with similar/same priority list can share the clusters, for
-> each swapfile, in each CPU. There will be a lot less duplication and
-> overhead. And two cgroups with different priority lists won't
-> interfere with each other, since they'll target different swapfiles.
-> 
-> Unless we want to nudge the swapfiles/clusters to be self-partitioned
-> among the cgroups? :) IOW, each cluster contains pages mostly from a
-> single cgroup (with some stranglers mixed in). I suppose that will be
-> very useful for swap on rotational drives where read contiguity is
-> imperative, but not sure about other backends :-? 
-> Anyway, no strong opinions to be completely honest :) Was just
-> throwing out some ideas. Per-cgroup-per-cpu-per-order sounds good to
-> me too, if it's easy to do.
+Hello,
 
-Good point!
-I agree with the mention that self-partitioned clusters and duplicated priority.
-One concern is the cost of synchronization.
-Specifically the one incurred when accessing the prioritized swap device
-From a simple performance perspective, a per-cgroup-per-CPU implementation
-seems favorable - in line with the current swap allocation fastpath.
+syzbot found the following issue on:
 
-It seems most reasonable to carefully compare the pros and cons of the           
-tow approaches.
+HEAD commit:    1c66f4a3612c bpf: Fix state use-after-free on push_stack()..
+git tree:       bpf-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1346ed70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=73696606574e3967
+dashboard link: https://syzkaller.appspot.com/bug?extid=a36aac327960ff474804
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1392610c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a9ee0c580000
 
-To summaraize,
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/2ddb1df1c757/disk-1c66f4a3.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6a318fc92af0/vmlinux-1c66f4a3.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/76c58dddcb6c/bzImage-1c66f4a3.xz
 
-Option 1. per-cgroup-per-cpu
-Pros: upstream fit. performance. 
-Cons: duplicate priority(some memory structure consumtion cost), 
-self partioned cluster 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a36aac327960ff474804@syzkaller.appspotmail.com
 
-Option 2. per-cpu-per-order(per-device)
-Pros: Cons of Option1
-Cons: Pros of Option1
+------------[ cut here ]------------
+verifier bug: add backedge: no SCC in verification path, insn_idx 9(1)
+WARNING: CPU: 1 PID: 5838 at kernel/bpf/verifier.c:1970 add_scc_backedge kernel/bpf/verifier.c:1969 [inline]
+WARNING: CPU: 1 PID: 5838 at kernel/bpf/verifier.c:1970 is_state_visited kernel/bpf/verifier.c:19417 [inline]
+WARNING: CPU: 1 PID: 5838 at kernel/bpf/verifier.c:1970 do_check+0xda21/0xdba0 kernel/bpf/verifier.c:19861
+Modules linked in:
+CPU: 1 UID: 0 PID: 5838 Comm: syz-executor286 Not tainted 6.15.0-syzkaller-g1c66f4a3612c #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:add_scc_backedge kernel/bpf/verifier.c:1969 [inline]
+RIP: 0010:is_state_visited kernel/bpf/verifier.c:19417 [inline]
+RIP: 0010:do_check+0xda21/0xdba0 kernel/bpf/verifier.c:19861
+Code: 01 90 48 b8 00 00 00 00 00 fc ff df 41 0f b6 04 06 84 c0 0f 85 2b 01 00 00 41 8b 75 00 48 c7 c7 20 49 91 8b e8 d0 05 ad ff 90 <0f> 0b 90 90 e9 27 fe ff ff e8 11 5d e9 ff e8 3c 10 4d 00 ba 38 00
+RSP: 0018:ffffc900043eeec0 EFLAGS: 00010246
+RAX: 53f7659fb2f02200 RBX: ffffc900043ef180 RCX: ffff8880257d1e00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
+RBP: ffffc900043ef2c8 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bfaa44 R12: ffff88801c7a4b00
+R13: ffff88801c7a4b54 R14: 1ffff110038f496a R15: 0000000000000000
+FS:  000055556bd6a380(0000) GS:ffff888125d54000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000ebea398 CR3: 00000000713fa000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ do_check_common+0x18fa/0x2460 kernel/bpf/verifier.c:23086
+ do_check_main kernel/bpf/verifier.c:23177 [inline]
+ bpf_check+0x110e2/0x1a240 kernel/bpf/verifier.c:24530
+ bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2972
+ __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5978
+ __do_sys_bpf kernel/bpf/syscall.c:6085 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:6083 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6083
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f37a741f569
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe3011bf08 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007ffe3011c0d8 RCX: 00007f37a741f569
+RDX: 0000000000000094 RSI: 0000200000000840 RDI: 0000000000000005
+RBP: 00007f37a7492610 R08: 00007ffe3011c0d8 R09: 00007ffe3011c0d8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffe3011c0c8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
 
-It's not easy to draw a definitive conclusion right away, 
-I should also evaluate other pros and cons that may arise during actual 
-implementation.
-so I'd like to take some time to review things in more detail 
-and share my thoughs and conclusions in the next patch series.
 
-What do you think, Nhat and Kairui?
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
