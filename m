@@ -1,82 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0663715573F;
-	Fri, 13 Jun 2025 14:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4785115573F;
+	Fri, 13 Jun 2025 14:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826475; cv=none; b=h05kQregjzWd5WbxzKA2uwySHhQgMDRwiHVuX7xf06/dcn+OWwQqqmdqjnF4d3qtQC5+Aev3QzG2gN8v0Ltiibm19dd7uWeUkXcpoiYpvXXlgqj7cdlXnGAGVkisJnBcatmS6eyBfF64kLWklGPtm94fCyTzLwmwm/JFsGnx4Ng=
+	t=1749826480; cv=none; b=r6ymeWqUIqGA8Rjj7otO7KbKDNQWfpyJBv51tnwx2huYpZTeGtpsUniXTagwJmbub2g/vsrjg+eJbGxLil49p9aZU3va8DSR9sMVsW6+IENNY915xFj1T678JNSbC5A6K7sHgoXobu4yQt8BdFVV8uH67qLnthC1ytp09pdbAVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826475; c=relaxed/simple;
-	bh=+637aPsLSU1UEPvOQGQyJUY4IglUTgPupGHZwaGPQ9w=;
+	s=arc-20240116; t=1749826480; c=relaxed/simple;
+	bh=HINBjh/f4wDEC+TsMpSPMskJo5DvoYsxBTVJ6SzjUBQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCE9DC352qGtv/GEfl4Ll+Bkw+WHDem1kDw7IUqJ7JARZXwQX6y0oZqprlqh1K1pqItBHBC4UMpWjkGd2Ec4kywIJa1ZNFmRYk6ABYp3XMaAEVgcWpMZZQYTaZ8XUSRyFMICgDlxYVq1LJ29DhWEUT7NWDT6iMzGNbsQwcj5xs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0Pct+Gi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vliy6HxzSpw2TbUjBkPvxi0yrF8lTvg/IRs5KeGCJ2t5vm8QNcajh+BwyfZBMX8S9G3iLyixDOyIzeFKPGFWiwRzwJprhjd9iVFUVuo1GO6E/nal8HyjaFvHaNl9n5zYTMN5J/oJHgQ5In/Y2u0CrNz+w7G/VOd4eK5CT+uvQo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oyU8Moeb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0GYAM/3a; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0Pct+Gi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A72CC4CEE3;
-	Fri, 13 Jun 2025 14:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749826474;
-	bh=+637aPsLSU1UEPvOQGQyJUY4IglUTgPupGHZwaGPQ9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p0Pct+Gi1hoDM0LZBCspzjOIqDTyyl/V2GwGBXdSGFwBLlkILUhpHpVlgfCrMUpLJ
-	 ft/YOmBjSQkitEQeADRDy2IJMuk2s5qeBmYAfOLlPe0KfidAf0uWqoe3GG3Quh0jbo
-	 vp59Zhbn5w3KL5AqV7PvQSSpyi9eG2fk5e6Zy6Qs1qFJrouqOACDQ4QVEPy68nKiWv
-	 m3H7my7AX4igycSxvPU6isS/XSrmG3VhiMT6KxJXgvyR2tEjCKY7d1g5iorVm6fZVk
-	 0LaMA8e65dqZijj1V1l+R6N9sVXHtRmMSZOPejxKl/4h0RJMRbDrFlJsHL7+g8myjt
-	 N3zheeKbLKx8w==
-Date: Fri, 13 Jun 2025 07:54:33 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tytso@mit.edu,
-	john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com, brauner@kernel.org,
-	martin.petersen@oracle.com, yi.zhang@huawei.com,
-	chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH 01/10] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to
- queue limits features
-Message-ID: <20250613145433.GF6134@frogsfrogsfrogs>
-References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
- <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
- <20250611060900.GA4613@lst.de>
- <343f7f06-9bf6-442f-8e77-0a774203ec3f@huaweicloud.com>
- <20250612044744.GA12828@lst.de>
- <41c21e20-5439-4157-ad73-6f133df42d28@huaweicloud.com>
- <20250612150347.GK6138@frogsfrogsfrogs>
- <3569a77f-1f38-4764-b1e3-d0075775c7bb@huaweicloud.com>
- <20250613055630.GA9119@lst.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oyU8Moeb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0GYAM/3a"
+Date: Fri, 13 Jun 2025 16:54:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749826476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UCgNyye0M5YlG5NmnZwHEEWDQzhX8B00XQ+oHNnuIUU=;
+	b=oyU8MoebGpq/R3iMgUVafJtAEsb9P557A0iORlS/dJI72zIN4TrWAwdJAtSYoHaAQk8N+v
+	w28d+Y0mtgPLK90FPMoBJPRI89hHbvhh920vLgySRYVuOiio/MqXa+oz3Z6Tdkw6HZpx8C
+	ld7SUpGSAt399vTh29eZ55UOIQIvyjf9Ez+k4MJij/91ZS+wguTbxnxLlLXvPnDxUuOUEe
+	3Q+metjbiye9B8etwJ437a94eNzqmiLRgA+ZaGb964HKpTuDPm4E8fdgJ/GOdrNDAXIHy6
+	r4ZpW6jtnbu699BETygIlClbiguxI24D6WEU3rJbLTFTC1tq6eg5ZyYTLfFvkg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749826476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UCgNyye0M5YlG5NmnZwHEEWDQzhX8B00XQ+oHNnuIUU=;
+	b=0GYAM/3awel+LSlkSj40gYMyxveX/JYMnZkFztKf1o3erEzycoPwxY8mp6afTVmrSTcEj6
+	9dTYQB80soPTcEBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Marc =?utf-8?Q?Str=C3=A4mke?= <marc.straemke@eltropuls.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to intel
+ IGB
+Message-ID: <20250613145434.T2x2ML8_@linutronix.de>
+References: <cb0d6ffc-acb3-4974-8f93-c86a6479109b@eltropuls.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250613055630.GA9119@lst.de>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cb0d6ffc-acb3-4974-8f93-c86a6479109b@eltropuls.de>
 
-On Fri, Jun 13, 2025 at 07:56:30AM +0200, Christoph Hellwig wrote:
-> On Fri, Jun 13, 2025 at 11:15:41AM +0800, Zhang Yi wrote:
-> > Yeah, this solution looks good to me. However, we currently have only
-> > two selections (none and unmap). What if we keep it as is and simply
-> > hide this interface if BLK_FEAT_WRITE_ZEROES_UNMAP is not set, making
-> > it visible only when the device supports this feature? Something like
-> > below:
-> 
-> I really hate having all kinds of different interfaces for configurations.
+On 2025-06-10 13:23:13 [+0200], Marc Str=C3=A4mke wrote:
+> Hello Everyone, I am reposting to LKML as I am not sure the rt-users
+Hi,
 
-I really hate the open-coded string parsing nonsense that is sysfs. ;)
+> mailinglist is read by many people, (I hope that is okay)
+>=20
+> On an AMD Ryzen Embedded machine I am experiencing strange Latency spikes=
+ in
+> cyclictest and need some hints how to debug that further.
+>=20
+> The system typically has max latencys of=C2=A0 88 us and averages of 4-8 =
+which is
+> more then sufficient for my application, but I saw some spikes of many
+> hundred us in testing.
+>=20
+> I can provoke latenciess of more then 500-1000 us by invoking "ip l set
+> enp1s0 promisc off" on the first network interfaces. The network interface
+> is an "Intel Corporation I210 Gigabit Network Connection" using the IGB
+> driver.
+>=20
+> I tried more or less all tracers but am not knowledgeable enough to make
+> sense of the output. IRQSoff and wakeup_rt trace output attached.
 
-> Maybe we should redo this similar to the other hardware/software interfaces
-> and have a hw_ limit that is exposed by the driver and re-only in
-> sysfs, and then the user configurable one without _hw.  Setting it to
-> zero disables the feature.
+I'm not sure what your two traces captured. The irqsoff_trace captured
+208us and this looks like a regular top of the run_ktimerd() invocation.
+There is not much going on.
 
-Yeah, that fits the /sys/block/foo/queue model better.
+wakeup_rt_trace shows the wakeup of cyclictest. It records 411us. Most
+of it is scheduler itself with some 100us from
+flush_smp_call_function_queue().
+=20
+> Can anyone point me in the right direction? I am not sure how to interpret
+> the function tracers and function_graph tracers output in a meaningful wa=
+y.
+> As mainly a user of of the kernel I am a bit overwhelmed by the interacti=
+on
+> of the scheduler, RCU and so on..
 
---D
+
+Could you please try one of the following:
+- enable sched tracing events and tell cyclictest to break & stop
+  tracing? The options for cyclitest would be -b --tracemark.
+  The idea to see the scheduler events before the delay happens. So your
+  latency spike is 500us then you can try -b 490 or so.
+
+- use rtla. This might be easier and give you the backtrace of what you
+  are looking for
+  	https://bristot.me/linux-scheduling-latency-debug-and-analysis/
+
+> I have attached my config for reference.
+
+There is nothing wrong with it. You might want to disable NO_HZ (and use
+PERIODIC) and use HZ=3D250 (or less)=20
+
+> Kind Regards
+>=20
+> Marc
+>=20
+
+Sebastian
