@@ -1,124 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6FA1AF0A7
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7A71C84BB
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826485; cv=none; b=Mid21i3I+VhEvUbs8HmP02cEh3DDcOIKaSC04jmhLuktGK53A4K4cyp/x6Pn0Hibuplozr0ZFki0QzZ+3NC3k7ooNwYAHepfBbTDzyGrYcDEqYQzygBJASPpdtMoiJLXLEXwUkjd0sSGgPX9eBvcgdajehFzQ7H/ZA4ccbgS/XM=
+	t=1749826488; cv=none; b=WhbxzAqPFewt6bQcOE+2N/rAVoqLgmUKoXOMV73hF2wDzaq7qW8P0hw+G2vY8J8XL6/DKWeTMRZ80lNYQm3syoRGtzO9gt2Cps93dj06CJBIIDxEQ0PbaOD2Bbs9MBxohtvNPK4ztRTqLHuN7MXFRluo/Nh91PNgkJcUy8DpNaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826485; c=relaxed/simple;
-	bh=LLeEIarksbDR+ruAO6Ua1Prx+jcWWce/HEzaa3B8Jro=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=cwMrdYyJNQWbh4XhoMTgzySETO1JUSoieAK9/dAqdt7el5qWrH/4joO+xozfXmv6f38fSaOBLmI6r5AEUco8M0SSknOT8rcMcf/KSC+kw+j5T4iQUu6tusQPFwYX1im7QjJYJ5dPa/HRwOtQrJoldjKD2NnSXRKHvqpsvSSNH78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S5mgAT/n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749826488; c=relaxed/simple;
+	bh=KlOZtFzzm6PfyrjqYCI+ew2XZogAweu4gTEHDHk+aT8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JNZELDgHN9q+GhZyKIP92TO5dpd+W7vgc/VQQGkQhAPelZqU8qJ4scFGNusSELnYNllI32rQ2C+NEUvmFR7zBR9Vp8Fh7FoPXMCZ+paFJresdnmE39n4oZr+GyiBHmWznhnxj+wNw1n9sOq2hVTJgLzryoBGI/KrmzWOOwZHya8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nw+QO0Q7; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S5mgAT/n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749826482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=9So26a++MHUdK9v3881Z330reK+K0iJs2Fhpuw5P5s0=;
-	b=S5mgAT/nIU6yCDI9MzuSnKyyORxm72Ltaau04jj9B4UR8KoR3oT7q5bZcI0BAekNtiDqex
-	QJmOmghcWDO7StJE5k4ToA19gyz8sFADmF1+oRZDbrPFZk2URnw61ZYw58YmKHoUO2O6We
-	mO8goQnbeBY2EeD/s/XPr6JOEiGF/Mk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-446--al5Mx2MNJW6W7t9IKXaOg-1; Fri,
- 13 Jun 2025 10:54:38 -0400
-X-MC-Unique: -al5Mx2MNJW6W7t9IKXaOg-1
-X-Mimecast-MFC-AGG-ID: -al5Mx2MNJW6W7t9IKXaOg_1749826477
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nw+QO0Q7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749826487; x=1781362487;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KlOZtFzzm6PfyrjqYCI+ew2XZogAweu4gTEHDHk+aT8=;
+  b=nw+QO0Q7zQUTKCa3idab9VHUshwUOVARhVN1e5rK/dSWJuzruXRNVwwI
+   vEMH0iecva/007lHwqCQ+ATDaYZ1EkIaz2v8/f9BB6hcDnIe8rMUtJnH2
+   qDJAEk7pKUb0QhPdVp/SMxhbJYNNrV6D4k3uZjZHEZK4IE6lNeBlnFH7N
+   R30c65dSUoGMfiWXZPptjsqhZstUmbdTHD0H5AEQTyRz3BZ/xFYWsNKWf
+   8Pf1JKmEIBuc+1Ie2IJVnalVwPWxT/alzqrLT1AjcJyuCTMg5sqdoMYgG
+   /eD/HhQOPGomsH6DhakpDN4tVcuCyJh9XLfKZDwV39CtIKiTv6x5O2kfT
+   w==;
+X-CSE-ConnectionGUID: ogwElbsTTuCqARGfZJv76g==
+X-CSE-MsgGUID: wAdkRKVQQLGcEEbiXkQTvQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="52192524"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="52192524"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 07:54:46 -0700
+X-CSE-ConnectionGUID: Pxh/EBSeQVaux7k8fdu20A==
+X-CSE-MsgGUID: ROsQTaztR1WdTTnZcGsROQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="148392590"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 07:54:46 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 298081956080;
-	Fri, 13 Jun 2025 14:54:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.18])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DF932195E340;
-	Fri, 13 Jun 2025 14:54:31 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-    Stephan Mueller <smueller@chronox.de>, Simo Sorce <simo@redhat.com>,
-    torvalds@linux-foundation.org, Paul Moore <paul@paul-moore.com>
-cc: dhowells@redhat.com, Lukas Wunner <lukas@wunner.de>,
-    Ignat Korchagin <ignat@cloudflare.com>,
-    Clemens Lang <cllang@redhat.com>,
-    David Bohannon <dbohanno@redhat.com>,
-    Roberto Sassu <roberto.sassu@huawei.com>, keyrings@vger.kernel.org,
-    linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Module signing and post-quantum crypto public key algorithms
+	by linux.intel.com (Postfix) with ESMTPS id 6D06320B5736;
+	Fri, 13 Jun 2025 07:54:44 -0700 (PDT)
+Message-ID: <03cfdc36-a7b9-4098-bc21-cb612907add2@linux.intel.com>
+Date: Fri, 13 Jun 2025 10:54:43 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <501215.1749826470.1@warthog.procyon.org.uk>
-Date: Fri, 13 Jun 2025 15:54:30 +0100
-Message-ID: <501216.1749826470@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
-
-Hi,
-
-So we need to do something about the impending quantum-related obsolescence of
-the RSA signatures that we use for module signing, kexec, BPF signing, IMA and
-a bunch of other things.
-
-From my point of view, the simplest way would be to implement key verification
-in the kernel for one (or more) of the available post-quantum algorithms (of
-which there are at least three), driving this with appropriate changes to the
-X.509 certificate to indicate that's what we want to use.
-
-The good news is that Stephan Mueller has an implemementation that includes
-kernel bits that we can use, or, at least, adapt:
-
-	https://github.com/smuellerDD/leancrypto/
-
-Note that we only need the signature verification bits.  One question, though:
-he's done it as a standalone "leancrypto" module, not integrated into crypto/,
-but should it be integrated into crypto/ or is the standalone fine?
-
-The not so good news, as I understand it, though, is that the X.509 bits are
-not yet standardised.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 03/12] x86/fpu/xstate: Add xsaves_nmi
+To: Dave Hansen <dave.hansen@intel.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+ dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
+ jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+ linux-kernel@vger.kernel.org
+Cc: dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250613134943.3186517-4-kan.liang@linux.intel.com>
+ <c7bfcaf2-1669-4d6f-afb2-9bbcadfcde9e@intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <c7bfcaf2-1669-4d6f-afb2-9bbcadfcde9e@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-However!  Not everyone agrees with this.  An alternative proposal would rather
-get the signature verification code out of the kernel entirely.  Simo Sorce's
-proposal, for example, AIUI, is to compile all the hashes we need into the
-kernel at build time, possibly with a hashed hash list to be loaded later to
-reduce the amount of uncompressible code in the kernel.  If signatures are
-needed at all, then this should be offloaded to a userspace program (which
-would also have to be hashed and marked unptraceable and I think unswappable)
-to do the checking.
 
-I don't think we can dispense with signature checking entirely, though: we
-need it for third party module loading, quick single-module driver updates and
-all the non-module checking stuff.  If it were to be done in userspace, this
-might entail an upcall for each signature we want to check - either that, or
-the kernel has to run a server process that it can delegate checking to.
+On 2025-06-13 10:39 a.m., Dave Hansen wrote:
+> On 6/13/25 06:49, kan.liang@linux.intel.com wrote:
+>> + * This function can only be invoked in an NMI. It returns the *ACTUAL*
+>> + * register contents when the NMI hit.
+> 
+> Yes, but why is this important and what are the implications?
+> 
+> It's important because all of the other mechanisms that deal with xstate
+> are _trying_ to get something coherent. They're trying to, for instance,
+> poke at the PKRU register for userspace and we need to ensure that the
+> PKRU value that's being targeted is for the right task and is actually
+> in memory (if that's what we're after).
+> 
+> This interface is totally *in*coherent. There's no telling what was in
+> the registers when the NMI hit. That seems crazy compared to all the
+> other FPU code in the kernel. But it's actually OK for perf because
+> there's a separate hardware mechanism that saves XSAVE-managed state off
+> to memory. That mechanism also writes whatever was in the registers when
+> the NMI hit. It's also completely incoherent.
+> 
+> That's really the only reason this insanity is OK. perf can _already_
+> handle XSAVE "snapshots" from random code running. This just provides
+> another XSAVE data source at a random time.
+> 
+> Could we get some of that ^ into the changelog and function comment, please?
 
-It's also been suggested that PQ algorithms are really slow.  For kernel
-modules that might not matter too much as we may well not load more than 200
-or so during boot - but there are other users that may get used more
-frequently (IMA, for example).
+Sure. Thanks for the details. I will add it in both the changelog and
+function comments.
 
+> 
+> One other thing...
+> 
+> XSAVES uses the modified optimization. That means if you did something
+> like this:
+> 
+> NMI=>
+> 	xsaves_nmi();
+> <=IRET
+> ... run a little bit in the kernel
+> NMI=> // another NMI
+> 	xsaves_nmi();
+> <=IRET
+> 
+> The second XSAVES might not actually write anything to the buffer
+> because the registers didn't change (they weren't modified). Is that OK?
 
-Now, there's also a possible hybrid approach, if I understand Roberto Sassu's
-proposal correctly, whereby it caches bundles of hashes obtained from, say,
-the hashes included in an RPM.  These bundles of hashes can be checked by
-signature generated by the package signing process.  This would reduce the PQ
-overhead to checking a bundle and would also make IMA's measuring easier as
-the hashes can be added in the right order, rather than being dependent on the
-order that the binaries are used.
+Yes. The per-cpu buffer in perf is only used by this XSAVES. No one will
+clear it or modify it between the two xsaves_nmi().
 
-David
+Thanks,
+Kan
 
