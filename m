@@ -1,87 +1,86 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1973C18A6AD;
-	Fri, 13 Jun 2025 02:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB57241682;
+	Fri, 13 Jun 2025 02:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749783158; cv=none; b=QHR3l3CftiSNdHbQFZsavZ7Jc4/oaTtyz/Z2qxM46ixbLEXwdLDaMgvcZRGDAoWKMNPIecQzdJiKyikos3aviA5NBOcN23aLvQ7nN0FNeVUDtgcZncIOSK7tcQqjIi6XQN+MF/E0Xu7cKDRfoFIWeHtsmMVqWpIHi3y2eUlZ0Bk=
+	t=1749783173; cv=none; b=f08eQm1oqtTV/N8U1opZiaSqicb+tIGdHGn0lrRJwQtkTMs8K0tXHv4YgL79UvssrP1PXe6D7pUJksJ+cxKRKdh0bZf/GSq0GnsBqIgArjG8YplluIon27/wOH3pQclPNkSAgaYg+mvn4+wZdAqWAcJl7uigCwDLHarAYF5Rv4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749783158; c=relaxed/simple;
-	bh=QyazcMeLFCkjCNo07nRBEmSyIRcBs2tA3az6DgTS+js=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=V0E0MPIfD4yjEg4PpzB1FIlEvFy2fqXaHANRNYDTIl3pi66FMX50WaRxzJeYrpGsUK1xeV9gGsVNnRn4pWrJfcQ6xprsDoMLjGJC0bT5efhRSWa2pkOT8EzWLqaBQvquF/UTWn+IX9xRopuIrT3Rub0Ph+hLoyBs7Q1kS+3gjGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uPuWv-009nYt-2o;
-	Fri, 13 Jun 2025 02:52:33 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1749783173; c=relaxed/simple;
+	bh=PoFqwsN2B5EhmtK22GXTU6a0tOLOFfisaWvAwGCVCQc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hp/QLX+FTQ3Lvi1oOeWrl91BvIATgDiYHj1Yx1/Nyf5PDSIs+NvqUc/UFdujFDcAUBTFgoLY7c93m7nzqELpydZRHFDt5i4Uq6od199ixMtWkE0Vwf0YkFvMz0iCxguXL65H4XcsXNGp91Ko1gKqJHpDh/tiSkg1l+o3Bri6rc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K3JadRX0; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K3JadRX0"
+Message-ID: <00a22161-1e40-4ec0-be4f-e2c5dadbfe0b@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749783169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CX+/VP1MiFLEdPtc2XaV4WX2ozXiPR9ceMVaJT/kqo8=;
+	b=K3JadRX0L2XSsGP/L0Q60CTd0b7I3e0wO1qHdGbl9W6sC0cO3F2BTcmkbn7MUOAN+pa+Rq
+	OzoEPfTSFHhfFBBpuWCBOXFzazPBLnhxmEvhEJdl5LEUFRrLV51VAPeOa2zXgghAih+B9K
+	Qgse4sRpiB6VkBNYrdSbc7JqzmWowgE=
+Date: Fri, 13 Jun 2025 10:52:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: Al Viro <viro@zeniv.linux.org.uk>, Kees Cook <kees@kernel.org>,
- Joel Granados <joel.granados@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] proc_sysctl: remove RCU annotations for accessing ->sysctl
-Date: Fri, 13 Jun 2025 12:52:32 +1000
-Message-id: <174978315268.608730.1330012617868311392@noble.neil.brown.name>
+Subject: Re: [PATCH bpf-next 2/2] bpf: Add show_fdinfo for kprobe_multi
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <20250612115556.295103-1-chen.dylane@linux.dev>
+ <20250612115556.295103-2-chen.dylane@linux.dev>
+ <CAADnVQLbpO7PED01OVZXTLib_hBYzwpC5hFyR_WMCCx8obR1Hw@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAADnVQLbpO7PED01OVZXTLib_hBYzwpC5hFyR_WMCCx8obR1Hw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+
+在 2025/6/13 00:01, Alexei Starovoitov 写道:
+> On Thu, Jun 12, 2025 at 4:56 AM Tao Chen <chen.dylane@linux.dev> wrote:
+>>
+>> Show kprobe_multi link info with fdinfo, the info as follows:
+>>
+>> link_type:      kprobe_multi
+>> link_id:        4
+>> prog_tag:       279dd9c09dfbc757
+>> prog_id:        30
+>> type:   kprobe_multi
+>> func_cnt:       8
+>> missed: 0
+>> addr:   0xffffffff81ecb1e0
+> 
+> fdinfo shouldn't print kernel addresses.
+> It defeats kaslr
+> 
+
+How about print the function name corresponding of the address, or
+don't show the addr info.
+
+> pw-bot: cr
 
 
-The ->sysctl field of a procfs inode is only set when the inode is
-created, and when it is being evicted.  In both these cases there cannot
-be concurrent accesses and so using RCU_INIT_POINTER() and
-rcu_dereference() is misleading.
-
-I discovered this with some devel code which called d_same_name()
-without holding the rcu_read_lock() - rcu_dereference() triggered a
-warning.  In mainline ->d_compare is called from d_alloc_parallel()
-without rcu_read_lock() after taking ->d_lock.  It is conceivable that
-the d_inode will have been set while waiting for that lock so mainline
-could trigger the same warning.
-
-This patch removes those accessor call.  Note that the sysctl field is
-not marked __rcu so sparse complains too.
-
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/proc/inode.c       | 2 +-
- fs/proc/proc_sysctl.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index a3eb3b740f76..c3991dd314d9 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -42,7 +42,7 @@ static void proc_evict_inode(struct inode *inode)
- 
- 	head = ei->sysctl;
- 	if (head) {
--		RCU_INIT_POINTER(ei->sysctl, NULL);
-+		ei->sysctl = NULL;
- 		proc_sys_evict_inode(inode, head);
- 	}
- }
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index cc9d74a06ff0..976d7605560f 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -928,7 +928,7 @@ static int proc_sys_compare(const struct dentry *dentry,
- 		return 1;
- 	if (memcmp(name->name, str, len))
- 		return 1;
--	head = rcu_dereference(PROC_I(inode)->sysctl);
-+	head = PROC_I(inode)->sysctl;
- 	return !head || !sysctl_is_seen(head);
- }
- 
 -- 
-2.49.0
-
+Best Regards
+Tao Chen
