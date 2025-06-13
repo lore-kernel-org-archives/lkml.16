@@ -1,135 +1,63 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE242135DE;
-	Fri, 13 Jun 2025 17:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEF1221D94;
+	Fri, 13 Jun 2025 17:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835309; cv=none; b=XX+DOTDdXs/XwpQcBqSNXKDc9qOIwSgVwwPveL7Zcm3jGW4cXNqnQTbn62kZsMtHh1j+nb6AS3P0FkX/AVy/Rg5jCXJa04BDkyOms+hZkM0POAXaW0kHhU7fug0vSn5MOr6uHJdghMgqDp//CJydT1ErRNnOYsO//Lrvl1hsKn0=
+	t=1749835327; cv=none; b=FWQ3zXI5/7k8s2lZN1szdV9AOSKKFsadjBLyT0pBENHVidWETOwfXoS2w7YLHgv8UXyEf9dlVEGc2rQqJVY9K/n2ZeeQrBob1SvtgwwANr03s1Tselo5wS8XHshm/GpUzSutypBwbDZqs960rJ0LIpz5DxiHPMBMuVfd3tol0Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835309; c=relaxed/simple;
-	bh=eRnKs8j9H4fFplY7rCQn3snlu+4OvYLtYMEVvRyx5C0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qMjsEvnaDKlYymH4fOedHSknqpTRub+BrOkWMcfaqp5nnTazEOSu4WYeUKBmiGWvcnEfyf6IAa100MHFGMN1dp+MrFi81gdi98SIXaf2B6GUwt9oRpNNEjG29qbC3znVrpzIYgMQ41EzHDNMEScsyAeRr28NlidWVfL2ESUXXiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R4LShqXi; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749835327; c=relaxed/simple;
+	bh=vwBsTCNzuvd2dupHBYfyTfQ8bE4absbZ11K/tiCsRNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B71+T2GpOTn4rDOv2rvqX37t3ZkvhwjLFfzBPFcQHQ5vOW71H6ZhVeBAEqXXUQ19q24MYGPOnQr0G/9aGp13+La+zmLjwtzgYfp6ikeFz7TXK8q1LufMcevvFlrBarrcRdHk2s4x48C2eQWeroOM24HpsjlrhmBT6anZsjDREYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEsT7eRL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R4LShqXi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6E9F1439C1;
-	Fri, 13 Jun 2025 17:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749835305;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NFvaZPsj89bK1e6TtRA9hK2VWG2Z97VXIvjyuBUmYi8=;
-	b=R4LShqXipvsxVDwypZ8S+KVkqWhF2zcN7yOVYmnFZ4hxx2Y8DOZ4uXur4lCcAQlDojkX9g
-	t1EAsawwkCXD4DX0QytsDjPnRrCTMKKA2C7sLSYBYaMK9XTPv5NW/xsX9fiqeZlgamjfcM
-	7Ea4r4rkM/YpFJVSVoBflTXPq09+dY3ABZGwpedgopieyujCQTQjOGNKkTASPzthHReBKS
-	tfiu98+BOaIP/zYGC7GLMmUqlMzGA8uWwXjTCdEdc2RSACSRgC8VdrgCqyGr85cM3vzJ3g
-	1LVCTjL2ZVcLAuJ78O/bIfPAEWL8+XVf3fJuxjktFiddNTIiEzv/PWTy5Z+qPQ==
-Date: Fri, 13 Jun 2025 19:21:42 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Andrew Davis <afd@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas
- Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, Roger
- Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, Paul
- Barker <paul.barker@sancloud.com>, Marc Murphy <marc.murphy@sancloud.com>,
- Jason Kridner <jkridner@gmail.com>, Bajjuri Praneeth <praneeth@ti.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/7] dt-bindings: omap: Add missing AM33xx compatible
- strings
-Message-ID: <20250613192142.5077fc75@kmaincent-XPS-13-7390>
-In-Reply-To: <db82d506-3d10-4f6d-a100-d29e3685ba46@ti.com>
-References: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
-	<20250613-bbg-v3-1-514cdc768448@bootlin.com>
-	<db82d506-3d10-4f6d-a100-d29e3685ba46@ti.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEsT7eRL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12C81C4CEE3;
+	Fri, 13 Jun 2025 17:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749835327;
+	bh=vwBsTCNzuvd2dupHBYfyTfQ8bE4absbZ11K/tiCsRNs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MEsT7eRL6JrEIuku4A0EIVBooeMAO8jrzb2HeqEXKKjOeHx8i3OVLyniOOizD0jsS
+	 FZRERjS9f5/nWwQmlmGPMrjML6VUZsIuv0AHqou1jLGY2h2yGiYT7YtjPq8x9tQ2Gi
+	 en9AbvEZqRGwEroqPIAYt2bdu4Uqu5A4XNebI/1ga9brxLyYHNswSYe/mt2CP4x0ST
+	 043HMpkswX0cQ7GCBa2F7X53M+78goRhSQBkihJ95tRUeqXcaIGSRY8uHeMDn2GNy6
+	 DgFZiLgAA3OQ4efuWYekiFK1pJC8Y/tq4PiYiwza//T3Er8we0ky6GQtQfKpQURwNU
+	 juVVmcq/xKOgg==
+Date: Fri, 13 Jun 2025 18:22:03 +0100
+From: Simon Horman <horms@kernel.org>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, skhan@linuxfoundation.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2 net-next] net: ipconfig: replace strncpy with strscpy
+Message-ID: <20250613172203.GO414686@horms.kernel.org>
+References: <20250612114859.2163-1-pranav.tyagi03@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeehfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgduleemkeehkeejmeejuddttdemfedttgefmeektgehsgemfhdtkegumeegfeegsgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekheekjeemjedutddtmeeftdgtfeemkegthegsmehftdekugemgeefgegspdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrfhgusehtihdrtghomhdprhgtphhtthhopehtohhnhiesrghtohhmihguvgdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgp
- dhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrghrohdrkhhoshhkihhnvghnsehikhhirdhfihdprhgtphhtthhopegrnhgurhgvrghssehkvghmnhgruggvrdhinhhfohdprhgtphhtthhopehkhhhilhhmrghnsegsrgihlhhisghrvgdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612114859.2163-1-pranav.tyagi03@gmail.com>
 
-Le Fri, 13 Jun 2025 12:10:47 -0500,
-Andrew Davis <afd@ti.com> a =C3=A9crit :
+On Thu, Jun 12, 2025 at 05:18:59PM +0530, Pranav Tyagi wrote:
+> Replace the deprecated strncpy() with strscpy() as the destination
+> buffer is NUL-terminated and does not require any
+> trailing NUL-padding. Also increase the length to 252
+> as NUL-termination is guaranteed.
+> 
+> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
 
-> On 6/13/25 10:49 AM, Kory Maincent wrote:
-> > Add several compatible strings that were missing from the binding
-> > documentation for AM33xx-based boards. Update vendor prefix from
-> > "ti" to "beagle" for BeagleBone to match actual hardware vendors.
-> >=20
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > ---
-> >=20
-> > Change in v3:
-> > - Change vendor prefix from ti to beagle
-> > - Remove BeagleBone board variant description.
-> >=20
-> > Change in v2:
-> > - New patch
-> > ---
-> >   Documentation/devicetree/bindings/arm/ti/omap.yaml | 22
-> > +++++++++++++++++++++- 1 file changed, 21 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/ti/omap.yaml
-> > b/Documentation/devicetree/bindings/arm/ti/omap.yaml index
-> > 3603edd7361d..45fa1c61cafd 100644 ---
-> > a/Documentation/devicetree/bindings/arm/ti/omap.yaml +++
-> > b/Documentation/devicetree/bindings/arm/ti/omap.yaml @@ -104,12 +104,32=
- @@
-> > properties:
-> >         - description: TI AM33 based platform
-> >           items:
-> >             - enum:
-> > +              - beagle,am335x-bone
-> > +              - beagle,am335x-bone-black
-> > +              - beagle,am335x-bone-black-wireless
-> > +              - beagle,am335x-bone-blue
-> > +              - beagle,am335x-pocketbeagle
-> > +              - bosch,am335x-guardian
-> >                 - compulab,cm-t335
-> > +              - grinn,am335x-chiliboard
-> > +              - grinn,am335x-chilisom
-> > +              - gumstix,am335x-pepper
-> > +              - isee,am335x-base0033
-> > +              - moxa,uc-2101
-> >                 - moxa,uc-8100-me-t
-> > +              - myir,myc-am335x
-> > +              - myir,myd-am335x
-> >                 - novatech,am335x-lxm
-> > -              - ti,am335x-bone
-> > +              - oct,osd3358-sm-refdesign
-> > +              - sancloud,am335x-boneenhanced
-> > +              - seeed,am335x-bone-green
-> > +              - seeed,am335x-bone-green-wireless
-> > +              - tcl,am335x-sl50
-> >                 - ti,am335x-evm
-> > +              - ti,am335x-evmsk
-> > +              - ti,am335x-shc =20
->=20
-> SHC looks like a Bosch board.
+Hi Pranav,
 
-Oh indeed it is, I missed that, thanks!
+Thanks for the updated patch.
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+I agree with your analysis above and that this patch is correct.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
