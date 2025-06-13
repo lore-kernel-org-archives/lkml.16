@@ -1,168 +1,132 @@
-Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C556819DF62
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AB545948
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749802006; cv=none; b=cedSbIog2v582zTNEuLa81APQDaBxdUo0uuFobmK4Lq/hEAG+nW4JSkCz/j9hiclPZkAejFiZ54xN/xq9F5f5jS0wLEAYkyO0NzDr6EYzQAxyiEl5wr0EwSDdKDZbF51S0FqP74DsAvPvMMGB5a2vX/K1l+y9IM17vK+xAqPpog=
+	t=1749802005; cv=none; b=Kh2s1LTse1Nh1W5e44ku6f0lMWfuSemCVXTzmqVDfwlf74yMhaave+Vdp4sp5+nVHLfKeFoARm2qOa7J3QE9aE70DDVSQ86AekwPPatO+rRjyFdUkzwCoFAWSxBG9Q0gS4fdSbaq0DNMsBrikicbdj5a2DwhdRw91nOlK47/2hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749802006; c=relaxed/simple;
-	bh=Lb+YJ4oNb1/AaOdtx6M5C75Jol27yzWvi223yojYa2g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GCmUsNoNzDqZaV6X/yvE4oX0hQI7fRxk/4MwjzJJ0fWhuqxgkoMPEcF5JNjJD84F5qSwTeT1J9QvqrAKFhD2mUcfw7VRI0QikG3FEOYP+NGsDFvCE/zFPPmvevR7GFD7ib0uP4qqFJT2CM8ZZwQJEvHiAmYbK7fzK0Yn6/hZUso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w011.hihonor.com (unknown [10.68.20.122])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bJX3z4g0mzYl9Bg;
-	Fri, 13 Jun 2025 16:04:31 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w011.hihonor.com
- (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
- 2025 16:06:40 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
- 2025 16:06:40 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <linux-f2fs-devel@lists.sourceforge.net>
-CC: <chao@kernel.org>, <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-	wangzijie <wangzijie1@honor.com>
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: introduce reserved_pin_section sysfs entry
-Date: Fri, 13 Jun 2025 16:06:26 +0800
-Message-ID: <20250613080626.1879314-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250613055109.2335-1-chao@kernel.org>
-References: <20250613055109.2335-1-chao@kernel.org>
+	s=arc-20240116; t=1749802005; c=relaxed/simple;
+	bh=SS6GUy7+iSGrMAI8Lio5hdVZyVEhieiGp9O0m4ddPPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NukhqYda6fJ4zm6TnF39I0+WqRDghz5rcBSooY5YmdzX1P0nc05ivoMsLGLL5Jcf9/l1Upp/0+1A+UNrncUIssEez3d7bPobFntNaPBG4Fb8Ve+dtBJfT73fMD7mt+N5aJLZDOXKUBmF9rBHZG6b4kH1kuDLm2iVGczOy90wuoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EsU2OSJH; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EsU2OSJH"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so1048585f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749802000; x=1750406800; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qkqDFUZXCEB8bR8DaJ2XDhGAG8e6Iv9Jz4tCnxztU5U=;
+        b=EsU2OSJH8aW92PaxpbLI9nQ0uktIgs64bW6Q/7YE+yj5YTwjEP5wr/44RSb4s4PT9Z
+         i0JrxeE95LjFUAm84dOodnUN2O47ha1oJV5BDUm7TboIxCel4kdWE1AZ148oqQYVNV0X
+         V35e42BUX38VqqzxxlLSAsxopnYvwsHKlyWO8Uy9D1KkE6c95rJLKjqLwZbnyFyBpqWT
+         XCA0PbRQz0tnDtigC25LeOxgVoCmZ5Es11wBvWvH5W+finrYiZA7fqCSsKsQzzpU4rF/
+         qcs3DgYtWDqR0j2Ec+HTfRTHI7+gjxzs5CItLEYzeFuhX3pVXiTR4EOo2BFh8lcu7H3v
+         25/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749802000; x=1750406800;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qkqDFUZXCEB8bR8DaJ2XDhGAG8e6Iv9Jz4tCnxztU5U=;
+        b=C19OqBthCt9utXaxuCDG7xWhYUCx7PGiPsPfouVKrjXo/ipfw4mheevFC19VEhLpHK
+         nOD2MH+ykQzgnjGn/bzuvR1YnVEhC78sLLUxCz7nN+pT7O6aAhRA7lZSO001UUVIixSg
+         NY/QnwkAwqLO8i/LCVLECSqouYYaMC2bf6dU9T9V4fRU+oi6sLRZM7nt8FfbzoQDYpzt
+         sKVIdbCTUve+DRVZ49onuzlTu4n/yFW2IZuMGyaS0r3ze7KVehxfKMajzzHO12CBh3Ks
+         jvxNK01c/gEB6LysecFwqFl5J3WAcvvg3P2RftQpLtsg3zCs8MiOFhaQ2kg8iN4jiBhi
+         xFvQ==
+X-Gm-Message-State: AOJu0YzuIfhYPraRFUFOsQgAzZ1C8FXYmQs96v6si2hdOmMDeabrd1nz
+	0DSAGKxkmThv/Hsv0BAjgOF1W+otzw0ucTIa3sodUPevtTCmvTm9GTXkcIInMSuMA6s=
+X-Gm-Gg: ASbGncu9NhLPJm+Iaw3GbAApsGCTI9kOLwuZW0KNDfSAr7n7kY31BbQfIp+VBOd5ypc
+	L9SAqENo/6uTqwq7x38RT5uQ+vCLGytJzsmI8hdaQq+sZTJ+w+1WfsjjXEAZKoNPIrPpEH3GS4w
+	B2rMZ3IfnCQPhWObyppf5vwvcCA6fcJB3xu5MjQOvqA7YaCQkoVHEak2v7VySgrLqghDAtVITV6
+	Q74b6gRttMw/c82JvGbRw7PUQb7AQRkgwtXMvxn26CDw+9v/htvifUA/2FgQu9xr8ii46Uh4zj/
+	aqViybmEHUn6MZxpK7/VcYF4XjRvnX7Yi4osPlwYeXI3dZM2eJE3zLy2ZEL3zXGDmuFMTTyWYGY
+	ZYVyBoVeXx/OmV4vToIIKQUDErkc=
+X-Google-Smtp-Source: AGHT+IG/O5UhDJVykXf2VjbwfD0QSNx5aG0GPegjXalhCDoQfY+0ubOtvsqOybm9J5xA3EHEjqAziQ==
+X-Received: by 2002:a05:6000:3103:b0:3a4:eb80:762d with SMTP id ffacd0b85a97d-3a56871e167mr1902935f8f.56.1749801999608;
+        Fri, 13 Jun 2025 01:06:39 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b4ba58sm1540669f8f.84.2025.06.13.01.06.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 01:06:39 -0700 (PDT)
+Message-ID: <03f54bb4-ddbb-4be8-9f9b-8328fdb98443@linaro.org>
+Date: Fri, 13 Jun 2025 09:06:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] media: qcom: camss: Add support for MSM8939
+To: Vincent Knecht <vincent.knecht@mailoo.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
+ <20250602-camss-8x39-vbif-v4-2-32c277d8f9bf@mailoo.org>
+ <877a72fa-cdae-4a66-9991-5ea86ef76aac@linaro.org>
+ <e73d676ba1901437d471a2a633e94a07b19a3e05.camel@mailoo.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <e73d676ba1901437d471a2a633e94a07b19a3e05.camel@mailoo.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a011.hihonor.com
- (10.68.31.243)
 
-> This patch introduces /sys/fs/f2fs/<dev>/reserved_pin_section for tuning
-> @needed parameter of has_not_enough_free_secs(), if we configure it w/
-> zero, it can avoid f2fs_gc() as much as possible while fallocating on
-> pinned file.
+On 07/06/2025 22:43, Vincent Knecht wrote:
+> Le vendredi 06 juin 2025 à 13:59 +0300, Vladimir Zapolskiy a écrit :
+>> Hello Vincent.
+>>
+>> On 6/2/25 20:27, Vincent Knecht via B4 Relay wrote:
+>>> From: Vincent Knecht <vincent.knecht@mailoo.org>
+>>>
+>>> The camera subsystem for the MSM8939 is the same as MSM8916 except with
+>>> 3 CSID instead of 2, and some higher clock rates.
+>>>
+>>> As a quirk, this SoC needs writing values to 2 VFE VBIF registers
+>>> (see downstream msm8939-camera.dtsi vbif-{regs,settings} properties).
+>>> This fixes black stripes across sensor and garbage in CSID TPG outputs.
+>>>
+>>> Add support for the MSM8939 camera subsystem.
+>>>
+>>> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>>> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+>>
+>> There was a preceding and partially reviewed changeset published on
+>> linux-media [1] before v1 of the MSM8939 platform support in CAMSS,
+>> due to a merge conflict this platform changeset should be rebased IMHO.
+>>
+>> [1] https://lore.kernel.org/all/20250513142353.2572563-4-vladimir.zapolskiy@linaro.org/
+>>
+>> --
+>> Best wishes,
+>> Vladimir
 > 
-> Signed-off-by: Chao Yu <chao@kernel.org>
-
-Thanks for helping to introduce this sysfs entry.
-
-Reviewed-by: wangzijie <wangzijie1@honor.com>
-
-> ---
-> v2:
-> - assign SM_I(sbi)->ovp_segments after f2fs_build_segment_manager()
->  Documentation/ABI/testing/sysfs-fs-f2fs | 9 +++++++++
->  fs/f2fs/f2fs.h                          | 3 +++
->  fs/f2fs/file.c                          | 5 ++---
->  fs/f2fs/super.c                         | 4 ++++
->  fs/f2fs/sysfs.c                         | 9 +++++++++
->  5 files changed, 27 insertions(+), 3 deletions(-)
+> Thank you, I'll look into it
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-> index bf03263b9f46..c2a233f2a085 100644
-> --- a/Documentation/ABI/testing/sysfs-fs-f2fs
-> +++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-> @@ -861,3 +861,12 @@ Description:	This is a read-only entry to show the value of sb.s_encoding_flags,
->  		SB_ENC_STRICT_MODE_FL            0x00000001
->  		SB_ENC_NO_COMPAT_FALLBACK_FL     0x00000002
->  		============================     ==========
-> +
-> +What:		/sys/fs/f2fs/<disk>/reserved_pin_section
-> +Date:		June 2025
-> +Contact:	"Chao Yu" <chao@kernel.org>
-> +Description:	This threshold is used to control triggering garbage collection while
-> +		fallocating on pinned file, so, it can guarantee there is enough free
-> +		reserved section before preallocating on pinned file.
-> +		By default, the value is ovp_sections, especially, for zoned ufs, the
-> +		value is 1.
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 9333a22b9a01..fa27498202a3 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1724,6 +1724,9 @@ struct f2fs_sb_info {
->  	/* for skip statistic */
->  	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
->  
-> +	/* free sections reserved for pinned file */
-> +	unsigned int reserved_pin_section;
-> +
->  	/* threshold for gc trials on pinned files */
->  	unsigned short gc_pin_file_threshold;
->  	struct f2fs_rwsem pin_sem;
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 696131e655ed..a909f79db178 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -1887,9 +1887,8 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
->  			}
->  		}
->  
-> -		if (has_not_enough_free_secs(sbi, 0, f2fs_sb_has_blkzoned(sbi) ?
-> -			ZONED_PIN_SEC_REQUIRED_COUNT :
-> -			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
-> +		if (has_not_enough_free_secs(sbi, 0,
-> +				sbi->reserved_pin_section)) {
->  			f2fs_down_write(&sbi->gc_lock);
->  			stat_inc_gc_call_count(sbi, FOREGROUND);
->  			err = f2fs_gc(sbi, &gc_control);
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 57adeff5ef25..e0ecc341f1d3 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -5017,6 +5017,10 @@ static int f2fs_fill_super(struct super_block *sb, struct fs_context *fc)
->  	/* get segno of first zoned block device */
->  	sbi->first_seq_zone_segno = get_first_seq_zone_segno(sbi);
->  
-> +	sbi->reserved_pin_section = f2fs_sb_has_blkzoned(sbi) ?
-> +			ZONED_PIN_SEC_REQUIRED_COUNT :
-> +			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi));
-> +
->  	/* Read accumulated write IO statistics if exists */
->  	seg_i = CURSEG_I(sbi, CURSEG_HOT_NODE);
->  	if (__exist_node_summaries(sbi))
-> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> index 75134d69a0bd..51be7ffb38c5 100644
-> --- a/fs/f2fs/sysfs.c
-> +++ b/fs/f2fs/sysfs.c
-> @@ -824,6 +824,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
->  		return count;
->  	}
->  
-> +	if (!strcmp(a->attr.name, "reserved_pin_section")) {
-> +		if (t > GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))
-> +			return -EINVAL;
-> +		*ui = (unsigned int)t;
-> +		return count;
-> +	}
-> +
->  	*ui = (unsigned int)t;
->  
->  	return count;
-> @@ -1130,6 +1137,7 @@ F2FS_SBI_GENERAL_RO_ATTR(unusable_blocks_per_sec);
->  F2FS_SBI_GENERAL_RW_ATTR(blkzone_alloc_policy);
->  #endif
->  F2FS_SBI_GENERAL_RW_ATTR(carve_out);
-> +F2FS_SBI_GENERAL_RW_ATTR(reserved_pin_section);
->  
->  /* STAT_INFO ATTR */
->  #ifdef CONFIG_F2FS_STAT_FS
-> @@ -1323,6 +1331,7 @@ static struct attribute *f2fs_attrs[] = {
->  	ATTR_LIST(last_age_weight),
->  	ATTR_LIST(max_read_extent_count),
->  	ATTR_LIST(carve_out),
-> +	ATTR_LIST(reserved_pin_section),
->  	NULL,
->  };
->  ATTRIBUTE_GROUPS(f2fs);
-> -- 
-> 2.40.1
+> 
 
+I think I will take 8939, plus any of the other now 3 SoCs waiting to be 
+merged with RBs.
+
+Bindings consistent with the last 10 years can go ahead. Its not 
+reasonable or in the interests of the community and developers to gate 
+any further.
+
+---
+bod
