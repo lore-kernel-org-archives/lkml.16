@@ -1,76 +1,206 @@
-Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2483BB48;
-	Fri, 13 Jun 2025 16:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2532E11D2
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749831620; cv=none; b=XDqyRKpLmV+qaRI8MllMhcXR2F7dxA8FiTIGFiG97D8SdeaJTHp53cCNZ45Bpc/mJKwJVxRxQ7C8lDqCyrC0wuNjAOpCcKlWY6RB551NPNN9q1R5gNAG/Z14y9cfCCRbEc7i4M6ocQbpv8A/khraSIxfQafgCwTnGWixRbgECdk=
+	t=1749831674; cv=none; b=J1O6NJs13Bx5U5K09FLQhyHGC4uDMCzzMaPkapgUFxAltVFfzS2t2m0e2ol2YfU9rRoFJXnYDOtGMkjy4aFOdXVX0pDX62ipTzjOVrS5X+5dfdihliGblj+0i9KoLra1ViReRw+UMN/n09B+Fd5nIf7yjKcog10sbN6rmnDEgD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749831620; c=relaxed/simple;
-	bh=CNErbTXB19qmacs6+xkbQ/5C0W3lKEIyxjPb4zKkg1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MQ6ie2yG3z2Tu45ttahImr4MffXAsw5SwfV6fIejOsiu9zgss9/0/VwngPt9BjXmUll7mlpd7aNmlvJfFXwcDW27dLNBDxINK2zmf09oBDpn9eHpqWP2UyvLCbHa5I7r2W18B7vefHWXnF7eL2u6E6yR2NbfA+TEREEtUNmVKkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=gbmiJziu; arc=none smtp.client-ip=199.89.3.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1749831674; c=relaxed/simple;
+	bh=uZe79v3PpuM209FTqzpTU2PdWlQToBmu2a+dDo0xnGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ujWIy08aV4W4E3TZ8JAW+x41grEFDDt/KA0yIl9wCI5RYpFCwO9gd9d/vjmcQ6ll1u919BmWMRJmBFnWNEUnyMHY4/DC8B664yqcKnyJzflkuhZzInFQzHfUM443cF47NM6HUqnpiOUR73+kiiN9f0jtsGlHnfIscv1pl6etybE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTZR9j5v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="gbmiJziu"
-Received: from localhost (localhost [127.0.0.1])
-	by 004.mia.mailroute.net (Postfix) with ESMTP id 4bJl3v13Y4zm0yst;
-	Fri, 13 Jun 2025 16:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1749831609; x=1752423610; bh=CNErbTXB19qmacs6+xkbQ/5C
-	0W3lKEIyxjPb4zKkg1E=; b=gbmiJziue20r5dFW8Xxl9VhoPK4ydfn7ypM2sCED
-	GHNb7a658Z3BHUECI/vxwRFgDDvl7uu98cvOmkFJHovv5KkJHW0QmYkAk7mkGBLs
-	yGUGeRhYmoe4+V85a5HK1bPXRrWmvxJmbOhMXsLbllgjFIbgYbXJzJtyuUYLnA4k
-	PdZDKN2eGFl6CkFbWQ20qyV0XNgIHmox1qcjyCDvhxIyWf5bWnXXOnoHpsSsi25I
-	RFPmrLJ1HehlOnLlcPWbr3j4eIUMSLx8AiobfzExDPvmGCGToX+Y5scDlB4rUeTy
-	LQXODrojt06aBK1n2EKgApLO/oO8iTSNpshfqsv9rJvLEA==
-X-Virus-Scanned: by MailRoute
-Received: from 004.mia.mailroute.net ([127.0.0.1])
- by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id XbKdJ0pP__oj; Fri, 13 Jun 2025 16:20:09 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4bJl3m2Cr8zm1HbX;
-	Fri, 13 Jun 2025 16:20:02 +0000 (UTC)
-Message-ID: <07975e85-2424-4ae9-8f31-d689c09d21dc@acm.org>
-Date: Fri, 13 Jun 2025 09:20:01 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTZR9j5v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04966C4CEE3;
+	Fri, 13 Jun 2025 16:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749831674;
+	bh=uZe79v3PpuM209FTqzpTU2PdWlQToBmu2a+dDo0xnGw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gTZR9j5vUqxTX+FdLcZFAkTMOQfxstLgp22Cxmz9jWmrsYp/Q2QVv0q0NTu/1cVox
+	 upey4uHrvINKd8Fmd8BBQu5Rw6uDMc+wlBYYCI0G1Hqc13TFps7Sd3r0kG3x4nhG94
+	 2vVSIH+6au2xFh9ZvPO3SlSEop0sRdZRyCqvSls/p0j4Uf4ssbIKr54+NvCeRePjVo
+	 Xyv7dnFhwAsDU54g7BoA7zB7YhhG+eqnw2knkrnjxNw+aWLqp5DlS1l8WAhAKDynSU
+	 oOG7JYhu6L82a+15Z/0v3xrKBGf0KdailLX2QNtpL7tYe8OvxZTAeudamFhjpbFT5v
+	 s1HITNvZrCOpg==
+Date: Fri, 13 Jun 2025 19:21:07 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Michal Clapinski <mclapinski@google.com>
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
+ properly
+Message-ID: <aExP8_WRsWsUhncy@kernel.org>
+References: <aEfGTXrsEL5-DuF1@kernel.org>
+ <CA+CK2bDXOWzrTsNtbCCK2rabNysf0JFQT5VfAjYrX5oSoiLmSQ@mail.gmail.com>
+ <aEhgNU80Dr9iRwoD@kernel.org>
+ <CA+CK2bD3n=JDuSsMGvsyMnVbPhGdhdf6zWFDa3KpzRGEXygdgQ@mail.gmail.com>
+ <mafs0qzzqo2bg.fsf@kernel.org>
+ <CA+CK2bBoMfJuUCV6sL80kwzYPnENnt7fDk2jRMPV0iPn1jCJdw@mail.gmail.com>
+ <aEmGMNL9v9djgrGz@kernel.org>
+ <mafs0ikl2nzqn.fsf@kernel.org>
+ <aEmUU4L3eStEsYQM@kernel.org>
+ <mafs0wm9fn2l3.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: ufs: core: Do clk scaling conditionally in reset
- and restore
-To: Anvith Dosapati <anvithdosapati@google.com>,
- Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, manugautam@google.com, vamshigajjela@google.com
-References: <20250613103140.1121621-1-anvithdosapati@google.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250613103140.1121621-1-anvithdosapati@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <mafs0wm9fn2l3.fsf@kernel.org>
 
-On 6/13/25 3:31 AM, Anvith Dosapati wrote:
-> In ufshcd_host_reset_and_restore, scale up clocks only when clock
-> scaling is supported. Without this change cpu latency is voted for 0
-> (ufshcd_pm_qos_update) during resume unconditionally.
-Since this patch is a bug fix, please add "Cc: stable@vger.kernel.org"
-and "Fixes:" tags. See also Documentation/process/stable-kernel-rules.rst
-in the kernel tree.
+On Fri, Jun 13, 2025 at 04:22:32PM +0200, Pratyush Yadav wrote:
+> On Wed, Jun 11 2025, Mike Rapoport wrote:
+> 
+> > On Wed, Jun 11, 2025 at 04:01:52PM +0200, Pratyush Yadav wrote:
+> >> On Wed, Jun 11 2025, Mike Rapoport wrote:
+> >> 
+> >> > On Wed, Jun 11, 2025 at 09:14:55AM -0400, Pasha Tatashin wrote:
+> >> >> On Wed, Jun 11, 2025 at 9:06 AM Pratyush Yadav <pratyush@kernel.org> wrote:
+> >> >> >
+> >> >> > On Tue, Jun 10 2025, Pasha Tatashin wrote:
+> >> >> >
+> >> >> > >> > > I think it should be the other way around, KHO should depend on
+> >> >> > >> > > !DEFERRED_STRUCT_PAGE_INIT.
+> >> >> > >> >
+> >> >> > >> > Agreed, and this is what I first tried, but that does not work, there
+> >> >> > >> > is some circular dependency breaking the build. If you feel
+> >> >> > >> > adventurous you can try that :-)
+> >> >> > >>
+> >> >> > >> Hmm, weird, worked for me :/
+> >> >> >
+> >> >> > Worked for me as well.
+> >> >> >
+> >> >> > >
+> >> >> > > I am super confused, it did not work for me over weekend, and now it
+> >> >> > > is working. Even `make menuconfig` would not work. Anyways, I will put
+> >> >> > > it in the appropriate place.
+> >> >> > >
+> >> >> > >>
+> >> >> > >> > > > We will need to teah KHO to work with deferred struct page init. I
+> >> >> > >> > > > suspect, we could init preserved struct pages and then skip over them
+> >> >> > >> > > > during deferred init.
+> >> >> > >> > >
+> >> >> > >> > > We could, but with that would mean we'll run this before SMP and it's not
+> >> >> > >> > > desirable. Also, init_deferred_page() for a random page requires
+> >> >> > >> >
+> >> >> > >> > We already run KHO init before smp_init:
+> >> >> > >> > start_kernel() -> mm_core_init() -> kho_memory_init() ->
+> >> >> > >> > kho_restore_folio() -> struct pages must be already initialized here!
+> >> >> > >> >
+> >> >> > >> > While deferred struct pages are initialized:
+> >> >> > >> > start_kernel() -> rest_init() -> kernel_init() ->
+> >> >> > >> > kernel_init_freeable() -> page_alloc_init_late() ->
+> >> >> > >> > deferred_init_memmap()
+> >> >> > >> >
+> >> >> > >> > If the number of preserved pages that is needed during early boot is
+> >> >> > >> > relatively small, that it should not be an issue to pre-initialize
+> >> >> > >> > struct pages for them before deferred struct pages are initialized. We
+> >> >> > >> > already pre-initialize some  "struct pages" that are needed during
+> >> >> > >> > early boot before the reset are initialized, see deferred_grow_zone()
+> >> >> > >>
+> >> >> > >> deferred_grow_zone() takes a chunk in the beginning of uninitialized range,
+> >> >> > >> with kho we are talking about some random pages. If we preinit them early,
+> >> >> > >> deferred_init_memmap() will overwrite them.
+> >> >> > >
+> >> >> > > Yes, this is why I am saying that we would need to skip the KHO
+> >> >> > > initialized "struct pages" somehow during deferred initialization. If
+> >> >> > > we create an ordered by PFN list of early-initialized KHO struct
+> >> >> > > pages, skipping during deferred initialization could be done
+> >> >> > > efficiently.
+> >> >> >
+> >> >> > Or keep things simple and don't use any KHO struct pages during early
+> >> >> > init. You can access the page itself, just don't use its struct page.
+> >> >> >
+> >> >> > Currently the only user of kho_restore_folio() during init is
+> >> >> > kho_memory_init(). The FDT is accessed by doing
+> >> >> > phys_to_virt(kho_in.fdt_phys) anyway, so there is really no need for
+> >> >> > restoring the folio so early. It can be done later, for example when LUO
+> >> >> > does the finish event, to clean up and free the folio.
+> >> >> 
+> >> >> Good suggestion, however, KHO does not have any sophisticated users
+> >> >> that we are going to be adding as part of the live update work in the
+> >> >> future: IR, KVM, early VCPU threads, and so on. So, while today, this
+> >> >> might work, in the future, I am not sure if we should expect struct
+> >> >> pages are not accessed until after deferred initialization or simply
+> >> >> fix it once and for all.
+> >> >
+> >> > KHO already accesses stuct page early and uses page->private for order.
+> >> > Since preserved memory is reserved in memblock, deferred init of struct
+> >> > pages won't touch those pages, we just need to make sure they are properly 
+> >> 
+> >> Not strictly true. Some of them might have been initialized from
+> >> free_area_init() -> memmap_init() (the ones not eligible for deferred
+> >> init), which happens before KHO makes its memblock reservations.
+> >> 
+> >> > initialized at some point. If we don't expect many kho_restore_folio()
+> >> > before page_alloc_init_late() we can use init_deferred_page() for early
+> >> > accesses.
+> >> 
+> >> I tried doing this when looking into this initially, but it doesn't work
+> >> for some reason.
+> >> 
+> >>     static void kho_restore_page(struct page *page, unsigned int order)
+> >>     {
+> >>     	unsigned int i, nr_pages = (1 << order);
+> >>     
+> >>     	/* Head page gets refcount of 1. */
+> >>     	init_deferred_page(page_to_pfn(page), NUMA_NO_NODE);
+> >
+> >
+> > This would do
+> >
+> > 	if (early_page_initialised(pfn, nid))
+> > 		return;
+> >
+> > 	__init_page_from_nid(pfn, nid);
+> >
+> > and I'm really surprised it didn't crash in early_page_initialised()
+> > because of NUMA_NO_NODE :)
+> 
+> Oh, right. Using the wrong node completely throws
+> early_page_initialised() off.
+> 
+> >
+> > What might work here is 
+> >
+> > 	pfn = page_to_pfn(page);
+> > 	__init_page_from_nid(pfn, early_pfn_to_nid(pfn));
+> 
+> Yep, that works. Although this would do early_pfn_to_nid() for each page
+> so it isn't very efficient. And we also need to make sure memblock does
+> not go away.
 
-Thanks,
+Yeah, that's far from ideal. Let's just gate KHO on
+!CONFIG_DEFERRED_PAGE_STRUCT_INIT for now.
 
-Bart.
+> >>     	set_page_count(page, 1);
+> >>     
+> >>     	/* For higher order folios, tail pages get a page count of zero. */
+> >>     	for (i = 1; i < nr_pages; i++) {
+> >>     		init_deferred_page(page_to_pfn(page + i), NUMA_NO_NODE);
+> >>     		set_page_count(page + i, 0);
+> >>     	}
+> >>     
+> >>     [...]
+> >> 
+> [...]
+> 
+> -- 
+> Regards,
+> Pratyush Yadav
+
+-- 
+Sincerely yours,
+Mike.
