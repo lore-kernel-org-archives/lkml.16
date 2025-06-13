@@ -1,138 +1,127 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE7A257429;
-	Fri, 13 Jun 2025 07:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64FD1A01B9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800817; cv=none; b=knSXzPkpz/Yu9sP4+aeYMQU1JtMV7Vrxgxf8WjJzl2rNFtHDynojNQgW7U3BdPB6CNpHj6pouQyXIWwhdkgw9UUZfoZn1HtxLUCLhiOXCKXL54dYNVWSer6H8K6zA6z9zvUy71aMc3d8LFp9KcpclDHummPgJ2+q4XS/vFiq+gU=
+	t=1749800880; cv=none; b=k/BPBexc4/BaOpQxacDky1l0rKGisn5/CbIPAg+6lYYfHRh4F+I8vyCbXrQcevzCG7GX8CzArztWQ2r9pYsRO7ecnuXmBje6AtCNxLUHkoLKmVQprE4q8mzN5TGxUGh13wD+Bm6Iul9gfAX+acdpwRnTOfVVxoVIy9bxH6uMuzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800817; c=relaxed/simple;
-	bh=ggsEPsc5My9b6nGy0dNSc9jiNHHKzbYi2GfOzd74X7I=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tvQlpClVqDolvMaEstXzN2WJH8FMwKtWjdyH5WMAvRZ766eH8LZvC8T5Bg13vDM3PcqpqU5kcqh+Nsofcv8UhAIZUv4WnsIqWfBYGaduiTmWsT0eVd8/d9rCRoSKYqvkxO1llOrx/LAS98RXnjzXJeZl6JZfK8ctZye+oMN1CBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UoAYcFYz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pmtJQTdO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749800880; c=relaxed/simple;
+	bh=GV5IiH1lX/tVnEyhZKXJm4snMe5XD+W9EpFTNssURzc=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IBv9sVHwCHYWyqukjG+4Q/9pa7AzDQZJ7Zt4uPoVegbwqStxBkg+K9lZ2An/d9D3JAKssnBqgZCK9vw8Y1IqyOwz6uBPnqY3pff3tCfUNTH23hQBmZnkf4OM9yX0pJfNpUvqwiN5kMZmoNCvTDOh8ttMD0EG8MVsoDzosLaJZco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=PdyK+4mM; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UoAYcFYz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pmtJQTdO"
-Date: Fri, 13 Jun 2025 07:46:52 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749800813;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DeARu5qdgdS1dM2fNHluVEYW7CA6XC6Z01lr5OTWuYw=;
-	b=UoAYcFYzxURd/fetIWkGfzLFBqXgg+Lq878U+dq9KrXyTsCPO55w13FfARR0SmmmmsTtqR
-	3gdnIdh0eIBqvu1lfjW5d8ryA8LSNmhrpO4mTduTQyh2cJRrcykQgElYbVNScHnOseS2OH
-	Udk/AlvfrNwk50/3I7mA1ZHYL9ZSAqDGC5cpLXrSHfRGpLVPvn9jcLIdH0OmoUtnArF1tL
-	ZCxqFPeRLH9Pm8+Mg9bRlIDaIUBvRxw50x0sL4iUqJeG5OoxNg64fq+BeQFWxqMoib005a
-	zLa/SDs08xS5uUfzmitg5Ymsx7CpOpGmhQ/n9flFfRBESkwmpTnzo+kce3+qOQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749800813;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DeARu5qdgdS1dM2fNHluVEYW7CA6XC6Z01lr5OTWuYw=;
-	b=pmtJQTdOgj3Em9HcJs4Ry7+JQbw5JpuoxEXiAiXU72Hl6ew9azDIGrR+eSeDITj2sBC5Xq
-	hv6mz6Hxa9IRU4Dg==
-From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/urgent] perf/x86/intel: Fix crash in icl_update_topdown_event()
-Cc: Vince Weaver <vincent.weaver@maine.edu>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, stable@vger.kernel.org,
-	#@tip-bot2.tec.linutronix.de, v6.15+@tip-bot2.tec.linutronix.de,
-	x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250612143818.2889040-1-kan.liang@linux.intel.com>
-References: <20250612143818.2889040-1-kan.liang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PdyK+4mM"
+X-UUID: b372d8ba482a11f0b33aeb1e7f16c2b6-20250613
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=GV5IiH1lX/tVnEyhZKXJm4snMe5XD+W9EpFTNssURzc=;
+	b=PdyK+4mM1oc1I9BPeVs75+3anIPHYhq+C8lxZOMSwykkzH34K/5xQ2RWxUka6eFSioRlg6b5Xo2mZt1qjuaA08CA/EbST3ztjVKMRsmAi7hWuH7UFvOm7xUxEoypaY3j/nEfMxq4KjQG7fD60PTgwtgKSviydtA4STLBYW8fTsI=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.3,REQID:f7354e2d-910b-4b3a-8762-da40294c50a1,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:09905cf,CLOUDID:ba69a558-abad-4ac2-9923-3af0a8a9a079,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
+	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: b372d8ba482a11f0b33aeb1e7f16c2b6-20250613
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
+	(envelope-from <kuyo.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 188918454; Fri, 13 Jun 2025 15:47:48 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 13 Jun 2025 15:47:45 +0800
+Received: from [10.233.130.16] (10.233.130.16) by mtkmbs11n1.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.1258.39 via Frontend
+ Transport; Fri, 13 Jun 2025 15:47:45 +0800
+Message-ID: <c32fcf451dad1cac40ad827e53ac6c027403b07e.camel@mediatek.com>
+Subject: Re: [PATCH 1/1] sched/core: Fix migrate_swap() vs. hotplug
+From: Kuyo Chang <kuyo.chang@mediatek.com>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, "Ben
+ Segall" <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Valentin
+ Schneider" <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Date: Fri, 13 Jun 2025 15:47:47 +0800
+In-Reply-To: <20250606082834.GM30486@noisy.programming.kicks-ass.net>
+References: <20250602072242.1839605-1-kuyo.chang@mediatek.com>
+	 <20250605100009.GO39944@noisy.programming.kicks-ass.net>
+	 <8e1018116ad7c5c325eced2cb17b65c73ca2ceca.camel@mediatek.com>
+	 <20250606082834.GM30486@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174980081261.406.7304310374946346602.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Fri, 2025-06-06 at 10:28 +0200, Peter Zijlstra wrote:
+>=20
+> External email : Please do not click links or open attachments until
+> you have verified the sender or the content.
+>=20
+>=20
+> On Fri, Jun 06, 2025 at 11:46:57AM +0800, Kuyo Chang wrote:
+>=20
+> > Thank you for your patch.
+> > I believe this patch also effectively addresses this race
+> > condition.
+> > I will queue it in our test pool for testing.
+>=20
+> Thank you; I shall await the results!
+>=20
+It works well during both regular and hotplug tests(one week).
+I believe the patch is workable.
+Please help to merge, thx.
 
-Commit-ID:     b0823d5fbacb1c551d793cbfe7af24e0d1fa45ed
-Gitweb:        https://git.kernel.org/tip/b0823d5fbacb1c551d793cbfe7af24e0d1fa45ed
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Thu, 12 Jun 2025 07:38:18 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 13 Jun 2025 09:38:06 +02:00
+>=20
+> > > @@ -101,12 +98,12 @@ static bool cpu_stop_queue_work(unsigned int
+> > > cpu, struct cpu_stop_work *work)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raw_spin_lock_irqsave(&sto=
+pper->lock, flags);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enabled =3D stopper->enabl=
+ed;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (enabled)
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 __cpu_stop_queue_work(stopper, work, &wakeq);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 __cpu_stop_queue_work(stopper, work);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else if (work->done)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 cpu_stop_signal_done(work->done);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raw_spin_unlock_irqrestore=
+(&stopper->lock, flags);
+> > >=20
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wake_up_q(&wakeq);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wake_up_process(stopper->thread=
+);
+> >=20
+> > BTW, should we add enabled check here?
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (enabled)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 wake_up_process(stopper->thread);
+>=20
+> Ah yes. Spuriously waking the stopper thread is harmless, but
+> wasteful.
+>=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 preempt_enable();
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return enabled;
 
-perf/x86/intel: Fix crash in icl_update_topdown_event()
-
-The perf_fuzzer found a hard-lockup crash on a RaptorLake machine:
-
-  Oops: general protection fault, maybe for address 0xffff89aeceab400: 0000
-  CPU: 23 UID: 0 PID: 0 Comm: swapper/23
-  Tainted: [W]=WARN
-  Hardware name: Dell Inc. Precision 9660/0VJ762
-  RIP: 0010:native_read_pmc+0x7/0x40
-  Code: cc e8 8d a9 01 00 48 89 03 5b cd cc cc cc cc 0f 1f ...
-  RSP: 000:fffb03100273de8 EFLAGS: 00010046
-  ....
-  Call Trace:
-    <TASK>
-    icl_update_topdown_event+0x165/0x190
-    ? ktime_get+0x38/0xd0
-    intel_pmu_read_event+0xf9/0x210
-    __perf_event_read+0xf9/0x210
-
-CPUs 16-23 are E-core CPUs that don't support the perf metrics feature.
-The icl_update_topdown_event() should not be invoked on these CPUs.
-
-It's a regression of commit:
-
-  f9bdf1f95339 ("perf/x86/intel: Avoid disable PMU if !cpuc->enabled in sample read")
-
-The bug introduced by that commit is that the is_topdown_event() function
-is mistakenly used to replace the is_topdown_count() call to check if the
-topdown functions for the perf metrics feature should be invoked.
-
-Fix it.
-
-Fixes: f9bdf1f95339 ("perf/x86/intel: Avoid disable PMU if !cpuc->enabled in sample read")
-Closes: https://lore.kernel.org/lkml/352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu/
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Vince Weaver <vincent.weaver@maine.edu>
-Cc: stable@vger.kernel.org # v6.15+
-Link: https://lore.kernel.org/r/20250612143818.2889040-1-kan.liang@linux.intel.com
----
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 741b229..c2fb729 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2826,7 +2826,7 @@ static void intel_pmu_read_event(struct perf_event *event)
- 		 * If the PEBS counters snapshotting is enabled,
- 		 * the topdown event is available in PEBS records.
- 		 */
--		if (is_topdown_event(event) && !is_pebs_counter_event_group(event))
-+		if (is_topdown_count(event) && !is_pebs_counter_event_group(event))
- 			static_call(intel_pmu_update_topdown_event)(event, NULL);
- 		else
- 			intel_pmu_drain_pebs_buffer();
