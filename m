@@ -1,64 +1,63 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C84259CA5
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B3B25B2E7
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749797891; cv=none; b=ncNlpy3CjSLJhdMMQEMuoltKQP6TAA56eS/ogZ+k3hrxuCbt6lo1gAV7hdQo8gdHRI9RuTaE2K6Jl+e08LAXRHZfMWvVqByw8qUqlHxeH9JabSdmyDtrzAy3CFVKv7znoMiNsJL7dcIw48GHv88tgltpK4V9tOHXbwVxpOQde1I=
+	t=1749797895; cv=none; b=nUoCnVJvGjhFMiot1TUV/fXstDrXLgkSnDROgkFa/s2/D/wPDYp7CxjD49uWlAzNXNNzm/DT95zczOfCs6FD7RgBe+srA1ZVJ79CVkjtk/TH6BdGjYl3MMd5l2Oyu3SxwetVgTf6e8AatOq1LvCfN6hsU8WH1FPTs58U6kR7SAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749797891; c=relaxed/simple;
-	bh=U71gyvnkFRTjwDI8pxtkBdAEgTm+G+VjYBDnQo+6/v4=;
+	s=arc-20240116; t=1749797895; c=relaxed/simple;
+	bh=UNJDgyGRwKsBGAVSWW07IY+xb3iaC5t5L0oSJfwXEpY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KiMrBZ8898OdGnnefWcd9kHvkDLEYm0alFYPd1V3wvxe1ShiKAAzrzxQmP0aA46CJOd7jxGoy90msFVr70QTyBPr2AWbF5FcDLPEWt8Od9gzGQU1ZraCmGdj3J4J6aw9mP+LlA3mSGeQ1cMVtuCSV3cTBxnsLN92sn2hDLA/Ldo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Gbor7Xki; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version; b=O8yViMuhgEPbd/MNqa8w5GSLGWuTSGO75uEVS957bKz6erpi3liK5mj+9O0wDQsNvL1L+dFgLCWIJEX18ibxlHAwEiTF/9yobdXkRNdtUXUBevPu5oCEt9PNyLH0a6252fZUK+XkAm/i6xuh8vhaXJ3zqdn3TqQVfJXUqs6flok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Y2IrjyvL; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Gbor7Xki"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3134c67a173so2013710a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:58:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Y2IrjyvL"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3137c20213cso2170379a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 23:58:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749797889; x=1750402689; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1749797894; x=1750402694; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3W7Bv8eoCvTNzkNO4nvyVAxgoupNAJKpC3g9nF1nD78=;
-        b=Gbor7XkiXs9Wc+6pZB7zFCGRj5+GrjBsPyoYRJpyQfc9HdUW8EegECBHgRcUMLFAxV
-         IHsviUyXTb4tq0fKL4+5bTA9O8SGHFWPMoIBOHtbj13rm62djTbHuzJJzKvX0Xj/DoGK
-         K9mWcFxMansr3EOzBTwkq8W4eFFkcn5+eYgFwrthEs2+KfMmaYawD9kclxKpRIGz/q6I
-         rq70SRY6GDJ/8JFiF070oJX8bKRIcE5RoJMCIokvVhgy3tAgmwADgvsdmOBw/1SCjhCS
-         +7f/Vb0sAxzbuC+rDtH5FIC9JU2540X2aH9gVywMraPynSlRIkZM8wjXIB0yTkT4/2EY
-         5/iw==
+        bh=0APR23xoSpRoPrmHOoIW/fZKPHEwlO7VgBzBq3Nrcg8=;
+        b=Y2IrjyvLyVi2V1jMJivm9rU6tHvy6jPoplagXWPOrX5fTmas/jOUA6m6Ax5Ho+5XZ4
+         D8O6GIhi3ID0M42TA8PS0oqM4xm/SAWKoZxum2WV4ZDtv5W68fR5oVCdPEFiA8VOaUXR
+         jbtXi94reH1k1AWlRY6rHSi2ECuUDEI0iBdJRXPM77PGGSNoQ/76OxopKxGtI5TnHcBG
+         vw6tpwGpTgATIDbzI55386IBcZ3uvJ4nQ6HEbZoH9ooUE9zPBTYMck/8W3qvyrmhezhK
+         JnvNhRM3G1TNTOWGjzrxWdgYjahy8M0xMmujwt4pZp9K6b7fsuQ4RmnvG9yfuHQbFux2
+         RpcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749797889; x=1750402689;
+        d=1e100.net; s=20230601; t=1749797894; x=1750402694;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3W7Bv8eoCvTNzkNO4nvyVAxgoupNAJKpC3g9nF1nD78=;
-        b=DmmbywjwMaWyfYZzlNHrCb9wcfutJWAJNvTOnT2zNaXLuYgwXh/lTByQqmRtw3jbn8
-         LGepNd+ZeRuaSfNMZPYssDthndb+0eRqbyMSd5fa0tNCpxhT+L3dPZxlMWJaFEyEqEmU
-         5GpB83g1XWFvElwhRQICONZ54c+BIr8Nn9qCsJXekStgu7fp+0mV7Py1+844IE0U3IZ6
-         +lodHui0uIWE67xxOuAmY9JwLFIBHKqNleHKUenvb75mWjO1zYc/ZWuq/IMM6B+7ePnI
-         oX65r1/87NwuG6mOZXUjCx+V009sYjrOprqP1zNMyX+8VfPRE9nJHHmCSnBIcQRIMlN3
-         2tyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ/auudPtXiAh8iCu7dm4besZlWfw0qwNyNeja1csWWHHfUtPN3dvKKYKgAU13K9Om4joi2VK77VNfA10=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7wdpHRYdDAwLqDU1Pod/Te9j6eC6++eCIWIGwwn/cMy1M/De1
-	U2vnqeIPzs0jXTvspR5ygTkrO5a8DLdLhXCFTJHBk4A5+KGsih40OvtlMgxos1D8cBcpOq3Dra1
-	Ea8mxUYE=
-X-Gm-Gg: ASbGncsEygQuUa9M9gAyClAVSmR/booqcvCH7doWLqx8nxs0GPFyjgwbppI3zvWq+ny
-	ugACYPvDGNb5YcTG9/PuWORdtWKEoeqe2WolONjyOPnfYFNx3mURnBvr7PFFH/k0U2BYNmTeBvc
-	thw64y9TbBJJq2F+4fBqpafKmI5sNntHHiN7hIoaUjVHj7w08IiCJNLXwSkNCEgNqJrHX9bjiGv
-	6SyBAgSTUKB+Sr24JFWwEckDL3AW8j8yYC3LmGaAJhf+EuHJLuRs1SV6aefP18/60REz5WP8K6K
-	aPWghdkxiBkE02UyedZ5bk+PnaMdqlk5ojp73EWevLXKRaxKTzBPtx/Gor1rn4xM7LiLVKCgUpJ
-	WgBxUpV5glu9xiepUKhk=
-X-Google-Smtp-Source: AGHT+IECSuEdfJ3+vv5ZN/l8SWOjIXMckOPoSZF/gGT301HnuJfIR6kjlfzE08KH38AjoOLcOVtXeQ==
-X-Received: by 2002:a17:90b:4c89:b0:311:c970:c9c0 with SMTP id 98e67ed59e1d1-313d9e926f7mr2384987a91.22.1749797888863;
-        Thu, 12 Jun 2025 23:58:08 -0700 (PDT)
+        bh=0APR23xoSpRoPrmHOoIW/fZKPHEwlO7VgBzBq3Nrcg8=;
+        b=s4tvL/qJonkZQgi+o7S6KzvqaFJ0HS2mgvocejDiY4MC/XXHFMUucBfE3mk3tKQiYz
+         22o0BuB4qc3GTW2uNlUUXHfH0f3sEEy+kdfYY+J/HUKjjQ4PMZ33CSksZTnijysMPchv
+         PiyW4TeX2EuHY6MR01O0Fb06eN66znCx3unHHvMx1hQKSlRniM7SHcHqStQT/ecg9yhn
+         iEHMcm0D+VyDcBrqOP+GXFv0LUBvCUZdHs67LFdb+CT++RTiLLybHfpy3/JeyalBh0hD
+         IifEwAxvSyrCsFA6vhXfmPTV1Gb4VZBB8tQH/0JnOzBc9VhzSzFXhj3oiGwishrXvuNY
+         uFoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYBsVp5TAD6/i0HvrAeuFP8IOiG3t1KMqfhCvajz+XfJM/qjB384fRSQfTaC5lbHwOhOMbJ9fwVGIZ8D4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDHb7Z5Lu+uHdf8Q2ESad/Iw+UuGZn5vZeWw4LujNhmb/Pw9ey
+	QDJc2xVzceLk5TOHe/9XNoQPCtem565VrNmcALiq3RoYRWff8jJsqHEhd9CjfgF7GgY=
+X-Gm-Gg: ASbGncvJOoQiKdf5FSzofZiv169JumuTJ/NYjTKR9ECHLWzwdrB6Hnmjyw/FsWxSPCJ
+	mn1e3gadHEOKA2eq6JA9qZlVEKEBu6PjwEbwac/DIyP4jC9RN3hvHpYnA1bIvmS1ojipcopSIqO
+	6yIPrTG4ERJtYs9ONUrJCxlp3fPGwc/kE629MCV2rVzpByfnrJSNOi8517nDUbVkCmNCP7X+7bB
+	I/DopTO6js9l6bJMVGwMKyfb6yUvJm15OGAGidwgM21XKfszaDkbH4aojLCCu8AqqFyJhApc2Yu
+	aoxgYVcL5kJ14AU7wXl2dV/VNK+ax1pPN0uJBFtAzcAl6im75ruQkmQTjUnFMmJl8pH33mqS6iG
+	1b8nVwgbHlW8Sz237ztE=
+X-Google-Smtp-Source: AGHT+IF4XmbWIExFu1mlduKfiNfTLu/tQXyVfpn87Q8JCh/3y9agaf4v394uxNt/X9mcs0VMw2lIeA==
+X-Received: by 2002:a17:90b:5212:b0:312:25dd:1c99 with SMTP id 98e67ed59e1d1-313d9e92702mr2795609a91.19.1749797893528;
+        Thu, 12 Jun 2025 23:58:13 -0700 (PDT)
 Received: from localhost.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b49b7fsm2653022a91.24.2025.06.12.23.58.04
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b49b7fsm2653022a91.24.2025.06.12.23.58.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 23:58:08 -0700 (PDT)
+        Thu, 12 Jun 2025 23:58:13 -0700 (PDT)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Atish Patra <atish.patra@linux.dev>
 Cc: Palmer Dabbelt <palmer@dabbelt.com>,
@@ -71,11 +70,10 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Anup Patel <apatel@ventanamicro.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Nutty Liu <liujingqi@lanxincomputing.com>
-Subject: [PATCH v2 03/12] RISC-V: KVM: Rename and move kvm_riscv_local_tlb_sanitize()
-Date: Fri, 13 Jun 2025 12:27:34 +0530
-Message-ID: <20250613065743.737102-4-apatel@ventanamicro.com>
+	Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v2 04/12] RISC-V: KVM: Replace KVM_REQ_HFENCE_GVMA_VMID_ALL with KVM_REQ_TLB_FLUSH
+Date: Fri, 13 Jun 2025 12:27:35 +0530
+Message-ID: <20250613065743.737102-5-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250613065743.737102-1-apatel@ventanamicro.com>
 References: <20250613065743.737102-1-apatel@ventanamicro.com>
@@ -87,128 +85,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The kvm_riscv_local_tlb_sanitize() deals with sanitizing current
-VMID related TLB mappings when a VCPU is moved from one host CPU
-to another.
-
-Let's move kvm_riscv_local_tlb_sanitize() to VMID management
-sources and rename it to kvm_riscv_gstage_vmid_sanitize().
+The KVM_REQ_HFENCE_GVMA_VMID_ALL is same as KVM_REQ_TLB_FLUSH so
+to avoid confusion let's replace KVM_REQ_HFENCE_GVMA_VMID_ALL with
+KVM_REQ_TLB_FLUSH. Also, rename kvm_riscv_hfence_gvma_vmid_all_process()
+to kvm_riscv_tlb_flush_process().
 
 Reviewed-by: Atish Patra <atishp@rivosinc.com>
-Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- arch/riscv/include/asm/kvm_host.h |  3 +--
- arch/riscv/kvm/tlb.c              | 23 -----------------------
- arch/riscv/kvm/vcpu.c             |  4 ++--
- arch/riscv/kvm/vmid.c             | 23 +++++++++++++++++++++++
- 4 files changed, 26 insertions(+), 27 deletions(-)
+ arch/riscv/include/asm/kvm_host.h | 4 ++--
+ arch/riscv/kvm/tlb.c              | 8 ++++----
+ arch/riscv/kvm/vcpu.c             | 8 ++------
+ 3 files changed, 8 insertions(+), 12 deletions(-)
 
 diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 9a617bf5363d..8aa705ac75a5 100644
+index 8aa705ac75a5..ff1f76d6f177 100644
 --- a/arch/riscv/include/asm/kvm_host.h
 +++ b/arch/riscv/include/asm/kvm_host.h
-@@ -331,8 +331,6 @@ void kvm_riscv_local_hfence_vvma_gva(unsigned long vmid,
+@@ -37,7 +37,6 @@
+ #define KVM_REQ_UPDATE_HGATP		KVM_ARCH_REQ(2)
+ #define KVM_REQ_FENCE_I			\
+ 	KVM_ARCH_REQ_FLAGS(3, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+-#define KVM_REQ_HFENCE_GVMA_VMID_ALL	KVM_REQ_TLB_FLUSH
+ #define KVM_REQ_HFENCE_VVMA_ALL		\
+ 	KVM_ARCH_REQ_FLAGS(4, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+ #define KVM_REQ_HFENCE			\
+@@ -331,8 +330,9 @@ void kvm_riscv_local_hfence_vvma_gva(unsigned long vmid,
  				     unsigned long order);
  void kvm_riscv_local_hfence_vvma_all(unsigned long vmid);
  
--void kvm_riscv_local_tlb_sanitize(struct kvm_vcpu *vcpu);
--
++void kvm_riscv_tlb_flush_process(struct kvm_vcpu *vcpu);
++
  void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu);
- void kvm_riscv_hfence_gvma_vmid_all_process(struct kvm_vcpu *vcpu);
+-void kvm_riscv_hfence_gvma_vmid_all_process(struct kvm_vcpu *vcpu);
  void kvm_riscv_hfence_vvma_all_process(struct kvm_vcpu *vcpu);
-@@ -380,6 +378,7 @@ unsigned long kvm_riscv_gstage_vmid_bits(void);
- int kvm_riscv_gstage_vmid_init(struct kvm *kvm);
- bool kvm_riscv_gstage_vmid_ver_changed(struct kvm_vmid *vmid);
- void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu);
-+void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu);
- 
- int kvm_riscv_setup_default_irq_routing(struct kvm *kvm, u32 lines);
+ void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu);
  
 diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
-index 2f91ea5f8493..b3461bfd9756 100644
+index b3461bfd9756..da98ca801d31 100644
 --- a/arch/riscv/kvm/tlb.c
 +++ b/arch/riscv/kvm/tlb.c
-@@ -156,29 +156,6 @@ void kvm_riscv_local_hfence_vvma_all(unsigned long vmid)
- 	csr_write(CSR_HGATP, hgatp);
+@@ -162,7 +162,7 @@ void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu)
+ 	local_flush_icache_all();
  }
  
--void kvm_riscv_local_tlb_sanitize(struct kvm_vcpu *vcpu)
--{
--	unsigned long vmid;
--
--	if (!kvm_riscv_gstage_vmid_bits() ||
--	    vcpu->arch.last_exit_cpu == vcpu->cpu)
--		return;
--
--	/*
--	 * On RISC-V platforms with hardware VMID support, we share same
--	 * VMID for all VCPUs of a particular Guest/VM. This means we might
--	 * have stale G-stage TLB entries on the current Host CPU due to
--	 * some other VCPU of the same Guest which ran previously on the
--	 * current Host CPU.
--	 *
--	 * To cleanup stale TLB entries, we simply flush all G-stage TLB
--	 * entries by VMID whenever underlying Host CPU changes for a VCPU.
--	 */
--
--	vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
--	kvm_riscv_local_hfence_gvma_vmid_all(vmid);
--}
--
- void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu)
+-void kvm_riscv_hfence_gvma_vmid_all_process(struct kvm_vcpu *vcpu)
++void kvm_riscv_tlb_flush_process(struct kvm_vcpu *vcpu)
  {
- 	kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_FENCE_I_RCVD);
+ 	struct kvm_vmid *v = &vcpu->kvm->arch.vmid;
+ 	unsigned long vmid = READ_ONCE(v->vmid);
+@@ -342,14 +342,14 @@ void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
+ 	data.size = gpsz;
+ 	data.order = order;
+ 	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE,
+-			    KVM_REQ_HFENCE_GVMA_VMID_ALL, &data);
++			    KVM_REQ_TLB_FLUSH, &data);
+ }
+ 
+ void kvm_riscv_hfence_gvma_vmid_all(struct kvm *kvm,
+ 				    unsigned long hbase, unsigned long hmask)
+ {
+-	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE_GVMA_VMID_ALL,
+-			    KVM_REQ_HFENCE_GVMA_VMID_ALL, NULL);
++	make_xfence_request(kvm, hbase, hmask, KVM_REQ_TLB_FLUSH,
++			    KVM_REQ_TLB_FLUSH, NULL);
+ }
+ 
+ void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
 diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index f9fb3dbbe0c3..a2dd4161e5a4 100644
+index a2dd4161e5a4..6eb11c913b13 100644
 --- a/arch/riscv/kvm/vcpu.c
 +++ b/arch/riscv/kvm/vcpu.c
-@@ -962,12 +962,12 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 		}
+@@ -721,12 +721,8 @@ static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
+ 		if (kvm_check_request(KVM_REQ_FENCE_I, vcpu))
+ 			kvm_riscv_fence_i_process(vcpu);
  
- 		/*
--		 * Cleanup stale TLB enteries
-+		 * Sanitize VMID mappings cached (TLB) on current CPU
- 		 *
- 		 * Note: This should be done after G-stage VMID has been
- 		 * updated using kvm_riscv_gstage_vmid_ver_changed()
- 		 */
--		kvm_riscv_local_tlb_sanitize(vcpu);
-+		kvm_riscv_gstage_vmid_sanitize(vcpu);
+-		/*
+-		 * The generic KVM_REQ_TLB_FLUSH is same as
+-		 * KVM_REQ_HFENCE_GVMA_VMID_ALL
+-		 */
+-		if (kvm_check_request(KVM_REQ_HFENCE_GVMA_VMID_ALL, vcpu))
+-			kvm_riscv_hfence_gvma_vmid_all_process(vcpu);
++		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
++			kvm_riscv_tlb_flush_process(vcpu);
  
- 		trace_kvm_entry(vcpu);
- 
-diff --git a/arch/riscv/kvm/vmid.c b/arch/riscv/kvm/vmid.c
-index ddc98714ce8e..92c01255f86f 100644
---- a/arch/riscv/kvm/vmid.c
-+++ b/arch/riscv/kvm/vmid.c
-@@ -122,3 +122,26 @@ void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu)
- 	kvm_for_each_vcpu(i, v, vcpu->kvm)
- 		kvm_make_request(KVM_REQ_UPDATE_HGATP, v);
- }
-+
-+void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long vmid;
-+
-+	if (!kvm_riscv_gstage_vmid_bits() ||
-+	    vcpu->arch.last_exit_cpu == vcpu->cpu)
-+		return;
-+
-+	/*
-+	 * On RISC-V platforms with hardware VMID support, we share same
-+	 * VMID for all VCPUs of a particular Guest/VM. This means we might
-+	 * have stale G-stage TLB entries on the current Host CPU due to
-+	 * some other VCPU of the same Guest which ran previously on the
-+	 * current Host CPU.
-+	 *
-+	 * To cleanup stale TLB entries, we simply flush all G-stage TLB
-+	 * entries by VMID whenever underlying Host CPU changes for a VCPU.
-+	 */
-+
-+	vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
-+	kvm_riscv_local_hfence_gvma_vmid_all(vmid);
-+}
+ 		if (kvm_check_request(KVM_REQ_HFENCE_VVMA_ALL, vcpu))
+ 			kvm_riscv_hfence_vvma_all_process(vcpu);
 -- 
 2.43.0
 
