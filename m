@@ -1,181 +1,77 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5D422DA17;
-	Fri, 13 Jun 2025 18:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B691FAC50
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749839078; cv=none; b=AoPjaDYvYciY7qVRErgJTW2kTxH3i1tgPd+PAFxX9d+fkxckEnV1IP2XOoOWeTPbiuLjnlYmAjR8yx81Z18Acw4RkdheC32F37LsccT2zu7+7girqUrrdfywIEug3T6zINYvFBqb12DITWWXVPV+GJNCCkRGVjQuPvFM2my2hdw=
+	t=1749839230; cv=none; b=BhjcUx74NDH5m+H3jqYvV4TcqJRKBePL8An6OSuFZ1UDQD9ZmcYgSs+4yswVHxNeKhf1q/xqkaY/ggeMlu67fhvQHN1Wi2YrPMNHf8+5dIrGeBjdqaQyEa78M7r+LcK5K1RKKvMoRb2nJXj/uINi5tXYe59OVJU8zISi4YhX77M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749839078; c=relaxed/simple;
-	bh=u/zWITcOMIRljTDaZ7RdWXJT1XpqzIjlB1a9ruiCQTw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R4UWGJhDnfj4UejbAQCCnnrWl99L9i7obMJzRO1haEjCfnlXnFMSy6oaNjXL+n39J+PxpBfQkjtCHDAcyuFojTgkK65qMsUVkEZlhrh8ya5LVsuOagCnR3TIZ2IIiYSvLZpdlhupV+C5GBBV9q99158PQhT6YMzLuv5g4Ksi1Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=X0I0IJW/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749839230; c=relaxed/simple;
+	bh=cRXdO1PVRpwX6IV7eVZiAEZkjs/w/TAYBXSY+UTxwZg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kawtg/p9SbfZykaifQisVWXpLKmDN/qkng7bp5U/UQWYDtpG7Md/++f731RnTiC8JVqQDV0qP2DeAFbtIs9MJpngwt0azre/LtPpaTotd1myZ/9jH4zpDdjqYKbuViAH9BqMA9H1B90o7lgiqjLbptxemda/FKvbL3wHLgd276M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=aWmi6toE; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X0I0IJW/"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55DGc2gs012194;
-	Fri, 13 Jun 2025 18:24:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=93a2OA8x5WTBOx3V4BM74zkkqwdo71Q9IIak0qIYa
-	kk=; b=X0I0IJW/3wBN9hKlyWAq/6FGzFU1tavC5ww8nFLjsGvPSEzpM/WhPVTSY
-	SVD5u9LW55wE4rZu2MPsbfWB8LRIzwNlO98FM8d0fYEU6RP97Rpc2rbiWwQTnoHu
-	9zl7RK/eQupjg/9RUVx60fFJsPPvZJ9SsP5QxquHq4yaw0K3oM36nsdLO7OcZ8c1
-	V7VfoxTqB7ImpLdxGDf1pSQeSMCWl7Rc9I9ZvQCi5AF9ma0vOprr8n8PY1BZkfY5
-	SGA+Yj1IqxXHz3duMFDvsSl7o0bOcmoc+sMXiGyqxrah7AHXG1BFtwxIn8WMls/V
-	XdKghM8wyCrm7gFNYnoZjEGBIjVfw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474hgv1t2y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 18:24:22 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55DEoZY3027940;
-	Fri, 13 Jun 2025 18:24:21 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47518mu7fx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 18:24:21 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55DIOH8s918030
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Jun 2025 18:24:18 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A965C58045;
-	Fri, 13 Jun 2025 18:24:17 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DBCB558050;
-	Fri, 13 Jun 2025 18:24:16 +0000 (GMT)
-Received: from spec2code.sl.cloud9.ibm.com (unknown [9.59.201.160])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 13 Jun 2025 18:24:16 +0000 (GMT)
-From: Qiushi Wu <qiushi@linux.ibm.com>
-To: linux@roeck-us.net, linux-kernel@vger.kernel.org
-Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org, zohar@linux.ibm.com,
-        qiushi.wu@ibm.com, Qiushi Wu <qiushi@linux.ibm.com>
-Subject: [PATCH v2] hwmon: ibmaem: match return type of wait_for_completion_timeout
-Date: Fri, 13 Jun 2025 14:24:13 -0400
-Message-Id: <20250613182413.1426367-1-qiushi@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="aWmi6toE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=6GAStOtcbUCMdDEfldQq+1/854ZKfmrtvJL2oMoKas4=; b=aWmi6toEPg/qSu7ygt0dMn6Ytp
+	ML9VgtH0uAqDlmBlq1uBgF2zsONG8yIuqU/PMAF+rDnBa+U2G8Szqt7HADzoP7gfS4vPPu6tViZTP
+	O2j5fKHCA9O148mGQR5N/4C+8A6Hr4D7TEc8xSISuj7eSkhszs9KkIfdLm3yh+87PWIdNbhaN6YNb
+	aTSBAOGOnAZEgIIC6jgYvj4+MZcE0wAkDR1RtCzSPqn7kU+oIg5lwL5dGc3oaY03w40MieePf/N46
+	7KaOOrUa8kyZIZ1Pn+rCg9iDofMAqyEGP779k20fpbLI+xTn4tq/1G+oQwpXfnGsu3GKpd+DLdDMa
+	OmzDUREg==;
+Received: from [191.204.192.64] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uQ97G-0039wK-89; Fri, 13 Jun 2025 20:27:02 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: "Alex Deucher" <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	amd-gfx@lists.freedesktop.org,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH 0/2] drm: amdgpu: Fix includes of <linux/export.h>
+Date: Fri, 13 Jun 2025 15:26:49 -0300
+Message-ID: <20250613182651.1758760-1-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Pfr/hjhd c=1 sm=1 tr=0 ts=684c6cd6 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=1kHW3ahkMzfw6R5McVEA:9
-X-Proofpoint-GUID: 93Rby3jhY1YasWEmJu87sGQ83iSsTXWv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDEzMSBTYWx0ZWRfX/jmC5OOOsrLj zeu0MrTjtPVF9HL8mKazVZlTNRn7g0/OltI7SFqPCMJiChIzx58tkbDX2ApNKZdoN0AwYtQanRt ZFm560jsZNejYmoflGCC37osWCC+lVgNLUllYMiOcGtfAPSXQSk5WFYqAfzMl2kDycFRmgmaYKS
- D5IHNhlPmc/t5S5IAW8cDZPLicj6Bh+8jY6Ss+hgaDWoaiaZBJabC2jlvZPtQ/xxfsgu0Vq4l8x MbEDc9tMjclVnWCGKMMgG44U6d+PbTU2Icw+ZfK0o/WTfid85FdCEt1j/LO2lo97gVlkssBwVcQ /rlOfr2DTopH06ltr913RZqQydhlO3yYMlbRSe14cN/hu4IyeaodWFnHzWQ3J6ooznzJ8znp/8o
- LCTaMpVNmbD3KFVkk8MvcHDPB8IvUJxmjAwC9Mf8yYM66CLSqIgpaT2qfM/uV+eo9d6UPRMr
-X-Proofpoint-ORIG-GUID: 93Rby3jhY1YasWEmJu87sGQ83iSsTXWv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-13_02,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0
- clxscore=1015 phishscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506130131
 
-Return type of wait_for_completion_timeout is unsigned long not int.
-Check its return value inline instead of introducing a throw-away
-variable.
+Commit 7d95680d64ac ("scripts/misc-check: check unnecessary #include
+<linux/export.h> when W=1") and commit a934a57a42f6 ("scripts/misc-check:
+check missing #include <linux/export.h> when W=1") added new checks for when the
+include <linux/export.h> is missued by drivers. This patchset make drm/amd code
+compliant to this new commits.
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Qiushi Wu <qiushi@linux.ibm.com>
----
- drivers/hwmon/ibmaem.c | 27 ++++++++-------------------
- 1 file changed, 8 insertions(+), 19 deletions(-)
+See also: https://lore.kernel.org/dri-devel/20250612121633.229222-1-tzimmermann@suse.de/
 
-diff --git a/drivers/hwmon/ibmaem.c b/drivers/hwmon/ibmaem.c
-index 157e232aace0..daed437d34a4 100644
---- a/drivers/hwmon/ibmaem.c
-+++ b/drivers/hwmon/ibmaem.c
-@@ -349,7 +349,7 @@ static void aem_msg_handler(struct ipmi_recv_msg *msg, void *user_msg_data)
- static int aem_read_sensor(struct aem_data *data, u8 elt, u8 reg,
- 			   void *buf, size_t size)
- {
--	int rs_size, res;
-+	int rs_size;
- 	struct aem_read_sensor_req rs_req;
- 	/* Use preallocated rx buffer */
- 	struct aem_read_sensor_resp *rs_resp = data->rs_resp;
-@@ -383,17 +383,12 @@ static int aem_read_sensor(struct aem_data *data, u8 elt, u8 reg,
- 
- 	aem_send_message(ipmi);
- 
--	res = wait_for_completion_timeout(&ipmi->read_complete, IPMI_TIMEOUT);
--	if (!res) {
--		res = -ETIMEDOUT;
--		goto out;
--	}
-+	if (!wait_for_completion_timeout(&ipmi->read_complete, IPMI_TIMEOUT))
-+		return -ETIMEDOUT;
- 
- 	if (ipmi->rx_result || ipmi->rx_msg_len != rs_size ||
--	    memcmp(&rs_resp->id, &system_x_id, sizeof(system_x_id))) {
--		res = -ENOENT;
--		goto out;
--	}
-+	    memcmp(&rs_resp->id, &system_x_id, sizeof(system_x_id)))
-+		return -ENOENT;
- 
- 	switch (size) {
- 	case 1: {
-@@ -417,10 +412,8 @@ static int aem_read_sensor(struct aem_data *data, u8 elt, u8 reg,
- 		break;
- 	}
- 	}
--	res = 0;
- 
--out:
--	return res;
-+	return 0;
- }
- 
- /* Update AEM energy registers */
-@@ -491,7 +484,6 @@ static void aem_delete(struct aem_data *data)
- /* Retrieve version and module handle for an AEM1 instance */
- static int aem_find_aem1_count(struct aem_ipmi_data *data)
- {
--	int res;
- 	struct aem_find_firmware_req	ff_req;
- 	struct aem_find_firmware_resp	ff_resp;
- 
-@@ -508,8 +500,7 @@ static int aem_find_aem1_count(struct aem_ipmi_data *data)
- 
- 	aem_send_message(data);
- 
--	res = wait_for_completion_timeout(&data->read_complete, IPMI_TIMEOUT);
--	if (!res)
-+	if (!wait_for_completion_timeout(&data->read_complete, IPMI_TIMEOUT))
- 		return -ETIMEDOUT;
- 
- 	if (data->rx_result || data->rx_msg_len != sizeof(ff_resp) ||
-@@ -632,7 +623,6 @@ static int aem_find_aem2(struct aem_ipmi_data *data,
- 			    struct aem_find_instance_resp *fi_resp,
- 			    int instance_num)
- {
--	int res;
- 	struct aem_find_instance_req fi_req;
- 
- 	fi_req.id = system_x_id;
-@@ -648,8 +638,7 @@ static int aem_find_aem2(struct aem_ipmi_data *data,
- 
- 	aem_send_message(data);
- 
--	res = wait_for_completion_timeout(&data->read_complete, IPMI_TIMEOUT);
--	if (!res)
-+	if (!wait_for_completion_timeout(&data->read_complete, IPMI_TIMEOUT))
- 		return -ETIMEDOUT;
- 
- 	if (data->rx_result || data->rx_msg_len != sizeof(*fi_resp) ||
+André Almeida (2):
+  drm/amd: Do not include <linux/export.h> when unused
+  drm/amd: Include <linux/export.h> when needed
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_i2c.c      | 1 -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.c   | 1 +
+ drivers/gpu/drm/amd/amdkfd/kfd_chardev.c     | 1 -
+ drivers/gpu/drm/amd/amdkfd/kfd_flat_memory.c | 1 -
+ drivers/gpu/drm/amd/amdxcp/amdgpu_xcp_drv.c  | 1 +
+ 5 files changed, 2 insertions(+), 3 deletions(-)
+
 -- 
-2.34.1
+2.49.0
 
