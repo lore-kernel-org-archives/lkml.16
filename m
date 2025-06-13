@@ -1,68 +1,169 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8D1757EA;
-	Fri, 13 Jun 2025 18:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4719230D14
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749839440; cv=none; b=XMFfJoTC4Z/pGFrpHtrkh8hqwm0tYEv/Mtz40sv1GMe1tW/F8F2q3D1kCRgy+j8bUqXOKE8AWWX+cvX9zuxdry6fMVVqBsKLnMVAGBzNUZEZkJbg0OfaY39gYuZwsZMoh7lnWalBVUUTd259BlXX6hoZfm6xsJcd0baj/06JVKs=
+	t=1749839490; cv=none; b=VWpL7gocmexxc7JF7wQyEfuHnYlh6PyArQm62gHqG2R5Qhpdu1eP3r0I5vxK3rhrpLIxb/gCd8PNbALLkOht58bksXw+YNjLMShH0fDPm1WM95LXGSIcgxIE66a7KOW0uQ/+ZXFyl7YsZpa7OBb2yeLRFddR3H3bgJIx4AuqHoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749839440; c=relaxed/simple;
-	bh=XZQLn+HoJR/0FeiwkXYxiPLVSYLl9Ll/HtMmUW7rhzM=;
+	s=arc-20240116; t=1749839490; c=relaxed/simple;
+	bh=0Xnneww3/PFszSCOvv5j2eaodIflSS1NySvaG/CLxVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BtzsBNcpOp8LlqMjr8oDejKVSKwAmo+fwGw49QHNmfgZpjyZIay3z05Dj1kPia3GXbDfGNFkwGt/1Yw8cFji+OSwUMExSgX8+9PmWbNiqXAm65gnufM6/r12lmgjh3pgx5Q1JTPKa+mlo5li4gbD1t9NBgxBlgcY6simQQ+SDF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BTeFuZPW; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=ELcOT9tYyanQyhAf8oLNweE1lM/vSEhTZuSR8GlhAsAmJD5lT59BHoXg3hhh81CXeBLgSoYLZ131Hb/sp+yoo9QkvOsh4bY77ajgZACZJkZlPzOy5itFsCxFnW7LF/atbH3i9Ua3l93UiAOy8E6PnbPfnNvCH8FDYdQyf7aHljE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BiD3JfXr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BTeFuZPW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=paNCNvp4BgQN1E3xRGQ5/dNU8wg6xvReIPZ5+6tjq5o=; b=BTeFuZPWYoQB1Ho4/KW8eoihcL
-	mj0KBUiyZtxkiyBplin5zmyxooCRUU4LHBbNx8kyh8NCg3HvVh6BYmLpCj/gLR9c/6+ltQe+iKt/i
-	eCTnFIB5niTsheCgqugvmsb3iTRlZ5XfKbTdIMa/AfG2ylK0ohGWSyZMJ9PJlHr0v6Q4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uQ9Ae-00Fkv9-DZ; Fri, 13 Jun 2025 20:30:32 +0200
-Date: Fri, 13 Jun 2025 20:30:32 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, imx@lists.linux.dev,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH net-next v2 06/10] net: fec: fec_enet_rx_queue(): use
- same signature as fec_enet_tx_queue()
-Message-ID: <30c3f258-1eca-4cba-9999-1059cba219d7@lunn.ch>
-References: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
- <20250612-fec-cleanups-v2-6-ae7c36df185e@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BiD3JfXr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749839487;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ABrGU8rVjmHN2cPq2PVD204TdB4R7E4BJeclzHtUZeU=;
+	b=BiD3JfXraD/5dL3k5/Ekyq+qIAp5wcRkH1qxq2gkRBnFJUN/t1WU70SP8XF4jjInBicfis
+	W2z68xG/JGyaPzxQh3M18rw8wB9YyNl0lYJoTBWq3t63+fjIImf6S3vw8NFXJ26SHOLIRf
+	RMPB/gdyWRLn94a2gra7AKSP0OUuEP8=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-338-E0Hg5eYdM8q4c4tPtWSSqw-1; Fri, 13 Jun 2025 14:31:26 -0400
+X-MC-Unique: E0Hg5eYdM8q4c4tPtWSSqw-1
+X-Mimecast-MFC-AGG-ID: E0Hg5eYdM8q4c4tPtWSSqw_1749839486
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fb2910dd04so45869476d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:31:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749839486; x=1750444286;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ABrGU8rVjmHN2cPq2PVD204TdB4R7E4BJeclzHtUZeU=;
+        b=OTzvK+nbU47ROgxKUYRuRGC50wHqh8Wsc2/WX/mr2xceC2+TsXs0xywwQCnfgtBt/9
+         KvH6L8vCrVBpkjNAxQSkdyBEmyoX54dWI4mQnIulr8iPNurgFZicaMC+6Osv3D1yoIIS
+         sMZo7KOMvwkp2MGQgVuv19eVwk8QPdA7DOaWdWdV4mb6YQ3NdKBtIYa0ZKBfthiMt3qq
+         lot6LE1opfg7eT0fX8VXiYsPbZM76McnT8L2yvRvFDfAKd7kIrFeuJnGDnav+ph1i9Wq
+         S4pVWYaXn5n9xfDFM7UfrHsme3AkJwR762JGsnK8J+JODUuLFVXBpWPj2MMXlfglw1fk
+         UDQA==
+X-Gm-Message-State: AOJu0YxVQr8MDhMrnxEUqQkkm4TnNghSbUnzvgh3Xk6IvDnTxECMb2TQ
+	nOuKTWjoHGlQzrhsNCpzpB7e887Nm9gcBUu06fpiKSGI8RdUoGZcV+JhRmuD2aku8zDxpB8fGrq
+	Qtl7+8NDCZp+sSJUWMiorKeKiQE1tMo2NiaozWQNNPnSPRkIBNfTH11HPWLnpMxZC3w==
+X-Gm-Gg: ASbGncsmJLKq+L0NUhSajy7iAhWdUXx/XJdBz36fz9JT5uTWXy6YlII3tTnLsydnAME
+	VCDaN2zIeMkEcwtLY2A4rYcP168GJrje3jKhI7susPm1cIZgkDSLeh8jTN58G07YUx7O/GThvXy
+	fEt7Jo2CUvd5luDP8SoC4nf3TtLY9EuGSTeamrlYlh0nn2IWiwsit97AVLnfTwMTE1flZ0hz4XB
+	cEEV/9kneEKc9F72gAbOW1JmRdybWswU/3TTXX5pjWrWUwc0RGg5QfrI7Mkdm7BelEwDHXSNHVa
+	7YYds/CaBkH1aQ==
+X-Received: by 2002:ad4:4ea7:0:b0:6fa:d956:243b with SMTP id 6a1803df08f44-6fb477926d9mr6788076d6.37.1749839485941;
+        Fri, 13 Jun 2025 11:31:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHJOS9hRKQi3Bj5CwhVVbf6JvljFhJrSLc5HsQ6rHSGhKFYSvsg6Z6aF2Ee1Sxv4NazF/xpCQ==
+X-Received: by 2002:ad4:4ea7:0:b0:6fa:d956:243b with SMTP id 6a1803df08f44-6fb477926d9mr6787716d6.37.1749839485531;
+        Fri, 13 Jun 2025 11:31:25 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c315cbsm24603416d6.67.2025.06.13.11.31.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 11:31:24 -0700 (PDT)
+Date: Fri, 13 Jun 2025 14:31:21 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>
+Subject: Re: [PATCH 3/5] mm: Rename __thp_get_unmapped_area to
+ mm_get_unmapped_area_aligned
+Message-ID: <aExueZPrt7z-jRdc@x1.local>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-4-peterx@redhat.com>
+ <20250613141745.GJ1174925@nvidia.com>
+ <aExANjUUpmkpo3p4@x1.local>
+ <20250613160020.GM1174925@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250612-fec-cleanups-v2-6-ae7c36df185e@pengutronix.de>
+In-Reply-To: <20250613160020.GM1174925@nvidia.com>
 
-On Thu, Jun 12, 2025 at 04:15:59PM +0200, Marc Kleine-Budde wrote:
-> There are the functions fec_enet_rx_queue() and fec_enet_tx_queue(),
-> one for handling the RX queue the other one handles the TX queue.
+On Fri, Jun 13, 2025 at 01:00:20PM -0300, Jason Gunthorpe wrote:
+> On Fri, Jun 13, 2025 at 11:13:58AM -0400, Peter Xu wrote:
+> > > I didn't intuitively guess how it works or why there are two
+> > > length/size arguments. It seems to have an exciting return code as
+> > > well.
+> > > 
+> > > I suppose size is the alignment target? Maybe rename the parameter too?
+> > 
+> > Yes, when the kdoc is there it'll be more obvious.  So far "size" is ok to
+> > me, but if you have better suggestion please shoot - whatever I came up
+> > with so far seems to be too long, and maybe not necessary when kdoc will be
+> > available too.
 > 
-> However they don't have the same signature. Align fec_enet_rx_queue()
-> argument order with fec_enet_tx_queue() to make code more readable.
+> I would call it align not size
+
+Sure thing.
+
 > 
-> Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> > > For the purposes of VFIO do we need to be careful about math overflow here:
+> > > 
+> > > 	loff_t off_end = off + len;
+> > > 	loff_t off_align = round_up(off, size);
+> > > 
+> > > ?
+> > 
+> > IIUC the 1st one was covered by the latter check here:
+> > 
+> >         (off + len_pad) < off
+> > 
+> > Indeed I didn't see what makes sure the 2nd won't overflow.
+> 
+> I'm not sure the < tests are safe in this modern world. I would use
+> the overflow helpers directly and remove the < overflow checks.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Good to learn the traps, and I also wasn't aware of the helpers.  I'll
+switch to that, thanks!
 
-    Andrew
+> 
+> > +/**
+> > + * mm_get_unmapped_area_aligned - Allocate an aligned virtual address
+> > + * @filp: file target of the mmap() request
+> > + * @addr: hint address from mmap() request
+> > + * @len: len of the mmap() request
+> > + * @off: file offset of the mmap() request
+> > + * @flags: flags of the mmap() request
+> > + * @size: the size of alignment the caller requests
+> 
+> Just "the alignment the caller requests"
+
+Sure.
+
+> 
+> > + * @vm_flags: the vm_flags passed from get_unmapped_area() caller
+> > + *
+> > + * This function should normally be used by a driver's specific
+> > + * get_unmapped_area() handler to provide a properly aligned virtual
+> > + * address for a specific mmap() request.  The caller should pass in most
+> > + * of the parameters from the get_unmapped_area() request, but properly
+> > + * specify @size as the alignment needed.
+> 
+>  .. "The function willl try to return a VMA starting address such that
+>  ret % size == 0"
+
+This is not true though when pgoff isn't aligned..
+
+For example, an allocation with (len=32M, size=2M, pgoff=1M) will return an
+address that is N*2M+1M, so that starting from pgoff=2M it'll be completely
+aligned.  In this case the returned mmap() address must not be aligned to
+make it happen, and the range within pgoff=1M-2M will be mapped with 4K.
+
+-- 
+Peter Xu
+
