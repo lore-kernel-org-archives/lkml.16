@@ -1,129 +1,120 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7ABB79E1;
-	Fri, 13 Jun 2025 10:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A341879E1
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749810941; cv=none; b=ERBwI7WDKenmKYyeapU+z+7qgWoM7guzJTcaxBSarYCvPFbbRd9yTXjqdT8Er4ENICPybvOtZww7zlzXpqz9+/VxhI8XWip1I37ALVooGiHeEBnqklokojfatDT+OCd5Q41SGKXfg8pnvmh0NsETiqduIbtXUV1DOO97GE7CTmk=
+	t=1749811118; cv=none; b=jMtZ7vLrXG4JuPcnodMRoS8q7gtGkuXOJBWbDhUgMV5UkqVX86PyzSlTb1g0NAxE5rajAST0tqUKpbRon1Lxd8g0Drlnr/x9z+ygfiCtxAVhQX2tDt889rDTOeje1U/gYpqOPtOomprle6auG5D4qf5nU9g/LXlbXZod/LqP1sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749810941; c=relaxed/simple;
-	bh=TnbuuaFXflGc/rCk8aiN+olOX/vOi5g3IaRdtUlFnAI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mL81A9zjNM8H5BwE0RHBTMbbjr1oq7EIQ8Q4vGZGMJYQbPTERv65J26GhHxIg7SZh3vsb9S9NobDQWPK8tdZCwcrUosXdvBtjibjrY95iQfyP5Lao5N2N1KtC2VHI8Vga/6YG9qrn74s6a1mxpddDvKGpGFwG0ES7Y+1dcisRek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czOErQYj; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czOErQYj"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad883afdf0cso386401366b.0;
-        Fri, 13 Jun 2025 03:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749810937; x=1750415737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Um8WIzMEpACnf9R59q9VDvyXlQNmMunrYEvCxR3bbcQ=;
-        b=czOErQYjNd2M9BNAESwjP/9/zxQzR9OQVearFd6zGJ59dvzaaF/WT7aoyrPfeVFBFw
-         3x/Gixh+w4H//0sBAIPYY2GJsCHDg2HN5G0QK/atQ/GD5Ld9O8nBXxFdmCtPBqcDlHkJ
-         d4C3D9m327OydvZpLZl5ZIHAlYjI0AGm/n+uyBzC3M+r3R+NvP9/e6ycrhtVPMm8ygb9
-         tECMYJ8HgTf+jnnnILbr9l+eTKzyv7I8J14gDBYGo12cvKnt/NBFJR5yR8E0iZPUiUjY
-         7BFbe/yl2jLp1dqKzi8VZpaZDCH+b1xsIg7LB1Y8Kog/6RUfLBRhnmPS+T7PmO+5DJNH
-         7RuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749810937; x=1750415737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Um8WIzMEpACnf9R59q9VDvyXlQNmMunrYEvCxR3bbcQ=;
-        b=oy3oYYAJJittsPtG/uLDhQXcd7CEsWcT3dwaY6KvStGool2mBKOb648HK6xsx1LCkO
-         sNAxIB6R4ZmQGtJu/2lQU89co7dVnE6hvTzWq45vmTzj8UDraEFhpoHQyRkyzLXdxYY8
-         Corw9nDzbgKpOLCVmNT3I/ajJP1UJROFK9nYEGN5c8SXDJxNRTYyLcw3wyELYufZTqaG
-         U1tjOyJ4FJDuDNDmG85jBAOkzSSI4J5g46YwvR4V72rEIInsuFOSD3+DIMDKhbpFd3ih
-         FN9aPdOPjwu+SCstRCbYFUihfygTH69f4VnI3jK+wKIJpKkMJ4pHa8cZOnFWj3w5beMk
-         kXYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdWT8qYiNx+TIOqhQDt6xAsUJ86Vn1P/svrOLucuf/I1CnxrftOecd+wd6p0sy/PuO6buRPVYfwTWEtnaw@vger.kernel.org, AJvYcCW1y/51lfGcZJ74IB9dmt4GxlTwR5ESXLt4iocceXn8ljK0CfJsbEOAifT1JaXFEnHiswA7Ww6goPetwayp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGAsfs0GglXkc2wjaMGS/0R8KRSNvdZdQaruWoeQi6Ryo3qOpB
-	Od3OK0roLzCiLsroye2erERbBaXFlcjxC+seY2MXhTPhjs9l/AkmdHpWHdy/iSknoLaIpiXBE/4
-	b6pBvuH//KoaX5ThlM7SGZ9k2LDeBzy8=
-X-Gm-Gg: ASbGncsVHGwrEUHYACDXFsAxTfQgmRZcdHRS8bL3CyCEu2tO3YyxDdgR6PbRTwrfBIB
-	RqxlwXz1o9DIzeZZz/eGfFR4zc5XSkTLQrhKu+J2VZ1WqhGjlHbErrkCIDeqHrrxJbviy86JPvr
-	XXl6ye5wqPlKenu3pX9cBkACc3D86FAOgG3nUj5rxqHUA=
-X-Google-Smtp-Source: AGHT+IE0Ed+LzM3wZqfUgv1QO1VkqAtgLXZRkCKOCmoe3mJkU4FRUHCQ3q1iNK/cFYAjlmUccsN/3Kxa5zQ1XSSDLAo=
-X-Received: by 2002:a17:907:a08a:b0:add:f189:1214 with SMTP id
- a640c23a62f3a-adec562fe77mr218113466b.24.1749810936844; Fri, 13 Jun 2025
- 03:35:36 -0700 (PDT)
+	s=arc-20240116; t=1749811118; c=relaxed/simple;
+	bh=GmyPyeWQVV5WBtGunWOAp07ZwC+/wYZ+4d1J4CFpw5c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aTf/ZoeSChg79DMZ6Z9+NP4Q+PKxhrVt0JkPcwYbnCmYrP95ZGSO1DjRP+W86ccmHbc4pG7rgmoHf565f1O2qRTVRO6vgCT9p+t/+4FdRjCvW0YN18ZAp9bkQrxMFmvzrANAnMbsA2D+Edu5Oha0GjQyfcFUZHnNwr77TNM7l0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w012.hihonor.com (unknown [10.68.27.189])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bJbRM57LHzYl4Jq;
+	Fri, 13 Jun 2025 18:36:31 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w012.hihonor.com
+ (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
+ 2025 18:38:31 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
+ 2025 18:38:31 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+	<niuzhiguo84@gmail.com>, <bintian.wang@honor.com>, <feng.han@honor.com>,
+	wangzijie <wangzijie1@honor.com>
+Subject: [f2fs-dev] [PATCH] f2fs: avoid non-section-aligned size pinned file generation
+Date: Fri, 13 Jun 2025 18:38:29 +0800
+Message-ID: <20250613103829.1895191-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGudoHGfa28YwprFpTOd6JnuQ7KAP=j36et=u5VrEhTek0HFtQ@mail.gmail.com>
- <20250613101111.17716-1-luis@igalia.com>
-In-Reply-To: <20250613101111.17716-1-luis@igalia.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Fri, 13 Jun 2025 12:35:24 +0200
-X-Gm-Features: AX0GCFslrH7-bJufkZwsq4W6csqtHJM0UkhdC0uVdrklAs2PQTd6MkZXdSgqELY
-Message-ID: <CAGudoHEu2v4MisyGO6gcBcnfKMgK41Y1=syhZoPm4exvj4fLQA@mail.gmail.com>
-Subject: Re: [PATCH v2] fs: drop assert in file_seek_cur_needs_f_lock
-To: Luis Henriques <luis@igalia.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-dev@igalia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: w001.hihonor.com (10.68.25.235) To a011.hihonor.com
+ (10.68.31.243)
 
-On Fri, Jun 13, 2025 at 12:11=E2=80=AFPM Luis Henriques <luis@igalia.com> w=
-rote:
->
-> The assert in function file_seek_cur_needs_f_lock() can be triggered very
-> easily because there are many users of vfs_llseek() (such as overlayfs)
-> that do their custom locking around llseek instead of relying on
-> fdget_pos(). Just drop the overzealous assertion.
->
-> Fixes: da06e3c51794 ("fs: don't needlessly acquire f_lock")
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Suggested-by: Mateusz Guzik <mjguzik@gmail.com>
-> Signed-off-by: Luis Henriques <luis@igalia.com>
-> ---
-> Hi!
->
-> As suggested by Mateusz, I'm adding a comment (also suggested by him!) to
-> replace the assertion.  I'm also adding the 'Suggested-by:' tags, althoug=
-h
-> I'm not sure it's the correct tag to use -- the authorship of this patch
-> isn't really clear at this point :-)
->
->  fs/file.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/file.c b/fs/file.c
-> index 3a3146664cf3..b6db031545e6 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -1198,8 +1198,12 @@ bool file_seek_cur_needs_f_lock(struct file *file)
->         if (!(file->f_mode & FMODE_ATOMIC_POS) && !file->f_op->iterate_sh=
-ared)
->                 return false;
->
-> -       VFS_WARN_ON_ONCE((file_count(file) > 1) &&
-> -                        !mutex_is_locked(&file->f_pos_lock));
-> +       /*
-> +        * Note that we are not guaranteed to be called after fdget_pos()=
- on
-> +        * this file obj, in which case the caller is expected to provide=
- the
-> +        * appropriate locking.
-> +        */
-> +
->         return true;
->  }
->
+To prevent non-section-aligned size pinned file generated from truncation,
+add check condition in setattr. Meanwhile, clean up F2FS_I_SB.
 
-well i think this is fine, obviously ;-)
+Signed-off-by: wangzijie <wangzijie1@honor.com>
+---
+ fs/f2fs/file.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-I was hoping a native speaker would do some touch ups on the comment though=
-.
---=20
-Mateusz Guzik <mjguzik gmail.com>
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 6bd3de64f..31ecf615b 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1026,9 +1026,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ {
+ 	struct inode *inode = d_inode(dentry);
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
++	block_t sec_blks = CAP_BLKS_PER_SEC(sbi);
+ 	int err;
+ 
+-	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
++	if (unlikely(f2fs_cp_error(sbi)))
+ 		return -EIO;
+ 
+ 	if (unlikely(IS_IMMUTABLE(inode)))
+@@ -1047,6 +1049,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			!IS_ALIGNED(attr->ia_size,
+ 			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
+ 			return -EINVAL;
++		if (f2fs_is_pinned_file(inode) &&
++			attr->ia_size < i_size_read(inode) &&
++			!IS_ALIGNED(attr->ia_size,
++			F2FS_BLK_TO_BYTES(sec_blks)))
++			return -EINVAL;
+ 	}
+ 
+ 	err = setattr_prepare(idmap, dentry, attr);
+@@ -1068,12 +1075,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	}
+ 	if (i_uid_needs_update(idmap, attr, inode) ||
+ 	    i_gid_needs_update(idmap, attr, inode)) {
+-		f2fs_lock_op(F2FS_I_SB(inode));
++		f2fs_lock_op(sbi);
+ 		err = dquot_transfer(idmap, inode, attr);
+ 		if (err) {
+-			set_sbi_flag(F2FS_I_SB(inode),
+-					SBI_QUOTA_NEED_REPAIR);
+-			f2fs_unlock_op(F2FS_I_SB(inode));
++			set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
++			f2fs_unlock_op(sbi);
+ 			return err;
+ 		}
+ 		/*
+@@ -1083,7 +1089,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 		i_uid_update(idmap, attr, inode);
+ 		i_gid_update(idmap, attr, inode);
+ 		f2fs_mark_inode_dirty_sync(inode, true);
+-		f2fs_unlock_op(F2FS_I_SB(inode));
++		f2fs_unlock_op(sbi);
+ 	}
+ 
+ 	if (attr->ia_valid & ATTR_SIZE) {
+@@ -1144,7 +1150,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	f2fs_mark_inode_dirty_sync(inode, true);
+ 
+ 	/* inode change will produce dirty node pages flushed by checkpoint */
+-	f2fs_balance_fs(F2FS_I_SB(inode), true);
++	f2fs_balance_fs(sbi, true);
+ 
+ 	return err;
+ }
+-- 
+2.25.1
+
