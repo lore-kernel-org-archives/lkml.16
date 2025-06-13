@@ -1,107 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26942580E2
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBB21EEA47;
+	Fri, 13 Jun 2025 20:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846892; cv=none; b=LkPyP+ouIpDAqaUekWE13WtWs3PW/QfClqBiIVtcUwqV8dm1/zfZnqQEp4nrM6rrf9RQ/aM26E2ZX+0/SaKq52xLcCcNpbRtk7FZQuJ4LDa4QvP0GUj1owDZt+BvFuB2LEBFxFLFe2BLRmpuEY1XGgnGpRA+EEYKwAMiCDhcVPg=
+	t=1749847002; cv=none; b=QHmGMBX8gJk2UHimLpKjm0Tlzu9tdtEajiJaAsztaT/+1LE6/cXdKpegO5Cs8UGissoiXu3AngOquJbqYDABar0d3CFFpzEX4/9x9eMe9RZQ6+qR9yVW1TDobmI8212G+l3Wczwdo6jRyXm6j8M5BE4CH5AqWuTvLH3N4PG1x3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846892; c=relaxed/simple;
-	bh=U+QYmARSwcbzvZ/i5KLxyqmIuYaY0pIfNjwmsmfFJlQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YZZWqw+wUQaiqccOXF4+frUqmkqH+LXk2ZiTKcuNJMSTlkaXw70NcSZMu8yvAv9HcpS3u/aTc3GsnsBbxrDjaqrjKyDPMNZNL7KOb0xFZ9Z7iHJslGIe3DmbrzpAGLx/ufg6v4swW29o3e6as17+j2+HMQ0S6lVM/NXOVt7Cqvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=efMSumBu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749847002; c=relaxed/simple;
+	bh=NnH1RCLj13aA3sFjZVykyMDY+HQb1oGS1X8FV4CU9bE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D/cip1KWdtfjiDzA8rmeSdx7V90yydoE7/ie6FiT30kebAfDwE80+QCjkF7oEiFuttPFvKH7Xahep0i/Eh5Cl1JcJQoAyvvGcZHMRqQE7d8RosjQjBAB9X49X8LwLaCyBeQ9JV64eIP8MegCEh+KYBcQlQrs9kRZQLrGtwL/Yrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLljrNwW; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="efMSumBu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749846888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PqJYpZw2kfoWO8TuT9Cszrg+UIQ9YyscpMrbGv4wYIk=;
-	b=efMSumBuTbqLWCV3bxTiwPz+ClOPzzxvb+0Z+9BNnjIEnqVpP1ZZTETBpBFAbe6OYMOs/H
-	XjanPmpKss1yqtvpy5QNDW6zUG36BfywKlkeJKjfifeNPM+oOJ6GTBVTMQAIUyQGR2C/Hp
-	lQdnmg7zxtCTjVD1aypFcnga3eMkQvg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-64-NnXLubk3Mm-MFH-yOj4U6Q-1; Fri,
- 13 Jun 2025 16:34:44 -0400
-X-MC-Unique: NnXLubk3Mm-MFH-yOj4U6Q-1
-X-Mimecast-MFC-AGG-ID: NnXLubk3Mm-MFH-yOj4U6Q_1749846882
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D93918002EC;
-	Fri, 13 Jun 2025 20:34:42 +0000 (UTC)
-Received: from [10.22.89.154] (unknown [10.22.89.154])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C34F1180045C;
-	Fri, 13 Jun 2025 20:34:39 +0000 (UTC)
-Message-ID: <45bc529f-0949-4d3c-a9dd-e7a30eac22ea@redhat.com>
-Date: Fri, 13 Jun 2025 16:34:38 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLljrNwW"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-afc857702d1so2218364a12.3;
+        Fri, 13 Jun 2025 13:36:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749846999; x=1750451799; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9y/A/honPhmFr4lSoVYSv+uKbj6HRcW5lWe22QcZ78E=;
+        b=RLljrNwWVQvbkbBCrRFGN0BZSFzc+UUlGjKTsTJSxpSfJurh2duBM8fTuItDZLH0uf
+         R6mJVd99BSiVUtpbKME4sPYt7SEQ93R4DMI0gPwejfjztCWHEGkLxfq61McF6IV7y1Zj
+         DKaGljXDUoHYLp+m8GoAenmfzkPOTiTM+rd/VP02gZG5QKjIO0SWCWQynhiPmeAsgF+F
+         iZ74KZ+WM7Y7L0CJNd7QnXWMbvRdd9wzyJtUyJFkU3EeCQXR+EmjpbSE8FfR3KK/p+JQ
+         oUawnrwtBnftztlY2ePwOcb/YfGQ/yWqUQ6p1FN3e8HMUfgPzzReRtzv/XD7Qw0N6Kfs
+         lssw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749846999; x=1750451799;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9y/A/honPhmFr4lSoVYSv+uKbj6HRcW5lWe22QcZ78E=;
+        b=L6bR2pvO7FB2eqZjEq8ckaINI+C7FnNR1bl9UoJTFFr7tlE4qcVz/MJv3QdJ3eemFu
+         ynYGDHhXFYyBZT23ULxStSCO/1SCViLM6+vAH3L3WNDibmjMgQ0EHQ9m9CKF6W4HmkSp
+         YV8Gna5YJV3qfTfo/Bmrk89NcJhOeUjZk5FHnnT9pZNF91723Om9PK5MHu3tNpeiNdFu
+         QqN0oEMJDosabO4wXs45lLO6XnGjE0CiOq1TarwqiLwFp1pkAiF+OJ1J1x+A/L0+X882
+         +bGa3D1YLS4MTSVAtD/0icKFj3z1OBf2BVq8BScYnswngIEF4YTYHnIvxto/SBfjox9/
+         SC0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUA70oOjDQdhvNbLDtXgKLDCvExCGL/aMk1FzHe3WOFvTl2CZnXQ9tvvXt+L5rBoQtEP4np46CXu/v+JtzH@vger.kernel.org, AJvYcCViAiCMXXJKk5H+QwNJYH+Ew8bxJGFHAcSpj+3q2Q2vT2G7YQ/2aQng7ogdsjUtE1fwd4yxDaoEUMd3JGofDHQW@vger.kernel.org, AJvYcCVyluA8veVHObNi58xL6GYICHP/9LY5nQ23eTSol73moGh93tLD6mzowAt8JqD2p5PeoY7SrYbjUFDlY0It@vger.kernel.org
+X-Gm-Message-State: AOJu0YziMo2SklnDTdylERci/zXI1XtIxuQ5/9UqmHZ6mJKf3ah+J7/0
+	o2BsCDL8yygdu09mKgkKC8FJL58pF9wtSbJSED/VDY/yiO3eiZ0MqNtDBDZgF0Tv6DATvWAUBS2
+	UBaZR1s2jD/Ww8cL8sLzjMZknbELzhMg=
+X-Gm-Gg: ASbGncthj6AAr1rMtzDUa2mkR2ry/UkIs737G1SvMiXun0REjkuz4m4EraOjCdYarX2
+	Qcnwk1ACdO2azWcIITxXEPxZaC+ec3flj8+7S5P0x/Kc13TpF7Co/uszNCdumvhJa2wwAwn/i9N
+	/RzRnzx3/39J2zUIonvq4yDUSqVCM9/1l/pAKnITs/UNAMzGD7QrMadgCnQmQ=
+X-Google-Smtp-Source: AGHT+IE+doNLPK7iQGfmHK2aMnyGWiCbAU7ZVE0TGsJ4ZiOD4WmzWHJdIsobeerDU3u3LIVga2Y0ZGSbz/IF/sJwSKQ=
+X-Received: by 2002:a05:6a20:734d:b0:1ee:efa5:6573 with SMTP id
+ adf61e73a8af0-21fbd475bc7mr1113173637.8.1749846999305; Fri, 13 Jun 2025
+ 13:36:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] scsi: fnic: Set appropriate logging level for log
- message
-To: Karan Tilak Kumar <kartilak@cisco.com>, sebaddel@cisco.com
-Cc: arulponn@cisco.com, djhawar@cisco.com, gcboffa@cisco.com,
- mkai2@cisco.com, satishkh@cisco.com, aeasi@cisco.com, jejb@linux.ibm.com,
- martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, revers@redhat.com, dan.carpenter@linaro.org
-References: <20250612221805.4066-1-kartilak@cisco.com>
-Content-Language: en-US
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <20250612221805.4066-1-kartilak@cisco.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250604231151.799834-1-surenb@google.com> <20250604231151.799834-8-surenb@google.com>
+In-Reply-To: <20250604231151.799834-8-surenb@google.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 13 Jun 2025 13:36:26 -0700
+X-Gm-Features: AX0GCFvv2DgZg91WNc7kjHPmacufJlE4-r5R7dF4S5nPd7EiZImIO8808EQSIdY
+Message-ID: <CAEf4BzYxOfk3_dTmQY4hkx-6f+OqpCOL0agY1x=9LM08py+s+A@mail.gmail.com>
+Subject: Re: [PATCH v4 7/7] mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
+	peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, mhocko@kernel.org, 
+	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, brauner@kernel.org, 
+	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
+	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
+	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, tjmercier@google.com, 
+	kaleshsingh@google.com, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please move this patch to the end of the series.
-
-The most important change here is:
-
-  [PATCH v4 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
-
-This is the major fix and and it should come first. All of these other DEBUG PRINTFs are less important.
-
-Thanks,
-
-/John
-
-On 6/12/25 6:18 PM, Karan Tilak Kumar wrote:
-> Replace KERN_INFO with KERN_DEBUG for a log message.
-> 
-> Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-> Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-> Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-> Reviewed-by: Arun Easi <aeasi@cisco.com>
-> Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+On Wed, Jun 4, 2025 at 4:12=E2=80=AFPM Suren Baghdasaryan <surenb@google.co=
+m> wrote:
+>
+> Utilize per-vma locks to stabilize vma after lookup without taking
+> mmap_lock during PROCMAP_QUERY ioctl execution. While we might take
+> mmap_lock for reading during contention, we do that momentarily only
+> to lock the vma.
+> This change is designed to reduce mmap_lock contention and prevent
+> PROCMAP_QUERY ioctl calls from blocking address space updates.
+>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 > ---
->   drivers/scsi/fnic/fnic_scsi.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
-> index 7133b254cbe4..75b29a018d1f 100644
-> --- a/drivers/scsi/fnic/fnic_scsi.c
-> +++ b/drivers/scsi/fnic/fnic_scsi.c
-> @@ -1046,7 +1046,7 @@ static void fnic_fcpio_icmnd_cmpl_handler(struct fnic *fnic, unsigned int cq_ind
->   		if (icmnd_cmpl->scsi_status == SAM_STAT_TASK_SET_FULL)
->   			atomic64_inc(&fnic_stats->misc_stats.queue_fulls);
->   
-> -		FNIC_SCSI_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-> +		FNIC_SCSI_DBG(KERN_DEBUG, fnic->host, fnic->fnic_num,
->   				"xfer_len: %llu", xfer_len);
->   		break;
->   
+>  fs/proc/task_mmu.c | 56 ++++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 44 insertions(+), 12 deletions(-)
+>
 
+The overall approach in this patch set looks good to me! PROCMAP_QUERY
+changes specifically are pretty straightforward, nice. LGTM:
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+And for the rest of the changes you seem to be in good hands, so I'll
+just be waiting for the final thing to land, thanks for working on
+this!
