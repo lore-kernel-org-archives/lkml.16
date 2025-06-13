@@ -1,47 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714991FF1C4;
-	Fri, 13 Jun 2025 15:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22078433D9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830100; cv=none; b=A2VCQPICeoj9kH0MtLNy0UZpPNeE4plJU3WbtVtjZF6fPcHpGE4czzhcBQNCLr0slvuodpAhM91JPa3SYEAGnkW3oiYnmkwNh1Ytu2p0WvJlG56fx+psSNcayX/bEJfSlRFnXjTiw+BVIkgQc5r1kAhbZ8xRRarP5yxtymNXMKQ=
+	t=1749830153; cv=none; b=dXZEVGNIG/BK1likN3WOM9spqUQvo2duqz6k/6sl1Roz2Qk/f/VaGkknbWE1dqq/ptjaGGF7K6B5Bkwz5UF9cPUpe1ugOWnqStnH4kzbAtj3pzsGK4F9xuAIrv6XjkBvBn0eZN5k0JQ+ywerHXnMK5+6RSozAUjULT3Dg2cNKGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830100; c=relaxed/simple;
-	bh=txoIyDrG2vubdoOdTiTdmcJQb8y7qy5caM50Zd8G8to=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=civ7wAVSSRrQNNQIKVpUL+/GP7hbtxYZ2WfH8rTPjH2gO2Fs1pitLNRMCNsmm4HEsjM0eeN/aOXaatVlD7GfE7touHrF0cidM7uNM1VMeXA6QvaSx8m7znWkRyyQQtxGmIzD5vD3x+chyzoV8zdpIRYJ7oXE1hYDFK+Ev1Ucwko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFPoa516; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749830153; c=relaxed/simple;
+	bh=LA9KMFx22SDlmIdsNUvqINZWyaU7ZbM3j1938f2NZIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpDiwoYLEG3TA7z/SGeoJWPZ8U32Wz639B31uab2CW+q1tRmENX/mYSnwidcnZy9yVa7wFC5F9mNpGTSvyzKngmw+gYjrZeBWgKPaDz66ydHbUQO8o6vTgYlEsasTB2pod0kJqCZbkqmhHLB9RN5h6tUcwakE1WmfY8IEHuyykg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j0RiOAkh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5uUXeId8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j0RiOAkh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5uUXeId8; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFPoa516"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42EBC4CEED;
-	Fri, 13 Jun 2025 15:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749830099;
-	bh=txoIyDrG2vubdoOdTiTdmcJQb8y7qy5caM50Zd8G8to=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gFPoa516Ela1DPXpH0f6/CS5GkNUbZK3nAYpFk07eqEgd3MKAhYJpF0s0lR7On5mh
-	 mTRs3hEkjNSmkoYXNNxat0V6bY1VSuL9RUaPNvJuo+3M4NxXHk18J9uIsBuF7BfZSP
-	 LT2mpCyuW/nNNqy98L7h2qv/SXJaaEYTKmk9KlAx8hO5gtnc+f8HFC2H9FWk4DGBfW
-	 6JdxNAw5ZVa4sVUYSYyFngUyMNeio0PIqep0t3E5XJuUwayNZIlc1Um9AsPD8fsgtD
-	 LX9RVvGngHT5S7OMOIWzgnwkmg0oDRjT3tctQgL7cXq2tYr8yGsydjYdO2oCDGOE4x
-	 7e6vKtWFkarMA==
-Date: Fri, 13 Jun 2025 10:54:58 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	vkoul@kernel.org, kishon@kernel.org, linus.walleij@linaro.org,
-	p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org, elbadrym@google.com, romlem@google.com,
-	anhphan@google.com, wak@google.com, yuxiaozhang@google.com,
-	BMC-SW@aspeedtech.com
-Subject: Re: [PATCH 5/7] ARM: dts: aspeed-g6: Add PCIe RC node
-Message-ID: <20250613155458.GA962010@bhelgaas>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j0RiOAkh";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5uUXeId8";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j0RiOAkh";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5uUXeId8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0B78A1F394;
+	Fri, 13 Jun 2025 15:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749830150; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6HmU5UhLrCtmKzq9wnn1QgmH8ORcyh4xVbHFKpC+Zdw=;
+	b=j0RiOAkhOLPB65cD9t0oUlmiajmJitWpJtjYL3zfcj8RxT8eZf9QwhM1JryG4M2i4H3Qm2
+	TYvDFraKeqMx3EJdg68mmcpRroOWydifjieNmgea5mdIVVX/QGLB6rtW63ZuJqJ2+x7OQ9
+	5/SxV/7RNUSOb5S/H/OLuIkl5a1hUU8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749830150;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6HmU5UhLrCtmKzq9wnn1QgmH8ORcyh4xVbHFKpC+Zdw=;
+	b=5uUXeId8BKmff9LhWy8yJ1Ii/fUxsdM73WC0+9DwBMruo23rZDh/FRjoGazKjO7Sm6i/WH
+	UrBTlGNIleB+8lDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=j0RiOAkh;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5uUXeId8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749830150; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6HmU5UhLrCtmKzq9wnn1QgmH8ORcyh4xVbHFKpC+Zdw=;
+	b=j0RiOAkhOLPB65cD9t0oUlmiajmJitWpJtjYL3zfcj8RxT8eZf9QwhM1JryG4M2i4H3Qm2
+	TYvDFraKeqMx3EJdg68mmcpRroOWydifjieNmgea5mdIVVX/QGLB6rtW63ZuJqJ2+x7OQ9
+	5/SxV/7RNUSOb5S/H/OLuIkl5a1hUU8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749830150;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6HmU5UhLrCtmKzq9wnn1QgmH8ORcyh4xVbHFKpC+Zdw=;
+	b=5uUXeId8BKmff9LhWy8yJ1Ii/fUxsdM73WC0+9DwBMruo23rZDh/FRjoGazKjO7Sm6i/WH
+	UrBTlGNIleB+8lDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F0EE0137FE;
+	Fri, 13 Jun 2025 15:55:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ZJ2FOgVKTGh+MQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 13 Jun 2025 15:55:49 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 85691A09B0; Fri, 13 Jun 2025 17:55:45 +0200 (CEST)
+Date: Fri, 13 Jun 2025 17:55:45 +0200
+From: Jan Kara <jack@suse.cz>
+To: Wei Gao <wegao@suse.com>
+Cc: Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, 
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v2] ext2: Handle fiemap on empty files to prevent EINVAL
+Message-ID: <5tsjb3wlierqa4cnevn4vv5dnwved7fsg55ggxlqf5coyptsjz@uco7crwg6x4m>
+References: <20250612142855.2678267-1-wegao@suse.com>
+ <20250613152402.3432135-1-wegao@suse.com>
+ <mxios5pbq3vq5267on4vnt5siozd4nap5w7wemsd2vlxoooexd@ia2ezhdu7ujq>
+ <aEytOcFNAI7ZcxzM@MiWiFi-CR6608-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,63 +91,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613033001.3153637-6-jacky_chou@aspeedtech.com>
+In-Reply-To: <aEytOcFNAI7ZcxzM@MiWiFi-CR6608-srv>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 0B78A1F394
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_THREE(0.00)[3];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.01
+X-Spam-Level: 
 
-On Fri, Jun 13, 2025 at 11:29:59AM +0800, Jacky Chou wrote:
-> The AST2600 has one PCIe RC, and add the relative configure regmap.
-
-> +			pcie0: pcie@1e7700c0 {
-> +				compatible = "aspeed,ast2600-pcie";
-> +				device_type = "pci";
-> +				reg = <0x1e7700c0 0x40>;
-> +				linux,pci-domain = <0>;
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-> +				bus-range = <0x80 0xff>;
-> +
-> +				ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
-> +					  0x02000000 0x0 0x70000000 0x70000000 0x0 0x10000000>;
-> +
-> +				status = "disabled";
-> +
-> +				resets = <&syscon ASPEED_RESET_H2X>,
-> +					 <&syscon ASPEED_RESET_PCIE_RC_O>;
-> +				reset-names = "h2x", "perst";
-
-PERST# is clearly a per-Root Port item since it's a signal on the PCIe
-connector.  Can you separate this and any other per-Root Port things
-into a Root Port stanza to leave open the possibility of future
-hardware that supports multiple Root Ports in the RC?
-
-> +				clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_pcierc1_default>;
-> +
-> +				#interrupt-cells = <1>;
-> +				msi-parent = <&pcie0>;
-> +				msi-controller;
-> +				msi_address = <0x1e77005c>;
-> +
-> +				aspeed,ahbc = <&ahbc>;
-> +				aspeed,pciecfg = <&pcie_cfg>;
-> +				aspeed,pciephy = <&pcie_phy1>;
-> +
-> +				interrupt-map-mask = <0 0 0 7>;
-> +				interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-> +						<0 0 0 2 &pcie_intc0 1>,
-> +						<0 0 0 3 &pcie_intc0 2>,
-> +						<0 0 0 4 &pcie_intc0 3>;
-> +				pcie_intc0: interrupt-controller {
-> +					interrupt-controller;
-> +					#address-cells = <0>;
-> +					#interrupt-cells = <1>;
-> +				};
-> +			};
-> +
->  			gfx: display@1e6e6000 {
->  				compatible = "aspeed,ast2600-gfx", "syscon";
->  				reg = <0x1e6e6000 0x1000>;
-> -- 
-> 2.43.0
+On Fri 13-06-25 18:59:05, Wei Gao wrote:
+> On Fri, Jun 13, 2025 at 11:42:17AM +0200, Jan Kara wrote:
+> > On Fri 13-06-25 11:18:38, Wei Gao wrote:
+> > > Previously, ext2_fiemap would unconditionally apply "len = min_t(u64, len,
+> > > i_size_read(inode));", When inode->i_size was 0 (for an empty file), this
+> > > would reduce the requested len to 0. Passing len = 0 to iomap_fiemap could
+> > > then result in an -EINVAL error, even for valid queries on empty files.
+> > > 
+> > > Link: https://github.com/linux-test-project/ltp/issues/1246
+> > > Signed-off-by: Wei Gao <wegao@suse.com>
+> > 
+> > ...
+> > 
+> > > diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+> > > index 30f8201c155f..591db2b4390a 100644
+> > > --- a/fs/ext2/inode.c
+> > > +++ b/fs/ext2/inode.c
+> > > @@ -895,9 +895,15 @@ int ext2_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+> > >  		u64 start, u64 len)
+> > >  {
+> > >  	int ret;
+> > > +	u64 i_size;
+> > >  
+> > >  	inode_lock(inode);
+> > > -	len = min_t(u64, len, i_size_read(inode));
+> > > +
+> > > +	i_size = i_size_read(inode);
+> > > +
+> > > +	if (i_size > 0)
+> > > +		len = min_t(u64, len, i_size_read(inode));
+> > 
+> > 
+> > Thanks! This would actually lead to excessively slow fiemap for 0-length
+> > files. So what I've ended up with is attached modification of your patch.
+> Thank you for your patient review, I really appreciate it. 
 > 
+> BTW i have stupid question:
+> Where can I see the real-time status of this patch? such as whether it has been merged?
+> I have checked https://patchwork.kernel.org/project/linux-fsdevel/list/
+> but do not find current patch, maybe this patch need specific sent it to
+> linux-fsdevel@vger.kernel.org? I just get maillist through scripts/get_maintainer.pl but
+> mail list not contain linux-fsdevel@vger.kernel.org.
+
+You cannot easily check it. You can see the patch is sitting in
+git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git for_next
+branch. During the next merge window, I'll push it to Linus.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
