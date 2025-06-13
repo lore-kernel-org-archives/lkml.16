@@ -1,85 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BD922DA0C;
-	Fri, 13 Jun 2025 12:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3488022616C
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749816463; cv=none; b=Z/9DdReZLZqKZtYGEqOvxWcCqKjkb7JVmEw5m8NSDLProL83DS/8IdN5v+BwpkSKAalpvTxJ5R8/kCB/A5SgpE1e3UDaB6rqmsYfGEe5ZPJS+rrjgpFnLSLE7aRp0PZwiVsvExvGHYWATim9W0/bFaNerURCt2Nu67h4BxiklLE=
+	t=1749816464; cv=none; b=LgrZbU5kxbMLTfA+6BoA1UBrTl8Db46/ZdbTsH/h4CUv+UqtbcI6B0HbtHwyBjOQ4KHGlFZZf4BGFB0MwWZYbI3AEgVYv1xqLOVup8VaALN6s03quK+Jl45POmNv/2jniU+RH/c+I5e3DIDvYbRPF+tuouDD6WnddG61dCM0ecc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749816463; c=relaxed/simple;
-	bh=zmixJqT+qnhq9tOVUyzq9GN1CmEoe3UJnls0UqSmEEU=;
+	s=arc-20240116; t=1749816464; c=relaxed/simple;
+	bh=dw+/2d23CWYaflUCx8yRKTMFvgtfvTK0Uw26ZiXjycM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DUwByuiHebSngxnoIPioPXog0zv/C2F6f/F82hNDwOAoQrIVIwDYo/rKp/fAclnrxBDkW5HPBC+gkWep6oNVWGNcaqLtwK9QL3H+8BNYk9JcznNxSgDQYp0r1kQqXXp2kv3V0Tl0LrE2/syKI+seIgld7vkF9Rv69JCUs0JsBMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oR0qDPoR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U9edJ1fOP94cNAAn4JlDenFZPzsu0koprs6bF9R2vLRUBjST3v6GN/Ko3Qf1IlUF2+lgGboub7b3MZ9YIHeF9Rh8BGBf5w57ITzp0FpuCNXPjw/F976Sv/S5Crx/g4dzi6gK08h89apnl8E0RZLOiSKeF4AGnbZ5MudkvKCFfGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=RvMTR4n1; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oR0qDPoR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D764C4CEE3;
-	Fri, 13 Jun 2025 12:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749816462;
-	bh=zmixJqT+qnhq9tOVUyzq9GN1CmEoe3UJnls0UqSmEEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oR0qDPoRWfpDHBJQO6hyV7QEIZbpkE4nst8WWHkhc3FIkWfPOLb9CmVLUbf2KCafM
-	 c1MJxCVgNRz8Kaug2d1LTaOiG59sgNiPTV4uyOMTXQMoOgpsfRDdrOVb3ccfucqSUI
-	 BzrUwo7+9xfz3j15iszoU/XkIsU9N9oK5a7NiSiwa2K1f0k1BBN2UDSH8995lmfGSg
-	 OIe8PINoMX9385fJC8nwiablTqjODVDGMWoPxfSvM+4AzDJQBGJxCcSbS0VuZ8o8gJ
-	 HRbAcyI+7TUAOyf0+x6n2cKy0+LBqoyzQFanLh4XErVFuZPkSeifyCMftAdX6rL6F/
-	 /+zjfs15GX7sg==
-Date: Fri, 13 Jun 2025 13:07:37 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Julien Panis <jpanis@baylibre.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] regulator: tps6594-regulator: Add TI TPS652G1
- PMIC regulators
-Message-ID: <735fc700-9cfe-474a-8c9a-8469e95bfb72@sirena.org.uk>
-References: <20250613114518.1772109-1-mwalle@kernel.org>
- <20250613114518.1772109-8-mwalle@kernel.org>
+	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="RvMTR4n1"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so1192172f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 05:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1749816459; x=1750421259; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=acAtLseFdOzXV3/vSQyIZE2n086nZk8lcarjj4fTGN8=;
+        b=RvMTR4n1UrjRqNKwmHuENPKn3T8acwu52R5cI/RHsYQtkRaLUgVl+P87T1VUcVOjKR
+         gcVXVzHJoSsJSItZmZ9sT21h2goqykeHpxvo06Ze5NoZa6O84wCx//IGw0c0imGWWaqU
+         7MJWfDQsDEHj40yAFsi0rTowJeYKcDHeyTfq+ZN000xjXCP1EJ29XYuFFg4lK6TFdzmm
+         gsW03rzUREo+ISUB1IgX4j2B5krOwn+rj389KJ7Ystg0cxZ02vEii+3tkmeWQTPE6gcd
+         IfpZqhdjg5oDp66R8na1Nu9D3ZZd9XwYW/Omqh+gyxuJZupufcOZZWO98fAEjYH7k6cA
+         BnDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749816459; x=1750421259;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=acAtLseFdOzXV3/vSQyIZE2n086nZk8lcarjj4fTGN8=;
+        b=sE6BD0+/TXMIB3n5TKS8GXfJXTGWHNoFjPIMFkhQqvebL5kDLnWa5g8owwMhB4P2lB
+         2+M9Qrf1KyrsunyJlsuNBvS+HNNsFStETMWI1f9bJ+0ibk5riXkfp+zvsz3xl5nND/jm
+         e5TkCVcmDvQp2Jp9GwtA7kSd5EcBuroxRIxysgUTm/V97H6LaANoAcnhm9M2ZGGivgsc
+         585qukr4a7iJFBGYC0YJLot8mVukTdria+7+wb6BhhleW3wxXGehZriXhJt6yQsj4uiU
+         7sz6cWvuFKQwIPtvH+7SY9eQG91Ncn/CFyGvkObJDpZtG2+5Fgns2G7/5UZf9kR1Focq
+         /X8A==
+X-Forwarded-Encrypted: i=1; AJvYcCV1qWMCgpr7aJcIBVmu+YiSthsscyTC07cR2eEd7el5JpStMU9XRGGYyamv5EpSsF/gLKggpttWpbgRZmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrx4+15Wf9HKDkb/mi363Hklq+BzzpzAAcVnHJ0ERtmEXjHmH/
+	I0NpmsIK+fvFCPAyuGX27lsTKHSUOB9P4vD+t3SdfaXi7sAwXBxlsIzmloN9DwMKF0eIlbfygrO
+	aMksC/R8=
+X-Gm-Gg: ASbGncvL8H/An18I8yesh9ciImCrRobe1T2wTOe/XQof+d3EQ7gRsrF0V/P0DiIu1bb
+	3VxJtM5wdHdUUM0JO7TUHQM66n+PbaQLU+VZgEAEoQ/6hlBoFsxbg3yTzuB3Al3qM5KgGJEGH+R
+	FGk23tcTA7mFFa9qEekQUwoA+IfaPhD/kYgDq/ZF5YspO7aEh2g63oXIFp2K3KxTwi0nAFaqJ3v
+	wgX9ujsor6dxnIT6jhLjYE0SfKzIs88M+MtAGX2x5Zn6HaoBg+XCaa2Bw8UJRBEfehFGYAIJb3h
+	vi8/rqGX4gd3LXAW4H/I9UPI+BGFnwKMZmkGK51KZzZpnqKf73TYZXVSgt0UjUKM1hHNtJxX
+X-Google-Smtp-Source: AGHT+IFwnfrbQNhYn+RKjvnvWq1fAt1wi2tjoULYiVKtV8KdDn2x97sSGXlAbKnPKoBdZNwQjgkRXA==
+X-Received: by 2002:a05:6000:1ace:b0:3a4:f723:3e73 with SMTP id ffacd0b85a97d-3a5686709d3mr2590339f8f.16.1749816459324;
+        Fri, 13 Jun 2025 05:07:39 -0700 (PDT)
+Received: from MacBook-Air.local ([5.100.243.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea15b0sm51167755e9.11.2025.06.13.05.07.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 05:07:38 -0700 (PDT)
+Date: Fri, 13 Jun 2025 15:07:35 +0300
+From: Joe Damato <joe@dama.to>
+To: Yuesong Li <liyuesong@vivo.com>
+Cc: Taehee Yoo <ap420073@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	opensource.kernel@vivo.com
+Subject: Re: [PATCH net-next v1] net: amt: convert to use secs_to_jiffies
+Message-ID: <aEwUh3A3gvj64v0a@MacBook-Air.local>
+Mail-Followup-To: Joe Damato <joe@dama.to>, Yuesong Li <liyuesong@vivo.com>,
+	Taehee Yoo <ap420073@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	opensource.kernel@vivo.com
+References: <20250613102014.3070898-1-liyuesong@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8PGlkFG+A9i0O2ul"
-Content-Disposition: inline
-In-Reply-To: <20250613114518.1772109-8-mwalle@kernel.org>
-X-Cookie: Use extra care when cleaning on stairs.
-
-
---8PGlkFG+A9i0O2ul
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250613102014.3070898-1-liyuesong@vivo.com>
 
-On Fri, Jun 13, 2025 at 01:45:18PM +0200, Michael Walle wrote:
-> The TI TPS652G1 is a stripped down version of the TPS65224 PMIC. It
-> doesn't feature the multiphase buck converter nor any voltage
-> monitoring. Due to the latter there are no interrupts serviced. In case
-> of the TPS652G1 any interrupt related setup is just skipped.
+On Fri, Jun 13, 2025 at 06:20:12PM +0800, Yuesong Li wrote:
+> Since secs_to_jiffies()(commit:b35108a51cf7) has been introduced, we can
+> use it to avoid scaling the time to msec.
+> 
+> Signed-off-by: Yuesong Li <liyuesong@vivo.com>
+> ---
+>  drivers/net/amt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/amt.c b/drivers/net/amt.c
+> index 734a0b3242a9..fb130fde68c0 100644
+> --- a/drivers/net/amt.c
+> +++ b/drivers/net/amt.c
+> @@ -979,7 +979,7 @@ static void amt_event_send_request(struct amt_dev *amt)
+>  	amt->req_cnt++;
+>  out:
+>  	exp = min_t(u32, (1 * (1 << amt->req_cnt)), AMT_MAX_REQ_TIMEOUT);
+> -	mod_delayed_work(amt_wq, &amt->req_wq, msecs_to_jiffies(exp * 1000));
+> +	mod_delayed_work(amt_wq, &amt->req_wq, secs_to_jiffies(exp));
+>  }
+>  
+>  static void amt_req_work(struct work_struct *work)
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Seems fine, but minor nit on the commit message -- when referring to commit
+you should include the one-liner as per the documentation [1].
 
---8PGlkFG+A9i0O2ul
-Content-Type: application/pgp-signature; name="signature.asc"
+For example, maybe something like:
 
------BEGIN PGP SIGNATURE-----
+  Since commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()"), ...
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhMFIgACgkQJNaLcl1U
-h9DDEQf/eMQAHNhzuQ6xi46PDQvyLcZ9nFF42j1GjBneMlZ0FTdvARSKnbCasrq8
-ouQNDIW4yGET8wK5e+rUTXPK5U5uvTe/jPzecw8lD4FzXlI7vJDO6N7VxkKkP5sg
-VKwqup2HXonwFeDV8BI8QRwp2m5n+S1AVEx4Yu/IBFZF89boZPHoiiRStxafOLRw
-By14D68K9zkA4EAffiTmpMkM6HcDx/nbQcEqzG03rr5r0Ahza7W5tV/QsS5dYBMO
-Q+QsHcB8UeqnxuEr5uAAvPlCR2xclnrBzRfOShdXPA15nksF4B6Akve50Qq6VafB
-/+T/UoPPjIWVjbEJi8qMgmPiONLl3A==
-=DTgi
------END PGP SIGNATURE-----
+Otherwise:
 
---8PGlkFG+A9i0O2ul--
+Reviewed-by: Joe Damato <joe@dama.to>
+
+[1]: https://www.kernel.org/doc/html/v6.15/process/submitting-patches.html
