@@ -1,139 +1,113 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE508242D9C;
-	Fri, 13 Jun 2025 19:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1FA220F47;
+	Fri, 13 Jun 2025 19:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749843819; cv=none; b=q14K8RE8wEaPemuPf76r7NfMb6U7/mMHclZvxRlojzjxRykzZX9mpfeZ3otKwb2Zf0t3YPgXr6qrgYnP9fYcIn0OyLAVJcL1Jw28HzyF/oOyFUTpGUc4fkHWd0dMgcnsRSayC+HmLs9fM/pU9AbBoYwYp89M+WeAOWcJpBE0hSg=
+	t=1749843921; cv=none; b=LoYSTVAMJHFpyarrTX/3zCKtTaliFXM9fZiW/TGtNUr5D6C/YZfQdpiF2XVyuxKH1F7yXwTCHLnKs7C/FqLmRfKH89G4+uYqbz298Da0x2+7zxEc7Nz6AWhWant7Wy7uPF/gxc9wgvi3rHT+u+u1dVtZmAqPYJeGGxYgULPfsJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749843819; c=relaxed/simple;
-	bh=ZaoZKZQZADem2BCfh2iMDReIBn0a8RhtRJb8n9Q2ESk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MSga+L7pQryMjy0X8bFi6h1X9HjSPZ1tnHxx0pzhTZTwsjHnOThPw4WVFlVcqqKYxKsNM/bjD+4XUc0p99O2wZnUwH9XgY3wLaesZBHbMxrCdpLVirIIDzn7ikQzN13tuCw0XGXOegRKs1ESXYS4TeVZqcLE11KKbXiMEKOqQuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tt+LjpM5; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1749843921; c=relaxed/simple;
+	bh=Yh7CDMY7zhVuwkLIdCkcnqO9gsEcVQzTOnr84L42C7s=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GaeW3g2Jgjqt3AR8dlks/Rz0bzd4ggFYM4iXAd7hlYz/+aqRH3nr84aLh0qjQS/tiVMakc8nhnIZ0u+D8CaW63trF4L+s1o0kzvr+W8I27r2hXKrzb9BYksW24eTgbEFFMEIQol+ZljyBxI9AXt188SauxSgD0Os8kHFm14MWYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YEAR26wY; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tt+LjpM5"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-adb2bb25105so424391166b.0;
-        Fri, 13 Jun 2025 12:43:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YEAR26wY"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6084dfb4cd5so6473755a12.0;
+        Fri, 13 Jun 2025 12:45:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749843816; x=1750448616; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dgt/50QF/JqAiUR0QT0950rpV9eyWAU1dWz6lsV+G/U=;
-        b=Tt+LjpM5OGXDxEHnXr8oifw6YZxGUx2XnZsMbRlRUbwp+6pTJv+5hmN5MA5EPdUbFK
-         JeSDWUT0+F3pst8qeXFfR0mWlTOnG2LAZMGrsib578VunZ8psJxEnOtvZeezmbEbOBvL
-         QJ2KX0j2OBVrMAXWGYCHVTvEL07tch0/lpUjxN9W+KJ+SII+eEXsojBvhxDIMIrpFBHy
-         vKNc2A9ICgrdrly2pG7Q/g2C+b7m4yMFiLPeC4WjAbw37xqW01qlBkzEwREekQ7Zutls
-         I8x/HfkwFKIg/oi4CbGq/vOxoNUsOcgVw57xuHVlq6DofvS8RXQF34m01vG95wjwwSzP
-         j2vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749843816; x=1750448616;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1749843918; x=1750448718; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dgt/50QF/JqAiUR0QT0950rpV9eyWAU1dWz6lsV+G/U=;
-        b=BHjIha6L1vgB5f6JsahkzMsQ0Ezlo5ef9BN5CjRfsrAUqDBWrp7poHAG3Ge4ttsV6j
-         oj6nYoTm2G0ZhfTt1MdhcFrLmtppuGTkIjRQYWOPn2e/bO/t8etoJQGaLtOWG05Onnun
-         ZWbBxOht89XhHMfxI19SgKi0rzXLFnGY65+O1pTG9y//tmrfS1OU0eQbBr92cdr38lFw
-         v3M2X4mlLPl73RlIUz83uR5ayULNb6xWyj+m2AsBeKCQ6omCKPZaruzAepWeGxAOSlLr
-         dHjSczJHOBdDD27wONgN2VBhPqRE5lzBq3QSS0dzyuY3DRcPZSbgBKA1jtTazIeXTE6k
-         PmbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQM2f54c0jw6MZd7AIw6QFImd20zgtU60nAJTtTBaq5Jlw8GmfzmRshHriix1ISx+z8U0rcfJ0UFOKjAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXw0utYVsFA5A5ou2QKbxm20GJ3vThQ9YPzqpZYGpiLRP+RKx7
-	Qk1S8FagrzFit8W/qtjNmP0ybX1yZYpvOvcqT6WMcq7gB0JzVxhMreoT7i6HMg==
-X-Gm-Gg: ASbGncsz/DR/Rv+FEDIY2bSLblZJWZTgORaL85WNXALLOlwo5XDzsBC7ZxsZEoihGv7
-	zlEUhCO9giVVspL/OKpSn+UaHcfyTZaLLgC4xBSSAnRtTGhih/4UqEnGI8NYPw0FnXKD9tmHDYw
-	r9oKWpxTDghRkcfMyAJBUWeLbHMDdkYciirTOaJd9n0gjyxjWabFXiZvxgS2/QFx3zVG7WKkB/d
-	Xqp7eU3dTYUnPR2cZm1mL8T2ZmbmoanB5NFubJHNg+MGbIsNm+J10pcRgMK+ylbS/Mk4WezAm9T
-	AZ6uInr16xLSTxwPnchqNrHp2464YgyJJXGdfeEEy9653ZsjAJZeKAr41qA5g2zyBydl6HkWO5l
-	FZfq+hkJDizkVN2aGKZxQ8qw=
-X-Google-Smtp-Source: AGHT+IFpVmmbzidAFPH6s1at1uCKqw6CJ9ipqwmnxcHj1rMJRNOo8Y5nrc4qCBez3R9Guw5kAWM57w==
-X-Received: by 2002:a17:907:785:b0:ade:7512:d9ba with SMTP id a640c23a62f3a-adfad358c88mr43903366b.26.1749843815851;
-        Fri, 13 Jun 2025 12:43:35 -0700 (PDT)
-Received: from playground.localdomain ([82.79.237.69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8159e24sm176836466b.34.2025.06.13.12.43.34
+        bh=Yh7CDMY7zhVuwkLIdCkcnqO9gsEcVQzTOnr84L42C7s=;
+        b=YEAR26wYwCMkVVGcZaEg2tytzguot0VT8pBeIoq0ZcolvNcdM6mMtp+wwWgSAiJ3PW
+         +2+M0f1q8ZC+uTxDWnuq6w51KkQo+cJ3K+BPZnDRaaXbWp9F5u9tkyxm5bOMp5UPs40p
+         HLdTS14vmpa/ualvLvvw5obuLxDEKNMHzTovDrVNJSqDOtlNr4QBwQPZH0HqBETIKWz6
+         O+0JFsldbipfLH7Iz89cpNIAuvfDdlUXknINOfw0BLpide3m+LGsg0VxHZhRPSsot+58
+         HVsu7ao93ZljPkqKf2Ku5XxMBomc4Bx2AqMcfQzY1i7NGjRR80k0j3S4JfrcseP53zGW
+         RHDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749843918; x=1750448718;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yh7CDMY7zhVuwkLIdCkcnqO9gsEcVQzTOnr84L42C7s=;
+        b=a8TKgmUR1rTyH5NcHV9HkYSIFeubrpWqDXqyDxgAtQn0YTeb7iJh7d+ajAPeJIijFC
+         TNVSRu+h5K7Hc8zMq47sgHG4OW2kITey6y+QSgQqlCgjj3HStubkHGZW8e/cuwwTfUQQ
+         TEJBz29+Hx+FiE7vDaVoRubSF8q/bjYqalqnrUahwh/Y1SD/y7wGfIz2qHEHo6Gj4hLg
+         bCfVatqzfBcDCxJf7D3HnV35QF8DPbIR+kLTCycsaOX+6syXthhQ/byZwOE3ULXnD7t7
+         zFrUia3IEDPSGDy7+pnjAjT8kmY2OGkmBI0N/C9clWHiZiMMwd3rmof1SXDDy6djhIJ0
+         i3kg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6A6ihPTvg4I67/lpT55jDouyJoe2Id1ERmL6krUDRUkmZV40P+6mD8iAAIYhAXwldjGimTAvUo4Vw@vger.kernel.org, AJvYcCWBrvzGBR78cE+5+s5pmtGAqc7NfYD5f4ZxDyrh6k0A0ueDgttgjBFLFaOi1H5iNiWzbt/owDHyeuT34agkFg==@vger.kernel.org, AJvYcCX1Nl3H4qLYdnj9mmR3ykjJNSZxyZvZXwPL00mY0xu5CdzZLClNkkJg7VMxoJRxxwyZHPiDRyQs6/ezHRkX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSPWTaHJTUudOV114TVy6hdSVj5RT8wTuax0jdzWhkdKbsbqJc
+	bRV7JLMI1PzJvgDjm3VZc1J60hKNxTCIf1yykJzanR5sJP1P8Cf3VC77
+X-Gm-Gg: ASbGncuTYDznEMQBB7vXEc6RFVeK1L0hwOz5vciEeCpbIHNvbA273MR0Jgx5uj4oYNf
+	ScfzJFSsM59BSgToHJLYHGQWlvL403QKL3P1Kyv6e4l+HZirDUJqBx5kpz/5C9LT/Y76sFCfCzr
+	HNKx2nJEFaSqDC+qKg1plXKWcmaoal497mw8LIcyi5xWZnKB+bwMmZ38r8pr4m6y2YRa8YaWX9w
+	sXsUErfisoXKss5x7dI1GWtr/fHlp6Elt5i3gyvG9WffnTOvVX2HxmV+dEHk2+ZiqlnDwKVztic
+	ln6e6oYYRiIV1c9FpGOFfrlX15AnfTnkiMhNJxn9xJ2KrlnntPnN6DQTxj+HPy6dH/1vmUMVBXk
+	=
+X-Google-Smtp-Source: AGHT+IF6z6qUjSoRJkdCpZJ9gUQ+bcq/eU0vQiN2mvd8PVrsm86gtKRwcAsm8FThCuyMb+x13CdxpA==
+X-Received: by 2002:a17:907:3c90:b0:ade:3413:8792 with SMTP id a640c23a62f3a-adf9c02dc6dmr94078666b.8.1749843917916;
+        Fri, 13 Jun 2025 12:45:17 -0700 (PDT)
+Received: from ainazi.localnet ([2001:9e8:1ad:9f00:925:9e86:49c5:c55f])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88fe907sm176790666b.93.2025.06.13.12.45.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 12:43:35 -0700 (PDT)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: linux-sound@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: imx8: add core shutdown operation for imx8/imx8x
-Date: Fri, 13 Jun 2025 15:43:10 -0400
-Message-Id: <20250613194310.1128733-1-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 13 Jun 2025 12:45:17 -0700 (PDT)
+From: Shinjo Park <peremen@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ "open list:ARM/QUALCOMM MAILING LIST" <linux-arm-msm@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH] ARM: dts: qcom: pm8921: add vibrator device node
+Date: Fri, 13 Jun 2025 21:45:16 +0200
+Message-ID: <5021407.31r3eYUQgx@ainazi>
+In-Reply-To: <6bd88bc5-c1b4-4ae9-b631-93b208e9862f@oss.qualcomm.com>
+References:
+ <20250613194004.19390-1-peremen@gmail.com>
+ <6bd88bc5-c1b4-4ae9-b631-93b208e9862f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+Hi all,
 
-Currently, the DSP core from i.MX8QM/i.MX8QXP is able to operate while the
-firmware image is being loaded. Because of this, the DSP may change the
-content of the firmware data just after it was loaded, thus leading to the
-data having unexpected values when the DSP is reset (via run()).
+I am very sorry for annoying through multiple messages, I mistook the SMTP=
+=20
+result code as "failure" while it was successful.=20
 
-Fix this by implementing the core_shutdown() operation that will put the
-DSP in stall during suspend(). The stall will be removed during the run()
-opertion, thus guaranteeing that the DSP core will not be able to run
-while the firmware image is being loaded.
+Best,
+Shinjo
 
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
----
- sound/soc/sof/imx/imx8.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+2025=EB=85=84 6=EC=9B=94 13=EC=9D=BC =EA=B8=88=EC=9A=94=EC=9D=BC =EC=98=A4=
+=ED=9B=84 9=EC=8B=9C 41=EB=B6=84 33=EC=B4=88 =EC=A4=91=EB=B6=80=EC=9C=A0=EB=
+=9F=BD =ED=95=98=EA=B3=84 =ED=91=9C=EC=A4=80=EC=8B=9C=EC=97=90 Konrad Dybci=
+o =EB=8B=98=EC=9D=B4 =EC=93=B4 =EA=B8=80:
+> On 6/13/25 9:40 PM, Shinjo Park wrote:
+> > Use the same definition as pm8058.dtsi. Since vibrator is used only by
+> > some devices, disable it by default and let it be enabled explicitly.
+> >=20
+> > Signed-off-by: Shinjo Park <peremen@gmail.com>
+> > ---
+>=20
+> This is the third time I receive this patch within 5 minutes - please
+> check https://lore.kernel.org/linux-arm-msm/ to make sure your emails
+> reached the outside world
+>=20
+> Konrad
 
-diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-index a40a8047873e..b73dd91bd529 100644
---- a/sound/soc/sof/imx/imx8.c
-+++ b/sound/soc/sof/imx/imx8.c
-@@ -40,6 +40,19 @@ struct imx8m_chip_data {
- 	struct reset_control *run_stall;
- };
- 
-+static int imx8_shutdown(struct snd_sof_dev *sdev)
-+{
-+	/*
-+	 * Force the DSP to stall. After the firmware image is loaded,
-+	 * the stall will be removed during run() by a matching
-+	 * imx_sc_pm_cpu_start() call.
-+	 */
-+	imx_sc_pm_cpu_start(get_chip_pdata(sdev), IMX_SC_R_DSP, false,
-+			    RESET_VECTOR_VADDR);
-+
-+	return 0;
-+}
-+
- /*
-  * DSP control.
-  */
-@@ -281,11 +294,13 @@ static int imx8_ops_init(struct snd_sof_dev *sdev)
- static const struct imx_chip_ops imx8_chip_ops = {
- 	.probe = imx8_probe,
- 	.core_kick = imx8_run,
-+	.core_shutdown = imx8_shutdown,
- };
- 
- static const struct imx_chip_ops imx8x_chip_ops = {
- 	.probe = imx8_probe,
- 	.core_kick = imx8x_run,
-+	.core_shutdown = imx8_shutdown,
- };
- 
- static const struct imx_chip_ops imx8m_chip_ops = {
--- 
-2.34.1
+
+
 
