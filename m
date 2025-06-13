@@ -1,55 +1,55 @@
-Received: from mail-vs1-f74.google.com (mail-vs1-f74.google.com [209.85.217.74])
+Received: from mail-qv1-f74.google.com (mail-qv1-f74.google.com [209.85.219.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94A62566F5
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821F725B302
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846204; cv=none; b=PKKM8mQPpYmDl4q4Sav/Bct9K9KrowfJW8q62ZqwNenu0g+/zrta9PW2ow/zyM0fSsN/fduh5G0OHT2JOdwhjckAWiVuImCAWAbQLY90qaEGiOQS4HC0YFkcr5RPLfrhhkUiYztGmsLlHycEpg1F6laFIbe5GvPkNEYWGg4SPBc=
+	t=1749846206; cv=none; b=MqCxCCqdRiaX16BzX4DVN8Vb4XaQEw5LDxMEhDKvdq3zxjfzS7QAVWO+MCpwVKFdkUW3lbukfi43iS7LIhVyTSw/THZPaGinnQnh79aTE6Wl2aYauxyDDuNPAhiwmnr/GDEt1DmKiYpvJvP9gaZOv/q/QlcY0ykLyStKOeusDuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846204; c=relaxed/simple;
-	bh=59Iy6rW99a1WmCSYZewQQsUiKBtGxHTFVJJ6e22aVhg=;
+	s=arc-20240116; t=1749846206; c=relaxed/simple;
+	bh=VER9ArbSHOwnBBBzloqqIylNJCaqitu4kwv4gydj20I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eekPN6O0Ga8mMzNpvtOIpuccaEWT2sgKCplxCoUfm46ie9ndyVeciMs+RpCxg0kV02SJTkgtOyIdxmrJDX6/Bila4H1y4njXOlxT8+cC8ZzW9EZat5b3jtKgQw+OVWzMqoBjE3ZZ1bGyblcTiiKElzNkxVznAa5d06Vmtk07jxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KUWAQV2I; arc=none smtp.client-ip=209.85.217.74
+	 To:Cc:Content-Type; b=NMQ2Yxz2GSb+SjJtFs1D7WeUtjDCyjUES1Glef3lOXhV3DgN/bfn8SI7FREIS12tavaxImWsMJ5ZzpBF4x+fanmzpt8KN2dmBim+i1aQOjOgJCqu8ayDlcj+JF/Tn2LVwIpgMzrTf6t00iEdMNuyz2QKvTJfa1VdpO4Os0mk6jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lyRdPdwA; arc=none smtp.client-ip=209.85.219.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KUWAQV2I"
-Received: by mail-vs1-f74.google.com with SMTP id ada2fe7eead31-4e7f36a3c97so145811137.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:23:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lyRdPdwA"
+Received: by mail-qv1-f74.google.com with SMTP id 6a1803df08f44-6fad29c1b72so34517716d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:23:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749846201; x=1750451001; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749846203; x=1750451003; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XzW1XmGn2aMxciKqb55qIDnqTsupaBqldoKo6HBQgdg=;
-        b=KUWAQV2IJ2Z+tJXzQt7b0Oddc58VtJraHNrqKPx64OrCIhI5h0+qn4xdsC0z0RbQaC
-         xAdmLqiS8q6AOcCvZE6Ja1IfT0upGAuEzEdIqM2G9OAADo5FPVrZCyT+BeF7LlJcfvN6
-         dBBcaLUA9wCcg3RD1/1uIFhOdqnLONqJPQlFV27i2vyR6Vr3T4Mdko4S+QbRFHB8ll/U
-         hoqWGsA7R6HrmlNWtnGyLkpdD/dbdCNpIAwphYee3DfneEeSAddeEkfqx0kMpW7zAfxS
-         iPr+BXurPC1e2VO5A3fAb/1nmh69GmbXBtajgScgS/wAszI9mm38Q7Q+WQyAPyglCJ5I
-         kVeQ==
+        bh=OFaJFELA+zenLb8Y22gAlioJyRz/eOniSI4TmKAA5To=;
+        b=lyRdPdwAu9yTlC4G8XA5QLvnL+XUDF6v0xPz9HKNaF8RX7Bt6SdP0JTkTIPYd8la0R
+         0jugoMsaTltxzprwOUJJhNcaw7i29lc+AdjoCtaQQHYv2iwM4QEcpTqA4Wau5MoaZ7dk
+         lphum7O5X3url3MJ4buGyt5DvH5AqH6/ve8naDD78SJhGeOdseurr18Tij7lz2wYo2bs
+         jNnlQlSsBlrfRk/p0baO9UQSdIxM4t9z6PPRuoT1DmLvCjg8ukyge2QReoePlJSSUazy
+         QMPYtLKwd5c80PFJFLQg3J03jJIQ3MIPz2tc7iZX+Ku+ePiszBEZhqjRMVvlj/lzzwOf
+         4EXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749846201; x=1750451001;
+        d=1e100.net; s=20230601; t=1749846203; x=1750451003;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XzW1XmGn2aMxciKqb55qIDnqTsupaBqldoKo6HBQgdg=;
-        b=OlDEQpBLtfL0fVQ4K6WMsnt2Ozkk7DpVJucK6+rC/Qe5ll2ejHCRq2bIE3Fb94mb9E
-         QMWOCO1mH9rnc8s9gaxbjr6yDmmdH4vPSEAdGM6WIsEBQwaPltgR5vvWO3uqKoLBVfPU
-         4D/wCISvKFARKZxcUyzaciszg7me86cwLAz/rkAu+PDW4Ov1+qV9EB5xRota4xvmp5fw
-         eqxKsNoiNvFGXC4vHzNeGgF6SNY+J04ghFjVXa1FSce4NklkWqn3IlnkbJjaVTeoVqlr
-         6ylk5Tq3hssNGTCLR1IpuAbVJWsndw88si79EVMlHq7D5jCwZWCrLYyWZHAGB6pVuL9E
-         K+NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1Ywdvj9NCfZ69XT5DYqurdNJ2Wd55hpynrLYQeNoVTxel9p0PxD+2pTTy5shbnc1nD5Nkz33MDsrxB9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJHgORVc/fjNwQcK75F7pqakfW7CVYbC1nXs1Pnxg0avf9hpvA
-	yZxQ0MD42rmVeBGX19AMjKlRFT2+SKDda9PyCmNc9SDDkrSaKKCcHMGaQZabhgO/IyAk32A6l8n
-	aS8EkvT3qqWTb4Lz8z4HABg==
-X-Google-Smtp-Source: AGHT+IE0NRHrDMwWtpGIEcKCTxD5Kf4jPxTrfVXerE3Nehmx+tOQQdnuX2HHZR/1hH8/WLBcgQXhf/bWdS+qG9E+
-X-Received: from uae4.prod.google.com ([2002:a05:6130:8104:b0:87e:e774:76ee])
+        bh=OFaJFELA+zenLb8Y22gAlioJyRz/eOniSI4TmKAA5To=;
+        b=NUQfH796SzHyXIXmcxmj5vyhHqtJ6jFUAeAv8kWxu3+ERN8EjTbdDldP5FDH7GrkqW
+         3Lu8qz4W+Z7fmQMdbysMm7BlZzGXuE0sBvBSHQCUWccSbhTw0GdHvAX+iI93kwCwxKRM
+         iddP8Qh6M+j2gsqNPV6Ae0g8dNKA5ArY+W0W8UTTHYFb//DnvSf8nRgJGwIDb5N0xdt6
+         qToLpjmFcoC9zMsmCyEm4gwtavBpLgGUaPjh0z5OCnCGpizMkvXPxbXPhe8ArB9vrtzb
+         lzCG/5nDEOrla6o+pxvtYRf8I0xcRjD+KUKZ5iDYm1xEBOX0DAYdP7a0JD/leGOuN33/
+         GGqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXb+LX9hnnEgRzUCJl9T9m2q4J3sNn8EkmAtiHEFxxWsQFcldRIZpUKAEcztGOPxa8lsYyJG5craekRHHA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPJ4uwqzZAMAfVpA+IkqtSGtp+9W9GQ78gtJUVJpxSiixjYVVL
+	tFbfzsmM1SJovxfJuGblkCXF/UpfKobYLLrN776qSfft19Hg39OnQx6yKX3ODl9/EGtjfWAzfxf
+	OowkDpWFrlYcoW1aNhaWNTA==
+X-Google-Smtp-Source: AGHT+IGEHUiDm4lDXoBuTgKOdQu5vKdi/t6ue2qnZlGualobYksBIHMvyieKg485zbwec9gdzCbGijkjqn2gbGxH
+X-Received: from qvri17.prod.google.com ([2002:a0c:edd1:0:b0:6fa:fc20:67])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6102:418d:b0:4dd:b82d:e0de with SMTP id ada2fe7eead31-4e7f6223165mr1228261137.17.1749846201672;
- Fri, 13 Jun 2025 13:23:21 -0700 (PDT)
-Date: Fri, 13 Jun 2025 20:23:12 +0000
+ 2002:a05:6214:458f:b0:6ed:df6:cdcd with SMTP id 6a1803df08f44-6fb47774531mr12272756d6.21.1749846203466;
+ Fri, 13 Jun 2025 13:23:23 -0700 (PDT)
+Date: Fri, 13 Jun 2025 20:23:14 +0000
 In-Reply-To: <20250613202315.2790592-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,209 +59,242 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250613202315.2790592-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
-Message-ID: <20250613202315.2790592-6-jthoughton@google.com>
-Subject: [PATCH v4 5/7] KVM: selftests: Introduce a selftest to measure
- execution performance
+Message-ID: <20250613202315.2790592-8-jthoughton@google.com>
+Subject: [PATCH v4 7/7] KVM: selftests: Add an NX huge pages jitter test
 From: James Houghton <jthoughton@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
 Cc: Vipin Sharma <vipinsh@google.com>, David Matlack <dmatlack@google.com>, 
 	James Houghton <jthoughton@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: David Matlack <dmatlack@google.com>
+Add a test that checks how much NX huge page recovery affects vCPUs that
+are faulting on pages not undergoing NX huge page recovery. To do this,
+this test uses a single vCPU to touch all of guest memory. After every
+1G of guest memory, it will switch from writing to executing. Only the
+writes are timed.
 
-Introduce a new selftest, execute_perf_test, that uses the
-perf_test_util framework to measure the performance of executing code
-within a VM. This test is similar to the other perf_test_util-based
-tests in that it spins up a variable number of vCPUs and runs them
-concurrently, accessing memory.
+With this setup, while the guest is in the middle of reading a 1G
+region, NX huge page recovery (provided it is set aggressive enough)
+will start to recover huge pages in the previous 1G region.
 
-In order to support execution, extend perf_test_util to populate guest
-memory with return instructions rather than random garbage. This way
-memory can be execute simply by calling it.
-
-Currently only x86_64 supports execution, but other architectures can be
-easily added by providing their return code instruction.
-
-Signed-off-by: David Matlack <dmatlack@google.com>
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
  tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- .../testing/selftests/kvm/execute_perf_test.c | 199 ++++++++++++++++++
- .../testing/selftests/kvm/include/memstress.h |   4 +
- tools/testing/selftests/kvm/lib/memstress.c   |  25 ++-
- 4 files changed, 227 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/execute_perf_test.c
+ .../kvm/x86/nx_huge_pages_perf_test.c         | 223 ++++++++++++++++++
+ 2 files changed, 224 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/x86/nx_huge_pages_perf_test.c
 
 diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index 38b95998e1e6b..0dc435e944632 100644
+index 0dc435e944632..4b5be9f0bac5b 100644
 --- a/tools/testing/selftests/kvm/Makefile.kvm
 +++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -137,6 +137,7 @@ TEST_GEN_PROGS_x86 += x86/recalc_apic_map_test
- TEST_GEN_PROGS_x86 += access_tracking_perf_test
- TEST_GEN_PROGS_x86 += coalesced_io_test
- TEST_GEN_PROGS_x86 += dirty_log_perf_test
-+TEST_GEN_PROGS_x86 += execute_perf_test
- TEST_GEN_PROGS_x86 += guest_memfd_test
- TEST_GEN_PROGS_x86 += hardware_disable_test
- TEST_GEN_PROGS_x86 += memslot_modification_stress_test
-diff --git a/tools/testing/selftests/kvm/execute_perf_test.c b/tools/testing/selftests/kvm/execute_perf_test.c
+@@ -88,6 +88,7 @@ TEST_GEN_PROGS_x86 += x86/kvm_buslock_test
+ TEST_GEN_PROGS_x86 += x86/monitor_mwait_test
+ TEST_GEN_PROGS_x86 += x86/nested_emulation_test
+ TEST_GEN_PROGS_x86 += x86/nested_exceptions_test
++TEST_GEN_PROGS_x86 += x86/nx_huge_pages_perf_test
+ TEST_GEN_PROGS_x86 += x86/platform_info_test
+ TEST_GEN_PROGS_x86 += x86/pmu_counters_test
+ TEST_GEN_PROGS_x86 += x86/pmu_event_filter_test
+diff --git a/tools/testing/selftests/kvm/x86/nx_huge_pages_perf_test.c b/tools/testing/selftests/kvm/x86/nx_huge_pages_perf_test.c
 new file mode 100644
-index 0000000000000..f7cbfd8184497
+index 0000000000000..e33e913ec7dfa
 --- /dev/null
-+++ b/tools/testing/selftests/kvm/execute_perf_test.c
-@@ -0,0 +1,199 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <inttypes.h>
-+#include <limits.h>
-+#include <pthread.h>
-+#include <sys/mman.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
++++ b/tools/testing/selftests/kvm/x86/nx_huge_pages_perf_test.c
+@@ -0,0 +1,223 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * nx_huge_pages_perf_test
++ *
++ * Copyright (C) 2025, Google LLC.
++ *
++ * Performance test for NX hugepage recovery.
++ *
++ * This test checks for long faults on allocated pages when NX huge page
++ * recovery is taking place on pages mapped by the VM.
++ */
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <time.h>
++
++#include "test_util.h"
 +
 +#include "kvm_util.h"
-+#include "test_util.h"
-+#include "memstress.h"
-+#include "guest_modes.h"
++#include "processor.h"
 +#include "ucall_common.h"
 +
-+/* Global variable used to synchronize all of the vCPU threads. */
-+static int iteration;
++/* Default guest test virtual memory offset */
++#define DEFAULT_GUEST_TEST_MEM		0xc0000000
 +
-+/* Set to true when vCPU threads should exit. */
-+static bool done;
++/* Default size (2GB) of the memory for testing */
++#define DEFAULT_TEST_MEM_SIZE		(2 << 30)
 +
-+/* The iteration that was last completed by each vCPU. */
-+static int vcpu_last_completed_iteration[KVM_MAX_VCPUS];
++/*
++ * Guest virtual memory offset of the testing memory slot.
++ * Must not conflict with identity mapped test code.
++ */
++static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
 +
-+/* Whether to overlap the regions of memory vCPUs access. */
-+static bool overlap_memory_access;
++static struct kvm_vcpu *vcpu;
 +
 +struct test_params {
-+	/* The backing source for the region of memory. */
 +	enum vm_mem_backing_src_type backing_src;
-+
-+	/* The amount of memory to allocate for each vCPU. */
-+	uint64_t vcpu_memory_bytes;
-+
-+	/* The number of vCPUs to create in the VM. */
-+	int nr_vcpus;
-+
-+	/* The number of execute iterations the test will run. */
-+	int iterations;
++	uint64_t memory_bytes;
 +};
 +
-+static void assert_ucall(struct kvm_vcpu *vcpu, uint64_t expected_ucall)
++struct guest_args {
++	uint64_t guest_page_size;
++	uint64_t pages;
++};
++
++static struct guest_args guest_args;
++
++#define RETURN_OPCODE 0xC3
++
++static void guest_code(int vcpu_idx)
 +{
-+	struct ucall uc = {};
++	struct guest_args *args = &guest_args;
++	uint64_t page_size = args->guest_page_size;
++	uint64_t max_cycles = 0UL;
++	volatile char *gva;
++	uint64_t page;
 +
-+	TEST_ASSERT(expected_ucall == get_ucall(vcpu, &uc),
-+		    "Guest exited unexpectedly (expected ucall %" PRIu64
-+		    ", got %" PRIu64 ")",
-+		    expected_ucall, uc.cmd);
-+}
 +
-+static bool spin_wait_for_next_iteration(int *current_iteration)
-+{
-+	int last_iteration = *current_iteration;
++	for (page = 0; page < args->pages; ++page) {
++		gva = (volatile char *)guest_test_virt_mem + page * page_size;
 +
-+	do {
-+		if (READ_ONCE(done))
-+			return false;
++		/*
++		 * To time the jitter on all faults on pages that are not
++		 * undergoing nx huge page recovery, only execute on every
++		 * other 1G region, and only time the non-executing pass.
++		 */
++		if (page & (1UL << 18)) {
++			uint64_t tsc1, tsc2;
 +
-+		*current_iteration = READ_ONCE(iteration);
-+	} while (last_iteration == *current_iteration);
++			tsc1 = rdtsc();
++			*gva = 0;
++			tsc2 = rdtsc();
 +
-+	return true;
-+}
-+
-+static void vcpu_thread_main(struct memstress_vcpu_args *vcpu_args)
-+{
-+	struct kvm_vcpu *vcpu = vcpu_args->vcpu;
-+	int current_iteration = 0;
-+
-+	while (spin_wait_for_next_iteration(&current_iteration)) {
-+		vcpu_run(vcpu);
-+		assert_ucall(vcpu, UCALL_SYNC);
-+		vcpu_last_completed_iteration[vcpu->id] = current_iteration;
++			if (tsc2 - tsc1 > max_cycles)
++				max_cycles = tsc2 - tsc1;
++		} else {
++			*gva = RETURN_OPCODE;
++			((void (*)(void)) gva)();
++		}
 +	}
++
++	GUEST_SYNC1(max_cycles);
 +}
 +
-+static void spin_wait_for_vcpu(struct kvm_vcpu *vcpu, int target_iteration)
++struct kvm_vm *create_vm(uint64_t memory_bytes,
++			 enum vm_mem_backing_src_type backing_src)
 +{
-+	while (READ_ONCE(vcpu_last_completed_iteration[vcpu->id]) !=
-+	       target_iteration) {
-+		continue;
-+	}
++	uint64_t backing_src_pagesz = get_backing_src_pagesz(backing_src);
++	struct guest_args *args = &guest_args;
++	uint64_t guest_num_pages;
++	uint64_t region_end_gfn;
++	uint64_t gpa, size;
++	struct kvm_vm *vm;
++
++	args->guest_page_size = getpagesize();
++
++	guest_num_pages = vm_adjust_num_guest_pages(VM_MODE_DEFAULT,
++				memory_bytes / args->guest_page_size);
++
++	TEST_ASSERT(memory_bytes % getpagesize() == 0,
++		    "Guest memory size is not host page size aligned.");
++
++	vm = __vm_create_with_one_vcpu(&vcpu, guest_num_pages, guest_code);
++
++	/* Put the test region at the top guest physical memory. */
++	region_end_gfn = vm->max_gfn + 1;
++
++	/*
++	 * If there should be more memory in the guest test region than there
++	 * can be pages in the guest, it will definitely cause problems.
++	 */
++	TEST_ASSERT(guest_num_pages < region_end_gfn,
++		    "Requested more guest memory than address space allows.\n"
++		    "    guest pages: %" PRIx64 " max gfn: %" PRIx64
++		    " wss: %" PRIx64 "]",
++		    guest_num_pages, region_end_gfn - 1, memory_bytes);
++
++	gpa = (region_end_gfn - guest_num_pages - 1) * args->guest_page_size;
++	gpa = align_down(gpa, backing_src_pagesz);
++
++	size = guest_num_pages * args->guest_page_size;
++	pr_info("guest physical test memory: [0x%lx, 0x%lx)\n",
++		gpa, gpa + size);
++
++	/*
++	 * Pass in MAP_POPULATE, because we are trying to test how long
++	 * we have to wait for a pending NX huge page recovery to take.
++	 * We do not want to also wait for GUP itself.
++	 */
++	vm_mem_add(vm, backing_src, gpa, 1,
++		   guest_num_pages, 0, -1, 0, MAP_POPULATE);
++
++	virt_map(vm, guest_test_virt_mem, gpa, guest_num_pages);
++
++	args->pages = guest_num_pages;
++
++	/* Export the shared variables to the guest. */
++	sync_global_to_guest(vm, guest_args);
++
++	return vm;
 +}
 +
-+static void run_iteration(struct kvm_vm *vm, const char *description)
++static void run_vcpu(struct kvm_vcpu *vcpu)
 +{
 +	struct timespec ts_elapsed;
 +	struct timespec ts_start;
-+	struct kvm_vcpu *vcpu;
-+	int next_iteration;
-+
-+	/* Kick off the vCPUs by incrementing iteration. */
-+	next_iteration = ++iteration;
++	struct ucall uc = {};
++	int ret;
 +
 +	clock_gettime(CLOCK_MONOTONIC, &ts_start);
 +
-+	/* Wait for all vCPUs to finish the iteration. */
-+	list_for_each_entry(vcpu, &vm->vcpus, list)
-+		spin_wait_for_vcpu(vcpu, next_iteration);
++	ret = _vcpu_run(vcpu);
 +
 +	ts_elapsed = timespec_elapsed(ts_start);
-+	pr_info("%-30s: %ld.%09lds\n",
-+		description, ts_elapsed.tv_sec, ts_elapsed.tv_nsec);
++
++	TEST_ASSERT(ret == 0, "vcpu_run failed: %d", ret);
++
++	TEST_ASSERT(get_ucall(vcpu, &uc) == UCALL_SYNC,
++		    "Invalid guest sync status: %" PRIu64, uc.cmd);
++
++	pr_info("Duration: %ld.%09lds\n",
++		ts_elapsed.tv_sec, ts_elapsed.tv_nsec);
++	pr_info("Max fault latency: %" PRIu64 " cycles\n", uc.args[0]);
 +}
 +
-+static void run_test(enum vm_guest_mode mode, void *arg)
++static void run_test(struct test_params *params)
 +{
-+	struct test_params *params = arg;
-+	struct kvm_vm *vm;
-+	int i;
++	/*
++	 * The fault + execute pattern in the guest relies on having more than
++	 * 1GiB to use.
++	 */
++	TEST_ASSERT(params->memory_bytes > PAGE_SIZE << 18,
++		    "Must use more than 1GiB of memory.");
 +
-+	vm = memstress_create_vm(mode, params->nr_vcpus,
-+				 params->vcpu_memory_bytes, 1,
-+				 params->backing_src, !overlap_memory_access);
-+
-+	memstress_start_vcpu_threads(params->nr_vcpus, vcpu_thread_main);
++	create_vm(params->memory_bytes, params->backing_src);
 +
 +	pr_info("\n");
 +
-+	memstress_set_write_percent(vm, 100);
-+	run_iteration(vm, "Populating memory");
-+
-+	run_iteration(vm, "Writing to memory");
-+
-+	memstress_set_execute(vm, true);
-+	for (i = 0; i < params->iterations; ++i)
-+		run_iteration(vm, "Executing from memory");
-+
-+	/* Set done to signal the vCPU threads to exit */
-+	done = true;
-+
-+	memstress_join_vcpu_threads(params->nr_vcpus);
-+	memstress_destroy_vm(vm);
++	run_vcpu(vcpu);
 +}
 +
 +static void help(char *name)
 +{
 +	puts("");
-+	printf("usage: %s [-h] [-m mode] [-b vcpu_bytes] [-v nr_vcpus] [-o] "
-+	       "[-s mem_type] [-i iterations]\n",
++	printf("usage: %s [-h] [-b bytes] [-s mem_type]\n",
 +	       name);
 +	puts("");
 +	printf(" -h: Display this help message.");
-+	guest_modes_help();
 +	printf(" -b: specify the size of the memory region which should be\n"
-+	       "     dirtied by each vCPU. e.g. 10M or 3G.\n"
-+	       "     (default: 1G)\n");
-+	printf(" -i: specify the number iterations to execute from memory.\n");
-+	printf(" -v: specify the number of vCPUs to run.\n");
-+	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
-+	       "     them into a separate region of memory for each vCPU.\n");
++	       "     dirtied by the guest. e.g. 2048M or 3G.\n"
++	       "     (default: 2G, must be greater than 1G)\n");
 +	backing_src_help("-s");
 +	puts("");
 +	exit(0);
@@ -271,30 +304,14 @@ index 0000000000000..f7cbfd8184497
 +{
 +	struct test_params params = {
 +		.backing_src = DEFAULT_VM_MEM_SRC,
-+		.vcpu_memory_bytes = DEFAULT_PER_VCPU_MEM_SIZE,
-+		.nr_vcpus = 1,
-+		.iterations = 1,
++		.memory_bytes = DEFAULT_TEST_MEM_SIZE,
 +	};
 +	int opt;
 +
-+	guest_modes_append_default();
-+
-+	while ((opt = getopt(argc, argv, "hm:b:i:v:os:")) != -1) {
++	while ((opt = getopt(argc, argv, "hb:s:")) != -1) {
 +		switch (opt) {
-+		case 'm':
-+			guest_modes_cmdline(optarg);
-+			break;
 +		case 'b':
-+			params.vcpu_memory_bytes = parse_size(optarg);
-+			break;
-+		case 'i':
-+			params.iterations = atoi(optarg);
-+			break;
-+		case 'v':
-+			params.nr_vcpus = atoi(optarg);
-+			break;
-+		case 'o':
-+			overlap_memory_access = true;
++			params.memory_bytes = parse_size(optarg);
 +			break;
 +		case 's':
 +			params.backing_src = parse_backing_src_type(optarg);
@@ -306,82 +323,8 @@ index 0000000000000..f7cbfd8184497
 +		}
 +	}
 +
-+	for_each_guest_mode(run_test, &params);
-+
-+	return 0;
++	run_test(&params);
 +}
-diff --git a/tools/testing/selftests/kvm/include/memstress.h b/tools/testing/selftests/kvm/include/memstress.h
-index 9071eb6dea60a..ab2a0c05e3fd2 100644
---- a/tools/testing/selftests/kvm/include/memstress.h
-+++ b/tools/testing/selftests/kvm/include/memstress.h
-@@ -50,6 +50,9 @@ struct memstress_args {
-  	/* Test is done, stop running vCPUs. */
-  	bool stop_vcpus;
- 
-+	/* If vCPUs should execute from memory. */
-+	bool execute;
-+
- 	struct memstress_vcpu_args vcpu_args[KVM_MAX_VCPUS];
- };
- 
-@@ -63,6 +66,7 @@ void memstress_destroy_vm(struct kvm_vm *vm);
- 
- void memstress_set_write_percent(struct kvm_vm *vm, uint32_t write_percent);
- void memstress_set_random_access(struct kvm_vm *vm, bool random_access);
-+void memstress_set_execute(struct kvm_vm *vm, bool execute);
- 
- void memstress_start_vcpu_threads(int vcpus, void (*vcpu_fn)(struct memstress_vcpu_args *));
- void memstress_join_vcpu_threads(int vcpus);
-diff --git a/tools/testing/selftests/kvm/lib/memstress.c b/tools/testing/selftests/kvm/lib/memstress.c
-index 313277486a1de..49677742ec92d 100644
---- a/tools/testing/selftests/kvm/lib/memstress.c
-+++ b/tools/testing/selftests/kvm/lib/memstress.c
-@@ -40,6 +40,16 @@ static bool all_vcpu_threads_running;
- 
- static struct kvm_vcpu *vcpus[KVM_MAX_VCPUS];
- 
-+/*
-+ * When writing to guest memory, write the opcode for the `ret` instruction so
-+ * that subsequent iteractions can exercise instruction fetch by calling the
-+ * memory.
-+ *
-+ * NOTE: Non-x86 architectures would to use different values here to support
-+ * execute.
-+ */
-+#define RETURN_OPCODE 0xC3
-+
- /*
-  * Continuously write to the first 8 bytes of each page in the
-  * specified region.
-@@ -75,8 +85,10 @@ void memstress_guest_code(uint32_t vcpu_idx)
- 
- 			addr = gva + (page * args->guest_page_size);
- 
--			if (__guest_random_bool(&rand_state, args->write_percent))
--				*(uint64_t *)addr = 0x0123456789ABCDEF;
-+			if (args->execute)
-+				((void (*)(void)) addr)();
-+			else if (__guest_random_bool(&rand_state, args->write_percent))
-+				*(uint64_t *)addr = RETURN_OPCODE;
- 			else
- 				READ_ONCE(*(uint64_t *)addr);
- 		}
-@@ -259,6 +271,15 @@ void __weak memstress_setup_nested(struct kvm_vm *vm, int nr_vcpus, struct kvm_v
- 	exit(KSFT_SKIP);
- }
- 
-+void memstress_set_execute(struct kvm_vm *vm, bool execute)
-+{
-+#ifndef __x86_64__
-+	TEST_FAIL("Execute not supported on thhis architecture; see RETURN_OPCODE.");
-+#endif
-+	memstress_args.execute = execute;
-+	sync_global_to_guest(vm, memstress_args);
-+}
-+
- static void *vcpu_thread_main(void *data)
- {
- 	struct vcpu_thread *vcpu = data;
 -- 
 2.50.0.rc2.692.g299adb8693-goog
 
