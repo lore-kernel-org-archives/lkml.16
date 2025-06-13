@@ -1,114 +1,104 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C282D1905;
-	Fri, 13 Jun 2025 07:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 629B22D1911
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800092; cv=none; b=eYrpWxK974+PQ/vE5SIgM+jv/WdGoZbUxpEC+BEW79U+FzLpXVOt4kY4ynA1uDx9dvQFVRNCZksAQ/lBegfPYQAhNqYnMg8ITPPUZadjEKlpymBokqnrKTIGKt7g+l0ela7scTe8EZR2eXoysy9WrWHpr++TYKsKMaqqJjckq60=
+	t=1749800094; cv=none; b=iEGPjAza/9NHxBKtKncVe4TG1L1n4cmNSKClQsNwvBpvBzX/aMMF6JY+Jeftozrttapre/udjU5YH+ppD81Y9bRjJCAnuIXiGDOfBGDNsjYETGChB64QlvNU3tDjl/Q17GJrjXuBKkhy7bvvpgCpHrRtqNcRJRq54cT6HLaNH0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800092; c=relaxed/simple;
-	bh=jMtJU2pTkz50zel0ZVOXCLZvoKCyvMzdYg3aVYdyDDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tI/mTxg6UT4G6XGGrnseTLLjwpRi+QwOy/Kkqk/e3xAYZwGPOCY+qujOzFs0rFyCZE7txwTcMGy5uNcvu+RjHyoI9lRAAZl5cHBL9ubghJ7BstzwJYZ1oeeEjhEi4D3IxlCnH3JMjyMXOo6N/mBKmvBKEE5kSYpne33yRcz8bQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dCQa5UPj; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dCQa5UPj"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55D2w0lh016526;
-	Fri, 13 Jun 2025 07:34:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=Q+00UsnK9QNmHyLDUgqm5Z0yCuP4tR
-	RAbOGJlESRpPw=; b=dCQa5UPjfC9CVBahw231jons1CFvs70D/96M0foymRk61/
-	LDUyLt/U77moLVGxdNpBs1JZ/LPRjGq5fKwnk/kgz9PcwdJHAn+NAidX5DN3CtdQ
-	cc5M85VaJX1iLFoIJ4G426Af/Mn0TGS8u/fIO7sn9UdXvma4zQVQkfsjOS7vjLVZ
-	2dom03hKSztypC8Sx7JUlowHAmbp+t9e1zRbNq7Dqo238xBJdE8r78J4K1XVrRAM
-	lv1ky0Kx8p9MvLtm3Ym5og/hJFsB8xQWIF5+mMgFWPu69VqX/kbuTy4W0hUwQKfw
-	tLwl1K3li39jpKpdTiuwj/mHb1gpswYw/QhOkvFg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474hguxqh2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 07:34:38 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55D7Fh6R017417;
-	Fri, 13 Jun 2025 07:34:38 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474hguxqgy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 07:34:38 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55D6g9dG014948;
-	Fri, 13 Jun 2025 07:34:37 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750rpgykn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 07:34:37 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55D7YZNM53477794
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Jun 2025 07:34:35 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A0612004B;
-	Fri, 13 Jun 2025 07:34:35 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 48C9420040;
-	Fri, 13 Jun 2025 07:34:35 +0000 (GMT)
-Received: from osiris (unknown [9.111.44.220])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 13 Jun 2025 07:34:35 +0000 (GMT)
-Date: Fri, 13 Jun 2025 09:34:33 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sean Christopherson <seanjc@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas.schier@linux.dev>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: move warnings about linux/export.h from W=1 to
- W=2
-Message-ID: <20250613073433.26153A91-hca@linux.ibm.com>
-References: <20250612160850.3007038-1-masahiroy@kernel.org>
+	s=arc-20240116; t=1749800094; c=relaxed/simple;
+	bh=Y1JO6yRUdnYicdtcwizD05rpMEa4fyvqEy46XDzFCsA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dZJ98xi5tmTPDcSNjAa8XJOoPZq8MRapZdWRVm7gQ3A4lhlOtD/WY7BwDD1dffWbOfrI++5YNUZZm47e//VtTxOIIjyVQbtvM8hAZtVPbbflDXrS2ekUK589er+ekBgFEUbffARZ7CRNv4+JW7j9oRMOw2ERkpFs8QQjlrZ3Nn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 481BD1D6F;
+	Fri, 13 Jun 2025 00:34:30 -0700 (PDT)
+Received: from [192.168.178.71] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDAB43F59E;
+	Fri, 13 Jun 2025 00:34:48 -0700 (PDT)
+Message-ID: <64ae41a7-2c06-4082-a4d6-0db5b635ea01@arm.com>
+Date: Fri, 13 Jun 2025 09:34:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612160850.3007038-1-masahiroy@kernel.org>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Pfr/hjhd c=1 sm=1 tr=0 ts=684bd48e cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=wWeqQ2MroeA1i1D5eWMA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: df9pBC3O6aQCIuOUUZyNihkLjICkB9kb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDA1MyBTYWx0ZWRfX9IIhdGcfxnKz +gmJ8zY2Mrj8pvuDF7Q1ovi7wbSP3z18gPdFm+ADGlN/MinPGJt9mn+6XiQQjY1wtpsnK5Ne8DI x/ADuyMd1PhIWKPMxPibq7/3MqErKPHeT9h1dyD3AmFkIdQqY9/ONAsJjH9dqT4BaCxnX9hW1nd
- khLGJ1BwjhremFkfegIidog5AKsBjhP8GtRAj8dR4XQdbvukxNOqWK3R4b5ObXwVaPRycWs/oVm pfSs3XkXYLpGwcu/6dYv22iHbjAEZIhV5IwBsqWnev8iZhV8dfzUucltrMBUGIA5K9/aOKN+IxC EGZMNVbpsJdEKsVQkia+fCHM+L2BKv36VPzKue2AFe0oNBJioviEoFN2fTlQlYP/eFHYaNgnEvm
- jfdxDVQOyPq8EiJtYobcoEF8VDL68JnK66J/v5sm/WZdu/j3FWDAGmOZX5xWedgVAcXdRHfv
-X-Proofpoint-ORIG-GUID: LnzqN63bkSsWR0S-YWzC821bvjD_P3_z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0
- clxscore=1015 phishscore=0 bulkscore=0 malwarescore=0 mlxlogscore=780
- mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506130053
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
+To: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, clm@meta.com
+Cc: linux-kernel@vger.kernel.org
+References: <20250520094538.086709102@infradead.org>
+ <20250520101727.984171377@infradead.org>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <20250520101727.984171377@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 01:08:48AM +0900, Masahiro Yamada wrote:
-> This hides excessive warnings, as nobody builds with W=2.
-> 
-> Fixes: a934a57a42f6 ("scripts/misc-check: check missing #include <linux/export.h> when W=1")
-> Fixes: 7d95680d64ac ("scripts/misc-check: check unnecessary #include <linux/export.h> when W=1")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  Makefile           |  3 ---
->  scripts/misc-check | 15 ++++++++++++---
->  2 files changed, 12 insertions(+), 6 deletions(-)
+On 20/05/2025 11:45, Peter Zijlstra wrote:
 
-Thank you!
+[...]
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+> @@ -3830,12 +3859,41 @@ void sched_ttwu_pending(void *arg)
+>  	update_rq_clock(rq);
+>  
+>  	llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
+> +		struct rq *p_rq = task_rq(p);
+> +		int ret;
+> +
+> +		/*
+> +		 * This is the ttwu_runnable() case. Notably it is possible for
+> +		 * on-rq entities to get migrated -- even sched_delayed ones.
+> +		 */
+> +		if (unlikely(p_rq != rq)) {
+> +			rq_unlock(rq, &rf);
+> +			p_rq = __task_rq_lock(p, &rf);
+
+I always get this fairly early with TTWU_QUEUE_DELAYED enabled, related
+to p->pi_lock not held in wakeup from interrupt.
+
+[   36.175285] WARNING: CPU: 0 PID: 162 at kernel/sched/core.c:679 __task_rq_lock+0xf8/0x128
+[   36.176021] Modules linked in:
+[   36.176187] CPU: 0 UID: 0 PID: 162 Comm: (udev-worker) Tainted: G W 6.15.0-00005-gcacccfab15bd-dirty #59 PREEMPT 
+[   36.176587] Tainted: [W]=WARN
+[   36.176727] Hardware name: linux,dummy-virt (DT)
+[   36.176964] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   36.177301] pc : __task_rq_lock+0xf8/0x128
+[   36.177576] lr : __task_rq_lock+0xf4/0x128
+...
+[   36.181314] Call trace:
+[   36.181510]  __task_rq_lock+0xf8/0x128 (P)
+[   36.181824]  sched_ttwu_pending+0x2d8/0x378
+[   36.182020]  __flush_smp_call_function_queue+0x138/0x37c
+[   36.182222]  generic_smp_call_function_single_interrupt+0x14/0x20
+[   36.182440]  ipi_handler+0x254/0x2bc
+[   36.182585]  handle_percpu_devid_irq+0xa8/0x2d4
+[   36.182780]  handle_irq_desc+0x34/0x58
+[   36.182942]  generic_handle_domain_irq+0x1c/0x28
+[   36.183109]  gic_handle_irq+0x40/0xe0
+[   36.183289]  call_on_irq_stack+0x24/0x64
+[   36.183441]  do_interrupt_handler+0x80/0x84
+[   36.183647]  el1_interrupt+0x34/0x70
+[   36.183795]  el1h_64_irq_handler+0x18/0x24
+[   36.184002]  el1h_64_irq+0x6c/0x70
+
+[...]
+
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2313,6 +2313,7 @@ static inline int task_on_rq_migrating(s
+>  #define WF_RQ_SELECTED		0x80 /* ->select_task_rq() was called */
+>  
+>  #define WF_ON_CPU		0x0100
+
+Looks like there is no specific handling for WF_ON_CPU yet?
+
+> +#define WF_DELAYED		0x0200
+
+[...]
+
