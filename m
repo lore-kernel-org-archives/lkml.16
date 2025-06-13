@@ -1,71 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0315317993
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4854B1862A;
+	Fri, 13 Jun 2025 12:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749818860; cv=none; b=OrcLgsM0OOMxuJyihrXaadL7ydNcAz5i135qfZRIWna1kIqM+TyX6OklzF2PFiK+KCc6ZwTSWsB3eTJlaMC4XGAwtPw/Va1nr9pHHPQEdOgYTOt1R1U/gFezsgik/j82tQQXUuDcYuN/6PtHv7wNNX9yc0oXEvTVwszls6Otqek=
+	t=1749818877; cv=none; b=L+EJ8CLObN0Dh+9zJWNFmxrBA5E3Hu3sYVms/EzPEuXRN5IgWgwXkNnu+sX7i1FOj27JaUKQGVmYYs/CqVYzAy6BxcHG7InNy3IOV5mv8lW3KHur1Vn6/+O7coACAEhIQjhxX++jOih0Le6EIZwWmPmcX8MDK2YqdOYMEjopFXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749818860; c=relaxed/simple;
-	bh=+SiE5qYo2rwclNu+ZxJIlHHqot1iDNTAW/egCzsPp6c=;
+	s=arc-20240116; t=1749818877; c=relaxed/simple;
+	bh=ezXY3qXnquNhyaHYxBN/76XTuscB/Svb9cb+gsY3Hzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=soBZF3Ieq0MZlkstTy3JVKub4s1aHkGf72jAt7mZk2f9J6FPFL60VXUW2qmkixmi1quyMuIJhkrU0EW6MH/nIqzsWt6YAiNHmUnqnnE5Onv6hT737JY8vAA2uqmR7kFj644TfA9m+SeSX+oC0ZhqSY4ivH6TVm2WOZMB2wrRJZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ApeBbIq7; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ApeBbIq7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749818859; x=1781354859;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+SiE5qYo2rwclNu+ZxJIlHHqot1iDNTAW/egCzsPp6c=;
-  b=ApeBbIq7i/funC43jVIrHf2vja2/gapqudFPVdtWnUXEoeNFROqbSc0o
-   6T9HYPRNKHL8qMk4wPdoyN6WvCidR8gbffiEgFk0WoYHbdNeGxYH+auEr
-   RQmn4/eiOAv1G8uoB2E/mVADig9JNF/bNMiR0cKNoUxV/1Ozwz69mRxMD
-   jOFYAEDgrapFht7wKVnsRYzmrtN9Z27tOVxgaGL0GlzoZow6HyCtRNrH8
-   WpXeH7Tsn3xyP2oxfD35FI60/eemOSRDcMjSSvtYv6xqfhJZACpopMlvY
-   od0y1HNUCqHfPG3ycGzgnmo0Fw+nx8Y1VRXbwJG1TA6f6LiDzI6UCFwjC
-   w==;
-X-CSE-ConnectionGUID: y+9dNtQbTzaHIKE5koziFQ==
-X-CSE-MsgGUID: NanEXk7ZQ4O8jbkkIXuQ2w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="54653894"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="54653894"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:47:38 -0700
-X-CSE-ConnectionGUID: lMG2YNQHSEaYooYR+Mh+1A==
-X-CSE-MsgGUID: MQntdoYaQa6nq49vHo7YFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="148192013"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2025 05:47:34 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uQ3oi-000Cc6-1p;
-	Fri, 13 Jun 2025 12:47:32 +0000
-Date: Fri, 13 Jun 2025 20:46:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Ahmed S. Darwish" <darwi@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: Re: [PATCH v3 41/44] x86/cpu: <asm/processor.h>: Do not include
- CPUID API header
-Message-ID: <202506132039.imS2Pflx-lkp@intel.com>
-References: <20250612234010.572636-42-darwi@linutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EjUYsct0aUc85Z9BoBlLKa5SSOV5H8NTbE4+ZCNDmSlXQ0esKm9IH9+1M8cg1HtsdqO8DtgPx/PDw3ztP7ObjL9anFSxvtVnI1nHnicf8GPTqR+m/zWkz8UnJx+U1OrRnG1HJuIO88vZZD+BlafbyN1EIRwmpR+CBKRKbPe4xfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so4081962a12.1;
+        Fri, 13 Jun 2025 05:47:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749818873; x=1750423673;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+wHh4AEKR+VQShRFBc7WiyNVG6FHWDiPyckjUrWvfps=;
+        b=cwoXK8FqNYC1FFtRwnQdALPKxgvrMBcSAn7OrLchhvd2ReoHaWpxzA2v3rSeugdCCZ
+         KuXOpECDlt3GDWtYRe5ZEPpJAw1wAnllFeD9zQ6i3ZKEfbv/0rO+2A9eRzd66sZnhIr4
+         hT8NF4Se5ndk8VTEVVU36ewuYkO445rBsE+Qtv4x0GbK7mDImJPh3zXiJn+vnZoF/zvi
+         wijYB3Jwxs32t1RaCM/jvARFGQybz3Lwzf6i4iKpGGG8FbSdHD5YQS6pIEsljihbvexh
+         VXsjXofrxIyekkmaCgdfE4F1ooVcenulR5hjxxZWxOazpM7jMwemb4BGqxwyvJir/nYQ
+         53/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUSsrZP/uXoi/JCHbHTlVWGWYT9r7lqvrBLhLVtlKtuXeKX0T9fr5VD65HEq5Zt7XbWqcHvC0UtmTtH+YFCXb7/@vger.kernel.org, AJvYcCW8q6TSBH8ugZxA6bLrM7gYPvk5NnRsFgu2wWVzk1EGeER3kAAw7g4upTHOTpFHkfLehfK/lycX@vger.kernel.org, AJvYcCXCjBEnzFJVKnPu7rnfEDTR2yKIr/nTazctAK9KKqCl4vbNV9sCBmtCT1sEXExcbxrKMAb1yZUOGFiuRYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRVI1fdj6QKYdX0c53Vsd5Nr3U7JMu897AplfYpV76vH/yvCOI
+	opwqVQXDw/Wn++R3eFS0YX6eYm62OmSlzrGS9NLD7Vq1sL8V/hJFjjCy
+X-Gm-Gg: ASbGncs/kJKPKzCnHBHDOlVB1XMeq4UOhZ8FVbC/F4w4qh0O4ZZPeazYHxnP48LYeJb
+	Z5xpRbgKRaBqJ+Z6DiVz7VG7NxiyazLuRW8B2qAFwsJB8tWUU1YYS/HL8ao3VCYf5vJy5qF6W82
+	pc2JMTPS3RdTbOzTyq5ipHAbVd/1ADUpzKRoMJTA/6jHiAy04hGhxcliAJ5wK8LyWQ2wl3l/aH0
+	Dy8tQjFL1SudRZqBv8hN6I1WLd7gIGvvRRUo6ji0xBoQwKF+Cw2FU0FkTuj8835CB8Q/YLJXAZ/
+	nbFxBqxaK08aNnJvu2H/AdRDaK2cdV19Ux2blrpaHQqtblMFWQZR
+X-Google-Smtp-Source: AGHT+IEq4rp5HuD75TmcVUsHuvmf88w/CqhBoW1iucFaZkCbfjFQ5I2ZG/geivWvMnTr6dTh72+hCA==
+X-Received: by 2002:a05:6402:40d2:b0:601:f3f1:f10e with SMTP id 4fb4d7f45d1cf-608b48c74b6mr2557695a12.5.1749818873294;
+        Fri, 13 Jun 2025 05:47:53 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:5::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48a876asm1151392a12.4.2025.06.13.05.47.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 05:47:52 -0700 (PDT)
+Date: Fri, 13 Jun 2025 05:47:50 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	ast@kernel.org
+Subject: Re: [PATCH net-next RFC] selftests: net: add netpoll basic
+ functionality test
+Message-ID: <aEwd9oLRnxna97JK@gmail.com>
+References: <20250612-netpoll_test-v1-1-4774fd95933f@debian.org>
+ <684b8e8abb874_dcc45294a5@willemb.c.googlers.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,53 +66,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612234010.572636-42-darwi@linutronix.de>
+In-Reply-To: <684b8e8abb874_dcc45294a5@willemb.c.googlers.com.notmuch>
 
-Hi Ahmed,
+Hello Willem,
 
-kernel test robot noticed the following build errors:
+On Thu, Jun 12, 2025 at 10:35:54PM -0400, Willem de Bruijn wrote:
+> Breno Leitao wrote:
+> > Add a basic selftest for the netpoll polling mechanism, specifically
+> > targeting the netpoll poll() side.
+> > 
+> > The test creates a scenario where network transmission is running at
+> > maximum sppend, and netpoll needs to poll the NIC. This is achieved by:
+> 
+> minor type: sppend/speed
 
-[auto build test ERROR on 19272b37aa4f83ca52bdf9c16d5d81bdd1354494]
+Thanks! I will update.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ahmed-S-Darwish/x86-cpuid-Remove-transitional-asm-cpuid-h-header/20250613-075051
-base:   19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-patch link:    https://lore.kernel.org/r/20250612234010.572636-42-darwi%40linutronix.de
-patch subject: [PATCH v3 41/44] x86/cpu: <asm/processor.h>: Do not include CPUID API header
-config: i386-randconfig-004-20250613 (https://download.01.org/0day-ci/archive/20250613/202506132039.imS2Pflx-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506132039.imS2Pflx-lkp@intel.com/reproduce)
+> >   1. Configuring a single RX/TX queue to create contention
+> >   2. Generating background traffic to saturate the interface
+> >   3. Sending netconsole messages to trigger netpoll polling
+> >   4. Using dynamic netconsole targets via configfs
+> > 
+> > The test validates a critical netpoll code path by monitoring traffic
+> > flow and ensuring netpoll_poll_dev() is called when the normal TX path
+> > is blocked. Perf probing confirms this test successfully triggers
+> > netpoll_poll_dev() in typical test runs.
+> 
+> So the test needs profiling to make it a pass/fail regression test?
+> Then perhaps add it to TEST_FILES rather than TEST_PROGS. Unless
+> exercising the code on its own is valuable enough.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506132039.imS2Pflx-lkp@intel.com/
+Sorry for not being clear. This test doesn't depend on any profiling
+data. Basically I just run `perf probe` to guarantee that
+netpoll_poll_dev() was being called (as that was the goal of the test).
 
-All errors (new ones prefixed by >>):
+This test is self contained and should run at `make run_test` targets.
 
-   drivers/cpufreq/longrun.c: In function 'longrun_get':
->> drivers/cpufreq/longrun.c:143:9: error: implicit declaration of function 'cpuid' [-Werror=implicit-function-declaration]
-     143 |         cpuid(0x80860007, &eax, &ebx, &ecx, &edx);
-         |         ^~~~~
-   cc1: some warnings being treated as errors
+> Or is there another way that the packets could be observed, e.g.,
+> counters.
 
+Unfortunately netpoll doesn't expose any data, thus, it is hard to get
+it. 
 
-vim +/cpuid +143 drivers/cpufreq/longrun.c
+I have plans to create a configfs for netpoll, so, we can check for
+these numbers (as also configure some pre-defined values today, such as
+USEC_PER_POLL, MAX_SKBS, ip6h->version = 6; ip6h->priority = 0, etc.
 
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  135  
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  136  static unsigned int longrun_get(unsigned int cpu)
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  137  {
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  138  	u32 eax, ebx, ecx, edx;
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  139  
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  140  	if (cpu)
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  141  		return 0;
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  142  
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16 @143  	cpuid(0x80860007, &eax, &ebx, &ecx, &edx);
-2d06d8c49afdcc arch/x86/kernel/cpu/cpufreq/longrun.c  Dominik Brodowski 2011-03-27  144  	pr_debug("cpuid eax is %u\n", eax);
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  145  
-48ee923a666d4c arch/x86/kernel/cpu/cpufreq/longrun.c  Dave Jones        2009-01-17  146  	return eax * 1000;
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  147  }
-^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  148  
+In fact, I've an private PoC for this, but, I am modernizing the code
+first, and creating some selftests to help me with those changes later
+(given we have very little test on netpoll, and I aim to improve this,
+given how critical it is for some datacenter designs).
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > +NETCONSOLE_CONFIGFS_PATH = "/sys/kernel/config/netconsole"
+> > +REMOTE_PORT = 6666
+> > +LOCAL_PORT = 1514
+> > +# Number of netcons messages to send. I usually see netpoll_poll_dev()
+> > +# being called at least once in 10 iterations.
+> > +ITERATIONS = 10
+> 
+> Is usually sufficient to avoid flakiness, or should this be cranked
+> up?
+
+10 was the minimum number I was able to trigger it on my dev
+environment, either with default configuration and a debug heavy
+configuration, but, the higher the number, more change to trigger it.
+I can crank up it a bit more. Maybe 20?
+
+> > +def check_traffic_flowing(cfg: NetDrvEpEnv, netdevnl: NetdevFamily) -> int:
+> > +    """Check if traffic is flowing on the interface"""
+> > +    stat1 = get_stats(cfg, netdevnl)
+> > +    time.sleep(1)
+> 
+> Can the same be learned with sufficient precision when sleeping
+> for only 100 msec? As tests are added, it's worth trying to keep
+> their runtime short.
+
+100%. In fact, I don't need to wait for 1 seconds. In fact, we don't
+even need to check for traffic flowing after the traffic started. I've
+just added it to help me do develop the test.
+
+We can either reduce it to 100ms or just remove it from the loop,
+without prejudice to the test itself. Maybe reducing it to 100 ms might
+help someone else that might debug this in the future, while just
+slowing down ITERATIONS * 0.1 seconds !?
+
+Thanks for the review!
+--breno
