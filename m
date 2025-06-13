@@ -1,50 +1,31 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEF91DB346;
-	Fri, 13 Jun 2025 06:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA0C1DB346
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749794907; cv=none; b=hxcjUfIqCO2PgAWL2SFTyA19aznMtEHQi9UjekzkWumZqMgdMb4F3b/80JVFm0TP/pt7jqfhAdfHqDlipJHb4QBvL+lt/XhdSud3FDhbioFoXrbw3EwESJ7DqtGmq6Zkh/LFGOiIKpV9Mjb4mDxP3oUUyhBfSOHFtHqVVLmgdB4=
+	t=1749794922; cv=none; b=ED64ZI3jcD6PqZfpSJjhylUoBiH5FT0nHcH7eNitA7L2eq+BVbvoviClEbNUT1ebOJf7XzSAiHX9XjgP5RgK+9H1yNpQbumY0z2q/jZbUXpHC6q5hgAOSP77lTba4f/t0jmexqOFBykvydRpVHMuQGDF5u0ULkg+zP0jhA9U0pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749794907; c=relaxed/simple;
-	bh=Ywmm9R+GsAveGJwXVIrNHVPW7WvotiSTP68Nk6SyG18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iM7QeVi8lofgTA8UaPT0+mTdqIpGalkzMiEzQdbk1wPFZJX97oebH2SvSaouTele/tt8QkgP+JYRMIjfEDK/FdaK0oas5VfE8l093ONk5B+EVOkDocOYLzV4uowhfNXBvsR9fOR/JLKjlc2UhJ0FaziHRWLQtcy0UOjrgqZTDBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZXy4EPCD; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749794922; c=relaxed/simple;
+	bh=iykDZfXZ8iabXE3eY+UFFOO/NgLs6BThg7X2/plrLX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OzDnQjXy0l2Kvvl+EKqpQC7ufjXrGmZ9zI1osTm7o/PDbD/iki/SHrR/Myp/CNKkkC2RZN1DkEdpG0pJGSfYe2uk11cfr/B9ELmCl6w+1gLwlIERI/roMgXnICZOsyq4ni+e0l5PAKvUMcihQ6/EZ5InD7cd09ctOZqYpm4CLaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=JRDPdO9b; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZXy4EPCD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749794906; x=1781330906;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=Ywmm9R+GsAveGJwXVIrNHVPW7WvotiSTP68Nk6SyG18=;
-  b=ZXy4EPCDEJskoTz8A+hhROAhlAzZ+LT/4y668WScN59Bu/2QffbV6FZu
-   rwOQJQU+YXcVg+HT/opcu7RMAgr2YSjvHsHaAAyGBytankfVFThClWy0M
-   psHQnO30p8v28etLOoGT0XICJgAyogsI4Ir+IpNgtRzDnyaF03yQ6UuP3
-   meh9+KsEAv8HbS/cZB4lzeusEtLe1A2KL70904qPIYRWADLLve6K7UkW7
-   FVYI/JYlcJxU0IRn0lXmSfgEU3eYAj7pwQz1k8VsuFK4fG86e83E/atok
-   q9qGey6fAdFdSM+X2K7O5fkvK7muo2lc8VTyOlkbmgAsHTqFAAtijGF+8
-   w==;
-X-CSE-ConnectionGUID: EsB2yo0dStOtPsltoe4r0Q==
-X-CSE-MsgGUID: zwiFiisDSAyomzT+EFr2bg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="62608523"
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="62608523"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 23:08:25 -0700
-X-CSE-ConnectionGUID: G0hxtRfHSYuwNg3sTxOFkw==
-X-CSE-MsgGUID: c4+Dep8ES0GYtSvStebAbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="147646095"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 23:08:17 -0700
-Message-ID: <0020abc9-73ac-4dee-b643-b21e9283c26e@intel.com>
-Date: Fri, 13 Jun 2025 14:08:14 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="JRDPdO9b"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749794914; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=U6N77Rg/y/+7iThJTzrXEJ/3VtfKAqzvXRg1gw+dPLk=;
+	b=JRDPdO9bC/kPDQdc9NcdPS0YcO4IheKnJiTrYSsrXn1GUX3ChhiJXuudUoY/vGUzKFHPsDS3Leq3oV//4HNB5dDdi9iB6LQJVLtEUDsE8Z5vP2gwU20ABifpBw3/52XobUrsYg/Poy4q4WzrTs2OSbCoVWIEzvZuq7tPjaqW78M=
+Received: from 30.170.233.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WdjN4EO_1749794913 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Jun 2025 14:08:33 +0800
+Message-ID: <0baf3fa2-ed77-4748-b5ee-286ce798c959@linux.alibaba.com>
+Date: Fri, 13 Jun 2025 14:08:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,78 +33,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 09/21] KVM: TDX: Enable 2MB mapping size after TD is
- RUNNABLE
-To: Yan Zhao <yan.y.zhao@intel.com>, Sean Christopherson <seanjc@google.com>,
- Kai Huang <kai.huang@intel.com>,
- Rick P Edgecombe <rick.p.edgecombe@intel.com>,
- Kirill Shutemov <kirill.shutemov@intel.com>, Fan Du <fan.du@intel.com>,
- Dave Hansen <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>,
- Zhiquan Li <zhiquan1.li@intel.com>,
- "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
- "tabba@google.com" <tabba@google.com>,
- "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Ira Weiny <ira.weiny@intel.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>,
- "michael.roth@amd.com" <michael.roth@amd.com>,
- "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
- "ackerleytng@google.com" <ackerleytng@google.com>,
- Chao P Peng <chao.p.peng@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- Vishal Annapurve <vannapurve@google.com>, "jroedel@suse.de"
- <jroedel@suse.de>, Jun Miao <jun.miao@intel.com>,
- "pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-References: <c19b4f450d8d079131088a045c0821eeb6fcae52.camel@intel.com>
- <aCcIrjw9B2h0YjuV@yzhao56-desk.sh.intel.com>
- <c98cbbd0d2a164df162a3637154cf754130b3a3d.camel@intel.com>
- <aCrsi1k4y8mGdfv7@yzhao56-desk.sh.intel.com>
- <f9a2354f8265efb9ed99beb871e471f92adf133f.camel@intel.com>
- <aCxMtjuvYHk2oWbc@yzhao56-desk.sh.intel.com>
- <119e40ecb68a55bdf210377d98021683b7bda8e3.camel@intel.com>
- <aEmVa0YjUIRKvyNy@google.com>
- <3a7e883a-440f-4bec-a592-ac3af4cb1677@intel.com>
- <aEubI/6HkEw/IkUr@yzhao56-desk.sh.intel.com>
- <aEu4iPq7o0wXgy/E@yzhao56-desk.sh.intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <aEu4iPq7o0wXgy/E@yzhao56-desk.sh.intel.com>
+Subject: Re: Unused trace event in erofs
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>
+References: <20250612224906.15000244@batman.local.home>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250612224906.15000244@batman.local.home>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/13/2025 1:35 PM, Yan Zhao wrote:
-> To avoid confusion, here's the full new design:
-> 
-> 1.when an EPT violation carries an ACCEPT level info
->    (This occurs when TD performs ACCEPT before it accesses memory),
->    KVM maps the page at map level <= the specified level.
->    Guest's ACCEPT will succeed or return PAGE_SIZE_MATCH if map level < the
->    specified level.
-> 
-> 2.when an EPT violation does not carry ACCEPT level info
->    (This occurs when TD accesses memory before invoking ACCEPT),
-> 
->    1) if the TD is configured to always accept VMM's map level,
->       KVM allows to map at 2MB.
->       TD's later 4KB ACCEPT will return PAGE_SIZE_MATCH.
->       TD can either retry with 2MB ACCEPT or explictly invoke a TDVMCALL for
->       demotion.
->    2) if the TD is not configured to always accept VMM's map level,
->       KVM always maps at 4KB.
+Hi Steven,
 
-Is it the decision derived from the discussion of this series to make 
-the design simple and avoid the demotion on ACCEPT?
-
-It looks like KVM's own design preference that if the TD doesn't opt-in 
-the proposed new feature "always accept VMM's map level', the only way 
-it can get the page mapped by EPT as hugepage is always trying to accept 
-the page before first access and trying accept starting from biggest 
-page size.
-
-I'm OK with it.
-
->       TD's 2MB ACCEPT will return PAGE_SIZE_MATCH.
+On 2025/6/13 10:49, Steven Rostedt wrote:
+> I have code that will trigger a warning if a trace event is defined but
+> not used[1]. It gives a list of unused events. Here's what I have for
+> erofs:
 > 
-> Please let me know if anything does not look right.
+> warning: tracepoint 'erofs_destroy_inode' is unused.
+
+I'm fine to remove it, also I wonder if it's possible to disable
+erofs tracepoints (rather than disable all tracepoints) in some
+embedded use cases because erofs tracepoints might not be useful for
+them and it can save memory (and .ko size) as you said below.
+
+> 
+> Each trace event can take up to around 5K in memory regardless if they
+> are used or not. Soon there will be warnings when they are defined but
+> not used. Please remove any unused trace event or at least hide it
+> under an #ifdef if they are used within configs. I'm planning on adding
+> these warning in the next merge window.
+
+If you don't have some interest to submit a removal patch, I will post
+a patch later.
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> 
+> -- Steve
+> 
+> [1] https://lore.kernel.org/linux-trace-kernel/20250612235827.011358765@goodmis.org/
 
