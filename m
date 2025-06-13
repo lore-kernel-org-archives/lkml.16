@@ -1,140 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9A572636;
-	Fri, 13 Jun 2025 01:24:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7E172636;
+	Fri, 13 Jun 2025 01:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749777841; cv=none; b=U1Runc3y8i8mp62AZIMIjfJYAE16vImdaPFawYPMOeQ+rqrIlv+WVYYTvW7F9KL6JI+6TcyLE3WAHYO+/paExGgfgA/EQGGOP3ETAAMQZDnxe+HEQMDdV8+BOmqahhwjCi59UafrBQ7oi+I/SS37xu8mgBKHaI4Dm1bRTPqlOqs=
+	t=1749778200; cv=none; b=jrDOwB0mN0sY+SMiz3OJbkSSnDGJSZs1YoybAdbqvlxXkPevHsdjwNmrduquGsLBq94XxePqUqcetQTkN6Dw+9yjrXFTYIhzlA4B1hzOPx2gRVQS5l9JqZdvAox29tCqaz5BXrUwygiUzNIs7jE1h/1NqEuZzUNLFERxorSi2G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749777841; c=relaxed/simple;
-	bh=d5rHizoOE6yeSiQobFd52hpxfVk2+AkiKtye4xkZZNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mpwcVB8zufKDpRNDoDXfUC6y6crnuQHpNOjxTu2YXtwGE90mX924g12vEPr+KtvUWUOQay0yBU7caYQNu5A7JxW1OUhFO9Y5GTDlymZRJwF9mlD8Mhy70hRpv5rxOvFTncZ7lWq5yWFu1BmMesjpMhgDivgeF+55+yMElTCRcoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sopL9OVG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749778200; c=relaxed/simple;
+	bh=RqMcqn0JWcgiJ7EPq03fKjRRCEN6dTdTUjbtUhbkVY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GWPu9RAEwjO2kHHTJs4VKAF7q3xC8pk1dXZQkMsOtuEQfM58BxRQdWgSoAPsWh20TDTT20rUtrHcT1W6VZDmgzncStTq/mbsqG7OmPLOkI9HfdK6YPin6eR8EN0OTfGZQ0qJJEfoPMD3l3sHnP9IAyTxkLoDPEjD6av2XEVyQyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q94CNsO3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sopL9OVG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB4CEC4CEEA;
-	Fri, 13 Jun 2025 01:23:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q94CNsO3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39684C4CEEA;
+	Fri, 13 Jun 2025 01:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749777840;
-	bh=d5rHizoOE6yeSiQobFd52hpxfVk2+AkiKtye4xkZZNQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sopL9OVGaKkYBLoQ9K0Gx3mNqKCtmF6HeqAxRPeMFvJLOQNPGNCCbdfRxS2LlfLqu
-	 C3Drs4Qu4cFQG2+79qNVN/2U+Mp5r2Ku8fHrvgJywco1pbYG6PtA3ImiR1O4x08klz
-	 xDAF1Jfb3fKbHGBJ+46TYP3cVpNrl19/EEmKclh0GQCX86o255XF08PT4Rd7b6JjMQ
-	 0pZk7pLaqF1Q6YqyMWUL0yY5F1li1Q6ACzRmSrSgpQrt8hIvANSSWWinXiguz6euWJ
-	 eocxM+zUeCV/S4k5Ycq56kPx+45/tXS3yhtnvX35hipDpMVHslTEwlPdsTCo0NKkoz
-	 V/KcVAfBqnyXg==
-Date: Fri, 13 Jun 2025 01:23:57 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc: Simon Richter <Simon.Richter@hogyros.de>, linux-fscrypt@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-ext4@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net, ceph-devel@vger.kernel.org
-Subject: Re: [PATCH] fscrypt: don't use hardware offload Crypto API drivers
-Message-ID: <20250613012357.GA3603104@google.com>
-References: <20250611205859.80819-1-ebiggers@kernel.org>
- <7f63be76-289b-4a99-b802-afd72e0512b8@hogyros.de>
- <20250612005914.GA546455@google.com>
- <20250612062521.GA1838@sol>
- <aEqU0iU1tBrLEYUq@gcabiddu-mobl.ger.corp.intel.com>
- <20250612155743.GA3529549@google.com>
+	s=k20201202; t=1749778200;
+	bh=RqMcqn0JWcgiJ7EPq03fKjRRCEN6dTdTUjbtUhbkVY8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Q94CNsO3znQfKi0xRGCXB/Fk3qrKKSZAAz74XJRYRyiJN8bEkUArl86tJ9bVMcKVl
+	 FhTHXgtbQ9LkNYdUrYyRhX/F+WGnGaj0T9fPBADf6Ltzqz7sq4GgiD3oASo5FlxXpN
+	 mB9ZxENtk92E8T69NZbg3uupmmfF0gVDd1OVBSoiE3uD7m7ez07yRIz1GbpgSQW+cf
+	 1Mku5nql8dRmwIxfFwPameDsRS6hY1H2rExcEDzMiyaWNMOdZd4lapVSsJ72YmJnxc
+	 GN7uicZrXfIRBGx0DmFihnbp/aqu5hPFFX/Irqs9PYWIIbKa3hV0qvXkkNZoiW76xs
+	 rmpiCizfQ4J3Q==
+Date: Thu, 12 Jun 2025 18:29:58 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Konrad Dybcio <konradybcio@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH net-next v5 0/5] Add support for the IPQ5018 Internal GE
+ PHY
+Message-ID: <20250612182958.7e8c5bf0@kernel.org>
+In-Reply-To: <DS7PR19MB8883E05490D6A0BD48DE11909D74A@DS7PR19MB8883.namprd19.prod.outlook.com>
+References: <DS7PR19MB8883E05490D6A0BD48DE11909D74A@DS7PR19MB8883.namprd19.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612155743.GA3529549@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 03:57:43PM +0000, Eric Biggers wrote:
-> On Thu, Jun 12, 2025 at 09:50:26AM +0100, Giovanni Cabiddu wrote:
-> > On Wed, Jun 11, 2025 at 11:25:21PM -0700, Eric Biggers wrote:
-> > 
-> > ...
-> > 
-> > > FWIW, here's what happens if you try to use the Intel QAT driver with dm-crypt:
-> > > https://lore.kernel.org/r/CACsaVZ+mt3CfdXV0_yJh7d50tRcGcRZ12j3n6-hoX2cz3+njsg@mail.gmail.com/
-> > 
-> > /s/happens/happened/
-> > 
-> > ... and it got fixed
-> > https://lore.kernel.org/all/20220506082327.21605-1-giovanni.cabiddu@intel.com/
-> 
-> But it reached users in the first place, including stable kernels.  And
-> apparently the issues were going on for years and were known to the authors of
-> the driver
-> (https://lore.kernel.org/linux-crypto/91fe9f87-54d7-4140-4d1a-eac8e2081a7c@gmail.com/).
-> 
-> We simply don't have issues like this with the AES-NI or VAES XTS code.
-> 
-> And separately, QAT was reported to be much slower than AES-NI for synchronous use
-> (https://lore.kernel.org/linux-crypto/0171515-7267-624-5a22-238af829698f@redhat.com/)
-> 
-> Later, I added VAES accelerated AES-XTS code which is over twice as fast as
-> AES-NI on the latest Intel CPUs, so that likely widened the gap even more.
-> 
-> Yet, the QAT driver registers its "xts(aes)" implementation with priority 4001,
-> compared to priority 800 for the VAES accelerated one.  So the QAT one is the
-> one that will be used by fscrypt!
-> 
-> That seems like a major issue even just from a performance perspective.
-> 
-> I expect this patch will significantly improve fscrypt performance on Intel
-> servers that have QAT.
+On Thu, 12 Jun 2025 17:10:24 +0400 George Moussalem wrote:
+>  [PATCH net-next v5 0/5] 
 
-I was curious, so I actually ran a benchmark on an Intel Emerald Rapids server.
-Specifically, I used a kernel module that repeatedly en/decrypted 4096-byte
-messages with AES-XTS using crypto_skcipher_en/decrypt().  That's basically what
-fscrypt's file contents encryption does, but here I just measured the raw crypto
-performance.  I tested both xts-aes-vaes-avx512 and qat_aes_xts.  For both, the
-difference between encryption and decryption was within the margin of error, so
-I'll give just one number for each.
-
-Results:
-
-    xts-aes-vaes-avx512: 16171 MB/s
-    qat_aes_xts: 289 MB/s
-
-So, QAT is 55 times slower than the VAES-optimized software code!
-
-It's even slower than the generic C code:
-     
-    xts(ecb(aes-generic)): 305 MB/s
-
-Now, it could be argued that this is user error -- I "should" have created lots
-of asynchronous crypto requests for 4K blocks, submitted them all at once, and
-waited for them to complete.  Thus allowing parallel processing by QAT.
-
-But, that's simply not what fscrypt does.  And even if it did, it could only
-plausibly help for large bios.  Short bios, for which latency is really
-important, would continue to be massively regressed by using QAT for them.
-
-Even for large bios, it would have to get over 55 times faster to be worth it,
-which seems (very?) tenuous.
-
-Also, as is known from dm-crypt which does do async processing, the code that's
-needed to do it is quite complex and error-prone.
-
-In any case, async processing would be a theoretical future improvement.  It's
-simply not what fscrypt does today, or has ever done.
-
-I also found that, even though I built the QAT driver as a loadable module, it
-was loaded automatically on the system and prioritized itself over the VAES-
-accelerated AES-XTS.  Thus, it would be what fscrypt uses on Intel servers where
-the QAT driver is enabled in kconfig, even just as 'm'.
-
-Even disregarding the historical data corruption issues with QAT, I think this
-makes it *very* clear that the QAT driver is harmful to fscrypt users.
-
-And I've seen similar results with the Qualcomm crypto engine
-(https://lore.kernel.org/r/20241203180553.16893-1-ebiggers@kernel.org/).
-So this isn't even unique to this particular accelerator either.
-
-This has gone on for long enough.
-
-- Eric
+I guess my explanation wasn't good enough :)
+This is not a correctly formatted series. It looks like a series with 5
+patches where patches 1 4 5 where lost. We need the cover letter to say
+0/2 and patches to say 1/2 and 2/2.
