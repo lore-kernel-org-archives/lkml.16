@@ -1,481 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D57257429;
-	Fri, 13 Jun 2025 20:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA602472B0
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749845599; cv=none; b=MIrKA4VPHdMiJmvKXb4T6kWVzxCpA1GgWtcemofCZXG4I/llT4D24toOhvDG+CPz5J3v3McRI98uUkvnXDqnbjjf3aw58MhUCqj3mFtX9+1NyliCiYeh+4tZDucVw77bSC16pTJOklbxjzZlDe5OrgiNVgdPyoakD7j6U90NV4I=
+	t=1749845640; cv=none; b=gw8UVLxvo/aYndaq6Uhfn0rZjE08JzIgp8cqL3vlqjgEDudh1VF2Jch9a9lBic5EbPSGoNalXnmM/0NJHgaecSOIzTI4vwIyWCmZSsIbHeLmLOXV0KDImEJ7O0uM+R+qoab10kLbOHloDG3i0+lVXzga6Sr//cdjZ63icfSI5N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749845599; c=relaxed/simple;
-	bh=3g+9PWr15IqQZrhqsFba3YoBbwi/Q8JwWyiK6WDk23Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lr7AlFBSJ7E7vFPCTmvWU93UFoq06qU61JuGjbjTyfSz6DJKfDjtQhLRwh43BU3dhg5QQJbbM+lvR0yPwaRo9PNhQC0oICDM4mwDsnqBO7zAqY5vOUj+6INrVWR0UtIt1YYOPVAxZfsiAyfgTwlRSIZ42vtqSJstkkHDlyf5XCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i+C3BZXY; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749845640; c=relaxed/simple;
+	bh=MDRu6yPWJY4+fErAYhdY1muQ1QaTDRZmWKOPvibaRVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WA1LGFPZQ+8sJNCHp/oYVpQfVwIqrDZROdda9nIJhS0OMNRholPnyAMDtNzwR45CEOHYPaH6DaG54RMIgdLSNFI4lOwIQOh8WdGl3siKPMeYnGEEUB90kHWEthNjM4JNQ2jIyS3Rf1V3i/nRH5vFbpfiBo1kLQuQ1s8KvFMG9Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFI6SJF/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i+C3BZXY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749845597; x=1781381597;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3g+9PWr15IqQZrhqsFba3YoBbwi/Q8JwWyiK6WDk23Q=;
-  b=i+C3BZXYh70yOrg9Mybh3iMk5TaBVUaiR+uCJRXBMZ4+VaAdL5VLYB4+
-   VUD1037wDyOYExnTJ8pk7iJsyjB6QMoxwb8gtSUnpqkM1JdY8rCtjHL40
-   dgwGzrYQULPfJZ9Ltu94ymIOzhbmOVPyNsbj9qjxCVfFWsNbDyWuQpSkT
-   xqNtqZgZmRAA6i87SFTmqmm8zFEjgeKlm0iEHRhw7Q74nivmUe0QUzklm
-   /dfAiQw9wDZioF3ON9dRCUIGGiZGWqc1m4v+ddbFu/92kuf+35hPu2puL
-   CbdXeAgDAJe2JqdUiDsWg7YrdSnEEWauT4k2Fo8MPRAaIS8aln3/SoZr0
-   g==;
-X-CSE-ConnectionGUID: UUl1JOhWSDS8B+BnNWYZaA==
-X-CSE-MsgGUID: piYhLZ6WTmOdQItKiOCHWQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51300395"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="51300395"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 13:13:17 -0700
-X-CSE-ConnectionGUID: zjc2clQLTJSf35RPxGJfQQ==
-X-CSE-MsgGUID: yaY2AtXWTMeP7BRL7Eg4qA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="148456846"
-Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
-  by orviesa007.jf.intel.com with ESMTP; 13 Jun 2025 13:13:12 -0700
-From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-To: donald.hunter@gmail.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	vadim.fedorenko@linux.dev,
-	jiri@resnulli.us,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch,
-	aleksandr.loktionov@intel.com,
-	corbet@lwn.net
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-rdma@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Milena Olech <milena.olech@intel.com>
-Subject: [PATCH net-next v6 3/3] ice: add ref-sync dpll pins
-Date: Fri, 13 Jun 2025 22:06:55 +0200
-Message-Id: <20250613200655.1712561-4-arkadiusz.kubalewski@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250613200655.1712561-1-arkadiusz.kubalewski@intel.com>
-References: <20250613200655.1712561-1-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFI6SJF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7236C4CEE3;
+	Fri, 13 Jun 2025 20:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749845639;
+	bh=MDRu6yPWJY4+fErAYhdY1muQ1QaTDRZmWKOPvibaRVE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TFI6SJF/I2Rgyz/5einOWGEo1TPSj1LY0z0vDXvrnA39kAZehH6gjQsBvQoaTBK1f
+	 3ufBuf/J3rgsf00Raum/KPbRg9QFqvtQLFLsHM01CYtNXUN7Lf2YTlA3Yttgd6H2Yc
+	 jX/k7TcK6Io5tvouwQKL6XkpEXKCrCk0ydJU10bLMOYNzND8WCetENof6+GIzRd4li
+	 V1ondGerX6dUgHh6MwMYsG6sT+GZLlHSfhBKUcLTh5XZ3axNtuGCqKlCJjVKocOyNq
+	 fxCvVZ3tumZzKFUd4eAfPIrX3rOrJf4Q3J3SMum8J3vMgjrkU1eoVCBPFzWT89Nsd1
+	 UJgn6Ocq4c15w==
+Date: Fri, 13 Jun 2025 17:13:55 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Yicong Yang <yangyicong@hisilicon.com>
+Cc: Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
+	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jinqian Yang <yangjinqian1@huawei.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: perf usage of arch/arm64/include/asm/cputype.h
+Message-ID: <aEyGg98z-MkcClXY@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-Implement reference sync input pin get/set callbacks, allow user space
-control over dpll pin pairs capable of reference sync support.
+Hi,
 
-Reviewed-by: Milena Olech <milena.olech@intel.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
----
-v6:
-- rebase and align with introducation of software pins
----
- .../net/ethernet/intel/ice/ice_adminq_cmd.h   |   2 +
- drivers/net/ethernet/intel/ice/ice_dpll.c     | 284 ++++++++++++++++++
- drivers/net/ethernet/intel/ice/ice_dpll.h     |   2 +
- 3 files changed, 288 insertions(+)
+tools/perf (and other tools/ living code) uses a file from the kernel, a
+copy, so that we don't break its build when something changes in the
+kernel that tooling uses.
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-index bdee499f991a..7fd0f0091d36 100644
---- a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-+++ b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-@@ -2288,6 +2288,8 @@ struct ice_aqc_get_cgu_abilities {
- 	u8 rsvd[3];
- };
- 
-+#define ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN		BIT(7)
-+
- /* Set CGU input config (direct 0x0C62) */
- struct ice_aqc_set_cgu_input_config {
- 	u8 input_idx;
-diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.c b/drivers/net/ethernet/intel/ice/ice_dpll.c
-index 9fc50bb3f35a..754b865ce1cc 100644
---- a/drivers/net/ethernet/intel/ice/ice_dpll.c
-+++ b/drivers/net/ethernet/intel/ice/ice_dpll.c
-@@ -34,6 +34,19 @@
- #define ICE_DPLL_PIN_SW_2_OUTPUT_ABS_IDX \
- 	(ICE_DPLL_PIN_SW_OUTPUT_ABS(ICE_DPLL_PIN_SW_2_IDX))
- 
-+#define ICE_SR_PFA_DPLL_DEFAULTS		0x152
-+#define ICE_DPLL_PFA_REF_SYNC_TYPE		0x2420
-+#define ICE_DPLL_PFA_REF_SYNC_TYPE2		0x2424
-+#define ICE_DPLL_PFA_END			0xFFFF
-+#define ICE_DPLL_PFA_HEADER_LEN			4
-+#define ICE_DPLL_PFA_ENTRY_LEN			3
-+#define ICE_DPLL_PFA_MAILBOX_REF_SYNC_PIN_S	4
-+#define ICE_DPLL_PFA_MASK_OFFSET		1
-+#define ICE_DPLL_PFA_VALUE_OFFSET		2
-+
-+#define ICE_DPLL_E810C_SFP_NC_PINS		2
-+#define ICE_DPLL_E810C_SFP_NC_START		4
-+
- /**
-  * enum ice_dpll_pin_type - enumerate ice pin types:
-  * @ICE_DPLL_PIN_INVALID: invalid pin type
-@@ -2042,6 +2055,149 @@ ice_dpll_sw_esync_get(const struct dpll_pin *pin, void *pin_priv,
- 						 extack);
- }
- 
-+/*
-+ * ice_dpll_input_ref_sync_set - callback for setting reference sync feature
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: requested state for reference sync for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync frequency
-+ * feature for input pin.
-+ *
-+ * Context: Acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_input_ref_sync_set(const struct dpll_pin *pin, void *pin_priv,
-+			    const struct dpll_pin *ref_pin, void *ref_pin_priv,
-+			    const enum dpll_pin_state state,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+	struct ice_pf *pf = p->pf;
-+	u8 flags_en = 0;
-+	int ret;
-+
-+	if (ice_dpll_is_reset(pf, extack))
-+		return -EBUSY;
-+	mutex_lock(&pf->dplls.lock);
-+
-+	if (p->flags[0] & ICE_AQC_GET_CGU_IN_CFG_FLG2_INPUT_EN)
-+		flags_en = ICE_AQC_SET_CGU_IN_CFG_FLG2_INPUT_EN;
-+	if (state == DPLL_PIN_STATE_CONNECTED)
-+		flags_en |= ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN;
-+	ret = ice_aq_set_input_pin_cfg(&pf->hw, p->idx, 0, flags_en, 0, 0);
-+	if (!ret)
-+		ret = ice_dpll_pin_state_update(pf, p, ICE_DPLL_PIN_TYPE_INPUT,
-+						extack);
-+	mutex_unlock(&pf->dplls.lock);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ice_dpll_input_ref_sync_get - callback for getting reference sync config
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: on success holds reference sync state for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync frequency
-+ * feature for input pin.
-+ *
-+ * Context: Acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_input_ref_sync_get(const struct dpll_pin *pin, void *pin_priv,
-+			    const struct dpll_pin *ref_pin, void *ref_pin_priv,
-+			    enum dpll_pin_state *state,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+	struct ice_pf *pf = p->pf;
-+
-+	if (ice_dpll_is_reset(pf, extack))
-+		return -EBUSY;
-+	mutex_lock(&pf->dplls.lock);
-+	if (p->flags[0] & ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN)
-+		*state = DPLL_PIN_STATE_CONNECTED;
-+	else
-+		*state = DPLL_PIN_STATE_DISCONNECTED;
-+	mutex_unlock(&pf->dplls.lock);
-+
-+	return 0;
-+}
-+
-+/*
-+ * ice_dpll_sw_input_ref_sync_set - callback for setting reference sync feature
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: requested state for reference sync for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync
-+ * feature for input pins.
-+ *
-+ * Context: Calls a function which acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_sw_input_ref_sync_set(const struct dpll_pin *pin, void *pin_priv,
-+			       const struct dpll_pin *ref_pin,
-+			       void *ref_pin_priv,
-+			       const enum dpll_pin_state state,
-+			       struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+
-+	return ice_dpll_input_ref_sync_set(pin, p->input, ref_pin, ref_pin_priv,
-+					   state, extack);
-+}
-+
-+/**
-+ * ice_dpll_sw_input_ref_sync_get - callback for getting reference sync config
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: on success holds reference sync state for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync feature for
-+ * input pins.
-+ *
-+ * Context: Calls a function which acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_sw_input_ref_sync_get(const struct dpll_pin *pin, void *pin_priv,
-+			       const struct dpll_pin *ref_pin,
-+			       void *ref_pin_priv,
-+			       enum dpll_pin_state *state,
-+			       struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+
-+	return ice_dpll_input_ref_sync_get(pin, p->input, ref_pin, ref_pin_priv,
-+					   state, extack);
-+}
-+
- /**
-  * ice_dpll_rclk_state_on_pin_set - set a state on rclk pin
-  * @pin: pointer to a pin
-@@ -2169,6 +2325,8 @@ static const struct dpll_pin_ops ice_dpll_pin_sma_ops = {
- 	.phase_offset_get = ice_dpll_phase_offset_get,
- 	.esync_set = ice_dpll_sw_esync_set,
- 	.esync_get = ice_dpll_sw_esync_get,
-+	.ref_sync_set = ice_dpll_sw_input_ref_sync_set,
-+	.ref_sync_get = ice_dpll_sw_input_ref_sync_get,
- };
- 
- static const struct dpll_pin_ops ice_dpll_pin_ufl_ops = {
-@@ -2197,6 +2355,8 @@ static const struct dpll_pin_ops ice_dpll_input_ops = {
- 	.phase_offset_get = ice_dpll_phase_offset_get,
- 	.esync_set = ice_dpll_input_esync_set,
- 	.esync_get = ice_dpll_input_esync_get,
-+	.ref_sync_set = ice_dpll_input_ref_sync_set,
-+	.ref_sync_get = ice_dpll_input_ref_sync_get,
- };
- 
- static const struct dpll_pin_ops ice_dpll_output_ops = {
-@@ -2376,6 +2536,88 @@ static void ice_dpll_periodic_work(struct kthread_work *work)
- 				   msecs_to_jiffies(500));
- }
- 
-+/**
-+ * ice_dpll_init_ref_sync_inputs - initialize reference sync pin pairs
-+ * @pf: pf private structure
-+ *
-+ * Read DPLL TLV capabilities and initialize reference sync pin pairs in
-+ * dpll subsystem.
-+ *
-+ * Return:
-+ * * 0 - success or nothing to do (no ref-sync tlv are present)
-+ * * negative - AQ failure
-+ */
-+static int ice_dpll_init_ref_sync_inputs(struct ice_pf *pf)
-+{
-+	struct ice_dpll_pin *inputs = pf->dplls.inputs;
-+	struct ice_hw *hw = &pf->hw;
-+	u16 addr, len, end, hdr;
-+	int ret;
-+
-+	ret = ice_get_pfa_module_tlv(hw, &hdr, &len, ICE_SR_PFA_DPLL_DEFAULTS);
-+	if (ret) {
-+		dev_err(ice_pf_to_dev(pf),
-+			"Failed to read PFA dpll defaults TLV ret=%d\n", ret);
-+		return ret;
-+	}
-+	end = hdr + len;
-+
-+	for (addr = hdr + ICE_DPLL_PFA_HEADER_LEN; addr < end;
-+	     addr += ICE_DPLL_PFA_ENTRY_LEN) {
-+		unsigned long bit, ul_mask, offset;
-+		u16 pin, mask, buf;
-+		bool valid = false;
-+
-+		ret = ice_read_sr_word(hw, addr, &buf);
-+		if (ret)
-+			return ret;
-+
-+		switch (buf) {
-+		case ICE_DPLL_PFA_REF_SYNC_TYPE:
-+		case ICE_DPLL_PFA_REF_SYNC_TYPE2:
-+		{
-+			u16 mask_addr = addr + ICE_DPLL_PFA_MASK_OFFSET;
-+			u16 val_addr = addr + ICE_DPLL_PFA_VALUE_OFFSET;
-+
-+			ret = ice_read_sr_word(hw, mask_addr, &mask);
-+			if (ret)
-+				return ret;
-+			ret = ice_read_sr_word(hw, val_addr, &pin);
-+			if (ret)
-+				return ret;
-+			if (buf == ICE_DPLL_PFA_REF_SYNC_TYPE)
-+				pin >>= ICE_DPLL_PFA_MAILBOX_REF_SYNC_PIN_S;
-+			valid = true;
-+			break;
-+		}
-+		case ICE_DPLL_PFA_END:
-+			addr = end;
-+			break;
-+		default:
-+			continue;
-+		}
-+		if (!valid)
-+			continue;
-+
-+		ul_mask = mask;
-+		offset = 0;
-+		for_each_set_bit(bit, &ul_mask, BITS_PER_TYPE(u16)) {
-+			int i, j;
-+
-+			if (hw->device_id == ICE_DEV_ID_E810C_SFP &&
-+			    pin > ICE_DPLL_E810C_SFP_NC_START)
-+				offset = -ICE_DPLL_E810C_SFP_NC_PINS;
-+			i = pin + offset;
-+			j = bit + offset;
-+			if (i < 0 || j < 0)
-+				return -ERANGE;
-+			inputs[i].ref_sync = j;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * ice_dpll_release_pins - release pins resources from dpll subsystem
-  * @pins: pointer to pins array
-@@ -2450,6 +2692,36 @@ ice_dpll_unregister_pins(struct dpll_device *dpll, struct ice_dpll_pin *pins,
- 			dpll_pin_unregister(dpll, pins[i].pin, ops, &pins[i]);
- }
- 
-+/**
-+ * ice_dpll_pin_ref_sync_register - register reference sync pins
-+ * @pins: pointer to pins array
-+ * @count: number of pins
-+ *
-+ * Register reference sync pins in dpll subsystem.
-+ *
-+ * Return:
-+ * * 0 - success
-+ * * negative - registration failure reason
-+ */
-+static int
-+ice_dpll_pin_ref_sync_register(struct ice_dpll_pin *pins, int count)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i < count; i++) {
-+		if (!pins[i].hidden && pins[i].ref_sync) {
-+			int j = pins[i].ref_sync;
-+
-+			ret = dpll_pin_ref_sync_pair_add(pins[i].pin,
-+							 pins[j].pin);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * ice_dpll_register_pins - register pins with a dpll
-  * @dpll: dpll pointer to register pins with
-@@ -2738,6 +3010,14 @@ static int ice_dpll_init_pins(struct ice_pf *pf, bool cgu)
- 				goto deinit_sma;
- 			count += ICE_DPLL_PIN_SW_NUM;
- 		}
-+		ret = ice_dpll_pin_ref_sync_register(pf->dplls.inputs,
-+						     pf->dplls.num_inputs);
-+		if (ret)
-+			goto deinit_ufl;
-+		ret = ice_dpll_pin_ref_sync_register(pf->dplls.sma,
-+						     ICE_DPLL_PIN_SW_NUM);
-+		if (ret)
-+			goto deinit_ufl;
- 	} else {
- 		count += pf->dplls.num_outputs + 2 * ICE_DPLL_PIN_SW_NUM;
- 	}
-@@ -3030,6 +3310,8 @@ ice_dpll_init_info_direct_pins(struct ice_pf *pf,
- 		pins[i].prop.freq_supported_num = freq_supp_num;
- 		pins[i].pf = pf;
- 	}
-+	if (input)
-+		ret = ice_dpll_init_ref_sync_inputs(pf);
- 
- 	return ret;
- }
-@@ -3095,6 +3377,8 @@ static int ice_dpll_init_info_sw_pins(struct ice_pf *pf)
- 		pin->pf = pf;
- 		pin->prop.board_label = ice_dpll_sw_pin_sma[i];
- 		pin->input = &d->inputs[pin_abs_idx];
-+		if (pin->input->ref_sync)
-+			pin->ref_sync = pin->input->ref_sync - pin_abs_idx;
- 		pin->output = &d->outputs[ICE_DPLL_PIN_SW_OUTPUT_ABS(i)];
- 		ice_dpll_phase_range_set(&pin->prop.phase_range, phase_adj_max);
- 	}
-diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.h b/drivers/net/ethernet/intel/ice/ice_dpll.h
-index 10cd12d70972..daa332ad0091 100644
---- a/drivers/net/ethernet/intel/ice/ice_dpll.h
-+++ b/drivers/net/ethernet/intel/ice/ice_dpll.h
-@@ -31,6 +31,7 @@ enum ice_dpll_pin_sw {
-  * @prop: pin properties
-  * @freq: current frequency of a pin
-  * @phase_adjust: current phase adjust value
-+ * @ref_sync: store id of reference sync pin
-  */
- struct ice_dpll_pin {
- 	struct dpll_pin *pin;
-@@ -47,6 +48,7 @@ struct ice_dpll_pin {
- 	struct ice_dpll_pin *output;
- 	enum dpll_pin_direction direction;
- 	u8 status;
-+	u8 ref_sync;
- 	bool active;
- 	bool hidden;
- };
--- 
-2.38.1
+There is this tools/perf/check-headers.sh that does the "copy coherency
+check", while trying to act on such a warning I stumbled on the report
+below.
+
+More details at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
+
+
+If you could please take a look at this that would be great, the initial
+copy was made at:
+
+commit 1314376d495f2d79cc58753ff3034ccc503c43c9
+Author: Ali Saidi <alisaidi@amazon.com>
+Date:   Thu Mar 24 18:33:20 2022 +0000
+
+    tools arm64: Import cputype.h
+    
+    Bring-in the kernel's arch/arm64/include/asm/cputype.h into tools/
+    for arm64 to make use of all the core-type definitions in perf.
+    
+    Replace sysreg.h with the version already imported into tools/.
+    
+    Committer notes:
+    
+    Added an entry to tools/perf/check-headers.sh, so that we get notified
+    when the original file in the kernel sources gets modified.
+    
+    Tester notes:
+    
+    LGTM. I did the testing on both my x86 and Arm64 platforms, thanks for
+    the fixing up.
+    
+    Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+    Tested-by: Leo Yan <leo.yan@linaro.org>
+
+- Arnaldo
+
+⬢ [acme@toolbx perf-tools]$ m
+rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
+make: Entering directory '/home/acme/git/perf-tools/tools/perf'
+  BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+  diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                             libcapstone: [ on  ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ on  ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+  INSTALL libsubcmd_headers
+  INSTALL libperf_headers
+  INSTALL libapi_headers
+  INSTALL libsymbol_headers
+  INSTALL libbpf_headers
+  INSTALL binaries
+  INSTALL tests
+  INSTALL libperf-jvmti.so
+  INSTALL libexec
+  INSTALL perf-archive
+  INSTALL perf-iostat
+  INSTALL perl-scripts
+  INSTALL python-scripts
+  INSTALL dlfilters
+  INSTALL perf_completion-script
+  INSTALL perf-tip
+make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
+ 18: 'import perf' in python                                         : Ok
+⬢ [acme@toolbx perf-tools]$ cp arch/arm64/include/asm/cputype.h tools/arch/arm64/include/asm/cputype.h
+⬢ [acme@toolbx perf-tools]$ m
+rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
+make: Entering directory '/home/acme/git/perf-tools/tools/perf'
+  BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                             libcapstone: [ on  ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ on  ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+  INSTALL libsubcmd_headers
+  INSTALL libperf_headers
+  INSTALL libapi_headers
+  INSTALL libsymbol_headers
+  INSTALL libbpf_headers
+  CC      /tmp/build/perf-tools/util/arm-spe.o
+util/arm-spe.c: In function ‘arm_spe__synth_ds’:
+util/arm-spe.c:885:43: error: passing argument 1 of ‘is_midr_in_range_list’ makes pointer from integer without a cast [-Wint-conversion]
+  885 |                 if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
+      |                                           ^~~~
+      |                                           |
+      |                                           u64 {aka long unsigned int}
+In file included from util/arm-spe.c:37:
+util/../../arch/arm64/include/asm/cputype.h:306:53: note: expected ‘const struct midr_range *’ but argument is of type ‘u64’ {aka ‘long unsigned int’}
+  306 | bool is_midr_in_range_list(struct midr_range const *ranges);
+      |                            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+util/arm-spe.c:885:21: error: too many arguments to function ‘is_midr_in_range_list’; expected 1, have 2
+  885 |                 if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
+      |                     ^~~~~~~~~~~~~~~~~~~~~       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/../../arch/arm64/include/asm/cputype.h:306:6: note: declared here
+  306 | bool is_midr_in_range_list(struct midr_range const *ranges);
+      |      ^~~~~~~~~~~~~~~~~~~~~
+make[4]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:85: /tmp/build/perf-tools/util/arm-spe.o] Error 1
+make[3]: *** [/home/acme/git/perf-tools/tools/build/Makefile.build:142: util] Error 2
+make[2]: *** [Makefile.perf:798: /tmp/build/perf-tools/perf-util-in.o] Error 2
+make[1]: *** [Makefile.perf:290: sub-make] Error 2
+make: *** [Makefile:119: install-bin] Error 2
+make: Leaving directory '/home/acme/git/perf-tools/tools/perf'
+⬢ [acme@toolbx perf-tools]$ 
+
 
