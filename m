@@ -1,117 +1,127 @@
-Received: from out.smtpout.orange.fr (outm-51.smtpout.orange.fr [193.252.22.51])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF85A291C2E
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D11B2E3373;
+	Fri, 13 Jun 2025 12:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749817557; cv=none; b=mRHMim9suj7s7ZRXDMFZd+E8uA6B+hyAm08i05HE7HtROHOfMyA3qSvcwxHfvqyeoUXb3EmENv99P37DtA6+xaTG93TZ6iHsG63m9u+j8HeU9Xn/PJoZt++pl6dRPBuMNYF5Qro9bloc8Vo/Qvu8U4nrvIa2e4jahkQBojTj+iY=
+	t=1749817569; cv=none; b=sYL61iC+o9kEVwK9r88Wbon3kARPOvCRa9RqmU6dlI4FiTeW3D9n5wpL8KGXh2gqTNaN1y8FA6xaKXp0eRhaFP5/xQUr5fVLJyh37wXfVlaHadwKbXVoJIeCubOebzRc4AdxJiZqd22/pJDm+01pA2jgu5c4dtN9mbVXLGqr3kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749817557; c=relaxed/simple;
-	bh=2mn0l/m6M2uSvV7dvbYnSPenaAzhChqJo6eFRW4XeTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qaeOBxL3vWIa08sD7LmvdAdg+hlCmhlB8+BctyOwYRuj2s6CPaTsDXxB4dQXeQBZ039i81iq6lQZeMisKEq8ul+shHRpxrgHRQJuhlTxuBd27gP1X0d4lA4LtXrWOtPoKXZEYb04RKgqxW1TD5NnZFS0hsddJUAUsmskRTphg/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=PDIZcUG4; arc=none smtp.client-ip=193.252.22.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1749817569; c=relaxed/simple;
+	bh=Q1ez6aZ6QHVeEpWsnuhjrMiCMOmmVRfnb72U0octC3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P6gt80XEGlU+nkuPEjtW3ceLya8zH9br2ipqwiUEcDqb+sPOPV2b5R2mwhWxtayQVmeuRFw4vKtBoPIEFX3qBYDY1u35fmk7O0/mah99LOSQhtDuXBSptZwIYqacqDYBMJJfNHcVCGHglKLG6oC5OcMvpS4NozhA1TXPtf/knOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ma8iNomY; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="PDIZcUG4"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id Q3SWuw5MZP9oMQ3SXuOWQ1; Fri, 13 Jun 2025 14:24:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1749817482;
-	bh=J748P/ycE21D8ejg0rZJK2DeFaE3v4xzrkl0Hh+KRZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=PDIZcUG4cnjNu4R5mz1NQELnzrs1LEswuUz7H16c/Tda46YuuvHcUucbfXDCxj+f+
-	 8BSOWLRSFczQ5nDu0ntpfaSe/wZ9fNKoOchFdGGObllo3GSe/7aa2WUDUTCn4sUX9E
-	 nXN1lc3FihUGc+0rE7tmA8YperZrah5QrKftdJ5UTy96Fb2ChnPbTHnmDzKTA/cwt+
-	 Kt+3+HRe+HVa8x3H1Z/aIlezGoU1cbfl3yMnp4RKQq7iAChtp1H7ljPLrkPPyvA3gm
-	 NY6WH8jLBOD9KiYYTk7pXmZJ44EWcRKnnuJbZbovRfsPO5X+I57lbY3ASRLnurd+nf
-	 y40hwVhAEQEew==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 13 Jun 2025 14:24:42 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <b5030bc8-34b8-4275-86ba-11e11ab2bea5@wanadoo.fr>
-Date: Fri, 13 Jun 2025 21:24:35 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ma8iNomY"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so1772009f8f.2;
+        Fri, 13 Jun 2025 05:26:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749817565; x=1750422365; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dWCRVyplTq5BWoBqiG9qwM38M5MTSKAdb6x0IXTxFNY=;
+        b=Ma8iNomYQXJMk4OE0MKpXD5LoVEdPXoQnhmnAv0J/y/z6B5fj0Gs7VEuxmJJFdmrm2
+         IEn51t9ffsgHNe0AKRN6T9ihEpg3oOKVert00vuIIsObv/QPr1Y5kmMEMgWpZ7+64R8B
+         pqkd292CnTwadW3Xlk9sDoiA3zY3SdWtAvbYoRptDXfybkHcDbuzcWULEVltDgNduEEX
+         wA9uUIHyWrAr8lcCyTfSNFI9Wv7nps+WKO9nTm9mKRM0x0YlGyMkAdqll3h6eyZKZjGG
+         XWDw3P6TEWK++9GYh/oMEdJNbRUxJ3SzNgDJmxHn1ERp15ZtxTmUsEOC11ayhxHIZipP
+         RDCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749817565; x=1750422365;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dWCRVyplTq5BWoBqiG9qwM38M5MTSKAdb6x0IXTxFNY=;
+        b=GBu3Hi8odLRMW1CefMfFggzKwNku0ExP1MjladpN6wUhb+ugo6ZmbPBT+6KEIn5ige
+         O63BBJeZntRp25ainpLa3dYVp+9RGoDaLWJO0Tf0LOt7sN1Jz52Hy83qyVprYLWMVsrK
+         OCH+KF+eokjFSElEuTpEMqJnN2nFlmdqWoUo5GvuGCpwZUG0mi8BYPCisz4XAOp8WIpm
+         Mp9oFrliVVAm+CPJ+WiHUoUhRQ2PH+rfaLIuQtcCmAmjAEWaJynSVplXv0jEUlwQz1+G
+         xdODIj+SAFVqznKf5B8BZnfRtmiHzsu/tzaQJe0v5fQ/juZRhgHObrplGUApr/X3p1px
+         uxyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUv5tmknzOXyEnWFiieo0T+A5kj3JmyYYfZ56fTateaY+tvWSCOY9k9i7JoYZI1nR/ewuXYZn5h4uLs5K1b77yLM4I=@vger.kernel.org, AJvYcCV6/XUeEKitSW0J9Ks6I1EJOPXGrNwRoCYPqfKZo79y3wBAhpTnHf3H9DNk2/VbPiXrFfcTlNI47ody4H3n@vger.kernel.org, AJvYcCVNecpGD5cBr6SjzDXjR/xTJVE1VjGYJzgFU316gqaQNHLKuB+RXzkHKJ5OUeo4vxtYnyvijiG1twbP@vger.kernel.org, AJvYcCVjTKpiKv9R6n1l16NiNQFZJZpOwD3uW3i/5lnIvp2H5tO5E2hojJ2uydebcCWFIAsAE64ZkigmXgd8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2ovqd6Tn4i27Ip5z7WhTCEyJDZQeHwV/wFEOA52TLG+trq1jv
+	9S1FhutDsCQQRzhw8cjFnSvFgXP9OCez4ba+0Npb30DtEOyTxmh+2d0YjxmC3uC8Jt/uPae69AU
+	NGU5uuAG1Iatjxz6+0Yuzqhvv2Q5nau0=
+X-Gm-Gg: ASbGncsvf/nDSIQAHLHiSqMbgp8nfMMnyEwF9spQkNtrnDQ8XCwxIvH2gF+06/kcu4E
+	/8aIJAukNuCiAdWkRAr5NXa40j4jzmg9TR22Fq26ltFaNyVQS1bVrLNv6fNY8+DPjpf92U8oaqa
+	zC8NCn1sYuXegDkDUxKYk4tTUlhtrBzUsaeufI3f5qrXLRlg0vL/GYKzDcofFQNYrKuGcsmLiqc
+	Tc=
+X-Google-Smtp-Source: AGHT+IF3bArABB3UHsWfZ3jPqnDgsxyauMc5FWC+cd4lxiV2/wmzE15K5+WGpgLYsPNvM57PYYNuZw4eOUC+0k9jHhI=
+X-Received: by 2002:a05:6000:2204:b0:3a4:e7b7:3851 with SMTP id
+ ffacd0b85a97d-3a56877ff2emr3095072f8f.58.1749817565324; Fri, 13 Jun 2025
+ 05:26:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1 fyi] tools headers: Synchronize linux/bits.h with the
- kernel sources
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- Namhyung Kim <namhyung@kernel.org>, Yury Norov <yury.norov@gmail.com>,
- linux-kernel@vger.kernel.org
-References: <aEr0ZJ60EbshEy6p@x1>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <aEr0ZJ60EbshEy6p@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250609203656.333138-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXMiTx3w2kt-jK06HWGhqD0vAnKKTyk7jGkhOhaXyf3Bw@mail.gmail.com>
+In-Reply-To: <CAMuHMdXMiTx3w2kt-jK06HWGhqD0vAnKKTyk7jGkhOhaXyf3Bw@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 13 Jun 2025 13:25:39 +0100
+X-Gm-Features: AX0GCFtxlxaZgUwr-aCpj8BmzmSFit0i-TR6pV3ge2PVAGYUR5zjx0lu_XmV8nw
+Message-ID: <CA+V-a8v_gdKBEd4ing5d0xka+S=vVAsU4XA=+KhCBvXSs4aNdw@mail.gmail.com>
+Subject: Re: [PATCH 4/8] clk: renesas: Add MSSR support to RZ/N2H SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13/06/2025 at 00:38, Arnaldo Carvalho de Melo wrote:
-> tldr; Just FYI, I'm carrying this on the perf tools tree.
-> 
-> Full explanation:
-> 
-> There used to be no copies, with tools/ code using kernel headers
-> directly. From time to time tools/perf/ broke due to legitimate kernel
-> hacking. At some point Linus complained about such direct usage. Then we
-> adopted the current model.
-> 
-> See further details at:
-> 
->  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
-> 
-> To pick up the changes in this cset:
-> 
->   5b572e8a9f3dcd6e ("bits: introduce fixed-type BIT_U*()")
->   19408200c094858d ("bits: introduce fixed-type GENMASK_U*()")
->   31299a5e02112411 ("bits: add comments and newlines to #if, #else and #endif directives")
-> 
-> This addresses these perf build warnings:
-> 
->   Warning: Kernel ABI header differences:
->     diff -u tools/include/linux/bits.h include/linux/bits.h
-> 
-> Please see tools/include/uapi/README for further details.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> Cc: Yury Norov <yury.norov@gmail.com>
-> Link: https://lore.kernel.org/r/
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hi Geert,
 
-For what it is worth:
+Thank you for the review.
 
-Acked-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+On Thu, Jun 12, 2025 at 3:38=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> Thanks for your patch!
+>
+> s@MSSR support to@CPG/MSSR support for@
+>
+Ok, I will update it as above in the next version.
 
+Cheers,
+Prabhakar
 
-Yours sincerely,
-Vincent Mailhol
-
+> On Mon, 9 Jun 2025 at 22:37, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add clock driver support for the Renesas RZ/N2H (R9A09G087) SoC by reus=
+ing
+> > the existing RZ/T2H (R9A09G077) CPG/MSSR implementation, as both SoCs
+> > share the same clock and reset architecture.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The rest LGTM, so
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
