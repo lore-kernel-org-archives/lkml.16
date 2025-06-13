@@ -1,142 +1,140 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DFB28D822;
-	Fri, 13 Jun 2025 21:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43184253951
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749849471; cv=none; b=TH1Z0qbF41IrTQY5jeYDx8/cOMOMXPBjDfvVwF51MosZYxKxU88cuHRNV1UYQXSWtBznuPBAF8c1/EfWS0AhMkQKA2yxHUiKNu4KzsNA5xCweG0HZn79e6IFClQBsCV9wZXPa2X6O/2PV1b/nN8w5k5a+WdB1rKC8dntIFxkNsc=
+	t=1749849941; cv=none; b=D9Mgu5DqqR3fToKAsO5tW8UuPVOTrSHujJ4WyFB8E9bwJCIq+0AzCyVvPzWZMLopxM04S0GIEjGwFJPtGKcuC2+3YhmdP9Cmxhab8L6DagL38iljJ8kmAZMDveciZfkA0kd0XleuRtyt6aztYy/rLu9EwwW4vJPNHLlJmArDRn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749849471; c=relaxed/simple;
-	bh=DCwPo7sO42t9J/l6c/zn2MAqLyfHwsxggzouM3HwKfs=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dBrVQfN6ywJ20HlnXo0oXfZmoE81NM2RXc9qfs4JKZjc9LyqB8fKX6az37t6ccOM8n1nfyHr+EpCIXBXajj9H8FH1tcDr76Z40nFYAo/A0fqxxZrmsSE3DhRfYnja2QIE/ixGCB3bZVAXVeioQn2Z3HU6rjtlrD8DbK+4C6Vv8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hFpp8ztW; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749849941; c=relaxed/simple;
+	bh=sHV8yx62yol9Bk56YKbLE0IVF5sfS+vZdmV+r8o63x0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ILUgKQ6XbmLbF/MAS1ZpPTlO9cfKmugpnLQRZgSCDe+3kQHaQCEF40Osb4VyqCe3f25c02ZF9C/tLV6i6HZ3aKkvT/krkWt1x4377cNdXfqjdGyrhVAdUlXWDJRUjUolx0uG3fDHD3PUZ5Do8vKGpVoi+pmoJLfb7ZMfNCm1aiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I+P/i+yj; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFpp8ztW"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b2f603b0f0dso2447492a12.1;
-        Fri, 13 Jun 2025 14:17:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+P/i+yj"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a5ac8fae12so114101cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749849469; x=1750454269; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1749849939; x=1750454739; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wsmXxUey0UIvIESNOBWD1muaRGeOJVYTb8fEmVCmw0s=;
-        b=hFpp8ztWHXk+iwv6H+UsiOPZRWeLOkFRfNxzoFF4VetdQb4lRZ4Bw486OqYPDKYK4u
-         GGTfwUNOg4XOeKmlLpX/KQiQR8ePIqrF18NbF3s7gkY62GLHFK9K7+Qbi6PHZCmEIWMw
-         wmcG16g3BSOQ6J7XGmeY2q4jPsbL3bSdtEZPLyrRtghUb4nwgipSdWZJm+7kAvSVQl1l
-         dwOWb+IUJN9/QZRlEHQBafY0eWkeX+V6+AzHHu9C1ewoHQ0HFkhbNdhqRGUdm0QJrb+W
-         jH0MsBzFrq/9CYo7Un9FMTGPIdz3dmiM8zMDCOTUXYgkEGF0bQW1QPvUxvX5DhnzsYzY
-         u/7g==
+        bh=TPUzIppHcu65DcXjx+xmQ4p2o7TM+1lbGXLpXn/D90M=;
+        b=I+P/i+yjFwiAoPxoTgsLZdfFg8675RXWd3N3Md6glKsbKl4lvRtve5J0ZIuEaau554
+         UKda9Hl/lIcu6s6TXwx1TSrSSrz0g6+2Q9Rs6DJ7S8teVdvnfdT9QMjW9CbtMEpHRRbd
+         j6g8yktMlwMwLf2fpmUKuIF0ivDJdJtw9WBdJZd6c0ZDo9BvPcrX5fONn3sA3pkO2dXQ
+         FXgdpCc1kXmxz5zi5fQYAinoBaY5s1lBxDO7OkrsWCO7jKHWvAljQyFmsI2dQFNLqofn
+         G9Xb2I8IhglbdKiaDaJxnWzG6ruENsoJERAej4g/XSf7628bPMJ3BMsqiOSUnksUbFvo
+         Wn7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749849469; x=1750454269;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wsmXxUey0UIvIESNOBWD1muaRGeOJVYTb8fEmVCmw0s=;
-        b=b4oAmNl7WnqH5pSuxuOTyeEfep7gLeOPm6UOVDQSis2FIbwiH3/oLY8anvvP1m8KuL
-         GvklJl3yybK3fgcA+lYvFRhu3+t++CJVJaCl+unZFd6MiAP5suPOYfxfvAxYpxqoBjFZ
-         XHZgnLfv4ZRkrhRChDv1ltMr4c0rPPi6N7N4CEXV2ZgD+8vdpbU+Sh/Feq8D8Qqg4/aa
-         o3UAW7pDWPADK0q/075vnt97RhBkpdEbKwyZWmNb7K/a4mloX41LVp8FiQaW4/eyB2MF
-         dNAoiAs8zB+Vk8N+KVvUfSWk07RQPbLlTyk8sG8NV/7AnOkUEoAWxr8KrSETmjsm5ylA
-         DYfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgsYfF2WS4fMGJB+r8i0xoeEEdlMk2+dkV73aNZXzVa9qHJ0I4HfcHJrRkoEqBH0IBsJI=@vger.kernel.org, AJvYcCWWvrpkjaqarWS2r/OKxdrZu2fQO9U0nLA99Ftz5ajQAcHuA0AS/+B6xLy3SrN4d4I5yrwyr+mhN2al3Tnw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8PAu+IlaMVRUA7Yq0EtxS4lhkd8/vWelpmH9phsGSgdkICVuE
-	rDIN2fa9Wv1wArlJSx41mK47WsnowznvlzSJqC429BijmeZHUH32Quzf
-X-Gm-Gg: ASbGncuXtw+0OXBSH2nEsLNtzLsh1wzy4FWpIQ6v2COG/SeQ/ydCs8KQ+RGW8W35BZN
-	qP+nBGR8H3hUSX+arCTw+Xgg6K1+keBGwCv8RZOm5FBQFao9UABWMFptvjcSJVhfGYaLqtIqjZv
-	KXbm1T8879c/1ftEd2iToqAvFgdojCqGm3JVRNq2Mw2uCrEwmwRrC9R76xOQRc9UvrfEu7jpHLp
-	fqeU7jlhPVxwzLpIncThQ1sHKFchLCKYYQe+hHWaCMJ7/3jHUR+YzaVM9KAGGmK5aCN8vrGHEek
-	tvSOSALgWpgNCCEdEFzcz0XlstBi6Mi+CXFLlqxoI1YL6pVSAI94R0f7eRs=
-X-Google-Smtp-Source: AGHT+IHTHbvCObYgkN/Yplj/d78ceR1ET3UUZfE+bp9ULGsJLHOVCdFDbei2f0z180uu1WfLAlrhcQ==
-X-Received: by 2002:a05:6a21:4612:b0:1fd:f55f:881e with SMTP id adf61e73a8af0-21fbd68e2e7mr1282934637.36.1749849468775;
-        Fri, 13 Jun 2025 14:17:48 -0700 (PDT)
-Received: from [192.168.0.226] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffecce6sm2200632b3a.10.2025.06.13.14.17.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 14:17:48 -0700 (PDT)
-Message-ID: <a4fbe41d6f4c25c3d1edd42905eb556541857327.camel@gmail.com>
-Subject: Re: [PATCH bpf-next v2] bpf: Remove redundant
- free_verifier_state()/pop_stack()
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Luis Gerhorst <luis.gerhorst@fau.de>, Alexei Starovoitov
- <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
- <john.fastabend@gmail.com>, Andrii Nakryiko	 <andrii@kernel.org>, Martin
- KaFai Lau <martin.lau@linux.dev>, Song Liu	 <song@kernel.org>, Yonghong
- Song <yonghong.song@linux.dev>, KP Singh	 <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo	 <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, bpf@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Fri, 13 Jun 2025 14:17:46 -0700
-In-Reply-To: <20250613090157.568349-2-luis.gerhorst@fau.de>
-References: <19f50af28e3a90cbd24b2325da8025e47f221739.camel@gmail.com>
-	 <20250613090157.568349-2-luis.gerhorst@fau.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+        d=1e100.net; s=20230601; t=1749849939; x=1750454739;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TPUzIppHcu65DcXjx+xmQ4p2o7TM+1lbGXLpXn/D90M=;
+        b=iT1a3eWj9zLTlo+IRLr2CuJpWghv1HgjstVTutGre51sqOJA2g+YkJY5sPeqRiVAdm
+         zaFmqA3xQU5MQXxoYRgA3FKJz9yRV8YJ5AI6h7tFx3fXVRldq5ABkVOD0xJZJgKtxlaf
+         ZK0jL1g4T4jkTS/F79vDlWEtgQ+zZHzo44fRvqvnZ7oOZuDC5H4M0nk8H3YvfeEsi2C6
+         ZybI3QVZfdIgaWCLWHFqbe+V7yB3oBq0gFAFVOTs2w3fEMGOHf7B8xX/H/t1Yu+G203V
+         PE/BVxeXVFv1MH6x1t6Rk6TVrDvRYhug3k9k1tUIK05jLUd0cJx/EVxKBuqkBbUrU6FL
+         jRlw==
+X-Forwarded-Encrypted: i=1; AJvYcCXug0px1kx+/Q0NJkr2/3qybov1EjuYgkep+kFvQRWtjhbdPn+BHoQB7TZDh5MT0OC8CCH7sJoqKfXOSlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj3LHcCQ6/SZEWurQyqp31U/Xjw1hWuwenOY9nvd9p/H6jLpYs
+	5ZntymK7xIup2uLlUUjNYaJy3xcAPDSLcxmc5pjqPaCSGL7wd+5kioogBhyZopNOw21U2m5npV2
+	409TmWBPLWa6ugbZdFaWaU1CxNszeYkMOZjL6m6OE
+X-Gm-Gg: ASbGncs5nOclZiFwqx9BXhKkrwcmNAyqgAWZv8Z3w06zncRBYXmkZ/CJKhu2T1QnRXl
+	pQYdSMpwkZqM8mOFUolT4ZfWfR/1Y7zug9dwd2wWKa5IZa8IqHm0dbfnl+1sxZITpKUcmK8aLN8
+	xXrmFicBy7+c8hhCLr6ESXD4iBLzPLRZc+/IaN5s3cTZBDVcYpWItJmQ==
+X-Google-Smtp-Source: AGHT+IHRTXKzQVq2KTm0RSt5qVgrnPAP0bkIbd607Uu6/KmOUX6+sJKqoHDdBmms0U0ufq7rNkEH/UqGIKX1Oa8Sr14=
+X-Received: by 2002:a05:622a:610d:b0:498:e884:7ca9 with SMTP id
+ d75a77b69052e-4a73da5803emr310651cf.13.1749849938737; Fri, 13 Jun 2025
+ 14:25:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250613155239.2029059-1-rananta@google.com> <aEyPswyvfJ2-oC3l@linux.dev>
+In-Reply-To: <aEyPswyvfJ2-oC3l@linux.dev>
+From: Raghavendra Rao Ananta <rananta@google.com>
+Date: Fri, 13 Jun 2025 14:25:26 -0700
+X-Gm-Features: AX0GCFvCkuSdtDxaxbaw03np7924c6ya2dvq2vPeL3lenyiqTkrCE5acxgbNPCk
+Message-ID: <CAJHc60yacW7-1K3Uw9RT7a8qH9JyTXouiP=6VP3gifqzHgMaQQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] KVM: arm64: Add attribute to control GICD_TYPER2.nASSGIcap
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Marc Zyngier <maz@kernel.org>, Mingwei Zhang <mizhang@google.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-06-13 at 11:01 +0200, Luis Gerhorst wrote:
-> This patch removes duplicated code.
->=20
-> Eduard points out [1]:
->=20
->     Same cleanup cycles are done in push_stack() and push_async_cb(),
->     both functions are only reachable from do_check_common() via
->     do_check() -> do_check_insn().
->=20
->     Hence, I think that cur state should not be freed in push_*()
->     functions and pop_stack() loop there is not needed.
->=20
-> This would also fix the 'symptom' for [2], but the issue also has a
-> simpler fix which was sent separately. This fix also makes sure the
-> push_*() callers always return an error for which
-> error_recoverable_with_nospec(err) is false. This is required because
-> otherwise we try to recover and access the stale `state`.
->=20
-> Moving free_verifier_state() and pop_stack(..., pop_log=3Dfalse) to happe=
-n
-> after the bpf_vlog_reset() call in do_check_common() is fine because the
-> pop_stack() call that is moved does not call bpf_vlog_reset() with the
-> pop_log=3Dfalse parameter.
->=20
-> [1] https://lore.kernel.org/all/b6931bd0dd72327c55287862f821ca6c4c3eb69a.=
-camel@gmail.com/
-> [2] https://lore.kernel.org/all/68497853.050a0220.33aa0e.036a.GAE@google.=
-com/
->=20
-> Reported-by: Eduard Zingerman <eddyz87@gmail.com>
-> Link: https://lore.kernel.org/all/b6931bd0dd72327c55287862f821ca6c4c3eb69=
-a.camel@gmail.com/
-> Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-> Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-> ---
+On Fri, Jun 13, 2025 at 1:53=E2=80=AFPM Oliver Upton <oliver.upton@linux.de=
+v> wrote:
+>
+> On Fri, Jun 13, 2025 at 03:52:34PM +0000, Raghavendra Rao Ananta wrote:
+> > A shortcoming of the GIC architecture is that there's an absolute limit=
+ on
+> > the number of vPEs that can be tracked by the ITS. It is possible that
+> > an operator is running a mix of VMs on a system, only wanting to provid=
+e
+> > a specific class of VMs with hardware interrupt injection support.
+> >
+> > The series introduces KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap vGIC attribute=
+ to allow
+> > the userspace to control GICD_TYPER2.nASSGIcap (GICv4.1) on a per-VM ba=
+sis.
+> >
+> > v1: https://lore.kernel.org/kvmarm/20250514192159.1751538-1-rananta@goo=
+gle.com/
+> >
+> > v1 -> v2: https://lore.kernel.org/all/20250531012545.709887-1-oliver.up=
+ton@linux.dev/
+> >  - Drop all use of GICv4 in the UAPI and KVM-internal helpers in favor
+> >    of nASSGIcap. This changes things around to model a guest feature,
+> >    not a host feature.
+> >
+> >  - Consolidate UAPI into a single attribute and expect userspace to use
+> >    to read the attribute for discovery, much like we do with the ID
+> >    registers
+> >
+> >  - Squash documentation together with implementation
+> >
+> >  - Clean up maintenance IRQ attribute handling, which I ran into as par=
+t
+> >    of reviewing this series
+> >
+> > v2 -> v3:
+> >  - Update checks in vgic-v3.c and vgic-v4.c to also include nASSGIcap (=
+via
+> >    vgic_supports_direct_sgis()) that's configured by the userspace. (Ol=
+iver)
+> >
+> > Oliver Upton (2):
+> >   KVM: arm64: Disambiguate support for vSGIs v. vLPIs
+> >   KVM: arm64: vgic-v3: Consolidate MAINT_IRQ handling
+>
+> Make sure you run checkpatch next time before sending out, it should've
+> warned you about sending patches w/o including your SOB.
+>
+Hmm, I do run checkpatch before sending, but I don't see any warning as suc=
+h.
 
-Tried v2, all looks good.
+Example:
+$ ./scripts/checkpatch.pl
+v3-0001-KVM-arm64-Disambiguate-support-for-vSGIs-v.-vLPIs.patch
+total: 0 errors, 0 warnings, 107 lines checked
 
-[...]
+v3-0001-KVM-arm64-Disambiguate-support-for-vSGIs-v.-vLPIs.patch has no
+obvious style problems and is ready for submission.
 
-> @@ -22934,6 +22922,11 @@ static void free_states(struct bpf_verifier_env =
-*env)
->  	struct bpf_scc_info *info;
->  	int i, j;
-> =20
-> +	WARN_ON_ONCE(!env->cur_state);
+I do see an option to tell the script to ignore the check:
+--no-signoff, so I'm guessing it should check by default? Or is there
+any other option?
 
-Tbh I woudn't do this a warning, just an 'if (env->cur_state) ...',
-but that's immaterial. Given current way do_check_common() is written
-env->cur_state !=3D NULL at this point, so the patch is safe to land.
-
-> +	free_verifier_state(env->cur_state, true);
-> +	env->cur_state =3D NULL;
-> +	while (!pop_stack(env, NULL, NULL, false));
-> +
->  	list_for_each_safe(pos, tmp, &env->free_list) {
->  		sl =3D container_of(pos, struct bpf_verifier_state_list, node);
->  		free_verifier_state(&sl->state, false);
+Thank you.
+Raghavendra
