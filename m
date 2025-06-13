@@ -1,243 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DA41E991B;
-	Fri, 13 Jun 2025 17:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1012E11B5
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749834760; cv=none; b=nlwSwIjETcQNYrxoxR3JElZFk+VKm7N4nAjd4DHZiVUSuAiEFycgRtwbtzDq1zclBz2RBlWOcvp5+ngWXNXyeRKIr4Rm8kpjMxxL4hlsdDLp8j3dkekEcu0reZItp9/Ml+2Po1zVey9fUMJ/U0cVLnQ45reMN9V/UVlresoartc=
+	t=1749834771; cv=none; b=U3sMOGPaxtO6yHMasXHGBN7Nzd9tPLBANlaZKgINBw0EFuRhttW3OSqeieMEgD4FqmQZGdxA0dgApV2DkqVGiNrnrwiZ10OuEsRiP+iL487LGfou+qodDs8UvI9tXc6ro0EtpP9qOg9zmm3nAIfFI8GTKCOwRmz/zcazMqVDcsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749834760; c=relaxed/simple;
-	bh=xM4LY8gCbVDYFCPbHwGXzUDBh//wknD9c5Jupk3PfVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CixVgEhnt6C4AfqwnGS40H9bzVUAMAtORCsDPsWRhTVxfvGjwWu7qhvvuhCBpI+J6zwE93iqxt2+GAuPeimQPhN62YL2zee21mDavhJcL+XpBst2GEXa7sXd9Q3mEfed/9BhBi02D/e/MvFEpxAb/5PKnxtm+vxhok4pWhvcGhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYig8c2K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749834771; c=relaxed/simple;
+	bh=eARcTBmBmFJlsmYwXi2QryQsRQmZYIIb5kCDrrtGRAU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FN4wsufrNaFrmpKPB6sAz3QApRnD4JkGmlMbMoEwHb6h7j9JXvPRD0V7vK7Pc1BbFln6NnaS5Q2/1tJgmBefNs9EQY/f9jj4XYidxkIrM1xkscjWxopPbDypDxRxZdGnhKSW3vAKNK1W4XGxsgoy+aHfnCxRxv1VGdfXfdOlFo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nerENi6U; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYig8c2K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54FF6C4CEEB;
-	Fri, 13 Jun 2025 17:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749834759;
-	bh=xM4LY8gCbVDYFCPbHwGXzUDBh//wknD9c5Jupk3PfVI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CYig8c2KsM8V1idlrJDousBAEU1xY7riLzZWMBTWE3Ezu2VsSR3yMHdo+EZrRPviZ
-	 BydL+68ZnGxEMYLCvzJpfV6fRy61xlYThU65/p/1tVPw+pdqDPIpGcOWMgAW7aPkzV
-	 +tGA94ZGrvKjJz2Dw42l0Hk0JshDRSo8/zt7gSQwRbDBOU35210VWs+2xsarH8E1Oi
-	 b//BrwyccxdIhvOvQ9vNzKXzbT9lwnSYCGMWxiBxqU0MrxS2kLsljTeexSkJOAQIFr
-	 /62nri21isMHRdLqH7ztmcGqHGFYbGMed7zYnKEp9ZPSushEVo8pS0XzkEiAAfXdzO
-	 RGIdY7xlvt3Qw==
-From: SeongJae Park <sj@kernel.org>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	corbet@lwn.net,
-	david@redhat.com,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com,
-	damon@lists.linux.dev
-Subject: Re: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data across nodes
-Date: Fri, 13 Jun 2025 10:12:37 -0700
-Message-Id: <20250613171237.44776-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <CAMvvPS4WsGkfukNscnLWW40Agg6_wmkm_QF96m+HZrEZrstR4A@mail.gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nerENi6U"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-310447fe59aso23636881fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:12:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749834768; x=1750439568; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TzkZpu5aUWr16IsQvZR0qI7By7l0jq4T/bvKoWh9vk4=;
+        b=nerENi6UuR5PXGGxdsv/NX9PKtxwRGflJAoozcs0rcWrYALy0eY0+YMNu85KOu0IB4
+         ksDiFV/kyXEVAvHVCpFR4G/WOQY3dymHUWceDZudQrK1o+/NHRL3URgq1++DxuSdqUwL
+         x5R4VDovANlQ6AkGnBtHiBkLeS1pmlTmEprQSPuSvfFRUcbUWvcsKg3Aqe01DQdq4z6H
+         NY6b3/oqaa8eLkTEVqwOWqfJyvrmBkbOWvT/bTGIFqQ2x0vxEjWLrLdrX/8pv0nXH1Ql
+         v51t0QEvdSviJKKt4K3HZeBuGUV8DJienYWie3lSwrrtWb1bG8Y8MXUFpV0prVaD0aI4
+         e/Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749834768; x=1750439568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TzkZpu5aUWr16IsQvZR0qI7By7l0jq4T/bvKoWh9vk4=;
+        b=ArgY4Wae6U3f/pgW1/lr0OfmP9tAUrAX/P2X2C1b5G11tl2ow2zhWANdY59D61DrBf
+         4IOltS+Ra0NsWgoqxijB3X9PCh/Vi8LsDkh565x+gbZezgHuKLi+npyn4wfHSab8THPs
+         OW5ZeTemHRO4mA1y2Svqx9IxJ87z6qgBPdHndt/WNZrOWmIxQ57+7Xtp2ht+Aob8hslv
+         pkyIxOUcAckxHAvRMLhsKTwWdtIgOt96ZttsaQePAt0ghh0Xr1A9gStQf0vST/fwXcIG
+         6sWMD6i7ow2Q6E6GhZTh8JJ8FUdJS3TXoxpq0V0z84AMk5MixHkiUt0UeQ8eF1BmipPp
+         MR4g==
+X-Gm-Message-State: AOJu0YxUjqAZ2IyUl6nlfFREeeSXiCBntL74yirxk+Bdbuw3zBOF3fNX
+	syyh4ZnoOCsQJb7e0FZhFzHh3hemu79Wm9mr+Trgo1puwv85GxKSPvS4Yt4C6/V3SZ54G5ZOFlu
+	MIDHK5tYFQwBcg3PkDbKtuz5ITj5PeA==
+X-Gm-Gg: ASbGncvLzoH8FsXGDsowOpo8xd4ZOwxySLyZ+AoHmvoVuHeTBvr0b4IecQK8Ch71BnB
+	5lDQQN5E6Ip2wzbSxZN15EDZHEojguhsEaf2dY1b4kWtD/Oxg0H9yL9IwFD5A5f81jikrsE0LMG
+	IdVeZ4v7HgR1ffmL3KGXnUG0y28JOXQH2cwuDFlWDRghM2hYcXsY78zd28+A==
+X-Google-Smtp-Source: AGHT+IGr2mYfHaBnraWL8ckMOM5ceFJ0G9zUnSP6X1Hu6q0McBTnWdg22300JcGf/rzUuwFWw/6oBelvsjIbg45AgmE=
+X-Received: by 2002:a2e:a98c:0:b0:32a:8ae2:a8a7 with SMTP id
+ 38308e7fff4ca-32b4a2c3186mr345781fa.8.1749834767291; Fri, 13 Jun 2025
+ 10:12:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250515132719.31868-1-mingo@kernel.org> <20250515132719.31868-4-mingo@kernel.org>
+In-Reply-To: <20250515132719.31868-4-mingo@kernel.org>
+From: Brian Gerst <brgerst@gmail.com>
+Date: Fri, 13 Jun 2025 13:12:34 -0400
+X-Gm-Features: AX0GCFtopQHZfeIi1lurgAikFrgTFdibsp_BL6YhrrIO3PGHUef7KADa5G1i4jQ
+Message-ID: <CAMzpN2jMYaF0eua8FoOPXR74yA62PBGK5f=QOBFYs2Z3O0BeUg@mail.gmail.com>
+Subject: Re: [PATCH 03/13] x86/kbuild: Remove ancient 'arch/i386/' and
+ 'arch/x86_64/' directory removal 'archclean' target
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw@amazon.co.uk>, 
+	Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 13 Jun 2025 10:44:17 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+On Thu, May 15, 2025 at 9:28=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrot=
+e:
+>
+> We have to go back 17 years into Git history, to kernels that won't
+> even build or boot with modern build environments, to come across
+> the obsolete arch/i386/ and arch/x86_64/ directories.
+>
+> Remove some of their last functional residuals in the 'archclean' target.
+>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> ---
+>  arch/x86/Makefile | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index 594723005d95..4e7ac5e4b537 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -348,10 +348,6 @@ $(orc_hash_h): $(srctree)/arch/x86/include/asm/orc_t=
+ypes.h $(orc_hash_sh) FORCE
+>  archprepare: $(orc_hash_h)
+>  endif
+>
+> -archclean:
+> -       $(Q)rm -rf $(objtree)/arch/i386
+> -       $(Q)rm -rf $(objtree)/arch/x86_64
+> -
+>  define archhelp
+>    echo  '* bzImage             - Compressed kernel image (arch/x86/boot/=
+bzImage)'
+>    echo  '  install             - Install kernel using (your) ~/bin/$(INS=
+TALLKERNEL) or'
 
-> Hi SeongJae,
-> 
-> Thank you for your comments.
-> 
-> On Thu, Jun 12, 2025 at 6:49 PM SeongJae Park <sj@kernel.org> wrote:
-> >
-> > Hi Bijan,
-> >
-> > On Thu, 12 Jun 2025 13:13:26 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
-> >
-> > > From: Bijan Tabatabai <bijantabatab@micron.com>
-> > >
-[...]
-> > What about extending DAMOS_MIGRATE_{HOT,COLD} to support your use case?  For
-> > example, letting users enter special keyword, say, 'weighted_interleave' to
-> > 'target_nid' DAMON sysfs file.  In the case, DAMOS_MIGRATE_{HOT,COLD} would
-> > work in the way you are implementing DAMOS_INTERLEAVE.
-> 
-> I like this idea. I will do this in the next version of the patch.
+This does not remove the code that actually creates these old symlinks:
 
-Great, looking forward to that!
-
-> I
-> have a couple of questions
-> about how to go about this if you don't mind.
-
-Of course I don't :)
-
-> 
-> First, should I drop the vaddr implementation or implement
-> DAMOS_MIGRATE_{HOT,COLD}
-> in vaddr as well? I am leaning towards the former because I believe
-> the paddr version is
-> more important, though the vaddr version is useful if the user only
-> cares about one
-> application.
-
-I show no problem at dropping the vaddr implementation.  Please do what you
-want and need to do on your pace :)
-
-> 
-> Second, do you have a preference for how we indicate that we are using
-> the mempolicy
-> rather than target_nid in struct damos? I was thinking of either
-> setting target_nid to
-> NUMA_NO_NODE or adding a boolean to struct damos for this.
-
-I'd prefer adding a boolean to 'struct damos'.
-
-> 
-> Maybe it would also be a good idea to generalize it some more. I
-> implemented this using
-> just weighted interleave because I was targeting the use case where
-> the best interleave
-> weights for a workload changes as the bandwidth utilization of the
-> system changes, which
-> I will go describe in more detail further down. However, we could
-> apply the same logic for
-> any mempolicy instead of just filtering for MPOL_WEIGHTED_INTERLEAVE. This might
-> clean up the code a little bit because the logic dependent on
-> CONFIG_NUMA would be
-> contained in the mempolicy code.
-
-Yes, I agree.  Such flexibility sounds useful :)
-
-In future, I think we could further let users set multiple target nodes for
-DAMOS_MIGRATE_{HOT,COLD} with arbitrary weights.
-
-[...]
-> > I show the test results on the commit messages of the second and the fourth
-> > patches.  In the next version, letting readers know that here would be nice.
-> > Also adding a short description of what you confirmed with the tests here
-> > (e.g., with the test we confirmed this patch functions as expected [and
-> > achieves X % Y metric wins]) would be nice.
-> >
-> 
-> Noted. I'll include this in the cover letter of the next patch set.
-
-Thank you! :)
-
-[...]
-> > I think it would also be nice if you could add more explanation about why you
-> > picked DAMON as a way to implement this feature.  I assume that's because you
-> > found opportunities to utilize this feature in some access-aware way or
-> > utilizing DAMOS features.  I was actually able to imagine some such usages.
-> > For example, we could do the re-interleaving for hot or cold pages of specific
-> > NUMA nodes or specific virtual address ranges first to make interleaving
-> > effective faster.
-> 
-> Yeah, I'll give more detail on the use case I was targeting, which I
-> will also include
-> in the cover letter of the next patch set.
-> 
-> Basically, we have seen that the best interleave weights for a workload can
-> change depending on the bandwidth utilization of the system. This was touched
-> upon in the discussion in [1]. As a toy example, imagine some
-> application that uses
-> 75% of the local bandwidth. Assuming sufficient capacity, when running alone, we
-> probably want to keep all of that application's data in local memory.
-> However, if a
-> second instance of that application begins, using the same amount of bandwidth,
-> it would be best to interleave the data of both processes to alleviate
-> the bandwidth
-> pressure from the local node. Likewise, when one of the processes ends, the data
-> should be moved back to local memory.
-> 
-> We imagine there would be a userspace application that would monitor system
-> performance characteristics, such as bandwidth utilization or memory
-> access latency,
-> and uses that information to tune the interleave weights. Others seemed to have
-> come to a similar conclusion in previous discussions [2]. We are
-> currently working
-> on a userspace program that does this, but it's not quite ready to be
-> published yet.
-
-Sounds interesting, looking forward!
-
-Note that DAMOS has internal feedback loop for auto-tuning aggressiveness of a
-given scheme, and the feedback loop accepts system metrics or arbitrary user
-inputs.  I think the userspace program _might_ be able to give the arbitrary
-feedback.  We could also think about extending the list of DAMOS-accepting
-feedback system metrics to memory bandwidth.
-
-> 
-> After the userspace application adjusts the interleave weights, we need some
-> mechanism to migrate the application pages that have already been allocated.
-> We think DAMON is the correct venue for this mechanism because we noticed
-> that we don't have to migrate all of the application's pages to
-> improve performance,
-> we just need to migrate the frequently accessed pages. DAMON's existing hotness
-> tracking is very useful for this. Additionally, as Ying pointed out
-> [3], a complete
-> solution must also handle when a memory node is at capacity. The existing
-> DAMOS_MIGRATE_COLD action can be used in conjunction with the functionality
-> in this patch set to provide that complete solution.
-> 
-> [1] https://lore.kernel.org/linux-mm/20250313155705.1943522-1-joshua.hahnjy@gmail.com/
-> [2] https://lore.kernel.org/linux-mm/20250314151137.892379-1-joshua.hahnjy@gmail.com/
-> [3] https://lore.kernel.org/linux-mm/87frjfx6u4.fsf@DESKTOP-5N7EMDA/
-
-Thank you for this nice and informative description of the use case!
-
-> 
-> > Also we could apply a sort of speed limit for the interleaving-migration to
-> > ensure it doesn't consume memory bandwidth too much.  The limit could be
-> > arbitrarily user-defined or auto-tuned for specific system metrics value (e.g.,
-> > memory bandwidth balance?).
-> 
-> I agree this is a concern, but I figured DAMOS's existing quota mechanism would
-> handle it. If you could elaborate on why quotas aren't enough here,
-> that would help
-> me come up with a solution.
-
-What I wanted to say is, we could use DAMOS's existing quota mechanism to
-handle it.  DAMOS quota feature is just another name of [auto-tunable] speed
-limit.  Sorry for confusing you.  Anyway, happy to confirm this is yet another
-DAMOS feature that could be useful for your and future cases.
-
-> 
-> 
-> > If you have such use case in your mind or your test setups, sharing those here
-> > or on the next versions of this would be very helpful for reviewers.
-> 
-> Answered above. I will include them in the next version.
-
-That was very helpful.  Keeping that on the next version will be helpful for
-new readers such as future SJ :)
-
-[1] https://origin.kernel.org/doc/html/latest/mm/damon/design.html#aim-oriented-feedback-driven-auto-tuning
+$ ll arch/x86_64/boot/bzImage
+lrwxrwxrwx. 1 bgerst bgerst 22 Jun 13 13:06 arch/x86_64/boot/bzImage
+-> ../../x86/boot/bzImage
 
 
-Thanks,
-SJ
-
-[...]
+Brian Gerst
