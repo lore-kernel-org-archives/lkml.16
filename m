@@ -1,91 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FF1275B16;
-	Fri, 13 Jun 2025 13:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D094E275B16;
+	Fri, 13 Jun 2025 13:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749820543; cv=none; b=OrMTaTL6L56FcfWSeO5TSBogssf7RNZwKWuKPMQ8pKA9fSkv0L2appRuX6x2izgrVAGeC5EjxUuSiQGxTwl/z+U9RjxvuzZTqbvYpya9Yn+gT6SDRSN90ydXIzGEGel/I6ZJ8crFo2dSel8xSDmUoUbcgZlD4RBtrwt0KHSTWAw=
+	t=1749820552; cv=none; b=WIe924k3U9M8qtuAMsRX1jTI98pgR6xRFmI3aD4YssmuNnu+nYrfNCl6BXjR3242WJJNuAWXfZrLDqLzau41PiVf9Zho0r53MZhRdF3/RLojpxO3MefTyudwadZeSd2pqhyJC/TSDUEO9wyXHpavDvMN/KuX9swl/iT5BoYOn+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749820543; c=relaxed/simple;
-	bh=yL3670z68hYeY8EGC3U63sSDcHZuXDqOHnkICFekZuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6P2LPgHgg4MGr8W2WOWIV2tiKQWb+e3fQydwoybbcW0ytaTtti9itIiAo89qSY92eAcq/oTpOVVSsCOjKClUS4D/o6gxJW9lPc3h/LLF1IpZeYKeeI7PjTqcLeudOiM0BebskXyPK6ELoR8uD7XrRLS34pwOU1KAylB7oFIVhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDBxRuyx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749820552; c=relaxed/simple;
+	bh=JmkT4xBJmwfzj3Z6UrKXTQcxKeDOw+MIsJe38RfHC2g=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=cp97B9+ts63QGeRgCStr4XWHIBKg2cW82qgffh9Hy6Thzy2lx0l0zchKKkJDDauLlGoQdREW+QDW750/CWJBgwqtrNt168VUZoOFlymGkA9ytuo6Coa5ZVEUi1wPqatTh/3aBGIfVcKitu3bBnJUpcabuqroI9m0ra5ElKZz7qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wAeCRBLA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WbTGNsdA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDBxRuyx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EF9CC4CEE3;
-	Fri, 13 Jun 2025 13:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749820543;
-	bh=yL3670z68hYeY8EGC3U63sSDcHZuXDqOHnkICFekZuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iDBxRuyxQR+wk2uOG1pn+a9RS3cf8kjxQnxBlnGPycnWcjVY+CwPEbdheCl67R72K
-	 Vk/mMuwqOU8nznFDRh6iXMA/Vpp1/g0KRXHObRieu/bxyOZz6+4n1vEkW2+d05AxqX
-	 SB5lj60ydD3eb8dTpGy5ZL5WV8zV4YDC79lu5ysTI9tHGllDsaRjoPPMJwYVp3oGPN
-	 tcc9W+WT1Fn7wB9i1uebH1cpXJHr/xfbh9YIQbmNL3VpD+our7WAf5wJk0zAAtZcXc
-	 klSr8jO28y2g9oQXBLocQ24lcx9MtSqIREU5mHU61WXZFP4RqEnVEaFk63LaQdIdeP
-	 Qpd5md1qeotKQ==
-Date: Fri, 13 Jun 2025 14:15:38 +0100
-From: Lee Jones <lee@kernel.org>
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com,
-	rogerq@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com,
-	afd@ti.com
-Subject: Re: [PATCH 1/2] mfd: tps65219: Update TPS65214 MFD cell's GPIO
- compatible string
-Message-ID: <20250613131538.GS381401@google.com>
-References: <20250527190455.169772-1-s-ramamoorthy@ti.com>
- <20250527190455.169772-2-s-ramamoorthy@ti.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wAeCRBLA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WbTGNsdA"
+Date: Fri, 13 Jun 2025 13:15:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749820549;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=24z977dzB33rivAEdGO7Uhy6z7X+GMNhhSv7BafVmEE=;
+	b=wAeCRBLAbXUvB45FNzSD8RVvvAqUrKIQmyigeL7MYnPa+ji7YFJAVSDfECcMBtaDT73TSH
+	/+UlpaCauutK9a2THml3me5co6Rl/1o7KLloS6y8b2VczUiqfwxC7c/134ZFkSSJI73WQW
+	Flon40AjV2H31eQTkhHLNF0kcjVVJbOuqZo/kE/cWQFu+k82wZJCjuW9ssFAuoL4F7e4qa
+	MJxAUGI4wvjXA5XYf7h32ixjM2BCLfn+9QS7HzsEnYs0KPKzDqENf5kDkLHXn26ZrpdJf5
+	PtSueOuJAh1be7ps2ON3KM4JB6RC9tMR2TWnJGutN2CDV0MFLCyK1YoNCttprg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749820549;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=24z977dzB33rivAEdGO7Uhy6z7X+GMNhhSv7BafVmEE=;
+	b=WbTGNsdAdJn/p++NQmjoKwHeanJodZ12tpnXtwdusAdsbwQ8i12lwaGfGlOlXrUL97NFEp
+	b+QmQAKvxqhcoiAQ==
+From: "tip-bot2 for Brian Norris" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/urgent] genirq/cpuhotplug: Restore affinity even for suspended IRQ
+Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+ Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250612183303.3433234-3-briannorris@chromium.org>
+References: <20250612183303.3433234-3-briannorris@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250527190455.169772-2-s-ramamoorthy@ti.com>
+Message-ID: <174982054803.406.16499151161208578856.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, 27 May 2025, Shree Ramamoorthy wrote:
+The following commit has been merged into the irq/urgent branch of tip:
 
-> This patch reflects the change made to move TPS65215 from 1 GPO and 1 GPIO
-> to 2 GPOs and 1 GPIO. TPS65215 and TPS65219 both have 2 GPOs and 1 GPIO.
-> TPS65214 has 1 GPO and 1 GPIO. TPS65215 will reuse the TPS65219 GPIO
-> compatible string.
-> 
-> TPS65214 TRM: https://www.ti.com/lit/pdf/slvud30
-> TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
-> 
-> Fixes: 7947219ab1a2 ("mfd: tps65219: Add support for TI TPS65214 PMIC")
-> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-> ---
->  drivers/mfd/tps65219.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/tps65219.c b/drivers/mfd/tps65219.c
-> index fd390600fbf0..297511025dd4 100644
-> --- a/drivers/mfd/tps65219.c
-> +++ b/drivers/mfd/tps65219.c
-> @@ -190,7 +190,7 @@ static const struct resource tps65219_regulator_resources[] = {
->  
->  static const struct mfd_cell tps65214_cells[] = {
->  	MFD_CELL_RES("tps65214-regulator", tps65214_regulator_resources),
-> -	MFD_CELL_NAME("tps65215-gpio"),
-> +	MFD_CELL_NAME("tps65214-gpio"),
+Commit-ID:     72218d74c9c57b8ea36c2a58875dff406fc10462
+Gitweb:        https://git.kernel.org/tip/72218d74c9c57b8ea36c2a58875dff406fc10462
+Author:        Brian Norris <briannorris@chromium.org>
+AuthorDate:    Thu, 12 Jun 2025 11:32:52 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 13 Jun 2025 15:13:35 +02:00
 
-Neither of these exist anywhere.
+genirq/cpuhotplug: Restore affinity even for suspended IRQ
 
-I'll assume they will be available soon.
+Commit 788019eb559f ("genirq: Retain disable depth for managed interrupts
+across CPU hotplug") tried to make managed shutdown/startup properly
+reference counted, but it missed the fact that the unplug and hotplug code
+has an intentional imbalance by skipping IRQS_SUSPENDED interrupts on
+the "restore" path.
 
->  };
->  
->  static const struct mfd_cell tps65215_cells[] = {
-> -- 
-> 2.43.0
-> 
+This means that if a managed-affinity interrupt was both suspended and
+managed-shutdown (such as may happen during system suspend / S3), resume
+skips calling irq_startup_managed(), and would again have an unbalanced
+depth this time, with a positive value (i.e., remaining unexpectedly
+masked).
 
--- 
-Lee Jones [李琼斯]
+This IRQS_SUSPENDED check was introduced in commit a60dd06af674
+("genirq/cpuhotplug: Skip suspended interrupts when restoring affinity")
+for essentially the same reason as commit 788019eb559f, to prevent that
+irq_startup() would unconditionally re-enable an interrupt too early.
+
+Because irq_startup_managed() now respsects the disable-depth count, the
+IRQS_SUSPENDED check is not longer needed, and instead, it causes harm.
+
+Thus, drop the IRQS_SUSPENDED check, and restore balance.
+
+This effectively reverts commit a60dd06af674 ("genirq/cpuhotplug: Skip
+suspended interrupts when restoring affinity"), because it is replaced
+by commit 788019eb559f ("genirq: Retain disable depth for managed
+interrupts across CPU hotplug").
+
+Fixes: 788019eb559f ("genirq: Retain disable depth for managed interrupts across CPU hotplug")
+Reported-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Link: https://lore.kernel.org/all/20250612183303.3433234-3-briannorris@chromium.org
+Closes: https://lore.kernel.org/lkml/24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com/
+---
+ kernel/irq/cpuhotplug.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+index f07529a..755346e 100644
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -210,13 +210,6 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+ 	    !irq_data_get_irq_chip(data) || !cpumask_test_cpu(cpu, affinity))
+ 		return;
+ 
+-	/*
+-	 * Don't restore suspended interrupts here when a system comes back
+-	 * from S3. They are reenabled via resume_device_irqs().
+-	 */
+-	if (desc->istate & IRQS_SUSPENDED)
+-		return;
+-
+ 	if (irqd_is_managed_and_shutdown(data))
+ 		irq_startup_managed(desc);
+ 
