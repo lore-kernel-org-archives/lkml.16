@@ -1,1227 +1,307 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318EA20CCE3
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1E614BF89;
+	Fri, 13 Jun 2025 23:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749858274; cv=none; b=EZBk06dC0LWerPX94P68G+K1PvLG9BS1UxeHhQaXLr/eIDQvz1dRZcs+LOv/VJKoSaPCoNFhd9vbp5CqJDKE1AEjH5fZUS2yoDN0mZY0j2oDEwQDOUUvwhrIW00tUOx2mZr2n+4yAv0p2uvsHGNgn+K/o5iO0Ik+2i3O882yt68=
+	t=1749858817; cv=none; b=uiuIsaOfFltW8cvTUQ41T7PeF+wgWYp96hA29LjheTlawMSoCGuYJ906PglNpdVUltHP1aLeBnw89rHQRWxHL32QXMv3VMSg3KTwvA7Wsw8EFRlOxkr8U7ew1g+PZ8ti+mZa8EG6b6iz/2vCICosgxsniqPVawsPgT1qtB/XQ4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749858274; c=relaxed/simple;
-	bh=GaSBjcPgoum8l+I5Hpd+OXuZ6bDvVYxu5OJx6AnyMmU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SyvtFTw6fuVeHPWmHIx0Hc1GJK0kNRMB+DSmJMGOArS+QlBEHA28ZDo5QHqkK/SKO+rVvk3doJ0p2q/ehS3G75/eo3iiU4aPBOXolfErcCVTe6T5OlToopvUzJG1+PmcZt4TAW6aKGGK99Tbi6UdWdnjsLsJr7kHitPJF/I2yLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ukQ3gCmk; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	s=arc-20240116; t=1749858817; c=relaxed/simple;
+	bh=B+6kzccr+wLacaAhProqN6kMTvtAE7WAi//m7TysVN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rvvqO/D3olohIqJAtQ67DBkzN0TnpygM88Sv5aRK3i0WpSGClLeJWo4xo4V5MDrzcFIAZe3HmtaQo1CtXvKLC/UNTW8db0tO8rdMqBOwtaypxB4zfrAWn5hMxrMej2MHa/jiQ1GAQIGyAuuc12LfY7Tbmtf+G7ABlwKZd+Zt3yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SflhmcMH; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ukQ3gCmk"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7489d1f5e9fso377216b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:44:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749858271; x=1750463071; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kGlVFyBup6/Q7xH30G8jpkl/vt/gHFhDjzIczqtR66Q=;
-        b=ukQ3gCmkoNEm/Oz6Bu0ORZTxO5wI1+0Kj0Sh7vTH6GarkosIkDuit/bYyCTEGFCKx7
-         B2Q7AOPzYxvp1THa9HjUP/vK89hJrb6bZrwgn7M/FeqymoCuH0ZAigCH1g759f9dI5qD
-         gMhgaAoDvPWUNH4qFi1dcds7o6GgD4Trlf3tfRPX1pjWaM1Yvq2fdh6Vk30MX3yXL+6X
-         q9rN4d9OYM8825RbHlwpZIgpgR69BzjkGWY9K9tTFC5XJOqso4Vd7hYiWr8faoXzVlhC
-         KOnlIJ1LXAzPdqkEcKfe9Jkn3VNkY7783BslzfrEhCXA7UaaKYjX5QccmQDibGxCvTVt
-         8R1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749858271; x=1750463071;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kGlVFyBup6/Q7xH30G8jpkl/vt/gHFhDjzIczqtR66Q=;
-        b=WzUVrky3GFHPqJd/3y0e7sOzJjj1C93oqh8snMJSSNJCTFtk+l3Mi6UNnfclEBc2xL
-         Cahj0qpbeiefosil4U+f9ZB5yIdLb/MEb9ciiTptIz2jho2gxXyimJNyyS3JT3RMmJkz
-         fwMxbxq4V/aelYlVkW1evLyE5/OqbGQ59fPR/nVkFiQAJgKH3nOUDb3a1qicMTLyIg8r
-         0xU3xdA4KVgeegZoiRIbXTQslTWkXjdgqyEJZtxBcdJeNG3G/OTHMap+HrKKG4zUcg6Q
-         X2Eolsu0+RKKb/jJdidUQog8mOT2r7wi9VWEeByI38TDXmN8y6sGYkjQB2KvqGi4MnfD
-         /0ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ0jjs82/SnktrDZrHG1EMSVkoCIJ+O+23SIwwdoxr9YvsRiZBw8QvtSZbeR2KkE2yUPosP3Ck4WOhZXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhfzhxJPURH/bS3qoOQn4lmZnHkbvElJcaZ0/gufJ9Sk0r2mFu
-	wzb89QuJdH5yzdNkZ27SH0Nz8faskukP+Gf3SqbzHeAE2rpmLWVxHu1dsPZ1mwIdR3ZcfHHUVb3
-	7YkoDHadyYq1tjQPW+Qv0miNLew==
-X-Google-Smtp-Source: AGHT+IFSnD78Cs+2ZGfkZWkpDP77omXnREWcL+E9nx8vbVk7cWlrlrYwxkcTvFddvyj1hOuZZETNqJwDQsnO+RqalA==
-X-Received: from pgb2.prod.google.com ([2002:a05:6a02:3402:b0:b2f:1e78:bfed])
- (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:1fc3:b0:215:fb74:2dc2 with SMTP id adf61e73a8af0-21fbd4cd45amr1565326637.11.1749858271509;
- Fri, 13 Jun 2025 16:44:31 -0700 (PDT)
-Date: Fri, 13 Jun 2025 23:44:20 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SflhmcMH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749858815; x=1781394815;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B+6kzccr+wLacaAhProqN6kMTvtAE7WAi//m7TysVN0=;
+  b=SflhmcMHBHltsr65X9/Imj+EC5xrdB/GnVAR0R4kYVvhDVS6lPAyceU1
+   BRCb8Q4zT2dRFTkQo2H3OqXXALH+p7h4OVxIZrLVfsRi2N+7VnFYWPjM/
+   VJhtVN6FiOodZ8n3wLyLnyc5W2TStQn62ZjEEvMeuENEYSdeL85DGDvud
+   Ppnv30ULbgyyTDRrtXWJ1AjPnIAyTdVn/ZMWFp0Ms+udIpksLwM4KePsY
+   8B8lZoCkY7KhPAaw5RAzVKz8BkBizeUpHo1A+jnJTH2nMpWyoKUAOdQDO
+   I4eMdR1AWKMTAQLBEsisQkpggpRaPKJnMg/z6NqJLy+K8FrtY3HwJuvlT
+   w==;
+X-CSE-ConnectionGUID: S4C1jUfAT+SfsYegq92Kkg==
+X-CSE-MsgGUID: 3vcxTIr3RAOYHG8NrEgf2g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51953407"
+X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
+   d="scan'208";a="51953407"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 16:53:34 -0700
+X-CSE-ConnectionGUID: MMF4g+PiTt6z7x4g0XHOJQ==
+X-CSE-MsgGUID: 30F/ZyKVS+yxq3xAfQRgQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
+   d="scan'208";a="147850582"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 13 Jun 2025 16:53:31 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQEDA-000D6A-2d;
+	Fri, 13 Jun 2025 23:53:28 +0000
+Date: Sat, 14 Jun 2025 07:52:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Subject: Re: [PATCH 01/14] xfs: tracing; Remove unused event
+ xfs_reflink_cow_found
+Message-ID: <202506140710.bDy6wh4J-lkp@intel.com>
+References: <20250612212634.746367055@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250613234420.1613060-1-almasrymina@google.com>
-Subject: [PATCH net-next v3] page_pool: import Jesper's page_pool benchmark
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	"=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?=" <toke@toke.dk>, Mina Almasry <almasrymina@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612212634.746367055@goodmis.org>
 
-From: Jesper Dangaard Brouer <hawk@kernel.org>
+Hi Steven,
 
-We frequently consult with Jesper's out-of-tree page_pool benchmark to
-evaluate page_pool changes.
+kernel test robot noticed the following build errors:
 
-Import the benchmark into the upstream linux kernel tree so that (a)
-we're all running the same version, (b) pave the way for shared
-improvements, and (c) maybe one day integrate it with nipa, if possible.
+[auto build test ERROR on xfs-linux/for-next]
+[also build test ERROR on linus/master v6.16-rc1 next-20250613]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Import bench_page_pool_simple from commit 35b1716d0c30 ("Add
-page_bench06_walk_all"), from this repository:
-https://github.com/netoptimizer/prototype-kernel.git
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/xfs-tracing-Remove-unused-event-xfs_reflink_cow_found/20250613-052758
+base:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git for-next
+patch link:    https://lore.kernel.org/r/20250612212634.746367055%40goodmis.org
+patch subject: [PATCH 01/14] xfs: tracing; Remove unused event xfs_reflink_cow_found
+config: s390-randconfig-r073-20250614 (https://download.01.org/0day-ci/archive/20250614/202506140710.bDy6wh4J-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506140710.bDy6wh4J-lkp@intel.com/reproduce)
 
-Changes done during upstreaming:
-- Fix checkpatch issues.
-- Remove the tasklet logic not needed.
-- Move under tools/testing
-- Create ksft for the benchmark.
-- Changed slightly how the benchmark gets build. Out of tree, time_bench
-  is built as an independent .ko. Here it is included in
-  bench_page_pool.ko
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506140710.bDy6wh4J-lkp@intel.com/
 
-Steps to run:
+All errors (new ones prefixed by >>):
 
-```
-mkdir -p /tmp/run-pp-bench
-make -C ./tools/testing/selftests/net/bench
-make -C ./tools/testing/selftests/net/bench install INSTALL_PATH=3D/tmp/run=
--pp-bench
-rsync --delete -avz --progress /tmp/run-pp-bench mina@$SERVER:~/
-ssh mina@$SERVER << EOF
-  cd ~/run-pp-bench && sudo ./test_bench_page_pool.sh
-EOF
-```
+>> fs/xfs/xfs_iomap.c:1614:3: error: call to undeclared function 'trace_xfs_reflink_cow_found'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1614 |                 trace_xfs_reflink_cow_found(ip, &got);
+         |                 ^
+   fs/xfs/xfs_iomap.c:1614:3: note: did you mean 'trace_xfs_reflink_cow_enospc'?
+   fs/xfs/xfs_trace.h:4245:1: note: 'trace_xfs_reflink_cow_enospc' declared here
+    4245 | DEFINE_INODE_IREC_EVENT(xfs_reflink_cow_enospc);
+         | ^
+   fs/xfs/xfs_trace.h:4073:39: note: expanded from macro 'DEFINE_INODE_IREC_EVENT'
+    4073 | #define DEFINE_INODE_IREC_EVENT(name) \
+         |                                       ^
+   include/linux/tracepoint.h:594:2: note: expanded from macro '\
+   DEFINE_EVENT'
+     594 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |         ^
+   include/linux/tracepoint.h:467:2: note: expanded from macro 'DECLARE_TRACE'
+     467 |         __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),              \
+         |         ^
+   include/linux/tracepoint.h:409:2: note: expanded from macro '__DECLARE_TRACE'
+     409 |         __DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto))
+         |         ^
+   include/linux/tracepoint.h:385:21: note: expanded from macro '__DECLARE_TRACE_COMMON'
+     385 |         static inline void trace_##name(proto)                          \
+         |                            ^
+   <scratch space>:36:1: note: expanded from here
+      36 | trace_xfs_reflink_cow_enospc
+         | ^
+   fs/xfs/xfs_iomap.c:1792:4: error: call to undeclared function 'trace_xfs_reflink_cow_found'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1792 |                         trace_xfs_reflink_cow_found(ip, &cmap);
+         |                         ^
+   2 errors generated.
 
-Output:
 
-```
-(benchmrk dmesg logs)
+vim +/trace_xfs_reflink_cow_found +1614 fs/xfs/xfs_iomap.c
 
-Fast path results:
-no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.368 ns
+7c879c8275c0505 Christoph Hellwig 2024-11-17  1514  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1515  static int
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1516  xfs_zoned_buffered_write_iomap_begin(
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1517  	struct inode		*inode,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1518  	loff_t			offset,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1519  	loff_t			count,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1520  	unsigned		flags,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1521  	struct iomap		*iomap,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1522  	struct iomap		*srcmap)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1523  {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1524  	struct iomap_iter	*iter =
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1525  		container_of(iomap, struct iomap_iter, iomap);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1526  	struct xfs_zone_alloc_ctx *ac = iter->private;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1527  	struct xfs_inode	*ip = XFS_I(inode);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1528  	struct xfs_mount	*mp = ip->i_mount;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1529  	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1530  	xfs_fileoff_t		end_fsb = xfs_iomap_end_fsb(mp, offset, count);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1531  	u16			iomap_flags = IOMAP_F_SHARED;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1532  	unsigned int		lockmode = XFS_ILOCK_EXCL;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1533  	xfs_filblks_t		count_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1534  	xfs_extlen_t		indlen;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1535  	struct xfs_bmbt_irec	got;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1536  	struct xfs_iext_cursor	icur;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1537  	int			error = 0;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1538  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1539  	ASSERT(!xfs_get_extsz_hint(ip));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1540  	ASSERT(!(flags & IOMAP_UNSHARE));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1541  	ASSERT(ac);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1542  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1543  	if (xfs_is_shutdown(mp))
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1544  		return -EIO;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1545  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1546  	error = xfs_qm_dqattach(ip);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1547  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1548  		return error;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1549  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1550  	error = xfs_ilock_for_iomap(ip, flags, &lockmode);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1551  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1552  		return error;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1553  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1554  	if (XFS_IS_CORRUPT(mp, !xfs_ifork_has_extents(&ip->i_df)) ||
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1555  	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1556  		xfs_bmap_mark_sick(ip, XFS_DATA_FORK);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1557  		error = -EFSCORRUPTED;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1558  		goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1559  	}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1560  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1561  	XFS_STATS_INC(mp, xs_blk_mapw);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1562  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1563  	error = xfs_iread_extents(NULL, ip, XFS_DATA_FORK);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1564  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1565  		goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1566  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1567  	/*
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1568  	 * For zeroing operations check if there is any data to zero first.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1569  	 *
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1570  	 * For regular writes we always need to allocate new blocks, but need to
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1571  	 * provide the source mapping when the range is unaligned to support
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1572  	 * read-modify-write of the whole block in the page cache.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1573  	 *
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1574  	 * In either case we need to limit the reported range to the boundaries
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1575  	 * of the source map in the data fork.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1576  	 */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1577  	if (!IS_ALIGNED(offset, mp->m_sb.sb_blocksize) ||
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1578  	    !IS_ALIGNED(offset + count, mp->m_sb.sb_blocksize) ||
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1579  	    (flags & IOMAP_ZERO)) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1580  		struct xfs_bmbt_irec	smap;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1581  		struct xfs_iext_cursor	scur;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1582  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1583  		if (!xfs_iext_lookup_extent(ip, &ip->i_df, offset_fsb, &scur,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1584  				&smap))
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1585  			smap.br_startoff = end_fsb; /* fake hole until EOF */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1586  		if (smap.br_startoff > offset_fsb) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1587  			/*
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1588  			 * We never need to allocate blocks for zeroing a hole.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1589  			 */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1590  			if (flags & IOMAP_ZERO) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1591  				xfs_hole_to_iomap(ip, iomap, offset_fsb,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1592  						smap.br_startoff);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1593  				goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1594  			}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1595  			end_fsb = min(end_fsb, smap.br_startoff);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1596  		} else {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1597  			end_fsb = min(end_fsb,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1598  				smap.br_startoff + smap.br_blockcount);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1599  			xfs_trim_extent(&smap, offset_fsb,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1600  					end_fsb - offset_fsb);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1601  			error = xfs_bmbt_to_iomap(ip, srcmap, &smap, flags, 0,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1602  					xfs_iomap_inode_sequence(ip, 0));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1603  			if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1604  				goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1605  		}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1606  	}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1607  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1608  	if (!ip->i_cowfp)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1609  		xfs_ifork_init_cow(ip);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1610  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1611  	if (!xfs_iext_lookup_extent(ip, ip->i_cowfp, offset_fsb, &icur, &got))
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1612  		got.br_startoff = end_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1613  	if (got.br_startoff <= offset_fsb) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13 @1614  		trace_xfs_reflink_cow_found(ip, &got);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1615  		goto done;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1616  	}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1617  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1618  	/*
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1619  	 * Cap the maximum length to keep the chunks of work done here somewhat
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1620  	 * symmetric with the work writeback does.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1621  	 */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1622  	end_fsb = min(end_fsb, got.br_startoff);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1623  	count_fsb = min3(end_fsb - offset_fsb, XFS_MAX_BMBT_EXTLEN,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1624  			 XFS_B_TO_FSB(mp, 1024 * PAGE_SIZE));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1625  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1626  	/*
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1627  	 * The block reservation is supposed to cover all blocks that the
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1628  	 * operation could possible write, but there is a nasty corner case
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1629  	 * where blocks could be stolen from underneath us:
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1630  	 *
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1631  	 *  1) while this thread iterates over a larger buffered write,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1632  	 *  2) another thread is causing a write fault that calls into
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1633  	 *     ->page_mkwrite in range this thread writes to, using up the
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1634  	 *     delalloc reservation created by a previous call to this function.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1635  	 *  3) another thread does direct I/O on the range that the write fault
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1636  	 *     happened on, which causes writeback of the dirty data.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1637  	 *  4) this then set the stale flag, which cuts the current iomap
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1638  	 *     iteration short, causing the new call to ->iomap_begin that gets
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1639  	 *     us here again, but now without a sufficient reservation.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1640  	 *
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1641  	 * This is a very unusual I/O pattern, and nothing but generic/095 is
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1642  	 * known to hit it. There's not really much we can do here, so turn this
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1643  	 * into a short write.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1644  	 */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1645  	if (count_fsb > ac->reserved_blocks) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1646  		xfs_warn_ratelimited(mp,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1647  "Short write on ino 0x%llx comm %.20s due to three-way race with write fault and direct I/O",
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1648  			ip->i_ino, current->comm);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1649  		count_fsb = ac->reserved_blocks;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1650  		if (!count_fsb) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1651  			error = -EIO;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1652  			goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1653  		}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1654  	}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1655  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1656  	error = xfs_quota_reserve_blkres(ip, count_fsb);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1657  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1658  		goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1659  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1660  	indlen = xfs_bmap_worst_indlen(ip, count_fsb);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1661  	error = xfs_dec_fdblocks(mp, indlen, false);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1662  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1663  		goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1664  	ip->i_delayed_blks += count_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1665  	xfs_mod_delalloc(ip, count_fsb, indlen);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1666  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1667  	got.br_startoff = offset_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1668  	got.br_startblock = nullstartblock(indlen);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1669  	got.br_blockcount = count_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1670  	got.br_state = XFS_EXT_NORM;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1671  	xfs_bmap_add_extent_hole_delay(ip, XFS_COW_FORK, &icur, &got);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1672  	ac->reserved_blocks -= count_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1673  	iomap_flags |= IOMAP_F_NEW;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1674  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1675  	trace_xfs_iomap_alloc(ip, offset, XFS_FSB_TO_B(mp, count_fsb),
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1676  			XFS_COW_FORK, &got);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1677  done:
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1678  	error = xfs_bmbt_to_iomap(ip, iomap, &got, flags, iomap_flags,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1679  			xfs_iomap_inode_sequence(ip, IOMAP_F_SHARED));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1680  out_unlock:
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1681  	xfs_iunlock(ip, lockmode);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1682  	return error;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1683  }
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1684  
 
-ptr_ring results:
-no-softirq-page_pool02 Per elem: 527 cycles(tsc) 195.187 ns
-
-slow path results:
-no-softirq-page_pool03 Per elem: 549 cycles(tsc) 203.466 ns
-```
-
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk>
-
-Signed-off-by: Mina Almasry <almasrymina@google.com>
-Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Signed-off-by: Jesper Dangaard Brouer <hawk@kernel.org>
-
----
-
-v3:
-- Non RFC
-- Collect Signed-off-by from Jesper and Acked-by Ilias.
-- Move test_bench_page_pool.sh to address nipa complaint.
-- Remove `static inline` in .c files to address nipa complaint.
-
-v2:
-- Move under tools/selftests (Jakub)
-- Create ksft for it.
-- Remove the tasklet logic no longer needed (Jesper + Toke)
-
-RFC discussion points:
-- Desirable to import it?
-- Can the benchmark be imported as-is for an initial version? Or needs
-  lots of modifications?
-  - Code location. I retained the location in Jesper's tree, but a path
-    like net/core/bench/ may make more sense.
-
----
- tools/testing/selftests/net/bench/Makefile    |   7 +
- .../selftests/net/bench/page_pool/Makefile    |  17 +
- .../bench/page_pool/bench_page_pool_simple.c  | 274 ++++++++++++
- .../net/bench/page_pool/time_bench.c          | 406 ++++++++++++++++++
- .../net/bench/page_pool/time_bench.h          | 259 +++++++++++
- .../net/bench/test_bench_page_pool.sh         |  32 ++
- 6 files changed, 995 insertions(+)
- create mode 100644 tools/testing/selftests/net/bench/Makefile
- create mode 100644 tools/testing/selftests/net/bench/page_pool/Makefile
- create mode 100644 tools/testing/selftests/net/bench/page_pool/bench_page_=
-pool_simple.c
- create mode 100644 tools/testing/selftests/net/bench/page_pool/time_bench.=
-c
- create mode 100644 tools/testing/selftests/net/bench/page_pool/time_bench.=
-h
- create mode 100755 tools/testing/selftests/net/bench/test_bench_page_pool.=
-sh
-
-diff --git a/tools/testing/selftests/net/bench/Makefile b/tools/testing/sel=
-ftests/net/bench/Makefile
-new file mode 100644
-index 000000000000..2546c45e42f7
---- /dev/null
-+++ b/tools/testing/selftests/net/bench/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+TEST_GEN_MODS_DIR :=3D page_pool
-+
-+TEST_PROGS +=3D test_bench_page_pool.sh
-+
-+include ../../lib.mk
-diff --git a/tools/testing/selftests/net/bench/page_pool/Makefile b/tools/t=
-esting/selftests/net/bench/page_pool/Makefile
-new file mode 100644
-index 000000000000..0549a16ba275
---- /dev/null
-+++ b/tools/testing/selftests/net/bench/page_pool/Makefile
-@@ -0,0 +1,17 @@
-+BENCH_PAGE_POOL_SIMPLE_TEST_DIR :=3D $(realpath $(dir $(abspath $(lastword=
- $(MAKEFILE_LIST)))))
-+KDIR ?=3D /lib/modules/$(shell uname -r)/build
-+
-+ifeq ($(V),1)
-+Q =3D
-+else
-+Q =3D @
-+endif
-+
-+obj-m	+=3D bench_page_pool.o
-+bench_page_pool-y +=3D bench_page_pool_simple.o time_bench.o
-+
-+all:
-+	+$(Q)make -C $(KDIR) M=3D$(BENCH_PAGE_POOL_SIMPLE_TEST_DIR) modules
-+
-+clean:
-+	+$(Q)make -C $(KDIR) M=3D$(BENCH_PAGE_POOL_SIMPLE_TEST_DIR) clean
-diff --git a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_si=
-mple.c b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple=
-.c
-new file mode 100644
-index 000000000000..44355043b632
---- /dev/null
-+++ b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
-@@ -0,0 +1,274 @@
-+/*
-+ * Benchmark module for page_pool.
-+ *
-+ */
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+
-+#include <linux/version.h>
-+#include <net/page_pool/helpers.h>
-+
-+#include <linux/interrupt.h>
-+#include <linux/limits.h>
-+
-+#include "time_bench.h"
-+
-+static int verbose =3D 1;
-+#define MY_POOL_SIZE 1024
-+
-+static void _page_pool_put_page(struct page_pool *pool, struct page *page,
-+				bool allow_direct)
-+{
-+	page_pool_put_page(pool, page, -1, allow_direct);
-+}
-+
-+/* Makes tests selectable. Useful for perf-record to analyze a single test=
-.
-+ * Hint: Bash shells support writing binary number like: $((2#101010)
-+ *
-+ * # modprobe bench_page_pool_simple run_flags=3D$((2#100))
-+ */
-+static unsigned long run_flags =3D 0xFFFFFFFF;
-+module_param(run_flags, ulong, 0);
-+MODULE_PARM_DESC(run_flags, "Limit which bench test that runs");
-+/* Count the bit number from the enum */
-+enum benchmark_bit {
-+	bit_run_bench_baseline,
-+	bit_run_bench_no_softirq01,
-+	bit_run_bench_no_softirq02,
-+	bit_run_bench_no_softirq03,
-+};
-+#define bit(b)		(1 << (b))
-+#define enabled(b)	((run_flags & (bit(b))))
-+
-+/* notice time_bench is limited to U32_MAX nr loops */
-+static unsigned long loops =3D 10000000;
-+module_param(loops, ulong, 0);
-+MODULE_PARM_DESC(loops, "Specify loops bench will run");
-+
-+/* Timing at the nanosec level, we need to know the overhead
-+ * introduced by the for loop itself */
-+static int time_bench_for_loop(struct time_bench_record *rec, void *data)
-+{
-+	uint64_t loops_cnt =3D 0;
-+	int i;
-+
-+	time_bench_start(rec);
-+	/** Loop to measure **/
-+	for (i =3D 0; i < rec->loops; i++) {
-+		loops_cnt++;
-+		barrier(); /* avoid compiler to optimize this loop */
-+	}
-+	time_bench_stop(rec, loops_cnt);
-+	return loops_cnt;
-+}
-+
-+static int time_bench_atomic_inc(struct time_bench_record *rec, void *data=
-)
-+{
-+	uint64_t loops_cnt =3D 0;
-+	atomic_t cnt;
-+	int i;
-+
-+	atomic_set(&cnt, 0);
-+
-+	time_bench_start(rec);
-+	/** Loop to measure **/
-+	for (i =3D 0; i < rec->loops; i++) {
-+		atomic_inc(&cnt);
-+		barrier(); /* avoid compiler to optimize this loop */
-+	}
-+	loops_cnt =3D atomic_read(&cnt);
-+	time_bench_stop(rec, loops_cnt);
-+	return loops_cnt;
-+}
-+
-+/* The ptr_ping in page_pool uses a spinlock. We need to know the minimum
-+ * overhead of taking+releasing a spinlock, to know the cycles that can be=
- saved
-+ * by e.g. amortizing this via bulking.
-+ */
-+static int time_bench_lock(struct time_bench_record *rec, void *data)
-+{
-+	uint64_t loops_cnt =3D 0;
-+	spinlock_t lock;
-+	int i;
-+
-+	spin_lock_init(&lock);
-+
-+	time_bench_start(rec);
-+	/** Loop to measure **/
-+	for (i =3D 0; i < rec->loops; i++) {
-+		spin_lock(&lock);
-+		loops_cnt++;
-+		barrier(); /* avoid compiler to optimize this loop */
-+		spin_unlock(&lock);
-+	}
-+	time_bench_stop(rec, loops_cnt);
-+	return loops_cnt;
-+}
-+
-+/* Helper for filling some page's into ptr_ring */
-+static void pp_fill_ptr_ring(struct page_pool *pp, int elems)
-+{
-+	gfp_t gfp_mask =3D GFP_ATOMIC; /* GFP_ATOMIC needed when under run softir=
-q */
-+	struct page **array;
-+	int i;
-+
-+	array =3D kzalloc(sizeof(struct page *) * elems, gfp_mask);
-+
-+	for (i =3D 0; i < elems; i++) {
-+		array[i] =3D page_pool_alloc_pages(pp, gfp_mask);
-+	}
-+	for (i =3D 0; i < elems; i++) {
-+		_page_pool_put_page(pp, array[i], false);
-+	}
-+
-+	kfree(array);
-+}
-+
-+enum test_type { type_fast_path, type_ptr_ring, type_page_allocator };
-+
-+/* Depends on compile optimizing this function */
-+static int time_bench_page_pool(struct time_bench_record *rec, void *data,
-+				enum test_type type, const char *func)
-+{
-+	uint64_t loops_cnt =3D 0;
-+	gfp_t gfp_mask =3D GFP_ATOMIC; /* GFP_ATOMIC is not really needed */
-+	int i, err;
-+
-+	struct page_pool *pp;
-+	struct page *page;
-+
-+	struct page_pool_params pp_params =3D {
-+		.order =3D 0,
-+		.flags =3D 0,
-+		.pool_size =3D MY_POOL_SIZE,
-+		.nid =3D NUMA_NO_NODE,
-+		.dev =3D NULL, /* Only use for DMA mapping */
-+		.dma_dir =3D DMA_BIDIRECTIONAL,
-+	};
-+
-+	pp =3D page_pool_create(&pp_params);
-+	if (IS_ERR(pp)) {
-+		err =3D PTR_ERR(pp);
-+		pr_warn("%s: Error(%d) creating page_pool\n", func, err);
-+		goto out;
-+	}
-+	pp_fill_ptr_ring(pp, 64);
-+
-+	if (in_serving_softirq())
-+		pr_warn("%s(): in_serving_softirq fast-path\n", func);
-+	else
-+		pr_warn("%s(): Cannot use page_pool fast-path\n", func);
-+
-+	time_bench_start(rec);
-+	/** Loop to measure **/
-+	for (i =3D 0; i < rec->loops; i++) {
-+		/* Common fast-path alloc, that depend on in_serving_softirq() */
-+		page =3D page_pool_alloc_pages(pp, gfp_mask);
-+		if (!page)
-+			break;
-+		loops_cnt++;
-+		barrier(); /* avoid compiler to optimize this loop */
-+
-+		/* The benchmarks purpose it to test different return paths.
-+		 * Compiler should inline optimize other function calls out
-+		 */
-+		if (type =3D=3D type_fast_path) {
-+			/* Fast-path recycling e.g. XDP_DROP use-case */
-+			page_pool_recycle_direct(pp, page);
-+
-+		} else if (type =3D=3D type_ptr_ring) {
-+			/* Normal return path */
-+			_page_pool_put_page(pp, page, false);
-+
-+		} else if (type =3D=3D type_page_allocator) {
-+			/* Test if not pages are recycled, but instead
-+			 * returned back into systems page allocator
-+			 */
-+			get_page(page); /* cause no-recycling */
-+			_page_pool_put_page(pp, page, false);
-+			put_page(page);
-+		} else {
-+			BUILD_BUG();
-+		}
-+	}
-+	time_bench_stop(rec, loops_cnt);
-+out:
-+	page_pool_destroy(pp);
-+	return loops_cnt;
-+}
-+
-+static int time_bench_page_pool01_fast_path(struct time_bench_record *rec,
-+					    void *data)
-+{
-+	return time_bench_page_pool(rec, data, type_fast_path, __func__);
-+}
-+
-+static int time_bench_page_pool02_ptr_ring(struct time_bench_record *rec,
-+					   void *data)
-+{
-+	return time_bench_page_pool(rec, data, type_ptr_ring, __func__);
-+}
-+
-+static int time_bench_page_pool03_slow(struct time_bench_record *rec,
-+				       void *data)
-+{
-+	return time_bench_page_pool(rec, data, type_page_allocator, __func__);
-+}
-+
-+static int run_benchmark_tests(void)
-+{
-+	uint32_t nr_loops =3D loops;
-+	int passed_count =3D 0;
-+
-+	/* Baseline tests */
-+	if (enabled(bit_run_bench_baseline)) {
-+		time_bench_loop(nr_loops * 10, 0, "for_loop", NULL,
-+				time_bench_for_loop);
-+		time_bench_loop(nr_loops * 10, 0, "atomic_inc", NULL,
-+				time_bench_atomic_inc);
-+		time_bench_loop(nr_loops, 0, "lock", NULL, time_bench_lock);
-+	}
-+
-+	/* This test cannot activate correct code path, due to no-softirq ctx */
-+	if (enabled(bit_run_bench_no_softirq01))
-+		time_bench_loop(nr_loops, 0, "no-softirq-page_pool01", NULL,
-+				time_bench_page_pool01_fast_path);
-+	if (enabled(bit_run_bench_no_softirq02))
-+		time_bench_loop(nr_loops, 0, "no-softirq-page_pool02", NULL,
-+				time_bench_page_pool02_ptr_ring);
-+	if (enabled(bit_run_bench_no_softirq03))
-+		time_bench_loop(nr_loops, 0, "no-softirq-page_pool03", NULL,
-+				time_bench_page_pool03_slow);
-+
-+	return passed_count;
-+}
-+
-+static int __init bench_page_pool_simple_module_init(void)
-+{
-+	if (verbose)
-+		pr_info("Loaded\n");
-+
-+	if (loops > U32_MAX) {
-+		pr_err("Module param loops(%lu) exceeded U32_MAX(%u)\n", loops,
-+		       U32_MAX);
-+		return -ECHRNG;
-+	}
-+
-+	run_benchmark_tests();
-+
-+	return 0;
-+}
-+module_init(bench_page_pool_simple_module_init);
-+
-+static void __exit bench_page_pool_simple_module_exit(void)
-+{
-+	if (verbose)
-+		pr_info("Unloaded\n");
-+}
-+module_exit(bench_page_pool_simple_module_exit);
-+
-+MODULE_DESCRIPTION("Benchmark of page_pool simple cases");
-+MODULE_AUTHOR("Jesper Dangaard Brouer <netoptimizer@brouer.com>");
-+MODULE_LICENSE("GPL");
-diff --git a/tools/testing/selftests/net/bench/page_pool/time_bench.c b/too=
-ls/testing/selftests/net/bench/page_pool/time_bench.c
-new file mode 100644
-index 000000000000..257b1515c64e
---- /dev/null
-+++ b/tools/testing/selftests/net/bench/page_pool/time_bench.c
-@@ -0,0 +1,406 @@
-+/*
-+ * Benchmarking code execution time inside the kernel
-+ *
-+ * Copyright (C) 2014, Red Hat, Inc., Jesper Dangaard Brouer
-+ *  for licensing details see kernel-base/COPYING
-+ */
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/module.h>
-+#include <linux/time.h>
-+
-+#include <linux/perf_event.h> /* perf_event_create_kernel_counter() */
-+
-+/* For concurrency testing */
-+#include <linux/completion.h>
-+#include <linux/sched.h>
-+#include <linux/workqueue.h>
-+#include <linux/kthread.h>
-+
-+#include "time_bench.h"
-+
-+static int verbose =3D 1;
-+
-+/** TSC (Time-Stamp Counter) based **
-+ * See: linux/time_bench.h
-+ *  tsc_start_clock() and tsc_stop_clock()
-+ */
-+
-+/** Wall-clock based **
-+ */
-+
-+/** PMU (Performance Monitor Unit) based **
-+ */
-+#define PERF_FORMAT                                                       =
-     \
-+	(PERF_FORMAT_GROUP | PERF_FORMAT_ID | PERF_FORMAT_TOTAL_TIME_ENABLED | \
-+	 PERF_FORMAT_TOTAL_TIME_RUNNING)
-+
-+struct raw_perf_event {
-+	uint64_t config; /* event */
-+	uint64_t config1; /* umask */
-+	struct perf_event *save;
-+	char *desc;
-+};
-+
-+/* if HT is enable a maximum of 4 events (5 if one is instructions
-+ * retired can be specified, if HT is disabled a maximum of 8 (9 if
-+ * one is instructions retired) can be specified.
-+ *
-+ * From Table 19-1. Architectural Performance Events
-+ * Architectures Software Developer=E2=80=99s Manual Volume 3: System Prog=
-ramming Guide
-+ */
-+struct raw_perf_event perf_events[] =3D {
-+	{ 0x3c, 0x00, NULL, "Unhalted CPU Cycles" },
-+	{ 0xc0, 0x00, NULL, "Instruction Retired" }
-+};
-+
-+#define NUM_EVTS (sizeof(perf_events) / sizeof(struct raw_perf_event))
-+
-+/* WARNING: PMU config is currently broken!
-+ */
-+bool time_bench_PMU_config(bool enable)
-+{
-+	int i;
-+	struct perf_event_attr perf_conf;
-+	struct perf_event *perf_event;
-+	int cpu;
-+
-+	preempt_disable();
-+	cpu =3D smp_processor_id();
-+	pr_info("DEBUG: cpu:%d\n", cpu);
-+	preempt_enable();
-+
-+	memset(&perf_conf, 0, sizeof(struct perf_event_attr));
-+	perf_conf.type           =3D PERF_TYPE_RAW;
-+	perf_conf.size           =3D sizeof(struct perf_event_attr);
-+	perf_conf.read_format    =3D PERF_FORMAT;
-+	perf_conf.pinned         =3D 1;
-+	perf_conf.exclude_user   =3D 1; /* No userspace events */
-+	perf_conf.exclude_kernel =3D 0; /* Only kernel events */
-+
-+	for (i =3D 0; i < NUM_EVTS; i++) {
-+		perf_conf.disabled =3D enable;
-+		//perf_conf.disabled =3D (i =3D=3D 0) ? 1 : 0;
-+		perf_conf.config   =3D perf_events[i].config;
-+		perf_conf.config1  =3D perf_events[i].config1;
-+		if (verbose)
-+			pr_info("%s() enable PMU counter: %s\n",
-+				__func__, perf_events[i].desc);
-+		perf_event =3D perf_event_create_kernel_counter(&perf_conf, cpu,
-+						 NULL /* task */,
-+						 NULL /* overflow_handler*/,
-+						 NULL /* context */);
-+		if (perf_event) {
-+			perf_events[i].save =3D perf_event;
-+			pr_info("%s():DEBUG perf_event success\n", __func__);
-+
-+			perf_event_enable(perf_event);
-+		} else {
-+			pr_info("%s():DEBUG perf_event is NULL\n", __func__);
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+/** Generic functions **
-+ */
-+
-+/* Calculate stats, store results in record */
-+bool time_bench_calc_stats(struct time_bench_record *rec)
-+{
-+#define NANOSEC_PER_SEC 1000000000 /* 10^9 */
-+	uint64_t ns_per_call_tmp_rem =3D 0;
-+	uint32_t ns_per_call_remainder =3D 0;
-+	uint64_t pmc_ipc_tmp_rem =3D 0;
-+	uint32_t pmc_ipc_remainder =3D 0;
-+	uint32_t pmc_ipc_div =3D 0;
-+	uint32_t invoked_cnt_precision =3D 0;
-+	uint32_t invoked_cnt =3D 0; /* 32-bit due to div_u64_rem() */
-+
-+	if (rec->flags & TIME_BENCH_LOOP) {
-+		if (rec->invoked_cnt < 1000) {
-+			pr_err("ERR: need more(>1000) loops(%llu) for timing\n",
-+			       rec->invoked_cnt);
-+			return false;
-+		}
-+		if (rec->invoked_cnt > ((1ULL << 32) - 1)) {
-+			/* div_u64_rem() can only support div with 32bit*/
-+			pr_err("ERR: Invoke cnt(%llu) too big overflow 32bit\n",
-+			       rec->invoked_cnt);
-+			return false;
-+		}
-+		invoked_cnt =3D (uint32_t)rec->invoked_cnt;
-+	}
-+
-+	/* TSC (Time-Stamp Counter) records */
-+	if (rec->flags & TIME_BENCH_TSC) {
-+		rec->tsc_interval =3D rec->tsc_stop - rec->tsc_start;
-+		if (rec->tsc_interval =3D=3D 0) {
-+			pr_err("ABORT: timing took ZERO TSC time\n");
-+			return false;
-+		}
-+		/* Calculate stats */
-+		if (rec->flags & TIME_BENCH_LOOP)
-+			rec->tsc_cycles =3D rec->tsc_interval / invoked_cnt;
-+		else
-+			rec->tsc_cycles =3D rec->tsc_interval;
-+	}
-+
-+	/* Wall-clock time calc */
-+	if (rec->flags & TIME_BENCH_WALLCLOCK) {
-+		rec->time_start =3D rec->ts_start.tv_nsec +
-+				  (NANOSEC_PER_SEC * rec->ts_start.tv_sec);
-+		rec->time_stop =3D rec->ts_stop.tv_nsec +
-+				 (NANOSEC_PER_SEC * rec->ts_stop.tv_sec);
-+		rec->time_interval =3D rec->time_stop - rec->time_start;
-+		if (rec->time_interval =3D=3D 0) {
-+			pr_err("ABORT: timing took ZERO wallclock time\n");
-+			return false;
-+		}
-+		/* Calculate stats */
-+		/*** Division in kernel it tricky ***/
-+		/* Orig: time_sec =3D (time_interval / NANOSEC_PER_SEC); */
-+		/* remainder only correct because NANOSEC_PER_SEC is 10^9 */
-+		rec->time_sec =3D div_u64_rem(rec->time_interval, NANOSEC_PER_SEC,
-+					    &rec->time_sec_remainder);
-+		//TODO: use existing struct timespec records instead of div?
-+
-+		if (rec->flags & TIME_BENCH_LOOP) {
-+			/*** Division in kernel it tricky ***/
-+			/* Orig: ns =3D ((double)time_interval / invoked_cnt); */
-+			/* First get quotient */
-+			rec->ns_per_call_quotient =3D
-+				div_u64_rem(rec->time_interval, invoked_cnt,
-+					    &ns_per_call_remainder);
-+			/* Now get decimals .xxx precision (incorrect roundup)*/
-+			ns_per_call_tmp_rem =3D ns_per_call_remainder;
-+			invoked_cnt_precision =3D invoked_cnt / 1000;
-+			if (invoked_cnt_precision > 0) {
-+				rec->ns_per_call_decimal =3D
-+					div_u64_rem(ns_per_call_tmp_rem,
-+						    invoked_cnt_precision,
-+						    &ns_per_call_remainder);
-+			}
-+		}
-+	}
-+
-+	/* Performance Monitor Unit (PMU) counters */
-+	if (rec->flags & TIME_BENCH_PMU) {
-+		//FIXME: Overflow handling???
-+		rec->pmc_inst =3D rec->pmc_inst_stop - rec->pmc_inst_start;
-+		rec->pmc_clk =3D rec->pmc_clk_stop - rec->pmc_clk_start;
-+
-+		/* Calc Instruction Per Cycle (IPC) */
-+		/* First get quotient */
-+		rec->pmc_ipc_quotient =3D div_u64_rem(rec->pmc_inst, rec->pmc_clk,
-+						    &pmc_ipc_remainder);
-+		/* Now get decimals .xxx precision (incorrect roundup)*/
-+		pmc_ipc_tmp_rem =3D pmc_ipc_remainder;
-+		pmc_ipc_div =3D rec->pmc_clk / 1000;
-+		if (pmc_ipc_div > 0) {
-+			rec->pmc_ipc_decimal =3D div_u64_rem(pmc_ipc_tmp_rem,
-+							   pmc_ipc_div,
-+							   &pmc_ipc_remainder);
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+/* Generic function for invoking a loop function and calculating
-+ * execution time stats.  The function being called/timed is assumed
-+ * to perform a tight loop, and update the timing record struct.
-+ */
-+bool time_bench_loop(uint32_t loops, int step, char *txt, void *data,
-+		     int (*func)(struct time_bench_record *record, void *data))
-+{
-+	struct time_bench_record rec;
-+
-+	/* Setup record */
-+	memset(&rec, 0, sizeof(rec)); /* zero func might not update all */
-+	rec.version_abi =3D 1;
-+	rec.loops       =3D loops;
-+	rec.step        =3D step;
-+	rec.flags       =3D (TIME_BENCH_LOOP|TIME_BENCH_TSC|TIME_BENCH_WALLCLOCK)=
-;
-+//	rec.flags       =3D (TIME_BENCH_LOOP|TIME_BENCH_TSC|
-+//			   TIME_BENCH_WALLCLOCK|TIME_BENCH_PMU);
-+	//TODO: Add/copy txt to rec
-+
-+	/*** Loop function being timed ***/
-+	if (!func(&rec, data)) {
-+		pr_err("ABORT: function being timed failed\n");
-+		return false;
-+	}
-+
-+	if (rec.invoked_cnt < loops)
-+		pr_warn("WARNING: Invoke count(%llu) smaller than loops(%d)\n",
-+			rec.invoked_cnt, loops);
-+
-+	/* Calculate stats */
-+	time_bench_calc_stats(&rec);
-+
-+	pr_info("Type:%s Per elem: %llu cycles(tsc) %llu.%03llu ns (step:%d)"
-+		" - (measurement period time:%llu.%09u sec time_interval:%llu)"
-+		" - (invoke count:%llu tsc_interval:%llu)\n",
-+		txt, rec.tsc_cycles,
-+		 rec.ns_per_call_quotient, rec.ns_per_call_decimal, rec.step,
-+		rec.time_sec, rec.time_sec_remainder, rec.time_interval,
-+		rec.invoked_cnt, rec.tsc_interval);
-+/*	pr_info("DEBUG check is %llu/%llu =3D=3D %llu.%03llu ?\n",
-+		rec.time_interval, rec.invoked_cnt,
-+		rec.ns_per_call_quotient, rec.ns_per_call_decimal);
-+*/
-+	if (rec.flags & TIME_BENCH_PMU) {
-+		pr_info("Type:%s PMU inst/clock"
-+			"%llu/%llu =3D %llu.%03llu IPC (inst per cycle)\n",
-+			txt, rec.pmc_inst, rec.pmc_clk,
-+			rec.pmc_ipc_quotient, rec.pmc_ipc_decimal);
-+	}
-+	return true;
-+}
-+
-+/* Function getting invoked by kthread */
-+static int invoke_test_on_cpu_func(void *private)
-+{
-+	struct time_bench_cpu *cpu =3D private;
-+	struct time_bench_sync *sync =3D cpu->sync;
-+	cpumask_t newmask =3D CPU_MASK_NONE;
-+	void *data =3D cpu->data;
-+
-+	/* Restrict CPU */
-+	cpumask_set_cpu(cpu->rec.cpu, &newmask);
-+	set_cpus_allowed_ptr(current, &newmask);
-+
-+	/* Synchronize start of concurrency test */
-+	atomic_inc(&sync->nr_tests_running);
-+	wait_for_completion(&sync->start_event);
-+
-+	/* Start benchmark function */
-+	if (!cpu->bench_func(&cpu->rec, data)) {
-+		pr_err("ERROR: function being timed failed on CPU:%d(%d)\n",
-+		       cpu->rec.cpu, smp_processor_id());
-+	} else {
-+		if (verbose)
-+			pr_info("SUCCESS: ran on CPU:%d(%d)\n", cpu->rec.cpu,
-+				smp_processor_id());
-+	}
-+	cpu->did_bench_run =3D true;
-+
-+	/* End test */
-+	atomic_dec(&sync->nr_tests_running);
-+	/*  Wait for kthread_stop() telling us to stop */
-+	while (!kthread_should_stop()) {
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		schedule();
-+	}
-+	__set_current_state(TASK_RUNNING);
-+	return 0;
-+}
-+
-+void time_bench_print_stats_cpumask(const char *desc,
-+				    struct time_bench_cpu *cpu_tasks,
-+				    const struct cpumask *mask)
-+{
-+	uint64_t average =3D 0;
-+	int cpu;
-+	int step =3D 0;
-+	struct sum {
-+		uint64_t tsc_cycles;
-+		int records;
-+	} sum =3D { 0 };
-+
-+	/* Get stats */
-+	for_each_cpu(cpu, mask) {
-+		struct time_bench_cpu *c =3D &cpu_tasks[cpu];
-+		struct time_bench_record *rec =3D &c->rec;
-+
-+		/* Calculate stats */
-+		time_bench_calc_stats(rec);
-+
-+		pr_info("Type:%s CPU(%d) %llu cycles(tsc) %llu.%03llu ns"
-+			" (step:%d)"
-+			" - (measurement period time:%llu.%09u sec time_interval:%llu)"
-+			" - (invoke count:%llu tsc_interval:%llu)\n",
-+			desc, cpu, rec->tsc_cycles, rec->ns_per_call_quotient,
-+			rec->ns_per_call_decimal, rec->step, rec->time_sec,
-+			rec->time_sec_remainder, rec->time_interval,
-+			rec->invoked_cnt, rec->tsc_interval);
-+
-+		/* Collect average */
-+		sum.records++;
-+		sum.tsc_cycles +=3D rec->tsc_cycles;
-+		step =3D rec->step;
-+	}
-+
-+	if (sum.records) /* avoid div-by-zero */
-+		average =3D sum.tsc_cycles / sum.records;
-+	pr_info("Sum Type:%s Average: %llu cycles(tsc) CPUs:%d step:%d\n", desc,
-+		average, sum.records, step);
-+}
-+
-+void time_bench_run_concurrent(
-+	uint32_t loops, int step, void *data,
-+	const struct cpumask *mask, /* Support masking outsome CPUs*/
-+	struct time_bench_sync *sync, struct time_bench_cpu *cpu_tasks,
-+	int (*func)(struct time_bench_record *record, void *data))
-+{
-+	int cpu, running =3D 0;
-+
-+	if (verbose) // DEBUG
-+		pr_warn("%s() Started on CPU:%d\n", __func__,
-+			smp_processor_id());
-+
-+	/* Reset sync conditions */
-+	atomic_set(&sync->nr_tests_running, 0);
-+	init_completion(&sync->start_event);
-+
-+	/* Spawn off jobs on all CPUs */
-+	for_each_cpu(cpu, mask) {
-+		struct time_bench_cpu *c =3D &cpu_tasks[cpu];
-+
-+		running++;
-+		c->sync =3D sync; /* Send sync variable along */
-+		c->data =3D data; /* Send opaque along */
-+
-+		/* Init benchmark record */
-+		memset(&c->rec, 0, sizeof(struct time_bench_record));
-+		c->rec.version_abi =3D 1;
-+		c->rec.loops       =3D loops;
-+		c->rec.step        =3D step;
-+		c->rec.flags       =3D (TIME_BENCH_LOOP|TIME_BENCH_TSC|
-+				      TIME_BENCH_WALLCLOCK);
-+		c->rec.cpu =3D cpu;
-+		c->bench_func =3D func;
-+		c->task =3D kthread_run(invoke_test_on_cpu_func, c,
-+				      "time_bench%d", cpu);
-+		if (IS_ERR(c->task)) {
-+			pr_err("%s(): Failed to start test func\n", __func__);
-+			return; /* Argh, what about cleanup?! */
-+		}
-+	}
-+
-+	/* Wait until all processes are running */
-+	while (atomic_read(&sync->nr_tests_running) < running) {
-+		set_current_state(TASK_UNINTERRUPTIBLE);
-+		schedule_timeout(10);
-+	}
-+	/* Kick off all CPU concurrently on completion event */
-+	complete_all(&sync->start_event);
-+
-+	/* Wait for CPUs to finish */
-+	while (atomic_read(&sync->nr_tests_running)) {
-+		set_current_state(TASK_UNINTERRUPTIBLE);
-+		schedule_timeout(10);
-+	}
-+
-+	/* Stop the kthreads */
-+	for_each_cpu(cpu, mask) {
-+		struct time_bench_cpu *c =3D &cpu_tasks[cpu];
-+		kthread_stop(c->task);
-+	}
-+
-+	if (verbose) // DEBUG - happens often, finish on another CPU
-+		pr_warn("%s() Finished on CPU:%d\n", __func__,
-+			smp_processor_id());
-+}
-diff --git a/tools/testing/selftests/net/bench/page_pool/time_bench.h b/too=
-ls/testing/selftests/net/bench/page_pool/time_bench.h
-new file mode 100644
-index 000000000000..b0e7139179e5
---- /dev/null
-+++ b/tools/testing/selftests/net/bench/page_pool/time_bench.h
-@@ -0,0 +1,259 @@
-+/*
-+ * Benchmarking code execution time inside the kernel
-+ *
-+ * Copyright (C) 2014, Red Hat, Inc., Jesper Dangaard Brouer
-+ *  for licensing details see kernel-base/COPYING
-+ */
-+#ifndef _LINUX_TIME_BENCH_H
-+#define _LINUX_TIME_BENCH_H
-+
-+/* Main structure used for recording a benchmark run */
-+struct time_bench_record {
-+	uint32_t version_abi;
-+	uint32_t loops;		/* Requested loop invocations */
-+	uint32_t step;		/* option for e.g. bulk invocations */
-+
-+	uint32_t flags; 	/* Measurements types enabled */
-+#define TIME_BENCH_LOOP		(1<<0)
-+#define TIME_BENCH_TSC		(1<<1)
-+#define TIME_BENCH_WALLCLOCK	(1<<2)
-+#define TIME_BENCH_PMU		(1<<3)
-+
-+	uint32_t cpu; /* Used when embedded in time_bench_cpu */
-+
-+	/* Records */
-+	uint64_t invoked_cnt; 	/* Returned actual invocations */
-+	uint64_t tsc_start;
-+	uint64_t tsc_stop;
-+	struct timespec64 ts_start;
-+	struct timespec64 ts_stop;
-+	/** PMU counters for instruction and cycles
-+	 * instructions counter including pipelined instructions */
-+	uint64_t pmc_inst_start;
-+	uint64_t pmc_inst_stop;
-+	/* CPU unhalted clock counter */
-+	uint64_t pmc_clk_start;
-+	uint64_t pmc_clk_stop;
-+
-+	/* Result records */
-+	uint64_t tsc_interval;
-+	uint64_t time_start, time_stop, time_interval; /* in nanosec */
-+	uint64_t pmc_inst, pmc_clk;
-+
-+	/* Derived result records */
-+	uint64_t tsc_cycles; // +decimal?
-+	uint64_t ns_per_call_quotient, ns_per_call_decimal;
-+	uint64_t time_sec;
-+	uint32_t time_sec_remainder;
-+	uint64_t pmc_ipc_quotient, pmc_ipc_decimal; /* inst per cycle */
-+};
-+
-+/* For synchronizing parallel CPUs to run concurrently */
-+struct time_bench_sync {
-+	atomic_t nr_tests_running;
-+	struct completion start_event;
-+};
-+
-+/* Keep track of CPUs executing our bench function.
-+ *
-+ * Embed a time_bench_record for storing info per cpu
-+ */
-+struct time_bench_cpu {
-+	struct time_bench_record rec;
-+	struct time_bench_sync *sync; /* back ptr */
-+	struct task_struct *task;
-+	/* "data" opaque could have been placed in time_bench_sync,
-+	 * but to avoid any false sharing, place it per CPU
-+	 */
-+	void *data;
-+	/* Support masking outsome CPUs, mark if it ran */
-+	bool did_bench_run;
-+	/* int cpu; // note CPU stored in time_bench_record */
-+	int (*bench_func)(struct time_bench_record *record, void *data);
-+};
-+
-+/*
-+ * Below TSC assembler code is not compatible with other archs, and
-+ * can also fail on guests if cpu-flags are not correct.
-+ *
-+ * The way TSC reading is used, many iterations, does not require as
-+ * high accuracy as described below (in Intel Doc #324264).
-+ *
-+ * Considering changing to use get_cycles() (#include <asm/timex.h>).
-+ */
-+
-+/** TSC (Time-Stamp Counter) based **
-+ * Recommend reading, to understand details of reading TSC accurately:
-+ *  Intel Doc #324264, "How to Benchmark Code Execution Times on Intel"
-+ *
-+ * Consider getting exclusive ownership of CPU by using:
-+ *   unsigned long flags;
-+ *   preempt_disable();
-+ *   raw_local_irq_save(flags);
-+ *   _your_code_
-+ *   raw_local_irq_restore(flags);
-+ *   preempt_enable();
-+ *
-+ * Clobbered registers: "%rax", "%rbx", "%rcx", "%rdx"
-+ *  RDTSC only change "%rax" and "%rdx" but
-+ *  CPUID clears the high 32-bits of all (rax/rbx/rcx/rdx)
-+ */
-+static __always_inline uint64_t tsc_start_clock(void)
-+{
-+	/* See: Intel Doc #324264 */
-+	unsigned hi, lo;
-+	asm volatile("CPUID\n\t"
-+		     "RDTSC\n\t"
-+		     "mov %%edx, %0\n\t"
-+		     "mov %%eax, %1\n\t"
-+		     : "=3Dr"(hi), "=3Dr"(lo)::"%rax", "%rbx", "%rcx", "%rdx");
-+	//FIXME: on 32bit use clobbered %eax + %edx
-+	return ((uint64_t)lo) | (((uint64_t)hi) << 32);
-+}
-+
-+static __always_inline uint64_t tsc_stop_clock(void)
-+{
-+	/* See: Intel Doc #324264 */
-+	unsigned hi, lo;
-+	asm volatile("RDTSCP\n\t"
-+		     "mov %%edx, %0\n\t"
-+		     "mov %%eax, %1\n\t"
-+		     "CPUID\n\t"
-+		     : "=3Dr"(hi), "=3Dr"(lo)::"%rax", "%rbx", "%rcx", "%rdx");
-+	return ((uint64_t)lo) | (((uint64_t)hi) << 32);
-+}
-+
-+/* Notes for RDTSC and RDTSCP
-+ *
-+ * Hannes found out that __builtin_ia32_rdtsc and
-+ * __builtin_ia32_rdtscp are undocumented available in gcc, so there
-+ * is no need to write inline assembler functions for them any more.
-+ *
-+ *  unsigned long long __builtin_ia32_rdtscp(unsigned int *foo);
-+ *   (where foo is set to: numa_node << 12 | cpu)
-+ *    and
-+ *  unsigned long long __builtin_ia32_rdtsc(void);
-+ *
-+ * Above we combine the calls with CPUID, thus I don't see how this is
-+ * directly appreciable.
-+ */
-+
-+/*
-+inline uint64_t rdtsc(void)
-+{
-+	uint32_t low, high;
-+	asm volatile("rdtsc" : "=3Da" (low), "=3Dd" (high));
-+	return low  | (((uint64_t )high ) << 32);
-+}
-+*/
-+
-+/** Wall-clock based **
-+ *
-+ * use: getnstimeofday()
-+ *  getnstimeofday(&rec->ts_start);
-+ *  getnstimeofday(&rec->ts_stop);
-+ *
-+ * API changed see: Documentation/core-api/timekeeping.rst
-+ *  https://www.kernel.org/doc/html/latest/core-api/timekeeping.html#c.get=
-nstimeofday
-+ *
-+ * We should instead use: ktime_get_real_ts64() is a direct
-+ *  replacement, but consider using monotonic time (ktime_get_ts64())
-+ *  and/or a ktime_t based interface (ktime_get()/ktime_get_real()).
-+ */
-+
-+/** PMU (Performance Monitor Unit) based **
-+ *
-+ * Needed for calculating: Instructions Per Cycle (IPC)
-+ * - The IPC number tell how efficient the CPU pipelining were
-+ */
-+//lookup: perf_event_create_kernel_counter()
-+
-+bool time_bench_PMU_config(bool enable);
-+
-+/* Raw reading via rdpmc() using fixed counters
-+ *
-+ * From: https://github.com/andikleen/simple-pmu
-+ */
-+enum {
-+	FIXED_SELECT =3D (1U << 30), /* =3D=3D 0x40000000 */
-+	FIXED_INST_RETIRED_ANY =3D 0,
-+	FIXED_CPU_CLK_UNHALTED_CORE =3D 1,
-+	FIXED_CPU_CLK_UNHALTED_REF =3D 2,
-+};
-+
-+static __always_inline unsigned long long p_rdpmc(unsigned in)
-+{
-+	unsigned d, a;
-+
-+	asm volatile("rdpmc" : "=3Dd"(d), "=3Da"(a) : "c"(in) : "memory");
-+	return ((unsigned long long)d << 32) | a;
-+}
-+
-+/* These PMU counter needs to be enabled, but I don't have the
-+ * configure code implemented.  My current hack is running:
-+ *  sudo perf stat -e cycles:k -e instructions:k insmod lib/ring_queue_tes=
-t.ko
-+ */
-+/* Reading all pipelined instruction */
-+static __always_inline unsigned long long pmc_inst(void)
-+{
-+	return p_rdpmc(FIXED_SELECT | FIXED_INST_RETIRED_ANY);
-+}
-+
-+/* Reading CPU clock cycles */
-+static __always_inline unsigned long long pmc_clk(void)
-+{
-+	return p_rdpmc(FIXED_SELECT | FIXED_CPU_CLK_UNHALTED_CORE);
-+}
-+
-+/* Raw reading via MSR rdmsr() is likely wrong
-+ * FIXME: How can I know which raw MSR registers are conf for what?
-+ */
-+#define MSR_IA32_PCM0 0x400000C1 /* PERFCTR0 */
-+#define MSR_IA32_PCM1 0x400000C2 /* PERFCTR1 */
-+#define MSR_IA32_PCM2 0x400000C3
-+static inline uint64_t msr_inst(unsigned long long *msr_result)
-+{
-+	return rdmsrq_safe(MSR_IA32_PCM0, msr_result);
-+}
-+
-+/** Generic functions **
-+ */
-+bool time_bench_loop(uint32_t loops, int step, char *txt, void *data,
-+		     int (*func)(struct time_bench_record *rec, void *data));
-+bool time_bench_calc_stats(struct time_bench_record *rec);
-+
-+void time_bench_run_concurrent(
-+	uint32_t loops, int step, void *data,
-+	const struct cpumask *mask, /* Support masking outsome CPUs*/
-+	struct time_bench_sync *sync, struct time_bench_cpu *cpu_tasks,
-+	int (*func)(struct time_bench_record *record, void *data));
-+void time_bench_print_stats_cpumask(const char *desc,
-+				    struct time_bench_cpu *cpu_tasks,
-+				    const struct cpumask *mask);
-+
-+//FIXME: use rec->flags to select measurement, should be MACRO
-+static __always_inline void time_bench_start(struct time_bench_record *rec=
-)
-+{
-+	//getnstimeofday(&rec->ts_start);
-+	ktime_get_real_ts64(&rec->ts_start);
-+	if (rec->flags & TIME_BENCH_PMU) {
-+		rec->pmc_inst_start =3D pmc_inst();
-+		rec->pmc_clk_start =3D pmc_clk();
-+	}
-+	rec->tsc_start =3D tsc_start_clock();
-+}
-+
-+static __always_inline void time_bench_stop(struct time_bench_record *rec,
-+					    uint64_t invoked_cnt)
-+{
-+	rec->tsc_stop =3D tsc_stop_clock();
-+	if (rec->flags & TIME_BENCH_PMU) {
-+		rec->pmc_inst_stop =3D pmc_inst();
-+		rec->pmc_clk_stop =3D pmc_clk();
-+	}
-+	//getnstimeofday(&rec->ts_stop);
-+	ktime_get_real_ts64(&rec->ts_stop);
-+	rec->invoked_cnt =3D invoked_cnt;
-+}
-+
-+#endif /* _LINUX_TIME_BENCH_H */
-diff --git a/tools/testing/selftests/net/bench/test_bench_page_pool.sh b/to=
-ols/testing/selftests/net/bench/test_bench_page_pool.sh
-new file mode 100755
-index 000000000000..5eb48f28b659
---- /dev/null
-+++ b/tools/testing/selftests/net/bench/test_bench_page_pool.sh
-@@ -0,0 +1,32 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+
-+set -e
-+
-+DRIVER=3D"./page_pool/bench_page_pool.ko"
-+result=3D""
-+
-+function run_test()
-+{
-+	rmmod "bench_page_pool.ko" || true
-+	insmod $DRIVER > /dev/null 2>&1
-+	result=3D$(dmesg | tail -10)
-+	echo "$result"
-+
-+	echo
-+	echo "Fast path results:"
-+	echo ${result} | grep -o -E "no-softirq-page_pool01 Per elem: ([0-9]+) cy=
-cles\(tsc\) ([0-9]+\.[0-9]+) ns"
-+
-+	echo
-+	echo "ptr_ring results:"
-+	echo ${result} | grep -o -E "no-softirq-page_pool02 Per elem: ([0-9]+) cy=
-cles\(tsc\) ([0-9]+\.[0-9]+) ns"
-+
-+	echo
-+	echo "slow path results:"
-+	echo ${result} | grep -o -E "no-softirq-page_pool03 Per elem: ([0-9]+) cy=
-cles\(tsc\) ([0-9]+\.[0-9]+) ns"
-+}
-+
-+run_test
-+
-+exit 0
-
-base-commit: 08207f42d3ffee43c97f16baf03d7426a3c353ca
---=20
-2.50.0.rc1.591.g9c95f17f64-goog
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
