@@ -1,157 +1,235 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2041.outbound.protection.outlook.com [40.107.92.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D4919C558;
-	Fri, 13 Jun 2025 14:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826744; cv=fail; b=CuffJrjo4L/Jn7ugAH6vuXEq7wdkWPdeRNczQOo2AX4IMtUyP3g8MB9JwmcE26JeHVGfMxoYIlCksex9lfB2YC21dH/nAGx0A94RRxJEE7fDdTtX9zBdsRURxyb/VVNW6E6O8AwLoWUswm/KXyI281X68hbLGZnLc8KTtn12Ftk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826744; c=relaxed/simple;
-	bh=0709O5B5wtLYY07dXvpOUMbWDjWDlt/HLYvFj5CNNes=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NyYihPymB1rGn8Q5sAfyYbMzPhqh//A4mrCJ23ShTxK9RgytXFgpUGwxKxeFerhOgh587oz7juomLV4S0azdmehJHs0CcTleqJxckqIzoA85MJTDEmyMt/29TGA64/0ZwZ3/qsu9tUL0cX2eEjYN99Iti/rVo0SX72xdALE0Wpc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GNj/GFDS; arc=fail smtp.client-ip=40.107.92.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8F21D61BC
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749826749; cv=none; b=f+0KFap9N7PT9h2qSxGnWjmLgDcmMicCCRftU2n0alJznvIfq/DHbDj+q7AzeyjIELDqeNYGtSRuLCaj5/4aiUkD67VDptbhlc3VBOomqApqsMmsmVNNOJjjQwkWppi4CMJcsYeL9pJlZiSRfhfB/hWGlIUpDYuWZctf1GzVj58=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749826749; c=relaxed/simple;
+	bh=pUKI2jfySVdWRDHA1kr+oyakX4sySindSmx0hr3ZFTQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A+Tc4sDrRBv5m+fc31fj6+Tv7PZoW4gQFCIK0UnwCu8PFgsJlPoeDbxiEYC2DkAd6zY/zO+yF/kzzogjKtIV5yTGZyYejo+kkKyXSxDuQzIUGSDYPBEBSQS1J9vtx/v91V1fFDqTWIjcw8QynGEb9fPTSzkJhbwfERLltjwTM0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n/QA8JZM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oUtr1uH0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n/QA8JZM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oUtr1uH0; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GNj/GFDS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b13tLawUt+5RChzlq3DRsScyfWW6OjZk/0/He3OSdgH5TkbA+RXB4G9eq/7cgiAFcsww22rivEYUcySsxGELYq4XX/onXytfUtIp4optdYPPcTo2CnCYY/YQMLDVBlEgJCluMCmb9cSgAshfT9u4ZZz7lrTRp/LJeji55KzO+5rrt65mZApO7njuZYTn1LBrhdrMkcHeZgIXeluazsmm0aO6cv0snByJWutVZ9i0fv6Q4uPcNZhPo6+CPqdDI+Wmp5N3KLH3XruVsVhVSpW5ipOK9bPr1zAJ1fUFf/uA6BHSIf51zxyYtlqFld212BnVOTU/GguHtJ92y5Z2IIQfdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UNmK3jDCl6S7wPLPwkasrtFMsCs3jVHwihq7SxhLl5A=;
- b=e5Etyitmi5vzOqqzFM7WR32d8MjyG0rJ7lnPd1RWYPRbwEIJ1/nHpAjURFmT1vKw8BniNXod2ia35SmnMk9EYI/xZIGXkJO5qEufw4p3mnVrT+sFmbd9cSWkgQnuFygL3b75AaEQoYMYA5BoDXzhydpqQp42+wjg25QIE6v8/6uk+7NxMpfoLpEycbVL9444gWoZLY3kCldDL9kMdBCmENO+1E7hJxoJPsWKyhVrluFD0iVlbOUqsx+mLVZdK2t2y3G37679ORCeduTMMTJhIkacb4NlRs9Q2ASE2P5NMutGi1Egbg9LVxQnbxS4mHANG5+3hqXBfXKut71jhPh1Xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UNmK3jDCl6S7wPLPwkasrtFMsCs3jVHwihq7SxhLl5A=;
- b=GNj/GFDSK6+N37gdOGSmydM6cY6ZNfba2tpb665d7r0AnL7qRB5y3a+KEJWxLVWVGYbv5gdVsKR9il1jkH0Yw28LYmhuT2pldlM+L4wbuXwOs5w9FSIjxvewEMFzmhXNXiBWcv47fJg05KCqAUWAFwmR9aa64hzzuUm5bFTy5Lzzha5wHi+4t+PhFANcTpalH8pQVzO+eJtbW3T9C5EodWzgVWqHnLVFxTuJNVGjH8IUvVpS+koT8RHPT8H0HG1qpTWpDeP1DxwlaTwgHfp+3L10nJXgpYY7MolskzTG2OMJbdI5HDD5KvbM/le5CkZ9WK+yWxKqE3Sf3axr0XfcpQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- LV8PR12MB9272.namprd12.prod.outlook.com (2603:10b6:408:201::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.23; Fri, 13 Jun
- 2025 14:58:58 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%4]) with mapi id 15.20.8792.038; Fri, 13 Jun 2025
- 14:58:58 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Alex Mastro <amastro@fb.com>,
- David Hildenbrand <david@redhat.com>, Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 1/5] mm: Deduplicate mm_get_unmapped_area()
-Date: Fri, 13 Jun 2025 10:58:55 -0400
-X-Mailer: MailMate (2.0r6263)
-Message-ID: <DC6C39B4-ACFE-45CA-BA31-BA0E81AD13B0@nvidia.com>
-In-Reply-To: <20250613134111.469884-2-peterx@redhat.com>
-References: <20250613134111.469884-1-peterx@redhat.com>
- <20250613134111.469884-2-peterx@redhat.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0238.namprd03.prod.outlook.com
- (2603:10b6:408:f8::33) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n/QA8JZM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oUtr1uH0";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n/QA8JZM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oUtr1uH0"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 47F6E21998;
+	Fri, 13 Jun 2025 14:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749826746; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvnuzgtMSI9Np/g2y/zyYte66ezEy6r674XqmB2jKLk=;
+	b=n/QA8JZMV23zhNbjtY69jGC9whE4ZOSKm2+qTzm4per3XpCWNo4AAlfBW1zHMm1WNEuhy4
+	f2oC2gpKMWdlF1b8RWRaH85z03+AayLp4zpV+vGPJXaqZQFOQ1sgi9wfs+l2Dxc6dPzfdQ
+	YgG3YBZfgB3GriEcR2yieLnm/KdCWI8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749826746;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvnuzgtMSI9Np/g2y/zyYte66ezEy6r674XqmB2jKLk=;
+	b=oUtr1uH04N97QdcVlxl8mWqPIHnKKZfLYmyeFEbjl2wBHPKWyZ/Zw6BAoQjKGI/ViBP5XV
+	6W56eswJ/xiFuuCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749826746; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvnuzgtMSI9Np/g2y/zyYte66ezEy6r674XqmB2jKLk=;
+	b=n/QA8JZMV23zhNbjtY69jGC9whE4ZOSKm2+qTzm4per3XpCWNo4AAlfBW1zHMm1WNEuhy4
+	f2oC2gpKMWdlF1b8RWRaH85z03+AayLp4zpV+vGPJXaqZQFOQ1sgi9wfs+l2Dxc6dPzfdQ
+	YgG3YBZfgB3GriEcR2yieLnm/KdCWI8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749826746;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RvnuzgtMSI9Np/g2y/zyYte66ezEy6r674XqmB2jKLk=;
+	b=oUtr1uH04N97QdcVlxl8mWqPIHnKKZfLYmyeFEbjl2wBHPKWyZ/Zw6BAoQjKGI/ViBP5XV
+	6W56eswJ/xiFuuCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 048D913782;
+	Fri, 13 Jun 2025 14:59:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5GxrO7k8TGh8IAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 13 Jun 2025 14:59:05 +0000
+Date: Fri, 13 Jun 2025 16:59:05 +0200
+Message-ID: <87tt4jr8li.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	Herve Codina <herve.codina@bootlin.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 3/3] ALSA: pcm: Convert snd_pcm_sync_ptr() to user_access_begin/user_access_end()
+In-Reply-To: <4f2f8e14-22d2-44f1-82cd-5f2a3b5117b1@csgroup.eu>
+References: <7baa34d4046c7750799b11830d38a46f8b581765.1749724478.git.christophe.leroy@csgroup.eu>
+	<79b86a0618328ba1d0cb5cf4011fd73ac6900e8f.1749724478.git.christophe.leroy@csgroup.eu>
+	<878qlwrnv1.wl-tiwai@suse.de>
+	<2df61bbf-76f6-4932-a347-7820350a156e@csgroup.eu>
+	<87wm9frf5x.wl-tiwai@suse.de>
+	<4f2f8e14-22d2-44f1-82cd-5f2a3b5117b1@csgroup.eu>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|LV8PR12MB9272:EE_
-X-MS-Office365-Filtering-Correlation-Id: c89c9b6d-aeb2-4b8b-e8ee-08ddaa8ad370
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?X5WvJlyxa2NNVkd3O6SBC+QMVEUEGhwAIHKlt+nqxLzyR/sLTf5tHEJ7hnVD?=
- =?us-ascii?Q?9DKPj55eOprLOrqI/fUq70PimN/47hGV462SV8nAelfZEUcJI6w8nddmE8lo?=
- =?us-ascii?Q?wWUuKmvVx4M1DdJgLtrYbxetuQZJj7fHuuhJhQU+XLcwiy+PR9zv7xWD7nzz?=
- =?us-ascii?Q?81V4UyRtnc/ykqdrawWOLH/UzDFr7VL0ltWq9YZNuHdXKZfWKA3eQ3Y0UXHG?=
- =?us-ascii?Q?tqtjVRYXTam7DjZnKzeym0bjMI/4e7tyn7f/HIiE0yiuHxU3X2IjUzDC/P2b?=
- =?us-ascii?Q?776+dBzEx1T99ZNqk1bp10WNaRu2JogCICOjXgOYdwg2IKGHErdCX1Aa0M1J?=
- =?us-ascii?Q?a3CChsmethGPba9NERDdj6eeQqXMt5N3BWEn8RwWTVCugQVvCQvyFr+rPdy5?=
- =?us-ascii?Q?AHMvdC5dP2G3f3svSyR5yAu7PKO+9DkXuQCa7iNu6tWCaC6Hay9WWRz/p+81?=
- =?us-ascii?Q?9MGe7AJglVWF0GHvyemFjh/3yE3zQWxvhBNOv6vvfZ3nouX1h3qs5+6SVYmI?=
- =?us-ascii?Q?imd9PXFuR1L5JHx4eUw9yofd8+XGH73RXj0w67xKUHGTSsPd+XYWe8vAgDVX?=
- =?us-ascii?Q?+F6oVJKWe3kf3L9Qqn7cjApteE4vapSPQpYijNMm4BDeVQG/sHPotVX+8EMn?=
- =?us-ascii?Q?9HbcEXyQwmuXrac/dBu2eKEiHQ5HnNtWT/GqE0/yKijcHQgY/CV0v5DWS0xi?=
- =?us-ascii?Q?eg0kVv95aCk1aqb6EtfZKZPNJHSQWdI8XRntDJoWLdmFSYtdqhEuSON9XMYV?=
- =?us-ascii?Q?/dXmeose5ec+gNk3Pr/fokHfSiMDVVQKUZpmSxOOZK6a5B7tTiGhSvFU0yAH?=
- =?us-ascii?Q?gLV3s+mddU33UCGEMIwb6WPJCNV9KZc/hwqSLTrZ7jJRV6efhRttgI92zs5m?=
- =?us-ascii?Q?HGazbs+Tf5u9UlriotcEB5IHE1Ifm+UftzJEEHzEVbu4Ikp0CcHNYfewTd/G?=
- =?us-ascii?Q?IZuNyNmc8NDBTkdsunfM+NZvCa+Y6jhrsGMEqcpWuUjcXeCTKctDMJnbZWCT?=
- =?us-ascii?Q?eTil8c/iXTRhC8RTYQF8pQ40lQkmwHR1CYTgZ/aXAb9WH2owGOoSLpjA9RIW?=
- =?us-ascii?Q?N3maZubg5D5j/TyJHyoVHIaDVSZb0SonNdKXaHPlcR0Cs3kqZZTWMAXp+fVq?=
- =?us-ascii?Q?YCcxH3CZIh5UaAkbXQYZxiLAcfAu4Ug8h8AhMQCFLAFzhGj1/jPeM1trFjEg?=
- =?us-ascii?Q?kcSAfJAea+Dula5XjIGiEWkgwCjE1OCdstI1hblHY0awtSW8Saw4toa6I1uh?=
- =?us-ascii?Q?91lFWwreQ6Rplg2MEPutQBPZMDYrmwbJoHqXD9Vr1bR5FTIdDyC4R9oNNGFP?=
- =?us-ascii?Q?OofJfwNapjneiVIgRZ3a48HBDfzQXYjMmj5g/qiiNDueT+1vuYr9TzuPUngX?=
- =?us-ascii?Q?Fh+HmrNFqZLaOB3h6bllsxZq5L9LmQ8Zbl5/BgLkF3KFgSoNbQ8Cwh5X4iX9?=
- =?us-ascii?Q?eiMOG1svJws=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/k3u6Pwqjei4154kP0hf2rEiFbVk70ILMHBOsxzvaCXoeuMHzDpcXf2AJJ4u?=
- =?us-ascii?Q?eI5RK+u8amRfEvkm7QA1YIxcSJh8dnC3qRalKm8aiIQoGJpk+knJLqFY1wwX?=
- =?us-ascii?Q?NvszP7IP39GFOswqNcjMtQTjsKq8OmlaZ+BVJRGP5WNDIosgt3ZFTQJ+zEWl?=
- =?us-ascii?Q?voE4xxhII9zmSnavZ57f/TYQ2VGcGf0V6JCA8PoaAtu/v+c/Y5wGCsXAzuj5?=
- =?us-ascii?Q?ccZ4ByGCrFcgP4s6sAkDAedkvPjWFZ4tXJ87TSu9km44qE9t8J5BRQRr0I3g?=
- =?us-ascii?Q?xyhRnwkHsOHMBHktpuLWOsJ8oXheO/zb1+7lEud5OJ32uhg8H8/dUyVNsA0V?=
- =?us-ascii?Q?32Za/bda9lYRLwQ1dQ1Z5fCzNYnzt5FjhjGTHlrCFOSj904KgQNiL7dS7hgD?=
- =?us-ascii?Q?diNPl9yB/Q6R8BRXY3Ri8OR/1cgOD/pgzen6IMJ5CaexZsABSO2R+CyFzXCd?=
- =?us-ascii?Q?TASGboHnF5VfIlg7aj62tsyoiPzqrQdeQfEB1OVZhM0XePyWRgirdJg2N/6T?=
- =?us-ascii?Q?0BUKq2LbDeumqZ4Skz5Gbrv/vR/DIBWqgXP4GjBrVHY3Ai8cSBjA13Owq79O?=
- =?us-ascii?Q?tZSAsKtFg1baNH1Zjwkrpr7sWH9LrxBrtnmAjtEmOPXKKibJBsNh01Shk7tV?=
- =?us-ascii?Q?s2lbs6yk63Kk/yhTYGNtrplgZsueuw7rBGbDzF1q3K5TWkyggNL+T8d4kkNj?=
- =?us-ascii?Q?Q6+6UoO11M4JWwVhGOXSNFsXDYS7N5tdpWFKZduPswmGgWvc5f9cOHLT2sXA?=
- =?us-ascii?Q?y6CSXnDtR+EQ3kc2KGvrC6WLXKvwDADcbJZIlq6pQd69Y46BvwQixRa6HGTx?=
- =?us-ascii?Q?0C0oeCXqma8wj8Ga/8QQCIXBKo0fzionJQ2NjvIxyhGqDyo4xokHcQPBOY83?=
- =?us-ascii?Q?hE+NNI3YrE+E2XDgncrIrFJQMXmtE45JZbF6mdE5bgnS/iXib5kABtGteS7/?=
- =?us-ascii?Q?T3SSlKgAN/z2xcl6+vHkpRiMY8joBQDJo7FGokYSXtMbFLeyJ7RfhWNiFTZO?=
- =?us-ascii?Q?TpKK0rK4NchkYfbxQk6OfLYx/+GzCEzYLTNBOi2tjMJ+OjOENRH3u+rRsYH9?=
- =?us-ascii?Q?Q86Ngl/Q7m/ccaE3tWSvqcY3IEV5Rw2REzi9D9z1H/HAktogCp/1QJhPywVh?=
- =?us-ascii?Q?K+5y5SRvROoB/wKhNjf2NVLlWJ41QFFXtaGsHm7lX6a3Uxrw72EnQbBmNEy+?=
- =?us-ascii?Q?SjrbRuW2J8UUFdTxEte50F5e8Ytj1QbmtrMngOx+ux7NEIgaJamfoNIQYxbY?=
- =?us-ascii?Q?VgFCPRb93gAshHVzYUP7Cl9+zFtoae7BVPxRaaqL9bNYf+sjCOOd4OS6EKGM?=
- =?us-ascii?Q?gJrLJ9dciRyJ+1Oig9XSUSpt2gWpLUMvOU7krtCK6/IgyHKnR+L7LbbWppCU?=
- =?us-ascii?Q?G6KGVh8EC/EurP7rNXZzMsMWqCpgWmHmb6WEWNzOJx7cYJI99vSA6xeMcRd3?=
- =?us-ascii?Q?sAaG3ADq/5r4/ad4RFLNA06bUxHc4cH0UuJP1pEMIS3BNl5K/qRRavLHF+5p?=
- =?us-ascii?Q?7wVIjrjKld97QtFN5/nD1YZeapy5+V7y0DE5GRlvX2nVK5cyFt9LT9fmARsq?=
- =?us-ascii?Q?dmkq9z2O4lYksAYonGA=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c89c9b6d-aeb2-4b8b-e8ee-08ddaa8ad370
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 14:58:58.7309
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X0D7jqDfaVDYhQY5sxNyOFovf/21BhlIDL/jR44Ak0x+RpllCRnJShNo5yhldQz2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9272
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -7.27
+X-Spamd-Result: default: False [-7.27 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.17)[-0.860];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Level: 
 
-On 13 Jun 2025, at 9:41, Peter Xu wrote:
+On Fri, 13 Jun 2025 14:46:46 +0200,
+Christophe Leroy wrote:
+> 
+> 
+> 
+> Le 13/06/2025 à 14:37, Takashi Iwai a écrit :
+> > On Fri, 13 Jun 2025 13:03:04 +0200,
+> > Christophe Leroy wrote:
+> >> 
+> >> 
+> >> 
+> >> Le 13/06/2025 à 11:29, Takashi Iwai a écrit :
+> >>> On Thu, 12 Jun 2025 12:51:05 +0200,
+> >>> Christophe Leroy wrote:
+> >>>> 
+> >>>> Now that snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user()
+> >>>> are converted to user_access_begin/user_access_end(),
+> >>>> snd_pcm_sync_ptr_get_user() is more efficient than a raw get_user()
+> >>>> followed by a copy_from_user(). And because copy_{to/from}_user() are
+> >>>> generic functions focussed on transfer of big data blocks to/from user,
+> >>>> snd_pcm_sync_ptr_put_user() is also more efficient for small amont of
+> >>>> data.
+> >>>> 
+> >>>> So use snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user() in
+> >>>> snd_pcm_sync_ptr() too.
+> >>>> 
+> >>>> In order to have snd_pcm_mmap_status32 similar to snd_pcm_mmap_status,
+> >>>> replace to tsamp_{sec/nsec} and audio_tstamp_{sec/nsec} by equivalent
+> >>>> struct __snd_timespec.
+> >>>> 
+> >>>> snd_pcm_ioctl_sync_ptr_buggy() is left as it is because the conversion
+> >>>> wouldn't be straigh-forward do to the workaround it provides.
+> >>>> 
+> >>>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> >>> 
+> >>> Through a quick glance, all patches look almost fine, but one favor to
+> >>> ask: this patch contains the convert from s32/s32 pair to struct
+> >>> __snd_timespec.  It should be factored out to a prerequisite patch
+> >>> instead of burying in a big change.
+> >> 
+> >> Shall I understand you prefer this series over the more simple "ALSA:
+> >> pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to
+> >> user_access_begin/user_access_end()" patch ?
+> > 
+> > Err, no, sorry for ambiguity.
+> 
+> Then I'm lost.
+> 
+> I sent two alternative proposals:
+> A/ Single patch, simple, handling only two fonctions
+> snd_pcm_ioctl_sync_ptr_{compat/x32} , without refactoring. [1]
+> B/ This RFC series, more elaborate, refactoring and putting user copy
+> into helper macros. [2]
+> 
+> So the question was to be sure you prefer alternative B over
+> alternative A. I guess the answer is YES as you asking me improve it.
 
-> Essentially it sets vm_flags==0 for mm_get_unmapped_area_vmflags().  Use
-> the helper instead to dedup the lines.
->
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  mm/mmap.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+Right, let's go with the RFC series with refactoring.
 
-Best Regards,
-Yan, Zi
+
+thanks,
+
+Takashi
+
+> 
+> [1]
+> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/8df11af98033e4cb4d9b0f16d6e9d5b69110b036.1749724057.git.christophe.leroy@csgroup.eu/
+> [2]
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?state=*&series=460665
+> 
+> 
+> > I wanted to move the replacement of tstamp_sec/nsec with struct
+> > __snd_timespec as a small preliminary patch from patch#3.
+> > That is,
+> 
+> Yes that's what I understood.
+> 
+> Thanks
+> Christophe
+> 
+> 
+> > --- a/sound/core/pcm_native.c
+> > +++ b/sound/core/pcm_native.c
+> > @@ -3103,11 +3103,9 @@ struct snd_pcm_mmap_status32 {
+> >   	snd_pcm_state_t state;
+> >   	s32 pad1;
+> >   	u32 hw_ptr;
+> > -	s32 tstamp_sec;
+> > -	s32 tstamp_nsec;
+> > +	struct __snd_timespec tstamp;
+> >   	snd_pcm_state_t suspended_state;
+> > -	s32 audio_tstamp_sec;
+> > -	s32 audio_tstamp_nsec;
+> > +	struct __snd_timespec audio_tstamp;
+> >   } __packed;
+> > etc.  By factoring this out, it becomes clear that the timespec
+> > compatibility is fully cared.
+> > 
+> > __snd_timespec may be defined in different ways on user-space, but in
+> > the kernel code, it's a single definition of s32/s32 pair.  This needs
+> > to be emphasized.
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> 
