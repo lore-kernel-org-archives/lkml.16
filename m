@@ -1,88 +1,65 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22078433D9
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942D6202C4E;
+	Fri, 13 Jun 2025 15:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830153; cv=none; b=dXZEVGNIG/BK1likN3WOM9spqUQvo2duqz6k/6sl1Roz2Qk/f/VaGkknbWE1dqq/ptjaGGF7K6B5Bkwz5UF9cPUpe1ugOWnqStnH4kzbAtj3pzsGK4F9xuAIrv6XjkBvBn0eZN5k0JQ+ywerHXnMK5+6RSozAUjULT3Dg2cNKGg=
+	t=1749830158; cv=none; b=OKn6gFLjQSy/vlStNCO2k9JiUBU1sSOVOBb3Mzw4f0acCdNinZeTaEIkvaypzPXOdAPxHVKBzNNBpFtPs93wjqriSaXNncVmohEKLESON+t/00+8ZyUeDGnD423onUadf0SkTZ5xkaGUMUfZMEac/QcxzCbgPzbdELW9JCTKioI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830153; c=relaxed/simple;
-	bh=LA9KMFx22SDlmIdsNUvqINZWyaU7ZbM3j1938f2NZIk=;
+	s=arc-20240116; t=1749830158; c=relaxed/simple;
+	bh=8L2z4739RHjaRoJpohe/Bhxsg8DT+gCJ7gSEEvxTp74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpDiwoYLEG3TA7z/SGeoJWPZ8U32Wz639B31uab2CW+q1tRmENX/mYSnwidcnZy9yVa7wFC5F9mNpGTSvyzKngmw+gYjrZeBWgKPaDz66ydHbUQO8o6vTgYlEsasTB2pod0kJqCZbkqmhHLB9RN5h6tUcwakE1WmfY8IEHuyykg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j0RiOAkh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5uUXeId8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j0RiOAkh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5uUXeId8; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j0RiOAkh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5uUXeId8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j0RiOAkh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5uUXeId8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0B78A1F394;
-	Fri, 13 Jun 2025 15:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749830150; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6HmU5UhLrCtmKzq9wnn1QgmH8ORcyh4xVbHFKpC+Zdw=;
-	b=j0RiOAkhOLPB65cD9t0oUlmiajmJitWpJtjYL3zfcj8RxT8eZf9QwhM1JryG4M2i4H3Qm2
-	TYvDFraKeqMx3EJdg68mmcpRroOWydifjieNmgea5mdIVVX/QGLB6rtW63ZuJqJ2+x7OQ9
-	5/SxV/7RNUSOb5S/H/OLuIkl5a1hUU8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749830150;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6HmU5UhLrCtmKzq9wnn1QgmH8ORcyh4xVbHFKpC+Zdw=;
-	b=5uUXeId8BKmff9LhWy8yJ1Ii/fUxsdM73WC0+9DwBMruo23rZDh/FRjoGazKjO7Sm6i/WH
-	UrBTlGNIleB+8lDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=j0RiOAkh;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5uUXeId8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749830150; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6HmU5UhLrCtmKzq9wnn1QgmH8ORcyh4xVbHFKpC+Zdw=;
-	b=j0RiOAkhOLPB65cD9t0oUlmiajmJitWpJtjYL3zfcj8RxT8eZf9QwhM1JryG4M2i4H3Qm2
-	TYvDFraKeqMx3EJdg68mmcpRroOWydifjieNmgea5mdIVVX/QGLB6rtW63ZuJqJ2+x7OQ9
-	5/SxV/7RNUSOb5S/H/OLuIkl5a1hUU8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749830150;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6HmU5UhLrCtmKzq9wnn1QgmH8ORcyh4xVbHFKpC+Zdw=;
-	b=5uUXeId8BKmff9LhWy8yJ1Ii/fUxsdM73WC0+9DwBMruo23rZDh/FRjoGazKjO7Sm6i/WH
-	UrBTlGNIleB+8lDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F0EE0137FE;
-	Fri, 13 Jun 2025 15:55:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZJ2FOgVKTGh+MQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 13 Jun 2025 15:55:49 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 85691A09B0; Fri, 13 Jun 2025 17:55:45 +0200 (CEST)
-Date: Fri, 13 Jun 2025 17:55:45 +0200
-From: Jan Kara <jack@suse.cz>
-To: Wei Gao <wegao@suse.com>
-Cc: Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, 
-	linux-ext4@vger.kernel.org
-Subject: Re: [PATCH v2] ext2: Handle fiemap on empty files to prevent EINVAL
-Message-ID: <5tsjb3wlierqa4cnevn4vv5dnwved7fsg55ggxlqf5coyptsjz@uco7crwg6x4m>
-References: <20250612142855.2678267-1-wegao@suse.com>
- <20250613152402.3432135-1-wegao@suse.com>
- <mxios5pbq3vq5267on4vnt5siozd4nap5w7wemsd2vlxoooexd@ia2ezhdu7ujq>
- <aEytOcFNAI7ZcxzM@MiWiFi-CR6608-srv>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZDvqd1/DMfT5EBz+1M83VXZDsM5izRuClTDdwT/tCybkGve+GMItLlk8Q0zeOEqS4Uz9DSK8dE7VuVU2QxZX8wkoZBbU9f+NTKUC/1PZqn6XRukGtrQQ+RSSNiDpBu2MGasFiBwZCVtzqG2wRq4s1PAIUy2ix5MqtJ2HjFjnVVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ade48b24c97so338185866b.2;
+        Fri, 13 Jun 2025 08:55:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749830155; x=1750434955;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fKXlTaD3M0r62w1mi9jV25qZkxT133cf8Hl+KW9P6fs=;
+        b=KkvFOE2DUepFvJY8znlkGyGdhoA6P78+wDy+SwyEPE4II+cscS2v0aGKSyubDraa61
+         AvBG7+reanuGqKfdWIf3PZy7s4i6Dpx0/Mqwa7iZze3C10DwNSxAvsxJ1yZWuRO1YuIp
+         ssmiRamZwc0g1jQbh33f7EJ5eAFr9P714ft0dPslwR/u48ILUPqeUQCKq6q9sGBgCfBx
+         QvEfibXaSNBmIi/e8KPi24xBA39quoj7L9SfSWp0Nziva84nuVTGhdTXn3OZ496zRegm
+         g+itucQ4Jp/pVxIPTR1TEOa/AElunqZ20wNDvx9qPzCtpB2vGXpS3am13C0NIjlrC5vd
+         BLlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUquF3FOy1nasaX1eUC9m/ZsFqfdUsESgz9bHsrXxZuaPn9VIAjhG4VtU4PVsOu8pnqnOIRPyON@vger.kernel.org, AJvYcCV2ndKdod16ddCyDIryKB8dydIx1ESIOk0Yk+jzOOojRwiDfjShZi+/UXSh3YoMEJ7VMPzHmxnjVpkqb2PK+Yex@vger.kernel.org, AJvYcCVSv7z0RL0lld02rkrrmYh94fU8v+PRamZ1h1QAl1Fa4+HlTU7A33wmLvymwVZvxJ3G5NsSfM0KLbKsRU0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoqQvDiuF0dg4S0w5vIlWkMe8GzBzIv6LUGaISjhKLHYInYad2
+	4dUH00CucuEbLPrtYnP5XKad9Iyj50wcBPoYssKSqLFMD3VUlDn7SAEt
+X-Gm-Gg: ASbGncuoO79QLOQGYVxjzNufbd7JB2Etth9xAGs6sovjeoNPsc8B9Ps2nGSZDOvxMXl
+	0fJ6BqE3NQ7+g0dExXyYAMg9/mtMBSaCYAFcB8Ggc14JCMdw9MaDFAvHNUT2NqzVvUjCDT1Eknw
+	FgDpy1HofhoyaKzG5/CFWvoR1Ul/3giV7oVeKkjPUAfCgyUiOApCosFQG7BQOblI6wuFnPLr8PV
+	qVuxL80/ZqF77Fgse/tipOBkgw8CNXuwmXI4X5Xp22ofFvVlpqYeqrh/hsHs3Y5MQ+y0lS58epg
+	Y9VszL0GePkRfb/BtMHnBfmPiGS9Ok2mHX2y//YjDhxmDA0l5CXUqyqDJSYorwk=
+X-Google-Smtp-Source: AGHT+IED168YgdZ6ChAOGCYrIy+tjPXzyGNF+en6Tv4Mzzs1Jkpfmk+mA53ktu5RHoF63IkhjvTPZQ==
+X-Received: by 2002:a17:906:9f8c:b0:ad8:9041:7724 with SMTP id a640c23a62f3a-adec5cd770fmr316366766b.61.1749830154753;
+        Fri, 13 Jun 2025 08:55:54 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:2::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec892b92asm147813266b.133.2025.06.13.08.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 08:55:54 -0700 (PDT)
+Date: Fri, 13 Jun 2025 08:55:52 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	David Wei <dw@davidwei.uk>, Shuah Khan <shuah@kernel.org>,
+	Simon Horman <horms@kernel.org>, joe@dama.to,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next v2 4/4] netdevsim: account dropped packet length
+ in stats on queue free
+Message-ID: <aExKCMX4SLM772xi@gmail.com>
+References: <20250613-netdevsim_stat-v2-0-98fa38836c48@debian.org>
+ <20250613-netdevsim_stat-v2-4-98fa38836c48@debian.org>
+ <aEw579mm+3aiXti+@gmail.com>
+ <20250613075507.2b857743@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,88 +68,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEytOcFNAI7ZcxzM@MiWiFi-CR6608-srv>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 0B78A1F394
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_THREE(0.00)[3];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.01
-X-Spam-Level: 
+In-Reply-To: <20250613075507.2b857743@kernel.org>
 
-On Fri 13-06-25 18:59:05, Wei Gao wrote:
-> On Fri, Jun 13, 2025 at 11:42:17AM +0200, Jan Kara wrote:
-> > On Fri 13-06-25 11:18:38, Wei Gao wrote:
-> > > Previously, ext2_fiemap would unconditionally apply "len = min_t(u64, len,
-> > > i_size_read(inode));", When inode->i_size was 0 (for an empty file), this
-> > > would reduce the requested len to 0. Passing len = 0 to iomap_fiemap could
-> > > then result in an -EINVAL error, even for valid queries on empty files.
-> > > 
-> > > Link: https://github.com/linux-test-project/ltp/issues/1246
-> > > Signed-off-by: Wei Gao <wegao@suse.com>
-> > 
-> > ...
-> > 
-> > > diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
-> > > index 30f8201c155f..591db2b4390a 100644
-> > > --- a/fs/ext2/inode.c
-> > > +++ b/fs/ext2/inode.c
-> > > @@ -895,9 +895,15 @@ int ext2_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
-> > >  		u64 start, u64 len)
+On Fri, Jun 13, 2025 at 07:55:07AM -0700, Jakub Kicinski wrote:
+> On Fri, 13 Jun 2025 07:47:11 -0700 Breno Leitao wrote:
+> > >  static void nsim_queue_free(struct nsim_rq *rq)
 > > >  {
-> > >  	int ret;
-> > > +	u64 i_size;
-> > >  
-> > >  	inode_lock(inode);
-> > > -	len = min_t(u64, len, i_size_read(inode));
+> > > +	struct net_device *dev = rq->napi.dev;
 > > > +
-> > > +	i_size = i_size_read(inode);
-> > > +
-> > > +	if (i_size > 0)
-> > > +		len = min_t(u64, len, i_size_read(inode));
+> > >  	hrtimer_cancel(&rq->napi_timer);
+> > > +	dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);  
 > > 
-> > 
-> > Thanks! This would actually lead to excessively slow fiemap for 0-length
-> > files. So what I've ended up with is attached modification of your patch.
-> Thank you for your patient review, I really appreciate it. 
+> > This is wrong and it will cause the kernel to crash in some cases, given
+> > we can get here with dev == NULL, in the following path:
 > 
-> BTW i have stupid question:
-> Where can I see the real-time status of this patch? such as whether it has been merged?
-> I have checked https://patchwork.kernel.org/project/linux-fsdevel/list/
-> but do not find current patch, maybe this patch need specific sent it to
-> linux-fsdevel@vger.kernel.org? I just get maillist through scripts/get_maintainer.pl but
-> mail list not contain linux-fsdevel@vger.kernel.org.
+> It's probably because NAPI wasn't registered yet in some paths.
+> You can pass dev in from the callers, it always exists, and all 
+> callers have it.
 
-You cannot easily check it. You can see the patch is sitting in
-git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git for_next
-branch. During the next merge window, I'll push it to Linus.
+Right, that is a better approach.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+I will update and send another version soon,
+--breno
