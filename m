@@ -1,106 +1,146 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABC363A9;
-	Fri, 13 Jun 2025 12:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA5463A9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749819520; cv=none; b=JDYh3BDm4lh/Q/3iqdsDamVmlINdbZV0igz6Yt7sNd27tuvBZxbf1EA8hKbhCviEwmc+K6uFMguXRqX7vQ+daSHpGCSQ8IplFQl0ntlHwPOQoTWhmYDKD/rVdxNRliV56HSgqsJqKn7rGTH5vh2SX8b8mIrGF9+V/wkaD3+cqT8=
+	t=1749819572; cv=none; b=CwW8IF3pW/IUHHiacqz2g5NA3m+qkkrH/j0okI2iSaxtvmfwyRy0ZJ26uEw0zJ9/Di9iJ0FQCCnAZQtcuYCym48RO47Z4ECdZL+Gyr4rnajaQGvJiVJ0fLB9aD7Lw7yQUkIuqxc2beEb5qevTfS0f/XnMTSZJlDoOQdm3c2CV/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749819520; c=relaxed/simple;
-	bh=HB0wDOJzS3HrgqoMV7bcUDMPRb1iMOcaGiVDH6zpgx4=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=i5OCFNbtkLwsKfWe9FaiH1/BIDLfYIpjh7CWvzRyoaSQ/NMo2600VZmGDZ1uLyVmjXnJiyRyYwf0PC9ut26cVJPZOCQHpSIXac4YVGpaVWb9uiiNB7TnHF1xp/BPcMEViXW8Xpjy77kBOBiAfXnEz9ut7mM+crCtp+W/gLPfgKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HvdIj8MG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tfyyus7o; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749819572; c=relaxed/simple;
+	bh=1GoZAGAypiB2oHd3pN/5VWptPj76Frs4MFiz1/rzIR4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hKGoG3mbMNrDO7SNCWRALD6fSVUHOg7FaX+QNPbthXSL1z0ba7gas8UWpXubMt3XHJYzQ5406oD5EzMOpHVOw+4yIqh6f/LsQ9xFdXLyMeQu62p4xra1Ax0ogByJvFdDZzuH5kDXbOBO+uJw6akwgjBVJq5Um3j2zz5ArrVkfzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjqlRkjS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HvdIj8MG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tfyyus7o"
-Date: Fri, 13 Jun 2025 12:58:28 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749819509;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CTuNRKXMmRC4Te9gor2dckm4EkkJG0/0j525o8lM6z8=;
-	b=HvdIj8MGEB/8x5NboKXz5B5/RytGWKRrP161XGmvsQMHNP+OtuLs+0HcsKVytcxNWW3TRk
-	Is7ajaU3YJp8NDtTFqhAnZXp7ZDCl7xUsxTBXWypvrUCQk+G1RHiOIDNFW3OzZJLI5GE2e
-	/pu8+QWWOMTYqHW4gSTczY3Nxl+QeU1EQdVAoWAlSdorSwBXA0CIKPKPuiHr73+FL9nqok
-	NChlGyvFCpTOOqxwn6jw51J1zz9oV+Qu6xernD/DAFQDd+YwHtJwW+glULMq+bVY4lcmDr
-	VMJ+gSUc31B1EZ5P63Ey/UdL53BhM+lyxkdIbnEchR8ikKDNgW8uRRXnN3ZDfw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749819509;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CTuNRKXMmRC4Te9gor2dckm4EkkJG0/0j525o8lM6z8=;
-	b=Tfyyus7o6CU5UZgrdJzVS0sGisNkbNhCYtVOXN3E4InDzTWsYm66SIhHgJv0k6OHIFkS6Q
-	zvVzfPgc2IkGDyDw==
-From: "tip-bot2 for Viresh Kumar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: smp/core] smp: Fix typo in comment for raw_smp_processor_id()
-Cc: Boqun Feng <boqun.feng@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Cd096779819962c305b85cd12bda41b593e0981aa=2E17495?=
- =?utf-8?q?36622=2Egit=2Eviresh=2Ekumar=40linaro=2Eorg=3E?=
-References: =?utf-8?q?=3Cd096779819962c305b85cd12bda41b593e0981aa=2E174953?=
- =?utf-8?q?6622=2Egit=2Eviresh=2Ekumar=40linaro=2Eorg=3E?=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjqlRkjS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A6CC4CEE3;
+	Fri, 13 Jun 2025 12:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749819572;
+	bh=1GoZAGAypiB2oHd3pN/5VWptPj76Frs4MFiz1/rzIR4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DjqlRkjSqS4mtvE0BoZP79f0E6u+3WNmszFR8VjFFD2aCwZ15xjkAhJ8fpbOt43CR
+	 MZFOeHBWYZ5EqEVRW6wy741J9UBA4AP5Q4hauneLWNANRSRCwZW9AN/P6REch1et8Z
+	 tGjDseMijrNPgamzq06NS61zhF9jkoobMe5tnJzmp8MHU4p4ERROPUh/tD+618lRQp
+	 USno98Hg8mmJN46I+37znExqRzf8hDsLHZ/q32KhFx+CdmFp1550mf0ChHgJ3hk2JF
+	 OfN4cBW1kafDhd53rvo/d0elwoZsWm33lttAxxqYMDBV4/k9f/g4ITmzSl/rKGe+hf
+	 ez9rJQYWOaUmw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>
+Cc: Pratyush Yadav <ptyadav@amazon.de>,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH v2] kho: initialize tail pages for higher order folios properly
+Date: Fri, 13 Jun 2025 14:59:06 +0200
+Message-ID: <20250613125916.39272-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174981950839.406.6889829329461040913.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the smp/core branch of tip:
+From: Pratyush Yadav <ptyadav@amazon.de>
 
-Commit-ID:     09735f0624b494c0959f3327af009283567af320
-Gitweb:        https://git.kernel.org/tip/09735f0624b494c0959f3327af009283567af320
-Author:        Viresh Kumar <viresh.kumar@linaro.org>
-AuthorDate:    Tue, 10 Jun 2025 13:27:13 +05:30
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 13 Jun 2025 14:48:54 +02:00
+Currently, when restoring higher order folios, kho_restore_folio() only
+calls prep_compound_page() on all the pages. That is not enough to
+properly initialize the folios. The managed page count does not
+get updated, the reserved flag does not get dropped, and page count does
+not get initialized properly.
 
-smp: Fix typo in comment for raw_smp_processor_id()
+Restoring a higher order folio with it results in the following BUG with
+CONFIG_DEBUG_VM when attempting to free the folio:
 
-The comment in `smp.h` incorrectly refers to `raw_processor_id()`
-instead of the correct function name `raw_smp_processor_id()`.
+    BUG: Bad page state in process test  pfn:104e2b
+    page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
+    flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
+    raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
+    raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
+    page dumped because: nonzero _refcount
+    [...]
+    Call Trace:
+    <TASK>
+    dump_stack_lvl+0x4b/0x70
+    bad_page.cold+0x97/0xb2
+    __free_frozen_pages+0x616/0x850
+    [...]
 
-Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/all/d096779819962c305b85cd12bda41b593e0981aa.1749536622.git.viresh.kumar@linaro.org
+Combine the path for 0-order and higher order folios, initialize the
+tail pages with a count of zero, and call adjust_managed_page_count() to
+account for all the pages instead of just missing them.
 
+In addition, since all the KHO-preserved pages get marked with
+MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
+actually set (as can also be seen from the flags of the dumped page in
+the logs above). So drop the ClearPageReserved() calls.
+
+Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
+Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
 ---
- include/linux/smp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index f1aa095..bea8d28 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -234,7 +234,7 @@ static inline int get_boot_cpu_id(void)
- #endif /* !SMP */
- 
+Changes in v2:
+- Declare i in the loop instead of at the top.
+
+ kernel/kexec_handover.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index eb305e7e61296..ca525f794f6be 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
+ }
+
+ /* almost as free_reserved_page(), just don't free the page */
+-static void kho_restore_page(struct page *page)
++static void kho_restore_page(struct page *page, unsigned int order)
+ {
+-	ClearPageReserved(page);
+-	init_page_count(page);
+-	adjust_managed_page_count(page, 1);
++	unsigned int nr_pages = (1 << order);
++
++	/* Head page gets refcount of 1. */
++	set_page_count(page, 1);
++
++	/* For higher order folios, tail pages get a page count of zero. */
++	for (unsigned int i = 1; i < nr_pages; i++)
++		set_page_count(page + i, 0);
++
++	if (order > 0)
++		prep_compound_page(page, order);
++
++	adjust_managed_page_count(page, nr_pages);
+ }
+
  /**
-- * raw_processor_id() - get the current (unstable) CPU id
-+ * raw_smp_processor_id() - get the current (unstable) CPU id
-  *
-  * For then you know what you are doing and need an unstable
-  * CPU id.
+@@ -179,15 +189,10 @@ struct folio *kho_restore_folio(phys_addr_t phys)
+ 		return NULL;
+
+ 	order = page->private;
+-	if (order) {
+-		if (order > MAX_PAGE_ORDER)
+-			return NULL;
+-
+-		prep_compound_page(page, order);
+-	} else {
+-		kho_restore_page(page);
+-	}
++	if (order > MAX_PAGE_ORDER)
++		return NULL;
+
++	kho_restore_page(page, order);
+ 	return page_folio(page);
+ }
+ EXPORT_SYMBOL_GPL(kho_restore_folio);
+--
+2.47.1
+
