@@ -1,63 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEF1221D94;
-	Fri, 13 Jun 2025 17:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984D91F4722
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:23:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835327; cv=none; b=FWQ3zXI5/7k8s2lZN1szdV9AOSKKFsadjBLyT0pBENHVidWETOwfXoS2w7YLHgv8UXyEf9dlVEGc2rQqJVY9K/n2ZeeQrBob1SvtgwwANr03s1Tselo5wS8XHshm/GpUzSutypBwbDZqs960rJ0LIpz5DxiHPMBMuVfd3tol0Kg=
+	t=1749835429; cv=none; b=fEiDPvsSKejUKyKGkwHhoQJI4WN6fgzaSACse5RNH50Acscwur2DJ6QxX5MALZDE7kHep25/EKC2ZhDpMMwTjcbSC5ysGyc4t3GDIDGY5IdnV3Wl7PoY1U7bljr/X5FnE+1u2XG4a/AjgUITmJQz/kJRqzY1b/66gv/Z/A4Ffmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835327; c=relaxed/simple;
-	bh=vwBsTCNzuvd2dupHBYfyTfQ8bE4absbZ11K/tiCsRNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B71+T2GpOTn4rDOv2rvqX37t3ZkvhwjLFfzBPFcQHQ5vOW71H6ZhVeBAEqXXUQ19q24MYGPOnQr0G/9aGp13+La+zmLjwtzgYfp6ikeFz7TXK8q1LufMcevvFlrBarrcRdHk2s4x48C2eQWeroOM24HpsjlrhmBT6anZsjDREYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEsT7eRL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749835429; c=relaxed/simple;
+	bh=HX7rB/hdzAiZrq3LmcTmLMqD0D6Jl/2X1ww3IfEBpKo=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=e48N+DCv3MVpDrsa4r5kGB5XMkXjkyDaPasle8pBeCzoLaWLjDmfbTdB0coa0+2B/MGsQmmc3fov2B6XqbKl7HNetGhFU+QdsSzi+zK96WV5vFF1JJID3T3pN0eyP+J7su1EvbAsClcaiaDPnTBJq5vovszL5qnVhVr4cNGf83A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vLFOUddT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEsT7eRL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12C81C4CEE3;
-	Fri, 13 Jun 2025 17:22:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLFOUddT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2EF9C4CEE3;
+	Fri, 13 Jun 2025 17:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749835327;
-	bh=vwBsTCNzuvd2dupHBYfyTfQ8bE4absbZ11K/tiCsRNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MEsT7eRL6JrEIuku4A0EIVBooeMAO8jrzb2HeqEXKKjOeHx8i3OVLyniOOizD0jsS
-	 FZRERjS9f5/nWwQmlmGPMrjML6VUZsIuv0AHqou1jLGY2h2yGiYT7YtjPq8x9tQ2Gi
-	 en9AbvEZqRGwEroqPIAYt2bdu4Uqu5A4XNebI/1ga9brxLyYHNswSYe/mt2CP4x0ST
-	 043HMpkswX0cQ7GCBa2F7X53M+78goRhSQBkihJ95tRUeqXcaIGSRY8uHeMDn2GNy6
-	 DgFZiLgAA3OQ4efuWYekiFK1pJC8Y/tq4PiYiwza//T3Er8we0ky6GQtQfKpQURwNU
-	 juVVmcq/xKOgg==
-Date: Fri, 13 Jun 2025 18:22:03 +0100
-From: Simon Horman <horms@kernel.org>
-To: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, skhan@linuxfoundation.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v2 net-next] net: ipconfig: replace strncpy with strscpy
-Message-ID: <20250613172203.GO414686@horms.kernel.org>
-References: <20250612114859.2163-1-pranav.tyagi03@gmail.com>
+	s=k20201202; t=1749835429;
+	bh=HX7rB/hdzAiZrq3LmcTmLMqD0D6Jl/2X1ww3IfEBpKo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vLFOUddTROn0J41cF9YQLF/4EH8tfV5g/NHuEZ3jdRz1MRAOB6QL5Q21z9ovT4vPC
+	 OckRfcJazHsmnuKysV+n2nQhrTTp11DxIBY9R970fG4NbzH46BWZor2j9PsRViQsZZ
+	 w0ogAbBK3lelYlyIw53muUyK7a3AA9VkoyBW45LtvTf7kLDuO4jeGHfblGoF9w459m
+	 zNvZY11+QGuvw/vzT7aHhGiB5n/wbck5ls+SqzGdZEZdd89NayIakSQtSlDbGlt7XU
+	 vI/oxF4mjsf7xkpczwo8LTAYv2C11bboOg5IPiTWUf0vNjNZ7mtPNQdCDn7E3xy1qz
+	 WnuwrI2fETYHg==
+Message-ID: <ef1d8afdc37fb1279dfe0d367ffafb56.broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regulator fixes for v6.16-rc1
+Date: Fri, 13 Jun 2025 18:23:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612114859.2163-1-pranav.tyagi03@gmail.com>
 
-On Thu, Jun 12, 2025 at 05:18:59PM +0530, Pranav Tyagi wrote:
-> Replace the deprecated strncpy() with strscpy() as the destination
-> buffer is NUL-terminated and does not require any
-> trailing NUL-padding. Also increase the length to 252
-> as NUL-termination is guaranteed.
-> 
-> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 
-Hi Pranav,
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
 
-Thanks for the updated patch.
+are available in the Git repository at:
 
-I agree with your analysis above and that this patch is correct.
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.16-rc1
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+for you to fetch changes up to 06118ae36855b7d3d22688298e74a766ccf0cb7a:
+
+  regulator: max20086: Fix refcount leak in max20086_parse_regulators_dt() (2025-06-08 23:29:48 +0100)
+
+----------------------------------------------------------------
+regulator: Fix for v6.16
+
+One minor fix for a leak in the DT parsing code in the max20086 driver.
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      regulator: max20086: Fix refcount leak in max20086_parse_regulators_dt()
+
+ drivers/regulator/max20086-regulator.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
