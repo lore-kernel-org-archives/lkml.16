@@ -1,82 +1,78 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FA124C084
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 03:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6B81C5F2C;
+	Fri, 13 Jun 2025 03:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749785704; cv=none; b=mKpnxT+qLuc9EF9TgZA1HmA0K7MyWXm7i4zzUZijvJ7qLpRecFjkA5zNNvBEEL7BuwyfZcaM2nAsO1R+tXoSXN11pX9f1mbDZ9fQ5957ROc1HL9N+gec1PVynHdQmMjco5u/FTMZp7FmMi+t6M0zUsAvSszgJNCw3vo6KVqItzM=
+	t=1749785825; cv=none; b=Nqb8E0oNnE/nMsMwd9cRep3kfTh6L/WklhEwMET6ZdBTchRjcwjK1q/dc1T4ckbKjgbS77dw6aBeQwvlfeGiDy23xf4VCB2GvJAhNpBc7c+54bEC/45h/Gw9CPZ+TOp1wn1nbbFJWn3o5lchDq0pex1fuRB/ZLXyzymK2GKUpfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749785704; c=relaxed/simple;
-	bh=Vtzq4OfDOPaA3phKqXp3fNWmDWjUoNtA06G+mvdfVLo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Aque2T+12hOUJAjbkTLb/D+DyGoKUtnbA6abaUR++WO7lLyRZBxSJ7Q31R9MSa2iMZtnPSfsTBJe1/bHY+WgohIA8sAQQSYqVWxG+OBoUrLQErNsJ0lNqx4SLeMbeXbmTG2gUY4/QbLyZFKj7++qsQ/D994q+AiXjDb9mdzeKEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+9j67z9; arc=none smtp.client-ip=209.85.216.43
+	s=arc-20240116; t=1749785825; c=relaxed/simple;
+	bh=wNKMwlFkVR1w4IR5EJhRljPNniCJa6HZfnDC2dnCNAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h34RLKZpcp0/81JJCOIMIDRcGmMljJWMw7L+cdR1wq0n2jANS63DHQodpg+6UW+rQg59RbLsmsvtFq4tAdvUvbTl9XhqqEBNEoTOYB2sdxkiyTEEbW686pDRgcRp06orIQcZKrYznqmLVG4SZeQymPt8FVvfJBFZPQi198dubFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fEdP7HO8; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+9j67z9"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3135f3511bcso1467476a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:35:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEdP7HO8"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b2fc93728b2so1322615a12.0;
+        Thu, 12 Jun 2025 20:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749785702; x=1750390502; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MV4uFc6vVwWL/rbS0pW47KvDrxXYmYxSN6tuasAUz2c=;
-        b=g+9j67z9WuMMBF1YFFIRwT+q/JKOPZy0E5uwhIFRiqTFajU6i0pdeiUp3HwTQSLWdO
-         a8f1eXeYhUcJv/LycDWu8B2qC4yzNTgLLOCdNGsBCwNUV5/q6dz/3GvDYp3u5fRFTe/u
-         hO9k9YxmYkJoQDiXwequjcxJM9cNmzWjnKM5JiIMJ4Z7qzFTihs+z3B14mPFnKqzb6wh
-         xTB1Yz4Qc2Dvbh99AnMjTZc1Qu4JYCrjVxHLpbXLrr+MBazm8tX3LIm2R9Gmp3SRCv/t
-         bITug72BY7lDbLvjv59qr9GgMMReCYQ+48oUsU2AQa+CFHVFQJiMjhqUetQuIwHVQEuK
-         0KSg==
+        d=gmail.com; s=20230601; t=1749785823; x=1750390623; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4u4RmDCaFqCXce9oSxwMeAVYPY052nOMNt31DfVJ+ac=;
+        b=fEdP7HO82C+Wh3/kv3Winy6hG/Sbm5ZgN8Hx5AzD9yuJGLhq8Us7aWdaMs666KpM3S
+         5ep3CzmZm8UqJDIU3RNRfRCcIM1/UklSdzuY6E4sS1EVgwfa+WKfeI0uc/AcjFhAAzoM
+         cRETUUvBndt5y/ZRehF65tMM4XZwoSQE5ObiXKNHKTTE5ckkO4l3C5WtaJfeefUfQPmw
+         v35FXrW7uuxrsJqN6YxDdkSrwvoNkjIFlroZUTS3/JvI1t+SOeNclPQ5diJ12jUW9qNy
+         x/84RcCw4zPbuu7N+fhGK3isZB3+apO6MxSCN+yDCp6DUq2H6cfIbdsfHEUSNIkJag2b
+         VdcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749785702; x=1750390502;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MV4uFc6vVwWL/rbS0pW47KvDrxXYmYxSN6tuasAUz2c=;
-        b=N9W6iXeC1jvwB96KZEMEyCIc6m9aYX44vFQ0s/Ny0gCS9tnZtgqapSgbQoqf8xI/16
-         x6chnTAeP2cTZ4kbtMCQZGxW8Swc7LnB0vMobd3AfeYb5RQNARHwPspku0N4Uanbc99u
-         HG6EXUrAKvJEkUAHtIz8IZAZn5dIbcjVATYrP/WiM78JMPoEE1HkzO9yvPBLF2a9lVEd
-         bYbIVMeAxVgIR/2zX9ygrYGL5ny6dzRjFSx3+WKkVLKhyKOJYA/p7W0qBn3s0NN+Sj9N
-         oG0g524VIEzfFTOb+ZU0u87xxs+8mcM39wYiVXy+YhP8vwg06LI9oLJuS7BKt7m/nYrb
-         p/gw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWm1RW3bK18rIofrrGiUndDqwDscPnjo+zBv+84j2EKKy9Eku3zVNPBLxH5BXljjXAH2tNE0EaQ73LxN4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzmxw6ALNo0bOsNgACC4r/pOJlvauCgg7QunlsNF6c4EYBRT7aV
-	rct1e0LzaH79wvueC4KKe0YfredBfaZSlLVk4I1pZDBvqb1bCQNQzJvp
-X-Gm-Gg: ASbGncvR0G1geUUwsOM9nWP8cL1NlOCcZcd69L/yrGcpGzhc7uNi6GLDCWUSR2t5kaR
-	vqu7cz8mm+CZnBO4mD6H5p8C3ccZkRA4GZFqMdyh7LTI0COCm8jytIBUJ12RhWGh3zcFXUncUsk
-	RcmLigYEM6WiYWvQBJX5J2HMteosHh5Av7Hx9wcGvagNA9YxG767K0caUp+r3OfoHd86OikMY3R
-	tc2P9rK/qL6yJCoRJcjSJGt7rAu1rV7aH8kTmfFeeSnZ/3sFh8za4r/B0zQ6BV19VU4VsR5wwo1
-	6oFLQY2WX87uqSVMcUxA08FoRjimyuQauJMt8N9LsHA4yecWDrwYcKnDzqbXXFfr3L6/21/4tfA
-	Bo21n3tpJSjRz7KQ=
-X-Google-Smtp-Source: AGHT+IFBQD7BrhJhqNst/xSBfOtv3N+sY80Vdm7lbkC+9a42TrW8pSZIA5GyYozmcOrqH1QWVuN73g==
-X-Received: by 2002:a17:90b:3f88:b0:313:1e60:584e with SMTP id 98e67ed59e1d1-313d9c34df7mr2348709a91.9.1749785702170;
-        Thu, 12 Jun 2025 20:35:02 -0700 (PDT)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:873:d810:9d97:1c69])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19d1122sm2339081a91.13.2025.06.12.20.34.59
+        d=1e100.net; s=20230601; t=1749785823; x=1750390623;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4u4RmDCaFqCXce9oSxwMeAVYPY052nOMNt31DfVJ+ac=;
+        b=MNu6phODrgn4brVTVLHJnVIWCdEn2oNjgEzHcN8UY/tE9k3SXV3+RP3Z0xAmC6zcO2
+         uEaXfEovxX0Th0WO4yy95UWzHRy9tmiKvztSJ+3Wwdfs96vTDZ9sUqODpNy5mDwS+0Uh
+         iwRsv0b+84Ns5Pr/YMqXwG83dj87DwLojG7tZ0ElG/TYabmfdn3UtXXTzFymFd2+iM8W
+         vwaFT+70zWytK9bX1UDzH6JDGhp3+8HVVB7jAM5u3idRCmKstgAErv1j3oDEfcKz3o92
+         BTQvKV9SR56PheO5xHWmIkJQGo6rAXeio/xYtOs3qc8pvwz7XpLblhvcvEQBUNg+KxHu
+         jmrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWj6UiSO8KyA9FxngPrgwEduHQoNcQMDR6fHEPm8IeakmaR3KA77o5PybKSxEeRMBF+Z6x1RIu/opDV+EQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfyNzT904bqIehhnj+uwVBxF2UsHr+KeUpPo1jiAqe1M9yZFyh
+	FR3R/Y7hycDSDVQoMb+Y08LqNxjWfbD2aUkLNIsjcjTGZ72/2qhMkOKU
+X-Gm-Gg: ASbGncu8Qc/Pwdr3XeYSJEe5Y3gNCw+BI8NU06e9RfKGaLoovrPpd+p/4ywUnHb0M4q
+	uJMNgrgKTi4ZJ+qUmK48o3U92yioJ6DA+K6QVzWjT+Cx2cQ5jKxXx6BgsfQypIpkOFjJAyPim2U
+	Ls3+hO4TzqGdydBl1ccwS1J4wiCRM9ffeN9TNofBSVdm5oTyyaqFcttPL2a8bscqQyRXBIKN7N8
+	ggq72Qmy1DUGNWvGn3+IdFt4DIdfU/owYwsj3DFYQvABHDffF/xDeVDy/8sQU1Fr5xJo4ykXQCX
+	lmCm0ZnLdinlFgFGGs81wd9wO4pNqnKFnDJprb0t19Xs
+X-Google-Smtp-Source: AGHT+IFttDOPWPsjhIje6EHEtX+s/9DHzubRfrFbhH9LVIkOP2onLg/4lBspvLdpNlJqHk0gjwlNmA==
+X-Received: by 2002:a05:6a20:a120:b0:1f5:7b6f:f8e8 with SMTP id adf61e73a8af0-21facbc3512mr2008832637.6.1749785823157;
+        Thu, 12 Jun 2025 20:37:03 -0700 (PDT)
+Received: from fedora.. ([2601:646:8081:3770::f55])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe168ccafsm469267a12.55.2025.06.12.20.37.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 20:35:01 -0700 (PDT)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: yury.norov@gmail.com
-Cc: linux@rasmusvillemoes.dk,
-	jstultz@google.com,
-	tglx@linutronix.de,
-	sboyd@kernel.org,
+        Thu, 12 Jun 2025 20:37:02 -0700 (PDT)
+From: Collin Funk <collin.funk1@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	eleanor15x@gmail.com,
-	visitorckw@gmail.com,
-	jserv@ccns.ncku.edu.tw,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [RFC PATCH 2/2] clocksource: Use cpumask_first_but() in clocksource_verify_choose_cpus()
-Date: Fri, 13 Jun 2025 11:34:47 +0800
-Message-ID: <20250613033447.3531709-3-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250613033447.3531709-1-richard120310@gmail.com>
-References: <20250613033447.3531709-1-richard120310@gmail.com>
+	Collin Funk <collin.funk1@gmail.com>
+Subject: [PATCH] perf build: Specify that spellcheck should use the bash dialect.
+Date: Thu, 12 Jun 2025 20:36:38 -0700
+Message-ID: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,50 +81,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Utilize cpumask_first_but() helper instead of first using
-cpumask_first() and then cpumask_next(). The logic is the same here,
-using the new helper will make it more conscious.
+When someone has a global shellcheckrc file, for example at
+~/.config/shellcheckrc, with the directive 'shell=sh', building perf
+will fail with many shellcheck errors like:
 
-Use bloat-o-meter to check the impact on code size, the result is the
-same, does not have positive impact nor negative impact.
+    In tests/shell/base_probe/test_adding_kernel.sh line 294:
+    (( TEST_RESULT += $? ))
+    ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((..)) is undefined.
 
-$ ./scripts/bloat-o-meter vmlinux_old vmlinux_new
-add/remove: 0/0 grow/shrink: 0/0 up/down: 0/0 (0)
-Function                                     old     new   delta
-Total: Before=22590709, After=22590709, chg +0.00%
+    For more information:
+      https://www.shellcheck.net/wiki/SC3006 -- In POSIX sh, standalone ((..)) is...
+    make[5]: *** [tests/Build:91: tests/shell/base_probe/test_adding_kernel.sh.shellcheck_log] Error 1
 
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+Passing the '-s bash' option ensures that it runs correctly regardless
+of a developers global configuration.
+
+Signed-off-by: Collin Funk <collin.funk1@gmail.com>
 ---
-Generally speaking, I think this is just a small tweak on the code,
-making it more readable. However, no benefit in code size or performance
-as the implementation behind the helper is in fact the same as the one
-used here.
+ tools/perf/tests/Build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Maybe more tests should be done to ensure the change is solid, I hope to
-seek some suggestions from everyone who has any ideas, or this is enough
-then it's good.
-
-Best regards,
-I Hsin Cheng
----
- kernel/time/clocksource.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index bb48498ebb5a..12ff0c048570 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -323,9 +323,7 @@ static void clocksource_verify_choose_cpus(void)
- 		return;
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 2181f5a92148..26efc5d20f6c 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -89,7 +89,7 @@ endif
  
- 	/* Make sure to select at least one CPU other than the current CPU. */
--	cpu = cpumask_first(cpu_online_mask);
--	if (cpu == smp_processor_id())
--		cpu = cpumask_next(cpu, cpu_online_mask);
-+	cpu = cpumask_first_but(cpu_online_mask, smp_processor_id());
- 	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
- 		return;
- 	cpumask_set_cpu(cpu, &cpus_chosen);
+ $(OUTPUT)%.shellcheck_log: %
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
++	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+ 
+ perf-test-y += $(SHELL_TEST_LOGS)
+ 
 -- 
-2.43.0
+2.49.0
 
