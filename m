@@ -1,55 +1,55 @@
-Received: from mail-vs1-f73.google.com (mail-vs1-f73.google.com [209.85.217.73])
+Received: from mail-vk1-f202.google.com (mail-vk1-f202.google.com [209.85.221.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC2C2472BD
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBFA25332E
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846201; cv=none; b=IWvD9bF75BoU8GRudmdz8UFMv8HaW/jaUHBiTU5b1Lo0UuL55SSmgLSUHM/gVYhEOGNGOmBxTu4qA9birzJFEBAzoeqC/0XnFvkRZLf5PJ6O1alfEJ5BW7kIum8j2uoBbzED97T19oyNIOGNlNUrgJDDnoybojcQiAAXS8tPHC0=
+	t=1749846203; cv=none; b=SPH0VaBkF8ldJXjjN6YpaxkJ9TW3o+kut4ENoKkIv/OW1AtbKeirBF+DaRUO5OomYa0XksEjWyhTaasWeqop1yh35or3bJqTIAwNPFkSjWuykal/mZIyX4aNTuxcC1I21m2KwC5inlOlxoxQcmHepZcNS0emfs8eQGckyFRHfcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846201; c=relaxed/simple;
-	bh=/C++yCmsyoQoAQ/JFzedGKuseM7Tk6mR7YxlYpQd9Z4=;
+	s=arc-20240116; t=1749846203; c=relaxed/simple;
+	bh=FO11FlBpcoyN0qJCLIRan7Jv37YU92XK6pL5bj0fOKs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=E85Npf2VBF2hYqguBmHn6NN7IzI6Oy5JhaVa8ZDClDxCJorxaqqCJD4d7UTJ1HqXgr8qK/IyVOfpGjRqLa+80vqB4+QovioNtd7ngPdfZfVkQYxZiCHy1zsYtJzvjp/qjI1x76GIcLE73tXJMwWJM3tEs5iGycYguW6qdvO7pbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DI7O/op7; arc=none smtp.client-ip=209.85.217.73
+	 To:Cc:Content-Type; b=Z35pOwDdreYXwCLGgkef1EdhWYhQqUT97MV+humhLGtvibQy0lPjRfDMKkSxjmGVXMVtgu9JMuVhJeZS8gWlEDv+aCUWkg820cKxklB6weJJvUkEUICdJVPlbLKfNMDeCB2FVxsXduwIsfQHYZDwzFh6MdrnR8lCjKLJPqlJRPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IKnkoOsR; arc=none smtp.client-ip=209.85.221.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DI7O/op7"
-Received: by mail-vs1-f73.google.com with SMTP id ada2fe7eead31-4e2e3366df8so344236137.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:23:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IKnkoOsR"
+Received: by mail-vk1-f202.google.com with SMTP id 71dfb90a1353d-52aa2e08ce5so2078707e0c.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:23:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749846199; x=1750450999; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749846201; x=1750451001; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3qYYxlJUSy6v2zDI8TzsrBHHnn7rC00X6zn+VLpi9Eg=;
-        b=DI7O/op7sJjmj4UgMKY+hqp50fD6y+yELUDSegFrlN9qVyfEZfmdCL6hYrQfz8Sed2
-         fmwULYVQvcIKMQTUHzjWNgBe2s1rlSyx3TthyGsZJpADqtS9epQMkfSacSDCUjqM83CY
-         Ag+JBDnBnuaFCBpGXZPpQkEaDOLvr8OkPxdF+wS6nOxvd5DRvsqBZyRW71DkjJX04sE2
-         ZKEw24bsj3fKmXTvE/Iglv6uzQ85LOtYYwXek8uuc/T4XySMDbCdfyIuQD/D/aGd5yoc
-         /Je0VXioyz1csfrJlJ5dycq2+c/dfU7xhrWK3Z8PFO3pCgIMCmuxwyHVxTr4OQyfryIb
-         RroQ==
+        bh=tns2KslAWsQR/nPQ6ZJXfp49qOYXLA43OUirDZfOqnE=;
+        b=IKnkoOsRW6EMTN6YX7I1JSmTbe0FRtYlOe9986lS/NopW5YO82wU+yfQCI1ZV4uDmZ
+         LeCeJc8tSzXCjT6PKrK3WLTwUelJIaUR9I5AYugc0dwY6eZcPkMDG5YR4VEZ3sDzM0kI
+         nlAYvifP5aIamgt1lTCY8qVpj6EPDCUTpQaXBkPDog4+jk4bMy+LVg9N+Fl2Hg6+inzK
+         BWTht2kVqGdWtctanaXGa1juITOWQWMXwe2j1eGCIDzrBn2yhJMV/WdIGERC3/KmjGRE
+         7X0d9wKKcGEut+Uy8GzsNQ7eCMZO7Fyw2mqzaM0mbxwGutCljeyx3zsXUa3afGcSQfiJ
+         fGtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749846199; x=1750450999;
+        d=1e100.net; s=20230601; t=1749846201; x=1750451001;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3qYYxlJUSy6v2zDI8TzsrBHHnn7rC00X6zn+VLpi9Eg=;
-        b=nJcFFb/CDURwAbtccS0LYPXrjSdqpk1OY6qkLIJckRVYzPNbfV4M4BZja/99aE5wet
-         oDfRiCx5sj5mchMCexIQ4A/h+MiQnUw9EGTAfLrSknNPWeXlrhVpVkF1oxOXNcICkAv1
-         U08+Nn1B6+4WwUWbhUEBeQvOXi6B+fudSyR5vaY4aTyoRWribqj6sUHlCnaXHuLjw96R
-         XuKtKLnG5/FJJBY1h7rRJY6sqgJdCZH29eg8jfusAmx9KvFBJc8UXIexQQHhEZvDkF05
-         UQBrCuiR7awmpl9p2Vwd3Q7hFaWHrwuWlrpC6Lox2sGlixBwvLfyzth399WF3qk7IdZc
-         LtGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNgdY3ZWyHXP1pgBtz8jElhg3wA+51k+8Nb+MuJ3E+ricEMisfVgggCFsEHmNE57de6sPcd80Q7nuR2Aw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmhOnOv13iwYlopemYg+EvZYpVlrHMuRcCQ7ZjF46cHf2U+wBp
-	RseE080J9UrRrYHHocTDbprAMBOCwehbE0Cb8HWWvDpj850OqwrYkVroUd2gDXy7Wtnw4bux17p
-	IjZCw1/7b4MXAJ4bvRNdwGw==
-X-Google-Smtp-Source: AGHT+IFVJjORcfffmUQKREgb2IlI7UakEaV5K18PSnlHkSke00VMT7vSvDgcnELg5b1l3wOKG9x8pR03ScjPXHET
-X-Received: from vsbia14.prod.google.com ([2002:a05:6102:4b0e:b0:4e7:edf6:29b2])
+        bh=tns2KslAWsQR/nPQ6ZJXfp49qOYXLA43OUirDZfOqnE=;
+        b=nKjb13SGmm8YWLwxseJfaTl10Cq3p14z2oi/1X7xG/LvBbw0FoS0coqDzVkmH9N4sV
+         Ji7jT08XMWQjW5d+rrBJMpaKpbhVH6wM1ycYl/4G6bXUs1VzmZIE7sOEVxx9svzKx/5Z
+         crHH0KPfynRt05nKSLP8fDnv7nGlrY+vXcg6FEh01NB1a61RRp19CVADB0qxhR1eCw1s
+         INKaGrga+Oq7lW8wuMVFxpYxzlCdXlOxC7TMmgn7aNoSKbAK9hJIePG268JwqlZ9d6wB
+         FtC/IpUiXQcoR1Jd4P+l8LE1JOVbrnGyqNGK6oP8bdzPlHpZfLNeNnrjt2r0tsKMBrL9
+         ZmEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZZ1Ik3ZhEJsASje8U1hs72WMTibb6mAJXAI2m/YacKqfGLA2xd2AlljDTA+JPRhPxReQojIUoeFTfk/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5qfYDc9g1Iinr9Ll2r8J+YT0jYLkSG/oBU9StPKBlR1mPyilq
+	r7QC02DsyMuH+6p1DlD6U43NuMBVJKutmAWOcri9GrY+pm/6xZ+6E+iT0PkRSJseTUMqKsk9t4p
+	mW6fUDiHIzruJO6kbhC18HQ==
+X-Google-Smtp-Source: AGHT+IE2AQx+r5mFnTFXsLCm8eJaB2E2MRY6faMF06zh29GE98yh28la0+/4aThtedtzqMsKaDbt81D+v6hsHfy2
+X-Received: from vkbfs14.prod.google.com ([2002:a05:6122:3b8e:b0:52f:ecd3:a2fe])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6102:370c:b0:4df:8259:eab with SMTP id ada2fe7eead31-4e7f63c60ebmr1243215137.19.1749846199123;
- Fri, 13 Jun 2025 13:23:19 -0700 (PDT)
-Date: Fri, 13 Jun 2025 20:23:09 +0000
+ 2002:a05:6122:2789:b0:526:2210:5b68 with SMTP id 71dfb90a1353d-531494ba560mr1299111e0c.4.1749846200807;
+ Fri, 13 Jun 2025 13:23:20 -0700 (PDT)
+Date: Fri, 13 Jun 2025 20:23:11 +0000
 In-Reply-To: <20250613202315.2790592-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,71 +59,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250613202315.2790592-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
-Message-ID: <20250613202315.2790592-3-jthoughton@google.com>
-Subject: [PATCH v4 2/7] KVM: x86/mmu: Rename kvm_tdp_mmu_zap_sp() to better
- indicate its purpose
+Message-ID: <20250613202315.2790592-5-jthoughton@google.com>
+Subject: [PATCH v4 4/7] KVM: x86/mmu: Only grab RCU lock for nx hugepage
+ recovery for TDP MMU
 From: James Houghton <jthoughton@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
 Cc: Vipin Sharma <vipinsh@google.com>, David Matlack <dmatlack@google.com>, 
 	James Houghton <jthoughton@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Vipin Sharma <vipinsh@google.com>
+Now that we have separate paths for the TDP MMU, it is trivial to only
+grab rcu_read_lock() for the TDP MMU case. We do not need to grab it
+for the shadow MMU, as pages are not RCU-freed in that case.
 
-kvm_tdp_mmu_zap_sp() is only used for NX huge page recovery, so rename
-it to kvm_tdp_mmu_zap_possible_nx_huge_page(). In a future commit, this
-function will be changed to include logic specific to NX huge page
-recovery.
-
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
- arch/x86/kvm/mmu/mmu.c     | 2 +-
- arch/x86/kvm/mmu/tdp_mmu.c | 3 ++-
- arch/x86/kvm/mmu/tdp_mmu.h | 3 ++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index f44d7f3acc179..b074f7bb5cc58 100644
+index 10ba328b664d7..51df92973d574 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7607,7 +7607,7 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
- 		if (slot && kvm_slot_dirty_track_enabled(slot))
- 			unaccount_nx_huge_page(kvm, sp);
- 		else if (mmu_type == KVM_TDP_MMU)
--			flush |= kvm_tdp_mmu_zap_sp(kvm, sp);
-+			flush |= kvm_tdp_mmu_zap_possible_nx_huge_page(kvm, sp);
- 		else
- 			kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
- 		WARN_ON_ONCE(sp->nx_huge_page_disallowed);
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 48b070f9f4e13..19907eb04a9c4 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -925,7 +925,8 @@ static void tdp_mmu_zap_root(struct kvm *kvm, struct kvm_mmu_page *root,
- 	rcu_read_unlock();
+@@ -7577,17 +7577,18 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+ 	nx_huge_pages = &kvm->arch.possible_nx_huge_pages[mmu_type].pages;
+ 
+ 	rcu_idx = srcu_read_lock(&kvm->srcu);
+-	if (is_tdp)
++	if (is_tdp) {
+ 		read_lock(&kvm->mmu_lock);
+-	else
++		/*
++		 * Zapping TDP MMU shadow pages, including the remote TLB flush,
++		 * must be done under RCU protection, because the pages are
++		 * freed via RCU callback.
++		 */
++		rcu_read_lock();
++	} else {
+ 		write_lock(&kvm->mmu_lock);
++	}
+ 
+-	/*
+-	 * Zapping TDP MMU shadow pages, including the remote TLB flush, must
+-	 * be done under RCU protection, because the pages are freed via RCU
+-	 * callback.
+-	 */
+-	rcu_read_lock();
+ 
+ 	for ( ; to_zap; --to_zap) {
+ 		if (is_tdp)
+@@ -7635,25 +7636,26 @@ static void kvm_recover_nx_huge_pages(struct kvm *kvm,
+ 
+ 		if (need_resched() || rwlock_needbreak(&kvm->mmu_lock)) {
+ 			kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+-			rcu_read_unlock();
+ 
+-			if (is_tdp)
++			if (is_tdp) {
++				rcu_read_unlock();
+ 				cond_resched_rwlock_read(&kvm->mmu_lock);
+-			else
++				rcu_read_lock();
++			} else {
+ 				cond_resched_rwlock_write(&kvm->mmu_lock);
++			}
+ 
+ 			flush = false;
+-			rcu_read_lock();
+ 		}
+ 	}
+ 	kvm_mmu_remote_flush_or_zap(kvm, &invalid_list, flush);
+ 
+-	rcu_read_unlock();
+-
+-	if (is_tdp)
++	if (is_tdp) {
++		rcu_read_unlock();
+ 		read_unlock(&kvm->mmu_lock);
+-	else
++	} else {
+ 		write_unlock(&kvm->mmu_lock);
++	}
+ 	srcu_read_unlock(&kvm->srcu, rcu_idx);
  }
  
--bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp)
-+bool kvm_tdp_mmu_zap_possible_nx_huge_page(struct kvm *kvm,
-+					   struct kvm_mmu_page *sp)
- {
- 	u64 old_spte;
- 
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
-index 52acf99d40a00..bd62977c9199e 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.h
-+++ b/arch/x86/kvm/mmu/tdp_mmu.h
-@@ -64,7 +64,8 @@ static inline struct kvm_mmu_page *tdp_mmu_get_root(struct kvm_vcpu *vcpu,
- }
- 
- bool kvm_tdp_mmu_zap_leafs(struct kvm *kvm, gfn_t start, gfn_t end, bool flush);
--bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp);
-+bool kvm_tdp_mmu_zap_possible_nx_huge_page(struct kvm *kvm,
-+					   struct kvm_mmu_page *sp);
- void kvm_tdp_mmu_zap_all(struct kvm *kvm);
- void kvm_tdp_mmu_invalidate_roots(struct kvm *kvm,
- 				  enum kvm_tdp_mmu_root_types root_types);
 -- 
 2.50.0.rc2.692.g299adb8693-goog
 
