@@ -1,119 +1,78 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6B81C5F2C;
-	Fri, 13 Jun 2025 03:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D1B20E018
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 03:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749785825; cv=none; b=Nqb8E0oNnE/nMsMwd9cRep3kfTh6L/WklhEwMET6ZdBTchRjcwjK1q/dc1T4ckbKjgbS77dw6aBeQwvlfeGiDy23xf4VCB2GvJAhNpBc7c+54bEC/45h/Gw9CPZ+TOp1wn1nbbFJWn3o5lchDq0pex1fuRB/ZLXyzymK2GKUpfc=
+	t=1749786019; cv=none; b=kXN1TgdJ+4H5SN/26tRhgYtP5MDd6Ssn8HSHFCrXEMS8w4feXfjyOYzniELk6YEBr+D7yMRa7qfa0eKTWQE5fS8wFeT3NklLhCl9pbZbnhj/JxvMioyBsPAHsNUuCAcinVpHclFCY1M6BbbqqLxHgLy0/fYb+M/EF9PBY556yfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749785825; c=relaxed/simple;
-	bh=wNKMwlFkVR1w4IR5EJhRljPNniCJa6HZfnDC2dnCNAc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h34RLKZpcp0/81JJCOIMIDRcGmMljJWMw7L+cdR1wq0n2jANS63DHQodpg+6UW+rQg59RbLsmsvtFq4tAdvUvbTl9XhqqEBNEoTOYB2sdxkiyTEEbW686pDRgcRp06orIQcZKrYznqmLVG4SZeQymPt8FVvfJBFZPQi198dubFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fEdP7HO8; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749786019; c=relaxed/simple;
+	bh=fLcVpDCbE/6C30fzPDJZhmMsEXjlAvnVMrYWqOEtrfc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s8WNYCBFK0oS2zNpSuLF5Y53ZQ4HBsINvY/V21L4dTwVP7rGQj0x+gqkBO9s0Zkc4ZQpN9AnQI5fi8uKNdQUVAjDi85J+SfCgqDi0xrF3cRkAtjr9MZ6NO2GqT5sbmqtKlNdq3gou0NTSpJxkCEnN3RoM6mu+vhb9sNxtxcH5II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l695HTCI; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEdP7HO8"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b2fc93728b2so1322615a12.0;
-        Thu, 12 Jun 2025 20:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749785823; x=1750390623; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4u4RmDCaFqCXce9oSxwMeAVYPY052nOMNt31DfVJ+ac=;
-        b=fEdP7HO82C+Wh3/kv3Winy6hG/Sbm5ZgN8Hx5AzD9yuJGLhq8Us7aWdaMs666KpM3S
-         5ep3CzmZm8UqJDIU3RNRfRCcIM1/UklSdzuY6E4sS1EVgwfa+WKfeI0uc/AcjFhAAzoM
-         cRETUUvBndt5y/ZRehF65tMM4XZwoSQE5ObiXKNHKTTE5ckkO4l3C5WtaJfeefUfQPmw
-         v35FXrW7uuxrsJqN6YxDdkSrwvoNkjIFlroZUTS3/JvI1t+SOeNclPQ5diJ12jUW9qNy
-         x/84RcCw4zPbuu7N+fhGK3isZB3+apO6MxSCN+yDCp6DUq2H6cfIbdsfHEUSNIkJag2b
-         VdcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749785823; x=1750390623;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4u4RmDCaFqCXce9oSxwMeAVYPY052nOMNt31DfVJ+ac=;
-        b=MNu6phODrgn4brVTVLHJnVIWCdEn2oNjgEzHcN8UY/tE9k3SXV3+RP3Z0xAmC6zcO2
-         uEaXfEovxX0Th0WO4yy95UWzHRy9tmiKvztSJ+3Wwdfs96vTDZ9sUqODpNy5mDwS+0Uh
-         iwRsv0b+84Ns5Pr/YMqXwG83dj87DwLojG7tZ0ElG/TYabmfdn3UtXXTzFymFd2+iM8W
-         vwaFT+70zWytK9bX1UDzH6JDGhp3+8HVVB7jAM5u3idRCmKstgAErv1j3oDEfcKz3o92
-         BTQvKV9SR56PheO5xHWmIkJQGo6rAXeio/xYtOs3qc8pvwz7XpLblhvcvEQBUNg+KxHu
-         jmrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWj6UiSO8KyA9FxngPrgwEduHQoNcQMDR6fHEPm8IeakmaR3KA77o5PybKSxEeRMBF+Z6x1RIu/opDV+EQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfyNzT904bqIehhnj+uwVBxF2UsHr+KeUpPo1jiAqe1M9yZFyh
-	FR3R/Y7hycDSDVQoMb+Y08LqNxjWfbD2aUkLNIsjcjTGZ72/2qhMkOKU
-X-Gm-Gg: ASbGncu8Qc/Pwdr3XeYSJEe5Y3gNCw+BI8NU06e9RfKGaLoovrPpd+p/4ywUnHb0M4q
-	uJMNgrgKTi4ZJ+qUmK48o3U92yioJ6DA+K6QVzWjT+Cx2cQ5jKxXx6BgsfQypIpkOFjJAyPim2U
-	Ls3+hO4TzqGdydBl1ccwS1J4wiCRM9ffeN9TNofBSVdm5oTyyaqFcttPL2a8bscqQyRXBIKN7N8
-	ggq72Qmy1DUGNWvGn3+IdFt4DIdfU/owYwsj3DFYQvABHDffF/xDeVDy/8sQU1Fr5xJo4ykXQCX
-	lmCm0ZnLdinlFgFGGs81wd9wO4pNqnKFnDJprb0t19Xs
-X-Google-Smtp-Source: AGHT+IFttDOPWPsjhIje6EHEtX+s/9DHzubRfrFbhH9LVIkOP2onLg/4lBspvLdpNlJqHk0gjwlNmA==
-X-Received: by 2002:a05:6a20:a120:b0:1f5:7b6f:f8e8 with SMTP id adf61e73a8af0-21facbc3512mr2008832637.6.1749785823157;
-        Thu, 12 Jun 2025 20:37:03 -0700 (PDT)
-Received: from fedora.. ([2601:646:8081:3770::f55])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe168ccafsm469267a12.55.2025.06.12.20.37.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 20:37:02 -0700 (PDT)
-From: Collin Funk <collin.funk1@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Collin Funk <collin.funk1@gmail.com>
-Subject: [PATCH] perf build: Specify that spellcheck should use the bash dialect.
-Date: Thu, 12 Jun 2025 20:36:38 -0700
-Message-ID: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l695HTCI"
+Message-ID: <6543e8c9-5368-4861-aab0-47b839ffb701@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749786004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OK95Kex3pTKub48BpiYZovwebqHHH0GQqhXbdTXF7cE=;
+	b=l695HTCI7hsjUMMiMu9lHICk5i4Txm3dezyKjuZacNkbXHYCthKDAev0WYaJwV8NQ76RYI
+	MMLa504XZATYdfdyU27dZOZUBL0F7/ImHp8132p44JEE43rByFfyTZX6mozs30c46bvmZZ
+	5FwKlt49II7uJBUJiQ8SuPFR7FPjRQQ=
+Date: Fri, 13 Jun 2025 11:39:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: =?UTF-8?Q?Re=3A_=5BRFC_v2_00/11=5D_dm-pcache_=E2=80=93_persistent-m?=
+ =?UTF-8?Q?emory_cache_for_block_devices?=
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
+ dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250605142306.1930831-1-dongsheng.yang@linux.dev>
+ <dc019764-5128-526e-d8ea-effa78e37b39@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <dc019764-5128-526e-d8ea-effa78e37b39@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-When someone has a global shellcheckrc file, for example at
-~/.config/shellcheckrc, with the directive 'shell=sh', building perf
-will fail with many shellcheck errors like:
 
-    In tests/shell/base_probe/test_adding_kernel.sh line 294:
-    (( TEST_RESULT += $? ))
-    ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((..)) is undefined.
+On 2025/6/13 0:57, Mikulas Patocka wrote:
+> Hi
+>
+>
+> On Thu, 5 Jun 2025, Dongsheng Yang wrote:
+>
+>> Hi Mikulas and all,
+...
+>
+> Generally, the code doesn't seem bad. After reworking the out-of-memory
+> handling and replacing arbitrary waits with wait queues, I can merge it.
 
-    For more information:
-      https://www.shellcheck.net/wiki/SC3006 -- In POSIX sh, standalone ((..)) is...
-    make[5]: *** [tests/Build:91: tests/shell/base_probe/test_adding_kernel.sh.shellcheck_log] Error 1
+Hi Mikulas,
 
-Passing the '-s bash' option ensures that it runs correctly regardless
-of a developers global configuration.
+     Thanks for your review. I will go through and respond to your 
+review comments one by one over the next few days, before the next version.
 
-Signed-off-by: Collin Funk <collin.funk1@gmail.com>
----
- tools/perf/tests/Build | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 2181f5a92148..26efc5d20f6c 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -89,7 +89,7 @@ endif
- 
- $(OUTPUT)%.shellcheck_log: %
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-+	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
- 
- perf-test-y += $(SHELL_TEST_LOGS)
- 
--- 
-2.49.0
+Thanx
 
+Dongsheng
+
+>
+> Mikulas
+>
