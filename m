@@ -1,207 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2205720F079;
-	Fri, 13 Jun 2025 16:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2483BB48;
+	Fri, 13 Jun 2025 16:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749831568; cv=none; b=NXVFjWoCbLR8p/wXyJWZNE1cvgo09aq8tiZbsRDFK4KOVdyWiLnydaAxl7Wy108sIKiUoqpZ4StGArKJ/lDgWLVMLMQ1R0e84FwLaAlq6gKeaP6AQ0qDmVqSgnIh7G97vYGnowW3Q9VhJExObaEtWgqENOHrJR1EVsZ/SjbrR2A=
+	t=1749831620; cv=none; b=XDqyRKpLmV+qaRI8MllMhcXR2F7dxA8FiTIGFiG97D8SdeaJTHp53cCNZ45Bpc/mJKwJVxRxQ7C8lDqCyrC0wuNjAOpCcKlWY6RB551NPNN9q1R5gNAG/Z14y9cfCCRbEc7i4M6ocQbpv8A/khraSIxfQafgCwTnGWixRbgECdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749831568; c=relaxed/simple;
-	bh=lA01gUMjFLrT+EPuMprAzxxtzaJPHgIPj1gJ4a71blo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rJdshqgiE96cE4Ytp25j1NirSs752suwZB/fMtohuN+gQs5Dn33WWV8fT9JaAuoOQBo/c1sKh/e8opVhWC22KpYtjBJmErulQD9na+14wtZ9QnEGPNqy3/YZ41M/iXE0J/qOfmiQ3mEkXZP2aEiYKlk3cX75MxtZWCO9eM2Djyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CstMtbds; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749831620; c=relaxed/simple;
+	bh=CNErbTXB19qmacs6+xkbQ/5C0W3lKEIyxjPb4zKkg1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MQ6ie2yG3z2Tu45ttahImr4MffXAsw5SwfV6fIejOsiu9zgss9/0/VwngPt9BjXmUll7mlpd7aNmlvJfFXwcDW27dLNBDxINK2zmf09oBDpn9eHpqWP2UyvLCbHa5I7r2W18B7vefHWXnF7eL2u6E6yR2NbfA+TEREEtUNmVKkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=gbmiJziu; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CstMtbds"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749831568; x=1781367568;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lA01gUMjFLrT+EPuMprAzxxtzaJPHgIPj1gJ4a71blo=;
-  b=CstMtbdsG0A0dLWaoJY5nhfBGteltzVbpC0hP1t5RxX9T5LVsnpqXjYi
-   I2lpoHmBT4PFlLfSTf/XEOoe2ncK1Rd73xpOC6kBBjO+sH0BR89hSQfaS
-   o+3raXg/96Zd93YKFWnbsVnmL26NTZ7ZXg7GOeIqIFntOzSBgjqY7WzHZ
-   LpGF3dz8JR5NbYSBDpcbc9jQGlBxrw7ehRNL7J3ZcZvvpbfgFXc0vSHMX
-   7p6Aus/y5waglkoCWKSd6wxgzKL5P+31Eqbo8jmZj3J2ZY74EbHCkdClT
-   xuxmZCTPhmFLXGNrO9SBdtjjvZq+Rgj2nHuKkz2IY2ZN6Iz0spmws2xk9
-   A==;
-X-CSE-ConnectionGUID: 1ctB+sFLRs2YjMG2amNzng==
-X-CSE-MsgGUID: Xrp4FCpdR0OMoZeoWhOcwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="52149244"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="52149244"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:19:28 -0700
-X-CSE-ConnectionGUID: mAVOzOJMSTyScXj0PaRaYg==
-X-CSE-MsgGUID: f0LK/4uLQiWYbgvVIfdrUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="147859291"
-Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
-  by orviesa009.jf.intel.com with ESMTP; 13 Jun 2025 09:19:24 -0700
-From: Yi Sun <yi.sun@intel.com>
-To: dave.jiang@intel.com,
-	vinicius.gomes@intel.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yi.sun@intel.com,
-	gordon.jin@intel.com,
-	fenghuay@nvidia.com,
-	anil.s.keshavamurthy@intel.com,
-	philip.lantz@intel.com
-Subject: [PATCH 2/2] dmaengine: idxd: Add Max SGL Size Support for DSA3.0
-Date: Sat, 14 Jun 2025 00:18:34 +0800
-Message-ID: <20250613161834.2912353-3-yi.sun@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250613161834.2912353-1-yi.sun@intel.com>
-References: <20250613161834.2912353-1-yi.sun@intel.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="gbmiJziu"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4bJl3v13Y4zm0yst;
+	Fri, 13 Jun 2025 16:20:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1749831609; x=1752423610; bh=CNErbTXB19qmacs6+xkbQ/5C
+	0W3lKEIyxjPb4zKkg1E=; b=gbmiJziue20r5dFW8Xxl9VhoPK4ydfn7ypM2sCED
+	GHNb7a658Z3BHUECI/vxwRFgDDvl7uu98cvOmkFJHovv5KkJHW0QmYkAk7mkGBLs
+	yGUGeRhYmoe4+V85a5HK1bPXRrWmvxJmbOhMXsLbllgjFIbgYbXJzJtyuUYLnA4k
+	PdZDKN2eGFl6CkFbWQ20qyV0XNgIHmox1qcjyCDvhxIyWf5bWnXXOnoHpsSsi25I
+	RFPmrLJ1HehlOnLlcPWbr3j4eIUMSLx8AiobfzExDPvmGCGToX+Y5scDlB4rUeTy
+	LQXODrojt06aBK1n2EKgApLO/oO8iTSNpshfqsv9rJvLEA==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id XbKdJ0pP__oj; Fri, 13 Jun 2025 16:20:09 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4bJl3m2Cr8zm1HbX;
+	Fri, 13 Jun 2025 16:20:02 +0000 (UTC)
+Message-ID: <07975e85-2424-4ae9-8f31-d689c09d21dc@acm.org>
+Date: Fri, 13 Jun 2025 09:20:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: ufs: core: Do clk scaling conditionally in reset
+ and restore
+To: Anvith Dosapati <anvithdosapati@google.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, manugautam@google.com, vamshigajjela@google.com
+References: <20250613103140.1121621-1-anvithdosapati@google.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250613103140.1121621-1-anvithdosapati@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Certain DSA 3.0 opcodes, such as Gather copy and Gather reduce requires max
-SGL configured for workqueues prior to support these opcodes.
+On 6/13/25 3:31 AM, Anvith Dosapati wrote:
+> In ufshcd_host_reset_and_restore, scale up clocks only when clock
+> scaling is supported. Without this change cpu latency is voted for 0
+> (ufshcd_pm_qos_update) during resume unconditionally.
+Since this patch is a bug fix, please add "Cc: stable@vger.kernel.org"
+and "Fixes:" tags. See also Documentation/process/stable-kernel-rules.rst
+in the kernel tree.
 
-Configure the maximum scatter-gather list (SGL) size for workqueues during
-setup on the supported HW. Application can then properly handle the SGL
-size without explicitly setting it.
+Thanks,
 
-Signed-off-by: Yi Sun <yi.sun@intel.com>
-Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 5cf419fe6b46..1c10b030bea7 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -375,6 +375,7 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
- 	memset(wq->name, 0, WQ_NAME_SIZE);
- 	wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
- 	idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-+	idxd_wq_set_init_max_sgl_size(idxd, wq);
- 	if (wq->opcap_bmap)
- 		bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
- }
-@@ -974,6 +975,8 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	/* bytes 12-15 */
- 	wq->wqcfg->max_xfer_shift = ilog2(wq->max_xfer_bytes);
- 	idxd_wqcfg_set_max_batch_shift(idxd->data->type, wq->wqcfg, ilog2(wq->max_batch_size));
-+	if (idxd_sgl_supported(idxd))
-+		wq->wqcfg->max_sgl_shift = ilog2(wq->max_sgl_size);
- 
- 	/* bytes 32-63 */
- 	if (idxd->hw.wq_cap.op_config && wq->opcap_bmap) {
-@@ -1152,6 +1155,8 @@ static int idxd_wq_load_config(struct idxd_wq *wq)
- 
- 	wq->max_xfer_bytes = 1ULL << wq->wqcfg->max_xfer_shift;
- 	idxd_wq_set_max_batch_size(idxd->data->type, wq, 1U << wq->wqcfg->max_batch_shift);
-+	if (idxd_sgl_supported(idxd))
-+		wq->max_sgl_size = 1U << wq->wqcfg->max_sgl_shift;
- 
- 	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
- 		wqcfg_offset = WQCFG_OFFSET(idxd, wq->id, i);
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index cc0a3fe1c957..fe5af50b58a4 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -227,6 +227,7 @@ struct idxd_wq {
- 	char name[WQ_NAME_SIZE + 1];
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+	u32 max_sgl_size;
- 
- 	/* Lock to protect upasid_xa access. */
- 	struct mutex uc_lock;
-@@ -348,6 +349,7 @@ struct idxd_device {
- 
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+	u32 max_sgl_size;
- 	int max_groups;
- 	int max_engines;
- 	int max_rdbufs;
-@@ -692,6 +694,20 @@ static inline void idxd_wq_set_max_batch_size(int idxd_type, struct idxd_wq *wq,
- 		wq->max_batch_size = max_batch_size;
- }
- 
-+static bool idxd_sgl_supported(struct idxd_device *idxd)
-+{
-+	return idxd->hw.dsacap0.sgl_formats &&
-+	       idxd->data->type == IDXD_TYPE_DSA &&
-+	       idxd->hw.version >= DEVICE_VERSION_3;
-+}
-+
-+static inline void idxd_wq_set_init_max_sgl_size(struct idxd_device *idxd,
-+						 struct idxd_wq *wq)
-+{
-+	if (idxd_sgl_supported(idxd))
-+		wq->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-+}
-+
- static inline void idxd_wqcfg_set_max_batch_shift(int idxd_type, union wqcfg *wqcfg,
- 						  u32 max_batch_shift)
- {
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index cc8203320d40..f37a7d7b537a 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -217,6 +217,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 		init_completion(&wq->wq_resurrect);
- 		wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
- 		idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-+		idxd_wq_set_init_max_sgl_size(idxd, wq);
- 		wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
- 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
- 		if (!wq->wqcfg) {
-@@ -585,6 +586,10 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 	idxd->hw.dsacap0.bits = ioread64(idxd->reg_base + IDXD_DSACAP0_OFFSET);
- 	idxd->hw.dsacap1.bits = ioread64(idxd->reg_base + IDXD_DSACAP1_OFFSET);
- 	idxd->hw.dsacap2.bits = ioread64(idxd->reg_base + IDXD_DSACAP2_OFFSET);
-+	if (idxd_sgl_supported(idxd)) {
-+		idxd->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-+		dev_dbg(dev, "max sgl size: %u\n", idxd->max_sgl_size);
-+	}
- 
- 	/* read iaa cap */
- 	if (idxd->data->type == IDXD_TYPE_IAX && idxd->hw.version >= DEVICE_VERSION_2)
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 45485ecd7bb6..0401cfc95f27 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -385,7 +385,8 @@ union wqcfg {
- 		/* bytes 12-15 */
- 		u32 max_xfer_shift:5;
- 		u32 max_batch_shift:4;
--		u32 rsvd4:23;
-+		u32 max_sgl_shift:4;
-+		u32 rsvd4:19;
- 
- 		/* bytes 16-19 */
- 		u16 occupancy_inth;
-@@ -585,6 +586,15 @@ union evl_status_reg {
- 
- #define IDXD_DSACAP0_OFFSET		0x180
- union dsacap0_reg {
-+	struct {
-+		u64 max_sgl_shift:4;
-+		u64 max_gr_block_shift:4;
-+		u64 ops_inter_domain:7;
-+		u64 rsvd1:17;
-+		u64 sgl_formats:16;
-+		u64 max_sg_process:8;
-+		u64 rsvd2:8;
-+	};
- 	u64 bits;
- };
- 
--- 
-2.43.0
-
+Bart.
