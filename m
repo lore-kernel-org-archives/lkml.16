@@ -1,180 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8C223F295;
-	Fri, 13 Jun 2025 02:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C213823BD0E;
+	Fri, 13 Jun 2025 02:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749782501; cv=none; b=ZZwvIawxHMLAjN+E/oB5WsG0iHD0Rz4KEM6Tb1qGJ7mKZSz7vYDx0JLQnfP5VLfAMuY8TeeAOcfcnol74mTsbibeUj/tgMv+kFm/f5W/Za8KeKffKOwD2/QQq96WF3ovlEUfOLMzc2MILGNi1woHc+fRm251osoZdARMNFh5gio=
+	t=1749782537; cv=none; b=bfUTD9FvycDlB6eEQoFJ+ytF9QsyeH8JKeqCGmjCn0awP56AGiXw/joq45O/WaNo3vREmKT507jyXjXKH9hiEEAJOHIPspOy/2hKSI8QAlTxC5EeJyePAChd2IBaiywnNCa1mCpKVIg8RFPgi1nCWTODbyjMZJchbWiw65qx2OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749782501; c=relaxed/simple;
-	bh=xxMW1F3z8YTMbeMxNGREpHep1LR4U/Fx58cvLnL+z8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=equphCih3msJw3yg6HWlWp53eJ3MPu3DVBPuinwDGA8lkmSn9GYgM91XSLBhWbeuGvo6vkc/3RlmC+nXnrj0D7nnGtCi0B0sZpoaRUM+JXyUBWlC7y9BkCw3oIs6MAyRr1xW50UHLJB87kyKj9JDkFjNNiChIsAvCrzTBWNc1zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S2eVGnWZ; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749782537; c=relaxed/simple;
+	bh=pqYRi5rsk0YEszupuD4KYmkxKG16OeKfIyH7C27eGoY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kGokbXOcntozv+WPSsHG32IC0YI3AslTY03U7S7FQqNbQcfH7t8vPHWq60Yccq0rqO9sXZgpnPvWly9CACnqe8ba2OCD5ZwWxkXqIGrsYNt3NeUasoEHC0wCXKcMHhkZQkY7gEC2pIgp0AWLelqi28U/htPTpA1D/jw6XvOck7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gCLGVge/; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S2eVGnWZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749782500; x=1781318500;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xxMW1F3z8YTMbeMxNGREpHep1LR4U/Fx58cvLnL+z8w=;
-  b=S2eVGnWZVQE796ppV/ZEynSaiIel3YSOzoxjt6dhnjxjmhzqAbxygvV/
-   qX/k53j1awjp3AzPt07TnLDVoO3FV+xyQrGwlKRXkRUth1VYowvYaltuJ
-   pzj+ccCy87w6dPa81AH/xsUISlI9PIKryo/g+pI5ZvsyRZy51ZRWvA3uU
-   RV/MYi0dnHjJ6+Pa7e246BbAiHA/U2QaaIrhhNexeqH59XOGv8MTU+2Fs
-   xmpeGZTPeaOS8eFQjoEN6nnvHotoJaASH4QTB5cKYMaXcp6MSqNsuG+OI
-   eGmu/j23Fz/fLKsmPFycamRVyEpW8l+iW/bf1YP7WuZFtEsjMtC9zfO38
-   w==;
-X-CSE-ConnectionGUID: jbyxuoHaSnKYYMgzzCRPlA==
-X-CSE-MsgGUID: Ql1IEAKYRFuvoyOu4jwc3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69431806"
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="69431806"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 19:41:31 -0700
-X-CSE-ConnectionGUID: sqDyY4HWSey42Ikpx0U4pA==
-X-CSE-MsgGUID: agk3eGefSRub+qh/FKVIVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="147554400"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 19:41:24 -0700
-Message-ID: <3a7e883a-440f-4bec-a592-ac3af4cb1677@intel.com>
-Date: Fri, 13 Jun 2025 10:41:21 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gCLGVge/"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749782525; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=5315MvZb0AmJ1EAMaqLXjh4G4D6FqiZehEP9DArwnIU=;
+	b=gCLGVge/+e6yz2RDY+ZQl34poWPRvFkzYIHfUCH8rYr54CSiVr2s3BLv/9aK3PeSSK/o/zqgDgwC1QP62suZfaCazQbSWz6NUnv0g5PVqS81L8J9QcMgwhf4AK/STStS9XDfBxVz/6CYWdRFQLU19hPZ+7oeM6JF1PDGxpp/lA4=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0Wdisood_1749782522 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Jun 2025 10:42:03 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Bijan Tabatabai <bijan311@gmail.com>,  SeongJae Park <sj@kernel.org>
+Cc: damon@lists.linux.com,  linux-mm@kvack.org,  linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  akpm@linux-foundation.org,
+  corbet@lwn.net,  david@redhat.com,  ziy@nvidia.com,
+  matthew.brost@intel.com,  joshua.hahnjy@gmail.com,  rakie.kim@sk.com,
+  byungchul@sk.com,  gourry@gourry.net,  apopple@nvidia.com,
+  bijantabatab@micron.com,  venkataravis@micron.com,  emirakhur@micron.com,
+  ajayjoshi@micron.com,  vtavarespetr@micron.com
+Subject: Re: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data
+ across nodes
+In-Reply-To: <20250612234942.3612-1-sj@kernel.org> (SeongJae Park's message of
+	"Thu, 12 Jun 2025 16:49:42 -0700")
+References: <20250612234942.3612-1-sj@kernel.org>
+Date: Fri, 13 Jun 2025 10:41:50 +0800
+Message-ID: <875xh0747l.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 09/21] KVM: TDX: Enable 2MB mapping size after TD is
- RUNNABLE
-To: Sean Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>
-Cc: Yan Y Zhao <yan.y.zhao@intel.com>,
- Rick P Edgecombe <rick.p.edgecombe@intel.com>,
- Kirill Shutemov <kirill.shutemov@intel.com>, Fan Du <fan.du@intel.com>,
- Dave Hansen <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>,
- Zhiquan Li <zhiquan1.li@intel.com>,
- "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
- "tabba@google.com" <tabba@google.com>,
- "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Ira Weiny <ira.weiny@intel.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>,
- "michael.roth@amd.com" <michael.roth@amd.com>,
- "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
- "ackerleytng@google.com" <ackerleytng@google.com>,
- Chao P Peng <chao.p.peng@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- Vishal Annapurve <vannapurve@google.com>, "jroedel@suse.de"
- <jroedel@suse.de>, Jun Miao <jun.miao@intel.com>,
- "pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
- <20250424030618.352-1-yan.y.zhao@intel.com>
- <dc20a7338f615d34966757321a27de10ddcbeae6.camel@intel.com>
- <c19b4f450d8d079131088a045c0821eeb6fcae52.camel@intel.com>
- <aCcIrjw9B2h0YjuV@yzhao56-desk.sh.intel.com>
- <c98cbbd0d2a164df162a3637154cf754130b3a3d.camel@intel.com>
- <aCrsi1k4y8mGdfv7@yzhao56-desk.sh.intel.com>
- <f9a2354f8265efb9ed99beb871e471f92adf133f.camel@intel.com>
- <aCxMtjuvYHk2oWbc@yzhao56-desk.sh.intel.com>
- <119e40ecb68a55bdf210377d98021683b7bda8e3.camel@intel.com>
- <aEmVa0YjUIRKvyNy@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <aEmVa0YjUIRKvyNy@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-On 6/11/2025 10:42 PM, Sean Christopherson wrote:
-> On Tue, May 20, 2025, Kai Huang wrote:
->> On Tue, 2025-05-20 at 17:34 +0800, Zhao, Yan Y wrote:
->>> On Tue, May 20, 2025 at 12:53:33AM +0800, Edgecombe, Rick P wrote:
->>>> On Mon, 2025-05-19 at 16:32 +0800, Yan Zhao wrote:
->>>>>> On the opposite, if other non-Linux TDs don't follow 1G->2M->4K
->>>>>> accept order, e.g., they always accept 4K, there could be *endless
->>>>>> EPT violation* if I understand your words correctly.
->>>>>>
->>>>>> Isn't this yet-another reason we should choose to return PG_LEVEL_4K
->>>>>> instead of 2M if no accept level is provided in the fault?
->>>>> As I said, returning PG_LEVEL_4K would disallow huge pages for non-Linux TDs.
->>>>> TD's accept operations at size > 4KB will get TDACCEPT_SIZE_MISMATCH.
->>>>
->>>> TDX_PAGE_SIZE_MISMATCH is a valid error code that the guest should handle. The
->>>> docs say the VMM needs to demote *if* the mapping is large and the accept size
->>>> is small.
-> 
-> No thanks, fix the spec and the TDX Module.  Punting an error to the VMM is
-> inconsistent, convoluted, and inefficient.
-> 
-> Per "Table 8.2: TDG.MEM.PAGE.ACCEPT SEPT Walk Cases":
-> 
->    S-EPT state         ACCEPT vs. Mapping Size         Behavior
->    Leaf SEPT_PRESENT   Smaller                         TDACCEPT_SIZE_MISMATCH
->    Leaf !SEPT_PRESENT  Smaller                         EPT Violation <=========================|
->    Leaf DONT_CARE      Same                            Success                                 | => THESE TWO SHOULD MATCH!!!
->    !Leaf SEPT_FREE     Larger                          EPT Violation, BECAUSE THERE'S NO PAGE  |
->    !Leaf SEPT_FREE     Larger                          TDACCEPT_SIZE_MISMATCH <================|
-> 
-> 
-> If ACCEPT is "too small", an EPT violation occurs.  But if ACCEPT is "too big",
-> a TDACCEPT_SIZE_MISMATCH error occurs.  That's asinine.
-> 
-> The only reason that comes to mind for punting the "too small" case to the VMM
-> is to try and keep the guest alive if the VMM is mapping more memory than has
-> been enumerated to the guest.  E.g. if the guest suspects the VMM is malicious
-> or buggy.  IMO, that's a terrible reason to push this much complexity into the
-> host.  It also risks godawful boot times, e.g. if the guest kernel is buggy and
-> accepts everything at 4KiB granularity.
-> 
-> The TDX Module should return TDACCEPT_SIZE_MISMATCH and force the guest to take
-> action, not force the hypervisor to limp along in a degraded state.  If the guest
-> doesn't want to ACCEPT at a larger granularity, e.g. because it doesn't think the
-> entire 2MiB/1GiB region is available, then the guest can either log a warning and
-> "poison" the page(s), or terminate and refuse to boot.
-> 
-> If for some reason the guest _can't_ ACCEPT at larger granularity, i.e. if the
-> guest _knows_ that 2MiB or 1GiB is available/usable but refuses to ACCEPT at the
-> appropriate granularity, then IMO that's firmly a guest bug.
+SeongJae Park <sj@kernel.org> writes:
 
-It might just be guest doesn't want to accept a larger level instead of 
-can't. Use case see below.
+> Hi Bijan,
+>
+> On Thu, 12 Jun 2025 13:13:26 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+>
+>> From: Bijan Tabatabai <bijantabatab@micron.com>
+>> 
+>> A recent patch set automatically set the interleave weight for each node
+>> according to the node's maximum bandwidth [1]. In another thread, the patch
+>> set's author, Joshua Hahn, wondered if/how these weights should be changed
+>> if the bandwidth utilization of the system changes [2].
+>
+> Thank you for sharing the background.  I do agree it is an important question.
+>
+>> 
+>> This patch set adds the mechanism for dynamically changing how application
+>> data is interleaved across nodes while leaving the policy of what the
+>> interleave weights should be to userspace. It does this by adding a new
+>> DAMOS action: DAMOS_INTERLEAVE. We implement DAMOS_INTERLEAVE with both
+>> paddr and vaddr operations sets. Using the paddr version is useful for
+>> managing page placement globally. Using the vaddr version limits tracking
+>> to one process per kdamond instance, but the va based tracking better
+>> captures spacial locality.
+>> 
+>> DAMOS_INTERLEAVE interleaves pages within a region across nodes using the
+>> interleave weights at /sys/kernel/mm/mempolicy/weighted_interleave/node<N>
+>> and the page placement algorithm in weighted_interleave_nid via
+>> policy_nodemask.
+>
+> So, what DAMOS_INTERLEAVE will do is, migrating pages of a given DAMON region
+> into multiple nodes, following interleaving weights, right?
 
-> If there's a *legitimate* use case where the guest wants to ACCEPT a subset of
-> memory, then there should be an explicit TDCALL to request that the unwanted
-> regions of memory be unmapped.  Smushing everything into implicit behavior has
-> obvioulsy created a giant mess.
+Hi, Bijan,
 
-Isn't the ACCEPT with a specific level explicit? Note that ACCEPT is not 
-only for the case that VMM has already mapped page and guest only needs 
-to accept it to make it available, it also works for the case that guest 
-requests VMM to map the page for a gpa (at specific level) then guest 
-accepts it.
+It's hard for me to understand what you want to do in your original
+patch description.  SeongJae's description is helpful.  So, can you add
+more description in the future version?
 
-Even for the former case, it is understandable for behaving differently 
-for the "too small" and "too big" case. If the requested accept level is 
-"too small", VMM can handle it by demoting the page to satisfy guest. 
-But when the level is "too big", usually the VMM cannot map the page at 
-a higher level so that ept violation cannot help. I admit that it leads 
-to the requirement that VMM should always try to map the page at the 
-highest available level, if the EPT violation is not caused by ACCEPT 
-which contains a desired mapping level.
+So, you will migrate allocated pages to follow new weight?  How to
+interact with the weight specified by users explicitly?  Usually we will
+respect explicit user policy.
 
-As for the scenario, the one I can think of is, guest is trying to 
-convert a 4K sized page between private and shared constantly, for 
-testing purpose. Guest knows that if accepting the gpa at higher level, 
-it takes more time. And when convert it to shared, it triggers DEMOTE 
-and more time. So for better performance, guest just calls ACCEPT with 
-4KB page. However, VMM returns PAGE_SIZE_MATCH and enforces guest to 
-accept a bigger size. what a stupid VMM.
+> We already have
+> DAMOS actions for migrating pages of a given DAMON region, namely
+> DAMOS_MIGRATE_{HOT,COLD}.  The actions support only single migration target
+> node, though.  To my perspective, hence, DAMOS_INTERLEAVE looks like an
+> extended version of DAMOS_MIGRATE_{HOT,COLD} for flexible target node
+> selections.  In a way, DAMOS_INTERLEAVE is rather a restricted version of
+> DAMOS_MIGRATE_{HOT,COLD}, since it prioritizes only hotter regions, if I read
+> the second patch correctly.
+>
+> What about extending DAMOS_MIGRATE_{HOT,COLD} to support your use case?  For
+> example, letting users enter special keyword, say, 'weighted_interleave' to
+> 'target_nid' DAMON sysfs file.  In the case, DAMOS_MIGRATE_{HOT,COLD} would
+> work in the way you are implementing DAMOS_INTERLEAVE.
+>
+>> We chose to reuse the mempolicy weighted interleave
+>> infrastructure to avoid reimplementing code. However, this has the awkward
+>> side effect that only pages that are mapped to processes using
+>> MPOL_WEIGHTED_INTERLEAVE will be migrated according to new interleave
+>> weights. This might be fine because workloads that want their data to be
+>> dynamically interleaved will want their newly allocated data to be
+>> interleaved at the same ratio.
+>
+> Makes sense to me.  I'm not very familiar with interleaving and memory policy,
+> though.
+>
+>> 
+>> If exposing policy_nodemask is undesirable,
+>
+> I see you are exposing it on include/linux/mempolicy.h on the first patch of
+> this series, and I agree it is not desirable to unnecessarily expose functions.
+> But you could reduce the exposure by exporting it on mm/internal.h instead.
+> mempolicy maitnainers and reviewers who you kindly Cc-ed to this mail could
+> give us good opinions.
+>
+>> we have two alternative methods
+>> for having DAMON access the interleave weights it should use. We would
+>> appreciate feedback on which method is preferred.
+>> 1. Use mpol_misplaced instead
+>>   pros: mpol_misplaced is already exposed publically
+>>   cons: Would require refactoring mpol_misplaced to take a struct vm_area
+>>   instead of a struct vm_fault, and require refactoring mpol_misplaced and
+>>   get_vma_policy to take in a struct task_struct rather than just using
+>>   current. Also requires processes to use MPOL_WEIGHTED_INTERLEAVE.
+>
+> I feel cons is larger than pros.  mpolicy people's opinion would matter more,
+> though.
+>
+>> 2. Add a new field to struct damos, similar to target_nid for the
+>> MIGRATE_HOT/COLD schemes.
+>>   pros: Keeps changes contained inside DAMON. Would not require processes
+>>   to use MPOL_WEIGHTED_INTERLEAVE.
+>>   cons: Duplicates page placement code. Requires discussion on the sysfs
+>>   interface to use for users to pass in the interleave weights.
+>
+> I agree this is also somewhat doable.  In future, we might want to implement
+> this anyway, for non-global and flexible memory interleaving.  But if memory
+> policy people are ok with reusing policy_nodemask(), I don't think we need to
+> do this now.
+>
+>> 
+>> This patchset was tested on an AMD machine with a NUMA node with CPUs
+>> attached to DDR memory and a cpu-less NUMA node attached to CXL memory.
+>> However, this patch set should generalize to other architectures and number
+>> of NUMA nodes.
+>
+> I show the test results on the commit messages of the second and the fourth
+> patches.  In the next version, letting readers know that here would be nice.
+> Also adding a short description of what you confirmed with the tests here
+> (e.g., with the test we confirmed this patch functions as expected [and
+> achieves X % Y metric wins]) would be nice.
+>
+>> 
+>> Patches Sequence
+>> ________________
+>> The first patch exposes policy_nodemask() in include/linux/mempolicy.h to
+>> let DAMON determine where a page should be placed for interleaving.
+>> The second patch implements DAMOS_INTERLEAVE as a paddr action.
+>> The third patch moves the DAMON page migration code to ops-common, allowing
+>> vaddr actions to use it.
+>> Finally, the fourth patch implements a vaddr version of DAMOS_INTERLEAVE.
+>
+> I'll try to take look on code and add comments if something stands out, but
+> let's focus on the high level discussion first, especially whether to implement
+> this as a new DAMOS action, or extend DAMOS_MIGRATE_{HOT,COLD} actions.
+>
+> I think it would also be nice if you could add more explanation about why you
+> picked DAMON as a way to implement this feature.  I assume that's because you
+> found opportunities to utilize this feature in some access-aware way or
+> utilizing DAMOS features.  I was actually able to imagine some such usages.
+> For example, we could do the re-interleaving for hot or cold pages of specific
+> NUMA nodes or specific virtual address ranges first to make interleaving
+> effective faster.
+>
+> Also we could apply a sort of speed limit for the interleaving-migration to
+> ensure it doesn't consume memory bandwidth too much.  The limit could be
+> arbitrarily user-defined or auto-tuned for specific system metrics value (e.g.,
+> memory bandwidth balance?).
+>
+> If you have such use case in your mind or your test setups, sharing those here
+> or on the next versions of this would be very helpful for reviewers.
+>
+>> 
+>> [1] https://lore.kernel.org/linux-mm/20250520141236.2987309-1-joshua.hahnjy@gmail.com/
+>> [2] https://lore.kernel.org/linux-mm/20250313155705.1943522-1-joshua.hahnjy@gmail.com/
 
-Anyway, I'm just expressing how I understand the current design and I 
-think it's reasonable. And I don't object the idea to return 
-ACCEPT_SIZE_MISMATCH for "too small" case, but it's needs to be guest 
-opt-in, i.e., let guest itself chooses the behavior.
+---
+Best Regards,
+Huang, Ying
