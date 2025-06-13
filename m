@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304B72EA482;
-	Fri, 13 Jun 2025 07:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82002EAD1F;
+	Fri, 13 Jun 2025 07:37:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800249; cv=none; b=BV27d2aZAxBfM157bIANj60dxK5LbDFZryPdd6srUc0qovIn8iLFdeqWy+6uzJTrmLIz3YZhP8jVnt107nSHhOST5+frNsj05SksauBAeceI2dHCsfNyOFenHt58xOqq9RAYjhB+siy7d7ZW+Se6xrLhdFEd4WaC4S9wlrbkdPA=
+	t=1749800251; cv=none; b=r7ovcP6eRlhi78ZWHj7fWm1zoryidi1sMWD0s73926GVfdrJrtK7xsKoLivC6J2TQVVJ2K32YZ2+Dv+JnL+FwgftkCuRi2a5WC3/FMs6BL9ORJtR3rtkXijpJZB8yQeCmZO68vND8qXClMX6n+scfNe0Ibp63UNgSqvSLVzul9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800249; c=relaxed/simple;
-	bh=c3eLj73r6isJ6Qg5nF1MV2b00OxH6rz7Ez7dudV9lYc=;
+	s=arc-20240116; t=1749800251; c=relaxed/simple;
+	bh=VgOEVvwJc1U61G3yDBRy0ONSA1uVlNxoO+87mM3AaDA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=SMOzaIDyxgtFOGceWf6dBU6KxM3TGSpPohIa+0HfhAN0Z2Pn3qHXt69Q8t6x0i3mwS9LB3ocQ4h447jwzKE6LHVOxpq/dJOtlmDtWbrCyYAQcl+Wttl94H/msX7H6/s8cRer6TnPiKltrzpuL4OStliu5mTd8B3dVICN54O0SlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NZGiJ6rR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jrm8Ai9L; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=CIRNFiKjFU1qe5s7xwm03433kUHIDl3e6Rh7aAGxBbgOR4U95mUWpxHGNH5L+Flf8R31Zc39tiJmKmPSfSfb9tWXsUOv782DFq2WNuj0w+qZw0hch3xbqeasf5PgD/CbXGZLXSAmw/au1NZ632FgQNb8ZguDGkbrnAtgn/zQ1zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eXCMpAmz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Nqr9iXWV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NZGiJ6rR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jrm8Ai9L"
-Date: Fri, 13 Jun 2025 07:37:24 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eXCMpAmz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nqr9iXWV"
+Date: Fri, 13 Jun 2025 07:37:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749800245;
+	s=2020; t=1749800248;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wgm/Jy+NkXbIz4HYYlVR7R4wXdNXGkpmH0U4NBggTfk=;
-	b=NZGiJ6rRa7zJCfapvpSky92gi950wiGO76VZpfbzOCns67ENrxA7vEo3FJUoph5gXST/Yz
-	WsqjB3qdoJd3b/6scyTeJkB4RtOXZrC6HbfSJ58Ewp7EDUEyTgakr1iDUvuoJ7K2Z/hpBS
-	oqQ1ZOc3FVdbYWxBebcaj/XZJQve8LcACeM1cMAcSonxxXRlLR86v+aRBKi5AXApSMQ8ud
-	501ZHPh1exgDrNEf0yV7AUhH2i2+UByNl9fSRWNEikGwTape/anZrveJDmuYSiWzTJ5mbt
-	/A0L58eDq9aJ+hbMBymgfwT4hEqn3PpByN/YMCttpdi/LzKrkyf5Kztkrt3kBA==
+	bh=K4sOpJ8rT9YXF0Syuk5y5TL1oIU1K9gPjgwGaHSjxsA=;
+	b=eXCMpAmzPkN2LX169pTYiY8zElKKKS4XfHa1Hy3kZQ3FwZ9FLaWV4Q/0Gcs52wgC+o8YRp
+	GYoWB+xhx/I3Dr6bOhqY/ZQopFPTEKsml/g3Tz+y8UjFEUDW2lrZD9CMFAYHTBP45+hKVN
+	yI6N4hvVSafm/ETtRaAhO5NlovfMCZVIv15r1WXf1xj+GYSXy8Dy9XTp0H4a+Mr19T2mUB
+	vR8aiZAtii4LTKqOJ3mYCIK3rBQggfJcXFNo1f/cxaawlNVFeUI/njTaRqhqpFzpdcZhMI
+	/D+8rURumhXhNjmiNp0nJnv6/w4LgYW3AqXvt3E9kaTAdICe+p3asrxCxdXGVQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749800245;
+	s=2020e; t=1749800248;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wgm/Jy+NkXbIz4HYYlVR7R4wXdNXGkpmH0U4NBggTfk=;
-	b=jrm8Ai9LsHpjWiSFv+48/L+6192pJQvVE5Re2g051Ek86jSobwLmLRVZVOOYy/AsgmbVW1
-	w0EwR3i2DKZHZIDw==
+	bh=K4sOpJ8rT9YXF0Syuk5y5TL1oIU1K9gPjgwGaHSjxsA=;
+	b=Nqr9iXWVZ3pjy5Ixa1nKWqnQnIMtTmUIyFOP3QsKJ4j9TSJTq47PTTWX7O6woQ3MKYK9OC
+	BWV0NGqCpa2OpcAQ==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/smp: Always define is_percpu_thread() and
- scheduler_ipi()
+Subject: [tip: sched/core] sched: Clean up and standardize #if/#else/#endif
+ markers in sched/topology.c
 Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Juri Lelli <juri.lelli@redhat.com>,
@@ -56,15 +56,15 @@ Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Valentin Schneider <vschneid@redhat.com>,
  Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250528080924.2273858-22-mingo@kernel.org>
-References: <20250528080924.2273858-22-mingo@kernel.org>
+In-Reply-To: <20250528080924.2273858-19-mingo@kernel.org>
+References: <20250528080924.2273858-19-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174980024478.406.12282096237020663354.tip-bot2@tip-bot2>
+Message-ID: <174980024737.406.7063848200836341008.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -74,17 +74,25 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     06ddd17521bf11a3e7f59dafdf5c148f29467d2c
-Gitweb:        https://git.kernel.org/tip/06ddd17521bf11a3e7f59dafdf5c148f29467d2c
+Commit-ID:     f1c6b957f7f4091d822b93ca2833e83bf728e001
+Gitweb:        https://git.kernel.org/tip/f1c6b957f7f4091d822b93ca2833e83bf728e001
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 28 May 2025 10:09:02 +02:00
+AuthorDate:    Wed, 28 May 2025 10:08:59 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 13 Jun 2025 08:47:18 +02:00
 
-sched/smp: Always define is_percpu_thread() and scheduler_ipi()
+sched: Clean up and standardize #if/#else/#endif markers in sched/topology.c
 
-Simplify the scheduler by making the CONFIG_SMP=y primitives
-of is_percpu_thread() and scheduler_ipi() unconditional.
+ - Use the standard #ifdef marker format for larger blocks,
+   where appropriate:
+
+        #if CONFIG_FOO
+        ...
+        #else /* !CONFIG_FOO: */
+        ...
+        #endif /* !CONFIG_FOO */
+
+ - Fix whitespace noise and other inconsistencies.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
@@ -97,43 +105,51 @@ Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lore.kernel.org/r/20250528080924.2273858-22-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250528080924.2273858-19-mingo@kernel.org
 ---
- include/linux/sched.h | 8 --------
- 1 file changed, 8 deletions(-)
+ kernel/sched/topology.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 376befd..eec6b22 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1765,12 +1765,8 @@ extern struct pid *cad_pid;
- 
- static __always_inline bool is_percpu_thread(void)
- {
--#ifdef CONFIG_SMP
- 	return (current->flags & PF_NO_SETAFFINITY) &&
- 		(current->nr_cpus_allowed  == 1);
--#else
--	return true;
--#endif
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 9026d32..2352caf 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -315,7 +315,7 @@ static int __init sched_energy_aware_sysctl_init(void)
  }
  
- /* Per-process atomic flags. */
-@@ -1967,7 +1963,6 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
- 	buf;						\
- })
+ late_initcall(sched_energy_aware_sysctl_init);
+-#endif
++#endif /* CONFIG_PROC_SYSCTL */
  
--#ifdef CONFIG_SMP
- static __always_inline void scheduler_ipi(void)
+ static void free_pd(struct perf_domain *pd)
  {
- 	/*
-@@ -1977,9 +1972,6 @@ static __always_inline void scheduler_ipi(void)
- 	 */
- 	preempt_fold_need_resched();
+@@ -451,9 +451,9 @@ free:
+ 
+ 	return false;
  }
 -#else
--static inline void scheduler_ipi(void) { }
++#else /* !(CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL): */
+ static void free_pd(struct perf_domain *pd) { }
+-#endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL*/
++#endif /* !(CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL) */
+ 
+ static void free_rootdomain(struct rcu_head *rcu)
+ {
+@@ -1600,7 +1600,7 @@ static int			sched_domains_curr_level;
+ int				sched_max_numa_distance;
+ static int			*sched_domains_numa_distance;
+ static struct cpumask		***sched_domains_numa_masks;
 -#endif
++#endif /* CONFIG_NUMA */
  
- extern unsigned long wait_task_inactive(struct task_struct *, unsigned int match_state);
+ /*
+  * SD_flags allowed in topology descriptions.
+@@ -1716,7 +1716,7 @@ sd_init(struct sched_domain_topology_level *tl,
+ 				       SD_WAKE_AFFINE);
+ 		}
  
+-#endif
++#endif /* CONFIG_NUMA */
+ 	} else {
+ 		sd->cache_nice_tries = 1;
+ 	}
