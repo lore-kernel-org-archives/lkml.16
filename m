@@ -1,118 +1,132 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEA4221555;
-	Fri, 13 Jun 2025 15:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4AF1FDA61
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749829890; cv=none; b=TdGY+F7hHLx6WMAsaLw8sa7w+rIGmYcMVwtD9lCbL1Us51GGdVbrjNn/6eX4vo/XWdejBCYwdKn7nEOvZpPVnX0shiDIYoHhYds4pnRP9ntvUtlcEQINP7/7GVopRhaRucl+BY82s2BytoS2iGHDEbJ/9Obl/70XTkyUsBJ2CX0=
+	t=1749829942; cv=none; b=J2ebHxvDgQa/es9uUYdeNLSn/PbctSCI8bNGtA7+KN3QhMjKpAIwyeew7j0re86OGbPUHO5odC9OUNAJjY4dCBCevbGgC+BxaczaFZtdmellfPS0F+8YRhPByi6VDQe/OcFIP5e3TI8RphS/c5lRGmDLSZywEQncVfOuu45N+PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749829890; c=relaxed/simple;
-	bh=c4wwjySIvlE7LwxsLOn8GKJp5V2/5xXu72WI0PKQ4k8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CnWz+TKJfjqwf7ACYcxtJ0Y4wWEbQ4rWopUyKSoLZdfo7bzY5BJK0FmWUdDK/wMyZ4n5DgUUHAgDAlBrarkAW7O35C/7vV65wPUFXEy0Worioe6oznWRFnvLQjXFJOiSoV/KXQ8wfaNqP6kZpb2ihm0dU4vt5PzfnQ9NUzM07JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UxxZf7BT; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749829942; c=relaxed/simple;
+	bh=Kev/MH7b3XzfIbzkgR1o2iu55NK3f5nafOrGO/KhEwE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HdMJNE9Iyb7+cXAa7FpH5Joc2cQaPxPngigi0Jrlc5h0lIkaCNNPP0kpVmvli1G616Hyd7cHVExX+q4GiNAttFLG4mNA7qywS0NqCdh2qUBhA1p5hCcUWUfYYdAhP1bhIUvnuGe7W0aKzyfETQ3a9aBN2uWvMr0+nw2OvZUiGP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hZXefQ1z; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxxZf7BT"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2363bd24891so2817995ad.3;
-        Fri, 13 Jun 2025 08:51:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749829888; x=1750434688; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c4wwjySIvlE7LwxsLOn8GKJp5V2/5xXu72WI0PKQ4k8=;
-        b=UxxZf7BT6Hox1Qnw+4qO+R2ooJaXbGG3SwbGvREoNEkQzwABmHOlNwl0NcW1VsMlVq
-         2tSXPsALPwrKTfgD1UdlwTyQMjcGvLSh9EKJsHw9kYnfRrKaIpzxEDpnK3e4HJ2ETyeB
-         UIR0jSM7/Qk+/keht53zsVN7/ppFxT/hFMnyAiqzJsLacsJneBkTSegeTTISoY0g+u2g
-         fOyCyd03hXPYwGSpgxFXsbw5sDPslOAktSiQQEYOZr5gXCO6IWoUXKNdeoeW8fUYeOXt
-         Nrg4SsB3KXu8T9smWoxAo3roKLxbnNZ4/KWIkbkXL8OKn+gpJxIMWjXwWqPv5zgmejaE
-         Pjvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749829888; x=1750434688;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c4wwjySIvlE7LwxsLOn8GKJp5V2/5xXu72WI0PKQ4k8=;
-        b=vxtOTbF0ELoq8yviLmH3B3BH0s9EbFW/8yKCjZhqElARfpt8/7Cubqw41jcvtcDVkQ
-         sH3qPQFsARqRN9yVUQ/YSlZ5HU9y3yLp4otRmWmHcxRzt0d4zPaErtJyoeoo/Jwk21F4
-         IgGaxexaMGOFwZkwcertMxcb18WBMlUQQuVOQCFfrz6m82NKV3tZ1txC0i9fhWgFpjug
-         cZ5j5PCckNZgGEU5vbJNbtoNJdmTRwiqXHbzpNcs4k56lpr9iZzFS7oxaeoIpooDdmW5
-         8kY//FdR/39rybT6hfU0Bw/kg3m65OcXvT44rEFCnwRh9pYC9QyuaEABwULcKUOBn598
-         WeZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUW2lqRuG/IPORfBf27OhLy0Zw/JuhWyhJFdjKIa4o9XOp5FVYB647Nq/MMyqrK7V0mZZC1fpZjMQ9187k=@vger.kernel.org, AJvYcCUowynwehk5mZ65h1Dw6GxbBuzyiKkgt9VTXdFveMD8iW8jafNzda/yPH0xGSRagZBYtJPG0m/MwLvmgfEpPXM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfKZzYkWWB/TkXguUZZJXHINtNTfsb6RqrGQoNV/N8eqEgRvp5
-	XlYnhhUw4iWLVWsofemC1dmIIp/mfX1qAMIkr9mgH8Iv2IuimmiplFBxLqjKqaVN2mkLLH35YTB
-	WN+ZlMZ6c66pL2RsDIJiBKfH2Sl86xM4=
-X-Gm-Gg: ASbGnct1tTD5Gz/UnZs5DGGD+jNZ6w9htTJswvqmylj3dj1ww/xUwTJ7oRUexmj0DqX
-	AuL80XY2481mskNSofRZkGNJDltP0344h0db1/dW5sGn+RZBhmtG8V5Qgnug9nh0UHRoMGsCVEE
-	1X9RD1I7lY9NLjYWKNB0KdKRoLw9kjHKW12XHBDh5a8ZQ=
-X-Google-Smtp-Source: AGHT+IHcPHYF94iRui/o4iCfw3hVlEAnn10MC+QUOtJfKBbbEt+l8sh4CVj6CXIMMJyZzu080k4/5V0scs/4oVMDiWM=
-X-Received: by 2002:a17:902:d2c5:b0:234:ef42:5d52 with SMTP id
- d9443c01a7336-2366b202b0fmr133035ad.6.1749829887880; Fri, 13 Jun 2025
- 08:51:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hZXefQ1z"
+Message-ID: <2ac62524-e45f-4ef6-a8b4-01adfd1391c2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749829927;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yV1sWZeZVf/FIQXque4O5JP0sG577Rz8Lj6jjxTnW8c=;
+	b=hZXefQ1zsdCjt1DrWrZaHhu7+CM+Ie5JgTIalZx7nqY2js+eUhbVLFm+cSahtcLnRIBMtM
+	6Sz8pXb9SRPlAlw2wYYU4/SHhLiAkOSjhVDfP9VYIdDUZ9PPtKK+y8h7nhiqz3VPpTXXrV
+	dwMnBcwhhkVjWndrPKIgkldwS4zTTlA=
+Date: Fri, 13 Jun 2025 16:52:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612121817.1621-1-dakr@kernel.org> <20250612121817.1621-2-dakr@kernel.org>
-In-Reply-To: <20250612121817.1621-2-dakr@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 13 Jun 2025 17:51:15 +0200
-X-Gm-Features: AX0GCFuyedTR1iv9KApMX6o7VMeHD0a1tKeFY0C-NXSDraSK_3YKR9RF1Z2Lr0I
-Message-ID: <CANiq72kpiGQCs=XJjqZn8pgXaRXfKxopGBvGVwOXn91Nit-W8w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] rust: completion: implement initial abstraction
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
-	aliceryhl@google.com, tmgross@umich.edu, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Benno Lossin <lossin@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next v6 0/3] dpll: add all inputs phase offset monitor
+To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, horms@kernel.org, jiri@resnulli.us,
+ anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+ andrew+netdev@lunn.ch, aleksandr.loktionov@intel.com,
+ milena.olech@intel.com, corbet@lwn.net
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-doc@vger.kernel.org
+References: <20250612152835.1703397-1-arkadiusz.kubalewski@intel.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250612152835.1703397-1-arkadiusz.kubalewski@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jun 12, 2025 at 2:18=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> Implement a minimal abstraction for the completion synchronization
-> primitive.
->
-> This initial abstraction only adds complete_all() and
-> wait_for_completion(), since that is what is required for the subsequent
-> Devres patch.
->
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> Reviewed-by: Benno Lossin <lossin@kernel.org>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+On 12/06/2025 16:28, Arkadiusz Kubalewski wrote:
+> Add dpll device level feature: phase offset monitor.
+> 
+> Phase offset measurement is typically performed against the current active
+> source. However, some DPLL (Digital Phase-Locked Loop) devices may offer
+> the capability to monitor phase offsets across all available inputs.
+> The attribute and current feature state shall be included in the response
+> message of the ``DPLL_CMD_DEVICE_GET`` command for supported DPLL devices.
+> In such cases, users can also control the feature using the
+> ``DPLL_CMD_DEVICE_SET`` command by setting the ``enum dpll_feature_state``
+> values for the attribute.
+> Once enabled the phase offset measurements for the input shall be returned
+> in the ``DPLL_A_PIN_PHASE_OFFSET`` attribute.
+> 
+> Implement feature support in ice driver for dpll-enabled devices.
+> 
+> Verify capability:
+> $ ./tools/net/ynl/pyynl/cli.py \
+>   --spec Documentation/netlink/specs/dpll.yaml \
+>   --dump device-get
+> [{'clock-id': 4658613174691613800,
+>    'id': 0,
+>    'lock-status': 'locked-ho-acq',
+>    'mode': 'automatic',
+>    'mode-supported': ['automatic'],
+>    'module-name': 'ice',
+>    'type': 'eec'},
+>   {'clock-id': 4658613174691613800,
+>    'id': 1,
+>    'lock-status': 'locked-ho-acq',
+>    'mode': 'automatic',
+>    'mode-supported': ['automatic'],
+>    'module-name': 'ice',
+>    'phase-offset-monitor': 'disable',
+>    'type': 'pps'}]
+> 
+> Enable the feature:
+> $ ./tools/net/ynl/pyynl/cli.py \
+>   --spec Documentation/netlink/specs/dpll.yaml \
+>   --do device-set --json '{"id":1, "phase-offset-monitor":"enable"}'
+> 
+> Verify feature is enabled:
+> $ ./tools/net/ynl/pyynl/cli.py \
+>   --spec Documentation/netlink/specs/dpll.yaml \
+>   --dump device-get
+> [
+>   [...]
+>   {'capabilities': {'all-inputs-phase-offset-monitor'},
+>    'clock-id': 4658613174691613800,
+>    'id': 1,
+>   [...]
+>    'phase-offset-monitor': 'enable',
+>   [...]]
+> 
+> v6:
+> - rebase.
+> 
+> Arkadiusz Kubalewski (3):
+>    dpll: add phase-offset-monitor feature to netlink spec
+>    dpll: add phase_offset_monitor_get/set callback ops
+>    ice: add phase offset monitor for all PPS dpll inputs
+> 
+>   Documentation/driver-api/dpll.rst             |  18 ++
+>   Documentation/netlink/specs/dpll.yaml         |  24 +++
+>   drivers/dpll/dpll_netlink.c                   |  69 ++++++-
+>   drivers/dpll/dpll_nl.c                        |   5 +-
+>   .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  20 ++
+>   drivers/net/ethernet/intel/ice/ice_common.c   |  26 +++
+>   drivers/net/ethernet/intel/ice/ice_common.h   |   3 +
+>   drivers/net/ethernet/intel/ice/ice_dpll.c     | 193 +++++++++++++++++-
+>   drivers/net/ethernet/intel/ice/ice_dpll.h     |   8 +
+>   drivers/net/ethernet/intel/ice/ice_main.c     |   4 +
+>   include/linux/dpll.h                          |   8 +
+>   include/uapi/linux/dpll.h                     |  12 ++
+>   12 files changed, 384 insertions(+), 6 deletions(-)
+> 
 
-This is part of a fix, so it is a bit of an edge case, but it is just
-the bits Danilo needs, so as long as nobody in the Cc list above
-complains:
-
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
-
-> +/// The [`Completion`] synchronization primitive signales when a certain=
- task has been completed by
-
-signals
-
-Cheers,
-Miguel
+Acked-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
