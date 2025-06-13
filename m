@@ -1,78 +1,57 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC9928D8CB
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D841E8338;
+	Fri, 13 Jun 2025 21:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749850204; cv=none; b=LkQe4LtSngBFYHAbobq8soPo54iqSrncTXf7vcX7+zEFLnzJxP3+sQ7jUERcbdo2MEJUyzJHQJr+47Ejvn8cimeUvNoeqOSw4YuhQs85hOxuKIL9twmg5WDiB/LwXr8kkVxd887HNspGm2dRBGuZCj5aakREY7hlw+8wBflt7Ec=
+	t=1749850396; cv=none; b=Ek8Zs7PiP2/SiXKPfdLPImU5jrRy0uqla+XRQ7ARKW0LFTMoSy9VDWQNt1UfdY2PwtAqVJZoxJqrI16NkVhtb4Ef+DT/AiKnHstroyHP5ONYmY2BKLfykHEqhqSulxXVu+VOPU9TULOuM6QZMgXpd54pG+uKAB/PAVKXuZrUrB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749850204; c=relaxed/simple;
-	bh=VVCtDi/THMNaziVez+/Kfyif66Kw1La+EoS6lUhoS30=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=IIr21xD9ZK3sTQFq3o8wTbi/ArQb1CCP21SY8E3OEpUllkxCWPv88Yc68PJqfhBAIH4KJCoN1gwV4xEcC0EFvT652OswRm2+faWuSz1w8haOviKiIvsMZAh4zCSKhGCiApohF5afIhiWDZBmWVLSlBqxsdsIH/q7xB3piP2aato=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddbb34fc1cso29898065ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:30:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749850202; x=1750455002;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=39o0uOIy8QjGOd/DbwJtSHVgR+dZ0CHMjvotGtElSDE=;
-        b=oxcxhjjNK6kooGSd5S1Tlv12yQJi+h5kmWVj/V1UK5foAz0wVSModooAjUbe3p44FV
-         2pjXc9t9qnN4hwWf9VjTTEsPYbZbbxSJ933IjtM3hfX0DpvAxxFK6UqXFGsxwej/cgAx
-         2x4FBWAK/eDL6jgocjdu+yu5Ya8jJzmYgjnzTwiC8lV76BRXlwX3nqdIVXe+kt2AEP/h
-         DRIuH4IT1Mo5xJa0K7aMiOlLVEPH3dSoGzLx9dFZ4M//CSh9tbU76x+ztEjUUrjS//Nd
-         WHNc9421CU+K7hZXvqogTrKQGI/yR8S7KqSJ1M80v+iwejQvsPMqgZayJgoFT1oIjccC
-         NeIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxYRbnOQL3iF81aVSn3iEhIZKuGtWkUbrX2ccWDcj889HmLNZOYxMKHYxSkbukd4BApGvYlEr73BnDzOg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxB4d/DoprDPhxtlqskQgGeDoY168LcYkx6uMoSTDbJC8I23j+Q
-	gyYlrnl2K1vLZmaCeo5jEg0zx8cQYaA56DCAxFlxsz6JI6xrITF2N8AI+vS6TBEQKes9ksTehZ5
-	XnNPJJBQj55yd1L/EMfcmM8it5iZoq3Gk26lZ/cBq1cu19g4/fWKXCJj9+Ek=
-X-Google-Smtp-Source: AGHT+IHkW+PxD4B9B39h1g7efcqLTlZYeOaomRymEnK4adDkhv/HoIAE6ytX221HzaU3iJ8HKARthzS1ikAXB3lVCeVNH10HpKzP
+	s=arc-20240116; t=1749850396; c=relaxed/simple;
+	bh=VxTps1ojM4lnBA5ELCNmtgP1CD8XjdF3FjfSnngtjjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PLrsQHzCTdW8mN/ZionlREwWZhfypozXw8jB5fM5O4NZkOOjmjKh6li/W/vwyAibd47TqHGB2zO/TGRqBtHYiyGcSufRRbk1N5od4OTjZm/ThfwT1M4tJ19lb7aA9Qft13KuKtIBLhZNMC+AwzuOw7vm89DdnA+jTst2LY5Z0H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sK5qHeQw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sK5qHeQw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900B9C4CEE3;
+	Fri, 13 Jun 2025 21:33:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749850395;
+	bh=VxTps1ojM4lnBA5ELCNmtgP1CD8XjdF3FjfSnngtjjU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sK5qHeQwAcEYuyv+kSHMWmReYoBwyORxEZqlUx06U5Cxz+Lhpnd18QQvJrHwdIZvW
+	 65WIFFZ9/NBbX93s+RhbaBmo72Xe8HXsDD5SCmTWBX6KL+p5CAJbaAT3lsg4bDoreA
+	 S8oxBloPvu6hOX2gK+YFGelnv+Q6We5hRmplD3MYClYho+xlKuA/CxyEm3UOPMAyp5
+	 /iqw0WJTmuf4/0nkCtPFAv4HtGVFnilhPRF+mkoYTUcA2RDyOPwk5gRA5wwlfAISkR
+	 1Rwwx5Whsgdd+STkpSEQA2N2BH3H6aUMMYP26G9n/r7Quq2zmhSVX54VSjb7dxYpf8
+	 Kt/+eYKHb6/8w==
+Date: Fri, 13 Jun 2025 14:33:11 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: ojeda@kernel.org
+Subject: Prebuilt LLVM 20.1.7 uploaded
+Message-ID: <20250613213311.GA1445087@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1887:b0:3dd:d1bc:f08c with SMTP id
- e9e14a558f8ab-3de07da228dmr14435435ab.20.1749850202173; Fri, 13 Jun 2025
- 14:30:02 -0700 (PDT)
-Date: Fri, 13 Jun 2025 14:30:02 -0700
-In-Reply-To: <684b6ff9.a00a0220.279073.0007.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684c985a.050a0220.be214.02a7.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in cfg80211_inform_bss_frame_data
-From: syzbot <syzbot+fd222bb38e916df26fa4@syzkaller.appspotmail.com>
-To: johannes.berg@intel.com, johannes@sipsolutions.net, 
-	lachlan.hodges@morsemicro.com, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-syzbot has bisected this issue to:
+Hi all,
 
-commit 1e1f706fc2ce90eaaf3480b3d5f27885960d751c
-Author: Lachlan Hodges <lachlan.hodges@morsemicro.com>
-Date:   Tue Jun 3 05:35:38 2025 +0000
+I have built and uploaded LLVM 20.1.7 to
+https://mirrors.edge.kernel.org/pub/tools/llvm/.
 
-    wifi: cfg80211/mac80211: correctly parse S1G beacon optional elements
+If there are any issues found, please let us know via email or
+https://github.com/ClangBuiltLinux/linux/issues/new. This will likely
+be the last 20.x release according to Discourse [1] but it is still
+worth reporting issues in case there is another release.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10f60e82580000
-start commit:   d9816ec74e6d macsec: MACsec SCI assignment for ES = 0
-git tree:       net
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12f60e82580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14f60e82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=73696606574e3967
-dashboard link: https://syzkaller.appspot.com/bug?extid=fd222bb38e916df26fa4
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1042460c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1442460c580000
+[1]: https://discourse.llvm.org/t/llvm-20-1-7-released/86855
 
-Reported-by: syzbot+fd222bb38e916df26fa4@syzkaller.appspotmail.com
-Fixes: 1e1f706fc2ce ("wifi: cfg80211/mac80211: correctly parse S1G beacon optional elements")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Cheers,
+Nathan
