@@ -1,150 +1,164 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A839279DDE
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01102DA748;
+	Fri, 13 Jun 2025 10:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749808747; cv=none; b=uISNBvBnQyMsEfBj3/qsKuCxUyBY9AEnY9NjS8aRNa0ej2edqiusD3Iw9qjcUjx9r9gFrysf+9dm24udn6wh70mAR4/fWSCEs5VZNseGwh+QBoHYDkRW5UawqgoD04lxoMjnGsNHrLmE8mWy+73OcTyCP2N5KukMx6Xt8RGKbHc=
+	t=1749808869; cv=none; b=MTsb4cuRfjGkEH3AxxGLgKd2HPknRK5CIi+2wR9ze4k6+DR4G0/ZsybPqq/AGxciNHRB2fp7YXFUKK5nqd7Hgz8QjT5Olj9OqUPW+iw2CzoCd3tes1mvadrnNdxYocYCxR1dpJeJ2iUucwUkpkUThZxaLmf/BC8SljE0HR7z0y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749808747; c=relaxed/simple;
-	bh=6g3UyFkoVrawWdV33JWBsjBQ/iUh38fGjkruGgCScy8=;
+	s=arc-20240116; t=1749808869; c=relaxed/simple;
+	bh=hzo5YZ2+59Ww2/Xt37jey9O/1XB9IVr5gQKh1UXWMqc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RSw33YEe5BJWva1U4z0ilnFTxiaCMxOWrTgFATFBsx8RhVDEnbL1vomCzdA0BuXqsRfRBAsKqIm+qf75Z+hUNEuZbr65re3Xipeh4z0HPtSfaYrEUJSRpvBlaTtAvjpLZ1gAopB92XdKUKLRfgky4RQ/udV7vGzZTk+criDWJ4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Lm1hYnvJ; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=IgOeYCkDaw7z4V/BtSQdlfxOcJZG3r2Yy/Vih/qBRrL96u3GDVRu8zTlw7jPIHTlFgBIMiqSoIpA/uW0+WltJm5kQiTgK6WTQ88LSKkhcyAS19JPnYYhSpwx9EUCHqEuZxJWYwkmJKcnp3dLuD1mUCdNTa3vK3LfvNOoEci463Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+i+dFit; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Lm1hYnvJ"
-Message-ID: <cd358b16-b03d-4560-9d55-e1e1e502e674@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749808739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cpXnDBPpqquBgfe2bBHutO28w9qj/2gJIO0pSbxaZ50=;
-	b=Lm1hYnvJ9HU6vP7pHVeLj5Zxhag7MSKDDdqABGGniKu6GSSmH6WXBln+CCWDvl93ImbCxF
-	l8p4eK2b/z0LxgleJWUtL7iQqXH2JeX5mS94okz0X64t3M5AL7PqOGk4mfokRVXo778lKP
-	gIHwGLMcx7NhSqiYYVeavupuN+GjGUg=
-Date: Fri, 13 Jun 2025 17:58:38 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+i+dFit"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BAECC4CEE3;
+	Fri, 13 Jun 2025 10:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749808869;
+	bh=hzo5YZ2+59Ww2/Xt37jey9O/1XB9IVr5gQKh1UXWMqc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M+i+dFitZ4SLhojmIk98p1eQBooTkkZ4ORHVZUgdju+63U/4treIGbCB+w9b+gBr6
+	 KgPy/3SmcIarW62bG5KANSgtrxA04yCZnFj62lDRpE4sWfvxmVXDv4ISqOy31dlaGl
+	 xP0rjMSKP3spCwrfyfWyiQOdAFPOuPNNoW99lLR4SJhbOSU9WffmaT012Y6QzR7v4o
+	 b27FrepMbwZuSX6kwyeIm8PwOh4LLWzoSBfpPgEAQ6/fmsaKxgnVI1hzYH5TxzUkue
+	 ia4LhORcCZ61v8GHJFbHImjGzcuiNLkvYeHopa+Kkf4vx/b+SKDOgv0oNlASYR9WcM
+	 4/P6KjWS2kGWw==
+Message-ID: <44fdaa5c-0fa4-457e-b193-e83cd06c1aed@kernel.org>
+Date: Fri, 13 Jun 2025 12:01:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] hugetlbfs:inode: initialize 'error' variable at
- definition to reduce code redundancy
-To: Oscar Salvador <osalvador@suse.de>, Hu Song <husong@kylinos.cn>
-Cc: muchun.song@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250609065615.108240-1-husong@kylinos.cn>
- <aEh-wRb_j5seV2Iz@localhost.localdomain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
+ management
+To: Michal Wilczynski <m.wilczynski@samsung.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Matt Coster <matt.coster@imgtec.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+ Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Frank Binns <frank.binns@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
+ <CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
+ <20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
+ <20250603-whispering-jaybird-of-thunder-f87867@kuoka>
+ <d42a8c49-7ad2-49ef-bd9c-1e3d9981b58e@samsung.com>
+ <e5a0bee2-ff74-47cf-ad2c-0c78b57ae6cf@kernel.org>
+ <a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
+ <cc4dbf7c-e023-403c-88be-4691f97a0ff0@kernel.org>
+ <c7774790-07c3-469d-a994-9e84108ad21d@samsung.com>
+ <CAMRc=Mexq9ThfG6jZUbs3wYDA9UZN-+pHnX_Y-7WO4ubXvEuCw@mail.gmail.com>
+ <ad6981eb-f53a-4a7b-90bd-2e2705bd0297@samsung.com>
+ <59cc6827-1602-402a-9279-96ad6285cff4@kernel.org>
+ <e5d3d3b3-7ada-476f-9558-328d3d316088@samsung.com>
+ <44090712-0635-47bf-b73d-d9b16ec446a4@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ye Liu <ye.liu@linux.dev>
-In-Reply-To: <aEh-wRb_j5seV2Iz@localhost.localdomain>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <44090712-0635-47bf-b73d-d9b16ec446a4@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-
-
-On 2025/6/11 02:51, Oscar Salvador wrote:
-> On Mon, Jun 09, 2025 at 02:56:15PM +0800, Hu Song wrote:
->> Initialize the error variable to -ENOMEM at definition in
->> init_hugetlbfs_fs().This removes the need for a separate
->> initialization later and makes the code slightly more concise,
->> while still preserving the original logic.
->> No functional change intended.
+On 13/06/2025 11:49, Michal Wilczynski wrote:
+> 
+> 
+> On 6/13/25 10:25, Michal Wilczynski wrote:
 >>
->> Signed-off-by: Hu Song <husong@kylinos.cn>
->> ---
->>  fs/hugetlbfs/inode.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
 >>
->> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
->> index e4de5425838d..390cddd5872c 100644
->> --- a/fs/hugetlbfs/inode.c
->> +++ b/fs/hugetlbfs/inode.c
->> @@ -1600,7 +1600,7 @@ static int __init init_hugetlbfs_fs(void)
->>  {
->>  	struct vfsmount *mnt;
->>  	struct hstate *h;
->> -	int error;
->> +	int error = -ENOMEM;
->>  	int i;
->>  
->>  	if (!hugepages_supported()) {
->> @@ -1608,7 +1608,6 @@ static int __init init_hugetlbfs_fs(void)
->>  		return -ENOTSUPP;
->>  	}
->>  
->> -	error = -ENOMEM;
->>  	hugetlbfs_inode_cachep = kmem_cache_create("hugetlbfs_inode_cache",
->>  					sizeof(struct hugetlbfs_inode_info),
->>  					0, SLAB_ACCOUNT, init_once);
+>> On 6/13/25 08:44, Krzysztof Kozlowski wrote:
+>>> On 11/06/2025 14:01, Michal Wilczynski wrote:
+>>>>
+>>>> However, this leads me back to a fundamental issue with the
+>>>> consumer side implementation in the generic pvr_device.c driver. The
+>>>> current fallback code is:
+>>>>
+>>>> /*
+>>>>  * If the error is -EPROBE_DEFER, it's because the
+>>>>  * optional sequencer provider is not present
+>>>>  * and it's safe to fall back on manual power-up.
+>>>>  */
+>>>> if (pwrseq_err == -EPROBE_DEFER)
+>>>>         pvr_dev->pwrseq = NULL;
+>>>>
+>>>> As Krzysztof noted, simply ignoring -EPROBE_DEFER is not ideal. But if I
+>>>> change this to a standard deferred probe, the pvr_device.c driver will
+>>>
+>>> Why? You have specific compatible for executing such quirks only for
+>>> given platform.
 > 
-> Uhmf, I do not know. 
+> I realized now that you may have meant the "thead,th1520-gpu" compatible,
+> not the "thead,th1520" SoC compatible.
 > 
-> Often, we tend to use those declarations in order to mark what error
-> code we will return if we fail the next operationg. E.g:
-> 
->   error = -ENOMEM
->   if (try_to_allocate)
->     goto out;
->  
->   error = -EINVAL
->   if (check_params)
->     goto out;
->  
->  out:
->   return error
-> 
+> In any case, the whole reason for using the pwrseq framework is to avoid
+> polluting the generic driver with SoC specific logic and instead offload
+> that responsibility to a pwrseq provider. Therefore, I can't simply add
+> a check like if (compatible == "thead,th1520-gpu") to the generic driver
+> to decide whether to get a power sequencer. This entire matching
+> responsibility was intended to be offloaded to the pwrseq framework.
 
-I prefer the following format, as it avoids unnecessary assignments:
+No, just do how all drivers are doing - driver match data, describing
+that there is some component, e.g. quirks/flags, number of clocks and
+their names typically. In your case - name or presence of pwrseq.
 
-        if (try_to_allocate) {
-                error = -ENOMEM
-                goto out;
-        }
-        
-        if (check_params) {
-                error = -EINVAL
-                goto out;
-        }
-out:
-	return error                   
 
-> No really strong opinion here, but I'd vote for leave it as is?
 
-Currently init_hugetlbfs_fs() pre-initializes the error variable
-with -ENOMEM before the allocation that might fail. This creates
-an unnecessary assignment in the success path.                  
-
-Therefore, this change might be preferable:
-
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index e4de5425838d..3fa7892ac865 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -1608,12 +1608,13 @@ static int __init init_hugetlbfs_fs(void)
-                return -ENOTSUPP;
-        }
- 
--       error = -ENOMEM;
-        hugetlbfs_inode_cachep = kmem_cache_create("hugetlbfs_inode_cache",
-                                        sizeof(struct hugetlbfs_inode_info),
-                                        0, SLAB_ACCOUNT, init_once);
--       if (hugetlbfs_inode_cachep == NULL)
-+       if (hugetlbfs_inode_cachep == NULL) {
-+               error = -ENOMEM;
-                goto out;
-+       }
- 
-        error = register_filesystem(&hugetlbfs_fs_type);
-        if (error)
-
-Thanks,
-Ye
- 
+Best regards,
+Krzysztof
