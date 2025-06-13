@@ -1,95 +1,91 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACFE256C73;
-	Fri, 13 Jun 2025 09:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225A1256C73;
+	Fri, 13 Jun 2025 09:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806752; cv=none; b=E8EiBFhlgwdkGslRNXw8nyWhpJx2Ox4fndfBBcjWggplYRfSA4PnyzAgbDazLnXTOfmkAcxUJdy4DhbftIu1gX78BahdbwT+r9OhbIh53NttujEs2JcxevGPiiccVmXn13GYxMG1BUatDJdCkh4G6klYgUVXM2M3UrzWnHhDqIE=
+	t=1749806817; cv=none; b=sdV7vfde+Qv0RipDZ4WgD0Q+0HYH8XOsd/WbOD2PNZ+Gj6m9/p6JRPhoUFEprCtLu3WZHFDatVoC0bqgymA+VvWxprYvPc5GQN6e5jbkqRkiMrcdo9Uk+71aGr2xmaIqP6SlmtBI4Rsum1FH6F+SMr6YuHpDXD8ExpuJIkXu31o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806752; c=relaxed/simple;
-	bh=4LsCH4BXnTTvUOxPK3fqPjjvv8ORrsKY7zJ0+so7tnI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WtDdV50/61Yo9xYAtZbdovfXT0/cPtQ8r+PLSOVebNCPClK5lfOJZUaYae87nVgO/njbvfcXwbe8/eZyUgJeyJ0ULAubQCfXEkEOdtcoVp2uNTWKmL6z9KumRyPx9xceQfDRAAlRmoBeO2qQ3cMFsSB0GAkKDZDq0Buocf8jqtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [127.0.0.2] (unknown [210.73.43.2])
-	by APP-01 (Coremail) with SMTP id qwCowAAn1tSP7ktoxvw7Bg--.2681S2;
-	Fri, 13 Jun 2025 17:25:37 +0800 (CST)
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-Date: Fri, 13 Jun 2025 17:25:33 +0800
-Subject: [PATCH] gpio: spacemit: Add missing MODULE_DEVICE_TABLE
+	s=arc-20240116; t=1749806817; c=relaxed/simple;
+	bh=Q5BhcgYpE35Y8AxcdDXKZviSULn7xDLW+iYnDJ09n7Y=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=Cvu2xcf1OwctF/68W21TmGNW5snNkc6q5GKLhZUbPyucXU13pfjqvkd9JrdH+YdYPMhGcAQM4VI54VLb/01UDyKLDaV0Av2A1BfZNM9RxwWEUi8IGmxAhLnU9Oj1l+eP3jtMb3jwbMaGKDaLRGpgcTlLNQ8Zlr2MjuF6s632oS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b8I/jcG7; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8I/jcG7"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d3f72391so25058495e9.3;
+        Fri, 13 Jun 2025 02:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749806814; x=1750411614; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Itja5tG6Qc2KiSi1iAZTXe7H2ni0UGVq2sw+wpmt+pc=;
+        b=b8I/jcG7pVixJfDnTkSOJZQMIHjZ0y0rIeieVDjWnYBTBsq98bxy3a6NEdTHzW6BNT
+         9onF45FJmkCKtFS2hI+lkQpo+ALf6ooEVhmQ/DY4CNMfdjqORr1HxZKO3rTc9XrCDkbr
+         6BIAungUXFlJQqYq2RXsHfU75xSndEUBbZn3aVBSNEVXpLGI9ULNS1qGih8Sg1kkj28e
+         kNTm9rZeXOUA4Wwy3BAm7sUxQ7hDGX1t+Dde1CSPQZCZ7HXrlVzfFQhEJ1fLi9HRsCNt
+         uXqKjuupN71gCQqjs9+A6mxQsuKPyiscOWbkVTkrxVKDkVdNOzNh62pDVRDINQn+strY
+         Uf4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749806814; x=1750411614;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Itja5tG6Qc2KiSi1iAZTXe7H2ni0UGVq2sw+wpmt+pc=;
+        b=IPR5W9ZA0alpdRQJclgU0HluDiBJtxKqLUo/6RKWY52+3O3w311ydy99fVbZKc3qAj
+         SuwKUXMF+DYAA+YE4x8FKyhxIJ9fLWyHZq/71B+QgacQMrQj+gfr7S4avceHrZ9sHwiJ
+         XyEePYSLWYUkjUE2gVwzBZRU6xPRAt4NrK1MXvVjjEYnIZeJlpaRayu0R+yMdPitgIx4
+         7hssZFK0qQpz/c+rry/CWDqkwY9ZIj5lUSgTTN0mIp64lff1Lo0lcHHYqHnCca7s5rRR
+         g/bipGvpidXAzNfi3DkWMZeJwnntBR1K+6Aq328lYD3I4q8SExIwU52E637jkjHfmnXW
+         L8zA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhYAiQaU0W5sGUbpDZfWOWCcbVLz3/WjyhraScX4Q7T+pftr45m11cwebO9AWJ/yvucww3OCp3@vger.kernel.org, AJvYcCXIMke6S966bMhv/jyPPrnP2lMU4Sg2K3KQmofz+0ZMFL+a9vn54WltiFicbyrRjmm9l68NUZa7vVBhSUM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOiFDbP49YcpE5MENnVmKmwJbif78i71XLpJrHcHgwcaK66dlv
+	8wTikIevzqJddWM2+sym8jnrPizdwPtadVhchu+S7Yv4GEAPOU7lSv1C
+X-Gm-Gg: ASbGncsptgGactUSyDibv4fT9rjOQEuAfXIE1NXPMldbf+WKepqPrgbpPCIL59EkqSd
+	M6G2Bhtfsgxj8QyW+H4bqzTcudW+BumON/F1LexXRixgPnZ95zTceqNZgySeC7uD1z5a5Ot7FM8
+	oymloKQt48eEtBVU/kun/v5QWr2Pb90RXmiCLqp/o9lk/wGsn5VGkBLR8ddtSp7kYj/QpfDqikr
+	Xbq13OnfOsU9ZYE9A2ncVGo01vZRA/1MTgLhZHpzEdwkLrlMsug6wZAe/xVHpz1QWXm4mLPRa8p
+	7rIJYk/RPPQ0Phtyw2Mc0Qv8porV/xX16D/vvX3+8YFqxtnuxp+4lju++fbR9c5DsBj3wLCqy34
+	=
+X-Google-Smtp-Source: AGHT+IEBTo7kIZ4DJ8graOHN/KQaV05qSrUjoSPXsongpILB30NWUheQhDMVK1PCPCF5Qi8PHQzzXQ==
+X-Received: by 2002:a05:600c:4f16:b0:44d:a244:4983 with SMTP id 5b1f17b1804b1-45335582b9dmr20908865e9.3.1749806814082;
+        Fri, 13 Jun 2025 02:26:54 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:75e0:f7f7:dffa:561e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b2c957sm1747795f8f.76.2025.06.13.02.26.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 02:26:53 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
+ <corbet@lwn.net>,  linux-kernel@vger.kernel.org,  Akira Yokosawa
+ <akiyks@gmail.com>,  "David S. Miller" <davem@davemloft.net>,  Ignacio
+ Encinas Rubio <ignacio@iencinas.com>,  Marco Elver <elver@google.com>,
+  Shuah Khan <skhan@linuxfoundation.org>,  Eric Dumazet
+ <edumazet@google.com>,  Jan Stancek <jstancek@redhat.com>,  Paolo Abeni
+ <pabeni@redhat.com>,  Ruben Wauters <rubenru09@aol.com>,
+  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
+  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
+  stern@rowland.harvard.edu,  Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v2 0/2] Some extra patches for netlink doc generation
+In-Reply-To: <cover.1749735022.git.mchehab+huawei@kernel.org>
+Date: Fri, 13 Jun 2025 09:24:43 +0100
+Message-ID: <m2ldpwnj5g.fsf@gmail.com>
+References: <cover.1749735022.git.mchehab+huawei@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-k1-gpio-of-table-v1-1-9015da8fdfdb@iscas.ac.cn>
-X-B4-Tracking: v=1; b=H4sIAI3uS2gC/x3MTQqAIBBA4avIrBvQ6Q+6SrTImmooVDQiiO6et
- PwW7z2QOAon6NQDkS9J4l2GKRRM2+hWRpmzgTTVujEl7gbXIB79gudoD0YispVtG1vVJeQsRF7
- k/pf98L4fKAWyM2IAAAA=
-X-Change-ID: 20250613-k1-gpio-of-table-222b4b76b453
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Yixun Lan <dlan@gentoo.org>, 
- Alex Elder <elder@riscstar.com>
-Cc: Vivian Wang <uwu@dram.page>, linux-gpio@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, Vivian Wang <wangruikang@iscas.ac.cn>
-X-Mailer: b4 0.14.2
-X-CM-TRANSID:qwCowAAn1tSP7ktoxvw7Bg--.2681S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Jr15ur4DCry5GF43JFWDJwb_yoW8Jr1xpF
-	45Zr9ak3y5GF43tasFvan7ZF18ua1vgFyIgF12kw1xZ3WqkrnFgF4jyFZF934UXryrJrW7
-	Xa1DGFyDWF18Ar7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUb8hL5UUUUU==
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
+Content-Type: text/plain
 
-The gpio-spacemit-k1 driver can be compiled as a module. Add missing
-MODULE_DEVICE_TABLE so it can be matched by modalias and automatically
-loaded by udev.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Fixes: d00553240ef8 ("gpio: spacemit: add support for K1 SoC")
-Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
----
-This patch is available at:
+> This patch series comes after:
+> 	https://lore.kernel.org/linux-doc/cover.1749723671.git.mchehab+huawei@kernel.org/T/#t
 
-https://github.com/dramforever/linux/tree/k1/gpio-of-table/v1
----
- drivers/gpio/gpio-spacemit-k1.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-index f027066365ff8741f99da076d1e7b6339a6c1a22..3cc75c701ec40194e602b80d3f96f23204ce3b4d 100644
---- a/drivers/gpio/gpio-spacemit-k1.c
-+++ b/drivers/gpio/gpio-spacemit-k1.c
-@@ -278,6 +278,7 @@ static const struct of_device_id spacemit_gpio_dt_ids[] = {
- 	{ .compatible = "spacemit,k1-gpio" },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, spacemit_gpio_dt_ids);
- 
- static struct platform_driver spacemit_gpio_driver = {
- 	.probe		= spacemit_gpio_probe,
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250613-k1-gpio-of-table-222b4b76b453
-
-Best regards,
--- 
-Vivian "dramforever" Wang
-
+Can you please incorporate this series into a v3 of the other patch set.
