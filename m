@@ -1,138 +1,287 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A72D1D5CC6
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BC91A01B9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749780421; cv=none; b=j0VhiQZEesQpwnyfVXwcnXqJYxtS2rcFYHaUlQfNKfs51Y6/R371McE1NZ1eh9cf0/lJsLmICGM8RfIakf139oG91MKgWIn1Ey3/8QlKsfq7vkjV+4NYlnUtyGwT39ytyUsZ3xc4nNLwporLdSQaGnaVdcv7AwWSdXmQ1nhNlQQ=
+	t=1749780452; cv=none; b=lQkmOHRu5Ul264AzPgBAWSAkuVWI8agxFZsmCuBDzmFfWryA3lmBDLYGQIOPCtqRhES+6PB2b+R1ZC82x122i8tN9OR85za2Ih13VR1z1vzAjWb17H808f0qsWQRbOGpJTupRrXqaQmgDh51NU0y/zb6jntgl/Bvwj5/gcpZLc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749780421; c=relaxed/simple;
-	bh=nCxKwbZk4e1A1IebS659hmsoseH4KT29iPS1HkLVXXE=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=KuXs1PV9NWxDzNYLiQ4CXdnBSe2bIWlx2tbFoyFGi2kYa97djuGWErM9O8ShShBo7aP8A0tU9WhZQZpSmU6VC4n6974JDN+uccCYynkWB+90FNKLMEr8MLneCnwS1/HjnyKAoKmAAig4o0GpEemNK3kdXEVrbt6+UxvpP5GqmDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZWQdhMxB; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749780452; c=relaxed/simple;
+	bh=wLJrwFv4SAlYUa3Duhr/pDflGB79tdrq/n/KdpiOEvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C18LJhCSn9aFsruuRTTRADFbbBTV3OVHZQF/6r+I8uAAKw3QzMpfeQfd1//dSb/aboerM7vahjp5y1rtJFM02gh3LS0kXywyTC5qkNxamYKLMzdS1a9a27NaT8RIBhvNhCccTjLPieK/J16eDepmIw1Zzt/KM3RJ4gHlxq7TI4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=e92SUjzE; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZWQdhMxB"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="e92SUjzE"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749780442; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=p+rRa3QKmOhYw/Lt12EnBbPLQ9TK+8gj2nP9q+FYN8w=;
+	b=e92SUjzEBxC47EZOAAKWdoH3RQ6/P4HSDKyNecEG7qWaZvY82HkDTY8gPzKXeIiD+Tyv0/i8lcgYSfCuFYMAdzBN6RMiXy32bFZYEr8sy5jVpNKAUszoujG/JHBs5G6sBd9V98AOMlmMVHw3G4+5l7kF5Zfqedg2fRYlBG7kLL0=
+Received: from 30.74.144.147(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdiglX0_1749780441 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Jun 2025 10:07:21 +0800
+Message-ID: <7c911fff-aaf1-430c-89f2-5e7925e90a04@linux.alibaba.com>
+Date: Fri, 13 Jun 2025 10:07:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749780407;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q1hLQZrnvipPz+3ANyt0Y2ORYvaf1oK6TEmtgPjNftQ=;
-	b=ZWQdhMxBz57PYxRverZ/XRcz6H+dQXt7NKN9SaTlFGJhoWD4jfvwxj6X+zJKrAyWbB+SA+
-	vi/v3h8YQA3YqNin1MBts/UKWsfmcyXTDBjquOHqqLy8Auo6ekiXI06v1yOMkEyOyxIbYn
-	H6rgxpz18e6WBJkXXXYVt8j+63/0zfE=
-Date: Fri, 13 Jun 2025 02:06:45 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yajun Deng" <yajun.deng@linux.dev>
-Message-ID: <2d5322bce3f450da329e5e146bf0a850afa55fe4@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH RESEND net-next v2] net: phy: Add c45_phy_ids sysfs
- directory entry
-To: "Andrew Lunn" <andrew@lunn.ch>
-Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <737294c1-258f-4780-80f8-e7a72e887f8b@lunn.ch>
-References: <20250612143532.4689-1-yajun.deng@linux.dev>
- <737294c1-258f-4780-80f8-e7a72e887f8b@lunn.ch>
-X-Migadu-Flow: FLOW_OUT
-
-June 12, 2025 at 11:31 PM, "Andrew Lunn" <andrew@lunn.ch> wrote:
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] mm: huge_memory: disallow hugepages if the
+ system-wide THP sysfs settings are disabled
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, Liam.Howlett@oracle.com,
+ npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, ziy@nvidia.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1749109709.git.baolin.wang@linux.alibaba.com>
+ <8eefb0809c598fadaa4a022634fba5689a4f3257.1749109709.git.baolin.wang@linux.alibaba.com>
+ <1ec368c4-c4d8-41ea-b8a3-7d1fdb3ec358@redhat.com>
+ <2ff65f37-efa9-4e96-9cdf-534d63ff154e@linux.alibaba.com>
+ <953596b2-8749-493d-97eb-a5d8995d9ef8@redhat.com>
+ <97a67b74-d473-455e-a05e-c85fe45da008@linux.alibaba.com>
+ <b8fe659e-8a84-4328-b6d6-6116c616cb3d@redhat.com>
+ <ce58b08c-0ac1-4ec2-8ff6-cf8e651709b0@lucifer.local>
+ <ee646bca-e77d-4452-82f8-0bdb4b241f9c@redhat.com>
+ <815f383d-8636-490d-8994-486be51f3123@lucifer.local>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <815f383d-8636-490d-8994-486be51f3123@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
->=20
->=20>=20
->=20> +#define MMD_INDICES \
-> >=20
->=20>  + _(1) _(2) _(3) _(4) _(5) _(6) _(7) _(8) \
-> >=20
->=20>  + _(9) _(10) _(11) _(12) _(13) _(14) _(15) _(16) \
-> >=20
->=20>  + _(17) _(18) _(19) _(20) _(21) _(22) _(23) _(24) \
-> >=20
->=20>  + _(25) _(26) _(27) _(28) _(29) _(30) _(31)
-> >=20
->=20
-> Is 0 not valid?
->=20
+On 2025/6/12 22:49, Lorenzo Stoakes wrote:
+> On Thu, Jun 12, 2025 at 04:09:27PM +0200, David Hildenbrand wrote:
+>>
+>>
+>>>> @@ -265,6 +265,42 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>>>                                            unsigned long tva_flags,
+>>>>                                            unsigned long orders);
+>>>> +/* Strictly mask requested anonymous orders according to sysfs settings. */
+>>>> +static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
+>>>> +       unsigned long tva_flags, unsigned long orders)
+>>>> +{
+>>>> +       const unsigned long always = READ_ONCE(huge_anon_orders_always);
+>>>> +       const unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
+>>>> +       const unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);
+>>>> +       const unsigned long never = ~(always | madvise | inherit);
+>>>> +
+>>>> +       /* Disallow orders that are set to NEVER directly ... */
+>>>> +       orders &= ~never;
+>>>> +
+>>>> +       /* ... or through inheritance (global == NEVER). */
+>>>> +       if (!hugepage_global_enabled())
+>>>> +               orders &= ~inherit;
+>>>> +
+>>>> +       /*
+>>>> +        * Otherwise, we only enforce sysfs settings if asked. In addition,
+>>>> +        * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
+>>>> +        * is not set, we don't bother checking whether the VMA has VM_HUGEPAGE
+>>>> +        * set.
+>>>> +        */
+>>>> +       if (!(tva_flags & TVA_ENFORCE_SYSFS))
+>>>> +               return orders;
+>>>
+>>> This implicitly does a & mask as per suggested previous version, which I think
+>>> is correct but worth pointing out.
+>>
+>> Yes.
+>>
+>>>
+>>>> +
+>>>> +       if (!(vm_flags & VM_HUGEPAGE)) {
+>>>
+>>> Don't love this sort of mega negation here. I read this as _does_ have huge
+>>> page...
+>>
+>> Well, it's very common to do that, but not objecting to something that is
+>> clearer ;)
+>>
+>> I assume you spotted the
+>>
+>> if (!(tva_flags & TVA_ENFORCE_SYSFS))
+>>
+>> :P
+> 
+> Lol yeah I know I know, I just think I guess in this case because you're
+> negating elsewhere it makes it harder...
+> 
+>>
+>> if (vm_flags & VM_HUGEPAGE)
+>> 	return orders;
+>>
+>>
+>> Would have been easier.
+>>
+>>>
+>>>> +               /* Disallow orders that are set to MADVISE directly ... */
+>>>> +               orders &= ~madvise;
+>>>> +
+>>>> +               /* ... or through inheritance (global == MADVISE). */
+>>>> +               if (!hugepage_global_always())
+>>>> +                       orders &= ~inherit;
+>>>
+>>> I hate this implicit 'not hugepage global always so this means either never or
+>>> madvise and since we cleared orders for never this means madvise' mental
+>>> gymnastics required here.
+>>>
+>>> Yeah I feel this is a bridge too far, we're getting into double negation and I
+>>> think that's more confusiong.
+>>
+>>
+>> Same here ... I think we should just have hugepage_global_madvise(). :)
+> 
+> Ideally in future not have these stupid globals all over the place and rework
+> this whole damn thing...
+> 
+>>
+>>>
+>>>
+>>>> +       }
+>>>
+>>> I propose a compromise as I rather like your 'exclude never' negation bit.
+>>>
+>>> So:
+>>>
+>>> /* Strictly mask requested anonymous orders according to sysfs settings. */
+>>> static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
+>>>                   unsigned long tva_flags, unsigned long orders)
+>>> {
+>>>           const unsigned long always = READ_ONCE(huge_anon_orders_always);
+>>>           const unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
+>>>           const unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);;
+>>> 	const unsigned long never = ~(always | madvise | inherit);
+>>>           const bool inherit_enabled = hugepage_global_enabled();
+>>
+>> Can we just have hugepage_global_never/disabled() to use instead?
+> 
+> This would be nice!
+> 
+> Could be a follow up... though again would be nice to somehow do away with all
+> this crap altogether.
+> 
+>>
+>>>
+>>> 	/* Disallow orders that are set to NEVER directly ... */
+>>> 	orders &= ~never;
+>>>
+>>> 	/* ... or through inheritance (global == NEVER). */
+>>> 	if (!inherit_enabled)
+>>> 		orders &= ~inherit;>
+>>> 	/*
+>>> 	 * Otherwise, we only enforce sysfs settings if asked. In addition,
+>>> 	 * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
+>>> 	 * is not set, we don't bother checking whether the VMA has VM_HUGEPAGE
+>>> 	 * set.
+>>> 	 */
+>>> 	if (!(tva_flags & TVA_ENFORCE_SYSFS))
+>>> 		return orders;
+>>>
+>>> 	if (hugepage_global_always())
+>>> 		return orders & (always | inherit);
+>>>
+>>> 	/* We already excluded never inherit above. */
+>>> 	if (vm_flags & VM_HUGEPAGE)
+>>> 		return orders & (always | madvise | inherit);
+>>>
+>>> 	return orders & always;
+>>> }
+>>>
+>>> What do you think?
+>>
+>> With the fixup, it would work for me. No magical "mask" variables :D
+> 
+> Thanks!
 
-Yes,=20the MMD starts at 1. See "include/uapi/linux/mdio.h".
+Fair enough. You both prefer the 'exclude never' logic, and I will 
+follow that logic.
 
-> >=20
->=20> +#define MMD_DEVICE_ID_ATTR(n) \
-> >=20
->=20>  +static ssize_t mmd##n##_device_id_show(struct device *dev, \
-> >=20
->=20>  + struct device_attribute *attr, char *buf) \
-> >=20
->=20>  +{ \
-> >=20
->=20>  + struct phy_device *phydev =3D to_phy_device(dev); \
-> >=20
->=20>  + return sysfs_emit(buf, "0x%.8lx\n", \
-> >=20
->=20>  + (unsigned long)phydev->c45_ids.device_ids[n]); \
-> >=20
->=20>  +} \
-> >=20
->=20>  +static DEVICE_ATTR_RO(mmd##n##_device_id)
-> >=20
->=20
-> This macro magic i can follow, you see this quite a bit in the kernel.
->=20
+>>>> +       return orders;
+>>>> +}
+>>>> +
+>>>>    /**
+>>>>     * thp_vma_allowable_orders - determine hugepage orders that are allowed for vma
+>>>>     * @vma:  the vm area to check
+>>>> @@ -287,16 +323,8 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>>>                                          unsigned long orders)
+>>>>    {
+>>>>           /* Optimization to check if required orders are enabled early. */
+>>>> -       if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
+>>>> -               unsigned long mask = READ_ONCE(huge_anon_orders_always);
+>>>> -
+>>>> -               if (vm_flags & VM_HUGEPAGE)
+>>>> -                       mask |= READ_ONCE(huge_anon_orders_madvise);
+>>>> -               if (hugepage_global_always() ||
+>>>> -                   ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()))
+>>>> -                       mask |= READ_ONCE(huge_anon_orders_inherit);
+>>>> -
+>>>> -               orders &= mask;
+>>>> +       if (vma_is_anonymous(vma)) {
+>>>> +               orders = __thp_mask_anon_orders(vm_flags, tva_flags, orders);
+>>>>                   if (!orders)
+>>>>                           return 0;
+>>>
+>>> I pointed out to Baolin that __thp_vma_allowable_orders() handles the orders ==
+>>> 0 case almost immediately so there's no need to do this, it just makes the code
+>>> noisier.
+>>
+>> The reason we added it in the first place was to not do the (expensive)
+>> function call.
+> 
+> Ack point taken!
+> 
+>>
+>>
+>> --
+>> Cheers,
+>>
+>> David / dhildenb
+>>
+> 
+> For convenience, I enclose the fixed version + tweaked the inherit local bool to
+> be inherit_never to be clearer:
+> 
+> /* Strictly mask requested anonymous orders according to sysfs settings. */
+> static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
+>                  unsigned long tva_flags, unsigned long orders)
+> {
+>          const unsigned long always = READ_ONCE(huge_anon_orders_always);
+>          const unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
+>          const unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);;
+>          const unsigned long never = ~(always | madvise | inherit);
+>          const bool inherit_never = !hugepage_global_enabled();
+> 
+>          /* Disallow orders that are set to NEVER directly ... */
+>          orders &= ~never;
+> 
+>          /* ... or through inheritance (global == NEVER). */
+>          if (inherit_never)
+>                  orders &= ~inherit;
+> 
+>          /*
+>           * Otherwise, we only enforce sysfs settings if asked. In addition,
+>           * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
+>           * is not set, we don't bother checking whether the VMA has VM_HUGEPAGE
+>           * set.
+>           */
+>          if (!(tva_flags & TVA_ENFORCE_SYSFS))
+>                  return orders;
+> 
+>          /* We already excluded never inherit above. */
+>          if (vm_flags & VM_HUGEPAGE)
+>                  return orders & (always | madvise | inherit);
+> 
+>          if (hugepage_global_always())
+>                  return orders & (always | inherit);
+> 
+>          return orders & always;
+> }
 
-Okay.
-
->=20>=20
->=20> +
-> >=20
->=20>  +#define _(x) MMD_DEVICE_ID_ATTR(x);
-> >=20
->=20>  +MMD_INDICES
-> >=20
->=20>  +#undef _
-> >=20
->=20>  +
-> >=20
->=20>  +static struct attribute *phy_mmd_attrs[] =3D {
-> >=20
->=20>  + #define _(x) &dev_attr_mmd##x##_device_id.attr,
-> >=20
->=20>  + MMD_INDICES
-> >=20
->=20>  + #undef _
-> >=20
->=20>  + NULL
-> >=20
->=20>  +};
-> >=20
->=20
-> If i squint at this enough, i can work it out, but generally a much
->=20
->=20more readable KISS approach is taken, of just invoking a macro 32
->=20
->=20times. See mdio_bus.c as an example.
->=20
-
-Okay.
-
->=20 Andrew
->=20
->=20---
->=20
->=20pw-bot: cr
->
+Thanks Lorenzo. Let me follow this logic and do some testing.
