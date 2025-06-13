@@ -1,368 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0724291C3F;
-	Fri, 13 Jun 2025 09:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9D79291C3F;
+	Fri, 13 Jun 2025 09:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749808483; cv=none; b=JhXr3crPJ0eVKipYGzIymLSF7uTD4wNnZPknqHG6WN+5oKpB4YyYEhFHy+81xEHOdNbcL/rXvolyza3ph9uNnvQ/VEcpHnlmTdrC8Ohcl4eGWGIMntYlTXwuZpaTgSYYoQlHY8cO92IklafQMPSwFjuSbPKiFrQxrkYW+QUab04=
+	t=1749808540; cv=none; b=u2dH6kMltQgJhzy87247ZmOHtrSYNRovp3XoULSoOOe0wYzONaiXlCy6ttvuVFVoiAXJxwXS017ZBDYp+vpQk4GASxHfsyRoDZfXY9yE//EWByrPeskcXdSgmaaYw+bVE/s5INPx4H7J+a+Q/emYiodYrApC2tyviEiOq4H6gwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749808483; c=relaxed/simple;
-	bh=7S40Zuc2TNAecTyadpX90VMiKscvd9zWpUm96dO61pk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fn8wuoYWVQClAHs3prM8igRin71Rqtc+hrUX4PaT8YR2n2weC/tYxC4SefHUJfsM+OuaSXYsCouIHLYLIC4t04e3NnnZQvg8OSybuZ81xscOYSEOxIS50WyiVZOgW1TVl0FjyhB8r+sDKQTqicv4FJJVSFEVUL/tBzNp4oxJy3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgwWZzCd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgwWZzCd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14343C4CEE3;
-	Fri, 13 Jun 2025 09:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749808482;
-	bh=7S40Zuc2TNAecTyadpX90VMiKscvd9zWpUm96dO61pk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IgwWZzCduhTWWVz0Ik0YoXpB8DwGFZHsTowAQDDHQVYhQv9QRP34IURI4Hl9yCc29
-	 4FlZxQ2xGoW39/quqB0hicrkzjFGe/Iim73kY7UdEr5popAOvhGPe+hej2bdOUGzzz
-	 NCFidSOWEI6m1Yy8pRAA5+KJ5oPRZ26qrLNWEhxBte0vywQJIcqitbBfmPICZeWUtf
-	 DBbBwNtxjtxEmoJ3kTn+WjaFCpezmZplSZdZK//Zrcetp8lu6MfuITyXXmwUJ/zkIe
-	 O1VLGw+kvQJANu1osi+nLeWlr0UQZ9okqtAaCaipvC9FcpoC8G9iFHKlozVAC5vzQK
-	 AZv9VAeaeADpg==
-Message-ID: <576ca6bb-291c-458e-9703-46e7d2f43bbe@kernel.org>
-Date: Fri, 13 Jun 2025 11:54:35 +0200
+	s=arc-20240116; t=1749808540; c=relaxed/simple;
+	bh=q5gk6sV246NIfmcZtoNnX05im1nF33xmkiCPYWeZivk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ITHIeW59bUn/db3qzWdC15y0us2zFrYkkXJUViB/NTVyYDLvFxi8+JX6zVHMtVgUfEv6tPCFvpdEELW67B1tT+33To+8U4SxZygyGOIaQc6sTCGM7PxvdSGumDHJokPGN6KtBqUv91M4fAZ1yygltI8KH/QZwLgh33cuurOr0Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-b3-684bf593d06c
+From: Rakie Kim <rakie.kim@sk.com>
+To: Bijan Tabatabai <bijan311@gmail.com>
+Cc: sj@kernel.org,
+	akpm@linux-foundation.org,
+	corbet@lwn.net,
+	david@redhat.com,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	bijantabatab@micron.com,
+	venkataravis@micron.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	vtavarespetr@micron.com,
+	damon@lists.linux.com,
+	linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel_team@skhynix.com
+Subject: Re: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data across nodes
+Date: Fri, 13 Jun 2025 18:55:17 +0900
+Message-ID: <20250613095525.1845-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <20250612181330.31236-1-bijan311@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
-To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
- lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
- andrew@codeconstruct.com.au, vkoul@kernel.org, kishon@kernel.org,
- linus.walleij@linaro.org, p.zabel@pengutronix.de,
- linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
-Cc: elbadrym@google.com, romlem@google.com, anhphan@google.com,
- wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
- <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsXC9ZZnoe7kr94ZBsc2mVus2NvKbjFn/Ro2
+	i103Qiwafnxms1hw7zyjxZMD7YwWCy9uYbT4uv4Xs8WMD5fYLX7ePc5ucXzrPHaLhW1LWCwu
+	75rDZnFvzX9Wi2990haHv75hstjZfIfJ4vi9SewWq9dkWMw+eo/dQcRj56y77B7dbZfZPRbv
+	ecnksWlVJ5vHpk+T2D1OzPjN4rHzoaXH9I7nQMm+yawe39d3sHn0Nr9j83i/7yqbx+dNcgG8
+	UVw2Kak5mWWpRfp2CVwZt9+/Zypo1ayY9WcHawPjW4UuRk4OCQETicvXelhg7Av3DgLZHBxs
+	AkoSx/bGgIRFBDQkdny/w97FyMXBLDCdRWLZvVPsIAlhgXCJxmm/wWwWAVWJ6xt+MYHYvEBz
+	VhzuYYOYqSnRcOkeWJxTwEJiXf9OsLiQAI/Eqw37GSHqBSVOznwCdgOzgLxE89bZzCDLJAQO
+	sUus3n2GFWKQpMTBFTdYJjDyz0LSMwtJzwJGplWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgZG3
+	rPZP9A7GTxeCDzEKcDAq8fBa7PLKEGJNLCuuzD3EKMHBrCTCy3gFKMSbklhZlVqUH19UmpNa
+	fIhRmoNFSZzX6Ft5ipBAemJJanZqakFqEUyWiYNTqoFx4rG890wvk89d69w7lYfptVGj8e+i
+	y9tXtjTb91qqnKr5b3TQOOP4i+31/W7iqWufT/U5svBX/ooAT/b+fYZX9Ble9H/gSH3G9u96
+	VdOZh7GCSi8uVXxrnC8RWC0zT2HZ9vbzomVn9/i+F4vblmm85Nvts24VhsdsBb4rXH7ld+6w
+	8aKlJzZHK7EUZyQaajEXFScCABdFEka4AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsXCNUNNS3fyV+8MgwXv1CxW7G1lt5izfg2b
+	xa4bIRYNPz6zWSy4d57R4tyU2WwWTw60M1osvLiF0eLr+l/MFjM+XGK3+Hn3OLvF8a3z2C0O
+	zz3JarGwbQmLxeVdc9gs7q35z2rxrU/a4tC156wWh7++YbLY2XyHyeL4vUnsFqvXZFjMPnqP
+	3UHcY+esu+we3W2X2T0W73nJ5LFpVSebx6ZPk9g9Tsz4zeKx86Glx/SO50DJvsmsHt/Xd7B5
+	9Da/Y/N4v+8qm8e32x4ei198YPL4vEkugD+KyyYlNSezLLVI3y6BK+P2+/dMBa2aFbP+7GBt
+	YHyr0MXIySEhYCJx4d5Bli5GDg42ASWJY3tjQMIiAhoSO77fYe9i5OJgFpjOIrHs3il2kISw
+	QLhE47TfYDaLgKrE9Q2/mEBsXqA5Kw73sEHM1JRouHQPLM4pYCGxrn8nWFxIgEfi1Yb9jBD1
+	ghInZz5hAbGZBeQlmrfOZp7AyDMLSWoWktQCRqZVjCKZeWW5iZk5pnrF2RmVeZkVesn5uZsY
+	gTG2rPbPxB2MXy67H2IU4GBU4uG12OWVIcSaWFZcmXuIUYKDWUmEl/EKUIg3JbGyKrUoP76o
+	NCe1+BCjNAeLkjivV3hqgpBAemJJanZqakFqEUyWiYNTqoGx/9vVaYZet1Z/dewrOPWyOObw
+	4z3B7PpuO6xOZSnvSN9260Sb+YNZW71esd+ri5yy8LjvnuzuV5//9Tzs4ZZmalD6cFvhu8ax
+	oLWhvy4znDSy7MmX/dIbuaCDO9t1muBEpTflAYwFTOwPlfsUixfrb8nsynz0U2ajcNTtpLk5
+	VUU/6o0umz5WYinOSDTUYi4qTgQATQbrLq0CAAA=
+X-CFilter-Loop: Reflected
 
-On 13/06/2025 05:30, Jacky Chou wrote:
-> Introduce PCIe Root Complex driver for ASPEED SoCs. Support RC
-> initialization, reset, clock, IRQ domain, and MSI domain setup.
-> Implement platform-specific setup and register configuration for
-> ASPEED. And provide PCI config space read/write and INTx/MSI
-> interrupt handling.
+On Thu, 12 Jun 2025 13:13:26 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+> From: Bijan Tabatabai <bijantabatab@micron.com>
 > 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->  drivers/pci/controller/Kconfig       |   13 +
->  drivers/pci/controller/Makefile      |    1 +
->  drivers/pci/controller/pcie-aspeed.c | 1039 ++++++++++++++++++++++++++
->  3 files changed, 1053 insertions(+)
->  create mode 100644 drivers/pci/controller/pcie-aspeed.c
+> A recent patch set automatically set the interleave weight for each node
+> according to the node's maximum bandwidth [1]. In another thread, the patch
+> set's author, Joshua Hahn, wondered if/how these weights should be changed
+> if the bandwidth utilization of the system changes [2].
 > 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 886f6f43a895..f6b5eea3b570 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -216,6 +216,19 @@ config PCIE_MT7621
->  	help
->  	  This selects a driver for the MediaTek MT7621 PCIe Controller.
->  
-> +config PCIE_ASPEED
-> +	bool "ASPEED PCIe controller"
-> +	depends on PCI
+> This patch set adds the mechanism for dynamically changing how application
+> data is interleaved across nodes while leaving the policy of what the
+> interleave weights should be to userspace. It does this by adding a new
+> DAMOS action: DAMOS_INTERLEAVE. We implement DAMOS_INTERLEAVE with both
+> paddr and vaddr operations sets. Using the paddr version is useful for
+> managing page placement globally. Using the vaddr version limits tracking
+> to one process per kdamond instance, but the va based tracking better
+> captures spacial locality.
 
-depends ARCH_ASPEED || COMPILE_TEST
+Hi Bijan,
 
-> +	depends on OF || COMPILE_TEST
-> +	select PCI_MSI_ARCH_FALLBACKS
-> +	help
-> +	  Enable this option to add support for the PCIe controller
-> +	  found on ASPEED SoCs.
-> +	  This driver provides initialization and management for PCIe
-> +	  Root Complex functionality, including interrupt and MSI support.
-> +	  Select Y if your platform uses an ASPEED SoC and requires PCIe
-> +	  connectivity.
-> +
->  config PCI_HYPERV_INTERFACE
->  	tristate "Microsoft Hyper-V PCI Interface"
->  	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 038ccbd9e3ba..1339f88e153d 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -39,6 +39,7 @@ obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
->  obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
->  obj-$(CONFIG_PCIE_APPLE) += pcie-apple.o
->  obj-$(CONFIG_PCIE_MT7621) += pcie-mt7621.o
-> +obj-$(CONFIG_PCIE_ASPEED) += pcie-aspeed.o
->  
->  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->  obj-y				+= dwc/
-> diff --git a/drivers/pci/controller/pcie-aspeed.c b/drivers/pci/controller/pcie-aspeed.c
-> new file mode 100644
-> index 000000000000..c745684a7f9b
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-aspeed.c
-> @@ -0,0 +1,1039 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2025 Aspeed Technology Inc.
-> + */
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/kernel.h>
-> +#include <linux/msi.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
+Thank you for explaining the motivation and need behind this patch.
+I believe it's important to consider the case where a new memory node
+is added and the interleave weight values are recalculated.
 
-Where do you use it?
+If a new memory node (say, node2) is added, there are two possible
+approaches to consider.
 
-> +#include <linux/of_address.h>
+1. Migrating pages to the newly added node2.
+   In this case, there is a potential issue where pages may be migrated
+   to node2, even though it is not part of the nodemask set by the user.
 
-Where do you use it?
+2. Ignoring the newly added node2 and continuing to use only the existing
+   nodemask for migrations.
+   However, if the weight values have been updated considering node2
+   performance, avoiding node2 might reduce the effectiveness of using
+   Weighted Interleave.
 
+It would be helpful to consider these two options or explore other
+possible solutions to ensure correctness.
 
-> +#include <linux/of_irq.h>
+Rakie
 
-Where do you use it?
-
-
-> +#include <linux/of_pci.h>
-
-Where do you use it?
-
-> +#include <linux/pci.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/irq.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +
-
-
-
-...
-
-> +
-> +static int aspeed_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pci_host_bridge *host;
-> +	struct aspeed_pcie *pcie;
-> +	struct device_node *node = dev->of_node;
-> +	const void *md = of_device_get_match_data(dev);
-
-Not void, but specific type. This is not Javascript, we have here types.
-
-> +	int irq, ret;
-> +
-> +	if (!md)
-> +		return -ENODEV;
-> +
-> +	host = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> +	if (!host)
-> +		return -ENOMEM;
-> +
-> +	pcie = pci_host_bridge_priv(host);
-> +	pcie->dev = dev;
-> +	pcie->tx_tag = 0;
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	pcie->platform = md;
-> +	pcie->host = host;
-> +
-> +	pcie->reg = devm_platform_ioremap_resource(pdev, 0);
-> +
-> +	of_property_read_u32(node, "msi_address", &pcie->msi_address);
-> +	of_property_read_u32(node, "linux,pci-domain", &pcie->domain);
-> +
-> +	pcie->cfg = syscon_regmap_lookup_by_phandle(dev->of_node, "aspeed,pciecfg");
-> +	if (IS_ERR(pcie->cfg))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->cfg), "Failed to map pciecfg base\n");
-> +
-> +	pcie->pciephy = syscon_regmap_lookup_by_phandle(node, "aspeed,pciephy");
-> +	if (IS_ERR(pcie->pciephy))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->pciephy), "Failed to map pciephy base\n");
-> +
-> +	pcie->h2xrst = devm_reset_control_get_exclusive(dev, "h2x");
-> +	if (IS_ERR(pcie->h2xrst))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->h2xrst), "Failed to get h2x reset\n");
-> +
-> +	pcie->perst = devm_reset_control_get_exclusive(dev, "perst");
-> +	if (IS_ERR(pcie->perst))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->perst), "Failed to get perst reset\n");
-> +
-> +	ret = pcie->platform->setup(pdev);
-> +	if (ret)
-> +		goto err_setup;
-> +
-> +	host->sysdata = pcie;
-> +
-> +	ret = aspeed_pcie_init_irq_domain(pcie);
-> +	if (ret)
-> +		goto err_irq_init;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		goto err_irq;
-> +
-> +	ret = devm_request_irq(dev, irq, aspeed_pcie_intr_handler, IRQF_SHARED, dev_name(dev),
-> +			       pcie);
-> +	if (ret)
-> +		goto err_irq;
-> +
-> +	pcie->clock = clk_get(dev, NULL);
-
-Huh...
-
-> +	if (IS_ERR(pcie->clock))
-> +		goto err_clk;
-> +	ret = clk_prepare_enable(pcie->clock);
-
-devm_clk_get_enabled.
-
-> +	if (ret)
-> +		goto err_clk_enable;
-> +
-> +	ret = pci_host_probe(host);
-> +	if (ret)
-> +		goto err_clk_enable;
-> +
-> +	return 0;
-> +
-> +err_clk_enable:
-> +	clk_put(pcie->clock);
-> +err_clk:
-> +err_irq:
-> +	aspeed_pcie_irq_domain_free(pcie);
-> +err_irq_init:
-> +err_setup:
-> +	return dev_err_probe(dev, ret, "Failed to setup PCIe RC\n");
-> +}
-> +
-> +static void aspeed_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct aspeed_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +	if (pcie->clock) {
-> +		clk_disable_unprepare(pcie->clock);
-> +		clk_put(pcie->clock);
-> +	}
-> +
-> +	pci_stop_root_bus(pcie->host->bus);
-> +	pci_remove_root_bus(pcie->host->bus);
-> +	aspeed_pcie_irq_domain_free(pcie);
-> +}
-> +
-> +static struct aspeed_pcie_rc_platform pcie_rc_ast2600 = {
-
-This should be const. Why it cannot?
-
-> +	.setup = aspeed_ast2600_setup,
-> +	.reg_intx_en = 0x04,
-> +	.reg_intx_sts = 0x08,
-> +	.reg_msi_en = 0x20,
-> +	.reg_msi_sts = 0x28,
-> +};
-> +
-> +static struct aspeed_pcie_rc_platform pcie_rc_ast2700 = {
-
-This should be const. Why it cannot?
-
-> +	.setup = aspeed_ast2700_setup,
-> +	.reg_intx_en = 0x40,
-> +	.reg_intx_sts = 0x48,
-> +	.reg_msi_en = 0x50,
-> +	.reg_msi_sts = 0x58,
-> +};
-> +
-> +static const struct of_device_id aspeed_pcie_of_match[] = {
-> +	{ .compatible = "aspeed,ast2600-pcie", .data = &pcie_rc_ast2600 },
-> +	{ .compatible = "aspeed,ast2700-pcie", .data = &pcie_rc_ast2700 },
-> +	{}
-> +};
-> +
-> +static struct platform_driver aspeed_pcie_driver = {
-> +	.driver = {
-> +		.name = "aspeed-pcie",
-> +		.suppress_bind_attrs = true,
-
-Why?
-
-> +		.of_match_table = aspeed_pcie_of_match,
-> +	},
-> +	.probe = aspeed_pcie_probe,
-> +	.remove = aspeed_pcie_remove,
-
-So how exactly remove can be triggered?
-
-> +};
-> +
-> +module_platform_driver(aspeed_pcie_driver);
-> +
-> +MODULE_AUTHOR("Jacky Chou <jacky_chou@aspeedtech.com>");
-> +MODULE_DESCRIPTION("ASPEED PCIe Root Complex");
-> +MODULE_LICENSE("GPL");
-
-
-Best regards,
-Krzysztof
+> 
+> DAMOS_INTERLEAVE interleaves pages within a region across nodes using the
+> interleave weights at /sys/kernel/mm/mempolicy/weighted_interleave/node<N>
+> and the page placement algorithm in weighted_interleave_nid via
+> policy_nodemask. We chose to reuse the mempolicy weighted interleave
+> infrastructure to avoid reimplementing code. However, this has the awkward
+> side effect that only pages that are mapped to processes using
+> MPOL_WEIGHTED_INTERLEAVE will be migrated according to new interleave
+> weights. This might be fine because workloads that want their data to be
+> dynamically interleaved will want their newly allocated data to be
+> interleaved at the same ratio.
+> 
+> If exposing policy_nodemask is undesirable, we have two alternative methods
+> for having DAMON access the interleave weights it should use. We would
+> appreciate feedback on which method is preferred.
+> 1. Use mpol_misplaced instead
+>   pros: mpol_misplaced is already exposed publically
+>   cons: Would require refactoring mpol_misplaced to take a struct vm_area
+>   instead of a struct vm_fault, and require refactoring mpol_misplaced and
+>   get_vma_policy to take in a struct task_struct rather than just using
+>   current. Also requires processes to use MPOL_WEIGHTED_INTERLEAVE.
+> 2. Add a new field to struct damos, similar to target_nid for the
+> MIGRATE_HOT/COLD schemes.
+>   pros: Keeps changes contained inside DAMON. Would not require processes
+>   to use MPOL_WEIGHTED_INTERLEAVE.
+>   cons: Duplicates page placement code. Requires discussion on the sysfs
+>   interface to use for users to pass in the interleave weights.
+> 
+> This patchset was tested on an AMD machine with a NUMA node with CPUs
+> attached to DDR memory and a cpu-less NUMA node attached to CXL memory.
+> However, this patch set should generalize to other architectures and number
+> of NUMA nodes.
+> 
+> Patches Sequence
+> ________________
+> The first patch exposes policy_nodemask() in include/linux/mempolicy.h to
+> let DAMON determine where a page should be placed for interleaving.
+> The second patch implements DAMOS_INTERLEAVE as a paddr action.
+> The third patch moves the DAMON page migration code to ops-common, allowing
+> vaddr actions to use it.
+> Finally, the fourth patch implements a vaddr version of DAMOS_INTERLEAVE.
+> 
+> [1] https://lore.kernel.org/linux-mm/20250520141236.2987309-1-joshua.hahnjy@gmail.com/
+> [2] https://lore.kernel.org/linux-mm/20250313155705.1943522-1-joshua.hahnjy@gmail.com/
+> 
+> Bijan Tabatabai (4):
+>   mm/mempolicy: Expose policy_nodemask() in include/linux/mempolicy.h
+>   mm/damon/paddr: Add DAMOS_INTERLEAVE action
+>   mm/damon: Move damon_pa_migrate_pages to ops-common
+>   mm/damon/vaddr: Add vaddr version of DAMOS_INTERLEAVE
+> 
+>  Documentation/mm/damon/design.rst |   2 +
+>  include/linux/damon.h             |   2 +
+>  include/linux/mempolicy.h         |   2 +
+>  mm/damon/ops-common.c             | 136 ++++++++++++++++++++
+>  mm/damon/ops-common.h             |   4 +
+>  mm/damon/paddr.c                  | 198 +++++++++++++-----------------
+>  mm/damon/sysfs-schemes.c          |   1 +
+>  mm/damon/vaddr.c                  | 124 +++++++++++++++++++
+>  mm/mempolicy.c                    |   4 +-
+>  9 files changed, 360 insertions(+), 113 deletions(-)
+> 
+> -- 
+> 2.43.5
+> 
+> 
