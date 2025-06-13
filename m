@@ -1,419 +1,196 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023105.outbound.protection.outlook.com [52.101.127.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B754A28
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749818022; cv=none; b=B3WDJLu1Adq3H5raIRuCk4d6Yba8r4BPRO8c3ERM4Wx92VxST5gecimB7UDYXmqxNCBJT/sGhkzMb5PM0OnujczyXcW0cSUbihxkvdlpy+QEnK7oeKSTySf3vaMmYPAvmX+QVXMRRjY9JuR0GoHdw8izrZwBRvg8WR5fdrly6QM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749818022; c=relaxed/simple;
-	bh=JVn9byu3TGWfOGDh2veYtyHTj+pykC7azRqcYzR1UEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GQHbPCYOKtIYpqNildMhz0A+3VrbD3G1XUZJwHcXl7dPa4ZLio6oQlwPkzuc3tdNhZWGahubTsNhfJmwmHYEWEme4WEqJtg+ZXsmMX7KngkQnRnDsOPHtPLvECD604Mmk22XWiSVw2mGyuwyEpXAxDi7D0VBzi3ce59sIARjmyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VkWAgdOw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cOS0/wOu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VkWAgdOw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cOS0/wOu; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VkWAgdOw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cOS0/wOu";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VkWAgdOw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cOS0/wOu"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2B3391F78E;
-	Fri, 13 Jun 2025 12:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749818017; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UY8/ryiGqwkfdxxEcA7a07H/iwmQeNiCx3y9XQts/Hs=;
-	b=VkWAgdOwurhw8KzQCumj6T4g1t3fElA1Ece16xomGu+GV0gERmaUg59qM9pNGcgKypM30R
-	bcfIpPm2urj/99pKwmlnxy75ewKP1x9r9cIRd2fu221Ld2vN0DnJ9nV8ASs7CPzrD7eVu2
-	KL719btKCBnlQxnGrHkv4IWVokcv8hI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749818017;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UY8/ryiGqwkfdxxEcA7a07H/iwmQeNiCx3y9XQts/Hs=;
-	b=cOS0/wOudHmAo0K8CvYlH9sKOzJ9/0uVeO3PfeqPmrKApurXLt4r23X7HObfmPwFEuroKa
-	ndtmtU6a1ly+A6Aw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=VkWAgdOw;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="cOS0/wOu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749818017; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UY8/ryiGqwkfdxxEcA7a07H/iwmQeNiCx3y9XQts/Hs=;
-	b=VkWAgdOwurhw8KzQCumj6T4g1t3fElA1Ece16xomGu+GV0gERmaUg59qM9pNGcgKypM30R
-	bcfIpPm2urj/99pKwmlnxy75ewKP1x9r9cIRd2fu221Ld2vN0DnJ9nV8ASs7CPzrD7eVu2
-	KL719btKCBnlQxnGrHkv4IWVokcv8hI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749818017;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UY8/ryiGqwkfdxxEcA7a07H/iwmQeNiCx3y9XQts/Hs=;
-	b=cOS0/wOudHmAo0K8CvYlH9sKOzJ9/0uVeO3PfeqPmrKApurXLt4r23X7HObfmPwFEuroKa
-	ndtmtU6a1ly+A6Aw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6D1B813782;
-	Fri, 13 Jun 2025 12:33:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EiAXGaAaTGj/cQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 13 Jun 2025 12:33:36 +0000
-Message-ID: <1a1cf578-2d27-486d-8418-737a99c9ebca@suse.de>
-Date: Fri, 13 Jun 2025 14:33:36 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA7A6FC5;
+	Fri, 13 Jun 2025 12:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.105
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749818026; cv=fail; b=YmniwBZjxAPyWDAQUjuVxh/BCxxq5cF9hMqI2cRlybOC59nKGDvFWoR4I1A5lS/pIQUhZLrRissmTDe3ZUjzsLIouNv+Y+CtU05GtnhkNCm2aEv4igpxd4FX5xkfCN3xQhKbTOUNMZAEnOCh8kem8TAoTQUFejq+km0TSo6cvow=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749818026; c=relaxed/simple;
+	bh=9Rxt8AzOh+tlVRa2psVFtK5ls5CzCw2CF6acmSAy4LU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ArIBZqdDt/29kq3/juGpWcwLRyNGw5wMWOWrPMRAXzGzkhpJuohVas/S+e95+RW5gFce9LhBOixCG43SfgxAqDkN1orLuu6kUh+CXJhj+bMob/Dt56S30slokNmsuuEviUIDmjnzMm8AQlq56xOSOMH0IZB/PYn0gEXGF+3KFU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Hj5qJ6xHQM83SLhIKapLTtaJmVKM/r2ChL4MWI1T/2syHyemeaXl2Yu83dC+yTasmi+99lOhPKdEpSGrYk8ZpZUUOGft33TlPYmYYlj6xzainm0C6kIHeSW2rrcNeq00fNBYfKAHXOG/csYhbuD8dp+oOfzFG5y3BBYViSt83SelTQL2rNOaVCh2FbPb4bitBgHamYiIwoWzVdXsbMBm71Akjwm0uL2PSxFK6cj0AKagDbAA4a0vm/MlQ3lsYltL2Sn5/RyVrKpvoZ9l3hejk0CPeQuRQ/sxmuAkK+4ULlsy91CmE50U3doqc/su8krN8aJJ2/o/JDpLkicKLYGu3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9Rxt8AzOh+tlVRa2psVFtK5ls5CzCw2CF6acmSAy4LU=;
+ b=Da9KB54r1gCfFn0aPBThzZ7M6UGiUW4pn/gAhX7ens9+aVOPQqgJgrzepn2Ajx4zEtpAqOFg7640K4ybaIviNsKV0WPsz8N1kKD7Ar9wdDtwhSPIgZ1HL1MNzfBwRlG67819Vj16rE9gDefjU1Mdqehh1kme1NZZZ3DLdfvAChQEzwIVB+bAOl4JgdvpJzSGpmoRtoBpvnSrcq9XKoW8Sr1qOf7feYJL/nQquRsX6Gx7HDVzu7WsRN8y6TYDxsPrf5oy4fAlsGOfidcdVRKMseoFqRKL5fBtJ7+WB1Mzv5Oq1O40ts9YEHgguEYTFzeTp7uUKDpPNY4rrgqeQyrwgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cixtech.com; dmarc=pass action=none header.from=cixtech.com;
+ dkim=pass header.d=cixtech.com; arc=none
+Received: from KL1PR0601MB4726.apcprd06.prod.outlook.com
+ (2603:1096:820:87::13) by TYZPR06MB5420.apcprd06.prod.outlook.com
+ (2603:1096:400:200::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Fri, 13 Jun
+ 2025 12:33:39 +0000
+Received: from KL1PR0601MB4726.apcprd06.prod.outlook.com
+ ([fe80::b54c:6c38:1483:3462]) by KL1PR0601MB4726.apcprd06.prod.outlook.com
+ ([fe80::b54c:6c38:1483:3462%4]) with mapi id 15.20.8835.023; Fri, 13 Jun 2025
+ 12:33:38 +0000
+From: Hans Zhang <Hans.Zhang@cixtech.com>
+To: Niklas Cassel <cassel@kernel.org>, Hans Zhang <18255117159@163.com>
+CC: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "mani@kernel.org" <mani@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "robh@kernel.org"
+	<robh@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject:
+ =?gb2312?B?u9i4tDogW1BBVENIIDAxLzEzXSBQQ0k6IGR3YzogQWRkIGR3X3BjaWVfY2xl?=
+ =?gb2312?B?YXJfYW5kX3NldF9kd29yZCgpIGZvciByZWdpc3RlciBiaXQgbWFuaXB1bGF0?=
+ =?gb2312?Q?ion?=
+Thread-Topic: [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for
+ register bit manipulation
+Thread-Index: AQHb2u5eKuHrkrx42EiULNApk4O0zLQBAD6AgAAHvgA=
+Date: Fri, 13 Jun 2025 12:33:38 +0000
+Message-ID:
+ <KL1PR0601MB4726E09FD2A35DC81E7B16F09D77A@KL1PR0601MB4726.apcprd06.prod.outlook.com>
+References: <20250611163057.860353-1-18255117159@163.com>
+ <aEwTXVZI0wvRvgil@ryzen>
+In-Reply-To: <aEwTXVZI0wvRvgil@ryzen>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cixtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: KL1PR0601MB4726:EE_|TYZPR06MB5420:EE_
+x-ms-office365-filtering-correlation-id: 2d467b3a-70d4-4175-60e1-08ddaa7685f4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?gb2312?B?R3FIUklxeUxxbXFTRWJoakhkVVlDTHFiM0dybUd5L3pqY0dJZ2hkQngxeUZH?=
+ =?gb2312?B?K1dEQjhIS3gyRkRFeDc1WG5kQnVKVmNNNFliNk5DWFhNL2k5eUhheWJ6L25G?=
+ =?gb2312?B?VzJWZWRFYnRQbEZmdWVVbFZvdi80MXFNR255dzZUNWpEM1YrVlVIMHdLK0hV?=
+ =?gb2312?B?WVEyNE1uSllaTUhRSnhHSEtOODBYU3YyNnlJaXVEZ1dHZnJCK2hwWFVweFRp?=
+ =?gb2312?B?RVlWM3oya0NXb0IwdVVoWDdDSzRtaGtXb0h3QkpNVEt3OHJ3UVpqTXhja05V?=
+ =?gb2312?B?cExiQXFpbG9pYi9vd1MyT3VpUHl0b2dPU1E1M2VULytWY1RQTVhzeXhIdkNW?=
+ =?gb2312?B?MUtiQisvNURkcXhkTlIyY2V5YWdCUlA0NFZFUHRGSENIaGRrYkZCTkZ3ejBn?=
+ =?gb2312?B?L2FZNlZMbEJSTDlEeEsvdnlLOWtGUUc3QnRuSDMveDNXOEYrV3Z2T3NtTnpU?=
+ =?gb2312?B?c0JhZ2tWaU5iUXp4bnhHcExKWVZSWDFQaUVSRVQwdFB4UWxsNkN6N1JXc0hv?=
+ =?gb2312?B?RmdpSTdkSk1sUldoWis2ejJ6R3RQM1hHVWRsNmhnZnl1SUVlUVlxQUYwVnFN?=
+ =?gb2312?B?UEoyR1JmaHRlWVFIZzN0MFo4S2s5NHAzenB0SHhtOWsra2VsQlE5c2RLeFU2?=
+ =?gb2312?B?S0lhb2djOXowMS85bmdiMGdxNzRCZnNrdFArYWI5bGwzNllXUkZJMVRjL3Rk?=
+ =?gb2312?B?R2pxYnJQL05SUURvcmtDSGtsSnhQeE8yVnFoRm9pL0ZnYmVGVzZ2U0JHcXVF?=
+ =?gb2312?B?VDQxeFQrMUJuK2dRN1V3bFBFY3ZnMjllREliTWN1WnV2aHZ5bGJ1eTFhRkFl?=
+ =?gb2312?B?dFpnWWh1di9KSktveC9Ba1liTWVFM052V2ZtZkNFRGVjeTY3eGxWNFBxLzNu?=
+ =?gb2312?B?cnRuV3VtVE02aWNuenJCbGUwVS8vVWl2Z2p2aysxUHhCL2JLTGZZMVBFZ1l6?=
+ =?gb2312?B?eDI2K01wMW5qQi9SZ1RMcnBXM3diMm8vWlFtMmtEc1BlUEh0OHRCaHNCVC9x?=
+ =?gb2312?B?T09MTUUydGVPUzdxaEZWakM1YUkxMlJPMVZFVGtLdkl1bWd6N2tiOWNLeWxn?=
+ =?gb2312?B?QWJ5UGIwVERSUE5keFhWdTdJWWZQekI4eUk1K1ZlM0N6YllVbEJkRmlhU0V1?=
+ =?gb2312?B?a2h5YVhzQmNXWTlaV0xrV1k5Umw0S0loVGNUWUtFZzQxV1JlOUVZU1daYXpz?=
+ =?gb2312?B?RUpyZG5OTGQ2N2hpazh6SytuSnBmY2FlcEZudUs0RGE2dVFUd05Ub3FSTTFx?=
+ =?gb2312?B?RDhOcjRwdHhpUzBoeHdkYUZoUVo4ME9mY3Biam1tT1FJaFgyV3hIKzBzK01V?=
+ =?gb2312?B?eERYT3Q0YmlXR3ZiOGhiM3JUQ2pDTE5lZEhhTDBiWGpaTVRmWmNCek56T2hv?=
+ =?gb2312?B?RVEyaUxXeXlEbVpmUTJqUFFuNzFuMGVkSm9ndjBoMzhyUGlsY3hwL2dIbE5E?=
+ =?gb2312?B?Z0FuR3hHb2duSi9DQXZ1ODdhbTd0U09KbTdtS0hSL0FodEFhVithWVJyeVI4?=
+ =?gb2312?B?ay8wandlTk4zYWdVMmZySVBiejZOeUVyZzZKM2hjcHZ6b3pxSUpXL0E5MHhu?=
+ =?gb2312?B?bHBRK1NMbEJ4MSs2YkRiVGtNNmtZZy9od29Ha1pUOC9uNWk3VDU1b1czSE5q?=
+ =?gb2312?B?cmJrNWtSNFhGL3JnZEVFbVU0NVRJYjRPTlVpck9yMmNFcDR4ZDRQZ3ZPSVkr?=
+ =?gb2312?B?SjdKR2dyYjZzZUZsQ3ExenE0Q1RHOG9McEtMUk5Nay9BTTBFWm5CUWpTOUNH?=
+ =?gb2312?B?M3psaVZsWDEySVNwS1pkZUZnazRFL2dNZ2oxOW81dlFtK3ZvMlZpanhLMEhU?=
+ =?gb2312?B?cTJENk96azhhZ1pYbTVJQ0FyLzZGZkZQMitXc24vS3VUeDEybG1mUTdLSXZ3?=
+ =?gb2312?B?cjVrOC9yMlE1TU5QWHVBSVVkeTVyVHY4ZWVia0JveGpWVEFLK3RoWkZTV1BY?=
+ =?gb2312?B?QUJXYXJ1YkNCbjhsdW1ySnRSeDBqOTVrZSs1cnFORHBTSW50SHAxNFNCditv?=
+ =?gb2312?B?bzhCa0lZQUpnPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR0601MB4726.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?dVdNZVFGQ01rN0ZXK2dySUJWUnQ3b1doUlYwWVA4VlNJaXFOZTgzUW8zZmd3?=
+ =?gb2312?B?L0hCbXZ2Q1J0SkN3MXBkRkZZRU5vM1hSYmU2NFJKUEhJeVh1eXQrZkljNDBZ?=
+ =?gb2312?B?Z1NmRHFuVlRXSHo3TkU2YWFHUERubEZFWGdZS2xpWmlFUjFzcHpFR3hKNitI?=
+ =?gb2312?B?bTBpNjJldUxWZHdRMit6MUV3NlVEb3QyVXNxbnZ1VVJvU1d2bExzYzNyeTh1?=
+ =?gb2312?B?S3FwNkpNcndDSzZtVFVFUGloNzN6ckREdkFDbGtWaTV4SittMjE5V3I3Yi95?=
+ =?gb2312?B?akJ0N1VQUGhkYWYxZGhEbkZvUTc1dFEwQk5xb1FuTlg5cVI2Z3lnYklIQWJM?=
+ =?gb2312?B?bEFFNGl0ZHhRUTNxdVErRkt3amI5RFlhVU1MWnE0SGRlUis5QzRseFlybWc0?=
+ =?gb2312?B?Mnd6ZnpYVzh3c1c2VnozL0xoMlgydmowc1FXT0tTWGMwbVVWeGlrN3cweC9H?=
+ =?gb2312?B?SFFhVHZXa1haS2pyNWFNdWRBYlVVMkcyUkdhcWFqYVQ5c01IalhCWjZ0ckpw?=
+ =?gb2312?B?R3M1MXErOHd4RkFTNmF5M2tsTzYxNEtrMHRHTnRnaUxJb29yV0xBN3lYenlH?=
+ =?gb2312?B?QXdHUEFaUmxMenFjWHYyQ0VjRUZaanJ0VExxbXpMSDZGYmRFS3NrOWNwTy9J?=
+ =?gb2312?B?Ni85VTBjM1QzUUZkYk1DS0IxdFYwdjhTekRhdnlsNnorRGlCUVJzelVpOHFh?=
+ =?gb2312?B?aXJNbExaT0dUSmlyQjlTOGZIQWlnT0twY0tUamE1ZndXcTU0bDBaNzc4S2E0?=
+ =?gb2312?B?QlIxMnlLQ21ncnhkMjlWVGFZdVpXL3ZDMVdXb2hsUi8zUkI3eXAzd2srT1FO?=
+ =?gb2312?B?NWlkcG9YbmEyR0JleEh4N1hWcTNiQXBuV3FoK3V2SXFWYys2NjNRN0xKMzZR?=
+ =?gb2312?B?bkNyK1o1R1M4T3lxRm1KVlhMbkl2SHFtOXZ0dFc4VVpyeG5ZcTBvV3VvRE1L?=
+ =?gb2312?B?TDhxT0JqcWczaWxHaEtzUCtHbi9XOS9rUDZRaVlPQTU2ZXZIQk5KWEE2QWRG?=
+ =?gb2312?B?QndQaEI5ZlR3RW8wL3p4cEUxZTVQZHZxM0RZL2t4UmgwdWg4TGxDS0Q4bjVo?=
+ =?gb2312?B?WDc3MDJIbUMvbDAwTXAxcjZHTlMzVVJNdWF3aU5LdnF2dExEYkM1QzZrTVVN?=
+ =?gb2312?B?b0pydmo2NGRPUFVtazliV3lJU2xvM1V3OTRQdXpXcDBqOHIzcDAvUjFvNS95?=
+ =?gb2312?B?dGU3RlJQRDRQR0pZOXlqamZSUVplS0NDNGR1elpzZHpldmRpTS9kVjhJWmFv?=
+ =?gb2312?B?MjM2Q1JZamFVK09zUFFhZHYrVmJETy9peWplU1BGaWhzdVVyM2VtR1V3N2ln?=
+ =?gb2312?B?MFNwSUJGa2JzRThKZlcyNVJXZGF1eUF5TmszZ3VlMG5LU2xBRU5HM0NRbTJK?=
+ =?gb2312?B?MXByTTVLbENNSm9BUXR2SHZkY3YreSsrdGVoWXNBRmk4SnBhb01QNmJtQmxy?=
+ =?gb2312?B?N2ZydTR3YWpnMFNyMDR6QzN1aENxTnVEVUtic1Q1emJFeisxNURFRStPSmRa?=
+ =?gb2312?B?T2JSSHRBZUtJdmZidmtRSTJOOXA5WmhsQmdUUXV0akcvNnJQYWQxMjQ0WlBH?=
+ =?gb2312?B?UjJMMldwZ0h2UlR3TGg0SksrbmNmNEhaaHYzNlR1Sm1saytHUUYyekcxY0lJ?=
+ =?gb2312?B?N0ZJdzBrb0NnSWRKUHhOWmJVaUQ4bXBvSG0yWjA3TFUvMXdwMTB0enM4d0dq?=
+ =?gb2312?B?TjRrQ0l5c2pjam1SK2ZvSzNYRFd3a01rS1VBbitZZ2dJc2pINmk2QndmOWp4?=
+ =?gb2312?B?dXVWNEh5STd2dXdaVGEzMnhySFpuK0pHcEIrS2pvZ21pYXhNWUdYUDlwdDJs?=
+ =?gb2312?B?dGViNzVpZGtTN2lwVEg0UEhlUktiNEp0WFhvRG9XZ0FXVnBIa2VKcjN2VGxj?=
+ =?gb2312?B?cVQzbGxaY2xQSTlTRVQwM0tsRE1VUlhoZkZFakh6TlpYY2k3a1dORW5najhn?=
+ =?gb2312?B?MW9pY056S3FNZXBpMGcxVGppQW1SUXdVcXVWaUhOejFUT2Y0TWZ4SExWdk1V?=
+ =?gb2312?B?SitUalMwYUJMSzkvODFXbnRKL3c5Qk05b1ZuOW1BaUJybU5BczV5bnRGQXhV?=
+ =?gb2312?B?ZU1LdXlLNzVaeVpxN0x2ejc4Tkc0Ky9NK3ZYYmx3QjZHRmRvUzVxcU1BSmlu?=
+ =?gb2312?Q?wDok3MYVbN6tct3OvxhKJ2lIP?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 9/9] drm/vkms: convert to use faux_device
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: Simona Vetter <simona.vetter@ffwll.ch>,
- Greg KH <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com,
- airlied@gmail.com, aleksander.lobakin@intel.com,
- andriy.shevchenko@linux.intel.com, bhelgaas@google.com, broonie@kernel.org,
- dakr@kernel.org, dri-devel@lists.freedesktop.org, hamohammed.sa@gmail.com,
- lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, louis.chauvet@bootlin.com, lukas@wunner.de,
- lyude@redhat.com, maarten.lankhorst@linux.intel.com, mairacanal@riseup.net,
- melissa.srw@gmail.com, mripard@kernel.org, quic_zijuhu@quicinc.com,
- rafael@kernel.org, robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
- simona@ffwll.ch
-References: <2025022643-scouting-petticoat-492b@gregkh>
- <20250311172054.2903-1-jose.exposito89@gmail.com>
- <2025031218-oxidize-backing-e278@gregkh>
- <Z9LqHcj4n7Dd8A-H@phenom.ffwll.local> <Z9MT23hgX2c21xNA@fedora>
- <fa5f9e9c-09f6-4f92-8f6d-4e057f9fc5a9@suse.de> <aEwRqrqn4M32ScxN@fedora>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <aEwRqrqn4M32ScxN@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 2B3391F78E
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[ffwll.ch,linuxfoundation.org,huawei.com,gmail.com,intel.com,linux.intel.com,google.com,kernel.org,lists.freedesktop.org,vger.kernel.org,bootlin.com,wunner.de,redhat.com,riseup.net,quicinc.com,arm.com];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLj8h91xihsixaeeztgm33n4sq)];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,ffwll.ch:url,ffwll.ch:email,intel.com:email,bootlin.com:url,bootlin.com:email,lists.freedesktop.org:email,suse.de:mid,suse.de:dkim,suse.de:email]
-X-Spam-Score: -3.01
-X-Spam-Level: 
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR0601MB4726.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d467b3a-70d4-4175-60e1-08ddaa7685f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2025 12:33:38.6318
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: L/4ScNOh4sgNdmmkiXVqM+S3uwG94Q2Y/PzBzz+3lorE9Zdb7G1KoC5p4vZUj0CIxOF1/eA0s0ndxUcTn65XbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5420
 
-Hi
-
-Am 13.06.25 um 13:55 schrieb José Expósito:
-> Hi Thomas,
->
-> Thanks for the heads up, this issue fall through the cracks.
->
-> On Fri, Jun 13, 2025 at 10:15:05AM +0200, Thomas Zimmermann wrote:
->> Hi
->>
->> Am 13.03.25 um 18:20 schrieb José Expósito:
->>> On Thu, Mar 13, 2025 at 03:22:21PM +0100, Simona Vetter wrote:
->>>> On Wed, Mar 12, 2025 at 07:22:07AM +0100, Greg KH wrote:
->>>>> On Tue, Mar 11, 2025 at 06:20:53PM +0100, José Expósito wrote:
->>>>>> Hi everyone,
->>>>>>
->>>>>>> On Tue, Feb 25, 2025 at 02:51:40PM +0100, Louis Chauvet wrote:
->>>>>>>> Le 25/02/2025 à 12:41, Thomas Zimmermann a écrit :
->>>>>>>>> Hi
->>>>>>>>>
->>>>>>>>> Am 10.02.25 um 15:37 schrieb Louis Chauvet:
->>>>>>>>>> On 10/02/25 - 13:30, Greg Kroah-Hartman wrote:
->>>>>>>>>>> The vkms driver does not need to create a platform device, as there is
->>>>>>>>>>> no real platform resources associated it,  it only did so because it was
->>>>>>>>>>> simple to do that in order to get a device to use for resource
->>>>>>>>>>> management of drm resources.  Change the driver to use the faux device
->>>>>>>>>>> instead as this is NOT a real platform device.
->>>>>>>>>>>
->>>>>>>>>>> Cc: Louis Chauvet <louis.chauvet@bootlin.com>
->>>>>>>>>>> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
->>>>>>>>>>> Cc: Simona Vetter <simona@ffwll.ch>
->>>>>>>>>>> Cc: Melissa Wen <melissa.srw@gmail.com>
->>>>>>>>>>> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
->>>>>>>>>>> Cc: Maxime Ripard <mripard@kernel.org>
->>>>>>>>>>> Cc: Thomas Zimmermann <tzimmermann@suse.de>
->>>>>>>>>>> Cc: David Airlie <airlied@gmail.com>
->>>>>>>>>>> Cc: dri-devel@lists.freedesktop.org
->>>>>>>>>>> Reviewed-by: Lyude Paul <lyude@redhat.com>
->>>>>>>>>>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>>>>>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->>>>>>>>>
->>>>>>>>>> Tested-by: Louis Chauvet <louis.chauvet@bootlin.com>
->>>>>>>>>> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
->>>>>>>>>>
->>>>>>>>>> Thanks for the modification, it seems to work.
->>>>>>>>> Should this patch be merged through DRM trees? drm-misc-next is at
->>>>>>>>> v6.14-rc4 and has struct faux_device.
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>> I was not aware the faux-device was merged, as it is a new feature, I
->>>>>>>> expected it to reach drm-misc-next on 6.15-rc1.
->>>>>>> I added it to Linus's tree just so that DRM could get these changes into
->>>>>>> their tree now :)
->>>>>>>
->>>>>>>> I plan to merge [1] today/tomorrow (well tested with platform_device), and
->>>>>>>> then I will submit an updated version of this patch (only trivial conflicts,
->>>>>>>> but never tested with multiple VKMS devices).
->>>>>>>>
->>>>>>>> [1]:https://lore.kernel.org/all/20250218101214.5790-1-jose.exposito89@gmail.com/
->>>>>>> Great, thanks!
->>>>>>>
->>>>>>> greg k-h
->>>>>> Testing this patch again as part of some IGT tests I'm working on,
->>>>>> I noticed that, applying this patch on top of the latest drm-misc-next
->>>>>> triggers a warning at drivers/gpu/drm/drm_gem.c:571, in
->>>>>> drm_gem_get_pages():
->>>>>>
->>>>>>       if (WARN_ON(!obj->filp))
->>>>>>               return ERR_PTR(-EINVAL);
->>>>> I don't see how the faux bus change would have anything to do with a
->>>>> filp as that's not related as far as I can tell.  But I don't know the
->>>>> drm layer at all, where does that filp come from?
->>>> Yeah that filp is the shmem file that backs gem bo. That's very far away
->>>> from anything device/driver related datastrctures. If this is a new
->>>> failure due to the aux bux conversion then it would be really surprising.
->>> Agreed, I find it surprising, but reverting the patch removes the warning.
->>>
->>> It's most likely an issue on my side, but I decided to double check just
->>> in case someone else is also seeing this warning.
->> Any news on this issue?
-> I tested again with drm-misc-next. At the moment of writing this, the last
-> commit is 6bd90e700b42 ("drm/xe: Make dma-fences compliant with the safe
-> access rules") and I still see a similar warning. The stack trace changed,
-> but the warning is still present.
->
-> I'm going to detail the exact steps I followed. Let's see if someone else is
-> able to reproduce the issue:
->
-> I started by applying the patches from this series that are not already merged:
->
->   - [PATCH v4 4/9] x86/microcode: move away from using a fake platform
->   - [PATCH v4 5/9] wifi: cfg80211: move away from using a fake
->   - [PATCH v4 8/9] drm/vgem/vgem_drv convert to use faux_device
->   - [PATCH v4 9/9] drm/vkms: convert to use faux_device
->
-> The last patch has small conflict in vkms_drv.h that I solved like this:
->
-> 	struct vkms_device {
-> 		struct drm_device drm;
-> 		struct faux_device *faux_dev;
-> 		const struct vkms_config *config;
-> 	};
->
-> And in vkms_drv.c:
->
-> 	static int vkms_create(struct vkms_config *config)
-> 	{
-> 		int ret;
-> 		struct faux_device *fdev;
-> 		struct vkms_device *vkms_device;
-> 		const char *dev_name;
->
-> 		dev_name = vkms_config_get_device_name(config);
-> 		fdev = faux_device_create(dev_name, NULL, NULL);
-> 		if (!fdev)
-> 			return -ENODEV;
->
-> Next, I installed the new kernel in a QEMU virtual machine running Fedora 41.
-> There is nothing special about my Fedora, it is the regular desktop version.
->
-> After a reboot, "sudo modprobe vkms" shows a similar warning in dmesg.
-> For reference, the warning is at the end of my email.
->
-> Am I the only one sawing this warning?
->
-> Jose
->
-> ---
->
-> [   69.417850] [drm] Initialized vkms 1.0.0 for vkms on minor 1
-> [   69.419446] faux_driver vkms: [drm] fb1: vkmsdrmfb frame buffer device
-> [   69.520944] ------------[ cut here ]------------
-> [   69.520954] WARNING: CPU: 2 PID: 1015 at drivers/dma-buf/dma-buf.c:1518 dma_buf_vmap+0x212/0x540
-> [   69.520992] Modules linked in: vkms snd_seq_dummy snd_hrtimer snd_seq snd_seq_device snd_timer snd soundcore nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables rfkill qrtr sunrpc binfmt_misc ppdev pktcdvd parport_pc parport pcspkr i2c_piix4 e1000 i2c_smbus joydev loop nfnetlink vsock_loopback zram vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vmw_vmci vsock bochs serio_raw ata_generic pata_acpi fuse qemu_fw_cfg
-> [   69.521082] CPU: 2 UID: 42 PID: 1015 Comm: KMS thread Not tainted 6.16.0-rc1+ #3 PREEMPT(voluntary)
-> [   69.521092] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-4.fc42 04/01/2014
-> [   69.521095] RIP: 0010:dma_buf_vmap+0x212/0x540
-
-That's dmabuf. could be related to the fact that there's no real DMA 
-possible with the faux_device. We now have support for 
-dmabuf-without-DMA, sort of. Could you please replace 
-DRM_GEM_SHMEM_DRIVER_OPS with the new 
-DRM_GEM_SHMEM_DRIVER_OPS_NO_MAP_SGT at [1]. That would avoid any actual 
-hardware-DMA functionality.
-
-[1] 
-https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/vkms/vkms_drv.c#L104
-
-Best regards
-Thomas
-
-
-> [   69.521105] Code: 7c 41 ff 03 0f 85 0a 02 00 00 c9 e9 c8 47 0c 01 80 3c 06 00 0f 85 c4 01 00 00 48 c7 01 00 00 00 00 48 85 d2 0f 85 bd fe ff ff <0f> 0b b8 ea ff ff ff eb af 48 85 f6 0f 85 cf 01 00 00 48 89 4c 24
-> [   69.521112] RSP: 0018:ffffc90006a5f690 EFLAGS: 00010246
-> [   69.521125] RAX: dffffc0000000000 RBX: 1ffff92000d4beea RCX: ffff88811467dcc8
-> [   69.521128] RDX: 0000000000000000 RSI: 1ffff110228cfb99 RDI: ffff88811467dcd0
-> [   69.521131] RBP: ffffc90006a5f728 R08: 1ffff92000d4bed9 R09: fffff52000d4bef1
-> [   69.521162] R10: fffff52000d4bef2 R11: ffff8881017f4e28 R12: ffff8881149594f0
-> [   69.521165] R13: ffff888114959400 R14: 1ffff11023146b29 R15: ffff88811467dcc8
-> [   69.521168] FS:  00007fbbdd1ff6c0(0000) GS:ffff888417580000(0000) knlGS:0000000000000000
-> [   69.521172] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   69.521174] CR2: 00007fbbcc0345c8 CR3: 000000011ec5a000 CR4: 00000000000006f0
-> [   69.521179] Call Trace:
-> [   69.521182]  <TASK>
-> [   69.521185]  ? __pfx_dma_buf_vmap+0x10/0x10
-> [   69.521193]  ? dma_resv_get_singleton+0x9a/0x2a0
-> [   69.521197]  drm_gem_shmem_vmap_locked+0xc2/0x5f0
-> [   69.521208]  ? __pfx_drm_gem_shmem_vmap_locked+0x10/0x10
-> [   69.521212]  ? __pfx_ww_mutex_lock+0x10/0x10
-> [   69.521225]  ? sched_clock_noinstr+0xd/0x20
-> [   69.521230]  ? local_clock_noinstr+0x13/0xf0
-> [   69.521233]  drm_gem_shmem_object_vmap+0xd/0x20
-> [   69.521237]  drm_gem_vmap_locked+0x70/0xf0
-> [   69.521247]  drm_gem_vmap+0x4c/0xa0
-> [   69.521250]  drm_gem_fb_vmap+0xb2/0x3b0
-> [   69.521255]  vkms_prepare_fb+0x6f/0x90 [vkms]
-> [   69.521264]  ? drm_atomic_helper_setup_commit+0xb7b/0x1320
-> [   69.521268]  drm_atomic_helper_prepare_planes+0x19f/0xb90
-> [   69.521272]  ? __pfx_drm_atomic_helper_commit+0x10/0x10
-> [   69.521276]  drm_atomic_helper_commit+0x126/0x2d0
-> [   69.521279]  ? __pfx_drm_atomic_helper_commit+0x10/0x10
-> [   69.521282]  drm_atomic_commit+0x205/0x2d0
-> [   69.521290]  ? _raw_spin_lock_irqsave+0x97/0xf0
-> [   69.521295]  ? __pfx_drm_atomic_commit+0x10/0x10
-> [   69.521299]  ? __pfx___drm_printfn_info+0x10/0x10
-> [   69.521313]  ? drm_event_reserve_init+0x1cd/0x260
-> [   69.521318]  drm_mode_atomic_ioctl+0x1c79/0x2d30
-> [   69.521323]  ? __pfx_drm_mode_atomic_ioctl+0x10/0x10
-> [   69.521326]  ? __kasan_check_write+0x18/0x20
-> [   69.521339]  drm_ioctl_kernel+0x17b/0x2f0
-> [   69.521343]  ? __pfx_drm_mode_atomic_ioctl+0x10/0x10
-> [   69.521349]  ? __pfx_drm_ioctl_kernel+0x10/0x10
-> [   69.521353]  ? __pfx_do_vfs_ioctl+0x10/0x10
-> [   69.521361]  ? __kasan_check_write+0x18/0x20
-> [   69.521365]  drm_ioctl+0x51b/0xbd0
-> [   69.521369]  ? __pfx_drm_mode_atomic_ioctl+0x10/0x10
-> [   69.521373]  ? __pfx_drm_ioctl+0x10/0x10
-> [   69.521378]  ? selinux_file_ioctl+0xfc/0x260
-> [   69.521390]  __x64_sys_ioctl+0x143/0x1d0
-> [   69.521394]  x64_sys_call+0xf4b/0x1d70
-> [   69.521404]  do_syscall_64+0x82/0x2a0
-> [   69.521408]  ? __kasan_check_write+0x18/0x20
-> [   69.521411]  ? do_user_addr_fault+0x491/0xa60
-> [   69.521420]  ? irqentry_exit+0x3f/0x50
-> [   69.521423]  ? exc_page_fault+0x8b/0xe0
-> [   69.521426]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [   69.521430] RIP: 0033:0x7fbc078fd8ed
-> [   69.521441] Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
-> [   69.521444] RSP: 002b:00007fbbdd1fd9b0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> [   69.521449] RAX: ffffffffffffffda RBX: 00007fbbcc02af60 RCX: 00007fbc078fd8ed
-> [   69.521452] RDX: 00007fbbdd1fda50 RSI: 00000000c03864bc RDI: 0000000000000035
-> [   69.521455] RBP: 00007fbbdd1fda00 R08: 00000000000000e0 R09: 0000000000000001
-> [   69.521457] R10: 0000000000000003 R11: 0000000000000246 R12: 00007fbbdd1fda50
-> [   69.521459] R13: 00000000c03864bc R14: 0000000000000035 R15: 00007fbbcc02acf0
-> [   69.521464]  </TASK>
-> [   69.521466] ---[ end trace 0000000000000000 ]---
->
->
->
->> Best regards
->> Thomas
->>
->>> Jose
->>>
->>>> -Sima
->>>>
->>>> -- 
->>>> Simona Vetter
->>>> Software Engineer, Intel Corporation
->>>> http://blog.ffwll.ch
->> -- 
->> --
->> Thomas Zimmermann
->> Graphics Driver Developer
->> SUSE Software Solutions Germany GmbH
->> Frankenstrasse 146, 90461 Nuernberg, Germany
->> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
->> HRB 36809 (AG Nuernberg)
->>
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+SGkgTmlrbGFzLA0KDQpJIGhhdmUgcmVwbGllZCB0byBCam9ybi4gRm9yIHRoZSBuZXh0IHZlcnNp
+b24sIEkgd2lsbCBzZW5kIHRoZSBwYXRjaGVzIG9mIHRoaXMgc2VyaWVzIHVzaW5nIHRoZSBjb21w
+YW55J3MgZW52aXJvbm1lbnQuDQoNClBsZWFzZSBsb29rIGF0IHRoaXMgbGluay4gQ291bGQgeW91
+IHBsZWFzZSBhbHNvIGhlbHAgcmV2aWV3IGl0PyBUaGFuayB5b3UgdmVyeSBtdWNoLg0KaHR0cHM6
+Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtcGNpL2MzMWMzODM0LTI0N2QtNGEyOC1iZDJjLTRhMzll
+YTcxOTYyNUAxNjMuY29tLw0KDQpCZXN0IHJlZ2FyZHMsDQpIYW5zDQoNCi0tLS0t08q8/tStvP4t
+LS0tLQ0Kt6K8/sjLOiBOaWtsYXMgQ2Fzc2VsIDxjYXNzZWxAa2VybmVsLm9yZz4gDQq3osvNyrG8
+5DogMjAyNcTqNtTCMTPI1SAyMDowMw0KytW8/sjLOiBIYW5zIFpoYW5nIDwxODI1NTExNzE1OUAx
+NjMuY29tPg0Ks63LzTogbHBpZXJhbGlzaUBrZXJuZWwub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29t
+OyBtYW5pQGtlcm5lbC5vcmc7IGt3aWxjenluc2tpQGtlcm5lbC5vcmc7IHJvYmhAa2VybmVsLm9y
+ZzsgamluZ29vaGFuMUBnbWFpbC5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCtb3zOI6IFJlOiBbUEFUQ0ggMDEvMTNdIFBDSTogZHdj
+OiBBZGQgZHdfcGNpZV9jbGVhcl9hbmRfc2V0X2R3b3JkKCkgZm9yIHJlZ2lzdGVyIGJpdCBtYW5p
+cHVsYXRpb24NCg0KRVhURVJOQUwgRU1BSUwNCg0KT24gVGh1LCBKdW4gMTIsIDIwMjUgYXQgMTI6
+MzA6NTdBTSArMDgwMCwgSGFucyBaaGFuZyB3cm90ZToNCj4gRGVzaWduV2FyZSBQQ0llIGNvbnRy
+b2xsZXIgZHJpdmVycyBpbXBsZW1lbnQgcmVnaXN0ZXIgYml0IG1hbmlwdWxhdGlvbiANCj4gdGhy
+b3VnaCBleHBsaWNpdCByZWFkLW1vZGlmeS13cml0ZSBzZXF1ZW5jZXMuIFRoZXNlIHBhdHRlcm5z
+IGFwcGVhciANCj4gcmVwZWF0ZWRseSBhY3Jvc3MgbXVsdGlwbGUgZHJpdmVycyB3aXRoIG1pbm9y
+IHZhcmlhdGlvbnMsIGNyZWF0aW5nIA0KPiBjb2RlIGR1cGxpY2F0aW9uIGFuZCBtYWludGVuYW5j
+ZSBvdmVyaGVhZC4NCj4NCj4gSW1wbGVtZW50IGR3X3BjaWVfY2xlYXJfYW5kX3NldF9kd29yZCgp
+IGhlbHBlciB0byBlbmNhcHN1bGF0ZSBhdG9taWMgDQo+IHJlZ2lzdGVyIG1vZGlmaWNhdGlvbi4g
+VGhlIGZ1bmN0aW9uIHJlYWRzIHRoZSBjdXJyZW50IHJlZ2lzdGVyIHZhbHVlLCANCj4gY2xlYXJz
+IHNwZWNpZmllZCBiaXRzLCBzZXRzIG5ldyBiaXRzLCBhbmQgd3JpdGVzIGJhY2sgdGhlIHJlc3Vs
+dCBpbiBhIA0KPiBzaW5nbGUgb3BlcmF0aW9uLiBUaGlzIGFic3RyYWN0aW9uIGhpZGVzIGJpdHdp
+c2UgbWFuaXB1bGF0aW9uIGRldGFpbHMgDQo+IHdoaWxlIGVuc3VyaW5nIGNvbnNpc3RlbnQgYmVo
+YXZpb3IgYWNyb3NzIGFsbCB1c2FnZSBzaXRlcy4NCj4NCj4gQ2VudHJhbGl6aW5nIHRoaXMgbG9n
+aWMgcmVkdWNlcyBmdXR1cmUgbWFpbnRlbmFuY2UgZWZmb3J0IHdoZW4gDQo+IG1vZGlmeWluZyBy
+ZWdpc3RlciBhY2Nlc3MgcGF0dGVybnMgYW5kIG1pbmltaXplcyB0aGUgcmlzayBvZiANCj4gaW1w
+bGVtZW50YXRpb24gZGl2ZXJnZW5jZSBiZXR3ZWVuIGRyaXZlcnMuDQo+DQo+IFNpZ25lZC1vZmYt
+Ynk6IEhhbnMgWmhhbmcgPDE4MjU1MTE3MTU5QDE2My5jb20+DQoNCk5vIGNvdmVyLWxldHRlcj8N
+Cg0KVXN1YWxseSBmb3IgdGhpbmdzIGxpa2UgdGhpcywgaXQgaXMgbmljZSB0byBzZWUgdGhlIGRp
+ZmZzdGF0LCB3aGljaCBpcyB1c3VhbGx5IHBhcnQgb2YgdGhlIGNvdmVyLWxldHRlci4NCg0KDQpL
+aW5kIHJlZ2FyZHMsDQpOaWtsYXMNCg0K
