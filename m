@@ -1,93 +1,107 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D8022616C
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8A32DFA3A;
+	Fri, 13 Jun 2025 12:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749816496; cv=none; b=n+o/FHc59By4BxohjFIxGSbTnNUXxQuqwUvz4mSbDG7Jp2ZNhlSelx64p6N0wbkjV9yYtXkAxLdOuIPli+ojmSaNnOP+kxSxip6ABfaAM2f2wvf91xZGvJUO0FRQaGzdOCPVaFfhzhJLnKFoUGvm9TJKi2l7GctdQ3x3o4legYI=
+	t=1749816500; cv=none; b=QzcQW5dQhk7D7Qc0kuBiLZacexrQ3Kki0QtxfpcOlBrJi12eI8Np1Fw5vzb8xmsKzV138lupHMGqTjNEzZbbNEnsBlBazreOqBjuauSQV8GkbX1oAMi/V/VBiPAsdiNTzAaCHy6HZ3B4sLDYWaB0G0+xtv4ymRgOCzyKYNc+bII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749816496; c=relaxed/simple;
-	bh=FTI1Dd4UXGGGgfpkTT8/Tb4MSRkcYnKLspq94ruFVQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rw8bWbIOovUr6hOOEK0ZCU1MKeOdbV56Jw+v//yFeSqQ0cipOXzarRf2nW3kxxm5NGAZcf1THWhvmx+S3aBGlr4D1NWgHnM9dri/LH+woaND9X4QmrEk8fpO+eqF9uHNAkxYx3PhVL1Cfy6Qm9RgbX9zFzlQqV9/b5pI9g4arxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uQ3CP-0000Au-9S; Fri, 13 Jun 2025 14:07:57 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uQ3CM-003Htt-34;
-	Fri, 13 Jun 2025 14:07:54 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uQ3CM-00BA3y-2Q;
-	Fri, 13 Jun 2025 14:07:54 +0200
-Date: Fri, 13 Jun 2025 14:07:54 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Robert Marko <robert.marko@sartura.hr>
-Cc: catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com,
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-	andi.shyti@kernel.org, broonie@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-	kernel@pengutronix.de, luka.perkov@sartura.hr, arnd@arndb.de,
-	daniel.machon@microchip.com
-Subject: Re: [PATCH v7 5/6] char: hw_random: atmel: make it selectable for
- ARCH_LAN969X
-Message-ID: <aEwUmh9HOwrG4kPK@pengutronix.de>
-References: <20250613114148.1943267-1-robert.marko@sartura.hr>
- <20250613114148.1943267-6-robert.marko@sartura.hr>
+	s=arc-20240116; t=1749816500; c=relaxed/simple;
+	bh=YqWiCERgiEikzOrbIVaSoUp1Cig2dZoekYsziOR1oVg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jatS+ypYe0wY1r38nh/biG/CQF5KI3DU+Qs0PHDur9gcIsSxLLxaEmub6usFUi4EtwoO0Ct9LK1htGqEN5kAHmdKOGRy0nbBvo+MEerl2/95IXAdgKiAQ1rCAS/iT6UKVcCkxaSbZQ5n+rUUonzn49E3I6yVsQdhXsyERLkg7wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GVFePW/J; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GVFePW/J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749816499; x=1781352499;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=YqWiCERgiEikzOrbIVaSoUp1Cig2dZoekYsziOR1oVg=;
+  b=GVFePW/JKNeZCEUcVtBdo2OubrhaEBaQ+1uPIh5BmC/jUhJ/Fa9APtt6
+   nEoFxmuXYC7kzFlrcP0UlpKBmhWm1gQsuCdhkkwgWSS0zeIpk9kIN0Xmf
+   c/iO4ZPeh3amjUB5UpbdvuNBoy0PGNefTD7s4mRsVVuVu7uDOAsGXZ2b9
+   UFdn4EqxdXL40lelPZdX10nO0nlJ0+dREaAgejM8lSMRar2+4F3V37Hk4
+   2TOzHlmlrr0DxEKif2J8p4h34f4PNd0VZBRGLGvVnKelU9zQDZtIimP27
+   pNJXsCtJSHhr1pUGEXOhs4+d8v91VqMyeD9iRmKVq8tkJIUt1Gpfx93H2
+   g==;
+X-CSE-ConnectionGUID: saW4ljieRcGquqCr2uekcQ==
+X-CSE-MsgGUID: cbMMBi0dTEq7ZKmCFfltrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51746180"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="51746180"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:08:18 -0700
+X-CSE-ConnectionGUID: nNN8x/ZORjSKHn3Ig+R5Cw==
+X-CSE-MsgGUID: bwvzuqkSSYW4XyGVTAicuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="151634791"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:08:16 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 13 Jun 2025 15:08:13 +0300 (EEST)
+To: Ivan Hu <ivan.hu@canonical.com>
+cc: Hans de Goede <hdegoede@redhat.com>, jesse.huang@portwell.com.tw, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: portwell-ec: Move watchdog device under
+ correct platform hierarchy
+In-Reply-To: <20250613082614.28929-1-ivan.hu@canonical.com>
+Message-ID: <18d60b6c-80c0-85e8-79f5-a41d8a757a46@linux.intel.com>
+References: <20250613082614.28929-1-ivan.hu@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250613114148.1943267-6-robert.marko@sartura.hr>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Jun 13, 2025 at 01:39:40PM +0200, Robert Marko wrote:
-> LAN969x uses Atmel HWRNG driver, so make it selectable for ARCH_LAN969X.
+On Fri, 13 Jun 2025, Ivan Hu wrote:
+
+> Without explicitly setting a parent for the watchdog device, the device is
+> registered with a NULL parent. This causes device_add() (called internally
+> by devm_watchdog_register_device()) to register the device under
+> /sys/devices/virtual, since no parent is provided. The result is:
 > 
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> DEVPATH=/devices/virtual/watchdog/watchdog0
+> 
+> To fix this, assign &pdev->dev as the parent of the watchdog device before
+> calling devm_watchdog_register_device(). This ensures the device is
+> associated with the Portwell EC platform device and placed correctly in
+> sysfs as:
+> 
+> DEVPATH=/devices/platform/portwell-ec/watchdog/watchdog0
+> 
+> This aligns the device hierarchy with expectations and avoids misplacement
+> under the virtual class.
+> 
+
+This is missing the Fixes tag.
+
+> Signed-off-by: Ivan Hu <ivan.hu@canonical.com>
 > ---
->  drivers/char/hw_random/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/portwell-ec.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index c85827843447..8e1b4c515956 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -77,7 +77,7 @@ config HW_RANDOM_AIROHA
+> diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
+> index 8b788822237b..3e019c51913e 100644
+> --- a/drivers/platform/x86/portwell-ec.c
+> +++ b/drivers/platform/x86/portwell-ec.c
+> @@ -236,6 +236,7 @@ static int pwec_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
 >  
->  config HW_RANDOM_ATMEL
->  	tristate "Atmel Random Number Generator support"
-> -	depends on (ARCH_AT91 || COMPILE_TEST)
-> +	depends on (ARCH_AT91 || ARCH_LAN969X ||COMPILE_TEST)
-------------------------- here is missing space ^
-
-Otherwise:
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> +	ec_wdt_dev.parent = &pdev->dev;
+>  	ret = devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "failed to register Portwell EC Watchdog\n");
+> 
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+ i.
+
