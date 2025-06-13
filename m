@@ -1,189 +1,213 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A692D2392
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893321E0DE8;
+	Fri, 13 Jun 2025 11:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814421; cv=none; b=Oi53O6RQhiIfqzwKHijHaP8OfsDLvY8mUhKn5rRkVYrEtvsfLHCdV+JN6HTQEnPCHuN6DUBFq/IEOztmE1hKz/QinroDtIRj+i4adBWeqNdeU2APycEz/2sS2dLkUsp0WTD1/a+qesVxtQexMiEUp5nzS7xTgooPKP8+9VdU37I=
+	t=1749814469; cv=none; b=eBlaS4Qt8CZdIvn6mbFe7kMRuiClCUdkFy6fyG5fKLL3x9cyhbOFgJmCUSZYW56C2GwkFDOk5zIt2ax7N/VXLOkQSyTQn3A/UtiNkA+hjk1QdEoYUxbFuILP0sgLAq0bcXYPC0zhR8WGd/d9ZuymqusSgx5G/SvFQRQkQ9gs4jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814421; c=relaxed/simple;
-	bh=lfynEmycBcTUhYS2//mGCt+9+hiekxvpfMXULeOUjqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BOtosUJ4lYHe3rlPIm8R6Q3D4LqKS9hojozW/sT1BPrS8TBHQqKrhniZBwF9/DyFmnDHkqhHFT8AEYGUe/8KxxqcWMDXDJ1xO8PnZWL8DFcmzakpxA2Dzjw7VY6ZMwHmfJMOTCDh4RkiwvDvlauIGcmYfnc3al/M2QZR+MHlbLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GoGT+eoL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GoGT+eoL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749814417;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J4I9CYam3FITVcfvZRQPJD4i6p9XAy84R0dLNBapStE=;
-	b=GoGT+eoLp9n9ptFhEl9azcYHjvm5Uu8dEhZw77xZ4zPWEDbvJHkIc8hFKuFrxMWhEP5MFo
-	A0pbo9kRMG3OpkQTTlWs0i+DkKYkRcVY18PJSiLuYJtQh5SXHjkUCJJOHy9pDeuI4ZG9o5
-	7/SdiSQ5fCpkSjRsqwKSn3QciSnpV+k=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-163-s700-o_5NmuVtHYdjSzeJQ-1; Fri,
- 13 Jun 2025 07:33:35 -0400
-X-MC-Unique: s700-o_5NmuVtHYdjSzeJQ-1
-X-Mimecast-MFC-AGG-ID: s700-o_5NmuVtHYdjSzeJQ_1749814410
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	s=arc-20240116; t=1749814469; c=relaxed/simple;
+	bh=xA+zEpZ1FkdZXdfe1TRGnTDv0gMFvhRy+g6ZUqPvvs4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tVxa4gYr8t8zqhvDJfDkP0WJmkNgYI8QMcEDyO87zBIe4O8Vx0rUxPknjtUfkhvOnSJAl95bwxayNw9jYGWw43KXVFtBJES3rbQE3fWFrJ/53RyzwHPDktcXBt3nsEaPQDE/yQ6HtsgUrqlnjsoiQEbgF4nEV0VhsYGltD0AQWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 847B21800281;
-	Fri, 13 Jun 2025 11:33:29 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.58.9])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9651230044CC;
-	Fri, 13 Jun 2025 11:33:24 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
-Date: Fri, 13 Jun 2025 07:33:22 -0400
-Message-ID: <7DCDEBE1-1416-4A93-B994-49A6D21DC065@redhat.com>
-In-Reply-To: <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
-References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
- <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
- <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
- <ae18305b-167d-4f27-bc3b-3d2d5f216d85@oracle.com>
- <1cd4d07f7afbd7322a1330a49a2cc24e8ff801cd.camel@kernel.org>
- <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bJck66GWDz9sfB;
+	Fri, 13 Jun 2025 13:34:22 +0200 (CEST)
+Message-ID: <10680b25-2953-4dbb-9ff1-362bcf0f84cc@timmermann.space>
+Date: Fri, 13 Jun 2025 13:34:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Subject: Re: [PATCH v6 2/2] leds: as3668: Driver for the ams Osram 4-channel
+ i2c LED driver
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, lee@kernel.org,
+ pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250611083151.22150-1-linux@timmermann.space>
+ <20250611083151.22150-3-linux@timmermann.space>
+ <5e131f07-9753-4d2f-a043-35751c278a63@wanadoo.fr>
+Content-Language: en-US, de-DE
+From: Lukas Timmermann <linux@timmermann.space>
+In-Reply-To: <5e131f07-9753-4d2f-a043-35751c278a63@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 12 Jun 2025, at 12:42, Chuck Lever wrote:
+Hi,
 
-> On 6/12/25 12:15 PM, Jeff Layton wrote:
->> On Thu, 2025-06-12 at 12:05 -0400, Chuck Lever wrote:
->>> On 6/12/25 11:57 AM, Jeff Layton wrote:
->>>> On Tue, 2025-05-27 at 20:12 -0400, Jeff Layton wrote:
->>>>> The old nfsdfs interface for starting a server with multiple pools
->>>>> handles the special case of a single entry array passed down from
->>>>> userland by distributing the threads over every NUMA node.
->>>>>
->>>>> The netlink control interface however constructs an array of length=
+okay thanks, I will wait a week or two until sending the next patch.
 
->>>>> nfsd_nrpools() and fills any unprovided slots with 0's. This behavi=
-or
->>>>> defeats the special casing that the old interface relies on.
->>>>>
->>>>> Change nfsd_nl_threads_set_doit() to pass down the array from userl=
-and
->>>>> as-is.
->>>>>
->>>>> Fixes: 7f5c330b2620 ("nfsd: allow passing in array of thread counts=
- via netlink")
->>>>> Reported-by: Mike Snitzer <snitzer@kernel.org>
->>>>> Closes: https://lore.kernel.org/linux-nfs/aDC-ftnzhJAlwqwh@kernel.o=
-rg/
->>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>>>> ---
->>>>>  fs/nfsd/nfsctl.c | 5 ++---
->>>>>  1 file changed, 2 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
->>>>> index ac265d6fde35df4e02b955050f5b0ef22e6e519c..22101e08c3e80350668=
-e94c395058bc228b08e64 100644
->>>>> --- a/fs/nfsd/nfsctl.c
->>>>> +++ b/fs/nfsd/nfsctl.c
->>>>> @@ -1611,7 +1611,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_b=
-uff *skb,
->>>>>   */
->>>>>  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info=
- *info)
->>>>>  {
->>>>> -	int *nthreads, count =3D 0, nrpools, i, ret =3D -EOPNOTSUPP, rem;=
+I've never worked with this email-based workflow before. That's the 
+reason I've chosen this simple driver as a first patch in the first 
+place. Just to get a little bit of experience under my belt. I know I'm 
+making a few very obvious mistakes. I'm getting a bit overwhelmed by all 
+the things to remember, I guess.
 
->>>>> +	int *nthreads, nrpools =3D 0, i, ret =3D -EOPNOTSUPP, rem;
->>>>>  	struct net *net =3D genl_info_net(info);
->>>>>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
->>>>>  	const struct nlattr *attr;
->>>>> @@ -1623,12 +1623,11 @@ int nfsd_nl_threads_set_doit(struct sk_buff=
- *skb, struct genl_info *info)
->>>>>  	/* count number of SERVER_THREADS values */
->>>>>  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
->>>>>  		if (nla_type(attr) =3D=3D NFSD_A_SERVER_THREADS)
->>>>> -			count++;
->>>>> +			nrpools++;
->>>>>  	}
->>>>>
->>>>>  	mutex_lock(&nfsd_mutex);
->>>>>
->>>>> -	nrpools =3D max(count, nfsd_nrpools(net));
->>>>>  	nthreads =3D kcalloc(nrpools, sizeof(int), GFP_KERNEL);
->>>>>  	if (!nthreads) {
->>>>>  		ret =3D -ENOMEM;
->>>>
->>>> I noticed that this didn't go in to the recent merge window.
->>>>
->>>> This patch fixes a rather nasty regression when you try to start the=
+Apologies for the noise.
 
->>>> server on a NUMA-capable box.
->>>
->>> The NFSD netlink interface is not broadly used yet, is it?
->>>
+Best regards,
+Lukas Timmermann
+
+Am 12.06.25 um 22:27 schrieb Christophe JAILLET:
+> Le 11/06/2025 à 10:31, Lukas Timmermann a écrit :
+>> Since there were no existing drivers for the AS3668 or related devices,
+>> a new driver was introduced in a separate file. Similar devices were
+>> reviewed, but none shared enough characteristics to justify code reuse.
+>> As a result, this driver is written specifically for the AS3668.
 >>
->> It is. RHEL10 shipped with it, for instance and it's been in Fedora fo=
-r
->> a while.
->
-> RHEL 10 is shiny and new, and Fedora is bleeding edge. It's not likely
-> either of these are deployed in production environments yet. Just sayin=
-
-> that in this case, the Bayesian filter leans towards waiting a full dev=
-
-> cycle.
-
-We don't consider it acceptable to allow known defects to persist in our
-products just because they are bleeding edge.
-
->>> Since this one came in late during the 6.16 dev cycle and the Fixes: =
-tag
->>> references a commit that is already in released kernels, I put in the=
-
->>> "next merge window" pile. On it's own it doesn't look urgent to me.
->>>
->>
->> I'd really like to see this go in soon and to stable. If you want me t=
-o
->> respin the changelog, I can. It's not a crash, but it manifests as los=
-t
->> RPCs that just hang. It took me quite a while to figure out what was
->> going on, and I'd prefer that we not put users through that.
->
-> If someone can confirm that it is effective, I'll add it to nfsd-fixes.=
-
-
-I'm sure it is if Jeff spent time on it.
-
-We're going to try to get this into RHEL-10 ASAP, because dropped RPCs
-manifest as datacenter-wide problems that are very hard to diagnose.  Its=
- a
-real pain that we won't have an upstream commit assigned for it.
-
-Ben
+>> Signed-off-by: Lukas Timmermann <linux@timmermann.space>
+> 
+> Hi,
+> 
+> first, I should that you should wait longer before sending each new 
+> version, so that you can collect more feedback.
+> 
+>> ---
+>>   MAINTAINERS                |   1 +
+>>   drivers/leds/Kconfig       |  13 +++
+>>   drivers/leds/Makefile      |   1 +
+>>   drivers/leds/leds-as3668.c | 204 +++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 219 insertions(+)
+>>   create mode 100644 drivers/leds/leds-as3668.c
+> 
+> ...
+> 
+>> +static int as3668_dt_init(struct as3668 *as3668)
+>> +{
+>> +    struct device *dev = &as3668->client->dev;
+>> +    struct as3668_led *led;
+>> +    struct led_init_data init_data = {};
+>> +    int err;
+>> +    u32 reg;
+>> +
+>> +    for_each_available_child_of_node_scoped(dev_of_node(dev), child) {
+>> +        err = of_property_read_u32(child, "reg", &reg);
+>> +        if (err) {
+>> +            dev_err(dev, "unable to read device tree led reg, err 
+>> %d\n", err);
+> 
+> as3668_dt_init() is only called from the probe. Sometimes maintainers 
+> prefer using "return dev_err_probe()" in such a case, to have less 
+> verbose code.
+> (I don't know if it is the case for the leds subsystem)
+> 
+>> +            return err;
+>> +        }
+>> +
+>> +        if (reg < 0 || reg > AS3668_MAX_LEDS) {
+>> +            dev_err(dev, "unsupported led reg %d\n", reg);
+>> +            return -EOPNOTSUPP;
+> 
+> Same.
+> 
+>> +        }
+>> +
+>> +        led = &as3668->leds[reg];
+>> +        led->fwnode = of_fwnode_handle(child);
+>> +
+>> +        led->num = reg;
+>> +        led->chip = as3668;
+>> +
+>> +        led->cdev.max_brightness = U8_MAX;
+>> +        led->cdev.brightness_get = as3668_brightness_get;
+>> +        led->cdev.brightness_set = as3668_brightness_set;
+>> +
+>> +        init_data.fwnode = led->fwnode;
+>> +        init_data.default_label = ":";
+>> +
+>> +        err = devm_led_classdev_register_ext(dev, &led->cdev, 
+>> &init_data);
+>> +        if (err) {
+>> +            dev_err(dev, "failed to register %d LED\n", reg);
+>> +            return err;
+> 
+> Same.
+> 
+>> +        }
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int as3668_probe(struct i2c_client *client)
+>> +{
+>> +    u8 chip_id1, chip_id2, chip_serial, chip_rev;
+>> +    struct as3668 *as3668;
+>> +
+>> +    /* Check for sensible i2c address */
+>> +    if (client->addr != 0x42)
+>> +        return dev_err_probe(&client->dev, -EFAULT,
+>> +                     "unexpected address for as3668 device\n");
+>> +
+>> +    /* Read identifier from chip */
+>> +    chip_id1 = as3668_read_value(client, AS3668_CHIP_ID1);
+>> +
+>> +    if (chip_id1 != AS3668_CHIP_IDENT)
+>> +        return dev_err_probe(&client->dev, -ENODEV,
+>> +                "chip reported wrong id: 0x%02x\n", chip_id1);
+>> +
+>> +    /* Check the revision */
+>> +    chip_id2 = as3668_read_value(client, AS3668_CHIP_ID2);
+>> +    chip_serial = FIELD_GET(AS3668_CHIP_ID2_SERIAL_MASK, chip_id2);
+>> +    chip_rev = FIELD_GET(AS3668_CHIP_ID2_REV_MASK, chip_id2);
+>> +
+>> +    if (chip_rev != AS3668_CHIP_REV1)
+>> +        dev_warn(&client->dev, "unexpected chip revision\n");
+>> +
+>> +    /* Print out information about the chip */
+>> +    dev_dbg(&client->dev,
+>> +        "chip_id: 0x%02x | chip_id2: 0x%02x | chip_serial: 0x%02x | 
+>> chip_rev: 0x%02x\n",
+>> +        chip_id1, chip_id2, chip_serial, chip_rev);
+>> +
+>> +    as3668 = devm_kzalloc(&client->dev, sizeof(*as3668), GFP_KERNEL);
+>> +
+> 
+> Unneeded new line.
+> 
+>> +    if (!as3668)
+>> +        return -ENOMEM;
+>> +
+>> +    as3668->client = client;
+>> +    int err = as3668_dt_init(as3668);
+> 
+> Would be better, IMHO, if err was declared at the top of the function.
+> 
+>> +
+> 
+> Unneeded new line.
+> 
+>> +    if (err) {
+>> +        dev_err(&client->dev, "failed to initialize device, err 
+>> %d\n", err);
+> 
+> return dev_err_probe() to be consistent with the code above.
+> 
+>> +        return err;
+>> +    }
+>> +
+>> +    /* Initialize the chip */
+>> +    as3668_write_value(client, AS3668_CURRX_CONTROL, 0x55);
+>> +    as3668_write_value(client, AS3668_CURR1, 0x00);
+>> +    as3668_write_value(client, AS3668_CURR2, 0x00);
+>> +    as3668_write_value(client, AS3668_CURR3, 0x00);
+>> +    as3668_write_value(client, AS3668_CURR4, 0x00);
+>> +
+>> +    return 0;
+>> +}
+> 
+> ...
+> 
+> CJ
+> 
 
