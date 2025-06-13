@@ -1,417 +1,339 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFC633E1;
-	Fri, 13 Jun 2025 15:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828002; cv=fail; b=b/oehVlEISf9DBpmMknTDxaAKvDGjln4gwsXhEOb43n/MABaEHiv9mZjWXiZgnbW7wK8VnH6X18BeX8KMRqwXDWfilodjZ4GC4wCQ+csfnthhfnWa4wp0XkF7S1dWsmAyK8TRmf7sJuD8cdxJDYx7DsA685n7ePcdvu5WOT2mW0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828002; c=relaxed/simple;
-	bh=ICNhM6k6XGXC3ab+Ksj+BuY+Js0jqB3oyMq6/3ibCwo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fECWiwBmKQ8DTDebTpucyCe8L6gSnnpcTiud/AflNjxkB0D+aihgi3wQCU9jGyrC6QVo0cpEUbsSZB/YRFbkzHFZAJZ87ywZ8runqN1cpKcnMznkUJzlHeYS+rduiQ8SiXvnRcqDXw6/oNUo2Glm4pIj0yPesiSutInXTtTIyFs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gTmle8mS; arc=fail smtp.client-ip=40.107.92.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6D32AE6A
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749828029; cv=none; b=URR1yA6sdHzt1MQJcdyiAvjZLBzFmTXnK6J/NtT/pHl8tf8X6apH5HfLDU8Ox9eWXDKh4245GLMQbrMBr91yQvyNfURx5hu9cIJrBP9OzmufPsPPWJLMXwAAenp2DoZDFdoH0FBGHhSWb2ckiN3E5SfTKokLSSgrt7QuRLzMgVE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749828029; c=relaxed/simple;
+	bh=bHZCmRyoCFqPaolfBcOdZMuw2qzfLKgx2uxtsbOw/I0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SZUnmfkDiLJ4mFDIb8DzlWpxh8JxVXyO0U53axMj4HmEJKTctZ8Fg7CWMqiRbsL7F1jelq5H6VCBOKfGlOwITsdcCa+EW3Al6D9Hl6XIQ59U7KBnnW4tPvW98x734QC8PWmucFQd6KD7ZQZWeh4NxzUxaDB0WuLyozRDL11mFLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FlqJBSah; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gTmle8mS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O5I3JUeMS7vjOATIjl70gbmF3kKmTb3kV2IHd6YfmJNWDoi3Xv38ZVW8MxBhismzPvgOVJ2zBdDOHstquajFxBDC1qpsnM2tHH/i6UOWHNDUwhSydHq4bmoRs1wTsBg1FtbPn+YWB20c9M84EYCYV8gd7dZkAmmdVXcXk1V13Wm5AJHSFblRNHAIkZvfXf7F+na0uLjiJiqkcMs0egztd01scKus9Gi0Bh6b4ouXmV0dqTPuidMxHR7bySQTSojWvRjyxXZz6aXS+8jvWDC8mafsRfpLVpn0uELkRsKSdOl9xtbLryWN7qYm+ICCLog5spADOxxx8N8UbUTM4dE9kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yvDP22/KhmHZzaLFesYb3B6vjlX96/ryyvxUQEMijSo=;
- b=vqOzXJnutwbm7OA7mHKgEe6o3aj6CJzp7uWxWDOqULD13xnVbhLJBHgcWNyOBlv6H0ATPmBDm/+ZwReVsNcYaOHvah+RK/9KfBmpsneskbMNNa7FkJYuE5qbZCmsjPBZNmubSHX+Mck/jTTFrDWvGMHQHFdCPGDuT0+OKIbVDsd86iHNMjvCNf8UW+IXf6Mr513Cz7TclEkhV6jbS0rYX6cz4fyimrwAVpid6CnRItEnkWOXxp3LKq27SvBjt9KC3GGd2FMRZTipHUFvK0WVv4NbpYX1PEZRRTRoeXkLeYHybRn6ehR46oDVlJoWsH7gF2rhXVoDtFhosUIjxgpx1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yvDP22/KhmHZzaLFesYb3B6vjlX96/ryyvxUQEMijSo=;
- b=gTmle8mSwqM21W0yBxVByQHGRALIB+awm2AOrT9TgLARKF5eek8yEWqRJ20nYJlxmmk64xpOPkW+NLYrZ0Q+w1Mob1ML+PKpsCDcuWwlDM+dBlM/4+1HilG8MW5ZVQsDmIJt5OhvNPLR9efe8HYXrbXfcPm5RYBOVtXfwyAMinw=
-Received: from SA0PR13CA0006.namprd13.prod.outlook.com (2603:10b6:806:130::11)
- by CH3PR12MB9453.namprd12.prod.outlook.com (2603:10b6:610:1c9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Fri, 13 Jun
- 2025 15:19:56 +0000
-Received: from SA2PEPF00001507.namprd04.prod.outlook.com
- (2603:10b6:806:130:cafe::76) by SA0PR13CA0006.outlook.office365.com
- (2603:10b6:806:130::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.25 via Frontend Transport; Fri,
- 13 Jun 2025 15:19:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00001507.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 15:19:55 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 13 Jun
- 2025 10:19:55 -0500
-Date: Fri, 13 Jun 2025 10:19:39 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-CC: Vishal Annapurve <vannapurve@google.com>, Ackerley Tng
-	<ackerleytng@google.com>, <kvm@vger.kernel.org>,
-	<linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>, <jroedel@suse.de>, <thomas.lendacky@amd.com>,
-	<pbonzini@redhat.com>, <seanjc@google.com>, <vbabka@suse.cz>,
-	<amit.shah@amd.com>, <pratikrajesh.sampat@amd.com>, <ashish.kalra@amd.com>,
-	<liam.merwick@oracle.com>, <david@redhat.com>, <quic_eberman@quicinc.com>
-Subject: Re: [PATCH 3/5] KVM: gmem: Hold filemap invalidate lock while
- allocating/preparing folios
-Message-ID: <20250613151939.z5ztzrtibr6xatql@amd.com>
-References: <diqzjz7azkmf.fsf@ackerleytng-ctop.c.googlers.com>
- <diqz8qmsfs5u.fsf@ackerleytng-ctop.c.googlers.com>
- <aC1221wU6Mby3Lo3@yzhao56-desk.sh.intel.com>
- <CAGtprH_chB5_D3ba=yqgg-ZGGE2ONpoMdB=4_O4S6k7jXcoHHw@mail.gmail.com>
- <aD5QVdH0pJeAn3+r@yzhao56-desk.sh.intel.com>
- <CAGtprH_XFpnBf_ZtEAs2MiZNJYhs4i+kJpmAj0QRVhcqWBqDsQ@mail.gmail.com>
- <aErK25Oo5VJna40z@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FlqJBSah"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4533bf4d817so1062405e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749828025; x=1750432825; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IKghZF40bURJv6c1/M9CEvL/tJPBCTMeZ3wBhbe2yAU=;
+        b=FlqJBSahzSpbI9dAsRkte9fmFMq2L/gH9rgzJMmosPJirhF2cKzwgHV1Wcvujf/2DR
+         VbsO0P/E1nWuoQUR9MqsCmicsNQm+NQuGGxJiZN6uywnlSSrdQQ7Jv//xuBKK1kN8VjO
+         V7Az0WYoLLg6URg98f3PgUZpINs/uGHJbqka2Cu+VL1a3ZxbvcO5hsV8OLxyV/Y2Entn
+         BuwtjTcicUVE9YCaC5eDMEWvEaSlDsibafMdbPpI6OkUJ1O2Hd2pVtr1k2+XzFxiYASN
+         vtNbrAVwWAAFxAQpnZGC0xrG42VNEHpKcrdTxPXV51m9EyfMs/ln4StS9kEOePWPYyZu
+         46DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749828025; x=1750432825;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IKghZF40bURJv6c1/M9CEvL/tJPBCTMeZ3wBhbe2yAU=;
+        b=CjPRAYFM+i084RscUNOPCEwoDWbeCWTqG3FIjpBwCWviiBB42RGf+zuAMPu/hEGBFG
+         OFkFQNoJgfgIqP3OxcPQCIda49K0NIfxokQT9+0t6RqxtA7GFTKsSsLwLj1CBqEBmJj+
+         lkuhAc3HqY02gMnuUr3sBttwloWbZdtKkHDrdOSIfJJQGOrGyaj+nsCP08d4Fyz+Uf/N
+         HLGsZ3H/MaKMKzqCqnLGRTIAvN/JXgS7oaC6+LBu9y9TNVSGjgSK2cIdxeWPHFbRmfcz
+         q4z8n44Opr3Zf0DWgPskR4rJ1WwCLY+/dhYjTirBld5ShUh5HV8vfJ7L1uMtDeZkWSnv
+         3/oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoLczuehJzrw0/WaGUv5aBu7EueUoiytIAjnPZ8X7+h0YvPI/oQHX/EsexSe7mmCb+9hUqB+r/pxVkoCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwRiC15AjApty4txV6AYxVhK8l635VQP3Aithr7G29iPtcHwtM
+	ba1mRxkNsJ1voFZB2uJToZztQIMzmtsfXkrpN6UeT9wuQjxcd6MV/fj2o346xDgPlK0=
+X-Gm-Gg: ASbGnctFVLQ5kV3H0DpXIRAsqtDxOkxmbiLJgoSVHyeJOFFtvZcZcxOb2AMYkB36Hop
+	1CHDRnJc20HMLfXzcLskJXkuAf5lMpumYkCi9pyJjO99knP++zlDp++nfamCM9kliK/7zjZ/oNX
+	M07OsGP3znhF0YQ4Qfq3EnvszH85LOOUW92qlHhmHA40vDCls05IAIxXbxdoASiV21SGJ8BG/VF
+	PawKJF+A/jrYzwhzRxvNdFt/1v5/MKA77lqLUV+/tkRcPZQ87wgvTMDYwmc+DH79IstqSvgCLhE
+	GmOOYZVqqE17XhMfWsWgl5GFthh7X3SM7Y2IHsEW7ef+MKXzS+1xmV6SSdqnvAyV
+X-Google-Smtp-Source: AGHT+IG0wPBdTWS6wVof0adSsVA4MK43CPoXzZFMCGpr9V6ukNZIjbxKLrOISAjwEQzvtDU5jyZr4A==
+X-Received: by 2002:a05:6000:25eb:b0:3a3:65b5:51d7 with SMTP id ffacd0b85a97d-3a572e2df7bmr142313f8f.26.1749828025451;
+        Fri, 13 Jun 2025 08:20:25 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1691d7fsm1835856a12.69.2025.06.13.08.20.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 08:20:24 -0700 (PDT)
+Date: Fri, 13 Jun 2025 17:20:03 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
+Subject: Re: [PATCH 2/7] printk: Use consoles_suspended flag when
+ suspending/resuming all consoles
+Message-ID: <aExBo-8cVOy6GegR@pathway.suse.cz>
+References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
+ <20250606-printk-cleanup-part2-v1-2-f427c743dda0@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aErK25Oo5VJna40z@yzhao56-desk.sh.intel.com>
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001507:EE_|CH3PR12MB9453:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cdd485d-b094-4e84-392c-08ddaa8dc0d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eVJFeHQzMXp2VnNraVNBU2dUckJOMXNmR1V5eXFHNUJJcFBCekI0ZmhSY1FE?=
- =?utf-8?B?ZUJDd0toMlZIckUxTVNtSWE3UjM5OTY2T3crNStSMVVHM1hOOE9CU0dVMDJl?=
- =?utf-8?B?bkcraCtDeWNJbVcxODdiVHZYY3F5THUwelN1YVdiY2tQTDlGNmk2b2c4QWlL?=
- =?utf-8?B?NTFXOEV1T0gzdkhVMXpIUjZ1QktzQlVZTFlqTkxuSmc4c0w2THVhUFZHanJl?=
- =?utf-8?B?Qm5FSEdVMHV2cll0cDdEb2JNeEpMTVZGNWE2UTJsZFpsOVZPaDVGaFFEeThn?=
- =?utf-8?B?L1ViczJNb0xHcjVnOHcySW90Z1NxcGZneEx3dEhLcGFuTjdJWW1ZZTI2SXh5?=
- =?utf-8?B?UWgvYlo0ZHFkbGdmOUtSZkNaYS9CblFtMDRXcml1b2wydTg5THlQV2Q0aEpC?=
- =?utf-8?B?R2E2cTZLUkJheG5WY1dvUzFXK1k3eG9JVXF3MTZwbm81T2FUbnJuUy96Y1JB?=
- =?utf-8?B?UHZrcGpva2xCbGExczNvVjZjL0xOVmsvOW0zNzBySWxrenZrT3ExOW5vbjgw?=
- =?utf-8?B?eUx3US9BVWQ4RXc5a2F1SEhoclB1K2tPZitQVElGN0duV3FIcW9CUkF1aytB?=
- =?utf-8?B?Q280Zkhiak9BM2pTakx2ZnVrWndrSG5EV01RVVdnUXdCbFZuUUVpVkx1aVVQ?=
- =?utf-8?B?TDFvMnRLNnBvYjA3SlU5SmRJd2NLbkJpN01OdXUrcE4xZnNjbXNtb0dYakp6?=
- =?utf-8?B?eVFZeXh6V0FUMTZpeU55WGs0SnNjYTRObzU2OU9pZnVieU90UUkrNVhHMkk1?=
- =?utf-8?B?S2gvSEY1eVdNYWRRRThZbGowb21oZGU5SWpmSFowVW1LL2NkNWlTRzVudENj?=
- =?utf-8?B?V0VGWCtyYnovTkhjZkZRaWtzcWdLTktTS3M1Z2NROTEzSC9TR2V6cFhJRUNB?=
- =?utf-8?B?WEdibnY5VC93dFF4WFJyc3A3d0dCLzlDMER5UUxqZEFCbENMWjFpdjNWZDRw?=
- =?utf-8?B?NG43WjFEYThCUXIwOEdLdU5HTjhEam9GOHNZVlFvVmJyWHJCcWxSSlgvWXpY?=
- =?utf-8?B?dFR1eG5hdjd0c2VleGtKdHBUdHBnN0doUnhJN2MyYzUyUVdXS1psNHVpdkZt?=
- =?utf-8?B?ZS9GY1B6bG9PVHJLMmZIWFVLd1JLM2pwTWx0d29jZU9hRWEzS3hsZjY3R3Fr?=
- =?utf-8?B?Y3RrVkJ1angzZEhPU1luMzg5dHdocnVYTHQzcHVJVUhQUmFQYmpaREJZbkcz?=
- =?utf-8?B?aUR5WG5CZEtrdmVVUm5WSktJbW1GZVZFdi8wTFY4NzY5QjJ3bitQTlBCYVI3?=
- =?utf-8?B?TFFHWENjaTVkU3BCREdUd0hNT2h2YzBTWFNLeTRkcjlCSzd5ajVyMXFBSEJ5?=
- =?utf-8?B?cVdTclZpQm5WRlBFVTJWMjdXY3NnR0k4Vmw4OURKVFZqTGt4Z3pyQUNodUN6?=
- =?utf-8?B?R0U1N2dpbnc3UWtLTUEyU3ZWbTVZNzZjV2doWERYRU5wOS90dStuaC94REls?=
- =?utf-8?B?Q0NFUmI2TjNwK2NNK3BRenlEaFFOd29hMTRYTklTMTcyTGVCM29TTG5qNnE3?=
- =?utf-8?B?azYyUjA3eEwvL0xBbWttWWxxR2p4NzdFTFR3alNvY3JzNE1UVVora0hXQXpX?=
- =?utf-8?B?SVpKdHJUa2lPbkNHTm5TaVduNWNzQi9selpBcTdOblJIWDNRTlFZMlNuUjd5?=
- =?utf-8?B?c1d2ZDlxak1ScU9EUDI1MWxiUldDamNoSUdLWlFPNVNjcnpJa09TT3dtdUlG?=
- =?utf-8?B?azd1Vm5ZR2NNbTBxTHRwU1EvaFo2d1lZNk5VNzVPNzMzYTJlNnpTdFRaMDdq?=
- =?utf-8?B?UC96ZWViemJnOXIrcVFiTVJSZzJhanlhMDRSREUxSCt4SnhOTG5iMll4MWhr?=
- =?utf-8?B?Rk9TOXlIbHNXQ3d0eGFlNUVzTHo4Yjd3N0RIUDd6dmpSNDVtcWViV1RmbzZm?=
- =?utf-8?B?MHNDeTdHSGFYL2xseS96UzBIbmtuZzJzRTNCRzJqR3F4QTJDVGRxbGhIb0Q3?=
- =?utf-8?B?N3cyZG03SXVlcDVLVVVzMmhqNlAzY3RSU3dENDh5TzBJdWFlZVpzQjc2NVBh?=
- =?utf-8?Q?3BX1USOVfloCtMgzsj8Ou3aPRBN1uk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 15:19:55.8053
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cdd485d-b094-4e84-392c-08ddaa8dc0d5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001507.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9453
+In-Reply-To: <20250606-printk-cleanup-part2-v1-2-f427c743dda0@suse.com>
 
-On Thu, Jun 12, 2025 at 08:40:59PM +0800, Yan Zhao wrote:
-> On Tue, Jun 03, 2025 at 11:28:35PM -0700, Vishal Annapurve wrote:
-> > On Mon, Jun 2, 2025 at 6:34 PM Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > >
-> > > On Mon, Jun 02, 2025 at 06:05:32PM -0700, Vishal Annapurve wrote:
-> > > > On Tue, May 20, 2025 at 11:49 PM Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > > >
-> > > > > On Mon, May 19, 2025 at 10:04:45AM -0700, Ackerley Tng wrote:
-> > > > > > Ackerley Tng <ackerleytng@google.com> writes:
-> > > > > >
-> > > > > > > Yan Zhao <yan.y.zhao@intel.com> writes:
-> > > > > > >
-> > > > > > >> On Fri, Mar 14, 2025 at 05:20:21PM +0800, Yan Zhao wrote:
-> > > > > > >>> This patch would cause host deadlock when booting up a TDX VM even if huge page
-> > > > > > >>> is turned off. I currently reverted this patch. No further debug yet.
-> > > > > > >> This is because kvm_gmem_populate() takes filemap invalidation lock, and for
-> > > > > > >> TDX, kvm_gmem_populate() further invokes kvm_gmem_get_pfn(), causing deadlock.
-> > > > > > >>
-> > > > > > >> kvm_gmem_populate
-> > > > > > >>   filemap_invalidate_lock
-> > > > > > >>   post_populate
-> > > > > > >>     tdx_gmem_post_populate
-> > > > > > >>       kvm_tdp_map_page
-> > > > > > >>        kvm_mmu_do_page_fault
-> > > > > > >>          kvm_tdp_page_fault
-> > > > > > >>       kvm_tdp_mmu_page_fault
-> > > > > > >>         kvm_mmu_faultin_pfn
-> > > > > > >>           __kvm_mmu_faultin_pfn
-> > > > > > >>             kvm_mmu_faultin_pfn_private
-> > > > > > >>               kvm_gmem_get_pfn
-> > > > > > >>                 filemap_invalidate_lock_shared
-> > > > > > >>
-> > > > > > >> Though, kvm_gmem_populate() is able to take shared filemap invalidation lock,
-> > > > > > >> (then no deadlock), lockdep would still warn "Possible unsafe locking scenario:
-> > > > > > >> ...DEADLOCK" due to the recursive shared lock, since commit e918188611f0
-> > > > > > >> ("locking: More accurate annotations for read_lock()").
-> > > > > > >>
-> > > > > > >
-> > > > > > > Thank you for investigating. This should be fixed in the next revision.
-> > > > > > >
-> > > > > >
-> > > > > > This was not fixed in v2 [1], I misunderstood this locking issue.
-> > > > > >
-> > > > > > IIUC kvm_gmem_populate() gets a pfn via __kvm_gmem_get_pfn(), then calls
-> > > > > > part of the KVM fault handler to map the pfn into secure EPTs, then
-> > > > > > calls the TDX module for the copy+encrypt.
-> > > > > >
-> > > > > > Regarding this lock, seems like KVM'S MMU lock is already held while TDX
-> > > > > > does the copy+encrypt. Why must the filemap_invalidate_lock() also be
-> > > > > > held throughout the process?
-> > > > > If kvm_gmem_populate() does not hold filemap invalidate lock around all
-> > > > > requested pages, what value should it return after kvm_gmem_punch_hole() zaps a
-> > > > > mapping it just successfully installed?
-> > > > >
-> > > > > TDX currently only holds the read kvm->mmu_lock in tdx_gmem_post_populate() when
-> > > > > CONFIG_KVM_PROVE_MMU is enabled, due to both slots_lock and the filemap
-> > > > > invalidate lock being taken in kvm_gmem_populate().
-> > > >
-> > > > Does TDX need kvm_gmem_populate path just to ensure SEPT ranges are
-> > > > not zapped during tdh_mem_page_add and tdh_mr_extend operations? Would
-> > > > holding KVM MMU read lock during these operations sufficient to avoid
-> > > > having to do this back and forth between TDX and gmem layers?
-> > > I think the problem here is because in kvm_gmem_populate(),
-> > > "__kvm_gmem_get_pfn(), post_populate(), and kvm_gmem_mark_prepared()"
-> > > must be wrapped in filemap invalidate lock (shared or exclusive), right?
-> > >
-> > > Then, in TDX's post_populate() callback, the filemap invalidate lock is held
-> > > again by kvm_tdp_map_page() --> ... ->kvm_gmem_get_pfn().
-> > 
-> > I am contesting the need of kvm_gmem_populate path altogether for TDX.
-> > Can you help me understand what problem does kvm_gmem_populate path
-> > help with for TDX?
-> There is a long discussion on the list about this.
+On Fri 2025-06-06 23:53:44, Marcos Paulo de Souza wrote:
+> Instead of update a per-console CON_SUSPENDED flag, use the console_list
+> locks to protect this flag. This is also applied to console_is_usable
+> functions, which now also checks if consoles_suspend is set.
 > 
-> Basically TDX needs 3 steps for KVM_TDX_INIT_MEM_REGION.
-> 1. Get the PFN
-> 2. map the mirror page table
-> 3. invoking tdh_mem_page_add().
-> Holding filemap invalidation lock around the 3 steps helps ensure that the PFN
-> passed to tdh_mem_page_add() is a valid one.
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> ---
+>  kernel/printk/internal.h |  7 ++++++-
+>  kernel/printk/nbcon.c    |  8 ++++----
+>  kernel/printk/printk.c   | 23 ++++++++++-------------
+>  3 files changed, 20 insertions(+), 18 deletions(-)
 > 
-> Rather then revisit it, what about fixing the contention more simply like this?
-> Otherwise we can revisit the history.
-> (The code is based on Ackerley's branch
-> https://github.com/googleprodkernel/linux-cc/commits/wip-tdx-gmem-conversions-hugetlb-2mept-v2, with patch "HACK: filemap_invalidate_lock() only for getting the pfn" reverted).
-> 
-> 
-> commit d71956718d061926e5d91e5ecf60b58a0c3b2bad
-> Author: Yan Zhao <yan.y.zhao@intel.com>
-> Date:   Wed Jun 11 18:17:26 2025 +0800
-> 
->     KVM: guest_memfd: Use shared filemap invalidate lock in kvm_gmem_populate()
-> 
->     Convert kvm_gmem_populate() to use shared filemap invalidate lock. This is
->     to avoid deadlock caused by kvm_gmem_populate() further invoking
->     tdx_gmem_post_populate() which internally acquires shared filemap
->     invalidate lock in kvm_gmem_get_pfn().
-> 
->     To avoid lockep warning by nested shared filemap invalidate lock,
->     avoid holding shared filemap invalidate lock in kvm_gmem_get_pfn() when
->     lockdep is enabled.
-> 
->     Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 784fc1834c04..ccbb7ceb978a 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -2393,12 +2393,16 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->         struct file *file = kvm_gmem_get_file(slot);
->         struct folio *folio;
->         bool is_prepared = false;
-> +       bool get_shared_lock;
->         int r = 0;
-> 
->         if (!file)
->                 return -EFAULT;
-> 
-> -       filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
-> +       get_shared_lock = !IS_ENABLED(CONFIG_LOCKDEP) ||
-> +                         !lockdep_is_held(&file_inode(file)->i_mapping->invalidate_lock);
-> +       if (get_shared_lock)
-> +               filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
-
-Hi Yan,
-
-I had been working on some kind of locking scheme that could account for some
-potential[1] changes needed to allowing concurrent updating of "preparedness"
-state while still allowing for concurrent fault handling. I posted a tree
-there in that link with an alternative scheme that's based on rw_semaphore
-like filemap invalidate lock, but with some changes to allow the folio
-lock to be taken to handle write-side updates to "preparedness" state
-instead of needing to take a write-lock.
-
-With that approach (or something similar), it is then possible to drop reliance
-on using the filemap invalidate lock in kvm_gmem_get_pfn(), and that I
-think would cleanly resolve this particular issue.
-
-However, it was also suggested during the guest_memfd call that we revisit
-the need to track preparedness in guest_memfd at all, and resulted in me
-posting this rfc[2] that removes preparedness tracking from gmem
-completely. That series is based on Ackerley's locking scheme from his
-HugeTLBFS series however, which re-uses filemap invalidate rw_semaphore
-to protect the shareability state, so you'd hit similar issues with
-kvm_gmem_populate().
-
-However, as above (and even more easily so since we don't need to do
-anything fancy for concurrent "preparedness" updates), it would be
-fairly trivial to replace the use of filemap invalidate lock with a
-rw_semaphore that's dedicated to protecting shareability state, which
-should make it possible to drop the use of
-filemap_invalidate_lock[_shared]() in kvm_gmem_get_pfn().
-
-But your above patch seems like it would at least get things working in
-the meantime if there's still some discussion that needs to happen
-before we can make a good call on:
-
-  1) whether to continue to use the filemap invalidate or use a dedicated one
-     (my 2 cents: use a dedicated lock to we don't have to deal with
-     inheriting unintended/unecessary locking dependencies)
-  2) whether or not is will be acceptable to drop preparedness-tracking
-     from guest_memfd or not
-     (my 2 cents: it will make all our lives much happier)
-  3) open-code what kvm_gmem_populate() handles currently if we need
-     extra flexibility WRT to locking
-     (my 2 cents: if it can be avoided it's still nice to gmem
-     handle/orchestrate this to some degree)
-
-Thanks,
-
-Mike
-
-[1] https://lore.kernel.org/lkml/20250529054227.hh2f4jmyqf6igd3i@amd.com/
-[2] https://lore.kernel.org/kvm/20250613005400.3694904-1-michael.roth@amd.com/
-
-> 
->         folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &is_prepared, max_order);
->         if (IS_ERR(folio)) {
-> @@ -2423,7 +2427,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->         else
->                 folio_put(folio);
->  out:
-> -       filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
-> +       if (get_shared_lock)
-> +               filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
->         fput(file);
->         return r;
->  }
-> @@ -2536,7 +2541,7 @@ long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long
->         if (!file)
->                 return -EFAULT;
-> 
-> -       filemap_invalidate_lock(file->f_mapping);
-> +       filemap_invalidate_lock_shared(file->f_mapping);
-> 
->         npages = min_t(ulong, slot->npages - (start_gfn - slot->base_gfn), npages);
->         for (i = 0; i < npages; i += npages_to_populate) {
-> @@ -2587,7 +2592,7 @@ long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long
->                         break;
->         }
-> 
-> -       filemap_invalidate_unlock(file->f_mapping);
-> +       filemap_invalidate_unlock_shared(file->f_mapping);
-> 
->         fput(file);
->         return ret && !i ? ret : i;
-> 
-> 
-> If it looks good to you, then for the in-place conversion version of
-> guest_memfd, there's one remaining issue left: an AB-BA lock issue between the
-> shared filemap invalidate lock and mm->mmap_lock, i.e.,
-> - In path kvm_gmem_fault_shared(),
->   the lock sequence is mm->mmap_lock --> filemap_invalidate_lock_shared(),
-> - while in path kvm_gmem_populate(),
->   the lock sequence is filemap_invalidate_lock_shared() -->mm->mmap_lock.
-> 
-> We can fix it with below patch. The downside of the this patch is that it
-> requires userspace to initialize all source pages passed to TDX, which I'm not
-> sure if everyone likes it. If it cannot land, we still have another option:
-> disallow the initial memory regions to be backed by the in-place conversion
-> version of guest_memfd. If this can be enforced, then we can resolve the issue
-> by annotating the lockdep, indicating that kvm_gmem_fault_shared() and
-> kvm_gmem_populate() cannot occur on the same guest_memfd, so the two shared
-> filemap invalidate locks in the two paths are not the same.
-> 
-> Author: Yan Zhao <yan.y.zhao@intel.com>
-> Date:   Wed Jun 11 18:23:00 2025 +0800
-> 
->     KVM: TDX: Use get_user_pages_fast_only() in tdx_gmem_post_populate()
-> 
->     Convert get_user_pages_fast() to get_user_pages_fast_only()
->     in tdx_gmem_post_populate().
-> 
->     Unlike get_user_pages_fast(), which will acquire mm->mmap_lock and fault in
->     physical pages after it finds the pages have not already faulted in or have
->     been zapped/swapped out, get_user_pages_fast_only() returns directly in
->     such cases.
-> 
->     Using get_user_pages_fast_only() can avoid tdx_gmem_post_populate()
->     acquiring mm->mmap_lock, which may cause AB, BA lockdep warning with the
->     shared filemap invalidate lock when guest_memfd in-place conversion is
->     supported. (In path kvm_gmem_fault_shared(), the lock sequence is
->     mm->mmap_lock --> filemap_invalidate_lock_shared(), while in path
->     kvm_gmem_populate(), the lock sequence is filemap_invalidate_lock_shared()
->     -->mm->mmap_lock).
-> 
->     Besides, using get_user_pages_fast_only() and returning directly to
->     userspace if a page is not present in the primary PTE can help detect a
->     careless case that the source pages are not initialized by userspace.
->     As initial memory region bypasses guest acceptance, copying an
->     uninitialized source page to guest could be harmful and undermine the page
->     measurement.
-> 
->     Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> 
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 93c31eecfc60..462390dddf88 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -3190,9 +3190,10 @@ static int tdx_gmem_post_populate_4k(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
->          * Get the source page if it has been faulted in. Return failure if the
->          * source page has been swapped out or unmapped in primary memory.
->          */
-> -       ret = get_user_pages_fast((unsigned long)src, 1, 0, &src_page);
-> +       ret = get_user_pages_fast_only((unsigned long)src, 1, 0, &src_page);
->         if (ret < 0)
->                 return ret;
+> diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+> index 48a24e7b309db20fdd7419f7aeda68ea7c79fd80..752101904f44b13059b6a922519d88e24c9f32c0 100644
+> --- a/kernel/printk/internal.h
+> +++ b/kernel/printk/internal.h
+> @@ -118,8 +118,12 @@ void nbcon_kthreads_wake(void);
+>   * which can also play a role in deciding if @con can be used to print
+>   * records.
+>   */
+> -static inline bool console_is_usable(struct console *con, short flags, bool use_atomic)
+> +static inline bool console_is_usable(struct console *con, short flags,
+> +				     bool use_atomic, bool consoles_suspended)
+>  {
+> +	if (consoles_suspended)
+> +		return false;
 > +
->         if (ret != 1)
->                 return -ENOMEM;
-> 
+>  	if (!(flags & CON_ENABLED))
+>  		return false;
+>  
+> @@ -212,6 +216,7 @@ extern bool have_boot_console;
+>  extern bool have_nbcon_console;
+>  extern bool have_legacy_console;
+>  extern bool legacy_allow_panic_sync;
+> +extern bool consoles_suspended;
+>  
+>  /**
+>   * struct console_flush_type - Define available console flush methods
+> diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+> index fd12efcc4aeda8883773d9807bc215f6e5cdf71a..72de12396e6f1bc5234acfdf6dcc393acf88d216 100644
+> --- a/kernel/printk/nbcon.c
+> +++ b/kernel/printk/nbcon.c
+> @@ -1147,7 +1147,7 @@ static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_contex
+>  	cookie = console_srcu_read_lock();
+>  
+>  	flags = console_srcu_read_flags(con);
+> -	if (console_is_usable(con, flags, false)) {
+> +	if (console_is_usable(con, flags, false, consoles_suspended)) {
+
+The new global console_suspended value has the be synchronized the
+same way as the current CON_SUSPENDED per-console flag.
+It means that the value must be:
+
+  + updated only under console_list_lock together with
+    synchronize_rcu().
+
+  + read using READ_ONCE() under console_srcu_read_lock()
+
+
+I am going to propose more solutions because no one is obviously
+the best one.
+
+Variant A:
+=========
+
+Create a helper functions, similar to
+console_srcu_read_flags() and console_srcu_write_flags():
+
+Something like:
+
+static inline bool console_srcu_read_consoles_suspended()
+{
+	WARN_ON_ONCE(!console_srcu_read_lock_is_held());
+
+	/*
+	 * The READ_ONCE() matches the WRITE_ONCE() when the value
+	 * is modified console_srcu_write_consoles_suspended().
+	 */
+	return data_race(READ_ONCE(consoles_suspended));
+}
+
+static inline void console_srcu_write_consoles_suspended(bool suspended)
+{
+	lockdep_assert_console_list_lock_held();
+
+	/* This matches the READ_ONCE() in console_srcu_read_consoles_suspended(). */
+	WRITE_ONCE(consoles_suspended, suspended);
+}
+
+This has the drawback that most console_is_usable() callers would need
+to get and pass both variables, for example:
+
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -1137,6 +1137,7 @@ static bool nbcon_emit_one(struct nbcon_write_context *wctxt, bool use_atomic)
+  */
+ static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_context *ctxt)
+ {
++	bool cons_suspended;
+ 	bool ret = false;
+ 	short flags;
+ 	int cookie;
+@@ -1147,7 +1148,8 @@ static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_contex
+ 	cookie = console_srcu_read_lock();
+ 
+ 	flags = console_srcu_read_flags(con);
+-	if (console_is_usable(con, flags, false)) {
++	cons_suspended = console_srcu_read_consoles_suspended();
++	if (console_is_usable(con, flags, false, cons_suspended)) {
+ 		/* Bring the sequence in @ctxt up to date */
+ 		ctxt->seq = nbcon_seq_read(con);
+
+Pros:
+
+   + always correct
+
+Cons:
+
+   + not user friendly
+
+
+
+Variant B:
+==========
+
+Do not pass @consoles_suspended as a parameter. Instead, read it
+in console_us_usable() directly.
+
+I do not like this because it is not consistent with the con->flags
+handling and it is not clear why.
+
+
+Variant C:
+==========
+
+Remove even @flags parameter from console_is_usable() and read both
+values there directly.
+
+Many callers read @flags only because they call console_is_usable().
+The change would simplify the code.
+
+But there are few exceptions:
+
+  1. __nbcon_atomic_flush_pending(), console_flush_all(),
+     and legacy_kthread_should_wakeup() pass @flags to
+     console_is_usable() and also check CON_NBCON flag.
+
+     But CON_NBCON flag is special. It is statically initialized
+     and never set/cleared at runtime. It can be checked without
+     READ_ONCE(). Well, we still might want to be sure that
+     the struct console can't disappear.
+
+     IMHO, this can be solved by a helper function:
+
+	/**
+	 * console_srcu_is_nbcon - Locklessly check whether the console is nbcon
+	 * @con:	struct console pointer of console to check
+	 *
+	 * Requires console_srcu_read_lock to be held, which implies that @con might
+	 * be a registered console. The purpose of holding console_srcu_read_lock is
+	 * to guarantee that no exit/cleanup routines will run if the console
+	 * is currently undergoing unregistration.
+	 *
+	 * If the caller is holding the console_list_lock or it is _certain_ that
+	 * @con is not and will not become registered, the caller may read
+	 * @con->flags directly instead.
+	 *
+	 * Context: Any context.
+	 * Return: True when CON_NBCON flag is set.
+	 */
+	static inline bool console_is_nbcon(const struct console *con)
+	{
+		WARN_ON_ONCE(!console_srcu_read_lock_is_held());
+
+		/*
+		 * The CON_NBCON flag is statically initialized and is never
+		 * set or cleared at runtime.
+		return data_race(con->flags & CON_NBCON);
+	}
+
+
+   2. Another exception is __pr_flush() where console_is_usable() is
+      called twice with @use_atomic set "true" and "false".
+
+      We would want to read "con->flags" only once here. A solution
+      would be to add a parameter to check both con->write_atomic
+      and con->write_thread in a single call.
+
+      But it might actually be enough to check is with the "false"
+      value because "con->write_thread()" is mandatory for nbcon
+      consoles. And legacy consoles do not distinguish atomic mode.
+
+
+Variant D:
+==========
+
+We need to distinguish the global and per-console "suspended" flag
+because they might be nested. But we could use a separate flag
+for the global setting.
+
+I mean that:
+
+    + console_suspend() would set CON_SUSPENDED flag
+    + console_suspend_all() would set CON_SUSPENDED_ALL flag
+
+They both will be in con->flags.
+
+Pros:
+
+    + It is easy to implement.
+
+Cons:
+
+    + It feels a bit ugly.
+
+
+My opinion:
+===========
+
+I personally prefer the variant C because:
+
+  + Removes one parameter from console_is_usable().
+
+  + The lockless synchronization of both global and per-console
+    flags is hidden in console_is_usable().
+
+  + The global console_suspended flag will be stored in global
+    variable (in compare with variant D).
+
+What do you think, please?
+
+Best Regards,
+Petr
+
+
+PS: The commit message and the cover letter should better explain
+    the background of this change.
+
+    It would be great if the cover letter described the bigger
+    picture, especially the history of the console_suspended,
+    CON_SUSPENDED, and CON_ENABLED flags. It might use info
+    from
+    https://lore.kernel.org/lkml/ZyoNZfLT6tlVAWjO@pathway.suse.cz/
+    and maybe even this link.
+
+    Also this commit message should mention that it partly reverts
+    the commit 9e70a5e109a4a233678 ("printk: Add per-console
+    suspended state"). But it is not simple revert because
+    we need to preserve the synchronization using
+    the console_list_lock for writing and SRCU for reading.
