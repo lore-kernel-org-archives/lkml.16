@@ -1,37 +1,38 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6004F18DB29;
-	Fri, 13 Jun 2025 15:49:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD011C5F2C;
+	Fri, 13 Jun 2025 15:49:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749829797; cv=none; b=mxOU4OkdbewztjPDuTA/muP56VFaACOhCEqX+BbXjYmQX6GauvR4i9MyRo5IYE3Vk7RH8KShhLNdCKk4J9jHs2pSn7IgEt3p8cyeofkBnt9H/998vWEGWJ/jatAB6L2+AGp64hlcQ6zhuatptqYNgBcvNwLI0aG+pzDvvQonrBo=
+	t=1749829798; cv=none; b=gDtkO7xsFVn7kiNAaTwFn1m49JAQIIGw2/4tuwFXyTZNEaf2aNn9KOzdPBuKwfBgvzyu1rxI+dnRu0TqOG74vQtVQ5MkV7YbJiF/i1P/5hzjh3kn+DLEgD72b92iU6430loHjEZFFLIHQIEr7fFQq8FIND8Z/YS006ObrA/QD3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749829797; c=relaxed/simple;
-	bh=kQEepNrhTMoeLkMWuKHbX1FQWB7KfGk67Nh0dUtM66U=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=izsUmehcMS5Bp4cAovF/w1oL594/RUn9p0XWOfGAOhPa/B9uMDA5D8vCnl/HzyiGKRa0O88jUj5HstTMICrKxDfskcOGievwzxWzphnwE/XE3hvoE3jBujvFVhCXxIdhTvF3cTYVTg7FVB7lTlq7S5wQX3N54rsEYiWFNrsj6Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UCS0Yhp0; arc=none smtp.client-ip=217.70.183.201
+	s=arc-20240116; t=1749829798; c=relaxed/simple;
+	bh=xdCDFsY7fHfgyuBIW40huzR//1ytnbFa21uQW+dNB+4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=m5c6TGvU8wezrHI8yqiviI9atK+0kVImOpitC4VYSklKr+QbmrcyKRVA8Ox1uvStY3vuXJ0uksk/Y74cagpzzS38ce1T5gyYg6OaMCGSugtANnRIetRp8UFExYnH1hXWeEVBGT1vldePPbBLyqSAhZT0hnbzahNDWvMCR4Sh6Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YQ5haUf4; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UCS0Yhp0"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A0F7F4441C;
-	Fri, 13 Jun 2025 15:49:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YQ5haUf4"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EAFA344423;
+	Fri, 13 Jun 2025 15:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749829788;
+	t=1749829794;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OOVi85YqZgwGXGhiKBANfYwAT8bk0/6cs0m4L0QZ5ww=;
-	b=UCS0Yhp0BmMKUNuUyOR1T25Kcr7nlJYjEgZK7Ufhbcj4FHb/qXJeRN4v5mPpJFrUUd2oem
-	fTzexFYkAKc3Kmfz2P1OQvLBE+rxYG/C49/ZWpML3/gowta2wgXwaugkZO9UfkCjyYXWDx
-	RB6/pbV8Lk9OHGzj0x6TCeGHiOuWwOw/GqRXABCIgt30idmf0uSS81p/0VYG7O3uIIXuci
-	oyU8nkw5n3EEIwKUqyshs1iZB8Srz5x5aWPAzF2rECrBLWduAsy0u7nADm+hGQEekGTeZN
-	nOKckX4BRAxjjOjp2rEOrb5hE9vJqwJBHUL1+pi98FGvNMufLUkIapIRvlBCPw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v1FemFSObCbEVYAn/hTqf4EyYMN6hadEZQLG7F20BzM=;
+	b=YQ5haUf4MGZknhpKqWKmRoydgFIHIXX7eOIPMF19aFHD1E7AtPH0r+fIDAzdUQ+viOLOzS
+	Z0/JPIt4JvvLiF3NSz18rw3a88z6uu+RIcpsq3zCnlu6WgsWtgcbr3SetKiJtQeMxFKcy/
+	D688E3Ijw4RLK4pGhJOeeR4WcO3WL/rI10Hc891qn0VGEa0SSL2MszPiJm634wKkHe1yp/
+	sZZxcSJMG5g44KAocIzsQEk6mfe2K3jE7PamlO3J44rGWIfTGbC67y5hxnWEe+k5z9s4NW
+	Yrxrct8tih8J5mTn0kvqMYBwwR2Zs4WvVgxAlyHSujJRKraZVeRMa/91pUfCUg==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH v3 0/7] Add support for BeagleBone Green Eco board
-Date: Fri, 13 Jun 2025 17:49:43 +0200
-Message-Id: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
+Date: Fri, 13 Jun 2025 17:49:49 +0200
+Subject: [PATCH v3 6/7] arm: omap2plus_defconfig: Enable TPS65219 regulator
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,11 +40,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAJdITGgC/1WMQQ6CMBBFr0JmbU070Ja68h7GBYUBmig1LWk0h
- LtbcGGY3Zv89xaIFBxFuBQLBEouOj9lKE8FtGMzDcRclxmQo+QSS2btwLQyXNSd6LHRkJevQL1
- 775XbPfPo4uzDZ48msX2PfhKMM+qrxpDUlO9qvZ8fbjq3/glbIeHfUtz8LMyWRF1zVFZXpj5a6
- 7p+Acr49H7OAAAA
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250613-bbg-v3-6-514cdc768448@bootlin.com>
+References: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
+In-Reply-To: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
 To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
@@ -61,70 +61,48 @@ Cc: Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>,
 X-Mailer: b4 0.15-dev-8cb71
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeefhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtkeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudfhveduteffgfekvdfhveehgeehtdelgefhffduiefffedvheefgeeiiedvkeetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgduleemkeehkeejmeejuddttdemfedttgefmeektgehsgemfhdtkegumeegfeegsgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekheekjeemjedutddtmeeftdgtfeemkegthegsmehftdekugemgeefgegspdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvrghss
- ehkvghmnhgruggvrdhinhhfohdprhgtphhtthhopehmrghrtgdrmhhurhhphhihsehsrghntghlohhuugdrtghomhdprhgtphhtthhopehlihhnuhigqdhomhgrphesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjkhhrihgunhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhnhiesrghtohhmihguvgdrtghomhdprhgtphhtthhopehkhhhilhhmrghnsegsrgihlhhisghrvgdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeefhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvefgvdfgkeetgfefgfegkedugffghfdtffeftdeuteehjedtvdelvddvleehtdevnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeeftdgtfeemkegthegsmehftdekugemgeefgegsnecuvehluhhsthgvrhfuihiivgepgeenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemfedttgefmeektgehsgemfhdtkegumeegfeegsgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhhopdhrtghpthhtohepmhgrrhgtrdhmuhhrp
+ hhhhiesshgrnhgtlhhouhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqohhmrghpsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhkrhhiughnvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhm
 X-GND-Sasl: kory.maincent@bootlin.com
 
-SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Green
-(BBG). It has minor differences from the BBG, such as a different PMIC,
-a different Ethernet PHY, and a larger eMMC.
+Enable the TPS65219 regulator in the defconfig, as the TPS65214
+variant is used by the newly introduced BeagleBoard Green Eco board.
 
-Also update the omap.yaml binding to include missing compatible strings
-that were previously undocumented.
-
+Reviewed-by: Andreas Kemnade <andreas@kemnade.info>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
-Changes in v3:
-- Update multi_v7_defconfig with TPS65219 config.
-- Remove extraneous compatible strings.
-- Replace BeagleBone compatible board name vendor to use "beagle" instead
-  of "ti".
-- Link to v2: https://lore.kernel.org/r/20250609-bbg-v2-0-5278026b7498@bootlin.com
+ arch/arm/configs/omap2plus_defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes in v2:
-- Add patch 1 to 3 to fix binding and devicetree inconsistencies.
-- Rename tps node name to generic pmic node name in am335x-bone-common.
-- Link to v1: https://lore.kernel.org/r/20250523-bbg-v1-0-ef4a9e57eeee@bootlin.com
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index 9f9780c8e62a..2ad669f7b202 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -385,6 +385,7 @@ CONFIG_TOUCHSCREEN_TSC2007=m
+ CONFIG_INPUT_MISC=y
+ CONFIG_INPUT_CPCAP_PWRBUTTON=m
+ CONFIG_INPUT_TPS65218_PWRBUTTON=m
++CONFIG_INPUT_TPS65219_PWRBUTTON=m
+ CONFIG_INPUT_TWL4030_PWRBUTTON=m
+ CONFIG_INPUT_UINPUT=m
+ CONFIG_INPUT_PALMAS_PWRBUTTON=m
+@@ -454,6 +455,7 @@ CONFIG_MFD_TPS65217=y
+ CONFIG_MFD_TI_LP873X=y
+ CONFIG_MFD_TI_LP87565=y
+ CONFIG_MFD_TPS65218=y
++CONFIG_MFD_TPS65219=y
+ CONFIG_MFD_TPS65910=y
+ CONFIG_TWL6040_CORE=y
+ CONFIG_REGULATOR_CPCAP=y
+@@ -470,6 +472,7 @@ CONFIG_REGULATOR_TPS65023=y
+ CONFIG_REGULATOR_TPS6507X=y
+ CONFIG_REGULATOR_TPS65217=y
+ CONFIG_REGULATOR_TPS65218=y
++CONFIG_REGULATOR_TPS65219=y
+ CONFIG_REGULATOR_TPS65910=y
+ CONFIG_REGULATOR_TWL4030=y
+ CONFIG_RC_CORE=m
 
----
-Kory Maincent (7):
-      dt-bindings: omap: Add missing AM33xx compatible strings
-      ARM: dts: omap: Remove incorrect compatible strings from device trees
-      arm: dts: omap: am335x-bone-common: Rename tps to generic pmic node
-      dt-bindings: omap: Add Seeed BeagleBone Green Eco
-      arm: dts: omap: Add support for BeagleBone Green Eco board
-      arm: omap2plus_defconfig: Enable TPS65219 regulator
-      arm: multi_v7_defconfig: Enable TPS65219 regulator
-
- Documentation/devicetree/bindings/arm/ti/omap.yaml |  23 ++-
- arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
- arch/arm/boot/dts/ti/omap/am335x-base0033.dts      |   2 +-
- arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi  |   2 +-
- arch/arm/boot/dts/ti/omap/am335x-bone.dts          |   4 +-
- .../boot/dts/ti/omap/am335x-boneblack-wireless.dts |   4 +-
- arch/arm/boot/dts/ti/omap/am335x-boneblack.dts     |   4 +-
- arch/arm/boot/dts/ti/omap/am335x-boneblue.dts      |   4 +-
- arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 169 +++++++++++++++++++++
- .../boot/dts/ti/omap/am335x-bonegreen-wireless.dts |   4 +-
- arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts     |   4 +-
- arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts    |   3 +-
- arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts  |   2 +-
- .../arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts |   2 +-
- arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts  |   4 +-
- .../ti/omap/am335x-sancloud-bbe-extended-wifi.dts  |   5 +-
- .../boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts  |   5 +-
- arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts  |   2 +-
- arch/arm/boot/dts/ti/omap/am335x-shc.dts           |   2 +-
- arch/arm/configs/multi_v7_defconfig                |   3 +
- arch/arm/configs/omap2plus_defconfig               |   3 +
- 21 files changed, 221 insertions(+), 31 deletions(-)
----
-base-commit: e22b9ddaf3afd031abc350c303c7c07a51c569d8
-change-id: 20250523-bbg-769018d1f2a7
-
-Best regards,
 -- 
-Köry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.43.0
 
