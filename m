@@ -1,69 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0481E1A05;
-	Fri, 13 Jun 2025 14:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CD31E1A33
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826509; cv=none; b=s+SScQ1/3y4wtJNVXgV9q+Bblc9YlKqekdeE/dDHWivtUSvkkKS0nNygANObBA8ozfOxprngqnOsq0N+SsZGHA9S8cuEAqW33EXO87YYStpnnpQaZ667AxqqN8HzJxh28P4mp1BrhniCdJOSL+Ams21K1ylGgpVBYc11qScwqBA=
+	t=1749826518; cv=none; b=O7SB05533L3hDKcStYrLC7MgQ0OPQZIqOE8GzGXfmdAD+iM9E9BOLjZTi6BnUX2Tl/DrafEk0nMsEriNm8dKcN9SwlLEIC+SBWQAKfkBg6NI1tQB61XEEM6n1V2kMYcinc5YtM2MEcyL4FqnSBdA+Y/bCAbZcjMkKJ6NKKIWWAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826509; c=relaxed/simple;
-	bh=5pD/BgSePBntWU8mhp6nAn27Zb6qdhC6ndfBZmHer+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ia9YRG4B02MFGD/UBjFQgxUmo/auARgbZvDHwB5gjl3s8VdjRlleJ/oA9ksMKbRX9JwqiFXW3b6NpgjldroGW+A5QQ/T0kTXbQarVI7JbYJxbRF4jpQAO3DCRXKaS4tpmWCUbftyTyj0tNWqt1D/aH6LZHNX1wmApFtno1LcJLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JX5iddf3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749826518; c=relaxed/simple;
+	bh=K0j0E8X+BOXpIkz8/efXSUghnYgg2ZTydyaS55DiavU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ROqdpw6PSqZdgfD2WvMPkBqE47Wzd+1TDEOlRU1pc/2Gwg7KRmr5QiVe2lRE9b+4I2UMdfP5BIHY9Xq3887rt9KkpRSaHLLQ0w4Wk2NLd/KU1KPfP1o+H99EramdXhdJXOPlw7qn+5h95V9z3gtemSXaGHc+9Gq/+Bzrto16Av4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mc1Kidky; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rV1/nDbr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mc1Kidky; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rV1/nDbr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JX5iddf3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90500C4CEE3;
-	Fri, 13 Jun 2025 14:55:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749826509;
-	bh=5pD/BgSePBntWU8mhp6nAn27Zb6qdhC6ndfBZmHer+Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JX5iddf3K21wiZZk2ToN+EDn1xo/UD4mV9iXfpVVSD0nLusWLwki5z6R0CbQS9cdS
-	 9YkHMoPdMVwDVNXarMWYv4XLb2BDz8TD+YjZ7ctHJDcCobIiV2103fpnD2XpwPLMyV
-	 rU8nT6zAnlGdMamgK4BhS9CiHxTdLx5I08occNKST9zZG2TOH5+MWmsTWBALKgCxOM
-	 bhz3zIDf5TbZhbybZjc4SAWv32gkMJnVJzVpPqo3AfYQR1gT5N0UlmPM4nSPLPl1SZ
-	 woZMGdKgAUx8gDXTR0nGM86sb/FsbBPVn1zox9StkGRNFwwzFqDo2lFWu4Um6yb2nh
-	 RNZvy1YGvn3ww==
-Date: Fri, 13 Jun 2025 07:55:07 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, David Wei <dw@davidwei.uk>, Shuah Khan
- <shuah@kernel.org>, Simon Horman <horms@kernel.org>, joe@dama.to,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next v2 4/4] netdevsim: account dropped packet
- length in stats on queue free
-Message-ID: <20250613075507.2b857743@kernel.org>
-In-Reply-To: <aEw579mm+3aiXti+@gmail.com>
-References: <20250613-netdevsim_stat-v2-0-98fa38836c48@debian.org>
-	<20250613-netdevsim_stat-v2-4-98fa38836c48@debian.org>
-	<aEw579mm+3aiXti+@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mc1Kidky";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rV1/nDbr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mc1Kidky";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rV1/nDbr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9761921277;
+	Fri, 13 Jun 2025 14:55:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749826512; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FOnvCgK+PK9koup8uKcxrwLNBHe5Jf9Dmp3a7AAYPcw=;
+	b=mc1Kidky6r1X2w5CReXCrzhMoDhAltOUwPKm/sIJGmJAclwtCyisx2YZsflcirij6AxxVr
+	EXIoAs9H0rtXJ/m8JXfMTNcyYtpyoW4EHL9P2pEh7WjtfSutjgJOofND+2UlFPkF9CQBZk
+	uslqm7q31v3ZM5eTzi4QNdqlz+6ce2w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749826512;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FOnvCgK+PK9koup8uKcxrwLNBHe5Jf9Dmp3a7AAYPcw=;
+	b=rV1/nDbrK8dkR7K4eWNT/xpR2kjtruA5HFyKiApL0gMffawry4StOB+Cyl1bYGfqrFXkHE
+	RT4150X4uZJEr0Ag==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mc1Kidky;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="rV1/nDbr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749826512; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FOnvCgK+PK9koup8uKcxrwLNBHe5Jf9Dmp3a7AAYPcw=;
+	b=mc1Kidky6r1X2w5CReXCrzhMoDhAltOUwPKm/sIJGmJAclwtCyisx2YZsflcirij6AxxVr
+	EXIoAs9H0rtXJ/m8JXfMTNcyYtpyoW4EHL9P2pEh7WjtfSutjgJOofND+2UlFPkF9CQBZk
+	uslqm7q31v3ZM5eTzi4QNdqlz+6ce2w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749826512;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FOnvCgK+PK9koup8uKcxrwLNBHe5Jf9Dmp3a7AAYPcw=;
+	b=rV1/nDbrK8dkR7K4eWNT/xpR2kjtruA5HFyKiApL0gMffawry4StOB+Cyl1bYGfqrFXkHE
+	RT4150X4uZJEr0Ag==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 032DF13782;
+	Fri, 13 Jun 2025 14:55:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7tC/Oc87TGhXHwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 13 Jun 2025 14:55:11 +0000
+Date: Fri, 13 Jun 2025 16:55:10 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	Alex Mastro <amastro@fb.com>, David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>
+Subject: Re: [PATCH 1/5] mm: Deduplicate mm_get_unmapped_area()
+Message-ID: <aEw7zkwNAc4aGnqe@localhost.localdomain>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-2-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613134111.469884-2-peterx@redhat.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 9761921277
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-On Fri, 13 Jun 2025 07:47:11 -0700 Breno Leitao wrote:
-> >  static void nsim_queue_free(struct nsim_rq *rq)
-> >  {
-> > +	struct net_device *dev = rq->napi.dev;
-> > +
-> >  	hrtimer_cancel(&rq->napi_timer);
-> > +	dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);  
+On Fri, Jun 13, 2025 at 09:41:07AM -0400, Peter Xu wrote:
+> Essentially it sets vm_flags==0 for mm_get_unmapped_area_vmflags().  Use
+> the helper instead to dedup the lines.
 > 
-> This is wrong and it will cause the kernel to crash in some cases, given
-> we can get here with dev == NULL, in the following path:
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 
-It's probably because NAPI wasn't registered yet in some paths.
-You can pass dev in from the callers, it always exists, and all 
-callers have it.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+
 -- 
-pw-bot: cr
+Oscar Salvador
+SUSE Labs
