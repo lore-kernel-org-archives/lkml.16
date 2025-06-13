@@ -1,255 +1,136 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6976B2459D2
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C4E2DA77F;
+	Fri, 13 Jun 2025 08:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749804365; cv=none; b=F/c1wnBlWhZ4DHvZCzpiv6evgtDt0IDM7XRV7vg+LZI0G7/K4tWAKXbkkD4Ve/ZfbQZygzVMtCBu5Bw/9FCbb2GSjezw+pmbttHWt5eaXf/uUQEdTY3icxm0cR4TxPFLNOG/Qt17EaWKHx2MoUjI3+2acKZ1RTse/OnO72urCEo=
+	t=1749804427; cv=none; b=eTSOo4ahG8m9q4P8e93jQdcc7qvwkDx9p/s+WTYuwT762oYGvojeFlE2Gk0hyAmCJsyDAlpkMDNKrKG+VKOJKsbEIhuTS7RtKi/AVcG/2WhX8g9PMwoilluvsIE8LKjy/+V5dSYfXJsBwKokrUCLK7Qr6XI5uXMSUdseRxP3WG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749804365; c=relaxed/simple;
-	bh=J5oWPXtOJiFBs9dv4I5q0WBvTbd28RX42UsQhqgXnX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qvCCIEKzKbvoDyLhAq6WKb2FCQjYB7pqWpeJvrOklXuxf3rVKQPPTWSLumz2TR86LM0RyEcRMlaz2hCkrlVg6ObdmX30//EegZQBop51QJy0tSWJVIyvR+EscoKAmca0kfQcTSU1XBuZO3gCD4nr/RWu00IVLgj0ieiYhhleCzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=n7aV4uGV; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1749804427; c=relaxed/simple;
+	bh=TVfUz3TKxC1BulEkZPvwIfSVjGBZCx6+Ief0xmyFK5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sgHjGtGd+wmhZIn3orvN6FQS8gK9bMzd7MADbBoVn9SQKALc4O0/M74hbJKLCEAw9p8RmGLUzu4rwFocQdRkaK15HgxStLqV8j6GUc/MNMDTDF6HWGdVI4DeYUOnQK4BlVASvt8iP+LJT1/e5hMasvq2iuqR7stsufrx4Fr2aos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9HSB70U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="n7aV4uGV"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so1494039f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749804360; x=1750409160; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pPysXILCfU+u1glPGM8ddsYMEL8PciSkqWZBDbfqi5Q=;
-        b=n7aV4uGVkqLwcOk9882qM/HVjYVzL5odjgqlwrhDtBqK+7sUjj9rW9cIeqLAD4bT3w
-         /yO8Isl3O4H3iGj+th9w4M30d3M9esoGSEeuHCpFPIcXZwm61RoT3ac1T7dcKQ4dVRwR
-         zrxLGZWiEMWzh3Pdj5sA3KmPKibKxd6g6tuwcl8GafsTjfJfCUSXCgeq1Jm633qSwEl+
-         JSIvgHwU/uFhGOhhoK5pULk0UDWP8Wu4rvciIsnwAy13MLW8AV61hJT7KwS8vEhtxkD6
-         Gyr2bm45t8zP6kpDCGwEjuB3A8dxkh43PjB5jp9hdj+VBzdSOrZMRWR45fzp5peIHukG
-         dMJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749804360; x=1750409160;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pPysXILCfU+u1glPGM8ddsYMEL8PciSkqWZBDbfqi5Q=;
-        b=QokxINHSeCxZQYs/6D+5+PehQ8/JyXalQ4E6xxrv73OQVQMzQ0WJe+//FA6/6lmaMk
-         9g84fCTYHljkHIT8HthRHpr8emUTc8uQkukGKzeNN7cDBRke1TT+rHosw5JyMN0VdDsT
-         InO+hHApk+8UOPZ7A/OiFRHy3vRspJDWIV6vfw+N5Wsa8ImZXr8oUloHJOqZNMKok3+0
-         rpUS/kVElQHXmIPostYgfipR91aDifJrfwtctGUf1cq+ZMpHj2kgNttRm2ZdofhiWSYt
-         g+2wVcplsIu3D7zVNrp99EwTGa+INMam7ZHFmvzyloVeiU1WywP3utDI9ZVFhk8DmVsJ
-         1uSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWSC07Y8F3sMCPYRcnwSdrSGGQ+xAmN+8VWhy8G/34XiW7y2B6uJSSYzqrT32GLY2KFLz/rMJwrzUDx1Z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw96hADS8MOlw1UEP1Ynx7+8x3vw8549gIb6CQJkuM5iQ626/pn
-	ARAmVGXB8AWHWucXqe7JpLpDbZBDMHfe/97/cetFTmhGYDNH/I4zxXjPxSx9NhniyVw=
-X-Gm-Gg: ASbGncvGmt5Q+RciQPNSGjHEd82CbZBzPB8zAZ44t524oOv8QFBbt//Crp4X562NwvO
-	4Aok2k5+l/xuBZS0W8LOg9ILTw3QAInIgEJ1/1qoHBqpFQOHM5hzRpELQYRY2bCytrSXLMju1u4
-	6sGOFhLWcma48H7SnMcdc8pkUcOCIQWrT/VEfZiWKdaLOI73Olm5kqnT3H3mhEiSiC/yQ8vWQAX
-	YS33tsp75f5tVa/TqsPi6N6fJOYkrbPGh3OUg9su7R2tn1vYB61tSV1tnV24JrKQhXrpBUpd0Wk
-	XGN98c7UVjoVP2dajh9oU/5ajtqfyF2eNbFNGU5kBkQ4yILRpQ==
-X-Google-Smtp-Source: AGHT+IEQkzpf/GCapCoD2b5zMQetkWxlSYPIz9FgJgDLq+nYarNZ+dQ9zrl0ZkcjsNfdKzttk0MElg==
-X-Received: by 2002:a05:6000:1785:b0:3a4:f7e6:284b with SMTP id ffacd0b85a97d-3a5686e46e7mr2096211f8f.10.1749804359658;
-        Fri, 13 Jun 2025 01:45:59 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::5485])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25e89fsm44115675e9.33.2025.06.13.01.45.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 01:45:59 -0700 (PDT)
-Date: Fri, 13 Jun 2025 10:45:58 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: zhouquan@iscas.ac.cn
-Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] RISC-V: perf/kvm: Add reporting of interrupt events
-Message-ID: <20250613-10b9c7df0043617e466a7212@orel>
-References: <9693132df4d0f857b8be3a75750c36b40213fcc0.1726211632.git.zhouquan@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9HSB70U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1BF8C4CEE3;
+	Fri, 13 Jun 2025 08:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749804427;
+	bh=TVfUz3TKxC1BulEkZPvwIfSVjGBZCx6+Ief0xmyFK5E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=i9HSB70U4KbfMCeMnJShysgjVY5llfhYZcqFMTPNS77p9z8cfcWNGWjQ/WYuHj3M4
+	 phPqq8RGk7Tbo+VQ3W//Lz25/mwP7Z1BZeLGwcF4GHOjCsWToCdjZvMdU2YtR6VJze
+	 QkWgdyBlb3NkcogbZWI6ALnCwofbcXAC8t3Xzkb9RIxVCY8eDWSpGOYJZI18tzNQ4/
+	 1KTt5AZxywmGOgcMYuMPKK0Q4RXf2oYo5BuOuaJ0s2u1Y8DRni2arpIVAwHMvXCO9n
+	 Q1RMcZ1t9vvwkGxEEQwOcnAw5tLyLCVn1RaToD5p5Flo1O5fdytJpHPHIvI1t5GKmA
+	 Tjep0DgaWVDkQ==
+Message-ID: <f1b83b96-7cac-4014-b791-e073d2299c01@kernel.org>
+Date: Fri, 13 Jun 2025 10:47:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9693132df4d0f857b8be3a75750c36b40213fcc0.1726211632.git.zhouquan@iscas.ac.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: usb: microchip,usb5744: Add support for
+ configurable board reset delays
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ gregkh@linuxfoundation.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, michal.simek@amd.com
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, git@amd.com
+References: <1749148171-1729610-1-git-send-email-radhey.shyam.pandey@amd.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <1749148171-1729610-1-git-send-email-radhey.shyam.pandey@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 03:53:38PM +0800, zhouquan@iscas.ac.cn wrote:
-> From: Quan Zhou <zhouquan@iscas.ac.cn>
+On 05/06/2025 20:29, Radhey Shyam Pandey wrote:
+> Introduce 'reset-delay-us' and 'power-on-delay-us' properties. Default
+> delays in datasheet are not good enough for Xilinx Kria KR260 Robotics
+> Starter Kit (and others) so there is a need to program board specific
+> reset and power on delay via DT.
 > 
-> For `perf kvm stat` on the RISC-V, in order to avoid the
-> occurrence of `UNKNOWN` event names, interrupts should be
-> reported in addition to exceptions.
-> 
-> testing without patch:
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
 > ---
-> Event name                    Samples  Sample%       Time(ns)
-> ---------------------------  --------  --------  ------------
-> STORE_GUEST_PAGE_FAULT   	  1496461   53.00%    889612544
-> UNKNOWN                        887514   31.00%    272857968
-> LOAD_GUEST_PAGE_FAULT          305164   10.00%    189186331
-> VIRTUAL_INST_FAULT              70625    2.00%    134114260
-> SUPERVISOR_SYSCALL              32014    1.00%     58577110
-> INST_GUEST_PAGE_FAULT               1    0.00%         2545
-> 
-> testing with patch:
+> Taken reference from mdio.yaml[1]
+> [1]: Documentation/devicetree/bindings/net/mdio.yaml
 > ---
-> Event name                    Samples  Sample%       Time(ns)
-> ---------------------------  --------  --------  ------------
-> IRQ_S_TIMER                   211271    58.00%  738298680600
-> EXC_STORE_GUEST_PAGE_FAULT    111279    30.00%  130725914800
-> EXC_LOAD_GUEST_PAGE_FAULT      22039     6.00%   25441480600
-> EXC_VIRTUAL_INST_FAULT          8913     2.00%   21015381600
-> IRQ_VS_EXT                      4748     1.00%   10155464300
-> IRQ_S_EXT                       2802     0.00%   13288775800
-> IRQ_S_SOFT                      1998     0.00%    4254129300
+>  .../devicetree/bindings/usb/microchip,usb5744.yaml   | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
-> ---
->  tools/perf/arch/riscv/util/kvm-stat.c         |  6 +-
->  .../arch/riscv/util/riscv_exception_types.h   | 35 ------------
->  tools/perf/arch/riscv/util/riscv_trap_types.h | 57 +++++++++++++++++++
->  3 files changed, 60 insertions(+), 38 deletions(-)
->  delete mode 100644 tools/perf/arch/riscv/util/riscv_exception_types.h
->  create mode 100644 tools/perf/arch/riscv/util/riscv_trap_types.h
-> 
-> diff --git a/tools/perf/arch/riscv/util/kvm-stat.c b/tools/perf/arch/riscv/util/kvm-stat.c
-> index 491aef449d1a..3ea7acb5e159 100644
-> --- a/tools/perf/arch/riscv/util/kvm-stat.c
-> +++ b/tools/perf/arch/riscv/util/kvm-stat.c
-> @@ -9,10 +9,10 @@
->  #include <memory.h>
->  #include "../../../util/evsel.h"
->  #include "../../../util/kvm-stat.h"
-> -#include "riscv_exception_types.h"
-> +#include "riscv_trap_types.h"
->  #include "debug.h"
+> diff --git a/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml b/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+> index c68c04da3399..94a2bebd32da 100644
+> --- a/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+> +++ b/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+> @@ -52,6 +52,16 @@ properties:
+>      description:
+>        phandle of an usb hub connected via i2c bus.
 >  
-> -define_exit_reasons_table(riscv_exit_reasons, kvm_riscv_exception_class);
-> +define_exit_reasons_table(riscv_exit_reasons, kvm_riscv_trap_class);
->  
->  const char *vcpu_id_str = "id";
->  const char *kvm_exit_reason = "scause";
-> @@ -30,7 +30,7 @@ static void event_get_key(struct evsel *evsel,
->  			  struct event_key *key)
->  {
->  	key->info = 0;
-> -	key->key = evsel__intval(evsel, sample, kvm_exit_reason);
-> +	key->key = evsel__intval(evsel, sample, kvm_exit_reason) & ~CAUSE_IRQ_FLAG;
->  	key->exit_reasons = riscv_exit_reasons;
->  }
->  
-> diff --git a/tools/perf/arch/riscv/util/riscv_exception_types.h b/tools/perf/arch/riscv/util/riscv_exception_types.h
-> deleted file mode 100644
-> index c49b8fa5e847..000000000000
-> --- a/tools/perf/arch/riscv/util/riscv_exception_types.h
-> +++ /dev/null
-> @@ -1,35 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#ifndef ARCH_PERF_RISCV_EXCEPTION_TYPES_H
-> -#define ARCH_PERF_RISCV_EXCEPTION_TYPES_H
-> -
-> -#define EXC_INST_MISALIGNED 0
-> -#define EXC_INST_ACCESS 1
-> -#define EXC_INST_ILLEGAL 2
-> -#define EXC_BREAKPOINT 3
-> -#define EXC_LOAD_MISALIGNED 4
-> -#define EXC_LOAD_ACCESS 5
-> -#define EXC_STORE_MISALIGNED 6
-> -#define EXC_STORE_ACCESS 7
-> -#define EXC_SYSCALL 8
-> -#define EXC_HYPERVISOR_SYSCALL 9
-> -#define EXC_SUPERVISOR_SYSCALL 10
-> -#define EXC_INST_PAGE_FAULT 12
-> -#define EXC_LOAD_PAGE_FAULT 13
-> -#define EXC_STORE_PAGE_FAULT 15
-> -#define EXC_INST_GUEST_PAGE_FAULT 20
-> -#define EXC_LOAD_GUEST_PAGE_FAULT 21
-> -#define EXC_VIRTUAL_INST_FAULT 22
-> -#define EXC_STORE_GUEST_PAGE_FAULT 23
-> -
-> -#define EXC(x) {EXC_##x, #x }
-> -
-> -#define kvm_riscv_exception_class                                         \
-> -	EXC(INST_MISALIGNED), EXC(INST_ACCESS), EXC(INST_ILLEGAL),         \
-> -	EXC(BREAKPOINT), EXC(LOAD_MISALIGNED), EXC(LOAD_ACCESS),           \
-> -	EXC(STORE_MISALIGNED), EXC(STORE_ACCESS), EXC(SYSCALL),            \
-> -	EXC(HYPERVISOR_SYSCALL), EXC(SUPERVISOR_SYSCALL),                  \
-> -	EXC(INST_PAGE_FAULT), EXC(LOAD_PAGE_FAULT), EXC(STORE_PAGE_FAULT), \
-> -	EXC(INST_GUEST_PAGE_FAULT), EXC(LOAD_GUEST_PAGE_FAULT),            \
-> -	EXC(VIRTUAL_INST_FAULT), EXC(STORE_GUEST_PAGE_FAULT)
-> -
-> -#endif /* ARCH_PERF_RISCV_EXCEPTION_TYPES_H */
-> diff --git a/tools/perf/arch/riscv/util/riscv_trap_types.h b/tools/perf/arch/riscv/util/riscv_trap_types.h
-> new file mode 100644
-> index 000000000000..854e9d95524d
-> --- /dev/null
-> +++ b/tools/perf/arch/riscv/util/riscv_trap_types.h
-> @@ -0,0 +1,57 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#ifndef ARCH_PERF_RISCV_TRAP_TYPES_H
-> +#define ARCH_PERF_RISCV_TRAP_TYPES_H
-> +
-> +/* Exception cause high bit - is an interrupt if set */
-> +#define CAUSE_IRQ_FLAG		(_AC(1, UL) << (__riscv_xlen - 1))
-> +
-> +/* Interrupt causes (minus the high bit) */
-> +#define IRQ_S_SOFT 1
-> +#define IRQ_VS_SOFT 2
-> +#define IRQ_M_SOFT 3
-> +#define IRQ_S_TIMER 5
-> +#define IRQ_VS_TIMER 6
-> +#define IRQ_M_TIMER 7
-> +#define IRQ_S_EXT 9
-> +#define IRQ_VS_EXT 10
-> +#define IRQ_M_EXT 11
-> +#define IRQ_S_GEXT 12
-> +#define IRQ_PMU_OVF 13
-> +
-> +/* Exception causes */
-> +#define EXC_INST_MISALIGNED 0
-> +#define EXC_INST_ACCESS 1
-> +#define EXC_INST_ILLEGAL 2
-> +#define EXC_BREAKPOINT 3
-> +#define EXC_LOAD_MISALIGNED 4
-> +#define EXC_LOAD_ACCESS 5
-> +#define EXC_STORE_MISALIGNED 6
-> +#define EXC_STORE_ACCESS 7
-> +#define EXC_SYSCALL 8
-> +#define EXC_HYPERVISOR_SYSCALL 9
-> +#define EXC_SUPERVISOR_SYSCALL 10
-> +#define EXC_INST_PAGE_FAULT 12
-> +#define EXC_LOAD_PAGE_FAULT 13
-> +#define EXC_STORE_PAGE_FAULT 15
-> +#define EXC_INST_GUEST_PAGE_FAULT 20
-> +#define EXC_LOAD_GUEST_PAGE_FAULT 21
-> +#define EXC_VIRTUAL_INST_FAULT 22
-> +#define EXC_STORE_GUEST_PAGE_FAULT 23
-> +
-> +#define TRAP(x) { x, #x }
-> +
-> +#define kvm_riscv_trap_class \
-> +	TRAP(IRQ_S_SOFT), TRAP(IRQ_VS_SOFT), TRAP(IRQ_M_SOFT), \
-> +	TRAP(IRQ_S_TIMER), TRAP(IRQ_VS_TIMER), TRAP(IRQ_M_TIMER), \
-> +	TRAP(IRQ_S_EXT), TRAP(IRQ_VS_EXT), TRAP(IRQ_M_EXT), \
-> +	TRAP(IRQ_S_GEXT), TRAP(IRQ_PMU_OVF), \
-> +	TRAP(EXC_INST_MISALIGNED), TRAP(EXC_INST_ACCESS), TRAP(EXC_INST_ILLEGAL), \
-> +	TRAP(EXC_BREAKPOINT), TRAP(EXC_LOAD_MISALIGNED), TRAP(EXC_LOAD_ACCESS), \
-> +	TRAP(EXC_STORE_MISALIGNED), TRAP(EXC_STORE_ACCESS), TRAP(EXC_SYSCALL), \
-> +	TRAP(EXC_HYPERVISOR_SYSCALL), TRAP(EXC_SUPERVISOR_SYSCALL), \
-> +	TRAP(EXC_INST_PAGE_FAULT), TRAP(EXC_LOAD_PAGE_FAULT), \
-> +	TRAP(EXC_STORE_PAGE_FAULT), TRAP(EXC_INST_GUEST_PAGE_FAULT), \
-> +	TRAP(EXC_LOAD_GUEST_PAGE_FAULT), TRAP(EXC_VIRTUAL_INST_FAULT), \
-> +	TRAP(EXC_STORE_GUEST_PAGE_FAULT)
-> +
-> +#endif /* ARCH_PERF_RISCV_TRAP_TYPES_H */
-> 
-> base-commit: da3ea35007d0af457a0afc87e84fddaebc4e0b63
-> -- 
-> 2.34.1
->
+> +  reset-delay-us:
+> +    description:
+> +      RESET pulse width in microseconds.
 
-LGTM
+I don't understand - there is no user for this in USB. Why do we need an
+ABI if no one ever uses it (and commit msg should clearly explain that)?
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> +
+> +  power-on-delay-us:
+
+No user here, either. Plus I just wonder if you are mixing here RC
+delays or regulator ramp delays, because datasheet does not mention any
+delay.
+
+Can you point me to datasheet page explaining these delays?
+
+
+
+Best regards,
+Krzysztof
