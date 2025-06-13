@@ -1,90 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92C51FDA89;
-	Fri, 13 Jun 2025 05:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB567082A;
+	Fri, 13 Jun 2025 05:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749790991; cv=none; b=Vw/LJRLk7NvesPpbyomh4rwXoSGotM5vm6boLHbhwDqrZ7coxOSEEgTCQd4BKTQOr4XpjeiFC+bVZknVBiddOC2gcuoNmjgrzjUvERf3WLsOqP0Tih6JyfAUFZ73qk31WnS4NL7bxQg4/Y9MctsBlUKFelUrk4H8zjQE+b8NBo4=
+	t=1749791351; cv=none; b=JgJ+cXR0f9Bd1poLGwhCe8kKBhogx5sqKTM0sj7IFhmeFksvlmR48+elwz2Ybo7iPmVWtOETtcbZ7TckSM3nWQZM6IVnLh5FldDcjCnR2/GxHQGIUd/uJ0flh6qs125sfYM3/J+502yqYoMbEUMXAXbufOUaBskdDV2szBtyqN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749790991; c=relaxed/simple;
-	bh=28rc7+v2kVerXbyWw3H3/T6kr4GP6Mq7cNkFNrIXQNg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VMlGHbwAu5Avd1QdXa5ly/4lVBd3vqxXW8908i1Oh2rwBqad9CTlub6y8X75ixTe7wHPYzatQZlMIMcG0+jIIX5q+bGAQcV0L4jHmBrt4IL/5Cpz8Jd4XxsNt/TvPB++7cl/foHzNgEvuelhZ8m5dkuUHTzzTlQ6luIzwSPn+bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HE2jeHGp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HE2jeHGp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 888CDC4CEED;
-	Fri, 13 Jun 2025 05:03:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749790991;
-	bh=28rc7+v2kVerXbyWw3H3/T6kr4GP6Mq7cNkFNrIXQNg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HE2jeHGpZEIpEa7JSqyBP6T/bb04h6phgaAJVRf8pB34y1utOutI5D7WNH9Bu6yFi
-	 1K6N84HfvDGSEL9GTJ60egmOOykPwwCURDOLzjiAX0ACTkxIbm5KdFkzgPyvZTLZEq
-	 8xkVvtiuxgeWCMVZ7Hd+cYopqEBpAjo/njYAl7x3fGSkMSXTsoU7BUW1lsb5uXKs9m
-	 DohChY2Ptfp0wC/uCNJZ3q9+0DrX2qqu9Izj6/Ia60v6QyQHxXdrDtLNNEjXAqmexn
-	 so2m4sfzyeFoyv1FKH3dFyLk/OLNHG1DGOSy4qtkTNuUBWiWzT+ntZZpu83WhO05EX
-	 Z2HOOEtG2IX0g==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Niklas Cassel <cassel@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Shradha Todi <shradha.t@samsung.com>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v3 0/2] riscv: sophgo Add PCIe support to Sophgo SG2044 SoC
-Date: Fri, 13 Jun 2025 10:32:54 +0530
-Message-ID: <174979096373.22387.8666752122012744282.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250504004420.202685-1-inochiama@gmail.com>
-References: <20250504004420.202685-1-inochiama@gmail.com>
+	s=arc-20240116; t=1749791351; c=relaxed/simple;
+	bh=uljXu3OjtlOKXiTrLwjCLapjiDP/HCxN+NtIcKqWWlU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TuojAwY8FlfyIPyS032IV5u8SdHiSoMKoJnmoaWyLojSPT6W0OMYNEvvfKjFLiD+dcLDmTetzRex4hRubry2Wx9sVmeqhHStGI0e8psqY0GdrDe8ZU6t/BNCkLPdkH0HMDMHco0acwF/LAtK7KXU2XXcBCh1TsQmM1dvuvCRjQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 290A31D14;
+	Thu, 12 Jun 2025 22:08:48 -0700 (PDT)
+Received: from [10.164.146.16] (J09HK2D2RT.blr.arm.com [10.164.146.16])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEB693F66E;
+	Thu, 12 Jun 2025 22:09:05 -0700 (PDT)
+Message-ID: <5c22c792-0648-4ced-b0ed-86882610b4be@arm.com>
+Date: Fri, 13 Jun 2025 10:39:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/ptdump: Ensure memory hotplug is prevented during
+ ptdump_check_wx()
+To: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
+ Dev Jain <dev.jain@arm.com>
+References: <20250609041214.285664-1-anshuman.khandual@arm.com>
+ <20250612145808.GA12912@willie-the-truck>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250612145808.GA12912@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On Sun, 04 May 2025 08:44:17 +0800, Inochi Amaoto wrote:
-> Sophgo's SG2044 SoC uses Synopsys Designware PCIe core
-> to implement RC mode.
+
+On 12/06/25 8:28 PM, Will Deacon wrote:
+> On Mon, Jun 09, 2025 at 05:12:14AM +0100, Anshuman Khandual wrote:
+>> The arm64 page table dump code can race with concurrent modification of the
+>> kernel page tables. When a leaf entries are modified concurrently, the dump
+>> code may log stale or inconsistent information for a VA range, but this is
+>> otherwise not harmful.
+>>
+>> When intermediate levels of table are freed, the dump code will continue to
+>> use memory which has been freed and potentially reallocated for another
+>> purpose. In such cases, the dump code may dereference bogus addresses,
+>> leading to a number of potential problems.
+>>
+>> This problem was fixed for ptdump_show() earlier via commit 'bf2b59f60ee1
+>> ("arm64/mm: Hold memory hotplug lock while walking for kernel page table
+>> dump")' but a same was missed for ptdump_check_wx() which faced the race
+>> condition as well. Let's just take the memory hotplug lock while executing
+>> ptdump_check_wx().
 > 
-> For legacy interrupt, the PCIe controller on SG2044 implement
-> its own legacy interrupt controller. For MSI/MSI-X, it use an
-> external interrupt controller to handle.
-> 
-> [...]
+> How do other architectures (e.g. x86) handle this? I don't see any usage
+> of {get,put}_online_mems() over there. Should this be moved into the core
+> code?
 
-Applied, thanks!
-
-[1/2] dt-bindings: pci: Add Sophgo SG2044 PCIe host
-      commit: a202f09e3e30622fdcae7d740dbf87fb0f032dd5
-[2/2] PCI: sophgo-dwc: Add Sophgo SG2044 PCIe driver
-      commit: 74ab255bab3082fa6bd2a925a986526e093d615b
-
-Best regards,
--- 
-Manivannan Sadhasivam <mani@kernel.org>
+Memory hot remove on arm64 unmaps kernel linear and vmemmap mapping while
+also freeing page table pages if those become empty. Although this might
+not be true for all other architectures, which might just unmap affected
+kernel regions but does not tear down the kernel page table.
