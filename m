@@ -1,130 +1,143 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EC826B759;
-	Fri, 13 Jun 2025 08:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B562DA772;
+	Fri, 13 Jun 2025 08:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749801749; cv=none; b=id4Xx0Wx89tndwUT0qwXEMaAAUeK1f4KVBCbSlK19o6zJX/TMc32xnaS4hPyNmXIiw6R91D9JO9LTcM6NYu+rc+sGaGjWSNPEB6SPmuBXLjLF5H95kC8tpnP/LplbUvf1y0K2V5w5piTqLKkuXWaHe2cy5bW64cG819ul+RQeQ8=
+	t=1749801761; cv=none; b=OcFnwPgl3/pUFWTYQ1WDpPXYbqSVB1pTKW/w8WlXFiLSN4fnHhB0cV5URGC97aFLIEc1qWvcy8Eejbf2dc0EEPw0BO/VENCmw1eSI8qJqbHVQFX12wjKy+tU1W6lowsGK9YN9rHaJPvvEKR0q8YUkMlqxz/VaO6tDmgeg50r+qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749801749; c=relaxed/simple;
-	bh=lgBm2HgvbLnlWMqEH6iVk5jwW921qaxzecXQG5eqrxc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rnnjEaEY7yNcILEHwL+UeMurJhybtRa+dqxuIdCkyDL7+3OWvpnScjKAW1C7XVpS4SgBSjRNqzVltdkJZ4XW7O8MhLsKHUIaKf5SpWzIghJm9wXHZIc0DtmbHsJOrCerBg071RQueWulDSKyOz5hE9dtXJV4O7lKxUEkWK3GJks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e7c7680591so1109738137.1;
-        Fri, 13 Jun 2025 01:02:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749801745; x=1750406545;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pXilN1K6MrIzaL2KoxsI8w57QJn0FDqqP0EZncSgdhA=;
-        b=N+hEU63jdyhdaOUJRfDNhYDnv5jvpSc2e2d6le+S0Hvy3RbX8pXbjdVXGOar2GsVXG
-         LRatUsJKqdoplWvUeM4Z8nfMHXtORdpUFihcIBULD3E/sbBczQGRDSF5b8Pa8Gf5tWui
-         81QkNa/XA9aqt4V3UEo8pP2YLkaub2OOxWsBZ5G8i7Yk7VWu3qeECHARu+Hz0UZw34cz
-         Kd7CoeARZoNvnenagpeDwCt9P5/fxBRfUsxvryMp8XYCyzl91+Q6q9AfnGu0BiuL7fAr
-         ljcnkcqP08TzgNnubex1nRxP3KEXmW5WoidbHMnkf0m+J9jOx42UwoFQghQEQB0rTpOr
-         WbqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWceNWWYxNZx6QIxV/aIrtyG2J1ebt7G773fdBPs+uzbFjqGU6KKqv2m4jOGhYj+aIUnINt8nN0bMzs@vger.kernel.org, AJvYcCXxN4lnD74YVL96biuHeOFYIW7MsewXgF/muD3FD0LrNKQTJTe9xhfBjJbxQTwOLXJ5YyBN3yPR0R2DNiQs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL2EIUVkcWaO1VPk78yiND7jzWPpfJ6TWZN96JfhFy5ac+in7q
-	Wsy1IKysgfNyWonB/8BFOYSF+mJGMkWX29gYg96439we9EV+NLf9oJozlXWldaLr
-X-Gm-Gg: ASbGncsX6lff4Qm2CGUDMA0mRi0uV3REgm4JF5yvnpecSNW7AYewHR6IfZCF8X3v/D2
-	XXSTl61XUtgAjvlUvOTbjfwrLUy6jDxRapXKzYHEtexcscnDNcExMDrMwVgy2R1Mc45i7mozuh0
-	A8RhoQEf4ch7MjTkDMw/R0mF2Bzn7WA8SYhIxb87i16NxkDDVebFMrAFRe1Wn97qMg+dPlfs88C
-	UOjoK7+M1jebbb74WP9EZJR7yp+KZP/7tpynx6Yuik3TbwSC0thFf2j8t9by7S9peqLo4CD1tVa
-	kG5nqHBEgVeOUyo0Pr7+ShCrnG8hZxP1wcHQ6wBmlk/k8/ZlJiDygW8qrTbGglCH4ZKwNh6fqG5
-	44l1ZepUhXhPEl9+Q0goiSn66KaLL5Om3GJY=
-X-Google-Smtp-Source: AGHT+IF7EwHq7ah/nkl7WvaG9K2jL1JwahraHDmWcjnpabOvqfdzt3mHP26PUiPp5KVNpXAmizqQXw==
-X-Received: by 2002:a05:6102:3005:b0:4e7:af64:1e91 with SMTP id ada2fe7eead31-4e7e65a9933mr751086137.11.1749801744853;
-        Fri, 13 Jun 2025 01:02:24 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7e6e1d526sm151556137.10.2025.06.13.01.02.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 01:02:24 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87ee954ca95so1047847241.0;
-        Fri, 13 Jun 2025 01:02:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWCS2ojxBnUPb8k+Jl16+iuw7D8QGg7nGs01grYVHBpqMooNHhQv+QZzaJeWSOYTTW8sWPCLxiX1a6qQ7n1@vger.kernel.org, AJvYcCXOr3kQCRq0qZ3RFhs5Iaj0M2q9MbIjWbykpq/A7WiGREONLzwt31eU+3jcgeEKgx4qkdIX1GwJOAV7@vger.kernel.org
-X-Received: by 2002:ac5:cb65:0:b0:531:3cde:6c74 with SMTP id
- 71dfb90a1353d-5313d83ef8fmr749693e0c.0.1749801744017; Fri, 13 Jun 2025
- 01:02:24 -0700 (PDT)
+	s=arc-20240116; t=1749801761; c=relaxed/simple;
+	bh=F+O1Z+Mot7lZF6wg2R1SqPqi0jvS0szJQYkBterefi0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YsqChHfsyxkwPPMSHPpPMIakcUh9HQHFGZU4R+t6iA/QojR7GqBwODspCi97bTO9AcvqqJKQIhnKlmjQ7ah0tVTj9p/mhVwv0xpIr55wNcU3uhcPBlV5RWfrueP7yTto5Gct/G8bUH5YWWwzR/ceyVdYlC+InvWm5bK8tH/KelU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.2.111] (p57bd96bf.dip0.t-ipconnect.de [87.189.150.191])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6D47B61E647A3;
+	Fri, 13 Jun 2025 10:02:09 +0200 (CEST)
+Message-ID: <a67b2409-334b-4712-b31d-efcbd2e216f5@molgen.mpg.de>
+Date: Fri, 13 Jun 2025 10:02:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
-In-Reply-To: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 13 Jun 2025 10:02:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
-X-Gm-Features: AX0GCFtL-d2TpLaeEEFThajisMZBkRFYXMovtv4udXAumQPPptBhnhzZw60wM4M
-Message-ID: <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
-Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
-	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] md/raid1,raid10: fix IO handle for REQ_NOWAIT
+To: Zheng Qixing <zhengqixing@huaweicloud.com>
+Cc: song@kernel.org, yukuai3@huawei.com, linux-raid@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ zhengqixing@huawei.com
+References: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Bartosz,
+Dear Zheng,
 
-On Tue, 10 Jun 2025 at 16:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> Following our discussion[1], here's a proposal for extending the sysfs
-> interface with attributes not referring to GPIO lines by their global
-> numbers in a backward compatible way.
->
-> Long story short: there is now a new class device for each GPIO chip.
-> It's called chipX where X is the ID of the device as per the driver
-> model and it lives next to the old gpiochipABC where ABC is the GPIO
-> base. Each new chip class device has a pair of export/unexport
-> attributes which work similarly to the global ones under /sys/class/gpio
-> but take hardware offsets within the chip as input, instead of the
-> global numbers. Finally, each exported line appears at the same time as
-> the global /sys/class/gpio/gpioABC as well as per-chip
-> /sys/class/gpio/chipX/gpioY sysfs group.
->
-> First, there are some documentation updates, followed by a set of
-> updates to the sysfs code that's useful even without the new
-> functionality. Then the actual implementation of a parallel GPIO chip
-> entry not containing the base GPIO number in the name and the
-> corresponding sysfs attribute group for each exported line that lives
-> under the new chip class device. Finally: also allow to compile out the
-> legacy parts leaving only the new elements of the sysfs ABI.
->
-> This series passes the compatibility tests I wrote while working on the
-> user-space compatibility layer for sysfs[2].
->
-> [1] https://lore.kernel.org/all/CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com/
-> [2] https://github.com/brgl/gpio-sysfs-compat-tests
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Thanks for your series!
+Thank you for the patch.
 
-I gave it a quick try, and it seems to work as expected, great!
+Am 12.06.25 um 15:21 schrieb Zheng Qixing:
+> From: Zheng Qixing <zhengqixing@huawei.com>
+> 
+> IO with REQ_NOWAIT should not set R1BIO_Uptodate when it fails,
+> and bad blocks should also be cleared when REQ_NOWAIT IO succeeds.
 
-Given the /sys/class/gpio/chip* numbering is volatile, I expect
-script writers should use topological path names instead, .e.g.
-/sys/devices/platform/soc/e6052000.gpio/gpio/chip*/export and
-sys/devices/platform/soc/e6052000.gpio/gpio/chip*/gpio19
-(note the wildcards).
+It’d be great if you could add an explanation for the *should*. Why 
+should it not be done?
 
-I hope to find time to do a review of the patches soon...
+Do you have a reproducer for this?
 
-Gr{oetje,eeting}s,
+> Fixes: 9f346f7d4ea7 ("md/raid1,raid10: don't handle IO error for REQ_RAHEAD and REQ_NOWAIT")
+> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+> ---
+>   drivers/md/raid1.c  | 11 ++++++-----
+>   drivers/md/raid10.c |  9 +++++----
+>   2 files changed, 11 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index 19c5a0ce5a40..a1cddd24b178 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -455,13 +455,13 @@ static void raid1_end_write_request(struct bio *bio)
+>   	struct md_rdev *rdev = conf->mirrors[mirror].rdev;
+>   	sector_t lo = r1_bio->sector;
+>   	sector_t hi = r1_bio->sector + r1_bio->sectors;
+> -	bool ignore_error = !raid1_should_handle_error(bio) ||
+> -		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
+> +	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
 
-                        Geert
+Excuse my ignorance. What is the difference between ignore and discard?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>   	/*
+>   	 * 'one mirror IO has finished' event handler:
+>   	 */
+> -	if (bio->bi_status && !ignore_error) {
+> +	if (bio->bi_status && !discard_error &&
+> +	    raid1_should_handle_error(bio)) {
+>   		set_bit(WriteErrorSeen,	&rdev->flags);
+>   		if (!test_and_set_bit(WantReplacement, &rdev->flags))
+>   			set_bit(MD_RECOVERY_NEEDED, &
+> @@ -507,12 +507,13 @@ static void raid1_end_write_request(struct bio *bio)
+>   		 * check this here.
+>   		 */
+>   		if (test_bit(In_sync, &rdev->flags) &&
+> -		    !test_bit(Faulty, &rdev->flags))
+> +		    !test_bit(Faulty, &rdev->flags) &&
+> +		    (!bio->bi_status || discard_error))
+>   			set_bit(R1BIO_Uptodate, &r1_bio->state);
+>   
+>   		/* Maybe we can clear some bad blocks. */
+>   		if (rdev_has_badblock(rdev, r1_bio->sector, r1_bio->sectors) &&
+> -		    !ignore_error) {
+> +		    !bio->bi_status) {
+>   			r1_bio->bios[mirror] = IO_MADE_GOOD;
+>   			set_bit(R1BIO_MadeGood, &r1_bio->state);
+>   		}
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index b74780af4c22..1848947b0a6d 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -458,8 +458,8 @@ static void raid10_end_write_request(struct bio *bio)
+>   	int slot, repl;
+>   	struct md_rdev *rdev = NULL;
+>   	struct bio *to_put = NULL;
+> -	bool ignore_error = !raid1_should_handle_error(bio) ||
+> -		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
+> +	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
+> +	bool ignore_error = !raid1_should_handle_error(bio) || discard_error;
+>   
+>   	dev = find_bio_disk(conf, r10_bio, bio, &slot, &repl);
+>   
+> @@ -522,13 +522,14 @@ static void raid10_end_write_request(struct bio *bio)
+>   		 * check this here.
+>   		 */
+>   		if (test_bit(In_sync, &rdev->flags) &&
+> -		    !test_bit(Faulty, &rdev->flags))
+> +		    !test_bit(Faulty, &rdev->flags) &&
+> +		    (!bio->bi_status || discard_error))
+>   			set_bit(R10BIO_Uptodate, &r10_bio->state);
+>   
+>   		/* Maybe we can clear some bad blocks. */
+>   		if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
+>   				      r10_bio->sectors) &&
+> -		    !ignore_error) {
+> +		    !bio->bi_status) {
+>   			bio_put(bio);
+>   			if (repl)
+>   				r10_bio->devs[slot].repl_bio = IO_MADE_GOOD;
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+Kind regards,
+
+Paul
