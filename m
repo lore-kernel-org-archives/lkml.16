@@ -1,188 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C43824BC1A;
-	Fri, 13 Jun 2025 20:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC43B248F49
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749845652; cv=none; b=Neezzc1ajfAaagum4ndyVBFaD7hZpTUz1j0qrkV/lDn9FicYq9KECzaApKavibTu9/BlweMRXgN6IElg8m5q/v1u6h0BGvWQedeeb/+E/jwhv/KCzR+jcDKrLE3BMFrJLe3yNrV7OhrlJ5oofcnr1ZJlSEVzJRq61kz0DDwcPbs=
+	t=1749845713; cv=none; b=OrOs5IcN7h3b+FA3sIg0ljNJWpVMOxwndknxlAOMo6Xa9TbcO5V2FY4aJhR6IY7Gu1FJCZyj4KQJh4oBUjKH9fmZ5CHXS1YH57C4AaspXRZhcLx0QUrLmshY0ahgDVaJSUfmk2Wh4GXzaphesoxPv5dvPoj6QRGtiwN0fplsxYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749845652; c=relaxed/simple;
-	bh=Zio/9ed1ISRgWicUqk/j1UAIrxh6W2Aq1NctnSkSqjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=XZdu1lTl3Zujx837SLA58wS62U0U8nA8hWoBY9aQXXe338nIzaLNUFM/1+p+0IvJ/KvXsU9IcziD/gUkaJB7zgeH+Hx0LVqWv/wltYr3XWw5GnrU2lwOUaF+lDLfwuUM+sMlSCfE2HGyRv1aYtDPvD85NV2u6B72dUiBQ64LPpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAJP7Rai; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749845713; c=relaxed/simple;
+	bh=JKVvkuzMLeE6PBwW7ovixiV6k6QmHlyUzw0Goxj0hNk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g+SS5uHf3xPiqJo15+dRHqK46OZYG1lcIXFO6dbFb3nG0ojjArrVMo4cnFjqDN+KeEMvjz+RRFi1uulBKt37E4uKPpu120e8SVRbo6NyMwGzddrJbjfoEZ7lfH1I+yvhgO07BKSs40EQcqS54erttbcVPsc+55aCLjLq6/Zw3Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F9J+S3Gx; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAJP7Rai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C517AC4CEE3;
-	Fri, 13 Jun 2025 20:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749845650;
-	bh=Zio/9ed1ISRgWicUqk/j1UAIrxh6W2Aq1NctnSkSqjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IAJP7Raic0SQjqE3t8ej2YiZWcFDLxcJmuLnstD+ww4P3KgdECE5SlqmEi5uEyddi
-	 YDto2pIAg7qcILAQnVArh8oefuPEdsdPYiixPquLyBIkr/ecbhxxM/Ryqsj1wQkYdF
-	 7IStXXPPxsQTSt4dgXOxj/IGLRXwBb3sI4ATE9EgyHlKr2gMKp1GSaJbIbG7+cx5p0
-	 ujnOhVrJN0B60glcRgz01Ju042eHHU+Yn4ueM1WQ2Lkbl5aiVnwjm2onOwvA8YvZnd
-	 OT1IdOTIiJ5QEuP2Mx533U8q53XlJY5TtZ2CxpYL4QOXbtVSTEROAeAqEpPKADmbge
-	 PPBLYTUp8U3jg==
-Date: Fri, 13 Jun 2025 15:14:09 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Geraldo Nascimento <geraldogabriel@gmail.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v4 1/5] PCI: rockchip: Use standard PCIe
- defines
-Message-ID: <20250613201409.GA973486@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9J+S3Gx"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4f78ebec8so1725201f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749845710; x=1750450510; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=akzZe5fRcI3dH/sdeQ9q6t9qEUFP+b/DdnlTQO8uRn8=;
+        b=F9J+S3Gx+KHTtMXJIpV1+v17nKRvHsKyE9677QMWmmProsc5usPf03Mj5RnGqdnnM2
+         tmhecAD6x1O174jtP3dId/BqCEP3OYTuBKhtfxJW+xfZsQgela4yZdoCyTmVYk2ktGyQ
+         /vLSCFaCGQzJakDB+HhDANqGeKNNe3RG9KUYzQLv+ssyNw9oNuNCbSXLjabgEIZ5aQMP
+         Xf+hm8nRDHqWRjRw5atuSHCN0lvc6My8VTu/LTGvzdaYehHyOyWv7pMyw9zsfWdLp+QY
+         PtWcPmNleCVerDPfucvKCWUZ96DKJ/49piZpNv8EAHh2tTrouxc4qrTWmz/KE1wnhY2+
+         PVvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749845710; x=1750450510;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=akzZe5fRcI3dH/sdeQ9q6t9qEUFP+b/DdnlTQO8uRn8=;
+        b=NKprYcKLJ/ixQPg1OyXX8d+CzRAr0KLFzj8uFHfB4lOld7dxmkISCjc6vz63RMnmyh
+         eYV3+qYAm+5dClur895CxkWi+0GAPjA3XBJnfLz+10Ur8Mxl+9N5O/F4gdfwnuYNKY3q
+         hotNC8PX7ygEb+IAav2jZ8l3R6eFFSnJ1IX9t7cl6HPobH/n288qMkr8ldU3ZPnI0u6M
+         EeMwVVyvc1lhCg4kK03ARLtBrOXK1lvmv0wWyudvhwZ4QJeCljO0B1hhjvXilrO8XmMB
+         ZodgAMGmM85CYrxf5TeRWx1ghgnSWKT/RwuY5RuiXgpr0E29XGKdbVP9fETYYGiZdUt1
+         Y5/A==
+X-Forwarded-Encrypted: i=1; AJvYcCU1hLkcv7ZPUNTn2oRjMYJ+Z7MZ7b7AT08qbROlTS9K2Va2oN3m1T+zkx7nRpsaghMtVmnSfiUxn6Wzzyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN652zqRxPS8NlVppzH+8lkIlurcugWtgtMZ8jmahjzKMjjHiN
+	wYPq8/3BqNF2s8gHKTnHMv/XTtLFyAA693Dd/u2hjqK3pO4aCFtw1ei+K5JbHwLYATUErWvf/Dc
+	FJdihipHOo2mgKT6C+XV/hkXjlGCslQ==
+X-Gm-Gg: ASbGncsA2sNbe5af9drgmZ/Ab1pC4QiC96WjosuVpELj4ROeRkstg5CAYlzHZuz3zAs
+	pT41mzcIt9ePyg4I8PZi8vra80dTW5cjizDkLWV1qZJJqa7/wJUbB0DCyZtLUlACViyewOtX77E
+	6Gfck+Ybf4bzjn+9jkjqorLMEiDRkjImcaLuIeySbWvp8=
+X-Google-Smtp-Source: AGHT+IFxjyMfkj4e8tJZAj72mtlyMYabyjZbj8kPnW/LYj+ElEsgRD9mREjz2vlpwu8yrMmYc/Dyd/61MJPsnPH4JXk=
+X-Received: by 2002:a05:6000:2893:b0:3a4:f6bc:d6f1 with SMTP id
+ ffacd0b85a97d-3a5723a2da3mr1155737f8f.14.1749845709668; Fri, 13 Jun 2025
+ 13:15:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <992ab6278af59b8f2f82521bf4611f69a916bbe1.1749827015.git.geraldogabriel@gmail.com>
+References: <20250612183303.3433234-1-briannorris@chromium.org>
+In-Reply-To: <20250612183303.3433234-1-briannorris@chromium.org>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Fri, 13 Jun 2025 22:14:58 +0200
+X-Gm-Features: AX0GCFvacs2R6-y3FRqPQawVHZmR4AHOXNdJZCmO2z3NBe1uy7nONO-uEtTmrqE
+Message-ID: <CAMcHhXoZo44Qro0g2_For+Yx1uoyAU1d39Eie5e3qzY0FWxtOg@mail.gmail.com>
+Subject: Re: [PATCH 6.16 0/2] genirq: Fixes for CPU hotplug / disable-depth regressions
+To: Brian Norris <briannorris@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Douglas Anderson <dianders@chromium.org>, 
+	David Stevens <stevensd@chromium.org>, linux-kernel@vger.kernel.org, 
+	Tsai Sung-Fu <danielsftsai@google.com>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 13, 2025 at 12:05:31PM -0300, Geraldo Nascimento wrote:
-> Current code uses custom-defined register offsets
-> and bitfields for standard PCIe registers. Change
-> to using standard PCIe defines.
+On Thu, 12 Jun 2025 at 20:33, Brian Norris <briannorris@chromium.org> wrote:
+>
+> Hi,
+>
+> Commit 788019eb559f ("genirq: Retain disable depth for managed
+> interrupts across CPU hotplug") was merged for v6.16-rc1, but it turns
+> out there were a few oversights.
+>
+> One such report:
+>
+> Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU hotplug
+> https://lore.kernel.org/lkml/24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com/
+>
+> This series contains two fixes for bugs that I've found locally and with
+> others' help. Some of the testing involved:
+>
+> 1. Aleksandrs Vinarskis tested suspend/resume + NVMe on Qualcomm
+>    Snapdragon X1E/X1P laptops:
+>    https://lore.kernel.org/lkml/CAMcHhXrT-y3EotxrcCZ0Pj8Sic6wsPSmRiW7NSzdG=9iH8xqKg@mail.gmail.com/
+>
+> 2. Locally-updated versions of kunit tests I've been working on for
+>    various kernel/irq/ code:
+>    Subject: [PATCH v4] genirq: Add kunit tests for depth counts
+>    https://lore.kernel.org/lkml/20250522210837.4135244-1-briannorris@chromium.org/
+>
+> 3. NVMe + x86 QEMU workloads, + system suspend
+>
+> 4. Pixel phones + modem driver + various CPU hotplug / system
+>    suspend/resume tests.
+>    (This is probably least compelling, because this doesn't use the
+>    latest mainline kernel, and it uses non-upstream drivers for some
+>    relevant components. But I figured I'd mention it, because we've
+>    noticed some similar problems to #1 here.)
+>
+> Regards,
+> Brian
+>
+>
+> Brian Norris (2):
+>   genirq: Rebalance managed interrupts across multi-CPU hotplug
+>   genirq/cpuhotplug: Restore affinity even for suspended IRQ
 
-Wrap to fill 75 columns so there's space for "git log" to add
-indentation.
+Thanks for the fix,
 
-> @@ -40,18 +40,18 @@ static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
->  {
->  	u32 status;
->  
-> -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  	status |= (PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  }
->  
->  static void rockchip_pcie_clr_bw_int(struct rockchip_pcie *rockchip)
->  {
->  	u32 status;
->  
-> -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  	status |= (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_LABS) << 16;
+Tested the entire series on both laptops that experienced the
+previously reported issue:
+* Dell XPS 9345, X1E-80-100
+* Asus Zenbook A14, X1-26-100
 
-It looks funny to write PCI_EXP_LNKCTL with bits from PCI_EXP_LNKSTA.
-I guess this is because rockchip_pcie_write() does 32-bit writes, but
-PCI_EXP_LNKCTL and PCI_EXP_LNKSTA are adjacent 16-bit registers.
+Can confirm it's resolved. No other side effects noticed in ~1.5 days of usage.
 
-If the hardware supports it, adding rockchip_pcie_readw() and
-rockchip_pcie_writew() for 16-bit accesses would make this read
-better.
+Tested-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>  # X1E, X1
 
-Hopefully the hardware *does* support this (it's required per spec at
-least for config accesses, which would be a different path in the
-hardware).  Doing the 32-bit write of PCI_EXP_LNKCTL above is
-problematic because writes PCI_EXP_LNKSTA as well, and PCI_EXP_LNKSTA
-includes some RW1C bits that may be unintentionally cleared.
 
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  }
->  
->  static void rockchip_pcie_update_txcredit_mui(struct rockchip_pcie *rockchip)
-> @@ -269,7 +269,7 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
->  	scale = 3; /* 0.001x */
->  	curr = curr / 1000; /* convert to mA */
->  	power = (curr * 3300) / 1000; /* milliwatt */
-> -	while (power > PCIE_RC_CONFIG_DCR_CSPL_LIMIT) {
-> +	while (power > FIELD_MAX(PCI_EXP_DEVCAP_PWR_VAL)) {
->  		if (!scale) {
->  			dev_warn(rockchip->dev, "invalid power supply\n");
->  			return;
-> @@ -278,10 +278,10 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
->  		power = power / 10;
->  	}
->  
-> -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCR);
-> -	status |= (power << PCIE_RC_CONFIG_DCR_CSPL_SHIFT) |
-> -		  (scale << PCIE_RC_CONFIG_DCR_CPLS_SHIFT);
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCR);
-> +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP);
-> +	status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_VAL, power);
-> +	status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_SCL, scale);
-
-This assumes the value you read from PCI_EXP_DEVCAP had zeroes in
-these bits.  It might, but it would look safer to do:
-
-  status &= ~(PCI_EXP_DEVCAP_PWR_VAL | PCI_EXP_DEVCAP_PWR_SCL);
-  status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_VAL, power);
-  status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_SCL, scale);
-
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP);
->  }
-
->  /**
-> @@ -309,14 +309,14 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  	rockchip_pcie_set_power_limit(rockchip);
->  
->  	/* Set RC's clock architecture as common clock */
-> -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  	status |= PCI_EXP_LNKSTA_SLC << 16;
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  
->  	/* Set RC's RCB to 128 */
-> -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  	status |= PCI_EXP_LNKCTL_RCB;
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  
->  	/* Enable Gen1 training */
->  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
-> @@ -341,9 +341,9 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  		 * Enable retrain for gen2. This should be configured only after
->  		 * gen1 finished.
->  		 */
-> -		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  		status |= PCI_EXP_LNKCTL_RL;
-> -		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
->  
->  		err = readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
->  					 status, PCIE_LINK_IS_GEN2(status), 20,
-> @@ -380,15 +380,15 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  
->  	/* Clear L0s from RC's link cap */
->  	if (of_property_read_bool(dev->of_node, "aspm-no-l0s")) {
-> -		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LINK_CAP);
-> -		status &= ~PCIE_RC_CONFIG_LINK_CAP_L0S;
-> -		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LINK_CAP);
-> +		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP);
-> +		status &= ~PCI_EXP_LNKCAP_ASPM_L0S;
-> +		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP);
->  	}
->  
-> -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCSR);
-> -	status &= ~PCIE_RC_CONFIG_DCSR_MPS_MASK;
-> -	status |= PCIE_RC_CONFIG_DCSR_MPS_256;
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCSR);
-> +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL);
-> +	status &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> +	status |= PCI_EXP_DEVCTL_PAYLOAD_256B;
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL);
-
-Similar problem here; PCI_EXP_DEVCTL is only 16 bits, and writing the
-adjacent PCI_EXP_DEVSTA may clear RW1C bits you didn't want to clear.
-
-Bjorn
+>
+>  kernel/irq/chip.c       | 8 ++++++++
+>  kernel/irq/cpuhotplug.c | 7 -------
+>  2 files changed, 8 insertions(+), 7 deletions(-)
+>
+> --
+> 2.50.0.rc1.591.g9c95f17f64-goog
+>
