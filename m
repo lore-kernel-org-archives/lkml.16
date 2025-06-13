@@ -1,88 +1,101 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283B91EA7E1;
-	Fri, 13 Jun 2025 07:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0D41A01B9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749799824; cv=none; b=Kh37x93sY51sdGBPbLafokUE3Bgm5W0VtEKtMyawvQM8M2c0KNfk+uOm95qNsBVgcOlgKWEoWYMlaNXwV5TGTLeiZdIkfG06ZXvJv9ak5uciG22GddtIAQfdiApMzuPJfwa7gQoUd+LBwVxy2ZI26Eu5YyEg6OBM8PmpA0GF3R8=
+	t=1749799864; cv=none; b=rKlvcFBFQj0YXnfgQHyrSV+3WXDAMR5RjPp9jAmITpaie2WjKG9AivMIA5h6lio47dYealtUMS2LVn+elRS6ay6T9RWSbr/smxV9qemsO91fiMgWMiKg27S11opjs6DkkUyG2nsImXY1rLJDF1llKVfCOjXhfezgNdS19abBJKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749799824; c=relaxed/simple;
-	bh=JaMvdmEB/xNxDbDBv2rfaj0AEG3Hnsd5q0m4mD/t37I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kj6TSFUlbLFALlgzYtuUzmQA3wLrNEmipeTat0VVpqKBzz/ZU8/b06kIcIVCVoSmi3K3EeQcpgALkoaWJqKdgqU3NASoM5gCzCvHK2fkkxl+2q+PmLNuUJ8/bYytvSMNlk1ZAh8DHcejEr12GBAXA40ovbXkkv1Feinkx1M7vM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AoIaen+J; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AoIaen+J"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C8D56443E0;
-	Fri, 13 Jun 2025 07:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749799818;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=49gLt15vu4mXbCU+te8YR47e4SuHu/CNyG4+R0GFtfQ=;
-	b=AoIaen+JdHaQhT0muniYwYMTBLi5m28ommnG27txBGyXsFiV8yYOp66M7LgdeTx0JFqx60
-	JHt/BALBmHTrKhpR6dlvnlrSL8dQr4RBrJcbCCkC8RQiJAEhaUk+iYIRMQ2usSQnJ5NoQz
-	gAaFsOtk11Nc1jA+IJdFlmiGj/KDjtdUJahMxlwW7SezkEQd8HnOTdFmFi8yMcHtWhbKZM
-	bEPd0NC9QpqAzqMhCdNzBLZdY7D/iEELhFF5XV1vJO+LrMJXp6yVEjsZDcgqql9c/bDOYx
-	9IsEf4zUcBT+CtcMnk1cADsr4DwFQ8qi1jlMPhjUraOf4ZGNDA4UWD1aBRNlug==
-Date: Fri, 13 Jun 2025 09:30:16 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Ayush Singh <ayush@beagleboard.org>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- luca.ceresoli@bootlin.com, robh@kernel.org, thomas.petazzoni@bootlin.com,
- wsa+renesas@sang-engineering.com
-Subject: Re: [RFC PATCH 0/3] i2c: Introduce i2c bus extensions
-Message-ID: <20250613093016.43230e3b@bootlin.com>
-In-Reply-To: <525877c8-6c64-45b3-b4aa-a52768e59b86@beagleboard.org>
-References: <20250205173918.600037-1-herve.codina@bootlin.com>
-	<525877c8-6c64-45b3-b4aa-a52768e59b86@beagleboard.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1749799864; c=relaxed/simple;
+	bh=cBQbV806MunnlrYLSpuN3FK9YSYRGvxOZmYLt/ntwk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aoasUqlnYFb57DckJFlx0Obz5jOBXt+dFzk7vP0cYYy9S/MsHFvSvHCqhYC/tZUmpdZiWnt/SNoJULl6HupnqMTwlrdtfnxpZAu4DRNnoN2id+GOUeZOU9iV6lIfBo/DqS4Dkmpy+RnYaqwJlrYZ8UND3RmgearQtyZUHjY1wzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uPysK-0007Pr-Hr; Fri, 13 Jun 2025 09:30:56 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uPysJ-003Ffn-0q;
+	Fri, 13 Jun 2025 09:30:55 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id EB762426D52;
+	Fri, 13 Jun 2025 07:30:54 +0000 (UTC)
+Date: Fri, 13 Jun 2025 09:30:54 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Brett Werling <brett.werling@garmin.com>
+Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>, bwerl.dev@gmail.com
+Subject: Re: [PATCH] can: tcan4x5x: fix power regulator retrieval during probe
+Message-ID: <20250613-snobbish-tapir-of-fascination-1dc74c-mkl@pengutronix.de>
+References: <20250612191825.3646364-1-brett.werling@garmin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddujeefhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprgihuhhshhessggvrghglhgvsghorghrugdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtp
- hhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mq5qqb2o7yoqfyri"
+Content-Disposition: inline
+In-Reply-To: <20250612191825.3646364-1-brett.werling@garmin.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Ayush,
 
-On Thu, 12 Jun 2025 13:22:45 +0530
-Ayush Singh <ayush@beagleboard.org> wrote:
+--mq5qqb2o7yoqfyri
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] can: tcan4x5x: fix power regulator retrieval during probe
+MIME-Version: 1.0
 
-> I have tested this patch series for use with pocketbeagle 2 connector 
-> driver [0]. To get a better idea how it looks in real devicetree, see 
-> the base tree [1] and the overlay [2]. Since it also used gpio and pwm 
-> nexus nodes, along with providing pinmux for pins, it can provide a 
-> better picture of how the different pieces (export-symbols, nexus nodes, 
-> etc) look when combined.
+On 12.06.2025 14:18:25, Brett Werling wrote:
+> Fixes the power regulator retrieval in tcan4x5x_can_probe() by ensuring
+> the regulator pointer is not set to NULL in the successful return from
+> devm_regulator_get_optional().
+>=20
+> Fixes: 3814ca3a10be ("can: tcan4x5x: tcan4x5x_can_probe(): turn on the po=
+wer before parsing the config")
+> Signed-off-by: Brett Werling <brett.werling@garmin.com>
 
-Nice. Happy to see that I am no more alone with a system using these
-features.
+Applied to linux-can and added stable on Cc.
 
-> 
-> 
-> I also have a question for Herve. Do you already have any working 
-> patches for similar extension for SPI and UART in some private tree?
+Thanks,
+Marc
 
-No, I didn't do anything related to SPI nor UART.
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-On my system, no SPI nor UART are wired to my connector and so, I haven't
-got any needs to implement extension busses for SPI an UART (serial dev bus)
-nor any support for nexus nodes for other kind of components.
+--mq5qqb2o7yoqfyri
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards,
-Hervé
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhL06sACgkQDHRl3/mQ
+kZw+Agf/atxpfdDJq/vqi5uCot1TovWSbv1wEiG6jQYBYVDNz3ib3DmdykY55lzF
+Tfjd8ow26v//NRddqJncMSXkFlSLFqSoM8Yb928dylnLsZhDZU2H5PJNDa63+9t3
+5zr4LpWpAmuXnQP8kqX47D7vZQ8j1qMwO4zK/s/Gqd2nHcHt6d7f4TaBzVLMZlmB
+OMwF0ST/Ras4DN/RJi8WqBPtHmI49m0u5LfJvZZEAB/Eo9vvPRoUGrsxp2AJvPjM
+Vqw+1dLA8B9QNl66npbWh8W/Bo4Md+NZEfVyVCmSDTW1jKL96vjKOOk+GegDEnyU
+XZdfvnz4t0C+pVSFWy9RuNcGTPSWKg==
+=8kCX
+-----END PGP SIGNATURE-----
+
+--mq5qqb2o7yoqfyri--
