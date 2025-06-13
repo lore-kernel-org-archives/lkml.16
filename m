@@ -1,227 +1,109 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF3A20F079
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB41132111;
+	Fri, 13 Jun 2025 17:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835745; cv=none; b=HO9J5EKUAwupHqTwxmM/cv60HR2A91aeRGve1LD2fhw+c8MTiUUwhDQ5vd9VvrTsYTZvysAe6EUvDog6vZJXXhUaIvT/HWAFyDdAe6VZf5AOYAgIxWKwf39PGzOLgJzVH4WS5ujzYjwPEK9HpLGUwK4TexquFnH7FCOIOcHJMKA=
+	t=1749835924; cv=none; b=gji6/aGkkJ9ul88PJlgd68uaRGi/1Xstz8k8v42aGAabN+yvIiDMTwlfIMaDrYqAvNTWP4Id46XOXDnzfPhPcT+SL/lgOyBw/BanLfWpFknqwTcYMTH0KhFC7UJnhfWZkHknYISpBlZgPPQcQG/BlX+JpLH4QroN9nazUkA6C98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835745; c=relaxed/simple;
-	bh=zxG4kcYf0IqDrP5j/PxbnwMv6Qx5WyymZLFw7Gpsk1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EexfOaZTcJ1+fxMYxdWPeYTAegU8kLCDN1aqa5icTT0DyzhvtTVf8Q6tFvh6Kdfhqkb2Afz/6wQDO83jyQ+caJX7sBLaoofNfkXigDzrcQ7W26jNtN6Ae7KWS2vNxEPtq027cp9SKuSTyP+VC8YzxOtCys62DbUsdkUvNMrvoKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hlXDQyyG; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749835924; c=relaxed/simple;
+	bh=t7N3BVq9WlE9phwxDsROYWpWt0kQq3OpsSCwh+9ECEM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JZCccSOc1RmPfryszexKyRfdKA93WtrvXfrFUUOrNr2hqGeYeDVi8sjXrpfi3g6ZJCY8PXyqtUCC5Sorbve0SzcnF06cQoD7//mLVG4UBspR/wb/5q9s7fg5IK/my1rAo4AHlbzdaQxPPHmgyuEKB6LKDOkRFfQhIdSuPd/7/6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XDfSphrd; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hlXDQyyG"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9133D44451;
-	Fri, 13 Jun 2025 17:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749835741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NIvF1qv3q2mPekX9cThcZh3+0e4WEHsvxF4etRx9qGk=;
-	b=hlXDQyyG5LP6QYGgduy7owkuKHXxcEVTPwaTUY1n3MeuZNihXL6kLGJZ5RPKcRoaUM8gGX
-	BG+2uasGb7G/2O+0hyMk2tgCvWpTSO4P4pUcbCo3FM4Xof2euXhrSRW9ugVWAKP8wTPh5H
-	6gbFMdeWSGcDk/Vr/mdFnFm6ZTuwUiYuuCDLYFQJWh7pmVA/7iHdS9rvwn3ndilLVDEqlP
-	IlprL4j9Xg7F3PkwPpg4LgJlSwsf1f/p57BM9f34iVQtxp9fgvVV1zWuPo1AYvIL2LAuW7
-	jhxQJd9kojAd0IRKzhy8/EZjTkmg5ql6a4RKbgos2thArrRav5fsDQjp3xtqhw==
-Message-ID: <115564ae-4b61-47be-9a9d-9c27acd4192c@bootlin.com>
-Date: Fri, 13 Jun 2025 19:28:49 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDfSphrd"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so1482872f8f.0;
+        Fri, 13 Jun 2025 10:32:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749835921; x=1750440721; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NVccLtBUkLI1MEe4KbooOMLXqPFKOC+ce3CE/xpHyA4=;
+        b=XDfSphrdQeatcz66ziAHt45KLnwoY5U4UIqaykpHBTVfoswmQm37+A16PAUfyHoxwN
+         AxVZ1JLJkA185wHGmR1/hrkH3QIZfIkeiFcjsJdlDjausz6TqGEPBnnE/uojabmepMqM
+         OGboH3w7Pah7iu197XLGrGwucLvFN6qLq+4YQwo/tdXIC64ID4rSTh5lF33viT4dzJ6W
+         px5hvyai8t4khpnisSO4fe3VWdi2S7j0B77TtYO1i7vLEhlke3X0zKc3UaBoZBaQn/FZ
+         itlAx4x0vf+lN9+6Y8BDInKppa5X5w+MQeQfRcG+3xS87X4PsQfQLCm7+w/O11xbBm+A
+         A8Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749835921; x=1750440721;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NVccLtBUkLI1MEe4KbooOMLXqPFKOC+ce3CE/xpHyA4=;
+        b=mvc2C3q8GlkzL5jlzoKtFICTCJDEbCTrW2YgFfSSjwvDJMjTaZJb8sP5vpTaYDzHsH
+         +pYz+qVT1F8oUYZoXRf7zG64Zxi1Voq6YqC5c+FiVll+oOHzIgcdenj8K671jIBBAe02
+         5X+cobKgDc0nvL1j0Nn1d/orF4vJ5p3DPHKTz+N2cTCEO8dM4FOlehnx3TYZFqsbkk+D
+         FMHHnoRP3QtJzPFm4oZ1yUdtZOVVKsRODEv2RrjsX3yeZWKJAr9Ryt8glFNWU1avJob2
+         uR6opXh1FuqIuhjloN+wktV8mQ4OB6Lr0LlmX/nQU4HIIWjfIwiBMY2Wr+d3sf7t/aOl
+         hmZA==
+X-Forwarded-Encrypted: i=1; AJvYcCU09bDxB+KapWi50O1bKso69bn1jLoum2K5XRfIkMylNc+WRbF8h66RTQFHRzH7n3krWe+WGc0YXc+pB49R@vger.kernel.org, AJvYcCVsHSCczqfVHDN9Ad40s7OwoH60qIW9R8AvlZGEK9+kXMUQdGHscGo5w42gfrxZ1xDDv74=@vger.kernel.org, AJvYcCX3aySYsXyhEElCH1NDU1W9W49865jWOh2+X5rpJ7JklwcWtOlLK/Et6PCxkUQ5a3xAQdD4PRG7PuaJGB0DRN4F5Bpn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlR+1XHskvosUJ0XyYZGxomGUvaOIH4KrC7R3634AQhaDDCuB1
+	3xM9aK7C2+t6xvQ4ofm7H5uFnbnTg3416pSSmKDvuqR/mioc8Q9l8jT5h39sVgNnH1nIeAGS2G/
+	detLw17mVlAERmmVNB0UHsrpV+C/RAECE6A==
+X-Gm-Gg: ASbGncvSZ7U84qJ0JpFYYM6dIRW+L+jQSY4N2RJtS6bMGc70rVN0cwq2NXqq7+kAvSf
+	gRF+YsiwV8eXpbtGdWLFyTGrhqG4mKfi0VY6qF19EKNGpzdktXRn9MdB1gcbyv4MQlCTNjEq1G2
+	Fys/9f5H28DmIb0Xps+z3IwIkaG6zf3B/8quf+PhrcA1y7/qfumq0XYeMwnC1gDB/Lbo2UR5t4
+X-Google-Smtp-Source: AGHT+IE5Txj9vSePCLXk8LXl4X9M2Y15KDj342FLtUVMXpCM6clk44IcqP+eIKErJWg8V6XaAMQaCZngglGDLa+g6xw=
+X-Received: by 2002:a05:6000:230a:b0:3a4:f7e7:3630 with SMTP id
+ ffacd0b85a97d-3a572e66e95mr638250f8f.15.1749835921053; Fri, 13 Jun 2025
+ 10:32:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/8] drm/vkms: Add support for ARGB8888 formats
-To: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
- Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rodrigo Siqueira <siqueira@igalia.com>,
- Simona Vetter <simona.vetter@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
- linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
- miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
- seanpaul@google.com, nicolejadeyee@google.com
-References: <20250530-b4-new-color-formats-v4-0-ef5f9f48376c@bootlin.com>
- <20250530-b4-new-color-formats-v4-2-ef5f9f48376c@bootlin.com>
- <eba688fe-d270-420b-9619-121fb4b8ba1d@igalia.com>
-Content-Language: en-US
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- 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
-In-Reply-To: <eba688fe-d270-420b-9619-121fb4b8ba1d@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeehhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeeivedtfeegtdekheethedttddtfefhhfegjeeljeejleduvdfhudegvdekheevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedukeehrddutdegrddufeekrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedukeehrddutdegrddufeekrdelgedphhgvlhhopegluddtrddutddurddtrdeiiegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtohepmhgtrghnrghlsehighgrlhhirgdrtghomhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrihhrrggtrghnrghlsehrihhsvghuphdrnhgvthdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrr
- ghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
-X-GND-Sasl: louis.chauvet@bootlin.com
+References: <20250612115556.295103-1-chen.dylane@linux.dev>
+ <20250612115556.295103-2-chen.dylane@linux.dev> <CAADnVQLbpO7PED01OVZXTLib_hBYzwpC5hFyR_WMCCx8obR1Hw@mail.gmail.com>
+ <00a22161-1e40-4ec0-be4f-e2c5dadbfe0b@linux.dev>
+In-Reply-To: <00a22161-1e40-4ec0-be4f-e2c5dadbfe0b@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 13 Jun 2025 10:31:49 -0700
+X-Gm-Features: AX0GCFu5PYm5SWowV-4zYH0VtJdfphoQJYMykfiKk_2dN6Gss3ybOKWkgea3cQk
+Message-ID: <CAADnVQKZbVHX_juvWqP-BZ77+TLfF73qnoV-7uDe5LxJsf4=9A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/2] bpf: Add show_fdinfo for kprobe_multi
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jun 12, 2025 at 7:52=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> =E5=9C=A8 2025/6/13 00:01, Alexei Starovoitov =E5=86=99=E9=81=93:
+> > On Thu, Jun 12, 2025 at 4:56=E2=80=AFAM Tao Chen <chen.dylane@linux.dev=
+> wrote:
+> >>
+> >> Show kprobe_multi link info with fdinfo, the info as follows:
+> >>
+> >> link_type:      kprobe_multi
+> >> link_id:        4
+> >> prog_tag:       279dd9c09dfbc757
+> >> prog_id:        30
+> >> type:   kprobe_multi
+> >> func_cnt:       8
+> >> missed: 0
+> >> addr:   0xffffffff81ecb1e0
+> >
+> > fdinfo shouldn't print kernel addresses.
+> > It defeats kaslr
+> >
+>
+> How about print the function name corresponding of the address, or
+> don't show the addr info.
 
-
-Le 11/06/2025 à 21:55, Maíra Canal a écrit :
-> Hi Louis,
-> 
-> On 5/30/25 11:05, Louis Chauvet wrote:
->> The formats XRGB8888 and ARGB8888 were already supported.
->> Add the support for:
->> - XBGR8888
->> - RGBX8888
->> - BGRX8888
->> - ABGR8888
->> - RGBA8888
->> - BGRA8888
->>
->> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
->> ---
-> 
-> [...]
-> 
->> +READ_LINE_ARGB8888(RGBX8888_read_line, px, 0xFF, px[3], px[2], px[1])
->> +READ_LINE_ARGB8888(BGRX8888_read_line, px, 0xFF, px[1], px[2], px[3])
-> 
-> How did you test those two formats? I noticed that IGT (kms_plane tests)
-> doesn't test them.
-
-Hi Maíra,
-
-Thanks for your review!
-
-I wrote this a long time ago, so I don't remember. I was probably greedy 
-and added all the "trivial" formats I was able to do and missed that 
-this format was not tested.
-
-For this revision, I just started kms_plane to check if it was happy 
-after the rebase, I did not check the formats one by one.
-
-Do you want me to remove those formats? I think it costs nothing to keep 
-them, especially with the new READ_LINE_ARGB8888 macro, but I will 
-comply if you think we should only merge tested formats.
-
-Thanks,
-Louis Chauvet
-
-> Best Regards,
-> - Maíra
-> 
->>    
->>    READ_LINE_ARGB8888(ARGB8888_read_line, px, px[3], px[2], px[1], px[0])
->>    READ_LINE_ARGB8888(ABGR8888_read_line, px, px[3], px[0], px[1], px[2])
->> +READ_LINE_ARGB8888(RGBA8888_read_line, px, px[0], px[3], px[2], px[1])
->> +READ_LINE_ARGB8888(BGRA8888_read_line, px, px[0], px[1], px[2], px[3])
->>    
->>    READ_LINE_le16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0])
->>    READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[1], px[0])
->> @@ -644,10 +649,20 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
->>    	switch (format) {
->>    	case DRM_FORMAT_ARGB8888:
->>    		return &ARGB8888_read_line;
->> -	case DRM_FORMAT_XRGB8888:
->> -		return &XRGB8888_read_line;
->>    	case DRM_FORMAT_ABGR8888:
->>    		return &ABGR8888_read_line;
->> +	case DRM_FORMAT_BGRA8888:
->> +		return &BGRA8888_read_line;
->> +	case DRM_FORMAT_RGBA8888:
->> +		return &RGBA8888_read_line;
->> +	case DRM_FORMAT_XRGB8888:
->> +		return &XRGB8888_read_line;
->> +	case DRM_FORMAT_XBGR8888:
->> +		return &XBGR8888_read_line;
->> +	case DRM_FORMAT_RGBX8888:
->> +		return &RGBX8888_read_line;
->> +	case DRM_FORMAT_BGRX8888:
->> +		return &BGRX8888_read_line;
->>    	case DRM_FORMAT_ARGB16161616:
->>    		return &ARGB16161616_read_line;
->>    	case DRM_FORMAT_XRGB16161616:
->> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
->> index e3fdd161d0f0..b7f498944c50 100644
->> --- a/drivers/gpu/drm/vkms/vkms_plane.c
->> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
->> @@ -14,8 +14,13 @@
->>    
->>    static const u32 vkms_formats[] = {
->>    	DRM_FORMAT_ARGB8888,
->> -	DRM_FORMAT_XRGB8888,
->>    	DRM_FORMAT_ABGR8888,
->> +	DRM_FORMAT_BGRA8888,
->> +	DRM_FORMAT_RGBA8888,
->> +	DRM_FORMAT_XRGB8888,
->> +	DRM_FORMAT_XBGR8888,
->> +	DRM_FORMAT_RGBX8888,
->> +	DRM_FORMAT_BGRX8888,
->>    	DRM_FORMAT_XRGB16161616,
->>    	DRM_FORMAT_ARGB16161616,
->>    	DRM_FORMAT_RGB565,
->>
-> 
-
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Yeah. That would be much better. human readable unlike hex.
