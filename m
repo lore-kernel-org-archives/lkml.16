@@ -1,107 +1,104 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538FA2C15B8
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6685B1DF258
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749812116; cv=none; b=sfDX1SVf4gw14DL2qea1fT0k4zAFAq0njS4vpn75cHFV3ip/b+E72pN/qh/OtveTR8Fpg5qwqU11aQMcRxU0QjOXXbCKgkrD5ko5snwbaZ+CG1cKdT7kWIY9rIojHgAeHgN4RP/Qk/ewMr30QCJ3SD7ilFa2+QK5SCrUK0R+iyU=
+	t=1749812219; cv=none; b=N8sOV8FESFDLF/qSEIc/32JUhwoiA/uGXvP6B9gshe4sc8m4pqyGzULHKvYGxBfw2DgXeziTFkNPyTYDYUtsh8AFgtVwDZyfpBItXvBqLYnEnZ1+GyhK4A7KDcaNTZ7hquSesjp0PkRzQDSJu7+VCzgVFVafoUdJtlUNu0HZZqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749812116; c=relaxed/simple;
-	bh=FQiYKnTCnJnB9WxLyBBMzZDQri5gRgtImAvHgithX9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D5CaiaeZhJlfrJJDH+AC1yc00Um/8N+jrIBX5SGvPR9HMZID4kbv8EBcthuxrxUTilKYZXYGSngzi42QQMJQzyWozVXdLctuWIWKr0NOKnL8Ph5OOi1+JynoAOun0xaFL5d9g0FDD+JUCntYGwvBe6Yy7cBCc/Pv88iGXFRjsnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JjwwsZJK; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749812219; c=relaxed/simple;
+	bh=JITvwUOEuK6VMx0vH2dZBuvurvXF7sYMUXnX2S5XEz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G658Xp+zGV5tbHm4HPOcSOgra70s6j+epb1MJ7VcX9O0/OGrQTsS3VvS7aG17DtX7cffpoPFAic4oOi7iq5of21J2VcV7kGretY1WUuGFkz7RTCiR0yjJg1xWHm5zXqV08Gk/X96fVTcv3NmWP9lNFFs0THulIAJi440lFoK6rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O5WVQyI2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KfJgzGdw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjwwsZJK"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a54690d369so2012405f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 03:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749812113; x=1750416913; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u9ln5HGGKIXvxuo/p2ea1FkQb90YA+7FEEhjYigED1Q=;
-        b=JjwwsZJKblu9H20thk6hkTsiudVWypOyz9iRSquUsOPHlbf/oCTtV7RdI6JlKgsx1e
-         L47KKAyuZSOdbIogwycaxkcgSEspDyLPnOnvdQ1300O8Rj+6p+GWxYvyRT4uTSs50y/7
-         0KoEyJbojPhiXgyjHM8bhfw/feJoj0lCUollOi5DGpmdPY9QwNj3SezcxwzgPOpOH/uI
-         8prjIzkyR0veAxJ52TC6S8QGANLOGcyF/N2iLdCquq+X2acQCgvJlUqPUcb+0qgTb58O
-         zmaVVNeIPw7N5geLd8RgSRprGqIFUtrTE0inGPp2O1eSOdu/l1f82xHWb8a1Yjct0/Gh
-         MxnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749812113; x=1750416913;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u9ln5HGGKIXvxuo/p2ea1FkQb90YA+7FEEhjYigED1Q=;
-        b=L+JEdVMhCEEJbQuH+4h0hC5XfgukIdl/F84N85OhOp8BZMwelntkM7KeLg3QENc1Sr
-         W5M8DgPrZoct0tmdGRei2CuseF+wyj+oM1pkyxsFPNUn8cCol/QymZ5n4Z/bOmq/gSiI
-         L7rc3xEOHtHpRR2XwaORrTfdHkoz3Q7xzT33VZzp/ripDrt2OZ/gvPCA8Tqucu2pjaex
-         Pne1krTbKcmPLlfi6pYwe3wBTdPpd7oMBQ005t0kOX4StoMaJ6sE3un4/mwfCllwidH9
-         m5F++q81XJce882RyLli+D3mzziivKX6usXtMfPhg5kdOYaYq3Nr1yuUD5Mk4FVYqRf3
-         YZmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuWTQkuhUf1KJQ5mWR4poDqa397EMtBD+/YnGiWx/VwS/4wNq0pnAO27XomaKTEihxHl/dpPNZyxI9U+M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2v3288+UZ77n7pV5MBB71ssKED5UjolZNdUakkroB8a/8QDa3
-	BKylBXjoMoQtwJCEUNE3QeS2ffTvzEQ/noE/fSnbN9Q+aIPfLOXlQCy/
-X-Gm-Gg: ASbGncvvi7mYYjVrkI6zgI5n+Z/4gQqTFVytzqnqhG1UHVp/y1W7WtoFrfqf5xqhtdq
-	WT3XAWJVAngUhvQIAKGNZH8QL72HdZxRAR7UFzVMD7iapIDQpWYnGT9K8CYiXu4sLbiVztOKa5p
-	YoCDg34gANaCas1xFMta97hruCuY7o+RqangWHK7D5hI7hoR9/va2xc4pq5LfJPT8t0PtUj2ud3
-	CtedzJ6UoL7Uo53gpNkfKJGNG42QQkFMcJdWkkx8gtapPxzsDNPu0YmNvRr/g44cHHLz5rKXtUA
-	yqeboEXzpeW4O5rF3qJnJt4GUs//xdZrIGMXW2pLub3NG+E0t26M1x74nzpLrlL/8i9ESDEMv3o
-	WaBXfemlU2/pPut1/H49dh9pS
-X-Google-Smtp-Source: AGHT+IFfslJ2aEALYhnP/9BaW3mXjNd6nsmmUKqVe9C01aF5V4kiO/RmoLsZeW15nbsHhQac+oQ4vg==
-X-Received: by 2002:a05:6000:258a:b0:3a3:5f36:33ee with SMTP id ffacd0b85a97d-3a568755d12mr2100819f8f.32.1749812113385;
-        Fri, 13 Jun 2025 03:55:13 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54b7asm2053143f8f.16.2025.06.13.03.55.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 03:55:13 -0700 (PDT)
-Date: Fri, 13 Jun 2025 11:54:59 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Atish
- Patra <atishp@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>,
- =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, Anup Patel
- <apatel@ventanamicro.com>
-Subject: Re: [PATCH 2/2] RISC-V: make use of variadic sbi_ecall
-Message-ID: <20250613115459.6293f929@pumpkin>
-In-Reply-To: <20250612145754.2126147-4-rkrcmar@ventanamicro.com>
-References: <20250612145754.2126147-2-rkrcmar@ventanamicro.com>
-	<20250612145754.2126147-4-rkrcmar@ventanamicro.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O5WVQyI2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KfJgzGdw"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749812216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0sTqX2tcvrlg+m1/ilDAXxr0xRBg7UGzOmG2GbyljDc=;
+	b=O5WVQyI2bsVC4qw4vaRyH1IC0CHCv3w3un8jiVX7BY8O/vM3h+GIRIdFiIDBqVvdl9edLK
+	gjCRrbxeNjXimysZ6AfSZYiHmPTJO6HJ4wclnj1bd5wACY7lUK5DYzTm3aJPyl/Hw5BTMP
+	vbiJDcTS8AyyRi8xQhGe6YlroCn9x7VdB1Evw20Yif1d8coOjy8mqSgUNxAAkuDxG45Bte
+	ZS3wNPEVC24buxIXeG1HlWblc04Iwuo9aLs0xZ7m+6sWbKnXHccEOwvkTGlS8auaS2ovzu
+	Moa3dEvVfeEe/bRLHJzRkci12iChu68Sr/PlgzPzxZ6wSGwcSD5f6uvgisAqHg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749812216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0sTqX2tcvrlg+m1/ilDAXxr0xRBg7UGzOmG2GbyljDc=;
+	b=KfJgzGdwN1ZZVng4IewzM4dIVR5F0iwnl75zrpX5cN68RdnFqXor599OwPSgM+dqMPBiK9
+	HH+hqijQHy405WDQ==
+To: linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Cc: Clark Williams <clrkwllms@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [RFC PATCH 0/1] softirq: Allow to drop the softirq-BKL lock on PREEMPT_RT
+Date: Fri, 13 Jun 2025 12:56:52 +0200
+Message-ID: <20250613105653.1860729-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 12 Jun 2025 16:57:55 +0200
-Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com> wrote:
+After auditing the tree most of the local-BH locks are in tree now or
+the code has been changed to avoid the per-CPU ressource.
 
-> The new sbi_ecall doesn't have to list all 8 arguments anymore, so only
-> pass the actual numbers of arguments for each SBI function.
->=20
-> Trailing 0 is sometimes intentional.
-...
-> @@ -630,10 +630,10 @@ static int pmu_sbi_snapshot_setup(struct riscv_pmu =
-*pmu, int cpu)
->  	if (IS_ENABLED(CONFIG_32BIT))
->  		ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
->  				cpu_hw_evt->snapshot_addr_phys,
-> -				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32, 0, 0, 0, 0);
-> +				(u64)(cpu_hw_evt->snapshot_addr_phys) >> 32);
+There are still a few places missing. While those are worked on, this
+patch allows to test the unlocked behaviour. Without the explicit
+softirq synchronisation, one softirq can interrupt and nest within.
 
-That doesn't look right (and other similar ones).
-The values are still 64bit - so get passed as two 32bit values (in some way)
-so that varargs code will get the wrong values.
+This is what the behaviour can look like:
 
-I guess the previous change wasn't tested on 32bit?
+|     ktimers/20-204  [020] ..s.1   33.291036: softirq_entry: vec=3D1 [acti=
+on=3DTIMER]
+|     ktimers/20-204  [020] d.s42   33.291054: sched_wakeup: comm=3Dkworker=
+/u133:3 pid=3D1215 prio=3D120 target_cpu=3D020
+|     ktimers/20-204  [020] d.H22   33.291146: irq_handler_entry: irq=3D37 =
+name=3Dahci[0000:00:1f.2]
+|     ktimers/20-204  [020] d.H22   33.291147: irq_handler_exit: irq=3D37 r=
+et=3Dhandled
+|     ktimers/20-204  [020] dNH52   33.291152: sched_wakeup: comm=3Dirq/37-=
+ahci[000 pid=3D810 prio=3D49 target_cpu=3D020
+|     ktimers/20-204  [020] d.s22   33.291162: sched_switch: prev_comm=3Dkt=
+imers/20 prev_pid=3D204 prev_prio=3D98 prev_state=3DR+ =3D=3D> next_comm=3D=
+irq/37-ahci[000 next_pid=3D810 next_prio=3D49
+|irq/37-ahci[000-810  [020] D..12   33.291177: softirq_raise: vec=3D4 [acti=
+on=3DBLOCK]
+|irq/37-ahci[000-810  [020] ..s.1   33.291179: softirq_entry: vec=3D4 [acti=
+on=3DBLOCK]
+^^
+|irq/37-ahci[000-810  [020] ..s.1   33.291187: softirq_exit: vec=3D4 [actio=
+n=3DBLOCK]
+|irq/37-ahci[000-810  [020] d..2.   33.291195: sched_switch: prev_comm=3Dir=
+q/37-ahci[000 prev_pid=3D810 prev_prio=3D49 prev_state=3DS =3D=3D> next_com=
+m=3Dktimers/20 next_pid=3D204 next_prio=3D98
+|     ktimers/20-204  [020] ..s.1   33.291227: softirq_exit: vec=3D1 [actio=
+n=3DTIMER]
 
-	David
+
+Sebastian Andrzej Siewior (1):
+  softirq: Allow to drop the softirq-BKL lock on PREEMPT_RT
+
+ kernel/Kconfig.preempt | 13 +++++++
+ kernel/softirq.c       | 83 ++++++++++++++++++++++++++++++++----------
+ 2 files changed, 76 insertions(+), 20 deletions(-)
+
+--=20
+2.49.0
+
