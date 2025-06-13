@@ -1,184 +1,277 @@
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11013043.outbound.protection.outlook.com [52.101.127.43])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97ADB20DD4B;
-	Fri, 13 Jun 2025 10:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749810228; cv=fail; b=cS2/mmQhKTk6hhN1LKOJ2V2cIZeDaBSHjf0O6BE+G62BezDDrmCaS78T3fNjCuOwRrnocH9z3WDuNo131u/s4KRi1ZncaZ4sXisLD8pKghscwK0+lyalD2v3iqIbX9FCLlNnrehyB7iIlunIKAxBwUePvkhmwI6bNyynt3XOF9c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749810228; c=relaxed/simple;
-	bh=dsGaqhWlUz3hFrgxaGRl0uA9S1l2xiwLtIu/OBe+5/I=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=COoZe+ZWOSaJd3jHrfEVGOq6dw1EaxNHiks+79hyw79tt3j6vpeIPCIxUdE+2IMUp/o7gX+GZMKBMqlFYh1ZjCJOxH1PQIRn/ORa3qe7whQ4FIus9lsbbnq0laaRv2WDhBSRoyMNv2kTfBbXNwD5zcuRDZom0pj9dbQ7SJH4Yj0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=RDSUp6T+; arc=fail smtp.client-ip=52.101.127.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959B72C159E;
+	Fri, 13 Jun 2025 10:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749810256; cv=none; b=kfAyfa2RDg3DaDo1EUhIkkXxH5gGres/Ci4MAzNkA8joEAMofj+Q1UzpSypxGp62/zJ5yJLFg/Id5pdaNHHGhkIS2Wio5lY9ALOAaTyyXubIW2WBzcBkkEIFuuLZAUGmYqaGusazapjBtpRYL0Mq80UitHUEz+EmzPdlOb0DWuI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749810256; c=relaxed/simple;
+	bh=2iDnlk7mOj+Ad67u+b0dCHsd+knvG74VXJc2zK3m1i0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fSUhYOqDa3EwBCWRkit3jTGczWFYWFQKOGxsLwTAOXPbH7Vx5LXxBTqhwWVRsYXGlmrj2NUKlD4Tl35gUzezTklLUuiIzAmT/nieibsb/t48oMxSL6XXE7Z0qEZgIzDvcn72b0DZ5Njb3N+wIJ8tRTN0mXf56h93Vf4BS1Agdcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fNnTdce/; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="RDSUp6T+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=f0SaUQb2YimZs0ApMHOhULCObT1XS+JW/eGJ0lnRShL7pVdhh4Km7UcX5QDroJ6n4J8Uk4xwK/UZcitJsTLUPDZQd64fqfxebP3fUIt9gckXNRqLWE3Mv7PNkgn7WbBy4hW3zFObVcpQdZ8ff8QBdU5l1mvUQ1C6Lo6UV67wcFcJF8H9bYW7X0rFhqZlbAJ27XSNxlEfrj4WG5lrEEResyf4JvbEZAvwTeuqvXex5eJ/dyysbMwPJz1JDg/o/3wHl1OIyYUNUCM9X6kuW0u6FasMY2lONjpqZhN7I7xFu/0bYGNPEKYwtuNf7oi7jPPbTe7rkaDBarwSL9s6usYUMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t6n1lg8OesHiM2yKEJo0OTuzLt3M8ed2e/p9rUVaDYs=;
- b=C9+zlN4Fg6r8kRVfQb3LOYOqDBuCBZKpVss8YBUH894xiRutq1z5g9vvriYynsIuJEpMovPfsbvCWJ8Hu/eC/FTTwyz9b8m7glBRYHTx8EDilPQgFTmQCcTFO/qBgeW2cQJhYIcIybwP42SrDia2SN8Z8l+Tm2nSe8C6R+WyXgP2nFylRadg3qRlRtndBVve2NMMkoiX61jG1tcpylS6lVG2yefa6KXbtCCHPEDbl0NsrT9L1lm9HBDj85WgcoLLb5Z0njc58808BVWohh+VNoVh1nhIu4R6GnPBUl3iFlnbK9QAWdaZ7+WL+bIqMW7uGQSinGaGbzVMHPPRcwa2Xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t6n1lg8OesHiM2yKEJo0OTuzLt3M8ed2e/p9rUVaDYs=;
- b=RDSUp6T+HxBwV6JvwtqLSY+RyiASrt+WZTfedD/MHAqoxABn9NobYekBTZF0oeNlhQgdjsAocbiNLHjKA++NU2JCg1SkhtCSz1utyQ1dGRpaV1Cj6R5E/VCJEiOlsUK/h8apc7l/SQoaKzRzk8mqyIQvhPXEvFx7m99hORwMvG8Zq1lSD9ngr75cAVxbLhSTq/AqKbWyi5mygjVbOnuPIYRjHfIXYRuXuqGWyrfam2EXyukiGqjxE/rlEoxF2gpW43y2Ph5Y++2orgA7lOFzyAKzWnluDQGPR5wtj3DT55JKNGMKvYJPDTvsQP6zEqA79wNaF8SJZX0295PnPJKyyw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SG2PR06MB4802.apcprd06.prod.outlook.com (2603:1096:4:169::8) by
- SI2PR06MB5018.apcprd06.prod.outlook.com (2603:1096:4:1a2::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8813.24; Fri, 13 Jun 2025 10:23:41 +0000
-Received: from SG2PR06MB4802.apcprd06.prod.outlook.com
- ([fe80::685f:929d:f06c:a349]) by SG2PR06MB4802.apcprd06.prod.outlook.com
- ([fe80::685f:929d:f06c:a349%3]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
- 10:23:41 +0000
-From: Yuesong Li <liyuesong@vivo.com>
-To: Ilya Dryomov <idryomov@gmail.com>,
-	Xiubo Li <xiubli@redhat.com>,
-	ceph-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: opensource.kernel@vivo.com,
-	Yuesong Li <liyuesong@vivo.com>
-Subject: [PATCH v1] ceph: convert to use secs_to_jiffies
-Date: Fri, 13 Jun 2025 18:23:22 +0800
-Message-Id: <20250613102322.3074153-1-liyuesong@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG3P274CA0011.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::23)
- To SG2PR06MB4802.apcprd06.prod.outlook.com (2603:1096:4:169::8)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fNnTdce/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749810255; x=1781346255;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2iDnlk7mOj+Ad67u+b0dCHsd+knvG74VXJc2zK3m1i0=;
+  b=fNnTdce/ogVHRpSnX1k7NPyfxeAhxv0iefamZjt5lSiYdjPU5zwZc+oL
+   BH2XXUa32qTSyr1+YSB0oMXdklr5izQx4hdMJbpGpp8GroZnl/QNGYult
+   nipgYBBTTVC0buh82fTjGaZdlHbbVMqS+yh862ghSzpEx6ZvM0qSZqmbf
+   LDpX6NL68evUqDgJRWQZ947oE/xpOPDomaZV+nvgeTBxD/ZNuHAJGlttv
+   COVfvpEuy6m8NwLbK8V7bSEhIRCw6/MN8XUaMN87LAbmML1NF/3amH1gD
+   wfSJdtwBlxPYtTE7GBCpHW2pwcEnEXWhehHuLYEVaZZciMKd4iA0m9o8c
+   g==;
+X-CSE-ConnectionGUID: SFfHZUGSSV+bT3fg6dUe2Q==
+X-CSE-MsgGUID: j8C3/pJ6SHiZuxCMQp3S5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69597033"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="69597033"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:24:14 -0700
+X-CSE-ConnectionGUID: 2+hRSAiYT5S5y7w8WfQKRw==
+X-CSE-MsgGUID: hxr4Xq7JRRi3aanGHmuyYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="152688791"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 13 Jun 2025 03:24:12 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQ1Zx-000CSo-33;
+	Fri, 13 Jun 2025 10:24:09 +0000
+Date: Fri, 13 Jun 2025 18:23:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+	Jeff Johnson <jjohnson@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Subject: Re: [PATCH ath-next] wifi: ath12k: handle regulatory hints during
+ mac registration
+Message-ID: <202506131836.KoxnhWuQ-lkp@intel.com>
+References: <20250612-handle_user_regd_update_hints_during_insmod-v1-1-576bd0f6dbe0@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PR06MB4802:EE_|SI2PR06MB5018:EE_
-X-MS-Office365-Filtering-Correlation-Id: 70fd12e9-73ef-4d58-af91-08ddaa645e18
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|376014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9ZAfYnj1gdE0HldzUk7W0+nsWVkIrM3SX2yOLauqNLJThi+0KxJx+rvWq57a?=
- =?us-ascii?Q?Exk6hvHIk794euBZwrnc+JrDgZSF+A32K+DrINw9+92afIk6ZVH+7xaFQWrZ?=
- =?us-ascii?Q?Vke3kiVol8UVXDZxuQY0J4TgTRm0YvsNbO8zPXBUxDAGSg6guxPOmZGQQDC7?=
- =?us-ascii?Q?CzjlmrIXjKs9/zJ9qJFtNGb2d1pnLx9O3LC7cGTZV3QSvjLybwrOp1XEYdnB?=
- =?us-ascii?Q?HAg0GV19ztojiDg3mgCfXAbc59PXsg1Xaf99OrNPuo7pZ6qc5yQh6G2GFggx?=
- =?us-ascii?Q?9WeDWUYku+PFgsZZurAY1VB32P9N7B5mUtl/Tl4Tenm0eYzgliyP2Gj7u4E2?=
- =?us-ascii?Q?80bJA1flMHqe/Z02AufzEXXOveP03sAaTdHd629Z99QiMzkc2iJq7Wd51b5c?=
- =?us-ascii?Q?gAhAMNbHNx+IbyBnVH3s9JvbdPiVPaLmsF+BtpDzy5ncXQ1Q+RgYweJBGRva?=
- =?us-ascii?Q?9EhkintQtzTp3pSDR4QXRHf9nHyvaUjDZDeVqT9HTOnkbD9e7XmRPZbtatiB?=
- =?us-ascii?Q?M7CZpfUMslwuCeOdMoS1WlQ/6cEtWKhLnc4ARRqbCmkAb8c3JXxgg/7HvmqK?=
- =?us-ascii?Q?KXqymUylhfN9+YbZm1KcUplw8IGWJD76ah4wG7JsTWayxsYy4Xo5rcgmbeYT?=
- =?us-ascii?Q?aptfWtu3Oil7sZLFcay5MowA2KsZ41bLfKWmVT0Quw3kZz1u7A1tuQQjTbMp?=
- =?us-ascii?Q?bIkmAMsJy+DUDrh92QIKXgDpcDyOEsdMlK6mg2n22Uu6/p40qXy8axD+vd8W?=
- =?us-ascii?Q?o9/zYWqTvSxeBHXXUUN9xQ6Xugxm7IcyCAgqs+2irrf1r42nJYrXd5PCQnWy?=
- =?us-ascii?Q?kS5uxQ64jU4S395vGDwkRM9CbHwKwQgn54/p9KgJ+ezwsVfNRY0t9n5OMXpC?=
- =?us-ascii?Q?5m2AHMB+WmARq+5XaEPqN3AFiTY0LmaU7abezHevAowp/Nqs2UH1eAHKFebk?=
- =?us-ascii?Q?eX5zXLmD5KgenGMgp9G892D12TiFkGv/exAYHnJftA/VMiuuXC0/s5+ZwcI2?=
- =?us-ascii?Q?f9+TIJ+GxGW5qNfGTDvlEbniz9TUeN3RH3B3Jk5ewYkf63psi1tRPq6thc9e?=
- =?us-ascii?Q?D99X1TUWB/lbSBrq9YtMh4XAyei4NK05yCqS6lVV005hbBMGyH1NtSGpxOxD?=
- =?us-ascii?Q?+w4evu42gLRRm2BUO9RqnNsFhOB8Ks4KnsTO3kFko7sJ4iX4WjNyy6fGhfhU?=
- =?us-ascii?Q?T5a5doTY/TUF0QRIGvDouuepJ+iB+ZAXqmKr0ZGQOmutlBVK+C387hmwB0od?=
- =?us-ascii?Q?AYhkgYJJWzWfcSW9duHQjM+vSEI9MYWpwOyr5FTof6e6iydYvPWwBk1pyt0O?=
- =?us-ascii?Q?jO7yLok9Nip/Gihxi2fMz90TCwP/khBfnD4mtZlqSGgC9kfPuuXu4w7+TA0T?=
- =?us-ascii?Q?E1cPKcagSDavyrRmqskjIhLjM4QjhQ1bSAZJlRbC/mdTlZ6D2ll8VqWMJlDS?=
- =?us-ascii?Q?0WA8Ec0zhfYiMUedBCEbmWhV+zLGIx4tMeGVauZJaIgsdDJBVsmbuA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB4802.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+Bm/LIEBVPqKSEtyOjGrNFqcKvizfpHqX4N57Csb+3w0nSN0zjRdBEH4UGi0?=
- =?us-ascii?Q?gUvjEXck51gS7zv/iiDaPafXAcoRzHTzCyS9Vpv8UJRJLA0/AHCx4aOhYN5R?=
- =?us-ascii?Q?dIhUXwxaQm82qBXsn6ZN7v0kvw1T0kZZNb28G4a0aarjIpFHCnsgqu+3MN2l?=
- =?us-ascii?Q?YyD0mOLgGdERijNFvunmdEEa432lBwxJo8M/ShHkyB8iitUbxDKFe+4jOv8C?=
- =?us-ascii?Q?W6zg6gBV2lj0rpcMFSmbjz3uWLFih4MXa1KFL8G7yKpABhXmiK8aYYuRrTOX?=
- =?us-ascii?Q?ZNDtKn8HY51li3yFK7z4nJrYL6da0u71I9af3dZL0VlSSlbqoAljPV6ydsC6?=
- =?us-ascii?Q?EEN6muNxFK09ecNtu19MNUnPrJe9KAFwdv3UY5VzrnB/pSVpbmb/84OrZREg?=
- =?us-ascii?Q?gBt/NEvIm8BdWaiOOM6jtWJHo9gxhQxy37uV4tyHKKEbfqjQmv0YlshSKzLy?=
- =?us-ascii?Q?4IkHmXFQnKK3qtsC3qdiXvbFUUHaOYpucW9L1DbuNPFb0M/sJ5M3CCqxjUKf?=
- =?us-ascii?Q?AMfYcIVoUKSkXbi98c9XuM5o2YslBBNwRNtvH2NaNgI7wQPsqduodcJfmNSb?=
- =?us-ascii?Q?JjwMIfCa+sx/rXJoA6W5KC34z5Oh/uTxiWB/B0N/qVSpuptav7A4WSqQL7uX?=
- =?us-ascii?Q?L1Ym926BmkND8w+aeaEfuJ5WpiX0AlfDdMd5QA8MOWL6r1yyQPMHKVrUqPJ7?=
- =?us-ascii?Q?g9IAu4bbU6Vr1SOLOB04W4lxkfA9upB8wusLuIzteFupJVYpRVGwT4K8td2W?=
- =?us-ascii?Q?VHtM0/lqXPv/ud8oyIepzH4YEz5E+q2E4/2yBTPToJo4WzWQYtfVvnPVvVVh?=
- =?us-ascii?Q?vC2vkHIwCt1g0WtXfRcAcx1suop9lIjRls9kk6FRDk4tp33nJ+LjXF2BU2BN?=
- =?us-ascii?Q?UpHRksVgiWDGIbOfp9ZtOQdcYq6L2exErmR5cuNpnXL1EnYNwLwYWBnLEkTd?=
- =?us-ascii?Q?B1znS/6/xn1iU9GTTQWrE4ojwzTrDBCrlKkMB2wgDgZc3YGDDp0YFNhkKcn6?=
- =?us-ascii?Q?0MztLre34rEYFNu1kVJ738ZmXdzs0Q8C4myVAHQbvnKZLs/PIJZ3fo1D7jbD?=
- =?us-ascii?Q?udMgdFlxRBJiibCIfdvVLUktG0ifxeAzj9Ti2Q8jvAdCNPzty5gp+OhKzsNm?=
- =?us-ascii?Q?JjeYjDuFuwwaVElIWvJIxVnTrQAh5degqo76vsh3jWRDUP5RAW9enGtLLZUW?=
- =?us-ascii?Q?VrpCgmT8ZNTunS4lJjKzL22T8W/ee1ARG309YtSBX/05LjfTTvBOnwk8km7I?=
- =?us-ascii?Q?mPZOO4GRheQuic87xMf3+iPbJ1pMCoUXunL7LL7wYrvgavEjclVmH/pW7YMK?=
- =?us-ascii?Q?hbFPbDoei8e/XQMD4xWn3TNJim76rYr3Ak+f0DrHazeb1mqmInZah0LayuKW?=
- =?us-ascii?Q?TpYOJJFt9VforQVoGGtVcHBDP+1feYs4OmRIIMwB4VaZmMtVQawz+6dnQUu5?=
- =?us-ascii?Q?11PghXTuo+1NHFuDfZQZxATRTP+ZRKSFr73LBBNQvrRTFpbv6weSJrDI9CPk?=
- =?us-ascii?Q?Q3I9kmECunQfpPRU5gUDDydeD2pPhe+54jTG28befRqKaK3Gn3iYKKm71JFR?=
- =?us-ascii?Q?vjM7mZnPxFoczeSVNL4Q5xb/HHkd020k6ub5FnJs?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70fd12e9-73ef-4d58-af91-08ddaa645e18
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB4802.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 10:23:41.0690
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +yf5OL0YHlyTFtE1CyM11p2RUl/8/88zMoj9UAd3KkmA3yT5dNrL3Fnphvuf5uIwwu1H8Cbgsp1on0Oy4mkLaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5018
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612-handle_user_regd_update_hints_during_insmod-v1-1-576bd0f6dbe0@oss.qualcomm.com>
 
-Since secs_to_jiffies()(commit:b35108a51cf7) has been introduced, we can
-use it to avoid scaling the time to msec.
+Hi Aditya,
 
-Signed-off-by: Yuesong Li <liyuesong@vivo.com>
----
- net/ceph/ceph_common.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/net/ceph/ceph_common.c b/net/ceph/ceph_common.c
-index 4c6441536d55..9ef326b0d50e 100644
---- a/net/ceph/ceph_common.c
-+++ b/net/ceph/ceph_common.c
-@@ -530,26 +530,26 @@ int ceph_parse_param(struct fs_parameter *param, struct ceph_options *opt,
- 		if (result.uint_32 < 1 || result.uint_32 > INT_MAX / 1000)
- 			goto out_of_range;
- 		opt->osd_keepalive_timeout =
--		    msecs_to_jiffies(result.uint_32 * 1000);
-+		    secs_to_jiffies(result.uint_32);
- 		break;
- 	case Opt_osd_idle_ttl:
- 		/* 0 isn't well defined right now, reject it */
- 		if (result.uint_32 < 1 || result.uint_32 > INT_MAX / 1000)
- 			goto out_of_range;
--		opt->osd_idle_ttl = msecs_to_jiffies(result.uint_32 * 1000);
-+		opt->osd_idle_ttl = secs_to_jiffies(result.uint_32);
- 		break;
- 	case Opt_mount_timeout:
- 		/* 0 is "wait forever" (i.e. infinite timeout) */
- 		if (result.uint_32 > INT_MAX / 1000)
- 			goto out_of_range;
--		opt->mount_timeout = msecs_to_jiffies(result.uint_32 * 1000);
-+		opt->mount_timeout = secs_to_jiffies(result.uint_32);
- 		break;
- 	case Opt_osd_request_timeout:
- 		/* 0 is "wait forever" (i.e. infinite timeout) */
- 		if (result.uint_32 > INT_MAX / 1000)
- 			goto out_of_range;
- 		opt->osd_request_timeout =
--		    msecs_to_jiffies(result.uint_32 * 1000);
-+		    secs_to_jiffies(result.uint_32);
- 		break;
- 
- 	case Opt_share:
+[auto build test WARNING on 8270f43193a0d097659eca55e701fd6818708945]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Aditya-Kumar-Singh/wifi-ath12k-handle-regulatory-hints-during-mac-registration/20250613-012106
+base:   8270f43193a0d097659eca55e701fd6818708945
+patch link:    https://lore.kernel.org/r/20250612-handle_user_regd_update_hints_during_insmod-v1-1-576bd0f6dbe0%40oss.qualcomm.com
+patch subject: [PATCH ath-next] wifi: ath12k: handle regulatory hints during mac registration
+config: um-allmodconfig (https://download.01.org/0day-ci/archive/20250613/202506131836.KoxnhWuQ-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506131836.KoxnhWuQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506131836.KoxnhWuQ-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/net/wireless/ath/ath12k/wmi.c:6:
+   In file included from include/linux/skbuff.h:17:
+   In file included from include/linux/bvec.h:10:
+   In file included from include/linux/highmem.h:12:
+   In file included from include/linux/hardirq.h:11:
+   In file included from arch/um/include/asm/hardirq.h:5:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:1175:55: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+    1175 |         return (port > MMIO_UPPER_LIMIT) ? NULL : PCI_IOBASE + port;
+         |                                                   ~~~~~~~~~~ ^
+>> drivers/net/wireless/ath/ath12k/wmi.c:6169:13: warning: variable 'pdev_idx' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+    6169 |         } else if (ret == ATH12K_REG_STATUS_DROP) {
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6216:17: note: uninitialized use occurs here
+    6216 |         ar = ab->pdevs[pdev_idx].ar;
+         |                        ^~~~~~~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6169:9: note: remove the 'if' if its condition is always false
+    6169 |         } else if (ret == ATH12K_REG_STATUS_DROP) {
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6170 |                 /* reg info is valid but we will not store it and
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6171 |                  * not going to create new regd for it
+         |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6172 |                  */
+         |                  ~~
+    6173 |                 ret = ATH12K_REG_STATUS_VALID;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6174 |                 goto mem_free;
+         |                 ~~~~~~~~~~~~~~
+    6175 |         }
+         |         ~
+   drivers/net/wireless/ath/ath12k/wmi.c:6163:6: warning: variable 'pdev_idx' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+    6163 |         if (ret == ATH12K_REG_STATUS_FALLBACK) {
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6216:17: note: uninitialized use occurs here
+    6216 |         ar = ab->pdevs[pdev_idx].ar;
+         |                        ^~~~~~~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6163:2: note: remove the 'if' if its condition is always false
+    6163 |         if (ret == ATH12K_REG_STATUS_FALLBACK) {
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6164 |                 ath12k_warn(ab, "failed to validate reg info %d\n", ret);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6165 |                 /* firmware has successfully switches to new regd but host can not
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6166 |                  * continue, so free reginfo and fallback to old regd
+         |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6167 |                  */
+         |                  ~~
+    6168 |                 goto mem_free;
+         |                 ~~~~~~~~~~~~~~
+    6169 |         } else if (ret == ATH12K_REG_STATUS_DROP) {
+         |         ~~~~~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6157:6: warning: variable 'pdev_idx' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+    6157 |         if (ret) {
+         |             ^~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6216:17: note: uninitialized use occurs here
+    6216 |         ar = ab->pdevs[pdev_idx].ar;
+         |                        ^~~~~~~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6157:2: note: remove the 'if' if its condition is always false
+    6157 |         if (ret) {
+         |         ^~~~~~~~~~
+    6158 |                 ath12k_warn(ab, "failed to extract regulatory info from received event\n");
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6159 |                 goto mem_free;
+         |                 ~~~~~~~~~~~~~~
+    6160 |         }
+         |         ~
+   drivers/net/wireless/ath/ath12k/wmi.c:6151:6: warning: variable 'pdev_idx' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+    6151 |         if (!reg_info) {
+         |             ^~~~~~~~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6216:17: note: uninitialized use occurs here
+    6216 |         ar = ab->pdevs[pdev_idx].ar;
+         |                        ^~~~~~~~
+   drivers/net/wireless/ath/ath12k/wmi.c:6151:2: note: remove the 'if' if its condition is always false
+    6151 |         if (!reg_info) {
+         |         ^~~~~~~~~~~~~~~~
+    6152 |                 ret = -ENOMEM;
+         |                 ~~~~~~~~~~~~~~
+    6153 |                 goto fallback;
+         |                 ~~~~~~~~~~~~~~
+    6154 |         }
+         |         ~
+   drivers/net/wireless/ath/ath12k/wmi.c:6147:13: note: initialize the variable 'pdev_idx' to silence this warning
+    6147 |         u8 pdev_idx;
+         |                    ^
+         |                     = '\0'
+   5 warnings generated.
+
+
+vim +6169 drivers/net/wireless/ath/ath12k/wmi.c
+
+d889913205cf7e Kalle Valo         2022-11-28  6142  
+d889913205cf7e Kalle Valo         2022-11-28  6143  static int ath12k_reg_chan_list_event(struct ath12k_base *ab, struct sk_buff *skb)
+d889913205cf7e Kalle Valo         2022-11-28  6144  {
+9e8e55c5832d4f Baochen Qiang      2025-04-18  6145  	struct ath12k_reg_info *reg_info;
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6146  	struct ath12k *ar;
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6147  	u8 pdev_idx;
+9e8e55c5832d4f Baochen Qiang      2025-04-18  6148  	int ret;
+d889913205cf7e Kalle Valo         2022-11-28  6149  
+d889913205cf7e Kalle Valo         2022-11-28  6150  	reg_info = kzalloc(sizeof(*reg_info), GFP_ATOMIC);
+d889913205cf7e Kalle Valo         2022-11-28  6151  	if (!reg_info) {
+d889913205cf7e Kalle Valo         2022-11-28  6152  		ret = -ENOMEM;
+d889913205cf7e Kalle Valo         2022-11-28  6153  		goto fallback;
+d889913205cf7e Kalle Valo         2022-11-28  6154  	}
+d889913205cf7e Kalle Valo         2022-11-28  6155  
+d889913205cf7e Kalle Valo         2022-11-28  6156  	ret = ath12k_pull_reg_chan_list_ext_update_ev(ab, skb, reg_info);
+d889913205cf7e Kalle Valo         2022-11-28  6157  	if (ret) {
+d889913205cf7e Kalle Valo         2022-11-28  6158  		ath12k_warn(ab, "failed to extract regulatory info from received event\n");
+75639b74351553 Baochen Qiang      2025-04-18  6159  		goto mem_free;
+75639b74351553 Baochen Qiang      2025-04-18  6160  	}
+75639b74351553 Baochen Qiang      2025-04-18  6161  
+75639b74351553 Baochen Qiang      2025-04-18  6162  	ret = ath12k_reg_validate_reg_info(ab, reg_info);
+75639b74351553 Baochen Qiang      2025-04-18  6163  	if (ret == ATH12K_REG_STATUS_FALLBACK) {
+75639b74351553 Baochen Qiang      2025-04-18  6164  		ath12k_warn(ab, "failed to validate reg info %d\n", ret);
+75639b74351553 Baochen Qiang      2025-04-18  6165  		/* firmware has successfully switches to new regd but host can not
+75639b74351553 Baochen Qiang      2025-04-18  6166  		 * continue, so free reginfo and fallback to old regd
+75639b74351553 Baochen Qiang      2025-04-18  6167  		 */
+75639b74351553 Baochen Qiang      2025-04-18  6168  		goto mem_free;
+75639b74351553 Baochen Qiang      2025-04-18 @6169  	} else if (ret == ATH12K_REG_STATUS_DROP) {
+75639b74351553 Baochen Qiang      2025-04-18  6170  		/* reg info is valid but we will not store it and
+75639b74351553 Baochen Qiang      2025-04-18  6171  		 * not going to create new regd for it
+75639b74351553 Baochen Qiang      2025-04-18  6172  		 */
+75639b74351553 Baochen Qiang      2025-04-18  6173  		ret = ATH12K_REG_STATUS_VALID;
+75639b74351553 Baochen Qiang      2025-04-18  6174  		goto mem_free;
+d889913205cf7e Kalle Valo         2022-11-28  6175  	}
+d889913205cf7e Kalle Valo         2022-11-28  6176  
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6177  	/* free old reg_info if it exist */
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6178  	pdev_idx = reg_info->phy_id;
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6179  	if (ab->reg_info[pdev_idx]) {
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6180  		ath12k_reg_reset_reg_info(ab->reg_info[pdev_idx]);
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6181  		kfree(ab->reg_info[pdev_idx]);
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6182  	}
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6183  	/* reg_info is valid, we store it for later use
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6184  	 * even below regd build failed
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6185  	 */
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6186  	ab->reg_info[pdev_idx] = reg_info;
+eaa027a1d83f87 Baochen Qiang      2025-04-18  6187  
+fafa6ff0823b79 Baochen Qiang      2025-04-18  6188  	ret = ath12k_reg_handle_chan_list(ab, reg_info, WMI_VDEV_TYPE_UNSPEC,
+fafa6ff0823b79 Baochen Qiang      2025-04-18  6189  					  IEEE80211_REG_UNSET_AP);
+9e8e55c5832d4f Baochen Qiang      2025-04-18  6190  	if (ret) {
+9e8e55c5832d4f Baochen Qiang      2025-04-18  6191  		ath12k_warn(ab, "failed to handle chan list %d\n", ret);
+d889913205cf7e Kalle Valo         2022-11-28  6192  		goto fallback;
+d889913205cf7e Kalle Valo         2022-11-28  6193  	}
+d889913205cf7e Kalle Valo         2022-11-28  6194  
+75639b74351553 Baochen Qiang      2025-04-18  6195  	goto out;
+75639b74351553 Baochen Qiang      2025-04-18  6196  
+75639b74351553 Baochen Qiang      2025-04-18  6197  mem_free:
+75639b74351553 Baochen Qiang      2025-04-18  6198  	ath12k_reg_reset_reg_info(reg_info);
+75639b74351553 Baochen Qiang      2025-04-18  6199  	kfree(reg_info);
+75639b74351553 Baochen Qiang      2025-04-18  6200  
+75639b74351553 Baochen Qiang      2025-04-18  6201  	if (ret == ATH12K_REG_STATUS_VALID)
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6202  		goto out;
+d889913205cf7e Kalle Valo         2022-11-28  6203  
+d889913205cf7e Kalle Valo         2022-11-28  6204  fallback:
+d889913205cf7e Kalle Valo         2022-11-28  6205  	/* Fallback to older reg (by sending previous country setting
+d889913205cf7e Kalle Valo         2022-11-28  6206  	 * again if fw has succeeded and we failed to process here.
+d889913205cf7e Kalle Valo         2022-11-28  6207  	 * The Regdomain should be uniform across driver and fw. Since the
+d889913205cf7e Kalle Valo         2022-11-28  6208  	 * FW has processed the command and sent a success status, we expect
+d889913205cf7e Kalle Valo         2022-11-28  6209  	 * this function to succeed as well. If it doesn't, CTRY needs to be
+d889913205cf7e Kalle Valo         2022-11-28  6210  	 * reverted at the fw and the old SCAN_CHAN_LIST cmd needs to be sent.
+d889913205cf7e Kalle Valo         2022-11-28  6211  	 */
+d889913205cf7e Kalle Valo         2022-11-28  6212  	/* TODO: This is rare, but still should also be handled */
+d889913205cf7e Kalle Valo         2022-11-28  6213  	WARN_ON(1);
+9e8e55c5832d4f Baochen Qiang      2025-04-18  6214  
+75639b74351553 Baochen Qiang      2025-04-18  6215  out:
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6216  	ar = ab->pdevs[pdev_idx].ar;
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6217  
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6218  	/* During the boot-time update, 'ar' might not be allocated,
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6219  	 * so the completion cannot be marked at that point.
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6220  	 * This boot-time update is handled in ath12k_mac_hw_register()
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6221  	 * before registering the hardware.
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6222  	 */
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6223  	if (ar)
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6224  		complete(&ar->regd_update_completed);
+e05f9e5c56466b Aditya Kumar Singh 2025-06-12  6225  
+d889913205cf7e Kalle Valo         2022-11-28  6226  	return ret;
+d889913205cf7e Kalle Valo         2022-11-28  6227  }
+d889913205cf7e Kalle Valo         2022-11-28  6228  
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
