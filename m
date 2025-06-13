@@ -1,91 +1,137 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2A62E11BF
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0CB2E11D8
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822672; cv=none; b=UCa4sGzcJKJ540lUFNhQsAeRQrOHPbDQidqVVagP3AYZ7KH2bvyBtca7Hl/ok7iLA21H1cWLXHh0qcl3SUyjZc9iBmBWAXINWLGpxHqpz3Ef2JH9LsSTkv7yrPRP2CITGxoBLT76WNF8jZ4Kz7hynWaH6oNeQ8hZGIqCS7JKQoQ=
+	t=1749822687; cv=none; b=V5Dteta3wqWnf9m/zn6PiwlpW6/17Hd3mIAUupZ/WTc/uDfCXaj0Xam5M/0wa70jCLlFov1dSUf5WWj0UanCYMXKapzVTMLV7vscvUPesLiMypcVLWM5g91smmKk1HibsdIt9YpssZsjsj0tZBxfpcFTNRXuJslmaNBOGD7kI9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822672; c=relaxed/simple;
-	bh=uhAeS2/IvRl+3Bzj9D4bvlYHg9ng/8TcHwD+T7mUEOQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OYcy1SaIx4tMftkSmSP1fXtN6y7dNnsbGROCmF6FR0g7vV2dEZQVkYPMHDlW97atTof6pL7fp4xuS5NEn9+e/0XLzz+7Qw0i84i7eFqdyojQajYTpwoyYiSF+PeMUjHcQCx/XDwTJLAi2O1Q6YT4aH1htfJXz17EiWKkiiH7XUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=huqrzQs8; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1749822687; c=relaxed/simple;
+	bh=fWjrdTn9ahDL/yhq4EI+kPXyWDfEKhDyxOTrt9Cyzc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b5ngNRY7FDZ2Wfiwavlukyqy2g5h3am5OOx3VOLW8lmY54dTtrSNbjGvbIgDgIkEUADd/YoswAV61vmhPqmSqx4WfOZh2JgfxHLp/L/Wa6OhXt1fJByxE/PpuDZo0R9TF1JmuODVDk33NbYvD4RiJejdIGQBLUWbCQ2k6KGVWKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MPeK2koI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X1BvddT8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MPeK2koI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X1BvddT8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="huqrzQs8"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a58b120bedso24886511cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749822669; x=1750427469; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uhAeS2/IvRl+3Bzj9D4bvlYHg9ng/8TcHwD+T7mUEOQ=;
-        b=huqrzQs87Z28MSP/P7C7S/+f6Ra/WHAhh7ivKjzQQMXNvcjgZ6EJ6QJLC9PklLdUo+
-         GUD+hXWAcEk33Kq3/tnuaqS8ud2jcNA+3MeBtKR6pBdYKQjk6ndiB31TOQALb4XuUi+l
-         7CZB0TkgzD7GpvuOEy3fP1vLQl1YuvHFpuj+dvh3up9YLNB96EQtls4RYvoZucAHGiQ8
-         6Lo7rtCbmP18tZ/uA+88LKGWLIu7lT/ds5LJH+9MfuppjIfjFAykXtYxZHBKH61ofxvi
-         +hxQ4aUsA+BZAL0rp1SLDzSxcnFF3qOH/HWPda67jVpPNUyyYiTXilcVWLOme8xDkc8U
-         Q2Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749822669; x=1750427469;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uhAeS2/IvRl+3Bzj9D4bvlYHg9ng/8TcHwD+T7mUEOQ=;
-        b=Q8ZGoplGHJR/Jn0H00LPhc1BAN6Y/odrBT/ybB+t1JK97OEsKCyz4aFGMMIaUtpzYe
-         bT9Rj393vC1f5NE5cpmQ6Non17r4ynUgoG4lv6hY5Hs2gAGPI7ago1WUB/tPscIyuZb0
-         NSmB1/YYOw7DgANxWYbZpwGnxY+VbFGkevu+9Vsug9/kR/bt6bCsuZXLFw2SiUfITUuT
-         2HGb7GmXMAvpEhfrTm8vLdrh1QIYmHanKRWfi9K3jJGkOSVCHjP8xUscshq+Zb2LaL8y
-         Y7XB9snvscKGHx+yZxffxgg95VHTnW8e+/6VLewPI5O5hrlvFZk2MpejT7SkPuOecQe/
-         eVUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5+jqQ8zc++DFcGAcHJ/QqPsScor/4L3oIf1fjkmbwi4RHgeXvfBhntBhzo3PwatwlNjEB6ig2uatmcIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYSirFKyyPCCdfMwqueudL5EAyMNJG2CMqCBG4x6tYwgYBVAjY
-	IJMeLlRrC8Pdh5+ZeOoHhB8k608X42CevPUFdDKB+kmgAlJDJ230v4PAmT7s6SOk1DQG8d5pm1c
-	LKoyUM99Gz181GJ8nycTWSn3c8+MDJXhTR772DQszXQ==
-X-Gm-Gg: ASbGncvNJTC8SIcZpjmYtg/e2e4VfB9jSZYdIFsi9+HCMsQrDd5ZP+CzaSCigEcV+M0
-	Usz4hhvKjPFsFcbZVKc/d1TaXMSpnln4yhU/CF9ZRQ0MR1wncjjQh/ov6cDKzc26FClb7mapOwH
-	rggeKEJQ+IsA6NxaGh3PTZcxrHLrQX9dmSh92ZPwfE
-X-Google-Smtp-Source: AGHT+IFYcaXWQwJ8CBpk9W1pt46Bf4+vPWaFiVIFLbCoUB7H481bLuHjLj5oM5Papt7OZLf3AWNII0ghPNALr5CtPag=
-X-Received: by 2002:a05:622a:1f8a:b0:4a4:30e7:77a with SMTP id
- d75a77b69052e-4a72fed8a6fmr52111111cf.15.1749822669449; Fri, 13 Jun 2025
- 06:51:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MPeK2koI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X1BvddT8";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MPeK2koI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X1BvddT8"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 95356219B3;
+	Fri, 13 Jun 2025 13:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749822683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XPPCFRRWECVGkw1RvEAyBtsaT8JowaAghXLwWqGIjX4=;
+	b=MPeK2koIHmGtjyeTxn/TIHd/3qV8R12DqcXikOzO7WEKMHW7mnQ9rEc5c+eUUKrBHJqpZg
+	1jcdDwJf4VIyYhxHQT1XSH/mVi80SOeHv8oSk52OLGqx2f+kzgQxCh0bS+cL8B+Ji9d/+M
+	Ad0w7/08vEUQbUkFkamKJkNneQ9CVco=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749822683;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XPPCFRRWECVGkw1RvEAyBtsaT8JowaAghXLwWqGIjX4=;
+	b=X1BvddT8ac656JKa6nlxpB/MsRIdRy4dN+iucSHOkqGo/t/r+Wg0/FEs6kueVrBOBtL/B3
+	xAMMCKnrcLms6RDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749822683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XPPCFRRWECVGkw1RvEAyBtsaT8JowaAghXLwWqGIjX4=;
+	b=MPeK2koIHmGtjyeTxn/TIHd/3qV8R12DqcXikOzO7WEKMHW7mnQ9rEc5c+eUUKrBHJqpZg
+	1jcdDwJf4VIyYhxHQT1XSH/mVi80SOeHv8oSk52OLGqx2f+kzgQxCh0bS+cL8B+Ji9d/+M
+	Ad0w7/08vEUQbUkFkamKJkNneQ9CVco=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749822683;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XPPCFRRWECVGkw1RvEAyBtsaT8JowaAghXLwWqGIjX4=;
+	b=X1BvddT8ac656JKa6nlxpB/MsRIdRy4dN+iucSHOkqGo/t/r+Wg0/FEs6kueVrBOBtL/B3
+	xAMMCKnrcLms6RDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 92F51137FE;
+	Fri, 13 Jun 2025 13:51:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id R9xDIdosTGioCwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 13 Jun 2025 13:51:22 +0000
+Date: Fri, 13 Jun 2025 15:51:12 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v3 2/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pmd()
+Message-ID: <aEws0EQ6a3659F1g@localhost.localdomain>
+References: <20250613092702.1943533-1-david@redhat.com>
+ <20250613092702.1943533-3-david@redhat.com>
+ <aEwseqmFrpNO5NJC@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613131917.4488-1-pratyush@kernel.org>
-In-Reply-To: <20250613131917.4488-1-pratyush@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 13 Jun 2025 09:50:32 -0400
-X-Gm-Features: AX0GCFvePpc0ixNyG8y1MRzHM9QVpjSrRM-vz2PlJH3pXBP9NTCDv51Jt8TZsu4
-Message-ID: <CA+CK2bD_+0a_Z9R+0O9ZCc-30PP4U9rbxXVaenx=S2r3W1kV0w@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add linux-mm@ list to Kexec Handover
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Changyuan Lyu <changyuanl@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Pratyush Yadav <ptyadav@amazon.de>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEwseqmFrpNO5NJC@localhost.localdomain>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Fri, Jun 13, 2025 at 9:19=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org=
-> wrote:
->
-> From: Pratyush Yadav <ptyadav@amazon.de>
->
-> Along with kexec, KHO also has parts dealing with memory management,
-> like page/folio initialization, memblock, and preserving/unpreserving
-> memory for next kernel. Copy linux-mm@ to KHO patches so the right set
-> of eyes can look at changes to those parts.
->
-> Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+On Fri, Jun 13, 2025 at 03:49:46PM +0200, Oscar Salvador wrote:
+> Reviewed-by: Oscar salvador <osalvador@suse.de>
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Fat-fingers on a Friday afternoon:
 
-Pasha
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+ 
+
+-- 
+Oscar Salvador
+SUSE Labs
