@@ -1,115 +1,178 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DC6252288;
-	Fri, 13 Jun 2025 05:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61D22AD04
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 05:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749792674; cv=none; b=IbuQLS95W/wP+Ox/1u1je15O29/dgy9GJ9JtqwFgLUfJ38saayiU/HYnjDXIX+qG6/9AWlKZTQDWnJ2FUira1ckjl2HhgGQIBN/oqnamIt7BBfm5EnX0qreOZfCk8fgZBxJvJx/WsqMrPLMKO3IP6vyhLNUm9dscnOzKvSxk/Eg=
+	t=1749792711; cv=none; b=LB6UbFcYSqQ00HnBqonNHhLNxEShlKrQVbm4AkdWXaRqvhpoIJu5G/KolUeJLaaj4czKE7dKD7hCpObIPOJDqSC62yWBU8mzcgy3s59+4uaZIt0HNLi2qQOsE/v3SV5RHGV87NPb0sdAA+Jx1gHxLgdhU9F4FT1GbsinBg5XouI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749792674; c=relaxed/simple;
-	bh=CNh+HiiRkB0XHFZ9RDPw/wKbUOdkeNHiRSJSctqLMz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CCQ/x5TObjrbdZc2y7rPVVBJSeSPmK320WsaMl8bhrsCDAT3VVjDqVbXu9lgruX2MvEH7UenT8ecwxiobKEnqZ0rLYvxvVWMFS7LoH0TiUqH6DDvyj5/xFalYkt/0XYVA9DqOMbcXFrF6owlCXD94vy4SNh6BrQra4cXb843+Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H0ZC3sb6; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749792711; c=relaxed/simple;
+	bh=NRB2YHNY6V0/cOywozOMB3mtKlY/Qugj7lYZ5RarsSE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=q1mpJBjM9wPiVk+D+pmhrAjj1/1erh+8idV5GpMeQpc1MyV/zn8G81T3RFxQFaJ5ypn/PvEsuqvMuJzhyk4PCQtsCL8W/qkUWJ9/4Ayf+L6kfnCanNygEPYTbNf3XgXfQ1bbLfpaofVJM41RM0Nwzn3HtcRzkcPKuRhM1nS1X/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYtPnR5G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0ZC3sb6"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-748764d8540so1621689b3a.0;
-        Thu, 12 Jun 2025 22:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749792672; x=1750397472; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CxRccK9TPNkSjUlVA9FxqDEHBsSIzMxTRGu02KOjBxE=;
-        b=H0ZC3sb6o7Wr3/LTZOvL5Ogl1/JJfiFdd+aMDFGds5cjpdcAticqA4AOvbPfnDEy5x
-         EnjMEMiM6ffatNshqMhBNGWbpgCGwSkOpfQtBCcpBrcF2+KkPCWEA5rY5/iCD1TT6/lO
-         O3EWmbHuzYlyKq2aaxQAFcRWF48vsKyvnJg54DecVex15urtRVv7l01T5spVpE3tB8XW
-         zrV/wE1ouVLVh34Nu8ClDA7ApsevzyxjkNq4xStLc+sodpsX1VBKYIvKX+6b8sNBIK2J
-         QsOaUcCOAYMmYYavP4clgm9n31kmzbfvouYvhKeat9FRlzCMR9FzOC5sKjmTG0zqSjOH
-         0URw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749792672; x=1750397472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CxRccK9TPNkSjUlVA9FxqDEHBsSIzMxTRGu02KOjBxE=;
-        b=F1MsHrtPvnxzrYiSBZBZHf+5UasNPY2Hyi0I9oFRwNz0PLqaZhwF1e6r6Sj+PK45CL
-         m5iGk6OW/U7Q8UTjICC1q060kM3gXJYajfT5tGV3AzeV/pAOUz5k5pOaHx1aIgfy/DLd
-         yhEXDJ1glTrZy0Tdq+YAVQ2sXdYwAxep8+lgs99zla7GpjIXDRtEEWn1Gbomr5dNXjzb
-         l4XEBJJePfAmod1CAHIIOa00nP2MU8GFKv65k2BhGoA21xIHlYqFU8CoCUIxccc3zZRc
-         FSTm2jZJWDRayrGUnfUufU+VHesvhoDHTt5x9Fz9oGKr4qL17/OZOh39jbnu8aUAv7i5
-         OrwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFHUkDcu3mXv1MtC+7MPoYRn9+EZanB8kFNKABoMY4+rP02pyZkEB8t/rlF2c9qh+GXkpA60He8eNHguE=@vger.kernel.org, AJvYcCX1PuQ4aDmFAjm/heqZdf6u/hGdEENq9bl+NH3/unddvUQPzRCBdeNiYj18HgbWNpTbMXUgKIuZdF8o@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjJvLRv8DxhfPUEbzZQO3qCH4TH9TV9+HcCBxLlMCkv+SHLCud
-	/r5O6W4ySwx+NxQyxLmo6iPzyAMQIF3+16FeaFISNdNHiJ1UwSkquezOFnhva5li
-X-Gm-Gg: ASbGncsq9ngqLptlBCGENIjDWfI+gJILxswXWsu4hteRxvERtU4u0JoUGwE9dUn2MpU
-	ooHhYQb0NFPR4wfg19HPTmJ2y4dj90ypu7HOJL8ZWvIiqtanFzyhN93prTQC70Evcw/kd3qHQkj
-	PRkRZUIZImDjynW953Sm2RWJ3ePr0c0hNQ9aZ3ZPmdvpZ17SnewLaF049PVXi0dN2jo6LnjDz5c
-	JjnoT41Fk9bCTTeixAUqPchgI5u5mcvi8jcgakqJLTyClibroCdKX0hJ3UGQI+c3HEkXCeKba7Y
-	c7K9o4py6GUW5tEPSMZj6Qlkr+VtngzJkzLRgvNsqGqDcMaEGTAtW/eK/bs6
-X-Google-Smtp-Source: AGHT+IFW3YLUNguMP7Jju7pJGbAloDxqM68G7zonX52FPkJnUD/CTS3dbXq3+Dz07CjcjRnXcH9SdA==
-X-Received: by 2002:aa7:88ca:0:b0:746:25d1:b711 with SMTP id d2e1a72fcca58-7488f71e65dmr2200476b3a.17.1749792672571;
-        Thu, 12 Jun 2025 22:31:12 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:7667::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffeca16sm717943b3a.35.2025.06.12.22.31.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 22:31:11 -0700 (PDT)
-Date: Fri, 13 Jun 2025 02:31:06 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 3/5] PCI: rockchip-host: Set Target Link Speed
- before retraining
-Message-ID: <aEu3mqIp-QjgYTWT@geday>
-References: <cover.1749791474.git.geraldogabriel@gmail.com>
- <ad9dc26689ae2c9e811d093ba18c9e579b6747ea.1749791474.git.geraldogabriel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYtPnR5G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47BF6C4CEED;
+	Fri, 13 Jun 2025 05:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749792711;
+	bh=NRB2YHNY6V0/cOywozOMB3mtKlY/Qugj7lYZ5RarsSE=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=nYtPnR5G1vn3Ht0iV6UzuHLZKJDksJQaR0r5V7URS8Ga3gir4t4NZcfC5Ka8Re1be
+	 CM1sv9gblBtwphGBYNmCkHhPKS5g1hSIJxy2ZJxDl1FNriNeE5yaqSNHpdlB/twh7v
+	 uDYdGEQg23mUMvPVKzJCb6EoeiOWz+YUmKP4JZWPvAaczPoHgZIVMKROrZgew+yMHu
+	 LuNW2NWCbregO6XMjrwqVhB+7BbqdIc68emrrFqRlDt7m/cFHJ15SKlM6F5FHM0BL1
+	 GXWjwWgD+QiDsRroUNIW+b7AFnv3LN4qjTVuHO5TMEYJn+146/EkIwydIiqsjfPBwl
+	 D1ztMtUr/pbRw==
+Message-ID: <c63deaf9-c567-46c4-a716-fae2b4736b88@kernel.org>
+Date: Fri, 13 Jun 2025 13:31:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad9dc26689ae2c9e811d093ba18c9e579b6747ea.1749791474.git.geraldogabriel@gmail.com>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, jaegeuk@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [f2fs-dev] [PATCH] f2fs: introduce reserved_pin_section sysfs
+ entry
+To: wangzijie <wangzijie1@honor.com>, linux-f2fs-devel@lists.sourceforge.net
+References: <20250612140526.6435-1-chao@kernel.org>
+ <20250613051110.1865186-1-wangzijie1@honor.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250613051110.1865186-1-wangzijie1@honor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 02:21:59AM -0300, Geraldo Nascimento wrote:
-> Current code may fail Gen2 retraining if Target Link Speed
-> is set to 2.5 GT/s in Link Control and Status Register 2.
-> Set it to 5.0 GT/s accordingly.
+On 2025/6/13 13:11, wangzijie wrote:
+>> This patch introduces /sys/fs/f2fs/<dev>/reserved_pin_section for tuning
+>> @needed parameter of has_not_enough_free_secs(), if we configure it w/
+>> zero, it can avoid f2fs_gc() as much as possible while fallocating on
+>> pinned file.
+>>
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>>   Documentation/ABI/testing/sysfs-fs-f2fs | 9 +++++++++
+>>   fs/f2fs/f2fs.h                          | 3 +++
+>>   fs/f2fs/file.c                          | 5 ++---
+>>   fs/f2fs/super.c                         | 3 +++
+>>   fs/f2fs/sysfs.c                         | 9 +++++++++
+>>   5 files changed, 26 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+>> index bf03263b9f46..c2a233f2a085 100644
+>> --- a/Documentation/ABI/testing/sysfs-fs-f2fs
+>> +++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+>> @@ -861,3 +861,12 @@ Description:	This is a read-only entry to show the value of sb.s_encoding_flags,
+>>   		SB_ENC_STRICT_MODE_FL            0x00000001
+>>   		SB_ENC_NO_COMPAT_FALLBACK_FL     0x00000002
+>>   		============================     ==========
+>> +
+>> +What:		/sys/fs/f2fs/<disk>/reserved_pin_section
+>> +Date:		June 2025
+>> +Contact:	"Chao Yu" <chao@kernel.org>
+>> +Description:	This threshold is used to control triggering garbage collection while
+>> +		fallocating on pinned file, so, it can guarantee there is enough free
+>> +		reserved section before preallocating on pinned file.
+>> +		By default, the value is ovp_sections, especially, for zoned ufs, the
+>> +		value is 1.
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 9333a22b9a01..fa27498202a3 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -1724,6 +1724,9 @@ struct f2fs_sb_info {
+>>   	/* for skip statistic */
+>>   	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
+>>   
+>> +	/* free sections reserved for pinned file */
+>> +	unsigned int reserved_pin_section;
+>> +
+>>   	/* threshold for gc trials on pinned files */
+>>   	unsigned short gc_pin_file_threshold;
+>>   	struct f2fs_rwsem pin_sem;
+>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>> index 696131e655ed..a909f79db178 100644
+>> --- a/fs/f2fs/file.c
+>> +++ b/fs/f2fs/file.c
+>> @@ -1887,9 +1887,8 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+>>   			}
+>>   		}
+>>   
+>> -		if (has_not_enough_free_secs(sbi, 0, f2fs_sb_has_blkzoned(sbi) ?
+>> -			ZONED_PIN_SEC_REQUIRED_COUNT :
+>> -			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
+>> +		if (has_not_enough_free_secs(sbi, 0,
+>> +				sbi->reserved_pin_section)) {
+>>   			f2fs_down_write(&sbi->gc_lock);
+>>   			stat_inc_gc_call_count(sbi, FOREGROUND);
+>>   			err = f2fs_gc(sbi, &gc_control);
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index 57adeff5ef25..48b97a95fd63 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -4975,6 +4975,9 @@ static int f2fs_fill_super(struct super_block *sb, struct fs_context *fc)
+>>   	sbi->last_valid_block_count = sbi->total_valid_block_count;
+>>   	sbi->reserved_blocks = 0;
+>>   	sbi->current_reserved_blocks = 0;
+>> +	sbi->reserved_pin_section = f2fs_sb_has_blkzoned(sbi) ?
+>> +			ZONED_PIN_SEC_REQUIRED_COUNT :
+>> +			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi));
+>>   	limit_reserve_root(sbi);
+>>   	adjust_unusable_cap_perc(sbi);
 > 
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> ---
->  drivers/pci/controller/pcie-rockchip-host.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> Hi Chao,
+> It seems like we cannot use overprovision_segments(sbi) directly before f2fs_build_segment_manager().
+
+Oops, ovp_segments is in f2fs_sm_info, I missed that, let me fix in v2.
+
+Thanks,
+
+>   
+>> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+>> index 75134d69a0bd..51be7ffb38c5 100644
+>> --- a/fs/f2fs/sysfs.c
+>> +++ b/fs/f2fs/sysfs.c
+>> @@ -824,6 +824,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+>>   		return count;
+>>   	}
+>>   
+>> +	if (!strcmp(a->attr.name, "reserved_pin_section")) {
+>> +		if (t > GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))
+>> +			return -EINVAL;
+>> +		*ui = (unsigned int)t;
+>> +		return count;
+>> +	}
+>> +
+>>   	*ui = (unsigned int)t;
+>>   
+>>   	return count;
+>> @@ -1130,6 +1137,7 @@ F2FS_SBI_GENERAL_RO_ATTR(unusable_blocks_per_sec);
+>>   F2FS_SBI_GENERAL_RW_ATTR(blkzone_alloc_policy);
+>>   #endif
+>>   F2FS_SBI_GENERAL_RW_ATTR(carve_out);
+>> +F2FS_SBI_GENERAL_RW_ATTR(reserved_pin_section);
+>>   
+>>   /* STAT_INFO ATTR */
+>>   #ifdef CONFIG_F2FS_STAT_FS
+>> @@ -1323,6 +1331,7 @@ static struct attribute *f2fs_attrs[] = {
+>>   	ATTR_LIST(last_age_weight),
+>>   	ATTR_LIST(max_read_extent_count),
+>>   	ATTR_LIST(carve_out),
+>> +	ATTR_LIST(reserved_pin_section),
+>>   	NULL,
+>>   };
+>>   ATTRIBUTE_GROUPS(f2fs);
+>> -- 
+>> 2.40.1
+>>
+>>
+>>
+>> _______________________________________________
+>> Linux-f2fs-devel mailing list
+>> Linux-f2fs-devel@lists.sourceforge.net
+>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
 > 
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 65653218b9ab..68634ae8caaf 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -341,6 +341,10 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  		 * Enable retrain for gen2. This should be configured only after
->  		 * gen1 finished.
->  		 */
-> +		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2);
-> +		status |= FIELD_PREP(PCI_EXP_LNKCTL2_TLS, PCI_EXP_LNKCTL2_TLS_5_0GT);
 
-Although this incidentally "works" for facilitating Gen2 training
-because mask clears 2.5 GT/s, this will shift the value 0x2
-by the mask I think. This is clearly wrong, and instead
-we should use AND clearing plus OR'ing the 5.0GT/s value.
-
-But I wait until at least Bjorn's review to send v4 with
-correction.
-
-Geraldo Nascimento
