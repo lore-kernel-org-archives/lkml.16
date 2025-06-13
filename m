@@ -1,47 +1,35 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED221DFD96;
-	Fri, 13 Jun 2025 01:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F68C1C4A10;
+	Fri, 13 Jun 2025 01:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749779382; cv=none; b=oEVoZDKBTsj0yVwErb8mLP2i2L7+RhT2/vLu4rDC7/+iU6QDs2dZ3rUwvOm5W/6HzoshZIOXEf8xCFyywV8zm/bEaug5MICmaTmDkzpWKvGOVClwbBLS2tDwIZVU+k99+LZwIPNKZLTyaLY46u3Xk8Ec4pXOvfQ9Iglp12H54Eo=
+	t=1749779400; cv=none; b=QQEX0Bs3/JprkgvIoDll6PC7iI04F1W1Htxvz7u/VPNJ8eqju71Yjvv+x1w7FgTbTN6GD2D9ewCuvqZGTY232wohGbeNIhEMIK4MSqm1WMsPsrolkQlUdDqNf50Yhevq/IFVeVyrdPe1EUvitng0Cj2D0uCS7sJIuAoaXstjsD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749779382; c=relaxed/simple;
-	bh=tZEWVSv372VA7rjweAEWTCSBnCTvaH5PrhFFxQbZb/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dKUDw1etXywsDA0XJR0qp3GyKLchPMq75cOQd+x3Q7VK+ir3Q0gHvmgSOCXdkP7xs7JepHQdLzf1qvhIRIzsma26JD2/5ql2tytQEGznfWTbW8pQ4ovj574/8OQVoVdZupBnETpxfCZHYqZYvxQzIbB+ACWWgIHLaPrp8veuUAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dnPFu5Gi; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749779400; c=relaxed/simple;
+	bh=KvQpbekyf0KFJWKFpC0va1oh7HK6XoLcGPLoyuPICOE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=b6JiKJKeKkoAMDyIdRzcJ91TGuQRgILZ4Y6FhIR0AtAPjti8FNUFpBUq0DkpQATAvwRiUojHYCPVCygFP3uHfLgjvftw/X1tdY4WMCv0vXx/+r2GKDdoouRhxvlHf1iJz++wAQ1XVQwIVCJstCuN/5tPhqT4tVZAwQE+uL0u+ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1rhK76u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dnPFu5Gi"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749779370; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=r6nZuF5tTb5TGTQTMpuco3jv+ToYoP7IRA14ag7htuk=;
-	b=dnPFu5GiVCIWNn+bw5ixdxjiVcw3Z6HgHdRhiftm4hKlokZTxHT3JxlA7w/h/8ra3j32C5bkJfxxb2JkM4hbCHumbuHk9s+gcyitEhwsFY1vjBd7zZ22lUW9wND58S3EjcSusZ+OEwZVyktFKD1BIztp203VLhSHfGELDpME4BI=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdiYSo7_1749779369 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 13 Jun 2025 09:49:30 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	david@redhat.com
-Cc: lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	npache@redhat.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	baohua@kernel.org,
-	shuah@kernel.org,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] selftests: khugepaged: fix the shmem collapse failure
-Date: Fri, 13 Jun 2025 09:49:19 +0800
-Message-ID: <d8502fc50d0304c2afd27ced062b1d636b7a872e.1749779183.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1rhK76u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC018C4CEEA;
+	Fri, 13 Jun 2025 01:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749779399;
+	bh=KvQpbekyf0KFJWKFpC0va1oh7HK6XoLcGPLoyuPICOE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=L1rhK76uFw5pFA95AqKZdJlBYNQr8MNwGTpKknRpIxCd4BCXGmw3COgzUe6dDDIa+
+	 7q6TO7wwYsXkSE3PrJYCRJY/cerKIv8a7gFh3QCfIpIX47Nlv3Iw5dHQxlgE7b4LkE
+	 rk5dIhapWMz01Mx3G820wVdjNl7ZgEKWBj6mqr4Fm9sJqQ4SoHXe8juk015s5fYlR/
+	 rhrHiIlsBvPy8yNy0zclSthAXMJEP4QBHkVoTwpcUjqTjhT/WN1I+NorAl6CWmHVy1
+	 6aDQ47dn3DuL+7wuAhhxcasj6K7x/ZyE1YJTeHygpja4tQywyipa9uuwOwYHZscghP
+	 bYDp0g38BvR5Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADC5039EFFCF;
+	Fri, 13 Jun 2025 01:50:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,63 +37,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] dt-bindings: net: renesas-gbeth: Add support for
+ RZ/G3E (R9A09G047) SoC
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174977942950.184018.422586356896918128.git-patchwork-notify@kernel.org>
+Date: Fri, 13 Jun 2025 01:50:29 +0000
+References: <20250611061204.15393-1-john.madieu.xa@bp.renesas.com>
+In-Reply-To: <20250611061204.15393-1-john.madieu.xa@bp.renesas.com>
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: andrew+netdev@lunn.ch, conor+dt@kernel.org, davem@davemloft.net,
+ edumazet@google.com, geert+renesas@glider.be, krzk+dt@kernel.org,
+ kuba@kernel.org, pabeni@redhat.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
+ robh@kernel.org, biju.das.jz@bp.renesas.com, devicetree@vger.kernel.org,
+ john.madieu@gmail.com, linux-kernel@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com,
+ netdev@vger.kernel.org
 
-When running the khugepaged selftest for shmem (./khugepaged all:shmem),
-I encountered the following test failures:
-"
-Run test: collapse_full (khugepaged:shmem)
-Collapse multiple fully populated PTE table.... Fail
-...
-Run test: collapse_single_pte_entry (khugepaged:shmem)
-Collapse PTE table with single PTE entry present.... Fail
-...
-Run test: collapse_full_of_compound (khugepaged:shmem)
-Allocate huge page... OK
-Split huge page leaving single PTE page table full of compound pages... OK
-Collapse PTE table full of compound pages.... Fail
-"
+Hello:
 
-The reason for the failure is that, it will set MADV_NOHUGEPAGE to prevent
-khugepaged from continuing to scan shmem VMA after khugepaged finishes
-scanning in the wait_for_scan() function. Moreover, shmem requires a refault
-to establish PMD mappings.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-However, after commit 2b0f922323cc ("mm: don't install PMD mappings when
-THPs are disabled by the hw/process/vma"), PMD mappings are prevented if the
-VMA is set with MADV_NOHUGEPAGE flag, so shmem cannot establish PMD mappings
-during refault.
+On Wed, 11 Jun 2025 08:12:04 +0200 you wrote:
+> Document support for the GBETH IP found on the Renesas RZ/G3E (R9A09G047) SoC.
+> The GBETH block on RZ/G3E is equivalent in functionality to the GBETH found on
+> RZ/V2H(P) (R9A09G057).
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviwed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+> 
+> [...]
 
-One way to fix this issue is to move the MADV_NOHUGEPAGE setting after the
-shmem refault. After shmem refault and check huge, the test case will unmap
-the shmem immediately. So it seems unnecessary to set the MADV_NOHUGEPAGE.
+Here is the summary with links:
+  - [net-next] dt-bindings: net: renesas-gbeth: Add support for RZ/G3E (R9A09G047) SoC
+    https://git.kernel.org/netdev/net-next/c/31b928210df1
 
-Then we can simply drop the MADV_NOHUGEPAGE setting, and all khugepaged test
-cases passed.
-
-Fixes: 2b0f922323cc ("mm: don't install PMD mappings when THPs are disabled by the hw/process/vma")
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
-Changes from v1:
- - Add reviewed tag from Zi. Thanks.
- - Drop the MADV_NOHUGEPAGE setting, per David.
----
- tools/testing/selftests/mm/khugepaged.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/tools/testing/selftests/mm/khugepaged.c b/tools/testing/selftests/mm/khugepaged.c
-index 8a4d34cce36b..4341ce6b3b38 100644
---- a/tools/testing/selftests/mm/khugepaged.c
-+++ b/tools/testing/selftests/mm/khugepaged.c
-@@ -561,8 +561,6 @@ static bool wait_for_scan(const char *msg, char *p, int nr_hpages,
- 		usleep(TICK);
- 	}
- 
--	madvise(p, nr_hpages * hpage_pmd_size, MADV_NOHUGEPAGE);
--
- 	return timeout == -1;
- }
- 
+You are awesome, thank you!
 -- 
-2.43.5
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
