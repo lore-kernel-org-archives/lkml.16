@@ -1,157 +1,85 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF4D1FF61E;
-	Fri, 13 Jun 2025 12:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF5E275AE0;
+	Fri, 13 Jun 2025 12:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749816373; cv=none; b=mCUsMS+PjX+IJAA4EL7viHH33o4aduA3SnrZfpPeOEU1qFQLi1ny6jI09VtfB0F5wGby+Q1HjOxboiT44/pvAi6LZmuUcvxg85qFCYJ1qYxs438Vo1pJxG5wcgiGc0oEVNRzrsQlk/cF6uNVngRmUDuIUZTowuaF0MdHWguMvXo=
+	t=1749816387; cv=none; b=JFIrdqHKHvBg6Uy0RH6J8gc2IiPqm+/yZTbfQififemN0EL5ibfV7Cm3Gg2IWzrUD4Ab509csk5A1yjfGt8EpRylu3jr41ly0qwMlzNJehUNsvqS1baH+ASTtbo/DGnQ7KTJON9uhYJgiDtgVhf5CSrHlNtopQRCRXZH8bc6PpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749816373; c=relaxed/simple;
-	bh=dy183kHYjGwHoCMN7pVrHMJgDWE/i9RF/XCaMmJP/Sg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sOr83mMiTczj6VHkijMQwhx0qZve5H6P+b564eAmF5qhyjS3twwFqzj3aWjZZMDaltS4B0VBCVJMn4dpS5opOO3MMqnjLAQrfDB+cIln1J0RY+EozGNplTlr33bCl1saG9FIgTPDSpA00j+Y7pmo7+d96cSOxI855loh+Y5+2u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 2BB53C0459;
-	Fri, 13 Jun 2025 12:06:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 0B0DB2002D;
-	Fri, 13 Jun 2025 12:06:04 +0000 (UTC)
-Date: Fri, 13 Jun 2025 08:07:41 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- llvm@lists.linux.dev, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, Nick
- Desaulniers <nick.desaulniers+lkml@gmail.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 0/5] tracepoints: Add warnings for unused tracepoints
- and trace events
-Message-ID: <20250613080741.55de0429@gandalf.local.home>
-In-Reply-To: <14fc8777-a5d2-4877-9707-73c25d9e9bd3@infradead.org>
-References: <20250612235827.011358765@goodmis.org>
-	<14fc8777-a5d2-4877-9707-73c25d9e9bd3@infradead.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749816387; c=relaxed/simple;
+	bh=BIcsBpXHfXg03QbBX/sXqJvQoxzxig2Amk4AM52b4sE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHOZyD3M9+K8u4o4F1zch6fVihWmRcvHBhgbBU+ram3Y5uBjB8HUma4XWvlkUi/0foDFmMH4L3UrkBRoXa6YMgAvCJyjX1Y0riIp8CPyv2p/jIhniawZjBcjSjgsCbiO+oqbnEhyk4ZRbGMsu6RrZ2IpuE57GQFrFPx3V6lBG4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ttk1X+Mk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ttk1X+Mk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEBC6C4CEE3;
+	Fri, 13 Jun 2025 12:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749816386;
+	bh=BIcsBpXHfXg03QbBX/sXqJvQoxzxig2Amk4AM52b4sE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ttk1X+MkvCC7Ja1zP/HhV6+6hna5AOx6Y0TQ/OXdzLpvonfo99unp+lCgJgjJ4PQb
+	 i11+5rxF//qC9iFdcWhW+BMMIytwFy8zioHYocuZs/KxTKDcV8ILMWeURa7jYemhYo
+	 pf5Kj101PR2mXf27UE1A0VZ+FwHL69xejbtKEuogc7BuRPwkLrK1f1jFJ/Ht1Jdg+x
+	 2ginz21DEcBSoPhHI0iPp3R5whixINH5i3ooeiWiJAmwPjnujL2gghqRQN3mcy5IpO
+	 GCGERLbZBTaNUAx2xJ8XWxttYeiG961Cudcbx4clrDizqJA61nI5Tvm7ugY41dXXd+
+	 FJ2DcLpF+Q45Q==
+Date: Fri, 13 Jun 2025 13:06:21 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Julien Panis <jpanis@baylibre.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] regulator: tps6594-regulator: remove
+ interrupt_count
+Message-ID: <8b9ee827-5ff0-441b-91fc-e406228a818a@sirena.org.uk>
+References: <20250613114518.1772109-1-mwalle@kernel.org>
+ <20250613114518.1772109-5-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 7mqzf3awyn1mrdt43cekibahainqkhx9
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 0B0DB2002D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX198NosNg0VWHJpbZw25v/HmbXrnlMNRfls=
-X-HE-Tag: 1749816364-802972
-X-HE-Meta: U2FsdGVkX1/SRYXKIc/bGFvB/8qKJp8ttNVRvnR8Mwf8M3ZCyOq0tIb4Y9YnmzpJt00MxcjffXc4/c/BIdQQ6+CvngQpwBNYGgB6lABNnzivrSER0hJRRSuMfYVTT47s9sXXhQMKNUkJtclXujk1DJuL363HjO+oPbQhC4kErPe2W86DPxzfeaaN6xHpKb5253zt9QQHELihZ3usO5MqEdoO1X6Bn4MlChv50EWAY4cMzVuYLBtOXV/bc5AAEwC3KE7pfPNgX8B0rRvBHdGjUyw7jcI3YVImujmPRtjauvHc/8+ll7AsFMGmc+j0BlsYPW6mQ4qeSaCQLXJ4jvZOXVMayBb74AEA7Fa+OuQKPwDbipN7KTiv1dpG20SZR6mvRysC/oq8XaQNGBUnYCraQQ==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pygDtv5/4tghC/Gq"
+Content-Disposition: inline
+In-Reply-To: <20250613114518.1772109-5-mwalle@kernel.org>
+X-Cookie: Use extra care when cleaning on stairs.
 
-On Thu, 12 Jun 2025 20:20:48 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> Hi,
-> 
-> On 6/12/25 4:58 PM, Steven Rostedt wrote:
-> > Every trace event can take up to 5K of memory in text and meta data regardless  
-> 
-> s/meta data/metadata/ unless you are referring to meta's data.
+--pygDtv5/4tghC/Gq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Oh so I need to give Meta royalties?
+On Fri, Jun 13, 2025 at 01:45:15PM +0200, Michael Walle wrote:
+> In .probe() interrupt_count and nr_types is essentially the same. It
+> contains the number of different interrupt per LDO or buck converter.
+> Drop one. This is a preparation patch to further simplify the handling
+> of different variants of this PMIC.
 
-> 
-> s/meta data/metadata/ in patches 1 and 2 also.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-I'll update when I pull them in. Note, the cover letter isn't something
-that I put into git. But I'll try to remember to update if I send a v3.
+--pygDtv5/4tghC/Gq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> > if they are used or not. Trace events should not be created if they are not
-> > used.  Currently there's over a hundred events in the kernel that are defined
-> > but unused, either because their callers were removed without removing the
-> > trace event with it, or a config hides the trace event caller but not the
-> > trace event itself. And in some cases, trace events were simply added but were
-> > never called for whatever reason. The number of unused trace events continues
-> > to grow.
-> > 
-> > This patch series aims to fix this.
-> > 
-> > The first patch creates a new section called __tracepoint_check, where all
-> > callers of a tracepoint creates a variable that is placed in this section with
-> > a pointer to the tracepoint they use. Then on boot up, it iterates this
-> > section and will modify the tracepoint's "func" field to a value of 1 (all
-> > tracepoints "func" fields are initialized to NULL and is only set when they
-> > are registered). This takes place before any tracepoint can be registered.
-> > 
-> > Then each tracepoint is iterated on and if any tracepoint does not have its
-> > "func" field set to 1 a warning is triggerd and every tracepoint that doesn't  
-> 
-> triggered
+-----BEGIN PGP SIGNATURE-----
 
-Yes I am!
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhMFDwACgkQJNaLcl1U
+h9AESgf9EMglMJXR+X0w+foDQ06ENi3AEXht5sWJBdcVGPF7p3s9sPW/pLMs5hHp
+H2MrAM5P8h0cDiZ2EbzAGoZkeGHKQombn3NEnJ8HZTP1U9Qmx4YVXkWJLn1IwPxO
+4vvvhaU/rQwqXYb+dMRdzbfjrucXBLdpor7PBi9pI7YSg2WXP9AeSWEFlRSrB1GP
+xeZQ7jdRpqCY88RzSx4pkin+tWQDzzy/eo5VdfyBnsahcf/Mr+fOmvD9eAlYFWDb
+B1F9zgGAt9+iu694OPLuQKSku+5OwqVg7tDDvllbrUErNz4XKkCBZsK22KWSA8Ms
+1RiG8DBx1aTx1fAX0vOQIr8KQF3Yiw==
+=RnCE
+-----END PGP SIGNATURE-----
 
-> 
-> > have that field set is printed. The "func" field is then reset back to NULL.
-> > 
-> > The second patch modifies scripts/sorttable.c to read the __tracepoint_check
-> > section. It sorts it, and then reads the __tracepoint_ptr section that has all
-> > compiled in tracepoints. It makes sure that every tracepoint is found in the
-> > check section and if not, it prints a warning message about it. This lists the
-> > missing tracepoints at build time.
-> > 
-> > The third patch updates sorttable to work for arm64 when compiled with gcc. As
-> > gcc's arm64 build doesn't put addresses in their section but saves them off in
-> > the RELA sections. This mostly takes the work done that was needed to do the
-> > mcount sorting at boot up on arm64.
-> > 
-> > The forth patch adds EXPORT_TRACEPOINT() to the __tracepoint_check section as  
-> 
-> fourth (or are you coding in forth?)
-
-oops
-
--- Steve
-
-> 
-> > well. There was several locations that adds tracepoints in the kernel proper
-> > that are only used in modules. It was getting quite complex trying to move
-> > things around that I just decided to make any tracepoint in a
-> > EXPORT_TRACEPOINT "used". I'm using the analogy of static and global
-> > functions. An unused static function gets a warning but an unused global one
-> > does not.
-> > 
-> > The last patch updates the trace_ftrace_test_filter boot up self test. That
-> > selftest creates a trace event to run a bunch of filter tests on it without
-> > actually calling the tracepoint. To quiet the warning, the selftest tracepoint
-> > is called within a if (!trace_<event>_enabled()) section, where it will not be
-> > optimized out, nor will it be called.
-> > 
-> > This is v2 from: https://lore.kernel.org/linux-trace-kernel/20250529130138.544ffec4@gandalf.local.home/
-> > which was simply the first patch. This version adds the other patches.
-> > 
-> > Steven Rostedt (5):
-> >       tracepoints: Add verifier that makes sure all defined tracepoints are used
-> >       tracing: sorttable: Add a tracepoint verification check at build time
-> >       tracing: sorttable: Find unused tracepoints for arm64 that uses reloc for address
-> >       tracepoint: Do not warn for unused event that is exported
-> >       tracing: Call trace_ftrace_test_filter() for the event
-> > 
-> > ----
-> >  include/asm-generic/vmlinux.lds.h  |   1 +
-> >  include/linux/tracepoint.h         |  13 ++
-> >  kernel/trace/Kconfig               |  31 +++
-> >  kernel/trace/trace_events_filter.c |   4 +
-> >  kernel/tracepoint.c                |  26 +++
-> >  scripts/Makefile                   |   4 +
-> >  scripts/sorttable.c                | 444 ++++++++++++++++++++++++++++++-------
-> >  7 files changed, 437 insertions(+), 86 deletions(-)
-> >   
-> 
-> thanks.
-
+--pygDtv5/4tghC/Gq--
