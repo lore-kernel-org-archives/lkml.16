@@ -1,76 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9B917A2FA;
-	Fri, 13 Jun 2025 13:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F200519DF8B;
+	Fri, 13 Jun 2025 13:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822222; cv=none; b=aKfeO+263TtBwaQ+OYqcCATjf8UbF0ma2wbz3SAkdYHRwUfYHsHUoQFSYCI5E9JtEcm2ruJ5uXdBQQ37Bn/w8uxXul/AC3I5SCQVkjzDym8y3QC0VJnQiXDM48r2/7Fv8Zm5rEa/WiMn61xK+mMGHwz/7hP3NxUJerOYFkyDD3I=
+	t=1749822233; cv=none; b=P0qPn6lEl43PP9MpxyQFcBzP8NEGqAZoZFv5471TgWL0xf44tbmgXNQ6Kj6Lhi3nhzRnV7bpn4NzcK87toVS+jxGzEu3lx8Y4kP7Xa+02GmKMROKDY3Vf7OU/mul/GvTd/7R/xpo+h8HjwKD6+rmr640VKpdmHWESyEnRRAiVEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822222; c=relaxed/simple;
-	bh=t2t/Dydkc0Q4SJApf90p0e3QNDSx3/98b+FbhGdPnFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ljrtMgYcOedcjjInVLnP8fKp5bL9diUklLp+S41ddDwTPGJuH2Tvib4vPCZLxmrmYc4K0piyWpeqw7YhaHKtof5bGGBG8CJ76kr6bsvW6xPKFogOzPJKGop/vr3oK+2pfUAM0jNgsoHSG/YOGCVb7BU6s+v3cjE35C4rRkkNDYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC8F62B;
-	Fri, 13 Jun 2025 06:43:19 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 722613F59E;
-	Fri, 13 Jun 2025 06:43:38 -0700 (PDT)
-Date: Fri, 13 Jun 2025 14:43:35 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-	<arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] clk: scmi: Handle case where child clocks are
- initialized before their parents
-Message-ID: <20250613-congenial-tamarin-of-experience-cb2598@sudeepholla>
-References: <20250612-clk-scmi-children-parent-fix-v3-1-7de52a27593d@pengutronix.de>
+	s=arc-20240116; t=1749822233; c=relaxed/simple;
+	bh=iuq70Qtl2TwSbyhOXfgpjjZYlKdn19Srq/EMIvt7ARw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=NhvEA7vUOR5tE3alC99fKEY2u4KwWF44SZDohDzK63gjMpn8cV5bpJNWnqX5NuouxJnDRdyk+yvJRoygt8ZjqONOmSZd5ldJwZtC71LfUqEsZne6kg31zluUX+pcn+cajck5vBtPmOpJiR1oFvIIOwPvAAD8Re5u2Sozc6dr6rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZNY5xUJM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r7r6it5Q; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZNY5xUJM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r7r6it5Q"
+Date: Fri, 13 Jun 2025 13:43:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749822229;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DMCRxCsdWqhdYORoetpIzc7qzdfVAVCzvKhKY4mALuk=;
+	b=ZNY5xUJM5tE1BAv+oudmS6zYIEbaXJpAuCcYO8dIesRC6yYgWIR+OK/FfJHMBn20x9xXDh
+	Ds+F00b7DpFsIrAWRuqsL62STV17fzrf6o1sGsJRer12WIj2GZSQuln7BeAJfayvcPF6/z
+	kwesee94rsIY8o1m9oxzz5zjBaxJ1e9/7fLR55Ct98b2bS3jH7bo5VlUP3NkyyJyydiJB0
+	GE56xzA2IZkyD4DYM3/ReJjQ8vjaOMcFAhItzAa+m4aBfAuqHCAaLVwPoA5hA/iT+HtvUC
+	K2yV49ccKp2u0ca2rd9lBo1v77QkJbfA3Zs5lq4jJG+S8PzCcQHPYhGDBJlLqQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749822229;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DMCRxCsdWqhdYORoetpIzc7qzdfVAVCzvKhKY4mALuk=;
+	b=r7r6it5QNIg8R5iupLmAeiVrT0EvUtTMxtyKZSmTURy4DzYeIsnGFwzFiIpH/Y3QjMi+Y3
+	FH+Tj4Fdj4HlimAg==
+From: "tip-bot2 for Gyeyoung Baek" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/urgent] genirq/irq_sim: Initialize work context pointers properly
+Cc: Gyeyoung Baek <gye976@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250612124827.63259-1-gye976@gmail.com>
+References: <20250612124827.63259-1-gye976@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612-clk-scmi-children-parent-fix-v3-1-7de52a27593d@pengutronix.de>
+Message-ID: <174982222851.406.8757318075182400850.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 02:56:57PM +0200, Sascha Hauer wrote:
-> The SCMI clock driver currently assumes that parent clocks are always
-> initialized before their children. However, this assumption can fail if
-> a child clock is encountered before its parent during probe.
-> 
-> This leads to an issue during initialization of the parent_data array:
-> 
->     sclk->parent_data[i].hw = hws[sclk->info->parents[i]];
-> 
-> If the parent clock's hardware structure has not been initialized yet,
-> this assignment results in invalid data.
-> 
-> To resolve this, allocate all struct scmi_clk instances as a contiguous
-> array at the beginning of the probe and populate the hws[] array
-> upfront. This ensures that any parent referenced later is already
-> initialized, regardless of the order in which clocks are processed.
-> 
-> Note that we can no longer free individual scmi_clk instances if
-> scmi_clk_ops_init() fails which shouldn't be a problem if the SCMI
-> platform has proper per-agent clock discovery.
-> 
-> Fixes: 65a8a3dd3b95f ("clk: scmi: Add support for clock {set,get}_parent")
-> Reviewed-by: peng.fan@nxp.com
-> Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+The following commit has been merged into the irq/urgent branch of tip:
 
-Mike/Stephen,
+Commit-ID:     8a2277a3c9e4cc5398f80821afe7ecbe9bdf2819
+Gitweb:        https://git.kernel.org/tip/8a2277a3c9e4cc5398f80821afe7ecbe9bdf2819
+Author:        Gyeyoung Baek <gye976@gmail.com>
+AuthorDate:    Thu, 12 Jun 2025 21:48:27 +09:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 13 Jun 2025 15:36:35 +02:00
 
-Please pick this up in your next round of fixes.
+genirq/irq_sim: Initialize work context pointers properly
 
--- 
-Regards,
-Sudeep
+Initialize `ops` member's pointers properly by using kzalloc() instead of
+kmalloc() when allocating the simulation work context. Otherwise the
+pointers contain random content leading to invalid dereferencing.
+
+Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250612124827.63259-1-gye976@gmail.com
+---
+ kernel/irq/irq_sim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+index 1a3d483..ae4c9cb 100644
+--- a/kernel/irq/irq_sim.c
++++ b/kernel/irq/irq_sim.c
+@@ -202,7 +202,7 @@ struct irq_domain *irq_domain_create_sim_full(struct fwnode_handle *fwnode,
+ 					      void *data)
+ {
+ 	struct irq_sim_work_ctx *work_ctx __free(kfree) =
+-				kmalloc(sizeof(*work_ctx), GFP_KERNEL);
++				kzalloc(sizeof(*work_ctx), GFP_KERNEL);
+ 
+ 	if (!work_ctx)
+ 		return ERR_PTR(-ENOMEM);
