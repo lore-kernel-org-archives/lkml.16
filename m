@@ -1,112 +1,116 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20F818FC91;
-	Fri, 13 Jun 2025 01:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749777439; cv=pass; b=S+UoIVAVee2HClZq7zwq/DrcuyW1aCKSZ4WGPGPesgjRHoB4j4cKAvs/pBYwKIyvQa8dAvz73gm5tllGfbql/aeI/Lshn1bZ85jGd4PoKBKdHoKaUDcxPS+TX4ErHXspdHFi/C5nSxYU/5obGAm4i81y6cebXX1qOemJ1NpWqeI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749777439; c=relaxed/simple;
-	bh=SE2gMvs69KJwEeMw4LVG+uxkdQffyaxBJ1kUt7qde/s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WA8DJBO9HhIM/UpbSsmbq1Hw77c9QBazYE9rWRTIB/4iNLqkWelRZhALp5Xbv5eUUh52ZQcEPelyeKE5MZF5Beik5PRHHxDWSutLZdhHLE/f9GI1YXtfCjaEM3e1v/f556woCmBbCrvrmhU65DiBMp03+FwP02hT8vjMq86WXdw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=EbNxmQTG; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478561420DD;
+	Fri, 13 Jun 2025 01:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749777526; cv=none; b=oe7gL8JyEriNEUzM3cGzL9ajkGYJY29vMbY02iGqkTueIS3uzn3dSLaRuW/le+moSvEhqn9do/xLf/v2v3qGqfMIGE+dcHcf3E+TSk6tlHFAaTw/9ZK8c5a+zw51HZAt4xGat8SM3WzuHrMpS+fMJ83+ARPwRnCHsmXYyF+QH5M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749777526; c=relaxed/simple;
+	bh=mzLaYBl+Y/d7BQANb7I+GDNo+dl/a7Akffi+nhcQ84s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gIofHeg0p+JCWPZ9ykS4EnbVBTXkFGUmp+D6Dep1vfPCbkIiUId3iZUXH24XIR6bhvuIPctuEXe2vE6YyeSgtK7r8vUdZi2UgwKokpelHDtjtb3Q+Wpz+ewr0HdpbadxrtadNQzdsYhraHgQsPnJwmTL8vpb2k0iLvH0OZpWpb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=hGHoMLUZ; arc=none smtp.client-ip=51.81.35.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="EbNxmQTG"
-ARC-Seal: i=1; a=rsa-sha256; t=1749777420; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Db5ZLSqEvxz/mh/pQ3q9oRJsi//zI1yZf/QM1J0jhr4PRO3j1lE6qKbTLavQy4fZK1/fRIY6ZUa610w2YZQYcHtOHRnDhy3PlOYuRLNxYcytOko9ElizJolihIzYp6o6ZxrOvd20zNom8Ijnyv1xVVaEB8YDAWBG3TIpuePDoJg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749777420; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=0L7BKWvOuvfVDSg+VJCsKrEDpK9Jj14ttaNHAKYRQHQ=; 
-	b=aeHYIC7nsPoP4Q0HIcN82gYUys2YCzkIv+jDsAOcrP7tPT7JzIIDIW24AclzwLKeZT6ejs2q97yK+HsCmma7uoKANpGqDJy4GuiWyg1KwFbQR1QLEE2M15V7lJm7ZYZBh8urdhAwGdf/eVSR1hvWfMfN9oW+fx4N+WJqUDlzpow=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749777420;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=0L7BKWvOuvfVDSg+VJCsKrEDpK9Jj14ttaNHAKYRQHQ=;
-	b=EbNxmQTGcve2F9r3TJ3mWwMIFzeyynWBOE0t68u1TchLLfTzX7RD0Iq7B4FacLsM
-	/JAyhS3JcypGgHpXXTTdMoXinP5cPlG0IVbwvqZRtoj2XHvRF675hB8A3cWNNtX4Ygn
-	IWjQsQApt1RJct+euNEyb99TT5E9gr1YlnjSPmHU=
-Received: by mx.zohomail.com with SMTPS id 1749777417445827.3026025740155;
-	Thu, 12 Jun 2025 18:16:57 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v2 1/1] cxl/edac: Fix potential memory leak issues
-Date: Fri, 13 Jun 2025 09:16:48 +0800
-Message-Id: <20250613011648.102840-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="hGHoMLUZ"
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id DABF822394;
+	Fri, 13 Jun 2025 01:12:46 +0000 (UTC)
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id AEA6726260;
+	Fri, 13 Jun 2025 01:12:37 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay3.mymailcheap.com (Postfix) with ESMTPS id 021413E8B6;
+	Fri, 13 Jun 2025 01:12:30 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 9E57C40078;
+	Fri, 13 Jun 2025 01:12:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1749777149; bh=mzLaYBl+Y/d7BQANb7I+GDNo+dl/a7Akffi+nhcQ84s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hGHoMLUZOLZCVgdW8cq0dvyersBeAz3xkHIZ2Omj7r5z+HuEW/pPNfTDO8K0Wrsxy
+	 PaFq534iNvtvMVkds2hnrsbyeuvgvQ1VD72sjrEnooOrYdKWIsbh3LCCSoX7Uq4NJ5
+	 mQuhUKNKnd4AYL5C3TFHvzaRDPGNyi6nx0e1X6nE=
+Received: from [19.191.1.9] (unknown [223.76.243.206])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id ED8D5411D6;
+	Fri, 13 Jun 2025 01:12:20 +0000 (UTC)
+Message-ID: <60cb6d5e-45f1-45a1-b142-22e3dfd203f9@aosc.io>
+Date: Fri, 13 Jun 2025 09:12:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] drm/xe: enable driver usage on non-4KiB kernels
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Francois Dugast
+ <francois.dugast@intel.com>,
+ =?UTF-8?Q?Zbigniew_Kempczy=C5=84ski?= <zbigniew.kempczynski@intel.com>,
+ =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
+ Mauro Carvalho Chehab <mauro.chehab@linux.intel.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Zhanjun Dong <zhanjun.dong@intel.com>, Matt Roper
+ <matthew.d.roper@intel.com>, Alan Previn
+ <alan.previn.teres.alexis@intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Mateusz Naklicki <mateusz.naklicki@intel.com>,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Kexy Biscuit <kexybiscuit@aosc.io>, Shang Yatsen <429839446@qq.com>,
+ Wenbin Fang <fangwenbin@vip.qq.com>, Haien Liang <27873200@qq.com>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>, Shirong Liu <lsr1024@qq.com>,
+ Haofeng Wu <s2600cw2@126.com>
+References: <20250604-upstream-xe-non-4k-v2-v2-0-ce7905da7b08@aosc.io>
+ <yyzxfqydczvfxddfsa4ebi7kyj5ezl2v4wbl5fopkdz6qwvjrg@fnhpcvfsp2dm>
+Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <yyzxfqydczvfxddfsa4ebi7kyj5ezl2v4wbl5fopkdz6qwvjrg@fnhpcvfsp2dm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227ff1cd31c31c3086469305e060000dd3b71e465ed97275de562b51b202c59a863dfd2c3f51342fd:zu08011227b54d31b1826e7d32de7773280000d77a85a4d1c2189b604832687dc28b70bdb85ab02935fabd17:rf0801122de8fac3f0d9d5f5827a75cffe00007d19148ccccaa9f940ed8e926b7502348fcbb750edebe5f7c88f2e37fe28e7:ZohoMail
-X-ZohoMailClient: External
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: 9E57C40078
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[ce7905da7b08.aosc.io:server fail];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,intel.com,gmail.com,ffwll.ch,kernel.org,suse.de,lists.freedesktop.org,vger.kernel.org,aosc.io,qq.com,vip.qq.com,126.com];
+	FREEMAIL_ENVRCPT(0.00)[126.com,gmail.com,qq.com,vip.qq.com];
+	TO_DN_SOME(0.00)[]
 
-In cxl_store_rec_gen_media() and cxl_store_rec_dram(), use kmemdup() to
-duplicate a cxl gen_media/dram event to store the event in a xarray by
-xa_store(). The cxl gen_media/dram event allocated by kmemdup() should
-be freed in the case that the xa_store() fails.
+Hi Lucas
 
-Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
-Signed-off-by: Li Ming <ming.li@zohomail.com>
-Tested-by: Shiju Jose <shiju.jose@huawei.com>
-Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
----
-v2:
-* Use kfree() instead of __free(kfree). (Jonathan)
+在 2025/6/13 08:13, Lucas De Marchi 写道:
+> For some reason this patch series didn't make it to any mailing
+> list... it only shows the b4-sent and stable:
+> https://lore.kernel.org/intel-xe/20250604-upstream-xe-non-4k-v2-v2-0- 
+> ce7905da7b08@aosc.io/
+> 
+> Could you resend this series?
 
-base-commit: 87b42c114cdda76c8ad3002f2096699ad5146cb3 cxl/next
----
- drivers/cxl/core/edac.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+That's strange... I have just resent the series.
 
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 2cbc664e5d62..628786def464 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -1099,8 +1099,10 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
- 	old_rec = xa_store(&array_rec->rec_gen_media,
- 			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
- 			   GFP_KERNEL);
--	if (xa_is_err(old_rec))
-+	if (xa_is_err(old_rec)) {
-+		kfree(rec);
- 		return xa_err(old_rec);
-+	}
- 
- 	kfree(old_rec);
- 
-@@ -1127,8 +1129,10 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
- 	old_rec = xa_store(&array_rec->rec_dram,
- 			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
- 			   GFP_KERNEL);
--	if (xa_is_err(old_rec))
-+	if (xa_is_err(old_rec)) {
-+		kfree(rec);
- 		return xa_err(old_rec);
-+	}
- 
- 	kfree(old_rec);
- 
--- 
-2.34.1
-
+Best Regards,
+Mingcong Bai
