@@ -1,124 +1,114 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E88139B;
-	Fri, 13 Jun 2025 12:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700023C26;
+	Fri, 13 Jun 2025 12:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749817830; cv=none; b=hC9KO2WSElPf6rwV2Vng5cpBk5Sf5Ha7rX3X0LAShGB39AdR32tRxhqVGHrCnLq1KmKfD2QNypTNmHX6CNLRtebLQciKUpGK0q/tCFldm7cjnY5GRM1sxmnMYdCe0GWIvIsqelgr7PxjD5wQOrFYKK+QzjVPAx8dzzijkmRmh9w=
+	t=1749817837; cv=none; b=efOnIHmuvv3WSpNPxRmRG5Cw93YC3uH4D6eQLDXuvCB4H822otda3TA8WSD3INpA2ALAeXAiv3NPN9Oh/g9mO1B4zIplDM06cXDhuIb5OrDXFWhfW4pkv5MGjk04GcKHkHNCO37aTG74ONbDqw+cnokNA/0W80Xv3Bkzgt6537g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749817830; c=relaxed/simple;
-	bh=JoM1Biw9+AxMLcXjIvmijSuBmIBIYRKF0yU2gIcMG3U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kGs6mZw5tUa9sQ5IantILTgEv1UdVdnmZRrb6QfY1f2gcd+DRsUxSYyieixK94fW7K2skrqBGs14Gs7WVVjjJk4UezAbI/1XQzicAd67gTpJpkw9NPhXGbvc0hVyh8gr5TynIq1XR5hfsHqw7R3XDlKp46wuIc2n7nvDqVD+WK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IbRxm4//; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749817837; c=relaxed/simple;
+	bh=IJX1C2H88d25bNe5hXlRqag8Mz3+ciOE8mS6zl1EXxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O4xTj7Fc50A3IAzHBYc9PkNPBTYcJd3nE2FaDZThzFu4IVav4WpzZIMFD+YOmUA8FJeDWUxc6uVcMScUwkc+xTakfGbGeG8nqXqHMd4HjzY6uEVadl9Yd5koO0tKiFKJatbMXmt8k/0koJuDCakNbuSVLtHO6HvL3bARJF8DcXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHVcayBb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbRxm4//"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so18803645e9.3;
-        Fri, 13 Jun 2025 05:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749817827; x=1750422627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iyKH7IE5IPc6Hr2NfqI5I89RnlgcJHTrR0JgVtHniLQ=;
-        b=IbRxm4//UkpvK7b64NWYGKKv+yElbdI40pjQeWosS7aku0mpRnWaD1pwqqIq9H8AP6
-         NR5mhNaevgZtWLUWQmws581TBsQoRYGDPgcekiJr0hRTxkzbeGUH2kwiHiraZ7v8dNuk
-         IZaF4wqr+y9r+THU7Y2G8CCL/lMHjG2TKJluCkV6C1WpSgRiyI2DF36u3V1JQtdKGJUG
-         WJKvkeVyvrU2vVIHbd604eR0IsIBVErBw47uceHlTBSA+JGTbDuhkvMDBuZaioxtj43M
-         /PcwbM/Zchmtwy9TPzSDsW/dkj2U72JY1YYNmbbHv5/dJlAvgxQJZmNRiNRyLeTFKs4k
-         BuQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749817827; x=1750422627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iyKH7IE5IPc6Hr2NfqI5I89RnlgcJHTrR0JgVtHniLQ=;
-        b=iZD7/owYr/Hpsa9jB49DIxa9esdbE02OOySaE7K4Eio+cgs9s6rV7IBZR7LDOxG9d0
-         0s6VZXpr1ZJqONNVnyH+bD/85CDzSNarSdEo+13+6k/QimclpNx4xPARsxf56paKGvJa
-         MjGA4/Z/DDvjzM+05OmrIhAif2Jc3MSlHa0NJjhe0NtrTuX+Cp8H9LpMw9fZuwVgJLLv
-         2z+NxMmIobO99egfG/FBfJ4nBYQb7j5cWoVY/tTOOjEzkRCcOkTF2ciJKuDRnAaM6hVH
-         jgj4R3s33MPAfFFyBf4V5cpbAzfUT9VveSnchFpGI4kwbEXhqqkpzSf3zWw/qtiPiEvJ
-         KuuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVq7ZVNOt6pnGPYKMEF2nhHsXzYdr0z4DYcbGiLYI0XE8aOKKPebEW2zvvjNZH2suYBT69dqYPmnuaB@vger.kernel.org, AJvYcCWZN1ohUIir2AMlH5aPhaXKY6fjivd807czeJ5vXTypVsPhvMVlqU0xNla3OyHKUe7JoEFw0SAgrMVh@vger.kernel.org, AJvYcCXDuSIZ5d8LvruRJ0NuEh0H515kvjBam3jIqdRqiD8cq9LftgY5IQFsGS7xlu7OkJkYgTYEfBKZv/T98+zJ39eVr/I=@vger.kernel.org, AJvYcCXYLJ9GJ/AcwXkUD4DjO2FLer2n36D/ZCCRx5F0rKCM4C6CXBp5tjKdFctXxGKWyIENvrtwL8p59npSyVp1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpOZKbt89LY6aoEqcLkt6dsjif2+aHr2bqLiDxtue+XeeEIbu8
-	C9JBPbUOM3WNDJN0/WbeF5gwRYFW24v+CtiMfJ1LQkPRFhK7ytU7rKeY8lmGUG7TwKWGZ41EBRM
-	ULxQWAprajJtn6hSaQejRVy0lc66bDc4=
-X-Gm-Gg: ASbGnctcvTJisHeCFjdLTJCyXQ2PHyFxejHB3ZvCQ/QotT3vuniXHlfqoZzvjGIwPTv
-	hlb0TTNJ/lK9ErhUC/OkhHdUX0U+Riwxcwz1YsUOppuMnihfTzoBTkwVVUqTcdx/7OdpgbzMNeV
-	Op58v6dgwxq2ztuwp+cGNz4S+TTBQfMigiMoLmTBzH2oN9FiccmHYwMyb/c8rfn2I4O5Gevgsly
-	F0=
-X-Google-Smtp-Source: AGHT+IHKEZ0DY4lN3QrQTun6mph9rEiHXX0KHN0OSWnhARuZn78+U4bfJHK4Yh/js2m7/cDh1QVzdFKc6kQ4DgmUC0w=
-X-Received: by 2002:a05:600c:6087:b0:450:cea0:1781 with SMTP id
- 5b1f17b1804b1-45334b1a0d6mr35396245e9.16.1749817826716; Fri, 13 Jun 2025
- 05:30:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHVcayBb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD4FC4CEE3;
+	Fri, 13 Jun 2025 12:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749817837;
+	bh=IJX1C2H88d25bNe5hXlRqag8Mz3+ciOE8mS6zl1EXxY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HHVcayBbqOyNBLQpD0xErm2r6KmC5mjKTRF9konGfLgYKMp1AKzsj0D9XLW33dMpZ
+	 W3e+T4xkqnlJkvwJMUvmLTG6iYL5W1S9c2jNqi3JubRp2FI+VXeHrpQKuy/wSEhTKQ
+	 9H6+WxXJ8BwNDKcT4mh0WkehtDPIjh+oZpXiEUgSucObS8YoVRNKZr8cmRgokWZMem
+	 0PhunEUD0uDq39R4/ObL2VPB/DQSJj1Oy6WiiPjc3McPXh76DFBJqLyG0r5uFyxuyF
+	 ByV0OCMBji2NcKwDf+y8hq6sijchfbMSp61IJkbhndSEEmffu7WAhvGlbKn/VXVSu8
+	 vQNSJMHNvvg6g==
+Date: Fri, 13 Jun 2025 14:30:30 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Donald Hunter <donald.hunter@gmail.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, "Akira Yokosawa" <akiyks@gmail.com>, "Breno Leitao"
+ <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, "Ignacio Encinas Rubio"
+ <ignacio@iencinas.com>, "Jan Stancek" <jstancek@redhat.com>, "Marco Elver"
+ <elver@google.com>, "Paolo Abeni" <pabeni@redhat.com>, "Ruben Wauters"
+ <rubenru09@aol.com>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
+ linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, netdev@vger.kernel.org,
+ peterz@infradead.org, stern@rowland.harvard.edu
+Subject: Re: [PATCH v2 12/12] docs: conf.py: don't handle yaml files outside
+ Netlink specs
+Message-ID: <20250613143030.3f78f367@foz.lan>
+In-Reply-To: <m2h60jn9j0.fsf@gmail.com>
+References: <cover.1749723671.git.mchehab+huawei@kernel.org>
+	<d4b8d090ce728fce9ff06557565409539a8b936b.1749723671.git.mchehab+huawei@kernel.org>
+	<m2h60jn9j0.fsf@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250609203656.333138-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWd3atW6H=ewNcHDOkC7aEzXGi1mU0YtiEiBPgB6uT3bw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWd3atW6H=ewNcHDOkC7aEzXGi1mU0YtiEiBPgB6uT3bw@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 13 Jun 2025 13:30:00 +0100
-X-Gm-Features: AX0GCFu5pkuuQ73sJw6VCu7eJzbS6egqReBFQrZwZIamPlb61Q6iENVYo4X8uUo
-Message-ID: <CA+V-a8sRD1cac_YrWb2wZVR=piSDyyqTZ0mYcQvxcdrn2cYi6Q@mail.gmail.com>
-Subject: Re: [PATCH 6/8] arm64: dts: renesas: Refactor RZ/T2H EVK device tree
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+Em Fri, 13 Jun 2025 12:52:35 +0100
+Donald Hunter <donald.hunter@gmail.com> escreveu:
 
-Thank you for the review.
-
-On Thu, Jun 12, 2025 at 3:47=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 9 Jun 2025 at 22:37, Prabhakar <prabhakar.csengg@gmail.com> wrote=
-:
-> > From: Paul Barker <paul.barker.ct@bp.renesas.com>
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+>=20
+> > The parser_yaml extension already has a logic to prevent
+> > handing all yaml documents. However, if we don't also exclude
+> > the patterns at conf.py, the build time would increase a lot,
+> > and warnings like those would be generated:
 > >
-> > The RZ/T2H EVK and RZ/N2H EVK are very similar boards. As there is so
-> > much overlap between these parts, common device tree entries are moved
-> > to the new file rzt2h-evk-common.dtsi.
+> >     Documentation/netlink/genetlink.yaml: WARNING: o documento n=C3=A3o=
+ est=C3=A1 inclu=C3=ADdo em nenhum toctree
+> >     Documentation/netlink/genetlink-c.yaml: WARNING: o documento n=C3=
+=A3o est=C3=A1 inclu=C3=ADdo em nenhum toctree
+> >     Documentation/netlink/genetlink-legacy.yaml: WARNING: o documento n=
+=C3=A3o est=C3=A1 inclu=C3=ADdo em nenhum toctree
+> >     Documentation/netlink/index.rst: WARNING: o documento n=C3=A3o est=
+=C3=A1 inclu=C3=ADdo em nenhum toctree
+> >     Documentation/netlink/netlink-raw.yaml: WARNING: o documento n=C3=
+=A3o est=C3=A1 inclu=C3=ADdo em nenhum toctree
 > >
-> > Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> >  .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    | 17 +------------
->
-> Definitely a good idea! Note that r9a09g077m44-rzt2h-evk.dts does not
-> exist yet in my tree...
->
-Yep I have based my patches on top of v10, are we waiting for the
-serial driver to be merged in first?
+> > Add some exclusion rules to prevent that.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  Documentation/conf.py | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/conf.py b/Documentation/conf.py
+> > index add6ce78dd80..b8668bcaf090 100644
+> > --- a/Documentation/conf.py
+> > +++ b/Documentation/conf.py
+> > @@ -222,7 +222,11 @@ language =3D 'en'
+> > =20
+> >  # List of patterns, relative to source directory, that match files and
+> >  # directories to ignore when looking for source files.
+> > -exclude_patterns =3D ['output']
+> > +exclude_patterns =3D [
+> > +	'output',
+> > +	'devicetree/bindings/**.yaml',
+> > +	'netlink/*.yaml',
+> > +] =20
+>=20
+> Please merge this with the earlier patch that changes these lines so
+> that the series doesn't contain unnecessary intermediate steps.
 
-> >  .../boot/dts/renesas/rzt2h-evk-common.dtsi    | 24 +++++++++++++++++++
-> >  2 files changed, 25 insertions(+), 16 deletions(-)
-> >  create mode 100644 arch/arm64/boot/dts/renesas/rzt2h-evk-common.dtsi
->
-> Perhaps call it rzt2h-n2h-evk-common.dtsi, to match the filename
-> of the documentation?
->
-Agreed, I will rename it. (Note although there are similarities, the
-DIP switch settings differ quite a lot. So If you prefer Im OK to go
-either ways)
+OK.
 
-Cheers,
-Prabhakar
+>=20
+> >  # The reST default role (used for this markup: `text`) to use for all
+> >  # documents. =20
+
+
+
+Thanks,
+Mauro
