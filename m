@@ -1,210 +1,128 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623E91F428C;
-	Fri, 13 Jun 2025 15:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE65F1F2BA4;
+	Fri, 13 Jun 2025 15:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749829209; cv=none; b=ElbjU20o5x65BC/6ddH2HWhp+LB4m6cC1uLzDr+EJ9dFO7c+32UYo+Nv1tKZbQ7ScJwYDmkRpY+cAy4zU1P8/B1KuTnpTI50cGofpADBqtHD37IZq0KtKCMKtfKVJ55YSljn+k1jQD7oA7/za3kH4FP9pIt3ue3kD2h957pdrJM=
+	t=1749829260; cv=none; b=Qy6cLSQqGIG/hICeKG2BTuIqMCKCLCEkuYt6+I0Flzw4R7sXn2KpvgjlNtDLyPAhfdn0Ssp5GJWCi7CuoGQKuYTBhCpOPU/DsNq57uwZNSlRpZwSB5UCb7UfmX92XtqRRLIONWqYEV3NMRwkeIdYFrl0DLHcZIt+g/albpWcCXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749829209; c=relaxed/simple;
-	bh=9te5CCjrFZaz1KxLyCGrVsVQcnrq78gDZkkGplYpKjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7NTCaXTrJsGzNhG4num94b30q3Kdqak6Fu7snbjiM/F+UrhzL05ME4FFJfipUfuncsDUaQ1rDDQtbkfGu96oMDARFK00GHik8pB7GSTH1DgiXkcyxfO8G4S0GTs++tXgVgt6h9wjfZm+wauTcg58CCoK3RPub59okGU1+VmufA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ej+/YyKq; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749829260; c=relaxed/simple;
+	bh=O09SdkgPIKTFU9Q1h82PH3/Bpg762GwFiRX1SYiGSNM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oH/QussdxwZqkk5KbAopMD9bFXKerl+fm5X4q3tTuzJMOvAa8O99ThfThFCjvZGbdK3V6hETCPAFqSk691CktNarxs3vdJQ9oWq4uLcQWwx1wKuaIek4DHmD8gPNcmHPYJStjDc2nSQvOPwaRRK8m+h9KKJS5/ubBQY7r1OGf1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=CNt+1EJw; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ej+/YyKq"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6facba680a1so26819076d6.3;
-        Fri, 13 Jun 2025 08:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749829206; x=1750434006; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KupK1c4Lm0SPYLLhp4v1EdiFsUsIffsLQqXMeFIS6mU=;
-        b=ej+/YyKqi+N06KWVfcAUTWqzlSruRRMzM5KkFuIBhd6lmIeSFmft7JzL59MH6C7+Ub
-         EdcMkxxxFqSG4gtm03tDQ1J807kb3bT06NgW92IR/A5kcT67XIQqPXXxlLjB0AVoxlyy
-         n/CP1ye5q3g/OyJxPMNlhl5GCfgBpiXevVsaKzEUBqFaxXyKQkJ1tZj4dpdv5Ux6ml1Z
-         3G+Vdhetp9zKgIziOzz4k2hLAE9ku83btlJ93NfA/Ts+zWVqbo3ecXF2cnbDN3D7WjM3
-         iebuPIP7XNErS2mpueZVPGI59JYZ7siIUB6fUetXcE2s7tnPmvf52PEm2EBi1tAXGvj4
-         erEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749829206; x=1750434006;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KupK1c4Lm0SPYLLhp4v1EdiFsUsIffsLQqXMeFIS6mU=;
-        b=S9E77IMxcw5sSqxIMp6qHJZN6JsdKFxYKgtCwtlFudd1Y0BE/7Rw3trFfCx1YCPwzD
-         qLCgEair9NoN2wKoJSqddEL2uk/pepjv5zmjA/NsgRqeLwkJZr2NxMxn07GfN1hwJc2h
-         mP/f+k1vo9OwCaNrGndqbfU500zWNavrj/un4Uc+bzrKfV+hAXdyRpmtBQZVntE7+w01
-         6aHqOZW/Ea+4H7ENF/JB1XqqPswYACnldA+5o5P6sQutElZPEFdfFNALAv1Gp6r5ZV3O
-         kFmpjSBNIvPXyRHJYmPEM3rAW3JSepfmMND6lEVLzV/Qqz936aw+XwsswC4d3AVWVwNO
-         a+pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV6oPPdfqI+sU1vQe3zXgWtF2f/yEZweNvIFOVqQGxbc9cL9nbw9HOlxEQlYh0n38Q8JPCrdbI75fOfaDk=@vger.kernel.org, AJvYcCXAFfgD9PQoO3EI32wL+t0fNCHb6Q8BwyjMJdwtV3/Vbw9oZVM2Oj3ECx3iqKGxVvFL+/hx28RGCmk=@vger.kernel.org, AJvYcCXvo1zojDu5Olzfs3DfO8Rt/WmobeGnUjFq/INENl28nCHBaauC2voMsrS0FPAoG10Tmcb+GsQO/E/A+G88I4c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyzVPl+wJNVC3ScntKvGuhGcakFxkRyzUt29KXSQGznWMv1te3
-	GJvbnXsYoxEg3RAYrzm1tzkYf1GRPtWmfBUx6HoW+pmWAS/ftHsWYmTk
-X-Gm-Gg: ASbGncvR1AdE9NtBQRkoQc09QceG6gOwY2a70nybHWXmyhL3ODVHOLvQYLl77R5XPV7
-	AV+eEpYfkpvpXcgM7TcmrzVWdStEqVcNmzA2slEPXl0jxkKBnwkirAQW+oxC7fJcpqE2vMRqiNk
-	BEYMTinVc9QK34fFoPzKHVA5dGCtRWQ2rMLvaEtiw7YcSyICcJ6gqeG/4ODw9nIZVZAIC12xgHv
-	cHQHtU/+12u/81airPGFT8SBZx0bNOj7VcciLwaITBZwmj7R+Bu0FT6xUiXG09WsuTkkh0IMQJW
-	vtoNPfHSEOtsRl4hYrfk0wYqnJho3bo8PYw/enfYSNynbIvRewR7jyQv+2HO94+S+MKaAwMDKpX
-	3bNsBQJmEoP8Y1JLaiwEZaRFHj1wio12xPb2yGoaTdUkE4jZG5kTdblmiZ4WUBQA=
-X-Google-Smtp-Source: AGHT+IEGvmkwA50NnwVfQznUXoblPUYa5GZU9ch0GNYZqlaVTm4hegFizJgmCPABwVktv6fBOQhPjA==
-X-Received: by 2002:a05:6214:246d:b0:6fb:f00:48ad with SMTP id 6a1803df08f44-6fb3e5991ffmr58510936d6.18.1749829204275;
-        Fri, 13 Jun 2025 08:40:04 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35b3d630sm22866776d6.47.2025.06.13.08.40.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 08:40:03 -0700 (PDT)
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 4B1561200068;
-	Fri, 13 Jun 2025 11:40:03 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Fri, 13 Jun 2025 11:40:03 -0400
-X-ME-Sender: <xms:U0ZMaKs_5dZs40BSZb_Z1s8gyLBJhak4--d0hze3BYG9wdLpdVCVgQ>
-    <xme:U0ZMaPfZabpg4ugqUUxi1QIgOLwTXJnxCLuofuUy2DHTyoWNetsq7A7zfR_2O-mRE
-    UIa1zapvlVl4sm3iQ>
-X-ME-Received: <xmr:U0ZMaFwQ-pFiCnyweAmQdddM-JR7Whzn6GtCpoqdcVQCKCi7x1RsMa8lfg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeeffecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
-    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
-    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
-    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduledpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhirhgvshhhrdhkuhhmrghrsehlihhnrg
-    hrohdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepphgvthgvrh
-    iisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprh
-    gtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhn
-    fegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopehlohhsshhinheskh
-    gvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:U0ZMaFML3_OTqlJKddHlbA6eEJU_jaPCcqj0six9T-3COTkbz-9Upw>
-    <xmx:U0ZMaK8o7OAgW0WPc2gcVxOMXDOnmDG0sEs6gJEccG9djZWlUKjBxA>
-    <xmx:U0ZMaNUoVbWMnmCbkWFyBkHBd9yXMszODL6JBpn2k0mcDi1-TAADpA>
-    <xmx:U0ZMaDdS64Q2qe5bC0vc-a3JSKlICjj2gkv9E7ml8yu812QEvhgTzA>
-    <xmx:U0ZMaEc4dImh-wme0UA2EMudbODoZRol7Qn7u6_GxKWw00VKKWlN6us_>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 13 Jun 2025 11:40:01 -0400 (EDT)
-Date: Fri, 13 Jun 2025 08:40:01 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 2/3] rust: Use CpuId in place of raw CPU numbers
-Message-ID: <aExGUZ3H5mZ7Drqd@Mac.home>
-References: <cover.1749554685.git.viresh.kumar@linaro.org>
- <e790f17123beb45c6a811135ec3df8f0bd761c0e.1749554685.git.viresh.kumar@linaro.org>
- <aEmq8fs1fHSB3z4i@tardis.local>
- <20250612050117.3oi6belkf5lrreoh@vireshk-i7>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="CNt+1EJw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1749829252;
+	bh=O09SdkgPIKTFU9Q1h82PH3/Bpg762GwFiRX1SYiGSNM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=CNt+1EJw0i0D27v0lNepu+ICrvGqwJa+xY/jRfGl9iqiZMCRilkO0XCwsqZZUm1z8
+	 /pq2PmJlcsoHSxvygR7uHWpd3JBs1L8VzwMl/w9px+ougciEo+rzCZM/LPy3fhEcm8
+	 pewa2l9EquOsDWgSkycGN7i9avo8Ow4QYZt7Y8YE=
+Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id DD1E61C0059;
+	Fri, 13 Jun 2025 11:40:51 -0400 (EDT)
+Message-ID: <e0f91ae1e43dbb05b97c248cd09fb0030e041f51.camel@HansenPartnership.com>
+Subject: Re: [RFC] Keyrings: How to make them more useful
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: David Howells <dhowells@redhat.com>
+Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>, Steve
+ French <sfrench@samba.org>, Chuck Lever <chuck.lever@oracle.com>, Mimi
+ Zohar <zohar@linux.ibm.com>, Paulo Alcantara <pc@manguebit.org>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Jeffrey Altman <jaltman@auristor.com>, 
+ hch@infradead.org, linux-afs@lists.infradead.org,
+ linux-nfs@vger.kernel.org,  linux-cifs@vger.kernel.org,
+ linux-security-module@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
+ linux-crypto@vger.kernel.org,  netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Fri, 13 Jun 2025 11:40:51 -0400
+In-Reply-To: <473711.1749760578@warthog.procyon.org.uk>
+References: 
+	<2dc7318d6c74b27a49b4c64b513f3da13d980473.camel@HansenPartnership.com>
+	 <462886.1749731810@warthog.procyon.org.uk>
+	 <473711.1749760578@warthog.procyon.org.uk>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612050117.3oi6belkf5lrreoh@vireshk-i7>
 
-On Thu, Jun 12, 2025 at 10:31:17AM +0530, Viresh Kumar wrote:
-> On 11-06-25, 09:12, Boqun Feng wrote:
-> > I generally found that `u32::from(cpu)` is more clear than `cpu.into()`,
-> > but it's up to you. Same for the rest of `cpu.into()` cases.
-> 
-> Updated as:
-> 
-> diff --git a/rust/kernel/cpu.rs b/rust/kernel/cpu.rs
-> index 7549594fad7f..abc780d7a8ec 100644
-> --- a/rust/kernel/cpu.rs
-> +++ b/rust/kernel/cpu.rs
-> @@ -129,7 +129,7 @@ fn from(id: CpuId) -> Self {
->  /// any references to the CPU device within the notifier's callback.
->  pub unsafe fn from_cpu(cpu: CpuId) -> Result<&'static Device> {
->      // SAFETY: It is safe to call `get_cpu_device()` for any CPU.
-> -    let ptr = unsafe { bindings::get_cpu_device(cpu.into()) };
-> +    let ptr = unsafe { bindings::get_cpu_device(u32::from(cpu)) };
->      if ptr.is_null() {
->          return Err(ENODEV);
->      }
-> diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-> index ea6106db5c29..11b03e9d7e89 100644
-> --- a/rust/kernel/cpufreq.rs
-> +++ b/rust/kernel/cpufreq.rs
-> @@ -527,7 +527,7 @@ pub fn generic_suspend(&mut self) -> Result {
->      #[inline]
->      pub fn generic_get(&self) -> Result<u32> {
->          // SAFETY: By the type invariant, the pointer stored in `self` is valid.
-> -        Ok(unsafe { bindings::cpufreq_generic_get(self.cpu().into()) })
-> +        Ok(unsafe { bindings::cpufreq_generic_get(u32::from(self.cpu())) })
->      }
->  
->      /// Provides a wrapper to the register with energy model using the OPP core.
-> @@ -682,7 +682,7 @@ fn clear_data<T: ForeignOwnable>(&mut self) -> Option<T> {
->  impl<'a> PolicyCpu<'a> {
->      fn from_cpu(cpu: CpuId) -> Result<Self> {
->          // SAFETY: It is safe to call `cpufreq_cpu_get` for any valid CPU.
-> -        let ptr = from_err_ptr(unsafe { bindings::cpufreq_cpu_get(cpu.into()) })?;
-> +        let ptr = from_err_ptr(unsafe { bindings::cpufreq_cpu_get(u32::from(cpu)) })?;
->  
->          Ok(Self(
->              // SAFETY: The `ptr` is guaranteed to be valid and remains valid for the lifetime of
-> diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
-> index 11ddd43edcb5..19c607709b5f 100644
-> --- a/rust/kernel/cpumask.rs
-> +++ b/rust/kernel/cpumask.rs
-> @@ -94,7 +94,7 @@ pub fn as_raw(&self) -> *mut bindings::cpumask {
->      #[inline]
->      pub fn set(&mut self, cpu: CpuId) {
->          // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `__cpumask_set_cpu`.
-> -        unsafe { bindings::__cpumask_set_cpu(cpu.into(), self.as_raw()) };
-> +        unsafe { bindings::__cpumask_set_cpu(u32::from(cpu), self.as_raw()) };
->      }
->  
->      /// Clear `cpu` in the cpumask.
-> @@ -106,7 +106,7 @@ pub fn set(&mut self, cpu: CpuId) {
->      pub fn clear(&mut self, cpu: CpuId) {
->          // SAFETY: By the type invariant, `self.as_raw` is a valid argument to
->          // `__cpumask_clear_cpu`.
-> -        unsafe { bindings::__cpumask_clear_cpu(cpu.into(), self.as_raw()) };
-> +        unsafe { bindings::__cpumask_clear_cpu(i32::from(cpu), self.as_raw()) };
->      }
->  
->      /// Test `cpu` in the cpumask.
-> @@ -115,7 +115,7 @@ pub fn clear(&mut self, cpu: CpuId) {
->      #[inline]
->      pub fn test(&self, cpu: CpuId) -> bool {
->          // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `cpumask_test_cpu`.
-> -        unsafe { bindings::cpumask_test_cpu(cpu.into(), self.as_raw()) }
-> +        unsafe { bindings::cpumask_test_cpu(i32::from(cpu), self.as_raw()) }
->      }
->  
+On Thu, 2025-06-12 at 21:36 +0100, David Howells wrote:
+> James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
+>=20
+> > One of the problems I keep tripping over is different special
+> > casing for user keyrings (which are real struct key structures) and
+> > system keyrings which are special values of the pointer in struct
+> > key *.
+>=20
+> It's meant to be like that.=C2=A0 The trusted system keyrings are static
+> within system_keyring.c and not so easily accessible by kernel
+> modules for direct modification, bypassing the security checks.
+>=20
+> Obviously this is merely a bit of obscurity and enforcement isn't
+> possible against kernel code that is determined to modify those
+> keyrings or otherwise interfere in the verification process.
 
-LGTM,thanks!
+Yes, I get that, and wasn't proposing to alter it, merely make them a
+bit more usable as part of the standard workflow.
+
+Are the permissions also deliberate?  It would be useful for ordinary
+users to see the certificates in there in case they want to condition
+anything on signatures with internal keys.
+
+> > For examples of what this special handling does, just look at
+> > things like bpf_trace.c:bpf_lookup_{user|system}_key
+> >=20
+> > Since the serial allocation code has a hard coded not less than 3
+> > (which looks for all the world like it was designed to mean the two
+> > system keyring id's were never used as user serial numbers)
+>=20
+> That's just a coincidence.=C2=A0 The <3 thing predates the advent of thos=
+e
+> system keyring magic pointers.
+
+Well coincidence or not it makes the scheme workable, but I've no
+objection to using negatives as suggested below, either.
+
+> > I think we could simply allow the two system keyring ids to be
+> > passed into lookup_user_key() (which now might be a bit misnamed)
+> > and special case not freeing it in put_key().
+>=20
+> If you want to make lookup_user_key() provide access to specific
+> keyrings like this, just use the next negative numbers - it's not
+> like we're likely to run out soon.
+>=20
+> But I'd rather not let lookup_user_key() return pointers to these
+> keyrings...
+
+That wasn't what I was proposing.  If we were to allow it I think it
+would return the standard pointer that's actually simply a number as we
+do now.  That would be enough to unify all the workflows into
+pkcs7_verify_..() and crash soon enough if the key pointers were used
+inside the kernel for stuff the system keyrings aren't supposed to do.
 
 Regards,
-Boqun
 
->      /// Set all CPUs in the cpumask.
-> 
-> -- 
-> viresh
+James
+
