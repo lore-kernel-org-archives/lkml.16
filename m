@@ -1,107 +1,152 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD5A26B769
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EF82727F6
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803389; cv=none; b=i89ICIGe6fuBK+lXLRr17a9kFjboWskFHsGqO5DpgmYiFGuu6my0oH1skLmrWO7pe5x0YxI6O6PM1PVObalB75i1kT2XLZOYBnYlNRKkwx7kagCjJ4iCGyeJ+tmzfz0y4dfhQEedb12CSfJFezj5P4oziv7WEtxswOQYhPcGoLI=
+	t=1749803393; cv=none; b=PWzycctWiPSyTkMC0SNnYSEQTw2M9uBvW1RJogV1q4KKHUjE3YMV62gmKGazAmOPjqisVidaL3maPA+f17l9eobheQD0fsZqY9tsy3Fa1E/oJConSTrPvcChvGEYt2B2UM32w2+D9Gm8QgR6Mx+fPnEJcRBf3NT8aiKLgR8lM1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803389; c=relaxed/simple;
-	bh=J6YZxriHaTmvz6OM5J/vKP3i63y+j8fechcV8d+0YjE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gO3KoMWm+bZRAqwIACfr+YSrGm3opntvGBPPcpg4L/iUU3TpwAwagCE9kbDPfYeN3Gf3b46sPjdQdjRzhp+iVIkVoLrSQ/hXCA4dusSRMKjfgjzoGGEm7vrcQ97/V/PNfRPQYJIs3Qszbuuy0tk19+SCz0Q/TPpLZbjMivDJx7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RsNOyIeC; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749803393; c=relaxed/simple;
+	bh=Ndaw6E/1DT8mCCAKumeuIusQOrCN2MR3mwrjjMC25I0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mcaaSfBIfc953E3aH0NEcZV0x8UX60K2DfipLBS8BfAUcx8B3X4JyUvRcjv9j/8a3FiD/8kBFauazzjgC13+6csT/sE+CJ+DtOcf7Puk9zMO7JTbk4FZAZ1C54St2/EdnKlMuVe7P9P7Lf/+JqFnlY5wfytFMkHitRxc2KeP9Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K/RR1W6w; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsNOyIeC"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23636167afeso18667765ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:29:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K/RR1W6w"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a3798794d3so1786644f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:29:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749803387; x=1750408187; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=td07OU6/JzFFs4bmH5Tm3DQk5V9dUyw12AEZ8RsjVnc=;
-        b=RsNOyIeCXAs2kky5OztzoC3MX15yQWcyYg8P3ha+ko0z6trwkdvP2THDxcyhmx9rX7
-         8raaK7HIasxLjMXmf6jJvJ+jey1vsgNyU1HE34G8c9ufIno2xBn4wPH/W/saXYp0BIj4
-         BLuzfbyP/86dbJb1SEEhmP8xk7v/ihRHAQpMNCLcfvqTdHJ90EpvY5fTSGu0kdcfEuaY
-         oNUOhlZUglbYfwmOINOU3zjZK7zDhyFHoYLcYUyF90OqL8b1GnhVzRdZaqk+JytZWG1u
-         P7h6WfEYiuHtlBlyLFGaGgugueKw01v4+opYyV0qN/fl2arfT2QOX4kQP6DvCVoX/L4t
-         L/LQ==
+        d=linaro.org; s=google; t=1749803390; x=1750408190; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2vw2wbUJHDF5FJbkrTPFuUAQyWojwex3GcPQ3V01XJY=;
+        b=K/RR1W6wc7ua4gF1hPXz1JMJNx1efcS69FStc5UtEmq5PYKLMvaPybNxeNUuGj6C/Q
+         u+h1Fm547CaIS7uU6uwFG6NSJDr+HA7YHCcs3kWuWKsNWrHiw3B7HijYCSennnQ6uGx2
+         nKlSMNU9BuS+n1N/YdLZC80YENNsNKqQjVLJ412cL6B/whMSaaCL2yJj1ZmL3e1YOKPg
+         VcqP+r4UXOqCNJf3qg3OU7ShlCrxmkhdOVN8vPrCK7gNASJlS69OLrOeUNGWn+gaB/e4
+         zsH28MD7RbpBa87BcjO0NfjeYA6TTxrCWzAZzXjI32w//heweHrZT9zS4lc0fBNYkO2l
+         cxeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749803387; x=1750408187;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=td07OU6/JzFFs4bmH5Tm3DQk5V9dUyw12AEZ8RsjVnc=;
-        b=kaU6N+4m6+gR9OjCvPpv/7KnCEL/tH5Tt4iid3kFiG6A5bCej7NSToNMAVp7Yo33lS
-         eizaVbcaTlfrWAAu0PTuxN+i6hwuAUOcNg65U8F3o4u2kGTQNsYsRyvAtfLxt3e9pust
-         YjPeR5qMPNdj7chvaiWydwPhOVLliQQmkA02fYYKfKwl8hs4ZpRIVZsO3FA7w4bzOw3e
-         SqPWNAPeaGf4yT8CYNLi9gKdP54LrU8wpuaLKovamSgj09uN2Ng5Z42wvumM4vR7FNpX
-         F/DchojpMW6Kpx5TpxCf1NWS0Brk/2NA3tFWYJxhplmy2QsAVbXe9TLzYesBi+3k8zul
-         ZDWw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9YGsli5xMxSG3w9ASV5kCYnZTUKa9JxGvvYJOVrZmun7Z0bxAQtm7/PXU05D8Be+V+88bDUrolgYJTk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW5GH7Tf6uB4khn9lymHyZuRjZeewrrQL5Ama4areg4QQpsjFR
-	gcJxSV+l0Rb4bMwGERLDZ5yFeguSR2pFpCS7XwrScoTVGhFBY7bddxkV
-X-Gm-Gg: ASbGncuJE8tbIQh377Jg949a8WJkkGLKjNxeiaCVmJR/QJzSlKdovtDoOuvGUyMDTIt
-	kTQiYmUm14o3UuF4aKsGWdAmM3JXAbZusRsILDuAYLB8oVhO5dLyNVrquNdU/n5qMpMvRd0dVEX
-	Wxu60KvYvTUcl0Tfx6EPT6b5ZKA2dudzTuaE4z0SLsSLhKWWWH2dXMWRJ6HTHtloH6+F6Nskx22
-	+F6O/1V2z0BCiQEEQ1Nrl84UDl5f2OWcUsSmaDbglLgrSUTgmwzl7vfdr3+4PCyTPmgQMmpCa6V
-	nuYV6B//VBJfl2SFEktPo4JxpC2OFyjY/tMr0DCfIHOP6PgUPkla0obVkG0WMTfT
-X-Google-Smtp-Source: AGHT+IETz9S2vC3DeAV5L/Z/4+EDQPLntlfWleDBPPajqXQm/k03d/6YVkB6j/50621Nj6VxoLsLwA==
-X-Received: by 2002:a17:903:1103:b0:234:c5c1:9b63 with SMTP id d9443c01a7336-2365d89ebb3mr24672145ad.18.1749803387516;
-        Fri, 13 Jun 2025 01:29:47 -0700 (PDT)
-Received: from localhost ([180.172.46.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb4e27sm9324335ad.176.2025.06.13.01.29.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 01:29:46 -0700 (PDT)
-From: Jemmy Wong <jemmywong512@gmail.com>
-To: kprateek.nayak@amd.com
-Cc: bsegall@google.com,
-	dietmar.eggemann@arm.com,
-	juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com,
-	jemmywong512@gmail.com
-Subject: [PATCH v2 0/1] sched/topology: Add lock guard support
-Date: Fri, 13 Jun 2025 16:29:40 +0800
-Message-ID: <20250613082941.18129-1-jemmywong512@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1749803390; x=1750408190;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2vw2wbUJHDF5FJbkrTPFuUAQyWojwex3GcPQ3V01XJY=;
+        b=cr1t2LpZKAltkLdW7BLvoGmtyRChwNuUvHFPKcnAI3SjNsAKDjrez2UZ36MVFbqL+6
+         SJoE0YbljPogN0KpWARCWIeS+cX8sdysRPZxQIBewYLDq8oqC2KnDcTYfrL7dIZWOkLK
+         hS/C7ZPxXnjjNe8ZYFdy8lSqZTgBdrvZMjzZ1LAN20Qgp/XBczK7ENbfnXWHo23GOomG
+         gDc8LNdT22fWQlqZhtYW96F0Y15ajBdB0ovh4K42SUIKCUkQIVP6N0iC5RBpKXzVVCJR
+         /5TZADfhPIqNA0RFf7swuyqw/RMsyW7n/NUSmL2O+U+ooLWg/+0YgPyW8urzdbmruyio
+         PYaA==
+X-Gm-Message-State: AOJu0YzhODNcixIqC4hKqjUgGbEH2nCTZOnlwAmxbAvnCfuwvsHPKDpF
+	aWBX6hOtWG+RpCPrBYSF7AyCAU5v47HiJWXEYLLEwcF7CUF+68+x0n0VYqZNVt/xEps=
+X-Gm-Gg: ASbGncsscArWvE0UnS66iq2ww+E30M6NtXePM5r90ni+oToJa6bxZMqjdaXxqZ5Xyky
+	LyPMpe1ZAcpsbyHYk+Q+t72KS5dpIEmoeQLiwRw2S3t1at+0/Rbkup3g6YLqv4zBToG/2Gyn3kW
+	XPH5NJTDbNE4+mZ1kNPXIFejKKv1KVRj0xEb3XIEhhktQ/orxZLJ3Zea7mClw+fGG1hAeuyB/1M
+	FkLzPL4uucAPz+/gRex7HEMsle9L6YmYG7xEZ5WbGx/iMAZinq94srHLIadMUqRfJSgSXVu6ZS7
+	uv1wlK31e+DN8XiwAteFMfUuDH6qrWEjNS3rFB2i6eAJh4vmc/20slKs/LCKMHiUfG5mZECYy0F
+	BQZvw18JBE+wSjdZJ9a7n+L7m9j0=
+X-Google-Smtp-Source: AGHT+IHi6SlBwjFJOsMDJVRnIHSeQtix9HOeS66GL6NI2gk448DXiXM8fUugtFC2s4okglYnJjCwFQ==
+X-Received: by 2002:a05:6000:178b:b0:3a4:f72a:b18a with SMTP id ffacd0b85a97d-3a5686da23dmr2067256f8f.26.1749803390030;
+        Fri, 13 Jun 2025 01:29:50 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e244392sm44568325e9.22.2025.06.13.01.29.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 01:29:49 -0700 (PDT)
+Message-ID: <7f76c2df-24bb-486f-b68c-6ca61e7acc8b@linaro.org>
+Date: Fri, 13 Jun 2025 09:29:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] media: qcom: camss: Add support for MSM8939
+To: Vincent Knecht <vincent.knecht@mailoo.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
+ <20250602-camss-8x39-vbif-v4-2-32c277d8f9bf@mailoo.org>
+ <877a72fa-cdae-4a66-9991-5ea86ef76aac@linaro.org>
+ <e73d676ba1901437d471a2a633e94a07b19a3e05.camel@mailoo.org>
+ <03f54bb4-ddbb-4be8-9f9b-8328fdb98443@linaro.org>
+ <67022a6de185740fa482183f29d574298048d54f.camel@mailoo.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <67022a6de185740fa482183f29d574298048d54f.camel@mailoo.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Changes in v2:
-- guard inside sched_init_domains instead of outside
-- replace do{}while(0) with sched_global_validate func
-- wrap commments at 80 characters
+On 13/06/2025 09:28, Vincent Knecht wrote:
+> Le vendredi 13 juin 2025 à 09:06 +0100, Bryan O'Donoghue a écrit :
+>> On 07/06/2025 22:43, Vincent Knecht wrote:
+>>> Le vendredi 06 juin 2025 à 13:59 +0300, Vladimir Zapolskiy a écrit :
+>>>> Hello Vincent.
+>>>>
+>>>> On 6/2/25 20:27, Vincent Knecht via B4 Relay wrote:
+>>>>> From: Vincent Knecht <vincent.knecht@mailoo.org>
+>>>>>
+>>>>> The camera subsystem for the MSM8939 is the same as MSM8916 except with
+>>>>> 3 CSID instead of 2, and some higher clock rates.
+>>>>>
+>>>>> As a quirk, this SoC needs writing values to 2 VFE VBIF registers
+>>>>> (see downstream msm8939-camera.dtsi vbif-{regs,settings} properties).
+>>>>> This fixes black stripes across sensor and garbage in CSID TPG outputs.
+>>>>>
+>>>>> Add support for the MSM8939 camera subsystem.
+>>>>>
+>>>>> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>>>>> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+>>>>
+>>>> There was a preceding and partially reviewed changeset published on
+>>>> linux-media [1] before v1 of the MSM8939 platform support in CAMSS,
+>>>> due to a merge conflict this platform changeset should be rebased IMHO.
+>>>>
+>>>> [1] https://lore.kernel.org/all/20250513142353.2572563-4-vladimir.zapolskiy@linaro.org/
+>>>>
+>>>> --
+>>>> Best wishes,
+>>>> Vladimir
+>>>
+>>> Thank you, I'll look into it
+>>>
+>>>
+>>
+>> I think I will take 8939, plus any of the other now 3 SoCs waiting to be
+>> merged with RBs.
+>>
+>> Bindings consistent with the last 10 years can go ahead. Its not
+>> reasonable or in the interests of the community and developers to gate
+>> any further.
+>>
+>> ---
+>> bod
+> 
+> Hi Bryan,
+> 
+> I've locally made the requested changes for bindings
+> (ordering, vdda voltage, style, clock-lanes removal),
+> just not gotten around to rebase on Vladimir series.
+> 
+> So I can still send a new version with just these changes today.
+> 
+> 
+> 
 
-Changes in v1:
-- Convert scoped_guard to guard
-https://lore.kernel.org/all/20250605120424.14756-1-jemmywong512@gmail.com/
+That sounds fine.
 
-v0 link:
-https://lore.kernel.org/all/20250604185049.374165-1-jemmywong512@gmail.com/
-
-Jemmy Wong (1):
-  sched/topology: Add lock guard support
-
- include/linux/sched.h   |   9 ++--
- kernel/sched/core.c     |   2 -
- kernel/sched/debug.c    |  13 ++---
- kernel/sched/rt.c       |  47 +++++++++-------
- kernel/sched/topology.c | 117 ++++++++++++++++++----------------------
- 5 files changed, 88 insertions(+), 100 deletions(-)
-
--- 
-2.43.0
-
+---
+bod
