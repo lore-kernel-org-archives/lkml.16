@@ -1,104 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C79273D80
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DE327144C
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749849050; cv=none; b=mhhF54jX3xEmTU0p+TTFr65xlzxOKDvqFoHSw0ypVxMF97xYlySwoC17HmQFRD2wbaljuw/MxCieuesNOX0Efe43LP+0Rs85U6FXpBKKUD0x2B38ugXT3AMXW/daUvhFV8CAg9IHeeQcTw2HZfMOcYrYtW7di139VoxG+c3D3/E=
+	t=1749849270; cv=none; b=UYC+x+SwFBBKX+J0I2DN5YkVXE8m8enP7eJIJJO5+UXIsKgXTho6iBHyWSctGoq20G0x+QPujiM543fc7lMaOdsPHEsgN47VFgVFtebzpY6dzK0N2ZvbLBGVXCMl4cTfhAffPEY083qay1KozptApHlp3QLqJxi3rd2/iNreNtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749849050; c=relaxed/simple;
-	bh=FHAPxI/HuXRg4fJxkaPDbwP0KAPYb39etCsQBuSsyBo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QB4LsPDbSGCogZGPmGvnQFDJjKi4/bawN10qDIlYN5ve3xYx4JITW1YBD5MkEWVY/ZVf11CCP2O47g0LV8YvS6qCi3JCq0ThyIk/ZGcs7TOmC8fHv6LSEtHxJ+K5I6tWBJf77cYBGl8YqqI+yIQhXvb5SXMpsMjDjalPNd53h+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SY61hkJp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749849270; c=relaxed/simple;
+	bh=3gW54xxqi5YfP3g8A7gpJXnky5JvqRK+AOvpeic5Yok=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UBnq24+36AQN1eC6hwJltiz1AogMJQZuZPZ77DS0FoHU/vWWKlb8QNMNf9EJCu2TLkShdcbs3YpoASJxnSTR7VUf7bCd+rw638DGI9S+G+nkd6UHIrPNFsB6zo8R2XomCkGM+RQ7QN+Br6kjT5AkXDKwwneorYIn9Tr7XRtcnDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=33EgCjj9; arc=none smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SY61hkJp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749849047;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mNiQe0latyuV+0Nej5a3v8dTOT3R2VIrVcf+cVDytHw=;
-	b=SY61hkJp5nCtnCOqoZy0duW2fU9EvnCvlX45+bMzjslStoo1CzKN6ns3mOTcejVCSPuoo4
-	oAf3Odzq2T6MqF2zj8FmzHPtZJpYzUySGknPuu/rzPTWE5gAXBNGL9ztXqUk6r7I/SX56u
-	/wGHmyaeUe5EJSTSAcVHDQF4zsy2reM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-C6wIBbHOOKG8kF1Hgbfh4g-1; Fri,
- 13 Jun 2025 17:10:42 -0400
-X-MC-Unique: C6wIBbHOOKG8kF1Hgbfh4g-1
-X-Mimecast-MFC-AGG-ID: C6wIBbHOOKG8kF1Hgbfh4g_1749849040
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EB281800343;
-	Fri, 13 Jun 2025 21:10:40 +0000 (UTC)
-Received: from [10.22.89.154] (unknown [10.22.89.154])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A087919560AF;
-	Fri, 13 Jun 2025 21:10:37 +0000 (UTC)
-Message-ID: <0b930c3e-0835-429e-8081-d83df811a091@redhat.com>
-Date: Fri, 13 Jun 2025 17:10:36 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="33EgCjj9"
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e79de9da3fso707158137.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:14:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749849267; x=1750454067; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9bCHCGcohcJ2Z8gKyh3s4OeACkb8tG/8ddHOZfIjF3E=;
+        b=33EgCjj9+K2cUB9uYjRDboj9VbWu+wAo6PDo9Q8YakZZ8LGv5dwdxji5VGqVkiwHfQ
+         oJp/NhdxR7+fr8mgN+cvl0irpXZDv+2ppEjcXZy9JuMrNJMM4T/wZn6EJfdWRPDeNeuR
+         o+/JQ/iFxM4MsHwqrKFh/PL6MeYPjh8n92E7L3Db3t5JkMSyzX/qJAjBIZMswh8ZkV5m
+         DFdy1tmYB4I/xkmoS/UVFA35hOW8xsxG2z3l/4hag1kOyk6s0CYCKl7daBRSuLPFyPD3
+         BBLk5D8Csb86HZvKpWejhlmvIpwWNPVixHzq0DKfq+v/jJJnQ7Vht64mEOaYTSIk1gKr
+         7Q0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749849267; x=1750454067;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9bCHCGcohcJ2Z8gKyh3s4OeACkb8tG/8ddHOZfIjF3E=;
+        b=wG8if/qsH1FiWuRZ6KX5KXOysghH/sKqMGWULCzzOfdvXWEve2rNpfULpycpBzN/Tq
+         szQtLDoyj137wTS2Efr+RoqQ+uYHt2GlxFhlUla29Qznm3/occLHxhchvcrjwTlKAu93
+         8uc1by32Y1CRkGwJLdG3t5gsmbbiihvivkhNfTHpfb9M5t9xYYxHyJuuDdJ9s4uoHOQl
+         ucAHqTjYqGOiAbBi5hiyKp4pGpPsOn44kREwwgWaeR1GmZdLwFajxDeCB3VDt1p/J5Nk
+         IyugckRh52ley7c5o9mFX0YMTlv47INrhVmxizzVa9d0biCNrf5W9+R449eVbGjjhuc8
+         GbDA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1uQ5aCm/AECZNcpo5mZofDDt6ZMtXA/QiprLMy63KI2Vrj7xjjWZSXEXlAcjOZ1BbCCa9A2lDMCXNXCs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn31ZLvexuIOxhq2hlBmR42aWSw08WdQgviaX3UMSw2JSk0M00
+	Vmoc/VSmaZQVS68El2hnszDWSOO710TowTWKaqBE6B4IwTQeariNnDdRZQRn3EYK37Snja3zSLO
+	Myhilr68r2W/7v8x86WblCG1aPtU0qfwkKgia+JhQ
+X-Gm-Gg: ASbGncs2q+S3zyn/oohwmjohDXpEayom8CXiddtSjtZOgF0Av04LxLtfe34jSAOADWX
+	dJ9S0NsibL/qDuGv48AppMa5Q5g+NmuMibJzt3cTS3C1IsvF6eyVbz8P+IbGOungOQ4jRpOXwcY
+	rOWm0wKNmGuRxPXhUf4flRjcOpMe8abS834ISkZlvWtw==
+X-Google-Smtp-Source: AGHT+IFDKOFSYaUuF6G7K6OfIsfpObQ96cqfG2SkXcaTm8DQdC0kgY8LOqBWYZw9a+dWxydmoDEXMMYsxWer9ReGFRQ=
+X-Received: by 2002:a05:6102:26c2:b0:4c5:1c2e:79f5 with SMTP id
+ ada2fe7eead31-4e7f61c6ecfmr1328879137.16.1749849267109; Fri, 13 Jun 2025
+ 14:14:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] scsi: fnic: Increment driver version number
-To: Karan Tilak Kumar <kartilak@cisco.com>, sebaddel@cisco.com
-Cc: arulponn@cisco.com, djhawar@cisco.com, gcboffa@cisco.com,
- mkai2@cisco.com, satishkh@cisco.com, aeasi@cisco.com, jejb@linux.ibm.com,
- martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, revers@redhat.com, dan.carpenter@linaro.org
-References: <20250612221805.4066-1-kartilak@cisco.com>
- <20250612221805.4066-5-kartilak@cisco.com>
-Content-Language: en-US
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <20250612221805.4066-5-kartilak@cisco.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20250613134817.681832-1-herve.codina@bootlin.com> <20250613134817.681832-7-herve.codina@bootlin.com>
+In-Reply-To: <20250613134817.681832-7-herve.codina@bootlin.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Fri, 13 Jun 2025 14:13:49 -0700
+X-Gm-Features: AX0GCFvxcUcb0pxRJ6zcIBbIU8xYBQJLfYNKarcjHKuyfWeI8fRbEayRS0Ht4OY
+Message-ID: <CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
+Subject: Re: [PATCH v3 06/28] driver core: fw_devlink: Introduce fw_devlink_set_device()
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since we are making a major fix to the driver here do we want to squash this change
-together with
+On Fri, Jun 13, 2025 at 6:49=E2=80=AFAM Herve Codina <herve.codina@bootlin.=
+com> wrote:
+>
+> Setting fwnode->dev is specific to fw_devlink.
+>
+> In order to avoid having a direct 'fwnode->dev =3D dev;' in several
+> place in the kernel, introduce fw_devlink_set_device() helper to perform
+> this operation.
+>
 
-[PATCH v4 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
+This should not be set anywhere outside the driver core files. I'll
+get to reviewing the series, but until then, NACK to this.
 
-so that the driver version gets updated in Stable together with the bug fix?
+Is there a specific patch that explain why we need to set this outside
+driver core?
 
-/John
+-Saravana
 
-On 6/12/25 6:18 PM, Karan Tilak Kumar wrote:
-> Increment driver version number.
-> 
-> Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-> Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-> Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-> Reviewed-by: Arun Easi <aeasi@cisco.com>
-> Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 > ---
->   drivers/scsi/fnic/fnic.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
-> index 6c5f6046b1f5..86e293ce530d 100644
-> --- a/drivers/scsi/fnic/fnic.h
-> +++ b/drivers/scsi/fnic/fnic.h
-> @@ -30,7 +30,7 @@
->   
->   #define DRV_NAME		"fnic"
->   #define DRV_DESCRIPTION		"Cisco FCoE HBA Driver"
-> -#define DRV_VERSION		"1.8.0.0"
-> +#define DRV_VERSION		"1.8.0.1"
->   #define PFX			DRV_NAME ": "
->   #define DFX                     DRV_NAME "%d: "
->   
-
+>  include/linux/fwnode.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index a921ca2fe940..a1345e274125 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -231,4 +231,10 @@ void fw_devlink_purge_absent_suppliers(struct fwnode=
+_handle *fwnode);
+>  void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode);
+>  bool fw_devlink_is_strict(void);
+>
+> +static inline void fw_devlink_set_device(struct fwnode_handle *fwnode,
+> +                                        struct device *dev)
+> +{
+> +       fwnode->dev =3D dev;
+> +}
+> +
+>  #endif
+> --
+> 2.49.0
+>
