@@ -1,116 +1,149 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869DB17B4EC
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765DD1F3B83
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749838428; cv=none; b=lN3Y8/x0aNz43IOQE5p87dPJG52lFASHyaLIggSBqP3pwJrq/RSLvVU6zd48IAF/NDJ4GzSu6dsTDKkYhQlVEJvE6cqCnk5N5wBClKAvVWYxLTS6GhUd4vhyvc+a3f2nbPGPmL7Afp6kbcqa5oFQGz92T2L+VtS7ygLGyM6ap3w=
+	t=1749838452; cv=none; b=B5mWWkApf1ZIHf4FBZC8mB/7DRQmnHQGmVtDwhVwcjkQxPFsKwJIG21l1u1XA7a34imUZ0OFg8kYrH41csWi8ogQGxouKd7QKPXD9LJXL985nWemMww05HjxF1641ZcI7lszXWjJM/293Gd2LUGpEDnNzw6zicVHc+qiYaqobRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749838428; c=relaxed/simple;
-	bh=UmgzyBzQ/jgUw39z2VUJbMgNeLwbSTLTYJ0VBxIVoxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TKfUU1ev9wuZ8d8P1X+eNORpiM16CfisTgTHsCoFqGjYS9hIFaSzLzXISZj7AhhJ3U/ddHkyyrrrHz3YshFA+SkgHi39QaqucwQ3aZTMMyMFho+XdQpCetT6YEjD6zKFJEiMHVeWT4N8RL2R4o8a7x+5X3n7vNmQpd/+ukOwgk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=srVXObpj; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749838452; c=relaxed/simple;
+	bh=pHIhBgCbxbw/wEXaEwfr43QBMvmKgvIYdQnGS+UjHQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mzAI4zY/UuKZwNAg13+TocV3KMqDCBY32+uYbNjX30pdJ74Pym9syWesfyUJyhENZr3zFSLX9dO1ELWrwOoiVgpR4uCb0XX6EJocCHKMg4e9SiAJKqMYz1ojG0Egv8BUBjN6H7w2UM5EVf6aIm1JPDogNbA9TcuaBOFO5dOHxdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BlsijBi4; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="srVXObpj"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso4478110a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749838425; x=1750443225; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0INhtq8UslCI0h3j7LA2BL7iWR70QyFmUejwynW5DK0=;
-        b=srVXObpjf9dkc2+PC97+KpAXQ4Lsu0HR/LTLJj2SgnZxH/1wx9ZycckFUpy88m2kQY
-         /1k3DbaW9cOEf0ES9XOhprPwwyR6viZgXde0NS7z/WqB4O9l5raLE8qMtDUcWaeAtoEF
-         vJLWkEHSKDtNX4Yyx8X4jIc5lElnNSP1oPW82HwcsqM3Vd3CTrTvjLRjEZY1LtmyJIgw
-         InGkglEcvvrFE2XWmv3rn5u0T/bSM6vZo+fFssJoiuXFdaXeKE43czCsMGOl/m8hSA21
-         dT/DGTUR5vw5cbrGgFtje/b40JysRMKUwzRy7F8NQtdyLzTxG2/gwolREF4M09twixpK
-         PIdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749838425; x=1750443225;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0INhtq8UslCI0h3j7LA2BL7iWR70QyFmUejwynW5DK0=;
-        b=rTeX69mJY2CcbnxnRnoZ+vnervVJ0jba2pO4auqpxryNx6pVqUg/+XgLx2bGCuv5vU
-         BnFdtHBWRZH9KxhJBOjjZvb4pVexRESd5TScTXVHaGC/+3KLG4ixkwAGWCMfv3xHQplA
-         +M9RhJxbTJaJfuO/Vd3Tany7ESxIiONLesvhQvOmlR78wdwR5p07QKMFq60y5E+3UZsO
-         WaW8ZGTm0lR+d6OTCgC7r3TjvY9CDWVlOE/L0Otnm4KMvdWtFTfv/O3ORX+MTLnuUlRl
-         bhDrmtnSFUb/uOnvM2DFil6slIoESonyCFWulHLbwz5Y4wVEwuKsbbz+IHFx+Qjq3+VC
-         /Fgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwvHqYUnaVymkwJz1cr4ja8zfF5AVO25qnZKQupl4Yl6jkNEmI5D1D/QTTTrgn0/Mkg4d+AfiwUDdQ7FY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywunx7mQ+13Q3crTEfw2SSFxb9zDuI/rKZh1CaH6BKOR+Tpwd1D
-	LT00Nip8j59yCHydqhIUyvAW29/PMEqIHsE+6Uxo/5MzLh+pwf4+aEchktc8mcyuu3syjd/npMJ
-	6SfD+
-X-Gm-Gg: ASbGnctJ76lYUyImtya1ApbtfDUUAu1x+jq/1LjduAuURgXcXjpZ6gzKCYgzB0FUk+P
-	hkHms6fOd+P9eUTuc4fW1v5UeyXaOLHjEL9KtwgPf2EOfGQEYx8vZ0n1foR0CjosU2IiMjttJYq
-	d4u2235EZEiqaIdNXhysxXVpQrNtv8V5lacU/EedrVCWO70gQOD8vbkHtbbHtXtYJPIa0W7BDWR
-	qMBHvLdoJMwC1MOoYQ8wtwxXNsoXFjOLzA4D80rfUM0El57ayTFNUcaXXPi60yr7SnjwvoMansM
-	JJGTNa9nwx7nc/nKLTPMYcfxLXXrtVRzn5r3SFZC01dQlR8gQ+V55b2YI/y067IK2PG8WgTiJq+
-	0TPkYBb4spJo=
-X-Google-Smtp-Source: AGHT+IE7chg7Stgbh4Yr4tdDPknvVXXUYCN1Cbm/Af0sSgXY5X2QBDtOR02WyyHHfHlz7aluSu81iw==
-X-Received: by 2002:a05:6402:2550:b0:5f3:857f:2b38 with SMTP id 4fb4d7f45d1cf-608d0948ae9mr218552a12.17.1749838424741;
-        Fri, 13 Jun 2025 11:13:44 -0700 (PDT)
-Received: from myrica (92.40.185.95.threembb.co.uk. [92.40.185.95])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a94d18sm1502508a12.67.2025.06.13.11.13.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 11:13:44 -0700 (PDT)
-Date: Fri, 13 Jun 2025 19:13:45 +0100
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-To: Demi Marie Obenour <demiobenour@gmail.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, virtualization@lists.linux.dev,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devel@spectrum-os.org, Alyssa Ross <hi@alyssa.is>
-Subject: Re: Virtio interrupt remapping
-Message-ID: <20250613181345.GA1350149@myrica>
-References: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BlsijBi4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749838450; x=1781374450;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pHIhBgCbxbw/wEXaEwfr43QBMvmKgvIYdQnGS+UjHQ4=;
+  b=BlsijBi4Y7uejLfacpDZX5KSfTmh7MFnz5k40/BMan58y3PkFqTqNZK5
+   9EptlxZmPDTKVSi3Y+J4P863Qvid9mdy7LVAycokPO+bVA5mFa4htPe0x
+   17wMxXsMQwbsW10o5NKx1ICZl2q7+9jO4fxpI9R6IoVikF3mheFKEyJba
+   n/YJg5HK6nLE4fZgLrvxPVSDS6X/LG7alb5cxg21XRsbSvvgEbqyt+gaw
+   JQqYnaq2pZZZXLpmdGODPunRIQaQ5iohLsz73MOq49PCzJMbF+iSkpWC4
+   MWlMS2Dn3EFnY87UJrVXyPphKrX68sldDnRcnVJSpjiRjgNK4V+u9dbT2
+   A==;
+X-CSE-ConnectionGUID: 55rKjbwlQQO4+j3tgfM2ZA==
+X-CSE-MsgGUID: USNu6Cz+RzO+1/Bi2KleGg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="52159415"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="52159415"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 11:14:09 -0700
+X-CSE-ConnectionGUID: ET1ejHN3TSmOXldNjbfPqg==
+X-CSE-MsgGUID: Y5kKJ9lMTG20hLZ8siEUqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="148363399"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 11:14:08 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id CE84D20B5736;
+	Fri, 13 Jun 2025 11:14:06 -0700 (PDT)
+Message-ID: <067e0923-d904-4382-bf49-34083f9927e7@linux.intel.com>
+Date: Fri, 13 Jun 2025 14:14:05 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 05/12] perf/x86: Support XMM register for non-PEBS and
+ REGS_USER
+To: Dave Hansen <dave.hansen@intel.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+ dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
+ jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+ linux-kernel@vger.kernel.org
+Cc: dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250613134943.3186517-6-kan.liang@linux.intel.com>
+ <9054bf0d-85db-4bd4-9f67-7c71d7866e6a@intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <9054bf0d-85db-4bd4-9f67-7c71d7866e6a@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c40da5dc-44c0-454e-8b1d-d3f42c299592@gmail.com>
 
-Hi,
 
-On Fri, Jun 13, 2025 at 01:08:07PM -0400, Demi Marie Obenour wrote:
-> I’m working on virtio-IOMMU interrupt remapping for Spectrum OS [1],
-> and am running into a problem.  All of the current interrupt remapping
-> drivers use __init code during initialization, and I’m not sure how to
-> plumb the struct virtio_device * into the IOMMU initialization code.
+
+On 2025-06-13 11:34 a.m., Dave Hansen wrote:
+> On 6/13/25 06:49, kan.liang@linux.intel.com wrote:
+>> +static void x86_pmu_get_ext_regs(struct x86_perf_regs *perf_regs, u64 mask)
+>> +{
+>> +	void *xsave = (void *)ALIGN((unsigned long)per_cpu(ext_regs_buf, smp_processor_id()), 64);
+>> +	struct xregs_state *xregs_xsave = xsave;
+>> +	u64 xcomp_bv;
+>> +
+>> +	if (WARN_ON_ONCE(!xsave))
+>> +		return;
+>> +
+>> +	xsaves_nmi(xsave, mask);
+>> +
+>> +	xcomp_bv = xregs_xsave->header.xcomp_bv;
+>> +	if (mask & XFEATURE_MASK_SSE && xcomp_bv & XFEATURE_SSE)
+>> +		perf_regs->xmm_regs = (u64 *)xregs_xsave->i387.xmm_space;
+>> +}
 > 
-> What is the proper way to do this, where “proper” means that it doesn’t
-> do something disgusting like “stuff the virtio device in a global
-> variable”?
+> Now that I'm thinking about the init optimization... This is buggy.
+> 
+> Isn't XSAVE fun?
+> 
+> Here's a little primer:
+> 
+> 	xcomp_bv - tells you what the format of the buffer is.
+> 		   Which states are where.
+> 	xstate_bv - (aka. xfeatures) tells you which things XSAVES
+> 		    wrote to the buffer.
 
-I'm not familiar at all with interrupt remapping, but I suspect a major
-hurdle will be device probing order: the PCI subsystem probes the
-virtio-pci transport device relatively late during boot, and the virtio
-driver probes the virtio-iommu device afterwards, at which point we can
-call viommu_probe() and inspect the device features and config.  This can
-be quite late in userspace if virtio and virtio-iommu get loaded as
-modules (which distros tend to do).
+I got the definitions of the two reversed. :(
 
-The way we know to hold off initializing dependent devices before the
-IOMMU is ready is by reading the firmware tables. In devicetree the
-"msi-parent" and "msi-map" properties point to the interrupt remapping
-device, so by reading those Linux knows to wait for the probe of the
-remapping device before setting up those endpoints. The ACPI VIOT
-describes this topology as well, although at the moment it does not have
-separate graphs for MMU and interrupts, like devicetree does (could
-probably be added to the spec if needed, but I'm guessing the topologies
-may be the same for a VM).  If the interrupt infrastructure supports
-probe deferral, then that's probably the way to go.
+> 
+> It's totally valid to have a feature set in xcomp_bv but not xstate_bv.
+> 
+> xcomp_bv is actually pretty boring:
+> 
+> 	The XSAVES instructions sets bit 63 of the XCOMP_BV field of the
+> 	XSAVE header while writing RFBM[62:0] to XCOMP_BV[62:0]
+> 
+> Since you know the RFBM, you also know xstate_bv. You don't need to read
+> it out of the buffer even.
+> 
+> Oh, and what's with the:
+> 
+> 	xcomp_bv & XFEATURE_SSE
+> 
+> ? xcomp_bv is a bitmap, just like 'mask'
+> 
+> So, what do you do when
+> 
+> 	if (!(xregs_xsave->header.xfeatures & XFEATURE_MASK_SSE))
+> 		... here?
+> 
+> The "XSAVE-Enabled Registers Group" docs say:
+> 
+> 	The first eight bytes include the XSAVES instruction’s XSTATE_BV
+> 	bit vector (reflecting INIT optimization). This field
+> 	is in XCR0 format.
+> 
+> So the PEBS parsing code has to know how to deal with this situation too
+> and not copy the xmm_regs out to users.
+
+Now, perf will copy all 0 to users if !perf_regs->xmm_regs. But 0 should
+be a valid value for the xmm_regs. Perf probably need to dump a bitmap
+which indicates what regs are really collected. It may be slightly
+different from the requested bitmap because of the above case.
 
 Thanks,
-Jean
+Kan
 
