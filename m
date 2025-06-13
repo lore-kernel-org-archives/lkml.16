@@ -1,67 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3A0125B9;
-	Fri, 13 Jun 2025 12:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0315317993
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749818859; cv=none; b=RkK1uSObYIcQjTC2m4ZQlpHj31eFqt/v+HnE4MZcnJDx4n/TWqbSM8mOjNqza6OseAoWNnCU/LolMr5HPyR0pVnwhdsQV4QSquNNfBH37FB1QViSaKur9Ac3dUfQPUudAd7AAM+E/D6Ib+91NaEYAttqD8SmhNE60MeZ5kk7HzY=
+	t=1749818860; cv=none; b=OrcLgsM0OOMxuJyihrXaadL7ydNcAz5i135qfZRIWna1kIqM+TyX6OklzF2PFiK+KCc6ZwTSWsB3eTJlaMC4XGAwtPw/Va1nr9pHHPQEdOgYTOt1R1U/gFezsgik/j82tQQXUuDcYuN/6PtHv7wNNX9yc0oXEvTVwszls6Otqek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749818859; c=relaxed/simple;
-	bh=5mk3F0ocPUMcuaVsmdoVLDWViyRIeQim/i1Xpz+fTFE=;
+	s=arc-20240116; t=1749818860; c=relaxed/simple;
+	bh=+SiE5qYo2rwclNu+ZxJIlHHqot1iDNTAW/egCzsPp6c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SsiNZGEePnRSNZM9hmD9mjE1zpVg1bH6do8DLsAl8IbNlE/vG39cKGzMon6K2JKcRKNvpwCf7CFTxkxo/KnGVxX4Z2sqnCvq8ShBi/8v2ys7D4KA/yOUNqIQ2me7FH91y0kd/s+hGoTC/0CBSnHvGeOFCoLq0MdjwZQiq1Qw9pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gXDWy6K5; arc=none smtp.client-ip=192.198.163.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=soBZF3Ieq0MZlkstTy3JVKub4s1aHkGf72jAt7mZk2f9J6FPFL60VXUW2qmkixmi1quyMuIJhkrU0EW6MH/nIqzsWt6YAiNHmUnqnnE5Onv6hT737JY8vAA2uqmR7kFj644TfA9m+SeSX+oC0ZhqSY4ivH6TVm2WOZMB2wrRJZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ApeBbIq7; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gXDWy6K5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ApeBbIq7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749818858; x=1781354858;
+  t=1749818859; x=1781354859;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=5mk3F0ocPUMcuaVsmdoVLDWViyRIeQim/i1Xpz+fTFE=;
-  b=gXDWy6K5S/leQU6FAT053Xhl/g4IKrgl9o4aLyKv6v49KsTR8uVIJ/HY
-   jL+UHydzuObgivAlLn10ROMf4oOEWAIqGmaMkSubbLiUjxdIFkts7Obw+
-   bZ4kOem5sRq98FkGAfruyaSf3ZDkbL9ItRYdS6b30d5zYFTuXgTo3cTtK
-   WyrWgf5EqWEGEMB1RxQbVAniCDbEflJkyjBz291n+9HJ1S7hdzHKDV6qt
-   sJaFCu6XWQudmVGbygaickIn7Ke97NYC9QKF6cAXfrIc2RCMlssy+vJSR
-   jS2wIhl6G/e1/e+ubeFihzTumpj/y80ckts4LEN8eSH0a30hTRE9lLyTt
+  bh=+SiE5qYo2rwclNu+ZxJIlHHqot1iDNTAW/egCzsPp6c=;
+  b=ApeBbIq7i/funC43jVIrHf2vja2/gapqudFPVdtWnUXEoeNFROqbSc0o
+   6T9HYPRNKHL8qMk4wPdoyN6WvCidR8gbffiEgFk0WoYHbdNeGxYH+auEr
+   RQmn4/eiOAv1G8uoB2E/mVADig9JNF/bNMiR0cKNoUxV/1Ozwz69mRxMD
+   jOFYAEDgrapFht7wKVnsRYzmrtN9Z27tOVxgaGL0GlzoZow6HyCtRNrH8
+   WpXeH7Tsn3xyP2oxfD35FI60/eemOSRDcMjSSvtYv6xqfhJZACpopMlvY
+   od0y1HNUCqHfPG3ycGzgnmo0Fw+nx8Y1VRXbwJG1TA6f6LiDzI6UCFwjC
    w==;
-X-CSE-ConnectionGUID: A61/o5loQBeivdkPV59+dA==
-X-CSE-MsgGUID: PbD5Ye+0S9S0jJDt2n1xcQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="63386316"
+X-CSE-ConnectionGUID: y+9dNtQbTzaHIKE5koziFQ==
+X-CSE-MsgGUID: NanEXk7ZQ4O8jbkkIXuQ2w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="54653894"
 X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="63386316"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:47:37 -0700
-X-CSE-ConnectionGUID: USdByUw8THa5lIoi+6/lmA==
-X-CSE-MsgGUID: +jwK5CYjQaqwZEctRuWepQ==
+   d="scan'208";a="54653894"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:47:38 -0700
+X-CSE-ConnectionGUID: lMG2YNQHSEaYooYR+Mh+1A==
+X-CSE-MsgGUID: MQntdoYaQa6nq49vHo7YFA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="147721964"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:47:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uQ3of-00000006FO3-3SxN;
-	Fri, 13 Jun 2025 15:47:29 +0300
-Date: Fri, 13 Jun 2025 15:47:29 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
-Subject: Re: [PATCH v11 11/11] iio: adc: ad7768-1: add low pass -3dB cutoff
- attribute
-Message-ID: <aEwd4cS7j0Vvypg8@smile.fi.intel.com>
-References: <cover.1749569957.git.Jonathan.Santos@analog.com>
- <804d66f1858014d7278aec3344d81c223661e878.1749569957.git.Jonathan.Santos@analog.com>
+   d="scan'208";a="148192013"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2025 05:47:34 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQ3oi-000Cc6-1p;
+	Fri, 13 Jun 2025 12:47:32 +0000
+Date: Fri, 13 Jun 2025 20:46:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	"Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: Re: [PATCH v3 41/44] x86/cpu: <asm/processor.h>: Do not include
+ CPUID API header
+Message-ID: <202506132039.imS2Pflx-lkp@intel.com>
+References: <20250612234010.572636-42-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,42 +74,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <804d66f1858014d7278aec3344d81c223661e878.1749569957.git.Jonathan.Santos@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250612234010.572636-42-darwi@linutronix.de>
 
-On Wed, Jun 11, 2025 at 08:52:03AM -0300, Jonathan Santos wrote:
-> Ad7768-1 has a different -3db frequency multiplier depending on
-> the filter type configured. The cutoff frequency also varies according
-> to the current ODR.
-> 
-> Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-> the user which bandwidth is being allowed depending on the filter
-> configurations.
+Hi Ahmed,
 
-> +/* -3dB cutoff frequency multipliers (relative to ODR) for each filter type. */
-> +static const int ad7768_filter_3db_odr_multiplier[] = {
-> +	[AD7768_FILTER_SINC5] = 204,		/* 0.204 */
-> +	[AD7768_FILTER_SINC3] = 262,		/* 0.2617 */
-> +	[AD7768_FILTER_SINC3_REJ60] = 262,	/* 0.2617 */
-> +	[AD7768_FILTER_WIDEBAND] = 433,		/* 0.433 */
+kernel test robot noticed the following build errors:
 
-Just to be sure, is it 0.433 or 0.4333(3) actually? Sometimes datasheets have
-rounding that even may lead to problems (see TSC issues for some of the Intel
-CPUs in the past). That's behind my question.
+[auto build test ERROR on 19272b37aa4f83ca52bdf9c16d5d81bdd1354494]
 
-> +};
+url:    https://github.com/intel-lab-lkp/linux/commits/Ahmed-S-Darwish/x86-cpuid-Remove-transitional-asm-cpuid-h-header/20250613-075051
+base:   19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+patch link:    https://lore.kernel.org/r/20250612234010.572636-42-darwi%40linutronix.de
+patch subject: [PATCH v3 41/44] x86/cpu: <asm/processor.h>: Do not include CPUID API header
+config: i386-randconfig-004-20250613 (https://download.01.org/0day-ci/archive/20250613/202506132039.imS2Pflx-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506132039.imS2Pflx-lkp@intel.com/reproduce)
 
-...
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506132039.imS2Pflx-lkp@intel.com/
 
-> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-> +		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-> +		*val = DIV_ROUND_CLOSEST(temp, 1000);
+All errors (new ones prefixed by >>):
 
-MILLI? KILO/ MICRO/MILLI? ...?
+   drivers/cpufreq/longrun.c: In function 'longrun_get':
+>> drivers/cpufreq/longrun.c:143:9: error: implicit declaration of function 'cpuid' [-Werror=implicit-function-declaration]
+     143 |         cpuid(0x80860007, &eax, &ebx, &ecx, &edx);
+         |         ^~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/cpuid +143 drivers/cpufreq/longrun.c
+
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  135  
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  136  static unsigned int longrun_get(unsigned int cpu)
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  137  {
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  138  	u32 eax, ebx, ecx, edx;
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  139  
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  140  	if (cpu)
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  141  		return 0;
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  142  
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16 @143  	cpuid(0x80860007, &eax, &ebx, &ecx, &edx);
+2d06d8c49afdcc arch/x86/kernel/cpu/cpufreq/longrun.c  Dominik Brodowski 2011-03-27  144  	pr_debug("cpuid eax is %u\n", eax);
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  145  
+48ee923a666d4c arch/x86/kernel/cpu/cpufreq/longrun.c  Dave Jones        2009-01-17  146  	return eax * 1000;
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  147  }
+^1da177e4c3f41 arch/i386/kernel/cpu/cpufreq/longrun.c Linus Torvalds    2005-04-16  148  
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
