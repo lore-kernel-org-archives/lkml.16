@@ -1,123 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9645212D9D;
-	Fri, 13 Jun 2025 16:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749832901; cv=none; b=gVqM2VLWIjSDEKeQtm7CSi7LtU1foFsSuUU9EWKGCRadUgSZablGKYxonjsNmbs0tsujveadQ6JwKeu64wAS9iFu4TWsGYJtkK6+/pOhW/mFV1k2XT3DQHGyFe6Xat2Bht9T7alJm1FFQfGrLiRaFpUsn4mtfDpxTYi+t8znL+c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749832901; c=relaxed/simple;
-	bh=j+85Z9iN6id/AZxF/3c6k5SRIkQ38TfU+QOw2QPbJ8w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WlFlc8nRpdTxaoj6xZnV/lTB/53cYI+YfVuIe2hmMOPOt3P76p0ehri6RsFYUeG2GUFrdgdry7Wx3axiqP77gPg/gbW2hlqZpwk14+BWPN613gI3pExSD+jQBesLbQ8JTKs7yv/N25OJbky8j8QFxInnpFIsZjqzNX2/Y+Bu6fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N6fNnxut; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F26433A5;
+	Fri, 13 Jun 2025 16:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749833037; cv=pass; b=SZC34zU/+J6arCMCOqwzdSBwpY6J0scRz/Zhqp27NdIfB5tcEDS2UkEQa+vHDQCPoJ600HMmva7Uyzb6ndUFK9Nd5mYkHgwmI7KK24WvKQUYWy45u/YzGRCVZlsKYlg2TT7b/3luw3ebJE8uCdA7UajywDXeTSLC6QEyeNloCSA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749833037; c=relaxed/simple;
+	bh=GKpdc9YiYyCY4jgWia1aI2xBSr421cdkebKu8ejyCnw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=RQ1OrfG/2ddCg5omid9m9opgFk9Jfpnrp3SMtnA5YWIOURL/6Mbk+yyvgo9QqGtLHOV3XaErKqUvC6AQfBH/d+3Lf4ye7MIaDi4arusS0DwZJY4L6xiZgPhoSXjF8OVibWUsUgHzypqLvsk4G4iaYj5ft9UjUvLMGbJ7NiTTAFw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=BtvhkdJM; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N6fNnxut"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 635D3C4CEF0;
-	Fri, 13 Jun 2025 16:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749832900;
-	bh=j+85Z9iN6id/AZxF/3c6k5SRIkQ38TfU+QOw2QPbJ8w=;
-	h=From:Date:Subject:To:Cc:From;
-	b=N6fNnxut65qhEuKg9enKMwgzKL7Wacb/3e7B6NfRkjdGw9xIu3r5NQsiMd+64f5/Y
-	 MCEAN4Qes1iuM5Nczrl6SNV9VFMnNyA7t4sk3ElkUxZABBJOiQJIqT65VBrIREL2l+
-	 bT1/f4ZaflvPej5n9VhZZt8qtiN/yZLqIV646exvAs2exq/dP9yXH45h85TVAc5IId
-	 6jMl5hUg7ZkG4kSjcNiw22gZ6V27x69OITk+VB+xr+RfMYeUxttmS4vk/jbY/D7hLT
-	 xsQpx1CxZSGOnfScn6bU/XLGC2Orb3m4Zm6KTbekETkHvSMW8nTRaDuGLw8TTyp6IP
-	 apLZAV0WmNTHw==
-From: Mark Brown <broonie@kernel.org>
-Date: Fri, 13 Jun 2025 17:41:04 +0100
-Subject: [PATCH] ASoC: hdac_hdmi: Rate limit logging on connection and
- disconnection
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="BtvhkdJM"
+ARC-Seal: i=1; a=rsa-sha256; t=1749832998; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=RXubKtilc4Hk7wiBtOfWMoEAbVkLii7p4eDasW98tipyK9ilfg/iaY17T61v/3qtT3TQIbOG7jeJD0TFTMcmNfIN0kJzTJ/jRTAEGBmPzIr3c6toeRmg9u2MeiQ7o4Wjz5lULCPFKR62H4lF9gUvl7mYANFBR7XVfoHWiJPbBRM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749832998; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=74vSUUgcxDPegdL/S7B0LL/ZhYlU7BQBdrEJIw3o8/4=; 
+	b=iy18LtjMHnhpfdyQHYdGpuVWAq/zxfeJQPMGRuZtdG3WjaQBw5Ja67/cbsW/OMXG66y4+tHWbTjVDGYXyOwK5xf6r1Afk64kFQrYFZG847nq2Ab1QVaCo7YWSsdFe+7ySGw7HiJyVVwsRaviLA7c9gQm8frNWEWfJT6JlaKHLu4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749832998;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=74vSUUgcxDPegdL/S7B0LL/ZhYlU7BQBdrEJIw3o8/4=;
+	b=BtvhkdJMHuKUHvpRZBnkYO2cNQVC1z/dDCPSr5TGD/9vwqOSMEqveDBN4COmd8VX
+	N9u3ePms9mT0Zca95widsqJll4DCUqd9/YdWG6PYzsP5RQAm4KUwgN/+Rqhr8KC0Y2v
+	fqs5SWMoGc74qxykJhNT/HDDkK4ZBBQxtwnyBW8A=
+Received: by mx.zohomail.com with SMTPS id 1749832997036813.3804981283496;
+	Fri, 13 Jun 2025 09:43:17 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-asoc-hdmi-eld-logging-v1-1-76d64154d969@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAJ9UTGgC/x3MQQqAIBBA0avIrBvIIoOuEi1MRxsoDYUIxLsnL
- d/i/wKZElOGRRRI9HDmGBpkJ8AcOnhCts0w9MPUKzmiztHgYS9GOi2e0XsOHqXc3Twp45yy0No
- 7keP3/65brR8jrGH0ZwAAAA==
-X-Change-ID: 20250613-asoc-hdmi-eld-logging-11bf756cff6d
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>
-Cc: Dmitry Baryshkov <lumag@kernel.org>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2292; i=broonie@kernel.org;
- h=from:subject:message-id; bh=j+85Z9iN6id/AZxF/3c6k5SRIkQ38TfU+QOw2QPbJ8w=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoTFTCLQoZVWZGDdV4XfO/HfdlIqg/6O2BeqOGV08y
- vAWrtPqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaExUwgAKCRAk1otyXVSH0HSaB/
- wP8CA12qJpoQG9DN3qyrYnlFc4egfdjAOYzx05tIe61x1ZloJ33iPLMbhuCYoQ89hqJqrDWbXHUrL0
- Sauo495wQpM6MHW1LGrFOkdaUUypqVBMs032pGGYj26eUdgXU2qvJZYbsbYn7L/4i8j492040AyhaP
- 0bWSxmBeYRC/Lf+zTKzux8QuLX1GUuhBmRjKq4sUnPP3021pk5UVl+IsBWhsBIvBnmRyhuNtuUPvic
- YI0RkriHy2A9pEmJqkH/sXDrCxWbL5OcCcDeAjMMmUcjIoOtmfizqvqc1mYn84OyyngMU2f4RUUIPp
- pexxpqF60PZxXLuW0cK6nnxW6ubn2g
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v2 2/2] rust: drm: Add GPUVM abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <aAj7gAzFVRX3dN7L@pollux>
+Date: Fri, 13 Jun 2025 13:42:59 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Lyude Paul <lyude@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ Asahi Lina <lina@asahilina.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F731D6F7-312D-4633-B677-69B7CC7194A6@collabora.com>
+References: <20250422-gpuvm-v2-0-44d4fc25e411@collabora.com>
+ <20250422-gpuvm-v2-2-44d4fc25e411@collabora.com>
+ <aAgHGuzCZzh7YPz2@cassiopeiae>
+ <DBB3E8CE-19AA-437D-AF54-BF23763B254F@collabora.com>
+ <aAj7gAzFVRX3dN7L@pollux>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-We currently log parse failures for ELD data and some disconnection events
-as errors without rate limiting. These log messages can be triggered very
-frequently in some situations, especially ELD parsing when there is nothing
-connected to a HDMI port which will generate:
+Danilo,
 
-hdmi-audio-codec hdmi-audio-codec.1.auto: HDMI: Unknown ELD version 0
 
-While there's doubtless work that could be done on reducing the number of
-connection notification callbacks it's possible these may be legitimately
-generated by poor quality physical connections so let's use rate limiting
-to mitigate the log spam for the parse errors and lower the severity for
-disconnect logging to debug level.
+> <snip>
+>=20
+>>>> +// SAFETY: DRM GpuVmBo objects are always reference counted and =
+the get/put functions
+>>>> +// satisfy the requirements.
+>>>> +unsafe impl<T: DriverGpuVm> AlwaysRefCounted for GpuVmBo<T> {
+>>>> +    fn inc_ref(&self) {
+>>>> +        // SAFETY: The drm_gpuvm_get function satisfies the =
+requirements for inc_ref().
+>>>> +        unsafe { bindings::drm_gpuvm_bo_get(&self.bo as *const _ =
+as *mut _) };
+>>>> +    }
+>>>> +
+>>>> +    unsafe fn dec_ref(mut obj: NonNull<Self>) {
+>>>> +        // SAFETY: drm_gpuvm_bo_put() requires holding the gpuva =
+lock, which is
+>>>> +        // the dma_resv lock by default.
+>>>> +        // The drm_gpuvm_put function satisfies the requirements =
+for dec_ref().
+>>>> +        // (We do not support custom locks yet.)
+>>>> +        unsafe {
+>>>> +            let resv =3D (*obj.as_mut().bo.obj).resv;
+>>>> +            bindings::dma_resv_lock(resv, core::ptr::null_mut());
+>>>> +            bindings::drm_gpuvm_bo_put(&mut obj.as_mut().bo);
+>>>> +            bindings::dma_resv_unlock(resv);
+>>>=20
+>>> What if the resv_lock is held already? Please also make sure to put =
+multiple
+>>> unsafe calls each in a separate unsafe block.
+>>=20
+>> By whom?
+>=20
+> The lock might be held already by the driver or by TTM when things are =
+called
+> from TTM callbacks.
+>=20
+> This is why GPUVM never takes locks by itself, but asserts that the =
+correct lock
+> is held.
+>=20
+> I think we really want to get proof by the driver by providing lock =
+guard
+> references.
+>=20
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/hdac_hdmi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+There doesn=E2=80=99t seem to be a solution that fits all the boxes =
+here.
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index 1139a2754ca3..056d98154682 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -1232,7 +1232,8 @@ static int hdac_hdmi_parse_eld(struct hdac_device *hdev,
- 						>> DRM_ELD_VER_SHIFT;
- 
- 	if (ver != ELD_VER_CEA_861D && ver != ELD_VER_PARTIAL) {
--		dev_err(&hdev->dev, "HDMI: Unknown ELD version %d\n", ver);
-+		dev_err_ratelimited(&hdev->dev,
-+				    "HDMI: Unknown ELD version %d\n", ver);
- 		return -EINVAL;
- 	}
- 
-@@ -1240,7 +1241,8 @@ static int hdac_hdmi_parse_eld(struct hdac_device *hdev,
- 		DRM_ELD_MNL_MASK) >> DRM_ELD_MNL_SHIFT;
- 
- 	if (mnl > ELD_MAX_MNL) {
--		dev_err(&hdev->dev, "HDMI: MNL Invalid %d\n", mnl);
-+		dev_err_ratelimited(&hdev->dev,
-+				    "HDMI: MNL Invalid %d\n", mnl);
- 		return -EINVAL;
- 	}
- 
-@@ -1299,8 +1301,8 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 
- 	if (!port->eld.monitor_present || !port->eld.eld_valid) {
- 
--		dev_err(&hdev->dev, "%s: disconnect for pin:port %d:%d\n",
--						__func__, pin->nid, port->id);
-+		dev_dbg(&hdev->dev, "%s: disconnect for pin:port %d:%d\n",
-+			__func__, pin->nid, port->id);
- 
- 		/*
- 		 * PCMs are not registered during device probe, so don't
+As you said, at this point the current status of the resv is unknown. If =
+we
+simply assume that it is not taken, we run into the problem you pointed =
+out:
+i.e.: recursive locking where ttm or some other layer has the lock =
+already.
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250613-asoc-hdmi-eld-logging-11bf756cff6d
+Alternatively, if we assume that the resv must be locked in dec_ref(), =
+then we
+may build a lock::Guard from it and assert that it is held, but in any =
+case
+it's very confusing to expect the reservation to be locked on a =
+dec_ref() call.
 
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
+The fact that dec_ref() is placed automatically on drop will massively
+complicate the call sites:
+
+We will have to ensure that the resv is locked at all times where we =
+interface
+with a GpuVmBo, because each of these points could possibly be the last =
+active
+ref. If we don't, then we've introduced a race where the list is =
+modified but
+no lock is taken, which will be a pretty easy mistake to make. This =
+seems to
+also be the case in C, which we should try to improve upon.
+
+My suggestion is to introduce a separate GPU-VA lock here:
+
+/// A base GEM object.
+#[repr(C)]
+#[pin_data]
+pub struct Object<T: DriverObject> {
+    obj: bindings::drm_gem_object,
+    // The DRM core ensures the Device exists as long as its objects =
+exist, so we don't need to
+    // manage the reference count here.
+    dev: *const bindings::drm_device,
+    #[pin]
+    inner: T,
+    #[pin]
+    _p: PhantomPinned,
+    // Add a GPU-VA lock here <--------
+}
+
+And only support custom locks in Rust, to the detriment of the =
+optimization
+where the resv is used and to the detriment of any perf improvements =
+that
+reusing the reservation might bring to the table.
+
+Notice that this would sidestep this entire discussion: nobody else =
+would be
+aware of this new lock so we could safely lock it in dec_ref(). We would =
+also
+be transparently managing the locking on behalf of drivers in all the =
+other
+calls where the VA list is accessed, which is another plus as I said =
+above.
+
+I understand that most C drivers do not need an extra lock, but it's =
+getting
+hard to emulate this behavior in Rust.
+
+Also, the fact that they don't need an extra lock does not invalidate =
+the fact
+that it would be simply safer to have this extra lock anyways. In other =
+words,
+it is still completely possible to use GPUVM without locking anything =
+and IMHO
+we shouldn't bring this over if we can help it.
+
+=E2=80=94 Daniel
+
 
