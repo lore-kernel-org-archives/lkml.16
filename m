@@ -1,93 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955E0279DB0;
-	Fri, 13 Jun 2025 08:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF5C272817
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749804511; cv=none; b=tNtYuvLj1GrBJjLavyHfbBtwOkaZc9vYNa6IDiT4MZlPXpV5rNksE+EbOITU74yMrE+erTqyO38dko7Gw96dPbaByrcPLlVxlf5D+bViVRMpZDdiMZektNsQr15bTuGM3cAJhoX/xX3dyMHlETTLMBXMN23Y0GhFpffrgRJza/A=
+	t=1749804521; cv=none; b=mIZ4P6666LrpY9H+c9v1KP/zm6DxZYzIdYnosXPiP6yGYjYEG4fplYlym4KUZXhJ03HrKETCyb0lYMpZW4qZI0pv+63afi70CZ8WK8nxyZ95trMzrI+mQ7WA+a1oe3HZEPV3LgfWNWLLcsm7WsTRxmXQfDpmXTWXVm5KCIkuHRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749804511; c=relaxed/simple;
-	bh=ii9mJGPrdiEf6M11++Ri3L388P4ein6nqY804ksJ9ww=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fsOEYRThHimZXHMIKY3Iz8jFDTvOXnWfv6uwFRb7PuWfKwZiZr4do8S7ri3dDSJ/A+n8bbHiEKhXuqAfd4NG/bKHljGrN3BXketB4TEJRdNgwBjCMCGBrupd/vZ9L+Kzy9QaQugeGzNTplCFts2V3En7+WToYXMtKebPVar4okA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nWAy60Fb; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1749804521; c=relaxed/simple;
+	bh=n/QFnQGQ4EB6B9Nni15cfoa1weo9vIdAacjQN+HA/E4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MuUwEW+rq/j6T/SgWGTCLyFr2X/kFzjRm3T4OJGq3k5ngDEZq82OqxZC/RS7IdPyTtOJXaQtCLXVjnHQ/vIej7Gg3vYEgS3EQlUDvnLWHV+P9NF4hutX28PolTrtGEBu1vuvS1Whqlbmqp//RMUm7iBlXWas1oLoEooEeLibjDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b6M3m/hd; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nWAy60Fb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b6M3m/hd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749804509; x=1781340509;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=ii9mJGPrdiEf6M11++Ri3L388P4ein6nqY804ksJ9ww=;
-  b=nWAy60FbnsECxj0UVHpXaH5Sdg+sw5jCgXyqv7DklX8tVYzSHUgeMKoV
-   h86tdeJEQx3S99T9uRoX+EK7h6s1QEC1pkPo+Rj/vogse33cNnXaEzZ4V
-   3AC9hFAWFaoPysGvgm69tsrudxQs/73xYiP2wCYqw/qNtqrIUQV990Q7w
-   TwHNsQerdee6iWKWm6Tk81q5Xpp6viK6XbQUJp65IjqlTeBJU6jO0RKEn
-   eXmhegf1EygjFHzTQdyYUAcHRnnS0AXA9okxDRFy7xNuN6okr8KTsucid
-   P71xQOToRVCrEqbpLuSyHhQuH0lFfKUSal05nUxb6kh4oSPnd1B2iF3s6
-   Q==;
-X-CSE-ConnectionGUID: nf7VjoewRiq5ysWGAY7T7w==
-X-CSE-MsgGUID: kcXTYfkCQd+L6gmdUv6Ljg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51993215"
+  t=1749804519; x=1781340519;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=n/QFnQGQ4EB6B9Nni15cfoa1weo9vIdAacjQN+HA/E4=;
+  b=b6M3m/hdH5GDaVKnmj438wcNOl+cvZCaEKZof7/B3H3N/r2YnZb1+Bok
+   EizkH78vLdkMql9UKppa+yNeBc3FqkYRuNzfIArZrhpQd3ds/PL68UzqN
+   nYUO6+JSxZYqe7WnUOO8O5RK7FXRclc8miHSVJcNuauLaFc65zU1S4i8x
+   NPWvFK/AzlDW5O6xRtcaYwIecOM35+UTXgs0i4NeoV1yZASZKv3uHI0U7
+   wf7UnusSErYlJ9G0lt8FPn1sFZywwM8BVXhUQa9xeQ4x1QqPA7YbW04o0
+   fLi6ojRJYr3AggBJHmQ5tBf4ctEDc5Al6m0u11r2L5i64HTFiG15JXunS
+   g==;
+X-CSE-ConnectionGUID: J9WCJLc8Q/GCJeGQoh4EfA==
+X-CSE-MsgGUID: DdCZ+sueTwOc0GOEdkr/aQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51238423"
 X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="51993215"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:29 -0700
-X-CSE-ConnectionGUID: 3yksSGsWSD6Yf/MyVUAN4Q==
-X-CSE-MsgGUID: Y6e25UhET/upSLsiqEP5jA==
+   d="scan'208";a="51238423"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:39 -0700
+X-CSE-ConnectionGUID: QPMAclAjTCa3tvB/CHiDmQ==
+X-CSE-MsgGUID: tAPWA51gRTySvyrRwVB5XQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="148659601"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:25 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- Hans de Goede <hansg@kernel.org>, Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
- Tero Kristo <tero.kristo@linux.intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250610093459.2646337-1-arnd@kernel.org>
-References: <20250610093459.2646337-1-arnd@kernel.org>
-Subject: Re: [PATCH] platform/x86/intel-uncore-freq: avoid non-literal
- format string
-Message-Id: <174980450175.1640.12062242383746628445.b4-ty@linux.intel.com>
-Date: Fri, 13 Jun 2025 11:48:21 +0300
+   d="scan'208";a="152668190"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uQ05T-00000006ByQ-2epz;
+	Fri, 13 Jun 2025 11:48:35 +0300
+Date: Fri, 13 Jun 2025 11:48:35 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v1 1/1] iopoll: Use fsleep() instead of usleep_range()
+Message-ID: <aEvl4yXPStVTotnx@smile.fi.intel.com>
+References: <20250502134346.4146857-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502134346.4146857-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, 10 Jun 2025 11:34:55 +0200, Arnd Bergmann wrote:
+On Fri, May 02, 2025 at 04:43:45PM +0300, Andy Shevchenko wrote:
+> Use fsleep() instead of usleep_range() to improve small time delays
+> by avoiding the timer use. With this, use slightly bigger initial
+> delays then was passed to usleep_range().
 
-> Using a string variable in place of a format string causes a W=1 build warning:
-> 
-> drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c:61:40: error: format string is not a string literal (potentially insecure) [-Werror,-Wformat-security]
->    61 |                 length += sysfs_emit_at(buf, length, agent_name[agent]);
->       |                                                      ^~~~~~~~~~~~~~~~~
-> 
-> Use the safer "%s" format string to print it instead.
-> 
-> [...]
+Any comments anybody?
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform/x86/intel-uncore-freq: avoid non-literal format string
-      commit: 0c44b46f51a17baa7ab67de1464427116e9c4eaa
-
---
- i.
 
