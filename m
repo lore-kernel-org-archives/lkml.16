@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984D91F4722
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:23:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06DE1DE3D6;
+	Fri, 13 Jun 2025 17:24:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835429; cv=none; b=fEiDPvsSKejUKyKGkwHhoQJI4WN6fgzaSACse5RNH50Acscwur2DJ6QxX5MALZDE7kHep25/EKC2ZhDpMMwTjcbSC5ysGyc4t3GDIDGY5IdnV3Wl7PoY1U7bljr/X5FnE+1u2XG4a/AjgUITmJQz/kJRqzY1b/66gv/Z/A4Ffmg=
+	t=1749835443; cv=none; b=LAG2PnhpHEIlup2LemoI7LrGHX6cs8yit/ZLHI5ZWGIkLO60Ysjwh9Lqp0De145tkeUJL15lkWRy5aki8bxtfOqRgALCRAqyv+x6PjJEETEhXPUQSyExZeZnsMOrDTgDBJ/brrR2PzxfxAeoGTlpQAndkQCZjOUrx+OLU6RExiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835429; c=relaxed/simple;
-	bh=HX7rB/hdzAiZrq3LmcTmLMqD0D6Jl/2X1ww3IfEBpKo=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=e48N+DCv3MVpDrsa4r5kGB5XMkXjkyDaPasle8pBeCzoLaWLjDmfbTdB0coa0+2B/MGsQmmc3fov2B6XqbKl7HNetGhFU+QdsSzi+zK96WV5vFF1JJID3T3pN0eyP+J7su1EvbAsClcaiaDPnTBJq5vovszL5qnVhVr4cNGf83A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vLFOUddT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749835443; c=relaxed/simple;
+	bh=BHv4FZ2RKkUXVAc8+iK0FCz2f0vExdZ7AbSQmQUHUkU=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=cXa5wiwh4i7zi/qV1gdkU4OZsWtCmoq6+JFWv3IVTCCm+i70eXOOaV1lPGzjwOgV4CYD/IEXhFuxbBR36ZpcEXoSPRLZnU3A+39VonGvY3141pOsIWR999tt4W9l0rFfG+nvK31B7D4U2lj/CdEarhP2o5xowqTFiro7hRVWkU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rElbI7LX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLFOUddT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2EF9C4CEE3;
-	Fri, 13 Jun 2025 17:23:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rElbI7LX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A54C4CEE3;
+	Fri, 13 Jun 2025 17:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749835429;
-	bh=HX7rB/hdzAiZrq3LmcTmLMqD0D6Jl/2X1ww3IfEBpKo=;
+	s=k20201202; t=1749835443;
+	bh=BHv4FZ2RKkUXVAc8+iK0FCz2f0vExdZ7AbSQmQUHUkU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=vLFOUddTROn0J41cF9YQLF/4EH8tfV5g/NHuEZ3jdRz1MRAOB6QL5Q21z9ovT4vPC
-	 OckRfcJazHsmnuKysV+n2nQhrTTp11DxIBY9R970fG4NbzH46BWZor2j9PsRViQsZZ
-	 w0ogAbBK3lelYlyIw53muUyK7a3AA9VkoyBW45LtvTf7kLDuO4jeGHfblGoF9w459m
-	 zNvZY11+QGuvw/vzT7aHhGiB5n/wbck5ls+SqzGdZEZdd89NayIakSQtSlDbGlt7XU
-	 vI/oxF4mjsf7xkpczwo8LTAYv2C11bboOg5IPiTWUf0vNjNZ7mtPNQdCDn7E3xy1qz
-	 WnuwrI2fETYHg==
-Message-ID: <ef1d8afdc37fb1279dfe0d367ffafb56.broonie@kernel.org>
+	b=rElbI7LX9zkpN4F7hFliTEexbMMaR70UHdAFH39OdyN2uTLych7/YzrfGsCMxSANI
+	 RVEiQ5pyJNwibj3elih5EzX03q1dDo+0ghBlIV1J8vZEBC9MkFCn1FWgHBNA5uv5vW
+	 FrBmoNNcl5ZCqlLJ8X79R7c1+Fb+SP+5+2yYySSRlqZP7u2Fei9PvibJ+YvELnPWuN
+	 LblgYgft2CcVxoXyQbpUyWN0/c56n7Cwt+ZIU2IR+3EHL/UT22YIN8rsHdgtg3HdAz
+	 R04iM5rNphTkrwiWk8Xk23N1V5a3lxxt956EOwW2MGI2BAzIco4/JuUCXRTOFSjEzd
+	 x84pASFh0PvkQ==
+Message-ID: <6b7c1c97241248c0f3c35512f1150ffd.broonie@kernel.org>
 From: Mark Brown <broonie@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] regulator fixes for v6.16-rc1
-Date: Fri, 13 Jun 2025 18:23:40 +0100
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] SPI fixes for v6.16-rc1
+Date: Fri, 13 Jun 2025 18:23:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,20 +43,49 @@ The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.16-rc1
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc1
 
-for you to fetch changes up to 06118ae36855b7d3d22688298e74a766ccf0cb7a:
+for you to fetch changes up to 9f0ad43b158d07bc7144d219ceabdea36e28e392:
 
-  regulator: max20086: Fix refcount leak in max20086_parse_regulators_dt() (2025-06-08 23:29:48 +0100)
-
-----------------------------------------------------------------
-regulator: Fix for v6.16
-
-One minor fix for a leak in the DT parsing code in the max20086 driver.
+  spi: spi-pci1xxxx: Drop MSI-X usage as unsupported by DMA engine (2025-06-13 12:25:31 +0100)
 
 ----------------------------------------------------------------
-Dan Carpenter (1):
-      regulator: max20086: Fix refcount leak in max20086_parse_regulators_dt()
+spi: Fies for v6.16
 
- drivers/regulator/max20086-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+A collection of driver specific fixes, most minor apart from the OMAP
+ones which disable some recent performance optimisations in some
+non-standard cases where we could start driving the bus incorrectly.
+
+The change to the stm32-ospi driver to use the newer reset APIs is a fix
+for interactions with other IP sharing the same reset line in some SoCs.
+
+----------------------------------------------------------------
+Andres Urian Florez (1):
+      spi: offload: check offload ops existence before disabling the trigger
+
+Dan Carpenter (2):
+      spi: spi-pci1xxxx: Fix error code in probe
+      spi: stm32-ospi: clean up on error in probe()
+
+Félix Piédallu (2):
+      spi: omap2-mcspi: Disable multi mode when CS should be kept asserted after message
+      spi: omap2-mcspi: Disable multi-mode when the previous message kept CS asserted
+
+Huacai Chen (1):
+      spi: loongson: Fix build warnings about export.h
+
+Mark Brown (1):
+      SPI: omap2-mcspi: Fix SPI CS behaviour around
+
+Patrice Chotard (1):
+      spi: stm32-ospi: Make usage of reset_control_acquire/release() API
+
+Thangaraj Samynathan (1):
+      spi: spi-pci1xxxx: Drop MSI-X usage as unsupported by DMA engine
+
+ drivers/spi/spi-loongson-core.c |  1 +
+ drivers/spi/spi-offload.c       |  2 +-
+ drivers/spi/spi-omap2-mcspi.c   | 30 ++++++++++++++++++------------
+ drivers/spi/spi-pci1xxxx.c      |  4 ++--
+ drivers/spi/spi-stm32-ospi.c    | 24 +++++++++++++++++++-----
+ 5 files changed, 41 insertions(+), 20 deletions(-)
