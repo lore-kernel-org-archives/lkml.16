@@ -1,81 +1,257 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF5C272817
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0A426B751
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749804521; cv=none; b=mIZ4P6666LrpY9H+c9v1KP/zm6DxZYzIdYnosXPiP6yGYjYEG4fplYlym4KUZXhJ03HrKETCyb0lYMpZW4qZI0pv+63afi70CZ8WK8nxyZ95trMzrI+mQ7WA+a1oe3HZEPV3LgfWNWLLcsm7WsTRxmXQfDpmXTWXVm5KCIkuHRs=
+	t=1749804542; cv=none; b=Z3oSkDw2oMGXanCzhZBMhAxPS9EV8ZaAFBz1nA8hfrkdRVgOvlTX381Ho9d5WLurG9zadAyw9eT+QgNvxVcYma9J8OnYiluWCFIcbZ16yM4ib9sBfEECtlrlYygm2K7JR9ZRpbtohqa01VqxhnVF8i9Vqe64wtjSHgbRT/JzVpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749804521; c=relaxed/simple;
-	bh=n/QFnQGQ4EB6B9Nni15cfoa1weo9vIdAacjQN+HA/E4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MuUwEW+rq/j6T/SgWGTCLyFr2X/kFzjRm3T4OJGq3k5ngDEZq82OqxZC/RS7IdPyTtOJXaQtCLXVjnHQ/vIej7Gg3vYEgS3EQlUDvnLWHV+P9NF4hutX28PolTrtGEBu1vuvS1Whqlbmqp//RMUm7iBlXWas1oLoEooEeLibjDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b6M3m/hd; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749804542; c=relaxed/simple;
+	bh=u7x16W5kMhuO8mP73I83fX0Qfs/D8SHE0KX4Q48Oks4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CtLwRz57fFHbBQWBGPVoo+ONjdCFUvw5gX/nrsOd6LkfVY56xOCDya/98KNX5GZF3xoXSJuV2cx1tIZcvKrFRBgDXmGoiX2cwloAEAO1qiqygWV60ZTOtrFBqLLRKVavFzwwvBO2IUMJ7Z17BWxj5UYGoVudHmLepOOVqbIqRxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9KNX1ky; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b6M3m/hd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749804519; x=1781340519;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n/QFnQGQ4EB6B9Nni15cfoa1weo9vIdAacjQN+HA/E4=;
-  b=b6M3m/hdH5GDaVKnmj438wcNOl+cvZCaEKZof7/B3H3N/r2YnZb1+Bok
-   EizkH78vLdkMql9UKppa+yNeBc3FqkYRuNzfIArZrhpQd3ds/PL68UzqN
-   nYUO6+JSxZYqe7WnUOO8O5RK7FXRclc8miHSVJcNuauLaFc65zU1S4i8x
-   NPWvFK/AzlDW5O6xRtcaYwIecOM35+UTXgs0i4NeoV1yZASZKv3uHI0U7
-   wf7UnusSErYlJ9G0lt8FPn1sFZywwM8BVXhUQa9xeQ4x1QqPA7YbW04o0
-   fLi6ojRJYr3AggBJHmQ5tBf4ctEDc5Al6m0u11r2L5i64HTFiG15JXunS
-   g==;
-X-CSE-ConnectionGUID: J9WCJLc8Q/GCJeGQoh4EfA==
-X-CSE-MsgGUID: DdCZ+sueTwOc0GOEdkr/aQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51238423"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="51238423"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:39 -0700
-X-CSE-ConnectionGUID: QPMAclAjTCa3tvB/CHiDmQ==
-X-CSE-MsgGUID: tAPWA51gRTySvyrRwVB5XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="152668190"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uQ05T-00000006ByQ-2epz;
-	Fri, 13 Jun 2025 11:48:35 +0300
-Date: Fri, 13 Jun 2025 11:48:35 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1 1/1] iopoll: Use fsleep() instead of usleep_range()
-Message-ID: <aEvl4yXPStVTotnx@smile.fi.intel.com>
-References: <20250502134346.4146857-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9KNX1ky"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2679BC4CEE3;
+	Fri, 13 Jun 2025 08:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749804541;
+	bh=u7x16W5kMhuO8mP73I83fX0Qfs/D8SHE0KX4Q48Oks4=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=u9KNX1kyhxLrcRKV+BaqoAHpw8g08yiQNw6sCBxBOcU/6FRYDtY1+vAzEE7lwOSnt
+	 12MYGMa17cjhZNQX+0Qr1FzeSN0rxo3/5Mv8S94RLxnbDQaA9vBG/EOsJEsTYbYM2P
+	 V9pRionuNZtVbZQql/dAuhVJ+acNjYSXQRoX18vu3U+nds1vJ4mtRIet490xhi2Z52
+	 jIBcgNOWg23HQBXj4zBw0sqnYo/VvPJaKH5W3eEo1KyZM9pkgSpBVJNZxwhBRPI+lQ
+	 3+9dsV/i0988EswF8HbtjH1nfqQDqnJ8LAD2BdnZmhTjlIbGX/a2ZoD2gJQ3QNBY7f
+	 NitUwarcD28/Q==
+Message-ID: <12dc51f7-a765-4995-bf6d-8abe973f4ea1@kernel.org>
+Date: Fri, 13 Jun 2025 16:49:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502134346.4146857-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, jaegeuk@kernel.org, bo.wu@vivo.com,
+ linux-kernel@vger.kernel.org, feng.han@honor.com,
+ linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: continue to allocate pinned section when
+ gc happens EAGAIN
+To: Zhiguo Niu <niuzhiguo84@gmail.com>, wangzijie <wangzijie1@honor.com>
+References: <f1b9209e-c2fb-4a53-8d15-a3e42dea8bca@kernel.org>
+ <20250612123444.1779509-1-wangzijie1@honor.com>
+ <CAHJ8P3LSxzSbdz_ONUKy8dyDjLGsNJ08Aq724CUwYdOJ=m_2eA@mail.gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <CAHJ8P3LSxzSbdz_ONUKy8dyDjLGsNJ08Aq724CUwYdOJ=m_2eA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 02, 2025 at 04:43:45PM +0300, Andy Shevchenko wrote:
-> Use fsleep() instead of usleep_range() to improve small time delays
-> by avoiding the timer use. With this, use slightly bigger initial
-> delays then was passed to usleep_range().
+On 2025/6/13 16:25, Zhiguo Niu wrote:
+> wangzijie <wangzijie1@honor.com> 于2025年6月12日周四 20:38写道：
+>>
+>>> On 6/12/25 11:27, wangzijie wrote:
+>>>> Wu Bo once mentioned a fallocate fail scenario in this link[1].
+>>>> After commit 3fdd89b452c2("f2fs: prevent writing without fallocate()
+>>>> for pinned files"), we cannot directly generate 4K size file and
+>>>> pin it, but we can still generate non-segment aligned pinned file:
+>>>>
+>>>> touch test_file
+>>>> ./f2fs_io pinfile set test_file
+>>>> ./f2fs_io fallocate 0 0 8192 test_file
+>>>> truncate -s 4096 test_file
+>>>
+>>> Well, shouldn't we avoid such case by adding check condition in setattr?
+>>
+>> Maybe like this?
+>>
+>> ---
+>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>> index 6bd3de64f..2f6537d9c 100644
+>> --- a/fs/f2fs/file.c
+>> +++ b/fs/f2fs/file.c
+>> @@ -1027,6 +1027,8 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>>          struct inode *inode = d_inode(dentry);
+>>          struct f2fs_inode_info *fi = F2FS_I(inode);
+>>          int err;
+>> +       struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>> +       block_t sec_blks = CAP_BLKS_PER_SEC(sbi);
+>>
+>>          if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
+>>                  return -EIO;
+>> @@ -1047,6 +1049,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>>                          !IS_ALIGNED(attr->ia_size,
+>>                          F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
+>>                          return -EINVAL;
+>> +               if (f2fs_is_pinned_file(inode) &&
+>> +                       attr->ia_size < i_size_read(inode) &&
+>> +                       !IS_ALIGNED(attr->ia_size,
+>> +                       F2FS_BLK_TO_BYTES(sec_blks)));
+>> +                       return -EINVAL;
+> Hi Chao and zijie,
+> Excuse me ,I'm a bit confused about this:
+> when a pin file size is not alinged with size of "section", it can not
+> be truncated?
 
-Any comments anybody?
+IMO, the pinned file can only be truncated to section-aligned size.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks
 
+> thanks！
+>>          }
+>>
+>>          err = setattr_prepare(idmap, dentry, attr);
+>> ---
+>>
+>>>>
+>>>> By doing this, pin+fallocate failure(gc happens EAGAIN but f2fs shows
+>>>> enough spare space) may occurs.
+>>>>
+>>>>  From message in commit 2e42b7f817ac("f2fs: stop allocating pinned sections
+>>>> if EAGAIN happens"), gc EAGAIN doesn't guarantee a free section, so we stop
+>>>> allocating. But after commit 48ea8b200414 ("f2fs: fix to avoid panic once
+>>>> fallocation fails for pinfile"), we have a way to avoid panic caused by
+>>>> concurrent pinfile allocation run out of free section, so I think that we
+>>>> can continue to allocate pinned section when gc happens EAGAIN. Even if we
+>>>> don't have free section, f2fs_allocate_pinning_section() can fail with ENOSPC.
+>>>
+>>> What do you think of introduce /sys/fs/f2fs/<dev>/reserved_pin_section to
+>>> tune @needed parameter of has_not_enough_free_secs()? If we configure it
+>>> w/ zero, it can avoid f2fs_gc() before preallocation.
+>>>
+>>> ---
+>>>   fs/f2fs/f2fs.h  | 3 +++
+>>>   fs/f2fs/file.c  | 5 ++---
+>>>   fs/f2fs/super.c | 3 +++
+>>>   fs/f2fs/sysfs.c | 9 +++++++++
+>>>   4 files changed, 17 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>> index 785537576aa8..ffb15da570d7 100644
+>>> --- a/fs/f2fs/f2fs.h
+>>> +++ b/fs/f2fs/f2fs.h
+>>> @@ -1731,6 +1731,9 @@ struct f2fs_sb_info {
+>>>        /* for skip statistic */
+>>>        unsigned long long skipped_gc_rwsem;            /* FG_GC only */
+>>>
+>>> +     /* free sections reserved for pinned file */
+>>> +     unsigned int reserved_pin_section;
+>>> +
+>>>        /* threshold for gc trials on pinned files */
+>>>        unsigned short gc_pin_file_threshold;
+>>>        struct f2fs_rwsem pin_sem;
+>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>> index 696131e655ed..a909f79db178 100644
+>>> --- a/fs/f2fs/file.c
+>>> +++ b/fs/f2fs/file.c
+>>> @@ -1887,9 +1887,8 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+>>>                        }
+>>>                }
+>>>
+>>> -             if (has_not_enough_free_secs(sbi, 0, f2fs_sb_has_blkzoned(sbi) ?
+>>> -                     ZONED_PIN_SEC_REQUIRED_COUNT :
+>>> -                     GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
+>>> +             if (has_not_enough_free_secs(sbi, 0,
+>>> +                             sbi->reserved_pin_section)) {
+>>>                        f2fs_down_write(&sbi->gc_lock);
+>>>                        stat_inc_gc_call_count(sbi, FOREGROUND);
+>>>                        err = f2fs_gc(sbi, &gc_control);
+>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>> index 57adeff5ef25..48b97a95fd63 100644
+>>> --- a/fs/f2fs/super.c
+>>> +++ b/fs/f2fs/super.c
+>>> @@ -4975,6 +4975,9 @@ static int f2fs_fill_super(struct super_block *sb, struct fs_context *fc)
+>>>        sbi->last_valid_block_count = sbi->total_valid_block_count;
+>>>        sbi->reserved_blocks = 0;
+>>>        sbi->current_reserved_blocks = 0;
+>>> +     sbi->reserved_pin_section = f2fs_sb_has_blkzoned(sbi) ?
+>>> +                     ZONED_PIN_SEC_REQUIRED_COUNT :
+>>> +                     GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi));
+>>>        limit_reserve_root(sbi);
+>>>        adjust_unusable_cap_perc(sbi);
+>>>
+>>> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+>>> index 75134d69a0bd..51be7ffb38c5 100644
+>>> --- a/fs/f2fs/sysfs.c
+>>> +++ b/fs/f2fs/sysfs.c
+>>> @@ -824,6 +824,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+>>>                return count;
+>>>        }
+>>>
+>>> +     if (!strcmp(a->attr.name, "reserved_pin_section")) {
+>>> +             if (t > GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))
+>>> +                     return -EINVAL;
+>>> +             *ui = (unsigned int)t;
+>>> +             return count;
+>>> +     }
+>>> +
+>>>        *ui = (unsigned int)t;
+>>>
+>>>        return count;
+>>> @@ -1130,6 +1137,7 @@ F2FS_SBI_GENERAL_RO_ATTR(unusable_blocks_per_sec);
+>>>   F2FS_SBI_GENERAL_RW_ATTR(blkzone_alloc_policy);
+>>>   #endif
+>>>   F2FS_SBI_GENERAL_RW_ATTR(carve_out);
+>>> +F2FS_SBI_GENERAL_RW_ATTR(reserved_pin_section);
+>>>
+>>>   /* STAT_INFO ATTR */
+>>>   #ifdef CONFIG_F2FS_STAT_FS
+>>> @@ -1323,6 +1331,7 @@ static struct attribute *f2fs_attrs[] = {
+>>>        ATTR_LIST(last_age_weight),
+>>>        ATTR_LIST(max_read_extent_count),
+>>>        ATTR_LIST(carve_out),
+>>> +     ATTR_LIST(reserved_pin_section),
+>>>        NULL,
+>>>   };
+>>>   ATTRIBUTE_GROUPS(f2fs);
+>>> --
+>>> 2.49.0
+>>
+>> I think it's a good way to solve this problem. Thank you!
+>>
+>>
+>>>>
+>>>> [1] https://lore.kernel.org/linux-f2fs-devel/20231030094024.263707-1-bo.wu@vivo.com/t/#u
+>>>>
+>>>> Signed-off-by: wangzijie <wangzijie1@honor.com>
+>>>> ---
+>>>>   fs/f2fs/file.c | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>> index 6bd3de64f..05c80d2b5 100644
+>>>> --- a/fs/f2fs/file.c
+>>>> +++ b/fs/f2fs/file.c
+>>>> @@ -1859,7 +1859,7 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+>>>>                      f2fs_down_write(&sbi->gc_lock);
+>>>>                      stat_inc_gc_call_count(sbi, FOREGROUND);
+>>>>                      err = f2fs_gc(sbi, &gc_control);
+>>>> -                   if (err && err != -ENODATA) {
+>>>> +                   if (err && err != -ENODATA && err != -EAGAIN) {
+>>>>                              f2fs_up_write(&sbi->pin_sem);
+>>>>                              goto out_err;
+>>>>                      }
+>>>
+>>>
+>>>
+>>> _______________________________________________
+>>> Linux-f2fs-devel mailing list
+>>> Linux-f2fs-devel@lists.sourceforge.net
+>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>
+>>
+>>
+>> _______________________________________________
+>> Linux-f2fs-devel mailing list
+>> Linux-f2fs-devel@lists.sourceforge.net
+>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
 
