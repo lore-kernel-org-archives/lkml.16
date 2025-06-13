@@ -1,38 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE151E3DCF;
-	Fri, 13 Jun 2025 15:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9231FFC5E;
+	Fri, 13 Jun 2025 15:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749829799; cv=none; b=WTu8fu8mN6SCjryjW3Iko4KonknHpOBFNbSj5Q1EldnsCPjmksj20p2pekI+ROTqeLvyX4SNNAD8TccWyl57TrxN957Jr0CV0e82DEciHuUZhWIu04rIfssSx5z6vxw1/tMpX4+yWM5J6WAhA/ZDJDhAF9YbKqcRCAjz4bE5CLw=
+	t=1749829800; cv=none; b=uYxVBci089z5YeDez4k5M6yxsrlnufCP8lerwSb07vxycPRJ74Aj37KAFAa2/yUr3u0lPg/n4RUFd4XXSH4TJ/nbTAnJs6sYw5Lf2LuLm4GRbXomk1wYHbMybj6tSxg0aoy5wfjF46Blw5nibDDRzxlLUJArZhEksXXMfVqPNH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749829799; c=relaxed/simple;
-	bh=N2UYITogtfecT3kXHmGjJKBWnKKAGejg+NybZgL/OX4=;
+	s=arc-20240116; t=1749829800; c=relaxed/simple;
+	bh=sg5hFcA5AJD67pL+3h9mhGYook12TaG/km05mOqEqTQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sZPBvj/xPkHFq19Bs8CS1/A4lPhifLtaFVp1ciIBAPFDdTdkABz/A5L7OKysseRsnjuO7rLefL0pEuKL7rCrWQmP8xSHpPtT8PnA43paaW+7T5F5m6AQd8ZVuU0N/yvLrr4JrWgP7DCEDhlVZKmgRi0BacnGounWtYmgUT5KSdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dxL7MVHd; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=umuKr3WJAlqrbZAavVUasQ/ShMf0ImkFf0r3MV7yjuN4B8+Md/kIn/uJlOdLm6DpEW55Fe1M/vKLLwC4rEgVTuwwsK5bNwlYk22xtKtzRoFRKPvrHQDcBA4a95AROLVMph8tobX/jnSQLtxDDLeaIKHqncOOfeb5gz7RsdCRyXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JoEXE9bZ; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dxL7MVHd"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0365E4444D;
-	Fri, 13 Jun 2025 15:49:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JoEXE9bZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 77A9344447;
+	Fri, 13 Jun 2025 15:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749829796;
+	t=1749829791;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YLidNV2GFKH/2JeWLKry+LSYqYYCzq3L8dBLPFyZJ/4=;
-	b=dxL7MVHdZNHIwWXIQRb95+ubU7TDxRKIiAsPh8EtlqpFPN0MQlZZltCAMK0VZgl6XKLMj1
-	OKsgyAmjfB04or5CTEjRlp68NGFkPW7Z7o6zEtNxI/tmOmQ2UM9qXjC52c2QsaNyQz2oz4
-	1uOhm5OKoWiPcVyHBtNQSzB3KRZzm/8naL7cOh3D/dUDuJc96jSlwETwPn+0lxZmDjYk3/
-	A8MZAFzjKILr7PfdRTtbvQOJR/H1De4moclzfUX2xQyTUpH9vYRR1qSfuO9UPUj1G4e0iJ
-	4Rrd5Q6cZFtEt73qabcvefXUNOep2kdA8ERirTK/RoV6sz++JAVFrQ891cpOKg==
+	bh=06HUies5V7PRfoIqtd4meQuakxr9viCcxBP1N+2s1sA=;
+	b=JoEXE9bZRnEeG69FH/gTa6N9rF1tm/6Ztnot7Gm6/NbrXPQAkk3NnioADJWIfErYMt9AB6
+	ePqTcMnkm1QuuVNeBkH9eB4ydseegPV4fBNSyEl1hxBn8Wrl+MmyOB3soCwodliRBRzDur
+	Z73+3SuxAk55frgcM22aKCONpIex3CUEDv3EtOic1LC6VCZOQ3ZsaZsJjkHMgrMZ3VAHmt
+	4f9VbdUpSHWZG59BiuUzJ8wCrhgp14p/3meF42uyVEQXMGew3nBAiWttWx4eHOLJ7GjCqT
+	QrLQhIWZaxz2PwLlqCn2CC5jsu+eaymmicitVmZ3SwGwG6G2jbtY4e+HIkkrPA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 13 Jun 2025 17:49:50 +0200
-Subject: [PATCH v3 7/7] arm: multi_v7_defconfig: Enable TPS65219 regulator
+Date: Fri, 13 Jun 2025 17:49:46 +0200
+Subject: [PATCH v3 3/7] arm: dts: omap: am335x-bone-common: Rename tps to
+ generic pmic node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-bbg-v3-7-514cdc768448@bootlin.com>
+Message-Id: <20250613-bbg-v3-3-514cdc768448@bootlin.com>
 References: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
 In-Reply-To: <20250613-bbg-v3-0-514cdc768448@bootlin.com>
 To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
@@ -61,50 +62,34 @@ Cc: Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>,
 X-Mailer: b4 0.15-dev-8cb71
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeefhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvefgvdfgkeetgfefgfegkedugffghfdtffeftdeuteehjedtvdelvddvleehtdevnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeeftdgtfeemkegthegsmehftdekugemgeefgegsnecuvehluhhsthgvrhfuihiivgepgeenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemfedttgefmeektgehsgemfhdtkegumeegfeegsgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhhopdhrtghpthhtohepmhgrrhgtrdhmuhhrp
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeefhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvefgvdfgkeetgfefgfegkedugffghfdtffeftdeuteehjedtvdelvddvleehtdevnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeeftdgtfeemkegthegsmehftdekugemgeefgegsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemfedttgefmeektgehsgemfhdtkegumeegfeegsgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhhopdhrtghpthhtohepmhgrrhgtrdhmuhhrp
  hhhhiesshgrnhgtlhhouhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqohhmrghpsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhkrhhiughnvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhm
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Enable the TPS65219 regulator in the defconfig, as the TPS65214
-variant is used by the newly introduced BeagleBoard Green Eco board.
+Rename tps@24 to the generic pmic@24 node name.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Change in v3:
+Change in v2:
 - New patch.
 ---
- arch/arm/configs/multi_v7_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 50c170b4619f..76f74103c1f0 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -344,6 +344,7 @@ CONFIG_INPUT_MAX77693_HAPTIC=m
- CONFIG_INPUT_MAX8997_HAPTIC=m
- CONFIG_INPUT_GPIO_DECODER=m
- CONFIG_INPUT_CPCAP_PWRBUTTON=m
-+CONFIG_INPUT_TPS65219_PWRBUTTON=m
- CONFIG_INPUT_AXP20X_PEK=m
- CONFIG_INPUT_DA9063_ONKEY=m
- CONFIG_INPUT_ADXL34X=m
-@@ -618,6 +619,7 @@ CONFIG_MFD_PALMAS=y
- CONFIG_MFD_TPS65090=y
- CONFIG_MFD_TPS65217=y
- CONFIG_MFD_TPS65218=y
-+CONFIG_MFD_TPS65219=y
- CONFIG_MFD_TPS6586X=y
- CONFIG_MFD_TPS65910=y
- CONFIG_MFD_STM32_LPTIMER=m
-@@ -667,6 +669,7 @@ CONFIG_REGULATOR_TPS62360=y
- CONFIG_REGULATOR_TPS65090=y
- CONFIG_REGULATOR_TPS65217=y
- CONFIG_REGULATOR_TPS65218=y
-+CONFIG_REGULATOR_TPS65219=y
- CONFIG_REGULATOR_TPS6586X=y
- CONFIG_REGULATOR_TPS65910=y
- CONFIG_REGULATOR_TWL4030=y
+diff --git a/arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi b/arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi
+index c400b7b70d0d..ad1e60a9b6fd 100644
+--- a/arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi
+@@ -212,7 +212,7 @@ &i2c0 {
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+ 
+-	tps: tps@24 {
++	tps: pmic@24 {
+ 		reg = <0x24>;
+ 	};
+ 
 
 -- 
 2.43.0
