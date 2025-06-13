@@ -1,162 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A109A2E11B5;
-	Fri, 13 Jun 2025 16:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749832458; cv=none; b=ggZPSIaNfcix16oOFfej5Tk/16ohnjp8qOGbk4YnzkuYWh1Y9u1Gn9eSS+sdb2Nd2sS4gKxYK5k5VjwR1XvlWG1yMOf/yI+shq2V+MVS4Le8QUQxRN6jLpvTXazZQXm1zZ8tAT5l/+nOmpX262eDCRF0nrIdb8lBCxzMdIh105Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749832458; c=relaxed/simple;
-	bh=XmQATzAYaYnvtUMi+XnSnSqsLk5YyHQDgNS0PcyR0VE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DvSaIwoPWa1stderyx1a5nLSjm28Iw6AZFjx4z+H5ueRzrs2fpWQGuOTnpns3A6PAoa2O0qipFwWLq3/jahZY5K07paOPXBrRN4/5MKKyXzSQkZLFrQv4x74TbcyBfHL6Pq5PXMxrLa/YBEi3hyQakgbajRZSss4WzlhH8P1WvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z1rWZEPS; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1842E11B5;
+	Fri, 13 Jun 2025 16:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749832505; cv=pass; b=TKWUsrVTO5fSgU5WmXYpiZms7ornwYpix0wF9ATcGbKAgOhpnOmclrkCIEdeMf+u5SjC6w/ef1ShZ06ZT+fVBZPzYzRRf/+nM1o6ZvkxHt5rSoq3/GvfOFunxZiHxOkdxWiB1ZUSIjYIt6IVY0h+d3+SQ+05G+WkfU8Chc/+CTg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749832505; c=relaxed/simple;
+	bh=JH7+5xcP0Gxy40aZWNJIxfN8DceUAl68OpLJLha0Qss=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=idE2JB9XRkaLo4n8RIuoDoW3Rx93FVq+Czz9QNKVtGrm0bfd+AgkaegJt87I+sqjZYj1e5w/nSOzWEKWnOkCVcd9+F8JN+ifu2ivICW6iL7QM8pa0fuSohybvBamD4WAOQj6HBWD4/XyWufW2fsefeDIQ//rOcNTnbi0DOzc2K4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chronox.de; spf=none smtp.mailfrom=chronox.de; dkim=pass (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b=najrXMw2; dkim=permerror (0-bit key) header.d=chronox.de header.i=@chronox.de header.b=p2LAhlLT; arc=pass smtp.client-ip=85.215.255.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chronox.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chronox.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z1rWZEPS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749832456; x=1781368456;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XmQATzAYaYnvtUMi+XnSnSqsLk5YyHQDgNS0PcyR0VE=;
-  b=Z1rWZEPSUjOXaFCHVCOE90SJp7n5KAViY9SXv4Rn6GT/CSpgFYh87fkV
-   TyWMVtpgWGrxtQ3cQkpVpGFE4d1+hl01loLoFFD73IdT4mAHu+dxp2LUw
-   6FaKJF1I5V7AWCGZnlqSPQ9cdn/GOqUOYJvkcbIeupp6DAILTiDoZ8CAO
-   UOAPXcsLpi7yzhLvRzBnffQywRUQ2ExGY9c6YY+g6C79MREs92for1D8M
-   LSYe8fwhnjklnEVhQO0onvbigw2SZlNN/AkCLZ25f5/Q8AeMopYU6cKPd
-   MqMCcTm3VuEqRvz+TgWdUq7jr2enc77pkfLFekejVm/WFqEhVCZvN2xkW
-   w==;
-X-CSE-ConnectionGUID: D0ju2UKdSnm7TG/08lmd4A==
-X-CSE-MsgGUID: S5FtnycxSd+xcp47mSMkBQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="54672617"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="54672617"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:34:15 -0700
-X-CSE-ConnectionGUID: xTT/NwgZQVyWy81RA0eR+g==
-X-CSE-MsgGUID: EOizAm/wT4OMCyvmQSPCSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="153160363"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:34:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uQ7Lp-00000006IeZ-3Wol;
-	Fri, 13 Jun 2025 19:33:57 +0300
-Date: Fri, 13 Jun 2025 19:33:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Alexander Kochetkov <al.kochet@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>,
-	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	=?iso-8859-1?Q?Am=E9lie?= Delaunay <amelie.delaunay@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Amit Vadhavana <av2082000@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Casey Connolly <casey.connolly@linaro.org>,
-	Kees Cook <kees@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
-	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Subject: Re: [PATCH 1/1] dmaengine: virt-dma: convert tasklet to BH workqueue
- for callback invocation
-Message-ID: <aExS9WB0Ussl4Lec@smile.fi.intel.com>
-References: <20250613143605.5748-1-al.kochet@gmail.com>
- <20250613143605.5748-2-al.kochet@gmail.com>
+	dkim=pass (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="najrXMw2";
+	dkim=permerror (0-bit key) header.d=chronox.de header.i=@chronox.de header.b="p2LAhlLT"
+ARC-Seal: i=1; a=rsa-sha256; t=1749832488; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=YEUIGp/kETBI6M2oLy+dhlduCnG1F194AG016SwkQHeKh4HLaVJXRsaYIM0UgMIO69
+    w/nQXXBb1F4gAIq7ThOlX+oMw5ThXtG2ubJgwYz71I3RF/xkEe5IDFZFO1+UOybp+GrU
+    AeOdoO9eCiyQBYbujA1RXMxeMoBCtgn/696mrdP7tPbNyLaaXPNUqYCKoy8KJehqLh+7
+    PkbeRa4eYFj9fhR5dLBaQS5BfjP1CiEi+DPle1PAdkPqpTgk59DEVT62m54tsN5GeuQz
+    pax4RZJCw6OL5B3f+7CCKqcgBf8X3qbKFS9PJIV7ErXgzkIN2SaFlnBp2FNcNHVk2jOK
+    xThQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1749832488;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=7ay36h4xp3J0JHjWRZu5rdj9y5vlRyjYR8YhExn3xUI=;
+    b=OGk9EFcSNu4xyt9f6Lk1dESSWi5DN8DIE0zaHAzSi2Dp0mK6YIRkEmgd7iF6IVgIrE
+    SG6CS2GApLkKrJU9fWP9nsfc1otA/WriPqJczVZ07e3BFjP0KbgZK6Jc066/C+tpqmcK
+    X/9Yk2Rt75mhDafsQXPhQwihhv581gHmyQBCFtJV5ZCVRNezWqpztk1mTvNbsgFPul90
+    fG8QP01S3QIaABmbaFfU58+IZuvUc6CLWrr+KS2pnxrrb6fpl8japOn1+q/HVlqk+9gU
+    SiTnPU5og/jbKJA3VM+MwGvi1CzTi6BV87b6s3MjFmmd8b5fbnTCIMu7RBvBYv3KbJkT
+    a2lw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1749832488;
+    s=strato-dkim-0002; d=chronox.de;
+    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=7ay36h4xp3J0JHjWRZu5rdj9y5vlRyjYR8YhExn3xUI=;
+    b=najrXMw2MMFXu4+7P4o+wnKQsGj2uJTlbmLMLMEwn8gAlSIzdbgtrCdOnYBd99+KI+
+    sl4Il0zJJolSo265Gf4OAfAokOgigZFO4v05AbqHjfVv83O6Hv09fy61EUVBmWN7td+F
+    U6lzQrqqayoTbixcm8bJm5unM1tP4zwdyrMJhkcE5aT1CtIfMPeKESRQEPny5yS+sOVp
+    6HyWTUGpblzXL9gCjQRe9m9zP1rRHtPzMQ3OYw/J2mou5t8SXtAHCBmdc0QnHNBdkWej
+    vn7v7R8r0/yfNz9tM0y+ZxUACCARI79Lc2F/LkBw4CFJ4iF0CDHDkMd3JNO2v91Nrzu/
+    qKJQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1749832488;
+    s=strato-dkim-0003; d=chronox.de;
+    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=7ay36h4xp3J0JHjWRZu5rdj9y5vlRyjYR8YhExn3xUI=;
+    b=p2LAhlLTCa+gMKHcYr86RN4e9cQeYSyoTMaeQDccLU6W0Lv5q3R0kK18SZhTsfJeWF
+    EM2oiw/oYzen8dgWSDAQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDYJfScBm5T"
+Received: from tauon.localnet
+    by smtp.strato.de (RZmta 51.3.0 DYNA|AUTH)
+    with ESMTPSA id f29bbf15DGYkxsw
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Fri, 13 Jun 2025 18:34:46 +0200 (CEST)
+From: Stephan Mueller <smueller@chronox.de>
+To: David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Simo Sorce <simo@redhat.com>,
+ torvalds@linux-foundation.org, Paul Moore <paul@paul-moore.com>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Ignat Korchagin <ignat@cloudflare.com>,
+ Clemens Lang <cllang@redhat.com>, David Bohannon <dbohanno@redhat.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: Module signing and post-quantum crypto public key algorithms
+Date: Fri, 13 Jun 2025 18:34:46 +0200
+Message-ID: <11297298.5MRjnR8RnV@tauon>
+In-Reply-To:
+ <01f2f3171dd0f1cd9dcb496ac66bc6903767a2d2.camel@HansenPartnership.com>
+References:
+ <501216.1749826470@warthog.procyon.org.uk>
+ <01f2f3171dd0f1cd9dcb496ac66bc6903767a2d2.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613143605.5748-2-al.kochet@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Jun 13, 2025 at 02:34:44PM +0000, Alexander Kochetkov wrote:
-> Currently DMA callbacks are called from tasklet. However the tasklet is
-> marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
-> are executed either in the Soft IRQ context or from ksoftirqd thread. BH
-> workqueue work items are executed in the BH context. Changing tasklet to
-> BH workqueue improved DMA callback latencies.
-> 
-> The commit changes virt-dma driver and all of its users:
-> - tasklet is replaced to work_struct, tasklet callback updated accordingly
-> - kill_tasklet() is replaced to cancel_work_sync()
-> - added include of linux/interrupt.h where necessary
-> 
-> Tested on Pine64 (Allwinner A64 ARMv8) with sun6i-dma driver. All other
-> drivers are changed similarly and tested for compilation.
+Am Freitag, 13. Juni 2025, 18:13:43 Mitteleurop=C3=A4ische Sommerzeit schri=
+eb James=20
+Bottomley:
 
-...
+Hi James,
 
-> --- a/drivers/dma/amd/qdma/qdma.c
-> +++ b/drivers/dma/amd/qdma/qdma.c
-> @@ -13,6 +13,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/amd_qdma.h>
->  #include <linux/regmap.h>
-> +#include <linux/interrupt.h>
+> > The good news is that Stephan Mueller has an implemementation that
+> > includes
+> >=20
+> > kernel bits that we can use, or, at least, adapt:
+> > 	https://github.com/smuellerDD/leancrypto/
+>=20
+> So the only hybrid scheme in there is dilithium+25519 which doesn't
+> quite fit the bill (although I'm assuming dilithium+448 could easily be
+> implemented)
 
-It seems it was ordered. Please, preserve the order.
-It not, try to squeeze to have longest possible ordered chain
-(it can be interleaved with something unordered, just look at
- the big picture).
+Dilithium-ED448 just landed. One bug to squash though.
 
-(Same applies to other similar cases)
-
-...
-
-What about the driver(s) that use threaded IRQ instead?
-Do you plan to convert them as well?
-
-I am talking about current users of virt-dma that do not use tasklets.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Ciao
+Stephan
 
 
