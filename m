@@ -1,161 +1,109 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACE5433A5
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C411A76AE;
+	Fri, 13 Jun 2025 14:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826106; cv=none; b=nlsqTmgvAvDkfOsMkvdOXT+L3IGB4CRwziFRi0gOs6sfgS6O2SawGWZCdiiBn1RlD5GA9n4QSpihm6up5+D7SBpI2lZ+L/Lu9xkqDRyV7ZfROnoEEsB+K5aV5Ldbp68EZ7Vazq6a8JRIbzv0esIDlBCuBtj6jqo2S/FkhG9w/Jg=
+	t=1749826111; cv=none; b=QyM89kusR623Ao35qlHCsjiZcp95HzGu3xWreb+yYquJgixJSOnn/f6kUv55wJbsayC4V+2bzk/p2bMv1kBqh0hex0Cv2SIB+Gy9DHhHMBjLonW0yVwWYKXdNdnxhFsvfGX2LDB8snQskWIsMgYVIra/iEdVnAl7yuVcFQA5cQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826106; c=relaxed/simple;
-	bh=LunFnbTFFDzuGfxH/qbk8l6GPWmy4BO3tDou7e+5RyU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=OW5so+Ex+S9x9xl2UddU1zK4nsi0Bs6s1+Q84+1kw6TPrj68y+/P7uEB2hEowK6mbqO27l+gOBBKQCgqWoYsd/kwzVcA7oV+PviEX30yod+kJdiG+mowS7ypCDtwV0lVSutigCAcvpu3zi7jwrGe3495hu7W1wlknp2O6DpGqjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g2uBbAya; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749826111; c=relaxed/simple;
+	bh=26ErZJ2j5j8tbM2DQYOWAirvOPS6iIdLWscIEgu7UGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pVK++9rLSzZEvJpKax+lpkKloEjIB2dshWz7Nxi0kYMFq5fAKrb7J0WM9z53v52c5ZnmDfqQxQ4+Ko8bNBkJCewUcz1IdptNWmXVoxhVqI4ZjLXRm/94+Iz6+GqI5R8N5SxUebgdoCfeNzP4rPQr+UiGe8yIGVMDkePZRIIl4QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GukvyTlS; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g2uBbAya"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a5096158dcso1965044f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:48:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GukvyTlS"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b2f0faeb994so2460661a12.0;
+        Fri, 13 Jun 2025 07:48:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749826102; x=1750430902; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2mOYd+KSN0bGLBIlymGQv2zJrwVUrxAdmR0BhjkZJyc=;
-        b=g2uBbAya+Y71MOM4DjUIP+qQMEIJJlos+LZBupBO4QaRK5eY3ZA+LuNZ7y1Hr9C/XR
-         WGpWldglY9EYh1GZbQjIgyEX0tDspZCSJq/jMjmY8+zWrejND5z0AWCAS+Ext9K8SK+T
-         4KxhATCe5GRhz7cFkBSWuTJv+l/rGx7pAEx8k3m98YQxYRuMw75k7bIK0wZOgwD8oVHP
-         CFEc4hkLUF2bPaP5hflUxHH1lm1K+lh26ykPDKTtt4vBFf+iMzxkVBeIUw6Tjlr1C1Vp
-         EoyOhHuwXYaXpT6pvKI6LMTJQ0TCCquV4zzhjMsHv/k/Y+VXbJR7o3SkYRdpriYrgWKO
-         alCQ==
+        d=gmail.com; s=20230601; t=1749826107; x=1750430907; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f9JTiirLp7dFXp65A+6dp+48wUewOH1a1vp6gPpeVWM=;
+        b=GukvyTlS7OrhVGp0KN8ewbWkAJ3Z1bygdVi15CnQYghBGmkdLyTEEKzAlVqGF5xrjp
+         hVW9gyrE8rZQI8V99hSCOj35KKRFBlEz3jN6gRDc7d2owSe187p2ciMN1uM2fkIjbDUU
+         mYQc/23BALXF1Akqu4SIt3p3AdgkQkh0qlWbbMKh61HFdcUq2l/ZaN+7tmvnkjT4tgJV
+         M27yCWhHAdF0ixT5apRnj9YJIzLq0EPGa35EOBsiNM/WWQrXXBm/kEWLY1EGHUvKzRGw
+         4kawFUZAJORPIOZ1ppctDB81umz7PoKne469GGwQWVRgoM2/tJe4FIkFVKX1wz9KlN2q
+         7YMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749826102; x=1750430902;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2mOYd+KSN0bGLBIlymGQv2zJrwVUrxAdmR0BhjkZJyc=;
-        b=jdykt1522q8vhoLvWrdKRTgDu7IvySfSt+cJB5s8OziXCgqXyMnw0g6lTqVTSheiRT
-         maa2eZ0JnYGmHrxFSJ0Cifes5cmXR68jij8+nb59rKp6KpQSpXX5sg61paEAqxlW+ngo
-         Wp/L6ERj7xlzH9jbROmyQBmqKWkfo2ETyKsLK8UYTaQdzwD4e8tf3v6oFeFZ9+A8k8sA
-         F7EjEnSrwzDCkXrq5v075ldUOVJRKz7YkiB6+hWxAS2+aonFu/hHhKBwxvJS5kdM6Dr6
-         Z3dX+7xYwHRu5IcsnahlPLudm9r2225bBzupC5sFVZXK++qyDRsbDrn0lDLGp48yN1hk
-         mszw==
-X-Forwarded-Encrypted: i=1; AJvYcCXx0C/Md9/zEt1/TOZo/TP+lbDEFgouyjyr3+KTjeUz5NY6UIyhMsFBW1joc+CF4XluktPIpQMAtDhRAzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz50PaRlWiqvmx2EVkmjOQ8Tjt9uL3lkeccyiQkTBF80lXUhimy
-	fT8g5uk+jQajqOn1Mf/yZtleUX3uEEPHf3PkD+xryCJ+TIz2oKktR3+iKsROYwevcfcvzXG+hFV
-	wxvukSL4=
-X-Gm-Gg: ASbGncuZeSAkCSNKNYkNDI7boTLLM5NOUOE/FXvq//dxkiOlgkgtr9IxAsMG2xN1LLS
-	R0j6lpxdsSCy/AMP/zToPHJGVepCnr73o6faoufm0Kas+IMQCMzfd+gqLNvU2wpfXWvG8+f8MI6
-	2jFS5P38PpfDEeGsaoEP9bOIE8mhxcFGTjlHqL2UOcVssfya2meMdJVqRLhC+bTaLbaGKqv4x7R
-	Co03IUOHFe2WcC2nFCWMEfyzdbMvdSITWtRwzs5s/XxS9sM6aNjBAtPpXjcVi9zu02p0NtkrPTq
-	UYvhCrlQ2SKc7zqHuvWIm308mEOiNJuqlufs8AJNoK0r2RU6QdPrd2Qnk2JxyZiVQvdRh6pYy0W
-	uQbs=
-X-Google-Smtp-Source: AGHT+IG9yKxjbUAlD81jUcQCQqnSyAIGryKoG0zNvJd5LrpgpBsrLCC2LN8O3W8Hm1XE98lIX1UEKA==
-X-Received: by 2002:a05:6000:2486:b0:3a4:e502:81e1 with SMTP id ffacd0b85a97d-3a56877f1b5mr3610228f8f.52.1749826102428;
-        Fri, 13 Jun 2025 07:48:22 -0700 (PDT)
-Received: from localhost ([2a02:c7c:7213:c700:c8e2:ba7d:a1c6:463f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c4b1sm56505835e9.2.2025.06.13.07.48.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 07:48:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749826107; x=1750430907;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f9JTiirLp7dFXp65A+6dp+48wUewOH1a1vp6gPpeVWM=;
+        b=eAVFAf/5Sm5NzdodR484m+Rx0vvvXwv/bM2EUZP8D6bVcMNh6/JTLssz0Omi9piuXx
+         4imIgRLVzQemDvrpi7Id9yBZbXqsQx3J+Nt4QfZFc9eQ94svQNBHPaDqIeh3E2AmPWBI
+         8TJMSCBtRyYLfP8JSKY/nsOSKIfwkKF9+1jneDK7yZuVLeX77yaUmwQHeIShbhEnEQ4Y
+         aLZbbG90VHwxT3g0ym0S08pb43X7I0tp/EzVeU9NS1OPROESZ/D6EnPvBrnOa3yamZjm
+         YrYOgPpkg6RhC1h8AqcCtBUUsHKGez03dKhYmldjWFT2zTlEO/3WmL3xYOx1NsafaSIL
+         mbBg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1i0Obh3kS0EPvLQWkf0Nm59y7CRNbu2S112VxI21I/HuOzns5LSG8Wt6MzRb07rnInQnNQRbupz66C/8=@vger.kernel.org, AJvYcCXQf2KJciNCx1TWKUm3w19lAcLEMaYq0pad4F3b5ERvYSB0q9Osb7YGtZa0H6nd51Nxp8lsTN2/Fgzh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJhvVE0VWHCeudFJXdOytJeKwe6eCm9rl67UcC9oX2XsaFYg0G
+	AvliTm/UwighjJ7jnbUPY30dnsJepZUhg3tC+BCoSin9sWvoDFjbqkyT
+X-Gm-Gg: ASbGncuqujPLPBC7202sPstRMje2hJ2hcxoH8jVf8IhDoAPEB7Ctd4AQ5UzcFKEMCNz
+	hAivzHi8M5hqh5TcKtT/RL8efkCF3k0XL4K+sTxqY3V8MRjZC3qdEU2UtRK4IQKQhyNmMVIEaRs
+	mhCR4aWnFE31Fl0m3tPX03csy9SobLoU8M9wzrS1vG8catL1jX1SHmyfylz+pEOPny07ZdzdSno
+	4kXHEfQbSXvfVOqmGNAaggPPjUTFXJz3Vwc12bE4tC6Yc4Z0Q2pOjImvm0j6s6JuHRUHifH6Kws
+	ZR1/6v8R7YmO3V1+73jTDQL7F6KYfiEqqBCp4ivw5Jf4ylrtag==
+X-Google-Smtp-Source: AGHT+IHcd33U1pPTm2OZvPaNgt6ez8a+j54CjSPCSVvtmMq9GaYDflpq+hrFnm/a0JpIR7GcANSQcQ==
+X-Received: by 2002:a05:6a20:728e:b0:1f5:64fd:68ea with SMTP id adf61e73a8af0-21facb4a140mr4610926637.4.1749826107267;
+        Fri, 13 Jun 2025 07:48:27 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:838f::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe164406esm1803644a12.27.2025.06.13.07.48.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 07:48:26 -0700 (PDT)
+Date: Fri, 13 Jun 2025 11:48:21 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v4 0/4] PCI: rockchip: Improve quality of driver
+Message-ID: <cover.1749825317.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 13 Jun 2025 15:48:21 +0100
-Message-Id: <DALHL1IBO6TR.11KW7Z16V4SH1@linaro.org>
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Ekansh Gupta"
- <ekansh.gupta@oss.qualcomm.com>, <konradybcio@kernel.org>,
- <srini@kernel.org>, <quic_ekangupt@quicinc.com>
-Cc: <andersson@kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <krzysztof.kozlowski@linaro.org>, "Bharath Kumar (QUIC)"
- <quic_bkumar@quicinc.com>, "Chenna Kesava Raju (QUIC)"
- <quic_chennak@quicinc.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sm8750: Add adsp fastrpc support
-X-Mailer: aerc 0.20.0
-References: <20250502011539.739937-1-alexey.klimov@linaro.org>
- <10f69da3-6f94-4249-a8f3-459dc48fa5e1@oss.qualcomm.com>
- <D9R4NCKH46WP.14C8F7W4M58ZQ@linaro.org>
- <3c0fea8d-0715-40e6-bed9-e0961bf034e0@oss.qualcomm.com>
- <bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com>
- <3f346bdc-81a4-4620-9a31-25c41d591c58@oss.qualcomm.com>
-In-Reply-To: <3f346bdc-81a4-4620-9a31-25c41d591c58@oss.qualcomm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue May 13, 2025 at 2:09 PM BST, Konrad Dybcio wrote:
-> On 5/9/25 5:42 AM, Ekansh Gupta wrote:
->>=20
->> On 5/9/2025 4:27 AM, Konrad Dybcio wrote:
->>> On 5/9/25 12:20 AM, Alexey Klimov wrote:
->>>> On Fri May 2, 2025 at 10:38 AM BST, Konrad Dybcio wrote:
->>>>> On 5/2/25 3:15 AM, Alexey Klimov wrote:
->>>>>> While at this, also add required memory region for fastrpc.
->>>>>>
->>>>>> Tested on sm8750-mtp device with adsprpdcd.
->>>>>>
->>>>>> Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>
->>>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
->>>>>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>>>>> ---
->>>>>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 70 +++++++++++++++++++++++++=
-+++
->>>>>>  1 file changed, 70 insertions(+)
+During a 30-day debugging-run fighting quirky PCIe devices on RK3399
+some quality improvements began to take form and this is my attempt
+at upstreaming it. It will ensure maximum chance of retraining to Gen2
+5.0GT/s, on all four lanes and plus if anybody is debugging the PHY
+they'll now get real values from TEST_I[3:0] for every TEST_ADDR[4:0]
+without risk of locking up kernel like with present broken async
+strobe TEST_WRITE.
 
-[...]
+---
+V3 -> V4: fix TLS setting-up in Link Control and Status Register 2 and
+adjust commit titles
+V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
+suggestion
+V1 -> V2: use standard PCIe defines as suggested by Bjorn
 
->>>>> IIUC the driver only considers this on the sensor DSP
->>>> Memory region is required for audio protection domain + adsprpdcd as f=
-ar as I know.
->>> next-20250508
->>>
->>> rmem_node =3D of_parse_phandle(rdev->of_node, "memory-region", 0);
->>> if (domain_id =3D=3D SDSP_DOMAIN_ID && rmem_node) {
->>> 	// ...
->>> }
->>>
->>> maybe some driver changes are still pending?
->>=20
->> Would like to add some more details here:
->>=20
->> Memory region is required for audio PD for dynamic loading and remote he=
-ap memory
->> requirements. Some initial memory(~2MB) is allocated initially when audi=
-o daemon
->> is getting attached[1] and this memory is added to audio PD memory pool.
->>=20
->> Additionally, if there is some additional memory requirement from audio =
-PD, the
->> PD can request for more memory using remote heap request[2]
->>=20
->> The support for SDSP was added sometime back[3] to support SDSP usecases=
- on some old
->> platform as there were no dedicated context banks for SDSP there. On rec=
-ent platforms,
->> context banks are available wherever SDSP is supported.=20
->>=20
->> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/=
-tree/drivers/misc/fastrpc.c#n1273
->> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/=
-tree/drivers/misc/fastrpc.c#n1884
->> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/=
-commit/drivers/misc/fastrpc.c?id=3Dc3c0363bc72d4d0907a6d446d7424b3f022ce82a
->
-> Ok, this was mildly confusing given there's specific "normal" region
-> handling, but the DMA allocator takes care of this one
+Geraldo Nascimento (4):
+  PCI: rockchip: Drop unused custom registers and bitfields
+  PCI: rockchip: Set Target Link Speed before retraining
+  phy: rockchip-pcie: Enable all four lanes
+  phy: rockchip-pcie: Adjust read mask and write
 
-Konrad, Srini, Ekansh,
-what's left here -- I guess memory region is needed,=20
-so do you want me to test with secure flag as the only required change at t=
-his point?
+ drivers/pci/controller/pcie-rockchip-host.c |  4 ++++
+ drivers/pci/controller/pcie-rockchip.h      | 11 +----------
+ drivers/phy/rockchip/phy-rockchip-pcie.c    | 16 +++++++++-------
+ 3 files changed, 14 insertions(+), 17 deletions(-)
 
-Best regards,
-Alexey
+-- 
+2.49.0
 
