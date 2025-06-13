@@ -1,109 +1,192 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB41132111;
-	Fri, 13 Jun 2025 17:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2C21F3B83
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835924; cv=none; b=gji6/aGkkJ9ul88PJlgd68uaRGi/1Xstz8k8v42aGAabN+yvIiDMTwlfIMaDrYqAvNTWP4Id46XOXDnzfPhPcT+SL/lgOyBw/BanLfWpFknqwTcYMTH0KhFC7UJnhfWZkHknYISpBlZgPPQcQG/BlX+JpLH4QroN9nazUkA6C98=
+	t=1749835963; cv=none; b=l9oOO5GxWm5fObNtHul01eu0YxFOGsEhyC/BXbouRYPJGAE1D7/xqE8arXc1k4b2DR/J7gaLDxee6P3YK07fMIGHr9a6V5HJGEmRKYt1p94posdXVzMl9Ef3IdA+E0O3ZZbM31b1s2LwzZXcBsO0MnYx5bCDd8xTTP2ixjxf7LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835924; c=relaxed/simple;
-	bh=t7N3BVq9WlE9phwxDsROYWpWt0kQq3OpsSCwh+9ECEM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JZCccSOc1RmPfryszexKyRfdKA93WtrvXfrFUUOrNr2hqGeYeDVi8sjXrpfi3g6ZJCY8PXyqtUCC5Sorbve0SzcnF06cQoD7//mLVG4UBspR/wb/5q9s7fg5IK/my1rAo4AHlbzdaQxPPHmgyuEKB6LKDOkRFfQhIdSuPd/7/6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XDfSphrd; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749835963; c=relaxed/simple;
+	bh=cjd9e8n2oR+FGyt2kpnBqvrA+bZIjT8nUIEefDkbJjA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CkYJQptpBFT7uGqsm798DE3YfXnULem94SPTjqTaoJF76wG+K/hHFMbh1WeaUWf5Gz/KsBRHRGA3vRSemzL/swjFK+64wX76Or0t6nyRjsv7W3mnTrorR/mQUlw+8G5LtsEn8Q5fRp/Jb35supMnbprDgR7whoEBT8hucHoIn5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ao7hLuPn; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDfSphrd"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so1482872f8f.0;
-        Fri, 13 Jun 2025 10:32:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ao7hLuPn"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a36748920cso2431974f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749835921; x=1750440721; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NVccLtBUkLI1MEe4KbooOMLXqPFKOC+ce3CE/xpHyA4=;
-        b=XDfSphrdQeatcz66ziAHt45KLnwoY5U4UIqaykpHBTVfoswmQm37+A16PAUfyHoxwN
-         AxVZ1JLJkA185wHGmR1/hrkH3QIZfIkeiFcjsJdlDjausz6TqGEPBnnE/uojabmepMqM
-         OGboH3w7Pah7iu197XLGrGwucLvFN6qLq+4YQwo/tdXIC64ID4rSTh5lF33viT4dzJ6W
-         px5hvyai8t4khpnisSO4fe3VWdi2S7j0B77TtYO1i7vLEhlke3X0zKc3UaBoZBaQn/FZ
-         itlAx4x0vf+lN9+6Y8BDInKppa5X5w+MQeQfRcG+3xS87X4PsQfQLCm7+w/O11xbBm+A
-         A8Pg==
+        d=linaro.org; s=google; t=1749835960; x=1750440760; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ztUb1CK2ca+AmmvOq6nu5cc85DsCpI/YRfqf7x02fNA=;
+        b=Ao7hLuPnR5t4vwOx/p1kx9TM1rdb/VoAU8JcOtlTrKcTb6ySdhi7IXZ/CYTPWDHFGo
+         sbIahgh4/p/2nc6RihzaQSEzinbiOuasUabqMmv5+wf/mE5pJ5vZprYjvkLOtM5B4lMW
+         ytjQ1ZiFEEemPbNxRiewmMVbiHoUiy3+KYRZ7RMiJ3pk0YWxevCjIAqr+VsYFYnKRuhQ
+         VLbHDSOJmDR5gP6kJswf2xvYe9ayOHKGYP/sEogRqPwz//9NYmPVAhIvexig20IWCuBS
+         CADrKoW1ljKqy53KAbflwIL9ATDpv+UjH8mjOmMcHfuowmsVfKB9JbXq2rmNzLyDafSR
+         Y4BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749835921; x=1750440721;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NVccLtBUkLI1MEe4KbooOMLXqPFKOC+ce3CE/xpHyA4=;
-        b=mvc2C3q8GlkzL5jlzoKtFICTCJDEbCTrW2YgFfSSjwvDJMjTaZJb8sP5vpTaYDzHsH
-         +pYz+qVT1F8oUYZoXRf7zG64Zxi1Voq6YqC5c+FiVll+oOHzIgcdenj8K671jIBBAe02
-         5X+cobKgDc0nvL1j0Nn1d/orF4vJ5p3DPHKTz+N2cTCEO8dM4FOlehnx3TYZFqsbkk+D
-         FMHHnoRP3QtJzPFm4oZ1yUdtZOVVKsRODEv2RrjsX3yeZWKJAr9Ryt8glFNWU1avJob2
-         uR6opXh1FuqIuhjloN+wktV8mQ4OB6Lr0LlmX/nQU4HIIWjfIwiBMY2Wr+d3sf7t/aOl
-         hmZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU09bDxB+KapWi50O1bKso69bn1jLoum2K5XRfIkMylNc+WRbF8h66RTQFHRzH7n3krWe+WGc0YXc+pB49R@vger.kernel.org, AJvYcCVsHSCczqfVHDN9Ad40s7OwoH60qIW9R8AvlZGEK9+kXMUQdGHscGo5w42gfrxZ1xDDv74=@vger.kernel.org, AJvYcCX3aySYsXyhEElCH1NDU1W9W49865jWOh2+X5rpJ7JklwcWtOlLK/Et6PCxkUQ5a3xAQdD4PRG7PuaJGB0DRN4F5Bpn@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlR+1XHskvosUJ0XyYZGxomGUvaOIH4KrC7R3634AQhaDDCuB1
-	3xM9aK7C2+t6xvQ4ofm7H5uFnbnTg3416pSSmKDvuqR/mioc8Q9l8jT5h39sVgNnH1nIeAGS2G/
-	detLw17mVlAERmmVNB0UHsrpV+C/RAECE6A==
-X-Gm-Gg: ASbGncvSZ7U84qJ0JpFYYM6dIRW+L+jQSY4N2RJtS6bMGc70rVN0cwq2NXqq7+kAvSf
-	gRF+YsiwV8eXpbtGdWLFyTGrhqG4mKfi0VY6qF19EKNGpzdktXRn9MdB1gcbyv4MQlCTNjEq1G2
-	Fys/9f5H28DmIb0Xps+z3IwIkaG6zf3B/8quf+PhrcA1y7/qfumq0XYeMwnC1gDB/Lbo2UR5t4
-X-Google-Smtp-Source: AGHT+IE5Txj9vSePCLXk8LXl4X9M2Y15KDj342FLtUVMXpCM6clk44IcqP+eIKErJWg8V6XaAMQaCZngglGDLa+g6xw=
-X-Received: by 2002:a05:6000:230a:b0:3a4:f7e7:3630 with SMTP id
- ffacd0b85a97d-3a572e66e95mr638250f8f.15.1749835921053; Fri, 13 Jun 2025
- 10:32:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749835960; x=1750440760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ztUb1CK2ca+AmmvOq6nu5cc85DsCpI/YRfqf7x02fNA=;
+        b=HfAiXrWoemKDrcTIehRVPgO3dF/jGmf3tepxtNgdIat0YOLDrW3DKeXMPss5DBAy3b
+         Lg9MfIOauxFdq4ba1t6ruYH0MI96kFg146BMHhM8UoHO3a7a3Do8lYFkjwFVRpMWXmRg
+         8KI6WQYYHuxR5CIGn2fcR8CqVQ76qMim6jA1z7ZFNNVVhsFx8xxxZSepMS7ZND0hx8Bi
+         6eiw4oEPYCkCzLZmTQL5bJFPX9VfOE5OQwDf9oqgvBX2vFphC7vNlQC5CVAYxt3/OK6E
+         /OmU0TPguyjv2oGELW1gM8hMI+YYUqBc9WC+LQ6drNhYckHtkXSGWmJPjPvOFigdSLUs
+         aoGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzGPj2Tq2b2zvsIOMx1m5H0EymxRfH6lSpjVAETyVIh3oq4ylrXJrDW05umRgAs9cOR/HP1DnA8QHA8Do=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXq4siaH1YQvLyXTKhMTzGzeODNyKPhBpvEwtl4qpz+bfIj4Vn
+	KyfaGBxzuxweOgifke3wBiXSiHBY+HluaTFDNYE/uyVZ5VBDvD099fYhmpWMaiESVfo=
+X-Gm-Gg: ASbGncveB7xtsTlBygiQgNYxIgEDdOi8uN973IzRLZVlo4Pu61WB4BFHhDeDgV+ncMX
+	LwqdCeuma8SJ+4K/i1+5CgEkFTsgUh7UrbjjRpaUICx96u1Z/cB6SI277wKf9WvTuTszs5XcEtV
+	cdSK6fjMM8lSKcpyvDzc3/7j82T9K0M6ABN0IxeMevKJCkMFWPCijPgR5ErM4SWvR6OZLYp0Vvb
+	WiQJfbXp1+ckN5Y9VO1zPL7MBDUVzZbJqzLQXUP9MsJZjoUlMmRNKUDP77KxbGDu7zj32Zczd7c
+	o1WxjfJlAZCgLIihMfc07rQg+C6Dm3JbsIucvH0QyCThnUOPaE3PJEJMuim6knLJFZPrFA==
+X-Google-Smtp-Source: AGHT+IEYT7vrlwuZEZwaQvZcRRnUXPS9FnrmpBGm7dU1PJcmsjyw9hFaJHssD/ILloIFSkFm7tbgkA==
+X-Received: by 2002:a5d:6f01:0:b0:3a4:d8f8:fba7 with SMTP id ffacd0b85a97d-3a572367c78mr730290f8f.2.1749835959714;
+        Fri, 13 Jun 2025 10:32:39 -0700 (PDT)
+Received: from orion.home ([2a02:c7c:7213:c700:c8e2:ba7d:a1c6:463f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224888sm59212625e9.1.2025.06.13.10.32.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 10:32:39 -0700 (PDT)
+From: Alexey Klimov <alexey.klimov@linaro.org>
+To: robin.clark@oss.qualcomm.com,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	linux-arm-msm@vger.kernel.org
+Cc: joro@8bytes.org,
+	iommu@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	andersson@kernel.org,
+	dmitry.baryshkov@oss.qualcomm.com
+Subject: [PATCH v2] iommu/arm-smmu-qcom: Add SM6115 MDSS compatible
+Date: Fri, 13 Jun 2025 18:32:38 +0100
+Message-ID: <20250613173238.15061-1-alexey.klimov@linaro.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612115556.295103-1-chen.dylane@linux.dev>
- <20250612115556.295103-2-chen.dylane@linux.dev> <CAADnVQLbpO7PED01OVZXTLib_hBYzwpC5hFyR_WMCCx8obR1Hw@mail.gmail.com>
- <00a22161-1e40-4ec0-be4f-e2c5dadbfe0b@linux.dev>
-In-Reply-To: <00a22161-1e40-4ec0-be4f-e2c5dadbfe0b@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 13 Jun 2025 10:31:49 -0700
-X-Gm-Features: AX0GCFu5PYm5SWowV-4zYH0VtJdfphoQJYMykfiKk_2dN6Gss3ybOKWkgea3cQk
-Message-ID: <CAADnVQKZbVHX_juvWqP-BZ77+TLfF73qnoV-7uDe5LxJsf4=9A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] bpf: Add show_fdinfo for kprobe_multi
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 12, 2025 at 7:52=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
-ote:
->
-> =E5=9C=A8 2025/6/13 00:01, Alexei Starovoitov =E5=86=99=E9=81=93:
-> > On Thu, Jun 12, 2025 at 4:56=E2=80=AFAM Tao Chen <chen.dylane@linux.dev=
-> wrote:
-> >>
-> >> Show kprobe_multi link info with fdinfo, the info as follows:
-> >>
-> >> link_type:      kprobe_multi
-> >> link_id:        4
-> >> prog_tag:       279dd9c09dfbc757
-> >> prog_id:        30
-> >> type:   kprobe_multi
-> >> func_cnt:       8
-> >> missed: 0
-> >> addr:   0xffffffff81ecb1e0
-> >
-> > fdinfo shouldn't print kernel addresses.
-> > It defeats kaslr
-> >
->
-> How about print the function name corresponding of the address, or
-> don't show the addr info.
+Add the SM6115 MDSS compatible to clients compatible list, as it also
+needs that workaround.
+Without this workaround, for example, QRB4210 RB2 which is based on
+SM4250/SM6115 generates a lot of smmu unhandled context faults during
+boot:
 
-Yeah. That would be much better. human readable unlike hex.
+arm_smmu_context_fault: 116854 callbacks suppressed
+arm-smmu c600000.iommu: Unhandled context fault: fsr=0x402,
+iova=0x5c0ec600, fsynr=0x320021, cbfrsynra=0x420, cb=5
+arm-smmu c600000.iommu: FSR    = 00000402 [Format=2 TF], SID=0x420
+arm-smmu c600000.iommu: FSYNR0 = 00320021 [S1CBNDX=50 PNU PLVL=1]
+arm-smmu c600000.iommu: Unhandled context fault: fsr=0x402,
+iova=0x5c0d7800, fsynr=0x320021, cbfrsynra=0x420, cb=5
+arm-smmu c600000.iommu: FSR    = 00000402 [Format=2 TF], SID=0x420
+
+and also failed initialisation of lontium lt9611uxc, gpu and dpu is
+observed:
+(binding MDSS components triggered by lt9611uxc have failed)
+
+ ------------[ cut here ]------------
+ !aspace
+ WARNING: CPU: 6 PID: 324 at drivers/gpu/drm/msm/msm_gem_vma.c:130 msm_gem_vma_init+0x150/0x18c [msm]
+ Modules linked in: ... (long list of modules)
+ CPU: 6 UID: 0 PID: 324 Comm: (udev-worker) Not tainted 6.15.0-03037-gaacc73ceeb8b #4 PREEMPT
+ Hardware name: Qualcomm Technologies, Inc. QRB4210 RB2 (DT)
+ pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+ pc : msm_gem_vma_init+0x150/0x18c [msm]
+ lr : msm_gem_vma_init+0x150/0x18c [msm]
+ sp : ffff80008144b280
+  		...
+ Call trace:
+  msm_gem_vma_init+0x150/0x18c [msm] (P)
+  get_vma_locked+0xc0/0x194 [msm]
+  msm_gem_get_and_pin_iova_range+0x4c/0xdc [msm]
+  msm_gem_kernel_new+0x48/0x160 [msm]
+  msm_gpu_init+0x34c/0x53c [msm]
+  adreno_gpu_init+0x1b0/0x2d8 [msm]
+  a6xx_gpu_init+0x1e8/0x9e0 [msm]
+  adreno_bind+0x2b8/0x348 [msm]
+  component_bind_all+0x100/0x230
+  msm_drm_bind+0x13c/0x3d0 [msm]
+  try_to_bring_up_aggregate_device+0x164/0x1d0
+  __component_add+0xa4/0x174
+  component_add+0x14/0x20
+  dsi_dev_attach+0x20/0x34 [msm]
+  dsi_host_attach+0x58/0x98 [msm]
+  devm_mipi_dsi_attach+0x34/0x90
+  lt9611uxc_attach_dsi.isra.0+0x94/0x124 [lontium_lt9611uxc]
+  lt9611uxc_probe+0x540/0x5fc [lontium_lt9611uxc]
+  i2c_device_probe+0x148/0x2a8
+  really_probe+0xbc/0x2c0
+  __driver_probe_device+0x78/0x120
+  driver_probe_device+0x3c/0x154
+  __driver_attach+0x90/0x1a0
+  bus_for_each_dev+0x68/0xb8
+  driver_attach+0x24/0x30
+  bus_add_driver+0xe4/0x208
+  driver_register+0x68/0x124
+  i2c_register_driver+0x48/0xcc
+  lt9611uxc_driver_init+0x20/0x1000 [lontium_lt9611uxc]
+  do_one_initcall+0x60/0x1d4
+  do_init_module+0x54/0x1fc
+  load_module+0x1748/0x1c8c
+  init_module_from_file+0x74/0xa0
+  __arm64_sys_finit_module+0x130/0x2f8
+  invoke_syscall+0x48/0x104
+  el0_svc_common.constprop.0+0xc0/0xe0
+  do_el0_svc+0x1c/0x28
+  el0_svc+0x2c/0x80
+  el0t_64_sync_handler+0x10c/0x138
+  el0t_64_sync+0x198/0x19c
+ ---[ end trace 0000000000000000 ]---
+ msm_dpu 5e01000.display-controller: [drm:msm_gpu_init [msm]] *ERROR* could not allocate memptrs: -22
+ msm_dpu 5e01000.display-controller: failed to load adreno gpu
+ platform a400000.remoteproc:glink-edge:apr:service@7:dais: Adding to iommu group 19
+ msm_dpu 5e01000.display-controller: failed to bind 5900000.gpu (ops a3xx_ops [msm]): -22
+ msm_dpu 5e01000.display-controller: adev bind failed: -22
+ lt9611uxc 0-002b: failed to attach dsi to host
+ lt9611uxc 0-002b: probe with driver lt9611uxc failed with error -22
+
+Suggested-by: Bjorn Andersson <andersson@kernel.org>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Fixes: 3581b7062cec ("drm/msm/disp/dpu1: add support for display on SM6115")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+---
+
+v2:
+ - added tags as suggested by Dmitry;
+ - slightly updated text in the commit message.
+
+Previous version: https://lore.kernel.org/linux-arm-msm/20250528003118.214093-1-alexey.klimov@linaro.org/
+
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+index 62874b18f645..c75023718595 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+@@ -379,6 +379,7 @@ static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
+ 	{ .compatible = "qcom,sdm670-mdss" },
+ 	{ .compatible = "qcom,sdm845-mdss" },
+ 	{ .compatible = "qcom,sdm845-mss-pil" },
++	{ .compatible = "qcom,sm6115-mdss" },
+ 	{ .compatible = "qcom,sm6350-mdss" },
+ 	{ .compatible = "qcom,sm6375-mdss" },
+ 	{ .compatible = "qcom,sm8150-mdss" },
+-- 
+2.47.2
+
