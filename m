@@ -1,197 +1,169 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B192E11D0
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8104819D08F;
+	Fri, 13 Jun 2025 21:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749851276; cv=none; b=pvVmZcyT7sjaSad3rSmegweTmCPz0Qvh3CcnFw0uOLYPhWamQabzoPoqY7NfRmm/avgenth63MRoB3lSDS9roKt3eHOpns48ntG4KnhkEzrcQ3X4NKUTZBr6+iloNwWEz7F7uiZkCHqW7pSCwiuZfeXQkTOh+8eR6IfizEdNbns=
+	t=1749851367; cv=none; b=uOc+xq9IOaNUPUWvLY+YYhX0ibT65uqhvJD7XjMzx+ekx7YeL0PNnVXvnYALkQugqtspszZtJokEDqC/2QTGh+rhCOEgZA2LIGasTNJv/RPavTINE1ThxiK0IYIOMonFKKnGP2otJ88Nf+wldt6l/ktklLXPCGX9W1IjpDKKMKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749851276; c=relaxed/simple;
-	bh=dtBCrC90bkifcc3nlBP/j5QlVWA95mgeQNwsYwKqvMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+Bc//2YYCT0d/U5VkTcXRH92s519U1rvNgkq/woIlDt0AfcRUYevU6318ZjSxi/VGd4U/Sc+AedYiMP5h96DiaJvLXU+VyWmbSXpEctX/rPLzSq2713Y1COFbQFW+WnHPctk/GbcG/ySrU016E7uhXX0/rNfXO0nSTtMUI4F6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=amu/e/j4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AfW23ToI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=amu/e/j4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AfW23ToI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749851367; c=relaxed/simple;
+	bh=urs2hnsQJwCZzHIoPIJEarCIpXTJCaDwpM2e4xSJVyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u/YI5d+Z9RnJzKJtXVTe/di+UmBJbwxUTRNX65MAiytOinmihEB00CTZIHlJlHTdLyjbYIcbD+b2NzMBJS0mRdeI4yGW9e3b1PfZTiDEAgLZnVGLxs4jhZgE1gOPJaf3iaar+z5PVC03cUm8KuKCxUVrf6TY4zis4j1sQqQPVcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4z/nB58; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="amu/e/j4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AfW23ToI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="amu/e/j4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AfW23ToI"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 439AB1F390;
-	Fri, 13 Jun 2025 21:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749851272; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z0Mxv7vMvbtG1IFq4FNjqvJLfb+OhVhpCKOxzSZ2rlo=;
-	b=amu/e/j4HA/6/f74zZzwYswY/ofIksR6uzmlVhcnP4iJfJmZpAFSB2s++jtEP6vnwz5dgl
-	LhgwejYF+75+eSseYsC7SLDYixVYtukBtQqh7AgaGfbKxHy7upTNOalYYwsyKdDg/cTtAx
-	CW4pE50gFkCopUrTn/6GV4JGf7KUxSY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749851272;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z0Mxv7vMvbtG1IFq4FNjqvJLfb+OhVhpCKOxzSZ2rlo=;
-	b=AfW23ToIN8oTeKGdSxKHJW+/TLKb5l1Lr5ua+2knUTcxwxjLSuWoCQxDByOHPn+hTdn6k/
-	EtcWPst4AuLSNPAg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="amu/e/j4";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=AfW23ToI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749851272; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z0Mxv7vMvbtG1IFq4FNjqvJLfb+OhVhpCKOxzSZ2rlo=;
-	b=amu/e/j4HA/6/f74zZzwYswY/ofIksR6uzmlVhcnP4iJfJmZpAFSB2s++jtEP6vnwz5dgl
-	LhgwejYF+75+eSseYsC7SLDYixVYtukBtQqh7AgaGfbKxHy7upTNOalYYwsyKdDg/cTtAx
-	CW4pE50gFkCopUrTn/6GV4JGf7KUxSY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749851272;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z0Mxv7vMvbtG1IFq4FNjqvJLfb+OhVhpCKOxzSZ2rlo=;
-	b=AfW23ToIN8oTeKGdSxKHJW+/TLKb5l1Lr5ua+2knUTcxwxjLSuWoCQxDByOHPn+hTdn6k/
-	EtcWPst4AuLSNPAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B40B3137FE;
-	Fri, 13 Jun 2025 21:47:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IHoGKYecTGiVDgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 13 Jun 2025 21:47:51 +0000
-Date: Fri, 13 Jun 2025 23:47:50 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	James Houghton <jthoughton@google.com>,
-	Peter Xu <peterx@redhat.com>, Gavin Guo <gavinguo@igalia.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] mm,hugetlb: Document the reason to lock the folio in
- the faulting path
-Message-ID: <aEychl8ZkJDG1-5K@localhost.localdomain>
-References: <20250612134701.377855-1-osalvador@suse.de>
- <20250612134701.377855-3-osalvador@suse.de>
- <44f0f1cc-307a-46e3-9e73-8b2061e4e938@redhat.com>
- <aEw0dxfc5n8v1-Mp@localhost.localdomain>
- <ffeeb3d2-0e45-43d1-b2e1-a55f09b160f5@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4z/nB58"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749851366; x=1781387366;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=urs2hnsQJwCZzHIoPIJEarCIpXTJCaDwpM2e4xSJVyc=;
+  b=Q4z/nB5850L7JfUcljvc7U9zje6GZwdAc5uNn4lQjFNZaFEOMBL3pLsE
+   VCqEj53vsDk1wQY3fS+qEqHuPeoqNYEsUjfYFQ7M3APM5IUOeFiBYvPlR
+   ix7du1flNgLx061K6XxnQ3BNUuRwf2+ZTkfCQKz//3kxvmGXJDMAd9F1E
+   f7O6ivXJW9Tyb/nUqkP6sCadnBsudo499D54oJcnbLTc+MW6mhT6DXSDG
+   BP/Cb33iSsOe9/VHlf8AJFNGHIHDd/jODdonRkHRGyZ2roMp4DtE2Hn/I
+   A1hBxHPDggKD0Dr+GJtf63ynkk0IGaOXP6ncYZYe2xhSYYzzcqA3g0N/8
+   w==;
+X-CSE-ConnectionGUID: BSKCO3aJTcKqNLp1E8BT8A==
+X-CSE-MsgGUID: wbr7WKfuRI26ofq73j1wMQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="69656422"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="69656422"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 14:49:25 -0700
+X-CSE-ConnectionGUID: Zvo5RG4cQJKuN76Zzv4ItA==
+X-CSE-MsgGUID: +AG4nj0NRtSGdenQ6e++oA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="178822019"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by orviesa002.jf.intel.com with ESMTP; 13 Jun 2025 14:49:24 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: rui.zhang@intel.com,
+	daniel.lezcano@linaro.org,
+	rafael@kernel.org,
+	lukasz.luba@arm.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 1/2] thermal: intel: int340x: Add throttling control interface to PTC
+Date: Fri, 13 Jun 2025 14:49:22 -0700
+Message-ID: <20250613214923.2910397-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ffeeb3d2-0e45-43d1-b2e1-a55f09b160f5@redhat.com>
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 439AB1F390
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 09:57:23PM +0200, David Hildenbrand wrote:
-> What I meant is:
-> 
-> Assume we have a pagecache page mapped into our page tables R/O (MAP_PRIVATE
-> mapping).
-> 
-> During a write fault on such a pagecache page, we end up in
-> do_wp_page()->wp_page_copy() we perform the copy via __wp_page_copy_user()
-> without the folio lock.
+Firmware-based thermal temperature control loops may aggressively
+throttle performance to prevent temperature overshoots relative to the
+defined target temperature. This can negatively impact performance. User
+space may prefer to prioritize performance, even if it results in
+temperature overshoots with in acceptable range.
 
-Yes, it would be similar to doing
+For example, user space might tolerate temperature overshoots when the
+device is placed on a desk, as opposed to when it's on a lap. To
+accommodate such scenarios, an optional attribute is provided to specify
+a tolerance level for temperature overshoots while maintaining acceptable
+performance.
 
-hugetlb_fault()->hugetlb_no_page() which would map it R/O.
-Then, if we write to it, we will go to hugetlb_wp().
-Since it is a private mapping, we would only need to lock the folio to
-see if we can re-use it (the wp_can_reuse_anon_folio() analog to
-hugetlb).
+Attribute:
+thermal_tolerance: This attribute ranges from 0 to 7, where 0 represents
+the most aggressive control to avoid any temperature overshoots, and 7
+represents a more graceful approach, favoring performance even at the
+expense of temperature overshoots.
+Note: This level may not scale linearly. For example, a value of 3 does not
+necessarily imply a 50% improvement in performance compared to a value of
+0.
 
-> In wp_page_copy(), we retake the pt lock, to make sure that the page is
-> still mapped (pte_same). If the page is no longer mapped, we retry the
-> fault.
-> 
-> In that case, we only want to make sure that the folio is still mapped after
-> possibly dropping the page table lock in between.
-> 
-> As we are holding an additional folio reference in
-> do_wp_page()->wp_page_copy(), the folio cannot get freed concurrently.
-> 
-> 
-> There is indeed the do_cow_fault() path where we avoid faulting in the
-> pagecache page in the first place. So no page table reference, an I can
-> understand why we would need the folio lock there.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+v2:
+- Changed commit description
+- Change "gain" to "thermal_tolerance" analogous to latency_tolerance.
+- Dropped "min_performance" attribute for next patch set
 
-But do_cow_fault() does take a reference via __do_fault()->filemap_fault().
+ Documentation/driver-api/thermal/intel_dptf.rst          | 9 +++++++++
+ .../intel/int340x_thermal/platform_temperature_control.c | 8 +++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-> Regarding hugetlb_no_page(): I think we could drop the folio lock for a
-> pagecache folio after inserting the folio into the page table. Just like
-> do_wp_page()->wp_page_copy(), we would have to verify again under PTL if the
-> folio is still mapped
-> 
-> ... which we already do through pte_same() checks?
-
-But that is somewhat similar what we do in the generic faulting path.
-
-Assume you fault in a file for a private mapping and do COW.
-So, do_pte_missing()->do_fault()->do_cow_fault().
-
-do_cow_fault()->__do_fault() will a) get a reference and b) lock the folio.
-And then we will proceed with copying the file to the page we will map privately.
-
-This would be something like hugetlb_fault()->hugetlb_no_page()->hugetlb_wp().
-So we have to hold the lock throughout hugetlb_wp() for file pages we are copying
-to private mappings.
-
-Now, let us assume you map the file R/O. And after a while you write-fault to it.
-In the generic faulting path, that will go through:
-
-do_pte_missing()->do_fault()->do_read_fault()
-do_wp_page()->wp_page_copy()
-
-wp_page_copy(), which indeed doesn't hold the lock (but takes a reference).
-
-Maybe it's because it's Friday, but I'm confused as to why 
-do_pte_missing()->do_fault()->do_cow_fault() holds the lock while do_wp_page() doesn't
-although it might the file's page we have to copy. 
-
+diff --git a/Documentation/driver-api/thermal/intel_dptf.rst b/Documentation/driver-api/thermal/intel_dptf.rst
+index ec5769accae0..c51ac793dc06 100644
+--- a/Documentation/driver-api/thermal/intel_dptf.rst
++++ b/Documentation/driver-api/thermal/intel_dptf.rst
+@@ -206,6 +206,15 @@ All these controls needs admin privilege to update.
+ 	Update a new temperature target in milli degree celsius for hardware to
+ 	use for the temperature control.
  
-
++``thermal_tolerance`` (RW)
++	This attribute ranges from 0 to 7, where 0 represents
++	the most aggressive control to avoid any temperature overshoots, and
++	7 represents a more graceful approach, favoring performance even at
++	the expense of temperature overshoots.
++	Note: This level may not scale linearly. For example, a value of 3 does
++	not necessarily imply a 50% improvement in performance compared to a
++	value of 0.
++
+ Given that this is platform temperature control, it is expected that a
+ single user-level manager owns and manages the controls. If multiple
+ user-level software applications attempt to write different targets, it
+diff --git a/drivers/thermal/intel/int340x_thermal/platform_temperature_control.c b/drivers/thermal/intel/int340x_thermal/platform_temperature_control.c
+index 2d6504514893..7850e91a6e2c 100644
+--- a/drivers/thermal/intel/int340x_thermal/platform_temperature_control.c
++++ b/drivers/thermal/intel/int340x_thermal/platform_temperature_control.c
+@@ -49,7 +49,7 @@ struct mmio_reg {
+ };
+ 
+ #define MAX_ATTR_GROUP_NAME_LEN	32
+-#define PTC_MAX_ATTRS		3
++#define PTC_MAX_ATTRS		4
+ 
+ struct ptc_data {
+ 	u32 offset;
+@@ -57,6 +57,7 @@ struct ptc_data {
+ 	struct attribute *ptc_attrs[PTC_MAX_ATTRS];
+ 	struct device_attribute temperature_target_attr;
+ 	struct device_attribute enable_attr;
++	struct device_attribute thermal_tolerance_attr;
+ 	char group_name[MAX_ATTR_GROUP_NAME_LEN];
+ };
+ 
+@@ -78,6 +79,7 @@ static u32 ptc_offsets[PTC_MAX_INSTANCES] = {0x5B20, 0x5B28, 0x5B30};
+ static const char * const ptc_strings[] = {
+ 	"temperature_target",
+ 	"enable",
++	"thermal_tolerance",
+ 	NULL
+ };
+ 
+@@ -177,6 +179,8 @@ PTC_SHOW(temperature_target);
+ PTC_STORE(temperature_target);
+ PTC_SHOW(enable);
+ PTC_STORE(enable);
++PTC_SHOW(thermal_tolerance);
++PTC_STORE(thermal_tolerance);
+ 
+ #define ptc_init_attribute(_name)\
+ 	do {\
+@@ -193,9 +197,11 @@ static int ptc_create_groups(struct pci_dev *pdev, int instance, struct ptc_data
+ 
+ 	ptc_init_attribute(temperature_target);
+ 	ptc_init_attribute(enable);
++	ptc_init_attribute(thermal_tolerance);
+ 
+ 	data->ptc_attrs[index++] = &data->temperature_target_attr.attr;
+ 	data->ptc_attrs[index++] = &data->enable_attr.attr;
++	data->ptc_attrs[index++] = &data->thermal_tolerance_attr.attr;
+ 	data->ptc_attrs[index] = NULL;
+ 
+ 	snprintf(data->group_name, MAX_ATTR_GROUP_NAME_LEN,
 -- 
-Oscar Salvador
-SUSE Labs
+2.49.0
+
