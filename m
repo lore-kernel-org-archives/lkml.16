@@ -1,226 +1,145 @@
-Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86212DA772;
-	Fri, 13 Jun 2025 09:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8763279DD7;
+	Fri, 13 Jun 2025 09:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749805446; cv=none; b=W2ISYzJZaOIZLxOOKPVosr0Xh5N2e4kt7teMhwCt6kUhoqbW9HGEpurmwqp4cXIRJOAxOIWevqd/fsriyHZV0mPI68zbvMmkzqSUilXJtoUgUNzLyUDJfJVXVfAtUbYMKzUzRDMzRsoT9WtoOEX9+TKZQyNIkhDHMuShnSN4RJg=
+	t=1749805505; cv=none; b=LqHK5x+JUWGTuDZcJIpVODFqI6pKHTnhIg11L/apfJuwpCez/fCcajs1UKQKyg4vQWGYKNACi1i8UR61zg7D9mKKJPJxATV6/4O32vavo+oo0+qrjepyijhnXdzxwQqlAsbIfuPn1JFovv+BRhXM9kU0j4GzVLiPCCyyZWcuHF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749805446; c=relaxed/simple;
-	bh=zJwTtQSAa5HRrIuQh+CUXWejQR70jOTRCIqBI7Qzsts=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Btio7jwhuZPv4OI/MI2eX+92N9oJojrKP7nXLdBcwZN+3PjfjOUOZ5ZZJgaYBN+UTWmANQaxHSeJnKC7FKx3JwWgtn2U2OUAfBEZdQ6BX592SlSQouQ4rPwjKP2cnKKB4lVAWbiKF2+Q4Zy7UtHCfvigN6r2Tt/RFTyuIItxq+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=HA4ilFFs; arc=none smtp.client-ip=131.188.11.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1749805505; c=relaxed/simple;
+	bh=/z3ISYzkV0unW5sqeJeb8uAQIRvRJjWrGvnYEIkJOl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R3kGH99Xyss1UFM2ttw9t5GCRTSDmtXRVkDEgLr49+c1Tovx0oPiIq3uTfdTU7dPJpHeHo4/MXQeRigm7pzHIaXrlFntMo/OcqVMwfCwkO17dKDfKBCKpYzFxOA5gC0ZvPGCaZg43iiWn79Q12iciE1cqaT6wl2j7MrBH4zRRxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1D314jD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="HA4ilFFs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1749805435; bh=pk/YSiR8kM1WyBitG6y7PF5HVEEOKlm6+fhKP2kx/MI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=HA4ilFFsazSE0lY3YWiIRtVqOpFirpENabSxQo9qgtS1eclQw2fghvxUl0tvQd5Ee
-	 i8TJ/XFKC2F9qDhSlI3jJ7lkpnANVO+N4bYSitZVLIS7DTVs+qof25dC10MdADjqzP
-	 hB33CLu8APK7zhyAOuY1nEDNNxSw1wopnygNR5ubNt5BkmdVvicb5bAPDm3Yd111Gk
-	 f6BADQBTtPOmyhmWzVP8sQ6qZzhZHbHZMmGTlYhRSN3IGg8e7g9ZhdKEtGI58ZpVB2
-	 kwlTCg6XfzlO0KmfzYATBuLapLIcczz9syNoTNN6ROQ5lDteUgRfuoP4yo+H5thUkz
-	 szUnhyq9pLzHg==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bJYNW4mJPzPk28;
-	Fri, 13 Jun 2025 11:03:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 37.201.192.232
-Received: from luis-tp.. (ip-037-201-192-232.um10.pools.vodafone-ip.de [37.201.192.232])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX1/h3Rf647JUjgakCq1chLzWuoo8oIF5ed8=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bJYNS2JjLzPkBF;
-	Fri, 13 Jun 2025 11:03:52 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Luis Gerhorst <luis.gerhorst@fau.de>
-Subject: [PATCH bpf-next v2] bpf: Remove redundant free_verifier_state()/pop_stack()
-Date: Fri, 13 Jun 2025 11:01:58 +0200
-Message-ID: <20250613090157.568349-2-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <19f50af28e3a90cbd24b2325da8025e47f221739.camel@gmail.com>
-References: <19f50af28e3a90cbd24b2325da8025e47f221739.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1D314jD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A22C4CEE3;
+	Fri, 13 Jun 2025 09:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749805505;
+	bh=/z3ISYzkV0unW5sqeJeb8uAQIRvRJjWrGvnYEIkJOl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I1D314jDshWGk9VU2FaY4xmGqqNeYJ+VEfnVmgJTbLmVUHHkWXnQ/bz5woAKzjvTP
+	 /DOvGnVk+VFicXXGm06il7p1yMWrGU1SrtwLvKYooEcl1/LvCtWvSdod2fqOwHKinI
+	 StbcptvHentF5Eltm8p22RKUHdoQ8dkhrZbjNGzfbjCDBfPqIjy3CbCryp/gAlspNP
+	 nuP7WJp4925btgScwJ1DSd8MdyUnu4D9EASBYnU5c4z+mq08FLc+QW5rd6RDW3eene
+	 yN6Ex20uiZkditsFIUM2eMD/uqKuvBx+c4h1Q9GSHmhOOXLosJ4N/TXPLe1SvV8MF1
+	 g9Dz9rRKzCncg==
+Date: Fri, 13 Jun 2025 14:34:54 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: 'Krzysztof Kozlowski' <krzk@kernel.org>, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.or, linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	alim.akhtar@samsung.com, vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de, 
+	m.szyprowski@samsung.com, jh80.chung@samsung.com, 
+	'Pankaj Dubey' <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 04/10] PCI: exynos: Add platform device private data
+Message-ID: <fty3sp3brzpcs6jeqg6yxiwgpbyqogxqt5mo7owiw4vkl7vj2j@b33zfdizuy4d>
+References: <20250518193152.63476-1-shradha.t@samsung.com>
+ <CGME20250518193239epcas5p4cb4112382560f38ad9708e000eb2335f@epcas5p4.samsung.com>
+ <20250518193152.63476-5-shradha.t@samsung.com>
+ <20250521-cheerful-spiked-mackerel-ef7ade@kuoka>
+ <0e2301dbcef4$42969af0$c7c3d0d0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e2301dbcef4$42969af0$c7c3d0d0$@samsung.com>
 
-This patch removes duplicated code.
+On Tue, May 27, 2025 at 04:13:58PM +0530, Shradha Todi wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Krzysztof Kozlowski <krzk@kernel.org>
+> > Sent: 21 May 2025 15:15
+> > To: Shradha Todi <shradha.t@samsung.com>
+> > Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.or;
+> > linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org;
+> > kw@linux.com; robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
+> > alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de; m.szyprowski@samsung.com;
+> > jh80.chung@samsung.com; Pankaj Dubey <pankaj.dubey@samsung.com>
+> > Subject: Re: [PATCH 04/10] PCI: exynos: Add platform device private data
+> > 
+> > On Mon, May 19, 2025 at 01:01:46AM GMT, Shradha Todi wrote:
+> > > -static const struct dw_pcie_ops dw_pcie_ops = {
+> > > +static const struct dw_pcie_ops exynos_dw_pcie_ops = {
+> > >  	.read_dbi = exynos_pcie_read_dbi,
+> > >  	.write_dbi = exynos_pcie_write_dbi,
+> > >  	.link_up = exynos_pcie_link_up,
+> > > @@ -279,6 +286,7 @@ static int exynos_pcie_probe(struct
+> > > platform_device *pdev)  {
+> > >  	struct device *dev = &pdev->dev;
+> > >  	struct exynos_pcie *ep;
+> > > +	const struct samsung_pcie_pdata *pdata;
+> > >  	struct device_node *np = dev->of_node;
+> > >  	int ret;
+> > >
+> > > @@ -286,8 +294,11 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+> > >  	if (!ep)
+> > >  		return -ENOMEM;
+> > >
+> > > +	pdata = of_device_get_match_data(dev);
+> > > +
+> > > +	ep->pdata = pdata;
+> > >  	ep->pci.dev = dev;
+> > > -	ep->pci.ops = &dw_pcie_ops;
+> > > +	ep->pci.ops = pdata->dwc_ops;
+> > >
+> > >  	ep->phy = devm_of_phy_get(dev, np, NULL);
+> > >  	if (IS_ERR(ep->phy))
+> > > @@ -363,9 +374,9 @@ static int exynos_pcie_resume_noirq(struct device *dev)
+> > >  		return ret;
+> > >
+> > >  	/* exynos_pcie_host_init controls ep->phy */
+> > > -	exynos_pcie_host_init(pp);
+> > > +	ep->pdata->host_ops->init(pp);
+> > >  	dw_pcie_setup_rc(pp);
+> > > -	exynos_pcie_start_link(pci);
+> > > +	ep->pdata->dwc_ops->start_link(pci);
+> > 
+> > One more layer of indirection.
+> > 
+> > Read:
+> > https://lore.kernel.org/all/CAL_JsqJgaeOcnUzw+rUF2yO4hQYCdZYssjxHzrDvvHGJimrASA@mail.gmail.com/
+> > 
+> 
+> I went through this thread and the solution to avoid redirection seems to be:
+> 1. Make the common parts into a library that each driver can call
+> 2. When there is barely anything in common, make a separate driver
+> 
+> From my understanding of these 2 drivers, there is hardly anything that can go into common library
+> 1. host_init, dbi_read, dbi_write these ops have completely different flow
+> 2. link_up, start_link have similar flow but different register offsets
+> 3. write_dbi2 and stop_link is not implemented for exynos but needed for FSD
+> 4. Resources are different - FSD does not have regulator, Exynos5433 does not have syscon, FSD has msi IRQ vs exynos5433 has legacy
+> 5. Exynos is host only whereas FSD is dual mode controller.
+> 
+> I don’t see any other way except redirection, or using lots of if(variant == FSD) which is also discouraged.
 
-Eduard points out [1]:
+Please wrap your replies to 80 columns.
 
-    Same cleanup cycles are done in push_stack() and push_async_cb(),
-    both functions are only reachable from do_check_common() via
-    do_check() -> do_check_insn().
+> 
 
-    Hence, I think that cur state should not be freed in push_*()
-    functions and pop_stack() loop there is not needed.
+IMO it is OK to have the callbacks for cases like this. This is also similar to
+Qcom driver where each SoC requires custom register updates and going by the
+common library or a new driver wouldn't be feasible.
 
-This would also fix the 'symptom' for [2], but the issue also has a
-simpler fix which was sent separately. This fix also makes sure the
-push_*() callers always return an error for which
-error_recoverable_with_nospec(err) is false. This is required because
-otherwise we try to recover and access the stale `state`.
+> And about making it a different driver altogether, I'm completely okay to do so. In fact we had previously tried to post it as a
+> different driver which was rejected.
+> 
 
-Moving free_verifier_state() and pop_stack(..., pop_log=false) to happen
-after the bpf_vlog_reset() call in do_check_common() is fine because the
-pop_stack() call that is moved does not call bpf_vlog_reset() with the
-pop_log=false parameter.
+No, please do not create a new driver, that is another maintainer burden.
 
-[1] https://lore.kernel.org/all/b6931bd0dd72327c55287862f821ca6c4c3eb69a.camel@gmail.com/
-[2] https://lore.kernel.org/all/68497853.050a0220.33aa0e.036a.GAE@google.com/
+- Mani
 
-Reported-by: Eduard Zingerman <eddyz87@gmail.com>
-Link: https://lore.kernel.org/all/b6931bd0dd72327c55287862f821ca6c4c3eb69a.camel@gmail.com/
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
----
-
-Changes since v1:
-- Move free_verifier_state() and pop_stack() into free_state() and
-  remove err label in push_*() altogether (incl. comment), both
-  suggested by Eduard
-- Link to v1: https://lore.kernel.org/bpf/20250611211431.275731-1-luis.gerhorst@fau.de/
-
- kernel/bpf/verifier.c | 37 +++++++++++--------------------------
- 1 file changed, 11 insertions(+), 26 deletions(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index c378074516cf..5f4e0a8b20f8 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2097,7 +2097,7 @@ static struct bpf_verifier_state *push_stack(struct bpf_verifier_env *env,
- 
- 	elem = kzalloc(sizeof(struct bpf_verifier_stack_elem), GFP_KERNEL);
- 	if (!elem)
--		goto err;
-+		return NULL;
- 
- 	elem->insn_idx = insn_idx;
- 	elem->prev_insn_idx = prev_insn_idx;
-@@ -2107,12 +2107,12 @@ static struct bpf_verifier_state *push_stack(struct bpf_verifier_env *env,
- 	env->stack_size++;
- 	err = copy_verifier_state(&elem->st, cur);
- 	if (err)
--		goto err;
-+		return NULL;
- 	elem->st.speculative |= speculative;
- 	if (env->stack_size > BPF_COMPLEXITY_LIMIT_JMP_SEQ) {
- 		verbose(env, "The sequence of %d jumps is too complex.\n",
- 			env->stack_size);
--		goto err;
-+		return NULL;
- 	}
- 	if (elem->st.parent) {
- 		++elem->st.parent->branches;
-@@ -2127,12 +2127,6 @@ static struct bpf_verifier_state *push_stack(struct bpf_verifier_env *env,
- 		 */
- 	}
- 	return &elem->st;
--err:
--	free_verifier_state(env->cur_state, true);
--	env->cur_state = NULL;
--	/* pop all elements and return */
--	while (!pop_stack(env, NULL, NULL, false));
--	return NULL;
- }
- 
- #define CALLER_SAVED_REGS 6
-@@ -2864,7 +2858,7 @@ static struct bpf_verifier_state *push_async_cb(struct bpf_verifier_env *env,
- 
- 	elem = kzalloc(sizeof(struct bpf_verifier_stack_elem), GFP_KERNEL);
- 	if (!elem)
--		goto err;
-+		return NULL;
- 
- 	elem->insn_idx = insn_idx;
- 	elem->prev_insn_idx = prev_insn_idx;
-@@ -2876,7 +2870,7 @@ static struct bpf_verifier_state *push_async_cb(struct bpf_verifier_env *env,
- 		verbose(env,
- 			"The sequence of %d jumps is too complex for async cb.\n",
- 			env->stack_size);
--		goto err;
-+		return NULL;
- 	}
- 	/* Unlike push_stack() do not copy_verifier_state().
- 	 * The caller state doesn't matter.
-@@ -2887,19 +2881,13 @@ static struct bpf_verifier_state *push_async_cb(struct bpf_verifier_env *env,
- 	elem->st.in_sleepable = is_sleepable;
- 	frame = kzalloc(sizeof(*frame), GFP_KERNEL);
- 	if (!frame)
--		goto err;
-+		return NULL;
- 	init_func_state(env, frame,
- 			BPF_MAIN_FUNC /* callsite */,
- 			0 /* frameno within this callchain */,
- 			subprog /* subprog number within this prog */);
- 	elem->st.frame[0] = frame;
- 	return &elem->st;
--err:
--	free_verifier_state(env->cur_state, true);
--	env->cur_state = NULL;
--	/* pop all elements and return */
--	while (!pop_stack(env, NULL, NULL, false));
--	return NULL;
- }
- 
- 
-@@ -22934,6 +22922,11 @@ static void free_states(struct bpf_verifier_env *env)
- 	struct bpf_scc_info *info;
- 	int i, j;
- 
-+	WARN_ON_ONCE(!env->cur_state);
-+	free_verifier_state(env->cur_state, true);
-+	env->cur_state = NULL;
-+	while (!pop_stack(env, NULL, NULL, false));
-+
- 	list_for_each_safe(pos, tmp, &env->free_list) {
- 		sl = container_of(pos, struct bpf_verifier_state_list, node);
- 		free_verifier_state(&sl->state, false);
-@@ -23085,14 +23078,6 @@ static int do_check_common(struct bpf_verifier_env *env, int subprog)
- 
- 	ret = do_check(env);
- out:
--	/* check for NULL is necessary, since cur_state can be freed inside
--	 * do_check() under memory pressure.
--	 */
--	if (env->cur_state) {
--		free_verifier_state(env->cur_state, true);
--		env->cur_state = NULL;
--	}
--	while (!pop_stack(env, NULL, NULL, false));
- 	if (!ret && pop_log)
- 		bpf_vlog_reset(&env->log, 0);
- 	free_states(env);
-
-base-commit: af91af33c16853c569ca814124781b849886f007
 -- 
-2.49.0
-
+மணிவண்ணன் சதாசிவம்
