@@ -1,46 +1,46 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2051.outbound.protection.outlook.com [40.107.237.51])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D92272E59;
-	Fri, 13 Jun 2025 21:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE46272E43;
+	Fri, 13 Jun 2025 21:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749848817; cv=fail; b=IgorZf+mBheT9Q6tlSjDQvcuGS+sR2gy2BzUmhgBNQOtnfvEXRJaNOFOxUMoIUrAMImabKfVoW/3CqedIrVU8+faPrL1U9CYGrn2AFXykGMfeXcsFvSHodbZhKRcukWWiB2zDgFA2qLsz485pNmc5gzLYVgobUQTyTOfSocCi7c=
+	t=1749848827; cv=fail; b=mdmMIV6klvc65IqGcTbDqw2oo8GyIRa9/BsmnnsWTOVG29w16LWa40QBVSIVLF00K9giXpuUD77dpKEyF46y3/+IAiz883WtzRgLlgTm5PuKNS1lSPS6n/u194seIKZfJ++whhVEzpNCIOOHZInkhSmFaq46J0RDm6B6LpOczM4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749848817; c=relaxed/simple;
-	bh=Afskno8kyqo7YjoacOlGg0iuMaUlXY392WHzBmCVz08=;
+	s=arc-20240116; t=1749848827; c=relaxed/simple;
+	bh=zaDuNVaUsH+fg6W8NzZai8/383Q47wJwQs2G9WqHG8g=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e2yg/9UDqvyvW9z2vFU/diM+JhbgMzyw8u/0Fd2X4dTuR2vUzBNTiHNB/szjLJEF/w5gOwwZnEFavks9azgWEzYt40UmJfHt9MmIFt77PgZhD6Vd6M0F9MSgcXxPLy7HuOthhix3xsYx/DFEw3gMBBbxkoLutJZkTSy2gjYqln4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MmjyAOVn; arc=fail smtp.client-ip=40.107.237.51
+	 MIME-Version:Content-Type; b=eqCwkMiBrv7MMO8WQSUbGH7CH/vB44zm645nWGma8foBphhSjGA/foNobREsKSGJ/OmwlFXjXLDrR1dLzTCZCHSl1Fup0+CMctDhwnodiWrj2d8hsHv5nvYSKLCFqv4Y+hmTb2giMW2wRnhuCc6EXbu/ZvPeeAAfUw1c98JlfJ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AQ5C1lw+; arc=fail smtp.client-ip=40.107.223.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MmjyAOVn"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AQ5C1lw+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LRYM29VFC+wSY/gnG7hGuTq/zeDg92j1Oi2GWz5oOO5FZwvbyGq6cqmFyCqnKQg3ynhC2gzFU/5BTFh3+F5WSvRtU1r2VbtfMRY1XoMvbLXfTtA6u3b/aa583Wy/kw6gA5XNAaKkENNWkQ+NxweDbV0jODwTlrwGnMim7pZ3YdnufooATwTzqmEuZ81Bkz0tDyHFjPcaQWFnkWZbcA584lTvGIDtfOD2kipqqJgJwS+nYqyEs9UOpvQJvLGKMok+EgAvgrVH1WtASkq48s75qMc1peGGG8LYwKXKOLJaOPnUm7nWkY1AqfCOCnTVNZKQhsOtQMbuUsU80kmobC1huQ==
+ b=Y5N8qob1xTkv4EfBIcFLtaCaUw1+Vhp7oud82vt7V2ypZUjMyOiNniAZMWef9kB7RyJBpxHJhZicIyEDmhnj/45d0YmsckPJkmes3k2Of0WXlDePeKidws5NTj4nsP9oJ9SQoFg/fnOUuc5KptHS/GL2L6DKUcC3aKIpzeyTg4GE8HOACswuBm6WuxVS7+9VVcIT93u5tgBrkjyuQxhiyIFryfljddOMJFstOTxmP58JvCGRN3J2QxxEBQ4Lup0aQ3Yl54JyHsafq0QhPEkM4kvzHMunZiNOGOeFuNS6owcppXKsCLErABLIHlM+TtHNpPecO/WuX4RRtMUWFb72Lw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=emLHUt62lYytrDS2iZ1Hwe0iL5DvcadKNCWKViJbAn8=;
- b=joDhqo2IKlgnh2+TJsCYv69PmdUdZmVrzlB9a7tcEVRN5mbOzTFPk3n363oGexyJjZeo9KX8D+CSEhgAoBoaa1iSQptZOMCIivGAhz+L55as5KxWFfDzwULPcY9A8K+AZZ8mfaZmhweBdQeNeNpnJrSQ90BDtpcOX3AzvWS2iDCEAFUFYpixxyHTaRwlJ4jhTmLk7sE/KENjn/ol/+Rrudcq2kwttwr2LG0xXzbIxL1JsTGgFFihfw/V1AZOuYd+Ddl+ORSsw2Iz4TwBOyT/klLGOwxow4j0/lin16fRUQXj4J3sC58KU6c1fUqNC+C59FcZdiMp7eN9c3E6MAg9og==
+ bh=Pl4KGpDih1UlzVaqpyiP8pVDptgEp4syaGVNg51TqWs=;
+ b=vzycuT4SUG4prWhquZWC94gAW/2b/U0akqt+jT7YbVGbbNY092pCFiJkEDaE9Y92PXiZBy4HxA7tr+v2t4eUIfbnFzHzv/MkEqt/MYv8NCM2b385e8HmwG0b8yl5REJjtbMw21FNJd01axJ23HpqkQXfLgitk0SrTgrDZ9GEMOagd8sShTVKFmKJ0o2TnwgqoHqnfKSyllBIpn8AMZ/X/GmHP1e1JHGY2MUoxkVlVCeoleLL4GiyNLjhtiWlR/tf/rC44ku/B7HOPqH9PR7rshG5itXN4QbTRTA8AkkbZXBa2+sspG3Fa+FIo1JLMiGFubzNMXCzk33HV5JNSUoAfw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=lwn.net smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=emLHUt62lYytrDS2iZ1Hwe0iL5DvcadKNCWKViJbAn8=;
- b=MmjyAOVn9Dd1inkXJTfzN9HSS+tLB6l9dtq/yAhfswZ7HubaP5etnTLNvPvdIYBc8H69XldZ5OhDhAJP6GvwBQeHlO0p2nYxf9wz3aDUqeF7njEyHTfSus5HzhvBp2QYBSa/M8BR2pKT28G5RC0f/ltqxi7DgQbj8dSopioLVB4=
-Received: from BY5PR17CA0031.namprd17.prod.outlook.com (2603:10b6:a03:1b8::44)
- by CY3PR12MB9553.namprd12.prod.outlook.com (2603:10b6:930:109::13) with
+ bh=Pl4KGpDih1UlzVaqpyiP8pVDptgEp4syaGVNg51TqWs=;
+ b=AQ5C1lw+PnPeaosEnTwkaQC8sGjpJLGs1Vkh0Z/bDGIb+YcyBpMyY8CXFkaYBVwt5Ns8FxrOrR1r3eQ1Vrha6Gx2iQtEP5JnlZgmwN8aXT7ZhPORSJXXRwA92+/3DM76CkKTIHITSwfmb1V2RAAOnbN9OhtCF2/3dOGqMKdGXVA=
+Received: from SJ0PR03CA0023.namprd03.prod.outlook.com (2603:10b6:a03:33a::28)
+ by DM3PR12MB9414.namprd12.prod.outlook.com (2603:10b6:0:47::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Fri, 13 Jun
- 2025 21:06:52 +0000
-Received: from CY4PEPF0000EDD6.namprd03.prod.outlook.com
- (2603:10b6:a03:1b8:cafe::4c) by BY5PR17CA0031.outlook.office365.com
- (2603:10b6:a03:1b8::44) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Fri,
- 13 Jun 2025 21:06:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Fri, 13 Jun
+ 2025 21:07:02 +0000
+Received: from CY4PEPF0000EDD2.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a:cafe::58) by SJ0PR03CA0023.outlook.office365.com
+ (2603:10b6:a03:33a::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29 via Frontend Transport; Fri,
+ 13 Jun 2025 21:07:02 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD6.mail.protection.outlook.com (10.167.241.202) with Microsoft
+ CY4PEPF0000EDD2.mail.protection.outlook.com (10.167.241.198) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 21:06:52 +0000
+ 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 21:07:00 +0000
 Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 13 Jun
- 2025 16:06:50 -0500
+ 2025 16:06:58 -0500
 From: Babu Moger <babu.moger@amd.com>
 To: <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
 	<reinette.chatre@intel.com>, <Dave.Martin@arm.com>, <james.morse@arm.com>,
@@ -71,9 +71,9 @@ CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
 	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
 	<eranian@google.com>, <linux-doc@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v14 10/32] x86/resctrl: Add support to enable/disable AMD ABMC feature
-Date: Fri, 13 Jun 2025 16:04:54 -0500
-Message-ID: <b755ee48c3c70fdd2015b51a331bb0456a107569.1749848715.git.babu.moger@amd.com>
+Subject: [PATCH v14 11/32] fs/resctrl: Introduce the interface to display monitoring modes
+Date: Fri, 13 Jun 2025 16:04:55 -0500
+Message-ID: <b1192216e05c5a5a0963b43698760106644b95eb.1749848715.git.babu.moger@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1749848714.git.babu.moger@amd.com>
 References: <cover.1749848714.git.babu.moger@amd.com>
@@ -89,255 +89,236 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD6:EE_|CY3PR12MB9553:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac63a099-3b7c-4fbc-8124-08ddaabe389f
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD2:EE_|DM3PR12MB9414:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76491a61-6bcd-4275-85c5-08ddaabe3d5c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024|921020;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014|921020|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WC4vddLW3PoF5hoIFtx4VhPFVYTmymibb7eXsNioBfGLpHjT0HCxWW0o7v3G?=
- =?us-ascii?Q?1Es9MovlJxhFSaZIzCm4O7g1I1UHeAkGNB+BPdHQM5V4csdqjkzbjB0s5PlJ?=
- =?us-ascii?Q?7MJu9aZbsE3YE1d0QNwQ1dcxBUd23hVwWH2WdWL3ktxHVyBO7NUj2yUyh0kt?=
- =?us-ascii?Q?7o5S49qWT71O1uKQuARQQuD3jCQV3Jgz8uTh0SwPw9JAhTsWWPNQjYwglr9W?=
- =?us-ascii?Q?vFMehfzNuk6lCuk9yUdIRCl7UZvhDiHQWP/WAgxisbRsiri2gtwYpH8dPNJx?=
- =?us-ascii?Q?sGM0e/tL8hd32WNZ2/ZqbflvydSbiY3y8A/ZaCxu1qdg7tmxcySCrOMzmKt/?=
- =?us-ascii?Q?Zqi2DSct28cFbkeAq4dmmXx7pw11vBIqke6MkZT7y9sFdEQcO+5gFX30Mf7B?=
- =?us-ascii?Q?ZQtfK50GskPmfWTsFyy+pn9dP6nrh1z79/otOSssdqAk2IGBF0tFaJYNZV+I?=
- =?us-ascii?Q?kDiGc+cMmQl+lF7BeeNw+G7zlcJY3B/OmyGUlqDeiiWq0bFeO9kbtUvLGrE/?=
- =?us-ascii?Q?n+45BBPJMQJ9ZgT5yds7xCcGEOs5DKLNXnl2yOkUCs5Eh8d5KdLUgMDc0m5D?=
- =?us-ascii?Q?9sdqmSwxMTLu/0yKpuw0LJg5nYt6H9aLQWxXUgr3A1JtLk5Wjb6XCOxmwkPJ?=
- =?us-ascii?Q?yKEuSU30XezFUIA477z0ZN7DaRhA91QOQCX9RTA+FfMyExIUNJlb6EbJXIW0?=
- =?us-ascii?Q?pkbm37vLqNFTF4MB2SavTt6T9c81r4o/GikaqRvLcxjkS++Ty/9nFggDS1yk?=
- =?us-ascii?Q?9YxRxk+Fv2JPrY7xRKAzXb2FAf8F8mCkG/qevVbigcEBDkFL9qy/mAca8m2O?=
- =?us-ascii?Q?JgpM+USIe/a9Zo4YB3MUd5i9e+xEGwTCS3mynOx8RnATVzFaeDf5Was6s73O?=
- =?us-ascii?Q?2cvCLJowR9QjGbqJop3BWisoZG/1YuA005iEIwalk+OF4G+5Q7MXbdwyvnuR?=
- =?us-ascii?Q?mOxs/kztBKU8FBcMM7m5S/q+BecFydgP4CxavkbFkoGRE8cXvKl8YbguNfIl?=
- =?us-ascii?Q?MOl26sXZElL873d01XQzP8lzVwvHFsHfzyyKqs4+CiaUxrG94G5zsJhJLQGV?=
- =?us-ascii?Q?EZfgNysqOl5AADHs6y4jNhdKSaWxLCNNADzGd2ZdiUljt3Zl7GL6eCaD/NqU?=
- =?us-ascii?Q?LoCtOyJOFHrg4RGTCQxKK6ygyR91uSw94+JtKLAx3oNn6dCQWQdAGR0RD16T?=
- =?us-ascii?Q?Hrk/JVyrBXUa38fYBYsvR+8tCutpVGkOzLlrXv7lM11qln2XAypQY1ZlnCAr?=
- =?us-ascii?Q?871s80Xv18DcQjlrXNibo5nW3Fr5CenDZKXhtyqYOOa1H8to9jT6dGynjdjv?=
- =?us-ascii?Q?Tb3gEgeSalOq4zU4rl4xUv4Y1RNtvG2Ej0hXKcMFcovJ/U28GTfkMb7faw4C?=
- =?us-ascii?Q?tn+piL3+2bPPx7msZLmdYj9BLOqAWHV90v1siKBCMUxqsB6Txsk3s/t5z4nS?=
- =?us-ascii?Q?sV/uhR77RzH8sQ4Q2U9+CusK+vziM1cHChl71sFVsfOVBqOaFHUMuorwJsZx?=
- =?us-ascii?Q?YcWa1QqkwyAbGLX3Z6RuZ1K4/hTZHRh0C8MIyMhLJyWLay+/pAaApwQNoQ?=
+	=?us-ascii?Q?2J3RsmXH5yWFn+Ki5r0c1k8SbAd856TD15vYXFoqVZJQQ+gf68gfYNB2Iv/+?=
+ =?us-ascii?Q?CoolgnsZKeNKFRV/qGzfGPG+hMvoQQsTjKbeE7NTf9cBQXR/Bf+iHKMwTbnT?=
+ =?us-ascii?Q?WIWw/77lbUiVRmcgpfvpK67aDf6Fz+H3CGcHxklF0zp1VIulL7GQxNLuJWnj?=
+ =?us-ascii?Q?s+Qw4aj87cMksOU+Mj6XoxFMR+pLTn85u0kbP7tQCHuYx+4PrYCqv9fARdIN?=
+ =?us-ascii?Q?vATwArG8qI9Xo6Knhf7/HEq5FA0cCkL/aABJ6xJNzLFQJ6IryiszkGk1caLg?=
+ =?us-ascii?Q?XcpcmqHpdLm0z8faBQ1ySC9xAJwv/J7ye6qzTtAfobJ6XtHKaW+RhK1uQw2W?=
+ =?us-ascii?Q?3OgwYFk/rT6jS0WjAK4gKJF9tNQnCKoGc/peEjycWTtgNBFCamf6gqOgdXTC?=
+ =?us-ascii?Q?jMz9Dx59Io3scZIj1f/gs9RygBAPurhayEU3becvUM5VCQJpfOq/9DOYEC9l?=
+ =?us-ascii?Q?1whj1wPE3nJhhTirKnlzmDqpCctjwD8Chn7NSy619azXj+bOS0remKhOzeOA?=
+ =?us-ascii?Q?+puc3PZCJ8nnKLuS8mJnMZNFyIaFPGw3ZnqJrLZuj4GCdOXuBopO7nK7T0b7?=
+ =?us-ascii?Q?P9rIwL7bM8XvRf8tiD3ZRuCZL0fz4E1tzmvYYbyVT4Io8YNZBXpW7wIkgwF9?=
+ =?us-ascii?Q?h3/JBS8+6H4b9dokP6uuajHR7t/vsB/fJFqVCw022904RMYUWjagUOcFqqFK?=
+ =?us-ascii?Q?hRxMPP6F+xb390qOdm6gMzc/GD8JbRLKbHZtTLLNQydV0M/wQbk8YOiDZn6H?=
+ =?us-ascii?Q?21ZzW4WgdmwIqfZr8mwJpmZOoEVl8aQwIr4nTo1oSivV43F2NZsU8mxLgpQi?=
+ =?us-ascii?Q?d1s3TtRe3iOr48OmCzFRJQYnbV/QqIU8E3AO92mYRTkanmpX3QJ584+KewPt?=
+ =?us-ascii?Q?ZPuAt2YAbpvnzZCGxNX5gWLYF60OY6lnrO9Ai8zsH8x6J3o/9Lz//eZyLnwJ?=
+ =?us-ascii?Q?Kp9zNWXOlYXZWsXNfGT6GkALwir9y2zmQ4TtjNf6ksc+h7o5ykluUbi0m4zm?=
+ =?us-ascii?Q?UVENSP+CdsHiSF7YT1S7U+66WGlHYADb/9YhfLiCR++G74BYI9q+N26Z2r6k?=
+ =?us-ascii?Q?r2wg905U9bjQeH7STQ8C4T0xj3GEuoGn5YWoFrXqpjv86/v0k4100AP4SRwY?=
+ =?us-ascii?Q?cl/QRkqp+mjzQGkg8hYxSl+u3sEvvjGtX+oJGp5qtGRbVG2YOVGRgOMFzBMq?=
+ =?us-ascii?Q?+the0u8c8RVp7IArcIgsAnCY4XQT1jd0fbBWtTDftl/+txqVKuISw/5tODKW?=
+ =?us-ascii?Q?JV3iioxkuSuVkXky0V21fWj/7LZxXGzW5EzTwK0wHF0o1COTkxhGdr6cyinS?=
+ =?us-ascii?Q?x712OkGhCFDzDmlsnrLtgK8BRv0++txBc0p8i9JeZJGCIhLtr9O/yfMf1sPw?=
+ =?us-ascii?Q?/SFis0ZZslgVaqN9nfq8bS1jsgFa/G+Ylxn+uMvQ2HLWcfjleBwGCwk1+alE?=
+ =?us-ascii?Q?Qyqpx8UN7xR5t898rBhzruFRE445BpruRwfL2bDfLae3sxBD9aDRnTfPCuQz?=
+ =?us-ascii?Q?o+O5jx6feYR5uIh2a4AbgaMiS3fHOqhafxqhaXPZuT0b9egEPs+uP71RrA?=
  =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014)(921020)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 21:06:52.5927
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 21:07:00.5453
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac63a099-3b7c-4fbc-8124-08ddaabe389f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76491a61-6bcd-4275-85c5-08ddaabe3d5c
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD6.namprd03.prod.outlook.com
+	CY4PEPF0000EDD2.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9553
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9414
 
-Add the functionality to enable/disable AMD ABMC feature.
+Introduce the resctrl file "mbm_assign_mode" to list the supported
+monitoring modes.
 
-AMD ABMC feature is enabled by setting enabled bit(0) in MSR
-L3_QOS_EXT_CFG. When the state of ABMC is changed, the MSR needs
-to be updated on all the logical processors in the QOS Domain.
+The "mbm_event" mode allows users to assign a hardware counter ID to an
+RMID, event pair and monitor bandwidth usage as long as it is assigned.
+The hardware continues to track the assigned counter until it is
+explicitly unassigned by the user. Each event within a resctrl group
+can be assigned independently in this mode.
 
-Hardware counters will reset when ABMC state is changed.
+On AMD systems "mbm_event" mode is backed by the ABMC (Assignable
+Bandwidth Monitoring Counters) hardware feature and is enabled by default.
 
-The ABMC feature details are documented in APM listed below [1].
-[1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
-Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable Bandwidth
-Monitoring (ABMC).
+The "default" mode is the existing mode that works without the explicit
+counter assignment, instead relying on dynamic counter assignment by
+hardware that may result in hardware not dedicating a counter resulting
+in monitoring data reads returning "Unavailable".
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Provide an interface to display the monitor modes on the system.
+
+$ cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
+[mbm_event]
+default
+
+Add IS_ENABLED(CONFIG_RESCTRL_ASSIGN_FIXED) check to support Arm64.
+
+On x86, CONFIG_RESCTRL_ASSIGN_FIXED is not defined. On Arm64, it will be
+defined when the "mbm_event" mode is supported.
+
+Add IS_ENABLED(CONFIG_RESCTRL_ASSIGN_FIXED) check early to ensure the user
+interface remains compatible with upcoming Arm64 support. IS_ENABLED()
+safely evaluates to 0 when the configuration is not defined.
+
+As a result, for MPAM, the display would be either:
+[default]
+or
+[mbm_event]
+
 Signed-off-by: Babu Moger <babu.moger@amd.com>
 ---
-v14: Added lockdep_assert_cpus_held() in _resctrl_abmc_enable().
-     Removed inline for resctrl_arch_mbm_cntr_assign_enabled().
-     Added prototype descriptions for resctrl_arch_mbm_cntr_assign_enabled()
-     and resctrl_arch_mbm_cntr_assign_set() in include/linux/resctrl.h.
+v14: Changed the name of the monitor mode to mbm_cntr_evt_assign based on the discussion.
+     https://lore.kernel.org/lkml/7628cec8-5914-4895-8289-027e7821777e@amd.com/
+     Changed the name of the mbm_assign_mode's.
+     Updated resctrl.rst for mbm_event mode.
+     Changed subject line to fs/resctrl.
 
-v13: Resolved minor conflicts with recent FS/ARCH restructure.
+v13: Updated the commit log with motivation for adding CONFIG_RESCTRL_ASSIGN_FIXED.
+     Added fflag RFTYPE_RES_CACHE for mbm_assign_mode file.
+     Updated user doc. Removed the references to "mbm_assign_control".
+     Resolved the conflicts with latest FS/ARCH code restructure.
 
-v12: Clarified the comment on _resctrl_abmc_enable().
-     Added the code to reset arch state in _resctrl_abmc_enable().
-     Resolved the conflicts with latest merge.
+v12: Minor text update in change log and user documentation.
+     Added the check CONFIG_RESCTRL_ASSIGN_FIXED to take care of arm platforms.
+     This will be defined only in arm and not in x86.
 
-v11: Moved the monitoring related calls to monitor.c file.
-     Moved the changes from include/linux/resctrl.h to
-     arch/x86/kernel/cpu/resctrl/internal.h.
-     Removed the Reviewed-by tag as patch changed.
-     Actual code did not change.
+v11: Renamed rdtgroup_mbm_assign_mode_show() to resctrl_mbm_assign_mode_show().
+     Removed few texts in resctrl.rst about AMD specific information.
+     Updated few texts.
 
-v10: No changes.
+v10: Added few more text to user documentation clarify on the default mode.
 
-v9: Re-ordered the MSR and added Reviewed-by tag.
+v9: Updated user documentation based on comments.
 
-v8: Commit message update and moved around the comments about L3_QOS_EXT_CFG
-    to _resctrl_abmc_enable.
+v8: Commit message update.
 
-v7: Renamed the function
-    resctrl_arch_get_abmc_enabled() to resctrl_arch_mbm_cntr_assign_enabled().
+v7: Updated the descriptions/commit log in resctrl.rst to generic text.
+    Thanks to James and Reinette.
+    Rename mbm_mode to mbm_assign_mode.
+    Introduced mutex lock in rdtgroup_mbm_mode_show().
 
-    Merged resctrl_arch_mbm_cntr_assign_disable, resctrl_arch_mbm_cntr_assign_disable
-    and renamed to resctrl_arch_mbm_cntr_assign_set().
+v6: Added documentation for mbm_cntr_assign and legacy mode.
+    Moved mbm_mode fflags initialization to static initialization.
 
-    Moved the function definition to linux/resctrl.h.
+v5: Changed interface name to mbm_mode.
+    It will be always available even if ABMC feature is not supported.
+    Added description in resctrl.rst about ABMC mode.
+    Fixed display abmc and legacy consistantly.
 
-    Passed the struct rdt_resource to these functions.
-    Removed resctrl_arch_reset_rmid_all() from arch code. This will be done
-    from the caller.
+v4: Fixed the checks for legacy and abmc mode. Default it ABMC.
 
-v6: Renamed abmc_enabled to mbm_cntr_assign_enabled.
-    Used msr_set_bit and msr_clear_bit for msr updates.
-    Renamed resctrl_arch_abmc_enable() to resctrl_arch_mbm_cntr_assign_enable().
-    Renamed resctrl_arch_abmc_disable() to resctrl_arch_mbm_cntr_assign_disable().
-    Made _resctrl_abmc_enable to return void.
-
-v5: Renamed resctrl_abmc_enable to resctrl_arch_abmc_enable.
-    Renamed resctrl_abmc_disable to resctrl_arch_abmc_disable.
-    Introduced resctrl_arch_get_abmc_enabled to get abmc state from
-    non-arch code.
-    Renamed resctrl_abmc_set_all to _resctrl_abmc_enable().
-    Modified commit log to make it clear about AMD ABMC feature.
-
-v3: No changes.
-
-v2: Few text changes in commit message.
+v3: New patch to display ABMC capability.
 ---
- arch/x86/include/asm/msr-index.h       |  1 +
- arch/x86/kernel/cpu/resctrl/internal.h |  5 +++
- arch/x86/kernel/cpu/resctrl/monitor.c  | 45 ++++++++++++++++++++++++++
- include/linux/resctrl.h                | 20 ++++++++++++
- 4 files changed, 71 insertions(+)
+ Documentation/filesystems/resctrl.rst | 31 ++++++++++++++++++++++
+ fs/resctrl/rdtgroup.c                 | 37 +++++++++++++++++++++++++++
+ 2 files changed, 68 insertions(+)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index b7dded3c8113..b92b04fa9888 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -1215,6 +1215,7 @@
- /* - AMD: */
- #define MSR_IA32_MBA_BW_BASE		0xc0000200
- #define MSR_IA32_SMBA_BW_BASE		0xc0000280
-+#define MSR_IA32_L3_QOS_EXT_CFG		0xc00003ff
- #define MSR_IA32_EVT_CFG_BASE		0xc0000400
+diff --git a/Documentation/filesystems/resctrl.rst b/Documentation/filesystems/resctrl.rst
+index c97fd77a107d..4e76e4ac5d3a 100644
+--- a/Documentation/filesystems/resctrl.rst
++++ b/Documentation/filesystems/resctrl.rst
+@@ -257,6 +257,37 @@ with the following files:
+ 	    # cat /sys/fs/resctrl/info/L3_MON/mbm_local_bytes_config
+ 	    0=0x30;1=0x30;3=0x15;4=0x15
  
- /* AMD-V MSRs */
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 44ef0d94131e..1a4e96044aac 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -37,6 +37,9 @@ struct arch_mbm_state {
- 	u64	prev_msr;
- };
- 
-+/* Setting bit 0 in L3_QOS_EXT_CFG enables the ABMC feature. */
-+#define ABMC_ENABLE_BIT			0
++"mbm_assign_mode":
++	The supported monitoring modes. The enclosed brackets indicate which mode
++	is enabled.
++	::
 +
- /**
-  * struct rdt_hw_ctrl_domain - Arch private attributes of a set of CPUs that share
-  *			       a resource for a control function
-@@ -103,6 +106,7 @@ struct msr_param {
-  * @mon_scale:		cqm counter * mon_scale = occupancy in bytes
-  * @mbm_width:		Monitor width, to detect and correct for overflow.
-  * @cdp_enabled:	CDP state of this resource
-+ * @mbm_cntr_assign_enabled:	ABMC feature is enabled
-  *
-  * Members of this structure are either private to the architecture
-  * e.g. mbm_width, or accessed via helpers that provide abstraction. e.g.
-@@ -116,6 +120,7 @@ struct rdt_hw_resource {
- 	unsigned int		mon_scale;
- 	unsigned int		mbm_width;
- 	bool			cdp_enabled;
-+	bool			mbm_cntr_assign_enabled;
- };
- 
- static inline struct rdt_hw_resource *resctrl_to_arch_res(struct rdt_resource *r)
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index a6b9a6ba036d..0ad9c731c13e 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -399,3 +399,48 @@ void __init intel_rdt_mbm_apply_quirk(void)
- 	mbm_cf_rmidthreshold = mbm_cf_table[cf_index].rmidthreshold;
- 	mbm_cf = mbm_cf_table[cf_index].cf;
++	  # cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
++	  [mbm_event]
++	  default
++
++	"mbm_event":
++
++	mbm_event mode allows users to assign a hardware counter ID to an RMID, event
++	pair and monitor the bandwidth usage as long as it is assigned. The hardware
++	continues to track the assigned counter until it is explicitly unassigned by
++	the user. Each event within a resctrl group can be assigned independently.
++
++	In this mode, a monitoring event can only accumulate data while it is backed
++	by a hardware counter. Use "mbm_L3_assignments" found in each CTRL_MON and MON
++	group to specify which of the events should have a counter assigned. The number
++	of counters available is described in the "num_mbm_cntrs" file. Changing the
++	mode may cause all counters on the resource to reset.
++
++	"default":
++
++	In default mode, resctrl assumes there is a hardware counter for each
++	event within every CTRL_MON and MON group. On AMD platforms, it is
++	recommended to use the mbm_event mode, if supported, to prevent reset of MBM
++	events between reads resulting from hardware re-allocating counters. This can
++	result in misleading values or display "Unavailable" if no counter is assigned
++	to the event.
++
+ "max_threshold_occupancy":
+ 		Read/write file provides the largest value (in
+ 		bytes) at which a previously used LLC_occupancy
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index 5874cfdf8d8d..ba7a9a68c5a6 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -1799,6 +1799,36 @@ static ssize_t mbm_local_bytes_config_write(struct kernfs_open_file *of,
+ 	return ret ?: nbytes;
  }
-+
-+static void resctrl_abmc_set_one_amd(void *arg)
+ 
++static int resctrl_mbm_assign_mode_show(struct kernfs_open_file *of,
++					struct seq_file *s, void *v)
 +{
-+	bool *enable = arg;
++	struct rdt_resource *r = rdt_kn_parent_priv(of->kn);
++	bool enabled;
 +
-+	if (*enable)
-+		msr_set_bit(MSR_IA32_L3_QOS_EXT_CFG, ABMC_ENABLE_BIT);
-+	else
-+		msr_clear_bit(MSR_IA32_L3_QOS_EXT_CFG, ABMC_ENABLE_BIT);
-+}
++	mutex_lock(&rdtgroup_mutex);
++	enabled = resctrl_arch_mbm_cntr_assign_enabled(r);
 +
-+/*
-+ * ABMC enable/disable requires update of L3_QOS_EXT_CFG MSR on all the CPUs
-+ * associated with all monitor domains.
-+ */
-+static void _resctrl_abmc_enable(struct rdt_resource *r, bool enable)
-+{
-+	struct rdt_mon_domain *d;
++	if (r->mon.mbm_cntr_assignable) {
++		if (enabled)
++			seq_puts(s, "[mbm_event]\n");
++		else
++			seq_puts(s, "[default]\n");
 +
-+	lockdep_assert_cpus_held();
-+
-+	list_for_each_entry(d, &r->mon_domains, hdr.list) {
-+		on_each_cpu_mask(&d->hdr.cpu_mask, resctrl_abmc_set_one_amd,
-+				 &enable, 1);
-+		resctrl_arch_reset_rmid_all(r, d);
++		if (!IS_ENABLED(CONFIG_RESCTRL_ASSIGN_FIXED)) {
++			if (enabled)
++				seq_puts(s, "default\n");
++			else
++				seq_puts(s, "mbm_event\n");
++		}
++	} else {
++		seq_puts(s, "[default]\n");
 +	}
-+}
 +
-+int resctrl_arch_mbm_cntr_assign_set(struct rdt_resource *r, bool enable)
-+{
-+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
-+
-+	if (r->mon.mbm_cntr_assignable &&
-+	    hw_res->mbm_cntr_assign_enabled != enable) {
-+		_resctrl_abmc_enable(r, enable);
-+		hw_res->mbm_cntr_assign_enabled = enable;
-+	}
++	mutex_unlock(&rdtgroup_mutex);
 +
 +	return 0;
 +}
 +
-+bool resctrl_arch_mbm_cntr_assign_enabled(struct rdt_resource *r)
-+{
-+	return resctrl_to_arch_res(r)->mbm_cntr_assign_enabled;
-+}
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index c0195498bd4a..f078ef24a8ad 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -440,6 +440,26 @@ static inline u32 resctrl_get_config_index(u32 closid,
- bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l);
- int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
- 
-+/**
-+ * resctrl_arch_mbm_cntr_assign_enabled() - Check if MBM counter assignment
-+ *					    mode is enabled.
-+ * @r:		Pointer to the resource structure.
-+ *
-+ * Return:
-+ * true if the assignment mode is enabled, false otherwise.
-+ */
-+bool resctrl_arch_mbm_cntr_assign_enabled(struct rdt_resource *r);
-+
-+/**
-+ * resctrl_arch_mbm_cntr_assign_set() - Configure the MBM counter assignment mode.
-+ * @r:		Pointer to the resource structure.
-+ * @enable:	Set to true to enable, false to disable the assignment mode.
-+ *
-+ * Return:
-+ * 0 on success, non-zero on failure.
-+ */
-+int resctrl_arch_mbm_cntr_assign_set(struct rdt_resource *r, bool enable);
-+
- /*
-  * Update the ctrl_val and apply this config right now.
-  * Must be called on one of the domain's CPUs.
+ /* rdtgroup information files for one cache resource. */
+ static struct rftype res_common_files[] = {
+ 	{
+@@ -1911,6 +1941,13 @@ static struct rftype res_common_files[] = {
+ 		.seq_show	= mbm_local_bytes_config_show,
+ 		.write		= mbm_local_bytes_config_write,
+ 	},
++	{
++		.name		= "mbm_assign_mode",
++		.mode		= 0444,
++		.kf_ops		= &rdtgroup_kf_single_ops,
++		.seq_show	= resctrl_mbm_assign_mode_show,
++		.fflags		= RFTYPE_MON_INFO | RFTYPE_RES_CACHE,
++	},
+ 	{
+ 		.name		= "cpus",
+ 		.mode		= 0644,
 -- 
 2.34.1
 
