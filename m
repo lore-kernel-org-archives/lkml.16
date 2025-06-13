@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192EA24888D
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 04:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2411253932
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 04:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749788906; cv=none; b=reSejeltN9aIv3z0k/mamk1Sz0c24QZTW8q/08UHDraArgEv3OxaaBOnkkkmyHCKaDrAUu+NLbO1QAGxcGSHT6P/jPdvIHyXakmUuFMnFH0WQfGGlZMpN0DkrNw24Oq/tVLqhpKpFkoGycrbLcOWID7OvwrKyOKN/4dLvmPujHg=
+	t=1749788908; cv=none; b=g2OMH6eT2Vy98O/kVFNR8NR+ynFvcQp2qP4Yh0/IlmxQBiZ0OABjy/Frz2DrBfqYR+g+yqYX8FN64DT936TSbx5Tt8fP8rKiCM01SMa87THGHQ56WzpplPaKphapty3lOuccntfhhyaLu2gSV1CrTS2buy8kHTK8h1ofbx9lHAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749788906; c=relaxed/simple;
-	bh=cLMFRytwCAbUcsumEZy3rbgGn6MqQQrWrO6EyWB53GY=;
+	s=arc-20240116; t=1749788908; c=relaxed/simple;
+	bh=tL1PLzIyUqJpZNsRBF7JRfwA8Ed51h34XsLMqxuM5k8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=n/ZMdUMLSk1CqujCW1zfCme4zPeYpPf2RQPMx1ZbP1sZWY7LFyjyBkWUEsNmqjDZlMhsNQ9rMsft4qAB8cmcKRqYQc9vgEzlVecrwoyESaeKzTU4GomLPvUHs6Ef3SX+7r7IdsPIPutZL39XTU3ahXznRghZtHDsn+Qw53GDmDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o2xHEDUG; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=hiATOLpgQHDgeZ3z0U0XMbRMKzURBLRfYu8aJ2nHzkpBsssarbFnoyAc2LgewcT18YLQwFeSz+3PjKREGa4kG10FU2U2KquUVfPe/AcESfuHre8VbgdexP4F8HCgfmUTSoOc5tugj3gqpxoiDrTkENhZ2RCF3S+EHxn7TbCsi88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ybzfkIUU; arc=none smtp.client-ip=209.85.160.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o2xHEDUG"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23228c09e14so22109065ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 21:28:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ybzfkIUU"
+Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2e42bf99e78so1581551fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 21:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749788904; x=1750393704; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749788906; x=1750393706; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xq0DQz/GmNzjKY9rWVYo4cPfcNQII7suJKVz4zh1h04=;
-        b=o2xHEDUGMCumw91n8paMImOVbTfnYreertLkKnleDbr5+y9UDSoGfUgMfLpbd1Rh5N
-         1KjqnFqaIdoY99PbrYEPLEK0vqVNAlBf4U7Ca963kyLC0YloS7nXGJv+YJIRY2uCHXl/
-         RYzo41LXjeeCGQaiRf8NdviVdkgO2jnrQdqYzno5oa/y1BYyYD6WW1Ii1ZStETozN+A7
-         Y++Dy0H3I9xCF2WecLfoo8hC2fQBoBmdtFOBDTB0IHLFGJSKfcXjh1qpNOI5O3vo14nR
-         qlIa7F3lRBiCRS3eTFLGLoQkBY6jEyD1OSkGcuwC8vKGP4RX869jjxqeyN0mjvlqtmKx
-         nfRw==
+        bh=JYBZvfyHdUGl/wklBqtBO8YvE+0ucQlCTvcKf6Jv4wE=;
+        b=ybzfkIUUFvxNbQLLohhlN9wgUJjkUcDYvoYskmX5arnn1rs4SdlQLvpOAfVe3Cfreo
+         F4Mq+TLcq4VJ/3rSWmxc8+/4L+ce8NUPSwN3zCmcY1ayKJX57CfLlOLEPKXq5Pkv9dXu
+         gnb0OAqsh0dNyRvYtkkNMIZzZhLtd+ipw13SLxTa2qVubDVHBSznyHQMAC5n/4IIy7aY
+         IIjwqrj/UXixl32juXYGaDe0a8X//idNcN+kfYuGcP1Kzk4jVAz5aolPCy82ET64wKGZ
+         2UK4w6kDUMnmYSPLMjRlVmQOuuHFuH4NvtEDyCOk/vrvPx2eJUn72AO3tCTF6LsInhKY
+         nYXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749788904; x=1750393704;
+        d=1e100.net; s=20230601; t=1749788906; x=1750393706;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xq0DQz/GmNzjKY9rWVYo4cPfcNQII7suJKVz4zh1h04=;
-        b=PfWjtKQVrKSEH1RKbZQNJI08MZuT4s9LgJvgOUKOGvpODSTJsLRW8ro2nGVWybhBdW
-         EKuLrDFSVuLKTxYGQgsboYXkuxLuImCjEbym/m06kr0QUbP8YmUABkK58QbOm/lDlesL
-         QdJy1xfK/J6jggTvv2sH5yJhDNWkOApPxrAVhwzLTvKglJ1TS86lIjtRia+dlcUgOA7m
-         6XasCqrNzmVgX5iQWKLydR+caTR+TRqWpMOQW/7vGKTrohZp6Ru1mqBh2sp/vTOaWZCF
-         6xxLdJAkx8UA6MJcbDNkTlLIkYXxve8ep6UmqJcxKPJuombSseqgUdQ/f7ZLnKAjXjSX
-         zFgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfq+8IvmHnSsPY5vSKUspxDOCoE+D/XWaxS3HPDHGFUU6PbsvJmmSxdHj5mjrTNt76ANo8gYfav3dhXjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCfGZAfT+TDWJkU6kHCzvkau4eHZ8ZY74h+ZYoY50xJNLR9DCp
-	TOoDn8WRLdj7zfWBuQe8tdHJ6/jCMgF0TNX70q76IHW0BpTl4zpTaPph7GBFPUfzGQc23F5mI8U
-	A7y+iStN9nakD1mRSKBGHjLxIQA==
-X-Google-Smtp-Source: AGHT+IFaqKu15tKP0UOvmvj4nCuAG9FBRJl5t2EPwtoFoYDsrTb/txjDVkvyhDwsAv5xUUWvtptEIssgdy6Mhndrug==
-X-Received: from plqt6.prod.google.com ([2002:a17:902:a5c6:b0:234:cfe1:44a3])
+        bh=JYBZvfyHdUGl/wklBqtBO8YvE+0ucQlCTvcKf6Jv4wE=;
+        b=P75oNxRPIUs1LBvLrLJ4EhqrdynqWpwc7wt6065tmHKbZev7HB3+3EFf4nEGBElxO+
+         JW/IvZ6ttnliLHWL7GsX/gSLaLs4CyFCxL1np7q5qSA+udUA7Q07qTNPBM98kchqnqNa
+         P0KcP+Xv4fNYByKkI/gzh+8iEUIzr2RlfiAkRT3pomt7/2RBCPyUzdueC1lq7jJZRTBS
+         7eT38A9U9D4AzCN+nZNRu/wKVhpnGzyJLIOWN1v4lrsbqwu8KAgQTcg5+qtLUa7gGwIB
+         KLVpSG21cqt8PbIQrZUuTRh808/i0uOvsJCTbfP4PoNJ9Vogg7YWkp1v32dVQQXzRRp4
+         HCFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/mbkLxRqKPsLc7xkAOgDeH3mYst1TzNm0lsS3D5uf5hcWsX1XwM5CWMYhxrBonjtgP0+7ZxaJTQr8lD8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw360TLwHstSzwdHEkXQJIdRQCptMDCMhZqVq9ixib3AqOvCnfh
+	lG4alwHHb8uxZ0yivdvRSqaDZ+uGGCY0XA3WTwHMrDCHSTHSFpk1kgRcIEYe8MTmy034sUa6cfz
+	h9EKg4QYJzcaTWgvHMczeqMIzVw==
+X-Google-Smtp-Source: AGHT+IGE43XcqhBFW+fQotJi4fyRgEkRR+8OmumQVou8oP2GURUevvi+LmO0+PoZqsrLru+kQ4PW7qlbTdI+8ngBXg==
+X-Received: from oabgh10.prod.google.com ([2002:a05:6870:3b0a:b0:2c1:6d20:7b92])
  (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:2a88:b0:234:8ec1:4ad3 with SMTP id d9443c01a7336-2365dd3e4a3mr25251795ad.40.1749788904428;
- Thu, 12 Jun 2025 21:28:24 -0700 (PDT)
-Date: Fri, 13 Jun 2025 04:28:02 +0000
+ 2002:a05:6870:de13:b0:2ea:6ec5:f182 with SMTP id 586e51a60fabf-2ead51d3976mr1007327fac.38.1749788906187;
+ Thu, 12 Jun 2025 21:28:26 -0700 (PDT)
+Date: Fri, 13 Jun 2025 04:28:03 +0000
 In-Reply-To: <20250613042804.3259045-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250613042804.3259045-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250613042804.3259045-2-almasrymina@google.com>
-Subject: [PATCH net-next v1 2/4] netmem: fix netmem comments
+Message-ID: <20250613042804.3259045-3-almasrymina@google.com>
+Subject: [PATCH net-next v1 3/4] selftests: devmem: remove unused variable
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org
@@ -69,60 +69,25 @@ Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.ne
 	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Trivial fix to a couple of outdated netmem comments. No code changes,
-just more accurately describing current code.
+Trivial fix to unused variable.
 
 Signed-off-by: Mina Almasry <almasrymina@google.com>
 ---
- include/net/netmem.h | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ tools/testing/selftests/drivers/net/hw/ncdevmem.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/net/netmem.h b/include/net/netmem.h
-index 386164fb9c18..28ca931dc860 100644
---- a/include/net/netmem.h
-+++ b/include/net/netmem.h
-@@ -89,8 +89,7 @@ static inline unsigned int net_iov_idx(const struct net_iov *niov)
-  * typedef netmem_ref - a nonexistent type marking a reference to generic
-  * network memory.
-  *
-- * A netmem_ref currently is always a reference to a struct page. This
-- * abstraction is introduced so support for new memory types can be added.
-+ * A netmem_ref can be a struct page* or a struct net_iov* underneath.
-  *
-  * Use the supplied helpers to obtain the underlying memory pointer and fields.
-  */
-@@ -117,9 +116,6 @@ static inline struct page *__netmem_to_page(netmem_ref netmem)
- 	return (__force struct page *)netmem;
- }
- 
--/* This conversion fails (returns NULL) if the netmem_ref is not struct page
-- * backed.
-- */
- static inline struct page *netmem_to_page(netmem_ref netmem)
- {
- 	if (WARN_ON_ONCE(netmem_is_net_iov(netmem)))
-@@ -178,6 +174,21 @@ static inline unsigned long netmem_pfn_trace(netmem_ref netmem)
- 	return page_to_pfn(netmem_to_page(netmem));
- }
- 
-+/* __netmem_clear_lsb - clear the lsb of &netmem and return it as
-+ * a net_iov*.
-+ * @netmem: netmem reference to extract as net_iov.
-+ *
-+ * All the sub types of netmem_ref (page, net_iov) have the same pp, pp_magic,
-+ * dma_addr, and pp_ref_count fields at the same offsets. Thus, we can access
-+ * these fields without a type check to make sure that the underlying mem is
-+ * net_iov or page.
-+ *
-+ * The resulting value of this function can only be used to access the fields
-+ * that are NET_IOV_ASSERT_OFFSET'd. Accessing any other fields will result in
-+ * undefined behavior.
-+ *
-+ * Return: the netmem_ref cast to net_iov* regardless of its underlying type.
-+ */
- static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
- {
- 	return (struct net_iov *)((__force unsigned long)netmem & ~NET_IOV);
+diff --git a/tools/testing/selftests/drivers/net/hw/ncdevmem.c b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
+index 02e4d3d7ded2..cc9b40d9c5d5 100644
+--- a/tools/testing/selftests/drivers/net/hw/ncdevmem.c
++++ b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
+@@ -852,7 +852,6 @@ static int do_client(struct memory_buffer *mem)
+ 	ssize_t line_size = 0;
+ 	struct cmsghdr *cmsg;
+ 	char *line = NULL;
+-	unsigned long mid;
+ 	size_t len = 0;
+ 	int socket_fd;
+ 	__u32 ddmabuf;
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
