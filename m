@@ -1,173 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2A41C5F35
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5090EEBA;
+	Fri, 13 Jun 2025 00:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749774558; cv=none; b=KDY2uzJKffpOb435P44VjFr7NryzepUzMdI2W9bDYNhZZJJ8jJVFIZQcY7DhLQSNM9ibIaKIZN7Xbq0Z8rOkBZ9PLwVf5SPU7F9DgW9j/ZGbE13dKYp3raJALWgFaBLZ3WPgSx33PEqZE968awvj70f8m7X9AX5pdhz+nFGQkJs=
+	t=1749775085; cv=none; b=FGJAmrEhjjejPifLJH92KpwU+NtDyYMDhj8eVMb9E/jYSHr+RYoCr0GCZTbBNMt28mO64y/e1BmuNS44BBXwW26+BT+LaMtVKDKS6Rt4dGPnN68VAEOVF6wSde9kcKdQbXd/lm9NOPD4hqVXHCabBL848vQudiEZPXpj12YxhlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749774558; c=relaxed/simple;
-	bh=6szosw9K0mEbz0ZCc+KigSj1rFBXue4gi0y78RNr2pk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=b7Rg+hzldppQuOqigLdAHGtubMf+TaUgVj8UrxXRJXZlKaRUNUsfOXzE9ZwhU8s1HmdskexGyOTISgcJ8xRFIdzwzbS1t8+QNtoBMIpIO9ExggqPPHhTKzPRYQHI2H16Qi8IWseGjbVPcCfwOp8DN0ntsWLJzkM8LcexuLv+4as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JK5EnNpA; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JK5EnNpA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749774557; x=1781310557;
-  h=date:from:to:cc:subject:message-id;
-  bh=6szosw9K0mEbz0ZCc+KigSj1rFBXue4gi0y78RNr2pk=;
-  b=JK5EnNpAaylS1XIG2s5YgMB4FBNydc8XRVj0aMHfNFEXELDxDbUOjiy/
-   gWGI+6QNxDPdTVp20BKRan64n+qCq8pdMtGhqg7agXeBjEPH153NIagds
-   8XKZi21VIyu1hyVhplNpGgAoZ9AQXGD0H932EVU3LBL+6FvBP8vgFZuio
-   /OUrrhZ/2OoSCZdNy/laeVgml8sltz2PAqDFW1vXH+Ght4Dsy8tOs8loJ
-   khiuw35ZTfwTFLzF7TySNb6Euf7d5m9l5heQQlglk/xNxnByMDubG0wdA
-   gVRKx9cXTnhyA7JrVdjKsQbx0Q0aAaafQRY4XqiWBKT78ZzAmpmbq6ZqQ
-   Q==;
-X-CSE-ConnectionGUID: U82rX2HrRdiDL1EEgDDXlQ==
-X-CSE-MsgGUID: 5SS4qvsCReaVyNhDe3T46A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="63331335"
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="63331335"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 17:29:16 -0700
-X-CSE-ConnectionGUID: Ffo7clo0Q12G4BCCRrhzeg==
-X-CSE-MsgGUID: YtvMLNJ0QU29vUN2tADn0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="147657928"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 12 Jun 2025 17:29:15 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPsIC-000C3T-1u;
-	Fri, 13 Jun 2025 00:29:12 +0000
-Date: Fri, 13 Jun 2025 08:28:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250606-with-bare-unions]
- BUILD SUCCESS 68615602f1eef5c67d22b8737f81f924c8b4177e
-Message-ID: <202506130839.lC8GZKJ8-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1749775085; c=relaxed/simple;
+	bh=iqS/z3Gqo+8xCdoolb1OxJ6f5y0nNxZmycHc2wANlf4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=mNHV3LDIhUf68JOj5Wc5ixok4iZAmFLbYlDn+T7Kmz6fB4TSC5U0qZctZuoCJgjxtHUmwuH0TzQPGl0tKDhsFD3HxxI/AwCuF6v/5Zr9X3QbN7i45pYMH1auyht40e7dz9hpvq0Mi2gJFg0irbD90dCfQmx+aXCTwNKpJ+/bnmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uPsQh-009bhR-Km;
+	Fri, 13 Jun 2025 00:37:59 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: "NeilBrown" <neil@brown.name>
+To: Al Viro <viro@zeniv.linux.org.uk>, Kees Cook <kees@kernel.org>,Joel
+ Granados <joel.granados@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] proc_sysctl: Fix up ->is_seen() handling
+Date: Fri, 13 Jun 2025 10:37:58 +1000
+Message-id: <174977507817.608730.3467596162021780258@noble.neil.brown.name>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250606-with-bare-unions
-branch HEAD: 68615602f1eef5c67d22b8737f81f924c8b4177e  NFSD: Avoid multiple -Wflex-array-member-not-at-end warnings
 
-elapsed time: 1460m
+Some sysctl tables can provide an is_seen() function which reports if
+the sysctl should be visible to the current process.  This is currently
+used to cause d_compare to fail for invisible sysctls.
 
-configs tested: 96
-configs skipped: 3
+This technique might have worked in 2.6.26 when it was implemented, but
+it cannot work now.  In particular if ->d_compare always fails for a
+particular name, then d_alloc_parallel() will always create a new dentry
+and pass it to lookup() resulting in a new inode for every lookup.  I
+tested this by changing sysctl_is_seen() to always return 0.  When
+all sysctls were still visible and repeated lookups (ls -li) reported
+different inode numbers.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This patch discards proc_sys_compare (the d_compare function) and
+instead adds the is_seen functionality into proc_sys_revalidate (the
+d_revalidate function).  If the sysctl table is unregistering, 0 is
+returned.  Otherwise if is_seen() exists but fails, -ENOENT is returned.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                     nsimosci_hs_defconfig    gcc-15.1.0
-arc                 nsimosci_hs_smp_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250612    gcc-8.5.0
-arc                   randconfig-002-20250612    gcc-10.5.0
-arm                               allnoconfig    clang-21
-arm                         assabet_defconfig    clang-18
-arm                             mxs_defconfig    clang-21
-arm                   randconfig-001-20250612    clang-21
-arm                   randconfig-002-20250612    clang-18
-arm                   randconfig-003-20250612    clang-21
-arm                   randconfig-004-20250612    clang-21
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250612    clang-19
-arm64                 randconfig-002-20250612    clang-17
-arm64                 randconfig-003-20250612    clang-21
-arm64                 randconfig-004-20250612    clang-18
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250612    gcc-11.5.0
-csky                  randconfig-002-20250612    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250612    clang-21
-hexagon               randconfig-002-20250612    clang-21
-i386        buildonly-randconfig-001-20250612    clang-20
-i386        buildonly-randconfig-002-20250612    gcc-12
-i386        buildonly-randconfig-003-20250612    clang-20
-i386        buildonly-randconfig-004-20250612    clang-20
-i386        buildonly-randconfig-005-20250612    clang-20
-i386        buildonly-randconfig-006-20250612    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                 loongson3_defconfig    gcc-15.1.0
-loongarch             randconfig-001-20250612    gcc-13.3.0
-loongarch             randconfig-002-20250612    gcc-12.4.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                        mvme16x_defconfig    gcc-15.1.0
-m68k                          sun3x_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250612    gcc-14.2.0
-nios2                 randconfig-002-20250612    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                randconfig-001-20250612    gcc-8.5.0
-parisc                randconfig-002-20250612    gcc-10.5.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20250612    clang-21
-powerpc               randconfig-002-20250612    gcc-8.5.0
-powerpc               randconfig-003-20250612    clang-17
-powerpc64             randconfig-001-20250612    gcc-12.4.0
-powerpc64             randconfig-002-20250612    clang-21
-powerpc64             randconfig-003-20250612    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                 randconfig-001-20250612    clang-21
-riscv                 randconfig-002-20250612    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250612    clang-21
-s390                  randconfig-002-20250612    gcc-11.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250612    gcc-12.4.0
-sh                    randconfig-002-20250612    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250612    gcc-14.3.0
-sparc                 randconfig-002-20250612    gcc-10.3.0
-sparc64               randconfig-001-20250612    gcc-13.3.0
-sparc64               randconfig-002-20250612    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250612    clang-17
-um                    randconfig-002-20250612    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20250612    gcc-12
-x86_64      buildonly-randconfig-002-20250612    clang-20
-x86_64      buildonly-randconfig-003-20250612    gcc-12
-x86_64      buildonly-randconfig-004-20250612    gcc-12
-x86_64      buildonly-randconfig-005-20250612    clang-20
-x86_64      buildonly-randconfig-006-20250612    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250612    gcc-10.5.0
-xtensa                randconfig-002-20250612    gcc-12.4.0
+The rcu_dereference() and RCU_INIT_POINTER() for ->sysctl are removed as
+the field is not rcu-managed.  It is only changed when the inode is
+created and when it is evicted, and in these cases there can be no
+possible concurrent access.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Signed-off-by: NeilBrown <neil@brown.name>
+---
+ fs/proc/inode.c       |  2 +-
+ fs/proc/proc_sysctl.c | 35 ++++-------------------------------
+ 2 files changed, 5 insertions(+), 32 deletions(-)
+
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index a3eb3b740f76..c3991dd314d9 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -42,7 +42,7 @@ static void proc_evict_inode(struct inode *inode)
+=20
+ 	head =3D ei->sysctl;
+ 	if (head) {
+-		RCU_INIT_POINTER(ei->sysctl, NULL);
++		ei->sysctl =3D NULL;
+ 		proc_sys_evict_inode(inode, head);
+ 	}
+ }
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index cc9d74a06ff0..dbf652b50909 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -884,21 +884,15 @@ static const struct inode_operations proc_sys_dir_opera=
+tions =3D {
+ 	.getattr	=3D proc_sys_getattr,
+ };
+=20
+-static int proc_sys_revalidate(struct inode *dir, const struct qstr *name,
+-			       struct dentry *dentry, unsigned int flags)
+-{
+-	if (flags & LOOKUP_RCU)
+-		return -ECHILD;
+-	return !PROC_I(d_inode(dentry))->sysctl->unregistering;
+-}
+-
+ static int proc_sys_delete(const struct dentry *dentry)
+ {
+ 	return !!PROC_I(d_inode(dentry))->sysctl->unregistering;
+ }
+=20
+-static int sysctl_is_seen(struct ctl_table_header *p)
++static int proc_sys_revalidate(struct inode *dir, const struct qstr *name,
++			       struct dentry *dentry, unsigned int flags)
+ {
++	struct ctl_table_header *p =3D PROC_I(d_inode(dentry))->sysctl;
+ 	struct ctl_table_set *set =3D p->set;
+ 	int res;
+ 	spin_lock(&sysctl_lock);
+@@ -907,35 +901,14 @@ static int sysctl_is_seen(struct ctl_table_header *p)
+ 	else if (!set->is_seen)
+ 		res =3D 1;
+ 	else
+-		res =3D set->is_seen(set);
++		res =3D set->is_seen(set) ? 1 : -ENOENT;
+ 	spin_unlock(&sysctl_lock);
+ 	return res;
+ }
+=20
+-static int proc_sys_compare(const struct dentry *dentry,
+-		unsigned int len, const char *str, const struct qstr *name)
+-{
+-	struct ctl_table_header *head;
+-	struct inode *inode;
+-
+-	/* Although proc doesn't have negative dentries, rcu-walk means
+-	 * that inode here can be NULL */
+-	/* AV: can it, indeed? */
+-	inode =3D d_inode_rcu(dentry);
+-	if (!inode)
+-		return 1;
+-	if (name->len !=3D len)
+-		return 1;
+-	if (memcmp(name->name, str, len))
+-		return 1;
+-	head =3D rcu_dereference(PROC_I(inode)->sysctl);
+-	return !head || !sysctl_is_seen(head);
+-}
+-
+ static const struct dentry_operations proc_sys_dentry_operations =3D {
+ 	.d_revalidate	=3D proc_sys_revalidate,
+ 	.d_delete	=3D proc_sys_delete,
+-	.d_compare	=3D proc_sys_compare,
+ };
+=20
+ static struct ctl_dir *find_subdir(struct ctl_dir *dir,
+--=20
+2.49.0
+
