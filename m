@@ -1,157 +1,120 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BE02F2C49;
-	Fri, 13 Jun 2025 07:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B8F1A01B9;
+	Fri, 13 Jun 2025 07:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800262; cv=none; b=YBE/WLE8ZshQEok3T8Mi3v2WOij60RueKMm9KDYqZp55SNaBEoarN2+4ww6RvmPqkTzORu9UR/L/sAHVjVaie93HV63pW8MIKXAohSFmfHgMgDiTQ5g2s4GrmkgAWaqTCAglnVAxrvw9Y4qw8RHH4kC+uqS4NCHCe/8cjRTWCr0=
+	t=1749800263; cv=none; b=i98FDcnJZVEoAMB2XTGZPhBJuzOoDWIDp24zd+w7q/Gq+s6QsfaRB7cLQEBNDsxNcB4FHD6h4As6jr1qmVpm2AB40U1HHBl34pAWqJkxKVPXMAOa7uqYWXhN5UG77G/8VlY/pQ1+k7e52hLBCYEsmmhQpwG9YRsokplaFWMoSkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800262; c=relaxed/simple;
-	bh=X3/qNFrhRreT64m2S7ky/c4+A/JzChsq4eXa99Zhu/w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ji96+Ocg4aSbSF9kkxKq51orl80eOTnCfzjWjzT9ZQo4nLFxSVwj+Iutb7bf69jCzA+W5PqixggN9m6VGbBeqz99ri4qvVvnvU7EKsJPdGNAabDHpUdPmsPAAQwb0HAY05KASa45ed6PY/uEcQhNg8ran74pMESdwEbYDILmUXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fYTs9Jbt; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749800263; c=relaxed/simple;
+	bh=1CGfO/6gdA3uL+9NwZDa1fxrQnlneqYdzyG3Ha0E5+o=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=lTuwB8jwDoAXUSgS/sp0iCNhCYRZGGjbpP9y0kPdP2auSFzDgVT4t+GbgeB92+BhN/46SG57uElMfmP30E5zUTA9xBElvZKjpMiPG0qP4cgydcsLEgF92w3WsE/GkHhJgeqHOFtKEw+BZjMRjKQvmkCbUqVUa2D7+SN9BGeRYHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U41+CuFL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8VpRbv6r; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fYTs9Jbt"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4737044515;
-	Fri, 13 Jun 2025 07:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749800257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U41+CuFL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8VpRbv6r"
+Date: Fri, 13 Jun 2025 07:37:38 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749800259;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WLtF15o+Ex4Ed3vWHcKorxdQYUZ/IggFlAe1+Bvb1bQ=;
-	b=fYTs9JbtnbQa0LG78Ip8By4e8kxfeBYaAkBZGd4wF2a4/6esqJ7MVj2PbEj1VGMwdzrKHn
-	7XSJaqODDAiuBQDbcyOJ7ITyuZE+Zts95dmJNmUCOudt2D1o/fCHsHwfW7ERCyNo9O1egn
-	/LwdsL+26wj2ktOlxMEyz4YwoQPhxWG3YI5wtVxeYPnSz7g19gMYyM6asNdvVsnq2m9Nud
-	WCK4DjKtHb+62+sqH6m5ov7tSnrcJSJbY8GgNj68E54TrE24BXl7RVaYv4PAxT+EIQDmaB
-	TM9B8Eacu+Xd3qzw1RWvru499qrPa8XL5GB3APEztX4F4YDKWoL4Z2Ne93qTdQ==
-From: =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
-Date: Fri, 13 Jun 2025 09:37:12 +0200
-Subject: [PATCH bpf 3/7] bpf/riscv: prevent trampoline attachment when args
- location on stack is uncertain
+	bh=ziwRrunBKYZ0QY+rtmihe7qN/Cxza3xQdd2VhMcmumk=;
+	b=U41+CuFLMLceAT7RV4OIN6kUwql/AtrZe4fuzeci0J2CvO/783eTCRGXsaVpSauDNevfgP
+	khavbbtqbF6Y0XusFENWCRtQWRegjqM9EsLD/6JE4PZi4EowSD1ZfakQg5WKJTZn2ScKVw
+	MbJMy8HpnmljADNzblBhPvt5dWDGenLNiMmabdrcZThJ30xAqpKTiudh2rpHAHWbngilyl
+	6wJXuGrVzmk7PynnZi+tfJmQQ5Es3Dpg7W0sEhZbujDY9t/UGtdcZ+nEaA2EfP2hxuPqZW
+	Az4lG9RTRLH1hwzZmiIZmQvMbb9kXhoipS3Cbvab1kJaq5KX0dw5FHl47XOY+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749800259;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ziwRrunBKYZ0QY+rtmihe7qN/Cxza3xQdd2VhMcmumk=;
+	b=8VpRbv6rw0ZQvVu8ZpW5crObA9xxOvjbk74YEPK2Fk85xpLAqvMsOTEG9bvBOYSPMs0SU8
+	QSW60G79SYr0qgBA==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched: Clean up and standardize #if/#else/#endif
+ markers in sched/cpupri.h
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Mel Gorman <mgorman@suse.de>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250528080924.2273858-6-mingo@kernel.org>
+References: <20250528080924.2273858-6-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <174980025813.406.13959988197065884589.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250613-deny_trampoline_structs_on_stack-v1-3-5be9211768c3@bootlin.com>
-References: <20250613-deny_trampoline_structs_on_stack-v1-0-5be9211768c3@bootlin.com>
-In-Reply-To: <20250613-deny_trampoline_structs_on_stack-v1-0-5be9211768c3@bootlin.com>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- David Ahern <dsahern@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Menglong Dong <imagedong@tencent.com>, 
- =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>, 
- Pu Lehui <pulehui@huawei.com>, Puranjay Mohan <puranjay@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Ilya Leoshkevich <iii@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: ebpf@linuxfoundation.org, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Bastien Curutchet <bastien.curutchet@bootlin.com>, netdev@vger.kernel.org, 
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>, 
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddujeefjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrroculdgvuefrhfcuhfhouhhnuggrthhiohhnmdcuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleejkeetffefveelgeeklefhtefhgfeigeduveffjeehleeifeefjedtudejgeeunecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekhedphhgvlhhopegludelvddrudeikedruddrudeljegnpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehkedprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghgohhruggvvghvsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtoheplhhinhhugihpphgtqdguvghvsehlihhsthhsrdhoiihlrggsshdrohhrghdprhgtphhtthhopehlihhnuhigq
- dhkshgvlhhfthgvshhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshhtmhefvdesshhtqdhmugdqmhgrihhlmhgrnhdrshhtohhrmhhrvghplhihrdgtohhmpdhrtghpthhtoheprghlvgigrghnughrvgdrthhorhhguhgvsehfohhsshdrshhtrdgtohhmpdhrtghpthhtohepmhihkhholhgrlhesfhgsrdgtohhmpdhrtghpthhtohepshhvvghnsheslhhinhhugidrihgsmhdrtghomh
-X-GND-Sasl: alexis.lothore@bootlin.com
+Content-Transfer-Encoding: 7bit
 
-When the target function receives more arguments than available
-registers, the additional arguments are passed on stack, and so the
-generated trampoline needs to read those to prepare the bpf context, but
-also to prepare the target function stack when it is in charge of
-calling it. This works well for scalar types, but if the value is a
-struct, we can not know for sure the exact struct location, as it may
-have been packed or manually aligned to a greater value.
+The following commit has been merged into the sched/core branch of tip:
 
-Prevent wrong readings by refusing trampoline attachment if the target
-function receives a struct on stack. While at it, move the max bpf args
-check in the new function.
+Commit-ID:     79af17344c2728c58e254219ff47840c67211cd9
+Gitweb:        https://git.kernel.org/tip/79af17344c2728c58e254219ff47840c67211cd9
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Wed, 28 May 2025 10:08:46 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 13 Jun 2025 08:47:15 +02:00
 
-Fixes: 6801b0aef79d ("riscv, bpf: Add 12-argument support for RV64 bpf trampoline")
-Signed-off-by: Alexis Lothoré (eBPF Foundation) <alexis.lothore@bootlin.com>
+sched: Clean up and standardize #if/#else/#endif markers in sched/cpupri.h
+
+ - Use the standard #ifdef marker format for larger blocks,
+   where appropriate:
+
+        #if CONFIG_FOO
+        ...
+        #else /* !CONFIG_FOO: */
+        ...
+        #endif /* !CONFIG_FOO */
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lore.kernel.org/r/20250528080924.2273858-6-mingo@kernel.org
 ---
- arch/riscv/net/bpf_jit_comp64.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ kernel/sched/cpupri.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_comp64.c
-index 10e01ff06312d9f1e6e213bb069c6ea749ea9af2..ea3a1c3af6bc129057c16a4070c33dbf00e6c611 100644
---- a/arch/riscv/net/bpf_jit_comp64.c
-+++ b/arch/riscv/net/bpf_jit_comp64.c
-@@ -1005,6 +1005,24 @@ static int invoke_bpf_prog(struct bpf_tramp_link *l, int args_off, int retval_of
- 	return ret;
- }
- 
-+static int validate_args(const struct btf_func_model *m)
-+{
-+	int i, nr_arg_slots, nr_regs = 0;
-+
-+	if (m->nr_args > MAX_BPF_FUNC_ARGS)
-+		return -ENOTSUPP;
-+
-+	for (i = 0; i < m->nr_args; i++) {
-+		nr_arg_slots = round_up(m->arg_size[i], 8) / 8;
-+		if (nr_regs + nr_arg_slots > RV_MAX_REG_ARGS &&
-+		    m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
-+			return -ENOTSUPP;
-+		nr_regs += nr_arg_slots;
-+	}
-+
-+	return 0;
-+}
-+
- static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im,
- 					 const struct btf_func_model *m,
- 					 struct bpf_tramp_links *tlinks,
-@@ -1069,8 +1087,12 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im,
- 	if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
- 		return -ENOTSUPP;
- 
--	if (m->nr_args > MAX_BPF_FUNC_ARGS)
--		return -ENOTSUPP;
-+	/* make sure that any argument can be located and processed by the
-+	 * trampoline
-+	 */
-+	ret = validate_args(m);
-+	if (ret)
-+		return ret;
- 
- 	for (i = 0; i < m->nr_args; i++)
- 		nr_arg_slots += round_up(m->arg_size[i], 8) / 8;
-
--- 
-2.49.0
-
+diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
+index f0f5a73..24add19 100644
+--- a/kernel/sched/cpupri.h
++++ b/kernel/sched/cpupri.h
+@@ -29,4 +29,4 @@ int  cpupri_find_fitness(struct cpupri *cp, struct task_struct *p,
+ void cpupri_set(struct cpupri *cp, int cpu, int pri);
+ int  cpupri_init(struct cpupri *cp);
+ void cpupri_cleanup(struct cpupri *cp);
+-#endif
++#endif /* CONFIG_SMP */
