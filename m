@@ -1,91 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06DE1DE3D6;
-	Fri, 13 Jun 2025 17:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD7B2E11B1
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835443; cv=none; b=LAG2PnhpHEIlup2LemoI7LrGHX6cs8yit/ZLHI5ZWGIkLO60Ysjwh9Lqp0De145tkeUJL15lkWRy5aki8bxtfOqRgALCRAqyv+x6PjJEETEhXPUQSyExZeZnsMOrDTgDBJ/brrR2PzxfxAeoGTlpQAndkQCZjOUrx+OLU6RExiI=
+	t=1749835663; cv=none; b=Bx8WOTnOkxe3jYAaLLUU/iQN36lNWWPQw6oPM7gYda+F8TnZeepMjc7LVacspgHqUaOonlts2oDpiiRlpngoqu72C/EBEGAzhDGtuAoKaDHKDQttY7WhMVXtAu/9/IcMGs822zRtYKrjx32mvvxFtjbOGZDu6W8xv9k6KGJ67xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835443; c=relaxed/simple;
-	bh=BHv4FZ2RKkUXVAc8+iK0FCz2f0vExdZ7AbSQmQUHUkU=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=cXa5wiwh4i7zi/qV1gdkU4OZsWtCmoq6+JFWv3IVTCCm+i70eXOOaV1lPGzjwOgV4CYD/IEXhFuxbBR36ZpcEXoSPRLZnU3A+39VonGvY3141pOsIWR999tt4W9l0rFfG+nvK31B7D4U2lj/CdEarhP2o5xowqTFiro7hRVWkU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rElbI7LX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749835663; c=relaxed/simple;
+	bh=pdf3rqtSJWicFOpYX+TUwUicneTlx6LcwlH4TfWiZAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2rLWGumVEwqvxWGfDcw9XJm6PjTVi/mLSXoQsU9uYhey4VRonXJu5baFYRu6C2CsMmenirPLeUb03UL0LzQKeLnr4XyixVTf7wgO4kZGLbb5aRuPbc051WtHHfAf3iDZ2viYasK3BVgccLBooUduLZyouE7vukFSrJGSQ+jkFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bpup1IH8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rElbI7LX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A54C4CEE3;
-	Fri, 13 Jun 2025 17:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749835443;
-	bh=BHv4FZ2RKkUXVAc8+iK0FCz2f0vExdZ7AbSQmQUHUkU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rElbI7LX9zkpN4F7hFliTEexbMMaR70UHdAFH39OdyN2uTLych7/YzrfGsCMxSANI
-	 RVEiQ5pyJNwibj3elih5EzX03q1dDo+0ghBlIV1J8vZEBC9MkFCn1FWgHBNA5uv5vW
-	 FrBmoNNcl5ZCqlLJ8X79R7c1+Fb+SP+5+2yYySSRlqZP7u2Fei9PvibJ+YvELnPWuN
-	 LblgYgft2CcVxoXyQbpUyWN0/c56n7Cwt+ZIU2IR+3EHL/UT22YIN8rsHdgtg3HdAz
-	 R04iM5rNphTkrwiWk8Xk23N1V5a3lxxt956EOwW2MGI2BAzIco4/JuUCXRTOFSjEzd
-	 x84pASFh0PvkQ==
-Message-ID: <6b7c1c97241248c0f3c35512f1150ffd.broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] SPI fixes for v6.16-rc1
-Date: Fri, 13 Jun 2025 18:23:53 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bpup1IH8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749835661;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dHfylN3K1/V0HnMVjNxiIhUPIWtFFj9Wr15mzi0PzWc=;
+	b=Bpup1IH8GEgyALQxs8mq+SZvWiup6wrEV/OAhIFPtpN2lbouY07uI43ctqLb2xW/dBBWS4
+	UWABg5Dqv9Vo4fhNlYt6/yAGKbi+Bk5M79aBw87BO4A8tao+O/QMccJmY/XCPJvOfUNx2X
+	RxhsQmokL3TC2KEwGykkydP5pVvgwbE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-85-PKjtGrgLMSeYFf9Yb3R15Q-1; Fri,
+ 13 Jun 2025 13:27:37 -0400
+X-MC-Unique: PKjtGrgLMSeYFf9Yb3R15Q-1
+X-Mimecast-MFC-AGG-ID: PKjtGrgLMSeYFf9Yb3R15Q_1749835656
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AC3E3195608F;
+	Fri, 13 Jun 2025 17:27:36 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.88])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 35F3D19560AF;
+	Fri, 13 Jun 2025 17:27:33 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 13 Jun 2025 19:26:54 +0200 (CEST)
+Date: Fri, 13 Jun 2025 19:26:50 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: =?iso-8859-1?Q?Beno=EEt?= Sevens <bsevens@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>
+Cc: Zander Work <zdw@google.com>, security@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] posix-cpu-timers: fix race between handle_posix_cpu_timers()
+ and posix_cpu_timer_del()
+Message-ID: <20250613172650.GA26022@redhat.com>
+References: <CAGCho0V0x_Y2+vg5G8-r45Xc6uftLbZK5K1=vpavd_4783fogQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGCho0V0x_Y2+vg5G8-r45Xc6uftLbZK5K1=vpavd_4783fogQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+If an exiting non-autoreaping task has already passed exit_notify() and
+calls handle_posix_cpu_timers() from IRQ, it can be reaped by its parent
+or debugger right after unlock_task_sighand().
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+If a concurrent posix_cpu_timer_del() runs at that moment, it won't be
+able to detect timer->it.cpu.firing != 0: cpu_timer_task_rcu() and/or
+lock_task_sighand() will fail.
 
-are available in the Git repository at:
+Add the tsk->exit_state check into run_posix_cpu_timers() to fix this.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc1
+This fix is not needed if CONFIG_POSIX_CPU_TIMERS_TASK_WORK=y, because
+exit_task_work() is called before exit_notify(). But the check still
+makes sense, task_work_add(&tsk->posix_cputimers_work.work) will fail
+anyway in this case.
 
-for you to fetch changes up to 9f0ad43b158d07bc7144d219ceabdea36e28e392:
+Cc: stable@vger.kernel.org
+Reported-by: Beno�t Sevens <bsevens@google.com>
+Fixes: 0bdd2ed4138e ("sched: run_posix_cpu_timers: Don't check ->exit_state, use lock_task_sighand()")
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/time/posix-cpu-timers.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-  spi: spi-pci1xxxx: Drop MSI-X usage as unsupported by DMA engine (2025-06-13 12:25:31 +0100)
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 50e8d04ab661..2e5b89d7d866 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1405,6 +1405,15 @@ void run_posix_cpu_timers(void)
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
++	/*
++	 * Ensure that release_task(tsk) can't happen while
++	 * handle_posix_cpu_timers() is running. Otherwise, a concurrent
++	 * posix_cpu_timer_del() may fail to lock_task_sighand(tsk) and
++	 * miss timer->it.cpu.firing != 0.
++	 */
++	if (tsk->exit_state)
++		return;
++
+ 	/*
+ 	 * If the actual expiry is deferred to task work context and the
+ 	 * work is already scheduled there is no point to do anything here.
+-- 
+2.25.1.362.g51ebf55
 
-----------------------------------------------------------------
-spi: Fies for v6.16
 
-A collection of driver specific fixes, most minor apart from the OMAP
-ones which disable some recent performance optimisations in some
-non-standard cases where we could start driving the bus incorrectly.
-
-The change to the stm32-ospi driver to use the newer reset APIs is a fix
-for interactions with other IP sharing the same reset line in some SoCs.
-
-----------------------------------------------------------------
-Andres Urian Florez (1):
-      spi: offload: check offload ops existence before disabling the trigger
-
-Dan Carpenter (2):
-      spi: spi-pci1xxxx: Fix error code in probe
-      spi: stm32-ospi: clean up on error in probe()
-
-Félix Piédallu (2):
-      spi: omap2-mcspi: Disable multi mode when CS should be kept asserted after message
-      spi: omap2-mcspi: Disable multi-mode when the previous message kept CS asserted
-
-Huacai Chen (1):
-      spi: loongson: Fix build warnings about export.h
-
-Mark Brown (1):
-      SPI: omap2-mcspi: Fix SPI CS behaviour around
-
-Patrice Chotard (1):
-      spi: stm32-ospi: Make usage of reset_control_acquire/release() API
-
-Thangaraj Samynathan (1):
-      spi: spi-pci1xxxx: Drop MSI-X usage as unsupported by DMA engine
-
- drivers/spi/spi-loongson-core.c |  1 +
- drivers/spi/spi-offload.c       |  2 +-
- drivers/spi/spi-omap2-mcspi.c   | 30 ++++++++++++++++++------------
- drivers/spi/spi-pci1xxxx.c      |  4 ++--
- drivers/spi/spi-stm32-ospi.c    | 24 +++++++++++++++++++-----
- 5 files changed, 41 insertions(+), 20 deletions(-)
