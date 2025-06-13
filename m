@@ -1,84 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0502D23A7;
-	Fri, 13 Jun 2025 11:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16254275AE1;
+	Fri, 13 Jun 2025 11:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749815210; cv=none; b=ZYqdNnnSusJdDmxVecdDg7CsV2ysd21S86A4JgDPD/wsvhLi5Ky/YqRlIrqBYgwWZN7XNG6Tmmdhh7ks8J4PmCjrF8zlt7Whk6k1wDxwmXEsLPpnM+Pszj0eM/CyCuZSp3LOAi8/ijTTqNeO23V7TdU23uhQdiy6OqESmmTVVqs=
+	t=1749815494; cv=none; b=Cx5HmOjkxnKW+hxqawe+pR7JhySUEwCua2lKnyZVJofe6wgCya5RdbHWD22XXw3Seu+KnMOlnOxUp1/CobbG5LyhJX1688kTP7cGaV3t/YqSZzH2sio4T+zlGuK6vxNJJ4Z55QQ4fI2WEGtqi3uE1YDq4O2GUo8cJyl3yVsK5ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749815210; c=relaxed/simple;
-	bh=vv4Pqa/1FuG6Cl4k7KZAwhVvN32B2mS5wcZejBitBwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pIqY4KxynPoXu+vMzDMc48ztVmnDHVT5wQBkGawecXAZU/hS3X8i6b0dfbw5BqmhyvDS0KZiHsA1cR3gBY3VmHoo10LtS/A2QEGheN+UHSggtMthoUw2pFBFaazicovm6IcXRLR5fzdFIkyagjVHEjl1O8VxmKpXIXKQOycweLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdiGAmfm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749815494; c=relaxed/simple;
+	bh=2YaQMA/P3sso6tRVUrftw0eEpHckdSBVm49F8Yxx4wA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tmypKZkj2HNuljo2OrWy9ENmR9/jVTg2UIZsKmBrC06Jtb6wtQKTWoB+kdmYzLSd6Dkcr2Zsypcl8jH+0/Egkpsv/aVL7yTEejMl4YgViBKvgw9g71sVJKdeOlCI/Xb9jy/4EJ9SlzFtNVBfDFMxYmQRCfb4VE7HWVF6ZYqUOUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm714X45; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdiGAmfm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A25EC4CEE3;
-	Fri, 13 Jun 2025 11:46:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm714X45"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8C35FC4CEF0;
+	Fri, 13 Jun 2025 11:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749815210;
-	bh=vv4Pqa/1FuG6Cl4k7KZAwhVvN32B2mS5wcZejBitBwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RdiGAmfm65ZeFbeMGTwHL6UxyRQdfgTfZIYn6LqmM7ff73kMv3j2uqU1Z0yObT1y3
-	 dqbPkCK863lyBfheR394/wz+8ZFvIScrvTq9gcoP2CNHX0IvUqvTvAWLIuwaKD2H2V
-	 +LxU6tVRQFG8Yf9uR2ldtlvYSe9fP5GKbXlmYv+Ikzmq3+ClVkd0HUc4n33oVpTa3x
-	 Y2TBpSg6P/9kshW/HOO3qWhYOlT99gdWY/twzR3i4XrGIap8vpc59pXZQ6jcLznmcb
-	 rZ1ygISFoPB6Qqyxf7B5MAfCPZVjw9lcvnXwOZnEvTqK+G+N7TlkaRvnTL0Zt0shqy
-	 dAJ2r+qMjI/6g==
-Date: Fri, 13 Jun 2025 12:46:43 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Robert Marko <robert.marko@sartura.hr>
-Cc: catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com,
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-	andi.shyti@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org, kernel@pengutronix.de,
-	ore@pengutronix.de, luka.perkov@sartura.hr, arnd@arndb.de,
-	daniel.machon@microchip.com
-Subject: Re: [PATCH v7 2/6] spi: atmel: make it selectable for ARCH_LAN969X
-Message-ID: <51dba7b7-d4fb-46bf-892e-a9634cb91659@sirena.org.uk>
-References: <20250613114148.1943267-1-robert.marko@sartura.hr>
- <20250613114148.1943267-3-robert.marko@sartura.hr>
+	s=k20201202; t=1749815493;
+	bh=2YaQMA/P3sso6tRVUrftw0eEpHckdSBVm49F8Yxx4wA=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=Lm714X45swi8SAgpFvc1CDA36DKH1s+6rG2Qnx7SoqyJ3xSQN70lgD+p4YCBiEj96
+	 2sJ5mBY9w0o1sR3fHRte/3x2Kc8c7yuUwJoJ2PTMnnR9NMO1Q25dAV9FGukMHej9Qz
+	 bfqNg8qiK6awtObZe9It8oDbgdcpSZFVLM3iR6J9qsEAnyFAbXCHVcNmXMvJJw99+O
+	 qX3mK+J6w+YQX1hLYk8WfCccRsxejzgnTcho7PVbnNS92907SoTAMEqbuel+E/fSfG
+	 IPihd4BdLzFHyigOczLAMhDL84UgBivNaQx2PNHNVxWKpDzrGdNtalo4Nv6pK5LMwG
+	 Dxy5uZ31e00eA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E3C61DB2;
+	Fri, 13 Jun 2025 11:51:33 +0000 (UTC)
+From: Raven Black via B4 Relay <devnull+ravenblack.gmail.com@kernel.org>
+Date: Fri, 13 Jun 2025 07:51:25 -0400
+Subject: [PATCH] ASoC: amd: yc: update quirk data for HP Victus
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="liIKPqX/LlpnoGyN"
-Content-Disposition: inline
-In-Reply-To: <20250613114148.1943267-3-robert.marko@sartura.hr>
-X-Cookie: Use extra care when cleaning on stairs.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250613-support-hp-victus-microphone-v1-1-bebc4c3a2041@gmail.com>
+X-B4-Tracking: v=1; b=H4sIALwQTGgC/x3MwQqDMAwA0F+RnBeodQ7Zr4wdShvXHGxDoiKI/
+ 27Z8V3eCUbKZPDuTlDa2biWhv7RQcyh/Ag5NYN3fnSvfkDbRKqumAV3jutmuHDUKrkWwtm5NKX
+ RP0MM0ApRmvn495/vdd2ZeuRYbgAAAA==
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Raven Black <ravenblack@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749815492; l=967;
+ i=ravenblack@gmail.com; s=20250613; h=from:subject:message-id;
+ bh=/bACXv58cmQwq8+BzTLIvAZpJC8AGmmTuOuCZ0+0UMk=;
+ b=xTamQF7Ox7AfzVbSqdl2WJ2aehKA1sXLoBYMMIHt4t5lDQBvpUfTfzF3uR3CmlDPtjct7mg0i
+ oEdrNV2z+uMA3v04due/xp8ttfSkDZA1ZPneno5EuviXCV1ZrN4poCo
+X-Developer-Key: i=ravenblack@gmail.com; a=ed25519;
+ pk=8ECM1VXVU5AHsXWVPR5Gs6qmW8kY07IYbgnWZDe+ddY=
+X-Endpoint-Received: by B4 Relay for ravenblack@gmail.com/20250613 with
+ auth_id=431
+X-Original-From: Raven Black <ravenblack@gmail.com>
+Reply-To: ravenblack@gmail.com
+
+From: Raven Black <ravenblack@gmail.com>
+
+Make the internal microphone work on HP Victus laptops.
+
+Signed-off-by: Raven Black <ravenblack@gmail.com>
+---
+ sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
+index 7e62445e02c1..3451d2f9c9ba 100644
+--- a/sound/soc/amd/yc/acp6x-mach.c
++++ b/sound/soc/amd/yc/acp6x-mach.c
+@@ -514,6 +514,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "OMEN by HP Gaming Laptop 16z-n000"),
+ 		}
+ 	},
++	{
++		.driver_data = &acp6x_card,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Victus by HP Gaming Laptop 15-fb2xxx"),
++		}
++	},
+ 	{
+ 		.driver_data = &acp6x_card,
+ 		.matches = {
+
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250613-support-hp-victus-microphone-f00d8d524aca
+
+Best regards,
+-- 
+Raven Black <ravenblack@gmail.com>
 
 
---liIKPqX/LlpnoGyN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 13, 2025 at 01:39:37PM +0200, Robert Marko wrote:
-> LAN969x uses the Atmel SPI, so make it selectable for ARCH_LAN969X.
->=20
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---liIKPqX/LlpnoGyN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhMD6IACgkQJNaLcl1U
-h9A2Tgf/S6jX4OTt8qMSDrYcgp49BzBMvfKq3YWuJ3TFTWtu27WywUPhj8oa42gc
-CzCOluHc+ctjn36Z6ENUygx8Sf9f2wO3QKsekaC5m301aySloWnBNCNh1CTWoKWa
-pcfCXorRLKUmIgyjTB9QnmFTebtF76O2QJYsosZAZX4E0h3fTyP2/O6eJuNshznh
-uW1yFBG7eO96O5ZigTfvCchi4CPiV2Eq44+35WRc/FkxiSyRMCCXpK/t1U8RFgEy
-M+DhG9KsPmk8y11dExnW+9rmYy8IY/FTxQwP4DWGTeacxTjwkUhvAacfOsXB6pB+
-aocL1gPyEZX8iTv2UnOf81f1YoBl0A==
-=og7b
------END PGP SIGNATURE-----
-
---liIKPqX/LlpnoGyN--
