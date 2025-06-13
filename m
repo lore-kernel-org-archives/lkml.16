@@ -1,69 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D572D2E11D0;
-	Fri, 13 Jun 2025 16:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4531AD3FA
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830968; cv=none; b=BRNHyPILhhSUEe3YCGt2jXM0/KRZlEsULbKgm8OR5GaNTZ6mm/l1wNdKI1IrBEDaiVCIkBBUx4CwcgHoJMJDzKf5fs6rZ1epqFQZaTB9/msjZQ79oYX4PDgDg3Smm1MD6oFnLj0fpswNDJx74eXSSbLJcef2LSVd89GM+kJtSyg=
+	t=1749830980; cv=none; b=FiXp0xzTFBwtxmV9ZUc1fEcc3EVMytfn27qCfWkKT/B21sMu2WorZkwXCUXRCzPIQS1Wpt2VBiIOXoU6j52TtKrrX57v/gIilgY0ibI+sB8wpeFeNJyd7BkRsC8NKIeIT8GZDy6cvmCDi9E966Huci5qN7aITYj3tVqMeSLs61A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830968; c=relaxed/simple;
-	bh=0uQcPfUf/QaYqIILQ0UsYx/TXlP/if/K5oZF6l/9Nk0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AZxoWuAG0zS2K03oR/1UkV+kx8OUFPD1tIX5xEaC0VX533MPfnyHjJRoi7saqKBSYDvIDKjI5USUTq0J1EKlKO70JbDIfRhf9hcqxSS2LLK6LiziFIkgAJA5s2puLPjpOOklcLHdOqUo7hMJqEejCjvbv5B0GPdpPgPd7OlVZr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q66O3dTV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749830980; c=relaxed/simple;
+	bh=bURaKvfe9SxljqTl8ZNfTZFqvIAxyx0oqsFKHm0HimE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S+zHDGqX8lYfKJQmGlXQNQMYz/rj/Y8wXJSKT71n5s5xhdH/NC3uu4IQxCwr7UobAjMgi95GfrN0OQa91cfxkV6Wc4tqD/bMfkgzL4mfTJ9T8o3/OdYrCXwpTC9ouldVGygf9E6b8W9596xD467rTxJj77qsygR3+yLVHQgSDoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kYIFwfMi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5Tz6VQ8a; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q66O3dTV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1716C4CEE3;
-	Fri, 13 Jun 2025 16:09:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749830968;
-	bh=0uQcPfUf/QaYqIILQ0UsYx/TXlP/if/K5oZF6l/9Nk0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=q66O3dTVhRbpTqaOMWsrr2u7nzUro4zKOSpfMWQjW2fMWlLtZUgXxKyn2HJtxdCa/
-	 1nXZjPYsdMDRwSZmIFhTK9cPqXq1UW9RWQnksydccB6QTZzZatMD9AWeOfDLsyBe2G
-	 OJOsMR77rjuqd/VZSgAjm3LrP+bdknLDBRhEQasLdALWWbjS6Uz3j3YlStDmobzVQE
-	 l+kF3M4da1mWun0wi5bjWWZLuJYvNCDU5hp1szFeYXQS60Ek/DekIoFSqfRwDhEA+4
-	 XVlqGiuSaM2PzYI8drspr/slO8gS24zyriCv0eIWOyDuykeitqB7Ov4/TgPs2JBh+q
-	 5RiouWSalOtow==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: linux-kernel@vger.kernel.org, 
- "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: tglx@linutronix.de, Bjorn Helgaas <bhelgaas@google.com>, 
- linux-pci@vger.kernel.org
-In-Reply-To: <20250611104348.192092-16-jirislaby@kernel.org>
-References: <20250611104348.192092-1-jirislaby@kernel.org>
- <20250611104348.192092-16-jirislaby@kernel.org>
-Subject: Re: (subset) [PATCH] pci/controller: Use dev_fwnode()
-Message-Id: <174983096525.53497.73284340599924461.b4-ty@kernel.org>
-Date: Fri, 13 Jun 2025 21:39:25 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kYIFwfMi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5Tz6VQ8a"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749830977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cnN2wDLdCnEWeBVo2iLPm2cmeNWXSxWE9M4pDJxs7wk=;
+	b=kYIFwfMiiYo6SpRBNIrHBFwidOWIu+qGzGvProKGuiOm/fjV/e/QPUxPfS0HsdEhfNdHB5
+	ZjpoQhaHWfkKU3ThPMujnbZHFrq+EZwZtTwkKSR/4P1LV7J6YHO88FpQh5zhoNrsUzwpk1
+	M/b6CKeAk5fkkaLcBwQ0l9vfsVxGDSoO+Wvu1IQyb6jTI6it0TlwMIjpgcdqvqt9055sDT
+	+B9ypj2Kr1M+Yk2IGNIs4SQXLKQTKQ+fstqY+PrZnKBF55v2jGyoPCE89GJxagM0QeL+VO
+	dT8xqaFdPjGFBEQ5CCFKMfbaSdsTh1QdbtI+Bw+R+Jysqs/AUEif+3jnwA88Yw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749830977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cnN2wDLdCnEWeBVo2iLPm2cmeNWXSxWE9M4pDJxs7wk=;
+	b=5Tz6VQ8aketHnFPrAdoqlE0d5hhk95bq56XeYrU0SX65v4poN5yFdxnVDw8Z5MU2YITCtZ
+	2Lhe0c6XlyNY9TBg==
+To: Khalid Ali <khaliidcaliy@gmail.com>, peterz@infradead.org, luto@kernel.org
+Cc: linux-kernel@vger.kernel.org, Khalid Ali <khaliidcaliy@gmail.com>
+Subject: Re: [PATCH] kernel/entry: Remove some redundancy checks on syscall
+ works
+In-Reply-To: <20250611114810.785-1-khaliidcaliy@gmail.com>
+References: <20250611114810.785-1-khaliidcaliy@gmail.com>
+Date: Fri, 13 Jun 2025 18:09:36 +0200
+Message-ID: <878qlvipxb.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
+On Wed, Jun 11 2025 at 11:43, Khalid Ali wrote:
+> There is a redundant checks of thread syscall work.
 
-On Wed, 11 Jun 2025 12:43:44 +0200, Jiri Slaby (SUSE) wrote:
-> irq_domain_create_simple() takes fwnode as the first argument. It can be
-> extracted from the struct device using dev_fwnode() helper instead of
-> using of_node with of_fwnode_handle().
-> 
-> So use the dev_fwnode() helper.
-> 
-> 
-> [...]
+Not really.
 
-Applied, thanks!
+> After we read thread syscall work we are checking the work bits using
 
-[1/1] pci/controller: Use dev_fwnode()
-      commit: 91afe85f4b282712231df9061a4528db51ce3c3b
+We are doing nothing. Please write your changelogs in imperative mood
+and do not try to impersonate code.
 
-Best regards,
--- 
-Manivannan Sadhasivam <mani@kernel.org>
+> SYSCALL_WORK_ENTER and SYSCALL_WORK_EXIT on syscall entry and exit
+> respectively, and at the same time syscall_trace_enter() and
+> syscall_exit_work() checking bits one by one, the bits we already checked.
+> This is redundancy. So either we need to check the work bits one by one as I
+> did, or check as whole. On my prespective, i think the way code is
+> implemented now checking work bits one by one is simpler and gives us
+> more granular control.
 
+That's just wrong and absolutely not redundant. Care to look at the
+definition of SYSCALL_WORK_ENTER:
+
+#define SYSCALL_WORK_ENTER	(SYSCALL_WORK_SECCOMP |			\
+				 SYSCALL_WORK_SYSCALL_TRACEPOINT |	\
+				 SYSCALL_WORK_SYSCALL_TRACE |		\
+				 SYSCALL_WORK_SYSCALL_EMU |		\
+				 SYSCALL_WORK_SYSCALL_AUDIT |		\
+				 SYSCALL_WORK_SYSCALL_USER_DISPATCH |	\
+				 ARCH_SYSCALL_WORK_ENTER)
+
+So this initial check avoids:
+
+    1) Doing an unconditional out of line call
+
+    2) Checking bit for bit to figure out that there is none set.
+
+Same applies for SYSCALL_WORK_EXIT.
+
+Your change neither makes anything simpler nor provides more granular
+control.
+
+All it does is adding overhead and therefore guaranteed to introduce a
+performance regression.
+
+Not going to happen.
+
+Thanks,
+
+        tglx
