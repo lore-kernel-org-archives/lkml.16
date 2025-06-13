@@ -1,147 +1,120 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495B52DA74D
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2DD2DA742;
+	Fri, 13 Jun 2025 07:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749801484; cv=none; b=A4TptfOe3oYn1HJl04jrv+8sATXEESwCo26RgZT4SxGM761Nzm2nnfBHOiptProAelzjammY2QFSKfoxnzIbhfPEbyxEGfL6JlVxbaZBmsfiB/QUMzF4M2C3fq09pxH4hkVSNzyXdOd2JjHKUxJyfK3z1nizFVJ6rfqSy+SyUs0=
+	t=1749801581; cv=none; b=TI5JoT72FHb5MxE3xRK9OHtUl5R2z2woLgGqQBxcigg/AOXe/NMgELm2cSaKTeKjKVjVFT55WTuVc6fCkdcJ/6bQdfwPucnTpMePwpnOQni72RVcMpb5ukLcIQdAZeOyQQ046CUmLl+fW5iOmueSQ+vYW8OWT/aVoSRFoSO+6UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749801484; c=relaxed/simple;
-	bh=QqKEj8d/6nhYZGpndkGRC6psU7P4KEDelUr5aNfYhQU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=rBnOVHEnVRMqGtMDl888RhVwZiL2VyuXLfmX5ZS1GJoEOcEu96qcUAbI78+TyUdlZ1/ZQ9zZx+oZ6YocnT3nYiViVia9pbiXhdPgQRZWxW10jXlO+GZHL80PpcNKHkPE0g22V8LNkSdx5ANbGN5eVZXsL8ndNCSWFJ+BYkEelpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=sG6q1yao; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1749801581; c=relaxed/simple;
+	bh=McDt6/W+t7nlPCwsFeEXv6YFx0GXNZG7meU5GlM6UyE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=fU7+cGQFcYrwhMynFJIpLCJ39R4bgc4FJ3iNcBkzFWwrfNX6sgzA+0SU6tHs9mPT0lzILFKRGPUt7xu5PMt8WlExms9jpzIMdp36k2i7M8UdoIk66YVVEnR8Zr037FqKOTCQhk+FgYy/ZWP3PguU6rVknxRI46zJkoz8Q/0N2ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FR0rsQrz; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="sG6q1yao"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FR0rsQrz"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55D7x5GN3711682
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 13 Jun 2025 00:59:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55D7x5GN3711682
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749801546;
+	bh=lbnQwynTa/B6ZoSlC7JbFa7/kdYpKx5Fq7CDYo42JEY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=FR0rsQrz+GJ0X6w+v6ybM29Adieb6GyuGSj/+DCrAaPMLMhdr2RxLyM98R/WJXO5Y
+	 irvf/z0IgWrYzUromQG4KYMG3tfVag5PWpeM4kJqDfDkYIvTXEZVNtlmjU8f/vl+Vq
+	 EzE4+aS/Dh3hGdY80Sp7m+hu4/TWQFXvSXBtx/UwQp66CcPaprw5nbhpUT6B8FYu6T
+	 Bs4pSMJappNvXsfwzoU2mXKBdWigwy+gRXLkW5ovueyfyLTEfsoKNNM/9H2dHaGyAf
+	 qlXRVYOoqrbVyZrD6X0FvMb9IcUOATIr2tMaB210kJYuv30tdDQZnv+yPz9kZbc2Ke
+	 Yz0ii9Kyn2aGQ==
+Date: Fri, 13 Jun 2025 00:59:04 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Xin Li <xin@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+CC: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, seanjc@google.com, pbonzini@redhat.com,
+        brgerst@gmail.com, tony.luck@intel.com, fenghuay@nvidia.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_2/3=5D_x86/traps=3A_Initialize_D?=
+ =?US-ASCII?Q?R7_by_writing_its_architectural_reset_value?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <f5ceeceb-d134-4d51-99d1-d8c6cfd7134f@zytor.com>
+References: <20250613070118.3694407-1-xin@zytor.com> <20250613070118.3694407-3-xin@zytor.com> <20250613071536.GG2273038@noisy.programming.kicks-ass.net> <f5ceeceb-d134-4d51-99d1-d8c6cfd7134f@zytor.com>
+Message-ID: <310B2567-8680-4E1D-B1BB-A56809466ED4@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1749801470;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L+YN4MTZBkTzMLCaO2wC4gmmUGZnS4C1FG9BefD5M2o=;
-	b=sG6q1yaomuV3OMNUoQqhkbuH1Xcj2p7del+A7bay2fusZru9OEE8vWFR9UthMbY3VpLLfI
-	FUolafPTe92AVJjXi4pi5inFQskTUn+5VcHL1uolO93tIKvk8tlCvfrwE0e3akdsHhcC8V
-	xULhpn0qpRQt3dVp2ppv0jcfC8bE3yRFWAhE3OIwjSlJd+fb0tB+Svm/dPDtaN8FVUic8Q
-	AlUuSwdrSq1M+QGe+Yic0cPdymG4mu6zz0PJ+rqKgAXWDJlPscQ3e8bvOMPMPVcUGhiwnQ
-	jVaBmQpd3KW1TkF59UGitXhqsK7wY8V8Q1vheo3YthkTxgD8q+/QVo+u1ZZMvg==
-Content-Type: multipart/signed;
- boundary=8d0444eb434897e482c102aa76e1f2eca706077e00be5351cd2962a65c42;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 13 Jun 2025 09:57:32 +0200
-Message-Id: <DAL8UI7TH6IJ.2EVGYOYRQSS89@cknow.org>
-Cc: <linux-crypto@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, "Corentin Labbe" <clabbe@baylibre.com>,
- <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/7] crypto: testmgr - replace
- CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Eric Biggers" <ebiggers@kernel.org>
-References: <20250505203345.802740-1-ebiggers@kernel.org>
- <20250505203345.802740-4-ebiggers@kernel.org>
- <DAJOCL4UQWZ1.2CB0NH55US5EI@cknow.org> <20250611163430.GA1254@sol>
-In-Reply-To: <20250611163430.GA1254@sol>
-X-Migadu-Flow: FLOW_OUT
-
---8d0444eb434897e482c102aa76e1f2eca706077e00be5351cd2962a65c42
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-On Wed Jun 11, 2025 at 6:34 PM CEST, Eric Biggers wrote:
-> On Wed, Jun 11, 2025 at 01:41:06PM +0200, Diederik de Haas wrote:
->> On Mon May 5, 2025 at 10:33 PM CEST, Eric Biggers wrote:
->> > The negative-sense of CRYPTO_MANAGER_DISABLE_TESTS is a longstanding
->> > mistake that regularly causes confusion.  Especially bad is that you c=
-an
->> > have CRYPTO=3Dn && CRYPTO_MANAGER_DISABLE_TESTS=3Dn, which is ambiguou=
-s.
->> >
->> > Replace CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS which has t=
-he
->> > expected behavior.
->> >
->> > The tests continue to be disabled by default.
->> > ---
->> >  <snip>
+On June 13, 2025 12:51:31 AM PDT, Xin Li <xin@zytor=2Ecom> wrote:
+>On 6/13/2025 12:15 AM, Peter Zijlstra wrote:
+>> On Fri, Jun 13, 2025 at 12:01:16AM -0700, Xin Li (Intel) wrote:
 >>=20
->> I built a 6.16-rc1 kernel [1] and its config is based upon Debian's and
->> that has enabled CRYPTO_SELFTESTS [2] (due to Debian bug 599441 [3]).
+>>> While at it, replace the hardcoded debug register number 7 with the
+>>> existing DR_CONTROL macro for clarity=2E
 >>=20
->> I then installed it on 3 Rockchip based devices and booted into that.
->> 1. Radxa Rock 5B (rk3588)
->> 2. PINE64 Quartz64 Model B (rk3568)
->> 3. PINE64 RockPro64 (rk3399)
+>> Yeah, not really a fan of that=2E=2E=2E IMO that obfuscates the code mo=
+re than
+>> it helps, consider:
 >>=20
->> The filtered dmesg output for Rock 5B:
->> ERROR:
->> [    0.709822] basic hdkf test(hmac(sha256)): failed to allocate transfo=
-rm: -2
->> WARNING:
+>>> -	get_debugreg(dr7, 7);
+>>> +	get_debugreg(dr7, DR_CONTROL);
 >
-> https://lore.kernel.org/r/20250610191600.54994-1-ebiggers@kernel.org/ fix=
-ed the
-> HKDF failure.  It was caused by a patch that changed initcall levels.
+>Actually I kind of agree with you that it may not help, because I had
+>thought to rename DR7_RESET_VALUE to DR_CONTROL_RESET_VALUE=2E
 >
->> [    8.877288] alg: skcipher: skipping comparison tests for xctr-aes-ce =
-because xctr(aes-generic) is unavailable
+>Yes, we should remember DR7 is the control register, however I also hate
+>to decode it when looking at the code=2E
 >
-> That's expected if you have CONFIG_CRYPTO_AES_ARM64_CE_BLK enabled but
-> CONFIG_CRYPTO_XCTR disabled.  Some tests are skipped in that case.
-
-Happy to report that with that patch and that config option, the error
-and warning are now gone. Thanks :-)
-
-PULL request for the patch is already sent to Linus:
-https://lore.kernel.org/linux-crypto/aEupSzhTI4h8kz-5@gondor.apana.org.au/
-
->> [   14.172991] alg: ahash: rk-sha1 export() overran state buffer on test=
- vector 0, cfg=3D"import/export"
->> [   14.202291] alg: ahash: rk-sha256 export() overran state buffer on te=
-st vector 0, cfg=3D"import/export"
->> [   14.230887] alg: ahash: rk-md5 export() overran state buffer on test =
-vector 0, cfg=3D"import/export"
 >
-> That means the Rockchip crypto driver is broken.
-
-The crypto driver for rk3399 is still broken.
-
-> Anyway, the more interesting part of your email is that you pointed out t=
-hat
-> Debian has the crypto self-tests enabled, precisely in order to automatic=
-ally
-> disable buggy drivers like these.
+>>=20
+>> and:
+>>=20
+>>> -	for (i =3D 0; i < 8; i++) {
+>>> -		/* Ignore db4, db5 */
+>>> -		if ((i =3D=3D 4) || (i =3D=3D 5))
+>>> -			continue;
+>>> +	/* Control register first */
+>>> +	set_debugreg(DR7_RESET_VALUE, DR_CONTROL);
+>>> +	set_debugreg(0, DR_STATUS);
+>>>   +	/* Ignore db4, db5 */
+>>> +	for (i =3D DR_FIRSTADDR; i <=3D DR_LASTADDR; i++)
+>>=20
+>> I had to git-grep DR_{FIRST,LAST}ADDR to double check this was correct =
+:(
+>>=20
+>> Also, you now write them in the order:
+>>=20
+>>    dr7, dr6, /* dr4, dr5 */, dr0, dr1, dr2, dr3
+>>=20
+>> My OCD disagrees with this :-)
+>>=20
 >
-> So I'll send a patch that adds back a kconfig knob to run the fast tests =
-only,
-> which I had removed in commit 698de822780f.
+>The order of the other debug registers doesn't seem critical, however
+>the control debug register should be the first, right?
+>
+>Here I prefer to use "control register" rather than "dr7" here :)
+>
+>Thanks!
+>    Xin
 
-I responded about this to a new patch submission here:
-https://lore.kernel.org/linux-crypto/DAJXJHLY2ITB.3IBN23DX0RO4Z@cknow.org/
-and v2 of that patch can be found here:
-https://lore.kernel.org/linux-crypto/20250612174709.26990-1-ebiggers@kernel=
-.org/
+That's the real issue here, 7 is the control register and 6 is the status =
+register; 4-5 and 8-15 don't even exist=2E=20
 
-Cheers,
-  Diederik
+But we want to reset the control register first=2E
 
---8d0444eb434897e482c102aa76e1f2eca706077e00be5351cd2962a65c42
-Content-Type: application/pgp-signature; name="signature.asc"
+Incidentally, do you know the following x86 register sequences in the prop=
+er order?
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaEvZ9AAKCRDXblvOeH7b
-bgePAP4+kEWYKZ1eqayKsFe8tBfUVxnfdStRKU8Qr/95saO95wEApLF/txTDorHT
-OXmTzRTcsInQy9LVjH2/+08cAly/KQs=
-=NvpI
------END PGP SIGNATURE-----
-
---8d0444eb434897e482c102aa76e1f2eca706077e00be5351cd2962a65c42--
+ax, cx, dx, bx, sp, bp, si, di, =2E=2E=2E
+al, cl, dl, bl, ah, ch, dh, bh
+es, cs, ss, ds, fs, gs
