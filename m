@@ -1,193 +1,302 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7742E3382;
-	Fri, 13 Jun 2025 11:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC992DFA2F
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814838; cv=none; b=CnJxUG2X9JE4s8JgvMiCdLgs/KyemY2aFOgPKtxd8YftJ3HHPvjAxPVUoVM4/90NLEAz7U6kHoSxgh3nqMn4d9aX9wdyg3frBYhrjZQSl6Y3bO6v3Uw33X8/Wl6zI5g09CtUrOSfETrdEcKF4EgnkOkFWtvfWykWO3K9lyFAGQo=
+	t=1749814859; cv=none; b=ltTxUOSHflOIPECCd5qFyWIZ6Xad7cyFEALq0O5Qt6sBKXYIlXGLE4BcWF4IqpEkP4TfQkghDoEKRMzULg4TMbH77IzoDj3SeEmf0aszMYU9ZtY7z1f8iKfapSLtsfNJnQ/msZOfe/rcFmKqN/7CALSlf7v1BMv2+cPGlO/SPqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814838; c=relaxed/simple;
-	bh=9lS0GiXIw36VpD4gMDnScr1Wznlsy2mbXpLBMqfdVPU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VnrBu7l22VPQVJLajJ2Tv1QkVs+fivCCt/Z/XnIJSc2XCUYLv1r8MFM5aHl7IASUZOQTRnePQfq6CddXOfaE8uoOQ7rKbCP5GW9/JWIf3ebTUBGzzuiDTUG7DElCKZplDw7DbtYjlms5OiN4eAbyv6Y7YGbwtesMMDsr3afFBIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QtzO2G90; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749814859; c=relaxed/simple;
+	bh=3uw5VUh/DqhrYkitcO3Ub7yKF46Sf6kT9VPpjmbdVok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eea/0oMUbzG8xLe7KPVTcd1xEJ2U2qb3nkNYn5ii3Abnh2ajLGRJifTLLXMpapvRTb7VokTo5ofGLfuFLZuSPdOm1QgfqZj5l9XhaXqB7bEP99cdbK2Jrm+JBw6j4OisPSh5C7rWCTVMbq4tHs/+PAU8ThuTpNYKXqGwfrH/x30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fGRcHaVg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NWneG4sG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fGRcHaVg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NWneG4sG; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtzO2G90"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso1268973f8f.0;
-        Fri, 13 Jun 2025 04:40:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749814834; x=1750419634; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pM0Osg+lhhh0k6/BGrJyYjnMbn6UNRn2yJYDdy0tDD8=;
-        b=QtzO2G9037exkYzaV7T6lqx4rfQaBGeoEh8sbJXE+JOVyhh2hXfLKNlYekgi/zG6uJ
-         IalAxUbRYzwTaSdzdnlYYXSiLE/NV1z1zOG4kJqnJKGV3u0yGR13zq9AItg6qv+6m7Jl
-         2PswuAR2Ie9t+wxucMnqtqwR2OUObfwh3vknz4jw0cZxT1qw1MaNXhDzUOLqJSqbQB1w
-         NnsiAGkhbOu3sv8GJqYxcMGXshK8Lowk7wuarHHdM53bXI82kGxe3VrjUFpKGzTgHGjA
-         Kf2xDTLv8YtNfshRsf0e6KXJQT6qyNFKyraaqRcpNLLpIJvrP00q6u68oYXE4w6zXxpt
-         i9dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749814834; x=1750419634;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pM0Osg+lhhh0k6/BGrJyYjnMbn6UNRn2yJYDdy0tDD8=;
-        b=m0pYkqSK4Vbc4LqpUPTj7k35uCQ5StstCOtNOByTyIk8rD2yyDfQocT5WtWCfhOZCZ
-         vBit0Kl1gZmdbiZqRNEblMLzsw1AS/RiXxCtGZq3AxhpcEvd9CgTgf8ndqsxK/Bousis
-         u6CPj14XPQH8778+qxF67ma5sntw+RIlMoGAwRTJLPn0o+FwimelJ1SIw2saw9I7yDmT
-         IeTvMhPcc99f26dtJuJNzyFMnZofcUtGrTSjf28Lc1RHhKnl52QQhg07pRLIXnODsYyA
-         1jlPCD5oBuYQSm1n9lZI7o7OYNLi+8Bl4M/WODnBOge87M/O1hOKsqjnGZpYw3zyTNsw
-         rfPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYRASMMmES0AZxbE/MukTSgxhKwFYvcOGxWrMyKhhH5VHapYxOEm/mlUOSiBEF1zDLe57RChTFV10i+vuC@vger.kernel.org, AJvYcCWkN6CNOOZVFffXdvnJErurGS6yHQbV1POWvPLRJ7LWgkspIaB16NKSU8AitWwX4TG3iVBEWO8TWTqD@vger.kernel.org, AJvYcCXKP9d8LlDdpi0SEEyPTKtkuuuYjqS4t0w9rzB91h6/WcIcS31Zhfwi8wKUCJqGXErY/JEM60/Z2UYU@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkDHBdlBgC5M3/7DLOLfBaF+U/MFwSLTpPEyH7Zu0yTACG9oEu
-	mkDY/pt34vHi8j34es/l+Cfpzzsxgq1+niXskJiUwKO9JMJN9z55T0PG
-X-Gm-Gg: ASbGnctrFnMkPHEK7nAbmJmKR+nHDsFTXmPkQ9PxNi8MbQ8FI2jxNK9PdiMl15AOlUL
-	Ho19qWezf2p+5EfYgxag9cUrqg5mdZaxkVs0y9Zb94esPVgVR3FtPJ9XmSTyE4oxhOsby0diMCe
-	u9ktGyRHlIBK8gI0QMKKT4A5u+X6vHhT7KCRgXu6NdU/uc0X6mvOu7nJJg5eobGUQhM94S8rGIw
-	qBkSyPs+gY1WijosEgpoQun05PQfg2O9oyxl0qhvGim3BssRolInn5VxCQhENCMZvz94t3AJNwm
-	UzK0jhjwC2odWuanHcpz0NLN+5BzVa8bnouZw5dF1XNKzgEN4pMSgEZ101vc/X84oKZUMq6XcY5
-	HQrTCr88ASA==
-X-Google-Smtp-Source: AGHT+IH2b69X7a0iHgBxSKN3rcmFhqIpiVER5rJBn/NY6jmoGearML0USBYLxKWCBzs62ngEwLKe0Q==
-X-Received: by 2002:a5d:584c:0:b0:3a4:eef5:dece with SMTP id ffacd0b85a97d-3a5686f4977mr2464737f8f.35.1749814834379;
-        Fri, 13 Jun 2025 04:40:34 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:2c2d:5496:6768:592])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54aeasm2171519f8f.14.2025.06.13.04.40.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 04:40:33 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 6/6] i2c: riic: Add support for RZ/T2H SoC
-Date: Fri, 13 Jun 2025 12:38:39 +0100
-Message-ID: <20250613113839.102994-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250613113839.102994-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250613113839.102994-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fGRcHaVg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NWneG4sG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fGRcHaVg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NWneG4sG"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2DE2321749;
+	Fri, 13 Jun 2025 11:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749814855; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Ui+2NR8PHPMbz98Hu9Hxy1TPwrhV0ozwjHMRatemvYY=;
+	b=fGRcHaVgvbrdC12QLl5Tu3zycV9x8IvnsIYiepRSZ0eD+YtLWAx6tiqzhne+TSEOWwECLs
+	ScbGUFNNwFvMuqlhcwA5Md7l8f4G1mh0QVvYrM+wMCq445n8arXDPsyK2mKyx5lg948dW3
+	5F+nvKCMfV3BWGsnlRIi/HZL6878hPk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749814855;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Ui+2NR8PHPMbz98Hu9Hxy1TPwrhV0ozwjHMRatemvYY=;
+	b=NWneG4sGCSXJqDTn15f24iNneFd4DMcDjL2Xq9tb7igXbSxP/g6EzcZmuoyrPStFpbqcuj
+	TwfC9DWon/94OlBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749814855; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Ui+2NR8PHPMbz98Hu9Hxy1TPwrhV0ozwjHMRatemvYY=;
+	b=fGRcHaVgvbrdC12QLl5Tu3zycV9x8IvnsIYiepRSZ0eD+YtLWAx6tiqzhne+TSEOWwECLs
+	ScbGUFNNwFvMuqlhcwA5Md7l8f4G1mh0QVvYrM+wMCq445n8arXDPsyK2mKyx5lg948dW3
+	5F+nvKCMfV3BWGsnlRIi/HZL6878hPk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749814855;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Ui+2NR8PHPMbz98Hu9Hxy1TPwrhV0ozwjHMRatemvYY=;
+	b=NWneG4sGCSXJqDTn15f24iNneFd4DMcDjL2Xq9tb7igXbSxP/g6EzcZmuoyrPStFpbqcuj
+	TwfC9DWon/94OlBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BF791137FE;
+	Fri, 13 Jun 2025 11:40:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kOGQLUYOTGh2YgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 13 Jun 2025 11:40:54 +0000
+Message-ID: <51d92681-188e-40d8-bda0-f4ff95eeccd7@suse.de>
+Date: Fri, 13 Jun 2025 13:40:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm: panel: add support for Samsung S6E8AA5X01 panel
+ controller
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250612-panel-samsung-s6e8aa5x01-v1-0-06dcba071ea6@disroot.org>
+ <20250612-panel-samsung-s6e8aa5x01-v1-2-06dcba071ea6@disroot.org>
+ <84ee6388-92af-49c8-988b-b79ed1453d5e@suse.de>
+ <84663a88789b993a1cab8c55af4e03a7@disroot.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <84663a88789b993a1cab8c55af4e03a7@disroot.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[dt];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linaro.org,quicinc.com,gmail.com,ffwll.ch,linux.intel.com,kernel.org,oss.qualcomm.com,lists.freedesktop.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,disroot.org:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi
 
-Add support for the Renesas RZ/T2H (R9A09G077) SoC, which features a
-different interrupt layout for the RIIC controller. Unlike other SoCs
-with individual error interrupts, RZ/T2H uses a combined error interrupt
-(EEI).
+Am 13.06.25 um 13:03 schrieb Kaustabh Chakraborty:
+> On 2025-06-13 09:39, Thomas Zimmermann wrote:
+>> Hi
+>>
+>> Am 12.06.25 um 16:52 schrieb Kaustabh Chakraborty:
+>>> Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Implement
+>>> a basic panel driver for such panels.
+>>>
+>>> The driver also initializes a backlight device, which works by changing
+>>> the panel's gamma values and aid brightness levels appropriately, with
+>>> the help of look-up tables acquired from downstream kernel sources.
+>>>
+>>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> [...]
+>
+>>> +
+>>> +static void s6e8aa5x01_mcs_protect(struct mipi_dsi_multi_context *dsi,
+>>> +				   struct s6e8aa5x01_ctx *ctx, bool protect)
+>> I found this interface confusing. Rather split it up into .  It also does two different things AFAICT.
+>>
+>> - The mcs_mutex protects against concurrent access from update_status and enable
+> mcs_mutex is meant to prevent any early access protection of the MCS commands.
+> Suppose there are two functions, A and B, accessing MCS.
+>
+> ENTRY: A()
+> (access protection disabled)
+> ...
+>
+> ENTRY: B()
+> (access protection disabled)
+> ...
+> (access protection enabled)
+> EXIT: B()
+>
+> [!] cannot access MCS commands here anymore
+> (access protection enabled)
+> EXIT: A()
+>
+> And to avoid such errors a mutex is provided.
 
-Introduce a new IRQ descriptor table for RZ/T2H, along with a custom
-ISR (`riic_eei_isr`) to handle STOP and NACK detection from the shared
-interrupt.
+This mutex protects a lot more than just the access flags. It prevents 
+backlight and enable code to concurrently set gamma on the device. Even 
+if you move the MCS_ACCESSPROT to enable/disable helpers, you'll likely 
+need the mutex around the gamma updates.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # on RZ/A1
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
----
-v2->v3:
-- No changes.
+But there's maybe an easy fix. See that the panel code already calls the 
+backlight helpers in its enable/disable [1][2] functions. They will 
+invoke ->update_status with the proper locking. [3] This means that you 
+shouldn't program gamma in the ->enable callback. Leave everything in 
+->update_status and let your panel helpers deal with it. No need for 
+mcs_mutex at all.
 
-v1->v2:
-- Updated the riic_rzt2h_irqs array to match the order of
-  interrupts as mentioned in the DT binding.
-- Updated the interrupt names in the riic_rzt2h_irqs array to
-  match the HW manual.
-- Added Tested-by and Reviewed-by tags.
----
- drivers/i2c/busses/i2c-riic.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+[1] 
+https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/drm_panel.c#L235
+[2] 
+https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/drm_panel.c#L275
+[3] 
+https://elixir.bootlin.com/linux/v6.15.1/source/include/linux/backlight.h#L318
 
-diff --git a/drivers/i2c/busses/i2c-riic.c b/drivers/i2c/busses/i2c-riic.c
-index d0b975e45595..9c164a4b9bb9 100644
---- a/drivers/i2c/busses/i2c-riic.c
-+++ b/drivers/i2c/busses/i2c-riic.c
-@@ -79,6 +79,7 @@
- #define ICIER_SPIE	BIT(3)
- 
- #define ICSR2_NACKF	BIT(4)
-+#define ICSR2_STOP	BIT(3)
- 
- #define ICBR_RESERVED	GENMASK(7, 5) /* Should be 1 on writes */
- 
-@@ -326,6 +327,19 @@ static irqreturn_t riic_stop_isr(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t riic_eei_isr(int irq, void *data)
-+{
-+	u8 icsr2 = riic_readb(data, RIIC_ICSR2);
-+
-+	if (icsr2 & ICSR2_NACKF)
-+		return riic_tend_isr(irq, data);
-+
-+	if (icsr2 & ICSR2_STOP)
-+		return riic_stop_isr(irq, data);
-+
-+	return IRQ_NONE;
-+}
-+
- static u32 riic_func(struct i2c_adapter *adap)
- {
- 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-@@ -497,6 +511,13 @@ static const struct riic_irq_desc riic_irqs[] = {
- 	{ .res_num = 5, .isr = riic_tend_isr, .name = "riic-nack" },
- };
- 
-+static const struct riic_irq_desc riic_rzt2h_irqs[] = {
-+	{ .res_num = 0, .isr = riic_eei_isr,  .name = "riic-eei" },
-+	{ .res_num = 1, .isr = riic_rdrf_isr, .name = "riic-rxi" },
-+	{ .res_num = 2, .isr = riic_tdre_isr, .name = "riic-txi" },
-+	{ .res_num = 3, .isr = riic_tend_isr, .name = "riic-tei" },
-+};
-+
- static int riic_i2c_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -643,6 +664,12 @@ static const struct riic_of_data riic_rz_v2h_info = {
- 	.fast_mode_plus = true,
- };
- 
-+static const struct riic_of_data riic_rz_t2h_info = {
-+	.regs = riic_rz_v2h_regs,
-+	.irqs = riic_rzt2h_irqs,
-+	.num_irqs = ARRAY_SIZE(riic_rzt2h_irqs),
-+};
-+
- static int riic_i2c_suspend(struct device *dev)
- {
- 	struct riic_dev *riic = dev_get_drvdata(dev);
-@@ -695,6 +722,7 @@ static const struct dev_pm_ops riic_i2c_pm_ops = {
- static const struct of_device_id riic_i2c_dt_ids[] = {
- 	{ .compatible = "renesas,riic-r7s72100", .data =  &riic_rz_a1h_info, },
- 	{ .compatible = "renesas,riic-r9a09g057", .data = &riic_rz_v2h_info },
-+	{ .compatible = "renesas,riic-r9a09g077", .data = &riic_rz_t2h_info },
- 	{ .compatible = "renesas,riic-rz", .data = &riic_rz_a_info },
- 	{ /* Sentinel */ }
- };
+>
+>> - MSC_ACCESSPROT enable access to hardware state.
+>>
+>> Maybe try this:
+>>
+>> - Move msc_mutex into the callers, so that ->update_status and ->enable acquire and release the lock.
+>>
+>> - Move MCS_ACCESSPROT into ->enable and ->disable and leave it accessible, if the hardware allows that.
+> Yeah this is a good idea, I'll try it.
+>
+>>> +{
+>>> +	if (protect) {
+>>> +		mipi_dsi_dcs_write_seq_multi(dsi, MCS_ACCESSPROT, 0xa5, 0xa5);
+>>> +		mutex_unlock(&ctx->mcs_mutex);
+>>> +	} else {
+>>> +		mutex_lock(&ctx->mcs_mutex);
+>>> +		mipi_dsi_dcs_write_seq_multi(dsi, MCS_ACCESSPROT, 0x5a, 0x5a);
+>>> +	}
+>>> +}
+>>> +
+>>> +static int s6e8aa5x01_update_brightness(struct backlight_device *backlight)#
+>> Maybe call this function s6e8aa5x01_update_status() to match the callback.
+>>
+>>> +{
+>>> +	struct mipi_dsi_multi_context dsi = { .dsi = bl_get_data(backlight) };
+>>> +	struct s6e8aa5x01_ctx *ctx = mipi_dsi_get_drvdata(dsi.dsi);
+>>> +	u16 lvl = backlight->props.brightness;
+>> backlight_get_brightness() here ?
+>>
+>>
+>> I think you should also check panel->enabled and return if false. AFAIU there will be no gamma changes on disabled hardware anyway.
+>>
+> The enable function is never executed when the panel is disabled. This is
+> because flag checking is done by drm_panel anyway. See drm_panel_enable()
+> in drivers/gpu/drm/drm_panel.c [1]
+
+What I mean is: the drm_panel.enabled flag is set at [4] and cleared at 
+[5]. It tells you that the panel is running. If someone tries to update 
+the backlight brightness while the panel is not enabled, you likely what 
+to return here without touching hardware.
+
+[4] 
+https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/drm_panel.c#L285
+[5] 
+https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/drm_panel.c#L233
+
+>
+>>> +
+>>> +static int s6e8aa5x01_probe(struct mipi_dsi_device *dsi)
+>>> +{
+>>> +	struct device *dev = &dsi->dev;
+>>> +	struct s6e8aa5x01_ctx *ctx;
+>>> +	int ret;
+>>> +
+>>> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+>> You're possibly using the instance after the hardware device has been removed. Alloc with drmm_kzalloc() or you might end up with UAF errors.
+> Hmm, none of the panel drivers are using drmm_kzalloc(), or even any
+> drmm_*(). Are you sure I must use it?
+
+Then leave it as it is. Maybe one of the panel maintainers can confirm.
+
+I still don't trust it to not possibly blow up. devm_ is released when 
+the hardware device goes away.
+
+Best regards
+Thomas
+
+>
+>>> +	ret = devm_mutex_init(dev, &ctx->mcs_mutex);
+>> You're taking this mutex in DRM code, so rather use drmm_mutex_init() here.
+> (The comment by me above applies here too)
+>
+>> Best regards
+>> Thomas
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/gpu/drm/drm_panel.c#n209
+
 -- 
-2.49.0
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
