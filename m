@@ -1,105 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8972C2E7F36;
-	Fri, 13 Jun 2025 11:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA1C2ED873;
+	Fri, 13 Jun 2025 11:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814967; cv=none; b=oQ8D+JwpeBJcbdURAx888kmdrAOfEwZLyDC7mw7RE+eDaCPzJcO4/r74dc2ycDXwv6paiYdJcztiG081Cjb0fCWvnc23X/0u3bhW8iT1b+gSjn1iVRRPiyyBrRDAKjFgzs2GXbOpXAw9yV9Y6kvIsrf+ztIStWLeibk+zGxTi/I=
+	t=1749814975; cv=none; b=fDtXGdtJysQAlkawrRuSlWu1IOGGERvDEMtwosM82unm4qY+WzuVSWRLOJZ3MFkZ3gAzFjMSHWlRq+DfmtTNeYaOhs6MiWzmkGzLOeKuq2k9m6nk84IABn2SAaL6q3KsVO6wYl3ZALPMgoe+xy7mPdH88OHnuZ6wxTRHdGh+aRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814967; c=relaxed/simple;
-	bh=qdx5eLFhJs3mwB2br6zWhdyUu0aQq9T5BmAjQqI3pSk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BCMOihGies2BUU/SdMqFvtqxEoLnt0rQ5yP/Sol9G9c3vPVat4MLgi+Oasftj1+DNRiJHJfvPuA1HtDyYvmjBfdjPV+fILFUYydnWJq7hagQwJBVMmpURmrqZPxAQhRrZkI5IUGIGFd+FCcBpaAcdalobttGqwX1ERcngIFL9bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMFGL2LM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749814975; c=relaxed/simple;
+	bh=pCBlCuG9Neif5IPi1RmChNHeLoVqg6sWDPGO2L3rdng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fBNJNhTX3N9w7Cpitd68ES3hArJgAVgRoyjdmJJaVYWN5SEzpb4PF31fZ3h/+2/WLpyfiHEOcbAAcZGJG/UefsQ+A41dku+YWX1Z/iVVPFbSJdhuF4SdPsSj2Rvc4Fut5RMQlEroh3cVBHsb6U0xl75Nm5SJYpIIcd8HqUICSI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvz6J9l6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMFGL2LM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA28C4CEE3;
-	Fri, 13 Jun 2025 11:42:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvz6J9l6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5871AC4CEE3;
+	Fri, 13 Jun 2025 11:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749814967;
-	bh=qdx5eLFhJs3mwB2br6zWhdyUu0aQq9T5BmAjQqI3pSk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tMFGL2LMp6jcV5y3OjWE1cneuwdj/V41scMM0iuDv5YGDEbEw0TEbmpgLm9ihPPzr
-	 QuL3oTW6HiBiU5Gn8A17+/gDWwFj/1+uSGc3N/NfMvuWht2VkizyXieWpsFwULRlLM
-	 13Z+fTR4+4L1BEuQHrU4uVhCw1C4Ly3r4nXB97r1O+y7HzI7zjc3Xw0jxXC5cPYUS1
-	 wpUuSmYwJXIm5Tn1aA2B5RC1DFJV1GaPh3e9TaRpyJz2gIH7eQKCnKDXAVRvG8bIYC
-	 Tzbq/0ymJ6REa32YPq+ItHq2iA6hec4XPG3ZPYDJ00hRRE0OWyuSHtXD0HMvt1uuot
-	 pfzocEgnH4FQg==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uQ2o1-00000005dFe-1WGD;
-	Fri, 13 Jun 2025 13:42:45 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>,
-	"Breno Leitao" <leitao@debian.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Donald Hunter" <donald.hunter@gmail.com>,
-	"Eric Dumazet" <edumazet@google.com>,
-	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
-	"Jan Stancek" <jstancek@redhat.com>,
-	"Marco Elver" <elver@google.com>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	"Paolo Abeni" <pabeni@redhat.com>,
-	"Ruben Wauters" <rubenru09@aol.com>,
-	"Shuah Khan" <skhan@linuxfoundation.org>,
-	joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev,
-	netdev@vger.kernel.org,
-	peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: [PATCH v3 15/16] MAINTAINERS: add maintainers for netlink_yml_parser.py
-Date: Fri, 13 Jun 2025 13:42:36 +0200
-Message-ID: <6de10a419ab9740030f9508e6e913639953cc656.1749812870.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1749812870.git.mchehab+huawei@kernel.org>
-References: <cover.1749812870.git.mchehab+huawei@kernel.org>
+	s=k20201202; t=1749814975;
+	bh=pCBlCuG9Neif5IPi1RmChNHeLoVqg6sWDPGO2L3rdng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kvz6J9l61wbBCQv3BuKWM9TEx1ApP+hCbHvp9m6ZDvH+nkMvLxD02kCYauL4MOrX2
+	 /Pm2kofSDJn2ZLpRDuC1RLr3zB2dWuzrehvtqe/PPhNrAEs5R8nVZ4ZZJqK3vM5bm5
+	 fXZl78J2QwO+Zptb7Oxn7sODSQ7jPwl48e6Bh8YtWG1JnsQmXFx5kHE4SXclLpxowp
+	 zUceEWFeMTK+QqaQx/ynqmxycQotIZYSahdp0kFE4I5FCT9CVCHfFo15vwAsvAIT96
+	 GPXHtJwXtN0UuRAUA3ZieY0+delpZXtnr+D5yLkPf02wC9URgQnR/f26LG9t5wYEkH
+	 FFLXlewdNLsdA==
+Date: Fri, 13 Jun 2025 17:12:48 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: grwhyte@linux.microsoft.com
+Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com, 
+	code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+Message-ID: <ccclacbxzdarqy27wlwqqcsogbrodwwslt7t5sp64xvqpa3wsl@xs5cllh7a6ft>
+References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+In-Reply-To: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
 
-The parsing code from tools/net/ynl/pyynl/ynl_gen_rst.py was moved
-to scripts/lib/netlink_yml_parser.py. Its maintainership
-is done by Netlink maintainers. Yet, as it is used by Sphinx
-build system, add it also to linux-doc maintainers, as changes
-there might affect documentation builds. So, linux-docs ML
-should ideally be C/C on changes to it.
+On Wed, Jun 11, 2025 at 12:05:50AM +0000, grwhyte@linux.microsoft.com wrote:
+> From: Graham Whyte <grwhyte@linux.microsoft.com>
+> 
+> Add a new flr_delay member of the pci_dev struct to allow customization of
+> the delay after FLR for devices that do not support immediate readiness
+> or readiness time reporting. The main scenario this addresses is VF
+> removal and rescan during runtime repairs and driver updates, which,
+> if fixed to 100ms, introduces significant delays across multiple VFs.
+> These delays are unnecessary for devices that complete the FLR well
+> within this timeframe.
+> 
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+I don't think it is acceptable to *reduce* the standard delay just because your
+device completes it more quickly. Proper way to reduce the timing would be to
+support FRS as you said, but we cannot have arbitrary delays for random devices.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa16..2c0b13e5d8fc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7202,6 +7202,7 @@ F:	scripts/get_abi.py
- F:	scripts/kernel-doc*
- F:	scripts/lib/abi/*
- F:	scripts/lib/kdoc/*
-+F:	scripts/lib/netlink_yml_parser.py
- F:	scripts/sphinx-pre-install
- X:	Documentation/ABI/
- X:	Documentation/admin-guide/media/
-@@ -27314,6 +27315,7 @@ M:	Jakub Kicinski <kuba@kernel.org>
- F:	Documentation/netlink/
- F:	Documentation/userspace-api/netlink/intro-specs.rst
- F:	Documentation/userspace-api/netlink/specs.rst
-+F:	scripts/lib/netlink_yml_parser.py
- F:	tools/net/ynl/
- 
- YEALINK PHONE DRIVER
+- Mani
+
+> Patch 1 adds the flr_delay member to the pci_dev struct
+> Patch 2 adds the msft device specific quirk to utilize the flr_delay
+> 
+> ---
+> v2->v3:
+> - Removed Microsoft specific pcie reset reset, replaced with customizable flr_delay parameter
+> - Changed msleep in pcie_flr to usleep_range to support flr delays of under 20ms 
+> v1->v2:
+> - Removed unnecessary EXPORT_SYMBOL_GPL for function pci_dev_wait
+> - Link to thread:https://lore.kernel.org/linux-pci/?q=f%3Agrwhyte&x=t#m7453647902a1b22840f5e39434a631fd7b2515ce'
+> 
+> Link to V1: https://lore.kernel.org/linux-pci/20250522085253.GN7435@unreal/T/#m7453647902a1b22840f5e39434a631fd7b2515ce  
+> 
+> Graham Whyte (2):
+>   PCI: Add flr_delay parameter to pci_dev struct
+>   PCI: Reduce FLR delay to 10ms for MSFT devices
+> 
+>  drivers/pci/pci.c    |  8 ++++++--
+>  drivers/pci/pci.h    |  2 ++
+>  drivers/pci/quirks.c | 20 ++++++++++++++++++++
+>  include/linux/pci.h  |  1 +
+>  4 files changed, 29 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
+> 
+
 -- 
-2.49.0
-
+மணிவண்ணன் சதாசிவம்
