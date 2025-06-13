@@ -1,119 +1,187 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6281E520E;
-	Fri, 13 Jun 2025 15:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878A61D07BA
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828158; cv=none; b=eLKz9sn0d5knA/2ODFWFGv9CZRMr8jTCVMPno4BlCMs4HRD25TByeN6dMK4LvTI+jqA4tU2WJl199NWHopuR8wq6J04QSuYZ6H/VzZvUVafiHaBjuc5KVOw3s+xbS5cqtrtnIVaSlYcSgUkM8Hh52N10YDOyTpV2FV1yWDGqk3g=
+	t=1749828206; cv=none; b=GzvhtootS1pSNriaT4qt4gj6OCFVQlaa1lcguf18KcbkSsp2m6OOM3Ta4NbaWZIctQksz+ahqrfno98pvGmHFXN2UUqaUeCe754F42pGlICGP9hdDem+tOVsEUJ5beARNwVqTSDpA1HcSVCzGwzgMrTi+LgPQ1ceLmpZs1u5qcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828158; c=relaxed/simple;
-	bh=QuAMBeGQ2NthxFN3VNjQFu2CXw1Za2z7CNe8cfsjUvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oBR/nemC2Nh/dISPMu52ZJbFoCdNSP1pGSHSa1x4NoHJ/bdrFuwDfnae+n2JUJUkvzFQAitFgDvgFLu3M7UH1FwHkjIi84Xc8Lv5WLrVewCdfGhcOue9V+I/hoNQstpdgm9AV6QzBCfQY+yY/KXdTYx3wLRoy/HBZTlXZXCFph4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kbrq/SBC; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749828206; c=relaxed/simple;
+	bh=/hXfFYfBfbotrpQpMR/vgWRHOpzAwTsszsgRbICb1ss=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kdm1cxXBDPC0On/VdsilaAov4saOzugOBygobLBWS3h6WW3RKa6VWgqZe7YODfWuvIxUtd3xRSiZv51Sx4Ye4ofOMb5qOq0I0EEGxY6FIiowajwBTfgsr1ppEvdTTc+1MALVfajQ7JzUyV/hYhfOntyX8xMR5D+Q2VCm97YY4Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aQFYA69B; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kbrq/SBC"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so1836396f8f.2;
-        Fri, 13 Jun 2025 08:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749828155; x=1750432955; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BcIHFVQTMDuqvLaLkwl39PNnrWe/Owh65ZfOe5jO1Qc=;
-        b=Kbrq/SBCrkcsibJ3HkslGAXlCnU/wVuAJ1m1C2wpcABGKsFIbJB05KUeqfpNp8THu5
-         15kfWSzhXkdA4eiudxAJMnPvk4cMHuTdPQDVXf6/zSNIJKAsSqL5lyQaFcA0ts+3OyOh
-         UMGMv/GE3EmR6189dKgQkIdhgYOzmIMB23rbopsqviF0w40neHElKxOC/bM/1dkGA53g
-         C2HT/3RO/IU3cg00krqFJU4zSqK8/oQY18MamGD9IFxcGkOIAmnGwv2l5rG0HALpJSey
-         X/DvOtHEZCy0ClrASpHdRrA54bi43VxBUTacfBjhwEWJyIzf6W6kPkhg5+6pM9amGKkg
-         ht0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749828155; x=1750432955;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BcIHFVQTMDuqvLaLkwl39PNnrWe/Owh65ZfOe5jO1Qc=;
-        b=JYDJEhyhgUC7a5iQwAt34VvOfcbyRJ758CbXThjcm2rabTeBnKNXZvMBjzfbI+vG+6
-         dFyO41ivB8UaYhrD4gY2PFIO53vymMq3nY1CvEB+/H6ci4PBQkr47D+SPUxpbFmI5Gow
-         VNjDFvjAX3GCHTUtR9QV3lkGV7Q7iCjGBmQKV9Qpw/Tfqa08ThA923UmohPXdlAAZG7i
-         gbcE6FLBFAxdq6YfGxh7U2aREifCIQF4AF4Fl/eqNfFMsO6wZH2OegP37t8mtbaD9WW1
-         149KTRQQ2TtABqBz0PILXBPWIiKSEFl/07yN5Tz/J0t0P1BmrHZNP991VhbMOz3QDJAC
-         8PJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTt/yBBjgkL5UlE23s4hywvYzOggM/Eaj7VANwn4JN/6rsQs3OGcs976UbnRmaLM6kTD8FV1b7b4kK@vger.kernel.org, AJvYcCX148Cg8jkPZ+sdYjYmPNDDlYGCAF4AvVM/EVbqpqNiSUlrAkboz0UYsKy6CXBtGI5HaYjIfZlQN+XGBAgQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrXyMwIkm8pln4tblaYtieq1jN8eQAIKRNacgO5U7SdbWxUheq
-	LXxB7PoxufveLPNZybqGk86A4Sl09X5BODDvDJVWjw/0TZB5Fam23CXn
-X-Gm-Gg: ASbGncsbX3G+UrBFQzaeuPKpxHZEHDSyOdzmXrs9XyIYHGPHJeoKUU8tIS/LkSrF+Y7
-	uQBdmiXsRQNGnxWUc5BetxOrmSy5Pw45nKbdMZHOYHRUmQjk7NZWHTxwWmm2ve61d0ChuuZkOVn
-	geWgeE56QM00qF9LUFu3nzrQFXIo2EhEhW/z5Wb16etv+DfTjRUbJD+WBdUGNrVVCBbI/Kl7OpV
-	ZTDlj2OcXjRS23TsxTiluS1ls4Ui/kW2s9wOd+I2+DROqWAk58t1pAmy/H8GkpgPYXk5Aq/f18D
-	D0W1EJCfRdx6lePQogQIg4wXyf6Ygrv6iuzrX4ccfCUgpMhN5Erq+s6EWNnWjQJb3zcD/8tlI8j
-	jafd6X57PFQ==
-X-Google-Smtp-Source: AGHT+IFc+ABLMNEaR+GPS5r6PHlTX/oTAK2MOjfw4O4/Zu8HnZlrHIlZ/Aboh6kvd4TWyPc2p32l3g==
-X-Received: by 2002:a5d:5c84:0:b0:3a4:f55a:4ae2 with SMTP id ffacd0b85a97d-3a572e92c50mr97547f8f.50.1749828154726;
-        Fri, 13 Jun 2025 08:22:34 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:2c2d:5496:6768:592])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b71c15sm2617409f8f.95.2025.06.13.08.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 08:22:34 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Drop `bias-pull-up` from OVC pins
-Date: Fri, 13 Jun 2025 16:22:16 +0100
-Message-ID: <20250613152216.201957-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aQFYA69B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749828203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1p5HdA5CaRZpyjsJJugbtkVKQTEXEDNVElJiBH9/rEM=;
+	b=aQFYA69BAKUwyYJGjjJKE6XD/BtVmYnJ2iFe5KXIP9D1c3wnX9TkncArjHklgB2bLGcHcW
+	0AUi9CSILku0qqe2/V4HASZPw5R/HgUwXlxJcTKi2BEIgoclnkYicD1ewl31sb/8vA5zWB
+	lB+b7S1R1w1sy/9ge31UF4VbCeB1Cec=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-C0We3tJzMne5spLZueix3g-1; Fri,
+ 13 Jun 2025 11:23:17 -0400
+X-MC-Unique: C0We3tJzMne5spLZueix3g-1
+X-Mimecast-MFC-AGG-ID: C0We3tJzMne5spLZueix3g_1749828195
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 71891195609F;
+	Fri, 13 Jun 2025 15:23:14 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.58.9])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D6EEA180045C;
+	Fri, 13 Jun 2025 15:23:09 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
+Date: Fri, 13 Jun 2025 11:23:07 -0400
+Message-ID: <6D3B09C4-0E35-4A98-8C29-C2EDDBD17163@redhat.com>
+In-Reply-To: <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
+References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
+ <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
+ <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
+ <ae18305b-167d-4f27-bc3b-3d2d5f216d85@oracle.com>
+ <1cd4d07f7afbd7322a1330a49a2cc24e8ff801cd.camel@kernel.org>
+ <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
+ <7DCDEBE1-1416-4A93-B994-49A6D21DC065@redhat.com>
+ <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 13 Jun 2025, at 10:56, Chuck Lever wrote:
 
-The USB20/21_OVRCUR pins on the RZ/V2H EVK has an external pull-up resistor
-on the board. Therefore, the internal pull-up configuration via the
-`bias-pull-up` property is redundant and should be removed.
+> On 6/13/25 7:33 AM, Benjamin Coddington wrote:
+>> We don't consider it acceptable to allow known defects to persist in our
+>> products just because they are bleeding edge.
+>
+> I'm not letting this issue persist. Proper testing takes time.
+>
+> The patch description and discussion around this change did not include
+> any information about its pervasiveness and only a little about its
+> severity. I used my best judgement and followed my usual rules, which
+> are:
+>
+> 1. Crashers, data corrupters, and security bugs with public bug reports
+>    and confirmed fix effectiveness go in as quickly as we can test.
+>    Note well that we have to balance the risk of introducing regressions
+>    in this case, since going in quickly means the fix lacks significant
+>    test experience.
+>
+> 1a. Rashes and bug bites require application of topical hydrocortisone.
 
-Fixes: 7548897ad4ae3 ("arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Enable USB2.0 support")
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts | 2 --
- 1 file changed, 2 deletions(-)
+:) no rash here, this response is very soothing.
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
-index 36e9f39cd4e4..9819f691c7d4 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
-+++ b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
-@@ -658,7 +658,6 @@ sd1_cd {
- 	usb20_pins: usb20 {
- 		ovc {
- 			pinmux =  <RZV2H_PORT_PINMUX(9, 6, 14)>; /* OVC */
--			bias-pull-up;
- 		};
- 
- 		vbus {
-@@ -669,7 +668,6 @@ vbus {
- 	usb21_pins: usb21 {
- 		ovc {
- 			pinmux = <RZV2H_PORT_PINMUX(6, 7, 14)>; /* OVC */
--			bias-pull-up;
- 		};
- 
- 		vbus {
--- 
-2.49.0
+> 2. Patches sit in nfsd-testing for at least two weeks; better if they
+>    are there for four. I have CI running daily on that branch, and
+>    sometimes it takes a while for a problem to surface and be noticed.
+>
+> 3. Patches should sit in nfsd-next or nfsd-fixes for at least as long
+>    as it takes for them to matriculate into linux-next and fs-next.
+>
+> 4. If the patch fixes an issue that was introduced in the most recent
+>    merge window, it goes in -fixes .
+>
+> 5. If the patch fixes an issue that is already in released kernels
+>    (and we are at rule 5 because the patch does not fix an immediate
+>    issue) then it goes in -next .
+>
+> These evidence-oriented guidelines are in place to ensure that we don't
+> panic and rush commits into the kernel without careful review and
+> testing. There have been plenty of times when a fix that was pushed
+> urgently was not complete or even made things worse. It's a long
+> pipeline on purpose.
+
+I totally understand, thanks very much for having a set of rules and
+guidelines and even more for taking the time to spell them out here.
+
+I wanted to express that Red Hat does consider all of its releases to be
+important to fix and maintain. I'd like to speak against arguments about fix
+urgency based on distro versions.  I think in this case we innocently crept
+into these arguments as Jeff presented evidence that the problem exists in
+the wild.
+
+> The issues with this patch were:
+>
+> - It was posted very late in the dev cycle for v6.16. (Jeff's urgent
+>   fixes always seem to happen during -rc7 ;-)
+>
+> - The Fixes: tag refers to a commit that was several releases ago, and
+>   I am not aware of specific reports of anyone hitting a similar issue.
+>
+> - IME, the adoption of enterprise distributions is slow. RHEL 10 is
+>   still only on its GA release. Therefore my estimation is that the
+>   number of potentially impacted customers will be small for some time,
+>   enough time for us to test Jeff's fix appropriately.
+
+While this is true, I hope we can still treat every release version equally
+/if/ we make any arguments about urgency based on what's currently released
+in a particular distro.  Your point is a good counter-arguement to Jeff's
+assertion that the problem has been widely distributed - but it does start
+to creep into a space which feels like we're treating certain early versions
+of a specific distro differently and didn't sit well for me.  I'd rather not
+have our upstream work or decisions appear to favor a particular distro.
+
+> - The issue did not appear to me to be severe, but maybe I didn't read
+>   the patch description carefully enough.
+>
+> - Although I respect, admire, and greatly appreciate the effort Jeff
+>   made to nail this one, that does not mean it is a pervasive problem.
+>   Jeff is quite capable of applying his own work to the kernels he and
+>   his employer care about.
+>
+<snip>
+>
+> It sounds like Red Hat also does not have clear evidence that links this
+> patch to a specific failure experienced by your customers. This affirms
+> my understanding that this fix is defensive rather than urgent.
+
+Also true - not yet, but there's a significant lag between customers
+discovering a problem and our engineers knowing about it, and during that
+lag all sorts of time, money, and reputation points are lost.
+
+> As a rule, defensive fixes go in during merge windows.
+>
+>> Its a real pain that we won't have an upstream commit assigned for it.
+>
+> It's not reasonable for any upstream maintainer not employed by Red Hat
+> to know about or cleave to Red Hat's internal processes. But, if an
+> issue is on Red Hat's radar, then you are welcome to make its priority
+> known to me so I can schedule fixes appropriately.
+
+Thanks!  I realize that, which is why I spoke up.
+
+> All that said, I've promoted the fix to nfsd-fixes, since it's narrow
+> and has several weeks of test experience now.
+
+Again, thanks!  We greatly appreciate the work you're doing.
+
+Best,
+Ben
 
