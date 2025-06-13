@@ -1,49 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8763279DD7;
-	Fri, 13 Jun 2025 09:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E557263C;
+	Fri, 13 Jun 2025 09:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749805505; cv=none; b=LqHK5x+JUWGTuDZcJIpVODFqI6pKHTnhIg11L/apfJuwpCez/fCcajs1UKQKyg4vQWGYKNACi1i8UR61zg7D9mKKJPJxATV6/4O32vavo+oo0+qrjepyijhnXdzxwQqlAsbIfuPn1JFovv+BRhXM9kU0j4GzVLiPCCyyZWcuHF8=
+	t=1749805542; cv=none; b=eDEGAf7IzzMvswpcdBN+fx2KeilN7eaVA8Z/ElCg9Tx1Gi6PursIJJDPCYFt8ypG+jBoxh6wXCs+cYJ1yR9g2AzVMC7arIOfW9xNfDNEiRYjedrfBe17RnW6ws1tyJtzFV2qnXen/EoYtvIoBJxlhc/IvqnErWjsALwNgdHniNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749805505; c=relaxed/simple;
-	bh=/z3ISYzkV0unW5sqeJeb8uAQIRvRJjWrGvnYEIkJOl0=;
+	s=arc-20240116; t=1749805542; c=relaxed/simple;
+	bh=8FvV1SciI0lOYrVif+0+YROqsYbPPO/U7ZW0LQOwq4Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R3kGH99Xyss1UFM2ttw9t5GCRTSDmtXRVkDEgLr49+c1Tovx0oPiIq3uTfdTU7dPJpHeHo4/MXQeRigm7pzHIaXrlFntMo/OcqVMwfCwkO17dKDfKBCKpYzFxOA5gC0ZvPGCaZg43iiWn79Q12iciE1cqaT6wl2j7MrBH4zRRxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1D314jD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UwGXpzJoXivtDLt8o+C6M2cWOlNKBWl2+CF9a7fpupYQ02NzyRXfuO/me1IQe9qkFJ/P/lHxUAh7YPBeqkagqE0wd/tIkIxfwI4AQ9OWnROya/fK1/+BrNhn1QPjT9+YpFYj2Y2EKC1hfb6PY5MSm0pA16OMqLwhD4/k4G9YBF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HhFno71t; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1D314jD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A22C4CEE3;
-	Fri, 13 Jun 2025 09:04:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749805505;
-	bh=/z3ISYzkV0unW5sqeJeb8uAQIRvRJjWrGvnYEIkJOl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I1D314jDshWGk9VU2FaY4xmGqqNeYJ+VEfnVmgJTbLmVUHHkWXnQ/bz5woAKzjvTP
-	 /DOvGnVk+VFicXXGm06il7p1yMWrGU1SrtwLvKYooEcl1/LvCtWvSdod2fqOwHKinI
-	 StbcptvHentF5Eltm8p22RKUHdoQ8dkhrZbjNGzfbjCDBfPqIjy3CbCryp/gAlspNP
-	 nuP7WJp4925btgScwJ1DSd8MdyUnu4D9EASBYnU5c4z+mq08FLc+QW5rd6RDW3eene
-	 yN6Ex20uiZkditsFIUM2eMD/uqKuvBx+c4h1Q9GSHmhOOXLosJ4N/TXPLe1SvV8MF1
-	 g9Dz9rRKzCncg==
-Date: Fri, 13 Jun 2025 14:34:54 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: 'Krzysztof Kozlowski' <krzk@kernel.org>, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.or, linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
-	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	alim.akhtar@samsung.com, vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de, 
-	m.szyprowski@samsung.com, jh80.chung@samsung.com, 
-	'Pankaj Dubey' <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH 04/10] PCI: exynos: Add platform device private data
-Message-ID: <fty3sp3brzpcs6jeqg6yxiwgpbyqogxqt5mo7owiw4vkl7vj2j@b33zfdizuy4d>
-References: <20250518193152.63476-1-shradha.t@samsung.com>
- <CGME20250518193239epcas5p4cb4112382560f38ad9708e000eb2335f@epcas5p4.samsung.com>
- <20250518193152.63476-5-shradha.t@samsung.com>
- <20250521-cheerful-spiked-mackerel-ef7ade@kuoka>
- <0e2301dbcef4$42969af0$c7c3d0d0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HhFno71t"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=0ft0fSiF67mpk/bqWwyG78k/NSeUXV83RntIl505nZ8=; b=HhFno71tY6laiYHIebx8aooC/C
+	k8u9+Ahb6Zsw5wwOMmwYjB7f9u7qxC53lo6igl2YfouCukeiwhieToj1Bn+Abw96R/6IniwPqHqdu
+	9RL2BGvbCdtpjMRM5+xGCuBfp3EWJhGH9Lb8mpmxldx8pmnN9k4teTxOkWrJ5vYZIpN55WN7d2W0a
+	buLJ7fPlHTenPbf78hLj3tOt5Gdm1d/1gxqjggukmXKotwyoN8FRLo1iDuDGPDMn/WqBt11b0ncFp
+	rsr2D+KeJopg2q28biYZ3/Ki1t6LbRea+t12AWthWDDOJgz0AzdsKg8Py8fvW0cjWFmmST232jzAi
+	KKV2uyCg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45694)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uQ0Lm-0000av-24;
+	Fri, 13 Jun 2025 10:05:26 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uQ0Lj-0001fm-1F;
+	Fri, 13 Jun 2025 10:05:23 +0100
+Date: Fri, 13 Jun 2025 10:05:23 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
+ informative text about RGMII delays
+Message-ID: <aEvp01pIuK-LUdjR@shell.armlinux.org.uk>
+References: <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+ <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
+ <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
+ <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
+ <aElArNHIwm1--GUn@shell.armlinux.org.uk>
+ <fc7ad44b922ec931e935adb96dcc33b89e9293b0.camel@icenowy.me>
+ <f82a86d3-6e06-4f24-beb5-68231383e635@lunn.ch>
+ <40fc8f3fec4da0ed2b59e8d2612345fb42b1fdd3.camel@icenowy.me>
+ <aEvi5DTBj-cltE5w@shell.armlinux.org.uk>
+ <9922727607de39da7ed75d1edaf1873147e26336.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,93 +74,93 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0e2301dbcef4$42969af0$c7c3d0d0$@samsung.com>
+In-Reply-To: <9922727607de39da7ed75d1edaf1873147e26336.camel@icenowy.me>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, May 27, 2025 at 04:13:58PM +0530, Shradha Todi wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Krzysztof Kozlowski <krzk@kernel.org>
-> > Sent: 21 May 2025 15:15
-> > To: Shradha Todi <shradha.t@samsung.com>
-> > Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.or;
-> > linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org;
-> > kw@linux.com; robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
-> > alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de; m.szyprowski@samsung.com;
-> > jh80.chung@samsung.com; Pankaj Dubey <pankaj.dubey@samsung.com>
-> > Subject: Re: [PATCH 04/10] PCI: exynos: Add platform device private data
+On Fri, Jun 13, 2025 at 04:43:14PM +0800, Icenowy Zheng wrote:
+> 在 2025-06-13星期五的 09:35 +0100，Russell King (Oracle)写道：
+> > On Fri, Jun 13, 2025 at 04:01:37PM +0800, Icenowy Zheng wrote:
+> > > 在 2025-06-11星期三的 17:28 +0200，Andrew Lunn写道：
+> > > > > Well in fact I have an additional question: when the MAC has
+> > > > > any
+> > > > > extra
+> > > > > [tr]x-internal-delay-ps property, what's the threshold of MAC
+> > > > > triggering patching phy mode? (The property might be only used
+> > > > > for
+> > > > > a
+> > > > > slight a few hundred ps delay for tweak instead of the full 2ns
+> > > > > one)
+> > > > 
+> > > > Maybe you should read the text.
+> > > > 
+> > > > The text says:
+> > > > 
+> > > >   In the MAC node, the Device Tree properties 'rx-internal-delay-
+> > > > ps'
+> > > >   and 'tx-internal-delay-ps' should be used to indicate fine
+> > > > tuning
+> > > >   performed by the MAC. The values expected here are small. A
+> > > > value
+> > > > of
+> > > >   2000ps, i.e 2ns, and a phy-mode of 'rgmii' will not be accepted
+> > > > by
+> > > >   Reviewers.
+> > > > 
+> > > > So a few hundred ps delay is fine. The MAC is not providing the
+> > > > 2ns
+> > > > delay, the PHY needs to do that, so you don't mask the value.
+> > > 
+> > > Thus if the MAC delay is set to 1xxx ps (e.g. 1800ps), should the
+> > > MAC
+> > > do the masking?
+> > > 
+> > > What should be the threshold? 1ns?
 > > 
-> > On Mon, May 19, 2025 at 01:01:46AM GMT, Shradha Todi wrote:
-> > > -static const struct dw_pcie_ops dw_pcie_ops = {
-> > > +static const struct dw_pcie_ops exynos_dw_pcie_ops = {
-> > >  	.read_dbi = exynos_pcie_read_dbi,
-> > >  	.write_dbi = exynos_pcie_write_dbi,
-> > >  	.link_up = exynos_pcie_link_up,
-> > > @@ -279,6 +286,7 @@ static int exynos_pcie_probe(struct
-> > > platform_device *pdev)  {
-> > >  	struct device *dev = &pdev->dev;
-> > >  	struct exynos_pcie *ep;
-> > > +	const struct samsung_pcie_pdata *pdata;
-> > >  	struct device_node *np = dev->of_node;
-> > >  	int ret;
-> > >
-> > > @@ -286,8 +294,11 @@ static int exynos_pcie_probe(struct platform_device *pdev)
-> > >  	if (!ep)
-> > >  		return -ENOMEM;
-> > >
-> > > +	pdata = of_device_get_match_data(dev);
-> > > +
-> > > +	ep->pdata = pdata;
-> > >  	ep->pci.dev = dev;
-> > > -	ep->pci.ops = &dw_pcie_ops;
-> > > +	ep->pci.ops = pdata->dwc_ops;
-> > >
-> > >  	ep->phy = devm_of_phy_get(dev, np, NULL);
-> > >  	if (IS_ERR(ep->phy))
-> > > @@ -363,9 +374,9 @@ static int exynos_pcie_resume_noirq(struct device *dev)
-> > >  		return ret;
-> > >
-> > >  	/* exynos_pcie_host_init controls ep->phy */
-> > > -	exynos_pcie_host_init(pp);
-> > > +	ep->pdata->host_ops->init(pp);
-> > >  	dw_pcie_setup_rc(pp);
-> > > -	exynos_pcie_start_link(pci);
-> > > +	ep->pdata->dwc_ops->start_link(pci);
+> > Why should there be a "threshold" ? It's really a case by case issue
+> > where the capabilities of the hardware need to be provided and
+> > considered before a decision can be made.
 > > 
-> > One more layer of indirection.
+> > In order to first understand this, one needs to understand the
+> > requirements of RGMII. RGMII v1.3 states:
 > > 
-> > Read:
-> > https://lore.kernel.org/all/CAL_JsqJgaeOcnUzw+rUF2yO4hQYCdZYssjxHzrDvvHGJimrASA@mail.gmail.com/
+> > Symbol  Parameter               Min     Typ     Max     Units
+> > TskewT  Data to Clock output    -500    0       500     ps
+> >         skew at clock tx
+> > TskewR  Data to Clock input     1               2.6     ns
+> >         skew at clock rx
 > > 
+> > The RGMII specification is written based upon the clock transmitter
+> > and receiver having no built-in delays, and the delay is achieved
+> > purely by trace routing. So, where delays are provided by the
+> > transmitter or receiver (whether that's the MAC or the PHY depends
+> > on whether TXC or RXC is being examined) these figures need to be
+> > thought about.
+> > 
+> > However, the range for the delay at the receiver is -1ns to +0.6ns.
+> > 
+> > In your example, you're talking about needing a 1800ps delay. I
+> > would suggest that, *assuming the PCB tracks introduce a 200ps skew
+> > between the data and clock*, then using the PHY's built-in 2ns delay
+> > is perfectly within the requirements of the RGMII specification.
+> > 
+> > That bit "assuming" is where the discussion needs to happen, and why
+> > it would be case by case. If the skew due to trace routing were
+> > 800ps, then enabling the PHY's built-in 2ns delay would take the
+> > delay out of spec.
+> > 
+> > Thrown into this would also be temperature effects, so trying to get
+> > to as near as the 2ns delay as possible is probably a good idea.
+> > 
+> > Lastly, there's the question whether the software engineer even
+> > knows what the skew provided by the hardware actually is.
 > 
-> I went through this thread and the solution to avoid redirection seems to be:
-> 1. Make the common parts into a library that each driver can call
-> 2. When there is barely anything in common, make a separate driver
-> 
-> From my understanding of these 2 drivers, there is hardly anything that can go into common library
-> 1. host_init, dbi_read, dbi_write these ops have completely different flow
-> 2. link_up, start_link have similar flow but different register offsets
-> 3. write_dbi2 and stop_link is not implemented for exynos but needed for FSD
-> 4. Resources are different - FSD does not have regulator, Exynos5433 does not have syscon, FSD has msi IRQ vs exynos5433 has legacy
-> 5. Exynos is host only whereas FSD is dual mode controller.
-> 
-> I don’t see any other way except redirection, or using lots of if(variant == FSD) which is also discouraged.
+> Sigh, my experience is that the only thing I can get is some magic
+> numbers from HW vendor... *facepalm*
 
-Please wrap your replies to 80 columns.
-
-> 
-
-IMO it is OK to have the callbacks for cases like this. This is also similar to
-Qcom driver where each SoC requires custom register updates and going by the
-common library or a new driver wouldn't be feasible.
-
-> And about making it a different driver altogether, I'm completely okay to do so. In fact we had previously tried to post it as a
-> different driver which was rejected.
-> 
-
-No, please do not create a new driver, that is another maintainer burden.
-
-- Mani
+I may have missed it if you've given the details, but tell us what
+information you have, what the capabilities of the hardware is, and
+we should be able to make suggestions.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
