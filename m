@@ -1,293 +1,177 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2182E62A1
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEFB2C327C;
+	Fri, 13 Jun 2025 07:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800396; cv=none; b=LOYDfhdDcuCjEGJYivIkIS9Iyesu347JBI3gDeGngcsL8syzrVqaBRrnApgvp9CBDCFkPyL8Hs+W8EvG/8OQciMBfBNDmiFEpJv9RPotlCMXLP8NkBTi4I+MfcdrhLuLVEpUrdDXZvyL/IJ+yW1MeDm2ur9E4RS2MAJ7jqs+tzE=
+	t=1749800468; cv=none; b=i+IIHurxaZOBZQBPyaKAHRyMAKmbn+9jm4PS7SZr3sJkNoePX/j/gjzp7k/JO1JOkrCqYwV29qP8I9ZUimo1xYHhteTiP9kbRFIHAMv5ZISBOBNzL51uC9hdULgzOiMgmzpiT1hu4DUkKNoEmF8KbTUiJNhenwMc1Ayd3CjayBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800396; c=relaxed/simple;
-	bh=+dfNvnlucquygPNJUXz34kJj8KjOh8qnQZM+R8On/k4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tTlaU10oZy5/DNjsUX8CpgNcZCZNtsL2ctYb1co1CdUNd5EfdjVDluVAft0JRTcSOSsm0GINzHQGaPEfNafilQlz8fux15nJzVcrZPq5qCH2d2dUI7bSGOH/zGCitFn0sbSvrQzvRoUVAcJmRvI0J6FIXGeURru8/maJffmD/qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=fasy3afW; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1749800468; c=relaxed/simple;
+	bh=XTLNLa6cch6vvzm8GPLGQE1EqCmrVS/d67uIjyzKwy0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pLqXHqb40XE/PN6AfUFiED1CJJJv72xm1gt3anIOxr1jh3HqmG0CtIi61V6c9JYDfRRLSPBflCcLNcqmsqqJZwpkrNPEK28fYXV5BBldsyb+rmc2ZgijZueRfaW030cj6AUtXGeL6LPUbqJb928YGIzYZYYlbMNCPY0svR6DHjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=F9f3VZTW; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="fasy3afW"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-addda47ebeaso346594266b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:39:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1749800393; x=1750405193; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/WG5vFd300oZUUzuglhUpNUIOh7+mLg7x9fAoLYnof8=;
-        b=fasy3afWKHV21OM6aF1XKx61L3stVQdDNrBQHqJgqgV5ydoCJKUVVrR+x+lngcNBlT
-         FqI9YMWN51yePi1+vJDgEZh/HKSBrP7f/+Sy6QLoE2pI7UN2CQEl8ZgsthNj0RVFb9u2
-         CC7HQuVcLUH2G1IefV1rrMWb3ubCB/dKutfb4FD+KjWOJDaSHdTNrJjW7eX3H6Hsa9Tj
-         q7eo4cehIBPaWl0wTyZhBva/r2HLh7T+jOqbqlRH1fvoZQApFPT3IapclD7rU/4Q3kyo
-         M0QEhcUdfR2Mlb6wYCUl5R/xASWIfSIBXgtroRKKEyrXPL37sOzh7BtOjsenMBIWjTF+
-         e4xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749800393; x=1750405193;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/WG5vFd300oZUUzuglhUpNUIOh7+mLg7x9fAoLYnof8=;
-        b=r9E+1OTxmphSFfkP11+KhZsjJ43/dWR6AmZI+0JgQdnWHrnKLCW6yGGp4MsQLJVipH
-         V8tUwVCVJnm1J/MHAYSEXQRtoYx5LSnVEORDo1pURBysfo/8PWiFgWmkxbJDAMR4Rt1r
-         slqlpHkPpvwd6yO/EKg+smKNye47y4NADTYVxiNwZOlrZb1pWyiC/Ant9vNtK+3oGrB7
-         +uUjx0DQR0wb4otMoAmPhwXYN4ZPWOeXjQYvYotXQkojzfh+2Co7ro8gOBCUB17O4hi/
-         Jt/O25D8nSsVtYR7MND5wFTPYIJEQ3tmCRpbyJSO9cI/ohRStX6rlS97BvhpdT8aFYEr
-         js8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUbCZyEi8rKUCto616lkQPZkherq35lOA3/VG85bkjz942EgOtWA3c6879Fk9Rg60USaewe2uK2u3mw7ow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoTW0oB5ZToBFdDeDtDws4nCTFYh82rZaNTwgX6Kps6OTEA5cD
-	mjlEMFxYYAJRlSKUkXqO9CnMjibbIhUAh9UbXvazNdEXCgheg2VaW62NOiGykzktKSY=
-X-Gm-Gg: ASbGncv6u8SnKkFkBnXMdTTOs0kHW12t4Jp4wFI20FkhLUcPzxEnumqtgcv5hDYjmrl
-	fgKb1jNenxKs8pNmkQVI5aNU086pzTiCprZaBLnRB6OaEumRKcQSLfvHhkzcxudSYk9RaCbqSBk
-	r2ws2CjVECyzYIfD47ZaVxdx/FBG2lWv2+/np5cX+uoE2nCoiv4p+OJxUDLYHycqUb1y35d3ADR
-	kvTfJNtj1HBKpdlAKOzY2CbOC3Z/ZpfJZdjzgoo194d5hqzAVMDUeBWc3qkRpR5vbYQsDtbJGxC
-	arjTnUEt2JXXp6lBj8hkXeqmifiZDuwlvYafKtg/J2MuXV4fxVttdmP4+D590xdfGe/oKCc=
-X-Google-Smtp-Source: AGHT+IHbT7oRQDXuk6B3wIxt0+oLJne2jQCVvWqR8ZSuXEeabN4NtHdvIe5vWvmjryMj3KG0rPYYUg==
-X-Received: by 2002:a17:907:944c:b0:ad8:a88c:84e3 with SMTP id a640c23a62f3a-adec5cb381cmr157457966b.33.1749800392513;
-        Fri, 13 Jun 2025 00:39:52 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.110])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88ff425sm84059666b.87.2025.06.13.00.39.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 00:39:52 -0700 (PDT)
-Message-ID: <486a1110-5336-42fd-82b8-a7b1452bad65@tuxon.dev>
-Date: Fri, 13 Jun 2025 10:39:50 +0300
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="F9f3VZTW"
+Received: from [10.102.99.184] (unknown [10.101.200.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id AD9293F796;
+	Fri, 13 Jun 2025 07:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1749800456;
+	bh=/s3ULtZuuGEr6lVQB4oZg7nvmbpL3b9XXpwD3nZvvhQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc;
+	b=F9f3VZTW+BB2abEWnbw/0UhmJOusVX9yvI702W5eAfgUhxMLHtNe1pSFFRePvgfTU
+	 JctbEUPLG0lTKMQFmt0HIvDBSlgEB0iVzBWXnkHACFAfVWfk6xsndNVSQZWVJgqqXx
+	 zznYpoO76I0K3F3TeYS8ARiVMRjt+5fRT/uXjwyEsbGFjFlPZQUOg/1EiQWQy1IaJO
+	 tXajDWRz5NdFdiVN5FlDF1dmNfvdel+apW4ee7fZ/tW1gzlYGI6YsAwnf7r2/V2hay
+	 NKXdbVo3zVfa+NOtDcm2XbdMpmOETLGb33oHVfOJUcLDttmOuh5L7G2FF9pqHa7wvL
+	 AglGsZ4c5zF7w==
+From: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
+Date: Fri, 13 Jun 2025 15:40:18 +0800
+Subject: [PATCH v2] i2c: i801: Do not instantiate spd5118 under SPD Write
+ Disable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] PM: domains: Add devres variant for
- dev_pm_domain_attach()
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, gregkh@linuxfoundation.org,
- dakr@kernel.org, len.brown@intel.com, pavel@kernel.org,
- ulf.hansson@linaro.org, daniel.lezcano@linaro.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bhelgaas@google.com,
- geert@linux-m68k.org, linux-iio@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
- <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
- <CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com>
- <zhjytvj35lknj7v3jhva3n3nbv6qctvqgykwyi5huj6omet7lz@wchd7f4p4dpv>
- <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
- <20250607140600.76e87ea5@jic23-huawei>
- <CAJZ5v0jqZ6gYKb85dpR-X5RwFeUBcbbcJ_b-AOe+JypBXod-MA@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAJZ5v0jqZ6gYKb85dpR-X5RwFeUBcbbcJ_b-AOe+JypBXod-MA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250613-for-upstream-not-instantiate-spd5118-v2-1-cf456ed9b587@canonical.com>
+X-B4-Tracking: v=1; b=H4sIAOHVS2gC/43NQQ6CMBCF4auQrh1DB9pUV97DsKhlkEmkJW0lG
+ sLdrSTuXf5v8b5VJIpMSZyrVURaOHHwJfBQCTdafyfgvrTAGlWtUMMQIjznlCPZCXzIwD5l6zP
+ bTJDmXklpoNUNoro1rba1KFdzpIFfO3PtSo+ccojvXV3kd/0B5j9gkSDBoNSEfWNO0lyc9cGzs
+ 4+jC5Potm37AA1Tz37cAAAA
+To: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, 
+ "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>, 
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Yo-Jung Lin (Leo)" <leo.lin@canonical.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3612; i=leo.lin@canonical.com;
+ h=from:subject:message-id; bh=XTLNLa6cch6vvzm8GPLGQE1EqCmrVS/d67uIjyzKwy0=;
+ b=owEBbQKS/ZANAwAKAV8XsZZKKe6GAcsmYgBoS9YEWAAj3LAMRYBS63h3VjqJfn8WIBu8BBxKa
+ Zjmxn0R0lGJAjMEAAEKAB0WIQQzqV4kW+yguuqHrw5fF7GWSinuhgUCaEvWBAAKCRBfF7GWSinu
+ hrpsD/sFBVStcy3VpX4RuV9znK3vjQ36PWnRk8vq6JVDuX0WnfyqGv4Syydih4VcUequ2JnOtGP
+ +yAIk0wzpIXDX+dZppHroZH9JsYf2aUEPmHUfPt4PmmjsUfmQy6deK6BGsXibEiALvjB/cuUu9Y
+ iAT/hnZqdrjBPIZSMhSkv61pHGwZiUVnDQbxTAq59wTtxEi7k89GYhTRAybtYShau33xSMzTUNy
+ Her/ViU8RB8JDoCB3w6GH+H5GKZoz1Q1UH1HaS6+vK/jAuniB+AJ59Ifooim3dZYWEu4P43RWvt
+ AkY5KDAzR0Hj7v30/+8bBMibaRA8yjjHq45O3QQngWjRk4Dw47Z9XHWyOgkrdtHYOz802ib0D+b
+ sEWGB4JrKD+CwVkmUgyzc/fSVy3gdF1AOBc0xNRKkTBTPF1dUvRKaxmveb2UqSvg/CgErfypbhU
+ 1HUe4emKUSmcsdrn1PdUtSf1V+u0f9M1o0QWYnivhSPqwPNSMc405m25ZU2mqCFgzTQGt7a9k+x
+ pnyzKhAljcHa2B/oKYeE4KmWjjskqEwWUeQmgzO7DR/j19nxrboOyuw2TaNH4lS35fKDcnqlzsL
+ KTIpyS7M/K1kS2YsXxzdro4knan1buNTozp5l7NfO1JzLPm/HQx7WV3+DErQCB+tGourRjElziS
+ SbOqhGRHm7rMF1w==
+X-Developer-Key: i=leo.lin@canonical.com; a=openpgp;
+ fpr=33A95E245BECA0BAEA87AF0E5F17B1964A29EE86
 
-Hi, Rafael,
+If SPD Write Disable bit in the SMBus is enabled, writing data to
+addresses from 0x50 to 0x57 is forbidden. This may lead to the
+following issues for spd5118 devices:
 
-On 09.06.2025 22:59, Rafael J. Wysocki wrote:
-> On Sat, Jun 7, 2025 at 3:06 PM Jonathan Cameron <jic23@kernel.org> wrote:
->>
->> On Fri, 6 Jun 2025 22:01:52 +0200
->> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
->>
->> Hi Rafael,
->>
->>> On Fri, Jun 6, 2025 at 8:55 PM Dmitry Torokhov
->>> <dmitry.torokhov@gmail.com> wrote:
->>>>
->>>> On Fri, Jun 06, 2025 at 06:00:34PM +0200, Rafael J. Wysocki wrote:
->>>>> On Fri, Jun 6, 2025 at 1:18 PM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->>>>>>
->>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>>
->>>>>> The dev_pm_domain_attach() function is typically used in bus code alongside
->>>>>> dev_pm_domain_detach(), often following patterns like:
->>>>>>
->>>>>> static int bus_probe(struct device *_dev)
->>>>>> {
->>>>>>     struct bus_driver *drv = to_bus_driver(dev->driver);
->>>>>>     struct bus_device *dev = to_bus_device(_dev);
->>>>>>     int ret;
->>>>>>
->>>>>>     // ...
->>>>>>
->>>>>>     ret = dev_pm_domain_attach(_dev, true);
->>>>>>     if (ret)
->>>>>>         return ret;
->>>>>>
->>>>>>     if (drv->probe)
->>>>>>         ret = drv->probe(dev);
->>>>>>
->>>>>>     // ...
->>>>>> }
->>>>>>
->>>>>> static void bus_remove(struct device *_dev)
->>>>>> {
->>>>>>     struct bus_driver *drv = to_bus_driver(dev->driver);
->>>>>>     struct bus_device *dev = to_bus_device(_dev);
->>>>>>
->>>>>>     if (drv->remove)
->>>>>>         drv->remove(dev);
->>>>>>     dev_pm_domain_detach(_dev);
->>>>>> }
->>>>>>
->>>>>> When the driver's probe function uses devres-managed resources that depend
->>>>>> on the power domain state, those resources are released later during
->>>>>> device_unbind_cleanup().
->>>>>>
->>>>>> Releasing devres-managed resources that depend on the power domain state
->>>>>> after detaching the device from its PM domain can cause failures.
->>>>>>
->>>>>> For example, if the driver uses devm_pm_runtime_enable() in its probe
->>>>>> function, and the device's clocks are managed by the PM domain, then
->>>>>> during removal the runtime PM is disabled in device_unbind_cleanup() after
->>>>>> the clocks have been removed from the PM domain. It may happen that the
->>>>>> devm_pm_runtime_enable() action causes the device to be runtime-resumed.
->>>>>
->>>>> Don't use devm_pm_runtime_enable() then.
->>>>
->>>> What about other devm_ APIs? Are you suggesting that platform drivers
->>>> should not be using devm_clk*(), devm_regulator_*(),
->>>> devm_request_*_irq() and devm_add_action_or_reset()? Because again,
->>>> dev_pm_domain_detach() that is called by platform bus_remove() may shut
->>>> off the device too early, before cleanup code has a chance to execute
->>>> proper cleanup.
->>>>
->>>> The issue is not limited to runtime PM.
->>>>
->>>>>
->>>>>> If the driver specific runtime PM APIs access registers directly, this
->>>>>> will lead to accessing device registers without clocks being enabled.
->>>>>> Similar issues may occur with other devres actions that access device
->>>>>> registers.
->>>>>>
->>>>>> Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attach() and
->>>>>> dev_pm_domain_detach() in bus probe and bus remove, it ensures that the
->>>>>> device is detached from its PM domain in device_unbind_cleanup(), only
->>>>>> after all driver's devres-managed resources have been release.
->>>>>>
->>>>>> For flexibility, the implemented devm_pm_domain_attach() has 2 state
->>>>>> arguments, one for the domain state on attach, one for the domain state on
->>>>>> detach.
->>>>>
->>>>> dev_pm_domain_attach() is not part driver API and I'm not convinced at
->>>>
->>>> Is the concern that devm_pm_domain_attach() will be [ab]used by drivers?
->>>
->>> Yes, among other things.
->>
->> Maybe naming could make abuse at least obvious to spot? e.g.
->> pm_domain_attach_with_devm_release()
-> 
-> If I'm not mistaken, it is not even necessary to use devres for this.
-> 
-> You might as well add a dev_pm_domain_detach() call to
-> device_unbind_cleanup() after devres_release_all().  There is a slight
-> complication related to the second argument of it, but I suppose that
-> this can be determined at the attach time and stored in a new device
-> PM flag, or similar.
-> 
+  1) Writes to the sensor hwmon sysfs attributes will always result
+     in ENXIO.
 
-I looked into this solution. I've tested it for all my failure cases and
-went good.
+  2) During system-wide resume, errors may occur during regcache sync,
+     resulting in the following error messages:
 
-> Note that dev->pm_domain is expected to be cleared by ->detach(), so
-> this should not cause the domain to be detached twice in a row from
-> the same device, but that needs to be double-checked.
+     kernel: spd5118 1-0050: failed to write b = 0: -6
+     kernel: spd5118 1-0050: pm: dpm_run_callback(): spd5118_resume [spd5118] returns -6
+     kernel: spd5118 1-0050: pm: failed to resume async: error -6
 
-The genpd_dev_pm_detach() calls genpd_remove_device() ->
-dev_pm_domain_set(dev, NULL) which sets the dev->pm_domain = NULL. I can't
-find any other detach function in the current code base.
+  3) nvmem won't be usable, because writing to the page selector becomes
+     impossible.
 
-The code I've tested for this solution is this one:
+Also, BIOS vendors may choose to set the page to a value != 0 after a board
+reset. This will make the sensor not functional unless its MR11 register
+can be changed, which is impossible due to writes being disabled.
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index b526e0e0f52d..5e9750d007b4 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -25,6 +25,7 @@
- #include <linux/kthread.h>
- #include <linux/wait.h>
- #include <linux/async.h>
-+#include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
- #include <linux/pinctrl/devinfo.h>
- #include <linux/slab.h>
-@@ -552,8 +553,11 @@ static void device_unbind_cleanup(struct device *dev)
-        dev->dma_range_map = NULL;
-        device_set_driver(dev, NULL);
-        dev_set_drvdata(dev, NULL);
--       if (dev->pm_domain && dev->pm_domain->dismiss)
--               dev->pm_domain->dismiss(dev);
-+       if (dev->pm_domain) {
-+               if (dev->pm_domain->dismiss)
-+                       dev->pm_domain->dismiss(dev);
-+               dev_pm_domain_detach(dev, dev->pm_domain->detach_power_off);
-+       }
-        pm_runtime_reinit(dev);
-        dev_pm_set_driver_flags(dev, 0);
+To address these issues, don't instantiate it at all if the SPD Write Disable
+bit is set.
+
+Signed-off-by: Yo-Jung Lin (Leo) <leo.lin@canonical.com>
+---
+Changes in v2:
+- Fix build failure on some non-x86 archs, by moving __i801_register_spd() out of the CONFIG_X86 && defined CONFIG_DMI region
+- Also fix unused function warning by adding __always_inline.
+- Link to v1: https://lore.kernel.org/r/20250528-for-upstream-not-instantiate-spd5118-v1-1-8216e2d38918@canonical.com
+---
+ drivers/i2c/busses/i2c-i801.c | 28 +++++++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index a7f89946dad41..2a56396d88c29 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -978,6 +978,14 @@ static void i801_disable_host_notify(struct i801_priv *priv)
+ 	iowrite8(priv->original_slvcmd, SMBSLVCMD(priv));
  }
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 075ec1d1b73a..2459be6aecf4 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -1400,11 +1400,8 @@ static int platform_probe(struct device *_dev)
-        if (ret)
-                goto out;
-
--       if (drv->probe) {
-+       if (drv->probe)
-                ret = drv->probe(dev);
--               if (ret)
--                       dev_pm_domain_detach(_dev, true);
--       }
-
- out:
-        if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
-@@ -1422,7 +1419,6 @@ static void platform_remove(struct device *_dev)
-
-        if (drv->remove)
-                drv->remove(dev);
--       dev_pm_domain_detach(_dev, true);
- }
-
- static void platform_shutdown(struct device *_dev)
-diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
-index 781968a128ff..4bd1e3c7f401 100644
---- a/drivers/base/power/common.c
-+++ b/drivers/base/power/common.c
-@@ -111,6 +111,9 @@ int dev_pm_domain_attach(struct device *dev, bool power_on)
-        if (!ret)
-                ret = genpd_dev_pm_attach(dev);
-
-+       if (dev->pm_domain)
-+               dev->pm_domain->detach_power_off = power_on;
+ 
++static inline __maybe_unused void __i801_register_spd(struct i801_priv *priv)
++{
++	if (priv->original_hstcfg & SMBHSTCFG_SPD_WD)
++		i2c_register_spd_write_disable(&priv->adapter);
++	else
++		i2c_register_spd_write_enable(&priv->adapter);
++}
 +
-        return ret < 0 ? ret : 0;
+ static const struct i2c_algorithm smbus_algorithm = {
+ 	.smbus_xfer	= i801_access,
+ 	.functionality	= i801_func,
+@@ -1157,6 +1165,19 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
+ 	}
  }
- EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index f0bd8fbae4f2..12e97e09e85c 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -748,6 +748,7 @@ struct dev_pm_domain {
-        void (*sync)(struct device *dev);
-        void (*dismiss)(struct device *dev);
-        int (*set_performance_state)(struct device *dev, unsigned int state);
-+       bool detach_power_off;
- };
+ 
++#ifdef CONFIG_I2C_I801_MUX
++static void i801_register_spd(struct i801_priv *priv)
++{
++	if (!priv->mux_pdev)
++		__i801_register_spd(priv);
++}
++#else
++static void i801_register_spd(struct i801_priv *priv)
++{
++	__i801_register_spd(priv);
++}
++#endif
++
+ /* Register optional targets */
+ static void i801_probe_optional_targets(struct i801_priv *priv)
+ {
+@@ -1177,10 +1198,7 @@ static void i801_probe_optional_targets(struct i801_priv *priv)
+ 		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
+ 
+ 	/* Instantiate SPD EEPROMs unless the SMBus is multiplexed */
+-#ifdef CONFIG_I2C_I801_MUX
+-	if (!priv->mux_pdev)
+-#endif
+-		i2c_register_spd_write_enable(&priv->adapter);
++	i801_register_spd(priv);
+ }
+ #else
+ static void __init input_apanel_init(void) {}
+@@ -1283,7 +1301,7 @@ static int i801_notifier_call(struct notifier_block *nb, unsigned long action,
+ 		return NOTIFY_DONE;
+ 
+ 	/* Call i2c_register_spd for muxed child segments */
+-	i2c_register_spd_write_enable(to_i2c_adapter(dev));
++	__i801_register_spd(priv);
+ 
+ 	return NOTIFY_OK;
+ }
 
-Rafael, Ulf, Dmitry, Jonathan, all,
+---
+base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
+change-id: 20250526-for-upstream-not-instantiate-spd5118-463225b346a0
 
-Could you please let me know how do you consider this approach?
+Best regards,
+-- 
+Yo-Jung (Leo) Lin <leo.lin@canonical.com>
 
-Thank you,
-Claudiu
