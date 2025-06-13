@@ -1,68 +1,108 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8980F1E0DE8;
-	Fri, 13 Jun 2025 05:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C28253B7B;
+	Fri, 13 Jun 2025 05:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749791997; cv=none; b=Pekvuk1CwhfHtX8n4lpj2gs1FHGAaXECV2xiI861LwMN1zHHJohcMQ+G5Itk+CLBe4fowMFaMVlqGDrFfzpZv3TnhWeYh0qu7Md0KpJ299bMx5IcIqMjxkCgnPOPzjDHUNZdLhVZftx5WIMjJuc69Xbgz95fm2bfrEbVLcsfaqE=
+	t=1749792005; cv=none; b=tccBR/Ed/lQhORl8ejNZk/VB6BsSJDT7UcOixewaNzSeiK7e8+6j4rmjOlnRl54THENJXIAmmLFs6nzBJMNlgslAMbRL6olQUbjAqlOCQO4t5WBkdR/Oyp1GI8SC5b72nl/mnzsiBjn9wuVQw+JgOA9zym5txsG4OeSc57NZcs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749791997; c=relaxed/simple;
-	bh=ptZLwYHmiAC1yec4Gg5juWYzR17LLoKlGX10JLGA4yo=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=X2Q3rUT/Ok9ybpm5Pol+NZEcMlyaf3T2QUDVQIrq1OorD6ipblzLPSt2f+lVAda2WB1nhnZAqSIjuVVB5x+/cn/eLsH/TyST0M/xZYmhbFiiIfyYBPrNnTm80e6zkY4xG7alVI8/yM33dYZqg+Kn5q7FxxwqV58ILeeeRbp7OuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=QvuINQWn; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1749792005; c=relaxed/simple;
+	bh=3tCqr02/XcoI9jrC5WwlXdvw6SpFrS6i8hbAiNUOV9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=f+lJKO0cjY5p0Y+6WMQ6JwTQefaEbcGT41aZtuAWzkT4SK/rYQCGGwjB5tipc6qAnQZB/RzYi18Rgmf4Tar4L4fB6Y0/XQoUvSxYYM3iPaEcDO4ZyhF9QkIl1i6FasI2Dzjxo8R4cuf3j2fumPEnGCKp3bzaTEKGUOHVt0pUSIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X6XHrAhQ; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="QvuINQWn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6XHrAhQ"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-747ef5996edso1694813b3a.0;
+        Thu, 12 Jun 2025 22:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1749791992;
-	bh=j9lhSwodmqSZLtijyE0pSLrkjXtCG6UQNDWeeUmgbW8=;
-	h=From:To:In-Reply-To:References:Subject:Date;
-	b=QvuINQWnEYPzu6AiW//WC2jHdsSgWYaKlBuTLW6kwJTlFGj6iAGW8/qDn+talgmly
-	 dkG5UehVSGzVgQZQbo5S0KuKFAPzBUsjt86qXJhkf1AHwPV5MPe9FXztTuQ0By/dRF
-	 NlCWml1pUnYk+rXEuiYyg6or2JzFHmKKRNi3yzYcyf9DWCgMJkGZW2tnubQ6DEAXAt
-	 iqXZQPeIi/euzBI7GXW7W/HbtudZoiWOrURkZSi2XnYvH3a9qt7mFALREivlMaQSkx
-	 O1hOL74z78zGYghiRHkm3jlsWEBNypNMZT+Ioxxig9DZphR+NnWX+z/8Ly/F8ubc5r
-	 dEuftikvGR4hQ==
-Received: from [127.0.1.1] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5763A680F3;
-	Fri, 13 Jun 2025 13:19:51 +0800 (AWST)
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- Peter Yin <peteryin.openbmc@gmail.com>
-In-Reply-To: <20250611080514.3123335-1-peteryin.openbmc@gmail.com>
-References: <20250611080514.3123335-1-peteryin.openbmc@gmail.com>
-Subject: Re: [PATCH v2 0/5] Revise Meta(Facebook) Harma BMC(AST2600)
-Message-Id: <174979199120.342730.12220286428468673903.b4-ty@codeconstruct.com.au>
-Date: Fri, 13 Jun 2025 14:49:51 +0930
+        d=gmail.com; s=20230601; t=1749792003; x=1750396803; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k8J3QiOw9YA5BRvHLHJu/HycsZALO2W/PjHSUFrfbe4=;
+        b=X6XHrAhQtuFBF8iMd3MYus12MLv2NT/jpaRJ823ZG2IsH0+l2e99Aq/UAY+rhMOiSI
+         JY5jgXHVeYqNFmBrhwm9Lwci9lZqoHLZ++dXURQavFxPjpJ12sl5HegOBtfr3QMbnpS2
+         H22yn5QOTSmMZ2RN/AQFzmGr4B93rYnow+atx4DMlmrItgEfla9f9tnt7+vQQYCWcBDL
+         +osWJtHaL0LoNTCRj2r1YNDt8DcSTG6rdVV31SpBRYKJAEoQ+/tQ8Wout2Sh3nYWAo1x
+         yhtZ0CF9Md5fj7mICcTlAZr/FS1XtL6cCIKwwLcZSErfxQKBPtcXQBxWZf1KQ3oudiz6
+         e4RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749792003; x=1750396803;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k8J3QiOw9YA5BRvHLHJu/HycsZALO2W/PjHSUFrfbe4=;
+        b=HYBpwsSCrZUhGcQqMWOBbDrPd7fsc6rCC5JUygO2VxV81KkOeHPpcmH+rR7SaBfwvb
+         4YrEldPSm1Ty5/hUltSTnjOzM0F4Qt153z51HW1d+jQ8S3HeXPzhohBrM1+TvuPCSLRW
+         MZPiRCq9TQ9MWSfXxysGnNvbTvoMFyvqUsiLVxniD+UFlOYVspVi97VAWrl52uF8aHCH
+         g4JT2d2ngaTNs67ZDj/CyPE6IfJSWmPi2LjwurfD8GZohK5qCY7V2L+9Uws6FIMI3qwA
+         jRwCweQFpTqan6VoOlZbo0oJBzDZAlqJeDJFimK5FV3scEUrz1eT7XeydTyZadecvYim
+         /UTA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7aIymLbbJ8fuUZSxb4HK8TXqdmPDy0d6U1rb4lkU7hAoaUGNxsAZTFcWJGetLCphE8r+g1K48FxoC@vger.kernel.org, AJvYcCUkhY1OCHiBIya0VIf8/Dg4o8gbtlLbPAl5lBX7f6QQ0OYgEVY6gkt2NAbRXEY0DTlTUyw7nfrmih7RzGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxETXmrAWFvtmEsUduIEt936vIXW2WZniO2tdF9H5UNPGz2cTx+
+	XOvQN637j9yNXs6ZZMHpJecaUYNp2hTuTQ/bE0gfR1SopffqmZ7QK/Ht
+X-Gm-Gg: ASbGnctgMDr21bVhoUA/B8o4CVtqcmJ0XOiTBEjoI+jT2j6Q9JHIgKR/sz46GAbB6Dq
+	TJCwey0bQxTmhL33La5h6sn4ENZ7tTepKrWLH63UdkXDuFuz6QZCKKTi1n+s3NvlPUQ2VZNHs75
+	3doRp+7fNufoy7XZshfXPcercj89+cLG7tefVZ9tyJ8O+L3IUBqf80u79WV5/YbDl3+QXfBgvho
+	chOHEoURdEFOpMRi4/WMbJH4WMW4DOfP0wYJyLRrSWSO/2bFxlXFqxppLo6LMP4NR87F/ZFsfmf
+	gol6KRH7IRQKRAPbblJBbxNdMdfMl0De8BgGqfa920wngm/mLTXDV1spj6n8
+X-Google-Smtp-Source: AGHT+IHcBqV07orbqmglXVR0EDk2W9hXsnO11JVIlP10U4fClURVXyuO/Hy1R8naKjKmYWjFRCjmfQ==
+X-Received: by 2002:a05:6a00:2342:b0:742:4545:2d2b with SMTP id d2e1a72fcca58-7488f6ec975mr2504576b3a.3.1749792003042;
+        Thu, 12 Jun 2025 22:20:03 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:7667::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffec9e8sm735318b3a.11.2025.06.12.22.19.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 22:20:02 -0700 (PDT)
+Date: Fri, 13 Jun 2025 02:19:52 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v3 0/5] Quality Improvements for Rockchip-IP PCIe
+Message-ID: <cover.1749791474.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 11 Jun 2025 16:05:09 +0800, Peter Yin wrote:
-> Summary:
-> Revise linux device tree entry related to Meta(Facebook) Harma
-> specific devices connected to BMC(AST2600) SoC.
-> 
-> Based on:
-> https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-> commit-id: cb3f397b17bbda3f2998eff9e54b040c8fa85cc9
-> 
-> [...]
+During a 30-day debugging-run fighting quirky PCIe devices on RK3399
+some quality improvements began to take form and this is my attempt
+at upstreaming it. It will ensure maximum chance of retraining to Gen2
+5.0GT/s, on all four lanes and plus if anybody is debugging the PHY
+they'll now get real values from TEST_I[3:0] for every TEST_ADDR[4:0]
+without risk of locking up kernel like with present broken async
+strobe TEST_WRITE.
 
-Thanks, I've applied this to be picked up through the BMC tree.
+---
+V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
+suggestion
+V1 -> V2: use standard PCIe defines as suggested by Bjorn
+
+Geraldo Nascimento (5):
+  PCI: rockchip-host: Use standard PCIe defines
+  PCI: rockchip: Drop unused custom registers and bitfields
+  PCI: rockchip-host: Set Target Link Speed before retraining
+  phy: rockchip-pcie: Enable all four lanes
+  phy: rockchip-pcie: Adjust read mask and write
+
+ drivers/pci/controller/pcie-rockchip-host.c | 48 +++++++++++----------
+ drivers/pci/controller/pcie-rockchip.h      | 11 +----
+ drivers/phy/rockchip/phy-rockchip-pcie.c    | 16 ++++---
+ 3 files changed, 36 insertions(+), 39 deletions(-)
 
 -- 
-Andrew Jeffery <andrew@codeconstruct.com.au>
+2.49.0
 
