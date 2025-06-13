@@ -1,148 +1,146 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3BE274677
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF1A284B36
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749798761; cv=none; b=a9Kde6E+upZXxJzqaOnAEf2/f4cYmvzkv2SX3vXm8SscxSFACwj9c9Fxt3/mucptgKitNsc/321Xc4OjQHRelqMNQQbew6NraVKHODsftb/6LfFPnjvxmGZ1yehMkiDQMg+FJJnRDjPewtUUdJ0rf59l/p7s+kx1qT4+9BZ8/HU=
+	t=1749798971; cv=none; b=aS77kwfvUoGBOdl3lP72YY+3dYbrTkUurgKAIudp3QmLsOHY6ZpsET/pEmMYW5HRMndPBoMG3MeNNulaJ0GIGy9jN0dYdCsAbQuPFu6N6tUm8pzFQeNp79mVevlSsT2KBwzCYeu/qfNGre4plpE0Y6gUA9DXWCvi745JEvX8tos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749798761; c=relaxed/simple;
-	bh=sWyWIfwI7kTzqivc7bTrOqy9Tj8LyGdscPOXHhGCi4s=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rx0XYLc1tO/wvBBtQ2OJJdrNOrVgC1D5fcPIuIl0+9vrXTZkqlEe+52lxmTpSwQEzF/dYCdDxb7v455/bxtCDhbCaENG/lRLvh0JzwfA5JJDaN17rHkRqy5vHET0VP+1WanWJEEYyMglXyjzhcA8Fbf818S2rlgI3wUyYiMe8RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86f4f032308so357063839f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:12:38 -0700 (PDT)
+	s=arc-20240116; t=1749798971; c=relaxed/simple;
+	bh=m6qHT7ZGx3axLWtAA1ik9FjqdHgd8DBCvLXWUV8VpHI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bmkBl1oP/ymphmlrqI0wthW+XyQfMWMVljfhkN7Eo938UgaXLH84jIlP9BwYoF9/1NaX5CIEnMTxe/iYdv/RxQ+zO1WuQvmXe+ZodJsEf3kb1/R+gInFyvf7MBgXQg8W3FEu/3Ol80SLaYONxAYyRdVDc6/W863Z5RoD939F+p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bwItP8lG; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bwItP8lG"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cfb8b335so1514495e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749798966; x=1750403766; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y5kZ7u7Dr0fsKDXt1wjhWFkaPUY7KtvLcENII4UEcyQ=;
+        b=bwItP8lGOXzBcHUFFattj3uWzKftto7bIWs38yRmEejSObW4KERYVANy0VQdtPt92t
+         qcUmbUD02VmLFUnuQssFmUmWJhcYCPGbmURQb8m1XXtozDlz4qU6JFSzXNYBa6smm9SM
+         4NUEVAwHG/3F8KXxOlaA2Ec2e9uRZbQTQalte5WP7MkJrsdCzmI9tZEcyofcHj+8qBO7
+         B/6dhsEEEGpg1X+bLpPCMKhsTFuqky55CF1cdYrUDR3dBzBwmVgWJqH9/8WmQPZz7Phf
+         bT0Aeywz4keTLBU8myJtlziA2/q4iBe4kiO9MYgfgpcw5OqTQqWSGPwpKCBOWV7fgHfo
+         wXMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749798757; x=1750403557;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=juhYk1wKYKfUnaUV/pQ8ZEVYMZB94Oi+kC5HvDlYkTc=;
-        b=vmarQzM/kAYaTbbugDole9YcTgqMNYcf8sjdZgy3DCs1pM4w5K9pWDxv0wct7xZLQw
-         h8stO9klirb31fQ5dmNCuUp8QJAUk+8HRsCac/jKCDUpSlaUVZaRXxUz4kd7Ovwtpje7
-         LPtlOrwnh1cwcXsIzXJOlevtUxA0QZq38W1AXB008EEy6HMzK1iBnTf5F6NpA+vQGjjw
-         REpwjkc5w7Z9busv4lnx6J8/Fjv3SBxgbQ+JPmxGH4AkRy3+Oz9DgenfQxzihVOLqJ4k
-         qxwAfpeEyG+wwW7qLnXGAtAHnNeTAtR8xpdOI00jKFl0qlXnbIQgrjpl8/lux1ligPyt
-         70Og==
-X-Forwarded-Encrypted: i=1; AJvYcCUIcnGYzR+WW8yavYEtHo3xqxfU3mAeodnhpQy/NWcnQbODReO3KFaIOaDTMbGgJ3sjkxa/SVUd1lvTPJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNO/clvR/T9H+SwWrYenr54bOkHKp1HRbtIAN5hR1hS0149L8X
-	hv0jq6Q58czZnlZPfxMbm+5PXUjzHim4aVYXqA01yO09RX+puvYB9B3J6yRjAaUBsz6Rpst0Ml7
-	xObEAScLSFWgnFNfOKDKm4i4xNcda/p7Cdrvl/tS2Vcn96ivAJ7v7XyeGpAk=
-X-Google-Smtp-Source: AGHT+IGBwD/2/C4kc9h6TIClenfR5iYoIenohZ5RomSbIQ0maGl/dTNKfi63zAkyRk+LR/aAQ38VdNauGcbMCQtdfWzn00FnCnPE
+        d=1e100.net; s=20230601; t=1749798966; x=1750403766;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y5kZ7u7Dr0fsKDXt1wjhWFkaPUY7KtvLcENII4UEcyQ=;
+        b=D/clz2ALI/9oS06LK5RSFvf6+kxemXCl/oV8mvrEurlQf6Vy9Gx6/N58N/lSIKyywL
+         OPzTptvA+mgxuE0aHVjTz0YwTu3lZgR5blNJhZbiNB2T28Os4Mey9pIiBBwvhRNFSLWX
+         glx8CioQNlQ7x9kHMsvh4Sh1zypc93DJRTOOaF5TWDGLBE3L+REJRv24Iw0I6IY/LNg+
+         LPmznK45HlFjGNsQInO3Atk5bZ3I+MKdkwdYoHuev5NSlrvNXMCzEJAPaPRiVNWZl5Tt
+         SrmonraXQBlzSKmiJhJ0irDx65sXQTGk87D5Ua4CefgbdC2scjB0n1XHTrX9rE3axMQ9
+         71MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTjRZutehNpQrKMzkFzpMCot+iKuwz2NaO2Xzg2rSHXWXgdrBdauPU8XHH3IUnDDQ2v2LIf7PPRgVZmQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEQevDemhg2xjAblX7GCuYv7oMC7en+WZFVrOj5ZzHuX+32fxm
+	rwmjx7lWOUe32Xvly0bX35VEjo5Ej1E7ovOJazCwSIqrAxlYzpTZ2dAQNt7rfGWBO/g=
+X-Gm-Gg: ASbGncu06cTISHXKXlQHRIm6fveVrcTIOZm6RqixjJFCXZzcnx3+DWa3X7hGOwBNx1M
+	4xVaJNz/KWgiDIWX7hRsXPGtsYZ44iCIXOEyCdiUb9z5ONuYhJwSFJ9WoUoSX3ZpLBeF0BHM/1j
+	yryD7uvJVnyAdvPokWnm1+b3+92kbXycbsSdDmDw3tuFCU4h0yDAecpk0W+ppPsWtu6I6vxsu5K
+	XEsVFiPe1RUMLH97LsE80BvpWBeESxu22p8VplTv5h4MNz+Rdf9u9RlJ6sDWLsNSCsNmDX3YQr/
+	VRAjYFzvXkb1dwn5ka58ONe8vMkFNFCyeC//51vVKRgnJvEHp4puvsbbdtrY/1WxAiv/+LA38w=
+	=
+X-Google-Smtp-Source: AGHT+IG5fdCQC4xaFcWmupiR1XNMdJV3tpCXa2Aa0dhnWO62Uu1xkclF26M8m6TAJ2GxEAXFunYgsQ==
+X-Received: by 2002:a05:600c:1d24:b0:441:d244:1463 with SMTP id 5b1f17b1804b1-453349bff4dmr7398455e9.0.1749798965705;
+        Fri, 13 Jun 2025 00:16:05 -0700 (PDT)
+Received: from kuoka.. ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54d98sm1456138f8f.7.2025.06.13.00.16.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 00:16:05 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] media: exynos4-is: fimc-is: Fully open-code compatible for grepping
+Date: Fri, 13 Jun 2025 09:15:57 +0200
+Message-ID: <20250613071556.46521-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2196:b0:3dd:ecc8:9773 with SMTP id
- e9e14a558f8ab-3de00c0951fmr18522855ab.19.1749798757590; Fri, 13 Jun 2025
- 00:12:37 -0700 (PDT)
-Date: Fri, 13 Jun 2025 00:12:37 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684bcf65.050a0220.be214.029b.GAE@google.com>
-Subject: [syzbot] [bpf?] WARNING in do_check
-From: syzbot <syzbot+a36aac327960ff474804@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2257; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=m6qHT7ZGx3axLWtAA1ik9FjqdHgd8DBCvLXWUV8VpHI=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoS9AsRRjfFwrBhrAdu6YhTXWliEG4OfD3sB8xm
+ u9Go3bASU+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEvQLAAKCRDBN2bmhouD
+ 1/ilD/4/zLqseRzSCkCDre89I0rSm1KMGMk+UqY9BuQkG2ooiHyUFkBGTWUWzbEIt2nYYAKK+Vj
+ Y/RnC0IOf1Z+N36zVqQVmZWfZ31dPCWh3Kr+oCBy53v65WSmJYpFt2fq57HhNNVaZock0CV2UY4
+ cfwgcSLPVPkoRojPiWn5JtnpRaYw0irSwPcUhIwDk7qJoC9uCt3kajj82cSzzfA+XHHUfnnukjQ
+ JOjs2YdOzReWwtyydz349ZOvJBCIH1L2km/BAeeJAcA8mpAH+T3HOSHYrqbO+2mQhIaBR2QL0dw
+ nYOPFdlIkBJEDAjkOks+r2VFHOvED4gnTa3WTSxW6KhWZOq0KwLSenfohvAOzjvlVNwkJZCvmhh
+ v43wkRC9ojZwug8PGq504B/ukGqpiUNdQgB1VMQ0FDZcoyfnE9iX1Mlv1J0gQ1ZiVWaHnGPMRx+
+ Yqhyx2u8MkyVo4Rox9g6+xPHIHXe+94xDprndb/PHypnN39SQ5eVuxD58vkonvraBT1mma/K5g9
+ A4JYCaP6K43pFci+7f6FvWVqERy2CD/nQZVYVNuz2mh77d43k4CgD2DV4hoAOoX2TFnQtUHZCxw
+ Qpc6/BTgjgs+O3HVJUoE9+ARzSG0DvpK7NmCz+HTvJqSxDKiEP7G2ZTeAAPMm2m1fvWOCb3Bb0X tVc9mUs8NAOu5xw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-Hello,
+It is very useful to find driver implementing compatibles with `git grep
+compatible`, so driver should not use defines for that string, even if
+this means string will be effectively duplicated.
 
-syzbot found the following issue on:
-
-HEAD commit:    1c66f4a3612c bpf: Fix state use-after-free on push_stack()..
-git tree:       bpf-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1346ed70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=73696606574e3967
-dashboard link: https://syzkaller.appspot.com/bug?extid=a36aac327960ff474804
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1392610c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a9ee0c580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/2ddb1df1c757/disk-1c66f4a3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6a318fc92af0/vmlinux-1c66f4a3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/76c58dddcb6c/bzImage-1c66f4a3.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a36aac327960ff474804@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-verifier bug: add backedge: no SCC in verification path, insn_idx 9(1)
-WARNING: CPU: 1 PID: 5838 at kernel/bpf/verifier.c:1970 add_scc_backedge kernel/bpf/verifier.c:1969 [inline]
-WARNING: CPU: 1 PID: 5838 at kernel/bpf/verifier.c:1970 is_state_visited kernel/bpf/verifier.c:19417 [inline]
-WARNING: CPU: 1 PID: 5838 at kernel/bpf/verifier.c:1970 do_check+0xda21/0xdba0 kernel/bpf/verifier.c:19861
-Modules linked in:
-CPU: 1 UID: 0 PID: 5838 Comm: syz-executor286 Not tainted 6.15.0-syzkaller-g1c66f4a3612c #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:add_scc_backedge kernel/bpf/verifier.c:1969 [inline]
-RIP: 0010:is_state_visited kernel/bpf/verifier.c:19417 [inline]
-RIP: 0010:do_check+0xda21/0xdba0 kernel/bpf/verifier.c:19861
-Code: 01 90 48 b8 00 00 00 00 00 fc ff df 41 0f b6 04 06 84 c0 0f 85 2b 01 00 00 41 8b 75 00 48 c7 c7 20 49 91 8b e8 d0 05 ad ff 90 <0f> 0b 90 90 e9 27 fe ff ff e8 11 5d e9 ff e8 3c 10 4d 00 ba 38 00
-RSP: 0018:ffffc900043eeec0 EFLAGS: 00010246
-RAX: 53f7659fb2f02200 RBX: ffffc900043ef180 RCX: ffff8880257d1e00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
-RBP: ffffc900043ef2c8 R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bfaa44 R12: ffff88801c7a4b00
-R13: ffff88801c7a4b54 R14: 1ffff110038f496a R15: 0000000000000000
-FS:  000055556bd6a380(0000) GS:ffff888125d54000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000ebea398 CR3: 00000000713fa000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_check_common+0x18fa/0x2460 kernel/bpf/verifier.c:23086
- do_check_main kernel/bpf/verifier.c:23177 [inline]
- bpf_check+0x110e2/0x1a240 kernel/bpf/verifier.c:24530
- bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2972
- __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5978
- __do_sys_bpf kernel/bpf/syscall.c:6085 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6083 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6083
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f37a741f569
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe3011bf08 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007ffe3011c0d8 RCX: 00007f37a741f569
-RDX: 0000000000000094 RSI: 0000200000000840 RDI: 0000000000000005
-RBP: 00007f37a7492610 R08: 00007ffe3011c0d8 R09: 00007ffe3011c0d8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffe3011c0c8 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.c | 2 +-
+ drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.h | 2 --
+ drivers/media/platform/samsung/exynos4-is/fimc-is.c     | 2 +-
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.c b/drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.c
+index b243cbb1d010..b5b37b6f8fa8 100644
+--- a/drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.c
++++ b/drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.c
+@@ -131,7 +131,7 @@ static const struct dev_pm_ops fimc_is_i2c_pm_ops = {
+ };
+ 
+ static const struct of_device_id fimc_is_i2c_of_match[] = {
+-	{ .compatible = FIMC_IS_I2C_COMPATIBLE },
++	{ .compatible = "samsung,exynos4212-i2c-isp" },
+ 	{ },
+ };
+ 
+diff --git a/drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.h b/drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.h
+index a23bd20be6c8..69d597e5c297 100644
+--- a/drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.h
++++ b/drivers/media/platform/samsung/exynos4-is/fimc-is-i2c.h
+@@ -6,7 +6,5 @@
+  * Sylwester Nawrocki <s.nawrocki@samsung.com>
+  */
+ 
+-#define FIMC_IS_I2C_COMPATIBLE	"samsung,exynos4212-i2c-isp"
+-
+ int fimc_is_register_i2c_driver(void);
+ void fimc_is_unregister_i2c_driver(void);
+diff --git a/drivers/media/platform/samsung/exynos4-is/fimc-is.c b/drivers/media/platform/samsung/exynos4-is/fimc-is.c
+index 2e8fe9e49735..ed7b7ca16f71 100644
+--- a/drivers/media/platform/samsung/exynos4-is/fimc-is.c
++++ b/drivers/media/platform/samsung/exynos4-is/fimc-is.c
+@@ -207,7 +207,7 @@ static int fimc_is_register_subdevs(struct fimc_is *is)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	for_each_compatible_node(i2c_bus, NULL, FIMC_IS_I2C_COMPATIBLE) {
++	for_each_compatible_node(i2c_bus, NULL, "samsung,exynos4212-i2c-isp") {
+ 		for_each_available_child_of_node(i2c_bus, child) {
+ 			ret = fimc_is_parse_sensor_config(is, index, child);
+ 
+-- 
+2.45.2
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
