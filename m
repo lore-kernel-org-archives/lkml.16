@@ -1,302 +1,222 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC992DFA2F
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583EE2D8769;
+	Fri, 13 Jun 2025 11:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814859; cv=none; b=ltTxUOSHflOIPECCd5qFyWIZ6Xad7cyFEALq0O5Qt6sBKXYIlXGLE4BcWF4IqpEkP4TfQkghDoEKRMzULg4TMbH77IzoDj3SeEmf0aszMYU9ZtY7z1f8iKfapSLtsfNJnQ/msZOfe/rcFmKqN/7CALSlf7v1BMv2+cPGlO/SPqo=
+	t=1749814875; cv=none; b=Ddb5mT6z1+NxOjsJVZfdyI5cwVFMMNNv9lLQtYVHD+PlWZCeWXaT3UB0cAdJdkEkEhU8B1HEcUXdhUG6sXBbhxmEyjwRd4fQPMMo6wv9bOGj/IqFLlIKdxI4uFuVQ6gKd4kkC60CmPSuBLcIzStQfeNgOSPlDs2gWiz2tT2MmCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814859; c=relaxed/simple;
-	bh=3uw5VUh/DqhrYkitcO3Ub7yKF46Sf6kT9VPpjmbdVok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eea/0oMUbzG8xLe7KPVTcd1xEJ2U2qb3nkNYn5ii3Abnh2ajLGRJifTLLXMpapvRTb7VokTo5ofGLfuFLZuSPdOm1QgfqZj5l9XhaXqB7bEP99cdbK2Jrm+JBw6j4OisPSh5C7rWCTVMbq4tHs/+PAU8ThuTpNYKXqGwfrH/x30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fGRcHaVg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NWneG4sG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fGRcHaVg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NWneG4sG; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fGRcHaVg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NWneG4sG";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fGRcHaVg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NWneG4sG"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2DE2321749;
-	Fri, 13 Jun 2025 11:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749814855; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ui+2NR8PHPMbz98Hu9Hxy1TPwrhV0ozwjHMRatemvYY=;
-	b=fGRcHaVgvbrdC12QLl5Tu3zycV9x8IvnsIYiepRSZ0eD+YtLWAx6tiqzhne+TSEOWwECLs
-	ScbGUFNNwFvMuqlhcwA5Md7l8f4G1mh0QVvYrM+wMCq445n8arXDPsyK2mKyx5lg948dW3
-	5F+nvKCMfV3BWGsnlRIi/HZL6878hPk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749814855;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ui+2NR8PHPMbz98Hu9Hxy1TPwrhV0ozwjHMRatemvYY=;
-	b=NWneG4sGCSXJqDTn15f24iNneFd4DMcDjL2Xq9tb7igXbSxP/g6EzcZmuoyrPStFpbqcuj
-	TwfC9DWon/94OlBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749814855; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ui+2NR8PHPMbz98Hu9Hxy1TPwrhV0ozwjHMRatemvYY=;
-	b=fGRcHaVgvbrdC12QLl5Tu3zycV9x8IvnsIYiepRSZ0eD+YtLWAx6tiqzhne+TSEOWwECLs
-	ScbGUFNNwFvMuqlhcwA5Md7l8f4G1mh0QVvYrM+wMCq445n8arXDPsyK2mKyx5lg948dW3
-	5F+nvKCMfV3BWGsnlRIi/HZL6878hPk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749814855;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ui+2NR8PHPMbz98Hu9Hxy1TPwrhV0ozwjHMRatemvYY=;
-	b=NWneG4sGCSXJqDTn15f24iNneFd4DMcDjL2Xq9tb7igXbSxP/g6EzcZmuoyrPStFpbqcuj
-	TwfC9DWon/94OlBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BF791137FE;
-	Fri, 13 Jun 2025 11:40:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kOGQLUYOTGh2YgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 13 Jun 2025 11:40:54 +0000
-Message-ID: <51d92681-188e-40d8-bda0-f4ff95eeccd7@suse.de>
-Date: Fri, 13 Jun 2025 13:40:54 +0200
+	s=arc-20240116; t=1749814875; c=relaxed/simple;
+	bh=AKO2IWwBCnH/kj2D9yQB16wKAlI1BiVH+clJ4sSGF9w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gw5GqtuG47iAU3o3OS0bqxwT4QUwvZ6yu+FR2fEvXbdYyoyCTCvb6eQTI1Put8v8BW2NHv9y8rYCyPJH/qwGdh4ROY1I0+SEFOndWioJIEIYh7B2I/i+USTFXPMpgVth1voiY3Zlr+Tg+nuYtEg8N/Tk5KefcoG/vGjH25kMJEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bJcnJ6WN4zdbCp;
+	Fri, 13 Jun 2025 19:37:08 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5689E18047B;
+	Fri, 13 Jun 2025 19:41:01 +0800 (CST)
+Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 13 Jun 2025 19:41:01 +0800
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 13 Jun 2025 19:41:00 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH] perf: ftrace: add graph tracer options args/retval/retval-hex/retaddr
+Date: Fri, 13 Jun 2025 19:40:47 +0800
+Message-ID: <20250613114048.132336-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm: panel: add support for Samsung S6E8AA5X01 panel
- controller
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250612-panel-samsung-s6e8aa5x01-v1-0-06dcba071ea6@disroot.org>
- <20250612-panel-samsung-s6e8aa5x01-v1-2-06dcba071ea6@disroot.org>
- <84ee6388-92af-49c8-988b-b79ed1453d5e@suse.de>
- <84663a88789b993a1cab8c55af4e03a7@disroot.org>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <84663a88789b993a1cab8c55af4e03a7@disroot.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linaro.org,quicinc.com,gmail.com,ffwll.ch,linux.intel.com,kernel.org,oss.qualcomm.com,lists.freedesktop.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,disroot.org:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemq200002.china.huawei.com (7.202.195.90)
 
-Hi
+This change adds support for new funcgraph tracer options funcgraph-args,
+funcgraph-retval, funcgraph-retval-hex and funcgraph-retaddr.
 
-Am 13.06.25 um 13:03 schrieb Kaustabh Chakraborty:
-> On 2025-06-13 09:39, Thomas Zimmermann wrote:
->> Hi
->>
->> Am 12.06.25 um 16:52 schrieb Kaustabh Chakraborty:
->>> Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Implement
->>> a basic panel driver for such panels.
->>>
->>> The driver also initializes a backlight device, which works by changing
->>> the panel's gamma values and aid brightness levels appropriately, with
->>> the help of look-up tables acquired from downstream kernel sources.
->>>
->>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> [...]
->
->>> +
->>> +static void s6e8aa5x01_mcs_protect(struct mipi_dsi_multi_context *dsi,
->>> +				   struct s6e8aa5x01_ctx *ctx, bool protect)
->> I found this interface confusing. Rather split it up into .  It also does two different things AFAICT.
->>
->> - The mcs_mutex protects against concurrent access from update_status and enable
-> mcs_mutex is meant to prevent any early access protection of the MCS commands.
-> Suppose there are two functions, A and B, accessing MCS.
->
-> ENTRY: A()
-> (access protection disabled)
-> ...
->
-> ENTRY: B()
-> (access protection disabled)
-> ...
-> (access protection enabled)
-> EXIT: B()
->
-> [!] cannot access MCS commands here anymore
-> (access protection enabled)
-> EXIT: A()
->
-> And to avoid such errors a mutex is provided.
+The new added options are:
+  - args       : Show function arguments.
+  - retval     : Show function return value.
+  - retval-hex : Show function return value in hexadecimal format.
+  - retaddr    : Show function return address.
 
-This mutex protects a lot more than just the access flags. It prevents 
-backlight and enable code to concurrently set gamma on the device. Even 
-if you move the MCS_ACCESSPROT to enable/disable helpers, you'll likely 
-need the mutex around the gamma updates.
+ # ./perf ftrace -G vfs_write --graph-opts retval,retaddr
+ # tracer: function_graph
+ #
+ # CPU  DURATION                  FUNCTION CALLS
+ # |     |   |                     |   |   |   |
+ 5)               |  mutex_unlock() { /* <-rb_simple_write+0xda/0x150 */
+ 5)   0.188 us    |    local_clock(); /* <-lock_release+0x2ad/0x440 ret=0x3bf2a3cf90e */
+ 5)               |    rt_mutex_slowunlock() { /* <-rb_simple_write+0xda/0x150 */
+ 5)               |      _raw_spin_lock_irqsave() { /* <-rt_mutex_slowunlock+0x4f/0x200 */
+ 5)   0.123 us    |        preempt_count_add(); /* <-_raw_spin_lock_irqsave+0x23/0x90 ret=0x0 */
+ 5)   0.128 us    |        local_clock(); /* <-__lock_acquire.isra.0+0x17a/0x740 ret=0x3bf2a3cfc8b */
+ 5)   0.086 us    |        do_raw_spin_trylock(); /* <-_raw_spin_lock_irqsave+0x4a/0x90 ret=0x1 */
+ 5)   0.845 us    |      } /* _raw_spin_lock_irqsave ret=0x292 */
+ 5)               |      _raw_spin_unlock_irqrestore() { /* <-rt_mutex_slowunlock+0x191/0x200 */
+ 5)   0.097 us    |        local_clock(); /* <-lock_release+0x2ad/0x440 ret=0x3bf2a3cff1f */
+ 5)   0.086 us    |        do_raw_spin_unlock(); /* <-_raw_spin_unlock_irqrestore+0x23/0x60 ret=0x1 */
+ 5)   0.104 us    |        preempt_count_sub(); /* <-_raw_spin_unlock_irqrestore+0x35/0x60 ret=0x0 */
+ 5)   0.726 us    |      } /* _raw_spin_unlock_irqrestore ret=0x80000000 */
+ 5)   1.881 us    |    } /* rt_mutex_slowunlock ret=0x0 */
+ 5)   2.931 us    |  } /* mutex_unlock ret=0x0 */
 
-But there's maybe an easy fix. See that the panel code already calls the 
-backlight helpers in its enable/disable [1][2] functions. They will 
-invoke ->update_status with the proper locking. [3] This means that you 
-shouldn't program gamma in the ->enable callback. Leave everything in 
-->update_status and let your panel helpers deal with it. No need for 
-mcs_mutex at all.
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/Documentation/perf-ftrace.txt |  4 ++
+ tools/perf/builtin-ftrace.c              | 60 +++++++++++++++++++++++-
+ tools/perf/util/ftrace.h                 |  4 ++
+ 3 files changed, 67 insertions(+), 1 deletion(-)
 
-[1] 
-https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/drm_panel.c#L235
-[2] 
-https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/drm_panel.c#L275
-[3] 
-https://elixir.bootlin.com/linux/v6.15.1/source/include/linux/backlight.h#L318
-
->
->> - MSC_ACCESSPROT enable access to hardware state.
->>
->> Maybe try this:
->>
->> - Move msc_mutex into the callers, so that ->update_status and ->enable acquire and release the lock.
->>
->> - Move MCS_ACCESSPROT into ->enable and ->disable and leave it accessible, if the hardware allows that.
-> Yeah this is a good idea, I'll try it.
->
->>> +{
->>> +	if (protect) {
->>> +		mipi_dsi_dcs_write_seq_multi(dsi, MCS_ACCESSPROT, 0xa5, 0xa5);
->>> +		mutex_unlock(&ctx->mcs_mutex);
->>> +	} else {
->>> +		mutex_lock(&ctx->mcs_mutex);
->>> +		mipi_dsi_dcs_write_seq_multi(dsi, MCS_ACCESSPROT, 0x5a, 0x5a);
->>> +	}
->>> +}
->>> +
->>> +static int s6e8aa5x01_update_brightness(struct backlight_device *backlight)#
->> Maybe call this function s6e8aa5x01_update_status() to match the callback.
->>
->>> +{
->>> +	struct mipi_dsi_multi_context dsi = { .dsi = bl_get_data(backlight) };
->>> +	struct s6e8aa5x01_ctx *ctx = mipi_dsi_get_drvdata(dsi.dsi);
->>> +	u16 lvl = backlight->props.brightness;
->> backlight_get_brightness() here ?
->>
->>
->> I think you should also check panel->enabled and return if false. AFAIU there will be no gamma changes on disabled hardware anyway.
->>
-> The enable function is never executed when the panel is disabled. This is
-> because flag checking is done by drm_panel anyway. See drm_panel_enable()
-> in drivers/gpu/drm/drm_panel.c [1]
-
-What I mean is: the drm_panel.enabled flag is set at [4] and cleared at 
-[5]. It tells you that the panel is running. If someone tries to update 
-the backlight brightness while the panel is not enabled, you likely what 
-to return here without touching hardware.
-
-[4] 
-https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/drm_panel.c#L285
-[5] 
-https://elixir.bootlin.com/linux/v6.15.1/source/drivers/gpu/drm/drm_panel.c#L233
-
->
->>> +
->>> +static int s6e8aa5x01_probe(struct mipi_dsi_device *dsi)
->>> +{
->>> +	struct device *dev = &dsi->dev;
->>> +	struct s6e8aa5x01_ctx *ctx;
->>> +	int ret;
->>> +
->>> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
->> You're possibly using the instance after the hardware device has been removed. Alloc with drmm_kzalloc() or you might end up with UAF errors.
-> Hmm, none of the panel drivers are using drmm_kzalloc(), or even any
-> drmm_*(). Are you sure I must use it?
-
-Then leave it as it is. Maybe one of the panel maintainers can confirm.
-
-I still don't trust it to not possibly blow up. devm_ is released when 
-the hardware device goes away.
-
-Best regards
-Thomas
-
->
->>> +	ret = devm_mutex_init(dev, &ctx->mcs_mutex);
->> You're taking this mutex in DRM code, so rather use drmm_mutex_init() here.
-> (The comment by me above applies here too)
->
->> Best regards
->> Thomas
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/gpu/drm/drm_panel.c#n209
-
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index b77f58c4d2fd..4b21a755132f 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -123,6 +123,10 @@ OPTIONS for 'perf ftrace trace'
+ --graph-opts::
+ 	List of options allowed to set:
+ 
++	  - args         - Show function arguments.
++	  - retval       - Show function return value.
++	  - retval-hex   - Show function return value in hexadecimal format.
++	  - retaddr      - Show function return address.
+ 	  - nosleep-time - Measure on-CPU time only for function_graph tracer.
+ 	  - noirqs       - Ignore functions that happen inside interrupt.
+ 	  - verbose      - Show process names, PIDs, timestamps, etc.
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index bba36ebc2aa7..f7cf1dd7b64b 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -301,6 +301,10 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+ 	write_tracing_option_file("funcgraph-proc", "0");
+ 	write_tracing_option_file("funcgraph-abstime", "0");
+ 	write_tracing_option_file("funcgraph-tail", "0");
++	write_tracing_option_file("funcgraph-args", "0");
++	write_tracing_option_file("funcgraph-retval", "0");
++	write_tracing_option_file("funcgraph-retval-hex", "0");
++	write_tracing_option_file("funcgraph-retaddr", "0");
+ 	write_tracing_option_file("latency-format", "0");
+ 	write_tracing_option_file("irq-info", "0");
+ }
+@@ -542,6 +546,41 @@ static int set_tracing_sleep_time(struct perf_ftrace *ftrace)
+ 	return 0;
+ }
+ 
++static int set_tracing_funcgraph_args(struct perf_ftrace *ftrace)
++{
++	if (ftrace->graph_args) {
++		if (write_tracing_option_file("funcgraph-args", "1") < 0)
++			return -1;
++	}
++
++	return 0;
++}
++
++static int set_tracing_funcgraph_retval(struct perf_ftrace *ftrace)
++{
++	if (ftrace->graph_retval || ftrace->graph_retval_hex) {
++		if (write_tracing_option_file("funcgraph-retval", "1") < 0)
++			return -1;
++	}
++
++	if (ftrace->graph_retval_hex) {
++		if (write_tracing_option_file("funcgraph-retval-hex", "1") < 0)
++			return -1;
++	}
++
++	return 0;
++}
++
++static int set_tracing_funcgraph_retaddr(struct perf_ftrace *ftrace)
++{
++	if (ftrace->graph_retaddr) {
++		if (write_tracing_option_file("funcgraph-retaddr", "1") < 0)
++			return -1;
++	}
++
++	return 0;
++}
++
+ static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
+ {
+ 	if (!ftrace->graph_noirqs)
+@@ -642,6 +681,21 @@ static int set_tracing_options(struct perf_ftrace *ftrace)
+ 		return -1;
+ 	}
+ 
++	if (set_tracing_funcgraph_args(ftrace) < 0) {
++		pr_err("failed to set tracing option funcgraph-args\n");
++		return -1;
++	}
++
++	if (set_tracing_funcgraph_retval(ftrace) < 0) {
++		pr_err("failed to set tracing option funcgraph-retval\n");
++		return -1;
++	}
++
++	if (set_tracing_funcgraph_retaddr(ftrace) < 0) {
++		pr_err("failed to set tracing option funcgraph-retaddr\n");
++		return -1;
++	}
++
+ 	if (set_tracing_funcgraph_irqs(ftrace) < 0) {
+ 		pr_err("failed to set tracing option funcgraph-irqs\n");
+ 		return -1;
+@@ -1607,6 +1661,10 @@ static int parse_graph_tracer_opts(const struct option *opt,
+ 	int ret;
+ 	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
+ 	struct sublevel_option graph_tracer_opts[] = {
++		{ .name = "args",		.value_ptr = &ftrace->graph_args },
++		{ .name = "retval",		.value_ptr = &ftrace->graph_retval },
++		{ .name = "retval-hex",		.value_ptr = &ftrace->graph_retval_hex },
++		{ .name = "retaddr",		.value_ptr = &ftrace->graph_retaddr },
+ 		{ .name = "nosleep-time",	.value_ptr = &ftrace->graph_nosleep_time },
+ 		{ .name = "noirqs",		.value_ptr = &ftrace->graph_noirqs },
+ 		{ .name = "verbose",		.value_ptr = &ftrace->graph_verbose },
+@@ -1699,7 +1757,7 @@ int cmd_ftrace(int argc, const char **argv)
+ 	OPT_CALLBACK('g', "nograph-funcs", &ftrace.nograph_funcs, "func",
+ 		     "Set nograph filter on given functions", parse_filter_func),
+ 	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
+-		     "Graph tracer options, available options: nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>",
++		     "Graph tracer options, available options: args,retval,retval-hex,retaddr,nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>",
+ 		     parse_graph_tracer_opts),
+ 	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
+ 		     "Size of per cpu buffer, needs to use a B, K, M or G suffix.", parse_buffer_size),
+diff --git a/tools/perf/util/ftrace.h b/tools/perf/util/ftrace.h
+index a9bc47da83a5..782c33227e92 100644
+--- a/tools/perf/util/ftrace.h
++++ b/tools/perf/util/ftrace.h
+@@ -29,6 +29,10 @@ struct perf_ftrace {
+ 	int			graph_depth;
+ 	int			func_stack_trace;
+ 	int			func_irq_info;
++	int			graph_args;
++	int			graph_retval;
++	int			graph_retval_hex;
++	int			graph_retaddr;
+ 	int			graph_nosleep_time;
+ 	int			graph_noirqs;
+ 	int			graph_verbose;
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.43.0
 
