@@ -1,135 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A4823E356;
-	Fri, 13 Jun 2025 19:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B1324BD1F
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749842486; cv=none; b=DOIS+sFSebNRdV/fb/+mZd22sbalQ4HoyelZAjQj57ncaY85Y94/o4UanXW9S3YOJ+ohiKIyTBmVIFZYtqbjChMwFJi2svD2U4Gmxkjs+itysUUedLyOoNks8QrMVjSmj2V8lBmPsY61d07TlETpzh/uQF4qckfer/ws3eaiLlc=
+	t=1749842506; cv=none; b=jdBlcPVKY+32eDjFHbBTUShWNSrFzZg23a/rxUUtL4my4ky6ofdF+1tphIv/A/aAYLqgDJogRuNuxmLz+bosduZ4lVHVJKQNlpqfJuNIlg9ZXaVpJKKmjXRFJwnwsBHNudVZpRWfxe8KfB7kJBB1OG0fnUct+k3M0NsP36siFbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749842486; c=relaxed/simple;
-	bh=Gpe+Xbaqg839eoHxEGGg3ncn8LwqWk899z282q/Ecfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tGfTav46C6nX2CLajcnWsL9bvW1Gsl8XtdhU6daQ6+Nz9wT8ZY4mml06eUfQJg3yoHQCNp/xmkqsTZgKnb/MhV2iTQ+K4aWBjtNKaBU+50P69yJFs3AHSdPbc3ycYSd4k1Ava3drWm5jmpZgzlOGZ66qml44yjJN3uPhAiAtrXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8odkKdl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749842506; c=relaxed/simple;
+	bh=YLKpZILOwVtOfA0AbaKsPcVtXLdl14+iX8YDYOFnlek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DTU4CJOcgAI0z4NM9Wc7E6cvkudcCAlpf2jkGZsvH8pqWrIzfv91hchrDorMh5jpbJf5jKuGajjkDpl2DlD1KI5me1xp9lK+3cXmA31/+FaSeJLkSnECk4cmMcRyelIztpJh5gs0hozda+uCJ7eXjCSbRc5hPDvQnfBbnANn8l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ObXxzX29; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8odkKdl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4399DC4CEE3;
-	Fri, 13 Jun 2025 19:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749842485;
-	bh=Gpe+Xbaqg839eoHxEGGg3ncn8LwqWk899z282q/Ecfo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=N8odkKdlYSl4cN22e5vZqUj6R+UMjpqE4NdHCBDHaho4VaSwQS3lsfEEa0T4SVBU0
-	 Tce66UH+sQiDvZl+zfL+yBF2suQIHwWyLdbMJNcC41VgUCX87JLDfdQtKUHiAdOIk9
-	 RMHHkCyyC1umn/UwNNz7Yl7IpKjKC4rwSpNZd1tQtPp6ToCfFOJYxG4/zKSUSUTYqq
-	 FRWyEE/NjOn50qCbIasBn4C54bpT51DEm8mESUQxvJk7LIQJbdmb6GSowMaIMlAgxc
-	 OmtTku36FPRwM/67sNu1tH/K+Y9zA0JzY644gDJmF7pZq58vjUonybnlCGVRMTaLdd
-	 dtF/6Csw2b8rg==
-Date: Fri, 13 Jun 2025 14:21:24 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-	mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-	kishon@kernel.org, dmitry.baryshkov@linaro.org,
-	manivannan.sadhasivam@linaro.org, neil.armstrong@linaro.org,
-	abel.vesa@linaro.org, kw@linux.com, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v2 1/2] PCI: qcom: Add equalization settings for 8.0 GT/s
-Message-ID: <20250613192124.GA970861@bhelgaas>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ObXxzX29"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-47e9fea29easo72671cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749842503; x=1750447303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SwsnYZZ63LvvlkMeoABDBQxLgrkaQY4fLJ1Enbyh2EY=;
+        b=ObXxzX29rZndd1MbjB6+7vqnl/35j6kXZZSxI803hD3AlyUcxnG4uoUeZ2BMbch15U
+         dZQfU1FIitEgdFJb+8FkQvqWoH4IhH6IX+jNPdFNnSSdqmSyhuqVwZTXgZdTTUpu+tOT
+         8Ya5f75I3Nqfi4N9gnv5+khvSLMMgjpQDNROa5maDl/yI/WuzTLsb8rBD1S5vXiNVP+O
+         V7SLh8PDQcodamaBmnAx9ioXgNtCb2OoFakp1cPw5EuGcMChNsz7kAGxOjn6BLfuZBGs
+         ldLuU8DmvcMc82QIQuWc3CWnyRu5AuvxIgUxFymCe2c1YKZIEujUm3a41SI4G1UzNUwT
+         8JJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749842503; x=1750447303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SwsnYZZ63LvvlkMeoABDBQxLgrkaQY4fLJ1Enbyh2EY=;
+        b=j/iZAFl30DDKp7AyrdFyZ3z5X4YYtAoSInDm5gA60fyFI9kkEymliLMqfKm0HbValx
+         huGO7iEBorv6y5d7ErkXDgwm9ULtbegk4U6BEcsiV5fGW02MLX6Ci0MRgJ1lM5GSjis1
+         w+gFKl0o/BJ3593pUmuOMSZD76sqJj35KtM7HGYzRw7IjRLBZO/veCKZc9KmBvRI9qIs
+         RA2tZOkvLRhssV7ZDV4ve1lmGH9bGNNqMlbfgBmolbI/z/FPtnO4FMfbhRNY4/8Z6zk6
+         csxK3BT0D5CwiPb047wGSoabeFLPH7HXPICgJ2kVYS9jQJIYtLN3kmJot0fVIolLbJkM
+         gHfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvlII7COhgRoiyxOqCzWYDJFdhg0nNSUykVHscde9x1St81Z367pS+RddmpvF5kzB//Qt/6jVsZze3Nqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCnjhI5Xu9PmyJOvLxe3hzlqxFNs1L33AtbHzBNyVjt6OUtUYB
+	n7Kx3ZEA8YffhQlqdo+rBqQUegcezCvUxpXk1Mp+PSkNhH98iSvD9hgSQ4PBopTPOkVuPMT3dE7
+	BTMT60dieM3Es5Np4Lts0yB7sZjJQ7K1kly+AX+5H
+X-Gm-Gg: ASbGncsZfbmDf2puAw1vXwugmnKeh7vpWSsqgEoa7fX3yWpHrdtRT1EQReDPSGd8XHJ
+	t3tYVsgYPHaBZGFuv3IkdgHDDAfYWOFTnTrcCGEuGP5cHUChYUYaHbmcNJXFzJ3KJWiL7FgbpYy
+	II4MPzY1tI+RiEQTSJIh8meCCCZXzOEjs5HLycCjZ7Fw==
+X-Google-Smtp-Source: AGHT+IEO+7tih5cXcAlJg0Vw2/Sois18XRurWIS2/frgQdC8+3vTxmNKORl6AWRcNFb2EewoNPpA6PIVNKd9BEEx0hI=
+X-Received: by 2002:ac8:5883:0:b0:47b:840:7f5b with SMTP id
+ d75a77b69052e-4a73c763a87mr516731cf.29.1749842503097; Fri, 13 Jun 2025
+ 12:21:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611100319.464803-2-quic_ziyuzhan@quicinc.com>
+References: <cover.1749779391.git.gehao@kylinos.cn> <099651f46b0b57f6c7890a64608dc7ca44df7764.1749779391.git.gehao@kylinos.cn>
+In-Reply-To: <099651f46b0b57f6c7890a64608dc7ca44df7764.1749779391.git.gehao@kylinos.cn>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 13 Jun 2025 12:21:32 -0700
+X-Gm-Features: AX0GCFu-OOwfRLFxcwNjR_GNWx_Buv2sRyKB524WUep1Vz9r7UOBtNhv2b7PdpU
+Message-ID: <CAJuCfpGkUk5RXm-HDLB2mr_mRbSxPV+kx116FFBhyYsf6pXNCg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] mm/alloc_tag: add the CONFIG_ARCH_NEEDS_WEAK_PER_CPU
+ macro when statically defining the percpu variable _shared_alloc_tag
+To: Hao Ge <hao.ge@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Kent Overstreet <kent.overstreet@linux.dev>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-s390@vger.kernel.org, Hao Ge <gehao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 06:03:18PM +0800, Ziyue Zhang wrote:
-> Adding lane equalization setting for 8.0 GT/s to enhance link stability
-> and fix AER correctable errors reported on some platforms (eg. SA8775P).
+On Thu, Jun 12, 2025 at 8:06=E2=80=AFPM Hao Ge <hao.ge@linux.dev> wrote:
+>
+> From: Hao Ge <gehao@kylinos.cn>
+>
+> Recently discovered this entry while checking kallsyms on ARM64:
+> ffff800083e509c0 D _shared_alloc_tag
+>
+> If CONFIG_ARCH_NEEDS_WEAK_PER_CPU is not defined(it is only defined for
+> s390 and alpha architectures),there's no need to statically define
+> the percpu variable _shared_alloc_tag. As the number of CPUs
+> increases,the wasted memory will grow correspondingly.
 
-s/Adding/Add/
+I don't think this patch needs all this background. Just say that
+_shared_alloc_tag is not used when CONFIG_ARCH_NEEDS_WEAK_PER_CPU=3Dn,
+so you want to compile it out.
 
-s/fix AER correctable errors/avoid AER Correctable Errors/
-so we know that (a) this avoids the errors (it's not some kind of
-recovery), and (b) readers know that "Correctable Error" is something
-that can be looked up in a spec.
-
-> 8.0 GT/s and 16.0GT/s require the same equalization setting. This setting
-> is programmed into a group of shadow registers, which can be switched to
-> configure equalization for different GEN speeds by writing 00b, 01b
-> to `RATE_SHADOW_SEL`.
-
-s|16.0GT/s|16.0 GT/s| to match "8.0 GT/s"
-
-s/different GEN speeds/different speeds/ (PCIe spec rev ("GEN") is not
-a one-to-one mapping to speeds)
-
-> @@ -18,33 +20,43 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->  	 * GEN3_EQ_*. The RATE_SHADOW_SEL bit field of GEN3_RELATED_OFF
->  	 * determines the data rate for which these equalization settings are
->  	 * applied.
-> +	 *
-> +	 * TODO:
-> +	 * EQ settings need to be added for 32.0 T/s in future
-
-Drop this comment since it's not an indication of a problem in this
-patch.  The list of possible future work is infinite, and you can keep
-track of a TODO list internally.
-
->  	 */
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-> -	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-> -	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-> -	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-> -			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
-> -	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
-> +	if (pcie_link_speed[pci->max_link_speed] < PCIE_SPEED_32_0GT)
-> +		max_speed = pcie_link_speed[pci->max_link_speed];
-> +	else
-> +		dev_warn(dev, "The target supports 32.0 GT/s, but the EQ setting for 32.0 GT/s is not configured.\n");
-
-Drop period at end of message.
-
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
-> -	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
-> -		GEN3_EQ_FMDC_N_EVALS |
-> -		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
-> -		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
-> -	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
-> -	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
-> +	for (speed = PCIE_SPEED_8_0GT; speed <= max_speed; ++speed) {
-> +		reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-> +		reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-> +		reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-> +		reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-> +			  speed - PCIE_SPEED_8_0GT);
-> +		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->  
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-> -	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
-> -		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
-> -		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
-> -		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
-> -	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
-> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
-> +		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
-> +			GEN3_EQ_FMDC_N_EVALS |
-> +			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
-> +			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
-
-Is "CUSROR" a typo for "CURSOR", or is "CUSROR" a real thing?  (Either
-way, it's not something you added, so not a problem with this patch.)
-
-Bjorn
+>
+> Enclose the definition of _shared_alloc_tag within the
+> CONFIG_ARCH_NEEDS_WEAK_PER_CPU condition.
+>
+> Suggested-by: Suren Baghdasaryan <surenb@google.com>
+> Signed-off-by: Hao Ge <gehao@kylinos.cn>
+> ---
+>  lib/alloc_tag.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+> index c7f602fa7b23..14fd66f26e42 100644
+> --- a/lib/alloc_tag.c
+> +++ b/lib/alloc_tag.c
+> @@ -24,8 +24,10 @@ static bool mem_profiling_support;
+>
+>  static struct codetag_type *alloc_tag_cttype;
+>
+> +#ifdef CONFIG_ARCH_NEEDS_WEAK_PER_CPU
+>  DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+>  EXPORT_SYMBOL(_shared_alloc_tag);
+> +#endif
+>
+>  DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+>                         mem_alloc_profiling_key);
+> --
+> 2.25.1
+>
