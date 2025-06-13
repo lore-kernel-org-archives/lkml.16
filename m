@@ -1,157 +1,142 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD381E50E;
-	Fri, 13 Jun 2025 13:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A8F54654
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749820837; cv=none; b=OK6gnDG0x/sysuMO4NkP27PBZIiFPdn3GS1rMbe7yHESAwYYw8gyzKys3Uuit6Uq/0Gu8XhYq1S5zlEcjl5IjEvXIvinSTyUVdt9FArzC0OcTkCjRknhfDAgmAA148/UaGczcnHP3MT5h1vh3XTbho9boVVj3PdvIvQOENOVlqo=
+	t=1749820859; cv=none; b=pzMgfjG5cdKz1y1wzHHoSaVe0B60VkX8IkEam5gI1LNTwqzXbdyc+eaxp2FSkRgczE3P4AzMJ1BKhQLkkPiaC5JsZTRyMmRNP50iLBsyetw/DjLWVXyUKzGEy+6EQqXoiCGDgc+HjLUYnn3BspWuBBxfeU+zbSgekKDnaTo4Jwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749820837; c=relaxed/simple;
-	bh=8ZA2pjmPBOMlITDw8dUanWs9Is45wgO0iG6R2MtrSzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c8P+OqfuBoSNDnuZtiKeJMNJqhbdXtFVphrV3g0IEFglsFWmRP5EKUWmm4xwB/ex0e2SB3ZPbxDfrMxvVDQXe2LFUC/pvkHLVzIeDd5EELMDPlYrvlCm8Az6/AFono2QPnDw/rcGFbbWsHOugnqHGEDaCVLvs6L7idJcCIdPLLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bJfKg2Cn2z9tHZ;
-	Fri, 13 Jun 2025 14:46:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id cqfwE16bHLFZ; Fri, 13 Jun 2025 14:46:47 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bJfKg1Tgbz9tHF;
-	Fri, 13 Jun 2025 14:46:47 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2DABD8B77B;
-	Fri, 13 Jun 2025 14:46:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id BdURGYxBYsF6; Fri, 13 Jun 2025 14:46:47 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B187F8B769;
-	Fri, 13 Jun 2025 14:46:46 +0200 (CEST)
-Message-ID: <4f2f8e14-22d2-44f1-82cd-5f2a3b5117b1@csgroup.eu>
-Date: Fri, 13 Jun 2025 14:46:46 +0200
+	s=arc-20240116; t=1749820859; c=relaxed/simple;
+	bh=cprFsDhlPvg9I3voB75Z5llSh0d1SD1azopoEw6opfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SIrop0qLEQo2iccQK68Y4ciIvtnZtNWNaEUiFDyuU3ynzTgcRz9OVLHf466uxJ7LogCM68ULajxyHP4VcTjFwFH+/Mro2KwZkJxnU6izNbjANG4eiXM27FKwjTrUK0BXREeHAjS8G+MdOwxXiYJ+VuK7NlH1HVRZ1zIIzLFhB20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zd3K4x4+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zd3K4x4+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749820857;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tfsl7na8vBkAH1D5HNAgOxCb5PMcLNTUrB21akYCqLA=;
+	b=Zd3K4x4+ND3Mk8TMIZ4o+V4AANftjgeEXqDlYfIiboVu7PW8UE6clI+w5mFD1HCqo7Qtyn
+	VLqfZCXBfKkiV+ugodI22BffEgA8ZWcPUHvHkyk79XKzSoOQ90tm0Nyiqrm3ni4gW4YLsP
+	N324P3eY9l5YjnXmG+Ru5ysdM+MDIdI=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-617-AgGsIj9gPV6oe9E0AXSYeA-1; Fri, 13 Jun 2025 09:20:55 -0400
+X-MC-Unique: AgGsIj9gPV6oe9E0AXSYeA-1
+X-Mimecast-MFC-AGG-ID: AgGsIj9gPV6oe9E0AXSYeA_1749820855
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b2f02cd1daeso1519618a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:20:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749820855; x=1750425655;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tfsl7na8vBkAH1D5HNAgOxCb5PMcLNTUrB21akYCqLA=;
+        b=q/o96yztMHQqVJf2tZaS4PvrItLrBcn2m/JqCbgemvL/MFrqNm90jBLZ7TiXFYfz4h
+         NeW1bWmsZ1urE1//qNqB5vJDjDkPZ2nnlgHMYAJrQWtCdL0ndMma7x32AUlHpzf2Hbv/
+         1FMhVcZehA90RiDbO9f6uVq6j1POUGFv4WHGctmnL9di7WzIR/pG4P+9HTzTW8JgO8QA
+         Rs6A1hVtxZa5KiQIZTeu6KjseZ42Izc5XKW1gaKbtdl/REYfLtzbtEo3ke4AkalovVpJ
+         cEjyAXC+WCJlavXNJA1p43OsXjBlFZJLztrqeuQfngnOhQRrm6yr9d+xW5TTZoQ8Psbr
+         hPDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVMY3osXiZHvIIm3lAFzo4e0HUKKM3IH+x+8VwrnXZ+KVB12Ofg1mSyg0VCUfoKkNaqUchewQz+hHHOLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrHly54XGcvEhjTfZ307OjwT3RPwbZUJjmgIK5VASRG5hPZvz+
+	iq+gMI/8pq2440DexJYeNY4hxHdG74PdTlRDfDcLYTf5JQaDsDHKQqA/3nP1yPmOXkDyKW5paMM
+	vMrD5hqPJ6jl2jx8qNMo5Dwf0XY4+vNkXnkuJKIkqCm5eLzN9nvUl4vOIZZ//wm+row==
+X-Gm-Gg: ASbGnctLMjtnlIEtFv/X4H9IS5bq4NJhx4iModoFMx9ReI0NHevIVz21blpVxaBx38A
+	VNSTYf/Nzvt9h1oEgnLDh0zCiw2diTeoHTiWxjp3i+6n3+vsk87757WlN6YFbawqzNX8PlmypNb
+	Rfgz7Cf3LLaawnMOVw5CRVQ1O3JpEZNhjw2fvyw9v6UzfG/ADGA5/F4O6hzNqfVwuO0teSzwUh9
+	umrTJ/OJw/aZmEspzkWtx2+ne3F8fyBaQ7BMTrzKWYauZEaitf7/+sMz0/KNS4HanaB/N/QDs4r
+	7WaqNCyEy8ASR8rKRfQ=
+X-Received: by 2002:a05:6a20:e196:b0:21f:775d:107e with SMTP id adf61e73a8af0-21facb26c8dmr3968597637.17.1749820854757;
+        Fri, 13 Jun 2025 06:20:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE223H+TJ8TXd6oDEioev4iMoI2/YxUX5Dfw+NXpEW25126CIcGpxhbG1+TbmG1LTliCo7ulA==
+X-Received: by 2002:a05:6a20:e196:b0:21f:775d:107e with SMTP id adf61e73a8af0-21facb26c8dmr3968563637.17.1749820854422;
+        Fri, 13 Jun 2025 06:20:54 -0700 (PDT)
+Received: from zeus.. ([2405:6580:83a0:7600:6e93:a15a:9134:ae1f])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1643e9esm1651732a12.25.2025.06.13.06.20.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 06:20:53 -0700 (PDT)
+From: Ryosuke Yasuoka <ryasuoka@redhat.com>
+To: kraxel@redhat.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	jfalempe@redhat.com
+Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH drm-next] drm/bochs: Add support for drm_panic
+Date: Fri, 13 Jun 2025 22:20:14 +0900
+Message-ID: <20250613132023.106946-1-ryasuoka@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/3] ALSA: pcm: Convert snd_pcm_sync_ptr() to
- user_access_begin/user_access_end()
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-sound@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>,
- Mark Brown <broonie@kernel.org>
-References: <7baa34d4046c7750799b11830d38a46f8b581765.1749724478.git.christophe.leroy@csgroup.eu>
- <79b86a0618328ba1d0cb5cf4011fd73ac6900e8f.1749724478.git.christophe.leroy@csgroup.eu>
- <878qlwrnv1.wl-tiwai@suse.de>
- <2df61bbf-76f6-4932-a347-7820350a156e@csgroup.eu>
- <87wm9frf5x.wl-tiwai@suse.de>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <87wm9frf5x.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Add drm_panic moudle for bochs drm so that panic screen can be displayed
+on panic.
 
+Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+---
+ drivers/gpu/drm/tiny/bochs.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Le 13/06/2025 à 14:37, Takashi Iwai a écrit :
-> On Fri, 13 Jun 2025 13:03:04 +0200,
-> Christophe Leroy wrote:
->>
->>
->>
->> Le 13/06/2025 à 11:29, Takashi Iwai a écrit :
->>> On Thu, 12 Jun 2025 12:51:05 +0200,
->>> Christophe Leroy wrote:
->>>>
->>>> Now that snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user()
->>>> are converted to user_access_begin/user_access_end(),
->>>> snd_pcm_sync_ptr_get_user() is more efficient than a raw get_user()
->>>> followed by a copy_from_user(). And because copy_{to/from}_user() are
->>>> generic functions focussed on transfer of big data blocks to/from user,
->>>> snd_pcm_sync_ptr_put_user() is also more efficient for small amont of
->>>> data.
->>>>
->>>> So use snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user() in
->>>> snd_pcm_sync_ptr() too.
->>>>
->>>> In order to have snd_pcm_mmap_status32 similar to snd_pcm_mmap_status,
->>>> replace to tsamp_{sec/nsec} and audio_tstamp_{sec/nsec} by equivalent
->>>> struct __snd_timespec.
->>>>
->>>> snd_pcm_ioctl_sync_ptr_buggy() is left as it is because the conversion
->>>> wouldn't be straigh-forward do to the workaround it provides.
->>>>
->>>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
->>>
->>> Through a quick glance, all patches look almost fine, but one favor to
->>> ask: this patch contains the convert from s32/s32 pair to struct
->>> __snd_timespec.  It should be factored out to a prerequisite patch
->>> instead of burying in a big change.
->>
->> Shall I understand you prefer this series over the more simple "ALSA:
->> pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to
->> user_access_begin/user_access_end()" patch ?
-> 
-> Err, no, sorry for ambiguity.
+diff --git a/drivers/gpu/drm/tiny/bochs.c b/drivers/gpu/drm/tiny/bochs.c
+index 8706763af8fb..ed42ad5c4927 100644
+--- a/drivers/gpu/drm/tiny/bochs.c
++++ b/drivers/gpu/drm/tiny/bochs.c
+@@ -19,6 +19,7 @@
+ #include <drm/drm_gem_shmem_helper.h>
+ #include <drm/drm_managed.h>
+ #include <drm/drm_module.h>
++#include <drm/drm_panic.h>
+ #include <drm/drm_plane_helper.h>
+ #include <drm/drm_probe_helper.h>
+ 
+@@ -469,10 +470,28 @@ static void bochs_primary_plane_helper_atomic_update(struct drm_plane *plane,
+ 	bochs_hw_setformat(bochs, fb->format);
+ }
+ 
++static int bochs_primary_plane_helper_get_scanout_buffer(struct drm_plane *plane,
++							  struct drm_scanout_buffer *sb)
++{
++	struct bochs_device *bochs = to_bochs_device(plane->dev);
++	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(bochs->fb_map);
++
++	if (plane->state && plane->state->fb) {
++		sb->format = plane->state->fb->format;
++		sb->width = plane->state->fb->width;
++		sb->height = plane->state->fb->height;
++		sb->pitch[0] = plane->state->fb->pitches[0];
++		sb->map[0] = map;
++		return 0;
++	}
++	return -ENODEV;
++}
++
+ static const struct drm_plane_helper_funcs bochs_primary_plane_helper_funcs = {
+ 	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
+ 	.atomic_check = bochs_primary_plane_helper_atomic_check,
+ 	.atomic_update = bochs_primary_plane_helper_atomic_update,
++	.get_scanout_buffer = bochs_primary_plane_helper_get_scanout_buffer,
+ };
+ 
+ static const struct drm_plane_funcs bochs_primary_plane_funcs = {
 
-Then I'm lost.
-
-I sent two alternative proposals:
-A/ Single patch, simple, handling only two fonctions 
-snd_pcm_ioctl_sync_ptr_{compat/x32} , without refactoring. [1]
-B/ This RFC series, more elaborate, refactoring and putting user copy 
-into helper macros. [2]
-
-So the question was to be sure you prefer alternative B over alternative 
-A. I guess the answer is YES as you asking me improve it.
-
-[1] 
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/8df11af98033e4cb4d9b0f16d6e9d5b69110b036.1749724057.git.christophe.leroy@csgroup.eu/
-[2] 
-https://patchwork.ozlabs.org/project/linuxppc-dev/list/?state=*&series=460665
-
-
-> I wanted to move the replacement of tstamp_sec/nsec with struct
-> __snd_timespec as a small preliminary patch from patch#3.
-> That is,
-
-Yes that's what I understood.
-
-Thanks
-Christophe
-
-
-> --- a/sound/core/pcm_native.c
-> +++ b/sound/core/pcm_native.c
-> @@ -3103,11 +3103,9 @@ struct snd_pcm_mmap_status32 {
->   	snd_pcm_state_t state;
->   	s32 pad1;
->   	u32 hw_ptr;
-> -	s32 tstamp_sec;
-> -	s32 tstamp_nsec;
-> +	struct __snd_timespec tstamp;
->   	snd_pcm_state_t suspended_state;
-> -	s32 audio_tstamp_sec;
-> -	s32 audio_tstamp_nsec;
-> +	struct __snd_timespec audio_tstamp;
->   } __packed;
-> etc.  By factoring this out, it becomes clear that the timespec
-> compatibility is fully cared.
-> 
-> __snd_timespec may be defined in different ways on user-space, but in
-> the kernel code, it's a single definition of s32/s32 pair.  This needs
-> to be emphasized.
-> 
-> 
-> thanks,
-> 
-> Takashi
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.49.0
 
