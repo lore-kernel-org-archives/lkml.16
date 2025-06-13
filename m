@@ -1,137 +1,132 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C1225B2E7;
-	Fri, 13 Jun 2025 07:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDE825A327;
+	Fri, 13 Jun 2025 07:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749798014; cv=none; b=mu+WPf01E/NBsgRicz8pLiAU9qYeaefklBz4tLzFPaEEuThDZ3uuWbjQDFZ4tl6kGXGX3llIQ5jJX+/7vTZtgZAsbkV1wXZ49aA7UHa94R8cfyvidJhPjYmkzenziFWrfcRYeJ+wfPezBw7c+kpHh2A/c/mOn3X0uwIypalE3MA=
+	t=1749798045; cv=none; b=VR0NvHsYKnHTn1C2RqhUUF6+y1avWm0aQLNCRE4jVQq/xSLKej3RK9WRdFueEJwuGvCFhV+IfGJoA9N+IcIqPpgjqPXu9m7g6BARbXAO+sSZN8W5EAo2p950+qqIsBR0UWFbYyMFrZf8CgPkIOiJwpUeTncYIbjcObbRNDUIR8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749798014; c=relaxed/simple;
-	bh=DeOmYTSoKgBkmYi9I5R5quW70ynWeDv7CtQf+tfZ4vE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=f0wWczY3ccq9CYywYzgXo045qFgw5BGq39YRKRP99S9gRWMzA5ucZDEc9I58nzMot6X//BC/Z3oBkwyBi62gCj2AavP9ZkDodL06uXQum9O+qq+ysnDOotQTljquMjdtI+mNU5f0kc/i67FACevVS0+drKM/kxpe1/1vZt/7EMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nXugKei7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xpkN7uRX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749798045; c=relaxed/simple;
+	bh=Bvj8CtaShUexAfMaH2rcjFAH8uSwrjT3+TlcJ5+aHgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LtyRWnfyAu6GzgK/2P1RUy3ybrLyTLJg5oJN6cG//Obo+BL/juZzUu+g889v52GP6LbmLJ9TMn3/1+xZey+zR7F0uprXD+0oeqCCsKHAwft/0zBNXCOebAZfUMDAcJTyJMkTfpirgNjyq6fL4W4PwQH3TvFWqi7JoYwVZRy5yTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=euIEhjk7; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nXugKei7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xpkN7uRX"
-Date: Fri, 13 Jun 2025 07:00:01 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749798002;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ftHLU2dio7N6OSbWClpfkNKh90adIr1QvhYTKh536ow=;
-	b=nXugKei7IhCTL5Ys3wktoDGOmp8pUQYE7TPtlVtkHnQygrglvXbhZf5jzVLQK6n2FeyXq6
-	HE17HOFRNMbFCHIN+abQgamXWJIj39jIQjRSR02lMDHDA8qOln07JgJU11ps/sXKZs83Bl
-	PM0tSHtvAcTgsNReBOqr6wj3Pv9M2/Z5VMocgkfsCtopYW7rGlkBPZevPdc0m+Afpzaq8U
-	utzaMb8g8JqpEd7kxR5y5qX3p4ow4d5UjTf+bd3Z2eAqDV1lQnACKroY/RuIvHD6CkC11T
-	7Urh1TaplKqPTtTrMnVc1uijknCHPtrq3C1HGvLp/KUAHLLCAKubsx1EJF/upQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749798002;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ftHLU2dio7N6OSbWClpfkNKh90adIr1QvhYTKh536ow=;
-	b=xpkN7uRXWSMSKt1klGaYMdXXlWD9hbPULP+twFjWLvyYaGSA74qgKS0oLiF0YYSFOqE+k2
-	rg5eNrCBvJumn9BQ==
-From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/intel: Fix crashing bug in
- icl_update_topdown_event
-Cc: Vince Weaver <vincent.weaver@maine.edu>,
- Kan Liang <kan.liang@linux.intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250612143818.2889040-1-kan.liang@linux.intel.com>
-References: <20250612143818.2889040-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="euIEhjk7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749798044; x=1781334044;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Bvj8CtaShUexAfMaH2rcjFAH8uSwrjT3+TlcJ5+aHgs=;
+  b=euIEhjk75uNY27/cmPZsIRC4ZAkVHCDWmVu13CNSZAOddjYF3JYCgjTV
+   fxahn/RL8Ew2pA1oDxFLDa+f/nwdfkHgDGh5A5HX8B4nzt503IfIWUtqC
+   nl+BvhbtUxudb+pseT/XFG6EVl6ptSmhlOCxbMSu9hw3fUtiAwaoh3gON
+   Yj/NiP4KTLx9RLzGW3OHPzC0IT8mFrMC6rZPR/ZDoV8ERosdkQezsYTqr
+   iUBoA7fc4fl3JsKZr0wmEUbu3Gla+DdDH5uXDhB/J9xEZKW0uY4ID1ZLn
+   96YMbjEC9YG2TsV6W1a2vBjljFbLrC6Ta8a0hR/b7ZtmUVd1IChUFhvL9
+   A==;
+X-CSE-ConnectionGUID: S1I/r/I2Q0aHD4ZR6NLVlQ==
+X-CSE-MsgGUID: OYObDru+S5KGjsJrP/3wEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55803189"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="55803189"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 00:00:43 -0700
+X-CSE-ConnectionGUID: 7//jaAb9Tjqk9OACg5dc1A==
+X-CSE-MsgGUID: u/GJR5lmQHun57KFWNtcEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="147625757"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 00:00:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPyOy-00000006AQq-4AUO;
+	Fri, 13 Jun 2025 10:00:36 +0300
+Date: Fri, 13 Jun 2025 10:00:36 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Akhil R <akhilrajeev@nvidia.com>
+Cc: andy.shevchenko@gmail.com, andi.shyti@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, digetx@gmail.com, jonathanh@nvidia.com,
+	krzk+dt@kernel.org, ldewangan@nvidia.com, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+	p.zabel@pengutronix.de, robh@kernel.org, thierry.reding@gmail.com
+Subject: Re: [PATCH v4 2/3] i2c: tegra: make reset an optional property
+Message-ID: <aEvMlKIfcccD_s-O@smile.fi.intel.com>
+References: <aEsf7Ml__JE1ixQX@surfacebook.localdomain>
+ <20250613060032.14927-1-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174979800111.406.4606845775414969638.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613060032.14927-1-akhilrajeev@nvidia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Fri, Jun 13, 2025 at 11:30:32AM +0530, Akhil R wrote:
+> On Thu, 12 Jun 2025 21:43:56 +0300, Andy Shevchenko wrote:
 
-Commit-ID:     e49460a2d03fd8689ce5f7f2d79ff159734ad563
-Gitweb:        https://git.kernel.org/tip/e49460a2d03fd8689ce5f7f2d79ff159734ad563
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Thu, 12 Jun 2025 07:38:18 -07:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 13 Jun 2025 08:54:21 +02:00
+> >> >> >     if (handle)
+> >> >> >             err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
+> >> >> > -   else
+> >> >> > +   else if (i2c_dev->rst)
+> >> >> >             err = reset_control_reset(i2c_dev->rst);
+> >> >> > +   else
+> >> >> > +           err = tegra_i2c_master_reset(i2c_dev);
+> >> >>
+> >> >> Can you please take a look here? Should the reset happen in ACPI?
+> >> >
+> >> > This is a good question. Without seeing all the implementations of _RST method
+> >> > for the platforms based on this SoC it's hard to say. Ideally the _RST (which
+> >> > is called above) must handle it properly, but firmwares have bugs...
+> >> >
+> >> > TL;DR: I think the approach is correct, and if any bug in ACPI will be found,
+> >> > the workaround (quirk) needs to be added here later on.
+> >> 
+> >> As in Thierry's comment, I was in thought of updating the code as below.
+> >> Does it make sense or would it be better keep what it is there now?
+> >> 
+> >> if (handle && acpi_has_method(handle, "_RST"))
+> >> 	err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
+> >> else if (i2c_dev->rst)
+> >> 	err = reset_control_reset(i2c_dev->rst);
+> >> else
+> >> 	err = tegra_i2c_master_reset(i2c_dev);
+> >
+> > This will change current behaviour for the ACPI based platforms that do not
+> > have an _RST method. At bare minumum this has to be elaborated in the commit
+> > message with an explanation why it's not a probnlem.
+> 
+> This sequence is hit only at boot and on any error. It should be good to reset
+> the controller internally at least for those cases. We are reconfiguring the I2C
+> anyway after this and hence should not cause any problem.
+> Will add these in the commit message as well.
 
-perf/x86/intel: Fix crashing bug in icl_update_topdown_event
+This is not enough. You should explain the ACPI case. The above is just generic
+wording as I read it. It does not explain 1) if there are ACPI firmwares that
+have no _RST method for this device; 2) why it's not a problem for them to do
+like this and why it was not supported before (with the current code this
+platform will return an error on the method evaluation. Moreover the current
+code is buggy. The acpi_evaluate_object() returns an ACPI error code and not
+Linux one. so, for the such platforms (which I think do not exist, but still)
+the err will have positive code which may be interpreted incorrectly.
 
-The perf_fuzzer found a hard-lock crash on a RaptorLake machine.
+So, fix the bug first, then rebase your code based on that change and
+extend the commit message to really elaborate on all of the aspects.
+W/o this done it's no go change.
 
-  Oops: general protection fault, maybe for address 0xffff89aeceab400: 0000
-  CPU: 23 UID: 0 PID: 0 Comm: swapper/23
-  Tainted: [W]=WARN
-  Hardware name: Dell Inc. Precision 9660/0VJ762
-  RIP: 0010:native_read_pmc+0x7/0x40
-  Code: cc e8 8d a9 01 00 48 89 03 5b cd cc cc cc cc 0f 1f ...
-  RSP: 000:fffb03100273de8 EFLAGS: 00010046
-  ....
-  Call Trace:
-    <TASK>
-    icl_update_topdown_event+0x165/0x190
-    ? ktime_get+0x38/0xd0
-    intel_pmu_read_event+0xf9/0x210
-    __perf_event_read+0xf9/0x210
 
-The CPUs 16-23 are E-core CPUs that don't support perf metrics feature.
-The icl_update_topdown_event() should not be invoked.
 
-It's an regression of the commit f9bdf1f95339 ("perf/x86/intel: Avoid
-disable PMU if !cpuc->enabled in sample read"). The is_topdown_event()
-is mistakenly used to replace the is_topdown_count() to check if the
-topdown functions for the perf metrics feature should be invoked.  The
-is_topdown_event() only checks the event encoding. It's possible that
-the same encoding 0x0400 is created on an e-core CPU (although there
-is no valid event with such encoding on e-core).  The
-is_topdown_count() checks the PERF_X86_EVENT_TOPDOWN flag. Only when
-the topdown events require the perf metrics magic, the flag is set.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-It should be a typo when merging the intel_pmu_auto_reload_read() and
-intel_pmu_read_topdown_event() in the commit.
 
-Fixes: f9bdf1f95339 ("perf/x86/intel: Avoid disable PMU if !cpuc->enabled in sample read")
-Closes: https://lore.kernel.org/lkml/352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu/
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/20250612143818.2889040-1-kan.liang@linux.intel.com
----
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 741b229..c2fb729 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2826,7 +2826,7 @@ static void intel_pmu_read_event(struct perf_event *event)
- 		 * If the PEBS counters snapshotting is enabled,
- 		 * the topdown event is available in PEBS records.
- 		 */
--		if (is_topdown_event(event) && !is_pebs_counter_event_group(event))
-+		if (is_topdown_count(event) && !is_pebs_counter_event_group(event))
- 			static_call(intel_pmu_update_topdown_event)(event, NULL);
- 		else
- 			intel_pmu_drain_pebs_buffer();
