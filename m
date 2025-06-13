@@ -1,80 +1,81 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5AF275B0D;
-	Fri, 13 Jun 2025 11:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B3C2D5C94;
+	Fri, 13 Jun 2025 11:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749815732; cv=none; b=jdC9H+PAUbhVxEE4Cg3j21bRxKo2UiZhGZ0b/YWZiF9YhM4DhLAyoAYcBZQFVRPwwE43a27d//RNqbmrPAWRw9wRkHOgjlJRmiUaOBoqBRQk1NsCvgiyDiOheE5fOpN9PXVnAJJ0Sd7MQlns56TJBukag06JfQo3zr2KUnN74Qc=
+	t=1749815735; cv=none; b=O6Pt/o77rzYqfQoiBFUT9ORMm88Ppgek7p2hUo9bns1yhYiNGMoBdEalQ8a0AP5rg86sQZVrNP1wdlpbRKUqSOY5KpraLcaMMP5bwwuLRPI35Td7Iny1V2hPiUneLJxQ4EDe2XEyujE3SsO6vWzgUl3ZteqLLj4uETvostullck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749815732; c=relaxed/simple;
-	bh=Sb5LOSkAwHk54c+c6zP3tGvl033zIanBvTqjdyRTILM=;
+	s=arc-20240116; t=1749815735; c=relaxed/simple;
+	bh=39J8B/it+yKmHYIqv06bQIDCskhQbpop8t56XJh97As=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=ORgr6wLWN1r472Usyl3td4l8NK34/fRkpoKS+U0kFxOfiO8YdCCE65TTccwOokBUdlkH7RMycZeAj3/27XC7xONsTUh/FKWMZddZm2rKyDqr1oNwEOwFfOpxiwCswXEESf4hNO7YPcDDLd0ivS922Ea71osUHrHIJEBI/h2UqCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k2ov20/T; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version:Content-Type; b=NRws+Ma73F5zbhtWfq+xj0cpIhQKhsErDnuzkIcH2Dr3MWGSOIg4j2elpXjU4KDh4MbIR0KsLncpWSb0za0yHpnLlcMKNy93f8mMAmKF8sQPtYXAIS/lFtkf+WhBiV3jWigzyNRufN2Xosw/JroFitWx62JXCaQRTJ33HgeQMQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsx6/CLA; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2ov20/T"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so17484075e9.1;
-        Fri, 13 Jun 2025 04:55:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsx6/CLA"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a3798794d3so1954912f8f.1;
+        Fri, 13 Jun 2025 04:55:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749815729; x=1750420529; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749815731; x=1750420531; darn=vger.kernel.org;
         h=mime-version:user-agent:references:message-id:date:in-reply-to
          :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ufE8HslboBgiS0ch8804+mkzD75VUbk5YRlVLPLoQRA=;
-        b=k2ov20/T+cSy0umWVitQG+013KJvbv63xH44HZyXyYMwrHFPsPBn1DAXszsZVt2uxz
-         LX2PLVb/daxktPoeXzMPD415tW2EGeZEUDd6thhWuUQoIh/CLSwh6Dz0N5jCP2BJ2Muf
-         vB2LzfwJkoGb+WnBXq+t2hllNH6Xu7ysrXeuHLJlzhJcytrLF+8H7TVfTjPezo7WMZ4V
-         +nwILPHcroEwtTAx4zI1ZrKwKT4/Vcx5pGQuxkPk6SRKzAgEXfhUr++bNzOf11WxFLXd
-         aZFQNkwrFGw0V4yG1VzneLIw8LW0OhiR22WHol3V6JqNS78Hr3V7D0SjUIl0WhaLlzRv
-         6PgA==
+        bh=1JJXFHi9ldlQPLqupON6xlA5LEI029g70pUzRWZNKyU=;
+        b=gsx6/CLA3wUh4qzsSFVoyYoJTzCGcaYqQX7jkLru6VrKrwFuIVBJNgy9wer/weqgjO
+         UJSBonkdhKsCiU9qtYmScIKS46+bfoEt1qaai3LU4B+RoWjYzSUguRyr9bshXU0Oh8aK
+         +mbzHO+cGbofk4F66W810o/Yy7WMnqAP76yQOiEpDBYofyIqJeQJ96kh+jEZ3LRyI0v4
+         gPd/67Q0O4m8opiWNY9oXPQlNOD+AJpiqyzBdoOq+/fFD9yKliTuqLFhMOC9BOAqXbXd
+         kZ74f+YfGfQkFY+XBWWqV0JibJlt07tq5RMVkQcdyg5oH9V0FvhtwXqy6+XWcJTdEO5U
+         SrZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749815729; x=1750420529;
+        d=1e100.net; s=20230601; t=1749815731; x=1750420531;
         h=mime-version:user-agent:references:message-id:date:in-reply-to
          :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ufE8HslboBgiS0ch8804+mkzD75VUbk5YRlVLPLoQRA=;
-        b=bJfDgDrZhMEXF8/Pb+1lfcwCHIalCbEJD+MzgLH5xxQ+YUQRTFa7EQgdmiRYIhAOyu
-         DZfYPkQRkXQatlo8LLf1pAvo6ltZrQqgK31/xpNtbGvc5CwLmnJ5xe+p0A9BW+2FigN/
-         z7z6ML+fCBbdkVqutsBsyzumg9zE22mRF2tcNlELHiiE4MnUn6mX1DNflMfoVeFO2zjR
-         h3sBtQAZdpOmcyVGGlehbq63amHstRnFKBEqsu//ghYxC/R8g7CFifIpUm7TezMWG/5d
-         4U5izYhthblVovegtuhPhcGAYN5vlSJ27nC07wc7ghvzj/X7vwhfmZmrxNhU3b0wn029
-         0AbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGazShPTTewCaJMAx1z0LQkyQM/6ZXSiHpkZsz7oUzG96TAs93BEVbyLIy5Me2CGUCM74pFEDvjJoPTHY=@vger.kernel.org, AJvYcCWMTOYQj3qB3CssPw54Z44kSKBH0rEqdGoPJfWisrvcgkt0xTzF9YYs0VXHqL8tPJMLrRkpLhIj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm2dU+/rrFTzM6jE2xmJXKche2dzmUnAcHT9sx9PH4wQ9ktbdR
-	o2f5ztc2D155xRCZSM1rogGwODdN87NXQzM0s8WlxegGVvrWWdFjitgufb754+s2
-X-Gm-Gg: ASbGnctPyhbFQUJmJOMhM4gDqoYFdMdijkysmV7F9hoxLycCUxCariv+WCEBsWqKXtN
-	loaei+wM9YyWMclYSUG3CKv+SKdEIglJdS6UFHGGP9z2t38/KGoqJebQZtnAt2nA0Z3t1TKJr8x
-	w9bG84Mk7sRjnXBJImZWAH3y5PSZF15NkEiSCgnusF2Lx9A0AbPsnDxE5uBmabqs2EsyRG42vZB
-	KduP2t2DMe+PjHiCAINdFeg5oAP4Lg6lj8T6g6wV4QXK31w+xkVZDLoES/fimIDHd2B4/UuYvfy
-	yb70NUYxi9kwDQK/iQ3AqAuR7sbJvlqu98YmoEyf4mfLrOFvXp1Qedu8RarWBSXK38v0euHrPxs
+        bh=1JJXFHi9ldlQPLqupON6xlA5LEI029g70pUzRWZNKyU=;
+        b=PLjBvaUolE4Zf+iOXO0Ta2a42h46Vmv9pye5DVpguGrHIzZ6GgmIebFjkhzq28VauC
+         gSNHb5zPdUXOuOQPDQVoqxGWzZ0IYMFQbCKsdJexUulx7/17iwkDzLs1F4xvLRoTEYQL
+         kfnIrxUMncyTuefKP6tG4nDAYRePelhwgN0wZ0A1EJuXHVrpOyxL0fD3bxaxggmsgFvi
+         7T76PsmxLOMubU+woEKqOaBQwBIy3615I3iFF+DRzS8gGNZ9pe8NpUaxb9xl00RVIOvB
+         qX6V4ft+vamEp46AvfFLm1VEmY1SQQuDBGwSLDCo1yIJNdouzoGpH8Sml1s/GKFjjKHc
+         pSEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvBUuk/VYpRsadhpR6xztnjIJcNmR54PnNUxfFSc59BKbFtmfsCNxvgPWMZZYlpDvsp4cccWovDo/I+Ao=@vger.kernel.org, AJvYcCX19prqCcVQbPbBHB0dAFr71IpJ7JldTr5eFJk8N+6gmpPHo+x4dg37/sOnFKmf4mAFDOfCEKx0@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywoum3cXWHApPhaik693hZ794tQP6DQp9+l0NRvwBJPeBx84Q24
+	OOhWk7HrW3ERnVvZTE5rSKgPJtISKxOn4Lq0Bws3c+tWAXGlQvQbZXrt
+X-Gm-Gg: ASbGncus8lTJt4iqjTU9SJx4KnMC4ldrJpaUOpqdmep85JyZs7bQuwBPwYBNNO27a7B
+	IOBnwUehis9bJAxdf6o4ybFMwqfcW3JvNRykqMnkC3Y5JX+pqC+Gi8LjdYbzDhKzi368niBiTid
+	Je2DuJUxvZBretjvSI1zNa0ULPzc4/gyK6D/Gy54UdafD2cw3aV3wnDI+hMxc5xFBAVSDM5ucHo
+	1pgf7GMMHTtSHsFatOxYZ9NHFy/m8RColE1hVcYXWG4GV+IrerAgd6GJ7zyEu7BIDNPd6QWcEX+
+	ti5NkLw030cFqsmb4TfpH2ufh7xrnpAdHU/p5fUjxKbRqJHUqpKXyi3n+p5NAUgqFHCvY3/mDLE
 	=
-X-Google-Smtp-Source: AGHT+IGUe7DjzHHSFplul/ar5RfAw7b4aYzc9kQ5lrIT8AkHKhhxkXNesyYzYlzEDkL2JyHmPvem9w==
-X-Received: by 2002:a05:600c:a49:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-4533499e98fmr33137635e9.0.1749815729086;
-        Fri, 13 Jun 2025 04:55:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH6ZxOKA+nk3cYFyy4sPdDCDQoX/fjJFz1gR0pdr5Ok5AHJOjXsI4WxV20/dTCer5v7vreBMQ==
+X-Received: by 2002:a05:6000:2c0c:b0:3a5:5fa4:a3f7 with SMTP id ffacd0b85a97d-3a5687603d1mr3028691f8f.58.1749815731307;
+        Fri, 13 Jun 2025 04:55:31 -0700 (PDT)
 Received: from imac ([2a02:8010:60a0:0:75e0:f7f7:dffa:561e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e195768sm50645645e9.0.2025.06.13.04.55.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b087f8sm2176397f8f.53.2025.06.13.04.55.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 04:55:28 -0700 (PDT)
+        Fri, 13 Jun 2025 04:55:30 -0700 (PDT)
 From: Donald Hunter <donald.hunter@gmail.com>
 To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
- <corbet@lwn.net>,  linux-kernel@vger.kernel.org,  Akira Yokosawa
- <akiyks@gmail.com>,  "David S. Miller" <davem@davemloft.net>,  Ignacio
- Encinas Rubio <ignacio@iencinas.com>,  Marco Elver <elver@google.com>,
-  Shuah Khan <skhan@linuxfoundation.org>,  Eric Dumazet
- <edumazet@google.com>,  Jan Stancek <jstancek@redhat.com>,  Paolo Abeni
- <pabeni@redhat.com>,  Ruben Wauters <rubenru09@aol.com>,
+ <corbet@lwn.net>,  "Akira Yokosawa" <akiyks@gmail.com>,  "Breno Leitao"
+ <leitao@debian.org>,  "David S. Miller" <davem@davemloft.net>,  "Eric
+ Dumazet" <edumazet@google.com>,  "Ignacio Encinas Rubio"
+ <ignacio@iencinas.com>,  "Jan Stancek" <jstancek@redhat.com>,  "Marco
+ Elver" <elver@google.com>,  "Paolo Abeni" <pabeni@redhat.com>,  "Ruben
+ Wauters" <rubenru09@aol.com>,  "Shuah Khan" <skhan@linuxfoundation.org>,
   joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
-  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
-  stern@rowland.harvard.edu,  Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v2 00/12] Don't generate netlink .rst files inside
- $(srctree)
-In-Reply-To: <cover.1749723671.git.mchehab+huawei@kernel.org>
-Date: Fri, 13 Jun 2025 12:05:56 +0100
-Message-ID: <m27c1foq97.fsf@gmail.com>
+  linux-kernel@vger.kernel.org,  lkmm@lists.linux.dev,
+  netdev@vger.kernel.org,  peterz@infradead.org,  stern@rowland.harvard.edu
+Subject: Re: [PATCH v2 05/12] tools: ynl_gen_rst.py: Split library from
+ command line tool
+In-Reply-To: <440956b08faee14ed22575bea6c7b022666e5402.1749723671.git.mchehab+huawei@kernel.org>
+Date: Fri, 13 Jun 2025 12:13:28 +0100
+Message-ID: <m234c3opwn.fsf@gmail.com>
 References: <cover.1749723671.git.mchehab+huawei@kernel.org>
+	<440956b08faee14ed22575bea6c7b022666e5402.1749723671.git.mchehab+huawei@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -86,116 +87,15 @@ Content-Type: text/plain
 
 Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-> As discussed at:
->    https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
+> As we'll be using the Netlink specs parser inside a Sphinx
+> extension, move the library part from the command line parser.
 >
-> changeset f061c9f7d058 ("Documentation: Document each netlink family")
-> added a logic which generates *.rst files inside $(srctree). This is bad when
-> O=<BUILDDIR> is used.
+> No functional changes.
 >
-> A recent change renamed the yaml files used by Netlink, revealing a bad
-> side effect: as "make cleandocs" don't clean the produced files, symbols 
-> appear duplicated for people that don't build the kernel from scratch.
->
-> There are some possible solutions for that. The simplest one, which is what
-> this series address, places the build files inside Documentation/output. 
-> The changes to do that are simple enough, but has one drawback,
-> as it requires a (simple) template file for every netlink family file from
-> netlink/specs. The template is simple enough:
->
->         .. kernel-include:: $BUILDDIR/networking/netlink_spec/<family>.rst
-
-I think we could skip describing this since it was an approach that has
-now been dropped.
-
-> Part of the issue is that sphinx-build only produces html files for sources
-> inside the source tree (Documentation/). 
->
-> To address that, add an yaml parser extension to Sphinx.
->
-> It should be noticed that this version has one drawback: it increases the
-> documentation build time. I suspect that the culprit is inside Sphinx
-> glob logic and the way it handles exclude_patterns. What happens is that
-> sphinx/project.py uses glob, which, on my own experiences, it is slow
-> (due to that, I ended implementing my own glob logic for kernel-doc).
->
-> On the plus side, the extension is flexible enough to handle other types
-> of yaml files, as the actual yaml conversion logic is outside the extension.
-
-I don't think the extension would handle anything other than the Netlink
-yaml specs, and I don't think that should be a goal of this patchset.
-
-> With this version, there's no need to add any template file per netlink/spec
-> file. Yet, the Documentation/netlink/spec.index.rst require updates as
-> spec files are added/renamed/removed. The already-existing script can
-> handle it automatically by running:
->
->             tools/net/ynl/pyynl/ynl_gen_rst.py -x  -v -o Documentation/netlink/specs/index.rst
-
-I think this can be avoided by using the toctree glob directive in the
-index, like this:
-
-=============================
-Netlink Family Specifications
-=============================
-
-.. toctree::
-   :maxdepth: 1
-   :glob:
-
-   *
-
-This would let you have a static index file.
-
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->
-> v2:
-> - Use a Sphinx extension to handle netlink files.
->
-> v1:
-> - Statically add template files to as networking/netlink_spec/<family>.rst
->
-> Mauro Carvalho Chehab (12):
->   tools: ynl_gen_rst.py: create a top-level reference
->   docs: netlink: netlink-raw.rst: use :ref: instead of :doc:
+>  scripts/lib/netlink_yml_parser.py  | 391 +++++++++++++++++++++++++++++
+>  tools/net/ynl/pyynl/ynl_gen_rst.py | 374 +--------------------------
 
-I suggest combining the first 2 patches.
-
->   docs: netlink: don't ignore generated rst files
-
-Maybe leave this patch to the end and change the description to be a
-cleanup of the remants of the old approach.
-
-Further comments on specific commits
-
->   tools: ynl_gen_rst.py: make the index parser more generic
->   tools: ynl_gen_rst.py: Split library from command line tool
->   scripts: lib: netlink_yml_parser.py: use classes
->   tools: ynl_gen_rst.py: do some coding style cleanups
->   scripts: netlink_yml_parser.py: improve index.rst generation
->   docs: sphinx: add a parser template for yaml files
->   docs: sphinx: parser_yaml.py: add Netlink specs parser
-
-Please combine these 2 patches. The template patch just introduces noise
-into the series and makes it harder to review.
-
->   docs: use parser_yaml extension to handle Netlink specs
->   docs: conf.py: don't handle yaml files outside Netlink specs
->
->  .pylintrc                                     |   2 +-
->  Documentation/Makefile                        |  17 -
->  Documentation/conf.py                         |  17 +-
->  Documentation/netlink/specs/index.rst         |  38 ++
->  Documentation/networking/index.rst            |   2 +-
->  .../networking/netlink_spec/.gitignore        |   1 -
->  .../networking/netlink_spec/readme.txt        |   4 -
->  Documentation/sphinx/parser_yaml.py           |  80 ++++
->  .../userspace-api/netlink/netlink-raw.rst     |   6 +-
->  scripts/lib/netlink_yml_parser.py             | 394 ++++++++++++++++++
->  tools/net/ynl/pyynl/ynl_gen_rst.py            | 378 +----------------
->  11 files changed, 544 insertions(+), 395 deletions(-)
->  create mode 100644 Documentation/netlink/specs/index.rst
->  delete mode 100644 Documentation/networking/netlink_spec/.gitignore
->  delete mode 100644 Documentation/networking/netlink_spec/readme.txt
->  create mode 100755 Documentation/sphinx/parser_yaml.py
->  create mode 100755 scripts/lib/netlink_yml_parser.py
+I think the library code should be put in tools/net/ynl/pyynl/lib
+because it is YNL specific code. Maybe call it rst_generator.py
