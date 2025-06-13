@@ -1,299 +1,219 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012008.outbound.protection.outlook.com [52.101.66.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF1C111BF
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.8
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749824666; cv=fail; b=FUbn2FiqwgXcHj51WmYRYOH5lHagUbcw4ftK4/9QkOAjiIWO+lQMg/ljvWg4TBN1ki+WbeODqFtSr9Ghi3udyK2FlWDUWfFSJQseXfPaDSXrDkJK+aOJtGS3DkEozHWvlgrLPAHKBuAhjVH1MyiWBh/yl+YBGJO0XBxT1TDd8ek=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749824666; c=relaxed/simple;
-	bh=zy+I5EqQwgPQQIMsWF5xcRTbGODSZfG5pXv8V3MqXCg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=licMLASFFhLWh5lvpkDF9NkUM59ZNH3nSglL6KFDGQ68BrMxei0bLSva4q1BCmc1hD81xBJ5+xW9ujiv6rsqNmqNxgs0IynTVZOt9IFGPBQYZ/+Dxha4PFQhKuQ5cO3Rg9M9asvSOlmP8dw9Z50Z5+XY98zTiEmeADd/n33Er0A=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=jYikpHOG; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=jYikpHOG; arc=fail smtp.client-ip=52.101.66.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE362E11A8;
+	Fri, 13 Jun 2025 14:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749824745; cv=none; b=uMjbcL/HkK3UeDnst3ZeZg3P5KMcuOwVwdmHUgnynkp03RZK4wnccRgeKUE5QxLO7g3jPNok6t+ihYSxCUHf/1rRj1ItQvIYFU+fhssGfGI+H+GEO657OOYwQl1Rdwe+ecaorSiaBkiYD6G3tdAQimJSi+VbCj/Em60CmlWP8y8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749824745; c=relaxed/simple;
+	bh=7nxxCzygmafMze1zm3p+C7sk/SkcGsulU3y8eIF1HT8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=p3DnGwgt8XNjTv6SsTNJG1GPtJGdVGrIUqI764iBofzicKSzp8YQUrbm5SNwy2Zs3xmcpLalcHSubI3Ee7mBtc3+WPBnHVSNNHW2nbfbHTPqlC+5sSl3pF59gPgSOZ4LYgme7BVQBbE+LW6/U2M4CO82GnG54/3adfp1l35WSLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LpdH5M1w; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="jYikpHOG";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="jYikpHOG"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=AanQ9XrjF0ZPA/R4pJwUmrFL9+/7IN1CPU7XVqLDFrRQIFzsmVdKSZex5jdB3er0Howh+jWkFMKVcWKyaU18M8nMkgKPhAQmG+//RbMVSaxE6AAhTagJSBXA1oQLm4d5goKGGB6RDmm4Pb1Z+Sx7BckQ0BmDtqNBJXCun950UXOScBz2qoanmF5WQhvigX1GUtx6LQ6Uh67xeyZMIwuOsxJR3FFAEqOh4vjcjlnfjLwITISsyKmTja1A2ROH9EJhhAFpWLq6SchfDsyOZcmUV3RToJ1EDbkzo2JPKphyPtxyEycU0K6aakk+m0T7XtwNSLrGdfbE9sZCMqoh43CGeA==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kNNdehApNhe5aZAaWCfSTw7AOlHoXdRZKvvxbG0hC3U=;
- b=m87jEFAEJPCP/I/v62YYzfHyKn7orWX4ERWhENnVsqmh2Ikkc4ZcaTG8j3LPuwENQJWBlFqqXItaExIdQcLOfXZmJu6Oq3pfYIQCI7cVP+n8IWOA0e0G+76DcpWFjCkwgOFVLqeD49fuR6PZ2w91AJK9wXrKnPJesLcoYmcu39cgkEEQmp7WSuZZVxY5CDxQUrcg8q9xoDXfxieSToSclupTpJlPa9/VZUIDqavLv34wZmiOA/idCbbw331B1lyyngLBzbqHyqkkH+zydChwVb/02WKN9LUcDPBAodNjnnA7fn0XWGVSwZO6sWns1xurQgvyRUSbQohD8cq96NqHkg==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=gmail.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kNNdehApNhe5aZAaWCfSTw7AOlHoXdRZKvvxbG0hC3U=;
- b=jYikpHOGXodeoQE2A9nHjZhD30oRmuFQ4uZwqEdb2h9k7TA/1/2pIFw6nZAcnh4BaFaKRvo2SlK1hMZct/1K5lO+a8YuS+PmMVfihgNAx6xggSCWqD7BQNsP3hMdpd00wcJ9m2vCkmrWTApuSu2QEJ89YAtPZbUT+O2fhixDFZk=
-Received: from AM7PR04CA0025.eurprd04.prod.outlook.com (2603:10a6:20b:110::35)
- by DU0PR08MB7518.eurprd08.prod.outlook.com (2603:10a6:10:312::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.31; Fri, 13 Jun
- 2025 14:24:18 +0000
-Received: from AM2PEPF0001C70F.eurprd05.prod.outlook.com
- (2603:10a6:20b:110:cafe::b8) by AM7PR04CA0025.outlook.office365.com
- (2603:10a6:20b:110::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Fri,
- 13 Jun 2025 14:24:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AM2PEPF0001C70F.mail.protection.outlook.com (10.167.16.203) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Fri, 13 Jun 2025 14:24:16 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y+SK4xMDYaeY8rwi8n7A7aQwhiZrIYWlU/2BleGEtJbHcFY5S1XbDoIPE3oulbhEhVwZkvBiZ/H49OhaukBLtB+rpTd7hF1p5UMBbNGvD1rMl7YdZGmjpkou/E/TJJ/xCamWjyUai4s8KeqQOZrQsa6aJowd5ZEP4j0G9fdcMHL4pkeAmjwJFFtjcMMjGKZ/yiqTyuQPJ1oJR4F+KGboKOyXQnDjzEfEl2je3ZLmJpluxXtmzVuP1ENSQFdaxneD6MZk7bxo/zYGXmoVsvWrDJ+mbpTcMqQUA9tLTpQIb2aYltT782zgGWQVKyf1/rV79QTPaK006P0KBRBp5y9ehw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kNNdehApNhe5aZAaWCfSTw7AOlHoXdRZKvvxbG0hC3U=;
- b=ivp4iiZK6FfY3kJXxF8U5jtJlhATppD85e/fredFceT81OMuCvV2xy22sQfOOiVmCojVHS2wvf4Vms6+FFZVjjPw2k0AMffR9PHnWzs8Dlp9jVFv/6OrMMR7OihoYJ4/74beDOK8f3cTuPeULHWsOKnUvMLGC9P6+4viB/STt/eOXqUNISdFp9vt4X8ft2xpAPxyanpekzilRbTIc4RDNyl/FxkP1jPwdgIZJzdz7LiT1nN4D7Ldxh1d6BSp3g8+GauvS4AJ2iOqnIRmOWqeBclGRf45ZnxM8yEWKHblc8wzNV4yis83ASe8smMyVlf4pbuAIzUqQRSceD5G4YPn7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kNNdehApNhe5aZAaWCfSTw7AOlHoXdRZKvvxbG0hC3U=;
- b=jYikpHOGXodeoQE2A9nHjZhD30oRmuFQ4uZwqEdb2h9k7TA/1/2pIFw6nZAcnh4BaFaKRvo2SlK1hMZct/1K5lO+a8YuS+PmMVfihgNAx6xggSCWqD7BQNsP3hMdpd00wcJ9m2vCkmrWTApuSu2QEJ89YAtPZbUT+O2fhixDFZk=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by DU0PR08MB7591.eurprd08.prod.outlook.com (2603:10a6:10:31d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.22; Fri, 13 Jun
- 2025 14:23:42 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%2]) with mapi id 15.20.8835.023; Fri, 13 Jun 2025
- 14:23:42 +0000
-Message-ID: <b28374e1-a387-4a2c-8986-02cd5081a8ab@arm.com>
-Date: Fri, 13 Jun 2025 19:53:37 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] lib/test_vmalloc.c: Allow built-in execution
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
- Christoph Hellwig <hch@infradead.org>,
- Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
- Ryan Roberts <ryan.roberts@arm.com>
-References: <20250417161216.88318-1-urezki@gmail.com>
- <20250417161216.88318-2-urezki@gmail.com>
- <6c6f1cfa-7f1b-4133-ae2a-c6b1ef2d82e8@arm.com> <aEwzcsDM2PPsx1h-@pc636>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <aEwzcsDM2PPsx1h-@pc636>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0063.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ac::17) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LpdH5M1w"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2350fc2591dso21496785ad.1;
+        Fri, 13 Jun 2025 07:25:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749824743; x=1750429543; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qbMJZEp+OXeJUxEccMiWTpp37iHTjZ0DWM07t8/kq5w=;
+        b=LpdH5M1wg1543yoDj6zeJDzKL+s6ImWqymRDuUFhI5J7bwA6GsSERsUnYbmxL1eyVa
+         cCKAAJrMDuHkejeHadtrTW0Alw278S8Zn3A91arWQWkGKj9Txw57jCdoN3IjV8Do0SCd
+         y9hE0bXasaTQDETsvkodgP8uSuEJC0V1wLJhUsyE19YBeu0YCpeWkbemJNH7x6YXvUES
+         CtVQGBpgXX46AcZ+2XfSvrOEVHTj71vKWOfGVGci5NHYllN0M2MQ+aolYuCYfL4o1GQc
+         8GYMBddWu1DWYFvkNgai/2/lxYCzV/hhJfz3Rl2nFfrr+sX+sPpXEFf4cQKsEzLrrApM
+         IyyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749824743; x=1750429543;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qbMJZEp+OXeJUxEccMiWTpp37iHTjZ0DWM07t8/kq5w=;
+        b=lMtDfnl6rjWZ+505DPz3HKLoEfV8OkcsF2wRVwQghRprGbRx+cHWjVP/T5X56JBmji
+         bJfkKf+JLCmHCWmMAW64Ds2BrHGbYWpPwl56oQsDnyf8QDgM0ZLCTfVJWcHPH7fEhMzw
+         sLZ4zQJAeecP75ybCe3KQ64HOR4WX2Fb9LvqUh5m8IwHyrjvLJ1I4f4EdfTdf19Jm+gk
+         YlO1Pu2i+zh7dbRujErNs2Cnd0dIZyUe16HZH/LKmx0KdGSjDdlQqdTVfhzU+qaQt8DT
+         vtYuZZfLzxSA/idrSCLroRcD26FfSpO6CzkbIb3JaGc98b5AnzGy4S6x/Wb+9Wv6R9NK
+         7pgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZDM+LQYq+4CoPTquavlEWp0yQnk5HcVhoLsHE7aw/KM1edx/x1wOwOxvUr3i8bGGHsOJhvUIcP24=@vger.kernel.org, AJvYcCUwjizICdkozNacBPmtSt7QKa85WW+TfQAsi7sGwDFGnmVCOv5W0CGEmNr7hyA1ytEhIFmPIkiimpMMWlTu@vger.kernel.org, AJvYcCW5V6RDDbzbqNmBKx6XHnMuTdA6DmjKjayrSWjZ25vuD8iUP5km/6eH11ravx0i/f1jB6qccGvGJdYiphg+HYEut+nPBw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxosNqFYbg/4Sm2mlhET28AXgzzLGp5QcpxScskV9USV+9afOOw
+	2ywES50knCWjF9kKcEwJYAaAcfzNWgd2JJQXHqAOeUCjMgd4js96T31l
+X-Gm-Gg: ASbGncv0H0ZT8btOJi/YY5CIAGP8+lhStVxGigFVzkurCR1JJa8ZkSWV7K5N8heoBJ/
+	+xAKcFIYkJE7TncUcWjNH9Ch16cJxewwCYxCrgreeuPWv8X/pmwe9Fe309LfzFxFD05jEL/euO5
+	3rmMTy58j86JkGVAb/EMVylNgAD1oHR8y4n4jTK42dgVj20q9LnIrIgoENes/eMDm0oinCH/yka
+	G+bB+BfBcLoXNBotnyUoxIQZ89iubO/a1q3J/Hvqog+03ISIVPehJ52dqceYxlDIZOboQ8vgQ4h
+	VtHUyffq7u/5LdLv5CBS7vfVadAQds10JkD4xP0fXS5eW/kRq/k+ishX7lOang58C5BcDw==
+X-Google-Smtp-Source: AGHT+IFSAUyJOYrFNH5kSIABO4B+RufRr/zidEOc71Ly1nTcpZMnFAZ9v7LZ/EoOYEq6B/ckMPhekw==
+X-Received: by 2002:a17:902:ecca:b0:233:fd7b:5e0d with SMTP id d9443c01a7336-23667a28c67mr11814005ad.5.1749824742839;
+        Fri, 13 Jun 2025 07:25:42 -0700 (PDT)
+Received: from ?IPv6:::1? ([2607:fb91:3ee2:c0aa:ad2:cc58:51f0:a267])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88c20bsm14914095ad.19.2025.06.13.07.25.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 07:25:42 -0700 (PDT)
+Date: Fri, 13 Jun 2025 07:25:39 -0700
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>,
+ Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v12_0/6=5D_platform/x86=3A_A?=
+ =?US-ASCII?Q?dd_Lenovo_WMI_Gaming_Series_Drivers?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <facbb66b-ea34-bc57-d673-adb84f79fb8d@linux.intel.com>
+References: <20250609185027.7378-1-derekjohn.clark@gmail.com> <facbb66b-ea34-bc57-d673-adb84f79fb8d@linux.intel.com>
+Message-ID: <8933A696-ABA4-4C79-90D3-347016B26911@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|DU0PR08MB7591:EE_|AM2PEPF0001C70F:EE_|DU0PR08MB7518:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4413f17-0984-446a-26f1-08ddaa85fa98
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?VEdGZTVZck14NjR2MDNuemMyYVZsTW8rdEVwTDRrOWNBUzFvWHNWN3ZFWm1h?=
- =?utf-8?B?U0NwL0xzejU2YW1xUFArbHE2RGdDeDBYVFZCOS9XNEdUZCtwcEg1elZ0VEYr?=
- =?utf-8?B?cTFqVFVLaXBHMGlQVzNqZ0hBSU56Y1pGQWpMSWJCb0I1RDFrc2xBeWg5TGpm?=
- =?utf-8?B?SlJHUkcraU5OblE0L0J4cE5NWFF0T1pCRThsK3ZESTRjWTU5aXBPWGlJelc1?=
- =?utf-8?B?bXFlK1VzcFZLeUFmMkY2ZGtSSHBoQzYyR2RmYXNycEhRY2dGeHM2OEtGNlJz?=
- =?utf-8?B?eVRoQjRGNTgzYnByNFV2aEFJL0Zta3dLU3lhMWxSTnlwZDg2OGFhMnhMQVRM?=
- =?utf-8?B?V3cyNFdoODkvY3FBU3V1NGlOOUhIS04yc2N1QWRpMjhMbXBFU29uTTM1bjU0?=
- =?utf-8?B?aHMyYXVGOTZ1NlBKRXc1VzIrQ2VGSWpHdnRqWC9rZU03YXJuc1dSWXUvcWZG?=
- =?utf-8?B?WW1WNkZhL3hYRFBSOEpMdER5bWg3M0haTU4raUs2aTd0MjJZSnJtc3paUk4w?=
- =?utf-8?B?bmxwNmhEUWU2bXdrUUlvNHRobW5PdjBLMXMzWEFGditJb1dPL0loOFlBckto?=
- =?utf-8?B?UGI0ZzFDaGJHMi9JaG5jOFQ5UDNPaE4wWjN6QllCeDlVTlgwekZSeFpUZWVh?=
- =?utf-8?B?NnhWQ0NtYkZqaHpaWnlsUy9iWFlzODJMdlRGSjVKejdXc3M3MVFTNXpWWmZl?=
- =?utf-8?B?YmdwQmRvTzEvOEFScitVL1dVaVBqQVhNUzM2VmtsM043a0ZxUDRNRm80QkFU?=
- =?utf-8?B?a3JYQVoxUmJLcDRRRDRRSUJZZGZyRklXanA3WG1VZEZUT2paMStTd29MeEpv?=
- =?utf-8?B?YVZRTmRrdDV1Z2Vuek1wOHVaR0Y0cWlIbnRsb0NxN0xXQ0gvR2hqdVEzMXIy?=
- =?utf-8?B?RUNjV0pqU001YlJiNEpEaXZ6Q2F6Q3llaDZtVEo0YXZqNy91SlExTm1tdjNC?=
- =?utf-8?B?bnlsaW1tL1dVYmlxNGJzbDljSUlKR05MZWE5U1ZPTU5INDlBaXFvSk9icmtu?=
- =?utf-8?B?R0RvL3l1d2NnYlVJaWQrcGYyT3BnWmRLTEl6aFExU0Z3NDRxZTNpdEtBNWlT?=
- =?utf-8?B?OTAxbld5QlZFYk5aNWczcFl4Uk9jMVdvZnZjeDNVaEFnUHFOektHOTVIY3VP?=
- =?utf-8?B?Z3phbXhpL0ZIYUNMdmh5ODNzbjZKWDlkMXlRVDY1dThpdjRWZmF6dzZVS2Zz?=
- =?utf-8?B?REZEcFpBRkVOd1J1VFRVQWNJZXVLZ3diU3ZFNVE1YkFna3ZuYkUvdFArci9M?=
- =?utf-8?B?UVRuT1pyRWkzUlRySnZOYkpDcFZadW5JbjlrdGYxQVB5SW1OeVoxSndKV2Iw?=
- =?utf-8?B?ZlQ0U3BNNUdrQkFoNkFSQ0JaYVM2Z2NQQXc3VGkrUXFCZlFiMlM0YjRiTXp6?=
- =?utf-8?B?UEY1UGcrU25vTVhFL0JtdlZPWFNFbXlQaWV6WUQyOGlXTGRQdE1ZODAxdUZN?=
- =?utf-8?B?blg1RXdlS2dFa1djNHk4RXRteWpLb203VGxwL3NTcnpGUzNKZEswcEhMcm9W?=
- =?utf-8?B?bkQ4aktia3V5RDVrTnZIdlA4YUM4c0JISWs0MnBWMldCWTZDbis3MDJSL2hX?=
- =?utf-8?B?TUs2R2NTNm5pdW1SODgyajM0QnNtZ01UUE8rWk90Q3JXT2VsR0Z6cnVneFJm?=
- =?utf-8?B?dzg2VlVxaUV5djJSRjhaRzJJanpYQVJWUm91MFJpM1p3c0FZUTZEeklmWmJq?=
- =?utf-8?B?NHBBWStxUkdaK1orRVJmc1Q0MFBJNHl2V3l5d1hualUxYlFMbk80VEtKVHRQ?=
- =?utf-8?B?MFlHMmw0N1FoNENFalFtRGErWkRydzJYZEhYaVEyV0NKcWU1enR2dnhReUVv?=
- =?utf-8?B?N2pOOVdlSUdTVFdkS0xFem9QZDFIUDRqcFRCemtlSlUvK3V4R3R6MGVYWnY5?=
- =?utf-8?B?Wk8rMlIrN3FnWFovY1IzWGI4Z09NeU4rMkZQVU55NU1YMzFxWld0ejRCeFNG?=
- =?utf-8?Q?iblmp3OLZb0=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB7591
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM2PEPF0001C70F.eurprd05.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	55ee188e-1c13-47b0-6991-08ddaa85e5e1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|14060799003|376014|36860700013|35042699022|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MGJsRjZzK3gxSGJvamdmYUdIOFJYK3puTGMrWFJMZi9BUWFoanRCVXN0cXBY?=
- =?utf-8?B?eWpnK2dpNCtpZEV2L01GZVdLV3g5VUpRZHp2TmdyYXZjb2pBYVhwUTkwNG0x?=
- =?utf-8?B?TWVwWkJVcEZmQUNBREQyZTN3eGc5NVpzZGJIR2MwMnRHQWttb1NlcGQrSmVw?=
- =?utf-8?B?QUVEMGtDaE15V0RINzZFMFZyMjJOTGcvNjZTaUVmMkdscC80RGMrZFVFYk90?=
- =?utf-8?B?SnAwYVI2R0drTWloN3VRN1pzalRPb3o2YW4ra09tLzM0M1JvOTh0QXcwaGlu?=
- =?utf-8?B?Qmg1ZkxreWYzYkVwVEpmT2hIQnVIVUVPTmlwRjR0YTJMVGJsb2FScDRpUVl1?=
- =?utf-8?B?U3Q4TkpIQjN3Mlc4eUdvQmxyWDlxSW1JTkdxR1B3M2ZsVFVLR2YxSmhWVVBw?=
- =?utf-8?B?YnlKd3ZZTTN3OW9qdG0wQWVzbXRsL0F2Y1R4YjZEbjdiV0R2V2ZkYThYUHMr?=
- =?utf-8?B?Y3oydUx5N01sam5nL0FoV2NqNjFYUDBJRkpEQ2U2MmdsV2gzYWEyOUdQSGJj?=
- =?utf-8?B?QmZodGlmK3pRdTdYbndCUERzdjF3T3JJbGF2SnhmRnVyc09oLzNSZTYrVXNv?=
- =?utf-8?B?RUhUSEpHSE4vZlZtSnVhaDlYUE5jOHdsYSsvMnltY0ZwazhoanFmdzJVa09O?=
- =?utf-8?B?Rkd5OXJ0aTAvY0xHTkxmYnNuYjFsSmhwWmlJcXJvTWhlU3QyMzJ1ZGliTWlL?=
- =?utf-8?B?VDNWRmRsUVA2SWJaZjlsaWIzSWtuRERtcWRDY1dOZnJSaytOY0hiSXBhZFFJ?=
- =?utf-8?B?Nnk1S3lqV0NMRVplOENJRHArTEJ5M0pUOUhRWWd0NmJWbjhpN1hXS0libTc5?=
- =?utf-8?B?cnJTMVMxYXltbWRlZWp6N2VKcWRvenNxNGNOTE9pMWQxeUZDQTBDMmx0akhl?=
- =?utf-8?B?TVhyRzdlWXVvWmxiZEg4NFdab0pXVUZlMmZPYUNITUowekFNYmxSSjV1djhG?=
- =?utf-8?B?NlVPNWxGM1ovOWxaUERheVR4MGhEak1KaENpNU83MlZ2RFJYc3Vzd0ozc1M5?=
- =?utf-8?B?OUxvblV1Yk5ZQTR2aTFML2xrT21sdGJNczM5R0FOcThhZ0ZrVTBvZlJVUWp4?=
- =?utf-8?B?OUFhV2k2TXRyMXlkOThtMTA1MFZSQzBIcFhDdnRjUEVvRGd4NzlSdjNicEE0?=
- =?utf-8?B?VTg5N1VVc0tpR1RxZjd6N0RadGZuRWZlcjljeCtVZmZzcTR2SEhwOC9XZGU5?=
- =?utf-8?B?Zy9peWdPOHc4ekpXV2lRWldzbGtlQmt2TWpBN00vcXBzUHpnNU55TUdISnRp?=
- =?utf-8?B?UXpwUGFsdDlXZkdzaGthaXFpZUtva1Z2d21pM0EwL3ZkTXovT01PV0hHMzdw?=
- =?utf-8?B?elBTK1ZtbEdhM2xhai81OGlpRzFzcEpCNVFnN1V1MVFrZzRSS2FVTkNvQm9h?=
- =?utf-8?B?c0VleERjV01aS0x0UVJwK0VySW1pWDlFRjdDRDJKMTNQSm82UjNwZkg4UVpq?=
- =?utf-8?B?Y3AyaDI3MlJSWDlscC82elozOFZOQXBCdm9OUVE1RVZKVUQ2cVBlL1crYlIz?=
- =?utf-8?B?Sm0vN0RzcEs4UmJSaGFNWThnMUdIcUtEbDhEeU9RQ1JYNlVMWTJWR0tPVG02?=
- =?utf-8?B?SndpeENJQUM2Y0lqUHJwSVovQXQwQmNIYXIrblhkWHJ0amluTWc4Qk1RM2d1?=
- =?utf-8?B?NFo3TkdQUW9sbWExSVdHTmdyTHJsbFIweXJNSjA1REZwU2hmMGFHL29URHZC?=
- =?utf-8?B?aTQrYXBTbVdUdlN2MVBJcHl2ZURIYWdXeDVIZUlHRi9uUFpob2pJUVY1NU8w?=
- =?utf-8?B?NjJlZm0ydGZzUGx0VFFDT3pZZFE1K0ZCQ3dWanFjWWh2ZjNONWZzWUZ3U0xH?=
- =?utf-8?B?azluamVhNDl4MHJxdnpsNWIxR2YvWVJXMjdHMTVEZUszU2pqd2VDcWFyRWc2?=
- =?utf-8?B?em4vbGk1c2dyck0yZlRZT2lPdElZeGNRUFc5WVhHKytycnlPTExTUkZFdmNa?=
- =?utf-8?B?VWZNcVlDTVZLdWttd0RnTlVSYmF1ajMwZ3oxcU5qam94VlR4Y3pMMWJSNmY1?=
- =?utf-8?B?VHJmdzlhT2xrUkN1RTFXS3c1U294b0Q3UTgrQlpMVlpXdU5aa2dxai9CUG1k?=
- =?utf-8?Q?OIOg15?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(14060799003)(376014)(36860700013)(35042699022)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 14:24:16.7285
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4413f17-0984-446a-26f1-08ddaa85fa98
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM2PEPF0001C70F.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB7518
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-On 13/06/25 7:49 pm, Uladzislau Rezki wrote:
-> Hello, Dev!
->
->> On 17/04/25 9:42 pm, Uladzislau Rezki (Sony) wrote:
->>> This patch removes the dependency on module loading ("m")
->>> for the vmalloc test suite, enabling it to be built directly
->>> into the kernel, so both ("=m") and ("=y") are supported.
->>>
->>> Motivation:
->>> - Faster debugging/testing of vmalloc code;
->>> - It allows to configure the test via kernel-boot parameters.
->>>
->>> Configuration example:
->>>     test_vmalloc.nr_threads=64
->>>     test_vmalloc.run_test_mask=7
->>>     test_vmalloc.sequential_test_order=1
->>>
->>> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
->>> ---
->>>    lib/Kconfig.debug  | 3 +--
->>>    lib/test_vmalloc.c | 5 +++--
->>>    2 files changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
->>> index f9051ab610d54..166b9d830a85a 100644
->>> --- a/lib/Kconfig.debug
->>> +++ b/lib/Kconfig.debug
->>> @@ -2574,8 +2574,7 @@ config TEST_BITOPS
->>>    config TEST_VMALLOC
->>>    	tristate "Test module for stress/performance analysis of vmalloc allocator"
->>>    	default n
->>> -       depends on MMU
->>> -	depends on m
->>> +	depends on MMU
->>>    	help
->>>    	  This builds the "test_vmalloc" module that should be used for
->>>    	  stress and performance analysis. So, any new change for vmalloc
->>> diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
->>> index 4ab23e5e772d0..6d65ef725d42c 100644
->>> --- a/lib/test_vmalloc.c
->>> +++ b/lib/test_vmalloc.c
->>> @@ -591,10 +591,11 @@ static void do_concurrent_test(void)
->>>    	kvfree(tdriver);
->>>    }
->>> -static int vmalloc_test_init(void)
->>> +static int __init vmalloc_test_init(void)
->>>    {
->>>    	do_concurrent_test();
->>> -	return -EAGAIN; /* Fail will directly unload the module */
->>> +	/* Fail will directly unload the module */
->>> +	return IS_BUILTIN(CONFIG_TEST_VMALLOC) ? 0:-EAGAIN;
->>>    }
->>>    module_init(vmalloc_test_init)
->> Hi Uladzislau,
->>
->> Post this patch I am seeing the following problem: while booting the kernel, this test is
->> executed and a particular testcase triggers a warning splat from the kernel, then the boot
->> gets stuck for 3-4 seconds, then proceeds. I am not an expert on modules so I don't know
->> what happened but I am guessing that when the test fails, the delay is due to module
->> unloading time...do you suggest a solution? I reverted your patch and then proceeded with
->> my work, so apologies for not having the dmesg log, if you need it I'll replicate, although
->> there is some subtest which has consistently been spitting out a warning on my Apple M3 Linux
->> VM and I have been just ignoring it for long : )
->>
-> This is because CONFIG_TEST_VMALLOC=y is built-in in your case.
 
-Actually, I have a usecase for test_vmalloc :) I wanted to test my
-patches through the test, but the problem is that the moment it fails,
-it gets unloaded and then I cannot use the test at runtime. Currently it
-is set to =m in my .config.
+On June 13, 2025 2:07:14 AM PDT, "Ilpo J=C3=A4rvinen" <ilpo=2Ejarvinen@lin=
+ux=2Eintel=2Ecom> wrote:
+>On Mon, 9 Jun 2025, Derek J=2E Clark wrote:
+>
+>> Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+>> WMI interfaces that control various power settings=2E There are multipl=
+e WMI
+>> interfaces that work in concert to provide getting and setting values a=
+s
+>> well as validation of input=2E Currently only the "Gamezone", "Other
+>> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+>> I attempted to structure the driver so that adding the "Custom Mode",
+>> "Lighting", and other data block interfaces would be trivial in later
+>> patches=2E
+>>=20
+>> This driver attempts to standardize the exposed sysfs by mirroring the
+>> asus-armoury driver currently under review=2E As such, a lot of
+>> inspiration has been drawn from that driver=2E
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250319065827=2E53478-=
+1-luke@ljones=2Edev/#t
+>>=20
+>> The drivers have been tested by me on the Lenovo Legion Go and Legion G=
+o
+>> S=2E
+>>=20
+>> Suggested-by: Mario Limonciello <superm1@kernel=2Eorg>
+>> Reviewed-by: Armin Wolf <W_Armin@gmx=2Ede>
+>> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+>> ---
+>> v12:
+>>  - Fix warnings from make W=3D1
+>> v11:
+>> v10:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250515182224=2E8277-1=
+-derekjohn=2Eclark@gmail=2Ecom/
+>> v9:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250508235217=2E12256-=
+1-derekjohn=2Eclark@gmail=2Ecom/
+>> v8:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250505010659=2E145098=
+4-1-derekjohn=2Eclark@gmail=2Ecom/
+>> v7:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250503000142=2E119035=
+4-1-derekjohn=2Eclark@gmail=2Ecom/
+>> v6:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250428012029=2E970017=
+-1-derekjohn=2Eclark@gmail=2Ecom/
+>> v5:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250408012815=2E103235=
+7-1-derekjohn=2Eclark@gmail=2Ecom/
+>> v4:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250317144326=2E5850-1=
+-derekjohn=2Eclark@gmail=2Ecom/
+>> v3:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250225220037=2E16073-=
+1-derekjohn=2Eclark@gmail=2Ecom/
+>> v2:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20250102004854=2E14874-=
+1-derekjohn=2Eclark@gmail=2Ecom/
+>> v1:
+>> https://lore=2Ekernel=2Eorg/platform-driver-x86/20241217230645=2E15027-=
+1-derekjohn=2Eclark@gmail=2Ecom/
+>>=20
+>> Derek J=2E Clark (6):
+>>   platform/x86: Add lenovo-wmi-* driver Documentation
+>>   platform/x86: Add lenovo-wmi-helpers
+>>   platform/x86: Add Lenovo WMI Events Driver
+>>   platform/x86: Add Lenovo Capability Data 01 WMI Driver
+>>   platform/x86: Add Lenovo Gamezone WMI Driver
+>>   platform/x86: Add Lenovo Other Mode WMI Driver
+>>=20
+>>  =2E=2E=2E/wmi/devices/lenovo-wmi-gamezone=2Erst       | 203 ++++++
+>>  =2E=2E=2E/wmi/devices/lenovo-wmi-other=2Erst          | 108 +++
+>>  MAINTAINERS                                   |  12 +
+>>  drivers/platform/x86/Kconfig                  |  41 ++
+>>  drivers/platform/x86/Makefile                 |   5 +
+>>  drivers/platform/x86/lenovo-wmi-capdata01=2Ec   | 302 ++++++++
+>>  drivers/platform/x86/lenovo-wmi-capdata01=2Eh   |  25 +
+>>  drivers/platform/x86/lenovo-wmi-events=2Ec      | 196 ++++++
+>>  drivers/platform/x86/lenovo-wmi-events=2Eh      |  20 +
+>>  drivers/platform/x86/lenovo-wmi-gamezone=2Ec    | 409 +++++++++++
+>>  drivers/platform/x86/lenovo-wmi-gamezone=2Eh    |  20 +
+>>  drivers/platform/x86/lenovo-wmi-helpers=2Ec     |  74 ++
+>>  drivers/platform/x86/lenovo-wmi-helpers=2Eh     |  20 +
+>>  drivers/platform/x86/lenovo-wmi-other=2Ec       | 665 ++++++++++++++++=
+++
+>>  drivers/platform/x86/lenovo-wmi-other=2Eh       |  16 +
+>>  15 files changed, 2116 insertions(+)
+>>  create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst
+>>  create mode 100644 Documentation/wmi/devices/lenovo-wmi-other=2Erst
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01=2Ec
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01=2Eh
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-events=2Ec
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-events=2Eh
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone=2Ec
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone=2Eh
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-helpers=2Ec
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-helpers=2Eh
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-other=2Ec
+>>  create mode 100644 drivers/platform/x86/lenovo-wmi-other=2Eh
+>
+>Hi Derek,
+>
+>Could you please rebase this on top of for-next placing the files under=
+=20
+>lenovo/ folder which we just created=2E I could have easily changed the=
+=20
+>placement of the files themselves, but making the Kconfig & Makefile=20
+>changes into the new files while applying would have been more=20
+>complicated=2E It is better you do it so I won't end up messing up anythi=
+ng=2E
+>
+>There's the lenovo-target in lenovo/Makefile which will auto add the=20
+>'lenovo-' prefix to the files so you can basically rename the files like=
+=20
+>this:
+>
+>drivers/platform/x86/lenovo-wmi-other=2Ec ->
+>drivers/platform/x86/lenovo/wmi-other=2Ec
+>
+>=2E=2E=2Eand add them using that lenovo-target=2E
+>
 
-> Therefore the tests are triggered including the ones which generates
-> kernel warnings, which is expectable. It takes some time to execute,
-> therefore you see a delay.
->
-> By default the CONFIG_TEST_VMALLOC is not set. This is just for
-> debugging purpose. Please unset it in your kernel configuration.
-> It is located under:
->
-> Kernel Hacking
->    Kernel Testing and Coverage
->      Runtime Testing
->         Test Module for stress/performance analysis of vmalloc allocator
->
-> --
-> Uladzislau Rezki
+Sure=2E I'm on travel so it may be a few days=2E I'll attempt to get it do=
+ne today if I can though=2E
+
+Should I change the docs at all for this?
+
+Cheers,
+- Derek
