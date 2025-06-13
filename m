@@ -1,117 +1,279 @@
-Received: from mail-m3292.qiye.163.com (mail-m3292.qiye.163.com [220.197.32.92])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E446B2DA761;
-	Fri, 13 Jun 2025 07:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF32E7652
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800652; cv=none; b=TjHRWzW8ZCvvzGujDwY3QhKvoN+EPxruicPRjKQ4HLbNzhYprLCVNK9HXHIiMKnQKGJ8hjq5siG8pjZU+uTTBNF+FrLCJnJet2M9IjNKsSvxUZtNHoAL9LL5AaiBOCMHUCrFxWj/TfVttIZk/u3tQHfA3dqeGY62Cw73gE4X5wU=
+	t=1749800662; cv=none; b=k/zFX4ztPXqOGypLo7eGFkwOQLEt/YRN3guCZ7wkXkQ6CnEl4UxZ7soJxmg1R+NMB7CqLAlFbkzKSUOSxrh30oF+MaXWkoN6KtUBShqmYgUNTo0lEUaMJHRpr17dmiOeQmx5GLjF1CBstAH3BtPc9vRKKp97Jf7KMYBunJtoz0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800652; c=relaxed/simple;
-	bh=rcLyjWA6iWah1E2lgGlYxaC7DrqkV6jmOnFtAUerKC8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Plv3boqRJQaTvoP6cLPCPvfVAcMv4EmQ6SCWhKPNLUa9+GhsXKdohEVlvCw+u3ZmuwRGHCsXG6bTRrgJr/FED4qvXlZuhwI/c00/mvy9Ga9TVHogKyvXjtKUUDW9cQ0rt6YU2N3RaAsb1NBBA07SDNvfk93OnhnN291z6KS4LZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hillstonenet.com; spf=pass smtp.mailfrom=hillstonenet.com; dkim=pass (1024-bit key) header.d=hillstonenet.com header.i=@hillstonenet.com header.b=WA/i2EJ1; arc=none smtp.client-ip=220.197.32.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hillstonenet.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hillstonenet.com
+	s=arc-20240116; t=1749800662; c=relaxed/simple;
+	bh=EnVnrBmOV7rIEgq7QH/fwD0t8DU3lxRyCJYZ7Y8djus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZJ2l4i/LQ/vy8YTTs6Mb4i7ZP3SaZ+hWQh8YHz44CEysLUXPCZfAVumgsqfV8RkgUQ84255XYhBxpIsvztpO97u8udOvSih2hpQ1OLGkZFkkFMOHGyFbc0H748bY4sGCAE2Lr3tT8JSl5/HnBopOmkGNCX/kM4sDNOg2rN1Vgbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J2h5ELs1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hillstonenet.com header.i=@hillstonenet.com header.b="WA/i2EJ1"
-Received: from localhost.localdomain (unknown [111.199.5.197])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 188e99b3c;
-	Fri, 13 Jun 2025 15:38:49 +0800 (GMT+08:00)
-From: Haixia Qu <hxqu@hillstonenet.com>
-To: Jon Maloy <jmaloy@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Richard Alpe <richard.alpe@ericsson.com>
-Cc: Haixia Qu <hxqu@hillstonenet.com>,
-	Jon Maloy <jon.maloy@ericsson.com>,
-	netdev@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tipc: fix panic in tipc_udp_nl_dump_remoteip() using bearer as udp without check
-Date: Fri, 13 Jun 2025 07:38:26 +0000
-Message-ID: <20250613073826.96527-1-hxqu@hillstonenet.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250613055506.95836-1-hxqu@hillstonenet.com>
-References: <20250613055506.95836-1-hxqu@hillstonenet.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2h5ELs1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749800659;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jGTjyGqgLpAkXFQhlYftBGt/d0bSUT/7S3I84fIEcgc=;
+	b=J2h5ELs1rVil9IIK+ZXshuydWbZISTc/PSPQFQYCqX3p4hp403/KwC2S3O95gozjM6eqvT
+	SrRjDEAUm/5ua6KyX/QjKBjaPaukQj8p/Jl64TEI3LcMZhR9Vo0zbMGJ33AzLWPGBopQQJ
+	xAk93c/I9qZSSAGedcipg+AbQyFB3ck=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-501-sksf6q12O62EsBJeRo2VSA-1; Fri, 13 Jun 2025 03:44:15 -0400
+X-MC-Unique: sksf6q12O62EsBJeRo2VSA-1
+X-Mimecast-MFC-AGG-ID: sksf6q12O62EsBJeRo2VSA_1749800655
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4eb9c80deso916118f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:44:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749800654; x=1750405454;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jGTjyGqgLpAkXFQhlYftBGt/d0bSUT/7S3I84fIEcgc=;
+        b=H7WdHXKjUywPPQ/B7jYMB/LEy4Rg26Aad7BTqwyTSflk7K9Pz/24+djuS3qGAPIwju
+         nUEW2ao3KeU584dNtTPByDr+VwV9mImNrtpUbStGfpmNMgNV4mz/TSk02IBThcl3QsYM
+         6jV+cILo/IQi1ALlRzl72FGYC2RMlGYAkBVF8jqgokMU26salCU4e25KRtYdgQaZetor
+         Ko49IXc0fPbM410+fwHspbVGN7FeFY0t1bGZPdEYt7lihSgM+SkoSx5oOI3NHSrMWGJY
+         avuVMUaIZDQ7ibpnRf367L8ASk178dB2Mt6wXWzvQxPSpl1rnPm3FevFAes9wpKwhx5d
+         310Q==
+X-Gm-Message-State: AOJu0Yy4USkh6nI3lv1zr2888Y8NKRz8aMPH126bMlriKdZpQEnOK7RY
+	tHtCbYrqyd5IYj9Q/I8Xh5tHSVuUELxGsCOujMR3DQ0q9yjy3QKpcPsK5I91ECrju2sW0tmcP/h
+	59MmAOKnjtQqmdmg2KXEumEh1UfGtrEjK7rpMzKbOJPMZ4MRcyt9twqy+KV9u/F5M8g==
+X-Gm-Gg: ASbGncu6H2sQJ0DQ2x1BItrsZsqTUrVCFM3/ph06ndavNABlQsuOJtlq05iQq+CB7yo
+	RKJhLbpzo6jUBfCoGOiUmbJGA8cNggWdQsZxGwjSCPj+nk1PA/nkC1DHQ3Auw5mrPqlOBDzyH0Y
+	i1By70wA+PcOR1GnRFJLWD+im9o40eGGpvdArYCpJGd9AaQG3WmQZtEimd67TMHsQdtN6XbVExX
+	pEMQimNjp1vFWBSoPMULRuwTCReSvCUzIkzJ+ASZ94oUeyeUwd3k8S9bwk89HAqHklS1FPcfItx
+	DuBHrLyshE96tY1yVMheVLgbCoWh864O8UNQn/BxBWNZH6tfq3nEJmuKzHgnL3adsrZamvYi8SO
+	lxxsClwFQ1WbgV0l2K/Z6PpqX972zynWmGxUNXHgchMLXviD4Lg==
+X-Received: by 2002:a05:6000:2085:b0:3a4:d6ed:8df7 with SMTP id ffacd0b85a97d-3a568738d6amr1803369f8f.59.1749800654619;
+        Fri, 13 Jun 2025 00:44:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGl/T3bpZSTH6EemLwcTOlSFsSb99biE42PVbkwHnNV+UQgVHq5uEEmxu+Q9QQsb+MD/3RwxQ==
+X-Received: by 2002:a05:6000:2085:b0:3a4:d6ed:8df7 with SMTP id ffacd0b85a97d-3a568738d6amr1803335f8f.59.1749800654148;
+        Fri, 13 Jun 2025 00:44:14 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4? (p200300d82f1a37002982b5f7a04e4cb4.dip0.t-ipconnect.de. [2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b09148sm1547927f8f.58.2025.06.13.00.44.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 00:44:13 -0700 (PDT)
+Message-ID: <51520205-07f5-45c2-b3e3-cf58a95d9fe6@redhat.com>
+Date: Fri, 13 Jun 2025 09:44:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHkJKVkkeSExPHUkZGkwdTlYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSkpVSkJCVU5VSkJMWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
-	VKQktLWQY+
-X-HM-Tid: 0a97683a222d09dakunm9ca564cfa80574
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pz46LTo5LzErOVZCGigvFR4z
-	QzMaCTdVSlVKTE9CQ0tLSEhKSUJNVTMWGhIXVRMDCg47ExIXFwgPFBUeFR4PVRgUFkVZV1kSC1lB
-	WUpKSlVKQkJVTlVKQkxZV1kIAVlBSU1MSDcG
-DKIM-Signature:a=rsa-sha256;
-	b=WA/i2EJ1MCZZN8gzi4pEUkNkmK0owipdfSdPf+EIomkq0dlMjkYqw3QjCk0fJRlvDZe4/+k7Zyoxk4xP6gYQNOapaEarAWOmqawk95HOdsI9cPopkvWIeHUSphsYTHSUNr/tdZFx/sFKkfDnBPphsloOfNMfAzJoEttUw2tMvdU=; s=default; c=relaxed/relaxed; d=hillstonenet.com; v=1;
-	bh=wtXKO9HXhZZMnYJ4fgvFMPEwRzEhJCJl8qJOxuHWRHc=;
-	h=date:mime-version:subject:message-id:from;
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pmd()
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Alistair Popple <apopple@nvidia.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
+ Oscar Salvador <osalvador@suse.de>
+References: <20250611120654.545963-1-david@redhat.com>
+ <20250611120654.545963-3-david@redhat.com>
+ <434c6cfd-ba83-4d3c-8bde-736fcb8e9d91@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <434c6cfd-ba83-4d3c-8bde-736fcb8e9d91@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When TIPC_NL_UDP_GET_REMOTEIP cmd calls tipc_udp_nl_dump_remoteip() 
-with media name set to a l2 name, kernel panics [1].
+On 12.06.25 18:10, Lorenzo Stoakes wrote:
+> On Wed, Jun 11, 2025 at 02:06:53PM +0200, David Hildenbrand wrote:
+>> Marking PMDs that map a "normal" refcounted folios as special is
+>> against our rules documented for vm_normal_page().
+>>
+>> Fortunately, there are not that many pmd_special() check that can be
+>> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
+>> would get this wrong right now are rather harmless: e.g., none so far
+>> bases decisions whether to grab a folio reference on that decision.
+>>
+>> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+>> implications as it seems.
+>>
+>> Getting this right will get more important as we use
+>> folio_normal_page_pmd() in more places.
+>>
+>> Fix it by teaching insert_pfn_pmd() to properly handle folios and
+>> pfns -- moving refcount/mapcount/etc handling in there, renaming it to
+>> insert_pmd(), and distinguishing between both cases using a new simple
+>> "struct folio_or_pfn" structure.
+>>
+>> Use folio_mk_pmd() to create a pmd for a folio cleanly.
+>>
+>> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> Looks good to me, checked that the logic remains the same. Some micro
+> nits/thoughts below. So:
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-The reproduction steps:
-1. create a tun interface
-2. enable l2 bearer
-3. TIPC_NL_UDP_GET_REMOTEIP with media name set to tun
+Thanks!
 
-the ub was in fact a struct dev.
+> 
+>> ---
+>>   mm/huge_memory.c | 58 ++++++++++++++++++++++++++++++++----------------
+>>   1 file changed, 39 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 49b98082c5401..7e3e9028873e5 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -1372,9 +1372,17 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
+>>   	return __do_huge_pmd_anonymous_page(vmf);
+>>   }
+>>
+>> -static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>> -		pmd_t *pmd, pfn_t pfn, pgprot_t prot, bool write,
+>> -		pgtable_t pgtable)
+>> +struct folio_or_pfn {
+>> +	union {
+>> +		struct folio *folio;
+>> +		pfn_t pfn;
+>> +	};
+>> +	bool is_folio;
+>> +};
+> 
+> Interesting... I guess a memdesc world will make this easy... maybe? :)
+> 
+> But this is a neat way of passing this.
+> 
+> Another mega nit is mayyybe we could have a macro for making these like:
+> 
+> 
+> #define DECLARE_FOP_PFN(name_, pfn_)		\
+> 	struct folio_or_pfn name_ {		\
+> 		.pfn = pfn_,			\
+> 		.is_folio = false,		\
+> 	}
+> 
+> #define DECLARE_FOP_FOLIO(name_, folio_)	\
+> 	struct folio_or_pfn name_ {		\
+> 		.folio = folio_,		\
+> 		.is_folio = true,		\
+> 	}
+> 
+> But yeah maybe overkill for this small usage in this file.
 
-when bid != 0 && skip_cnt != 0, bearer_list[bid] may be NULL or 
-other media when other thread changes it.
+Yeah. I suspect at some point we will convert this into a folio+idx 
+("page") or "pfn" approach, at which point we could also use this for 
+ordinary insert_pfn().
 
-fix this by checking media_id.
+(hopefully, then we can also do pfn_t -> unsigned long)
 
-[1]
-tipc: Started in network mode
-tipc: Node identity 8af312d38a21, cluster identity 4711
-tipc: Enabled bearer <eth:syz_tun>, priority 1
-Oops: general protection fault
-KASAN: null-ptr-deref in range 
-CPU: 1 UID: 1000 PID: 559 Comm: poc Not tainted 6.16.0-rc1+ #117 PREEMPT
-Hardware name: QEMU Ubuntu 24.04 PC
-RIP: 0010:tipc_udp_nl_dump_remoteip+0x4a4/0x8f0
+So let's defer adding that for now.
 
-Fixes: 832629ca5c31 ("tipc: add UDP remoteip dump to netlink API")
-Signed-off-by: Haixia Qu <hxqu@hillstonenet.com>
----
- net/tipc/udp_media.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+>> +
+>> +static int insert_pmd(struct vm_area_struct *vma, unsigned long addr,
+>> +		pmd_t *pmd, struct folio_or_pfn fop, pgprot_t prot,
+>> +		bool write, pgtable_t pgtable)
+>>   {
+>>   	struct mm_struct *mm = vma->vm_mm;
+>>   	pmd_t entry;
+>> @@ -1382,8 +1390,11 @@ static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>>   	lockdep_assert_held(pmd_lockptr(mm, pmd));
+>>
+>>   	if (!pmd_none(*pmd)) {
+>> +		const unsigned long pfn = fop.is_folio ? folio_pfn(fop.folio) :
+>> +					  pfn_t_to_pfn(fop.pfn);
+>> +
+>>   		if (write) {
+>> -			if (pmd_pfn(*pmd) != pfn_t_to_pfn(pfn)) {
+>> +			if (pmd_pfn(*pmd) != pfn) {
+>>   				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
+>>   				return -EEXIST;
+>>   			}
+>> @@ -1396,11 +1407,19 @@ static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>>   		return -EEXIST;
+>>   	}
+>>
+>> -	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
+>> -	if (pfn_t_devmap(pfn))
+>> -		entry = pmd_mkdevmap(entry);
+>> -	else
+>> -		entry = pmd_mkspecial(entry);
+>> +	if (fop.is_folio) {
+>> +		entry = folio_mk_pmd(fop.folio, vma->vm_page_prot);
+>> +
+>> +		folio_get(fop.folio);
+>> +		folio_add_file_rmap_pmd(fop.folio, &fop.folio->page, vma);
+>> +		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PMD_NR);
+>> +	} else {
+>> +		entry = pmd_mkhuge(pfn_t_pmd(fop.pfn, prot));
+> 
+> Mega micro annoying nit - in above branch you have a newline after entry =, here
+> you don't. Maybe should add here also?
 
-diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c
-index 108a4cc2e001..258d6aa4f21a 100644
---- a/net/tipc/udp_media.c
-+++ b/net/tipc/udp_media.c
-@@ -489,7 +489,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb, struct netlink_callback *cb)
- 
- 		rtnl_lock();
- 		b = tipc_bearer_find(net, bname);
--		if (!b) {
-+		if (!b || b->bcast_addr.media_id != TIPC_MEDIA_TYPE_UDP) {
- 			rtnl_unlock();
- 			return -EINVAL;
- 		}
-@@ -500,7 +500,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb, struct netlink_callback *cb)
- 
- 		rtnl_lock();
- 		b = rtnl_dereference(tn->bearer_list[bid]);
--		if (!b) {
-+		if (!b || b->bcast_addr.media_id != TIPC_MEDIA_TYPE_UDP) {
- 			rtnl_unlock();
- 			return -EINVAL;
- 		}
+Well, it's combining all the "entry" setup in one block. But I don't 
+particularly care, so I'll just do it :)
+
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
