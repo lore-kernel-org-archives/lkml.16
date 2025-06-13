@@ -1,51 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1232E7642;
-	Fri, 13 Jun 2025 07:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC4A2E7F1A;
+	Fri, 13 Jun 2025 07:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800240; cv=none; b=gAtIaRe3CTpu0lSeTbHM+590UTUTQ4h4mtPQrzVj30PZ52RFEztN8OQGsBjGu9IYzhYCOhKeb3ZWNFZxdwJ/oyBaubS4ULxTSCSaisfELyfFoyWwI0fps6F4Wj08hMbLWOoapdMV1gIKO0B8uETHe7/BdF12ZPBkfANPQxpOS9Q=
+	t=1749800241; cv=none; b=eP8v2M8zWBfokFQlIFVqQBE707ikeE8hmbe+06FmBQz2YffgIclnm5SokUrv9kKThX3sZ4BALc5h5vQCg9PN3n3XExITbSmba28fVC1CRZ9J3uzXHM3Ex6Mh0c/YfqKGMmzliAwpWMBgSjSIqhyBMIudMNm8hcw2zZqDP7W8Jzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800240; c=relaxed/simple;
-	bh=ABwc1kj0xrksNlvBDjXyxDkEoXd4XXUG8vUPBaEVhYs=;
+	s=arc-20240116; t=1749800241; c=relaxed/simple;
+	bh=Kdw3hBFMipUon2tOuLWtpNPqlMzaZz4xthoOeJG1pUA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=bf3wgjg9CEJcEaUI4DK3CfZNDzm2cN1qoWUuozM65tlNfaDnPE+Lpa3cTsJkMkvh45prX7naa/RCgmdf+lQ0Z7iTti9o8QQmsgiXdbdoJNhAe+GIz2+GhHyCYxZeYdtNwAfaboyKjTGMLXKX4zOIftKoci2LAmz/dPAOeBK/sD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=en0zLxj/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L9w+zZmT; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JIICsEfCYTt1ZZUhlV3NqwSmIAn+duMR6tfnXJEgU7L2Y4Ial0NyV4zX7BqYPZ2+iu7qNdwEOYqT2cDCfvYuxFgdbeulArQ9DwB2B+t1Z/umHWFoXY+HQRJxnK4WDsQbxCHiTJm46wcStxpCPDEbhLTQ7vJyIknC3T3iTkNRoAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lPm5oXZi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EWbSDc3S; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="en0zLxj/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L9w+zZmT"
-Date: Fri, 13 Jun 2025 07:37:15 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lPm5oXZi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EWbSDc3S"
+Date: Fri, 13 Jun 2025 07:37:17 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749800237;
+	s=2020; t=1749800238;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AJRI5XrIwhTtuJo8/GrlGuHaUV7m6DL5YsFUEXYLrU4=;
-	b=en0zLxj/2lzzNWX7O67txjU2lYeXighmONP+GbdvTp0CjCoAJVmxLfuIGU3doArNSZnhXe
-	0+SK5ZyG0CFBciqsvVQgiInDc3OIOGGwWq4uQPGWAcipDlgoSiQpEh9qiGBI/0Dt5mZp9G
-	Fvgfmu8F6MPjyQwmUyKDmgXwpp4g6ifzbvgZfwvLOLY7qDrWU8K6O2V4SLX5HxW01ik1nt
-	B7ZemLs1przv81dm/zRixQzo4J6D8CstuXoknYR1bUTag6CkOmWEtMgwiwmdzm9f/rzPZI
-	DOvmQwMe3ViGxtp9KGcDinQapSdoYL6C9eimcSFYVbzlG6vuxVAw59Jg/UTQvQ==
+	bh=P5h3DREMX1wbuYj6Hcak1PF49V59tWUCHLbGhzQArmo=;
+	b=lPm5oXZil6dGy58FCygPoGjHJYb1BzAnCTa8co6icCgDZff5ccnYQJ86zMHICwKlTAhtPC
+	AvH5WdsIVe4zu0cr4ffZ2TubXpvJ4Oblby1gcucgiEEsCczwhO9m9TbFhf1CknmS3GrhVy
+	O7VEoVcsVMZDzBoLfyh0Ai5qLTgrOyYZQeZ+Fvqkh4GAgLhXW1EcT8DUA1iDaC9nTTSZKU
+	37v442AugTIjxi4mKOOrJkAAXu89TtRCIiHpzxHKueFuvbfIadCHy1jKV2UVtKyBvAR6V6
+	1ERMamqAZhEiog+GWmNyLgyE8MX6G0lVeZ/pht4HLso3WkSwEVDKQTNJNnRDyg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749800237;
+	s=2020e; t=1749800238;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AJRI5XrIwhTtuJo8/GrlGuHaUV7m6DL5YsFUEXYLrU4=;
-	b=L9w+zZmT20nhiy4q0WD4+YgpMiUm6PRIB4ozbBLS16Sxw+YCuaq5PPkOENfHPTFlVumico
-	cXW1QhGy1FluRxDQ==
+	bh=P5h3DREMX1wbuYj6Hcak1PF49V59tWUCHLbGhzQArmo=;
+	b=EWbSDc3ShfurPTJSsLsNoG0ADXyQCis7OuE2VnshsVL+qe4qzv1CDN+LlD+1T7a6Ob7DeY
+	oE/we4WBPUIhpXBg==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/smp: Use the SMP version of schedstats
+Subject: [tip: sched/core] sched/smp: Use the SMP version of the deadline
+ scheduling class
 Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Juri Lelli <juri.lelli@redhat.com>,
@@ -55,15 +56,15 @@ Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Valentin Schneider <vschneid@redhat.com>,
  Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250528080924.2273858-32-mingo@kernel.org>
-References: <20250528080924.2273858-32-mingo@kernel.org>
+In-Reply-To: <20250528080924.2273858-30-mingo@kernel.org>
+References: <20250528080924.2273858-30-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174980023595.406.16508743799112441499.tip-bot2@tip-bot2>
+Message-ID: <174980023775.406.17404450194416335798.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,17 +74,17 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     9d9af2372f2a46242fd5e827973235f40f31a706
-Gitweb:        https://git.kernel.org/tip/9d9af2372f2a46242fd5e827973235f40f31a706
+Commit-ID:     6324dce8f6262ec2049494af311e5418bc733341
+Gitweb:        https://git.kernel.org/tip/6324dce8f6262ec2049494af311e5418bc733341
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 28 May 2025 10:09:12 +02:00
+AuthorDate:    Wed, 28 May 2025 10:09:10 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 13 Jun 2025 08:47:21 +02:00
+CommitterDate: Fri, 13 Jun 2025 08:47:20 +02:00
 
-sched/smp: Use the SMP version of schedstats
+sched/smp: Use the SMP version of the deadline scheduling class
 
-Simplify the scheduler by making CONFIG_SMP=y schedstats
-debugging output unconditional.
+Simplify the scheduler by making CONFIG_SMP=y code
+in prio_changed_dl() unconditional.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
@@ -96,39 +97,34 @@ Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lore.kernel.org/r/20250528080924.2273858-32-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250528080924.2273858-30-mingo@kernel.org
 ---
- kernel/sched/stats.c | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/sched/deadline.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
-index 86acd37..d1c9429 100644
---- a/kernel/sched/stats.c
-+++ b/kernel/sched/stats.c
-@@ -115,10 +115,8 @@ static int show_schedstat(struct seq_file *seq, void *v)
- 		seq_printf(seq, "timestamp %lu\n", jiffies);
- 	} else {
- 		struct rq *rq;
--#ifdef CONFIG_SMP
- 		struct sched_domain *sd;
- 		int dcount = 0;
--#endif
- 		cpu = (unsigned long)(v - 2);
- 		rq = cpu_rq(cpu);
- 
-@@ -133,7 +131,6 @@ static int show_schedstat(struct seq_file *seq, void *v)
- 
- 		seq_printf(seq, "\n");
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index bf9b70a..0f30697 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -3005,7 +3005,6 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
+ 	if (!task_on_rq_queued(p))
+ 		return;
  
 -#ifdef CONFIG_SMP
- 		/* domain-specific stats */
- 		rcu_read_lock();
- 		for_each_domain(cpu, sd) {
-@@ -164,7 +161,6 @@ static int show_schedstat(struct seq_file *seq, void *v)
- 			    sd->ttwu_move_balance);
- 		}
- 		rcu_read_unlock();
--#endif /* CONFIG_SMP */
+ 	/*
+ 	 * This might be too much, but unfortunately
+ 	 * we don't have the old deadline value, and
+@@ -3034,13 +3033,6 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
+ 		    dl_time_before(p->dl.deadline, rq->curr->dl.deadline))
+ 			resched_curr(rq);
  	}
- 	return 0;
+-#else /* !CONFIG_SMP: */
+-	/*
+-	 * We don't know if p has a earlier or later deadline, so let's blindly
+-	 * set a (maybe not needed) rescheduling point.
+-	 */
+-	resched_curr(rq);
+-#endif /* !CONFIG_SMP */
  }
+ 
+ #ifdef CONFIG_SCHED_CORE
