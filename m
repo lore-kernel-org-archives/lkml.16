@@ -1,255 +1,326 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AAE1A8F79
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3282DA748;
+	Fri, 13 Jun 2025 10:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749808903; cv=none; b=tM/jA/rHW28+uB9MCFu5M0EW/UUyUBa1uB9eSJWGuPCHqyEfInT6thCBsYzPl7LwnZsTO9oo1cLaDdFVAAlw9FFsW81QVszhAFWyH1CmyPp80OQpbjC4snw+QL472e1oJzievaPj23aBYKpi2YxlrKrieu6cVB1149ed3YTkPZ4=
+	t=1749808947; cv=none; b=eEu1D5EKUxTQBoiHDbmyGfL7HElt9A/pijvz98yezHSF1p7Qh5k4NFh8JbGCZzUMUffWi1QRkMeN9Mx62crr+qPjt6pHLd1AFpy1P02YOhjiCljSY7kFQZKvQ2uLD7eB4rFZWXnWzY2tvincekjv27J9Dy9RcnE4km+joR7DDTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749808903; c=relaxed/simple;
-	bh=vdE8ZJvKezXZAkWqUAojLnlJRXRUgCIpmIhpemx4JtQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tOrxDs5zqgg6LPkpQgZGsnK6vt0rEmHSjAPVcdTmJ/dNfPPJ7GNmT0VJfJoFGC/2fKtgYCTzsxXoB6OHHFkfAZC2QmUAKl994fjguesKnynAQH6myPGCkD0KdR22fOuRIE2rrD794g55eTUT/J75ch5mxH+yGXCfMboM8UArlzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dWiB/kdq; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749808947; c=relaxed/simple;
+	bh=gRTYPv8n7RPX68ovKWwQpPv6R/EmA7Fk41rJ4kGszzQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UwZTF1VkeJ3bMLu837rjiu6PG3JqpuNrcuq9ILeWkKLtCW2jWhUZzhBciH52q3K/hzlWffYekEO6GYuf0g49Nq/9fR4ySif/1Lm5RvzxA/pYlYWSU3GfR4AwW+FKNDYOnTsjVtdGRw06Rby/v/BtJHG8h/83WuayJSEvQbyhPFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rC49uMoZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dWiB/kdq"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55DA15wA3104814;
-	Fri, 13 Jun 2025 05:01:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749808865;
-	bh=UOuiWlX9p7lNVU0QfBFOh9XTcLaprri11iz8KEMFwho=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=dWiB/kdqRYglvWY4MP9yXFY7QgkgOGDQQ+F/9kTNz4JJqX3vnFexfqz7P9j2j6bgR
-	 9n2dVAANFS0BPDyGt8sSLebLejQV+6kECX9OgLRxSRdNwkXGYK9gN+2HqL2RxLJguW
-	 IRI0L+zZqVb8TGIvN26JCvuipReHMJmJHajsuZtY=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55DA14b13357680
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 13 Jun 2025 05:01:04 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 13
- Jun 2025 05:01:04 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Fri, 13 Jun 2025 05:01:04 -0500
-Received: from [172.24.227.14] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.14])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55DA0v3G3579539;
-	Fri, 13 Jun 2025 05:00:58 -0500
-Message-ID: <1301f0d9-7ebd-44c1-bfcf-a82bbbd92e46@ti.com>
-Date: Fri, 13 Jun 2025 15:30:57 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rC49uMoZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D43AC4CEEB;
+	Fri, 13 Jun 2025 10:02:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749808947;
+	bh=gRTYPv8n7RPX68ovKWwQpPv6R/EmA7Fk41rJ4kGszzQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rC49uMoZNt6COZRusTs2MFq0rcxWSlEJliwKrC2jR+IRWqM7dbWuDxDs83H5TEqd4
+	 1T8v4XmJ7tDoiw6tf7O+2UXpkgjkSEqc67HgSrF/2/E+B9Yfp5zG2II+7lEtRbniiu
+	 BgGXACMnvRJ6bR7L3Ite4ZmJm9R2qEhLXPKSRuDQa0aTQEMfvNn8hzUSVb2YME8Wys
+	 SRiPWsYWB064hIYE/hMXhO/IFiM0dU4N1xTKgbKzDiN0nS7TqwA0QoUWzrskXiqcxn
+	 4MJSJJ0JlUPlgP/R9uZl5cLS6Fh2ER2KSE2njF5uudDXJS20THFK+pFT6gAptG1E+k
+	 4pJsdhKuG3OaQ==
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2e8f84653c3so448575fac.0;
+        Fri, 13 Jun 2025 03:02:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVXBWmqYEdCNIzqePhxg45P8nhXoHCTh9ucy+bQ8cmz/O/MQ7NsKFY1xSf9Z5LeglvTCwTLPvrzMAA=@vger.kernel.org, AJvYcCVYfeL1LuBA45q1fYUPhdWmg/LysFZrZkpxApagNO0BubtBAbv1HkGy/c+dcctNGXkgD9VleYEFVI+q7Ni+O7HLoZc=@vger.kernel.org, AJvYcCWA5c2IGuDu03+rzETy7k0zGrQogt9+Ocuxm4S20rFF9tWfMreKTWYvsuCUe2DOir32g1rVMplF/7pVuUdQ@vger.kernel.org, AJvYcCX/r42gvdHQfvWh1M80nzOe8gTRXqqPY5csxt+oSrvGIVHHh7fOvB8oxle8+5X7h3bQqKS11mMIl14=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCbJ1o+P5KUc/8Y7FliHc/MiGkqLWbXCvv6Lrm87TegW7fXe3Q
+	7YcbSPDWkb6cojmYB0n9/eBH9gzyBvzlrEv6iMVHQ6H1z0fiw2+apseOJYg3CHU6RIV4/GTgiK1
+	Apx7xw8p7VZ7chCPJUW8eJRLnOtoAs/I=
+X-Google-Smtp-Source: AGHT+IG6RV4SKL/zKEETYHAk5xh93JCc+BzoHPReRZCSi6kaiSZR+jx4L3gcXCRQIT8z6bjaF9DodMiBECMSXSOM7V8=
+X-Received: by 2002:a05:6871:a516:b0:2e8:7953:ece7 with SMTP id
+ 586e51a60fabf-2ead50ecccdmr1375549fac.24.1749808946553; Fri, 13 Jun 2025
+ 03:02:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <kieran.bingham+renesas@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>, <max.oss.09@gmail.com>,
-        <devarsht@ti.com>, <geert@linux-m68k.org>, <dianders@chromium.org>,
-        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
-        <dri-devel@lists.freedesktop.org>, <max.krummenacher@toradex.com>,
-        <ernestvanhoecke@gmail.com>
-References: <20250611052947.5776-1-j-choudhary@ti.com>
- <9cd2f481-07e4-4c1e-9daa-aceeec47f871@ideasonboard.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <9cd2f481-07e4-4c1e-9daa-aceeec47f871@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
+ <CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com>
+ <zhjytvj35lknj7v3jhva3n3nbv6qctvqgykwyi5huj6omet7lz@wchd7f4p4dpv>
+ <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
+ <20250607140600.76e87ea5@jic23-huawei> <CAJZ5v0jqZ6gYKb85dpR-X5RwFeUBcbbcJ_b-AOe+JypBXod-MA@mail.gmail.com>
+ <486a1110-5336-42fd-82b8-a7b1452bad65@tuxon.dev>
+In-Reply-To: <486a1110-5336-42fd-82b8-a7b1452bad65@tuxon.dev>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 13 Jun 2025 12:02:15 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hqBm4L2V9aUjB0tmW67eRRCnM7FScgdJQ=ihnpAZuMfA@mail.gmail.com>
+X-Gm-Features: AX0GCFvUpM5UGXUCp-G6WAFRkpKl3jKALA_qxwwQX1rDqdDt1ZJwTijYpfyF6q0
+Message-ID: <CAJZ5v0hqBm4L2V9aUjB0tmW67eRRCnM7FScgdJQ=ihnpAZuMfA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, gregkh@linuxfoundation.org, dakr@kernel.org, 
+	len.brown@intel.com, pavel@kernel.org, ulf.hansson@linaro.org, 
+	daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org, 
+	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	fabrizio.castro.jz@renesas.com, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Tomi,
+On Fri, Jun 13, 2025 at 9:39=E2=80=AFAM Claudiu Beznea <claudiu.beznea@tuxo=
+n.dev> wrote:
+>
+> Hi, Rafael,
+>
+> On 09.06.2025 22:59, Rafael J. Wysocki wrote:
+> > On Sat, Jun 7, 2025 at 3:06=E2=80=AFPM Jonathan Cameron <jic23@kernel.o=
+rg> wrote:
+> >>
+> >> On Fri, 6 Jun 2025 22:01:52 +0200
+> >> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> >>
+> >> Hi Rafael,
+> >>
+> >>> On Fri, Jun 6, 2025 at 8:55=E2=80=AFPM Dmitry Torokhov
+> >>> <dmitry.torokhov@gmail.com> wrote:
+> >>>>
+> >>>> On Fri, Jun 06, 2025 at 06:00:34PM +0200, Rafael J. Wysocki wrote:
+> >>>>> On Fri, Jun 6, 2025 at 1:18=E2=80=AFPM Claudiu <claudiu.beznea@tuxo=
+n.dev> wrote:
+> >>>>>>
+> >>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>>>>>
+> >>>>>> The dev_pm_domain_attach() function is typically used in bus code =
+alongside
+> >>>>>> dev_pm_domain_detach(), often following patterns like:
+> >>>>>>
+> >>>>>> static int bus_probe(struct device *_dev)
+> >>>>>> {
+> >>>>>>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+> >>>>>>     struct bus_device *dev =3D to_bus_device(_dev);
+> >>>>>>     int ret;
+> >>>>>>
+> >>>>>>     // ...
+> >>>>>>
+> >>>>>>     ret =3D dev_pm_domain_attach(_dev, true);
+> >>>>>>     if (ret)
+> >>>>>>         return ret;
+> >>>>>>
+> >>>>>>     if (drv->probe)
+> >>>>>>         ret =3D drv->probe(dev);
+> >>>>>>
+> >>>>>>     // ...
+> >>>>>> }
+> >>>>>>
+> >>>>>> static void bus_remove(struct device *_dev)
+> >>>>>> {
+> >>>>>>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+> >>>>>>     struct bus_device *dev =3D to_bus_device(_dev);
+> >>>>>>
+> >>>>>>     if (drv->remove)
+> >>>>>>         drv->remove(dev);
+> >>>>>>     dev_pm_domain_detach(_dev);
+> >>>>>> }
+> >>>>>>
+> >>>>>> When the driver's probe function uses devres-managed resources tha=
+t depend
+> >>>>>> on the power domain state, those resources are released later duri=
+ng
+> >>>>>> device_unbind_cleanup().
+> >>>>>>
+> >>>>>> Releasing devres-managed resources that depend on the power domain=
+ state
+> >>>>>> after detaching the device from its PM domain can cause failures.
+> >>>>>>
+> >>>>>> For example, if the driver uses devm_pm_runtime_enable() in its pr=
+obe
+> >>>>>> function, and the device's clocks are managed by the PM domain, th=
+en
+> >>>>>> during removal the runtime PM is disabled in device_unbind_cleanup=
+() after
+> >>>>>> the clocks have been removed from the PM domain. It may happen tha=
+t the
+> >>>>>> devm_pm_runtime_enable() action causes the device to be runtime-re=
+sumed.
+> >>>>>
+> >>>>> Don't use devm_pm_runtime_enable() then.
+> >>>>
+> >>>> What about other devm_ APIs? Are you suggesting that platform driver=
+s
+> >>>> should not be using devm_clk*(), devm_regulator_*(),
+> >>>> devm_request_*_irq() and devm_add_action_or_reset()? Because again,
+> >>>> dev_pm_domain_detach() that is called by platform bus_remove() may s=
+hut
+> >>>> off the device too early, before cleanup code has a chance to execut=
+e
+> >>>> proper cleanup.
+> >>>>
+> >>>> The issue is not limited to runtime PM.
+> >>>>
+> >>>>>
+> >>>>>> If the driver specific runtime PM APIs access registers directly, =
+this
+> >>>>>> will lead to accessing device registers without clocks being enabl=
+ed.
+> >>>>>> Similar issues may occur with other devres actions that access dev=
+ice
+> >>>>>> registers.
+> >>>>>>
+> >>>>>> Add devm_pm_domain_attach(). When replacing the dev_pm_domain_atta=
+ch() and
+> >>>>>> dev_pm_domain_detach() in bus probe and bus remove, it ensures tha=
+t the
+> >>>>>> device is detached from its PM domain in device_unbind_cleanup(), =
+only
+> >>>>>> after all driver's devres-managed resources have been release.
+> >>>>>>
+> >>>>>> For flexibility, the implemented devm_pm_domain_attach() has 2 sta=
+te
+> >>>>>> arguments, one for the domain state on attach, one for the domain =
+state on
+> >>>>>> detach.
+> >>>>>
+> >>>>> dev_pm_domain_attach() is not part driver API and I'm not convinced=
+ at
+> >>>>
+> >>>> Is the concern that devm_pm_domain_attach() will be [ab]used by driv=
+ers?
+> >>>
+> >>> Yes, among other things.
+> >>
+> >> Maybe naming could make abuse at least obvious to spot? e.g.
+> >> pm_domain_attach_with_devm_release()
+> >
+> > If I'm not mistaken, it is not even necessary to use devres for this.
+> >
+> > You might as well add a dev_pm_domain_detach() call to
+> > device_unbind_cleanup() after devres_release_all().  There is a slight
+> > complication related to the second argument of it, but I suppose that
+> > this can be determined at the attach time and stored in a new device
+> > PM flag, or similar.
+> >
+>
+> I looked into this solution. I've tested it for all my failure cases and
+> went good.
 
-On 12/06/25 11:55, Tomi Valkeinen wrote:
-> Hi,
-> 
-> On 11/06/2025 08:29, Jayesh Choudhary wrote:
->> By default, HPD was disabled on SN65DSI86 bridge. When the driver was
->> added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
->> call which was moved to other function calls subsequently.
->> Later on, commit "c312b0df3b13" added detect utility for DP mode. But with
->> HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
->> state always return 1 (always connected state).
->>
->> Set HPD_DISABLE bit conditionally based on connector type.
->> Since the HPD_STATE is reflected correctly only after waiting for debounce
->> time (~100-400ms) and adding this delay in detect() is not feasible
->> owing to the performace impact (glitches and frame drop), remove runtime
->> calls in detect() and add hpd_enable()/disable() bridge hooks with runtime
->> calls, to detect hpd properly without any delay.
->>
->> [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
->>
->> Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connector operations for DP")
->> Cc: Max Krummenacher <max.krummenacher@toradex.com>
->> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->> ---
->>
->> Changelog v3->v4:
->> - Remove "no-hpd" support due to backward compatibility issues
->> - Change the conditional from "no-hpd" back to connector type
->>    but still address [1]
->>
->> v3 patch link:
->> <https://lore.kernel.org/all/20250529110418.481756-1-j-choudhary@ti.com/>
->>
->> Changelog v2->v3:
->> - Change conditional based on no-hpd property to address [1]
->> - Remove runtime calls in detect() with appropriate comments
->> - Add hpd_enable() and hpd_disable() in drm_bridge_funcs
->>
->> v2 patch link:
->> <https://lore.kernel.org/all/20250508115433.449102-1-j-choudhary@ti.com/>
->>
->> Changelog v1->v2:
->> - Drop additional property in bindings and use conditional.
->> - Instead of register read for HPD state, use dpcd read which returns 0
->>    for success and error codes for no connection
->> - Add relevant history for the required change in commit message
->> - Drop RFC subject-prefix in v2
->> - Add "Cc:" tag
->>
->> v1 patch link:
->> <https://lore.kernel.org/all/20250424105432.255309-1-j-choudhary@ti.com/>
->>
->> [1]: <https://lore.kernel.org/all/mwh35anw57d6nvre3sguetzq3miu4kd43rokegvul7fk266lys@5h2euthpk7vq/>
->>
->>   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 49 ++++++++++++++++++++++-----
->>   1 file changed, 41 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->> index 60224f476e1d..b674a1aa1a37 100644
->> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->> @@ -348,12 +348,20 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata,
->>   	 * 200 ms.  We'll assume that the panel driver will have the hardcoded
->>   	 * delay in its prepare and always disable HPD.
->>   	 *
->> -	 * If HPD somehow makes sense on some future panel we'll have to
->> -	 * change this to be conditional on someone specifying that HPD should
->> -	 * be used.
->> +	 * For DisplayPort connector type, now that HPD makes sense and is
-> 
-> This comment also is written like a commit description ("now that HPD
-> makes sense").
+OK
 
-I will make it more apt.
+> > Note that dev->pm_domain is expected to be cleared by ->detach(), so
+> > this should not cause the domain to be detached twice in a row from
+> > the same device, but that needs to be double-checked.
+>
+> The genpd_dev_pm_detach() calls genpd_remove_device() ->
+> dev_pm_domain_set(dev, NULL) which sets the dev->pm_domain =3D NULL. I ca=
+n't
+> find any other detach function in the current code base.
 
-> 
->> +	 * required, use the connector type to conditionally disable HPD.
->> +	 *
->> +	 * NOTE: The bridge type is set in auxiliary_bridge probe but
->> +	 * enable_comms() can be called before. So for DisplayPort,
->> +	 * HPD will be enabled once bridge type is set.
->> +	 * "no-hpd" property is not used properly in devicetree description
->> +	 * and hence is unreliable. Therefore HPD is being enabled using
->> +	 * this conditional.
->>   	 */
->> -	regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
->> -			   HPD_DISABLE);
->> +
->> +	if (pdata->bridge.type != DRM_MODE_CONNECTOR_DisplayPort)
->> +		regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
->> +				   HPD_DISABLE);
->>   
->>   	pdata->comms_enabled = true;
->>   
->> @@ -1195,9 +1203,17 @@ static enum drm_connector_status ti_sn_bridge_detect(struct drm_bridge *bridge)
->>   	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
->>   	int val = 0;
->>   
->> -	pm_runtime_get_sync(pdata->dev);
->> +	/*
->> +	 * The chip won't report HPD right after being powered on as
->> +	 * HPD_DEBOUNCED_STATE reflects correct state only after the
->> +	 * debounce time (~100-400 ms).
->> +	 * So having pm_runtime_get_sync() and immediately reading
->> +	 * the register in detect() won't work, and adding delay()
->> +	 * in detect will have performace impact in display.
->> +	 * So remove runtime calls here.
->> +	 */
->> +
-> 
-> As Doug mentioned, the style here is more like a commit message. But
-> also, in my opinion, it would make more sense to have the comment in
-> hpd_enable() rather than having it here, mentioning that the chip needs
-> to be powered to have a reliable HPD due to the long debounce time.
-> 
+There is also acpi_dev_pm_detach() which can be somewhat hard to find,
+but it calls dev_pm_domain_set(dev, NULL) either.
 
-So a comment here that runtime references are handled through
-hpd_enable() and hpd_disable()
+> The code I've tested for this solution is this one:
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index b526e0e0f52d..5e9750d007b4 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/kthread.h>
+>  #include <linux/wait.h>
+>  #include <linux/async.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pinctrl/devinfo.h>
+>  #include <linux/slab.h>
+> @@ -552,8 +553,11 @@ static void device_unbind_cleanup(struct device *dev=
+)
+>         dev->dma_range_map =3D NULL;
+>         device_set_driver(dev, NULL);
+>         dev_set_drvdata(dev, NULL);
+> -       if (dev->pm_domain && dev->pm_domain->dismiss)
+> -               dev->pm_domain->dismiss(dev);
+> +       if (dev->pm_domain) {
+> +               if (dev->pm_domain->dismiss)
+> +                       dev->pm_domain->dismiss(dev);
+> +               dev_pm_domain_detach(dev, dev->pm_domain->detach_power_of=
+f);
 
-And then in enable(), mentioning that device needs to be powered on
-for reliable HPD in detect() due to debounce time
+I would do the "detach" before the "dismiss" to retain the current ordering=
+.
 
->>   	regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
->> -	pm_runtime_put_autosuspend(pdata->dev);
->>   
->>   	return val & HPD_DEBOUNCED_STATE ? connector_status_connected
->>   					 : connector_status_disconnected;
->> @@ -1220,6 +1236,20 @@ static void ti_sn65dsi86_debugfs_init(struct drm_bridge *bridge, struct dentry *
->>   	debugfs_create_file("status", 0600, debugfs, pdata, &status_fops);
->>   }
->>   
->> +static void ti_sn_bridge_hpd_enable(struct drm_bridge *bridge)
->> +{
->> +	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
->> +
->> +	pm_runtime_get_sync(pdata->dev);
->> +}
->> +
->> +static void ti_sn_bridge_hpd_disable(struct drm_bridge *bridge)
->> +{
->> +	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
->> +
->> +	pm_runtime_put_sync(pdata->dev);
-> 
-> No need for _sync, afaics. Why not pm_runtime_put_autosuspend()?
+Also it is interesting that you ended up calling them both in one
+place.  It kind of indicates that the PM domains attached via
+dev_pm_domain_attach() should be attached earlier and just use the
+->activate() and ->dismiss() callbacks.
 
-Okay.
+> +       }
+>         pm_runtime_reinit(dev);
+>         dev_pm_set_driver_flags(dev, 0);
+>  }
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 075ec1d1b73a..2459be6aecf4 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -1400,11 +1400,8 @@ static int platform_probe(struct device *_dev)
+>         if (ret)
+>                 goto out;
+>
+> -       if (drv->probe) {
+> +       if (drv->probe)
+>                 ret =3D drv->probe(dev);
+> -               if (ret)
+> -                       dev_pm_domain_detach(_dev, true);
+> -       }
+>
+>  out:
+>         if (drv->prevent_deferred_probe && ret =3D=3D -EPROBE_DEFER) {
+> @@ -1422,7 +1419,6 @@ static void platform_remove(struct device *_dev)
+>
+>         if (drv->remove)
+>                 drv->remove(dev);
+> -       dev_pm_domain_detach(_dev, true);
+>  }
+>
+>  static void platform_shutdown(struct device *_dev)
+> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> index 781968a128ff..4bd1e3c7f401 100644
+> --- a/drivers/base/power/common.c
+> +++ b/drivers/base/power/common.c
+> @@ -111,6 +111,9 @@ int dev_pm_domain_attach(struct device *dev, bool pow=
+er_on)
+>         if (!ret)
+>                 ret =3D genpd_dev_pm_attach(dev);
+>
+> +       if (dev->pm_domain)
+> +               dev->pm_domain->detach_power_off =3D power_on;
 
-> 
->   Tomi
-> 
->> +}
->> +
->>   static const struct drm_bridge_funcs ti_sn_bridge_funcs = {
->>   	.attach = ti_sn_bridge_attach,
->>   	.detach = ti_sn_bridge_detach,
->> @@ -1234,6 +1264,8 @@ static const struct drm_bridge_funcs ti_sn_bridge_funcs = {
->>   	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
->>   	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
->>   	.debugfs_init = ti_sn65dsi86_debugfs_init,
->> +	.hpd_enable = ti_sn_bridge_hpd_enable,
->> +	.hpd_disable = ti_sn_bridge_hpd_disable,
->>   };
->>   
->>   static void ti_sn_bridge_parse_lanes(struct ti_sn65dsi86 *pdata,
->> @@ -1322,7 +1354,8 @@ static int ti_sn_bridge_probe(struct auxiliary_device *adev,
->>   			   ? DRM_MODE_CONNECTOR_DisplayPort : DRM_MODE_CONNECTOR_eDP;
->>   
->>   	if (pdata->bridge.type == DRM_MODE_CONNECTOR_DisplayPort)
->> -		pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT;
->> +		pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT |
->> +				    DRM_BRIDGE_OP_HPD;
->>   
->>   	drm_bridge_add(&pdata->bridge);
->>   
-> 
+This will not work for acpi_general_pm_domain because it is shared by
+all of its users.
 
-Thanks,
-Jayesh
+It is likely to not work for shared PM domains in general.
+
+I would put the new flag into struct dev_pm_info.
+
+> +
+>         return ret < 0 ? ret : 0;
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
+> diff --git a/include/linux/pm.h b/include/linux/pm.h
+> index f0bd8fbae4f2..12e97e09e85c 100644
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -748,6 +748,7 @@ struct dev_pm_domain {
+>         void (*sync)(struct device *dev);
+>         void (*dismiss)(struct device *dev);
+>         int (*set_performance_state)(struct device *dev, unsigned int sta=
+te);
+> +       bool detach_power_off;
+>  };
+>
+> Rafael, Ulf, Dmitry, Jonathan, all,
+>
+> Could you please let me know how do you consider this approach?
+
+Please see my comments above.
+
+Thanks!
