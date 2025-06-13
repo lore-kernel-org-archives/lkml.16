@@ -1,283 +1,293 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83282135BC
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0344A214A6E;
+	Fri, 13 Jun 2025 16:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833074; cv=none; b=PomsTUUuhYUgJnmBmTd92QpFmYg+10BkxViZL2Vb1DLjfdyUFSKs84Lf3y4fr53SbuFDjkx8C+Nc59P4Nr42q9qv4T0aVR2YNNsc1+RIUUjjfy3oB+2TMPdNCrUdy1f8k0whBR9yhSC+kKFodHFuhnJ5ByXCuo/Uf3ha2v1cG6Q=
+	t=1749833076; cv=none; b=kqBdrltIElix0U9qcZXAN4wc1fpYj3ekXTKmOInTZhykzro4VdSVHf1IIWgC3TLebJQ+ntLOv9opPK9cH8cYnQgVhKvMUgy6xENGts+DZIYTxPeH4j7y3DpuKQFUj/7YYqaoum817YYyYaBe7TiNkd94WM2e9ZvaveMFMLvj3h0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833074; c=relaxed/simple;
-	bh=xfwOxsDgYunx//JZHasoSCroD3+r4OvjrSj4RQ3NaR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ObJiraQ8sObOdXkzdTnxdO24BA4cBO2/Ocyk8LBFV2ZRvH1v0hTCjcGVXQInYhEL/PE74xMZU17AGJm59FsmR1LfaLCo4JgydtLM2cgEAmJZCl3IhwcdAMv3UPbtJtvue0WwOJdKBZzGC28AvmC3nFJLe6ZGq+MpMra1SYJ9Zaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YC+R8j3N; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749833076; c=relaxed/simple;
+	bh=0ZXN1WuV/lX7XS3COQuAduKIyu3l3gNG/FKH5ieV37k=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=CR0hB24EMrq2bcwV87kQeBR8BcY5MjcB6WDWlrXxn/5tMBFWMtSyWuAGxLFeP7a2qjlnYdcJps4wNTsmJRtgCixp9X0UZpAse2YKK7IIt3r2YcRXl5xx1nu5CPHhgZg7ITE7tDKvRhrC2lBtdV1doxSR9HDAB7su23PyZB+ZTzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dXzBDihS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z+/4N+hH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YC+R8j3N"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so3294724b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:44:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749833071; x=1750437871; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oFsHs2L6+8EBoJ/ILRzyWwmWoJe5zrU0k/YrygGMeNA=;
-        b=YC+R8j3NF8nZ74DBbo2H4YE/g6+wREQVqpk7Ksfw+IbQpMDrk7+qr4bEHB7Zwib/09
-         7HT7QNfpqhN20tltPqld5knkYk9+3tG+kFpKxp8Zq1zvPKJEvg7SORggAk8v8rJYLiM8
-         0yEl+y7XQC+bYRE4T8yxbr9khIh9YSkpilKV4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749833071; x=1750437871;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oFsHs2L6+8EBoJ/ILRzyWwmWoJe5zrU0k/YrygGMeNA=;
-        b=XrIXI8POECxiho+9CMzn1aIXJNRf8UF/kog5XJj/jkFxTahY0rLW3H8dzQ255k8CZB
-         BU2RF24Exw2sohzirAhR9s5QxAI3wSGfonYLZ8p7H34cIAqxXf4Y9fzjzb9yzGsvrcO1
-         kXN8fJp4hyXzmerddqTflADBzl10Kckk9ul9v1IH8LQUvKJMkNIwB12d/zxDI0QgUJ38
-         NoeNb1QAafaKnzvBCuDjbJe1GZjSRYBudVxY7CMdu79qmiz8LRi43uQuYrpuqameGkLb
-         /3rTQDI5YZOx6Mnv4h+BAn4dAUpTIN4urn44lu+77X4LZcqDTl/5MtUpkSzbcWitHMKl
-         By+g==
-X-Forwarded-Encrypted: i=1; AJvYcCX8woGzsqv1F3VI5ObAZvHFEqCLhIlt0U6X9G6yAq3qX5kZbKBvNva55M81iGMz0D25q2zp5cWMma6BWfg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl1tK6LGWy/dLgztlelVs8S2CEMrG+/71gBl/T4wBi/c4nPdYa
-	IikgW4fNzThFIAnj9Xcdry/7C9G5KLG7lbQyEYxMCBv/8lCHFOQHk7bRNMwNaunGnMGpaXe34y2
-	YXJk=
-X-Gm-Gg: ASbGncuDwmhqTroH9PWt1+legXdsNDWu+o9RUmS8gJs6j0VLpWlhVNCxZoqZyfItHnh
-	+MUKOikuS7VVTocz+JWuhUd45ilSlfOAkqZJzIeOkOIZtVcabRbGpI6zbiOHCMR4/DxSCMjIh4N
-	w4NcaZ4kjEk/1L8MMWTFh1QZE+erFzGbaJp5Lvb/h7ywWudcx5Y+7cRqiVaGapR7+zUcWn7ykAB
-	Wn4lt/aWCbmBipMM0tb9JQtwYi7pg6YPNTwl/1Er9jaGyRJRaLkPMHD4sW2mpeB9YQTMzWz0gVN
-	qUTu50eFhPPa3h+l92Ex6XvX4qBFk/NJM3i4SOmlUAjhM6EXLH+b3twinxFuQWfjxNPoWj6g1l5
-	Tj8BtqUlZAyCjnS5GgXPAM8qGIlh7Xw==
-X-Google-Smtp-Source: AGHT+IF7Qm4Yu+9MMLAYgiQSpUXRqm258b20JLXkVlWjc9L2lPxkzikEWgDPctgRthNxwf1nSI13lA==
-X-Received: by 2002:a05:6a00:a450:b0:740:6f6:7338 with SMTP id d2e1a72fcca58-748982baf5emr1491353b3a.3.1749833071034;
-        Fri, 13 Jun 2025 09:44:31 -0700 (PDT)
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com. [209.85.215.178])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900062cesm1878151b3a.57.2025.06.13.09.44.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 09:44:30 -0700 (PDT)
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b2f645eba5dso2559328a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:44:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUDt6ydAvTpViJzuBeZxz9/Gbc6buY7iy1Ye1VZDVv957WiIg5sWynW3dBnhqzwlzmCIUMs7hUbMD73Cso=@vger.kernel.org
-X-Received: by 2002:a17:902:fc84:b0:234:9fe1:8fc6 with SMTP id
- d9443c01a7336-236678a6caamr20933585ad.18.1749833069252; Fri, 13 Jun 2025
- 09:44:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dXzBDihS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z+/4N+hH"
+Date: Fri, 13 Jun 2025 16:44:30 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749833072;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nu6v3mRl1qoly5n2cH0SCi/xD4oj/b5Ro11XBLt1fLs=;
+	b=dXzBDihSyY13Ywa39zUR46JliPoMsMECx1T4P60Y8toN4e3WNsprCnXgSQd72D4xJQRvmL
+	IYMs7zP4avp2bVyy0rBaNrHgNnN1BKtnQ7qZLhsB7nThwhV87KEaf36LT9uYqAZSBeC7Rr
+	iqwec5YKDfE4jVf5O5Fegb49TFg+6jR+gIuE40ArPLw/cgGYyvczT9HrAZLAvPL5ehXEzO
+	d7RJ+CoCbi1mlm27CgxwATdV5+xTXdM9qgW5eafDrPcmus35Zr7Ssr5woLtH+KSVSHgZvj
+	kXWxrPsmwQE4OIQtYat4W/hNkuhVsL5q/skZHriuWvwDTicB+LDfvB/jX/uH0g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749833072;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nu6v3mRl1qoly5n2cH0SCi/xD4oj/b5Ro11XBLt1fLs=;
+	b=Z+/4N+hHebZGm69C3bfcv1W38feYlwSfwrKG/XNehUa65AivcCBiW/aO9iIGT/0WWRcYhB
+	PTBaPnJcLPZqFdDA==
+From: "tip-bot2 for Dmitry Vyukov" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: core/entry] selftests: Add tests for PR_SYS_DISPATCH_INCLUSIVE_ON
+Cc: Dmitry Vyukov <dvyukov@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To:
+ <8df4b50b176b073550bab5b3f3faff752c5f8e17.1747839857.git.dvyukov@google.com>
+References:
+ <8df4b50b176b073550bab5b3f3faff752c5f8e17.1747839857.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
- <20250606-printk-cleanup-part2-v1-4-f427c743dda0@suse.com>
- <CAD=FV=XXQyZLYKoszj68ZGFDY=9-cmEUp406WeOeSBVZOHyUHw@mail.gmail.com>
- <f962e9bab3dc8bf5cae1c7e187a54fb96a543d51.camel@suse.com> <CAD=FV=XFeokpbMUFjAc0OkwJ97vR8aB+4GbnFxRKymvpEY3gnA@mail.gmail.com>
- <aErcrCKcsi9cpANY@pathway.suse.cz> <CAD=FV=WFWviPPR6VWmsN2-+vzRDoU6oTNH=EP6z1usG4EDR3+w@mail.gmail.com>
- <aEwC81RhvveGP73Y@pathway.suse.cz>
-In-Reply-To: <aEwC81RhvveGP73Y@pathway.suse.cz>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 13 Jun 2025 09:44:17 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XwJ8b2Qd52dUG7DrbkVz2XdjCgXoThh2i3gi=+vGqFAw@mail.gmail.com>
-X-Gm-Features: AX0GCFsbz4DtEeKeZs4XLMlp6WpvZqtedSANACGhbS0pNgSY94ZUMPk-yfpPG_M
-Message-ID: <CAD=FV=XwJ8b2Qd52dUG7DrbkVz2XdjCgXoThh2i3gi=+vGqFAw@mail.gmail.com>
-Subject: Re: [PATCH 4/7] drivers: serial: kgdboc: Check CON_SUSPENDED instead
- of CON_ENABLED
-To: Petr Mladek <pmladek@suse.com>
-Cc: Marcos Paulo de Souza <mpdesouza@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net, 
-	linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174983307077.406.14570090888290217227.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
+The following commit has been merged into the core/entry branch of tip:
 
-On Fri, Jun 13, 2025 at 3:52=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
-e:
->
-> On Thu 2025-06-12 16:16:09, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Thu, Jun 12, 2025 at 6:57=E2=80=AFAM Petr Mladek <pmladek@suse.com> =
-wrote:
-> > >
-> > > > > > > @@ -577,7 +577,8 @@ static int __init kgdboc_earlycon_init(ch=
-ar
-> > > > > > > *opt)
-> > > > > > >         console_list_lock();
-> > > > > > >         for_each_console(con) {
-> > > > > > >                 if (con->write && con->read &&
-> > > > > > > -                   (con->flags & (CON_BOOT | CON_ENABLED)) &=
-&
-> > > > > > > +                   (con->flags & CON_BOOT) &&
-> > > > > > > +                   ((con->flags & CON_SUSPENDED) =3D=3D 0) &=
-&
-> > > > > >
-> > > > > > I haven't tried running the code, so I could easily be mistaken=
-,
-> > > > > > but...
-> > > > > >
-> > > > > > ...the above doesn't seem like the correct conversion. The old
-> > > > > > expression was:
-> > > > > >
-> > > > > > (con->flags & (CON_BOOT | CON_ENABLED))
-> > > > > >
-> > > It is easy to get confused by the register_console() code. And
-> > > it has been even worse some years ago.
-> > >
-> > > Anyway, the current code sets CON_ENABLED for all registered
-> > > consoles, including CON_BOOT consoles. The flag is cleared only
-> > > by console_suspend()[*] or unregister_console().
-> > >
-> > > IMHO, kgdboc_earlycon_init() does not need to care about
-> > > console_suspend() because the kernel could not be suspended
-> > > during boot. Does this makes sense?
-> >
-> > Yeah, makes sense to me.
-> >
-> > > Resume:
-> > >
-> > > I would remove the check of CON_ENABLED or CON_SUSPENDED
-> > > from kgdboc_earlycon_init() completely.
-> > >
-> > > IMHO, we should keep the check of CON_BOOT because we do not
-> > > want to register "normal" console drivers as kgdboc_earlycon_io_ops.
-> > > It is later removed by kgdboc_earlycon_deinit(). I guess
-> > > that the code is not ready to handle a takeover from normal
-> > > to normal (even the same) console driver.
-> >
-> > I'm not sure I understand your last sentence there. In general the
-> > code handling all of the possible handoff (or lack of handoff) cases
-> > between kgdboc_earlycon and regular kgdboc is pretty wacky. At one
-> > point I thought through it all and tried to test as many scenarios as
-> > I could and I seem to remember trying to model some of the behavior on
-> > how earlycon worked. If something looks broken here then let me know.
->
-> Later update: The code is safe. The scenario below does not exist,
->               see the "WAIT:" section below.
->
->
-> I am not familiar with the kgdb init code. I thought about the
-> following scenario:
->
-> 1. kgdboc_earlycon_init() registers some struct console via
->
->         kgdboc_earlycon_io_ops.cons =3D con;
->         pr_info("Going to register kgdb with earlycon '%s'\n", con->name)=
-;
->         if (kgdb_register_io_module(&kgdboc_earlycon_io_ops) !=3D 0) {
->
->    and sets
->
->                 earlycon_orig_exit =3D con->exit;
->                 con->exit =3D kgdboc_earlycon_deferred_exit;
->
->
-> 2. Later, configure_kgdboc() would find some "preferred" console
->    and register it via
->
->         for_each_console_srcu(cons) {
->                 int idx;
->                 if (cons->device && cons->device(cons, &idx) =3D=3D p &&
->                     idx =3D=3D tty_line) {
->                         kgdboc_io_ops.cons =3D cons;
-> [...]
->         err =3D kgdb_register_io_module(&kgdboc_io_ops);
->
->    , where kgdb_register_io_module would call deinit for the
->    previously registered kgdboc_earlycon_io_ops:
->
->         if (old_dbg_io_ops) {
->                 old_dbg_io_ops->deinit();
->                 return 0;
->         }
->
->    , where kgdboc_earlycon_deinit() might call the .exit() callback
->
->                 kgdboc_earlycon_io_ops.cons->exit(kgdboc_earlycon_io_ops.=
-cons);
->
->
-> BANG: If both "kgdboc_earlycon_io_ops" and "kgdboc_io_ops" pointed to
->       the same struct console then this might call .exit() callback
->       for a console which is still being used.
->
->       But I am wrong, see below.
->
-> WAIT:
->
-> I have got all the pieces together when writing this mail).
-> I see that the code is safe, namely:
->
-> static void kgdboc_earlycon_deinit(void)
-> {
->         if (!kgdboc_earlycon_io_ops.cons)
->                 return;
->
->         if (kgdboc_earlycon_io_ops.cons->exit =3D=3D kgdboc_earlycon_defe=
-rred_exit)
->                 /*
->                  * kgdboc_earlycon is exiting but original boot console e=
-xit
->                  * was never called (AKA kgdboc_earlycon_deferred_exit()
->                  * didn't ever run).  Undo our trap.
->                  */
->                 kgdboc_earlycon_io_ops.cons->exit =3D earlycon_orig_exit;
->         else if (kgdboc_earlycon_io_ops.cons->exit)
->                 /*
->                  * We skipped calling the exit() routine so we could try =
-to
->                  * keep using the boot console even after it went away.  =
-We're
->                  * finally done so call the function now.
->                  */
->                 kgdboc_earlycon_io_ops.cons->exit(kgdboc_earlycon_io_ops.=
-cons);
->
->         kgdboc_earlycon_io_ops.cons =3D NULL;
-> }
->
-> It calls kgdboc_earlycon_io_ops.cons->exit() only when
-> unregister_console() tried to call the original con->exit()
-> which was reassigned to kgdboc_earlycon_deferred_exit()...
->
-> Updated resume:
->
-> It looks to me that even normal console can be used by
-> kgdboc_earlycon_io_ops and we could remove even the check
-> of the CON_BOOT flag.
->
-> My expectation:
->
-> If a "struct console" is registered then the driver is used
-> by printk() and it should be safe even for kgdboc_earlycon,
-> as long as it has both "con->write" and "con->read" callbacks.
->
-> So the check in kgdboc_earlycon_init() might be:
->
->         for_each_console(con) {
->                 if (con->write && con->read &&
->                     (!opt || !opt[0] || strcmp(con->name, opt) =3D=3D 0))
->                         break;
->         }
->
-> Heh, I hope that you were able to follow my thoughts and I did not
-> create even bigger confusion.
+Commit-ID:     b6a5a16b8b59476156dc6d6f73bffaf3a1707adb
+Gitweb:        https://git.kernel.org/tip/b6a5a16b8b59476156dc6d6f73bffaf3a1707adb
+Author:        Dmitry Vyukov <dvyukov@google.com>
+AuthorDate:    Wed, 21 May 2025 17:04:30 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 13 Jun 2025 18:36:39 +02:00
 
-I didn't go back to the code and trace through every step you made,
-but it sounds like the code looks OK even if it's a bit convoluted
-(sorry about that! at least it's commented!).
+selftests: Add tests for PR_SYS_DISPATCH_INCLUSIVE_ON
 
-I agree with your final suggestion for the check. That has the side
-effect of also being less of a change from what we had before. Because
-of how the code was written before, it would have allowed any console
-because it checked for "enabled or boot" and all consoles were
-enabled. So just getting rid of the check for flags seems reasonable
-to me.
+Add tests for PR_SYS_DISPATCH_INCLUSIVE_ON correct/incorrect args,
+and a test that ensures that the specified range is respected
+by both PR_SYS_DISPATCH_EXCLUSIVE_ON and PR_SYS_DISPATCH_INCLUSIVE_ON.
 
--Doug
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/8df4b50b176b073550bab5b3f3faff752c5f8e17.1747839857.git.dvyukov@google.com
+
+
+---
+ tools/testing/selftests/syscall_user_dispatch/sud_test.c | 94 +++++--
+ 1 file changed, 74 insertions(+), 20 deletions(-)
+
+diff --git a/tools/testing/selftests/syscall_user_dispatch/sud_test.c b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
+index 48cf01a..2eb2c06 100644
+--- a/tools/testing/selftests/syscall_user_dispatch/sud_test.c
++++ b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
+@@ -10,6 +10,8 @@
+ #include <sys/sysinfo.h>
+ #include <sys/syscall.h>
+ #include <signal.h>
++#include <stdbool.h>
++#include <stdlib.h>
+ 
+ #include <asm/unistd.h>
+ #include "../kselftest_harness.h"
+@@ -17,11 +19,15 @@
+ #ifndef PR_SET_SYSCALL_USER_DISPATCH
+ # define PR_SET_SYSCALL_USER_DISPATCH	59
+ # define PR_SYS_DISPATCH_OFF	0
+-# define PR_SYS_DISPATCH_ON	1
+ # define SYSCALL_DISPATCH_FILTER_ALLOW	0
+ # define SYSCALL_DISPATCH_FILTER_BLOCK	1
+ #endif
+ 
++#ifndef PR_SYS_DISPATCH_EXCLUSIVE_ON
++# define PR_SYS_DISPATCH_EXCLUSIVE_ON	1
++# define PR_SYS_DISPATCH_INCLUSIVE_ON	2
++#endif
++
+ #ifndef SYS_USER_DISPATCH
+ # define SYS_USER_DISPATCH	2
+ #endif
+@@ -65,7 +71,7 @@ TEST_SIGNAL(dispatch_trigger_sigsys, SIGSYS)
+ 	ret = sysinfo(&info);
+ 	ASSERT_EQ(0, ret);
+ 
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -118,8 +124,8 @@ TEST(bad_prctl_param)
+ 	/* Valid parameter */
+ 	prctl_valid(_metadata, op, 0x0, 0x0, 0x0);
+ 
+-	/* PR_SYS_DISPATCH_ON */
+-	op = PR_SYS_DISPATCH_ON;
++	/* PR_SYS_DISPATCH_EXCLUSIVE_ON */
++	op = PR_SYS_DISPATCH_EXCLUSIVE_ON;
+ 
+ 	/* Dispatcher region is bad (offset > 0 && len == 0) */
+ 	prctl_invalid(_metadata, op, 0x1, 0x0, &sel, EINVAL);
+@@ -131,12 +137,24 @@ TEST(bad_prctl_param)
+ 	/*
+ 	 * Dispatcher range overflows unsigned long
+ 	 */
+-	prctl_invalid(_metadata, PR_SYS_DISPATCH_ON, 1, -1L, &sel, EINVAL);
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, 1, -1L, &sel, EINVAL);
+ 
+ 	/*
+ 	 * Allowed range overflows usigned long
+ 	 */
+-	prctl_invalid(_metadata, PR_SYS_DISPATCH_ON, -1L, 0x1, &sel, EINVAL);
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, -1L, 0x1, &sel, EINVAL);
++
++	/* 0 len should fail for PR_SYS_DISPATCH_INCLUSIVE_ON */
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 1, 0, 0, EINVAL);
++
++	/* Range wrap-around should fail */
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, -1L, 2, 0, EINVAL);
++
++	/* Normal range shouldn't fail */
++	prctl_valid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 2, 3, 0);
++
++	/* Invalid selector */
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 2, 3, (void *) -1, EFAULT);
+ }
+ 
+ /*
+@@ -147,11 +165,13 @@ char glob_sel;
+ int nr_syscalls_emulated;
+ int si_code;
+ int si_errno;
++unsigned long syscall_addr;
+ 
+ static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
+ {
+ 	si_code = info->si_code;
+ 	si_errno = info->si_errno;
++	syscall_addr = (unsigned long)info->si_call_addr;
+ 
+ 	if (info->si_syscall == MAGIC_SYSCALL_1)
+ 		nr_syscalls_emulated++;
+@@ -174,31 +194,34 @@ static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
+ #endif
+ }
+ 
+-TEST(dispatch_and_return)
++int setup_sigsys_handler(void)
+ {
+-	long ret;
+ 	struct sigaction act;
+ 	sigset_t mask;
+ 
+-	glob_sel = 0;
+-	nr_syscalls_emulated = 0;
+-	si_code = 0;
+-	si_errno = 0;
+-
+ 	memset(&act, 0, sizeof(act));
+ 	sigemptyset(&mask);
+-
+ 	act.sa_sigaction = handle_sigsys;
+ 	act.sa_flags = SA_SIGINFO;
+ 	act.sa_mask = mask;
++	return sigaction(SIGSYS, &act, NULL);
++}
+ 
+-	ret = sigaction(SIGSYS, &act, NULL);
+-	ASSERT_EQ(0, ret);
++TEST(dispatch_and_return)
++{
++	long ret;
++
++	glob_sel = 0;
++	nr_syscalls_emulated = 0;
++	si_code = 0;
++	si_errno = 0;
++
++	ASSERT_EQ(0, setup_sigsys_handler());
+ 
+ 	/* Make sure selector is good prior to prctl. */
+ 	SYSCALL_DISPATCH_OFF(glob_sel);
+ 
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &glob_sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -254,7 +277,7 @@ TEST_SIGNAL(bad_selector, SIGSYS)
+ 	/* Make sure selector is good prior to prctl. */
+ 	SYSCALL_DISPATCH_OFF(glob_sel);
+ 
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &glob_sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -278,7 +301,7 @@ TEST(disable_dispatch)
+ 	struct sysinfo info;
+ 	char sel = 0;
+ 
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -310,7 +333,7 @@ TEST(direct_dispatch_range)
+ 	 * Instead of calculating libc addresses; allow the entire
+ 	 * memory map and lock the selector.
+ 	 */
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, -1L, &sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, -1L, &sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -323,4 +346,35 @@ TEST(direct_dispatch_range)
+ 	}
+ }
+ 
++static void test_range(struct __test_metadata *_metadata,
++		       unsigned long op, unsigned long off,
++		       unsigned long size, bool dispatch)
++{
++	nr_syscalls_emulated = 0;
++	SYSCALL_DISPATCH_OFF(glob_sel);
++	EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, off, size, &glob_sel));
++	SYSCALL_DISPATCH_ON(glob_sel);
++	if (dispatch) {
++		EXPECT_EQ(syscall(MAGIC_SYSCALL_1), MAGIC_SYSCALL_1);
++		EXPECT_EQ(nr_syscalls_emulated, 1);
++	} else {
++		EXPECT_EQ(syscall(MAGIC_SYSCALL_1), -1);
++		EXPECT_EQ(nr_syscalls_emulated, 0);
++	}
++}
++
++TEST(dispatch_range)
++{
++	ASSERT_EQ(0, setup_sigsys_handler());
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, true);
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr, 1, false);
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr-100, 200, false);
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr+1, 100, true);
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr-100, 100, true);
++	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr, 1, true);
++	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr-1, 1, false);
++	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr+1, 1, false);
++	SYSCALL_DISPATCH_OFF(glob_sel);
++}
++
+ TEST_HARNESS_MAIN
