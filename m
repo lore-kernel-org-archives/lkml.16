@@ -1,91 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA862D23B2;
-	Fri, 13 Jun 2025 10:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95C92D2382;
+	Fri, 13 Jun 2025 10:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749809713; cv=none; b=TTCCN1cH0x1oi6c3Fzv4768hdXvJVe1RQoAOTK0aMEEldv4NHjUuxxGo68MZHFYws7AoBgeRDFVCAtxThrNbgWKX2+8uY+WOvRD8UxdXuHUyX94dEkB3t1LkanXNtnp6r71F3e7vXN4G/hzrLrXYzs+boxEIXkQGGP1aVq702VA=
+	t=1749809736; cv=none; b=NR00+fm32/N12qoD4XCO9Neq2GxyfIeCl1jZNoLyLZo0jCDjW/MMseDzwcV+JSS8k1XmNmH08wW/CdZfcLU0Q9IQ1l6zK+qBbl5ixBmuUQAVB6So8HfAB1B2iI0KBDYkSXKtj28UXpuL4OVN4eVTGCjsbfOzRgSo+66UJ5HQ7tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749809713; c=relaxed/simple;
-	bh=Mmx2wiHujPu/dQ2+A7mZP3qk4H3KDRZF79BQL/Bhfx0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Ip4d1I7p63jRK/efvmxap2BvrLg7Ibi491loqy9VnGLLrVDjAai2AfA4/qlgRoQ7LvgN3pDpjrK9JHKSe9FkAQLuJsIBSHoZffkIJzXaOgKB/ljmaWj8e5JUbqxI8FM2Iidm6QXrUTTG+4ji6nfK2syCAkqzkq/YB5yi55pZzQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pi0t6+BN; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749809736; c=relaxed/simple;
+	bh=CZqYmHg36RMSs1ABWyY6d1Bd8dHgzQog9KqyX+oH+Lk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a0fzXDBTbSbvWb6aJqdaGIHtHWiBOT4Lkt7HEfBZg1qcJXwau5daPy3eYPvflP2V02GECQNi+FML2RTG59O7klCbOJJYzGKcT2UK2dQuHDZpV6JRPNrzx1V9oW5L8Tflf4e0fK026h99fdtPuExGJZ7MpPKzkaI1zR4lY4sCaHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hPYQPpsa; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pi0t6+BN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749809712; x=1781345712;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=Mmx2wiHujPu/dQ2+A7mZP3qk4H3KDRZF79BQL/Bhfx0=;
-  b=Pi0t6+BN5QbZKy0c+V8aRc6gTaw3m6txMA1Me76F0L//94c16nW4v8Rp
-   FUBSPCfWRuKmmk9ondUcJ9l7xJVvwFqJ4K3ZUTo6r1REj/DYXa2sAK1Ic
-   isnE0ZS3mdwFKcMjnlhDUAhZyJdTxkOsATfTDlRjokUDHcZMabPB9BsXc
-   0nxFl6A761IGcratxh/qBPMUm99xN+EdwyuC+V094og5GExnf9uzHGcKs
-   5f+M3qiOd0+IodJWVE0AAy6Ar5SvwEVg1OTDB6fJ6n0SU28UMaWTeeA7T
-   Ve4vp6k9YBxN9Neu7w8Rt7t8WmGq83+cyDA3HfhPVzJBPCK0aV+j26EHM
-   A==;
-X-CSE-ConnectionGUID: dY4/PBCtThyLyggm1nHXaw==
-X-CSE-MsgGUID: 4qeVeGCtQ3eWG8CMORz7ZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69595223"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="69595223"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:15:11 -0700
-X-CSE-ConnectionGUID: fM9L2VxHQGKMqkw/wYZJbQ==
-X-CSE-MsgGUID: vM/HAJK6TtecF+C6VezkBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="147635800"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:15:07 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Dell.Client.Kernel@dell.com, jithu.joseph@intel.com, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, corbet@lwn.net, 
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250610055526.23688-1-W_Armin@gmx.de>
-References: <20250610055526.23688-1-W_Armin@gmx.de>
-Subject: Re: [PATCH 1/2] Documentation: ABI: Update WMI device paths in ABI
- docs
-Message-Id: <174980970219.26331.6171635150526759589.b4-ty@linux.intel.com>
-Date: Fri, 13 Jun 2025 13:15:02 +0300
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hPYQPpsa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749809732;
+	bh=CZqYmHg36RMSs1ABWyY6d1Bd8dHgzQog9KqyX+oH+Lk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hPYQPpsaE6puBxDXojLRDR1BTHvBiTT4DxSG2fp1VqTMJGRFbuJJG9mBWuT6S8Bhr
+	 GH0D+YbNoCyVr+h96i86944sAcuSmZLne4zxBO3F4kCdhNHKR+erVRWSOdpRz5lkDJ
+	 wY3NGcTphnUWlnonyAZlr/MmsZ1ZUm7B3a21XR6MEdqCyWPtw1eDSKQfxHqeiXE/r/
+	 hvmq1iQxB0FK7FYlrQJP97uQsqXPN0+n5N4IzzY0wwQPO40YQ1uuhdQnWhVLglsS+l
+	 +qENCeLTD07E8uz/NptSuuyh6+6BgDSlhteAfq4VUg8WXqdhlx+FW5AizQL6LAj3BC
+	 E0C8nbLHeNTdw==
+Received: from [192.168.1.90] (unknown [212.93.144.165])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2A22C17E00AC;
+	Fri, 13 Jun 2025 12:15:30 +0200 (CEST)
+Message-ID: <c8e3081f-cd0c-48c0-8934-bd81fd681943@collabora.com>
+Date: Fri, 13 Jun 2025 13:15:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/20] drm/rockchip: dw_hdmi: switch to HWORD_UPDATE*
+ macros
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson
+ <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>,
+ Shreeya Patel <shreeya.patel@collabora.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Sandy Huang
+ <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Shawn Lin <shawn.lin@rock-chips.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>, Qin Jian <qinjian@cqplus1.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org,
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev
+References: <20250612-byeword-update-v1-0-f4afb8f6313f@collabora.com>
+ <20250612-byeword-update-v1-13-f4afb8f6313f@collabora.com>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <20250612-byeword-update-v1-13-f4afb8f6313f@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
 
-On Tue, 10 Jun 2025 07:55:25 +0200, Armin Wolf wrote:
+Hi Nicolas,
 
-> The WMI driver core might append an ID to the WMI device name to avoid
-> name collisions in case multiple WMI devices with the same GUID are
-> present. Update all sysfs path referring to WMI devices to inform
-> users about this important detail.
+On 6/12/25 9:56 PM, Nicolas Frattaroli wrote:
+> The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
+> drivers that use constant masks.
 > 
+> Remove this driver's very own HIWORD_UPDATE macro, and replace all
+> instances of it with equivalent instantiations of HWORD_UPDATE or
+> HWORD_UPDATE_CONST, depending on whether it's in an initializer.
 > 
+> This gives us better error checking, and a centrally agreed upon
+> signature for this macro, to ease in code comprehension.
+> 
+> Because HWORD_UPDATE/HWORD_UPDATE_CONST shifts the value to the mask
+> (like FIELD_PREP et al do), a lot of macro instantiations get easier to
+> read.
+> 
+> This was tested on an RK3568 ODROID M1, as well as an RK3399 ROCKPro64.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
+This again LGTM and I could verify the RK3568 related bits on my Radxa
+ROCK 3A board.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Reviewed-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Tested-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 
-The list of commits applied:
-[1/2] Documentation: ABI: Update WMI device paths in ABI docs
-      commit: c9de2e5c15cba9e9be7fd124a74b9067560d4746
-[2/2] platform/x86: wmi: Fix WMI device naming issue
-      commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
-
---
- i.
+Cheers,
+Cristian
 
