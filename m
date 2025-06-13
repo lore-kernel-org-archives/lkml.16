@@ -1,159 +1,295 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5081A279DDD
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA615255E27
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806073; cv=none; b=NlXsKZ9tNsTvldPLfu435vCgST8UPVlelIhbCMrnGN4MBUth6fj9EhDHcfc8eqUfOgF7RPBY6YkBCA2QUKT0hYacYGQsDl6v8Zgo8TzbUE01iHjEbgsc1GPPUJJ4wgbiqu4oXwg+5Lr6jST64/Eq6jwp02rC5hU3jx3BuIYa3Xc=
+	t=1749806116; cv=none; b=Os97YP6zI9hxoh3ZSJjf7otnjuN+1Wa4QGLGJGwizyP6CPuLoXKYwDBY5bDJwBimKNtLoFL0t1roKCK8P5oPnTmNWEjHyBl7QKEPuU9ubcoeEngvmsx6jOnFZKCfwCz+tguFU4phZZdNvLEooeOg/0MJmxr7sHYaP7e7AQWSCSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806073; c=relaxed/simple;
-	bh=U4FrUnxsS+O88EpMRs/X5M2gy9Ob8GhzpGYbm/BQic0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=U+QOUMT/FSsxq0tjxjls4Ui06TX2T5oemaEdPXdvLA+4kELvyhf4GPSHCNAue93Pbxs/rUiVbkOc0mll9dQ6N59cq6N/3zqOQgbgKkK4aY+9vtDsi2HlZZBeA1DGMWl/86A9QM4kkbC7zdb7iq2Pmk/v2X7VGTbUSG4hgeP/Qyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pqUDzcBF; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749806116; c=relaxed/simple;
+	bh=F0e0SFf/vKSHXJF8fZ++vE4zeIDUxEkUkvSRxYgh8GA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KDOyTdPiv59rkUpRMzMH2Hzz3R2Gntn7RWJ27IP5ELqzJFMm/CQQ0X0aFQxV+AoN0F6hY2n97Rn6ptdwhmPEv7qqoqKEASSOrIkg8gyBVsoKh9PyBRb+wyScBKhM/E38YFHnWr8rqlXU3YJ5PhWorPVpySW04wQNHGPp2r7wplk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jsZ3jErx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5kQgcHbS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lQ+Eg3e9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VrYZpozi; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pqUDzcBF"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso1217868f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749806069; x=1750410869; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QxfIULPvH1TVJo+Bp0irHce0KEkyksYpcZ/Cbp7r00Y=;
-        b=pqUDzcBFV6RG06MgGflTxIjg1liDnk1gsEGgSGBoZMh+pFiUq/2G502r9TXTwDsjVj
-         JbZ345JbxpD3v1u6bUt/dqyUSYq8bJtJVPWqIudiToPjlo22LcQVjozZk/1dmJNN38G9
-         OHt86ReFqDxTB2Q46Bpzq3B5IMS4XkYaxQtXjVVkB/2yOqGlg5u8FlzANeDjfoBV9TU5
-         uCPmYyQImOn0NJMzjYIwUPHUqOE+DJ4djlQtAo4dLE0eDA3qlkcjEEDKSRF+hR3ko9dC
-         iC82B/tH+yUpyEo4oJ57s1Hbcz1cwAepYYmgWOpnvKF9ZL5J/kqWZkqbWRMFljGlqWMQ
-         zfjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749806069; x=1750410869;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QxfIULPvH1TVJo+Bp0irHce0KEkyksYpcZ/Cbp7r00Y=;
-        b=WdDQGoHp6y/JpMcWe/6g1i6pc/HApPMsa9l3KoPVf2OHAHR9NfHw+sGbyQXBaHXWTa
-         qQBrZHT9K2W2algc1c1aYj9AnK/wunyCvHow9MdKn9ytSw6GHf7YMAyxdTyKssABvmIW
-         y9hSlA8doPC/SbVlRcOdp2KhykzCGjevRYe/lqFxTTyPJi1Qt1U47r03Oswasel2rvK3
-         ynBVAuljvvvro7QrmbhssYRjz9PtENDjJlV5AsRdYFFmC1b5Y0fTXLTj1VruyTrAAAJO
-         wv6YHu2y9z9GPcszibRojQqXS3k3jx+hxXFzmG1DOida3WS1oznvsQft0xw6yuBAEro7
-         zaaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7TuSVxKWrVjHXHm6263EDfVqe+ygaLbkOg5hN1lwkzoul8pybxC5HD0Yt6GHEGQUtrDxPG8C9XHIrEYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtbtBwDomFoGn5EEbJM8t8VUcMasYhZlFBe3idbyTME/nk3BeD
-	z1R/cjVusPLCA2cPutwzJnHqEAi169VYmvBmTDFSYCGKvD4pDEsh1Zp/p9Uespi8C5U=
-X-Gm-Gg: ASbGncv109VVNGYSUPfyT9vQjxDaUlRTNIEAjJmf6NhllQAZBOLTU0urDxyGp5LN0GT
-	Xi3GaHcyab1XlddxP5yE0N57eamDYeh85XM/voBSMS3XjoWBR3JWzh4E0l93PnJuFd/LuyhyIT8
-	73+yTns04MJPoAIK7XohSSN1ukWDpF4emaM1H9jSXuVDNeqBvuIwc1aZFRXm87ozLzgJ8/bLa5v
-	8BOMwphvZM2YuUvLYKk11s1f2TQWOvErAhnWLdYYJgkN1BEYi2yz8MRwKNEqSKg3Olyteqn0H8N
-	U0IIIWPpHUMXBczodqb/TCDUwVNVtTLYlw/ZI6NWGBhXBhn3xEhgRr1kPzNONkXuk7CHbrMyrxO
-	QWAAsdNSq0VjCeMqliyAQrwJkzcsulY11VgqTbdw=
-X-Google-Smtp-Source: AGHT+IGQOFD/EY7S2QDUIKx6X5WFj8qb8/qrnjFsfEXjcL1hzrA6uPRMdM2o+qwKrI1AezZg1EjOrA==
-X-Received: by 2002:a05:6000:1445:b0:3a5:52cc:346e with SMTP id ffacd0b85a97d-3a568655fe0mr1850481f8f.6.1749806068043;
-        Fri, 13 Jun 2025 02:14:28 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:4144:6a84:fe1d:3aae? ([2a01:e0a:3d9:2080:4144:6a84:fe1d:3aae])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54a36sm1781165f8f.15.2025.06.13.02.14.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 02:14:27 -0700 (PDT)
-Message-ID: <5d624bce-a46f-4b75-b785-56def0c7f108@linaro.org>
-Date: Fri, 13 Jun 2025 11:14:26 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jsZ3jErx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5kQgcHbS";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lQ+Eg3e9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VrYZpozi"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D48C621185;
+	Fri, 13 Jun 2025 09:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749806113; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1gFr2ORNyOcDAn99XmFpex/Nd1tdtjGNWZMMFbxDzKo=;
+	b=jsZ3jErxWF+qQWtcV9dOuBZQgt7fImbZbQxpL/A4BxJifkLZs2UoY+sQPm48+jT87QDXbX
+	6LKhfBsh/Odcl1VEQUIx204jt4NG+/Azl5YxG4s0nK2XQaLFl1LD3IiT9TSquvj93cX0y6
+	r1PB05X92tK54YRn+oAR6m+7prPK1d4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749806113;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1gFr2ORNyOcDAn99XmFpex/Nd1tdtjGNWZMMFbxDzKo=;
+	b=5kQgcHbSBcNxCKw+j/6cpYnddVl9r9xKZz2KgaiuSoQMS/7dPoYAnWIlW4sNpVjZcOMblT
+	xyhUy5PJIk38+xAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749806112; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1gFr2ORNyOcDAn99XmFpex/Nd1tdtjGNWZMMFbxDzKo=;
+	b=lQ+Eg3e92o4z8o9eKaqOQCt1MbWg5ToGpgotVEh+9vXZYcNCicIVmuEmia7kWVHHBqsd1s
+	7w90+JFfwo9NY4cHj6lMf5TKqK73puDOqWs1E2N07jMeds4CnrpdGvMrBsYZ72ZLmZFNN+
+	+960iFlJCy+7iwS9n3820d54wI8H6oc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749806112;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1gFr2ORNyOcDAn99XmFpex/Nd1tdtjGNWZMMFbxDzKo=;
+	b=VrYZpoziUd4gHOj94fvOhe8usaRNWM+cBfpEzILHVy9dpUOdJWqQHdELrkf8S57QGpAXds
+	lmyo9IgHVIX37WDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 96429137FE;
+	Fri, 13 Jun 2025 09:15:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cSWRIyDsS2ikNwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 13 Jun 2025 09:15:12 +0000
+Date: Fri, 13 Jun 2025 11:15:12 +0200
+Message-ID: <87a56croin.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	Herve Codina <herve.codina@bootlin.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ALSA: pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to user_access_begin/user_access_end()
+In-Reply-To: <fa8c0bca-a127-410e-9b13-3fa5ea7d8110@csgroup.eu>
+References: <8df11af98033e4cb4d9b0f16d6e9d5b69110b036.1749724057.git.christophe.leroy@csgroup.eu>
+	<87wm9hte77.wl-tiwai@suse.de>
+	<fa8c0bca-a127-410e-9b13-3fa5ea7d8110@csgroup.eu>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 1/7] dt-bindings: phy: Add document for ASPEED PCIe PHY
-To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
- lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
- andrew@codeconstruct.com.au, vkoul@kernel.org, kishon@kernel.org,
- linus.walleij@linaro.org, p.zabel@pengutronix.de,
- linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
-Cc: elbadrym@google.com, romlem@google.com, anhphan@google.com,
- wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
- <20250613033001.3153637-2-jacky_chou@aspeedtech.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250613033001.3153637-2-jacky_chou@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-7.30 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -7.30
 
-On 13/06/2025 05:29, Jacky Chou wrote:
-> Add device tree binding YAML documentation for the ASPEED PCIe PHY.
-> This schema describes the required properties for the PCIe PHY node,
-> including compatible strings and register space, and provides an
-> example for reference.
+On Fri, 13 Jun 2025 07:24:46 +0200,
+Christophe Leroy wrote:
 > 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->   .../bindings/phy/aspeed-pcie-phy.yaml         | 38 +++++++++++++++++++
->   MAINTAINERS                                   | 10 +++++
->   2 files changed, 48 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
 > 
+> 
+> Le 12/06/2025 à 13:02, Takashi Iwai a écrit :
+> > On Thu, 12 Jun 2025 12:39:39 +0200,
+> > Christophe Leroy wrote:
+> >> 
+> >> With user access protection (Called SMAP on x86 or KUAP on powerpc)
+> >> each and every call to get_user() or put_user() performs heavy
+> >> operations to unlock and lock kernel access to userspace.
+> >> 
+> >> SNDRV_PCM_IOCTL_SYNC_PTR ioctl is a hot path that needs to be
+> >> optimised. To do that, perform user accesses by blocks using
+> >> user_access_begin/user_access_end() and unsafe_get_user()/
+> >> unsafe_put_user() and alike.
+> >> 
+> >> Before the patch the 9 calls to put_user() at the
+> >> end of snd_pcm_ioctl_sync_ptr_compat() imply the following set of
+> >> instructions about 9 times (access_ok - enable user - write - disable
+> >> user):
+> >>      0.00 :   c057f858:       3d 20 7f ff     lis     r9,32767
+> >>      0.29 :   c057f85c:       39 5e 00 14     addi    r10,r30,20
+> >>      0.77 :   c057f860:       61 29 ff fc     ori     r9,r9,65532
+> >>      0.32 :   c057f864:       7c 0a 48 40     cmplw   r10,r9
+> >>      0.36 :   c057f868:       41 a1 fb 58     bgt     c057f3c0 <snd_pcm_ioctl+0xbb0>
+> >>      0.30 :   c057f86c:       3d 20 dc 00     lis     r9,-9216
+> >>      1.95 :   c057f870:       7d 3a c3 a6     mtspr   794,r9
+> >>      0.33 :   c057f874:       92 8a 00 00     stw     r20,0(r10)
+> >>      0.27 :   c057f878:       3d 20 de 00     lis     r9,-8704
+> >>      0.28 :   c057f87c:       7d 3a c3 a6     mtspr   794,r9
+> >> ...
+> >> 
+> >> A perf profile shows that in total the 9 put_user() represent 36% of
+> >> the time spent in snd_pcm_ioctl() and about 80 instructions.
+> >> 
+> >> With this patch everything is done in 13 instructions and represent
+> >> only 15% of the time spent in snd_pcm_ioctl():
+> >> 
+> >>      0.57 :   c057f5dc:       3d 20 dc 00     lis     r9,-9216
+> >>      0.98 :   c057f5e0:       7d 3a c3 a6     mtspr   794,r9
+> >>      0.16 :   c057f5e4:       92 7f 00 04     stw     r19,4(r31)
+> >>      0.63 :   c057f5e8:       93 df 00 0c     stw     r30,12(r31)
+> >>      0.16 :   c057f5ec:       93 9f 00 10     stw     r28,16(r31)
+> >>      4.95 :   c057f5f0:       92 9f 00 14     stw     r20,20(r31)
+> >>      0.19 :   c057f5f4:       92 5f 00 18     stw     r18,24(r31)
+> >>      0.49 :   c057f5f8:       92 bf 00 1c     stw     r21,28(r31)
+> >>      0.27 :   c057f5fc:       93 7f 00 20     stw     r27,32(r31)
+> >>      5.88 :   c057f600:       93 36 00 00     stw     r25,0(r22)
+> >>      0.11 :   c057f604:       93 17 00 00     stw     r24,0(r23)
+> >>      0.00 :   c057f608:       3d 20 de 00     lis     r9,-8704
+> >>      0.79 :   c057f60c:       7d 3a c3 a6     mtspr   794,r9
+> >> 
+> >> Note that here the access_ok() in user_write_access_begin() is skipped
+> >> because the exact same verification has already been performed at the
+> >> beginning of the fonction with the call to user_read_access_begin().
+> >> 
+> >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> >> ---
+> >> This is a lighter version of previous patch "[PATCH v2] ALSA: pcm: Convert multiple {get/put}_user to user_access_begin/user_access_end()" focussing on identified hot path.
+> >> Moved and nested the failure labels closer in order to increase readability
+> > 
+> > Thanks for the revised patch!
+> > 
+> > Although it's now much lighter, I still believe that we can reduce
+> > get_user() / put_user() calls significantly by adjusting the struct
+> > usage.
+> > 
+> > Could you check whether the patch below can improve?
+> > (Zero-ing of sstatus can be an overhead here, but there are some
+> > holes, and these need to be initialized before copying back...)
+> > 
+> 
+> Thanks for the proposed patch. Unfortunately it doesn't improve the
+> situation. The problem with copy_from_user() and copy_to_user() is
+> that they perform quite bad on small regions. And for the from_user
+> side we still get two user access enable/disable instead 3 and for the
+> to_user side we still get two as well (Allthough we had 7
+> previously). Those 4 user access enable/disable still have a cost.
+> 
+> Nowadays the tendency is really to go for the unsafe_put/get_user
+> style, see some significant exemples below. And as mentioned in those
+> commits, behind the performance improvement it also lead to much
+> cleaner code generation.
+> - 38ebcf5096a8 ("scm: optimize put_cmsg()")
+> - 9f79b78ef744 ("Convert filldir[64]() from __put_user() to
+> unsafe_put_user()")
+> - ef0ba0553829 ("poll: fix performance regression due to out-of-line
+> __put_user()")
+> 
+> Commit 38ebcf5096a8 is explicit about copy_to_user() being bad for
+> small regions.
+> 
+> Here below is some comparison between the three way of doing
+> snd_pcm_ioctl_sync_ptr_compat(), output is from 'perf top':
+> 
+> Initially I got the following. That 12%+ is the reason why I started
+> investigating.
+> 
+>     14.20%  test_perf           [.] engine_main
+> ==> 12.86%  [kernel]            [k] snd_pcm_ioctl
+>     11.91%  [kernel]            [k] finish_task_switch.isra.0
+>      4.15%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+>      4.07%  libc.so.6           [.] __ioctl_time64
+>      3.58%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+>      3.37%  [kernel]            [k] sys_ioctl
+>      2.96%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+>      2.73%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+>      2.58%  [kernel]            [k] system_call_exception
+>      1.93%  libasound.so.2.0.0  [.] sync_ptr1
+>      1.85%  libasound.so.2.0.0  [.] snd_pcm_unlock
+>      1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
+>      1.83%  libasound.so.2.0.0  [.] bad_pcm_state
+>      1.68%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+>      1.67%  libasound.so.2.0.0  [.] snd_pcm_avail_update
+> 
+> With _your_ patch I get the following. copy_from_user() calls
+> _copy_from_user() and copy_to_user() calls _copy_to_user(). Both then
+> call __copy_tofrom_user(). In total it is 16.4% so it is worse than
+> before.
+> 
+>     14.47%  test_perf           [.] engine_main
+>     12.00%  [kernel]            [k] finish_task_switch.isra.0
+> ==>  8.37%  [kernel]            [k] snd_pcm_ioctl
+>      5.44%  libc.so.6           [.] __ioctl_time64
+>      5.03%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+> ==>  4.86%  [kernel]            [k] __copy_tofrom_user
+>      4.62%  [kernel]            [k] sys_ioctl
+>      3.22%  [kernel]            [k] system_call_exception
+>      2.42%  libasound.so.2.0.0  [.] snd_pcm_mmap_begin
+>      2.31%  [kernel]            [k] fdget
+>      2.23%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+>      2.19%  [kernel]            [k] syscall_exit_prepare
+>      1.92%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+>      1.86%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+>      1.68%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+> ==>  1.67%  [kernel]            [k] _copy_from_user
+>      1.66%  libasound.so.2.0.0  [.] bad_pcm_state
+> ==>  1.53%  [kernel]            [k] _copy_to_user
+>      1.40%  libasound.so.2.0.0  [.] sync_ptr1
+> 
+> With my patch I get the following:
+> 
+>     17.46%  test_perf           [.] engine_main
+>      9.14%  [kernel]            [k] finish_task_switch.isra.0
+> ==>  4.92%  [kernel]            [k] snd_pcm_ioctl
+>      3.99%  [kernel]            [k] snd_pcm_group_unlock_irq.part.0
+>      3.71%  libc.so.6           [.] __ioctl_time64
+>      3.61%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin_generic
+>      2.72%  libasound.so.2.0.0  [.] sync_ptr1
+>      2.65%  [kernel]            [k] system_call_exception
+>      2.46%  [kernel]            [k] sys_ioctl
+>      2.43%  [kernel]            [k] __rseq_handle_notify_resume
+>      2.34%  [kernel]            [k] do_epoll_wait
+>      2.30%  libasound.so.2.0.0  [.] __snd_pcm_mmap_commit
+>      2.14%  libasound.so.2.0.0  [.] __snd_pcm_avail
+>      2.04%  libasound.so.2.0.0  [.] snd_pcm_hw_avail_update
+>      1.89%  libasound.so.2.0.0  [.] snd_pcm_lock
+>      1.84%  libasound.so.2.0.0  [.] snd_pcm_mmap_avail
+>      1.76%  libasound.so.2.0.0  [.] __snd_pcm_avail_update
+>      1.61%  libasound.so.2.0.0  [.] bad_pcm_state
+>      1.60%  libasound.so.2.0.0  [.] __snd_pcm_mmap_begin
+>      1.49%  libasound.so.2.0.0  [.] query_status_data
 
-<snip>
+Thanks for the detailed analysis!  Then unsafe_*_user() seems to be
+the way to go.  I'll check your latest patches.
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a5a650812c16..68115443607d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3696,6 +3696,16 @@ S:	Maintained
->   F:	Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
->   F:	drivers/media/platform/aspeed/
->   
-> +ASPEED PCIE CONTROLLER DRIVER
-> +M:	Jacky Chou <jacky_chou@aspeedtech.com>
-> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/pci/aspeed-pcie-cfg.yaml
-> +F:	Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
-> +F:	Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
-> +F:	drivers/pci/controller/pcie-aspeed.c
-> +
->   ASUS EC HARDWARE MONITOR DRIVER
->   M:	Eugene Shalygin <eugene.shalygin@gmail.com>
->   L:	linux-hwmon@vger.kernel.org
 
-Please move the MAINTAINERS change in a separate patch.
-
-Thanks,
-Neil
+Takashi
