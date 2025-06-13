@@ -1,150 +1,290 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DF42727EF
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AB3272809
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803149; cv=none; b=ol4Qtxh561pA5SZlU1pkw4q+rFf1M4z44K8b/PlRLnovwnc7YcOmnnsdjYoqmg/DXO/XKsmJl4XLdai4GAh7dfQcNgwrX5ybQbA9Tnpz92nBrk1kc8CYnc+aI3jODz73uHPOzBSZ1FktTNsI9taXgOHR6WPnn2T/N2NF9w0muZg=
+	t=1749803163; cv=none; b=fI2SxZ5yImuNvbKFk+gxX4w27d9DEfLreXRuBg7iscjOWz17ZT7N8JdYGqJfyNhCRb8yK5z8absxZmEZEVSbpyEXH8DP/eCyvZvTxnyujHlObJcIS5UgEOhZGANUid//azGYtXqwKxXyCfTTfJ6mnRzoYvTGk5wXJg/UNjy/OY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803149; c=relaxed/simple;
-	bh=cX3yW1RHLGbcArCJf9n6aJS1EPQDINCtfh+k5tXO+9U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=L6NjwuGFcGtMXGwvIq+cMQrwLi2JhdumCp6PnmbTXs9RDBRMXvwu8BdRI67IKu/EqpQOGTPc3hj8ZbVREQOaQcID3+BpRhgCTCbezBcFFvBHwXUu+2E7NfErafaS4d5A1HzqE6kQkpOHs5AvNAc6T6OqeRonpJxUww3B33mlJEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hQTSVmz3; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749803163; c=relaxed/simple;
+	bh=CQHtbRddVHdiYqQgBqNDsuo0eE1o6GB+Zmr8xkLw3VE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R33txK+EIsBZheOnYV6Kvt7psOjCzAm7rB33THtOwkaAc0Da/3oI8gQEdXnPbbrvayPEQwMEb1Wuqoc5h4cEZUsrpgqHuPkEpCqfQ2IFOx4UIVQDdWIzSuGEm/wrGJIrNSSXGgP11M7QVd8ldLyDU7humShI4x2bQxQkaXEsiqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3SWmCwi; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hQTSVmz3"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250613082540euoutp01aff9d6e2fec3a1897105b3d84fed3a48~IjK9x-VUS2188521885euoutp01D
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:25:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250613082540euoutp01aff9d6e2fec3a1897105b3d84fed3a48~IjK9x-VUS2188521885euoutp01D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749803140;
-	bh=I8IkmX2ltxLIkn/+l8073UC2Q+m47Csc2VhEngKEE7U=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=hQTSVmz3gpTinUPWOUdrn22NBzGwzqG9vLblhR6fqYlgPSJdOhjspCRG2jRa516Uw
-	 0O2rtvOD54U2FdOREeIqa8IHz0nM5Ton4y2y7sB4XdAcrq2xrO2d7Ejthw5XftV4cq
-	 ukCDeWAMy8dvO08ZUAiCgYZFkzfapAkyVDY8MdxQ=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250613082539eucas1p2b5a99e3e2413e78710bd36303e839cf8~IjK9Fl0ni1345813458eucas1p27;
-	Fri, 13 Jun 2025 08:25:39 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250613082538eusmtip2583bf59103d68afb613b87f12210c74b~IjK8C5sOg0843108431eusmtip2D;
-	Fri, 13 Jun 2025 08:25:38 +0000 (GMT)
-Message-ID: <e5d3d3b3-7ada-476f-9558-328d3d316088@samsung.com>
-Date: Fri, 13 Jun 2025 10:25:38 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3SWmCwi"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f64cdc2dso131401f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749803159; x=1750407959; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MHH36GXGqix57B9/OvcMWpHmSiwmsvkt8HsllgPW6sI=;
+        b=e3SWmCwitZxWFi1ossYbUibcvDGmzzOvXrUhtk7bolKkLcWsIySoeaCG3YaZAo69kJ
+         wBF0A3+6jy1u41MkWJjwtXbSKezCEgQ4E+PkudmCu6VxJHRUlEjV0CtIoXmrYstOqGPq
+         FL5N3GbG456vvVPjS/8oB3OjaEUE3MBk+4RVWA+laWH0gf5gq0+omujP9SVa5VXP9XHu
+         W1739yWMV7Lw2ytPNJa8/JcuRzWEgn5qUGGgj0DSX1TB+MC9t4VmUBgqWF2dC0pDaBJT
+         uosN3KQDn4DnyzSn5O3ODi2MPnOOfuzLUS0jKp8T0QpToz1egOZWVIOCatyG2UOx/Hf0
+         xliQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749803159; x=1750407959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MHH36GXGqix57B9/OvcMWpHmSiwmsvkt8HsllgPW6sI=;
+        b=jJiSYmd7MG/C0ig4HUS1yBNAbZKJ62yZdeNvClR0mYU8Bm+ifI2Yzo67Tq0QczZLn2
+         zrJO59AqAkenqExSe0HMzSvlmD9+yL8WER9I521qMXJ+JSEwNC5QFbhwhtQ760Zr99Sv
+         1VCtE4oCQHtXCFs6Qnv1CZqVEULyjqvYTV9iokSWCRQtE99uUcJ5HQFBQXjnI1ppzeiW
+         tNfwUo7uK7szH7H7LQPb8VoQ2he17pqbo2Vjpt6sNFGc8zyPFAY8SOXtsE3Hpwa5V5Ih
+         Q9jsNz+e5syiSjOjh2xTtWZ6w7uHqQ1xvLIoXXIQk/pEEBOhIQw1SK1ri3rn+GQ8QFe5
+         ouEg==
+X-Forwarded-Encrypted: i=1; AJvYcCXgv4/G8xno1H3VQEJKlIwChmh3SdzhvahhXjwti5E7Kge3aXuNUQNG9fLZhidtl1OsC6rPqg3G+zxHFhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaHBrxOuIUBWiE47loVDo2Vdxv1IU4ITIWhHt3Zjxxe8s7gmYs
+	voJsaXhfKrSVFM1WGC94sh4IpYV72zbw1th588jpBgUGDZcUbIaOmI22919miCfxwvw4AkRete/
+	rzrqdN+O6eMVM2rqFM/fhB5lsx4p0/U8=
+X-Gm-Gg: ASbGncvtFlBN8tccwurftS7IC7isKDzzr9qpD4QxOFgEU/Abg4Rz0/7vGfE6a/8xJqg
+	RwVYxl9ZXVqX/cGEWv9luTPn9euRXKcxH02CCUEciuXUv13VSjuZXSnuoKMUyIoj8+OLy9jhh+m
+	muHO+S+UxpReyjOPYT0zkHzzb9YWSYsRkIv64OukvbNN8D
+X-Google-Smtp-Source: AGHT+IGEecZKdUrI4TPXWcW0ROqZszFyPMmn7YKGv8m8nGY5NZX4FtUA3aY7KOWD8zMGZqMAmw0CdLNPjLgipDDD6mc=
+X-Received: by 2002:a5d:5f8f:0:b0:3a4:d4a0:1315 with SMTP id
+ ffacd0b85a97d-3a56869d570mr771547f8f.6.1749803158868; Fri, 13 Jun 2025
+ 01:25:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
- management
-To: Krzysztof Kozlowski <krzk@kernel.org>, Bartosz Golaszewski
-	<brgl@bgdev.pl>, Matt Coster <matt.coster@imgtec.com>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns
-	<frank.binns@imgtec.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
-	Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <59cc6827-1602-402a-9279-96ad6285cff4@kernel.org>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250613082539eucas1p2b5a99e3e2413e78710bd36303e839cf8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
-X-EPHeader: CA
-X-CMS-RootMailID: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
-References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-	<CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
-	<20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
-	<20250603-whispering-jaybird-of-thunder-f87867@kuoka>
-	<d42a8c49-7ad2-49ef-bd9c-1e3d9981b58e@samsung.com>
-	<e5a0bee2-ff74-47cf-ad2c-0c78b57ae6cf@kernel.org>
-	<a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
-	<cc4dbf7c-e023-403c-88be-4691f97a0ff0@kernel.org>
-	<c7774790-07c3-469d-a994-9e84108ad21d@samsung.com>
-	<CAMRc=Mexq9ThfG6jZUbs3wYDA9UZN-+pHnX_Y-7WO4ubXvEuCw@mail.gmail.com>
-	<ad6981eb-f53a-4a7b-90bd-2e2705bd0297@samsung.com>
-	<59cc6827-1602-402a-9279-96ad6285cff4@kernel.org>
+References: <f1b9209e-c2fb-4a53-8d15-a3e42dea8bca@kernel.org> <20250612123444.1779509-1-wangzijie1@honor.com>
+In-Reply-To: <20250612123444.1779509-1-wangzijie1@honor.com>
+From: Zhiguo Niu <niuzhiguo84@gmail.com>
+Date: Fri, 13 Jun 2025 16:25:47 +0800
+X-Gm-Features: AX0GCFsVSnrsE293JjoIJZ4IbML9sSsMb82uoVfJnJkHnNN0Qp0HRhEhyEf5fq0
+Message-ID: <CAHJ8P3LSxzSbdz_ONUKy8dyDjLGsNJ08Aq724CUwYdOJ=m_2eA@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: continue to allocate pinned section when
+ gc happens EAGAIN
+To: wangzijie <wangzijie1@honor.com>
+Cc: linux-f2fs-devel@lists.sourceforge.net, feng.han@honor.com, 
+	linux-kernel@vger.kernel.org, bo.wu@vivo.com, jaegeuk@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 6/13/25 08:44, Krzysztof Kozlowski wrote:
-> On 11/06/2025 14:01, Michal Wilczynski wrote:
->>
->> However, this leads me back to a fundamental issue with the
->> consumer side implementation in the generic pvr_device.c driver. The
->> current fallback code is:
->>
->> /*
->>  * If the error is -EPROBE_DEFER, it's because the
->>  * optional sequencer provider is not present
->>  * and it's safe to fall back on manual power-up.
->>  */
->> if (pwrseq_err == -EPROBE_DEFER)
->>         pvr_dev->pwrseq = NULL;
->>
->> As Krzysztof noted, simply ignoring -EPROBE_DEFER is not ideal. But if I
->> change this to a standard deferred probe, the pvr_device.c driver will
-> 
-> Why? You have specific compatible for executing such quirks only for
-> given platform.
-
-This is due to how the pwrseq API works; it constructs a bus on which
-provider devices may appear at any time. With the current API, there is
-no way to express that a provider for a specific target will never
-appear. ('gpu-power' is the generic target name, and of course, more
-specific binding is handled in the provider's .match callback - based on
-the compatible and the node phandle like discussed previously).
-
-For all other supported SoCs, no such provider will ever appear on the
-bus, and the current pwrseq API doesn't allow a generic consumer to know
-this.
-
-However, your suggestion of handling this with a platform specific
-driver is a good path forward. It would still require a minimal addition
-to the pwrseq API to work. For example, a new SoC specific driver for
-"thead,th1520" could call a new function like
-pwrseq_enable_optional_target("gpu-power") during its probe. This would
-signal to the pwrseq core that this target is expected on the platform.
-Therefore, when the Imagination driver later calls pwrseq_get() on a
-TH1520, it would correctly result in either a match or a deferral.
-
-On all other platforms, this optional target would not be enabled. The
-pwrseq_get() call would then immediately return -ENODEV instead of
-deferring, which solves the problem and allows the other supported SoCs
-to probe correctly.
-
-I wonder whether Bartosz would be okay with such an addition.
-
-> 
->> break on all other supported SoCs. It would wait indefinitely for a
->> pwrseq-thead-gpu provider that will never appear on those platforms.
->>
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
-
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+wangzijie <wangzijie1@honor.com> =E4=BA=8E2025=E5=B9=B46=E6=9C=8812=E6=97=
+=A5=E5=91=A8=E5=9B=9B 20:38=E5=86=99=E9=81=93=EF=BC=9A
+>
+> > On 6/12/25 11:27, wangzijie wrote:
+> > > Wu Bo once mentioned a fallocate fail scenario in this link[1].
+> > > After commit 3fdd89b452c2("f2fs: prevent writing without fallocate()
+> > > for pinned files"), we cannot directly generate 4K size file and
+> > > pin it, but we can still generate non-segment aligned pinned file:
+> > >
+> > > touch test_file
+> > > ./f2fs_io pinfile set test_file
+> > > ./f2fs_io fallocate 0 0 8192 test_file
+> > > truncate -s 4096 test_file
+> >
+> > Well, shouldn't we avoid such case by adding check condition in setattr=
+?
+>
+> Maybe like this?
+>
+> ---
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 6bd3de64f..2f6537d9c 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1027,6 +1027,8 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct de=
+ntry *dentry,
+>         struct inode *inode =3D d_inode(dentry);
+>         struct f2fs_inode_info *fi =3D F2FS_I(inode);
+>         int err;
+> +       struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
+> +       block_t sec_blks =3D CAP_BLKS_PER_SEC(sbi);
+>
+>         if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
+>                 return -EIO;
+> @@ -1047,6 +1049,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct d=
+entry *dentry,
+>                         !IS_ALIGNED(attr->ia_size,
+>                         F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
+>                         return -EINVAL;
+> +               if (f2fs_is_pinned_file(inode) &&
+> +                       attr->ia_size < i_size_read(inode) &&
+> +                       !IS_ALIGNED(attr->ia_size,
+> +                       F2FS_BLK_TO_BYTES(sec_blks)));
+> +                       return -EINVAL;
+Hi Chao and zijie,
+Excuse me ,I'm a bit confused about this:
+when a pin file size is not alinged with size of "section", it can not
+be truncated?
+thanks=EF=BC=81
+>         }
+>
+>         err =3D setattr_prepare(idmap, dentry, attr);
+> ---
+>
+> > >
+> > > By doing this, pin+fallocate failure(gc happens EAGAIN but f2fs shows
+> > > enough spare space) may occurs.
+> > >
+> > > From message in commit 2e42b7f817ac("f2fs: stop allocating pinned sec=
+tions
+> > > if EAGAIN happens"), gc EAGAIN doesn't guarantee a free section, so w=
+e stop
+> > > allocating. But after commit 48ea8b200414 ("f2fs: fix to avoid panic =
+once
+> > > fallocation fails for pinfile"), we have a way to avoid panic caused =
+by
+> > > concurrent pinfile allocation run out of free section, so I think tha=
+t we
+> > > can continue to allocate pinned section when gc happens EAGAIN. Even =
+if we
+> > > don't have free section, f2fs_allocate_pinning_section() can fail wit=
+h ENOSPC.
+> >
+> > What do you think of introduce /sys/fs/f2fs/<dev>/reserved_pin_section =
+to
+> > tune @needed parameter of has_not_enough_free_secs()? If we configure i=
+t
+> > w/ zero, it can avoid f2fs_gc() before preallocation.
+> >
+> > ---
+> >  fs/f2fs/f2fs.h  | 3 +++
+> >  fs/f2fs/file.c  | 5 ++---
+> >  fs/f2fs/super.c | 3 +++
+> >  fs/f2fs/sysfs.c | 9 +++++++++
+> >  4 files changed, 17 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index 785537576aa8..ffb15da570d7 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -1731,6 +1731,9 @@ struct f2fs_sb_info {
+> >       /* for skip statistic */
+> >       unsigned long long skipped_gc_rwsem;            /* FG_GC only */
+> >
+> > +     /* free sections reserved for pinned file */
+> > +     unsigned int reserved_pin_section;
+> > +
+> >       /* threshold for gc trials on pinned files */
+> >       unsigned short gc_pin_file_threshold;
+> >       struct f2fs_rwsem pin_sem;
+> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > index 696131e655ed..a909f79db178 100644
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@ -1887,9 +1887,8 @@ static int f2fs_expand_inode_data(struct inode *i=
+node, loff_t offset,
+> >                       }
+> >               }
+> >
+> > -             if (has_not_enough_free_secs(sbi, 0, f2fs_sb_has_blkzoned=
+(sbi) ?
+> > -                     ZONED_PIN_SEC_REQUIRED_COUNT :
+> > -                     GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)=
+))) {
+> > +             if (has_not_enough_free_secs(sbi, 0,
+> > +                             sbi->reserved_pin_section)) {
+> >                       f2fs_down_write(&sbi->gc_lock);
+> >                       stat_inc_gc_call_count(sbi, FOREGROUND);
+> >                       err =3D f2fs_gc(sbi, &gc_control);
+> > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> > index 57adeff5ef25..48b97a95fd63 100644
+> > --- a/fs/f2fs/super.c
+> > +++ b/fs/f2fs/super.c
+> > @@ -4975,6 +4975,9 @@ static int f2fs_fill_super(struct super_block *sb=
+, struct fs_context *fc)
+> >       sbi->last_valid_block_count =3D sbi->total_valid_block_count;
+> >       sbi->reserved_blocks =3D 0;
+> >       sbi->current_reserved_blocks =3D 0;
+> > +     sbi->reserved_pin_section =3D f2fs_sb_has_blkzoned(sbi) ?
+> > +                     ZONED_PIN_SEC_REQUIRED_COUNT :
+> > +                     GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)=
+);
+> >       limit_reserve_root(sbi);
+> >       adjust_unusable_cap_perc(sbi);
+> >
+> > diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> > index 75134d69a0bd..51be7ffb38c5 100644
+> > --- a/fs/f2fs/sysfs.c
+> > +++ b/fs/f2fs/sysfs.c
+> > @@ -824,6 +824,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+> >               return count;
+> >       }
+> >
+> > +     if (!strcmp(a->attr.name, "reserved_pin_section")) {
+> > +             if (t > GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)=
+))
+> > +                     return -EINVAL;
+> > +             *ui =3D (unsigned int)t;
+> > +             return count;
+> > +     }
+> > +
+> >       *ui =3D (unsigned int)t;
+> >
+> >       return count;
+> > @@ -1130,6 +1137,7 @@ F2FS_SBI_GENERAL_RO_ATTR(unusable_blocks_per_sec)=
+;
+> >  F2FS_SBI_GENERAL_RW_ATTR(blkzone_alloc_policy);
+> >  #endif
+> >  F2FS_SBI_GENERAL_RW_ATTR(carve_out);
+> > +F2FS_SBI_GENERAL_RW_ATTR(reserved_pin_section);
+> >
+> >  /* STAT_INFO ATTR */
+> >  #ifdef CONFIG_F2FS_STAT_FS
+> > @@ -1323,6 +1331,7 @@ static struct attribute *f2fs_attrs[] =3D {
+> >       ATTR_LIST(last_age_weight),
+> >       ATTR_LIST(max_read_extent_count),
+> >       ATTR_LIST(carve_out),
+> > +     ATTR_LIST(reserved_pin_section),
+> >       NULL,
+> >  };
+> >  ATTRIBUTE_GROUPS(f2fs);
+> > --
+> > 2.49.0
+>
+> I think it's a good way to solve this problem. Thank you!
+>
+>
+> > >
+> > > [1] https://lore.kernel.org/linux-f2fs-devel/20231030094024.263707-1-=
+bo.wu@vivo.com/t/#u
+> > >
+> > > Signed-off-by: wangzijie <wangzijie1@honor.com>
+> > > ---
+> > >  fs/f2fs/file.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > > index 6bd3de64f..05c80d2b5 100644
+> > > --- a/fs/f2fs/file.c
+> > > +++ b/fs/f2fs/file.c
+> > > @@ -1859,7 +1859,7 @@ static int f2fs_expand_inode_data(struct inode =
+*inode, loff_t offset,
+> > >                     f2fs_down_write(&sbi->gc_lock);
+> > >                     stat_inc_gc_call_count(sbi, FOREGROUND);
+> > >                     err =3D f2fs_gc(sbi, &gc_control);
+> > > -                   if (err && err !=3D -ENODATA) {
+> > > +                   if (err && err !=3D -ENODATA && err !=3D -EAGAIN)=
+ {
+> > >                             f2fs_up_write(&sbi->pin_sem);
+> > >                             goto out_err;
+> > >                     }
+> >
+> >
+> >
+> > _______________________________________________
+> > Linux-f2fs-devel mailing list
+> > Linux-f2fs-devel@lists.sourceforge.net
+> > https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>
+>
+>
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
