@@ -1,103 +1,138 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F59B2E406
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAEA2E406;
+	Fri, 13 Jun 2025 14:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826665; cv=none; b=cjzCPQaT+EZHz37BCVJmLoRp4ZIBRND8GtpDksIFS6S/2iKnudu4m7f2TsTriNxwV6i5tBUUBEVJKBP0dZYIsNRUCzbBf56kSM7Orbo2bH70bFuvwHrNdiG6JAsY30M66B6PHOo+cnQZitulV3JMTkOJsA358rhxUXwHWLzPmZw=
+	t=1749826717; cv=none; b=VpDR8VA4+VLh2HZIfYyxq8HtqaPayX+YguLpQ/eBeTN9qvSEDqF60cOQ76pmCEBEbLZhCh+pyVPeU5lLIe5skSGf2t+Vh7nDlj1pLVyppIWguT59qQw2qK8s4ZJsgXBKzVTKA+WwN+/qqhGoXFs1BdFWHUVJ5x0m59K0XPT9RwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826665; c=relaxed/simple;
-	bh=EiQOOWFkzzeyj6/G+hsyo5qE25sCt/13o6+DhimKiOg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=EULLGdHGmeSsykF23670baNui5iC8yCzP+I0HihzqlC679AUj25ZqGnnu4KcglSJxPzBbPITuPg4yUYMv9KsAJAgJC5a7GDeE0VP5Uiuu3a5dt4pb2xKntnKkYNAM1WvmlN64W9poqZnO+mKPvgtxnCFyBuZfQgOnhx2PGyHT5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RBIYBh0M; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749826717; c=relaxed/simple;
+	bh=iB17qoOb8HlU/gXIO+LtqUhl3ctgMUcVmL/kKRQHq+w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=F9wgeEGk9usAP2ONRtfSqYQuSHeBgifZ4DJy0kZ8s0uFUZelZkuXY6yBVhtkj55L0zkzoDuAyTCIKPBqe4RJkusRZrqDFHxv9SY91XO+R0+3WGXOa3znOnCreKbKKLSVdnL1jrjIzfH8NsnyKa0EfsD8qszGngvN/nZi83CT9Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZtLOza4k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RBIYBh0M"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-442fda876a6so19685325e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:57:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749826661; x=1750431461; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1CnpYz9K0mT/m/oiAcVJkvrvCJiX+sS/URqYCr0+onU=;
-        b=RBIYBh0MOVLTOxaPIPDGDrkDLNKEOqdscG4ac6OpZ87Wv25gexHv8lI90GPPI3UAnY
-         pyQskyMkBuOAieR3TscHAHep3VxJOPlI+MbIgjZELmj5JgY8+hgOSRBsshR1BxikrkWa
-         de479Jjz/+iM87fcOZkwA4UCiQlCYsem1ITzNVUEgob75AOP+ODa0ITT/0uRzjrI4M2T
-         14Sc5OJjkXclvURQ3e93J9K42ecwUILEMU3d5y+/+JPB+tZYE6+pVPkD5546EcPkxffd
-         LdusvH4iLCNbj4hqFG4wrBgME1aolK+cZsIAtA760YhTPWkyh7unJFdFRYDkVrVwPUb/
-         YOog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749826661; x=1750431461;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1CnpYz9K0mT/m/oiAcVJkvrvCJiX+sS/URqYCr0+onU=;
-        b=f5r5Nek0tH4Kf0uVudnamk3HCrBB7hv9IJFXKzZQ8EXA0l5CTO4wFq3lvJsqpmrEDW
-         nlsLNtwkT8//UNJE9qnCKj3GfPb7HwL6Vp5DVPdr1Wb0yKXXw/JlA2OZyJ/tK/hQWmN5
-         ZCmxSd8CYLGqwT/Fb3k5X3GStDOCJO8mqbCSyCsBhVvsUFcPwSxnurElCgtAWMJcEpdv
-         tgE3QhKtQkbSVwLbjDUFW7pJ4DQZ3vp4nelcabQG2kEXe5CJX6IPqgamxV5/7yDWINeD
-         6/T7miJ/XtckiQ7TdVAPpJ6W9AeqDveZlTM13+0UiSsabN4NwilxQCzjPqyBALa2Zcv4
-         WjSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBBwDVxfHu33VKa8d4rIZJsxqEZawR+9m8UAzlw9t9hOLdCOhtkGZY0qGFxI8pnfptd8rQIZhv4Y93nIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrPvZ8/LJ2tuKvb2MG4gtBTTiqaZuBWHWANPevKZzylOoifk8U
-	sjr9dJ14rfQrcDjzbAtVho6QXSiL5mNEYlsI2V+iJ1HdPWMQnm+QSLRiUxvxTP2kYd5ki4/E4XC
-	s4yGOuTk=
-X-Gm-Gg: ASbGncuVW+fAue9U2TTZKImWKG3YKodxZFy882VlfCQXU7b/1j5c96vV7xKmmBljtZD
-	21oDrabY2Ay85bDbz1v/jMdLr0jWc+61peqH7H71YvhIazmYvqBkPUiERFTsdqcJb/kn/5PxrI1
-	dvsOQoVTFuYzJoo7Di2CGYlEmpwvbHHgaiwih/z4Y/m5vXyljX58/89jHdLE0Z9LUtRAPTkMBkY
-	gJLSXXEoPragyPsKELspF5LHyMRj+eOEsYl7M8djYZlLWRWuNObr5w/s8IsQLVp7d4sDnFSCKD8
-	Zwyr5mg34Wea//jjaLCZwHiwSPqvYS34yAH3ouC+XkPw/KmusAlOLGZvPKmfmvX7hArR2/Kq6kY
-	9ShM=
-X-Google-Smtp-Source: AGHT+IHGukDkZVswTcj0Lp6moWGFAwYliY4cT6cRYlRm6eZSgyLpxqv52EshO7PcMNoDb7jfDD7ZSg==
-X-Received: by 2002:a05:600c:a301:b0:442:f12f:bd9f with SMTP id 5b1f17b1804b1-45334b2aaadmr25496635e9.27.1749826661479;
-        Fri, 13 Jun 2025 07:57:41 -0700 (PDT)
-Received: from localhost ([2a02:c7c:7213:c700:c8e2:ba7d:a1c6:463f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453305a0d9dsm48887925e9.21.2025.06.13.07.57.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 07:57:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZtLOza4k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 198CFC4CEE3;
+	Fri, 13 Jun 2025 14:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749826716;
+	bh=iB17qoOb8HlU/gXIO+LtqUhl3ctgMUcVmL/kKRQHq+w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ZtLOza4kFt33ZPiPPvZkUgKUFAaVPI2F6rZSPV7N0hMGTWjezapJgshD9Sttg4i8m
+	 l5k0K0vhi8JwswN72Z+VXR7wuyng4VrG619zkgMDH+ascjJJL6zuIrF1wGF/z6d6Vc
+	 lHeiF3Cmo5CwIZhBbf0AfngBPM8b5JlPSnQCUVIHFrvCg4APYyFjwnMe62M1E6MzEl
+	 /xPI2F9K+8uFKgLHuD8fKgbmnoo+/fSPZ0+HZlds4VrKVFxG8QcjcATIb40v4Lj6gB
+	 rkVA9NyNpRnRMY4k+2JJLiIJM2cnns5QfIVkF9oGS4hfyUXbiswq6VBHnoNrf57D17
+	 9nk3vU67O1/dQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  jasonmiu@google.com,
+  graf@amazon.com,  changyuanl@google.com,  rppt@kernel.org,
+  dmatlack@google.com,  rientjes@google.com,  corbet@lwn.net,
+  rdunlap@infradead.org,  ilpo.jarvinen@linux.intel.com,
+  kanie@linux.alibaba.com,  ojeda@kernel.org,  aliceryhl@google.com,
+  masahiroy@kernel.org,  akpm@linux-foundation.org,  tj@kernel.org,
+  yoann.congal@smile.fr,  mmaurer@google.com,  roman.gushchin@linux.dev,
+  chenridong@huawei.com,  axboe@kernel.dk,  mark.rutland@arm.com,
+  jannh@google.com,  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
+  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
+  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
+  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
+  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
+  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
+  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
+  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
+  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
+  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
+  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
+  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
+  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
+  stuart.w.hayes@gmail.com
+Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
+In-Reply-To: <CA+CK2bA7eAB4PvF0RXtt2DJ+FQ4DVV3x1OZrVo4q3EvgowhvJg@mail.gmail.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+	<20250515182322.117840-6-pasha.tatashin@soleen.com>
+	<mafs0sekfts2i.fsf@kernel.org>
+	<CA+CK2bA7eAB4PvF0RXtt2DJ+FQ4DVV3x1OZrVo4q3EvgowhvJg@mail.gmail.com>
+Date: Fri, 13 Jun 2025 16:58:27 +0200
+Message-ID: <mafs0sek3n0x8.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 13 Jun 2025 15:57:40 +0100
-Message-Id: <DALHS6EU059G.18NCREBNOHJ26@linaro.org>
-Cc: <freedreno@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
- "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Neil Armstrong"
- <neil.armstrong@linaro.org>, "Rob Clark" <robdclark@gmail.com>, "Sean Paul"
- <sean@poorly.run>, "Konrad Dybcio" <konradybcio@kernel.org>, "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>, "Dmitry Baryshkov" <lumag@kernel.org>,
- "Marijn Suijten" <marijn.suijten@somainline.org>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "open list"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/msm: Fix inverted WARN_ON() logic
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Rob Clark" <robin.clark@oss.qualcomm.com>,
- <dri-devel@lists.freedesktop.org>
-X-Mailer: aerc 0.20.0
-References: <20250613144144.27945-1-robin.clark@oss.qualcomm.com>
-In-Reply-To: <20250613144144.27945-1-robin.clark@oss.qualcomm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Fri Jun 13, 2025 at 3:41 PM BST, Rob Clark wrote:
-> We want to WARN_ON() if info is NULL.
+On Sat, Jun 07 2025, Pasha Tatashin wrote:
+[...]
+>>
+>> This weirdness happens because luo_prepare() and luo_cancel() control
+>> the KHO state machine, but then also get controlled by it via the
+>> notifier callbacks. So the relationship between then is not clear.
+>> __luo_prepare() at least needs access to struct kho_serialization, so it
+>> needs to come from the callback. So I don't have a clear way to clean
+>> this all up off the top of my head.
 >
-> Suggested-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Fixes: 0838fc3e6718 ("drm/msm/adreno: Check for recognized GPU before bin=
-d")
-> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
-> ---
->  drivers/gpu/drm/msm/adreno/adreno_device.c | 2 +-
+> On production machine, without KHO_DEBUGFS, only LUO can control KHO
+> state, but if debugfs is enabled, KHO can be finalized manually, and
+> in this case LUO transitions to prepared state. In both cases, the
+> path is identical. The KHO debugfs path is only for
+> developers/debugging purposes.
 
-Apart from tag problem it is usually a good idea to add relevant people in
-c/c. Especially when you fix the reported bug.
+What I meant is that even without KHO_DEBUGFS, LUO drives KHO, but then
+KHO calls into LUO from the notifier, which makes the control flow
+somewhat convoluted. If LUO is supposed to be the only thing that
+interacts directly with KHO, maybe we should get rid of the notifier and
+only let LUO drive things.
 
-Best regards,
-Alexey
+This can be done later though; it doesn't have to be in the initial
+revision.
+
+>
+>> >  static int __init luo_startup(void)
+>> >  {
+>> > -     __luo_set_state(LIVEUPDATE_STATE_NORMAL);
+>> > +     phys_addr_t fdt_phys;
+>> > +     int ret;
+>> > +
+>> > +     if (!kho_is_enabled()) {
+>> > +             if (luo_enabled)
+>> > +                     pr_warn("Disabling liveupdate because KHO is disabled\n");
+>> > +             luo_enabled = false;
+>> > +             return 0;
+>> > +     }
+>> > +
+>> > +     ret = register_kho_notifier(&luo_kho_notifier_nb);
+>> > +     if (ret) {
+>> > +             luo_enabled = false;
+>>
+>> You set luo_enabled to false here, but none of the LUO entry points like
+>> luo_prepare() or luo_freeze() actually check it. So LUO will appear work
+>> just fine even when it hasn't initialized properly.
+>
+> luo_enabled check was missing from luo_ioctl.c, as we should not
+> create a device if LUO is not enabled. This is fixed.
+>
+>>
+>> > +             pr_warn("Failed to register with KHO [%d]\n", ret);
+>>
+>> I guess you don't return here so a previous liveupdate can still be
+>> recovered, even though we won't be able to make the next one. If so, a
+>> comment would be nice to point this out.
+>
+> This is correct, but this is not going to work. Because, with the
+> current change I am disabling "/dev/liveupdate" iff luo_enable ==
+> false. Let's just return here, failing to register with KHO should not
+> really happen, it usually means that there is another notifier with
+> the same name has already registered.
+
+Okay, fair enough.
+
+-- 
+Regards,
+Pratyush Yadav
