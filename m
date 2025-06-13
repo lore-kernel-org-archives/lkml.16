@@ -1,115 +1,136 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBA92367D9
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0492367D9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846626; cv=none; b=E/AqVc2wqMDjH6dkyN7dwd9DQxkQWKjK0/EADQKD2z5vT+yhtnytIaQLyROXy9GZ1MWxEii9z2YrG5xPeiAJQ0WxRjJyTPPfwW5QgY0A6zokC9tcvAicAYf9GoEyPsLVwUeEmazgU35wGvBXibcbQVJ1K+xEY9GIit6dm5bGbxQ=
+	t=1749846634; cv=none; b=BXWiKe8/7CtlOnxb2CwZYj6bsuW5RTa/AWiA5W1ax9wSf9YRrr3WKQ3ZLaQmssSuSF0ZAlaVOIMfsEMtvxRnktY0auHAxzan1ByMlRjDvboeHxQuwGKz4/c5eaeKUcjPubeDS4ZEdxNTQrF+hAIBHjrhxd3w1AChEyxN/ZwXx/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846626; c=relaxed/simple;
-	bh=Wx/w9AjdgBdua0CCLxzqzAIuSi/xSMUXyBDVY4umg5k=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=T9hL+nZOhhxRVymrKG+h5R8GKqRtrQwnPLf54e1jHgXU6k6dSq+DDHLxTuXmfmV78ph8VDUjS8ILqWn6wjs6dP7pKG5IlGGbVe2igSHxobODiybf6tK3UC7b+a7mXajZfdo1UFEl7E/LQzICTYvGWbdx3LAyIRnSRNbSamsCvyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddc5137992so29103125ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:30:24 -0700 (PDT)
+	s=arc-20240116; t=1749846634; c=relaxed/simple;
+	bh=6hMvnHrlDGmIsq+dHiAUFLU63nbpFzoG7BlKtAAWUjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t1zO3Vnr23C/7jMso4U/5HlpRo5wgE4l8kEgThg32ARf6vowXiRy/ZSoS4cKD+27Zk04Seqi61Ord833Oyy/bGrW0RHqmsTPkwR/1FeelevN20WOuVED4GgBAdcfGnRxzYd27+1nxuffKJdj7H7hh4Y3DL3SzUjfEaHXgUZryGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X3AABrSp; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3AABrSp"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so2465067f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:30:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749846631; x=1750451431; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X6gxnPqEZ3rJPOAZK/e5c7eolLEIOuidR5IiopqFvaw=;
+        b=X3AABrSpzXyCphUFVLSdRepaqzHHfrh1wgUyL10IRMj99KMchZZiI6pk1qmtGOHhJG
+         E8AMSxgw98Wnjg8NpJdILz/KeX4AoVoOkh4QhdcGkY3UsJOjl9SpxCQ9kUdrI2cP/Orq
+         xWoWzR9yMZFggcd2hn04XQpISVmP04mVR6K+LhsoIPvyumyzR2xqE3HGj656eOvcKN18
+         DG7qM/4RN3+UwFeeggZBZAVCCIovGNPVjxCGgoJHWZOYpYUsUs7h1hZxEl2zC35tQBY3
+         ZSrOI/cWPwkMQkVd0Nwo3PXKJ6MLzzymzvGHknjBgkSXuUxOsj9Wni+U1c1xYNb6B2Xe
+         +YRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749846624; x=1750451424;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lAT0xlzsFKpAKX7I55g+k6KWgGcGGE+bWGUyodsvEb4=;
-        b=KovmEgrUIGrjPwn2V0yruTgJRZXLyu85qdriIGmpyw/pj/K5OkHze9w+lTRTRDB1TP
-         N1rlyzCdoJ//V5nP0/Q0kDnvt7hDM+tBiZuor01uR1roQi4nfkPTBqVlD1pLUtgGIAyL
-         WPO+pe7lBduIUbHUVRlwzERrisRNU72q4BHOE5jTw7XNabFIT9sHrktig9ANWKTo3UpP
-         yjBNlBbquBIVcc5dOk3RtAQFq15HrvjMl3So/IIxTHHCN56HCGp+OZu5UiwN/Q82RkmK
-         Wd4DImzRwDJbCP13vao41kqBSbTjpQPqptJCzTJv+rRDfrOMX736GH1hdCniv04U/hGd
-         XXkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7PhvgYL6pZWPpWd1OrKT7Vpmc8OKbGMM/e2vCAjK4C8rKMcQLv5GapXGv+wgW4LtKNDMHSgS1uU2o/hk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ+sFKZpvySUByGn1gaNIOlPIZ3picvh6hcwQW8Da3nlr6y403
-	heqpGr9MsIya3AqIjZbJJFZrQhy7TEbFpp4gE34ZbLrXtaGZtZQwPi6R2/QEGRkIFPKAARRYhod
-	sGRKz5ZJFGDDLHjmENucDyEYVCnWQVw2DK3wIgKS1wQzHvRM2M8bdHptHipQ=
-X-Google-Smtp-Source: AGHT+IEEp/FkkUlE3BJWKdHjmhqu+GIVyYccKy1r1UGJ5mapdlfUpC9Npsm7E4bKOHXqi+3bXnHv+Y85/Y9SbdNtDlyuHyaZ3aUs
+        d=1e100.net; s=20230601; t=1749846631; x=1750451431;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X6gxnPqEZ3rJPOAZK/e5c7eolLEIOuidR5IiopqFvaw=;
+        b=aWTlxYt2RS+3SqLpxXeS7k9tO3DfYFGlV5EYsLWs3Ewr63GYCjBXsMcK+IMBqipgMs
+         5QWJJVvwFm410sIett5AGrO3Q7JOeOPNwZyzaOYvLsQ5Ike38FC7Vl1nv8mxKOPhPiDF
+         ivFCaqiVeApOSIo176vOGrbr1hxjH3F29A8XQijvbMSdQp5AWDtlCo+8PU0JVCCvQ5AW
+         nFJqXTGirJRb2DT1VWwbkYyo6UAOx4Ps8+HQpilkgEgdHL8sLYti1b+VjXJb2Sjr2XMV
+         ez0s6ss0R4Ds5EOfk3dxkar8hcBCZlbrsleM1wibC/WA6TaMu3Z5vVtoviF6mjEaZjHL
+         OgQQ==
+X-Gm-Message-State: AOJu0Yz+CSJ/3x4aNqdG6bsGTdv47X/MC1iE2iEhoSt1vQ9ttcjk14x+
+	GkdXd3ukSwy0HWIVnslUMFAi3whKFdXcdKM+AyvNfuRaMXTkTMsUuWsPH4Xhtw4B
+X-Gm-Gg: ASbGncvtTxtUrXebO1LctMDApuy+ye0BATKbRQXOheybdak83AgCSp+gZCffHTNtomR
+	0p/tSI/KQSdmP5goGqbfjaXfsQ6ys7AdGhhToLtsu0gEypY+ckzSqEPYUoGJsoqjl2W59ioKksT
+	Z5kZD1m04EDZkPxgSVuaPaQ8G6MDenAUq7YNhPvz3s001QKNSUxkoRgd2d+KJNhDifIuqwoqRux
+	wacrbJAy3ymI6cFvkYoJdeorxDefOL7mB7DgHKdGGOkYnfQpHYz+H5Uh05nJr7xxnZjI/WNF0sz
+	443u61YUQ561UNiqW78jZlwU5n+8k/8ii1zoTqkt6eU246HwCTgSTVN9Pm1m+Wm472Jk+69269q
+	U
+X-Google-Smtp-Source: AGHT+IEDjuQsLnKawdR179gPNxjs65VEiakJVNIb2Tu9L+ChyqkN7o042MQHiuqMO5RKVjxKiaqvWA==
+X-Received: by 2002:a05:6000:2507:b0:3a5:527b:64c6 with SMTP id ffacd0b85a97d-3a572398d8emr1099000f8f.1.1749846630570;
+        Fri, 13 Jun 2025 13:30:30 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8f2e0sm61628255e9.8.2025.06.13.13.30.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 13:30:30 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	peterz@infradead.org,
+	luto@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/entry: Remove some redundancy checks on syscall works
+Date: Fri, 13 Jun 2025 20:28:49 +0000
+Message-ID: <20250613202937.679-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3a03:b0:3dc:76ad:7990 with SMTP id
- e9e14a558f8ab-3de07cd0417mr14484135ab.15.1749846624287; Fri, 13 Jun 2025
- 13:30:24 -0700 (PDT)
-Date: Fri, 13 Jun 2025 13:30:24 -0700
-In-Reply-To: <684a39aa.a00a0220.1eb5f5.00fa.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684c8a60.050a0220.be214.02a6.GAE@google.com>
-Subject: Re: [syzbot] [net?] WARNING in __linkwatch_sync_dev (2)
-From: syzbot <syzbot+b8c48ea38ca27d150063@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, stfomichev@gmail.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+On Wed, Jun 11 2025 at 11:43, Khalid Ali wrote:
+> > There is a redundant checks of thread syscall work.
 
-HEAD commit:    27605c8c0f69 Merge tag 'net-6.16-rc2' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17bb9d70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8e5a54165d499a9
-dashboard link: https://syzkaller.appspot.com/bug?extid=b8c48ea38ca27d150063
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a7b9d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1421310c580000
+> Not really.
+>
+> >  After we read thread syscall work we are checking the work bits using
+>
+> We are doing nothing. Please write your changelogs in imperative mood
+> and do not try to impersonate code.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-27605c8c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ab939a8a93b4/vmlinux-27605c8c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e90d45016aac/bzImage-27605c8c.xz
+Sorry, i guess my english sucks.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b8c48ea38ca27d150063@syzkaller.appspotmail.com
+> > SYSCALL_WORK_ENTER and SYSCALL_WORK_EXIT on syscall entry and exit
+> > respectively, and at the same time syscall_trace_enter() and
+> > syscall_exit_work() checking bits one by one, the bits we already checked.
+> > This is redundancy. So either we need to check the work bits one by one as I
+> > did, or check as whole. On my prespective, i think the way code is
+> > implemented now checking work bits one by one is simpler and gives us
+> > more granular control.
 
-------------[ cut here ]------------
-RTNL: assertion failed at ./include/net/netdev_lock.h (72)
-WARNING: CPU: 2 PID: 60 at ./include/net/netdev_lock.h:72 netdev_ops_assert_locked include/net/netdev_lock.h:72 [inline]
-WARNING: CPU: 2 PID: 60 at ./include/net/netdev_lock.h:72 __linkwatch_sync_dev+0x1ed/0x230 net/core/link_watch.c:279
-Modules linked in:
-CPU: 2 UID: 0 PID: 60 Comm: kworker/u32:3 Not tainted 6.16.0-rc1-syzkaller-00101-g27605c8c0f69 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: bond0 bond_mii_monitor
-RIP: 0010:netdev_ops_assert_locked include/net/netdev_lock.h:72 [inline]
-RIP: 0010:__linkwatch_sync_dev+0x1ed/0x230 net/core/link_watch.c:279
-Code: 05 ff ff ff e8 94 b6 59 f8 c6 05 e9 0f 2e 07 01 90 ba 48 00 00 00 48 c7 c6 c0 8c e3 8c 48 c7 c7 60 8c e3 8c e8 94 7b 18 f8 90 <0f> 0b 90 90 e9 d6 fe ff ff 48 c7 c7 44 3b a8 90 e8 ae 86 c0 f8 e9
-RSP: 0018:ffffc90000ce79f0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffff8880363a2000 RCX: ffffffff817ae368
-RDX: ffff888022148000 RSI: ffffffff817ae375 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: 1ffff9200019cf48
-R13: ffff8880363a2cc5 R14: ffffffff8c5909c0 R15: ffffffff899ba310
-FS:  0000000000000000(0000) GS:ffff8880d6954000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd4122af9c CR3: 000000000e382000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ethtool_op_get_link+0x1d/0x70 net/ethtool/ioctl.c:63
- bond_check_dev_link+0x3f9/0x710 drivers/net/bonding/bond_main.c:863
- bond_miimon_inspect drivers/net/bonding/bond_main.c:2745 [inline]
- bond_mii_monitor+0x3c0/0x2dc0 drivers/net/bonding/bond_main.c:2967
- process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3321 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
- kthread+0x3c5/0x780 kernel/kthread.c:464
- ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+> That's just wrong and absolutely not redundant. Care to look at the
+> definition of SYSCALL_WORK_ENTER:
+>
+> #define SYSCALL_WORK_ENTER	(SYSCALL_WORK_SECCOMP |			\
+>				 SYSCALL_WORK_SYSCALL_TRACEPOINT |	\
+>				 SYSCALL_WORK_SYSCALL_TRACE |		\
+>				 SYSCALL_WORK_SYSCALL_EMU |		\
+>				 SYSCALL_WORK_SYSCALL_AUDIT |		\
+>				 SYSCALL_WORK_SYSCALL_USER_DISPATCH |	\
+>				 ARCH_SYSCALL_WORK_ENTER)
+>
+> So this initial check avoids:
+>
+>    1) Doing an unconditional out of line call
+>
+>    2) Checking bit for bit to figure out that there is none set.
+>
+> Same applies for SYSCALL_WORK_EXIT.
+>
+> Your change neither makes anything simpler nor provides more granular
+> control.
+>
+> All it does is adding overhead and therefore guaranteed to introduce a
+> performance regression.
+>
+> Not going to happen.
+>
+> Thanks,
+>
+>        tglx
+Thanks, for the response and noted all your points, however i spotted some minor details also:
 
+First if we are talking about performance then we may need likely() on SYSCALL_WORK_ENTER since 
+the probability of condition evaluating as true is very high.
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Second syscall_enter_audit() missing SYSCALL_WORK_SYSCALL_AUDIT	evaluation, aren't we supposed to call
+it only if SYSCALL_WORK_SYSCALL_AUDIT is set?
+
+Should i create another patch fixing these two points, of course if i am right?
+
+Thanks, Khalid Ali
