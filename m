@@ -1,77 +1,74 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB1A1B3939;
-	Fri, 13 Jun 2025 14:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9704C9444;
+	Fri, 13 Jun 2025 14:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826298; cv=none; b=pQfhS77M12PRGlF0VhW9P64d9f+Xz2bc9LL5vilg0kFxnJPJlJdtReqRX4d8BVnbTy1aN9092nzEZBl4Pa3h1RlvN86kyEv0wMl28tf089EmkZm2VpX5RS0vzIgAA9PEIt1zBCxwOOss01CnD80iSFBWGt/a0jW6SEPl678POqs=
+	t=1749826313; cv=none; b=gWf8OINN49QtwFFu8alNq/OZV1tLSTVqH5esf4iaWRx6OXiSvaQfdWHm08+qYB0qcR5U70kA964zAuLNDm0T4N/kJu3iMTbMSzPpMn3hxvnjvWhT+XVQUxhu+8cL9RQvPuWEo+HjAYPlZKnnGU88P3B/b/ulI5sODxzpVW9NvUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826298; c=relaxed/simple;
-	bh=2czsTqDFs2LayaWE3o+qV4gJyCKv1km6UVStrH9AcGg=;
+	s=arc-20240116; t=1749826313; c=relaxed/simple;
+	bh=uE0ZDwVkukg/QxjYkXVtj4KHDh7Mopm+MTwTfQzQK6E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FAGEpGhcIZqYEsFZeYpO9Tf+97YxDBH2fQjmxlNGR1rkPyKmLdA8yqlz1GpVoksA9bKBgPr73lyQt7d90t64TtVocMkvJjOLwZrNAv7V29TkdLIgxes6vSPzpuSma1g8ZaywODk17YBqR+NAYLgEEk+/cmnbGCRCxZHngjusn9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QDMu9Qkw; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kshckPI/FkHLebbBHxNqPNgTBc9u6g7+bJuGUDa3m3s8IKoOWboE4Y4AE3d1e5mcz8t7uFBAzKSnnljue0QtKfj9EBFkq4iJ4QdUlImm4e1q8PjwLqf+bIDdkMjk8ytlcN7WLolUWypBt2c9KW9Mtx166bzmGkbSar2a5Ygz69Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G3sOHVTr; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDMu9Qkw"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2352400344aso21227275ad.2;
-        Fri, 13 Jun 2025 07:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749826296; x=1750431096; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d/L0PwwkoPnRzlL6fmDLU+JBmZkHn+VWrN87UcWrxlw=;
-        b=QDMu9QkwzjPVvKYGh/XX9CK945yHkPnF1fVNTKB+gDZJtZ8MQ4m4hGHgpIARoTsHlo
-         gxGZUWFVlH7JnxlkgGXa24GiQF67prmlNwNgvAtQeto9gn5sTOUxKgMTSFp8wPADEe7D
-         PnBYa+x2o3nYJL4hemYN1HRZ/Egl9mq47+K/NA0ub5u0n0gQkr+CDueFUTbIXnmaNkju
-         2PUHaETqKKe3WRwPd6eHk1WSm6xmI55isnI7rkupOliZGN70MMNiuuFUEoMf489CihsU
-         XMjaxQYoitMbM5374NFyQta88EYDhLaP/apSPJJcJBVWWM+dl8LdmVExumlDzuTt4k+h
-         mt4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749826296; x=1750431096;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d/L0PwwkoPnRzlL6fmDLU+JBmZkHn+VWrN87UcWrxlw=;
-        b=IE3/bljXPvTFsSZJ2z0xdqxl6+s1pVaBQsGXKrFXqR7x3/nw880GWw0TNxDLRIhfH0
-         QORShx08XlAqtRsGqoKWfuyiSVwoG49W/RfKoEltXoEuUXxOAblGnPn09MKlyd8my4b0
-         Jo05M0UUu4ZjnoV49IncKa1bNpb65k8QhatEDMPQrSJFRMqz3JX0nLUjR/FGuJWMX3i/
-         OGeL8dp1oYYW2Ek5eXZ9DhEFr0zBXmx8w+6onEjB7u87fenYumaNu6DvwQFbv800YJcS
-         s64gwza49pULFMhOlzZvmMRFlfoH/NMk9Qg0oC51HaFaud7Qq1RC8Egrz0byKiu9PqTW
-         yVHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ4wqOZfLj+UzKgN6oCYff8DOpqHurJre2rpzi6sJvxZIOnRjjkcZt7K5aMcIUwlS/ut12f4I+apTq@vger.kernel.org, AJvYcCXzDK/kAv3XjaCJGR3FR0EjXNPMQhLwZj53hpqvq4eqmCeHImJPvOUseLde6EMSpZZ+beBSiUokQJW2il4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmrcZtg2Ts5E4jEqeJHE9NpLIzLAf1+0PeDmY8ijnSBZodDaFQ
-	xkwpCCM2fQmu3qhdjQXfKo91zeNNkInR8US1qMI9cNLeaKrvAVAojJRI
-X-Gm-Gg: ASbGncu4klzTC+RdSrvROqjwaNndf4rPUh/q13GgpRFZa5Ii05jC4RQB+wR3o4v4BZ/
-	t9iaven4xk0+9rLWoK1fAkY/BRFm3UqxRPgu+K8gw81y3QKCFjMR95DEWf4s6LgYfVaYYNqSHnK
-	TVumLTbYMpW72mv0d6Dy+5uaB0Wcr5N4ZmgBzKvfWElAVw/4HS54yz8bCVq0lShnMzYPfFIQSmi
-	MNdWXLlwfm9hE0088CGV7CKuCcpvaKZ8AmlcJDZX0B88nnDaxMROlCohskbsoiFVtFLZyGpqCbN
-	/vrO7taYT+LZHY8VEYaKYMRTMCIGr9TXFtITGsSd1h4twP+QCg==
-X-Google-Smtp-Source: AGHT+IEIIUA/SqQ/LFR7HRB5k5zVKg219NACECTVDBepqqz/zObVh2DDinY6N9JMXMq66xyxr+KZvg==
-X-Received: by 2002:a17:902:e5d1:b0:231:e331:b7df with SMTP id d9443c01a7336-2365db08f94mr46802515ad.29.1749826296073;
-        Fri, 13 Jun 2025 07:51:36 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:838f::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5fef6sm3847533a91.40.2025.06.13.07.51.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 07:51:35 -0700 (PDT)
-Date: Fri, 13 Jun 2025 11:51:29 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v4 2/5] PCI: rockchip: Drop unused custom registers and
- bitfields
-Message-ID: <ed25d30f2761e963164efffcfbe35502feb3adc2.1749826250.git.geraldogabriel@gmail.com>
-References: <cover.1749826250.git.geraldogabriel@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G3sOHVTr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749826311; x=1781362311;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uE0ZDwVkukg/QxjYkXVtj4KHDh7Mopm+MTwTfQzQK6E=;
+  b=G3sOHVTr6ZyjDJs3R9LKFjg66VB6vu9nSQCxkeTds16IcseEDgMnH8XI
+   AOy+p3G74+CVYuR7RVdBYyz3nwVjcmpHoz0Radi7X+5mLenW38DDT4BHz
+   krXiP2GZG9YywFTTrb00M5rr7S8bYCmEry91eti13UTBIFYGnM5vWyfKn
+   k6a50fpZsvcSSbwddXnTwGBe8bfyd6dvvqFs0upvtFxLY9npdnYTWGuzN
+   7tLfkBw7qW5JDTosZvynNEPq2vBudH6mVy1UxBDhuceodVLyeBmj47A3w
+   AVu28sM3ftaB7syus2hEMWt2MYjr8PCiq2RYa/wqRWbMIhE9txc9eGxSY
+   Q==;
+X-CSE-ConnectionGUID: Lc4Nij40SZOq8R/9jqdZbw==
+X-CSE-MsgGUID: 8F4kckI1QBa5eSLbuCpBCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="52192246"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="52192246"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 07:51:51 -0700
+X-CSE-ConnectionGUID: kh3lcKhgT6KCXynKXf8Keg==
+X-CSE-MsgGUID: FiP3cSsoQ5CGmvHLgaAtiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="148392187"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 13 Jun 2025 07:51:46 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQ5kt-000Cic-1d;
+	Fri, 13 Jun 2025 14:51:43 +0000
+Date: Fri, 13 Jun 2025 22:50:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Daniel Golle <daniel@makrotopia.org>,
+	Simon Horman <horms@kernel.org>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Lei Wei <quic_leiwei@quicinc.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Claudiu Beznea <claudiu.beznea@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [net-next PATCH v6 09/10] net: macb: Support external PCSs
+Message-ID: <202506132226.hNuGyG9l-lkp@intel.com>
+References: <20250610233642.3588414-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,40 +77,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1749826250.git.geraldogabriel@gmail.com>
+In-Reply-To: <20250610233642.3588414-1-sean.anderson@linux.dev>
 
-Since we are now using standard PCIe defines, drop
-unused custom-defined ones, which are now referenced
-from offset at added Capabilities Register.
+Hi Sean,
 
-Suggested-By: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
----
- drivers/pci/controller/pcie-rockchip.h | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 5864a20323f2..f611599988d7 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -155,16 +155,7 @@
- #define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
- #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
- #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
--#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
--#define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
--#define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
--#define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
--#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_BASE + 0xc8)
--#define   PCIE_RC_CONFIG_DCSR_MPS_MASK		GENMASK(7, 5)
--#define   PCIE_RC_CONFIG_DCSR_MPS_256		(0x1 << 5)
--#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
--#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
--#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
-+#define PCIE_RC_CONFIG_CR		(PCIE_RC_CONFIG_BASE + 0xc0)
- #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
- #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
- #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+[auto build test WARNING on net-next/main]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-net-Add-Xilinx-PCS/20250611-143544
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250610233642.3588414-1-sean.anderson%40linux.dev
+patch subject: [net-next PATCH v6 09/10] net: macb: Support external PCSs
+config: xtensa-randconfig-r062-20250613 (https://download.01.org/0day-ci/archive/20250613/202506132226.hNuGyG9l-lkp@intel.com/config)
+compiler: xtensa-linux-gcc (GCC) 13.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506132226.hNuGyG9l-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506132226.hNuGyG9l-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/net/ethernet/cadence/macb_main.c:24:
+   include/linux/pcs.h: In function 'pcs_get_by_fwnode_compat':
+   include/linux/pcs.h:201:16: error: implicit declaration of function '_pcs_get_tail' [-Werror=implicit-function-declaration]
+     201 |         return _pcs_get_tail(dev, fwnode, NULL);
+         |                ^~~~~~~~~~~~~
+>> include/linux/pcs.h:201:16: warning: returning 'int' from a function with return type 'struct phylink_pcs *' makes pointer from integer without a cast [-Wint-conversion]
+     201 |         return _pcs_get_tail(dev, fwnode, NULL);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +201 include/linux/pcs.h
+
+56201bc1ac71fc Sean Anderson 2025-06-10  187  
+56201bc1ac71fc Sean Anderson 2025-06-10  188  #ifdef CONFIG_OF_DYNAMIC
+56201bc1ac71fc Sean Anderson 2025-06-10  189  struct phylink_pcs *
+56201bc1ac71fc Sean Anderson 2025-06-10  190  pcs_get_by_fwnode_compat(struct device *dev, struct fwnode_handle *fwnode,
+56201bc1ac71fc Sean Anderson 2025-06-10  191  			 int (*fixup)(struct of_changeset *ocs,
+56201bc1ac71fc Sean Anderson 2025-06-10  192  				      struct device_node *np, void *data),
+56201bc1ac71fc Sean Anderson 2025-06-10  193  			 void *data);
+56201bc1ac71fc Sean Anderson 2025-06-10  194  #else
+56201bc1ac71fc Sean Anderson 2025-06-10  195  static inline struct phylink_pcs *
+56201bc1ac71fc Sean Anderson 2025-06-10  196  pcs_get_by_fwnode_compat(struct device *dev, struct fwnode_handle *fwnode,
+56201bc1ac71fc Sean Anderson 2025-06-10  197  			 int (*fixup)(struct of_changeset *ocs,
+56201bc1ac71fc Sean Anderson 2025-06-10  198  				      struct device_node *np, void *data),
+56201bc1ac71fc Sean Anderson 2025-06-10  199  			 void *data)
+56201bc1ac71fc Sean Anderson 2025-06-10  200  {
+56201bc1ac71fc Sean Anderson 2025-06-10 @201  	return _pcs_get_tail(dev, fwnode, NULL);
+56201bc1ac71fc Sean Anderson 2025-06-10  202  }
+56201bc1ac71fc Sean Anderson 2025-06-10  203  #endif
+56201bc1ac71fc Sean Anderson 2025-06-10  204  
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
