@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A60E52D540C;
-	Fri, 13 Jun 2025 11:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C17F2D8778;
+	Fri, 13 Jun 2025 11:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749813632; cv=none; b=E3eSyEw6Fr9op1bX5wNQHIRFbQ5yTzmpIU0h5PL2jVugRJGdC6nGn0PHkmDKMEwyCabQ3nT3bN9q2LmeT9GqptxxNk2s+4j1zwoMRXaRnMwqDFiUFNsa1LaLtWKBs6ioyqPmfP+7PdG9zjjt3kNfHhteZL7RtECYvxrjfqjXvVY=
+	t=1749813634; cv=none; b=aoeJtL+0EGM/YEmGm7KIVpdUFDki5rMv4uxJJZx5BuWH404zptfWNly5RHTbHQssAfI+c+s7IxpzGKLp2BmMz678gTZ9ecPOIc8PGcxymiYW0xcMDUUvV1SJC7fctL0HNsKHaPxYjWDLF+fw95PS2lSq5wuu7bvr9bCIx1L9MUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749813632; c=relaxed/simple;
-	bh=T8M8l/OSfqF6LAD2opiryZllIbiWH12cgjvJos95K/A=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=YYOxnP05Q1jpux4uYBBqSAeKcXO4PyhSxKaA7w8ljI28DLZccLckYnaz7I9k4FOwDGdceBH4ZGrSBi4dPn6oHcPNHt+Su+YkObEdDJ4eCoxgbxOAw/m0zwKfSrkfMNKyGvqaZooqU/FC38qMU3J18edGd1BHx+XkYrxt4HveziM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rcj58bYi; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1749813634; c=relaxed/simple;
+	bh=OBRSd7WT4BkXBIhKRy7/4sQyu81IXc/MtzNZy6JnjkU=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=UqlMp2wAYLJv8nip4hW5zHXLizqKgheDKplMja/ifb9S1fJ8Go8IxUkJ2AGv1FzrcpQDyqLsKdPnu/hVX1ajBA+Ubgrl3DQXZ40HQpUKoK7jPjDKvHLCwSDIA/xSPyNtGbpUKY21KSEC6bYrH2nbg608NNjVstfO04RhQC42ViQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fdBndOap; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rcj58bYi"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fdBndOap"
 Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 43663201C775; Fri, 13 Jun 2025 04:20:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 43663201C775
+	id 1CFCD2115189; Fri, 13 Jun 2025 04:20:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1CFCD2115189
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749813630;
-	bh=cP2o3EuJ+p3R1t0enkJckW1hpdqJe16ROT2UBloMEak=;
+	s=default; t=1749813632;
+	bh=BqSBN+65YZJiSCSL/gtogSMXpS7OJBtQMStl9721njU=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=rcj58bYikfHixGsadDstumxnYOpQ2cczgQ3tPbZwypPNycE6iiYQASD14+rtR5Wxq
-	 1INnpJ4W3DvFB4MjF9rkd6z4E3lQJlUfrhTkPAkViR8/nDALW7FoN/fnnsuUZaYGVJ
-	 fCtUEwxNuq+aG/kxvnMEMUBJs4AfjzPvpf5xXjIY=
+	b=fdBndOapKxV3jXo7zfVJa5MhUBBNJlov+QsSwWJ4IH6AKizPaqZyjvJq2r010k91a
+	 CVeREEkf3ldgaDg3xOvghFKHOYeLpcpHxFJHzZoPgqoGUrukkNe+0JVZnVwtvBAbmC
+	 XGNBtwILCRLJ0flMjE4L0p0q+6/9vYDi7W/flqtE=
 From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -48,9 +48,9 @@ To: kys@microsoft.com,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org
-Subject: [PATCH net-next v2 1/4] net: mana: Fix potential deadlocks in mana napi ops
-Date: Fri, 13 Jun 2025 04:20:24 -0700
-Message-Id: <1749813627-8377-2-git-send-email-ernis@linux.microsoft.com>
+Subject: [PATCH net-next v2 3/4] net: mana: Add speed support in mana_get_link_ksettings
+Date: Fri, 13 Jun 2025 04:20:26 -0700
+Message-Id: <1749813627-8377-4-git-send-email-ernis@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
 References: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
@@ -60,109 +60,111 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-When net_shaper_ops are enabled for MANA, netdev_ops_lock
-becomes active.
+Allow mana ethtool get_link_ksettings operation to report
+the maximum speed supported by the SKU in mbps.
 
-MANA VF setup/teardown by netvsc follows this call chain:
+The driver retrieves this information by issuing a
+HWC command to the hardware via mana_query_link_cfg(),
+which retrieves the SKU's maximum supported speed.
 
-netvsc_vf_setup()
-        dev_change_flags()
-		...
-         __dev_open() OR __dev_close()
+These APIs when invoked on hardware that are older/do
+not support these APIs, the speed would be reported as UNKNOWN.
 
-dev_change_flags() holds the netdev mutex via netdev_lock_ops.
+Before:
+$ethtool enP30832s1
+> Settings for enP30832s1:
+        Supported ports: [  ]
+        Supported link modes:   Not reported
+        Supported pause frame use: No
+        Supports auto-negotiation: No
+        Supported FEC modes: Not reported
+        Advertised link modes:  Not reported
+        Advertised pause frame use: No
+        Advertised auto-negotiation: No
+        Advertised FEC modes: Not reported
+        Speed: Unknown!
+        Duplex: Full
+        Auto-negotiation: off
+        Port: Other
+        PHYAD: 0
+        Transceiver: internal
+        Link detected: yes
 
-Meanwhile, mana_create_txq() and mana_create_rxq() in mana_open()
-path call NAPI APIs (netif_napi_add_tx(), netif_napi_add_weight(),
-napi_enable()), which also try to acquire the same lock, risking
-deadlock.
+After:
+$ethtool enP30832s1
+> Settings for enP30832s1:
+        Supported ports: [  ]
+        Supported link modes:   Not reported
+        Supported pause frame use: No
+        Supports auto-negotiation: No
+        Supported FEC modes: Not reported
+        Advertised link modes:  Not reported
+        Advertised pause frame use: No
+        Advertised auto-negotiation: No
+        Advertised FEC modes: Not reported
+        Speed: 16000Mb/s
+        Duplex: Full
+        Auto-negotiation: off
+        Port: Other
+        PHYAD: 0
+        Transceiver: internal
+        Link detected: yes
 
-Similarly in the teardown path (mana_close()), netif_napi_disable()
-and netif_napi_del(), contend for the same lock.
-
-Switch to the _locked variants of these APIs to avoid deadlocks
-when the netdev_ops_lock is held.
-
-Fixes: d4c22ec680c8 ("net: hold netdev instance lock during ndo_open/ndo_stop")
 Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 Reviewed-by: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
 ---
 Changes in v2:
-* Use netdev_lock_ops_to_full() instead of if...else statements for napi
-  APIs.
-* Edit commit message.
+* No change.
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 30 +++++++++++++------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c      | 1 +
+ drivers/net/ethernet/microsoft/mana/mana_ethtool.c | 6 ++++++
+ include/net/mana/mana.h                            | 2 ++
+ 3 files changed, 9 insertions(+)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index e68b8190bb7a..ca5e9c3d374b 100644
+index 7e8bc2c6a194..54a86c233948 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1912,8 +1912,11 @@ static void mana_destroy_txq(struct mana_port_context *apc)
- 		napi = &apc->tx_qp[i].tx_cq.napi;
- 		if (apc->tx_qp[i].txq.napi_initialized) {
- 			napi_synchronize(napi);
--			napi_disable(napi);
--			netif_napi_del(napi);
-+			netdev_lock_ops_to_full(napi->dev);
-+			napi_disable_locked(napi);
-+			netif_napi_del_locked(napi);
-+			netdev_unlock_full_to_ops(napi->dev);
- 			apc->tx_qp[i].txq.napi_initialized = false;
- 		}
- 		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
-@@ -2065,8 +2068,11 @@ static int mana_create_txq(struct mana_port_context *apc,
- 
- 		mana_create_txq_debugfs(apc, i);
- 
--		netif_napi_add_tx(net, &cq->napi, mana_poll);
--		napi_enable(&cq->napi);
-+		set_bit(NAPI_STATE_NO_BUSY_POLL, &cq->napi.state);
-+		netdev_lock_ops_to_full(net);
-+		netif_napi_add_locked(net, &cq->napi, mana_poll);
-+		napi_enable_locked(&cq->napi);
-+		netdev_unlock_full_to_ops(net);
- 		txq->napi_initialized = true;
- 
- 		mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
-@@ -2102,9 +2108,11 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
- 	if (napi_initialized) {
- 		napi_synchronize(napi);
- 
--		napi_disable(napi);
--
--		netif_napi_del(napi);
-+		netdev_lock_ops_to_full(napi->dev);
-+		napi_disable_locked(napi);
-+		netif_napi_del_locked(napi);
-+		netdev_unlock_full_to_ops(napi->dev);
+@@ -1272,6 +1272,7 @@ int mana_query_link_cfg(struct mana_port_context *apc)
+ 		return err;
  	}
- 	xdp_rxq_info_unreg(&rxq->xdp_rxq);
+ 	apc->speed = resp.link_speed_mbps;
++	apc->max_speed = resp.qos_speed_mbps;
+ 	return 0;
+ }
  
-@@ -2355,14 +2363,18 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 4fb3a04994a2..a1afa75a9463 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -495,6 +495,12 @@ static int mana_set_ringparam(struct net_device *ndev,
+ static int mana_get_link_ksettings(struct net_device *ndev,
+ 				   struct ethtool_link_ksettings *cmd)
+ {
++	struct mana_port_context *apc = netdev_priv(ndev);
++	int err;
++
++	err = mana_query_link_cfg(apc);
++	cmd->base.speed = (err) ? SPEED_UNKNOWN : apc->max_speed;
++
+ 	cmd->base.duplex = DUPLEX_FULL;
+ 	cmd->base.port = PORT_OTHER;
  
- 	gc->cq_table[cq->gdma_id] = cq->gdma_cq;
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 038b18340e51..e1030a7d2daa 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -533,6 +533,8 @@ struct mana_port_context {
+ 	u16 port_idx;
+ 	/* Currently configured speed (mbps) */
+ 	u32 speed;
++	/* Maximum speed supported by the SKU (mbps) */
++	u32 max_speed;
  
--	netif_napi_add_weight(ndev, &cq->napi, mana_poll, 1);
-+	netdev_lock_ops_to_full(ndev);
-+	netif_napi_add_weight_locked(ndev, &cq->napi, mana_poll, 1);
-+	netdev_unlock_full_to_ops(ndev);
- 
- 	WARN_ON(xdp_rxq_info_reg(&rxq->xdp_rxq, ndev, rxq_idx,
- 				 cq->napi.napi_id));
- 	WARN_ON(xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq, MEM_TYPE_PAGE_POOL,
- 					   rxq->page_pool));
- 
--	napi_enable(&cq->napi);
-+	netdev_lock_ops_to_full(ndev);
-+	napi_enable_locked(&cq->napi);
-+	netdev_unlock_full_to_ops(ndev);
- 
- 	mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
- out:
+ 	bool port_is_up;
+ 	bool port_st_save; /* Saved port state */
 -- 
 2.34.1
 
