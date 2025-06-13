@@ -1,77 +1,92 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED2726B75E;
-	Fri, 13 Jun 2025 08:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990F52459D2;
+	Fri, 13 Jun 2025 08:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749804289; cv=none; b=WYcwWNDK5oWrKpIXeFzrt9owNgaqqotj2kqGAH+RxzO4sUX/L+F+YlTj9UD276Esnbrtpih4CXyRhtkQUKkba8BpFClzBxSzXCjbVLCgKIvYMpFNPactHud+tvQHD+OAe0eI5Tfz5QafF6UmZWmfy6d9eFwHQGz3xUjJB7loizg=
+	t=1749804350; cv=none; b=D5PAaHONRyHrvYwmXbu6nrE4gwmMaSsScO6nM0KMImDVz3UwkQSs5pIa/86gxRMN+O41rgg7s5AaRWQkCaC46uTzVt6+1yaUxGebLkvt3FuIDYt/rKCjzg3UP2+mLK2Vx+u34sWPUSb61+gSRW+vX+0MXv7wm7GY/qHRHrdpL2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749804289; c=relaxed/simple;
-	bh=O0oMevI0+fsqaiQmYRliBlOITZY6NqjayKVJfj1TUJc=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Qegj8vsRqjOsSMLIKF86Ru7/VCo5yzhhxQSb6ZgUVjmh1k4J3WHq7jGEq1irf6LQrn4xEfFiVj5FF/n97Z/drencLS8nFzok15Q9G7OVnVU38P7/5whXRDH2KJx4MgLfDdEvijEn3zWaKD+p1ATeVXZdeolePJYTJJT8bkGeRAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=jrnGy9zx; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1749804350; c=relaxed/simple;
+	bh=6PQjGNdTndadBOHPNSprrGjhrgshe7eqm6LfkP0/LiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqXVuFxqruAwUDvjxpGg13K/sET520uuyfIb8kU6mluj6TOlk4jIGkvKcmLy79s248ReNpgUondyyllBIlJX9teMJGqJvNfwSBjFopyRSnzOyW/HP/IethOA6/4y9r3ViRoG1KWwNOXVvQHeMns4e+WJb4/05cAjKonNq1KAgtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Io6BXJVO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="jrnGy9zx"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 4C33625D88;
-	Fri, 13 Jun 2025 10:44:44 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id VJ3FmyzkRE4g; Fri, 13 Jun 2025 10:44:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1749804283; bh=O0oMevI0+fsqaiQmYRliBlOITZY6NqjayKVJfj1TUJc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=jrnGy9zxM+TxKbgEnY76Sd3r8sA47VyKEqG4QEFmALpH9bqn1UfkS7HXqV5pEyNw/
-	 3npTjLBmTNLaXcURkkv+wi5g7JQ7IzxeIBd5CdgmsnwUvPXrzAAC6kU/XTQ1ho3S8s
-	 Az9lel6UrrN3s+OFsT2X0MkAeaAnrx4yyMLSeamnKEIaHLhQUSQsnLQHdXfzP6ZWDq
-	 /PyWIPYfcHAlrPU7XZ1gWCgCv2OfKZzxk7XD1bcifdIm/mvIKQjNrtFbB1yKvV+IAv
-	 nfnXq+HrtTMeCUPYYc/n6A2pMY4WMYqxB4YlFPq0QBfP2SdeqYRpfRu8c8mQPVQLVY
-	 TZ3OeLxeQBaLA==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Io6BXJVO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4682AC4CEE3;
+	Fri, 13 Jun 2025 08:45:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749804350;
+	bh=6PQjGNdTndadBOHPNSprrGjhrgshe7eqm6LfkP0/LiU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Io6BXJVOBa3rGapk/leIugA8Y0mg9CsNPVHgzaioUd+wmmJzgXCNeBylEZf7BTz95
+	 /rq0CwhhW0lO46pyfqsFZzIAWgtMxGt1nuoMJC57bG9/3TQj5yWYORirArDMGB2mB8
+	 tUThlPLV/GKKLEweCgbFvdjiHomidjbppYF5KTQmm77oG93fGmla/PI/v9r60EtMjZ
+	 yORFY3xe0HKEYZOXIoHtrVL5M+ZqLQGXetecA4RaWPYO6TunP6sjBS0U2QdyJy2c9a
+	 1y+30HoSoC5Hg5iUcQYn2JQBt3HlzRCJUOAuM2DmLw+Ut89iABTAMGXpe1Pfg6nSZE
+	 cgGzTmqFhr5vg==
+Date: Fri, 13 Jun 2025 14:15:41 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, tglx@linutronix.de, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com, oohall@gmail.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	Hans Zhang <hans.zhang@cixtech.com>
+Subject: Re: [PATCH 2/2] PCI/AER: Use bool for AER disable state tracking
+Message-ID: <ufdexukxobnpyjmfbr7gb2zvlv4xshkwbuinrrr3fowtmjtcyv@xfmmg7wrvjm7>
+References: <20250516165223.125083-1-18255117159@163.com>
+ <20250516165223.125083-3-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 13 Jun 2025 08:44:43 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Sangwon Jee <jeesw@melfas.com>, Dmitry Torokhov
- <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Henrik
- Rydberg <rydberg@bitmath.org>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 0/5] Support for MELFAS MIP4 touchkey devices
-In-Reply-To: <20250613-mip4-touchkey-v2-0-9bbbe14c016d@disroot.org>
-References: <20250613-mip4-touchkey-v2-0-9bbbe14c016d@disroot.org>
-Message-ID: <e6b71b3d3cacc2f112e62c57fd0c3c65@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250516165223.125083-3-18255117159@163.com>
 
-On 2025-06-12 19:41, Kaustabh Chakraborty wrote:
-> MIP4 is a protocol developed and used by MELFAS in its touchscreen and
-> touchkey devices. The MIP4 touchscreen driver acknowledges the
-> touchscreen capabilities, but touchkeys are left unimplemented.
+On Sat, May 17, 2025 at 12:52:23AM +0800, Hans Zhang wrote:
+> From: Hans Zhang <hans.zhang@cixtech.com>
 > 
-> Apart from touchscreen + touchkey devices, the protocol is also used by
-> devices which are, functionally, touchkey devices. Thus, the driver
-> should also be compatible with those devices. This series aims to
-> introduce such required changes.
+> Change pcie_aer_disable variable to bool and update pci_no_aer()
+> to set it to true. Improves code readability and aligns with modern
+> kernel practices.
 > 
-> RFC: How should the compatible string be handled? The string defined in
-> dtschema is 'melfas,mip4_ts', which implies that it's a MIP4 *touchscreen*
-> by MELFAS.
+> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
 
-I see that there are 2 dts(i) files which use the compatible
-"melfas,mip4_ts", as discovered from a simple grep in arch/. They are:
-- arm64/qcom/msm8916-lg-m216.dts
-- arm64/mediatek/mt8173-elm-hana.dtsi
+Applied to pci/misc!
 
-Is it possible to change all references of the compatible to something more
-generic, such as "melfas,mip4"?
+- Mani
+
+> ---
+>  drivers/pci/pcie/aer.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index a1cf8c7ef628..ade98c5a19b9 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -111,12 +111,12 @@ struct aer_stats {
+>  					PCI_ERR_ROOT_MULTI_COR_RCV |	\
+>  					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
+>  
+> -static int pcie_aer_disable;
+> +static bool pcie_aer_disable;
+>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+>  
+>  void pci_no_aer(void)
+>  {
+> -	pcie_aer_disable = 1;
+> +	pcie_aer_disable = true;
+>  }
+>  
+>  bool pci_aer_available(void)
+> -- 
+> 2.25.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
