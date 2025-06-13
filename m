@@ -1,140 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5A72397A4;
-	Fri, 13 Jun 2025 21:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC9928D8CB
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 21:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749850031; cv=none; b=HQDm+WTZ0apLTCuy4mTNHR1wZbmOC1mjjVWrrtTOSGayzMNk5o/gi3ezkrwpgOxtAisdrosb/O0NHMswqSC8p8kQledHjOYllY2F5mRWoIX0oioj1zQGF8XtNmoqA8UgkdFKchP93Gumsb2WoWaDi9wUNDfUG0nFOK2UFFb+S2Y=
+	t=1749850204; cv=none; b=LkQe4LtSngBFYHAbobq8soPo54iqSrncTXf7vcX7+zEFLnzJxP3+sQ7jUERcbdo2MEJUyzJHQJr+47Ejvn8cimeUvNoeqOSw4YuhQs85hOxuKIL9twmg5WDiB/LwXr8kkVxd887HNspGm2dRBGuZCj5aakREY7hlw+8wBflt7Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749850031; c=relaxed/simple;
-	bh=uao9vXicfmNGv7hAWWVlUXBcpeUEFrEd/9ktZYSF5ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dilfbHh4ddjSDIa8/lp8fKlVdZIezejxeMDxe8Tr9xUG195kgAjoDmbIO7onYUXKV+f7nRdqry/KPOASd07SvIWsLvGAqIFceaVUDDEUPBFgCERaGMOB2U9k/TmWG2ZrqzQuSMsJpMf8CyRlvx+gk43XFa50ueSKfj133mg2wNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZbpXBjn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZbpXBjn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A62DCC4CEE3;
-	Fri, 13 Jun 2025 21:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749850030;
-	bh=uao9vXicfmNGv7hAWWVlUXBcpeUEFrEd/9ktZYSF5ig=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nZbpXBjnZAtM27vBM686WDSlmCevbldUDcv0haHfTvmlSbLoJxSVxv9p7sUN/igzZ
-	 DQK/ujQyUDtDXKo2+9/B+og9k8xaILfs7yj0Ci3wDQTJoB15fvuJM/ChAGShZ3sJS/
-	 bufKhI9YRG+YCjlQBcTTG/xsYrSg2fEsxsIA3vHaqMgwXY8cAwIwDfocOYkk4kfsyJ
-	 P4ztXwL4ANgDMym+oXwaG7Bg27bJtH+40UVzknDgw/qfvepHaMcja5TXadWM+ftgzY
-	 JKVnZ/05xPQ/3S7h35bYqr18+mF84NOxMFMKg9d3gusw5T0wrId6QwXlt1I1+pXePB
-	 G+ukl5JR60TBg==
-Date: Fri, 13 Jun 2025 16:27:09 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 24/28] PCI: Add Microchip LAN9662 PCI Device ID
-Message-ID: <20250613212709.GA979346@bhelgaas>
+	s=arc-20240116; t=1749850204; c=relaxed/simple;
+	bh=VVCtDi/THMNaziVez+/Kfyif66Kw1La+EoS6lUhoS30=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=IIr21xD9ZK3sTQFq3o8wTbi/ArQb1CCP21SY8E3OEpUllkxCWPv88Yc68PJqfhBAIH4KJCoN1gwV4xEcC0EFvT652OswRm2+faWuSz1w8haOviKiIvsMZAh4zCSKhGCiApohF5afIhiWDZBmWVLSlBqxsdsIH/q7xB3piP2aato=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddbb34fc1cso29898065ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:30:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749850202; x=1750455002;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=39o0uOIy8QjGOd/DbwJtSHVgR+dZ0CHMjvotGtElSDE=;
+        b=oxcxhjjNK6kooGSd5S1Tlv12yQJi+h5kmWVj/V1UK5foAz0wVSModooAjUbe3p44FV
+         2pjXc9t9qnN4hwWf9VjTTEsPYbZbbxSJ933IjtM3hfX0DpvAxxFK6UqXFGsxwej/cgAx
+         2x4FBWAK/eDL6jgocjdu+yu5Ya8jJzmYgjnzTwiC8lV76BRXlwX3nqdIVXe+kt2AEP/h
+         DRIuH4IT1Mo5xJa0K7aMiOlLVEPH3dSoGzLx9dFZ4M//CSh9tbU76x+ztEjUUrjS//Nd
+         WHNc9421CU+K7hZXvqogTrKQGI/yR8S7KqSJ1M80v+iwejQvsPMqgZayJgoFT1oIjccC
+         NeIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxYRbnOQL3iF81aVSn3iEhIZKuGtWkUbrX2ccWDcj889HmLNZOYxMKHYxSkbukd4BApGvYlEr73BnDzOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB4d/DoprDPhxtlqskQgGeDoY168LcYkx6uMoSTDbJC8I23j+Q
+	gyYlrnl2K1vLZmaCeo5jEg0zx8cQYaA56DCAxFlxsz6JI6xrITF2N8AI+vS6TBEQKes9ksTehZ5
+	XnNPJJBQj55yd1L/EMfcmM8it5iZoq3Gk26lZ/cBq1cu19g4/fWKXCJj9+Ek=
+X-Google-Smtp-Source: AGHT+IHkW+PxD4B9B39h1g7efcqLTlZYeOaomRymEnK4adDkhv/HoIAE6ytX221HzaU3iJ8HKARthzS1ikAXB3lVCeVNH10HpKzP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-25-herve.codina@bootlin.com>
+X-Received: by 2002:a05:6e02:1887:b0:3dd:d1bc:f08c with SMTP id
+ e9e14a558f8ab-3de07da228dmr14435435ab.20.1749850202173; Fri, 13 Jun 2025
+ 14:30:02 -0700 (PDT)
+Date: Fri, 13 Jun 2025 14:30:02 -0700
+In-Reply-To: <684b6ff9.a00a0220.279073.0007.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684c985a.050a0220.be214.02a7.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in cfg80211_inform_bss_frame_data
+From: syzbot <syzbot+fd222bb38e916df26fa4@syzkaller.appspotmail.com>
+To: johannes.berg@intel.com, johannes@sipsolutions.net, 
+	lachlan.hodges@morsemicro.com, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 13, 2025 at 03:48:04PM +0200, Herve Codina wrote:
-> Existing code uses the 0x9660 value (LAN9662 PCI Device ID) in several
-> places.
-> 
-> Avoid this direct use of the 0x9660 value replacing it by defined PCI
-> Device ID.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+syzbot has bisected this issue to:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+commit 1e1f706fc2ce90eaaf3480b3d5f27885960d751c
+Author: Lachlan Hodges <lachlan.hodges@morsemicro.com>
+Date:   Tue Jun 3 05:35:38 2025 +0000
 
-> ---
->  drivers/misc/lan966x_pci.c | 2 +-
->  drivers/pci/quirks.c       | 2 +-
->  include/linux/pci_ids.h    | 1 +
->  3 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/misc/lan966x_pci.c b/drivers/misc/lan966x_pci.c
-> index b28066c96534..e60ab662b8f3 100644
-> --- a/drivers/misc/lan966x_pci.c
-> +++ b/drivers/misc/lan966x_pci.c
-> @@ -197,7 +197,7 @@ static void lan966x_pci_remove(struct pci_dev *pdev)
->  }
->  
->  static struct pci_device_id lan966x_pci_ids[] = {
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, 0x9660) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, PCI_DEVICE_ID_EFAR_LAN9662) },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(pci, lan966x_pci_ids);
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index d7f4ee634263..bde077ce663a 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6302,7 +6302,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
-> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, 0x9660, of_pci_make_dev_node);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, PCI_DEVICE_ID_EFAR_LAN9662, of_pci_make_dev_node);
->  
->  /*
->   * Devices known to require a longer delay before first config space access
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index e2d71b6fdd84..5d69fde7dd97 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -934,6 +934,7 @@
->  #define PCI_VENDOR_ID_EFAR		0x1055
->  #define PCI_DEVICE_ID_EFAR_SLC90E66_1	0x9130
->  #define PCI_DEVICE_ID_EFAR_SLC90E66_3	0x9463
-> +#define PCI_DEVICE_ID_EFAR_LAN9662	0x9660
->  
->  #define PCI_VENDOR_ID_MOTOROLA		0x1057
->  #define PCI_DEVICE_ID_MOTOROLA_MPC105	0x0001
-> -- 
-> 2.49.0
-> 
+    wifi: cfg80211/mac80211: correctly parse S1G beacon optional elements
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10f60e82580000
+start commit:   d9816ec74e6d macsec: MACsec SCI assignment for ES = 0
+git tree:       net
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=12f60e82580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14f60e82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=73696606574e3967
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd222bb38e916df26fa4
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1042460c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1442460c580000
+
+Reported-by: syzbot+fd222bb38e916df26fa4@syzkaller.appspotmail.com
+Fixes: 1e1f706fc2ce ("wifi: cfg80211/mac80211: correctly parse S1G beacon optional elements")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
