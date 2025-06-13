@@ -1,156 +1,229 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2078.outbound.protection.outlook.com [40.107.237.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CDC1A2389
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822088; cv=fail; b=QSKfWD+ttb5GSG6WVj698AlvrF2gMMqffWyi1U+E0Xi0nSJdHoQ2CtWythG3J7HjTSuz8pigpeK2IxFDACYd+egfoxTQAL/nMFHRUv8B3eRAg0cx3ogMfe4AatD6HrrdyVsPa4hh2D1zJ+H7kWJlh3gSx5DpKIRaCC8SbT5YeLk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822088; c=relaxed/simple;
-	bh=ThBTqwbMB/AgbUeJyeHGrGgvv/Zs+ws3Vrva8LeLZks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=pKlPFb7gtdp7n290wHUUVoBt+akM3Vhio2EouQf0RLMw/aTJjPgk8VFdjha7HUjCvHIpfcHFM0TP7bniVS+Mh48gNV8dsj2JVB/KLdc6NQSskDXpxr3x5jzbjGmGWBmyG3inOTnHl0U9oW9sNA9pCYDaCNDuYHS1UGrmuQZKpN0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aSALuL89; arc=fail smtp.client-ip=40.107.237.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0771C84A6
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749822090; cv=none; b=ds+qA00adsD40KbVoljSLICOM6glR8RNbSrG+rmYX2/TNJnQs29bOwYG/EnjR0TH6jKgKvCVZmYrIgD7PqHFpHOc6zYRb+AJXvygCQaxhU5Zthz5Vm9NZHM/6S7XAVCMHs3BpGiIg6TbnxP9XBgpk2tdmx2JgXV8c3k2gwNwfB4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749822090; c=relaxed/simple;
+	bh=/Hj2o0NKvMzVIjNKTfgbctNmnmS2OLsACrglt6/q3Wg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c99i6SDWy+xMRGCV9P3s5z+i5rHFdLwc4KyTrF+Qf0SEMEn1wKxn7GF4FIkmuDGbnqCKLkbqrD2RAtFT5OttHSMxq0kojZq+Ezlm/1Lg+O3GogjQJXGkldLrJeYfcVZBLNkDbezlm2y1zesQ01NOmMy2MoUD7om6XzXemNpjFDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZfCuYgeM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aSALuL89"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aXFzIujP4vpatSU834a8WKfMpLxcSH+f8THR80FsimJ5EAPNTT5xi3UpSysswf4aR15Ub8doSZYjcggswdRL8YBVARmB4iLKoW6uVWNgqw6cW4QT6/mMMnsMoBgUiAJQLWw8rQ826saVl8oQzPWFRiR9ukFsqhUPzfkNZkWX1CO15K9ksEiADGRc7BxRoiy5h+SlqSzqmFfn+23ntbzp6Y2ssjroaclHZAQF4zaeV8cw5dh20WQW3PYKM2Gnr/QweNXvdfqTN+U07ZuGfSJXf3p55b1AL79aqTOriQgOBoP9IF87tFimO3maoCjSrex4Oq6hiBnbQwzSQALKssWSlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NoEfkoh1fvaR5bJ2rLRBKfhRGfzT75fXqJgrzCMRsyU=;
- b=ezTUs3FXKEBAUWt7iuhKyYx5ynnqq89Eoy9v9GfEvSer8UeZZ7wKoOajoaHRtz7XXFhsKinqJSMjo+0P08GKp2GMolQ/+Ihq4y6JXTv5QfZm1DdzWHpdtC0Gx7+d46INroDE3N16aydUG48J1516ZMxfjw6DutNiiqG8lLU7eDUYezPCUBhKK1vjOhlP7INo7XjAG4Sd8YyndQYLCI04svtq0NM5UTy4q8QlJ0qBat6KL+vv1DO5uCSvbSonGWyivO1JYyH7LvYX06XAoXt66CVN8AkbK3uIUoZ7+2HN79M1N7F3/52D7xYt8zPSUEhRpTr85suRHdWEI4JpD5U/Lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NoEfkoh1fvaR5bJ2rLRBKfhRGfzT75fXqJgrzCMRsyU=;
- b=aSALuL89PJkc2+lUw+vC1esRrdZOrIidlo/r1joixVH4R52qbxhWoK8A3dAm2YHDKrjlyEaMzMv+s3PW2q3F8I+zmZ6CXhgUQyi/wurdzAGxEP+MEKyNjgL3LQhHScoTI2FewBKcS7A9W/jYOFNzYm4sBSNVusPwcNFuMXt8nRUdCueipLVAOjw9tGSSUDFVE2ELdt+hdlmZOpxuVKs8mLn3EyrpybJowp2ky0JofADmrO9LyHc/wQg81mw6dqFDtqzA4TTYOQQtEfsc8jkYnSjCGjzzxKNJx+qGJFHZfwzgIxhIWibmJqM8KYReCiWyO2hfb8mco1z3EWGhon38gw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by PH7PR12MB6977.namprd12.prod.outlook.com (2603:10b6:510:1b7::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Fri, 13 Jun
- 2025 13:41:19 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Fri, 13 Jun 2025
- 13:41:19 +0000
-Date: Fri, 13 Jun 2025 10:41:17 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, will@kernel.org, robin.murphy@arm.com,
-	joro@8bytes.org, ddutile@redhat.com, yi.l.liu@intel.com,
-	peterz@infradead.org, jsnitsel@redhat.com, praan@google.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	baolu.lu@linux.intel.com
-Subject: Re: [PATCH v1 05/12] iommu: Introduce get_viommu_size and
- viommu_init ops
-Message-ID: <20250613134117.GD1174925@nvidia.com>
-References: <cover.1749488870.git.nicolinc@nvidia.com>
- <bc2c57254c40028e4dc74f32ac350826a26b3d8c.1749488870.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc2c57254c40028e4dc74f32ac350826a26b3d8c.1749488870.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: YT4PR01CA0440.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10d::16) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZfCuYgeM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749822087;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Rg4eLLEgx6FDFHzHNf6mLR85Vz7bTkf4DxmFxHRoP8=;
+	b=ZfCuYgeMNZ5rlCEGHfvR5+089zXLLFvmoUujnRc+4SaUyJr9OFZu2RZV7aRDYy6XK5j8rv
+	MamZT8XLNbScf8PML+w1e/NIpg0oDH5QGJdQ/M5rFcV3ZY+AhoL7nyLUmZ1S5nsol2rqOQ
+	o+iQ6NmP8Geuau+fMBJGXH+XFEeCsdc=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-692-PQMQZBN9MWOzi7p0GDseqg-1; Fri, 13 Jun 2025 09:41:26 -0400
+X-MC-Unique: PQMQZBN9MWOzi7p0GDseqg-1
+X-Mimecast-MFC-AGG-ID: PQMQZBN9MWOzi7p0GDseqg_1749822085
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d2107d6b30so328121085a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:41:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749822085; x=1750426885;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1Rg4eLLEgx6FDFHzHNf6mLR85Vz7bTkf4DxmFxHRoP8=;
+        b=nhuVQPielATYPvVAcNTmV5lN3hzumqd2aTinZemJLvLgZSu/rAJdKwGvlsn/jBxQZN
+         3RmxuhkaeBraK+kHOvwaO7ymkbb0wFQKci06XSJKjctOnyzZCcCWkk5WddKIwbTlma60
+         V1ia91Vn/RQJIO7rGzS2TXV7MO+OY1CJmXqSldZrNfSAP342ZZvKQbRQC93lSm5+Sv1A
+         mgHtIOEjwbtRBljRF2RKJKUcSVDI3kirIUCUL4YErKF/wEYc66PRnCbqetdyRAzuCjgY
+         wtdU1yiJNUw5gz17DYlENHVOtI4ZQub//wuKI4CTApu8nDjK07l9T7rdSzAHXgb/vm/t
+         7ksg==
+X-Gm-Message-State: AOJu0Yy/hMdeiBl/EuQCQBwdgix45wIO+PG07PJKybSEUkVOlrdYuTXv
+	BMQAe+2LGJ0U5SNeKw6FHY2yRL/RPl6Qu1WlrThxZFWdxdH/PaLZdq3h74bThJrHX9otfzL9Zea
+	dQA/+99f2zQ2FLv4twRyUAPv4Ll9szNeHL39Hl6aZSvfFNfnl+56xTEnIGCzUm6uMTvd7V+yFVb
+	y9xN5Y73NE9PeUlhE0gsgmca8fVyuUhaKBSswAWrzoVkD6/gw=
+X-Gm-Gg: ASbGncvJh0ii+aSgSpSuwp2ZwCdlsq1NnLkCBUdnBxiQ8lAYmGLSrBWwhEC9IjqreFu
+	3d5cy8dl4LHJbGVYEqF8UNFvDcGa18//j6P6HVkkpbTA/zNVEwIUMmnCk9RZ45MDxun6bOY63Rh
+	8Ir7YXiauok1vqATYJD7r5RaK1gR3TDVAZdWgm+om1myuIYuOAuRSX/1QAWOtohdBkztozYC1zm
+	wNOI8PvYPih4XclrijMFxkuPCaq5aZ5KU5dhwVbHlPW25TXiahuQSmNSm2hIy+BQdXnVR2TrNYH
+	PlKJp+xyPnc=
+X-Received: by 2002:a05:620a:1721:b0:7d3:aad4:6f87 with SMTP id af79cd13be357-7d3bc37ba17mr568289585a.7.1749822084980;
+        Fri, 13 Jun 2025 06:41:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFqZxKV2mT6BD/bi39sPGRhzywu281UAzYUirAEIW40JfRfajmXwptkVPgbiPNtRrb6I7XH6g==
+X-Received: by 2002:a05:620a:1721:b0:7d3:aad4:6f87 with SMTP id af79cd13be357-7d3bc37ba17mr568285785a.7.1749822084512;
+        Fri, 13 Jun 2025 06:41:24 -0700 (PDT)
+Received: from x1.com ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 06:41:23 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kvm@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>,
+	peterx@redhat.com
+Subject: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED mappings
+Date: Fri, 13 Jun 2025 09:41:11 -0400
+Message-ID: <20250613134111.469884-6-peterx@redhat.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250613134111.469884-1-peterx@redhat.com>
+References: <20250613134111.469884-1-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|PH7PR12MB6977:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0fc8226b-2c5c-4508-d036-08ddaa7ff9e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5CIHuoklU9Ago2BhmYSvKno/Vqag1zJSf8BWhFDHNVa/rycFY8y1OqRxAFMi?=
- =?us-ascii?Q?PJ1TMJO+xAr6j/FWzRK302E3ZtepXOXzySmzVYectptcW6pLhoBn+x4YvUii?=
- =?us-ascii?Q?whaN/ZtXPppCeKbBMmJnSdPfdH4VgmY5+5rmZYe7SeQlrd0L4iI3/vUiO3A1?=
- =?us-ascii?Q?45n5KEGp8RHXlqsZ02VWP5BaMH/ZShs/nldM1j0JyEVBa4YndyLwehMAZVDN?=
- =?us-ascii?Q?9g5cEP4AW2GD6n3USeZHRHWinEWyQMTbbH7DBiOt81f1KH8epPFh+wfbp3ab?=
- =?us-ascii?Q?X/2DnbWInDGTMXNmYOP3fUuiTxdlAvP9U8YIDRFAueaczCZI4tjyUrbPWiaV?=
- =?us-ascii?Q?G7wyFnIbCZrj/dc6szGzolXivO5AhPVXMKVmiZ7Fzq3l+DpdO0MrgK8t6qOt?=
- =?us-ascii?Q?tYOgfvUxNYTNVVTY+cpNpBdL9Cxk34BxuNr/jtEdKlSu/iobcDTRAEZpl+Uk?=
- =?us-ascii?Q?McAnNoD+lb8inimNosxsaepYrQkm84iFZ1baM5wBJDmUT4IZ+9YcCnl3WQ1f?=
- =?us-ascii?Q?5iIu6n9VX4VExrg1RGE5xnMR/wUFuYyNIywWBFzKVJdXQT9eytHrkYyFdGOd?=
- =?us-ascii?Q?oi9nCqmk34MEK7tQkvzGVXgQDIwzNAdl9Vm6mvkY7h6TZUOgtniHH4KWzr4l?=
- =?us-ascii?Q?Y2XYyKrMmaawK2ffSbEuSwhaOw5wzy75Ku43IBiIrpRBeClYN/VComn5vs9D?=
- =?us-ascii?Q?xMnd/oC0ROJmXxZQOPVwQWlIzAQgLGKZc0fbGdHgZ9FwrErxg38ToaNV6Yky?=
- =?us-ascii?Q?J7/C/T/+Un/SjrpwBl7iEoi9ImkeZ/jdHrKBvE35/v/yZQvw0DQtXl5syzfi?=
- =?us-ascii?Q?4O2laacXe1pEnuNf3Mx7nP84BCTFs++HQ9Zdcz9FMvocOXCUyOPXpWFPbLwV?=
- =?us-ascii?Q?GhYvewSwbFQqvcI+bjcovDTUOlMpufGOgCppanfdf/uZ0NjV8k19i35P7qqR?=
- =?us-ascii?Q?sCJc/McPl+w8IxP5qCgCoVMBGXGE01hBqo6PaLElSBbDWZk03ubsr3yAiOVP?=
- =?us-ascii?Q?CbqW+1tM3dSYz+DTeBsEuOp6SxHxeAwRLpFKRCbzQj94AnyASTC1te3Ww91N?=
- =?us-ascii?Q?rNPK3k+m+7lk3ur6sUqVaG6iEVHLbjRfAqJ10TOQ93Zl1n7+zYYX4905Y62J?=
- =?us-ascii?Q?j16aDUcNwzp1/P6miQYta0aE9nld9Nx3DoUZ/SteiAaXqNHQOOBc/Z1i0K62?=
- =?us-ascii?Q?bukShtTBhc1s/E6e9LqDesyzlQTouaMwae949ahBzvIIThcHVesmXn+nSEuz?=
- =?us-ascii?Q?P2QJIbkM1qdXogP7EmGAmik5GnJXfU26iJtc5O+orm/1vqrpvC/mkqCbysUc?=
- =?us-ascii?Q?gPVCABaqRGsIpbV7XObZ3bVdlC3sKRgoccKHEhEcRnbzQ+DI0CPj90jtxa1O?=
- =?us-ascii?Q?6RX7znCwAa8D1/B6rN2XwOI6j+3Rluw+LHWyjrWsfs3lb87Bzg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?OjQVFcVx2Mhwb98xlBmqhqbP8+diFfPLmo2T5lOWRVWrsV/zKuk9kELHiSeQ?=
- =?us-ascii?Q?uVtL7aE1S5LJGJ9/A5H5T34bHsFV4ffnjtkgfT0p3WjDwve40awQUxlyFedM?=
- =?us-ascii?Q?URDx0dQly9GzWXZYNItmKcqMQ+B5zdDeRaCmXbLoYCXyNM2IubPf3YJM/CYi?=
- =?us-ascii?Q?CwGmp7kooik2v6RHGUFnD5fXQTA9VilwaoF0GuI/iXjh7KZqJJURXNsgJ/rp?=
- =?us-ascii?Q?HWFLsjgkwb5cyTp68JhXvkcTOkbxITXnYYRLFnnozdASUfI/VMPvyDn0T/YC?=
- =?us-ascii?Q?incUAueXM+n4T79JZw0uWHjqTxLHiO6VGAppOuH7uCkrX3NZXzbhaBr8TeWM?=
- =?us-ascii?Q?/M0WTPLXJvN8rdVGDnqgu9YXtxk3ZbOzKwh8+uGwi186QYtFBPl8YgcyjPw1?=
- =?us-ascii?Q?DbG9sSePH8gSnFrgGy4Lec5aqUW5EmuPz050oVonulI0Vt6acMMgTe6tLeaD?=
- =?us-ascii?Q?fPCOU4x+Gz6lZZw6s6lAxDzWi1Xem7Y6vnHU3PhblBaVlqF3evZsI8+VDZ5t?=
- =?us-ascii?Q?dkR8o1TtVM54/x5ccOZHtetTPSJnB1vU8ZOkdV9P9G1bbm/zuZZ1KuaxTh6B?=
- =?us-ascii?Q?utBQMdR5WY6G4fwlz0FoJeOPJYRSw/5WYk+Ent7Bapeumly0G3hdb0WO8Sw9?=
- =?us-ascii?Q?MPdFSXQ8ZkkFqPsOVOgpHXfiN787j5qHyvG8UoIWsPKp5NH4Fpt5JYfhGWo+?=
- =?us-ascii?Q?L7v/RJStrIYbVzA2Ky9A501mxtNDoJkJjxyJjYpfBpSmKq+9EC7LwfOrvOXO?=
- =?us-ascii?Q?cvrxlhfOHFy+o4WELb69jtlVcbi1LV8zw7Bc2UTcIYjOfRbzvXIrWmmZTiv8?=
- =?us-ascii?Q?oWurtAQHq7rOusvjSPfqj6a5qUr4QFPqyoIRIP80zI1fNHqlmcj07ow1+l/R?=
- =?us-ascii?Q?Ae/PsywMm9K9X4bPdORP8+HhWdTO9i2Er5tAmHwFINgjCEcNdLMMO43Iv8ob?=
- =?us-ascii?Q?R94G0Cj3rv81ftT8x5pffvlTwOJ1IkczsKfILCyU+yvNg5x4Oj63VdecPSUu?=
- =?us-ascii?Q?a10YALMliYQdXt3TJTIntejvmuDpnZ1dxdjiygZPubhtSd1ZN6dBTCD8BIdB?=
- =?us-ascii?Q?4lCCVQTM++QvBk0ub9hUUlANpN2uORS+ZeJ1KzFDA9DTqgbqGzX5CBEb0hZC?=
- =?us-ascii?Q?ZKTHIK6zsSMBq0ACkouY3I1e6TF+zZQkateR9IQUC7VVH1t6n3LHWmyGrUFw?=
- =?us-ascii?Q?0Nz/5H6xzf8kxPXYBYR0+01XKn504Zz7xt0PhwF+SDmQhGBO6uJzAJoKxWf3?=
- =?us-ascii?Q?qK+a8Lkj6c9yWXcoSjKJLvLl7F6xHSX4gYjgM1gPncmw0t8hb9YoXfmAGM29?=
- =?us-ascii?Q?AOLw9Wz3tgjqRw8ljUb6qhqdmE6gQ50LGZuOQUuNdi/m5kdQ6VfTsrSh6qXf?=
- =?us-ascii?Q?XsaimnqwB7CnPPXlcCAE5xQALmHAVG8ojVUPYqauGzj93g683a2KjJYqoBVV?=
- =?us-ascii?Q?H9UwslmrP+/k9KdcupPsWzl+macou4RcfknikJ5UkKtFTCBCENcqvjFUElNE?=
- =?us-ascii?Q?xPdhQApAhI3vd97E/sHo7X602TWY0a8RUgIUHpkbdNV7g8Lgid9g/jb5a1nz?=
- =?us-ascii?Q?nReTaVN8S6mJp2hdsYFG2ntzF/eJ3j4SERIRSNVn?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fc8226b-2c5c-4508-d036-08ddaa7ff9e1
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 13:41:19.0094
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N7f9tnTAO3UGZIDALwnE+6X1DsvmTCQ30DCdf7LozQFNY7ImCCt4vsgQj4Cg0vKn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6977
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 09, 2025 at 10:13:28AM -0700, Nicolin Chen wrote:
-> @@ -654,6 +665,10 @@ struct iommu_ops {
->  
->  	int (*def_domain_type)(struct device *dev);
->  
-> +	int (*get_viommu_size)(enum iommu_viommu_type viommu_type,
-> +			       struct device *dev, size_t *viommu_size);
+This patch enables best-effort mmap() for vfio-pci bars even without
+MAP_FIXED, so as to utilize huge pfnmaps as much as possible.  It should
+also avoid userspace changes (switching to MAP_FIXED with pre-aligned VA
+addresses) to start enabling huge pfnmaps on VFIO bars.
 
-I'd return the size in a size_t instead of using an output
-pointer. Make 0 mean not supported..
+Here the trick is making sure the MMIO PFNs will be aligned with the VAs
+allocated from mmap() when !MAP_FIXED, so that whatever returned from
+mmap(!MAP_FIXED) of vfio-pci MMIO regions will be automatically suitable
+for huge pfnmaps as much as possible.
 
-Jason
+To achieve that, a custom vfio_device's get_unmapped_area() for vfio-pci
+devices is needed.
+
+Note that MMIO physical addresses should normally be guaranteed to be
+always bar-size aligned, hence the bar offset can logically be directly
+used to do the calculation.  However to make it strict and clear (rather
+than relying on spec details), we still try to fetch the bar's physical
+addresses from pci_dev.resource[].
+
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ drivers/vfio/pci/vfio_pci.c      |  3 ++
+ drivers/vfio/pci/vfio_pci_core.c | 65 ++++++++++++++++++++++++++++++++
+ include/linux/vfio_pci_core.h    |  6 +++
+ 3 files changed, 74 insertions(+)
+
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 5ba39f7623bb..d9ae6cdbea28 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -144,6 +144,9 @@ static const struct vfio_device_ops vfio_pci_ops = {
+ 	.detach_ioas	= vfio_iommufd_physical_detach_ioas,
+ 	.pasid_attach_ioas	= vfio_iommufd_physical_pasid_attach_ioas,
+ 	.pasid_detach_ioas	= vfio_iommufd_physical_pasid_detach_ioas,
++#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
++	.get_unmapped_area	= vfio_pci_core_get_unmapped_area,
++#endif
+ };
+ 
+ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index 6328c3a05bcd..835bc168f8b7 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -1641,6 +1641,71 @@ static unsigned long vma_to_pfn(struct vm_area_struct *vma)
+ 	return (pci_resource_start(vdev->pdev, index) >> PAGE_SHIFT) + pgoff;
+ }
+ 
++#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
++/*
++ * Hint function to provide mmap() virtual address candidate so as to be
++ * able to map huge pfnmaps as much as possible.  It is done by aligning
++ * the VA to the PFN to be mapped in the specific bar.
++ *
++ * Note that this function does the minimum check on mmap() parameters to
++ * make the PFN calculation valid only. The majority of mmap() sanity check
++ * will be done later in mmap().
++ */
++unsigned long vfio_pci_core_get_unmapped_area(struct vfio_device *device,
++					      struct file *file,
++					      unsigned long addr,
++					      unsigned long len,
++					      unsigned long pgoff,
++					      unsigned long flags)
++{
++	struct vfio_pci_core_device *vdev =
++		container_of(device, struct vfio_pci_core_device, vdev);
++	struct pci_dev *pdev = vdev->pdev;
++	unsigned long ret, phys_len, req_start, phys_addr;
++	unsigned int index;
++
++	index = pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
++
++	/* Currently, only bars 0-5 supports huge pfnmap */
++	if (index >= VFIO_PCI_ROM_REGION_INDEX)
++		goto fallback;
++
++	/* Bar offset */
++	req_start = (pgoff << PAGE_SHIFT) & ((1UL << VFIO_PCI_OFFSET_SHIFT) - 1);
++	phys_len = PAGE_ALIGN(pci_resource_len(pdev, index));
++
++	/*
++	 * Make sure we at least can get a valid physical address to do the
++	 * math.  If this happens, it will probably fail mmap() later..
++	 */
++	if (req_start >= phys_len)
++		goto fallback;
++
++	phys_len = MIN(phys_len, len);
++	/* Calculate the start of physical address to be mapped */
++	phys_addr = pci_resource_start(pdev, index) + req_start;
++
++	/* Choose the alignment */
++	if (IS_ENABLED(CONFIG_ARCH_SUPPORTS_PUD_PFNMAP) && phys_len >= PUD_SIZE) {
++		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
++						   flags, PUD_SIZE, 0);
++		if (ret)
++			return ret;
++	}
++
++	if (phys_len >= PMD_SIZE) {
++		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
++						   flags, PMD_SIZE, 0);
++		if (ret)
++			return ret;
++	}
++
++fallback:
++	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
++}
++EXPORT_SYMBOL_GPL(vfio_pci_core_get_unmapped_area);
++#endif
++
+ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
+ 					   unsigned int order)
+ {
+diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+index fbb472dd99b3..e59699e01901 100644
+--- a/include/linux/vfio_pci_core.h
++++ b/include/linux/vfio_pci_core.h
+@@ -119,6 +119,12 @@ ssize_t vfio_pci_core_read(struct vfio_device *core_vdev, char __user *buf,
+ 		size_t count, loff_t *ppos);
+ ssize_t vfio_pci_core_write(struct vfio_device *core_vdev, const char __user *buf,
+ 		size_t count, loff_t *ppos);
++unsigned long vfio_pci_core_get_unmapped_area(struct vfio_device *device,
++					      struct file *file,
++					      unsigned long addr,
++					      unsigned long len,
++					      unsigned long pgoff,
++					      unsigned long flags);
+ int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma);
+ void vfio_pci_core_request(struct vfio_device *core_vdev, unsigned int count);
+ int vfio_pci_core_match(struct vfio_device *core_vdev, char *buf);
+-- 
+2.49.0
+
