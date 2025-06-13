@@ -1,43 +1,72 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253FD2D2392;
-	Fri, 13 Jun 2025 11:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814519; cv=pass; b=WZ88mDkQk9Neoi8B3QDCd4fF7+gjuTVmrb2sjrmebPSStu+n6cuvBYVxD/l3BI2FNnYmN1+Ujma/ztAuzOOfLEs8zj3Qe2HH3qFmKe2CbAM9xHYBo6hAI64/cIVaPkYVE2Z4eUVedfeststBnu9tPXQtN5a38+wUV7wRqHzq5ws=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814519; c=relaxed/simple;
-	bh=FwF5gcy/sg4T3XYi70dfrvpopDl97RJ7KYLH2cJ4P4M=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aqYetkR/SzgBDTSF/32fbjbEtGkPG5MAdOgP9OqS1DC+nFfwGpvFRiSPaM0T5iG6XS/7fMYt2WzGSBgnAfgDKmya74G+JnezJpDvvDgFHAEuqH8BIkNtCmlXPalRpnqRipHCv3EGfX7bwQptMROH6GDsVwcs3g6zQIsKEpKIeVY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=U19sVfz6; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7FF279DA5
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749814615; cv=none; b=o1pNFXcCMdmJCSKfR+oO2t73RjWZLzdYsGtn4vsGrt582ed0Rcbe+1HZchuTousXBoprKZASO+6cab8d2wvD34kLFPpZiGnNIiV8UI0MXZvSivi0nSA9ygm2mlcMOWaSJq2KMQt3jqfb1synbqMR2DwKhjnSwjBZ6/hs7BqIuuA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749814615; c=relaxed/simple;
+	bh=oGlpjZ5opoJtpQ1qNyf7S0PnCoXmXblVAlhgGEL2LpE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o8zlVBu9oxvB2xEwGmvkOGblsey3AJOH1E3qPq8O/0EVWjNZu7ayW0xf8nAeXAQCInepoZDfCl/2lF/cJCGJIZhyCloGCgKkcyvMR8jr3dXumZmk7zT7SYW+1CxjNZ3Fa3qez8T4o2qZ0F9Clyne3U8N1dT3gy7tNaNg3zBUr3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dw8YZCjW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="U19sVfz6"
-ARC-Seal: i=1; a=rsa-sha256; t=1749814474; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=lETLoGB93kdeds4S0KtNgOM7REQiwh+NZ6/JULXJtNWu0wDh7njH+EAT21aIV0vuQZBgZL6HhZL4qjblaCJJms7usXnNucSq6ioJtIRNjT9eEctgPyUG1Wd7dbpxaZasVZszsHIlNh4DLEm0BzZ37fHfFGceOU/LKs8iM0ABrTw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749814474; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=63O4HhVlmCIQH37e2yHnmXGKXhP1A6hZ3WnVeHzeLEY=; 
-	b=kMZGZWpT0GGC+aDITWLFTMZkO6X0afeAstC8/ug09xlUzVnHv5bfYJHm8LqcdKp2SWXr5pSNumIC/Zza/QdMmDVqhj7haDn1ojsa8ucnNtgfYU1vN1oMTjRwTuqgwHsW5lDBu72GxB4jj8xfbEIqaAH0oL6WGks2uBj+btQmkqI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749814474;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=63O4HhVlmCIQH37e2yHnmXGKXhP1A6hZ3WnVeHzeLEY=;
-	b=U19sVfz6Zbmlpv0eumTx1fIYHMVk7lX/xpIlvbmK7WXwJQbF8yOpD64+dbqp7Ib/
-	Gt3+S9ia5k/c/e30enP+saH+RNyJHoB0/39CvJEu5Pm0szVrVZVSQ1VdPW+aD+fOe12
-	/6zI5fopVgzD3SIYhrF1pyvafdR+9Vb6r/7P35Io=
-Received: by mx.zohomail.com with SMTPS id 174981447219438.66651306626147;
-	Fri, 13 Jun 2025 04:34:32 -0700 (PDT)
-Message-ID: <73496f2a-ae0d-42c8-8013-9e157177c477@collabora.com>
-Date: Fri, 13 Jun 2025 16:34:20 +0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dw8YZCjW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749814612;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kiZEx38HoIp/sJF/T9xSvKuzGXFeABVVsomdogZAZjY=;
+	b=Dw8YZCjWVORHwCWhTM8YcMYMWuNovCm2bHJW41B0egyMn4nEOec63MZpz6p7KCqK/qT4MI
+	LK8zr02amXd2uDGLUMUrDLEm8GJMbw82U851OZb56kS16qCGpWN4YHaYuTXlgiekWC0zFO
+	RvUhGqvGFIFfPzRdZrTB6Q38Jch2H1E=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-394-GCQv5isgOg2O6ikkNcAA6w-1; Fri, 13 Jun 2025 07:36:50 -0400
+X-MC-Unique: GCQv5isgOg2O6ikkNcAA6w-1
+X-Mimecast-MFC-AGG-ID: GCQv5isgOg2O6ikkNcAA6w_1749814609
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45311704d22so13800515e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 04:36:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749814609; x=1750419409;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kiZEx38HoIp/sJF/T9xSvKuzGXFeABVVsomdogZAZjY=;
+        b=fwPsYGsfgQiE6JdUDi+nk0iztKZYP6+RxA/0UOQogxYZz5zDbTLBInvQwkZ5+lD6KU
+         hcXt/ZdmzQAlnb6imZpclH3yi74dsHP8vghXLRHEDq0x/l9gZIeQPTgrKmieb3vHH8g4
+         BhF/oY1AZvuksjETQUShOiUzuO1qdr7a4UXrl0TgybDQFTzbcajYrO/RsLYZvnvuMpU8
+         yyjp0nSZLJ8KZE4I/oI/Gp8OGUjH0r2/KW0gooOy5b2CKT7jcNFidBR/558YHiX92NL2
+         7VPw3YZfv+pxONEO+iZBClsaE1CA457kwdrTL9KRux68Y9pN6Y11160ArrcoN/PpDH5+
+         41cg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+70YP1coSNBijWH89LOS1CxI9MNXyl/SeC8p7cczrds0hUBdddPF+cdLRhcAV1JxbXQGVJEo4vhdmxMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ4da+5VnwdtgFJBBdNv6gTP2THFg2/pTIx/6WsPcSgVLtUHX6
+	RnaJQeeI+8ls9HC6ZURbb5hU+CjcqbhIlKzimWH6FHPvP+AwJZbarPnYHJj870N3ImH6dzK+lHg
+	6v9WAkr2xsYi9oqBNQsPxhKChYQrBaojUtAe2olWP/8fI7uLz31SQylAqOobwk8PYBQ==
+X-Gm-Gg: ASbGnctbIFI57BLc47IJ4083uWdyF31aquEVxrTFtx24M5VONnH2v0smscFJCylPDtQ
+	wPtsxpW6Vwxz8kBlINznHhXSYsNM5jslycPm8YFLxVJELqEx9vQTK/pXwscNUmNKh5qArymULAN
+	yaMmP06saQdUmx7/odm0lgyuJd1y7ZAriHkysZIFGmXY+Eyd2DWnT2McupctYQyq1rNcqVXHl9g
+	wPyM9AOIOR7TeBqOy5bm5NqhJddSXw99DqP0mKZ8/DHiwvmOGH152TO7yrJbWis0txDSMTSDo96
+	SCkMpPEA9qlxQLYbFuMKM58i
+X-Received: by 2002:a05:600c:4451:b0:43d:77c5:9c1a with SMTP id 5b1f17b1804b1-45334a72185mr27367815e9.4.1749814609486;
+        Fri, 13 Jun 2025 04:36:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0/pWAKXXkfTKjY6GSDkjAZxarVPySFWaSgjTKT++lKeu39Gcd8U/THccgcBg1C7Om+J9v1g==
+X-Received: by 2002:a05:600c:4451:b0:43d:77c5:9c1a with SMTP id 5b1f17b1804b1-45334a72185mr27367295e9.4.1749814609004;
+        Fri, 13 Jun 2025 04:36:49 -0700 (PDT)
+Received: from [192.168.10.48] ([151.49.64.79])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532e169d90sm50809005e9.32.2025.06.13.04.36.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 04:36:48 -0700 (PDT)
+Message-ID: <3a7c0856-6e7b-4d3d-b966-6f17f1aca42e@redhat.com>
+Date: Fri, 13 Jun 2025 13:36:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,288 +74,224 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@collabora.com, kernel@collabora.com,
- sebastian.reichel@collabora.com, Jeff Johnson
- <jeff.johnson@oss.qualcomm.com>, Baochen Qiang <quic_bqiang@quicinc.com>,
- Sumit Garg <sumit.garg@kernel.org>, mhi@lists.linux.dev,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
- ath12k@lists.infradead.org, Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
- Jeff Johnson <jjohnson@kernel.org>,
- Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
- Youssef Samir <quic_yabdulra@quicinc.com>,
- Matthew Leung <quic_mattleun@quicinc.com>,
- Carl Vanderlip <quic_carlv@quicinc.com>,
- "Dr. David Alan Gilbert" <linux@treblig.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Troy Hanson <quic_thanson@quicinc.com>, Alex Elder <elder@kernel.org>,
- Yan Zhen <yanzhen@vivo.com>, Kunwu Chan <chentao@kylinos.cn>
-Subject: Re: [PATCH v6] bus: mhi: host: don't free bhie tables during
- suspend/hibernation
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-References: <20250516184952.878726-1-usama.anjum@collabora.com>
- <819f15f9-1b16-4b96-8273-3f95c1e071bb@collabora.com>
+Subject: Re: [RFC PATCH v2 6/5] KVM: TDX: Explicitly do WBINVD upon reboot
+ notifier
+To: Kai Huang <kai.huang@intel.com>, dave.hansen@intel.com, bp@alien8.de,
+ tglx@linutronix.de, peterz@infradead.org, mingo@redhat.com
+Cc: kirill.shutemov@linux.intel.com, hpa@zytor.com, x86@kernel.org,
+ linux-kernel@vger.kernel.org, seanjc@google.com, rick.p.edgecombe@intel.com,
+ isaku.yamahata@intel.com, reinette.chatre@intel.com,
+ dan.j.williams@intel.com, thomas.lendacky@amd.com, ashish.kalra@amd.com,
+ nik.borisov@suse.com, sagis@google.com
+References: <cover.1746874095.git.kai.huang@intel.com>
+ <20250510112503.23497-1-kai.huang@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <819f15f9-1b16-4b96-8273-3f95c1e071bb@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20250510112503.23497-1-kai.huang@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
 
-Hi,
-
-Reminder
-
-On 5/28/25 10:25 AM, Muhammad Usama Anjum wrote:
-> Soft reminder
+On 5/10/25 13:25, Kai Huang wrote:
+> On TDX platforms, during kexec, the kernel needs to make sure there's no
+> dirty cachelines of TDX private memory before booting to the new kernel
+> to avoid silent memory corruption to the new kernel.
 > 
-> On 5/16/25 11:49 PM, Muhammad Usama Anjum wrote:
->> Fix dma_direct_alloc() failure at resume time during bhie_table
->> allocation because of memory pressure. There is a report where at
->> resume time, the memory from the dma doesn't get allocated and MHI
->> fails to re-initialize.
->>
->> To fix it, don't free the memory at power down during suspend /
->> hibernation. Instead, use the same allocated memory again after every
->> resume / hibernation. This patch has been tested with resume and
->> hibernation both.
->>
->> Optimize the rddm and fbc bhie allocations. The rddm is of constant
->> size for a given hardware. While the fbc_image size depends on the
->> firmware. If the firmware changes, we'll free and allocate new memory
->> for it. This patch is motivated from the ath12k [1] and ath11k [2]
->> patches. They don't free the memory and reuse the same memory if new
->> size is same. The firmware caching hasn't been implemented for the
->> drivers other than in the nouveau. (The changing of firmware isn't
->> tested/supported for wireless drivers. But let's follow the example
->> patches here.)
->>
->> [1] https://lore.kernel.org/all/20240419034034.2842-1-quic_bqiang@quicinc.com/
->> [2] https://lore.kernel.org/all/20220506141448.10340-1-quic_akolli@quicinc.com/
->>
->> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
->> Tested-on: WCN7850 hw2.0 WLAN.HMT.1.1.c5-00284-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
->>
->> Acked-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
->> Tested-by: Baochen Qiang <quic_bqiang@quicinc.com>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->> Changes since v1:
->> - Don't free bhie tables during suspend/hibernation only
->> - Handle fbc_image changed size correctly
->> - Remove fbc_image getting set to NULL in *free_bhie_table()
->>
->> Changes since v2:
->> - Remove the new mhi_partial_unprepare_after_power_down() and instead
->>   update mhi_power_down_keep_dev() to use
->>   mhi_power_down_unprepare_keep_dev() as suggested by Mani
->> - Update all users of this API such as ath12k (previously only ath11k
->>   was updated)
->> - Define prev_fw_sz in docs
->> - Do better alignment of comments
->>
->> Changes since v3:
->> - Fix state machine of ath12k by setting ATH12K_MHI_DEINIT with
->>   ATH12K_MHI_POWER_OFF_KEEP_DEV state (Thanks Sebastian for testing and
->>   finding the problem)
->> - Use static with mhi_power_down_unprepare_keep_dev()
->> - Remove crash log as it was showing that kworker wasn't able to
->>   allocate memory.
->>
->> Changes since v4:
->> - Update description
->> - Use __mhi_power_down_unprepare_keep_dev() in
->>   mhi_unprepare_after_power_down()
->>
->> Changes since v5:
->> - Update description to don't give an impression that all bhie
->>   allocations are being fixed. mhi_load_image_bhie() doesn't require
->>   this optimization.
->>
->> This patch doesn't have fixes tag as we are avoiding error in case of
->> memory pressure. We are just making this driver more robust by not
->> freeing the memory and using the same after resuming.
->> ---
->>  drivers/bus/mhi/host/boot.c           | 15 +++++++++++----
->>  drivers/bus/mhi/host/init.c           | 18 ++++++++++++------
->>  drivers/bus/mhi/host/internal.h       |  2 ++
->>  drivers/bus/mhi/host/pm.c             |  1 +
->>  drivers/net/wireless/ath/ath11k/mhi.c |  8 ++++----
->>  drivers/net/wireless/ath/ath12k/mhi.c | 14 ++++++++++----
->>  include/linux/mhi.h                   |  2 ++
->>  7 files changed, 42 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
->> index efa3b6dddf4d2..bc8459798bbee 100644
->> --- a/drivers/bus/mhi/host/boot.c
->> +++ b/drivers/bus/mhi/host/boot.c
->> @@ -584,10 +584,17 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
->>  	 * device transitioning into MHI READY state
->>  	 */
->>  	if (fw_load_type == MHI_FW_LOAD_FBC) {
->> -		ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
->> -		if (ret) {
->> -			release_firmware(firmware);
->> -			goto error_fw_load;
->> +		if (mhi_cntrl->fbc_image && fw_sz != mhi_cntrl->prev_fw_sz) {
->> +			mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
->> +			mhi_cntrl->fbc_image = NULL;
->> +		}
->> +		if (!mhi_cntrl->fbc_image) {
->> +			ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
->> +			if (ret) {
->> +				release_firmware(firmware);
->> +				goto error_fw_load;
->> +			}
->> +			mhi_cntrl->prev_fw_sz = fw_sz;
->>  		}
->>  
->>  		/* Load the firmware into BHIE vec table */
->> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
->> index 13e7a55f54ff4..8419ea8a5419b 100644
->> --- a/drivers/bus/mhi/host/init.c
->> +++ b/drivers/bus/mhi/host/init.c
->> @@ -1173,8 +1173,9 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
->>  		/*
->>  		 * Allocate RDDM table for debugging purpose if specified
->>  		 */
->> -		mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
->> -				     mhi_cntrl->rddm_size);
->> +		if (!mhi_cntrl->rddm_image)
->> +			mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
->> +					     mhi_cntrl->rddm_size);
->>  		if (mhi_cntrl->rddm_image) {
->>  			ret = mhi_rddm_prepare(mhi_cntrl,
->>  					       mhi_cntrl->rddm_image);
->> @@ -1200,6 +1201,14 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
->>  }
->>  EXPORT_SYMBOL_GPL(mhi_prepare_for_power_up);
->>  
->> +void __mhi_unprepare_keep_dev(struct mhi_controller *mhi_cntrl)
->> +{
->> +	mhi_cntrl->bhi = NULL;
->> +	mhi_cntrl->bhie = NULL;
->> +
->> +	mhi_deinit_dev_ctxt(mhi_cntrl);
->> +}
->> +
->>  void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
->>  {
->>  	if (mhi_cntrl->fbc_image) {
->> @@ -1212,10 +1221,7 @@ void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
->>  		mhi_cntrl->rddm_image = NULL;
->>  	}
->>  
->> -	mhi_cntrl->bhi = NULL;
->> -	mhi_cntrl->bhie = NULL;
->> -
->> -	mhi_deinit_dev_ctxt(mhi_cntrl);
->> +	__mhi_unprepare_keep_dev(mhi_cntrl);
->>  }
->>  EXPORT_SYMBOL_GPL(mhi_unprepare_after_power_down);
->>  
->> diff --git a/drivers/bus/mhi/host/internal.h b/drivers/bus/mhi/host/internal.h
->> index ce566f7d2e924..41b3fb835880b 100644
->> --- a/drivers/bus/mhi/host/internal.h
->> +++ b/drivers/bus/mhi/host/internal.h
->> @@ -427,4 +427,6 @@ void mhi_unmap_single_no_bb(struct mhi_controller *mhi_cntrl,
->>  void mhi_unmap_single_use_bb(struct mhi_controller *mhi_cntrl,
->>  			     struct mhi_buf_info *buf_info);
->>  
->> +void __mhi_unprepare_keep_dev(struct mhi_controller *mhi_cntrl);
->> +
->>  #endif /* _MHI_INT_H */
->> diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
->> index e6c3ff62bab1d..c2c09c308b9b7 100644
->> --- a/drivers/bus/mhi/host/pm.c
->> +++ b/drivers/bus/mhi/host/pm.c
->> @@ -1263,6 +1263,7 @@ void mhi_power_down_keep_dev(struct mhi_controller *mhi_cntrl,
->>  			       bool graceful)
->>  {
->>  	__mhi_power_down(mhi_cntrl, graceful, false);
->> +	__mhi_unprepare_keep_dev(mhi_cntrl);
->>  }
->>  EXPORT_SYMBOL_GPL(mhi_power_down_keep_dev);
->>  
->> diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
->> index acd76e9392d31..c5dc776b23643 100644
->> --- a/drivers/net/wireless/ath/ath11k/mhi.c
->> +++ b/drivers/net/wireless/ath/ath11k/mhi.c
->> @@ -460,12 +460,12 @@ void ath11k_mhi_stop(struct ath11k_pci *ab_pci, bool is_suspend)
->>  	 * workaround, otherwise ath11k_core_resume() will timeout
->>  	 * during resume.
->>  	 */
->> -	if (is_suspend)
->> +	if (is_suspend) {
->>  		mhi_power_down_keep_dev(ab_pci->mhi_ctrl, true);
->> -	else
->> +	} else {
->>  		mhi_power_down(ab_pci->mhi_ctrl, true);
->> -
->> -	mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
->> +		mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
->> +	}
->>  }
->>  
->>  int ath11k_mhi_suspend(struct ath11k_pci *ab_pci)
->> diff --git a/drivers/net/wireless/ath/ath12k/mhi.c b/drivers/net/wireless/ath/ath12k/mhi.c
->> index 08f44baf182a5..3af524ccf4a5a 100644
->> --- a/drivers/net/wireless/ath/ath12k/mhi.c
->> +++ b/drivers/net/wireless/ath/ath12k/mhi.c
->> @@ -601,6 +601,12 @@ static int ath12k_mhi_set_state(struct ath12k_pci *ab_pci,
->>  
->>  	ath12k_mhi_set_state_bit(ab_pci, mhi_state);
->>  
->> +	/* mhi_power_down_keep_dev() has been updated to DEINIT without
->> +	 * freeing bhie tables
->> +	 */
->> +	if (mhi_state == ATH12K_MHI_POWER_OFF_KEEP_DEV)
->> +		ath12k_mhi_set_state_bit(ab_pci, ATH12K_MHI_DEINIT);
->> +
->>  	return 0;
->>  
->>  out:
->> @@ -635,12 +641,12 @@ void ath12k_mhi_stop(struct ath12k_pci *ab_pci, bool is_suspend)
->>  	 * workaround, otherwise ath12k_core_resume() will timeout
->>  	 * during resume.
->>  	 */
->> -	if (is_suspend)
->> +	if (is_suspend) {
->>  		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_POWER_OFF_KEEP_DEV);
->> -	else
->> +	} else {
->>  		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_POWER_OFF);
->> -
->> -	ath12k_mhi_set_state(ab_pci, ATH12K_MHI_DEINIT);
->> +		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_DEINIT);
->> +	}
->>  }
->>  
->>  void ath12k_mhi_suspend(struct ath12k_pci *ab_pci)
->> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
->> index dd372b0123a6d..6fd218a877855 100644
->> --- a/include/linux/mhi.h
->> +++ b/include/linux/mhi.h
->> @@ -306,6 +306,7 @@ struct mhi_controller_config {
->>   *           if fw_image is NULL and fbc_download is true (optional)
->>   * @fw_sz: Firmware image data size for normal booting, used only if fw_image
->>   *         is NULL and fbc_download is true (optional)
->> + * @prev_fw_sz: Previous firmware image data size, when fbc_download is true
->>   * @edl_image: Firmware image name for emergency download mode (optional)
->>   * @rddm_size: RAM dump size that host should allocate for debugging purpose
->>   * @sbl_size: SBL image size downloaded through BHIe (optional)
->> @@ -382,6 +383,7 @@ struct mhi_controller {
->>  	const char *fw_image;
->>  	const u8 *fw_data;
->>  	size_t fw_sz;
->> +	size_t prev_fw_sz;
->>  	const char *edl_image;
->>  	size_t rddm_size;
->>  	size_t sbl_size;
+> During kexec, the kexec-ing CPU firstly invokes native_stop_other_cpus()
+> to stop all remote CPUs before booting to the new kernel.  The remote
+> CPUs will then execute stop_this_cpu() to stop themselves.
 > 
+> The kernel has a percpu boolean to indicate whether the cache of a CPU
+> may be in incoherent state.  In stop_this_cpu(), the kernel does WBINVD
+> if that percpu boolean is true.
 > 
+> TDX turns on that percpu boolean on a CPU when the kernel does SEAMCALL.
+> This makes sure the cahces will be flushed during kexec.
+> 
+> However, the native_stop_other_cpus() and stop_this_cpu() have a "race"
+> which is extremely rare to happen but if did could cause system to hang.
 
+s/if did//
 
--- 
-Regards,
-Usama
+> Specifically, the native_stop_other_cpus() firstly sends normal reboot
+> IPI to remote CPUs and wait one second for them to stop.  If that times
+> out, native_stop_other_cpus() then sends NMIs to remote CPUs to stop
+> them.
+> 
+> The aforementioned race happens when NMIs are sent.  Doing WBINVD in
+> stop_this_cpu() makes each CPU take longer time to stop and increases
+> the chance of the race to happen.
+> 
+> Register reboot notifier in KVM to explcitly flush caches upon reboot
+> for TDX.  This brings doing WBINVD at earlier stage and aovids the
+> WBINVD in stop_this_cpu(), eliminating the possibility of increasing the
+> chance of the aforementioned race.
+
+"This moves the WBINVD to an earlier stage than stop_this_cpus(), 
+avoiding a possibly lengthy operation at a time where it could cause 
+this race."
+
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+
+Waiting for v3. :)
+
+Paolo
+
+> Signed-off-by: Kai Huang <kai.huang@intel.com>
+> ---
+>   arch/x86/include/asm/tdx.h  |  3 +++
+>   arch/x86/kvm/vmx/tdx.c      | 45 +++++++++++++++++++++++++++++++++++++
+>   arch/x86/virt/vmx/tdx/tdx.c |  9 ++++++++
+>   3 files changed, 57 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+> index 91dc6e6bdd97..d0156bf0b966 100644
+> --- a/arch/x86/include/asm/tdx.h
+> +++ b/arch/x86/include/asm/tdx.h
+> @@ -221,6 +221,8 @@ u64 tdh_mem_page_remove(struct tdx_td *td, u64 gpa, u64 level, u64 *ext_err1, u6
+>   u64 tdh_phymem_cache_wb(bool resume);
+>   u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td);
+>   u64 tdh_phymem_page_wbinvd_hkid(u64 hkid, struct page *page);
+> +
+> +void tdx_cpu_flush_cache(void);
+>   #else
+>   static inline void tdx_init(void) { }
+>   static inline int tdx_cpu_enable(void) { return -ENODEV; }
+> @@ -228,6 +230,7 @@ static inline int tdx_enable(void)  { return -ENODEV; }
+>   static inline u32 tdx_get_nr_guest_keyids(void) { return 0; }
+>   static inline const char *tdx_dump_mce_info(struct mce *m) { return NULL; }
+>   static inline const struct tdx_sys_info *tdx_get_sysinfo(void) { return NULL; }
+> +static inline void tdx_cpu_flush_cache(void) { }
+>   #endif	/* CONFIG_INTEL_TDX_HOST */
+>   
+>   #endif /* !__ASSEMBLER__ */
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index b952bc673271..3b92b3999855 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -5,7 +5,9 @@
+>   #include <asm/fpu/xcr.h>
+>   #include <linux/misc_cgroup.h>
+>   #include <linux/mmu_context.h>
+> +#include <linux/reboot.h>
+>   #include <asm/tdx.h>
+> +#include <asm/processor.h>
+>   #include "capabilities.h"
+>   #include "mmu.h"
+>   #include "x86_ops.h"
+> @@ -3278,6 +3280,33 @@ static int tdx_offline_cpu(unsigned int cpu)
+>   	return -EBUSY;
+>   }
+>   
+> +static void smp_func_cpu_flush_cache(void *unused)
+> +{
+> +	tdx_cpu_flush_cache();
+> +}
+> +
+> +static int tdx_reboot_notify(struct notifier_block *nb, unsigned long code,
+> +			     void *unused)
+> +{
+> +	/*
+> +	 * Flush cache for all CPUs upon the reboot notifier.  This
+> +	 * avoids having to do WBINVD in stop_this_cpu() during kexec.
+> +	 *
+> +	 * Kexec calls native_stop_other_cpus() to stop remote CPUs
+> +	 * before booting to new kernel, but that code has a "race"
+> +	 * when the normal REBOOT IPI timesout and NMIs are sent to
+> +	 * remote CPUs to stop them.  Doing WBINVD in stop_this_cpu()
+> +	 * could potentially increase the posibility of the "race".
+> +	 */
+> +	if (code == SYS_RESTART)
+> +		on_each_cpu(smp_func_cpu_flush_cache, NULL, 1);
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block tdx_reboot_nb = {
+> +	.notifier_call = tdx_reboot_notify,
+> +};
+> +
+>   static void __do_tdx_cleanup(void)
+>   {
+>   	/*
+> @@ -3435,6 +3464,11 @@ void tdx_cleanup(void)
+>   {
+>   	if (enable_tdx) {
+>   		misc_cg_set_capacity(MISC_CG_RES_TDX, 0);
+> +		/*
+> +		 * Ignore the return value.  See the comment in
+> +		 * tdx_bringup().
+> +		 */
+> +		unregister_reboot_notifier(&tdx_reboot_nb);
+>   		__tdx_cleanup();
+>   		kvm_disable_virtualization();
+>   	}
+> @@ -3518,6 +3552,17 @@ int __init tdx_bringup(void)
+>   		enable_tdx = 0;
+>   	}
+>   
+> +	if (enable_tdx)
+> +		/*
+> +		 * Ignore the return value.  @tdx_reboot_nb is used to flush
+> +		 * cache for all CPUs upon rebooting to avoid having to do
+> +		 * WBINVD in kexec while the kexec-ing CPU stops all remote
+> +		 * CPUs.  Failure to register isn't fatal, because if KVM
+> +		 * doesn't flush cache explicitly upon rebooting the kexec
+> +		 * will do it anyway.
+> +		 */
+> +		register_reboot_notifier(&tdx_reboot_nb);
+> +
+>   	return r;
+>   
+>   success_disable_tdx:
+> diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+> index af8798bc62ed..7478230cdc33 100644
+> --- a/arch/x86/virt/vmx/tdx/tdx.c
+> +++ b/arch/x86/virt/vmx/tdx/tdx.c
+> @@ -1890,3 +1890,12 @@ u64 tdh_phymem_page_wbinvd_hkid(u64 hkid, struct page *page)
+>   	return seamcall(TDH_PHYMEM_PAGE_WBINVD, &args);
+>   }
+>   EXPORT_SYMBOL_GPL(tdh_phymem_page_wbinvd_hkid);
+> +
+> +void tdx_cpu_flush_cache(void)
+> +{
+> +	lockdep_assert_preemption_disabled();
+> +
+> +	wbinvd();
+> +	this_cpu_write(cache_state_incoherent, false);
+> +}
+> +EXPORT_SYMBOL_GPL(tdx_cpu_flush_cache);
+
