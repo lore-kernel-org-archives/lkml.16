@@ -1,140 +1,174 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAE22D5419
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BEF2D5C84
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749810064; cv=none; b=ca5tJGx3pXQLJINEpwOGk/ARc6RtUY+/MT8zzpLVPnShgqQxOOu8QixB7rzFoxZn1dMDe6tDmAojSjS5VZi3wwIf/skKuPBU32uxLS6clVXLW+CICWX4TQQ/h7jmOAAndSbdbSeoHJqie3pdnM2mrGbZtVKv/7LROvBmXUTgT5E=
+	t=1749810084; cv=none; b=b4xKIQAyHHoIo3iZfKu5rtA/ZBm6Y+qljLfqtEJRs/1Jorywfq4byn49W0ybGoiLdLUDygGXi3rkDKWcTZzMtLjwKCrVA9cK2Yy1+bbl+m5Q0vtCmeeJ3ka88pHH7oYxi65dmGtaZAfaSfhNmdN5X1zKwEn/RAlCfvp8CXD8Z7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749810064; c=relaxed/simple;
-	bh=3DshbZQ6H1gyKpLq1Hj5233kw6POE3tSn0w5kgOIK1Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=os/RFOaPGDnLSajMj7IQ7XDeb2/au93DBimgRiX7TYZowbcoGfuaCmfwFv9iQlhWw/S1Voob3q48xcN97aVdujeYRryu4/kGr4RTrqSOdm3yP8jt+ADa4XXp8Hu1A9+mpAoxXoW/1IIYTnpQgzj/LLuMconw5TIjiyWn/5qBgvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b=FYU8IcCJ; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1749810084; c=relaxed/simple;
+	bh=5vWvO7APvFqNr7TvWRF8J9X828f8LeO6UiHetDUQAPc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P0qVvJGfjJZ8++GW1y1TwkP8VDCDAW9jyGtKxp8rFG+m6+9Oj9eN3CaLuWVbFskH1KUxdHXkCG5dH0uUhRafhcyVwdB6fEAA44/2PksIjZmxpjbrVe7e/hpC0oXkXBJdqKqgXsh8m0WsJm+yxNhDoo9b2wtKotjtBPKx0LT6bnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XqSwfUjz; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="FYU8IcCJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1749810059; x=1750414859; i=efault@gmx.de;
-	bh=aMzHmRsGC65UDtPINQXSlVAeL42niPaWLmzMIRmICZ8=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:MIME-Version:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=FYU8IcCJHNleAOffLFZ5w5f1W6qdHMzkWiU3vt22+URuLdcthd9WshafCguvDv0x
-	 Ex/6VIqqjCbAnuE2PbBrHyTf/Oj2Gqa0Q0wSRXxt5El8ymm5fsb6NGo3M25wPNWrR
-	 m5zAd7UEINaZoU9k4DQFm8W6ENjsaCjdaZtpdTvgFxvkidTy+82rCek4obGyU1WHY
-	 LBypy7YBRg/d4LJdYRvgApe0GNb6jeQzimU7vpyBfJsFv83DFNkqb6f7pTQgHLqwJ
-	 2YObEHoZeR2YAdeJ6tGwaeZK0V0JgVEcn62Kcn1iAWeUTI92vtO15W6x8QuPe8Scg
-	 FYEw6CDPaUCNYWbofA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from homer.fritz.box ([185.146.50.50]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWics-1uJIOJ2SwC-00Vdtu; Fri, 13
- Jun 2025 12:20:59 +0200
-Message-ID: <b638eb73e6da733afd6eb758cc144bf119e1b600.camel@gmx.de>
-Subject: Re: [RFC][PATCH 2/5] sched: Optimize ttwu() / select_task_rq()
-From: Mike Galbraith <efault@gmx.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de,  vschneid@redhat.com, clm@meta.com,
- linux-kernel@vger.kernel.org
-Date: Fri, 13 Jun 2025 12:20:56 +0200
-In-Reply-To: <20250613094052.GF2278213@noisy.programming.kicks-ass.net>
-References: <20250520094538.086709102@infradead.org>
-	 <20250520101727.620602459@infradead.org>
-	 <334e48ebbf34d853777672449cb29d5f06c751b7.camel@gmx.de>
-	 <20250613094052.GF2278213@noisy.programming.kicks-ass.net>
-Autocrypt: addr=efault@gmx.de;
- keydata=mQGiBE/h0fkRBACJWa+2g5r12ej5DQZEpm0cgmzjpwc9mo6Jz7PFSkDQGeNG8wGwFzFPKQrLk1JRdqNSq37FgtFDDYlYOzVyO/6rKp0Iar2Oel4tbzlUewaYWUWTTAtJoTC0vf4p9Aybyo9wjor+XNvPehtdiPvCWdONKZuGJHKFpemjXXj7lb9ifwCg7PLKdz/VMBFlvbIEDsweR0olMykD/0uSutpvD3tcTItitX230Z849Wue3cA1wsOFD3N6uTg3GmDZDz7IZF+jJ0kKt9xL8AedZGMHPmYNWD3Hwh2gxLjendZlcakFfCizgjLZF3O7k/xIj7Hr7YqBSUj5Whkbrn06CqXSRE0oCsA/rBitUHGAPguJfgETbtDNqx8RYJA2A/9PnmyAoqH33hMYO+k8pafEgXUXwxWbhx2hlWEgwFovcBPLtukH6mMVKXS4iik9obfPEKLwW1mmz0eoHzbNE3tS1AaagHDhOqnSMGDOjogsUACZjCJEe1ET4JHZWFM7iszyolEhuHbnz2ajwLL9Ge8uJrLATreszJd57u+NhAyEW7QeTWlrZSBHYWxicmFpdGggPGVmYXVsdEBnbXguZGU+iGIEExECACIFAk/h0fkCGyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEMYmACnGfbb41A4AnjscsLm5ep+DSi7Bv8BmmoBGTCRnAJ9oXX0KtnBDttPkgUbaiDX56Z1+crkBDQRP4dH5EAQAtYCgoXJvq8VqoleWvqcNScHLrN4LkFxfGkDdqTyQe/79rDWr8su+8TH1ATZ/k+lC6W+vg7ygrdyOK7egA5u+T/GBA1VN+KqcqGqAEZqCLvjorKVQ6mgb5FfXouSGvtsblbRMireEEhJqIQPndq3DvZbKXHVkKrUBcco4MMGDVucABAsEAKXKCwGVEVuYcM/KdT2htDpziRH4JfUn3Ts2EC6F7rXIQ4NaIA6gAvL6HdD3q
-	y6yrWaxyqUg8CnZF/J5HR+IvRK+vu85xxwSLQsrVONH0Ita1jg2nhUW7yLZer8xrhxIuYCqrMgreo5BAA3+irHy37rmqiAFZcnDnCNDtJ4sz48tiEkEGBECAAkFAk/h0fkCGwwACgkQxiYAKcZ9tvgIMQCeIcgjSxwbGiGn2q/cv8IvHf1r/DIAnivw+bGITqTU7rhgfwe07dhBoIdz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XqSwfUjz"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad891bb0957so320283266b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 03:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749810081; x=1750414881; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W9SJxTP/LNWCbYYEI6OkUEGLgl2yUwj6T7YItwXovjw=;
+        b=XqSwfUjzumsdz8qLHdVfKRfy6wJKh2yOCdDl4WldplVQaEW6RDfv2CsBoYRRzhAQhl
+         eU8sFCHqi4W2A2+6gzBTOqwb9NMfQjy7pIoWIFy0lQ4LLKjM/H57f7D/Lm13pKUuQWhV
+         KvaUSEv0fJ+rqOOGw9I4WU0xouQcr54AhI7hSGDWNwSHyTd8UzeXu99E6UUdVwBULbl5
+         /tMY+qC4BLHQjEC5dDgvx+lL42Pmno9JrmcS2oy3eDo8Q7uNSojqjmN0BBEeusmOyYtf
+         mpyheqeNYHz+hONgV6RPpcIxiwgKL3nBZQ8tBicksyn7fvf6BC7w+tDk0n8Cjooq9Unm
+         oIOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749810081; x=1750414881;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W9SJxTP/LNWCbYYEI6OkUEGLgl2yUwj6T7YItwXovjw=;
+        b=Ym/gP7t49yT3PvYPmtRM+HBY4RqGqUPq4H3zpd4CYeU00viVALgUV05rwDEedwKkHC
+         G8zYTdw9EPZMOYanFVjeIJq0GwU+niN5YoeS+dE+tsvUIUqTr5fh2pdStQ0/SUHMShSq
+         9w57Gf3kMQDQHtY7hdy2KCJjt5wCy/u7nr4isac1vXTrpjAp0fMsk9865rxMovmEhtO2
+         MlyGPxZP6ZkJsmG7HhihK3VM+Hxjdha8I1hB/jPvhNF5TG+Rb4mJnPy4rRrArMzrUlxK
+         tUITPnQIgA7/ZTcQJpBSbtdXUvvMpgXq3szOx+RIKor7jnF+UuI0GzK9nZu9bO2yNvAi
+         YI1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUwYXOteZ4ep/ZtKEtwY6EtWBJYEaa247lVbad4iJ0GwlesTud49GVtwts85j6XDUxh85c6t8SUe2jyVGQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhWqwK0gRasdGvjdmgCyRNmKOZx/7KktHr8c5EJHnAud7SyyFP
+	3LrLF0j4CmTQkgYPiIZPMZLDUeoCjqNKoWu/PexQG1WXE+Y5aTS/qYXDWjD8s5vgjn4=
+X-Gm-Gg: ASbGnctWqZIVF1mBRWH0mFg7u1ChkMu55l9PVcdSMdG19+z0fNccNSmND9gIWgJF/O6
+	8L8t7nAmkHDSnQWbjq/B4aXMHAKUjduHfSnQ992m8UgOi5Z7phPgATuISvsBZZH64khlW5vl3/K
+	CdMQCg6Js6sDJXaMI624H/dg3muYV5iSHZ1dJYhCXckxXVNFrpRxBLmpdzYsbZ09hm/PauALuU7
+	H1bkKEvrpVNVzWgQxRgblR9a8S1Itb8BJefvuQ+m/gkDreDof1k+UScSmoMmYe9fD6f/aZT+dDh
+	Q8sn4Zj60tM5Cp3HKE0dNqqVlZbFALtM0U8jR5zE4f9lmXjiDHdeV9nJoPHXPCCzSceT4KGrI63
+	qAn2OVxpaF9ctLmY82twNHKYZspMgeq2p81MbdJwPjt4jfcNg2OgOqj7yddZ41dQBucy11PIp+k
+	0/fquQm1gcesW1O26I7DG7aFf9HBzA
+X-Google-Smtp-Source: AGHT+IGwhxBXtvKQCuLuDCf/nGJEfM4DLEKQAoHQVK7c7AK6Z8TsMeRo2v0GxkveBG+7/VTqYRmzIQ==
+X-Received: by 2002:a17:907:97c5:b0:ad8:87a1:4da8 with SMTP id a640c23a62f3a-adec55221aamr244337866b.14.1749810080571;
+        Fri, 13 Jun 2025 03:21:20 -0700 (PDT)
+Received: from ?IPV6:2a00:1028:838d:271e:8e3b:4aff:fe4c:a100? (dynamic-2a00-1028-838d-271e-8e3b-4aff-fe4c-a100.ipv6.o2.cz. [2a00:1028:838d:271e:8e3b:4aff:fe4c:a100])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adf1b7fb8d5sm29584666b.98.2025.06.13.03.21.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 03:21:20 -0700 (PDT)
+Message-ID: <f64cd2c7-905c-4554-b007-ad3fd528cec9@suse.com>
+Date: Fri, 13 Jun 2025 12:21:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:D7nHal4Ntrr316AmP5iSLywM5kUQNWWoOiT7CRozYxQ941T8DYj
- Yj7fwAsY/DEYodJjhjmdniY4eLyLgF+2N/QpwbTinGe8FnfxnbLH2u5VRz4QV0eHEt++1dY
- IZ6fQORdUrsVAnPWn2YSZ5fvFQnqL4RkoTlJJnyeEJ9967tSHE2N0gvktj7ZW3apnn9gTId
- fLYVBBaSV4hIZBNTfviBg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1TYA3J/5OFQ=;BdfK6sC/jzVriGijEIYlirW3/ea
- 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
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] module: remove meaningless 'name' parameter from
+ __MODULE_INFO()
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Alexey Gladkov <legion@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250606041029.614348-1-masahiroy@kernel.org>
+ <20250606041029.614348-2-masahiroy@kernel.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250606041029.614348-2-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2025-06-13 at 11:40 +0200, Peter Zijlstra wrote:
-> On Mon, Jun 09, 2025 at 07:01:47AM +0200, Mike Galbraith wrote:
->=20
-> Right; so the problem being that we can race with
-> migrate_disable_switch().
+On 6/6/25 6:10 AM, Masahiro Yamada wrote:
+> The symbol names in the .modinfo section are never used and already
+> randomized by the __UNIQUE_ID() macro.
+> 
+> Therefore, the second parameter of  __MODULE_INFO() is meaningless
+> and can be removed to simplify the code.
+> 
+> With this change, the symbol names in the .modinfo section will be
+> prefixed with __UNIQUE_ID_modinfo, making it clearer that they
+> originate from MODULE_INFO().
+> 
+> [Before]
+> 
+>   $ objcopy  -j .modinfo vmlinux.o modinfo.o
+>   $ nm -n modinfo.o | head -n10
+>   0000000000000000 r __UNIQUE_ID_license560
+>   0000000000000011 r __UNIQUE_ID_file559
+>   0000000000000030 r __UNIQUE_ID_description558
+>   0000000000000074 r __UNIQUE_ID_license580
+>   000000000000008e r __UNIQUE_ID_file579
+>   00000000000000bd r __UNIQUE_ID_description578
+>   00000000000000e6 r __UNIQUE_ID_license581
+>   00000000000000ff r __UNIQUE_ID_file580
+>   0000000000000134 r __UNIQUE_ID_description579
+>   0000000000000179 r __UNIQUE_ID_uncore_no_discover578
+> 
+> [After]
+> 
+>   $ objcopy  -j .modinfo vmlinux.o modinfo.o
+>   $ nm -n modinfo.o | head -n10
+>   0000000000000000 r __UNIQUE_ID_modinfo560
+>   0000000000000011 r __UNIQUE_ID_modinfo559
+>   0000000000000030 r __UNIQUE_ID_modinfo558
+>   0000000000000074 r __UNIQUE_ID_modinfo580
+>   000000000000008e r __UNIQUE_ID_modinfo579
+>   00000000000000bd r __UNIQUE_ID_modinfo578
+>   00000000000000e6 r __UNIQUE_ID_modinfo581
+>   00000000000000ff r __UNIQUE_ID_modinfo580
+>   0000000000000134 r __UNIQUE_ID_modinfo579
+>   0000000000000179 r __UNIQUE_ID_modinfo578
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> [...]
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 92e1420fccdf..81b41cc6a19e 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -164,9 +164,6 @@ extern void cleanup_module(void);
+>  
+>  struct module_kobject *lookup_or_create_module_kobject(const char *name);
+>  
+> -/* Generic info of form tag = "info" */
+> -#define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
+> -
+>  /* For userspace: you can also call me... */
+>  #define MODULE_ALIAS(_alias) MODULE_INFO(alias, _alias)
+>  
+> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+> index bfb85fd13e1f..00166f747e27 100644
+> --- a/include/linux/moduleparam.h
+> +++ b/include/linux/moduleparam.h
+> @@ -20,18 +20,19 @@
+>  /* Chosen so that structs with an unsigned long line up. */
+>  #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
+>  
+> -#define __MODULE_INFO(tag, name, info)					  \
+> -	static const char __UNIQUE_ID(name)[]				  \
+> +/* Generic info of form tag = "info" */
+> +#define MODULE_INFO(tag, info)					  \
+> +	static const char __UNIQUE_ID(modinfo)[]			  \
+>  		__used __section(".modinfo") __aligned(1)		  \
+>  		= __MODULE_INFO_PREFIX __stringify(tag) "=" info
+>  
 
-Yeah.  Most of the time when we do fallback saves us, but we can and do
-zip past it, and that turns box various shades of sad.
+One nit is that MODULE_INFO() is now defined in moduleparam.h, even
+though it is a general macro for adding module information and not
+specifically tied to parameters. I realize it is needed in moduleparam.h
+and that the dependency is from module.h to moduleparam.h, not the other
+way around. We could potentially keep the MODULE_INFO() (in module.h) ->
+__MODULE_INFO() (moduleparam.h) split solely for this, but it is
+probably unnecessary.
 
->=20
-> Does something like this help?
+The overall change looks ok to me.
 
-It surely will, but I'll testdrive it.  No news is good news.
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3593,7 +3593,7 @@ int select_task_rq(struct task_struct *p
-> =C2=A0		cpu =3D p->sched_class->select_task_rq(p, cpu,
-> *wake_flags);
-> =C2=A0		*wake_flags |=3D WF_RQ_SELECTED;
-> =C2=A0	} else {
-> -		cpu =3D cpumask_any(p->cpus_ptr);
-> +		cpu =3D task_cpu(p);
-> =C2=A0	}
-> =C2=A0
-> =C2=A0	/*
-
+-- 
+Thanks,
+Petr
