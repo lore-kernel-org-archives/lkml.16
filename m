@@ -1,192 +1,99 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CA64C62
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0934A1E;
+	Fri, 13 Jun 2025 12:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749818238; cv=none; b=qnXWVf5rsBJglyH37RMWMBFHUiRcbG1P8bL80JKyuB2Jt3JTi/CxPOQygBE9UyZtqesJ5ya26qt4P2V7VufLJOHE/1NL6+kCuVOoyY5fPpOjYyDfx6x3AzcYVz/2dNRbgEzEKZkCBlvRYs+yZaltFLWaAOqPkzM+qwky9zRehpg=
+	t=1749818421; cv=none; b=i4VQmkriYMS1pmnsd/Kro+xy83g9TYMk3YIKp+JInyJBj6pPJ8QBdq7j7cXFvgOCoSwug3Focp+yAFSGh1A9dSq4qSs0d0qFL4DgK5rHCRbvhlyfEwMr5179msCifGfPbztHj8ySO16zLjJG+WW4TeoSiTGU1Z4IbYgxPXLN5iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749818238; c=relaxed/simple;
-	bh=7tjZv5pxW18/1G+UdP7WLEwIjMIuR7ZIMwePZ7a02XQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sEHOYt7e9NdD9yAECO5CSK0VLC2gJFBeekZKloAo8ADcQiji2dX+x/GaDLpSPi2zDtrl66TX+qe+d35Q5IwWlcahMqRWIjaX5SniJxqlKSZvqQVidk/GAp44nhDVBMqCh9DBZle/ZuUQS3dvpCOE2hFgIGRRzJUSqs/Cmp0oqts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kCCrcdFT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zQujh0/5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kCCrcdFT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zQujh0/5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749818421; c=relaxed/simple;
+	bh=n8uww8W98ephJQVBitTMkEpar+EJEaBk8t8Zr/77i8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=klyYXU7tIYBh8Xhcm08F/zIW5v8ntxqV7IHXZPkChiDjqMwPHO8yiwHNY51Et4ApGCnCmIrSRBf1x7in3YqbppvdNmXjIxwgpHZl/0YVGL9RnhJY0VdyEBHC5P/fVJO9/pwCE0fkjqa1akrR51dWNg0zatmYuklv5/Hyfk572o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uK6jGYiF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kCCrcdFT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zQujh0/5";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kCCrcdFT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zQujh0/5"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B7C8E21A23;
-	Fri, 13 Jun 2025 12:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749818234; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ons9VlAWyS5iGbbTVkDBgSxgXbxKUV7OAg/2/YmOuTQ=;
-	b=kCCrcdFTYqrZUYuBN/pBMasKboKwHTZiQZUKz5OXDm1VT0q6deaATpqQrUBT3MOetNInd5
-	vN71hH58Klp8dYim2DqSqd0agTlZdrYbULxkGkz4/Duk25WycMr0l8PDAHhXr8zMTMAPg8
-	7EsXZDZD+noCrm5n1gGR8XP5Bggz8tA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749818234;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ons9VlAWyS5iGbbTVkDBgSxgXbxKUV7OAg/2/YmOuTQ=;
-	b=zQujh0/5m0F7qHNo6Y8TZIlFlZMoGQHLZqqAgCngNWCM5wyBLTzvSFxe87w9JxORxkjU0p
-	nKm4FFKyJCrcwpAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749818234; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ons9VlAWyS5iGbbTVkDBgSxgXbxKUV7OAg/2/YmOuTQ=;
-	b=kCCrcdFTYqrZUYuBN/pBMasKboKwHTZiQZUKz5OXDm1VT0q6deaATpqQrUBT3MOetNInd5
-	vN71hH58Klp8dYim2DqSqd0agTlZdrYbULxkGkz4/Duk25WycMr0l8PDAHhXr8zMTMAPg8
-	7EsXZDZD+noCrm5n1gGR8XP5Bggz8tA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749818234;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ons9VlAWyS5iGbbTVkDBgSxgXbxKUV7OAg/2/YmOuTQ=;
-	b=zQujh0/5m0F7qHNo6Y8TZIlFlZMoGQHLZqqAgCngNWCM5wyBLTzvSFxe87w9JxORxkjU0p
-	nKm4FFKyJCrcwpAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6DC6913782;
-	Fri, 13 Jun 2025 12:37:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oI1fGXobTGj9cgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 13 Jun 2025 12:37:14 +0000
-Date: Fri, 13 Jun 2025 14:37:14 +0200
-Message-ID: <87wm9frf5x.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 3/3] ALSA: pcm: Convert snd_pcm_sync_ptr() to user_access_begin/user_access_end()
-In-Reply-To: <2df61bbf-76f6-4932-a347-7820350a156e@csgroup.eu>
-References: <7baa34d4046c7750799b11830d38a46f8b581765.1749724478.git.christophe.leroy@csgroup.eu>
-	<79b86a0618328ba1d0cb5cf4011fd73ac6900e8f.1749724478.git.christophe.leroy@csgroup.eu>
-	<878qlwrnv1.wl-tiwai@suse.de>
-	<2df61bbf-76f6-4932-a347-7820350a156e@csgroup.eu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uK6jGYiF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8F9C4CEE3;
+	Fri, 13 Jun 2025 12:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749818421;
+	bh=n8uww8W98ephJQVBitTMkEpar+EJEaBk8t8Zr/77i8g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uK6jGYiFnRly4K4X48Oi04xh14YvBbkf7irMkqzx1nR9HVAM7ubnr970iwwaIScRU
+	 D+7M9+lyIZm0QyW8Dc+m/NmMDRXwrYRCaSS/O9B13hlpK5C9eeZm6bGAmwQwZzuf44
+	 mWrF5BjbxHhp5LgCrqaenA2lJNtJbg5ySW+15BwZ6iBBZDfz3s1Zlr5sMzsnRvrEW6
+	 Yq3UwBPCeIQw1qBM1J7LL8ga4PmkegKh5ncehT18chKIfQ9BD+7dJq7BSQuOrAOaNT
+	 EDeTcb/WMmRGqm6ts0aZqu4KO8696yEWrg8aOBS5DPqzB0uiTPNFaGFYCdAHM+NE1s
+	 pH3UHMZfbBPSw==
+Date: Fri, 13 Jun 2025 14:40:14 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Donald Hunter <donald.hunter@gmail.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, "Akira Yokosawa" <akiyks@gmail.com>, "Breno Leitao"
+ <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, "Ignacio Encinas Rubio"
+ <ignacio@iencinas.com>, "Jan Stancek" <jstancek@redhat.com>, "Marco Elver"
+ <elver@google.com>, "Paolo Abeni" <pabeni@redhat.com>, "Ruben Wauters"
+ <rubenru09@aol.com>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
+ linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, netdev@vger.kernel.org,
+ peterz@infradead.org, stern@rowland.harvard.edu
+Subject: Re: [PATCH v2 06/12] scripts: lib: netlink_yml_parser.py: use
+ classes
+Message-ID: <20250613144014.5ae14ae0@foz.lan>
+In-Reply-To: <m2y0tvnb0e.fsf@gmail.com>
+References: <cover.1749723671.git.mchehab+huawei@kernel.org>
+	<08ac4b3457b99037c7ec91d7a2589d4c820fd63a.1749723671.git.mchehab+huawei@kernel.org>
+	<m2y0tvnb0e.fsf@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 13 Jun 2025 13:03:04 +0200,
-Christophe Leroy wrote:
+Em Fri, 13 Jun 2025 12:20:33 +0100
+Donald Hunter <donald.hunter@gmail.com> escreveu:
+
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 > 
+> > As we'll be importing netlink parser into a Sphinx extension,
+> > move all functions and global variables inside two classes:
+> >
+> > - RstFormatters, containing ReST formatter logic, which are
+> >   YAML independent;
+> > - NetlinkYamlParser: contains the actual parser classes. That's
+> >   the only class that needs to be imported by the script or by
+> >   a Sphinx extension.  
 > 
-> 
-> Le 13/06/2025 à 11:29, Takashi Iwai a écrit :
-> > On Thu, 12 Jun 2025 12:51:05 +0200,
-> > Christophe Leroy wrote:
-> >> 
-> >> Now that snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user()
-> >> are converted to user_access_begin/user_access_end(),
-> >> snd_pcm_sync_ptr_get_user() is more efficient than a raw get_user()
-> >> followed by a copy_from_user(). And because copy_{to/from}_user() are
-> >> generic functions focussed on transfer of big data blocks to/from user,
-> >> snd_pcm_sync_ptr_put_user() is also more efficient for small amont of
-> >> data.
-> >> 
-> >> So use snd_pcm_sync_ptr_get_user() and snd_pcm_sync_ptr_put_user() in
-> >> snd_pcm_sync_ptr() too.
-> >> 
-> >> In order to have snd_pcm_mmap_status32 similar to snd_pcm_mmap_status,
-> >> replace to tsamp_{sec/nsec} and audio_tstamp_{sec/nsec} by equivalent
-> >> struct __snd_timespec.
-> >> 
-> >> snd_pcm_ioctl_sync_ptr_buggy() is left as it is because the conversion
-> >> wouldn't be straigh-forward do to the workaround it provides.
-> >> 
-> >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > 
-> > Through a quick glance, all patches look almost fine, but one favor to
-> > ask: this patch contains the convert from s32/s32 pair to struct
-> > __snd_timespec.  It should be factored out to a prerequisite patch
-> > instead of burying in a big change.
-> 
-> Shall I understand you prefer this series over the more simple "ALSA:
-> pcm: Convert snd_pcm_ioctl_sync_ptr_{compat/x32} to
-> user_access_begin/user_access_end()" patch ?
+> I suggest a third class for the doc generator that is separate from the
+> yaml parsing.
 
-Err, no, sorry for ambiguity.
-I wanted to move the replacement of tstamp_sec/nsec with struct
-__snd_timespec as a small preliminary patch from patch#3.
-That is,
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -3103,11 +3103,9 @@ struct snd_pcm_mmap_status32 {
- 	snd_pcm_state_t state;
- 	s32 pad1;
- 	u32 hw_ptr;
--	s32 tstamp_sec;
--	s32 tstamp_nsec;
-+	struct __snd_timespec tstamp;
- 	snd_pcm_state_t suspended_state;
--	s32 audio_tstamp_sec;
--	s32 audio_tstamp_nsec;
-+	struct __snd_timespec audio_tstamp;
- } __packed;
-etc.  By factoring this out, it becomes clear that the timespec
-compatibility is fully cared.
+Do you mean moving those two (or three? [*]) methods to a new class?
 
-__snd_timespec may be defined in different ways on user-space, but in
-the kernel code, it's a single definition of s32/s32 pair.  This needs
-to be emphasized.
+    def parse_yaml(self, obj: Dict[str, Any]) -> str:
+    def parse_yaml_file(self, filename: str) -> str:
+    def generate_main_index_rst(self, output: str, index_dir: str) -> None:
 
+Also, how should I name it to avoid confusion with NetlinkYamlParser? 
+Maybe YnlParser?
 
-thanks,
+[*] generate_main_index_rst is probably deprecated. eventually
+    we may drop it or keep it just at the command line stript.
 
-Takashi
+> The yaml parsing should really be refactored to reuse
+> tools/net/ynl/pyynl/lib/nlspec.py at some point.
+
+Makes sense, but such change is out of the scope of this series.
+
+> > With that, we won't pollute Sphinx namespace, avoiding any
+> > potential clashes.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+
+Thanks,
+Mauro
