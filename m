@@ -1,287 +1,161 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BC91A01B9
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267421A01B9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749780452; cv=none; b=lQkmOHRu5Ul264AzPgBAWSAkuVWI8agxFZsmCuBDzmFfWryA3lmBDLYGQIOPCtqRhES+6PB2b+R1ZC82x122i8tN9OR85za2Ih13VR1z1vzAjWb17H808f0qsWQRbOGpJTupRrXqaQmgDh51NU0y/zb6jntgl/Bvwj5/gcpZLc0=
+	t=1749780665; cv=none; b=qMpOHrk837sZvq5r6ilLHUTcFFkZ19LpZTTkNkLyW56/n+ftF30r9mG7GurLejfjOHaKTFia7L3lWSiGm/JWjhDnDQrOwU20IU4B+e75rKilorothGOI4LgIxQcQQCA3DYlXQP8GMs/3tZQl6zmSDN5KKgnEWpVg2H3SElOYxbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749780452; c=relaxed/simple;
-	bh=wLJrwFv4SAlYUa3Duhr/pDflGB79tdrq/n/KdpiOEvA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C18LJhCSn9aFsruuRTTRADFbbBTV3OVHZQF/6r+I8uAAKw3QzMpfeQfd1//dSb/aboerM7vahjp5y1rtJFM02gh3LS0kXywyTC5qkNxamYKLMzdS1a9a27NaT8RIBhvNhCccTjLPieK/J16eDepmIw1Zzt/KM3RJ4gHlxq7TI4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=e92SUjzE; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749780665; c=relaxed/simple;
+	bh=AASYvjJY+a+e63K9/2ymTSWXr0lIeyAHE2bIYsoyJFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kxEL48UcOJ4TwgzpySf+kCBfDShDr2BZGsSGi2oEuF9+ENBcw2cNh9tc3vNRkli3ehuGA459UfnUsfYHMztvWJNpxoyon2j0TuFmakEJ3EGtz35yI6Cm+mFaTtOaEwkzU+duCmqdSNCD9KwhOD9EB/8+9gy/1bcByF5oVQsnu64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vr3g1N1K; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="e92SUjzE"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749780442; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=p+rRa3QKmOhYw/Lt12EnBbPLQ9TK+8gj2nP9q+FYN8w=;
-	b=e92SUjzEBxC47EZOAAKWdoH3RQ6/P4HSDKyNecEG7qWaZvY82HkDTY8gPzKXeIiD+Tyv0/i8lcgYSfCuFYMAdzBN6RMiXy32bFZYEr8sy5jVpNKAUszoujG/JHBs5G6sBd9V98AOMlmMVHw3G4+5l7kF5Zfqedg2fRYlBG7kLL0=
-Received: from 30.74.144.147(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdiglX0_1749780441 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 13 Jun 2025 10:07:21 +0800
-Message-ID: <7c911fff-aaf1-430c-89f2-5e7925e90a04@linux.alibaba.com>
-Date: Fri, 13 Jun 2025 10:07:20 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vr3g1N1K"
+Date: Thu, 12 Jun 2025 22:10:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749780651;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=YGhHosSHDbMOkNnQE2jm7PRGL2uaPimeOOlGmR/awso=;
+	b=Vr3g1N1KHgEFvMhIUVkRQEqdhn4oBEPmGM/L3eveCLY8rEOqdLk1V93imqfPm6sxuZuBOT
+	MNq97cuUXSker50b7j+CVZaAvrTp114OsLjTL+wTOiaHCv+yKU1x+km75wkNYd4glfrlNH
+	rkmddDn8PAtMseaDz5S44/UwGl2oNEA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] bcachefs fixes for 6.16-rc2
+Message-ID: <oxjgqivjmn43zo5dj2u43u432gmfexxjc6xxqcig5jovna3fe3@youegmmszsip>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] mm: huge_memory: disallow hugepages if the
- system-wide THP sysfs settings are disabled
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, Liam.Howlett@oracle.com,
- npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, ziy@nvidia.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1749109709.git.baolin.wang@linux.alibaba.com>
- <8eefb0809c598fadaa4a022634fba5689a4f3257.1749109709.git.baolin.wang@linux.alibaba.com>
- <1ec368c4-c4d8-41ea-b8a3-7d1fdb3ec358@redhat.com>
- <2ff65f37-efa9-4e96-9cdf-534d63ff154e@linux.alibaba.com>
- <953596b2-8749-493d-97eb-a5d8995d9ef8@redhat.com>
- <97a67b74-d473-455e-a05e-c85fe45da008@linux.alibaba.com>
- <b8fe659e-8a84-4328-b6d6-6116c616cb3d@redhat.com>
- <ce58b08c-0ac1-4ec2-8ff6-cf8e651709b0@lucifer.local>
- <ee646bca-e77d-4452-82f8-0bdb4b241f9c@redhat.com>
- <815f383d-8636-490d-8994-486be51f3123@lucifer.local>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <815f383d-8636-490d-8994-486be51f3123@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
 
-On 2025/6/12 22:49, Lorenzo Stoakes wrote:
-> On Thu, Jun 12, 2025 at 04:09:27PM +0200, David Hildenbrand wrote:
->>
->>
->>>> @@ -265,6 +265,42 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
->>>>                                            unsigned long tva_flags,
->>>>                                            unsigned long orders);
->>>> +/* Strictly mask requested anonymous orders according to sysfs settings. */
->>>> +static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
->>>> +       unsigned long tva_flags, unsigned long orders)
->>>> +{
->>>> +       const unsigned long always = READ_ONCE(huge_anon_orders_always);
->>>> +       const unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
->>>> +       const unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);
->>>> +       const unsigned long never = ~(always | madvise | inherit);
->>>> +
->>>> +       /* Disallow orders that are set to NEVER directly ... */
->>>> +       orders &= ~never;
->>>> +
->>>> +       /* ... or through inheritance (global == NEVER). */
->>>> +       if (!hugepage_global_enabled())
->>>> +               orders &= ~inherit;
->>>> +
->>>> +       /*
->>>> +        * Otherwise, we only enforce sysfs settings if asked. In addition,
->>>> +        * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
->>>> +        * is not set, we don't bother checking whether the VMA has VM_HUGEPAGE
->>>> +        * set.
->>>> +        */
->>>> +       if (!(tva_flags & TVA_ENFORCE_SYSFS))
->>>> +               return orders;
->>>
->>> This implicitly does a & mask as per suggested previous version, which I think
->>> is correct but worth pointing out.
->>
->> Yes.
->>
->>>
->>>> +
->>>> +       if (!(vm_flags & VM_HUGEPAGE)) {
->>>
->>> Don't love this sort of mega negation here. I read this as _does_ have huge
->>> page...
->>
->> Well, it's very common to do that, but not objecting to something that is
->> clearer ;)
->>
->> I assume you spotted the
->>
->> if (!(tva_flags & TVA_ENFORCE_SYSFS))
->>
->> :P
-> 
-> Lol yeah I know I know, I just think I guess in this case because you're
-> negating elsewhere it makes it harder...
-> 
->>
->> if (vm_flags & VM_HUGEPAGE)
->> 	return orders;
->>
->>
->> Would have been easier.
->>
->>>
->>>> +               /* Disallow orders that are set to MADVISE directly ... */
->>>> +               orders &= ~madvise;
->>>> +
->>>> +               /* ... or through inheritance (global == MADVISE). */
->>>> +               if (!hugepage_global_always())
->>>> +                       orders &= ~inherit;
->>>
->>> I hate this implicit 'not hugepage global always so this means either never or
->>> madvise and since we cleared orders for never this means madvise' mental
->>> gymnastics required here.
->>>
->>> Yeah I feel this is a bridge too far, we're getting into double negation and I
->>> think that's more confusiong.
->>
->>
->> Same here ... I think we should just have hugepage_global_madvise(). :)
-> 
-> Ideally in future not have these stupid globals all over the place and rework
-> this whole damn thing...
-> 
->>
->>>
->>>
->>>> +       }
->>>
->>> I propose a compromise as I rather like your 'exclude never' negation bit.
->>>
->>> So:
->>>
->>> /* Strictly mask requested anonymous orders according to sysfs settings. */
->>> static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
->>>                   unsigned long tva_flags, unsigned long orders)
->>> {
->>>           const unsigned long always = READ_ONCE(huge_anon_orders_always);
->>>           const unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
->>>           const unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);;
->>> 	const unsigned long never = ~(always | madvise | inherit);
->>>           const bool inherit_enabled = hugepage_global_enabled();
->>
->> Can we just have hugepage_global_never/disabled() to use instead?
-> 
-> This would be nice!
-> 
-> Could be a follow up... though again would be nice to somehow do away with all
-> this crap altogether.
-> 
->>
->>>
->>> 	/* Disallow orders that are set to NEVER directly ... */
->>> 	orders &= ~never;
->>>
->>> 	/* ... or through inheritance (global == NEVER). */
->>> 	if (!inherit_enabled)
->>> 		orders &= ~inherit;>
->>> 	/*
->>> 	 * Otherwise, we only enforce sysfs settings if asked. In addition,
->>> 	 * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
->>> 	 * is not set, we don't bother checking whether the VMA has VM_HUGEPAGE
->>> 	 * set.
->>> 	 */
->>> 	if (!(tva_flags & TVA_ENFORCE_SYSFS))
->>> 		return orders;
->>>
->>> 	if (hugepage_global_always())
->>> 		return orders & (always | inherit);
->>>
->>> 	/* We already excluded never inherit above. */
->>> 	if (vm_flags & VM_HUGEPAGE)
->>> 		return orders & (always | madvise | inherit);
->>>
->>> 	return orders & always;
->>> }
->>>
->>> What do you think?
->>
->> With the fixup, it would work for me. No magical "mask" variables :D
-> 
-> Thanks!
+are available in the Git repository at:
 
-Fair enough. You both prefer the 'exclude never' logic, and I will 
-follow that logic.
+  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-06-12
 
->>>> +       return orders;
->>>> +}
->>>> +
->>>>    /**
->>>>     * thp_vma_allowable_orders - determine hugepage orders that are allowed for vma
->>>>     * @vma:  the vm area to check
->>>> @@ -287,16 +323,8 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
->>>>                                          unsigned long orders)
->>>>    {
->>>>           /* Optimization to check if required orders are enabled early. */
->>>> -       if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
->>>> -               unsigned long mask = READ_ONCE(huge_anon_orders_always);
->>>> -
->>>> -               if (vm_flags & VM_HUGEPAGE)
->>>> -                       mask |= READ_ONCE(huge_anon_orders_madvise);
->>>> -               if (hugepage_global_always() ||
->>>> -                   ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()))
->>>> -                       mask |= READ_ONCE(huge_anon_orders_inherit);
->>>> -
->>>> -               orders &= mask;
->>>> +       if (vma_is_anonymous(vma)) {
->>>> +               orders = __thp_mask_anon_orders(vm_flags, tva_flags, orders);
->>>>                   if (!orders)
->>>>                           return 0;
->>>
->>> I pointed out to Baolin that __thp_vma_allowable_orders() handles the orders ==
->>> 0 case almost immediately so there's no need to do this, it just makes the code
->>> noisier.
->>
->> The reason we added it in the first place was to not do the (expensive)
->> function call.
-> 
-> Ack point taken!
-> 
->>
->>
->> --
->> Cheers,
->>
->> David / dhildenb
->>
-> 
-> For convenience, I enclose the fixed version + tweaked the inherit local bool to
-> be inherit_never to be clearer:
-> 
-> /* Strictly mask requested anonymous orders according to sysfs settings. */
-> static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
->                  unsigned long tva_flags, unsigned long orders)
-> {
->          const unsigned long always = READ_ONCE(huge_anon_orders_always);
->          const unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
->          const unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);;
->          const unsigned long never = ~(always | madvise | inherit);
->          const bool inherit_never = !hugepage_global_enabled();
-> 
->          /* Disallow orders that are set to NEVER directly ... */
->          orders &= ~never;
-> 
->          /* ... or through inheritance (global == NEVER). */
->          if (inherit_never)
->                  orders &= ~inherit;
-> 
->          /*
->           * Otherwise, we only enforce sysfs settings if asked. In addition,
->           * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
->           * is not set, we don't bother checking whether the VMA has VM_HUGEPAGE
->           * set.
->           */
->          if (!(tva_flags & TVA_ENFORCE_SYSFS))
->                  return orders;
-> 
->          /* We already excluded never inherit above. */
->          if (vm_flags & VM_HUGEPAGE)
->                  return orders & (always | madvise | inherit);
-> 
->          if (hugepage_global_always())
->                  return orders & (always | inherit);
-> 
->          return orders & always;
-> }
+for you to fetch changes up to aef22f6fe7a630d536f9eaa0a7a2ed0f90ea369e:
 
-Thanks Lorenzo. Let me follow this logic and do some testing.
+  bcachefs: Don't trace should_be_locked unless changing (2025-06-11 23:25:41 -0400)
+
+----------------------------------------------------------------
+bcachefs fixes for 6.16-rc2
+
+As usual, highlighting the ones users have been noticing:
+
+- Fix a small issue with has_case_insensitive not being propagated on
+  snapshot creation; this led to fsck errors, which we're harmless
+  because we're not using this flag yet (it's for overlayfs +
+  casefolding).
+
+- Log the error being corrected in the journal when we're doing fsck
+  repair: this was one of the "lessons learned" from the i_nlink 0 ->
+  subvolume deletion bug, where reconstructing what had happened by
+  analyzing the journal was a bit more difficult than it needed to be.
+
+- Don't schedule btree node scan to run in the superblock: this fixes a
+  regression from the 6.16 recovery passes rework, and let to it running
+  unnecessarily.
+
+  The real issue here is that we don't have online, "self healing" style
+  topology repair yet: topology repair currently has to run before we go
+  RW, which means that we may schedule it unnecessarily after a
+  transient error. This will be fixed in the future.
+
+- We now track, in btree node flags, the reason it was scheduled to be
+  rewritten. We discovered a deadlock in recovery when many btree nodes
+  need to be rewritten because they're degraded: fully fixing this will
+  take some work but it's now easier to see what's going on.
+
+  For the bug report where this came up, a device had been kicked RO due
+  to transient errors: manually setting it back to RW was sufficient to
+  allow recovery to succeed.
+
+- Mark a few more fsck errors as autofix: as a reminder to users, please
+  do keep reporting cases where something needs to be repaired and is
+  not repaired automatically (i.e. cases where -o fix_errors or fsck -y
+  is required).
+
+- rcu_pending.c now works with PREEMPT_RT
+
+- 'bcachefs device add', then umount, then remount wasn't working - we
+  now emit a uevent so that the new device's new superblock is correctly
+  picked up
+
+- Assorted repair fixes: btree node scan will no longer incorrectly
+  update sb->version_min,
+
+- Assorted syzbot fixes
+
+----------------------------------------------------------------
+Alan Huang (1):
+      bcachefs: Fix possible console lock involved deadlock
+
+Arnd Bergmann (1):
+      bcachefs: ioctl: avoid stack overflow warning
+
+Kent Overstreet (21):
+      bcachefs: Add missing restart handling to check_topology()
+      bcachefs: Log fsck errors in the journal
+      bcachefs: Add range being updated to btree_update_to_text()
+      bcachefs: Add more flags to btree nodes for rewrite reason
+      bcachefs: Update /dev/disk/by-uuid on device add
+      bcachefs: Mark need_discard_freespace_key_bad autofix
+      bcachefs: Only run 'increase_depth' for keys from btree node csan
+      bcachefs: Read error message now prints if self healing
+      bcachefs: Don't persistently run scan_for_btree_nodes
+      bcachefs: mark more errors autofix
+      bcachefs: Make sure opts.read_only gets propagated back to VFS
+      bcachefs: Don't put rhashtable on stack
+      bcachefs: Fix downgrade_table_extra()
+      bcachefs: Fix rcu_pending for PREEMPT_RT
+      bcachefs: Fix leak in bch2_fs_recovery() error path
+      bcachefs: Don't pass trans to fsck_err() in gc_accounting_done
+      bcachefs: Fix version checks in validate_bset()
+      bcachefs: Don't trust sb->nr_devices in members_to_text()
+      bcachefs: Print devices we're mounting on multi device filesystems
+      bcachefs: Ensure that snapshot creation propagates has_case_insensitive
+      bcachefs: Don't trace should_be_locked unless changing
+
+ fs/bcachefs/bcachefs.h              |  1 -
+ fs/bcachefs/btree_gc.c              | 95 +++++++++++++++++++++++--------------
+ fs/bcachefs/btree_io.c              | 26 +++++++---
+ fs/bcachefs/btree_locking.c         |  2 +-
+ fs/bcachefs/btree_locking.h         |  6 ++-
+ fs/bcachefs/btree_types.h           | 29 +++++++++++
+ fs/bcachefs/btree_update_interior.c | 33 ++++++++++++-
+ fs/bcachefs/btree_update_interior.h |  7 +++
+ fs/bcachefs/chardev.c               |  4 +-
+ fs/bcachefs/disk_accounting.c       |  4 +-
+ fs/bcachefs/error.c                 |  5 +-
+ fs/bcachefs/fs.c                    |  8 ++++
+ fs/bcachefs/io_read.c               | 11 ++++-
+ fs/bcachefs/io_read.h               |  1 +
+ fs/bcachefs/movinggc.c              | 22 +++++----
+ fs/bcachefs/namei.c                 | 10 ++++
+ fs/bcachefs/rcu_pending.c           | 22 ++++-----
+ fs/bcachefs/recovery.c              | 27 ++++++++---
+ fs/bcachefs/recovery_passes.c       | 14 ++++--
+ fs/bcachefs/sb-downgrade.c          |  5 +-
+ fs/bcachefs/sb-errors_format.h      | 10 ++--
+ fs/bcachefs/sb-members.c            | 34 +++++++++++--
+ fs/bcachefs/super.c                 | 47 ++++++++++++------
+ fs/bcachefs/util.c                  | 10 +---
+ fs/bcachefs/util.h                  |  2 +-
+ 25 files changed, 319 insertions(+), 116 deletions(-)
