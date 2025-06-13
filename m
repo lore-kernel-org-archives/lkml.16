@@ -1,149 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2689444
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F0C1E5213;
+	Fri, 13 Jun 2025 15:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828432; cv=none; b=iFMdOPioET0q2VlDprJpcgM3EcEeUuqvKsiMayXMX11GBcpHG9FEfCrx2nRD2Xgi5LGbu3y0jlCeT+ULUvrCwBHbivdCrmfoSL8XM+rlZ68vTu/i6/GlaIA5/nxVx6A1Ix1CdfDeNMry7Sj78hGvbjsrmNOllrj63fTk586vnxE=
+	t=1749828451; cv=none; b=HnI6Bec1JbHRRIGsBqpmY8rIDT1kBN76PNhsUeZgUa7WA862BLBdJei2hEL+ryJ0hl2MGmnZYryH+4dh8r8GGaxRhvMTVG46U23JYq+eE2BSDuejm5mAdltiq+ARRdiPsXsTj/Cp5WPYYdmSgyhrJgFK0UFxM9lB6mkVXOn0Au8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828432; c=relaxed/simple;
-	bh=dTLeBokCk+Qu5G4dlYAvuaZ2u1EV60MG1tXSrQgsAWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iescPkYesshbb9RJ7A8RJKyVzVr3gr7JO2DihzeMKlyxSaZG+8DQsJPmL54AN7wo2lBrvqYCEkNj5oouSGE9cjOeJ7N92p7XCetOiW3Ijyn4HmYjx4ayhBCFrUaAl9+iPiXYACdbFa5DWmtGzJ2k+AVDAugpsnGO5qC4QUDNARQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g0vX3vYQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749828451; c=relaxed/simple;
+	bh=88xUdYBMPT3UbWHPTJRNtJ5le6acxvABX2a2MypWfUE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZrVdEqpJLXOvX0s8Pas6oIbjM/Gay4uWpBujSc+WD9N6C5DPj9OMbAnmNZTATS3MOOw9K4cTpWrPXLQEPmPer6tZVEAqvMnkFWVs57G20ln29M5Qb0UI1lMSrfnyl25QH5QrvjiTup1/cnlYfWjMVCt43/c4WjKfD4E/JYu5jbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBosYd0U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0vX3vYQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749828429;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ffGF128HVtw6a+HHD8uShTa3yQQnx4ItFakvkjkmL6Q=;
-	b=g0vX3vYQ5PgJ03QQwM45dLLmXJb7BY0MWbIU28u0LhPfLYTMo8Tp/DSMmXSxwdSyuPuGRw
-	SrhzTF5HIGSjZRW81sKTVs4i81yq0cnVTToe84XTUAM4gM1y2/5ep7qjb2eyJUVNRwmsx6
-	ed50W5knfUKI0zSQ6texP+qLsqOkvHk=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-580-YkAygli8PFinD-_FkymMBg-1; Fri, 13 Jun 2025 11:27:08 -0400
-X-MC-Unique: YkAygli8PFinD-_FkymMBg-1
-X-Mimecast-MFC-AGG-ID: YkAygli8PFinD-_FkymMBg_1749828428
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86cfccca327so493138739f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:27:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749828428; x=1750433228;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ffGF128HVtw6a+HHD8uShTa3yQQnx4ItFakvkjkmL6Q=;
-        b=FUJkEWWwBVUI0+sAPLaevO3nW6FtgUQap1UBiNC1rYHb7U7AZf7oWOjzgGS7g6mym/
-         Nu+vVw3FFcLi0YFGgymgmCQbSC1m/Pidp8pcaJEpmVkmfMxat/hjJ9fVd/P0iN9fQhGS
-         PulWCRM52VT50kgzmjUuzucIUhDVnPKzCrDQrJutiWohimeIQP+rqw6Xfam/HtCaxkq3
-         +DhRkK3YospLYGgrsVw2dI7qsg/Bmb5v0G97jlAbO740uuW5Z0RYGiLrZWx7nzxhvIPr
-         TrhmhC8bAlFORokjdetpBTLvAMKfKUzU67fRTGXa/JiVdwb5DyVtRXkSdPscVNAM1tNo
-         TDzg==
-X-Gm-Message-State: AOJu0Yx76q9K+J6gn8TzC0Mbi14xxbUrXbqhA9WLYxEgnit+M5d2XPyy
-	A1UI3VdmlgrFIaFqVfYsZ1XYT0a9LJzHND1guMcVtYtdtElgwK1r9G+088xWfy0NoWL8t+KR3Zl
-	Lh3fyVvahjZGYJx5s3zZBopw50g98yIHsVvDFHxtbhBKONF1hBzbpUaJ82WVYaiIJM/13UweDOA
-	==
-X-Gm-Gg: ASbGncvnEQWEroDgflaxIPSLbh+wiuqfrDpSuZfSGE1tylZR2hec5V8yEs1fJV5I5ls
-	L5iGjKqjJOlWUBn0jbfUsRMrq2bjSehT84I0RKq/MqKZ77D0MzyrGTIBwaE8rFOc/urNIlBxPD7
-	WwK/oCy47zxc5nUUr0YNW8OU6oDQxUYKfafE8uhDfR2FOSX63BLJbY0lIWcvcZYG2pL3BxrGPLR
-	vM5Y+wFZ+LGSztJtoUJ+csBrRCDDgWVytcpZSw5J40r4go+Ozy1uugOCOLmUDcE5QFVkR6tEWbF
-	G7cf7lZWMTJgig==
-X-Received: by 2002:a05:6602:b85:b0:85a:e279:1ed6 with SMTP id ca18e2360f4ac-875d3d047e8mr419246239f.11.1749828415813;
-        Fri, 13 Jun 2025 08:26:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE8djcjjfItHRHrDNgzteRBKJ058qY0Qze27Tb0GmaT85bQCB0E8VSqwOBOZ5ggANoXHojH2Q==
-X-Received: by 2002:a05:6214:2343:b0:6fb:3537:fcfe with SMTP id 6a1803df08f44-6fb3e602ce6mr52125976d6.22.1749828404861;
-        Fri, 13 Jun 2025 08:26:44 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c55ff4sm22627546d6.92.2025.06.13.08.26.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 08:26:44 -0700 (PDT)
-Date: Fri, 13 Jun 2025 11:26:40 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <aExDMO5fZ_VkSPqP@x1.local>
-References: <20250613134111.469884-1-peterx@redhat.com>
- <20250613134111.469884-6-peterx@redhat.com>
- <20250613142903.GL1174925@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBosYd0U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC73C4CEE3;
+	Fri, 13 Jun 2025 15:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749828450;
+	bh=88xUdYBMPT3UbWHPTJRNtJ5le6acxvABX2a2MypWfUE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=OBosYd0UCBZw4SAiVzH5bFP26U8lcMe2wbd/3tbGiUAQ9sfKtUT2UeGBUS50U9S4P
+	 F6Qt1zqdq8JNIyEFCbk/oIp6YWZXv/UUqkYVEqLxwjhuQ/66c4+ka28Qh4HVgBdVdV
+	 SB1Mnr5ycqi1qRMC7qKas9U652pK/xJngizVsheYzvkbsjBiYv+y+i/yT/A+ogx5fN
+	 YKgYRNzaqcMkMv6xGYhGfseiaMJ58y+G4SfCtefRuriPxTMAPoUXqBZfpRLZn/UICh
+	 2ocRZSUrTAIXwmBzylEyCCg4nzKTpd2//Brxj1WhoTUAr+b6hyMJbfwbIpFQDpyln+
+	 eCaXnAU7yNhyw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  jasonmiu@google.com,
+  graf@amazon.com,  changyuanl@google.com,  rppt@kernel.org,
+  dmatlack@google.com,  rientjes@google.com,  corbet@lwn.net,
+  rdunlap@infradead.org,  ilpo.jarvinen@linux.intel.com,
+  kanie@linux.alibaba.com,  ojeda@kernel.org,  aliceryhl@google.com,
+  masahiroy@kernel.org,  akpm@linux-foundation.org,  tj@kernel.org,
+  yoann.congal@smile.fr,  mmaurer@google.com,  roman.gushchin@linux.dev,
+  chenridong@huawei.com,  axboe@kernel.dk,  mark.rutland@arm.com,
+  jannh@google.com,  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
+  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
+  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
+  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
+  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
+  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
+  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
+  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
+  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
+  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
+  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
+  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
+  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
+  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
+  stuart.w.hayes@gmail.com
+Subject: Re: [RFC v2 08/16] luo: luo_files: add infrastructure for FDs
+In-Reply-To: <CA+CK2bBeCOojpZ=qoefd6NG+bO6CUh+NU8=8dMhD01=LtC9eNg@mail.gmail.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+	<20250515182322.117840-9-pasha.tatashin@soleen.com>
+	<mafs034cetc5g.fsf@kernel.org>
+	<CA+CK2bBeCOojpZ=qoefd6NG+bO6CUh+NU8=8dMhD01=LtC9eNg@mail.gmail.com>
+Date: Fri, 13 Jun 2025 17:27:21 +0200
+Message-ID: <mafs0cyb7mzl2.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250613142903.GL1174925@nvidia.com>
+Content-Type: text/plain
 
-On Fri, Jun 13, 2025 at 11:29:03AM -0300, Jason Gunthorpe wrote:
-> On Fri, Jun 13, 2025 at 09:41:11AM -0400, Peter Xu wrote:
-> 
-> > +	/* Choose the alignment */
-> > +	if (IS_ENABLED(CONFIG_ARCH_SUPPORTS_PUD_PFNMAP) && phys_len >= PUD_SIZE) {
-> > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
-> > +						   flags, PUD_SIZE, 0);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	if (phys_len >= PMD_SIZE) {
-> > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
-> > +						   flags, PMD_SIZE, 0);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> 
-> Hurm, we have contiguous pages now, so PMD_SIZE is not so great, eg on
-> 4k ARM with we can have a 16*2M=32MB contiguity, and 16k ARM uses
-> contiguity to get a 32*16k=1GB option.
-> 
-> Forcing to only align to the PMD or PUD seems suboptimal..
+On Sun, Jun 08 2025, Pasha Tatashin wrote:
 
-Right, however the cont-pte / cont-pmd are still not supported in huge
-pfnmaps in general?  It'll definitely be nice if someone could look at that
-from ARM perspective, then provide support of both in one shot.
+[...]
+>> > +     down_write(&luo_filesystems_list_rwsem);
+>> > +     if (luo_files_xa_in_recreated)
+>> > +             goto exit_unlock;
+>> > +
+>> > +     parent_node_offset = fdt_subnode_offset(luo_fdt_in, 0,
+>> > +                                             LUO_FILES_NODE_NAME);
+>> > +
+>> > +     fdt_for_each_subnode(file_node_offset, luo_fdt_in, parent_node_offset) {
+>> > +             bool handler_found = false;
+>> > +             u64 token;
+>> > +
+>> > +             node_name = fdt_get_name(luo_fdt_in, file_node_offset, NULL);
+>> > +             if (!node_name) {
+>> > +                     panic("Skipping FDT subnode at offset %d: Cannot get name\n",
+>> > +                           file_node_offset);
+>>
+>> Should failure to parse a specific FD really be a panic? Wouldn't it be
+>> better to continue and let userspace decide if it can live with the FD
+>> missing?
+>
+> This is not safe, the memory might be DMA or owned by a sensetive
+> process, and if we proceed liveupdate reboot without properly handling
+> memory, we can get corruptions, and memory leaks. Therefore, during
+> liveupdate boot if there are exceptions, we should panic.
 
-> 
-> > +fallback:
-> > +	return mm_get_unmapped_area(current->mm, file, addr, len, pgoff, flags);
-> 
-> Why not put this into mm_get_unmapped_area_vmflags() and get rid of
-> thp_get_unmapped_area_vmflags() too?
-> 
-> Is there any reason the caller should have to do a retry?
+I don't get how it would result in memory leaks or corruptions, since
+KHO would have marked that memory as preserved, and the new kernel won't
+touch it until someone restores it.
 
-We would still need thp_get_unmapped_area_vmflags() because that encodes
-PMD_SIZE for THPs; we need the flexibility of providing any size alignment
-as a generic helper.
+So it can at most lead to loss of data, and in that case, userspace can
+very well decide if it can live with that loss or not.
 
-But I get your point.  For example, mm_get_unmapped_area_aligned() can
-still fallback to mm_get_unmapped_area_vmflags() automatically.
+Or are you assuming here that even data in KHO is broken? In that case,
+it would probably be a good idea to panic early.
 
-That was ok, however that loses some flexibility when the caller wants to
-try with different alignments, exactly like above: currently, it was trying
-to do a first attempt of PUD mapping then fallback to PMD if that fails.
+[...]
+>> > +             }
+>> > +
+>> > +             luo_file = kmalloc(sizeof(*luo_file),
+>> > +                                GFP_KERNEL | __GFP_NOFAIL);
+>> > +             luo_file->fs = fs;
+>> > +             luo_file->file = NULL;
+>> > +             memcpy(&luo_file->private_data, data_ptr, sizeof(u64));
+>>
+>> Why not make sure data_ptr is exactly sizeof(u64) when we parse it, and
+>> then simply do luo_file->private_data = (u64)*data_ptr ?
+>
+> Because FDT alignment is 4 bytes, we can't simply assign it.
 
-Indeed I don't know whether such fallback would help in our unit tests. But
-logically speaking we'll need to look into every arch's va allocator to
-know when it might fail with bigger allocations, and if PUD fails it's
-still sensible one wants to retry with PMD if available.  From that POV, we
-don't want to immediately fallback to 4K if 1G fails.
+Hmm, good catch. Didn't think of that.
 
-Thanks,
+>
+>> Because if the previous kernel wrote more than a u64 in data, then
+>> something is broken and we should catch that error anyway.
+>>
+>> > +             luo_file->reclaimed = false;
+>> > +             mutex_init(&luo_file->mutex);
+>> > +             luo_file->state = LIVEUPDATE_STATE_UPDATED;
+>> > +             ret = xa_err(xa_store(&luo_files_xa_in, token, luo_file,
+>> > +                                   GFP_KERNEL | __GFP_NOFAIL));
+>>
+[...]
+>> > +struct liveupdate_filesystem {
+>> > +     int (*prepare)(struct file *file, void *arg, u64 *data);
+>> > +     int (*freeze)(struct file *file, void *arg, u64 *data);
+>> > +     void (*cancel)(struct file *file, void *arg, u64 data);
+>> > +     void (*finish)(struct file *file, void *arg, u64 data, bool reclaimed);
+>> > +     int (*retrieve)(void *arg, u64 data, struct file **file);
+>> > +     bool (*can_preserve)(struct file *file, void *arg);
+>> > +     const char *compatible;
+>> > +     void *arg;
+>>
+>> What is the use for this arg? I would expect one file type/system to
+>> register one set of handlers. So they can keep their arg in a global in
+>> their code. I don't see why a per-filesystem arg is needed.
+>
+> I think, arg is useful in case we support a subsystem is registered
+> multiple times with some differences: i.e. based on mount point, or
+> file types handling. Let's keep it for now, but if needed, we can
+> remove that in future revisions.
+>
+>> What I do think is needed is a per-file arg. Each callback gets 'data',
+>> which is the serialized data, but there is no place to store runtime
+>> state, like some flags or serialization metadata. Sure, you could make
+>> place for it somewhere in the inode, but I think it would be a lot
+>> cleaner to be able to store it in struct luo_file.
+>>
+>> So perhaps rename private_data in struct luo_file to say
+>> serialized_data, and have a field called "private" that filesystems can
+>> use for their runtime state?
+>
+> I am not against this, but let's make this change when it is actually
+> needed by a registered filesystem.
+
+Okay, fair enough.
 
 -- 
-Peter Xu
-
+Regards,
+Pratyush Yadav
