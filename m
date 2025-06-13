@@ -1,353 +1,697 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C861EC018
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749840514; cv=fail; b=CNXnCZmF//rVGFwCG7vOPb4xexfxk86trFxglfN59D0gqtIlmWT8u9dhpM95ZyTBD1rb9DFw4fXdRQ/EQ55P52Woopu5Pnovk3J8+K9iJJC9Q36mII7gkab4JcSDEGV+KrDSF1/wo/i+67AR1hxRWUmEBsVq88PBpk4WSENAmKk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749840514; c=relaxed/simple;
-	bh=WeBtwWhK4C66gQ4sWAjf5/VgxV3vkK62vhjKYmbMOes=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=GEOicrKqIfbS7js9WUApqxVmjkmZFT85GCHSam/DFcZZePT/wjEscM8G6LPqU6lLEu8FQME5hrSqfKU7ra5BzhbyrxBL0pDhu03w3Din8PzSdP+agOVGnC7+qSicZ22UGsMDFjqQPelrHvyfWQV+l20S3O5MRn/Lnijt+vkvAqo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=b14qjH+d; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=BM7cU3W8; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4601A254C;
+	Fri, 13 Jun 2025 18:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749840564; cv=none; b=AmgcJGkzBe6hvsobX8LHnoBSQS3FL2I2d3IQdznCMI9Y3TqRIqVUh53UNPXS9lQFN178fiw3GOxkQ7O4lPGecV/k8WZA6y/hE6KhwuKyGPEh322vJA2BsFt7drUNqr8SD9qRpRleslMonuwLJnsBGN+/ej/jiNxeAmgAKm+XtaE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749840564; c=relaxed/simple;
+	bh=Yul0x1DrECLshgFjLIE51vPUKu4ioT0DdsqOpLIn+DY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=siJr8643E4Kf6ZZBSugizizQeqIx1EgpLpRmZ5wW2YKhC1FB5APL0scgZXG+05mFfiqpa/D9Dy9UOEIQTKm8U1pEyaY+ujEwFCbhroXZN5xRI/v+zVGC8ZIm0GNAj2S/bNVW7Yzf0K+X4z223/mvkvoCBnrvzQcSFmVhLwvHhS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8fnr1FB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b14qjH+d";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="BM7cU3W8"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55DCtdg8005753;
-	Fri, 13 Jun 2025 18:48:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2025-04-25; bh=VvU7VsKJm0ZrvFll
-	lWc4xTgzPaFeUSm66rUDmaG7+k8=; b=b14qjH+dM7bWzz1Ut6dqpN7nQmDpeRuv
-	02rampCsNULU2yZDmr8cUFap98EHaRzScFA0MOVvhLK+dcZX9B6vV1fQspEMR0cx
-	/mOwGuzghDQxhiXqGOvMVXfj/8ikNbBDqSyOHfAvg3AjvNjgdxKtxfN3tKre4DkV
-	GT603HPzWwgIzVzkPe0LGgCJYHgBqNjW+ZAYC49nyXliRtH4ePHxpq2vcfVVRNc+
-	HHnoskQ0uFgYUr7C1ABZmCHx6QwtT0otjNXO5n7zX8eaIBca4cpNBuwcg14e+bG0
-	IiIdhVnguhLxLdj0+33021GwAdr4rg0jtMt8lY0JApLMCnB7+O3B2g==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474cbem4r3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Jun 2025 18:48:19 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55DIFk83016716;
-	Fri, 13 Jun 2025 18:48:18 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10on2048.outbound.protection.outlook.com [40.107.92.48])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 474bvd86mb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Jun 2025 18:48:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kl/TZCpxgCv2ugWsMAeaMW/LVGi0Suju+oyvEnpDcL1Cpj86PzscOR65s+YQjbueb4+wH7OFZ5AYWLx1VrZGFU5N6IPuZP37HBg7aG3paTkfd3kEUte9DBicOTP8owQ+ANV3qKvSfdcSqGSSI4OecTMAsX/Y5KNFIKwBUu16Ujh/Lz2g0Eo5BT5hLPEJX4+j+hQe/Jh/QDja9GE5M7cDspJ4IG9VgMH5LRMnjVAQHjiKkyEGyzzeBCz5o0CzsJZyELI3j84oyZWbotYknaYMkpSyVEgUa8mQaxVS5lKrssGe9yLjT+dK5Zz0of9spk+9n4ApKNp6i4JpB9RnJuOLdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VvU7VsKJm0ZrvFlllWc4xTgzPaFeUSm66rUDmaG7+k8=;
- b=VOU54YaHv/ta1OETHpU+V6+h1aRLAiVwy2nygtosziuHET4sd72wLOrnOP7WXICApYiyx+gV9ejCTCnEDlsId+w0oJgdQkSIklzkeQ5NecSjU2QGnhHELN1qlu6oKt62UIwjmHybUcDr9hOY6fmpi3nfJpj6tqEotn/dvFeqDap1GVHg3Lg3/pffWdccgBj5bi2A3v6NBUdOpow7MKKB74OQlWUVxRaXs3zjKMSOJ24jOOnkJyzlms0kKdXF6sYMj8dGQiZYSfpOGj0Vhg2mr/4XXmNP9WddnltCVKhl4myibO52aAj4bXxy42/R9cIK7bZLjC0gHYxzM8A/ejtNow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VvU7VsKJm0ZrvFlllWc4xTgzPaFeUSm66rUDmaG7+k8=;
- b=BM7cU3W88AxlqeRt2mOm30ye7qlTV0dobLueYrWXDtgacG9WS7LBInzJ/nK6VX+yaCZSUw26KpReREpcoZSZPH2DOsSa1Z+jtrhW0uRjv232nZFutIO0e/g9/3FLyJ8fHdzF7f4v9Z7h9d77RtAWxe1Mh4gxWVPRqc7i2EpvHrw=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ5PPF1DE1C92F7.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::792) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Fri, 13 Jun
- 2025 18:48:16 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8813.024; Fri, 13 Jun 2025
- 18:48:16 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Kees Cook <kees@kernel.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/vma: use vmg->target to specify target VMA for new VMA merge
-Date: Fri, 13 Jun 2025 19:48:07 +0100
-Message-ID: <20250613184807.108089-1-lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8fnr1FB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE008C4CEE3;
+	Fri, 13 Jun 2025 18:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749840563;
+	bh=Yul0x1DrECLshgFjLIE51vPUKu4ioT0DdsqOpLIn+DY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=L8fnr1FBDmYwiGnQcmO6FAmbVnQ65klkuv3yp66e9DjAYsghmVjEva5c2l+8PvUUE
+	 XVvcLgn7fpo2+xe07mUegcN3Cx4+Uz4F6rZ6r8MRI7E6D1NORW7aWSRIPBaOTQ1Drv
+	 qA5wPhGW6qMmXCFBZ/L9U0rVALWq/Tmq1ggi4CeVpv4tOzXh1lqa6ha8NDl2NIC4lP
+	 NV7gjyWSp31F2zqQiQaVAHrWPDpYS+dRxFFPCrPb+xRvCYceHDZVa9ufRbgUWIe9L/
+	 LpK9dlqXrANgGD7cTy+mwvrOtFP2G/lzN74h82yauW89Nz3V3myweDR6hYANPCOxri
+	 ITz+ClfVs4SmA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH v2] lib/crypto: explicitly include <linux/export.h>
+Date: Fri, 13 Jun 2025 11:48:14 -0700
+Message-ID: <20250613184814.50173-1-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO2P265CA0116.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:c::32) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ5PPF1DE1C92F7:EE_
-X-MS-Office365-Filtering-Correlation-Id: af808fc8-502f-4dbf-9f8f-08ddaaaadb96
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8WSdCfcrMWp0CUfbwtvsbuFyn8xZ47u7nIHNb9xCqHdAAWwfB9eJvLgZgSIS?=
- =?us-ascii?Q?BHJxdavedPtYCbRPKF5fs+f6eHhaKR1rDj0FQ1ZJbPUz7eC43ZNn7rjY6nQP?=
- =?us-ascii?Q?/5ZEVrT0zARSJ/DgwNawOna0jjLwqk8NFLHYL2b9kNNGua4NEB2CJ9YBcv6K?=
- =?us-ascii?Q?PA6AT30Kd/KPhfdD76rLC84NKyCBmfBbu5U3XdX6XbFkXEr8YMZvKNdCBNui?=
- =?us-ascii?Q?4ODraA6ZjhZQvj5vEBATSo0u8i+/q93Psc3S022enFovBZhH0x3O5oU4SdhY?=
- =?us-ascii?Q?i89PcSiA8z1TfFmxIipFa73BVKfWCMO8P+X1ushttG6bWuZ1J2Mc3LUf6JSc?=
- =?us-ascii?Q?wISxvleFfO/Bh2tBXquxuiJQzRIPAEd5pcxRf/lHhkv2oLwd9Sd+MVASDoeh?=
- =?us-ascii?Q?kxswrX0uOqB1JMLS/byyR9yx1k21bjPSYQ2tSdzp14WIyO3oHcqCPkiLzscq?=
- =?us-ascii?Q?n6UIpiXNncGnHuzCAaBZGco7g20xMSUeIjPvoOO61BYJXacF4PjjOv7nPf5U?=
- =?us-ascii?Q?Iop4pnbROOyYEOSyqvSoBg8LbRPIfHzLTZwOeHqePH9cph5fuG5qUomhrwgy?=
- =?us-ascii?Q?nlcbJ42JN7pZa5t4U5u4h9nK3nz+JBIaYmPOpMTEmtlFi3IXtAUB5eBO1vTr?=
- =?us-ascii?Q?1D/DfPaqybDH2LGEIlr801rJTBlVdLQMoGryFdJo/Eic2t4EQyCQn/9jxdkr?=
- =?us-ascii?Q?mL5UC91PROgjW49erJ3LdY3f27LDW8i/kcUuUp6uGLZw6EmfuHxoQapFcLHH?=
- =?us-ascii?Q?7GZCziBsQOOmFdx9NaJiBnP2rsgTysrzfeVI634Vm3W/ed0nk13t6wMfveIB?=
- =?us-ascii?Q?Hq14AutCY1uT0m4er6IuSVUcVPHe9uGeS3VA9VznLB0kXv0Ocd8w5A3lTLgx?=
- =?us-ascii?Q?GdS6wUB0q2vFm/YdntuZQ0XMYb2RBGnGSERfdvicalbUZiuOEJLy5d9ZbD/6?=
- =?us-ascii?Q?ncFtyx2NyQ1V8Gf3VGPaRak0T/+GQHYJdDplrEXfDpgYhoh5zAulJz+1OYYT?=
- =?us-ascii?Q?aSrMI4sA+FD+VFTV03SFxBd7U4cH4MIEz51Cy4rPcy88esN82F28Uq465mD+?=
- =?us-ascii?Q?xTD2ApPBINZ1y7pVABy8IhLEzQs/bdaGZkFq9M7yyAyedpboQdYcUc1Gyb63?=
- =?us-ascii?Q?5hCetzCApyT1cYOSGqRkbP2b/LiDT3X3Q+bxQz8bS6GmqSK2pLjNz83EzsNN?=
- =?us-ascii?Q?YWuzHDlNkpvZO6gKfxY5vsTsNjvWX6MMz0z+62EEN/Z+i3HM9ETzwqLl6z+A?=
- =?us-ascii?Q?RYK8RK3Yj6+ZDc8zPVlxhnX4ZFfCb9PtSsNbgfs4dpyNaqPoov8/ftwUWbzX?=
- =?us-ascii?Q?YYZKTADymgnpdrAZziizKHPwl4wSte/FEThus9hlg2KaDfszCreMx3Y2gy4W?=
- =?us-ascii?Q?ds+ZPc+APktEo9RU5VwcL77W3wAR2IWHOz2b7kTg5V3spIEsme+zI9iu0+U0?=
- =?us-ascii?Q?wy2g5fMoxe8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?6k1Df6hz4zjPC+3C8IYyyiCIP0WgKFJWM4oms5e2S5bJa4DECJrNalKlACzU?=
- =?us-ascii?Q?/jOb1v4l7WHHclyf5dLq0uG2t5cKOyvE8GUq/AV1DVGJkmbhGMIb0/foxXA5?=
- =?us-ascii?Q?S1uBI5+XSC5tEDN+8UPDiQ/PZasICUvC0ZrYEADdFid+mL/D1JGHZu0g5P4T?=
- =?us-ascii?Q?VrgvedOWWADAgY+OPEdtXwNqiEifDyaZXNpnDOSEYB1wijC+XM5NVFBKvb+u?=
- =?us-ascii?Q?beWMrCFmKGknU26z3XtD1/EwaDcvKa1FZ6bCMw+sua4a/jVb8xAnW2DvDW7V?=
- =?us-ascii?Q?mJRZCUilDiU6WS1+/lmoA7XOB2Ju7gkRh5EbIwbd9xkSFg+M8kAoo8lDk5Ux?=
- =?us-ascii?Q?xF2cMMxPidrROEHVLGHGbLXEwHOehMHgRw3oDp0bRDAn7TR9iog81NrDeEJu?=
- =?us-ascii?Q?k9k+07+AiX1ykbqpJajtFp98hMsrYBATuu5xXa9j4TzG6n3CosFOA6KpYggT?=
- =?us-ascii?Q?kFJ+hYNgNI4bW1VVJe8+l5xTc3fYnl9Uhfh6XZ+i1nDd7osA+DPcpg2DM+AY?=
- =?us-ascii?Q?l3EuFnhm/p5w2SLkc3X7XoZvJcaS5FEDIcCsqi6cC7HMbJu6BGDbwvnBHE2t?=
- =?us-ascii?Q?bpHigTSttdw0mINq5/AQAEz1NpUqbtt6ed97TSwG9PkIJEeZwLnBS4jabyHz?=
- =?us-ascii?Q?fwPAcXdzzla8Ie4h1h+ttlBgkbPxrToWXMFcw/R+FU/QlYV+nAWUr6y5CO+Q?=
- =?us-ascii?Q?jvYzdVaY/Kr4uJIZR0VkXVOmDO4t0nS93AVq5MBvyTyhLLELv/2ed+a77fYC?=
- =?us-ascii?Q?v7PJoz5wsQLQN2TPYfHJfQBkrGjgaUs9lPtKL0zY8btCAZNdFIVLbcc7CcD/?=
- =?us-ascii?Q?Z+FLq1Eh3oVYj1s1IOBVoMzQXC/QuA7L3hRsR1S/zyaqcT1anOKDbP/rMy50?=
- =?us-ascii?Q?qZYLk6gShaII0+Qul0F4KBcLd6hCSYsJKbb2rRh2QhuAxre36h8grMKjJyfw?=
- =?us-ascii?Q?3OqJZzYDJFSyw7zsYaksmIUHhDH7fhuTJnVUNfFAJUHx1xJmL3TKfjRUT+4A?=
- =?us-ascii?Q?eU6n0oEcQATRR/S8XruXa7lSV1WCHNdaaY/MtNHHdCj50fj752BEMTHYgJxr?=
- =?us-ascii?Q?stkt5arHUTgcVCh0SA57wdGPMDqwOWR+sWSHHUuIjO4RQ8mkqMOyk/IVXFJT?=
- =?us-ascii?Q?jh8A6C3bRQ4EzZPIlz18Dr1DselwNzfx7RKSFoQPuVwRBbxKqllV0Afkkc3v?=
- =?us-ascii?Q?rOFLB8YrLWeggIsmuZ/5+akojzoxxiy4LSkGvKH5ltE1nZmFmSpJzoixZZo0?=
- =?us-ascii?Q?uTGmG/fAc/XECeJ7TQhmNqlxDDK+TuJThsWrw9PuvPm4bvlxIqpFM2hlgAiH?=
- =?us-ascii?Q?xk9PNNsDn1iiivDDyKzYmSguTTpIrgxiXYTJ6OXJkok1tBlMBPQ5B4HH7Yea?=
- =?us-ascii?Q?Q+CVGYIsH5VhOfmWYVE1OjXK87WfvuQ1kWkyKcfeq9DUtTWqiV4u8+GC/xyb?=
- =?us-ascii?Q?z2vJZW97ZwtW7Ql5ckI7eDdCfA7I0DLkTRTBTbiJv3W52M/SysnVbcXlp2SQ?=
- =?us-ascii?Q?AynelWXaLMaoAiSp93TdRdh++yY66KP9MieFq8bd/Ug6xhIjhFjbSL3jtibX?=
- =?us-ascii?Q?VlSZPaZ1tVRw6IKRcZEIN1yK9D5lPQDGWiXFhkkV+fpXjnc5Tk7yFbng7YjZ?=
- =?us-ascii?Q?Fg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	e1JVcrIOhgkkRvIT7A3hbQcgN4vZyhAxAHI6k9vhw2I9NwWn6z5Ik2bRgoSxPsx5daNTLmBPaLSEQ+ED4NygvNxAjb+KG0AeW8JxnIgPsbBrx/lj8SXp9Li1HyyBIxFaskpeweh9TK7X2D561jzDngmYivcbLM22JJJNDvMnl6R3FWsZn2Mw+HBWI9wTdDYYqZpNLe5MdcH3Lw0CwcQXxAnhasK5ak+l2TZVAtDc4XrVTBsoKQw35n/G6fkeirEQeY11KxF3Q7Cinp4Q3/R1B3RzHfbua4mOHpH/a9hKKnrbgT0MLVzi2DSqXdGk2afdfn9UUd4yXanKzJBNnvol89gebJhP6zIRYCyRopegLzG27z2Glc9wG+6lY86UTIVr8RDPPRyqWhQjtKXtwLw6ddoW2mhx6DXbeu2TZhZlczKMN0yoWdvuSIZjtE3nx+Nzs9xzF8TyUGUL687AHIxbqUQwTUMkKx9goe2elEB/G6Ckytc9O/h5yAtSxSp9nPqOVyawBGR7yPUCxwv3YXnwxebF+qpJ57Ic1MfiCizLfVwlu/UgV36RhWFVb599mJ184kIS3JoXeBR5+2tud0pj4DB+u+Ip1IoTMTfxXKppO/4=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af808fc8-502f-4dbf-9f8f-08ddaaaadb96
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 18:48:16.2540
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S78hPQIZgE2i/LmTS6Hwxu6egxgFaayuf7ouqudZ+haGzz/1OAbaGdQuj340SNAdYLIse1e0KG6es7uicRchKSpoHayUQNA3c4rsBBG9x34=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF1DE1C92F7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-13_02,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506130133
-X-Proofpoint-GUID: auahTKYbIH_OJdqwU7KSe7sPCIBRh_qm
-X-Authority-Analysis: v=2.4 cv=BffY0qt2 c=1 sm=1 tr=0 ts=684c7273 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=bZtX5uDdIcPNizj3TXgA:9 cc=ntf awl=host:14714
-X-Proofpoint-ORIG-GUID: auahTKYbIH_OJdqwU7KSe7sPCIBRh_qm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDEzMyBTYWx0ZWRfX/BTY2av1DQQJ PotPTBGKKHZ4zx+csl0g0JeO1rydpnxbdzofzszlq25jCLBiWVYgg6K06AzsixIfoVLO1tRh5hD ZS8MYuAx4x1yC50b2wyTpWxLaip4tNiIC/JnW4vDqbUNwDGWJ2aYZYltkJf3FyVd+1MCS3LzWTZ
- PnaBbGvXCTwvVWbY5rA0ILStiMS4icUNlhZ4XpygPNDnk0RB51QISKR//kNtdk3HIi33RsTqx6o fg/SD0BJrIZyoyZmJn9rM5siZ+/P+Uq83r1tUEgibAm8tC9O+Y4tCcYeei5CIFEB6Q1aq75/MKl hyYQS9TgNGr8EtPfEQ3yn58RTk8JHHSzbAlpld2w1fNgJIlmAr5CrRYA4dTnifI7Xu8xIs1CwHY
- jcmDQUUd0e/Tjvs8q0STmwbFZUr61z6FjlwpwTucGS/z35s6KxSwbAMMXeXJTFzK48gvKReT
+Content-Transfer-Encoding: 8bit
 
-In commit 3a75ccba047b ("mm: simplify vma merge structure and expand
-comments") we introduced the vmg->target field to make the merging of
-existing VMAs simpler - clarifying precisely which VMA would eventually
-become the merged VMA once the merge operation was complete.
+From: Eric Biggers <ebiggers@google.com>
 
-New VMA merging did not get quite the same treatment, retaining the rather
-confusing convention of storing the target VMA in vmg->middle.
+Fix build warnings with W=1 that started appearing after
+commit a934a57a42f6 ("scripts/misc-check: check missing #include
+<linux/export.h> when W=1").
 
-This patch corrects this state of affairs, utilising vmg->target for this
-purpose for both vma_merge_new_range() and also for vma_expand().
+While at it, also sort the include lists alphabetically.  (Keep
+asm/irqflags.h last, as otherwise it doesn't build on alpha.)
 
-We retain the WARN_ON for vmg->middle being specified in
-vma_merge_new_range() as doing so would make no sense, but add an
-additional debug assert for setting vmg->target.
+This handles all of lib/crypto/, but not arch/*/lib/crypto/.  The
+exports in arch/*/lib/crypto/ will go away when the code is properly
+integrated into lib/crypto/ as planned.
 
-This patch additionally updates VMA userland testing to account for this
-change.
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+v2: keep asm/irqflags.h last, to avoid build error on alpha
+    (https://lore.kernel.org/all/202506140001.CtqYqDPn-lkp@intel.com/)
+
 ---
- mm/vma.c                | 36 +++++++++++++++++++-----------------
- mm/vma_exec.c           |  2 +-
- tools/testing/vma/vma.c |  6 +++---
- 3 files changed, 23 insertions(+), 21 deletions(-)
+ lib/crypto/aes.c                | 1 +
+ lib/crypto/aescfb.c             | 7 +++----
+ lib/crypto/aesgcm.c             | 5 ++---
+ lib/crypto/arc4.c               | 1 +
+ lib/crypto/blake2s-generic.c    | 9 +++++----
+ lib/crypto/blake2s.c            | 9 +++++----
+ lib/crypto/chacha.c             | 7 ++++---
+ lib/crypto/chacha20poly1305.c   | 8 ++++----
+ lib/crypto/curve25519-generic.c | 1 +
+ lib/crypto/des.c                | 7 +++----
+ lib/crypto/gf128mul.c           | 1 +
+ lib/crypto/libchacha.c          | 7 +++----
+ lib/crypto/memneq.c             | 3 ++-
+ lib/crypto/mpi/mpi-add.c        | 2 ++
+ lib/crypto/mpi/mpi-bit.c        | 2 ++
+ lib/crypto/mpi/mpi-cmp.c        | 2 ++
+ lib/crypto/mpi/mpi-mul.c        | 2 ++
+ lib/crypto/mpi/mpi-pow.c        | 2 ++
+ lib/crypto/mpi/mpi-sub-ui.c     | 2 ++
+ lib/crypto/mpi/mpicoder.c       | 3 ++-
+ lib/crypto/mpi/mpiutil.c        | 2 ++
+ lib/crypto/poly1305-donna32.c   | 3 ++-
+ lib/crypto/poly1305-donna64.c   | 3 ++-
+ lib/crypto/poly1305-generic.c   | 1 +
+ lib/crypto/poly1305.c           | 1 +
+ lib/crypto/sha1.c               | 6 +++---
+ lib/crypto/sha256-generic.c     | 1 +
+ lib/crypto/sha256.c             | 1 +
+ lib/crypto/sm3.c                | 1 +
+ lib/crypto/utils.c              | 3 ++-
+ 30 files changed, 65 insertions(+), 38 deletions(-)
 
-diff --git a/mm/vma.c b/mm/vma.c
-index bfbc56df190c..a58b39b4eeb1 100644
---- a/mm/vma.c
-+++ b/mm/vma.c
-@@ -1028,6 +1028,7 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
-
- 	mmap_assert_write_locked(vmg->mm);
- 	VM_WARN_ON_VMG(vmg->middle, vmg);
-+	VM_WARN_ON_VMG(vmg->target, vmg);
- 	/* vmi must point at or before the gap. */
- 	VM_WARN_ON_VMG(vma_iter_addr(vmg->vmi) > end, vmg);
-
-@@ -1043,13 +1044,13 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
- 	/* If we can merge with the next VMA, adjust vmg accordingly. */
- 	if (can_merge_right) {
- 		vmg->end = next->vm_end;
--		vmg->middle = next;
-+		vmg->target = next;
- 	}
-
- 	/* If we can merge with the previous VMA, adjust vmg accordingly. */
- 	if (can_merge_left) {
- 		vmg->start = prev->vm_start;
--		vmg->middle = prev;
-+		vmg->target = prev;
- 		vmg->pgoff = prev->vm_pgoff;
-
- 		/*
-@@ -1071,10 +1072,10 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
- 	 * Now try to expand adjacent VMA(s). This takes care of removing the
- 	 * following VMA if we have VMAs on both sides.
- 	 */
--	if (vmg->middle && !vma_expand(vmg)) {
--		khugepaged_enter_vma(vmg->middle, vmg->flags);
-+	if (vmg->target && !vma_expand(vmg)) {
-+		khugepaged_enter_vma(vmg->target, vmg->flags);
- 		vmg->state = VMA_MERGE_SUCCESS;
--		return vmg->middle;
-+		return vmg->target;
- 	}
-
- 	return NULL;
-@@ -1086,27 +1087,29 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
-  * @vmg: Describes a VMA expansion operation.
-  *
-  * Expand @vma to vmg->start and vmg->end.  Can expand off the start and end.
-- * Will expand over vmg->next if it's different from vmg->middle and vmg->end ==
-- * vmg->next->vm_end.  Checking if the vmg->middle can expand and merge with
-+ * Will expand over vmg->next if it's different from vmg->target and vmg->end ==
-+ * vmg->next->vm_end.  Checking if the vmg->target can expand and merge with
-  * vmg->next needs to be handled by the caller.
-  *
-  * Returns: 0 on success.
-  *
-  * ASSUMPTIONS:
-- * - The caller must hold a WRITE lock on vmg->middle->mm->mmap_lock.
-- * - The caller must have set @vmg->middle and @vmg->next.
-+ * - The caller must hold a WRITE lock on vmg->target->mm->mmap_lock.
-+ * - The caller must have set @vmg->target and @vmg->next.
+diff --git a/lib/crypto/aes.c b/lib/crypto/aes.c
+index eafe14d021f5a..b57fda3460f1b 100644
+--- a/lib/crypto/aes.c
++++ b/lib/crypto/aes.c
+@@ -3,10 +3,11 @@
+  * Copyright (C) 2017-2019 Linaro Ltd <ard.biesheuvel@linaro.org>
   */
- int vma_expand(struct vma_merge_struct *vmg)
+ 
+ #include <crypto/aes.h>
+ #include <linux/crypto.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/unaligned.h>
+ 
+ /*
+  * Emit the sbox as volatile const to prevent the compiler from doing
+diff --git a/lib/crypto/aescfb.c b/lib/crypto/aescfb.c
+index 437613265e14f..035140b2e7789 100644
+--- a/lib/crypto/aescfb.c
++++ b/lib/crypto/aescfb.c
+@@ -3,15 +3,14 @@
+  * Minimal library implementation of AES in CFB mode
+  *
+  * Copyright 2023 Google LLC
+  */
+ 
+-#include <linux/module.h>
+-
+-#include <crypto/algapi.h>
+ #include <crypto/aes.h>
+-
++#include <crypto/algapi.h>
++#include <linux/export.h>
++#include <linux/module.h>
+ #include <asm/irqflags.h>
+ 
+ static void aescfb_encrypt_block(const struct crypto_aes_ctx *ctx, void *dst,
+ 				 const void *src)
  {
- 	struct vm_area_struct *anon_dup = NULL;
- 	bool remove_next = false;
--	struct vm_area_struct *middle = vmg->middle;
-+	struct vm_area_struct *target = vmg->target;
- 	struct vm_area_struct *next = vmg->next;
-
-+	VM_WARN_ON_VMG(!target, vmg);
+diff --git a/lib/crypto/aesgcm.c b/lib/crypto/aesgcm.c
+index 277824d6b4af7..57e631a8ea3f3 100644
+--- a/lib/crypto/aesgcm.c
++++ b/lib/crypto/aesgcm.c
+@@ -3,16 +3,15 @@
+  * Minimal library implementation of GCM
+  *
+  * Copyright 2022 Google LLC
+  */
+ 
+-#include <linux/module.h>
+-
+ #include <crypto/algapi.h>
+ #include <crypto/gcm.h>
+ #include <crypto/ghash.h>
+-
++#include <linux/export.h>
++#include <linux/module.h>
+ #include <asm/irqflags.h>
+ 
+ static void aesgcm_encrypt_block(const struct crypto_aes_ctx *ctx, void *dst,
+ 				 const void *src)
+ {
+diff --git a/lib/crypto/arc4.c b/lib/crypto/arc4.c
+index 838812d182164..4e950e1e66d08 100644
+--- a/lib/crypto/arc4.c
++++ b/lib/crypto/arc4.c
+@@ -6,10 +6,11 @@
+  *
+  * Jon Oberheide <jon@oberheide.org>
+  */
+ 
+ #include <crypto/arc4.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ 
+ int arc4_setkey(struct arc4_ctx *ctx, const u8 *in_key, unsigned int key_len)
+ {
+ 	int i, j = 0, k = 0;
+diff --git a/lib/crypto/blake2s-generic.c b/lib/crypto/blake2s-generic.c
+index 09682136b57c6..9828176a2efec 100644
+--- a/lib/crypto/blake2s-generic.c
++++ b/lib/crypto/blake2s-generic.c
+@@ -7,15 +7,16 @@
+  * Information: https://blake2.net/
+  *
+  */
+ 
+ #include <crypto/internal/blake2s.h>
+-#include <linux/types.h>
+-#include <linux/string.h>
+-#include <linux/kernel.h>
+-#include <linux/init.h>
+ #include <linux/bug.h>
++#include <linux/export.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/string.h>
++#include <linux/types.h>
+ #include <linux/unaligned.h>
+ 
+ static const u8 blake2s_sigma[10][16] = {
+ 	{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
+ 	{ 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3 },
+diff --git a/lib/crypto/blake2s.c b/lib/crypto/blake2s.c
+index b0f9a678300b3..f6ec68c3dcdae 100644
+--- a/lib/crypto/blake2s.c
++++ b/lib/crypto/blake2s.c
+@@ -7,16 +7,17 @@
+  * Information: https://blake2.net/
+  *
+  */
+ 
+ #include <crypto/internal/blake2s.h>
+-#include <linux/types.h>
+-#include <linux/string.h>
++#include <linux/bug.h>
++#include <linux/export.h>
++#include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/init.h>
+-#include <linux/bug.h>
++#include <linux/string.h>
++#include <linux/types.h>
+ 
+ static inline void blake2s_set_lastblock(struct blake2s_state *state)
+ {
+ 	state->f[0] = -1;
+ }
+diff --git a/lib/crypto/chacha.c b/lib/crypto/chacha.c
+index ced87dd31a97f..5962e65c5a9fd 100644
+--- a/lib/crypto/chacha.c
++++ b/lib/crypto/chacha.c
+@@ -3,17 +3,18 @@
+  * The "hash function" used as the core of the ChaCha stream cipher (RFC7539)
+  *
+  * Copyright (C) 2015 Martin Willi
+  */
+ 
++#include <crypto/chacha.h>
++#include <linux/bitops.h>
+ #include <linux/bug.h>
+-#include <linux/kernel.h>
+ #include <linux/export.h>
+-#include <linux/bitops.h>
++#include <linux/export.h>
++#include <linux/kernel.h>
+ #include <linux/string.h>
+ #include <linux/unaligned.h>
+-#include <crypto/chacha.h>
+ 
+ static void chacha_permute(struct chacha_state *state, int nrounds)
+ {
+ 	u32 *x = state->x;
+ 	int i;
+diff --git a/lib/crypto/chacha20poly1305.c b/lib/crypto/chacha20poly1305.c
+index e29eed49a5a14..0b49d6aedefdd 100644
+--- a/lib/crypto/chacha20poly1305.c
++++ b/lib/crypto/chacha20poly1305.c
+@@ -5,20 +5,20 @@
+  * This is an implementation of the ChaCha20Poly1305 AEAD construction.
+  *
+  * Information: https://tools.ietf.org/html/rfc8439
+  */
+ 
+-#include <crypto/chacha20poly1305.h>
+ #include <crypto/chacha.h>
++#include <crypto/chacha20poly1305.h>
+ #include <crypto/poly1305.h>
+ #include <crypto/utils.h>
+-
+-#include <linux/unaligned.h>
+-#include <linux/kernel.h>
++#include <linux/export.h>
+ #include <linux/init.h>
++#include <linux/kernel.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
++#include <linux/unaligned.h>
+ 
+ static void chacha_load_key(u32 *k, const u8 *in)
+ {
+ 	k[0] = get_unaligned_le32(in);
+ 	k[1] = get_unaligned_le32(in + 4);
+diff --git a/lib/crypto/curve25519-generic.c b/lib/crypto/curve25519-generic.c
+index de7c99172fa25..f8aa70c9f5598 100644
+--- a/lib/crypto/curve25519-generic.c
++++ b/lib/crypto/curve25519-generic.c
+@@ -8,10 +8,11 @@
+  *
+  * Information: https://cr.yp.to/ecdh.html
+  */
+ 
+ #include <crypto/curve25519.h>
++#include <linux/export.h>
+ #include <linux/module.h>
+ 
+ const u8 curve25519_null_point[CURVE25519_KEY_SIZE] __aligned(32) = { 0 };
+ const u8 curve25519_base_point[CURVE25519_KEY_SIZE] __aligned(32) = { 9 };
+ 
+diff --git a/lib/crypto/des.c b/lib/crypto/des.c
+index d3423b34a8e9b..a906070136dc3 100644
+--- a/lib/crypto/des.c
++++ b/lib/crypto/des.c
+@@ -5,25 +5,24 @@
+  * DES & Triple DES EDE Cipher Algorithms.
+  *
+  * Copyright (c) 2005 Dag Arne Osvik <da@osvik.no>
+  */
+ 
++#include <crypto/des.h>
++#include <crypto/internal/des.h>
+ #include <linux/bitops.h>
+ #include <linux/compiler.h>
+ #include <linux/crypto.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/fips.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+-
+ #include <linux/unaligned.h>
+ 
+-#include <crypto/des.h>
+-#include <crypto/internal/des.h>
+-
+ #define ROL(x, r) ((x) = rol32((x), (r)))
+ #define ROR(x, r) ((x) = ror32((x), (r)))
+ 
+ /* Lookup tables for key expansion */
+ 
+diff --git a/lib/crypto/gf128mul.c b/lib/crypto/gf128mul.c
+index fbe72cb3453a5..2a34590fe3f10 100644
+--- a/lib/crypto/gf128mul.c
++++ b/lib/crypto/gf128mul.c
+@@ -47,10 +47,11 @@
+  This file provides fast multiplication in GF(2^128) as required by several
+  cryptographic authentication modes
+ */
+ 
+ #include <crypto/gf128mul.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ 
+ #define gf128mul_dat(q) { \
+diff --git a/lib/crypto/libchacha.c b/lib/crypto/libchacha.c
+index ebcca381e248a..26862ad90a964 100644
+--- a/lib/crypto/libchacha.c
++++ b/lib/crypto/libchacha.c
+@@ -3,16 +3,15 @@
+  * The ChaCha stream cipher (RFC7539)
+  *
+  * Copyright (C) 2015 Martin Willi
+  */
+ 
+-#include <linux/kernel.h>
+-#include <linux/export.h>
+-#include <linux/module.h>
+-
+ #include <crypto/algapi.h> // for crypto_xor_cpy
+ #include <crypto/chacha.h>
++#include <linux/export.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
+ 
+ void chacha_crypt_generic(struct chacha_state *state, u8 *dst, const u8 *src,
+ 			  unsigned int bytes, int nrounds)
+ {
+ 	/* aligned to potentially speed up crypto_xor() */
+diff --git a/lib/crypto/memneq.c b/lib/crypto/memneq.c
+index a2afd10349c92..44daacb8cb513 100644
+--- a/lib/crypto/memneq.c
++++ b/lib/crypto/memneq.c
+@@ -57,13 +57,14 @@
+  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-#include <linux/unaligned.h>
+ #include <crypto/algapi.h>
++#include <linux/export.h>
+ #include <linux/module.h>
++#include <linux/unaligned.h>
+ 
+ /* Generic path for arbitrary size */
+ static inline unsigned long
+ __crypto_memneq_generic(const void *a, const void *b, size_t size)
+ {
+diff --git a/lib/crypto/mpi/mpi-add.c b/lib/crypto/mpi/mpi-add.c
+index 3015140d48602..c0375c1672fa3 100644
+--- a/lib/crypto/mpi/mpi-add.c
++++ b/lib/crypto/mpi/mpi-add.c
+@@ -9,10 +9,12 @@
+  *	 way the data is stored; this is to support the abstraction
+  *	 of an optional secure memory allocation which may be used
+  *	 to avoid revealing of sensitive data due to paging etc.
+  */
+ 
++#include <linux/export.h>
 +
- 	mmap_assert_write_locked(vmg->mm);
+ #include "mpi-internal.h"
+ 
+ int mpi_add(MPI w, MPI u, MPI v)
+ {
+ 	mpi_ptr_t wp, up, vp;
+diff --git a/lib/crypto/mpi/mpi-bit.c b/lib/crypto/mpi/mpi-bit.c
+index 934d813113606..b3d0e7ddbc03d 100644
+--- a/lib/crypto/mpi/mpi-bit.c
++++ b/lib/crypto/mpi/mpi-bit.c
+@@ -16,10 +16,12 @@
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  */
+ 
++#include <linux/export.h>
++
+ #include "mpi-internal.h"
+ #include "longlong.h"
+ 
+ #define A_LIMB_1 ((mpi_limb_t) 1)
+ 
+diff --git a/lib/crypto/mpi/mpi-cmp.c b/lib/crypto/mpi/mpi-cmp.c
+index ceaebe181cd70..b42929296bcef 100644
+--- a/lib/crypto/mpi/mpi-cmp.c
++++ b/lib/crypto/mpi/mpi-cmp.c
+@@ -16,10 +16,12 @@
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  */
+ 
++#include <linux/export.h>
++
+ #include "mpi-internal.h"
+ 
+ int mpi_cmp_ui(MPI u, unsigned long v)
+ {
+ 	mpi_limb_t limb = v;
+diff --git a/lib/crypto/mpi/mpi-mul.c b/lib/crypto/mpi/mpi-mul.c
+index 7e6ff1ce3e9b6..d79f186ad90bc 100644
+--- a/lib/crypto/mpi/mpi-mul.c
++++ b/lib/crypto/mpi/mpi-mul.c
+@@ -9,10 +9,12 @@
+  *	 way the data is stored; this is to support the abstraction
+  *	 of an optional secure memory allocation which may be used
+  *	 to avoid revealing of sensitive data due to paging etc.
+  */
+ 
++#include <linux/export.h>
++
+ #include "mpi-internal.h"
+ 
+ int mpi_mul(MPI w, MPI u, MPI v)
+ {
+ 	mpi_size_t usize, vsize, wsize;
+diff --git a/lib/crypto/mpi/mpi-pow.c b/lib/crypto/mpi/mpi-pow.c
+index 67fbd4c2503d0..9e695a3bda3a0 100644
+--- a/lib/crypto/mpi/mpi-pow.c
++++ b/lib/crypto/mpi/mpi-pow.c
+@@ -11,12 +11,14 @@
+  *	 to avoid revealing of sensitive data due to paging etc.
+  *	 The GNU MP Library itself is published under the LGPL;
+  *	 however I decided to publish this code under the plain GPL.
+  */
+ 
++#include <linux/export.h>
+ #include <linux/sched.h>
+ #include <linux/string.h>
++
+ #include "mpi-internal.h"
+ #include "longlong.h"
+ 
+ /****************
+  * RES = BASE ^ EXP mod MOD
+diff --git a/lib/crypto/mpi/mpi-sub-ui.c b/lib/crypto/mpi/mpi-sub-ui.c
+index b41b082b5f3e3..0edcdbd24833a 100644
+--- a/lib/crypto/mpi/mpi-sub-ui.c
++++ b/lib/crypto/mpi/mpi-sub-ui.c
+@@ -30,10 +30,12 @@
+  * You should have received copies of the GNU General Public License and the
+  * GNU Lesser General Public License along with the GNU MP Library.  If not,
+  * see https://www.gnu.org/licenses/.
+  */
+ 
++#include <linux/export.h>
++
+ #include "mpi-internal.h"
+ 
+ int mpi_sub_ui(MPI w, MPI u, unsigned long vval)
+ {
+ 	if (u->nlimbs == 0) {
+diff --git a/lib/crypto/mpi/mpicoder.c b/lib/crypto/mpi/mpicoder.c
+index dde01030807de..47f6939599b33 100644
+--- a/lib/crypto/mpi/mpicoder.c
++++ b/lib/crypto/mpi/mpicoder.c
+@@ -17,12 +17,13 @@
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  */
+ 
+ #include <linux/bitops.h>
+-#include <linux/count_zeros.h>
+ #include <linux/byteorder/generic.h>
++#include <linux/count_zeros.h>
++#include <linux/export.h>
+ #include <linux/scatterlist.h>
+ #include <linux/string.h>
+ #include "mpi-internal.h"
+ 
+ #define MAX_EXTERN_MPI_BITS 16384
+diff --git a/lib/crypto/mpi/mpiutil.c b/lib/crypto/mpi/mpiutil.c
+index 979ece5a81d25..7f2db830f4043 100644
+--- a/lib/crypto/mpi/mpiutil.c
++++ b/lib/crypto/mpi/mpiutil.c
+@@ -16,10 +16,12 @@
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  */
+ 
++#include <linux/export.h>
++
+ #include "mpi-internal.h"
+ 
+ /****************
+  * Note:  It was a bad idea to use the number of limbs to allocate
+  *	  because on a alpha the limbs are large but we normally need
+diff --git a/lib/crypto/poly1305-donna32.c b/lib/crypto/poly1305-donna32.c
+index 0a4a2d99e3654..b66131b3f6d4b 100644
+--- a/lib/crypto/poly1305-donna32.c
++++ b/lib/crypto/poly1305-donna32.c
+@@ -4,13 +4,14 @@
+  *
+  * This is based in part on Andrew Moon's poly1305-donna, which is in the
+  * public domain.
+  */
+ 
++#include <crypto/internal/poly1305.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/unaligned.h>
+-#include <crypto/internal/poly1305.h>
+ 
+ void poly1305_core_setkey(struct poly1305_core_key *key,
+ 			  const u8 raw_key[POLY1305_BLOCK_SIZE])
+ {
+ 	/* r &= 0xffffffc0ffffffc0ffffffc0fffffff */
+diff --git a/lib/crypto/poly1305-donna64.c b/lib/crypto/poly1305-donna64.c
+index 530287531b2ee..8a72a5a849446 100644
+--- a/lib/crypto/poly1305-donna64.c
++++ b/lib/crypto/poly1305-donna64.c
+@@ -4,13 +4,14 @@
+  *
+  * This is based in part on Andrew Moon's poly1305-donna, which is in the
+  * public domain.
+  */
+ 
++#include <crypto/internal/poly1305.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/unaligned.h>
+-#include <crypto/internal/poly1305.h>
+ 
+ void poly1305_core_setkey(struct poly1305_core_key *key,
+ 			  const u8 raw_key[POLY1305_BLOCK_SIZE])
+ {
+ 	u64 t0, t1;
+diff --git a/lib/crypto/poly1305-generic.c b/lib/crypto/poly1305-generic.c
+index a73f700fa1fb8..71a16c5c538b4 100644
+--- a/lib/crypto/poly1305-generic.c
++++ b/lib/crypto/poly1305-generic.c
+@@ -6,10 +6,11 @@
+  *
+  * Based on public domain code by Andrew Moon and Daniel J. Bernstein.
+  */
+ 
+ #include <crypto/internal/poly1305.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ 
+ void poly1305_block_init_generic(struct poly1305_block_state *desc,
+ 				 const u8 raw_key[POLY1305_BLOCK_SIZE])
+diff --git a/lib/crypto/poly1305.c b/lib/crypto/poly1305.c
+index 5f2f2af3b59f8..a6dc182b6c22d 100644
+--- a/lib/crypto/poly1305.c
++++ b/lib/crypto/poly1305.c
+@@ -7,10 +7,11 @@
+  * Based on public domain code by Andrew Moon and Daniel J. Bernstein.
+  */
+ 
+ #include <crypto/internal/blockhash.h>
+ #include <crypto/internal/poly1305.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/string.h>
+ #include <linux/unaligned.h>
+ 
+diff --git a/lib/crypto/sha1.c b/lib/crypto/sha1.c
+index ebb60519ae939..6d809c3088be3 100644
+--- a/lib/crypto/sha1.c
++++ b/lib/crypto/sha1.c
+@@ -4,16 +4,16 @@
+  * and to avoid unnecessary copies into the context array.
+  *
+  * This was based on the git SHA1 implementation.
+  */
+ 
+-#include <linux/kernel.h>
++#include <crypto/sha1.h>
++#include <linux/bitops.h>
+ #include <linux/export.h>
++#include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/bitops.h>
+ #include <linux/string.h>
+-#include <crypto/sha1.h>
+ #include <linux/unaligned.h>
+ 
+ /*
+  * If you have 32 registers or more, the compiler can (and should)
+  * try to change the array[] accesses into registers. However, on
+diff --git a/lib/crypto/sha256-generic.c b/lib/crypto/sha256-generic.c
+index a16ad4f25ebb7..2968d95d04038 100644
+--- a/lib/crypto/sha256-generic.c
++++ b/lib/crypto/sha256-generic.c
+@@ -10,10 +10,11 @@
+  * Copyright (c) 2002 James Morris <jmorris@intercode.com.au>
+  * Copyright (c) 2014 Red Hat Inc.
+  */
+ 
+ #include <crypto/internal/sha2.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/string.h>
+ #include <linux/unaligned.h>
+ 
+diff --git a/lib/crypto/sha256.c b/lib/crypto/sha256.c
+index 107e5162507a7..6bfa4ae8dfb59 100644
+--- a/lib/crypto/sha256.c
++++ b/lib/crypto/sha256.c
+@@ -11,10 +11,11 @@
+  * Copyright (c) 2014 Red Hat Inc.
+  */
+ 
+ #include <crypto/internal/blockhash.h>
+ #include <crypto/internal/sha2.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/string.h>
+ 
+ /*
+diff --git a/lib/crypto/sm3.c b/lib/crypto/sm3.c
+index efff0e267d84d..c6b9ad8a3ac66 100644
+--- a/lib/crypto/sm3.c
++++ b/lib/crypto/sm3.c
+@@ -7,10 +7,11 @@
+  * Copyright (C) 2017 Gilad Ben-Yossef <gilad@benyossef.com>
+  * Copyright (C) 2021 Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+  */
+ 
+ #include <crypto/sm3.h>
++#include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/string.h>
+ #include <linux/unaligned.h>
+ 
+diff --git a/lib/crypto/utils.c b/lib/crypto/utils.c
+index 87da2a6dd161e..dec381d5e9065 100644
+--- a/lib/crypto/utils.c
++++ b/lib/crypto/utils.c
+@@ -3,13 +3,14 @@
+  * Crypto library utility functions
+  *
+  * Copyright (c) 2006 Herbert Xu <herbert@gondor.apana.org.au>
+  */
+ 
+-#include <linux/unaligned.h>
+ #include <crypto/utils.h>
++#include <linux/export.h>
+ #include <linux/module.h>
++#include <linux/unaligned.h>
+ 
+ /*
+  * XOR @len bytes from @src1 and @src2 together, writing the result to @dst
+  * (which may alias one of the sources).  Don't call this directly; call
+  * crypto_xor() or crypto_xor_cpy() instead.
 
--	vma_start_write(middle);
--	if (next && (middle != next) && (vmg->end == next->vm_end)) {
-+	vma_start_write(target);
-+	if (next && (target != next) && (vmg->end == next->vm_end)) {
- 		int ret;
-
- 		remove_next = true;
-@@ -1117,19 +1120,18 @@ int vma_expand(struct vma_merge_struct *vmg)
- 		 * In this case we don't report OOM, so vmg->give_up_on_mm is
- 		 * safe.
- 		 */
--		ret = dup_anon_vma(middle, next, &anon_dup);
-+		ret = dup_anon_vma(target, next, &anon_dup);
- 		if (ret)
- 			return ret;
- 	}
-
- 	/* Not merging but overwriting any part of next is not handled. */
- 	VM_WARN_ON_VMG(next && !remove_next &&
--		       next != middle && vmg->end > next->vm_start, vmg);
-+		       next != target && vmg->end > next->vm_start, vmg);
- 	/* Only handles expanding */
--	VM_WARN_ON_VMG(middle->vm_start < vmg->start ||
--		       middle->vm_end > vmg->end, vmg);
-+	VM_WARN_ON_VMG(target->vm_start < vmg->start ||
-+		       target->vm_end > vmg->end, vmg);
-
--	vmg->target = middle;
- 	if (remove_next)
- 		vmg->__remove_next = true;
-
-diff --git a/mm/vma_exec.c b/mm/vma_exec.c
-index 2dffb02ed6a2..922ee51747a6 100644
---- a/mm/vma_exec.c
-+++ b/mm/vma_exec.c
-@@ -54,7 +54,7 @@ int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift)
- 	/*
- 	 * cover the whole range: [new_start, old_end)
- 	 */
--	vmg.middle = vma;
-+	vmg.target = vma;
- 	if (vma_expand(&vmg))
- 		return -ENOMEM;
-
-diff --git a/tools/testing/vma/vma.c b/tools/testing/vma/vma.c
-index 238acd4e20fd..61a67aa6977c 100644
---- a/tools/testing/vma/vma.c
-+++ b/tools/testing/vma/vma.c
-@@ -400,7 +400,7 @@ static bool test_simple_expand(void)
- 	VMA_ITERATOR(vmi, &mm, 0);
- 	struct vma_merge_struct vmg = {
- 		.vmi = &vmi,
--		.middle = vma,
-+		.target = vma,
- 		.start = 0,
- 		.end = 0x3000,
- 		.pgoff = 0,
-@@ -1318,7 +1318,7 @@ static bool test_dup_anon_vma(void)
- 	vma_next->anon_vma = &dummy_anon_vma;
-
- 	vmg_set_range(&vmg, 0, 0x5000, 0, flags);
--	vmg.middle = vma_prev;
-+	vmg.target = vma_prev;
- 	vmg.next = vma_next;
-
- 	ASSERT_EQ(expand_existing(&vmg), 0);
-@@ -1501,7 +1501,7 @@ static bool test_vmi_prealloc_fail(void)
- 	vma->anon_vma = &dummy_anon_vma;
-
- 	vmg_set_range(&vmg, 0, 0x5000, 3, flags);
--	vmg.middle = vma_prev;
-+	vmg.target = vma_prev;
- 	vmg.next = vma;
-
- 	fail_prealloc = true;
---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
 2.49.0
+
