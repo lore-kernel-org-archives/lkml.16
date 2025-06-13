@@ -1,112 +1,179 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061D854654;
-	Fri, 13 Jun 2025 13:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33A654654
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749820956; cv=none; b=ULplLgjtGn+v1OxCg0JEPnP08SJGESZg4SfZ65P7TDHZnjX6XE+gAflLtxA4ec1fEzzvLVc9rppGkoVxCfOsftJ09cGDxhrFsmDgCZb/6pUhzkGqEQCvxL26woCCSNhiXcIdVwq5pAVx55M1UL6wdV1IGS68uaNi3mM5B3ueoHU=
+	t=1749821032; cv=none; b=MzK13H9jN1qVOMrrOxPOKl6NqDAVsXWw5ebxYPzLtm8hKZLtyb6WSmUL6lK/WEAa4GIngrcPJW0muV1B3JnkqDaS9iirQ5+K7MUAfKdE8VfJyXPeO6P3CNj7TFbZJAZ9un8pq+WaZzuD8TDiS26lt2rKHFsPKqRfUghHiqBv2yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749820956; c=relaxed/simple;
-	bh=ZStFIAdXWvcgH+i6/QJnkTysUtDb1IVoiav26flpgDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YSzS/TA0f3GjR+e0z5WUzhqGmUXUUeyqtBFpw88KbJ9umw/pHfmbP3F0ELeF8IWOGl0e75ToyJaBpSMqPROAobSOQDIUFX062uwY4yD2rT3DXidJhQGwoWmPHNO3l0iembZkFUfw5Tgu5p5gbC1m/Fph44wnxadCAv+TkWEm9Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.48.232])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id A915E3422ED;
-	Fri, 13 Jun 2025 13:22:33 +0000 (UTC)
-Date: Fri, 13 Jun 2025 13:22:27 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Vivian Wang <uwu@dram.page>
-Cc: Guodong Xu <guodong@riscstar.com>, vkoul@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	p.zabel@pengutronix.de, drew@pdp7.com,
-	emil.renner.berthing@canonical.com, inochiama@gmail.com,
-	geert+renesas@glider.be, tglx@linutronix.de,
-	hal.feng@starfivetech.com, joel@jms.id.au, duje.mihanovic@skole.hr,
-	Ze Huang <huangze@whut.edu.cn>, elder@riscstar.com,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev
-Subject: Re: [PATCH 5/8] riscv: dts: spacemit: Add dma bus and PDMA node for
- K1 SoC
-Message-ID: <20250613132227-GYB135173@gentoo>
-References: <20250611125723.181711-1-guodong@riscstar.com>
- <20250611125723.181711-6-guodong@riscstar.com>
- <2b17769e-2620-4f22-9ea5-f15d4adcb27b@dram.page>
+	s=arc-20240116; t=1749821032; c=relaxed/simple;
+	bh=9GwavlykpM94jHW4f5zZBsDnslZ1cX7tYFhtrvS6o94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RTmx5HaIkutkDEJJltzXeJqnMYwMvRSv1mMT7Rldme4Gj+b7vkqhLDs7yvZykf3D322UDx3FGwKvyOi8NCV9FuYaqeV9yWTEFx6cWpJwY6c0vx9LMpqjfNfsXLKDsoUbSjazxrcDXo7XeT4hNqdGmlA7r/cnWvG5Hi+QAF68Wd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XVU+GMz+; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XVU+GMz+"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32a6f5cb6f9so10080111fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749821026; x=1750425826; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZX+vTEoJiqzvv8Nfz11XIKSmMVqjZTXwTuDnsnu36yQ=;
+        b=XVU+GMz+TD5BNVcgz0OJ4BmWpOx8pSfZC8Sg63Y2oZcqkBGoXl+unpGLtcgpFpL135
+         gQ7Gf4MrnmQOp5me2Trce4NecTIU2IDNZh3BP43581Hu2CH9JZQJJ53hpF+55Z9Yl+Hr
+         bWoSa5q9ymfvXIZnVC1UdF7dYUkb+M3lRkePEOr3Naz9J+qmuzl1MO+icuwsGkDyDnym
+         UkYfO5AfSvNjOHkTClF9/jJXpdx+OuTQ9+Nec6jnTY+Xx4Pmq15OzT1jvFDNIXCm/SIj
+         jDOZ4ETrRKDVXgmRWy2R8g+jZVu+/qWlEPHmIU1DY+lnhx97of3AopD6AwXC7Ga/H8I7
+         czaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749821026; x=1750425826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZX+vTEoJiqzvv8Nfz11XIKSmMVqjZTXwTuDnsnu36yQ=;
+        b=Ft4NYsUokSIDwDFsPx6ch6h2NNVCvJNDKEFMqRl+XAJj1sVnAifkU6sB1ver+oY7At
+         WGkMtjjyyqdVTIpngQ+fd5RIEc3716KyfAPivGCKpF0CaJ4eH6lIw6MEwqHI3/J419J/
+         C7StRPHgq4ZtEzsFlS71dyhGpucbqEhgEySqPRoJYQmJuH1LAcuxU8ptDXj11RrleeCV
+         7NOI9yt6uj1tXn9nJtjb5dchJsIECzX82OpuKmb+tuQm6J0YGeLcGHRIb9oIdkJVaPhg
+         wML5AjdA9kd9FxZPrhdcR3Ft1XbvGZDHjkRjp6XC/5CQ1+BAFYeNImA5pVdi+TEQ6/ce
+         aw7Q==
+X-Gm-Message-State: AOJu0YwmIi8bc/uOqzNWUWcAKnVPYN+wWsiLWkdpxSQJGpNMWzFkUzLd
+	gmiAku8xV3+QESqbE/0HPAsXVjq/NV+Hs9voGQK5oT9Pb5rA8BgT9NPdYdlSpSHrVedq5D3yMfj
+	Bd+L7vdJqVLX6+9/BmoFtx0h2ma4HOxy8DrLhFeAjGQ==
+X-Gm-Gg: ASbGnct+rO75iQU8SnDwMGW4EWZ1jhjJmQxFmCM7SvV9Hw2pdm/qRyEzALqmzz9gxOg
+	khJ01UE4QaHJeLA385Jqn5Z2428Zp3mNqe4IWpZvmrrYeiUpgx+tJS0Rnen7emrJw9gRrXmQbf/
+	zb8B/QqTAHlpfssslqdVsT4kQUwwX4oJr2mtCCuORPXMD5hISt8xN3eWXHy7nUR8W8EbnoBEzYV
+	mt6
+X-Google-Smtp-Source: AGHT+IHNetXgmhXQnt6IKRDaFvwc/+WfkhXwtS/6xiDC31z9cjj6znsCkn5XwEij8ckDeDVVIJ3cHVeRuWu7rNBtL1c=
+X-Received: by 2002:a05:651c:b24:b0:32b:4653:2f5b with SMTP id
+ 38308e7fff4ca-32b465332eamr2447251fa.15.1749821025764; Fri, 13 Jun 2025
+ 06:23:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b17769e-2620-4f22-9ea5-f15d4adcb27b@dram.page>
+References: <20250612133335.788593-1-marco.crivellari@suse.com>
+ <20250612133335.788593-4-marco.crivellari@suse.com> <aEwj52Fia2Q6-O2Z@localhost.localdomain>
+In-Reply-To: <aEwj52Fia2Q6-O2Z@localhost.localdomain>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Fri, 13 Jun 2025 15:23:34 +0200
+X-Gm-Features: AX0GCFvw9kVKbomJsB9KNJCTn5OzOTlLVPpmQKEKXHA77FM4ulJc1p3UEcRcagM
+Message-ID: <CAAofZF4TeyK=Kbmtb=GbMhYGc4XTJh1TdQ5Jr2+tgdOh-rCXhg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] [Doc] Workqueue: add WQ_PERCPU
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Vivian, Guodong,
+Thank you!
 
-On 11:06 Fri 13 Jun     , Vivian Wang wrote:
-> Hi Guodong,
-> 
-> On 6/11/25 20:57, Guodong Xu wrote:
-> > <snip>
+> But since the support for this is not there yet, perhaps this note
+> should be added later? Ie: if someone omits the WQ_UNBOUND flag currently=
+,
+> the workqueue will be percpu.
+
+Yes, it makes sense.
+
+I will send the v5 with all the corrections.
+
+Thanks.
+
+On Fri, Jun 13, 2025 at 3:13=E2=80=AFPM Frederic Weisbecker <frederic@kerne=
+l.org> wrote:
+>
+> Le Thu, Jun 12, 2025 at 03:33:35PM +0200, Marco Crivellari a =C3=A9crit :
+> > Workqueue documentation upgraded with the description
+> > of the new added flag, WQ_PERCPU.
 > >
-> > -			status = "disabled";
-> > +		dma_bus: bus@4 {
-> > +			compatible = "simple-bus";
-> > +			#address-cells = <2>;
-> > +			#size-cells = <2>;
-> > +			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-> > +				     <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
-> > +			ranges;
-> >  		};
-> 
-> Can the addition of dma_bus and movement of nodes under it be extracted
-> into a separate patch, and ideally, taken up by Yixun Lan without going
-> through dmaengine? Not specifically "dram_range4", but all of these
-> translations affects many devices on the SoC, including ethernet and
-> USB3. See:
-Right, we've had an offline discussion, and agreed on this - have *bus
-patches separated and let other patches depend on it.
-
-But seems Guodong failed to do this or just sent out an old version
-of the PDMA patch?
-
-> 
-> https://lore.kernel.org/all/20250526-b4-k1-dwc3-v3-v4-2-63e4e525e5cb@whut.edu.cn/
-> https://lore.kernel.org/all/20250613-net-k1-emac-v1-0-cc6f9e510667@iscas.ac.cn/
-> 
-> (I haven't put eth{0,1} under dma_bus5 because in 6.16-rc1 there is
-> none, but ideally we should fix this.)
-> 
-> DMA address translation does not depend on PDMA. It would be best if we
-> get all the possible dma-ranges buses handled in one place, instead of
-> everyone moving nodes around.
-> 
-I agree
-
-> @Ze Huang: This affects your "MBUS" changes as well. Please take a look,
-> thanks.
-> 
-> >  
-> >  		gpio: gpio@d4019000 {
-> > @@ -792,3 +693,124 @@ pwm19: pwm@d4022c00 {
-> >  		};
-> >  	};
-> >  };
+> > Also the WQ_UNBOUND flag documentation has been integrated
+> >
+> > Suggested-by: Tejun Heo <tj@kernel.org>
+> > Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+>
+> Thanks, a few spelling nits below:
+>
+> > ---
+> >  Documentation/core-api/workqueue.rst | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/Documentation/core-api/workqueue.rst b/Documentation/core-=
+api/workqueue.rst
+> > index e295835fc116..ae63a648a51b 100644
+> > --- a/Documentation/core-api/workqueue.rst
+> > +++ b/Documentation/core-api/workqueue.rst
+> > @@ -183,6 +183,12 @@ resources, scheduled and executed.
+> >    BH work items cannot sleep. All other features such as delayed queue=
+ing,
+> >    flushing and canceling are supported.
+> >
+> > +``WQ_PERCPU``
+> > +  Work items queued to a per-cpu wq are bound to that specific CPU.
+>
+> s/that/a
+>
+> > +  This flag it's the right choice when cpu locality is important.
+>
+> s/it's/is
+>
 > > +
-> > +&dma_bus {
+> > +  This flag is the complement of ``WQ_UNBOUND``.
+> > +
+> >  ``WQ_UNBOUND``
+> >    Work items queued to an unbound wq are served by the special
+> >    worker-pools which host workers which are not bound to any
+> > @@ -200,6 +206,10 @@ resources, scheduled and executed.
+> >    * Long running CPU intensive workloads which can be better
+> >      managed by the system scheduler.
 > >
-> > <snip>
-> 
+> > +  **Note:** This flag will be removed in future and all the work
+>
+> in the future
+>
+> > +  items that dosen't need to be bound to a specific CPU, should not
+>
+> s/dosen't/don't
+>
+> > +  use this flags.
+>
+> flag.
+>
+> But since the support for this is not there yet, perhaps this note
+> should be added later? Ie: if someone omits the WQ_UNBOUND flag currently=
+,
+> the workqueue will be percpu.
+>
+> Thanks.
+>
+> > +
+> >  ``WQ_FREEZABLE``
+> >    A freezable wq participates in the freeze phase of the system
+> >    suspend operations.  Work items on the wq are drained and no
+> > --
+> > 2.49.0
+> >
+>
+> --
+> Frederic Weisbecker
+> SUSE Labs
 
--- 
-Yixun Lan (dlan)
+
+
+--=20
+
+Marco Crivellari
+
+L3 Support Engineer, Technology & Product
+
+
+
+
+marco.crivellari@suse.com
