@@ -1,93 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C2E22F774;
-	Fri, 13 Jun 2025 18:04:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50865225A3D;
+	Fri, 13 Jun 2025 18:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749837857; cv=none; b=iyFIy+eWKVI5+sfXV/sFTQcxR+rmAtXtYPXFLIHj4WEsrAFR9JPIk5F1zZs5w7WEfbwSev6ufvsJHXsqyxbAgyLvfXMn5AYXbQMpkgbaZ0ydjGus5YT568tBGFqmx7Df0DfbgqGpdSBrxB0PXuQvsUGe2SZDISgC5b67LDxp7Fo=
+	t=1749837863; cv=none; b=rt+np+niSy4mheZf2PW+XgbokQg9opGkneleMHTaToeVz7x1j3qjqBseOWnz7GnNflHI5K8hr7g3FWoqLBRhrlMh9wru0njq45vRx8h/5mkyBhgoFh4S5SzuOxp2/eJZfoTUxwMdgNORfxiFR8aqICaWQbo8bZ1YsrWA9VXDBUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749837857; c=relaxed/simple;
-	bh=k06ojrMVttfbbL990yVC8yu59w25ry+eDhakMB1d0nc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=U+acKQ3ghwqi285kA8dUu9pbpoQzY+NirgLHUtcBCuh+49rIXW5EFbT1631+5MVEYCV4HGlYKetdcE0difC6tG7EX5mEn0TzLYULTSOs9Vj1yl7e7bZtXzedbOtgHBEBrioGtnbET7Gd6p+p8iIrbt01QkbbxSX6Kq+JsMa7OC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cgCTvs0W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749837863; c=relaxed/simple;
+	bh=QoWL+WLjv4+FfD13sRd00iIwab26JFHdbKgK4m9ZyNo=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=BD7VOCEFKyyFuSqjh1VL9tWkQtlTFO3r3/JdexVBJWq57gVgpE1mR+e7NxeWnl0U6zEUi8XyJ3ool6LOe1UKYtwp2kyfuJ15oijxwMJxDFQdO3juqUZRo26po/bnJja3iS0Gp6nQLacnEijMi3U2EC8CEs73FqHx7gLBWP3cs2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMm5aTwn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cgCTvs0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD822C4CEE3;
-	Fri, 13 Jun 2025 18:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749837856;
-	bh=k06ojrMVttfbbL990yVC8yu59w25ry+eDhakMB1d0nc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cgCTvs0WGSJL7LwUsZCaLwKpZ/QUfJB9UWn5PKrCpwOSwZZMC97VKX9gEGwZfGLUW
-	 iM+3bkXTFbJzcjQ/ChQP5shRXwJjgCTakHlo9wuQ3VyMZgBMHChWQfuLmqhv3mzyyy
-	 EFSr6Cyuj5A5J6D/DjAPOjwH6/ufUeKVQAC8FjEQ=
-Date: Fri, 13 Jun 2025 11:04:15 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Robert Pang <robertpang@google.com>
-Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, corbet@lwn.net, colyli@kernel.org,
- kent.overstreet@linux.dev, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-bcache@vger.kernel.org,
- jserv@ccns.ncku.edu.tw, stable@vger.kernel.org
-Subject: Re: [PATCH 0/8] Fix bcache regression with equality-aware heap APIs
-Message-Id: <20250613110415.b898c62c7c09ff6e8b0149e9@linux-foundation.org>
-In-Reply-To: <CAJhEC05+0S69z+3+FB2Cd0hD+pCRyWTKLEOsc8BOmH73p1m+KQ@mail.gmail.com>
-References: <20250610215516.1513296-1-visitorckw@gmail.com>
-	<20250611184817.bf9fee25d6947a9bcf60b6f9@linux-foundation.org>
-	<aEvCHUcNOe1YPv37@visitorckw-System-Product-Name>
-	<CAJhEC05+0S69z+3+FB2Cd0hD+pCRyWTKLEOsc8BOmH73p1m+KQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMm5aTwn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20487C4CEE3;
+	Fri, 13 Jun 2025 18:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749837863;
+	bh=QoWL+WLjv4+FfD13sRd00iIwab26JFHdbKgK4m9ZyNo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=cMm5aTwnPZaqMUP5SaQBhlSIMtGwx+tIjzktITjwhVrH3QZtXAkHN4QSLI0CN8cpv
+	 ctdW20kwxLywF+oPifr4MScKssh5lSpZYnDVomJGY10BMFgGV1l/giQ4H5OamRlybl
+	 qk/hc+Fx+krvrBayyw2/QSvcp2tznCOFfW1e9uDuB311y8E/Oe/K4ekdxICb/YHx49
+	 Ib3T82iOL46ouL5U9DPxUZHa25EuS8yi5ImvHIIUg9aNR6nF2D/FH2yV2xjvbcX2Ln
+	 QQg3gfiHw58IBknyX5xOGEVdW2z/1ovDz2jY88/EZ/9z5pSs+RKeB8VFXpJ1IRCJmM
+	 zhmA6TxAYki4A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADFE380AAD0;
+	Fri, 13 Jun 2025 18:04:53 +0000 (UTC)
+Subject: Re: [GIT PULL] Crypto Fixes for 6.16
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <aEupSzhTI4h8kz-5@gondor.apana.org.au>
+References: <aEupSzhTI4h8kz-5@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-crypto.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aEupSzhTI4h8kz-5@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.16-p4
+X-PR-Tracked-Commit-Id: 40a98e702b528c631094f2e524d309faf33dc774
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ad6159087fbbd754bfe940bd62b6322307925faa
+Message-Id: <174983789254.834702.8944781738634806282.pr-tracker-bot@kernel.org>
+Date: Fri, 13 Jun 2025 18:04:52 +0000
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 13 Jun 2025 23:26:33 +0900 Robert Pang <robertpang@google.com> wrote:
+The pull request you sent on Fri, 13 Jun 2025 12:30:03 +0800:
 
-> Hi Andrew
-> 
-> Bcache is designed to boost the I/O performance of slower storage
-> (HDDs, network-attached storage) by leveraging fast SSDs as a block
-> cache. This functionality is critical in significantly reducing I/O
-> latency. Therefore, any notable increase in bcache's latency severely
-> diminishes its value. For instance, our tests show a P100 (max)
-> latency spike from 600 ms to 2.4 seconds every 5 minutes due to this
-> regression. In real-world environments, this  increase will cause
-> frequent timeouts and stalls in end-user applications that rely on
-> bcache's latency improvements, highlighting the urgent need to address
-> this issue.
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.16-p4
 
-Great, thanks.  Let's please incorporate this into the v2 changelogging.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ad6159087fbbd754bfe940bd62b6322307925faa
 
-> > > Also, if we are to address this regression in -stable kernels then
-> > > reverting 866898efbb25 is an obvious way - it is far far safer.  So
-> > > please also tell us why the proposed patchset is a better way for us to
-> > > go.
-> > >
-> > I agree that reverting 866898efbb25 is a much safer and smaller change
-> > for backporting. In fact, I previously raised the discussion of whether
-> > we should revert the commit or instead introduce an equality-aware API
-> > and use it. The bcache maintainer preferred the latter, and I also
-> > believe that it is a more forward-looking approach. Given that bcache
-> > has run into this issue, it's likely that other users with similar use
-> > cases may encounter it as well. We wouldn't want those users to
-> > continue relying on the current default heapify behavior. So, although
-> > reverting may be more suitable for stable in isolation, adding an
-> > equality-aware API could better serve a broader set of use cases going
-> > forward.
+Thank you!
 
-"much safer and smaller" is very desirable for backporting, please. 
-After all, 866898efbb25 didn't really fix anything and reverting that
-takes us back to a known-to-work implementation.
-
-I of course have no problem making the changes in this patchset for
-"going forward"!
-
-So if agreeable, please prepare a patch which reverts 866898efbb25. 
-Robert's words above are a great basis for that patch's description.
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
