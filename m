@@ -1,62 +1,112 @@
-Received: from hs01.dakr.org (hs01.dakr.org [173.249.23.66])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F512E11B6;
-	Fri, 13 Jun 2025 15:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.23.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714991FF1C4;
+	Fri, 13 Jun 2025 15:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830101; cv=none; b=LtXo6maYZFcSq5vNe0u41AQG9VlniRjWf7MOuFQGwo8d4pk4RtyGgeswMwrQCmkMQwn0wyxWY891AvxekdRn905KyFilkYxf/2ijTlh8/LBbGJlWawZrwp0i2Z8qmp9usHSuKC58vTkRK1OPt+1rcZVaC25D9722rnHVEVz2SYA=
+	t=1749830100; cv=none; b=A2VCQPICeoj9kH0MtLNy0UZpPNeE4plJU3WbtVtjZF6fPcHpGE4czzhcBQNCLr0slvuodpAhM91JPa3SYEAGnkW3oiYnmkwNh1Ytu2p0WvJlG56fx+psSNcayX/bEJfSlRFnXjTiw+BVIkgQc5r1kAhbZ8xRRarP5yxtymNXMKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830101; c=relaxed/simple;
-	bh=dUwgw4FwP1/9bjNmCs34U6/iexRr91COm2QSU7o6sRE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lrGSxlMmDd+p4UwkRIxjCguy72QYoVD9h5Kr2B9FebjLcS6i/mf5AikDkhBcGFL5C4kcSTSkXvOKtYnbu4GobVKaVNx1JxlIrA0VZxo08JEfPv1/R+rhuK4dVkr6Uc3wF0n73JIPlyzoItN4p22e5NBHZ+wDF3q8xnKx2z19uKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dakr.org; spf=pass smtp.mailfrom=dakr.org; arc=none smtp.client-ip=173.249.23.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dakr.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dakr.org
-Message-ID: <cfc45862-92a1-4dee-9b94-b743e6ff72e5@dakr.org>
-Date: Fri, 13 Jun 2025 17:46:58 +0200
+	s=arc-20240116; t=1749830100; c=relaxed/simple;
+	bh=txoIyDrG2vubdoOdTiTdmcJQb8y7qy5caM50Zd8G8to=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=civ7wAVSSRrQNNQIKVpUL+/GP7hbtxYZ2WfH8rTPjH2gO2Fs1pitLNRMCNsmm4HEsjM0eeN/aOXaatVlD7GfE7touHrF0cidM7uNM1VMeXA6QvaSx8m7znWkRyyQQtxGmIzD5vD3x+chyzoV8zdpIRYJ7oXE1hYDFK+Ev1Ucwko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFPoa516; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFPoa516"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42EBC4CEED;
+	Fri, 13 Jun 2025 15:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749830099;
+	bh=txoIyDrG2vubdoOdTiTdmcJQb8y7qy5caM50Zd8G8to=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=gFPoa516Ela1DPXpH0f6/CS5GkNUbZK3nAYpFk07eqEgd3MKAhYJpF0s0lR7On5mh
+	 mTRs3hEkjNSmkoYXNNxat0V6bY1VSuL9RUaPNvJuo+3M4NxXHk18J9uIsBuF7BfZSP
+	 LT2mpCyuW/nNNqy98L7h2qv/SXJaaEYTKmk9KlAx8hO5gtnc+f8HFC2H9FWk4DGBfW
+	 6JdxNAw5ZVa4sVUYSYyFngUyMNeio0PIqep0t3E5XJuUwayNZIlc1Um9AsPD8fsgtD
+	 LX9RVvGngHT5S7OMOIWzgnwkmg0oDRjT3tctQgL7cXq2tYr8yGsydjYdO2oCDGOE4x
+	 7e6vKtWFkarMA==
+Date: Fri, 13 Jun 2025 10:54:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+	vkoul@kernel.org, kishon@kernel.org, linus.walleij@linaro.org,
+	p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org, elbadrym@google.com, romlem@google.com,
+	anhphan@google.com, wak@google.com, yuxiaozhang@google.com,
+	BMC-SW@aspeedtech.com
+Subject: Re: [PATCH 5/7] ARM: dts: aspeed-g6: Add PCIe RC node
+Message-ID: <20250613155458.GA962010@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] Documentation: nouveau: Update GSP message queue
- kernel-doc reference
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Documentation <linux-doc@vger.kernel.org>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>,
- Linux Nouveau <nouveau@lists.freedesktop.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Jonathan Corbet <corbet@lwn.net>, Dave Airlie <airlied@redhat.com>,
- Ben Skeggs <bskeggs@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
- Randy Dunlap <rdunlap@infradead.org>
-References: <20250611020805.22418-2-bagasdotme@gmail.com>
-From: Danilo Krummrich <kernel@dakr.org>
-Content-Language: en-US
-In-Reply-To: <20250611020805.22418-2-bagasdotme@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613033001.3153637-6-jacky_chou@aspeedtech.com>
 
-On 6/11/25 4:08 AM, Bagas Sanjaya wrote:
-> GSP message queue docs has been moved following RPC handling split in
-> 8a8b1ec5261f20 ("drm/nouveau/gsp: split rpc handling out on its own"),
-> before GSP-RM implementation is versioned in c472d828348caf
-> ("drm/nouveau/gsp: move subdev/engine impls to subdev/gsp/rm/r535/").
-> However, the kernel-doc reference in nouveau docs is left behind, which
-> triggers htmldocs warnings:
-> 
-> ERROR: Cannot find file ./drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> WARNING: No kernel-doc for file ./drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> 
-> Update the reference.
-> 
-> Fixes: c472d828348c ("drm/nouveau/gsp: move subdev/engine impls to subdev/gsp/rm/r535/")
-> Fixes: 8a8b1ec5261f ("drm/nouveau/gsp: split rpc handling out on its own")
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+On Fri, Jun 13, 2025 at 11:29:59AM +0800, Jacky Chou wrote:
+> The AST2600 has one PCIe RC, and add the relative configure regmap.
 
-Applied to drm-misc-fixes, thanks!
+> +			pcie0: pcie@1e7700c0 {
+> +				compatible = "aspeed,ast2600-pcie";
+> +				device_type = "pci";
+> +				reg = <0x1e7700c0 0x40>;
+> +				linux,pci-domain = <0>;
+> +				#address-cells = <3>;
+> +				#size-cells = <2>;
+> +				interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
+> +				bus-range = <0x80 0xff>;
+> +
+> +				ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
+> +					  0x02000000 0x0 0x70000000 0x70000000 0x0 0x10000000>;
+> +
+> +				status = "disabled";
+> +
+> +				resets = <&syscon ASPEED_RESET_H2X>,
+> +					 <&syscon ASPEED_RESET_PCIE_RC_O>;
+> +				reset-names = "h2x", "perst";
+
+PERST# is clearly a per-Root Port item since it's a signal on the PCIe
+connector.  Can you separate this and any other per-Root Port things
+into a Root Port stanza to leave open the possibility of future
+hardware that supports multiple Root Ports in the RC?
+
+> +				clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_pcierc1_default>;
+> +
+> +				#interrupt-cells = <1>;
+> +				msi-parent = <&pcie0>;
+> +				msi-controller;
+> +				msi_address = <0x1e77005c>;
+> +
+> +				aspeed,ahbc = <&ahbc>;
+> +				aspeed,pciecfg = <&pcie_cfg>;
+> +				aspeed,pciephy = <&pcie_phy1>;
+> +
+> +				interrupt-map-mask = <0 0 0 7>;
+> +				interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+> +						<0 0 0 2 &pcie_intc0 1>,
+> +						<0 0 0 3 &pcie_intc0 2>,
+> +						<0 0 0 4 &pcie_intc0 3>;
+> +				pcie_intc0: interrupt-controller {
+> +					interrupt-controller;
+> +					#address-cells = <0>;
+> +					#interrupt-cells = <1>;
+> +				};
+> +			};
+> +
+>  			gfx: display@1e6e6000 {
+>  				compatible = "aspeed,ast2600-gfx", "syscon";
+>  				reg = <0x1e6e6000 0x1000>;
+> -- 
+> 2.43.0
+> 
