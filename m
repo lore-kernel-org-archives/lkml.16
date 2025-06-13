@@ -1,132 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDE825A327;
-	Fri, 13 Jun 2025 07:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE4D2248A4;
+	Fri, 13 Jun 2025 07:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749798045; cv=none; b=VR0NvHsYKnHTn1C2RqhUUF6+y1avWm0aQLNCRE4jVQq/xSLKej3RK9WRdFueEJwuGvCFhV+IfGJoA9N+IcIqPpgjqPXu9m7g6BARbXAO+sSZN8W5EAo2p950+qqIsBR0UWFbYyMFrZf8CgPkIOiJwpUeTncYIbjcObbRNDUIR8Y=
+	t=1749798155; cv=none; b=bhoxVGlPdFbXo3XQitFNk2D0lHFwjx98i05uBXxS6ej4LP8xsxTQklswmmwGK8nOOGR/meMqsB4ckcDdugD1WcVryOFSHZGuFZDRQhnnkwx/zhFwDdIraU8LfIrpOlIUvHNWuODVvJDDdKwISCoU0oOeQxHiu2GP7R5FOq+Zdpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749798045; c=relaxed/simple;
-	bh=Bvj8CtaShUexAfMaH2rcjFAH8uSwrjT3+TlcJ5+aHgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LtyRWnfyAu6GzgK/2P1RUy3ybrLyTLJg5oJN6cG//Obo+BL/juZzUu+g889v52GP6LbmLJ9TMn3/1+xZey+zR7F0uprXD+0oeqCCsKHAwft/0zBNXCOebAZfUMDAcJTyJMkTfpirgNjyq6fL4W4PwQH3TvFWqi7JoYwVZRy5yTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=euIEhjk7; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749798155; c=relaxed/simple;
+	bh=HWrziV4+2qmDxBt322CIIw9OWk0/+AUbOu7JxXsJ6hg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DonONW+gwXP09ego2f/6bnvQ5vnlzLei0giEhNZYSXxINyLcGEgFNV2qEsxj7fqJ8ERlxHk/KltifiKiQfe+VCK1bqsJ+PWyoDlUx0h6DcCMn2q5JWUAar6YjvP8pWoZ3a4pauBj4276ndVqyXgz9R9SP9kTOgziTKL7O13SYao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=P1Q3Uy9B; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="euIEhjk7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749798044; x=1781334044;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Bvj8CtaShUexAfMaH2rcjFAH8uSwrjT3+TlcJ5+aHgs=;
-  b=euIEhjk75uNY27/cmPZsIRC4ZAkVHCDWmVu13CNSZAOddjYF3JYCgjTV
-   fxahn/RL8Ew2pA1oDxFLDa+f/nwdfkHgDGh5A5HX8B4nzt503IfIWUtqC
-   nl+BvhbtUxudb+pseT/XFG6EVl6ptSmhlOCxbMSu9hw3fUtiAwaoh3gON
-   Yj/NiP4KTLx9RLzGW3OHPzC0IT8mFrMC6rZPR/ZDoV8ERosdkQezsYTqr
-   iUBoA7fc4fl3JsKZr0wmEUbu3Gla+DdDH5uXDhB/J9xEZKW0uY4ID1ZLn
-   96YMbjEC9YG2TsV6W1a2vBjljFbLrC6Ta8a0hR/b7ZtmUVd1IChUFhvL9
-   A==;
-X-CSE-ConnectionGUID: S1I/r/I2Q0aHD4ZR6NLVlQ==
-X-CSE-MsgGUID: OYObDru+S5KGjsJrP/3wEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55803189"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="55803189"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 00:00:43 -0700
-X-CSE-ConnectionGUID: 7//jaAb9Tjqk9OACg5dc1A==
-X-CSE-MsgGUID: u/GJR5lmQHun57KFWNtcEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="147625757"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 00:00:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uPyOy-00000006AQq-4AUO;
-	Fri, 13 Jun 2025 10:00:36 +0300
-Date: Fri, 13 Jun 2025 10:00:36 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: andy.shevchenko@gmail.com, andi.shyti@kernel.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, digetx@gmail.com, jonathanh@nvidia.com,
-	krzk+dt@kernel.org, ldewangan@nvidia.com, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-	p.zabel@pengutronix.de, robh@kernel.org, thierry.reding@gmail.com
-Subject: Re: [PATCH v4 2/3] i2c: tegra: make reset an optional property
-Message-ID: <aEvMlKIfcccD_s-O@smile.fi.intel.com>
-References: <aEsf7Ml__JE1ixQX@surfacebook.localdomain>
- <20250613060032.14927-1-akhilrajeev@nvidia.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P1Q3Uy9B"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55D71IfJ3694425
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Fri, 13 Jun 2025 00:01:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55D71IfJ3694425
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749798087;
+	bh=h9iJHFOHOzOA7O5d4YSVzD0dfbtLZJOJH9bYscztX2g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=P1Q3Uy9BjukCg0FKOFKMiZAHtXtKjaxlRQKOv4SIvLC4NVko50w73b/FmZ6tta7X9
+	 4kUb1+MQqhhtAjq7YkrZ7fsq32XOU6hvBg8FaQVN1QIlBiK7J3kW5DoSK47KpTGVYS
+	 RFR2jugdcU2mEhXE9I4lZxhvFqa058/NAi9BwxC+BwaEIOvsl3VQPMb85DIuGF3fnz
+	 tRSBjAkHez5Et4I4LTpy8mbsSdYEUoJnLRHoJ3Da7P/FGnt4uZqy2viMIjNC1jxxOe
+	 ZkpwhcGkeO5DleQPTIAvXasTZLWlhOaxbCmiM32SnHFvLt/ot0jdae4EIkKOI6Wneq
+	 pIeM33RHQU5hQ==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
+        brgerst@gmail.com, tony.luck@intel.com, fenghuay@nvidia.com
+Subject: [PATCH v1 0/3] x86/traps: Fix DR6/DR7 inintialization
+Date: Fri, 13 Jun 2025 00:01:14 -0700
+Message-ID: <20250613070118.3694407-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613060032.14927-1-akhilrajeev@nvidia.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 11:30:32AM +0530, Akhil R wrote:
-> On Thu, 12 Jun 2025 21:43:56 +0300, Andy Shevchenko wrote:
+Sohil reported seeing a split lock warning when running a test that
+generates userspace #DB:
 
-> >> >> >     if (handle)
-> >> >> >             err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
-> >> >> > -   else
-> >> >> > +   else if (i2c_dev->rst)
-> >> >> >             err = reset_control_reset(i2c_dev->rst);
-> >> >> > +   else
-> >> >> > +           err = tegra_i2c_master_reset(i2c_dev);
-> >> >>
-> >> >> Can you please take a look here? Should the reset happen in ACPI?
-> >> >
-> >> > This is a good question. Without seeing all the implementations of _RST method
-> >> > for the platforms based on this SoC it's hard to say. Ideally the _RST (which
-> >> > is called above) must handle it properly, but firmwares have bugs...
-> >> >
-> >> > TL;DR: I think the approach is correct, and if any bug in ACPI will be found,
-> >> > the workaround (quirk) needs to be added here later on.
-> >> 
-> >> As in Thierry's comment, I was in thought of updating the code as below.
-> >> Does it make sense or would it be better keep what it is there now?
-> >> 
-> >> if (handle && acpi_has_method(handle, "_RST"))
-> >> 	err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
-> >> else if (i2c_dev->rst)
-> >> 	err = reset_control_reset(i2c_dev->rst);
-> >> else
-> >> 	err = tegra_i2c_master_reset(i2c_dev);
-> >
-> > This will change current behaviour for the ACPI based platforms that do not
-> > have an _RST method. At bare minumum this has to be elaborated in the commit
-> > message with an explanation why it's not a probnlem.
-> 
-> This sequence is hit only at boot and on any error. It should be good to reset
-> the controller internally at least for those cases. We are reconfiguring the I2C
-> anyway after this and hence should not cause any problem.
-> Will add these in the commit message as well.
-
-This is not enough. You should explain the ACPI case. The above is just generic
-wording as I read it. It does not explain 1) if there are ACPI firmwares that
-have no _RST method for this device; 2) why it's not a problem for them to do
-like this and why it was not supported before (with the current code this
-platform will return an error on the method evaluation. Moreover the current
-code is buggy. The acpi_evaluate_object() returns an ACPI error code and not
-Linux one. so, for the such platforms (which I think do not exist, but still)
-the err will have positive code which may be interpreted incorrectly.
-
-So, fix the bug first, then rebase your code based on that change and
-extend the commit message to really elaborate on all of the aspects.
-W/o this done it's no go change.
+  x86/split lock detection: #DB: sigtrap_loop_64/4614 took a bus_lock trap at address: 0x4011ae
 
 
+We investigated the issue and identified how the false bus lock detected
+warning is generated under certain test conditions:
 
+  1) The warning is a false positive.
+
+  2) It is not caused by the test itself.
+
+  3) It occurs even when Bus Lock Detection (BLD) is disabled.
+
+  4) It only happens on the first #DB on a CPU.
+
+
+And the root cause is, at boot time, Linux zeros DR6.  This leads to
+different DR6 values depending on whether the CPU supports BLD:
+
+  1) On CPUs with BLD support, DR6 becomes 0xFFFF07F0 (bit 11, DR6.BLD,
+     is cleared).
+
+  2) On CPUs without BLD, DR6 becomes 0xFFFF0FF0.
+
+Since only BLD-induced #DB exceptions clear DR6.BLD and other debug
+exceptions leave it unchanged, even if the first #DB is unrelated to
+BLD, DR6.BLD is still cleared.  As a result, such a first #DB is
+misinterpreted as a BLD #DB, and a false warning is triggerred.
+
+
+Fix the bug by initializing DR6 by writing its architectural reset
+value at boot time.
+
+
+DR7 suffers from a similar issue.  We apply the same fix.
+
+
+This patch set is based on tip/x86/urgent branch as of today.
+
+
+Xin Li (Intel) (3):
+  x86/traps: Move DR7_RESET_VALUE to <uapi/asm/debugreg.h>
+  x86/traps: Initialize DR7 by writing its architectural reset value
+  x86/traps: Initialize DR6 by writing its architectural reset value
+
+ arch/x86/coco/sev/core.c             |  1 +
+ arch/x86/coco/sev/vc-handle.c        |  1 +
+ arch/x86/include/asm/debugreg.h      | 12 +++++-----
+ arch/x86/include/asm/sev-internal.h  |  2 --
+ arch/x86/include/uapi/asm/debugreg.h |  9 ++++++-
+ arch/x86/kernel/cpu/common.c         | 17 ++++++-------
+ arch/x86/kernel/hw_breakpoint.c      |  8 +++----
+ arch/x86/kernel/kgdb.c               |  4 ++--
+ arch/x86/kernel/process_32.c         |  6 ++---
+ arch/x86/kernel/process_64.c         |  6 ++---
+ arch/x86/kernel/traps.c              | 36 +++++++++++++++++-----------
+ arch/x86/kvm/vmx/nested.c            |  2 +-
+ arch/x86/kvm/vmx/vmx.c               |  6 ++---
+ arch/x86/kvm/x86.c                   |  4 ++--
+ 14 files changed, 63 insertions(+), 51 deletions(-)
+
+
+base-commit: 7cd9a11dd0c3d1dd225795ed1b5b53132888e7b5
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
