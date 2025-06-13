@@ -1,192 +1,210 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2C21F3B83
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147091FE477
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835963; cv=none; b=l9oOO5GxWm5fObNtHul01eu0YxFOGsEhyC/BXbouRYPJGAE1D7/xqE8arXc1k4b2DR/J7gaLDxee6P3YK07fMIGHr9a6V5HJGEmRKYt1p94posdXVzMl9Ef3IdA+E0O3ZZbM31b1s2LwzZXcBsO0MnYx5bCDd8xTTP2ixjxf7LY=
+	t=1749836040; cv=none; b=gvXTCSMDKe7lmUf6QmFLp+db4AN/DFCmMp+cVOMcqID4DYX+r4Ke69w8xx1Bg8J2X3Za1xXNE36A2mtzFbHBpg05Vj2iRi3DVmJAVbtyCFFcC/sl4BytTSf0hTafbBRpm1uaCMCLFXwwQqDDyeZrKw8UDt4Tu5c40sW88h61LuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835963; c=relaxed/simple;
-	bh=cjd9e8n2oR+FGyt2kpnBqvrA+bZIjT8nUIEefDkbJjA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CkYJQptpBFT7uGqsm798DE3YfXnULem94SPTjqTaoJF76wG+K/hHFMbh1WeaUWf5Gz/KsBRHRGA3vRSemzL/swjFK+64wX76Or0t6nyRjsv7W3mnTrorR/mQUlw+8G5LtsEn8Q5fRp/Jb35supMnbprDgR7whoEBT8hucHoIn5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ao7hLuPn; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749836040; c=relaxed/simple;
+	bh=Fsmd/OynqYi+2X+eZIkhZcMjAjmYuRs7XyREgNHQA98=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iGvBDLAE/TOs4d35zfNPBtuWarjEpYo8JCW9e3gEZyZneukcbFHyZPPvOjN9dC4U+egPiqlzISyDCMcTz0Z9ycE9X284U6Flb8j0Lpd+8aSNgViUD2rYVENRDOSObUiYeM7mwsR869bfrKCKWT0p/dKS3SWXk06wq8Sz+lOaHZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TJwrIgsg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ao7hLuPn"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a36748920cso2431974f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749835960; x=1750440760; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ztUb1CK2ca+AmmvOq6nu5cc85DsCpI/YRfqf7x02fNA=;
-        b=Ao7hLuPnR5t4vwOx/p1kx9TM1rdb/VoAU8JcOtlTrKcTb6ySdhi7IXZ/CYTPWDHFGo
-         sbIahgh4/p/2nc6RihzaQSEzinbiOuasUabqMmv5+wf/mE5pJ5vZprYjvkLOtM5B4lMW
-         ytjQ1ZiFEEemPbNxRiewmMVbiHoUiy3+KYRZ7RMiJ3pk0YWxevCjIAqr+VsYFYnKRuhQ
-         VLbHDSOJmDR5gP6kJswf2xvYe9ayOHKGYP/sEogRqPwz//9NYmPVAhIvexig20IWCuBS
-         CADrKoW1ljKqy53KAbflwIL9ATDpv+UjH8mjOmMcHfuowmsVfKB9JbXq2rmNzLyDafSR
-         Y4BA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJwrIgsg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749836038;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EVmS4EGgEnkwhO7NDVdPntY5DfSrUnrO5NX0r8I9Gzg=;
+	b=TJwrIgsgPCh3Fs0nRfXJ6CTmqJ7CoXH9SYTwGgkd1QOYNdNonsZuUe0OsocyJeifl1IQUI
+	wOqDQS+HPOdl/Q884aoNVOpxpLb1gnOII+xQawSvypZ358eOOZogTnkLbXhTe2JABGESaD
+	4FhgP1EgExDfI34ZpgDuZqYX6ce5azc=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-527-o7ObVKDmOviLAYGs4rhEHQ-1; Fri, 13 Jun 2025 13:33:56 -0400
+X-MC-Unique: o7ObVKDmOviLAYGs4rhEHQ-1
+X-Mimecast-MFC-AGG-ID: o7ObVKDmOviLAYGs4rhEHQ_1749836036
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c791987cf6so519653985a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:33:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749835960; x=1750440760;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ztUb1CK2ca+AmmvOq6nu5cc85DsCpI/YRfqf7x02fNA=;
-        b=HfAiXrWoemKDrcTIehRVPgO3dF/jGmf3tepxtNgdIat0YOLDrW3DKeXMPss5DBAy3b
-         Lg9MfIOauxFdq4ba1t6ruYH0MI96kFg146BMHhM8UoHO3a7a3Do8lYFkjwFVRpMWXmRg
-         8KI6WQYYHuxR5CIGn2fcR8CqVQ76qMim6jA1z7ZFNNVVhsFx8xxxZSepMS7ZND0hx8Bi
-         6eiw4oEPYCkCzLZmTQL5bJFPX9VfOE5OQwDf9oqgvBX2vFphC7vNlQC5CVAYxt3/OK6E
-         /OmU0TPguyjv2oGELW1gM8hMI+YYUqBc9WC+LQ6drNhYckHtkXSGWmJPjPvOFigdSLUs
-         aoGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzGPj2Tq2b2zvsIOMx1m5H0EymxRfH6lSpjVAETyVIh3oq4ylrXJrDW05umRgAs9cOR/HP1DnA8QHA8Do=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXq4siaH1YQvLyXTKhMTzGzeODNyKPhBpvEwtl4qpz+bfIj4Vn
-	KyfaGBxzuxweOgifke3wBiXSiHBY+HluaTFDNYE/uyVZ5VBDvD099fYhmpWMaiESVfo=
-X-Gm-Gg: ASbGncveB7xtsTlBygiQgNYxIgEDdOi8uN973IzRLZVlo4Pu61WB4BFHhDeDgV+ncMX
-	LwqdCeuma8SJ+4K/i1+5CgEkFTsgUh7UrbjjRpaUICx96u1Z/cB6SI277wKf9WvTuTszs5XcEtV
-	cdSK6fjMM8lSKcpyvDzc3/7j82T9K0M6ABN0IxeMevKJCkMFWPCijPgR5ErM4SWvR6OZLYp0Vvb
-	WiQJfbXp1+ckN5Y9VO1zPL7MBDUVzZbJqzLQXUP9MsJZjoUlMmRNKUDP77KxbGDu7zj32Zczd7c
-	o1WxjfJlAZCgLIihMfc07rQg+C6Dm3JbsIucvH0QyCThnUOPaE3PJEJMuim6knLJFZPrFA==
-X-Google-Smtp-Source: AGHT+IEYT7vrlwuZEZwaQvZcRRnUXPS9FnrmpBGm7dU1PJcmsjyw9hFaJHssD/ILloIFSkFm7tbgkA==
-X-Received: by 2002:a5d:6f01:0:b0:3a4:d8f8:fba7 with SMTP id ffacd0b85a97d-3a572367c78mr730290f8f.2.1749835959714;
-        Fri, 13 Jun 2025 10:32:39 -0700 (PDT)
-Received: from orion.home ([2a02:c7c:7213:c700:c8e2:ba7d:a1c6:463f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224888sm59212625e9.1.2025.06.13.10.32.38
+        d=1e100.net; s=20230601; t=1749836036; x=1750440836;
+        h=mime-version:user-agent:content-transfer-encoding:organization
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EVmS4EGgEnkwhO7NDVdPntY5DfSrUnrO5NX0r8I9Gzg=;
+        b=mJ5/qK4Y2GAfexyrDojNyl8jZRjhLHILzRq9i3Q96pcNPj38bUt4gQAxJdjgQnG9ns
+         5B5l7F3BFZ7oWcVulP56UTg4eHQCaM8IkTIzC+nSfjqw5tjmZtHuqleQwQNudGm+7r+U
+         fEQ9GA2rMjgjAqXvIV09trcdWuc5M06N8bknN4JLzaN2OU4Mdzgq3KRjQ1C+EkmfOgLU
+         g8hxPZlGns3a4sxP5F4DTkVbkqdlJoXoSuzSkTg9GBN1xhaJQlNE5+JP4suVXhJzpHv/
+         gVSL5H3448jBJGeMgu8l4PAOFuU1lKRBiNpay8s92ICmdVMwOlSzxGV7DWMdn5hp2y9k
+         m5jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/tbuCOOGOpsvbGzVPWZ4vvVqxAQTEcmKYHoHo5h8WHTKEDPmc8MeZlgoEaDyoSWGdE6Dwo87RxUQ0fQo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiVdkrzfXJnl+7SHXiPcYNO2PLUnMMr2FtwrNEcx+eUYcptXsG
+	8wekBUUJyNnv2cWorkI2BeYqFAkePW+Xg+feuLSi7o1qFHaQBL+ntgYdkGL6dZ5P5uuw1x0WbFW
+	By7M17ZXl1wBWR8ArRT7mn2oxjmqxAmMeOHKdwOWoI+9rKi1Zcg8wQXmC5irAZbiNxw==
+X-Gm-Gg: ASbGncvb5HE3EtNxgbrRYOZT/kSs4Z/ep11VyloIVFn+/V/+CyEnOJp41TuqojzGR89
+	mbsgP/ZmyvMBEWEX29lkXPNLTvstvYZMuzEAKEFDMTaBZHT9YRjLFyk+JGf9OXq/uvx1yg61hiN
+	RGG+2dSVTSHPIPhyO1J+EyvvisvUACnrirxcdzhr+3c+yH7zKZrOaLIBuJePgXk6ol2FkB6YPPU
+	nJmhsR/vV7h9Np1H98dmJN1oVuL0El3Nh8eyDuHWHwluhklLCFZIgacoyIrYzoOdrBVhihtIAyU
+	IXQw8jMPN1aC776p
+X-Received: by 2002:a05:620a:2448:b0:7d3:9da3:4840 with SMTP id af79cd13be357-7d3c6cebbfcmr42869785a.38.1749836036227;
+        Fri, 13 Jun 2025 10:33:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFjAs87IdqSCJ1lmVEc2pJUic+CnTFOXiehkUdG1cJmxJpjMU8c5tMJHN8cq1l3mKPRRfNkzA==
+X-Received: by 2002:a05:620a:2448:b0:7d3:9da3:4840 with SMTP id af79cd13be357-7d3c6cebbfcmr42866685a.38.1749836035856;
+        Fri, 13 Jun 2025 10:33:55 -0700 (PDT)
+Received: from m8.users.ipa.redhat.com ([2603:7000:9400:fe80::baf])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eaca83sm197229685a.60.2025.06.13.10.33.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 10:32:39 -0700 (PDT)
-From: Alexey Klimov <alexey.klimov@linaro.org>
-To: robin.clark@oss.qualcomm.com,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	linux-arm-msm@vger.kernel.org
-Cc: joro@8bytes.org,
-	iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	andersson@kernel.org,
-	dmitry.baryshkov@oss.qualcomm.com
-Subject: [PATCH v2] iommu/arm-smmu-qcom: Add SM6115 MDSS compatible
-Date: Fri, 13 Jun 2025 18:32:38 +0100
-Message-ID: <20250613173238.15061-1-alexey.klimov@linaro.org>
-X-Mailer: git-send-email 2.47.2
+        Fri, 13 Jun 2025 10:33:55 -0700 (PDT)
+Message-ID: <de070353cc7ef2cd6ad68f899f3244917030c39b.camel@redhat.com>
+Subject: Re: Module signing and post-quantum crypto public key algorithms
+From: Simo Sorce <simo@redhat.com>
+To: Ignat Korchagin <ignat@cloudflare.com>, David Howells
+ <dhowells@redhat.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Stephan Mueller
+	 <smueller@chronox.de>, torvalds@linux-foundation.org, Paul Moore
+	 <paul@paul-moore.com>, Lukas Wunner <lukas@wunner.de>, Clemens Lang
+	 <cllang@redhat.com>, David Bohannon <dbohanno@redhat.com>, Roberto Sassu
+	 <roberto.sassu@huawei.com>, keyrings@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 13 Jun 2025 13:33:54 -0400
+In-Reply-To: <CALrw=nGkM9V12y7dB8y84UHKnroregUwiLBrtn5Xyf3k4pREsg@mail.gmail.com>
+References: <501216.1749826470@warthog.procyon.org.uk>
+	 <CALrw=nGkM9V12y7dB8y84UHKnroregUwiLBrtn5Xyf3k4pREsg@mail.gmail.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add the SM6115 MDSS compatible to clients compatible list, as it also
-needs that workaround.
-Without this workaround, for example, QRB4210 RB2 which is based on
-SM4250/SM6115 generates a lot of smmu unhandled context faults during
-boot:
+Premise: this problem can't be ignored, even if you think Quantum
+Computers are BS, various government regulations are pushing all
+commercial entities to require PQ signatures, so we have to deal with
+this problem.
 
-arm_smmu_context_fault: 116854 callbacks suppressed
-arm-smmu c600000.iommu: Unhandled context fault: fsr=0x402,
-iova=0x5c0ec600, fsynr=0x320021, cbfrsynra=0x420, cb=5
-arm-smmu c600000.iommu: FSR    = 00000402 [Format=2 TF], SID=0x420
-arm-smmu c600000.iommu: FSYNR0 = 00320021 [S1CBNDX=50 PNU PLVL=1]
-arm-smmu c600000.iommu: Unhandled context fault: fsr=0x402,
-iova=0x5c0d7800, fsynr=0x320021, cbfrsynra=0x420, cb=5
-arm-smmu c600000.iommu: FSR    = 00000402 [Format=2 TF], SID=0x420
+On Fri, 2025-06-13 at 16:21 +0100, Ignat Korchagin wrote:
+> Hi David,
+>=20
+> On Fri, Jun 13, 2025 at 3:54=E2=80=AFPM David Howells <dhowells@redhat.co=
+m> wrote:
+> >=20
+> > Hi,
+> >=20
+> > So we need to do something about the impending quantum-related obsolesc=
+ence of
+> > the RSA signatures that we use for module signing, kexec, BPF signing, =
+IMA and
+> > a bunch of other things.
+>=20
+> Is it that impending? At least for now it seems people are more
+> concerned about quantum-safe TLS, so their communications cannot be
+> decrypted later. But breaking signatures of open source modules
+> probably only makes sense when there is an actual capability to break
+> RSA (or ECDSA)
 
-and also failed initialisation of lontium lt9611uxc, gpu and dpu is
-observed:
-(binding MDSS components triggered by lt9611uxc have failed)
+We do not know when Q-day (or Y2Q if you prefer) will strike, "never"
+is still a possibility.
 
- ------------[ cut here ]------------
- !aspace
- WARNING: CPU: 6 PID: 324 at drivers/gpu/drm/msm/msm_gem_vma.c:130 msm_gem_vma_init+0x150/0x18c [msm]
- Modules linked in: ... (long list of modules)
- CPU: 6 UID: 0 PID: 324 Comm: (udev-worker) Not tainted 6.15.0-03037-gaacc73ceeb8b #4 PREEMPT
- Hardware name: Qualcomm Technologies, Inc. QRB4210 RB2 (DT)
- pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
- pc : msm_gem_vma_init+0x150/0x18c [msm]
- lr : msm_gem_vma_init+0x150/0x18c [msm]
- sp : ffff80008144b280
-  		...
- Call trace:
-  msm_gem_vma_init+0x150/0x18c [msm] (P)
-  get_vma_locked+0xc0/0x194 [msm]
-  msm_gem_get_and_pin_iova_range+0x4c/0xdc [msm]
-  msm_gem_kernel_new+0x48/0x160 [msm]
-  msm_gpu_init+0x34c/0x53c [msm]
-  adreno_gpu_init+0x1b0/0x2d8 [msm]
-  a6xx_gpu_init+0x1e8/0x9e0 [msm]
-  adreno_bind+0x2b8/0x348 [msm]
-  component_bind_all+0x100/0x230
-  msm_drm_bind+0x13c/0x3d0 [msm]
-  try_to_bring_up_aggregate_device+0x164/0x1d0
-  __component_add+0xa4/0x174
-  component_add+0x14/0x20
-  dsi_dev_attach+0x20/0x34 [msm]
-  dsi_host_attach+0x58/0x98 [msm]
-  devm_mipi_dsi_attach+0x34/0x90
-  lt9611uxc_attach_dsi.isra.0+0x94/0x124 [lontium_lt9611uxc]
-  lt9611uxc_probe+0x540/0x5fc [lontium_lt9611uxc]
-  i2c_device_probe+0x148/0x2a8
-  really_probe+0xbc/0x2c0
-  __driver_probe_device+0x78/0x120
-  driver_probe_device+0x3c/0x154
-  __driver_attach+0x90/0x1a0
-  bus_for_each_dev+0x68/0xb8
-  driver_attach+0x24/0x30
-  bus_add_driver+0xe4/0x208
-  driver_register+0x68/0x124
-  i2c_register_driver+0x48/0xcc
-  lt9611uxc_driver_init+0x20/0x1000 [lontium_lt9611uxc]
-  do_one_initcall+0x60/0x1d4
-  do_init_module+0x54/0x1fc
-  load_module+0x1748/0x1c8c
-  init_module_from_file+0x74/0xa0
-  __arm64_sys_finit_module+0x130/0x2f8
-  invoke_syscall+0x48/0x104
-  el0_svc_common.constprop.0+0xc0/0xe0
-  do_el0_svc+0x1c/0x28
-  el0_svc+0x2c/0x80
-  el0t_64_sync_handler+0x10c/0x138
-  el0t_64_sync+0x198/0x19c
- ---[ end trace 0000000000000000 ]---
- msm_dpu 5e01000.display-controller: [drm:msm_gpu_init [msm]] *ERROR* could not allocate memptrs: -22
- msm_dpu 5e01000.display-controller: failed to load adreno gpu
- platform a400000.remoteproc:glink-edge:apr:service@7:dais: Adding to iommu group 19
- msm_dpu 5e01000.display-controller: failed to bind 5900000.gpu (ops a3xx_ops [msm]): -22
- msm_dpu 5e01000.display-controller: adev bind failed: -22
- lt9611uxc 0-002b: failed to attach dsi to host
- lt9611uxc 0-002b: probe with driver lt9611uxc failed with error -22
+But, as a data point, IBM just announced a roadmap for a contraption
+with 200 error corrected logic qubits.
+That is substantial progress, so we cannot assume it will never happen,
+the risk is too high (it is not me saying this, it is the cryptography
+community consensus).
 
-Suggested-by: Bjorn Andersson <andersson@kernel.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Fixes: 3581b7062cec ("drm/msm/disp/dpu1: add support for display on SM6115")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
----
+In terms of impending, what is pressing businesses at this time is the
+CNSA 2.0 requirements, which wants software and firmware signatures to
+transition to PQ algorithm in 2025 (yes this year) with complete phase
+off of classic signatures by 2030 (it is an aggressive timeline, yes).
 
-v2:
- - added tags as suggested by Dmitry;
- - slightly updated text in the commit message.
+This is because a lot of the keys are embedded in HW (think Secure
+Boot), so you can't wait until *after* you have a machine that can
+generate forged signatures to protect your software update process.
 
-Previous version: https://lore.kernel.org/linux-arm-msm/20250528003118.214093-1-alexey.klimov@linaro.org/
+A Quantum computer capable of breaking RSA =3D=3D you can load any code in
+a kernel that uses RSA/ECC signed modules.
 
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index 62874b18f645..c75023718595 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -379,6 +379,7 @@ static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
- 	{ .compatible = "qcom,sdm670-mdss" },
- 	{ .compatible = "qcom,sdm845-mdss" },
- 	{ .compatible = "qcom,sdm845-mss-pil" },
-+	{ .compatible = "qcom,sm6115-mdss" },
- 	{ .compatible = "qcom,sm6350-mdss" },
- 	{ .compatible = "qcom,sm6375-mdss" },
- 	{ .compatible = "qcom,sm8150-mdss" },
--- 
-2.47.2
+
+> We need to consider cases, for example, when a python script calls
+> some binaries via system(3) or similar in a tight loop. Yes, with IMA
+> we would verify only once, but still there are cases, when software
+> updates happen frequently or config management "templates" the
+> binaries, so they change all the time.
+
+In general, if you care about performance what you want to do is to
+limit the amount of signatures you have to check to the bare minimum,
+that is why I proposed to David the use of hashes, where you can have a
+whole bundle of them and a single signature covering them all. This is
+paramount for something like IMA if you want to make it usable wrt
+performance.
+
+> > I don't think we can dispense with signature checking entirely, though:=
+ we
+> > need it for third party module loading, quick single-module driver upda=
+tes and
+> > all the non-module checking stuff.  If it were to be done in userspace,=
+ this
+> > might entail an upcall for each signature we want to check - either tha=
+t, or
+> > the kernel has to run a server process that it can delegate checking to=
+.
+>=20
+> Agreed - we should have an in-kernel option
+>=20
+> > It's also been suggested that PQ algorithms are really slow.  For kerne=
+l
+> > modules that might not matter too much as we may well not load more tha=
+n 200
+> > or so during boot - but there are other users that may get used more
+> > frequently (IMA, for example).
+>=20
+> Yep, mentioned above.
+
+Note that PQ algorithms are not all slow, but mostly signatures are
+large, much larger than hashes, which is another reason to move to
+storing hashes in the kernel, rather than signatures.
+
+Where the smaller classic signatures (ECC) are 32 bytes, the smallest
+produced by ML-DSA are 2420 bytes (with a public key of 1312).
+For SLH-DSA the smaller signature is 7856 bytes (but hey! 32 bytes
+pubic key).
+
+The proposed FN-DSA standard has smaller signature sizes (the smallest
+in the drafts is ~666B with a 897B public key, numbers are still
+subject to change), yet it requires a IEEE-754 FPU to implement and is
+a bit crazy, and it is generally not recommended for software
+signatures.
+
+Some algorithm is also slow (eg SLH-DSA with strong parameters), but
+ML-DSA is comparable to ECC in performance.
+
+
+In any case reducing the number of verification operations is a net
+positive for kernel boot/operations performance so moving to hash-based
+checks instead of full signature verification wherever possible just
+makes general engineering sense, even if it can make loading of hash
+lists slightly more complicated.
+
+HTH,
+Simo.
+
+--=20
+Simo Sorce
+Distinguished Engineer
+RHEL Crypto Team
+Red Hat, Inc
 
