@@ -1,219 +1,221 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013070.outbound.protection.outlook.com [40.107.162.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D1E2C158B;
-	Fri, 13 Jun 2025 09:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749808597; cv=none; b=F8y2ANaFEiM0T34XMwGLhs7GOgW+3uGeCLlSFoYbrePbxaSGnIDkLjUya+shaxkpCM2EBORkKAHb0voa9mSGqZiNDarwoffonQj/Z7inlQL8NzaAXPVTwuA3oOCdFpVpNYtTeoecRc6SWKKz8MReLzXu6vJoHj6TZ3hS4QEGL0w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749808597; c=relaxed/simple;
-	bh=bPxha2Xcu3gnmDgJ+sO40rP34w3Cu8XjpqJ9R4eEoQE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JsB2pqGEb8OLerU8W3nz1xyo6d9hXFonbUb1b4+f0BsT2XYeLnfXNQQTyC3VtTnG0KecI+10hcwqr/6c0YFUiqGAj44ZizYnnXnyYbwOr12+SpLIVv2IAs0F9XAROU5IrPlHEJHXJzX0hMZbkQomkG2XzWH8aZH0X8NlN88loII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d0Jx9Pmm; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C972C15B3;
+	Fri, 13 Jun 2025 09:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749808608; cv=fail; b=afIresinfzxmBDRoSRCsWtKSi40WMNMuI2bV592VLgZJqFgC7uittkWNxpWq/M0YRS7z6kjxFx2Ebe1DUryTlFzD6B747fFB4PL6mbOVA/2tPnuPxBmEaL06d6bIwSnOjy9G1V1Vd0F2XEbnQwxYcbkm5XjLhfL3HFHFmacW8sU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749808608; c=relaxed/simple;
+	bh=xErebxN/v0nlpKGeazrYorx94qUzGGpOlgVEqf/MhG8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=T6rSKXthZt6dtmgTCOeJ4e8IRYHwRFBlz2kL3gJ/JdcbjauArjjMKB+y9STA2D92rSKwUhQ5e0wY32Hpi+GV9QGYbpQgzRDh99/dmRIgjzf5ArkXEXcJYvbfRSjP5I+HR4Irwo4T2OaZzEJuA6w2slBLJbha9AOuHEPJkbLqsfk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bAt4K4n6; arc=fail smtp.client-ip=40.107.162.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0Jx9Pmm"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a524caf77eso278694f8f.3;
-        Fri, 13 Jun 2025 02:56:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749808594; x=1750413394; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nce6Ym0vqjs78qejFB/GFy83NREwUyPEHp0148HaRg8=;
-        b=d0Jx9PmmTZ+ZGNXo6QEs+PON7TBaSV3Gq6kISJaoBtuk/mfDjfZjbqfAklNxUMgnZF
-         lVbCcsSQQ3WfVbiR3Rs5U079bREmH77JPh7Pz3WKlCiV31rW0MfDspJK6tLC7S42+HJr
-         ra+eA0b/ZaBk8qqqxEmJzqcdqBqMmO5u+AJChkD6l7GVSnvtWN4+BG3xCrX3Z7c9Tj9r
-         5H/KyZcHBN5pEgrENJoOINfSx9hNEdU0YVFYfLM28Q8vLKfkHXSHeA7+kOFYgqh7diyZ
-         CP0H4VQ1+2GjSzuKbDJBmx1ZIRyQjDGIzthDn96mj0t1pme9NMayf33xBf+fvcez8RSu
-         gGmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749808594; x=1750413394;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nce6Ym0vqjs78qejFB/GFy83NREwUyPEHp0148HaRg8=;
-        b=jS8j41CZK56lWXHoQgEXjQJoZsYT/n5jIlK1hK2+36GCp9Y7VOQH/pEkpwrnm6lSME
-         gRK5nqbEo1v3/g3O6IKkIA0i1UihqoVTcCvHJYZRTsGN1vziINaek6t9jbOk9ROWzjVd
-         T0qaxvFZbtvzWcsLQ5NdmNLv0d/jiolbWBLxA694nWhPsQ/OjMpfXNU7/vEIRBrmT1W3
-         nGsCD597Phm02Ev6+cll+6ZXgSL+zjJKJWrFbD8Qx4+Vidaid+faV+zi0x37PkvZDW6n
-         EE+0m60R4Uv85YqiuP3LninJSWRiJAWw4+xKaHV3HJEoedPPky3YKytjonp3Ja54Bw6Y
-         YR1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVagZ4z8FaAmB0BbRYoR5dlmPj7KEpNThg+/CSP2UKLwqxcFbnpn2a8eqa7pVKxFWGd9xfvhdA30FjxC8c=@vger.kernel.org, AJvYcCXhqSLioqLysuYtET6bnY2FLVcDl6xjQ1lOz9aY2cnEXOuTAIg1zYqXvBHIKGv4g7nqyX7dYMjd@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywolg5fT1fcNOLU8aZbWPyVRX9dHrRKvWJlY/gEGShKzQZ0H688
-	zhdBwt5v7dr+oX9bOMCY6BZHIzfT+vuVAdJT/BHt3hO4xbKuZpzIgOBO
-X-Gm-Gg: ASbGnct0d32pwR41/xSnSbZzNA+QZO64fXoUhDZdc863oMBUeyFjm+yaUijl4ZwZTFJ
-	01r2YNe08EGTgiPRtAUCOKD34VnFe4FGM4PhcJLcW202QCk18+DrInOHgEPTsrMJWg5D+x1hGiP
-	g98vuq6h0JZp0MvswLXKQYnOuBW8kH5UbAtNCkzH3HJoTMlp32AZbdaQACJbhzytZzuHmc8iKAu
-	vnSC9JDgdH34zMM1126TIdkan+5iuBABB5i4kj8pJIFHQGvUCiCkGUGwIb2IQXDRCSrWxJSkkTY
-	uagxleksHmH8tkfiOI9G1rF3+YRDvcs5u3Ezz0vkSHY/QSSQIUikKhP/Foj7mIcRhRdBmG7rFSF
-	S1z4F4Hzj5E1RAWuK9JKaKJhXQCmAY6ks2kJPc5+RlxVRVRqHm6fWAALNavmgiJWR9jHqZmeF1A
-	==
-X-Google-Smtp-Source: AGHT+IEziPQdq0KF6UI5r4uYSQ+fvzC2O/JjbNzzT8lc5Gibr2CfkffMVFgazAI3BwVOyYBJIIl3ng==
-X-Received: by 2002:a05:600c:a10b:b0:439:9a40:aa27 with SMTP id 5b1f17b1804b1-45334b2b435mr6180485e9.5.1749808593874;
-        Fri, 13 Jun 2025 02:56:33 -0700 (PDT)
-Received: from thomas-precision3591.home (2a01cb00014ec300ef49063bf04e52e9.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:ef49:63b:f04e:52e9])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4531febf905sm88978955e9.0.2025.06.13.02.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 02:56:33 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Chris Snook <chris.snook@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] (drivers/ethernet/atheros/atl1) test DMA mapping for error code
-Date: Fri, 13 Jun 2025 11:54:08 +0200
-Message-ID: <20250613095516.116486-1-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250612183234.51a959e9@kernel.org>
-References: <20250612183234.51a959e9@kernel.org>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bAt4K4n6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EwgTJ6CWWvpKXm4FhXAeCLa+ydsRvLYhA11an+jloVJDYM9x26g4i1anBlwBumhytyo+b1mi9ROFj3Q+DfeXuGWVJ9c+LplJLNY5yWt944QoeL7ExQ/Y39H1XydYa59kdYuUxpvwh2MioddGcCk4fcCktKY3KvrgS8y06fOGAX7oFlcw1xCF8aHcw348RRtcr0hXfUlOwrC/hXkL9tR2+B1+XvN6m9TeT99fTXbOP2Mp4WqfKSA/PCLfo/aAfsCHoHHw4IEOLeAbC2rJD4QBp6z7LePkp0fz2DIbW0M4tindPox0YH8Fdg6WCpwkwPRftL/nF7w9fLF1sUfBpMiWww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N/oq2gTWGGCTnp7Edd1gANJoCRjc/sTGEDXJ3aG+6sI=;
+ b=XDbWLbBo4hbPAIcj2HozJVx5n42ttXr7F+ltZR3gaJWTv0hbusMJtSSMukjpT8rKoEcAcnDOXLhjKuLm+iKiWpMMUi4B7QnsDjjWXC9eCXsGdvgCR4h0X4hv8vczuLwNqVBFZirZr0JBJAZ3k5/W8qh8opIpEvJGJwMcRYbHnDub1kTQ0Vu21mSYxqp31ecZHIM17zdTWa6fnu3Bgo0AYzmEbGDGa12ENeVp4Nl9t9MZXAatqqKElEk3/0L7IQEcS23Tt3b5/YnyhXxm+w41rIfYPp45XR0yIqvGedDxCKh2wWz+8lr2JNB0ZchuzsDNbe25GYoAh8AVrmreZnK9Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N/oq2gTWGGCTnp7Edd1gANJoCRjc/sTGEDXJ3aG+6sI=;
+ b=bAt4K4n6AcXti8bI2/5mTPTiz5RctV12T960zYcdD3bRXwz/XSDANDbuo0kKMtCeoYTOTYFvlw4JnQRr2sTvE/nzCDnCEccNYnBVjPp7+50nylB18tlgW3ALbQpxh0KlTriVH3GzcXawHXzbcDQqg+HQW/SOGpHmbCi3q7Z/VcuJ/ubSAhOVv2aKCIBPHX5aoqBH2WJkne5PLICEqwhfkx/M+MbpRXL9LO/Tm8kuB04wHHU3qNr7sT78TK07xXREzbv/n6A6kmL0/b2Dp7U1VKAxYUaoOiUiEyXByaHEEp9OzLSZ52ckNt71jS5sLB5Y56ew1NYd0dL5iYoMvvveBg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by VI0PR04MB11000.eurprd04.prod.outlook.com (2603:10a6:800:268::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Fri, 13 Jun
+ 2025 09:56:42 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8835.018; Fri, 13 Jun 2025
+ 09:56:42 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: claudiu.manoil@nxp.com,
+	vladimir.oltean@nxp.com,
+	xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH v2 net-next] net: enetc: replace PCVLANR1/2 with SICVLANR1/2 and remove dead branch
+Date: Fri, 13 Jun 2025 17:36:05 +0800
+Message-Id: <20250613093605.39277-1-wei.fang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MA0PR01CA0066.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ad::8) To PAXPR04MB8510.eurprd04.prod.outlook.com
+ (2603:10a6:102:211::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|VI0PR04MB11000:EE_
+X-MS-Office365-Filtering-Correlation-Id: f3cf1489-5a85-444a-0dbb-08ddaa609922
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7Rzve0rwafDRfKmVsTrfilC2xcf9KTLweYIhBIePd6UWx/fD8ES+IrT5U3Ue?=
+ =?us-ascii?Q?MYZ6MEbiOdYRNJf+1M+4ZVBp2QK6IAcfi2flpKqxvO9zRUqxa9ZFfLzYZXry?=
+ =?us-ascii?Q?/NFoeEV0E0yswqsKvedyYMpjA+NTyc/G6el1z4pRcXgvGnmVhP8ZJhGiG7Ug?=
+ =?us-ascii?Q?bv8sIiKzyXUwwh/Tydcem5hseYyWLvESD+qlUh4unj8YNqI2BwqfcnIxWsGD?=
+ =?us-ascii?Q?NYjQ+7ltUKOxJgHh95GHtgXLCMuNTt1YkK3VL4Zbcq9TUcsQwEdTHnRK/TVz?=
+ =?us-ascii?Q?CUOHzlLfmIhzQPNJztL6PjJ394h003YArA8AFUA8k4OShRTHDw72itiWpNhe?=
+ =?us-ascii?Q?R/D2jSTnmhg7Vc8V11f5jvVeysYIcMDFnCtzppA6Wy7LUimvsEaQbBhQEJrg?=
+ =?us-ascii?Q?U2ZAqdgQchhbiqfK9n37W2ky27XguwmFZiSsE055UzBsXubwFVjbzryP3+EH?=
+ =?us-ascii?Q?2ZP7x/bcbWNaYoC4UorCbavs9tjl9rFdIiSExuwDTCFZScof+qyZ6WbUNyUN?=
+ =?us-ascii?Q?HGlO4Th/qbfq6/wcLCy660gi8SesOtmlGJniNcoLaI7zAzOYZQzJPGIYvgKg?=
+ =?us-ascii?Q?ycKiavJGmfcmHenrEcfU9BUFzXaTvBDW/s59rKKKslg+//trhXJ+tVSlvHvb?=
+ =?us-ascii?Q?xR29w5urcyqCIph1FKwRuiz5VGB0HTBEabRzqD81EWXA2kQaIuoKEQApnQkY?=
+ =?us-ascii?Q?9aLS49ez47TKoH6Bj+fpHNoMfSLvwfmFz4QGJH0VXxhTZFE0y2U4T2eLosUt?=
+ =?us-ascii?Q?fKOlUZOWikAlkTAl7KwRZ2E3En12rDZy2TkcCJEPSnjlICehuPFAZXGjCxlb?=
+ =?us-ascii?Q?B5qdck5DuNUY0+1UhIP3I8NWGTJx4mlWquxopn+cKNmfMOWF6z7kds5NSng+?=
+ =?us-ascii?Q?RHogLI86O5MBEQ+TA/rzmkN8tkVkvpFO+t6E+nEMWs3uT1HkCdoD3i3Y7lf/?=
+ =?us-ascii?Q?Clo5thNr1ogbN9f22KqqdpfthzWciqZD+AAh18aW9jt3uvOMYH8UQehY1pER?=
+ =?us-ascii?Q?rn95fwcONoZ7PSsXTtb/UemjeOdtY2m1UP5eqDhQgIfugFTay225TFAsX0MB?=
+ =?us-ascii?Q?WIQc7NGQyd/CCn8Ekvs26eLFXDpqvPJVOFsz8iG16Kw/7hMWPNzcPVvYgrp9?=
+ =?us-ascii?Q?YRNfjc4mhL3DwIzoi+dVA+LebfLHNHbTU2ZZrAwU08Z5Bd313DlxM5ylQxmM?=
+ =?us-ascii?Q?V39z4Ywiqg06GL9gL1t5Cuqc+1N5OM8PPZUvSAsflryvrqzsDxurA6Dzb/2J?=
+ =?us-ascii?Q?dAtTmcBRprViLUEiAHSgFHrQxt66/jJfQKnlfd3zX3Kqu5V1eo/FvrZZp6xb?=
+ =?us-ascii?Q?7lQ9uRrHLDozbPUZmxuXpLobW+40kGA38HlWGCQH0HhZJBlXb0Gh6bj2549M?=
+ =?us-ascii?Q?ahf2pGbNYkE7KvRCVSWwWazMLSWqV4LW5aJuKmFR2UC8Kn+TT33ZtjLXeRNE?=
+ =?us-ascii?Q?6G+57nhp/+puiCtdRl605HobBk77Nsr2+U1aGQYPSdIPb0StXEsp7sVUS5+v?=
+ =?us-ascii?Q?rDbQyTay6V0oBcM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?RW1IQceMK/bWOle8oYtiz4PzR42kVjSG9COl5/SHW1h3BsH6hr3I+F1oiQOI?=
+ =?us-ascii?Q?Sy26VeLym4+r2Kuwa3fIYta625hCR2R0qx3c5lVzqb0t9Tgn1Y+9BZ+FOmuv?=
+ =?us-ascii?Q?I5HvbR3U32K5IldVDsMAHJm9SoPUKRpRqCMVNXQ6l9O+Wdz57SDG5QkuAUZK?=
+ =?us-ascii?Q?zjc0ySilHa+4h2TzPHPUt+eAoJqJTfx9AB3ClyTUgSz9TusAvq7Vf2eG4uCa?=
+ =?us-ascii?Q?12F4jcUPVvqYDeBWfDenU9YtjR/MDDccpFVvDPimZJPnEU3PATXXHHF9Sckq?=
+ =?us-ascii?Q?MszzofY+ThysIrQl65Uwk53RrF6rbHUlPAHTkhMWGqfNXEMmptDahfwcwARH?=
+ =?us-ascii?Q?Piv5M44V4ZD7LA6PT+NXBw9tscekTSA/n0HufyBoheVeCrd05jVgJcNCJhP3?=
+ =?us-ascii?Q?a/vHR+pQks342qF7yVn8xlzziupU8VZwFVSTgoVaGzt60F/ktAH2iWPvEzJr?=
+ =?us-ascii?Q?JVgZZF7oQ2ld3JSBem/AAx4wNSZ8voucuFZSopxAeMxcxkUTsnWvLGe5Rf6g?=
+ =?us-ascii?Q?uZ5tlXqXlUFmv/QV2tDPFf24M9ECoz+515R/uggPj5LLaNUjDj5vWgDsxEjs?=
+ =?us-ascii?Q?uWNbY1gyME2xAxtyBBs6kfZWZQpAcTKex7H2opQuwHbao9b0/3Wb632x0ZMn?=
+ =?us-ascii?Q?rrZ9Qyy5shrJIulKE/gUVLuhjfKUA/lc37el7JJ7gxS5gGy9TyzvP9ZTb3V+?=
+ =?us-ascii?Q?v53e3VMpSm02XRMty3rfFBB2YBo8zGrci+Zh7azn83ERVP7+USbu5e5h0c4U?=
+ =?us-ascii?Q?laEeDX8e1DN4T7o9xnGd+08lqCGmq1ktp3roTrIHozUUL4X78DttKJGYbxWn?=
+ =?us-ascii?Q?1CWDhmuyhNcKQ24yE62rqYQx+53CALho3ynekU9CEX4iCUxkcM2Okj5MtwoR?=
+ =?us-ascii?Q?CODG9k/9FPPCe8RAr2IOQiHGMIFE38e5WbAxaWctspMAGgRD4Mw8sR3wcvUY?=
+ =?us-ascii?Q?Sxi85SA87TyJ9e/bJyThgYJJL7TBA2nxnLWRcIOX6vigPnxjhhsn+6glEBtF?=
+ =?us-ascii?Q?30hjo5FADdkuPs1h4wl8BNyJtKf82QKaw0pJw74eC/5VxR3XINZyhOJcGcEj?=
+ =?us-ascii?Q?3BnfWTU59A1BKWapwoWsmS2tDjbWLNqL+PG2w6UsVs3W7i2bIAItIxFn7w+K?=
+ =?us-ascii?Q?B8JSzV1sPJcpqoPealoltn9LlPtbPJ6mzttrsTELRAV00MXDwkHkDJfuiuIg?=
+ =?us-ascii?Q?J0jdmaR825DUznzHgKpiyKqxvLkpBywG3ocO+GanJ9yqNKcXCzF2Y9hdQnyP?=
+ =?us-ascii?Q?gRQq+QcPGX7mxZfHohC1ZqL0LGL3HOTn8lOTORinAsevLqUeWHF0Y6maReqb?=
+ =?us-ascii?Q?lTkzYMoZB5kbE2i+x+Zy1rVJ2w5WQ3JKdU9HqtkaaFOK/mIk6N3Yf1522QZb?=
+ =?us-ascii?Q?XoJESGQT4Mizv/6AxqsPuiCpOLkNr6Aehz3Bvv+FKrplb96pNtSvaDKAEn3w?=
+ =?us-ascii?Q?QgnAvBP+WGaQwMYqBTvj12PNclmxM8QQaN+q3V/kqelP5JtIDe2RSRCWrd+r?=
+ =?us-ascii?Q?jKCCuDSG0oAGkrd3SrjWOj3YDdRSz/Yz0AgWANQa9flJO7LA+gdTu4Yx6qYL?=
+ =?us-ascii?Q?B/pEgvTeeYs2E2CGwx+ROQzqmlxWH+gc52sd4/Yk?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3cf1489-5a85-444a-0dbb-08ddaa609922
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 09:56:42.2716
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OWoZkfdQXhNW6jP3ZhVPkv5zqqUX1UtRpbujL9uOM+kBiIzJ0Ym4feojgOKj9BlBU8Ll+pxuhaf04G541kNtjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB11000
 
-According to Shuah Khan[1], all `dma_map()` functions should be tested
-before using the pointer. This patch checks for errors after all `dma_map()`
-calls.
+Both PF and VF have rx-vlan-offload enabled, however, the PCVLANR1/2
+registers are resources controlled by PF, so VF cannot access these
+two registers. Fortunately, the hardware provides SICVLANR1/2 registers
+for each SI to reflect the value of PCVLANR1/2 registers. Therefore,
+use SICVLANR1/2 instead of PCVLANR1/2. Note that this is not an issue
+in actual use, because the current driver does not support custom TPID,
+the driver will not access these two registers in actual use, so this
+modification is just an optimization.
 
-In `atl1_alloc_rx_buffers()`, the buffer is deallocated ans marked as such.
+In addition, since ENETC_RXBD_FLAG_TPID is defined as GENMASK(1, 0),
+the possible values are only 0, 1, 2, 3, so the default branch will
+never be true, so remove the default branch.
 
-In `atl1_tx_map()`, the arleady dma_mapped buffers are de-mapped and an error
-is returned.
-
-[1] https://events.static.linuxfound.org/sites/events/files/slides/Shuah_Khan_dma_map_error.pdf
-
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+Signed-off-by: Wei Fang <wei.fang@nxp.com>
 ---
- drivers/net/ethernet/atheros/atlx/atl1.c | 39 ++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
+v1 link: https://lore.kernel.org/imx/20250530090012.3989060-1-wei.fang@nxp.com/
+v2 changes:
+1. Change target tree to net-next and modify the subject
+2. Add a description in the commit message that the current patch is
+just an optimization.
+3. The definitions of ENETC_PCVLANR1 and ENETC_PCVLANR2 are retained
+---
+ drivers/net/ethernet/freescale/enetc/enetc.c    | 12 +++++-------
+ drivers/net/ethernet/freescale/enetc/enetc_hw.h |  3 +++
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/atheros/atlx/atl1.c b/drivers/net/ethernet/atheros/atlx/atl1.c
-index cfdb546a09e7..d3cd51ccf621 100644
---- a/drivers/net/ethernet/atheros/atlx/atl1.c
-+++ b/drivers/net/ethernet/atheros/atlx/atl1.c
-@@ -1869,6 +1869,14 @@ static u16 atl1_alloc_rx_buffers(struct atl1_adapter *adapter)
- 		buffer_info->dma = dma_map_page(&pdev->dev, page, offset,
- 						adapter->rx_buffer_len,
- 						DMA_FROM_DEVICE);
-+		if (dma_mapping_error(&pdev->dev, buffer_info->dma)) {
-+			buffer_info->alloced = 0;
-+			buffer_info->skb = NULL;
-+			buffer_info->dma = 0;
-+			kfree_skb(skb);
-+			adapter->soft_stats.rx_dropped++;
-+			break;
-+		}
- 		rfd_desc->buffer_addr = cpu_to_le64(buffer_info->dma);
- 		rfd_desc->buf_len = cpu_to_le16(adapter->rx_buffer_len);
- 		rfd_desc->coalese = 0;
-@@ -2183,7 +2191,7 @@ static int atl1_tx_csum(struct atl1_adapter *adapter, struct sk_buff *skb,
- 	return 0;
- }
- 
--static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
-+static int atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
- 	struct tx_packet_desc *ptpd)
- {
- 	struct atl1_tpd_ring *tpd_ring = &adapter->tpd_ring;
-@@ -2195,12 +2203,14 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
- 	unsigned int f;
- 	int retval;
- 	u16 next_to_use;
-+	u16 first_mapped;
- 	u16 data_len;
- 	u8 hdr_len;
- 
- 	buf_len -= skb->data_len;
- 	nr_frags = skb_shinfo(skb)->nr_frags;
- 	next_to_use = atomic_read(&tpd_ring->next_to_use);
-+	first_mapped = next_to_use;
- 	buffer_info = &tpd_ring->buffer_info[next_to_use];
- 	BUG_ON(buffer_info->skb);
- 	/* put skb in last TPD */
-@@ -2216,6 +2226,8 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
- 		buffer_info->dma = dma_map_page(&adapter->pdev->dev, page,
- 						offset, hdr_len,
- 						DMA_TO_DEVICE);
-+		if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma))
-+			goto dma_err;
- 
- 		if (++next_to_use == tpd_ring->count)
- 			next_to_use = 0;
-@@ -2242,6 +2254,8 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
- 								page, offset,
- 								buffer_info->length,
- 								DMA_TO_DEVICE);
-+				if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma))
-+					goto dma_err;
- 				if (++next_to_use == tpd_ring->count)
- 					next_to_use = 0;
- 			}
-@@ -2254,6 +2268,8 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
- 		buffer_info->dma = dma_map_page(&adapter->pdev->dev, page,
- 						offset, buf_len,
- 						DMA_TO_DEVICE);
-+		if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma))
-+			goto dma_err;
- 		if (++next_to_use == tpd_ring->count)
- 			next_to_use = 0;
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+index dcc3fbac3481..e4287725832e 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+@@ -1375,6 +1375,7 @@ static void enetc_get_offloads(struct enetc_bdr *rx_ring,
  	}
-@@ -2277,6 +2293,8 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
- 			buffer_info->dma = skb_frag_dma_map(&adapter->pdev->dev,
- 				frag, i * ATL1_MAX_TX_BUF_LEN,
- 				buffer_info->length, DMA_TO_DEVICE);
-+			if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma))
-+				goto dma_err;
  
- 			if (++next_to_use == tpd_ring->count)
- 				next_to_use = 0;
-@@ -2285,6 +2303,22 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 	if (le16_to_cpu(rxbd->r.flags) & ENETC_RXBD_FLAG_VLAN) {
++		struct enetc_hw *hw = &priv->si->hw;
+ 		__be16 tpid = 0;
  
- 	/* last tpd's buffer-info */
- 	buffer_info->skb = skb;
-+
-+	return 0;
-+
-+ dma_err:
-+	while (first_mapped != next_to_use) {
-+		buffer_info = &tpd_ring->buffer_info[first_mapped];
-+		dma_unmap_page(&adapter->pdev->dev,
-+			       buffer_info->dma,
-+			       buffer_info->length,
-+			       DMA_TO_DEVICE);
-+		buffer_info->dma = 0;
-+
-+		if (++first_mapped == tpd_ring->count)
-+			first_mapped = 0;
-+	}
-+	return -ENOMEM;
- }
- 
- static void atl1_tx_queue(struct atl1_adapter *adapter, u16 count,
-@@ -2419,7 +2453,8 @@ static netdev_tx_t atl1_xmit_frame(struct sk_buff *skb,
+ 		switch (le16_to_cpu(rxbd->r.flags) & ENETC_RXBD_FLAG_TPID) {
+@@ -1385,15 +1386,12 @@ static void enetc_get_offloads(struct enetc_bdr *rx_ring,
+ 			tpid = htons(ETH_P_8021AD);
+ 			break;
+ 		case 2:
+-			tpid = htons(enetc_port_rd(&priv->si->hw,
+-						   ENETC_PCVLANR1));
++			tpid = htons(enetc_rd_hot(hw, ENETC_SICVLANR1) &
++				     SICVLANR_ETYPE);
+ 			break;
+ 		case 3:
+-			tpid = htons(enetc_port_rd(&priv->si->hw,
+-						   ENETC_PCVLANR2));
+-			break;
+-		default:
+-			break;
++			tpid = htons(enetc_rd_hot(hw, ENETC_SICVLANR2) &
++				     SICVLANR_ETYPE);
  		}
- 	}
  
--	atl1_tx_map(adapter, skb, ptpd);
-+	if (atl1_tx_map(adapter, skb, ptpd))
-+		return NETDEV_TX_BUSY;
- 	atl1_tx_queue(adapter, count, ptpd);
- 	atl1_update_mailbox(adapter);
- 	return NETDEV_TX_OK;
+ 		__vlan_hwaccel_put_tag(skb, tpid, le16_to_cpu(rxbd->r.vlan_opt));
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+index 4098f01479bc..cb26f185f52f 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+@@ -43,6 +43,9 @@
+ 
+ #define ENETC_SIPMAR0	0x80
+ #define ENETC_SIPMAR1	0x84
++#define ENETC_SICVLANR1	0x90
++#define ENETC_SICVLANR2	0x94
++#define  SICVLANR_ETYPE	GENMASK(15, 0)
+ 
+ /* VF-PF Message passing */
+ #define ENETC_DEFAULT_MSG_SIZE	1024	/* and max size */
 -- 
-2.43.0
+2.34.1
 
