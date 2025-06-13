@@ -1,149 +1,158 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13CD2DA747;
-	Fri, 13 Jun 2025 07:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238F22DA752;
+	Fri, 13 Jun 2025 07:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749801309; cv=none; b=jmeXCA5sc4qeYEvmGJyQj3MPavA0nlBP/pH2tr215b5cI5babp6MpNXbwYZDoKGQKIf2Lio2KyIayHw3xycFeNqsGw0P//sYGmqyZqn11PuAIm4yYmV8Gi+McA8sgd778alBG/pC0dXhZFoTclOzxTKvV0T9fczARjlq4wgepZQ=
+	t=1749801404; cv=none; b=nL/4dR3CFEMT4BlGagoJOE9+Ig/fuBus5uRx0SLwR3kOBOqdFHM5DZsrWFuNor+tG2SuDj3IHsbh+ZX6iQUlUY4diCbqAULX2eD6EndMjCkrHcHM9Yz0rkUpnidt4YZugblCwvbKQzkL4Ws8bw1Ojkw1mzCeQdXLU4S6zNCFTbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749801309; c=relaxed/simple;
-	bh=bbP+XtmImDmyo1O60/+0zsZ6h9lo1pg4BmbooaslguI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8BQYfMfoS39fZ/fZzjG9qhRDR4fzTSGPK+YWTYHQeTJioVKKEoG8dSgjZfuWR6oV6sUJZUv3dUWuSBirWjYYYuPZkqQCreykhqUWlyNxkSzQfU3gZAwCBAa4sup5kdKfgI8t6MMMCr0yxAOnYCyDEqg+qyKTtSFeyp+CaLifRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iHSviwGD; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749801404; c=relaxed/simple;
+	bh=cJwIY7LeFlkdqM3q5CBcb7DUXVjGRhCEix/XOSYGtM4=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nOhEx7FStaRldHETwfmcf8H3MyF4kEq+GT+fZd+gjK/6x0TaeL163AK/oJ0cy6kHez8jca8CP7aQxg1uT1i3SJ1QkcKwA9ffDHcqT0KxjEksfo18n5S3dgXayQv/MV25q7xyjcj99hs+h70qFAnQp2Jx6kQ/ddM1Bly55S1pYMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkL1+33J; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iHSviwGD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=qvLSHHM5imsyzb1NQRe9PrbIn9fT9/7q6eeM8YHTaI4=; b=iHSviwGDuQcN4JYdKqCedz7pFP
-	OaH4MXef62Q6ydksJvZVqxmA2hJBgB3AXrhcKQOM4Ap5DQXId2SQwqyTEtFrmtQx9KZbgfiZx3Ddi
-	cIrflQ2OK334Vy4gpxSW27CFD/A63YPd6GL7BYp5nDALknyAG5MrorbdKq7h2GOYe4zbMBGORTDuU
-	SIUuJO4PPQzolf/w5b6cgJMsybxeUil+ajCGMfm06LhkSsJD6vxuEfnaQqNQb3ZgH1ggXIdXiZScn
-	wc7/px7KpqihiEPui0etXAB8V7SU8odHL1CD0gDR4jHoJ1mBL2hYDI7TbVZ2ntijcIgQLaz4XC8DW
-	eSjEJokA==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPzFf-00000002uRp-0qaP;
-	Fri, 13 Jun 2025 07:55:03 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 13DF430BC02; Fri, 13 Jun 2025 09:55:01 +0200 (CEST)
-Date: Fri, 13 Jun 2025 09:55:01 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Thomas Haas <t.haas@tu-bs.de>
-Cc: Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	lkmm@lists.linux.dev, hernan.poncedeleon@huaweicloud.com,
-	jonas.oberhauser@huaweicloud.com,
-	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
-Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
-Message-ID: <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
-References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkL1+33J"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-236470b2dceso17319225ad.0;
+        Fri, 13 Jun 2025 00:56:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749801402; x=1750406202; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NSwG/HIIRb5Ru+o8dgoFYjJtj1lPDuEQqm8MMK/oXl4=;
+        b=EkL1+33JRmbfKwJ+JmB4XYCkJI4pNunsu33RVQDKbL8q5Wb1squRZnCMUpRjZ5i0pz
+         Qfph2tBRW7s0jhYjXgi0jCNwHKlc3bbCPiYFuW/azbXcdX01JezlSOWNRfXVWpHFzHMS
+         kuAhicwe/f/lbc25M/eWM8LG+TOLWuDQX041492hl66BhsGlA9xeSMWyPDaj2d/rWnZw
+         HXsJccV6IqrhZkrlLdENnxPjh/GpO1LQsOGuDhnlz6HgLxVD4pJFfr0y7OjnwYfGAJnc
+         n1LWFDuaJTOohn27V5lXuMbih/61eibzjYz2R2a0KuqsxxHAxd4ibrbeISgJhqRAgYQo
+         0zdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749801402; x=1750406202;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NSwG/HIIRb5Ru+o8dgoFYjJtj1lPDuEQqm8MMK/oXl4=;
+        b=U7oG54xFvZrWG7l5hIfItJJE+lmuDFcCvgeAAfhkNTo0CRFY2wShcIMAvCsI2Q1Cg9
+         VJDzS1a/e/kjb7fDDUeeCI6CwkeBXLzerh/bztdeezCewOZ+F4EezSbIIgwBUxVcP7wC
+         pU/4iCq3Y/jEPPReTrWjwzuXHMINNsU8oHcHY8NkFOUleXH+s+xoxiZIRPBtWS7UszUC
+         Y3bNOxzlduCqx4b9b0n6nQQj0uS1sxXx4lHfdthCq6b7TxL8hJEz9NHvg9QqybNISttN
+         24yr+mLQpPwq4NJc1ct030Likv+sW5no7VBYnJ54Gr49chovnCYs6mJrOZbQQ+/EH4S6
+         SrPg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1GsEriLWxSkqdcF2WiqCk7rCBtx6mWPD5UnErBZ6fJIDzThvm7jUWf2x2UtPCUVlXOxGlbN1Q@vger.kernel.org, AJvYcCWtZK/EtDRHdQtwbfubSLsUNIEvqd0Okj1VB4ZN0cgFoD2AxPumBOzBsP7w2I8V5zuGxYDZ9WfUhWxebZa7@vger.kernel.org, AJvYcCXOSVMjrazvHZLFjydTqkcZP0Zzs/TQQJbu3vejUULs4c+w9w7zhTmfYpW6Q+mefzQfZqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8jViKUY5ZzKDGxndXQa8gYSvxCyWddcsyAfrGFaJAmOmXR7+Q
+	ldHS6s7d7l2eplFVFpppjxguqs12/Dnj6k9tTXuV7A4RnFnXem7ykC6k
+X-Gm-Gg: ASbGncupbnCMdrbUaMAB6Sv0Nig9NrIx1O+6jODWAeiSJ04iSCOKS2d3lvfVWGGLwq7
+	HRACmgQro6ZObBB7NCzTbwv2km+CN0mpf93Nu71vn5euIoUWVhoYpO0UytSrZSfZozIgtQKcAXe
+	iR9htT1w/NjQR+OAuP0cYUxHLqZXwkmlz5WgIJeRgP3v1aT6HLsPdEKAn8qLOLnNcnopVYKLNDU
+	qWQRI/MC3iqwYpc8rDr9J1QHhFqOErdeiv5Ka4+rvfhEZvB3lu8nc5RWuFcQHJe6w/eU8T/1rJ2
+	x0lvBBbjH3n0v/mswC5GIpLNU2vYMEGi2tDwORLXQ7N2SZ/DiVDy4nyFYQk=
+X-Google-Smtp-Source: AGHT+IHEyrz/ILDe7jbPjp6tJmahDSX4yonGX0uC2t43TAZnuhuFxHsNqcfzDcBA7S2p5LMYscMdKg==
+X-Received: by 2002:a17:902:c94a:b0:234:ef42:5d65 with SMTP id d9443c01a7336-2365dd4028bmr30650795ad.52.1749801402274;
+        Fri, 13 Jun 2025 00:56:42 -0700 (PDT)
+Received: from [192.168.0.226] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88be1fsm8920275ad.8.2025.06.13.00.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 00:56:41 -0700 (PDT)
+Message-ID: <3c89e1105e611812ae86fb6aafd346be4445e055.camel@gmail.com>
+Subject: Re: [syzbot] [bpf?] WARNING in do_check
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: syzbot <syzbot+a36aac327960ff474804@syzkaller.appspotmail.com>, 
+	andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ daniel@iogearbox.net, 	haoluo@google.com, john.fastabend@gmail.com,
+ jolsa@kernel.org, kpsingh@kernel.org, 	linux-kernel@vger.kernel.org,
+ martin.lau@linux.dev, netdev@vger.kernel.org, 	sdf@fomichev.me,
+ song@kernel.org, syzkaller-bugs@googlegroups.com, 	yonghong.song@linux.dev
+Date: Fri, 13 Jun 2025 00:56:39 -0700
+In-Reply-To: <684bcf65.050a0220.be214.029b.GAE@google.com>
+References: <684bcf65.050a0220.be214.029b.GAE@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
 
-On Thu, Jun 12, 2025 at 04:55:28PM +0200, Thomas Haas wrote:
-> We have been taking a look if mixed-size accesses (MSA) can affect the
-> correctness of qspinlock.
-> We are focusing on aarch64 which is the only memory model with MSA support
-> [1].
-> For this we extended the dartagnan [2] tool to support MSA and now it
-> reports liveness, synchronization, and mutex issues.
-> Notice that we did something similar in the past for LKMM, but we were
-> ignoring MSA [3].
-> 
-> The culprit of all these issues is that atomicity of single load
-> instructions is not guaranteed in the presence of smaller-sized stores
-> (observed on real hardware according to [1] and Fig. 21/22)
-> Consider the following pseudo code:
-> 
->     int16 old = xchg16_rlx(&lock, 42);
->     int32 l = load32_acq(&lock);
-> 
-> Then the hardware can treat the code as (likely due to store-forwarding)
-> 
->     int16 old = xchg16_rlx(&lock, 42);
->     int16 l1 = load16_acq(&lock);
->     int16 l2 = load16_acq(&lock + 2); // Assuming byte-precise pointer
-> arithmetic
-> 
-> and reorder it to
-> 
->     int16 l2 = load16_acq(&lock + 2);
->     int16 old = xchg16_rlx(&lock, 42);
->     int16 l1 = load16_acq(&lock);
-> 
-> Now another thread can overwrite "lock" in between the first two accesses so
-> that the original l (l1 and l2) ends up containing
-> parts of a lock value that is older than what the xchg observed.
+On Fri, 2025-06-13 at 00:12 -0700, syzbot wrote:
+> Hello,
+>=20
+> syzbot found the following issue on:
+>=20
+> HEAD commit:    1c66f4a3612c bpf: Fix state use-after-free on push_stack(=
+)..
+> git tree:       bpf-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D1346ed7058000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D73696606574e3=
+967
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Da36aac327960ff4=
+74804
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e0775=
+7-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1392610c580=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D11a9ee0c58000=
+0
+>=20
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/2ddb1df1c757/dis=
+k-1c66f4a3.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/6a318fc92af0/vmlinu=
+x-1c66f4a3.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/76c58dddcb6c/b=
+zImage-1c66f4a3.xz
+>=20
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+a36aac327960ff474804@syzkaller.appspotmail.com
+>=20
+> ------------[ cut here ]------------
 
-Oops :-(
+Fwiw, here is a repro converted to selftest.
+I'll take detailed look on Friday:
 
-(snip the excellent details)
+SEC("socket")
+__naked void syzbot_repro(void)
+{
+        asm volatile (
+        "r8 =3D 0xff80;"
+        "r1 =3D 0xff110001085a0800 ll;"
+        "r2 =3D 20;"
+        "r3 =3D 0;"
+        "call %[bpf_ktime_get_ns];"
+"1:"
+        "w9 =3D w10;"
+        "if r9 >=3D 0xff4ad400 goto 2f;"
+        "may_goto +13;"
+        "r2 =3D 0;"
+        "*(u8 *)(r10 -16) =3D r9;"
+"2:"
+        "if r9 s< 0x1004 goto 3f;"
+        "lock *(u32 *)(r10 -16) +=3D r10;"
+        "r6 =3D r8;"
+        "r8 +=3D -8;"
+        "r4 =3D r10;"
+"3:"
+        "r6 +=3D -16;"
+        "r2 =3D 8;"
+        "r2 =3D 0xff110001085a05d8 ll;"
+        "r5 =3D 8;"
+        "if w8 & 0x76 goto 1b;"
+        "r8 =3D r9;"
+        "if w8 !=3D 0x0 goto +0;"
+        "call %[bpf_get_prandom_u32];"
+        "r0 =3D 0;"
+        "exit;"
+        :
+        : __imm(bpf_get_prandom_u32),
+          __imm(bpf_ktime_get_ns)
+        : __clobber_all);
+}
 
-> ### Solutions
-> 
-> The problematic executions rely on the fact that T2 can move half of its
-> load operation (1) to before the xchg_tail (3).
-> Preventing this reordering solves all issues. Possible solutions are:
->     - make the xchg_tail full-sized (i.e, also touch lock/pending bits).
->       Note that if the kernel is configured with >= 16k cpus, then the tail
-> becomes larger than 16 bits and needs to be encoded in parts of the pending
-> byte as well.
->       In this case, the kernel makes a full-sized (32-bit) access for the
-> xchg. So the above bugs are only present in the < 16k cpus setting.
-
-Right, but that is the more expensive option for some.
-
->     - make the xchg_tail an acquire operation.
->     - make the xchg_tail a release operation (this is an odd solution by
-> itself but works for aarch64 because it preserves REL->ACQ ordering). In
-> this case, maybe the preceding "smp_wmb()" can be removed.
-
-I think I prefer this one, it move a barrier, not really adding
-additional overhead. Will?
-
->     - put some other read-read barrier between the xchg_tail and the load.
-> 
-> 
-> ### Implications for qspinlock executed on non-ARM architectures.
-> 
-> Unfortunately, there are no MSA extensions for other hardware memory models,
-> so we have to speculate based on whether the problematic reordering is
-> permitted if the problematic load was treated as two individual
-> instructions.
-> It seems Power and RISCV would have no problem reordering the instructions,
-> so qspinlock might also break on those architectures.
-
-Power (and RiscV without ZABHA) 'emulate' the short XCHG using a full
-word LL/SC and should be good.
-
-But yes, ZABHA might be equally broken.
-
-> TSO, on the other hand, does not permit such reordering. Also, the xchg_tail
-> is a rmw operation which acts like a full memory barrier under TSO, so even
-> if load-load reordering was permitted, the rmw would prevent this.
-
-Right.
+[...]
