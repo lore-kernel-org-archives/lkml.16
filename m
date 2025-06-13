@@ -1,33 +1,33 @@
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E92022DA17;
-	Fri, 13 Jun 2025 18:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8D1757EA;
+	Fri, 13 Jun 2025 18:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749839331; cv=none; b=Flk0bGqv0J6UW3sMiVggFjngqgoF41gQndkDMnGNVpDFez/b/joAxaGvoia7xN3YpwN9B1dncDPwVkNCUnb63ElMgO0JuVrnxKn0/W5YZK6rTzMv0wLYXSAXkCvM01DOIpGLZ2/pKEZ2yUQ511ZCdHqD9SVq9b9RJ1nJl6sTBe0=
+	t=1749839440; cv=none; b=XMFfJoTC4Z/pGFrpHtrkh8hqwm0tYEv/Mtz40sv1GMe1tW/F8F2q3D1kCRgy+j8bUqXOKE8AWWX+cvX9zuxdry6fMVVqBsKLnMVAGBzNUZEZkJbg0OfaY39gYuZwsZMoh7lnWalBVUUTd259BlXX6hoZfm6xsJcd0baj/06JVKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749839331; c=relaxed/simple;
-	bh=vx+L4EWcVjAmC1H85Z6K9NQ6o3bPzGB68D+lyL43M80=;
+	s=arc-20240116; t=1749839440; c=relaxed/simple;
+	bh=XZQLn+HoJR/0FeiwkXYxiPLVSYLl9Ll/HtMmUW7rhzM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QfB/DCpGXRnRdPwsvWX9SJcjrs/2lKiBAkNZnZp6d9tZKzl5r+rHEyndz8bTE4U2gMnjyQ47ervKKYIDA/rFT8+S4x4dCgRZa0DoC9ISBVrbDpYd22VMbir2rHJAPMTgWcQFvzZm04rIm7uWD1QPN1NNW+bUnQMmB6M8R3OmWSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=XUqnmCZ5; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=BtzsBNcpOp8LlqMjr8oDejKVSKwAmo+fwGw49QHNmfgZpjyZIay3z05Dj1kPia3GXbDfGNFkwGt/1Yw8cFji+OSwUMExSgX8+9PmWbNiqXAm65gnufM6/r12lmgjh3pgx5Q1JTPKa+mlo5li4gbD1t9NBgxBlgcY6simQQ+SDF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BTeFuZPW; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XUqnmCZ5"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BTeFuZPW"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=aZeDv6uJiL3yHMZHYwsHRlG5PjnadZxlMcLR2eb7Kl0=; b=XUqnmCZ5YH2M/SgnKbr15HrSL4
-	MLUt2m8EpiC13BLUOb1Ldml0LWp/7AyCxhtdk8EhiDvWQFky1oVs12OPo2LKNw0meyIjuoTisGsIS
-	ucC++UKd1ju7M6uDD3+KwNqPDNp+TykcKIlJ7qaN9GbO5Mz3e9IMz96HqAf2Z0esD5hU=;
+	bh=paNCNvp4BgQN1E3xRGQ5/dNU8wg6xvReIPZ5+6tjq5o=; b=BTeFuZPWYoQB1Ho4/KW8eoihcL
+	mj0KBUiyZtxkiyBplin5zmyxooCRUU4LHBbNx8kyh8NCg3HvVh6BYmLpCj/gLR9c/6+ltQe+iKt/i
+	eCTnFIB5niTsheCgqugvmsb3iTRlZ5XfKbTdIMa/AfG2ylK0ohGWSyZMJ9PJlHr0v6Q4=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1uQ98q-00Fksu-0N; Fri, 13 Jun 2025 20:28:40 +0200
-Date: Fri, 13 Jun 2025 20:28:39 +0200
+	id 1uQ9Ae-00Fkv9-DZ; Fri, 13 Jun 2025 20:30:32 +0200
+Date: Fri, 13 Jun 2025 20:30:32 +0200
 From: Andrew Lunn <andrew@lunn.ch>
 To: Marc Kleine-Budde <mkl@pengutronix.de>
 Cc: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
@@ -38,12 +38,12 @@ Cc: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
 	Richard Cochran <richardcochran@gmail.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>, imx@lists.linux.dev,
 	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH net-next v2 05/10] net: fec: fec_restart(): introduce a
- define for FEC_ECR_SPEED
-Message-ID: <4689760b-18ac-4a3a-b6ff-b21f099aee16@lunn.ch>
+	kernel@pengutronix.de
+Subject: Re: [PATCH net-next v2 06/10] net: fec: fec_enet_rx_queue(): use
+ same signature as fec_enet_tx_queue()
+Message-ID: <30c3f258-1eca-4cba-9999-1059cba219d7@lunn.ch>
 References: <20250612-fec-cleanups-v2-0-ae7c36df185e@pengutronix.de>
- <20250612-fec-cleanups-v2-5-ae7c36df185e@pengutronix.de>
+ <20250612-fec-cleanups-v2-6-ae7c36df185e@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,14 +52,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612-fec-cleanups-v2-5-ae7c36df185e@pengutronix.de>
+In-Reply-To: <20250612-fec-cleanups-v2-6-ae7c36df185e@pengutronix.de>
 
-On Thu, Jun 12, 2025 at 04:15:58PM +0200, Marc Kleine-Budde wrote:
-> Replace "1 << 5" for configuring 1000 MBit/s with a defined constant to
-> improve code readability and maintainability.
+On Thu, Jun 12, 2025 at 04:15:59PM +0200, Marc Kleine-Budde wrote:
+> There are the functions fec_enet_rx_queue() and fec_enet_tx_queue(),
+> one for handling the RX queue the other one handles the TX queue.
 > 
-> Reviewed-by: Wei Fang <wei.fang@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> However they don't have the same signature. Align fec_enet_rx_queue()
+> argument order with fec_enet_tx_queue() to make code more readable.
+> 
 > Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
