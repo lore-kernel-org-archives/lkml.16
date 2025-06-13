@@ -1,51 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F36214A93
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD3F22422F
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833168; cv=none; b=XCyrjknyViQ8oX7UBTBprGxI9qyqzFdxQIjIlMe7ob900WE8d2Yl7EGbrlc0nGW5ojTF3Hg/bass6JR1gqUIx/s18NzC+LoG3cpjW0+20ziNIEahBrZq9pLe7mpVXnK53dImCOPz6gjZk/JNl2GcCEqxoJi4Wy6X3da5B97NIDQ=
+	t=1749833172; cv=none; b=MbTMW4F+vw9qmkq59TfZXFZj4aJOva0TinKhohzavCCfefSbzpqqAl/j7/Jv/Nq20TChAOR8utMRrqJ0yCqno0Z9+1mLHoFedFse98cMbmaEmI1tITaOkCkAKrPinuZTLEXn03hOAle1PUYtcuM35T1B5qE3pWb9Lt/mdY5tocc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833168; c=relaxed/simple;
+	s=arc-20240116; t=1749833172; c=relaxed/simple;
 	bh=i4hm9CHKm/3oJOWsJxscFqz/8Ylt/YD/hMzaFSn5rPs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=QhKmxV6wTpYIPQmfGb7wWQzL9tuGzPpR9Uwi9EX4+J/m7+6YME/525emzQpsd1gsbt2/Xbvv147m9cI6ckMcsloN2u8crbrcgD7fVSBw5z8C/4Z40fCv15YC8W1AID7TnmPMfIS5+ELbToX90IYwPtW9nu7e+l7A/CWu8rx9T+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IuW+tWi6; arc=none smtp.client-ip=170.10.133.124
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jVj0RHptfGrZs75nvEQ6UepXLTPEmZN0C8bvg0utkitQBOhDOR3NwR/Lc0SpcMZm4qzTzEg4JaaTJ84+qiG1X2lGWxvLngXuyIhy7ytTkUi4RfCfLe1B5kadZ9UPQYuYzwVxox5So0XrDLiQAGJqxAtJLQ5DdaX7His8h9aUe/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IuuDAIC6; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IuW+tWi6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IuuDAIC6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749833163;
+	s=mimecast20190719; t=1749833169;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
 	bh=bbROYjb4mdQOqht6aHh/H9xfCrTcRr7mEK6Oc+kCnJc=;
-	b=IuW+tWi6GtwT+2GK3CexQhxuU8RdinZSXgfOX4pDUvI2PLYjAimTNBBh6bRuR3ed9MvCfx
-	8wQkD42ab9XlnhrrzltcTEniHTrTWA4BRXPRjhO2vroTw6H2V2w58Yy936uHXsDETrgZ78
-	gkNoK+XRqVIBshhmKIkpzCR8S/Uhc3s=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	b=IuuDAIC61uBt7PdpuwnYM4BiYMSbH5Mk9B7ZiDSeLe0eBf5UqZI1wydUe4m7KxjF9ipcQ0
+	nMTRk6BYvhdnWNEt2JWqV+EK01jZDOUtkW7zHWg4sITxDqU7dsqIpk7RtwNtC3TJ3sSOj9
+	il2DW+dk7dRN3Iv07H24LJ9HoawVndI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-172-qBL8VcTUMKOyuYyy47NJxw-1; Fri,
- 13 Jun 2025 12:45:58 -0400
-X-MC-Unique: qBL8VcTUMKOyuYyy47NJxw-1
-X-Mimecast-MFC-AGG-ID: qBL8VcTUMKOyuYyy47NJxw_1749833157
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-7I_JWVqIOZirAbcsISAQpw-1; Fri,
+ 13 Jun 2025 12:46:06 -0400
+X-MC-Unique: 7I_JWVqIOZirAbcsISAQpw-1
+X-Mimecast-MFC-AGG-ID: 7I_JWVqIOZirAbcsISAQpw_1749833165
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9FFB519560AA;
-	Fri, 13 Jun 2025 16:45:57 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E088E1800343;
+	Fri, 13 Jun 2025 16:46:04 +0000 (UTC)
 Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F1BB180035C;
-	Fri, 13 Jun 2025 16:45:56 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4D1491956050;
+	Fri, 13 Jun 2025 16:46:04 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Subject: [GIT PULL] KVM fixes for Linux 6.16-rc2
-Date: Fri, 13 Jun 2025 12:45:56 -0400
-Message-ID: <20250613164556.163306-1-pbonzini@redhat.com>
+Date: Fri, 13 Jun 2025 12:46:03 -0400
+Message-ID: <20250613164603.163319-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +54,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
 Linus,
 
