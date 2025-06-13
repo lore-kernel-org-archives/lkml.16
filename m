@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3706A29
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:04:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6773976410
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749819852; cv=none; b=sZWPf7J5pPSu0sXChdqAh/dgik0pVc7VirfPOOuA83pKGMZU8kJaIMGQSFAFBnInPOXblLZHxHcUYUW12Xb3Kv+BI+Qgakgz44aGP0MLfTHUKr2BQdHQ4/Hcft3qgLxvQNSzqEIjZ1dbRsAUQLwI3DnlRWumThkFpBbVhIQL1Tk=
+	t=1749819855; cv=none; b=bNnyW1QdWxN4BLmV4D5IdaQQOKKpjX45RhhC67VeGQMat8/40ElCsXHhPDESGG8M9+dFtNTFo7hQsVh90qDLvkN22/T312/VmTLLRqmOUIemvn1fnaKc2Ga+MuF6Ai6sPaHXchszkqXMXS5yO+Tjhrn7RJ25fs8x4IZDpBiqdTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749819852; c=relaxed/simple;
-	bh=VQNWDd1YQ60J6doeEOBUSszAhBt87lrKUAX5qbHodJw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X5UdlsM960dRQrg7+Dfi43PTKavfjKx9L+TMBMfpRZm85Vzf4icDlLjHz6xR4TESaGSAjVHAoBzZB8D56pJnmvPY9d8+1TK+J1EgL/ikIDx9Ef9Sn6OoiMpoKssh5dPtHgboFbdwS0ptZW40ne8oZZ9xqDCcRP3pgtAgsJm4yDI=
+	s=arc-20240116; t=1749819855; c=relaxed/simple;
+	bh=lwkFMbUDRfq7zvVSJJ0Y/V6V8MeJmvET1EKCFo9+p8A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ryDBg1kXUCeZMJpFs7dvf/F8U+dci1OYM2FtOfq/apssK+gBPTqulStp1SEoUhgJo1jy0BnH18d/e6SxJ4vNO6i7WplhH+3EMm0NWsdhn4sq+feCZTLvNlV19ng64FSPUaJsWfYASMuW8K6UuRsLrKuRbhfvV7sQ26Bg0PMa370=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C17E1C0A;
-	Fri, 13 Jun 2025 06:03:49 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 197161CDD;
+	Fri, 13 Jun 2025 06:03:52 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12FA53F59E;
-	Fri, 13 Jun 2025 06:04:07 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D47B93F59E;
+	Fri, 13 Jun 2025 06:04:10 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
@@ -26,10 +27,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Rob Herring <robh@kernel.org>,
 	Ben Horgan <ben.horgan@arm.com>,
 	James Morse <james.morse@arm.com>
-Subject: [PATCH 0/5] cacheinfo: Set cache 'id' based on DT data
-Date: Fri, 13 Jun 2025 13:03:51 +0000
-Message-Id: <20250613130356.8080-1-james.morse@arm.com>
+Subject: [PATCH 1/5] cacheinfo: Set cache 'id' based on DT data
+Date: Fri, 13 Jun 2025 13:03:52 +0000
+Message-Id: <20250613130356.8080-2-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250613130356.8080-1-james.morse@arm.com>
+References: <20250613130356.8080-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,61 +41,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds support for cache-ids to device-tree systems.
-These values are exposed to user-space via
-/sys/devices/system/cpu/cpuX/cache/indexY/id
-and are used to identify caches and their associated CPUs by kernel interfaces
-such as resctrl.
+From: Rob Herring <robh@kernel.org>
 
-Resctrl anticipates cache-ids are unique for a given cache level, but may
-be sparse. See Documentation/filesystems/resctrl.rst's "Cache IDs" section.
+Use the minimum CPU h/w id of the CPUs associated with the cache for the
+cache 'id'. This will provide a stable id value for a given system. As
+we need to check all possible CPUs, we can't use the shared_cpu_map
+which is just online CPUs. As there's not a cache to CPUs mapping in DT,
+we have to walk all CPU nodes and then walk cache levels.
 
-Another user is PCIe's cache-steering hints, where an id provided by the
-hardware would be needed. Today this expects a platform specific ACPI hook
-the program that value into the PCIe root port registers. If DT platforms
-are ever supported, it will likely need a kernel driver to convert the
-user-space cache-id to whatever hardware value is needed.
+The cache_id exposed to user-space has historically been 32 bits, and
+is too late to change. Give up on assigning cache-id's if a CPU h/w
+id greater than 32 bits is found.
 
-Rob H previously preferred to generate a cache-id from the information DT
-already has. (Rob: does the PCIe cache-steering use-case change this?)
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+[ ben: converted to use the __free cleanup idiom ]
+Signed-off-by: Ben Horgan <ben.horgan@arm.com>
+[ morse: Add checks to give up if a value larger than 32 bits is seen. ]
+Signed-off-by: James Morse <james.morse@arm.com>
+---
+Use as a 32bit value has been seen in DPDK patches here:
+http://inbox.dpdk.org/dev/20241021015246.304431-2-wathsala.vithanage@arm.com/
+---
+ drivers/base/cacheinfo.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-This series generates a 32bit cache-id from the lowest CPU hardware id
-of the CPU's associated with that cache. On arm64, CPU hardware ids may
-be greater than 32bits, but can be swizzled into 32bits. An architecture
-hook is provided to allow the architecture to swizzle the values into 32bits.
-
-Finally, the MPAM driver needs to know the size of a cache, which is stored
-in cacheinfo. Add a helper to retrieve that information.
-
-This series is based on v6.16-rc1, and can be retreived from:
-https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/cacheinfo/v1
-
-The MPAM driver that makes use of these can be found here:
-https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/snapshot/v6.16-rc1
-
-What is MPAM? Set your time-machine to 2020:
-https://lore.kernel.org/lkml/20201030161120.227225-1-james.morse@arm.com/
-
-
-Bugs welcome,
-Thanks,
-
-James Morse (4):
-  cacheinfo: Add arch hook to compress CPU h/w id into 32 bits for
-    cache-id
-  arm64: cacheinfo: Provide helper to compress MPIDR value into u32
-  cacheinfo: Expose the code to generate a cache-id from a device_node
-  cacheinfo: Add helper to find the cache size from cpu+level
-
-Rob Herring (1):
-  cacheinfo: Set cache 'id' based on DT data
-
- arch/arm64/include/asm/cache.h | 14 +++++++++++
- arch/arm64/kernel/sleep.S      |  1 +
- drivers/base/cacheinfo.c       | 45 ++++++++++++++++++++++++++++++++++
- include/linux/cacheinfo.h      | 21 ++++++++++++++++
- 4 files changed, 81 insertions(+)
-
+diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
+index cf0d455209d7..9888d87840a2 100644
+--- a/drivers/base/cacheinfo.c
++++ b/drivers/base/cacheinfo.c
+@@ -8,6 +8,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
++#include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/cacheinfo.h>
+ #include <linux/compiler.h>
+@@ -183,6 +184,37 @@ static bool cache_node_is_unified(struct cacheinfo *this_leaf,
+ 	return of_property_read_bool(np, "cache-unified");
+ }
+ 
++static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
++{
++	struct device_node *cpu;
++	u32 min_id = ~0;
++
++	for_each_of_cpu_node(cpu) {
++		struct device_node *cache_node __free(device_node) = of_find_next_cache_node(cpu);
++		u64 id = of_get_cpu_hwid(cpu, 0);
++
++		if (FIELD_GET(GENMASK_ULL(63, 32), id)) {
++			of_node_put(cpu);
++			return;
++		}
++		while (1) {
++			if (!cache_node)
++				break;
++			if (cache_node == np && id < min_id) {
++				min_id = id;
++				break;
++			}
++			struct device_node *prev __free(device_node) = cache_node;
++			cache_node = of_find_next_cache_node(cache_node);
++		}
++	}
++
++	if (min_id != ~0) {
++		this_leaf->id = min_id;
++		this_leaf->attributes |= CACHE_ID;
++	}
++}
++
+ static void cache_of_set_props(struct cacheinfo *this_leaf,
+ 			       struct device_node *np)
+ {
+@@ -198,6 +230,7 @@ static void cache_of_set_props(struct cacheinfo *this_leaf,
+ 	cache_get_line_size(this_leaf, np);
+ 	cache_nr_sets(this_leaf, np);
+ 	cache_associativity(this_leaf);
++	cache_of_set_id(this_leaf, np);
+ }
+ 
+ static int cache_setup_of_node(unsigned int cpu)
 -- 
 2.39.5
 
