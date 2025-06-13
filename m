@@ -1,159 +1,87 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CA22E11A4
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCC82E11C4;
+	Fri, 13 Jun 2025 14:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749823322; cv=none; b=iDhARN51eADakUtuIxlkDxKB6wOre+YvSs4mLM5EDDlKR0Tq5XF7A9nZ5v2/FHYT8Vb13BUA0+1et0u0Lcs12j/vkZx0Fzr5BccNIIA9xlh3zEktpdlYrN5XlTWnl5DKYD+G7YMyYXL/9sjPKu6vKLkNS1BYD4yHL5v5KAXhDHU=
+	t=1749823334; cv=none; b=TgU2U58jn7B4Z8CaGDP2mQv1WosdLH9TZ+s67rkHgloouXwBHE6HU9NB40G4h5HyxKnQRzMYP2vny1BLGPF+D4xxIuv1PoJ2VKObHfrVJAS7BE43emdhKvjr8Rwa7zacTshTudow8nLWJnVF5CV1luJMXhKykAB/zU+lWMpEh6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749823322; c=relaxed/simple;
-	bh=IOQbPRKow8jBAKNt5sq70UbtAwDqIxbw0GdmhwIR0Ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iH6nd4hy5eNGPcGI9meuXQq5oOcybfel/jpOqD7aU1WQ0deQxoHk1EPWoX4O6/SAsa1X2iE5+92EIunIzOPWUnrq4OlpITL0VQEmfAyCvQ5BMMhXgE6f70tX4UgeHYkiioLiPSkoEb8tMEBASJRLqzS88uxTEdCyeJsiEle+UtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a+gtUUKX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p/i6C4yv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a+gtUUKX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p/i6C4yv; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749823334; c=relaxed/simple;
+	bh=27cCgN4Qgfm8dDPySwZrBGcQ4kQ9MtAZA0JJSq67OFs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bQbg1YVWaxd/NwSzcII569LlZLWZuIL7915IpTbSCvOH+9EFXN6msCyCM06aEqEvZq5tfLMpNAR86+Hp0KVyeMONz0zCBvRy6r7/q2g6hlWqkjPu/eubNiprteWddY5unKROdUP4tQhqFJ2djafaOxrr/zPMyuPrJY2XQBeX++w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QxpRHaJC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZdtaMejt; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a+gtUUKX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p/i6C4yv";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a+gtUUKX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p/i6C4yv"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AD5011F397;
-	Fri, 13 Jun 2025 14:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749823318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QxpRHaJC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZdtaMejt"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749823331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sUQdDRyXbbonvF49JKMmGXX6X7F0bhUgdCeb2Z1yoa8=;
-	b=a+gtUUKX1GxiEQEETg09fq+vFbA2xh0JXaMO21oAQd4BMYCHM4tTrW8SwXKGDeCc2WaK8r
-	Lz4lRJA705z2cSt/3PJKYG26yi7gekO7Q/aB1pCc1P6hFU+aQN8yf4zaDStAZOF1GdT78i
-	JAnNF8p3ygUEkNOrOIhcJVe8KBwsBvE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749823318;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	bh=p6yLbGaAqKXjfS0WvcDA9G+lP7oBNZSeK5gSgxur2Uc=;
+	b=QxpRHaJCdPe7lz1UwNt4dK1l+9JhVUQb8heDWyc2otiF7NXESJsPAJcMT5xjSf2cOg9QD0
+	Qrk26CBxj1otzOsu5ZeN23jl4NK2e7PI42mFewsBQQUvv6kKLR37b3u2r8j5ezkDD6ZIiQ
+	Mv67c6JaRQ0Y6uajmqRsqb8YoKmkJ07G2PfuzHwhJ2Zwb6Gkb6yVlZPC3tZApEprLtZ7AA
+	KsythRCKjyI9bnLwQO+tqJ3jXffCLeuJwT+L3P1A3CeyFdADlVZXnFgS9BC0Lj2xr/H14w
+	9VpUqswNA1gNN1JoVVJ8FG7oYKtutO2VNN0CPXJQHFYJ+L4RRVJCSd0XEYHP7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749823331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sUQdDRyXbbonvF49JKMmGXX6X7F0bhUgdCeb2Z1yoa8=;
-	b=p/i6C4yvNf3Er50JSOwIpxt2kEKqZd1b3g55zMH6Kl+VbWagR80cUwZLIN+iv6cajIGLbd
-	x6aolSjbSvHLCVAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749823318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUQdDRyXbbonvF49JKMmGXX6X7F0bhUgdCeb2Z1yoa8=;
-	b=a+gtUUKX1GxiEQEETg09fq+vFbA2xh0JXaMO21oAQd4BMYCHM4tTrW8SwXKGDeCc2WaK8r
-	Lz4lRJA705z2cSt/3PJKYG26yi7gekO7Q/aB1pCc1P6hFU+aQN8yf4zaDStAZOF1GdT78i
-	JAnNF8p3ygUEkNOrOIhcJVe8KBwsBvE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749823318;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUQdDRyXbbonvF49JKMmGXX6X7F0bhUgdCeb2Z1yoa8=;
-	b=p/i6C4yvNf3Er50JSOwIpxt2kEKqZd1b3g55zMH6Kl+VbWagR80cUwZLIN+iv6cajIGLbd
-	x6aolSjbSvHLCVAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A9FDE137FE;
-	Fri, 13 Jun 2025 14:01:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id W9rjJlUvTGinDgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 13 Jun 2025 14:01:57 +0000
-Date: Fri, 13 Jun 2025 16:01:47 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v3 3/3] mm/huge_memory: don't mark refcounted folios
- special in vmf_insert_folio_pud()
-Message-ID: <aEwvS8AbW7OHLfmk@localhost.localdomain>
-References: <20250613092702.1943533-1-david@redhat.com>
- <20250613092702.1943533-4-david@redhat.com>
+	bh=p6yLbGaAqKXjfS0WvcDA9G+lP7oBNZSeK5gSgxur2Uc=;
+	b=ZdtaMejt/2tlKWPR5Y3CvvojlvL3NtNtY2buu9XogiPe6c9CxLEFOgqqgBxNg0mRVfoYN0
+	W1uCQhE9UieXdZDQ==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Super User <root@localhost.localdomain>
+Subject: Re: [PATCH v4 0/2]  Loongarch irq-redirect supprot
+In-Reply-To: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+Date: Fri, 13 Jun 2025 16:02:10 +0200
+Message-ID: <87qzznivtp.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613092702.1943533-4-david@redhat.com>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,nvidia.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Type: text/plain
 
-On Fri, Jun 13, 2025 at 11:27:02AM +0200, David Hildenbrand wrote:
-> Marking PUDs that map a "normal" refcounted folios as special is
-> against our rules documented for vm_normal_page(). normal (refcounted)
-> folios shall never have the page table mapping marked as special.
-> 
-> Fortunately, there are not that many pud_special() check that can be
-> mislead and are right now rather harmless: e.g., none so far
-> bases decisions whether to grab a folio reference on that decision.
-> 
-> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
-> implications as it seems.
-> 
-> Getting this right will get more important as we introduce
-> folio_normal_page_pud() and start using it in more place where we
-> currently special-case based on other VMA flags.
-> 
-> Fix it just like we fixed vmf_insert_folio_pmd().
-> 
-> Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
-> 
-> Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Tue, Jun 10 2025 at 19:42, Tianyang Zhang wrote:
+> From: Super User <root@localhost.localdomain>
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+That's a valid developer name :)
 
+> This series of patches introduces support for interrupt-redirect
+> controllers, and this hardware feature will be supported on 3C6000
+> for the first time
+>
+> change log:
+> 	v3->v4
+> 	1.Provide reasonable comments on the modifications made to IRQ_SET_MASK_OK_DONE	
 
+That's not really what I asked for:
 
--- 
-Oscar Salvador
-SUSE Labs
+  "This change really wants to be seperate with a proper explanation and
+   not burried inside of this pile of changes."
+
+Emphasis on _seperate_, which translates to:
+
+  "Put it into a seperate patch with a proper changelog explaining this
+   modification and why it is correct."
+
+You still have burried this in the whole pile of unrelated changes.
+
+Thanks,
+
+        tglx
