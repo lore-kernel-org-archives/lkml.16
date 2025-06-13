@@ -1,220 +1,203 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BCF1B85F8
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 01:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F03B1B85F8;
+	Fri, 13 Jun 2025 01:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749776910; cv=none; b=TCRq68vRBLD9QN/qGyp6EcRa0s0acuxZjFZdAwQ0Irk5LhHYnfbbhwklZAkMq2JtzV5+1rT63XFX7T1m2ghJszjQS8PqZZrft4iyJIIfv4AoDuMV1r6QCHDQXaZssie478Z16Q0DU3XhW9rK4OqNW3Sl9+A2qzsIE42SwgMOdxE=
+	t=1749776946; cv=none; b=eASym4DzDfq7AMSM/WsCZf9gOV9Q5d6n+tpEJPMaeqPE5O/hsGi8oXml/A90540nSVvDvx6IBupFUdAXhTus9Gc4x7QpPXSRwdnJnufGMzTZ989le3E3V1eB26B/4hSKYgNkZY0g2gz+CGKE/HwmXH25REn/wjUowtXGAhXly+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749776910; c=relaxed/simple;
-	bh=4cSiIHmjVzal+4uywlcg3fHT6GaATCAkHSAHealoWZA=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=nwVO3mdPf79ZoYzYIYpK8pgRbT/5Ntxg/zzpF7oM5J6wAhOaiMruUJr0ksmFBrUtL4ST/hBLWqvdJrgOyQv9eLSDyQ/T+Y1VjN4pmjg8mRyKUjCwxu/ublqDQtySR0Cp11cRvZsSlAEMcB/FiuqWbIkULJDGLr7XF0tBvHAk9h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com; spf=pass smtp.mailfrom=jrtc27.com; dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b=IK9YeYxR; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jrtc27.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jrtc27.com
+	s=arc-20240116; t=1749776946; c=relaxed/simple;
+	bh=CL39Y09tldOkduTJUv/yrhpBrW/GAFEW2x6aGEDtDeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3ZC4fjgusoWbW2dOmZVdUceyloSwwPjQ8OzXBXIOyq3jRncW1zV86Hg+CCQ44wkiyn1G0xbahHHJu1BsjBPA0nUuFf6UWYwpZzHVZiOdwalLY/lBP2aCdWebblm8q7Itbk1dpp4MNCvKg45vPpYDeIOv6V9C8vdl7zVS2nM+i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DJXz4Zlc; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="IK9YeYxR"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso13768915e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 18:08:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJXz4Zlc"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23636167afeso16037285ad.3;
+        Thu, 12 Jun 2025 18:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user; t=1749776907; x=1750381707; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yV/+ZQq5RzgkIE87cL2HuuOvaHTwwG97pZ4IkkoLaPM=;
-        b=IK9YeYxRi3f8bRKKm5EFJIIEy5EO7LLEpSMPVMgucRGJC6eMd6hc2Nq8tt/+6NUiI4
-         dD1pprOVqtEB55q8X8G5oXCbejR+TadufWzohtcTeXdcOV81nqt7lHq5lGmZWPX5r1lC
-         TJOWSCrASUhNpo+EoG2S9OCLZ945UMWdjlgUZ4SL24/ZNnLXGuotPNUYrAVo+bgOY6WC
-         KH4jb8cxXQIgNA8VAFRIcbXrlsdCUXjdIuUWYlTaxmQ156GUKwNLXVG/vEeBOA/iUHfZ
-         i8NRQkkkvek32g0/CqY0QZ84GEIzJT0U+6Urs66b7gVnpmojirT9NFw+qxPVq1EgQIpg
-         VDXw==
+        d=gmail.com; s=20230601; t=1749776944; x=1750381744; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7mnOu8GOPvWlaCL2dD/0DCQC4xT6FxohHBJt4LsaZV4=;
+        b=DJXz4ZlcAGFapd/Oo9mi09s6UJosYYe+cQ4uP7mhcQKPzD3uvHb1JO3bxkA6znGcEN
+         3kznvbkHM0ULXia4OJldpeO6dACqQs0AAjEDlA6jZywucS7P+sqPVhx9zsAghNgJE91k
+         CzNmpUB/0IMnZ2451WzzxYQglohNWpD9ksuisClEhD7UFCJHjn3r9TNHJ5hyAp0WlDzw
+         T6Uzl2NYWEKdVchy+JK+6i/+7RL2Nwe8X6I/A0YrdxAwcWN5TVF0DD/idePKkWuPPTJ1
+         U+bkXjjvktU/+cQyXmQe+SxjkQv/vGA471FBYzWYqnJ+wW5o4TiOh5vSYHHdGqhrsax1
+         c7ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749776907; x=1750381707;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yV/+ZQq5RzgkIE87cL2HuuOvaHTwwG97pZ4IkkoLaPM=;
-        b=AAn0WxP+LOmdrFTJg8j02678vIiRAPrjH0m0GaesIg33P5N63+nPMnd2YqYO06CyW0
-         GB7RXFx4RaUKIHcvnYgBr9VD6k1otI0XEoFsQnLsosrmk++bC7hCT7XyhN1e7O/oecVC
-         828ruoFgbfo4gA8dmvamSXXGAq4xNzS2VMEqD/GUmMcxY2pb4WulPW4QnphhiJnsE4xk
-         LWfpCPdXoH0QeIhRJK+LTy83P8Cw2jFp/10ft3r9KJOC8VcrfQBRxH32atUPpkYjWMvq
-         /PeOm3biI+rut7oykiXWo++KTbMfKJeax+eexeTj765KZNu4TJ+YfYwME5O8Dbnq987k
-         VEoA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3uyeEBWm5QP5H/svgKyaHILIsW4kFKh4vZ7Oy5a+D/EsuvNmtsi4N4rxr+lOlZxS8tpCmGXw5ROPD3xU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmK5fF9D09W4zLeEXRozF6NU+tPCmQjD5PCLApV9xkGm0UkEqB
-	qZG8RR+3Dz3bhn/UcJKaCpk4AnxsvB3b4lHSU57k164fn2WnNqVbaJj3ODqh21uk4Ll9vOVeqYw
-	8SjkQecg=
-X-Gm-Gg: ASbGncsmoojnO+KS79zqDrA2hqN2f5p2ZdgIDvkJKfIOUWX1MYoYxZ72ETz0WJWqM0o
-	CbNvMpJwgRdFgz+iZctICdRfxku0XxPyf7+iiMqkWCFXlOjxIOfGnZqHavjFrP6ALImv5zJUBjc
-	m8NkomiWTB68sUfGtYf2hxv0dcDWBt3334qtB0x1+pI/mW+MGKJQWlTkvek0AyHCD2b5fA5ezKg
-	0j5wc9/sSU8LkymP7Y5mXDvsocw5ygUHvzgwvOodPOoG7V9ozGSiHholHg1UQjjeHAyc3Ew/DNO
-	NWUwJREQv5V4rSaX46iYLlOGkvh3jNXTsYC9/U3LfIKvGxsMFfx7XgOUjEBKMlIzjqTDDm9Oof8
-	=
-X-Google-Smtp-Source: AGHT+IFwyw9OHP+fZV6LAbNr0tT5uZJzpkB6b4K/Ns4tGf9uKmcXDtKWoPd0LKrnrhtueMGufyguFg==
-X-Received: by 2002:a05:600c:1c12:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-45334b5ae3cmr9341235e9.30.1749776906902;
-        Thu, 12 Jun 2025 18:08:26 -0700 (PDT)
-Received: from smtpclient.apple ([131.111.5.201])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e24420csm35282755e9.20.2025.06.12.18.08.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Jun 2025 18:08:26 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1749776944; x=1750381744;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7mnOu8GOPvWlaCL2dD/0DCQC4xT6FxohHBJt4LsaZV4=;
+        b=mqTrvaOF02YVusC3qpDrjGFLYNl92r/H/F5iL+fkGPR17LdS3lAdngR4jB+yc+DVxG
+         YbqjEGu5qhF6eo6FJtek0spTKKvFRucMaVBdyA5gczCYfF+jwu6ZeMe+YVphVQmHjE2F
+         m3omBEI36sWk363aGQV/2zORh1CmGoh/YCTDjrKFr5fWXpfDjd2QujaHoO+XF3rWtBbK
+         HxtVqwEsmWaOKHB5ORAKXpfV7Ma7J1KtdyROZNRqNMfTLUFzV/uMBuBMddB6JEazn7wr
+         8pX7OWOsa6vpFz8rUOxOeK3sNr2pc7Rrrs7t+7fUZm4j7MF3+nyQRozgkxl6bkChGn7E
+         3CLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxUCNN5MTC1lbTf80CtCZCxOzNyb0IgyyhF3PvAQEnde3DgbOC/1wcXuvAV1Y4nzjau3RjR64rRuW/mtA=@vger.kernel.org, AJvYcCXi5xzc3LtFmAkPeapN/IsSOs46CX6xfk2LPfvZSkxCYMJAgQcu+yma3NdkHrulMZTnGChxB6mL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgTCpNfO/VqbVzy9prjZEWSAj8Kp4umyt1vO+/Sns1oDndDpAd
+	YEUzv/d/+VxTYLebt6WJqBLmqHxSi0g7sBjgrfUavCOZcWk8lh0BuX8=
+X-Gm-Gg: ASbGncsS806Et5HEeDbbYqmBDlAXD/Lra4w+5Zr1wG98OqvzeXpfKBLzinojzkyP6/9
+	jhfO6qAy7VEQinpHbg7EUI7XksVyGBTjICXrmw68JkGL0V9UPI/DRqDPPiCJLe3KQxBpAznB7HM
+	4mBHmtLnzd6aNQAOhgVl64vLbZH/xbUiloF5a0PzEVpVV1UQDu+/gI55VYb9S0Symgmwr4S2okg
+	DTIpsfuzli2oNE+g0dKLCLnd0Xo0p7Z2pQckndMjl1P4D2ntZnjNumA85qjaBSwG9LkMd6y8sC4
+	uCSCQPiUI1gfmv+juY9kDsnHmyVujpnMQzxtmQ14Y+YM7LezNksoFyv3yaX9+vMCTIBLipW36DA
+	CYYCSL3oSV1SAYLoMxFqMpxo=
+X-Google-Smtp-Source: AGHT+IHfhYjnG1JC92HNzmOJaW/pwPNnCKvtr4rnnyIjEcYl38+QzCs6yW8OO/W9kWRl/yi3CQHbtg==
+X-Received: by 2002:a17:903:19c5:b0:235:be0:db6b with SMTP id d9443c01a7336-2365dd3f57emr15916205ad.45.1749776943504;
+        Thu, 12 Jun 2025 18:09:03 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b2fe1691be9sm434862a12.68.2025.06.12.18.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 18:09:03 -0700 (PDT)
+Date: Thu, 12 Jun 2025 18:09:02 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: syzbot <syzbot+b8c48ea38ca27d150063@syzkaller.appspotmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, horms@kernel.org,
+	kuba@kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, pabeni@redhat.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] WARNING in __linkwatch_sync_dev (2)
+Message-ID: <aEt6LvBMwUMxmUyx@mini-arch>
+References: <684a39aa.a00a0220.1eb5f5.00fa.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v3 3/3] vdso: Reject absolute relocations during build
-From: Jessica Clarke <jrtc27@jrtc27.com>
-In-Reply-To: <mhng-4BA05CCD-6D5A-4067-B88A-DEBD4FCDED77@palmerdabbelt-mac>
-Date: Fri, 13 Jun 2025 02:08:14 +0100
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
- thomas.weissschuh@linutronix.de,
- Paul Walmsley <paul.walmsley@sifive.com>,
- aou@eecs.berkeley.edu,
- nathan@kernel.org,
- nick.desaulniers+lkml@gmail.com,
- morbo@google.com,
- justinstitt@google.com,
- luto@kernel.org,
- tglx@linutronix.de,
- vincenzo.frascino@arm.com,
- linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20ED8855-2A51-4821-9675-EF45041BCD31@jrtc27.com>
-References: <mhng-4BA05CCD-6D5A-4067-B88A-DEBD4FCDED77@palmerdabbelt-mac>
-To: Palmer Dabbelt <palmer@dabbelt.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <684a39aa.a00a0220.1eb5f5.00fa.GAE@google.com>
 
-On 12 Jun 2025, at 21:05, Palmer Dabbelt <palmer@dabbelt.com> wrote:
->=20
-> On Thu, 12 Jun 2025 01:31:20 PDT (-0700), Alexandre Ghiti wrote:
->> Hi Thomas,
->>=20
->> On 6/11/25 11:22, Thomas Wei=C3=9Fschuh wrote:
->>> All vDSO code needs to be completely position independent.
->>> Symbol references are marked as hidden so the compiler emits
->>> PC-relative relocations. However there are cases where the compiler =
-may
->>> still emit absolute relocations, as they are valid in regular PIC =
-DSO code.
->>> These would be resolved by the linker and will break at runtime.
->>> This has been observed on arm64 under some circumstances, see
->>> commit 0c314cda9325 ("arm64: vdso: Work around invalid absolute =
-relocations from GCC")
->>>=20
->>> Introduce a build-time check for absolute relocations.
->>> The check is done on the object files as the relocations will not =
-exist
->>> anymore in the final DSO. As there is no extension point for the
->>> compilation of each object file, perform the validation in =
-vdso_check.
->>>=20
->>> Debug information can contain legal absolute relocations and readelf =
-can
->>> not print relocations from the .text section only. Make use of the =
-fact
->>> that all global vDSO symbols follow the naming pattern "vdso_u_".
->>>=20
->>> Link: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
->>> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D120002
->>> Signed-off-by: Thomas Wei=C3=9Fschuh =
-<thomas.weissschuh@linutronix.de>
->>> ---
->>>  lib/vdso/Makefile.include | 6 ++++++
->>>  1 file changed, 6 insertions(+)
->>>=20
->>> diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
->>> index =
-cedbf15f80874d4bb27c097244bc5b11272f261c..04257d0f28c0ed324e31adbb68497181=
-085752f8 100644
->>> --- a/lib/vdso/Makefile.include
->>> +++ b/lib/vdso/Makefile.include
->>> @@ -12,7 +12,13 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) :=3D =
-$(addprefix $(GENERIC_VDSO_DIR), getrand
->>>  #
->>>  # As a workaround for some GNU ld ports which produce unneeded =
-R_*_NONE
->>>  # dynamic relocations, ignore R_*_NONE.
->>> +#
->>> +# Also validate that no absolute relocations against global symbols =
-are present
->>> +# in the object files.
->>>  quiet_cmd_vdso_check =3D VDSOCHK $@
->>>        cmd_vdso_check =3D if $(READELF) -rW $@ | grep -v _NONE | =
-grep -q " R_\w*_"; \
->>>          then (echo >&2 "$@: dynamic relocations are not supported"; =
-\
->>> +      rm -f $@; /bin/false); fi && \
->>> +        if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q =
-" R_\w*_ABS.*vdso_u_"; \
->>=20
->>=20
->> This only works for arm64 relocations right? I can't find any *ABS*
->> relocations in riscv elf abi
->> =
-(https://github.com/riscv-non-isa/riscv-elf-psabi-doc/releases/tag/v1.0).
->=20
-> That's because the psABI people do not believe in absolute symbols.
+On 06/11, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    f09079bd04a9 Merge tag 'powerpc-6.16-2' of git://git.kerne..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16e9260c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e24211089078d6c6
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b8c48ea38ca27d150063
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-f09079bd.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/ef68cb3d29a3/vmlinux-f09079bd.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/1cc9431b9a15/bzImage-f09079bd.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+b8c48ea38ca27d150063@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> RTNL: assertion failed at ./include/net/netdev_lock.h (72)
+> WARNING: CPU: -1 PID: 1141 at ./include/net/netdev_lock.h:72 netdev_ops_assert_locked include/net/netdev_lock.h:72 [inline]
+> WARNING: CPU: 0 PID: 1141 at ./include/net/netdev_lock.h:72 __linkwatch_sync_dev+0x1ed/0x230 net/core/link_watch.c:279
+>  ethtool_op_get_link+0x1d/0x70 net/ethtool/ioctl.c:63
+>  bond_check_dev_link+0x3f9/0x710 drivers/net/bonding/bond_main.c:863
+>  bond_miimon_inspect drivers/net/bonding/bond_main.c:2745 [inline]
+>  bond_mii_monitor+0x3c0/0x2dc0 drivers/net/bonding/bond_main.c:2967
+>  process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+>  process_scheduled_works kernel/workqueue.c:3321 [inline]
+>  worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
+>  kthread+0x3c5/0x780 kernel/kthread.c:464
+>  ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>  </TASK>
 
-I don=E2=80=99t know what you=E2=80=99re referring to here. Absolute =
-symbols (SHN_ABS
-rather than a real section index) are different to absolute
-relocations. The code here is checking for *relocations*, not symbols.
-RISC-V has absolute relocations, they=E2=80=99re R_RISCV_32/64. Putting =
-ABS in
-the relocation name is an Arm-ism that other architectures don=E2=80=99t =
-do.
-Absolute addressing exists, as the medlow and large code models (with
--fno-pic/PIC/pie/PIE). So I=E2=80=99m really not sure what you=E2=80=99re =
-saying the
-current psABI doesn=E2=80=99t do that it should, nor what discussions =
-you=E2=80=99re
-even suggesting have happened and been dismissed?
+netdev_ops_assert_locked is called for non-ops-locked netdev and we
+trigger ASSERT_RTNL case. Which is a bit misleading, but I noticed that
+bond_miimon_inspect is running under rcu lock, which is not
+gonna work for ops-locked devices :-/ (we want to grab instance
+lock for the CHANGE notifiers).
 
-Perhaps you=E2=80=99re referring to the difficulty of using PC-relative
-accesses against absolute symbols, as you=E2=80=99ll get in medany and =
-PIE
-code? But that=E2=80=99s something that affects many architectures; you =
-can
-have issues on amd64 and aarch64, not just riscv64.
+I'm contemplating dropping rcu and doing try_lock rtnl. Looking at
+commit f0c76d61779b ("bonding: refactor mii monitor"), it doesn't look
+like there were issues with rtnl performance, so hopefully should be ok.
 
-Jessica
+Because from my resent patches I remember this trace:
 
-> They exist in the actual toolchains, though, as they are part of the =
-generic ELF ABI. In theory they'd work fine in the VDSO as long as we're =
-using absolute addressing instructions for them, which is possible to do =
-(and I think should happen for some global symbols).
->=20
-> That said, it doesn't really seem worth the effort to get the checking =
-more fine-grained here.  I don't see any reason we'd need an absolute =
-symbol in the VDSO, so unil someone has one we might as well just forbid =
-them entirely.
->=20
-> Some old toolchains had an absolute "__gloabl_pointer$" floating =
-around some of the CRT files, so we might trip over bugs here.  I think =
-we're safe as those shouldn't show up in the VDSO, but not 100% sure.  =
-Probably best to get this on next to bake for a bit, just to make sure =
-we're not trippig anyone up.
->=20
->> Thanks,
->>=20
->> Alex
->>=20
->>=20
->>> +        then (echo >&2 "$@: absolute relocations are not =
-supported"; \
->>>        rm -f $@; /bin/false); fi
->>>=20
->=20
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+    [ 3456.656261]  ? ipv6_add_dev+0x370/0x620
+    [ 3456.660039]  ipv6_find_idev+0x96/0xe0
+    [ 3456.660445]  addrconf_add_dev+0x1e/0xa0
+    [ 3456.660861]  addrconf_init_auto_addrs+0xb0/0x720
+    [ 3456.661803]  addrconf_notify+0x35f/0x8d0
+    [ 3456.662236]  notifier_call_chain+0x38/0xf0
+    [ 3456.662676]  netdev_state_change+0x65/0x90
+    [ 3456.663112]  linkwatch_do_dev+0x5a/0x70
 
+Where linkwatch_do_dev (potentially called from ethtool_op_get_link and
+bond_check_dev_link) might trigger ipv6 address assignment so I'm not
+sure how this all supposed to work under rcu and without rtnl lock.
 
+Tentatively (untested uncompiled):
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index c4d53e8e7c15..e2c4bcdb8b1a 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2739,7 +2739,7 @@ static int bond_miimon_inspect(struct bonding *bond)
+ 			ignore_updelay = true;
+ 	}
+ 
+-	bond_for_each_slave_rcu(bond, slave, iter) {
++	bond_for_each_slave(bond, slave, iter) {
+ 		bond_propose_link_state(slave, BOND_LINK_NOCHANGE);
+ 
+ 		link_state = bond_check_dev_link(bond, slave->dev, 0);
+@@ -2962,35 +2962,28 @@ static void bond_mii_monitor(struct work_struct *work)
+ 	if (!bond_has_slaves(bond))
+ 		goto re_arm;
+ 
+-	rcu_read_lock();
++	/* Race avoidance with bond_close cancel of workqueue */
++	if (!rtnl_trylock()) {
++		delay = 1;
++		should_notify_peers = false;
++		goto re_arm;
++	}
++
+ 	should_notify_peers = bond_should_notify_peers(bond);
+ 	commit = !!bond_miimon_inspect(bond);
+ 	if (bond->send_peer_notif) {
+-		rcu_read_unlock();
+-		if (rtnl_trylock()) {
+-			bond->send_peer_notif--;
+-			rtnl_unlock();
+-		}
+-	} else {
+-		rcu_read_unlock();
++		bond->send_peer_notif--;
+ 	}
+ 
+ 	if (commit) {
+-		/* Race avoidance with bond_close cancel of workqueue */
+-		if (!rtnl_trylock()) {
+-			delay = 1;
+-			should_notify_peers = false;
+-			goto re_arm;
+-		}
+-
+ 		bond_for_each_slave(bond, slave, iter) {
+ 			bond_commit_link_state(slave, BOND_SLAVE_NOTIFY_LATER);
+ 		}
+ 		bond_miimon_commit(bond);
+-
+-		rtnl_unlock();	/* might sleep, hold no other locks */
+ 	}
+ 
++	rtnl_unlock();	/* might sleep, hold no other locks */
++
+ re_arm:
+ 	if (bond->params.miimon)
+ 		queue_delayed_work(bond->wq, &bond->mii_work, delay);
