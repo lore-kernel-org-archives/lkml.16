@@ -1,123 +1,103 @@
-Received: from mailo.com (msg-2.mailo.com [213.182.54.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E43424DCE8;
-	Fri, 13 Jun 2025 08:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.182.54.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAD02DA745;
+	Fri, 13 Jun 2025 08:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803362; cv=none; b=U+3yHEU02af4OAshBiIoMjZy5WtIQVw0+rRUQfu3BtjkH8ScHqz4aGOaj3I5WM5Adi2KQY56piFDxqMKoMmE8CxCc6cs8QrWmbcqcGlD1Z+0TFIWLQc5TCQCJG8Qhoud9mroF55P36b8hovaVPC0eptDmdaXnSxwqfGfICFplAw=
+	t=1749803374; cv=none; b=f4mNvJaThz9YGptlwXCzIQl275ZvF2som9/wK262kzlJvQv0uWOeD4woCbywj4lDAu5l3I9pj4T8x/0Wae+0LqWTbg+hkekyrVUEvO0MZmH/WDzUYkSBesbgRwM+KMdAIelXSQBd5TqS95v1VVE0OFYbNYohwXjVlZEiclvsr54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803362; c=relaxed/simple;
-	bh=mbo21/O/tb+/v1cHO9/jX/KjlrdVyhKn6PjeqyCcfGY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Fc308+5oV4Z56quyWvmkaHPrqaIpwHw+O5Ci4f+OYTgfPEp0e6JbyKr7xAkVMwnS9os44qGrRzFaU6KiPk6TrLqbQhqh0E1ELBi/MLvf+7Ss88wffI92/BIFE8UEz6FbRoScnEoVi1AkOcYylT1bywwlHwTjr5y6BD9FAVlx240=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org; spf=pass smtp.mailfrom=mailoo.org; dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b=AzUBi9sG; arc=none smtp.client-ip=213.182.54.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailoo.org
+	s=arc-20240116; t=1749803374; c=relaxed/simple;
+	bh=ynppvBS7PNRniwt6jOu2/9HHz7kUhD/2Ep+aNoLGk94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzLe9Lvz5tvqtvusSw2am03d2NYaT82EcF9lDB1KSWy3SmjZ+cpKrqP71eYyNbwdlJpYAoZB4F460tqdwrjAQ8X9su+k9f3SsbvxPLyFm77P/deJWo6iLHXw4l4cnhqCnOJBZo/mcQD7z5Y4WrIWfcqn9jdT0fOhoB1h+TYZT60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T48YS3Uj; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b="AzUBi9sG"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailoo.org; s=mailo;
-	t=1749803334; bh=mbo21/O/tb+/v1cHO9/jX/KjlrdVyhKn6PjeqyCcfGY=;
-	h=X-EA-Auth:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=AzUBi9sGRf2H4KcZLOmBBlZtMNo/gvj7zlnMFIAP7GqSlf/OUySwxuVPdyaaZew19
-	 ycFJKS9+fXLUpo1yEFGJbDWef5pEhc/WuaHz3oSpOYQTrviFBPKcEj0wZAysyUFsXJ
-	 oLagW6VB35s9MGd6f4Vh7pgJbIP7hWKl7fT1VyvI=
-Received: by b221-3.in.mailobj.net [192.168.90.23] with ESMTP
-	via ip-22.mailoo.org [213.182.54.22]
-	Fri, 13 Jun 2025 10:28:51 +0200 (CEST)
-X-EA-Auth: gnpnY6dGPIUhlFepldG3MbudFjlJfBvJ+4/XssfeHzUAH4jMqgFSn86AyJqPLY6G6rEo55/+3CnCP/nDWDn3/Rig0Zmo28q94HrA2FMoWEA=
-Message-ID: <67022a6de185740fa482183f29d574298048d54f.camel@mailoo.org>
-Subject: Re: [PATCH v4 2/4] media: qcom: camss: Add support for MSM8939
-From: Vincent Knecht <vincent.knecht@mailoo.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Vladimir Zapolskiy	
- <vladimir.zapolskiy@linaro.org>, Robert Foss <rfoss@kernel.org>, Todor
- Tomov	 <todor.too@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley	 <conor+dt@kernel.org>, Bjorn Andersson
- <andersson@kernel.org>, Konrad Dybcio	 <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- =?ISO-8859-1?Q?Andr=E9?= Apitzsch
-	 <git@apitzsch.eu>, phone-devel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Date: Fri, 13 Jun 2025 10:28:47 +0200
-In-Reply-To: <03f54bb4-ddbb-4be8-9f9b-8328fdb98443@linaro.org>
-References: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
-	 <20250602-camss-8x39-vbif-v4-2-32c277d8f9bf@mailoo.org>
-	 <877a72fa-cdae-4a66-9991-5ea86ef76aac@linaro.org>
-	 <e73d676ba1901437d471a2a633e94a07b19a3e05.camel@mailoo.org>
-	 <03f54bb4-ddbb-4be8-9f9b-8328fdb98443@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42app2) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T48YS3Uj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749803373; x=1781339373;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ynppvBS7PNRniwt6jOu2/9HHz7kUhD/2Ep+aNoLGk94=;
+  b=T48YS3UjLwtUBFlyp1arXQKhymPfIgskQcFLi01Y4SQpWIjkxHR6RMC+
+   sScvZNh9tdLeawYs5IOHmLDFeM+ZqzGhLSfhLKXB64n5txDDWObm3x4OF
+   kVqU2YBQOG7nV2CXXMuxu4VlfpD4J6h8WYEyevinUyVBDc7oYjNBy7MQT
+   4X+U5b8gkyNlV/np3u9xPyuw0CYwh1M/V3JwH2F0P+epW+x5bos4bMZEq
+   nvHtVfuAVs2fVblyhnM45oPql/SOnJSBn+StvJ8VW4DLQR5l5UyafBB6k
+   d4KovBlbta/gURdWbipCAzrQWtGnE/UZuw7ZSi4R/d/3ce07GJpZfk0Rh
+   A==;
+X-CSE-ConnectionGUID: 07QNFQfxQ5K6oSgKFsD1uA==
+X-CSE-MsgGUID: g8kz78nYRWeUPWswP1UjSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55682058"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="55682058"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:29:32 -0700
+X-CSE-ConnectionGUID: s9SNfEIzSs2VTbCEU2SyUQ==
+X-CSE-MsgGUID: 4rQClN4nQmGiI9l0dJIRuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="151592123"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:29:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uPzmw-00000006BfK-40rq;
+	Fri, 13 Jun 2025 11:29:26 +0300
+Date: Fri, 13 Jun 2025 11:29:26 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: jean-baptiste.maneyrol@tdk.com
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] iio: imu: inv_icm42600: add WoM support
+Message-ID: <aEvhZiXHLLIRe41-@smile.fi.intel.com>
+References: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
+ <20250613-losd-3-inv-icm42600-add-wom-support-v4-1-7e5f554201bf@tdk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613-losd-3-inv-icm42600-add-wom-support-v4-1-7e5f554201bf@tdk.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Le vendredi 13 juin 2025 =C3=A0 09:06 +0100, Bryan O'Donoghue a =C3=A9crit=
-=C2=A0:
-> On 07/06/2025 22:43, Vincent Knecht wrote:
-> > Le vendredi 06 juin 2025 =C3=A0 13:59 +0300, Vladimir Zapolskiy a =C3=
-=A9crit=C2=A0:
-> > > Hello Vincent.
-> > >=20
-> > > On 6/2/25 20:27, Vincent Knecht via B4 Relay wrote:
-> > > > From: Vincent Knecht <vincent.knecht@mailoo.org>
-> > > >=20
-> > > > The camera subsystem for the MSM8939 is the same as MSM8916 except =
-with
-> > > > 3 CSID instead of 2, and some higher clock rates.
-> > > >=20
-> > > > As a quirk, this SoC needs writing values to 2 VFE VBIF registers
-> > > > (see downstream msm8939-camera.dtsi vbif-{regs,settings} properties=
-).
-> > > > This fixes black stripes across sensor and garbage in CSID TPG outp=
-uts.
-> > > >=20
-> > > > Add support for the MSM8939 camera subsystem.
-> > > >=20
-> > > > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> > > > Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
-> > >=20
-> > > There was a preceding and partially reviewed changeset published on
-> > > linux-media [1] before v1 of the MSM8939 platform support in CAMSS,
-> > > due to a merge conflict this platform changeset should be rebased IMH=
-O.
-> > >=20
-> > > [1] https://lore.kernel.org/all/20250513142353.2572563-4-vladimir.zap=
-olskiy@linaro.org/
-> > >=20
-> > > --
-> > > Best wishes,
-> > > Vladimir
-> >=20
-> > Thank you, I'll look into it
-> >=20
-> >=20
->=20
-> I think I will take 8939, plus any of the other now 3 SoCs waiting to be=
-=20
-> merged with RBs.
->=20
-> Bindings consistent with the last 10 years can go ahead. Its not=20
-> reasonable or in the interests of the community and developers to gate=
-=20
-> any further.
->=20
-> ---
-> bod
+On Fri, Jun 13, 2025 at 09:34:26AM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
+> 
+> Add WoM as accel roc rising x|y|z event.
 
-Hi Bryan,
+...
 
-I've locally made the requested changes for bindings
-(ordering, vdda voltage, style, clock-lanes removal),
-just not gotten around to rebase on Vladimir series.
+> +	if (sleep_ms)
+> +		msleep(sleep_ms);
 
-So I can still send a new version with just these changes today.
+I still wonder if we can get rid of the conditional here.
+Would the
 
+	fsleep(sleep_ms * USEC_PER_MSEC)
+
+actually work as expected?
+
+Ditto for other case(s) like this.
+
+...
+
+Overall, looking to this patch again, I think it would be better to prepend it
+by replacing *int*_t types by the respective uXX ones. Because in this patch
+we add dozens of new ones which increases an unneeded churn in the future.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
