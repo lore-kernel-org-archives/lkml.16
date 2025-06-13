@@ -1,177 +1,111 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEFB2C327C;
-	Fri, 13 Jun 2025 07:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5072E337E;
+	Fri, 13 Jun 2025 07:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800468; cv=none; b=i+IIHurxaZOBZQBPyaKAHRyMAKmbn+9jm4PS7SZr3sJkNoePX/j/gjzp7k/JO1JOkrCqYwV29qP8I9ZUimo1xYHhteTiP9kbRFIHAMv5ZISBOBNzL51uC9hdULgzOiMgmzpiT1hu4DUkKNoEmF8KbTUiJNhenwMc1Ayd3CjayBA=
+	t=1749800535; cv=none; b=CY6a/I+qowU34WJkV2soe4Idz2N8FYHvjL7ORTvULjcV8vcNxcyxrBAjVFnuSbREPtWS/npzmKmpeiZxTiaOigos84X4dX+R1xr8AlvgQm2UYtnwJOGhvfIBMfu5DDGRxbJ4gvHWllhHD4L//ytALacCrmcKc7ueWoM2WdayMQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800468; c=relaxed/simple;
-	bh=XTLNLa6cch6vvzm8GPLGQE1EqCmrVS/d67uIjyzKwy0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pLqXHqb40XE/PN6AfUFiED1CJJJv72xm1gt3anIOxr1jh3HqmG0CtIi61V6c9JYDfRRLSPBflCcLNcqmsqqJZwpkrNPEK28fYXV5BBldsyb+rmc2ZgijZueRfaW030cj6AUtXGeL6LPUbqJb928YGIzYZYYlbMNCPY0svR6DHjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=F9f3VZTW; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1749800535; c=relaxed/simple;
+	bh=c4VPRTpmVLRj51P1P/drS8KkDTxWgLY6SmOUwd3FyJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CLaMrF5dpyHl0ckglUaeam9BmqLYqNRj2sjjVoV91mfCJKS8OYmEZklLrBcIPdLWiyjKTFWhLQfewIpKOatm/66AHfk3UkUC+IWrlC/XvXdIW4wECs8MWULWH4UgYxO7+vhWnhro8SQT9V5pVUCiC+AIPfzscT0Gk785vsJNGAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EM3tyTAH; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="F9f3VZTW"
-Received: from [10.102.99.184] (unknown [10.101.200.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id AD9293F796;
-	Fri, 13 Jun 2025 07:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1749800456;
-	bh=/s3ULtZuuGEr6lVQB4oZg7nvmbpL3b9XXpwD3nZvvhQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc;
-	b=F9f3VZTW+BB2abEWnbw/0UhmJOusVX9yvI702W5eAfgUhxMLHtNe1pSFFRePvgfTU
-	 JctbEUPLG0lTKMQFmt0HIvDBSlgEB0iVzBWXnkHACFAfVWfk6xsndNVSQZWVJgqqXx
-	 zznYpoO76I0K3F3TeYS8ARiVMRjt+5fRT/uXjwyEsbGFjFlPZQUOg/1EiQWQy1IaJO
-	 tXajDWRz5NdFdiVN5FlDF1dmNfvdel+apW4ee7fZ/tW1gzlYGI6YsAwnf7r2/V2hay
-	 NKXdbVo3zVfa+NOtDcm2XbdMpmOETLGb33oHVfOJUcLDttmOuh5L7G2FF9pqHa7wvL
-	 AglGsZ4c5zF7w==
-From: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
-Date: Fri, 13 Jun 2025 15:40:18 +0800
-Subject: [PATCH v2] i2c: i801: Do not instantiate spd5118 under SPD Write
- Disable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EM3tyTAH"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4530e6f4db4so1669795e9.2;
+        Fri, 13 Jun 2025 00:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749800530; x=1750405330; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+mHRCW2P2LDNhBI8HSjh6g8BIpo2V/XePOS2AmYos8w=;
+        b=EM3tyTAHZ4vQMPbujSWWp1Gkzb3ZPSIn3rk33DwT6K4lSc+jeL9J8N27+CixW6fYT0
+         1OUxtpctKxaL+aPMMbnphqVwNR1XKRSZfjHVOyFgY3bXOCEIAbcaqq53FBNliiCxh3G3
+         KBAWtWz/gwhwx20DAaaGfORW5QNNvWDM9wUa4iMV9BdZsJUrpy2as4i2q8QcZAXpvyEM
+         fIHzaCJHRg3EEf5UUFTVuceR97qKcpxdKWI1T5T/pXYf9699zpAwscPyt5gNJhb8Tjrh
+         pp/uhOTu0vFyGpP00bsedA1EK233qj2Fj6ZAFoP2N4x5QakM6Za1JqskTMYw1W5MjxmG
+         lV0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749800530; x=1750405330;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+mHRCW2P2LDNhBI8HSjh6g8BIpo2V/XePOS2AmYos8w=;
+        b=eT5zvoyUJWJ07oS/JKAGZdI0AGieeCeX8qjEK9BkYosVGjMv28f7MF9sgSoJDdB9xe
+         LedWz/e542dLzXW+T5bWi6PEUH/jxJpumH8NlU6eOQ+kk3jBc3FW9ArKqVHowPM/kk6J
+         EYdt+3+JB1lZLcldIqSL4ThrT3x3lQlly4PsAwKAOC51BzZG6C7h4vYtkTQsYKsEWDnA
+         X2dqpzO2FlfyKc9lpFy0Y6+9UOK+KckQTdJX7Mz5vg6Xh6ydK0Q14x5eTLbgjcDFfAgN
+         gHO5ccNZy4rCShWkJm25d9/TVGeRr6MJu+1YdNSIixRxKEAgJ4sHMJROVZZt9MxnlSy5
+         ww0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWuHvg+pCgaS64pMASSiQN+kwesl+JgC+WMzwGmuUn8PVwaUZVRlK2fCZBhOXW29JPbv/CZUjlD6g0LhKFyspY=@vger.kernel.org, AJvYcCXB2lFBgl0WFjVC+qWJ2+ftOCUDTwIaUsWDohauj2LWBjVbYXjFNeV8hHr6d3xvfsimqJZt+WH3gIqpQpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxggJlGij6LCQwudKWgrIPbq7lLHSKyWCI3Q7z7v9zBoohp5e1b
+	68emfWH1MSA++R7mHAvW0DhOfbbqIZWVkdOC9VcTRfe0v7Y1ubAmt/Velj1LnVJP
+X-Gm-Gg: ASbGncv4lJ1qbMVFpF4CQJ83srWmHl1gzh+i5nSXXdD0qJjAdrm0XM5XTLNDwVtDl/M
+	vHxHOCCd65NElSul3WFKQAx4BmJ6DOnuBuBlJK039osRYM/ncjnyNQz/agae8EV8/j4f48CwM2G
+	+KC0O+a7FpIphxu8Cvz7yrF08FiPenO308Mbx5frCsMOypq83yp1QGcZhvrnSzdw1IwKpnJUEUF
+	zFXIvVIM95/VYRvCqoHqqhSve/4/5nZDly0M9kEbZy/AHooPN/5nlwP+ZtjuJrMfoBcYUm+pDv5
+	kMD2Km+j64BhF1PowAg78WEiRE8zIQY2HuYT64AH0lcrTxKVVMnA2qqfl5PjMg1bFICNpMSC0ll
+	tsPdygDA41rnSjbeBrxuebsxa+PlrDmDEJ4k5e6jFpcVHAAlnBNtiHDUtISGUGfFTcD4LLs5OWO
+	Wp8Q1973Mh
+X-Google-Smtp-Source: AGHT+IGX3ElMSuMPQPMhJruu5vPH6ifXwBOMevT//Ehz8t4/ajxGCobDDyPCH92F6MevBuNrEmCMwQ==
+X-Received: by 2002:a05:6000:22c2:b0:3a4:d30a:7633 with SMTP id ffacd0b85a97d-3a56874032cmr674690f8f.15.1749800530234;
+        Fri, 13 Jun 2025 00:42:10 -0700 (PDT)
+Received: from thomas-precision3591.home (2a01cb00014ec300ef49063bf04e52e9.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:ef49:63b:f04e:52e9])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a568b08785sm1518728f8f.56.2025.06.13.00.42.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 00:42:09 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH rtw-next] wifi: rtlwifi: fix possible skb memory leak in _rtl_pci_init_one_rxdesc()
+Date: Fri, 13 Jun 2025 09:38:36 +0200
+Message-ID: <20250613074014.69856-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <9800869271a34ca3835743207c0a4109@realtek.com>
+References: <9800869271a34ca3835743207c0a4109@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-for-upstream-not-instantiate-spd5118-v2-1-cf456ed9b587@canonical.com>
-X-B4-Tracking: v=1; b=H4sIAOHVS2gC/43NQQ6CMBCF4auQrh1DB9pUV97DsKhlkEmkJW0lG
- sLdrSTuXf5v8b5VJIpMSZyrVURaOHHwJfBQCTdafyfgvrTAGlWtUMMQIjznlCPZCXzIwD5l6zP
- bTJDmXklpoNUNoro1rba1KFdzpIFfO3PtSo+ccojvXV3kd/0B5j9gkSDBoNSEfWNO0lyc9cGzs
- 4+jC5Potm37AA1Tz37cAAAA
-To: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, 
- "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>, 
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Yo-Jung Lin (Leo)" <leo.lin@canonical.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3612; i=leo.lin@canonical.com;
- h=from:subject:message-id; bh=XTLNLa6cch6vvzm8GPLGQE1EqCmrVS/d67uIjyzKwy0=;
- b=owEBbQKS/ZANAwAKAV8XsZZKKe6GAcsmYgBoS9YEWAAj3LAMRYBS63h3VjqJfn8WIBu8BBxKa
- Zjmxn0R0lGJAjMEAAEKAB0WIQQzqV4kW+yguuqHrw5fF7GWSinuhgUCaEvWBAAKCRBfF7GWSinu
- hrpsD/sFBVStcy3VpX4RuV9znK3vjQ36PWnRk8vq6JVDuX0WnfyqGv4Syydih4VcUequ2JnOtGP
- +yAIk0wzpIXDX+dZppHroZH9JsYf2aUEPmHUfPt4PmmjsUfmQy6deK6BGsXibEiALvjB/cuUu9Y
- iAT/hnZqdrjBPIZSMhSkv61pHGwZiUVnDQbxTAq59wTtxEi7k89GYhTRAybtYShau33xSMzTUNy
- Her/ViU8RB8JDoCB3w6GH+H5GKZoz1Q1UH1HaS6+vK/jAuniB+AJ59Ifooim3dZYWEu4P43RWvt
- AkY5KDAzR0Hj7v30/+8bBMibaRA8yjjHq45O3QQngWjRk4Dw47Z9XHWyOgkrdtHYOz802ib0D+b
- sEWGB4JrKD+CwVkmUgyzc/fSVy3gdF1AOBc0xNRKkTBTPF1dUvRKaxmveb2UqSvg/CgErfypbhU
- 1HUe4emKUSmcsdrn1PdUtSf1V+u0f9M1o0QWYnivhSPqwPNSMc405m25ZU2mqCFgzTQGt7a9k+x
- pnyzKhAljcHa2B/oKYeE4KmWjjskqEwWUeQmgzO7DR/j19nxrboOyuw2TaNH4lS35fKDcnqlzsL
- KTIpyS7M/K1kS2YsXxzdro4knan1buNTozp5l7NfO1JzLPm/HQx7WV3+DErQCB+tGourRjElziS
- SbOqhGRHm7rMF1w==
-X-Developer-Key: i=leo.lin@canonical.com; a=openpgp;
- fpr=33A95E245BECA0BAEA87AF0E5F17B1964A29EE86
+Content-Transfer-Encoding: 8bit
 
-If SPD Write Disable bit in the SMBus is enabled, writing data to
-addresses from 0x50 to 0x57 is forbidden. This may lead to the
-following issues for spd5118 devices:
+When `dma_mapping_error()` is true, if a new `skb` has been allocated,
+then it must be de-allocated.
 
-  1) Writes to the sensor hwmon sysfs attributes will always result
-     in ENXIO.
+Compile tested only
 
-  2) During system-wide resume, errors may occur during regcache sync,
-     resulting in the following error messages:
-
-     kernel: spd5118 1-0050: failed to write b = 0: -6
-     kernel: spd5118 1-0050: pm: dpm_run_callback(): spd5118_resume [spd5118] returns -6
-     kernel: spd5118 1-0050: pm: failed to resume async: error -6
-
-  3) nvmem won't be usable, because writing to the page selector becomes
-     impossible.
-
-Also, BIOS vendors may choose to set the page to a value != 0 after a board
-reset. This will make the sensor not functional unless its MR11 register
-can be changed, which is impossible due to writes being disabled.
-
-To address these issues, don't instantiate it at all if the SPD Write Disable
-bit is set.
-
-Signed-off-by: Yo-Jung Lin (Leo) <leo.lin@canonical.com>
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
 ---
-Changes in v2:
-- Fix build failure on some non-x86 archs, by moving __i801_register_spd() out of the CONFIG_X86 && defined CONFIG_DMI region
-- Also fix unused function warning by adding __always_inline.
-- Link to v1: https://lore.kernel.org/r/20250528-for-upstream-not-instantiate-spd5118-v1-1-8216e2d38918@canonical.com
----
- drivers/i2c/busses/i2c-i801.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index a7f89946dad41..2a56396d88c29 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -978,6 +978,14 @@ static void i801_disable_host_notify(struct i801_priv *priv)
- 	iowrite8(priv->original_slvcmd, SMBSLVCMD(priv));
- }
- 
-+static inline __maybe_unused void __i801_register_spd(struct i801_priv *priv)
-+{
-+	if (priv->original_hstcfg & SMBHSTCFG_SPD_WD)
-+		i2c_register_spd_write_disable(&priv->adapter);
-+	else
-+		i2c_register_spd_write_enable(&priv->adapter);
-+}
-+
- static const struct i2c_algorithm smbus_algorithm = {
- 	.smbus_xfer	= i801_access,
- 	.functionality	= i801_func,
-@@ -1157,6 +1165,19 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
- 	}
- }
- 
-+#ifdef CONFIG_I2C_I801_MUX
-+static void i801_register_spd(struct i801_priv *priv)
-+{
-+	if (!priv->mux_pdev)
-+		__i801_register_spd(priv);
-+}
-+#else
-+static void i801_register_spd(struct i801_priv *priv)
-+{
-+	__i801_register_spd(priv);
-+}
-+#endif
-+
- /* Register optional targets */
- static void i801_probe_optional_targets(struct i801_priv *priv)
- {
-@@ -1177,10 +1198,7 @@ static void i801_probe_optional_targets(struct i801_priv *priv)
- 		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
- 
- 	/* Instantiate SPD EEPROMs unless the SMBus is multiplexed */
--#ifdef CONFIG_I2C_I801_MUX
--	if (!priv->mux_pdev)
--#endif
--		i2c_register_spd_write_enable(&priv->adapter);
-+	i801_register_spd(priv);
- }
- #else
- static void __init input_apanel_init(void) {}
-@@ -1283,7 +1301,7 @@ static int i801_notifier_call(struct notifier_block *nb, unsigned long action,
- 		return NOTIFY_DONE;
- 
- 	/* Call i2c_register_spd for muxed child segments */
--	i2c_register_spd_write_enable(to_i2c_adapter(dev));
-+	__i801_register_spd(priv);
- 
- 	return NOTIFY_OK;
- }
-
----
-base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
-change-id: 20250526-for-upstream-not-instantiate-spd5118-463225b346a0
-
-Best regards,
+diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
+index 898f597f70a9..472072630f8d 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/pci.c
++++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
+@@ -572,8 +572,11 @@ static int _rtl_pci_init_one_rxdesc(struct ieee80211_hw *hw,
+ 		dma_map_single(&rtlpci->pdev->dev, skb_tail_pointer(skb),
+ 			       rtlpci->rxbuffersize, DMA_FROM_DEVICE);
+ 	bufferaddress = *((dma_addr_t *)skb->cb);
+-	if (dma_mapping_error(&rtlpci->pdev->dev, bufferaddress))
++	if (dma_mapping_error(&rtlpci->pdev->dev, bufferaddress)) {
++		if (!new_skb)
++			kfree_skb(skb);
+ 		return 0;
++	}
+ 	rtlpci->rx_ring[rxring_idx].rx_buf[desc_idx] = skb;
+ 	if (rtlpriv->use_new_trx_flow) {
+ 		/* skb->cb may be 64 bit address */
 -- 
-Yo-Jung (Leo) Lin <leo.lin@canonical.com>
+2.43.0
 
