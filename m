@@ -1,42 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF8C1AA1DA;
-	Fri, 13 Jun 2025 15:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C301149DE8;
+	Fri, 13 Jun 2025 15:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749827336; cv=none; b=n4GWPB5L0tYA5lS1kij4GFxSOuZMKGDolBSOn4kRuDONiNIecBiRUSaJfZ+7Hi2UuWnBmMcpQ91nAseffD2OGYtJsLdANZ4c/gZPYKIHrbtZkxdEH0RGt/24q4BFzMYayh5CnT6w0iNFmmA+wJscCiUNEfCZFiW/6Yp1GwtwmII=
+	t=1749827349; cv=none; b=s9+K4iSwGzFEkmLW0/5EgBEQGqvPPWJIZyQMKbrNnmkCDw7V7BALbGXsiHQoQblsQC3Liv1TlSQNOCmqUTY+URu0vDWYIsjMKTq/IZcKl+7m8GN5gVTypHXvAmfLptwxM9zS5pBLjLeJXdbGul9pdQ3dC5uf+oTj6VMiKZ0Povc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749827336; c=relaxed/simple;
-	bh=KcxStdt8f8rzcLQ2tvp3NeEaAi/emd0jaeTIX1dmMLQ=;
+	s=arc-20240116; t=1749827349; c=relaxed/simple;
+	bh=+jvCD2kowkTgOqSg81LszSYq2ncrCtuKus8a/WXzonI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c+dt7Fge9aV3dwRvfeA0U0qjYNQ69FNZikBH4CCThF60FK//OtPlPfVx9OvFrcpkn/NX2muqLPJB0EsZlLtkOR/cyL2H39Zjif8SXQErxtV9Bx8kDdLiB2lM/dm4F1ijR6ZJBXvG3NkUpGnzepRzqKkPHeUDzv+azMFNwzalHIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCszDAiZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dx+ROeslW7sgf4KE7vueXcZmvhXUGU45OAi2nz23lk5O0cwb6xT54nORShNSSXsjlF5iRjLuhe8Z1F8aSYVPZmPmFUIfzBOCGgaQDCTvhBh2AWjE77qwjsiT6qgxAzFXSwrv4GxicGbL7JJqVYV+qLrdcBB/bzQRnQ5HvG2HKUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LL5LRNFx; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCszDAiZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1DBFC4CEE3;
-	Fri, 13 Jun 2025 15:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749827336;
-	bh=KcxStdt8f8rzcLQ2tvp3NeEaAi/emd0jaeTIX1dmMLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CCszDAiZcQhun/+u+GhD53nmGwteamscEbgh22Qkeu8kQBL4niBdejC8SrkRrghso
-	 wY5FVO5Q5CMPR7NdyshGq1dY1awU+XFJJ7IajkG7EHJ2nmTM/v+8+mSOYojMw8CqTf
-	 hzlmjceHcQzyxZsVD747XMfbYxqx3YKP/k0c9d4yD24blG9YhrQMcgv50b/yta4Wda
-	 K2GnSHoUXUYZiMhGVl1cvsdpwTVz/zO9D8FHKb6Et6cVqJULwkHyAEt67HYD0ek3mP
-	 RJ/gP05iMwUuj8dGCqHMhT5A/sZqKJStWUfZFtcffjhxXXSIDPZW9e/zK1R7VeTiXo
-	 7qsY5kIDTdU6A==
-Date: Fri, 13 Jun 2025 08:08:55 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 00/14] xfs: Remove unused trace events
-Message-ID: <20250613150855.GQ6156@frogsfrogsfrogs>
-References: <20250612212405.877692069@goodmis.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LL5LRNFx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749827347; x=1781363347;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+jvCD2kowkTgOqSg81LszSYq2ncrCtuKus8a/WXzonI=;
+  b=LL5LRNFxkK+n+uDitU2AODCGcui2GZmnT9ztDi0s3cNqhlJgM+zCilwL
+   EsWUaaKQeYf1kaPCBtqmNNQu+U7iG2VFYa7hzLZXlLJ38XbQ1IAa6hXGg
+   lyZabSP/gD++TzF9+aVAytY7yIfj9fH1s5sm7k04ineQHoelpAbNhwLZF
+   jQ04LbtKQ87vXr4m5qpSCwIa6Q7dGKWBI2vMVeuFwHFqQMbAon4uQAb0L
+   U5Ycm9dFUAZgBaD9H7g51d8YHBEp7immRoYSUZjakoectbiI5HBmZLVcM
+   6XAOPbHKu7n4pXBngGKq+y3W1OC5Bbbx2u7hPDgvzqKyCzU5PdtB3Rv3L
+   g==;
+X-CSE-ConnectionGUID: PD5xtQstS8+SBLvNza0M0A==
+X-CSE-MsgGUID: fJubu7CsSyydh+wYWiQGlw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="74580021"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="74580021"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:09:07 -0700
+X-CSE-ConnectionGUID: ImMIdTIDRsC69PqAeUGuEg==
+X-CSE-MsgGUID: yEqvY+VAR7iEFMmi7VNQHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="152617176"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:09:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uQ61d-00000006HNs-1Z1M;
+	Fri, 13 Jun 2025 18:09:01 +0300
+Date: Fri, 13 Jun 2025 18:09:01 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Marek Vasut <marek.vasut+bmc150@mailbox.org>,
+	Hans de Goede <hansg@kernel.org>
+Cc: linux-iio@vger.kernel.org,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Julien Stephan <jstephan@baylibre.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: accel: bmc150: Do not configure IRQ registers if no
+ IRQ connected
+Message-ID: <aEw_DcqpCpcsBGd0@smile.fi.intel.com>
+References: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,70 +72,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612212405.877692069@goodmis.org>
+In-Reply-To: <20250613124648.14141-1-marek.vasut+bmc150@mailbox.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Jun 12, 2025 at 05:24:05PM -0400, Steven Rostedt wrote:
-> 
-> Trace events take up to 5K in memory for text and meta data. I have code that
+Strange I don't see Hans in the Cc list, so added.
+Thanks for the report and patch, my comments below.
 
-Under what circumstances do they eat up that much memory?  And is that
-per-class?  Or per-tracepoint?
+On Fri, Jun 13, 2025 at 02:45:22PM +0200, Marek Vasut wrote:
+> The BMC150 on Onemix 2S does not have IRQ line described in ACPI tables,
+> which leads to bmc150_accel_core_probe() being called with irq=0, which
+> leads to bmc150_accel_interrupts_setup() never being called, which leads
+> to struct bmc150_accel_data *data ->interrupts[i].info being left unset
+> to NULL. Later, userspace can indirectly trigger bmc150_accel_set_interrupt()
+> which depends on struct bmc150_accel_data *data ->interrupts[i].info being
+> non-NULL, and which triggers NULL pointer dereference. This is triggered
+> e.g. from iio-sensor-proxy.
+> 
+> Fix this by skipping the IRQ register configuration in case there is no
+> IRQ connected in hardware, in a manner similar to what the driver did in
+> the very first commit which added the driver.
+> 
+> ACPI table dump:
 
-> will trigger a warning when it detects unused tracepoints. The XFS file
-> system contains many events that are not called. Most of them used to be called
-> but due to code refactoring the calls were removed but the trace events stayed
-> behind.
-> 
-> Some events were added but never used. If they were recent, I just reported
-> them, but if they were older, this series simply removes them.
+>         Device (BMA2)
+>         {
+>             Name (_ADR, Zero)  // _ADR: Address
+>             Name (_HID, "BOSC0200")  // _HID: Hardware ID
+>             Name (_CID, "BOSC0200")  // _CID: Compatible ID
+>             Name (_DDN, "Accelerometer")  // _DDN: DOS Device Name
+>             Name (_UID, One)  // _UID: Unique ID
+>             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>             {
+>                 Name (RBUF, ResourceTemplate ()
+>                 {
+>                     I2cSerialBusV2 (0x0019, ControllerInitiated, 0x00061A80,
+>                         AddressingMode7Bit, "\\_SB.PCI0.I2C0",
+>                         0x00, ResourceConsumer, , Exclusive,
+>                         )
+>                 })
+>                 Return (RBUF) /* \_SB_.PCI0.I2C0.BMA2._CRS.RBUF */
+>             }
 
-TBH it'd be really nice if there was /something/ in the build path that
-would complain about disused tracepoints.  I often put in tracepoints
-while developing a feature, then the code gets massively rewritten
-during review, and none of us remember to rip out the orphaned traces...
+These lines...
 
-> One is called only when CONFIG_COMPACT is defined, so an #ifdef was placed
-> around it.
+>             Method (ROTM, 0, NotSerialized)
+>             {
+>                 Name (SBUF, Package (0x03)
+>                 {
+>                     "0 1 0",
+>                     "1 0 0 ",
+>                     "0 0 1"
+>                 })
+>                 Return (SBUF) /* \_SB_.PCI0.I2C0.BMA2.ROTM.SBUF */
+>             }
 > 
-> A couple are only called in #if 0 code (left as a reminder to fix it), so
-> those events are wrapped by a #if 0 as well (with a comment).
-> 
-> Finally, one event is supposed to be a trace event class, but was created with
-> the TRACE_EVENT() macro and not the DECLARE_EVENT_CLASS() macro. This works
-> because a TRACE_EVENT() is simply a DECLARE_EVENT_CLASS() and DEFINE_EVENT()
-> where the class and event have the same name. But as this was a mistake, the
-> event created should not exist.
-> 
-> Each patch is a stand alone patch. If you ack them, I can take them in my
-> tree, or if you want, you can take them. I may be adding the warning code to
-> linux-next near the end of the cycle, so it would be good to have this cleaned
-> up before hand. As this is removing dead code, it may be even OK to send them
-> to Linus as a fix.
+>             Method (_STA, 0, NotSerialized)  // _STA: Status
+>             {
+>                 Return (0x0F)
+>             }
 
-...oh, you /do/ have a program and it's coming down the pipeline.
-Excellent <tents fingers>. :)
+...are irrelevant.
 
---D
+>         }
+> "
+> 
+> Splat, collected from debian unstable, probably not very useful:
 
-> 
-> Steven Rostedt (14):
->       xfs: tracing; Remove unused event xfs_reflink_cow_found
->       xfs: Remove unused trace event xfs_attr_remove_iter_return
->       xfs: Remove unused event xlog_iclog_want_sync
->       xfs: Remove unused event xfs_ioctl_clone
->       xfs: Remove unused xfs_reflink_compare_extents events
->       xfs: Remove unused trace event xfs_attr_rmtval_set
->       xfs: ifdef out unused xfs_attr events
->       xfs: Remove unused event xfs_attr_node_removename
->       xfs: Remove unused event xfs_alloc_near_error
->       xfs: Remove unused event xfs_alloc_near_nominleft
->       xfs: Remove unused event xfs_pagecache_inval
->       xfs: Remove usused xfs_end_io_direct events
->       xfs: Only create event xfs_file_compat_ioctl when CONFIG_COMPAT is configure
->       xfs: Change xfs_xattr_class from a TRACE_EVENT() to DECLARE_EVENT_CLASS()
-> 
-> ----
->  fs/xfs/scrub/trace.h |  2 +-
->  fs/xfs/xfs_trace.h   | 72 ++++++----------------------------------------------
->  2 files changed, 9 insertions(+), 65 deletions(-)
-> 
+Oh my gosh, please leave only ~3-5 *important* lines out of this, or move it
+completely to the comment block (after '---' cutter line).
+
+This is requirement written in Submitting Patches.
+
+...
+
+As for the solution, are you sure the line is not wired at all?
+IIRC Hans had a broken tales where it was simply forgotten, meaning
+the Android / Windows driver simply hardcoded needed info.
+
+If it's the case, it should be solved differently around PDx86 special quirk
+driver for the cases like this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
