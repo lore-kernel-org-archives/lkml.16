@@ -1,52 +1,51 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336F8279DD6;
-	Fri, 13 Jun 2025 08:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF07279DAF;
+	Fri, 13 Jun 2025 08:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803116; cv=none; b=Yz5aSg0GhsVGpjmr6WPJVM3d+mxhvvfu6chzPf4a7+iK/69weczuwaynxVbytYFJ+/XqR8mFb8PUeYCypiiADGAsynuxTlikgGcuTZIy+wrkeJ1Psa+pn6x4fjkB6m6VSecLrz/ANsABnIlfhZiTyksLnaAybW4nB4S/YujeeZA=
+	t=1749803119; cv=none; b=m/Lx4TMYWix/HYs5nLuJtKZQGrmMWsbqEvN5vLPw/h8lIybDGueJLuhbAOGSs0WUrtiR671cSoLN05TbL2MWxkeQIM6PhOzdEdLvUlMpPoCx+CGMJ5XTsGBFE9t3JhLRgH6MLJS9KJ6XdVo5xqQQh3kHX2dacy8NJKH4Ae6DgFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803116; c=relaxed/simple;
-	bh=tk0l7ip/pjuzNz/UL+oNASF1gVNRXnvrxUMjDLcWia4=;
+	s=arc-20240116; t=1749803119; c=relaxed/simple;
+	bh=qQMNsNFMXLtKrTeBcmX3MdS6xrj87OSWVkX1WfWiJkQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=b6ymyT896fmLNblNfrYoeguAeibwd8GCEJQkwLi12/IMSd0k/3H0s094Zs1CWTcP0XNkWxjttLRy5n9f7MHQ44d14FqwhOEQIM3TUeU8MeHMBUXYr05dftXbxKRLREwa8J6akclxtZ0hZXB7t8XTaiJQdp4GsByXc4XlCyKRKj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HjVKrwwR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=02KE7WWe; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=jdhsXLwpl5K6Oe/uuadMFcIznqOvQtQ45oxd9tkyunj4++V/JtJNyNtJHkwxV/UHKmQgm2e/y49v3qoLRGCHzMIxWoNn20nuW3d3hjk9f+vhcG8cwfH3M2s5bY69wecDE70Yi6FOi7QKW6II+hDAbfZl9wA1hoaI5LWk3nrjUbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RYrR9Jxh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uzGzIJ2M; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HjVKrwwR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="02KE7WWe"
-Date: Fri, 13 Jun 2025 08:25:12 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RYrR9Jxh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uzGzIJ2M"
+Date: Fri, 13 Jun 2025 08:25:15 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749803113;
+	s=2020; t=1749803116;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OipuxVR876uTN5Bmoi66QcMLdMgW9Iymq3u5OJ+vX8A=;
-	b=HjVKrwwRgSfqWHcrpyI+s6VH8F1kPFlh491QZHu70tMBcquPN1/B+5lf1ePCKMNFqqFzrV
-	r6265e+3hRw/VYFuuPfmQyVW4gSwnZr0OkwqPXnhJHelsVJ+S1ejmOAiiXqA0Gxa/50xpZ
-	7K5cSFVOMA59IVWkMaFgbiI+pu5rCtkIZXoZmC8BvgY/28kG2qqBcIP5esbtlyAMAWjMcS
-	dmFsIJzZ9zyLFj9JdHLhXGpIi2Jy3/KPCZdGKaz61gCdLWKv4RRuj6C4foSEaokzDtCEoh
-	hvqmHYspVw5tPvCYcvRKv8IJ28W/f+UrJqztPIB39t3lxolyJaE9NYdLWMFGug==
+	bh=3Cj7n0VpdzqM9fOR81UcF7y44cj1MbOQjcEjR8SHSY4=;
+	b=RYrR9JxhicQ/ZHvURaEz1D+Rs+UQVMvQZcNrFfk1MQXWJrNmKSvGljNRy3yRZ5lvtbzBb/
+	0Agdb/d2qyY+eVwAf7hrMLadF+9SP3YW7FyXtuORVPUE9Z2C6z/aYFwmgEkz4q2lzxUqk0
+	V2MmRytoGfKONy51NYT5+LSsDbRNpqMO7deHQKUSkl+YcFjSgnp21Uwi+jeNGmOkR+lNBq
+	aLB7u+jsVKasomiySw47ZDQHfaSZ3MhX4N8Jq5Y6kb7rJxq++RauTuX6P5lZcH7MihRVR+
+	mVVquadJA9Z66DAyJohXtv7eYDNjUtGxjfhYeFv+BFmTyXAlVxbtgD1tbhTKFA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749803113;
+	s=2020e; t=1749803116;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OipuxVR876uTN5Bmoi66QcMLdMgW9Iymq3u5OJ+vX8A=;
-	b=02KE7WWeOveXmAnD9S1ci9560+pPc9h7wYrFQMWETORaJSSNRga4HzAAaWgqeqq5jK+lhX
-	LKDIWT46KKiDk9Bw==
+	bh=3Cj7n0VpdzqM9fOR81UcF7y44cj1MbOQjcEjR8SHSY4=;
+	b=uzGzIJ2MQGbEXfHAGZvDXxZiV8LVj/AVsBec+3Ht48ID6184q3WQavSaZ2Yvocjw8l0k/j
+	yxHOhKNSogWKBiCA==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kconfig] x86/tools: insn_decoder_test.c: Emit standard
- build success messages
+Subject: [tip: x86/kconfig] x86/kconfig/64: Refresh defconfig
 Cc: Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
  Arnd Bergmann <arnd@arndb.de>, David Woodhouse <dwmw@amazon.co.uk>,
  "H. Peter Anvin" <hpa@zytor.com>, jgross@suse.com,
@@ -55,15 +54,15 @@ Cc: Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
  Michal Marek <michal.lkml@markovi.net>, Peter Zijlstra <peterz@infradead.org>,
  Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250515132719.31868-5-mingo@kernel.org>
-References: <20250515132719.31868-5-mingo@kernel.org>
+In-Reply-To: <20250515132719.31868-2-mingo@kernel.org>
+References: <20250515132719.31868-2-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174980311278.406.14176587531310722886.tip-bot2@tip-bot2>
+Message-ID: <174980311589.406.43050021533084310.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,25 +72,21 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the x86/kconfig branch of tip:
 
-Commit-ID:     8d188ec9bef86be180e1eca6b7d23467d0d6a9cb
-Gitweb:        https://git.kernel.org/tip/8d188ec9bef86be180e1eca6b7d23467d0d=
-6a9cb
+Commit-ID:     00c7a872026f9e74055ba5c71cba03c665e8b03e
+Gitweb:        https://git.kernel.org/tip/00c7a872026f9e74055ba5c71cba03c665e=
+8b03e
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Thu, 15 May 2025 15:27:10 +02:00
+AuthorDate:    Thu, 15 May 2025 15:27:07 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 13 Jun 2025 10:00:58 +02:00
+CommitterDate: Fri, 13 Jun 2025 09:51:18 +02:00
 
-x86/tools: insn_decoder_test.c: Emit standard build success messages
+x86/kconfig/64: Refresh defconfig
 
-The standard 'success' output of insn_decoder_test spams build logs with:
+Refresh the x86-64 defconfig to pick up changes in the
+general Kconfig environment: removed options, different
+defaults, renames, etc.
 
-  arch/x86/tools/insn_decoder_test: success: Decoded and checked 8258521 inst=
-ructions
-
-Prefix the message with the standard '  ' (two spaces) used by kbuild to deno=
-te
-regular build messages, making it easier for tools to filter out
-warnings and errors.
+No changes to the actual result of 'make ARCH=3Dx86 defconfig'.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Ard Biesheuvel <ardb@kernel.org>
@@ -104,22 +99,70 @@ Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc: Michal Marek <michal.lkml@markovi.net>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Link: https://lore.kernel.org/r/20250515132719.31868-5-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250515132719.31868-2-mingo@kernel.org
 ---
- arch/x86/tools/insn_decoder_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/configs/x86_64_defconfig |  9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_decoder=
-_test.c
-index 08cd913..8bf15c4 100644
---- a/arch/x86/tools/insn_decoder_test.c
-+++ b/arch/x86/tools/insn_decoder_test.c
-@@ -167,7 +167,7 @@ int main(int argc, char **argv)
- 		pr_warn("Decoded and checked %d instructions with %d "
- 			"failures\n", insns, warnings);
- 	else
--		fprintf(stdout, "%s: success: Decoded and checked %d"
-+		fprintf(stdout, "  %s: success: Decoded and checked %d"
- 			" instructions\n", prog, insns);
- 	return 0;
- }
+diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defc=
+onfig
+index 61e25f6..7d7310c 100644
+--- a/arch/x86/configs/x86_64_defconfig
++++ b/arch/x86/configs/x86_64_defconfig
+@@ -27,6 +27,7 @@ CONFIG_CGROUP_DEBUG=3Dy
+ CONFIG_BLK_DEV_INITRD=3Dy
+ CONFIG_KALLSYMS_ALL=3Dy
+ CONFIG_PROFILING=3Dy
++CONFIG_KEXEC=3Dy
+ CONFIG_SMP=3Dy
+ CONFIG_HYPERVISOR_GUEST=3Dy
+ CONFIG_PARAVIRT=3Dy
+@@ -40,8 +41,6 @@ CONFIG_EFI=3Dy
+ CONFIG_EFI_STUB=3Dy
+ CONFIG_EFI_MIXED=3Dy
+ CONFIG_HZ_1000=3Dy
+-CONFIG_KEXEC=3Dy
+-CONFIG_CRASH_DUMP=3Dy
+ CONFIG_HIBERNATION=3Dy
+ CONFIG_PM_DEBUG=3Dy
+ CONFIG_PM_TRACE_RTC=3Dy
+@@ -63,9 +62,7 @@ CONFIG_BINFMT_MISC=3Dy
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_NET=3Dy
+ CONFIG_PACKET=3Dy
+-CONFIG_UNIX=3Dy
+ CONFIG_XFRM_USER=3Dy
+-CONFIG_INET=3Dy
+ CONFIG_IP_MULTICAST=3Dy
+ CONFIG_IP_ADVANCED_ROUTER=3Dy
+ CONFIG_IP_MULTIPLE_TABLES=3Dy
+@@ -205,7 +202,6 @@ CONFIG_SND_HDA_INTEL=3Dy
+ CONFIG_SND_HDA_HWDEP=3Dy
+ CONFIG_HIDRAW=3Dy
+ CONFIG_HID_GYRATION=3Dy
+-CONFIG_LOGITECH_FF=3Dy
+ CONFIG_HID_NTRIG=3Dy
+ CONFIG_HID_PANTHERLORD=3Dy
+ CONFIG_PANTHERLORD_FF=3Dy
+@@ -239,7 +235,6 @@ CONFIG_EXT4_FS_POSIX_ACL=3Dy
+ CONFIG_EXT4_FS_SECURITY=3Dy
+ CONFIG_QUOTA=3Dy
+ CONFIG_QUOTA_NETLINK_INTERFACE=3Dy
+-# CONFIG_PRINT_QUOTA_WARNING is not set
+ CONFIG_QFMT_V2=3Dy
+ CONFIG_AUTOFS_FS=3Dy
+ CONFIG_ISO9660_FS=3Dy
+@@ -264,13 +259,11 @@ CONFIG_SECURITY=3Dy
+ CONFIG_SECURITY_NETWORK=3Dy
+ CONFIG_SECURITY_SELINUX=3Dy
+ CONFIG_SECURITY_SELINUX_BOOTPARAM=3Dy
+-CONFIG_SECURITY_SELINUX_DISABLE=3Dy
+ CONFIG_PRINTK_TIME=3Dy
+ CONFIG_DEBUG_KERNEL=3Dy
+ CONFIG_MAGIC_SYSRQ=3Dy
+ CONFIG_DEBUG_WX=3Dy
+ CONFIG_DEBUG_STACK_USAGE=3Dy
+-# CONFIG_SCHED_DEBUG is not set
+ CONFIG_SCHEDSTATS=3Dy
+ CONFIG_BLK_DEV_IO_TRACE=3Dy
+ CONFIG_PROVIDE_OHCI1394_DMA_INIT=3Dy
