@@ -1,67 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BE514D2B7
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81982191F84
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822080; cv=none; b=atGWjLpP6PPzgYqO7hb8usmNd7LidspY+F6C3WpsgwH+BKRUiDPULPr54e1g6xqNdus2PFBSVUwRq4fc9l0GnvFzZ3wEm6Wfz6FmYA8QIB8lJ/sh5FkRDSGFKVaPTxMSdTi7k2W/Fa/y3NjJq4/uupWBYx6DVh420sypAJnT2gs=
+	t=1749822085; cv=none; b=YuqBhSGBaHHcHqWrF5tHy658u/O8Hl4R/FGXmmQ+eKJ6PrnwUYsu1QES+W2QZFwunbblIwhR8avvaNIIqSEvRLIKZWRHBvP60tlUmkSJVGy/qrjx+zsyieYypBHI82g6AnjEzDAKj66fFTadgdJwaWPxJDQ+cfU8bZI4oQeu9A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822080; c=relaxed/simple;
-	bh=H46jNRRysgI7C7Yo+blkL5OHIRXgGO6SIOJfPsWTea4=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hXFH3/a7d9OFyKzwmbOqT+XPqEUp6M+KZvqUYupJZmmzUN8mdinPREjnW8PvFDlDfqNlveWE2OQdDtlLETKumwK9Wp9ibrtTqqT5ZCFbUjZM7pPvosilEMHzTMoGOPgDdSqFcaQIDAfNGvpXoI2f+5KGX+z1FIgK5gCBrCPF/b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QLzq40J8; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1749822085; c=relaxed/simple;
+	bh=oBujyHW3fR3UArBsFd0eQdvuPTosgfHx6P9PRFKYox8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RwR3ugaP99JggYq2Zr228jvcTtM4uKxNwODcYBIp0UIW2ySU0yqblY0rBmNGYcMoMWYLY/Hi/SrDoQsSr1KqdQVeLYHam9WThyHg8jrd1xtiQcVJ5nThjdG93P+LPEj7d18/+vg6PLhRQ+VpWQv17UcEDl0K0WWmhje6TzIU2jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LuubT669; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QLzq40J8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LuubT669"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749822077;
+	s=mimecast20190719; t=1749822081;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8+Xheo22yfi8+4Y8JwQZygk+6DcGkUs/7vPXcz1EW7o=;
-	b=QLzq40J8E0qbkCdXBmOqWKZOjdP4l9IWVJKyAYT+7nVQ89uz3ew4xjkDvzbPWSd8kjTLyo
-	7lSIZQW5LsDLn8rbnM5AItnY9OTl8DJI73YPQEKGP6NZFhv8Pu4xsVZMgbqBRMSvTDH2Ak
-	HJxytgMglGRCo2pSEQH0r1DhLFa+dts=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CurRk13BLi453FdNUVmvRv3/1kchAf7liLqepSAurz8=;
+	b=LuubT669ueDH/xKrJFloiM00Z9RVEWMQ+DYwBJW+PkN4UWUbkjK9mDQA1y04bySSLHTipq
+	GPZG++dULivASt9Lf7maMkjfFC052twrT/+FqM+239BPt+LKGlrdM7QXhDqo+A6d9gElaX
+	DIVWbJCwJczl5YnsRCehZtOtyn4A4Cs=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-58-DhdauXHmNMW5DzsIOPXJmQ-1; Fri, 13 Jun 2025 09:41:16 -0400
-X-MC-Unique: DhdauXHmNMW5DzsIOPXJmQ-1
-X-Mimecast-MFC-AGG-ID: DhdauXHmNMW5DzsIOPXJmQ_1749822076
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c790dc38b4so373191985a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:41:16 -0700 (PDT)
+ us-mta-250-dvUiS6ZNNq-tQB227trzew-1; Fri, 13 Jun 2025 09:41:20 -0400
+X-MC-Unique: dvUiS6ZNNq-tQB227trzew-1
+X-Mimecast-MFC-AGG-ID: dvUiS6ZNNq-tQB227trzew_1749822080
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5cd0f8961so480348985a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:41:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749822075; x=1750426875;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8+Xheo22yfi8+4Y8JwQZygk+6DcGkUs/7vPXcz1EW7o=;
-        b=Iffa9yxVoeynxQBSmIy/WsVtbmxfpx0A9cARpY1j5TTmWW20zTrFT9le6WI92Y8xDU
-         /6VyMjSnPT5CVv/Y0T635XO+3ZgnWVCQhIu+zNcb7HcaWbuO+3Gh+XKDvtB/E7mzuwu5
-         kFfAnHzXzvY1S9XscNsAeyBB552kHLwUyCdv6LZP1lt1mbsTfVdgioxZwbx4vjbztRuv
-         mprB6jAhDXRSJOg+jIMALjEQlzBkO4+PlPV1lppchm1o0lGYXI0vdyPWiVNxnRD1NbWc
-         U6nepK/sKkcVz6XfOldHIkkyTIPkf/nBJv8Rd1IzSEDnWIMgtWHtA2QHjDWaUb6tKVjO
-         badw==
-X-Gm-Message-State: AOJu0YzYfyg3KifNIHTIZT9gwqfSBFRuzJxkxeQwjFaP1WePXXp+unON
-	BHpZEXyxH7hRbO995Jmnn9zqRhaNCmNo44anCmDjwjvo1VdiKqvyM+XcxLKWa/z9DrjKj7et0ai
-	m3h7Nxmx429JMNF3pZgeuJIIGsBa5bjY/Y1XYxn4B9G6SnrsGDauSOC+bpCSoBMTJecFzaP38KN
-	sCBYuZNb9Wujd6HB0waagQ0g2XI+Hgpx0hC+YSgxVgOL1sg44=
-X-Gm-Gg: ASbGncuumHzPfEB930bP/dHWpLpZYuCFUJxIBC7D6mKuWBqkgi7ZGlfVrEOo216fIYT
-	nBqPoCAtAEzsyQX81M3j+41+qpk9IZdefDIzPjqR8Hsi8YUSzYSIGvw5FaIlsiJrcfSgK3TLd08
-	dJWqJqWMlt//RSE3dOhecGmsBgbCynRglsElouSA2Q8Dh4pBhI2Os6aZDMObxXmpcH7um8kG60Q
-	vzxjz4StE/kr8R7CuMvsnjLF0aXBRdfdHKcKb+mQEUqBfipSsbzlaYbQRU2IMfRN9Wyf4CaU5I6
-	ejI3SLoRhLY=
-X-Received: by 2002:a05:620a:2621:b0:7d3:9032:2b85 with SMTP id af79cd13be357-7d3c5360840mr136459585a.13.1749822075459;
-        Fri, 13 Jun 2025 06:41:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFe+TnRdtM1gxQu/6gMVaNFM0qTZrkCayfL/mj3FQ53jOkq/dZA5fcnFQB8Hiozqkhq54Zhsw==
-X-Received: by 2002:a05:620a:2621:b0:7d3:9032:2b85 with SMTP id af79cd13be357-7d3c5360840mr136454585a.13.1749822075007;
-        Fri, 13 Jun 2025 06:41:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749822079; x=1750426879;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CurRk13BLi453FdNUVmvRv3/1kchAf7liLqepSAurz8=;
+        b=UKddhGJB3P6yHkoiGHd2IfO6YrhLq5AYIavu1xoAJZQmYg5YMwODwkY0qIO04JY+9d
+         11o7OnMG6PQW0TJlNCCv5xEB8GBENq1e3NVhLE99gp2+Y5lKygAnNX1gMghRziIMa4If
+         S1QNiNZd3ehqjcElhe0QPfhjXHMAPV+y4Zxc6pr/uISn1FIfWu/IPJZRObXsx071e592
+         GMIsXUhXBDn7YJ8M7xrk2bREgVKGhb5ZD9tx9/U454ETAe42RiKaEnt08eh0N/b9DjzX
+         rMZicZhX+VZgdyBR8xHoOWbGHHOQeY1PAgmmc2b8pIpiAk3V9WVElHSfzwl+us6El5DR
+         0k8g==
+X-Gm-Message-State: AOJu0Yzmmkeme10VmfcY8B2op7gc3+B8S/HgH2Cogpjkzl3v8+mfJOxQ
+	YRSL1a/YmQAL7u+EVFLEPTzMv+rDxh+IaTtXMvOeUApE6de8p6ugCh1Xcqio606kb9WUQzLvZ+8
+	ch+4t2Cnu8+yK2gPuBk8VwRIFeVnK9IPwEKlQd/mLkBNaGteG2ohBjGlpy3/f73Rhr1uqdVClua
+	Q3KTqE41vOJp/fCtJvXNeBr949BcCgUkoSEItZnolOvDlPMmU=
+X-Gm-Gg: ASbGncvjvzbwk2EH6GHuh0M373UqFIIXTJ0Mr7NQ3+s1NItAc10EGHgNAyai4juxxcb
+	iYNYAaWIRE7iq0TLlOg0qwhNjw9tNfAmTI2KqO0fz18uMfO+D/QzNielMLDcVbOjBHUROfX8vgi
+	3+vqezHu2WE9WvCiYFg25sGgT1AnwvQUyOs4gktPUNPGlBUSD4iMYkbT+jDihnBDx9rq63zxM+O
+	87Mf7lavXnkhmKOcfAN5Cmt4Z02zqkxlEM3Ft9ckfiplY4gYj0D9JIm3p/XkGFc+hngM8TCBuO5
+	NI+EnCCfpv4=
+X-Received: by 2002:a05:620a:44d0:b0:7d2:27ff:2133 with SMTP id af79cd13be357-7d3bc3b0704mr463530385a.1.1749822079373;
+        Fri, 13 Jun 2025 06:41:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmKoTuxvL7ffTQWjIUtdV/ylXkzGCctDnDjUG//mfabF7LSk4R8g8f8pkMatkvnCJNdWJBNQ==
+X-Received: by 2002:a05:620a:44d0:b0:7d2:27ff:2133 with SMTP id af79cd13be357-7d3bc3b0704mr463525385a.1.1749822078879;
+        Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
 Received: from x1.com ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.13
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:41:13 -0700 (PDT)
+        Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
 From: Peter Xu <peterx@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -73,12 +75,19 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Alex Mastro <amastro@fb.com>,
 	David Hildenbrand <david@redhat.com>,
 	Nico Pache <npache@redhat.com>,
-	peterx@redhat.com
-Subject: [PATCH 0/5] mm/vfio: huge pfnmaps with !MAP_FIXED mappings
-Date: Fri, 13 Jun 2025 09:41:06 -0400
-Message-ID: <20250613134111.469884-1-peterx@redhat.com>
+	peterx@redhat.com,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org
+Subject: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
+Date: Fri, 13 Jun 2025 09:41:08 -0400
+Message-ID: <20250613134111.469884-3-peterx@redhat.com>
 X-Mailer: git-send-email 2.49.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20250613134111.469884-1-peterx@redhat.com>
+References: <20250613134111.469884-1-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,82 +96,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-[based on latest akpm/mm-new as of June 12th 2025, commit 19d47edf9]
+Only mips and loongarch implemented this API, however what it does was
+checking against stack overflow for either len or addr.  That's already
+done in arch's arch_get_unmapped_area*() functions, hence not needed.
 
-This series enables !MAP_FIXED huge pfnmaps for vfio-pci.
+It means the whole API is pretty much obsolete at least now, remove it
+completely.
 
-Before this series, an userapp in most cases need to be modified to benefit
-from huge mappings to provide huge size aligned VA using MAP_FIXED.  After
-this series, the userapp can benefit from huge pfnmap automatically after
-the kernel upgrades, with no userspace modifications.
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Muchun Song <muchun.song@linux.dev>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/loongarch/include/asm/hugetlb.h | 14 --------------
+ arch/mips/include/asm/hugetlb.h      | 14 --------------
+ fs/hugetlbfs/inode.c                 |  8 ++------
+ include/asm-generic/hugetlb.h        |  8 --------
+ include/linux/hugetlb.h              |  6 ------
+ 5 files changed, 2 insertions(+), 48 deletions(-)
 
-It's still best-effort, because the auto-alignment will require a larger VA
-range to be allocated via the per-arch allocator, hence if the huge-mapping
-aligned VA cannot be allocated then it'll still fallback to small mappings
-like before.  However that's really from theory POV: in reality I don't yet
-know when it'll fail on any 64bits system due to it.
-
-So far, only vfio-pci is supported.  But the logic should be applicable to
-all the drivers that support or will support huge pfnmaps.
-
-Kudos goes to Jason on the suggestion:
-
-  https://lore.kernel.org/r/20250530131050.GA233377@nvidia.com
-
-Though instead of refactoring shmem, I found we already have a function we
-can directly reuse for THP calculations.
-
-The idea is fairly simple too, which is to make sure whatever virtual
-address got returned from an mmap() request of the MMIO BAR regions to be
-huge-size-aligned with the physical address of the corresponding BARs.
-
-It contains minimum mm changes, in reality only to rename and export the
-THP function that can be reused.  That is patch 3.
-
-Patch 1 & 2 are trivial small cleanups that I found while I'm looking at
-this problem.  They can even be posted separately if anyone would like me
-to.
-
-Patch 4 is a tunneling needed to wire vfio-pci over to the mmap()
-operations of vfio_device.  Then, patch 5 is the real meat.
-
-For testing: besides checkpatch and my daily cross-build harness, unit
-tests working all fine from either myself [1] (based on another Alex's test
-program) or Alex, checking the alignments look all sane with
-mmap(!MAP_FIXED), and huge mappings properly installed.
-
-Alex Mastro: please feel free to try this out with your internal tests. The
-hope is that after this series applied your app should get huge pfnmaps
-without any changes (with any pgoff specified).  Logically there should be
-minimal dependency on stable branches whenever huge pfnmap is available.
-
-Comments welcomed, thanks.
-
-[1] https://github.com/xzpeter/clibs/blob/master/misc/vfio-pci-nofix.c
-[2] https://github.com/awilliam/tests/blob/vfio-pci-device-map-alignment/vfio-pci-device-map-alignment.c
-
-Peter Xu (5):
-  mm: Deduplicate mm_get_unmapped_area()
-  mm/hugetlb: Remove prepare_hugepage_range()
-  mm: Rename __thp_get_unmapped_area to mm_get_unmapped_area_aligned
-  vfio: Introduce vfio_device_ops.get_unmapped_area hook
-  vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED mappings
-
- arch/loongarch/include/asm/hugetlb.h | 14 ------
- arch/mips/include/asm/hugetlb.h      | 14 ------
- drivers/vfio/pci/vfio_pci.c          |  3 ++
- drivers/vfio/pci/vfio_pci_core.c     | 65 ++++++++++++++++++++++++++++
- drivers/vfio/vfio_main.c             | 18 ++++++++
- fs/hugetlbfs/inode.c                 |  8 +---
- include/asm-generic/hugetlb.h        |  8 ----
- include/linux/huge_mm.h              | 14 +++++-
- include/linux/hugetlb.h              |  6 ---
- include/linux/vfio.h                 |  7 +++
- include/linux/vfio_pci_core.h        |  6 +++
- mm/huge_memory.c                     |  6 ++-
- mm/mmap.c                            |  5 +--
- 13 files changed, 120 insertions(+), 54 deletions(-)
-
+diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+index 4dc4b3e04225..ab68b594f889 100644
+--- a/arch/loongarch/include/asm/hugetlb.h
++++ b/arch/loongarch/include/asm/hugetlb.h
+@@ -10,20 +10,6 @@
+ 
+ uint64_t pmd_to_entrylo(unsigned long pmd_val);
+ 
+-#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-					 unsigned long addr,
+-					 unsigned long len)
+-{
+-	unsigned long task_size = STACK_TOP;
+-
+-	if (len > task_size)
+-		return -ENOMEM;
+-	if (task_size - len < addr)
+-		return -EINVAL;
+-	return 0;
+-}
+-
+ #define __HAVE_ARCH_HUGE_PTE_CLEAR
+ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 				  pte_t *ptep, unsigned long sz)
+diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
+index fbc71ddcf0f6..8c460ce01ffe 100644
+--- a/arch/mips/include/asm/hugetlb.h
++++ b/arch/mips/include/asm/hugetlb.h
+@@ -11,20 +11,6 @@
+ 
+ #include <asm/page.h>
+ 
+-#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-					 unsigned long addr,
+-					 unsigned long len)
+-{
+-	unsigned long task_size = STACK_TOP;
+-
+-	if (len > task_size)
+-		return -ENOMEM;
+-	if (task_size - len < addr)
+-		return -EINVAL;
+-	return 0;
+-}
+-
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long addr, pte_t *ptep,
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index fc03dd541b4d..32dff13463d2 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ 
+ 	if (len & ~huge_page_mask(h))
+ 		return -EINVAL;
+-	if (flags & MAP_FIXED) {
+-		if (addr & ~huge_page_mask(h))
+-			return -EINVAL;
+-		if (prepare_hugepage_range(file, addr, len))
+-			return -EINVAL;
+-	}
++	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
++		return -EINVAL;
+ 	if (addr)
+ 		addr0 = ALIGN(addr, huge_page_size(h));
+ 
+diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
+index 3e0a8fe9b108..4bce4f07f44f 100644
+--- a/include/asm-generic/hugetlb.h
++++ b/include/asm-generic/hugetlb.h
+@@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
+ }
+ #endif
+ 
+-#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-		unsigned long addr, unsigned long len)
+-{
+-	return 0;
+-}
+-#endif
+-
+ #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
+ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 		unsigned long addr, pte_t *ptep)
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 42f374e828a2..85acdfdbe9f0 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
+ {
+ }
+ 
+-static inline int prepare_hugepage_range(struct file *file,
+-				unsigned long addr, unsigned long len)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
+ {
+ }
 -- 
 2.49.0
 
