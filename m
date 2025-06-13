@@ -1,144 +1,246 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7228219E7E2
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05642E11B3;
+	Fri, 13 Jun 2025 17:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749834030; cv=none; b=Jjj5URl5mNK13xgIhubJn5phow4G6H+e+iZoCXE7Y3GEZ0KBlAvwN9Z2IC1RnGtGciitfp9pLiJCj9SNf+X2kVEDYxC4qpY1JtcHJezH13/muDrBXuzGYGw26xqNVWEJ5wvOpuZ8Yd9gSyzIWB8LVdZDx1d3pDbFXkTjZW3frhM=
+	t=1749834054; cv=none; b=VFWnf5YgeiZZonszRlvi2pgA1wvFKAr1a8DDHQnnZXggjRr3XmxTuyXGGlcW+1gd2aCo0oq2+eL8Ku99bF0XgAZKMuY1Sr78zEpCtNQ6q1B1aEPjFADLBYUN3CcUOhjOuWikmtNLOM68YeU90TPmJk72e4E2GV7JMBb+gzNYVOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749834030; c=relaxed/simple;
-	bh=Ee23bSYewgw1pZtLKYfWhlq/qzuBs8kymYq9pjayqSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ASAz09QlXY3m5AZWlK83X+qlHz0HUfQV5pjsdIF9xFERycq/wjVloEQpxw/dvH/n4LMfpphwQDbouUbZpxNFh5s8GWeW2iqclppzbbKSY+peVShHWSdgqkf6/TDkR3mOi/i3AqsAqomKWIUgoSKa7y79XpvpABPmtMvPBiFhz80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u9aG/XAy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ocT+pKRE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u9aG/XAy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ocT+pKRE; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749834054; c=relaxed/simple;
+	bh=KX7jK6qf6Ts4XzWAWHyDvYIzeWB/bWHJ2NGXsH7w4ew=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=AqaiJxUKAqlEBUQEfpyZKI0TZlvMM5+RDuEqQudVgoPMn4aYHZBvPJDDiyVBcXaoAuqZBo4CYUo3X0j+b9q5kueY4ZAflt4eFsQweaRKuYgilnxLzxx176TXA3ye5tchz8/opcUMJTKBrfAjTdk6hhy0vk/cRZAvfttEUgrZYbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lBOWq48e; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u9aG/XAy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ocT+pKRE";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u9aG/XAy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ocT+pKRE"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9339C1F892;
-	Fri, 13 Jun 2025 17:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749834026; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UievMDUraOnDMl0JUSi8sCjrJFjc+fcUJjXG5uHY0QQ=;
-	b=u9aG/XAy248ET//vYRdstDzkp9e1gMhJ9a1HNBFgWBgkqQ+DzLQHTCdDuzdjJXNyc8sQsj
-	tJc3ghB024EctTUGHt0guaki0rPUDLxL5DFjJKiMw905+EiBJYUwcxBNeS8E/WWZh42zr6
-	W+MEoKdKBOaRPeamP6LjmhCF59/urCQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749834026;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UievMDUraOnDMl0JUSi8sCjrJFjc+fcUJjXG5uHY0QQ=;
-	b=ocT+pKRE0yIBuDKH/NadiAPPUhisX2hRv3LVIi3nXKaMqJ6vwZH5DwuI1Zki5i8j1KTFCd
-	UVHFb9xm6+EPziCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749834026; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UievMDUraOnDMl0JUSi8sCjrJFjc+fcUJjXG5uHY0QQ=;
-	b=u9aG/XAy248ET//vYRdstDzkp9e1gMhJ9a1HNBFgWBgkqQ+DzLQHTCdDuzdjJXNyc8sQsj
-	tJc3ghB024EctTUGHt0guaki0rPUDLxL5DFjJKiMw905+EiBJYUwcxBNeS8E/WWZh42zr6
-	W+MEoKdKBOaRPeamP6LjmhCF59/urCQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749834026;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UievMDUraOnDMl0JUSi8sCjrJFjc+fcUJjXG5uHY0QQ=;
-	b=ocT+pKRE0yIBuDKH/NadiAPPUhisX2hRv3LVIi3nXKaMqJ6vwZH5DwuI1Zki5i8j1KTFCd
-	UVHFb9xm6+EPziCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ABD6713782;
-	Fri, 13 Jun 2025 17:00:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LSjlJilZTGgwRAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 13 Jun 2025 17:00:25 +0000
-Date: Fri, 13 Jun 2025 18:00:23 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Alex Williamson <alex.williamson@redhat.com>, Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Alex Mastro <amastro@fb.com>, David Hildenbrand <david@redhat.com>, 
-	Nico Pache <npache@redhat.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 1/5] mm: Deduplicate mm_get_unmapped_area()
-Message-ID: <koa6s4cdbnch45vr55td2okarbpyirnmqlvovvfsnu6rdagdu3@ofp2jkeryoa7>
-References: <20250613134111.469884-1-peterx@redhat.com>
- <20250613134111.469884-2-peterx@redhat.com>
- <1fa31b8c-4074-45c7-ad59-077b9f0ab8fb@lucifer.local>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lBOWq48e"
+Received: by linux.microsoft.com (Postfix, from userid 1006)
+	id 1FFA221175A7; Fri, 13 Jun 2025 10:00:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1FFA221175A7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749834046;
+	bh=8UhqfepXfhCvXH0+pdx3UWMlC1815qt8SHGEMAi8/AU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lBOWq48eaQ46TlT8vkleg6fGvOgaY1k1pdulzf6epLjPtwWbIUtRnBKCD3cMdqX8u
+	 ZrltlAa6Aial2EOaquS6kFYEJ/bhposC7A18s8Ko/Wf+t+w71RKp+fXHxumb1bQAgs
+	 tE359RaFP5w2vPnWyWUgAPyzLn13FnfPgX+URoN8=
+From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	decui@microsoft.com,
+	stephen@networkplumber.org,
+	kys@microsoft.com,
+	paulros@microsoft.com,
+	olaf@aepfle.de,
+	vkuznets@redhat.com,
+	davem@davemloft.net,
+	wei.liu@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	leon@kernel.org,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	bpf@vger.kernel.org,
+	ast@kernel.org,
+	hawk@kernel.org,
+	tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com,
+	andrew+netdev@lunn.ch,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next,v8] net: mana: Add handler for hardware servicing events
+Date: Fri, 13 Jun 2025 10:00:34 -0700
+Message-Id: <1749834034-18498-1-git-send-email-haiyangz@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1fa31b8c-4074-45c7-ad59-077b9f0ab8fb@lucifer.local>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.990];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
 
-On Fri, Jun 13, 2025 at 04:57:12PM +0100, Lorenzo Stoakes wrote:
-> You've not cc'd maintainers/reviewers of mm/mmap.c, please make sure to do so.
-> 
-> +cc Liam
-> +cc Vlastimiil
-> +cc Jann
-> +cc Pedro
-> 
-> ...!
-> 
-> On Fri, Jun 13, 2025 at 09:41:07AM -0400, Peter Xu wrote:
-> > Essentially it sets vm_flags==0 for mm_get_unmapped_area_vmflags().  Use
-> > the helper instead to dedup the lines.
-> >
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> 
-> This looks fine though, so:
-> 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+To collaborate with hardware servicing events, upon receiving the special
+EQE notification from the HW channel, remove the devices on this bus.
+Then, after a waiting period based on the device specs, rescan the parent
+bus to recover the devices.
 
-Looks good, thanks!
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+v8:
+Tested rmmod as suggested by Jakub Kicinski, and found it's necessary to
+add back: acquiring module refcnt.
 
+v7:
+rebased.
+
+v6:
+Not acquiring module refcnt as suggested by Paolo Abeni.
+
+v5:
+Get refcnt of the pdev struct to avoid removal before running the work
+as suggested by Jakub Kicinski.
+
+v4:
+Renamed EQE type 135 to GDMA_EQE_HWC_RESET_REQUEST, since there can
+be multiple cases of this reset request.
+
+v3:
+Updated for checkpatch warnings as suggested by Simon Horman.
+
+v2:
+Added dev_dbg for service type as suggested by Shradha Gupta.
+Added driver cap bit.
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 75 +++++++++++++++++++
+ include/net/mana/gdma.h                       | 10 ++-
+ 2 files changed, 83 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 3504507477c6..069b7a871b78 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -352,11 +352,59 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
+ }
+ EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
+ 
++#define MANA_SERVICE_PERIOD 10
++
++struct mana_serv_work {
++	struct work_struct serv_work;
++	struct pci_dev *pdev;
++};
++
++static void mana_serv_func(struct work_struct *w)
++{
++	struct mana_serv_work *mns_wk;
++	struct pci_bus *bus, *parent;
++	struct pci_dev *pdev;
++
++	mns_wk = container_of(w, struct mana_serv_work, serv_work);
++	pdev = mns_wk->pdev;
++
++	pci_lock_rescan_remove();
++
++	if (!pdev)
++		goto out;
++
++	bus = pdev->bus;
++	if (!bus) {
++		dev_err(&pdev->dev, "MANA service: no bus\n");
++		goto out;
++	}
++
++	parent = bus->parent;
++	if (!parent) {
++		dev_err(&pdev->dev, "MANA service: no parent bus\n");
++		goto out;
++	}
++
++	pci_stop_and_remove_bus_device(bus->self);
++
++	msleep(MANA_SERVICE_PERIOD * 1000);
++
++	pci_rescan_bus(parent);
++
++out:
++	pci_unlock_rescan_remove();
++
++	pci_dev_put(pdev);
++	kfree(mns_wk);
++	module_put(THIS_MODULE);
++}
++
+ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ {
+ 	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
+ 	struct gdma_context *gc = eq->gdma_dev->gdma_context;
+ 	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
++	struct mana_serv_work *mns_wk;
+ 	union gdma_eqe_info eqe_info;
+ 	enum gdma_eqe_type type;
+ 	struct gdma_event event;
+@@ -401,6 +449,33 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 		eq->eq.callback(eq->eq.context, eq, &event);
+ 		break;
+ 
++	case GDMA_EQE_HWC_FPGA_RECONFIG:
++		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
++
++		if (gc->in_service) {
++			dev_info(gc->dev, "Already in service\n");
++			break;
++		}
++
++		if (!try_module_get(THIS_MODULE)) {
++			dev_info(gc->dev, "Module is unloading\n");
++			break;
++		}
++
++		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
++		if (!mns_wk) {
++			module_put(THIS_MODULE);
++			break;
++		}
++
++		dev_info(gc->dev, "Start MANA service type:%d\n", type);
++		gc->in_service = true;
++		mns_wk->pdev = to_pci_dev(gc->dev);
++		pci_dev_get(mns_wk->pdev);
++		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
++		schedule_work(&mns_wk->serv_work);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 3ce56a816425..bfae59202669 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -58,7 +58,7 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+ 	GDMA_EQE_HWC_INIT_DATA		= 130,
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
+-	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
++	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
+ 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
+ 	GDMA_EQE_HWC_SOC_SERVICE	= 134,
+ 	GDMA_EQE_RNIC_QP_FATAL		= 176,
+@@ -403,6 +403,8 @@ struct gdma_context {
+ 	u32			test_event_eq_id;
+ 
+ 	bool			is_pf;
++	bool			in_service;
++
+ 	phys_addr_t		bar0_pa;
+ 	void __iomem		*bar0_va;
+ 	void __iomem		*shm_base;
+@@ -578,12 +580,16 @@ enum {
+ /* Driver can handle holes (zeros) in the device list */
+ #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
+ 
++/* Driver can self reset on FPGA Reconfig EQE notification */
++#define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
++
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+ 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
+ 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
+-	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
++	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
++	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
 -- 
-Pedro
+2.34.1
+
