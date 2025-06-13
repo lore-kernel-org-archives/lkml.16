@@ -1,51 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D819192B84;
-	Fri, 13 Jun 2025 14:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F75191493;
+	Fri, 13 Jun 2025 14:39:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749825538; cv=none; b=Y0B4ZKTRHbKUKKk0JnPMqP8OyMocoYwf8KPgKFpwPLkbZmLb9++hLxqgLXxKG4/KaL3C7ul72i7YgoHVjRh6jJ942xAP9WZea+rMG9GBoIFoR4VElJ7Ytq9oUz4nhRKaK0mGUOp22dFlfcFb4pOaSVZ2SVPs/Ob0HajtyXwuFeY=
+	t=1749825552; cv=none; b=Wdsih7mqnV9T5yrg6AFEbbpGSbw38EgEDUzwEJ04Pk4Boy6hjZEKnh00feJ1AYARoT65qSqrqzyeQFpu9n0kxmxLhyKMk6qDBmK9Nw2b6FFJEVuJEkpjosSmMzQZY3K9J8NTCLcdU8DhJIZXGMKrclWPjK3NcQIEj11qnRDcgZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749825538; c=relaxed/simple;
-	bh=xrFkZTYOl+Mqw+MnXtAP1z+pwD14ChtvOblUtxTfkXM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lNOlFDDvdI4t8q67j30sRW8MtlnLmUGY0TUmK2fIloXjEw0uuXHp9SzUgi9RPxKj9rrWzcX4HsE+3MgmJ817lrytGyJXYFZskZ+lQQ0GF7mVwAB1tre17zqKgP4nR4OsxXHHg4H9UyemKhKuFvcS6AKCSJPIvoFf0/yG/FzRrpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLfplMoX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749825552; c=relaxed/simple;
+	bh=MlNL5NuSsckZmfzOBbDDlUapsEairvkF/IEwHQhc/sg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=t+e0TSaEEvF9tlJGn8guotHQMRwujtuzj6KxXTJEatCBF2RJ+irzOQ2fYxg5pFVd03dthRDLYol762iZjrC41PNTByIspe2zvGoL6umJU4UOIx7aw3p9vJ9XrVyuV3twkXJk5H2WA/j3XaMilMiYVOSm2PYrP7tUyM2WfXKVg0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWqdB8cO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLfplMoX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C81DC4CEE3;
-	Fri, 13 Jun 2025 14:38:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWqdB8cO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73634C4CEE3;
+	Fri, 13 Jun 2025 14:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749825538;
-	bh=xrFkZTYOl+Mqw+MnXtAP1z+pwD14ChtvOblUtxTfkXM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gLfplMoX1JV+9xs3L9h7WbHAZKEUMGWzRVo/cvt7qFp7WFa428Sa9mEQeyuD6BZNC
-	 wPX/cSbiKhDONQXokSzlLtoE/U17YsIwR+TDoGEJE9dWSv+fcWtbqVxxBwWjO+DJJa
-	 3dxO1dRtj9c8uYiZ8ag36JsN58gRPyGK/HhQI0yIlWTNyT0keXpzt8zx0czPv6hOqf
-	 smgg1swTkfLvqYvye/u4buKy5LPsz2ATtXQxZBLivVWK3VNpk+A3LJLVyjWrgfomC2
-	 3YxiZGqmcSsRpHFxvUiW78up/4oJP+ASvVU1CZkYyUczff5odNKkdpKjSue5gi26uw
-	 4wHAp0jc0sfXA==
-From: Sven Peter <sven@kernel.org>
-To: Janne Grunau <j@jannau.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>,
-	Sven Peter <sven@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Nick Chan <towinchenmi@gmail.com>,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: apple: Move touchbar mipi {address,size}-cells from dtsi to dts
-Date: Fri, 13 Jun 2025 16:38:47 +0200
-Message-Id: <174982533895.547352.2988220636703408038.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250611-display-pipe-mipi-warning-v1-1-bd80ba2c0eea@kernel.org>
-References: <20250611-display-pipe-mipi-warning-v1-1-bd80ba2c0eea@kernel.org>
+	s=k20201202; t=1749825552;
+	bh=MlNL5NuSsckZmfzOBbDDlUapsEairvkF/IEwHQhc/sg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=fWqdB8cOmaIYs8CYIv/mmsGUhVKzqCFTAcNqxVhXsqTTghwo1riLPDnIvBh2NMMDg
+	 ZrBJtz8FySKher5dgfq6ipqpiIso43mnQ88v8IaqqGRqmA5+QxOZBgpw2UB+l0DY4B
+	 tfY7IvV2dA57hGCPeBmDko9+gWY+PEcstepNqDlRlL/+BwIfzeqM4N22wKguigIXAO
+	 9OIupGAfw6DpaSqVS4zolbsw4SniC8VO7psLRR6wkoRxTl+Bc6PiLGxd9WKjQ7Vugu
+	 Pek71J0GN8o+9u3kg0qwImX3MhmfjPkjcPJlQ0ya/lSqYQMyhIQrrYIaVA0faKD3Wq
+	 a9odqk7xkWb3A==
+From: Lee Jones <lee@kernel.org>
+To: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
+ rogerq@kernel.org, tony@atomide.com, linux@treblig.org
+Cc: lee@kernel.org, linux-omap@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250607202232.265344-1-linux@treblig.org>
+References: <20250607202232.265344-1-linux@treblig.org>
+Subject: Re: (subset) [PATCH] mfd: twl6030-irq: Remove unused
+ twl6030_mmc_card_detect*
+Message-Id: <174982555021.957746.5154174096136189391.b4-ty@kernel.org>
+Date: Fri, 13 Jun 2025 15:39:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,23 +45,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-459a0
 
-
-On Wed, 11 Jun 2025 15:18:53 +0000, Sven Peter wrote:
-> Move the {address,size}-cells property from the (disabled) touchbar screen
-> mipi node inside the dtsi file to the model-specific dts file where it's
-> enabled to fix the following W=1 warnings:
+On Sat, 07 Jun 2025 21:22:32 +0100, linux@treblig.org wrote:
+> twl6030_mmc_card_detect() and twl6030_mmc_card_detect_config() have
+> been unused since 2013's
+> commit b2ff4790612b ("ARM: OMAP2+: Remove legacy
+> omap4_twl6030_hsmmc_init")
 > 
-> t8103.dtsi:404.34-433.5: Warning (avoid_unnecessary_addr_size): /soc/dsi@228600000: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-> t8112.dtsi:419.34-448.5: Warning (avoid_unnecessary_addr_size): /soc/dsi@228600000: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
+> Remove them.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: apple: Move touchbar mipi {address,size}-cells from dtsi to dts
-      commit: 08a0d93c353bd55de8b5fb77b464d89425be0215
+[1/1] mfd: twl6030-irq: Remove unused twl6030_mmc_card_detect*
+      commit: 3d5341b17ca242fbf1dc78d642c36af0a510c758
 
-Best regards,
--- 
-Sven Peter <sven@kernel.org>
+--
+Lee Jones [李琼斯]
+
