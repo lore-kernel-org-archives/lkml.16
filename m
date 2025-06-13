@@ -1,238 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A95293C6F
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52652BF066
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 19:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749842508; cv=none; b=biU3KOAMp1t6KUmGB9sPNToHXCO4R1+Y5N9HaaJwzFRdZdGrsPEW+WPG81kbbIUgcNsMI7bbaLC7xVh1Kk2GArD7QXj+bXy6j/xplk8up3cRTfmS+P4CTy/cpratOwlROJdznu7JEcp8em1Jywr/lGhX1upOiC2Vp6iLtjI020o=
+	t=1749842515; cv=none; b=QuLDuDATu+bSmqIllwuwhskOO2phyeOlAhEZ0YLD8Tfjm80iDW1+3l539eypdLK6rHpmByaIUaRmTynH+jseqwAEKNv6jKZqaKMIwSAnW187qzVadGvPmVYEkHrKfo23KCWaY8yIHdbiMmjc0sdX7ZRHSOnCjW0lcgKFGboVZHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749842508; c=relaxed/simple;
-	bh=DI9goXjsgHd0CIIpoV89sIa4Moo1ngQqqygfMWTuukY=;
+	s=arc-20240116; t=1749842515; c=relaxed/simple;
+	bh=4SddsYziogAY+ldwWHLjtIPf3SQjAyTK44hwSQ2+iLU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h2zKKGETgmEiC83z/wfi0v7Euru+7r42cEh3T8qFZT+1x9JstnOdFB06isLjRE5HzciVF5QAE+7sCE90AD/8DBV/3rH9Sxj7UY7QGNPE+9RALIPowUI2B1cE+MpgjpWGz9eJ6JRnm3S6k07PHMM1n/O8qfx9wx5Tq2URkwWvu2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B+xCHb1m; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mFmVI4EtdDCzlYs+AHUTXgh0eMBPYItO6E7MW8GsDSZ39dNnozh72F6/R53cujB4P6JlpQ8HpJqQLkGVISOp3XEVb04BaT6f/vSUjHtW9LOhOuUV+Dimi32es5m0Yw25KGaCk/0Qe31nJhLVFntHyxOuyMbH9g8qDZGsAiEUwa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDG/FjyW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B+xCHb1m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749842505;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=47EwzNRArjARKfaIAn0KmpmAVReUeeJkM/EwClBQZtg=;
-	b=B+xCHb1m8QA6i4FwnZKQLXd+mYZ9LBwCA6IRoYLbN1UGNz6BE7P7ZgFvF+6n9rk3Ezv+2J
-	eJvKpDqnYt5tJ/lsFxWxa1VW0k+q9tTLlMRD92kTVvFnqFVTaLUStQdAB4B47IVhTT/PfR
-	8olFfFVNDBfM1GFWMMZVjme+xsslQ4c=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-249-SYVqQTAjMdOrXA4F7WFzgA-1; Fri, 13 Jun 2025 15:21:44 -0400
-X-MC-Unique: SYVqQTAjMdOrXA4F7WFzgA-1
-X-Mimecast-MFC-AGG-ID: SYVqQTAjMdOrXA4F7WFzgA_1749842504
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d38f565974so624409485a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:21:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749842503; x=1750447303;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=47EwzNRArjARKfaIAn0KmpmAVReUeeJkM/EwClBQZtg=;
-        b=Q19jyQBHl7lIO37VwxzwSsRl0BOUHxy7S2P4R27HfYhK1S06UFIzpDg4qLUHgsfaS1
-         M/tG9YGXGzC8D/S68qwZpTqCpgrksfffMnGxWdIWoJVGipqTQPeckTagYBoLr7VtvD+o
-         fkrCxML94GyGhWswJM2jYLICN7fzcqpAWMPnFr/T1judqvJMP49oc9OUFfVSFaufWYs2
-         ylUaeuJDb2IaqLbWubHc0FxZ0/KW2Atsd7q0gx9EvUukA1wSLXWdeXWk+BzN1OJ1YZaK
-         UJwvA1vKhKdcqEf/wG4mq66R0eTXXn0QdOHH3eE0wJZKPMzJ3DH2nrdv3lvKlCE2MK+U
-         kLhQ==
-X-Gm-Message-State: AOJu0YwJN46PTFgTQKeMCpAApntjp8A2aAbdHS1VvWX4D1Wt8qutIPS5
-	MyKpmDKRrTuoizQerj2vSpqGrJcGx7MBL6FUQuYyFEzA+Kv7CeON6yFa1xHcg3GLOdjd8ABClai
-	/DU48pR61YZ4laaO84ovbHeAzai/uJrzzyfcVisUXr6p2G1Lx3+FOnEfZe4GiT7Qa3g==
-X-Gm-Gg: ASbGncvGhCgYJTnnwKqBKPa4FjOQHK/WD3Htje5LM4hLH7IiMjnBLHCeD+yh7DfDWGE
-	hW7Gt+0PK8i8U9YhPky6GNK73grsh+CXfppOurFL5G4CUpCSdaZpSug08dx2r2ZPJd+owmPszwa
-	dhSY9fRBkhYtaabPCtaxRwYO1PXA2eFAJ+QV+TstlUsFShnJculYY/VL/NA3x4ka9Ma7IS5SVtB
-	++H7roGPBaIqmXrnOev0uZud47boaMYP5dJPAHBVaLsaJ51U6mjIzneALCiAoYpz1VXHtOveLGe
-	92alsGhdHAePTQ==
-X-Received: by 2002:a05:620a:410c:b0:7cd:3ef0:d1ac with SMTP id af79cd13be357-7d3c6841c5fmr163742485a.15.1749842503534;
-        Fri, 13 Jun 2025 12:21:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYPw1DvF4R6o67TB67rLDMELDw3huktfBOSn9E7o8cN6pBp5XOkigzzTV9lHJHGKVi6V/qow==
-X-Received: by 2002:a05:620a:410c:b0:7cd:3ef0:d1ac with SMTP id af79cd13be357-7d3c6841c5fmr163739085a.15.1749842503116;
-        Fri, 13 Jun 2025 12:21:43 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8df8ee8sm209361985a.28.2025.06.13.12.21.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 12:21:42 -0700 (PDT)
-Date: Fri, 13 Jun 2025 15:21:39 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
-	Alex Mastro <amastro@fb.com>, Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <aEx6Qyl3cgiarXZD@x1.local>
-References: <20250613134111.469884-1-peterx@redhat.com>
- <20250613134111.469884-6-peterx@redhat.com>
- <d6fbee39-a38f-4f94-bffb-938f7be73681@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDG/FjyW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F25E5C4CEE3;
+	Fri, 13 Jun 2025 19:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749842515;
+	bh=4SddsYziogAY+ldwWHLjtIPf3SQjAyTK44hwSQ2+iLU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sDG/FjyW+4OalR8KQ0zcvbj+1Uyxau641L86noPdOB6LJFr4MbcmBzJXAp3PdfasG
+	 hQlJavI3zpa0DV6VjiPN9kMIzpn/Xj/j8dyRTcMu6n1k5Py4uNWA3O94F2vlUQv4m5
+	 +FT2c44qhYlR3Z2LYwRYNpJFLTcpTPoPPmekiORB19XOa22/2nL63PbR3bIFpn7mjk
+	 rRpj0D+Jt39yWFCrKOzzHy4ukEiy+AOZ1FZtQ9tv3kKIJsttyn+DrgYZeBd7jmq5zm
+	 0bzKx3OsoDe/BN0b2zFK9DF0H65CzWAWvkc/91FqNB6BVxcbO2fHyWIViZK93tAo7R
+	 3vGiQA6cIVw1w==
+Date: Fri, 13 Jun 2025 16:21:52 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1 fyi] tools headers: Synchronize linux/bits.h with the
+ kernel sources
+Message-ID: <aEx6UDLwH_0UR6xl@x1>
+References: <aEr0ZJ60EbshEy6p@x1>
+ <b5030bc8-34b8-4275-86ba-11e11ab2bea5@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d6fbee39-a38f-4f94-bffb-938f7be73681@redhat.com>
+In-Reply-To: <b5030bc8-34b8-4275-86ba-11e11ab2bea5@wanadoo.fr>
 
-On Fri, Jun 13, 2025 at 08:09:41PM +0200, David Hildenbrand wrote:
-> On 13.06.25 15:41, Peter Xu wrote:
-> > This patch enables best-effort mmap() for vfio-pci bars even without
-> > MAP_FIXED, so as to utilize huge pfnmaps as much as possible.  It should
-> > also avoid userspace changes (switching to MAP_FIXED with pre-aligned VA
-> > addresses) to start enabling huge pfnmaps on VFIO bars.
-> > 
-> > Here the trick is making sure the MMIO PFNs will be aligned with the VAs
-> > allocated from mmap() when !MAP_FIXED, so that whatever returned from
-> > mmap(!MAP_FIXED) of vfio-pci MMIO regions will be automatically suitable
-> > for huge pfnmaps as much as possible.
-> > 
-> > To achieve that, a custom vfio_device's get_unmapped_area() for vfio-pci
-> > devices is needed.
-> > 
-> > Note that MMIO physical addresses should normally be guaranteed to be
-> > always bar-size aligned, hence the bar offset can logically be directly
-> > used to do the calculation.  However to make it strict and clear (rather
-> > than relying on spec details), we still try to fetch the bar's physical
-> > addresses from pci_dev.resource[].
-> > 
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> 
-> There is likely a
-> 
-> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> 
-> missing?
+On Fri, Jun 13, 2025 at 09:24:35PM +0900, Vincent Mailhol wrote:
+> On 13/06/2025 at 00:38, Arnaldo Carvalho de Melo wrote:
+> > To pick up the changes in this cset:
 
-Would it mean the same if we use the two SoBs like what this patch uses?
-I sincerely don't know the difference..  I hope it's fine to show that this
-patch was developed together.  Please let me know otherwise.
+> >   5b572e8a9f3dcd6e ("bits: introduce fixed-type BIT_U*()")
+> >   19408200c094858d ("bits: introduce fixed-type GENMASK_U*()")
+> >   31299a5e02112411 ("bits: add comments and newlines to #if, #else and #endif directives")
 
-> 
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >   drivers/vfio/pci/vfio_pci.c      |  3 ++
-> >   drivers/vfio/pci/vfio_pci_core.c | 65 ++++++++++++++++++++++++++++++++
-> >   include/linux/vfio_pci_core.h    |  6 +++
-> >   3 files changed, 74 insertions(+)
-> > 
-> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> > index 5ba39f7623bb..d9ae6cdbea28 100644
-> > --- a/drivers/vfio/pci/vfio_pci.c
-> > +++ b/drivers/vfio/pci/vfio_pci.c
-> > @@ -144,6 +144,9 @@ static const struct vfio_device_ops vfio_pci_ops = {
-> >   	.detach_ioas	= vfio_iommufd_physical_detach_ioas,
-> >   	.pasid_attach_ioas	= vfio_iommufd_physical_pasid_attach_ioas,
-> >   	.pasid_detach_ioas	= vfio_iommufd_physical_pasid_detach_ioas,
-> > +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
-> > +	.get_unmapped_area	= vfio_pci_core_get_unmapped_area,
-> > +#endif
-> >   };
-> >   static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> > index 6328c3a05bcd..835bc168f8b7 100644
-> > --- a/drivers/vfio/pci/vfio_pci_core.c
-> > +++ b/drivers/vfio/pci/vfio_pci_core.c
-> > @@ -1641,6 +1641,71 @@ static unsigned long vma_to_pfn(struct vm_area_struct *vma)
-> >   	return (pci_resource_start(vdev->pdev, index) >> PAGE_SHIFT) + pgoff;
-> >   }
-> > +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
-> > +/*
-> > + * Hint function to provide mmap() virtual address candidate so as to be
-> > + * able to map huge pfnmaps as much as possible.  It is done by aligning
-> > + * the VA to the PFN to be mapped in the specific bar.
-> > + *
-> > + * Note that this function does the minimum check on mmap() parameters to
-> > + * make the PFN calculation valid only. The majority of mmap() sanity check
-> > + * will be done later in mmap().
-> > + */
-> > +unsigned long vfio_pci_core_get_unmapped_area(struct vfio_device *device,
-> > +					      struct file *file,
-> > +					      unsigned long addr,
-> > +					      unsigned long len,
-> > +					      unsigned long pgoff,
-> > +					      unsigned long flags)
-> 
-> A very suboptimal way to indent this many parameters; just use two tabs at
-> the beginning.
+> > This addresses these perf build warnings:
 
-This is the default indentation from Emacs c-mode.
+> >   Warning: Kernel ABI header differences:
+> >     diff -u tools/include/linux/bits.h include/linux/bits.h
 
-Since this is a VFIO file, I checked the file and looks like there's not
-yet a strict rule of indentation across the whole file.  I can switch to
-two-tabs for sure if nobody else disagrees.
+> > Please see tools/include/uapi/README for further details.
 
-> 
-> > +{
-> > +	struct vfio_pci_core_device *vdev =
-> > +		container_of(device, struct vfio_pci_core_device, vdev);
-> > +	struct pci_dev *pdev = vdev->pdev;
-> > +	unsigned long ret, phys_len, req_start, phys_addr;
-> > +	unsigned int index;
-> > +
-> > +	index = pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
-> 
-> Could do
-> 
-> unsigned int index =  pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
-> 
-> at the very top.
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > Cc: Yury Norov <yury.norov@gmail.com>
+> > Link: https://lore.kernel.org/r/
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+ 
+> For what it is worth:
+ 
+> Acked-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
-Sure.
+Very much appreciated, added to the cset.
 
-> 
-> > +
-> > +	/* Currently, only bars 0-5 supports huge pfnmap */
-> > +	if (index >= VFIO_PCI_ROM_REGION_INDEX)
-> > +		goto fallback;
-> > +
-> > +	/* Bar offset */
-> > +	req_start = (pgoff << PAGE_SHIFT) & ((1UL << VFIO_PCI_OFFSET_SHIFT) - 1);
-> > +	phys_len = PAGE_ALIGN(pci_resource_len(pdev, index));
-> > +
-> > +	/*
-> > +	 * Make sure we at least can get a valid physical address to do the
-> > +	 * math.  If this happens, it will probably fail mmap() later..
-> > +	 */
-> > +	if (req_start >= phys_len)
-> > +		goto fallback;
-> > +
-> > +	phys_len = MIN(phys_len, len);
-> > +	/* Calculate the start of physical address to be mapped */
-> > +	phys_addr = pci_resource_start(pdev, index) + req_start;
-> > +
-> > +	/* Choose the alignment */
-> > +	if (IS_ENABLED(CONFIG_ARCH_SUPPORTS_PUD_PFNMAP) && phys_len >= PUD_SIZE) {
-> > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
-> > +						   flags, PUD_SIZE, 0);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	if (phys_len >= PMD_SIZE) {
-> > +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
-> > +						   flags, PMD_SIZE, 0);
-> > +		if (ret)
-> > +			return ret;
-> 
-> Similar to Jason, I wonder if that logic should reside in the core, and we
-> only indicate the maximum page table level we support.
-
-I replied.  We can continue the discussion there.
-
-Thanks,
-
--- 
-Peter Xu
-
+- Arnaldo
