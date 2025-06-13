@@ -1,187 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE1028FA85
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE00E192584
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749857327; cv=none; b=bShjcxpmC77wlqvAvjYz0S9AGzXktTibuWShTs4OVNJ98GFKlOZuU2Xao9ff2JqjAq6gSzJgOe1WF6AodBsIMA5+09nly3/YJ8YVAFtWBwlP9Wln1ZoIOYRtwHeDPk0/mguM/ow03+Bj5v3tp062YRXdjNfTanULjWCVPHgch6Y=
+	t=1749857436; cv=none; b=IHTy4sQ7Q5t8cmtE+/Go+vVZugC6WRZjAZQMMrbIMaqxhp7w0VO6FchaqO1njqemW4sQHvMPH/t00FjQ7CFGCjfYIQD8IBpVEy7ts3/qfmCpS5jpR2cecHAgnhWsWF1/slfRVbEOw71eoQaqsc9ZrJlZ4J01dmPn8Y7f1OfUPuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749857327; c=relaxed/simple;
-	bh=n9umnjaNSBSHX0GHX2P8zsGPIAl95NZy7G30H4N3fao=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qQicsS2ukYPaQKvkc01AFxbGwqRzxNYnT3CLjZXmMw/Gg3AspENzZAxUCxyWOHjtyvcfihJ+AivOxrjVY4OH2HfR2Pv6HSPI+XQwD+HxRTPZ7ERxJquZb9LD0oer/zI8lLk/MSLZx6QK/xM3eaE61voykUh1SEgoxODi7dY2vqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N5HvLscj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N5HvLscj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749857325;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vE7a8Rvyx3n5Nss6xlhGQkT2GVTsPwwys36P7pqKvnI=;
-	b=N5HvLscj34efZp/ucvB45+PyLRUCeWyIn8HHhsp+pswXjxhYr1SeBK7OKp3U4kf0Wt9zpe
-	rhIFs+OlfHPXYD5Bshhph1NHiNsBIehM2pVLqlDIbMtfg+GhJrt3T4IjJC7hsqfFm3i0MQ
-	qCkBNt/SEDAMILLjeBf3Zy7CXprT2Kc=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-557-HS3fditTOY6RYgI0mO9AuA-1; Fri,
- 13 Jun 2025 19:28:42 -0400
-X-MC-Unique: HS3fditTOY6RYgI0mO9AuA-1
-X-Mimecast-MFC-AGG-ID: HS3fditTOY6RYgI0mO9AuA_1749857320
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D386E195608E;
-	Fri, 13 Jun 2025 23:28:39 +0000 (UTC)
-Received: from chopper.redhat.com (unknown [10.22.64.52])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B4B14180045B;
-	Fri, 13 Jun 2025 23:28:35 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: rust-for-linux@vger.kernel.org,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	linux-kernel@vger.kernel.org
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v5 7/7] rust: hrtimer: Add forward_now() to HrTimer and HrTimerCallbackContext
-Date: Fri, 13 Jun 2025 19:22:28 -0400
-Message-ID: <20250613232754.451450-8-lyude@redhat.com>
-In-Reply-To: <20250613232754.451450-1-lyude@redhat.com>
-References: <20250613232754.451450-1-lyude@redhat.com>
+	s=arc-20240116; t=1749857436; c=relaxed/simple;
+	bh=0abnlyb7tMAEy1Y0XS37gQsAYKpdOw5VGv59YK1IzDs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=X5awtPkz2LdMNH46nm95VPl+A/YlwlDPPOoeqnq6kuYDQDSswwuqIQeTSF2tQ3ex/t9c2uzWJ05hzmirHThTe4wO0ReBPuSCalsTOIc0+KekKyMUfXMfnuvWpO7QLjnFYbk2ELtR3nbU+8RZRzjAOE4GHL72O7+EdsaTcanFm7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso36432435ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:30:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749857434; x=1750462234;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vF7xs1A3Q2dAycwY5p/OJbr9P/yojYK9Yt6rhyL/AFs=;
+        b=tacbmj2ny1i53FybO0jl+ZXUkG6HkN0UIVHuZtlbtx36Nc37LBSCz6n4mSuF/zjhOW
+         lZFdMd6wpYPgzBS9STsgz1TEl4+NHppnQg/X7515J7lJ5zU3LLKl810YFjGW0JRZgZOb
+         pZ2BkXeRPlZLWlEJ0vlf/tTCq+bDkG+LmioH3c10LsUrb8wgM3Z5tvwEslSV0gNzFZho
+         slnVr+iy9DCGcfP5Mwupd9UGMdDSpbMb4WsFsAv/Q1GswjPCMFhuTCJ94VpI3VGQbFkz
+         UOe6tliAtqZYycpjJEWZ4RAotO3i5nBsrlH0A8RNWbpGc39hD2md1HR/6K9CH9qJBvej
+         UOzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFPV0N92IR8G+lcoEGYd0nDLiT3K3KcQoujMH2iLbTTWOhdJ3m/z7BV8nqIlBQWvkro3zmu298++ruacA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS8b6ofnQGhEJMVBJX3f+i11SEZM4tKR5Kg5/7hKdH084T6ysx
+	+CBjULh9LlrTJYbHjUOL4vWCL96HtxYCJlhRWQ7ls35AqSMpK3CY4BCcDC09sC7SjIjYyegXLKl
+	UEw2gKOpMpauTTHoR12FKBnvByh9a3TGR/J1FwD/RXopx10nVmkGDZ+ReV14=
+X-Google-Smtp-Source: AGHT+IGRAA9OJyHdZx3olCjGPopW4j7o8RyPYuTFqvQIi0A6jUryimHBx8pugZDlISqy0X3182xYzFab7qTndPBx+vXNFNIaT6dB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Received: by 2002:a05:6e02:168b:b0:3dc:7cc1:b731 with SMTP id
+ e9e14a558f8ab-3de07c21db4mr17551605ab.0.1749857433818; Fri, 13 Jun 2025
+ 16:30:33 -0700 (PDT)
+Date: Fri, 13 Jun 2025 16:30:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
+Subject: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
+From: syzbot <syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com>
+To: brauner@kernel.org, chao@kernel.org, djwong@kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, xiang@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Using the HrTimer::raw_time_cb() function, we can now add an equivalent to
-hrtimer_forward_now() to both HrTimer and HrTimerCallbackContext.
+Hello,
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
+syzbot found the following issue on:
+
+HEAD commit:    27605c8c0f69 Merge tag 'net-6.16-rc2' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=171079d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3a936e3316f9e2dc
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8f000c609f05f52d9b5
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1725310c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115e0e82580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-27605c8c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c55edb669703/vmlinux-27605c8c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e12830584492/bzImage-27605c8c.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/36391cabb242/mount_2.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=165e0e82580000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
+
+erofs (device loop0): EXPERIMENTAL EROFS subpage compressed block support in use. Use at your own risk!
+erofs (device loop0): mounted with root inode @ nid 36.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5317 at fs/iomap/iter.c:33 iomap_iter_done fs/iomap/iter.c:33 [inline]
+WARNING: CPU: 0 PID: 5317 at fs/iomap/iter.c:33 iomap_iter+0x87c/0xdf0 fs/iomap/iter.c:113
+Modules linked in:
+CPU: 0 UID: 0 PID: 5317 Comm: syz-executor245 Not tainted 6.16.0-rc1-syzkaller-00101-g27605c8c0f69 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:iomap_iter_done fs/iomap/iter.c:33 [inline]
+RIP: 0010:iomap_iter+0x87c/0xdf0 fs/iomap/iter.c:113
+Code: cc cc cc e8 a6 eb 6b ff 90 0f 0b 90 e9 31 f8 ff ff e8 98 eb 6b ff 90 0f 0b 90 bd fb ff ff ff e9 ad fb ff ff e8 85 eb 6b ff 90 <0f> 0b 90 e9 22 fd ff ff e8 77 eb 6b ff 90 0f 0b 90 e9 53 fd ff ff
+RSP: 0018:ffffc9000d08f808 EFLAGS: 00010293
+RAX: ffffffff8254736b RBX: ffffc9000d08f920 RCX: ffff88803a692440
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000074
+RBP: 1ffff92001a11f2a R08: ffffea00010c5277 R09: 1ffffd4000218a4e
+R10: dffffc0000000000 R11: fffff94000218a4f R12: 0000000000000074
+R13: 0000000000000000 R14: ffffc9000d08f950 R15: 1ffff92001a11f25
+FS:  0000555562dab380(0000) GS:ffff88808d252000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffeb97cc968 CR3: 0000000043323000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ iomap_fiemap+0x117/0x530 fs/iomap/fiemap.c:79
+ ioctl_fiemap fs/ioctl.c:220 [inline]
+ do_vfs_ioctl+0x16d3/0x1990 fs/ioctl.c:841
+ __do_sys_ioctl fs/ioctl.c:905 [inline]
+ __se_sys_ioctl+0x82/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbc6028fe59
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffccc462b68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fbc6028fe59
+RDX: 0000200000000580 RSI: 00000000c020660b RDI: 0000000000000005
+RBP: 00007fbc603045f0 R08: 0000555562dac4c0 R09: 0000555562dac4c0
+R10: 00000000000001ca R11: 0000000000000246 R12: 00007ffccc462b90
+R13: 00007ffccc462db8 R14: 431bde82d7b634db R15: 00007fbc602d903b
+ </TASK>
+
 
 ---
-V2:
-* Change from Ktime to Delta
-* Make sure that forward_now() takes a mutable reference to the timer
-  struct
-* Reword this to point out that we're adding forward_now() to both callback
-  context and mutable timer reference
-* Rename interval to duration
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-V4:
-* Fix rust documentation for HrTimerCallbackContext (forgot to update both
-  forward_now() declarations)
-* Use Pin<&mut Self> for context-less forward.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- rust/kernel/time/hrtimer.rs | 58 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 79d86e1099a1e..0908359b0550a 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -201,7 +201,6 @@ unsafe fn raw_forward(self_ptr: *mut Self, now: HrTimerInstant<T>, interval: Del
-     /// - The caller must ensure that the `hrtimer_clock_base` cannot possibly change in the context
-     ///   this function is being called in. This means either exclusive access to `self_ptr` is
-     ///   required, or we must be from within the timer callback context of `self_ptr`.
--    #[expect(unused)]
-     unsafe fn raw_cb_time(self_ptr: *const Self) -> HrTimerInstant<T>
-     where
-         T: HasHrTimer<T>,
-@@ -243,6 +242,44 @@ pub fn forward(self: Pin<&mut Self>, now: HrTimerInstant<T>, interval: Delta) ->
-         //   exclusive access to it - fulfilling the requirements of the C API.
-         unsafe { Self::raw_forward(self.get_unchecked_mut(), now, interval) }
-     }
-+
-+    /// Conditionally forward the timer.
-+    ///
-+    /// This is a variant of [`forward()`](Self::forward) that uses an interval after the current
-+    /// time of the base clock for the [`HrTimer`].
-+    pub fn forward_now(self: Pin<&mut Self>, interval: Delta) -> u64
-+    where
-+        T: HasHrTimer<T>,
-+    {
-+        // SAFETY: `self` is a mutable reference, guaranteeing it is both a valid pointer to Self
-+        // and that we also have exclusive access to `self`.
-+        let now = unsafe { Self::raw_cb_time(&*self.as_ref()) };
-+
-+        self.forward(now, interval)
-+    }
-+
-+    /// Return the time expiry for this [`HrTimer`].
-+    ///
-+    /// This value should only be used as a snapshot, as the actual expiry time could change after
-+    /// this function is called.
-+    pub fn expires(&self) -> HrTimerInstant<T>
-+    where
-+        T: HasHrTimer<T>,
-+    {
-+        // SAFETY: `self` is an immutable reference and thus always points to a valid `HrTimer`.
-+        let c_timer_ptr = unsafe { HrTimer::raw_get(self) };
-+
-+        // SAFETY:
-+        // - `node.expires` is a ktime_t, so it must be within the range of `0` to `KTIME_MAX`.
-+        // - There's no actual locking here, a racy read is fine and expected
-+        unsafe {
-+            Instant::from_nanos(
-+                // This `read_volatile` is intended to correspond to a READ_ONCE call.
-+                // FIXME(read_once): Replace with `read_once` when available on the Rust side.
-+                core::ptr::read_volatile(&raw const ((*c_timer_ptr).node.expires)),
-+            )
-+        }
-+    }
- }
- 
- /// Implemented by pointer types that point to structs that contain a [`HrTimer`].
-@@ -702,6 +739,25 @@ pub fn forward(&mut self, now: HrTimerInstant<T>, interval: Delta) -> u64
-         // - By our type invariants, `self.0` always points to a valid `HrTimer<T>`
-         unsafe { HrTimer::<T>::raw_forward(self.0.as_ptr(), now, interval) }
-     }
-+
-+    /// Conditionally forward the timer.
-+    ///
-+    /// This is a variant of [`HrTimerCallbackContext::forward()`] that uses an interval after the
-+    /// current time of the base clock for the [`HrTimer`].
-+    pub fn forward_now(&mut self, duration: Delta) -> u64
-+    where
-+        T: HasHrTimer<T>,
-+    {
-+        self.forward(
-+            // SAFETY:
-+            // - We're guaranteed `self.0` points to a valid `HrTimer<T>` instance by type
-+            //   invariants.
-+            // - We're guaranteed to be within the context of the timer callback by our type
-+            //   invariants.
-+            unsafe { HrTimer::<T>::raw_cb_time(self.0.as_ptr()) },
-+            duration,
-+        )
-+    }
- }
- 
- /// Use to implement the [`HasHrTimer<T>`] trait.
--- 
-2.49.0
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
