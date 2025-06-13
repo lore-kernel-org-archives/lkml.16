@@ -1,86 +1,93 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC23A19E7D0;
-	Fri, 13 Jun 2025 06:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08C9C21B19D
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749796359; cv=none; b=ZGdcDtrv4eGF6kicmwj0XkUJZQMMRUtPvsjRnJBMgCGbqbGX1hl5sb2pCqTgyrEEJsEvlfQO0PXC7hcrhS43uxrGSdaCajyel3kRMP0XcyiOzAXFU86Ai2PYe4W03+Er1AkFnZzhhN7R7eXUtfz5SwOymlnYpx2jHGcKPYHbHlM=
+	t=1749796682; cv=none; b=nwz0A08eS/yW58MOlR3SL3pZ+KTIBD15kJfiDE70sMXtYHQBD42goCKvLrji4rdKyBegow3rN0RlneefkzfDlEkG1tv3L4NM49cIvmwP54vvHiLma4IgFf1IcNa9sqLmZsVRAVbJZoE5odjd3y9OVxkzvjLwicJcXXbQzzfTeIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749796359; c=relaxed/simple;
-	bh=Tx/RxFsLs83VOkymMWNsDjyCSM3ZCC9BI2ibGIG/Hq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a3V/iNXY0F3r8DHvyWuA9BnP+MQGTu2HoFOJ4YBfOcMELx2BB/CfNlrV34Q3NmkvGfEH/l06xYzknq+J0F1WK/tUOFWNNsUAf+Z8qploPi8BcOzkWwp4ZtcfSj/n8qEWUObeHVwsX2KOtZN7wURqRpolcsJQ2YmSQMnaF37BDZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uQ0/TEfD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ej78IIJt; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749796682; c=relaxed/simple;
+	bh=niW1Z5/2R05MmPnD4eCTnKvr4c0P3IfHZsdwsFaDST0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jt/2c0rDwTMgdsgTjig230X3JPq41NH6waA9s8VR8CYT8+9cpCWOtWJb0mvzY5qLh84kzeYi4YQp5HrTZdJFvzxCJdLYHHNSf3/4N44CsHu+e4KE9IkBz+ay6k4t9Y4vW4WLRyarj01Hr0BzZCUB8GC2fNsTZnml79Wyl3mf1HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SL9wuNi9; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uQ0/TEfD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ej78IIJt"
-Date: Fri, 13 Jun 2025 08:32:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749796352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vEt7mrZB/9zzOpAPhHlZclwQn0SIWdrSyoVPPsz+YuQ=;
-	b=uQ0/TEfDJdvGa/UH3fa4qdjWEQDRwIogkwQiNvxIT1YydWCDzS0cnHWYyITeYu5isgSU2L
-	QxpJUHb0HzqS8mFL+dAA8E7aVNpc2fdFnkAjXHWWvoVQgNMuy1eVHemDg+dAivJUXf9c/I
-	PW0Nmgc2dPZfAiail2pYR+523AY5/591Xw9BVgQgjRJGeBi0TsdWZJ+3yzxycxMzxU60Df
-	ZOTVpEc0EWhIzV1gLNNOJ1jhstJAhu9WihTQgzqRcUpfk9Qm1YwU0l1tTJ/98hmdvksG/Q
-	l8ueLIXq6YiWQd+RTVkWDW6tFP5tEkFEbZkUTld/2oI3rRiXtHCExByiD3lpDQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749796352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vEt7mrZB/9zzOpAPhHlZclwQn0SIWdrSyoVPPsz+YuQ=;
-	b=Ej78IIJtbOQAfAuKiiZXFEihwrV1zSsZA+R4XLHB0aqx6pKqWVVBCENl3W6Yke8XaF/LA6
-	U6IOKVcqR17SPUDA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
-	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
-	John Stultz <jstultz@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Miroslav Lichvar <mlichvar@redhat.com>, 
-	Werner Abt <werner.abt@meinberg-usa.com>, David Woodhouse <dwmw2@infradead.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Kurt Kanzenbach <kurt@linutronix.de>, 
-	Nam Cao <namcao@linutronix.de>, Antoine Tenart <atenart@kernel.org>
-Subject: Re: [patch V2 06/26] ntp: Add support for auxiliary timekeepers
-Message-ID: <20250613082938-04b6c1ae-b5b9-4547-bb23-23fd0df81818@linutronix.de>
-References: <20250519082042.742926976@linutronix.de>
- <20250519083025.969000914@linutronix.de>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SL9wuNi9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=4Z
+	4Zk6gFMiiiZCc+KOTwsC9S+QK7pJWpmIYxo8X11Ys=; b=SL9wuNi92DVR4EZZg1
+	AcrmdZhnTbCzkePXev9RZ2c9A4mBcPkVyZR1r5Sd5MfJTFIPW6EX4VxC2qGqCgQ9
+	RfeqOC/NB3B0M5+S9bc7pgO5LMBRTMM7sNgfOzVP4G91LJOuOwrgi142L1QFaBgt
+	Vaad342x3Z0IHqsY5D11Yb1zo=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgCXdSQGx0togsW6Bg--.7897S2;
+	Fri, 13 Jun 2025 14:36:55 +0800 (CST)
+From: wangdicheng <wangdich9700@163.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	linux-arm-kernel@lists.infradead.org,
+	wangdicheng <wangdicheng@kylinos.cn>
+Subject: [PATCH] ALSA: usb-audio: Rename ALSA kcontrol PCM and PCM1 for the KTMicro sound card
+Date: Fri, 13 Jun 2025 14:36:36 +0800
+Message-Id: <20250613063636.239683-1-wangdich9700@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519083025.969000914@linutronix.de>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PCgvCgCXdSQGx0togsW6Bg--.7897S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Gr45AryrAF1UtrWfXr4fXwb_yoWkAwb_Ja
+	1Y9FW7AF15GFy3AFy7KF1ava4vyay7uasFgF98tryDta4Dtw1UAr42yF1kZFyqgrZ3JFy3
+	J3WDtr1S9a47JjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbl_MDUUUUU==
+X-CM-SenderInfo: pzdqwv5lfkmliqq6il2tof0z/1S2mRwBrT2hLxekfZwAAsU
 
-On Mon, May 19, 2025 at 10:33:21AM +0200, Thomas Gleixner wrote:
-> If auxiliary clocks are enabled, provide an array of NTP data so that the
-> auxiliary timekeepers can be steered independently of the core timekeeper.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  kernel/time/ntp.c |   41 ++++++++++++++++++++++-------------------
->  1 file changed, 22 insertions(+), 19 deletions(-)
+From: wangdicheng <wangdicheng@kylinos.cn>
 
-<snip>
+PCM1 not in Pulseaudio's control list;standardize control to "Speaker"and"Headphone"
 
->  void __init ntp_init(void)
->  {
-> -	ntp_clear();
-> +	for (int id = 0; id < TIMEKEEPERS_MAX; id++)
-> +		__ntp_clear(tk_ntp_data + id);
+Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
+---
+ sound/usb/mixer_maps.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-For consistency with the rest of the code:
+diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
+index 0e9b5431a47f..faac7df1fbcf 100644
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -383,6 +383,13 @@ static const struct usbmix_name_map ms_usb_link_map[] = {
+ 	{ 0 }   /* terminator */
+ };
+ 
++/* KTMicro USB */
++static struct usbmix_name_map s31b2_0022_map[] = {
++	{ 23, "Speaker Playback" },
++	{ 18, "Headphone Playback" },
++	{ 0 }
++};
++
+ /* ASUS ROG Zenith II with Realtek ALC1220-VB */
+ static const struct usbmix_name_map asus_zenith_ii_map[] = {
+ 	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
+@@ -692,6 +699,11 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
+ 		.id = USB_ID(0x045e, 0x083c),
+ 		.map = ms_usb_link_map,
+ 	},
++	{
++		/* KTMicro USB */
++		.id = USB_ID(0X31b2, 0x0022),
++		.map = s31b2_0022_map,
++	},
+ 	{ 0 } /* terminator */
+ };
+ 
+-- 
+2.25.1
 
-__ntp_clear(&tk_ntp_data[id]);
-
->  	ntp_init_cmos_sync();
->  }
-> 
