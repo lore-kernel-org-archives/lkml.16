@@ -1,73 +1,169 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta20.hihonor.com (mta20.hihonor.com [81.70.206.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDDE1FDA89
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 05:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C0E1FDA89
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 05:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749791471; cv=none; b=HAWfHmaVTg4gbX5e8WHLT4iLrMPWvwmiy0GuHoVxCV/uIcGvNklem4in43JOrY0DW53VH9wE/0NDziekj+qeeDGmTsA0EkVKG0/pnid8CfbqmJ9HBnNOKdKzdaKkvHVXYxVmuw+aZ2k7dwDeXxVr9U6yhQWu5KfN+iUJrxbJ/UI=
+	t=1749791476; cv=none; b=hyTFdGTdqjNkNMbuPkvsdjSksbd3eEYknlziVThpeDuBt3Ms7v6XJY/61jSLIkB+qMRrMu3NDrjHTUigglaa3Gbp+qzyIPBZUVgQQYDcY5RZS6eRb1YWlmAnPkc6U4m3gcwXh0mLAiokVZ2y2oGP0DAqDBKYJ5dMasc0GiSCX0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749791471; c=relaxed/simple;
-	bh=cUvwOLl3mEuX6bXFhiRV8ofP3klCN+cY8uC/h346d/U=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Twtt/zJUjsWF2Rqar7zHiXLfXCb4SwkbiBDkHfF9GSzZgUJEsXkOD0LmraCw1o757v7/ACyGb6nskVbLqMnUoWmP/X1DWkz2NesHr0gOX4bnEzps8+s9vNQ+n7bzvaa8e6cCzdIY0ZcVKnSFFnPMmYT26/iLrx5gJhogBQuHdqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd051e8e5so16140055ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 22:11:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749791468; x=1750396268;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nw77KWnxaR6xG40zkWU1KSH5QZlyIGcQ1pTP4BctBbA=;
-        b=NClQhnr6HQXCtM7PGoUcViOMa9pGSusdTeQhVoypT0i9y5I+Hy5B1hKaxevxVSKXpL
-         6e4Pj+WTbGKCqpkCH8Nr1huvwn3lYauYUXebW0A+bTyFGifC12NzQrB1/xVxt9wTRtC8
-         v8do77j5LjN6OCH8p6Z2LbFzOQbaIJp3TzQDCDEm1sL+HKaf59GW7pjIPUM2SS3MFe/S
-         tpPgMjwuuw93J7dMssV5kDNBNKhz1An7GJwvEqHBlDojzKtogICQ9UgNjMXwAPB5IG3Q
-         bWhke2D3fDnp604LdSf4H8ubMSXXJ+XNeUNGn+hYWrqS2jaN9BI7qqcb5ddk0V5tIJf9
-         hXJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXNIsdfMZOGwfL6eAPDvf2Tu5aPU4/tC4w60v/sAni3+H1tV7t1LPBjpEHgRVhTh4Xe1MXex0ODcLQpGvc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywlvfa0vb7csnn220ds41dGEDvK4fcfT4UQiWpR9M/Hxd0+Noxg
-	anbMHtQjAi9jPeJYahDpZ8BW1poXc0NEOBKAQrznPV5B5SnIIzn00WThwZYa8P+O1mdmnAaSH4G
-	auG6i6xV6ZbYv32eZ6gSBuyQT7EUJNv6WaeDVvlwA5vs5nYfEUCz5VwM304s=
-X-Google-Smtp-Source: AGHT+IHWVnmkvnP7OgPlPOI+KaqLRcddj988eaBzrh6EYBlD2YrWLZz76gr7ACyFRtgGWaQChipknEfOkKvAlLNMuQktm8BzzHvh
+	s=arc-20240116; t=1749791476; c=relaxed/simple;
+	bh=UFAYzYZdIRVAOTWV2F59ryEn3DoxClQQ+mepY7xaCgg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iDnNMyPRjMuWCTZHibk6650FGTNpq2+P13fc68USYjsgtj+bTP36RCyjECT/SIoNAqqCqkqlUONJ62wc9Kn+QCThQk8qjAZm0zRPUK7gnWa3paNlVGFvADUqixDMCeRbFb42iqn8AjLQJbm4elg3Dgs3JVJiKcrnl0bNnn9aT30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w003.hihonor.com (unknown [10.68.17.88])
+	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4bJS9B67FHzYl3Ps;
+	Fri, 13 Jun 2025 13:08:46 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w003.hihonor.com
+ (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
+ 2025 13:11:10 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
+ 2025 13:11:10 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <linux-f2fs-devel@lists.sourceforge.net>
+CC: <chao@kernel.org>, <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: introduce reserved_pin_section sysfs entry
+Date: Fri, 13 Jun 2025 13:11:10 +0800
+Message-ID: <20250613051110.1865186-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250612140526.6435-1-chao@kernel.org>
+References: <20250612140526.6435-1-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2593:b0:3dd:d995:5a97 with SMTP id
- e9e14a558f8ab-3de00bea30dmr16390805ab.12.1749791467999; Thu, 12 Jun 2025
- 22:11:07 -0700 (PDT)
-Date: Thu, 12 Jun 2025 22:11:07 -0700
-In-Reply-To: <20250613042412.328342-1-kuni1840@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684bb2eb.050a0220.be214.029a.GAE@google.com>
-Subject: Re: [syzbot] [atm?] KMSAN: uninit-value in atmtcp_c_send
-From: syzbot <syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com>
-To: 3chas3@gmail.com, kuni1840@gmail.com, kuniyu@google.com, 
-	linux-atm-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: w010.hihonor.com (10.68.28.113) To a011.hihonor.com
+ (10.68.31.243)
 
-Hello,
+> This patch introduces /sys/fs/f2fs/<dev>/reserved_pin_section for tuning
+> @needed parameter of has_not_enough_free_secs(), if we configure it w/
+> zero, it can avoid f2fs_gc() as much as possible while fallocating on
+> pinned file.
+> 
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+>  Documentation/ABI/testing/sysfs-fs-f2fs | 9 +++++++++
+>  fs/f2fs/f2fs.h                          | 3 +++
+>  fs/f2fs/file.c                          | 5 ++---
+>  fs/f2fs/super.c                         | 3 +++
+>  fs/f2fs/sysfs.c                         | 9 +++++++++
+>  5 files changed, 26 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+> index bf03263b9f46..c2a233f2a085 100644
+> --- a/Documentation/ABI/testing/sysfs-fs-f2fs
+> +++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+> @@ -861,3 +861,12 @@ Description:	This is a read-only entry to show the value of sb.s_encoding_flags,
+>  		SB_ENC_STRICT_MODE_FL            0x00000001
+>  		SB_ENC_NO_COMPAT_FALLBACK_FL     0x00000002
+>  		============================     ==========
+> +
+> +What:		/sys/fs/f2fs/<disk>/reserved_pin_section
+> +Date:		June 2025
+> +Contact:	"Chao Yu" <chao@kernel.org>
+> +Description:	This threshold is used to control triggering garbage collection while
+> +		fallocating on pinned file, so, it can guarantee there is enough free
+> +		reserved section before preallocating on pinned file.
+> +		By default, the value is ovp_sections, especially, for zoned ufs, the
+> +		value is 1.
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 9333a22b9a01..fa27498202a3 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -1724,6 +1724,9 @@ struct f2fs_sb_info {
+>  	/* for skip statistic */
+>  	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
+>  
+> +	/* free sections reserved for pinned file */
+> +	unsigned int reserved_pin_section;
+> +
+>  	/* threshold for gc trials on pinned files */
+>  	unsigned short gc_pin_file_threshold;
+>  	struct f2fs_rwsem pin_sem;
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 696131e655ed..a909f79db178 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1887,9 +1887,8 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+>  			}
+>  		}
+>  
+> -		if (has_not_enough_free_secs(sbi, 0, f2fs_sb_has_blkzoned(sbi) ?
+> -			ZONED_PIN_SEC_REQUIRED_COUNT :
+> -			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
+> +		if (has_not_enough_free_secs(sbi, 0,
+> +				sbi->reserved_pin_section)) {
+>  			f2fs_down_write(&sbi->gc_lock);
+>  			stat_inc_gc_call_count(sbi, FOREGROUND);
+>  			err = f2fs_gc(sbi, &gc_control);
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 57adeff5ef25..48b97a95fd63 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -4975,6 +4975,9 @@ static int f2fs_fill_super(struct super_block *sb, struct fs_context *fc)
+>  	sbi->last_valid_block_count = sbi->total_valid_block_count;
+>  	sbi->reserved_blocks = 0;
+>  	sbi->current_reserved_blocks = 0;
+> +	sbi->reserved_pin_section = f2fs_sb_has_blkzoned(sbi) ?
+> +			ZONED_PIN_SEC_REQUIRED_COUNT :
+> +			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi));
+>  	limit_reserve_root(sbi);
+>  	adjust_unusable_cap_perc(sbi);
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Hi Chao,
+It seems like we cannot use overprovision_segments(sbi) directly before f2fs_build_segment_manager().
+ 
+> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> index 75134d69a0bd..51be7ffb38c5 100644
+> --- a/fs/f2fs/sysfs.c
+> +++ b/fs/f2fs/sysfs.c
+> @@ -824,6 +824,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+>  		return count;
+>  	}
+>  
+> +	if (!strcmp(a->attr.name, "reserved_pin_section")) {
+> +		if (t > GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))
+> +			return -EINVAL;
+> +		*ui = (unsigned int)t;
+> +		return count;
+> +	}
+> +
+>  	*ui = (unsigned int)t;
+>  
+>  	return count;
+> @@ -1130,6 +1137,7 @@ F2FS_SBI_GENERAL_RO_ATTR(unusable_blocks_per_sec);
+>  F2FS_SBI_GENERAL_RW_ATTR(blkzone_alloc_policy);
+>  #endif
+>  F2FS_SBI_GENERAL_RW_ATTR(carve_out);
+> +F2FS_SBI_GENERAL_RW_ATTR(reserved_pin_section);
+>  
+>  /* STAT_INFO ATTR */
+>  #ifdef CONFIG_F2FS_STAT_FS
+> @@ -1323,6 +1331,7 @@ static struct attribute *f2fs_attrs[] = {
+>  	ATTR_LIST(last_age_weight),
+>  	ATTR_LIST(max_read_extent_count),
+>  	ATTR_LIST(carve_out),
+> +	ATTR_LIST(reserved_pin_section),
+>  	NULL,
+>  };
+>  ATTRIBUTE_GROUPS(f2fs);
+> -- 
+> 2.40.1
+> 
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
 
-Reported-by: syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com
-Tested-by: syzbot+1d3c235276f62963e93a@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         27605c8c Merge tag 'net-6.16-rc2' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15c21e0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=42d51b7b9f9e61d
-dashboard link: https://syzkaller.appspot.com/bug?extid=1d3c235276f62963e93a
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10c0d10c580000
-
-Note: testing is done by a robot and is best-effort only.
