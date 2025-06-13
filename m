@@ -1,239 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732C53C26;
-	Fri, 13 Jun 2025 12:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E88139B;
+	Fri, 13 Jun 2025 12:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749817805; cv=none; b=FJYNSYc5YuAh+HiBd7mkj+MThGW6BQBrfsT0zxoycMkK5EXnvg3M7zpU+QCNi8ugPcD2PVzqeICVXFAQyKC3eEXmqFHV69dNu0ZyZuML4FISz9yjHyPb3/TZxQiKjmI1xEQ17P35zHGsV6F0zhHE6pQMj/VV1iHW4yNL7X0zDnE=
+	t=1749817830; cv=none; b=hC9KO2WSElPf6rwV2Vng5cpBk5Sf5Ha7rX3X0LAShGB39AdR32tRxhqVGHrCnLq1KmKfD2QNypTNmHX6CNLRtebLQciKUpGK0q/tCFldm7cjnY5GRM1sxmnMYdCe0GWIvIsqelgr7PxjD5wQOrFYKK+QzjVPAx8dzzijkmRmh9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749817805; c=relaxed/simple;
-	bh=bvrBb7TJAzx9kC/eHHu6hVfqRao0Qn/rdOJhsxYrWBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iE4PUCF1QED4kfH3xzivChr54WmUI+ad4Y+HfG/QQBaolDLBPGORxas+xXyO5nzvNxgwiOpd8DHlMxeSuAZV9XqqheRiOev8v/phtxtq95lXNuFLQULT05uOJOfgZg1c9RPS8/T+YQRZYb8WW7ZB2hwOtxpiMjt0O0gKuq8SpM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=reVKfuRv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749817830; c=relaxed/simple;
+	bh=JoM1Biw9+AxMLcXjIvmijSuBmIBIYRKF0yU2gIcMG3U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kGs6mZw5tUa9sQ5IantILTgEv1UdVdnmZRrb6QfY1f2gcd+DRsUxSYyieixK94fW7K2skrqBGs14Gs7WVVjjJk4UezAbI/1XQzicAd67gTpJpkw9NPhXGbvc0hVyh8gr5TynIq1XR5hfsHqw7R3XDlKp46wuIc2n7nvDqVD+WK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IbRxm4//; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reVKfuRv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BACDC4CEEF;
-	Fri, 13 Jun 2025 12:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749817805;
-	bh=bvrBb7TJAzx9kC/eHHu6hVfqRao0Qn/rdOJhsxYrWBg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=reVKfuRvoLVC3JVyGbdMNMObhWSTDUy4lXEHsPTGK/zy5j9NjYnjDLzVf+XxgUeXq
-	 lJWQkCXG71U+z3R/ft+BlQFdT5/IzHBRC5ONX0ODg9WfKpN2N3by7tLirM7W6MULVB
-	 QyzVErlnaty0dSNNu1DvRkkmpsgdXFpWKRWsop9wDdTi0RJ42nVOiF70UWPLpc+IMx
-	 +2EXjIGuqfBZA2ivEYGI4iv+NbdgTm22vNeKMXCZY1CYjiPhLCV1v+k6Pn3xpI/E95
-	 B0K4jPV7568smddo2fpzTaghxxBupRX7pUIMHo0Xrds7ehsKQlW5W740wMb/jlzh6U
-	 4nBPrn054PXoQ==
-Date: Fri, 13 Jun 2025 14:29:58 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, "Akira Yokosawa" <akiyks@gmail.com>, "Breno Leitao"
- <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Ignacio Encinas Rubio"
- <ignacio@iencinas.com>, "Jan Stancek" <jstancek@redhat.com>, "Marco Elver"
- <elver@google.com>, "Paolo Abeni" <pabeni@redhat.com>, "Ruben Wauters"
- <rubenru09@aol.com>, "Shuah Khan" <skhan@linuxfoundation.org>,
- joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
- linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, netdev@vger.kernel.org,
- peterz@infradead.org, stern@rowland.harvard.edu
-Subject: Re: [PATCH v2 11/12] docs: use parser_yaml extension to handle
- Netlink specs
-Message-ID: <20250613142958.5876fd27@foz.lan>
-In-Reply-To: <m2ldpvn9lz.fsf@gmail.com>
-References: <cover.1749723671.git.mchehab+huawei@kernel.org>
-	<931e46a6fdda4fa67df731b052c121b9094fbd8a.1749723671.git.mchehab+huawei@kernel.org>
-	<m2ldpvn9lz.fsf@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbRxm4//"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so18803645e9.3;
+        Fri, 13 Jun 2025 05:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749817827; x=1750422627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iyKH7IE5IPc6Hr2NfqI5I89RnlgcJHTrR0JgVtHniLQ=;
+        b=IbRxm4//UkpvK7b64NWYGKKv+yElbdI40pjQeWosS7aku0mpRnWaD1pwqqIq9H8AP6
+         NR5mhNaevgZtWLUWQmws581TBsQoRYGDPgcekiJr0hRTxkzbeGUH2kwiHiraZ7v8dNuk
+         IZaF4wqr+y9r+THU7Y2G8CCL/lMHjG2TKJluCkV6C1WpSgRiyI2DF36u3V1JQtdKGJUG
+         WJKvkeVyvrU2vVIHbd604eR0IsIBVErBw47uceHlTBSA+JGTbDuhkvMDBuZaioxtj43M
+         /PcwbM/Zchmtwy9TPzSDsW/dkj2U72JY1YYNmbbHv5/dJlAvgxQJZmNRiNRyLeTFKs4k
+         BuQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749817827; x=1750422627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iyKH7IE5IPc6Hr2NfqI5I89RnlgcJHTrR0JgVtHniLQ=;
+        b=iZD7/owYr/Hpsa9jB49DIxa9esdbE02OOySaE7K4Eio+cgs9s6rV7IBZR7LDOxG9d0
+         0s6VZXpr1ZJqONNVnyH+bD/85CDzSNarSdEo+13+6k/QimclpNx4xPARsxf56paKGvJa
+         MjGA4/Z/DDvjzM+05OmrIhAif2Jc3MSlHa0NJjhe0NtrTuX+Cp8H9LpMw9fZuwVgJLLv
+         2z+NxMmIobO99egfG/FBfJ4nBYQb7j5cWoVY/tTOOjEzkRCcOkTF2ciJKuDRnAaM6hVH
+         jgj4R3s33MPAfFFyBf4V5cpbAzfUT9VveSnchFpGI4kwbEXhqqkpzSf3zWw/qtiPiEvJ
+         KuuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVq7ZVNOt6pnGPYKMEF2nhHsXzYdr0z4DYcbGiLYI0XE8aOKKPebEW2zvvjNZH2suYBT69dqYPmnuaB@vger.kernel.org, AJvYcCWZN1ohUIir2AMlH5aPhaXKY6fjivd807czeJ5vXTypVsPhvMVlqU0xNla3OyHKUe7JoEFw0SAgrMVh@vger.kernel.org, AJvYcCXDuSIZ5d8LvruRJ0NuEh0H515kvjBam3jIqdRqiD8cq9LftgY5IQFsGS7xlu7OkJkYgTYEfBKZv/T98+zJ39eVr/I=@vger.kernel.org, AJvYcCXYLJ9GJ/AcwXkUD4DjO2FLer2n36D/ZCCRx5F0rKCM4C6CXBp5tjKdFctXxGKWyIENvrtwL8p59npSyVp1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpOZKbt89LY6aoEqcLkt6dsjif2+aHr2bqLiDxtue+XeeEIbu8
+	C9JBPbUOM3WNDJN0/WbeF5gwRYFW24v+CtiMfJ1LQkPRFhK7ytU7rKeY8lmGUG7TwKWGZ41EBRM
+	ULxQWAprajJtn6hSaQejRVy0lc66bDc4=
+X-Gm-Gg: ASbGnctcvTJisHeCFjdLTJCyXQ2PHyFxejHB3ZvCQ/QotT3vuniXHlfqoZzvjGIwPTv
+	hlb0TTNJ/lK9ErhUC/OkhHdUX0U+Riwxcwz1YsUOppuMnihfTzoBTkwVVUqTcdx/7OdpgbzMNeV
+	Op58v6dgwxq2ztuwp+cGNz4S+TTBQfMigiMoLmTBzH2oN9FiccmHYwMyb/c8rfn2I4O5Gevgsly
+	F0=
+X-Google-Smtp-Source: AGHT+IHKEZ0DY4lN3QrQTun6mph9rEiHXX0KHN0OSWnhARuZn78+U4bfJHK4Yh/js2m7/cDh1QVzdFKc6kQ4DgmUC0w=
+X-Received: by 2002:a05:600c:6087:b0:450:cea0:1781 with SMTP id
+ 5b1f17b1804b1-45334b1a0d6mr35396245e9.16.1749817826716; Fri, 13 Jun 2025
+ 05:30:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250609203656.333138-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWd3atW6H=ewNcHDOkC7aEzXGi1mU0YtiEiBPgB6uT3bw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWd3atW6H=ewNcHDOkC7aEzXGi1mU0YtiEiBPgB6uT3bw@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 13 Jun 2025 13:30:00 +0100
+X-Gm-Features: AX0GCFu5pkuuQ73sJw6VCu7eJzbS6egqReBFQrZwZIamPlb61Q6iENVYo4X8uUo
+Message-ID: <CA+V-a8sRD1cac_YrWb2wZVR=piSDyyqTZ0mYcQvxcdrn2cYi6Q@mail.gmail.com>
+Subject: Re: [PATCH 6/8] arm64: dts: renesas: Refactor RZ/T2H EVK device tree
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Fri, 13 Jun 2025 12:50:48 +0100
-Donald Hunter <donald.hunter@gmail.com> escreveu:
+Hi Geert,
 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> 
-> > Instead of manually calling ynl_gen_rst.py, use a Sphinx extension.
-> > This way, no .rst files would be written to the Kernel source
-> > directories.
+Thank you for the review.
+
+On Thu, Jun 12, 2025 at 3:47=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, 9 Jun 2025 at 22:37, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Paul Barker <paul.barker.ct@bp.renesas.com>
 > >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  Documentation/Makefile                        | 17 ---------
-> >  Documentation/conf.py                         | 11 +++---
-> >  Documentation/netlink/specs/index.rst         | 38 +++++++++++++++++++
-> >  Documentation/networking/index.rst            |  2 +-
-> >  .../networking/netlink_spec/readme.txt        |  4 --
-> >  Documentation/sphinx/parser_yaml.py           |  2 +-
-> >  6 files changed, 46 insertions(+), 28 deletions(-)
-> >  create mode 100644 Documentation/netlink/specs/index.rst
-> >  delete mode 100644 Documentation/networking/netlink_spec/readme.txt
+> > The RZ/T2H EVK and RZ/N2H EVK are very similar boards. As there is so
+> > much overlap between these parts, common device tree entries are moved
+> > to the new file rzt2h-evk-common.dtsi.
 > >
-> > diff --git a/Documentation/Makefile b/Documentation/Makefile
-> > index d30d66ddf1ad..9185680b1e86 100644
-> > --- a/Documentation/Makefile
-> > +++ b/Documentation/Makefile
-> > @@ -102,22 +102,6 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
-> >  		cp $(if $(patsubst /%,,$(DOCS_CSS)),$(abspath $(srctree)/$(DOCS_CSS)),$(DOCS_CSS)) $(BUILDDIR)/$3/_static/; \
-> >  	fi
-> >  
-> > -YNL_INDEX:=$(srctree)/Documentation/networking/netlink_spec/index.rst
-> > -YNL_RST_DIR:=$(srctree)/Documentation/networking/netlink_spec
-> > -YNL_YAML_DIR:=$(srctree)/Documentation/netlink/specs
-> > -YNL_TOOL:=$(srctree)/tools/net/ynl/pyynl/ynl_gen_rst.py
-> > -
-> > -YNL_RST_FILES_TMP := $(patsubst %.yaml,%.rst,$(wildcard $(YNL_YAML_DIR)/*.yaml))
-> > -YNL_RST_FILES := $(patsubst $(YNL_YAML_DIR)%,$(YNL_RST_DIR)%, $(YNL_RST_FILES_TMP))
-> > -
-> > -$(YNL_INDEX): $(YNL_RST_FILES)
-> > -	$(Q)$(YNL_TOOL) -o $@ -x
-> > -
-> > -$(YNL_RST_DIR)/%.rst: $(YNL_YAML_DIR)/%.yaml $(YNL_TOOL)
-> > -	$(Q)$(YNL_TOOL) -i $< -o $@
-> > -
-> > -htmldocs texinfodocs latexdocs epubdocs xmldocs: $(YNL_INDEX)
-> > -
-> >  htmldocs:
-> >  	@$(srctree)/scripts/sphinx-pre-install --version-check
-> >  	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var)))
-> > @@ -184,7 +168,6 @@ refcheckdocs:
-> >  	$(Q)cd $(srctree);scripts/documentation-file-ref-check
-> >  
-> >  cleandocs:
-> > -	$(Q)rm -f $(YNL_INDEX) $(YNL_RST_FILES)
-> >  	$(Q)rm -rf $(BUILDDIR)
-> >  	$(Q)$(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/userspace-api/media clean
-> >  
-> > diff --git a/Documentation/conf.py b/Documentation/conf.py
-> > index 12de52a2b17e..add6ce78dd80 100644
-> > --- a/Documentation/conf.py
-> > +++ b/Documentation/conf.py
-> > @@ -45,7 +45,7 @@ needs_sphinx = '3.4.3'
-> >  extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include',
-> >                'kfigure', 'sphinx.ext.ifconfig', 'automarkup',
-> >                'maintainers_include', 'sphinx.ext.autosectionlabel',
-> > -              'kernel_abi', 'kernel_feat', 'translations']
-> > +              'kernel_abi', 'kernel_feat', 'translations', 'parser_yaml']
-> >  
-> >  # Since Sphinx version 3, the C function parser is more pedantic with regards
-> >  # to type checking. Due to that, having macros at c:function cause problems.
-> > @@ -143,10 +143,11 @@ else:
-> >  # Add any paths that contain templates here, relative to this directory.
-> >  templates_path = ['sphinx/templates']
-> >  
-> > -# The suffix(es) of source filenames.
-> > -# You can specify multiple suffix as a list of string:
-> > -# source_suffix = ['.rst', '.md']
-> > -source_suffix = '.rst'
-> > +# The suffixes of source filenames that will be automatically parsed
-> > +source_suffix = {
-> > +        '.rst': 'restructuredtext',
-> > +        '.yaml': 'yaml',  
-> 
-> The handler name should probably be netlink_yaml 
+> > Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> >  .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    | 17 +------------
+>
+> Definitely a good idea! Note that r9a09g077m44-rzt2h-evk.dts does not
+> exist yet in my tree...
+>
+Yep I have based my patches on top of v10, are we waiting for the
+serial driver to be merged in first?
 
-See my comments on earlier patches.
+> >  .../boot/dts/renesas/rzt2h-evk-common.dtsi    | 24 +++++++++++++++++++
+> >  2 files changed, 25 insertions(+), 16 deletions(-)
+> >  create mode 100644 arch/arm64/boot/dts/renesas/rzt2h-evk-common.dtsi
+>
+> Perhaps call it rzt2h-n2h-evk-common.dtsi, to match the filename
+> of the documentation?
+>
+Agreed, I will rename it. (Note although there are similarities, the
+DIP switch settings differ quite a lot. So If you prefer Im OK to go
+either ways)
 
-> 
-> > +}
-> >  
-> >  # The encoding of source files.
-> >  #source_encoding = 'utf-8-sig'
-> > diff --git a/Documentation/netlink/specs/index.rst b/Documentation/netlink/specs/index.rst
-> > new file mode 100644
-> > index 000000000000..ca0bf816dc3f
-> > --- /dev/null
-> > +++ b/Documentation/netlink/specs/index.rst
-> > @@ -0,0 +1,38 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +.. NOTE: This document was auto-generated.
-> > +
-> > +.. _specs:
-> > +
-> > +=============================
-> > +Netlink Family Specifications
-> > +=============================
-> > +
-> > +.. toctree::
-> > +   :maxdepth: 1
-> > +
-> > +   conntrack
-> > +   devlink
-> > +   dpll
-> > +   ethtool
-> > +   fou
-> > +   handshake
-> > +   lockd
-> > +   mptcp_pm
-> > +   net_shaper
-> > +   netdev
-> > +   nfsd
-> > +   nftables
-> > +   nl80211
-> > +   nlctrl
-> > +   ovpn
-> > +   ovs_datapath
-> > +   ovs_flow
-> > +   ovs_vport
-> > +   rt-addr
-> > +   rt-link
-> > +   rt-neigh
-> > +   rt-route
-> > +   rt-rule
-> > +   tc
-> > +   tcp_metrics
-> > +   team
-> > diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-> > index ac90b82f3ce9..b7a4969e9bc9 100644
-> > --- a/Documentation/networking/index.rst
-> > +++ b/Documentation/networking/index.rst
-> > @@ -57,7 +57,7 @@ Contents:
-> >     filter
-> >     generic-hdlc
-> >     generic_netlink
-> > -   netlink_spec/index
-> > +   ../netlink/specs/index
-> >     gen_stats
-> >     gtp
-> >     ila
-> > diff --git a/Documentation/networking/netlink_spec/readme.txt b/Documentation/networking/netlink_spec/readme.txt
-> > deleted file mode 100644
-> > index 030b44aca4e6..000000000000
-> > --- a/Documentation/networking/netlink_spec/readme.txt
-> > +++ /dev/null
-> > @@ -1,4 +0,0 @@
-> > -SPDX-License-Identifier: GPL-2.0
-> > -
-> > -This file is populated during the build of the documentation (htmldocs) by the
-> > -tools/net/ynl/pyynl/ynl_gen_rst.py script.
-> > diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
-> > index eb32e3249274..cdcafe5b3937 100755
-> > --- a/Documentation/sphinx/parser_yaml.py
-> > +++ b/Documentation/sphinx/parser_yaml.py
-> > @@ -55,7 +55,7 @@ class YamlParser(Parser):
-> >          fname = document.current_source
-> >  
-> >          # Handle netlink yaml specs
-> > -        if re.search("/netlink/specs/", fname):
-> > +        if re.search("netlink/specs/", fname):  
-> 
-> Please combine this change into the earlier patch so that the series
-> doesn't have unnecessary changes.
-
-OK.
-
-> 
-> >              if fname.endswith("index.yaml"):
-> >                  msg = self.netlink_parser.generate_main_index_rst(fname, None)
-> >              else:  
-
-Thanks,
-Mauro
+Cheers,
+Prabhakar
