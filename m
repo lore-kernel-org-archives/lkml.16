@@ -1,158 +1,147 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238F22DA752;
-	Fri, 13 Jun 2025 07:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495B52DA74D
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749801404; cv=none; b=nL/4dR3CFEMT4BlGagoJOE9+Ig/fuBus5uRx0SLwR3kOBOqdFHM5DZsrWFuNor+tG2SuDj3IHsbh+ZX6iQUlUY4diCbqAULX2eD6EndMjCkrHcHM9Yz0rkUpnidt4YZugblCwvbKQzkL4Ws8bw1Ojkw1mzCeQdXLU4S6zNCFTbU=
+	t=1749801484; cv=none; b=A4TptfOe3oYn1HJl04jrv+8sATXEESwCo26RgZT4SxGM761Nzm2nnfBHOiptProAelzjammY2QFSKfoxnzIbhfPEbyxEGfL6JlVxbaZBmsfiB/QUMzF4M2C3fq09pxH4hkVSNzyXdOd2JjHKUxJyfK3z1nizFVJ6rfqSy+SyUs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749801404; c=relaxed/simple;
-	bh=cJwIY7LeFlkdqM3q5CBcb7DUXVjGRhCEix/XOSYGtM4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nOhEx7FStaRldHETwfmcf8H3MyF4kEq+GT+fZd+gjK/6x0TaeL163AK/oJ0cy6kHez8jca8CP7aQxg1uT1i3SJ1QkcKwA9ffDHcqT0KxjEksfo18n5S3dgXayQv/MV25q7xyjcj99hs+h70qFAnQp2Jx6kQ/ddM1Bly55S1pYMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkL1+33J; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749801484; c=relaxed/simple;
+	bh=QqKEj8d/6nhYZGpndkGRC6psU7P4KEDelUr5aNfYhQU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=rBnOVHEnVRMqGtMDl888RhVwZiL2VyuXLfmX5ZS1GJoEOcEu96qcUAbI78+TyUdlZ1/ZQ9zZx+oZ6YocnT3nYiViVia9pbiXhdPgQRZWxW10jXlO+GZHL80PpcNKHkPE0g22V8LNkSdx5ANbGN5eVZXsL8ndNCSWFJ+BYkEelpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=sG6q1yao; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkL1+33J"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-236470b2dceso17319225ad.0;
-        Fri, 13 Jun 2025 00:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749801402; x=1750406202; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NSwG/HIIRb5Ru+o8dgoFYjJtj1lPDuEQqm8MMK/oXl4=;
-        b=EkL1+33JRmbfKwJ+JmB4XYCkJI4pNunsu33RVQDKbL8q5Wb1squRZnCMUpRjZ5i0pz
-         Qfph2tBRW7s0jhYjXgi0jCNwHKlc3bbCPiYFuW/azbXcdX01JezlSOWNRfXVWpHFzHMS
-         kuAhicwe/f/lbc25M/eWM8LG+TOLWuDQX041492hl66BhsGlA9xeSMWyPDaj2d/rWnZw
-         HXsJccV6IqrhZkrlLdENnxPjh/GpO1LQsOGuDhnlz6HgLxVD4pJFfr0y7OjnwYfGAJnc
-         n1LWFDuaJTOohn27V5lXuMbih/61eibzjYz2R2a0KuqsxxHAxd4ibrbeISgJhqRAgYQo
-         0zdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749801402; x=1750406202;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NSwG/HIIRb5Ru+o8dgoFYjJtj1lPDuEQqm8MMK/oXl4=;
-        b=U7oG54xFvZrWG7l5hIfItJJE+lmuDFcCvgeAAfhkNTo0CRFY2wShcIMAvCsI2Q1Cg9
-         VJDzS1a/e/kjb7fDDUeeCI6CwkeBXLzerh/bztdeezCewOZ+F4EezSbIIgwBUxVcP7wC
-         pU/4iCq3Y/jEPPReTrWjwzuXHMINNsU8oHcHY8NkFOUleXH+s+xoxiZIRPBtWS7UszUC
-         Y3bNOxzlduCqx4b9b0n6nQQj0uS1sxXx4lHfdthCq6b7TxL8hJEz9NHvg9QqybNISttN
-         24yr+mLQpPwq4NJc1ct030Likv+sW5no7VBYnJ54Gr49chovnCYs6mJrOZbQQ+/EH4S6
-         SrPg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1GsEriLWxSkqdcF2WiqCk7rCBtx6mWPD5UnErBZ6fJIDzThvm7jUWf2x2UtPCUVlXOxGlbN1Q@vger.kernel.org, AJvYcCWtZK/EtDRHdQtwbfubSLsUNIEvqd0Okj1VB4ZN0cgFoD2AxPumBOzBsP7w2I8V5zuGxYDZ9WfUhWxebZa7@vger.kernel.org, AJvYcCXOSVMjrazvHZLFjydTqkcZP0Zzs/TQQJbu3vejUULs4c+w9w7zhTmfYpW6Q+mefzQfZqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8jViKUY5ZzKDGxndXQa8gYSvxCyWddcsyAfrGFaJAmOmXR7+Q
-	ldHS6s7d7l2eplFVFpppjxguqs12/Dnj6k9tTXuV7A4RnFnXem7ykC6k
-X-Gm-Gg: ASbGncupbnCMdrbUaMAB6Sv0Nig9NrIx1O+6jODWAeiSJ04iSCOKS2d3lvfVWGGLwq7
-	HRACmgQro6ZObBB7NCzTbwv2km+CN0mpf93Nu71vn5euIoUWVhoYpO0UytSrZSfZozIgtQKcAXe
-	iR9htT1w/NjQR+OAuP0cYUxHLqZXwkmlz5WgIJeRgP3v1aT6HLsPdEKAn8qLOLnNcnopVYKLNDU
-	qWQRI/MC3iqwYpc8rDr9J1QHhFqOErdeiv5Ka4+rvfhEZvB3lu8nc5RWuFcQHJe6w/eU8T/1rJ2
-	x0lvBBbjH3n0v/mswC5GIpLNU2vYMEGi2tDwORLXQ7N2SZ/DiVDy4nyFYQk=
-X-Google-Smtp-Source: AGHT+IHEyrz/ILDe7jbPjp6tJmahDSX4yonGX0uC2t43TAZnuhuFxHsNqcfzDcBA7S2p5LMYscMdKg==
-X-Received: by 2002:a17:902:c94a:b0:234:ef42:5d65 with SMTP id d9443c01a7336-2365dd4028bmr30650795ad.52.1749801402274;
-        Fri, 13 Jun 2025 00:56:42 -0700 (PDT)
-Received: from [192.168.0.226] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88be1fsm8920275ad.8.2025.06.13.00.56.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 00:56:41 -0700 (PDT)
-Message-ID: <3c89e1105e611812ae86fb6aafd346be4445e055.camel@gmail.com>
-Subject: Re: [syzbot] [bpf?] WARNING in do_check
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: syzbot <syzbot+a36aac327960ff474804@syzkaller.appspotmail.com>, 
-	andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
- daniel@iogearbox.net, 	haoluo@google.com, john.fastabend@gmail.com,
- jolsa@kernel.org, kpsingh@kernel.org, 	linux-kernel@vger.kernel.org,
- martin.lau@linux.dev, netdev@vger.kernel.org, 	sdf@fomichev.me,
- song@kernel.org, syzkaller-bugs@googlegroups.com, 	yonghong.song@linux.dev
-Date: Fri, 13 Jun 2025 00:56:39 -0700
-In-Reply-To: <684bcf65.050a0220.be214.029b.GAE@google.com>
-References: <684bcf65.050a0220.be214.029b.GAE@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="sG6q1yao"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1749801470;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L+YN4MTZBkTzMLCaO2wC4gmmUGZnS4C1FG9BefD5M2o=;
+	b=sG6q1yaomuV3OMNUoQqhkbuH1Xcj2p7del+A7bay2fusZru9OEE8vWFR9UthMbY3VpLLfI
+	FUolafPTe92AVJjXi4pi5inFQskTUn+5VcHL1uolO93tIKvk8tlCvfrwE0e3akdsHhcC8V
+	xULhpn0qpRQt3dVp2ppv0jcfC8bE3yRFWAhE3OIwjSlJd+fb0tB+Svm/dPDtaN8FVUic8Q
+	AlUuSwdrSq1M+QGe+Yic0cPdymG4mu6zz0PJ+rqKgAXWDJlPscQ3e8bvOMPMPVcUGhiwnQ
+	jVaBmQpd3KW1TkF59UGitXhqsK7wY8V8Q1vheo3YthkTxgD8q+/QVo+u1ZZMvg==
+Content-Type: multipart/signed;
+ boundary=8d0444eb434897e482c102aa76e1f2eca706077e00be5351cd2962a65c42;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Fri, 13 Jun 2025 09:57:32 +0200
+Message-Id: <DAL8UI7TH6IJ.2EVGYOYRQSS89@cknow.org>
+Cc: <linux-crypto@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, "Corentin Labbe" <clabbe@baylibre.com>,
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/7] crypto: testmgr - replace
+ CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Eric Biggers" <ebiggers@kernel.org>
+References: <20250505203345.802740-1-ebiggers@kernel.org>
+ <20250505203345.802740-4-ebiggers@kernel.org>
+ <DAJOCL4UQWZ1.2CB0NH55US5EI@cknow.org> <20250611163430.GA1254@sol>
+In-Reply-To: <20250611163430.GA1254@sol>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 2025-06-13 at 00:12 -0700, syzbot wrote:
-> Hello,
->=20
-> syzbot found the following issue on:
->=20
-> HEAD commit:    1c66f4a3612c bpf: Fix state use-after-free on push_stack(=
-)..
-> git tree:       bpf-next
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D1346ed7058000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D73696606574e3=
-967
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Da36aac327960ff4=
-74804
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e0775=
-7-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1392610c580=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D11a9ee0c58000=
-0
->=20
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/2ddb1df1c757/dis=
-k-1c66f4a3.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/6a318fc92af0/vmlinu=
-x-1c66f4a3.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/76c58dddcb6c/b=
-zImage-1c66f4a3.xz
->=20
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+a36aac327960ff474804@syzkaller.appspotmail.com
->=20
-> ------------[ cut here ]------------
+--8d0444eb434897e482c102aa76e1f2eca706077e00be5351cd2962a65c42
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Fwiw, here is a repro converted to selftest.
-I'll take detailed look on Friday:
+On Wed Jun 11, 2025 at 6:34 PM CEST, Eric Biggers wrote:
+> On Wed, Jun 11, 2025 at 01:41:06PM +0200, Diederik de Haas wrote:
+>> On Mon May 5, 2025 at 10:33 PM CEST, Eric Biggers wrote:
+>> > The negative-sense of CRYPTO_MANAGER_DISABLE_TESTS is a longstanding
+>> > mistake that regularly causes confusion.  Especially bad is that you c=
+an
+>> > have CRYPTO=3Dn && CRYPTO_MANAGER_DISABLE_TESTS=3Dn, which is ambiguou=
+s.
+>> >
+>> > Replace CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS which has t=
+he
+>> > expected behavior.
+>> >
+>> > The tests continue to be disabled by default.
+>> > ---
+>> >  <snip>
+>>=20
+>> I built a 6.16-rc1 kernel [1] and its config is based upon Debian's and
+>> that has enabled CRYPTO_SELFTESTS [2] (due to Debian bug 599441 [3]).
+>>=20
+>> I then installed it on 3 Rockchip based devices and booted into that.
+>> 1. Radxa Rock 5B (rk3588)
+>> 2. PINE64 Quartz64 Model B (rk3568)
+>> 3. PINE64 RockPro64 (rk3399)
+>>=20
+>> The filtered dmesg output for Rock 5B:
+>> ERROR:
+>> [    0.709822] basic hdkf test(hmac(sha256)): failed to allocate transfo=
+rm: -2
+>> WARNING:
+>
+> https://lore.kernel.org/r/20250610191600.54994-1-ebiggers@kernel.org/ fix=
+ed the
+> HKDF failure.  It was caused by a patch that changed initcall levels.
+>
+>> [    8.877288] alg: skcipher: skipping comparison tests for xctr-aes-ce =
+because xctr(aes-generic) is unavailable
+>
+> That's expected if you have CONFIG_CRYPTO_AES_ARM64_CE_BLK enabled but
+> CONFIG_CRYPTO_XCTR disabled.  Some tests are skipped in that case.
 
-SEC("socket")
-__naked void syzbot_repro(void)
-{
-        asm volatile (
-        "r8 =3D 0xff80;"
-        "r1 =3D 0xff110001085a0800 ll;"
-        "r2 =3D 20;"
-        "r3 =3D 0;"
-        "call %[bpf_ktime_get_ns];"
-"1:"
-        "w9 =3D w10;"
-        "if r9 >=3D 0xff4ad400 goto 2f;"
-        "may_goto +13;"
-        "r2 =3D 0;"
-        "*(u8 *)(r10 -16) =3D r9;"
-"2:"
-        "if r9 s< 0x1004 goto 3f;"
-        "lock *(u32 *)(r10 -16) +=3D r10;"
-        "r6 =3D r8;"
-        "r8 +=3D -8;"
-        "r4 =3D r10;"
-"3:"
-        "r6 +=3D -16;"
-        "r2 =3D 8;"
-        "r2 =3D 0xff110001085a05d8 ll;"
-        "r5 =3D 8;"
-        "if w8 & 0x76 goto 1b;"
-        "r8 =3D r9;"
-        "if w8 !=3D 0x0 goto +0;"
-        "call %[bpf_get_prandom_u32];"
-        "r0 =3D 0;"
-        "exit;"
-        :
-        : __imm(bpf_get_prandom_u32),
-          __imm(bpf_ktime_get_ns)
-        : __clobber_all);
-}
+Happy to report that with that patch and that config option, the error
+and warning are now gone. Thanks :-)
 
-[...]
+PULL request for the patch is already sent to Linus:
+https://lore.kernel.org/linux-crypto/aEupSzhTI4h8kz-5@gondor.apana.org.au/
+
+>> [   14.172991] alg: ahash: rk-sha1 export() overran state buffer on test=
+ vector 0, cfg=3D"import/export"
+>> [   14.202291] alg: ahash: rk-sha256 export() overran state buffer on te=
+st vector 0, cfg=3D"import/export"
+>> [   14.230887] alg: ahash: rk-md5 export() overran state buffer on test =
+vector 0, cfg=3D"import/export"
+>
+> That means the Rockchip crypto driver is broken.
+
+The crypto driver for rk3399 is still broken.
+
+> Anyway, the more interesting part of your email is that you pointed out t=
+hat
+> Debian has the crypto self-tests enabled, precisely in order to automatic=
+ally
+> disable buggy drivers like these.
+>
+> So I'll send a patch that adds back a kconfig knob to run the fast tests =
+only,
+> which I had removed in commit 698de822780f.
+
+I responded about this to a new patch submission here:
+https://lore.kernel.org/linux-crypto/DAJXJHLY2ITB.3IBN23DX0RO4Z@cknow.org/
+and v2 of that patch can be found here:
+https://lore.kernel.org/linux-crypto/20250612174709.26990-1-ebiggers@kernel=
+.org/
+
+Cheers,
+  Diederik
+
+--8d0444eb434897e482c102aa76e1f2eca706077e00be5351cd2962a65c42
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaEvZ9AAKCRDXblvOeH7b
+bgePAP4+kEWYKZ1eqayKsFe8tBfUVxnfdStRKU8Qr/95saO95wEApLF/txTDorHT
+OXmTzRTcsInQy9LVjH2/+08cAly/KQs=
+=NvpI
+-----END PGP SIGNATURE-----
+
+--8d0444eb434897e482c102aa76e1f2eca706077e00be5351cd2962a65c42--
