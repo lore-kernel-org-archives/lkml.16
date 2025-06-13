@@ -1,190 +1,172 @@
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05177211A3D;
-	Fri, 13 Jun 2025 18:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749837640; cv=pass; b=bFki7yycpVEBY5pL9Wm+vbwe9U4w0rzLYOqrekelS5xrWO7ar8LQsETEueIiTfKwEvyMuA9bMZkjELW9y5TGwTKRA2yXApnbfhYWy1439I9eFIMFCTaS/pHrr1dMZM5Ar4qgxKvbVRtmLSnMQfgUEhFdV7lmgibUJkuGnOqn04I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749837640; c=relaxed/simple;
-	bh=39x2sOts/JA4bYtbdbLZWdvg0H9jOtxHW4x4DPCwkLk=;
-	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc:Date; b=JhKUZugpZX9pUTAbvdVmGtWiwT3JQahaERIKfvSXzifP8wRdY9le0uPtxjJphG9gWFzZ8rbjSPgL/5XQmmUB2ry62bsy9aYS/c29Pc76r2XOWUywF2IevcoIWLHc91LCSvelAyh5xOKgSnFGZI8rLTJ5Z1v2vlaqhQMuoiojQaE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=Hv2vqCFj; arc=pass smtp.client-ip=23.83.209.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7762E11AE;
+	Fri, 13 Jun 2025 18:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749837678; cv=none; b=TbED/dVfdoRTmRffrnJe2yIOY/YIiYoXbsQrnx0TdcbNOKtQDBlxLdXMTtzaurtzKo6f0Ev/gq1CZ3u3ZmnFwn2RWM0U7JMXwki7FrWojJZMI2idI/oRckRKWTbd0u/WGN8R+jT4hS5+NMsRLWoiX841IB5yA/LDct86tZcyPIo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749837678; c=relaxed/simple;
+	bh=9KUO3cLTiS97O+QgWmYbDshewMAYWF5gYqH152liDaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZtykOyHblKYy9bZn41odpDzr93jiYF7mqRsrdsKmnEzsxZTfScsnGarHWG8BrcfBP53YF6AqOig7OlMyZ++5N1nY7SLKscO4YXpPa1V1QMHak4lL8QQbX65fJkzUDprmVCKKyQccBcY6D0LHu8Ae3cm3vlKG0qPaP4oJYJXnBOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rf9BA7ez; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="Hv2vqCFj"
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 43A2F4E6211;
-	Fri, 13 Jun 2025 17:50:24 +0000 (UTC)
-Received: from fr-int-smtpout9.hostinger.io (trex-green-8.trex.outbound.svc.cluster.local [100.96.77.9])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 223BC4E4DAE;
-	Fri, 13 Jun 2025 17:50:21 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749837023; a=rsa-sha256;
-	cv=none;
-	b=6lB19nwZInaQr91bfIWhUx4TybxbAWg27aVr4yRh4i0ENCC9faRzfb9J4/rJNKCZx++eN5
-	CeyBbHsI3xY+hiV9S5ROh/BwsqA3CdL/tpljHRqT9AW4sSIVSoY1uFrEKXWyH2N7cEyk1E
-	jgXn025o9Gu5qPDH0srlLPRbVUScrLrAL+OQnqKeYkHyvjiYZVCr7HxNusiotbwOamjuE+
-	8UW1JmF4AAaytqrIrEGCawBwx09uGTnuK/crRhE806fPWdR/5VMbFbxeaMU7nBQtKOKe6C
-	80296n8hKfN6dBQVB99NTVWf9PA8L7iL2HQ/bX8zqMQ3kpDk7zTPwHEe1C9aIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1749837023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=wITIvOP3Y/BU1DRBQyWwXE0WSEyQLvutvo9Jo3cM+xY=;
-	b=A4GlIWucy6iDHaJ0LmxuL3yLZi/yvbpzt0L3JkdRaV8sFtXm34PjSJW0352KBTjbM4gkNv
-	QXgj87sExWtj8mPaC26O2m7V/+OHBnDOfjlP9aCXKheq0SN/WLVMSoYJFK0k+QUHbRZJat
-	MlVgpUcRsgI5SvkplEjEuOgiBuRGS0RU/IY7tkL8dgIpv2ESZ0mTzVK7mom6OM6h3rRPmt
-	aJCsv+qkLseArUyW9IkXpq1XKXIvZJft8zbkeE8au5T5Lnvhl5nHS6r6BCCmN6wbqGFPdE
-	25EEm6q16N1dvj4YyzNvo3KRpxVN/EUMpvtkg6JhuUGngV/rY2Ll3nvf/AJkRw==
-ARC-Authentication-Results: i=1;
-	rspamd-5859dfb5d9-fwlfl;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
-X-MailChannels-Auth-Id: hostingeremail
-X-Tart-Wipe: 166c0d7a3b9fcfc7_1749837024154_3202172520
-X-MC-Loop-Signature: 1749837024154:636548336
-X-MC-Ingress-Time: 1749837024154
-Received: from fr-int-smtpout9.hostinger.io (fr-int-smtpout9.hostinger.io
- [89.116.146.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.77.9 (trex/7.0.3);
-	Fri, 13 Jun 2025 17:50:24 +0000
-Received: from [172.17.0.2] (unknown [36.79.97.133])
-	(Authenticated sender: linux@smankusors.com)
-	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bJn3n59XwzH9gK7;
-	Fri, 13 Jun 2025 17:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
-	s=hostingermail-a; t=1749837017;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wITIvOP3Y/BU1DRBQyWwXE0WSEyQLvutvo9Jo3cM+xY=;
-	b=Hv2vqCFj1wHJY5sdMKQ5pGEt/Ng7XrtJXQ2Fe24qzywutRdHLbYvDGcxd+Xy0YVOeIKcco
-	u5p6fjLTskKFAEvu5CF/m6wZ2fxW7qFGYsFa7WLJHMNU+OMOR0MMotbXLiyFU8bxgvv1IA
-	QKfkNK4euRBk+8HPqdkq76/W5a92HGf6P421m0oSmPYyrGoXqSGRc+/w6H+A+jzm+dhNVj
-	H8U5N3/EVcYICbdnKvdAi/FpwGyRcLUxtND3Z9L8a4PGJRuRTALJPRIrw+4QQkRID4Wevv
-	Mg3v+jn7bk8Vko8kB4kEittG2J+oR09m1rOPYRflxnRouWSmn0Q6IbQkOWd63Q==
-From: Antony Kurniawan Soemardi <linux@smankusors.com>
-Subject: [PATCH 1/5] ARM: dts: qcom: msm8960: add sdcc3 pinctrl states
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rf9BA7ez"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55DGuqr7000783;
+	Fri, 13 Jun 2025 18:01:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=r4xlRy
+	bBFMuV3vYoqbGldn8jTJQrjq5zA5EONnRjL+8=; b=rf9BA7ez9wssWsTe7nHM7H
+	hvhkU07mTjyZ3ejwFZW6Bln+4IXMfmN5TDysjwX79woTtCLwUTWdRlTZI1Fr01S9
+	Ro2bFUpGzKyaCiPRxH+XlaZsMtYMfhXirJhAEAEZ7Ms393mUPYXWDnyomFFIx5QC
+	sN93Qq+tg9i4g2/84ENqIPJPSp8d6j2kNDQos4B+hTJTyzR2NafXFnE4shAZQjOj
+	TMKaSqwxOdo0G1kmS1+HISvgI/PloqrxYAtxvQJg1zTr2QmTCqK0IAw+D8vyuuK2
+	zJkdqqrwDr/JCAsw9LxrNUFi5azBQW5Qxd2TuXSGnH1o9wHCMg2t4LjnO1QHVNBQ
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4769x07fbx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Jun 2025 18:01:02 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55DFOQOF027929;
+	Fri, 13 Jun 2025 18:01:01 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47518mu4ku-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Jun 2025 18:01:01 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55DI0xNO26935970
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Jun 2025 18:00:59 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7FA1A58065;
+	Fri, 13 Jun 2025 18:00:59 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E355E58043;
+	Fri, 13 Jun 2025 18:00:58 +0000 (GMT)
+Received: from [9.61.168.233] (unknown [9.61.168.233])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 13 Jun 2025 18:00:58 +0000 (GMT)
+Message-ID: <9de66b16-73eb-4853-b283-47db26bce170@linux.ibm.com>
+Date: Fri, 13 Jun 2025 14:00:58 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250614-msm8960-sdcard-v1-1-ccce629428b6@smankusors.com>
-References: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
-In-Reply-To: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Antony Kurniawan Soemardi <linux@smankusors.com>, 
- Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749837006; l=2173;
- i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
- bh=39x2sOts/JA4bYtbdbLZWdvg0H9jOtxHW4x4DPCwkLk=;
- b=ZkgmLQnaSKGwuvev40k377LN896yAMsjKo1DkrfidMLzGZeHOABhHYAdJrKaxtw6GSsm6h8JD
- XzKX+eXfv8SCCjctn4Q+rrSE76MrzK9f9KJbc4DSDo3bRJmJod6Ku4z
-X-Developer-Key: i=linux@smankusors.com; a=ed25519;
- pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
-Date: Fri, 13 Jun 2025 17:50:13 +0000 (UTC)
-X-CM-Envelope: MS4xfO88UVV5Ae5bVFu2faTAz5u/TiBEfXzeKuywK2yy8QPhNE98ZqjaqxTvNkly6MLUrY1PugnaxqT8otIkn4wQ2MxRJRg2COvugE0aapkIlDoNc0B4alZx qguuvBQY36AXe0eOPC3An97NfYDK529eoICuGkQFC2Xk9SfTMosHKrJU/Deu0hiSzvbu7cQ1ZYzaWmfcDf1rsISYGh5LTTZvDfJ7dNtu/2muPZEBJSxZCzfM Yf1JM+BsqCVyiMjCR2QPSw+ZE6sor57pNLydNgfl6nUasB4bkvY0joaT/nGMBxEIIShMWVLozhUri65LvjSEnoG3k9MHucTYQPSubcDXLOf3PoF73EvYX079 LdAFBqyT4h9swlA85397xnMoJ09B5P/apZW6wSj6eNwIvbOCklECN2PAlhLWJiS1wBTWFAD5S152Q8nnYu24a0ovyrKTB/+C0dLA2XalN9eo4b8FNoVyYL83 5JpZ8S8ZG30lS4umCfxiQyWzPBYyyxO+Eu0O/IfA3mQKyesJmC6mDdPL+VY=
-X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=684c64d9 a=/sUT9SOQbq9tkq2xjVjq6Q==:117 a=/sUT9SOQbq9tkq2xjVjq6Q==:17 a=IkcTkHD0fZMA:10 a=pGLkceISAAAA:8 a=wxLWbCv9AAAA:8 a=2wrJF2QuKA2qlS4toWQA:9 a=QEXdDO2ut3YA:10 a=QJY96suAAestDpCc5Gi9:22
-X-AuthUser: linux@smankusors.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hwmon: ibmaem: match return type of
+ wait_for_completion_timeout
+To: Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org
+Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org, zohar@linux.ibm.com,
+        qiushi.wu@ibm.com
+References: <20250612184324.1355854-1-qiushi@linux.ibm.com>
+ <62bca511-8cc2-4d26-96e2-bb35c96dce72@roeck-us.net>
+Content-Language: en-US
+From: Qiushi Wu <qiushi@linux.ibm.com>
+In-Reply-To: <62bca511-8cc2-4d26-96e2-bb35c96dce72@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: W6wJ69-mUWASmImNlQW8LveVqjosp_Zm
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDEyNiBTYWx0ZWRfX76F2Hfyv9y5b gurtaYEGjqlnrrsFjMHiU9vhcYQSI2dhERFuBQ4HPgYq90KntwZ8I9mIaavZHav34TDLQPGFBMt gsp81y70IQdbF4SgS0mxLPfbqlt8tenMFb4jPBgKEZHwRxZlYo8ctaA1KWAJaxsJolGjwQnsaLs
+ fLQ04waG6+nbyMtBte7ruShmV9xxAn1kuk5XQFd9CiGOLKC4HpJjY9NBVT3CvBkKyhuF5GIPiGC 4l228gP7vLpRXHyHErGHGKJG+r9gGbS+6ePg70wYXTjcY3rIctBkREbmfEzle/jz1ZgGXCiJ5tc 9/TvoA6tr7iJb+9m2J8gxOXFTWfqWs2fc9Bf9jU3aFN7TdU97eet3mUe+609nqm/RPoAyvSY2Gd
+ v15scxopOeGQ+K3nbOZ5t8Qb/KUhMPIj/Mkx33JRqSIrT8C1U+IZfFqlMwbEei/rcrYciGfh
+X-Authority-Analysis: v=2.4 cv=YKGfyQGx c=1 sm=1 tr=0 ts=684c675e cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=HtoYwMfs-QjFNvvKTUoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: W6wJ69-mUWASmImNlQW8LveVqjosp_Zm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-13_02,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506130126
 
-Adds sdcc3-default-state and sdcc3-sleep-state pinctrl states for
-MSM8960. These are required for devices like Sony Xperia SP to ensure
-micro SD card functionality, though they are a no-op on the Samsung
-Galaxy Express.
 
-Tested-by: Rudraksha Gupta <guptarud@gmail.com>
-Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
----
- arch/arm/boot/dts/qcom/qcom-msm8960-pins.dtsi      | 38 ++++++++++++++++++++++
- .../dts/qcom/qcom-msm8960-samsung-expressatt.dts   |  5 +++
- 2 files changed, 43 insertions(+)
+On 6/12/25 16:57, Guenter Roeck wrote:
+> On 6/12/25 11:43, Qiushi Wu wrote:
+>> Return type of wait_for_completion_timeout is unsigned long not int.
+>> Check its return value inline instead of introducing a throw-away
+>> variable.
+>>
+>> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+>> Signed-off-by: Qiushi Wu <qiushi@linux.ibm.com>
+>> ---
+>>   drivers/hwmon/ibmaem.c | 11 +++--------
+>>   1 file changed, 3 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/ibmaem.c b/drivers/hwmon/ibmaem.c
+>> index 157e232aace0..e52e937a396c 100644
+>> --- a/drivers/hwmon/ibmaem.c
+>> +++ b/drivers/hwmon/ibmaem.c
+>> @@ -383,8 +383,7 @@ static int aem_read_sensor(struct aem_data *data, 
+>> u8 elt, u8 reg,
+>>         aem_send_message(ipmi);
+>>   -    res = wait_for_completion_timeout(&ipmi->read_complete, 
+>> IPMI_TIMEOUT);
+>> -    if (!res) {
+>> +    if (!wait_for_completion_timeout(&ipmi->read_complete, 
+>> IPMI_TIMEOUT)) {
+>>           res = -ETIMEDOUT;
+>>           goto out;
+>
+> If you want to clean up the code:
+>
+>         return -ETIMEDOUT;
+>
+> Also drop the second goto and return directly, drop res and the out: 
+> label
+> entirely, and return 0; at the end. That goto is really pointless.
+>
+> Guenter
+>
+Thanks for your feedback. I’ll clean up that and resubmit it as v2.
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960-pins.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8960-pins.dtsi
-index 4fa98277128897a531c54296576a6f15cd6d2a28..77fe5be24b36fbda83ba73034939db10db6ef4c8 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8960-pins.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8960-pins.dtsi
-@@ -18,4 +18,42 @@ i2c3-pins {
- 			bias-bus-hold;
- 		};
- 	};
-+
-+	sdcc3_default_state: sdcc3-default-state {
-+		clk-pins {
-+			pins = "sdc3_clk";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+
-+		cmd-pins {
-+			pins = "sdc3_cmd";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+
-+		data-pins {
-+			pins = "sdc3_data";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	sdcc3_sleep_state: sdcc3-sleep-state {
-+		clk-pins {
-+			pins = "sdc3_clk";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		cmd-pins {
-+			pins = "sdc3_cmd";
-+			drive-strength = <2>;
-+		};
-+
-+		data-pins {
-+			pins = "sdc3_data";
-+			drive-strength = <2>;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts b/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
-index af6cc6393d740d30f3555825175ea6851d406166..49d117ea033a0ef73c134d1225982786fbded2c2 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
-@@ -71,6 +71,11 @@ &sdcc1 {
- &sdcc3 {
- 	vmmc-supply = <&pm8921_l6>;
- 	vqmmc-supply = <&pm8921_l7>;
-+
-+	pinctrl-0 = <&sdcc3_default_state>;
-+	pinctrl-1 = <&sdcc3_sleep_state>;
-+	pinctrl-names = "default", "sleep";
-+
- 	status = "okay";
- };
- 
+Sincerely,
 
--- 
-2.34.1
+Qiushi
 
+>>       }
+>> @@ -491,7 +490,6 @@ static void aem_delete(struct aem_data *data)
+>>   /* Retrieve version and module handle for an AEM1 instance */
+>>   static int aem_find_aem1_count(struct aem_ipmi_data *data)
+>>   {
+>> -    int res;
+>>       struct aem_find_firmware_req    ff_req;
+>>       struct aem_find_firmware_resp    ff_resp;
+>>   @@ -508,8 +506,7 @@ static int aem_find_aem1_count(struct 
+>> aem_ipmi_data *data)
+>>         aem_send_message(data);
+>>   -    res = wait_for_completion_timeout(&data->read_complete, 
+>> IPMI_TIMEOUT);
+>> -    if (!res)
+>> +    if (!wait_for_completion_timeout(&data->read_complete, 
+>> IPMI_TIMEOUT))
+>>           return -ETIMEDOUT;
+>>         if (data->rx_result || data->rx_msg_len != sizeof(ff_resp) ||
+>> @@ -632,7 +629,6 @@ static int aem_find_aem2(struct aem_ipmi_data *data,
+>>                   struct aem_find_instance_resp *fi_resp,
+>>                   int instance_num)
+>>   {
+>> -    int res;
+>>       struct aem_find_instance_req fi_req;
+>>         fi_req.id = system_x_id;
+>> @@ -648,8 +644,7 @@ static int aem_find_aem2(struct aem_ipmi_data *data,
+>>         aem_send_message(data);
+>>   -    res = wait_for_completion_timeout(&data->read_complete, 
+>> IPMI_TIMEOUT);
+>> -    if (!res)
+>> +    if (!wait_for_completion_timeout(&data->read_complete, 
+>> IPMI_TIMEOUT))
+>>           return -ETIMEDOUT;
+>>         if (data->rx_result || data->rx_msg_len != sizeof(*fi_resp) ||
+>
