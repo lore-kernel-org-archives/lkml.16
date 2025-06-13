@@ -1,144 +1,74 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE00E192584
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC5D1DF258;
+	Fri, 13 Jun 2025 23:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749857436; cv=none; b=IHTy4sQ7Q5t8cmtE+/Go+vVZugC6WRZjAZQMMrbIMaqxhp7w0VO6FchaqO1njqemW4sQHvMPH/t00FjQ7CFGCjfYIQD8IBpVEy7ts3/qfmCpS5jpR2cecHAgnhWsWF1/slfRVbEOw71eoQaqsc9ZrJlZ4J01dmPn8Y7f1OfUPuE=
+	t=1749857512; cv=none; b=o5orR0kQoVUYWyyGRPwE/mOATKYFQ77M/cJuDaLv4i2DTzCnSKAlX26mSx+mJgiaWpo6+JnRilN5BNa9K3oROkAaly5lCRWt7IQiCBrU//9/v4kauZSfqn5sqFf1+IxfQXxJfbqPrFoKj5uwPXIGWX2Kk1/uVBla4ix/NLpm7VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749857436; c=relaxed/simple;
-	bh=0abnlyb7tMAEy1Y0XS37gQsAYKpdOw5VGv59YK1IzDs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=X5awtPkz2LdMNH46nm95VPl+A/YlwlDPPOoeqnq6kuYDQDSswwuqIQeTSF2tQ3ex/t9c2uzWJ05hzmirHThTe4wO0ReBPuSCalsTOIc0+KekKyMUfXMfnuvWpO7QLjnFYbk2ELtR3nbU+8RZRzjAOE4GHL72O7+EdsaTcanFm7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso36432435ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:30:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749857434; x=1750462234;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vF7xs1A3Q2dAycwY5p/OJbr9P/yojYK9Yt6rhyL/AFs=;
-        b=tacbmj2ny1i53FybO0jl+ZXUkG6HkN0UIVHuZtlbtx36Nc37LBSCz6n4mSuF/zjhOW
-         lZFdMd6wpYPgzBS9STsgz1TEl4+NHppnQg/X7515J7lJ5zU3LLKl810YFjGW0JRZgZOb
-         pZ2BkXeRPlZLWlEJ0vlf/tTCq+bDkG+LmioH3c10LsUrb8wgM3Z5tvwEslSV0gNzFZho
-         slnVr+iy9DCGcfP5Mwupd9UGMdDSpbMb4WsFsAv/Q1GswjPCMFhuTCJ94VpI3VGQbFkz
-         UOe6tliAtqZYycpjJEWZ4RAotO3i5nBsrlH0A8RNWbpGc39hD2md1HR/6K9CH9qJBvej
-         UOzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFPV0N92IR8G+lcoEGYd0nDLiT3K3KcQoujMH2iLbTTWOhdJ3m/z7BV8nqIlBQWvkro3zmu298++ruacA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS8b6ofnQGhEJMVBJX3f+i11SEZM4tKR5Kg5/7hKdH084T6ysx
-	+CBjULh9LlrTJYbHjUOL4vWCL96HtxYCJlhRWQ7ls35AqSMpK3CY4BCcDC09sC7SjIjYyegXLKl
-	UEw2gKOpMpauTTHoR12FKBnvByh9a3TGR/J1FwD/RXopx10nVmkGDZ+ReV14=
-X-Google-Smtp-Source: AGHT+IGRAA9OJyHdZx3olCjGPopW4j7o8RyPYuTFqvQIi0A6jUryimHBx8pugZDlISqy0X3182xYzFab7qTndPBx+vXNFNIaT6dB
+	s=arc-20240116; t=1749857512; c=relaxed/simple;
+	bh=gsYojMPyJ0oQagOCr8PG52brf8VytUgnofN6otC7NfY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GUoelLnSgi6mHNeY9S2AY/HNOgifllykV/Y0iD8nrrEGAAXtBm3aWFT24yM134+UkDA5oZJeIy9RBrJ+vulbn+i4IP52fOnGiOepQI9Kqd9vmaKGNb/rlSBkPid2K63M3VSrgHtFAN2ipKL6Jwd1DAwfhws2hqOPnOy2UCl+GeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DC571C0A;
+	Fri, 13 Jun 2025 16:31:28 -0700 (PDT)
+Received: from u103485.austin.arm.com (u103485.arm.com [10.118.30.35])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76AAD3F66E;
+	Fri, 13 Jun 2025 16:31:48 -0700 (PDT)
+From: Prachotan Bathi <prachotan.bathi@arm.com>
+To: Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Stuart Yoder <stuart.yoder@arm.com>
+Cc: linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prachotan Bathi <prachotan.bathi@arm.com>
+Subject: [PATCH v4 0/1] tpm_crb_ffa: handle tpm busy return code
+Date: Fri, 13 Jun 2025 18:31:31 -0500
+Message-ID: <20250613233132.4167653-1-prachotan.bathi@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:168b:b0:3dc:7cc1:b731 with SMTP id
- e9e14a558f8ab-3de07c21db4mr17551605ab.0.1749857433818; Fri, 13 Jun 2025
- 16:30:33 -0700 (PDT)
-Date: Fri, 13 Jun 2025 16:30:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
-Subject: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
-From: syzbot <syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com>
-To: brauner@kernel.org, chao@kernel.org, djwong@kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Platforms that support FF-A direct message request v2 can implement
+Secure Partitions (SPs) that host multiple services. When the TPM
+service shares its SP with other services, message requests from the
+driver may fail with a BUSY response if another service is currently
+active.
 
-syzbot found the following issue on:
+To improve robustness in such scenarios, we need to introduce retry
+logic in the driver. When a BUSY error is received, the driver will
+re-attempt the TPM request until it succeeds or a configurable timeout
+(default: 2000 ms) is reached. This ensures reliable TPM access under
+shared-SP conditions.
 
-HEAD commit:    27605c8c0f69 Merge tag 'net-6.16-rc2' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=171079d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3a936e3316f9e2dc
-dashboard link: https://syzkaller.appspot.com/bug?extid=d8f000c609f05f52d9b5
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1725310c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115e0e82580000
+Add a module parameter, `busy_timeout`, which specifies the
+maximum amount of time (in milliseconds) to retry on BUSY before giving
+up.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-27605c8c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c55edb669703/vmlinux-27605c8c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e12830584492/bzImage-27605c8c.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/36391cabb242/mount_2.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=165e0e82580000)
+This change builds on top of commit a85b55ee64a5, which introduced
+support for TPM service communication using the FF-A direct message v2
+path, in accordance with section 3.3 of the TPM Service Command
+Response Buffer Interface specification.
+https://developer.arm.com/documentation/den0138/latest/
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
+Changes in v4:
+- Updated commit message to clarify the purpose of the patch.
+- Removed comments that state the obvious.
 
-erofs (device loop0): EXPERIMENTAL EROFS subpage compressed block support in use. Use at your own risk!
-erofs (device loop0): mounted with root inode @ nid 36.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5317 at fs/iomap/iter.c:33 iomap_iter_done fs/iomap/iter.c:33 [inline]
-WARNING: CPU: 0 PID: 5317 at fs/iomap/iter.c:33 iomap_iter+0x87c/0xdf0 fs/iomap/iter.c:113
-Modules linked in:
-CPU: 0 UID: 0 PID: 5317 Comm: syz-executor245 Not tainted 6.16.0-rc1-syzkaller-00101-g27605c8c0f69 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:iomap_iter_done fs/iomap/iter.c:33 [inline]
-RIP: 0010:iomap_iter+0x87c/0xdf0 fs/iomap/iter.c:113
-Code: cc cc cc e8 a6 eb 6b ff 90 0f 0b 90 e9 31 f8 ff ff e8 98 eb 6b ff 90 0f 0b 90 bd fb ff ff ff e9 ad fb ff ff e8 85 eb 6b ff 90 <0f> 0b 90 e9 22 fd ff ff e8 77 eb 6b ff 90 0f 0b 90 e9 53 fd ff ff
-RSP: 0018:ffffc9000d08f808 EFLAGS: 00010293
-RAX: ffffffff8254736b RBX: ffffc9000d08f920 RCX: ffff88803a692440
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000074
-RBP: 1ffff92001a11f2a R08: ffffea00010c5277 R09: 1ffffd4000218a4e
-R10: dffffc0000000000 R11: fffff94000218a4f R12: 0000000000000074
-R13: 0000000000000000 R14: ffffc9000d08f950 R15: 1ffff92001a11f25
-FS:  0000555562dab380(0000) GS:ffff88808d252000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffeb97cc968 CR3: 0000000043323000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- iomap_fiemap+0x117/0x530 fs/iomap/fiemap.c:79
- ioctl_fiemap fs/ioctl.c:220 [inline]
- do_vfs_ioctl+0x16d3/0x1990 fs/ioctl.c:841
- __do_sys_ioctl fs/ioctl.c:905 [inline]
- __se_sys_ioctl+0x82/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbc6028fe59
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffccc462b68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fbc6028fe59
-RDX: 0000200000000580 RSI: 00000000c020660b RDI: 0000000000000005
-RBP: 00007fbc603045f0 R08: 0000555562dac4c0 R09: 0000555562dac4c0
-R10: 00000000000001ca R11: 0000000000000246 R12: 00007ffccc462b90
-R13: 00007ffccc462db8 R14: 431bde82d7b634db R15: 00007fbc602d903b
- </TASK>
+Prachotan Bathi (1):
+  tpm_crb_ffa: handle tpm busy return code
 
+ drivers/char/tpm/tpm_crb_ffa.c | 74 +++++++++++++++++++++++-----------
+ 1 file changed, 50 insertions(+), 24 deletions(-)
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-- 
+2.43.0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
