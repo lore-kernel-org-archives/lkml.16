@@ -1,103 +1,82 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E992E15573F;
-	Fri, 13 Jun 2025 14:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0663715573F;
+	Fri, 13 Jun 2025 14:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826465; cv=none; b=rcgM8Ki6u0VDfk9yqAdMwasFiONBGqs1GVFeahMjRJecSnHpG7NyqCf/trLdmdNbJ7CHI2k8NCadG02mi8LRlRygsabJLAI2oUW/61NeeZzPpWH7p9XR6AvEMjQmrvRWAM922J6u+fYs2K1kGWJ/keKXsdxkI9GGYyBTQpYxUe4=
+	t=1749826475; cv=none; b=h05kQregjzWd5WbxzKA2uwySHhQgMDRwiHVuX7xf06/dcn+OWwQqqmdqjnF4d3qtQC5+Aev3QzG2gN8v0Ltiibm19dd7uWeUkXcpoiYpvXXlgqj7cdlXnGAGVkisJnBcatmS6eyBfF64kLWklGPtm94fCyTzLwmwm/JFsGnx4Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826465; c=relaxed/simple;
-	bh=8cOPkGn/szCCpXB2qWZWgqyw7ZOYYE0Zy6npeEJKfws=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OMzZ7AyiKTaNykrC1v8iHGSVxFrOPDp4eIvHitSszZdnJrD4xEpNMCmnMnQDZ7mM/kDUymSX4cIAM1nq+tyA30p0B+7cHbEtnZ1QgbBUjscBwEMPB8VZVc6bPZZAhjj4DRUPtV1hCw0rkWQ2PjqQnZmIHyiyqlFPrW4jzLEjWXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: zesmtpip3t1749826425td2e088ce
-X-QQ-Originating-IP: Z5TTPs9mOc1QREyKbkANH7OY8KCSckJh6gkg7KuqpRk=
-Received: from [192.168.30.36] ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 13 Jun 2025 22:53:44 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 6558941307661380512
-EX-QQ-RecipientCnt: 6
-From: Xilin Wu <sophon@radxa.com>
-Date: Fri, 13 Jun 2025 22:53:38 +0800
-Subject: [PATCH] interconnect: qcom: sc7280: Add missing num_links to
- xm_pcie3_1 node
+	s=arc-20240116; t=1749826475; c=relaxed/simple;
+	bh=+637aPsLSU1UEPvOQGQyJUY4IglUTgPupGHZwaGPQ9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCE9DC352qGtv/GEfl4Ll+Bkw+WHDem1kDw7IUqJ7JARZXwQX6y0oZqprlqh1K1pqItBHBC4UMpWjkGd2Ec4kywIJa1ZNFmRYk6ABYp3XMaAEVgcWpMZZQYTaZ8XUSRyFMICgDlxYVq1LJ29DhWEUT7NWDT6iMzGNbsQwcj5xs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0Pct+Gi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0Pct+Gi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A72CC4CEE3;
+	Fri, 13 Jun 2025 14:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749826474;
+	bh=+637aPsLSU1UEPvOQGQyJUY4IglUTgPupGHZwaGPQ9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p0Pct+Gi1hoDM0LZBCspzjOIqDTyyl/V2GwGBXdSGFwBLlkILUhpHpVlgfCrMUpLJ
+	 ft/YOmBjSQkitEQeADRDy2IJMuk2s5qeBmYAfOLlPe0KfidAf0uWqoe3GG3Quh0jbo
+	 vp59Zhbn5w3KL5AqV7PvQSSpyi9eG2fk5e6Zy6Qs1qFJrouqOACDQ4QVEPy68nKiWv
+	 m3H7my7AX4igycSxvPU6isS/XSrmG3VhiMT6KxJXgvyR2tEjCKY7d1g5iorVm6fZVk
+	 0LaMA8e65dqZijj1V1l+R6N9sVXHtRmMSZOPejxKl/4h0RJMRbDrFlJsHL7+g8myjt
+	 N3zheeKbLKx8w==
+Date: Fri, 13 Jun 2025 07:54:33 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tytso@mit.edu,
+	john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com,
+	shinichiro.kawasaki@wdc.com, brauner@kernel.org,
+	martin.petersen@oracle.com, yi.zhang@huawei.com,
+	chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH 01/10] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to
+ queue limits features
+Message-ID: <20250613145433.GF6134@frogsfrogsfrogs>
+References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
+ <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
+ <20250611060900.GA4613@lst.de>
+ <343f7f06-9bf6-442f-8e77-0a774203ec3f@huaweicloud.com>
+ <20250612044744.GA12828@lst.de>
+ <41c21e20-5439-4157-ad73-6f133df42d28@huaweicloud.com>
+ <20250612150347.GK6138@frogsfrogsfrogs>
+ <3569a77f-1f38-4764-b1e3-d0075775c7bb@huaweicloud.com>
+ <20250613055630.GA9119@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-sc7280-icc-pcie1-fix-v1-1-0b09813e3b09@radxa.com>
-X-B4-Tracking: v=1; b=H4sIAHE7TGgC/x2MQQqAMAzAviI9W+jmnNOviAepVXtR2UAE2d8dH
- hNIXkgSVRIM1QtRbk16HgVMXQHv87EJ6lIYLNmWvGkwcWcDoTLjxSoGV32Q+hCcJ+NCZ6GkV5S
- i/+045fwB/uIKRmYAAAA=
-X-Change-ID: 20250613-sc7280-icc-pcie1-fix-098846014872
-To: Georgi Djakov <djakov@kernel.org>, 
- Odelu Kukatla <quic_okukatla@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Xilin Wu <sophon@radxa.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749826424; l=927;
- i=sophon@radxa.com; s=20240424; h=from:subject:message-id;
- bh=8cOPkGn/szCCpXB2qWZWgqyw7ZOYYE0Zy6npeEJKfws=;
- b=LYU3mT8poMy5IX056AH7Ctc3vbR2+hrcFJdzFhBppoxyeXqEKEK0du4TntPpXLEMHo2ykPEph
- bNmcW6p9bm5AYiHTkWaDQhWm0/045K3Svl5Db8WWj2Gt9QesNOXnvOx
-X-Developer-Key: i=sophon@radxa.com; a=ed25519;
- pk=vPnxeJnlD/PfEbyQPZzaay5ezxI/lMrke7qXy31lSM8=
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:radxa.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MMRwY2QoRaEQwrIgYAyvWdURrqOddORGOmj2cKN3JzWsy8L0RIZUCSmR
-	C4QdZ4TYRDBc0Uti6Ev5LFuf5xd6OMAFCUzy/8aTx76DwRgw683VDRIqGBDIs5t+JStDBUg
-	Ns33mrlIZAKMKEZJrmXBAAGAKIYlyJBHtawk+5HHmOgja/+9UC4jYMShDafE5O5oJTKGStT
-	0uzljY8GGB7gVoRl4etp8jOQC4WDLX8N8vuZ+fR2EnsIIJkfoe4/tyq+FLJJSrC+DUbv1w3
-	CC9BoR2wHnXK6r/qh3WNdDfwKv97nR2m997yVPKzWLh5ahIkeq0TS0Ti4dEOFY+FjLYRvBz
-	xHZlF146ss0eb8jUfpnM0uKo6KLf+1m4bcszSKrgMs/z5Yb29aXQto+Pts++KbuPbp7pzKJ
-	E19Nu9NCsZ/7PIvNXssvBWMLe59Xvk73Ld8SncHsdkiZQT5akXs6659tx5vH/jGAyHr/T0y
-	q5nYqeBmAc4sUZ/cXXwFIMGg2mrDeTDsacpH8wDOsfCxR/tUZGfLNAYfOWJAXo2REWu02NR
-	3ZAT2nLm6ODmUNpYEPLzcLGIlJeG1jVn9PsO+KIOhA1hCtwP4+MzvipQHj6YIVwZOnZSBQR
-	bqcmOE/EouMKT+OdJAu+3z0zsNv7vWjALa8dGNlX5KXe8FqxOBLbkHAMbeK57O855VT69y/
-	5hrfDRtEJbxtJwo2UY+Gxt39sDu7j213r27oNKgeySAsqw9HgQ6IZl32f/APW2smkwq94At
-	aUOQ4Mp4a7sH0dbDYnXROHNRLKVlsxr9fJs+gsYxVuCSxA8gxOHjKw2u2OnWFEYdpvLffon
-	PhXk58fNUVcpq1fT4SZrCe93XjeQP/i+n+Br3Vzj0zwU1vYEhwrhGwiAhle5Fv3Ib9DFdIo
-	Wxq790/moJmy+KAM+L9v2ERaqa2HIXGi6/mXdPni0FIRXYmugyLLfTgwwCp1oF9OF79cak0
-	G40Wq1QtzCNctEiytlrH7qQErnPDzrI6n7/vHE9iORe1/7jX3qxRLRNntQFPK/T1zEyEJ8i
-	PZmUBXUCr4qj3e1uxCs8l3Lx3tJKM=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613055630.GA9119@lst.de>
 
-This allows adding interconnect paths for PCIe 1 in device tree later.
+On Fri, Jun 13, 2025 at 07:56:30AM +0200, Christoph Hellwig wrote:
+> On Fri, Jun 13, 2025 at 11:15:41AM +0800, Zhang Yi wrote:
+> > Yeah, this solution looks good to me. However, we currently have only
+> > two selections (none and unmap). What if we keep it as is and simply
+> > hide this interface if BLK_FEAT_WRITE_ZEROES_UNMAP is not set, making
+> > it visible only when the device supports this feature? Something like
+> > below:
+> 
+> I really hate having all kinds of different interfaces for configurations.
 
-Fixes: 46bdcac533cc ("interconnect: qcom: Add SC7280 interconnect provider driver")
-Signed-off-by: Xilin Wu <sophon@radxa.com>
----
- drivers/interconnect/qcom/sc7280.c | 1 +
- 1 file changed, 1 insertion(+)
+I really hate the open-coded string parsing nonsense that is sysfs. ;)
 
-diff --git a/drivers/interconnect/qcom/sc7280.c b/drivers/interconnect/qcom/sc7280.c
-index 346f18d70e9e5e95821437ca716ef8f151a42574..905403a3a930a2e1cd01f62e375e60c6b2d524f7 100644
---- a/drivers/interconnect/qcom/sc7280.c
-+++ b/drivers/interconnect/qcom/sc7280.c
-@@ -238,6 +238,7 @@ static struct qcom_icc_node xm_pcie3_1 = {
- 	.id = SC7280_MASTER_PCIE_1,
- 	.channels = 1,
- 	.buswidth = 8,
-+	.num_links = 1,
- 	.links = { SC7280_SLAVE_ANOC_PCIE_GEM_NOC },
- };
- 
+> Maybe we should redo this similar to the other hardware/software interfaces
+> and have a hw_ limit that is exposed by the driver and re-only in
+> sysfs, and then the user configurable one without _hw.  Setting it to
+> zero disables the feature.
 
----
-base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
-change-id: 20250613-sc7280-icc-pcie1-fix-098846014872
+Yeah, that fits the /sys/block/foo/queue model better.
 
-Best regards,
--- 
-Xilin Wu <sophon@radxa.com>
-
+--D
