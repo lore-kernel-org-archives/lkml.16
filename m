@@ -1,51 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DB2275AE2;
-	Fri, 13 Jun 2025 12:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A288C275B1D
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749816843; cv=none; b=aXW1c9HiHtzlyS4tXpQ9MJ/0atGwZxLUlp1vYMlNuOrD257/pc8G4+Y4qVmWTg3eR/whFDUz5rl5e9WWg9N06A+HAT1QIbCNYyaInn97R0G48CjvCgofAguoRvX4z3DX0TvykMDzgJQDRa5EO/CNy68z4XP914KkVhkAdP2ulIg=
+	t=1749816956; cv=none; b=hrg06jRXOpPo81hpLVh/Q5Kfs+NQKDiOV9HEPTuuEonkcLz8q/rZPr+3BqCnhGHgAHH9vPXnvBAgfZDdUTQITQ9ur47I1J9QI6/rvgfLZIM1/kXw3w36VoYvS7TIr9ZJkX6TCKY4dVeD1ZaFxC4v6KbzHBDv+XFMREDQWNeul74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749816843; c=relaxed/simple;
-	bh=9n6iNHBCKV0GZHwkyD9XOEtgWinRTZGyTm0zXHbGTj8=;
+	s=arc-20240116; t=1749816956; c=relaxed/simple;
+	bh=BJ11s9pRdhe85oZrgviwyD/bBqyGZbl5ISnhBqENcvY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WZqw8yd8aCKIoaeRj0fE4KaKnJTKrCSeJ5GvlP39DxLQzpInp4Lbvy2oNoMHx16MsFigaBDhjKadSYMC9TF5cB+YXj5Rta/1SlzDU01CA4Oubrl6J7yHGbGdkEUG9SnHk83tQyVVBgQgr27X6nlluDnmczzvHon7X6q5jYO+aqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Spvbua0w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Spvbua0w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60EFC4CEE3;
-	Fri, 13 Jun 2025 12:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749816842;
-	bh=9n6iNHBCKV0GZHwkyD9XOEtgWinRTZGyTm0zXHbGTj8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Spvbua0wsLdsGl5pDN19EMUXpC4ap8aSfq/9e9wylKUORzwKiKC/eNMxcHvmlp6iS
-	 HGzt1oOFYFui3i5bzUxJrp4QJLXm4uDqKT917RdGSBgR1P05c7RTu+qApgsEKbGteN
-	 FJrU2V940EcGMDbgH9IWPd3vx4PkgrE9VAeuluvKjPM/F/AuMI0K5DQ60jmRwiN0xl
-	 wHs2vYRwUN/TybSEuzXJwbnt+sThgy8PYj7FxntZjkiftHz15Qohgbyf0e73RsR7Gy
-	 WYq/UkJCSNn2C00jwVkgJITijJk3xwriOK9420MiOmYpFhl8YuHPTibazxW/EVtUnW
-	 xwU1ercHPPxRA==
-Date: Fri, 13 Jun 2025 14:13:55 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, linux-kernel@vger.kernel.org, Akira Yokosawa
- <akiyks@gmail.com>, "David S. Miller" <davem@davemloft.net>, Ignacio
- Encinas Rubio <ignacio@iencinas.com>, Marco Elver <elver@google.com>, Shuah
- Khan <skhan@linuxfoundation.org>, Eric Dumazet <edumazet@google.com>, Jan
- Stancek <jstancek@redhat.com>, Paolo Abeni <pabeni@redhat.com>, Ruben
- Wauters <rubenru09@aol.com>, joel@joelfernandes.org,
- linux-kernel-mentees@lists.linux.dev, lkmm@lists.linux.dev,
- netdev@vger.kernel.org, peterz@infradead.org, stern@rowland.harvard.edu,
- Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v2 00/12] Don't generate netlink .rst files inside
- $(srctree)
-Message-ID: <20250613141355.1bba92fc@foz.lan>
-In-Reply-To: <m27c1foq97.fsf@gmail.com>
-References: <cover.1749723671.git.mchehab+huawei@kernel.org>
-	<m27c1foq97.fsf@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	 MIME-Version:Content-Type; b=VqXrZhMOskD6rqQUzOcGAfCyCsc+Z625ijfGTKlq7UxTn2kiBsM4F0X9QvmirkPVL/Ot3oXRII/+4C8VNrMxeiwYc+AaFxdVI/Ipz1hddl7eM/oLTly+rwnh3MgtWADW5i/Loi+a9wNBTqDew5hE/kg+veRugXS0q7mFYUQFV98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 6AC841D3317;
+	Fri, 13 Jun 2025 12:15:53 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 97F7B2000E;
+	Fri, 13 Jun 2025 12:15:51 +0000 (UTC)
+Date: Fri, 13 Jun 2025 08:17:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org, Gao
+ Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>
+Subject: Re: Unused trace event in erofs
+Message-ID: <20250613081728.6212a554@gandalf.local.home>
+In-Reply-To: <0baf3fa2-ed77-4748-b5ee-286ce798c959@linux.alibaba.com>
+References: <20250612224906.15000244@batman.local.home>
+	<0baf3fa2-ed77-4748-b5ee-286ce798c959@linux.alibaba.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,147 +38,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 97F7B2000E
+X-Stat-Signature: infzwy15dda57cgcg4d9ditmeebzkrft
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18BtDgKuXNZPoYBnFNGThqX5YGBtgfzf9o=
+X-HE-Tag: 1749816951-862733
+X-HE-Meta: U2FsdGVkX195zLSu+DbhYIomwGRc115YpbM2ycknmYQf2F2pGL3U8iMbkxESzO1a7e1SbWMLyeZUWsDn0+MwpfMm1VYAGVFkOGA5/0F+ZULmLOgJg6at3Pq9PTU+6HoN6Oex5p2OqUhC6tN5pyzbr5wJ8FHCNQVZQwhecbTK/s4NCZOHHD0Ya+pRdqKyIIPbYa/ojOfUFsIDt1UTwygssTgnXqGnOotPzYKO6urya1NQm4hSerex9xZqz2cCXu3Z6qygVLplU0VspUcQCoojYiWXlkM0hXc+tDg/ke4KyWpJL1U7tn9o1nOoH6kEbH/rjPoY/QCgz5/6QTutImtz/gPwSEx2bAuX
 
-Em Fri, 13 Jun 2025 12:05:56 +0100
-Donald Hunter <donald.hunter@gmail.com> escreveu:
+On Fri, 13 Jun 2025 14:08:32 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> Hi Steven,
 > 
-> > As discussed at:
-> >    https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
-> >
-> > changeset f061c9f7d058 ("Documentation: Document each netlink family")
-> > added a logic which generates *.rst files inside $(srctree). This is bad when
-> > O=<BUILDDIR> is used.
-> >
-> > A recent change renamed the yaml files used by Netlink, revealing a bad
-> > side effect: as "make cleandocs" don't clean the produced files, symbols 
-> > appear duplicated for people that don't build the kernel from scratch.
-> >
-> > There are some possible solutions for that. The simplest one, which is what
-> > this series address, places the build files inside Documentation/output. 
-> > The changes to do that are simple enough, but has one drawback,
-> > as it requires a (simple) template file for every netlink family file from
-> > netlink/specs. The template is simple enough:
-> >
-> >         .. kernel-include:: $BUILDDIR/networking/netlink_spec/<family>.rst  
+> On 2025/6/13 10:49, Steven Rostedt wrote:
+> > I have code that will trigger a warning if a trace event is defined but
+> > not used[1]. It gives a list of unused events. Here's what I have for
+> > erofs:
+> > 
+> > warning: tracepoint 'erofs_destroy_inode' is unused.  
 > 
-> I think we could skip describing this since it was an approach that has
-> now been dropped.
+> I'm fine to remove it, also I wonder if it's possible to disable
+> erofs tracepoints (rather than disable all tracepoints) in some
+> embedded use cases because erofs tracepoints might not be useful for
+> them and it can save memory (and .ko size) as you said below.
 
-Ok. Will drop on next versions.
+You can add #ifdef around them.
 
-> 
-> > Part of the issue is that sphinx-build only produces html files for sources
-> > inside the source tree (Documentation/). 
-> >
-> > To address that, add an yaml parser extension to Sphinx.
-> >
-> > It should be noticed that this version has one drawback: it increases the
-> > documentation build time. I suspect that the culprit is inside Sphinx
-> > glob logic and the way it handles exclude_patterns. What happens is that
-> > sphinx/project.py uses glob, which, on my own experiences, it is slow
-> > (due to that, I ended implementing my own glob logic for kernel-doc).
-> >
-> > On the plus side, the extension is flexible enough to handle other types
-> > of yaml files, as the actual yaml conversion logic is outside the extension.  
-> 
-> I don't think the extension would handle anything other than the Netlink
-> yaml specs, and I don't think that should be a goal of this patchset.
+Note, the "up to around 5K" means it can add up to that much depending on
+what you have configured. The TRACE_EVENT() macro (and more specifically
+the DECLARE_EVENT_CLASS() which TRACE_EVENT() has), is where all the bloat
+is. I generates unique code for each trace event that prints it, parses it,
+records it, the event fields, and has code specific for perf, ftrace and BPF.
 
-Not necessarily. We do have already DT yaml files (although there's
-a separate process to handle those outside the tree). Nothing prevents
-we end having more. See, the way Sphinx parser works is that it will cover
-all files with *.yaml extension no matter where it is located within the
-tree. We may end needing to use it for something else as well (*).
+The DEFINE_EVENT() which can be used to make several events that are
+similar use the same DECLARE_EVENT_CLASS() only takes up around 250 bytes.
+One reason I tell people to use DECLARE_EVENT_CLASS() when you have similar events.
 
-(*) at the last Media Summit, we did have some discussions about using
-    either yaml or rst for sensor documentation.
-
-> > With this version, there's no need to add any template file per netlink/spec
-> > file. Yet, the Documentation/netlink/spec.index.rst require updates as
-> > spec files are added/renamed/removed. The already-existing script can
-> > handle it automatically by running:
-> >
-> >             tools/net/ynl/pyynl/ynl_gen_rst.py -x  -v -o Documentation/netlink/specs/index.rst  
-> 
-> I think this can be avoided by using the toctree glob directive in the
-> index, like this:
-> 
-> =============================
-> Netlink Family Specifications
-> =============================
-> 
-> .. toctree::
->    :maxdepth: 1
->    :glob:
-> 
->    *
-> 
-> This would let you have a static index file.
-
-Didn't know about such option. If it works with the parser, it sounds good 
-enough.
+There's also a DEFINE_EVENT_PRINT() that can use an existing
+DECLARE_EVENT_CLASS() but update the "printk" section. That adds some more
+code (the creation of the print function) but still much smaller than the
+DECLARE_EVENT_CLASS(). But this requires the tracepoint function (what the
+code calls) must have the same prototype.
 
 > 
-> > ---
-> >
-> > v2:
-> > - Use a Sphinx extension to handle netlink files.
-> >
-> > v1:
-> > - Statically add template files to as networking/netlink_spec/<family>.rst
-> >
-> > Mauro Carvalho Chehab (12):
-> >   tools: ynl_gen_rst.py: create a top-level reference
-> >   docs: netlink: netlink-raw.rst: use :ref: instead of :doc:  
+> > 
+> > Each trace event can take up to around 5K in memory regardless if they
+> > are used or not. Soon there will be warnings when they are defined but
+> > not used. Please remove any unused trace event or at least hide it
+> > under an #ifdef if they are used within configs. I'm planning on adding
+> > these warning in the next merge window.  
 > 
-> I suggest combining the first 2 patches.
-> 
-> >   docs: netlink: don't ignore generated rst files  
-> 
-> Maybe leave this patch to the end and change the description to be a
-> cleanup of the remants of the old approach.
+> If you don't have some interest to submit a removal patch, I will post
+> a patch later.
 
-Ok for me, but I usually prefer keeping one patch per logical change.
-In this case, one patch adding support at the tool; the other one
-improving docs to benefit from the new feature.
+Please make the patch. There's too many for me to do them all.
 
-> Further comments on specific commits
-> 
-> >   tools: ynl_gen_rst.py: make the index parser more generic
-> >   tools: ynl_gen_rst.py: Split library from command line tool
-> >   scripts: lib: netlink_yml_parser.py: use classes
-> >   tools: ynl_gen_rst.py: do some coding style cleanups
-> >   scripts: netlink_yml_parser.py: improve index.rst generation
-> >   docs: sphinx: add a parser template for yaml files
-> >   docs: sphinx: parser_yaml.py: add Netlink specs parser  
-> 
-> Please combine these 2 patches. The template patch just introduces noise
-> into the series and makes it harder to review.
+Thanks!
 
-Ok.
-
-> >   docs: use parser_yaml extension to handle Netlink specs
-> >   docs: conf.py: don't handle yaml files outside Netlink specs
-> >
-> >  .pylintrc                                     |   2 +-
-> >  Documentation/Makefile                        |  17 -
-> >  Documentation/conf.py                         |  17 +-
-> >  Documentation/netlink/specs/index.rst         |  38 ++
-> >  Documentation/networking/index.rst            |   2 +-
-> >  .../networking/netlink_spec/.gitignore        |   1 -
-> >  .../networking/netlink_spec/readme.txt        |   4 -
-> >  Documentation/sphinx/parser_yaml.py           |  80 ++++
-> >  .../userspace-api/netlink/netlink-raw.rst     |   6 +-
-> >  scripts/lib/netlink_yml_parser.py             | 394 ++++++++++++++++++
-> >  tools/net/ynl/pyynl/ynl_gen_rst.py            | 378 +----------------
-> >  11 files changed, 544 insertions(+), 395 deletions(-)
-> >  create mode 100644 Documentation/netlink/specs/index.rst
-> >  delete mode 100644 Documentation/networking/netlink_spec/.gitignore
-> >  delete mode 100644 Documentation/networking/netlink_spec/readme.txt
-> >  create mode 100755 Documentation/sphinx/parser_yaml.py
-> >  create mode 100755 scripts/lib/netlink_yml_parser.py  
-
-Thanks,
-Mauro
+-- Steve
