@@ -1,104 +1,167 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 629B22D1911
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2C02D6636;
+	Fri, 13 Jun 2025 07:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800094; cv=none; b=iEGPjAza/9NHxBKtKncVe4TG1L1n4cmNSKClQsNwvBpvBzX/aMMF6JY+Jeftozrttapre/udjU5YH+ppD81Y9bRjJCAnuIXiGDOfBGDNsjYETGChB64QlvNU3tDjl/Q17GJrjXuBKkhy7bvvpgCpHrRtqNcRJRq54cT6HLaNH0g=
+	t=1749800103; cv=none; b=gM8r+dj81dzDwcOCpkJIUYJWl78JDcaxuqhCURjdTGbN9W5ro9tBe9zV9WmVVjy1SjlHagOcBIVDzejxxKvJHuLChRZwC5ThT4IG1tSIwBM7SX+Nv96l7fmhYQMsy5CkMXLUdhW60BxmjBJxl24vw3mC9wOLU2e+VyG1W+KkHC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800094; c=relaxed/simple;
-	bh=Y1JO6yRUdnYicdtcwizD05rpMEa4fyvqEy46XDzFCsA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dZJ98xi5tmTPDcSNjAa8XJOoPZq8MRapZdWRVm7gQ3A4lhlOtD/WY7BwDD1dffWbOfrI++5YNUZZm47e//VtTxOIIjyVQbtvM8hAZtVPbbflDXrS2ekUK589er+ekBgFEUbffARZ7CRNv4+JW7j9oRMOw2ERkpFs8QQjlrZ3Nn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 481BD1D6F;
-	Fri, 13 Jun 2025 00:34:30 -0700 (PDT)
-Received: from [192.168.178.71] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDAB43F59E;
-	Fri, 13 Jun 2025 00:34:48 -0700 (PDT)
-Message-ID: <64ae41a7-2c06-4082-a4d6-0db5b635ea01@arm.com>
-Date: Fri, 13 Jun 2025 09:34:22 +0200
+	s=arc-20240116; t=1749800103; c=relaxed/simple;
+	bh=fQ+Zm3/XGK+10ZRvK+XFYpZHWx6PqU9jm94xEvpjMQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MSiQ08osfeOh+qYDxXcAZAtiSQBc+BeUBSmSYbl+MripyxteYMu4tGRFs0UuKgM/Q4bLBC/0PHMqFly9zoo+2hJU+GmMt2n7CbQNG0+ZMnFdtf0RO+RgoxQjm9N27zYLIYUOv+ECdWgQ8xGijOIR9b2eD8KEjxK5tPI8Ob7dcJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=B67nTcCn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=obGdjANf; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="B67nTcCn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="obGdjANf"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 78C582540150;
+	Fri, 13 Jun 2025 03:34:59 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Fri, 13 Jun 2025 03:35:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1749800099; x=1749886499; bh=heYYdoDlXF
+	OciX8bAT8IXpBAQStR+kpfE0iWQ6XRFa8=; b=B67nTcCnNzwgqqw5e9km6I+xvo
+	aP4x12BY0eqNXQd/5WAzuvx3iqVg+FZbcVKP5FKPEGSxxMuGAH3L/rfj418xIg70
+	/PvX1cbyeDwUVpAcivjtmOGjtx3ml0nmwCKa17nScrb2s5Q527q2h1/y4XBROHia
+	8nvdqwn17kBjrn8qoIQKRvcai0qtqKY6UiU2s0gziN05KRSAFQ4f9o6h6pNVDNwf
+	xVf1VeIBpzeymw1P0k9OGmTImtr8zQJULdyC5yrqJcK6g4oaNCLeMYXfXeMRE0RW
+	RFEC3RnE8yyU3OKG/xjyzlzvwyXSaM02E/VbYozacysEWXVmlLCujDx88tdQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1749800099; x=1749886499; bh=heYYdoDlXFOciX8bAT8IXpBAQStR+kpfE0i
+	WQ6XRFa8=; b=obGdjANf3TY83z9E4pcTsihvUy/NhNuL3IyPMSupSohNWxVy02l
+	DIhu0O7mPdBhG6LALj7QpvkuBLRqxCqUTe/FY4Lgl4LKVkszfBgYA8yw0VMo+P2L
+	IwQnsy9s2JORNu4cgB5/Ez7MBDt83hyhqL/wYquBx1at4LCZ2I+NQNwPDOr9FMkE
+	AyQ0zW/vRNT1xbbp1Z9aPEaYPnF9b5y3tP9zv1nlBYffAsC0pAWd1uHkLY0OEjuz
+	9fsO6TrlrTHGWtQ2xMgouIieOSKT87OUFxo4gbsF49Z8qiAQCflR1cgxccfM+ex0
+	aWWyY/hUGVsazvF765v54qnsr8ZcE2eWA8w==
+X-ME-Sender: <xms:odRLaLh6zoBCwTVNx3mvfgXtLKR5nE8PQpNCvoZQTZ4Yl_CbLvnwdw>
+    <xme:odRLaICswVPjz4ogeEyOqVrKMv3h2K0ju_EfqS7zm4Gl6Uf-UjFh8gN6posrOHBmL
+    iOC5OcwHsAR-lM2c_8>
+X-ME-Received: <xmr:odRLaLHK0aeEIyi6snr3y6ADuhS7i5ZXVIhpnmTkXcZQGxVBcNZK22osXdbJ_qmFKeLZKXiAXT60ogZi27I6ELmpNqrr_diVC9k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddujeefiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
+    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
+    cuggftrfgrthhtvghrnhepgfdvffevleegudejfeefheehkeehleehfefgjefffeetudeg
+    tefhuedufeehfeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhesjhgrnhhnrghurdhnvghtpdhnsggprhgtphhtthhopeefuddpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepshhvvghnsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhiohdprhgtphhtthhopehnvggr
+    lhesghhomhhprgdruggvvhdprhgtphhtthhopehulhhfrdhhrghnshhsohhnsehlihhnrg
+    hrohdrohhrghdprhgtphhtthhopehmthhurhhquhgvthhtvgessggrhihlihgsrhgvrdgt
+    ohhmpdhrtghpthhtohepshgsohihugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsh
+    hrihhniheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughirdhshhihthhisehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:odRLaIS_fY6doz4TXul-16ldYhjIlpniGV2a8g4n6ltibGDTV-_mOQ>
+    <xmx:odRLaIznjucvvyZgRzf35RgUzJyDfO3OetS3EdETiVvnX76AZ8CLtw>
+    <xmx:odRLaO761ll-OM5SIk4RJpRBEoWwgMAB-KKWrDFl6U7GyN_JjqAY0g>
+    <xmx:odRLaNw8AJBTxtqIaToqpW5WlxojAdlTnU6UprMcyicXZwTH4PyLwQ>
+    <xmx:o9RLaB0Xg6U_mH9QzF5X9ggXCjEz7dkLBSNqyZGrq3Q-npIGYGL9kSgl>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 13 Jun 2025 03:34:57 -0400 (EDT)
+Date: Fri, 13 Jun 2025 09:34:55 +0200
+From: Janne Grunau <j@jannau.net>
+To: Sven Peter <sven@kernel.org>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,	Srinivas Kandagatla <srini@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,	Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>,	Robin Murphy <robin.murphy@arm.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,	Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,
+ Arnd Bergmann <arnd@arndb.de>,	asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org,	linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org,	linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org,	iommu@lists.linux.dev,
+ linux-input@vger.kernel.org,	dmaengine@vger.kernel.org,
+ linux-sound@vger.kernel.org
+Subject: Re: [PATCH 00/11] Drop default ARCH_APPLE from Kconfig and use
+ defconfig instead
+Message-ID: <20250613073455.GF3141695@robin.jannau.net>
+References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
-To: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, clm@meta.com
-Cc: linux-kernel@vger.kernel.org
-References: <20250520094538.086709102@infradead.org>
- <20250520101727.984171377@infradead.org>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <20250520101727.984171377@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
 
-On 20/05/2025 11:45, Peter Zijlstra wrote:
+Hej,
 
-[...]
+On Thu, Jun 12, 2025 at 09:11:24PM +0000, Sven Peter wrote:
+> 
+> When support for Apple Silicon was originally upstreamed we somehow
+> started using `default ARCH_APPLE` for most drivers. arm64 defconfig
+> also contains ARCH_APPLE=y such that this will turn into `default y`
+> there by default which is neither what we want nor how this is usually
+> done.
 
-> @@ -3830,12 +3859,41 @@ void sched_ttwu_pending(void *arg)
->  	update_rq_clock(rq);
->  
->  	llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
-> +		struct rq *p_rq = task_rq(p);
-> +		int ret;
-> +
-> +		/*
-> +		 * This is the ttwu_runnable() case. Notably it is possible for
-> +		 * on-rq entities to get migrated -- even sched_delayed ones.
-> +		 */
-> +		if (unlikely(p_rq != rq)) {
-> +			rq_unlock(rq, &rf);
-> +			p_rq = __task_rq_lock(p, &rf);
+It's not such an uncommon pattern. `git grep 'default ARCH_' --
+'*Kconfig'` has over 250 matches (not counting ARCH_APPLE) and from a
+cursory look not all CONFIG_* look essential for booting.
+I agree that the drivers covered here should not be built-in by default.
+An alternative would be using `default m if ARCH_APPLE` instead but that
+pattern is not common in the kernel. So just moving this to defconfig is
+fine by me.
 
-I always get this fairly early with TTWU_QUEUE_DELAYED enabled, related
-to p->pi_lock not held in wakeup from interrupt.
+> Let's fix all that by dropping the default everywhere and adding the
+> drivers to defconfig as modules instead of built-ins.
+> None of these patches depend on each other so we can just take them all
+> independently through the respective subsystem trees.
+> 
+> Best,
+> 
+> Sven
+> 
+> Signed-off-by: Sven Peter <sven@kernel.org>
+> ---
+> Sven Peter (11):
+>       pmdomain: apple: Drop default ARCH_APPLE in Kconfig
+>       soc: apple: Drop default ARCH_APPLE in Kconfig
+>       clk: apple-nco: Drop default ARCH_APPLE in Kconfig
+>       nvmem: apple: drop default ARCH_APPLE in Kconfig
+>       i2c: apple: Drop default ARCH_APPLE in Kconfig
+>       cpufreq: apple: drop default ARCH_APPLE in Kconfig
+>       iommu/apple-dart: Drop default ARCH_APPLE in Kconfig
+>       Input: apple_z2: Drop default ARCH_APPLE in Kconfig
+>       dmaengine: apple-admac: Drop default ARCH_APPLE in Kconfig
+>       ASoC: apple: mca: Drop default ARCH_APPLE in Kconfig
+>       arm64: defconfig: Enable Apple Silicon drivers
+> 
+>  arch/arm64/configs/defconfig      | 19 +++++++++++++++++++
+>  drivers/clk/Kconfig               |  1 -
+>  drivers/cpufreq/Kconfig.arm       |  1 -
+>  drivers/dma/Kconfig               |  1 -
+>  drivers/i2c/busses/Kconfig        |  1 -
+>  drivers/input/touchscreen/Kconfig |  1 -
+>  drivers/iommu/Kconfig             |  1 -
+>  drivers/nvmem/Kconfig             |  1 -
+>  drivers/pmdomain/apple/Kconfig    |  1 -
+>  drivers/soc/apple/Kconfig         |  3 ---
+>  sound/soc/apple/Kconfig           |  1 -
+>  11 files changed, 19 insertions(+), 12 deletions(-)
 
-[   36.175285] WARNING: CPU: 0 PID: 162 at kernel/sched/core.c:679 __task_rq_lock+0xf8/0x128
-[   36.176021] Modules linked in:
-[   36.176187] CPU: 0 UID: 0 PID: 162 Comm: (udev-worker) Tainted: G W 6.15.0-00005-gcacccfab15bd-dirty #59 PREEMPT 
-[   36.176587] Tainted: [W]=WARN
-[   36.176727] Hardware name: linux,dummy-virt (DT)
-[   36.176964] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   36.177301] pc : __task_rq_lock+0xf8/0x128
-[   36.177576] lr : __task_rq_lock+0xf4/0x128
-...
-[   36.181314] Call trace:
-[   36.181510]  __task_rq_lock+0xf8/0x128 (P)
-[   36.181824]  sched_ttwu_pending+0x2d8/0x378
-[   36.182020]  __flush_smp_call_function_queue+0x138/0x37c
-[   36.182222]  generic_smp_call_function_single_interrupt+0x14/0x20
-[   36.182440]  ipi_handler+0x254/0x2bc
-[   36.182585]  handle_percpu_devid_irq+0xa8/0x2d4
-[   36.182780]  handle_irq_desc+0x34/0x58
-[   36.182942]  generic_handle_domain_irq+0x1c/0x28
-[   36.183109]  gic_handle_irq+0x40/0xe0
-[   36.183289]  call_on_irq_stack+0x24/0x64
-[   36.183441]  do_interrupt_handler+0x80/0x84
-[   36.183647]  el1_interrupt+0x34/0x70
-[   36.183795]  el1h_64_irq_handler+0x18/0x24
-[   36.184002]  el1h_64_irq+0x6c/0x70
+whole series
 
-[...]
-
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2313,6 +2313,7 @@ static inline int task_on_rq_migrating(s
->  #define WF_RQ_SELECTED		0x80 /* ->select_task_rq() was called */
->  
->  #define WF_ON_CPU		0x0100
-
-Looks like there is no specific handling for WF_ON_CPU yet?
-
-> +#define WF_DELAYED		0x0200
-
-[...]
-
+Reviewed-by: Janne Grunau <j@jannau.net>
