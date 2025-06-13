@@ -1,157 +1,146 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AB3291C20;
-	Fri, 13 Jun 2025 09:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BE825A321;
+	Fri, 13 Jun 2025 09:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806992; cv=none; b=US7ARzxGSxY/QppRTpkOWbjMW1l5mTXU5wLCFZtwEmaOYcRB/pcPKvPOCGatuUx5ojhTRMwSUA3sU4RSwVBNp6O59jPBEdEKgMKIDd3STrJ+SMjqzcYtGz3Vx8kdgBKCZPta4pkcT7annXPPFOadkjLTUJixBwZUB0tgvx7gM8M=
+	t=1749807041; cv=none; b=MJXRn9kwf/Tg7N+lY84szoEt8Zfd3Qj/Rr+/J7iDed7CVvvIGkmb3FX1wiGECB/z+mm2l4q8XiMYb2v9auahJNGjjh7plBGCckgo4RYvAh3c5/S7s/y1MM26fwLMTrf+tdATX5FU9XFf/p7CLBrUmPlfVUWmaYv9vqWUumsJyCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806992; c=relaxed/simple;
-	bh=dTFe4i14xDT19JSJo8KCeKJsJ0q9GY1gJEdMW/eHGHw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rYh/kBDAoJ4O+QspnLbtCaooFJeZKR8/t4GHFWd605UcYrEQPXqdCR24ofezuYnlj9/m5KVC6zm2N4eBgYt4pmgZaH0dQzWcmMDzSIz06XfQSVfMHAuJzbNgXyKLJWB1gqQxLxjc2RCzENIJbQaJxuR2qoNxdJzl9WzXKytD/q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bJYyM5MHfzYQvlF;
-	Fri, 13 Jun 2025 17:29:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B75C21A1538;
-	Fri, 13 Jun 2025 17:29:46 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBHrGCJ70toVayHPQ--.51121S3;
-	Fri, 13 Jun 2025 17:29:46 +0800 (CST)
-Subject: Re: [PATCH] md/raid1,raid10: fix IO handle for REQ_NOWAIT
-To: Zheng Qixing <zhengqixing@huaweicloud.com>, song@kernel.org
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, zhengqixing@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <dfbb5d06-68aa-9acc-a13c-0863f5a25193@huaweicloud.com>
-Date: Fri, 13 Jun 2025 17:29:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1749807041; c=relaxed/simple;
+	bh=4adj2/0BDm5vg8dnp5LhYk1LezexBVo3xysAfl3faqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b5H1YqnAVmVVCtiP9KILzUgRoijZaoVQK1N0MqT+jUviv2xLqlryhZugc8XQ8Swq4LtiO21PT6QI98GBIlDMz3Xzgut6nh+T+n2qOZU7cWLh59qLlSQIvRyi4p0LL6CWEzxgdvc0vAhhYT2LbOyT3WtDlRGnz47SR1SrUSQwFb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=fwyq21dh; arc=none smtp.client-ip=88.97.38.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="fwyq21dh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1749807035; bh=4adj2/0BDm5vg8dnp5LhYk1LezexBVo3xysAfl3faqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fwyq21dhcFvWE8scCJgvxtKLUo9MqwqwULQKvlyNYHbA4IRUudvsEH2J+I7CW1v6N
+	 fRxd5/SHhBA+FARtQWmopjSgNZUVyzQdwFf4AA/h9PrjL4LXDYfA0qm5P4Cl9d5bZv
+	 9K2A5fJRzU2IqN2Uj2vbfHKrquYs0mkQwYmifn3DtgVYAwR5/Ti2uRQwz2SnOFQa7z
+	 sigJnpnD88QbSYyu4fbtncSnIuczJJ4aQJY/R4EF3TBlDMauMSV6Z7FtrvJy+pC54O
+	 WcvIrFQd7aOE8wWtvxd39Yf0OloDnpMZKRRlCdQfyYKWu694um84iUhS9/LXMS5CS8
+	 yMghlVXQQeZxA==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+	id 33F9E100069; Fri, 13 Jun 2025 10:30:35 +0100 (BST)
+Date: Fri, 13 Jun 2025 10:30:35 +0100
+From: Sean Young <sean@mess.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] media: rc: ir-spi: constrain carrier frequency
+Message-ID: <aEvvu2sez981pM6Q@gofer.mess.org>
+References: <20250611112348.3576093-1-demonsingur@gmail.com>
+ <20250611112348.3576093-3-demonsingur@gmail.com>
+ <aEnifhd1M6oJjy1S@gofer.mess.org>
+ <24d63ec4-a037-46fd-bbc1-9be2bef34c2b@gmail.com>
+ <aEsycgtDxrypTU0v@gofer.mess.org>
+ <aEs0Qr3O5myydP_L@gofer.mess.org>
+ <94bc5863-f831-47b6-8bfd-57a807c8fe23@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHrGCJ70toVayHPQ--.51121S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF4xuw45Gr47XF4xZrW3Awb_yoW5tr48p3
-	yUGa9Yv39rGFWUu3WDtFWUZayF9w4Ygay7C3yUJ34xXas09FZ8Aa1DJ34YgF4DXrWfuw4a
-	q3ZYgw4DCFWayFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUot
-	CzDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94bc5863-f831-47b6-8bfd-57a807c8fe23@gmail.com>
 
-Hi,
-
-ÔÚ 2025/06/12 21:21, Zheng Qixing Ð´µÀ:
-> From: Zheng Qixing <zhengqixing@huawei.com>
+On Thu, Jun 12, 2025 at 11:20:28PM +0300, Cosmin Tanislav wrote:
+> On 6/12/25 11:10 PM, Sean Young wrote:
+> > On Thu, Jun 12, 2025 at 09:02:59PM +0100, Sean Young wrote:
+> > > On Wed, Jun 11, 2025 at 11:35:21PM +0300, Cosmin Tanislav wrote:
+> > > > On 6/11/25 11:09 PM, Sean Young wrote:
+> > > > > On Wed, Jun 11, 2025 at 02:23:44PM +0300, Cosmin Tanislav wrote:
+> > > > > > Carrier frequency is currently unconstrained, allowing the SPI transfer
+> > > > > > to be allocated and filled only for it to be later rejected by the SPI
+> > > > > > controller since the frequency is too large.
+> > > > > > 
+> > > > > > Add a check to constrain the carrier frequency inside
+> > > > > > ir_spi_set_tx_carrier().
+> > > > > > 
+> > > > > > Also, move the number of bits per pulse to a macro since it is not used
+> > > > > > in multiple places.
+> > > > > > 
+> > > > > > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> > > > > > ---
+> > > > > >    drivers/media/rc/ir-spi.c | 6 +++++-
+> > > > > >    1 file changed, 5 insertions(+), 1 deletion(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
+> > > > > > index 50e30e2fae22..bf731204c81e 100644
+> > > > > > --- a/drivers/media/rc/ir-spi.c
+> > > > > > +++ b/drivers/media/rc/ir-spi.c
+> > > > > > @@ -21,6 +21,7 @@
+> > > > > >    #define IR_SPI_DRIVER_NAME		"ir-spi"
+> > > > > >    #define IR_SPI_DEFAULT_FREQUENCY	38000
+> > > > > > +#define IR_SPI_BITS_PER_PULSE		16
+> > > > > >    struct ir_spi_data {
+> > > > > >    	u32 freq;
+> > > > > > @@ -70,7 +71,7 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
+> > > > > >    	memset(&xfer, 0, sizeof(xfer));
+> > > > > > -	xfer.speed_hz = idata->freq * 16;
+> > > > > > +	xfer.speed_hz = idata->freq * IR_SPI_BITS_PER_PULSE;
+> > > > > >    	xfer.len = len * sizeof(*tx_buf);
+> > > > > >    	xfer.tx_buf = tx_buf;
+> > > > > > @@ -98,6 +99,9 @@ static int ir_spi_set_tx_carrier(struct rc_dev *dev, u32 carrier)
+> > > > > >    	if (!carrier)
+> > > > > >    		return -EINVAL;
+> > > > > > +	if (carrier * IR_SPI_BITS_PER_PULSE > idata->spi->max_speed_hz)
+> > > > > > +		return -EINVAL;
+> > > > > 
+> > > > > Just a nitpick.
+> > > > > 
+> > > > > I think carrier * IR_SPI_BITS_PER_PULSE could overflow, and then the check
+> > > > > wouldn't work. It might be better to do:
+> > > > > 
+> > > > > 	if (carrier > idata->spi->max_speed_hz / IR_SPI_BITS_PER_PULSE)
+> > > > > 
+> > > > > However since IR_SPI_BITS_PER_PULSE is 16, which is just a shift left by 4,
+> > > > > I don't think this can be abused in any useful way.
+> > > > > 
+> > > > 
+> > > > I have another concern regarding overflow, inside ir_spi_tx().
+> > > > 
+> > > > DIV_ROUND_CLOSEST() is called with buffer[i] * idata->freq and 1000000.
+> > > > buffer[i] comes from userspace, it's the number of microseconds for this
+> > > > pulse. It's unsigned int. lirc core already checks that each element
+> > > > is not bigger than 500000 microseconds. Issue is, at 500000, it would
+> > > > take a carrier frequency as low as 8590 to overflow the unsigned int.
+> > > 
+> > > Interesting, you are right.
+> > > 
+> > > > Maybe it would make sense to switch this one to mult_frac()? But we
+> > > > would lose rounding.
+> > > > 
+> > > > mult_frac(buffer[i], idata->freq, 1000000)
+> > > > 
+> > > > Optionally, we could cast buffer[i] to u64/unsigned long long, and use
+> > > > DIV_ROUND_CLOSEST_ULL.
+> > > > 
+> > > > DIV_ROUND_CLOSEST_ULL((u64)buffer[i] * idata->freq, 1000000)
+> > > > 
+> > > > Let me know what you think.
+> > > 
+> > > I've given it some thought and I'm not sure there is a better solution. It's
+> > > an edge case of course, but we should deal with it correctly.
+> > 
+> > Actually could we use check_mul_overflow() for this?
+> > 
 > 
-> IO with REQ_NOWAIT should not set R1BIO_Uptodate when it fails,
-> and bad blocks should also be cleared when REQ_NOWAIT IO succeeds.
-> 
-> Fixes: 9f346f7d4ea7 ("md/raid1,raid10: don't handle IO error for REQ_RAHEAD and REQ_NOWAIT")
-> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
-> ---
->   drivers/md/raid1.c  | 11 ++++++-----
->   drivers/md/raid10.c |  9 +++++----
->   2 files changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index 19c5a0ce5a40..a1cddd24b178 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -455,13 +455,13 @@ static void raid1_end_write_request(struct bio *bio)
->   	struct md_rdev *rdev = conf->mirrors[mirror].rdev;
->   	sector_t lo = r1_bio->sector;
->   	sector_t hi = r1_bio->sector + r1_bio->sectors;
-> -	bool ignore_error = !raid1_should_handle_error(bio) ||
-> -		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
-> +	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
->   
->   	/*
->   	 * 'one mirror IO has finished' event handler:
->   	 */
-> -	if (bio->bi_status && !ignore_error) {
-> +	if (bio->bi_status && !discard_error &&
-> +	    raid1_should_handle_error(bio)) {
->   		set_bit(WriteErrorSeen,	&rdev->flags);
->   		if (!test_and_set_bit(WantReplacement, &rdev->flags))
->   			set_bit(MD_RECOVERY_NEEDED, &
-> @@ -507,12 +507,13 @@ static void raid1_end_write_request(struct bio *bio)
->   		 * check this here.
->   		 */
->   		if (test_bit(In_sync, &rdev->flags) &&
-> -		    !test_bit(Faulty, &rdev->flags))
-> +		    !test_bit(Faulty, &rdev->flags) &&
-> +		    (!bio->bi_status || discard_error))
->   			set_bit(R1BIO_Uptodate, &r1_bio->state);
+> I think we're better off using DIV_ROUND_CLOSEST_ULL(), since after the
+> multiplication, there's a division by 1000000, which might bring us back
+> in 32-bit territory, even if the multiplication overflowed. If we use
+> check_mul_overflow(), we would just invalidate a case that would have
+> worked fine.
 
-BTW, for nowait, the error value returned to user should be -EAGAIN, not
--EIO, you'd better cook another patch to change this.
+I don't have a strong opinion on this, but in the current code the overflow
+is not detected and garbage is sent, right?
 
-Thanks,
-Kuai
 
->   
->   		/* Maybe we can clear some bad blocks. */
->   		if (rdev_has_badblock(rdev, r1_bio->sector, r1_bio->sectors) &&
-> -		    !ignore_error) {
-> +		    !bio->bi_status) {
->   			r1_bio->bios[mirror] = IO_MADE_GOOD;
->   			set_bit(R1BIO_MadeGood, &r1_bio->state);
->   		}
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index b74780af4c22..1848947b0a6d 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -458,8 +458,8 @@ static void raid10_end_write_request(struct bio *bio)
->   	int slot, repl;
->   	struct md_rdev *rdev = NULL;
->   	struct bio *to_put = NULL;
-> -	bool ignore_error = !raid1_should_handle_error(bio) ||
-> -		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
-> +	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
-> +	bool ignore_error = !raid1_should_handle_error(bio) || discard_error;
->   
->   	dev = find_bio_disk(conf, r10_bio, bio, &slot, &repl);
->   
-> @@ -522,13 +522,14 @@ static void raid10_end_write_request(struct bio *bio)
->   		 * check this here.
->   		 */
->   		if (test_bit(In_sync, &rdev->flags) &&
-> -		    !test_bit(Faulty, &rdev->flags))
-> +		    !test_bit(Faulty, &rdev->flags) &&
-> +		    (!bio->bi_status || discard_error))
->   			set_bit(R10BIO_Uptodate, &r10_bio->state);
->   
->   		/* Maybe we can clear some bad blocks. */
->   		if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
->   				      r10_bio->sectors) &&
-> -		    !ignore_error) {
-> +		    !bio->bi_status) {
->   			bio_put(bio);
->   			if (repl)
->   				r10_bio->devs[slot].repl_bio = IO_MADE_GOOD;
-> 
-
+Sean
