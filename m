@@ -1,45 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lgeamrelo07.lge.com (lgeamrelo07.lge.com [156.147.51.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B271369B4;
-	Fri, 13 Jun 2025 06:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897A51369B4
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.51.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749797693; cv=none; b=IB8//+PDkk/gtn9/rrH104TnWdaJ2GJdwZit8xTPzZCAtnxmRZHd6pMf4V5SLZ1czNCeCR21GObrwK7Bj2zz9jeMtORsQuG3hXJYMA08ujTjf5PN3zgmi/wX/Yok2ktx2e/Q7IN/tJtIUhH65cItYTN8PMSravj/uGmKNNtJoqU=
+	t=1749797776; cv=none; b=LRG4tsBGQurKc+NMPZ+CDyYQXnIOIlarr+XXRyip7koko16PU4v0WkaPSSuVnv3PuDQJ59uIEXOfL8OnjuT62uuOPhB7r3eTARv0/oMv5z9jYosrJWXZifBFRnYqPL1F8SaqqY8ZpQHDSY2Vgw8JH7xyFvBzBIQcZkPSm/chkVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749797693; c=relaxed/simple;
-	bh=1s/szMVjHm2c5YpFJE4JzICjVT6sl1T+nHxY2oXfPJ8=;
+	s=arc-20240116; t=1749797776; c=relaxed/simple;
+	bh=i4du00HGA9zb0ohT1cC/b0VFC6Vw65Lig03aEVDZji8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s8bWNddjzoc92MwGxP45qZiDJKd8zC9/iDru9QBMP7MqLodUBnrl2ecJipcXxd/xz95uDxPuWPcgR6DbOcZ3RYCONmMyhjrLmE+1P23FpfaVGDH0el7ahOYpwDqbw7KbErBqiQOX1V2MwFHEsL4Oa7B3p5q9FNrPHpJyzN+xGa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeCuvtCG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeCuvtCG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F465C4CEF1;
-	Fri, 13 Jun 2025 06:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749797692;
-	bh=1s/szMVjHm2c5YpFJE4JzICjVT6sl1T+nHxY2oXfPJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WeCuvtCG8iIXRXnhJ5iaXqjj6hBoLE9nJhyZji6mGfw9szRLL/Xy8f1ycbXigCuA0
-	 WIpW3PtLH3zAaZyLQDW/cX2DUoNiB+goqVATpP01Qea3eOEg9GCgh5QexINECMGp/4
-	 bPmFsLCXhGAn5t78RMVAqR6W2u5OnhX5B3lKZ9a6G2SDoFddyWs4dfw5Ocq1CuDinq
-	 uAopszmsyYSwpmdYpIJZ0rWr3S3LJcRGpSwrTcMCvG/P2Y3G/kQX5hIKeMsmhv4bZr
-	 2A6WingZ25Re1WjygPKDCtn1gR1UrNGiHyEPP2+pANoVrQDuNmOXqS/H9/DBebDa2/
-	 2Ocmit6DjOuww==
-Date: Fri, 13 Jun 2025 12:24:41 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
-	heiko@sntech.de, manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com, 
-	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com, 
-	khilman@baylibre.com, jbrunet@baylibre.com, martin.blumenstingl@googlemail.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 2/2] PCI: dwc: Remove redundant MPS configuration
-Message-ID: <6v7m7qt4n26n6pmx5tggmmvv7na6t5v5wtfqev5x4wxosymwul@j3dizxyyy4tg>
-References: <20250510155607.390687-1-18255117159@163.com>
- <20250510155607.390687-3-18255117159@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=k54OodiBJY9eL2zfX1dpMtilhJC33h5CeiKAgJWenHqyLiXAgLXMhMaFj+cHlm46KSSEY7Mny8ywJxtkLSpwtucyS+z44paPQd2iYzZYTFVbiNoM925OYtRi8h1LfWGmeJKrxtJno9RbpTE5LRnHZiGUOux2iBDyGsX+d2ljGRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.51.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
+Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
+	by 156.147.51.103 with ESMTP; 13 Jun 2025 15:56:12 +0900
+X-Original-SENDERIP: 10.177.112.156
+X-Original-MAILFROM: youngjun.park@lge.com
+Date: Fri, 13 Jun 2025 15:56:12 +0900
+From: YoungJun Park <youngjun.park@lge.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	baohua@kernel.org, chrisl@kernel.org, muchun.song@linux.dev,
+	iamjoonsoo.kim@lge.com, taejoon.song@lge.com, gunho.lee@lge.com
+Subject: Re: [RFC PATCH 0/2] mm/swap, memcg: Support per-cgroup swap device
+ prioritization
+Message-ID: <aEvLjEInMQC7hEyh@yjaykim-PowerEdge-T330>
+References: <20250612103743.3385842-1-youngjun.park@lge.com>
+ <CAMgjq7BA_2-5iCvS-vp9ZEoG=1DwHWYuVZOuH8DWH9wzdoC00g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,76 +41,176 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250510155607.390687-3-18255117159@163.com>
+In-Reply-To: <CAMgjq7BA_2-5iCvS-vp9ZEoG=1DwHWYuVZOuH8DWH9wzdoC00g@mail.gmail.com>
 
-On Sat, May 10, 2025 at 11:56:07PM +0800, Hans Zhang wrote:
-> The Meson PCIe controller driver manually configures maximum payload
-> size (MPS) through meson_set_max_payload, duplicating functionality now
-> centralized in the PCI core.  Deprecating redundant code simplifies the
-> driver and aligns it with the consolidated MPS management strategy,
-> improving long-term maintainability.
+On Thu, Jun 12, 2025 at 08:24:08PM +0800, Kairui Song wrote:
+> On Thu, Jun 12, 2025 at 6:38 PM <youngjun.park@lge.com> wrote:
+> >
+> > From: Youngjun Park <youngjun.park@lge.com>
+> >
+> > Introduction
+> > ============
+> > I am a kernel developer working on platforms deployed on commercial consumer devices.
+> > Due to real-world product requirements, needed to modify the Linux kernel to support
+> > a new swap management mechanism. The proposed mechanism allows assigning different swap
+> > priorities to swap devices per cgroup.
+> > I believe this mechanism can be generally useful for similar constrained-device scenarios
+> > and would like to propose it for upstream inclusion and solicit feedback from the community.
+> >
+> > Motivation
+> > ==========
+> > Core requirement was to improve application responsiveness and loading time, especially
+> > for latency critical applications, without increasing RAM or storage hardware resources.
+> > Device constraints:
+> >   - Linux-based embedded platform
+> >   - Limited system RAM
+> >   - Small local swap
+> >   - No option to expand RAM or local swap
+> > To mitigate this, we explored utilizing idle RAM and storage from nearby devices as remote
+> > swap space. To maximize its effectiveness, we needed the ability to control which swap devices
+> > were used by different cgroups:
+> >   - Assign faster local swap devices to latency critical apps
+> >   - Assign remote swap devices to background apps
+> > However, current Linux kernel swap infrastructure does not support per-cgroup swap device
+> > assignment.
+> > To solve this, I propose a mechanism to allow each cgroup to specify its own swap device
+> > priorities.
+> >
+> > Evaluated Alternatives
+> > ======================
+> > 1. **Per-cgroup dedicated swap devices**
+> >    - Previously proposed upstream [1]
+> >    - Challenges in managing global vs per-cgroup swap state
+> >    - Difficult to integrate with existing memory.limit / swap.max semantics
+> > 2. **Multi-backend swap device with cgroup-aware routing**
+> >    - Considered sort of layering violation (block device cgroup awareness)
+> >    - Swap devices are commonly meant to be physical block devices.
+> >    - Similar idea mentioned in [2]
+> > 3. **Per-cgroup swap device enable/disable with swap usage contorl**
+> >    - Expand swap.max with zswap.writeback usage
+> >    - Discussed in context of zswap writeback [3]
+> >    - Cannot express arbitrary priority orderings
+> >     (e.g. swap priority A-B-C on cgroup C-A-B impossible)
+> >    - Less flexible than per-device priority approach
+> > 4. **Per-namespace swap priority configuration**
+> >    - In short, make swap namespace for swap device priority
+> >    - Overly complex for our use case
+> >    - Cgroups are the natural scope for this mechanism
+> >
+> > Based on these findings, we chose to prototype per-cgroup swap priority configuration
+> > as the most natural, least invasive extension of the existing kernel mechanisms.
+> >
+> > Design and Semantics
+> > ====================
+> > - Each swap device gets a unique ID at `swapon` time
+> > - Each cgroup has a `memory.swap.priority` interface:
+> >   - Show unique ID by memory.swap.priority interface
+> >   - Format: `unique_id:priority,unique_id:priority,...`
+> >   - All currently-active swap devices must be listed
+> >   - Priorities follow existing swap infrastructure semantics
+> > - The interface is writeable and updatable at runtime
+> > - A priority configuration can be reset via `echo "" > memory.swap.priority`
+> > - Swap on/off events propagate to all cgroups with priority configurations
+> >
+> > Example Usage
+> > -------------
+> > # swap device on
+> > $ swapon
+> > NAME      TYPE      SIZE USED PRIO
+> > /dev/sdb  partition 300M  0B   10
+> > /dev/sdc  partition 300M  0B    5
+> >
+> > # assign custom priorities in a cgroup
+> > $ echo "1:5,2:10" > memory.swap.priority
+> > $ cat memory.swap.priority
+> > Active
+> > /dev/sdb  unique:1  prio:5
+> > /dev/sdc  unique:2  prio:10
+> >
+> > # adding new swap device later
+> > $ swapon /dev/sdd --priority -1
+> > $ cat memory.swap.priority
+> > Active
+> > /dev/sdb  unique:1  prio:5
+> > /dev/sdc  unique:2  prio:10
+> > /dev/sdd  unique:3  prio:-2
+> >
+> > # reset cgroup priority
+> > $ echo "" > memory.swap.priority
+> > $ cat memory.swap.priority
+> > Inactive
+> > /dev/sdb  unique:1  prio:10
+> > /dev/sdc  unique:2  prio:5
+> > /dev/sdd  unique:3  prio:-2
+> >
+> > Implementation Notes
+> > ====================
+> > The items mentioned below are to be considered during the next patch work.
+> >
+> > - Workaround using per swap cpu cluster as before
+> > - Priority propgation of child cgroup
+> > - And other TODO, XXX
+> > - Refactoring for reviewability and maintainability, comprehensive testing
+> >   and performance evaluation
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-
-I believe that the root port MPS set by PCI core in patch 1 should be enough to
-remove the logic in the driver. But given that we already saw that is not the
-case with Armada controllers, it would be good if one of the Meson maintainers
-could verify if this series works as intented. Since the driver is not using the
-DEVCAP value, but using the hardcoded value, I'm slightly worried that setting
-MPS value other than 256 would have any downside.
-
-But anyway, the root port MPS should be the same with and without this series.
-This can be verified by:
-
-sudo lspci -vvv | grep MaxPayload
-
-Also, performing any benchmark and making sure that the device performance
-didn't get affected would be great.
-
-- Mani
-
-> ---
->  drivers/pci/controller/dwc/pci-meson.c | 17 -----------------
->  1 file changed, 17 deletions(-)
+> Hi Youngjun,
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index db9482a113e9..126f38ed453d 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -261,22 +261,6 @@ static int meson_size_to_payload(struct meson_pcie *mp, int size)
->  	return fls(size) - 8;
->  }
->  
-> -static void meson_set_max_payload(struct meson_pcie *mp, int size)
-> -{
-> -	struct dw_pcie *pci = &mp->pci;
-> -	u32 val;
-> -	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> -	int max_payload_size = meson_size_to_payload(mp, size);
-> -
-> -	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
-> -	val &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
-> -
-> -	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
-> -	val |= PCIE_CAP_MAX_PAYLOAD_SIZE(max_payload_size);
-> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
-> -}
-> -
->  static void meson_set_max_rd_req_size(struct meson_pcie *mp, int size)
->  {
->  	struct dw_pcie *pci = &mp->pci;
-> @@ -381,7 +365,6 @@ static int meson_pcie_host_init(struct dw_pcie_rp *pp)
->  
->  	pp->bridge->ops = &meson_pci_ops;
->  
-> -	meson_set_max_payload(mp, MAX_PAYLOAD_SIZE);
->  	meson_set_max_rd_req_size(mp, MAX_READ_REQ_SIZE);
->  
->  	return 0;
-> -- 
-> 2.25.1
+> Interesting idea. For your current approach, I think all we need is
+> per-cgroup swap meta info structures (and infrastures for maintaining
+> and manipulating them).
 > 
+> So we have a global version and a cgroup version of "plist, next
+> cluster list, and maybe something else", right? And then
+> once the allocator is folio aware it can just prefer the cgroup ones
+> (as I mentioned in another reply) reusing all the same other
+> routines. Changes are minimal, the cgroup swap meta infos
+> and control plane are separately maintained.
+> 
+> It seems aligned quite well with what I wanted to do, and can be done
+> in a clean and easy to maintain way.
+> 
+> Meanwhile with virtual swap, things could be even more flexible, not
+> only changing the priority at swapout time, it will also provide
+> capabilities to migrate and balance devices adaptively, and solve long
+> term issues like mTHP fragmentation and min-order swapout etc..
+> 
+> Maybe they can be combined, like maybe cgroup can be limited to use
+> the virtual device or physical ones depending on priority. Seems all
+> solvable. Just some ideas here.
 
--- 
-மணிவண்ணன் சதாசிவம்
+I had been thinking about the work related to vswap and alignment,
+so I'm glad to hear that they can harmonize.
+
+> Vswap can cover the priority part too. I think we might want to avoid
+> duplicated interfaces.
+> 
+> So I'm just imagining things now, will it be good if we have something
+> like (following your design):
+> 
+> $ cat memcg1/memory.swap.priority
+> Active
+> /dev/vswap:(zram/zswap? with compression params?) unique:0 prio:5
+> 
+> $ cat memcg2/memory.swap.priority
+> Active
+> /dev/vswap:/dev/nvme1  unique:1  prio:5
+> /dev/vswap:/dev/nvme2  unique:2  prio:10
+> /dev/vswap:/dev/vda  unique:3  prio:15
+> /dev/sda  unique:4  prio:20
+> 
+> $ cat memcg3/memory.swap.priority
+> Active
+> /dev/vda  unique:3  prio:5
+> /dev/sda  unique:4  prio:15
+> 
+> Meaning memcg1 (high priority) is allowed to use compressed memory
+> only through vswap, and memcg2 (mid priority) uses disks through vswap
+> and fallback to HDD. memcg3 (low prio) is only allowed to use slow
+> devices.
+> 
+> Global fallback just uses everything the system has. It might be over
+> complex though?
+ 
+Just looking at the example usage which you mention, 
+it seems flexible and good.
+I will think more about this in relation to it.
