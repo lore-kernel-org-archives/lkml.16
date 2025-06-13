@@ -1,120 +1,159 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86E91885B8
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285F4A48
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749775467; cv=none; b=dSMtPY/zhbqqdIJvmxGNJ6FEawxgNba6B+KhasY9gWVeTqydWWDMHhZ7rdXs8cnGzh768Ab6VmUAabdWLLh5+L4RST1qGHZGo5+9+j4H1wEhJK3DA06bI2uE9b5d1P3KtcC7bj/ef8ofmbSWrjVeUv04iKA8tyAz2W95J52pYmU=
+	t=1749775662; cv=none; b=si73i7+lyf1z7AWC2uAcxpgBU1HFbX+cEZTbiw5VbBiFBv24Ra91PUyo4POCC/aLevD/fbA+5R3T57dosXX4A46J3rW6H7CIUQlI/fePz2FToys+Ojk6CI5boNiFSim3AAScaD3Syb4VDQrOpPsIU2WbCvz1/5I3oUjEhzhdDOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749775467; c=relaxed/simple;
-	bh=qjV8I61m5Ce+7fcZ155IHQqOvBkqUUl+LFanirdTQpg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LaoUAnfRYiKDVXIE7ySZN+4/YBGcJb38xBShcH9R3ZYIzQqStdLP9F0CqIRKwP4daW/X7lgf7PY6W8rGBKk82Ev7ve9mrIbkHaU9eS+6Fl4y4Zsd8Q6N0rxjMwzIv62ymOAuEQLKsO8N4Mqk2IjykTAxRq/FQynJ/BHhFV3yJhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NMRIynpM; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749775662; c=relaxed/simple;
+	bh=FcwAaUnFzLm16huHjizGe95MQwCLo8XGRMUUruWoPVg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GeyCGM3ny+SlNfFJni6JVNqhHwIAPVoM3oBMpublnRPfiU9fWON+Djhjetb5I+cVoBIITdgMXP72T3e3yZbySxPBlPBDiZ6eeUdJvMEQPUjwpLBMW2idpVKOV7VX7cCNYODxVHxA3e6rmRpyPuV7ySnphNPf1w/i5COW0Jn9CT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWHdOwG5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NMRIynpM"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235dd77d11fso13263475ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749775465; x=1750380265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NoDP1PzJo+JhoHPqRKT7Ls4qXBOrUxSG8VSYNnYgfDU=;
-        b=NMRIynpMXy9EbSo1EqWCegq4z2qOy9JZWn3MbAaFzWC3MaDGpXYfnBKEvi8/MIw2m2
-         Ke0wdVI149oacd+d6vHGICjIRDjx7NJ/S6398/mJbW6cvHpG6XxVwgyLdPYK1+eb6QFj
-         aL4Gr10CDFqCetXgSuINjApB67TGtFrWl00be71YE4ULxskjduiigxPbyxTim9G3AYW+
-         12dG7tSNnLv8C6R+TXEiMi+OXCx330AyTvG7NlCGhr8pmGky6t6RvEpi9zFOwilnSGjH
-         7ENtRrqtQXf+WEdcdQEL4hbOZT0v8I7UgZ9dpUvXeqodokg/knfeV/FBST42/WwZq33o
-         4xpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749775465; x=1750380265;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NoDP1PzJo+JhoHPqRKT7Ls4qXBOrUxSG8VSYNnYgfDU=;
-        b=E9L8eTNmkWVOr02uzVDzgD56kHJzZzwyXI3gLm9qNYt7TLeaOuLmxYCHEOO1WMikzL
-         vh1G0w1HPugulyGh0pcVoYlOF5WnSy18KV9IPQ24ZBnZo+nf03F5ohqggSraVgRugcWg
-         qwvu1Oi4BgrfO42iTLStZQt5uEm5MfHQaK0K2yEZyArag/hI9O50dur/WBLKvwtjouTU
-         DUgiIgaxUNFD8u6WvBE0RXVqyStIESlaemqvmGtJ2nt0GguCML8i0CJtbAc2cAM7E4jD
-         ryvyViVOejTmGPgLRRlZjlCdmL3zu5xsBeP/qsbn/vVO3DTklaDXRceV8LJ4Ye6huPPF
-         1dxg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsYM2HsCqvKVff0oxkfpEJ6bBAYKknrJajAONGfIq516kYPF19JYsxKKk6DcUVYtKuaJugPLBZxk3CBic=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqGZIYs1b3W/ROzq36P93GBqfrJ4jhYjdtbiMg3oeVL8O8e00i
-	laVJwEH9x1A4glvIvF58fUkC5ZIhD5Hs6hJhTcyE9Wnv0qMAeady3GjkjdGlJTxE0HIqXtNNuRK
-	VD2M5AA==
-X-Google-Smtp-Source: AGHT+IFiMHcR7v7YOleAgZOGqiF7s3lQ/RilLV7anOXAIv/Wn2gruQs9wyGFklb+9A85XAYEbjcWfiQ86zA=
-X-Received: from pgar12.prod.google.com ([2002:a05:6a02:2e8c:b0:b14:df7a:ff1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:41d2:b0:234:a139:1203
- with SMTP id d9443c01a7336-2365da0bbf3mr14996075ad.32.1749775465048; Thu, 12
- Jun 2025 17:44:25 -0700 (PDT)
-Date: Thu, 12 Jun 2025 17:44:23 -0700
-In-Reply-To: <d9bf81fc03cb0d92fc0956c6a49ff695d6b2d1ad.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWHdOwG5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96CC8C4CEEA;
+	Fri, 13 Jun 2025 00:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749775661;
+	bh=FcwAaUnFzLm16huHjizGe95MQwCLo8XGRMUUruWoPVg=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=HWHdOwG5fGCvoZ49mhZwo4E9DXck8Oz8r0w31CBPt18AjO4MpfcIrFxRWBhve3lP9
+	 cmyVSDOLrvV5NbRPF2jP8b9fbEXnFecMlRvcDapqsejU8Bi/avxo0LipQUmFEymapS
+	 YD6V3mzWB5FvhN8C1Y/OzqLCNx+pgFcTlT81jHl73iYHMHkJDkfiw00+Zqstcpldkm
+	 sAqEBgKVy+zZ++1xyI77WmMgvA8BGYsEdJP+jex+u7ueRTHFjnHgX/58JtrwxraOUh
+	 spQFP35GxU6O8gfhey8/LwW+5aguAflbQAuF9RL4HxRqA6KX1YH2y+lvg9mNGIr6ub
+	 ighIGGihzzCYw==
+Message-ID: <b3ecfa66-31c4-435e-918b-097c385848bf@kernel.org>
+Date: Fri, 13 Jun 2025 08:47:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aCcIrjw9B2h0YjuV@yzhao56-desk.sh.intel.com> <c98cbbd0d2a164df162a3637154cf754130b3a3d.camel@intel.com>
- <aCrsi1k4y8mGdfv7@yzhao56-desk.sh.intel.com> <f9a2354f8265efb9ed99beb871e471f92adf133f.camel@intel.com>
- <aCxMtjuvYHk2oWbc@yzhao56-desk.sh.intel.com> <119e40ecb68a55bdf210377d98021683b7bda8e3.camel@intel.com>
- <aEmVa0YjUIRKvyNy@google.com> <f001881a152772b623ff9d3bb6ca5b2f72034db9.camel@intel.com>
- <aEtumIYPJSV49_jL@google.com> <d9bf81fc03cb0d92fc0956c6a49ff695d6b2d1ad.camel@intel.com>
-Message-ID: <aEt0ZxzvXngfplmN@google.com>
-Subject: Re: [RFC PATCH 09/21] KVM: TDX: Enable 2MB mapping size after TD is RUNNABLE
-From: Sean Christopherson <seanjc@google.com>
-To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	Kai Huang <kai.huang@intel.com>, Fan Du <fan.du@intel.com>, 
-	Dave Hansen <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>, 
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, Yan Y Zhao <yan.y.zhao@intel.com>, 
-	Zhiquan1 Li <zhiquan1.li@intel.com>, Kirill Shutemov <kirill.shutemov@intel.com>, 
-	"michael.roth@amd.com" <michael.roth@amd.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, Chao P Peng <chao.p.peng@intel.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"ackerleytng@google.com" <ackerleytng@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "tabba@google.com" <tabba@google.com>, 
-	Vishal Annapurve <vannapurve@google.com>, "jroedel@suse.de" <jroedel@suse.de>, Jun Miao <jun.miao@intel.com>, 
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] f2fs: use ioprio hint for hot and pinned files
+To: Daniel Lee <chullee@google.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20250611233706.572784-1-chullee@google.com>
+ <20250611233706.572784-3-chullee@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250611233706.572784-3-chullee@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025, Rick P Edgecombe wrote:
-> On Thu, 2025-06-12 at 17:19 -0700, Sean Christopherson wrote:
-> > > I think this may need a guest opt-in, so the guest can say it can han=
-dle
-> > > errors for both smaller and larger page size matches. So it may not
-> > > matter if there is a rare usage or not. If KVM finds the guest opts-i=
-n
-> > > (how to do that TBD), it can start mapping at the host level.=20
-> >=20
-> > Hmm, clever.=C2=A0 That should work; requiring an updated guest kernel =
-to get
-> > optimal performance doesn't seem too onerous.
-> >=20
-> > > If KVM doesn't see the opt-in, the guest gets 4k pages.
-> >=20
-> > As in, KVM doesn't even try to use hugepage mappings?=C2=A0 If so, this=
- idea
-> > probably gets my vote.
->=20
-> Maybe an "I can handle it" accept size bit that comes in the exit qualifi=
-cation?
+On 2025/6/12 7:37, Daniel Lee wrote:
+> Apply the `ioprio_hint` to set `F2FS_IOPRIO_WRITE` priority
+> on files identified as "hot" at creation and on files that are
+> pinned via ioctl.
+> 
+> Signed-off-by: Daniel Lee <chullee@google.com>
+> ---
+>   fs/f2fs/f2fs.h  | 21 +++++++++++++++++++++
+>   fs/f2fs/file.c  |  3 +++
+>   fs/f2fs/namei.c | 11 +++++++----
+>   3 files changed, 31 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 162d79a3c1a5..0b05b3b6386b 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3441,6 +3441,27 @@ static inline void set_file(struct inode *inode, int type)
+>   	f2fs_mark_inode_dirty_sync(inode, true);
+>   }
+>   
+> +static inline int get_ioprio(struct inode *inode)
+> +{
+> +	return F2FS_I(inode)->ioprio_hint;
+> +}
+> +
+> +static inline void set_ioprio(struct inode *inode, int level)
+> +{
+> +	if (get_ioprio(inode) == level)
+> +		return;
+> +	F2FS_I(inode)->ioprio_hint = level;
+> +	f2fs_mark_inode_dirty_sync(inode, true);
 
-Eww, no.  Having to react on _every_ EPT violation would be annoying, and t=
-rying
-to debug issues where the guest is mixing options would probably be a night=
-mare.
+We don't need to mark inode dirty? IIRC, .ioprio_hint is just in-memory variable?
 
-I was thinking of something along the lines of an init-time or boot-time op=
-t-in.
+> +}
+> +
+> +static inline void clear_ioprio(struct inode *inode)
+> +{
+> +	if (get_ioprio(inode) == 0)
+> +		return;
+> +	F2FS_I(inode)->ioprio_hint = 0;
+> +	f2fs_mark_inode_dirty_sync(inode, true);
 
-> Yan, do you see any problems with that? Like if a guest passed it in some=
- accept
-> and not others? Thinking about the new "unaccept" SEAMCALL...
+Ditto,
+
+> +}
+> +
+>   static inline void clear_file(struct inode *inode, int type)
+>   {
+>   	if (!is_file(inode, type))
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 4fd45e94661a..95a3b4b59dd1 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -3496,6 +3496,7 @@ static int f2fs_ioc_set_pin_file(struct file *filp, unsigned long arg)
+>   
+>   	if (!pin) {
+>   		clear_inode_flag(inode, FI_PIN_FILE);
+> +		clear_ioprio(inode);
+>   		f2fs_i_gc_failures_write(inode, 0);
+>   		goto done;
+>   	} else if (f2fs_is_pinned_file(inode)) {
+> @@ -3529,6 +3530,8 @@ static int f2fs_ioc_set_pin_file(struct file *filp, unsigned long arg)
+>   	}
+>   
+>   	set_inode_flag(inode, FI_PIN_FILE);
+> +	file_set_hot(inode);
+> +	set_ioprio(inode, F2FS_IOPRIO_WRITE);
+>   	ret = F2FS_I(inode)->i_gc_failures;
+>   done:
+>   	f2fs_update_time(sbi, REQ_TIME);
+> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+> index 07e333ee21b7..0f96a0b86c40 100644
+> --- a/fs/f2fs/namei.c
+> +++ b/fs/f2fs/namei.c
+> @@ -191,9 +191,10 @@ static void set_compress_new_inode(struct f2fs_sb_info *sbi, struct inode *dir,
+>   }
+>   
+>   /*
+> - * Set file's temperature for hot/cold data separation
+> + * Set file's temperature (for hot/cold data separation) and
+> + * I/O priority, based on filename extension
+>    */
+> -static void set_file_temperature(struct f2fs_sb_info *sbi, struct inode *inode,
+> +static void set_file_temp_prio(struct f2fs_sb_info *sbi, struct inode *inode,
+>   		const unsigned char *name)
+>   {
+>   	__u8 (*extlist)[F2FS_EXTENSION_LEN] = sbi->raw_super->extension_list;
+> @@ -212,8 +213,10 @@ static void set_file_temperature(struct f2fs_sb_info *sbi, struct inode *inode,
+>   
+>   	if (i < cold_count)
+>   		file_set_cold(inode);
+> -	else
+> +	else {
+>   		file_set_hot(inode);
+> +		set_ioprio(inode, F2FS_IOPRIO_WRITE);
+> +	}
+>   }
+>   
+>   static struct inode *f2fs_new_inode(struct mnt_idmap *idmap,
+> @@ -317,7 +320,7 @@ static struct inode *f2fs_new_inode(struct mnt_idmap *idmap,
+>   		set_inode_flag(inode, FI_INLINE_DATA);
+>   
+>   	if (name && !test_opt(sbi, DISABLE_EXT_IDENTIFY))
+> -		set_file_temperature(sbi, inode, name);
+> +		set_file_temp_prio(sbi, inode, name);
+>   
+>   	stat_inc_inline_xattr(inode);
+>   	stat_inc_inline_inode(inode);
+
