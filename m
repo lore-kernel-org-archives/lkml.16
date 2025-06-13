@@ -1,55 +1,55 @@
 Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBD41F8690
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976C321421C
 	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749829979; cv=none; b=iXu3ylsSEnZUODLQh1PliFqhWwK82kQwIbohkVm0aV9Gzr+5Te93c8YJoA/s/vWyhJj8SKWrYPsjJYpBo8G+0lSCXpbKpi/vanW5mJaDWhiST9eEQtIYBfyVM7CE5ePzxMFlsnx6JviJbk4HUQxsdh0bEWYt+uBE/lxYcE5F72o=
+	t=1749829979; cv=none; b=RpfPqeY4CvF5NdRm4JXa6IkHWT4PR5duG/Dn3JUWV1wb3Fb1OEEjybd7fdWsdkB9sqJ1/+tayPFR6LZFcnn2ccqRqn0UXdxsKJRiiL9hDHANp+i6CKpA/rDB52aMVwZ2VZ4Lm/VIw5kAgUobmsYUf0CpTl490KI0QM+tJi/76hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749829979; c=relaxed/simple;
-	bh=vxkacs+qUolHE8ofOSXElM6uFZzrXDwx3yDd3lw+TdE=;
+	bh=Lako0OAiwwW3qmvtQn9EFqpnvuUs1QbGAU5WOiOhGB8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qWXIeNU5fxsD2y0XoG0EHR/NWA5S+9Y62b0eVAyngy+s6kvA6x0eBj6uYC+mf1uB3MDOJzUg54jTLvV1wOqmU37jRCYAzYr8Nu0OXxNQGTKSJLtZvsh2UXVJ7cwBPmTW8kmI/JIzIFQFyBh8xIHZaISURMjlg7FAhhre9N/O/Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kg645UMD; arc=none smtp.client-ip=209.85.166.73
+	 To:Cc:Content-Type; b=bsxNUVyZMMTTu4/ncTeluBLV97piFvW+8M6TK/a2THoe2W9ftpVT/lv/oRs1RMW0/X/rQYENj+IDOZgUksFj385v/k6Yoy05pb8ffEtC4flUTBUEhCxaHRvFYfAHUcZfP//WZORwcLCZqefTb9Qxw1KeAhl/Kztv/CDRCp6w0v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TFb0YF9Y; arc=none smtp.client-ip=209.85.166.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kg645UMD"
-Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-869e9667f58so445543439f.3
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TFb0YF9Y"
+Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-86a5def8869so459121139f.0
         for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749829976; x=1750434776; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749829977; x=1750434777; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OFF6SOp13MfI+rKYc7dCezNEaDk/WUOkhnG6IJMmr80=;
-        b=Kg645UMD5Al2JdimJtX+fWBrF7WLVF+k6Od+MRlWVrWRXRUlFv6/C0HbftavRly7TP
-         pt28jSaVtEWQWSKk6ewNBj0x8k7a41xeak2cP5QSfOs+NyLUiFkKE0la80pIH7SoEplI
-         TcwHC4J4iKb0Hkj8ZcKH3t/l8WnIcqCQ4LXJVcmIIPUf9bhbuLAp7SLxNrq31qwvnTW7
-         ZM4DVDgbTTdt53eu5XGNMd8scqs7QKeDnnemLXVa+N2ntPNTSrpTjXWa2BklvzMTerHF
-         UYvkjuwM7ZMgD2651kDfj2+Am6yDuFX6120bgaCnyQvvqyTHC/dTtpXtMralEAPy/xP4
-         GGcA==
+        bh=R6oERwEX9ihIeJP2v6QxDWL9BHMEBqaouPjaqIFm6Iw=;
+        b=TFb0YF9YeGY1sW/cBIJRUGAHTbP1v/NJ2LicpCKicQkH1KGbk2qhPB044hjt8/5m8Q
+         buPO0Gxxvy8W1YD2Q9ujESFa09RfpbtaxaPW8yy3bk3gSlhv3Y/WYyAgIoLmWKOp0bbO
+         +53v3UtCLBuILVoCwwdDXLnMBvk0IPyIffXKCQnCkDkPJuscK0VnVRYtyWwU/n1JqHKY
+         CjlvgF6QtHf5X0V+GM0I2zQ6X6KrtNx9YtPy3xWYWBtSvz+2eCBLlWHwPWA3taZ2VOEQ
+         jv0IqxhslLf44algDeiRLh3IDLa2/y4rN2Eieq6FjbttCTj8T7/pyPeEujyUsNtUEIm1
+         dXOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749829976; x=1750434776;
+        d=1e100.net; s=20230601; t=1749829977; x=1750434777;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OFF6SOp13MfI+rKYc7dCezNEaDk/WUOkhnG6IJMmr80=;
-        b=j9bXIeYzYBR4Z1o3HrVHxZQD1IXCy86m7cLMhLgsCCDc2gi9CQyLJxWOAyyCfpRCWd
-         1HXaKKN3NpNnLH7e6tmUPUTXBjqbVphnAOzvJoSkIY76KntH8KYDaVZGPotlLjrazNby
-         sVcPJ+H/74d7lf7c69gERLdkL8JGSGogi/Kc6pXvEW/rKiirhfPVPXyg7CVQ4FiezXoE
-         6bzFpMkfixHkWsJA9Ia7lRwPMXoH1uTd7v1Rqgr1A8gjBLhuqYEMbTrZCK28sXQbS/ds
-         n8MC7Kr+3uheTGXNtAlM1N209gCygbTq9Ez3LXicuk8NoL/VixNMkEM1RiEr86LJbaMu
-         IqJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKYDhlJsHtlJtA9lHCmPU2ewUdePH7YYzDdQuue4owZC+O+cqPdWGaEqo627bCIcYiNH/YFoKjij5cgdY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/c4Ub27LE5iegQ1kqMkxl2y+5y83/uZqmhsaLQQbE+YMDH7SO
-	gEf5Je1UsaVuww6EJyhEyESumOCp64TcHVBBG213T2V14qy4+B91MB4/9U4aP4cliTMT0d3XYQF
-	HWYIOoA7EzA==
-X-Google-Smtp-Source: AGHT+IG8T3q/TFMjMeVIYD6samTw89/uinTNnuWwzxHnuwndVMxgoAdLhGBoyVqCfis1o5KW9rTeoIB0iQbo
-X-Received: from oabkz22.prod.google.com ([2002:a05:6871:4096:b0:2bc:69a2:7ea5])
- (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:a3c6:b0:2d6:667c:511f
- with SMTP id 586e51a60fabf-2eaf05ca75amr171809fac.9.1749829964975; Fri, 13
- Jun 2025 08:52:44 -0700 (PDT)
-Date: Fri, 13 Jun 2025 15:52:36 +0000
+        bh=R6oERwEX9ihIeJP2v6QxDWL9BHMEBqaouPjaqIFm6Iw=;
+        b=L3/ci0F0IjIlUE3U8b9oYnxm6vAKLRBZI9ceFK3YYESiHCmrh3hN8fIKxLhPLz52N4
+         lC9nhnKYcdGKQvfsiKGnCSxP0vMtlGlMc5L29GidC7zvVFYeNmfzmWpJ1ivfEMS17tNA
+         zt0tYuPA2eEnBdu6F1j2odHdtkRgkAX54D4n/L6hCf6Ynk0SRGeOQOksUjxv9h3l73e9
+         Qv4loeg8AQHqqROvOOPVVQ3QmrRplbyvrRBgsvjjcOx3npM1M82beeWZ4deWX2WWUQKA
+         csHwjAa9fD0HATt6GQraVPVB9xLQlMnd8gfdzieBwkZniGAlOMT2SUQj0tBDWa04d99p
+         u2XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPJ55egsV8KiL4SmN9owkJeZSFKxtUIga42Z89ltbPSd2VVTs4eos8NHAvqW/znVAfT1jwOOjieBPPycE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFZX9vY6BRbkJAjoPB1SQI6/JQ56IxdaxfLmD33/b5XZpH9gEG
+	WzixP53nIDmDggRZDianLle4M05G4F3L/KjNtkVoJAt3h2s0jLU54W+82493hU9S2f2OW0UF8h1
+	zkxIiXHPplw==
+X-Google-Smtp-Source: AGHT+IHQ02cONRw6pm1YF1fpfHYYr8pmJ6vodarmPvsSB72Fz6jp9DIzeYQOuK2lpV+1OvcWdDYWazQgvwWV
+X-Received: from iobbr11.prod.google.com ([2002:a05:6602:388b:b0:867:6d21:ab61])
+ (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6602:29a9:b0:864:4a1b:dfc5
+ with SMTP id ca18e2360f4ac-875d3d2c717mr392436439f.9.1749829965739; Fri, 13
+ Jun 2025 08:52:45 -0700 (PDT)
+Date: Fri, 13 Jun 2025 15:52:37 +0000
 In-Reply-To: <20250613155239.2029059-1-rananta@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250613155239.2029059-1-rananta@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
-Message-ID: <20250613155239.2029059-3-rananta@google.com>
-Subject: [PATCH v3 2/4] KVM: arm64: vgic-v3: Consolidate MAINT_IRQ handling
+Message-ID: <20250613155239.2029059-4-rananta@google.com>
+Subject: [PATCH v3 3/4] KVM: arm64: Introduce attribute to control GICD_TYPER2.nASSGIcap
 From: Raghavendra Rao Ananta <rananta@google.com>
 To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
 Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.com>, 
@@ -68,91 +68,114 @@ Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.co
 	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Oliver Upton <oliver.upton@linux.dev>
+KVM unconditionally advertises GICD_TYPER2.nASSGIcap (which internally
+implies vSGIs) on GICv4.1 systems. Allow userspace to change whether a
+VM supports the feature. Only allow changes prior to VGIC initialization
+as at that point vPEs need to be allocated for the VM.
 
-Consolidate the duplicated handling of the VGICv3 maintenance IRQ
-attribute as a regular GICv3 attribute, as it is neither a register nor
-a common attribute.
+For convenience, bundle support for vLPIs and vSGIs behind this feature,
+allowing userspace to control vPE allocation for VMs in environments
+that may be constrained on vPE IDs.
 
+Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
 Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
 ---
- arch/arm64/kvm/vgic/vgic-kvm-device.c | 51 +++++++++++++--------------
- 1 file changed, 25 insertions(+), 26 deletions(-)
+ .../virt/kvm/devices/arm-vgic-v3.rst          | 29 +++++++++++++++
+ arch/arm64/include/uapi/asm/kvm.h             |  3 ++
+ arch/arm64/kvm/vgic/vgic-init.c               |  3 ++
+ arch/arm64/kvm/vgic/vgic-kvm-device.c         | 37 +++++++++++++++++++
+ arch/arm64/kvm/vgic/vgic-mmio-v3.c            | 10 ++++-
+ arch/arm64/kvm/vgic/vgic-v3.c                 |  5 ++-
+ arch/arm64/kvm/vgic/vgic-v4.c                 |  2 +-
+ include/kvm/arm_vgic.h                        |  3 ++
+ 8 files changed, 88 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/virt/kvm/devices/arm-vgic-v3.rst b/Documentation/virt/kvm/devices/arm-vgic-v3.rst
+index e860498b1e35..049d77eae591 100644
+--- a/Documentation/virt/kvm/devices/arm-vgic-v3.rst
++++ b/Documentation/virt/kvm/devices/arm-vgic-v3.rst
+@@ -306,3 +306,32 @@ Groups:
+ 
+     The vINTID specifies which interrupt is generated when the vGIC
+     must generate a maintenance interrupt. This must be a PPI.
++
++  KVM_DEV_ARM_VGIC_GRP_FEATURES
++   Attributes:
++
++    KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap
++      Control whether support for SGIs without an active state is exposed
++      to the VM. attr->addr points to a __u8 value which indicates whether
++      he feature is enabled / disabled.
++
++      A value of 0 indicates that the feature is disabled. A nonzero value
++      indicates that the feature is enabled.
++
++      This attribute can only be set prior to initializing the VGIC (i.e.
++      KVM_DEV_ARM_VGIC_CTRL_INIT).
++
++      Support for SGIs without an active state depends on hardware support.
++      Userspace can discover support for the feature by reading the
++      attribute after creating a VGICv3. It is possible that
++      KVM_DEV_ARM_VGIC_CTRL_INIT can later fail if this feature is enabled
++      and KVM is unable to allocate GIC vPEs for the VM.
++
++  Errors:
++
++    =======  ========================================================
++    -ENXIO   Invalid attribute in attr->attr
++    -EFAULT  Invalid user address in attr->addr
++    -EBUSY   The VGIC has already been initialized
++    -EINVAL  KVM doesn't support the requested feature setting
++    =======  ========================================================
+diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+index ed5f3892674c..41e9ce412afd 100644
+--- a/arch/arm64/include/uapi/asm/kvm.h
++++ b/arch/arm64/include/uapi/asm/kvm.h
+@@ -417,6 +417,7 @@ enum {
+ #define KVM_DEV_ARM_VGIC_GRP_LEVEL_INFO  7
+ #define KVM_DEV_ARM_VGIC_GRP_ITS_REGS 8
+ #define KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ  9
++#define KVM_DEV_ARM_VGIC_GRP_FEATURES 10
+ #define KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_SHIFT	10
+ #define KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_MASK \
+ 			(0x3fffffULL << KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_SHIFT)
+@@ -429,6 +430,8 @@ enum {
+ #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES	3
+ #define   KVM_DEV_ARM_ITS_CTRL_RESET		4
+ 
++#define   KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap	0
++
+ /* Device Control API on vcpu fd */
+ #define KVM_ARM_VCPU_PMU_V3_CTRL	0
+ #define   KVM_ARM_VCPU_PMU_V3_IRQ		0
+diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
+index 5e0e4559004b..944e24750ac4 100644
+--- a/arch/arm64/kvm/vgic/vgic-init.c
++++ b/arch/arm64/kvm/vgic/vgic-init.c
+@@ -157,6 +157,9 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
+ 
+ 	kvm->arch.vgic.in_kernel = true;
+ 	kvm->arch.vgic.vgic_model = type;
++	if (type == KVM_DEV_TYPE_ARM_VGIC_V3)
++		kvm->arch.vgic.nassgicap = kvm_vgic_global_state.has_gicv4_1 &&
++					   gic_cpuif_has_vsgi();
+ 
+ 	kvm->arch.vgic.vgic_dist_base = VGIC_ADDR_UNDEF;
+ 
 diff --git a/arch/arm64/kvm/vgic/vgic-kvm-device.c b/arch/arm64/kvm/vgic/vgic-kvm-device.c
-index f9ae790163fb..e28cf68a49c3 100644
+index e28cf68a49c3..629f56063a13 100644
 --- a/arch/arm64/kvm/vgic/vgic-kvm-device.c
 +++ b/arch/arm64/kvm/vgic/vgic-kvm-device.c
-@@ -303,12 +303,6 @@ static int vgic_get_common_attr(struct kvm_device *dev,
- 			     VGIC_NR_PRIVATE_IRQS, uaddr);
- 		break;
+@@ -626,6 +626,26 @@ static int vgic_v3_set_attr(struct kvm_device *dev,
+ 		dev->kvm->arch.vgic.mi_intid = val;
+ 		return 0;
  	}
--	case KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ: {
--		u32 __user *uaddr = (u32 __user *)(long)attr->addr;
--
--		r = put_user(dev->kvm->arch.vgic.mi_intid, uaddr);
--		break;
--	}
- 	}
- 
- 	return r;
-@@ -523,7 +517,7 @@ static int vgic_v3_attr_regs_access(struct kvm_device *dev,
- 	struct vgic_reg_attr reg_attr;
- 	gpa_t addr;
- 	struct kvm_vcpu *vcpu;
--	bool uaccess, post_init = true;
-+	bool uaccess;
- 	u32 val;
- 	int ret;
- 
-@@ -539,9 +533,6 @@ static int vgic_v3_attr_regs_access(struct kvm_device *dev,
- 		/* Sysregs uaccess is performed by the sysreg handling code */
- 		uaccess = false;
- 		break;
--	case KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ:
--		post_init = false;
--		fallthrough;
- 	default:
- 		uaccess = true;
- 	}
-@@ -561,7 +552,7 @@ static int vgic_v3_attr_regs_access(struct kvm_device *dev,
- 
- 	mutex_lock(&dev->kvm->arch.config_lock);
- 
--	if (post_init != vgic_initialized(dev->kvm)) {
-+	if (!vgic_initialized(dev->kvm)) {
- 		ret = -EBUSY;
- 		goto out;
- 	}
-@@ -591,19 +582,6 @@ static int vgic_v3_attr_regs_access(struct kvm_device *dev,
- 		}
- 		break;
- 	}
--	case KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ:
--		if (!is_write) {
--			val = dev->kvm->arch.vgic.mi_intid;
--			ret = 0;
--			break;
--		}
--
--		ret = -EINVAL;
--		if ((val < VGIC_NR_PRIVATE_IRQS) && (val >= VGIC_NR_SGIS)) {
--			dev->kvm->arch.vgic.mi_intid = val;
--			ret = 0;
--		}
--		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
-@@ -630,8 +608,24 @@ static int vgic_v3_set_attr(struct kvm_device *dev,
- 	case KVM_DEV_ARM_VGIC_GRP_REDIST_REGS:
- 	case KVM_DEV_ARM_VGIC_GRP_CPU_SYSREGS:
- 	case KVM_DEV_ARM_VGIC_GRP_LEVEL_INFO:
--	case KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ:
- 		return vgic_v3_attr_regs_access(dev, attr, true);
-+	case KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ: {
-+		u32 __user *uaddr = (u32 __user *)attr->addr;
-+		u32 val;
++	case KVM_DEV_ARM_VGIC_GRP_FEATURES: {
++		u8 __user *uaddr = (u8 __user *)attr->addr;
++		u8 val;
++
++		if (attr->attr != KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap)
++			return -ENXIO;
 +
 +		if (get_user(val, uaddr))
 +			return -EFAULT;
@@ -161,30 +184,124 @@ index f9ae790163fb..e28cf68a49c3 100644
 +		if (vgic_initialized(dev->kvm))
 +			return -EBUSY;
 +
-+		if ((val < VGIC_NR_SGIS) || (val >= VGIC_NR_PRIVATE_IRQS))
++		if (!(kvm_vgic_global_state.has_gicv4_1 && gic_cpuif_has_vsgi()) && val)
 +			return -EINVAL;
 +
-+		dev->kvm->arch.vgic.mi_intid = val;
++		dev->kvm->arch.vgic.nassgicap = val;
 +		return 0;
 +	}
  	default:
  		return vgic_set_common_attr(dev, attr);
  	}
-@@ -645,8 +639,13 @@ static int vgic_v3_get_attr(struct kvm_device *dev,
- 	case KVM_DEV_ARM_VGIC_GRP_REDIST_REGS:
- 	case KVM_DEV_ARM_VGIC_GRP_CPU_SYSREGS:
- 	case KVM_DEV_ARM_VGIC_GRP_LEVEL_INFO:
--	case KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ:
- 		return vgic_v3_attr_regs_access(dev, attr, false);
-+	case KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ: {
-+		u32 __user *uaddr = (u32 __user *)(long)attr->addr;
+@@ -646,6 +666,17 @@ static int vgic_v3_get_attr(struct kvm_device *dev,
+ 		guard(mutex)(&dev->kvm->arch.config_lock);
+ 		return put_user(dev->kvm->arch.vgic.mi_intid, uaddr);
+ 	}
++	case KVM_DEV_ARM_VGIC_GRP_FEATURES: {
++		u8 __user *uaddr = (u8 __user *)attr->addr;
++		u8 val;
++
++		if (attr->attr != KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap)
++			return -ENXIO;
 +
 +		guard(mutex)(&dev->kvm->arch.config_lock);
-+		return put_user(dev->kvm->arch.vgic.mi_intid, uaddr);
++		val = dev->kvm->arch.vgic.nassgicap;
++		return put_user(val, uaddr);
 +	}
  	default:
  		return vgic_get_common_attr(dev, attr);
  	}
+@@ -683,8 +714,14 @@ static int vgic_v3_has_attr(struct kvm_device *dev,
+ 			return 0;
+ 		case KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES:
+ 			return 0;
++		default:
++			return -ENXIO;
+ 		}
++	case KVM_DEV_ARM_VGIC_GRP_FEATURES:
++		return attr->attr != KVM_DEV_ARM_VGIC_FEATURE_nASSGIcap ?
++		       -ENXIO : 0;
+ 	}
++
+ 	return -ENXIO;
+ }
+ 
+diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+index 1a9c5b4418b2..43f59e70e1a2 100644
+--- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
++++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+@@ -50,12 +50,20 @@ bool vgic_has_its(struct kvm *kvm)
+ 
+ bool vgic_supports_direct_msis(struct kvm *kvm)
+ {
++	/*
++	 * Deliberately conflate vLPI and vSGI support on GICv4.1 hardware,
++	 * indirectly allowing userspace to control whether or not vPEs are
++	 * allocated for the VM.
++	 */
++	if (kvm_vgic_global_state.has_gicv4_1 && !vgic_supports_direct_sgis(kvm))
++		return false;
++
+ 	return kvm_vgic_global_state.has_gicv4 && vgic_has_its(kvm);
+ }
+ 
+ bool vgic_supports_direct_sgis(struct kvm *kvm)
+ {
+-	return kvm_vgic_global_state.has_gicv4_1 && gic_cpuif_has_vsgi();
++	return kvm->arch.vgic.nassgicap;
+ }
+ 
+ /*
+diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
+index b9ad7c42c5b0..cb6bda9b3c6c 100644
+--- a/arch/arm64/kvm/vgic/vgic-v3.c
++++ b/arch/arm64/kvm/vgic/vgic-v3.c
+@@ -404,7 +404,8 @@ int vgic_v3_save_pending_tables(struct kvm *kvm)
+ 	 * The above vgic initialized check also ensures that the allocation
+ 	 * and enabling of the doorbells have already been done.
+ 	 */
+-	if (kvm_vgic_global_state.has_gicv4_1) {
++	if (kvm_vgic_global_state.has_gicv4_1 &&
++	    vgic_supports_direct_irqs(kvm)) {
+ 		unmap_all_vpes(kvm);
+ 		vlpi_avail = true;
+ 	}
+@@ -581,7 +582,7 @@ int vgic_v3_map_resources(struct kvm *kvm)
+ 		return -EBUSY;
+ 	}
+ 
+-	if (kvm_vgic_global_state.has_gicv4_1)
++	if (vgic_supports_direct_sgis(kvm))
+ 		vgic_v4_configure_vsgis(kvm);
+ 
+ 	return 0;
+diff --git a/arch/arm64/kvm/vgic/vgic-v4.c b/arch/arm64/kvm/vgic/vgic-v4.c
+index e7e284d47a77..25e9da9e7a2d 100644
+--- a/arch/arm64/kvm/vgic/vgic-v4.c
++++ b/arch/arm64/kvm/vgic/vgic-v4.c
+@@ -245,7 +245,7 @@ int vgic_v4_init(struct kvm *kvm)
+ 
+ 	lockdep_assert_held(&kvm->arch.config_lock);
+ 
+-	if (!kvm_vgic_global_state.has_gicv4)
++	if (!vgic_supports_direct_irqs(kvm))
+ 		return 0; /* Nothing to see here... move along. */
+ 
+ 	if (dist->its_vm.vpes)
+diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+index 4a34f7f0a864..1b4886f3fb20 100644
+--- a/include/kvm/arm_vgic.h
++++ b/include/kvm/arm_vgic.h
+@@ -264,6 +264,9 @@ struct vgic_dist {
+ 	/* distributor enabled */
+ 	bool			enabled;
+ 
++	/* Supports SGIs without active state */
++	bool			nassgicap;
++
+ 	/* Wants SGIs without active state */
+ 	bool			nassgireq;
+ 
 -- 
 2.50.0.rc2.692.g299adb8693-goog
 
