@@ -1,253 +1,186 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0835B2741CB;
-	Fri, 13 Jun 2025 21:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749848992; cv=fail; b=UW/FOfJjc3S/ZWqzn7QZeAJHpizIAvLKfv0LAj2qxtFWVjpcCb63UwFpoS6EBPmP34Ps8z+JCJYwGlWDXJa/CNSP3Dnr6t7fiHHweEQe3+DsQjcCnmw14/xKiUI3B5AOBj3/QdYFwKHLMII2mMBK/zOaA4g7ik9N1w5a7HVim1M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749848992; c=relaxed/simple;
-	bh=o9TrNhilmmhKv01AG+6GUaAq3fDAsLk0xI5yB4bKl/8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=do3QADjswbFubQbmy7nGwOxnG2Oqm0izd4JZF6kiMD2fj9TV2LNzcicrS8drrwThonDaQgCKhaSoTBmOmgjbQ2AEK8CheyEH4URi4uHvbTPbkfj4wCNMYyGFOIOzdn3OVwDcCuR28e38/wzlNKL2kdKlFpr6NLOQ+j1bwP8tIVo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KQUerUy5; arc=fail smtp.client-ip=40.107.223.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF2F272E45;
+	Fri, 13 Jun 2025 21:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749849011; cv=none; b=Ka6w8RLcfIAvRzP7/5JFOpFduE6qTIhcoCSe6F1dnHEpm3cCPPCd+VjJsh0aGNb5cNUvX+xaiICegbIMnQM5gpaURWZhOYMsXUP2pvVbvnhCv8t86f6AQZ+kRG1TZIRVuqzSTT4eJEeMgTGcsYAWjnnJFZllF2ct/e0ClcIOW0k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749849011; c=relaxed/simple;
+	bh=OmkcJNAV0hfO/+rD4d1mO4Zskm+DdbNdyEKY6x3S9ZA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NFIHgkYtlaCEl8vktKQGX2Tz0D31a/kKZXDcqYvbQ8QNEAbigNgzHOupWPwr5sMSWkluRBUgXC0dIjImoG2kRhrpiAex7EbSUIzAatKykAVDuYxM8wpH1ZWiNvH2rTRbWIsmuxmPgTwHYdYKOdFaYJM9vYDiZBzaHi6BHKsS4dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W/+KmpmN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B+7CxHUz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KQUerUy5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xF/M06YOtOGhyDvkAm+OUJ3k+izGvNt6SAAuOCalcnNRQ0mb9oRzCc1EFj7lDg0/t68TSnVjtU3oOrhXoRHOXIEM6BCwGxXtTZ2IgraitE6N5ZXexGiRtD9BJZBiUZZB5AQUgsMwOWkO+F6HsjYmOJRNwhlUcxUFMfMRt8CQpm2Gskt60N9+R1wz8b6qTTG/C/ZRd8C806AdtVUwh2hMVSJFQXh1hZZ00rkVOfQSHbxBSFyTZguI+odaOxGHkuajadp67Bk/xSm/jjnRHVq4Fuq+JRqvuybBBhJOMFFptWLfrXvsvsX3irBp13j5Hw/O5YBUInenOijbQZHZZhTygg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AvBKvX48qdqaObdL6gEBkO8pDRoOzoWjZjBh8RqqvMU=;
- b=C9beAyqUwqrql0wVVB4W//1CQVStV1bP5dtUNPIDAwSyn7vkNlVVRIGdj+zoucQoi+sPM0POiOh9wbbi7C8rdYNs3hwNnM5h3lp9nvGiTfcLtGGxxLQYPZZeBPoed8obkTIuZBgteJp4RgClKhY7cyMkM9/aIl9+sL4Ub3KZymyksJ0TzioJmSGaLW7cDil3CiAaHdY3Yb62kI22GOBXE3bCTU5XBzYc3rmC4yiLIm+Mv8TKS245AYZ9LcCSZLxEE873OGzmg9RnWTqraqjtq+KV/AB+mQed07ofttwzsCG4FH3Hkp5T6eCfFoua4xHcDOk9kW7RqmbyqTk5SNKNhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lwn.net smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AvBKvX48qdqaObdL6gEBkO8pDRoOzoWjZjBh8RqqvMU=;
- b=KQUerUy5CJQXZn6Y2BxPiuxIL4FjF+Ba8oO2QUkDus6k/yMCa5v8eje99gFVh48iH93mUg71RT5/kB+0CMRb6URmzh00uVnWAWicmE9uxKL1EMmQkND3dMAmJ2/1fDsHtw6GHIVZ5eq41RzXqu2OLui1mTKDnHVCCZ6zrF3b/2E=
-Received: from PH8PR21CA0017.namprd21.prod.outlook.com (2603:10b6:510:2ce::17)
- by DM6PR12MB4283.namprd12.prod.outlook.com (2603:10b6:5:211::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Fri, 13 Jun
- 2025 21:09:47 +0000
-Received: from CY4PEPF0000EDD1.namprd03.prod.outlook.com
- (2603:10b6:510:2ce:cafe::e6) by PH8PR21CA0017.outlook.office365.com
- (2603:10b6:510:2ce::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.14 via Frontend Transport; Fri,
- 13 Jun 2025 21:09:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD1.mail.protection.outlook.com (10.167.241.197) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 21:09:47 +0000
-Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 13 Jun
- 2025 16:09:44 -0500
-From: Babu Moger <babu.moger@amd.com>
-To: <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
-	<reinette.chatre@intel.com>, <Dave.Martin@arm.com>, <james.morse@arm.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>
-CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <thuth@redhat.com>,
-	<ardb@kernel.org>, <gregkh@linuxfoundation.org>, <seanjc@google.com>,
-	<thomas.lendacky@amd.com>, <pawan.kumar.gupta@linux.intel.com>,
-	<manali.shukla@amd.com>, <perry.yuan@amd.com>, <kai.huang@intel.com>,
-	<peterz@infradead.org>, <xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>,
-	<mario.limonciello@amd.com>, <xin3.li@intel.com>, <gautham.shenoy@amd.com>,
-	<xin@zytor.com>, <chang.seok.bae@intel.com>, <fenghuay@nvidia.com>,
-	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
-	<eranian@google.com>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v14 32/32] x86/resctrl: Configure mbm_event mode if supported
-Date: Fri, 13 Jun 2025 16:05:16 -0500
-Message-ID: <d0924000e0de931f414c7cc1697919f6d3beeff9.1749848715.git.babu.moger@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1749848714.git.babu.moger@amd.com>
-References: <cover.1749848714.git.babu.moger@amd.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W/+KmpmN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B+7CxHUz"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749849007;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MuBzFJ8bax/C07ekYms0nJGiLaxwPvHrXMpn69ItGCE=;
+	b=W/+KmpmNybGnuRoYv0AkuKtnsKYy49mDsnZqnAuVFR1iteOuBy0nacsuwGwXn52voU6/A3
+	rlpGxKzE17HSzJPSKGvwNQJEKPQ2IFAH0QXreT8YqKLVvYCy/n1ZCmO4AAVX15Jd+MYBUZ
+	f078Jahg2V4fzWuEaulUv7ngS3jkX9Tek/CfN3Gn+gU1TOIbsKZQYlPliMSLFsqyqornBW
+	lsIadsSDSfNHZTi+A/6p2ZwnwTvAdvZSMEF/OVyDAxeAFC4jk3gJJG1QVukp+FAy2z+3wo
+	2gYCjOHwj5rC7TfnnNYbSEVUNJgT0ejodJqurt21ADxWP4ylesQwYB2SVPEGEg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749849007;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MuBzFJ8bax/C07ekYms0nJGiLaxwPvHrXMpn69ItGCE=;
+	b=B+7CxHUzslKZqG2mQ5S8cP+m4qTSW7M8mzh4mOWSOA/tKqAiCbq9U6NTQHVBHdo+sCpJ1L
+	VBPCCiAD4jsOM0DA==
+To: Eugen Hristev <eugen.hristev@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
+ rostedt@goodmis.org, john.ogness@linutronix.de, senozhatsky@chromium.org,
+ pmladek@suse.com, peterz@infradead.org, mojha@qti.qualcomm.com,
+ linux-arm-kernel@lists.infradead.org, vincent.guittot@linaro.org,
+ konradybcio@kernel.org, dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+ andersson@kernel.org
+Subject: Re: [RFC][PATCH 09/14] genirq: add irq_kmemdump_register
+In-Reply-To: <f916cf7f-6d0d-4d31-8e4b-24fc7da13f4d@linaro.org>
+References: <20250422113156.575971-1-eugen.hristev@linaro.org>
+ <20250422113156.575971-10-eugen.hristev@linaro.org> <87h61wn2qq.ffs@tglx>
+ <1331aa82-fee9-4788-abd9-ef741d00909e@linaro.org>
+ <f916cf7f-6d0d-4d31-8e4b-24fc7da13f4d@linaro.org>
+Date: Fri, 13 Jun 2025 23:10:06 +0200
+Message-ID: <87ikkzpcup.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD1:EE_|DM6PR12MB4283:EE_
-X-MS-Office365-Filtering-Correlation-Id: 91b1a312-49c9-4fcb-3f4f-08ddaabea0c5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?V/dOetoXs2CCADbttw41UKEWrBiuzdSdOqgg1DRJXVwuFIGgU6Oot8pestS+?=
- =?us-ascii?Q?xPftwALbySYy4Pf/iU4+ZDYdA+yG0vAv7d4lmsUzYfb7rBszoSUzF7lY3Xi7?=
- =?us-ascii?Q?TJOQjOlOEdO1I476H6n9lXCpr0OPGE4umE+6Iu/sbFyfEGTujarSw7a9M+oV?=
- =?us-ascii?Q?+8EjooyWufm/4ZztsZ5rdpgLNXneaY7rsPqQx7ztNdDpCnej1R6EcdVI4Tib?=
- =?us-ascii?Q?m5ZQSWHgPKoHfp951oSNOk5upzBLTkP2qoFePdZ8qBnc10SMwCuRzTuv//LV?=
- =?us-ascii?Q?TjFbMR/1KvLxZ378iS9KoAH+HYgU6nnicJ8q3RynZEcwIkxKqZG7Dbb4BnL1?=
- =?us-ascii?Q?7xvOzbXlT0v42phPjOz7KnZeYx758FrVqlkhd05nbQFCodPGxmZ6/vIpzbye?=
- =?us-ascii?Q?Bg1q7vklFrqUeiah841S/aKjOU3czNGIiWOSn4G4Ey/wpK4q1qQxWtgI7rcn?=
- =?us-ascii?Q?xA7E1z8GCco7CiVvUBTZZLxM1QCGvQeiBgkW7z6qPEvr/y9OVKDNdeWNjLC6?=
- =?us-ascii?Q?CRvC22yAJ7tu1rgm1nxCTiYPmZB8vHHZ7LzZCUd3wKNV5dv7pJ05yrf2qKnQ?=
- =?us-ascii?Q?oQ6iO0ZvuCsw7B+Yi7QpECsZu+ipcQUNq7jNMIpH4OhCpsQ+DHcJu97zqpuZ?=
- =?us-ascii?Q?k3owbL9lEQS6QDuuXU8w3fzknwcATRE4VjbI8TzxSwhUVtjGkYr0KoPKdSUw?=
- =?us-ascii?Q?lYX0fgr56NKoSLpj8+ipVu0tDSFkt/orpGso9ibYSuWEG4Sy9+SjvhnAEOz/?=
- =?us-ascii?Q?DcCj9dT2nFSADlD+mRUrxP2tsOvOvdtt0gEwCQniwdZjZSNu+cqqu6kWYhne?=
- =?us-ascii?Q?TUYae+tuzm0djz5soDRD/kT6szTc2kqInxPaYatXRGYTYYZ5MU25WX41Z1Mr?=
- =?us-ascii?Q?nm0sHg7xhby/CTsZdY4TExhhggVkm/1xwSg8wKp/x1dJ9/bN3gue1Mn8Ohj8?=
- =?us-ascii?Q?wC5wsImQe6DeObirEeQ85mQLUi0NWh4fYBhZED1MISB4RMzNBwfU9M1iylKc?=
- =?us-ascii?Q?CXPQh3lPyVoSQFtZU6I2nYkPUR9XZzSexcqCwuAP2AiOvwIqQ2lsppSYs+BY?=
- =?us-ascii?Q?X5BvrCnmiyp1dQQ75y+B8/PaCyRBeFSVYGBAeugTKqeTz0Yh2PHxNEnyYwrH?=
- =?us-ascii?Q?eMts+JnbNc84HbBIMqvCvNRR6+aOWjpupSu5thpjx7GQW9wg3eJeYArHARpD?=
- =?us-ascii?Q?h8DylxwT2bruZOONkfyTuL3wPvmeyZiLyFVS4UkPaAH2jQ8pkU38T/o42qEs?=
- =?us-ascii?Q?kKpkFzhpFzFP6lIR1RvKY1EgGLrWZbG+19iOHHHu0+7Ym8oEHyyytFMInTAm?=
- =?us-ascii?Q?0I47kuk78AQb0SVHUZKxGOZP7zd0Xqw3rDEXM01HoafTmTauunt01WXbkEuA?=
- =?us-ascii?Q?/WRQShseLj3IkpmO9rs614IBZdQ4zuXzvmfSA7KU+Id4MzD3YqUY8JkZmoll?=
- =?us-ascii?Q?eREzKf++yIB3MIds9QygW244CaXZaqMHtKQq0W2mhNV7njZPL3dns0KT60XO?=
- =?us-ascii?Q?jg5r6CkCBq2pCVSHB5/jjm+Zy2Q3zSaBR14aeLmNVoVhvYkCksIB92+bMA?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 21:09:47.3268
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91b1a312-49c9-4fcb-3f4f-08ddaabea0c5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4283
 
-Configure mbm_event mode on AMD platforms. On AMD platforms, it is
-recommended to use the mbm_event mode, if supported, to prevent the
-hardware from resetting counters between reads. This can result in
-misleading values or display "Unavailable" if no counter is assigned
-to the event.
+On Fri, Jun 13 2025 at 17:33, Eugen Hristev wrote:
+> On 5/7/25 13:27, Eugen Hristev wrote:
+>>> Let KMEMDUMP_VAR() store the size and the address of 'nr_irqs' in a
+>>> kmemdump specific section and then kmemdump can just walk that section
+>>> and dump stuff. No magic register functions and no extra storage
+>>> management for static/global variables.
+>>>
+>>> No?
+>> 
+>> Thank you very much for your review ! I will try it out.
+>
+> I have tried this way and it's much cleaner ! thanks for the
+> suggestion.
 
-The mbm_event mode, referred to as ABMC (Assignable Bandwidth Monitoring
-Counters) on AMD, is enabled by default when supported by the system.
+Welcome.
 
-Update ABMC across all logical processors within the resctrl domain to
-ensure proper functionality.
+> The thing that I am trying to figure out now is how to do something
+> similar for a dynamically allocated memory, e.g.
+> void *p = kmalloc(...);
+> and then I can annotate `p` itself, it's address and size, but what I
+> would also want to so dump the whole memory region pointed out by p. and
+> that area address and size cannot be figured out at compile time hence I
+> can't instantiate a struct inside the dedicated section for it.
+> Any suggestion on how to make that better ? Or just keep the function
+> call to register the area into kmemdump ?
 
-Signed-off-by: Babu Moger <babu.moger@amd.com>
----
-v14: Updated the changelog to reflect the change in name of the monitor mode
-     to mbm_event.
+Right. For dynamically allocated memory there is obviously no compile
+time magic possible.
 
-v13 : Added the call resctrl_init_evt_configuration() to setup the event
-      configuration during init.
-      Resolved conflicts caused by the recent FS/ARCH code restructure.
+But I think you can simplify the registration for dynamically allocated
+memory significantly.
 
-v12: Moved the resctrl_arch_mbm_cntr_assign_set_one to domain_add_cpu_mon().
-     Updated the commit log.
+struct kmemdump_entry {
+	void			*ptr;
+        size_t			size;
+        enum kmemdump_uids	uid;
+};
 
-v11: Commit text in imperative tone. Added few more details.
-     Moved resctrl_arch_mbm_cntr_assign_set_one() to monitor.c.
+You use that layout for the compile time table and the runtime
+registrations.
 
-v10: Commit text in imperative tone.
+I intentionally used an UID as that avoids string allocation and all of
+the related nonsense. Mapping UID to a string is a post processing
+problem and really does not need to be done in the kernel. The 8
+character strings are horribly limited and a simple 4 byte unique id is
+achieving the same and saving space.
 
-v9: Minor code change due to merge. Actual code did not change.
+Just stick the IDs into include/linux/kmemdump_ids.h and expose the
+content for the post processing machinery.
 
-v8: Renamed resctrl_arch_mbm_cntr_assign_configure to
-        resctrl_arch_mbm_cntr_assign_set_one.
-    Adde r->mon_capable check.
-    Commit message update.
+So you want KMEMDUMP_VAR() for the compile time created table to either
+automatically create that ID derived from the variable name or you add
+an extra argument with the ID.
 
-v7: Introduced resctrl_arch_mbm_cntr_assign_configure() to configure.
-    Moved the default settings to rdt_get_mon_l3_config(). It should be
-    done before the hotplug handler is called. It cannot be done at
-    rdtgroup_init().
+kmemdump_init()
+        // Use a simple fixed size array to manage this
+        // as it avoids all the memory allocation nonsense
+        // This stuff is neither performance critical nor does allocating
+        // a few hundred entries create a memory consumption problem
+        // It consumes probably way less memory than the whole IDR/XARRAY allocation
+        // string duplication logic consumes text and data space.
+	kmemdump_entries = kcalloc(NR_ENTRIES, sizeof(*kmemdump_entries), GFP_KERNEL);
 
-v6: Keeping the default enablement in arch init code for now.
-     This may need some discussion.
-     Renamed resctrl_arch_configure_abmc to resctrl_arch_mbm_cntr_assign_configure.
+kmemdump_register(void *ptr, size_t size, enum kmemdump_uids uid)
+{
+        guard(entry_mutex);
 
-v5: New patch to enable ABMC by default.
----
- arch/x86/kernel/cpu/resctrl/core.c     | 7 +++++++
- arch/x86/kernel/cpu/resctrl/internal.h | 1 +
- arch/x86/kernel/cpu/resctrl/monitor.c  | 8 ++++++++
- 3 files changed, 16 insertions(+)
+	entry = kmemdump_find_empty_slot();
+        if (!entry)
+        	return;
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 1df171d04bea..a8fda1b408c7 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -518,6 +518,9 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
- 		d = container_of(hdr, struct rdt_mon_domain, hdr);
- 
- 		cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
-+		/* Update the mbm_assign_mode state for the CPU if supported */
-+		if (r->mon.mbm_cntr_assignable)
-+			resctrl_arch_mbm_cntr_assign_set_one(r);
- 		return;
- 	}
- 
-@@ -537,6 +540,10 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
- 	d->ci_id = ci->id;
- 	cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
- 
-+	/* Update the mbm_mbm_assign state for the CPU if supported */
-+	if (r->mon.mbm_cntr_assignable)
-+		resctrl_arch_mbm_cntr_assign_set_one(r);
-+
- 	arch_mon_domain_online(r, d);
- 
- 	if (arch_domain_mbm_alloc(r->mon.num_rmid, hw_dom)) {
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 77a9ce4a8403..f03abae3a2c4 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -216,5 +216,6 @@ bool rdt_cpu_has(int flag);
- void __init intel_rdt_mbm_apply_quirk(void);
- 
- void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
-+void resctrl_arch_mbm_cntr_assign_set_one(struct rdt_resource *r);
- 
- #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 053f516a8e67..74282dab7c2b 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -430,6 +430,7 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
- 		cpuid_count(0x80000020, 5, &eax, &ebx, &ecx, &edx);
- 		r->mon.num_mbm_cntrs = (ebx & GENMASK(15, 0)) + 1;
- 		r->mon.mbm_assign_on_mkdir = true;
-+		hw_res->mbm_cntr_assign_enabled = true;
- 	}
- 
- 	r->mon_capable = true;
-@@ -533,3 +534,10 @@ void resctrl_arch_config_cntr(struct rdt_resource *r, struct rdt_mon_domain *d,
- 			memset(am, 0, sizeof(*am));
- 	}
- }
-+
-+void resctrl_arch_mbm_cntr_assign_set_one(struct rdt_resource *r)
-+{
-+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
-+
-+	resctrl_abmc_set_one_amd(&hw_res->mbm_cntr_assign_enabled);
-+}
--- 
-2.34.1
+        entry->ptr = ptr;
+        entry->size = size;
+        entry->uid = uid;
 
+        // Make this unconditional by providing a dummy backend
+        // implementation. If the backend changes re-register all
+        // entries with the new backend and be done with it.
+        backend->register(entry);
+}
+
+kmemdump_unregister(void *ptr)
+{
+        guard(entry_mutex);
+        entry = find_entry(ptr);
+        if (entry) {
+                backend->unregister(entry);
+        	memset(entry, 0, sizeof(*entry);
+        }
+}
+
+You get the idea.
+
+Coming back to the registration at the call site itself.
+
+       struct foo = kmalloc(....);
+
+       if (!foo)
+       		return;
+
+       kmemdump_register(foo, sizeof(*foo), KMEMDUMP_ID_FOO);
+
+That's a code duplication shitshow. You can wrap that into:
+
+       struct foo *foo = kmemdump_alloc(foo, KMEMDUMP_ID_FOO, kmalloc, ...);
+
+#define kmemdump_alloc(var, id, fn, ...)				\
+	({								\
+        	void *__p = fn(##__VA_ARGS__);				\
+									\
+                if (__p)						\
+                	kmemdump_register(__p, sizeof(*var), id);	\
+		__p;
+        })
+
+or something daft like that. And provide the matching magic for the free
+side.
+
+Thoughts?
+
+Thanks,
+
+        tglx
