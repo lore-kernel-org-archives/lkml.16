@@ -1,152 +1,197 @@
-Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A897D238C06;
-	Fri, 13 Jun 2025 09:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FF5291C2F;
+	Fri, 13 Jun 2025 09:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749807842; cv=none; b=AnxrIl0I3JQI1Ao0Sr+JKY4V5S9xarxVYQX0WTNUJZIDYFMVDOnk3PHZo6RsyaSdRBqCEsBR1IA5CY5xl0JjFM6JfH26ZSivqM5FHSko0t+a2mBSMAzuiudnqeGDqmZQ66e5mlDg3GbvYz24wZl85YtKsEhrC8xOuIJOeRpFVpA=
+	t=1749807896; cv=none; b=ozcEV+X/A8jOC/6YV/NePB9Zrzr0CAZcC+F+38wkuDSJSZ63oHKoj2eZiBfUXh1F7YfDxk/fqal74sE00ePJ5j9ZR+kr+YEt58F3ScyLZdTzIXi6qYUjiZnFi7uk1jhTbGKLOpsLP/FpWValgjF8M75yvGH3VU4OzaZPkL1DHDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749807842; c=relaxed/simple;
-	bh=5qTng8w94cZ0pqhP00XAbIUVrscsHqDDRFScVMngN6c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=tZ4j/CKxIr8JTtq3xs49G1mXRONCRSUvOya8zPe5efvnDENQo335VqytTsWr5oiz/N4Uysux5WRBxwGQicPspgBRu+qQHccvJNy1I5tp9TqvyZ6OgrnVj9Jl8pw09c+0Dk9SgQwrNvlkWgR94sRZMbkfRlHhx4CEXFE0QR9lBVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w011.hihonor.com (unknown [10.68.20.122])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bJZCT3tmzzYm7yk;
-	Fri, 13 Jun 2025 17:41:09 +0800 (CST)
-Received: from a018.hihonor.com (10.68.17.250) by w011.hihonor.com
- (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
- 2025 17:43:09 +0800
-Received: from a010.hihonor.com (10.68.16.52) by a018.hihonor.com
- (10.68.17.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Jun
- 2025 17:43:09 +0800
-Received: from a010.hihonor.com ([fe80::7127:3946:32c7:6e]) by
- a010.hihonor.com ([fe80::7127:3946:32c7:6e%14]) with mapi id 15.02.1544.011;
- Fri, 13 Jun 2025 17:43:08 +0800
-From: wangtao <tao.wangtao@honor.com>
-To: Christoph Hellwig <hch@infradead.org>, =?iso-8859-1?Q?Christian_K=F6nig?=
-	<christian.koenig@amd.com>
-CC: "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>, "kraxel@redhat.com"
-	<kraxel@redhat.com>, "vivek.kasireddy@intel.com" <vivek.kasireddy@intel.com>,
-	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "brauner@kernel.org"
-	<brauner@kernel.org>, "hughd@google.com" <hughd@google.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "amir73il@gmail.com"
-	<amir73il@gmail.com>, "benjamin.gaignard@collabora.com"
-	<benjamin.gaignard@collabora.com>, "Brian.Starkey@arm.com"
-	<Brian.Starkey@arm.com>, "jstultz@google.com" <jstultz@google.com>,
-	"tjmercier@google.com" <tjmercier@google.com>, "jack@suse.cz" <jack@suse.cz>,
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "wangbintian(BintianWang)"
-	<bintian.wang@honor.com>, yipengxiang <yipengxiang@honor.com>, liulu 00013167
-	<liulu.liu@honor.com>, hanfeng 00012985 <feng.han@honor.com>
-Subject: RE: [PATCH v4 0/4] Implement dmabuf direct I/O via copy_file_range
-Thread-Topic: [PATCH v4 0/4] Implement dmabuf direct I/O via copy_file_range
-Thread-Index: AQHb1G1ol+FT389RFkuW+lwB3adoKrPw4BKAgAADywCAAAF8AIAE6kCg//+rigCABEW6AIAA1IFwgAEnIgCAAC4PgIAE+w3w
-Date: Fri, 13 Jun 2025 09:43:08 +0000
-Message-ID: <80ce3ec9104c4f0abbcb589b03a5f3c7@honor.com>
-References: <20250603095245.17478-1-tao.wangtao@honor.com>
- <aD7x_b0hVyvZDUsl@infradead.org>
- <09c8fb7c-a337-4813-9f44-3a538c4ee8b1@amd.com>
- <aD72alIxu718uri4@infradead.org> <5d36abace6bf492aadd847f0fabc38be@honor.com>
- <a766fbf4-6cda-43a5-a1c7-61a3838f93f9@amd.com>
- <aEZkjA1L-dP_Qt3U@infradead.org> <761986ec0f404856b6f21c3feca67012@honor.com>
- <d86a677b-e8a7-4611-9494-06907c661f05@amd.com>
- <aEg1BZj-HzbgWKsx@infradead.org>
-In-Reply-To: <aEg1BZj-HzbgWKsx@infradead.org>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1749807896; c=relaxed/simple;
+	bh=856dxDS+Uf8WXPdeMuD0cTLl98kWJ40xrdivrBRQOok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WM0xLkuFSjhbSlWRAO3x61EGifkWXnUl8qejFqPfoFxwiCt1GJmRJQYy1pz/WhhY3TdKq0q+5zag7+gkaw/RnVdiiMa/mJDcOfr7vfO1Lt44QkMk2jXlf3+uL3S79UvbQkI2s6k4fHBNYU2XNtePMsjJZgaqaTwLHiCZsJ39bxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDCKOhif; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDCKOhif"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4209C4CEE3;
+	Fri, 13 Jun 2025 09:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749807895;
+	bh=856dxDS+Uf8WXPdeMuD0cTLl98kWJ40xrdivrBRQOok=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IDCKOhifcsK5rlivUrkhIrXEivpkcqJc7VPxFhAEAlYL4ZLDhBikU1vMyTRdBKW0h
+	 fIcG0hUICIwieAxhuvNNqwo2y228BZl4+ozJviwbofC7MQqSAor7xd2Xa8sAZ/6BC0
+	 oJIumLp/g5mwnDTf52oFvyyBuWS613l2sJOwdggvCXmvBSgvniHj6SE3G6KWoQ7sGu
+	 z9C7WHJNi1Wmo7JAkUofQKCoYPZHwbj7C7tptXcxpim1ohZAqSFqjWyt/wzK2sApT6
+	 Xx4l7ioJvnWArjgzD1EaO+hwmEZINJQUftaVAOAK06iMhGPNXmCOsLrf3kDgpxH/AH
+	 24wvSrAq/ZtZQ==
+Message-ID: <36cb3578-1efb-4d2e-b50a-47e6dfd3bdd0@kernel.org>
+Date: Fri, 13 Jun 2025 11:44:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] dt-bindings: phy: Add document for ASPEED PCIe PHY
+To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au, vkoul@kernel.org, kishon@kernel.org,
+ linus.walleij@linaro.org, p.zabel@pengutronix.de,
+ linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Cc: elbadrym@google.com, romlem@google.com, anhphan@google.com,
+ wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
+References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
+ <20250613033001.3153637-2-jacky_chou@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250613033001.3153637-2-jacky_chou@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 13/06/2025 05:29, Jacky Chou wrote:
+> Add device tree binding YAML documentation for the ASPEED PCIe PHY.
+> This schema describes the required properties for the PCIe PHY node,
+> including compatible strings and register space, and provides an
+> example for reference.
+> 
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+> ---
+>  .../bindings/phy/aspeed-pcie-phy.yaml         | 38 +++++++++++++++++++
+
+Filename basedon compatible
+
+A nit, subject: drop second/last, redundant "document for". The
+"dt-bindings" prefix is already stating that these are documents.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+
+>  MAINTAINERS                                   | 10 +++++
+>  2 files changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
+> new file mode 100644
+> index 000000000000..762bf7b0aedc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/aspeed-pcie-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED PCIe PHY
+> +
+> +maintainers:
+> +  - Jacky Chou <jacky_chou@aspeedtech.com>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  The ASPEED PCIe PHY provides the physical layer interface for PCIe
+> +  controllers in the SoC. This node represents the register block for the PCIe
+> +  PHY, which is typically accessed by PCIe Root Complex or Endpoint drivers
+> +  via syscon.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2600-pcie-phy
+> +      - aspeed,ast2700-pcie-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+
+No phy cells? How is this a phy exactly?
+
+No resources? This looks just incomplete.
+
+> +required:
+> +  - compatible
+> +  - reg
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie-phy@1e6ed200 {
+> +      compatible = "aspeed,ast2600-pcie-phy";
+> +      reg = <0x1e6ed200 0x100>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a5a650812c16..68115443607d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3696,6 +3696,16 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+>  F:	drivers/media/platform/aspeed/
+>  
+> +ASPEED PCIE CONTROLLER DRIVER
+> +M:	Jacky Chou <jacky_chou@aspeedtech.com>
+> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
+> +L:	linux-pci@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/pci/aspeed-pcie-cfg.yaml
+> +F:	Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
+> +F:	Documentation/devicetree/bindings/phy/aspeed-pcie-phy.yaml
+> +F:	drivers/pci/controller/pcie-aspeed.c
+
+There is no such file... actually many above do not exist.
 
 
-
-> On Tue, Jun 10, 2025 at 12:52:18PM +0200, Christian K=F6nig wrote:
-> > >> dma_addr_t/len array now that the new DMA API supporting that has
-> > >> been merged.  Is there any chance the dma-buf maintainers could
-> > >> start to kick this off?  I'm of course happy to assist.
-> >
-> > Work on that is already underway for some time.
-> >
-> > Most GPU drivers already do sg_table -> DMA array conversion, I need
-> > to push on the remaining to clean up.
->=20
-> Do you have a pointer?
->=20
-> > >> Yes, that's really puzzling and should be addressed first.
-> > > With high CPU performance (e.g., 3GHz), GUP (get_user_pages)
-> > > overhead is relatively low (observed in 3GHz tests).
-> >
-> > Even on a low end CPU walking the page tables and grabbing references
-> > shouldn't be that much of an overhead.
->=20
-> Yes.
->=20
-> >
-> > There must be some reason why you see so much CPU overhead. E.g.
-> > compound pages are broken up or similar which should not happen in the
-> > first place.
->=20
-> pin_user_pages outputs an array of PAGE_SIZE (modulo offset and shorter
-> last length) array strut pages unfortunately.  The block direct I/O code =
-has
-> grown code to reassemble folios from them fairly recently which did speed
-> up some workloads.
->=20
-> Is this test using the block device or iomap direct I/O code?  What kerne=
-l
-> version is it run on?
-Here's my analysis on Linux 6.6 with F2FS/iomap.
-
-Comparing udmabuf+memfd direct read vs dmabuf direct c_f_r:
-Systrace: On a high-end 3 GHz CPU, the former occupies >80% runtime vs
-<20% for the latter. On a low-end 1 GHz CPU, the former becomes CPU-bound.
-Perf: For the former, bio_iov_iter_get_pages/get_user_pages dominate
-latency. The latter avoids this via lightweight bvec assignments.
-|- 13.03% __arm64_sys_read
-|-|- 13.03% f2fs_file_read_iter
-|-|-|- 13.03% __iomap_dio_rw
-|-|-|-|- 12.95% iomap_dio_bio_iter
-|-|-|-|-|- 10.69% bio_iov_iter_get_pages
-|-|-|-|-|-|- 10.53% iov_iter_extract_pages
-|-|-|-|-|-|-|- 10.53% pin_user_pages_fast
-|-|-|-|-|-|-|-|- 10.53% internal_get_user_pages_fast
-|-|-|-|-|-|-|-|-|- 10.23% __gup_longterm_locked
-|-|-|-|-|-|-|-|-|-|- 8.85% __get_user_pages
-|-|-|-|-|-|-|-|-|-|-|- 6.26% handle_mm_fault
-|-|-|-|-|- 1.91% iomap_dio_submit_bio
-|-|-|-|-|-|- 1.64% submit_bio
-
-|- 1.13% __arm64_sys_copy_file_range
-|-|- 1.13% vfs_copy_file_range
-|-|-|- 1.13% dma_buf_copy_file_range
-|-|-|-|- 1.13% system_heap_dma_buf_rw_file
-|-|-|-|-|- 1.13% f2fs_file_read_iter
-|-|-|-|-|-|- 1.13% __iomap_dio_rw
-|-|-|-|-|-|-|- 1.13% iomap_dio_bio_iter
-|-|-|-|-|-|-|-|- 1.13% iomap_dio_submit_bio
-|-|-|-|-|-|-|-|-|- 1.08% submit_bio
-
-Large folios can reduce GUP overhead but still significantly slower
-than dmabuf to bio_vec conversion.
-
-Regards,
-Wangtao.
-
+Best regards,
+Krzysztof
