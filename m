@@ -1,134 +1,204 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9457A2C375F;
-	Fri, 13 Jun 2025 09:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564232C3266;
+	Fri, 13 Jun 2025 09:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749807922; cv=none; b=gXUqN5U+ioMF9vR+JEnDAVasspmIIh0nfSh6O8EkoX50zA0beKWO70rrhgT86mi/46YsugK8nPx4HiBgDYkmT8Ufg+PnLmdAv+hwLKGxj1W/vmzd21mZRiJkKFJ7ZEsxYGl84Aqrd6zzyP0EUt0zGri0SwIXLSvOXae9JWQvYz4=
+	t=1749807926; cv=none; b=g58+MrGipF0uLQqKQgI875Hkn0w4FfU3huhXGSxKTdf4FFvPA+ZaJ+nHlNq2plwA11XVPiW5cS9S+PcTkqpLyrkuCjVwHsywpyPX+Skoh0eXN6aFT3mItX8+0a3NQcIIqs2ZEvULvYKv/ur5ITgrUV01Zzn8HRb+o1VXsBuW15Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749807922; c=relaxed/simple;
-	bh=2bAxLZdmW+dB6hgjHfQTeJYs5D2kkGbxxoTra19Jy04=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hqc+aRuvnctxVwb410d16WzeIOTPNN2kuqmC3OC2p54Mk+/kvZM5mw8c0NDUld1TY6cRC5gpiEMv17b0qcNDR+KZbxO5ocHGAJfN/L/xQMYAfQAoJX6sqPVB5fo3lJFBdDgNEgpOlDTXfDc1p8bsXfv91gopS5MbIqFsLT46+bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iEsrf4HL; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749807926; c=relaxed/simple;
+	bh=0a8Um9kWdO9fuwlHv6a9YYdS5wG3MdJYtiarpZGBvfs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RLERh8v58bDlYEBPt6y+8TynpemWbhbMmEXgdEGqQzV+a+zC8rFNIyXSsxcTp8jv4+Gzz1kSrTopssywGLS7OtCDkOx1lsISqZQ99CVYG5/Ht/pipCEehgg7ayRJoNzXcK4mWU/Gs9AfrHQW/0qIiA0vbRk4H2CEbuFBytip0jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=RzyHsq4T; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEsrf4HL"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5534f3722caso2269894e87.0;
-        Fri, 13 Jun 2025 02:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749807917; x=1750412717; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oxrGh0fCLnQwX4nzD6CTGfjfOhrw6Z6qm6oKUUOWy6s=;
-        b=iEsrf4HL//j5UXUqUNl8z7hwoQQoXzsJSph8cF8Fxeg0leH7tU7aVy+DdCZCH9/+KD
-         KbL4RAWarGUCSBSmRtOrRGcG03E0RZ2NvhQexojSAQn14X84+w3nDbN7LKvyFc+gKGtd
-         oZ/2zNpqmIzQRKF/taXxz5FnrBPFgdKCee6Hurdm3JIeIMLK5WkU+9dMJGxqRY0JWx7o
-         txIqJDUsdKMqKJ49sDZeVmLDerwC7twVzdrihAAa4bH5hBaPIat/KwQtSXmPUi8yQhNw
-         I293HwRsTBNq417Kf3Cy5OxCeB5si1No8HwJcyr1hCK/sesy+kVdrVCbPt4CsC9h3Jgu
-         aTYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749807917; x=1750412717;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oxrGh0fCLnQwX4nzD6CTGfjfOhrw6Z6qm6oKUUOWy6s=;
-        b=NVYLWYsSHxBQoXYJZ8iOZXm9y2DhsJFnqSKVqm5uVWykU0+KXmECTKKaR71BV46Q18
-         j94j9KdgGObTeNF2Hsq69/fKWLcZf7uV3TTFZ4qcj1Iime+otmXhgucQFGYk+a7oFBzo
-         mvYwQoGasjCO/NZpW/9mN6UwtG00O4G1/Pz5RDI6v7r7FAHJBrxNsrHCs2xAMdymgOqg
-         3fcnATJqdUOkUH7m058ieAfhuHHxtim+p+12k86/cNHLXuykgGK7gsUhMp2da4H1U6sD
-         N24YKZWMP1EcHhlHijM9m/v+7P1YMozH9gc+xBpE35kSscTsSDa9ue57JQz/F7bsyOJb
-         E17g==
-X-Forwarded-Encrypted: i=1; AJvYcCUhPkL4RzEbcMlvTDNNWu1pimcHgzt/xBuWhTl4gI3P070GXdjQ+++gLN6+pJXzmnYF3PJR2HTET2aa0r/gYMY=@vger.kernel.org, AJvYcCVRsyw5jHReG6PLH1iat+WCRqTHRV6vKypZPRl6A4cP3xRZjc85QvgVf416hsdvQ3jWW46cFIbCNqkL8AE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTWRwr7bfuZXZHP15UzYf+M33ppWfBnXzXk95/rWEvlvRClw55
-	JJ6XDCOIVNVQsCKwdOx6jAnhrZ+AgLGA/FChfdETsSuhNMmlzii2i+cO
-X-Gm-Gg: ASbGncuPskoDELSbkVO+gXBgSJalIgftORRtyQVTcBfkRqZAaSWPxB6I0QdUE6h/bZZ
-	o2x4NgfZw9+FFJ27Qpj7r2PzFlNIoD9zphKZjy7kpr7fj/yGGoRFBsiso8FBbqhRjE4QWFMcbFe
-	QJjwEU6s/LLxIUErUf5rTvmot46ZJQ7E/COMBxRDoBk/yfFmWzBn0/O7ospPsOBfDc4gh0cQT55
-	xEFp+3PkN29prLlfzvgzDa1y78JtxK6pPfktesgnhkDOCvJmSIv5Oq934MJV0Ij4qK0zvBZ0WAw
-	JDZp7+7N8BI9OpfnXgM/joT928QO3j8kCiR0XQm2TQQvjOTDdY8BYhY0xVbVWuwpel5W7AIQjXy
-	ozVUrV/z+ikuzX4YLRQO7phe1QI9GHYuVwQGHniY=
-X-Google-Smtp-Source: AGHT+IHiJOoevlgKdwDSnmotX6IPm3Uj1/yrY7CfWWn7/KrZu7vk47zHN6lD4iwOK4EjOUhVQcIvWQ==
-X-Received: by 2002:a05:6512:114e:b0:553:2f61:58eb with SMTP id 2adb3069b0e04-553af96f227mr619887e87.49.1749807916268;
-        Fri, 13 Jun 2025 02:45:16 -0700 (PDT)
-Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1f7799sm381819e87.229.2025.06.13.02.45.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 02:45:15 -0700 (PDT)
-Message-ID: <0b71832f-f3a9-4109-baa1-f29a8327d872@gmail.com>
-Date: Fri, 13 Jun 2025 12:45:14 +0300
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="RzyHsq4T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=gPRbjVZ+DxeUpgGwBx4bDgQ7d893ZBcdZ1rYykx5xiA=; b=RzyHsq4TBm7SXAnuz/ceSfs8tt
+	SqWaCjqEAYKNrlTtHBouLY33PiIbjUjIhHtciXBy3+1Wc1+53HQXWH510d2TwsGYhFxKmAGWQBH6Y
+	l6nYd6ft1i2wW2euluLiRZpAFBgwKHcYXJ55h0c9nbSVCHHDcsK/vEgyDyMFY47oMz4yBWmgBgFcL
+	9SFiMGX5mnASBVrJKVXAR2Id4tpMoLa+BCo2c9jZ8OLgU7A9cRjmkH6C6q2EYihmrpxKpySJ+fPcf
+	aJSVw3eCOTfGmZHiZUC69PVyxKOfawAtfAVGyz3GeRnabiqympdJBmXqdhbgKMxMgh1ilyzid3Q6v
+	XYjXz1tg==;
+Received: from [58.29.143.236] (helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uQ0yJ-002xel-0R; Fri, 13 Jun 2025 11:45:16 +0200
+From: Changwoo Min <changwoo@igalia.com>
+To: lukasz.luba@arm.com,
+	rafael@kernel.org,
+	len.brown@intel.com,
+	pavel@kernel.org
+Cc: christian.loehle@arm.com,
+	tj@kernel.org,
+	kernel-dev@igalia.com,
+	linux-pm@vger.kernel.org,
+	sched-ext@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [PATCH v2 07/10] PM: EM: Implement em_nl_get_pd_table_doit().
+Date: Fri, 13 Jun 2025 18:44:25 +0900
+Message-ID: <20250613094428.267791-8-changwoo@igalia.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250613094428.267791-1-changwoo@igalia.com>
+References: <20250613094428.267791-1-changwoo@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] rust: dma: add as_slice/write functions for
- CoherentAllocation
-To: Alexandre Courbot <acourbot@nvidia.com>, dakr@kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
- rust-for-linux@vger.kernel.org,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250602085444.1925053-1-abdiel.janulgue@gmail.com>
- <20250602085444.1925053-4-abdiel.janulgue@gmail.com>
- <DAC2ILD2DSIZ.3TF8W39X5DDH8@nvidia.com>
-Content-Language: en-US
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-In-Reply-To: <DAC2ILD2DSIZ.3TF8W39X5DDH8@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 02/06/2025 16:05, Alexandre Courbot wrote:
-> On Mon Jun 2, 2025 at 5:53 PM JST, Abdiel Janulgue wrote:
->> Add unsafe accessors for the region for reading or writing large
->> blocks of data.
->>
->> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
->> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-> 
-> A couple remaining nits/questions below, but FWIW:
-> 
-> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
->> +
->> +    /// Writes data to the region starting from `offset`. `offset` is in units of `T`, not the
->> +    /// number of bytes.
-> 
-> Reading this sentence it occured to me that `offset` may be ambiguous
-> here, as in my mind it rings as being in bytes unit. How about using
-> `index` throughout the file?
+When a userspace requests EM_CMD_GET_PD_TABLE with an ID of a performancei
+domain, the kernel reports back the energy model table of the specified
+performance domain. The message format of the response is as follows:
 
-Thanks! I don't have any strong opinion about this, I think it's enough 
-that the subsequent paragraph makes it clear that the unit is in bytes 
-unit? In any case, this could this be updated later after the merge?
+EM_A_PD_TABLE_PD_ID (NLA_U32)
+EM_A_PD_TABLE_PS (NLA_NESTED)*
+    EM_A_PS_PERFORMANCE (NLA_U64)
+    EM_A_PS_FREQUENCY (NLA_U64)
+    EM_A_PS_POWER (NLA_U64)
+    EM_A_PS_COST (NLA_U64)
+    EM_A_PS_FLAGS (NLA_U64)
 
->> +    /// ```
->> +    pub unsafe fn write(&self, src: &[T], offset: usize) -> Result {
-> 
-> Can this function be written by leveraging `as_slice_mut` and
-> `clone_from_slice`?
+where EM_A_PD_TABLE_PS can be repeated as many times as there are
+performance states (struct em_perf_state).
 
-using `slice::clone_from_slice` would enforce the length of the coherent 
-allocation to be always the same as src data. Not sure if that is what 
-we want. Also, instead of just a straight memcpy, this would go through 
-a 2-step layer (a call to `slice::from_raw_parts_mut` and then the 
-`slice::clone_from_slice` itself)?.
+Signed-off-by: Changwoo Min <changwoo@igalia.com>
+---
+ kernel/power/em_netlink.c | 108 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 107 insertions(+), 1 deletion(-)
 
+diff --git a/kernel/power/em_netlink.c b/kernel/power/em_netlink.c
+index 31b27c6fe3c9..981bbf1f9a2f 100644
+--- a/kernel/power/em_netlink.c
++++ b/kernel/power/em_netlink.c
+@@ -102,9 +102,115 @@ int em_nl_get_pds_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return ret;
+ }
+ 
++static struct em_perf_domain *__em_nl_get_pd_table_id(struct nlattr **attrs)
++{
++	struct em_perf_domain *pd;
++	int id;
++
++	if (!attrs[EM_A_PD_TABLE_PD_ID])
++		return NULL;
++
++	id = nla_get_u32(attrs[EM_A_PD_TABLE_PD_ID]);
++	pd = em_perf_domain_get_by_id(id);
++	return pd;
++}
++
++static int __em_nl_get_pd_table_size(const struct em_perf_domain *pd)
++{
++	int id_sz, ps_sz;
++
++	id_sz = nla_total_size(sizeof(u32));		/* EM_A_PD_TABLE_PD_ID */
++	ps_sz = nla_total_size(0) +			/* EM_A_PD_TABLE_PS */
++		nla_total_size_64bit(sizeof(u64)) +	/* EM_A_PS_PERFORMANCE */
++		nla_total_size_64bit(sizeof(u64)) +	/* EM_A_PS_FREQUENCY */
++		nla_total_size_64bit(sizeof(u64)) +	/* EM_A_PS_POWER */
++		nla_total_size_64bit(sizeof(u64)) +	/* EM_A_PS_COST */
++		nla_total_size_64bit(sizeof(u64));	/* EM_A_PS_FLAGS */
++	ps_sz *= pd->nr_perf_states;
++
++	return nlmsg_total_size(genlmsg_msg_size(id_sz + ps_sz));
++}
++
++static int __em_nl_get_pd_table(struct sk_buff *msg, const struct em_perf_domain *pd)
++{
++	struct em_perf_state *table, *ps;
++	struct nlattr *entry;
++	int i;
++
++	if (nla_put_u32(msg, EM_A_PD_TABLE_PD_ID, pd->id))
++		goto out_err;
++
++	rcu_read_lock();
++	table = em_perf_state_from_pd((struct em_perf_domain *)pd);
++
++	for (i = 0; i < pd->nr_perf_states; i++) {
++		ps = &table[i];
++
++		entry = nla_nest_start(msg, EM_A_PD_TABLE_PS);
++		if (!entry)
++			goto out_unlock_ps;
++
++		if (nla_put_u64_64bit(msg, EM_A_PS_PERFORMANCE,
++				      ps->performance, EM_A_PS_PAD))
++			goto out_cancel_ps_nest;
++		if (nla_put_u64_64bit(msg, EM_A_PS_FREQUENCY,
++				      ps->frequency, EM_A_PS_PAD))
++			goto out_cancel_ps_nest;
++		if (nla_put_u64_64bit(msg, EM_A_PS_POWER,
++				      ps->power, EM_A_PS_PAD))
++			goto out_cancel_ps_nest;
++		if (nla_put_u64_64bit(msg, EM_A_PS_COST,
++				      ps->cost, EM_A_PS_PAD))
++			goto out_cancel_ps_nest;
++		if (nla_put_u64_64bit(msg, EM_A_PS_FLAGS,
++				      ps->flags, EM_A_PS_PAD))
++			goto out_cancel_ps_nest;
++
++		nla_nest_end(msg, entry);
++	}
++	rcu_read_unlock();
++	return 0;
++
++out_cancel_ps_nest:
++	nla_nest_cancel(msg, entry);
++out_unlock_ps:
++	rcu_read_unlock();
++out_err:
++	return -EMSGSIZE;
++}
++
+ int em_nl_get_pd_table_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	return -EOPNOTSUPP;
++	struct sk_buff *msg;
++	struct em_perf_domain *pd;
++	void *hdr;
++	int cmd = info->genlhdr->cmd;
++	int msg_sz, ret;
++
++	pd = __em_nl_get_pd_table_id(info->attrs);
++	if (!pd)
++		return -EINVAL;
++
++	msg_sz = __em_nl_get_pd_table_size(pd);
++
++	msg = genlmsg_new(msg_sz, GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++
++	hdr = genlmsg_put_reply(msg, info, &em_nl_family, 0, cmd);
++	if (!hdr)
++		goto out_free_msg;
++
++	ret = __em_nl_get_pd_table(msg, pd);
++	if (ret)
++		goto out_free_msg;
++
++	genlmsg_end(msg, hdr);
++	return genlmsg_reply(msg, info);
++
++out_free_msg:
++	nlmsg_free(msg);
++	return -EMSGSIZE;
+ }
+ 
+ static int __init em_netlink_init(void)
+-- 
+2.49.0
 
-Regards,
-Abdiel
