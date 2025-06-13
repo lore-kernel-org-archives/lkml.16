@@ -1,253 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02olkn2084.outbound.protection.outlook.com [40.92.15.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88D02F4317;
-	Fri, 13 Jun 2025 01:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749778671; cv=none; b=Yi/9331RVK9zcd0PmR2MR0jVEZKryamG6j8teDcPdqtisG3lczf4lhW6Ej4pkERCqJAskXux/mFuvak5RGrrzJiFaShNmSFeP3DL7A7aB+6/uXsSNBovT13EeiEu3LWrj+lpr9T41+kiNqrA4asGZ0Oi68/2ohaMJnRDO9RkHGk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749778671; c=relaxed/simple;
-	bh=JdjnJoXwFxt6MMfWyhD6AFSzvj1/Y0xGVzxgB2RjyrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MnVI9p8s7ShRTvjD1QGUZ7yqfhKiG1kZaj228Tq5E7pS58xSDLiE7lO9nL1vE8mvbtbnw4kPcgm4P1bBJ3eTsZ9FKjzc1M604Z8cioQTeZa+FYHUZhpLu+42w1hAd42AwWNo2fkyq1MPlf43wp963jY11FJuKTu9UKJ+wpdQZak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mIRJkkGB; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2542F4317;
+	Fri, 13 Jun 2025 01:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.15.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749778776; cv=fail; b=XYJ4VOyJW5gku6JtnZTci/hvXRHf8sMd7KXXiOu5YUH+i69Ue+qQg5frYla8EpqoSdkZMLaB9ozlEWfcQ716yCYmGw96DZAVq2jxprBsyhQ+QgZrO6cgmoBJ832y0V7Ttsk2PEgpafFpDoPoBF40yQbNfLpVUbaYFH+SGLMcjvs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749778776; c=relaxed/simple;
+	bh=HpUQqiOexLqRTeBS8mjJRxKxNuoGPOjQvXS+VdFxS54=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=H7zkih4GB45hk8I+8dKsAjqnd86DTQ/2NHhf3o6KgVIg5W/0PML6+VFyg2h2ASxLoGm8K2D8s0YD5Jl+1bwjD7OhUWOy/OTek2HEgYLZafhWbvFG+BhfmQNSIudHb/dyW8t0rK3EKQx1fzJpIOJNm7yU1EBo+TzF6MsGxvlCLBY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=dDCQFOOf; arc=fail smtp.client-ip=40.92.15.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mIRJkkGB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749778669; x=1781314669;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JdjnJoXwFxt6MMfWyhD6AFSzvj1/Y0xGVzxgB2RjyrI=;
-  b=mIRJkkGB/oySdw12JUl0ig7bxbwsI0iYAVcZ2GAh1lb4cBhUD3c3RZGy
-   3LruHngWmQIClUzBV1++OAjn5Wq3s6+39yKfnaCKCty2IbmUu6RK9+ntX
-   kTMa2a7zExWqXSfu57L0Do57Vt4jG3j5V0Bw9Mmy3xBbU5F8YGEpmFaN/
-   cjGAROsroORequrQUhtub4XCA2/sFjNHHzt7Tsf2OnNZeL7bRKzDzxPGA
-   UDPGxqG09w306hG6pA4Iw4eVZnxGQuoVbI7mWigjZgLrpxB3hwHzc9+3k
-   UmqSOK1lgV55piVQqXkUW8o4SmYfAKpL1iaMd7jSlzT7D+mR2JAD2GWse
-   g==;
-X-CSE-ConnectionGUID: mE0k6qDUQY+p5nOKpQaGLw==
-X-CSE-MsgGUID: PAVzREJbRMW6EumGlFa35w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="62636945"
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="62636945"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 18:37:48 -0700
-X-CSE-ConnectionGUID: znXLCPfZRoCR9YShTX4t8Q==
-X-CSE-MsgGUID: sFI1Seh4SgWrdP8kE1Hf1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,232,1744095600"; 
-   d="scan'208";a="147566287"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 18:37:45 -0700
-Message-ID: <0d1e9a86-41aa-46dd-812b-308db5861b16@linux.intel.com>
-Date: Fri, 13 Jun 2025 09:37:44 +0800
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="dDCQFOOf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q/jLpkYOxleizXdAcFVVDV3urFq6Fjhc1dd1F4MZQgAmFinWu126qbEBmyM1mG36I+0dhl0h6JAYYtd43AStUP+Og1bj63P8GpuH43jtcKcmSYAL3ACa9dxbG7bpm4soN9Lo0ef8bBqTMIlm8BItzKi/aBEO22a21zQWwZXnxvVnig/zbwMsFsXuxG/HZmLvaMseFTRDOeK3mjYj3j/ATUp1zZdnp6GE8pfZsIDUW7ClpKEAfmoQsK3Eu3RlOY6SqoU4S2e9Xwk+kYxgqQ4LFjcw6kkPUiwb0BBsAGFe6ztzjyzrl+26w+xX6EeXR0BIxA8vxKl6wt51rcyRLzcATA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NwDeBGkd51FNKGGSA1v6aCA98cl0JZjG5EJ9X3fquds=;
+ b=x1hRST9Fw8PdLk6D6k2nyVYPkEHX4jts3J2f859pbNTkMFCVI3z60/HXiL46n1vdKoFLYIenkukonkdiZYV7AAqiQ6bNSkP1J4/H78t2p5hod0/BMmQr2pqBIEM59oJ0xok/Ek2eUsdsvFy3bk7n69x5neJeBkhUQVvwZGuD8EyqIE6v31EXnaxTFfL8duioMFd1QAlFp5xh9hlusJSL5Y41VZTEXW4EphKunWj0ekhRk0C36c4JrrkVd6B65cXpROTEbKPzJqrRYDz7PPxlGzNpsIaaphJ8PHcCaVFNzEVda6Uvag9GdYmV1PMCt79a83RkHS7GmQl/yAZ4x5KGpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NwDeBGkd51FNKGGSA1v6aCA98cl0JZjG5EJ9X3fquds=;
+ b=dDCQFOOfk6A9Mct0yIVoodmTTDRQ4jaaSMQKNowhjL77yHGEmVBQFIBY6wuMFWbL34/uVHaOYOcVJ3yJkohttB1HFzEyq9Q1wf4QjI7mqyssOj3FcIArTYxXKMg91eNX7UEfbo/nHtvx/RfbYo8Pwvu1KSbYWvI63+jjR0jAfeC851vxpQ2gdz/k2gAFPLNxm2QOQ0W1kmCqU5U5SBWRQOWs8qDPm8e9PjNAJ+4pekxS9UUllCgxhGVgYxruFOPqbZvOszRux1ivBH4nYSw+6UTIjGPOuf0RwHCwuWWFsQDD/ADYLB+SUDOW92tFP+26ETx8W55PJEgMjtsKN/zm/w==
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
+ by SJ2PR19MB8122.namprd19.prod.outlook.com (2603:10b6:a03:548::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.15; Fri, 13 Jun
+ 2025 01:39:31 +0000
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305%6]) with mapi id 15.20.8835.012; Fri, 13 Jun 2025
+ 01:39:31 +0000
+Message-ID:
+ <DS7PR19MB8883DA8B81357B2E229798FC9D77A@DS7PR19MB8883.namprd19.prod.outlook.com>
+Date: Fri, 13 Jun 2025 05:39:18 +0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5 0/5] Add support for the IPQ5018 Internal GE
+ PHY
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <DS7PR19MB8883E05490D6A0BD48DE11909D74A@DS7PR19MB8883.namprd19.prod.outlook.com>
+ <20250612182958.7e8c5bf0@kernel.org>
+Content-Language: en-US
+From: George Moussalem <george.moussalem@outlook.com>
+In-Reply-To: <20250612182958.7e8c5bf0@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DX0P273CA0028.AREP273.PROD.OUTLOOK.COM
+ (2603:1086:300:5b::10) To DS7PR19MB8883.namprd19.prod.outlook.com
+ (2603:10b6:8:253::16)
+X-Microsoft-Original-Message-ID:
+ <ccb91286-378f-446e-843d-73e755eafc11@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] KVM: x86: Deduplicate MSR interception enabling and
- disabling
-To: Chao Gao <chao.gao@intel.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: seanjc@google.com, pbonzini@redhat.com
-References: <20250612081947.94081-1-chao.gao@intel.com>
- <20250612081947.94081-2-chao.gao@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250612081947.94081-2-chao.gao@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|SJ2PR19MB8122:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3bf2650e-a0f2-4c55-dba6-08ddaa1b23dd
+X-MS-Exchange-SLBlob-MailProps:
+	znQPCv1HvwW4gkeWOyJlJSAnEZnWJBh4XfZZvNO88AmXPS1QaVoDUmh4tQmozRaZ7SfwMXHj2jOOFrQjuf9M7E44FQGIBiiuXhzXBSf7gSkxG0m1bo+sV8XzcXxMT8bwoX6M1f+7n108GIH95vT/F4P/vJOL3hHV3WlOJpxpXCjK7Hx80cvToAVxws5eknRefrqzfaqUfzb36uLKhAeyWVSfl5IbN0OV7A6qA3wkdVEIEKVssOEM1uh2CPPOOXrzZHl0oS0+pd4bw3V2QXyzxHlRd4OBjpI433ypgyNg636RR4CHpDuNGQ3ulcCVnx9CVG8PDfgG3BVhUu118UU8yRDGWbdz52zYMznXoz5Rf1Cpx5jHFEYotPyp8XzHn3vVBOVnULKJqp7JZZNHFg/4K3PBU7BZaXUmsh6UoZTXXsz7TjPWEr93B/ka8PByHjUTIQQZUNgQueRLzfCuIyawTg85ZFAJxMDUnfOaYr7JCLXaKQHZj7MzAjh3W0IzE0j9x7RlKMhdJGnB3tWmDEx806D74Yab8n3CK5DeiQNUCtsc9DDFwMdPXUKI5Hgmpzwjis4AHnZn8/15pDXyiQ3EqdNtAcvVaairwwz3uGnEbOLmIwl3+5ASs8F46Mbs70rQjexSJIK67UEIelQuZTaM6y3ceyb6SiuGXK9R1kniBWp77qKaSsXt91eeS1nyN/ujL6D7hIZtvkd48RKDAbr8RNEcfRd8sK1iE9lFes/pxHYuPM93rSAws8jBKYfABW5XvyCADmVPtbI=
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|5072599009|461199028|8060799009|15080799009|6090799003|7092599006|19110799006|40105399003|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c0dKYmxuWGZqOUN4NjhoRDRHSGdMNUVTQ052THB6c2pSWllsNXdqYzI5NXVp?=
+ =?utf-8?B?N2k5NktzOUVFenArQk82RC9sYTkycUMwVHQyOUhIbjY3alBzRUpOTm1JZzBa?=
+ =?utf-8?B?TDR5M1RvWCtKdFpocEQzaUtoZVByV3YxcUVSS2J1aXpiUXo1RlpxYXBvSndV?=
+ =?utf-8?B?eEp0RUJDbkRUUVY2cEkyc1Bnb05ZRVlNb1QwUnVIUSsyWU5lNktSRFpiRjFD?=
+ =?utf-8?B?NEdXSDF6WTBOS3l3UDhlc0lseVRhNm5qcHFiSkZTK1dzQjd1QkZOUlVEVDlk?=
+ =?utf-8?B?NFhsWXRPMVdYZklTMk5jTCtXSWtqUnQzVDcyeVppeitqc1VFdVU2YnRwRmZk?=
+ =?utf-8?B?QjVYSFZpTTNRVGdqOHFDaFl3SDR5UERuVEd6NE1GWEVLeDJuaXVmOHkwazZv?=
+ =?utf-8?B?ODVTN05LcTVLSnVWaXRkamlkYXZSMS9rWXYwQXdHamxiY2V2MnpZa1ZoclRF?=
+ =?utf-8?B?dm1odWs1R2c5QWZra3RqdURpck44NG9KWWlZUjNsUmd6bzNHWFphNTVyNnpG?=
+ =?utf-8?B?TWZRZklFVVJNQkU0YzFaaUUzcTR5cXZYZFpyVmRQQ0Y5NFJoMEJxU3dURG85?=
+ =?utf-8?B?cU1TNXRoUXFQQmtCMkFwclBEd2k3VG9MZ1NBZHI5dzhNbEtkcldONS94endk?=
+ =?utf-8?B?MkErZmNDK2hhK2J2YjB0cWg1K0VibVdCK2NRVG5qR2grRURsekN3bFlYUG1N?=
+ =?utf-8?B?bHB6cGFYcWlkMHNYc1dwdVUxV1ZiNDhyaW9UZlR0aVNyZkNhZ09tUytFcGM3?=
+ =?utf-8?B?RlJIOWRpU1Q5YkJpSWszQzZWRWxVMUFVK2Q0Tnl6aW9oNHp3TXlkeE9aWDNV?=
+ =?utf-8?B?SG9rV3E3WTJwVFlhTkdOS09FYTBjRHV1Wnp3U3cvZ3FBUDdsL1Aza2dWdEo2?=
+ =?utf-8?B?aHU1MUpJUTVSK0NLaFVnYm56YVdkN3N1ei9aSkF0dkNOdXlmU0U3QmNFM2c3?=
+ =?utf-8?B?ZWg4V2Q2UiswZW5IckV1bmVpNWYyZ3BOVm5ObWd1UzVvVStZalhEUmpjd21D?=
+ =?utf-8?B?K2dHRHdheENCRVZSUHk2QitFeVp0cWE5dHl5YmVRWk10REtDK1FwdVFWMnQy?=
+ =?utf-8?B?VVF6aDNBdHBHbzRIeERXL2lnV3RNYTRnbDZIay83YmQ1UlFZY2ZteVZ4eUor?=
+ =?utf-8?B?dENzNDFCWWlxQndoQmVQd3ZLZ1piY2g3bERDNU1NZmJGODMvamIrb2kvOStq?=
+ =?utf-8?B?R0ZPb1NlQ3didFJZSitoRC95Rmk1d1BOK0JSMnRiNTU4R2psZy9qUHVyZUpQ?=
+ =?utf-8?B?S0V1Y3lhSzZ2Wlp4c01WY1FXdXZGWXJkMjFhdTlnNFRhcjRLem5PeDBpWTdm?=
+ =?utf-8?B?dTRrcVJ2Z0NTUU50SVRyd1Vha1dpaTZhMkNCRm4yZFZNVUZVL016UUhlSjZa?=
+ =?utf-8?B?dExpY0w4MlNUTzkxbTBRZ2c0cXAzZDhhdHlzdzVXOS96SitoRzIxUHk4S0xM?=
+ =?utf-8?B?bzNITVg0OWVqeU5XUDJwcmVGVlFUUk9ZTlBUUWptS1ptVU5sc044clgvUjhY?=
+ =?utf-8?B?WTlOQ1kySHJ1d2NCWGxGMFJNaGQxMkZqeFJ6WGpKb2g4dzUrSlc0QXg4aDg0?=
+ =?utf-8?Q?N50kcJwIy8q0BmIECH7J3SZPA=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a2E5Um1PN1RrVGlaRVNPVzdidHkwRUsvSmxlMGtlM1RoNzJBckxrS1NSYXIw?=
+ =?utf-8?B?dGFNZG16a2VRdUlwZUNvV3B1eDgzNnFGYTh0ZXd0aWhpeENPWVN4dXJUNzZU?=
+ =?utf-8?B?MWF6ZFZaeGtQQmkzdDFYcFh0LzcybVY3V2NkNnNrL3QraXZFZ0h3UnkvSVJx?=
+ =?utf-8?B?K3hHVVBoOHljTzVUMlNEb29aaUJQTUhrd2VET1BVSEFHOXVkL1VDUTJOWTUx?=
+ =?utf-8?B?VEVKNG5pYTU4MVplWEZuRTlvQWJ6YUxYRW5JTkF5c2ljTElodXNBa3FiVy9k?=
+ =?utf-8?B?YXBTOW1WMld1aFU1R0gzNUN6TEpzbVAwakNRRExVVEJCRlpXK2R5cXZxUG9y?=
+ =?utf-8?B?Z0doemFsV1RqcU5QOCtOMm5GVXdhQ29NYnNTLzIzRHJxdENKcEZXbVJqMTBU?=
+ =?utf-8?B?UTZraVUrSkRqOWo0ejMyT0ptdDl4dkJGN1AyUHZiKzVhT3J2RThIUU1jQnJV?=
+ =?utf-8?B?SG14SzF1b1NwYWhoNWhCaUZwWmtVRmpuUDlrRkxlNUVzV2VORVBNazdPVHVt?=
+ =?utf-8?B?RXN1NHIrK2doaTFra3NWZkVxdEM5UG5QOTZmNDBrcXNzTk1MZ1A1d3AvZmYz?=
+ =?utf-8?B?NEc2VjhiKzgyYnk2TVNvaXRIRy9kNzdaWUl0c3FBc2xPSDhtVC9iVERBQVhP?=
+ =?utf-8?B?VzNRelBRRGgyd0dvRk1xYVBRZFVyWDMrNFBjN0VoVVREeEpITGFxSFV5L2N0?=
+ =?utf-8?B?KzFyUUExTTB6ZHNNQnZBb2NRU0JZa09lR0xBUXdoNTRuVTNvVUdzS0tId0Zz?=
+ =?utf-8?B?T0w3cVFwcHVCMC9QNGFlQjFDVTNCTTdVRG1NSko1amwxbzU5RVcxWkYxckZ4?=
+ =?utf-8?B?ZTRUSHlGRUVTUlFzYmw5WjFqSGQzS0JnRlM3T0VzQjFZY0xIMkd1RGdMek5h?=
+ =?utf-8?B?U3M3RUQ3dFNMdVhscUZtZ3JQNEFMdnNZdmpnbjVwVURsQjVNZFVXTHc3UXF2?=
+ =?utf-8?B?aVZVUGFUOGRZWVhWQ2llem9xbnJlczlKcVpCQzBEWmZFbm1TaFZQbjdweWZs?=
+ =?utf-8?B?Q3hzanc4NEpUakVZT1pzTkNINUQzK0Nuam5DckJuQ0lJQjRXaitkSmRCTGRH?=
+ =?utf-8?B?WFNJS0RBbFRFZXpkQ2JOeGpIN2RMQ1pzM3FXSnVJYjNWOWZyeDFhZW5rU3Bs?=
+ =?utf-8?B?Mk1UdHlTcXAycWhsQmdNT2JEZ0I5SDhjWXB3aHlhYmsrUTJIM3VYcThkeThl?=
+ =?utf-8?B?UnhHYit2MlJVK3pnbkVMNVhvYWhSN2VHUEljYUVCTFdndm1LVElyaUd0eUNl?=
+ =?utf-8?B?bjh3U29QMFZRb3VsQVNUYjJYNUlXNW5XdzBpWVJKRldjN1dmZ3pEK05UcFhQ?=
+ =?utf-8?B?Zjhodm1RdG91OGZwdmxiYXgvR1EzSCtFditWbWdRdjVPSFlyZlM0OFJ0REZw?=
+ =?utf-8?B?UkV0SFVvNng2T2hJY0R1T1pzNDh1VTZocWxjUWh2YWtMNkRzdWR3QkRLWnlj?=
+ =?utf-8?B?TGxxbkdQcmJUVTJSc0hCb3VFZDlMVkdkM0JHaTB1WU15NWgvZG1GS3BNbnNS?=
+ =?utf-8?B?Qy9Ic29nanJXVDlKZXdhZnJRVVJlaURUTU52aU5ITGlKTTdyeFZnOGhYZ2cv?=
+ =?utf-8?B?bXJRV290c283QlpDZHlsdDZieHJSWVMreFhFMDMvK0xEY292WElCNTdMd0Fl?=
+ =?utf-8?B?KzN3ZVNxUlg3dTZRSVpNMUNWYUpjaFIwVnoyZklZL1g4dmNkV0ZaZGFLMzNs?=
+ =?utf-8?Q?RnL9S/i80kiBeR6INzqV?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bf2650e-a0f2-4c55-dba6-08ddaa1b23dd
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 01:39:30.8808
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR19MB8122
 
+Hi Jakub,
 
-On 6/12/2025 4:19 PM, Chao Gao wrote:
-> Extract a common function from MSR interception disabling logic and create
-> disabling and enabling functions based on it. This removes most of the
-> duplicated code for MSR interception disabling/enabling.
->
-> No functional change intended.
->
-> Signed-off-by: Chao Gao <chao.gao@intel.com>
-> ---
->  arch/x86/kvm/svm/svm.c | 23 +++++++++--------------
->  arch/x86/kvm/svm/svm.h | 10 +---------
->  arch/x86/kvm/vmx/vmx.c | 25 +++++++++----------------
->  arch/x86/kvm/vmx/vmx.h | 10 +---------
->  4 files changed, 20 insertions(+), 48 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 5453478d1ca3..cc5f81afd8af 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -685,21 +685,21 @@ static bool msr_write_intercepted(struct kvm_vcpu *vcpu, u32 msr)
->  	return svm_test_msr_bitmap_write(msrpm, msr);
->  }
->  
-> -void svm_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
-> +void svm_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type, bool enable)
->  {
->  	struct vcpu_svm *svm = to_svm(vcpu);
->  	void *msrpm = svm->msrpm;
->  
->  	/* Don't disable interception for MSRs userspace wants to handle. */
->  	if (type & MSR_TYPE_R) {
-> -		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
-> +		if (!enable && kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
->  			svm_clear_msr_bitmap_read(msrpm, msr);
->  		else
->  			svm_set_msr_bitmap_read(msrpm, msr);
->  	}
->  
->  	if (type & MSR_TYPE_W) {
-> -		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
-> +		if (!enable && kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
->  			svm_clear_msr_bitmap_write(msrpm, msr);
->  		else
->  			svm_set_msr_bitmap_write(msrpm, msr);
-> @@ -709,19 +709,14 @@ void svm_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->  	svm->nested.force_msr_bitmap_recalc = true;
->  }
->  
-> -void svm_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
-> +void svm_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->  {
-> -	struct vcpu_svm *svm = to_svm(vcpu);
-> -	void *msrpm = svm->msrpm;
-> -
-> -	if (type & MSR_TYPE_R)
-> -		svm_set_msr_bitmap_read(msrpm, msr);
-> -
-> -	if (type & MSR_TYPE_W)
-> -		svm_set_msr_bitmap_write(msrpm, msr);
-> +	svm_set_intercept_for_msr(vcpu, msr, type, false);
-> +}
->  
-> -	svm_hv_vmcb_dirty_nested_enlightenments(vcpu);
-> -	svm->nested.force_msr_bitmap_recalc = true;
-> +void svm_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
-> +{
-> +	svm_set_intercept_for_msr(vcpu, msr, type, true);
->  }
->  
->  void *svm_alloc_permissions_map(unsigned long size, gfp_t gfp_mask)
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 8d3279563261..faa478d9fc62 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -696,15 +696,7 @@ void svm_complete_interrupt_delivery(struct kvm_vcpu *vcpu, int delivery_mode,
->  
->  void svm_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type);
->  void svm_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type);
-> -
-> -static inline void svm_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr,
-> -					     int type, bool enable_intercept)
-> -{
-> -	if (enable_intercept)
-> -		svm_enable_intercept_for_msr(vcpu, msr, type);
-> -	else
-> -		svm_disable_intercept_for_msr(vcpu, msr, type);
-> -}
-> +void svm_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type, bool enable);
->  
->  /* nested.c */
->  
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 277c6b5b5d5f..559261b18512 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -3952,7 +3952,7 @@ static void vmx_msr_bitmap_l01_changed(struct vcpu_vmx *vmx)
->  	vmx->nested.force_msr_bitmap_recalc = true;
->  }
->  
-> -void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
-> +void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type, bool enable)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-> @@ -3963,35 +3963,28 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->  	vmx_msr_bitmap_l01_changed(vmx);
->  
->  	if (type & MSR_TYPE_R) {
-> -		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
-> +		if (!enable && kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
->  			vmx_clear_msr_bitmap_read(msr_bitmap, msr);
->  		else
->  			vmx_set_msr_bitmap_read(msr_bitmap, msr);
->  	}
->  
->  	if (type & MSR_TYPE_W) {
-> -		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
-> +		if (!enable && kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
->  			vmx_clear_msr_bitmap_write(msr_bitmap, msr);
->  		else
->  			vmx_set_msr_bitmap_write(msr_bitmap, msr);
->  	}
->  }
->  
-> -void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
-> +void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->  {
-> -	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> -	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-> -
-> -	if (!cpu_has_vmx_msr_bitmap())
-> -		return;
-> -
-> -	vmx_msr_bitmap_l01_changed(vmx);
-> -
-> -	if (type & MSR_TYPE_R)
-> -		vmx_set_msr_bitmap_read(msr_bitmap, msr);
-> +	vmx_set_intercept_for_msr(vcpu, msr, type, false);
-> +}
->  
-> -	if (type & MSR_TYPE_W)
-> -		vmx_set_msr_bitmap_write(msr_bitmap, msr);
-> +void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
-> +{
-> +	vmx_set_intercept_for_msr(vcpu, msr, type, true);
->  }
->  
->  static void vmx_update_msr_bitmap_x2apic(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index a26fe3d9e1d2..31acd8c726e3 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -388,21 +388,13 @@ void vmx_ept_load_pdptrs(struct kvm_vcpu *vcpu);
->  
->  void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type);
->  void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type);
-> +void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type, bool enable);
->  
->  u64 vmx_get_l2_tsc_offset(struct kvm_vcpu *vcpu);
->  u64 vmx_get_l2_tsc_multiplier(struct kvm_vcpu *vcpu);
->  
->  gva_t vmx_get_untagged_addr(struct kvm_vcpu *vcpu, gva_t gva, unsigned int flags);
->  
-> -static inline void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr,
-> -					     int type, bool value)
-> -{
-> -	if (value)
-> -		vmx_enable_intercept_for_msr(vcpu, msr, type);
-> -	else
-> -		vmx_disable_intercept_for_msr(vcpu, msr, type);
-> -}
-> -
->  void vmx_update_cpu_dirty_logging(struct kvm_vcpu *vcpu);
->  
->  /*
+On 6/13/25 05:29, Jakub Kicinski wrote:
+> On Thu, 12 Jun 2025 17:10:24 +0400 George Moussalem wrote:
+>>  [PATCH net-next v5 0/5] 
+> 
+> I guess my explanation wasn't good enough :)
+> This is not a correctly formatted series. It looks like a series with 5
+> patches where patches 1 4 5 where lost. We need the cover letter to say
+> 0/2 and patches to say 1/2 and 2/2.
 
-The change looks good to me. 
+got it, thanks for the guidance. Will send a new series shortly.
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-
-Just curious, is there a preference on using these 3 interfaces? When
-should we use the disable/enable interfaces? When should be we use the set
-interface?  or no preference?
-
+Best regards.
+George
 
