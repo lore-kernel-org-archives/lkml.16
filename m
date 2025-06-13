@@ -1,125 +1,135 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6E2293C51
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 14:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9599924EF76;
+	Fri, 13 Jun 2025 14:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749823861; cv=none; b=qkXgNp0SvHz9ln71aqRnGqxsEakcjpPavsEETIWTcznIZhfkBs4lJ2Jls2Lu2vQJt5PNpFe04jcdVpog4pXudWo3VTmmE3VD321Ip6jC3ty7xjkOevpeyDANBuQu+6n3FGcM2danTXvarHWw9Zm5S1fsWXcDmEy90DMOSzf4tAM=
+	t=1749823870; cv=none; b=Z1otUhXx0YefQqO7ZQUui2p0+jnB4++JtKvWlPSW/zdH4Hiz0KWsgSsjQmaxBUKvIOyVBL8jDsIe62gzR9sWugjeXxJNRTSnlwTystTkt5Dld1gk2ajpbytzOpWZ9/yXQSFLMuqdDF6JU/ID77ZERGY9/voh/fih2UQ3o7Ljnug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749823861; c=relaxed/simple;
-	bh=KsMsyRZXElvuHkJ96w1G569AzFpOqniYxrD/MRoCgA0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RIGMlXQsbcf+Kdw0f1zHTRIqz5rznaR801RPgFNq0bkGxa7rD0WFDI5ncIaNea7JyqsPswyfQztCcgbuGv3ETjRu4f2/JDu8wNEAguyvA/fMQ+0hgz2fMSLlBTrdx89hL5ZMz1Lmd7jUH5V0RB1VJqGDyJxu01rpo264bZ1/xSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eLSN0g7I; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749823870; c=relaxed/simple;
+	bh=CXdDV5RZX9NAHKpJrTG0aap19fFfXLe8jGSP+6lFlZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hLQb+HQdLkNKE5ywgdbHe5j8qVV+idZRq4kEatf17O/rPP1ouZywS88BNpsijzBNGxPsL8o1EO0bgKldXQh5Cazddq4a1+bVcWqUS4KDfoVraVuQ0W3YU2DuiD2HQBmLazQTOfqqIwv/BHDgAjY/R/jcS3YafUXPPUwa+QND7LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fg80NS1r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eLSN0g7I"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-6c8f99fef10so2503540a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 07:10:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749823859; x=1750428659; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KFKxciq4Ln4zlYp2JiFF7Swu6ECCNV/1MfY2qSFQNn4=;
-        b=eLSN0g7IgA3pRVM4dOdej9OHNVsITq1iUTAM3EFnSvc9xnx9nrag9ftxSAe9POLEiU
-         ypr75AuFPYgNLHLSYJil1vckV1UXQgf83EB7z2Xmq1FT8Zg02D3UZRgr1HE6bTN1y84I
-         ZJAi1g7TTRg/HyfM6TlKgzuaRTNt6JvStpNPHoI+L7jpdwOwAAlr4eZGMdx8690ZXUig
-         kmsUhY8G30wghnAAa++QPJQtCXvx8DMG5yN1m63y6FI3bn+1sjndO+6yZQUmd6+W81l8
-         ls5+9ODcvpBMUL4qQvlsHfjspi+5PE7fpqog6xKePI2yFCqI+c6XqhiuRvnUaKTD9btd
-         c7FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749823859; x=1750428659;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KFKxciq4Ln4zlYp2JiFF7Swu6ECCNV/1MfY2qSFQNn4=;
-        b=plhd4hq9x/GKNMSoVJQnfh0E1bUA/e1lfxFFalCDE4CHCrHPtyfNF46G65jgdIWUMh
-         WwU8jygxW2K2eJ1HNQRCb8W3M6johaxxlmoq1KQwFT2lZ6HcTzVKUEd+dRT+2ee55jge
-         oTsYUIA69UGreMU887jXVu0J9NQ0vT/ZqMnfvxZPEeCjnj2XAI/gN6HTAHeMvYcq3EC+
-         ED9QJ0hVx1kRYrqOPoea8T0kjoMRPLdkn0f80QF+A/Y3Z6hcsNv4gDcTmUiX7L9wbmKV
-         AuxsW+lSIbQzxq2Y4u4nF5CPXPLU11qbH2KG3tcPp8ljxkKb3h1Gr9fdLD8M0IHoBJx8
-         INnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOmc0ENkgw7AB3xo90Ut8KDSsfmkGEso1gTJn4gpM14DRHUkNwdFpYbuIzzEZpIYaCOi5eILeACZRFsg8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFrNX+loPQxyAYZI5L+Zue06DjXXopFEtzB8symd8k+YV6qDly
-	tCf31dOM140kvUngf2P8dIk+wqKJkcOZ0SEGT+vxE3CekB3i1CjlgEB5/vWsFLKxG9AvTPmel7d
-	WYwPn9Q==
-X-Google-Smtp-Source: AGHT+IFN3c4N91I5ZhjfG8LYZwpTxT5er4jDbXzzE1DZU2whHqoP1gUgS61lLn6FCV62f4VbZN+4TFLFz4w=
-X-Received: from pgam16.prod.google.com ([2002:a05:6a02:2b50:b0:b2e:c0d6:cbd3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a127:b0:21f:5b6f:36d5
- with SMTP id adf61e73a8af0-21facb26d8bmr4729208637.10.1749823859107; Fri, 13
- Jun 2025 07:10:59 -0700 (PDT)
-Date: Fri, 13 Jun 2025 07:10:57 -0700
-In-Reply-To: <20250613071536.GG2273038@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fg80NS1r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A93C4CEF2;
+	Fri, 13 Jun 2025 14:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749823870;
+	bh=CXdDV5RZX9NAHKpJrTG0aap19fFfXLe8jGSP+6lFlZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fg80NS1reIecjAK+K5IzG4qz1egVVu4m9WDgoJ0qQ+N2d4hSwaApaROhWJ6UQECfD
+	 iV1sN1zHzYERYGrV+OxEIUwXKZhCokn2fDJyT8425YzIB8M+kfPLU6awbBcDsLEKci
+	 SL4HMIH1OjLULlx3je8rf29NZZyMQHaNG+AknM8RikRgA5UyCks36VATmWgOS+7Cjo
+	 nB9tPU5cMxOp6wqXBRq0NIx2FTGeaSDFsuKMQKddV+RS9fpWls8eEla0X1HUljzVgk
+	 +4nzQVF17iiJl278BN8C99611fTtSGf1R627TYH9SNY1OOKH/hcDdwHsrtxd4+M99y
+	 23GNW0pvEB3CQ==
+Date: Fri, 13 Jun 2025 15:11:05 +0100
+From: Lee Jones <lee@kernel.org>
+To: Job Sava <jsava@criticallink.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Julien Panis <jpanis@baylibre.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, jcormier@criticallink.com
+Subject: Re: [PATCH 3/3] mfd: tps6594: Adds support for powering off the PMIC
+Message-ID: <20250613141105.GG897353@google.com>
+References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
+ <20250520-linux-stable-tps6594-pwrbutton-v1-3-0cc5c6e0415c@criticallink.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250613070118.3694407-1-xin@zytor.com> <20250613070118.3694407-3-xin@zytor.com>
- <20250613071536.GG2273038@noisy.programming.kicks-ass.net>
-Message-ID: <aEwxcVzQubz3BmmJ@google.com>
-Subject: Re: [PATCH v1 2/3] x86/traps: Initialize DR7 by writing its
- architectural reset value
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	pbonzini@redhat.com, brgerst@gmail.com, tony.luck@intel.com, 
-	fenghuay@nvidia.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250520-linux-stable-tps6594-pwrbutton-v1-3-0cc5c6e0415c@criticallink.com>
 
-On Fri, Jun 13, 2025, Peter Zijlstra wrote:
-> On Fri, Jun 13, 2025 at 12:01:16AM -0700, Xin Li (Intel) wrote:
+On Tue, 20 May 2025, Job Sava wrote:
+
+> When the FSM_I2C_TRIGGER register's bit 0 is set it triggers TRIGGER_I2C_0
+> and the PMIC is transitioned to the STANDBY state
+> (table 6-18: SLVSGG7 – DECEMBER 2023).
 > 
-> > While at it, replace the hardcoded debug register number 7 with the
-> > existing DR_CONTROL macro for clarity.
+> An ON request is required to transition from STANDBY to ACTIVE.
 > 
-> Yeah, not really a fan of that... IMO that obfuscates the code more than
-> it helps, consider:
+> Signed-off-by: Job Sava <jsava@criticallink.com>
+> ---
+>  drivers/mfd/tps6594-core.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/mfd/tps6594-core.c b/drivers/mfd/tps6594-core.c
+> index 1b0b3d1bf6c4..f4c434c0d87a 100644
+> --- a/drivers/mfd/tps6594-core.c
+> +++ b/drivers/mfd/tps6594-core.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/reboot.h>
+>  
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/tps6594.h>
+> @@ -615,6 +616,19 @@ static int tps6594_enable_crc(struct tps6594 *tps)
+>  	return ret;
+>  }
+>  
+> +static int tps6594_soft_shutdown(struct tps6594 *tps)
 
-+1, and NAK to the KVM changes.  Pretty much everything in KVM deals with the
-"raw" names.  The use of dr6 and dr7 is pervasive throughout the VMX and SVM
-architectures:
+Why do you have a whole separate function that itself is only called
+once and only conducts a single one call to one other function?
 
- vmcs.GUEST_DR7
- vmcb.save.dr6
- vmcb.save.dr7
+> +{
+> +	return regmap_update_bits(tps->regmap, TPS6594_REG_FSM_I2C_TRIGGERS,
+> +				TPS6594_BIT_TRIGGER_I2C(0),
+> +				TPS6594_BIT_TRIGGER_I2C(0));
+> +}
+> +
+> +static int tps6594_power_off_handler(struct sys_off_data *data)
+> +{
+> +	tps6594_soft_shutdown(data->cb_data);
+> +	return NOTIFY_DONE;
+> +}
+> +
+>  int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+>  {
+>  	struct device *dev = tps->dev;
+> @@ -623,6 +637,7 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+>  	const struct mfd_cell *cells;
+>  	int n_cells;
+>  	bool pwr_button;
+> +	bool system_power_controller;
+>  
+>  	if (enable_crc) {
+>  		ret = tps6594_enable_crc(tps);
+> @@ -681,6 +696,15 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
+>  			return dev_err_probe(dev, ret, "Failed to add RTC child device\n");
+>  	}
+>  
+> +	system_power_controller = of_property_read_bool(dev->of_node, "system-power-controller");
+> +	if (system_power_controller) {
+> +		ret = devm_register_power_off_handler(tps->dev,
+> +								tps6594_power_off_handler,
+> +								tps);
 
-And is cemented in KVM's uAPI:
+This alignment is odd.
 
- kvm_debug_exit_arch.dr6
- kvm_debug_exit_arch.dr7
- kvm_debugregs.dr6
- kvm_debugregs.dr7
+> +		if (ret)
+> +			return dev_err_probe(dev, ret, "Failed to register power-off handler\n");
+> +	}
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(tps6594_device_init);
+> 
+> -- 
+> 2.43.0
+> 
 
-Using DR_STATUS and DR_CONTROL is not an improvement when everything else is using
-'6' and '7'.  E.g. I skipped the changelog and was very confused by the '6' =>
-DR_STATUS change in the next patch.
-
-And don't even think about renaming the prefixes on these :-)
-
-#define DR6_BUS_LOCK   (1 << 11)
-#define DR6_BD		(1 << 13)
-#define DR6_BS		(1 << 14)
-#define DR6_BT		(1 << 15)
-#define DR6_RTM		(1 << 16)
-/*
- * DR6_ACTIVE_LOW combines fixed-1 and active-low bits.
- * We can regard all the bits in DR6_FIXED_1 as active_low bits;
- * they will never be 0 for now, but when they are defined
- * in the future it will require no code change.
- *
- * DR6_ACTIVE_LOW is also used as the init/reset value for DR6.
- */
-#define DR6_ACTIVE_LOW	0xffff0ff0
-#define DR6_VOLATILE	0x0001e80f
-#define DR6_FIXED_1	(DR6_ACTIVE_LOW & ~DR6_VOLATILE)
-
-#define DR7_BP_EN_MASK	0x000000ff
-#define DR7_GE		(1 << 9)
-#define DR7_GD		(1 << 13)
-#define DR7_FIXED_1	0x00000400
-#define DR7_VOLATILE	0xffff2bff
+-- 
+Lee Jones [李琼斯]
