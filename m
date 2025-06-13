@@ -1,156 +1,114 @@
-Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F40149DE8;
-	Fri, 13 Jun 2025 15:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF8C1AA1DA;
+	Fri, 13 Jun 2025 15:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749827305; cv=none; b=ljrQsn3CMxZQmnuda7/evhKom97yWZiptQgXC8bKb17qPHEHVYImI3nXgr+m+RFHf8rTvPE93iyS1mnhzFa02J7pzjvP/JshDY0gdNWChXGK9uJB0YXuUZ651LSIewAQA34TUovYdF9CkDem9vm/H+e77Z45We+xzhFbWSP3s1A=
+	t=1749827336; cv=none; b=n4GWPB5L0tYA5lS1kij4GFxSOuZMKGDolBSOn4kRuDONiNIecBiRUSaJfZ+7Hi2UuWnBmMcpQ91nAseffD2OGYtJsLdANZ4c/gZPYKIHrbtZkxdEH0RGt/24q4BFzMYayh5CnT6w0iNFmmA+wJscCiUNEfCZFiW/6Yp1GwtwmII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749827305; c=relaxed/simple;
-	bh=vnWsm4LRUsXGvvlcvq/aWEudAYhnE6+wMQQnlbygm8o=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=swzJ6zO4ZxoQLkc/bQfQyEShBSoLp7rMU33yXVX4DwJtKLh5OAwo5n4/uQ/hp0ULDO0wDt8/J9hz6tJF3sofdENoEQiDBh9xhUVIdghsuPmrNxvoYnAt7xfXPGSxw9fohgnFSbdjvIZJgESV6gssZ2nz8K/AInSZT7KKywY8sEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in01.mta.xmission.com ([166.70.13.51]:58800)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1uQ60r-00DYaa-Ow; Fri, 13 Jun 2025 09:08:13 -0600
-Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:44690 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1uQ60q-00A6I1-O7; Fri, 13 Jun 2025 09:08:13 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: Paul Moore <paul@paul-moore.com>,  Jann Horn <jannh@google.com>,
-  Richard Guy Briggs <rgb@redhat.com>,  "Serge E. Hallyn"
- <serge@hallyn.com>,  Kees Cook <kees@kernel.org>,  jmorris@namei.org,
-  Andy Lutomirski <luto@kernel.org>,  morgan@kernel.org,  Christian Brauner
- <christian@brauner.io>,  linux-security-module@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-References: <20250306082615.174777-1-max.kellermann@ionos.com>
-	<878qmxsuy8.fsf@email.froward.int.ebiederm.org>
-	<202505151451.638C22B@keescook>
-	<87ecwopofp.fsf@email.froward.int.ebiederm.org>
-	<CAG48ez1VpuTR9_cvLrJEMmjOxTCYpYFswXVPmN6fE3NcSmPPVA@mail.gmail.com>
-	<87wmagnnhq.fsf@email.froward.int.ebiederm.org>
-	<202505201319.D57FDCB2A@keescook>
-	<87frgznd74.fsf_-_@email.froward.int.ebiederm.org>
-	<CAG48ez0N_1CEKyMHdjnvwsxUkCenmzsLe7dkUL=a6OmU4tPa6Q@mail.gmail.com>
-	<87zff6gf17.fsf@email.froward.int.ebiederm.org>
-	<CAG48ez1z97sCsx53W0O_dCCJL6tnf2pWuv=qaeszcYBfz_01sA@mail.gmail.com>
-	<CAHC9VhRPUXwqLvo4rbxL0++5zqHXfD8_tr-sirTJXdF_Aba_UQ@mail.gmail.com>
-	<CAKPOu+-S5C59X8zW=6keYAsHecketOBzMbb3XXDnLTc0X1nBhA@mail.gmail.com>
-Date: Fri, 13 Jun 2025 10:07:44 -0500
-In-Reply-To: <CAKPOu+-S5C59X8zW=6keYAsHecketOBzMbb3XXDnLTc0X1nBhA@mail.gmail.com>
-	(Max Kellermann's message of "Wed, 11 Jun 2025 16:23:56 +0200")
-Message-ID: <87jz5fbry7.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1749827336; c=relaxed/simple;
+	bh=KcxStdt8f8rzcLQ2tvp3NeEaAi/emd0jaeTIX1dmMLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c+dt7Fge9aV3dwRvfeA0U0qjYNQ69FNZikBH4CCThF60FK//OtPlPfVx9OvFrcpkn/NX2muqLPJB0EsZlLtkOR/cyL2H39Zjif8SXQErxtV9Bx8kDdLiB2lM/dm4F1ijR6ZJBXvG3NkUpGnzepRzqKkPHeUDzv+azMFNwzalHIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCszDAiZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCszDAiZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1DBFC4CEE3;
+	Fri, 13 Jun 2025 15:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749827336;
+	bh=KcxStdt8f8rzcLQ2tvp3NeEaAi/emd0jaeTIX1dmMLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CCszDAiZcQhun/+u+GhD53nmGwteamscEbgh22Qkeu8kQBL4niBdejC8SrkRrghso
+	 wY5FVO5Q5CMPR7NdyshGq1dY1awU+XFJJ7IajkG7EHJ2nmTM/v+8+mSOYojMw8CqTf
+	 hzlmjceHcQzyxZsVD747XMfbYxqx3YKP/k0c9d4yD24blG9YhrQMcgv50b/yta4Wda
+	 K2GnSHoUXUYZiMhGVl1cvsdpwTVz/zO9D8FHKb6Et6cVqJULwkHyAEt67HYD0ek3mP
+	 RJ/gP05iMwUuj8dGCqHMhT5A/sZqKJStWUfZFtcffjhxXXSIDPZW9e/zK1R7VeTiXo
+	 7qsY5kIDTdU6A==
+Date: Fri, 13 Jun 2025 08:08:55 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 00/14] xfs: Remove unused trace events
+Message-ID: <20250613150855.GQ6156@frogsfrogsfrogs>
+References: <20250612212405.877692069@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-XM-SPF: eid=1uQ60q-00A6I1-O7;;;mid=<87jz5fbry7.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX19DS5hI3QZXTnlYT7NATr6IQyCR/t/vFwc=
-X-Spam-Level: 
-X-Spam-Virus: No
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4714]
-	*  0.7 XMSubLong Long Subject
-	*  0.0 XM_B_Unicode BODY: Testing for specific types of unicode
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa01 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.0 XM_B_AI_SPAM_COMBINATION Email matches multiple AI-related
-	*      patterns
-X-Spam-DCC: XMission; sa01 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Max Kellermann <max.kellermann@ionos.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 550 ms - load_scoreonly_sql: 0.04 (0.0%),
-	signal_user_changed: 4.3 (0.8%), b_tie_ro: 2.9 (0.5%), parse: 1.29
-	(0.2%), extract_message_metadata: 15 (2.6%), get_uri_detail_list: 2.4
-	(0.4%), tests_pri_-2000: 5 (0.9%), tests_pri_-1000: 2.1 (0.4%),
-	tests_pri_-950: 1.02 (0.2%), tests_pri_-900: 0.79 (0.1%),
-	tests_pri_-90: 55 (9.9%), check_bayes: 53 (9.7%), b_tokenize: 6 (1.2%),
-	 b_tok_get_all: 8 (1.5%), b_comp_prob: 2.7 (0.5%), b_tok_touch_all: 33
-	(6.0%), b_finish: 0.69 (0.1%), tests_pri_0: 454 (82.6%),
-	check_dkim_signature: 0.44 (0.1%), check_dkim_adsp: 13 (2.4%),
-	poll_dns_idle: 0.38 (0.1%), tests_pri_10: 2.3 (0.4%), tests_pri_500: 7
-	(1.2%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH v2] exec: Correct the permission check for unsafe exec
-X-SA-Exim-Connect-IP: 166.70.13.51
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, christian@brauner.io, morgan@kernel.org, luto@kernel.org, jmorris@namei.org, kees@kernel.org, serge@hallyn.com, rgb@redhat.com, jannh@google.com, paul@paul-moore.com, max.kellermann@ionos.com
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612212405.877692069@goodmis.org>
 
-Max Kellermann <max.kellermann@ionos.com> writes:
+On Thu, Jun 12, 2025 at 05:24:05PM -0400, Steven Rostedt wrote:
+> 
+> Trace events take up to 5K in memory for text and meta data. I have code that
 
-> On Wed, Jun 11, 2025 at 2:19=E2=80=AFAM Paul Moore <paul@paul-moore.com> =
-wrote:
->> Aside from a tested-by verification from Max, it looks like everyone
->> is satisfied with the v2 patch, yes?
->
-> Sorry for the delay. I tested Eric's v2 patch and it solves my
-> problem. His patch is nearly identical to mine, it's only a bit more
-> intrusive by removing the weird __is_setXid functions that never made
-> sense. I welcome that; I wasn't confident enough to do that and tried
-> to make the least intrusive patch.
->
-> Eric, I'm glad you changed your mind and no longer consider my work
-> "pure nonsense" and "pointless".
+Under what circumstances do they eat up that much memory?  And is that
+per-class?  Or per-tracepoint?
 
-As you pointed out in that case my analysis of your code was incorrect.
+> will trigger a warning when it detects unused tracepoints. The XFS file
+> system contains many events that are not called. Most of them used to be called
+> but due to code refactoring the calls were removed but the trace events stayed
+> behind.
+> 
+> Some events were added but never used. If they were recent, I just reported
+> them, but if they were older, this series simply removes them.
 
-Further I wrote this patch when I finally realized what is going on and
-that the case you are dealing with is an actual bug in the current
-code and not some kind of enhancement or extension.
+TBH it'd be really nice if there was /something/ in the build path that
+would complain about disused tracepoints.  I often put in tracepoints
+while developing a feature, then the code gets massively rewritten
+during review, and none of us remember to rip out the orphaned traces...
 
-> But one problem remains: in the same email, you demanded evidence that
-> userspace doesn't depend on the current behavior. However, in your
-> patch description, you hand-waved that away by "I don't expect anyone
-> to care". What happened to that?
+> One is called only when CONFIG_COMPACT is defined, so an #ifdef was placed
+> around it.
+> 
+> A couple are only called in #if 0 code (left as a reminder to fix it), so
+> those events are wrapped by a #if 0 as well (with a comment).
+> 
+> Finally, one event is supposed to be a trace event class, but was created with
+> the TRACE_EVENT() macro and not the DECLARE_EVENT_CLASS() macro. This works
+> because a TRACE_EVENT() is simply a DECLARE_EVENT_CLASS() and DEFINE_EVENT()
+> where the class and event have the same name. But as this was a mistake, the
+> event created should not exist.
+> 
+> Each patch is a stand alone patch. If you ack them, I can take them in my
+> tree, or if you want, you can take them. I may be adding the warning code to
+> linux-next near the end of the cycle, so it would be good to have this cleaned
+> up before hand. As this is removing dead code, it may be even OK to send them
+> to Linus as a fix.
 
+...oh, you /do/ have a program and it's coming down the pipeline.
+Excellent <tents fingers>. :)
 
-The analysis of __is_setuid and __is_setgid that allowed me to remove
-them helped quite a lot.
+--D
 
-The analysis makes it clear that the code change is semantically safe
-so we don't loose anything by not mucking with permissions.
-
-The analysis shows the code is good comprehension and maintenance and
-not just for your case.  It also makes it clear why not supporting your
-case is a bug, and frankly a regression in the current code. (A 20 year
-old regression so that doesn't carry much weight but still a
-regression).
-
-A related analysis in another parallel thread mostly concluded that for
-brpm->unsafe in general it is a better user experience to terminate the
-exec with a permission error instead of continuing the exec.  Exception
-ptrace.
-
-Part of my resistance was the initial reading that your change was
-trying to escape the unsafe downgrading of permissions, instead of
-showing that it was safe to keep the permissions.
-
-With the reminder that no one should even be exercising the permission
-downgrading case, it became clear that changing the little bit that is
-safe should not affect may users at all.
-
-Failing the exec rather than downgrading permissions will also make
-a good test to see if anyone cares about this functionality.  I do still
-believe we should tread carefully.
-
-Hopefully that makes things clear.
-
-Eric
-
+> 
+> Steven Rostedt (14):
+>       xfs: tracing; Remove unused event xfs_reflink_cow_found
+>       xfs: Remove unused trace event xfs_attr_remove_iter_return
+>       xfs: Remove unused event xlog_iclog_want_sync
+>       xfs: Remove unused event xfs_ioctl_clone
+>       xfs: Remove unused xfs_reflink_compare_extents events
+>       xfs: Remove unused trace event xfs_attr_rmtval_set
+>       xfs: ifdef out unused xfs_attr events
+>       xfs: Remove unused event xfs_attr_node_removename
+>       xfs: Remove unused event xfs_alloc_near_error
+>       xfs: Remove unused event xfs_alloc_near_nominleft
+>       xfs: Remove unused event xfs_pagecache_inval
+>       xfs: Remove usused xfs_end_io_direct events
+>       xfs: Only create event xfs_file_compat_ioctl when CONFIG_COMPAT is configure
+>       xfs: Change xfs_xattr_class from a TRACE_EVENT() to DECLARE_EVENT_CLASS()
+> 
+> ----
+>  fs/xfs/scrub/trace.h |  2 +-
+>  fs/xfs/xfs_trace.h   | 72 ++++++----------------------------------------------
+>  2 files changed, 9 insertions(+), 65 deletions(-)
+> 
