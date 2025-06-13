@@ -1,320 +1,201 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47470275AF3;
-	Fri, 13 Jun 2025 11:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5AF275B0D;
+	Fri, 13 Jun 2025 11:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749815730; cv=none; b=MocD/cqoKiZg93mumDeAMlh75WZ27itVCp6q699zr8U6MnoHUrXJaRx+E0SsknwermqL8AJUj8ovCj2pEPG0c937XRRKAf1JbnwnedCZCqGGgvBcOEPsv2BTA3wP0YU952xTNF26jGSzlCJrf7L1I8LeevR3Ir2eLk/OGK39sXM=
+	t=1749815732; cv=none; b=jdC9H+PAUbhVxEE4Cg3j21bRxKo2UiZhGZ0b/YWZiF9YhM4DhLAyoAYcBZQFVRPwwE43a27d//RNqbmrPAWRw9wRkHOgjlJRmiUaOBoqBRQk1NsCvgiyDiOheE5fOpN9PXVnAJJ0Sd7MQlns56TJBukag06JfQo3zr2KUnN74Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749815730; c=relaxed/simple;
-	bh=rDUmv2bR1gX7GTZT1kxvTtzQT29+yRG2+x7FPLdhHLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lkYKyVTDZ9nuCOPOj6H7cOdL/+wpA1Qg2SVY/JRoFJPD+0TnvD3b19c+goDXCOxfc/bst05WJgrklCASf/Y7H6QA9w6b3D5duFFUWQW2QG92cE2QLG3BmKWp5UjoetEVu4Daxnk9xIInv3KYolTixaYzai0/WY8FsW7AhbmGj9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=awFN4Dtc; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1749815732; c=relaxed/simple;
+	bh=Sb5LOSkAwHk54c+c6zP3tGvl033zIanBvTqjdyRTILM=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=ORgr6wLWN1r472Usyl3td4l8NK34/fRkpoKS+U0kFxOfiO8YdCCE65TTccwOokBUdlkH7RMycZeAj3/27XC7xONsTUh/FKWMZddZm2rKyDqr1oNwEOwFfOpxiwCswXEESf4hNO7YPcDDLd0ivS922Ea71osUHrHIJEBI/h2UqCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k2ov20/T; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awFN4Dtc"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d6ade159so17577215e9.1;
-        Fri, 13 Jun 2025 04:55:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2ov20/T"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so17484075e9.1;
+        Fri, 13 Jun 2025 04:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749815727; x=1750420527; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xO4lHSnHfpkX9ey6V1hK+cOGeHbT22KfbfOMN9lyAQI=;
-        b=awFN4DtcbiEPj9Szsl07POIlmnOpEftVlY4JPSYOh3eNwIwqQkkM7Vh9CC7Sd4YNdh
-         +Mdnh0CPORZwUePmnAO8GTJN5Je55EM95WgIuwm5gvk5IYCtavwQdCmiY97t6jPhZDaY
-         GH6mAAZL8IchfJ9DptjnVb6VWIMh8pv/yzWq6HEGBvYQZsJVojEmfahelNuJTKOWv6q5
-         3OJ/HR1/u2LGLfQHiuWBLDbvAPzaL5ky5I5IZuRE5b00sf6sK53lIe+Bc8wPVm0I5lb6
-         tzg0TYvXv8/KX58vEfkuF3tRk9o9taiVFK5fSFAObZXrY9IUpFZJPXLAq0ySdZUOkwKV
-         iEQg==
+        d=gmail.com; s=20230601; t=1749815729; x=1750420529; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ufE8HslboBgiS0ch8804+mkzD75VUbk5YRlVLPLoQRA=;
+        b=k2ov20/T+cSy0umWVitQG+013KJvbv63xH44HZyXyYMwrHFPsPBn1DAXszsZVt2uxz
+         LX2PLVb/daxktPoeXzMPD415tW2EGeZEUDd6thhWuUQoIh/CLSwh6Dz0N5jCP2BJ2Muf
+         vB2LzfwJkoGb+WnBXq+t2hllNH6Xu7ysrXeuHLJlzhJcytrLF+8H7TVfTjPezo7WMZ4V
+         +nwILPHcroEwtTAx4zI1ZrKwKT4/Vcx5pGQuxkPk6SRKzAgEXfhUr++bNzOf11WxFLXd
+         aZFQNkwrFGw0V4yG1VzneLIw8LW0OhiR22WHol3V6JqNS78Hr3V7D0SjUIl0WhaLlzRv
+         6PgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749815727; x=1750420527;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xO4lHSnHfpkX9ey6V1hK+cOGeHbT22KfbfOMN9lyAQI=;
-        b=Y1nKbURnwmLiUSnGx751+dZSHwcf6dRA5R/YXkvFws9nWdiRVSERZhC7pPuUODwHKv
-         BTleNZ2XQKuQ6mzOJmP/hPW+YI89xDHw7aAf6vxD7FnYfwDg7D0NaO1Ljm07hRh6AqkJ
-         08S+Bf/t6ovxsAfYjLnur99vRnxlt/5rRQyvx/B+ZGaRK0imdl1CpkXs0L6G5k/Vb8om
-         jE8Jz5TH9cazWpvhp96aBW681nZO0dvukvO+TUoEnmRXLlmcU/9Hj2L2TAuQkyqWCu+z
-         GA/ng7MUk3tcTJzLt0AJDfXUcz06h2Iq/ekR/4u3cs62bIrYQ9gB6jPMFdf7shD2wl0d
-         iTyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWgKmxxazjDt/C03oj2VUu2+pjoiJ2SWRhv46Mmrn2JgOl3IHfQ6IqBHopxJfz6roqVwr3aDcDj+QN34qWbxg=@vger.kernel.org, AJvYcCWWyLk4bFgvPqOb2y0onEjdf0x+N9ohpMcE+MRGpQimLqAAVNwmP2UieBmELXQYOWHili2B855c0t7O@vger.kernel.org, AJvYcCX+e1YIpgx/1zQqTBMGxMeRjKCwAL1XMmcDMeabDFbELVU9D/nrt31sctnp+sKFlPBJiugQHjUNDxZCPEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy57QDnlDqwDOEI9zQz4f08PKqbd/F87WAsaoHg23IQto/qqLS/
-	BiqXUZvM08hQrIe+el7XRxJe9GZAPSBBD73Lp72ytN2fYpNa5rxwGZEM
-X-Gm-Gg: ASbGncsZFao5CqdRxxAqNIMU0yu1m7KiKOpQlMyntQGIVqNryDSq8nQmfuVJvqbCqEi
-	kt+x6xC1+MiHtEy10NIP+5QFBXy2VWYeURxdlEVeo7hFXMx5fIgwXTxUc+sAPElvjXbFqpEjvJ+
-	ROWJVLD4BUcfW4LwGGiGEzwafMX0Bym33ZHALmO8k3WvOdxWLXNl8Xt8FjiL+srxCOPD3qw2UOA
-	3uXhWJpHUvbPSk83Xp+gKq92I0CD0CLWLeyoJDLw6XNnJWL1uT8JZC0JcSn8zqNU2L5qr8mBuY3
-	diyeWhI4wDRrWHIEbM5hSGvamftYb4lURKq7Qu+2did+FrRHh0e7euGhmIaWgduGCGVSZA==
-X-Google-Smtp-Source: AGHT+IF90CtrNYbBnmdORu8/pLVZKEnKFH8SYtwc5YbhuQ8Be6X/il+Uo2k5UArsErZqC0gE2pksjA==
-X-Received: by 2002:a05:600c:3d97:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-45334b07fe9mr26480615e9.33.1749815726197;
-        Fri, 13 Jun 2025 04:55:26 -0700 (PDT)
-Received: from fedora ([94.73.34.56])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e22460bsm52636405e9.6.2025.06.13.04.55.23
+        d=1e100.net; s=20230601; t=1749815729; x=1750420529;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ufE8HslboBgiS0ch8804+mkzD75VUbk5YRlVLPLoQRA=;
+        b=bJfDgDrZhMEXF8/Pb+1lfcwCHIalCbEJD+MzgLH5xxQ+YUQRTFa7EQgdmiRYIhAOyu
+         DZfYPkQRkXQatlo8LLf1pAvo6ltZrQqgK31/xpNtbGvc5CwLmnJ5xe+p0A9BW+2FigN/
+         z7z6ML+fCBbdkVqutsBsyzumg9zE22mRF2tcNlELHiiE4MnUn6mX1DNflMfoVeFO2zjR
+         h3sBtQAZdpOmcyVGGlehbq63amHstRnFKBEqsu//ghYxC/R8g7CFifIpUm7TezMWG/5d
+         4U5izYhthblVovegtuhPhcGAYN5vlSJ27nC07wc7ghvzj/X7vwhfmZmrxNhU3b0wn029
+         0AbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGazShPTTewCaJMAx1z0LQkyQM/6ZXSiHpkZsz7oUzG96TAs93BEVbyLIy5Me2CGUCM74pFEDvjJoPTHY=@vger.kernel.org, AJvYcCWMTOYQj3qB3CssPw54Z44kSKBH0rEqdGoPJfWisrvcgkt0xTzF9YYs0VXHqL8tPJMLrRkpLhIj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm2dU+/rrFTzM6jE2xmJXKche2dzmUnAcHT9sx9PH4wQ9ktbdR
+	o2f5ztc2D155xRCZSM1rogGwODdN87NXQzM0s8WlxegGVvrWWdFjitgufb754+s2
+X-Gm-Gg: ASbGnctPyhbFQUJmJOMhM4gDqoYFdMdijkysmV7F9hoxLycCUxCariv+WCEBsWqKXtN
+	loaei+wM9YyWMclYSUG3CKv+SKdEIglJdS6UFHGGP9z2t38/KGoqJebQZtnAt2nA0Z3t1TKJr8x
+	w9bG84Mk7sRjnXBJImZWAH3y5PSZF15NkEiSCgnusF2Lx9A0AbPsnDxE5uBmabqs2EsyRG42vZB
+	KduP2t2DMe+PjHiCAINdFeg5oAP4Lg6lj8T6g6wV4QXK31w+xkVZDLoES/fimIDHd2B4/UuYvfy
+	yb70NUYxi9kwDQK/iQ3AqAuR7sbJvlqu98YmoEyf4mfLrOFvXp1Qedu8RarWBSXK38v0euHrPxs
+	=
+X-Google-Smtp-Source: AGHT+IGUe7DjzHHSFplul/ar5RfAw7b4aYzc9kQ5lrIT8AkHKhhxkXNesyYzYlzEDkL2JyHmPvem9w==
+X-Received: by 2002:a05:600c:a49:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-4533499e98fmr33137635e9.0.1749815729086;
+        Fri, 13 Jun 2025 04:55:29 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:75e0:f7f7:dffa:561e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e195768sm50645645e9.0.2025.06.13.04.55.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 04:55:25 -0700 (PDT)
-Date: Fri, 13 Jun 2025 13:55:22 +0200
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Simona Vetter <simona.vetter@ffwll.ch>,
-	Greg KH <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com,
-	airlied@gmail.com, aleksander.lobakin@intel.com,
-	andriy.shevchenko@linux.intel.com, bhelgaas@google.com,
-	broonie@kernel.org, dakr@kernel.org,
-	dri-devel@lists.freedesktop.org, hamohammed.sa@gmail.com,
-	lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, louis.chauvet@bootlin.com,
-	lukas@wunner.de, lyude@redhat.com,
-	maarten.lankhorst@linux.intel.com, mairacanal@riseup.net,
-	melissa.srw@gmail.com, mripard@kernel.org, quic_zijuhu@quicinc.com,
-	rafael@kernel.org, robin.murphy@arm.com,
-	rust-for-linux@vger.kernel.org, simona@ffwll.ch
-Subject: Re: [PATCH v4 9/9] drm/vkms: convert to use faux_device
-Message-ID: <aEwRqrqn4M32ScxN@fedora>
-References: <2025022643-scouting-petticoat-492b@gregkh>
- <20250311172054.2903-1-jose.exposito89@gmail.com>
- <2025031218-oxidize-backing-e278@gregkh>
- <Z9LqHcj4n7Dd8A-H@phenom.ffwll.local>
- <Z9MT23hgX2c21xNA@fedora>
- <fa5f9e9c-09f6-4f92-8f6d-4e057f9fc5a9@suse.de>
+        Fri, 13 Jun 2025 04:55:28 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
+ <corbet@lwn.net>,  linux-kernel@vger.kernel.org,  Akira Yokosawa
+ <akiyks@gmail.com>,  "David S. Miller" <davem@davemloft.net>,  Ignacio
+ Encinas Rubio <ignacio@iencinas.com>,  Marco Elver <elver@google.com>,
+  Shuah Khan <skhan@linuxfoundation.org>,  Eric Dumazet
+ <edumazet@google.com>,  Jan Stancek <jstancek@redhat.com>,  Paolo Abeni
+ <pabeni@redhat.com>,  Ruben Wauters <rubenru09@aol.com>,
+  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
+  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
+  stern@rowland.harvard.edu,  Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v2 00/12] Don't generate netlink .rst files inside
+ $(srctree)
+In-Reply-To: <cover.1749723671.git.mchehab+huawei@kernel.org>
+Date: Fri, 13 Jun 2025 12:05:56 +0100
+Message-ID: <m27c1foq97.fsf@gmail.com>
+References: <cover.1749723671.git.mchehab+huawei@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fa5f9e9c-09f6-4f92-8f6d-4e057f9fc5a9@suse.de>
+Content-Type: text/plain
 
-Hi Thomas,
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Thanks for the heads up, this issue fall through the cracks.
+> As discussed at:
+>    https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
+>
+> changeset f061c9f7d058 ("Documentation: Document each netlink family")
+> added a logic which generates *.rst files inside $(srctree). This is bad when
+> O=<BUILDDIR> is used.
+>
+> A recent change renamed the yaml files used by Netlink, revealing a bad
+> side effect: as "make cleandocs" don't clean the produced files, symbols 
+> appear duplicated for people that don't build the kernel from scratch.
+>
+> There are some possible solutions for that. The simplest one, which is what
+> this series address, places the build files inside Documentation/output. 
+> The changes to do that are simple enough, but has one drawback,
+> as it requires a (simple) template file for every netlink family file from
+> netlink/specs. The template is simple enough:
+>
+>         .. kernel-include:: $BUILDDIR/networking/netlink_spec/<family>.rst
 
-On Fri, Jun 13, 2025 at 10:15:05AM +0200, Thomas Zimmermann wrote:
-> Hi
-> 
-> Am 13.03.25 um 18:20 schrieb José Expósito:
-> > On Thu, Mar 13, 2025 at 03:22:21PM +0100, Simona Vetter wrote:
-> > > On Wed, Mar 12, 2025 at 07:22:07AM +0100, Greg KH wrote:
-> > > > On Tue, Mar 11, 2025 at 06:20:53PM +0100, José Expósito wrote:
-> > > > > Hi everyone,
-> > > > > 
-> > > > > > On Tue, Feb 25, 2025 at 02:51:40PM +0100, Louis Chauvet wrote:
-> > > > > > > 
-> > > > > > > Le 25/02/2025 à 12:41, Thomas Zimmermann a écrit :
-> > > > > > > > Hi
-> > > > > > > > 
-> > > > > > > > Am 10.02.25 um 15:37 schrieb Louis Chauvet:
-> > > > > > > > > On 10/02/25 - 13:30, Greg Kroah-Hartman wrote:
-> > > > > > > > > > The vkms driver does not need to create a platform device, as there is
-> > > > > > > > > > no real platform resources associated it,  it only did so because it was
-> > > > > > > > > > simple to do that in order to get a device to use for resource
-> > > > > > > > > > management of drm resources.  Change the driver to use the faux device
-> > > > > > > > > > instead as this is NOT a real platform device.
-> > > > > > > > > > 
-> > > > > > > > > > Cc: Louis Chauvet <louis.chauvet@bootlin.com>
-> > > > > > > > > > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-> > > > > > > > > > Cc: Simona Vetter <simona@ffwll.ch>
-> > > > > > > > > > Cc: Melissa Wen <melissa.srw@gmail.com>
-> > > > > > > > > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > > > > > > > > > Cc: Maxime Ripard <mripard@kernel.org>
-> > > > > > > > > > Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> > > > > > > > > > Cc: David Airlie <airlied@gmail.com>
-> > > > > > > > > > Cc: dri-devel@lists.freedesktop.org
-> > > > > > > > > > Reviewed-by: Lyude Paul <lyude@redhat.com>
-> > > > > > > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > > > > Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> > > > > > > > 
-> > > > > > > > > Tested-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> > > > > > > > > Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> > > > > > > > > 
-> > > > > > > > > Thanks for the modification, it seems to work.
-> > > > > > > > Should this patch be merged through DRM trees? drm-misc-next is at
-> > > > > > > > v6.14-rc4 and has struct faux_device.
-> > > > > > > Hi,
-> > > > > > > 
-> > > > > > > I was not aware the faux-device was merged, as it is a new feature, I
-> > > > > > > expected it to reach drm-misc-next on 6.15-rc1.
-> > > > > > I added it to Linus's tree just so that DRM could get these changes into
-> > > > > > their tree now :)
-> > > > > > 
-> > > > > > > I plan to merge [1] today/tomorrow (well tested with platform_device), and
-> > > > > > > then I will submit an updated version of this patch (only trivial conflicts,
-> > > > > > > but never tested with multiple VKMS devices).
-> > > > > > > 
-> > > > > > > [1]:https://lore.kernel.org/all/20250218101214.5790-1-jose.exposito89@gmail.com/
-> > > > > > Great, thanks!
-> > > > > > 
-> > > > > > greg k-h
-> > > > > Testing this patch again as part of some IGT tests I'm working on,
-> > > > > I noticed that, applying this patch on top of the latest drm-misc-next
-> > > > > triggers a warning at drivers/gpu/drm/drm_gem.c:571, in
-> > > > > drm_gem_get_pages():
-> > > > > 
-> > > > >      if (WARN_ON(!obj->filp))
-> > > > >              return ERR_PTR(-EINVAL);
-> > > > I don't see how the faux bus change would have anything to do with a
-> > > > filp as that's not related as far as I can tell.  But I don't know the
-> > > > drm layer at all, where does that filp come from?
-> > > Yeah that filp is the shmem file that backs gem bo. That's very far away
-> > > from anything device/driver related datastrctures. If this is a new
-> > > failure due to the aux bux conversion then it would be really surprising.
-> > Agreed, I find it surprising, but reverting the patch removes the warning.
-> > 
-> > It's most likely an issue on my side, but I decided to double check just
-> > in case someone else is also seeing this warning.
-> 
-> Any news on this issue?
+I think we could skip describing this since it was an approach that has
+now been dropped.
 
-I tested again with drm-misc-next. At the moment of writing this, the last
-commit is 6bd90e700b42 ("drm/xe: Make dma-fences compliant with the safe
-access rules") and I still see a similar warning. The stack trace changed,
-but the warning is still present.
+> Part of the issue is that sphinx-build only produces html files for sources
+> inside the source tree (Documentation/). 
+>
+> To address that, add an yaml parser extension to Sphinx.
+>
+> It should be noticed that this version has one drawback: it increases the
+> documentation build time. I suspect that the culprit is inside Sphinx
+> glob logic and the way it handles exclude_patterns. What happens is that
+> sphinx/project.py uses glob, which, on my own experiences, it is slow
+> (due to that, I ended implementing my own glob logic for kernel-doc).
+>
+> On the plus side, the extension is flexible enough to handle other types
+> of yaml files, as the actual yaml conversion logic is outside the extension.
 
-I'm going to detail the exact steps I followed. Let's see if someone else is
-able to reproduce the issue:
+I don't think the extension would handle anything other than the Netlink
+yaml specs, and I don't think that should be a goal of this patchset.
 
-I started by applying the patches from this series that are not already merged:
+> With this version, there's no need to add any template file per netlink/spec
+> file. Yet, the Documentation/netlink/spec.index.rst require updates as
+> spec files are added/renamed/removed. The already-existing script can
+> handle it automatically by running:
+>
+>             tools/net/ynl/pyynl/ynl_gen_rst.py -x  -v -o Documentation/netlink/specs/index.rst
 
- - [PATCH v4 4/9] x86/microcode: move away from using a fake platform
- - [PATCH v4 5/9] wifi: cfg80211: move away from using a fake
- - [PATCH v4 8/9] drm/vgem/vgem_drv convert to use faux_device
- - [PATCH v4 9/9] drm/vkms: convert to use faux_device
+I think this can be avoided by using the toctree glob directive in the
+index, like this:
 
-The last patch has small conflict in vkms_drv.h that I solved like this:
+=============================
+Netlink Family Specifications
+=============================
 
-	struct vkms_device {
-		struct drm_device drm;
-		struct faux_device *faux_dev;
-		const struct vkms_config *config;
-	};
+.. toctree::
+   :maxdepth: 1
+   :glob:
 
-And in vkms_drv.c:
+   *
 
-	static int vkms_create(struct vkms_config *config)
-	{
-		int ret;
-		struct faux_device *fdev;
-		struct vkms_device *vkms_device;
-		const char *dev_name;
+This would let you have a static index file.
 
-		dev_name = vkms_config_get_device_name(config);
-		fdev = faux_device_create(dev_name, NULL, NULL);
-		if (!fdev)
-			return -ENODEV;
+> ---
+>
+> v2:
+> - Use a Sphinx extension to handle netlink files.
+>
+> v1:
+> - Statically add template files to as networking/netlink_spec/<family>.rst
+>
+> Mauro Carvalho Chehab (12):
+>   tools: ynl_gen_rst.py: create a top-level reference
+>   docs: netlink: netlink-raw.rst: use :ref: instead of :doc:
 
-Next, I installed the new kernel in a QEMU virtual machine running Fedora 41.
-There is nothing special about my Fedora, it is the regular desktop version.
+I suggest combining the first 2 patches.
 
-After a reboot, "sudo modprobe vkms" shows a similar warning in dmesg.
-For reference, the warning is at the end of my email.
+>   docs: netlink: don't ignore generated rst files
 
-Am I the only one sawing this warning?
+Maybe leave this patch to the end and change the description to be a
+cleanup of the remants of the old approach.
 
-Jose
+Further comments on specific commits
 
----
+>   tools: ynl_gen_rst.py: make the index parser more generic
+>   tools: ynl_gen_rst.py: Split library from command line tool
+>   scripts: lib: netlink_yml_parser.py: use classes
+>   tools: ynl_gen_rst.py: do some coding style cleanups
+>   scripts: netlink_yml_parser.py: improve index.rst generation
+>   docs: sphinx: add a parser template for yaml files
+>   docs: sphinx: parser_yaml.py: add Netlink specs parser
 
-[   69.417850] [drm] Initialized vkms 1.0.0 for vkms on minor 1
-[   69.419446] faux_driver vkms: [drm] fb1: vkmsdrmfb frame buffer device
-[   69.520944] ------------[ cut here ]------------
-[   69.520954] WARNING: CPU: 2 PID: 1015 at drivers/dma-buf/dma-buf.c:1518 dma_buf_vmap+0x212/0x540
-[   69.520992] Modules linked in: vkms snd_seq_dummy snd_hrtimer snd_seq snd_seq_device snd_timer snd soundcore nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables rfkill qrtr sunrpc binfmt_misc ppdev pktcdvd parport_pc parport pcspkr i2c_piix4 e1000 i2c_smbus joydev loop nfnetlink vsock_loopback zram vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vmw_vmci vsock bochs serio_raw ata_generic pata_acpi fuse qemu_fw_cfg
-[   69.521082] CPU: 2 UID: 42 PID: 1015 Comm: KMS thread Not tainted 6.16.0-rc1+ #3 PREEMPT(voluntary) 
-[   69.521092] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-4.fc42 04/01/2014
-[   69.521095] RIP: 0010:dma_buf_vmap+0x212/0x540
-[   69.521105] Code: 7c 41 ff 03 0f 85 0a 02 00 00 c9 e9 c8 47 0c 01 80 3c 06 00 0f 85 c4 01 00 00 48 c7 01 00 00 00 00 48 85 d2 0f 85 bd fe ff ff <0f> 0b b8 ea ff ff ff eb af 48 85 f6 0f 85 cf 01 00 00 48 89 4c 24
-[   69.521112] RSP: 0018:ffffc90006a5f690 EFLAGS: 00010246
-[   69.521125] RAX: dffffc0000000000 RBX: 1ffff92000d4beea RCX: ffff88811467dcc8
-[   69.521128] RDX: 0000000000000000 RSI: 1ffff110228cfb99 RDI: ffff88811467dcd0
-[   69.521131] RBP: ffffc90006a5f728 R08: 1ffff92000d4bed9 R09: fffff52000d4bef1
-[   69.521162] R10: fffff52000d4bef2 R11: ffff8881017f4e28 R12: ffff8881149594f0
-[   69.521165] R13: ffff888114959400 R14: 1ffff11023146b29 R15: ffff88811467dcc8
-[   69.521168] FS:  00007fbbdd1ff6c0(0000) GS:ffff888417580000(0000) knlGS:0000000000000000
-[   69.521172] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   69.521174] CR2: 00007fbbcc0345c8 CR3: 000000011ec5a000 CR4: 00000000000006f0
-[   69.521179] Call Trace:
-[   69.521182]  <TASK>
-[   69.521185]  ? __pfx_dma_buf_vmap+0x10/0x10
-[   69.521193]  ? dma_resv_get_singleton+0x9a/0x2a0
-[   69.521197]  drm_gem_shmem_vmap_locked+0xc2/0x5f0
-[   69.521208]  ? __pfx_drm_gem_shmem_vmap_locked+0x10/0x10
-[   69.521212]  ? __pfx_ww_mutex_lock+0x10/0x10
-[   69.521225]  ? sched_clock_noinstr+0xd/0x20
-[   69.521230]  ? local_clock_noinstr+0x13/0xf0
-[   69.521233]  drm_gem_shmem_object_vmap+0xd/0x20
-[   69.521237]  drm_gem_vmap_locked+0x70/0xf0
-[   69.521247]  drm_gem_vmap+0x4c/0xa0
-[   69.521250]  drm_gem_fb_vmap+0xb2/0x3b0
-[   69.521255]  vkms_prepare_fb+0x6f/0x90 [vkms]
-[   69.521264]  ? drm_atomic_helper_setup_commit+0xb7b/0x1320
-[   69.521268]  drm_atomic_helper_prepare_planes+0x19f/0xb90
-[   69.521272]  ? __pfx_drm_atomic_helper_commit+0x10/0x10
-[   69.521276]  drm_atomic_helper_commit+0x126/0x2d0
-[   69.521279]  ? __pfx_drm_atomic_helper_commit+0x10/0x10
-[   69.521282]  drm_atomic_commit+0x205/0x2d0
-[   69.521290]  ? _raw_spin_lock_irqsave+0x97/0xf0
-[   69.521295]  ? __pfx_drm_atomic_commit+0x10/0x10
-[   69.521299]  ? __pfx___drm_printfn_info+0x10/0x10
-[   69.521313]  ? drm_event_reserve_init+0x1cd/0x260
-[   69.521318]  drm_mode_atomic_ioctl+0x1c79/0x2d30
-[   69.521323]  ? __pfx_drm_mode_atomic_ioctl+0x10/0x10
-[   69.521326]  ? __kasan_check_write+0x18/0x20
-[   69.521339]  drm_ioctl_kernel+0x17b/0x2f0
-[   69.521343]  ? __pfx_drm_mode_atomic_ioctl+0x10/0x10
-[   69.521349]  ? __pfx_drm_ioctl_kernel+0x10/0x10
-[   69.521353]  ? __pfx_do_vfs_ioctl+0x10/0x10
-[   69.521361]  ? __kasan_check_write+0x18/0x20
-[   69.521365]  drm_ioctl+0x51b/0xbd0
-[   69.521369]  ? __pfx_drm_mode_atomic_ioctl+0x10/0x10
-[   69.521373]  ? __pfx_drm_ioctl+0x10/0x10
-[   69.521378]  ? selinux_file_ioctl+0xfc/0x260
-[   69.521390]  __x64_sys_ioctl+0x143/0x1d0
-[   69.521394]  x64_sys_call+0xf4b/0x1d70
-[   69.521404]  do_syscall_64+0x82/0x2a0
-[   69.521408]  ? __kasan_check_write+0x18/0x20
-[   69.521411]  ? do_user_addr_fault+0x491/0xa60
-[   69.521420]  ? irqentry_exit+0x3f/0x50
-[   69.521423]  ? exc_page_fault+0x8b/0xe0
-[   69.521426]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   69.521430] RIP: 0033:0x7fbc078fd8ed
-[   69.521441] Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
-[   69.521444] RSP: 002b:00007fbbdd1fd9b0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-[   69.521449] RAX: ffffffffffffffda RBX: 00007fbbcc02af60 RCX: 00007fbc078fd8ed
-[   69.521452] RDX: 00007fbbdd1fda50 RSI: 00000000c03864bc RDI: 0000000000000035
-[   69.521455] RBP: 00007fbbdd1fda00 R08: 00000000000000e0 R09: 0000000000000001
-[   69.521457] R10: 0000000000000003 R11: 0000000000000246 R12: 00007fbbdd1fda50
-[   69.521459] R13: 00000000c03864bc R14: 0000000000000035 R15: 00007fbbcc02acf0
-[   69.521464]  </TASK>
-[   69.521466] ---[ end trace 0000000000000000 ]---
+Please combine these 2 patches. The template patch just introduces noise
+into the series and makes it harder to review.
 
-
-
-> Best regards
-> Thomas
-> 
-> > 
-> > Jose
-> > 
-> > > -Sima
-> > > 
-> > > -- 
-> > > Simona Vetter
-> > > Software Engineer, Intel Corporation
-> > > http://blog.ffwll.ch
-> 
-> -- 
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
-> 
+>   docs: use parser_yaml extension to handle Netlink specs
+>   docs: conf.py: don't handle yaml files outside Netlink specs
+>
+>  .pylintrc                                     |   2 +-
+>  Documentation/Makefile                        |  17 -
+>  Documentation/conf.py                         |  17 +-
+>  Documentation/netlink/specs/index.rst         |  38 ++
+>  Documentation/networking/index.rst            |   2 +-
+>  .../networking/netlink_spec/.gitignore        |   1 -
+>  .../networking/netlink_spec/readme.txt        |   4 -
+>  Documentation/sphinx/parser_yaml.py           |  80 ++++
+>  .../userspace-api/netlink/netlink-raw.rst     |   6 +-
+>  scripts/lib/netlink_yml_parser.py             | 394 ++++++++++++++++++
+>  tools/net/ynl/pyynl/ynl_gen_rst.py            | 378 +----------------
+>  11 files changed, 544 insertions(+), 395 deletions(-)
+>  create mode 100644 Documentation/netlink/specs/index.rst
+>  delete mode 100644 Documentation/networking/netlink_spec/.gitignore
+>  delete mode 100644 Documentation/networking/netlink_spec/readme.txt
+>  create mode 100755 Documentation/sphinx/parser_yaml.py
+>  create mode 100755 scripts/lib/netlink_yml_parser.py
