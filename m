@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4A1239E7A
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D6E23F429;
+	Fri, 13 Jun 2025 18:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749837869; cv=none; b=h5aDlyOjrxMZA2w/JqcHSTPbrTn5GZ8wPSWj1Y0EOLC2Zqdv+8h9gTdA1ZKL0yOqNgGBRmnJJUrjvMOKxOqiouh9DG29u5izQ7zkR+Zwn7VHhbgYFOGmWsxZnUecc95ySpHajx+xd+hAYsRDxnBaCIniyo/pVXACWmrYD/HGpCA=
+	t=1749837870; cv=none; b=XhdqH4rVAjEc4lFRHW8Az+Aggd8jJBti+klv0w1BOdWIB/W+gUidGL2HaLEkLn663DXxZcD/VMmodPyD5nkQmzepNCc9n8mKktJ69MMIjVKOFLny9B6vRMHZWi6gx+wdcv0TjHr8g0o/DN3+f1dHugcQaTJwp7tDVkgqclsQ9Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749837869; c=relaxed/simple;
-	bh=Qy48y7H2DCevEKDju+D8MuUeOu4fA1AhCpAKqyQTbyQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=YSiXyIjAc1Jhjem5XV4ea6w1QVzJjCQlDUPd5Ap3AabQyzsZ31qElqOCllTD7vUyV0aIItlIr8KG8rYZ0F3PWdKu/h8tqmnKqmiB8l3tCH4Hi+KC2HCFTQZZhCsxUIkmhLeUkhmZS6CfwpR6GY4E8CTrnrveAARcOgnJ+A7OBk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rI/xLP8t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749837870; c=relaxed/simple;
+	bh=4lgOtRux7AhkwT1tqi+zKVMpv+dgcgt+LmxUhdElYh4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Y5+HO972CIqeXvofGeXMijvTEwRVert8XM73eOz2asU1/5jUumfy3yOuJBj0U1m/rhoq6puZvKvEjGTIwoLBoDM6hDS3/6xbHNqNliA7DSi8gAEYOtoCGL27Hj3UebIBYogUdzHOzTA6mqzl/kyCY1W5M+aJOb21NciiA9OKVTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2N/vG01; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rI/xLP8t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D139CC4CEEB;
-	Fri, 13 Jun 2025 18:04:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2N/vG01"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C32FC4CEEB;
+	Fri, 13 Jun 2025 18:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749837868;
-	bh=Qy48y7H2DCevEKDju+D8MuUeOu4fA1AhCpAKqyQTbyQ=;
+	s=k20201202; t=1749837870;
+	bh=4lgOtRux7AhkwT1tqi+zKVMpv+dgcgt+LmxUhdElYh4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=rI/xLP8t0XPV/d8vxP9+6o6PQpEgs9QKAk+34T6N17k6RO7sHMr9+ktkn28FQq90O
-	 mxN1ua4rg9foUNs3K+Vo/DhPZHLQHQYMSRgycKdTLKRiDRtsA28yTJWMwZ2gEnGsNN
-	 0C+GxGKErglKKgT9LvKTa93EsBUJ5xI4Awkki7OhJ3ltY3KGwrug/dUeB2yzE0SaiY
-	 htN7reHsE0h1EQiRcKru7/sqnJoOhyM5gtrJBDK6cyHFwRO6j1cr135HgSg0ibsvva
-	 hHC2A2+e+h0volSS5jxzJY3oNni0dppBCjqdlshOq8dF4mC0FQ96M6hFYv4c8AKc/j
-	 Wv98jOTH/gQiw==
+	b=R2N/vG01o6zUug0W9HmR1YiqvbrX2kawn+ic2zDOtFave/mXT/pLHtYfI/bcCnRPr
+	 g3NqCPtyrUlKkAAVaFscYOCYWzorHGDUMXkWiPq4zB08KpxtAFtLDs++egx8kAFdoW
+	 YzODnGcu96yO0GHTuaBNRqTEGY23ZbolLmzljFACp3goms4+mLmklR9SZOWUj4xhr9
+	 HaMJOQVKNyn6NkpfjjkYWow1YNr+c/YpnqPW3kjIuXDiXSoCO/2qAhwgGVm8DSF7cw
+	 TxLihz9kQ9mGbVxxe04Jauy/oaL/2Jw/efGyqjTQlc2/lx28Okvx+b7vcVzm5sUZyk
+	 u6DKt9jN0ljxw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADC89380AAD0;
-	Fri, 13 Jun 2025 18:04:59 +0000 (UTC)
-Subject: Re: [GIT PULL] regulator fixes for v6.16-rc1
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B36380AAD0;
+	Fri, 13 Jun 2025 18:05:01 +0000 (UTC)
+Subject: Re: [GIT PULL] SPI fixes for v6.16-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ef1d8afdc37fb1279dfe0d367ffafb56.broonie@kernel.org>
-References: <ef1d8afdc37fb1279dfe0d367ffafb56.broonie@kernel.org>
+In-Reply-To: <6b7c1c97241248c0f3c35512f1150ffd.broonie@kernel.org>
+References: <6b7c1c97241248c0f3c35512f1150ffd.broonie@kernel.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ef1d8afdc37fb1279dfe0d367ffafb56.broonie@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.16-rc1
-X-PR-Tracked-Commit-Id: 06118ae36855b7d3d22688298e74a766ccf0cb7a
+X-PR-Tracked-Message-Id: <6b7c1c97241248c0f3c35512f1150ffd.broonie@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc1
+X-PR-Tracked-Commit-Id: 9f0ad43b158d07bc7144d219ceabdea36e28e392
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 601dddb6c5d6bf63c63b2efba98231db5f861696
-Message-Id: <174983789828.834702.14788356232417026752.pr-tracker-bot@kernel.org>
-Date: Fri, 13 Jun 2025 18:04:58 +0000
+X-PR-Merge-Commit-Id: 02adc1490e6d8681cc81057ed86d123d0240909b
+Message-Id: <174983789978.834702.5471087257660089155.pr-tracker-bot@kernel.org>
+Date: Fri, 13 Jun 2025 18:04:59 +0000
 To: Mark Brown <broonie@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 13 Jun 2025 18:23:40 +0100:
+The pull request you sent on Fri, 13 Jun 2025 18:23:53 +0100:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.16-rc1
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/601dddb6c5d6bf63c63b2efba98231db5f861696
+https://git.kernel.org/torvalds/c/02adc1490e6d8681cc81057ed86d123d0240909b
 
 Thank you!
 
