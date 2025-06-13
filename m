@@ -1,129 +1,231 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770191DF268;
-	Fri, 13 Jun 2025 02:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7621A01B9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 02:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749780737; cv=none; b=QfACml63QkDQdjjpeOXAqRQxNeFqG5YFvt2ohnTaFYl4ITWdF6nlK4JIgGH3GVOa7hWxbsVFv24xYhu4WZUwd/THSpEoR7bxI7UG2ub46zgEKfDjRpKdxdFEsKmw9OVPqPooUYEPJZ8Ee1TW9W+M7Hps+ENHZTYBp/Z+i5xvgsE=
+	t=1749780774; cv=none; b=l0dbNvV145zuTtx5RATNxUvYrDdjDj9BXkRvcUhfd9phEcQEZ4xJkxfCi/zhmG0AqEZubDqyrbXGU35WbrQHCVA0PNhxNCk+LlaL+EWqFwUwRlHNPFYQnK2J9VvbMDTg8D6B0bQKW8JXzSRhUuIktqHshiM0UX0hQGgGpe/kuxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749780737; c=relaxed/simple;
-	bh=oV2F7jyiXlkuJRhDsFyY1YWgqEbzKbiBKXchw7JTdGU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kF2Fm6ObhuHWtIvBdN6ENDygvfkpDencYn1ICPakUq8zj+vE+OK5PP1k9mTnsWDArsQrtkWQef0CrT278+kclLYuZtdVLz+ORrdYGXRIUzCV3WYEmYe25EB0tAXEQzmTyy8U4qi7V/02twaPv0Dfi0V3gH+UBdDFQvhTFKaz3qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MfCvXX0b; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfCvXX0b"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2350fc2591dso15683405ad.1;
-        Thu, 12 Jun 2025 19:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749780735; x=1750385535; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/hna0O+LUaLx+0oktXX+K8llS+HEe3f1PFlR9cMiAfc=;
-        b=MfCvXX0br3I4InM6lyJ+7/ORK5J2GlhY+0CTcFfRHnnG7TfkMqJhlVwPdwBppsvzml
-         NUGAxoVKFz5pviO1nYtUph+MVM8jhjXtcuAWGuUvT9I64O0fhqsprkf2upchB/n4WGAz
-         7ATeYR6awWaNTzCRo5NPg/E0LYxrBHZMIuQkpRdyjrAWg4cT/fSb0BJqWg4ZVB3dRorv
-         VmA8YBrBRgDzzXbwepiUhAhvltY1B+/9dsGwS58Fz0P1YQzcGzuUWaKd03CqRgrTFGTe
-         bwsmYhYmxYmPMWrt9kziLWuB21HO9AfJ/qgpUBZY9UI99SR+nlx7+tW4eH511UnQEZJE
-         dQ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749780735; x=1750385535;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/hna0O+LUaLx+0oktXX+K8llS+HEe3f1PFlR9cMiAfc=;
-        b=q9U7vM+IbrV3z5Nb/T8PpKGFk5e23djOblUsqU7xTgoGtxp25aQEmpF3tF6oaxXUpu
-         x1m+ijQxtRGPLG0n9QxLH2MByC4IFjLOBlvQqwq1gnqCioR7jdY0CQEgNJcdR5u3lPQ8
-         ItOI0kZ+2+yM1P1w04tVbgL5iMd/pXzyLbizrh/e9z1p8L/mGgqaqcIG8lkAIjmXU53y
-         zJZuqpdOgq9b20fudDXckWMN5SD5OMsBId5s00Yo4ynx1bVJTjzvyAG4tGS5gcww9geh
-         NdeGjQE+lWT70Ys0i5v1JMnISLfkI/iCbiXeDO1ayTzo9xJwtJ2weWOUMFzTmj2Kw9ll
-         hxGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXfEnlqkxY8Gx+guEayWQZTqfsN7tWOhYcaEZ1JZqHNDzLLpc8pXxOrtVdXodQzBPx0aBo22z6+MAtdn/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO/yHmPEPhumUkIFmd8TJSRqe0HV07ouebS1QqWeOd+WgzZBjh
-	yEg/XcMHT50dnxvyh1ju1Y1BC2QU47JNgoEsQiv4f52yZDhb210qXpMe
-X-Gm-Gg: ASbGnct/yfTOChKpUj3T3mYOR5pj1paYyM2hARUZcE7JieA3bJlCis+39tX93lHXtjG
-	DFVxc9A6z9zDJsFbfnUeY8SQBdvNARj1TbijgedFZ9WuXUdBQEXVqosw3DYQ+RI4y7hRh7EH2OH
-	8l5qegLC9Ee6NCUoOSwCzYWB3jP3gaV5jN+WzUAtz7uu8O7nDlLgFuKKCzkEMlMBiCDR4lt2siG
-	TtOJW3dWPUFIldFyIE6/u3oVtODOkxj/VYElHcV247Xq5p8Zaw9RrTxk/Wno5Sf1G0OueCAyzpJ
-	3OQeXOiiFEPdYfWGd23H3QppCEln0m4yM3lgyMnuAT1AdnWjOfxvqw==
-X-Google-Smtp-Source: AGHT+IEn+f3gutrZsuGdkCNgFErV5PdSC6Hef2d/nsG5l9WFwb349LMISTX9gwCyLloUOhY8JzqgdQ==
-X-Received: by 2002:a17:902:ecc1:b0:21f:5063:d3ca with SMTP id d9443c01a7336-2365fb3dde4mr12310335ad.16.1749780734677;
-        Thu, 12 Jun 2025 19:12:14 -0700 (PDT)
-Received: from localhost ([2602:f919:106::1b8])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b2fe1639e5bsm403153a12.2.2025.06.12.19.12.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 19:12:14 -0700 (PDT)
-Date: Fri, 13 Jun 2025 10:12:07 +0800
-From: Troy Mitchell <troymitchell988@gmail.com>
-To: Alex Elder <elder@riscstar.com>, andi.shyti@kernel.org, dlan@gentoo.org,
-	troymitchell988@gmail.com
-Cc: linux-i2c@vger.kernel.org, spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Troy Mitchell <troy.mitchell@linux.dev>
-Subject: Re: [PATCH] i2c: k1: check for transfer error
-Message-ID: <aEuI9-QWCv6CRUyX@troy-wujie14pro-arch>
-References: <20250612225627.1106735-1-elder@riscstar.com>
+	s=arc-20240116; t=1749780774; c=relaxed/simple;
+	bh=U5TFIeTq+bxCbMPWoKoEBgxfuhXcMhbM7OWZKVTWBx4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iQ+yfZy77jhFVbKllL1mZN3MjwpD+flrO638sQ3qwXYQRewMzCivhImt4awQ2lLw+vGBEnwUuEfDDwKWdcPDHigliXxNO3hVo3CtUXD30/TUBclsqU7P9F+q6bd7MEAg0RC73ynqVj06kZf5bIw7Xamd+PjehLV2BSTa5B3bNO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+	by SHSQR01.spreadtrum.com with ESMTP id 55D1pk83030165
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:51:46 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 55D1p0qG026367;
+	Fri, 13 Jun 2025 09:51:00 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4bJMjK1876z2NtGrn;
+	Fri, 13 Jun 2025 09:47:49 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Fri, 13 Jun 2025 09:50:57 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <Hao_hao.Wang@unisoc.com>, <baocong.liu@unisoc.com>
+Subject: [PATCH 1/2] f2fs: compress: change the first parameter of page_array_{alloc,free} to sbi
+Date: Fri, 13 Jun 2025 09:50:44 +0800
+Message-ID: <1749779445-29125-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612225627.1106735-1-elder@riscstar.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 55D1p0qG026367
 
-On Thu, Jun 12, 2025 at 05:56:25PM -0500, Alex Elder wrote:
-> If spacemit_i2c_xfer_msg() times out waiting for a message transfer to
-> complete, or if the hardware reports an error, it returns a negative
-> error code (-ETIMEDOUT, -EAGAIN, -ENXIO. or -EIO).
-> 
-> The sole caller of spacemit_i2c_xfer_msg() is spacemit_i2c_xfer(),
-> which is the i2c_algorithm->xfer callback function.  It currently
-> does not save the value returned by spacemit_i2c_xfer_msg().
-> 
-> The result is that transfer errors go unreported, and a caller
-> has no indication anything is wrong.
-> 
-> When this code was out for review, the return value *was* checked
-> in early versions.  But for some reason, that assignment got dropped
-> between versions 5 and 6 of the series, perhaps related to reworking
-> the code to merge spacemit_i2c_xfer_core() into spacemit_i2c_xfer().
-> 
-> Simply assigning the value returned to "ret" fixes the problem.
-> 
-> Fixes: 5ea558473fa31 ("i2c: spacemit: add support for SpacemiT K1 SoC")
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> Reviewed-by: Troy Mitchell <troymitchell988@gmail.com>
-> ---
-> v2: Added Troy's Reviewed-by
-Hi Alex, you added the changelog, but the subject line 
-doesn't have the "V2" suffix. Is this a mistake?
+No logic changes, just cleanup and prepare for fixing the UAF issue
+in f2fs_free_dic.
 
-            - Troy
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
+---
+ fs/f2fs/compress.c | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-> 
->  drivers/i2c/busses/i2c-k1.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
-> index 5965b4cf6220e..b68a21fff0b56 100644
-> --- a/drivers/i2c/busses/i2c-k1.c
-> +++ b/drivers/i2c/busses/i2c-k1.c
-> @@ -477,7 +477,7 @@ static int spacemit_i2c_xfer(struct i2c_adapter *adapt, struct i2c_msg *msgs, in
->  
->  	ret = spacemit_i2c_wait_bus_idle(i2c);
->  	if (!ret)
-> -		spacemit_i2c_xfer_msg(i2c);
-> +		ret = spacemit_i2c_xfer_msg(i2c);
->  	else if (ret < 0)
->  		dev_dbg(i2c->dev, "i2c transfer error: %d\n", ret);
->  	else
-> 
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> -- 
-> 2.45.2
-> 
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index b3c1df9..832a484 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -23,20 +23,18 @@
+ static struct kmem_cache *cic_entry_slab;
+ static struct kmem_cache *dic_entry_slab;
+ 
+-static void *page_array_alloc(struct inode *inode, int nr)
++static void *page_array_alloc(struct f2fs_sb_info *sbi, int nr)
+ {
+-	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	unsigned int size = sizeof(struct page *) * nr;
+ 
+ 	if (likely(size <= sbi->page_array_slab_size))
+ 		return f2fs_kmem_cache_alloc(sbi->page_array_slab,
+-					GFP_F2FS_ZERO, false, F2FS_I_SB(inode));
++					GFP_F2FS_ZERO, false, sbi);
+ 	return f2fs_kzalloc(sbi, size, GFP_NOFS);
+ }
+ 
+-static void page_array_free(struct inode *inode, void *pages, int nr)
++static void page_array_free(struct f2fs_sb_info *sbi, void *pages, int nr)
+ {
+-	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	unsigned int size = sizeof(struct page *) * nr;
+ 
+ 	if (!pages)
+@@ -149,13 +147,13 @@ int f2fs_init_compress_ctx(struct compress_ctx *cc)
+ 	if (cc->rpages)
+ 		return 0;
+ 
+-	cc->rpages = page_array_alloc(cc->inode, cc->cluster_size);
++	cc->rpages = page_array_alloc(F2FS_I_SB(cc->inode), cc->cluster_size);
+ 	return cc->rpages ? 0 : -ENOMEM;
+ }
+ 
+ void f2fs_destroy_compress_ctx(struct compress_ctx *cc, bool reuse)
+ {
+-	page_array_free(cc->inode, cc->rpages, cc->cluster_size);
++	page_array_free(F2FS_I_SB(cc->inode), cc->rpages, cc->cluster_size);
+ 	cc->rpages = NULL;
+ 	cc->nr_rpages = 0;
+ 	cc->nr_cpages = 0;
+@@ -622,6 +620,7 @@ static void *f2fs_vmap(struct page **pages, unsigned int count)
+ 
+ static int f2fs_compress_pages(struct compress_ctx *cc)
+ {
++	struct f2fs_sb_info *sbi = F2FS_I_SB(cc->inode);
+ 	struct f2fs_inode_info *fi = F2FS_I(cc->inode);
+ 	const struct f2fs_compress_ops *cops =
+ 				f2fs_cops[fi->i_compress_algorithm];
+@@ -642,7 +641,7 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+ 	cc->nr_cpages = DIV_ROUND_UP(max_len, PAGE_SIZE);
+ 	cc->valid_nr_cpages = cc->nr_cpages;
+ 
+-	cc->cpages = page_array_alloc(cc->inode, cc->nr_cpages);
++	cc->cpages = page_array_alloc(sbi, cc->nr_cpages);
+ 	if (!cc->cpages) {
+ 		ret = -ENOMEM;
+ 		goto destroy_compress_ctx;
+@@ -716,7 +715,7 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+ 		if (cc->cpages[i])
+ 			f2fs_compress_free_page(cc->cpages[i]);
+ 	}
+-	page_array_free(cc->inode, cc->cpages, cc->nr_cpages);
++	page_array_free(sbi, cc->cpages, cc->nr_cpages);
+ 	cc->cpages = NULL;
+ destroy_compress_ctx:
+ 	if (cops->destroy_compress_ctx)
+@@ -1340,7 +1339,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 	cic->magic = F2FS_COMPRESSED_PAGE_MAGIC;
+ 	cic->inode = inode;
+ 	atomic_set(&cic->pending_pages, cc->valid_nr_cpages);
+-	cic->rpages = page_array_alloc(cc->inode, cc->cluster_size);
++	cic->rpages = page_array_alloc(sbi, cc->cluster_size);
+ 	if (!cic->rpages)
+ 		goto out_put_cic;
+ 
+@@ -1442,13 +1441,13 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 	spin_unlock(&fi->i_size_lock);
+ 
+ 	f2fs_put_rpages(cc);
+-	page_array_free(cc->inode, cc->cpages, cc->nr_cpages);
++	page_array_free(sbi, cc->cpages, cc->nr_cpages);
+ 	cc->cpages = NULL;
+ 	f2fs_destroy_compress_ctx(cc, false);
+ 	return 0;
+ 
+ out_destroy_crypt:
+-	page_array_free(cc->inode, cic->rpages, cc->cluster_size);
++	page_array_free(sbi, cic->rpages, cc->cluster_size);
+ 
+ 	for (--i; i >= 0; i--) {
+ 		if (!cc->cpages[i])
+@@ -1469,7 +1468,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 		f2fs_compress_free_page(cc->cpages[i]);
+ 		cc->cpages[i] = NULL;
+ 	}
+-	page_array_free(cc->inode, cc->cpages, cc->nr_cpages);
++	page_array_free(sbi, cc->cpages, cc->nr_cpages);
+ 	cc->cpages = NULL;
+ 	return -EAGAIN;
+ }
+@@ -1499,7 +1498,7 @@ void f2fs_compress_write_end_io(struct bio *bio, struct page *page)
+ 		end_page_writeback(cic->rpages[i]);
+ 	}
+ 
+-	page_array_free(cic->inode, cic->rpages, cic->nr_rpages);
++	page_array_free(sbi, cic->rpages, cic->nr_rpages);
+ 	kmem_cache_free(cic_entry_slab, cic);
+ }
+ 
+@@ -1640,7 +1639,7 @@ static int f2fs_prepare_decomp_mem(struct decompress_io_ctx *dic,
+ 	if (!allow_memalloc_for_decomp(F2FS_I_SB(dic->inode), pre_alloc))
+ 		return 0;
+ 
+-	dic->tpages = page_array_alloc(dic->inode, dic->cluster_size);
++	dic->tpages = page_array_alloc(F2FS_I_SB(dic->inode), dic->cluster_size);
+ 	if (!dic->tpages)
+ 		return -ENOMEM;
+ 
+@@ -1700,7 +1699,7 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+ 	if (!dic)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	dic->rpages = page_array_alloc(cc->inode, cc->cluster_size);
++	dic->rpages = page_array_alloc(sbi, cc->cluster_size);
+ 	if (!dic->rpages) {
+ 		kmem_cache_free(dic_entry_slab, dic);
+ 		return ERR_PTR(-ENOMEM);
+@@ -1721,7 +1720,7 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+ 		dic->rpages[i] = cc->rpages[i];
+ 	dic->nr_rpages = cc->cluster_size;
+ 
+-	dic->cpages = page_array_alloc(dic->inode, dic->nr_cpages);
++	dic->cpages = page_array_alloc(sbi, dic->nr_cpages);
+ 	if (!dic->cpages) {
+ 		ret = -ENOMEM;
+ 		goto out_free;
+@@ -1751,6 +1750,7 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+ 		bool bypass_destroy_callback)
+ {
+ 	int i;
++	struct f2fs_sb_info *sbi = F2FS_I_SB(dic->inode);
+ 
+ 	f2fs_release_decomp_mem(dic, bypass_destroy_callback, true);
+ 
+@@ -1762,7 +1762,7 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+ 				continue;
+ 			f2fs_compress_free_page(dic->tpages[i]);
+ 		}
+-		page_array_free(dic->inode, dic->tpages, dic->cluster_size);
++		page_array_free(sbi, dic->tpages, dic->cluster_size);
+ 	}
+ 
+ 	if (dic->cpages) {
+@@ -1771,10 +1771,10 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+ 				continue;
+ 			f2fs_compress_free_page(dic->cpages[i]);
+ 		}
+-		page_array_free(dic->inode, dic->cpages, dic->nr_cpages);
++		page_array_free(sbi, dic->cpages, dic->nr_cpages);
+ 	}
+ 
+-	page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
++	page_array_free(sbi, dic->rpages, dic->nr_rpages);
+ 	kmem_cache_free(dic_entry_slab, dic);
+ }
+ 
+-- 
+1.9.1
+
