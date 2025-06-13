@@ -1,516 +1,291 @@
-Received: from olivedrab.birch.relay.mailchannels.net (olivedrab.birch.relay.mailchannels.net [23.83.209.135])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9BB2E11AE;
-	Fri, 13 Jun 2025 18:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.135
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749838134; cv=pass; b=OgaDWy0yr/YkSqak4RUawI/tZLf3asamY0tjeJG/5eMHd4YLlQrQGCOlVN7Iiau+vL1OTqk+NE1wfMQMEqQLrWTwjCXOW48dZmYJpx4c46DpyF3oZs90FEM7i7F53FxDcbA9ZCX0rJ0RDGeeC8kVPpDPs6HkUR4EyHw3Jnh+kqo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749838134; c=relaxed/simple;
-	bh=J8kKyaakj1aYx0rm37/TO+tMsW2zUNsq8DTgJmYfnVE=;
-	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc:Date; b=lKR9BhMkoiBJo72yR01c7uCKgmAJ2v20+KxxyGLKg8bwkMLMoOz6tGe3z03vot1rx2VwazrKioWC4DUrm2Nh0lg9jvJ8DN1nfbnQB1D8ohmxTKZ4MuIMQ2tcbiqSDCiMAlAjiVQzuWrmNmFgmEj43xw5YiqWzWy6bS2rYjqVjNY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com; spf=pass smtp.mailfrom=smankusors.com; dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b=JceNp00k; arc=pass smtp.client-ip=23.83.209.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smankusors.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smankusors.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E94C2E11AE
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 18:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749838190; cv=none; b=md3n5G9Io0ezHsxAxb8Phc1kwsgdJZ8leoHYM6eEXe4gPqQ2tuiPvf8cAL6ZX/v6Z6OIrsIpLnUyUO9Z8srPR77m36RO2Uq2uuwbMdC0JFIx8i7cgZU8D2AZnhvzicIrHsG7xS2SvBaLTIxKTrbBpOeYZLTu6i7ATo8htbenhc4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749838190; c=relaxed/simple;
+	bh=/bZSIVVZJykaqbguGPxnLpZYxAUiql/y/pGMGcs8kQE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tm5+mpI24m6VC1xa6Q1r8FzuFeSjM5GslaY6cmdR6Y+UpdnvdTx0JlVLa4CazQ/d5UwA4UyqPmNR4NdCT/6b7vD7IJQBBJWrg0PLdCOd/DCEsW83z23IPLV3JgIvUpQVtPIoTyBQNTxA6fPyX8mQ8hwdMbmw0br3rkEG9PiXIKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DaG7HVkK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smankusors.com header.i=@smankusors.com header.b="JceNp00k"
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 054222C5C53;
-	Fri, 13 Jun 2025 17:51:19 +0000 (UTC)
-Received: from fr-int-smtpout9.hostinger.io (trex-green-2.trex.outbound.svc.cluster.local [100.96.75.158])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 021AA2C4FC5;
-	Fri, 13 Jun 2025 17:51:13 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749837076; a=rsa-sha256;
-	cv=none;
-	b=DCtDkgRNYob1nmrIuTuDxwgJO62lmyI0VXLhpyteLj04M7DyrSY1Jncmym66JzZh9IalMS
-	Jv36CrabE9drhhLe5/BQT1dKClcDsAgFGiAUekWR8JgAWMZdQdhSRUmCi/PVQ98EqKUuPj
-	liM2K1zKyNmyIVIxx9N9BnZVAJYwN4ONMXk3Uzzg8Thk8NLUi2R68j9rz42tmufzayAX1d
-	W+ZDKx3cMoz6m+6G1U92Iy2upNexdowOgcmfO6xq+oahjK7L55FjtMB4bqRw4W2FSVyWyS
-	PEqHqE/tyTJhUIxyPiDGKEwgCJ+3qX/kw93g9vcgOqZfxjMxNcMDNEM8+rfD4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1749837076;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DaG7HVkK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749838187;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=ywr5D5/TX6NEUGOjUEwyjTA/Ckv+ZE65Ks4KW4iIrX8=;
-	b=tmMwonuFNdub6knG8QJqaMHxk2NUaX6Ico/v3aQ11nDFX8JINlI26h12wSymvsO/pxOiY6
-	7GHzFh1nZYNu9uBfqhVC/PvcR+laBXYBPc7zAwW/foZhbubTx2SXckDgRX9VkpEwhvhwUM
-	bzPAJseEKzmmKpfCkVrp6yKMPuJAsg2gL7V3gJmYlzx0m4zBl2sN5Ivo0j2kPiL3l9kDIW
-	2HkXsiCCUh9yaL+uK3rxdpLJB/im8I8e+wK1daB4FvcbXqAvcfYhS1JYAMPiAgvI33OIGH
-	Tg7T4JboqECgmeIK49DZKEAPHW2ClTSsgtOV6bfV6NwPhpw6Q/Msfr+4iuEpew==
-ARC-Authentication-Results: i=1;
-	rspamd-5859dfb5d9-lnjzv;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=linux@smankusors.com
-X-Sender-Id: hostingeremail|x-authuser|linux@smankusors.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|linux@smankusors.com
-X-MailChannels-Auth-Id: hostingeremail
-X-Battle-Descriptive: 0e5a00b20322edec_1749837078694_2226515485
-X-MC-Loop-Signature: 1749837078694:2937717600
-X-MC-Ingress-Time: 1749837078694
-Received: from fr-int-smtpout9.hostinger.io (fr-int-smtpout9.hostinger.io
- [89.116.146.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.75.158 (trex/7.0.3);
-	Fri, 13 Jun 2025 17:51:18 +0000
-Received: from [172.17.0.2] (unknown [36.79.97.133])
-	(Authenticated sender: linux@smankusors.com)
-	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4bJn4n3LjnzH9gKX;
-	Fri, 13 Jun 2025 17:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smankusors.com;
-	s=hostingermail-a; t=1749837068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ywr5D5/TX6NEUGOjUEwyjTA/Ckv+ZE65Ks4KW4iIrX8=;
-	b=JceNp00kgbv3+mzs3RPmS0Mu9vhDfJWkAUf+jnWew9OBrwqyJqGPjRKT3wOCaKk1btDT1c
-	zbTKaRHwonIlRdLAw2rqgkdJ3qUVgoTOOV/vIUdkIwkMrA0sZfj/naO7xaVlFm8gkzEpNh
-	kpQyn5zAdyvc197kg/Y5qjBEeT0cJe/qm++uqZDPQZgH+Uwuswk0J4OtsmGzSk57OaNDfm
-	EVPWE7tZs1GMUZN5/RtuQysnWY07ahPletNRceIpc8eMCHrKbR37lS/YB8p4LTixMkCYEJ
-	mYnXx0O95h+l9o0XDgSMzLmYIzlDJd/AwFB0CvbWnAzad9xhU+N8PoQDxUmo+g==
-From: Antony Kurniawan Soemardi <linux@smankusors.com>
-Subject: [PATCH 5/5] ARM: dts: qcom: add device tree for Sony Xperia SP
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xXcFgixY4ZARJd9iDzBe662fiHU31V0lsCiirwehN0A=;
+	b=DaG7HVkKs1W6k6ZuCB+fEChkmhZQoJBHfanfEDYNpX6+sibjVtFdKaxlIVL5l0IPXfjKiq
+	inP3XnEpKVmTPpUbX/TsGW7sM90xzoIlzE5ntiwETd+ktbh6q4qvBVUtB3OXctY4RbpVbw
+	MYI1+xRjoeX5EK4w/w/kRu8ZiE0KSPY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-216-CZtKDC76OF2nNQVoGXi7Xw-1; Fri, 13 Jun 2025 14:09:45 -0400
+X-MC-Unique: CZtKDC76OF2nNQVoGXi7Xw-1
+X-Mimecast-MFC-AGG-ID: CZtKDC76OF2nNQVoGXi7Xw_1749838185
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a5232c6ae8so1110921f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:09:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749838184; x=1750442984;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xXcFgixY4ZARJd9iDzBe662fiHU31V0lsCiirwehN0A=;
+        b=pb6IR9YYVar+yb6Z9FXctm5EAo27+HqU/TuH0Hq6Fiioyt+JlgMtHAHZi+FdvWfkAP
+         OyTljVgim4EcvozPbSIvdaxcL+sdKnA7CJrblA+1ej4MYHZSiPlEUDYxCa4nXGgUyNKm
+         ZQBnNfrddW307GS9XISpnrGRBitNmCIWdT/VmI8N5ykzUTRZNjxJdTBGa4zMAG1jdlIZ
+         4Uu1O+5k5fyvhX7DuFOCXAsUfNwRUnh679i+CayjuexFZyxJ6UscMx+OWAZgU6JQxNPO
+         wQCx9JaaoClcVX0gnH7TWI6/xS/dLS3ysHYQcyialTky55rXG/H/J6zVwOXm8mpMGNJe
+         PuwA==
+X-Forwarded-Encrypted: i=1; AJvYcCVO8tlFFx+uZ8xiaNzKX4EklJG1nu41vLETZRF6gwpYzZD6B543Ayz3jlsTPfey+C/Yrse1M2ZtTcQJA3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx07qhJyj7OPG2fNONJkCe3mCV6TNL6rX76ArFAiqXL97zlFnl5
+	N3SiekppBj3S+h2k0nR9qCkGjNEEduQGpisRIpoyPo9xn/bldTYFAoHAK6wIBp2RklmsW196yPY
+	+KoFwbo810HG5yt3nK04TqXMOFE5VtbQqiVnFGtQEMn91GU5VCL/y/xLYXJTKcmqLhw==
+X-Gm-Gg: ASbGncsYOPqmKlkepfBueoyc90CjUBBvmdoUAft6YzBxCs+bzcuRRV5+yujXZnPAIW8
+	uMSvsTb/PxzpJRN2/miGVQgCHpeUEygxHDGiBUY57O3Yr/J0ntVaUWtIzQkOXWdVHeyFd1+COxG
+	8p6ZdOsHbMR3UY+Mzyf9MGvY+M42HYDf1CY0W0CT7Pn9Dhl642VLTDm+7WSw4iyX8pgx3k7Wk6N
+	ciBhOcxs3H+Rg5mlwN6hdv72By6GfwyEGowK5UHEsjrag2iIzOKbmuy/ybEdFXijEpRABLmVZ5A
+	hOFH0IteZ4axd0FxRv2yNFi3RF9i2UIsCJZtksTSjHM/jWeXxtV131/OxY+46bVm1Oe4hRC2GFG
+	9K33sBsQ3qDhoD8MkB6FnPtw7+CX8l8pKmByXnm4JtxXEu8rufg==
+X-Received: by 2002:a05:6000:2486:b0:3a4:ef30:a4c8 with SMTP id ffacd0b85a97d-3a572399103mr813372f8f.10.1749838184495;
+        Fri, 13 Jun 2025 11:09:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEzERlz95am9fonq/srpc4ADnlYUlo09Tj6R4QtVRm3hJDLhOgIqByYURXlt/BU6Q/uO4KIjw==
+X-Received: by 2002:a05:6000:2486:b0:3a4:ef30:a4c8 with SMTP id ffacd0b85a97d-3a572399103mr813343f8f.10.1749838184028;
+        Fri, 13 Jun 2025 11:09:44 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4? (p200300d82f1a37002982b5f7a04e4cb4.dip0.t-ipconnect.de. [2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e256b95sm60924015e9.30.2025.06.13.11.09.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 11:09:43 -0700 (PDT)
+Message-ID: <d6fbee39-a38f-4f94-bffb-938f7be73681@redhat.com>
+Date: Fri, 13 Jun 2025 20:09:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
+ mappings
+To: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, kvm@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Alex Williamson <alex.williamson@redhat.com>, Zi Yan <ziy@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Alex Mastro <amastro@fb.com>,
+ Nico Pache <npache@redhat.com>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-6-peterx@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250613134111.469884-6-peterx@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250614-msm8960-sdcard-v1-5-ccce629428b6@smankusors.com>
-References: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
-In-Reply-To: <20250614-msm8960-sdcard-v1-0-ccce629428b6@smankusors.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Antony Kurniawan Soemardi <linux@smankusors.com>, 
- Max Shevchenko <wctrl@proton.me>, Rudraksha Gupta <guptarud@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749837006; l=9928;
- i=linux@smankusors.com; s=20250609; h=from:subject:message-id;
- bh=J8kKyaakj1aYx0rm37/TO+tMsW2zUNsq8DTgJmYfnVE=;
- b=QJpr4VybUGg/Ex9xMz6khaGn3HDqeMI69niccYMhcnCOEqQbbZeA1ldju2DTb4zwqFuwcpHkH
- 4mt4AvJdxGeBNV/kEPm440/PdWk00/vTrCtieM4OnXds/MNHEd7J+/A
-X-Developer-Key: i=linux@smankusors.com; a=ed25519;
- pk=65wTy06fJl2/h/EJwjr704YG+yjHFhZObJBWzzK+N00=
-Date: Fri, 13 Jun 2025 17:51:05 +0000 (UTC)
-X-CM-Envelope: MS4xfG5a+boJu2i93CZIsVZh3X6/H/Fb5bihLyJ8U+xsoCbM8+HcAoN4/S0f0Bl+lbqt+oENd7cN5gsl855fSHkJ5T9CgaibSNRjk+ENGU7PCGOxA3SHJVtX a7HIWe8NgaRbeY0G52TVb1AD5EdlViE84fjeTYWwfo4575OipChVkoAclUtDKap6ebB5G/c7kTg2yC7MrBUV9iojLHpRN28WylvviSTuQeP+XiNEJ5WxFiJo 5Mi4lzpFkAn2u/6l24sBez6ukIYKtWLHeKMI9FbL3v0ahvs58+lDBN7d6l/bXNSKYliOPLFXI9zb5+9qNDtIWrTQTJQq0QslIeABJrVeQtZMEN1I6+Mrd31t jSBRVA3XhK0PoQBZUFq8mR6mgKV7u43BESkBS1bD2bfIPsO7KBpriYDrV41umaFgcgkhikccAk33b9yomB2Fs89u3rwLIsZnUS6X/rstiu+eSo15o260e4i3 kpaBs4l/MZKnl5W9jBPgucQZIW4nySkvTAa0PIIeFrzSpgt754tiyS2hflY=
-X-CM-Analysis: v=2.4 cv=Vv1xAP2n c=1 sm=1 tr=0 ts=684c650c a=/sUT9SOQbq9tkq2xjVjq6Q==:117 a=/sUT9SOQbq9tkq2xjVjq6Q==:17 a=IkcTkHD0fZMA:10 a=wxLWbCv9AAAA:8 a=SKXNq62mckHbbuXN77oA:9 a=QEXdDO2ut3YA:10 a=QJY96suAAestDpCc5Gi9:22
-X-AuthUser: linux@smankusors.com
 
-Add initial device tree support for the Sony Xperia SP (codename:
-sony-huashan), a smartphone based on the Qualcomm MSM8960T SoC.
+On 13.06.25 15:41, Peter Xu wrote:
+> This patch enables best-effort mmap() for vfio-pci bars even without
+> MAP_FIXED, so as to utilize huge pfnmaps as much as possible.  It should
+> also avoid userspace changes (switching to MAP_FIXED with pre-aligned VA
+> addresses) to start enabling huge pfnmaps on VFIO bars.
+> 
+> Here the trick is making sure the MMIO PFNs will be aligned with the VAs
+> allocated from mmap() when !MAP_FIXED, so that whatever returned from
+> mmap(!MAP_FIXED) of vfio-pci MMIO regions will be automatically suitable
+> for huge pfnmaps as much as possible.
+> 
+> To achieve that, a custom vfio_device's get_unmapped_area() for vfio-pci
+> devices is needed.
+> 
+> Note that MMIO physical addresses should normally be guaranteed to be
+> always bar-size aligned, hence the bar offset can logically be directly
+> used to do the calculation.  However to make it strict and clear (rather
+> than relying on spec details), we still try to fetch the bar's physical
+> addresses from pci_dev.resource[].
+> 
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 
-There are two variants of the Xperia SP, one without LTE and one with
-LTE. This device tree should work for both variants, though it has only
-been tested on the non-LTE variant.
+There is likely a
 
-The following are currently supported:
-- Serial console support via gsbi8
-- GPIO keys for volume up/down buttons
-- PM8921 keypad with camera focus/capture keys
-- eMMC (sdcc1) and micro SD card (sdcc3) support
-- USB OTG support
+Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
 
-Other hardware features are not yet implemented.
+missing?
 
-Signed-off-by: Antony Kurniawan Soemardi <linux@smankusors.com>
----
- arch/arm/boot/dts/qcom/Makefile                    |   1 +
- .../boot/dts/qcom/qcom-msm8960-sony-huashan.dts    | 361 +++++++++++++++++++++
- 2 files changed, 362 insertions(+)
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>   drivers/vfio/pci/vfio_pci.c      |  3 ++
+>   drivers/vfio/pci/vfio_pci_core.c | 65 ++++++++++++++++++++++++++++++++
+>   include/linux/vfio_pci_core.h    |  6 +++
+>   3 files changed, 74 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 5ba39f7623bb..d9ae6cdbea28 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -144,6 +144,9 @@ static const struct vfio_device_ops vfio_pci_ops = {
+>   	.detach_ioas	= vfio_iommufd_physical_detach_ioas,
+>   	.pasid_attach_ioas	= vfio_iommufd_physical_pasid_attach_ioas,
+>   	.pasid_detach_ioas	= vfio_iommufd_physical_pasid_detach_ioas,
+> +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
+> +	.get_unmapped_area	= vfio_pci_core_get_unmapped_area,
+> +#endif
+>   };
+>   
+>   static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 6328c3a05bcd..835bc168f8b7 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1641,6 +1641,71 @@ static unsigned long vma_to_pfn(struct vm_area_struct *vma)
+>   	return (pci_resource_start(vdev->pdev, index) >> PAGE_SHIFT) + pgoff;
+>   }
+>   
+> +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
+> +/*
+> + * Hint function to provide mmap() virtual address candidate so as to be
+> + * able to map huge pfnmaps as much as possible.  It is done by aligning
+> + * the VA to the PFN to be mapped in the specific bar.
+> + *
+> + * Note that this function does the minimum check on mmap() parameters to
+> + * make the PFN calculation valid only. The majority of mmap() sanity check
+> + * will be done later in mmap().
+> + */
+> +unsigned long vfio_pci_core_get_unmapped_area(struct vfio_device *device,
+> +					      struct file *file,
+> +					      unsigned long addr,
+> +					      unsigned long len,
+> +					      unsigned long pgoff,
+> +					      unsigned long flags)
 
-diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
-index 0c1d116f6e84f76994aa8c8286350bdcd1657a42..220ee204c8569e7039edae090bf1d0db379ba54e 100644
---- a/arch/arm/boot/dts/qcom/Makefile
-+++ b/arch/arm/boot/dts/qcom/Makefile
-@@ -43,6 +43,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-msm8926-samsung-matisselte.dtb \
- 	qcom-msm8960-cdp.dtb \
- 	qcom-msm8960-samsung-expressatt.dtb \
-+	qcom-msm8960-sony-huashan.dtb \
- 	qcom-msm8974-lge-nexus5-hammerhead.dtb \
- 	qcom-msm8974-samsung-hlte.dtb \
- 	qcom-msm8974-sony-xperia-rhine-amami.dtb \
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960-sony-huashan.dts b/arch/arm/boot/dts/qcom/qcom-msm8960-sony-huashan.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..f2f59fc8b9b61e18b0ec4ed1fc2d813585a75f15
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8960-sony-huashan.dts
-@@ -0,0 +1,361 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2025, Antony Kurniawan Soemardi <linux@smankusors.com>
-+ */
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/reset/qcom,gcc-msm8960.h>
-+
-+#include "qcom-msm8960.dtsi"
-+#include "pm8921.dtsi"
-+
-+/ {
-+	model = "Sony Xperia SP";
-+	compatible = "sony,huashan", "qcom,msm8960t", "qcom,msm8960";
-+	chassis-type = "handset";
-+
-+	aliases {
-+		serial0 = &gsbi8_serial;
-+		mmc0 = &sdcc1; /* SDCC1 eMMC slot */
-+		mmc1 = &sdcc3; /* SDCC3 SD card slot */
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			gpios = <&pm8921_gpio 21 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <10>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+
-+		key-volume-down {
-+			label = "Volume Down";
-+			gpios = <&pm8921_gpio 20 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <10>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+	};
-+};
-+
-+&gsbi8 {
-+	qcom,mode = <GSBI_PROT_I2C_UART>;
-+	status = "okay";
-+};
-+
-+&gsbi8_serial {
-+	status = "okay";
-+};
-+
-+&pm8921 {
-+	interrupts-extended = <&msmgpio 104 IRQ_TYPE_LEVEL_LOW>;
-+};
-+
-+&pm8921_gpio {
-+	keypad_default_state: keypad-default-state {
-+		keypad-sense-pins {
-+			pins = "gpio1", "gpio2", "gpio3", "gpio4", "gpio5";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			bias-pull-up;
-+			input-enable;
-+			power-source = <PM8921_GPIO_S4>;
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+			qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_31P5>;
-+		};
-+
-+		keypad-drive-pins {
-+			pins = "gpio9", "gpio10";
-+			function = PMIC_GPIO_FUNC_FUNC1;
-+			bias-disable;
-+			drive-open-drain;
-+			output-low;
-+			power-source = <PM8921_GPIO_S4>;
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+		};
-+	};
-+};
-+
-+&pm8921_keypad {
-+	linux,keymap = <
-+		MATRIX_KEY(1, 0, KEY_CAMERA_FOCUS)
-+		MATRIX_KEY(1, 1, KEY_CAMERA)
-+	>;
-+	keypad,num-rows = <2>;
-+	keypad,num-columns = <5>;
-+
-+	pinctrl-0 = <&keypad_default_state>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
-+&rpm {
-+	regulators {
-+		compatible = "qcom,rpm-pm8921-regulators";
-+		vin_lvs1_3_6-supply = <&pm8921_s4>;
-+		vin_lvs2-supply = <&pm8921_s4>;
-+		vin_lvs4_5_7-supply = <&pm8921_s4>;
-+		vdd_ncp-supply = <&pm8921_l6>;
-+		vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
-+		vdd_l21_l23_l29-supply = <&pm8921_s8>;
-+		vdd_l24-supply = <&pm8921_s1>;
-+		vdd_l25-supply = <&pm8921_s1>;
-+		vdd_l26-supply = <&pm8921_s7>;
-+		vdd_l27-supply = <&pm8921_s7>;
-+		vdd_l28-supply = <&pm8921_s7>;
-+		vdd_l29-supply = <&pm8921_s8>;
-+
-+		/* Buck SMPS */
-+		pm8921_s1: s1 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1225000>;
-+			qcom,switch-mode-frequency = <3200000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_s2: s2 {
-+			regulator-min-microvolt = <1300000>;
-+			regulator-max-microvolt = <1300000>;
-+			qcom,switch-mode-frequency = <1600000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_s3: s3 {
-+			regulator-min-microvolt = <500000>;
-+			regulator-max-microvolt = <1150000>;
-+			qcom,switch-mode-frequency = <4800000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_s4: s4 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			qcom,switch-mode-frequency = <1600000>;
-+			bias-pull-down;
-+			qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
-+		};
-+
-+		pm8921_s7: s7 {
-+			regulator-min-microvolt = <1150000>;
-+			regulator-max-microvolt = <1150000>;
-+			qcom,switch-mode-frequency = <3200000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_s8: s8 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <2050000>;
-+			regulator-max-microvolt = <2050000>;
-+			qcom,switch-mode-frequency = <1600000>;
-+			bias-pull-down;
-+		};
-+
-+		/* PMOS LDO */
-+		pm8921_l1: l1 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1050000>;
-+			regulator-max-microvolt = <1050000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l2: l2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l3: l3 {
-+			regulator-min-microvolt = <3075000>;
-+			regulator-max-microvolt = <3075000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l4: l4 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l5: l5 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l6: l6 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l7: l7 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1850000>;
-+			regulator-max-microvolt = <2950000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l8: l8 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l9: l9 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2850000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l10: l10 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3000000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l11: l11 {
-+			regulator-min-microvolt = <2600000>;
-+			regulator-max-microvolt = <3000000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l12: l12 {
-+			regulator-min-microvolt = <1050000>;
-+			regulator-max-microvolt = <1200000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l14: l14 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l15: l15 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l16: l16 {
-+			regulator-min-microvolt = <2600000>;
-+			regulator-max-microvolt = <3000000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l17: l17 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3000000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l18: l18 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l21: l21 {
-+			regulator-min-microvolt = <1900000>;
-+			regulator-max-microvolt = <1900000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l22: l22 {
-+			regulator-min-microvolt = <2750000>;
-+			regulator-max-microvolt = <2750000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l23: l23 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l24: l24 {
-+			regulator-min-microvolt = <750000>;
-+			regulator-max-microvolt = <1150000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l25: l25 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1225000>;
-+			bias-pull-down;
-+		};
-+
-+		/* Low Voltage Switch */
-+		pm8921_lvs1: lvs1 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs2: lvs2 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs3: lvs3 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs4: lvs4 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs5: lvs5 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs6: lvs6 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs7: lvs7 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_ncp: ncp {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			qcom,switch-mode-frequency = <1600000>;
-+		};
-+	};
-+};
-+
-+&sdcc1 {
-+	vmmc-supply = <&pm8921_l5>;
-+	status = "okay";
-+};
-+
-+&sdcc3 {
-+	vmmc-supply = <&pm8921_l6>;
-+	vqmmc-supply = <&pm8921_l7>;
-+
-+	pinctrl-0 = <&sdcc3_default_state>;
-+	pinctrl-1 = <&sdcc3_sleep_state>;
-+	pinctrl-names = "default", "sleep";
-+
-+	status = "okay";
-+};
-+
-+&usb_hs1_phy {
-+	v3p3-supply = <&pm8921_l3>;
-+	v1p8-supply = <&pm8921_l4>;
-+};
-+
-+&usb1 {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
+A very suboptimal way to indent this many parameters; just use two tabs 
+at the beginning.
+
+> +{
+> +	struct vfio_pci_core_device *vdev =
+> +		container_of(device, struct vfio_pci_core_device, vdev);
+> +	struct pci_dev *pdev = vdev->pdev;
+> +	unsigned long ret, phys_len, req_start, phys_addr;
+> +	unsigned int index;
+> +
+> +	index = pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
+
+Could do
+
+unsigned int index =  pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
+
+at the very top.
+
+> +
+> +	/* Currently, only bars 0-5 supports huge pfnmap */
+> +	if (index >= VFIO_PCI_ROM_REGION_INDEX)
+> +		goto fallback;
+> +
+> +	/* Bar offset */
+> +	req_start = (pgoff << PAGE_SHIFT) & ((1UL << VFIO_PCI_OFFSET_SHIFT) - 1);
+> +	phys_len = PAGE_ALIGN(pci_resource_len(pdev, index));
+> +
+> +	/*
+> +	 * Make sure we at least can get a valid physical address to do the
+> +	 * math.  If this happens, it will probably fail mmap() later..
+> +	 */
+> +	if (req_start >= phys_len)
+> +		goto fallback;
+> +
+> +	phys_len = MIN(phys_len, len);
+> +	/* Calculate the start of physical address to be mapped */
+> +	phys_addr = pci_resource_start(pdev, index) + req_start;
+> +
+> +	/* Choose the alignment */
+> +	if (IS_ENABLED(CONFIG_ARCH_SUPPORTS_PUD_PFNMAP) && phys_len >= PUD_SIZE) {
+> +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
+> +						   flags, PUD_SIZE, 0);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (phys_len >= PMD_SIZE) {
+> +		ret = mm_get_unmapped_area_aligned(file, addr, len, phys_addr,
+> +						   flags, PMD_SIZE, 0);
+> +		if (ret)
+> +			return ret;
+
+Similar to Jason, I wonder if that logic should reside in the core, and 
+we only indicate the maximum page table level we support.
+
+			   unsigned int order)
+>   {
+> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+> index fbb472dd99b3..e59699e01901 100644
+> --- a/include/linux/vfio_pci_core.h
+> +++ b/include/linux/vfio_pci_core.h
+> @@ -119,6 +119,12 @@ ssize_t vfio_pci_core_read(struct vfio_device *core_vdev, char __user *buf,
+>   		size_t count, loff_t *ppos);
+>   ssize_t vfio_pci_core_write(struct vfio_device *core_vdev, const char __user *buf,
+>   		size_t count, loff_t *ppos);
+> +unsigned long vfio_pci_core_get_unmapped_area(struct vfio_device *device,
+> +					      struct file *file,
+> +					      unsigned long addr,
+> +					      unsigned long len,
+> +					      unsigned long pgoff,
+> +					      unsigned long flags);
+
+Dito.
 
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
