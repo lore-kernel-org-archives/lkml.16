@@ -1,69 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81982191F84
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C1F198E81
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822085; cv=none; b=YuqBhSGBaHHcHqWrF5tHy658u/O8Hl4R/FGXmmQ+eKJ6PrnwUYsu1QES+W2QZFwunbblIwhR8avvaNIIqSEvRLIKZWRHBvP60tlUmkSJVGy/qrjx+zsyieYypBHI82g6AnjEzDAKj66fFTadgdJwaWPxJDQ+cfU8bZI4oQeu9A0=
+	t=1749822086; cv=none; b=HtN9kPQkIky4YyV/0Nxfl0fpak/afUMwdtxcHJM7+oyuHA1A3yLCYxqaFItj15YhKi+GZntcolB7wfPOZ1Kgnk/UVV82fSGRfZ2VAtitaCYXLMiHFu8soc/cZeMynseNOpBsIeSI+AezNe/B2XbKcH56q8BzdSjkzkBShZ0Tt7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822085; c=relaxed/simple;
-	bh=oBujyHW3fR3UArBsFd0eQdvuPTosgfHx6P9PRFKYox8=;
+	s=arc-20240116; t=1749822086; c=relaxed/simple;
+	bh=IG4FGgbLqBxGp2REQK9VMac2EIQLzuWAExl8Q4V6oog=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RwR3ugaP99JggYq2Zr228jvcTtM4uKxNwODcYBIp0UIW2ySU0yqblY0rBmNGYcMoMWYLY/Hi/SrDoQsSr1KqdQVeLYHam9WThyHg8jrd1xtiQcVJ5nThjdG93P+LPEj7d18/+vg6PLhRQ+VpWQv17UcEDl0K0WWmhje6TzIU2jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LuubT669; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=JjKEygQpPQ640U5+Twy0KzTQNiPrdxAjp0sZC6GB9xkpdUnXRpyTOE9zu164LOsQaVWmg67BqP6FbDLXvOmEZZEo/FAQ5iMxxFu+2tTM+NZKdesiXqdp+5WOAzJrkFh8/w55ti/GSLOpjyBKxuBAJBvquWIqxSD61RCbT7pKzc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dDs1l449; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LuubT669"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dDs1l449"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749822081;
+	s=mimecast20190719; t=1749822083;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CurRk13BLi453FdNUVmvRv3/1kchAf7liLqepSAurz8=;
-	b=LuubT669ueDH/xKrJFloiM00Z9RVEWMQ+DYwBJW+PkN4UWUbkjK9mDQA1y04bySSLHTipq
-	GPZG++dULivASt9Lf7maMkjfFC052twrT/+FqM+239BPt+LKGlrdM7QXhDqo+A6d9gElaX
-	DIVWbJCwJczl5YnsRCehZtOtyn4A4Cs=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=v/F+9x18GPW2fMOX0xB9ZVXh7FNtANzBJLNRs0BqoEY=;
+	b=dDs1l4492mDuV6Q8jCpSPfGVB2xRLgwKgnCi8UT8kSFeaAJPlQIhM5pD8JK3egdgNUyote
+	XSnm7TseQn94+SG1Rk5DtVeJOK8QPRxOgbt5hlcUXRSNChDOgnncMDRRX5eOGRBR+ka7MD
+	9B0i22oVcY843feKY4oDdzfY7EpynuA=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-250-dvUiS6ZNNq-tQB227trzew-1; Fri, 13 Jun 2025 09:41:20 -0400
-X-MC-Unique: dvUiS6ZNNq-tQB227trzew-1
-X-Mimecast-MFC-AGG-ID: dvUiS6ZNNq-tQB227trzew_1749822080
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5cd0f8961so480348985a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:41:20 -0700 (PDT)
+ us-mta-377-eylsNshfPSa450f6MxbVBQ-1; Fri, 13 Jun 2025 09:41:22 -0400
+X-MC-Unique: eylsNshfPSa450f6MxbVBQ-1
+X-Mimecast-MFC-AGG-ID: eylsNshfPSa450f6MxbVBQ_1749822082
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5bb68b386so685978085a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:41:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749822079; x=1750426879;
+        d=1e100.net; s=20230601; t=1749822081; x=1750426881;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CurRk13BLi453FdNUVmvRv3/1kchAf7liLqepSAurz8=;
-        b=UKddhGJB3P6yHkoiGHd2IfO6YrhLq5AYIavu1xoAJZQmYg5YMwODwkY0qIO04JY+9d
-         11o7OnMG6PQW0TJlNCCv5xEB8GBENq1e3NVhLE99gp2+Y5lKygAnNX1gMghRziIMa4If
-         S1QNiNZd3ehqjcElhe0QPfhjXHMAPV+y4Zxc6pr/uISn1FIfWu/IPJZRObXsx071e592
-         GMIsXUhXBDn7YJ8M7xrk2bREgVKGhb5ZD9tx9/U454ETAe42RiKaEnt08eh0N/b9DjzX
-         rMZicZhX+VZgdyBR8xHoOWbGHHOQeY1PAgmmc2b8pIpiAk3V9WVElHSfzwl+us6El5DR
-         0k8g==
-X-Gm-Message-State: AOJu0Yzmmkeme10VmfcY8B2op7gc3+B8S/HgH2Cogpjkzl3v8+mfJOxQ
-	YRSL1a/YmQAL7u+EVFLEPTzMv+rDxh+IaTtXMvOeUApE6de8p6ugCh1Xcqio606kb9WUQzLvZ+8
-	ch+4t2Cnu8+yK2gPuBk8VwRIFeVnK9IPwEKlQd/mLkBNaGteG2ohBjGlpy3/f73Rhr1uqdVClua
-	Q3KTqE41vOJp/fCtJvXNeBr949BcCgUkoSEItZnolOvDlPMmU=
-X-Gm-Gg: ASbGncvjvzbwk2EH6GHuh0M373UqFIIXTJ0Mr7NQ3+s1NItAc10EGHgNAyai4juxxcb
-	iYNYAaWIRE7iq0TLlOg0qwhNjw9tNfAmTI2KqO0fz18uMfO+D/QzNielMLDcVbOjBHUROfX8vgi
-	3+vqezHu2WE9WvCiYFg25sGgT1AnwvQUyOs4gktPUNPGlBUSD4iMYkbT+jDihnBDx9rq63zxM+O
-	87Mf7lavXnkhmKOcfAN5Cmt4Z02zqkxlEM3Ft9ckfiplY4gYj0D9JIm3p/XkGFc+hngM8TCBuO5
-	NI+EnCCfpv4=
-X-Received: by 2002:a05:620a:44d0:b0:7d2:27ff:2133 with SMTP id af79cd13be357-7d3bc3b0704mr463530385a.1.1749822079373;
-        Fri, 13 Jun 2025 06:41:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmKoTuxvL7ffTQWjIUtdV/ylXkzGCctDnDjUG//mfabF7LSk4R8g8f8pkMatkvnCJNdWJBNQ==
-X-Received: by 2002:a05:620a:44d0:b0:7d2:27ff:2133 with SMTP id af79cd13be357-7d3bc3b0704mr463525385a.1.1749822078879;
-        Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
+        bh=v/F+9x18GPW2fMOX0xB9ZVXh7FNtANzBJLNRs0BqoEY=;
+        b=H0Jy+NFHYsO89ZT2Jp54g0Ou6+W0uZt41tfKJRFixFQOYbCrYKe23dPlw1AP3Xp4Bq
+         aw5FlbDnKwVDsokvSk5C0z7AIqzwCgFb0hB/KseW/8uCQYJa8lLeCs3GyxAj5cafPWZE
+         yDxWj3ZPyY+X33FKSPY/iF0epn9DTjiF78y4nAd+NiZAyzOdi7reJPs9yYVwB937J7aG
+         fiYqLyEXQPpH8Trfmu9vO/h9hy+SHt9rYHNp0Qi5q6TuuxDb24F8/dNnLeA5uPftBA1b
+         BjDUP9ZVA4m2aNx0jOgaLVKVZAcwm3Exh2Uhp5oX/19B3K1z1WesASoKu7s44de6f2jp
+         Wrqw==
+X-Gm-Message-State: AOJu0Yw8yLOuaqjfygxyWIUrevOMWksPXJlbe/+5YwsnaNB0jHD7ITpp
+	LQTrEXRwC88JpnZD4YAsI2ibXqnAcxWYpff6G+RNfTT88Iqq4nxiW6i6Zc4VkVeKGxcBrNw+TiF
+	DKP8ajeR0o+Haj5VVODLQujnP2DwyB/s8knN4ad4oAANkUifkLWZoEvy9haER3kWKVsiPsvc9W8
+	QD9G3A5C6As7ruUW97c41l8hpsf/vqRuZagJxoqi2Dz3WVwRI=
+X-Gm-Gg: ASbGnctv3N/UtmZk+XIS7OIgf257oehxgHYmPaqzQ8qwBiRjqW0R6LCPIY1kziOe88/
+	LKfr7IpU+YAoABQHY2nDtoSkykCpaByJQxNMwG3oZizalpfOshPM6CAhJiEZYOJXfKyz0DvL5fv
+	bv6LPya6jVMlag1PGXdcUojVgF1NXpe09R62BT945ACw57YJuskV6lyfppskFqtr0S2iErQ3yn4
+	4OLa+1o33RgLNajVG9jiOgYd2k4r7SmRMvZG9QSI41qUrlE4tILXbgqOTNRvlMyqKRqtNe4pgZl
+	Ow5U1CEZuL8=
+X-Received: by 2002:a05:620a:2628:b0:7d3:ad22:7851 with SMTP id af79cd13be357-7d3bc47c25bmr596013085a.54.1749822081385;
+        Fri, 13 Jun 2025 06:41:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IED+auoBj/loYopQZCrkvQWTc00gLx9IMXiqmfkt7NzTeF6mlRUzM1RQY37rgcn1p4Rs3RbhA==
+X-Received: by 2002:a05:620a:2628:b0:7d3:ad22:7851 with SMTP id af79cd13be357-7d3bc47c25bmr596008385a.54.1749822080787;
+        Fri, 13 Jun 2025 06:41:20 -0700 (PDT)
 Received: from x1.com ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.17
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:41:18 -0700 (PDT)
+        Fri, 13 Jun 2025 06:41:19 -0700 (PDT)
 From: Peter Xu <peterx@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -76,15 +76,15 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@redhat.com>,
 	Nico Pache <npache@redhat.com>,
 	peterx@redhat.com,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org
-Subject: [PATCH 2/5] mm/hugetlb: Remove prepare_hugepage_range()
-Date: Fri, 13 Jun 2025 09:41:08 -0400
-Message-ID: <20250613134111.469884-3-peterx@redhat.com>
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>
+Subject: [PATCH 3/5] mm: Rename __thp_get_unmapped_area to mm_get_unmapped_area_aligned
+Date: Fri, 13 Jun 2025 09:41:09 -0400
+Message-ID: <20250613134111.469884-4-peterx@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250613134111.469884-1-peterx@redhat.com>
 References: <20250613134111.469884-1-peterx@redhat.com>
@@ -96,133 +96,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Only mips and loongarch implemented this API, however what it does was
-checking against stack overflow for either len or addr.  That's already
-done in arch's arch_get_unmapped_area*() functions, hence not needed.
+This function is pretty handy for any type of VMA to provide a size-aligned
+VMA address when mmap().  Rename the function and export it.
 
-It means the whole API is pretty much obsolete at least now, remove it
-completely.
+About the rename:
 
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Muchun Song <muchun.song@linux.dev>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: loongarch@lists.linux.dev
-Cc: linux-mips@vger.kernel.org
+  - Dropping "THP" because it doesn't really have much to do with THP
+    internally.
+
+  - The suffix "_aligned" imply it is a helper to generate aligned virtual
+    address based on what is specified (which can be not PMD_SIZE).
+
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Dev Jain <dev.jain@arm.com>
+Cc: Barry Song <baohua@kernel.org>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/loongarch/include/asm/hugetlb.h | 14 --------------
- arch/mips/include/asm/hugetlb.h      | 14 --------------
- fs/hugetlbfs/inode.c                 |  8 ++------
- include/asm-generic/hugetlb.h        |  8 --------
- include/linux/hugetlb.h              |  6 ------
- 5 files changed, 2 insertions(+), 48 deletions(-)
+ include/linux/huge_mm.h | 14 +++++++++++++-
+ mm/huge_memory.c        |  6 ++++--
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
-index 4dc4b3e04225..ab68b594f889 100644
---- a/arch/loongarch/include/asm/hugetlb.h
-+++ b/arch/loongarch/include/asm/hugetlb.h
-@@ -10,20 +10,6 @@
- 
- uint64_t pmd_to_entrylo(unsigned long pmd_val);
- 
--#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--					 unsigned long addr,
--					 unsigned long len)
--{
--	unsigned long task_size = STACK_TOP;
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 2f190c90192d..706488d92bb6 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -339,7 +339,10 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+ unsigned long thp_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
+ 		unsigned long len, unsigned long pgoff, unsigned long flags,
+ 		vm_flags_t vm_flags);
 -
--	if (len > task_size)
--		return -ENOMEM;
--	if (task_size - len < addr)
--		return -EINVAL;
--	return 0;
--}
--
- #define __HAVE_ARCH_HUGE_PTE_CLEAR
- static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
- 				  pte_t *ptep, unsigned long sz)
-diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
-index fbc71ddcf0f6..8c460ce01ffe 100644
---- a/arch/mips/include/asm/hugetlb.h
-+++ b/arch/mips/include/asm/hugetlb.h
-@@ -11,20 +11,6 @@
- 
- #include <asm/page.h>
- 
--#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--					 unsigned long addr,
--					 unsigned long len)
--{
--	unsigned long task_size = STACK_TOP;
--
--	if (len > task_size)
--		return -ENOMEM;
--	if (task_size - len < addr)
--		return -EINVAL;
--	return 0;
--}
--
- #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
- static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
- 					    unsigned long addr, pte_t *ptep,
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index fc03dd541b4d..32dff13463d2 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- 
- 	if (len & ~huge_page_mask(h))
- 		return -EINVAL;
--	if (flags & MAP_FIXED) {
--		if (addr & ~huge_page_mask(h))
--			return -EINVAL;
--		if (prepare_hugepage_range(file, addr, len))
--			return -EINVAL;
--	}
-+	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
-+		return -EINVAL;
- 	if (addr)
- 		addr0 = ALIGN(addr, huge_page_size(h));
- 
-diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
-index 3e0a8fe9b108..4bce4f07f44f 100644
---- a/include/asm-generic/hugetlb.h
-+++ b/include/asm-generic/hugetlb.h
-@@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
++unsigned long mm_get_unmapped_area_aligned(struct file *filp,
++		unsigned long addr, unsigned long len,
++		loff_t off, unsigned long flags, unsigned long size,
++		vm_flags_t vm_flags);
+ bool can_split_folio(struct folio *folio, int caller_pins, int *pextra_pins);
+ int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
+ 		unsigned int new_order);
+@@ -543,6 +546,15 @@ thp_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
+ 	return 0;
  }
- #endif
  
--#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
--static inline int prepare_hugepage_range(struct file *file,
--		unsigned long addr, unsigned long len)
--{
--	return 0;
--}
--#endif
--
- #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
- static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
- 		unsigned long addr, pte_t *ptep)
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 42f374e828a2..85acdfdbe9f0 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
++static inline unsigned long
++mm_get_unmapped_area_aligned(struct file *filp,
++			     unsigned long addr, unsigned long len,
++			     loff_t off, unsigned long flags, unsigned long size,
++			     vm_flags_t vm_flags)
++{
++	return 0;
++}
++
+ static inline bool
+ can_split_folio(struct folio *folio, int caller_pins, int *pextra_pins)
  {
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 4734de1dc0ae..52f13a70562f 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1088,7 +1088,7 @@ static inline bool is_transparent_hugepage(const struct folio *folio)
+ 		folio_test_large_rmappable(folio);
  }
  
--static inline int prepare_hugepage_range(struct file *file,
--				unsigned long addr, unsigned long len)
--{
--	return -EINVAL;
--}
--
- static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
- {
+-static unsigned long __thp_get_unmapped_area(struct file *filp,
++unsigned long mm_get_unmapped_area_aligned(struct file *filp,
+ 		unsigned long addr, unsigned long len,
+ 		loff_t off, unsigned long flags, unsigned long size,
+ 		vm_flags_t vm_flags)
+@@ -1132,6 +1132,7 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
+ 	ret += off_sub;
+ 	return ret;
  }
++EXPORT_SYMBOL_GPL(mm_get_unmapped_area_aligned);
+ 
+ unsigned long thp_get_unmapped_area_vmflags(struct file *filp, unsigned long addr,
+ 		unsigned long len, unsigned long pgoff, unsigned long flags,
+@@ -1140,7 +1141,8 @@ unsigned long thp_get_unmapped_area_vmflags(struct file *filp, unsigned long add
+ 	unsigned long ret;
+ 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
+ 
+-	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE, vm_flags);
++	ret = mm_get_unmapped_area_aligned(filp, addr, len, off, flags,
++					   PMD_SIZE, vm_flags);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.49.0
 
