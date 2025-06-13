@@ -1,140 +1,216 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3D72F22;
-	Fri, 13 Jun 2025 13:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480DC2F22;
+	Fri, 13 Jun 2025 13:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749820553; cv=none; b=WxCtotjdig2/sX3W1RRMbhBwDyW3/mUAUtwq1lY7b3vuTWRaxxU9G8EBdttzNw1Mp0wMTAlPChVUR1MCTyZb713yAFvxSIEoOXC5YONy9/fMYftFdzQqN60hTPhkuyMDuw1KG94wwipgCABE/E/BQiDPa0CjOqy2etOXZ6xOxYg=
+	t=1749820767; cv=none; b=A/AfmF5s+bGbkjuGT5P1d4WBJVaJ5RC3q9d+brZbEVD+NCoObrOF8VOlKLdwsadPnkJrf/kHZrEfpU38udJb4X4y7d/etwSUlrCp+vuuFgQ/e/xD8Zjnw0YqLF4HKB4YaMUzRuuA2M3T9c7qH1mF1J3Kwcu4YLUJajuDbSK9k+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749820553; c=relaxed/simple;
-	bh=obrbZwAwISKmUGgzZ8xbbLbeafL3y18u9ytG1/D2M10=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=XKQ66YwYBUwHYHej1boqwvc9gcseglUQ3HlWHnNBgljSdLTHdDa1dmWehJEqqhEJHUQH/2fkawaQLAqD2h5kzYLQ6qsUehtMoAfxvKwUsSbX4QL1qkcvyrKAD2NW/kMlp3RXNVztBi3fL+hBaO29mdCzPx1HeGAy+MKjQc3osVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jWtTJ5dw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rXUcGO+d; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749820767; c=relaxed/simple;
+	bh=e3+7YlD19HZodM0ZPNmbIt24WnlflgEnLjO5QggBlVU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kKLOOIAQ46JdxF28OfvD5ymsIJLvfznu7HJug29Tychm6oE6ZZjM6+SLG7YXiKwZCXOqvtK4FSXZ881z/q0BvTymrghI3iD467dGVHHyd7shmKTh32dKvACBQDXeN8oenRgk44xxuuRAXoIp/H3KHCOPt9NER+8vSk2UoKfDojw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wWmCCZO8; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jWtTJ5dw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rXUcGO+d"
-Date: Fri, 13 Jun 2025 13:15:49 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749820550;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qWqRVRBJjUU47KItwBhCFAOZFZEIc/vfrnUzIE0TYFE=;
-	b=jWtTJ5dwnc08FDpObK/hQt4Muw+duKucgjlqkP6ZRH+yy1LzkyT19D8FRTY96RX7WseW9P
-	zoh8u1IxiSbygzRneVakI0LlMAtW3oT2scp3AiQtf7TfGQRRuZLEgMwxTpPsXy1aJTNZdx
-	3hw9qberBvuJyj+571eSus6kj/Ky/PdcWrk6uWv29/ThtSPBDX4Pi6OAZwp3xUICF4v9kj
-	RLoljDGLV7Sc57MqdvFGkq21ZN8j3beMZwhC6jWpWD5iTOB5OGlLbqYrGumt80RO5rlgIo
-	jTkG+vED83ebq4O4m8SxsIHqrDJX6uovEW3A/lE98i7zMYfTTAHqZb4n/BdG9w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749820550;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qWqRVRBJjUU47KItwBhCFAOZFZEIc/vfrnUzIE0TYFE=;
-	b=rXUcGO+dEWtlFhZcnkEwuNwOhhgVUrRfP6TZt+XnZl54AcX+87J+3Xp2e7SPAeGARLC4y1
-	9qUrpV59+48e+8AA==
-From: "tip-bot2 for Brian Norris" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] genirq/cpuhotplug: Rebalance managed interrupts
- across multi-CPU hotplug
-Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
- Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250612183303.3433234-2-briannorris@chromium.org>
-References: <20250612183303.3433234-2-briannorris@chromium.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wWmCCZO8"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749820761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UTpqzx/I7knYrEQNLnovX3S0UrarEkhfBlmvyVvUnXc=;
+	b=wWmCCZO8LOjQRGy22/OSuxjsJ1wP56n3XaUFlPsx97hH5hdjeqGYrtPbnjHzdJxeiRMICe
+	Bfi8W3e8xpqGYsO2riTNUghrKZAY82QKiXCFoxgElWgyjAjFKQIUwhGZqM9usiHn42GYEb
+	uegnSYCHuN5O0rteaj4+tl865P4fcio=
+From: Yajun Deng <yajun.deng@linux.dev>
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yajun Deng <yajun.deng@linux.dev>
+Subject: [PATCH net-next v3] net: phy: Add c45_phy_ids sysfs directory entry
+Date: Fri, 13 Jun 2025 21:19:03 +0800
+Message-Id: <20250613131903.2961-1-yajun.deng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174982054908.406.13897114312168103744.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The following commit has been merged into the irq/urgent branch of tip:
+The phy_id field only shows the PHY ID of the C22 device, and the C45
+device did not store its PHY ID in this field.
 
-Commit-ID:     2b32fc8ff08deac3aa509f321a28e21b1eea5525
-Gitweb:        https://git.kernel.org/tip/2b32fc8ff08deac3aa509f321a28e21b1eea5525
-Author:        Brian Norris <briannorris@chromium.org>
-AuthorDate:    Thu, 12 Jun 2025 11:32:51 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 13 Jun 2025 15:13:35 +02:00
+Add a new phy_mmd_group, and export the mmd<n>_device_id for the C45
+device. These files are invisible to the C22 device.
 
-genirq/cpuhotplug: Rebalance managed interrupts across multi-CPU hotplug
-
-Commit 788019eb559f ("genirq: Retain disable depth for managed interrupts
-across CPU hotplug") intended to only decrement the disable depth once per
-managed shutdown, but instead it decrements for each CPU hotplug in the
-affinity mask, until its depth reaches a point where it finally gets
-re-started.
-
-For example, consider:
-
-1. Interrupt is affine to CPU {M,N}
-2. disable_irq() -> depth is 1
-3. CPU M goes offline -> interrupt migrates to CPU N / depth is still 1
-4. CPU N goes offline -> irq_shutdown() / depth is 2
-5. CPU N goes online
-    -> irq_restore_affinity_of_irq()
-       -> irqd_is_managed_and_shutdown()==true
-          -> irq_startup_managed() -> depth is 1
-6. CPU M goes online
-    -> irq_restore_affinity_of_irq()
-       -> irqd_is_managed_and_shutdown()==true
-          -> irq_startup_managed() -> depth is 0
-          *** BUG: driver expects the interrupt is still disabled ***
-             -> irq_startup() -> irqd_clr_managed_shutdown()
-7. enable_irq() -> depth underflow / unbalanced enable_irq() warning
-
-This should clear the managed-shutdown flag at step 6, so that further
-hotplugs don't cause further imbalance.
-
-Note: It might be cleaner to also remove the irqd_clr_managed_shutdown()
-invocation from __irq_startup_managed(). But this is currently not possible
-because of irq_update_affinity_desc() as it sets IRQD_MANAGED_SHUTDOWN and
-expects irq_startup() to clear it.
-
-Fixes: 788019eb559f ("genirq: Retain disable depth for managed interrupts across CPU hotplug")
-Reported-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Link: https://lore.kernel.org/all/20250612183303.3433234-2-briannorris@chromium.org
+Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
 ---
- kernel/irq/chip.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+v3: Make code more readable.
+v2: Only one value for per file and invisible to the C22 device.
+v1: https://lore.kernel.org/all/20250523132606.2814-1-yajun.deng@linux.dev/
+---
+ .../ABI/testing/sysfs-class-net-phydev        |  10 ++
+ drivers/net/phy/phy_device.c                  | 112 +++++++++++++++++-
+ 2 files changed, 120 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index b0e0a73..2b27400 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -205,6 +205,14 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
+diff --git a/Documentation/ABI/testing/sysfs-class-net-phydev b/Documentation/ABI/testing/sysfs-class-net-phydev
+index ac722dd5e694..31615c59bff9 100644
+--- a/Documentation/ABI/testing/sysfs-class-net-phydev
++++ b/Documentation/ABI/testing/sysfs-class-net-phydev
+@@ -26,6 +26,16 @@ Description:
+ 		This ID is used to match the device with the appropriate
+ 		driver.
  
- void irq_startup_managed(struct irq_desc *desc)
- {
-+	struct irq_data *d = irq_desc_get_irq_data(desc);
++What:		/sys/class/mdio_bus/<bus>/<device>/c45_phy_ids/mmd<n>_device_id
++Date:		June 2025
++KernelVersion:	6.17
++Contact:	netdev@vger.kernel.org
++Description:
++		This attribute contains the 32-bit PHY Identifier as reported
++		by the device during bus enumeration, encoded in hexadecimal.
++		These C45 IDs are used to match the device with the appropriate
++		driver. These files are invisible to the C22 device.
 +
-+	/*
-+	 * Clear managed-shutdown flag, so we don't repeat managed-startup for
-+	 * multiple hotplugs, and cause imbalanced disable depth.
-+	 */
-+	irqd_clr_managed_shutdown(d);
+ What:		/sys/class/mdio_bus/<bus>/<device>/phy_interface
+ Date:		February 2014
+ KernelVersion:	3.15
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 73f9cb2e2844..d03f706d004b 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -645,11 +645,119 @@ static struct attribute *phy_dev_attrs[] = {
+ 	&dev_attr_phy_dev_flags.attr,
+ 	NULL,
+ };
+-ATTRIBUTE_GROUPS(phy_dev);
 +
- 	/*
- 	 * Only start it up when the disable depth is 1, so that a disable,
- 	 * hotunplug, hotplug sequence does not end up enabling it during
++static const struct attribute_group phy_dev_group = {
++	.attrs = phy_dev_attrs,
++};
++
++#define MMD_DEVICE_ID_ATTR(n) \
++static ssize_t mmd##n##_device_id_show(struct device *dev, \
++				struct device_attribute *attr, char *buf) \
++{ \
++	struct phy_device *phydev = to_phy_device(dev); \
++	return sysfs_emit(buf, "0x%.8lx\n", \
++			 (unsigned long)phydev->c45_ids.device_ids[n]); \
++} \
++static DEVICE_ATTR_RO(mmd##n##_device_id)
++
++MMD_DEVICE_ID_ATTR(1);
++MMD_DEVICE_ID_ATTR(2);
++MMD_DEVICE_ID_ATTR(3);
++MMD_DEVICE_ID_ATTR(4);
++MMD_DEVICE_ID_ATTR(5);
++MMD_DEVICE_ID_ATTR(6);
++MMD_DEVICE_ID_ATTR(7);
++MMD_DEVICE_ID_ATTR(8);
++MMD_DEVICE_ID_ATTR(9);
++MMD_DEVICE_ID_ATTR(10);
++MMD_DEVICE_ID_ATTR(11);
++MMD_DEVICE_ID_ATTR(12);
++MMD_DEVICE_ID_ATTR(13);
++MMD_DEVICE_ID_ATTR(14);
++MMD_DEVICE_ID_ATTR(15);
++MMD_DEVICE_ID_ATTR(16);
++MMD_DEVICE_ID_ATTR(17);
++MMD_DEVICE_ID_ATTR(18);
++MMD_DEVICE_ID_ATTR(19);
++MMD_DEVICE_ID_ATTR(20);
++MMD_DEVICE_ID_ATTR(21);
++MMD_DEVICE_ID_ATTR(22);
++MMD_DEVICE_ID_ATTR(23);
++MMD_DEVICE_ID_ATTR(24);
++MMD_DEVICE_ID_ATTR(25);
++MMD_DEVICE_ID_ATTR(26);
++MMD_DEVICE_ID_ATTR(27);
++MMD_DEVICE_ID_ATTR(28);
++MMD_DEVICE_ID_ATTR(29);
++MMD_DEVICE_ID_ATTR(30);
++MMD_DEVICE_ID_ATTR(31);
++
++static struct attribute *phy_mmd_attrs[] = {
++	&dev_attr_mmd1_device_id.attr,
++	&dev_attr_mmd2_device_id.attr,
++	&dev_attr_mmd3_device_id.attr,
++	&dev_attr_mmd4_device_id.attr,
++	&dev_attr_mmd5_device_id.attr,
++	&dev_attr_mmd6_device_id.attr,
++	&dev_attr_mmd7_device_id.attr,
++	&dev_attr_mmd8_device_id.attr,
++	&dev_attr_mmd9_device_id.attr,
++	&dev_attr_mmd10_device_id.attr,
++	&dev_attr_mmd11_device_id.attr,
++	&dev_attr_mmd12_device_id.attr,
++	&dev_attr_mmd13_device_id.attr,
++	&dev_attr_mmd14_device_id.attr,
++	&dev_attr_mmd15_device_id.attr,
++	&dev_attr_mmd16_device_id.attr,
++	&dev_attr_mmd17_device_id.attr,
++	&dev_attr_mmd18_device_id.attr,
++	&dev_attr_mmd19_device_id.attr,
++	&dev_attr_mmd20_device_id.attr,
++	&dev_attr_mmd21_device_id.attr,
++	&dev_attr_mmd22_device_id.attr,
++	&dev_attr_mmd23_device_id.attr,
++	&dev_attr_mmd24_device_id.attr,
++	&dev_attr_mmd25_device_id.attr,
++	&dev_attr_mmd26_device_id.attr,
++	&dev_attr_mmd27_device_id.attr,
++	&dev_attr_mmd28_device_id.attr,
++	&dev_attr_mmd29_device_id.attr,
++	&dev_attr_mmd30_device_id.attr,
++	&dev_attr_mmd31_device_id.attr,
++	NULL
++};
++
++static umode_t phy_mmd_is_visible(struct kobject *kobj,
++				  struct attribute *attr, int index)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct phy_device *phydev = to_phy_device(dev);
++	const int i = index + 1;
++
++	if (!phydev->is_c45)
++		return 0;
++	if (i >= ARRAY_SIZE(phydev->c45_ids.device_ids) ||
++	    phydev->c45_ids.device_ids[i] == 0xffffffff)
++		return 0;
++
++	return attr->mode;
++}
++
++static const struct attribute_group phy_mmd_group = {
++	.name = "c45_phy_ids",
++	.attrs = phy_mmd_attrs,
++	.is_visible = phy_mmd_is_visible,
++};
++
++static const struct attribute_group *phy_device_groups[] = {
++	&phy_dev_group,
++	&phy_mmd_group,
++	NULL,
++};
+ 
+ static const struct device_type mdio_bus_phy_type = {
+ 	.name = "PHY",
+-	.groups = phy_dev_groups,
++	.groups = phy_device_groups,
+ 	.release = phy_device_release,
+ 	.pm = pm_ptr(&mdio_bus_phy_pm_ops),
+ };
+-- 
+2.25.1
+
