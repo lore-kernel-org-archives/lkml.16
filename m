@@ -1,63 +1,66 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4854B1862A;
-	Fri, 13 Jun 2025 12:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEACA12B73;
+	Fri, 13 Jun 2025 12:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749818877; cv=none; b=L+EJ8CLObN0Dh+9zJWNFmxrBA5E3Hu3sYVms/EzPEuXRN5IgWgwXkNnu+sX7i1FOj27JaUKQGVmYYs/CqVYzAy6BxcHG7InNy3IOV5mv8lW3KHur1Vn6/+O7coACAEhIQjhxX++jOih0Le6EIZwWmPmcX8MDK2YqdOYMEjopFXw=
+	t=1749818944; cv=none; b=i80YgsjLM6uwg5XTDfsehFIrb40DNnMSlyk4I+JleUoiU+l0LifibQ+sNFFAKNqTb3bgEh6/O0jo+HeEDdPZzX0kK5rG+NVa5yho9VynyPAyOJuPa1EFnfDb+yEazSsyNsE2GLQv2G5aejEhM2halVEYwiksKYSf5b54XLSYeLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749818877; c=relaxed/simple;
-	bh=ezXY3qXnquNhyaHYxBN/76XTuscB/Svb9cb+gsY3Hzk=;
+	s=arc-20240116; t=1749818944; c=relaxed/simple;
+	bh=YEq3r8z9CPTt5vkquBPOsdtVyNqtsd8fCjZ9kOARXHw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EjUYsct0aUc85Z9BoBlLKa5SSOV5H8NTbE4+ZCNDmSlXQ0esKm9IH9+1M8cg1HtsdqO8DtgPx/PDw3ztP7ObjL9anFSxvtVnI1nHnicf8GPTqR+m/zWkz8UnJx+U1OrRnG1HJuIO88vZZD+BlafbyN1EIRwmpR+CBKRKbPe4xfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so4081962a12.1;
-        Fri, 13 Jun 2025 05:47:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749818873; x=1750423673;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+wHh4AEKR+VQShRFBc7WiyNVG6FHWDiPyckjUrWvfps=;
-        b=cwoXK8FqNYC1FFtRwnQdALPKxgvrMBcSAn7OrLchhvd2ReoHaWpxzA2v3rSeugdCCZ
-         KuXOpECDlt3GDWtYRe5ZEPpJAw1wAnllFeD9zQ6i3ZKEfbv/0rO+2A9eRzd66sZnhIr4
-         hT8NF4Se5ndk8VTEVVU36ewuYkO445rBsE+Qtv4x0GbK7mDImJPh3zXiJn+vnZoF/zvi
-         wijYB3Jwxs32t1RaCM/jvARFGQybz3Lwzf6i4iKpGGG8FbSdHD5YQS6pIEsljihbvexh
-         VXsjXofrxIyekkmaCgdfE4F1ooVcenulR5hjxxZWxOazpM7jMwemb4BGqxwyvJir/nYQ
-         53/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUSsrZP/uXoi/JCHbHTlVWGWYT9r7lqvrBLhLVtlKtuXeKX0T9fr5VD65HEq5Zt7XbWqcHvC0UtmTtH+YFCXb7/@vger.kernel.org, AJvYcCW8q6TSBH8ugZxA6bLrM7gYPvk5NnRsFgu2wWVzk1EGeER3kAAw7g4upTHOTpFHkfLehfK/lycX@vger.kernel.org, AJvYcCXCjBEnzFJVKnPu7rnfEDTR2yKIr/nTazctAK9KKqCl4vbNV9sCBmtCT1sEXExcbxrKMAb1yZUOGFiuRYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRVI1fdj6QKYdX0c53Vsd5Nr3U7JMu897AplfYpV76vH/yvCOI
-	opwqVQXDw/Wn++R3eFS0YX6eYm62OmSlzrGS9NLD7Vq1sL8V/hJFjjCy
-X-Gm-Gg: ASbGncs/kJKPKzCnHBHDOlVB1XMeq4UOhZ8FVbC/F4w4qh0O4ZZPeazYHxnP48LYeJb
-	Z5xpRbgKRaBqJ+Z6DiVz7VG7NxiyazLuRW8B2qAFwsJB8tWUU1YYS/HL8ao3VCYf5vJy5qF6W82
-	pc2JMTPS3RdTbOzTyq5ipHAbVd/1ADUpzKRoMJTA/6jHiAy04hGhxcliAJ5wK8LyWQ2wl3l/aH0
-	Dy8tQjFL1SudRZqBv8hN6I1WLd7gIGvvRRUo6ji0xBoQwKF+Cw2FU0FkTuj8835CB8Q/YLJXAZ/
-	nbFxBqxaK08aNnJvu2H/AdRDaK2cdV19Ux2blrpaHQqtblMFWQZR
-X-Google-Smtp-Source: AGHT+IEq4rp5HuD75TmcVUsHuvmf88w/CqhBoW1iucFaZkCbfjFQ5I2ZG/geivWvMnTr6dTh72+hCA==
-X-Received: by 2002:a05:6402:40d2:b0:601:f3f1:f10e with SMTP id 4fb4d7f45d1cf-608b48c74b6mr2557695a12.5.1749818873294;
-        Fri, 13 Jun 2025 05:47:53 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:5::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48a876asm1151392a12.4.2025.06.13.05.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 05:47:52 -0700 (PDT)
-Date: Fri, 13 Jun 2025 05:47:50 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	ast@kernel.org
-Subject: Re: [PATCH net-next RFC] selftests: net: add netpoll basic
- functionality test
-Message-ID: <aEwd9oLRnxna97JK@gmail.com>
-References: <20250612-netpoll_test-v1-1-4774fd95933f@debian.org>
- <684b8e8abb874_dcc45294a5@willemb.c.googlers.com.notmuch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=C0PO7q2FKtnxtvhZ5Wk8ycQtmDZDj5v/m0DQzqM0a1b5HtEkkWEnlncMDRIc+PrfZ07xcK24Fbw6wwUURCT3r+05Y679Rzkdal6aFxMEfb5GH9klgu5fWHTDkVTqGCXIzH6LtRD4JgtA7W1rC0LglBfx/33G8Tol/s0mrvpKrqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dOWVlNK1; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dOWVlNK1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749818943; x=1781354943;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YEq3r8z9CPTt5vkquBPOsdtVyNqtsd8fCjZ9kOARXHw=;
+  b=dOWVlNK1efwrUGCvOs5/pJPWSORzT00BOhe+13b84Js2xKqwPBlVX6K6
+   dcPYSBVdxbtMqbHxP6zFUZmUy5Au4Le0xPflUdySFERg/vzi4OawoHeaV
+   GoSSTYaNX1OWoVp11vTKcUzpWqPHy0Fk5rvQGZAaU81bjW+QQdFSMOBKY
+   qS+f+DAIpArAGMbKqxlMEXAupfkdk+f6FkJ7A9qOF2s2eFXcsfOex1I78
+   fvwHdV07L4CL/3vdWuxka49zUb1X3kjmGVxXLhSi63+TqLpjVOJNwaoJh
+   IIHhiYyfa1Sp+l7kmaYs6LSByJtQC7fETHpqDjtAzSkMvg0MEyGeTWA9l
+   A==;
+X-CSE-ConnectionGUID: QekG7zqPRfiVU9tmbrbpLg==
+X-CSE-MsgGUID: PRuNhoT3QbGSAbU3r9eAUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="63386439"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="63386439"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:49:02 -0700
+X-CSE-ConnectionGUID: L8mRnVdgSiWXFWr30HX9ew==
+X-CSE-MsgGUID: QEGtiL6UR0SjxOy0sLjvLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="147722174"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:48:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uQ3q2-00000006FPO-1dnT;
+	Fri, 13 Jun 2025 15:48:54 +0300
+Date: Fri, 13 Jun 2025 15:48:54 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
+Subject: Re: [PATCH v11 00/11] iio: adc: ad7768-1: Add features,
+ improvements, and fixes
+Message-ID: <aEweNqhLsL_Hg_gl@smile.fi.intel.com>
+References: <cover.1749569957.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,89 +69,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <684b8e8abb874_dcc45294a5@willemb.c.googlers.com.notmuch>
+In-Reply-To: <cover.1749569957.git.Jonathan.Santos@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hello Willem,
-
-On Thu, Jun 12, 2025 at 10:35:54PM -0400, Willem de Bruijn wrote:
-> Breno Leitao wrote:
-> > Add a basic selftest for the netpoll polling mechanism, specifically
-> > targeting the netpoll poll() side.
-> > 
-> > The test creates a scenario where network transmission is running at
-> > maximum sppend, and netpoll needs to poll the NIC. This is achieved by:
+On Wed, Jun 11, 2025 at 08:49:34AM -0300, Jonathan Santos wrote:
 > 
-> minor type: sppend/speed
-
-Thanks! I will update.
-
-> >   1. Configuring a single RX/TX queue to create contention
-> >   2. Generating background traffic to saturate the interface
-> >   3. Sending netconsole messages to trigger netpoll polling
-> >   4. Using dynamic netconsole targets via configfs
-> > 
-> > The test validates a critical netpoll code path by monitoring traffic
-> > flow and ensuring netpoll_poll_dev() is called when the normal TX path
-> > is blocked. Perf probing confirms this test successfully triggers
-> > netpoll_poll_dev() in typical test runs.
+> This patch series introduces some new features, improvements,
+> and fixes for the AD7768-1 ADC driver.
 > 
-> So the test needs profiling to make it a pass/fail regression test?
-> Then perhaps add it to TEST_FILES rather than TEST_PROGS. Unless
-> exercising the code on its own is valuable enough.
+> The goal is to support all key functionalities listed in the device
+> datasheet, including filter mode selection, common mode voltage output
+> configuration and GPIO support. Additionally, this includes fixes
+> for SPI communication and for IIO interface, and also code improvements
+> to enhance maintainability and readability.
 
-Sorry for not being clear. This test doesn't depend on any profiling
-data. Basically I just run `perf probe` to guarantee that
-netpoll_poll_dev() was being called (as that was the goal of the test).
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+(for all except DT patches)
 
-This test is self contained and should run at `make run_test` targets.
+The nit-picks can be addressed either in next version (if needed) or whilst
+applying. Up to maintainers and you.
 
-> Or is there another way that the packets could be observed, e.g.,
-> counters.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Unfortunately netpoll doesn't expose any data, thus, it is hard to get
-it. 
 
-I have plans to create a configfs for netpoll, so, we can check for
-these numbers (as also configure some pre-defined values today, such as
-USEC_PER_POLL, MAX_SKBS, ip6h->version = 6; ip6h->priority = 0, etc.
-
-In fact, I've an private PoC for this, but, I am modernizing the code
-first, and creating some selftests to help me with those changes later
-(given we have very little test on netpoll, and I aim to improve this,
-given how critical it is for some datacenter designs).
-
-> > +NETCONSOLE_CONFIGFS_PATH = "/sys/kernel/config/netconsole"
-> > +REMOTE_PORT = 6666
-> > +LOCAL_PORT = 1514
-> > +# Number of netcons messages to send. I usually see netpoll_poll_dev()
-> > +# being called at least once in 10 iterations.
-> > +ITERATIONS = 10
-> 
-> Is usually sufficient to avoid flakiness, or should this be cranked
-> up?
-
-10 was the minimum number I was able to trigger it on my dev
-environment, either with default configuration and a debug heavy
-configuration, but, the higher the number, more change to trigger it.
-I can crank up it a bit more. Maybe 20?
-
-> > +def check_traffic_flowing(cfg: NetDrvEpEnv, netdevnl: NetdevFamily) -> int:
-> > +    """Check if traffic is flowing on the interface"""
-> > +    stat1 = get_stats(cfg, netdevnl)
-> > +    time.sleep(1)
-> 
-> Can the same be learned with sufficient precision when sleeping
-> for only 100 msec? As tests are added, it's worth trying to keep
-> their runtime short.
-
-100%. In fact, I don't need to wait for 1 seconds. In fact, we don't
-even need to check for traffic flowing after the traffic started. I've
-just added it to help me do develop the test.
-
-We can either reduce it to 100ms or just remove it from the loop,
-without prejudice to the test itself. Maybe reducing it to 100 ms might
-help someone else that might debug this in the future, while just
-slowing down ITERATIONS * 0.1 seconds !?
-
-Thanks for the review!
---breno
