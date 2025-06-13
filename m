@@ -1,201 +1,149 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2063.outbound.protection.outlook.com [40.107.243.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67A12E11AE
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 23:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749856676; cv=fail; b=fePnxqxAG/7PFK/i4NVz2Z7W6G4uKuAQl3ED8Bfv3ORKEeUbk44QGNYy0RnTYs/YJb4l5Z9EzTV3NeJnV/SLXUB9adz8UzvV+oYSy7q8ClYux4Zwn1S1XSwPZFu7UBAf8tiBZ+tPtUofAWwreW0/jWqn+RMMT0LaFL/kbSGvaok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749856676; c=relaxed/simple;
-	bh=iy4eLj3a/DCgQ8yp4q28CvmcQolVFV2ZHQsxFdLTxl4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jUrCTrhkkr4TOvWtsasnf1FwXcVrAm7NnHt+8cyujwbw01kQocgDqv+M9ewah5uwSCW/Ea+jqifLitJBxPfXQX7KXPCTHbD+2pOWGTt8wafElrirjBY6skjWn3mZhWPnb1bf51zTzdKgW8kWFb0IyZGNRw404qmRKw8Cwn3H9H0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YjIjLwqo; arc=fail smtp.client-ip=40.107.243.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA07F28EA76;
+	Fri, 13 Jun 2025 23:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749856798; cv=none; b=TB0qbojmcmgdM7nNIkrNuNJd543kSgH4Evlozd+4WmE2Jw7dkmmlnIgFeVrnoyHVC75UpCqmKrzIxnBm34Ve2rVMwrgUKoTZ9KYGrQrLwgiWn/rj5+4lZsiCz5OHR8q0+Doe8s4oKDJwmJMcTNYKfRDPxMUqAZKRbHMU78d9H+s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749856798; c=relaxed/simple;
+	bh=bcZuyPoS5TY+Y74is6sExuoGp8BF7wkEybtx4YILCd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gdoGZ9PFZvtkBeXuKZbxjSvnVorlArj2SuqdCivaRJG3CT73ZugK36CicjaUzRGnVpr7ahZPzqtHhVqa7Ddl2Z9YCiMNARklWQjUBQ9mFWAxaBTCh9QKwNF5yNoecpl3IpOXSIttO8/vtgkbdd5Rt9HvE8P7AwGy7vLjGVRrL9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ip4hUmyL; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YjIjLwqo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YZsbiyXmaAOWZW2L/x4EpAvzQ4NjrJzmL713NtHytqrfRynpbnA/1M99FCEjtdIHG+vOTHFHCTirl6YcrApJaooWPNB9AVpLwTQyYVzV7ArfWJ3s+a0+LzSFHTbT8E+l7VFp1xwu3iQzN6TrWq6JZ2IMBXg4JYbZHzaV2UlEZVdA0uIJ1K9MC1W7Yevs3OX7oZd7X+qdw7J5NDUGWvDvSn/Umvl21AQEsh/UrGDcC7BP/LupkeykRvPaqplADPVZp7ktynpaJ5GaM5eNdZouQ4p71+S84aGCAAtJsuLpzljyE3Qbb/iScij9+x7Nj8kk6w2kn2NGZT+wx2uDsA6zbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Po1n59z1FxV07FPJAP6oBU3+0MBf4fmgWHUxvH8gnw4=;
- b=nOOxMhx5Lt5vatCObrPh8Kt6uZKYZezODpMIE+8WJqtaAbxK40uLSKvQV5qyToLiCtFKhSRUfdJ8dlZ5u6pMtXwMOvWnqZ/SN/KsH0bCTsZ0IiamnbmO4q2pXXzuhoxeY0t3+VBLHTyPTd3uHprigY/4Ql2hBMWxj3I7DGhvFrf2mxUZ0NCFZYhagsuzlALjDqLLLcegEjh9APM+R+/r5oBkVQoF1P8Ol+CQLSupRY0QnEFdO+qTA40qMbr4FzOjpz2/MxGjBzYvcqKaXVGg5gJxx9xFIXN9POKBAqU7N6eie5VfcAabaqq3Vn/g4eO+zNBPjo0mWPopCFMgt011wA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Po1n59z1FxV07FPJAP6oBU3+0MBf4fmgWHUxvH8gnw4=;
- b=YjIjLwqotvvpr1X+lYsFxJpECC3jvoG5M+oUJ1yZJVWyNurv5b+C7rWU3cm1dhaufa3ov/0jKhqkV8ez53RXmiwMJp49LEkIJydO98ZGliToxxK4j1drGtcqIVqtNiKTVHX29ZNYLqUPrWvODiOnZqH3tFHRI22R5fldK+b2DMiVQrEyShY01TCxBEdxoslXbQsoFiYMkk8CEG/yHiCUMu0BEUD9WyFnFl+FXUhjBsHRMMUnytp8giF7YHrQ6MtMhM1WU8+v7qQRocnxphbEO725G0Fceg5+pZ7xClKQJoeTyDGVh7/vfldO8hqPoUU3IVvLfq5dUueiLYbKDrhKkw==
-Received: from DM6PR13CA0036.namprd13.prod.outlook.com (2603:10b6:5:bc::49) by
- BY5PR12MB4193.namprd12.prod.outlook.com (2603:10b6:a03:20c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Fri, 13 Jun
- 2025 23:17:48 +0000
-Received: from DS1PEPF00017091.namprd03.prod.outlook.com
- (2603:10b6:5:bc:cafe::9a) by DM6PR13CA0036.outlook.office365.com
- (2603:10b6:5:bc::49) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Fri,
- 13 Jun 2025 23:17:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DS1PEPF00017091.mail.protection.outlook.com (10.167.17.133) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 23:17:47 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 13 Jun
- 2025 16:17:32 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 13 Jun
- 2025 16:17:32 -0700
-Received: from nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Fri, 13 Jun 2025 16:17:27 -0700
-Date: Fri, 13 Jun 2025 16:17:24 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: <kevin.tian@intel.com>, <will@kernel.org>, <robin.murphy@arm.com>,
-	<joro@8bytes.org>, <ddutile@redhat.com>, <yi.l.liu@intel.com>,
-	<peterz@infradead.org>, <jsnitsel@redhat.com>, <praan@google.com>,
-	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>,
-	<baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v1 11/12] iommufd: Introduce iommufd_object_alloc_ucmd
- helper
-Message-ID: <aEyxhKOSlvP23/81@nvidia.com>
-References: <cover.1749488870.git.nicolinc@nvidia.com>
- <52edfd3e74c264f0f7b1f706d29e9edcb705e2db.1749488870.git.nicolinc@nvidia.com>
- <20250613135817.GG1174925@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ip4hUmyL"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b3182c6d03bso431405a12.0;
+        Fri, 13 Jun 2025 16:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749856796; x=1750461596; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GGkSjekPp20C8RFg/1qiK22k8lYciBn5l4gWbgxyXx8=;
+        b=Ip4hUmyLqH1tU1Sk5oQkmxureT99KORcEvKyYoMUfbpvUcPlmi3/OyeET4mrtEMSry
+         q3nQWiIMxxtX/LqnpSlBhl9D6CLIRlyMkOlskxvcSb4zBHOjloFWNU5wBARFB6pW+zxd
+         OF39xmOekQ1unQu9JVAvNDBYZ3uSuCedkbSfS2ArHJ+1D4aZKl8QiARpEyXIa1BVVRbr
+         /aQ0HnPVVDjQz42h75yNAfJQWxVbsyuJN4+Mt/860evnIAHt2BBxXthkjHLCINvGpv5a
+         P/vAftA2tTPT1DFki1e+TfX6FpQFwH4TEvTeGWIATIYU3G2wHAjKm/0/q7hUWVJ1eqVB
+         uBXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749856796; x=1750461596;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGkSjekPp20C8RFg/1qiK22k8lYciBn5l4gWbgxyXx8=;
+        b=TT0w0qLNITWar2p3Mz135dYlZbDxcvW7ty61f12D7grpuKtK/gDQWqqyk/V5lf0vfF
+         09HAg6JkMHFFdau88LCCzkqNtULedxIh4d8DbjnD9+yG9ZmHkADN1HzmYv91YBE+UkjT
+         gj9Az9Sh7Q6zQNQitNWE4WTDE5kBPfZ7o3A2TSRCQ9Hs8uICx0KyADY6bl4A8t3PU7jJ
+         xf8bVLBuE4SscCE9Qq1bIBaDNy6yBpz7bru6ypFmYVsYkyqpuORSLsIgwK+Cz6Kg/3v4
+         fKB2YAWIicWdsMrh0aw32IuvZXyBkaVx9/W4K065q8bV9MRA91PbOk+PkC7G7r2xpTtF
+         r4uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHihxqsk4I3R/y1AhIpLCBXUBM8ryqTqBd1IVmFsnZnbSSrIRKn3ckgOH8snn9kqg0UZ/L1PrZ/Qi4GIso@vger.kernel.org, AJvYcCVguWvXHL6TsnoKkRdIgAJeS1XBFN8y9+NUWm7E4fORIh4PAUuz1Xfhe2UJfhnOq387TA22NAjqllVPevM=@vger.kernel.org, AJvYcCWe3S8kvfDwlFvwSvHiX+9FRwttJuuwA2f6Fz1fkTBSe/dVnjRweO9UyFCHZWXhnYkut36p56fr@vger.kernel.org, AJvYcCX3fqWvCgOooEZuodikr75r7WvMfiO/dbI2M8ypfnXbmM4ycUgclwhaBHaEa0ltGjohYycE5CWIO4IE@vger.kernel.org
+X-Gm-Message-State: AOJu0YznFuRRl+IIqMNFl6vpo4ZTkG2L3qQoSCfIDasM8ixjDasnd9o/
+	0LDC+lX5dhfUW3XIzgrq1RGLGgjM/audrfSb67raD/q6nb9jSSyLsZq7
+X-Gm-Gg: ASbGncvBEc9mG1ibb7h+FGwhjskgIXDn92ts+IBbwlLzgJ+mxpzJM4uHUOJbpOGB+iK
+	/1gR/IAofaWAlj8RQYOPfDWF3R+zndBHbngeDeaGy0usmKZkacINOfMlAAjRluTpbWZ9vbq5/aX
+	caMmaYlBOlzyFNihD1sGsMyqRVg5M9xn7GaF1uw0JMRzqLLzKbjUjdICqrFfR9Nh5YokV7rg6EK
+	JBkwWv13E1N4JGXQ0BbEWXkV4g16qe4oal6ffhBDviJx0+sakRW/DE96/1H0k0JXfGoC9wlEj+Y
+	KduZU+Pgu8qWAcdoyB6ZJIAycsi3GwZ4RsO7C5512IobTT8DjbeV48bqxYvx4y05GqgAcBenrqp
+	r2jGppIcwufKxIA==
+X-Google-Smtp-Source: AGHT+IGRDA8rtHbr3BM4Iaal2yZGRiefv2wcGquxzfNqyO3WqlQTLD6NDZr/rAtztCW1hjT2NcSB6A==
+X-Received: by 2002:a05:6a20:729f:b0:21a:3d97:e93a with SMTP id adf61e73a8af0-21fbd5d9253mr1546691637.42.1749856795963;
+        Fri, 13 Jun 2025 16:19:55 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1639fe0sm2354429a12.14.2025.06.13.16.19.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 16:19:55 -0700 (PDT)
+Date: Sat, 14 Jun 2025 07:19:51 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Robert Pang <robertpang@google.com>, corbet@lwn.net, colyli@kernel.org,
+	kent.overstreet@linux.dev, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-bcache@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw, stable@vger.kernel.org
+Subject: Re: [PATCH 0/8] Fix bcache regression with equality-aware heap APIs
+Message-ID: <aEyyF9SsTGguEBGd@visitorckw-System-Product-Name>
+References: <20250610215516.1513296-1-visitorckw@gmail.com>
+ <20250611184817.bf9fee25d6947a9bcf60b6f9@linux-foundation.org>
+ <aEvCHUcNOe1YPv37@visitorckw-System-Product-Name>
+ <CAJhEC05+0S69z+3+FB2Cd0hD+pCRyWTKLEOsc8BOmH73p1m+KQ@mail.gmail.com>
+ <20250613110415.b898c62c7c09ff6e8b0149e9@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250613135817.GG1174925@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017091:EE_|BY5PR12MB4193:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9cd74da-e088-463d-1cb1-08ddaad082b8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|7416014|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LjtQXZdXU3dBBL95fb43pwhm1r96DWkoBGPG9gLJxvsUqsTHY3a3qTWsG5tY?=
- =?us-ascii?Q?dQMfrdOnQ8OZN+4JItdIbgYComeqnXimHw6pxRa27xgf2T4Z3PjYo1TgAwOt?=
- =?us-ascii?Q?9258zWOxx80sBflmZWsun4twHJpwdm1RmAm67MnJMusU8aS1GSGAlR5s+obP?=
- =?us-ascii?Q?Wr+ic6cgBst4jf1UVQuK2FLLzmdpJatichQVSDHNZFN5X3Nn7JbxgblF0G+H?=
- =?us-ascii?Q?+YWn64a8nI8PlepT7VjS2+iXma/hIkok/AkPvvTz2p+HOngyHplOXFt/wd+y?=
- =?us-ascii?Q?WpEpA/M6r2QvsAH0FATpnEizKDW7AuhpDvt2U/yMQEtAMiGLT/c3Y/PD5Z8h?=
- =?us-ascii?Q?saxh0C89Bo3a9KVx5wsZNliXuG+W6EVXTyAqFUSpmDYkyWXcKoPdfyQTmZIo?=
- =?us-ascii?Q?dXR3O+lOVq1zyE6xfYuvvZXXma1dI8Uij0YTgXjDiv7E6QUywBwC1viR3z7F?=
- =?us-ascii?Q?ePsxzeyOKVtjl0rl7gQJPpdeia0wjhn4fpgVpdJIIXK7a3tJkyT5fQcecARL?=
- =?us-ascii?Q?sIhBB53L31NNgqf7Z+fJoYaaSnqk5ZUAV0EiQAr94Kcho2o2i0lnhZffQgIS?=
- =?us-ascii?Q?mj9J6L+RM6y/pZSgyXme3Egr8AtyYMVJNjySh+D74xApq+rFwNRy9uYII6Sh?=
- =?us-ascii?Q?dsL7IpjjfnKxIl51w7rx7CNSlKGK8txyK4nEWCl6W1cjxjSwCtSzWGztVH8/?=
- =?us-ascii?Q?6w4MdpIsyB3c5BBSGjQS6U0wZOfryKQRCAJYnEp6vPI8uvOLNr8q4FAF+Vt6?=
- =?us-ascii?Q?0dmGA+wBA8tZJZx9C9wDBmuVzDzd5Imr6wIb3Wp8MdudvzHtLGM3xJgggxg6?=
- =?us-ascii?Q?LVnQJI6o8SEAAkFB3LVIUHjdLGyBYnWN2g9G8mIjdBOhoR9ncpJUpcjpcFrm?=
- =?us-ascii?Q?23JfDSZg2vr5VyZoO5+3PkopfeEPq2cIKGctYe6qCIRcQMXiaOVzrYGCTZ0m?=
- =?us-ascii?Q?18V4c22aAmFeVf7Zs0x2Sm45NmC4p1yaIJ4eg7u0JQlbQgfIK62JSP/L94/C?=
- =?us-ascii?Q?u8cpYlpDwxkckwRaBQufSvOLwf9S9TxtaJOv151XM0Tor4w18Q6tdFM8RRpN?=
- =?us-ascii?Q?lNXY2JKoOr4adwGHIkm5Pex8noa4eoieqw46uUMdJ9Z6mj8bj+k9p7AilOy6?=
- =?us-ascii?Q?kLGs6+T4Ha/2BfTVSW/g8tlWX8I2sDWAv0uavyXpsEegnbFWuMEtvBOQGy8w?=
- =?us-ascii?Q?Ob9TamjHze5CtD4pvyfQY/UeiFH12De+QzyjixiI4WPbckTK+AeFJoaHmFjd?=
- =?us-ascii?Q?xHeqtN0ofpFbPpzKFNI/YU4OSzY9WiKRC6xQZ2iQbwRxYD4tV1vs6DJ6R1rC?=
- =?us-ascii?Q?FoOWc6noiucuV3GKZuand1FcTBSOJJvPW2OPYJsvlvoMMUBjj8Of+nbaTJbT?=
- =?us-ascii?Q?MYTEbVwm5ZaPs8y/kxhRZYW4x/K/O8B75i/1qzcRF9oqnakeBYRElT1IPBk2?=
- =?us-ascii?Q?3jzd4OS7R3r3SGi8LKmCbGTBFJcDJ2Kt74/T5KtmHF3ClMVGEf97inIBtNID?=
- =?us-ascii?Q?WdjS9ueMVQDlTEvkLpsOkRFR8RjDKqDyJf5K?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 23:17:47.8063
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9cd74da-e088-463d-1cb1-08ddaad082b8
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017091.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4193
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250613110415.b898c62c7c09ff6e8b0149e9@linux-foundation.org>
 
-On Fri, Jun 13, 2025 at 10:58:17AM -0300, Jason Gunthorpe wrote:
-> On Mon, Jun 09, 2025 at 10:13:34AM -0700, Nicolin Chen wrote:
+Hi Andrew,
+
+On Fri, Jun 13, 2025 at 11:04:15AM -0700, Andrew Morton wrote:
+> On Fri, 13 Jun 2025 23:26:33 +0900 Robert Pang <robertpang@google.com> wrote:
 > 
-> > +#define iommufd_object_alloc_ucmd(ucmd, ptr, type) \
-> > +	__iommufd_object_alloc_ucmd(ucmd, ptr, type, obj)
+> > Hi Andrew
+> > 
+> > Bcache is designed to boost the I/O performance of slower storage
+> > (HDDs, network-attached storage) by leveraging fast SSDs as a block
+> > cache. This functionality is critical in significantly reducing I/O
+> > latency. Therefore, any notable increase in bcache's latency severely
+> > diminishes its value. For instance, our tests show a P100 (max)
+> > latency spike from 600 ms to 2.4 seconds every 5 minutes due to this
+> > regression. In real-world environments, this  increase will cause
+> > frequent timeouts and stalls in end-user applications that rely on
+> > bcache's latency improvements, highlighting the urgent need to address
+> > this issue.
 > 
-> Lets add a comment here and on the normal iommufd_object_alloc
-> explaining that this function automatically calls finalize and abort,
-> the non ucmd version requires the caller to do so.
-
-Yes.
-
-@@ -231,6 +231,11 @@ iommufd_object_put_and_try_destroy(struct iommufd_ctx *ictx,
-        iommufd_object_remove(ictx, obj, obj->id, 0);
- }
-
-+/*
-+ * Callers of these normal object allocators must call iommufd_object_finalize()
-+ * to finalize the object, or call iommufd_object_abort_and_destroy() to revert
-+ * the allocation.
-+ */
- struct iommufd_object *_iommufd_object_alloc(struct iommufd_ctx *ictx,
-                                             size_t size,
-                                             enum iommufd_object_type type);
-@@ -247,6 +252,10 @@ struct iommufd_object *_iommufd_object_alloc(struct iommufd_ctx *ictx,
- #define iommufd_object_alloc(ictx, ptr, type) \
-        __iommufd_object_alloc(ictx, ptr, type, obj)
-
-+/*
-+ * Callers of these _ucmd allocators should not call iommufd_object_finalize()
-+ * or iommufd_object_abort_and_destroy(), as the core automatically does that.
-+ */
- struct iommufd_object *
- _iommufd_object_alloc_ucmd(struct iommufd_ucmd *ucmd, size_t size,
-                           enum iommufd_object_type type);
-
-> > +struct iommufd_object *_iommufd_object_alloc_ucmd(struct iommufd_ucmd *ucmd,
-> > +						  size_t size,
-> > +						  enum iommufd_object_type type)
-> > +{
-> > +	struct iommufd_object *new_obj;
-> > +
-> > +	if (ucmd->new_obj)
+> Great, thanks.  Let's please incorporate this into the v2 changelogging.
 > 
-> WARN_ON? Something is coded wrong if we hit this right?
+> > > > Also, if we are to address this regression in -stable kernels then
+> > > > reverting 866898efbb25 is an obvious way - it is far far safer.  So
+> > > > please also tell us why the proposed patchset is a better way for us to
+> > > > go.
+> > > >
+> > > I agree that reverting 866898efbb25 is a much safer and smaller change
+> > > for backporting. In fact, I previously raised the discussion of whether
+> > > we should revert the commit or instead introduce an equality-aware API
+> > > and use it. The bcache maintainer preferred the latter, and I also
+> > > believe that it is a more forward-looking approach. Given that bcache
+> > > has run into this issue, it's likely that other users with similar use
+> > > cases may encounter it as well. We wouldn't want those users to
+> > > continue relying on the current default heapify behavior. So, although
+> > > reverting may be more suitable for stable in isolation, adding an
+> > > equality-aware API could better serve a broader set of use cases going
+> > > forward.
+> 
+> "much safer and smaller" is very desirable for backporting, please. 
+> After all, 866898efbb25 didn't really fix anything and reverting that
+> takes us back to a known-to-work implementation.
+> 
+> I of course have no problem making the changes in this patchset for
+> "going forward"!
+> 
+> So if agreeable, please prepare a patch which reverts 866898efbb25. 
+> Robert's words above are a great basis for that patch's description.
+> 
+Sure, I'll prepare a revert patch to address the issue and plan to
+submit it for backporting to -stable.
 
-Yes.
+However, I'd like to confirm whether the following patch series
+structure would be appropriate:
 
-@@ -67,7 +67,8 @@ struct iommufd_object *_iommufd_object_alloc_ucmd(struct iommufd_ucmd *ucmd,
- {
-        struct iommufd_object *new_obj;
+- Patch 1: Revert 866898efbb25 and CC it to stable
+- Patch 2–8: Introduce the new equality-aware heap API
+- Patch 9: Revert Patch 1 and switch bcache to use the new API
 
--       if (ucmd->new_obj)
-+       /* Something is coded wrong if this is hit */
-+       if (WARN_ON(ucmd->new_obj))
-                return ERR_PTR(-EBUSY);
+In this case, we would only backport Patch 1 to stable.
 
-        new_obj = _iommufd_object_alloc(ucmd->ictx, size, type);
+Alternatively, would you prefer we simply revert 866898efbb25 without
+introducing and using the new API in the same series?
 
-Thanks
-Nicolin
+Regards,
+Kuan-Wei
