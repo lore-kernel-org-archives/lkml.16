@@ -1,207 +1,136 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E776211A0D;
-	Fri, 13 Jun 2025 16:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09D81E00A0
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833198; cv=none; b=buiYjLYY651Hgta+VMUWdkKxA/u9YjO+/GrikIBZIhevV64FhDUULnmiPxaCc8/bHaeKgSjrYX8cWLtjaXNRDOngRekJEdetkz7AabMTJCZbp3ovvLE2t8vbyQTSSsbPT0EPted6AndHXPFaXeMhUbLjKSnD8VvEimp8F9TVTLc=
+	t=1749833310; cv=none; b=VWL5R4elaq0LphhvNbp0y7I2TgA8Y9sJtTE4D7+C0Bmjf7lJ49b0qgDA9gPCTzN0mR4Y76e9kIc62RdTfwutPC3xiUQead5T8M48D8n+wlsXXntfWcniI8N69x7mmb/aPP3wlHapfXoF/LT4yro+d0T8POxuOqa44LHyYz674gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833198; c=relaxed/simple;
-	bh=qy48ViaN3if55ls8Ik4eE788CPNqNwEPM2Qlx4wnVvY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=neBh4qwgr+zHOKI3dysJDlwJ3ftSaKVLCWiMWeZJu964Y3pLmIVEA0UhyrPW8lvpKCtm7OTTkDdkDWPew31Gib8InidTEjGL6C85q2+wzA3Egwzp0bS0zikQeRe+JRLxvTWpuL6lnd3XrAtn+K6dGuxo5VCFpb7gVtoA7q4pd2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6XRuoG0; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6XRuoG0"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ade30256175so430252866b.1;
-        Fri, 13 Jun 2025 09:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749833194; x=1750437994; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8b+XF1R6IDkuZBmPOk+AjM7WkGgjUBKP1V8hx4ecgO8=;
-        b=O6XRuoG0S7GW9Gz9SODxB0VwuVfUtey9vBSipW8LeIEqZU/hKAARJ6ur5PmCLHmkDb
-         tERq0lEDMQUftSGqc5Q2OEFrt0vVVjJ9votWY84sVWNPGge3BF1VgIeVLuonDTPwuJ3G
-         X6dUZGxpSzN0tbGqiwjAKJjNf7u7WC2wPRSaHpg/RZNa+Qv92pFeP31Tn+UFybOldqCi
-         wIkYT65kYXAomxPdJRxCJ5RDxS+NjCL/g48VhSSAFMjIVTOv2RKv51+y3DGX3sxEvdeI
-         qSYVi1KqOg0iYwqvNMq3yd0ARzQ464mgUxjWvZDJB5kygyoQetyBtrHkyMQsSrEP4qIc
-         EStA==
+	s=arc-20240116; t=1749833310; c=relaxed/simple;
+	bh=Rp7vJTlMPsaoen5NOBgjQfwezWAotk4TV69xzCO7TNQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MjSSbbT7Smsw45VjkGQRMZf6g2WFOdD17Djk9pB873DuGbsDQQ+xoXDcVQGOMpwnpQyDycmeuGVzQcAYh/Abn9vwf8ArA7PXq4hmQMyVap2xMBPOA2OhAQqI7grtO9GrmOgJV5wNfi3IKi4uxx+HhoOxlor96flUXQRN4gDwHig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so60239755ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:48:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749833194; x=1750437994;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8b+XF1R6IDkuZBmPOk+AjM7WkGgjUBKP1V8hx4ecgO8=;
-        b=l3AdxyUktiFjbBpkBBvf3QfJ1kV/MNSqcoq54iN65f3OKiKjc9h4Jev+LLD4djNCGA
-         NOKVR7NLi7B9gMMngVkFDqz3GGoeE4/aZ42I3PRslX8ILKOTtDSDOLCxrRr+n+P0gpwf
-         sRijcFyRPr1fy7W2xFBnkvWIq4XzRDvtgpAFc9R9j5b0ZsZ7f8P+Ig0ZcEl9TpTPdvN7
-         SCX6JsXg6avmaIvFJIQ1kKjqE04QEZ7LwI0Eeexv9hoof9PjqJh4sqDieVSSHLkqgqzf
-         HUUarWpvsSZC876Cip1DcTMwwukOmZk4iIa13qmzlD+9rZyChYgC+FAaqTY+kZWSFxzh
-         +Gew==
-X-Forwarded-Encrypted: i=1; AJvYcCUtN1SqN+LW+yyFJJSZBiVtJbamvqXQMRZSQnUfKeatZBJgKqD8Nn7OSc7g2nKRExLGTnwFq2Jw+IlvsD6h@vger.kernel.org, AJvYcCW/pEfyyLebHxz3QGuabroUXvRuF3Z3xhcRKU/lEcaqw63qt4QmN5lbyU1s+ZJ+RCz69JFRTqeTqJw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhzoW968tQ5rWlkdkEiebDD0FOcCXRssfWsaP+aKEGw30c9qyJ
-	gdwSENqnqM2ukXqxb/YsnitjANTjuSAP9T3i+aDoY5LfpLsgrO9HJuPg4xEFsJoz32JHwfL8Cdl
-	FEriytkroqwNLtLojSRCQNrzKmLwwHZk=
-X-Gm-Gg: ASbGnct5ydv6NEjsrIr4ZSQYYxBgCzIwP38XmeJJQ8CCoOZM0RwBjL8fpYZ5YKz+lOL
-	923J/TmCXhDDQAaYglmHSCcKM6rSM4DsAKpTQLAUWJdW/UFnxhORl8INH/F9ySpvcJqSVhBKsxv
-	4MV68EnFg2pofLeCEYBVwEVvNYusCmUpZp7ibmYcYZBEZFMDwd4B784iBKYQB8mNmlZd2Hl3Vel
-	9wl
-X-Google-Smtp-Source: AGHT+IFAM+0ARMBkOl378yE7TD1p2iruVPP2VsDOQczbz9maxLgWC1Hy5JyiV73B37TmNy5naByi7YIX04Dwzauu6Js=
-X-Received: by 2002:a17:907:971e:b0:ade:32fa:739e with SMTP id
- a640c23a62f3a-adec54dac66mr411183266b.2.1749833194107; Fri, 13 Jun 2025
- 09:46:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749833308; x=1750438108;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nUBlTmct8R22pPkzLTix51atGwB3+I8WO1dU4QJBzjk=;
+        b=uNMlIui7cUfNk1kGNYCoRDp5E9zbxmu1cMfuNTA8Ys2161Fjb7OOHBDiqD1q64UmzQ
+         UfzDbaCnTxn0LWcvKe3JuhXQyZQsuulY7GriLOHTGggmg2P5/jAumXlxuCZnBgcPQZDp
+         iHc7lQCyQ9ydUWXI/IBtDs+cUSgavIEoNFpXFEoaedA4NMQgrga+UKtIpXApY0jhMaC1
+         OspwI7lUpT5D+SVE9jsPDwoowUxAqQbvB6a7W6JPwdke2+4aMoYVSs9POhCUD/FswUcW
+         FKm3AdLuYbE/3gbUkdUbaDT9xV7lsroEKzo1cg8Sn0AyV0dxANuSwPmzMePvR9ReThyd
+         c19w==
+X-Forwarded-Encrypted: i=1; AJvYcCVf9/eEqkcUlwOILO7EVrallD2Luwl0L3ZQUof8KoNilC86F3swBaDwDJ/B3oU/+hk7YNNxygp5WJ+klNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXWjyIOeJBbpzd4/Z3fo/Cw9qgNeDftOfIVUgpAxIyq2QfaBnl
+	Ki7QKRxnY9oKQXxJEObOTwAXXsc5v4YhIOhq2C8vvnVnUW7/fowOp0oAUm/f4ycwrKapK8k7ybg
+	ab4+cyc4TMKVlBQl720xjZRowsiuEL1eyBOmPt0VVb857R0Dgm/+Aqe5hQvo=
+X-Google-Smtp-Source: AGHT+IE2fqAVde6MrvtCnAC4SuVWHIlQw+FwU8+kzEz67aL6Ahlu7EHoBf2WFhN3lVy9ywM1JHWJdwsJrKUwldbDSiIRDuDdovku
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612181330.31236-1-bijan311@gmail.com> <20250613152517.225529-1-joshua.hahnjy@gmail.com>
-In-Reply-To: <20250613152517.225529-1-joshua.hahnjy@gmail.com>
-From: Bijan Tabatabai <bijan311@gmail.com>
-Date: Fri, 13 Jun 2025 11:46:22 -0500
-X-Gm-Features: AX0GCFsgz60G6jm7BUq-axwbbcXxdq8WAFNMq5rp79wrCHhDW3-XBuJijPYHKiw
-Message-ID: <CAMvvPS4COqinefth9rEB4etJF2erjQa3xfcOGQMtZ-LCUQnwFw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data
- across nodes
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, sj@kernel.org, akpm@linux-foundation.org, 
-	corbet@lwn.net, david@redhat.com, ziy@nvidia.com, matthew.brost@intel.com, 
-	rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net, 
-	ying.huang@linux.alibaba.com, apopple@nvidia.com, bijantabatab@micron.com, 
-	venkataravis@micron.com, emirakhur@micron.com, ajayjoshi@micron.com, 
-	vtavarespetr@micron.com, damon@lists.linux.dev
+X-Received: by 2002:a05:6e02:1a2b:b0:3dd:d746:25eb with SMTP id
+ e9e14a558f8ab-3de07cd170amr3843025ab.16.1749833307733; Fri, 13 Jun 2025
+ 09:48:27 -0700 (PDT)
+Date: Fri, 13 Jun 2025 09:48:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684c565b.a00a0220.279073.0014.GAE@google.com>
+Subject: [syzbot] [bcachefs?] BUG: unable to handle kernel NULL pointer
+ dereference in bch2_btree_update_start
+From: syzbot <syzbot+2f3859bd28f20fa682e6@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Joshua,
+Hello,
 
-On Fri, Jun 13, 2025 at 10:25=E2=80=AFAM Joshua Hahn <joshua.hahnjy@gmail.c=
-om> wrote:
->
-> On Thu, 12 Jun 2025 13:13:26 -0500 Bijan Tabatabai <bijan311@gmail.com> w=
-rote:
->
-> > From: Bijan Tabatabai <bijantabatab@micron.com>
-> >
-> > A recent patch set automatically set the interleave weight for each nod=
-e
-> > according to the node's maximum bandwidth [1]. In another thread, the p=
-atch
-> > set's author, Joshua Hahn, wondered if/how these weights should be chan=
-ged
-> > if the bandwidth utilization of the system changes [2].
->
-> Hi Bijan,
->
-> Thank you for this patchset, and thank you for finding interest in my
-> question!
->
-> > This patch set adds the mechanism for dynamically changing how applicat=
-ion
-> > data is interleaved across nodes while leaving the policy of what the
-> > interleave weights should be to userspace. It does this by adding a new
-> > DAMOS action: DAMOS_INTERLEAVE. We implement DAMOS_INTERLEAVE with both
-> > paddr and vaddr operations sets. Using the paddr version is useful for
-> > managing page placement globally. Using the vaddr version limits tracki=
-ng
-> > to one process per kdamond instance, but the va based tracking better
-> > captures spacial locality.
-> >
-> > DAMOS_INTERLEAVE interleaves pages within a region across nodes using t=
-he
-> > interleave weights at /sys/kernel/mm/mempolicy/weighted_interleave/node=
-<N>
-> > and the page placement algorithm in weighted_interleave_nid via
-> > policy_nodemask. We chose to reuse the mempolicy weighted interleave
-> > infrastructure to avoid reimplementing code. However, this has the awkw=
-ard
-> > side effect that only pages that are mapped to processes using
-> > MPOL_WEIGHTED_INTERLEAVE will be migrated according to new interleave
-> > weights. This might be fine because workloads that want their data to b=
-e
-> > dynamically interleaved will want their newly allocated data to be
-> > interleaved at the same ratio.
->
-> I think this is generally true. Maybe until a user says that they have a
-> usecase where they would like to have a non-weighted-interleave policy
-> to allocate pages, but would like to place them according to a set weight=
-,
-> we can leave support for other mempolicies out for now.
->
-> > If exposing policy_nodemask is undesirable, we have two alternative met=
-hods
-> > for having DAMON access the interleave weights it should use. We would
-> > appreciate feedback on which method is preferred.
-> > 1. Use mpol_misplaced instead
-> >   pros: mpol_misplaced is already exposed publically
-> >   cons: Would require refactoring mpol_misplaced to take a struct vm_ar=
-ea
-> >   instead of a struct vm_fault, and require refactoring mpol_misplaced =
-and
-> >   get_vma_policy to take in a struct task_struct rather than just using
-> >   current. Also requires processes to use MPOL_WEIGHTED_INTERLEAVE.
-> > 2. Add a new field to struct damos, similar to target_nid for the
-> > MIGRATE_HOT/COLD schemes.
-> >   pros: Keeps changes contained inside DAMON. Would not require process=
-es
-> >   to use MPOL_WEIGHTED_INTERLEAVE.
-> >   cons: Duplicates page placement code. Requires discussion on the sysf=
-s
-> >   interface to use for users to pass in the interleave weights.
->
-> Here I agree with SJ's sentiment -- I think mpol_misplaced runs with the
-> context of working with current / fault contexts, like you pointed out.
-> Perhaps it is best to keep the scope of the changes as local as possible =
-: -)
-> As for duplicating page placement code, I think that is something we can
-> refine over iterations of this patchset, and maybe SJ will have some grea=
-t
-> ideas on how this can best be done as well.
+syzbot found the following issue on:
 
-David Hildenbrand responded to this and proposed adding a new function that
-just returns the nid a folio should go on based on its mempolicy. I think t=
-hat's
-probably the best way to go for now. I think the common case would want
-the weights used by this and mempolicy to be the same. However, if there is
-a use case where different weights are desired, I don't mind coming back an=
-d
-adding that functionality.
+HEAD commit:    19272b37aa4f Linux 6.16-rc1
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=11a7f682580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8409c4d4e51ac27
+dashboard link: https://syzkaller.appspot.com/bug?extid=2f3859bd28f20fa682e6
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+userspace arch: arm64
 
-> > This patchset was tested on an AMD machine with a NUMA node with CPUs
-> > attached to DDR memory and a cpu-less NUMA node attached to CXL memory.
-> > However, this patch set should generalize to other architectures and nu=
-mber
-> > of NUMA nodes.
->
-> I think moving the test results to the cover letter will help reviewers
-> better understand the intent of the work. Also, I think it will also be
-> very helpful to include some potential use-cases in here as well. That is=
-,
-> what workloads would benefit from placing pages according to a set ratio,
-> rather than using existing migration policies that adjust this based on
-> hotness / coldness?
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Noted. I will be sure to include that in the next revision.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/92d22b0c6493/disk-19272b37.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3fb0142bb63a/vmlinux-19272b37.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3d5f3836ae42/Image-19272b37.gz.xz
 
-> One such use case that I can think of is using this patchset + weighted
-> interleave auto-tuning, which would help alleviate bandwidth limitations
-> by ensuring that past the allocation stage, pages are being accessed
-> in a way that maximizes the bandwidth usage of the system (at the cost of
-> latency, which may or may not even be true based on how bandwidth-bound
-> the workload is).
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2f3859bd28f20fa682e6@syzkaller.appspotmail.com
 
-This was the exact use case I envisioned for this patch. I talk about it in=
- more
-detail in my reply to SeongJae.
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+Mem abort info:
+  ESR = 0x0000000086000006
+  EC = 0x21: IABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x06: level 2 translation fault
+user pgtable: 4k pages, 48-bit VAs, pgdp=000000014106a000
+[0000000000000000] pgd=0800000128c8b403, p4d=0800000128c8b403, pud=0800000132b39403, pmd=0000000000000000
+Internal error: Oops: 0000000086000006 [#1]  SMP
+Modules linked in:
+CPU: 1 UID: 0 PID: 7230 Comm: syz.5.20 Not tainted 6.16.0-rc1-syzkaller-g19272b37aa4f #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : 0x0
+lr : mempool_alloc_noprof+0x150/0x3f4 mm/mempool.c:402
+sp : ffff80009dc06c80
+x29: ffff80009dc06d80 x28: 0000000000000000 x27: 1fffe0001ee507df
+x26: 0000000000092800 x25: ffff700013b80d9c x24: ffff0000f7283ef0
+x23: 0000000000092c40 x22: ffff0000f7283ef8 x21: 0000000000000400
+x20: 1fffe0001ee507de x19: ffff0000f7283ea0 x18: 00000000ffffffff
+x17: ffff800093215000 x16: ffff80008051b344 x15: ffff800092d9eb80
+x14: ffff0000c4812910 x13: ffff800093014c08 x12: ffff0000c4812930
+x11: 0000000000008004 x10: 0000000000ff0100 x9 : 0000000000000000
+x8 : 0000000000000000 x7 : ffff800080b774a8 x6 : 0000000000000000
+x5 : 0000000000000020 x4 : ffff80009dc06a20 x3 : 0000000000000000
+x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000092800
+Call trace:
+ 0x0 (P)
+ bch2_btree_update_start+0x488/0x1398 fs/bcachefs/btree_update_interior.c:1212
+ bch2_btree_node_rewrite+0x190/0xd34 fs/bcachefs/btree_update_interior.c:2226
+ bch2_move_btree+0x538/0xa8c fs/bcachefs/move.c:1145
+ bch2_scan_old_btree_nodes+0x80/0x21c fs/bcachefs/move.c:1266
+ bch2_data_job+0x570/0x7cc fs/bcachefs/move.c:1404
+ bch2_data_thread+0xb4/0x1cc fs/bcachefs/chardev.c:315
+ kthread+0x5fc/0x75c kernel/kthread.c:464
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+Code: ???????? ???????? ???????? ???????? (????????) 
+---[ end trace 0000000000000000 ]---
 
-> Thank you again for the amazing patchset! Have a great day : -)
-> Joshua
 
-I appreciate you taking the time to respond,
-Bijan
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
