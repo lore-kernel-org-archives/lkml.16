@@ -1,45 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA5463A9
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 12:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461DA29;
+	Fri, 13 Jun 2025 13:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749819572; cv=none; b=CwW8IF3pW/IUHHiacqz2g5NA3m+qkkrH/j0okI2iSaxtvmfwyRy0ZJ26uEw0zJ9/Di9iJ0FQCCnAZQtcuYCym48RO47Z4ECdZL+Gyr4rnajaQGvJiVJ0fLB9aD7Lw7yQUkIuqxc2beEb5qevTfS0f/XnMTSZJlDoOQdm3c2CV/g=
+	t=1749819765; cv=none; b=Gx8sfgCaW+2mgppT4xF2l/xPl32FXcesBdA4kEcHS1xKnbPHhPnmgBpm1xVEWV0qutr4lyrD4vI8HXTH7NwT2v6j9UpzB1jFRhqLNyqqFspa1UzXSSlUy2b2Ka4tKQYx6q47t2SElXEyeKt7l5Ak778iHufjIK1SKJbTol0ZkjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749819572; c=relaxed/simple;
-	bh=1GoZAGAypiB2oHd3pN/5VWptPj76Frs4MFiz1/rzIR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hKGoG3mbMNrDO7SNCWRALD6fSVUHOg7FaX+QNPbthXSL1z0ba7gas8UWpXubMt3XHJYzQ5406oD5EzMOpHVOw+4yIqh6f/LsQ9xFdXLyMeQu62p4xra1Ax0ogByJvFdDZzuH5kDXbOBO+uJw6akwgjBVJq5Um3j2zz5ArrVkfzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjqlRkjS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749819765; c=relaxed/simple;
+	bh=iDUHzb5KiG2udZG4Gth0ZpjkeGyywdN49zxcOfgKPrQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jb9EoqazBSDy3RAa71l2GN6vWgn9iYxrdFXDw/TtDJKequuCTgKL1TftLTxDBcv/igqhpNYbAjxRNUsAgh2pF3bUZXaeeZ5uK+hVC/k1tKmC1WcDrb3FTyxjYrzMTzFkfKaeuowNXyVAd6D7vismWRMfNeNcmr2SPGQvfmTidnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=UUV/8l2l; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjqlRkjS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A6CC4CEE3;
-	Fri, 13 Jun 2025 12:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749819572;
-	bh=1GoZAGAypiB2oHd3pN/5VWptPj76Frs4MFiz1/rzIR4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DjqlRkjSqS4mtvE0BoZP79f0E6u+3WNmszFR8VjFFD2aCwZ15xjkAhJ8fpbOt43CR
-	 MZFOeHBWYZ5EqEVRW6wy741J9UBA4AP5Q4hauneLWNANRSRCwZW9AN/P6REch1et8Z
-	 tGjDseMijrNPgamzq06NS61zhF9jkoobMe5tnJzmp8MHU4p4ERROPUh/tD+618lRQp
-	 USno98Hg8mmJN46I+37znExqRzf8hDsLHZ/q32KhFx+CdmFp1550mf0ChHgJ3hk2JF
-	 OfN4cBW1kafDhd53rvo/d0elwoZsWm33lttAxxqYMDBV4/k9f/g4ITmzSl/rKGe+hf
-	 ez9rJQYWOaUmw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>
-Cc: Pratyush Yadav <ptyadav@amazon.de>,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH v2] kho: initialize tail pages for higher order folios properly
-Date: Fri, 13 Jun 2025 14:59:06 +0200
-Message-ID: <20250613125916.39272-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="UUV/8l2l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1749819765; x=1781355765;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iDUHzb5KiG2udZG4Gth0ZpjkeGyywdN49zxcOfgKPrQ=;
+  b=UUV/8l2lWPf3ewvke1n2qago0c/AElDgD+vRIoyjUkIK7xoPdR2+xIwJ
+   kSaeLvxjzGEpSL5pFZklz35lMStMSKNw/1rd7ydMMAAc01N0+s9rhYh5D
+   eDcPFqSzroaatsgFn95P7Wr1XetqqBIu8VeR+9KohpEWpqYR14BnodAem
+   dbM1ssM4xH6VCjCsdDe/3PEl7IoH17KgVGuvXkdR3bDDqx0zYci6rWZdr
+   tzO3epTpChdA+w0HucWoZQNPTNZCGzx5x/KMSdXqd1ZcdbNfQRCEwcx+n
+   8i5/RfQ+uCDzNg00A4TxxwJKLIQkAxaWGAkAIqFy0GDenk+OfxzxpwXmR
+   g==;
+X-CSE-ConnectionGUID: Aonm0V6kTF+56eNzH0aNCQ==
+X-CSE-MsgGUID: 9NF5q4BDT/iTtvAlCk2Uiw==
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="274154965"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 Jun 2025 06:02:38 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Fri, 13 Jun 2025 06:02:27 -0700
+Received: from vduicu-Virtual-Machine.mshome.net (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Fri, 13 Jun 2025 06:02:24 -0700
+From: <victor.duicu@microchip.com>
+To: <jic23@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
+	<andy@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>
+CC: <marius.cristea@microchip.com>, <victor.duicu@microchip.com>,
+	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: iio: temperature: add support for MCP998X
+Date: Fri, 13 Jun 2025 16:02:06 +0300
+Message-ID: <20250613130207.8560-2-victor.duicu@microchip.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250613130207.8560-1-victor.duicu@microchip.com>
+References: <20250613130207.8560-1-victor.duicu@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,100 +63,236 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Pratyush Yadav <ptyadav@amazon.de>
+From: Victor Duicu <victor.duicu@microchip.com>
 
-Currently, when restoring higher order folios, kho_restore_folio() only
-calls prep_compound_page() on all the pages. That is not enough to
-properly initialize the folios. The managed page count does not
-get updated, the reserved flag does not get dropped, and page count does
-not get initialized properly.
+This is the devicetree schema for Microchip MCP998X/33 and
+MCP998XD/33D Automotive Temperature Monitor Family.
 
-Restoring a higher order folio with it results in the following BUG with
-CONFIG_DEBUG_VM when attempting to free the folio:
-
-    BUG: Bad page state in process test  pfn:104e2b
-    page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
-    flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
-    raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
-    raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
-    page dumped because: nonzero _refcount
-    [...]
-    Call Trace:
-    <TASK>
-    dump_stack_lvl+0x4b/0x70
-    bad_page.cold+0x97/0xb2
-    __free_frozen_pages+0x616/0x850
-    [...]
-
-Combine the path for 0-order and higher order folios, initialize the
-tail pages with a count of zero, and call adjust_managed_page_count() to
-account for all the pages instead of just missing them.
-
-In addition, since all the KHO-preserved pages get marked with
-MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
-actually set (as can also be seen from the flags of the dumped page in
-the logs above). So drop the ClearPageReserved() calls.
-
-Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
-Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
 ---
+ .../iio/temperature/microchip,mcp9982.yaml    | 211 ++++++++++++++++++
+ 1 file changed, 211 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
 
-Changes in v2:
-- Declare i in the loop instead of at the top.
-
- kernel/kexec_handover.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index eb305e7e61296..ca525f794f6be 100644
---- a/kernel/kexec_handover.c
-+++ b/kernel/kexec_handover.c
-@@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
- }
-
- /* almost as free_reserved_page(), just don't free the page */
--static void kho_restore_page(struct page *page)
-+static void kho_restore_page(struct page *page, unsigned int order)
- {
--	ClearPageReserved(page);
--	init_page_count(page);
--	adjust_managed_page_count(page, 1);
-+	unsigned int nr_pages = (1 << order);
+diff --git a/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+new file mode 100644
+index 000000000000..ec939d463612
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+@@ -0,0 +1,211 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/temperature/microchip,mcp9982.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	/* Head page gets refcount of 1. */
-+	set_page_count(page, 1);
++title: Microchip MCP998X/33 and MCP998XD/33D Multichannel Automotive
++       Temperature Monitor Family
 +
-+	/* For higher order folios, tail pages get a page count of zero. */
-+	for (unsigned int i = 1; i < nr_pages; i++)
-+		set_page_count(page + i, 0);
++maintainers:
++  - Victor Duicu <victor.duicu@microchip.com>
 +
-+	if (order > 0)
-+		prep_compound_page(page, order);
++description: |
++  The MCP998X/33 and MCP998XD/33D family is a high-accuracy 2-wire multichannel
++  automotive temperature monitor.
++  The datasheet can be found here:
++    https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
 +
-+	adjust_managed_page_count(page, nr_pages);
- }
-
- /**
-@@ -179,15 +189,10 @@ struct folio *kho_restore_folio(phys_addr_t phys)
- 		return NULL;
-
- 	order = page->private;
--	if (order) {
--		if (order > MAX_PAGE_ORDER)
--			return NULL;
--
--		prep_compound_page(page, order);
--	} else {
--		kho_restore_page(page);
--	}
-+	if (order > MAX_PAGE_ORDER)
-+		return NULL;
-
-+	kho_restore_page(page, order);
- 	return page_folio(page);
- }
- EXPORT_SYMBOL_GPL(kho_restore_folio);
---
-2.47.1
++properties:
++  compatible:
++    enum:
++      - microchip,mcp9933
++      - microchip,mcp9933d
++      - microchip,mcp9982
++      - microchip,mcp9982d
++      - microchip,mcp9983
++      - microchip,mcp9983d
++      - microchip,mcp9984
++      - microchip,mcp9984d
++      - microchip,mcp9985
++      - microchip,mcp9985d
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 2
++    maxItems: 2
++
++  interrupt-names:
++    description:
++      -alert-therm is used to handle a HIGH or LOW limit.
++      -therm-addr is used to handle a THERM limit on chips
++      without "D" in the name.
++      -sys-shutdown is used to handle a THERM limit on chips
++      with "D" in the name.
++    items:
++      - const: alert-therm
++      - const: therm-addr
++      - const: sys-shutdown
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  microchip,enable-anti-parallel:
++    description:
++      Enable anti-parallel diode mode operation.
++      MCP9984/84D/85/85D and MCP9933/33D support reading two external diodes
++      in anti-parallel connection on the same set of pins.
++    type: boolean
++
++  microchip,beta1:
++    description:
++      Set beta compensation value for external channel 1.
++      <0> 0.050
++      <1> 0.066
++      <2> 0.087
++      <3> 0.114
++      <4> 0.150
++      <5> 0.197
++      <6> 0.260
++      <7> 0.342
++      <8> 0.449
++      <9> 0.591
++      <10> 0.778
++      <11> 1.024
++      <12> 1.348
++      <13> 1.773
++      <14> 2.333
++      <15> Diode_Mode
++      <16> Auto
++      - Diode_Mode is used when measuring a discrete thermal diode
++      or a CPU diode that functions like a discrete thermal diode.
++      - Auto enables beta auto-detection. The chip monitors
++      external diode/transistor and determines the optimum
++      setting.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    default: 16
++
++  microchip,beta2:
++    description:
++      Set beta compensation value for external channel 2.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    default: 16
++
++  microchip,resistance-comp-ch1-2-enable:
++    description:
++      Enable resistance error correction(REC) for external channels 1 and 2.
++      The chip internal hardware counterbalances the parasitic resistance in
++      series with the external diodes. The compensation can be activated or
++      disabled in hardware for both channels 1 and 2 at the same time.
++    type: boolean
++
++  microchip,resistance-comp-ch3-4-enable:
++    description:
++      Enable resistance error correction(REC) for external channels 3 and 4.
++      The chip internal hardware counterbalances the parasitic resistance in
++      series with the external diodes. The compensation can be activated or
++      disabled in hardware for both channels 3 and 4 at the same time.
++    type: boolean
++
++
++  vdd-supply: true
++
++patternProperties:
++  "^channel@[1-4]$":
++    description:
++      Represents the external temperature channels to which
++      a remote diode is connected.
++    type: object
++
++    properties:
++      reg:
++        items:
++          minimum: 1
++          maximum: 4
++
++      microchip,ideality-factor:
++        description:
++          Each channel has an ideality factor.
++          Beta compensation and resistance error correction automatically
++          correct for most ideality errors. So ideality factor does not need
++          to be adjusted in general.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        default: 18
++
++      label:
++        description: Unique name to identify which channel this is.
++
++    required:
++      - reg
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - vdd-supply
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - microchip,mcp9982d
++              - microchip,mcp9983d
++              - microchip,mcp9984d
++              - microchip,mcp9985d
++              - microchip,mcp9933d
++    then:
++      properties:
++        interrupts-names:
++          items:
++            - const: alert-therm
++            - const: sys-shutdown
++    else:
++      properties:
++        interrupts-names:
++          items:
++            - const: alert-therm
++            - const: therm-addr
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        temperature-sensor@4c {
++            compatible = "microchip,mcp9985";
++            reg = <0x4c>;
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            microchip,enable-anti-parallel;
++            microchip,resistance-comp-ch1-2-enable;
++            microchip,resistance-comp-ch3-4-enable;
++            microchip,beta1 = <16>;
++            microchip,beta2 = <16>;
++            vdd-supply = <&vdd>;
++
++            channel@1 {
++                reg = <1>;
++                label = "CPU Temperature";
++            };
++
++            channel@2 {
++                reg = <2>;
++                label = "GPU Temperature";
++            };
++        };
++    };
++
++...
+-- 
+2.48.1
 
