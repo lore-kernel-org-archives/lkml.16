@@ -1,132 +1,207 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD3F22422F
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 16:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E776211A0D;
+	Fri, 13 Jun 2025 16:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749833172; cv=none; b=MbTMW4F+vw9qmkq59TfZXFZj4aJOva0TinKhohzavCCfefSbzpqqAl/j7/Jv/Nq20TChAOR8utMRrqJ0yCqno0Z9+1mLHoFedFse98cMbmaEmI1tITaOkCkAKrPinuZTLEXn03hOAle1PUYtcuM35T1B5qE3pWb9Lt/mdY5tocc=
+	t=1749833198; cv=none; b=buiYjLYY651Hgta+VMUWdkKxA/u9YjO+/GrikIBZIhevV64FhDUULnmiPxaCc8/bHaeKgSjrYX8cWLtjaXNRDOngRekJEdetkz7AabMTJCZbp3ovvLE2t8vbyQTSSsbPT0EPted6AndHXPFaXeMhUbLjKSnD8VvEimp8F9TVTLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749833172; c=relaxed/simple;
-	bh=i4hm9CHKm/3oJOWsJxscFqz/8Ylt/YD/hMzaFSn5rPs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jVj0RHptfGrZs75nvEQ6UepXLTPEmZN0C8bvg0utkitQBOhDOR3NwR/Lc0SpcMZm4qzTzEg4JaaTJ84+qiG1X2lGWxvLngXuyIhy7ytTkUi4RfCfLe1B5kadZ9UPQYuYzwVxox5So0XrDLiQAGJqxAtJLQ5DdaX7His8h9aUe/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IuuDAIC6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749833198; c=relaxed/simple;
+	bh=qy48ViaN3if55ls8Ik4eE788CPNqNwEPM2Qlx4wnVvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=neBh4qwgr+zHOKI3dysJDlwJ3ftSaKVLCWiMWeZJu964Y3pLmIVEA0UhyrPW8lvpKCtm7OTTkDdkDWPew31Gib8InidTEjGL6C85q2+wzA3Egwzp0bS0zikQeRe+JRLxvTWpuL6lnd3XrAtn+K6dGuxo5VCFpb7gVtoA7q4pd2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6XRuoG0; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IuuDAIC6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749833169;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bbROYjb4mdQOqht6aHh/H9xfCrTcRr7mEK6Oc+kCnJc=;
-	b=IuuDAIC61uBt7PdpuwnYM4BiYMSbH5Mk9B7ZiDSeLe0eBf5UqZI1wydUe4m7KxjF9ipcQ0
-	nMTRk6BYvhdnWNEt2JWqV+EK01jZDOUtkW7zHWg4sITxDqU7dsqIpk7RtwNtC3TJ3sSOj9
-	il2DW+dk7dRN3Iv07H24LJ9HoawVndI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-7I_JWVqIOZirAbcsISAQpw-1; Fri,
- 13 Jun 2025 12:46:06 -0400
-X-MC-Unique: 7I_JWVqIOZirAbcsISAQpw-1
-X-Mimecast-MFC-AGG-ID: 7I_JWVqIOZirAbcsISAQpw_1749833165
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E088E1800343;
-	Fri, 13 Jun 2025 16:46:04 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4D1491956050;
-	Fri, 13 Jun 2025 16:46:04 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fixes for Linux 6.16-rc2
-Date: Fri, 13 Jun 2025 12:46:03 -0400
-Message-ID: <20250613164603.163319-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6XRuoG0"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ade30256175so430252866b.1;
+        Fri, 13 Jun 2025 09:46:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749833194; x=1750437994; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8b+XF1R6IDkuZBmPOk+AjM7WkGgjUBKP1V8hx4ecgO8=;
+        b=O6XRuoG0S7GW9Gz9SODxB0VwuVfUtey9vBSipW8LeIEqZU/hKAARJ6ur5PmCLHmkDb
+         tERq0lEDMQUftSGqc5Q2OEFrt0vVVjJ9votWY84sVWNPGge3BF1VgIeVLuonDTPwuJ3G
+         X6dUZGxpSzN0tbGqiwjAKJjNf7u7WC2wPRSaHpg/RZNa+Qv92pFeP31Tn+UFybOldqCi
+         wIkYT65kYXAomxPdJRxCJ5RDxS+NjCL/g48VhSSAFMjIVTOv2RKv51+y3DGX3sxEvdeI
+         qSYVi1KqOg0iYwqvNMq3yd0ARzQ464mgUxjWvZDJB5kygyoQetyBtrHkyMQsSrEP4qIc
+         EStA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749833194; x=1750437994;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8b+XF1R6IDkuZBmPOk+AjM7WkGgjUBKP1V8hx4ecgO8=;
+        b=l3AdxyUktiFjbBpkBBvf3QfJ1kV/MNSqcoq54iN65f3OKiKjc9h4Jev+LLD4djNCGA
+         NOKVR7NLi7B9gMMngVkFDqz3GGoeE4/aZ42I3PRslX8ILKOTtDSDOLCxrRr+n+P0gpwf
+         sRijcFyRPr1fy7W2xFBnkvWIq4XzRDvtgpAFc9R9j5b0ZsZ7f8P+Ig0ZcEl9TpTPdvN7
+         SCX6JsXg6avmaIvFJIQ1kKjqE04QEZ7LwI0Eeexv9hoof9PjqJh4sqDieVSSHLkqgqzf
+         HUUarWpvsSZC876Cip1DcTMwwukOmZk4iIa13qmzlD+9rZyChYgC+FAaqTY+kZWSFxzh
+         +Gew==
+X-Forwarded-Encrypted: i=1; AJvYcCUtN1SqN+LW+yyFJJSZBiVtJbamvqXQMRZSQnUfKeatZBJgKqD8Nn7OSc7g2nKRExLGTnwFq2Jw+IlvsD6h@vger.kernel.org, AJvYcCW/pEfyyLebHxz3QGuabroUXvRuF3Z3xhcRKU/lEcaqw63qt4QmN5lbyU1s+ZJ+RCz69JFRTqeTqJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhzoW968tQ5rWlkdkEiebDD0FOcCXRssfWsaP+aKEGw30c9qyJ
+	gdwSENqnqM2ukXqxb/YsnitjANTjuSAP9T3i+aDoY5LfpLsgrO9HJuPg4xEFsJoz32JHwfL8Cdl
+	FEriytkroqwNLtLojSRCQNrzKmLwwHZk=
+X-Gm-Gg: ASbGnct5ydv6NEjsrIr4ZSQYYxBgCzIwP38XmeJJQ8CCoOZM0RwBjL8fpYZ5YKz+lOL
+	923J/TmCXhDDQAaYglmHSCcKM6rSM4DsAKpTQLAUWJdW/UFnxhORl8INH/F9ySpvcJqSVhBKsxv
+	4MV68EnFg2pofLeCEYBVwEVvNYusCmUpZp7ibmYcYZBEZFMDwd4B784iBKYQB8mNmlZd2Hl3Vel
+	9wl
+X-Google-Smtp-Source: AGHT+IFAM+0ARMBkOl378yE7TD1p2iruVPP2VsDOQczbz9maxLgWC1Hy5JyiV73B37TmNy5naByi7YIX04Dwzauu6Js=
+X-Received: by 2002:a17:907:971e:b0:ade:32fa:739e with SMTP id
+ a640c23a62f3a-adec54dac66mr411183266b.2.1749833194107; Fri, 13 Jun 2025
+ 09:46:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20250612181330.31236-1-bijan311@gmail.com> <20250613152517.225529-1-joshua.hahnjy@gmail.com>
+In-Reply-To: <20250613152517.225529-1-joshua.hahnjy@gmail.com>
+From: Bijan Tabatabai <bijan311@gmail.com>
+Date: Fri, 13 Jun 2025 11:46:22 -0500
+X-Gm-Features: AX0GCFsgz60G6jm7BUq-axwbbcXxdq8WAFNMq5rp79wrCHhDW3-XBuJijPYHKiw
+Message-ID: <CAMvvPS4COqinefth9rEB4etJF2erjQa3xfcOGQMtZ-LCUQnwFw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] mm/damon: Add DAMOS action to interleave data
+ across nodes
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sj@kernel.org, akpm@linux-foundation.org, 
+	corbet@lwn.net, david@redhat.com, ziy@nvidia.com, matthew.brost@intel.com, 
+	rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, bijantabatab@micron.com, 
+	venkataravis@micron.com, emirakhur@micron.com, ajayjoshi@micron.com, 
+	vtavarespetr@micron.com, damon@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+Hi Joshua,
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+On Fri, Jun 13, 2025 at 10:25=E2=80=AFAM Joshua Hahn <joshua.hahnjy@gmail.c=
+om> wrote:
+>
+> On Thu, 12 Jun 2025 13:13:26 -0500 Bijan Tabatabai <bijan311@gmail.com> w=
+rote:
+>
+> > From: Bijan Tabatabai <bijantabatab@micron.com>
+> >
+> > A recent patch set automatically set the interleave weight for each nod=
+e
+> > according to the node's maximum bandwidth [1]. In another thread, the p=
+atch
+> > set's author, Joshua Hahn, wondered if/how these weights should be chan=
+ged
+> > if the bandwidth utilization of the system changes [2].
+>
+> Hi Bijan,
+>
+> Thank you for this patchset, and thank you for finding interest in my
+> question!
+>
+> > This patch set adds the mechanism for dynamically changing how applicat=
+ion
+> > data is interleaved across nodes while leaving the policy of what the
+> > interleave weights should be to userspace. It does this by adding a new
+> > DAMOS action: DAMOS_INTERLEAVE. We implement DAMOS_INTERLEAVE with both
+> > paddr and vaddr operations sets. Using the paddr version is useful for
+> > managing page placement globally. Using the vaddr version limits tracki=
+ng
+> > to one process per kdamond instance, but the va based tracking better
+> > captures spacial locality.
+> >
+> > DAMOS_INTERLEAVE interleaves pages within a region across nodes using t=
+he
+> > interleave weights at /sys/kernel/mm/mempolicy/weighted_interleave/node=
+<N>
+> > and the page placement algorithm in weighted_interleave_nid via
+> > policy_nodemask. We chose to reuse the mempolicy weighted interleave
+> > infrastructure to avoid reimplementing code. However, this has the awkw=
+ard
+> > side effect that only pages that are mapped to processes using
+> > MPOL_WEIGHTED_INTERLEAVE will be migrated according to new interleave
+> > weights. This might be fine because workloads that want their data to b=
+e
+> > dynamically interleaved will want their newly allocated data to be
+> > interleaved at the same ratio.
+>
+> I think this is generally true. Maybe until a user says that they have a
+> usecase where they would like to have a non-weighted-interleave policy
+> to allocate pages, but would like to place them according to a set weight=
+,
+> we can leave support for other mempolicies out for now.
+>
+> > If exposing policy_nodemask is undesirable, we have two alternative met=
+hods
+> > for having DAMON access the interleave weights it should use. We would
+> > appreciate feedback on which method is preferred.
+> > 1. Use mpol_misplaced instead
+> >   pros: mpol_misplaced is already exposed publically
+> >   cons: Would require refactoring mpol_misplaced to take a struct vm_ar=
+ea
+> >   instead of a struct vm_fault, and require refactoring mpol_misplaced =
+and
+> >   get_vma_policy to take in a struct task_struct rather than just using
+> >   current. Also requires processes to use MPOL_WEIGHTED_INTERLEAVE.
+> > 2. Add a new field to struct damos, similar to target_nid for the
+> > MIGRATE_HOT/COLD schemes.
+> >   pros: Keeps changes contained inside DAMON. Would not require process=
+es
+> >   to use MPOL_WEIGHTED_INTERLEAVE.
+> >   cons: Duplicates page placement code. Requires discussion on the sysf=
+s
+> >   interface to use for users to pass in the interleave weights.
+>
+> Here I agree with SJ's sentiment -- I think mpol_misplaced runs with the
+> context of working with current / fault contexts, like you pointed out.
+> Perhaps it is best to keep the scope of the changes as local as possible =
+: -)
+> As for duplicating page placement code, I think that is something we can
+> refine over iterations of this patchset, and maybe SJ will have some grea=
+t
+> ideas on how this can best be done as well.
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+David Hildenbrand responded to this and proposed adding a new function that
+just returns the nid a folio should go on based on its mempolicy. I think t=
+hat's
+probably the best way to go for now. I think the common case would want
+the weights used by this and mempolicy to be the same. However, if there is
+a use case where different weights are desired, I don't mind coming back an=
+d
+adding that functionality.
 
-are available in the Git repository at:
+> > This patchset was tested on an AMD machine with a NUMA node with CPUs
+> > attached to DDR memory and a cpu-less NUMA node attached to CXL memory.
+> > However, this patch set should generalize to other architectures and nu=
+mber
+> > of NUMA nodes.
+>
+> I think moving the test results to the cover letter will help reviewers
+> better understand the intent of the work. Also, I think it will also be
+> very helpful to include some potential use-cases in here as well. That is=
+,
+> what workloads would benefit from placing pages according to a set ratio,
+> rather than using existing migration policies that adjust this based on
+> hotness / coldness?
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+Noted. I will be sure to include that in the next revision.
 
-for you to fetch changes up to 8046d29dde17002523f94d3e6e0ebe486ce52166:
+> One such use case that I can think of is using this patchset + weighted
+> interleave auto-tuning, which would help alleviate bandwidth limitations
+> by ensuring that past the allocation stage, pages are being accessed
+> in a way that maximizes the bandwidth usage of the system (at the cost of
+> latency, which may or may not even be true based on how bandwidth-bound
+> the workload is).
 
-  KVM: x86/mmu: Reject direct bits in gpa passed to KVM_PRE_FAULT_MEMORY (2025-06-12 00:51:42 -0400)
+This was the exact use case I envisioned for this patch. I talk about it in=
+ more
+detail in my reply to SeongJae.
 
-----------------------------------------------------------------
-ARM:
+> Thank you again for the amazing patchset! Have a great day : -)
+> Joshua
 
-- Rework of system register accessors for system registers that are
-  directly writen to memory, so that sanitisation of the in-memory
-  value happens at the correct time (after the read, or before the
-  write). For convenience, RMW-style accessors are also provided.
-
-- Multiple fixes for the so-called "arch-timer-edge-cases' selftest,
-  which was always broken.
-
-x86:
-
-- Make KVM_PRE_FAULT_MEMORY stricter for TDX, allowing userspace to pass
-  only the "untouched" addresses and flipping the shared/private bit
-  in the implementation.
-
-- Disable SEV-SNP support on initialization failure
-
-----------------------------------------------------------------
-Ashish Kalra (1):
-      KVM: SEV: Disable SEV-SNP support on initialization failure
-
-Marc Zyngier (4):
-      KVM: arm64: Add assignment-specific sysreg accessor
-      KVM: arm64: Add RMW specific sysreg accessor
-      KVM: arm64: Don't use __vcpu_sys_reg() to get the address of a sysreg
-      KVM: arm64: Make __vcpu_sys_reg() a pure rvalue operand
-
-Paolo Bonzini (3):
-      Merge tag 'kvmarm-fixes-6.16-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
-      KVM: x86/mmu: Embed direct bits into gpa for KVM_PRE_FAULT_MEMORY
-      KVM: x86/mmu: Reject direct bits in gpa passed to KVM_PRE_FAULT_MEMORY
-
-Sebastian Ott (4):
-      KVM: arm64: selftests: Fix help text for arch_timer_edge_cases
-      KVM: arm64: selftests: Fix thread migration in arch_timer_edge_cases
-      KVM: arm64: selftests: Fix xVAL init in arch_timer_edge_cases
-      KVM: arm64: selftests: Determine effective counter width in arch_timer_edge_cases
-
- arch/arm64/include/asm/kvm_host.h                  | 34 +++++++++---
- arch/arm64/kvm/arch_timer.c                        | 18 +++----
- arch/arm64/kvm/debug.c                             |  4 +-
- arch/arm64/kvm/fpsimd.c                            |  4 +-
- arch/arm64/kvm/hyp/exception.c                     |  4 +-
- arch/arm64/kvm/hyp/include/hyp/switch.h            |  4 +-
- arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h         |  6 +--
- arch/arm64/kvm/hyp/nvhe/hyp-main.c                 |  4 +-
- arch/arm64/kvm/hyp/vhe/switch.c                    |  4 +-
- arch/arm64/kvm/hyp/vhe/sysreg-sr.c                 | 46 ++++++++---------
- arch/arm64/kvm/nested.c                            |  2 +-
- arch/arm64/kvm/pmu-emul.c                          | 24 ++++-----
- arch/arm64/kvm/sys_regs.c                          | 60 +++++++++++-----------
- arch/arm64/kvm/sys_regs.h                          |  4 +-
- arch/arm64/kvm/vgic/vgic-v3-nested.c               | 10 ++--
- arch/x86/kvm/mmu/mmu.c                             |  9 +++-
- arch/x86/kvm/svm/sev.c                             | 44 ++++++++++++----
- .../selftests/kvm/arm64/arch_timer_edge_cases.c    | 39 +++++++++-----
- 18 files changed, 194 insertions(+), 126 deletions(-)
-
+I appreciate you taking the time to respond,
+Bijan
