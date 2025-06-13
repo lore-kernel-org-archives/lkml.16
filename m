@@ -1,49 +1,86 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E9E291C20
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87729291C25
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 09:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749807662; cv=none; b=MNtNA/K8pkuiP3iSLC/leexKHSAPHFj4EHsQwApb12yQFQnEDZq4kvR2Shs+JemTtVQxGwoPfOlPIXV2tOlpcR4kAVx/KDSAZhCXFDRuH6Zzf00G4IaoPElXgl2XtRkAmKDg20RqJGbuV388bnBJjn6MFLPCeDD6YHHMUmq/0H0=
+	t=1749807741; cv=none; b=E/NWeRGyOAY9TqGdUzB76GLVoTVCb0yo1fGV1bERi5CXgcml1jQKgrEnRcy/dGB5K8/geUI/KNSXFkhyiuCYeMq2lLnbHCuRbLnsBUXbYz+yYr20vb8rMrRvUT17GRADIswDJjcBWBvO3jMNp1Z3J7J6iC4Mvfy5lmybX8SvmEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749807662; c=relaxed/simple;
-	bh=vxJIwqBoBthw6Y68avy/XPdTAXT+CeXBYs8C127BEFI=;
+	s=arc-20240116; t=1749807741; c=relaxed/simple;
+	bh=Fgb6wnysN63y1b2pgmr1er7TXwdkZlxsNrNLLAaFZ6Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gFKKBDucogKSTUxNE9eidGbLX1YHUysLqTrFnwi551ffWchPtIVwGoOdwJvHPzvtw7gmQiSTSvSe9Rgv1XNDF8fEIIE2Jqc0nNvTya9psrmQtkZoXPYtOHO1JnvxoLkoE7DfBFDvt1LJ1+RsNzVhQyLD1/no6F3vbdygRdeMycQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XnaX2ZYS; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=heVP6DlNGpKFMwgnCjhkHVTl37yhuKram6DnoYoheVB1AnvR/C5PCa/33BtNwu2hx3Z2nbduy8lw//H6rdeEz5gQjE3ECqUOv3SuAZpExQfK/9+byyNw4QhNx85TQAll8jli/qYBH7G1s/txbXfALKZxCPnnj1tdZ4bns7/kzcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UIfsEZZi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=p1jbw5ZQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UIfsEZZi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=p1jbw5ZQ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XnaX2ZYS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YCxzUkHK8oucoNTrGYax2mHVE0vyWjNk8JVLimfriZ4=; b=XnaX2ZYSGkYwrmeikapZ91uUU8
-	WtWp0752MMyx0EWKUg3K85SUIcSjtfVm7d3ldgehZ8fXAw0arviXaBK9juXjjtFLn7LVfhDliDyF9
-	cb52DUVfFIfVoX4grP5BIHatLhSgeO3FmvipF7J23kypIvnvt7LGLsKAmAlp67STO4z4U8bz0I6zp
-	PxU4a49MLHIvH0pOekQNeZoBV2iYd6Lp88v/YZcNagAwxpCb74qAnD9ky+hUmQW9jKH2cnYDLJTlE
-	UOpFJ+gt3Jwhq3QAckCxEqKO9ndPBNE3UVkUnxuBMvda1BKjI9JdIyBxXOwbI837OlGXQdw4oEKPB
-	OB8yHRaw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uQ0u4-0000000CnWh-3wKR;
-	Fri, 13 Jun 2025 09:40:53 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 704E83061AA; Fri, 13 Jun 2025 11:40:52 +0200 (CEST)
-Date: Fri, 13 Jun 2025 11:40:52 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mike Galbraith <efault@gmx.de>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, clm@meta.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 2/5] sched: Optimize ttwu() / select_task_rq()
-Message-ID: <20250613094052.GF2278213@noisy.programming.kicks-ass.net>
-References: <20250520094538.086709102@infradead.org>
- <20250520101727.620602459@infradead.org>
- <334e48ebbf34d853777672449cb29d5f06c751b7.camel@gmx.de>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UIfsEZZi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="p1jbw5ZQ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UIfsEZZi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="p1jbw5ZQ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A95B41F78E;
+	Fri, 13 Jun 2025 09:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749807737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lz3N8H62Scka+0A9NkxhFIl4TdftpD6QSLaVuMv/lvk=;
+	b=UIfsEZZiF8yYJJuG1DFOoIUo+/kdtCLI91u/QbzaYg2jdPALNC0naI8tcsYHKuT2jiPW2N
+	2Qvfe/Giw8KhwvbYeahbV/kEUIAHv4ZHJCfuheqCS3xORwTMRuBtI7m2t9FUKNxQLQpvz9
+	PoxwZHgIz6CpN0qiCOJhEUVN2+TaQbc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749807737;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lz3N8H62Scka+0A9NkxhFIl4TdftpD6QSLaVuMv/lvk=;
+	b=p1jbw5ZQmKflhB0NSIzqlUcvBvHz2gH7Dq8g0mk+LI8s270uPnaJaKqXpWs7cJxQoiSzQS
+	i9lwEMGul7h/q7Dw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UIfsEZZi;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=p1jbw5ZQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749807737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lz3N8H62Scka+0A9NkxhFIl4TdftpD6QSLaVuMv/lvk=;
+	b=UIfsEZZiF8yYJJuG1DFOoIUo+/kdtCLI91u/QbzaYg2jdPALNC0naI8tcsYHKuT2jiPW2N
+	2Qvfe/Giw8KhwvbYeahbV/kEUIAHv4ZHJCfuheqCS3xORwTMRuBtI7m2t9FUKNxQLQpvz9
+	PoxwZHgIz6CpN0qiCOJhEUVN2+TaQbc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749807737;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lz3N8H62Scka+0A9NkxhFIl4TdftpD6QSLaVuMv/lvk=;
+	b=p1jbw5ZQmKflhB0NSIzqlUcvBvHz2gH7Dq8g0mk+LI8s270uPnaJaKqXpWs7cJxQoiSzQS
+	i9lwEMGul7h/q7Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9E3D2137FE;
+	Fri, 13 Jun 2025 09:42:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7Wc+JnnyS2gpPwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 13 Jun 2025 09:42:17 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 436D1A09B0; Fri, 13 Jun 2025 11:42:17 +0200 (CEST)
+Date: Fri, 13 Jun 2025 11:42:17 +0200
+From: Jan Kara <jack@suse.cz>
+To: Wei Gao <wegao@suse.com>
+Cc: Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, 
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v2] ext2: Handle fiemap on empty files to prevent EINVAL
+Message-ID: <mxios5pbq3vq5267on4vnt5siozd4nap5w7wemsd2vlxoooexd@ia2ezhdu7ujq>
+References: <20250612142855.2678267-1-wegao@suse.com>
+ <20250613152402.3432135-1-wegao@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,57 +89,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <334e48ebbf34d853777672449cb29d5f06c751b7.camel@gmx.de>
+In-Reply-To: <20250613152402.3432135-1-wegao@suse.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: A95B41F78E
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCPT_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.01
+X-Spam-Level: 
 
-On Mon, Jun 09, 2025 at 07:01:47AM +0200, Mike Galbraith wrote:
-
-Right; so the problem being that we can race with
-migrate_disable_switch().
-
->  kernel/sched/core.c |    8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+On Fri 13-06-25 11:18:38, Wei Gao wrote:
+> Previously, ext2_fiemap would unconditionally apply "len = min_t(u64, len,
+> i_size_read(inode));", When inode->i_size was 0 (for an empty file), this
+> would reduce the requested len to 0. Passing len = 0 to iomap_fiemap could
+> then result in an -EINVAL error, even for valid queries on empty files.
 > 
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4313,7 +4313,10 @@ int try_to_wake_up(struct task_struct *p
->  		    ttwu_queue_wakelist(p, task_cpu(p), wake_flags))
->  			break;
+> Link: https://github.com/linux-test-project/ltp/issues/1246
+> Signed-off-by: Wei Gao <wegao@suse.com>
+
+...
+
+> diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+> index 30f8201c155f..591db2b4390a 100644
+> --- a/fs/ext2/inode.c
+> +++ b/fs/ext2/inode.c
+> @@ -895,9 +895,15 @@ int ext2_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+>  		u64 start, u64 len)
+>  {
+>  	int ret;
+> +	u64 i_size;
 >  
-> -		cpu = select_task_rq(p, p->wake_cpu, &wake_flags);
-> +		if (is_migration_disabled(p))
-> +			cpu = -1;
-> +		else
-> +			cpu = select_task_rq(p, p->wake_cpu, &wake_flags);
->  
->  		/*
->  		 * If the owning (remote) CPU is still in the middle of schedule() with
-> @@ -4326,6 +4329,9 @@ int try_to_wake_up(struct task_struct *p
->  		 */
->  		smp_cond_load_acquire(&p->on_cpu, !VAL);
->  
-> +		if (cpu == -1)
-> +			cpu = select_task_rq(p, p->wake_cpu, &wake_flags);
+>  	inode_lock(inode);
+> -	len = min_t(u64, len, i_size_read(inode));
 > +
->  		if (task_cpu(p) != cpu) {
->  			if (p->in_iowait) {
->  				delayacct_blkio_end(p);
+> +	i_size = i_size_read(inode);
+> +
+> +	if (i_size > 0)
+> +		len = min_t(u64, len, i_size_read(inode));
+
+
+Thanks! This would actually lead to excessively slow fiemap for 0-length
+files. So what I've ended up with is attached modification of your patch.
+
+> +
+>  	ret = iomap_fiemap(inode, fieinfo, start, len, &ext2_iomap_ops);
+>  	inode_unlock(inode);
+>  
+> -- 
+> 2.49.0
 > 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
+---
 
-So select_task_rq() already checks is_migration_disabled(); just not
-well enough. Also, I'm thinking that if we see migration_disabled, we
-don't need to call it a second time, just let it be where it was.
+From a099b09a3342a0b28ea330e405501b5b4d0424b4 Mon Sep 17 00:00:00 2001
+From: Wei Gao <wegao@suse.com>
+Date: Fri, 13 Jun 2025 11:18:38 -0400
+Subject: [PATCH] ext2: Handle fiemap on empty files to prevent EINVAL
 
-Does something like this help? Specifically, when nr_cpus_allowed == 1
-|| is_migration_disabled(), don't change @cpu at all.
+Previously, ext2_fiemap would unconditionally apply "len = min_t(u64, len,
+i_size_read(inode));", When inode->i_size was 0 (for an empty file), this
+would reduce the requested len to 0. Passing len = 0 to iomap_fiemap could
+then result in an -EINVAL error, even for valid queries on empty files.
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3593,7 +3593,7 @@ int select_task_rq(struct task_struct *p
- 		cpu = p->sched_class->select_task_rq(p, cpu, *wake_flags);
- 		*wake_flags |= WF_RQ_SELECTED;
- 	} else {
--		cpu = cpumask_any(p->cpus_ptr);
-+		cpu = task_cpu(p);
- 	}
+Link: https://github.com/linux-test-project/ltp/issues/1246
+Signed-off-by: Wei Gao <wegao@suse.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://patch.msgid.link/20250613152402.3432135-1-wegao@suse.com
+---
+ fs/ext2/inode.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+index 30f8201c155f..177b1f852b63 100644
+--- a/fs/ext2/inode.c
++++ b/fs/ext2/inode.c
+@@ -895,9 +895,19 @@ int ext2_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+ 		u64 start, u64 len)
+ {
+ 	int ret;
++	loff_t i_size;
  
- 	/*
+ 	inode_lock(inode);
+-	len = min_t(u64, len, i_size_read(inode));
++	i_size = i_size_read(inode);
++	/*
++	 * iomap_fiemap() returns EINVAL for 0 length. Make sure we don't trim
++	 * length to 0 but still trim the range as much as possible since
++	 * ext2_get_blocks() iterates unmapped space block by block which is
++	 * slow.
++	 */
++	if (i_size == 0)
++		i_size = 1;
++	len = min_t(u64, len, i_size);
+ 	ret = iomap_fiemap(inode, fieinfo, start, len, &ext2_iomap_ops);
+ 	inode_unlock(inode);
+ 
+-- 
+2.43.0
+
