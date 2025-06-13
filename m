@@ -1,91 +1,84 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43F1111BF;
-	Fri, 13 Jun 2025 13:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BE514D2B7
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822050; cv=none; b=Z1+7TtycwgbNtAC7hKdrbpOIv2HiJR2PKHGjy4ZyBTCHvh6aZaGfDAIYNBZ+b/L5LsHh7cBUpP0N0yqJD6EbiDSOFvGfPzMLs2PgsODD6BSi2xjeTXokWgrIjXAclSUw3xXxojFuuZjCK5LwkRh0KXgDUcym1rP0KVzb41jKaH0=
+	t=1749822080; cv=none; b=atGWjLpP6PPzgYqO7hb8usmNd7LidspY+F6C3WpsgwH+BKRUiDPULPr54e1g6xqNdus2PFBSVUwRq4fc9l0GnvFzZ3wEm6Wfz6FmYA8QIB8lJ/sh5FkRDSGFKVaPTxMSdTi7k2W/Fa/y3NjJq4/uupWBYx6DVh420sypAJnT2gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822050; c=relaxed/simple;
-	bh=fLM1J7jVqqiZf/ld7d1JFGfRWVz+teNjK6y084/tbPs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BNSV5vms5Kwbtlbhq6bjk/VgU1NkfplM+jeg7FEJImv0lUpQmLatZyS3RynIE0hx/xHMs3qNFmJpvpokQRZt1VXVajgeDoA9i2xAFrpmxqg8fFqh0ZjlCh9Skx7HoR3sbRpTS4lO2uAd1Ou9KcCvqx/7wq3BiSjuC+cANMmGIEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JqRVk66n; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749822080; c=relaxed/simple;
+	bh=H46jNRRysgI7C7Yo+blkL5OHIRXgGO6SIOJfPsWTea4=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hXFH3/a7d9OFyKzwmbOqT+XPqEUp6M+KZvqUYupJZmmzUN8mdinPREjnW8PvFDlDfqNlveWE2OQdDtlLETKumwK9Wp9ibrtTqqT5ZCFbUjZM7pPvosilEMHzTMoGOPgDdSqFcaQIDAfNGvpXoI2f+5KGX+z1FIgK5gCBrCPF/b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QLzq40J8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqRVk66n"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso17390995e9.2;
-        Fri, 13 Jun 2025 06:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749822047; x=1750426847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oudxA8JPC06HRjXurKEPIdr/6i2EGFIADSPFZLQo5s0=;
-        b=JqRVk66nenFwP3UFJSa2v0lIxzb6/hIo1iqOQqNzCbibJEMr/GQ7I2ZZ38jAw7Fe8s
-         6LhmobPA7CVC+WrrO9OB1gjz7tsXUCnq3J9ps515xDnl2kFCPVDufBS4T7kCCS6xSLwO
-         IP8CkfzAbgm/vDgtiAsAUM0ewRwXkSN4m0cgmeJklKbHDs2Zw9b5jdoApSiPCYj+apwk
-         v5Fhsi48PlEtIMENJxTcLGNXgW5Lx7qUOc81aKa83cmn88EuZljftGpE0EPITSFPxaYh
-         rHK44fBmJ11GkuP0gBqN8JlQ1LAJREviY+rDCjM9n/i3c8D+UXG8Kfw5jAf+Rwp+0svE
-         EKBA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QLzq40J8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749822077;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8+Xheo22yfi8+4Y8JwQZygk+6DcGkUs/7vPXcz1EW7o=;
+	b=QLzq40J8E0qbkCdXBmOqWKZOjdP4l9IWVJKyAYT+7nVQ89uz3ew4xjkDvzbPWSd8kjTLyo
+	7lSIZQW5LsDLn8rbnM5AItnY9OTl8DJI73YPQEKGP6NZFhv8Pu4xsVZMgbqBRMSvTDH2Ak
+	HJxytgMglGRCo2pSEQH0r1DhLFa+dts=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-58-DhdauXHmNMW5DzsIOPXJmQ-1; Fri, 13 Jun 2025 09:41:16 -0400
+X-MC-Unique: DhdauXHmNMW5DzsIOPXJmQ-1
+X-Mimecast-MFC-AGG-ID: DhdauXHmNMW5DzsIOPXJmQ_1749822076
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c790dc38b4so373191985a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:41:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749822047; x=1750426847;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oudxA8JPC06HRjXurKEPIdr/6i2EGFIADSPFZLQo5s0=;
-        b=uH9MzXXREWtXXMYb12JNtv5x5RJJmjUXOI55KGpB2MW2h6Brje5YhzS+NkKXNAKy1j
-         BZcB/N7Y3Yiwjo8cRSWIRdztI/SVpEbhKk+CVp/8mYmFlQnNEvs9vaW8/r4XAGEeRLnR
-         dgycMXfGWzKE44ujr+m6AFBewDEvkTGAZXLcHKtZFw9QZHjUVFgxvkJ3vAWS8R6MSq7o
-         zseuIxSmyu5ZOBokwCrRjQU7W52u8/6b89E85DQPNZKY2mdByc/OyRJ8KmVDDK/Rds0T
-         kzHbVCPtMa5RB12Ua+e4n/pouGvLcznPTpPDRsaSMuhYyZEBFtx2gwHsoPLeSUaqVM8N
-         MNQw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8Th2+3U+a8mUPgRhSoViDu3bgqmJeuW04EQ6iok8ZSJAdim+3XEhfa0PLcs76GFxjGF8z44HVTKsrr8AEFKc=@vger.kernel.org, AJvYcCXCEbqv2XD4Qe0SLUPoO5zbz7zobkMSx5sWQ85oJuM68fsI6vCpvwdUwYS9aBmbk1hn9eAVER1KX8wE@vger.kernel.org, AJvYcCXfeBZ9Cxws57v8dfPEW94gUFOJIeiC6mFGK78ntU9E5ZxSBZIAJCob0A/iu8NsFkD8qf/m8DpqyEaU/Kc5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW1WvD6Cks/+uJgZwlTZ8Hb5P79ycPDQiT1v5yX6k/ly6rVEmD
-	+JYsFORkenmFJHRxyiJkH5LIRItQ6MMyvJzSvg54X0kqNL4T3LOc8b44
-X-Gm-Gg: ASbGncs1rVaRP0NNeLvEhH3cYIcPO4H+N9Ick/E0aPfPQSPrSbiKAyZE5/Fx99RrUdf
-	pje+Sm0EbFORPt6ES+H/hvTG9a+MykO4r6Jx7dPm9wFYyESwOuTjywMMGAlzIvNEVCzhaNtfDTR
-	U5xX1f/4q+D3wmbuwQLU6iUZkTC/irVEQZMIj/6bzgVXugspqglAMBnOkE3egtMGthuXdPxPlB3
-	8sprvqY7CLdxMdgL1waVlOosHpJqXqqd8VilOAgyEhFO3tYDMo4aWduf5LmjpuFBglwl8RjQeuI
-	a+akTIYlvS9pbfsMxiPOIcAWYBfcoE7hz+w3x0I6EQFTRnLBWvXRROMcGney8kPdCh1W0bV+4xB
-	iI+EefVSMyokKt8PWPl87yH1jBxsdk8Hn+XxyXppqKFsiuNc=
-X-Google-Smtp-Source: AGHT+IGSQQDsmwIh4IRTyDRinr32zbDXqbTyjcQINJTodAgQ41yIYuwm/iuMJcEHUctW6KpfLD9UWA==
-X-Received: by 2002:a05:600c:4f53:b0:43d:9f2:6274 with SMTP id 5b1f17b1804b1-45334ad2eb9mr35369995e9.14.1749822046739;
-        Fri, 13 Jun 2025 06:40:46 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b48564sm2361368f8f.82.2025.06.13.06.40.45
+        d=1e100.net; s=20230601; t=1749822075; x=1750426875;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8+Xheo22yfi8+4Y8JwQZygk+6DcGkUs/7vPXcz1EW7o=;
+        b=Iffa9yxVoeynxQBSmIy/WsVtbmxfpx0A9cARpY1j5TTmWW20zTrFT9le6WI92Y8xDU
+         /6VyMjSnPT5CVv/Y0T635XO+3ZgnWVCQhIu+zNcb7HcaWbuO+3Gh+XKDvtB/E7mzuwu5
+         kFfAnHzXzvY1S9XscNsAeyBB552kHLwUyCdv6LZP1lt1mbsTfVdgioxZwbx4vjbztRuv
+         mprB6jAhDXRSJOg+jIMALjEQlzBkO4+PlPV1lppchm1o0lGYXI0vdyPWiVNxnRD1NbWc
+         U6nepK/sKkcVz6XfOldHIkkyTIPkf/nBJv8Rd1IzSEDnWIMgtWHtA2QHjDWaUb6tKVjO
+         badw==
+X-Gm-Message-State: AOJu0YzYfyg3KifNIHTIZT9gwqfSBFRuzJxkxeQwjFaP1WePXXp+unON
+	BHpZEXyxH7hRbO995Jmnn9zqRhaNCmNo44anCmDjwjvo1VdiKqvyM+XcxLKWa/z9DrjKj7et0ai
+	m3h7Nxmx429JMNF3pZgeuJIIGsBa5bjY/Y1XYxn4B9G6SnrsGDauSOC+bpCSoBMTJecFzaP38KN
+	sCBYuZNb9Wujd6HB0waagQ0g2XI+Hgpx0hC+YSgxVgOL1sg44=
+X-Gm-Gg: ASbGncuumHzPfEB930bP/dHWpLpZYuCFUJxIBC7D6mKuWBqkgi7ZGlfVrEOo216fIYT
+	nBqPoCAtAEzsyQX81M3j+41+qpk9IZdefDIzPjqR8Hsi8YUSzYSIGvw5FaIlsiJrcfSgK3TLd08
+	dJWqJqWMlt//RSE3dOhecGmsBgbCynRglsElouSA2Q8Dh4pBhI2Os6aZDMObxXmpcH7um8kG60Q
+	vzxjz4StE/kr8R7CuMvsnjLF0aXBRdfdHKcKb+mQEUqBfipSsbzlaYbQRU2IMfRN9Wyf4CaU5I6
+	ejI3SLoRhLY=
+X-Received: by 2002:a05:620a:2621:b0:7d3:9032:2b85 with SMTP id af79cd13be357-7d3c5360840mr136459585a.13.1749822075459;
+        Fri, 13 Jun 2025 06:41:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFe+TnRdtM1gxQu/6gMVaNFM0qTZrkCayfL/mj3FQ53jOkq/dZA5fcnFQB8Hiozqkhq54Zhsw==
+X-Received: by 2002:a05:620a:2621:b0:7d3:9032:2b85 with SMTP id af79cd13be357-7d3c5360840mr136454585a.13.1749822075007;
+        Fri, 13 Jun 2025 06:41:15 -0700 (PDT)
+Received: from x1.com ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ee3f72sm171519285a.94.2025.06.13.06.41.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:40:46 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v6 1/6] rust: acpi: add `acpi::DeviceId` abstraction
-Date: Fri, 13 Jun 2025 14:38:42 +0100
-Message-ID: <20250613133842.1230254-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
-References: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
+        Fri, 13 Jun 2025 06:41:13 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kvm@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>,
+	peterx@redhat.com
+Subject: [PATCH 0/5] mm/vfio: huge pfnmaps with !MAP_FIXED mappings
+Date: Fri, 13 Jun 2025 09:41:06 -0400
+Message-ID: <20250613134111.469884-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.49.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,110 +87,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-`acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
+[based on latest akpm/mm-new as of June 12th 2025, commit 19d47edf9]
 
-This is used by subsequent patches, in particular the i2c driver
-abstractions, to create ACPI device ID tables.
+This series enables !MAP_FIXED huge pfnmaps for vfio-pci.
 
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- MAINTAINERS         |  1 +
- rust/kernel/acpi.rs | 61 +++++++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs  |  1 +
- 3 files changed, 63 insertions(+)
- create mode 100644 rust/kernel/acpi.rs
+Before this series, an userapp in most cases need to be modified to benefit
+from huge mappings to provide huge size aligned VA using MAP_FIXED.  After
+this series, the userapp can benefit from huge pfnmap automatically after
+the kernel upgrades, with no userspace modifications.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa16..6c809ea30e6a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -302,6 +302,7 @@ F:	include/linux/acpi.h
- F:	include/linux/fwnode.h
- F:	include/linux/fw_table.h
- F:	lib/fw_table.c
-+F:	rust/kernel/acpi.rs
- F:	tools/power/acpi/
- 
- ACPI APEI
-diff --git a/rust/kernel/acpi.rs b/rust/kernel/acpi.rs
-new file mode 100644
-index 000000000000..f9a98dc4eb8a
---- /dev/null
-+++ b/rust/kernel/acpi.rs
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Advanced Configuration and Power Interface abstractions.
-+
-+use crate::{bindings, device_id::RawDeviceId, prelude::*};
-+
-+/// IdTable type for ACPI drivers.
-+pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
-+
-+/// An ACPI device id.
-+#[repr(transparent)]
-+#[derive(Clone, Copy)]
-+pub struct DeviceId(bindings::acpi_device_id);
-+
-+// SAFETY:
-+// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct acpi_device_id` and does not add
-+//   additional invariants, so it's safe to transmute to `RawType`.
-+// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
-+unsafe impl RawDeviceId for DeviceId {
-+    type RawType = bindings::acpi_device_id;
-+
-+    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::acpi_device_id, driver_data);
-+
-+    fn index(&self) -> usize {
-+        self.0.driver_data as _
-+    }
-+}
-+
-+impl DeviceId {
-+    const ACPI_ID_LEN: usize = 16;
-+
-+    /// Create a new device id from an ACPI 'id' string.
-+    pub const fn new(id: &'static CStr) -> Self {
-+        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
-+        let src = id.as_bytes_with_nul();
-+        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
-+        // SAFETY: FFI type is valid to be zero-initialized.
-+        let mut acpi: bindings::acpi_device_id = unsafe { core::mem::zeroed() };
-+        let mut i = 0;
-+        while i < src.len() {
-+            acpi.id[i] = src[i];
-+            i += 1;
-+        }
-+
-+        Self(acpi)
-+    }
-+}
-+
-+/// Create an ACPI `IdTable` with an "alias" for modpost.
-+#[macro_export]
-+macro_rules! acpi_device_table {
-+    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
-+        const $table_name: $crate::device_id::IdArray<
-+            $crate::acpi::DeviceId,
-+            $id_info_type,
-+            { $table_data.len() },
-+        > = $crate::device_id::IdArray::new($table_data);
-+
-+        $crate::module_device_table!("acpi", $module_table_name, $table_name);
-+    };
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 6b4774b2b1c3..5bbf3627212f 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -51,6 +51,7 @@
- 
- pub use ffi;
- 
-+pub mod acpi;
- pub mod alloc;
- #[cfg(CONFIG_AUXILIARY_BUS)]
- pub mod auxiliary;
+It's still best-effort, because the auto-alignment will require a larger VA
+range to be allocated via the per-arch allocator, hence if the huge-mapping
+aligned VA cannot be allocated then it'll still fallback to small mappings
+like before.  However that's really from theory POV: in reality I don't yet
+know when it'll fail on any 64bits system due to it.
+
+So far, only vfio-pci is supported.  But the logic should be applicable to
+all the drivers that support or will support huge pfnmaps.
+
+Kudos goes to Jason on the suggestion:
+
+  https://lore.kernel.org/r/20250530131050.GA233377@nvidia.com
+
+Though instead of refactoring shmem, I found we already have a function we
+can directly reuse for THP calculations.
+
+The idea is fairly simple too, which is to make sure whatever virtual
+address got returned from an mmap() request of the MMIO BAR regions to be
+huge-size-aligned with the physical address of the corresponding BARs.
+
+It contains minimum mm changes, in reality only to rename and export the
+THP function that can be reused.  That is patch 3.
+
+Patch 1 & 2 are trivial small cleanups that I found while I'm looking at
+this problem.  They can even be posted separately if anyone would like me
+to.
+
+Patch 4 is a tunneling needed to wire vfio-pci over to the mmap()
+operations of vfio_device.  Then, patch 5 is the real meat.
+
+For testing: besides checkpatch and my daily cross-build harness, unit
+tests working all fine from either myself [1] (based on another Alex's test
+program) or Alex, checking the alignments look all sane with
+mmap(!MAP_FIXED), and huge mappings properly installed.
+
+Alex Mastro: please feel free to try this out with your internal tests. The
+hope is that after this series applied your app should get huge pfnmaps
+without any changes (with any pgoff specified).  Logically there should be
+minimal dependency on stable branches whenever huge pfnmap is available.
+
+Comments welcomed, thanks.
+
+[1] https://github.com/xzpeter/clibs/blob/master/misc/vfio-pci-nofix.c
+[2] https://github.com/awilliam/tests/blob/vfio-pci-device-map-alignment/vfio-pci-device-map-alignment.c
+
+Peter Xu (5):
+  mm: Deduplicate mm_get_unmapped_area()
+  mm/hugetlb: Remove prepare_hugepage_range()
+  mm: Rename __thp_get_unmapped_area to mm_get_unmapped_area_aligned
+  vfio: Introduce vfio_device_ops.get_unmapped_area hook
+  vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED mappings
+
+ arch/loongarch/include/asm/hugetlb.h | 14 ------
+ arch/mips/include/asm/hugetlb.h      | 14 ------
+ drivers/vfio/pci/vfio_pci.c          |  3 ++
+ drivers/vfio/pci/vfio_pci_core.c     | 65 ++++++++++++++++++++++++++++
+ drivers/vfio/vfio_main.c             | 18 ++++++++
+ fs/hugetlbfs/inode.c                 |  8 +---
+ include/asm-generic/hugetlb.h        |  8 ----
+ include/linux/huge_mm.h              | 14 +++++-
+ include/linux/hugetlb.h              |  6 ---
+ include/linux/vfio.h                 |  7 +++
+ include/linux/vfio_pci_core.h        |  6 +++
+ mm/huge_memory.c                     |  6 ++-
+ mm/mmap.c                            |  5 +--
+ 13 files changed, 120 insertions(+), 54 deletions(-)
+
 -- 
-2.43.0
+2.49.0
 
