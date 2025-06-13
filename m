@@ -1,142 +1,146 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7AC3C26;
-	Fri, 13 Jun 2025 00:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702EB28EA
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 00:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749773201; cv=none; b=MJ+5gr5MFs31pie9KFWEi3CqVzY79xjAu3jRLzPcTUcs+ScMJIZc+NaYmTQs1e5OdLVa5v51PIs9oKWfO5t74eJfDh1aZUQ12fFO7XGStqwh4tUi4OXRDMJfdJ3ONcNmMf5JzpDYFZDp1CteW+0ZCzJMK4EyF9Iiv8TIou1uXSg=
+	t=1749773375; cv=none; b=e2lDBnvI4Pev5zbyvgJIOde700POecBNb7rL8ENis1bKHkL/hjzP9K0yOGecrnmuHp+9hpTOeevy/0AyFQMwBHntIMBw6kyF90lUybix3dmEhw0p0ZCeBHwSqqG4pN+uTN2M0aP/juaJAcVhTsfl6FL6RQhQziJ6YQqHIzCY2jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749773201; c=relaxed/simple;
-	bh=d0RuPBuCSODcZVIzWEXGOpuiLX63DqP3/tASAAIxyNg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kXxA1U0FwSXia99N3uwLthYO6rQJbbj+kSmUWDNvrXACLzAt2Lx0digelssL+PjF+/Ss2C/i736AyEf31bWBaiWy6UEGkwYgJ/l3hqx1h/B0+lIoadI1YJfMekp59hYRzVrbTUWppIgWPrDK+RqIoFNpPgNJmCGdH9ChOtH6siU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kqcDmR3W; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749773375; c=relaxed/simple;
+	bh=/ktH2xactQn7a2Lngut9MGuVtpiPv0SdsqRt9Mm857k=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=A244OpjLIs9OhpccPhEpkUtP4ytkWTzuiZe44EPXKgE6ZhTsKiBKDh2tKOXhGy9Dwkj/gSrj4oupq6BePa7LH2VY4Qy1TmBDm3/6V4pejUnvubJGHTkq89uhOpEdRdWIqNzQFa33W1bCAclS9boEkyF07CAyQ1DeqYxqWjaytcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XXqa7ICU; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqcDmR3W"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234d3261631so11271225ad.1;
-        Thu, 12 Jun 2025 17:06:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XXqa7ICU"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-740774348f6so1412073b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:09:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749773199; x=1750377999; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d0RuPBuCSODcZVIzWEXGOpuiLX63DqP3/tASAAIxyNg=;
-        b=kqcDmR3WAPGwCgwoYRc89Do89m2UihwWZad8jYW2PxBuY5FKEqBBa6vbxbjjb63Its
-         lOPf80u3Wai56BhjEI7fdS5UpKXQ2vi7pcRRbSO69zQgAmbgEbAADDY33ueZX2/nE1Ki
-         JgUyICIrn7v1YBjenv5Xzfe7eMh+CBUKDQuuVIX+Yq9neldEWafmhe2OAbrhIOJ6P1Qr
-         6GGOxJc7UP0u8g6EyqFccytCHrJHuez4RKcGVBDdNqD3fcproDm7bDwYdRyvEJY5kW/0
-         uUwiqbV+3dKu/deTpe4+4y3gnLmh9XqvQgIo5iJHFOLhXgdX69aYoALgKHja7bCP8+XR
-         wjLg==
+        d=google.com; s=20230601; t=1749773374; x=1750378174; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JjbKQe64dfg1fWMvIao4pEIryvItWqTHsDUghiEa5jk=;
+        b=XXqa7ICU2K6RUBc9+LZnfZP1wbQywZiLUM2K7sXCBSH54KKr1iWi14GPTqAn6fW9Hn
+         m309/otUnTvt2hI/hTm7EQPK8TQIIQVitQNCTcemQBs2pXgDpTAhvPRSXwliR35uyMxM
+         FQ7SQW6mnXhJA0MyBMRlzYS92IosvF005nZIskQ9rgAJPPcJmRfuSBvH+sGQNfETeL90
+         RrrVdBTwqB+2UIAg3cG3CNntka8bYVyoPr9J7ZuHpo9Sc7PLAD1ZL/HrGa0vlj0KAgWH
+         tOMsA4RAENvZcq1y7sAYjRr9Yu8ULHb6+Y1EnjoJAVp5P8e1SHHcp0oG82V+PMl7j7wz
+         iEEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749773199; x=1750377999;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d0RuPBuCSODcZVIzWEXGOpuiLX63DqP3/tASAAIxyNg=;
-        b=Ros+UnnoUZWJPI5n4dmXUxNzwjjIOEV52hzN3QOQ1MCuIq7lvPnlr41m2NcmkrAvqw
-         zQ3ccHlf1GfhXTa2xlovcI9jGwfqqZ1duShYhg3wZFqnftP7iGSWshaK1L3aT+nnyzop
-         vaXLc5DQmqAVtmlyOYak/ZDrTl2cn8ULj1azD6Ue20uOJ/iakDsZoLcKxk1T9psCFHD4
-         kx1pZ1+xemHbuYi8GdRF+CROj+ARAHW1p5ocGnYipCUcnhVuu0TW5prsHR+enpmyBF0M
-         PGQjZ9HbuyONFV2etcy2naYAgI2HtAo4kKzlaPyTqROQ5NM/cZvxYgcavJwKdg/GoOxh
-         3AjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXAJi9clpJjh6qpEfEZqkqfvYSrt09xaqKqjsr2ZhEpauA6B9vv9SMWedSjnfxjy1NIpA=@vger.kernel.org, AJvYcCWmW61MgIN9skJ1ymeFNs/U8zsGkO5n1Z7IH5qYoM9Z6VVSClkrzZnhztxT+X94QYh9jnKaAdRjcNyPSnQLkh58qRTz@vger.kernel.org, AJvYcCXArtR6HSvmu6SRHdlkOMS240+KSnPqCV/U0GJ9ZAFLXZHfYdC7OxuXfZMKCDp8Jhyh3PuUiL+98dkMhEMX@vger.kernel.org
-X-Gm-Message-State: AOJu0YywL48QahWdMqbdhbP5gYPp1cdaq4e+1PtSkdpGupMF6FbfCs2g
-	Yck5IMHRT7jIb0qOYF1MauSqV3IM3+zYM1fu3oLIDzkD3zum0baXhfyehZIjjL9P8ujL/L1Jq3M
-	0lTGWHKI7oEDaziJDcAw54QdpJvjlRuA=
-X-Gm-Gg: ASbGncuRgXVymIvlDGhTeOUd9eWJTS3f2K0sAuHqzNo5aQ3Mc+LUAkWibtawa4znbGu
-	0VpnxxcvN0qngN07tgGtge493aDZnS2s8R1yFqPk0xCd4uwfqGHD8h8pjo7jicMsBZQD/F2lXEY
-	rWEjrmGXSGZ2wkHW41DV3eLuUn9jwn2yDluyT9fPhbdRZvNrdPBkncmwFBFA0=
-X-Google-Smtp-Source: AGHT+IEPSLsTexGUKwbGZB+a2Mn+hEIdnHaQwmU6KUzaqp938CS+7Eeo1eX8520vbqupCXYDLWrets8alAP3ZKxaAPY=
-X-Received: by 2002:a17:903:1a0c:b0:22e:62f0:885f with SMTP id
- d9443c01a7336-2365dc0c4ebmr14191995ad.40.1749773199120; Thu, 12 Jun 2025
- 17:06:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749773374; x=1750378174;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JjbKQe64dfg1fWMvIao4pEIryvItWqTHsDUghiEa5jk=;
+        b=nwfyPk63U7decGUjpYal855L8mG5nccqkv8jHMQm1cBgSW78CrsWZVsMiJq/FrMJn0
+         hifJ9XDvWoTuobzPAOA95OuxgwgLFRmAs5q3t0KEYJEx8JB/zw4e8NaUt+WuNw4CwckV
+         MBT468y7qk2QIwM5H2sl2oRhK5vUHs15mJLIPRzGrh4riOsKlurCMfeGx7vx2VjKYUAj
+         YRm0gdSeNp8rLtcxDdNYCXbeKayyAvH8cuoC5tqF2uCbhmRabGnJPwMN+K+cgDPf352I
+         CMT0zcXeXopCzcmS9TLzV+pO8B9iMhseaDD2N/uPuqsGBfNoEdYwOukQ51phbFtpKMKU
+         XK2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXTRNTiLQ8lxb4EQK2oTrC20xt28jocR27NxV9UWwLh1+zTaJerpypivg/g6ZVOFtD+0VrQNEVTg/qgUe0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5KQfGG5Fjf3YoyMF4z6FErKk03vWh+fESjRFycTe6xRlH3Noz
+	e+2wlWyW2U7U20+PI5A4Vo021wYraZJmJ8qaIe+d3UUnEsGzYCj2NXoBl7ddAvnSWNCPSGVZOow
+	Yrp9sTg==
+X-Google-Smtp-Source: AGHT+IEvfSNx2MTIGs9zRZWnO+a9xVhIHUWPkCsnktSUFR08Nvt4dHmTB1CxMd7JQI0Vq45VV1vpNv+gKmY=
+X-Received: from pgbbo5.prod.google.com ([2002:a05:6a02:385:b0:b2f:63c8:753d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:8093:b0:21a:e091:ac25
+ with SMTP id adf61e73a8af0-21fac8e62b3mr872991637.6.1749773373878; Thu, 12
+ Jun 2025 17:09:33 -0700 (PDT)
+Date: Thu, 12 Jun 2025 17:09:32 -0700
+In-Reply-To: <02ee52259c7c6b342d9c6ddf303fbf27004bf4ef.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250611154859.259682-1-chen.dylane@linux.dev>
- <CAEf4Bzbn=RVhMOR7RapYwi+s8gbVS=1msOuZ7MhPvgz8zHiE9w@mail.gmail.com>
- <CAADnVQJ8cVi4KyJqWgEfyWYs+zSYQ73PevrNszPkisrdPSjYMg@mail.gmail.com>
- <CAEf4BzayBd9e5c9fiEPgDKPoRm-E4uB_u__xKcRpXDz18kNnkA@mail.gmail.com> <CAADnVQKw2u9y-Cf+8idB0bZ0v-p6BtuyRV=JpmN4to3_1Z6GEA@mail.gmail.com>
-In-Reply-To: <CAADnVQKw2u9y-Cf+8idB0bZ0v-p6BtuyRV=JpmN4to3_1Z6GEA@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 12 Jun 2025 17:06:25 -0700
-X-Gm-Features: AX0GCFtzlARaYcK7r342SFEPGz5cXS3H7NHCUuu0m_82OyNKtt6PfeiRsBWeHuc
-Message-ID: <CAEf4BzbScdvawnTZ7364bXxU2QpW_ooCB-tjohBgC4WSvFigFg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: clear user buf when bpf_d_path failed
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Tao Chen <chen.dylane@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250611001018.2179964-1-xiaoyao.li@intel.com>
+ <aEnGjQE3AmPB3wxk@google.com> <aErGKAHKA1VENLK0@yzhao56-desk.sh.intel.com> <02ee52259c7c6b342d9c6ddf303fbf27004bf4ef.camel@intel.com>
+Message-ID: <aEtsPEnQTRBoJYtw@google.com>
+Subject: Re: [PATCH] KVM: x86/mmu: Embed direct bits into gpa for KVM_PRE_FAULT_MEMORY
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Yan Y Zhao <yan.y.zhao@intel.com>, Kai Huang <kai.huang@intel.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
+	Reinette Chatre <reinette.chatre@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"tony.lindgren@linux.intel.com" <tony.lindgren@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025 at 4:56=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Thu, Jun 12, 2025 at 4:27=E2=80=AFPM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Thu, Jun 12, 2025 at 2:40=E2=80=AFPM Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > On Thu, Jun 12, 2025 at 2:29=E2=80=AFPM Andrii Nakryiko
-> > > <andrii.nakryiko@gmail.com> wrote:
-> > > >
-> > > > On Wed, Jun 11, 2025 at 8:49=E2=80=AFAM Tao Chen <chen.dylane@linux=
-.dev> wrote:
-> > > > >
-> > > > > The bpf_d_path() function may fail. If it does,
-> > > > > clear the user buf, like bpf_probe_read etc.
-> > > > >
-> > > >
-> > > > But that doesn't mean we *have to* do memset(0) for bpf_d_path(),
-> > > > though. Especially given that path buffer can be pretty large (4KB)=
-.
-> > > >
-> > > > Is there an issue you are trying to address with this, or is it mor=
-e
-> > > > of a consistency clean up? Note, that more or less recently we made
-> > > > this zero filling behavior an option with an extra flag
-> > > > (BPF_F_PAD_ZEROS) for newer APIs. And if anything, bpf_d_path() is
-> > > > more akin to variable-sized string probing APIs rather than
-> > > > fixed-sized bpf_probe_read* family.
-> > >
-> > > All old helpers had this BPF_F_PAD_ZEROS behavior
-> > > (or rather should have had).
-> > > So it makes sense to zero in this helper too for consistency.
-> > > I don't share performance concerns. This is an error path.
-> >
-> > It's just a bizarre behavior as it stands right now.
-> >
-> > On error, you'll have a zeroed out buffer, OK, good so far.
-> >
-> > On success, though, you'll have a buffer where first N bytes are
-> > filled out with good path information, but then the last sizeof(buf) -
-> > N bytes would be, effectively, garbage.
-> >
-> > All in all, you can't use that buffer as a key for hashmap looking
-> > (because of leftover non-zeroed bytes at the end), yet on error we
-> > still zero out bytes for no apparently useful reason.
-> >
-> > And then for the bpf_path_d_path(). What do we do about that one? It
-> > doesn't have zeroing out either in the error path, nor in the success
-> > path. So just more inconsistency all around.
->
-> Consistency with bpf_path_d_path() kfunc is indeed missing.
->
-> Ok, since you insist, dropped this patch, and force pushed.
+On Thu, Jun 12, 2025, Rick P Edgecombe wrote:
+> On Thu, 2025-06-12 at 20:20 +0800, Yan Zhao wrote:
+> > What about passing is is_private instead?=C2=A0=20
+> >=20
+> > static inline bool kvm_is_mirror_fault(struct kvm *kvm, bool is_private=
+)
+> > {
+> > =C2=A0	return kvm_has_mirrored_tdp(kvm) && is_private;
+> > }
+> >=20
+> > tdp_mmu_get_root_for_fault() and kvm_tdp_mmu_gpa_is_mapped() can pass i=
+n
+> > faul->is_private or is_private directly, leaving the parsing of error_c=
+ode &
+> > PFERR_PRIVATE_ACCESS only in kvm_mmu_do_page_fault().
+>=20
+> General question about the existing code...
+>=20
+> Why do we have the error code bits separated out into bools in struct
+> kvm_page_fault? It transitions between:
+> 1. Native exit info (exit qualification, AMD error code, etc)
 
-Great, thank you!
+This step should be obvious :-)
+
+> 2. Synthetic error codes
+> 3. struct kvm_page_fault bools *and* synthetic error code.
+
+A few reasons.
+
+ a. The error_code is used in other paths, e.g. see the PFERR_IMPLICIT_ACCE=
+SS
+    usage in emulator_write_std(), and the @access parameter from FNAME(gva=
+_to_gpa)
+    to FNAME(walk_addr_generic) (which is why FNAME(walk_addr) takes a sani=
+tized
+    "access", a.k.a. error code, instead of e.g. kvm_page_fault.
+ b. Keeping the entire error code allowed adding kvm_page_fault without hav=
+ing
+    to churn *everything*.
+ c. Preserving the entire error code simplifies the handoff to async #PF.
+ d. Unpacking error_code into bools makes downstream code much cleaner, e.g=
+.
+    page_fault_can_be_fast() is a good example.
+ e. Waiting until kvm_mmu_do_page_fault() to fill kvm_page_fault deduplicat=
+es a
+    _lot_ of boilerplate, and allows for many fields to be "const".
+ f. I really, really want to make (most of) kvm_page_fault a structure that=
+'s
+    common to all architectures, at which point tracking e.g. exec, read, w=
+rite,
+    etc. using bool is pretty much the only sane option.
+
+> Why don't we go right to struct kvm_page_fault bools? Or just leave the
+> synthetic error code in struct kvm_page_fault and refer to it? Having bot=
+h in
+> struct kvm_page_fault seems wrong, at least.
+
+I actually like it.  It's like having both the raw and decoded information =
+for
+CPUID or RDMSR output.  All of the relevant fields are "const", so there's =
+very
+little chance of the state becoming out of sync.
+
+I suppose an alternative would be to create union+bitfield overlay, but tha=
+t
+wouldn't work if/when pieces of kvm_page_fault are shared with other archit=
+ectures,
+and even without that angle in play, I think I actually prefer manually fil=
+ling
+bools.
