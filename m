@@ -1,241 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6198628EA44
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 22:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A9223814C;
+	Fri, 13 Jun 2025 22:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749853876; cv=none; b=ULnZHN+ZPiu+MC4Y5z/MoypYWRhOW+N4RtOYLrRozujoBmN+gOnvRDFXK82OvThUg5hn3YHZuE7soe7kFp6TRDVHsj8tdTBwxv593YMZhv60P4u+7vAtxD1ZWIeDNQSqqc1xkOMqGbWM0Ytqtn8HPbjfEfPS0P0s6Yb3X19MW/A=
+	t=1749854172; cv=none; b=tbwGRjLunBM+irSwTSWAtqUzhJfvjVlUD9qIkY189vZ/I2P079zW5jaYic7HWs1d+B0xkNxUG4Nfw7a9kjSJ3b7cFZk3xMSzxOAsAEjgtlJHrHNqEvxozu07FAV3CxNP1KuNXbfEDO+yrOMDzmmKxsoCyqHs5k7g1rReKdHUqE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749853876; c=relaxed/simple;
-	bh=CUdNhTNdI3W/WjDv4FEJCGsxc0OikP5xHgNGo0iDXpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iH5m1C4MPh576508iWfhcjCzPJ4Wki96wPk1V+OkXoUli08XuUHCw291JI0eWS/nmZ/2yWaFyA33Mh6DQophR0YBDEts4DlrYIYZh0m5brRIllo4/9GIKAM77EB5mLLBiAGFngU6lWvn3FrzCssbnCMx3nfry+tVSp5U16cqztI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Afrt2b6y; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749854172; c=relaxed/simple;
+	bh=ZDhN0PQzQ9wgEHlw7OXTzGjuQH3XOnQA5xq1WBIqnek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K/sp72YL0BJbPMytT+pI1ho62UuE4i9Do923g1q7FvJW9gbIOPwG/c9mh3nTpUiwCTpkonNtBEyejikBLd+s3vw13gC4LIJF6EB/LpBx6M+wM5q8Nci/vfLJofi7dY2ly5lOR9iS7GRB0kXk6m4rGcY0xobBRVuwM8MfyhqRjWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V0MMfQ9L; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Afrt2b6y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749853873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i3NcXW1X2EQ+iIT8GcacHhMupAyBhF1g0lj8W/NWBMY=;
-	b=Afrt2b6yd+I4Y0Ez6/0qd2k0ajmwg1tZGLYKW+bjJjbJhLrjmOKiACuBzUN71urBaupuj3
-	axAJPtNjzfCziLQD3maxJm4iW4qsPsIdcBaH2CgtNs2bzElrrC2GPbnXDmnMrj/hQsTVH5
-	4A4pUv1sg0NvEK0QeR7x1YWsE+jYHUk=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-60-M0FHpGrCMZWRq9bEojyOZQ-1; Fri, 13 Jun 2025 18:31:12 -0400
-X-MC-Unique: M0FHpGrCMZWRq9bEojyOZQ-1
-X-Mimecast-MFC-AGG-ID: M0FHpGrCMZWRq9bEojyOZQ_1749853871
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddc47aebc2so4831415ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:31:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0MMfQ9L"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so2243830f8f.3;
+        Fri, 13 Jun 2025 15:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749854169; x=1750458969; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZDhN0PQzQ9wgEHlw7OXTzGjuQH3XOnQA5xq1WBIqnek=;
+        b=V0MMfQ9LnVFjKTXF/j9wodh39meUoxLTRuYmqR6UlVLco4MCSPFkyZ3TVgdbc03eYA
+         3yLlwoGSG8T4HnLNgLKGfhQmKhx/l8jvCN44pZddh1c66IhJH1mpigG5C2Rl2vYo3SkP
+         naMo0QZn/e4SHNMPnJmhf8taujDmwIM6EAJU6rMmOH1NsbjUVuf1dexFHDZvksmOrXf6
+         T9hBS2h32S+1atZsl91SDUhqF3R93ohXZkld4EjaIxb4gTaTfbLMBK/IoBLUJpRMCGJo
+         RL3uZXsh7n7njkZyWbpNqa7Kk/bdp1R655+0koEKH6yziNKQMpoiBKcfha2Apt23VLTA
+         FtPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749853871; x=1750458671;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i3NcXW1X2EQ+iIT8GcacHhMupAyBhF1g0lj8W/NWBMY=;
-        b=aQ7XXqdNe1ltBIsBPp1QzT9prbBHjNWQz17nwycCnUO8ndzqfZcs9y7iL11jfmtgBO
-         q2Tpkmiz+OdHIb/APQr8K8vtu1enfCglMSHnU9gE9hc8SExhFFCTX8LwMD4NJ/h5M/76
-         SyZ+NvH4Hsp7lzhYhsfsJ0eHWPDe7X3sGAF3eHGTv9NyESbYURZAGqgDte6hBWD9Ivwc
-         U+lX76Ucp71dcGTyMcoWbtjXGMvHIM1iOkgNadIGb9POGzcYpDUXcB3zBrPzRbk3hs5/
-         Ik94mcDvPvMckGRXXizTFjXUKNLiirrUAIXFlCDwuUooFfKpW1fu74ij/ucbg8A6pByq
-         CGxA==
-X-Gm-Message-State: AOJu0YxYWoDCNfkur9fPw29Oj5Zjjj+R5GfEwBXZxV0WFn/EtzwlgzAv
-	HWPX+9JhnvzyOiwGE0EEHQ972qxD2L3ghspnfohue99vaUy/0naht9mjpcrpS65rjJJwJ/tRnz5
-	SylDQffX5pRGOSZ/eJA45jXAWVOg9hh2M+JM1x6zc6UvkqEZFG04uSMHSs4Nfo5u/Ag==
-X-Gm-Gg: ASbGnct7ZBqFQRx3kkmVrw60GSHdmk5rLuVFDivdHvIyRZjICWfFnNUmIY8ZSxouKJE
-	2ecvGOxH3PKJjbN47Foi0Ld7PphnFHX+vK6JTI0Bhl/IUhlzkXVIUNxOBt8IURddzPiKojGDdga
-	kAHe+nqgM30TtQONSbED/O2linGaugUDLWgV8Y0DNz5X/VV0m4Vfe5GVenWX8dqUwEgx1jWZyg/
-	MZsSSH4EfX3yEVnxhX9TRi+aeHOjZDhKeOchSYvssNvNmR4pgSTe0vIsgKtCgDwdw/vmeJAoC2p
-	Uz5j+Yzanrl0EvZjYMbI4tz1Bw==
-X-Received: by 2002:a05:6602:608a:b0:873:13c6:f37b with SMTP id ca18e2360f4ac-875dede0723mr34496439f.3.1749853871306;
-        Fri, 13 Jun 2025 15:31:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFqXSXoSbA8I0Hvkx//SE0JzUwJmJV92eYQmiHgIhgmK7NohihKNmCrzP0m9Qv08pVXoJvoxw==
-X-Received: by 2002:a05:6602:608a:b0:873:13c6:f37b with SMTP id ca18e2360f4ac-875dede0723mr34494539f.3.1749853870935;
-        Fri, 13 Jun 2025 15:31:10 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149ca2aa9sm508990173.123.2025.06.13.15.31.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 15:31:09 -0700 (PDT)
-Date: Fri, 13 Jun 2025 16:31:03 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Jacob Pan <jacob.pan@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, "Liu, Yi L" <yi.l.liu@intel.com>, "jgg@nvidia.com"
- <jgg@nvidia.com>, Zhang Yu <zhangyu1@microsoft.com>, Easwar Hariharan
- <eahariha@linux.microsoft.com>, Saurabh Sengar
- <ssengar@linux.microsoft.com>
-Subject: Re: [PATCH v2 2/2] vfio: Fix unbalanced vfio_df_close call in
- no-iommu mode
-Message-ID: <20250613163103.3bca27cd.alex.williamson@redhat.com>
-In-Reply-To: <20250603152343.1104-2-jacob.pan@linux.microsoft.com>
-References: <20250603152343.1104-1-jacob.pan@linux.microsoft.com>
-	<20250603152343.1104-2-jacob.pan@linux.microsoft.com>
-Organization: Red Hat
+        d=1e100.net; s=20230601; t=1749854169; x=1750458969;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZDhN0PQzQ9wgEHlw7OXTzGjuQH3XOnQA5xq1WBIqnek=;
+        b=DP4LeCxipuEqfRH/A2U6e54gykEjP3H8WEMNZ2815004YhU+gJAM75Ep86mc6cwu0U
+         sU0lWog3PIuRrhr87ACxCbJu7XbTX2LBbY4voVmOssDG5FOI4w6VINVtXwyTFBv3Kj5v
+         68MbKplggEERqahkd5FDqvUvjyjurLaJrkrQs8bI3Ncwcv65x8A8wlSrknk+tjYXzy95
+         o6H4I54gLkz2BJRvbBElZpQmog6M9fgU7OD5TfQGoBl8hDmJWCXV8Y1CEp/tCtqTOWE3
+         DPpZH0WyhmNp80DpS9/yw/eq2nIAlSc39UAiju6m2uYHUPJGOUjNCtwwxlUAX2OFf5i3
+         ee+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUoYtPXQA1uonZ073rI2MQTnx7vh8vbs0CZCRSym1QzwDQuv6NwLIXJ0+NeznFNyNSH1+50HKyNLXsQfKs8@vger.kernel.org, AJvYcCVjXZP1T8WApTDB6z5tsMrbFQK12GdZtuo4tF1USUF5uaYuXR2eAKSRCFplpm43sH0Xqz7FFrSh@vger.kernel.org, AJvYcCVvlhQTmGOtxaZxoUYXhwk+c+TEffvp7aCFl3iix3+LUllcrwP/LyWhXfdwAg6fqLDx6b6w1Vo/TNxhbg==@vger.kernel.org, AJvYcCW3aYg3AI9cYfEnKrLIjIa4yyUWU8gi3edaUgLhE+ZyKNzma1VxhqXyt2J6oLyQkokz4pnutWegtkcPiswZSOPV@vger.kernel.org, AJvYcCXujocvSLLDKiMDLrc+W8B812qxkbpNvwDvihIZpAXdUL6+MoYyRv1ApO9qe+KFQ2hLtv8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeBjcDMLiKMO1E2tsO4XxqMmBq8cy2hRZqk9/D8n8ENQ6nHbp2
+	tMBJ2GlIYAB4j6mYC5V+xcZTAID5mBkkV3ZElSkKV8xouQ8Vg2hXJkZE7sFdIj/9a4cKURft0HI
+	nlXc/yCSSeQNS2chc7tmRzkuIoAKmPC0=
+X-Gm-Gg: ASbGncvQSz/Iq49Vxr/l0p1voHBV7BElZxSaGoeGsxsXfe4RwBsu5iI/OnOZ9Q1f/Vw
+	+OoJABUOAz43h3Ow0Hnutijz3BbX8PzfCduLtMxZupYAeLY3vmEUTY5cqvdMlWD4OZA5JYaf3Bx
+	V15Ez1gewM9qaYhaTTbkZatLJ7ukp6Ac/XZSBrNLRVOntN6oWqJOzHP3fSwhqNGe8apV5nJ05y
+X-Google-Smtp-Source: AGHT+IGvAZU4d5tXw0nhgWlSwGRKFbuaQhR8GZiHa22TV57O0MRl7T0f9v9YaYzOJredMJW3TgBMxueem5pPB3YsBNg=
+X-Received: by 2002:a05:6000:40dd:b0:3a5:2694:d75f with SMTP id
+ ffacd0b85a97d-3a572e895fbmr1535518f8f.52.1749854168416; Fri, 13 Jun 2025
+ 15:36:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250613-deny_trampoline_structs_on_stack-v1-0-5be9211768c3@bootlin.com>
+ <20250613-deny_trampoline_structs_on_stack-v1-2-5be9211768c3@bootlin.com>
+ <20250613081150.GJ2273038@noisy.programming.kicks-ass.net>
+ <DAL9GRMH74F4.2IV0HN0NGU65X@bootlin.com> <20250613083232.GL2273038@noisy.programming.kicks-ass.net>
+ <DALA5WYA04OG.1283TZDOVLBPS@bootlin.com>
+In-Reply-To: <DALA5WYA04OG.1283TZDOVLBPS@bootlin.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 13 Jun 2025 15:35:57 -0700
+X-Gm-Features: AX0GCFvxnM-s8AungljiWEt_LCtzKmPe0DGMu2VqQrNsxFmjrZ6Pec_NoZEOn-E
+Message-ID: <CAADnVQ+sj9XhscN9PdmTzjVa7Eif21noAUH3y1K6x5bWcL-5pg@mail.gmail.com>
+Subject: Re: [PATCH bpf 2/7] bpf/x86: prevent trampoline attachment when args
+ location on stack is uncertain
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, X86 ML <x86@kernel.org>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Menglong Dong <imagedong@tencent.com>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Pu Lehui <pulehui@huawei.com>, Puranjay Mohan <puranjay@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Bastien Curutchet <bastien.curutchet@bootlin.com>, 
+	Network Development <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	ppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue,  3 Jun 2025 08:23:43 -0700
-Jacob Pan <jacob.pan@linux.microsoft.com> wrote:
+On Fri, Jun 13, 2025 at 1:59=E2=80=AFAM Alexis Lothor=C3=A9
+<alexis.lothore@bootlin.com> wrote:
+>
+> On Fri Jun 13, 2025 at 10:32 AM CEST, Peter Zijlstra wrote:
+> > On Fri, Jun 13, 2025 at 10:26:37AM +0200, Alexis Lothor=C3=A9 wrote:
+> >> Hi Peter,
+> >>
+> >> On Fri Jun 13, 2025 at 10:11 AM CEST, Peter Zijlstra wrote:
+> >> > On Fri, Jun 13, 2025 at 09:37:11AM +0200, Alexis Lothor=C3=A9 (eBPF =
+Foundation) wrote:
+>
+> [...]
+>
+> >> Maybe my commit wording is not precise enough, but indeed, there's not
+> >> doubt about whether the struct value is passed on the stack or through=
+ a
+> >> register/a pair of registers. The doubt is rather about the struct loc=
+ation
+> >> when it is passed _by value_ and _on the stack_: the ABI indeed clearl=
+y
+> >> states that "Structures and unions assume the alignment of their most
+> >> strictly aligned component" (p.13), but this rule is "silently broken"=
+ when
+> >> a struct has an __attribute__((packed)) or and __attribute__((aligned(=
+X))),
+> >> and AFAICT this case can not be detected at runtime with current BTF i=
+nfo.
+> >
+> > Ah, okay. So it is a failure of BTF. That was indeed not clear.
+>
+> If I need to respin, I'll rewrite the commit message to include the detai=
+ls
+> above.
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> For devices with no-iommu enabled in IOMMUFD VFIO compat mode, the group
-> open path skips vfio_df_open(), leaving open_count at 0. This causes a
-> warning in vfio_assert_device_open(device) when vfio_df_close() is called
-> during group close.
-> 
-> The correct behavior is to skip only the IOMMUFD bind in the device open
-> path for no-iommu devices. Commit 6086efe73498 omitted vfio_df_open(),
-> which was too broad. This patch restores the previous behavior, ensuring
-> the vfio_df_open is called in the group open path.
-> 
-> Fixes: 6086efe73498 ("vfio-iommufd: Move noiommu compat validation out of vfio_iommufd_bind()")
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Tested-by: Jacob Pan <jacob.pan@linux.microsoft.com>
-> Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
-> ---
-> v2: Use a fix from Jason
-> ---
->  drivers/vfio/group.c     | 10 +++++-----
->  drivers/vfio/iommufd.c   |  3 ---
->  drivers/vfio/vfio_main.c | 26 ++++++++++++++++----------
->  3 files changed, 21 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
-> index c321d442f0da..8f5fe8a392de 100644
-> --- a/drivers/vfio/group.c
-> +++ b/drivers/vfio/group.c
-> @@ -192,18 +192,18 @@ static int vfio_df_group_open(struct vfio_device_file *df)
->  		 * implies they expected translation to exist
->  		 */
->  		if (!capable(CAP_SYS_RAWIO) ||
-> -		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd))
-> +		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd)) {
->  			ret = -EPERM;
-> -		else
-> -			ret = 0;
-> -		goto out_put_kvm;
-> +			goto out_put_kvm;
-> +		}
->  	}
->  
->  	ret = vfio_df_open(df);
->  	if (ret)
->  		goto out_put_kvm;
->  
-> -	if (df->iommufd && device->open_count == 1) {
-> +	if (df->iommufd && device->open_count == 1 &&
-> +	    !vfio_device_is_noiommu(device)) {
+No need to respin. The cover letter is quite detailed already.
 
-Why do we need this?
+But looking at the patch and this thread I think we need to agree
+on the long term approach to BTF, since people assume that
+it's a more compact dwarf and any missing information
+should be added to it.
+Like in this case special alignment case and packed attributes
+are not expressed in BTF and I believe they should not be.
+BTF is not a debug format and not a substitute for dwarf.
+There is no goal to express everything possible in C.
+It's minimal, because BTF is _practical_ description of
+types and data present in the kernel.
+I don't think the special case of packing and alignment exists
+in the kernel today, so the current format is sufficient.
+It doesn't miss anything.
+I think we made arm64 JIT unnecessary restrictive and now considering
+to make all other JITs restrictive too for hypothetical case
+of some future kernel functions.
+I feel we're going in the wrong direction.
+Instead we should teach pahole to sanitize BTF where functions
+are using this fancy alignment and packed structs.
+pahole can see it in dwarf and can skip emitting BTF for such
+functions. Then the kernel JITs on all architectures won't even
+see such cases.
 
-int vfio_iommufd_compat_attach_ioas(struct vfio_device *vdev,
-                                    struct iommufd_ctx *ictx)
-{
-        u32 ioas_id;
-        int ret;
+The issue was initially discovered by a selftest:
+https://lore.kernel.org/bpf/20250411-many_args_arm64-v1-3-0a32fe72339e@boot=
+lin.com/
+that attempted to support these two types:
++struct bpf_testmod_struct_arg_4 {
++ __u64 a;
++ __u64 b;
++};
++
++struct bpf_testmod_struct_arg_5 {
++ __int128 a;
++};
 
-        lockdep_assert_held(&vdev->dev_set->lock);
+The former is present in the kernel. It's more or less sockptr_t,
+and people want to access it for observability in tracing.
+The latter doesn't exist in the kernel and we cannot represent
+it properly in BTF without losing alignment.
 
-        /* compat noiommu does not need to do ioas attach */
-        if (vfio_device_is_noiommu(vdev))
-                return 0;
+So I think we should go back to that series:
+https://lore.kernel.org/bpf/20250411-many_args_arm64-v1-0-0a32fe72339e@boot=
+lin.com/
 
+remove __int128 selftest, but also teach pahole
+to recognize types that cannot be represented in BTF and
+don't emit them either into vmlinux or in kernel module
+(like in this case it was bpf_testmod.ko)
+I think that would be a better path forward aligned
+with the long term goal of BTF.
 
->  		ret = vfio_iommufd_compat_attach_ioas(device, df->iommufd);
->  		if (ret)
->  			goto out_close_device;
-> diff --git a/drivers/vfio/iommufd.c b/drivers/vfio/iommufd.c
-> index c8c3a2d53f86..26c9c3068c77 100644
-> --- a/drivers/vfio/iommufd.c
-> +++ b/drivers/vfio/iommufd.c
-> @@ -54,9 +54,6 @@ void vfio_df_iommufd_unbind(struct vfio_device_file *df)
->  
->  	lockdep_assert_held(&vdev->dev_set->lock);
->  
-> -	if (vfio_device_is_noiommu(vdev))
-> -		return;
-> -
-
-Why not keep this and add similar to vfio_df_iommufd_bind()?  It seems
-cleaner to me.  Thanks,
-
-Alex
-
->  	if (vdev->ops->unbind_iommufd)
->  		vdev->ops->unbind_iommufd(vdev);
->  }
-> diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-> index 5046cae05222..ac2dbd4e5d04 100644
-> --- a/drivers/vfio/vfio_main.c
-> +++ b/drivers/vfio/vfio_main.c
-> @@ -506,17 +506,19 @@ static int vfio_df_device_first_open(struct vfio_device_file *df)
->  {
->  	struct vfio_device *device = df->device;
->  	struct iommufd_ctx *iommufd = df->iommufd;
-> -	int ret;
-> +	int ret = 0;
->  
->  	lockdep_assert_held(&device->dev_set->lock);
->  
->  	if (!try_module_get(device->dev->driver->owner))
->  		return -ENODEV;
->  
-> -	if (iommufd)
-> -		ret = vfio_df_iommufd_bind(df);
-> -	else
-> +	if (iommufd) {
-> +		if (!vfio_device_is_noiommu(device))
-> +			ret = vfio_df_iommufd_bind(df);
-> +	} else {
->  		ret = vfio_device_group_use_iommu(device);
-> +	}
->  	if (ret)
->  		goto err_module_put;
->  
-> @@ -528,10 +530,12 @@ static int vfio_df_device_first_open(struct vfio_device_file *df)
->  	return 0;
->  
->  err_unuse_iommu:
-> -	if (iommufd)
-> -		vfio_df_iommufd_unbind(df);
-> -	else
-> +	if (iommufd) {
-> +		if (!vfio_device_is_noiommu(device))
-> +			vfio_df_iommufd_unbind(df);
-> +	} else {
->  		vfio_device_group_unuse_iommu(device);
-> +	}
->  err_module_put:
->  	module_put(device->dev->driver->owner);
->  	return ret;
-> @@ -546,10 +550,12 @@ static void vfio_df_device_last_close(struct vfio_device_file *df)
->  
->  	if (device->ops->close_device)
->  		device->ops->close_device(device);
-> -	if (iommufd)
-> -		vfio_df_iommufd_unbind(df);
-> -	else
-> +	if (iommufd) {
-> +		if (!vfio_device_is_noiommu(device))
-> +			vfio_df_iommufd_unbind(df);
-> +	} else {
->  		vfio_device_group_unuse_iommu(device);
-> +	}
->  	module_put(device->dev->driver->owner);
->  }
->  
-
+And before people ask... pahole is a trusted component of the build
+system. We trust it just as we trust gcc, clang, linker, objtool.
