@@ -1,31 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA0022424C;
-	Fri, 13 Jun 2025 07:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFD7257429;
+	Fri, 13 Jun 2025 07:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749800737; cv=none; b=CCMWnfb9BtntUkSmhCrAB/q9xoHeRX0vYqvjSRZUIIyQVNEXSlKQJGO+DTn5LeUQ8WbxiPItnvvK2qYihqtASCCSplJ4SoOcaoxYvxIGL5dP/OR72E40P28epHSTIY0wO+MGpsAawsDRnvIdnytu7kNbx4EsAiu/jjdySteVq0E=
+	t=1749800762; cv=none; b=uH4zgIHcm1Ao9jZD2/iShtll4NCuq2Jgn2L2O5GbO2P2P/uTjRMGRPijmQKhLLnk37RwlZvld6Vg2v93wOscZQg5sn6gw6FLrDqPcUtSJ7AaF1Qn3zB5r/j8iNHyX+O3umtRk0GBDtXeOOSKUlCMKd7E+C27OTNUwxZdBywHajk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749800737; c=relaxed/simple;
-	bh=+Id2wnzVCrR7xLgz9/qEdJXcATcWgDxwiLjnKBiKqJ8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=HVeayQ1KswuL8L4BaKRfEFzlBVJXZFtK/tO+ihUImxVbDcbJeLTFyXE6TiyRy2vr6f0OfiGN6ZwgBdScK054K/SiaGjga1CNouw5ojhZ6KMv5ViIIphouf+HqsxuyxTMVU+70YSJQtEcao4U+9jE+Bc/X68D1RSJ/3DRc4TuNlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5jVRQ1F; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5jVRQ1F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC2F6C4CEE3;
-	Fri, 13 Jun 2025 07:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749800737;
-	bh=+Id2wnzVCrR7xLgz9/qEdJXcATcWgDxwiLjnKBiKqJ8=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=l5jVRQ1F3tKR08AajhLrfPq54BPrS0trkc5iPHeJGgNdkdMJ5UhBPy/QY8agxVyQV
-	 IFnG2LB1VLfiFDqIUSRATFlnNeFgGtzTVygUXBx8mPCCFseiNE3vMgFKnm+Wcj8s87
-	 fMYkkYhJVIYeOk6UgfC6R2FAlhtxldlpGMLB1wEhG88fz/5W+Cmd4GcZ8YjhhK9v+O
-	 a7xCjvFjJ0VOk8n7zk/SXoT0DZRo4c4UuVaib5VY9vhPp9KZJqpXTLJwAW3fuG8gq1
-	 QnxEo+U9+t6PNLhZh2TGJNLe+HNKN0HxwXcVFPerNF0kssFOOYoTkg9IYYmOKvSz3g
-	 CLpCY215mE/0Q==
+	s=arc-20240116; t=1749800762; c=relaxed/simple;
+	bh=HSsbIO/yBWYpAUsXUWOO0TGRD0D9fEyuSZV/FHrGhc8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=Gyt0i9SXLPyX7g7yin1R0xM/QLMZdU8/BN6Mb5Cvthxd25+PFUcwvNazaSRtzcanVGKx2i57DKkvHPJ4rz9TkWB1FSdjyjsUQKOFfIIx8wp7Vz/IhooPMjFm2Dr296HL5vKgJlf3NhbMLTOnkmVQH7Hmkj696qZbj3pqfj+qs9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bJWfT4Z1gz9s2L;
+	Fri, 13 Jun 2025 09:45:53 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,73 +28,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 13 Jun 2025 09:45:33 +0200
-Message-Id: <DAL8LBJYGJU8.H23CBQ07RAMI@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] rust: alloc: implement `Borrow` and `BorrowMut` for
- `Vec`
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Danilo Krummrich"
- <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+Date: Fri, 13 Jun 2025 09:45:47 +0200
+Message-Id: <DAL8LI3LMET9.3LW0J9JED1EZG@buenzli.dev>
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
  <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
  <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
-X-Mailer: aerc 0.20.1
-References: <20250601-borrow_impls-v1-0-e1caeb428db4@nvidia.com>
- <20250601-borrow_impls-v1-1-e1caeb428db4@nvidia.com>
- <DABBUFXP4O5X.1JG9O6Z2BRAQX@kernel.org>
- <DABND24P80ZZ.NLCKU3AYPN4X@nvidia.com>
- <DADKPKS4EAWU.D1UJEEBXKS8R@kernel.org>
- <DAL5THET602V.345BOV2PJGATF@nvidia.com>
-In-Reply-To: <DAL5THET602V.345BOV2PJGATF@nvidia.com>
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Dirk Behme" <dirk.behme@de.bosch.com>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v8 0/9] More Rust bindings for device property reads
+References: <20250611102908.212514-1-remo@buenzli.dev>
+ <aEtjONTgqDikCoB6@cassiopeiae>
+In-Reply-To: <aEtjONTgqDikCoB6@cassiopeiae>
 
-On Fri Jun 13, 2025 at 7:35 AM CEST, Alexandre Courbot wrote:
-> On Wed Jun 4, 2025 at 4:34 PM JST, Benno Lossin wrote:
->> On Mon Jun 2, 2025 at 3:13 AM CEST, Alexandre Courbot wrote:
->>> Hi Benno,
->>>
->>> On Mon Jun 2, 2025 at 1:11 AM JST, Benno Lossin wrote:
->>>> On Sun Jun 1, 2025 at 5:00 AM CEST, Alexandre Courbot wrote:
->>>>> Implement these two common traits, which allow generic types to store
->>>>> either an owned value or a reference to it.
->>>>
->>>> I don't understand the second part of the sentence.
->>>
->>> I want to say that Borrow allows you to do something like:
->>>
->>>     struct Foo<B: Borrow<u32>>(B);
->>>
->>>     // `foo1` owns its value...
->>>     let foo1 =3D Foo(0x12);
->>>
->>>     let i =3D 0x24;
->>>     // ... but `foo2` just borrows it, subject to the lifetime of `i`.
->>>     let foo2 =3D Foo(&i);
->>>
->>> And the implementations in this series also let you do:
->>>
->>>     // `foo3`'s value is owned, but heap-allocated
->>>     let foo3 =3D Arc::new(KBox::new(0x56, GFP_KERNEL)?);
->>>
->>>     let j =3D Arc::new(0x78, GFP_KERNEL)?;
->>>     // `foo4`'s value is shared and its lifetime runtime-managed.
->>>     let foo4 =3D Foo(j.clone());
->>
->> How about something like:
->>
->>     Implement `Borrow<[T]>` and `BorrowMut<[T]>` for `Vec<T>`. This allo=
-ws
->>     `Vec<T>` to be used in generic APIs asking for types implementing th=
-ose
->>     traits. `[T; N]` and `&mut [T]` also implement those traits allowing
->>     users to use either owned, borrowed and heap-owned values.
+On Fri Jun 13, 2025 at 1:31 AM CEST, Danilo Krummrich wrote:
+> On Wed, Jun 11, 2025 at 12:28:59PM +0200, Remo Senekowitsch wrote:
+>> Remo Senekowitsch (9):
+>>   rust: device: Create FwNode abstraction for accessing device
+>>     properties
+>>   rust: device: Enable accessing the FwNode of a Device
+>>   rust: device: Move property_present() to FwNode
+>>   rust: device: Enable printing fwnode name and path
+>>   rust: device: Introduce PropertyGuard
+>>   rust: device: Implement accessors for firmware properties
+>>   samples: rust: platform: Add property read examples
 >
-> This is super clear, and I think I'll just reuse this message as-is if
-> that's ok with you. Thanks!
+> Applied to driver-core-testing, thanks!
+>
+> Once the patches passed 0-day testing they will be merged into driver-cor=
+e-next.
+>
+>>   rust: device: Add child accessor and iterator
+>>   rust: device: Add property_get_reference_args
+>
+> I did drop those two patches for now, because:
+>
+>   (1) They're basically dead code.
+>
+>   (2) It seems that FwNode::property_get_reference_args() leaks a struct
+>       fwnode_handle reference. property_get_reference_args() explicitly s=
+ays
+>       that the caller is responsible "for calling fwnode_handle_put() on =
+the
+>       returned @args->fwnode pointer", which doesn't seem to happen.
+>
+> Can you please fix the leak and resend those two patches with an addition=
+al one
+> that adds a sample usage of the introduced methods to the platform sample
+> driver?
 
-Sure!
-
----
-Cheers,
-Benno
+Alright, thanks. I suppose that should be a new patch series, with a new
+title and starting at v1 ..?
