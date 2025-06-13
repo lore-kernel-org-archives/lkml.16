@@ -1,83 +1,53 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE6A15A87C;
-	Fri, 13 Jun 2025 13:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE4E7263F;
+	Fri, 13 Jun 2025 13:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749820255; cv=none; b=Hda4jzw+Cc1bOgZVmHdLC6lZepIrp0t+Z8xEu4wakYrHWP/eefizHtiGPErNvdP7ndpk5M3BgdZ21wSvTCktsMEsmVKsNGIfWBE+5lyv2w65qsbI9bdlnPuWdPsu23Xa2NUARSVbPalTuhbWCSWzX+7E67FhZK5As4vqriLBcUU=
+	t=1749820301; cv=none; b=KQOEW/xi6bqXvmfy+NNm9/oWteAPY1a8QMF6ady9NkvcXXGnlvmt2yChh5z8KuloKDU0TWcUkjNZ0YuFvPoYyUji+tyrG8rxx+H50EceT0WEIUJ1gjM0h4q7QTKHBMPPALKLdKuymr85JpnBt7dQhYbB0sfanjNi1Rd2/GsXpis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749820255; c=relaxed/simple;
-	bh=6rp7eAnv7jydJiNj1mOqYkTX3fDMNGW8f61mmdX4yIM=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=vCS6iMYLeLNu3gtqj3wRiXaYwufJPFjlSo5NnYO0/9ttmKrIfHMYnjMJcYvbgRKOxHCTj7Phj3w/Y8JxDYUwemf6dzPlA3YnGowrF7WSt1XZHQVPr4RNfZK0VzOGlt1/WiqnehuNIUxzzfYpLCggqNWPTpsKZx5+emZ0L1JBzcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kBOEsTq6; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749820301; c=relaxed/simple;
+	bh=RbLt8//FrHv3yzSlHkAnJ39jGaCI5d6TuBafqw1Iais=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ixhMjx6T0gge8SoUCrzD7+Wz00Nm2hPfvfHh2XHdqUcNDG8/vrppw/ZLfMDdUx7ZhBvKeFGsRj8V4qCm0cP0nsnI8kCyyssvmjzYqjYwCM1OHJX7VZo5VHTkdSKnayJSGSQMeQ1Trw1Kph8FgW/UUpGxPqTW9P/XaOCE8MBC/PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9CRFwTF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBOEsTq6"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so11739175e9.2;
-        Fri, 13 Jun 2025 06:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749820252; x=1750425052; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :message-id:date:in-reply-to:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qkrgZn1Te7Sj9IIaDIwy8pfNXIJhrotxZavh7kLndew=;
-        b=kBOEsTq6T2E2knzEjuLXNC0Iq43S1zO7Qnr7YO9S2rFmM9Gh5XEK69OCyuNFc9q6rh
-         xGyhq0h047TIK4HGo+I3jWs0BNnSFcu+x+7IiZRVPGWKGatu60vLFz/mqNI59xetsamb
-         EI3y9VSEGleGPv/7CxA0yzp9uEVjA6VZMRZhueg0UHAbao3UJarNGNirIFSZpMAgL/lT
-         WLOP01OQFV5jCee+P0sjLIu654VFGlObu/M6iaMrI6Ry1N5yMITOr7quzheJuVNMJ71m
-         AoZ7A8zLm35uh0r2Mj338f5iJeKiLHgZWmTkdLnRE2CyuW/oGfO98z3SpzWdX+daCXWb
-         8+wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749820252; x=1750425052;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :message-id:date:in-reply-to:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qkrgZn1Te7Sj9IIaDIwy8pfNXIJhrotxZavh7kLndew=;
-        b=i0yIlRTL/JcVny3Fjb2fhcM2oR2VPnyjDmY6KjdRvcz3xqhXNcTp32xRQHw8bozQYx
-         bGLSnDlX+XJb21YZauKHYiFNMAlaeqetdkDvPiT0M0NZG5w9q0TOChZbKcf72DytKR2D
-         XJI985L5jUkrO9PNtIt3jRW9aIACElHTevXWTqoCyXzpJckvRtT1XVZSQW/x9lyxIwlT
-         agFdQ0QLL98CMPglgyaLGxubNIBnIB4chDvZG5cXqLKBwZOKzVsDbZsuhs3PNAFBnMX2
-         zervQin2VlQomZl5RBoKvrXBTLi5bdHVUK7ZeQLPoABR94VyVzjO1CkUxbRSlkN2BpVC
-         GwAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlloFFuubMbxwNvaH/1cA14BA6Nu483rJUoOG6DLxuakm2nwrA62e5o5KUsDniASpMxW2WDBkAmCKLj/Y=@vger.kernel.org, AJvYcCXMpHP5mN5v1rbBqF8AWL26mw4QjtOK8+O9kviDFYJ79EU6d/nxem4UDEM27RBhq3/LVeOnBAFV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwoWrG718zScAyNcQnky1Z0P+/GjeCuEgBug/uu9AVN7qiYATV
-	cYwTyt0u9Aoog0ednK4MTcdzJZmjfDchrFE+EmiGFXdL280KRpoDwWxq
-X-Gm-Gg: ASbGncv4jtbImgA5e9lv2QLWfhUWp/6s4KAizMmsO2UKUCfyGMqPA7MxM1xub/jxDfL
-	ovQNizY3juWqpzXYLyGfauHjideNj73evTGPOdz6qOtG4oUf4QOABgzUr/T/LjSENRqK37xjhg2
-	O23r0WcstFhqVPtu+irA9fWAiNaZ2C8wLQoi6G+a6NOUd4//4dYuoHgltI+i7uN+VyYxyOJjDrp
-	+lEyferrjkvLt5WZ9EN4BtB2MUbEmmc8R/Zn5DHCQApBnnWqeHzxS56ro1ILMWOIb+72Sgl6qss
-	xGV5NKWpWg0ObHT3oFLRPTZ/+NCy3g07hOSZDmxeTU+uvBD+pr1R4pKqRr/Pcq2/PK1nTzCR7cK
-	sZKzIfu1Szg==
-X-Google-Smtp-Source: AGHT+IHgXB8AXL/nBv92iI8+cZmWTMu3M9SVVTLKyCQOyvG2PJJtoDlsBbfj+n5MGh8yOcyLVZGdKg==
-X-Received: by 2002:a05:600c:8b2d:b0:442:d9f2:ded8 with SMTP id 5b1f17b1804b1-45334b19469mr33212305e9.15.1749820252233;
-        Fri, 13 Jun 2025 06:10:52 -0700 (PDT)
-Received: from imac ([2a02:8010:60a0:0:75e0:f7f7:dffa:561e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c4e8sm51884785e9.3.2025.06.13.06.10.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 06:10:50 -0700 (PDT)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
- <corbet@lwn.net>,  "Akira Yokosawa" <akiyks@gmail.com>,  "Breno Leitao"
- <leitao@debian.org>,  "David S. Miller" <davem@davemloft.net>,  "Eric
- Dumazet" <edumazet@google.com>,  "Ignacio Encinas Rubio"
- <ignacio@iencinas.com>,  "Jan Stancek" <jstancek@redhat.com>,  "Marco
- Elver" <elver@google.com>,  "Paolo Abeni" <pabeni@redhat.com>,  "Ruben
- Wauters" <rubenru09@aol.com>,  "Shuah Khan" <skhan@linuxfoundation.org>,
-  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  lkmm@lists.linux.dev,
-  netdev@vger.kernel.org,  peterz@infradead.org,  stern@rowland.harvard.edu
-Subject: Re: [PATCH v3 12/16] docs: conf.py: don't handle yaml files outside
- Netlink specs
-In-Reply-To: <d4b8d090ce728fce9ff06557565409539a8b936b.1749812870.git.mchehab+huawei@kernel.org>
-Date: Fri, 13 Jun 2025 14:06:24 +0100
-Message-ID: <m2ecvnlrjj.fsf@gmail.com>
-References: <cover.1749812870.git.mchehab+huawei@kernel.org>
-	<d4b8d090ce728fce9ff06557565409539a8b936b.1749812870.git.mchehab+huawei@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9CRFwTF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39038C4CEE3;
+	Fri, 13 Jun 2025 13:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749820300;
+	bh=RbLt8//FrHv3yzSlHkAnJ39jGaCI5d6TuBafqw1Iais=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p9CRFwTFQB6b2MRLIiu64qe3eBQOQuybf4O9R2ndSQD5+AQW0G9ttxIY4zPnD8CIR
+	 PEgjQ6UJ9A02nWnYEZ4hdjuxmmKz6W9EADdVr1GVQ9lQW4/UCuMqUoNBuQ/te93Ads
+	 cupoMj4pmBj6bu8exL7TUN4N6fe3dwCeRUtCkKcrAaTyCPyrwDvvZGOM/cWMKITupY
+	 WkCpdeJQcDK/SPlMYkK5Q+JsHKtoHx/lUn4cW8iI9i1NkACjO9b4KBYGoCGY0bLYUd
+	 /EVAoP7PxxLSUHNVxHonbuFweNJhlAClNBBdHHSNUjgrkmZ3M5/m9a2Kqx1y+Katy8
+	 TgWiR9/xkyNpg==
+Date: Fri, 13 Jun 2025 14:11:33 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250613131133.GR381401@google.com>
+References: <20250604041418.1188792-1-tmyu0@nuvoton.com>
+ <20250604041418.1188792-2-tmyu0@nuvoton.com>
+ <20250612140041.GF381401@google.com>
+ <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
+ <20250612152313.GP381401@google.com>
+ <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,49 +55,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Fri, 13 Jun 2025, Ming Yu wrote:
 
-> The parser_yaml extension already has a logic to prevent
-> handing all yaml documents. However, if we don't also exclude
-> the patterns at conf.py, the build time would increase a lot,
-> and warnings like those would be generated:
->
->     Documentation/netlink/genetlink.yaml: WARNING: o documento n=C3=A3o e=
-st=C3=A1 inclu=C3=ADdo em nenhum toctree
->     Documentation/netlink/genetlink-c.yaml: WARNING: o documento n=C3=A3o=
- est=C3=A1 inclu=C3=ADdo em nenhum toctree
->     Documentation/netlink/genetlink-legacy.yaml: WARNING: o documento n=
-=C3=A3o est=C3=A1 inclu=C3=ADdo em nenhum toctree
->     Documentation/netlink/index.rst: WARNING: o documento n=C3=A3o est=C3=
-=A1 inclu=C3=ADdo em nenhum toctree
->     Documentation/netlink/netlink-raw.yaml: WARNING: o documento n=C3=A3o=
- est=C3=A1 inclu=C3=ADdo em nenhum toctree
->
-> Add some exclusion rules to prevent that.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/conf.py | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index add6ce78dd80..b8668bcaf090 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -222,7 +222,11 @@ language =3D 'en'
->=20=20
->  # List of patterns, relative to source directory, that match files and
->  # directories to ignore when looking for source files.
-> -exclude_patterns =3D ['output']
-> +exclude_patterns =3D [
-> +	'output',
-> +	'devicetree/bindings/**.yaml',
-> +	'netlink/*.yaml',
-> +]
+> Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
+> >
+> > On Thu, 12 Jun 2025, Ming Yu wrote:
+> >
+> > > Dear Lee,
+> > >
+> > > Thank you for reviewing,
+> > >
+> > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
+> > > >
+> > > ...
+> > > > > +static const struct mfd_cell nct6694_devs[] = {
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > > > +
+> > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+> > > >
+> > > > Why have we gone back to this silly numbering scheme?
+> > > >
+> > > > What happened to using IDA in the child driver?
+> > > >
+> > >
+> > > In a previous version, I tried to maintain a static IDA in each
+> > > sub-driver. However, I didn’t consider the case where multiple NCT6694
+> > > devices are bound to the same driver — in that case, the IDs are not
+> > > fixed and become unusable for my purpose.
+> >
+> > Not sure I understand.
+> >
+> 
+> As far as I know, if I maintain the IDA in the sub-drivers and use
+> multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
+> NCT6694 device bound to the GPIO driver will receive IDs 0~15.
+> However, when a second NCT6694 device is connected to the system, it
+> will receive IDs 16~31.
+> Because of this behavior, I switched back to using platform_device->id.
 
-Please drop this patch from the series.
+Each of the devices will probe once.
 
->  # The reST default role (used for this markup: `text`) to use for all
->  # documents.
+The first one will be given 0, the second will be given 1, etc.
+
+Why would you give multiple IDs to a single device bound to a driver?
+
+-- 
+Lee Jones [李琼斯]
