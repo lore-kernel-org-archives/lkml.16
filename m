@@ -1,70 +1,74 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B9B1A5BBD
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AA416F265;
+	Fri, 13 Jun 2025 15:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749827100; cv=none; b=FcqbNU+C5LbZpZHyDnHBWJCgA59jNNn4GvpKU4VWSJdGs/Yobr7GhnXhVYSUca/91s3/fGAoHFvjwR8ZTFpcmeGJxEG8KqmtD0M8XxePLOd0ZvcguVMg1XcRRFV01uemCLSKxHkwWfrB8fB5BDoMIAx2BbgK6Cv3F20W25htVu4=
+	t=1749827123; cv=none; b=HiopXN6/5V9O4ypfPO0eeZzZaGoTGp5ymLxs1pqcpW/D3hRNG+X7AU3gryKPDWnmu5ZWDrrl0d9sklOQlZkmaslFloS6iZxzfg45MW16W6HcZ1WYLXI/VipL3BVcWZiCVN/91joeDMfBrEdzJTEc34APHK+ze0dx4WN896mkwuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749827100; c=relaxed/simple;
-	bh=4yA+JlBRpnUu1k8vwp1P++uRqzwJEHAlSmuWB+Hl9QA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ofkKp9Q+Ci2oO+ZN4/eDzEPms5Dq4ySFVA44XxiLvdSyf94D+HZGQwbU99ss5QJbVi/xJSdiSIeFyJdi5E00PizwKLuvdWrmtFYNvJCqTuR4LgsJQJpRBFYvmb8Y8GoifkIEqu2hT22SRdnmIIyb0rEAE9cTX3xpzzpTKz5/QS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gczvSCYa; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749827123; c=relaxed/simple;
+	bh=ZUzbXl+uC0IGlwd+pRzkC/+knfBPi0nX8Q5kONj9Cnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=A6oSX507fr2l8vtccBWZYMca2otxF/tQp5TqlXJ+VRJ1yNcwkqag+UKLZX9awfYKafT0Xgwq4GHuGOAafSx7AlP8wsXU6n5RrbAZengS6Ex1IqlbZa5QanKarM9HtUi7QgWk3hK47txdy+RrGYvKYGB7tI/Pml/N6V8pIHc0AYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZxOX/3pm; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gczvSCYa"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55DAlkP2027642;
-	Fri, 13 Jun 2025 15:04:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=nU0lDOj4fnV4lbhScWiQUVCcAJe+tL
-	fpYFaq2c/Ynhc=; b=gczvSCYaCYtxBqY7tij7LaHV95ZM5dT9KLXs2772CDrHWW
-	4yBPAT+J2rxpmf73BuVUNVHKrAHJUMB8/ABj0LeJvtFU8CrKcntWTl3ThKh1g7wB
-	nkHxJ8jdR3B1PYvIr5BOWLZNQXwYf3ZXrFU2bURgBqi0MdWOIXXsDfYGj+SceDzw
-	hq5AWeXyucV/jlhWM9GEAGrKUEpdZ6AdGJIyhLoqNhqYBDUmPja7rnf8lbJKJw8Q
-	dD6vNP2scvumPjKrEUZGTSO3Dcsj6ZeDAYfZr0+IZc5jZEVC7PFdQKFZqoGKMUwv
-	qCAEoNccYSw9n9Nhrm0/0aJlH7YxJEHfb17niA2Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474x4mpu58-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 15:04:40 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55DDje1p022352;
-	Fri, 13 Jun 2025 15:04:39 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 475050anv6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Jun 2025 15:04:39 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55DF4b5b37224918
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Jun 2025 15:04:37 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8664920043;
-	Fri, 13 Jun 2025 15:04:37 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0612C20040;
-	Fri, 13 Jun 2025 15:04:37 +0000 (GMT)
-Received: from osiris (unknown [9.111.92.109])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 13 Jun 2025 15:04:36 +0000 (GMT)
-Date: Fri, 13 Jun 2025 17:04:35 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Will Deacon <will@kernel.org>
-Cc: Tengda Wu <wutengda@huaweicloud.com>, Oleg Nesterov <oleg@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David A . Long" <dave.long@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] arm64/ptrace: Fix stack-out-of-bounds read in
- regs_get_kernel_stack_nth()
-Message-ID: <20250613150435.26153B5d-hca@linux.ibm.com>
-References: <20250604005533.1278992-1-wutengda@huaweicloud.com>
- <20250612163331.GA13384@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxOX/3pm"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-31223a4cddeso1808576a91.1;
+        Fri, 13 Jun 2025 08:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749827122; x=1750431922; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KF3cFtJQTcMBQy4lM7jXXcjLVtEEtKJIoATzivLkWQQ=;
+        b=ZxOX/3pmuqRyg1eDeuj+dK+J6SdbvK1zTh1QyiOsoHuNE5hsH5IklmSgio/nobpIij
+         MFPi9XbAW+xyJvDLM5zJBrKIXlx12RUxsxsDDoHop0fqJxBOxPJmB4ngstGv85qrataC
+         Y0k99MAoqqW+sdt68+DviTqjHGlTcOY++wos5ATNPqIGGR8kVB5weKwJjt5a3ikcndl1
+         cvnHAArwYgPKpsMYm2piBx7awLfHw8IP8Z+km+OR/a/kS3qWVElKxOV5HvqBU9CWQH9L
+         XFyOinVe+1oezoJegCKWNd35R5ls0tobTQBxXERzqa8Rj+Z1HAoRVg3o55LcDn6f+6el
+         Osdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749827122; x=1750431922;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KF3cFtJQTcMBQy4lM7jXXcjLVtEEtKJIoATzivLkWQQ=;
+        b=J8/qkxGXWBwJd1w6ZZNcXkY6f4dVAx6vrBkn0rOsNd5VKltSWWssxQRw/vTCMeH+Q6
+         LfDWkCUK+Qx6H40SxEQOcem9C0Jw5w2LwpyoTldH1AXgiqPGPjmEU8kW4nmkhJYuqPjL
+         qGn1vM8ucCCvfImu/TUwkRFNXbv3UAOcfTGwRO+lMakor4+md765qF1T6HjcRMPbPfK3
+         xe64rnk94VTjrHMKIQNtAeyvCHrNLefDJLpehkCYeLwBn8IrdHgmkObcmG4Ym3ClFOya
+         IrKCXsgQ+irSBwcSpkkOfUjCtagrlQcoLbHd22YyVQ/kaV1Vrl31G+bf7lUU3zC1Vf1S
+         nnBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVa5fUs+OoRi5xiXlaXjUftE+CFPIVdmqqlABd+kRWIMyakZTUkX3g7UmxGYvSz3T9KZCUZuu/PMowhIFE=@vger.kernel.org, AJvYcCWGiUIERApJTqlfSfidoiuGFLLzvsDFAugRZOjRAiAQLqlUHg+w5B+QWXXKUfIOJq+WM/HKRgU5hk4D@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDZtZQLWUrgse5nWWPyeD19/lEtS7MnMcEGOKVt6pNP5bVsWCy
+	UXnptREE7iEM69W9XCM99aF63ijswTwIPHLqzjCIGeCkIntZ4K6uQAjCmxW1lEAS
+X-Gm-Gg: ASbGncvzd4Ux79mkUsMNGZcSOBKAau/+gonFFa6VfdnfItNdmiuSL93IXJmPm6jWhye
+	JiBV/0qNmTSrftOMNl0vYRqa5XfcpwU9srd/u25Kn8Z/ExZNPR6179sorwPdYDfW2ov+fqIpVUw
+	X1ZyK/NWpqFIKUOheMSAxuDrxxT8P/vL+3PTsowCffHtzrpNXC3kAVPx2xyS8RQuT1Smcc9Ftmn
+	gYfT8ZCKxsYPE2zTINF+jST+6Ej5aU6rW1uhPQEYWMYiiZNjaACdr4I3jpJx6MJbMCYGPgl8s8D
+	a0qzTgnNmgmLxNPLJ8wnYHsVQFvAyxbveA6/GrbuYLfW8h7bcA==
+X-Google-Smtp-Source: AGHT+IHdK8qQo3ZG3V7b3Hz4SJ4IVpLiY2VBl4h1vhl+f3MfcXfp7Rgjw/llpCTAemK6u+3no+kgZA==
+X-Received: by 2002:a17:90b:582d:b0:312:f0d0:bc4 with SMTP id 98e67ed59e1d1-313f1be5b9dmr93821a91.5.1749827121457;
+        Fri, 13 Jun 2025 08:05:21 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:838f::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deca008sm15308325ad.193.2025.06.13.08.05.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 08:05:20 -0700 (PDT)
+Date: Fri, 13 Jun 2025 12:05:15 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RESEND RFC PATCH v4 0/5] PCI: rockchip: Improve driver quality
+Message-ID: <cover.1749827015.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,38 +77,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612163331.GA13384@willie-the-truck>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Y4X4sgeN c=1 sm=1 tr=0 ts=684c3e08 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=7XB3cJai-94OTXmGs3EA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: uwSIkbTXw9knD9U00yLIga3sZ76sILCJ
-X-Proofpoint-ORIG-GUID: uwSIkbTXw9knD9U00yLIga3sZ76sILCJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEzMDEwNyBTYWx0ZWRfX0DEYwy1xF1tK rzsFKtB1UXWYoQiamn4W1/RqmeNO/QlD1ORGeZrZkvEbSfUSte1MlAfQF1LqTVA5xYkT77hj3lA 3tRQGtTE5tTuD37x8Hjuc99UK+WdaDtuiIAeuWEMUGiiV4YAdpKh9lco/vDrRaV6q1jXRop5CKK
- y2FGB1xY+e+FspHfHxamopWFIr6IptP4az/RLd0iMgHM+bOo1dX6bFIhmZMZHi9c56JEBnG6tJo lVLqkk1ab+Ur53kfYOr68IGWWODpktWs1obcRzQ0N7NcW1tWj8hPuyU2cqzoHlwcHOphAQ7aG9+ 9YfQlh9+Lqj1jvngXRGdqRtGHm3kwYHjsS9belae3ToB3vE5dCBTh3hx1LSc2gBaEMuZj11smIv
- zFrySB6YupbRZLLAmxIswv0N0sxM3VetXZoEEUfGhI39hvnQM1YIc5SjqEj+vz49WpytVgnq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-13_01,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=603 spamscore=0
- clxscore=1011 lowpriorityscore=0 malwarescore=0 bulkscore=0 adultscore=0
- impostorscore=0 suspectscore=0 phishscore=0 mlxscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506130107
 
-On Thu, Jun 12, 2025 at 05:33:32PM +0100, Will Deacon wrote:
-> On Wed, Jun 04, 2025 at 12:55:33AM +0000, Tengda Wu wrote:
-> > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> > index f79b0d5f71ac..fe3f7e554d14 100644
-> > --- a/arch/arm64/kernel/ptrace.c
-> > +++ b/arch/arm64/kernel/ptrace.c
-> > @@ -141,7 +141,7 @@ unsigned long regs_get_kernel_stack_nth(struct pt_regs *regs, unsigned int n)
-> >  
-> >  	addr += n;
-> >  	if (regs_within_kernel_stack(regs, (unsigned long)addr))
-> > -		return *addr;
-> > +		return READ_ONCE_NOCHECK(addr);
-> 
-> I think this should be '*addr', but that makes me wonder wtf s390 is
-> doing...
+During a 30-day debugging-run fighting quirky PCIe devices on RK3399
+some quality improvements began to take form and this is my attempt
+at upstreaming it. It will ensure maximum chance of retraining to Gen2
+5.0GT/s, on all four lanes and plus if anybody is debugging the PHY
+they'll now get real values from TEST_I[3:0] for every TEST_ADDR[4:0]
+without risk of locking up kernel like with present broken async
+strobe TEST_WRITE.
 
-That's obviously a brown paper bag bug in our code... will be fixed.
+---
+V3 -> V4: fix setting-up of TLS in Link Control and Status Register 2,
+also adjust commit titles
+V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
+suggestion
+V1 -> V2: use standard PCIe defines as suggested by Bjorn
+
+Geraldo Nascimento (5):
+  PCI: rockchip: Use standard PCIe defines
+  PCI: rockchip: Drop unused custom registers and bitfields
+  PCI: rockchip: Set Target Link Speed before retraining
+  phy: rockchip-pcie: Enable all four lanes
+  phy: rockchip-pcie: Adjust read mask and write
+
+ drivers/pci/controller/pcie-rockchip-host.c | 48 +++++++++++----------
+ drivers/pci/controller/pcie-rockchip.h      | 11 +----
+ drivers/phy/rockchip/phy-rockchip-pcie.c    | 16 ++++---
+ 3 files changed, 36 insertions(+), 39 deletions(-)
+
+-- 
+2.49.0
+
