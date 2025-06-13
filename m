@@ -1,79 +1,104 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ED518A6DF
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0CE1E51FA
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828346; cv=none; b=Uomzc/TAqzk9oQrdkcagfBveKbG6GAKSUlEPtzFA8FduPoJyx99Yt9XQEbhN77kbkP5n0TyGj+a+oNHBdIE7fRAv46fCsyoddK5OL/0tHvmQLBVqqnKx9aEPKrGHqX0EKOzZ0vMXYeN4ugTenKCV8wV0p8NN/eQMtGA8hP9ifes=
+	t=1749828369; cv=none; b=kpS/zj6o/WqNGJkHPaiIR2pYc+W+OVmslGPdoxizssgPE4p/zQIPqumlrEOgda5zh9yOMBzmvdllIeo6swNnstWFyvQWI5P4gcpYv4UG0x7X09QPAURkZs7VGKI2U2KV0dsA60snbxAbJfCfl2DKI2c+d6Jp74ddxoJpzWg0GCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828346; c=relaxed/simple;
-	bh=5Qxm/mUOR7cmc6BrDSdpe6P/adHyAhov4VLqzOUjc4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NrPtrdZePfY/WJLXbMb1r8BCAqZeeT3Yc2pn2vtcUwfK7ZO3VjUqWUwWzURMkhqojl6waT0ntUSywNN2SbNxtQRJnDFhbteS7Sro3kBSuw8zONS/jwpxFW6o9nVjnIMFgjJQrrM6xb82FgXyTxvnFqQI83XTLFbriAdM5bTwYl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 9ADB8120A87;
-	Fri, 13 Jun 2025 15:25:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id E8C8220038;
-	Fri, 13 Jun 2025 15:25:32 +0000 (UTC)
-Date: Fri, 13 Jun 2025 11:25:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yuri Andriaccio <yurand2000@gmail.com>
-Cc: juri.lelli@redhat.com, bsegall@google.com, dietmar.eggemann@arm.com,
- linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it, mgorman@suse.de,
- mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
- vschneid@redhat.com, yuri.andriaccio@santannapisa.it
-Subject: Re: [RFC PATCH 5/9] sched/deadline: Hierarchical scheduling with DL
- on top of RT
-Message-ID: <20250613112531.04cfa8ad@batman.local.home>
-In-Reply-To: <20250611135456.61493-1-yurand2000@gmail.com>
-References: <aEfwxUyu54Y1EXJI@jlelli-thinkpadt14gen4.remote.csb>
-	<20250611135456.61493-1-yurand2000@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749828369; c=relaxed/simple;
+	bh=4e0gp9uIV7MyzxlvTTu7qZW9G/t1tf1C48sZL1Ybazo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=lUmlikJAzolxXPvT9mJ0YLSoLUljPd4qF0HRgbqR0/1chycCLSpZuiJYWkfylS0JrbnEOSvtP/9PpHL6bNkHtHeLH6M/E4OtL8UfhOTNObdk+cfkcFrTDZZm7rqnHm02MuZjGpP0YXnbb5VnZBJl+cTsEjWzWNMakXiYDn9wdJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=IT+zgK9t; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="IT+zgK9t"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-861d7a09c88so69982239f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 08:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749828366; x=1750433166; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pJyEx9SEtMoT9W574jcNh5RLLtb5eK5nBGN8Lv2U/V8=;
+        b=IT+zgK9tshirZFdcjv95do9YnxYi+asmrxVUqSX9K3SiLvuXrg/csjG2Lz2iD4WDrD
+         KGpO+RL09zdoGwAA7pn2wTseKl563bEVBiO5D6DWo+1E3LcdmIewF5rFEuaW3bC1hFXh
+         fu9l0iN/iKGsoGvuvAGr3/imrSfjAdbj8Yn9ov37jukVDRVnrSIL7p1HxhIFIizE+Agn
+         XBHgbrENP9pWBPGEMK+AKSzl59y9akCH0JyXU0pOJmcTp4G4wdyFZY5KIx9aTeYGx8rK
+         VfI+6GIEjBh9H5fPc2FPvCWdYLGV5Q/o+OqO+DBldp270/TiWNGbLGPnWcwp9zCVKiub
+         vIyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749828366; x=1750433166;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pJyEx9SEtMoT9W574jcNh5RLLtb5eK5nBGN8Lv2U/V8=;
+        b=DAqKNqd1D7lslHsP6MD15YHJWVmTzHuI66RWtsBHB7CQT2/B6z2V9DoaFALJcw4r0K
+         Nm0vZ4dHhayES+3UV3vJU8u2+YxKXukCui5O9oNBUyAvY/yrv5eH3eqQcas/N+U8PBzg
+         JcNPyt+sNfYM08KGHNNVvlZnaRbYGo9t2HrtjhSY/gHSGYFZI/jP4dv3e1TQdejWZRYk
+         1KgD23vtcBLEV8cwTShU6Rmng1zrj54rT6n+NJmwP0tmM4lSkbzqU3rzoRS2oU7Dn4Tq
+         yfibEwjSnBGjDW1lAJDRPRcUNpJKowWmhY+Zv8utdPbaIKzpT7s2oBggiE9yZBXL5x9z
+         GTeA==
+X-Gm-Message-State: AOJu0YycmxMvm68lf6pAnYGgxhokYBhs8mLUyVxhol7LvK+L2oV9qITq
+	vjHHf5rmi/74hQOH4xavwC/WttxrByWZsch5pCnQly3okVxq+Z7jFTPRB0oRH0to5II=
+X-Gm-Gg: ASbGncvydpdTjKidzNUoBkP86LegoesPBPZGvbN2I/5QQWUOd6Dp+sZSHyfH9BXZWB7
+	dvN2KDbg+gAwd7Pfo0dd+3BT8eMIA18EYRtbvPGZst8ImfxREAm3Vu77bQYvknqgtt7/USTjX81
+	t4xvBcEPoSFsJGST5dzgSE5HAPQWdahdQAmOsHJi+aP01ilirHnmUeWkzbb1+ioc2fl3LESxxoj
+	3oA7ClUyIvJHpIdvA0TZJbWsuGYNcMbo6/nnJh4xivTaD5cbhwcTnYTef4knN1yE3m1QBey7wpg
+	DzCwL//8VyddOOP30cgkWsv6iycdWDh76fKmw+UR2VoNPP6kUxjl
+X-Google-Smtp-Source: AGHT+IGYvJK3/OvP02MLHyARtWzj0lGmzWqmFxziBjJCVW+F8NXt7Xn4uM0PaH6+Trrm9TNdqvfACg==
+X-Received: by 2002:a05:6602:7504:b0:866:217f:80a with SMTP id ca18e2360f4ac-875d3c88149mr444305339f.7.1749828366385;
+        Fri, 13 Jun 2025 08:26:06 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-875d570f54fsm32817239f.10.2025.06.13.08.26.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 08:26:05 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+ Linux Documentation <linux-doc@vger.kernel.org>, 
+ Linux Block Devices <linux-block@vger.kernel.org>, 
+ Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>, 
+ Ming Lei <ming.lei@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Stephen Rothwell <sfr@canb.auug.org.au>
+In-Reply-To: <20250613023857.15971-1-bagasdotme@gmail.com>
+References: <20250613023857.15971-1-bagasdotme@gmail.com>
+Subject: Re: [PATCH] Documentation: ublk: Separate UBLK_F_AUTO_BUF_REG
+ fallback behavior sublists
+Message-Id: <174982836505.723307.4689076506739660480.b4-ty@kernel.dk>
+Date: Fri, 13 Jun 2025 09:26:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: E8C8220038
-X-Stat-Signature: b863p6t3mr3aiymdfksf5jrzxd73h44z
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1++YD2dBarreGRLQfXg0JX4SQCK0wJYWpk=
-X-HE-Tag: 1749828332-630125
-X-HE-Meta: U2FsdGVkX1+IoBJY9fUs4RxV2RXZQqXln+frg5L8jeKzAYWCZKEgL+C2I1wSJpA0VzJNtX7st3LcR+xzzfh5U6PhftrrzQkGxbwtY6q1MZKU5oaQVac9nue7UbklB/ymRCnTW/QpOOvFJ5x5XiTKJPsbj3qy5ShGA0McjlclcaH2wNixJmAIH7jpH2yS1D1D9iYkpDikaP4y+10M+cXn/MWzF4xgPwALYu+2tWuEwQQ+LV7oO4UGiBkYRRr2cNMasIAkIIkOaWabjjqyEhZWyvP4KKCak0U4dB8N/DEVZzwpW6p5MQI/TF3HQQTocOAVc3BRe1lPC2GIFwk/7l8KgWUI4zemYSGf
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-On Wed, 11 Jun 2025 15:54:56 +0200
-Yuri Andriaccio <yurand2000@gmail.com> wrote:
 
-> Hi,
+On Fri, 13 Jun 2025 09:38:57 +0700, Bagas Sanjaya wrote:
+> Stephen Rothwell reports htmldocs warning on ublk docs:
 > 
-> thanks for your feedback.
+> Documentation/block/ublk.rst:414: ERROR: Unexpected indentation. [docutils]
 > 
-> > From changelog (and confirmed by changed lines), this patch might be doing too
-> > many things at once and so it might be harder to review. Do you think it can
-> > be split in smaller chunks?  
+> Fix the warning by separating sublists of auto buffer registration
+> fallback behavior from their appropriate parent list item.
 > 
-> I'm currently working on splitting this patch (and the patch 8) in smaller
-> chunks as you suggested, adding changes bit by bit.
-> 
-> I'll submit the updated version of the patchset for a RFC v2 as soon as I have
-> it done.
+> [...]
 
-Hi Yuri,
+Applied, thanks!
 
-Thanks for doing this. On your next version, please add your own
-Signed-off-by to each patch you send. Although you may not be the
-author, you are posting them, which requires a Signed-off-by which
-basically is you saying you have the right to post these patches.
+[1/1] Documentation: ublk: Separate UBLK_F_AUTO_BUF_REG fallback behavior sublists
+      commit: db3dfae1a2f662e69d535827703bcdbb04b8d72b
 
-Thanks,
+Best regards,
+-- 
+Jens Axboe
 
--- Steve
+
 
