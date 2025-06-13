@@ -1,124 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966AD2E11B5
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB0F19C558
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 17:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835037; cv=none; b=e5ECNsTme1vBrzy+TY5f2p1YAUOaOxSna80uP33fhU7NAIn9Y8XPfiovcSXLQG3o/ACQD/uWdt1Lrn6zmPWetdCr0MenTm+iVuji2UPcVHqRb1BzmpRfStZpAx0ElbQxBEb58+FCC5fteyJjhXRHpS2IGShl728W6hKwQn7mhyQ=
+	t=1749835093; cv=none; b=A5nW5MPwhzKlF1sgOwg8Q0/f6GhMLprMDopds3KV5Sx36X09TXe1AS4guiBsngDoLyvsNO/OKbsyWf5gvjk/HvLxwHZJ2GnwfHQlNdDxuD7Ya2TO5ydPraMl0GBgS+OD8EmLEtiP5/XDk1MjmXI9VI+wIUQEBPbrUjd8t9seb+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835037; c=relaxed/simple;
-	bh=Gj36E+PdLr277lawY7j4IlULScK9vZb1GqdyaVVM6dI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R18o1M3EYTnYxu59xZ0RYtAstHlDGMj2WpdscEm7kzJFssrMOasouRnGdTaAd6BASP/UgPx65X4sQyAJmtFa9pDbbq0UzoJVtMeczy4DiQH6InJ4e2ZQvN3nFvNSE4K/GfJ90BY1/zpfm0GzD6f3U8JYm9NR+F3aUy6znPKIsdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DoZfMHlu; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749835093; c=relaxed/simple;
+	bh=qOAaSK0i4JY+2lxY4sFKnHMudgOX455/UPjJpdmjGWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gm88PEpAJzUBR3IbDVN/kD7jq012yCfFzp3ehfhEnODDKoquY7jnbB0REL+LAYy3Pa5VgZbNcu6s1QJIC1N13Rrl6y/JXff0WXoaIIWYNaKQ5omf5EmKeVgLNkCaQblEPBwr/HbnvtbqJS/WOXZn2USMy3LBWee6WQ7euD8Oz5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Kqcp4lZK; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DoZfMHlu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749835036; x=1781371036;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Gj36E+PdLr277lawY7j4IlULScK9vZb1GqdyaVVM6dI=;
-  b=DoZfMHluOKdSqiWzCb4LSOJnlivude54V6/biPM9CunwFa7eAhnXbwxZ
-   jPvXkSa+JcZYQ22dDP4yTAWjsP+3uz7bC1+lPu5boqeUtj8BKOUrRE6ng
-   Dx/vOt/DwOxmTGwUHvs3FVXcPbkKAYlQkjf67N6PSNK5P5KeSEqz6seI1
-   ffpXrF6Pfy8og5uPBB3eFwIYleP52khaAGbKBDqFzBr330KOiXEdq+AyJ
-   dxSsjZyNjbx64hjNb1tOgXnn0S1FM+OwJUmf4slFx77mn+iLD1+ZBGexQ
-   G04cem/RmTBm/sum1TlWXdNA7t/Ighsz3YqwVWNNEEEe8oFDtAR8DQy0y
-   A==;
-X-CSE-ConnectionGUID: /XBuAgEOR9Oaq9w9lFjyUQ==
-X-CSE-MsgGUID: pLqtZufXRjyTnwfGXJCg2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51937051"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="51937051"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 10:17:15 -0700
-X-CSE-ConnectionGUID: ZcKY4dv5RFG8CRa3k9c0RA==
-X-CSE-MsgGUID: VL9LkWWoTHyaT35PV4xfdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="148248380"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 10:17:14 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 0DA3720B5736;
-	Fri, 13 Jun 2025 10:17:11 -0700 (PDT)
-Message-ID: <5c239831-a83e-4a70-9670-77986c689a9d@linux.intel.com>
-Date: Fri, 13 Jun 2025 13:17:10 -0400
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kqcp4lZK"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b3182c6d03bso108377a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 10:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749835091; x=1750439891; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lsmpqmL7w+/CwGWjuLFXFQAJZbzAXyTWyTM4rCVagQk=;
+        b=Kqcp4lZKZJrFzMPGJ5JHm4t0CPwqeBokHlwvVWGbIvE+aebaOJ+aE0KZa2TXznaiAN
+         PFtPAt4wimEN/I80VGEh3GDplvqV6YuUGo/y2CWahUpFqot/7hJCCOM9fuIXVNJAxnsp
+         eNb9/uoL5KjEILnZFpToUlkOaX9OZnW0xCOXMeVIRvvoBU0tNhI5WEQNWGpvQady3JQ6
+         o111PgQqB0bI3Fzf6PwR5Bs7GXF6d0yIYPKzQH07CFnEygrUGpyzFMc1N7VmHEOJDudC
+         PA//iuY9OXaB33/+0o5k+vZ1YiqBHMeXnTfctzKIJ2zcOFM5cU1EdVoEFtZA77gUJCLn
+         PBuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749835091; x=1750439891;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lsmpqmL7w+/CwGWjuLFXFQAJZbzAXyTWyTM4rCVagQk=;
+        b=nXQYvNeSEZ3rpfVQoLxTl0ZBeVes1GDV9/T9U6vblpIa02Tt4n2OeSWtkWYQN6PuEA
+         EMHXRddzxT4RtzIDy/d60CuFGam5Xxynl/BpU/J7Ed6HoN8fPtiiyH7TFEbNAP8PffFV
+         MA0+or9kdpNtpYeeXxAVIiEtic91ORX+4c7w+mbx+1YfD33s1UGoYrOY3DJH4bpJk0Ja
+         UBUt02ueQWNr0gXzMCLn0Udsr3btiBa3TLMZXrsvikCrAGJatHOv6dqkM9v2dYHlvV8w
+         weLNK+yqf9saPJS0RGZ5OLNYCET9/9iahqXomkc8U0c2wzYeNLyxyEHY0nDRZSo3kcR+
+         4QUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+AZ2dEdiLllxsoKVeLSPnU1PWmnO2H2Edg7sx1XXfnUn8frymzeUbG2HE69rnF1ZZ+c+6A5vf8Uaqcss=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+8xngW79+/1iGxZq4z0sldgsH9o+3HDH/eRnaBwtsaxI3a7NZ
+	UHNgTdr/cXlGIhKdp6e4BFnfi54m/A1jqkBN/YE271Vxp3DpBFAlYqqcxGXJX259pmQ=
+X-Gm-Gg: ASbGnctqaf7vGey+pnlcwhYc0DfPebrigySJNAxj+6XbkML8lBkSXINdI7GbV2azWZq
+	KdxbNVpzlJtGz8uuj3lZ/aMayf73YAinMIoehwxA5gvSrf7ienpkV+Vwyx9CqNeb12l2DbnddNg
+	3gZxicLp8ZRC8g18FeF0y861O3PvmExXamLwlMSlfZydKrRXbIkaM7UoqtzR4a+m6C1YTSEwlhL
+	f9eRy9xvBrtyDCE8afxJgGwJacgCYKoDVw7vESi8ulvSROJZBZFJD/TCIglsejLVgzdlFpzKYiu
+	fVxqpo1aG80NkwGX5zJ0STrlhCuLxHPOzE4NlsDDsMhkwbJ7WKmdQZI2+veojUGLRfM+ZzxOiX9
+	R
+X-Google-Smtp-Source: AGHT+IHRbOM7ma3p28dCl6i5/2joUrRoZmrADPn6tljhIXUnu27s94ck2LDSzPrDTEtJSYt8rUqnkg==
+X-Received: by 2002:a05:6a20:a115:b0:218:c01:ddce with SMTP id adf61e73a8af0-21fbd5d90aemr223503637.40.1749835090617;
+        Fri, 13 Jun 2025 10:18:10 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:5219:d969:f11e:ad3c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d29a2sm1915223b3a.175.2025.06.13.10.18.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 10:18:10 -0700 (PDT)
+Date: Fri, 13 Jun 2025 11:18:08 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Tanmay Shah <tanmay.shah@amd.com>
+Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] remoteproc: xlnx: allow single core use in split mode
+Message-ID: <aExdUKf4JYjZt_nf@p14s>
+References: <20250610192738.3095247-1-tanmay.shah@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 08/12] perf/x86: Add APX in extended regs
-To: Dave Hansen <dave.hansen@intel.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
- dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
- jolsa@kernel.org, alexander.shishkin@linux.intel.com,
- linux-kernel@vger.kernel.org
-Cc: dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
-References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
- <20250613134943.3186517-9-kan.liang@linux.intel.com>
- <9624b098-f3ab-4db7-8811-cab2c5cce351@intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <9624b098-f3ab-4db7-8811-cab2c5cce351@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610192738.3095247-1-tanmay.shah@amd.com>
 
+Good day,
 
+On Tue, Jun 10, 2025 at 12:27:38PM -0700, Tanmay Shah wrote:
+> It's a valid use case to have only one core enabled in cluster in split
+> mode. Remove exact core count expecatation from the driver.
 
-On 2025-06-13 12:02 p.m., Dave Hansen wrote:
-> On 6/13/25 06:49, kan.liang@linux.intel.com wrote:
->> +#define __x86_pmu_get_regs(_mask, _regs, _size)		\
->> +do {							\
->> +	if (mask & _mask && xcomp_bv & _mask) {		\
->> +		_regs = xsave;				\
->> +		xsave += _size;				\
->> +	}						\
->> +} while (0)
-> 
-> Ewww.
-> 
-> First of all, this doesn't work generally because of the previously
-> mentioned alignment. Second, it's using xcomp_bv which doesn't tell you
-> if XSAVES wrote the data.
-> 
-> Last, this attempts to reimplement get_xsave_addr().
-> 
-> I'd do something like this:
-> 
-> 	for (xfeature_nr in mask) {
-> 		void *src = get_xsave_addr(xsave, xfeature_nr);
-> 		void *dst = ... a function to map XFEATURE_MASK_APX
-> 				to perf_regs->apx_regs,
-> 		int size  = xstate_sizes(xfeature_nr);
-> 
-> 		if (!src)
-> 			continue;
-> 
-> 		memcpy(dst, src, size);
+I suggest:
 
-The data will eventually be copied to a buffer which shared with the
-user-space tool. I probably have to avoid the memcpy and do it later
-when outputting the sample.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c#n7389
+"When operating in split mode, it is a valid usecase to have only one core
+enabled in the cluster. Remove..."
 
-> 	}
 > 
-> That should handle *all* of the nastiness. The alignment, the init
-> optimization. *Please* use get_xsave_addr() or one of the other helpers.
+> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
+> ---
+> 
+> Change in v2:
+>   - limit core_count to max 2
+> 
+>  drivers/remoteproc/xlnx_r5_remoteproc.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> index 1af89782e116..a1beaa2acc96 100644
+> --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
+> +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> @@ -1336,12 +1336,9 @@ static int zynqmp_r5_cluster_init(struct zynqmp_r5_cluster *cluster)
+>  	 * and ignore core1 dt node.
+>  	 */
+>  	core_count = of_get_available_child_count(dev_node);
+> -	if (core_count == 0) {
+> +	if (core_count == 0 || core_count > 2) {
+>  		dev_err(dev, "Invalid number of r5 cores %d", core_count);
+>  		return -EINVAL;
+> -	} else if (cluster_mode == SPLIT_MODE && core_count != 2) {
+> -		dev_err(dev, "Invalid number of r5 cores for split mode\n");
+> -		return -EINVAL;
+>  	} else if (cluster_mode == LOCKSTEP_MODE && core_count == 2) {
+>  		dev_warn(dev, "Only r5 core0 will be used\n");
+>  		core_count = 1;
 
-Thanks, I will try to reuse the existing fpu functions as much as I can.
+When thinking about the specific usecase where, in split mode, a single core is
+enabled - can it be either core0 or core1 or does it have to be core0?
+
+Is the code in the driver ready to handle this configuration?
+
+The inline comments you already have to explain the possible configurations
+need to be update to address this new usecase.
 
 Thanks,
-Kan
+Mathieu
 
+> 
+> base-commit: dc8417021bcd01914a416bf8bab811a6c5e7d99a
+> -- 
+> 2.34.1
+> 
