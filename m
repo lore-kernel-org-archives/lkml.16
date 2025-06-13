@@ -1,330 +1,164 @@
-Received: from mail-qv1-f74.google.com (mail-qv1-f74.google.com [209.85.219.74])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821F725B302
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC49246BA9
+	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 20:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749846206; cv=none; b=MqCxCCqdRiaX16BzX4DVN8Vb4XaQEw5LDxMEhDKvdq3zxjfzS7QAVWO+MCpwVKFdkUW3lbukfi43iS7LIhVyTSw/THZPaGinnQnh79aTE6Wl2aYauxyDDuNPAhiwmnr/GDEt1DmKiYpvJvP9gaZOv/q/QlcY0ykLyStKOeusDuc=
+	t=1749846410; cv=none; b=pn7Xfi9dydQaORJ9Vzya8yaWhJvQb/b1DcOUp3gRK4r0hYQpsfw+iW+8bstivMAvaSAHdoehAlphAGcihxNvduIQsHj2a4naq03qMcpuL0Y8Dm1kaGIaMI1jM14XcMOZy4VKZjCKVDUxJJw2/lYb65M3NapL6pOq+o1914oSBeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749846206; c=relaxed/simple;
-	bh=VER9ArbSHOwnBBBzloqqIylNJCaqitu4kwv4gydj20I=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NMQ2Yxz2GSb+SjJtFs1D7WeUtjDCyjUES1Glef3lOXhV3DgN/bfn8SI7FREIS12tavaxImWsMJ5ZzpBF4x+fanmzpt8KN2dmBim+i1aQOjOgJCqu8ayDlcj+JF/Tn2LVwIpgMzrTf6t00iEdMNuyz2QKvTJfa1VdpO4Os0mk6jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lyRdPdwA; arc=none smtp.client-ip=209.85.219.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
+	s=arc-20240116; t=1749846410; c=relaxed/simple;
+	bh=DFyKp/yhJZEzV1BA2ndAeoIkyIKISY9X93mahyLohhk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TMoxdTSiwCnpqyQUSaMGhSf5LensZ+yyMwyqY5R1q3uhXmtpE6Ok80vjGg4VqGb8UMs2zq8Vald/v7bBShOaVEsDLoRU6Vt3EfpF3EURLPOXAk2L1LIhWcrVIPcWl0mnfqEepcKbPh6hUbaiG4cgAZVECyU7dSspXZ5J9NVwsjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=LMLi0Gy3; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lyRdPdwA"
-Received: by mail-qv1-f74.google.com with SMTP id 6a1803df08f44-6fad29c1b72so34517716d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:23:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="LMLi0Gy3"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6facf4d8e9eso27523656d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 13:26:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749846203; x=1750451003; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OFaJFELA+zenLb8Y22gAlioJyRz/eOniSI4TmKAA5To=;
-        b=lyRdPdwAu9yTlC4G8XA5QLvnL+XUDF6v0xPz9HKNaF8RX7Bt6SdP0JTkTIPYd8la0R
-         0jugoMsaTltxzprwOUJJhNcaw7i29lc+AdjoCtaQQHYv2iwM4QEcpTqA4Wau5MoaZ7dk
-         lphum7O5X3url3MJ4buGyt5DvH5AqH6/ve8naDD78SJhGeOdseurr18Tij7lz2wYo2bs
-         jNnlQlSsBlrfRk/p0baO9UQSdIxM4t9z6PPRuoT1DmLvCjg8ukyge2QReoePlJSSUazy
-         QMPYtLKwd5c80PFJFLQg3J03jJIQ3MIPz2tc7iZX+Ku+ePiszBEZhqjRMVvlj/lzzwOf
-         4EXA==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749846408; x=1750451208; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s1F7eBu2yh4yyIng6GZ4YIrhraTRHuVfaAEr8sxIw/I=;
+        b=LMLi0Gy3QwXNVMEYLsGW3kGCoteuVpcrg7t8kLBdMd9aj7M9aF0CyoYSta1I7orYnR
+         GEASRi5TX9Dj05ClxZ2bIAAxzNe+PJNr7wZFLNLm/SE9IOAMN+vIXc+Q5pCFNfOiWrlM
+         015f9l8tmbPsN2syU95pIsoKt0nD7bklIA9WV2nB794zNKy6tuUbg2Ye026Ikt+B6SMC
+         LxO2xtKZwj/fIw7i3cJqs1yGmpLZvbsPjxrREjXVQk6UinfWH1+ssbI2rI4q2w/Cwcaj
+         7abRMiJpRAIw76WS/Pdo4VU6nWN0O0+3t174YyQiHtdjLH3UKTnSjQnfs0RqsEufuSqa
+         Ji5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749846203; x=1750451003;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OFaJFELA+zenLb8Y22gAlioJyRz/eOniSI4TmKAA5To=;
-        b=NUQfH796SzHyXIXmcxmj5vyhHqtJ6jFUAeAv8kWxu3+ERN8EjTbdDldP5FDH7GrkqW
-         3Lu8qz4W+Z7fmQMdbysMm7BlZzGXuE0sBvBSHQCUWccSbhTw0GdHvAX+iI93kwCwxKRM
-         iddP8Qh6M+j2gsqNPV6Ae0g8dNKA5ArY+W0W8UTTHYFb//DnvSf8nRgJGwIDb5N0xdt6
-         qToLpjmFcoC9zMsmCyEm4gwtavBpLgGUaPjh0z5OCnCGpizMkvXPxbXPhe8ArB9vrtzb
-         lzCG/5nDEOrla6o+pxvtYRf8I0xcRjD+KUKZ5iDYm1xEBOX0DAYdP7a0JD/leGOuN33/
-         GGqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXb+LX9hnnEgRzUCJl9T9m2q4J3sNn8EkmAtiHEFxxWsQFcldRIZpUKAEcztGOPxa8lsYyJG5craekRHHA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPJ4uwqzZAMAfVpA+IkqtSGtp+9W9GQ78gtJUVJpxSiixjYVVL
-	tFbfzsmM1SJovxfJuGblkCXF/UpfKobYLLrN776qSfft19Hg39OnQx6yKX3ODl9/EGtjfWAzfxf
-	OowkDpWFrlYcoW1aNhaWNTA==
-X-Google-Smtp-Source: AGHT+IGEHUiDm4lDXoBuTgKOdQu5vKdi/t6ue2qnZlGualobYksBIHMvyieKg485zbwec9gdzCbGijkjqn2gbGxH
-X-Received: from qvri17.prod.google.com ([2002:a0c:edd1:0:b0:6fa:fc20:67])
- (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6214:458f:b0:6ed:df6:cdcd with SMTP id 6a1803df08f44-6fb47774531mr12272756d6.21.1749846203466;
- Fri, 13 Jun 2025 13:23:23 -0700 (PDT)
-Date: Fri, 13 Jun 2025 20:23:14 +0000
-In-Reply-To: <20250613202315.2790592-1-jthoughton@google.com>
+        d=1e100.net; s=20230601; t=1749846408; x=1750451208;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s1F7eBu2yh4yyIng6GZ4YIrhraTRHuVfaAEr8sxIw/I=;
+        b=wqh539oybwlwMqDBZlHcnSKecHUlLjcd8+5Wz2sT43GG7cI1f6XNataA8ADyHdX3fD
+         H5oE47s1RwTXLQzZEjUDuFnFlXcSHsd7/JslxgkKVSRtv5h1IbYKn8KoRiycuQ2f3WVt
+         Ra65cZhnFyNHxUWz8emgtocupfdJfAeXMjVR6i1IFT/hSDpSwZ7ZWWzMeF8sokNkS4CS
+         t1UXNvkOyTUECsfXoaKiiSE8s8P6ve2ifi8Xq6aDRKLx4xP3ULsctahvlwRMFpcVzeAY
+         lmWLRK0xnOzcrOsC/2Lzn1jbH5ajlgo142J2yxeT8vA8NhFdYX4hjYiroNzVT0841fMw
+         9y/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXMqzz/EOapdh2bURAVO66E9Ort9ubUjXiEt0MLzc+NEOH5pNH2M8aLt8YniKWFNp8HZVboVIZzed7oooA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJpg3z3SX2/t7xI6IZEUTosru4lOKTqkq1wFePHAUJBLrCySXV
+	LTjsXR1VnW/vlTtQmgEZ3HEbZE1utw9Af4eLjITAixGbLJ4VFI+JW6zhXdwv1yWO9Iyz1UMClnT
+	VuuJlqGQV13f1fTI72sij4oPCiDVeLYf6VqSQXhOU4Q==
+X-Gm-Gg: ASbGncunlPw7ljmxCu5IwKvTNRXB2cWzt7eBwoH6jdvjJ0dVYdcfS658khK2cVE8J9j
+	VAGlzYizhyMWrHS0J9Rq1wkHHh7FVCe2TAHPAvBQ3fOKzGwUefUVGNfzVyghhl/ROgTY0PrweXs
+	Uf92Gfkv0I9If5v9B/mUJEixmbsKUVMsWGtuhDN635
+X-Google-Smtp-Source: AGHT+IF3nwss38w+6sPte2LyqGqKz6Z8Ac5rw75TrU6T2qKoe2RWjWXsO/0k7+DIxBlrqkXH+4SsDrUNg7bBmP0KMdo=
+X-Received: by 2002:a05:6214:2022:b0:6e8:fbb7:675b with SMTP id
+ 6a1803df08f44-6fb477a609cmr14338616d6.32.1749846407982; Fri, 13 Jun 2025
+ 13:26:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250613202315.2790592-1-jthoughton@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
-Message-ID: <20250613202315.2790592-8-jthoughton@google.com>
-Subject: [PATCH v4 7/7] KVM: selftests: Add an NX huge pages jitter test
-From: James Houghton <jthoughton@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
-Cc: Vipin Sharma <vipinsh@google.com>, David Matlack <dmatlack@google.com>, 
-	James Houghton <jthoughton@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+ <20250515182322.117840-10-pasha.tatashin@soleen.com> <mafs0y0u6rx8y.fsf@kernel.org>
+ <CA+CK2bCigGJJqtSt1-4GP0JPVCZrTa6WS4LiMTT0J=04G64e5w@mail.gmail.com> <mafs0h60jmzzc.fsf@kernel.org>
+In-Reply-To: <mafs0h60jmzzc.fsf@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 13 Jun 2025 16:26:10 -0400
+X-Gm-Features: AX0GCFuCENC8DGDNRlKtZr6QEPTNog2Lyu6MfBppirHIT_JNXbHcfvU0_kVcGIQ
+Message-ID: <CA+CK2bA6zsdARkRMQwadD__qXOzjABcRnwdZjfdnvLf26hsz9w@mail.gmail.com>
+Subject: Re: [RFC v2 09/16] luo: luo_files: implement file systems callbacks
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: jasonmiu@google.com, graf@amazon.com, changyuanl@google.com, 
+	rppt@kernel.org, dmatlack@google.com, rientjes@google.com, corbet@lwn.net, 
+	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
+	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
+	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
+	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
+	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a test that checks how much NX huge page recovery affects vCPUs that
-are faulting on pages not undergoing NX huge page recovery. To do this,
-this test uses a single vCPU to touch all of guest memory. After every
-1G of guest memory, it will switch from writing to executing. Only the
-writes are timed.
+On Fri, Jun 13, 2025 at 11:18=E2=80=AFAM Pratyush Yadav <pratyush@kernel.or=
+g> wrote:
+>
+> On Sun, Jun 08 2025, Pasha Tatashin wrote:
+>
+> > On Thu, Jun 5, 2025 at 12:04=E2=80=AFPM Pratyush Yadav <pratyush@kernel=
+.org> wrote:
+> >>
+> >> On Thu, May 15 2025, Pasha Tatashin wrote:
+> >>
+> >> > Implements the core logic within luo_files.c to invoke the prepare,
+> >> > reboot, finish, and cancel callbacks for preserved file instances,
+> >> > replacing the previous stub implementations. It also handles
+> >> > the persistence and retrieval of the u64 data payload associated wit=
+h
+> >> > each file via the LUO FDT.
+> >> >
+> >> > This completes the core mechanism enabling registered filesystem
+> >> > handlers to actively manage file state across the live update
+> >> > transition using the LUO framework.
+> >> >
+> >> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> >> > ---
+> >> >  drivers/misc/liveupdate/luo_files.c | 105 +++++++++++++++++++++++++=
+++-
+> >> >  1 file changed, 103 insertions(+), 2 deletions(-)
+> >> >
+> >> [...]
+> >> > @@ -305,7 +369,29 @@ int luo_do_files_prepare_calls(void)
+> >> >   */
+> >> >  int luo_do_files_freeze_calls(void)
+> >> >  {
+> >> > -     return 0;
+> >> > +     unsigned long token;
+> >> > +     struct luo_file *h;
+> >> > +     int ret;
+> >> > +
+> >> > +     xa_for_each(&luo_files_xa_out, token, h) {
+> >>
+> >> Should we also ensure at this point that there are no open handles to
+> >> this file? How else would a file system ensure the file is in quiescen=
+t
+> >> state to do its final serialization?
+> >
+> > Do you mean check refcnt here? If so, this is a good idea, but first
+> > we need to implement the lifecycle of liveupdate agent correctectly,
+> > where owner of FD must survive through entering into reboot() with
+> > /dev/liveupdate still open.
+>
+> Yes, by this point we should ensure refcnt =3D=3D 1. IIUC you plan to
+> implement the lifecycle change in the next revision, so this can be
+> added there as well I suppose.
 
-With this setup, while the guest is in the middle of reading a 1G
-region, NX huge page recovery (provided it is set aggressive enough)
-will start to recover huge pages in the previous 1G region.
+Yes, I am working on that. Current, WIP patch looks like this:
+https://github.com/soleen/linux/commit/fecf912d8b70acd23d24185a8c0504764e43=
+a279
 
-Signed-off-by: James Houghton <jthoughton@google.com>
----
- tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- .../kvm/x86/nx_huge_pages_perf_test.c         | 223 ++++++++++++++++++
- 2 files changed, 224 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/x86/nx_huge_pages_perf_test.c
+However, I am not sure about refcnt =3D=3D 1 at freeze() time. We can have
+programs, that never terminated while we were still in userspace (i.e.
+kexec -e -> reboot() -> freeze()), in that case refcnt can be anything
+at the time of freeze, no?
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index 0dc435e944632..4b5be9f0bac5b 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -88,6 +88,7 @@ TEST_GEN_PROGS_x86 += x86/kvm_buslock_test
- TEST_GEN_PROGS_x86 += x86/monitor_mwait_test
- TEST_GEN_PROGS_x86 += x86/nested_emulation_test
- TEST_GEN_PROGS_x86 += x86/nested_exceptions_test
-+TEST_GEN_PROGS_x86 += x86/nx_huge_pages_perf_test
- TEST_GEN_PROGS_x86 += x86/platform_info_test
- TEST_GEN_PROGS_x86 += x86/pmu_counters_test
- TEST_GEN_PROGS_x86 += x86/pmu_event_filter_test
-diff --git a/tools/testing/selftests/kvm/x86/nx_huge_pages_perf_test.c b/tools/testing/selftests/kvm/x86/nx_huge_pages_perf_test.c
-new file mode 100644
-index 0000000000000..e33e913ec7dfa
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86/nx_huge_pages_perf_test.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * nx_huge_pages_perf_test
-+ *
-+ * Copyright (C) 2025, Google LLC.
-+ *
-+ * Performance test for NX hugepage recovery.
-+ *
-+ * This test checks for long faults on allocated pages when NX huge page
-+ * recovery is taking place on pages mapped by the VM.
-+ */
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
-+
-+#include "test_util.h"
-+
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "ucall_common.h"
-+
-+/* Default guest test virtual memory offset */
-+#define DEFAULT_GUEST_TEST_MEM		0xc0000000
-+
-+/* Default size (2GB) of the memory for testing */
-+#define DEFAULT_TEST_MEM_SIZE		(2 << 30)
-+
-+/*
-+ * Guest virtual memory offset of the testing memory slot.
-+ * Must not conflict with identity mapped test code.
-+ */
-+static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
-+
-+static struct kvm_vcpu *vcpu;
-+
-+struct test_params {
-+	enum vm_mem_backing_src_type backing_src;
-+	uint64_t memory_bytes;
-+};
-+
-+struct guest_args {
-+	uint64_t guest_page_size;
-+	uint64_t pages;
-+};
-+
-+static struct guest_args guest_args;
-+
-+#define RETURN_OPCODE 0xC3
-+
-+static void guest_code(int vcpu_idx)
-+{
-+	struct guest_args *args = &guest_args;
-+	uint64_t page_size = args->guest_page_size;
-+	uint64_t max_cycles = 0UL;
-+	volatile char *gva;
-+	uint64_t page;
-+
-+
-+	for (page = 0; page < args->pages; ++page) {
-+		gva = (volatile char *)guest_test_virt_mem + page * page_size;
-+
-+		/*
-+		 * To time the jitter on all faults on pages that are not
-+		 * undergoing nx huge page recovery, only execute on every
-+		 * other 1G region, and only time the non-executing pass.
-+		 */
-+		if (page & (1UL << 18)) {
-+			uint64_t tsc1, tsc2;
-+
-+			tsc1 = rdtsc();
-+			*gva = 0;
-+			tsc2 = rdtsc();
-+
-+			if (tsc2 - tsc1 > max_cycles)
-+				max_cycles = tsc2 - tsc1;
-+		} else {
-+			*gva = RETURN_OPCODE;
-+			((void (*)(void)) gva)();
-+		}
-+	}
-+
-+	GUEST_SYNC1(max_cycles);
-+}
-+
-+struct kvm_vm *create_vm(uint64_t memory_bytes,
-+			 enum vm_mem_backing_src_type backing_src)
-+{
-+	uint64_t backing_src_pagesz = get_backing_src_pagesz(backing_src);
-+	struct guest_args *args = &guest_args;
-+	uint64_t guest_num_pages;
-+	uint64_t region_end_gfn;
-+	uint64_t gpa, size;
-+	struct kvm_vm *vm;
-+
-+	args->guest_page_size = getpagesize();
-+
-+	guest_num_pages = vm_adjust_num_guest_pages(VM_MODE_DEFAULT,
-+				memory_bytes / args->guest_page_size);
-+
-+	TEST_ASSERT(memory_bytes % getpagesize() == 0,
-+		    "Guest memory size is not host page size aligned.");
-+
-+	vm = __vm_create_with_one_vcpu(&vcpu, guest_num_pages, guest_code);
-+
-+	/* Put the test region at the top guest physical memory. */
-+	region_end_gfn = vm->max_gfn + 1;
-+
-+	/*
-+	 * If there should be more memory in the guest test region than there
-+	 * can be pages in the guest, it will definitely cause problems.
-+	 */
-+	TEST_ASSERT(guest_num_pages < region_end_gfn,
-+		    "Requested more guest memory than address space allows.\n"
-+		    "    guest pages: %" PRIx64 " max gfn: %" PRIx64
-+		    " wss: %" PRIx64 "]",
-+		    guest_num_pages, region_end_gfn - 1, memory_bytes);
-+
-+	gpa = (region_end_gfn - guest_num_pages - 1) * args->guest_page_size;
-+	gpa = align_down(gpa, backing_src_pagesz);
-+
-+	size = guest_num_pages * args->guest_page_size;
-+	pr_info("guest physical test memory: [0x%lx, 0x%lx)\n",
-+		gpa, gpa + size);
-+
-+	/*
-+	 * Pass in MAP_POPULATE, because we are trying to test how long
-+	 * we have to wait for a pending NX huge page recovery to take.
-+	 * We do not want to also wait for GUP itself.
-+	 */
-+	vm_mem_add(vm, backing_src, gpa, 1,
-+		   guest_num_pages, 0, -1, 0, MAP_POPULATE);
-+
-+	virt_map(vm, guest_test_virt_mem, gpa, guest_num_pages);
-+
-+	args->pages = guest_num_pages;
-+
-+	/* Export the shared variables to the guest. */
-+	sync_global_to_guest(vm, guest_args);
-+
-+	return vm;
-+}
-+
-+static void run_vcpu(struct kvm_vcpu *vcpu)
-+{
-+	struct timespec ts_elapsed;
-+	struct timespec ts_start;
-+	struct ucall uc = {};
-+	int ret;
-+
-+	clock_gettime(CLOCK_MONOTONIC, &ts_start);
-+
-+	ret = _vcpu_run(vcpu);
-+
-+	ts_elapsed = timespec_elapsed(ts_start);
-+
-+	TEST_ASSERT(ret == 0, "vcpu_run failed: %d", ret);
-+
-+	TEST_ASSERT(get_ucall(vcpu, &uc) == UCALL_SYNC,
-+		    "Invalid guest sync status: %" PRIu64, uc.cmd);
-+
-+	pr_info("Duration: %ld.%09lds\n",
-+		ts_elapsed.tv_sec, ts_elapsed.tv_nsec);
-+	pr_info("Max fault latency: %" PRIu64 " cycles\n", uc.args[0]);
-+}
-+
-+static void run_test(struct test_params *params)
-+{
-+	/*
-+	 * The fault + execute pattern in the guest relies on having more than
-+	 * 1GiB to use.
-+	 */
-+	TEST_ASSERT(params->memory_bytes > PAGE_SIZE << 18,
-+		    "Must use more than 1GiB of memory.");
-+
-+	create_vm(params->memory_bytes, params->backing_src);
-+
-+	pr_info("\n");
-+
-+	run_vcpu(vcpu);
-+}
-+
-+static void help(char *name)
-+{
-+	puts("");
-+	printf("usage: %s [-h] [-b bytes] [-s mem_type]\n",
-+	       name);
-+	puts("");
-+	printf(" -h: Display this help message.");
-+	printf(" -b: specify the size of the memory region which should be\n"
-+	       "     dirtied by the guest. e.g. 2048M or 3G.\n"
-+	       "     (default: 2G, must be greater than 1G)\n");
-+	backing_src_help("-s");
-+	puts("");
-+	exit(0);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct test_params params = {
-+		.backing_src = DEFAULT_VM_MEM_SRC,
-+		.memory_bytes = DEFAULT_TEST_MEM_SIZE,
-+	};
-+	int opt;
-+
-+	while ((opt = getopt(argc, argv, "hb:s:")) != -1) {
-+		switch (opt) {
-+		case 'b':
-+			params.memory_bytes = parse_size(optarg);
-+			break;
-+		case 's':
-+			params.backing_src = parse_backing_src_type(optarg);
-+			break;
-+		case 'h':
-+		default:
-+			help(argv[0]);
-+			break;
-+		}
-+	}
-+
-+	run_test(&params);
-+}
--- 
-2.50.0.rc2.692.g299adb8693-goog
+Pasha
 
+>
+> [...]
+>
+> --
+> Regards,
+> Pratyush Yadav
