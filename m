@@ -1,45 +1,46 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2087.outbound.protection.outlook.com [40.107.236.87])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2082.outbound.protection.outlook.com [40.107.220.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2835273D9D;
-	Fri, 13 Jun 2025 21:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589DF273816;
+	Fri, 13 Jun 2025 21:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749848884; cv=fail; b=gFQCTvPsSpGkDpISJbdzJT/HYtiVq8AMR/WWFGg/cnE4NLVQocWjZ+oaneLo5au7Wss/I12AinyyZr4cfUDWq/fDlygzALKijagmbHawHpNJy1DJ7x5f4Y2ZDgxFo9WZ9KrshFAhNzbeosSLvEkyJZLPAS+bS4Sf5IiBweK372w=
+	t=1749848887; cv=fail; b=jFOK96eUoUmqwktpeSL99e/9df1whxq/ci+osqc3FzKPwvSgRRa7ovqA2782k/zX3TrP7V3J392BrmDothT9cnzE51amKTYLkxTH/Jhj6b5yxJwMdP8Fx4RDjJCkK8k7rxHUevqfNVz2DrIAVDlEchrTX017IuBmarzs/lOecFs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749848884; c=relaxed/simple;
-	bh=CFZZ4Y+8y9Mcy7qyY1/na5fg+RZlOVl3ebT+KDT05iI=;
+	s=arc-20240116; t=1749848887; c=relaxed/simple;
+	bh=NoCvKmrRbLjHWxz43aN0b8VfM+3yOjZXaqRZSjcZA7M=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IXkWY44P1t3+dvH7w471IkMW33Z5yzoeUjRMN+M2Q7rsnnonAXvOUHVQFZmVl8KsGP8Iyk+sS4ITGQIceRU98V/3pDorv0kLL5eEwyr4Zp4pNOP8+LFxUfrIY0IsApLpL0YcGwhnj78ldSDAYeuCMCd7Kn1N7ebuaAI1oOvqdg4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ld8bm178; arc=fail smtp.client-ip=40.107.236.87
+	 MIME-Version:Content-Type; b=EHUSzavb8NH7q0OmACVwO+TMPH6hb006QetSa/svL6q/6oyLdqCLRd1Faa1LoZKjCvJKrdus0rEaVvwNWMgUQReHouO7I4XM2xRmwqdpldtwzj1ToEBpILinK80kJzBqxmYddTQPCozrQYmhai7Ts3cjB2KD4j1rpMzUXCEN6YU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yKyujKK9; arc=fail smtp.client-ip=40.107.220.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ld8bm178"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yKyujKK9"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AUsntiNDogxfuumL5MZqNdarV7wVI5BPLk7JkJgREAKaM02BbBxH+AvGNcjsLyWzJm/PAIuxrKNuu7Ps1Pamthlh3u5Ceo2cbjb74VE5PyLXa2E+PahS5ctfmw9lP/HI7U9FNI/+uMchcNWVOXCYcPke4MDiAehD+BjhGWjdACpLjqs3Xo5YHtqOxNzZjLSzSqotgssgpQffyrdW98uWqjRJyu0Fp3jHYhELcIEr79zjiZkyH9vJ6l+ORX5IOTBvueCKTYlj5UYO9oldLNtozFKftz2aMKmRaumisO+fVi2xDvNONj0466rAobrD7EqrODHCufJgEfd1poybhH07jg==
+ b=r2bDa7DQWAiigesXupJI2z5i1Bwfhpsby0tGinuET6UkNdfGZaq6CRd7tXxizQyt83XgSyBKLM+vRUnfswnxqmHAWPB78fShTcVYeDWouX0WSEcy5kJlPcZBHdFodNr8vMJk6cWXS1zgfYPite2K4CBZe2nRzRy+L3aUAzRhfzvPu8W0IMc48oFnLK7PtgoGnsVkCmFhUoZSeupr9Fxn1w7GzPfaSXngikUTnp9zi2gwIQdodf8lti9LI/p0pxC8emqliApzL9Z8K03EFiQzXuhc8NKInOW0vHmaQcMI1AsXW4562MwBkx5f1ckkJ3/4HX4y4ElzdwDhqfy+DkRDDQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QXYD/H8mcF6+k5rhW9/p4qVdw+xoTCeG5UTEQ7KLbS0=;
- b=V8zpqhnat3GyLIv53k8rUSAlmh/l0Cj9rO1OA4QMSRAiA4PxPaxmVUFXFOV82Lj7pGhgUKQT/OG8MahvbNh45qbeDnm6ya8L7s6GqY3i90skwRGnUHPa2euPU5fSmPmf6EkzAH61qUoNWcyn/g8bVfpp3wzpRSRuD1/1BUie7+u9ggCzLTJlE5fMn97eVKK+gZ3UVriHZ4wvggA0fV4qhSootszknf9t27SFpN6nAlsKU68fsaYtX8WgBr8ErdvPhxaqzlO/6jsQOLjSswzqtN+LCd3kgn7IHDGCnGF8A5PzOy7CyfvQJ4jxwaO6Rsr7Q4FAlgsOy+cv8/IbZ4g4Yg==
+ bh=DwVv5RYmWSy+Uc0Qp7g9Rqt394dhUp3ERCT3KZg4Kks=;
+ b=MuXN58J7KZUtPxXyGEadFuMD29fMjHsct2vGsD6zUVXmZiYzxFlDRcnpCTSrCXrP9GwSE7WsfBHKp6/3pm3TtfXv0oIoSgjzNsolxG7dfeMNsepC5/Qsb/3bZDM7Nq+gJEL8whs5FM4xfAZ7F8nO0MlgsUZiMBB2MiNlenRtJRzDKlBuwiBHUiwSYW5kH8gkvIb/a4ejc7hhuSACvQE9msKZLvCgcBLUSB8IeWfJMaim14K3k0ZTaqw7rbE+axmxTa6EOBrXZiWlQy3kpzGRC5VLDSpASRWndoV5xzIZb0cWsNMIaCr0YVQju160lnP2Vglnx0pbpooUXm0SJNC0VQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=lwn.net smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QXYD/H8mcF6+k5rhW9/p4qVdw+xoTCeG5UTEQ7KLbS0=;
- b=ld8bm178nbl9BVUlxTzz9tcMtbRpwnreCGhMzIOg2VCBKivYWatFdlQ9RXHDolmKPm6f1RoVt1m+VO38BeUh2SDVxiOT3V17NslL9ZLrq8zBzWqlvT8oFjGZa/B9QasQWRsH92QqIpqIU+NKGBHiaoRiYTB8YfOc6Gc/+a2lTUQ=
-Received: from DM6PR05CA0058.namprd05.prod.outlook.com (2603:10b6:5:335::27)
- by DS0PR12MB8320.namprd12.prod.outlook.com (2603:10b6:8:f8::14) with
+ bh=DwVv5RYmWSy+Uc0Qp7g9Rqt394dhUp3ERCT3KZg4Kks=;
+ b=yKyujKK9ISGMYDifmROkS3T/16+lH0H6D3MxwiXW862TJ6KG2cILKsp8E7ROQ/8PefBMCtaDxspl699BGfR95RxeJMTR5UO7xhI04WeRLWIpkOGdxqZk2AbvII3wVdz40g6hafJJiQFLjTHsvEx1R13QioY6K6I3MJugBchi0r0=
+Received: from CYZPR17CA0008.namprd17.prod.outlook.com (2603:10b6:930:8c::17)
+ by DS0PR12MB6608.namprd12.prod.outlook.com (2603:10b6:8:d0::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Fri, 13 Jun
- 2025 21:07:55 +0000
-Received: from CY4PEPF0000EDD0.namprd03.prod.outlook.com (2603:10b6:5:335::4)
- by DM6PR05CA0058.outlook.office365.com (2603:10b6:5:335::27) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19
- via Frontend Transport; Fri, 13 Jun 2025 21:07:55 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.41; Fri, 13 Jun
+ 2025 21:08:04 +0000
+Received: from CY4PEPF0000EDD4.namprd03.prod.outlook.com
+ (2603:10b6:930:8c:cafe::de) by CYZPR17CA0008.outlook.office365.com
+ (2603:10b6:930:8c::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.25 via Frontend Transport; Fri,
+ 13 Jun 2025 21:08:03 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD0.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ CY4PEPF0000EDD4.mail.protection.outlook.com (10.167.241.200) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 21:07:55 +0000
+ 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 21:08:03 +0000
 Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 13 Jun
- 2025 16:07:53 -0500
+ 2025 16:08:01 -0500
 From: Babu Moger <babu.moger@amd.com>
 To: <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
 	<reinette.chatre@intel.com>, <Dave.Martin@arm.com>, <james.morse@arm.com>,
@@ -70,9 +71,9 @@ CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
 	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
 	<eranian@google.com>, <linux-doc@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v14 18/32] fs/resctrl: Add the functionality to assign MBM events
-Date: Fri, 13 Jun 2025 16:05:02 -0500
-Message-ID: <eea2cfb5b6231b322ab2194abfcd1ce335e2bdf5.1749848715.git.babu.moger@amd.com>
+Subject: [PATCH v14 19/32] fs/resctrl: Add the functionality to unassign MBM events
+Date: Fri, 13 Jun 2025 16:05:03 -0500
+Message-ID: <83d54b00cc873d7d4dec433b7f528da10963d025.1749848715.git.babu.moger@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1749848714.git.babu.moger@amd.com>
 References: <cover.1749848714.git.babu.moger@amd.com>
@@ -88,284 +89,206 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD0:EE_|DS0PR12MB8320:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6559eaef-62cc-4102-e651-08ddaabe5e22
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD4:EE_|DS0PR12MB6608:EE_
+X-MS-Office365-Filtering-Correlation-Id: 05912bb3-b089-4d61-c1b1-08ddaabe631a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|36860700013|82310400026|921020;
+	BCL:0;ARA:13230040|7416014|82310400026|376014|1800799024|36860700013|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?u516bxvRaVg8lcZJ1wL28QEDmlHwVgYpkyMW6bqKC0ryrG48Yj64qIRaq2aQ?=
- =?us-ascii?Q?f2XLnD4OteG0zdLG7IvmwNj1CRsxB1/w6SxpWBQJGjEOFBkoxZpJP7kHb9f3?=
- =?us-ascii?Q?IQlgAd+MnxRisMWw/eb72UOlFXdt1Q8cimy3o/81tvHtaNY00x88iFS32vXZ?=
- =?us-ascii?Q?ronh7nUrzwy7t8uqbATtuQ18sHQium31oOPkzlq6xIVTECUztcnOMEqxuLl0?=
- =?us-ascii?Q?I/kih+aYYj3EH79pyymIi3YjXxhgj4x4CIwgFqGscnTfAczu3/HvHkZe4645?=
- =?us-ascii?Q?7F1gGmKbLXE1kNukYl0oZ1+F3hONrWOtOpCk5UWXwSipluwHTwAapjYETBZh?=
- =?us-ascii?Q?YtcjnoCYrCpkCoaUWmhff3wvUsnQt7Nd5paSMnUlV+BvmWkm7wlAbFh4QP3C?=
- =?us-ascii?Q?UsM9WyfmNjGcK5ioDX00tLfkNMu72aZanTuz/O6yf7A5R1JIAX8o0O2iO3Np?=
- =?us-ascii?Q?xJ5s1mxD0RriaylrJXNH2HMmdKxeqBGtD+F63F7i0OsCd50HOrEFMd9+75Vw?=
- =?us-ascii?Q?IZJLWYusTieIEYg8QZIHTbJ72T7wPFs/EiP70ALSgscB+ndE5DyMyf4oiiO+?=
- =?us-ascii?Q?J+F1X9O7Y8uioXHjKjknHFLCWLNdIbcSqoeAGXifhzS7sEW8CBwZZta4W19g?=
- =?us-ascii?Q?nuaUs7vD4VkheX8Szcj30vtKhO8knsjkK8PM41g14RkB8aLqIebVHpnVoZWN?=
- =?us-ascii?Q?/343PEXDN85sb5NXDqLNpn3Yy4r+BboBav0ZNgNg3ZK5F2d7y6AvlIfBbC/2?=
- =?us-ascii?Q?b5d9bkLFTKs2L08/mZo2QZeDrxC/V7aRqmvnqbs1txbIPSlmM2R7EcGSlCzP?=
- =?us-ascii?Q?7RBrEtnnCwDsc2tis4nq+D7fauIz3Z8fabDuiO9eyUFKX4i7KYkj2kHG3Duw?=
- =?us-ascii?Q?OJRutHoKKfivEL4tdKRWORh/miL4GOCt/Hwy8p/W+46xr/DL35xnMdeKvOZZ?=
- =?us-ascii?Q?4QDHPLvgxm4a1SEfNGnluid5b4OIropolbBzNAsPOxcGdrtgBQ4vzYjub1Sj?=
- =?us-ascii?Q?ohH8B4lck45oCof/5s9KUo9FjySmaaV+vo1pPE47CbbYgA9cru1GA6pSUAVT?=
- =?us-ascii?Q?0OKcF3pwBjOgchiB22gly3VAiEdJqB7U6rj0nq6Q0c+ZS22+qi+aoMrQVxgP?=
- =?us-ascii?Q?HluiakLURU3OKwAKWNixNLHIuuk4QQWy3eUn4gpoUj1WGFmivT1gyOssLXGs?=
- =?us-ascii?Q?cqCgQF4f/8/UYzQLGH5tWyDxBtsAfBSChHFbNiiMgmI3h4qm6Au42uPfsvq/?=
- =?us-ascii?Q?kZ8Eeqltdnbv2OhmITU+rj4ihKdHLFoMe7tEXcSnj9mf8BMTsVfpSGcrHAMN?=
- =?us-ascii?Q?JJFEK/0VIcFhauS/7fWMlafAcz7L+1JdaVtujdxvWv4/JUVaxlUgD7gARMVW?=
- =?us-ascii?Q?Zq+db+R6Q6vJBglB9uNTrOsBUY7E28jIsRpJvT3VxsbQwoITgq4zwrCwPmNV?=
- =?us-ascii?Q?/WlUGFygnAQ1t+szB3lVJzXcgpsGnhSRRgujtCOgKleh+U4f5GwvsdIj0pDm?=
- =?us-ascii?Q?j2tqzYtwYA27vM80200wNaHxEHFimsdhvfotLS9G9/4yUcAireGMdhKXo5Mv?=
- =?us-ascii?Q?0OJHlPrXNb1fTr72szo=3D?=
+	=?us-ascii?Q?MW+7KnJKnA5p1gqZ1Myup6lipwHuy+OaG977snnchMEgKVC88j+Any39LNye?=
+ =?us-ascii?Q?S9aWv1tFIaNNKiz8SHArB0+4ms3ZqdUnfSNRqktmpospLJUYSdEpKdum0ZGd?=
+ =?us-ascii?Q?xfhQcjqus/HUyCK3KNKGf3RL0jZ/oaE+y9vJTW25ls/mSYkOgOKLtRH1jaBB?=
+ =?us-ascii?Q?u6gO7wk8uncBt7BXYL4uHMb8y6cO2LRL4PmwAzAF+xW7BgZ3dJ9H2rYEtal0?=
+ =?us-ascii?Q?mo/6+9yAiXBUwdy1d3UD6wuV8g+HC3yEGYOta9p/zCu8Cxeqw+3eYuVg1t0R?=
+ =?us-ascii?Q?W4CFVt8BUIGDKbmWnJ9xgYg3WzgL8PnolbbhEkpUpgoYCezr1fFJ9zeUAlKz?=
+ =?us-ascii?Q?VP9GabQFKx3SGL44mq3o0N+ArxvuSIMXGLrJ3ShvFVv0Uoy4hxYhdv668xcR?=
+ =?us-ascii?Q?jjMMwD1rZ9BaltnBqGiJ9AdOdACfBhr3PUQwAHiy6LTFTSdoJgatdbBNrWyX?=
+ =?us-ascii?Q?QsfJntSnPw/505t01if0sICVn7AY0mjVnGbN+VkfRhhAA4kyTYvgUtXH4LOP?=
+ =?us-ascii?Q?DT4GkfcmN+JK4QTHHeo2Nw3rRYHZ4nnDqH0oi3L/cgPlYxz8ZYAPQMsolqas?=
+ =?us-ascii?Q?Op8pyqeFi5Y+wZ/oaM0U9jxH/mpSTkjqS5H1Q5I16nvueAgFDfn8pVKGexg4?=
+ =?us-ascii?Q?mUT8ObtOstZQ4VW45vQIDOtWAS3+ohclvMbdAyTKFJMAg4yXAORSEBMJ3/IH?=
+ =?us-ascii?Q?ERe8/RX93mFywlADkOOfk4Q0CjCntUpKiKB5kn8Io7Nuuy+uQB1FGFtYhETZ?=
+ =?us-ascii?Q?xqPl2vgaQ2qP0XfPXNCTxpGRVb7xP1gYNHZd7mx5hImiIVNUWh0duMsOz9xB?=
+ =?us-ascii?Q?WdMvHsx6Qb811H9ncdiZQsOx2Wyhu/AqfY/JvYAZEdX3weOLOK4MoaI1Naiv?=
+ =?us-ascii?Q?Z/vV507su+CzbQ3FTgPJ2MMKijHdGcDlanVhzahXsck60yy4exbogzHi0cw8?=
+ =?us-ascii?Q?9MAcXJ2VTT3SVqTIx7UsSnEM0/uuPKjHQc+OQMpGwza0bW4GisMxdCtCFxly?=
+ =?us-ascii?Q?plM55U07K67SnKHX8ZqLryNgfjLjjADz1wLoEipmMXcj/ApCBIH5yAgTydLD?=
+ =?us-ascii?Q?I3TsBnB4EZr/PvvL2a7xvxRNHtia2JYy6NMHFx/3L1DNxIwYCheUjig8Z/ip?=
+ =?us-ascii?Q?BxeFtMdiS6quchHpFwy5qucBU2usShO+xG87bwGro+OKzagvYNJNJMffAXy/?=
+ =?us-ascii?Q?VNYM2SdHLUFkZGSoGW5eJlKo4h3bgat5Jq9eGpashTRpbuEFM4J6PdRO/A9m?=
+ =?us-ascii?Q?w/u8H0LeorNxrwU/wnvH2JBJVT8GrhstFlY4YN4DNNzB+H22xt21MSM/jqzB?=
+ =?us-ascii?Q?XwhUiMwvBmv4VI1VnbSTESmhslgw2iGnZ2M48JepaI7crYaJHs+IdTa4kdst?=
+ =?us-ascii?Q?htUh5hilIt+VdqXPGr4+VCZbNm5rXkzU2g2tPOlkY6q/B7H7tNhz4fcyxJQS?=
+ =?us-ascii?Q?uPfE9V9c+p/aG+VHzuE/yPSmXhLujxNWhRxOZGFYWsoDi5DXdupyaOoxDrhG?=
+ =?us-ascii?Q?Blqih6GTXWMIK7Av6T5kCOTSQFY8ztDKoiC3jNmqdhx7jrbXGtAdTLk1Pw?=
+ =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(36860700013)(82310400026)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(376014)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 21:07:55.5328
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 21:08:03.8568
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6559eaef-62cc-4102-e651-08ddaabe5e22
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05912bb3-b089-4d61-c1b1-08ddaabe631a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD0.namprd03.prod.outlook.com
+	CY4PEPF0000EDD4.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8320
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6608
 
-When supported "mbm_event" mode offers "num_mbm_cntrs" number of counters
-that can be assigned to RMID, event pairs and monitor bandwidth usage as
-long as it is assigned.
+The "mbm_event" mode offers "num_mbm_cntrs" number of counters that can be
+assigned to RMID, event pairs and monitor bandwidth usage as long as it is
+assigned. If all the counters are in use, the kernel logs the error message
+"Unable to allocate counter in domain" in
+/sys/fs/resctrl/info/last_cmd_status when a new assignment is requested.
 
-Add the functionality to allocate and assign a counter ID to an RMID, event
-pair in the domain.
+To make space for a new assignment, users must unassign an already
+assigned counter and retry the assignment again.
 
-If all the counters are in use, kernel will log the error message "Unable
-to allocate counter in domain" in /sys/fs/resctrl/info/last_cmd_status
-when a new assignment is requested. Exit on the first failure when
-assigning counters across all the domains.
+Add the functionality to unassign and free the counters in the domain.
 
 Signed-off-by: Babu Moger <babu.moger@amd.com>
 ---
-v14: Updated the changelog little bit.
-     Updated the code documentation for mbm_cntr_alloc() and  mbm_cntr_get().
-     Passed struct mon_evt to resctrl_assign_cntr_event() that way to avoid
-     back and forth calls to get event details.
-     Updated the code documentation about the failure when counters are exhasted.
+v14: Passing the struct mon_evt to resctrl_free_config_cntr() and removed
+     the need for mbm_get_mon_event() call.
+     Corrected the code documentation for mbm_cntr_free().
+     Changed resctrl_free_config_cntr() and resctrl_unassign_cntr_event()
+     to return void.
      Changed subject line to fs/resctrl.
+     Updated the changelog.
 
-v13: Updated changelog.
-     Changed resctrl_arch_config_cntr() to return void instead of int.
-     Just passing evtid is to resctrl_alloc_config_cntr() and
-     resctrl_assign_cntr_event(). Event configuration value can be easily
-     obtained from mon_evt list.
-     Introduced new function mbm_get_mon_event() to get event configuration value.
-     Added prototype descriptions to mbm_cntr_get() and mbm_cntr_alloc().
+v13: Moved mbm_cntr_free() to this patch as it is used in here first.
+     Not required to pass evt_cfg to resctrl_unassign_cntr_event(). It is
+     available via mbm_get_mon_event().
      Resolved conflicts caused by the recent FS/ARCH code restructure.
-     The files monitor.c/rdtgroup.c have been split between FS and ARCH directories.
+     The monitor.c file has now been split between the FS and ARCH directories.
 
-v12: Fixed typo in the subjest line.
+v12: Updated the commit text to make bit more clear.
      Replaced several counters with "num_mbm_cntrs" counters.
-     Changed the check in resctrl_alloc_config_cntr() to reduce the indentation.
+     Fixed typo in the subjest line.
      Fixed the handling error on first failure.
      Added domain id and event id on failure.
-     Fixed the return error override.
-     Added new parameter event configuration (evt_cfg) to get the event configuration
-     from user space.
+     Added new parameter event configuration (evt_cfg) to provide the event from
+     user space.
 
-v11: Patch changed again quite a bit.
-     Moved the functions to monitor.c.
-     Renamed rdtgroup_assign_cntr_event() to resctrl_assign_cntr_event().
-     Refactored the resctrl_assign_cntr_event().
-     Added functionality to exit on the first error during assignment.
-     Simplified mbm_cntr_free().
-     Removed the function mbm_cntr_assigned(). Will be using mbm_cntr_get() to
-     figure out if the counter is assigned or not.
+v11: Moved the functions to monitor.c.
+     Renamed rdtgroup_unassign_cntr_event() to resctrl_unassign_cntr_event().
+     Refactored the resctrl_unassign_cntr_event().
      Updated commit message and code comments.
 
-v10: Patch changed completely.
+v10: Patch changed again.
      Counters are managed at the domain based on the discussion.
      https://lore.kernel.org/lkml/CALPaoCj+zWq1vkHVbXYP0znJbe6Ke3PXPWjtri5AFgD9cQDCUg@mail.gmail.com/
-     Reset non-architectural MBM state.
-     Commit message update.
+     commit message update.
 
-v9: Introduced new function resctrl_config_cntr to assign the counter, update
-    the bitmap and reset the architectural state.
-    Taken care of error handling(freeing the counter) when assignment fails.
-    Moved mbm_cntr_assigned_to_domain here as it used in this patch.
-    Minor text changes.
+v9: Changes related to addition of new function resctrl_config_cntr().
+    The removed rdtgroup_mbm_cntr_is_assigned() as it was introduced
+    already.
+    Text changes to take care comments.
 
-v8: Renamed rdtgroup_assign_cntr() to rdtgroup_assign_cntr_event().
-    Added the code to return the error if rdtgroup_assign_cntr_event fails.
-    Moved definition of MBM_EVENT_ARRAY_INDEX to resctrl/internal.h.
-    Updated typo in the comments.
+v8: Renamed rdtgroup_mbm_cntr_is_assigned to mbm_cntr_assigned_to_domain
+    Added return error handling in resctrl_arch_config_cntr().
 
-v7: New patch. Moved all the FS code here.
-    Merged rdtgroup_assign_cntr and rdtgroup_alloc_cntr.
-    Adde new #define MBM_EVENT_ARRAY_INDEX.
+v7: Merged rdtgroup_unassign_cntr and rdtgroup_free_cntr functions.
+    Renamed rdtgroup_mbm_cntr_test() to rdtgroup_mbm_cntr_is_assigned().
+    Reworded the commit log little bit.
+
+v6: Removed mbm_cntr_free from this patch.
+    Added counter test in all the domains and free if it is not assigned to
+    any domains.
+
+v5: Few name changes to match cntr_id.
+    Changed the function names to rdtgroup_unassign_cntr
+    More comments on commit log.
+
+v4: Added domain specific unassign feature.
+    Few name changes.
+
+v3: Removed the static from the prototype of rdtgroup_unassign_abmc.
+    The function is not called directly from user anymore. These
+    changes are related to global assignment interface.
+
+v2: No changes.
 ---
- fs/resctrl/internal.h |   3 +
- fs/resctrl/monitor.c  | 134 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 137 insertions(+)
+ fs/resctrl/internal.h |  2 ++
+ fs/resctrl/monitor.c  | 47 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
 diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
-index 71059c2cda16..0767a1c46f26 100644
+index 0767a1c46f26..4496c359ac22 100644
 --- a/fs/resctrl/internal.h
 +++ b/fs/resctrl/internal.h
-@@ -386,6 +386,9 @@ bool closid_allocated(unsigned int closid);
+@@ -388,6 +388,8 @@ int resctrl_find_cleanest_closid(void);
  
- int resctrl_find_cleanest_closid(void);
+ int resctrl_assign_cntr_event(struct rdt_resource *r, struct rdt_mon_domain *d,
+ 			      struct rdtgroup *rdtgrp, struct mon_evt *mevt);
++void resctrl_unassign_cntr_event(struct rdt_resource *r, struct rdt_mon_domain *d,
++				 struct rdtgroup *rdtgrp, struct mon_evt *mevt);
  
-+int resctrl_assign_cntr_event(struct rdt_resource *r, struct rdt_mon_domain *d,
-+			      struct rdtgroup *rdtgrp, struct mon_evt *mevt);
-+
  #ifdef CONFIG_RESCTRL_FS_PSEUDO_LOCK
  int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
- 
 diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-index 3e1a8239b0d3..38800fe45931 100644
+index 38800fe45931..f2636aea6545 100644
 --- a/fs/resctrl/monitor.c
 +++ b/fs/resctrl/monitor.c
-@@ -950,3 +950,137 @@ void resctrl_mon_resource_exit(void)
+@@ -1016,6 +1016,14 @@ static int mbm_cntr_alloc(struct rdt_resource *r, struct rdt_mon_domain *d,
+ 	return -ENOSPC;
+ }
  
- 	dom_data_exit(r);
++/**
++ * mbm_cntr_free() - Clear the counter ID configuration details in the domain @d.
++ */
++static void mbm_cntr_free(struct rdt_mon_domain *d, int cntr_id)
++{
++	memset(&d->cntr_cfg[cntr_id], 0, sizeof(struct mbm_cntr_cfg));
++}
++
+ /**
+  * resctrl_alloc_config_cntr() - Allocate a counter ID and configure it for the
+  * event pointed to by @mevt and the resctrl group @rdtgrp within the domain @d.
+@@ -1084,3 +1092,42 @@ int resctrl_assign_cntr_event(struct rdt_resource *r, struct rdt_mon_domain *d,
+ 
+ 	return ret;
  }
 +
 +/**
-+ * resctrl_config_cntr() - Configure the counter ID for the event, RMID pair in
-+ * the domain.
-+ *
-+ * Assign the counter if @assign is true else unassign the counter. Reset the
-+ * associated non-architectural state.
++ * resctrl_free_config_cntr() - Unassign and reset the counter ID configuration
++ * for the event pointed to by @mevt within the domain @d and resctrl group @rdtgrp.
 + */
-+static void resctrl_config_cntr(struct rdt_resource *r, struct rdt_mon_domain *d,
-+				enum resctrl_event_id evtid, u32 rmid, u32 closid,
-+				u32 cntr_id, bool assign)
-+{
-+	struct mbm_state *m;
-+
-+	resctrl_arch_config_cntr(r, d, evtid, rmid, closid, cntr_id, assign);
-+
-+	m = get_mbm_state(d, closid, rmid, evtid);
-+	if (m)
-+		memset(m, 0, sizeof(struct mbm_state));
-+}
-+
-+/**
-+ * mbm_cntr_get() - Return the counter ID for the matching @evtid and @rdtgrp.
-+ *
-+ * Return:
-+ * Valid counter ID on success, or -ENOENT on failure.
-+ */
-+static int mbm_cntr_get(struct rdt_resource *r, struct rdt_mon_domain *d,
-+			struct rdtgroup *rdtgrp, enum resctrl_event_id evtid)
-+{
-+	int cntr_id;
-+
-+	if (!resctrl_is_mbm_event(evtid))
-+		return -ENOENT;
-+
-+	for (cntr_id = 0; cntr_id < r->mon.num_mbm_cntrs; cntr_id++) {
-+		if (d->cntr_cfg[cntr_id].rdtgrp == rdtgrp &&
-+		    d->cntr_cfg[cntr_id].evtid == evtid)
-+			return cntr_id;
-+	}
-+
-+	return -ENOENT;
-+}
-+
-+/**
-+ * mbm_cntr_alloc() - Initilialize and return a new counter ID in the domain @d.
-+ *
-+ * Return:
-+ * Valid counter ID on success, or -ENOSPC on failure.
-+ */
-+static int mbm_cntr_alloc(struct rdt_resource *r, struct rdt_mon_domain *d,
-+			  struct rdtgroup *rdtgrp, enum resctrl_event_id evtid)
-+{
-+	int cntr_id;
-+
-+	for (cntr_id = 0; cntr_id < r->mon.num_mbm_cntrs; cntr_id++) {
-+		if (!d->cntr_cfg[cntr_id].rdtgrp) {
-+			d->cntr_cfg[cntr_id].rdtgrp = rdtgrp;
-+			d->cntr_cfg[cntr_id].evtid = evtid;
-+			return cntr_id;
-+		}
-+	}
-+
-+	return -ENOSPC;
-+}
-+
-+/**
-+ * resctrl_alloc_config_cntr() - Allocate a counter ID and configure it for the
-+ * event pointed to by @mevt and the resctrl group @rdtgrp within the domain @d.
-+ *
-+ * Return:
-+ * 0 on success, or a non-zero value on failure.
-+ */
-+static int resctrl_alloc_config_cntr(struct rdt_resource *r, struct rdt_mon_domain *d,
++static void resctrl_free_config_cntr(struct rdt_resource *r, struct rdt_mon_domain *d,
 +				     struct rdtgroup *rdtgrp, struct mon_evt *mevt)
 +{
 +	int cntr_id;
 +
-+	/* No need to allocate a new counter if it is already assigned */
 +	cntr_id = mbm_cntr_get(r, d, rdtgrp, mevt->evtid);
-+	if (cntr_id >= 0)
-+		goto cntr_configure;
 +
-+	cntr_id = mbm_cntr_alloc(r, d, rdtgrp, mevt->evtid);
-+	if (cntr_id <  0) {
-+		rdt_last_cmd_printf("Unable to allocate counter in domain %d\n",
-+				    d->hdr.id);
-+		return cntr_id;
-+	}
++	/* If there is no cntr_id assigned, nothing to do */
++	if (cntr_id < 0)
++		return;
 +
-+cntr_configure:
-+	/*
-+	 * Skip reconfiguration if the event setup is current; otherwise,
-+	 * update and apply the new configuration to the domain.
-+	 */
-+	if (mevt->evt_cfg != d->cntr_cfg[cntr_id].evt_cfg) {
-+		d->cntr_cfg[cntr_id].evt_cfg = mevt->evt_cfg;
-+		resctrl_config_cntr(r, d, mevt->evtid, rdtgrp->mon.rmid,
-+				    rdtgrp->closid, cntr_id, true);
-+	}
++	resctrl_config_cntr(r, d, mevt->evtid, rdtgrp->mon.rmid, rdtgrp->closid,
++			    cntr_id, false);
 +
-+	return 0;
++	mbm_cntr_free(d, cntr_id);
++
++	return;
 +}
 +
 +/**
-+ * resctrl_assign_cntr_event() - Assign a hardware counter for the event in
-+ * @mevt to the resctrl group @rdtgrp. Assign counters to all domains if @d is
-+ * NULL; otherwise, assign the counter to the specified domain @d.
-+ *
-+ * If all counters in a domain are already in use, resctrl_alloc_config_cntr()
-+ * will fail. The assignment process will abort at the first failure encountered
-+ * during domain traversal, which may result in the event being only partially
-+ * assigned.
-+ *
-+ * Return:
-+ * 0 on success, or a non-zero value on failure.
++ * resctrl_unassign_cntr_event() - Unassign a hardware counter associated with
++ * the event structure @mevt from the domain @d and the group @rdtgrp. Unassign
++ * the counters from all the domains if @d is NULL else unassign from @d.
 + */
-+int resctrl_assign_cntr_event(struct rdt_resource *r, struct rdt_mon_domain *d,
-+			      struct rdtgroup *rdtgrp, struct mon_evt *mevt)
++void resctrl_unassign_cntr_event(struct rdt_resource *r, struct rdt_mon_domain *d,
++				 struct rdtgroup *rdtgrp, struct mon_evt *mevt)
 +{
-+	int ret = 0;
-+
 +	if (!d) {
-+		list_for_each_entry(d, &r->mon_domains, hdr.list) {
-+			ret = resctrl_alloc_config_cntr(r, d, rdtgrp, mevt);
-+			if (ret)
-+				return ret;
-+		}
++		list_for_each_entry(d, &r->mon_domains, hdr.list)
++			resctrl_free_config_cntr(r, d, rdtgrp, mevt);
 +	} else {
-+		ret = resctrl_alloc_config_cntr(r, d, rdtgrp, mevt);
++		resctrl_free_config_cntr(r, d, rdtgrp, mevt);
 +	}
-+
-+	return ret;
 +}
 -- 
 2.34.1
