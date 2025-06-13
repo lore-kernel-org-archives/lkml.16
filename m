@@ -1,216 +1,121 @@
-Received: from lgeamrelo07.lge.com (lgeamrelo07.lge.com [156.147.51.103])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897A51369B4
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 06:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.51.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86C92580D1;
+	Fri, 13 Jun 2025 06:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749797776; cv=none; b=LRG4tsBGQurKc+NMPZ+CDyYQXnIOIlarr+XXRyip7koko16PU4v0WkaPSSuVnv3PuDQJ59uIEXOfL8OnjuT62uuOPhB7r3eTARv0/oMv5z9jYosrJWXZifBFRnYqPL1F8SaqqY8ZpQHDSY2Vgw8JH7xyFvBzBIQcZkPSm/chkVo=
+	t=1749797806; cv=none; b=IhD2QPUmHNgpALJ9oNlBMkPGk8l5SC3fy+UYkLBye6y/8KEd//bcaPsLIlv006oy+ZYZyzx8zV5IhVRLjQIdf1k15gdddUBo9ef3cISh5xJtIq8BL0U59jxb5wogY7xSx0pkOuDrEKxSdjfGSPRf57QQUWf0+XVHDIHcBTe2vmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749797776; c=relaxed/simple;
-	bh=i4du00HGA9zb0ohT1cC/b0VFC6Vw65Lig03aEVDZji8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k54OodiBJY9eL2zfX1dpMtilhJC33h5CeiKAgJWenHqyLiXAgLXMhMaFj+cHlm46KSSEY7Mny8ywJxtkLSpwtucyS+z44paPQd2iYzZYTFVbiNoM925OYtRi8h1LfWGmeJKrxtJno9RbpTE5LRnHZiGUOux2iBDyGsX+d2ljGRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.51.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
-Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
-	by 156.147.51.103 with ESMTP; 13 Jun 2025 15:56:12 +0900
-X-Original-SENDERIP: 10.177.112.156
-X-Original-MAILFROM: youngjun.park@lge.com
-Date: Fri, 13 Jun 2025 15:56:12 +0900
-From: YoungJun Park <youngjun.park@lge.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
-	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
-	baohua@kernel.org, chrisl@kernel.org, muchun.song@linux.dev,
-	iamjoonsoo.kim@lge.com, taejoon.song@lge.com, gunho.lee@lge.com
-Subject: Re: [RFC PATCH 0/2] mm/swap, memcg: Support per-cgroup swap device
- prioritization
-Message-ID: <aEvLjEInMQC7hEyh@yjaykim-PowerEdge-T330>
-References: <20250612103743.3385842-1-youngjun.park@lge.com>
- <CAMgjq7BA_2-5iCvS-vp9ZEoG=1DwHWYuVZOuH8DWH9wzdoC00g@mail.gmail.com>
+	s=arc-20240116; t=1749797806; c=relaxed/simple;
+	bh=GhfW6OpDp15omdr3afmq7V7jrbBZ4rWNSl+jEHnADD8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GV8tG29QjdpimYwrc5IkP1tJKgLHAtjWQZnjr4lLvbnisTveMZDk1bzf5JTRconeXZi6H9QSTmSkBoZPFpFMHsDRyxe6h6GALGS78DHBLZOb0WdclNn/FJZCkY+sh5GwAA3GAWBrnoT3YBrwimYyWAhGA0DSX8mtL8lEWRcVSXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=waiDbM15; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="waiDbM15"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749797793; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=st0G/jtNnigkjTuEzRjxuWPi77i46Gqsx9W7ef09lV8=;
+	b=waiDbM15+Wy8c1gwRMSYuKT98bBtpQrqrhyZnm5TwpXHKCbiFMpWemLubcxsGtEnerfWF5POSvg38vhbmykS0r/6kzIGFdKtDYj31UX6DIwrQVrvKqx8GdrVB42q2dJ9T0J75SNoN7YWaLjOuF7zQ2n9j6Lz/oO4fX7T8BlbEz0=
+Received: from 30.74.144.147(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdjYqSs_1749797792 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Jun 2025 14:56:33 +0800
+Message-ID: <78c027ff-20f3-4678-9fd5-1884c9583fb1@linux.alibaba.com>
+Date: Fri, 13 Jun 2025 14:56:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMgjq7BA_2-5iCvS-vp9ZEoG=1DwHWYuVZOuH8DWH9wzdoC00g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] mm: shmem: avoid setting error on splited entries in
+ shmem_set_folio_swapin_error()
+To: Kemeng Shi <shikemeng@huaweicloud.com>, hughd@google.com,
+ willy@infradead.org, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
+ <20250605221037.7872-3-shikemeng@huaweicloud.com>
+ <c05b8612-83a6-47f7-84f8-72276c08a4ac@linux.alibaba.com>
+ <100d50f3-95df-86a3-7965-357d72390193@huaweicloud.com>
+ <24580f79-c104-41aa-bbdb-e1ce120c28a0@linux.alibaba.com>
+ <93336040-f457-d8a1-29df-f737efa8261c@huaweicloud.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <93336040-f457-d8a1-29df-f737efa8261c@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 08:24:08PM +0800, Kairui Song wrote:
-> On Thu, Jun 12, 2025 at 6:38 PM <youngjun.park@lge.com> wrote:
-> >
-> > From: Youngjun Park <youngjun.park@lge.com>
-> >
-> > Introduction
-> > ============
-> > I am a kernel developer working on platforms deployed on commercial consumer devices.
-> > Due to real-world product requirements, needed to modify the Linux kernel to support
-> > a new swap management mechanism. The proposed mechanism allows assigning different swap
-> > priorities to swap devices per cgroup.
-> > I believe this mechanism can be generally useful for similar constrained-device scenarios
-> > and would like to propose it for upstream inclusion and solicit feedback from the community.
-> >
-> > Motivation
-> > ==========
-> > Core requirement was to improve application responsiveness and loading time, especially
-> > for latency critical applications, without increasing RAM or storage hardware resources.
-> > Device constraints:
-> >   - Linux-based embedded platform
-> >   - Limited system RAM
-> >   - Small local swap
-> >   - No option to expand RAM or local swap
-> > To mitigate this, we explored utilizing idle RAM and storage from nearby devices as remote
-> > swap space. To maximize its effectiveness, we needed the ability to control which swap devices
-> > were used by different cgroups:
-> >   - Assign faster local swap devices to latency critical apps
-> >   - Assign remote swap devices to background apps
-> > However, current Linux kernel swap infrastructure does not support per-cgroup swap device
-> > assignment.
-> > To solve this, I propose a mechanism to allow each cgroup to specify its own swap device
-> > priorities.
-> >
-> > Evaluated Alternatives
-> > ======================
-> > 1. **Per-cgroup dedicated swap devices**
-> >    - Previously proposed upstream [1]
-> >    - Challenges in managing global vs per-cgroup swap state
-> >    - Difficult to integrate with existing memory.limit / swap.max semantics
-> > 2. **Multi-backend swap device with cgroup-aware routing**
-> >    - Considered sort of layering violation (block device cgroup awareness)
-> >    - Swap devices are commonly meant to be physical block devices.
-> >    - Similar idea mentioned in [2]
-> > 3. **Per-cgroup swap device enable/disable with swap usage contorl**
-> >    - Expand swap.max with zswap.writeback usage
-> >    - Discussed in context of zswap writeback [3]
-> >    - Cannot express arbitrary priority orderings
-> >     (e.g. swap priority A-B-C on cgroup C-A-B impossible)
-> >    - Less flexible than per-device priority approach
-> > 4. **Per-namespace swap priority configuration**
-> >    - In short, make swap namespace for swap device priority
-> >    - Overly complex for our use case
-> >    - Cgroups are the natural scope for this mechanism
-> >
-> > Based on these findings, we chose to prototype per-cgroup swap priority configuration
-> > as the most natural, least invasive extension of the existing kernel mechanisms.
-> >
-> > Design and Semantics
-> > ====================
-> > - Each swap device gets a unique ID at `swapon` time
-> > - Each cgroup has a `memory.swap.priority` interface:
-> >   - Show unique ID by memory.swap.priority interface
-> >   - Format: `unique_id:priority,unique_id:priority,...`
-> >   - All currently-active swap devices must be listed
-> >   - Priorities follow existing swap infrastructure semantics
-> > - The interface is writeable and updatable at runtime
-> > - A priority configuration can be reset via `echo "" > memory.swap.priority`
-> > - Swap on/off events propagate to all cgroups with priority configurations
-> >
-> > Example Usage
-> > -------------
-> > # swap device on
-> > $ swapon
-> > NAME      TYPE      SIZE USED PRIO
-> > /dev/sdb  partition 300M  0B   10
-> > /dev/sdc  partition 300M  0B    5
-> >
-> > # assign custom priorities in a cgroup
-> > $ echo "1:5,2:10" > memory.swap.priority
-> > $ cat memory.swap.priority
-> > Active
-> > /dev/sdb  unique:1  prio:5
-> > /dev/sdc  unique:2  prio:10
-> >
-> > # adding new swap device later
-> > $ swapon /dev/sdd --priority -1
-> > $ cat memory.swap.priority
-> > Active
-> > /dev/sdb  unique:1  prio:5
-> > /dev/sdc  unique:2  prio:10
-> > /dev/sdd  unique:3  prio:-2
-> >
-> > # reset cgroup priority
-> > $ echo "" > memory.swap.priority
-> > $ cat memory.swap.priority
-> > Inactive
-> > /dev/sdb  unique:1  prio:10
-> > /dev/sdc  unique:2  prio:5
-> > /dev/sdd  unique:3  prio:-2
-> >
-> > Implementation Notes
-> > ====================
-> > The items mentioned below are to be considered during the next patch work.
-> >
-> > - Workaround using per swap cpu cluster as before
-> > - Priority propgation of child cgroup
-> > - And other TODO, XXX
-> > - Refactoring for reviewability and maintainability, comprehensive testing
-> >   and performance evaluation
-> 
-> Hi Youngjun,
-> 
-> Interesting idea. For your current approach, I think all we need is
-> per-cgroup swap meta info structures (and infrastures for maintaining
-> and manipulating them).
-> 
-> So we have a global version and a cgroup version of "plist, next
-> cluster list, and maybe something else", right? And then
-> once the allocator is folio aware it can just prefer the cgroup ones
-> (as I mentioned in another reply) reusing all the same other
-> routines. Changes are minimal, the cgroup swap meta infos
-> and control plane are separately maintained.
-> 
-> It seems aligned quite well with what I wanted to do, and can be done
-> in a clean and easy to maintain way.
-> 
-> Meanwhile with virtual swap, things could be even more flexible, not
-> only changing the priority at swapout time, it will also provide
-> capabilities to migrate and balance devices adaptively, and solve long
-> term issues like mTHP fragmentation and min-order swapout etc..
-> 
-> Maybe they can be combined, like maybe cgroup can be limited to use
-> the virtual device or physical ones depending on priority. Seems all
-> solvable. Just some ideas here.
 
-I had been thinking about the work related to vswap and alignment,
-so I'm glad to hear that they can harmonize.
 
-> Vswap can cover the priority part too. I think we might want to avoid
-> duplicated interfaces.
+On 2025/6/11 17:11, Kemeng Shi wrote:
 > 
-> So I'm just imagining things now, will it be good if we have something
-> like (following your design):
 > 
-> $ cat memcg1/memory.swap.priority
-> Active
-> /dev/vswap:(zram/zswap? with compression params?) unique:0 prio:5
+> on 6/11/2025 3:41 PM, Baolin Wang wrote:
+>>
+>>
+>> On 2025/6/9 09:19, Kemeng Shi wrote:
+>>>
+>>>
+>>> on 6/7/2025 2:20 PM, Baolin Wang wrote:
+>>>>
+>>>>
+>>>> On 2025/6/6 06:10, Kemeng Shi wrote:
+>>>>> When large entry is splited, the first entry splited from large entry
+>>>>> retains the same entry value and index as original large entry but it's
+>>>>> order is reduced. In shmem_set_folio_swapin_error(), if large entry is
+>>>>> splited before xa_cmpxchg_irq(), we may replace the first splited entry
+>>>>> with error entry while using the size of original large entry for release
+>>>>> operations. This could lead to a WARN_ON(i_blocks) due to incorrect
+>>>>> nr_pages used by shmem_recalc_inode() and could lead to used after free
+>>>>> due to incorrect nr_pages used by swap_free_nr().
+>>>>
+>>>> I wonder if you have actually triggered this issue? When a large swap entry is split, it means the folio is already at order 0, so why would the size of the original large entry be used for release operations? Or is there another race condition?
+>>> All issues are found during review the code of shmem as I menthioned in
+>>> cover letter.
+>>> The folio could be allocated from shmem_swap_alloc_folio() and the folio
+>>> order will keep unchange when swap entry is split.
+>>
+>> Sorry, I did not get your point. If a large swap entry is split, we must ensure that the corresponding folio is order 0.
+>>
+>> However, I missed one potential case which was recently fixed by Kairui[1].
+>>
+>> [1] https://lore.kernel.org/all/20250610181645.45922-1-ryncsn@gmail.com/
+>>
+> Here is a possible code routine which I think could trigger the issue:
+> shmem_swapin_folio          shmem_swapin_folio
+> folio = swap_cache_get_folio()
+> order = xa_get_order(&mapping->i_pages, index);
+> if (!folio)
+>   ...
+>   /* suppose large folio allocation is failed, we will try to split large entry */
+>   folio = shmem_swap_alloc_folio(..., order, ...)
 > 
-> $ cat memcg2/memory.swap.priority
-> Active
-> /dev/vswap:/dev/nvme1  unique:1  prio:5
-> /dev/vswap:/dev/nvme2  unique:2  prio:10
-> /dev/vswap:/dev/vda  unique:3  prio:15
-> /dev/sda  unique:4  prio:20
+>                              folio = swap_cache_get_folio()
+>                              order = xa_get_order(&mapping->i_pages, index);
+>                              if (!folio)
+>                               ...
+>                               /* suppose large folio allocation is successful this time */
+>                               folio = shmem_swap_alloc_folio(..., order, ...)
+>                              ...
+>                              /* suppose IO of large folio is failed, will set swapin error later */
+>                              if (!folio_test_uptodate(folio)) {
+>                               error = -EIO;
+>                               goto failed:
+>                              }
 > 
-> $ cat memcg3/memory.swap.priority
-> Active
-> /dev/vda  unique:3  prio:5
-> /dev/sda  unique:4  prio:15
+>   ...
+>   shmem_split_large_entry()
 > 
-> Meaning memcg1 (high priority) is allowed to use compressed memory
-> only through vswap, and memcg2 (mid priority) uses disks through vswap
-> and fallback to HDD. memcg3 (low prio) is only allowed to use slow
-> devices.
-> 
-> Global fallback just uses everything the system has. It might be over
-> complex though?
- 
-Just looking at the example usage which you mention, 
-it seems flexible and good.
-I will think more about this in relation to it.
+>                              ...
+>                              shmem_set_folio_swapin_error(..., folio, ...)
+
+OK. I think this is a good example of a potiential race condition. 
+Please include this information in the commit message to make it easier 
+for others to understand. Thanks.
+
+I will find some time to test your patch.
