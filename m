@@ -1,221 +1,121 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61BF1E378C;
-	Fri, 13 Jun 2025 16:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749832505; cv=fail; b=pbIBXTe5t9h5RHiiFxN5kuy3mfb9V86d1jNRlP9PziFakdLRx5xDg6AkwfiokQTI07MZkoen25hC8ZJeL4NE0DoLQBAWenzuTqSVSuHYsuLckKWH6q2llh1WKS4+GXWYHAjmNFRntAJudRiVP09wpX6gRAiWGQsXm/LfCpuCptc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749832505; c=relaxed/simple;
-	bh=EOhy9ABZCwFPLb6ISn0pe9KVWu0y+n9AjuqArMWxiQ4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XRJuEJu+MC1e6FHER60/8Bd08R2Y56ns4mtSgrnTj8ajxFPhBxcG+AYJlRtn/FxXUemybbyXm2ukbkhR40vVhN4L8L6it/RIPxqAKNdmDFDSbWYBJZ62KXzLk7Vhg7ndb0T3wD3I3SSwzFZ+1DGOb9yRKlymnEUBk6LWa9/+vS8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JplZWJxT; arc=fail smtp.client-ip=40.107.243.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A94E20297D;
+	Fri, 13 Jun 2025 16:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749832523; cv=none; b=VbTqvFH4NMIatDju5FsYRZec8cXPTslnPxN44O7nvmePV7F3pEAINaoPPBbyKy4M6eNFnLhmWNnOSFM4KMLGxQh2oOSmIKXPCFoUJIY1iIHSltBHGLG3mBTg+idR2bJUttZ0nEDrwc6M+nSKwm0frgnmV5gYwopZPVv9oDSdSdQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749832523; c=relaxed/simple;
+	bh=QXE8CKFwmIeb+JPAQUReJotkuCcr6O5N8pxWfDgAg1c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pnlCh7YldDXPsYgfZOBhCsBAlnZQd4avyRmOYVt8fbPHUDTLE2UBNkOhhtYhHatRdkg9+3aWKWPLKMwuoUEv9zCm3CiP5lBSgISNDaEFMQX16yRtNu9yhZ0jkpkokZpCvRnWnjbNwcx1tfWcsCKJDoeag5hiPKFKt7WeeQMx8/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Olh/xIyA; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JplZWJxT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dR7tZwPPcPK84PA743WLFKVjBXAEKCQ6E7NJTPxuEZPSN5OsL5qPWVib7jZDYUnQh0baCI/ELBCbeH7Y6WINF4J2Ebqdff7AhblCIAHzPhLK5WViwiKnySRStir7Z25AGy5pIMngEwINmHZH2AS1B1IbifMquU7SUwd3HnE0zr7RPqBZ1hSUqydFeIGqms+tLBU6cDPAmI3phBuJXyYbCi0/Z3yQM4rzOQVm1pcQL1EmgAV21y/PmRNe7KAT0PCI1Ut3LZcOAWSQp7vhyKOCklr4Pb7Pe0Pv/OH3D1Prykx+9mgxRSnN1WGYRhmoRfbozPlZJjOoJBOCtB+yALcSeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oU9ImkQS3p72Inan8dmIXDlU8czeYoa/HFE1AcJWvWc=;
- b=cgZssS4mcIwudM07rkDQKbY5TwQEez4+cpQgEFsgmboRyivadFco3TocfU0Erjzn7+2QzTON6Zqt1nx8QipcIADgHpP1jm1pKvOkSPbdrISk2mQpNp9qbtOgKy/e/vmmwfVg3HUa2QZSeWHfU+bzNe7O8qer289iEq8+Jgnxv0TF1o8dTUNqnz7SgRUdVzRlMrNgVWD1ZOTt2gBL1Xtl4/O78Uo3QUIbmXYDZd+JOihy/PSF6QBHZ/o2Fu2w3Az/TBdrZ2NALPIc0zFuIIyhcCyEdRCcSNNk02yB/ZQ/6Fk9RN0bv8PnC/bSHjQ02yAx9D7e2tUlEMhpqmrIrqAX9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oU9ImkQS3p72Inan8dmIXDlU8czeYoa/HFE1AcJWvWc=;
- b=JplZWJxTyFRM9YHDgcYnG1WoZ1pswFZylXXseDgGTvxwJEvVBWNo7CJWYXdZmynxB9dVsHEVp89ljOKsu6SNR1WzRAioyGPErBbfcBmD6Mz04hRCbCF6mvbwbV/961wpzHGyLk/8kvx1axnZZjcxrwzSAu0412LeojlUmOt9fbJO0zK5bnD7WyeBQdaSyPjJG5hBihxaXxsf8aLDUFTL4CsbmjMsIp0bin4ZD1WoSO7HW79jsABM7eUGA8sRXExU7LsSjepQad+0535OmF2sR7VNB1Ej2pA0P/qW5nqnQ9slqzW/SUh6gasuOpGEURJnG8q0lV6ONjje/idvL4Qa/g==
-Received: from SJ0PR03CA0389.namprd03.prod.outlook.com (2603:10b6:a03:3a1::34)
- by DS7PR12MB6357.namprd12.prod.outlook.com (2603:10b6:8:96::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.38; Fri, 13 Jun
- 2025 16:35:00 +0000
-Received: from CO1PEPF000066EA.namprd05.prod.outlook.com
- (2603:10b6:a03:3a1:cafe::37) by SJ0PR03CA0389.outlook.office365.com
- (2603:10b6:a03:3a1::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Fri,
- 13 Jun 2025 16:35:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1PEPF000066EA.mail.protection.outlook.com (10.167.249.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 16:35:00 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 13 Jun
- 2025 09:34:46 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 13 Jun
- 2025 09:34:46 -0700
-Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Fri, 13
- Jun 2025 09:34:45 -0700
-From: David Thompson <davthompson@nvidia.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>
-CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "David
- Thompson" <davthompson@nvidia.com>, Shravan Kumar Ramani
-	<shravankr@nvidia.com>
-Subject: [PATCH v1] gpio: mlxbf3: only get IRQ for device instance 0
-Date: Fri, 13 Jun 2025 16:34:43 +0000
-Message-ID: <20250613163443.1065217-1-davthompson@nvidia.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Olh/xIyA"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-312116d75a6so2114124a91.3;
+        Fri, 13 Jun 2025 09:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749832521; x=1750437321; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FHPrpo9d42nRJm72Dq1MnICc6IUuyfQPRBp7KXTIMQ4=;
+        b=Olh/xIyAOI1IXUkpB0UgFWAOtNYq+AcIofwCd9Opc0LBO4IX6esV39SnyQ9fksa11Z
+         2cDtKZeSG1QGLshmmWqOij2R5ehI75+okNuqaQXEQnXEAYyISUefsSYObmEkXRq0jg4o
+         hoJ7KwscBSW3qs1VZNDmKkCXLPy0GfJxsSVHJc/+I6CblortqkrkfrZjvlUT0MleKegt
+         NqlycJiqtdnB5ngMY/0kacEYUnjgL+bDcU6GU4qowuJ6Bm/fHfyX5utWEYWzj8RUnCn7
+         ohpzKfc3BJDNiS3SIgSBPKCGUgSSV3LthLEE+U/Rq34HCH2y0+uQI7QD09EgsOMeZ/GI
+         j2dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749832521; x=1750437321;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FHPrpo9d42nRJm72Dq1MnICc6IUuyfQPRBp7KXTIMQ4=;
+        b=apAAWp1J1tflonUXU7d+5r5BKEemHi8SyC1ErpAZb0gnN7HORo3vUrfNXOuqTJT76g
+         3XTsbeKv3O3QjtLH1bOO3onYCFlqZew89AMT+YTzHdH6WLZRuCo8F4mLgQ6skfq3Fg+S
+         iK5hnxDnLwr5So+8G6VQyATW3CNIl0Qz3zVhRVlVkgthCG1OTA1xpUs4Kh8reGfG8/Rr
+         IeJy6ouGM4uoTG//FiJC3Yb+bc9QToQuCw5twpHUvG22sPIcNOg23CSAq/qN8y+ZWF24
+         IPiIxa+GxW9F5OO1FrpdTk6HMB0H9ggsr3Sw/vTvC8mgKJXpaGANj+c8Zzfezs5348jE
+         s7RA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9/s8xlSyQe0w86nGmosU8mLpEgYbnPwnVbMpl9SGYF3lq6V5Oa0y6EXv4laFsWtqWsRMUwIL+cHJzoSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpft0Tt2oChOFd5kAmzkJ6dJLMzBEgswAKF3ye84IzpEcJOs8a
+	RHjeF79hEd2y8XFqNwVgxA06h8phFenmf6FWpAKQpPegbynD/WCcKYWJ
+X-Gm-Gg: ASbGnct9FMFrmmAbSXwIwlW4D3n0CqeQGVgF/xNrlmY8dX5fILdiT5t7kfJm7B/gs2B
+	gpVTURGRWa3G/Bw5ZwNYY5c4gjPvof5AvoUDgfB95VR69XuqQsZtF+7qgPhd40k9J8I7yBXMZ06
+	ekDXTs8nxJ8iqMZJIfXinG/xEQgwXWgTTXPFxBPA7x821/3qbtPYPZtikAprO36loWL8/TJ7qAH
+	BX9PqpYsNIy/KfDeHsp0HtJ1Bt0PjTGKpLJPU4U1OvQaOMm5SFWcAZvNgdATT67H7YoSqRWMqeO
+	vLdjPgnwszxp+tMNK+q6FBBIr09A8r7IZr5muxKKZmKuhysUat+yujJge+Il9AB1A3HmJOJD7PM
+	NWTluj5TxJl3UvdJ9Wn7l
+X-Google-Smtp-Source: AGHT+IGIuAqQa292qV7dqgToWK54149pBTrBaPodmpn2s350eBZtY87Pv6smrPbvL/pWn7OY37TTsA==
+X-Received: by 2002:a17:90b:1c04:b0:30a:4874:5397 with SMTP id 98e67ed59e1d1-313f1ca7f9cmr519630a91.9.1749832521202;
+        Fri, 13 Jun 2025 09:35:21 -0700 (PDT)
+Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b5a85dsm3568672a91.38.2025.06.13.09.35.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 09:35:20 -0700 (PDT)
+From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
+Date: Fri, 13 Jun 2025 13:35:04 -0300
+Subject: [PATCH] arm64: dts: freescale: imx8mp-toradex-smarc: add fan
+ cooling levels
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000066EA:EE_|DS7PR12MB6357:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68e05159-13db-4c50-d66a-08ddaa983db1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zrugr9MpJq7BpgU91MXv7WRskrftMY3l+OktgHVK0DpOV39VDkD1CcThWpkY?=
- =?us-ascii?Q?e3iAnhFrYw7SZxwpl9kMpdqH6zA0tk2R/a54XRMCPVTINsCG6Vdyaf8t18tB?=
- =?us-ascii?Q?y5uL1hly6/VezK7r9AR3EWj1nKOg3upRSv2H0K3VYKZnUdPuv1RJDqXfNix/?=
- =?us-ascii?Q?EGcILqRm0cBbqNWoVrnPwEdaRuOhT7p4rXYPHS5N5C5l9W9uIkMMPboeUCHm?=
- =?us-ascii?Q?2VVQF8hRzmZmFB6/JWfyaKs1av8yKCnlLrd7JaGVWnqp0o4Xrv2H0ML203Lb?=
- =?us-ascii?Q?51K2X3iIrtXD/RdkcTGqsg6dhaJd+TKTVVdyvlVd28sPdenJ89MhiVy/1CCG?=
- =?us-ascii?Q?WQj2WK3MUp7trWm+tc+qSFcT78fr5NQjxShvEEFGtzi2tF9Frv8T/3HVEAv5?=
- =?us-ascii?Q?oqrkPG3Hkgb/yUCbobAxytyPkwYFdfrarnUKBnX+1YNWxWvr/ZMaAyrU8Gmm?=
- =?us-ascii?Q?9934Haco+sQ4dMfMVjvi53P9fCA5FRrz2u0P7eaylgSEdpfg5TxuXNeIYsTR?=
- =?us-ascii?Q?Hr6rnw5zxGhCVh4HRTEo96wDJyFjPcH/LyZ76Kl8/dJqkIKUntOQV1Trz8FV?=
- =?us-ascii?Q?0zHDF+TaevergN3CqipnjLwNd1540ri5c/fZMDcXrrZduOCtzDKCucCIoB4h?=
- =?us-ascii?Q?PS72HSV+H8vynw3Uzr5kFKUQjDzXdGBQKrJdC5b1eMDvzF2dH8UhXzeWSsPI?=
- =?us-ascii?Q?jWCiXTRgCqzC7MGK5n0r2oHu1ro/+1Vsst95NySYhU8w/SzBNu5ldkiE2bTC?=
- =?us-ascii?Q?SFo1XGwZX2e4RQxEa2NK1+Fv/QD4SnqXfTJ5aA6qo+q8jIT0rP6JUoqvMoJo?=
- =?us-ascii?Q?LIfNrfpugbbhjm3k5Hz3D/w9HF8hnjZmxTho9IPenkwJUvkPmeWGgw8k9lFy?=
- =?us-ascii?Q?/uhiKceG1tuFjVPmEWNsFJLEE2lIqcdGPp8tgqA1appoCNOyCT9ehF+/Bnqu?=
- =?us-ascii?Q?4a6mRhf8nDlBWtm4pvQgFYfoiJyQj3G6OTmHqYMNmJLiETJ6DSaIuFhgm+GX?=
- =?us-ascii?Q?EJGdC/ZED/u3hx/eGTSMQlz1NbaM+CgGnkakFhUjMMwN7bhbrWYCYuBQMl3n?=
- =?us-ascii?Q?yNi+oIjhsIXuaYeFzIb0zR9CVuf9/xgPuYSB7TVToBhBmbZ0DIjPcfDzEvGT?=
- =?us-ascii?Q?0149Vlz8E478MnYC5rUXS4gHVYyurVXx+gc/3YI55QePU7IVJZWeucBtAJU/?=
- =?us-ascii?Q?E8HD29Wd6tn5jSefHArmnGWfPuOnFF5TEAYIfMdD3qXZzZwqL+/0qdQFJ/rC?=
- =?us-ascii?Q?aO8niGqtzm4jBikubB7TY6yAR8x52mBD2/xL/AlCLW6EJzqgW/gx7cOaOPKR?=
- =?us-ascii?Q?L7fLuGWrbeaoACbWo/it7CKeZpPzgkcOkJXI8S5Gul1gXxbmzt0LUBLih7ns?=
- =?us-ascii?Q?m1mhfFk8B14xU/L3II7cusmZCiOwvrr1r+ljAQ59XixMrULGpQB/Yvn0Y3lX?=
- =?us-ascii?Q?M+sNSJ4TX9M9R3vMoJx0G9ru9uwFsnip2lb/DaEUFBYp5sydhdIptKjOGLWA?=
- =?us-ascii?Q?CHNoBjpmdUdAo2W7/ee+dlSjF/ldn2qISWHV?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 16:35:00.1922
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68e05159-13db-4c50-d66a-08ddaa983db1
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000066EA.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6357
+Message-Id: <20250613-tdx-smarc-imx8mp-fan-cooling-level-v1-1-59aae8fee2db@toradex.com>
+X-B4-Tracking: v=1; b=H4sIADdTTGgC/x3NTQqDMBBA4avIrB3Q1KTqVUoXMRntQH4kKRIQ7
+ 25w+W3eOyFTYsowNyckOjhzDBV924D56bARsq0G0QnZqf6Ff1swe50Msi+j33HVAU2MjsOGjg5
+ yuKi3UFKTMMMENbQnWrk8k8/3um7Lrur0dAAAAA==
+X-Change-ID: 20250613-tdx-smarc-imx8mp-fan-cooling-level-b67265ae2c49
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>
+X-Mailer: b4 0.14.2
 
-The gpio-mlxbf3 driver interfaces with two GPIO controllers,
-device instance 0 and 1. There is a single IRQ resource shared
-between the two controllers, and it is found in the ACPI table for
-device instance 0.  The driver should not attempt to get an IRQ
-resource when probing device instance 1, otherwise the following
-error is logged:
-  mlxbf3_gpio MLNXBF33:01: error -ENXIO: IRQ index 0 not found
+From: João Paulo Gonçalves <joao.goncalves@toradex.com>
 
-Signed-off-by: David Thompson <davthompson@nvidia.com>
-Reviewed-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+The fan controller on this board cannot work in automatic mode, and
+requires software control, the reason is that it has no temperature
+sensor connected.
+
+Given that this board is a development kit and does not have any
+specific fan, add a default single cooling level that would enable the
+fan to spin with a 100% duty cycle, enabling a safe default.
+
+Signed-off-by: João Paulo Gonçalves <joao.goncalves@toradex.com>
 ---
- drivers/gpio/gpio-mlxbf3.c | 54 ++++++++++++++++++++++++--------------
- 1 file changed, 35 insertions(+), 19 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-mlxbf3.c b/drivers/gpio/gpio-mlxbf3.c
-index 10ea71273c89..9875e34bde72 100644
---- a/drivers/gpio/gpio-mlxbf3.c
-+++ b/drivers/gpio/gpio-mlxbf3.c
-@@ -190,7 +190,9 @@ static int mlxbf3_gpio_probe(struct platform_device *pdev)
- 	struct mlxbf3_gpio_context *gs;
- 	struct gpio_irq_chip *girq;
- 	struct gpio_chip *gc;
-+	char *colon_ptr;
- 	int ret, irq;
-+	long num;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts b/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
+index 55b8c5c14fb4f3e7407243760ac01b0aca0dacf5..5f233304cea747d3f04a748265f96696668c9d6b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-toradex-smarc-dev.dts
+@@ -213,6 +213,7 @@ fan_controller: fan@18 {
+ 		#pwm-cells = <2>;
  
- 	gs = devm_kzalloc(dev, sizeof(*gs), GFP_KERNEL);
- 	if (!gs)
-@@ -227,25 +229,39 @@ static int mlxbf3_gpio_probe(struct platform_device *pdev)
- 	gc->owner = THIS_MODULE;
- 	gc->add_pin_ranges = mlxbf3_gpio_add_pin_ranges;
- 
--	irq = platform_get_irq(pdev, 0);
--	if (irq >= 0) {
--		girq = &gs->gc.irq;
--		gpio_irq_chip_set_chip(girq, &gpio_mlxbf3_irqchip);
--		girq->default_type = IRQ_TYPE_NONE;
--		/* This will let us handle the parent IRQ in the driver */
--		girq->num_parents = 0;
--		girq->parents = NULL;
--		girq->parent_handler = NULL;
--		girq->handler = handle_bad_irq;
--
--		/*
--		 * Directly request the irq here instead of passing
--		 * a flow-handler because the irq is shared.
--		 */
--		ret = devm_request_irq(dev, irq, mlxbf3_gpio_irq_handler,
--				       IRQF_SHARED, dev_name(dev), gs);
--		if (ret)
--			return dev_err_probe(dev, ret, "failed to request IRQ");
-+	colon_ptr = strchr(dev_name(dev), ':');
-+	if (!colon_ptr) {
-+		dev_err(dev, "invalid device name format\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = kstrtol(++colon_ptr, 16, &num);
-+	if (ret) {
-+		dev_err(dev, "invalid device instance\n");
-+		return ret;
-+	}
-+
-+	if (!num) {
-+		irq = platform_get_irq(pdev, 0);
-+		if (irq >= 0) {
-+			girq = &gs->gc.irq;
-+			gpio_irq_chip_set_chip(girq, &gpio_mlxbf3_irqchip);
-+			girq->default_type = IRQ_TYPE_NONE;
-+			/* This will let us handle the parent IRQ in the driver */
-+			girq->num_parents = 0;
-+			girq->parents = NULL;
-+			girq->parent_handler = NULL;
-+			girq->handler = handle_bad_irq;
-+
-+			/*
-+			 * Directly request the irq here instead of passing
-+			 * a flow-handler because the irq is shared.
-+			 */
-+			ret = devm_request_irq(dev, irq, mlxbf3_gpio_irq_handler,
-+					       IRQF_SHARED, dev_name(dev), gs);
-+			if (ret)
-+				return dev_err_probe(dev, ret, "failed to request IRQ");
-+		}
- 	}
- 
- 	platform_set_drvdata(pdev, gs);
+ 		fan {
++			cooling-levels = <255>;
+ 			pwms = <&fan_controller 40000 PWM_POLARITY_INVERTED>;
+ 		};
+ 	};
+
+---
+base-commit: 1a2ad59da68dd294f994efbf68c5d671f6b42fad
+change-id: 20250613-tdx-smarc-imx8mp-fan-cooling-level-b67265ae2c49
+
+Best regards,
 -- 
-2.43.2
+João Paulo Gonçalves <joao.goncalves@toradex.com>
 
