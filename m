@@ -1,26 +1,25 @@
 Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF22610C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F291EFF81;
 	Fri, 13 Jun 2025 02:20:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749781207; cv=none; b=XBFfDSdq99XePFAt2lUbawbGV2UIFuMSfQvG87eZHiHsQhKuCmBvqHrURAlyLAm/jJ5+OFkW7siZBUYqOVXQcsskbHxXK02hA3sJ5HoIa2LdN7I0vLuXn+5syCSkL9hirIp4lq7wmlUUKd9diew6nJVIJCx0jC1znoMcd/fjIDo=
+	t=1749781207; cv=none; b=iAqeuOWAtDM3DHP2YzeufMTDy2jfF0ydzM2GNXq8PFelmjwsaXFKoR1EXX1OUPmRVbzan5bZaXe1ABCIwxmOn4OXnKEWY7yUZJ1hL5s3A3L8w/3GXHRC7NfrZbS51p00hPAuhMh3+raD7JXAwcWwiWNHNcbZBUlnLbxgeKnsHA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749781207; c=relaxed/simple;
-	bh=dM5AqaeKyAlooiVP0T1b27Nki8+Los7g+DLzsnJ/IHA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N53hNRS7Ld7fWQQ73tIFlT/Zlce4260cSKV+S3qcPsmBiVo31Y/GG9YHfNIxTD1TNh14EKSJO/gnFMm1HHk0nYjYJ2/PHdUHF2DIk74mf2H+R6x6tpDIreC5VeGKv68xxVZbLs8hGm9GuvDC2dwhN8SfBrywenoUPHT5/1762Q4=
+	bh=SVwINmzjWUlA0izmJZ5isREN6hUzd4XcsqhnL0edfCM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sbkzy1ImCLlXybNeInOv9/eVVNQxMUYayqpt3lY8cpW36rRvi6E4kl4JD+sHmi7G2mDJ8xm5DuABpu7sa/jZ48zGYYEKeih5BmppiuJ/GS+swvk06g3S0HjJYZT8dOmYiYdQ2ci8eXlCjd1BIH+xayqJgA3ntBLmhQC6ppsu9tQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
 Received: from [127.0.0.2] (unknown [210.73.43.2])
-	by APP-01 (Coremail) with SMTP id qwCowABXB9aviktoIvMtBg--.44541S5;
-	Fri, 13 Jun 2025 10:19:28 +0800 (CST)
+	by APP-01 (Coremail) with SMTP id qwCowABXB9aviktoIvMtBg--.44541S2;
+	Fri, 13 Jun 2025 10:19:27 +0800 (CST)
 From: Vivian Wang <wangruikang@iscas.ac.cn>
-Date: Fri, 13 Jun 2025 10:15:09 +0800
-Subject: [PATCH net-next 3/4] riscv: dts: spacemit: Add Ethernet support
- for K1
+Subject: [PATCH net-next 0/4] Add Ethernet MAC support for SpacemiT K1
+Date: Fri, 13 Jun 2025 10:15:06 +0800
+Message-Id: <20250613-net-k1-emac-v1-0-cc6f9e510667@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,9 +28,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-net-k1-emac-v1-3-cc6f9e510667@iscas.ac.cn>
-References: <20250613-net-k1-emac-v1-0-cc6f9e510667@iscas.ac.cn>
-In-Reply-To: <20250613-net-k1-emac-v1-0-cc6f9e510667@iscas.ac.cn>
+X-B4-Tracking: v=1; b=H4sIAKqJS2gC/y2OQQ7CIBREr0L+Who+tVgbY7yH6QLpV4lCFdA0a
+ Xp3aetyMjNvZoRIwVKEho0Q6Guj7X0WuGFg7trfiNsua5BCVkIJxT0l/kBOThteEtZYiZq02kJ
+ uvAJd7bDQzjAHPQ0J2tUJ9P5kfPrbFx2Jm945mxr2VQUqHgzOFEcx6mW4YYd1F0uBiOW+QClwJ
+ yTPB54dhVOw0cSkQ5FJR2in6QfrjN4y0QAAAA==
+X-Change-ID: 20250606-net-k1-emac-3e181508ea64
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -46,125 +47,100 @@ Cc: Vivian Wang <uwu@dram.page>, netdev@vger.kernel.org,
  devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
  spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-CM-TRANSID:qwCowABXB9aviktoIvMtBg--.44541S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxurW7tw43KF47XFW7GFWrAFb_yoW5tr1fpa
-	y7AFs3Cr1xCw1rCw1S9F9ruFs5G3WFkFyrGr9rCFWxGF4rtFy2yFn0yFy5Xw48Zws8ArW8
-	Gr48XrWxKFnrtw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUHj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0
-	owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
-	8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCF
-	s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFI
-	xGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK67AK6r4UMxAI
-	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
-	4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxG
-	rwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr
-	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvE
-	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRMxRhDUUUU
+X-CM-TRANSID:qwCowABXB9aviktoIvMtBg--.44541S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxur1fZr15Kr13tF13WrW3Jrb_yoW5AFy5pF
+	W7ZrZI9wn3Jr47tws3uwsru3yfW3WvyFy5WF1jyr1rXr1q9a48Jr1SkFW5tw18ZrWfJ34Y
+	qr4vvws3CFs8Ar7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
+	xVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK67AK6r4UMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRiMmh5UUUUU==
 X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
 
-Add nodes for each of the two Ethernet MACs on K1 with generic
-properties. Also add "gmac" pins to pinctrl config.
+SpacemiT K1 has two gigabit Ethernet MACs with RGMII and RMII support.
+Add a driver for them, as well as the supporting devicetree and bindings
+updates.
 
-Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Tested on BananaPi BPI-F3 (but see "Known issues").
+
+I would like to note that even though some bit field names superficially
+resemble that of DesignWare MAC, but all other differences point to it
+in fact being a custom design.
+
+Based on SpacemiT drivers [1]. This series depends on reset controller
+support for K1 [2]. These patches can also be pulled from:
+
+https://github.com/dramforever/linux/tree/k1/ethernet/v1
+
+Known issues:
+
+- RX fails to achieve close-enough-to gigabit performance for unknown
+  reasons. The 6.6-based Linux in the vendor distribution "Bianbu" can
+  do over 900 Mbps, so this should be a software problem, but I haven't
+  figured out why yet. A cursory look at "top" tells me that ksoftirqd
+  takes up almost one entire core, which suggests that RX could be
+  compute-bound.
+
+  Tested with Banana Pi BPI-F3:
+
+    # On the BPI-F3
+    taskset -c 2 iperf3 -s
+
+    # On the other side
+    iperf3 --bitrate 0 --time 10 {--reverse,} {--udp,} -c [ip]
+
+  Results (TX/RX from BPI-F3 perspective):
+
+    TCP TX: 941 Mbits/sec
+    UDP TX: 948 Mbits/sec
+    TCP RX: 617 Mbits/sec
+    UDP RX: 647 Mbits/sec
+
+- No DT for Milk-V Jupiter. I do not have this hardware to test yet.
+  If I get access to it later I will add its DT changes.
+
+[1]: https://github.com/spacemit-com/linux-k1x
+[2]: https://lore.kernel.org/all/20250613011139.1201702-1-elder@riscstar.com
+
 ---
- arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi | 48 ++++++++++++++++++++++++++++
- arch/riscv/boot/dts/spacemit/k1.dtsi         | 22 +++++++++++++
- 2 files changed, 70 insertions(+)
+Vivian Wang (4):
+      dt-bindings: net: Add support for SpacemiT K1
+      net: spacemit: Add K1 Ethernet MAC
+      riscv: dts: spacemit: Add Ethernet support for K1
+      riscv: dts: spacemit: Add Ethernet support for BPI-F3
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index 283663647a86ff137917ced8bfe79a129c86342a..4a7fbb40858dc1e7d2a55d4bb8547d5472ec4fc3 100644
---- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-@@ -20,4 +20,52 @@ uart0-2-pins {
- 			drive-strength = <32>;
- 		};
- 	};
-+
-+	gmac0_cfg: gmac0-cfg {
-+		gmac0-pins {
-+			pinmux = <K1_PADCONF(0, 1)>,	/* gmac0_rxdv */
-+				 <K1_PADCONF(1, 1)>,	/* gmac0_rx_d0 */
-+				 <K1_PADCONF(2, 1)>,	/* gmac0_rx_d1 */
-+				 <K1_PADCONF(3, 1)>,	/* gmac0_rx_clk */
-+				 <K1_PADCONF(4, 1)>,	/* gmac0_rx_d2 */
-+				 <K1_PADCONF(5, 1)>,	/* gmac0_rx_d3 */
-+				 <K1_PADCONF(6, 1)>,	/* gmac0_tx_d0 */
-+				 <K1_PADCONF(7, 1)>,	/* gmac0_tx_d1 */
-+				 <K1_PADCONF(8, 1)>,	/* gmac0_tx */
-+				 <K1_PADCONF(9, 1)>,	/* gmac0_tx_d2 */
-+				 <K1_PADCONF(10, 1)>,	/* gmac0_tx_d3 */
-+				 <K1_PADCONF(11, 1)>,	/* gmac0_tx_en */
-+				 <K1_PADCONF(12, 1)>,	/* gmac0_mdc */
-+				 <K1_PADCONF(13, 1)>,	/* gmac0_mdio */
-+				 <K1_PADCONF(14, 1)>,	/* gmac0_int_n */
-+				 <K1_PADCONF(45, 1)>;	/* gmac0_clk_ref */
-+
-+			bias-pull-up = <0>;
-+			drive-strength = <21>;
-+		};
-+	};
-+
-+	gmac1_cfg: gmac1-cfg {
-+		gmac1-pins {
-+			pinmux = <K1_PADCONF(29, 1)>,	/* gmac1_rxdv */
-+				 <K1_PADCONF(30, 1)>,	/* gmac1_rx_d0 */
-+				 <K1_PADCONF(31, 1)>,	/* gmac1_rx_d1 */
-+				 <K1_PADCONF(32, 1)>,	/* gmac1_rx_clk */
-+				 <K1_PADCONF(33, 1)>,	/* gmac1_rx_d2 */
-+				 <K1_PADCONF(34, 1)>,	/* gmac1_rx_d3 */
-+				 <K1_PADCONF(35, 1)>,	/* gmac1_tx_d0 */
-+				 <K1_PADCONF(36, 1)>,	/* gmac1_tx_d1 */
-+				 <K1_PADCONF(37, 1)>,	/* gmac1_tx */
-+				 <K1_PADCONF(38, 1)>,	/* gmac1_tx_d2 */
-+				 <K1_PADCONF(39, 1)>,	/* gmac1_tx_d3 */
-+				 <K1_PADCONF(40, 1)>,	/* gmac1_tx_en */
-+				 <K1_PADCONF(41, 1)>,	/* gmac1_mdc */
-+				 <K1_PADCONF(42, 1)>,	/* gmac1_mdio */
-+				 <K1_PADCONF(43, 1)>,	/* gmac1_int_n */
-+				 <K1_PADCONF(46, 1)>;	/* gmac1_clk_ref */
-+
-+			bias-pull-up = <0>;
-+			drive-strength = <21>;
-+		};
-+	};
- };
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index de403bda2b878c60d9eb5b4d8d336e5c52498159..61c804d3a3791127b5fee7ae78dd5be44dd33318 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -580,5 +580,27 @@ sec_uart1: serial@f0612000 {
- 			reg-io-width = <4>;
- 			status = "reserved"; /* for TEE usage */
- 		};
-+
-+		eth0: ethernet@cac80000 {
-+			compatible = "spacemit,k1-emac";
-+			reg = <0x0 0xcac80000 0x0 0x420>;
-+			clocks = <&syscon_apmu CLK_EMAC0_BUS>;
-+			interrupts = <131>;
-+			mac-address = [ 00 00 00 00 00 00 ];
-+			resets = <&syscon_apmu RESET_EMAC0>;
-+			spacemit,apmu = <&syscon_apmu 0x3e4>;
-+			status = "disabled";
-+		};
-+
-+		eth1: ethernet@cac81000 {
-+			compatible = "spacemit,k1-emac";
-+			reg = <0x0 0xcac81000 0x0 0x420>;
-+			clocks = <&syscon_apmu CLK_EMAC1_BUS>;
-+			interrupts = <133>;
-+			mac-address = [ 00 00 00 00 00 00 ];
-+			resets = <&syscon_apmu RESET_EMAC1>;
-+			spacemit,apmu = <&syscon_apmu 0x3ec>;
-+			status = "disabled";
-+		};
- 	};
- };
+ .../devicetree/bindings/net/spacemit,k1-emac.yaml  |   81 +
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |   46 +
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi       |   48 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |   22 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/spacemit/Kconfig              |   29 +
+ drivers/net/ethernet/spacemit/Makefile             |    6 +
+ drivers/net/ethernet/spacemit/k1_emac.c            | 2059 ++++++++++++++++++++
+ drivers/net/ethernet/spacemit/k1_emac.h            |  416 ++++
+ 10 files changed, 2709 insertions(+)
+---
+base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
+change-id: 20250606-net-k1-emac-3e181508ea64
+prerequisite-message-id: <20250613011139.1201702-1-elder@riscstar.com>
+prerequisite-patch-id: 2c73c63bef3640e63243ddcf3c07b108d45f6816
+prerequisite-patch-id: 0faba75db33c96a588e722c4f2b3862c4cbdaeae
+prerequisite-patch-id: 5db8688ef86188ec091145fae9e14b2211cd2b8c
+prerequisite-patch-id: e0fe84381637dc888d996a79ea717ff0e3441bd1
+prerequisite-patch-id: 2fc0ef1c2fcda92ad83400da5aadaf194fe78627
+prerequisite-patch-id: bfa54447803e5642059c386e2bd96297e691d0bf
 
+Best regards,
 -- 
-2.49.0
+Vivian "dramforever" Wang
 
