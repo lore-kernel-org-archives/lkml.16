@@ -1,190 +1,106 @@
-Received: from server.couthit.com (server.couthit.com [162.240.164.96])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E7328691;
-	Fri, 13 Jun 2025 12:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.164.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC861CAA4;
+	Fri, 13 Jun 2025 12:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749819259; cv=none; b=hwE7ApmuRcn1bqBHNLR3EOCQlsYj3D3gyFQ0SjoNdfeT3QbFw5Rd/omC32mY56vccrNX1/ID/zSFltrxOVgFzw8sJmOwz12y8q8xH0r2iLyD15C9jR0beQvKX+P4gzlJfIORW+oSI90xgkzScQAbaFlI5TTtO5bKpv3RqJ/YCIY=
+	t=1749819272; cv=none; b=ZSFRf2+N9lhrzkDImMBBoskmZ1g4XCy1O96p8wyHKgnCvyDPQwwi6Yo/hrR64Oj3XTIwcIwn5/cHUfFYBCYDNhebwocL8W7DaXUv/zhTe0gnHpTzOpnp4BtpPyhPwZ90m8ybCBEGxjg6Mr25/rD9PNM2M2EzW/qReGJ31AAlBss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749819259; c=relaxed/simple;
-	bh=rTFIi2usA4Iknjpjancsasj407AUD6ipJNUXYjs3KBQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=ljD1HOZLx3OjiTJNmfBt9o4OqjdEkdotfOTxGcAHsESBf7FZO2RwBLzfnXugC5ps9V01X8LmoCXPH2yH2VFEn7gTEE1iWzu5Ma3vvNuap5FiviDZBD4MQbZlnYtHzGRpuz/m/O2WCqZ6Xj0ZCojI+xkBchxY80EhlFj2yF5HyLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=es8djR6v; arc=none smtp.client-ip=162.240.164.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1749819272; c=relaxed/simple;
+	bh=I1quJrY/4Wb61BqLz3/Y0Rl043912WMh95rEDI9InB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gcPasgENAkkgphlcu16ljapqCLOfAavevhtiE+MOwj+h8Knh+3AI+ySGNUFV5RvfY/vsA/xiQPihbdw1kdm8j/NZ/o3Z/41O2YKmthQzn6wIhGOzFh/5alBDWnVP7y3f9AoO5jfcnf1ClCGKK97HoRQRXOcCRR7sC0/iPPATfNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D1Gq8nO5; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="es8djR6v"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=twkhsV1zF0hL+QCGl5QNOY+ykroDooxraR5ZCGY5fWM=; b=es8djR6vmm6TqtJIf58kZsllKp
-	TzJmAZ2/GXq/4luB7VASVqpOdTNjmUPkZPjYIo/46HunuURSwxzibLkvBHzA2N04pV4VoNgxw7tEz
-	OI4eiivibzdE0CYnkl7EDz57A2S9ANJUUPUf0+fAvvlfdIdqNVR5c9jVzwpzZqAQW+By7viRsMlaN
-	JlH4U6dDN0c9ppdK0lZWJjHlkUu4GhkKE/3U3K0J7xDUtvjetOUG03C0QYigVF+yznKZPGVpNcUh7
-	Ov4XQ+082tULqHZDQBDRXrGp/uiXZwj2YV0xBKWhlKyWNNhXjKmOY8WyNiQTocNk1DBm1k6RTAAIv
-	sJCo7lHw==;
-Received: from [122.175.9.182] (port=23246 helo=zimbra.couthit.local)
-	by server.couthit.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1uQ3uu-0000000DXDE-3J6J;
-	Fri, 13 Jun 2025 08:53:57 -0400
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id 079A91781C8F;
-	Fri, 13 Jun 2025 18:23:43 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id DB65117882B2;
-	Fri, 13 Jun 2025 18:23:42 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tfKVzeSMqLXe; Fri, 13 Jun 2025 18:23:42 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 8286E1781C8F;
-	Fri, 13 Jun 2025 18:23:42 +0530 (IST)
-Date: Fri, 13 Jun 2025 18:23:42 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
-	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
-	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
-	kuba <kuba@kernel.org>, pabeni <pabeni@redhat.com>, 
-	robh <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>, 
-	conor+dt <conor+dt@kernel.org>, ssantosh <ssantosh@kernel.org>, 
-	richardcochran <richardcochran@gmail.com>, 
-	s hauer <s.hauer@pengutronix.de>, m-karicheri2 <m-karicheri2@ti.com>, 
-	glaroque <glaroque@baylibre.com>, afd <afd@ti.com>, 
-	saikrishnag@marvell.com, m-malladi <m-malladi@ti.com>, 
-	jacob e keller <jacob.e.keller@intel.com>, 
-	diogo ivo <diogo.ivo@siemens.com>, 
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
-	horms <horms@kernel.org>, s-anna <s-anna@ti.com>, 
-	basharath <basharath@couthit.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	netdev <netdev@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>
-Message-ID: <909024001.1496409.1749819222224.JavaMail.zimbra@couthit.local>
-In-Reply-To: <cdcd54ff-ff67-4ad8-8aa7-baa711928242@linux.dev>
-References: <20250610105721.3063503-1-parvathi@couthit.com> <20250610123245.3063659-7-parvathi@couthit.com> <cdcd54ff-ff67-4ad8-8aa7-baa711928242@linux.dev>
-Subject: Re: [PATCH net-next v8 06/11] net: ti: prueth: Adds HW timestamping
- support for PTP using PRU-ICSS IEP module
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D1Gq8nO5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749819270; x=1781355270;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=I1quJrY/4Wb61BqLz3/Y0Rl043912WMh95rEDI9InB4=;
+  b=D1Gq8nO581QT2E6tubueov8LgUxlIMhkAG0bYTmZCs4T0eONd/EuQkca
+   S8YLrYOnIgVk8sOBlmyGl3zAuOcmbpvunViuAWD7IshZaiCpu6kmBoIv9
+   Wfu2Fwy+HQo3Bg9ltYURLroYvaNpFQOiECnXjJSJ0tyuJrxNElj91adWA
+   /XWbYLpnlXx/kGp0Ez+FjXV6NYJNNpZ5BocxNl+luAcEPGQDtON0bSIA0
+   8hipfJb7Xjhqe9k4IdbEjEWj5ruUxRMulmbv2WDpMCMd+q0zlf3ZoKKFs
+   bVCmykxnHWH5uSPzp3oG3Q6JWg3p0OEm60ePOE2hGbWttOIsp3Kr9a9eJ
+   A==;
+X-CSE-ConnectionGUID: l7cnL/BsQ5SsG3uE+Aw0ag==
+X-CSE-MsgGUID: QFZZ7yL4S3O4QyohYOv++w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="52128328"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="52128328"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:54:30 -0700
+X-CSE-ConnectionGUID: vyrE4TroS9K8ntiac2XJlg==
+X-CSE-MsgGUID: 9PnAMZTjSPC0tZAR7Bkg5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="147667503"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 05:54:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uQ3vN-00000006FVN-0KZU;
+	Fri, 13 Jun 2025 15:54:25 +0300
+Date: Fri, 13 Jun 2025 15:54:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] iio: imu: inv_icm42600: add WoM support
+Message-ID: <aEwfgP3tiio52Rj-@smile.fi.intel.com>
+References: <20250613-losd-3-inv-icm42600-add-wom-support-v4-0-7e5f554201bf@tdk.com>
+ <20250613-losd-3-inv-icm42600-add-wom-support-v4-1-7e5f554201bf@tdk.com>
+ <aEvhZiXHLLIRe41-@smile.fi.intel.com>
+ <FR3P281MB17578B82AC67F49552E24EB3CE77A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+ <aEwfUMgLTnQxOh_k@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: prueth: Adds HW timestamping support for PTP using PRU-ICSS IEP module
-Thread-Index: 8LzCZ2vNfRRRUg8kt8zc1YlyHE5Drg==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.couthit.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.couthit.com: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.couthit.com: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aEwfUMgLTnQxOh_k@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi,
+On Fri, Jun 13, 2025 at 03:53:36PM +0300, Andy Shevchenko wrote:
+> On Fri, Jun 13, 2025 at 12:46:46PM +0000, Jean-Baptiste Maneyrol wrote:
+> > >From: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > >Sent: Friday, June 13, 2025 10:29
+> > >On Fri, Jun 13, 2025 at 09:34:26AM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
 
-> On 10/06/2025 13:32, Parvathi Pudi wrote:
->> From: Roger Quadros <rogerq@ti.com>
->> 
->> PRU-ICSS IEP module, which is capable of timestamping RX and
->> TX packets at HW level, is used for time synchronization by PTP4L.
->> 
->> This change includes interaction between firmware and user space
->> application (ptp4l) with required packet timestamps. The driver
->> initializes the PRU firmware with appropriate mode and configuration
->> flags. Firmware updates local registers with the flags set by driver
->> and uses for further operation. RX SOF timestamp comes along with
->> packet and firmware will rise interrupt with TX SOF timestamp after
->> pushing the packet on to the wire.
->> 
->> IEP driver is available in upstream and we are reusing for hardware
->> configuration for ICSSM as well. On top of that we have extended it
->> with the changes for AM57xx SoC.
->> 
->> Extended ethtool for reading HW timestamping capability of the PRU
->> interfaces.
->> 
->> Currently ordinary clock (OC) configuration has been validated with
->> Linux ptp4l.
->> 
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
->> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
->> ---
->>   drivers/net/ethernet/ti/icssg/icss_iep.c      |  42 ++
->>   drivers/net/ethernet/ti/icssm/icssm_ethtool.c |  23 +
->>   drivers/net/ethernet/ti/icssm/icssm_prueth.c  | 443 +++++++++++++++++-
->>   drivers/net/ethernet/ti/icssm/icssm_prueth.h  |  11 +
->>   .../net/ethernet/ti/icssm/icssm_prueth_ptp.h  |  85 ++++
->>   5 files changed, 602 insertions(+), 2 deletions(-)
->>   create mode 100644 drivers/net/ethernet/ti/icssm/icssm_prueth_ptp.h
-> 
-> [...]
-> 
->> @@ -732,9 +949,22 @@ int icssm_emac_rx_packet(struct prueth_emac *emac, u16
->> *bd_rd_ptr,
->>   		src_addr += actual_pkt_len;
->>   	}
->>   
->> +	if (pkt_info->timestamp) {
->> +		src_addr = (void *)PTR_ALIGN((uintptr_t)src_addr,
->> +					   ICSS_BLOCK_SIZE);
->> +		dst_addr = &ts;
->> +		memcpy(dst_addr, src_addr, sizeof(ts));
->> +	}
->> +
->>   	if (!pkt_info->sv_frame) {
->>   		skb_put(skb, actual_pkt_len);
->>   
->> +		if (icssm_prueth_ptp_rx_ts_is_enabled(emac) &&
->> +		    pkt_info->timestamp) {
->> +			ssh = skb_hwtstamps(skb);
->> +			memset(ssh, 0, sizeof(*ssh));
->> +			ssh->hwtstamp = ns_to_ktime(ts);
->> +		}
->>   		/* send packet up the stack */
->>   		skb->protocol = eth_type_trans(skb, ndev);
->>   		netif_receive_skb(skb);
-> 
-> Could you please explain why do you need to copy timestamp to a
-> temporary variable if you won't use it in some cases? I believe these
-> 2 blocks should be placed under the last if condition and simplified a
-> bit, like
-> 
-> +		if (icssm_prueth_ptp_rx_ts_is_enabled(emac) &&
-> +		    pkt_info->timestamp) {
-> +			src_addr = (void*)PTR_ALIGN((uintptr_t)src_addr,
-> +					   ICSS_BLOCK_SIZE);
-> +			memcpy(&ts, src_addr, sizeof(ts));
-> +			ssh = skb_hwtstamps(skb);
-> +			ssh->hwtstamp = ns_to_ktime(ts);
-> +		}
-> 
-> This will avoid useless copy when the packet will be dropped anyway, WDYT?
+...
 
-Yes, we can merge both the if conditions to make it simple.
+> > >Overall, looking to this patch again, I think it would be better to prepend it
+> > >by replacing *int*_t types by the respective uXX ones. Because in this patch
+> > >we add dozens of new ones which increases an unneeded churn in the future.
+> > >
+> > In my opinion, to respect the rule don't mix *int*_t and uXX types, it is better
+> > to keep *int*_t types. If it need to be changed, we can change afterward the
+> > whole driver types with a replace tool and send it in a separate patch.
+> 
+> It will be never ending story, sorry. We need someone to solve this tech debt.
+> And since this patch adds more than 3 new users of it, I think it's a candidate
+> to embrace the burden.
 
-We will address this in the next version.
+For your convenience I can mock-up a change...
 
-Thanks and Regards,
-Parvathi.
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
