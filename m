@@ -1,142 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4287E0E4
-	for <linux-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75712B9A9;
+	Fri, 13 Jun 2025 15:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749827963; cv=none; b=NJDfUv7XItZj6upiqSc+YsMZXUSsWl9RYrvQjCG8WhPDDE3KdSvckZd/S8MfeG3L6ASOETqGLYAbr4PKM/Gmzm/a2ijSttnSgrSAb83Hcrkbv+IMPhYIeY1ZMP0IGIYyVV+yisPmRRDtXbZFT6zWNDbKxdtMvh31+vaSWpR0L1M=
+	t=1749827969; cv=none; b=GiJat+/3fiyZsd09VbsnMng4NpL/Yz5bopTw15j+t/Mp+xYBRHj9srBtos7HBAs8NJDepo5xicKqE1T/i8n3AiarGTIWfR6UzgQbWKC+aDh2GAJ+xhkxAaiqfZBiGBzDEuhif0BYHw5enEbB6Q3Hg7dSZWsZh66a5h0JeMDQ9Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749827963; c=relaxed/simple;
-	bh=KMyD8RQJLbJ/YrRtD29J23PNrq1wgzYBmXTcpPjdKaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NuVlrpek2r0trXmKhSLu/zlsf16/Gj2CuVqVFvD0daD75x41oDPbUW6SzBqu1oH6hKJHT5GU4SQ44iEqSWybgG6IMcuz3qTnMvn4U8X6Bf+Rr8ATmVRxEM06QbbQNB1yaltQj5kbXuKdHl9WNqsqPGzxKqzXCIyB/pFQvbZCPbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M4WgYaYg; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749827969; c=relaxed/simple;
+	bh=nHPJUt2IiJwZuWc7/3YI2Y+yJKOyCh18zYy1JNeGUbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZHubbrvfFo5G4crwN4dteKPJ9ry+KWnnWLw3YgA/W4tGBSReWCfvH8zJiTzPJAIMiriXU6YT5XfewqH0JrS2VdWudD2t4bHwFiRtZt0g8YIEK8vCqKH/ghdGkOL3P/bRrG2O5cBDP8qx1vymeU4ToIaTNw5clAeGbDKc7R0RV/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iV67mHC/; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M4WgYaYg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749827962; x=1781363962;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KMyD8RQJLbJ/YrRtD29J23PNrq1wgzYBmXTcpPjdKaM=;
-  b=M4WgYaYgW7OoKlpbKjcEIcJktbWeOa6XY/4uIstp7pNYWTBTLFcMFes8
-   JHidvrs5Vo/uvb+onoo5mXQONwiorPOcxNM/B7hZoYQA0ZtH2jb7+2ZWN
-   OryyF/N1VKr8VKh4jUV8miP3wfC+LnfkOimj3B7LLeb4JSGhxOof5EBRH
-   S6OBJDPWnNoLKJY3Puu8uHGYiDVN3lMX1jOcdOp1m1XsyExubw4FV1+v/
-   +dQlgaJsTz+rL+qbMRgIULH+X4TepRzkJk66Ftglm6Nz2LxDAaoeOo0yN
-   sFuvlPyUmDP1yNb0eggFB8s0iZ4RWbt+z9s0wj2OkbowKdunD7O9qAVVE
-   w==;
-X-CSE-ConnectionGUID: WPP1UHfxR1qcCs4LVrtL3w==
-X-CSE-MsgGUID: 2bQ3nadrTE6IbkxBEW/x1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="74580772"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="74580772"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:19:21 -0700
-X-CSE-ConnectionGUID: YGbkUkWxQWOn34IN0SjxJw==
-X-CSE-MsgGUID: ApgAb0oMQLK5l6VHYpj8Og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="178747752"
-Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.228]) ([10.125.111.228])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:19:21 -0700
-Message-ID: <c5d21a4c-bfb1-4a0f-8302-d3b78fcc8f3e@intel.com>
-Date: Fri, 13 Jun 2025 08:19:20 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iV67mHC/"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so3197764b3a.0;
+        Fri, 13 Jun 2025 08:19:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749827967; x=1750432767; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=E5wEqTLrIuHxlff07XhC6OAddwglGpYMw59cggcJYQ4=;
+        b=iV67mHC/LiSPY90ReVi3U9qC5C9aXwY/JEQr1Tr+I5+FVnXbD04RFVg/yr4WOKP/+9
+         /HIPunQDhAXotuKNoG2dja2gjYMQSBQrWmSgy6Bh/YMt49BP/UTi5uESJsG6ji6OVYOT
+         EXh9lqJ3Lbw7RLa3t1jTafYAWWWSsAChgkcnxcySYnibx90su7yEmhaSLT238AyvUeMP
+         JmKp98IcDQWM1x+g6BvjPgVtqJ05ZX2vkQFoVC094BHsynsKyu9HtuSQJEv+Shdda3YA
+         4KBwp9mgJNyq5NWbbW5hcjH1U+NKL0xMytuJ5Enrr6d7uFn/fwGeC28IGXgM1GXWMYaT
+         oOVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749827967; x=1750432767;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E5wEqTLrIuHxlff07XhC6OAddwglGpYMw59cggcJYQ4=;
+        b=MMdnIozr6j4VQSm4py2Y7BLiswn3fcw5Rqk87yOJ1ZUp9d7132TZU7dyyeh+Y+8FUJ
+         mAmQFhku7DiK+aoXQsnAEStKL1lPTjxS2vm1dqgrTRd/Hh2F37XxbG6BtRULO4oL/6Nn
+         9mltPCXdZtbWWQGOmaotg4kqhoXGW/nWKnG6tOdS+7EeQ5OLUly63rbFz5XWVE5XFx5T
+         24htzA32y/5Azl22XTcNhDXQJzRTDGQ/+P0BQEeun8OaFcJ7a+4wTb5PwElbDU1PTA4R
+         PhzCRVf7SGVMa0l9oJ/o77TB8OmQU7k7GelEg7Aa9yVjvrY8g/eOrk6CilCll+DaVblB
+         ZYkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwE9NRaUIrh0ZPdbOMgc8ph/Awc+Kq7jYeRfpEwTXFu8XMsMuHdq+IqHOqf7TfC6GwxpD3HHRG5peJ@vger.kernel.org, AJvYcCXnoHhPZ8T/F0A3jW6TUDEfgGiCiwx6izaJqvBkytmXhRmyTzdIYinlin0jFtmsZ9aNjm8CvT+OqM/JhZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2kO7Z87IbW9OympdMXPIZu6Tb84lUZSMGQHwpmLoCgVg5rpA/
+	HlL3CUOracu8TWYJr7FULk5dift0tsHakz2NZwNYpzQDTUNO9p2BPQSY
+X-Gm-Gg: ASbGncu34j/UXa63JxwIFt2X2bkLagzBVm4gChRWPVG+hPsE2xHkN4+tgV4YsOBVvZj
+	As95G8SZBcEOM7Q67nsMPleiu27Ol0DF5urqzMhyx3y/35UFFL+ukUQMliuuGGEFyYZYRVY9ppo
+	tY0MHC3pwDiCaGfV/3nABh1hHdU+siDy1wwZOcQ3emb3FzvXzn9HvK/QczRn90ftUibqkg4axQ5
+	22H4Dn3CPyrzaVz/ARiJIMMqZRKkAIvo9/o/7GQiC1vWwfe045f/21uprZlrcoKcB9YJDjomt0Y
+	V+tPBwiWeg+81D4uZM9aUacl6Ke70vjtGGE8n15xujLT1aruLw==
+X-Google-Smtp-Source: AGHT+IH6BtrN8GvaynSvVoLNqD2VGmMz6n61XivbhbvYaO0BgySl9/odnV8zmrOFQ6SXd92rPXn+AA==
+X-Received: by 2002:a05:6a00:10c9:b0:742:b928:59cb with SMTP id d2e1a72fcca58-74898586762mr1340177b3a.7.1749827966984;
+        Fri, 13 Jun 2025 08:19:26 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:838f::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7489008303fsm1687203b3a.79.2025.06.13.08.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 08:19:26 -0700 (PDT)
+Date: Fri, 13 Jun 2025 12:19:20 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v4 2/5] PCI: rockchip: Drop unused custom registers
+ and bitfields
+Message-ID: <aExBeNdkOtFtW87z@geday>
+References: <cover.1749826250.git.geraldogabriel@gmail.com>
+ <ed25d30f2761e963164efffcfbe35502feb3adc2.1749826250.git.geraldogabriel@gmail.com>
+ <97114c68-5eb7-18b0-adbd-227e1d7957c6@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 03/12] x86/fpu/xstate: Add xsaves_nmi
-To: "Liang, Kan" <kan.liang@linux.intel.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
- dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
- jolsa@kernel.org, alexander.shishkin@linux.intel.com,
- linux-kernel@vger.kernel.org
-Cc: dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
-References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
- <20250613134943.3186517-4-kan.liang@linux.intel.com>
- <c7bfcaf2-1669-4d6f-afb2-9bbcadfcde9e@intel.com>
- <03cfdc36-a7b9-4098-bc21-cb612907add2@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <03cfdc36-a7b9-4098-bc21-cb612907add2@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <97114c68-5eb7-18b0-adbd-227e1d7957c6@linux.intel.com>
 
-On 6/13/25 07:54, Liang, Kan wrote:
->> One other thing...
->>
->> XSAVES uses the modified optimization. That means if you did something
->> like this:
->>
->> NMI=>
->> 	xsaves_nmi();
->> <=IRET
->> ... run a little bit in the kernel
->> NMI=> // another NMI
->> 	xsaves_nmi();
->> <=IRET
->>
->> The second XSAVES might not actually write anything to the buffer
->> because the registers didn't change (they weren't modified). Is that OK?
-> Yes. The per-cpu buffer in perf is only used by this XSAVES. No one will
-> clear it or modify it between the two xsaves_nmi().
+On Fri, Jun 13, 2025 at 06:03:14PM +0300, Ilpo Järvinen wrote:
+> On Fri, 13 Jun 2025, Geraldo Nascimento wrote:
+> 
+> > Since we are now using standard PCIe defines, drop
+> > unused custom-defined ones, which are now referenced
+> > from offset at added Capabilities Register.
+> 
+> These are quite short lines, please reflow the changelog paragraphs to the 
+> usual length.
 
-What prevents it from being freed, reallocated to some other user, freed
-and reallocated to the per-cpu buffer? ;)
+Hi Ilpo,
 
-But, really, the thing that saves you here is that the modified
-optimization only comes into effect if you XRSTOR from an XSAVE buffer.
-This buffer is only ever XSAVES'd to.
+I'll reflow for v5.
 
-So I think it's safe ... from the modified optimization. I'll look at
-the init optimization later in the series.
+> 
+> > Suggested-By: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+> > ---
+> >  drivers/pci/controller/pcie-rockchip.h | 11 +----------
+> >  1 file changed, 1 insertion(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> > index 5864a20323f2..f611599988d7 100644
+> > --- a/drivers/pci/controller/pcie-rockchip.h
+> > +++ b/drivers/pci/controller/pcie-rockchip.h
+> > @@ -155,16 +155,7 @@
+> >  #define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
+> >  #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+> >  #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
+> > -#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
+> > -#define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+> > -#define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+> > -#define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+> > -#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_BASE + 0xc8)
+> > -#define   PCIE_RC_CONFIG_DCSR_MPS_MASK		GENMASK(7, 5)
+> > -#define   PCIE_RC_CONFIG_DCSR_MPS_256		(0x1 << 5)
+> > -#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
+> > -#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+> > -#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
+> > +#define PCIE_RC_CONFIG_CR		(PCIE_RC_CONFIG_BASE + 0xc0)
+> 
+> This will cause a build failure because PCIE_RC_CONFIG_CR is used in 1/5 
+> but only introduced here so you'll need to do this in the same patch as 
+> any step within a series must build too. IMO it would anyway make sense to 
+> combine patches 1 & 2.
+
+Ah, interesting angle. I'll fix it.
+
+> 
+> >  #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+> 
+> Aren't you going to convert this as well?
+
+I can, but I can't test it however! But I'll Cc: someone who hopefully
+can.
+
+Thanks,
+Geraldo Nascimento
+> 
+> >  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+> >  #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+> > 
+> 
+> -- 
+>  i.
+> 
