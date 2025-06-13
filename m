@@ -1,103 +1,74 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0721275AEE;
-	Fri, 13 Jun 2025 12:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095DA275AEE;
+	Fri, 13 Jun 2025 12:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749816124; cv=none; b=iq8WZ/FwJlztWBneRiJ71jJQKNWu/k0SErVhqwMZ/kV6AqLNw56p9ytS/AFGKv47OoMfvq5ONJWPOOqFELOTovrZ1LLyuckUW2c4j41ts5bDqyydACoVJ3Sop9SdT+97R7/4JrA4h9vJjWjfhF/J6lpjsbF+GuqX5hO00FmI5DA=
+	t=1749816162; cv=none; b=NdqiKGbYLo/3jdrHiuu5VacxNnZAylRYcquIk2WCIl2+XILwii4L+sh/jiw6WdbkD5h7BMSN4P6qjk4lEvnqAII24F9Xlk9eaOtoLbTLh07kxZ3puPudfrLp2fizSrM3nEMDrfmbILBoJVlF7Zh83ta0dtRmGU4HB2MBDHqS3iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749816124; c=relaxed/simple;
-	bh=8qZZcEMlaq3Vypp00BBrhb1qwqZhnJLoqXoQwe+lRtI=;
+	s=arc-20240116; t=1749816162; c=relaxed/simple;
+	bh=ptGTEPBzKTgt1ZhqPyNpeoZedjh8jWlmRyimJ1J8KLk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mpguc8hBPCbOa23qqVk1OXndMHDPqFyqDE6eo/etrDiDfV3nM4trHlEFLXfStcgr0xdild4PGUcBJU1eGbtDyU1lv1KLIvb2OrDpx3NQLQnpbcFknrPEK4NJsQodRnJOGErY97EbQKK08QyI6/JmaVHrlBuD8lIyFMCy8pCZVhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k2Uwe+NV; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfaxO2shaOSrFtB70FIJSe6QG4VdH/caTuaJdUZiOxwuWrHdgURk0BpfdAfCJSF/NVPbxxlGLUf3raVuaPqDG3sUPk1owXQOscXyc/c9bNRG+Uw9lXaR97dfmQ9/9mzcVUWuXsfc9oQ8TIML2KPuhkvFNO7LuxvEcZAEA0w3BiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMMSuxdd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2Uwe+NV"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so2177407e87.1;
-        Fri, 13 Jun 2025 05:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749816121; x=1750420921; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I09yI6md/7rXSeHEhNNEyJMVTDlTe0uyfiH7BsFvjpE=;
-        b=k2Uwe+NVjHFJ0gCZL5hDq0drClVfmdsCb2gJb2C5i9ooq2XB8fcrjsFfLGnGXt9OZO
-         cHb+XdMjrSy1W/FMfVhhEjjLFh9WvVbcTVbc95EKaD9kHW6Yb8GNSizW6J2MmEH7Btx8
-         gbFF9NGzLODJccK001Drr0HGHypxngZJa4PGen5lWh99mtyTw3/2GLY+40pimSxddBrQ
-         1c+k72+bUXb5yUZZsbZYjd5UqJySHhu/g5gbuXmURZfH/vbykwuG1RiOj/pmosjMmlaP
-         iXhM1ElndZV7NPlF2i1Fu7vy9DdlKx2koU1/X+ZSP4i7m1nXjnYnh82B10RZG9eRbtlZ
-         Eqog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749816121; x=1750420921;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I09yI6md/7rXSeHEhNNEyJMVTDlTe0uyfiH7BsFvjpE=;
-        b=nTJIbj8TCeMeHD2tmTQJeiIMXMkKWkq/jrIiSH73OLZ41pMfSDjrL3DK5FZsbSkoce
-         /0P0+Yl4clOxojwbfsZEpJ6jLDqdr3i0UxR4H8Y8RNcLrVnE51tMpdmJiaYsQFRMnVkb
-         sHiNqsq9eg3Co/bjcieQbHCNijxfUPmM8f8l5uXrD2e7A5w8AaZsNoqPS41BICg8d/d7
-         e5cZC1l1wByk31XqPjZNTdg8KrV0HTwrlxHtxe2HsWYdi1QpKfwZLjqaPjVSTXkxa7Tc
-         8IhT/rkxADRFyVuN22Dbfqgh2YeDkiPsrSq6nSI/oRjKpq1MIvj8CU6EKv8rkx62+RHw
-         JHBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZBl9+OykSw58vtIo6ymTupKfp7Aw4VRlFJRFe3xfzRc+pzGd/JiKYQ269UegDYr7bBUut7jmEDZQyPlI=@vger.kernel.org, AJvYcCWy2dRy7Po4TProbtYgneT2gn1u5fqpK5a9e16lM5ImzN7/MB5QvSuv42o9HrPrcqtieg1opLH46Ntq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQpBPzUaMy8XYCspe4/pOnRRviDBxxkWzPt5Gxz/LAyWq0qR3i
-	lvyb0barG9piEy9o3pPBsABqyEVftgt72BVV8l54ZakySUZVZvAqGaq3
-X-Gm-Gg: ASbGncvPxN1S68WHOcS8rZvkiCYxWhbTa203XETuiBtyHKsSpVVHB6gtTUwJxtzLQRr
-	nyeEaguCYxXwaWkbIIXdkbjJy56DvKgwvVQ/DUakx+1ow3IJKdAgeTKpgd0YhYk+b2bQ+tS4ksa
-	6iXkLzi0lVcIaW0uUmqpdb8cCRREXGVxDY1NkEYGvPXohB5W3T1NeV+Gj/gyErIP8kfYEKOyZAH
-	SsQnSsYYFsU8QS3s6ZOio4yo4N9PEeRNT1mtqcUO5b8ImaAxiypuFM6wbwi1hX+qSoRxkDD5Jot
-	ChSSZeOSPl/O5I88G1rK4vPQyg3AdZwuWKtwecuBacEapxGi/g7+nRZiyF5ZaRQLiC0ZcTEekWm
-	0bbI8ZlCz8KgL95s=
-X-Google-Smtp-Source: AGHT+IG2udKV9cM84btHRYB6qtTpXt4G9OM7Ds+sqU9jJDdLi7FlzLyZ425DIsBGa8wvPeGzRnTeyQ==
-X-Received: by 2002:a05:6512:6cc:b0:553:a867:8dd6 with SMTP id 2adb3069b0e04-553af8f1d7fmr860842e87.9.1749816119667;
-        Fri, 13 Jun 2025 05:01:59 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([178.34.112.253])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1dc630sm425675e87.196.2025.06.13.05.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 05:01:59 -0700 (PDT)
-Date: Fri, 13 Jun 2025 15:01:57 +0300
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Konstantin Evtushenko <koevtushenko@yandex.com>
-Subject: Re: [PATCH v2] nfsd: Implement large extent array support in pNFS
-Message-ID: <xr7sopuwurexwjcvcm2iaikv7yax45ryqxdpjyipcv7obph62i@xbdkqwznujsn>
-References: <20250610011818.3232-1-sergeybashirov@gmail.com>
- <1da1e7db-c091-44b0-b466-cb8aaa6431ff@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMMSuxdd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F020C4CEE3;
+	Fri, 13 Jun 2025 12:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749816161;
+	bh=ptGTEPBzKTgt1ZhqPyNpeoZedjh8jWlmRyimJ1J8KLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rMMSuxddTOfmauhNg/0g0BI1pAdFxkmvRmdp16nYt+eCKgofcaDi554ZX33qI0zg/
+	 B+ZRbCW6wJz0E4DvIGxM74cGyybSIbfSPMif7vjGK40ycH+xoj8BXgkvsep0V0Io2G
+	 Zr2lXmtSoLqDeEscu4xqxJNBcPdOALqCMTVui6csvVDZATBx8XRInRFy3VVSIfEc5J
+	 lJsBYJeLJA0TMga7b5QICwKlWTybqsM01Mp8MkjErGHWRXaCc4SM3Qe4Zk8G9+Y4IG
+	 dPAKk1lY4KbwLTEzmCgJc4iCV9+dTPvtnIRNmWUjGXgL9mGHwNU+26KluzWe9g7J6j
+	 f5GWHqa2+NwOg==
+Date: Fri, 13 Jun 2025 14:02:37 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
+	kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/13] PCI: dwc: Add dw_pcie_clear_and_set_dword() for
+ register bit manipulation
+Message-ID: <aEwTXVZI0wvRvgil@ryzen>
+References: <20250611163057.860353-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1da1e7db-c091-44b0-b466-cb8aaa6431ff@oracle.com>
-User-Agent: NeoMutt/20231103
+In-Reply-To: <20250611163057.860353-1-18255117159@163.com>
 
-On Tue, Jun 10, 2025 at 02:10:46PM -0400, Chuck Lever wrote:
-> On 6/9/25 9:18 PM, Sergey Bashirov wrote:
-> > +	xdr_init_decode(&xdr, buf, buf->head[0].iov_base, NULL);
-> > +	xdr_set_scratch_buffer(&xdr, scratch, sizeof(scratch));
->
-> Consider using svcxdr_init_decode() instead.
+On Thu, Jun 12, 2025 at 12:30:57AM +0800, Hans Zhang wrote:
+> DesignWare PCIe controller drivers implement register bit manipulation
+> through explicit read-modify-write sequences. These patterns appear
+> repeatedly across multiple drivers with minor variations, creating
+> code duplication and maintenance overhead.
+> 
+> Implement dw_pcie_clear_and_set_dword() helper to encapsulate atomic
+> register modification. The function reads the current register value,
+> clears specified bits, sets new bits, and writes back the result in
+> a single operation. This abstraction hides bitwise manipulation details
+> while ensuring consistent behavior across all usage sites.
+> 
+> Centralizing this logic reduces future maintenance effort when modifying
+> register access patterns and minimizes the risk of implementation
+> divergence between drivers.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
 
-I see that svcxdr_init_decode() does the same two steps. What I
-concerned about is that it takes the top-level svc_rqst struct
-and modifies it. Of course, we can pass rqstp from nfsd4_layoutcommit()
-to the layout driver callback. But then we would need to make a backup
-of the original xdr buffer and stream position, set up and initialize
-the xdr sub-buffer, and at the end restore back the original xdr stream.
-All these actions seem somewhat unnecessary and not so elegant to me.
+No cover-letter?
 
-Is it acceptable to keep the current solution in the patch or am I
-missing something?
+Usually for things like this, it is nice to see the diffstat,
+which is usually part of the cover-letter.
 
---
-Sergey Bashirov
+
+Kind regards,
+Niklas
